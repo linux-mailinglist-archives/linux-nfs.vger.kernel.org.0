@@ -1,866 +1,217 @@
-Return-Path: <linux-nfs+bounces-18447-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18448-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GKirORwMdmkNLAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18447-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:27:08 +0100
+	id I1OgE6obdmmNLwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18448-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 14:33:30 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCE5680883
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:27:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 863B280BB6
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 14:33:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8A2D73001CCD
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 12:27:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0FCB430037CC
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0133164B8;
-	Sun, 25 Jan 2026 12:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FCD02DF68;
+	Sun, 25 Jan 2026 13:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="vQrdQmpy"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ESVY+IZQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3263A20B80B
-	for <linux-nfs@vger.kernel.org>; Sun, 25 Jan 2026 12:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769344022; cv=pass; b=VHGroXDDPUTOFllhM0Ij1m/VcXKAWIUHDqnr0YIlU1v3vTHjcSkOILJdyHuCEST7wbHvGNCv8+sjguXqkU8EPRBq9SSoTBnR4HgebCLA6lBIbbciRiKcc7zbxykT0yU0F6rZIPKwi+D+l71XqttlK+7nSCq4IslE1Z5ZRmQaDWA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769344022; c=relaxed/simple;
-	bh=YPvKbd+LYUa1e+et2HUSH9EItlyV/XZv7lKXhNLqahA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=UepQT87V3+qqV50q58e8TBFShlHO98RW3No1qfHxBoaLlpyTrqTLs+pSRyb8mAyyB6PuQNUq63STtXq2O1UVnic41CtxOcSHuPmVhLFr/V1r1oi4Td2AJcCYnjNsUNQ+y7XPkEWG+5arnRTiT/CEhCFcUq9Xgb4HS5Z1e/C3sgE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=vQrdQmpy; arc=pass smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b8876d1a39bso211666166b.1
-        for <linux-nfs@vger.kernel.org>; Sun, 25 Jan 2026 04:26:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769344018; cv=none;
-        d=google.com; s=arc-20240605;
-        b=enhveY8RBr2bDJ+qn5kH+Oor8UMvL9AkheFReVT1cNWMFQR29eMBk69O2yIcsYOov7
-         Tk0HCf8ekW376S8S1RtCfvqZAmfezjVBVSzdB28/fqCsTdfhP8UhpxszBliJg3fy+VbF
-         +2ZJIFqP00iXMc7Pe5DtjXQ+/DNZiQiiiJSM1HgUMleDQko3RcNd8PIzJo6R3f+C19Zj
-         VlkuARj/lsqJkrDrPIMaD6A3YFCeon9qm2hiuJVtMkyED40YEowMXG54zmoXgQTV16Qm
-         5n/R2xAbTKdt8HVSC9N1n7WiJ1BL/9kAyGneEqf1vVOdDCnULxFHzcQ2k13K3RJRCiJL
-         CGow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=YPvKbd+LYUa1e+et2HUSH9EItlyV/XZv7lKXhNLqahA=;
-        fh=A6VhHI7NKHnmfjjs9vgKiwsl8TnYIjA9XaJXQoRXXsA=;
-        b=aou9yIQ20gyTwzBShwgaAusGe/1Y8moFKSOBH0hzLt+yN29OpKqIG8MNfbNmMV5rs+
-         PT8X12/QzFzA27Bbw9ei8gbc9QDps8+4cu7pnd4synWh2Gz25gYrk7iOaebwcDz/X5Hh
-         3A1QwdKqwjfB74O0uBiCe1WqpLq5BFsYdwN9PoZNUPdj8klM4fNPVkKJW73n/QYmr1V4
-         mr2J65VEoig8AdyRq/SvOaYhqDHZQlR/0QFm1O/lyDLh8E6Z5Pa5+nGHqAyLKRfpPkkj
-         Sw+KsN2MMJ7pmhIbmhLvAl5fTobj35TyV+xk/uoWCn7NCr6FO9Lgg727qJHsuvasfPQg
-         sdww==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1769344018; x=1769948818; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YPvKbd+LYUa1e+et2HUSH9EItlyV/XZv7lKXhNLqahA=;
-        b=vQrdQmpyiFkKu1vV0fF8gChtC5TwQOwpxfHcGZyggF5wANfmrPvs18XwM99gPt1Ine
-         /K6NQZ8vs1213z6yE3039vaVleRVozca4qYvtTrxPDZKgloSP6txJHVL4MB64zLKyrbI
-         cbzOZcvh2/kXD40iPI0GMNvEfCb+T8duFiP0vYHvGFCoi9UrmRp241IQNjsm7qcCK7HD
-         7JdpFmQ/Butwau9JBUVr8u2ds5GQ+ojW+lxB9gL3hso3lcOEi3lPvLflu3fnaX6B4gdA
-         7vwJOeW2gfKb++WH9/0mGukeVK78qFzYEqZEFC3/vU+UlvjQykMO3doaOh5sAGIhO84T
-         nofg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769344018; x=1769948818;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YPvKbd+LYUa1e+et2HUSH9EItlyV/XZv7lKXhNLqahA=;
-        b=jxzExFSU9EfUUTB2GtpQVBFgfc9Z40lYR1beG07tkR6dRtUjLUJVaQQQo6baVVIwjW
-         qqheFG7W0S4OUTxapr2TmUAl1tc4FS+quoAR6jPvqENwDugLnnQQVaCFOP5xUsGpSGS6
-         gOg8g9pto5UbQ/1+whGVwVsPlFd1Qeaw9nQzJO37QEWJS57eX4ZS4V5kWGZJSfxSnJFD
-         WWzM35CDOWTMrMJnVzUrBhlz7ytqvnKOIbZAzgZHGYYmY5mItSjhTSDYHbs+6QORsnM5
-         fbVJSCkj0mBC5K3UpahZ0B331cAEMLV13NM7nPvjPpEzL0hrniE6KVzD1NimsgEBiwwE
-         Jwmw==
-X-Gm-Message-State: AOJu0YxWzm/+OqZo8YnOg6/vP4sXRCVUfBRPbtBO1PgkhAHMuXOqS13a
-	4/SoS5zk7UBrjATn/1AuJwmxiTLgK3v8xBxnH3aB0IacZgX+jqBJ+zrwx5s9WZI+07M3IKDc9Zk
-	V03Ow+91YZz2u35Ag9tJbOVajmTSQIM8aIq1OMFtcmWtBP1y6A50EMf0=
-X-Gm-Gg: AZuq6aJwUUGnPzd62qdcglNFsLf+Z7tGD0Wko4nLpZaUHrPo7JJ9jvSbIZQwoAFb+Qd
-	jSx0bGzUN0Z1M3X045CsmSE7n7RMgHgNl6KyRRSOGtzzm55vEuV+u+tP16Xm422zkvsifg4cPpr
-	s2eVlcx2uahoW/0ndmBUV6YQTWOxvYX16Y7X4N0YFF5dWA+wTFa4A0ztGAvPspP1FBrTE3igaiK
-	7OtgyVucvTdR8HF1YanLLlyaYtdJUPXbxQXUAax3TmM1ZG+ZZa70lNkTaozUge2rvyjOg==
-X-Received: by 2002:a17:906:f5a3:b0:b88:6327:d0eb with SMTP id
- a640c23a62f3a-b8d2e836a07mr98721166b.65.1769344017822; Sun, 25 Jan 2026
- 04:26:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69C224F3
+	for <linux-nfs@vger.kernel.org>; Sun, 25 Jan 2026 13:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769348007; cv=none; b=jk7xJizfUox77E4NUKjYBcjWs3ONXTSjKG7iFRWtyNLNC+vHAbgCor95MsgjlWuICgo17VR/vgHAqIaDV8Jvf40tINuKJn8UfLopb3cPgqbjgJMlSVAl8X0tS+oCiNQNVHbuQDgnM6E9Ztn1UmiRcDEmOv+n/gtAgLmKvX5JBng=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769348007; c=relaxed/simple;
+	bh=lIaIljlAm3+5VpG/9ZPdHEFB2CKJ/br/ExDUw+jUJqo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Oo5l6KC4y8+6grvqpuR1imajU07lMqvmKziAQHc2u2umNOphch7C6FemyERkb9732txQZoh/k4cIQ/p8eWg2nEm2p84HBilVPDH5EWZkgXLyxPbfh4YWqlcur4JLM1KILpdZNy3oypY2MUBVU6dCMfNRl3GyneBiHpVaVSt+ris=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ESVY+IZQ; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60P7TEHe1504860;
+	Sun, 25 Jan 2026 05:33:19 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=ae5F5ju3HVsTloT9TuRvjydWFVEElhB1MvO78uDH7Ns=; b=ESVY+IZQn/ec
+	gelDh1Rsyx+/UANdV5FJLd60OfctClCUgMZz90qnB8SErTm3k/otUQ+DNXgpea7b
+	xAWHXPvQ5lvlo8sJNEjay3l0DNpMvDFCbT15zfzMUq8d6AqS47ZtrZ+6h3IuIbEj
+	8/NoMqKOCrn2fTXPYGL13Yxa/+j1LcxlcAdKTx/0FYlxGtLZYiWB4RxU8JezmB6S
+	8qlrOSQTV1ahE/btOhwoQS6vVHmG9Z30Z0lbebUSH7Fz+7syXwDrY3uTFQwCPzHN
+	VgBCRK01KA1DY2eLZN3Z+8dZAIUUB6O/HP3xJnruQo6J/CqZpeK76CofLKyO/92p
+	uRrNZ+1H4A==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bvt93xg2h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sun, 25 Jan 2026 05:33:19 -0800 (PST)
+Received: from devbig003.atn7.facebook.com (2620:10d:c085:208::7cb7) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Sun, 25 Jan 2026 13:33:18 +0000
+From: Chris Mason <clm@meta.com>
+To: Christoph Hellwig <hch@lst.de>
+CC: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 22/24] NFS: add a separate delegation return list
+Date: Sun, 25 Jan 2026 05:30:07 -0800
+Message-ID: <20260125133300.2723227-1-clm@meta.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260107072720.1744129-23-hch@lst.de>
+References: <20260107072720.1744129-1-hch@lst.de> <20260107072720.1744129-23-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Daire Byrne <daire@dneg.com>
-Date: Sun, 25 Jan 2026 12:26:21 +0000
-X-Gm-Features: AZwV_QgB9wXzyVdxhLgc3-tK8SzlFImt7VGGt-Qi7fVj--vlUC325clGZqUBbUQ
-Message-ID: <CAPt2mGNAGaO8hP9u4M+oH0_w0dbSNAmDF=g0jyb26ED5R_mhOA@mail.gmail.com>
-Subject: knfsd read iops limits?
-To: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000ab7b8a06493581d4"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI1MDExMyBTYWx0ZWRfXz371FmgOIAD4
+ IgItkDahN2z9txEOL8LJbcJqKsU7x6rre2BFx1uEqjGUw/myoNpwlrBk3pzASRNO9Q6HCIsc+48
+ pqGwQ5G28I/nZLWQEaXP1lKre/bK1XqAiOln5YLuSgsHTyyk+oKPdPhovUbuxPvK2CvWHHMT/75
+ ZTDs1R/Lytp2eXGPEhAH44j510Ts524GQWrQDASsvuLeMI0IZkNhcEUj3BLr4WnpmNIxoYiOPpU
+ auJFn+emnmj8BaqfCOlqdNcf5wshFCrzbecKn2IkdYTtA1aAkVlHjjMbaYXvqivN6qr6HGeXr5F
+ TPuBMEPG/P5sNssPn1UZ8v1nIQdwinKXFKyHzlBmgxflr4rqYO0ncE3ITctWLfWt3B6ZgYmboZD
+ cxZNuNVrclh7Wp3y+PJk4c7o0Q6QKy75ruHOH383l/jo/UGItFgCWEAtqki1N0z6lZGS0aV5ow+
+ Xa/lvSSOun605a7X2YA==
+X-Authority-Analysis: v=2.4 cv=HoR72kTS c=1 sm=1 tr=0 ts=69761b9f cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=rc_i4G9jLmr0IctmWxwA:9
+X-Proofpoint-ORIG-GUID: y4auikv9HSi9pu8DiYuwMaTpG6_ADXJJ
+X-Proofpoint-GUID: y4auikv9HSi9pu8DiYuwMaTpG6_ADXJJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-25_03,2026-01-22_02,2025-10-01_01
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.06 / 15.00];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[dneg.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[dneg.com:s=google];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[meta.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[meta.com:s=s2048-2025-q2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
-	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_ONE(0.00)[1];
-	TO_DN_ALL(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+];
-	TAGGED_FROM(0.00)[bounces-18447-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[dneg.com:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daire@dneg.com,linux-nfs@vger.kernel.org];
-	HAS_ATTACHMENT(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MISSING_XM_UA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	TAGGED_FROM(0.00)[bounces-18448-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CCE5680883
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[clm@meta.com,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[meta.com:+];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:mid,meta.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:email]
+X-Rspamd-Queue-Id: 863B280BB6
 X-Rspamd-Action: no action
 
---000000000000ab7b8a06493581d4
-Content-Type: text/plain; charset="UTF-8"
+Christoph Hellwig <hch@lst.de> wrote:
+> Searching for returnable delegations in the per-server delegations list
+> can be very expensive.  While commit e04bbf6b1bbe ("NFS: Avoid quadratic
+> search when freeing delegations.") reduced the overhead a bit, the
+> fact that all the non-returnable delegations have to be searched limits
+> the amount of optimizations that can be done.
 
-Hi,
+Hi everyone,
 
-We recently came across a workload that consisted of 100s of clients
-under (cgroup) memory pressure and so their page cache was all but
-exhausted. This resulted in lots of repeat small 4k-8k random reads
-hitting our NFS servers which maxed out their CPUs and flatlined
-performance.
+I ran some linux-next commits through AI review prmopts, and this one
+was flagged.  The spinlock concern looks valid to me, but I didn't try to
+confirm the RETURN_DELAYED comments.
 
-Uniquely, the data being read easily fit in the server's page cache so
-there was no backend IO to limit throughput.
+> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> --- a/fs/nfs/delegation.c
+> +++ b/fs/nfs/delegation.c
 
-The fix was to put in place a system to kill workloads under such
-memory pressure. But it piqued my curiosity, so I decided to do some
-simple benchmarks to see where the server limits are.
+[ ... ]
 
-I ran something like this across 200 client hosts simultaneously using
-NFSv3 to reproduce:
+> @@ -674,15 +667,15 @@ static bool nfs_server_clear_delayed_delegations(struct nfs_server *server)
+>
+>  	if (!test_and_clear_bit(NFS4SERV_DELEGRETURN_DELAYED,
+>  				&server->delegation_flags))
+> -		goto out;
+> -	list_for_each_entry_rcu (d, &server->delegations, super_list) {
+> -		if (!test_bit(NFS_DELEGATION_RETURN_DELAYED, &d->flags))
+> -			continue;
+> -		nfs_mark_return_delegation(server, d);
+> -		clear_bit(NFS_DELEGATION_RETURN_DELAYED, &d->flags);
+> +		return false;
+> +
+> +	spin_lock(&server->delegations_lock);
+> +	list_for_each_entry_rcu(d, &server->delegations_return, entry) {
+> +		if (test_bit(NFS_DELEGATION_RETURN_DELAYED, &d->flags))
+> +			clear_bit(NFS_DELEGATION_RETURN_DELAYED, &d->flags);
+>  		ret = true;
+>  	}
+> -out:
+> +
+>  	return ret;
+>  }
 
- fio --directory /hosts/nfs1/xfs1/ --name test-file --direct=0
---buffered=1 --size=1g --time_based --runtime=600s --bs=4096
---rw=randread --numjobs=2
+Is there a missing spin_unlock() here? The spin_lock() is taken but
+the function returns without releasing it. This appears to cause a
+deadlock when delegations_lock is next acquired.
 
-By reading the same small file from many hosts, we are essentially
-serving from server page cache so can rule out disk IO (I even tried
-files on /dev/shm)
+[ ... ]
 
-The main things I found:
-* across a wide range of server hardware, we top out around 300k-400k
-read iops/s.
-* whether the server has 24/48/96 cores, the results were pretty much the same.
-* 24 knfsd threads is the optimal with more threads reducing
-performance until threads=ncores
-* multiple nics (bonded) or single socket (no numa) makes little or no
-difference
-* different nic hardware make little difference (2x100g, 4x25g,
-broadcom, mellanox etc).
-* various network tuning (queues, txqueuelen, qdisc, etc) makes little
-difference.
-* NFSv4.2 has less read iops/s (160k/s) but it also has sequence &
-pufh ops too (+ 2x160k/s).
-* increasing nconnect (>1) reduces aggregate read iops performance (8 -> 120k/s)
+> +static int nfs_return_one_delegation(struct nfs_server *server)
+> +{
+> +	struct nfs_delegation *delegation;
+> +	struct inode *inode;
+> +	int err = 0;
+> +
+> +	spin_lock(&server->delegations_lock);
+> +	delegation = list_first_entry_or_null(&server->delegations_return,
+> +			struct nfs_delegation, entry);
+> +	if (!delegation) {
+> +		spin_unlock(&server->delegations_lock);
+> +		return 0; /* no more delegations */
+> +	}
+> +	list_del_init(&delegation->entry);
+> +	spin_unlock(&server->delegations_lock);
+> +
+> +	spin_lock(&delegation->lock);
+> +	inode = delegation->inode;
+> +	if (!inode || !igrab(inode)) {
+> +		spin_unlock(&delegation->lock);
+> +		goto out_put_delegation;
+> +	}
+> +	if (test_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation->flags) ||
+> +	    test_bit(NFS_DELEGATION_REVOKED, &delegation->flags) ||
+> +	    test_and_set_bit(NFS_DELEGATION_RETURNING, &delegation->flags)) {
+> +		spin_unlock(&delegation->lock);
+> +		goto out_put_inode;
+> +	}
 
-It feels like there is some thread locking contention limitation such
-that the number of CPUs and/or knfsd threads reaches some plateau and
-throwing more cores/threads at the workload just results in more CPU
-time spent spinning but you get no more performance out.
+When a delegation has RETURN_DELAYED set, the code removes it from
+delegations_return (via list_del_init above) and then skips to
+out_put_inode without re-adding it to the list. Since
+nfs_server_clear_delayed_delegations() only iterates delegations_return,
+will this delegation ever have its RETURN_DELAYED flag cleared so it
+can be processed again?
 
-The top level perf report looks something like the attached (for v6.18).
+The scenario is: nfs_end_delegation_return() returns -EAGAIN, which
+sets RETURN_DELAYED via nfs_abort_delegation_return(), then
+nfs_mark_return_delegation() re-adds the delegation to
+delegations_return. On the next iteration of the loop, this check
+triggers and the delegation is dropped from the list without being
+re-queued.
 
-Like I said, we can work around this pretty rare workload (random
-small reads from server page cache), but it just piqued my interest as
-to what the underlying (knfsd) server limit is (it doesn't seem to be
-hardware).
+> +	clear_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation->flags);
+> +	spin_unlock(&delegation->lock);
 
-Cheers,
+[ ... ]
 
-Daire
-
---000000000000ab7b8a06493581d4
-Content-Type: text/plain; charset="UTF-8"; name="perf-graph.txt"
-Content-Disposition: attachment; filename="perf-graph.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mktp3x8f0>
-X-Attachment-Id: f_mktp3x8f0
-
-ICBDaGlsZHJlbiAgICAgIFNlbGYgIENvbW1hbmQgICAgICAgICAgU2hhcmVkIE9iamVjdCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFN5bWJvbAotICAgOTMuNzUlICAgICAwLjAw
-JSAgbmZzZCAgICAgICAgICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgW2tdIHJldF9mcm9tX2ZvcmtfYXNtICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4peGCiAgICAgcmV0X2Zyb21fZm9ya19h
-c20gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICByZXRfZnJvbV9mb3JrICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgIGt0aHJlYWQgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgIC0gbmZzZCAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgLSA5My43MCUgc3ZjX3JlY3Yg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAtIDg4LjU1JSBzdmNfaGFu
-ZGxlX3hwcnQgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgIC0gODQuNzUlIHN2Y19w
-cm9jZXNzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgLSA3OC43MCUgc3Zj
-X3Byb2Nlc3NfY29tbW9uICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAtIDc2LjIwJSBu
-ZnNkX2Rpc3BhdGNoICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgIC0gNzUuNTcl
-IG5mc2QzX3Byb2NfcmVhZCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgLSA3NS41
-MSUgbmZzZF9yZWFkICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAtIDcz
-LjQyJSBuZnNkX2ZpbGVfYWNxdWlyZV9nYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0g
-NzMuNDIlIG5mc2RfZmlsZV9kb19hY3F1aXJlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-LSA3My4xOCUgZmhfdmVyaWZ5ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAtIDczLjE3JSBfX2ZoX3ZlcmlmeSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIC0gNzIuMDElIG5mc2Rfc2V0X2ZoX2RlbnRyeSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgLSA3MC43MCUgZXhwb3J0ZnNfZGVjb2RlX2ZoX3JhdyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAtIDY4Ljk2JSB4ZnNfZnNfZmhfdG9fZGVudHJ5ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC0gNjguOTUlIHhmc19uZnNfZ2V0X2lub2RlICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgLSA2OC45MiUgeGZzX2lnZXQgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAtIDQ3LjY1JSB4ZnNfaWdldF9jYWNoZV9oaXQgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIC0gNDYuNjglIF9yYXdfc3Bpbl9sb2NrICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgLSA0Ni40MSUgZG9fcmF3X3NwaW5fbG9jayAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAtIDQ2LjM2JSBuYXRpdmVfcXVldWVkX3NwaW5fbG9ja19zbG93
-cGF0aCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0gMi42MyUgYXNtX2NvbW1vbl9pbnRlcnJ1cHQgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLSAyLjYzJSBjb21tb25faW50ZXJydXB0ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAtIDIuNDQlIF9faXJxX2V4aXRfcmN1ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gMi40NCUgaGFuZGxlX3NvZnRpcnFzICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSAyLjMwJSBuZXRfcnhfYWN0aW9uICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDIuMTclIF9fbmFwaV9wb2xsICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gMi4xNiUgbWx4NWVfbmFwaV9wb2xs
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKyAxLjQwJSBuYXBpX2NvbXBsZXRl
-X2RvbmUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICArIDAuNTglIG1seDVlX3BvbGxfcnhf
-Y3EgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICsgMC42NCUgYXNtX3N5c3ZlY19hcGljX3RpbWVyX2ludGVycnVwdCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDi
-lpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAwLjU1JSBpZ3JhYiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKW
-kgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAr
-IDIwLjc3JSBfcmF3X3NwaW5fbG9jayAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paS
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICsgMS42OSUgX19k
-X29idGFpbl9hbGlhcyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKyAwLjYyJSBycXN0X2V4
-cF9maW5kICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAuNjAlIHByZXBhcmVf
-Y3JlZHMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICsgMS4wMSUgbmZzZF9zZXR1c2Vy
-X2FuZF9jaGVja19wb3J0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgKyAyLjAzJSBuZnNkX3NwbGljZV9yZWFkICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAg
-ICAgICAgICAgICAgICAgIDEuMzQlIHN2Y2F1dGhfdW5peF9zZXRfY2xpZW50ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAg
-ICAgICAgICAgICsgNi4wMyUgc3ZjX3NlbmQgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAg
-ICAgICAgKyAyLjk0JSBzdmNfdGNwX3JlY3Zmcm9tICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAg
-ICArIDQuMTElIF9fbHdxX2RlcXVldWUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAg
-ICsgMC42NyUgc3ZjX2FsbG9jX2FyZwotICAgOTMuNzUlICAgICAwLjAwJSAgbmZzZCAgICAgICAg
-ICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2td
-IHJldF9mcm9tX2ZvcmsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAg4paSCiAgICAgcmV0X2Zyb21fZm9yayAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICDilpIKICAgICBrdGhyZWFkICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIOKWkgogICAtIG5mc2QgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAg4paSCiAgICAgIC0gOTMuNzAlIHN2Y19yZWN2ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICDilpIKICAgICAgICAgLSA4OC41NSUgc3ZjX2hhbmRsZV94cHJ0ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAtIDg0Ljc1JSBzdmNfcHJvY2VzcyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgIC0gNzguNzAlIHN2Y19wcm9jZXNzX2NvbW1v
-biAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgLSA3Ni4yMCUgbmZzZF9kaXNwYXRjaCAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAtIDc1LjU3JSBuZnNkM19wcm9jX3Jl
-YWQgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgIC0gNzUuNTElIG5mc2RfcmVhZCAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgLSA3My40MiUgbmZzZF9maWxl
-X2FjcXVpcmVfZ2MgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDczLjQyJSBuZnNkX2Zp
-bGVfZG9fYWNxdWlyZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gNzMuMTglIGZoX3Zl
-cmlmeSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSA3My4xNyUgX19m
-aF92ZXJpZnkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDcyLjAxJSBu
-ZnNkX3NldF9maF9kZW50cnkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAg4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gNzAuNzAl
-IGV4cG9ydGZzX2RlY29kZV9maF9yYXcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICDilpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSA2OC45
-NiUgeGZzX2ZzX2ZoX3RvX2RlbnRyeSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IOKWkgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDY4
-Ljk1JSB4ZnNfbmZzX2dldF9pbm9kZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4paSCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0g
-NjguOTIlIHhmc19pZ2V0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDi
-lpIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-LSA0Ny42NSUgeGZzX2lnZXRfY2FjaGVfaGl0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKW
-kgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAtIDQ2LjY4JSBfcmF3X3NwaW5fbG9jayAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paS
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIC0gNDYuNDElIGRvX3Jhd19zcGluX2xvY2sgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgLSA0Ni4zNiUgbmF0aXZlX3F1ZXVlZF9zcGluX2xvY2tfc2xvd3BhdGggICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAtIDIuNjMlIGFzbV9jb21tb25faW50ZXJydXB0ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC0gMi42MyUgY29tbW9uX2ludGVycnVwdCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgLSAyLjQ0JSBfX2lycV9leGl0X3JjdSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAtIDIuNDQlIGhhbmRsZV9zb2Z0aXJxcyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIC0gMi4zMCUgbmV0X3J4X2FjdGlvbiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgKyAyLjE3JSBfX25hcGlfcG9sbCAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICArIDAuNjQlIGFzbV9zeXN2ZWNfYXBpY190aW1lcl9pbnRlcnJ1cHQgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC41NSUg
-aWdyYWIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKyAyMC43NyUgX3Jh
-d19zcGluX2xvY2sgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICArIDEuNjklIF9fZF9vYnRhaW5fYWxp
-YXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICsgMC42MiUgcnFzdF9leHBfZmluZCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjYwJSBwcmVwYXJlX2NyZWRzICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICArIDEuMDElIG5mc2Rfc2V0dXNlcl9hbmRfY2hlY2tf
-cG9ydCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICsgMi4wMyUgbmZzZF9zcGxpY2VfcmVhZCAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAg
-ICAgICAxLjM0JSBzdmNhdXRoX3VuaXhfc2V0X2NsaWVudCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAr
-IDYuMDMlIHN2Y19zZW5kICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICsgMi45
-NCUgc3ZjX3RjcF9yZWN2ZnJvbSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgKyA0LjExJSBf
-X2x3cV9kZXF1ZXVlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICArIDAuNjclIHN2
-Y19hbGxvY19hcmcgIAorICAgOTMuNzUlICAgICAwLjAwJSAgbmZzZCAgICAgICAgICAgICBba2Vy
-bmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIGt0aHJlYWQg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAg4paSCisgICA5My43NSUgICAgIDAuMDElICBuZnNkICAgICAgICAgICAgIFtrZXJu
-ZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gbmZzZCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICDilpIKKyAgIDkzLjcxJSAgICAgMC4xMCUgIG5mc2QgICAgICAgICAgICAgW2tlcm5l
-bC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBzdmNfcmVjdiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIOKWkgorICAgODguNTclICAgICAwLjA2JSAgbmZzZCAgICAgICAgICAgICBba2VybmVs
-LmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIHN2Y19oYW5kbGVf
-eHBydCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAg4paSCisgICA4NC43NSUgICAgIDAuMDIlICBuZnNkICAgICAgICAgICAgIFtrZXJuZWwu
-a2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gc3ZjX3Byb2Nlc3Mg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICDilpIKKyAgIDc4LjcxJSAgICAgMC4wNiUgIG5mc2QgICAgICAgICAgICAgW2tlcm5lbC5r
-YWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBzdmNfcHJvY2Vzc19j
-b21tb24gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIOKWkgorICAgNzYuMjAlICAgICAwLjA3JSAgbmZzZCAgICAgICAgICAgICBba2VybmVsLmth
-bGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIG5mc2RfZGlzcGF0Y2gg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAg4paSCisgICA3NS41NyUgICAgIDAuMDQlICBuZnNkICAgICAgICAgICAgIFtrZXJuZWwua2Fs
-bHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gbmZzZDNfcHJvY19yZWFk
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICDilpIKKyAgIDc1LjUyJSAgICAgMC4wMyUgIG5mc2QgICAgICAgICAgICAgW2tlcm5lbC5rYWxs
-c3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBuZnNkX3JlYWQgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IOKWkgorICAgNzMuNzklICAgICAwLjE3JSAgbmZzZCAgICAgICAgICAgICBba2VybmVsLmthbGxz
-eW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIF9yYXdfc3Bpbl9sb2NrICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4paSCisgICA3My40MyUgICAgIDAuMDQlICBuZnNkICAgICAgICAgICAgIFtrZXJuZWwua2FsbHN5
-bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gbmZzZF9maWxlX2RvX2FjcXVp
-cmUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDi
-lpIKKyAgIDczLjQzJSAgICAgMC4wMSUgIG5mc2QgICAgICAgICAgICAgW2tlcm5lbC5rYWxsc3lt
-c10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBuZnNkX2ZpbGVfYWNxdWlyZV9n
-YyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKW
-kgorICAgNzMuMTglICAgICAwLjA0JSAgbmZzZCAgICAgICAgICAgICBba2VybmVsLmthbGxzeW1z
-XSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIF9fZmhfdmVyaWZ5ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paS
-CisgICA3My4xOCUgICAgIDAuMDAlICBuZnNkICAgICAgICAgICAgIFtrZXJuZWwua2FsbHN5bXNd
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gZmhfdmVyaWZ5ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIK
-KyAgIDcyLjQyJSAgICAgMC4wNCUgIG5mc2QgICAgICAgICAgICAgW2tlcm5lbC5rYWxsc3ltc10g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBkb19yYXdfc3Bpbl9sb2NrICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgot
-ICAgNzIuNDAlICAgIDY3LjIwJSAgbmZzZCAgICAgICAgICAgICBba2VybmVsLmthbGxzeW1zXSAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIG5hdGl2ZV9xdWV1ZWRfc3Bpbl9sb2Nr
-X3Nsb3dwYXRoICAKICAgLSA2Ny4yMCUgcmV0X2Zyb21fZm9ya19hc20gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIOKWkgogICAgICAgIHJldF9mcm9tX2ZvcmsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAg4paSCiAgICAgICAga3RocmVhZCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICDilpIKICAgICAgLSBuZnNkICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIOKWkgogICAgICAgICAtIDY3LjIwJSBzdmNfcmVjdiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAg4paSCiAgICAgICAgICAgIC0gNjMuNzMlIHN2Y19oYW5kbGVfeHBydCAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICDilpIKICAgICAgICAgICAgICAgLSA2My42NSUgc3ZjX3Byb2Nlc3MgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IOKWkgogICAgICAgICAgICAgICAgICAtIDYzLjY0JSBzdmNfcHJvY2Vzc19jb21tb24gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-4paSCiAgICAgICAgICAgICAgICAgICAgIC0gNjMuNDglIG5mc2RfZGlzcGF0Y2ggICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDi
-lpIKICAgICAgICAgICAgICAgICAgICAgICAgLSA2My40OCUgbmZzZDNfcHJvY19yZWFkICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKW
-kgogICAgICAgICAgICAgICAgICAgICAgICAgICAtIDYzLjQ4JSBuZnNkX3JlYWQgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paS
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gNjMuNDclIG5mc2RfZmlsZV9hY3F1aXJl
-X2djICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSBuZnNkX2ZpbGVfZG9fYWNxdWlyZSAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDYzLjQ3JSBmaF92ZXJpZnkgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gX19maF92ZXJpZnkgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSA2My40NyUgbmZzZF9zZXRf
-ZmhfZGVudHJ5ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDYzLjQ3JSBleHBvcnRm
-c19kZWNvZGVfZmhfcmF3ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gNjIuNDklIHhmc19m
-c19maF90b19kZW50cnkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB4ZnNfbmZzX2dl
-dF9pbm9kZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIHhmc19pZ2V0ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gNDMuMzMlIHhm
-c19pZ2V0X2NhY2hlX2hpdCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSA0My4wNiUg
-X3Jhd19zcGluX2xvY2sgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDQzLjA2
-JSBkb19yYXdfc3Bpbl9sb2NrICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNDMu
-MDYlIG5hdGl2ZV9xdWV1ZWRfc3Bpbl9sb2NrX3Nsb3dwYXRoICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSAxOS4xNCUgX3Jhd19z
-cGluX2xvY2sgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDE5LjE0JSBkb19y
-YXdfc3Bpbl9sb2NrICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTkuMTQlIG5h
-dGl2ZV9xdWV1ZWRfc3Bpbl9sb2NrX3Nsb3dwYXRoICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLSAwLjk4JSBfX2Rfb2J0YWluX2FsaWFz
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtIDAuOTUlIF9yYXdfc3Bpbl9sb2Nr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0gMC45NSUgZG9fcmF3X3NwaW5f
-bG9jayAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuYXRpdmVfcXVldWVkX3Nw
-aW5fbG9ja19zbG93cGF0aCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgogICAgICAgICAgICArIDMuNDIl
-IF9fbHdxX2RlcXVldWUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCiAgICsgNS4yMCUgbmF0aXZlX3F1
-ZXVlZF9zcGluX2xvY2tfc2xvd3BhdGggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKKyAgIDcyLjAxJSAgICAgMC4wMyUg
-IG5mc2QgICAgICAgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIFtrXSBuZnNkX3NldF9maF9kZW50cnkgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgorICAgNzAuNzAlICAgICAwLjAxJSAg
-bmZzZCAgICAgICAgICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgW2tdIGV4cG9ydGZzX2RlY29kZV9maF9yYXcgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCisgICA2OC45OCUgICAgIDAuMDMlICBu
-ZnNkICAgICAgICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBba10geGZzX25mc19nZXRfaW5vZGUgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKKyAgIDY4Ljk2JSAgICAgMC4wMSUgIG5m
-c2QgICAgICAgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFtrXSB4ZnNfZnNfZmhfdG9fZGVudHJ5ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgorICAgNjguOTQlICAgICAwLjA0JSAgbmZz
-ZCAgICAgICAgICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgW2tdIHhmc19pZ2V0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAg4paSCisgICA0Ny42NiUgICAgIDAuMDYlICBuZnNk
-ICAgICAgICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBba10geGZzX2lnZXRfY2FjaGVfaGl0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICDilpIKKyAgICA4LjkzJSAgICAgMC45NCUgIG5mc2Qg
-ICAgICAgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIFtrXSBsb2NrX2FjcXVpcmUucGFydC4wLmlzcmEuMCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIOKWkgorICAgIDguODklICAgICAyLjA5JSAgbmZzZCAg
-ICAgICAgICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgW2tdIF9fbG9ja19hY3F1aXJlLmNvbnN0cHJvcC4wICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAg4paSCisgICAgNi4zOSUgICAgIDAuMDYlICBuZnNkICAg
-ICAgICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBba10gaGFuZGxlX3NvZnRpcnFzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICDilpIKKyAgICA2LjAzJSAgICAgMC4wMiUgIG5mc2QgICAg
-ICAgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IFtrXSBzdmNfc2VuZCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIOKWkgorICAgIDYuMDMlICAgICAwLjAxJSAgbmZzZCAgICAg
-ICAgICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-W2tdIF9faXJxX2V4aXRfcmN1ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAg4paSCisgICAgNi4wMiUgICAgIDAuMTElICBuZnNkICAgICAg
-ICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBb
-a10gc3ZjX3RjcF9zZW5kdG8gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICDilpIKKyAgICA1Ljc0JSAgICAgMC4wNCUgIG5mc2QgICAgICAg
-ICAgICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtr
-XSBzdmNfdGNwX3NlbmRtc2cgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIOKWkgorICAgIDUuNjklICAgICAwLjAxJSAgbmZzZCAgICAgICAg
-ICAgICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2td
-IHNvY2tfc2VuZG1zZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAg4paSCisgICAgNS42NSUgICAgIDAuMDElICBuZnNkICAgICAgICAg
-ICAgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10g
-dGNwX3NlbmRtc2cgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICDilpIKKyAgICA1LjUzJSAgICAgMC4wMSUgIG5mc2QgICAgICAgICAg
-ICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBh
-c21fY29tbW9uX2ludGVycnVwdCAgCisgICAgNS40OCUgICAgIDEuODQlICBuZnNkICAgICAgICAg
-ICAgIFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10g
-bG9ja19yZWxlYXNlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICDilpIKKyAgICA1LjExJSAgICAgMS4wMSUgIG5mc2QgICAgICAgICAg
-ICAgW2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBs
-b2NhbF9jbG9jayAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIOKWkgorICAgIDUuMDYlICAgICAwLjAyJSAgbmZzZCAgICAgICAgICAg
-ICBba2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIG5l
-dF9yeF9hY3Rpb24gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAg4paSCisgICAgNS4wMyUgICAgIDAuMDclICBuZnNkICAgICAgICAgICAg
-IFtrZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gdGNw
-X3NlbmRtc2dfbG9ja2VkICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICDilpIKKyAgICA0LjgyJSAgICAgMC4wNiUgIG5mc2QgICAgICAgICAgICAg
-W2tlcm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBfX25h
-cGlfcG9sbCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIOKWkgorICAgIDQuNzglICAgICAwLjA2JSAgbmZzZCAgICAgICAgICAgICBb
-a2VybmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIG1seDVl
-X25hcGlfcG9sbCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAg4paSCisgICAgNC42MCUgICAgIDEuMjYlICBuZnNkICAgICAgICAgICAgIFtr
-ZXJuZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gX19sb2Nr
-X3JlbGVhc2UuaXNyYS4wICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICDilpIKKyAgICA0LjM5JSAgICAgMS41NCUgIG5mc2QgICAgICAgICAgICAgW2tl
-cm5lbC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBsb2NhbF9j
-bG9ja19ub2luc3RyICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIOKWkgorICAgIDQuMzAlICAgICAwLjA1JSAgbmZzZCAgICAgICAgICAgICBba2Vy
-bmVsLmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIHRjcF93cml0
-ZV94bWl0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAg4paSCisgICAgNC4yOSUgICAgIDAuMDElICBuZnNkICAgICAgICAgICAgIFtrZXJu
-ZWwua2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gX190Y3BfcHVz
-aF9wZW5kaW5nX2ZyYW1lcyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICDilpIKKyAgICA0LjEyJSAgICAgMC4wMiUgIG5mc2QgICAgICAgICAgICAgW2tlcm5l
-bC5rYWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBfX2x3cV9kZXF1
-ZXVlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIOKWkgorICAgIDMuNzglICAgICAwLjAyJSAgbmZzZCAgICAgICAgICAgICBba2VybmVs
-LmthbGxzeW1zXSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW2tdIG5ldGlmX3JlY2Vp
-dmVfc2tiX2xpc3RfaW50ZXJuYWwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAg4paSCisgICAgMy42NSUgICAgIDEuMTclICBuZnNkICAgICAgICAgICAgIFtrZXJuZWwu
-a2FsbHN5bXNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBba10gbmF0aXZlX3NjaGVk
-X2Nsb2NrICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICDilpIKKyAgICAzLjUxJSAgICAgMC4wMSUgIG5mc2QgICAgICAgICAgICAgW2tlcm5lbC5r
-YWxsc3ltc10gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtrXSBfX25ldGlmX3JlY2Vp
-dmVfc2tiX2xpc3RfY29yZSAgICAgICAgCgo=
---000000000000ab7b8a06493581d4--
 
