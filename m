@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-18444-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18445-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YLr6K34LdmkNLAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18444-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:24:30 +0100
+	id aMXlLYgLdmkNLAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18445-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:24:40 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A8E080847
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:24:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A3C38085E
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 13:24:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1891930053A7
-	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 12:24:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 761D93008E16
+	for <lists+linux-nfs@lfdr.de>; Sun, 25 Jan 2026 12:24:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1C4431A57C;
-	Sun, 25 Jan 2026 12:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D115031AF25;
+	Sun, 25 Jan 2026 12:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvdHByHR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEURFtES"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4BE191F91;
-	Sun, 25 Jan 2026 12:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5AC31AABC;
+	Sun, 25 Jan 2026 12:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769343865; cv=none; b=OY7el01dT3Psac8Nw8zyOnfdCo/0GmeWoyi4ublwQv3J0dEIywEfr0G0R4OzKeb5s+zpwsjjXipfMnNRDzEhLf2NaoXefsk49g0OQqswRbB2ej8YsHTrOfW506xbm1q9r5iMUeVg1Q5w4U/uvJ4tzAiiB7CcKrh5NU1wpMQ1bPw=
+	t=1769343866; cv=none; b=C1UqEpBvzzs+Ra7P9t2sXVJ2Aps19v3ym3n5CGikukwF5g/AEG8lkt69FCdN6VEB4z8HS+HRNPqGtJEYRHlKwgCNqGcCEIqxjZBbU+Y++AD8beejijixGnwYAqu2PUmXGjKaDXKiotvRpUoBGHjKDYVvBN2SRaTFYcB2MQJ4GNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769343865; c=relaxed/simple;
-	bh=w1HVPyRUR5weJ6460gobTVT6mMvjOJvs9NQCdhVhScU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=k6/Y+b2cy9HyLLKrNXO4ZpbjiND8YRebPH9NmBNmCImpiq7IPzSjbj+VCu2/I1c2eFubxsCprE/BYMWZSDVBYVUBGq89N5oKx+D07wAGpR5EE726ZHDaTuSceVM57Sb4CLm54fzyU9OKZJReZn9AFHxL7vrXdVw5dpO7ru+iTf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvdHByHR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9646DC19425;
-	Sun, 25 Jan 2026 12:24:24 +0000 (UTC)
+	s=arc-20240116; t=1769343866; c=relaxed/simple;
+	bh=gnv726bieIdTlpxb8y9dA7re2w8a8XFyqdfDIFSEzHI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=L7c84d2nASTLPE8TMPA8j+f92OG2Y9pDgeY/KWY68Jmc98Qj0EZtI7pJVNZu54y0WU0pGBum0yBrmZ4xfwUCJRgf/29nmtz8JCanmWzWA6DWncJ1VFaPa/CMQ67boqY6RzMP95VYMUMt9U44YKsK8a0Q+0qDxV00SnEr2POFmIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEURFtES; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A88C2BC86;
+	Sun, 25 Jan 2026 12:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769343865;
-	bh=w1HVPyRUR5weJ6460gobTVT6mMvjOJvs9NQCdhVhScU=;
-	h=From:Subject:Date:To:Cc:From;
-	b=bvdHByHRADgf6exXh67SNOreHrf8pXPI+pcXov4pS8Id82LE+SaRAWwlFMExXlUU2
-	 bsJbTf+O7cgteBfA/xwWFHlWl2xrF+9l7uiN6lPo6yrBwEdvIdJMntwvOxWMVW9DHC
-	 I0KcA4SObbL5drLeavHqF1zXy1rwx0dh+QYObZv7wMuJj6HF/D0SqdQnckikS3/kUT
-	 UFbpl7zZlXrfGs3/jbaCN5joaH7Wa9WS+dGkF8g4iumkjPPPEG4UtHRJYdm11O5Vz1
-	 Oo+McOZ9NaHUK2j5KUMkFBLK8WExOQvEJO+nRSFdbWmO8duowtcmoa9DYIznVzttWB
-	 Y609Ljxz/z3KA==
+	s=k20201202; t=1769343866;
+	bh=gnv726bieIdTlpxb8y9dA7re2w8a8XFyqdfDIFSEzHI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=vEURFtESdsmxlAeUG3gPVInNSecoCfaYayLHlBtgID2EzMX89tGwdHiDs6FAbrVZD
+	 xA0cXxsk7ovvYL4MeYEtqsvEndg2e2DtZzzXy3DnG4B3Xf+IawWmaeFFLuVc+qyOAh
+	 d0ANQav+meFU7NLU6Lq+UcE1Bwf6zhMEOduQ3GUhS4gQLG+KlU5vWtNwaA7XYABcP/
+	 6fwb3scfeFE8wxPqV4+ee4yodo92idVC0WXwKT1Bgo+Crm/hOlHJlV8IiowRHI207O
+	 jqS4bID4uQozT/m94/U6/0AiiSpSLyV2dHsBRUvSYDBGqh+bSXLNQR6GzbSWNDiFt/
+	 enhlA423Ti3ng==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 0/2] nfsd: move delegated timestamps to being runtime
- disabled instead of compile time
-Date: Sun, 25 Jan 2026 07:24:12 -0500
-Message-Id: <20260125-delegts-v2-0-cd004157fb46@kernel.org>
+Date: Sun, 25 Jan 2026 07:24:13 -0500
+Subject: [PATCH v2 1/2] nfsd: add a runtime switch for disabling delegated
+ timestamps
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,30 +56,29 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2XMywrDIBCF4VcJs65llGovq75HycKYiZEGLWOQl
- uC712bb5X84fBtk4kAZbt0GTCXkkGILdejAzTZ6EmFsDQqVQamUGGkhv2YhNaJB687uaqG9X0x
- TeO/So289h7wm/uxwkb/13yhSoDjhNAzyglobd38SR1qOiT30tdYvakFAQJ8AAAA=
-X-Change-ID: 20260122-delegts-150060ac7c9a
+Message-Id: <20260125-delegts-v2-1-cd004157fb46@kernel.org>
+References: <20260125-delegts-v2-0-cd004157fb46@kernel.org>
+In-Reply-To: <20260125-delegts-v2-0-cd004157fb46@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=958; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=w1HVPyRUR5weJ6460gobTVT6mMvjOJvs9NQCdhVhScU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpdgtzhwtBEW85Vid5HJfQlR+5FPv9x1ZkFxhP+
- gY8gI10GEeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaXYLcwAKCRAADmhBGVaC
- FXRHD/4/r5lhdesKGf9nSSFr9jbYmAwWI4Ufh02M61AQG1117AxBTSt6mD3uE+Ee09q44/0gOQe
- sfTAHw/WLKw2rvq+hNNBStXJafBolDQMGXpvU3Ns3x+a8E42G/OcFP7zeBDKCvZQTZj9YbqkNKk
- l4el0LuJemg0mJoxH3d2TMS5GM8w+BrNtMHRwqDbR4IWHA2WkyHwbYjuWV0AlSNMVoytqLjfibN
- QVP/0kcyV3kNRULcWnmRqS3OrfZml4Jne//KVki+pgqV3LHW3b5u6m0Qs4t264yTR/6k1i6H49h
- CYTAT6zjkGfTnFqdT+emGQfUY9IeFoje3jydYo9VpNgJkOfUlBHquDIDP73u7FfBXth17avB+OW
- 7W3Gtt24ZK5BlTm7d2LgmK2rVJ4C4+EysNPseeB7FV9v5pP7pLdZWPgawfIlpcg7OsWXZNW1/Y5
- y3jEIi3TMKVbkizahuJAgwM+yvQCM3LdpEbCEvfXqR2W4NNZO68hCc7u1lFCFj1r/+HVD3IOFcz
- HgxJPn9G66z5ZfAPp46lNLz8+C7AU6xAK9VQKhu3WtRIacvmQZEFwf/zZfRXqusPiIKhrnikQYn
- cIGHticoa/+DH9S7pmNsuRuEYMO5BC6Kda2tAQZE8p/RCHCwHeXblkVUesXuMprzekpnk8kh3Du
- I6jvgoHgVdD/nCw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2421; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=gnv726bieIdTlpxb8y9dA7re2w8a8XFyqdfDIFSEzHI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpdgt4zP52FhTzbbyMvLUHQnH3ZXG0FFd/IB7BR
+ of4xMBgPLSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaXYLeAAKCRAADmhBGVaC
+ Fbs8EACyGS3K6Z0gdhTWiIK4JJGmW9ESMZmgzgjux6uIRqLY4HByur9G0IDRYeISrFDYGYQ2/Le
+ XLqDkFwXsn0snYbzD1H8oUJ1XbUKkHUKj/cdk7LzJxEppnaUaWB/EH0zPdMWoE5C+s8ZwIj2Ke6
+ C2XyFS9t/xUGNz+rx5ly/2RE/lqXCTJ5MShzZXsdB3lVhmeQlji+vqTTUiLpI5o9LxmkUkuV7lR
+ ReeBkSdPRLfBE+kLh6S/fSPKQKW1acRYg1xayJLuZ3MGO4Oum/H/g13ivB1+Y1dLw4xCtZsrGBW
+ cflf50/RJm4Yoilxy8SJj4NWpOhBgauaUjmvF080yfp0HG1Ye2nz/o9VkW0d2/lR2zAU6K/Zy7x
+ e3UUciK9HZ9BUPzvGKs5ybo/foW4KswIrE1lFxGPtNA1V6mlDJIdjJELPr7S71zDDToKtl4dZgb
+ 2rP+ho07td45GyxTDnM7KvEv7xNlpVXyQ+N6dItLnAPlsgLTsuRQaDznfcYZDJP/ObWjAwaEV1t
+ My+3NvokqNYd0Oh+yT+SL0kH4zkPvQm7Hc2Yju0H3nSqArY6HZGp/++gCQsPPiW8xg+30qr6z7b
+ 0d8LXU8C1V/X84Tz3lDIjbZ6hcFw+0lc/64EJwsvQl6rlNuMQfvZTHSumAfnmgdqzV3WM3uSAAm
+ MP0n2WCD3cX+zuQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Server: lfdr
@@ -92,7 +91,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18444-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18445-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -108,36 +107,70 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2A8E080847
+X-Rspamd-Queue-Id: 7A3C38085E
 X-Rspamd-Action: no action
 
-Small update: The kernel test robot reported that this didn't build when
-CONFIG_NFSD_V4 was disabled. The fix is to compile out the new debugfs
-file when that's the case. Resending both patches, but the second patch
-is identical.
+The delegated timestamp code seems to be working well enough now that we
+want to make it always be built in. In the event that there are problems
+though, we still want to be able to disable them for debugging purposes.
+Add a switch to debugfs to enable them at runtime.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- Don't create debugfs file when CONFIG_NFSD_V4 is disabled
-- Link to v1: https://lore.kernel.org/r/20260122-delegts-v1-0-40fbb180556c@kernel.org
+ fs/nfsd/debugfs.c   | 4 ++++
+ fs/nfsd/nfs4state.c | 4 ++++
+ fs/nfsd/nfsd.h      | 1 +
+ 3 files changed, 9 insertions(+)
 
----
-Jeff Layton (2):
-      nfsd: add a runtime switch for disabling delegated timestamps
-      nfsd: remove NFSD_V4_DELEG_TIMESTAMPS Kconfig option
+diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+index 7f44689e0a53edbfd6ade9dda6af4052976a65d3..386fd1c54f5277fd9b9544caa5220e234915264d 100644
+--- a/fs/nfsd/debugfs.c
++++ b/fs/nfsd/debugfs.c
+@@ -140,4 +140,8 @@ void nfsd_debugfs_init(void)
+ 
+ 	debugfs_create_file("io_cache_write", 0644, nfsd_top_dir, NULL,
+ 			    &nfsd_io_cache_write_fops);
++#ifdef CONFIG_NFSD_V4
++	debugfs_create_bool("delegated_timestamps", 0644, nfsd_top_dir,
++			    &nfsd_delegts_enabled);
++#endif
+ }
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 583c13b5aaf3cd12a87c7aae62fe6a8223368f55..95f2e87141a7ab5dd3da6741859bdcae28a8c6c0 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -76,6 +76,8 @@ static const stateid_t close_stateid = {
+ 
+ static u64 current_sessionid = 1;
+ 
++bool nfsd_delegts_enabled __read_mostly = true;
++
+ #define ZERO_STATEID(stateid) (!memcmp((stateid), &zero_stateid, sizeof(stateid_t)))
+ #define ONE_STATEID(stateid)  (!memcmp((stateid), &one_stateid, sizeof(stateid_t)))
+ #define CURRENT_STATEID(stateid) (!memcmp((stateid), &currentstateid, sizeof(stateid_t)))
+@@ -6048,6 +6050,8 @@ nfsd4_verify_setuid_write(struct nfsd4_open *open, struct nfsd_file *nf)
+ #ifdef CONFIG_NFSD_V4_DELEG_TIMESTAMPS
+ static bool nfsd4_want_deleg_timestamps(const struct nfsd4_open *open)
+ {
++	if (!nfsd_delegts_enabled)
++		return false;
+ 	return open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS;
+ }
+ #else /* CONFIG_NFSD_V4_DELEG_TIMESTAMPS */
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index a2e35a4fa105380c2d99cb0865003e0f7f4a8e8d..7c009f07c90b50d7074695d4665a2eca85140eda 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -160,6 +160,7 @@ static inline void nfsd_debugfs_exit(void) {}
+ #endif
+ 
+ extern bool nfsd_disable_splice_read __read_mostly;
++extern bool nfsd_delegts_enabled __read_mostly;
+ 
+ enum {
+ 	/* Any new NFSD_IO enum value must be added at the end */
 
- fs/nfsd/Kconfig     | 10 ----------
- fs/nfsd/debugfs.c   |  4 ++++
- fs/nfsd/nfs4state.c | 11 ++++-------
- fs/nfsd/nfsd.h      |  1 +
- 4 files changed, 9 insertions(+), 17 deletions(-)
----
-base-commit: 2a1dde6dd823e94e0768e929566dd65cd74ca793
-change-id: 20260122-delegts-150060ac7c9a
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.52.0
 
 
