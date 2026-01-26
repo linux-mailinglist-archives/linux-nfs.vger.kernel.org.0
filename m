@@ -1,307 +1,312 @@
-Return-Path: <linux-nfs+bounces-18468-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18469-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SB1TM3Bjd2lefAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18468-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:52:00 +0100
+	id SDu0Ij5md2nCfQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18469-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 14:03:58 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C690887D6
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:52:00 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07003888F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 14:03:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3A4F0301DEFD
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 12:51:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3147B3015A5D
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:03:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC453375C3;
-	Mon, 26 Jan 2026 12:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996CE329E5E;
+	Mon, 26 Jan 2026 13:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SK2VZkB9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WBSzRrSL";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="R28GVNEZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994F3376A1
-	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 12:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769431897; cv=none; b=NtH6j0cDlqaOeiXhwu6QwyxJvc9PQCPi7CNWuPfRqrI+VARUILI2ZeNdjtBL315HXeyClS/CZgyXdQmIsQBdtbM2jaoSO5Vu09roIyBDQ4gInJgTK/m6A2uuE+Wv8ua8UAW9vGlYqkBEATk60EAb+M2H8UQwKSamdzd1GWgrp2s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769431897; c=relaxed/simple;
-	bh=TgL2rUYt9RIvse3rkQdggVRA7EF41kpxIyCE/k7n5Og=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gMNSXULskUTPlbv2TfSVD2aQnDFS+UlCcx/taTNtb+Be5jxDU2X1+qf5/zLTbv9r2r0qd1chkGGuLyZaIZZUVu1F7SwYybIfLdEdgwo0BH5U92Oj89tAGT6QNiDKBG6nJOPpR5nvw826vlH4YGaZA/0oCRwRQXpF7CRsL8ZF1W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SK2VZkB9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A80C116C6;
-	Mon, 26 Jan 2026 12:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769431896;
-	bh=TgL2rUYt9RIvse3rkQdggVRA7EF41kpxIyCE/k7n5Og=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SK2VZkB9RP+42LttlQZ4hdVVRzP8hARnFqnOHn1q35SgBgQX4OHdaSmADQXTXppWj
-	 8/IgOUTbwiGOuPCatjE5/L5CCcgEbe0cnq8WI/w5WPw0uKTDp9Dj+qcCuQLDTLrXqp
-	 Au9xpC24urdnrT66MVIH+fbQtKfd/kLmKDLS08ifsCsrubsRBZQdJbH5quJwUG0zoV
-	 zaNp72/T8liZn70Mx/VueAm58ax2uTR2eq85oQ/aWH4zCD/vV41VAxxTQSVTtHBCDC
-	 JQZKX36ET6yzu63Dx58q7z1yptX4kk+IQUcWAHgNw43mWFzELsRFf1iwUvIm4zV4p4
-	 8TfoJ1V8cpvew==
-Message-ID: <448bfee54bdf87e6f2fd8895697c9b4c001e70e2.camel@kernel.org>
-Subject: Re: [PATCH v2 00/42] Clarify module API boundaries
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 26 Jan 2026 07:51:34 -0500
-In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
-References: <20260123185259.1215767-1-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C07192B90
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 13:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769432634; cv=fail; b=rF/3kS1vQ+gSLXpdHVNnnaqbKODEBe9qw1AlUa8eU+ToIY/gAJ2gAVExGtsMEcKvNZNJ/6TJqmp+71HMYsKQRni9zdGOvqdrPLIxLXQ8TWH2nAmkZNwpfBIHQh8KDjrYD7wnPcFZhGwonqysyOcGG7Pv0BkWULCTtVauFOpKQKo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769432634; c=relaxed/simple;
+	bh=tlGCeF+U+f4m1S8DrqMXQzO+kOYXtIKKmgN6lJa9pHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sK8nkfIKTwlkH/dXbWj7Xv5qOAmlY6Okj21hWY0pZQTMxb6KSMvSs/vfzzqaliQKMI/OA2mqYwa2JMWbix310eFWvh2iqclJBhYj1MwdHQCvCg6KAONXw5W2ZMmaqz04zgZDy44O9RwWB1rSHZouno99mcrbJGggMJb1FaodPLo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WBSzRrSL; dkim=fail (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=R28GVNEZ reason="signature verification failed"; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60Q4x7he522655;
+	Mon, 26 Jan 2026 13:03:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=5iRO7hYgb3RZI76IYtbf2blkI8taaFiU8foyX1gk4bM=; b=
+	WBSzRrSLXRxR1gNV8CRsDOaRJJ+xoD2qP67SRB7R2n8pALv/qbpJmQ07HdhQiO2J
+	LtiwVHztFa89ND+gcNtT1eeWNHhTOHJfQhw3vQ9LWRNQHLQsOFFIVIgdZb0wn150
+	FCPChWjYIp4LZisO3KD0KD5FM5u18iKX+tzomEvGMkFj4ScimI1PDMUseTdNY/59
+	wqqlhsSRAouIrliWTltSgTW9B/VEA2fNouaeZkmPaYQwVO0x6FU/V7EmFn04/i81
+	crCgEJ1nGVxd8XbtlBj9eZ4FiQY8bGkto41btWTZgwdFLVTxXYckB5QOXjh2CKcI
+	js8Hho5rjEhunA/Os6nr0g==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bvn09hts4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Jan 2026 13:03:50 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60QCaqHi032705;
+	Mon, 26 Jan 2026 13:03:49 GMT
+Received: from sn4pr0501cu005.outbound.protection.outlook.com (mail-southcentralusazon11011031.outbound.protection.outlook.com [40.93.194.31])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4bvmh7wpwj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Jan 2026 13:03:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jt9EKdXs/KUdqDHLrbvAOPEdCGmCwwW/yUbID+tokLlOLLmulnZjI3GYmAif0pZm5xBsfhDstjr5oTN3TtwaVbyCv4ipDPPiUPUduTtAlY7ZCQf/QxcBcWg7zK0sbwmGA9Vs4/bmFkP2XTAXMjY7KZN4T0iez9N+1dxSpmff8Ju13TRqD+vHvEzv1v/K07LhcotMZ+K3qT73WseZXBeE5600GaWfmrWTCKh+KXW3M4sv6ZTIGVec6melbC0FHlj8k3reBLv+IBbjT8Q+yNmlQ/qYkU560B12wQMlinTxX7r/Yo7PLYaW4vOT3Peyd9WkSuPWas5p2bBR4SaO9NKFmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kw/XX+QmUeyVrazVFXd7hvRrOnqyxCkZOe4/juvjYmQ=;
+ b=wjVXtXLdqIrSCjNgwhJj1J+JkYGaftc1Zxrd94+FTUep9iyWn1zNFO9XZ0jqwTqzvdwqfWzy/XVTzL8hUgNCBlVxOWDv0fRMw60BXwedcqBfYbxYjIDH0IHDcBp4g6/MupzbWCaqWu1fIOEbvUlMd5tysJ/gCEliWDQvkenbIX8AxrSZshDUCcqkbeLcn6EEebGArwYP5KhAzOVQan+sMa/X/xcLdX+zTMmb5pn1LPvdpFaWR0RFDeGZXp0Sf68Dla7d4mCZWSwzJQBmEDkyw0CZIpv7u9Kasa2NFFiCi/q+NLP7qZyOmRv14EZCvm2zoFrw+LRm/AZmnug44A2VCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kw/XX+QmUeyVrazVFXd7hvRrOnqyxCkZOe4/juvjYmQ=;
+ b=R28GVNEZNPv922Hkmc2qBhGIm6ISW4SDcpKcfYmRYgKNenNjzjymPlIvOWUi5H/LSabRRAgkZKa+62ZDUJGoXsgXLfr1O6ddDcOu/D3gTDA80wXpmhQdTaL5E6DJTCMg4AJ+c89HmCgeHBBtYS0Rc5539YZ82iODxOZIpO/Lpfg=
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
+ by SA2PR10MB4665.namprd10.prod.outlook.com (2603:10b6:806:fb::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Mon, 26 Jan
+ 2026 13:03:43 +0000
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Mon, 26 Jan 2026
+ 13:03:46 +0000
+Date: Mon, 26 Jan 2026 13:03:42 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/5] NFS: Protect against 'eof page pollution'
+Message-ID: <8b0b3a40-008a-435f-aa01-75668c22be62@lucifer.local>
+References: <cover.1757100278.git.trond.myklebust@hammerspace.com>
+ <a753650aeb789a1a3f2a748bf37415b92615382b.1757100278.git.trond.myklebust@hammerspace.com>
+ <4a0a8181-b0b5-4f2f-84e1-3c935273b7df@lucifer.local>
+ <7c86e2c3ec73650696579a3e03be937a8b4205a1.camel@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7c86e2c3ec73650696579a3e03be937a8b4205a1.camel@kernel.org>
+X-ClientProxiedBy: LO4P123CA0094.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:191::9) To BL4PR10MB8229.namprd10.prod.outlook.com
+ (2603:10b6:208:4e6::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|SA2PR10MB4665:EE_
+X-MS-Office365-Filtering-Correlation-Id: 14faa112-9b79-487b-536c-08de5cdb56f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?IwnRuUmJ241l04VYRPAhkezLMFNT4kORP3CQzarWJM88gefidHcLCO7Ulp?=
+ =?iso-8859-1?Q?fVbN+bEtW6lwoxspb3kiLZ/rpQQux9OAImYWIOvaqHK2WSkbDxuUABpriU?=
+ =?iso-8859-1?Q?EmXN+OsLslh0lwEYu1Fmxnqb8EU3VHbGpxxK0J3Y2CGMvzl9oa0hv2cSiF?=
+ =?iso-8859-1?Q?4DS4IHc4KMsNwSUgA6LWtsfqFHtv2bmnkemn1JoGckeeS/aRyJ1YpJexhd?=
+ =?iso-8859-1?Q?+6no2Tr06H6ZoVcQMZBQmi/1dRsxuhF6BEuypOvQa25DY3IHAMzzKeA3tn?=
+ =?iso-8859-1?Q?VlMpqXfjBgNTDov88AYArq9cL2LOOXNajHkH9xlOX+Uj9W2cpmp1VJ5Slv?=
+ =?iso-8859-1?Q?GmgliQvBl4KU4htqtDuw7Zyut3jcDVTuP8t00FaTtpPoPri6liMZM6h4bT?=
+ =?iso-8859-1?Q?PhqxGDSCie9xeQhV4J/6Q2y+wX8RZOUhEMQzDRKukWQZLeiNGjncZgxUAo?=
+ =?iso-8859-1?Q?2KaVmj+v9wyxbJd7WnDS9MPTrXKIFG/Flq48eDmXGSpcQ26i2OVUyNQ64w?=
+ =?iso-8859-1?Q?rfv9BiXxkZyyKkr7D/TtGy9F+8BnLRhfJ9VUuATrHxtDsNEb7GNoZtYT0R?=
+ =?iso-8859-1?Q?SXztZQ+ohewfEaU+ttaEJloitm891HjJmqxdEIYqasfmfdtGh9wVXOlDIN?=
+ =?iso-8859-1?Q?RtcfXZdGS9o0eusuC2yIumPF2tstJ8/Ay3j2mIFcxiuW5LBhnWP3VyvcfK?=
+ =?iso-8859-1?Q?0gbSw5yyZ7c6m8Qm/pKU5+mvgaj6BNmDI4X0WyqfEWtqVpRvq7lkkKZ4Xq?=
+ =?iso-8859-1?Q?OUmHsFcaaRI4dV9bbmg7OTsDjxLHv51drha3U7/Vknn6xwONlf0lnHtEpu?=
+ =?iso-8859-1?Q?uBR58x+Xz35wgOAfi3K/TldDtk8pZEXI0sysvl80ysHoEoh7h0ANXY3oc9?=
+ =?iso-8859-1?Q?tCciiwALidtDbAfaTN0rtXYDotEz03OIqRSoLqbjCw/+3ywYwwugDPY2QV?=
+ =?iso-8859-1?Q?DaEtwNuGBIO4urdiN8mrnrJJjl+rFVG3QbnHEbw6t/El8PtWrLwSu2H+AC?=
+ =?iso-8859-1?Q?Xpvvw3JpH8CNE5nC3KCc7slVv/6Ex4kfNdSYKkz2q0eZWr9kkhWSrr6HqP?=
+ =?iso-8859-1?Q?moZQmaGMegGvPSCXn9HMG3yRlmVNZPwVGzS46a7HkxL7+5ogoRjMsN7+Mc?=
+ =?iso-8859-1?Q?Ce0oIN/bQAm2PDGhUk6+91Do0wspOHj4I1IK9ZKVhEc8riSKBDBqZ/YWKq?=
+ =?iso-8859-1?Q?9jTfjYwEZ/fDq8CCca8hz1CTdODBsttuQTJIJqPe77RGegj0t08lF+DgV2?=
+ =?iso-8859-1?Q?Eel0Ts1Ylb1EDv8jCXEGSJEJ5P1BmQfmx1vWh4SJShocdgeXbbs+O/uF33?=
+ =?iso-8859-1?Q?w8zHIygTfs+dLw+yUlNfRXYSvbIVS4CXrihCwqq/CCah6havFKqwyhljhx?=
+ =?iso-8859-1?Q?3qnrjTbBC6LSpJ2eGFTbEqh3sN0xNNOJrm2tN+v+CyI6p4YX3gA6tHr1I3?=
+ =?iso-8859-1?Q?xCX7HcZPsGSBNPBetukg1+5I4rk/BchKFvhJtugKYKsuG7nFr7hlBibYww?=
+ =?iso-8859-1?Q?dFjsBTC3HKCDObpMwoGhvzrclKt6wbqj3Y8EyfzRz0DpwMod+8XFtIjFfM?=
+ =?iso-8859-1?Q?I57H0KuGggmDfb8C51pREBHUl7i+9m3igKIvRSTRgnHwBSlueinkUl5cW5?=
+ =?iso-8859-1?Q?AgADvz1dRAR8Q=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?V4QhwVUP6hm0qEH5rhNj2qvPOtc+Wbyp7AnraCpeT1KOdxKAVHOeoZXYRk?=
+ =?iso-8859-1?Q?TmUdWtGhRCN7XF/gbK5lNpUHvfYOYCc+2JspPB4JbnUczm3Z1ZxsF+Dnp5?=
+ =?iso-8859-1?Q?TzSklgpC+2t3P0EFKDVJv87Mv6h5nUJBTrexqxuiUB+B1Ev/zyNv/UX1zD?=
+ =?iso-8859-1?Q?wyKWB/lIyNkLuRTUPvH+C8JUkRkHsTJTf/+TszKFAT6lW+nhZtOxBtvkPK?=
+ =?iso-8859-1?Q?JMhOWc7AUCwiIcpXD9ZwMgucNoqRS0Tjk4qhj0rZRLTnndryqFWWF0Ayx8?=
+ =?iso-8859-1?Q?uEsFp7U7hIkqcR808aZz/8ZqEEMIEA3epkEqUdag+J1svEkM+1TCSnJGSc?=
+ =?iso-8859-1?Q?TPhlS5LDGuXQvgu3dNoTASXpBlbMcC+0gjmAqPzEw7oKpEIZ9hHJcTv7Sj?=
+ =?iso-8859-1?Q?aRFpljR37aSoP3vO0G1LkAHjGikAN72KmGoXfOVAqo+oyElAA56a21aOsL?=
+ =?iso-8859-1?Q?fnjwM50sisdsnUG/78EpE5mRP/jW4ex6aMi6tCBunthQwPxFIHujgYyKoZ?=
+ =?iso-8859-1?Q?2cQ+Db09WZXSzhCEHvjDI+kwgmwsaV4653lYmLo1glGs7K0iJ5huOH3Y66?=
+ =?iso-8859-1?Q?eqgbJL+qx9RWe+Q83LR0iiBR0GC1jiEOpVd9lVq1H0xQkHqC/GoofU1YEg?=
+ =?iso-8859-1?Q?tcA7yc8VQrsuPG6wD0ATtO6K+btSS0LFn++syD/Ue1zJGRYR8QUE0aXdBc?=
+ =?iso-8859-1?Q?ZW6KRBZ/KR/dg+BRK2tXw1u+f2UL6eEb3LahdleXT5j/Nfdo4I4RRFxjRi?=
+ =?iso-8859-1?Q?5Pd/tsOTN0/jpa6bWqa6jw5MqaSSjekb28pBKYWtoca+PtGQerInC//7qt?=
+ =?iso-8859-1?Q?HfYsBvnOV9uC5ceCWMAODssTp2VQ7zmk3gLZdINa8ntK2J4Lwfq1mqvYmH?=
+ =?iso-8859-1?Q?dK3EQl/bB4vdJWg33AQRQawnyovSNqUd7DovfDcQA1IFEED6tkDZMt/Fhh?=
+ =?iso-8859-1?Q?ePo1iYSbQzvLuiRfIeAM1Rhb/4ur7CsZTh4y2VJ/bpU/Nj7HyKXwOEk4yj?=
+ =?iso-8859-1?Q?mmmeElbhPbxFJjnAKsd6MEozcMxyo2KKS3DD8j69DD4Nm4CexqMszwhqI0?=
+ =?iso-8859-1?Q?x57qbFFADh/iqFPJynFvkOdPazDm7TGTZSc019rsksZV/TIKrYYSstIas0?=
+ =?iso-8859-1?Q?bC+iLyklgQRFGau+LeOg3cX0tXAPsXOhtgSG6ZY4sxwyyQvWzZUjnDaXvD?=
+ =?iso-8859-1?Q?8W79hauvuOnxoH5yb2Ei2FVD4a0HaFedb7VsrxDBwQbUrZH/viTEJNqQgw?=
+ =?iso-8859-1?Q?2hrvZKu6YdwZLa5zCsjfmyC0Q0qGIQqUtg3uAxkSPBMvLVH2t31zfZ/XT8?=
+ =?iso-8859-1?Q?5FvkM3pR0EIOQ8/7g7S0nC9uoaf+xlx9p+oWI5Uqxxl2EPeCyy2kqKi0AJ?=
+ =?iso-8859-1?Q?jiLq+eKvm5j3XlMBlb6hlKkSyDzAJUhPbXmo5GxmL173sRCSsAo0Q3e1ur?=
+ =?iso-8859-1?Q?NavB1oXxtkqzgczu53CjhvNNo15WKmSJnEMV5QFh9S/WHMkGCQ8uFkKdW1?=
+ =?iso-8859-1?Q?jsU9mKbrNkPeW9de5UWV37Y15Bk438AWYigmzmUNmxrLTpGxzKFrRrx+e9?=
+ =?iso-8859-1?Q?zzjbZKNwCAH0eyaHke4sRg+9awKJVeaRoiMFF1fzu3eOnatFVd09Nrk3Zb?=
+ =?iso-8859-1?Q?EFLu2hCSmcvpjOp1W11eSRASDEYOzUxGTXXMz2RdzZDfZ2xZqbTlCMGk46?=
+ =?iso-8859-1?Q?2wHIx7ufo1S24KhgSAEsJ8rXbXZ7+C/xxgY1rItTINGFVAD6K69GA/4Si0?=
+ =?iso-8859-1?Q?RSHBBPQkezH+wKQKE4GofwFWGI51VFVSqFPXZzeHR3Zgo0OgDdq5slvpAp?=
+ =?iso-8859-1?Q?CLv018j14K+idtXQLj4+GsOq1LZ4D0M=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	cTofOdquelaLWI8BvxEqF21RfEgDHZ4VUZ/ZRKp6QYZsmZ5ANci4o7Ot6hWS4rOU1Pou/XJvC/zAtDTuWJ0NZzRZY+lm7ZqQ5IONvB8FT785olGcG9050szlh6QDrNSA3hVJ9UEYwvlQe8IGgaeDUmHyDXsz3mwQokBg4IUyoLaJv/LvtZT9A1guKp585X3qXE7SIZtgK/zJlQwgO6doXWRqxEq7zhgYs4cdtJZmNRP8OLYUh9O8QrvTtV0AAF34heMrfzXxoD2+Ayn0jqEJo09y6hpWi+lOUrGZWq0AzEovL34zi87mMWBp6VN2bNMDqgvIixf/hYeXp/S+feue94PlGxVoVQamjMeZghYRVcNFRUOC/ofkISDOdI4U6jOSa6ZXopRTYqlHlYhCsm0NGX6GxX8TTo3Q704mo/8DvYgJUL+QzWTgTtK9/kzDlN0EKq4q2y37Lf0cpDgUJjEUSRsMozySK/wffEs7CF0NWVB9szcBiCFMFjTbjSd8k4cpN4OeW2CjX2lHms7sl/RQlft2TubiMYxQJb4bFh9BoP3E3NLh7+maXCtQ5P2T5de9CoOyj6WSQKLDzgVrba/EoM2dUFTVua5BK8YlV1r9ktg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14faa112-9b79-487b-536c-08de5cdb56f3
+X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2026 13:03:46.4689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EVrilsAlQJnclNWalnYOvzx1VHCH6HjeiDkWY1fOvt2UT0NlQumtwi9QbqtJGgPW8LveVl9BBJtQvxeCnySE4teHwufdabOdPgdZWIzIguc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4665
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-26_03,2026-01-22_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 spamscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2601260111
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI2MDExMSBTYWx0ZWRfXz/KDsNIOi6vf
+ LnMKVWypAxz1u5eFcRO9Zs2HflOTc7hv6TgSxxhWZA1GlcnmceG1sRIJoWo7zKkMo67V2449eVI
+ peSyVLWSfB29rxJyPsDrvSXXG6S9OBGa3mEgbLk+Wk8WSdlrffMkNl2Twgo2dfo5ascaCHAYuHu
+ rlAenfTDhtgEbgLQdUvUVjquG626YZ2Sfm4dyIFXNuBkYAsVv4RCXusuQaMvq84rNzzr37HwBSg
+ IKZDK5kyk4Hcezk3XI+mtF9Wk3UuxZPPq7vYxW8f5S9liLC+qzs9Zbv+eibLsZsTGpwwo563sKA
+ yQMsvDh85cenFWUrrEBIlyfIWFrJ21GBNbI7JdOnr1A5TNLBlYMVTNJabyabHVHIQrFh5NfYJdq
+ Mrga9XDW6Sv5pvRKhmAp3XxtdGiElhVxCq8tWswYhnIlsMReXY6QNFGec5rIM3txPIdv4Xyk+/k
+ tPfmb+nJ/HndIpOAcCA==
+X-Proofpoint-ORIG-GUID: vYC3dkyblavqta1lN63uaUw3Z_xqIIYR
+X-Authority-Analysis: v=2.4 cv=Rp7I7SmK c=1 sm=1 tr=0 ts=69776636 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
+ a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RqAwqL4BN2GdRpRTKnkA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
+X-Proofpoint-GUID: vYC3dkyblavqta1lN63uaUw3Z_xqIIYR
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18468-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18469-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	R_DKIM_REJECT(0.00)[oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_MIXED(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:-];
 	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[lorenzo.stoakes@oracle.com,linux-nfs@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[oracle.com,reject];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 8C690887D6
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 07003888F6
 X-Rspamd-Action: no action
 
-On Fri, 2026-01-23 at 13:52 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> The first thirteen patches in this series refactor the lockd code
-> base to clearly separate its public API from internal implementation
-> details. The remainder are presented for context, but demonstrate
-> the intended purpose of the clean-up in the first thirteen.
->=20
-> The lockd subsystem currently exposes internal implementation headers
-> through include/linux/lockd/, creating implicit API contracts that
-> complicate maintenance. External consumers such as NFSD and the NFS
-> client have developed dependencies on internal structures like struct
-> nlm_host, and wire protocol constants leak into high-level module
-> interfaces.
->=20
-> These patches work to establish clean architectural boundaries. The
-> public API in include/linux/lockd/ is reduced to bind.h and nlm.h,
-> which define the contract between lockd and its consumers. Private
-> implementation details including XDR definitions, share management,
-> and host structures are relocated to fs/lockd/ where they belong.
-> Layering violations are corrected: the NFS client now uses accessor
-> helpers instead of dereferencing internal structures, and nlm_fopen()
-> returns errno values instead of wire protocol codes.
->=20
-> These changes enable subsequent work to modernize the NLMv4 XDR
-> layer using xdrgen without risk of breaking external consumers.
-> This work appears in the remaining patches in this series, which
-> are presented here only to provide context for the API adjustments.
-> No need to review those closely just yet.
->=20
-> The series is based on the public nfsd-testing branch.
->=20
-> ---
->=20
-> Changes since v1:
-> - Refine the pre-requisite header adjustments
-> - Reduce stack consumption by moving large structures to wrappers
-> - Additional extensive clean up
->=20
-> Chuck Lever (42):
->   lockd: Simplify cast_status() in svcproc.c
->   lockd: Introduce nlm__int__deadlock
->   lockd: Have nlm_fopen() return errno values
->   lockd: Relocate nlmsvc_unlock API declarations
->   NFS: Use nlmclnt_rpc_clnt() helper to retrieve nlm_host's rpc_clnt
->   lockd: Move xdr4.h from include/linux/lockd/ to fs/lockd/
->   lockd: Move share.h from include/linux/lockd/ to fs/lockd/
->   lockd: Relocate include/linux/lockd/lockd.h
->   lockd: Remove lockd/debug.h
->   lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
->   lockd: Make linux/lockd/nlm.h an internal header
->   lockd: Move nlm4svc_set_file_lock_range()
->   lockd: Relocate svc_version definitions to XDR layer
->   Documentation: Add the RPC language description of NLM version 4
->   lockd: Use xdrgen XDR functions for the NLMv4 NULL procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
->   lockd: Refactor nlm4svc_callback()
->   lockd: Use xdrgen XDR functions for the NLMv4 TEST_MSG procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_MSG procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_MSG procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_MSG procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_MSG procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 TEST_RES procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_RES procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_RES procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_RES procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_RES procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
->   lockd: Convert server-side undefined procedures to xdrgen
->   lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
->   lockd: Prepare share helpers for xdrgen conversion
->   lockd: Use xdrgen XDR functions for the NLMv4 SHARE procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
->   lockd: Use xdrgen XDR functions for the NLMv4 FREE_ALL procedure
->   lockd: Add LOCKD_SHARE_SVID constant for DOS sharing mode
->   lockd: Remove C macros that are no longer used
->   lockd: Remove dead code from fs/lockd/xdr4.c
->=20
->  Documentation/sunrpc/xdr/nlm4.x     |  211 ++++
->  fs/lockd/Makefile                   |   30 +-
->  fs/lockd/clnt4xdr.c                 |    5 +-
->  fs/lockd/clntlock.c                 |    2 +-
->  fs/lockd/clntproc.c                 |    2 +-
->  fs/lockd/clntxdr.c                  |    3 +-
->  fs/lockd/host.c                     |    2 +-
->  {include/linux =3D> fs}/lockd/lockd.h |   99 +-
->  fs/lockd/mon.c                      |    2 +-
->  {include/linux =3D> fs}/lockd/nlm.h   |    8 +-
->  fs/lockd/nlm4xdr_gen.c              |  724 +++++++++++
->  fs/lockd/nlm4xdr_gen.h              |   32 +
->  {include/linux =3D> fs}/lockd/share.h |   19 +-
->  fs/lockd/svc.c                      |   50 +-
->  fs/lockd/svc4proc.c                 | 1783 ++++++++++++++++++---------
->  fs/lockd/svclock.c                  |   12 +-
->  fs/lockd/svcproc.c                  |   99 +-
->  fs/lockd/svcshare.c                 |   40 +-
->  fs/lockd/svcsubs.c                  |   32 +-
->  fs/lockd/trace.h                    |    3 +-
->  fs/lockd/xdr.c                      |    6 +-
->  {include/linux =3D> fs}/lockd/xdr.h   |   15 +-
->  fs/lockd/xdr4.c                     |  347 ------
->  fs/nfs/sysfs.c                      |   10 +-
->  fs/nfsd/lockd.c                     |   51 +-
->  fs/nfsd/nfsctl.c                    |    2 +-
->  include/linux/lockd/bind.h          |   23 +-
->  include/linux/lockd/debug.h         |   40 -
->  include/linux/lockd/xdr4.h          |   43 -
->  include/linux/sunrpc/xdrgen/nlm4.h  |  233 ++++
->  30 files changed, 2750 insertions(+), 1178 deletions(-)
->  create mode 100644 Documentation/sunrpc/xdr/nlm4.x
->  rename {include/linux =3D> fs}/lockd/lockd.h (84%)
->  rename {include/linux =3D> fs}/lockd/nlm.h (91%)
->  create mode 100644 fs/lockd/nlm4xdr_gen.c
->  create mode 100644 fs/lockd/nlm4xdr_gen.h
->  rename {include/linux =3D> fs}/lockd/share.h (58%)
->  rename {include/linux =3D> fs}/lockd/xdr.h (91%)
->  delete mode 100644 fs/lockd/xdr4.c
->  delete mode 100644 include/linux/lockd/debug.h
->  delete mode 100644 include/linux/lockd/xdr4.h
->  create mode 100644 include/linux/sunrpc/xdrgen/nlm4.h
+On Sat, Jan 24, 2026 at 05:20:19PM -0500, Trond Myklebust wrote:
+> > > diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+> > > index 86e36c630f09..af2fdbfcbbf6 100644
+> > > --- a/fs/nfs/file.c
+> > > +++ b/fs/nfs/file.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include <linux/mm.h>
+> > >  #include <linux/pagemap.h>
+> > >  #include <linux/gfp.h>
+> > > +#include <linux/rmap.h>
+> > >  #include <linux/swap.h>
+> > >  #include <linux/compaction.h>
+> > >
+> > > @@ -280,6 +281,37 @@ nfs_file_fsync(struct file *file, loff_t
+> > > start, loff_t end, int datasync)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(nfs_file_fsync);
+> > >
+> > > +void nfs_truncate_last_folio(struct address_space *mapping, loff_t
+> > > from,
+> > > +      loff_t to)
+> >
+> > So this seems to be a slightly adjusted version of
+> > pagecache_isize_extend(),
+> > what was it about that that didn't work for you?
+> >
+> > It seems the main differences are - block size alignment (surely you
+> > still need
+> > that though?) switching folio_test_dirty() for folio_test_uptodate()
+> > (I'm not
+> > sure about this change though?) and adding the trace line.
+>
+>    1. NFS is not a block protocol. Reads and writes are byte aligned.
+>    2. The test for bsize >= PAGE_SIZE is nonsense for a byte aligned
+>       filesystem.
+>    3. NFS does care about using folio_mkclean() to fix races between an
+>       application that is writing to the folio, and any zeroing of the
+>       data that may result from the file truncation.
+>    4. The existing folio dirty state isn't of interest here, since NFS
+>       won't extend existing writes to cover the part of the folio that
+>       lies after the old eof.
+>    5. The folio uptodate state is of interest, since any future
+>       pagecache read needs to see zeroed bytes starting at the old eof
+>       and extending either to the offset at the end of the folio, or to
+>       the new eof (whichever of the two is smaller).
 
-I went through the series and it looks good overall. I definitely like
-moving away from hand-rolled XDR handling. You can add this to the
-series:
+Thanks very much for the explanation, much appreciated :)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Motivation is that generally it seems to me folio_mkclean() itself is an
+implementation detail we shouldn't be exporting, but I'm considering how we
+might abstract this while retaining functionality in existing file systems
+(nfs and ext4 are the only current users).
 
-There is still the matter of the race vs. the shutdown file, but that's
-a preexisting problem. I presume you intend to let this sit in -next
-for a while? It's a big change so it'd be good to have a nice long test
-cycle with it.
+So given what you've said, either we'd need an abstraction that provided an
+alternative to pagecache_isize_extend() which could account for your use
+case (perhaps breaking it into parts), or simply to have an abstraction
+around the folio_mkclean() / folio_mark_dirty() dance.
+
+The latter I was trying to avoid as it doesn't do all that much to
+un-export the implementation detail but of course ensuring in-tree
+filesystems work as they do now is a requirement for any such change.
+
+Obviously I will cc- you on anything that touches NFS in this regard!
+
+Cheers, Lorenzo
 
