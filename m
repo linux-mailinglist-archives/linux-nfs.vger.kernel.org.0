@@ -1,205 +1,148 @@
-Return-Path: <linux-nfs+bounces-18463-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18464-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eAu6MNIJd2lGawEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18463-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 07:29:38 +0100
+	id GH5xL7hZd2maeQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18464-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:10:32 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81FF284893
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 07:29:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64886880A6
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:10:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3E7163003308
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 06:29:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4FC553035A9A
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 12:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F2D71F8755;
-	Mon, 26 Jan 2026 06:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4565E334C1A;
+	Mon, 26 Jan 2026 12:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="faQD8Kdy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omeNT6nM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28D01624C0;
-	Mon, 26 Jan 2026 06:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F87230BE9;
+	Mon, 26 Jan 2026 12:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769408975; cv=none; b=CtoPE4sXJXVfYqxa6OXzxMdkqnXriesBh9taaKleboAhmamXwK28npkbR0dg0gc4uZXin/XzBlXeTidGWxA7tHgkTuqNp6a8vZd+/HyYLtzpFeNjWK711DNR+NM21jIZxZrqOqLeeSYCL4XHC8llmP5l+jae4nONa8vzr6POXcc=
+	t=1769429423; cv=none; b=IU4LWUJ9sl4eoaQn9E9qVh5j6gWJUSp3YPd+qfIa+8jC8Zf6QT2rZfOZMsY2FXs4XnBZjl+DRZX+VW3rREKLshVdC8mJHCDtweEKOwnGf2QhctCBKWSSRTBG9aJaJqIc/7rCjUM1vuOaExP3wu745y+A29nCEylUAw0OYZYmrsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769408975; c=relaxed/simple;
-	bh=74F+QdvEEPyCkFQAZ9k7xfLSsdZRZRCgm+EBSZyKB+I=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=KdMwmGtRfPqUNsdgx7XT+WVdVfVnKVb3w5Bnt7zwKNRNGUld2kPUi0C/pH7R9umm53S6gMWLdUq0M/WbCoQhbDTWsfy7/tt9zu9X/hKVKcf7YzT1hRqx55WFJk/+uHsJoVQA1jyKAZ5KBYVWn3jXfxux4bObi7dCxjEDdnCoiCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=faQD8Kdy; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1769408960;
-	bh=YrOJ9nnZ1uMX7vySKsJwrRb67e2niePqvCeLLz2LtBM=;
-	h=From:To:Cc:Subject:Date;
-	b=faQD8KdycPq+93nfF6kh/Q3Nl6D+o3F0fqeUtI7VhROVJ1THbltMagh4pm/776+MY
-	 Ezqt9/dtfhUCuPsHuExbJ34Lu7kT9pW8JnQNbb6b0rGichtmK0WCOAtzeAWrvpjS4j
-	 HLFg9h2bGGDU24CiaMkFnVtYnMAHWrFck4Aqoy0s=
-Received: from jack-mini ([58.212.11.129])
-	by newxmesmtplogicsvrszb51-0.qq.com (NewEsmtp) with SMTP
-	id 673944A9; Mon, 26 Jan 2026 14:25:51 +0800
-X-QQ-mid: xmsmtpt1769408751tmo9wa8bj
-Message-ID: <tencent_DBA407008574A1E4BF7F27AD38AD4D13730A@qq.com>
-X-QQ-XMAILINFO: MqswyhUqVe0CsHE4UAtaAPNOrVrVCeA8XoFx1yJMupYoIBLm34WVL95ZXkh2Sm
-	 pmW04F9Z9YHOs2V13ddwEz/rqxN+4Xp6+F/pw4siFRf95ls+hDdXJd8WKk8xdZRiX+gDRYLfL3Ij
-	 oiM/YwvP1mVT/6E3sMQEcdBd0LLsTGDn5bjDHxkHvP/mGaF2SUUvssCrglhCtqC2nNjtCdxpd09m
-	 93z5Ixs7oLVtKDmxt4rp3NjBA/zw/giZO/xNOye2CjEF8NTw8h5EKRoaPHHxhusiYIvZKGZYuQL7
-	 cBkcQPHD9fS3iKRXb5oov7dkjNyXphgX/I1NCI3j+7kPXZs+rxM0bW67jIFK0eCH6ySg/jIAqORU
-	 SUgTtWO0fCKARgNebAx0jfp2vdkyNxClHPX9F2tQLwONCj4iO1aJc1Dia0akDiaPpQs/z2AuHUl8
-	 c04RCcBTHhtGGyiWOmRgGBHYXf3fkNT+wI1d0ws8utyLCEo9YW1q1sW1MlrmfgCQlO7+FNM1jS2a
-	 BwkzdmdiiI33Bs1G8Dq7OVMKzaR8vw+UXWxQSPWUw86co1yC6yrIEyTUouvFtsx8mFBgfO8DXXcR
-	 0o3obenJP8xzMu6Kd7unYCTPEi+KAL4mYFsMAIiDvjMZDMBCDbZgqrFykz8lo1RDuDPYf2CQuBVm
-	 RpGFOeIGuRQmCHwgHskiaLM/glCdrrUA78EGeLK9Jz5e4FRvnd8RqABvydwLdp/HE3+IT0alUNSB
-	 QkOHh1fARpdiGKRMGIhCMQvWiSKgqz+TDntwirgnX3J34DiRaGrTKs4U6gtyrd7vc5d/2h3V1564
-	 BuuDp0Toa8+PkCm97oxPRwr1UxGfqzFhz9a39xnpgGasJ6szw19FuKL/XEs2yD21D8F3natNAzW/
-	 A8tHVMIQnUcKR4HQI3eboi61mYRu2po24ndXVXSa3SxQYVdofaRfsHkjvP5yZ/2IGsTpghXZ8CLP
-	 iiiRbPjyQppp+0ywFJjuJxiUcvspfJqQCCZYp7nffnyEjswvVStsg6yxr3qr2aJP+AwB1sh3Lrx2
-	 cIp4gW7UPAUKcZCU8jNxd3Q9KOeqDMkFgZypgGBg==
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-From: "jack.zhou" <jack.wemmick@foxmail.com>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"jack.zhou" <jacketzc@outlook.com>
-Subject: [PATCH] sunrpc/xs_read_stream: fix dead loop when xs_read_discard
-Date: Mon, 26 Jan 2026 14:25:24 +0800
-X-OQ-MSGID: <20260126062548.3417933-1-jack.wemmick@foxmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1769429423; c=relaxed/simple;
+	bh=jRASq9oWNIGqSefvMErvSg1c4fbWyaJFpOFIGkv6+eM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uF+75mCDR87tTBkJ4vM4AzVzLRD8wrhINAypRlbW+3wthX+zMd74ViIPqVg65z3GSP3UGJXuUxGJcD7JqKOW8ivr7uymsEImW2m9wMpAH4zpMMVwmXiQEAy8MLNBE+AAqo78cT7dh9kFm8jELVbdaTvzlrYgQSc0wYxxIPHcZ4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omeNT6nM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A39C19421;
+	Mon, 26 Jan 2026 12:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769429423;
+	bh=jRASq9oWNIGqSefvMErvSg1c4fbWyaJFpOFIGkv6+eM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=omeNT6nMO/qe/Sswu1wqqzFBxxcVHKNeOdHHqld8YGq3so3ViX5g9F4T0AFuKHoia
+	 kOF6ji//1U/8AYvj8fCzxHLst/pK0uzyDWo9Z1+R6M5aT6HqTiwD7nCAfSM/0P4uhK
+	 oKuA1lyFQhVFQFUjmMl3i39KCCNfST2CtLuCuO6/M4ibgXfTkAEqgkLn2FraowIgUw
+	 Ug2JHEdPjWBImdwWEkBRO64EUB6ki680lZdM+Sr751FPStUWVbhYfxphUjPaBM5TnS
+	 ws774crMfd72kHh4srckbsO1oxjzE3IP3JGKeS63BJ0+MW6awXhjdqJ0LW5fL6Q62u
+	 kUMYMhZBX8cGg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 0/2] nfsd: move delegated timestamps to being runtime
+ disabled instead of compile time
+Date: Mon, 26 Jan 2026 07:10:12 -0500
+Message-Id: <20260126-delegts-v3-0-079f29927b83@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2WMwQ7CIBAFf6XZs5gFgaon/8N4aGFpiU1roCGah
+ n+X9qLG47y8mQUiBU8RztUCgZKPfhoLHHYVmL4ZO2LeFgaBQiMXglkaqJsj4wpRY2Nqc2qgvB+
+ BnH9upeutcO/jPIXXFk58Xf8biTNkEl3b8iMqpc3lTmGkYT+FDtZIEt+i+oiiiMYiSq5q10r9I
+ +ac3/A6HZrYAAAA
+X-Change-ID: 20260122-delegts-150060ac7c9a
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1047; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=jRASq9oWNIGqSefvMErvSg1c4fbWyaJFpOFIGkv6+eM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpd1mp2XZp5KaMZ86sfKA86otulOAD1o3wRCbAA
+ fSBn8r2rLiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaXdZqQAKCRAADmhBGVaC
+ FaFtEACcyppv1l7h14rvhLSHO8e1ba29gYHIcVT31MIJZMbGxwzx0DZfQY96oRjBiq2sHwMnZca
+ l5aQPI52yCViecZjmoO0zI9haS64dCwY6Ls8TnXQpGzW1/j3V8/rjikBcopkId8WpSZYYYQaNqw
+ jawZPZpVBzkgXZk7zoGYGFgHFeunMZcU/ycHlKetsaf6rDfG8cWP9jjqLmk+T8GQUaCDRoiudLD
+ Ofq4V9cH0FqXm8eik0zHQ5leZCq33XAf8zD/zk3G6lcNYMJY6kZnH8UQcTtrAKauOwdrZX/s8c5
+ PljQpY9dB7L+esSI79A++49566Wi1uQsgKvk4zvXtGUBMv9sGWAYXrA4dSTzdI89nVXioo7L4jA
+ iSqlySIUerMGsbFCTS6qNOl/A6zb37Dxd6i1B6zvDDq1PJEB6GleccapYeydkB0wd307+aHctEJ
+ QDDhDb8TeqvjsGTYR7LG/4RpbJc9N91hSY7PBaH5tzbwoKTftdNzVbcTBzE4CbfcsNemydSAXxA
+ uDDrUp3tJrRr7u2ULlLRTDMs8v3ysCjq/fGsRgMnG5r8lnFR4PH2L4jCX4UO+C/KbOctLzcHKCf
+ BN1+JAF6asvIccAZlwgVlymlohIcyTg87zI+ali/T12iWrIqItWXlnhvPTkyaOLYfE+OWHeT3fE
+ fz8YTU6pPuxLIIQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18463-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18464-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[foxmail.com];
-	FROM_NEQ_ENVFROM(0.00)[jack.wemmick@foxmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[foxmail.com:+];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,foxmail.com:dkim]
-X-Rspamd-Queue-Id: 81FF284893
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 64886880A6
 X-Rspamd-Action: no action
 
-From: "jack.zhou" <jacketzc@outlook.com>
+This version just updates the comments an changelogs per Claude's
+recommendations.
 
-Hi maintainers,
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- add comment over nfsd4_want_deleg_timestamps()
+- add info to changelog about how to disable delegated timestamps at runtime
+- Link to v2: https://lore.kernel.org/r/20260125-delegts-v2-0-cd004157fb46@kernel.org
 
-This bug was discovered during following scenario:
-
-1. Using NFS client with TCP mode
-2. RPC_REPLY process
-
-
-Let's first review the normal process:
-
-1. The `xs_read_stream` function is located within the for loop of the `xs_stream_data_receive` function. The condition for exiting is that the return value ret of the `xs_read_stream` method is < 0.
-2. When entering the function `xs_read_stream`, since `transport->recv.len` == 0, `xs_read_stream_header` will be called first. Based on `transport->recv.calldir`, it decides whether to execute `RPC_CALL` or `RPC_REPLY`;(and also sets the value of `transport->recv.len`)
-3. Since it is executing `RPC_REPLY`, the return value of the function `xs_read_stream_reply` is provided by tcp.c's `tcp_recvmsg`, indicating the size of the copied skb, and this value is > 0.
-4. Since it is a normal process, it will reach the end of the function and return, which is: 
-```
-transport->recv.offset = 0;
-transport->recv.len = 0;
-return read;
-```
-5. The returned 'read' is the return value of the function 'xs_read_stream_reply' in the RPC_REPLY process. Since this value is > 0, the `xs_stream_data_receive` function's for loop cannot be exited.
-6. After re-entering the xs_read_stream function, since transport->recv.len == 0, xs_read_stream_header will still be called.
-7. Since the skb is empty, tcp.c's `tcp_recvmsg` will return a value < 0, usually -EAGAIN (-11).
-8. Since the return value of xs_read_stream_header is < 0, the goto out_err statement will be executed.
-9. The for loop of the xs_stream_data_receive function will be exited.
-10. The next time xs_stream_data_receive is entered, the above steps will be repeated.
-
-
-Now we are encountering an abnormal process:
-
-
-1. For some reason, skb is contaminated, and `transport->recv.calldir` parses out an incorrect value, so `msg.msg_flags |= MSG_TRUNC`;(and also sets the value of transport->recv.len)
-2. The `if (transport->recv.offset < transport->recv.len) {}` condition will be executed
-3. The return value of function `xs_read_discard` is > 0, so when returning to the upstream `xs_stream_data_receive` function, the for loop cannot be exited
-4. When entering xs_read_stream again, since transport->recv.len != 0, `xs_read_stream_header` will no longer be executed, which means `transport->recv.calldir` cannot be correctly set anymore
-5. This is fatal for all subsequent RPC Replies because `transport->recv.calldir` cannot be correctly set anymore, so they will all go to `xs_read_discard`
-6. At the same time, since transport->recv.len has not been reset to 0, this loop will become an infinite loop
-
-Therefore, my approach is:
-
-After reaching the point of `xs_read_discard` due to an abnormal situation, the value of `transport->recv.len` will be reset in the same way as a normal return, in order to prevent a deadlock from occurring.
-
-The modification has been tested and passed in version 5.10.160.
-
-
+Changes in v2:
+- Don't create debugfs file when CONFIG_NFSD_V4 is disabled
+- Link to v1: https://lore.kernel.org/r/20260122-delegts-v1-0-40fbb180556c@kernel.org
 
 ---
- net/sunrpc/xprtsock.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Jeff Layton (2):
+      nfsd: add a runtime switch for disabling delegated timestamps
+      nfsd: remove NFSD_V4_DELEG_TIMESTAMPS Kconfig option
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 2e1fe6013361..91d1b992eb7f 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -695,6 +695,13 @@ xs_read_stream_reply(struct sock_xprt *transport, struct msghdr *msg, int flags)
- 	return ret;
- }
- 
-+static void
-+xs_stream_reset_recv(struct sock_xprt *transport)
-+{
-+	transport->recv.offset = 0;
-+	transport->recv.len = 0;
-+}
-+
- static ssize_t
- xs_read_stream(struct sock_xprt *transport, int flags)
- {
-@@ -740,8 +747,10 @@ xs_read_stream(struct sock_xprt *transport, int flags)
- 		msg.msg_flags = 0;
- 		ret = xs_read_discard(transport->sock, &msg, flags,
- 				transport->recv.len - transport->recv.offset);
--		if (ret <= 0)
-+		if (ret <= 0) {
-+			xs_stream_reset_recv(transport);
- 			goto out_err;
-+		}
- 		transport->recv.offset += ret;
- 		read += ret;
- 		if (transport->recv.offset != transport->recv.len)
-@@ -751,8 +760,7 @@ xs_read_stream(struct sock_xprt *transport, int flags)
- 		trace_xs_stream_read_request(transport);
- 		transport->recv.copied = 0;
- 	}
--	transport->recv.offset = 0;
--	transport->recv.len = 0;
-+	xs_stream_reset_recv(transport);
- 	return read;
- out_err:
- 	return ret != 0 ? ret : -ESHUTDOWN;
+ fs/nfsd/Kconfig     | 10 ----------
+ fs/nfsd/debugfs.c   |  4 ++++
+ fs/nfsd/nfs4state.c | 15 ++++++++-------
+ fs/nfsd/nfsd.h      |  1 +
+ 4 files changed, 13 insertions(+), 17 deletions(-)
+---
+base-commit: 2a1dde6dd823e94e0768e929566dd65cd74ca793
+change-id: 20260122-delegts-150060ac7c9a
+
+Best regards,
 -- 
-2.51.0
+Jeff Layton <jlayton@kernel.org>
 
 
