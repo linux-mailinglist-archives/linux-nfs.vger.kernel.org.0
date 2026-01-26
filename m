@@ -1,103 +1,51 @@
-Return-Path: <linux-nfs+bounces-18472-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18473-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Gx6FuRvd2m8gAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18472-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 14:45:08 +0100
+	id KI1TC+R8d2m9hgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18473-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 15:40:36 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0AFE890BA
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 14:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 638EA89A28
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 15:40:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A0E24305A6C6
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:37:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4B98A3019B87
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 14:35:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5949C329E5C;
-	Mon, 26 Jan 2026 13:37:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C45C323D288;
+	Mon, 26 Jan 2026 14:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HiogmgMP";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZWJ5Pk+e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8t2MGZd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D567233A710
-	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 13:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE68245020
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 14:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769434639; cv=none; b=KI99SVD2pF+OAqOSbwVx5zjbfdjL84z5bjC03EdbGCTLrkVRQ3pOOl3WBNUjXCF0FMs9Iv7gtxvKssIsU1Czb/PaAl+jYUueAn03b2RRgm6ZrzrVqffEMHcG6Mm/K1/ueEvX7gcxrDjHq31y8ISsm83+94NXCRPECD42+aVQntE=
+	t=1769438151; cv=none; b=mQjXaMnQ9OSW81XW03ynbX/JV9EsFgQSkmDv4vyuBvcCh8pTT0QnT0M/4UqX1linCIQpedSvVASxRKRHPZzG3IBjuS8G5pB1stMZY6i4z7dVUMI3IjpWkThfUcj0N0DNLT9sf5vujR755t/zuLV0EptC8g6lvnSOQrOoajdkj9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769434639; c=relaxed/simple;
-	bh=HXvJ20SYYESgx2QNyij5S/zvMbtN/kZ+R+N9kiaAUBE=;
+	s=arc-20240116; t=1769438151; c=relaxed/simple;
+	bh=1Tl3/exD1R6JXaWWe2lxJ6tsFN/KWIRVRAoE98sG8cQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pLMMlrbL7IjwCrR0HYjWEh9S9iyHrDJJ7wqrXTxcBBCip4H1+x6cGwD6ZZcCbWMsHl70lItf7dWpCnFUz53DI5PTBy+oT5imhxJ4OkPL2ifpLCelKd8ngilCdMwLNGLE20rI+QyrD7Sjz7CyCeIDhc3zkyxRM9BjWP+ELGMSfDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HiogmgMP; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZWJ5Pk+e; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769434636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=szfZNAki7zua2PW1Pglk9Nn9BF//YpRllb4rQ6W4HtA=;
-	b=HiogmgMPjHbYGgJMmSZM/7J4SJF7jGAB5bXf8AWC/EwXkCrbNgBarZpdAQfpRiqOLCSdUk
-	nMJh4ZgEFkjL3SbfruaMYZbqmVQHVRC+8MS2csXtQks912gLd0pD3e/q/oUt0iwA7QDYrb
-	5knSvwaasOQ7hIBBAPvkmI/dI+HDOx0=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-27-eT2apLSNMEeGzZAmokaVkw-1; Mon, 26 Jan 2026 08:37:15 -0500
-X-MC-Unique: eT2apLSNMEeGzZAmokaVkw-1
-X-Mimecast-MFC-AGG-ID: eT2apLSNMEeGzZAmokaVkw_1769434634
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-502ab2494e3so130835741cf.3
-        for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 05:37:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1769434634; x=1770039434; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=szfZNAki7zua2PW1Pglk9Nn9BF//YpRllb4rQ6W4HtA=;
-        b=ZWJ5Pk+e5yNRtryz9S15/KgfVSNlpmqUnGapxhDT/y9LM/AEzjxJN7eimgDjZgkLer
-         7v0YAMv0twxC8IhW090o28niMivjOtcnUU6ajYRn1cjopfzbA94qYXGbjj6TUrAuHUUO
-         i7/wJLu0gNdlQMVwUuevvOC58JQ92yE0uDC69cuP2B9WrILNVBY5Hd6N/QeEv6SgxfLa
-         nbZjlvhMdiSdhLPyOxGlLIieGlZR4Hr0+gZ/jROyHX2J09bck2nmThtYEf+hTITTVqH+
-         obPNBS+cK1PPKf42N4U9xbNQ+SdYUJQpgrNtX75iTgVT5GCjsFk5sr7+gooEu7PwXPrU
-         B8WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769434634; x=1770039434;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=szfZNAki7zua2PW1Pglk9Nn9BF//YpRllb4rQ6W4HtA=;
-        b=SIsXnkpd2xJZEhYhzXVJVV+FqdRnue9LnoJg5lHy9+Y1XofJtvlXGAfuXDLb9iMydE
-         A6z38izIFWKCfA/tMrY+OA5LSiHPrskrTwK6gQKYARSe9TtuRGvnBddE2T0a08xTC0t8
-         7m52TxLnWzDdTv7E3g2GlRHkaRXSSkQCX0K1J3Hn4c0hlq02QIvGJzmcQHLSp05wtC8A
-         8Qjh4tN9CQ4998MS0KWMpoZBqlC7RhynJLq/YSY2UTWcRPcvJN6dRCWivyAi0gfGCxw1
-         XguZSA27jgvE3AJSevCqpDMxoYykO9e93xbeNyhv+GKwmMl7CWlwz85pvJpqwmupVhC7
-         Joqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSckNcG839PBTtLPhaCz929qeTH1oZyfyUmwlegZM+CgJF9dqccDFTY9/G0qwFceiR4U0/rvI/eKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyueQgwKIeNEasX4zyn9sxZYTkqZSU9+s3DTuVlZQ5jaxy0dnVq
-	qazdq1QIkQl4neqPQcIbIUMUmoUJ3W4bJH/+KvBY/6gRc7oTM2TnRF4hPWMjQWsiUkxdoWMbpeq
-	wFbrGibJadbTSPTKCIH2sOMid9pZH85Rj7rC2CJguGiKviwOneYTQrCN6fA8BEA==
-X-Gm-Gg: AZuq6aLMbFe+pgGvDh0eLYzjCumELu4wAxwVkwZ58ED8tM1+fIsuB4v/6dAvCrd8tse
-	EtF7wE4YZRNUW/8S0LHBZrHqSWDumj2yfGCLwYyAgx0uORR2UHLL5LbEYMjOygSe6Vfkh5fMsHZ
-	TxcBMhZ4SzPsYK2/u51BdsmPU9O4vYf297GuNR/l7fx6s65yseu1F1sDj9MA8jnNQC/Zh2Cz67U
-	uMhlAikRGtpuZQ3VFepv1OZ8isMDhqbASn19PSjLRgMq5g3b3jYturo86FbSwbM4QBcRsorD32z
-	kaBzMW6bu/jh12infQ/4SKEB4Cg8piqedGZmzd1O1AmdOht1TSyq5e9Ah/1HW6c+M5ZkEO+Xc1i
-	nMM45Ah/U
-X-Received: by 2002:a05:622a:1993:b0:4f4:e14b:8039 with SMTP id d75a77b69052e-50314c7338dmr63588261cf.54.1769434634335;
-        Mon, 26 Jan 2026 05:37:14 -0800 (PST)
-X-Received: by 2002:a05:622a:1993:b0:4f4:e14b:8039 with SMTP id d75a77b69052e-50314c7338dmr63587921cf.54.1769434633914;
-        Mon, 26 Jan 2026 05:37:13 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.242.59])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8949dcf5c5asm76240246d6.36.2026.01.26.05.37.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jan 2026 05:37:13 -0800 (PST)
-Message-ID: <8b479852-69af-4b4e-836c-17b9622df576@redhat.com>
-Date: Mon, 26 Jan 2026 08:37:12 -0500
+	 In-Reply-To:Content-Type; b=QxRZwYOOQflKX5YED4Qhcr5uafZe/D7nZmwj3KLsGCxhQ7KYVgQI8V6S4QzZvSc3i1EuYKNWt4fBQfp7fMYru+rzaKhKTNKdvOzE3eYTlKW1FbGaZZYLUWUuqd+yB9X6uIRzzYE51LTftvtq2I++lqnuPD1zgUdrIxwt/N8htN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8t2MGZd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD0EC116C6;
+	Mon, 26 Jan 2026 14:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769438151;
+	bh=1Tl3/exD1R6JXaWWe2lxJ6tsFN/KWIRVRAoE98sG8cQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=q8t2MGZdU5QTRM/BamOJOVvaUdF2qHX0zai3uB33YS+xEiG3LAxFRSMDO8c/P2vMQ
+	 0KPQkO++qJjVGSLDuAYvBsEmKaVotIwmnBNf+Mz7TPjVw2SNFC3AXcreaHWEMos+LZ
+	 ZQeNn9CdMxjAHicY8h7YuWLnI2Ioy1hLN91EqppeX938nUf+dfVA43F5ynTmbI+1dh
+	 iFZAiOSB/v61PXs4IWBqjZBNB0cv7IeMF/Q08FAFrB6rD7kmjtHieutnFqIXBA+Bh2
+	 20ZgfvOnjLLSFrZRNiU/ydvRdtrA33pzYMSh9P4NEj6n1ejVZoJV037W4WnmivAFSD
+	 BbU1LO3iIyjqQ==
+Message-ID: <f41b27dc-fd7a-4a39-b490-1a19b3947f90@kernel.org>
+Date: Mon, 26 Jan 2026 09:35:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -105,142 +53,202 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH] Rename CONFIG_NFSV41 to CONFIG_BLKMAPD and
- disable by default
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: hch@infradead.org, carnil@debian.org, linux-nfs@vger.kernel.org
-References: <aWc5dO3fP4J67x0H@infradead.org>
- <20260114145435.826165-1-smayhew@redhat.com>
+Subject: Re: [PATCH v2 00/42] Clarify module API boundaries
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@ownmail.net>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <20260123185259.1215767-1-cel@kernel.org>
+ <448bfee54bdf87e6f2fd8895697c9b4c001e70e2.camel@kernel.org>
+From: Chuck Lever <cel@kernel.org>
 Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20260114145435.826165-1-smayhew@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: kernel.org
+In-Reply-To: <448bfee54bdf87e6f2fd8895697c9b4c001e70e2.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18472-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18473-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,configure.ac:url]
-X-Rspamd-Queue-Id: C0AFE890BA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 638EA89A28
 X-Rspamd-Action: no action
 
-
-
-On 1/14/26 9:54 AM, Scott Mayhew wrote:
-> pNFS block layout is deprecated in favor of pNFS SCSI layout, which
-> doesn't require the use of blkmapd.
+On 1/26/26 7:51 AM, Jeff Layton wrote:
+> On Fri, 2026-01-23 at 13:52 -0500, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> The first thirteen patches in this series refactor the lockd code
+>> base to clearly separate its public API from internal implementation
+>> details. The remainder are presented for context, but demonstrate
+>> the intended purpose of the clean-up in the first thirteen.
+>>
+>> The lockd subsystem currently exposes internal implementation headers
+>> through include/linux/lockd/, creating implicit API contracts that
+>> complicate maintenance. External consumers such as NFSD and the NFS
+>> client have developed dependencies on internal structures like struct
+>> nlm_host, and wire protocol constants leak into high-level module
+>> interfaces.
+>>
+>> These patches work to establish clean architectural boundaries. The
+>> public API in include/linux/lockd/ is reduced to bind.h and nlm.h,
+>> which define the contract between lockd and its consumers. Private
+>> implementation details including XDR definitions, share management,
+>> and host structures are relocated to fs/lockd/ where they belong.
+>> Layering violations are corrected: the NFS client now uses accessor
+>> helpers instead of dereferencing internal structures, and nlm_fopen()
+>> returns errno values instead of wire protocol codes.
+>>
+>> These changes enable subsequent work to modernize the NLMv4 XDR
+>> layer using xdrgen without risk of breaking external consumers.
+>> This work appears in the remaining patches in this series, which
+>> are presented here only to provide context for the API adjustments.
+>> No need to review those closely just yet.
+>>
+>> The series is based on the public nfsd-testing branch.
+>>
+>> ---
+>>
+>> Changes since v1:
+>> - Refine the pre-requisite header adjustments
+>> - Reduce stack consumption by moving large structures to wrappers
+>> - Additional extensive clean up
+>>
+>> Chuck Lever (42):
+>>   lockd: Simplify cast_status() in svcproc.c
+>>   lockd: Introduce nlm__int__deadlock
+>>   lockd: Have nlm_fopen() return errno values
+>>   lockd: Relocate nlmsvc_unlock API declarations
+>>   NFS: Use nlmclnt_rpc_clnt() helper to retrieve nlm_host's rpc_clnt
+>>   lockd: Move xdr4.h from include/linux/lockd/ to fs/lockd/
+>>   lockd: Move share.h from include/linux/lockd/ to fs/lockd/
+>>   lockd: Relocate include/linux/lockd/lockd.h
+>>   lockd: Remove lockd/debug.h
+>>   lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
+>>   lockd: Make linux/lockd/nlm.h an internal header
+>>   lockd: Move nlm4svc_set_file_lock_range()
+>>   lockd: Relocate svc_version definitions to XDR layer
+>>   Documentation: Add the RPC language description of NLM version 4
+>>   lockd: Use xdrgen XDR functions for the NLMv4 NULL procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
+>>   lockd: Refactor nlm4svc_callback()
+>>   lockd: Use xdrgen XDR functions for the NLMv4 TEST_MSG procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_MSG procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_MSG procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_MSG procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_MSG procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 TEST_RES procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_RES procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_RES procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_RES procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_RES procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
+>>   lockd: Convert server-side undefined procedures to xdrgen
+>>   lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
+>>   lockd: Prepare share helpers for xdrgen conversion
+>>   lockd: Use xdrgen XDR functions for the NLMv4 SHARE procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
+>>   lockd: Use xdrgen XDR functions for the NLMv4 FREE_ALL procedure
+>>   lockd: Add LOCKD_SHARE_SVID constant for DOS sharing mode
+>>   lockd: Remove C macros that are no longer used
+>>   lockd: Remove dead code from fs/lockd/xdr4.c
+>>
+>>  Documentation/sunrpc/xdr/nlm4.x     |  211 ++++
+>>  fs/lockd/Makefile                   |   30 +-
+>>  fs/lockd/clnt4xdr.c                 |    5 +-
+>>  fs/lockd/clntlock.c                 |    2 +-
+>>  fs/lockd/clntproc.c                 |    2 +-
+>>  fs/lockd/clntxdr.c                  |    3 +-
+>>  fs/lockd/host.c                     |    2 +-
+>>  {include/linux => fs}/lockd/lockd.h |   99 +-
+>>  fs/lockd/mon.c                      |    2 +-
+>>  {include/linux => fs}/lockd/nlm.h   |    8 +-
+>>  fs/lockd/nlm4xdr_gen.c              |  724 +++++++++++
+>>  fs/lockd/nlm4xdr_gen.h              |   32 +
+>>  {include/linux => fs}/lockd/share.h |   19 +-
+>>  fs/lockd/svc.c                      |   50 +-
+>>  fs/lockd/svc4proc.c                 | 1783 ++++++++++++++++++---------
+>>  fs/lockd/svclock.c                  |   12 +-
+>>  fs/lockd/svcproc.c                  |   99 +-
+>>  fs/lockd/svcshare.c                 |   40 +-
+>>  fs/lockd/svcsubs.c                  |   32 +-
+>>  fs/lockd/trace.h                    |    3 +-
+>>  fs/lockd/xdr.c                      |    6 +-
+>>  {include/linux => fs}/lockd/xdr.h   |   15 +-
+>>  fs/lockd/xdr4.c                     |  347 ------
+>>  fs/nfs/sysfs.c                      |   10 +-
+>>  fs/nfsd/lockd.c                     |   51 +-
+>>  fs/nfsd/nfsctl.c                    |    2 +-
+>>  include/linux/lockd/bind.h          |   23 +-
+>>  include/linux/lockd/debug.h         |   40 -
+>>  include/linux/lockd/xdr4.h          |   43 -
+>>  include/linux/sunrpc/xdrgen/nlm4.h  |  233 ++++
+>>  30 files changed, 2750 insertions(+), 1178 deletions(-)
+>>  create mode 100644 Documentation/sunrpc/xdr/nlm4.x
+>>  rename {include/linux => fs}/lockd/lockd.h (84%)
+>>  rename {include/linux => fs}/lockd/nlm.h (91%)
+>>  create mode 100644 fs/lockd/nlm4xdr_gen.c
+>>  create mode 100644 fs/lockd/nlm4xdr_gen.h
+>>  rename {include/linux => fs}/lockd/share.h (58%)
+>>  rename {include/linux => fs}/lockd/xdr.h (91%)
+>>  delete mode 100644 fs/lockd/xdr4.c
+>>  delete mode 100644 include/linux/lockd/debug.h
+>>  delete mode 100644 include/linux/lockd/xdr4.h
+>>  create mode 100644 include/linux/sunrpc/xdrgen/nlm4.h
 > 
-> Since CONFIG_NFSV41 (enabled by default, but can be disabled via
-> --disable-nfsv41) is only used to enable blkmapd, let's rename it to
-> CONFIG_BLKMAPD and change the default to disabled.
+> I went through the series and it looks good overall. I definitely like
+> moving away from hand-rolled XDR handling. You can add this to the
+> series:
 > 
-> Distributions that wish to continue to include blkmapd can do so by
-> adding --enable-blkmapd to their configure script invocation.
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 > 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Committed... (tag: nfs-utils-2-8-5-rc2)
+> There is still the matter of the race vs. the shutdown file, but that's
+> a preexisting problem.
 
-steved.
+So the first time around I didn't quite catch the gist of your proposal
+to add a lockd API to deal with this. Obviously it makes sense that such
+an API will also remove the direct access to the internal struct field.
 
-> ---
->   configure.ac        | 22 +++++++++++-----------
->   systemd/Makefile.am |  2 +-
->   utils/Makefile.am   |  2 +-
->   3 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/configure.ac b/configure.ac
-> index 6da23915..bcbf0d69 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -85,22 +85,22 @@ AC_ARG_ENABLE(nfsv4,
->   	AC_SUBST(enable_nfsv4)
->   	AM_CONDITIONAL(CONFIG_NFSV4, [test "$enable_nfsv4" = "yes"])
->   
-> -AC_ARG_ENABLE(nfsv41,
-> -	[AS_HELP_STRING([--disable-nfsv41],[disable support for NFSv41 @<:@default=no@:>@])],
-> -	enable_nfsv41=$enableval,
-> -	enable_nfsv41=yes)
-> -	if test "$enable_nfsv41" = yes; then
-> +AC_ARG_ENABLE(blkmapd,
-> +	[AS_HELP_STRING([--enable-blkmapd],[enable support for blkmapd @<:@default=no@:>@])],
-> +	enable_blkmapd=$enableval,
-> +	enable_blkmapd=no)
-> +	if test "$enable_blkmapd" = yes; then
->   		if test "$enable_nfsv4" != yes; then
-> -			AC_MSG_WARN([NFS v4 is not enabled. Disabling NFS v4.1])
-> -			enable_nfsv41=no
-> +			AC_MSG_WARN([NFS v4 is not enabled. Disabling blkmapd.])
-> +			enable_blkmapd=no
->   		fi
->   		BLKMAPD=blkmapd
->   	else
-> -		enable_nfsv41=
-> +		enable_blkmapd=
->   		BLKMAPD=
->   	fi
-> -	AC_SUBST(enable_nfsv41)
-> -	AM_CONDITIONAL(CONFIG_NFSV41, [test "$enable_nfsv41" = "yes"])
-> +	AC_SUBST(enable_blkmapd)
-> +	AM_CONDITIONAL(CONFIG_BLKMAPD, [test "$enable_blkmapd" = "yes"])
->   
->   AC_ARG_ENABLE(gss,
->   	[AS_HELP_STRING([--disable-gss],[disable client support for rpcsec_gss @<:@default=no@:>@])],
-> @@ -398,7 +398,7 @@ else
->     enable_nfsdcltrack="no"
->   fi
->   
-> -if test "$enable_nfsv41" = yes; then
-> +if test "$enable_blkmapd" = yes; then
->     AC_CHECK_LIB([devmapper], [dm_task_create], [LIBDEVMAPPER="-ldevmapper"], AC_MSG_ERROR([libdevmapper needed]))
->     AC_CHECK_HEADER(libdevmapper.h, , AC_MSG_ERROR([Cannot find devmapper header file libdevmapper.h]))
->     AC_CHECK_HEADER(sys/inotify.h, , AC_MSG_ERROR([Cannot find header file sys/inotify.h]))
-> diff --git a/systemd/Makefile.am b/systemd/Makefile.am
-> index 5e481421..9cc940dc 100644
-> --- a/systemd/Makefile.am
-> +++ b/systemd/Makefile.am
-> @@ -32,7 +32,7 @@ unit_files += \
->       nfsv4-server.service
->   endif
->   
-> -if CONFIG_NFSV41
-> +if CONFIG_BLKMAPD
->   unit_files += \
->       nfs-blkmap.service
->   endif
-> diff --git a/utils/Makefile.am b/utils/Makefile.am
-> index e5cb81e7..bfa12081 100644
-> --- a/utils/Makefile.am
-> +++ b/utils/Makefile.am
-> @@ -11,7 +11,7 @@ if CONFIG_NFSV4SERVER
->   OPTDIRS += exportd
->   endif
->   
-> -if CONFIG_NFSV41
-> +if CONFIG_BLKMAPD
->   OPTDIRS += blkmapd
->   endif
->   
+So I've folded all that together into a replacement for 05/42.
 
+
+> I presume you intend to let this sit in -next
+> for a while? It's a big change so it'd be good to have a nice long test
+> cycle with it.
+
+I was thinking of applying at least 1 - 13 to nfsd-testing soon so it
+will show up in nfsd-next as soon as the 7.0 merge window closes.
+
+
+-- 
+Chuck Lever
 
