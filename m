@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18506-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18507-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uJH/M+DGd2nckgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18506-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:56:16 +0100
+	id gNT4Ee3Gd2nckgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18507-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:56:29 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 749058CD2B
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:56:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CC6E8CD33
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:56:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 55703303E485
+	by sea.lore.kernel.org (Postfix) with ESMTP id CFBD2304208C
 	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:55:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2AE128BAB9;
-	Mon, 26 Jan 2026 19:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD05128C037;
+	Mon, 26 Jan 2026 19:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM2iK4WI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/ewdfG8"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06AC288C81
-	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 19:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A92A28DB46
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 19:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769457348; cv=none; b=OOp1d09yfY/Zd/5mGZO9KnCDLrIj9ImvbVzrMEradEDS2om+3Lw3+zt90d53srk0AAli6C0JLeCZrfdXkzp4xEd2+jQGNlU4uFdI9n5i1rw94eexrIoCUTW+eItA/uOUk54CLyozR8GwM7EzlS6GIPrYja0Vt4Xsx95PEyH3+lo=
+	t=1769457349; cv=none; b=hn472UDNbsP9EPJ5V37+pbRnONV6Zzs/z6HmkYHb0i9kijeVHBpXzQGAdvkAkB25ZIZn22eirQPj1OXuPuRMcAwabdTWOW/4f/ZGoCt/U53GdNOqCWbfFYwgYUQWmS0/4PF/vtrtX4zzT5o/tADiaNr9rVqxP38b+6HlUvnagbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769457348; c=relaxed/simple;
-	bh=Ad8FsgEpD1m/K+VE1Lx0dz8EuBwymdZcOfhV8U02i50=;
+	s=arc-20240116; t=1769457349; c=relaxed/simple;
+	bh=VxDGufFAnYwP2gcbpsjkNqhJMr1L4G3BB5P6tF8D6xA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aLJwZ/RUAsPrdQ0QhkASxh9ecUtjdeExws40WqhndEg5zkGY4IkJaWE1MvIPvSZcPlqlDaM3QTJPCC9nxa+q7fQ16Xeksv5BsHd1wdOBQSQj0fYEkAugQK7KIWu7wlKOIPR1Q4dq99D/uDpA0UCb3zLZ393MRxJdCI+E7FeULjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM2iK4WI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D495C116C6;
+	 MIME-Version; b=XiPdCjvclHCJkOTzWSmtq8jxPrw3xs8eWhkYCmjGLRKjGx6gtEdJxLMlDFwpDHXMcreNnhOjg6bdscPnkKZHcIGy8KzevPUCxWybdZYooow+iEV+FEjjjj8GiIPlubL4tYSCOJpnr0nkXZ7YQHtuZ12m1vi9+fSAL51RSFN6RA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/ewdfG8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BA2C2BC86;
 	Mon, 26 Jan 2026 19:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769457348;
-	bh=Ad8FsgEpD1m/K+VE1Lx0dz8EuBwymdZcOfhV8U02i50=;
+	s=k20201202; t=1769457349;
+	bh=VxDGufFAnYwP2gcbpsjkNqhJMr1L4G3BB5P6tF8D6xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eM2iK4WIELpnllTGZsfKR8yVLWZSmY1lL6ZxkGdN8UxVS2Trj1g5ROua6JW0Hv7jM
-	 QZqwxvWFoLKOhqKG3HkywoavRa1YcG6d9LRUxBQ80ZdthFMYW+zTpq2HbDOJS7cJyC
-	 FqXw8GgWKinSvReyuTrSGJvIwg8jHQn7c5h4vpLnWgUFbn4GyHmy+wdY/im62WWBDQ
-	 MdYzHsayvWSHuCAYyHYSpcPBxaV9+ri/UBf3sZcDR+YiVieqDD4L7haCSsMbS3RVSv
-	 J+6T1Wy80cPb8UQzsw7eN+m/xHUvbXtdWSk3pAPtCxhmuhOTQyY5BoGfs9niPDzUxZ
-	 UeCkwq4yGBoFg==
+	b=A/ewdfG8vR1WmF62soE7oDLsfFX+5GUFadLMuTZYghg4L0FXkfO/63tc7+RD4XFfw
+	 8Qza2nqXJU7CEjuYT7ylerkRWMOt2O8y32MOLRXxYpvO2UPocESrmqmxq/GyBeyzS5
+	 IYyNDggy4+l+JlCP6Sa2gp918kt242vGtRZnYw6m0ht1A0+aVjyRPgveT+kQlgf63+
+	 2NWK5ex3RgUrmLOb9NfnUZwCtbGGB+H3VVZ/RlUuN7DusVZbpOi50h61mCu2OOwT4p
+	 daLdqndPQvC8M0/RIKvH+ZKG2hcviaObg47+7/PmvEqN4Og+DmmRv4hODFkZUIBEow
+	 kr6Ref3v3vrRA==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 13/14] lockd: Move nlm4svc_set_file_lock_range()
-Date: Mon, 26 Jan 2026 14:55:34 -0500
-Message-ID: <20260126195535.154697-14-cel@kernel.org>
+Subject: [PATCH v3 14/14] lockd: Relocate svc_version definitions to XDR layer
+Date: Mon, 26 Jan 2026 14:55:35 -0500
+Message-ID: <20260126195535.154697-15-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260126195535.154697-1-cel@kernel.org>
 References: <20260126195535.154697-1-cel@kernel.org>
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18506-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18507-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -94,129 +94,265 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 749058CD2B
+X-Rspamd-Queue-Id: 6CC6E8CD33
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Both client-side and server-side NLMv4 code convert lock byte ranges
-from the wire format (start, length) to the kernel's file_lock format
-(start, end). The current nlm4svc_set_file_lock_range() performs this
-conversion, but the "svc" prefix incorrectly suggests server-only use,
-and client code must include server-internal headers to access it.
+Public RPC server interfaces become cluttered when internal
+XDR implementation details leak into them. The procedure count,
+maximum XDR buffer size, and per-CPU call counters serve no
+purpose outside the code that encodes and decodes NLM protocol
+messages. Exposing these values through global headers creates
+unnecessary coupling between the RPC dispatch logic and the
+XDR layer.
 
-Rename to lockd_set_file_lock_range4() and relocate to the shared
-lockd.h header, making it accessible to both client and server code.
-This eliminates the need for client code to include xdr4.h, reducing
-coupling between the XDR implementation files.
+Relocating the svc_version structure definitions confines this
+implementation information to the files where XDR encoding and
+decoding occur. In svc.c, the buffer size computation now reads
+vs_xdrsize from the version structures rather than relying on a
+preprocessor constant. This calculation occurs at service
+initialization, after the linker has resolved the version
+structure definitions. The dispatch function becomes non-static
+because both the version structures and the dispatcher reside in
+different translation units.
 
-While relocating the function, add input validation: clamp the
-starting offset to OFFSET_MAX before use. Without this, a malformed
-lock request with off > OFFSET_MAX results in fl_start > fl_end,
-violating file_lock invariants and potentially causing incorrect
-lock conflict detection.
+The NLMSVC_XDRSIZE macro is removed from xdr.h because buffer
+size is now computed from the union of XDR argument and result
+structures, matching the pattern used in other RPC services.
+Version 1 and 3 share the same procedure table but maintain
+separate counter arrays. Version 4 remains separate due to its
+distinct procedure definitions.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/clnt4xdr.c |  2 +-
- fs/lockd/lockd.h    | 25 +++++++++++++++++++++++++
- fs/lockd/xdr4.c     | 13 +------------
- fs/lockd/xdr4.h     |  1 -
- 4 files changed, 27 insertions(+), 14 deletions(-)
+ fs/lockd/lockd.h    |  6 ++++--
+ fs/lockd/svc.c      | 48 +++++++++++----------------------------------
+ fs/lockd/svc4proc.c | 23 +++++++++++++++++++++-
+ fs/lockd/svcproc.c  | 38 ++++++++++++++++++++++++++++++++++-
+ fs/lockd/xdr.h      |  5 -----
+ 5 files changed, 74 insertions(+), 46 deletions(-)
 
-diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
-index 61ee5fa6dfa4..c09e67765cac 100644
---- a/fs/lockd/clnt4xdr.c
-+++ b/fs/lockd/clnt4xdr.c
-@@ -287,7 +287,7 @@ static int decode_nlm4_holder(struct xdr_stream *xdr, struct nlm_res *result)
- 	fl->c.flc_type  = exclusive != 0 ? F_WRLCK : F_RDLCK;
- 	p = xdr_decode_hyper(p, &l_offset);
- 	xdr_decode_hyper(p, &l_len);
--	nlm4svc_set_file_lock_range(fl, l_offset, l_len);
-+	lockd_set_file_lock_range4(fl, l_offset, l_len);
- 	error = 0;
- out:
- 	return error;
 diff --git a/fs/lockd/lockd.h b/fs/lockd/lockd.h
-index e73c6b348154..ef6431b4cac0 100644
+index ef6431b4cac0..ad4c6701b64a 100644
 --- a/fs/lockd/lockd.h
 +++ b/fs/lockd/lockd.h
-@@ -413,6 +413,31 @@ static inline int nlm_compare_locks(const struct file_lock *fl1,
- 	     &&(fl1->c.flc_type  == fl2->c.flc_type || fl2->c.flc_type == F_UNLCK);
- }
+@@ -221,9 +221,10 @@ struct nlm_block {
+  * Global variables
+  */
+ extern const struct rpc_program	nlm_program;
+-extern const struct svc_procedure nlmsvc_procedures[24];
++extern const struct svc_version nlmsvc_version1;
++extern const struct svc_version nlmsvc_version3;
+ #ifdef CONFIG_LOCKD_V4
+-extern const struct svc_procedure nlmsvc_procedures4[24];
++extern const struct svc_version nlmsvc_version4;
+ #endif
+ extern int			nlmsvc_grace_period;
+ extern unsigned long		nlm_timeout;
+@@ -318,6 +319,7 @@ void		  nlmsvc_traverse_blocks(struct nlm_host *, struct nlm_file *,
+ void		  nlmsvc_grant_reply(struct nlm_cookie *, __be32);
+ void		  nlmsvc_release_call(struct nlm_rqst *);
+ void		  nlmsvc_locks_init_private(struct file_lock *, struct nlm_host *, pid_t);
++int		  nlmsvc_dispatch(struct svc_rqst *rqstp);
  
-+/**
-+ * lockd_set_file_lock_range4 - set the byte range of a file_lock
-+ * @fl: file_lock whose length fields are to be initialized
-+ * @off: starting offset of the lock, in bytes
-+ * @len: length of the byte range, in bytes, or zero
-+ *
-+ * The NLMv4 protocol represents lock byte ranges as (start, length),
-+ * where length zero means "lock to end of file." The kernel's file_lock
-+ * structure uses (start, end) representation. Convert from NLMv4 format
-+ * to file_lock format, clamping the starting offset and treating
-+ * arithmetic overflow as "lock to EOF."
-+ */
-+static inline void
-+lockd_set_file_lock_range4(struct file_lock *fl, u64 off, u64 len)
-+{
-+	u64 clamped_off = (off > OFFSET_MAX) ? OFFSET_MAX : off;
-+	s64 end = clamped_off + len - 1;
-+
-+	fl->fl_start = clamped_off;
-+	if (len == 0 || end < 0)
-+		fl->fl_end = OFFSET_MAX;
-+	else
-+		fl->fl_end = end;
-+}
-+
- extern const struct lock_manager_operations nlmsvc_lock_operations;
- 
- #endif /* _LOCKD_LOCKD_H */
-diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
-index f57d4881d5f1..dbbb2dfcb81b 100644
---- a/fs/lockd/xdr4.c
-+++ b/fs/lockd/xdr4.c
-@@ -34,17 +34,6 @@ loff_t_to_s64(loff_t offset)
- 	return res;
- }
- 
--void nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len)
--{
--	s64 end = off + len - 1;
--
--	fl->fl_start = off;
--	if (len == 0 || end < 0)
--		fl->fl_end = OFFSET_MAX;
--	else
--		fl->fl_end = end;
--}
--
  /*
-  * NLM file handles are defined by specification to be a variable-length
-  * XDR opaque no longer than 1024 bytes. However, this implementation
-@@ -91,7 +80,7 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
+  * File handling for the server personality
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 9dd7f8e11544..490551369ef2 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -44,7 +44,6 @@
+ #include "netlink.h"
  
- 	locks_init_lock(fl);
- 	fl->c.flc_type  = F_RDLCK;
--	nlm4svc_set_file_lock_range(fl, lock->lock_start, lock->lock_len);
-+	lockd_set_file_lock_range4(fl, lock->lock_start, lock->lock_len);
- 	return true;
- }
+ #define NLMDBG_FACILITY		NLMDBG_SVC
+-#define LOCKD_BUFSIZE		(1024 + NLMSVC_XDRSIZE)
  
-diff --git a/fs/lockd/xdr4.h b/fs/lockd/xdr4.h
-index 7be318c0512b..4ddf51a2e0ea 100644
---- a/fs/lockd/xdr4.h
-+++ b/fs/lockd/xdr4.h
-@@ -15,7 +15,6 @@
- #define	nlm4_fbig		cpu_to_be32(NLM_FBIG)
- #define	nlm4_failed		cpu_to_be32(NLM_FAILED)
+ static struct svc_program	nlmsvc_program;
  
--void	nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len);
- bool	nlm4svc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr);
- bool	nlm4svc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
- bool	nlm4svc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+@@ -319,6 +318,7 @@ static struct notifier_block lockd_inet6addr_notifier = {
+ static int lockd_get(void)
+ {
+ 	struct svc_serv *serv;
++	unsigned int bufsize;
+ 	int error;
+ 
+ 	if (nlmsvc_serv) {
+@@ -334,7 +334,15 @@ static int lockd_get(void)
+ 		printk(KERN_WARNING
+ 			"lockd_up: no pid, %d users??\n", nlmsvc_users);
+ 
+-	serv = svc_create(&nlmsvc_program, LOCKD_BUFSIZE, lockd);
++#ifdef CONFIG_LOCKD_V4
++	bufsize = 1024 + max3(nlmsvc_version1.vs_xdrsize,
++			      nlmsvc_version3.vs_xdrsize,
++			      nlmsvc_version4.vs_xdrsize);
++#else
++	bufsize = 1024 + max(nlmsvc_version1.vs_xdrsize,
++			     nlmsvc_version3.vs_xdrsize);
++#endif
++	serv = svc_create(&nlmsvc_program, bufsize, lockd);
+ 	if (!serv) {
+ 		printk(KERN_WARNING "lockd_up: create service failed\n");
+ 		return -ENOMEM;
+@@ -640,7 +648,7 @@ module_exit(exit_nlm);
+  *  %0: Processing complete; do not send a Reply
+  *  %1: Processing complete; send Reply in rqstp->rq_res
+  */
+-static int nlmsvc_dispatch(struct svc_rqst *rqstp)
++int nlmsvc_dispatch(struct svc_rqst *rqstp)
+ {
+ 	const struct svc_procedure *procp = rqstp->rq_procinfo;
+ 	__be32 *statp = rqstp->rq_accept_statp;
+@@ -671,40 +679,6 @@ static int nlmsvc_dispatch(struct svc_rqst *rqstp)
+ /*
+  * Define NLM program and procedures
+  */
+-static DEFINE_PER_CPU_ALIGNED(unsigned long, nlmsvc_version1_count[17]);
+-static const struct svc_version	nlmsvc_version1 = {
+-	.vs_vers	= 1,
+-	.vs_nproc	= 17,
+-	.vs_proc	= nlmsvc_procedures,
+-	.vs_count	= nlmsvc_version1_count,
+-	.vs_dispatch	= nlmsvc_dispatch,
+-	.vs_xdrsize	= NLMSVC_XDRSIZE,
+-};
+-
+-static DEFINE_PER_CPU_ALIGNED(unsigned long,
+-			      nlmsvc_version3_count[ARRAY_SIZE(nlmsvc_procedures)]);
+-static const struct svc_version	nlmsvc_version3 = {
+-	.vs_vers	= 3,
+-	.vs_nproc	= ARRAY_SIZE(nlmsvc_procedures),
+-	.vs_proc	= nlmsvc_procedures,
+-	.vs_count	= nlmsvc_version3_count,
+-	.vs_dispatch	= nlmsvc_dispatch,
+-	.vs_xdrsize	= NLMSVC_XDRSIZE,
+-};
+-
+-#ifdef CONFIG_LOCKD_V4
+-static DEFINE_PER_CPU_ALIGNED(unsigned long,
+-			      nlmsvc_version4_count[ARRAY_SIZE(nlmsvc_procedures4)]);
+-static const struct svc_version	nlmsvc_version4 = {
+-	.vs_vers	= 4,
+-	.vs_nproc	= ARRAY_SIZE(nlmsvc_procedures4),
+-	.vs_proc	= nlmsvc_procedures4,
+-	.vs_count	= nlmsvc_version4_count,
+-	.vs_dispatch	= nlmsvc_dispatch,
+-	.vs_xdrsize	= NLMSVC_XDRSIZE,
+-};
+-#endif
+-
+ static const struct svc_version *nlmsvc_version[] = {
+ 	[1] = &nlmsvc_version1,
+ 	[3] = &nlmsvc_version3,
+diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+index 86dfeb6ce68d..c99f192bce77 100644
+--- a/fs/lockd/svc4proc.c
++++ b/fs/lockd/svc4proc.c
+@@ -530,7 +530,7 @@ struct nlm_void			{ int dummy; };
+ #define	St	1					/* status */
+ #define	Rg	4					/* range (offset + length) */
+ 
+-const struct svc_procedure nlmsvc_procedures4[24] = {
++static const struct svc_procedure nlm4svc_procedures[24] = {
+ 	[NLMPROC_NULL] = {
+ 		.pc_func = nlm4svc_proc_null,
+ 		.pc_decode = nlm4svc_decode_void,
+@@ -772,3 +772,24 @@ const struct svc_procedure nlmsvc_procedures4[24] = {
+ 		.pc_name = "FREE_ALL",
+ 	},
+ };
++
++/*
++ * Storage requirements for XDR arguments and results
++ */
++union nlm4svc_xdrstore {
++	struct nlm_args			args;
++	struct nlm_res			res;
++	struct nlm_reboot		reboot;
++};
++
++static DEFINE_PER_CPU_ALIGNED(unsigned long,
++			      nlm4svc_call_counters[ARRAY_SIZE(nlm4svc_procedures)]);
++
++const struct svc_version nlmsvc_version4 = {
++	.vs_vers	= 4,
++	.vs_nproc	= ARRAY_SIZE(nlm4svc_procedures),
++	.vs_proc	= nlm4svc_procedures,
++	.vs_count	= nlm4svc_call_counters,
++	.vs_dispatch	= nlmsvc_dispatch,
++	.vs_xdrsize	= sizeof(union nlm4svc_xdrstore),
++};
+diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+index e9a6bcc3bf2e..75b0dfa1a79a 100644
+--- a/fs/lockd/svcproc.c
++++ b/fs/lockd/svcproc.c
+@@ -555,7 +555,7 @@ struct nlm_void			{ int dummy; };
+ #define	No	(1+1024/4)			/* Net Obj */
+ #define	Rg	2				/* range - offset + size */
+ 
+-const struct svc_procedure nlmsvc_procedures[24] = {
++static const struct svc_procedure nlmsvc_procedures[24] = {
+ 	[NLMPROC_NULL] = {
+ 		.pc_func = nlmsvc_proc_null,
+ 		.pc_decode = nlmsvc_decode_void,
+@@ -797,3 +797,39 @@ const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_name = "FREE_ALL",
+ 	},
+ };
++
++/*
++ * Storage requirements for XDR arguments and results
++ */
++union nlmsvc_xdrstore {
++	struct nlm_args			args;
++	struct nlm_res			res;
++	struct nlm_reboot		reboot;
++};
++
++/*
++ * NLMv1 defines only procedures 1 - 15. Linux lockd also implements
++ * procedures 0 (NULL) and 16 (SM_NOTIFY).
++ */
++static DEFINE_PER_CPU_ALIGNED(unsigned long, nlm1svc_call_counters[17]);
++
++const struct svc_version nlmsvc_version1 = {
++	.vs_vers	= 1,
++	.vs_nproc	= 17,
++	.vs_proc	= nlmsvc_procedures,
++	.vs_count	= nlm1svc_call_counters,
++	.vs_dispatch	= nlmsvc_dispatch,
++	.vs_xdrsize	= sizeof(union nlmsvc_xdrstore),
++};
++
++static DEFINE_PER_CPU_ALIGNED(unsigned long,
++			      nlm3svc_call_counters[ARRAY_SIZE(nlmsvc_procedures)]);
++
++const struct svc_version nlmsvc_version3 = {
++	.vs_vers	= 3,
++	.vs_nproc	= ARRAY_SIZE(nlmsvc_procedures),
++	.vs_proc	= nlmsvc_procedures,
++	.vs_count	= nlm3svc_call_counters,
++	.vs_dispatch	= nlmsvc_dispatch,
++	.vs_xdrsize	= sizeof(union nlmsvc_xdrstore),
++};
+diff --git a/fs/lockd/xdr.h b/fs/lockd/xdr.h
+index af821ecf2a4e..3c60817c4349 100644
+--- a/fs/lockd/xdr.h
++++ b/fs/lockd/xdr.h
+@@ -88,11 +88,6 @@ struct nlm_reboot {
+ 	struct nsm_private	priv;
+ };
+ 
+-/*
+- * Contents of statd callback when monitored host rebooted
+- */
+-#define NLMSVC_XDRSIZE		sizeof(struct nlm_args)
+-
+ bool	nlmsvc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ bool	nlmsvc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
+ bool	nlmsvc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
 -- 
 2.52.0
 
