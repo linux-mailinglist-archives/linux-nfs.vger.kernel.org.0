@@ -1,60 +1,59 @@
-Return-Path: <linux-nfs+bounces-18467-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18468-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sMg7ADhgd2n8eQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18467-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:38:16 +0100
+	id SB1TM3Bjd2lefAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18468-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:52:00 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98B71885D8
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:38:15 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C690887D6
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 13:52:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4C6293015AD2
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 12:35:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3A4F0301DEFD
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 12:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8685246B5;
-	Mon, 26 Jan 2026 12:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC453375C3;
+	Mon, 26 Jan 2026 12:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNhYP6t3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SK2VZkB9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6240A15530C
-	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 12:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994F3376A1
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 12:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769430866; cv=none; b=d73oPN1yfCncOqqoTOv7vSdh4NovZLZ0SSUyZHi2V1rDAD5ZcIDGSg1GoSi6OotqD5jH/nqd3ZCX+vVdNvDKIMwhquwqR4eftuSls9Zp4dmpyEzV6TWyhsSCibqtUj/mPy1XLR3z8ArW4o0B2t4ahrXc4KStW1XpwBBsv6w8JIE=
+	t=1769431897; cv=none; b=NtH6j0cDlqaOeiXhwu6QwyxJvc9PQCPi7CNWuPfRqrI+VARUILI2ZeNdjtBL315HXeyClS/CZgyXdQmIsQBdtbM2jaoSO5Vu09roIyBDQ4gInJgTK/m6A2uuE+Wv8ua8UAW9vGlYqkBEATk60EAb+M2H8UQwKSamdzd1GWgrp2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769430866; c=relaxed/simple;
-	bh=WJxPCtDP6GrApHM7p39LFUaGUhplgVQj2gTSDPB8rqw=;
+	s=arc-20240116; t=1769431897; c=relaxed/simple;
+	bh=TgL2rUYt9RIvse3rkQdggVRA7EF41kpxIyCE/k7n5Og=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YBFGk49uwD0PGRiCSPyeDT5GySTKhFudd2P6yDpeQPpmscT5AONxNj7JI+MgJEqQFM0wPYIGHolqWBBi1zdGcvxNmLEGMd3LTdfxFDF1oUE6G28AW6lbc+/wB2f3cwWkxZReRJ24iXNxwHEDOksXI5V4jMFN4at7bIcFZJMzzU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNhYP6t3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52629C116C6;
-	Mon, 26 Jan 2026 12:34:25 +0000 (UTC)
+	 Content-Type:MIME-Version; b=gMNSXULskUTPlbv2TfSVD2aQnDFS+UlCcx/taTNtb+Be5jxDU2X1+qf5/zLTbv9r2r0qd1chkGGuLyZaIZZUVu1F7SwYybIfLdEdgwo0BH5U92Oj89tAGT6QNiDKBG6nJOPpR5nvw826vlH4YGaZA/0oCRwRQXpF7CRsL8ZF1W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SK2VZkB9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A80C116C6;
+	Mon, 26 Jan 2026 12:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769430866;
-	bh=WJxPCtDP6GrApHM7p39LFUaGUhplgVQj2gTSDPB8rqw=;
+	s=k20201202; t=1769431896;
+	bh=TgL2rUYt9RIvse3rkQdggVRA7EF41kpxIyCE/k7n5Og=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=JNhYP6t365Bu8Xt+N8E6j0jgqvAe8ta6eRF6l4zu4XjjPosozsrgNOkZEUWBYNKuD
-	 BY2KDm257mkkXSsKIJVrOOwE9b1rhC5p/3z30fVSkN7eNR4OD5z1l0LMtHCUV121qQ
-	 IWGTx+PrNBNSdwsQJ4dmK1NkPhd/pS5A8tBNbaFIU6TSJBCDeLwcwxBqZqcqIjQySg
-	 Bm8UQ0QtSALF+gHIhxHChg3nVGnwbWu3m2P2vFyqS6fvo4hhDy4KGUx0wQ6u+gNVvG
-	 l5LCoQo/KNZLGIzYKkx19nkcH6sGAm9WO9kCi8m/9LsdMb04Yhl8X+qFQu8B+a2+I0
-	 u5GKy0I0hvgag==
-Message-ID: <59cb862609db9a605c848805df55a60567be90ab.camel@kernel.org>
-Subject: Re: [PATCH v2 02/42] lockd: Introduce nlm__int__deadlock
+	b=SK2VZkB9RP+42LttlQZ4hdVVRzP8hARnFqnOHn1q35SgBgQX4OHdaSmADQXTXppWj
+	 8/IgOUTbwiGOuPCatjE5/L5CCcgEbe0cnq8WI/w5WPw0uKTDp9Dj+qcCuQLDTLrXqp
+	 Au9xpC24urdnrT66MVIH+fbQtKfd/kLmKDLS08ifsCsrubsRBZQdJbH5quJwUG0zoV
+	 zaNp72/T8liZn70Mx/VueAm58ax2uTR2eq85oQ/aWH4zCD/vV41VAxxTQSVTtHBCDC
+	 JQZKX36ET6yzu63Dx58q7z1yptX4kk+IQUcWAHgNw43mWFzELsRFf1iwUvIm4zV4p4
+	 8TfoJ1V8cpvew==
+Message-ID: <448bfee54bdf87e6f2fd8895697c9b4c001e70e2.camel@kernel.org>
+Subject: Re: [PATCH v2 00/42] Clarify module API boundaries
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 26 Jan 2026 07:34:24 -0500
-In-Reply-To: <20260123185259.1215767-3-cel@kernel.org>
+Date: Mon, 26 Jan 2026 07:51:34 -0500
+In-Reply-To: <20260123185259.1215767-1-cel@kernel.org>
 References: <20260123185259.1215767-1-cel@kernel.org>
-	 <20260123185259.1215767-3-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -142,12 +141,12 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18467-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18468-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
@@ -160,27 +159,149 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 98B71885D8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 8C690887D6
 X-Rspamd-Action: no action
 
 On Fri, 2026-01-23 at 13:52 -0500, Chuck Lever wrote:
-> =20
-> +/*
-> + * Internal-use status codes, not to be placed on the wire.
-> + * Version handlers translate these to appropriate wire values.
-> + */
-> +#define nlm_drop_reply		cpu_to_be32(30000)
-> +#define nlm__int__deadlock	cpu_to_be32(30001)
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> The first thirteen patches in this series refactor the lockd code
+> base to clearly separate its public API from internal implementation
+> details. The remainder are presented for context, but demonstrate
+> the intended purpose of the clean-up in the first thirteen.
+>=20
+> The lockd subsystem currently exposes internal implementation headers
+> through include/linux/lockd/, creating implicit API contracts that
+> complicate maintenance. External consumers such as NFSD and the NFS
+> client have developed dependencies on internal structures like struct
+> nlm_host, and wire protocol constants leak into high-level module
+> interfaces.
+>=20
+> These patches work to establish clean architectural boundaries. The
+> public API in include/linux/lockd/ is reduced to bind.h and nlm.h,
+> which define the contract between lockd and its consumers. Private
+> implementation details including XDR definitions, share management,
+> and host structures are relocated to fs/lockd/ where they belong.
+> Layering violations are corrected: the NFS client now uses accessor
+> helpers instead of dereferencing internal structures, and nlm_fopen()
+> returns errno values instead of wire protocol codes.
+>=20
+> These changes enable subsequent work to modernize the NLMv4 XDR
+> layer using xdrgen without risk of breaking external consumers.
+> This work appears in the remaining patches in this series, which
+> are presented here only to provide context for the API adjustments.
+> No need to review those closely just yet.
+>=20
+> The series is based on the public nfsd-testing branch.
+>=20
+> ---
+>=20
+> Changes since v1:
+> - Refine the pre-requisite header adjustments
+> - Reduce stack consumption by moving large structures to wrappers
+> - Additional extensive clean up
+>=20
+> Chuck Lever (42):
+>   lockd: Simplify cast_status() in svcproc.c
+>   lockd: Introduce nlm__int__deadlock
+>   lockd: Have nlm_fopen() return errno values
+>   lockd: Relocate nlmsvc_unlock API declarations
+>   NFS: Use nlmclnt_rpc_clnt() helper to retrieve nlm_host's rpc_clnt
+>   lockd: Move xdr4.h from include/linux/lockd/ to fs/lockd/
+>   lockd: Move share.h from include/linux/lockd/ to fs/lockd/
+>   lockd: Relocate include/linux/lockd/lockd.h
+>   lockd: Remove lockd/debug.h
+>   lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
+>   lockd: Make linux/lockd/nlm.h an internal header
+>   lockd: Move nlm4svc_set_file_lock_range()
+>   lockd: Relocate svc_version definitions to XDR layer
+>   Documentation: Add the RPC language description of NLM version 4
+>   lockd: Use xdrgen XDR functions for the NLMv4 NULL procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
+>   lockd: Refactor nlm4svc_callback()
+>   lockd: Use xdrgen XDR functions for the NLMv4 TEST_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_MSG procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 TEST_RES procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 LOCK_RES procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_RES procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_RES procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_RES procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
+>   lockd: Convert server-side undefined procedures to xdrgen
+>   lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
+>   lockd: Prepare share helpers for xdrgen conversion
+>   lockd: Use xdrgen XDR functions for the NLMv4 SHARE procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
+>   lockd: Use xdrgen XDR functions for the NLMv4 FREE_ALL procedure
+>   lockd: Add LOCKD_SHARE_SVID constant for DOS sharing mode
+>   lockd: Remove C macros that are no longer used
+>   lockd: Remove dead code from fs/lockd/xdr4.c
+>=20
+>  Documentation/sunrpc/xdr/nlm4.x     |  211 ++++
+>  fs/lockd/Makefile                   |   30 +-
+>  fs/lockd/clnt4xdr.c                 |    5 +-
+>  fs/lockd/clntlock.c                 |    2 +-
+>  fs/lockd/clntproc.c                 |    2 +-
+>  fs/lockd/clntxdr.c                  |    3 +-
+>  fs/lockd/host.c                     |    2 +-
+>  {include/linux =3D> fs}/lockd/lockd.h |   99 +-
+>  fs/lockd/mon.c                      |    2 +-
+>  {include/linux =3D> fs}/lockd/nlm.h   |    8 +-
+>  fs/lockd/nlm4xdr_gen.c              |  724 +++++++++++
+>  fs/lockd/nlm4xdr_gen.h              |   32 +
+>  {include/linux =3D> fs}/lockd/share.h |   19 +-
+>  fs/lockd/svc.c                      |   50 +-
+>  fs/lockd/svc4proc.c                 | 1783 ++++++++++++++++++---------
+>  fs/lockd/svclock.c                  |   12 +-
+>  fs/lockd/svcproc.c                  |   99 +-
+>  fs/lockd/svcshare.c                 |   40 +-
+>  fs/lockd/svcsubs.c                  |   32 +-
+>  fs/lockd/trace.h                    |    3 +-
+>  fs/lockd/xdr.c                      |    6 +-
+>  {include/linux =3D> fs}/lockd/xdr.h   |   15 +-
+>  fs/lockd/xdr4.c                     |  347 ------
+>  fs/nfs/sysfs.c                      |   10 +-
+>  fs/nfsd/lockd.c                     |   51 +-
+>  fs/nfsd/nfsctl.c                    |    2 +-
+>  include/linux/lockd/bind.h          |   23 +-
+>  include/linux/lockd/debug.h         |   40 -
+>  include/linux/lockd/xdr4.h          |   43 -
+>  include/linux/sunrpc/xdrgen/nlm4.h  |  233 ++++
+>  30 files changed, 2750 insertions(+), 1178 deletions(-)
+>  create mode 100644 Documentation/sunrpc/xdr/nlm4.x
+>  rename {include/linux =3D> fs}/lockd/lockd.h (84%)
+>  rename {include/linux =3D> fs}/lockd/nlm.h (91%)
+>  create mode 100644 fs/lockd/nlm4xdr_gen.c
+>  create mode 100644 fs/lockd/nlm4xdr_gen.h
+>  rename {include/linux =3D> fs}/lockd/share.h (58%)
+>  rename {include/linux =3D> fs}/lockd/xdr.h (91%)
+>  delete mode 100644 fs/lockd/xdr4.c
+>  delete mode 100644 include/linux/lockd/debug.h
+>  delete mode 100644 include/linux/lockd/xdr4.h
+>  create mode 100644 include/linux/sunrpc/xdrgen/nlm4.h
 
-nit: the double underscores look weird next to nlm_drop_reply. Maybe
-you could also rename it to nlm__int__drop_reply?
+I went through the series and it looks good overall. I definitely like
+moving away from hand-rolled XDR handling. You can add this to the
+series:
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+There is still the matter of the race vs. the shutdown file, but that's
+a preexisting problem. I presume you intend to let this sit in -next
+for a while? It's a big change so it'd be good to have a nice long test
+cycle with it.
 
