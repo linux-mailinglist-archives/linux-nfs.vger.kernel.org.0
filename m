@@ -1,245 +1,157 @@
-Return-Path: <linux-nfs+bounces-18491-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18492-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +LtgJxe6d2lGkgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18491-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:01:43 +0100
+	id 8CQbKpi9d2l8kgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18492-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:16:40 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4041C8C4AD
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:01:43 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F2D48C75E
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:16:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7251930058F1
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:01:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 361133037496
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75A7A20B810;
-	Mon, 26 Jan 2026 19:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1D8626ED3A;
+	Mon, 26 Jan 2026 19:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXHtuceF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CibmWdwn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529921F30AD;
-	Mon, 26 Jan 2026 19:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC691A3178
+	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 19:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769454101; cv=none; b=ItOlXb7x6cK30ClUWH5vYh1Pgb20Ctl6fHMKdueISD+oJaKZBUT3AQaPQEOg1XodWmJISvMYn+5YrkNO7Dw2s7hBgQU9PW2FcRFZluSYIGjseOjifuO8GqhtY+dWiG3XdAHTg/HzS+aedJdhV0MV/Mg5vSMt2KxWUpBD8frPbEM=
+	t=1769454969; cv=none; b=jcmWdmjI8pSOh3g7GGD/lNBi/y+zWWLNKmTAIKPnvKBrL6cPy9XKWkmz4xM7kRPMSV8RJYbQZA+RIBXx27GqDVrO/NldH7/spVBjzyonnXSettIQvgTWqgJuD6KaL97Gumv77qYn3mAadW9x4Q+W2GDJS7joScEOiUXvXgfckww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769454101; c=relaxed/simple;
-	bh=l93hlbEyLc+w9+V7vcsTvvUPIRFqS0itMLiaYqMaNFY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hPxbekMyfz8JCgIVXWqdALSBTNEiSNCDEwIshFZYtHFWmvxO+9H4QidWr6+/TlBzB6FDb7eiEz7jQgHh8UHmI/yquL6uorurRu8Nxkofy3BODxj3bv0eyHUNk5Uqel3bijSADlSZhULoNJ6HHlI411a/+G610USkSqzRgthXhpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXHtuceF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999A0C116C6;
-	Mon, 26 Jan 2026 19:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769454101;
-	bh=l93hlbEyLc+w9+V7vcsTvvUPIRFqS0itMLiaYqMaNFY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pXHtuceF8rrbD3JUjmXCAzZzpCxqmPanXzVO9Hx1/ElROCQrkESEeXrtCy57JHMk4
-	 KVbYGsVBx3RUQ3VYfCn2B2cdf9Uevw42IDK4DrBpy+JdddIBefLBFhTSjnk/08qbSc
-	 HHQ3MRPHXBDniRi8pzmaFdABzJc+MQZ16i9hALh6DJ95F9Y43mrgT07J71LqaSWYKa
-	 pA+L3UNHtBEvu25PQgCM+u82WUO1rPwwnZ3bb8ATssGoMTXh7dxHRphBBySzGlEHS0
-	 F040kLmb3iEU/mtAET3KK/qjziUwPNGJM5TXHXQ1+wT4fJ2a9kBjjHD4nG1Ozzs+b9
-	 GWR/1xMSU+oxw==
-Message-ID: <19540d70aaa8d92a65625f1a4530824d92f6ba44.camel@kernel.org>
-Subject: Re: [PATCH] sunrpc/xs_read_stream: fix dead loop when
- xs_read_discard
-From: Trond Myklebust <trondmy@kernel.org>
-To: "jack.zhou" <jack.wemmick@foxmail.com>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, "jack.zhou"
-	 <jacketzc@outlook.com>
-Date: Mon, 26 Jan 2026 14:01:39 -0500
-In-Reply-To: <tencent_DBA407008574A1E4BF7F27AD38AD4D13730A@qq.com>
-References: <tencent_DBA407008574A1E4BF7F27AD38AD4D13730A@qq.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=arc-20240116; t=1769454969; c=relaxed/simple;
+	bh=aZ0Zy2EK1CNFrxC039OrtNcZNxkVD+ScxC3qjWAsMkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=io5M8p1/ZAcIyzPcXiJm80vebS0xnfJKnRUTfH3Hp+RE2yqq1jSSfkQ7Uq14nr0fAKL/6P48qq5wbrJ63x5R37nwVcwhzGSRd8J05F6xJvqBGSTzLmRPOPI3sObuPVMk3PhnQl6Hl7C/mEptYy2tu/0pQv5oxXu5EkVIXLO+Vzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CibmWdwn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769454967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bd+PwC0gQCF1NZWm91E84POwKUikM3de5bMDm147GAk=;
+	b=CibmWdwnEmMx+x02QMfIRl6HZXxyD5DR+/Hqx2Os1Cmv1AEoHK3RXCiQSNeTIhHw2se71B
+	/heU0BiS890LG8T0Fz1HcEfF76eMwFh8a7R2auu2wffrm6+nbqLk2mOSdlLT+oi6OKKa3T
+	MxtSlHHsJvfjqo8gCMiIPS9kzNsf6fA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-311-ZaVmJ3DaPL6j_sMKfcrkgQ-1; Mon,
+ 26 Jan 2026 14:16:03 -0500
+X-MC-Unique: ZaVmJ3DaPL6j_sMKfcrkgQ-1
+X-Mimecast-MFC-AGG-ID: ZaVmJ3DaPL6j_sMKfcrkgQ_1769454962
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2D621944B0C;
+	Mon, 26 Jan 2026 19:16:02 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.81.42])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 06E191956095;
+	Mon, 26 Jan 2026 19:16:01 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: trond.myklebust@hammerspace.com,
+	anna.schumaker@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] pNFS: fix a missing wake up while waiting on NFS_LAYOUT_DRAIN
+Date: Mon, 26 Jan 2026 14:15:39 -0500
+Message-ID: <20260126191539.4280-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18491-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[foxmail.com];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_FROM(0.00)[bounces-18492-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,outlook.com:email,hammerspace.com:email]
-X-Rspamd-Queue-Id: 4041C8C4AD
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4F2D48C75E
 X-Rspamd-Action: no action
 
-On Mon, 2026-01-26 at 14:25 +0800, jack.zhou wrote:
-> From: "jack.zhou" <jacketzc@outlook.com>
->=20
-> Hi maintainers,
->=20
-> This bug was discovered during following scenario:
->=20
-> 1. Using NFS client with TCP mode
-> 2. RPC_REPLY process
->=20
->=20
-> Let's first review the normal process:
->=20
-> 1. The `xs_read_stream` function is located within the for loop of
-> the `xs_stream_data_receive` function. The condition for exiting is
-> that the return value ret of the `xs_read_stream` method is < 0.
-> 2. When entering the function `xs_read_stream`, since `transport-
-> >recv.len` =3D=3D 0, `xs_read_stream_header` will be called first. Based
-> on `transport->recv.calldir`, it decides whether to execute
-> `RPC_CALL` or `RPC_REPLY`;(and also sets the value of `transport-
-> >recv.len`)
-> 3. Since it is executing `RPC_REPLY`, the return value of the
-> function `xs_read_stream_reply` is provided by tcp.c's `tcp_recvmsg`,
-> indicating the size of the copied skb, and this value is > 0.
-> 4. Since it is a normal process, it will reach the end of the
-> function and return, which is:=20
-> ```
-> transport->recv.offset =3D 0;
-> transport->recv.len =3D 0;
-> return read;
-> ```
-> 5. The returned 'read' is the return value of the function
-> 'xs_read_stream_reply' in the RPC_REPLY process. Since this value is
-> > 0, the `xs_stream_data_receive` function's for loop cannot be
-> exited.
-> 6. After re-entering the xs_read_stream function, since transport-
-> >recv.len =3D=3D 0, xs_read_stream_header will still be called.
-> 7. Since the skb is empty, tcp.c's `tcp_recvmsg` will return a value
-> < 0, usually -EAGAIN (-11).
-> 8. Since the return value of xs_read_stream_header is < 0, the goto
-> out_err statement will be executed.
-> 9. The for loop of the xs_stream_data_receive function will be
-> exited.
-> 10. The next time xs_stream_data_receive is entered, the above steps
-> will be repeated.
->=20
->=20
-> Now we are encountering an abnormal process:
->=20
->=20
-> 1. For some reason, skb is contaminated, and `transport-
-> >recv.calldir` parses out an incorrect value, so `msg.msg_flags |=3D
-> MSG_TRUNC`;(and also sets the value of transport->recv.len)
-> 2. The `if (transport->recv.offset < transport->recv.len) {}`
-> condition will be executed
-> 3. The return value of function `xs_read_discard` is > 0, so when
-> returning to the upstream `xs_stream_data_receive` function, the for
-> loop cannot be exited
-> 4. When entering xs_read_stream again, since transport->recv.len !=3D
-> 0, `xs_read_stream_header` will no longer be executed, which means
-> `transport->recv.calldir` cannot be correctly set anymore
-> 5. This is fatal for all subsequent RPC Replies because `transport-
-> >recv.calldir` cannot be correctly set anymore, so they will all go
-> to `xs_read_discard`
-> 6. At the same time, since transport->recv.len has not been reset to
-> 0, this loop will become an infinite loop
->=20
-> Therefore, my approach is:
->=20
-> After reaching the point of `xs_read_discard` due to an abnormal
-> situation, the value of `transport->recv.len` will be reset in the
-> same way as a normal return, in order to prevent a deadlock from
-> occurring.
->=20
-> The modification has been tested and passed in version 5.10.160.
->=20
->=20
->=20
-> ---
-> =C2=A0net/sunrpc/xprtsock.c | 14 +++++++++++---
-> =C2=A01 file changed, 11 insertions(+), 3 deletions(-)
->=20
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index 2e1fe6013361..91d1b992eb7f 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -695,6 +695,13 @@ xs_read_stream_reply(struct sock_xprt
-> *transport, struct msghdr *msg, int flags)
-> =C2=A0	return ret;
-> =C2=A0}
-> =C2=A0
-> +static void
-> +xs_stream_reset_recv(struct sock_xprt *transport)
-> +{
-> +	transport->recv.offset =3D 0;
-> +	transport->recv.len =3D 0;
-> +}
-> +
-> =C2=A0static ssize_t
-> =C2=A0xs_read_stream(struct sock_xprt *transport, int flags)
-> =C2=A0{
-> @@ -740,8 +747,10 @@ xs_read_stream(struct sock_xprt *transport, int
-> flags)
-> =C2=A0		msg.msg_flags =3D 0;
-> =C2=A0		ret =3D xs_read_discard(transport->sock, &msg, flags,
-> =C2=A0				transport->recv.len - transport-
-> >recv.offset);
-> -		if (ret <=3D 0)
-> +		if (ret <=3D 0) {
-> +			xs_stream_reset_recv(transport);
-> =C2=A0			goto out_err;
-> +		}
-> =C2=A0		transport->recv.offset +=3D ret;
-> =C2=A0		read +=3D ret;
-> =C2=A0		if (transport->recv.offset !=3D transport->recv.len)
-> @@ -751,8 +760,7 @@ xs_read_stream(struct sock_xprt *transport, int
-> flags)
-> =C2=A0		trace_xs_stream_read_request(transport);
-> =C2=A0		transport->recv.copied =3D 0;
-> =C2=A0	}
-> -	transport->recv.offset =3D 0;
-> -	transport->recv.len =3D 0;
-> +	xs_stream_reset_recv(transport);
-> =C2=A0	return read;
-> =C2=A0out_err:
-> =C2=A0	return ret !=3D 0 ? ret : -ESHUTDOWN;
+It is possible to have a task get stuck on waiting on the
+NFS_LAYOUT_DRAIN in the following scenario
 
-NACK.
+1. cpu a: waiter test NFS_LAYOUT_DRAIN (1) and plh_outstanding (1)
+2. cpu b: atomic_dec_and_test() -> clear bit -> wake up
+3. cpu c: sets NFS_LAYOUT_DRAIN again
+4. cpu a: calls wait_on_bit() sleeps forever.
 
-If we're in the xs_read_discard() case, then that's because we're out
-of receive buffer space, and so we've given up reading the remainder of
-the message into that receive buffer. However we still have to read to
-the end of that message before we get to the next message in the TCP
-stream. The only thing that can prevent that is if someone breaks the
-connection, and in that case the client already takes care of resetting
-the message state as part of reconnecting.
+To expand on this we have say 2 outstanding pnfs write IO that get
+ESTALE which causes both to call pnfs_destroy_layout() and set the
+NFS_LAYOUT_DRAIN bit but the 1st one doesn't call the
+pnfs_put_layout_hdr() yet (as that would prevent the 2nd ESTALE write
+from trying to call pnfs_destroy_layout()). If the 1st ESTALE write
+is the one that initially sets the NFS_LAYOUT_DRAIN so that new IO
+on this file initiates new LAYOUTGET. Another new write would find
+NFS_LAYOUT_DRAIN set and phl_outstanding>0 (step 1) and would
+wait_on_bit(). LAYOUTGET completes doing step 2. Now, the 2nd of
+ESTALE writes is calling pnfs_destory_layout() and set the
+NFS_LAYOUT_DRAIN bit (step 3). Finally, the waiting write wakes up
+to check the bit and goes back to sleep.
 
-With this change, then as soon as there is no more buffered data to
-read from the socket and it returns EAGAIN, you will reset the message
-parameters. The result is that the next call to xs_read_stream() will
-just leave us reading random data from the middle of the message as if
-it were a new message header.
+The problem revolves around the fact that if NFS_LAYOUT_INVALID_STID
+was already set, it should not do the work of
+pnfs_mark_layout_stateid_invalid(), thus NFS_LAYOUT_DRAIN will not
+be set more than once for an invalid layout.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 880265c77ac4 ("pNFS: Avoid a live lock condition in pnfs_update_layout()")
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ fs/nfs/pnfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index f22943fb91cf..e5c50a24c83a 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -463,7 +463,8 @@ pnfs_mark_layout_stateid_invalid(struct pnfs_layout_hdr *lo,
+ 	};
+ 	struct pnfs_layout_segment *lseg, *next;
+ 
+-	set_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags);
++	if (test_and_set_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
++		return !list_empty(&lo->plh_segs);
+ 	clear_bit(NFS_INO_LAYOUTCOMMIT, &NFS_I(lo->plh_inode)->flags);
+ 	list_for_each_entry_safe(lseg, next, &lo->plh_segs, pls_list)
+ 		pnfs_clear_lseg_state(lseg, lseg_list);
+-- 
+2.47.3
+
 
