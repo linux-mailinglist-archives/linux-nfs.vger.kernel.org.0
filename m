@@ -1,455 +1,232 @@
-Return-Path: <linux-nfs+bounces-18486-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18487-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wLS3KEuvd2n2kAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18486-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:15:39 +0100
+	id sFKQAwmxd2k3kQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18487-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:23:05 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0369B8C008
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:15:38 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DCC18C0D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 19:23:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2E6A1305EC01
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 18:14:23 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8863B3006239
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 18:23:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14DF34DB67;
-	Mon, 26 Jan 2026 18:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16B8121ABB9;
+	Mon, 26 Jan 2026 18:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Is/xDOjx"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="b2dB3R9i"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020085.outbound.protection.outlook.com [52.101.85.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEABA34DB5C;
-	Mon, 26 Jan 2026 18:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769451261; cv=none; b=u8A74VlUQ6aolJ3GyOIkuBn245fXeRrXQHZtnPE1zzILQ/lSA0soaef+PV3ZpWIE2UDIOl6OI+v5R4ztlM0XyOwjgA/18/IlvdH0SL/En0+cdZumM0FJPMeDp6dq0p6Yzw6nhaOwTV0+fpJkhCl/abqXLp7aU4Q6OfxqFOymBWU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769451261; c=relaxed/simple;
-	bh=GqHoFKlICzAtwkELf/PPKiHVN3AMVmyd0NvMPUhCkWo=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5581DE8BE;
+	Mon, 26 Jan 2026 18:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769451779; cv=fail; b=Wa2H2EmxwdK2l1Cfs/4Ew0OL72OcISOAJvtnGnLznTPaw42DE+gGkvezHlT7f45VyrFKpHgLNEkZo0EEkiTFGhX2R2PnnYGtZMsPzsWW/7AU+n+jiE8kC6VjKuIum8IDV33Wt+H4AAnKcyytlmTJ33STQ3Mt8aDpkCv49Pv/J+M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769451779; c=relaxed/simple;
+	bh=b1YuXGoY3GYMoe5hb7IsJ5KbjhVcV8/2e6oi6QWZm+s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ki1YWgBv1x2NAVXGYrmDcMZS5Wcyt52uAL8gO74cNX2f31Nzqw1GMEO/G32htVKfGv2E3rPgMMhkIEOxBOFLbQ7ZsVQ0pVvZ7O1Jw5j/G0kU7qTaH4uEZjzCwLGo1bW9FsHMS06GKtFMdbt38qi2pJ5y5WcJpMMkKTrkbj0NqNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Is/xDOjx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278DAC116C6;
-	Mon, 26 Jan 2026 18:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769451261;
-	bh=GqHoFKlICzAtwkELf/PPKiHVN3AMVmyd0NvMPUhCkWo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Is/xDOjx2heuZa6+ahhOdd5WshwIGHBawgHvQHxAgGcKGN3gih/qbrDP+oxK4JhFG
-	 4CyjQ8LhVfWWkoTxq/8RGsA82FeEiy+yyhSJzYXxjFcPcrnmAn4KrFJcgoRDgHZ4EL
-	 AV5lwhk+Ivomt9+sKdYqPKOsN9j27xXglv+dsKWt1zEFBolb9T5geaGqGEN8ZZ+nB6
-	 j+FG8ZmQvQRvmrW3jLRhYGs1NSUXetgzAUO24Aq3u5/BOx986aMt6WGCMXyL1dXPBJ
-	 Booon52dZsnC/9I9aujP3VxOKurLoOXfjROkqc2LOJ2E5OHGvHi6aCOfaakZ1XZ/tf
-	 GqpE7d0TNSqog==
-From: Chuck Lever <cel@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Cc: <linux-rdma@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v4 5/5] svcrdma: use bvec-based RDMA read/write API
-Date: Mon, 26 Jan 2026 13:14:14 -0500
-Message-ID: <20260126181414.105062-6-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260126181414.105062-1-cel@kernel.org>
-References: <20260126181414.105062-1-cel@kernel.org>
+	 Content-Type:MIME-Version; b=N0yOKXLX5sJRtNSQsXU3ueW7UUc8BsOzwTwanjNDK9BhbkMDlm+lbHnxTsDz2iYGPiIsgaX3beDmGoI/rBRqLh4e3Ux5SQwCk5OJjwQKaOr8EnG4wPFIIsHnq/uh8Ly/geCvhSyTanlhhaI28+zsEhwzTsfFS1KhpHVTVrc4nt8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=b2dB3R9i; arc=fail smtp.client-ip=52.101.85.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fAVE3n/xy9QwwZ2t+xdK83M/DanX+m9ZR5D85azqEQBXJCSx6n5mQOFxCwF6Sok+D7oAy432cuLp9sfs0IYfpoTpU357akbPXDyVoWTA9U0G/0pvDHGkx0tfphNbwJ9jdKsQupQgyRfqWxgY8+RXsgSqOrIewLSD4nwYfBGXSZ3PjWPmf1iUHVOHIaMbon0Nbq5F4kn04R2UdhxxHvdJbafBsHSZjMghTs5I6E4x37+gvaESgwMv2x4XtWrLfKncukTgYC3QLSfP+ww/CpwBWkxlmJEyQJ/bP5Rs3+KbX0ug0fXZwAkonRwAbAMRT6QPXx1OOJ27D53yM93/UQWUFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HNcaxp5SWML22oSPFy+lTtOBVBs12B+yWB51xaFix9w=;
+ b=ZVUrL8/t5FSpRA/AT1KDt3SiTYWZRU72p4P/f37Kubfew/z91+jLkD4wlqZiq57PtzZLQlIkcnNfNxy8lHIBmMzpYbDhZOXhYTcVpudLFYBRio3PXU0O/GQdav2zGy8gQwFKXMnK8eL5C77TENH34sYzdqjG9EKCYgR9zFOTrNmij737VnmDO+Aq/7NofhdOtmMAHOfj9cYpF8/bZei+9q/ZesKUvcvOSXMLKuC84E9WLHm68339e6mZxRYsOgj9WqNEDIZ1qmDyviPI3VprJRgzcr9Jc9BI2oz/nEEneq4qzsgU9pBOWGP9FgEgzsuApa/2tBLVar2wexKN3Rzzwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HNcaxp5SWML22oSPFy+lTtOBVBs12B+yWB51xaFix9w=;
+ b=b2dB3R9ifwvrhQuae8lnEx2CpLy9AQX9cO5LBCATXxvC2z1ardvdlqX5MGqdYnxZPsylaDfQDL9a2uUSCAYgxyPvHCZR03NYihxZsxy1NQ1dTGfTZdhiqxNbvRyOxo8D58ehoWNRpmCnbTJAiHzWIuy7svybkZfENkeBSt2tmoY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+Received: from DM8PR13MB5239.namprd13.prod.outlook.com (2603:10b6:5:314::5) by
+ SA0PR13MB3934.namprd13.prod.outlook.com (2603:10b6:806:92::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9542.12; Mon, 26 Jan 2026 18:22:53 +0000
+Received: from DM8PR13MB5239.namprd13.prod.outlook.com
+ ([fe80::fa6e:7b5:d1ec:92f3]) by DM8PR13MB5239.namprd13.prod.outlook.com
+ ([fe80::fa6e:7b5:d1ec:92f3%4]) with mapi id 15.20.9542.010; Mon, 26 Jan 2026
+ 18:22:53 +0000
+From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, NeilBrown <neil@brown.name>,
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+ Rick Macklem <rick.macklem@gmail.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
+Date: Mon, 26 Jan 2026 13:22:49 -0500
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <D3263C1D-A15E-48EC-B05A-8DC6A0C2B37A@hammerspace.com>
+In-Reply-To: <33c02e5a-03e7-42ef-8ccd-790a9b29a763@kernel.org>
+References: <> <e545c35e-31fc-4069-8d83-1f9585e82532@app.fastmail.com>
+ <176921979948.16766.5458950508894093690@noble.neil.brown.name>
+ <686CBEE5-D524-409D-8508-D3D48706CC02@hammerspace.com>
+ <77e7a645-66bd-4ce2-b963-2a2488595b00@kernel.org>
+ <8be0a065a84bed02735141b4333e9c49a2ab0c90.camel@kernel.org>
+ <33c02e5a-03e7-42ef-8ccd-790a9b29a763@kernel.org>
+Content-Type: text/plain
+X-ClientProxiedBy: PH8P223CA0022.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:510:2db::27) To DM8PR13MB5239.namprd13.prod.outlook.com
+ (2603:10b6:5:314::5)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR13MB5239:EE_|SA0PR13MB3934:EE_
+X-MS-Office365-Filtering-Correlation-Id: 16d0d6b7-e68c-426c-936e-08de5d07eb61
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AFadxF2F8SmTkny+/cF40bPOr29Q9Pz+J+twLHIuy4a934HL0tkY9OnxP9vq?=
+ =?us-ascii?Q?WxtBKO+9qKLvoWMiCb55l9AYlyrl0M/691VCqLTW6wrUpzZotMAuuBHS8AAQ?=
+ =?us-ascii?Q?uvQhgWGvntOfczUKEUYB4DxBNsLivQ01GmvGKf3wavBSZPBMsopBZ2l8rsaR?=
+ =?us-ascii?Q?fOvM+hHaRlmk8QOQvo+7GvVEiCk21EyRdTYcZQ5njUUmt6epCXpd5jljS9LW?=
+ =?us-ascii?Q?1qOkfVrRjrpmTub8n8l9RgFVJfnko/exxsOKK9vC6XKa+GAHHPUjtexVMdH8?=
+ =?us-ascii?Q?gS1xs1at1tP3y/ZFBh/Bg6z4R0GZxgL7L1jJ7bVYZ+ScD+wuBYccGF1rVSsU?=
+ =?us-ascii?Q?N4WfqhS8ZXLD35x70sL+bh7FR5Y8C7zXQomfda6L3GrkeSHuKz2ArK7JlwvK?=
+ =?us-ascii?Q?vSHf572kZ3JO4WXz8ufhLYyFTdxpGCjbxqKB/38shb+SkukEgt1DE4zSI9fi?=
+ =?us-ascii?Q?M51KV4CTvUpi+iFgSIpV6WFvHEZsM2z6NHvXMkt24PoDT1t/nIqdmZv8o1jF?=
+ =?us-ascii?Q?qruRXMKe2GYxPn56iv3LcSYb9TYPlX0F4tM+rqTslUROFghVaYjbInZDenuR?=
+ =?us-ascii?Q?q86wCtfK3a6+7Dbf7zdQwrpiUkRfJnnAkbC64AVGKY9LVvcfAgnOciyqTgo2?=
+ =?us-ascii?Q?OAN3948hIrQm0uW8Q2Z2tjmiMzllZs8tFcEnVPrZR/vphB+S07q28WfVj/A2?=
+ =?us-ascii?Q?t+/2hBklVIr5NqqvAWvWt+cEHiqihwWxtJyU8D/9wdF38/QEKFC+zuEaOgrh?=
+ =?us-ascii?Q?D0t5mWfCiu4d7mZ/lfNHMM1NRw36srmWLKx+tEBV1AS/8Ldwq3SJ+51ojbrv?=
+ =?us-ascii?Q?M1xwbWnZFz8spfTylVIugUMGiro49WgLvpetBlrQ+1/2P7VN8IL3IK7HJMdq?=
+ =?us-ascii?Q?3rJqjVlfXM6vWinFPkEMyW9jqUDP0VbxVejxFGq1qkM+q2Z3DNqZzsO7CZ2V?=
+ =?us-ascii?Q?H88rsDpnRw577l8fPJnczNjU6hpxsseIkrXuvgzNIXr1v/yDNmTf0gjM3sMN?=
+ =?us-ascii?Q?aAauRTHhSLbVxAM7dyGhrWXMGubTbfKJ4unpM9NjRqG4H5p1LMONrLLvcRoK?=
+ =?us-ascii?Q?quiMOfWKcfToTx2WUgTWRniJyQp3+sz5PlQXhJIrFw9x9fCkzelxweHND/tR?=
+ =?us-ascii?Q?X21eUSRJg0zSmoqhC44Pul8CnV9V9gHlfMAY0PPNWFqUXgXqaZALVHYYTAHc?=
+ =?us-ascii?Q?lmPdbVgMURIo77EsT1jy1ftghsDwPr/RPoFiXEQzy7RK5ohYg1BefdyB6fdF?=
+ =?us-ascii?Q?6acVI7TL+Fw6zWr7Se4QpBM1MOi2Jwwl6A4Zk5zGDzAnFs8jLmofORfi5xCK?=
+ =?us-ascii?Q?LTt5vOOHGmJXWNJbg6iz0R21ls0bk3RA8R75W47RykcrSgl77CkGGzhbZqIr?=
+ =?us-ascii?Q?PU1qz+o0clRLWXyg5yWB3ezEU4c0KhGiIuH3sGjrCaygYpwSkSkHOfiV44Js?=
+ =?us-ascii?Q?VZNl92mw+qbK2Hzl5vTtBSlfOTsibKpg25G3tfCZ0R9bkioQMhANdhGS88Yt?=
+ =?us-ascii?Q?3DPtHbTUxpE9xhcaiQ/Dkaur7pRaUkVkfg26hDc96P3PweTgcPhqw1ihHKFg?=
+ =?us-ascii?Q?0q3ZnBwIS31bgwWY7b0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5239.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TQU+HD+nuPn4gm7GUbhDOwPHbkHfLPn7zZS3xze4N2eMlqMViqmeMqLeDgRq?=
+ =?us-ascii?Q?UPuv5rQLM/AUCdovCY2iEBxg1AqBUgHbVJ7FefAb7uH55kxHgHd9PRPVRy+D?=
+ =?us-ascii?Q?hrTIYoxpPxmu/Q7SDAJBQndH9kuu07zKK6umSoNwoN2NsR8bR+6iv0PhKMiw?=
+ =?us-ascii?Q?yTKnUYzUHgbtGvzBB01EDJrhuZbSw3DViU8rt4RYfypYWy36TV0cWX+EIAAk?=
+ =?us-ascii?Q?vAH8BCCtp8MaC7WVjX61I/f7ePP7OqpVa1QtkYyWtmjiEG9l3XExHt85upER?=
+ =?us-ascii?Q?AmyuFOu+UgjqMRtxgTBo/bm+DpwbEwo0NbB69rVz++YNc/GRzygR2TBBQxui?=
+ =?us-ascii?Q?KWDPpVF622U8yX2S+0WU/FaHouJKysjb6nm5x8PpBFeAmB31mcs/H8QxLKJ2?=
+ =?us-ascii?Q?FDULfTGdS2Kj2LVm8X9cdZzQOqe7lsmhh0M8f9mmvD8yoWlmmBxUdTBvBSUP?=
+ =?us-ascii?Q?59KPNQAnInxg2jmd/jwoEwZYKA81YOfNSgEFzZpbgzCvAHauXildXfqihwxp?=
+ =?us-ascii?Q?FhmjqCQYPBv915fGvHlObsRHFQL66/y34BXEqgrg9WY90Yyd2PbCULeAthMi?=
+ =?us-ascii?Q?hc5uwInGRwm3Vwf+CmE41Mpp1RBnG8w08j0Evfk3RFO1QnF34xJEM3jFFyar?=
+ =?us-ascii?Q?pkxrgvMV+2eaygp+V567ffSIdNhDIDUR2KO9xiVxuYJi4qgP924EIpk7zbWU?=
+ =?us-ascii?Q?pwEBNmfK0nIVuh4re8fYA3ZBCA3ur0UxSnI4CRbOQqrXVwnrt93lVL6Bxiov?=
+ =?us-ascii?Q?HbcXlVz94wMamwmdGgKwWiifZ4IG5ahBRqe26meMBQB8LcQSSyOI2HB7GoLU?=
+ =?us-ascii?Q?xyJSntyx53K6/2J1ImHvG2iL5WW0Ge5j8Dt9Yu3C4HQQ3WLC7MAw6BkKSUcw?=
+ =?us-ascii?Q?lFeUMPFFnq0JDAwSt8+YNLARv9jZeACnioJwC0VaRcGslyQ5VDCR3qTQEr/X?=
+ =?us-ascii?Q?exxSJkqkl53EWxmZz2TZfHjE05ChH0Itww3liYpQ4NSlAQHSd3bRoXi1stDG?=
+ =?us-ascii?Q?3f4sy2UNgIqqx4FrQH4NokowcmQP5JkmvbfHD48WiXLJWDS0HT2WJ2rs4lyc?=
+ =?us-ascii?Q?lUb54i/qgnUzpBVsfSjBB6x0tFHsEqecYAcn9l6Mhj9vsKd5GZWo8/JcJMiZ?=
+ =?us-ascii?Q?MlDwzpCqm9dmHI7HPbQSnQfV84lbqz9d4tFQJjwjRk3PAmi4NfHWHoB9Hcjc?=
+ =?us-ascii?Q?m9X5XPhWQT1iN+o2hE7aJAxIM/53IbMsdlZrsC0w/BHYI8FS9csd8tvD2r1F?=
+ =?us-ascii?Q?DPfdFrBsKxno6U3yrSHkQVPPWnp6kc7tdhwgBxmAMooDdm+zoY5L/p+Gbihq?=
+ =?us-ascii?Q?RkiD5guzN7B1yEdICfKHex8kN37kGotPy1WYixqJzoRYQAkbF+2i0T+pRJbS?=
+ =?us-ascii?Q?MmQthAoq1ZQVSspn33BNdS1u2DtlpmkJjp7r63x4n9MnH0v0GTpKCs/G2itY?=
+ =?us-ascii?Q?uprCsmWtUAARCGCBe6p3ILk7IaWk6umAbAbBlAFqrmNnoDbCBbsrt51gp4JK?=
+ =?us-ascii?Q?jt7UCVUFlToubhrY7t+HljpbPOvSEv6VOd5XmjTJFGudqfcadFuXC4+41/cE?=
+ =?us-ascii?Q?thZwdNEIQbKprpp1Gc+l2ZrJt67qJGfPZiPLcddp/34SiHEULryfdo9/n7NA?=
+ =?us-ascii?Q?u0LUTAKqb2/2VZYzbxy+/COhTlpg19UcSWRNKWdUFmKniK4uE8NgJDprxXTq?=
+ =?us-ascii?Q?eKJdjZisemxjI+wGOk50sIsrVt+NHZKdDeks0Juse36Jn2qXNw+pyUG7roqw?=
+ =?us-ascii?Q?r3yXRFXEK6RypChsau1e7sAkTzt5Kn4=3D?=
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16d0d6b7-e68c-426c-936e-08de5d07eb61
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5239.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2026 18:22:52.9987
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0Mvd3ZGetRolFwRbcX3T1U1nEhdHoKZibWdKvhX5HQfEvL6ZvKyOjiP6xUAGTpbZYvuRJ/7gDoAP585rYBWFkJ+gZq8A1/U+ChN9IP2kr6s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR13MB3934
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [1.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18486-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,brown.name,oracle.com,gmail.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18487-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[bcodding@hammerspace.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.995];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 0369B8C008
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:mid,hammerspace.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2DCC18C0D1
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On 24 Jan 2026, at 14:48, Chuck Lever wrote:
 
-Convert svcrdma to the bvec-based RDMA API introduced earlier in
-this series.
+> I can't recall if Wireshark is smart enough to introspect Linux NFSD
+> file handles (I thought it could). It would be sensible to have some
+> Wireshark update code in hand before making the final decision about
+> keeping the new auth_type.
 
-The bvec-based RDMA API eliminates the intermediate scatterlist
-conversion step, allowing direct DMA mapping from bio_vec arrays.
-This simplifies the svc_rdma_rw_ctxt structure by removing the
-chained SG table management.
+I've gone digging and wireshark has a surprising amount of filehandle
+dissection code - it currently can "Decode As:"
 
-The structure retains an inline array approach similar to the
-previous scatterlist implementation: an inline bvec array sized
-to max_send_sge handles most I/O operations without additional
-allocation. Larger requests fall back to dynamic allocation.
-This preserves the allocation-free fast path for typical NFS
-operations while supporting arbitrarily large transfers.
+dissect_fhandle_data_SVR4
+dissect_fhandle_data_LINUX_KNFSD_LE
+dissect_fhandle_data_LINUX_NFSD_LE
+dissect_fhandle_data_NETAPP
+dissect_fhandle_data_NETAPP_V4
+dissect_fhandle_data_NETAPP_GX_v3
+dissect_fhandle_data_LINUX_KNFSD_NEW
+dissect_fhandle_data_GLUSTER
+dissect_fhandle_data_DCACHE
+dissect_fhandle_data_PRIMARY_DATA
+dissect_fhandle_data_CELERRA_VNX
+dissect_fhandle_data_unknown
 
-The bvec API handles all device types internally, including iWARP
-devices which require memory registration. No explicit fallback
-path is needed.
+.. almost all with finer grained filehandle components.  I certainly can add
+patches to parse FH_AT_MAC for the linux(s) decoders, but I admit I don't
+have any use case.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 155 +++++++++++++++++-------------
- 1 file changed, 86 insertions(+), 69 deletions(-)
+I'm completely neutral on keeping FH_AT_MAC at this point.
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 310de7a80be5..4ec2f9ae06aa 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -5,6 +5,8 @@
-  * Use the core R/W API to move RPC-over-RDMA Read and Write chunks.
-  */
- 
-+#include <linux/bvec.h>
-+#include <linux/overflow.h>
- #include <rdma/rw.h>
- 
- #include <linux/sunrpc/xdr.h>
-@@ -20,30 +22,33 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
- /* Each R/W context contains state for one chain of RDMA Read or
-  * Write Work Requests.
-  *
-- * Each WR chain handles a single contiguous server-side buffer,
-- * because scatterlist entries after the first have to start on
-- * page alignment. xdr_buf iovecs cannot guarantee alignment.
-+ * Each WR chain handles a single contiguous server-side buffer.
-+ * - each xdr_buf iovec is a single contiguous buffer
-+ * - the xdr_buf pages array is a single contiguous buffer because the
-+ *   second through the last element always start on a page boundary
-  *
-  * Each WR chain handles only one R_key. Each RPC-over-RDMA segment
-  * from a client may contain a unique R_key, so each WR chain moves
-  * up to one segment at a time.
-  *
-- * The scatterlist makes this data structure over 4KB in size. To
-- * make it less likely to fail, and to handle the allocation for
-- * smaller I/O requests without disabling bottom-halves, these
-- * contexts are created on demand, but cached and reused until the
-- * controlling svcxprt_rdma is destroyed.
-+ * The inline bvec array is sized to handle most I/O requests without
-+ * additional allocation. Larger requests fall back to dynamic allocation.
-+ * These contexts are created on demand, but cached and reused until
-+ * the controlling svcxprt_rdma is destroyed.
-  */
- struct svc_rdma_rw_ctxt {
- 	struct llist_node	rw_node;
- 	struct list_head	rw_list;
- 	struct rdma_rw_ctx	rw_ctx;
- 	unsigned int		rw_nents;
--	unsigned int		rw_first_sgl_nents;
--	struct sg_table		rw_sg_table;
--	struct scatterlist	rw_first_sgl[];
-+	unsigned int		rw_first_bvec_nents;
-+	struct bio_vec		*rw_bvec;
-+	struct bio_vec		rw_first_bvec[];
- };
- 
-+static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-+				 struct svc_rdma_rw_ctxt *ctxt);
-+
- static inline struct svc_rdma_rw_ctxt *
- svc_rdma_next_ctxt(struct list_head *list)
- {
-@@ -52,10 +57,10 @@ svc_rdma_next_ctxt(struct list_head *list)
- }
- 
- static struct svc_rdma_rw_ctxt *
--svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
-+svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int nr_bvec)
- {
- 	struct ib_device *dev = rdma->sc_cm_id->device;
--	unsigned int first_sgl_nents = dev->attrs.max_send_sge;
-+	unsigned int first_bvec_nents = dev->attrs.max_send_sge;
- 	struct svc_rdma_rw_ctxt *ctxt;
- 	struct llist_node *node;
- 
-@@ -65,33 +70,44 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- 	if (node) {
- 		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
- 	} else {
--		ctxt = kmalloc_node(struct_size(ctxt, rw_first_sgl, first_sgl_nents),
-+		ctxt = kmalloc_node(struct_size(ctxt, rw_first_bvec,
-+						first_bvec_nents),
- 				    GFP_KERNEL, ibdev_to_node(dev));
- 		if (!ctxt)
- 			goto out_noctx;
- 
- 		INIT_LIST_HEAD(&ctxt->rw_list);
--		ctxt->rw_first_sgl_nents = first_sgl_nents;
-+		ctxt->rw_first_bvec_nents = first_bvec_nents;
- 	}
- 
--	ctxt->rw_sg_table.sgl = ctxt->rw_first_sgl;
--	if (sg_alloc_table_chained(&ctxt->rw_sg_table, sges,
--				   ctxt->rw_sg_table.sgl,
--				   first_sgl_nents))
--		goto out_free;
-+	if (nr_bvec <= ctxt->rw_first_bvec_nents) {
-+		ctxt->rw_bvec = ctxt->rw_first_bvec;
-+	} else {
-+		ctxt->rw_bvec = kmalloc_array_node(nr_bvec,
-+						   sizeof(*ctxt->rw_bvec),
-+						   GFP_KERNEL,
-+						   ibdev_to_node(dev));
-+		if (!ctxt->rw_bvec)
-+			goto out_free;
-+	}
- 	return ctxt;
- 
- out_free:
--	kfree(ctxt);
-+	/* Return cached contexts to cache; free freshly allocated ones */
-+	if (node)
-+		svc_rdma_put_rw_ctxt(rdma, ctxt);
-+	else
-+		kfree(ctxt);
- out_noctx:
--	trace_svcrdma_rwctx_empty(rdma, sges);
-+	trace_svcrdma_rwctx_empty(rdma, nr_bvec);
- 	return NULL;
- }
- 
- static void __svc_rdma_put_rw_ctxt(struct svc_rdma_rw_ctxt *ctxt,
- 				   struct llist_head *list)
- {
--	sg_free_table_chained(&ctxt->rw_sg_table, ctxt->rw_first_sgl_nents);
-+	if (ctxt->rw_bvec != ctxt->rw_first_bvec)
-+		kfree(ctxt->rw_bvec);
- 	llist_add(&ctxt->rw_node, list);
- }
- 
-@@ -123,6 +139,7 @@ void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
-  * @ctxt: R/W context to prepare
-  * @offset: RDMA offset
-  * @handle: RDMA tag/handle
-+ * @length: total number of bytes in the bvec array
-  * @direction: I/O direction
-  *
-  * Returns on success, the number of WQEs that will be needed
-@@ -130,14 +147,18 @@ void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
-  */
- static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
- 				struct svc_rdma_rw_ctxt *ctxt,
--				u64 offset, u32 handle,
-+				u64 offset, u32 handle, unsigned int length,
- 				enum dma_data_direction direction)
- {
-+	struct bvec_iter iter = {
-+		.bi_size = length,
-+	};
- 	int ret;
- 
--	ret = rdma_rw_ctx_init(&ctxt->rw_ctx, rdma->sc_qp, rdma->sc_port_num,
--			       ctxt->rw_sg_table.sgl, ctxt->rw_nents,
--			       0, offset, handle, direction);
-+	ret = rdma_rw_ctx_init_bvec(&ctxt->rw_ctx, rdma->sc_qp,
-+				    rdma->sc_port_num,
-+				    ctxt->rw_bvec, ctxt->rw_nents,
-+				    iter, offset, handle, direction);
- 	if (unlikely(ret < 0)) {
- 		trace_svcrdma_dma_map_rw_err(rdma, offset, handle,
- 					     ctxt->rw_nents, ret);
-@@ -175,7 +196,6 @@ void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- {
- 	struct llist_node *first, *last;
- 	struct svc_rdma_rw_ctxt *ctxt;
--	LLIST_HEAD(free);
- 
- 	trace_svcrdma_cc_release(&cc->cc_cid, cc->cc_sqecount);
- 
-@@ -183,10 +203,11 @@ void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- 	while ((ctxt = svc_rdma_next_ctxt(&cc->cc_rwctxts)) != NULL) {
- 		list_del(&ctxt->rw_list);
- 
--		rdma_rw_ctx_destroy(&ctxt->rw_ctx, rdma->sc_qp,
--				    rdma->sc_port_num, ctxt->rw_sg_table.sgl,
--				    ctxt->rw_nents, dir);
--		__svc_rdma_put_rw_ctxt(ctxt, &free);
-+		rdma_rw_ctx_destroy_bvec(&ctxt->rw_ctx, rdma->sc_qp,
-+					 rdma->sc_port_num,
-+					 ctxt->rw_bvec, ctxt->rw_nents, dir);
-+		if (ctxt->rw_bvec != ctxt->rw_first_bvec)
-+			kfree(ctxt->rw_bvec);
- 
- 		ctxt->rw_node.next = first;
- 		first = &ctxt->rw_node;
-@@ -414,29 +435,26 @@ static int svc_rdma_post_chunk_ctxt(struct svcxprt_rdma *rdma,
- 	return -ENOTCONN;
- }
- 
--/* Build and DMA-map an SGL that covers one kvec in an xdr_buf
-+/* Build a bvec that covers one kvec in an xdr_buf.
-  */
--static void svc_rdma_vec_to_sg(struct svc_rdma_write_info *info,
--			       unsigned int len,
--			       struct svc_rdma_rw_ctxt *ctxt)
-+static void svc_rdma_vec_to_bvec(struct svc_rdma_write_info *info,
-+				 unsigned int len,
-+				 struct svc_rdma_rw_ctxt *ctxt)
- {
--	struct scatterlist *sg = ctxt->rw_sg_table.sgl;
--
--	sg_set_buf(&sg[0], info->wi_base, len);
-+	bvec_set_virt(&ctxt->rw_bvec[0], info->wi_base, len);
- 	info->wi_base += len;
- 
- 	ctxt->rw_nents = 1;
- }
- 
--/* Build and DMA-map an SGL that covers part of an xdr_buf's pagelist.
-+/* Build a bvec array that covers part of an xdr_buf's pagelist.
-  */
--static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
--				    unsigned int remaining,
--				    struct svc_rdma_rw_ctxt *ctxt)
-+static void svc_rdma_pagelist_to_bvec(struct svc_rdma_write_info *info,
-+				      unsigned int remaining,
-+				      struct svc_rdma_rw_ctxt *ctxt)
- {
--	unsigned int sge_no, sge_bytes, page_off, page_no;
-+	unsigned int bvec_idx, bvec_len, page_off, page_no;
- 	const struct xdr_buf *xdr = info->wi_xdr;
--	struct scatterlist *sg;
- 	struct page **page;
- 
- 	page_off = info->wi_next_off + xdr->page_base;
-@@ -444,21 +462,19 @@ static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
- 	page_off = offset_in_page(page_off);
- 	page = xdr->pages + page_no;
- 	info->wi_next_off += remaining;
--	sg = ctxt->rw_sg_table.sgl;
--	sge_no = 0;
-+	bvec_idx = 0;
- 	do {
--		sge_bytes = min_t(unsigned int, remaining,
--				  PAGE_SIZE - page_off);
--		sg_set_page(sg, *page, sge_bytes, page_off);
--
--		remaining -= sge_bytes;
--		sg = sg_next(sg);
-+		bvec_len = min_t(unsigned int, remaining,
-+				 PAGE_SIZE - page_off);
-+		bvec_set_page(&ctxt->rw_bvec[bvec_idx], *page, bvec_len,
-+			      page_off);
-+		remaining -= bvec_len;
- 		page_off = 0;
--		sge_no++;
-+		bvec_idx++;
- 		page++;
- 	} while (remaining);
- 
--	ctxt->rw_nents = sge_no;
-+	ctxt->rw_nents = bvec_idx;
- }
- 
- /* Construct RDMA Write WRs to send a portion of an xdr_buf containing
-@@ -496,7 +512,7 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
- 		constructor(info, write_len, ctxt);
- 		offset = seg->rs_offset + info->wi_seg_off;
- 		ret = svc_rdma_rw_ctx_init(rdma, ctxt, offset, seg->rs_handle,
--					   DMA_TO_DEVICE);
-+					   write_len, DMA_TO_DEVICE);
- 		if (ret < 0)
- 			return -EIO;
- 		percpu_counter_inc(&svcrdma_stat_write);
-@@ -535,7 +551,7 @@ static int svc_rdma_iov_write(struct svc_rdma_write_info *info,
- 			      const struct kvec *iov)
- {
- 	info->wi_base = iov->iov_base;
--	return svc_rdma_build_writes(info, svc_rdma_vec_to_sg,
-+	return svc_rdma_build_writes(info, svc_rdma_vec_to_bvec,
- 				     iov->iov_len);
- }
- 
-@@ -559,7 +575,7 @@ static int svc_rdma_pages_write(struct svc_rdma_write_info *info,
- {
- 	info->wi_xdr = xdr;
- 	info->wi_next_off = offset - xdr->head[0].iov_len;
--	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_sg,
-+	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_bvec,
- 				     length);
- }
- 
-@@ -734,29 +750,29 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- {
- 	struct svcxprt_rdma *rdma = svc_rdma_rqst_rdma(rqstp);
- 	struct svc_rdma_chunk_ctxt *cc = &head->rc_cc;
--	unsigned int sge_no, seg_len, len;
-+	unsigned int bvec_idx, nr_bvec, seg_len, len, total;
- 	struct svc_rdma_rw_ctxt *ctxt;
--	struct scatterlist *sg;
- 	int ret;
- 
- 	len = segment->rs_length;
--	sge_no = PAGE_ALIGN(head->rc_pageoff + len) >> PAGE_SHIFT;
--	ctxt = svc_rdma_get_rw_ctxt(rdma, sge_no);
-+	if (check_add_overflow(head->rc_pageoff, len, &total))
-+		return -EINVAL;
-+	nr_bvec = PAGE_ALIGN(total) >> PAGE_SHIFT;
-+	ctxt = svc_rdma_get_rw_ctxt(rdma, nr_bvec);
- 	if (!ctxt)
- 		return -ENOMEM;
--	ctxt->rw_nents = sge_no;
-+	ctxt->rw_nents = nr_bvec;
- 
--	sg = ctxt->rw_sg_table.sgl;
--	for (sge_no = 0; sge_no < ctxt->rw_nents; sge_no++) {
-+	for (bvec_idx = 0; bvec_idx < ctxt->rw_nents; bvec_idx++) {
- 		seg_len = min_t(unsigned int, len,
- 				PAGE_SIZE - head->rc_pageoff);
- 
- 		if (!head->rc_pageoff)
- 			head->rc_page_count++;
- 
--		sg_set_page(sg, rqstp->rq_pages[head->rc_curpage],
--			    seg_len, head->rc_pageoff);
--		sg = sg_next(sg);
-+		bvec_set_page(&ctxt->rw_bvec[bvec_idx],
-+			      rqstp->rq_pages[head->rc_curpage],
-+			      seg_len, head->rc_pageoff);
- 
- 		head->rc_pageoff += seg_len;
- 		if (head->rc_pageoff == PAGE_SIZE) {
-@@ -770,7 +786,8 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- 	}
- 
- 	ret = svc_rdma_rw_ctx_init(rdma, ctxt, segment->rs_offset,
--				   segment->rs_handle, DMA_FROM_DEVICE);
-+				   segment->rs_handle, segment->rs_length,
-+				   DMA_FROM_DEVICE);
- 	if (ret < 0)
- 		return -EIO;
- 	percpu_counter_inc(&svcrdma_stat_read);
--- 
-2.52.0
-
+Ben
 
