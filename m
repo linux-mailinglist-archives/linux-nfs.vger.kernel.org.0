@@ -1,1640 +1,675 @@
-Return-Path: <linux-nfs+bounces-18525-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18526-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2MWIEInRd2mxlQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18525-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 21:41:45 +0100
+	id 8BukCZALeGllngEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18526-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 01:49:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6B368D31C
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 21:41:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D0798E895
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 01:49:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8E58330579D2
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Jan 2026 20:39:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B54D0300BD89
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 00:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6442F2D7398;
-	Mon, 26 Jan 2026 20:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF34B3B2BA;
+	Tue, 27 Jan 2026 00:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyRgb/Cr"
+	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="EHO0xGcV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE102D739C
-	for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 20:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769459987; cv=none; b=hVeMmgsuk2mf1dhTB9WbL9d7qBmsqtVjnmb+3pdje+pfOO2iHCTyaLw6ssUbQZaNinJGz/FhyW3D/7j8xhuHXstPFp12jH4Do5IXgQFwpz9CySXke9OAPvIvVA2XkUo63mMapd1YSAhsDgHCFagNrl2lF2JotlkznfIXpiSbJZE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769459987; c=relaxed/simple;
-	bh=LU0RMZMsOA7PGs0FjwdCYuDktpFTWeiJFbdNqGkRiqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=On6ssjf/SnF3V7ig6fIJjgM5gck/nZ7d7QJfqqYHClJ+iXp/zfgDkgXfR2CifiI+cJSDZIV+rOKQo8S51KgZiOga2PtSLR7Slam+ExgFqdPiBqIo5Ho2AqIovZCyUqv5PFTTnjB6dSwt2X+kpSC7Sc7GbvK148+uq1eOHhGPuHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyRgb/Cr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7E8C19425;
-	Mon, 26 Jan 2026 20:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769459986;
-	bh=LU0RMZMsOA7PGs0FjwdCYuDktpFTWeiJFbdNqGkRiqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lyRgb/Cr7EL/5WH3JJHtL5GSgFLQ81SlbifJnavFCRRS7SqomRONzDEfCl7jTGYG3
-	 l+Wqxnjm6JkfLDaLSe7Y0JUYxsrbSB5Nr3Iyq4MQRvrvQnW3jhyunNgd/aow1YXWwn
-	 Ko0daFRTEFAV0ZuTedXu6oOD/qmKhTOZ73Ut59DQXQC7FRyYyYzpp2p29jgzCHfILY
-	 FIGxIYcxSrusOv/MuHuuGkSPfYxOGzZ6lJip93Umt5oQvevQOHR9pR/lR01lFGIW1V
-	 Hz/HBVYLsZUId44l3i+M0D9aAUoXTv5uXHKmgd7Tld71fduhITRmIHOpwM5vX49P9k
-	 MwlYanJjErdfA==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH v2 14/14] NFS: Merge CONFIG_NFS_V4_1 with CONFIG_NFS_V4
-Date: Mon, 26 Jan 2026 15:39:38 -0500
-Message-ID: <20260126203938.450304-15-anna@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260126203938.450304-1-anna@kernel.org>
-References: <20260126203938.450304-1-anna@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D4C4C6D
+	for <linux-nfs@vger.kernel.org>; Tue, 27 Jan 2026 00:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769474956; cv=pass; b=nWAaW9nj2YRL8Jv1+UX4C7uTDAynCFui/ejVVWUHkFtuBe9y0N0jtzz3MWkNE/9NX69boF2WZ18APpTf3I+EWyxWAa3x22NjSozkY07yZEjnDWcp/PqD8qgdLv4QP716xgoha/9q26eeHnPzjQ69hl/lxFlsHJtfuM/acVZYYhI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769474956; c=relaxed/simple;
+	bh=1/HvcpKsUsATzCZyAO/UTQGu8msMYwVVAS1hmYRIjPs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=drWfnm3+XMR2kLU+KtboHtFuUIYQwl6befztftWT/+Zjrz3d3b6lLBF2UARsND1w2e+7BsybUyY9xqjKfFjynPcbr1Tqwsic2aUFmQAjOtIi7+IZKN9LHp9ZAE6Ar/MfGBRPwno5w/oHJH9OfBmwtRfEtnUcNoLYNSbr1NILxEo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=EHO0xGcV; arc=pass smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8d7f22d405so214311766b.0
+        for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 16:49:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769474952; cv=none;
+        d=google.com; s=arc-20240605;
+        b=U7V1+w73gl2ZItmf6pnKZgQL5kF9xjOMaGY0L1S2vpZkwMm8dnRmWxvRXrNB2l72FA
+         Dd8wMwGTaROFDg1LsWfIIoOeBaAqxKRgrO5Fs28eqS5WCQLYDKFAa7EkownNP/nXSJ2w
+         TG2nwA/ZEH/yyXVQXROd9qVXKgAoWiuh405z2REoqTA6PWS0oAr6r2laq18wM5ZXQ8lb
+         7Zxx3tkEhLewW95GF6s0odVlAwlSWVipV/kpO2oFkEVMvBYDQ8MkA/Y3WX0v2+vtp+YF
+         X4IWCQUldGDQx1bA7UmZZehr/zty3FCrgS/c5I9jjlGo3j+vkPBlmyRDFGzDguXJ5y5D
+         lXUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=nGzjtNVa0dpUSQOn3DYiJjVYxmxhZxt3AQS7To7/Zgg=;
+        fh=fHHF/Ols5kY+nXCl9h0bqkW/1GiNipAqlLa1h6uk2iA=;
+        b=j/d/4Zj0nJig8HPMrEd/Rx/W5sLOSQio/36Vn+zW6VUH5ZCoOqG05e20ZAVM/jSUo7
+         UwrHEUj9JGRnZHthh3LxZ+Hpe5jtfUDcxRhpHn2d2jkzkMPnOk5HTr3Fmc1ksChOV+HV
+         Rr5b9mhjFa3n9btuTzm9WKhpGqEkDaeJlP1OBXVPDHpGQFYfeLLWsFNwpkTArk6Gs9/u
+         Wn2tyC4RrHVz+qZRjPd62dZKMvlKlOKgvB+V3SY1sMTCiwKDsfZ5fIeuACHo7F1qcMzL
+         pEvhC4yQ661hBT1VD5cArWH2s24hn9kxOKFpLo0WN61NaY6I36+R6hUzqjpMlB0nHeKi
+         4hFA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google; t=1769474952; x=1770079752; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nGzjtNVa0dpUSQOn3DYiJjVYxmxhZxt3AQS7To7/Zgg=;
+        b=EHO0xGcVTxwaSNF+DMA70Thm1xSZoqSi0cfhdP+JHXaZbinb7QjnEWooub1lNnIXMd
+         +inB3ktRBpbEmmBkXTrH1hUN2RnzFJZir3K2MVmwnd4QyrxQNVPxTvNHMpywkzYxjZYP
+         9Dd73UlnRtIkNZU9aCIteVuBUgbpNViaf6YDqRVxqR6VyZi16fIdZBDYPLbl9qYgM2JZ
+         TaOC3r1jwPdm0qFrqY87G2oc7peHXxxkVvgC2OCBxRiRLQ7V4F+MYMv7Gvyki5Rk0Ewn
+         WvxNS7vniSGiT/3+VkzymeajTt2pQmaJuhiTCzIGU+snMcgQaT3PGULmx2yf5mZy5y1V
+         8Uew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769474952; x=1770079752;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nGzjtNVa0dpUSQOn3DYiJjVYxmxhZxt3AQS7To7/Zgg=;
+        b=ThATqiPRAFay0c19N+yPdX+6u2IGgIDVP1TmoVWig43MUxYBGkC0Z3d7nl6vxCjw+c
+         fT7uvGUySpmZ/1AoUmesbe9dRNGRI8jAIrd3Rv8WcWkH6MuJ4a9Z8YKh9fH+ElzKpuA2
+         DfzIF6pdcpkt65MZhHl/lu6XR/veUQ2ktaT9Kqodv1A979mgOE07Ku/+3PCXlbpfN5HQ
+         HsYdcVl3LDgQrZYU4wvG1VKQ8m59d0yWcsmYC5KXys7ulsKsSTCViUSk6F7M+S7n9MHk
+         O0zyH6ZgJa+PkNhWWkOLztepS4dOJwfkD32XzFK5ZR4FN/6UJxZ16kw9AK1D3YD6IQ0P
+         UVRA==
+X-Gm-Message-State: AOJu0YyihUKu/ldOxCP2ZfPi5k4c6s46tQ5I5BLDP8Izd3+paArys5i2
+	N1X2Kc8zkg7RnSmnkB1wxP1rcuYqXSD/RdrZWQM3m2tyRa7ifqfxR0YuJMXcvmqpjLAOdl7yAsx
+	Xi6FsTjXVhpNkLhVDALaHkyU2OamkOJynkaixwBiqkMQ2JmvBcb3MvPXEELX6
+X-Gm-Gg: AZuq6aK6siEXG+NOLl4lhzSh/soAuiIt6+T9sdkzMUOSTWIx0rNVCGRU+7gDA7weiKE
+	jCVFK18VkJ56gwZVbbmfTOHEwo83sLLVaew3Sw2kB6XA85XfnxOZYINCjT1KZe3+0zbJcwaWlWj
+	kVQUIKqdu4JI8jziTS9t4BYz6XmIlOFzGtmJq1swLRHt6OQ8yE2qbJVfG/XL1bY6lkRV49X2F1C
+	Wc8j8OE9KA2+mfwPaH/cr/elw4o7GjYr6kOymCTIqn6teDM1f+eqCiNjTVSVBu3j4C+DQ==
+X-Received: by 2002:a17:907:9806:b0:b80:3346:496 with SMTP id
+ a640c23a62f3a-b8dab330e74mr4060066b.42.1769474952548; Mon, 26 Jan 2026
+ 16:49:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAPt2mGNAGaO8hP9u4M+oH0_w0dbSNAmDF=g0jyb26ED5R_mhOA@mail.gmail.com>
+ <a1b6c46f-e49d-4ae6-ae5e-3c08ed40e359@app.fastmail.com> <CAPt2mGNL4neF1NX7_1=9svnNz_iXhadHw0AEjZ_B-50-vwNtUg@mail.gmail.com>
+ <723418cf-cec6-4afc-906e-b93a55e85fc9@app.fastmail.com> <CAPt2mGNkGbWujzTzxoTGTvAWoOL9aUUhN93SEJQYJTQyV4xu7Q@mail.gmail.com>
+ <d9926f9e-50bf-46e7-9109-21b30dd695c1@app.fastmail.com>
+In-Reply-To: <d9926f9e-50bf-46e7-9109-21b30dd695c1@app.fastmail.com>
+From: Daire Byrne <daire@dneg.com>
+Date: Tue, 27 Jan 2026 00:48:35 +0000
+X-Gm-Features: AZwV_QiAMrO1FNtebGZ_rFGRFaY9ITpt_Fq56mZl3LNceXBBa-l7YzwN3dUsbSc
+Message-ID: <CAPt2mGNbZm9YDjuCUwJHiJUQUUnKQtbf1ggYPzAytgWjMp68LA@mail.gmail.com>
+Subject: Re: knfsd read iops limits?
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000fcb983064953fdc1"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [-0.06 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[dneg.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[dneg.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18526-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18525-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWO(0.00)[2];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[dneg.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A6B368D31C
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[daire@dneg.com,linux-nfs@vger.kernel.org];
+	HAS_ATTACHMENT(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,dneg.com:dkim,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 3D0798E895
 X-Rspamd-Action: no action
 
-From: Anna Schumaker <anna.schumaker@oracle.com>
+--000000000000fcb983064953fdc1
+Content-Type: text/plain; charset="UTF-8"
 
-Compiling the NFSv4 module without any minorversion support doesn't make
-much sense, so this patch sets NFS v4.1 as the default, always enabled
-NFS version allowing us to replace all the CONFIG_NFS_V4_1s scattered
-throughout the code with CONFIG_NFS_V4.
+On Mon, 26 Jan 2026 at 20:04, Chuck Lever <cel@kernel.org> wrote:
+>
+>
+>
+> On Mon, Jan 26, 2026, at 1:46 PM, Daire Byrne wrote:
+> > On Mon, 26 Jan 2026 at 16:31, Chuck Lever <cel@kernel.org> wrote:
+> >>
+> >>
+> >>
+> >> On Sun, Jan 25, 2026, at 6:45 PM, Daire Byrne wrote:
+> >> > On Sun, 25 Jan 2026 at 16:19, Chuck Lever <cel@kernel.org> wrote:
+> >> >>
+> >> >>
+> >> >>
+> >> >> On Sun, Jan 25, 2026, at 7:26 AM, Daire Byrne wrote:
+> >> >> > Hi,
+> >> >> >
+> >> >> > We recently came across a workload that consisted of 100s of clients
+> >> >> > under (cgroup) memory pressure and so their page cache was all but
+> >> >> > exhausted. This resulted in lots of repeat small 4k-8k random reads
+> >> >> > hitting our NFS servers which maxed out their CPUs and flatlined
+> >> >> > performance.
+> >> >> >
+> >> >> > Uniquely, the data being read easily fit in the server's page cache so
+> >> >> > there was no backend IO to limit throughput.
+> >> >> >
+> >> >> > The fix was to put in place a system to kill workloads under such
+> >> >> > memory pressure. But it piqued my curiosity, so I decided to do some
+> >> >> > simple benchmarks to see where the server limits are.
+> >> >> >
+> >> >> > I ran something like this across 200 client hosts simultaneously using
+> >> >> > NFSv3 to reproduce:
+> >> >> >
+> >> >> >  fio --directory /hosts/nfs1/xfs1/ --name test-file --direct=0
+> >> >> > --buffered=1 --size=1g --time_based --runtime=600s --bs=4096
+> >> >> > --rw=randread --numjobs=2
+> >> >> >
+> >> >> > By reading the same small file from many hosts, we are essentially
+> >> >> > serving from server page cache so can rule out disk IO (I even tried
+> >> >> > files on /dev/shm)
+> >> >> >
+> >> >> > The main things I found:
+> >> >> > * across a wide range of server hardware, we top out around 300k-400k
+> >> >> > read iops/s.
+> >> >> > * whether the server has 24/48/96 cores, the results were pretty much the same.
+> >> >> > * 24 knfsd threads is the optimal with more threads reducing
+> >> >> > performance until threads=ncores
+> >> >> > * multiple nics (bonded) or single socket (no numa) makes little or no
+> >> >> > difference
+> >> >> > * different nic hardware make little difference (2x100g, 4x25g,
+> >> >> > broadcom, mellanox etc).
+> >> >> > * various network tuning (queues, txqueuelen, qdisc, etc) makes little
+> >> >> > difference.
+> >> >> > * NFSv4.2 has less read iops/s (160k/s) but it also has sequence &
+> >> >> > pufh ops too (+ 2x160k/s).
+> >> >> > * increasing nconnect (>1) reduces aggregate read iops performance (8 -> 120k/s)
+> >> >> >
+> >> >> > It feels like there is some thread locking contention limitation such
+> >> >> > that the number of CPUs and/or knfsd threads reaches some plateau and
+> >> >> > throwing more cores/threads at the workload just results in more CPU
+> >> >> > time spent spinning but you get no more performance out.
+> >> >> >
+> >> >> > The top level perf report looks something like the attached (for v6.18).
+> >> >> >
+> >> >> > Like I said, we can work around this pretty rare workload (random
+> >> >> > small reads from server page cache), but it just piqued my interest as
+> >> >> > to what the underlying (knfsd) server limit is (it doesn't seem to be
+> >> >> > hardware).
+> >> >>
+> >> >> At risk of being glib, the performance data suggests your workload is
+> >> >> tickling one or more contended spin locks. To collect more information
+> >> >> about the contended spin locks, see
+> >> >>
+> >> >>   Documentation/locking/lockstat.rst
+> >> >
+> >> > Yea, good idea. I ran a quick test (200 NFSv3 clients, 4k randread)
+> >> > and attached the resulting top locks (abbreviated).
+> >> >
+> >> > Again, this is for the latest v6.18 kernel. A couple of expensive
+> >> > looking locks, but the xpt_mutex/svc_tcp_sendto seems to have the
+> >> > highest overall cost?
+> >>
+> >> There's kind of no denying it, the xpt_mutex numbers are shitty.
+> >> The maximum hold time on that mutex is 293379.40 usecs, with a
+> >> mean hold time of nearly 16 usec, giving it the worst mean wait
+> >> time by an order of magnitude. And it's not even a contended lock.
+> >>
+> >> It's probably not easy for you to bisect, is it...
+> >
+> > I can certainly bisect through some generations of kernel, but I'm not
+> > sure there has ever been a "good" one when it comes to this extreme
+> > (niche) workload (4k read iops).
+>
+> True, having a "good" starting point is a pre-requisite for
+> obtaining quality bisection results. I'm going to try some
+> simple experiments here to see if I can spot any structural
+> problems with the TCP send path.
 
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
----
- fs/nfs/Kconfig            | 27 ++++--------
- fs/nfs/Makefile           |  3 +-
- fs/nfs/callback.c         | 13 +-----
- fs/nfs/callback.h         |  3 --
- fs/nfs/callback_proc.c    |  3 --
- fs/nfs/callback_xdr.c     | 21 ---------
- fs/nfs/client.c           |  8 ++--
- fs/nfs/internal.h         | 12 ++----
- fs/nfs/netns.h            |  4 +-
- fs/nfs/nfs4_fs.h          | 36 +---------------
- fs/nfs/nfs4client.c       | 23 ----------
- fs/nfs/nfs4proc.c         | 55 ------------------------
- fs/nfs/nfs4session.c      |  4 --
- fs/nfs/nfs4session.h      | 23 ----------
- fs/nfs/nfs4state.c        | 17 --------
- fs/nfs/nfs4trace.c        |  2 -
- fs/nfs/nfs4trace.h        | 16 -------
- fs/nfs/nfs4xdr.c          | 90 ---------------------------------------
- fs/nfs/pnfs.h             |  6 +--
- fs/nfs/read.c             |  4 +-
- fs/nfs/super.c            | 16 ++-----
- fs/nfs/sysfs.c            | 10 ++---
- fs/nfs/write.c            |  2 +-
- include/linux/nfs_fs_sb.h |  2 -
- include/linux/nfs_xdr.h   |  6 +--
- 25 files changed, 35 insertions(+), 371 deletions(-)
+Because I had it to hand, I did a quick 10 minute burn test using the
+RHEL9 v5.14 kernel recompiled to enable lockstat - results attached.
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 058ed67b98cc..12cb0ca738af 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -78,9 +78,10 @@ config NFS_V4
- 	tristate "NFS client support for NFS version 4"
- 	depends on NFS_FS
- 	select KEYS
-+	select SUNRPC_BACKCHANNEL
- 	help
--	  This option enables support for version 4 of the NFS protocol
--	  (RFC 3530) in the kernel's NFS client.
-+	  This option enables support for version 4.1 of the NFS protocol
-+	  (RFC 5661) in the kernel's NFS client.
- 
- 	  To mount NFS servers using NFSv4, you also need to install user
- 	  space programs which can be found in the Linux nfs-utils package,
-@@ -105,19 +106,9 @@ config NFS_V4_0
- 
- 	  If unsure, say N.
- 
--config NFS_V4_1
--	bool "NFS client support for NFSv4.1"
--	depends on NFS_V4
--	select SUNRPC_BACKCHANNEL
--	help
--	  This option enables support for minor version 1 of the NFSv4 protocol
--	  (RFC 5661) in the kernel's NFS client.
--
--	  If unsure, say N.
--
- config NFS_V4_2
- 	bool "NFS client support for NFSv4.2"
--	depends on NFS_V4_1
-+	depends on NFS_V4
- 	help
- 	  This option enables support for minor version 2 of the NFSv4 protocol
- 	  in the kernel's NFS client.
-@@ -126,22 +117,22 @@ config NFS_V4_2
- 
- config PNFS_FILE_LAYOUT
- 	tristate
--	depends on NFS_V4_1
-+	depends on NFS_V4
- 	default NFS_V4
- 
- config PNFS_BLOCK
- 	tristate
--	depends on NFS_V4_1 && BLK_DEV_DM
-+	depends on NFS_V4 && BLK_DEV_DM
- 	default NFS_V4
- 
- config PNFS_FLEXFILE_LAYOUT
- 	tristate
--	depends on NFS_V4_1
-+	depends on NFS_V4
- 	default NFS_V4
- 
- config NFS_V4_1_IMPLEMENTATION_ID_DOMAIN
- 	string "NFSv4.1 Implementation ID Domain"
--	depends on NFS_V4_1
-+	depends on NFS_V4
- 	default "kernel.org"
- 	help
- 	  This option defines the domain portion of the implementation ID that
-@@ -153,7 +144,7 @@ config NFS_V4_1_IMPLEMENTATION_ID_DOMAIN
- 
- config NFS_V4_1_MIGRATION
- 	bool "NFSv4.1 client support for migration"
--	depends on NFS_V4_1
-+	depends on NFS_V4
- 	default n
- 	help
- 	  This option makes the NFS client advertise to NFSv4.1 servers that
-diff --git a/fs/nfs/Makefile b/fs/nfs/Makefile
-index 6a9aaf2f913b..c895521f27f3 100644
---- a/fs/nfs/Makefile
-+++ b/fs/nfs/Makefile
-@@ -27,11 +27,10 @@ CFLAGS_nfs4trace.o += -I$(src)
- nfsv4-y := nfs4proc.o nfs4xdr.o nfs4state.o nfs4renewd.o nfs4super.o nfs4file.o \
- 	  delegation.o nfs4idmap.o callback.o callback_xdr.o callback_proc.o \
- 	  nfs4namespace.o nfs4getroot.o nfs4client.o nfs4session.o \
--	  dns_resolve.o nfs4trace.o
-+	  dns_resolve.o nfs4trace.o pnfs.o pnfs_dev.o pnfs_nfs.o
- nfsv4-$(CONFIG_NFS_USE_LEGACY_DNS) += cache_lib.o
- nfsv4-$(CONFIG_SYSCTL)	+= nfs4sysctl.o
- nfsv4-$(CONFIG_NFS_V4_0)	+= nfs40client.o nfs40proc.o
--nfsv4-$(CONFIG_NFS_V4_1)	+= pnfs.o pnfs_dev.o pnfs_nfs.o
- nfsv4-$(CONFIG_NFS_V4_2)	+= nfs42proc.o nfs42xattr.o
- 
- obj-$(CONFIG_PNFS_FILE_LAYOUT) += filelayout/
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index fabda0f6ec1a..6af67bdf0e40 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -87,7 +87,6 @@ nfs4_callback_svc(void *vrqstp)
- 	return 0;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- static inline void nfs_callback_bc_serv(u32 minorversion, struct rpc_xprt *xprt,
- 		struct svc_serv *serv)
- {
-@@ -98,12 +97,6 @@ static inline void nfs_callback_bc_serv(u32 minorversion, struct rpc_xprt *xprt,
- 		 */
- 		xprt->bc_serv = serv;
- }
--#else
--static inline void nfs_callback_bc_serv(u32 minorversion, struct rpc_xprt *xprt,
--		struct svc_serv *serv)
--{
--}
--#endif /* CONFIG_NFS_V4_1 */
- 
- static int nfs_callback_start_svc(int minorversion, struct rpc_xprt *xprt,
- 				  struct svc_serv *serv)
-@@ -157,7 +150,7 @@ static int nfs_callback_up_net(int minorversion, struct svc_serv *serv,
- 	}
- 
- 	ret = 0;
--	if (!IS_ENABLED(CONFIG_NFS_V4_1) || minorversion == 0)
-+	if (minorversion == 0)
- 		ret = nfs4_callback_up_net(serv, net);
- 	else if (xprt->ops->bc_setup)
- 		set_bc_enabled(serv);
-@@ -198,10 +191,6 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
- 			cb_info->users);
- 
- 	threadfn = nfs4_callback_svc;
--#if !defined(CONFIG_NFS_V4_1)
--	if (minorversion)
--		return ERR_PTR(-ENOTSUPP);
--#endif
- 	serv = svc_create(&nfs4_callback_program, NFS4_CALLBACK_BUFSIZE,
- 			  threadfn);
- 	if (!serv) {
-diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
-index 8809f93d82c0..2a721c422d48 100644
---- a/fs/nfs/callback.h
-+++ b/fs/nfs/callback.h
-@@ -65,8 +65,6 @@ struct cb_recallargs {
- 	uint32_t truncate;
- };
- 
--#if defined(CONFIG_NFS_V4_1)
--
- struct referring_call {
- 	uint32_t			rc_sequenceid;
- 	uint32_t			rc_slotid;
-@@ -168,7 +166,6 @@ struct cb_notify_lock_args {
- 
- extern __be32 nfs4_callback_notify_lock(void *argp, void *resp,
- 					 struct cb_process_state *cps);
--#endif /* CONFIG_NFS_V4_1 */
- #ifdef CONFIG_NFS_V4_2
- struct cb_offloadargs {
- 	struct nfs_fh		coa_fh;
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index 57550020c819..805eb3764186 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -126,8 +126,6 @@ __be32 nfs4_callback_recall(void *argp, void *resp,
- 	return res;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
--
- /*
-  * Lookup a layout inode by stateid
-  *
-@@ -698,7 +696,6 @@ __be32 nfs4_callback_notify_lock(void *argp, void *resp,
- 
- 	return htonl(NFS4_OK);
- }
--#endif /* CONFIG_NFS_V4_1 */
- #ifdef CONFIG_NFS_V4_2
- static void nfs4_copy_cb_args(struct nfs4_copy_state *cp_state,
- 				struct cb_offloadargs *args)
-diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
-index 4254ba3ee7c5..c2fa4a91db26 100644
---- a/fs/nfs/callback_xdr.c
-+++ b/fs/nfs/callback_xdr.c
-@@ -30,7 +30,6 @@
- 					 (2 + 2 + 3 + 3 + 3 + 3 + 3) * 4)
- #define CB_OP_RECALL_RES_MAXSZ		(CB_OP_HDR_RES_MAXSZ)
- 
--#if defined(CONFIG_NFS_V4_1)
- #define CB_OP_LAYOUTRECALL_RES_MAXSZ	(CB_OP_HDR_RES_MAXSZ)
- #define CB_OP_DEVICENOTIFY_RES_MAXSZ	(CB_OP_HDR_RES_MAXSZ)
- #define CB_OP_SEQUENCE_RES_MAXSZ	(CB_OP_HDR_RES_MAXSZ + \
-@@ -39,7 +38,6 @@
- #define CB_OP_RECALLANY_RES_MAXSZ	(CB_OP_HDR_RES_MAXSZ)
- #define CB_OP_RECALLSLOT_RES_MAXSZ	(CB_OP_HDR_RES_MAXSZ)
- #define CB_OP_NOTIFY_LOCK_RES_MAXSZ	(CB_OP_HDR_RES_MAXSZ)
--#endif /* CONFIG_NFS_V4_1 */
- #ifdef CONFIG_NFS_V4_2
- #define CB_OP_OFFLOAD_RES_MAXSZ		(CB_OP_HDR_RES_MAXSZ)
- #endif /* CONFIG_NFS_V4_2 */
-@@ -205,7 +203,6 @@ static __be32 decode_recall_args(struct svc_rqst *rqstp,
- 	return decode_fh(xdr, &args->fh);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- static __be32 decode_layout_stateid(struct xdr_stream *xdr, nfs4_stateid *stateid)
- {
- 	stateid->type = NFS4_LAYOUT_STATEID_TYPE;
-@@ -521,7 +518,6 @@ static __be32 decode_notify_lock_args(struct svc_rqst *rqstp,
- 	return decode_lockowner(xdr, args);
- }
- 
--#endif /* CONFIG_NFS_V4_1 */
- #ifdef CONFIG_NFS_V4_2
- static __be32 decode_write_response(struct xdr_stream *xdr,
- 					struct cb_offloadargs *args)
-@@ -747,8 +743,6 @@ static __be32 encode_getattr_res(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	return status;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
--
- static __be32 encode_sessionid(struct xdr_stream *xdr,
- 				 const struct nfs4_sessionid *sid)
- {
-@@ -846,19 +840,6 @@ static void nfs4_cb_free_slot(struct cb_process_state *cps)
- 	}
- }
- 
--#else /* CONFIG_NFS_V4_1 */
--
--static __be32
--preprocess_nfs41_op(int nop, unsigned int op_nr, struct callback_op **op)
--{
--	return htonl(NFS4ERR_MINOR_VERS_MISMATCH);
--}
--
--static void nfs4_cb_free_slot(struct cb_process_state *cps)
--{
--}
--#endif /* CONFIG_NFS_V4_1 */
--
- #ifdef CONFIG_NFS_V4_2
- static __be32
- preprocess_nfs42_op(int nop, unsigned int op_nr, struct callback_op **op)
-@@ -1051,7 +1032,6 @@ static struct callback_op callback_ops[] = {
- 		.decode_args = decode_recall_args,
- 		.res_maxsize = CB_OP_RECALL_RES_MAXSZ,
- 	},
--#if defined(CONFIG_NFS_V4_1)
- 	[OP_CB_LAYOUTRECALL] = {
- 		.process_op = nfs4_callback_layoutrecall,
- 		.decode_args = decode_layoutrecall_args,
-@@ -1083,7 +1063,6 @@ static struct callback_op callback_ops[] = {
- 		.decode_args = decode_notify_lock_args,
- 		.res_maxsize = CB_OP_NOTIFY_LOCK_RES_MAXSZ,
- 	},
--#endif /* CONFIG_NFS_V4_1 */
- #ifdef CONFIG_NFS_V4_2
- 	[OP_CB_OFFLOAD] = {
- 		.process_op = nfs4_callback_offload,
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 62aece00f810..6b9a65615a51 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -1266,11 +1266,9 @@ void nfs_clients_init(struct net *net)
- 	INIT_LIST_HEAD(&nn->nfs_volume_list);
- #if IS_ENABLED(CONFIG_NFS_V4)
- 	idr_init(&nn->cb_ident_idr);
--#endif
--#if IS_ENABLED(CONFIG_NFS_V4_1)
- 	INIT_LIST_HEAD(&nn->nfs4_data_server_cache);
- 	spin_lock_init(&nn->nfs4_data_server_lock);
--#endif
-+#endif /* CONFIG_NFS_V4 */
- 	spin_lock_init(&nn->nfs_client_lock);
- 	nn->boot_time = ktime_get_real();
- 	memset(&nn->rpcstats, 0, sizeof(nn->rpcstats));
-@@ -1287,9 +1285,9 @@ void nfs_clients_exit(struct net *net)
- 	nfs_cleanup_cb_ident_idr(net);
- 	WARN_ON_ONCE(!list_empty(&nn->nfs_client_list));
- 	WARN_ON_ONCE(!list_empty(&nn->nfs_volume_list));
--#if IS_ENABLED(CONFIG_NFS_V4_1)
-+#if IS_ENABLED(CONFIG_NFS_V4)
- 	WARN_ON_ONCE(!list_empty(&nn->nfs4_data_server_cache));
--#endif
-+#endif /* CONFIG_NFS_V4 */
- }
- 
- #ifdef CONFIG_PROC_FS
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index e99998e515c0..63e09dfc27a8 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -334,17 +334,13 @@ extern int nfs3_decode_dirent(struct xdr_stream *,
- #if IS_ENABLED(CONFIG_NFS_V4)
- extern int nfs4_decode_dirent(struct xdr_stream *,
- 				struct nfs_entry *, bool);
--#endif
--#ifdef CONFIG_NFS_V4_1
- extern const u32 nfs41_maxread_overhead;
- extern const u32 nfs41_maxwrite_overhead;
- extern const u32 nfs41_maxgetdevinfo_overhead;
--#endif
- 
- /* nfs4proc.c */
--#if IS_ENABLED(CONFIG_NFS_V4)
- extern const struct rpc_procinfo nfs4_procedures[];
--#endif
-+#endif /* CONFIG_NFS_V4 */
- 
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- extern struct nfs4_label *nfs4_label_alloc(struct nfs_server *server, gfp_t flags);
-@@ -639,7 +635,7 @@ void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio);
- int nfs_filemap_write_and_wait_range(struct address_space *mapping,
- 		loff_t lstart, loff_t lend);
- 
--#ifdef CONFIG_NFS_V4_1
-+#ifdef CONFIG_NFS_V4
- static inline void
- pnfs_bucket_clear_pnfs_ds_commit_verifiers(struct pnfs_commit_bucket *buckets,
- 		unsigned int nbuckets)
-@@ -660,12 +656,12 @@ void nfs_clear_pnfs_ds_commit_verifiers(struct pnfs_ds_commit_info *cinfo)
- 				array->nbuckets);
- 	rcu_read_unlock();
- }
--#else
-+#else /* CONFIG_NFS_V4 */
- static inline
- void nfs_clear_pnfs_ds_commit_verifiers(struct pnfs_ds_commit_info *cinfo)
- {
- }
--#endif
-+#endif /* CONFIG_NFS_V4 */
- 
- #ifdef CONFIG_MIGRATION
- int nfs_migrate_folio(struct address_space *, struct folio *dst,
-diff --git a/fs/nfs/netns.h b/fs/nfs/netns.h
-index 6ba3ea39e928..36658579100d 100644
---- a/fs/nfs/netns.h
-+++ b/fs/nfs/netns.h
-@@ -31,11 +31,9 @@ struct nfs_net {
- 	unsigned short nfs_callback_tcpport;
- 	unsigned short nfs_callback_tcpport6;
- 	int cb_users[NFS4_MAX_MINOR_VERSION + 1];
--#endif /* CONFIG_NFS_V4 */
--#if IS_ENABLED(CONFIG_NFS_V4_1)
- 	struct list_head nfs4_data_server_cache;
- 	spinlock_t nfs4_data_server_lock;
--#endif /* CONFIG_NFS_V4_1 */
-+#endif /* CONFIG_NFS_V4 */
- 	struct nfs_netns_client *nfs_client;
- 	spinlock_t nfs_client_lock;
- 	ktime_t boot_time;
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 1f233411578c..b48e5b87cb2a 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -18,10 +18,8 @@
- 
- #if defined(CONFIG_NFS_V4_2)
- #define NFS4_MAX_MINOR_VERSION 2
--#elif defined(CONFIG_NFS_V4_1)
-+#else
- #define NFS4_MAX_MINOR_VERSION 1
--#else
--#define NFS4_MAX_MINOR_VERSION 0
- #endif
- 
- #if IS_ENABLED(CONFIG_NFS_V4)
-@@ -383,7 +381,6 @@ extern bool nfs4_match_stateid(const nfs4_stateid *s1, const nfs4_stateid *s2);
- extern int nfs4_find_root_sec(struct nfs_server *server, struct nfs_fh *fhandle,
- 			      struct nfs_fattr *fattr);
- 
--#if defined(CONFIG_NFS_V4_1)
- extern int nfs41_sequence_done(struct rpc_task *, struct nfs4_sequence_res *);
- extern int nfs4_proc_create_session(struct nfs_client *, const struct cred *);
- extern int nfs4_proc_destroy_session(struct nfs4_session *, const struct cred *);
-@@ -461,31 +458,6 @@ nfs4_state_protect_write(struct nfs_client *clp, struct rpc_clnt **clntp,
- 	    !test_bit(NFS_SP4_MACH_CRED_COMMIT, &clp->cl_sp4_flags))
- 		hdr->args.stable = NFS_FILE_SYNC;
- }
--#else /* CONFIG_NFS_v4_1 */
--static inline bool
--is_ds_only_client(struct nfs_client *clp)
--{
--	return false;
--}
--
--static inline bool
--is_ds_client(struct nfs_client *clp)
--{
--	return false;
--}
--
--static inline void
--nfs4_state_protect(struct nfs_client *clp, unsigned long sp4_flags,
--		   struct rpc_clnt **clntp, struct rpc_message *msg)
--{
--}
--
--static inline void
--nfs4_state_protect_write(struct nfs_client *clp, struct rpc_clnt **clntp,
--			 struct rpc_message *msg, struct nfs_pgio_header *hdr)
--{
--}
--#endif /* CONFIG_NFS_V4_1 */
- 
- extern const struct nfs4_minor_version_ops *nfs_v4_minor_ops[];
- 
-@@ -517,18 +489,12 @@ int nfs4_discover_server_trunking(struct nfs_client *clp,
- 			struct nfs_client **);
- int nfs40_discover_server_trunking(struct nfs_client *clp,
- 			struct nfs_client **, const struct cred *);
--#if defined(CONFIG_NFS_V4_1)
- int nfs41_discover_server_trunking(struct nfs_client *clp,
- 			struct nfs_client **, const struct cred *);
- extern void nfs4_schedule_session_recovery(struct nfs4_session *, int);
- extern void nfs41_notify_server(struct nfs_client *);
- bool nfs4_check_serverowner_major_id(struct nfs41_server_owner *o1,
- 			struct nfs41_server_owner *o2);
--#else
--static inline void nfs4_schedule_session_recovery(struct nfs4_session *session, int err)
--{
--}
--#endif /* CONFIG_NFS_V4_1 */
- 
- extern struct nfs4_state_owner *nfs4_get_state_owner(struct nfs_server *, const struct cred *, gfp_t);
- extern void nfs4_put_state_owner(struct nfs4_state_owner *);
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 00b57e55aba8..51cf4a37d652 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -44,7 +44,6 @@ static int nfs_get_cb_ident_idr(struct nfs_client *clp, int minorversion)
- 	return ret < 0 ? ret : 0;
- }
- 
--#ifdef CONFIG_NFS_V4_1
- /*
-  * Per auth flavor data server rpc clients
-  */
-@@ -187,7 +186,6 @@ void nfs41_shutdown_client(struct nfs_client *clp)
- 	}
- 
- }
--#endif	/* CONFIG_NFS_V4_1 */
- 
- struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
- {
-@@ -217,9 +215,7 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
- 	clp->cl_mvops = nfs_v4_minor_ops[cl_init->minorversion];
- 	clp->cl_mig_gen = 1;
- 	clp->cl_last_renewal = jiffies;
--#if IS_ENABLED(CONFIG_NFS_V4_1)
- 	init_waitqueue_head(&clp->cl_lock_waitq);
--#endif
- 	INIT_LIST_HEAD(&clp->pending_cb_stateids);
- 
- 	if (cl_init->minorversion != 0)
-@@ -332,8 +328,6 @@ static int nfs4_init_callback(struct nfs_client *clp)
- 	return 0;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
--
- /**
-  * nfs41_init_client - nfs_client initialization tasks for NFSv4.1+
-  * @clp: nfs_client to initialize
-@@ -365,8 +359,6 @@ int nfs41_init_client(struct nfs_client *clp)
- 	return 0;
- }
- 
--#endif	/* CONFIG_NFS_V4_1 */
--
- /*
-  * Initialize the minor version specific parts of an NFS4 client record
-  */
-@@ -508,7 +500,6 @@ int nfs4_match_client(struct nfs_client  *pos,  struct nfs_client *new,
- 	return 0;
- }
- 
--#ifdef CONFIG_NFS_V4_1
- /*
-  * Returns true if the server major ids match
-  */
-@@ -637,7 +628,6 @@ int nfs41_walk_client_list(struct nfs_client *new,
- 	nfs_put_client(prev);
- 	return status;
- }
--#endif	/* CONFIG_NFS_V4_1 */
- 
- static void nfs4_destroy_server(struct nfs_server *server)
- {
-@@ -669,7 +659,6 @@ nfs4_find_client_ident(struct net *net, int cb_ident)
- 	return clp;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- /* Common match routine for v4.0 and v4.1 callback services */
- static bool nfs4_cb_match_client(const struct sockaddr *addr,
- 		struct nfs_client *clp, u32 minorversion)
-@@ -727,16 +716,6 @@ nfs4_find_client_sessionid(struct net *net, const struct sockaddr *addr,
- 	return NULL;
- }
- 
--#else /* CONFIG_NFS_V4_1 */
--
--struct nfs_client *
--nfs4_find_client_sessionid(struct net *net, const struct sockaddr *addr,
--			   struct nfs4_sessionid *sid, u32 minorversion)
--{
--	return NULL;
--}
--#endif /* CONFIG_NFS_V4_1 */
--
- /*
-  * Set up an NFS4 client
-  */
-@@ -878,7 +857,6 @@ EXPORT_SYMBOL_GPL(nfs4_set_ds_client);
-  */
- static void nfs4_session_limit_rwsize(struct nfs_server *server)
- {
--#ifdef CONFIG_NFS_V4_1
- 	struct nfs4_session *sess;
- 	u32 server_resp_sz;
- 	u32 server_rqst_sz;
-@@ -895,7 +873,6 @@ static void nfs4_session_limit_rwsize(struct nfs_server *server)
- 		server->rsize = server_resp_sz;
- 	if (server->wsize > server_rqst_sz)
- 		server->wsize = server_rqst_sz;
--#endif /* CONFIG_NFS_V4_1 */
- }
- 
- /*
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 9daba5b7a545..9c2ffe72cf33 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -99,7 +99,6 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- static int nfs4_do_setattr(struct inode *inode, const struct cred *cred,
- 			    struct nfs_fattr *fattr, struct iattr *sattr,
- 			    struct nfs_open_context *ctx, struct nfs4_label *ilabel);
--#ifdef CONFIG_NFS_V4_1
- static struct rpc_task *_nfs41_proc_sequence(struct nfs_client *clp,
- 		const struct cred *cred,
- 		struct nfs4_slot *slot,
-@@ -108,7 +107,6 @@ static int nfs41_test_stateid(struct nfs_server *, const nfs4_stateid *,
- 			      const struct cred *);
- static int nfs41_free_stateid(struct nfs_server *, nfs4_stateid *,
- 			      const struct cred *, bool);
--#endif
- 
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- static inline struct nfs4_label *
-@@ -569,7 +567,6 @@ static int nfs4_do_handle_exception(struct nfs_server *server,
- 		case -NFS4ERR_LEASE_MOVED:
- 			nfs4_schedule_lease_moved_recovery(clp);
- 			goto wait_on_recovery;
--#if defined(CONFIG_NFS_V4_1)
- 		case -NFS4ERR_BADSESSION:
- 		case -NFS4ERR_BADSLOT:
- 		case -NFS4ERR_BAD_HIGH_SLOT:
-@@ -579,7 +576,6 @@ static int nfs4_do_handle_exception(struct nfs_server *server,
- 		case -NFS4ERR_SEQ_MISORDERED:
- 			/* Handled in nfs41_sequence_process() */
- 			goto wait_on_recovery;
--#endif /* defined(CONFIG_NFS_V4_1) */
- 		case -NFS4ERR_FILE_OPEN:
- 			if (exception->timeout > HZ) {
- 				/* We have retried a decent amount, time to
-@@ -783,8 +779,6 @@ void nfs4_init_sequence(struct nfs_client *clp,
- 	res->sr_slot_ops = clp->cl_mvops->sequence_slot_ops;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
--
- static void nfs41_release_slot(struct nfs4_slot *slot)
- {
- 	struct nfs4_session *session;
-@@ -1022,8 +1016,6 @@ static const struct rpc_call_ops nfs41_call_sync_ops = {
- };
- 
- 
--#endif	/* !CONFIG_NFS_V4_1 */
--
- static void nfs41_sequence_res_init(struct nfs4_sequence_res *res)
- {
- 	res->sr_timestamp = jiffies;
-@@ -1589,7 +1581,6 @@ static void update_open_stateflags(struct nfs4_state *state, fmode_t fmode)
- 	nfs4_state_set_mode_locked(state, state->state | fmode);
- }
- 
--#ifdef CONFIG_NFS_V4_1
- static bool nfs_open_stateid_recover_openmode(struct nfs4_state *state)
- {
- 	if (state->n_rdonly && !test_bit(NFS_O_RDONLY_STATE, &state->flags))
-@@ -1600,7 +1591,6 @@ static bool nfs_open_stateid_recover_openmode(struct nfs4_state *state)
- 		return true;
- 	return false;
- }
--#endif /* CONFIG_NFS_V4_1 */
- 
- static void nfs_state_log_update_open_stateid(struct nfs4_state *state)
- {
-@@ -2837,7 +2827,6 @@ void nfs_finish_clear_delegation_stateid(struct nfs4_state *state,
- 	nfs_state_clear_delegation(state);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- static int nfs41_test_and_free_expired_stateid(struct nfs_server *server,
- 					       nfs4_stateid *stateid, const struct cred *cred)
- {
-@@ -3022,7 +3011,6 @@ static int nfs41_open_expired(struct nfs4_state_owner *sp, struct nfs4_state *st
- 		status = nfs4_open_expired(sp, state);
- 	return status;
- }
--#endif
- 
- /*
-  * on an EXCLUSIVE create, the server should send back a bitmask with FATTR4-*
-@@ -4384,7 +4372,6 @@ static int nfs4_get_referral(struct rpc_clnt *client, struct inode *dir,
- 	return status;
- }
- 
--#if IS_ENABLED(CONFIG_NFS_V4_1)
- static bool should_request_dir_deleg(struct inode *inode)
- {
- 	if (!directory_delegations)
-@@ -4401,12 +4388,6 @@ static bool should_request_dir_deleg(struct inode *inode)
- 		return false;
- 	return true;
- }
--#else
--static bool should_request_dir_deleg(struct inode *inode)
--{
--	return false;
--}
--#endif /* CONFIG_NFS_V4_1 */
- 
- static void nfs4_call_getattr_prepare(struct rpc_task *task, void *calldata)
- {
-@@ -7552,7 +7533,6 @@ int nfs4_lock_expired(struct nfs4_state *state, struct file_lock *request)
- 	return err;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- static int nfs41_lock_expired(struct nfs4_state *state, struct file_lock *request)
- {
- 	struct nfs4_lock_state *lsp;
-@@ -7567,7 +7547,6 @@ static int nfs41_lock_expired(struct nfs4_state *state, struct file_lock *reques
- 		return 0;
- 	return nfs4_lock_expired(state, request);
- }
--#endif
- 
- static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock *request)
- {
-@@ -7641,7 +7620,6 @@ nfs4_retry_setlk_simple(struct nfs4_state *state, int cmd,
- 	return status;
- }
- 
--#ifdef CONFIG_NFS_V4_1
- struct nfs4_lock_waiter {
- 	struct inode		*inode;
- 	struct nfs_lowner	owner;
-@@ -7709,13 +7687,6 @@ nfs4_retry_setlk(struct nfs4_state *state, int cmd, struct file_lock *request)
- 
- 	return status;
- }
--#else /* !CONFIG_NFS_V4_1 */
--static inline int
--nfs4_retry_setlk(struct nfs4_state *state, int cmd, struct file_lock *request)
--{
--	return nfs4_retry_setlk_simple(state, cmd, request);
--}
--#endif
- 
- static int
- nfs4_proc_lock(struct file *filp, int cmd, struct file_lock *request)
-@@ -7848,7 +7819,6 @@ static bool nfs4_xattr_list_nfs4_acl(struct dentry *dentry)
- 	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_ACL);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- #define XATTR_NAME_NFSV4_DACL "system.nfs4_dacl"
- 
- static int nfs4_xattr_set_nfs4_dacl(const struct xattr_handler *handler,
-@@ -7895,8 +7865,6 @@ static bool nfs4_xattr_list_nfs4_sacl(struct dentry *dentry)
- 	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_SACL);
- }
- 
--#endif
--
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- 
- static int nfs4_xattr_set_nfs4_label(const struct xattr_handler *handler,
-@@ -8135,8 +8103,6 @@ int nfs4_proc_fs_locations(struct rpc_clnt *client, struct inode *dir,
- 	return err;
- }
- 
--#ifdef CONFIG_NFS_V4_1
--
- /*
-  * This operation also signals the server that this client is
-  * performing migration recovery.  The server can stop asserting
-@@ -8199,8 +8165,6 @@ static int _nfs41_proc_get_locations(struct nfs_server *server,
- 	return status;
- }
- 
--#endif	/* CONFIG_NFS_V4_1 */
--
- /**
-  * nfs4_proc_get_locations - discover locations for a migrated FSID
-  * @server: pointer to nfs_server to process
-@@ -8248,8 +8212,6 @@ int nfs4_proc_get_locations(struct nfs_server *server,
- 	return status;
- }
- 
--#ifdef CONFIG_NFS_V4_1
--
- /*
-  * This operation also signals the server that this client is
-  * performing "lease moved" recovery.  The server can stop asserting
-@@ -8288,8 +8250,6 @@ static int _nfs41_proc_fsid_present(struct inode *inode, const struct cred *cred
- 	return status;
- }
- 
--#endif	/* CONFIG_NFS_V4_1 */
--
- /**
-  * nfs4_proc_fsid_present - Is this FSID present or absent on server?
-  * @inode: inode on FSID to check
-@@ -8418,7 +8378,6 @@ int nfs4_proc_secinfo(struct inode *dir, const struct qstr *name,
- 	return err;
- }
- 
--#ifdef CONFIG_NFS_V4_1
- /*
-  * Check the exchange flags returned by the server for invalid flags, having
-  * both PNFS and NON_PNFS flags set, and not having one of NON_PNFS, PNFS, or
-@@ -9031,8 +8990,6 @@ int nfs4_destroy_clientid(struct nfs_client *clp)
- 	return ret;
- }
- 
--#endif /* CONFIG_NFS_V4_1 */
--
- struct nfs4_get_lease_time_data {
- 	struct nfs4_get_lease_time_args *args;
- 	struct nfs4_get_lease_time_res *res;
-@@ -9109,8 +9066,6 @@ int nfs4_proc_get_lease_time(struct nfs_client *clp, struct nfs_fsinfo *fsinfo)
- 	return nfs4_call_sync_custom(&task_setup);
- }
- 
--#ifdef CONFIG_NFS_V4_1
--
- /*
-  * Initialize the values to be used by the client in CREATE_SESSION
-  * If nfs4_init_session set the fore channel request and response sizes,
-@@ -10449,8 +10404,6 @@ static bool nfs41_match_stateid(const nfs4_stateid *s1,
- 	return s1->seqid == 0 || s2->seqid == 0;
- }
- 
--#endif /* CONFIG_NFS_V4_1 */
--
- bool nfs4_match_stateid(const nfs4_stateid *s1,
- 		const nfs4_stateid *s2)
- {
-@@ -10460,7 +10413,6 @@ bool nfs4_match_stateid(const nfs4_stateid *s1,
- }
- 
- 
--#if defined(CONFIG_NFS_V4_1)
- static const struct nfs4_sequence_slot_ops nfs41_sequence_slot_ops = {
- 	.process = nfs41_sequence_process,
- 	.done = nfs41_sequence_done,
-@@ -10527,7 +10479,6 @@ static const struct nfs4_minor_version_ops nfs_v4_1_minor_ops = {
- 	.state_renewal_ops = &nfs41_state_renewal_ops,
- 	.mig_recovery_ops = &nfs41_mig_recovery_ops,
- };
--#endif
- 
- #if defined(CONFIG_NFS_V4_2)
- static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
-@@ -10573,9 +10524,7 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
- #if defined(CONFIG_NFS_V4_0)
- 	[0] = &nfs_v4_0_minor_ops,
- #endif /* CONFIG_NFS_V4_0 */
--#if defined(CONFIG_NFS_V4_1)
- 	[1] = &nfs_v4_1_minor_ops,
--#endif
- #if defined(CONFIG_NFS_V4_2)
- 	[2] = &nfs_v4_2_minor_ops,
- #endif
-@@ -10743,7 +10692,6 @@ static const struct xattr_handler nfs4_xattr_nfs4_acl_handler = {
- 	.set	= nfs4_xattr_set_nfs4_acl,
- };
- 
--#if defined(CONFIG_NFS_V4_1)
- static const struct xattr_handler nfs4_xattr_nfs4_dacl_handler = {
- 	.name	= XATTR_NAME_NFSV4_DACL,
- 	.list	= nfs4_xattr_list_nfs4_dacl,
-@@ -10757,7 +10705,6 @@ static const struct xattr_handler nfs4_xattr_nfs4_sacl_handler = {
- 	.get	= nfs4_xattr_get_nfs4_sacl,
- 	.set	= nfs4_xattr_set_nfs4_sacl,
- };
--#endif
- 
- #ifdef CONFIG_NFS_V4_2
- static const struct xattr_handler nfs4_xattr_nfs4_user_handler = {
-@@ -10769,10 +10716,8 @@ static const struct xattr_handler nfs4_xattr_nfs4_user_handler = {
- 
- const struct xattr_handler * const nfs4_xattr_handlers[] = {
- 	&nfs4_xattr_nfs4_acl_handler,
--#if defined(CONFIG_NFS_V4_1)
- 	&nfs4_xattr_nfs4_dacl_handler,
- 	&nfs4_xattr_nfs4_sacl_handler,
--#endif
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- 	&nfs4_xattr_nfs4_label_handler,
- #endif
-diff --git a/fs/nfs/nfs4session.c b/fs/nfs/nfs4session.c
-index 5db460476bf2..a2fdd4b80dc4 100644
---- a/fs/nfs/nfs4session.c
-+++ b/fs/nfs/nfs4session.c
-@@ -408,8 +408,6 @@ void nfs41_wake_slot_table(struct nfs4_slot_table *tbl)
- 	}
- }
- 
--#if defined(CONFIG_NFS_V4_1)
--
- static void nfs41_set_max_slotid_locked(struct nfs4_slot_table *tbl,
- 		u32 target_highest_slotid)
- {
-@@ -653,5 +651,3 @@ int nfs4_init_ds_session(struct nfs_client *clp, unsigned long lease_time)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(nfs4_init_ds_session);
--
--#endif	/* defined(CONFIG_NFS_V4_1) */
-diff --git a/fs/nfs/nfs4session.h b/fs/nfs/nfs4session.h
-index f9c291e2165c..d2569f599977 100644
---- a/fs/nfs/nfs4session.h
-+++ b/fs/nfs/nfs4session.h
-@@ -111,7 +111,6 @@ static inline struct nfs4_session *nfs4_get_session(const struct nfs_client *clp
- 	return clp->cl_session;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- extern void nfs41_set_target_slotid(struct nfs4_slot_table *tbl,
- 		u32 target_highest_slotid);
- extern void nfs41_update_target_slotid(struct nfs4_slot_table *tbl,
-@@ -154,28 +153,6 @@ static inline void nfs4_copy_sessionid(struct nfs4_sessionid *dst,
-  */
- #define nfs_session_id_hash(sess_id) \
- 	(~crc32_le(0xFFFFFFFF, &(sess_id)->data[0], sizeof((sess_id)->data)))
--#else /* defined(CONFIG_NFS_V4_1) */
- 
--static inline int nfs4_init_session(struct nfs_client *clp)
--{
--	return 0;
--}
--
--/*
-- * Determine if sessions are in use.
-- */
--static inline int nfs4_has_session(const struct nfs_client *clp)
--{
--	return 0;
--}
--
--static inline int nfs4_has_persistent_session(const struct nfs_client *clp)
--{
--	return 0;
--}
--
--#define nfs_session_id_hash(session) (0)
--
--#endif /* defined(CONFIG_NFS_V4_1) */
- #endif /* IS_ENABLED(CONFIG_NFS_V4) */
- #endif /* __LINUX_FS_NFS_NFS4SESSION_H */
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 87c40c207ab6..963719f35467 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -259,8 +259,6 @@ static int nfs4_begin_drain_session(struct nfs_client *clp)
- 	return nfs4_drain_slot_tbl(&ses->fc_slot_table);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
--
- static void nfs41_finish_session_reset(struct nfs_client *clp)
- {
- 	clear_bit(NFS4CLNT_LEASE_CONFIRM, &clp->cl_state);
-@@ -339,8 +337,6 @@ int nfs41_discover_server_trunking(struct nfs_client *clp,
- 	return status;
- }
- 
--#endif /* CONFIG_NFS_V4_1 */
--
- /**
-  * nfs4_get_clid_cred - Acquire credential for a setclientid operation
-  * @clp: client state handle
-@@ -2310,7 +2306,6 @@ int nfs4_discover_server_trunking(struct nfs_client *clp,
- 	return status;
- }
- 
--#ifdef CONFIG_NFS_V4_1
- void nfs4_schedule_session_recovery(struct nfs4_session *session, int err)
- {
- 	struct nfs_client *clp = session->clp;
-@@ -2517,18 +2512,6 @@ static void nfs4_layoutreturn_any_run(struct nfs_client *clp)
- 		set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
- 	}
- }
--#else /* CONFIG_NFS_V4_1 */
--static int nfs4_reset_session(struct nfs_client *clp) { return 0; }
--
--static int nfs4_bind_conn_to_session(struct nfs_client *clp)
--{
--	return 0;
--}
--
--static void nfs4_layoutreturn_any_run(struct nfs_client *clp)
--{
--}
--#endif /* CONFIG_NFS_V4_1 */
- 
- static void nfs4_state_manager(struct nfs_client *clp)
- {
-diff --git a/fs/nfs/nfs4trace.c b/fs/nfs/nfs4trace.c
-index 987c92d6364b..3fdc013f56d8 100644
---- a/fs/nfs/nfs4trace.c
-+++ b/fs/nfs/nfs4trace.c
-@@ -14,7 +14,6 @@
- #define CREATE_TRACE_POINTS
- #include "nfs4trace.h"
- 
--#ifdef CONFIG_NFS_V4_1
- EXPORT_TRACEPOINT_SYMBOL_GPL(nfs4_pnfs_read);
- EXPORT_TRACEPOINT_SYMBOL_GPL(nfs4_pnfs_write);
- EXPORT_TRACEPOINT_SYMBOL_GPL(nfs4_pnfs_commit_ds);
-@@ -39,4 +38,3 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(bl_pr_key_unreg);
- EXPORT_TRACEPOINT_SYMBOL_GPL(bl_pr_key_unreg_err);
- 
- EXPORT_TRACEPOINT_SYMBOL_GPL(fl_getdevinfo);
--#endif
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index 8ff6396bc206..a598d94d4536 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -71,7 +71,6 @@ DEFINE_NFS4_CLIENTID_EVENT(nfs4_setclientid);
- DEFINE_NFS4_CLIENTID_EVENT(nfs4_setclientid_confirm);
- DEFINE_NFS4_CLIENTID_EVENT(nfs4_renew);
- DEFINE_NFS4_CLIENTID_EVENT(nfs4_renew_async);
--#ifdef CONFIG_NFS_V4_1
- DEFINE_NFS4_CLIENTID_EVENT(nfs4_exchange_id);
- DEFINE_NFS4_CLIENTID_EVENT(nfs4_create_session);
- DEFINE_NFS4_CLIENTID_EVENT(nfs4_destroy_session);
-@@ -302,8 +301,6 @@ TRACE_EVENT(pnfs_ds_connect,
-                 )
- );
- 
--#endif /* CONFIG_NFS_V4_1 */
--
- TRACE_EVENT(nfs4_setup_sequence,
- 		TP_PROTO(
- 			const struct nfs4_session *session,
-@@ -1068,7 +1065,6 @@ TRACE_EVENT(nfs4_delegreturn_exit,
- 		)
- );
- 
--#ifdef CONFIG_NFS_V4_1
- DECLARE_EVENT_CLASS(nfs4_test_stateid_event,
- 		TP_PROTO(
- 			const struct nfs4_state *state,
-@@ -1123,7 +1119,6 @@ DECLARE_EVENT_CLASS(nfs4_test_stateid_event,
- DEFINE_NFS4_TEST_STATEID_EVENT(nfs4_test_delegation_stateid);
- DEFINE_NFS4_TEST_STATEID_EVENT(nfs4_test_open_stateid);
- DEFINE_NFS4_TEST_STATEID_EVENT(nfs4_test_lock_stateid);
--#endif /* CONFIG_NFS_V4_1 */
- 
- DECLARE_EVENT_CLASS(nfs4_lookup_event,
- 		TP_PROTO(
-@@ -1626,12 +1621,8 @@ DEFINE_NFS4_IDMAP_EVENT(nfs4_map_group_to_gid);
- DEFINE_NFS4_IDMAP_EVENT(nfs4_map_uid_to_name);
- DEFINE_NFS4_IDMAP_EVENT(nfs4_map_gid_to_group);
- 
--#ifdef CONFIG_NFS_V4_1
- #define NFS4_LSEG_LAYOUT_STATEID_HASH(lseg) \
- 	(lseg ? nfs_stateid_hash(&lseg->pls_layout->plh_stateid) : 0)
--#else
--#define NFS4_LSEG_LAYOUT_STATEID_HASH(lseg) (0)
--#endif
- 
- DECLARE_EVENT_CLASS(nfs4_read_event,
- 		TP_PROTO(
-@@ -1703,9 +1694,7 @@ DECLARE_EVENT_CLASS(nfs4_read_event,
- 			), \
- 			TP_ARGS(hdr, error))
- DEFINE_NFS4_READ_EVENT(nfs4_read);
--#ifdef CONFIG_NFS_V4_1
- DEFINE_NFS4_READ_EVENT(nfs4_pnfs_read);
--#endif /* CONFIG_NFS_V4_1 */
- 
- DECLARE_EVENT_CLASS(nfs4_write_event,
- 		TP_PROTO(
-@@ -1778,9 +1767,7 @@ DECLARE_EVENT_CLASS(nfs4_write_event,
- 			), \
- 			TP_ARGS(hdr, error))
- DEFINE_NFS4_WRITE_EVENT(nfs4_write);
--#ifdef CONFIG_NFS_V4_1
- DEFINE_NFS4_WRITE_EVENT(nfs4_pnfs_write);
--#endif /* CONFIG_NFS_V4_1 */
- 
- DECLARE_EVENT_CLASS(nfs4_commit_event,
- 		TP_PROTO(
-@@ -1840,7 +1827,6 @@ DECLARE_EVENT_CLASS(nfs4_commit_event,
- 			), \
- 			TP_ARGS(data, error))
- DEFINE_NFS4_COMMIT_EVENT(nfs4_commit);
--#ifdef CONFIG_NFS_V4_1
- DEFINE_NFS4_COMMIT_EVENT(nfs4_pnfs_commit_ds);
- 
- TRACE_EVENT(nfs4_layoutget,
-@@ -2874,8 +2860,6 @@ DEFINE_NFS4_XATTR_EVENT(nfs4_removexattr);
- DEFINE_NFS4_INODE_EVENT(nfs4_listxattr);
- #endif /* CONFIG_NFS_V4_2 */
- 
--#endif /* CONFIG_NFS_V4_1 */
--
- #endif /* _TRACE_NFS4_H */
- 
- #undef TRACE_INCLUDE_PATH
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 73f36dd539ec..c23c2eee1b5c 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -308,7 +308,6 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- #define encode_secinfo_maxsz	(op_encode_hdr_maxsz + nfs4_name_maxsz)
- #define decode_secinfo_maxsz	(op_decode_hdr_maxsz + 1 + ((NFS_MAX_SECFLAVORS * (16 + GSS_OID_MAX_LEN)) / 4))
- 
--#if defined(CONFIG_NFS_V4_1)
- #define NFS4_MAX_MACHINE_NAME_LEN (64)
- #define IMPL_NAME_LIMIT (sizeof(utsname()->sysname) + sizeof(utsname()->release) + \
- 			 sizeof(utsname()->version) + sizeof(utsname()->machine) + 8)
-@@ -455,16 +454,6 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- #define encode_free_stateid_maxsz	(op_encode_hdr_maxsz + 1 + \
- 					 XDR_QUADLEN(NFS4_STATEID_SIZE))
- #define decode_free_stateid_maxsz	(op_decode_hdr_maxsz)
--#else /* CONFIG_NFS_V4_1 */
--#define encode_sequence_maxsz	0
--#define decode_sequence_maxsz	0
--#define encode_get_dir_deleg_maxsz 0
--#define decode_get_dir_deleg_maxsz 0
--#define encode_layoutreturn_maxsz 0
--#define decode_layoutreturn_maxsz 0
--#define encode_layoutget_maxsz	0
--#define decode_layoutget_maxsz	0
--#endif /* CONFIG_NFS_V4_1 */
- 
- #define NFS4_enc_compound_sz	(1024)  /* XXX: large enough? */
- #define NFS4_dec_compound_sz	(1024)  /* XXX: large enough? */
-@@ -838,7 +827,6 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- 				 decode_putfh_maxsz + \
- 				 decode_getfh_maxsz + \
- 				 decode_renew_maxsz)
--#if defined(CONFIG_NFS_V4_1)
- #define NFS4_enc_bind_conn_to_session_sz \
- 				(compound_encode_hdr_maxsz + \
- 				 encode_bind_conn_to_session_maxsz)
-@@ -871,7 +859,6 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- #define NFS4_dec_sequence_sz \
- 				(compound_decode_hdr_maxsz + \
- 				 decode_sequence_maxsz)
--#endif
- #define NFS4_enc_get_lease_time_sz	(compound_encode_hdr_maxsz + \
- 					 encode_sequence_maxsz + \
- 					 encode_putrootfh_maxsz + \
-@@ -880,7 +867,6 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- 					 decode_sequence_maxsz + \
- 					 decode_putrootfh_maxsz + \
- 					 decode_fsinfo_maxsz)
--#if defined(CONFIG_NFS_V4_1)
- #define NFS4_enc_reclaim_complete_sz	(compound_encode_hdr_maxsz + \
- 					 encode_sequence_maxsz + \
- 					 encode_reclaim_complete_maxsz)
-@@ -958,7 +944,6 @@ const u32 nfs41_maxgetdevinfo_overhead = ((RPC_MAX_REPHEADER_WITH_AUTH +
- 					   decode_sequence_maxsz) *
- 					  XDR_UNIT);
- EXPORT_SYMBOL_GPL(nfs41_maxgetdevinfo_overhead);
--#endif /* CONFIG_NFS_V4_1 */
- 
- static const umode_t nfs_type2fmt[] = {
- 	[NF4BAD] = 0,
-@@ -1834,7 +1819,6 @@ static void encode_secinfo(struct xdr_stream *xdr, const struct qstr *name, stru
- 	encode_string(xdr, name->len, name->name);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- /* NFSv4.1 operations */
- static void encode_bind_conn_to_session(struct xdr_stream *xdr,
- 				   const struct nfs41_bind_conn_to_session_args *args,
-@@ -1986,13 +1970,11 @@ static void encode_reclaim_complete(struct xdr_stream *xdr,
- 	encode_op_hdr(xdr, OP_RECLAIM_COMPLETE, decode_reclaim_complete_maxsz, hdr);
- 	encode_uint32(xdr, args->one_fs);
- }
--#endif /* CONFIG_NFS_V4_1 */
- 
- static void encode_sequence(struct xdr_stream *xdr,
- 			    const struct nfs4_sequence_args *args,
- 			    struct compound_hdr *hdr)
- {
--#if defined(CONFIG_NFS_V4_1)
- 	struct nfs4_session *session;
- 	struct nfs4_slot_table *tp;
- 	struct nfs4_slot *slot = args->sa_slot;
-@@ -2023,10 +2005,8 @@ static void encode_sequence(struct xdr_stream *xdr,
- 	*p++ = cpu_to_be32(slot->slot_nr);
- 	*p++ = cpu_to_be32(tp->highest_used_slotid);
- 	*p = cpu_to_be32(args->sa_cache_this);
--#endif /* CONFIG_NFS_V4_1 */
- }
- 
--#ifdef CONFIG_NFS_V4_1
- static void
- encode_get_dir_delegation(struct xdr_stream *xdr, struct compound_hdr *hdr)
- {
-@@ -2188,26 +2168,6 @@ static void encode_free_stateid(struct xdr_stream *xdr,
- 	encode_op_hdr(xdr, OP_FREE_STATEID, decode_free_stateid_maxsz, hdr);
- 	encode_nfs4_stateid(xdr, &args->stateid);
- }
--#else
--static inline void
--encode_get_dir_delegation(struct xdr_stream *xdr, struct compound_hdr *hdr)
--{
--}
--
--static inline void
--encode_layoutreturn(struct xdr_stream *xdr,
--		    const struct nfs4_layoutreturn_args *args,
--		    struct compound_hdr *hdr)
--{
--}
--
--static void
--encode_layoutget(struct xdr_stream *xdr,
--		      const struct nfs4_layoutget_args *args,
--		      struct compound_hdr *hdr)
--{
--}
--#endif /* CONFIG_NFS_V4_1 */
- 
- /*
-  * END OF "GENERIC" ENCODE ROUTINES.
-@@ -2215,11 +2175,9 @@ encode_layoutget(struct xdr_stream *xdr,
- 
- static u32 nfs4_xdr_minorversion(const struct nfs4_sequence_args *args)
- {
--#if defined(CONFIG_NFS_V4_1)
- 	struct nfs4_session *session = args->sa_slot->table->session;
- 	if (session)
- 		return session->clp->cl_mvops->minor_version;
--#endif /* CONFIG_NFS_V4_1 */
- 	return 0;
- }
- 
-@@ -2977,7 +2935,6 @@ static void nfs4_xdr_enc_fsid_present(struct rpc_rqst *req,
- 	encode_nops(&hdr);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- /*
-  * BIND_CONN_TO_SESSION request
-  */
-@@ -3079,8 +3036,6 @@ static void nfs4_xdr_enc_sequence(struct rpc_rqst *req, struct xdr_stream *xdr,
- 	encode_nops(&hdr);
- }
- 
--#endif
--
- /*
-  * a GET_LEASE_TIME request
-  */
-@@ -3101,8 +3056,6 @@ static void nfs4_xdr_enc_get_lease_time(struct rpc_rqst *req,
- 	encode_nops(&hdr);
- }
- 
--#ifdef CONFIG_NFS_V4_1
--
- /*
-  * a RECLAIM_COMPLETE request
-  */
-@@ -3265,7 +3218,6 @@ static void nfs4_xdr_enc_free_stateid(struct rpc_rqst *req,
- 	encode_free_stateid(xdr, args, &hdr);
- 	encode_nops(&hdr);
- }
--#endif /* CONFIG_NFS_V4_1 */
- 
- static int decode_opaque_inline(struct xdr_stream *xdr, unsigned int *len, char **string)
- {
-@@ -5764,7 +5716,6 @@ static int decode_secinfo(struct xdr_stream *xdr, struct nfs4_secinfo_res *res)
- 	return decode_secinfo_common(xdr, res);
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- static int decode_secinfo_no_name(struct xdr_stream *xdr, struct nfs4_secinfo_res *res)
- {
- 	int status = decode_op_hdr(xdr, OP_SECINFO_NO_NAME);
-@@ -5976,13 +5927,11 @@ static int decode_reclaim_complete(struct xdr_stream *xdr, void *dummy)
- {
- 	return decode_op_hdr(xdr, OP_RECLAIM_COMPLETE);
- }
--#endif /* CONFIG_NFS_V4_1 */
- 
- static int decode_sequence(struct xdr_stream *xdr,
- 			   struct nfs4_sequence_res *res,
- 			   struct rpc_rqst *rqstp)
- {
--#if defined(CONFIG_NFS_V4_1)
- 	struct nfs4_session *session;
- 	struct nfs4_sessionid id;
- 	u32 dummy;
-@@ -6042,12 +5991,8 @@ static int decode_sequence(struct xdr_stream *xdr,
- out_overflow:
- 	status = -EIO;
- 	goto out_err;
--#else  /* CONFIG_NFS_V4_1 */
--	return 0;
--#endif /* CONFIG_NFS_V4_1 */
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- static int decode_layout_stateid(struct xdr_stream *xdr, nfs4_stateid *stateid)
- {
- 	stateid->type = NFS4_LAYOUT_STATEID_TYPE;
-@@ -6310,27 +6255,6 @@ static int decode_free_stateid(struct xdr_stream *xdr,
- 	res->status = decode_op_hdr(xdr, OP_FREE_STATEID);
- 	return res->status;
- }
--#else
--static int decode_get_dir_delegation(struct xdr_stream *xdr,
--				     struct nfs4_getattr_res *res)
--{
--	return 0;
--}
--
--static inline
--int decode_layoutreturn(struct xdr_stream *xdr,
--			       struct nfs4_layoutreturn_res *res)
--{
--	return 0;
--}
--
--static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
--			    struct nfs4_layoutget_res *res)
--{
--	return 0;
--}
--
--#endif /* CONFIG_NFS_V4_1 */
- 
- /*
-  * END OF "GENERIC" DECODE ROUTINES.
-@@ -7359,7 +7283,6 @@ static int nfs4_xdr_dec_fsid_present(struct rpc_rqst *rqstp,
- 	return status;
- }
- 
--#if defined(CONFIG_NFS_V4_1)
- /*
-  * Decode BIND_CONN_TO_SESSION response
-  */
-@@ -7456,8 +7379,6 @@ static int nfs4_xdr_dec_sequence(struct rpc_rqst *rqstp,
- 	return status;
- }
- 
--#endif
--
- /*
-  * Decode GET_LEASE_TIME response
-  */
-@@ -7479,8 +7400,6 @@ static int nfs4_xdr_dec_get_lease_time(struct rpc_rqst *rqstp,
- 	return status;
- }
- 
--#ifdef CONFIG_NFS_V4_1
--
- /*
-  * Decode RECLAIM_COMPLETE response
-  */
-@@ -7668,7 +7587,6 @@ static int nfs4_xdr_dec_free_stateid(struct rpc_rqst *rqstp,
- out:
- 	return status;
- }
--#endif /* CONFIG_NFS_V4_1 */
- 
- /**
-  * nfs4_decode_dirent - Decode a single NFSv4 directory entry stored in
-@@ -7766,9 +7684,6 @@ int nfs4_decode_dirent(struct xdr_stream *xdr, struct nfs_entry *entry,
- 	.p_name = #proc,	\
- }
- 
--<<<<<<< Updated upstream
--#if defined(CONFIG_NFS_V4_1)
--=======
- #if defined(CONFIG_NFS_V4_0)
- #define PROC40(proc, argtype, restype)				\
- 	PROC(proc, argtype, restype)
-@@ -7777,13 +7692,8 @@ int nfs4_decode_dirent(struct xdr_stream *xdr, struct nfs_entry *entry,
- 	STUB(proc)
- #endif /* CONFIG_NFS_V4_0 */
- 
-->>>>>>> Stashed changes
- #define PROC41(proc, argtype, restype)				\
- 	PROC(proc, argtype, restype)
--#else
--#define PROC41(proc, argtype, restype)				\
--	STUB(proc)
--#endif
- 
- #if defined(CONFIG_NFS_V4_2)
- #define PROC42(proc, argtype, restype)				\
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 3db8f13d8fe4..eb39859c216c 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -84,7 +84,7 @@ enum pnfs_try_status {
- 	PNFS_TRY_AGAIN     = 2,
- };
- 
--#ifdef CONFIG_NFS_V4_1
-+#if IS_ENABLED(CONFIG_NFS_V4)
- 
- #define LAYOUT_NFSV4_1_MODULE_PREFIX "nfs-layouttype4"
- 
-@@ -704,7 +704,7 @@ static inline void nfs4_print_deviceid(const struct nfs4_deviceid *dev_id)
- }
- 
- #endif /* NFS_DEBUG */
--#else  /* CONFIG_NFS_V4_1 */
-+#else  /* CONFIG_NFS_V4 */
- 
- static inline bool nfs_have_layout(struct inode *inode)
- {
-@@ -913,7 +913,7 @@ static inline bool pnfs_layout_is_valid(const struct pnfs_layout_hdr *lo)
- 	return false;
- }
- 
--#endif /* CONFIG_NFS_V4_1 */
-+#endif /* CONFIG_NFS_V4 */
- 
- #if IS_ENABLED(CONFIG_NFS_V4_2)
- int pnfs_report_layoutstat(struct inode *inode, gfp_t gfp_flags);
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index 3c1fa320b3f1..e1fe78d7b8d0 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -68,10 +68,10 @@ void nfs_pageio_init_read(struct nfs_pageio_descriptor *pgio,
- 	struct nfs_server *server = NFS_SERVER(inode);
- 	const struct nfs_pageio_ops *pg_ops = &nfs_pgio_rw_ops;
- 
--#ifdef CONFIG_NFS_V4_1
-+#if IS_ENABLED(CONFIG_NFS_V4)
- 	if (server->pnfs_curr_ld && !force_mds)
- 		pg_ops = server->pnfs_curr_ld->pg_read_ops;
--#endif
-+#endif /* CONFIG_NFS_V4 */
- 	nfs_pageio_init(pgio, inode, pg_ops, compl_ops, &nfs_rw_read_ops,
- 			server->rsize, 0);
- }
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index e74164d9c081..7a318581f85b 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -589,18 +589,13 @@ static void show_lease(struct seq_file *m, struct nfs_server *server)
- 	seq_printf(m, ",lease_expired=%ld",
- 		   time_after(expire, jiffies) ?  0 : (jiffies - expire) / HZ);
- }
--#ifdef CONFIG_NFS_V4_1
-+
- static void show_sessions(struct seq_file *m, struct nfs_server *server)
- {
- 	if (nfs4_has_session(server->nfs_client))
- 		seq_puts(m, ",sessions");
- }
--#else
--static void show_sessions(struct seq_file *m, struct nfs_server *server) {}
--#endif
--#endif
- 
--#ifdef CONFIG_NFS_V4_1
- static void show_pnfs(struct seq_file *m, struct nfs_server *server)
- {
- 	seq_printf(m, ",pnfs=");
-@@ -620,16 +615,11 @@ static void show_implementation_id(struct seq_file *m, struct nfs_server *nfss)
- 			   impl_id->date.seconds, impl_id->date.nseconds);
- 	}
- }
--#else
--#if IS_ENABLED(CONFIG_NFS_V4)
--static void show_pnfs(struct seq_file *m, struct nfs_server *server)
--{
--}
--#endif
-+#else /* CONFIG_NFS_V4 */
- static void show_implementation_id(struct seq_file *m, struct nfs_server *nfss)
- {
- }
--#endif
-+#endif /* CONFIG_NFS_V4 */
- 
- int nfs_show_devname(struct seq_file *m, struct dentry *root)
- {
-diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-index ea6e6168092b..7bf650fda1cb 100644
---- a/fs/nfs/sysfs.c
-+++ b/fs/nfs/sysfs.c
-@@ -293,7 +293,7 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static struct kobj_attribute nfs_sysfs_attr_shutdown = __ATTR_RW(shutdown);
- 
--#if IS_ENABLED(CONFIG_NFS_V4_1)
-+#if IS_ENABLED(CONFIG_NFS_V4)
- static ssize_t
- implid_domain_show(struct kobject *kobj, struct kobj_attribute *attr,
- 				char *buf)
-@@ -323,7 +323,7 @@ implid_name_show(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static struct kobj_attribute nfs_sysfs_attr_implid_name = __ATTR_RO(implid_name);
- 
--#endif /* IS_ENABLED(CONFIG_NFS_V4_1) */
-+#endif /* IS_ENABLED(CONFIG_NFS_V4) */
- 
- #define RPC_CLIENT_NAME_SIZE 64
- 
-@@ -362,7 +362,7 @@ static struct kobj_type nfs_sb_ktype = {
- 	.child_ns_type = nfs_netns_object_child_ns_type,
- };
- 
--#if IS_ENABLED(CONFIG_NFS_V4_1)
-+#if IS_ENABLED(CONFIG_NFS_V4)
- static void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
- {
- 	int ret;
-@@ -382,11 +382,11 @@ static void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
- 		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
- 			server->s_sysfs_id, ret);
- }
--#else /* CONFIG_NFS_V4_1 */
-+#else /* CONFIG_NFS_V4 */
- static inline void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
- {
- }
--#endif /* CONFIG_NFS_V4_1 */
-+#endif /* CONFIG_NFS_V4 */
- 
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index bf412455e8ed..2d0e4a765aeb 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1402,7 +1402,7 @@ void nfs_pageio_init_write(struct nfs_pageio_descriptor *pgio,
- 	struct nfs_server *server = NFS_SERVER(inode);
- 	const struct nfs_pageio_ops *pg_ops = &nfs_pgio_rw_ops;
- 
--#ifdef CONFIG_NFS_V4_1
-+#if IS_ENABLED(CONFIG_NFS_V4)
- 	if (server->pnfs_curr_ld && !force_mds)
- 		pg_ops = server->pnfs_curr_ld->pg_write_ops;
- #endif
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index bb13a294b69e..89826c3e15a2 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -115,9 +115,7 @@ struct nfs_client {
- #define NFS_SP4_MACH_CRED_WRITE    5	/* WRITE */
- #define NFS_SP4_MACH_CRED_COMMIT   6	/* COMMIT */
- #define NFS_SP4_MACH_CRED_PNFS_CLEANUP  7 /* LAYOUTRETURN */
--#if IS_ENABLED(CONFIG_NFS_V4_1)
- 	wait_queue_head_t	cl_lock_waitq;
--#endif /* CONFIG_NFS_V4_1 */
- #endif /* CONFIG_NFS_V4 */
- 
- 	/* Our own IP address, as a null-terminated string.
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 2aa4e38af57a..437e6f4af7e0 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1324,10 +1324,6 @@ struct nfs4_fsid_present_res {
- 	unsigned char			renew:1;
- };
- 
--#endif /* CONFIG_NFS_V4 */
--
--#ifdef CONFIG_NFS_V4_1
--
- struct pnfs_commit_bucket {
- 	struct list_head written;
- 	struct list_head committing;
-@@ -1467,7 +1463,7 @@ struct nfs41_free_stateid_res {
- struct pnfs_ds_commit_info {
- };
- 
--#endif /* CONFIG_NFS_V4_1 */
-+#endif /* CONFIG_NFS_V4 */
- 
- #ifdef CONFIG_NFS_V4_2
- struct nfs42_falloc_args {
--- 
-2.52.0
+I clearly misremembered the overhead of the list_lru_del &
+list_lru_add locks as it was not as high as I thought.
 
+Again, the xprt->xpt_mutex beats all else.
+
+Daire
+
+
+> > We have a few generations of hardware and OS versions like RHEL8
+> > (4.18), RHEL9 (5.14) and mainline (v6.18) in production, but I see
+> > similar performance plateaus for this workload in all cases (~300k
+> > iops/s).
+> >
+> > But it could well be that they are all limited for different reasons
+> > (lock contentions). I distinctly remember seeing high
+> > nfsd_file_lru_remove & nfsd_file_put (perf lock record) contention on
+> > the RHEL9 (5.14) kernel which I don't see now on mainline.
+> >
+> > I'm happy to record the lockstat report for this workload across a few
+> > different kernel versions if that is of interest to anyone.
+>
+>
+> --
+> Chuck Lever
+
+--000000000000fcb983064953fdc1
+Content-Type: text/plain; charset="US-ASCII"; name="lockstat-v5.14.txt"
+Content-Disposition: attachment; filename="lockstat-v5.14.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mkvvhv6l0>
+X-Attachment-Id: f_mkvvhv6l0
+
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3MgbmFtZSAgICBjb24tYm91bmNlcyAgICBjb250
+ZW50aW9ucyAgIHdhaXR0aW1lLW1pbiAgIHdhaXR0aW1lLW1heCB3YWl0dGltZS10b3RhbCAgIHdh
+aXR0aW1lLWF2ZyAgICBhY3EtYm91bmNlcyAgIGFjcXVpc2l0aW9ucyAgIGhvbGR0aW1lLW1pbiAg
+IGhvbGR0aW1lLW1heCBob2xkdGltZS10b3RhbCAgIGhvbGR0aW1lLWF2ZwotLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICAgICAgICAgICAg
+ICAgICAmaXAtPmlfZmxhZ3NfbG9jazogICAgIDIxMjAzNjQ4OSAgICAgIDM1NjMwNTU2NyAgICAg
+ICAgICAgMC4wNyAgICAgICAgIDU4Mi44NSAgNDI2OTk3NjAxNy44OCAgICAgICAgICAxMS45OCAg
+ICAgIDQzMDc0OTM3OCAgICAgIDU0MTE2MDU1MSAgICAgICAgICAgMC4wNCAgICAgICAgIDUxOS43
+NSAgIDM3NjU1MzU0My40NSAgICAgICAgICAgMC43MAogICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICZxLT5sb2NrOiAgICAgMjc1MzcwODkxICAgICAgMjc4MTI0NDUzICAgICAgICAgICAw
+LjA3ICAgICAgICAxMjM3LjM0IDk3MTQ1NjU3OTE4LjcyICAgICAgICAgMzQ5LjI5ICAgICAgMjc4
+NTU4NzY1ICAgICAgMjc4NjE3MzA1ICAgICAgICAgICAwLjA1ICAgICAgICAgNDczLjk3ICAgMjU3
+NDgwOTgzLjU0ICAgICAgICAgICAwLjkyCiAgICAgICAgICAgICAgICZzYi0+c190eXBlLT5pX2xv
+Y2tfa2V5IzI6ICAgICAgNzAzNzc4MjQgICAgICAgNzAzODQzMDMgICAgICAgICAgIDAuMDcgICAg
+ICAgICA0ODMuOTUgICAgOTg4ODExNDUuMjcgICAgICAgICAgIDEuNDAgICAgICAzMTA3MzAxMTgg
+ICAgICAzNjA2OTEzNTkgICAgICAgICAgIDAuMDYgICAgICAgICA0ODQuMTYgICAyMjY3MDg3Mzgu
+MTggICAgICAgICAgIDAuNjMKICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvY2stQUZfSU5F
+VDogICAgICA2MTA2MTQ5NSAgICAgICA2MjMxNDExNyAgICAgICAgICAgMC4wNyAgICAgICAgIDM1
+MS42NCAgIDE4OTk0NTM5MS42MCAgICAgICAgICAgMy4wNSAgICAgIDU2MzI0MjY3OCAgICAgMjk1
+MDE3NjgyMyAgICAgICAgICAgMC4wNiAgICAgICAgIDM2Ni4xMCAgMTcyMDkzMDQ5OC41OSAgICAg
+ICAgICAgMC41OAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleSMxOiAgICAg
+IDQzNDM3MjUwICAgICAgIDQzNDM3MjYyICAgICAgICAgICAwLjA2ICAgICAgICAgIDMxLjI5ICAg
+IDM3NTU2MDA1LjcyICAgICAgICAgICAwLjg2ICAgICAgMzYxMTA4MjQ5ICAgICAgMzYxMTU0NzIw
+ICAgICAgICAgICAwLjA2ICAgICAgICAgMzQ5Ljg4ICAgIDc5Nzk0MjcwLjYxICAgICAgICAgICAw
+LjIyCiAgICAgICAgICAgICAgICAgICAgICAmbHJ1LT5ub2RlW2ldLmxvY2s6ICAgICAgMzQxMTM4
+NzYgICAgICAgMzQyNDEwNzUgICAgICAgICAgIDAuMDcgICAgICAgICA0ODkuNDUgICAgODA2MDI0
+MDcuNzcgICAgICAgICAgIDIuMzUgICAgICAyMDg0MzgxOTEgICAgICAyMjI3ODI1NzIgICAgICAg
+ICAgIDAuMDUgICAgICAgICA1MjkuODUgICAgNjAyNjg3NjMuNzUgICAgICAgICAgIDAuMjcKICAg
+ICAgICAgICAgICAgICAgICAgICAgICZkZW50cnktPmRfbG9jazogICAgICAyNzI4OTE4OSAgICAg
+ICAyNzMwOTI0MiAgICAgICAgICAgMC4wNyAgICAgICAgIDQzMC4zNiAgICAzMDkxOTEzOS4yMSAg
+ICAgICAgICAgMS4xMyAgICAgIDM1ODE3NTUyNCAgICAgIDQwMjk1MjA1OSAgICAgICAgICAgMC4w
+NiAgICAgICAgIDQ2MC4xOSAgIDEyMTIwMzczMS42NCAgICAgICAgICAgMC4zMAogICAgICAgICAg
+ICAgICAgICAgICAgICAgc2xvY2stQUZfSU5FVC8xOiAgICAgICA4Nzc3OTY3ICAgICAgICA4Nzkw
+NzQ1ICAgICAgICAgICAwLjA4ICAgICAgICAgMjE4LjgxICAgIDIyMDU2NzMxLjM5ICAgICAgICAg
+ICAyLjUxICAgICAgMTk5Mjk3OTc3ICAgICAgMzU1NjcyNjIwICAgICAgICAgICAwLjE2ICAgICAg
+ICAgMzY2Ljg3ICAxNjIxMjU0MTMzLjY3ICAgICAgICAgICA0LjU2CiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgJnAtPnBpX2xvY2s6ICAgICAgIDc3MDM2MzQgICAgICAgIDc3MDQxNDggICAg
+ICAgICAgIDAuMDcgICAgICAgICAyMjAuMDQgICAgMzMxNzkwOTYuNDAgICAgICAgICAgIDQuMzEg
+ICAgICAgODA2MjYzNTIgICAgICAgOTE3MzQ1NzYgICAgICAgICAgIDAuMDUgICAgICAgICAzNTMu
+MDQgICAxNzI3MDQwNjEuODIgICAgICAgICAgIDEuODgKICAgICAgICAgICAgICAgICAgICAgICAg
+JnhwcnQtPnhwdF9tdXRleDogICAgICAgNjkxNTQ2MyAgICAgICAgNjk0ODY1OSAgICAgICAgICAg
+MC4yOCAgICAgICA0MjAwNy4wMyAyMjYwOTE4MTY0OS43OSAgICAgICAgMzI1My43NSAgICAgIDE3
+OTU4Mzg4NyAgICAgIDE4MDM0NDYwOSAgICAgICAgICAgNS4xNCAgICAgICA0MjMxOS41OSAyMDI5
+MjYxODY3Mi4xMiAgICAgICAgIDExMi41MgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+Y3Vfbm9kZV8xOiAgICAgICAzOTYyNTE5ICAgICAgICAzOTk1MTcyICAgICAgICAgICAwLjA4ICAg
+ICAgICAgIDE2LjM2ICAgICA1MzE1MzQ4LjUyICAgICAgICAgICAxLjMzICAgICAgICA4Nzg1MTY0
+ICAgICAgIDE3Njc0MTYxICAgICAgICAgICAwLjA3ICAgICAgICAgIDE1LjIyICAgIDExNzM3ODU0
+Ljk4ICAgICAgICAgICAwLjY2CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnJxLT5fX2xv
+Y2s6ICAgICAgIDIyOTQyODggICAgICAgIDIzNDg3NDIgICAgICAgICAgIDAuMDYgICAgICAgICAg
+NzUuMDEgICAgIDQ1OTg3MDMuNDQgICAgICAgICAgIDEuOTYgICAgICAgMzMxMzY5MTggICAgICA0
+OTAyMDUyMDggICAgICAgICAgIDAuMDYgICAgICAgICAzNTYuNzUgICA3NzU4NTExODEuODQgICAg
+ICAgICAgIDEuNTgKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jazogICAg
+ICAgMTg5NDk1NSAgICAgICAgMTk2Njg0MiAgICAgICAgICAgMC4wNyAgICAgICAgICAxNC42MCAg
+ICAgMTIxNjEwMi45MSAgICAgICAgICAgMC42MiAgICAgIDU0MDE0Mzc5NiAgICAgMTE0MTc4MjU4
+OSAgICAgICAgICAgMC4wNiAgICAgICAgIDIxMy45MCAgIDMyNTcwOTE3MS40OSAgICAgICAgICAg
+MC4yOQogICAgICAgICAgICAgICAgICAgICAgaHJ0aW1lcl9iYXNlcy5sb2NrOiAgICAgICAgNzcy
+OTAwICAgICAgICAgNzc5ODk4ICAgICAgICAgICAwLjA4ICAgICAgICAgIDEyLjA0ICAgICAgNTI2
+NDQ2Ljk2ICAgICAgICAgICAwLjY4ICAgICAgMzEzNTcyODUzICAgICAxMTIzNzkxMDg0ICAgICAg
+ICAgICAwLjA3ICAgICAgICAgMzUzLjk5ICAgNDczMjMzNzg5LjAzICAgICAgICAgICAwLjQyCiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgJnBvb2wtPmxvY2s6ICAgICAgICA1MTUwMTAgICAg
+ICAgICA1MTUwOTcgICAgICAgICAgIDAuMDggICAgICAgICAgMjEuNjcgICAgICA4MDkwNTUuOTYg
+ICAgICAgICAgIDEuNTcgICAgICAgMTAzOTUwNzYgICAgICAgNDYwMTc3MDYgICAgICAgICAgIDAu
+MDYgICAgICAgICAgMjYuMDkgICAgNTgxODk4NzUuMTIgICAgICAgICAgIDEuMjYKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAmem9uZS0+bG9jazogICAgICAgIDI0MTIwNCAgICAgICAgIDI0
+MTIwNyAgICAgICAgICAgMC4xMSAgICAgICAgIDE0Mi43MSAgICAgMjIwNTg5Ny4xNSAgICAgICAg
+ICAgOS4xNSAgICAgICAgMzc2MzMxNyAgICAgICAgMzgxMDE3OCAgICAgICAgICAgMC4xNCAgICAg
+ICAgIDM2MC4wNSAgICA1MzA4OTE4Ni40MiAgICAgICAgICAxMy45MwogICAgICAgICAgICAgICAg
+ICAgICAgICAgJnNkLT5kZWZlcl9sb2NrOiAgICAgICAgMjI0MDI5ICAgICAgICAgMjI0MDM1ICAg
+ICAgICAgICAwLjA4ICAgICAgICAgIDE4LjcwICAgICAgMTM1MDcyLjgyICAgICAgICAgICAwLjYw
+ICAgICAgMjQ5NzQyNDE5ICAgICAgMjQ5NzQ1NzM3ICAgICAgICAgICAwLjA2ICAgICAgICAgIDIx
+LjQwICAgIDM2NzYyODcyLjk0ICAgICAgICAgICAwLjE1CiAgICAgICAgICAgICAgICAgICAgICAg
+ICZjbWQtPmFsbG9jX2xvY2s6ICAgICAgICAxNjE2NDggICAgICAgICAxNjMxNTUgICAgICAgICAg
+IDAuMDggICAgICAgICAgMTQuMzUgICAgICAxMDEwMTkuODYgICAgICAgICAgIDAuNjIgICAgICAg
+MTM5NzU0MzcgICAgICAgMTk0OTYwNDMgICAgICAgICAgIDAuMDYgICAgICAgICAgMTQuMDggICAg
+IDg3MTM1ODQuOTcgICAgICAgICAgIDAuNDUKICAgICAgICAgICAgICAgICAgICAgICAgIGlucHV0
+X3Bvb2wubG9jazogICAgICAgIDExNDYwMSAgICAgICAgIDExNDYwMSAgICAgICAgICAgMC4xMiAg
+ICAgICAgICAgOS44NiAgICAgIDE3ODg1NC4yNCAgICAgICAgICAgMS41NiAgICAgICAgIDYwMzQ2
+OCAgICAgICAgIDYwNTUwMCAgICAgICAgICAgMC4wOSAgICAgICAgICAxMy43NCAgICAgIDQyNDQ5
+Mi41NCAgICAgICAgICAgMC43MAogICAgICAgICAgICAgICAgICAgICAgICAgcXVldWVfd2FpdC5s
+b2NrOiAgICAgICAgIDkxNDE5ICAgICAgICAgMTAyNTM0ICAgICAgICAgICAwLjA3ICAgICAgICAg
+IDU3LjY0ICAgICAgNDQ0MjU1LjEwICAgICAgICAgICA0LjMzICAgICAgICAgMTA2MDgwICAgICAg
+ICAgMTEwNzk3ICAgICAgICAgICAwLjA2ICAgICAgICAgMTI0LjYxICAgICAgIDI1ODg0LjQ3ICAg
+ICAgICAgICAwLjIzCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJjdV9ub2RlXzA6ICAg
+ICAgICAgNzc2OTYgICAgICAgICAgNzc2OTYgICAgICAgICAgIDAuMDkgICAgICAgICAgIDkuMjIg
+ICAgICAgODY2MTEuNDEgICAgICAgICAgIDEuMTEgICAgICAgICA0ODU0NzQgICAgICAgICA3NTY2
+MjQgICAgICAgICAgIDAuMDcgICAgICAgICAgMTIuMTIgICAgICAyODIwOTIuNTYgICAgICAgICAg
+IDAuMzcKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZjaC0+bG9jazogICAgICAgICA2
+ODMwNSAgICAgICAgICA2ODMxMiAgICAgICAgICAgMC4xMCAgICAgICAgICAgNy44MiAgICAgICA0
+MDEyNi45NiAgICAgICAgICAgMC41OSAgICAgICAxMjE4NzAxMSAgICAgICAxMjk5Njc5MCAgICAg
+ICAgICAgMC4wNyAgICAgICAgICAxMy44OSAgICAgNTcwMzQ0NC4zNSAgICAgICAgICAgMC40NAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBxdWV1ZV9sb2NrOiAgICAgICAgIDQ2NjIyICAg
+ICAgICAgIDUxNTA1ICAgICAgICAgICAwLjA3ICAgICAgICAgIDM4LjM4ICAgICAgMTA5OTAxLjY4
+ICAgICAgICAgICAyLjEzICAgICAgICAgMTAxMDI5ICAgICAgICAgMTE1MzY3ICAgICAgICAgICAw
+LjA2ICAgICAgICAgIDI3LjQ3ICAgICAgIDI1MTAxLjA5ICAgICAgICAgICAwLjIyCiAgICAgICAg
+ICAgICAgICAgICAgICZyLT5wcm9kdWNlcl9sb2NrIzI6ICAgICAgICAgNDIwMDIgICAgICAgICAg
+NDIwNDYgICAgICAgICAgIDAuMTMgICAgICAgICAgMTIuNzMgICAgICAgMzIxNTkuMTMgICAgICAg
+ICAgIDAuNzYgICAgICAgIDM1Mjc5MTcgICAgICAgIDM4Njg3MTEgICAgICAgICAgIDAuMDYgICAg
+ICAgICAgMTYuODkgICAgIDIwNTY0ODEuNjYgICAgICAgICAgIDAuNTMKICAgICAgICAgICAgICAg
+ICAgICAgICAgICZ4cHJ0LT54cHRfbG9jazogICAgICAgICAyMTA2OCAgICAgICAgICAyODg0MCAg
+ICAgICAgICAgMC4xMCAgICAgICAgIDQxMi4zNyAgICAgICA4NzcyMy4zNiAgICAgICAgICAgMy4w
+NCAgICAgIDE3OTcwMDgzMSAgICAgIDM2MDY4ODU1MiAgICAgICAgICAgMC4wNiAgICAgICAgIDQ1
+Ni4wOCAgIDE1MjQzODc5NS4zNCAgICAgICAgICAgMC40MgogICAgICAgICAgICAgICAgICAgICAm
+ZWktPnNvY2tldC53cS53YWl0OiAgICAgICAgIDI2Mjc3ICAgICAgICAgIDI2Mjc3ICAgICAgICAg
+ICAwLjA3ICAgICAgICAgIDYzLjcyICAgICAgIDg5Njg0LjQ2ICAgICAgICAgICAzLjQxICAgICAg
+ICAgMTI2NjY5ICAgICAgICAgMjg5ODgzICAgICAgICAgICAwLjA3ICAgICAgICAgMTAxLjQzICAg
+ICAgMjM4NzYxLjQzICAgICAgICAgICAwLjgyCiAgICAgICAgICAgICAgICAgICAmZnV0ZXhfcXVl
+dWVzW2ldLmxvY2s6ICAgICAgICAgMjIzNTAgICAgICAgICAgMjI0OTEgICAgICAgICAgIDAuMDcg
+ICAgICAgICAgMTcuNzUgICAgICAgMTA4NTkuMzcgICAgICAgICAgIDAuNDggICAgICAgICAgODkw
+MTQgICAgICAgICAzNDMzODMgICAgICAgICAgIDAuMDYgICAgICAgICAgNjkuMzUgICAgICAxNDAx
+NDMuNDggICAgICAgICAgIDAuNDEKICAgICAgICAgICAgICAgICAgICAgICBzZW1hcGhvcmUtPmxv
+Y2sjMjogICAgICAgICAxOTgwNCAgICAgICAgICAxOTk3OSAgICAgICAgICAgMC4wOSAgICAgICAg
+ICAgMS4zNiAgICAgICAgODkyMy4zOCAgICAgICAgICAgMC40NSAgICAgICAgOTQ0ODExMiAgICAg
+ICAxMjk5NzcxMCAgICAgICAgICAgMC4wNiAgICAgICAgICAxMy4zMSAgICAgMjkzNDg1Ny45MSAg
+ICAgICAgICAgMC4yMwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmeC0+d2FpdCMyOiAg
+ICAgICAgIDE4MzkwICAgICAgICAgIDE4NTg0ICAgICAgICAgICAwLjA4ICAgICAgICAgICAxLjg0
+ICAgICAgICA4MTYxLjE0ICAgICAgICAgICAwLjQ0ICAgICAgIDM3ODE5MTk1ICAgICAgIDQ4MTA0
+NDM0ICAgICAgICAgICAwLjA2ICAgICAgICAgMzUxLjg4ICAgIDI2MTQyMzczLjkwICAgICAgICAg
+ICAwLjU0CiAgICAgICAgICAgICAgICAgICAgICAgICAgJnN0YXRzLT5sb2NrIzI6ICAgICAgICAg
+MTQ1NDMgICAgICAgICAgMTQ1NDMgICAgICAgICAgIDAuMTAgICAgICAgICAgIDEuOTUgICAgICAg
+IDcwNjcuNDQgICAgICAgICAgIDAuNDkgICAgICAgIDYzODU3MzggICAgICAgIDY0OTg2ODEgICAg
+ICAgICAgIDAuMDYgICAgICAgICAxODYuNjIgICAgIDE1NjgwOTYuMjcgICAgICAgICAgIDAuMjQK
+Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzIG5hbWUgICAgY29uLWJvdW5jZXMgICAgY29u
+dGVudGlvbnMgICB3YWl0dGltZS1taW4gICB3YWl0dGltZS1tYXggd2FpdHRpbWUtdG90YWwgICB3
+YWl0dGltZS1hdmcgICAgYWNxLWJvdW5jZXMgICBhY3F1aXNpdGlvbnMgICBob2xkdGltZS1taW4g
+ICBob2xkdGltZS1tYXggaG9sZHRpbWUtdG90YWwgICBob2xkdGltZS1hdmcKLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCgogICAgICAgICAgICAgICAg
+ICAgICAgICZpcC0+aV9mbGFnc19sb2NrOiAgICAgMjEyMDM2NDg5ICAgICAgMzU2MzA1NTY3ICAg
+ICAgICAgICAwLjA3ICAgICAgICAgNTgyLjg1ICA0MjY5OTc2MDE3Ljg4ICAgICAgICAgIDExLjk4
+ICAgICAgNDMwNzQ5Mzc4ICAgICAgNTQxMTYwNTUxICAgICAgICAgICAwLjA0ICAgICAgICAgNTE5
+Ljc1ICAgMzc2NTUzNTQzLjQ1ICAgICAgICAgICAwLjcwCiAgICAgICAgICAgICAgICAgICAgICAg
+LS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAmaXAtPmlfZmxhZ3NfbG9j
+ayAgICAgICAgICAgIDExNiAgICAgICAgICBbPDAwMDAwMDAwZjVhNDhhZmI+XSB4ZnNfcmVsZWFz
+ZSsweGE3LzB4MTgwIFt4ZnNdCiAgICAgICAgICAgICAgICAgICAgICAgJmlwLT5pX2ZsYWdzX2xv
+Y2sgICAgICAxMDk0OTI0NjEgICAgICAgICAgWzwwMDAwMDAwMGM5MTI3ZjE5Pl0geGZzX2lnZXRf
+Y2FjaGVfaGl0KzB4MzUvMHgzMzAgW3hmc10KICAgICAgICAgICAgICAgICAgICAgICAmaXAtPmlf
+ZmxhZ3NfbG9jayAgICAgIDEyMzU2MTc5OCAgICAgICAgICBbPDAwMDAwMDAwOGUzYWEyNGI+XSB4
+ZnNfaWdldF9jYWNoZV9oaXQrMHgyYjYvMHgzMzAgW3hmc10KICAgICAgICAgICAgICAgICAgICAg
+ICAmaXAtPmlfZmxhZ3NfbG9jayAgICAgIDEyMzI1MTE5MCAgICAgICAgICBbPDAwMDAwMDAwZGYz
+OTM3M2Y+XSB4ZnNfaWdldCsweDFmNC8weDJhMCBbeGZzXQogICAgICAgICAgICAgICAgICAgICAg
+IC0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAgJmlwLT5pX2ZsYWdzX2xv
+Y2sgICAgICAgICAgICAxMTYgICAgICAgICAgWzwwMDAwMDAwMGY1YTQ4YWZiPl0geGZzX3JlbGVh
+c2UrMHhhNy8weDE4MCBbeGZzXQogICAgICAgICAgICAgICAgICAgICAgICZpcC0+aV9mbGFnc19s
+b2NrICAgICAgMTY4ODc5NDcxICAgICAgICAgIFs8MDAwMDAwMDBjOTEyN2YxOT5dIHhmc19pZ2V0
+X2NhY2hlX2hpdCsweDM1LzB4MzMwIFt4ZnNdCiAgICAgICAgICAgICAgICAgICAgICAgJmlwLT5p
+X2ZsYWdzX2xvY2sgICAgICAxMzE4NjA3OTcgICAgICAgICAgWzwwMDAwMDAwMDhlM2FhMjRiPl0g
+eGZzX2lnZXRfY2FjaGVfaGl0KzB4MmI2LzB4MzMwIFt4ZnNdCiAgICAgICAgICAgICAgICAgICAg
+ICAgJmlwLT5pX2ZsYWdzX2xvY2sgICAgICAgNTU1NjUxODEgICAgICAgICAgWzwwMDAwMDAwMGRm
+MzkzNzNmPl0geGZzX2lnZXQrMHgxZjQvMHgyYTAgW3hmc10KCi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgogICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICZxLT5sb2NrOiAgICAgMjc1MzcwODkxICAgICAgMjc4MTI0NDUzICAgICAgICAgICAw
+LjA3ICAgICAgICAxMjM3LjM0IDk3MTQ1NjU3OTE4LjcyICAgICAgICAgMzQ5LjI5ICAgICAgMjc4
+NTU4NzY1ICAgICAgMjc4NjE3MzA1ICAgICAgICAgICAwLjA1ICAgICAgICAgNDczLjk3ICAgMjU3
+NDgwOTgzLjU0ICAgICAgICAgICAwLjkyCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+LS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcS0+bG9jayAgICAgIDI3
+ODEyNDQ1MyAgICAgICAgICBbPDAwMDAwMDAwMTk3YjZlYTE+XSBfX2x3cV9kZXF1ZXVlKzB4MTcv
+MHg4MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgJnEtPmxvY2sgICAgICAyNzgxMjQ0NTMgICAgICAgICAgWzww
+MDAwMDAwMDE5N2I2ZWExPl0gX19sd3FfZGVxdWV1ZSsweDE3LzB4ODAKCi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgogICAgICAgICAgICAgICAmc2It
+PnNfdHlwZS0+aV9sb2NrX2tleSMyOiAgICAgIDcwMzc3ODI0ICAgICAgIDcwMzg0MzAzICAgICAg
+ICAgICAwLjA3ICAgICAgICAgNDgzLjk1ICAgIDk4ODgxMTQ1LjI3ICAgICAgICAgICAxLjQwICAg
+ICAgMzEwNzMwMTE4ICAgICAgMzYwNjkxMzU5ICAgICAgICAgICAwLjA2ICAgICAgICAgNDg0LjE2
+ICAgMjI2NzA4NzM4LjE4ICAgICAgICAgICAwLjYzCiAgICAgICAgICAgICAgIC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgJnNiLT5zX3R5cGUtPmlfbG9ja19rZXkjMiAg
+ICAgICAzMzcxMDg1NCAgICAgICAgICBbPDAwMDAwMDAwOWM2NjkwZjI+XSBfX2Rfb2J0YWluX2Fs
+aWFzKzB4NDEvMHgyNzAKICAgICAgICAgICAgICAgJnNiLT5zX3R5cGUtPmlfbG9ja19rZXkjMiAg
+ICAgICAzNjY3MzQ0OSAgICAgICAgICBbPDAwMDAwMDAwMjI2YmE2NWM+XSBpZ3JhYisweDE5LzB4
+NTAKICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgICAgICAg
+ICAmc2ItPnNfdHlwZS0+aV9sb2NrX2tleSMyICAgICAgIDY5OTEwMzUzICAgICAgICAgIFs8MDAw
+MDAwMDA5YzY2OTBmMj5dIF9fZF9vYnRhaW5fYWxpYXMrMHg0MS8weDI3MAogICAgICAgICAgICAg
+ICAmc2ItPnNfdHlwZS0+aV9sb2NrX2tleSMyICAgICAgICAgNDczOTUwICAgICAgICAgIFs8MDAw
+MDAwMDAyMjZiYTY1Yz5dIGlncmFiKzB4MTkvMHg1MAoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNs
+b2NrLUFGX0lORVQ6ICAgICAgNjEwNjE0OTUgICAgICAgNjIzMTQxMTcgICAgICAgICAgIDAuMDcg
+ICAgICAgICAzNTEuNjQgICAxODk5NDUzOTEuNjAgICAgICAgICAgIDMuMDUgICAgICA1NjMyNDI2
+NzggICAgIDI5NTAxNzY4MjMgICAgICAgICAgIDAuMDYgICAgICAgICAzNjYuMTAgIDE3MjA5MzA0
+OTguNTkgICAgICAgICAgIDAuNTgKICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0t
+LS0tLQogICAgICAgICAgICAgICAgICAgICAgICAgICBzbG9jay1BRl9JTkVUICAgICAgIDM0NzY1
+MDg4ICAgICAgICAgIFs8MDAwMDAwMDA4MzI3MzJkMz5dIGxvY2tfc29ja19uZXN0ZWQrMHgzYi8w
+eDcwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsb2NrLUFGX0lORVQgICAgICAgMTY4Njg1
+NTEgICAgICAgICAgWzwwMDAwMDAwMDE4NzAzM2Q5Pl0gcmVsZWFzZV9zb2NrKzB4MTkvMHhhMAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICBzbG9jay1BRl9JTkVUICAgICAgICAxODYzMjc2ICAg
+ICAgICAgIFs8MDAwMDAwMDA5MDA4NTA4MT5dIF9fbG9ja19zb2NrKzB4OWYvMHgxMTAKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgc2xvY2stQUZfSU5FVCAgICAgICAgODcwNzgxMiAgICAgICAg
+ICBbPDAwMDAwMDAwMzU3OGRlOGU+XSB0Y3BfdHNxX2hhbmRsZXIrMHgxYS8weGUwCiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc2xvY2stQUZfSU5FVCAgICAgICAxODg5MjY0NyAgICAgICAgICBbPDAwMDAwMDAwZTY0ZWNj
+MTg+XSB0Y3BfdjRfcmN2KzB4ZWE0LzB4ZjkwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNs
+b2NrLUFGX0lORVQgICAgICAgMTY4MDY2OTAgICAgICAgICAgWzwwMDAwMDAwMDgzMjczMmQzPl0g
+bG9ja19zb2NrX25lc3RlZCsweDNiLzB4NzAKICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xv
+Y2stQUZfSU5FVCAgICAgICAgNzAzNDUwMSAgICAgICAgICBbPDAwMDAwMDAwMTg3MDMzZDk+XSBy
+ZWxlYXNlX3NvY2srMHgxOS8weGEwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsb2NrLUFG
+X0lORVQgICAgICAgICA3NjA1MzUgICAgICAgICAgWzwwMDAwMDAwMDkwMDg1MDgxPl0gX19sb2Nr
+X3NvY2srMHg5Zi8weDExMAoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5IzE6ICAg
+ICAgNDM0MzcyNTAgICAgICAgNDM0MzcyNjIgICAgICAgICAgIDAuMDYgICAgICAgICAgMzEuMjkg
+ICAgMzc1NTYwMDUuNzIgICAgICAgICAgIDAuODYgICAgICAzNjExMDgyNDkgICAgICAzNjExNTQ3
+MjAgICAgICAgICAgIDAuMDYgICAgICAgICAzNDkuODggICAgNzk3OTQyNzAuNjEgICAgICAgICAg
+IDAuMjIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLS0tLQogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGtleSMxICAgICAgIDQzNDM3MjYxICAgICAgICAgIFs8
+MDAwMDAwMDBmOTBmZDkwNz5dIHBlcmNwdV9jb3VudGVyX2FkZF9iYXRjaCsweDUwLzB4NzAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXkjMSAgICAgICAgICAgICAgMSAgICAg
+ICAgICBbPDAwMDAwMDAwZWZjNjk5MjE+XSBfX3BlcmNwdV9jb3VudGVyX3N1bV9tYXNrKzB4MTEv
+MHg4MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAga2V5IzEgICAgICAgNDM0MzcyNTEgICAgICAgICAgWzww
+MDAwMDAwMGY5MGZkOTA3Pl0gcGVyY3B1X2NvdW50ZXJfYWRkX2JhdGNoKzB4NTAvMHg3MAogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleSMxICAgICAgICAgICAgIDExICAgICAg
+ICAgIFs8MDAwMDAwMDBlZmM2OTkyMT5dIF9fcGVyY3B1X2NvdW50ZXJfc3VtX21hc2srMHgxMS8w
+eDgwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoK
+ICAgICAgICAgICAgICAgICAgICAgICZscnUtPm5vZGVbaV0ubG9jazogICAgICAzNDExMzg3NiAg
+ICAgICAzNDI0MTA3NSAgICAgICAgICAgMC4wNyAgICAgICAgIDQ4OS40NSAgICA4MDYwMjQwNy43
+NyAgICAgICAgICAgMi4zNSAgICAgIDIwODQzODE5MSAgICAgIDIyMjc4MjU3MiAgICAgICAgICAg
+MC4wNSAgICAgICAgIDUyOS44NSAgICA2MDI2ODc2My43NSAgICAgICAgICAgMC4yNwogICAgICAg
+ICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAm
+bHJ1LT5ub2RlW2ldLmxvY2sgICAgICAgMzEzNTI2NjEgICAgICAgICAgWzwwMDAwMDAwMGQ3YTg1
+MjIyPl0gbGlzdF9scnVfZGVsKzB4MzAvMHhlMAogICAgICAgICAgICAgICAgICAgICAgJmxydS0+
+bm9kZVtpXS5sb2NrICAgICAgICAyODg4Mzg4ICAgICAgICAgIFs8MDAwMDAwMDBkNjk0OTQyMj5d
+IGxpc3RfbHJ1X2FkZCsweDM1LzB4MTIwCiAgICAgICAgICAgICAgICAgICAgICAmbHJ1LT5ub2Rl
+W2ldLmxvY2sgICAgICAgICAgICAgMjYgICAgICAgICAgWzwwMDAwMDAwMDRiMzRhN2FjPl0gbGlz
+dF9scnVfd2Fsa19ub2RlKzB4NTAvMHgxNTAKICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
+LS0tLS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAgJmxydS0+bm9kZVtpXS5sb2NrICAgICAg
+IDI2NzQ0ODAxICAgICAgICAgIFs8MDAwMDAwMDBkN2E4NTIyMj5dIGxpc3RfbHJ1X2RlbCsweDMw
+LzB4ZTAKICAgICAgICAgICAgICAgICAgICAgICZscnUtPm5vZGVbaV0ubG9jayAgICAgICAgNzQ5
+NjIwMyAgICAgICAgICBbPDAwMDAwMDAwZDY5NDk0MjI+XSBsaXN0X2xydV9hZGQrMHgzNS8weDEy
+MAogICAgICAgICAgICAgICAgICAgICAgJmxydS0+bm9kZVtpXS5sb2NrICAgICAgICAgICAgIDcx
+ICAgICAgICAgIFs8MDAwMDAwMDA0YjM0YTdhYz5dIGxpc3RfbHJ1X3dhbGtfbm9kZSsweDUwLzB4
+MTUwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoK
+ICAgICAgICAgICAgICAgICAgICAgICAgICZkZW50cnktPmRfbG9jazogICAgICAyNzI4OTE4OSAg
+ICAgICAyNzMwOTI0MiAgICAgICAgICAgMC4wNyAgICAgICAgIDQzMC4zNiAgICAzMDkxOTEzOS4y
+MSAgICAgICAgICAgMS4xMyAgICAgIDM1ODE3NTUyNCAgICAgIDQwMjk1MjA1OSAgICAgICAgICAg
+MC4wNiAgICAgICAgIDQ2MC4xOSAgIDEyMTIwMzczMS42NCAgICAgICAgICAgMC4zMAogICAgICAg
+ICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAmZGVudHJ5LT5kX2xvY2sgICAgICAgICAgMTQyNDAgICAgICAgICAgWzwwMDAwMDAwMDc3N2M2
+ODg4Pl0gbG9ja3JlZl9nZXRfbm90X2RlYWQrMHhlLzB4NDAKICAgICAgICAgICAgICAgICAgICAg
+ICAgICZkZW50cnktPmRfbG9jayAgICAgICAgICAgICA0MCAgICAgICAgICBbPDAwMDAwMDAwMzJh
+ODkzNzQ+XSBfX2RfbG9va3VwKzB4NzgvMHhmMAogICAgICAgICAgICAgICAgICAgICAgICAgJmRl
+bnRyeS0+ZF9sb2NrICAgICAgICAgICAgICA4ICAgICAgICAgIFs8MDAwMDAwMDBlZGQ1MmQ0Yj5d
+IF9fZGVudHJ5X2tpbGwrMHhiYi8weDE5MAogICAgICAgICAgICAgICAgICAgICAgICAgJmRlbnRy
+eS0+ZF9sb2NrICAgICAgIDE3OTc3NDg2ICAgICAgICAgIFs8MDAwMDAwMDA4NjA5MmUwMj5dIGRw
+dXQrMHhlOS8weDIzMAogICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tCiAg
+ICAgICAgICAgICAgICAgICAgICAgICAmZGVudHJ5LT5kX2xvY2sgICAgICAgMTc3MzY1MzcgICAg
+ICAgICAgWzwwMDAwMDAwMDg2MDkyZTAyPl0gZHB1dCsweGU5LzB4MjMwCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAmZGVudHJ5LT5kX2xvY2sgICAgICAgICAgMTMyMDkgICAgICAgICAgWzwwMDAw
+MDAwMDc3N2M2ODg4Pl0gbG9ja3JlZl9nZXRfbm90X2RlYWQrMHhlLzB4NDAKICAgICAgICAgICAg
+ICAgICAgICAgICAgICZkZW50cnktPmRfbG9jayAgICAgICAgOTU1OTAzNiAgICAgICAgICBbPDAw
+MDAwMDAwYjc3Zjc0YTE+XSBsb2NrcmVmX2dldCsweDkvMHgyMAogICAgICAgICAgICAgICAgICAg
+ICAgICAgJmRlbnRyeS0+ZF9sb2NrICAgICAgICAgICAgIDIzICAgICAgICAgIFs8MDAwMDAwMDBl
+ZGQ1MmQ0Yj5dIF9fZGVudHJ5X2tpbGwrMHhiYi8weDE5MAoKLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAgICAgICBz
+bG9jay1BRl9JTkVULzE6ICAgICAgIDg3Nzc5NjcgICAgICAgIDg3OTA3NDUgICAgICAgICAgIDAu
+MDggICAgICAgICAyMTguODEgICAgMjIwNTY3MzEuMzkgICAgICAgICAgIDIuNTEgICAgICAxOTky
+OTc5NzcgICAgICAzNTU2NzI2MjAgICAgICAgICAgIDAuMTYgICAgICAgICAzNjYuODcgIDE2MjEy
+NTQxMzMuNjcgICAgICAgICAgIDQuNTYKICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
+LS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAgICAgc2xvY2stQUZfSU5FVC8xICAgICAgICA4
+NzkwNzQ1ICAgICAgICAgIFs8MDAwMDAwMDBlNjRlY2MxOD5dIHRjcF92NF9yY3YrMHhlYTQvMHhm
+OTAKICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0tLQogICAgICAgICAgICAg
+ICAgICAgICAgICAgc2xvY2stQUZfSU5FVC8xICAgICAgICAzMzMxOTU4ICAgICAgICAgIFs8MDAw
+MDAwMDAxODcwMzNkOT5dIHJlbGVhc2Vfc29jaysweDE5LzB4YTAKICAgICAgICAgICAgICAgICAg
+ICAgICAgIHNsb2NrLUFGX0lORVQvMSAgICAgICAgMTM4ODU0NCAgICAgICAgICBbPDAwMDAwMDAw
+ODMyNzMyZDM+XSBsb2NrX3NvY2tfbmVzdGVkKzB4M2IvMHg3MAogICAgICAgICAgICAgICAgICAg
+ICAgICAgc2xvY2stQUZfSU5FVC8xICAgICAgICAzOTk2MTEwICAgICAgICAgIFs8MDAwMDAwMDAz
+NTc4ZGU4ZT5dIHRjcF90c3FfaGFuZGxlcisweDFhLzB4ZTAKICAgICAgICAgICAgICAgICAgICAg
+ICAgIHNsb2NrLUFGX0lORVQvMSAgICAgICAgICA1MDc3MyAgICAgICAgICBbPDAwMDAwMDAwOTAw
+ODUwODE+XSBfX2xvY2tfc29jaysweDlmLzB4MTEwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAm
+cC0+cGlfbG9jazogICAgICAgNzcwMzYzNCAgICAgICAgNzcwNDE0OCAgICAgICAgICAgMC4wNyAg
+ICAgICAgIDIyMC4wNCAgICAzMzE3OTA5Ni40MCAgICAgICAgICAgNC4zMSAgICAgICA4MDYyNjM1
+MiAgICAgICA5MTczNDU3NiAgICAgICAgICAgMC4wNSAgICAgICAgIDM1My4wNCAgIDE3MjcwNDA2
+MS44MiAgICAgICAgICAgMS44OAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
+LS0tCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnAtPnBpX2xvY2sgICAgICAgIDc3MDQx
+NDggICAgICAgICAgWzwwMDAwMDAwMGQ2YjRkMzg4Pl0gdHJ5X3RvX3dha2VfdXArMHg0Zi8weDZj
+MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgJnAtPnBpX2xvY2sgICAgICAgIDc3MDQxNDggICAgICAgICAgWzwwMDAw
+MDAwMGQ2YjRkMzg4Pl0gdHJ5X3RvX3dha2VfdXArMHg0Zi8weDZjMAoKLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAg
+ICAgICZ4cHJ0LT54cHRfbXV0ZXg6ICAgICAgIDY5MTU0NjMgICAgICAgIDY5NDg2NTkgICAgICAg
+ICAgIDAuMjggICAgICAgNDIwMDcuMDMgMjI2MDkxODE2NDkuNzkgICAgICAgIDMyNTMuNzUgICAg
+ICAxNzk1ODM4ODcgICAgICAxODAzNDQ2MDkgICAgICAgICAgIDUuMTQgICAgICAgNDIzMTkuNTkg
+MjAyOTI2MTg2NzIuMTIgICAgICAgICAxMTIuNTIKICAgICAgICAgICAgICAgICAgICAgICAgLS0t
+LS0tLS0tLS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAgICAmeHBydC0+eHB0X211dGV4ICAg
+ICAgICA2OTQ4NjU5ICAgICAgICAgIFs8MDAwMDAwMDBmN2MyMzg5Nj5dIHN2Y190Y3Bfc2VuZHRv
+KzB4NWYvMHgxZDAgW3N1bnJwY10KICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0t
+LS0tLQogICAgICAgICAgICAgICAgICAgICAgICAmeHBydC0+eHB0X211dGV4ICAgICAgICA2OTQ4
+NjU5ICAgICAgICAgIFs8MDAwMDAwMDBmN2MyMzg5Nj5dIHN2Y190Y3Bfc2VuZHRvKzB4NWYvMHgx
+ZDAgW3N1bnJwY10KCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICByY3Vfbm9kZV8xOiAgICAgICAz
+OTYyNTE5ICAgICAgICAzOTk1MTcyICAgICAgICAgICAwLjA4ICAgICAgICAgIDE2LjM2ICAgICA1
+MzE1MzQ4LjUyICAgICAgICAgICAxLjMzICAgICAgICA4Nzg1MTY0ICAgICAgIDE3Njc0MTYxICAg
+ICAgICAgICAwLjA3ICAgICAgICAgIDE1LjIyICAgIDExNzM3ODU0Ljk4ICAgICAgICAgICAwLjY2
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0KICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmN1X25vZGVfMSAgICAgICAgICAgICAxNCAgICAgICAgICBbPDAwMDAw
+MDAwY2UxNTE3ZDI+XSByY3VfZ3BfaW5pdCsweDUzNS8weDgzMAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICByY3Vfbm9kZV8xICAgICAgICAzOTk0NTEwICAgICAgICAgIFs8MDAwMDAwMDBj
+YjI3MWZlOD5dIHJjdV9jb3JlKzB4YTkvMHgzOTAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcmN1X25vZGVfMSAgICAgICAgICAgICAzNyAgICAgICAgICBbPDAwMDAwMDAwODI1MDVmZjg+
+XSByY3VfYWNjZWxlcmF0ZV9jYnNfdW5sb2NrZWQrMHg0NC8weGEwCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJjdV9ub2RlXzEgICAgICAgICAgICA1OTcgICAgICAgICAgWzwwMDAwMDAw
+MDZjZDBiNDg4Pl0gZm9yY2VfcXNfcm5wKzB4MTEyLzB4MzEwCiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIC0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmN1X25v
+ZGVfMSAgICAgICAgICAgICAxNSAgICAgICAgICBbPDAwMDAwMDAwZWYyZWE2Njc+XSByY3VfZ3Bf
+aW5pdCsweDFlZC8weDgzMAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICByY3Vfbm9kZV8x
+ICAgICAgICAgICAgIDg5ICAgICAgICAgIFs8MDAwMDAwMDA3ZGQ1ZWQyYz5dIHJjdV9ncF9jbGVh
+bnVwKzB4MWMyLzB4NWEwCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJjdV9ub2RlXzEg
+ICAgICAgIDMxNjY0NzUgICAgICAgICAgWzwwMDAwMDAwMGNiMjcxZmU4Pl0gcmN1X2NvcmUrMHhh
+OS8weDM5MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICByY3Vfbm9kZV8xICAgICAgICAg
+NDEwMjU0ICAgICAgICAgIFs8MDAwMDAwMDBjZTE1MTdkMj5dIHJjdV9ncF9pbml0KzB4NTM1LzB4
+ODMwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcnEtPl9fbG9jazogICAgICAgMjI5NDI4OCAg
+ICAgICAgMjM0ODc0MiAgICAgICAgICAgMC4wNiAgICAgICAgICA3NS4wMSAgICAgNDU5ODcwMy40
+NCAgICAgICAgICAgMS45NiAgICAgICAzMzEzNjkxOCAgICAgIDQ5MDIwNTIwOCAgICAgICAgICAg
+MC4wNiAgICAgICAgIDM1Ni43NSAgIDc3NTg1MTE4MS44NCAgICAgICAgICAgMS41OAogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgJnJxLT5fX2xvY2sgICAgICAgIDIzNDg3NDIgICAgICAgICAgWzwwMDAwMDAwMDE0MDY2
+OWViPl0gcmF3X3NwaW5fcnFfbG9ja19uZXN0ZWQrMHgxZS8weDkwCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcnEt
+Pl9fbG9jayAgICAgICAgMjM0ODc0MiAgICAgICAgICBbPDAwMDAwMDAwMTQwNjY5ZWI+XSByYXdf
+c3Bpbl9ycV9sb2NrX25lc3RlZCsweDFlLzB4OTAKCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICZi
+YXNlLT5sb2NrOiAgICAgICAxODk0OTU1ICAgICAgICAxOTY2ODQyICAgICAgICAgICAwLjA3ICAg
+ICAgICAgIDE0LjYwICAgICAxMjE2MTAyLjkxICAgICAgICAgICAwLjYyICAgICAgNTQwMTQzNzk2
+ICAgICAxMTQxNzgyNTg5ICAgICAgICAgICAwLjA2ICAgICAgICAgMjEzLjkwICAgMzI1NzA5MTcx
+LjQ5ICAgICAgICAgICAwLjI5CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0t
+LS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jayAgICAgICAgMTU4Nzg3
+NyAgICAgICAgICBbPDAwMDAwMDAwMWYyMDVlMGU+XSBsb2NrX3RpbWVyX2Jhc2UrMHg2MS8weDgw
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgICAzNjU1MTcg
+ICAgICAgICAgWzwwMDAwMDAwMDc5YzZjZjgzPl0gX19tb2RfdGltZXIrMHgxZTkvMHgzYzAKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jayAgICAgICAgICAgOTQzOSAgICAg
+ICAgICBbPDAwMDAwMDAwOWNiOGQ2NmY+XSBfX3J1bl90aW1lcnMucGFydC4wKzB4MzAvMHgyYzAK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jayAgICAgICAgICAgIDI3OCAg
+ICAgICAgICBbPDAwMDAwMDAwN2E5YzU2YTc+XSBnZXRfbmV4dF90aW1lcl9pbnRlcnJ1cHQrMHg0
+OS8weDI2MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tCiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgIDE2NzE1NzIgICAgICAgICAg
+WzwwMDAwMDAwMDFmMjA1ZTBlPl0gbG9ja190aW1lcl9iYXNlKzB4NjEvMHg4MAogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICZiYXNlLT5sb2NrICAgICAgICAgMjc1NTgzICAgICAgICAgIFs8
+MDAwMDAwMDA3OWM2Y2Y4Mz5dIF9fbW9kX3RpbWVyKzB4MWU5LzB4M2MwCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgICAgMTgwNzggICAgICAgICAgWzwwMDAw
+MDAwMDljYjhkNjZmPl0gX19ydW5fdGltZXJzLnBhcnQuMCsweDMwLzB4MmMwCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgICAgICAgODEgICAgICAgICAgWzww
+MDAwMDAwMDdhOWM1NmE3Pl0gZ2V0X25leHRfdGltZXJfaW50ZXJydXB0KzB4NDkvMHgyNjAKCi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgo=
+--000000000000fcb983064953fdc1--
 
