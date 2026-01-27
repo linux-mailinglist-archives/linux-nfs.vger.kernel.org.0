@@ -1,675 +1,478 @@
-Return-Path: <linux-nfs+bounces-18526-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18527-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8BukCZALeGllngEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18526-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 01:49:20 +0100
+	id NoliFeULeGl3ngEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18527-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 01:50:45 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D0798E895
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 01:49:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A08C08E8AC
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 01:50:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B54D0300BD89
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 00:49:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2ED92300E728
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Jan 2026 00:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF34B3B2BA;
-	Tue, 27 Jan 2026 00:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13B719AD5C;
+	Tue, 27 Jan 2026 00:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="EHO0xGcV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gij8zeRg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D4C4C6D
-	for <linux-nfs@vger.kernel.org>; Tue, 27 Jan 2026 00:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769474956; cv=pass; b=nWAaW9nj2YRL8Jv1+UX4C7uTDAynCFui/ejVVWUHkFtuBe9y0N0jtzz3MWkNE/9NX69boF2WZ18APpTf3I+EWyxWAa3x22NjSozkY07yZEjnDWcp/PqD8qgdLv4QP716xgoha/9q26eeHnPzjQ69hl/lxFlsHJtfuM/acVZYYhI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769474956; c=relaxed/simple;
-	bh=1/HvcpKsUsATzCZyAO/UTQGu8msMYwVVAS1hmYRIjPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=drWfnm3+XMR2kLU+KtboHtFuUIYQwl6befztftWT/+Zjrz3d3b6lLBF2UARsND1w2e+7BsybUyY9xqjKfFjynPcbr1Tqwsic2aUFmQAjOtIi7+IZKN9LHp9ZAE6Ar/MfGBRPwno5w/oHJH9OfBmwtRfEtnUcNoLYNSbr1NILxEo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=EHO0xGcV; arc=pass smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8d7f22d405so214311766b.0
-        for <linux-nfs@vger.kernel.org>; Mon, 26 Jan 2026 16:49:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769474952; cv=none;
-        d=google.com; s=arc-20240605;
-        b=U7V1+w73gl2ZItmf6pnKZgQL5kF9xjOMaGY0L1S2vpZkwMm8dnRmWxvRXrNB2l72FA
-         Dd8wMwGTaROFDg1LsWfIIoOeBaAqxKRgrO5Fs28eqS5WCQLYDKFAa7EkownNP/nXSJ2w
-         TG2nwA/ZEH/yyXVQXROd9qVXKgAoWiuh405z2REoqTA6PWS0oAr6r2laq18wM5ZXQ8lb
-         7Zxx3tkEhLewW95GF6s0odVlAwlSWVipV/kpO2oFkEVMvBYDQ8MkA/Y3WX0v2+vtp+YF
-         X4IWCQUldGDQx1bA7UmZZehr/zty3FCrgS/c5I9jjlGo3j+vkPBlmyRDFGzDguXJ5y5D
-         lXUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=nGzjtNVa0dpUSQOn3DYiJjVYxmxhZxt3AQS7To7/Zgg=;
-        fh=fHHF/Ols5kY+nXCl9h0bqkW/1GiNipAqlLa1h6uk2iA=;
-        b=j/d/4Zj0nJig8HPMrEd/Rx/W5sLOSQio/36Vn+zW6VUH5ZCoOqG05e20ZAVM/jSUo7
-         UwrHEUj9JGRnZHthh3LxZ+Hpe5jtfUDcxRhpHn2d2jkzkMPnOk5HTr3Fmc1ksChOV+HV
-         Rr5b9mhjFa3n9btuTzm9WKhpGqEkDaeJlP1OBXVPDHpGQFYfeLLWsFNwpkTArk6Gs9/u
-         Wn2tyC4RrHVz+qZRjPd62dZKMvlKlOKgvB+V3SY1sMTCiwKDsfZ5fIeuACHo7F1qcMzL
-         pEvhC4yQ661hBT1VD5cArWH2s24hn9kxOKFpLo0WN61NaY6I36+R6hUzqjpMlB0nHeKi
-         4hFA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1769474952; x=1770079752; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nGzjtNVa0dpUSQOn3DYiJjVYxmxhZxt3AQS7To7/Zgg=;
-        b=EHO0xGcVTxwaSNF+DMA70Thm1xSZoqSi0cfhdP+JHXaZbinb7QjnEWooub1lNnIXMd
-         +inB3ktRBpbEmmBkXTrH1hUN2RnzFJZir3K2MVmwnd4QyrxQNVPxTvNHMpywkzYxjZYP
-         9Dd73UlnRtIkNZU9aCIteVuBUgbpNViaf6YDqRVxqR6VyZi16fIdZBDYPLbl9qYgM2JZ
-         TaOC3r1jwPdm0qFrqY87G2oc7peHXxxkVvgC2OCBxRiRLQ7V4F+MYMv7Gvyki5Rk0Ewn
-         WvxNS7vniSGiT/3+VkzymeajTt2pQmaJuhiTCzIGU+snMcgQaT3PGULmx2yf5mZy5y1V
-         8Uew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769474952; x=1770079752;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nGzjtNVa0dpUSQOn3DYiJjVYxmxhZxt3AQS7To7/Zgg=;
-        b=ThATqiPRAFay0c19N+yPdX+6u2IGgIDVP1TmoVWig43MUxYBGkC0Z3d7nl6vxCjw+c
-         fT7uvGUySpmZ/1AoUmesbe9dRNGRI8jAIrd3Rv8WcWkH6MuJ4a9Z8YKh9fH+ElzKpuA2
-         DfzIF6pdcpkt65MZhHl/lu6XR/veUQ2ktaT9Kqodv1A979mgOE07Ku/+3PCXlbpfN5HQ
-         HsYdcVl3LDgQrZYU4wvG1VKQ8m59d0yWcsmYC5KXys7ulsKsSTCViUSk6F7M+S7n9MHk
-         O0zyH6ZgJa+PkNhWWkOLztepS4dOJwfkD32XzFK5ZR4FN/6UJxZ16kw9AK1D3YD6IQ0P
-         UVRA==
-X-Gm-Message-State: AOJu0YyihUKu/ldOxCP2ZfPi5k4c6s46tQ5I5BLDP8Izd3+paArys5i2
-	N1X2Kc8zkg7RnSmnkB1wxP1rcuYqXSD/RdrZWQM3m2tyRa7ifqfxR0YuJMXcvmqpjLAOdl7yAsx
-	Xi6FsTjXVhpNkLhVDALaHkyU2OamkOJynkaixwBiqkMQ2JmvBcb3MvPXEELX6
-X-Gm-Gg: AZuq6aK6siEXG+NOLl4lhzSh/soAuiIt6+T9sdkzMUOSTWIx0rNVCGRU+7gDA7weiKE
-	jCVFK18VkJ56gwZVbbmfTOHEwo83sLLVaew3Sw2kB6XA85XfnxOZYINCjT1KZe3+0zbJcwaWlWj
-	kVQUIKqdu4JI8jziTS9t4BYz6XmIlOFzGtmJq1swLRHt6OQ8yE2qbJVfG/XL1bY6lkRV49X2F1C
-	Wc8j8OE9KA2+mfwPaH/cr/elw4o7GjYr6kOymCTIqn6teDM1f+eqCiNjTVSVBu3j4C+DQ==
-X-Received: by 2002:a17:907:9806:b0:b80:3346:496 with SMTP id
- a640c23a62f3a-b8dab330e74mr4060066b.42.1769474952548; Mon, 26 Jan 2026
- 16:49:12 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3084D3B2BA;
+	Tue, 27 Jan 2026 00:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769475041; cv=none; b=pAfA/kInYHTAm6I7JnVrWDgV0kLZl+BQtwCJ/f6HZyTEERwqqzbCGKBqTOGTpt+cfKOQBz0s1F5BY0QMwHLc8hSUu9FeoPGJpK2VI4aGshB6zsuZR4TD20tkb9ZfVMToTnca6aYojDL+tDTXe1VSgW2eAPYmnDvGI3h7BE+i+l4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769475041; c=relaxed/simple;
+	bh=ysYWCDKOIHe/V3IqO027N2C/wWrUItyeT4kMAVb2PK0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TGA9EspTvqRuh8S5cZ9ikksJEW2i97numRRKzi/SjS7UHZfhAaMCCX9BlRbifqf+6xd8qB0M6rLUrDV+57NBt5arnZHSC04lo03LgoHXTQpe4Ak7jMs6/3R2aSOFZ6VPa2x74EnPBQaliVKMPKaG+YKwhEwHuztrqKK50Qrayoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gij8zeRg; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60QHHhGs843262;
+	Tue, 27 Jan 2026 00:50:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=mCs1WJcJCXJxVhOKCJbRGGc5yVS2T
+	1xguJRT884EAfc=; b=gij8zeRgHT2pfLS8wk1dWZmrqNFzWksvkLnnogDk6MYUI
+	5ri+7KH6RO4csi6S9mLCvIydB9wqQZPJypKJalkAABrZ83/+DBV4HztHhKDaPg6q
+	C29DHBLOM5utpRGrWd23b9at1NNHJv0+LnCSMJvlp52rI2NrGHwls7DXGfhPMqmu
+	RTZqRYfd/G8VjhTK3w7VQSolBEyNbHTI/UEPjYxZhDBEKqXdjHJoJaZ8aEGih/z1
+	mMtiz4CdDHTQ8p+c9KiYm5YKiNb/vNXQ/zuvXxwlhma2Foy60K/nV9DnyPeppNhV
+	vr2yaywvugwKq3NfEaK+BFTJY7xWhmHm6lrTmL3Rw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bvnpsb66v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Jan 2026 00:50:18 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60QMZPXC033453;
+	Tue, 27 Jan 2026 00:50:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4bvmh8phrc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Jan 2026 00:50:17 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 60R0oHZv006635;
+	Tue, 27 Jan 2026 00:50:17 GMT
+Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4bvmh8phr2-1;
+	Tue, 27 Jan 2026 00:50:17 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
+        okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH v4 1/1] NFSD: Enforce Timeout on Layout Recall and Integrate Lease Manager Fencing
+Date: Mon, 26 Jan 2026 16:50:06 -0800
+Message-ID: <20260127005013.552805-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPt2mGNAGaO8hP9u4M+oH0_w0dbSNAmDF=g0jyb26ED5R_mhOA@mail.gmail.com>
- <a1b6c46f-e49d-4ae6-ae5e-3c08ed40e359@app.fastmail.com> <CAPt2mGNL4neF1NX7_1=9svnNz_iXhadHw0AEjZ_B-50-vwNtUg@mail.gmail.com>
- <723418cf-cec6-4afc-906e-b93a55e85fc9@app.fastmail.com> <CAPt2mGNkGbWujzTzxoTGTvAWoOL9aUUhN93SEJQYJTQyV4xu7Q@mail.gmail.com>
- <d9926f9e-50bf-46e7-9109-21b30dd695c1@app.fastmail.com>
-In-Reply-To: <d9926f9e-50bf-46e7-9109-21b30dd695c1@app.fastmail.com>
-From: Daire Byrne <daire@dneg.com>
-Date: Tue, 27 Jan 2026 00:48:35 +0000
-X-Gm-Features: AZwV_QiAMrO1FNtebGZ_rFGRFaY9ITpt_Fq56mZl3LNceXBBa-l7YzwN3dUsbSc
-Message-ID: <CAPt2mGNbZm9YDjuCUwJHiJUQUUnKQtbf1ggYPzAytgWjMp68LA@mail.gmail.com>
-Subject: Re: knfsd read iops limits?
-To: Chuck Lever <cel@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000fcb983064953fdc1"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-26_04,2026-01-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 spamscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2601270005
+X-Authority-Analysis: v=2.4 cv=dY2NHHXe c=1 sm=1 tr=0 ts=69780bca b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
+ a=wJgj6elaJi8SMsIUsgwA:9
+X-Proofpoint-GUID: hC-cbpoiYRhmqznRWuMl2t4Lf4BW1mTT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDAwNCBTYWx0ZWRfX9Z0vz3ksaHRW
+ 8MJXke7a+eMSlEmSrSfAsLhLFN+1jpta1KAlMyB5mBazhX0ctQOy6g983GubuEswSuNhtBqtGmk
+ QvEjmrl/aIMu403xxG8HPEfatkzxAqGdXUnTB9N4xoBILEUB43U3AbO5Mbd0pwQyKHorqV5zqg4
+ IVgPNypyU1byoYOBIkhmtJrYykjBwonYcDSapyeH3aNzv2lGFj9Cloo4KsIMoiQYtwH1wRvgL+Z
+ PDqQrWC9jEVMRJ1Xgm8MlpTAiNY3KWtaaFcOud5YV8JJ06Kpa8YTUclh5EtG+67a0r3vjjDUf/W
+ 29l1SiUmuYf2SugzmuTJBfsrcXFu27Zark7BxEYqomcREWbsWXQsqiICaApxqJA1WEDtcykpgk1
+ mOVzwlJtzes+gCg1yq/dWomyZil339+YqeTOmn8jcxsaZaBcUHzKjJbN6//oewbVCDAb53Anwsa
+ 7Hb11nkyX6qSO9Ourfg==
+X-Proofpoint-ORIG-GUID: hC-cbpoiYRhmqznRWuMl2t4Lf4BW1mTT
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[dneg.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[dneg.com:s=google];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
 	MAILLIST(-0.15)[generic];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18526-lists,linux-nfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-18527-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWO(0.00)[2];
+	FREEMAIL_TO(0.00)[oracle.com,kernel.org,brown.name,redhat.com,talpey.com,lst.de,gmail.com,zeniv.linux.org.uk,suse.cz];
+	DKIM_TRACE(0.00)[oracle.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[dneg.com:+];
+	TO_DN_NONE(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daire@dneg.com,linux-nfs@vger.kernel.org];
-	HAS_ATTACHMENT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MIME_TRACE(0.00)[0:+,1:+,2:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,dneg.com:dkim,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 3D0798E895
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: A08C08E8AC
 X-Rspamd-Action: no action
 
---000000000000fcb983064953fdc1
-Content-Type: text/plain; charset="UTF-8"
+When a layout conflict triggers a recall, enforcing a timeout is
+necessary to prevent excessive nfsd threads from being blocked in
+__break_lease ensuring the server continues servicing incoming
+requests efficiently.
 
-On Mon, 26 Jan 2026 at 20:04, Chuck Lever <cel@kernel.org> wrote:
->
->
->
-> On Mon, Jan 26, 2026, at 1:46 PM, Daire Byrne wrote:
-> > On Mon, 26 Jan 2026 at 16:31, Chuck Lever <cel@kernel.org> wrote:
-> >>
-> >>
-> >>
-> >> On Sun, Jan 25, 2026, at 6:45 PM, Daire Byrne wrote:
-> >> > On Sun, 25 Jan 2026 at 16:19, Chuck Lever <cel@kernel.org> wrote:
-> >> >>
-> >> >>
-> >> >>
-> >> >> On Sun, Jan 25, 2026, at 7:26 AM, Daire Byrne wrote:
-> >> >> > Hi,
-> >> >> >
-> >> >> > We recently came across a workload that consisted of 100s of clients
-> >> >> > under (cgroup) memory pressure and so their page cache was all but
-> >> >> > exhausted. This resulted in lots of repeat small 4k-8k random reads
-> >> >> > hitting our NFS servers which maxed out their CPUs and flatlined
-> >> >> > performance.
-> >> >> >
-> >> >> > Uniquely, the data being read easily fit in the server's page cache so
-> >> >> > there was no backend IO to limit throughput.
-> >> >> >
-> >> >> > The fix was to put in place a system to kill workloads under such
-> >> >> > memory pressure. But it piqued my curiosity, so I decided to do some
-> >> >> > simple benchmarks to see where the server limits are.
-> >> >> >
-> >> >> > I ran something like this across 200 client hosts simultaneously using
-> >> >> > NFSv3 to reproduce:
-> >> >> >
-> >> >> >  fio --directory /hosts/nfs1/xfs1/ --name test-file --direct=0
-> >> >> > --buffered=1 --size=1g --time_based --runtime=600s --bs=4096
-> >> >> > --rw=randread --numjobs=2
-> >> >> >
-> >> >> > By reading the same small file from many hosts, we are essentially
-> >> >> > serving from server page cache so can rule out disk IO (I even tried
-> >> >> > files on /dev/shm)
-> >> >> >
-> >> >> > The main things I found:
-> >> >> > * across a wide range of server hardware, we top out around 300k-400k
-> >> >> > read iops/s.
-> >> >> > * whether the server has 24/48/96 cores, the results were pretty much the same.
-> >> >> > * 24 knfsd threads is the optimal with more threads reducing
-> >> >> > performance until threads=ncores
-> >> >> > * multiple nics (bonded) or single socket (no numa) makes little or no
-> >> >> > difference
-> >> >> > * different nic hardware make little difference (2x100g, 4x25g,
-> >> >> > broadcom, mellanox etc).
-> >> >> > * various network tuning (queues, txqueuelen, qdisc, etc) makes little
-> >> >> > difference.
-> >> >> > * NFSv4.2 has less read iops/s (160k/s) but it also has sequence &
-> >> >> > pufh ops too (+ 2x160k/s).
-> >> >> > * increasing nconnect (>1) reduces aggregate read iops performance (8 -> 120k/s)
-> >> >> >
-> >> >> > It feels like there is some thread locking contention limitation such
-> >> >> > that the number of CPUs and/or knfsd threads reaches some plateau and
-> >> >> > throwing more cores/threads at the workload just results in more CPU
-> >> >> > time spent spinning but you get no more performance out.
-> >> >> >
-> >> >> > The top level perf report looks something like the attached (for v6.18).
-> >> >> >
-> >> >> > Like I said, we can work around this pretty rare workload (random
-> >> >> > small reads from server page cache), but it just piqued my interest as
-> >> >> > to what the underlying (knfsd) server limit is (it doesn't seem to be
-> >> >> > hardware).
-> >> >>
-> >> >> At risk of being glib, the performance data suggests your workload is
-> >> >> tickling one or more contended spin locks. To collect more information
-> >> >> about the contended spin locks, see
-> >> >>
-> >> >>   Documentation/locking/lockstat.rst
-> >> >
-> >> > Yea, good idea. I ran a quick test (200 NFSv3 clients, 4k randread)
-> >> > and attached the resulting top locks (abbreviated).
-> >> >
-> >> > Again, this is for the latest v6.18 kernel. A couple of expensive
-> >> > looking locks, but the xpt_mutex/svc_tcp_sendto seems to have the
-> >> > highest overall cost?
-> >>
-> >> There's kind of no denying it, the xpt_mutex numbers are shitty.
-> >> The maximum hold time on that mutex is 293379.40 usecs, with a
-> >> mean hold time of nearly 16 usec, giving it the worst mean wait
-> >> time by an order of magnitude. And it's not even a contended lock.
-> >>
-> >> It's probably not easy for you to bisect, is it...
-> >
-> > I can certainly bisect through some generations of kernel, but I'm not
-> > sure there has ever been a "good" one when it comes to this extreme
-> > (niche) workload (4k read iops).
->
-> True, having a "good" starting point is a pre-requisite for
-> obtaining quality bisection results. I'm going to try some
-> simple experiments here to see if I can spot any structural
-> problems with the TCP send path.
+This patch introduces a new function to lease_manager_operations:
 
-Because I had it to hand, I did a quick 10 minute burn test using the
-RHEL9 v5.14 kernel recompiled to enable lockstat - results attached.
+lm_breaker_timedout: Invoked when a lease recall times out and is
+about to be disposed of. This function enables the lease manager
+to inform the caller whether the file_lease should remain on the
+flc_list or be disposed of.
 
-I clearly misremembered the overhead of the list_lru_del &
-list_lru_add locks as it was not as high as I thought.
+For the NFSD lease manager, this function now handles layout recall
+timeouts. If the layout type supports fencing and the client has not
+been fenced, a fence operation is triggered to prevent the client
+from accessing the block device.
 
-Again, the xprt->xpt_mutex beats all else.
+While the fencing operation is in progress, the conflicting file_lease
+remains on the flc_list until fencing is complete. This guarantees
+that no other clients can access the file, and the client with
+exclusive access is properly blocked before disposal.
 
-Daire
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ Documentation/filesystems/locking.rst |  2 +
+ fs/locks.c                            | 10 +++-
+ fs/nfsd/blocklayout.c                 | 38 ++++++-------
+ fs/nfsd/nfs4layouts.c                 | 79 +++++++++++++++++++++++++--
+ fs/nfsd/nfs4state.c                   |  1 +
+ fs/nfsd/state.h                       |  6 ++
+ include/linux/filelock.h              |  1 +
+ 7 files changed, 110 insertions(+), 27 deletions(-)
 
+v2:
+    . Update Subject line to include fencing operation.
+    . Allow conflicting lease to remain on flc_list until fencing
+      is complete.
+    . Use system worker to perform fencing operation asynchronously.
+    . Use nfs4_stid.sc_count to ensure layout stateid remains
+      valid before starting the fencing operation, nfs4_stid.sc_count
+      is released after fencing operation is complete.
+    . Rework nfsd4_scsi_fence_client to:
+         . wait until fencing to complete before exiting.
+         . wait until fencing in progress to complete before
+           checking the NFSD_MDS_PR_FENCED flag.
+    . Remove lm_need_to_retry from lease_manager_operations.
+v3:
+    . correct locking requirement in locking.rst.
+    . add max retry count to fencing operation.
+    . add missing nfs4_put_stid in nfsd4_layout_fence_worker.
+    . remove special-casing of FL_LAYOUT in lease_modify.
+    . remove lease_want_dispose.
+    . move lm_breaker_timedout call to time_out_leases.
+v4:
+    . only increment ls_fence_retry_cnt after successfully
+      schedule new work in nfsd4_layout_lm_breaker_timedout.
 
-> > We have a few generations of hardware and OS versions like RHEL8
-> > (4.18), RHEL9 (5.14) and mainline (v6.18) in production, but I see
-> > similar performance plateaus for this workload in all cases (~300k
-> > iops/s).
-> >
-> > But it could well be that they are all limited for different reasons
-> > (lock contentions). I distinctly remember seeing high
-> > nfsd_file_lru_remove & nfsd_file_put (perf lock record) contention on
-> > the RHEL9 (5.14) kernel which I don't see now on mainline.
-> >
-> > I'm happy to record the lockstat report for this workload across a few
-> > different kernel versions if that is of interest to anyone.
->
->
-> --
-> Chuck Lever
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index 04c7691e50e0..a339491f02e4 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -403,6 +403,7 @@ prototypes::
+ 	bool (*lm_breaker_owns_lease)(struct file_lock *);
+         bool (*lm_lock_expirable)(struct file_lock *);
+         void (*lm_expire_lock)(void);
++        void (*lm_breaker_timedout)(struct file_lease *);
+ 
+ locking rules:
+ 
+@@ -417,6 +418,7 @@ lm_breaker_owns_lease:	yes     	no			no
+ lm_lock_expirable	yes		no			no
+ lm_expire_lock		no		no			yes
+ lm_open_conflict	yes		no			no
++lm_breaker_timedout     yes             no                      no
+ ======================	=============	=================	=========
+ 
+ buffer_head
+diff --git a/fs/locks.c b/fs/locks.c
+index 46f229f740c8..1b63aa704598 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -1524,6 +1524,7 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
+ {
+ 	struct file_lock_context *ctx = inode->i_flctx;
+ 	struct file_lease *fl, *tmp;
++	bool remove = true;
+ 
+ 	lockdep_assert_held(&ctx->flc_lock);
+ 
+@@ -1531,8 +1532,13 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
+ 		trace_time_out_leases(inode, fl);
+ 		if (past_time(fl->fl_downgrade_time))
+ 			lease_modify(fl, F_RDLCK, dispose);
+-		if (past_time(fl->fl_break_time))
+-			lease_modify(fl, F_UNLCK, dispose);
++
++		if (past_time(fl->fl_break_time)) {
++			if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
++				remove = fl->fl_lmops->lm_breaker_timedout(fl);
++			if (remove)
++				lease_modify(fl, F_UNLCK, dispose);
++		}
+ 	}
+ }
+ 
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 7ba9e2dd0875..69d3889df302 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -443,6 +443,14 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode, struct svc_rqst *rqstp,
+ 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
+ }
+ 
++/*
++ * Perform the fence operation to prevent the client from accessing the
++ * block device. If a fence operation is already in progress, wait for
++ * it to complete before checking the NFSD_MDS_PR_FENCED flag. Once the
++ * operation is complete, check the flag. If NFSD_MDS_PR_FENCED is set,
++ * update the layout stateid by setting the ls_fenced flag to indicate
++ * that the client has been fenced.
++ */
+ static void
+ nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
+ {
+@@ -450,31 +458,23 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
+ 	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
+ 	int status;
+ 
+-	if (nfsd4_scsi_fence_set(clp, bdev->bd_dev))
++	mutex_lock(&clp->cl_fence_mutex);
++	if (nfsd4_scsi_fence_set(clp, bdev->bd_dev)) {
++		ls->ls_fenced = true;
++		mutex_unlock(&clp->cl_fence_mutex);
++		nfs4_put_stid(&ls->ls_stid);
+ 		return;
++	}
+ 
+ 	status = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
+ 			nfsd4_scsi_pr_key(clp),
+ 			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
+-	/*
+-	 * Reset to allow retry only when the command could not have
+-	 * reached the device. Negative status means a local error
+-	 * (e.g., -ENOMEM) prevented the command from being sent.
+-	 * PR_STS_PATH_FAILED, PR_STS_PATH_FAST_FAILED, and
+-	 * PR_STS_RETRY_PATH_FAILURE indicate transport path failures
+-	 * before device delivery.
+-	 *
+-	 * For all other errors, the command may have reached the device
+-	 * and the preempt may have succeeded. Avoid resetting, since
+-	 * retrying a successful preempt returns PR_STS_IOERR or
+-	 * PR_STS_RESERVATION_CONFLICT, which would cause an infinite
+-	 * retry loop.
+-	 */
+-	if (status < 0 ||
+-	    status == PR_STS_PATH_FAILED ||
+-	    status == PR_STS_PATH_FAST_FAILED ||
+-	    status == PR_STS_RETRY_PATH_FAILURE)
++	if (status)
+ 		nfsd4_scsi_fence_clear(clp, bdev->bd_dev);
++	else
++		ls->ls_fenced = true;
++	mutex_unlock(&clp->cl_fence_mutex);
++	nfs4_put_stid(&ls->ls_stid);
+ 
+ 	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
+ }
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index ad7af8cfcf1f..1c498f3cd059 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -222,6 +222,29 @@ nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
+ 	return 0;
+ }
+ 
++static void
++nfsd4_layout_fence_worker(struct work_struct *work)
++{
++	struct nfsd_file *nf;
++	struct delayed_work *dwork = to_delayed_work(work);
++	struct nfs4_layout_stateid *ls = container_of(dwork,
++			struct nfs4_layout_stateid, ls_fence_work);
++	u32 type;
++
++	rcu_read_lock();
++	nf = nfsd_file_get(ls->ls_file);
++	rcu_read_unlock();
++	if (!nf) {
++		nfs4_put_stid(&ls->ls_stid);
++		return;
++	}
++
++	type = ls->ls_layout_type;
++	if (nfsd4_layout_ops[type]->fence_client)
++		nfsd4_layout_ops[type]->fence_client(ls, nf);
++	nfsd_file_put(nf);
++}
++
+ static struct nfs4_layout_stateid *
+ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+ 		struct nfs4_stid *parent, u32 layout_type)
+@@ -271,6 +294,10 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+ 	list_add(&ls->ls_perfile, &fp->fi_lo_states);
+ 	spin_unlock(&fp->fi_lock);
+ 
++	INIT_DELAYED_WORK(&ls->ls_fence_work, nfsd4_layout_fence_worker);
++	ls->ls_fenced = false;
++	ls->ls_fence_retry_cnt = 0;
++
+ 	trace_nfsd_layoutstate_alloc(&ls->ls_stid.sc_stateid);
+ 	return ls;
+ }
+@@ -708,9 +735,10 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
+ 		rcu_read_unlock();
+ 		if (fl) {
+ 			ops = nfsd4_layout_ops[ls->ls_layout_type];
+-			if (ops->fence_client)
++			if (ops->fence_client) {
++				refcount_inc(&ls->ls_stid.sc_count);
+ 				ops->fence_client(ls, fl);
+-			else
++			} else
+ 				nfsd4_cb_layout_fail(ls, fl);
+ 			nfsd_file_put(fl);
+ 		}
+@@ -747,11 +775,9 @@ static bool
+ nfsd4_layout_lm_break(struct file_lease *fl)
+ {
+ 	/*
+-	 * We don't want the locks code to timeout the lease for us;
+-	 * we'll remove it ourself if a layout isn't returned
+-	 * in time:
++	 * Enforce break lease timeout to prevent NFSD
++	 * thread from hanging in __break_lease.
+ 	 */
+-	fl->fl_break_time = 0;
+ 	nfsd4_recall_file_layout(fl->c.flc_owner);
+ 	return false;
+ }
+@@ -782,10 +808,51 @@ nfsd4_layout_lm_open_conflict(struct file *filp, int arg)
+ 	return 0;
+ }
+ 
++/**
++ * nfsd4_layout_lm_breaker_timedout - The layout recall has timed out.
++ * If the layout type supports a fence operation, schedule a worker to
++ * fence the client from accessing the block device.
++ *
++ * @fl: file to check
++ *
++ * Return true if the file lease should be disposed of by the caller;
++ * otherwise, return false.
++ */
++static bool
++nfsd4_layout_lm_breaker_timedout(struct file_lease *fl)
++{
++	struct nfs4_layout_stateid *ls = fl->c.flc_owner;
++	bool ret;
++
++	if (!nfsd4_layout_ops[ls->ls_layout_type]->fence_client)
++		return true;
++	if (ls->ls_fenced || ls->ls_fence_retry_cnt >= LO_MAX_FENCE_RETRY)
++		return true;
++
++	if (work_busy(&ls->ls_fence_work.work))
++		return false;
++	/* Schedule work to do the fence operation */
++	ret = mod_delayed_work(system_dfl_wq, &ls->ls_fence_work, 0);
++	if (!ret) {
++		/*
++		 * If there is no pending work, mod_delayed_work queues
++		 * new task. While fencing is in progress, a reference
++		 * count is added to the layout stateid to ensure its
++		 * validity. This reference count is released once fencing
++		 * has been completed.
++		 */
++		refcount_inc(&ls->ls_stid.sc_count);
++		++ls->ls_fence_retry_cnt;
++		return true;
++	}
++	return false;
++}
++
+ static const struct lease_manager_operations nfsd4_layouts_lm_ops = {
+ 	.lm_break		= nfsd4_layout_lm_break,
+ 	.lm_change		= nfsd4_layout_lm_change,
+ 	.lm_open_conflict	= nfsd4_layout_lm_open_conflict,
++	.lm_breaker_timedout	= nfsd4_layout_lm_breaker_timedout,
+ };
+ 
+ int
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 583c13b5aaf3..a57fa3318362 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2385,6 +2385,7 @@ static struct nfs4_client *alloc_client(struct xdr_netobj name,
+ #endif
+ #ifdef CONFIG_NFSD_SCSILAYOUT
+ 	xa_init(&clp->cl_dev_fences);
++	mutex_init(&clp->cl_fence_mutex);
+ #endif
+ 	INIT_LIST_HEAD(&clp->async_copies);
+ 	spin_lock_init(&clp->async_lock);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 713f55ef6554..57e54dfb406c 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -529,6 +529,7 @@ struct nfs4_client {
+ 	time64_t		cl_ra_time;
+ #ifdef CONFIG_NFSD_SCSILAYOUT
+ 	struct xarray		cl_dev_fences;
++	struct mutex		cl_fence_mutex;
+ #endif
+ };
+ 
+@@ -738,8 +739,13 @@ struct nfs4_layout_stateid {
+ 	stateid_t			ls_recall_sid;
+ 	bool				ls_recalled;
+ 	struct mutex			ls_mutex;
++	struct delayed_work		ls_fence_work;
++	bool				ls_fenced;
++	int				ls_fence_retry_cnt;
+ };
+ 
++#define	LO_MAX_FENCE_RETRY		5
++
+ static inline struct nfs4_layout_stateid *layoutstateid(struct nfs4_stid *s)
+ {
+ 	return container_of(s, struct nfs4_layout_stateid, ls_stid);
+diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+index 2f5e5588ee07..13b9c9f04589 100644
+--- a/include/linux/filelock.h
++++ b/include/linux/filelock.h
+@@ -50,6 +50,7 @@ struct lease_manager_operations {
+ 	void (*lm_setup)(struct file_lease *, void **);
+ 	bool (*lm_breaker_owns_lease)(struct file_lease *);
+ 	int (*lm_open_conflict)(struct file *, int);
++	bool (*lm_breaker_timedout)(struct file_lease *fl);
+ };
+ 
+ struct lock_manager {
+-- 
+2.47.3
 
---000000000000fcb983064953fdc1
-Content-Type: text/plain; charset="US-ASCII"; name="lockstat-v5.14.txt"
-Content-Disposition: attachment; filename="lockstat-v5.14.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mkvvhv6l0>
-X-Attachment-Id: f_mkvvhv6l0
-
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3MgbmFtZSAgICBjb24tYm91bmNlcyAgICBjb250
-ZW50aW9ucyAgIHdhaXR0aW1lLW1pbiAgIHdhaXR0aW1lLW1heCB3YWl0dGltZS10b3RhbCAgIHdh
-aXR0aW1lLWF2ZyAgICBhY3EtYm91bmNlcyAgIGFjcXVpc2l0aW9ucyAgIGhvbGR0aW1lLW1pbiAg
-IGhvbGR0aW1lLW1heCBob2xkdGltZS10b3RhbCAgIGhvbGR0aW1lLWF2ZwotLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKICAgICAgICAgICAgICAgICAg
-ICAgICAmaXAtPmlfZmxhZ3NfbG9jazogICAgIDIxMjAzNjQ4OSAgICAgIDM1NjMwNTU2NyAgICAg
-ICAgICAgMC4wNyAgICAgICAgIDU4Mi44NSAgNDI2OTk3NjAxNy44OCAgICAgICAgICAxMS45OCAg
-ICAgIDQzMDc0OTM3OCAgICAgIDU0MTE2MDU1MSAgICAgICAgICAgMC4wNCAgICAgICAgIDUxOS43
-NSAgIDM3NjU1MzU0My40NSAgICAgICAgICAgMC43MAogICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICZxLT5sb2NrOiAgICAgMjc1MzcwODkxICAgICAgMjc4MTI0NDUzICAgICAgICAgICAw
-LjA3ICAgICAgICAxMjM3LjM0IDk3MTQ1NjU3OTE4LjcyICAgICAgICAgMzQ5LjI5ICAgICAgMjc4
-NTU4NzY1ICAgICAgMjc4NjE3MzA1ICAgICAgICAgICAwLjA1ICAgICAgICAgNDczLjk3ICAgMjU3
-NDgwOTgzLjU0ICAgICAgICAgICAwLjkyCiAgICAgICAgICAgICAgICZzYi0+c190eXBlLT5pX2xv
-Y2tfa2V5IzI6ICAgICAgNzAzNzc4MjQgICAgICAgNzAzODQzMDMgICAgICAgICAgIDAuMDcgICAg
-ICAgICA0ODMuOTUgICAgOTg4ODExNDUuMjcgICAgICAgICAgIDEuNDAgICAgICAzMTA3MzAxMTgg
-ICAgICAzNjA2OTEzNTkgICAgICAgICAgIDAuMDYgICAgICAgICA0ODQuMTYgICAyMjY3MDg3Mzgu
-MTggICAgICAgICAgIDAuNjMKICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvY2stQUZfSU5F
-VDogICAgICA2MTA2MTQ5NSAgICAgICA2MjMxNDExNyAgICAgICAgICAgMC4wNyAgICAgICAgIDM1
-MS42NCAgIDE4OTk0NTM5MS42MCAgICAgICAgICAgMy4wNSAgICAgIDU2MzI0MjY3OCAgICAgMjk1
-MDE3NjgyMyAgICAgICAgICAgMC4wNiAgICAgICAgIDM2Ni4xMCAgMTcyMDkzMDQ5OC41OSAgICAg
-ICAgICAgMC41OAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleSMxOiAgICAg
-IDQzNDM3MjUwICAgICAgIDQzNDM3MjYyICAgICAgICAgICAwLjA2ICAgICAgICAgIDMxLjI5ICAg
-IDM3NTU2MDA1LjcyICAgICAgICAgICAwLjg2ICAgICAgMzYxMTA4MjQ5ICAgICAgMzYxMTU0NzIw
-ICAgICAgICAgICAwLjA2ICAgICAgICAgMzQ5Ljg4ICAgIDc5Nzk0MjcwLjYxICAgICAgICAgICAw
-LjIyCiAgICAgICAgICAgICAgICAgICAgICAmbHJ1LT5ub2RlW2ldLmxvY2s6ICAgICAgMzQxMTM4
-NzYgICAgICAgMzQyNDEwNzUgICAgICAgICAgIDAuMDcgICAgICAgICA0ODkuNDUgICAgODA2MDI0
-MDcuNzcgICAgICAgICAgIDIuMzUgICAgICAyMDg0MzgxOTEgICAgICAyMjI3ODI1NzIgICAgICAg
-ICAgIDAuMDUgICAgICAgICA1MjkuODUgICAgNjAyNjg3NjMuNzUgICAgICAgICAgIDAuMjcKICAg
-ICAgICAgICAgICAgICAgICAgICAgICZkZW50cnktPmRfbG9jazogICAgICAyNzI4OTE4OSAgICAg
-ICAyNzMwOTI0MiAgICAgICAgICAgMC4wNyAgICAgICAgIDQzMC4zNiAgICAzMDkxOTEzOS4yMSAg
-ICAgICAgICAgMS4xMyAgICAgIDM1ODE3NTUyNCAgICAgIDQwMjk1MjA1OSAgICAgICAgICAgMC4w
-NiAgICAgICAgIDQ2MC4xOSAgIDEyMTIwMzczMS42NCAgICAgICAgICAgMC4zMAogICAgICAgICAg
-ICAgICAgICAgICAgICAgc2xvY2stQUZfSU5FVC8xOiAgICAgICA4Nzc3OTY3ICAgICAgICA4Nzkw
-NzQ1ICAgICAgICAgICAwLjA4ICAgICAgICAgMjE4LjgxICAgIDIyMDU2NzMxLjM5ICAgICAgICAg
-ICAyLjUxICAgICAgMTk5Mjk3OTc3ICAgICAgMzU1NjcyNjIwICAgICAgICAgICAwLjE2ICAgICAg
-ICAgMzY2Ljg3ICAxNjIxMjU0MTMzLjY3ICAgICAgICAgICA0LjU2CiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgJnAtPnBpX2xvY2s6ICAgICAgIDc3MDM2MzQgICAgICAgIDc3MDQxNDggICAg
-ICAgICAgIDAuMDcgICAgICAgICAyMjAuMDQgICAgMzMxNzkwOTYuNDAgICAgICAgICAgIDQuMzEg
-ICAgICAgODA2MjYzNTIgICAgICAgOTE3MzQ1NzYgICAgICAgICAgIDAuMDUgICAgICAgICAzNTMu
-MDQgICAxNzI3MDQwNjEuODIgICAgICAgICAgIDEuODgKICAgICAgICAgICAgICAgICAgICAgICAg
-JnhwcnQtPnhwdF9tdXRleDogICAgICAgNjkxNTQ2MyAgICAgICAgNjk0ODY1OSAgICAgICAgICAg
-MC4yOCAgICAgICA0MjAwNy4wMyAyMjYwOTE4MTY0OS43OSAgICAgICAgMzI1My43NSAgICAgIDE3
-OTU4Mzg4NyAgICAgIDE4MDM0NDYwOSAgICAgICAgICAgNS4xNCAgICAgICA0MjMxOS41OSAyMDI5
-MjYxODY3Mi4xMiAgICAgICAgIDExMi41MgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
-Y3Vfbm9kZV8xOiAgICAgICAzOTYyNTE5ICAgICAgICAzOTk1MTcyICAgICAgICAgICAwLjA4ICAg
-ICAgICAgIDE2LjM2ICAgICA1MzE1MzQ4LjUyICAgICAgICAgICAxLjMzICAgICAgICA4Nzg1MTY0
-ICAgICAgIDE3Njc0MTYxICAgICAgICAgICAwLjA3ICAgICAgICAgIDE1LjIyICAgIDExNzM3ODU0
-Ljk4ICAgICAgICAgICAwLjY2CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnJxLT5fX2xv
-Y2s6ICAgICAgIDIyOTQyODggICAgICAgIDIzNDg3NDIgICAgICAgICAgIDAuMDYgICAgICAgICAg
-NzUuMDEgICAgIDQ1OTg3MDMuNDQgICAgICAgICAgIDEuOTYgICAgICAgMzMxMzY5MTggICAgICA0
-OTAyMDUyMDggICAgICAgICAgIDAuMDYgICAgICAgICAzNTYuNzUgICA3NzU4NTExODEuODQgICAg
-ICAgICAgIDEuNTgKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jazogICAg
-ICAgMTg5NDk1NSAgICAgICAgMTk2Njg0MiAgICAgICAgICAgMC4wNyAgICAgICAgICAxNC42MCAg
-ICAgMTIxNjEwMi45MSAgICAgICAgICAgMC42MiAgICAgIDU0MDE0Mzc5NiAgICAgMTE0MTc4MjU4
-OSAgICAgICAgICAgMC4wNiAgICAgICAgIDIxMy45MCAgIDMyNTcwOTE3MS40OSAgICAgICAgICAg
-MC4yOQogICAgICAgICAgICAgICAgICAgICAgaHJ0aW1lcl9iYXNlcy5sb2NrOiAgICAgICAgNzcy
-OTAwICAgICAgICAgNzc5ODk4ICAgICAgICAgICAwLjA4ICAgICAgICAgIDEyLjA0ICAgICAgNTI2
-NDQ2Ljk2ICAgICAgICAgICAwLjY4ICAgICAgMzEzNTcyODUzICAgICAxMTIzNzkxMDg0ICAgICAg
-ICAgICAwLjA3ICAgICAgICAgMzUzLjk5ICAgNDczMjMzNzg5LjAzICAgICAgICAgICAwLjQyCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgJnBvb2wtPmxvY2s6ICAgICAgICA1MTUwMTAgICAg
-ICAgICA1MTUwOTcgICAgICAgICAgIDAuMDggICAgICAgICAgMjEuNjcgICAgICA4MDkwNTUuOTYg
-ICAgICAgICAgIDEuNTcgICAgICAgMTAzOTUwNzYgICAgICAgNDYwMTc3MDYgICAgICAgICAgIDAu
-MDYgICAgICAgICAgMjYuMDkgICAgNTgxODk4NzUuMTIgICAgICAgICAgIDEuMjYKICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAmem9uZS0+bG9jazogICAgICAgIDI0MTIwNCAgICAgICAgIDI0
-MTIwNyAgICAgICAgICAgMC4xMSAgICAgICAgIDE0Mi43MSAgICAgMjIwNTg5Ny4xNSAgICAgICAg
-ICAgOS4xNSAgICAgICAgMzc2MzMxNyAgICAgICAgMzgxMDE3OCAgICAgICAgICAgMC4xNCAgICAg
-ICAgIDM2MC4wNSAgICA1MzA4OTE4Ni40MiAgICAgICAgICAxMy45MwogICAgICAgICAgICAgICAg
-ICAgICAgICAgJnNkLT5kZWZlcl9sb2NrOiAgICAgICAgMjI0MDI5ICAgICAgICAgMjI0MDM1ICAg
-ICAgICAgICAwLjA4ICAgICAgICAgIDE4LjcwICAgICAgMTM1MDcyLjgyICAgICAgICAgICAwLjYw
-ICAgICAgMjQ5NzQyNDE5ICAgICAgMjQ5NzQ1NzM3ICAgICAgICAgICAwLjA2ICAgICAgICAgIDIx
-LjQwICAgIDM2NzYyODcyLjk0ICAgICAgICAgICAwLjE1CiAgICAgICAgICAgICAgICAgICAgICAg
-ICZjbWQtPmFsbG9jX2xvY2s6ICAgICAgICAxNjE2NDggICAgICAgICAxNjMxNTUgICAgICAgICAg
-IDAuMDggICAgICAgICAgMTQuMzUgICAgICAxMDEwMTkuODYgICAgICAgICAgIDAuNjIgICAgICAg
-MTM5NzU0MzcgICAgICAgMTk0OTYwNDMgICAgICAgICAgIDAuMDYgICAgICAgICAgMTQuMDggICAg
-IDg3MTM1ODQuOTcgICAgICAgICAgIDAuNDUKICAgICAgICAgICAgICAgICAgICAgICAgIGlucHV0
-X3Bvb2wubG9jazogICAgICAgIDExNDYwMSAgICAgICAgIDExNDYwMSAgICAgICAgICAgMC4xMiAg
-ICAgICAgICAgOS44NiAgICAgIDE3ODg1NC4yNCAgICAgICAgICAgMS41NiAgICAgICAgIDYwMzQ2
-OCAgICAgICAgIDYwNTUwMCAgICAgICAgICAgMC4wOSAgICAgICAgICAxMy43NCAgICAgIDQyNDQ5
-Mi41NCAgICAgICAgICAgMC43MAogICAgICAgICAgICAgICAgICAgICAgICAgcXVldWVfd2FpdC5s
-b2NrOiAgICAgICAgIDkxNDE5ICAgICAgICAgMTAyNTM0ICAgICAgICAgICAwLjA3ICAgICAgICAg
-IDU3LjY0ICAgICAgNDQ0MjU1LjEwICAgICAgICAgICA0LjMzICAgICAgICAgMTA2MDgwICAgICAg
-ICAgMTEwNzk3ICAgICAgICAgICAwLjA2ICAgICAgICAgMTI0LjYxICAgICAgIDI1ODg0LjQ3ICAg
-ICAgICAgICAwLjIzCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJjdV9ub2RlXzA6ICAg
-ICAgICAgNzc2OTYgICAgICAgICAgNzc2OTYgICAgICAgICAgIDAuMDkgICAgICAgICAgIDkuMjIg
-ICAgICAgODY2MTEuNDEgICAgICAgICAgIDEuMTEgICAgICAgICA0ODU0NzQgICAgICAgICA3NTY2
-MjQgICAgICAgICAgIDAuMDcgICAgICAgICAgMTIuMTIgICAgICAyODIwOTIuNTYgICAgICAgICAg
-IDAuMzcKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZjaC0+bG9jazogICAgICAgICA2
-ODMwNSAgICAgICAgICA2ODMxMiAgICAgICAgICAgMC4xMCAgICAgICAgICAgNy44MiAgICAgICA0
-MDEyNi45NiAgICAgICAgICAgMC41OSAgICAgICAxMjE4NzAxMSAgICAgICAxMjk5Njc5MCAgICAg
-ICAgICAgMC4wNyAgICAgICAgICAxMy44OSAgICAgNTcwMzQ0NC4zNSAgICAgICAgICAgMC40NAog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBxdWV1ZV9sb2NrOiAgICAgICAgIDQ2NjIyICAg
-ICAgICAgIDUxNTA1ICAgICAgICAgICAwLjA3ICAgICAgICAgIDM4LjM4ICAgICAgMTA5OTAxLjY4
-ICAgICAgICAgICAyLjEzICAgICAgICAgMTAxMDI5ICAgICAgICAgMTE1MzY3ICAgICAgICAgICAw
-LjA2ICAgICAgICAgIDI3LjQ3ICAgICAgIDI1MTAxLjA5ICAgICAgICAgICAwLjIyCiAgICAgICAg
-ICAgICAgICAgICAgICZyLT5wcm9kdWNlcl9sb2NrIzI6ICAgICAgICAgNDIwMDIgICAgICAgICAg
-NDIwNDYgICAgICAgICAgIDAuMTMgICAgICAgICAgMTIuNzMgICAgICAgMzIxNTkuMTMgICAgICAg
-ICAgIDAuNzYgICAgICAgIDM1Mjc5MTcgICAgICAgIDM4Njg3MTEgICAgICAgICAgIDAuMDYgICAg
-ICAgICAgMTYuODkgICAgIDIwNTY0ODEuNjYgICAgICAgICAgIDAuNTMKICAgICAgICAgICAgICAg
-ICAgICAgICAgICZ4cHJ0LT54cHRfbG9jazogICAgICAgICAyMTA2OCAgICAgICAgICAyODg0MCAg
-ICAgICAgICAgMC4xMCAgICAgICAgIDQxMi4zNyAgICAgICA4NzcyMy4zNiAgICAgICAgICAgMy4w
-NCAgICAgIDE3OTcwMDgzMSAgICAgIDM2MDY4ODU1MiAgICAgICAgICAgMC4wNiAgICAgICAgIDQ1
-Ni4wOCAgIDE1MjQzODc5NS4zNCAgICAgICAgICAgMC40MgogICAgICAgICAgICAgICAgICAgICAm
-ZWktPnNvY2tldC53cS53YWl0OiAgICAgICAgIDI2Mjc3ICAgICAgICAgIDI2Mjc3ICAgICAgICAg
-ICAwLjA3ICAgICAgICAgIDYzLjcyICAgICAgIDg5Njg0LjQ2ICAgICAgICAgICAzLjQxICAgICAg
-ICAgMTI2NjY5ICAgICAgICAgMjg5ODgzICAgICAgICAgICAwLjA3ICAgICAgICAgMTAxLjQzICAg
-ICAgMjM4NzYxLjQzICAgICAgICAgICAwLjgyCiAgICAgICAgICAgICAgICAgICAmZnV0ZXhfcXVl
-dWVzW2ldLmxvY2s6ICAgICAgICAgMjIzNTAgICAgICAgICAgMjI0OTEgICAgICAgICAgIDAuMDcg
-ICAgICAgICAgMTcuNzUgICAgICAgMTA4NTkuMzcgICAgICAgICAgIDAuNDggICAgICAgICAgODkw
-MTQgICAgICAgICAzNDMzODMgICAgICAgICAgIDAuMDYgICAgICAgICAgNjkuMzUgICAgICAxNDAx
-NDMuNDggICAgICAgICAgIDAuNDEKICAgICAgICAgICAgICAgICAgICAgICBzZW1hcGhvcmUtPmxv
-Y2sjMjogICAgICAgICAxOTgwNCAgICAgICAgICAxOTk3OSAgICAgICAgICAgMC4wOSAgICAgICAg
-ICAgMS4zNiAgICAgICAgODkyMy4zOCAgICAgICAgICAgMC40NSAgICAgICAgOTQ0ODExMiAgICAg
-ICAxMjk5NzcxMCAgICAgICAgICAgMC4wNiAgICAgICAgICAxMy4zMSAgICAgMjkzNDg1Ny45MSAg
-ICAgICAgICAgMC4yMwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmeC0+d2FpdCMyOiAg
-ICAgICAgIDE4MzkwICAgICAgICAgIDE4NTg0ICAgICAgICAgICAwLjA4ICAgICAgICAgICAxLjg0
-ICAgICAgICA4MTYxLjE0ICAgICAgICAgICAwLjQ0ICAgICAgIDM3ODE5MTk1ICAgICAgIDQ4MTA0
-NDM0ICAgICAgICAgICAwLjA2ICAgICAgICAgMzUxLjg4ICAgIDI2MTQyMzczLjkwICAgICAgICAg
-ICAwLjU0CiAgICAgICAgICAgICAgICAgICAgICAgICAgJnN0YXRzLT5sb2NrIzI6ICAgICAgICAg
-MTQ1NDMgICAgICAgICAgMTQ1NDMgICAgICAgICAgIDAuMTAgICAgICAgICAgIDEuOTUgICAgICAg
-IDcwNjcuNDQgICAgICAgICAgIDAuNDkgICAgICAgIDYzODU3MzggICAgICAgIDY0OTg2ODEgICAg
-ICAgICAgIDAuMDYgICAgICAgICAxODYuNjIgICAgIDE1NjgwOTYuMjcgICAgICAgICAgIDAuMjQK
-Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzIG5hbWUgICAgY29uLWJvdW5jZXMgICAgY29u
-dGVudGlvbnMgICB3YWl0dGltZS1taW4gICB3YWl0dGltZS1tYXggd2FpdHRpbWUtdG90YWwgICB3
-YWl0dGltZS1hdmcgICAgYWNxLWJvdW5jZXMgICBhY3F1aXNpdGlvbnMgICBob2xkdGltZS1taW4g
-ICBob2xkdGltZS1tYXggaG9sZHRpbWUtdG90YWwgICBob2xkdGltZS1hdmcKLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCgogICAgICAgICAgICAgICAg
-ICAgICAgICZpcC0+aV9mbGFnc19sb2NrOiAgICAgMjEyMDM2NDg5ICAgICAgMzU2MzA1NTY3ICAg
-ICAgICAgICAwLjA3ICAgICAgICAgNTgyLjg1ICA0MjY5OTc2MDE3Ljg4ICAgICAgICAgIDExLjk4
-ICAgICAgNDMwNzQ5Mzc4ICAgICAgNTQxMTYwNTUxICAgICAgICAgICAwLjA0ICAgICAgICAgNTE5
-Ljc1ICAgMzc2NTUzNTQzLjQ1ICAgICAgICAgICAwLjcwCiAgICAgICAgICAgICAgICAgICAgICAg
-LS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAmaXAtPmlfZmxhZ3NfbG9j
-ayAgICAgICAgICAgIDExNiAgICAgICAgICBbPDAwMDAwMDAwZjVhNDhhZmI+XSB4ZnNfcmVsZWFz
-ZSsweGE3LzB4MTgwIFt4ZnNdCiAgICAgICAgICAgICAgICAgICAgICAgJmlwLT5pX2ZsYWdzX2xv
-Y2sgICAgICAxMDk0OTI0NjEgICAgICAgICAgWzwwMDAwMDAwMGM5MTI3ZjE5Pl0geGZzX2lnZXRf
-Y2FjaGVfaGl0KzB4MzUvMHgzMzAgW3hmc10KICAgICAgICAgICAgICAgICAgICAgICAmaXAtPmlf
-ZmxhZ3NfbG9jayAgICAgIDEyMzU2MTc5OCAgICAgICAgICBbPDAwMDAwMDAwOGUzYWEyNGI+XSB4
-ZnNfaWdldF9jYWNoZV9oaXQrMHgyYjYvMHgzMzAgW3hmc10KICAgICAgICAgICAgICAgICAgICAg
-ICAmaXAtPmlfZmxhZ3NfbG9jayAgICAgIDEyMzI1MTE5MCAgICAgICAgICBbPDAwMDAwMDAwZGYz
-OTM3M2Y+XSB4ZnNfaWdldCsweDFmNC8weDJhMCBbeGZzXQogICAgICAgICAgICAgICAgICAgICAg
-IC0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAgJmlwLT5pX2ZsYWdzX2xv
-Y2sgICAgICAgICAgICAxMTYgICAgICAgICAgWzwwMDAwMDAwMGY1YTQ4YWZiPl0geGZzX3JlbGVh
-c2UrMHhhNy8weDE4MCBbeGZzXQogICAgICAgICAgICAgICAgICAgICAgICZpcC0+aV9mbGFnc19s
-b2NrICAgICAgMTY4ODc5NDcxICAgICAgICAgIFs8MDAwMDAwMDBjOTEyN2YxOT5dIHhmc19pZ2V0
-X2NhY2hlX2hpdCsweDM1LzB4MzMwIFt4ZnNdCiAgICAgICAgICAgICAgICAgICAgICAgJmlwLT5p
-X2ZsYWdzX2xvY2sgICAgICAxMzE4NjA3OTcgICAgICAgICAgWzwwMDAwMDAwMDhlM2FhMjRiPl0g
-eGZzX2lnZXRfY2FjaGVfaGl0KzB4MmI2LzB4MzMwIFt4ZnNdCiAgICAgICAgICAgICAgICAgICAg
-ICAgJmlwLT5pX2ZsYWdzX2xvY2sgICAgICAgNTU1NjUxODEgICAgICAgICAgWzwwMDAwMDAwMGRm
-MzkzNzNmPl0geGZzX2lnZXQrMHgxZjQvMHgyYTAgW3hmc10KCi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgogICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICZxLT5sb2NrOiAgICAgMjc1MzcwODkxICAgICAgMjc4MTI0NDUzICAgICAgICAgICAw
-LjA3ICAgICAgICAxMjM3LjM0IDk3MTQ1NjU3OTE4LjcyICAgICAgICAgMzQ5LjI5ICAgICAgMjc4
-NTU4NzY1ICAgICAgMjc4NjE3MzA1ICAgICAgICAgICAwLjA1ICAgICAgICAgNDczLjk3ICAgMjU3
-NDgwOTgzLjU0ICAgICAgICAgICAwLjkyCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-LS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcS0+bG9jayAgICAgIDI3
-ODEyNDQ1MyAgICAgICAgICBbPDAwMDAwMDAwMTk3YjZlYTE+XSBfX2x3cV9kZXF1ZXVlKzB4MTcv
-MHg4MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJnEtPmxvY2sgICAgICAyNzgxMjQ0NTMgICAgICAgICAgWzww
-MDAwMDAwMDE5N2I2ZWExPl0gX19sd3FfZGVxdWV1ZSsweDE3LzB4ODAKCi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgogICAgICAgICAgICAgICAmc2It
-PnNfdHlwZS0+aV9sb2NrX2tleSMyOiAgICAgIDcwMzc3ODI0ICAgICAgIDcwMzg0MzAzICAgICAg
-ICAgICAwLjA3ICAgICAgICAgNDgzLjk1ICAgIDk4ODgxMTQ1LjI3ICAgICAgICAgICAxLjQwICAg
-ICAgMzEwNzMwMTE4ICAgICAgMzYwNjkxMzU5ICAgICAgICAgICAwLjA2ICAgICAgICAgNDg0LjE2
-ICAgMjI2NzA4NzM4LjE4ICAgICAgICAgICAwLjYzCiAgICAgICAgICAgICAgIC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgJnNiLT5zX3R5cGUtPmlfbG9ja19rZXkjMiAg
-ICAgICAzMzcxMDg1NCAgICAgICAgICBbPDAwMDAwMDAwOWM2NjkwZjI+XSBfX2Rfb2J0YWluX2Fs
-aWFzKzB4NDEvMHgyNzAKICAgICAgICAgICAgICAgJnNiLT5zX3R5cGUtPmlfbG9ja19rZXkjMiAg
-ICAgICAzNjY3MzQ0OSAgICAgICAgICBbPDAwMDAwMDAwMjI2YmE2NWM+XSBpZ3JhYisweDE5LzB4
-NTAKICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgICAgICAg
-ICAmc2ItPnNfdHlwZS0+aV9sb2NrX2tleSMyICAgICAgIDY5OTEwMzUzICAgICAgICAgIFs8MDAw
-MDAwMDA5YzY2OTBmMj5dIF9fZF9vYnRhaW5fYWxpYXMrMHg0MS8weDI3MAogICAgICAgICAgICAg
-ICAmc2ItPnNfdHlwZS0+aV9sb2NrX2tleSMyICAgICAgICAgNDczOTUwICAgICAgICAgIFs8MDAw
-MDAwMDAyMjZiYTY1Yz5dIGlncmFiKzB4MTkvMHg1MAoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNs
-b2NrLUFGX0lORVQ6ICAgICAgNjEwNjE0OTUgICAgICAgNjIzMTQxMTcgICAgICAgICAgIDAuMDcg
-ICAgICAgICAzNTEuNjQgICAxODk5NDUzOTEuNjAgICAgICAgICAgIDMuMDUgICAgICA1NjMyNDI2
-NzggICAgIDI5NTAxNzY4MjMgICAgICAgICAgIDAuMDYgICAgICAgICAzNjYuMTAgIDE3MjA5MzA0
-OTguNTkgICAgICAgICAgIDAuNTgKICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0t
-LS0tLQogICAgICAgICAgICAgICAgICAgICAgICAgICBzbG9jay1BRl9JTkVUICAgICAgIDM0NzY1
-MDg4ICAgICAgICAgIFs8MDAwMDAwMDA4MzI3MzJkMz5dIGxvY2tfc29ja19uZXN0ZWQrMHgzYi8w
-eDcwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsb2NrLUFGX0lORVQgICAgICAgMTY4Njg1
-NTEgICAgICAgICAgWzwwMDAwMDAwMDE4NzAzM2Q5Pl0gcmVsZWFzZV9zb2NrKzB4MTkvMHhhMAog
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzbG9jay1BRl9JTkVUICAgICAgICAxODYzMjc2ICAg
-ICAgICAgIFs8MDAwMDAwMDA5MDA4NTA4MT5dIF9fbG9ja19zb2NrKzB4OWYvMHgxMTAKICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc2xvY2stQUZfSU5FVCAgICAgICAgODcwNzgxMiAgICAgICAg
-ICBbPDAwMDAwMDAwMzU3OGRlOGU+XSB0Y3BfdHNxX2hhbmRsZXIrMHgxYS8weGUwCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc2xvY2stQUZfSU5FVCAgICAgICAxODg5MjY0NyAgICAgICAgICBbPDAwMDAwMDAwZTY0ZWNj
-MTg+XSB0Y3BfdjRfcmN2KzB4ZWE0LzB4ZjkwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNs
-b2NrLUFGX0lORVQgICAgICAgMTY4MDY2OTAgICAgICAgICAgWzwwMDAwMDAwMDgzMjczMmQzPl0g
-bG9ja19zb2NrX25lc3RlZCsweDNiLzB4NzAKICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xv
-Y2stQUZfSU5FVCAgICAgICAgNzAzNDUwMSAgICAgICAgICBbPDAwMDAwMDAwMTg3MDMzZDk+XSBy
-ZWxlYXNlX3NvY2srMHgxOS8weGEwCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsb2NrLUFG
-X0lORVQgICAgICAgICA3NjA1MzUgICAgICAgICAgWzwwMDAwMDAwMDkwMDg1MDgxPl0gX19sb2Nr
-X3NvY2srMHg5Zi8weDExMAoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5IzE6ICAg
-ICAgNDM0MzcyNTAgICAgICAgNDM0MzcyNjIgICAgICAgICAgIDAuMDYgICAgICAgICAgMzEuMjkg
-ICAgMzc1NTYwMDUuNzIgICAgICAgICAgIDAuODYgICAgICAzNjExMDgyNDkgICAgICAzNjExNTQ3
-MjAgICAgICAgICAgIDAuMDYgICAgICAgICAzNDkuODggICAgNzk3OTQyNzAuNjEgICAgICAgICAg
-IDAuMjIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLS0tLQogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGtleSMxICAgICAgIDQzNDM3MjYxICAgICAgICAgIFs8
-MDAwMDAwMDBmOTBmZDkwNz5dIHBlcmNwdV9jb3VudGVyX2FkZF9iYXRjaCsweDUwLzB4NzAKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXkjMSAgICAgICAgICAgICAgMSAgICAg
-ICAgICBbPDAwMDAwMDAwZWZjNjk5MjE+XSBfX3BlcmNwdV9jb3VudGVyX3N1bV9tYXNrKzB4MTEv
-MHg4MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAga2V5IzEgICAgICAgNDM0MzcyNTEgICAgICAgICAgWzww
-MDAwMDAwMGY5MGZkOTA3Pl0gcGVyY3B1X2NvdW50ZXJfYWRkX2JhdGNoKzB4NTAvMHg3MAogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleSMxICAgICAgICAgICAgIDExICAgICAg
-ICAgIFs8MDAwMDAwMDBlZmM2OTkyMT5dIF9fcGVyY3B1X2NvdW50ZXJfc3VtX21hc2srMHgxMS8w
-eDgwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoK
-ICAgICAgICAgICAgICAgICAgICAgICZscnUtPm5vZGVbaV0ubG9jazogICAgICAzNDExMzg3NiAg
-ICAgICAzNDI0MTA3NSAgICAgICAgICAgMC4wNyAgICAgICAgIDQ4OS40NSAgICA4MDYwMjQwNy43
-NyAgICAgICAgICAgMi4zNSAgICAgIDIwODQzODE5MSAgICAgIDIyMjc4MjU3MiAgICAgICAgICAg
-MC4wNSAgICAgICAgIDUyOS44NSAgICA2MDI2ODc2My43NSAgICAgICAgICAgMC4yNwogICAgICAg
-ICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAm
-bHJ1LT5ub2RlW2ldLmxvY2sgICAgICAgMzEzNTI2NjEgICAgICAgICAgWzwwMDAwMDAwMGQ3YTg1
-MjIyPl0gbGlzdF9scnVfZGVsKzB4MzAvMHhlMAogICAgICAgICAgICAgICAgICAgICAgJmxydS0+
-bm9kZVtpXS5sb2NrICAgICAgICAyODg4Mzg4ICAgICAgICAgIFs8MDAwMDAwMDBkNjk0OTQyMj5d
-IGxpc3RfbHJ1X2FkZCsweDM1LzB4MTIwCiAgICAgICAgICAgICAgICAgICAgICAmbHJ1LT5ub2Rl
-W2ldLmxvY2sgICAgICAgICAgICAgMjYgICAgICAgICAgWzwwMDAwMDAwMDRiMzRhN2FjPl0gbGlz
-dF9scnVfd2Fsa19ub2RlKzB4NTAvMHgxNTAKICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
-LS0tLS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAgJmxydS0+bm9kZVtpXS5sb2NrICAgICAg
-IDI2NzQ0ODAxICAgICAgICAgIFs8MDAwMDAwMDBkN2E4NTIyMj5dIGxpc3RfbHJ1X2RlbCsweDMw
-LzB4ZTAKICAgICAgICAgICAgICAgICAgICAgICZscnUtPm5vZGVbaV0ubG9jayAgICAgICAgNzQ5
-NjIwMyAgICAgICAgICBbPDAwMDAwMDAwZDY5NDk0MjI+XSBsaXN0X2xydV9hZGQrMHgzNS8weDEy
-MAogICAgICAgICAgICAgICAgICAgICAgJmxydS0+bm9kZVtpXS5sb2NrICAgICAgICAgICAgIDcx
-ICAgICAgICAgIFs8MDAwMDAwMDA0YjM0YTdhYz5dIGxpc3RfbHJ1X3dhbGtfbm9kZSsweDUwLzB4
-MTUwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoK
-ICAgICAgICAgICAgICAgICAgICAgICAgICZkZW50cnktPmRfbG9jazogICAgICAyNzI4OTE4OSAg
-ICAgICAyNzMwOTI0MiAgICAgICAgICAgMC4wNyAgICAgICAgIDQzMC4zNiAgICAzMDkxOTEzOS4y
-MSAgICAgICAgICAgMS4xMyAgICAgIDM1ODE3NTUyNCAgICAgIDQwMjk1MjA1OSAgICAgICAgICAg
-MC4wNiAgICAgICAgIDQ2MC4xOSAgIDEyMTIwMzczMS42NCAgICAgICAgICAgMC4zMAogICAgICAg
-ICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAmZGVudHJ5LT5kX2xvY2sgICAgICAgICAgMTQyNDAgICAgICAgICAgWzwwMDAwMDAwMDc3N2M2
-ODg4Pl0gbG9ja3JlZl9nZXRfbm90X2RlYWQrMHhlLzB4NDAKICAgICAgICAgICAgICAgICAgICAg
-ICAgICZkZW50cnktPmRfbG9jayAgICAgICAgICAgICA0MCAgICAgICAgICBbPDAwMDAwMDAwMzJh
-ODkzNzQ+XSBfX2RfbG9va3VwKzB4NzgvMHhmMAogICAgICAgICAgICAgICAgICAgICAgICAgJmRl
-bnRyeS0+ZF9sb2NrICAgICAgICAgICAgICA4ICAgICAgICAgIFs8MDAwMDAwMDBlZGQ1MmQ0Yj5d
-IF9fZGVudHJ5X2tpbGwrMHhiYi8weDE5MAogICAgICAgICAgICAgICAgICAgICAgICAgJmRlbnRy
-eS0+ZF9sb2NrICAgICAgIDE3OTc3NDg2ICAgICAgICAgIFs8MDAwMDAwMDA4NjA5MmUwMj5dIGRw
-dXQrMHhlOS8weDIzMAogICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAmZGVudHJ5LT5kX2xvY2sgICAgICAgMTc3MzY1MzcgICAg
-ICAgICAgWzwwMDAwMDAwMDg2MDkyZTAyPl0gZHB1dCsweGU5LzB4MjMwCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAmZGVudHJ5LT5kX2xvY2sgICAgICAgICAgMTMyMDkgICAgICAgICAgWzwwMDAw
-MDAwMDc3N2M2ODg4Pl0gbG9ja3JlZl9nZXRfbm90X2RlYWQrMHhlLzB4NDAKICAgICAgICAgICAg
-ICAgICAgICAgICAgICZkZW50cnktPmRfbG9jayAgICAgICAgOTU1OTAzNiAgICAgICAgICBbPDAw
-MDAwMDAwYjc3Zjc0YTE+XSBsb2NrcmVmX2dldCsweDkvMHgyMAogICAgICAgICAgICAgICAgICAg
-ICAgICAgJmRlbnRyeS0+ZF9sb2NrICAgICAgICAgICAgIDIzICAgICAgICAgIFs8MDAwMDAwMDBl
-ZGQ1MmQ0Yj5dIF9fZGVudHJ5X2tpbGwrMHhiYi8weDE5MAoKLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAgICAgICBz
-bG9jay1BRl9JTkVULzE6ICAgICAgIDg3Nzc5NjcgICAgICAgIDg3OTA3NDUgICAgICAgICAgIDAu
-MDggICAgICAgICAyMTguODEgICAgMjIwNTY3MzEuMzkgICAgICAgICAgIDIuNTEgICAgICAxOTky
-OTc5NzcgICAgICAzNTU2NzI2MjAgICAgICAgICAgIDAuMTYgICAgICAgICAzNjYuODcgIDE2MjEy
-NTQxMzMuNjcgICAgICAgICAgIDQuNTYKICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
-LS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAgICAgc2xvY2stQUZfSU5FVC8xICAgICAgICA4
-NzkwNzQ1ICAgICAgICAgIFs8MDAwMDAwMDBlNjRlY2MxOD5dIHRjcF92NF9yY3YrMHhlYTQvMHhm
-OTAKICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0tLQogICAgICAgICAgICAg
-ICAgICAgICAgICAgc2xvY2stQUZfSU5FVC8xICAgICAgICAzMzMxOTU4ICAgICAgICAgIFs8MDAw
-MDAwMDAxODcwMzNkOT5dIHJlbGVhc2Vfc29jaysweDE5LzB4YTAKICAgICAgICAgICAgICAgICAg
-ICAgICAgIHNsb2NrLUFGX0lORVQvMSAgICAgICAgMTM4ODU0NCAgICAgICAgICBbPDAwMDAwMDAw
-ODMyNzMyZDM+XSBsb2NrX3NvY2tfbmVzdGVkKzB4M2IvMHg3MAogICAgICAgICAgICAgICAgICAg
-ICAgICAgc2xvY2stQUZfSU5FVC8xICAgICAgICAzOTk2MTEwICAgICAgICAgIFs8MDAwMDAwMDAz
-NTc4ZGU4ZT5dIHRjcF90c3FfaGFuZGxlcisweDFhLzB4ZTAKICAgICAgICAgICAgICAgICAgICAg
-ICAgIHNsb2NrLUFGX0lORVQvMSAgICAgICAgICA1MDc3MyAgICAgICAgICBbPDAwMDAwMDAwOTAw
-ODUwODE+XSBfX2xvY2tfc29jaysweDlmLzB4MTEwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAm
-cC0+cGlfbG9jazogICAgICAgNzcwMzYzNCAgICAgICAgNzcwNDE0OCAgICAgICAgICAgMC4wNyAg
-ICAgICAgIDIyMC4wNCAgICAzMzE3OTA5Ni40MCAgICAgICAgICAgNC4zMSAgICAgICA4MDYyNjM1
-MiAgICAgICA5MTczNDU3NiAgICAgICAgICAgMC4wNSAgICAgICAgIDM1My4wNCAgIDE3MjcwNDA2
-MS44MiAgICAgICAgICAgMS44OAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
-LS0tCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnAtPnBpX2xvY2sgICAgICAgIDc3MDQx
-NDggICAgICAgICAgWzwwMDAwMDAwMGQ2YjRkMzg4Pl0gdHJ5X3RvX3dha2VfdXArMHg0Zi8weDZj
-MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgJnAtPnBpX2xvY2sgICAgICAgIDc3MDQxNDggICAgICAgICAgWzwwMDAw
-MDAwMGQ2YjRkMzg4Pl0gdHJ5X3RvX3dha2VfdXArMHg0Zi8weDZjMAoKLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4KCiAgICAgICAgICAgICAgICAgICAg
-ICAgICZ4cHJ0LT54cHRfbXV0ZXg6ICAgICAgIDY5MTU0NjMgICAgICAgIDY5NDg2NTkgICAgICAg
-ICAgIDAuMjggICAgICAgNDIwMDcuMDMgMjI2MDkxODE2NDkuNzkgICAgICAgIDMyNTMuNzUgICAg
-ICAxNzk1ODM4ODcgICAgICAxODAzNDQ2MDkgICAgICAgICAgIDUuMTQgICAgICAgNDIzMTkuNTkg
-MjAyOTI2MTg2NzIuMTIgICAgICAgICAxMTIuNTIKICAgICAgICAgICAgICAgICAgICAgICAgLS0t
-LS0tLS0tLS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAgICAmeHBydC0+eHB0X211dGV4ICAg
-ICAgICA2OTQ4NjU5ICAgICAgICAgIFs8MDAwMDAwMDBmN2MyMzg5Nj5dIHN2Y190Y3Bfc2VuZHRv
-KzB4NWYvMHgxZDAgW3N1bnJwY10KICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0t
-LS0tLQogICAgICAgICAgICAgICAgICAgICAgICAmeHBydC0+eHB0X211dGV4ICAgICAgICA2OTQ4
-NjU5ICAgICAgICAgIFs8MDAwMDAwMDBmN2MyMzg5Nj5dIHN2Y190Y3Bfc2VuZHRvKzB4NWYvMHgx
-ZDAgW3N1bnJwY10KCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICByY3Vfbm9kZV8xOiAgICAgICAz
-OTYyNTE5ICAgICAgICAzOTk1MTcyICAgICAgICAgICAwLjA4ICAgICAgICAgIDE2LjM2ICAgICA1
-MzE1MzQ4LjUyICAgICAgICAgICAxLjMzICAgICAgICA4Nzg1MTY0ICAgICAgIDE3Njc0MTYxICAg
-ICAgICAgICAwLjA3ICAgICAgICAgIDE1LjIyICAgIDExNzM3ODU0Ljk4ICAgICAgICAgICAwLjY2
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0KICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcmN1X25vZGVfMSAgICAgICAgICAgICAxNCAgICAgICAgICBbPDAwMDAw
-MDAwY2UxNTE3ZDI+XSByY3VfZ3BfaW5pdCsweDUzNS8weDgzMAogICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICByY3Vfbm9kZV8xICAgICAgICAzOTk0NTEwICAgICAgICAgIFs8MDAwMDAwMDBj
-YjI3MWZlOD5dIHJjdV9jb3JlKzB4YTkvMHgzOTAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgcmN1X25vZGVfMSAgICAgICAgICAgICAzNyAgICAgICAgICBbPDAwMDAwMDAwODI1MDVmZjg+
-XSByY3VfYWNjZWxlcmF0ZV9jYnNfdW5sb2NrZWQrMHg0NC8weGEwCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJjdV9ub2RlXzEgICAgICAgICAgICA1OTcgICAgICAgICAgWzwwMDAwMDAw
-MDZjZDBiNDg4Pl0gZm9yY2VfcXNfcm5wKzB4MTEyLzB4MzEwCiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmN1X25v
-ZGVfMSAgICAgICAgICAgICAxNSAgICAgICAgICBbPDAwMDAwMDAwZWYyZWE2Njc+XSByY3VfZ3Bf
-aW5pdCsweDFlZC8weDgzMAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICByY3Vfbm9kZV8x
-ICAgICAgICAgICAgIDg5ICAgICAgICAgIFs8MDAwMDAwMDA3ZGQ1ZWQyYz5dIHJjdV9ncF9jbGVh
-bnVwKzB4MWMyLzB4NWEwCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJjdV9ub2RlXzEg
-ICAgICAgIDMxNjY0NzUgICAgICAgICAgWzwwMDAwMDAwMGNiMjcxZmU4Pl0gcmN1X2NvcmUrMHhh
-OS8weDM5MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICByY3Vfbm9kZV8xICAgICAgICAg
-NDEwMjU0ICAgICAgICAgIFs8MDAwMDAwMDBjZTE1MTdkMj5dIHJjdV9ncF9pbml0KzB4NTM1LzB4
-ODMwCgouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLgoK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcnEtPl9fbG9jazogICAgICAgMjI5NDI4OCAg
-ICAgICAgMjM0ODc0MiAgICAgICAgICAgMC4wNiAgICAgICAgICA3NS4wMSAgICAgNDU5ODcwMy40
-NCAgICAgICAgICAgMS45NiAgICAgICAzMzEzNjkxOCAgICAgIDQ5MDIwNTIwOCAgICAgICAgICAg
-MC4wNiAgICAgICAgIDM1Ni43NSAgIDc3NTg1MTE4MS44NCAgICAgICAgICAgMS41OAogICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgJnJxLT5fX2xvY2sgICAgICAgIDIzNDg3NDIgICAgICAgICAgWzwwMDAwMDAwMDE0MDY2
-OWViPl0gcmF3X3NwaW5fcnFfbG9ja19uZXN0ZWQrMHgxZS8weDkwCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgLS0tLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcnEt
-Pl9fbG9jayAgICAgICAgMjM0ODc0MiAgICAgICAgICBbPDAwMDAwMDAwMTQwNjY5ZWI+XSByYXdf
-c3Bpbl9ycV9sb2NrX25lc3RlZCsweDFlLzB4OTAKCi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICZi
-YXNlLT5sb2NrOiAgICAgICAxODk0OTU1ICAgICAgICAxOTY2ODQyICAgICAgICAgICAwLjA3ICAg
-ICAgICAgIDE0LjYwICAgICAxMjE2MTAyLjkxICAgICAgICAgICAwLjYyICAgICAgNTQwMTQzNzk2
-ICAgICAxMTQxNzgyNTg5ICAgICAgICAgICAwLjA2ICAgICAgICAgMjEzLjkwICAgMzI1NzA5MTcx
-LjQ5ICAgICAgICAgICAwLjI5CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0t
-LS0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jayAgICAgICAgMTU4Nzg3
-NyAgICAgICAgICBbPDAwMDAwMDAwMWYyMDVlMGU+XSBsb2NrX3RpbWVyX2Jhc2UrMHg2MS8weDgw
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgICAzNjU1MTcg
-ICAgICAgICAgWzwwMDAwMDAwMDc5YzZjZjgzPl0gX19tb2RfdGltZXIrMHgxZTkvMHgzYzAKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jayAgICAgICAgICAgOTQzOSAgICAg
-ICAgICBbPDAwMDAwMDAwOWNiOGQ2NmY+XSBfX3J1bl90aW1lcnMucGFydC4wKzB4MzAvMHgyYzAK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmYmFzZS0+bG9jayAgICAgICAgICAgIDI3OCAg
-ICAgICAgICBbPDAwMDAwMDAwN2E5YzU2YTc+XSBnZXRfbmV4dF90aW1lcl9pbnRlcnJ1cHQrMHg0
-OS8weDI2MAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgIDE2NzE1NzIgICAgICAgICAg
-WzwwMDAwMDAwMDFmMjA1ZTBlPl0gbG9ja190aW1lcl9iYXNlKzB4NjEvMHg4MAogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICZiYXNlLT5sb2NrICAgICAgICAgMjc1NTgzICAgICAgICAgIFs8
-MDAwMDAwMDA3OWM2Y2Y4Mz5dIF9fbW9kX3RpbWVyKzB4MWU5LzB4M2MwCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgICAgMTgwNzggICAgICAgICAgWzwwMDAw
-MDAwMDljYjhkNjZmPl0gX19ydW5fdGltZXJzLnBhcnQuMCsweDMwLzB4MmMwCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgJmJhc2UtPmxvY2sgICAgICAgICAgICAgODEgICAgICAgICAgWzww
-MDAwMDAwMDdhOWM1NmE3Pl0gZ2V0X25leHRfdGltZXJfaW50ZXJydXB0KzB4NDkvMHgyNjAKCi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgo=
---000000000000fcb983064953fdc1--
 
