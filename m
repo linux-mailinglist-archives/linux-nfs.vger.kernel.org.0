@@ -1,455 +1,367 @@
-Return-Path: <linux-nfs+bounces-18546-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18547-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CKgsGT5eeWn+wgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18546-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 01:54:22 +0100
+	id iLqqIWyCeWmexQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18547-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 04:28:44 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B4509BC5E
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 01:54:22 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00C919CAD6
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 04:28:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 45A443006B50
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 00:54:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 27C41301981F
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 03:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 039E2221F26;
-	Wed, 28 Jan 2026 00:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3CA7242D95;
+	Wed, 28 Jan 2026 03:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H03TNcj6"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="hTIh/Cbh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GLeAki4f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57A421771C;
-	Wed, 28 Jan 2026 00:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209FA2528FD;
+	Wed, 28 Jan 2026 03:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769561647; cv=none; b=YhiV22NcatK4ZVOPyTmc+46Kvp0Q4gtekPpXKtSWZrPxLzsct/lNEOQru6mj2SRmTS+x4B84iIp39lQNYQBsbGmdwTFN6TleC9pCGGKikP0u/gkt6ClklOQcDS9soZyEKr0xrPzReEHg2PGWocLyy47mJ6RsUM7c8lksk7vWO/M=
+	t=1769570874; cv=none; b=aQoM+cQ8FhYSJQDiUCWs9i061L8/38t5RuMUEkRm8Z85DE4y+IgSEdiyrDfszKF8cudsBGR1GO4n5afrv7gvxeD3lwdK4Wbh3zTiTs0BsJOV28sLe9PUradJL34lr6fzGOaNQ1wwyM3P5tWvXIjvPw7oGXNXf8UNGJsfcfYpFnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769561647; c=relaxed/simple;
-	bh=MiugMA/WJlGxY3t+bSI0aJCvlsDy172jhqxQfCO4PoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CK4FkSUlqkNr2OPW8AN/Bu0YBAz6DHQyjLSIRo4szcVlKBtTE3LHZuqhGG5c8f4kSstgAZujT1X3GBaLRSKbD75G3GkP1e1tehvG2mn2S20FUtEX8/1LQSOlDxAoEkCyTMwOIuesbtqgBi/fBVr0Mg69m+VeM2wER4zxJxq1pXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H03TNcj6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B85C2BC9E;
-	Wed, 28 Jan 2026 00:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769561647;
-	bh=MiugMA/WJlGxY3t+bSI0aJCvlsDy172jhqxQfCO4PoM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H03TNcj6rTO47lvQRaiuIeWw5+2ZxDa1nPO3Y8kU6gpwsSsBIKkfr9pJ5t0auAfJg
-	 xuT95TIc553MGiP68V9yXkmTxF6meriCaFUWZJ8NxyF2PsgnFgqP0TDqnZVfVFW+oD
-	 wZJ0HV2jfRB+llsApHBr9aCMppml65V1FxbtYDg4axw415paqbohFjrnLnZRvyNCfx
-	 c94qmXIoSRgBbHOfwhk4kavFw7NlYKQ5W0juvYzQyykTjOGQSAQcRE4CEF/++BFctB
-	 dD9Wg/9PeRqNV8sbo9wAW9VP8of/WmV/m2xcZAV4ieqENcrWv+ZVQPGhzVMk8cwZW3
-	 acFTqAY/ksZyg==
-From: Chuck Lever <cel@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Cc: <linux-rdma@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v5 5/5] svcrdma: use bvec-based RDMA read/write API
-Date: Tue, 27 Jan 2026 19:54:00 -0500
-Message-ID: <20260128005400.25147-6-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20260128005400.25147-1-cel@kernel.org>
-References: <20260128005400.25147-1-cel@kernel.org>
+	s=arc-20240116; t=1769570874; c=relaxed/simple;
+	bh=V+XR6VP76w4DKm8upOwlgkXGNXhfrPYtWw9JnOBXAoI=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=tb0a4UnNXDWKiXXg3xxWy/V6XiPwPJObunfEJTqpFg9WDI8cwYNiWiezZpULNk7sIuofeALWXurMQa7mZwxXzCDCqrZdlZiyZ7RFa4ELBNegwrNG+x1iZ+vC5xzjz9h+q4z0a8WqD3P3KshVvI1rcEvqP3HT7uYkgkhMVCm1YM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=hTIh/Cbh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GLeAki4f; arc=none smtp.client-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfout.stl.internal (Postfix) with ESMTP id 158611D00114;
+	Tue, 27 Jan 2026 22:27:51 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Tue, 27 Jan 2026 22:27:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1769570870; x=1769657270; bh=qE6lXM8pKpo5gk3fRGouZrIVMYH4pyBU1RO
+	8HA3fqxY=; b=hTIh/CbhrKWNX51u3eM4w3zaJ4Jm2JWle/2TynxSGTBDSJcygkf
+	M4Fc1RS5duLdygaPdS6Me5De1Zx8SSvF+9bfK0Ux8FsLSmn+TbD9+mijO0tTjjL9
+	arUprazSHeXUZUHtg4PSuhaEqVpH7I0X5/fTZgOccvN75WhwzQEwtPXiqOLJQQ8G
+	IXE1A/gnEqBQE9uS+ruyQpYTR9QqihAkDPobn+LBteXi7eL2HxnJFx+2YU6XCCVd
+	+DC6GhJio1raKsdtAjGP7ch748nNtl4Ldo+4ne3b3cmXar1Sriyxz4pqjswaJ3UR
+	kTsnTmjI5/O+hw68UnXDfXZqwF0ieGyWtvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769570870; x=
+	1769657270; bh=qE6lXM8pKpo5gk3fRGouZrIVMYH4pyBU1RO8HA3fqxY=; b=G
+	LeAki4fsr1ppvnrCWDHi1tXKQ0lbPr3CuZVocliBIeZuyzmYP2BEAyNbf+OesjxK
+	TmcGkAzCeRY5gtuKCt4Tj23I9AgqwdoQF27j17L6aasF5MHGkexZ/IVF+X46sHWt
+	t5e2YF//GhIlwgodpCMwTfNV+lZtAaE/EHi7jx8DfE+5SHm5UaYgkYiLyyJsnjcV
+	/c9N4lnx8q/kCk2GrfuWWKnzz4exbST8A+4NlqePZqyM0VIuRoGvwQEO2g/WSW5k
+	2J6EYkWDp+e2WM9mV8uhcsJxKwEcCELDcwXfzQOvVRDbu2w0+oNVFG56AZvVraik
+	FYtzMsaEMMLLjLVsyJn1A==
+X-ME-Sender: <xms:NoJ5afOAedzHoIZxratogQjsIEntBXGy9sJUivmQ9tDsHvyxvo9kgg>
+    <xme:NoJ5aV0Mf5p05eueMEQcyuyB_SXs5H8IGROOjulpqtPAcK6nqz7gP9VlmJkrWAYzh
+    th54x0s1ctS5SiGfJwPdffBpfrIHC6QZaqdYe11rngJpoLHCJE>
+X-ME-Received: <xmr:NoJ5abTsusg0ymKuDc09UGnQE62iXW8YY0Xn2E6HPqJpGRQQWN3sgw5zupMMn0dQs3DhLNL0oa24QRil0rPVTWAD2jhguvpsWt-oZYsXmihM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduiedvvdelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
+    rhgtphhtthhopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlh
+    grhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvsghighhgvghrsheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheprghnnhgrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:NoJ5aYnrYXOlCxJeAwxZz6RKAw2dHBdh24egVZFD0F_N-BdlhZw8YA>
+    <xmx:NoJ5acOY69JrQctcgNEai3ka4h55hxWUXHCMiUdR3_sTlxPaAk-oVA>
+    <xmx:NoJ5aUh6AZpo3H2wpK2ToOGJfUGOl1sRzXobQCJkjh0R6IdzsXA41A>
+    <xmx:NoJ5aShXaFfrBrG0CnD-GeTcuMcjB9cZxwT56VIqt4S-eMwLXOVFYQ>
+    <xmx:NoJ5acydHdeS9Icdp1a-N218Kpfihs4UB01ia4j_OvWaYP3y3AHdDKuG>
+Feedback-ID: iab3e480c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 27 Jan 2026 22:27:47 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Benjamin Coddington" <bcodding@hammerspace.com>,
+ "Eric Biggers" <ebiggers@kernel.org>, "Rick Macklem" <rick.macklem@gmail.com>,
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+Subject: Re: [PATCH/RFC] nfsd: rate limit requests that result in -ESTALE from
+ the filesystem
+In-reply-to: <7d973130-d4a4-4f84-a7c0-a896e17339e1@app.fastmail.com>
+References: <176920977124.16766.1785815212991547773@noble.neil.brown.name>,
+ <7d973130-d4a4-4f84-a7c0-a896e17339e1@app.fastmail.com>
+Date: Wed, 28 Jan 2026 14:27:42 +1100
+Message-id: <176957086265.16766.1100004904619725538@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18546-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-18547-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FREEMAIL_CC(0.00)[oracle.com,kernel.org,hammerspace.com,gmail.com,vger.kernel.org];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0B4509BC5E
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,brown.name:replyto,brown.name:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ownmail.net:dkim]
+X-Rspamd-Queue-Id: 00C919CAD6
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 26 Jan 2026, Chuck Lever wrote:
+> On Fri, Jan 23, 2026, at 6:09 PM, NeilBrown wrote:
+> 
+> > From: NeilBrown <neil@brown.name>
+> > Subject: [PATCH] nfsd: rate limit requests that result in -ESTALE from the
+> >  filesystem
+> >
+> > NFS file handles typically contain a 32 bit generation number which is
+> > randomly generated by the filesystem when the inode (or inode number) is
+> > allocated.  This makes it hard to guess correct file handles.  Hard but
+> > not impossible on a low latency network with a high speed server.
+> 
+> Is this claim accurate for commonly-exported filesystems? Looking
+> at the kernel sources:
+> 
+>   - btrfs sets i_generation = trans->transid (a sequential counter
+>     starting from 1, incremented per transaction)
+>   - ext2 uses sbi->s_next_generation++ (sequential counter seeded
+>     randomly at mount)
+>   - ocfs2 uses osb->s_next_generation++ (sequential counter)
+> 
+> For btrfs in particular, the generation number contains zero bits of
+> randomness. An attacker who can estimate the filesystem age or
+> transaction count can predict valid generation numbers with high
+> probability. Does the "1 year" security estimate hold for btrfs
+> exports, or is that filesystem effectively unprotected by this
+> mitigation?
 
-Convert svcrdma to the bvec-based RDMA API introduced earlier in
-this series.
+Thanks for exploring this.  I had only checked ext4 and xfs and thought
+I saw a pattern.
+btrfs is certainly a weakness here - though it could be "fixed" I expect.
 
-The bvec-based RDMA API eliminates the intermediate scatterlist
-conversion step, allowing direct DMA mapping from bio_vec arrays.
-This simplifies the svc_rdma_rw_ctxt structure by removing the
-chained SG table management.
+> 
+> 
+> > Filehandles already contain 32 bits of randomness.
+> 
+> This appears true for ext4, f2fs, XFS v3+, and tmpfs (which use
+> get_random_u32()), but not for btrfs, ext2, or ocfs2 as noted above.
+> 
+> Additionally, NFS re-exports (fs/nfs/export.c) use no generation number
+> at all. The nfs_encode_fh() function embeds the backing server's
+> filehandle verbatim rather than generating a local generation number.
+> Protection depends entirely on what the backing NFS server uses. If
+> someone re-exports a btrfs-backed NFS mount, the sequential transaction
+> IDs on the backing server provide minimal protection.
 
-The structure retains an inline array approach similar to the
-previous scatterlist implementation: an inline bvec array sized
-to max_send_sge handles most I/O operations without additional
-allocation. Larger requests fall back to dynamic allocation.
-This preserves the allocation-free fast path for typical NFS
-operations while supporting arbitrarily large transfers.
+I think we would have to expect the backing server to provide any
+protection that it needs.  It is better placed than an intermediate
+server, not matter what sort of protection we choose.
 
-The bvec API handles all device types internally, including iWARP
-devices which require memory registration. No explicit fallback
-path is needed.
+> 
+> We can't legitimately extend your cryptanalysis to non-Linux servers
+> that back re-exported NFS mounts.
+> 
+> 
+> > The only known attack methodology is to guess the inode number of a file
+> > of interest, then iterate over all possible generation numbers.
+> 
+> Is generation number brute-forcing the optimal attack? Inode numbers
+> are typically sequential and the valid range is much smaller than 2^32.
+> Could an attacker first enumerate valid inode numbers (which also
+> triggers ESTALE and the rate limit), then brute-force the generation
+> for interesting inodes? The rate limit slows both phases equally, but
+> inode enumeration requires far fewer guesses.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 155 +++++++++++++++++-------------
- 1 file changed, 86 insertions(+), 69 deletions(-)
+How would they enumeration valid inode numbers?  and how would
+"interesting" inode numbers be determined?
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 310de7a80be5..4ec2f9ae06aa 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -5,6 +5,8 @@
-  * Use the core R/W API to move RPC-over-RDMA Read and Write chunks.
-  */
- 
-+#include <linux/bvec.h>
-+#include <linux/overflow.h>
- #include <rdma/rw.h>
- 
- #include <linux/sunrpc/xdr.h>
-@@ -20,30 +22,33 @@ static void svc_rdma_wc_read_done(struct ib_cq *cq, struct ib_wc *wc);
- /* Each R/W context contains state for one chain of RDMA Read or
-  * Write Work Requests.
-  *
-- * Each WR chain handles a single contiguous server-side buffer,
-- * because scatterlist entries after the first have to start on
-- * page alignment. xdr_buf iovecs cannot guarantee alignment.
-+ * Each WR chain handles a single contiguous server-side buffer.
-+ * - each xdr_buf iovec is a single contiguous buffer
-+ * - the xdr_buf pages array is a single contiguous buffer because the
-+ *   second through the last element always start on a page boundary
-  *
-  * Each WR chain handles only one R_key. Each RPC-over-RDMA segment
-  * from a client may contain a unique R_key, so each WR chain moves
-  * up to one segment at a time.
-  *
-- * The scatterlist makes this data structure over 4KB in size. To
-- * make it less likely to fail, and to handle the allocation for
-- * smaller I/O requests without disabling bottom-halves, these
-- * contexts are created on demand, but cached and reused until the
-- * controlling svcxprt_rdma is destroyed.
-+ * The inline bvec array is sized to handle most I/O requests without
-+ * additional allocation. Larger requests fall back to dynamic allocation.
-+ * These contexts are created on demand, but cached and reused until
-+ * the controlling svcxprt_rdma is destroyed.
-  */
- struct svc_rdma_rw_ctxt {
- 	struct llist_node	rw_node;
- 	struct list_head	rw_list;
- 	struct rdma_rw_ctx	rw_ctx;
- 	unsigned int		rw_nents;
--	unsigned int		rw_first_sgl_nents;
--	struct sg_table		rw_sg_table;
--	struct scatterlist	rw_first_sgl[];
-+	unsigned int		rw_first_bvec_nents;
-+	struct bio_vec		*rw_bvec;
-+	struct bio_vec		rw_first_bvec[];
- };
- 
-+static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
-+				 struct svc_rdma_rw_ctxt *ctxt);
-+
- static inline struct svc_rdma_rw_ctxt *
- svc_rdma_next_ctxt(struct list_head *list)
- {
-@@ -52,10 +57,10 @@ svc_rdma_next_ctxt(struct list_head *list)
- }
- 
- static struct svc_rdma_rw_ctxt *
--svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
-+svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int nr_bvec)
- {
- 	struct ib_device *dev = rdma->sc_cm_id->device;
--	unsigned int first_sgl_nents = dev->attrs.max_send_sge;
-+	unsigned int first_bvec_nents = dev->attrs.max_send_sge;
- 	struct svc_rdma_rw_ctxt *ctxt;
- 	struct llist_node *node;
- 
-@@ -65,33 +70,44 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- 	if (node) {
- 		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
- 	} else {
--		ctxt = kmalloc_node(struct_size(ctxt, rw_first_sgl, first_sgl_nents),
-+		ctxt = kmalloc_node(struct_size(ctxt, rw_first_bvec,
-+						first_bvec_nents),
- 				    GFP_KERNEL, ibdev_to_node(dev));
- 		if (!ctxt)
- 			goto out_noctx;
- 
- 		INIT_LIST_HEAD(&ctxt->rw_list);
--		ctxt->rw_first_sgl_nents = first_sgl_nents;
-+		ctxt->rw_first_bvec_nents = first_bvec_nents;
- 	}
- 
--	ctxt->rw_sg_table.sgl = ctxt->rw_first_sgl;
--	if (sg_alloc_table_chained(&ctxt->rw_sg_table, sges,
--				   ctxt->rw_sg_table.sgl,
--				   first_sgl_nents))
--		goto out_free;
-+	if (nr_bvec <= ctxt->rw_first_bvec_nents) {
-+		ctxt->rw_bvec = ctxt->rw_first_bvec;
-+	} else {
-+		ctxt->rw_bvec = kmalloc_array_node(nr_bvec,
-+						   sizeof(*ctxt->rw_bvec),
-+						   GFP_KERNEL,
-+						   ibdev_to_node(dev));
-+		if (!ctxt->rw_bvec)
-+			goto out_free;
-+	}
- 	return ctxt;
- 
- out_free:
--	kfree(ctxt);
-+	/* Return cached contexts to cache; free freshly allocated ones */
-+	if (node)
-+		svc_rdma_put_rw_ctxt(rdma, ctxt);
-+	else
-+		kfree(ctxt);
- out_noctx:
--	trace_svcrdma_rwctx_empty(rdma, sges);
-+	trace_svcrdma_rwctx_empty(rdma, nr_bvec);
- 	return NULL;
- }
- 
- static void __svc_rdma_put_rw_ctxt(struct svc_rdma_rw_ctxt *ctxt,
- 				   struct llist_head *list)
- {
--	sg_free_table_chained(&ctxt->rw_sg_table, ctxt->rw_first_sgl_nents);
-+	if (ctxt->rw_bvec != ctxt->rw_first_bvec)
-+		kfree(ctxt->rw_bvec);
- 	llist_add(&ctxt->rw_node, list);
- }
- 
-@@ -123,6 +139,7 @@ void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
-  * @ctxt: R/W context to prepare
-  * @offset: RDMA offset
-  * @handle: RDMA tag/handle
-+ * @length: total number of bytes in the bvec array
-  * @direction: I/O direction
-  *
-  * Returns on success, the number of WQEs that will be needed
-@@ -130,14 +147,18 @@ void svc_rdma_destroy_rw_ctxts(struct svcxprt_rdma *rdma)
-  */
- static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
- 				struct svc_rdma_rw_ctxt *ctxt,
--				u64 offset, u32 handle,
-+				u64 offset, u32 handle, unsigned int length,
- 				enum dma_data_direction direction)
- {
-+	struct bvec_iter iter = {
-+		.bi_size = length,
-+	};
- 	int ret;
- 
--	ret = rdma_rw_ctx_init(&ctxt->rw_ctx, rdma->sc_qp, rdma->sc_port_num,
--			       ctxt->rw_sg_table.sgl, ctxt->rw_nents,
--			       0, offset, handle, direction);
-+	ret = rdma_rw_ctx_init_bvec(&ctxt->rw_ctx, rdma->sc_qp,
-+				    rdma->sc_port_num,
-+				    ctxt->rw_bvec, ctxt->rw_nents,
-+				    iter, offset, handle, direction);
- 	if (unlikely(ret < 0)) {
- 		trace_svcrdma_dma_map_rw_err(rdma, offset, handle,
- 					     ctxt->rw_nents, ret);
-@@ -175,7 +196,6 @@ void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- {
- 	struct llist_node *first, *last;
- 	struct svc_rdma_rw_ctxt *ctxt;
--	LLIST_HEAD(free);
- 
- 	trace_svcrdma_cc_release(&cc->cc_cid, cc->cc_sqecount);
- 
-@@ -183,10 +203,11 @@ void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- 	while ((ctxt = svc_rdma_next_ctxt(&cc->cc_rwctxts)) != NULL) {
- 		list_del(&ctxt->rw_list);
- 
--		rdma_rw_ctx_destroy(&ctxt->rw_ctx, rdma->sc_qp,
--				    rdma->sc_port_num, ctxt->rw_sg_table.sgl,
--				    ctxt->rw_nents, dir);
--		__svc_rdma_put_rw_ctxt(ctxt, &free);
-+		rdma_rw_ctx_destroy_bvec(&ctxt->rw_ctx, rdma->sc_qp,
-+					 rdma->sc_port_num,
-+					 ctxt->rw_bvec, ctxt->rw_nents, dir);
-+		if (ctxt->rw_bvec != ctxt->rw_first_bvec)
-+			kfree(ctxt->rw_bvec);
- 
- 		ctxt->rw_node.next = first;
- 		first = &ctxt->rw_node;
-@@ -414,29 +435,26 @@ static int svc_rdma_post_chunk_ctxt(struct svcxprt_rdma *rdma,
- 	return -ENOTCONN;
- }
- 
--/* Build and DMA-map an SGL that covers one kvec in an xdr_buf
-+/* Build a bvec that covers one kvec in an xdr_buf.
-  */
--static void svc_rdma_vec_to_sg(struct svc_rdma_write_info *info,
--			       unsigned int len,
--			       struct svc_rdma_rw_ctxt *ctxt)
-+static void svc_rdma_vec_to_bvec(struct svc_rdma_write_info *info,
-+				 unsigned int len,
-+				 struct svc_rdma_rw_ctxt *ctxt)
- {
--	struct scatterlist *sg = ctxt->rw_sg_table.sgl;
--
--	sg_set_buf(&sg[0], info->wi_base, len);
-+	bvec_set_virt(&ctxt->rw_bvec[0], info->wi_base, len);
- 	info->wi_base += len;
- 
- 	ctxt->rw_nents = 1;
- }
- 
--/* Build and DMA-map an SGL that covers part of an xdr_buf's pagelist.
-+/* Build a bvec array that covers part of an xdr_buf's pagelist.
-  */
--static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
--				    unsigned int remaining,
--				    struct svc_rdma_rw_ctxt *ctxt)
-+static void svc_rdma_pagelist_to_bvec(struct svc_rdma_write_info *info,
-+				      unsigned int remaining,
-+				      struct svc_rdma_rw_ctxt *ctxt)
- {
--	unsigned int sge_no, sge_bytes, page_off, page_no;
-+	unsigned int bvec_idx, bvec_len, page_off, page_no;
- 	const struct xdr_buf *xdr = info->wi_xdr;
--	struct scatterlist *sg;
- 	struct page **page;
- 
- 	page_off = info->wi_next_off + xdr->page_base;
-@@ -444,21 +462,19 @@ static void svc_rdma_pagelist_to_sg(struct svc_rdma_write_info *info,
- 	page_off = offset_in_page(page_off);
- 	page = xdr->pages + page_no;
- 	info->wi_next_off += remaining;
--	sg = ctxt->rw_sg_table.sgl;
--	sge_no = 0;
-+	bvec_idx = 0;
- 	do {
--		sge_bytes = min_t(unsigned int, remaining,
--				  PAGE_SIZE - page_off);
--		sg_set_page(sg, *page, sge_bytes, page_off);
--
--		remaining -= sge_bytes;
--		sg = sg_next(sg);
-+		bvec_len = min_t(unsigned int, remaining,
-+				 PAGE_SIZE - page_off);
-+		bvec_set_page(&ctxt->rw_bvec[bvec_idx], *page, bvec_len,
-+			      page_off);
-+		remaining -= bvec_len;
- 		page_off = 0;
--		sge_no++;
-+		bvec_idx++;
- 		page++;
- 	} while (remaining);
- 
--	ctxt->rw_nents = sge_no;
-+	ctxt->rw_nents = bvec_idx;
- }
- 
- /* Construct RDMA Write WRs to send a portion of an xdr_buf containing
-@@ -496,7 +512,7 @@ svc_rdma_build_writes(struct svc_rdma_write_info *info,
- 		constructor(info, write_len, ctxt);
- 		offset = seg->rs_offset + info->wi_seg_off;
- 		ret = svc_rdma_rw_ctx_init(rdma, ctxt, offset, seg->rs_handle,
--					   DMA_TO_DEVICE);
-+					   write_len, DMA_TO_DEVICE);
- 		if (ret < 0)
- 			return -EIO;
- 		percpu_counter_inc(&svcrdma_stat_write);
-@@ -535,7 +551,7 @@ static int svc_rdma_iov_write(struct svc_rdma_write_info *info,
- 			      const struct kvec *iov)
- {
- 	info->wi_base = iov->iov_base;
--	return svc_rdma_build_writes(info, svc_rdma_vec_to_sg,
-+	return svc_rdma_build_writes(info, svc_rdma_vec_to_bvec,
- 				     iov->iov_len);
- }
- 
-@@ -559,7 +575,7 @@ static int svc_rdma_pages_write(struct svc_rdma_write_info *info,
- {
- 	info->wi_xdr = xdr;
- 	info->wi_next_off = offset - xdr->head[0].iov_len;
--	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_sg,
-+	return svc_rdma_build_writes(info, svc_rdma_pagelist_to_bvec,
- 				     length);
- }
- 
-@@ -734,29 +750,29 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- {
- 	struct svcxprt_rdma *rdma = svc_rdma_rqst_rdma(rqstp);
- 	struct svc_rdma_chunk_ctxt *cc = &head->rc_cc;
--	unsigned int sge_no, seg_len, len;
-+	unsigned int bvec_idx, nr_bvec, seg_len, len, total;
- 	struct svc_rdma_rw_ctxt *ctxt;
--	struct scatterlist *sg;
- 	int ret;
- 
- 	len = segment->rs_length;
--	sge_no = PAGE_ALIGN(head->rc_pageoff + len) >> PAGE_SHIFT;
--	ctxt = svc_rdma_get_rw_ctxt(rdma, sge_no);
-+	if (check_add_overflow(head->rc_pageoff, len, &total))
-+		return -EINVAL;
-+	nr_bvec = PAGE_ALIGN(total) >> PAGE_SHIFT;
-+	ctxt = svc_rdma_get_rw_ctxt(rdma, nr_bvec);
- 	if (!ctxt)
- 		return -ENOMEM;
--	ctxt->rw_nents = sge_no;
-+	ctxt->rw_nents = nr_bvec;
- 
--	sg = ctxt->rw_sg_table.sgl;
--	for (sge_no = 0; sge_no < ctxt->rw_nents; sge_no++) {
-+	for (bvec_idx = 0; bvec_idx < ctxt->rw_nents; bvec_idx++) {
- 		seg_len = min_t(unsigned int, len,
- 				PAGE_SIZE - head->rc_pageoff);
- 
- 		if (!head->rc_pageoff)
- 			head->rc_page_count++;
- 
--		sg_set_page(sg, rqstp->rq_pages[head->rc_curpage],
--			    seg_len, head->rc_pageoff);
--		sg = sg_next(sg);
-+		bvec_set_page(&ctxt->rw_bvec[bvec_idx],
-+			      rqstp->rq_pages[head->rc_curpage],
-+			      seg_len, head->rc_pageoff);
- 
- 		head->rc_pageoff += seg_len;
- 		if (head->rc_pageoff == PAGE_SIZE) {
-@@ -770,7 +786,8 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- 	}
- 
- 	ret = svc_rdma_rw_ctx_init(rdma, ctxt, segment->rs_offset,
--				   segment->rs_handle, DMA_FROM_DEVICE);
-+				   segment->rs_handle, segment->rs_length,
-+				   DMA_FROM_DEVICE);
- 	if (ret < 0)
- 		return -EIO;
- 	percpu_counter_inc(&svcrdma_stat_read);
--- 
-2.49.0
+The fact that an attacking client cannot know what inode numbers would
+be interesting would, I think, add a few bits to the guessing required.
+It could certainly guess something about what sort of numbers to try, as
+the assumption is that it *does* have access to some files.  So it
+wouldn't make the search *much* harder, but would increase it from a
+year to a decade.
+
+> 
+> 
+> > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> > index 9fa600602658..f7229d1f9d86 100644
+> > --- a/fs/nfsd/netns.h
+> > +++ b/fs/nfsd/netns.h
+> > @@ -219,6 +219,8 @@ struct nfsd_net {
+> >  	/* last time an admin-revoke happened for NFSv4.0 */
+> >  	time64_t		nfs40_last_revoke;
+> > 
+> > +	struct mutex		estale_rate_limit_mutex;
+> > +
+> >  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+> >  	/* Local clients to be invalidated when net is shut down */
+> >  	spinlock_t              local_clients_lock;
+> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > index 7587c64bf26d..55d25d9b414f 100644
+> > --- a/fs/nfsd/nfsctl.c
+> > +++ b/fs/nfsd/nfsctl.c
+> > @@ -2198,6 +2198,7 @@ static __net_init int nfsd_net_init(struct net 
+> > *net)
+> >  	nfsd4_init_leases_net(nn);
+> >  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+> >  	seqlock_init(&nn->writeverf_lock);
+> > +	mutex_init(&nn->estale_rate_limit_mutex);
+> >  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+> >  	spin_lock_init(&nn->local_clients_lock);
+> >  	INIT_LIST_HEAD(&nn->local_clients);
+> > diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> > index ed85dd43da18..7032f65fe21a 100644
+> > --- a/fs/nfsd/nfsfh.c
+> > +++ b/fs/nfsd/nfsfh.c
+> > @@ -244,6 +244,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst 
+> > *rqstp, struct net *net,
+> >  						data_left, fileid_type, 0,
+> >  						nfsd_acceptable, exp);
+> >  		if (IS_ERR_OR_NULL(dentry)) {
+> > +			struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> > +
+> >  			trace_nfsd_set_fh_dentry_badhandle(rqstp, fhp,
+> >  					dentry ?  PTR_ERR(dentry) : -ESTALE);
+> >  			switch (PTR_ERR(dentry)) {
+> > @@ -252,6 +254,19 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst 
+> > *rqstp, struct net *net,
+> >  				break;
+> >  			default:
+> >  				dentry = ERR_PTR(-ESTALE);
+> > +				/* We limit ESTALE returns to 1 every
+> > +				 * 15 milliseconds (across all threads) to
+> > +				 * prevent a client from guessing the
+> > +				 * correct (32 bit) generation number
+> > +				 * for an given inode in significantly
+> > +				 * less than 1 year.  This ensures clients
+> > +				 * can only access files for which they
+> > +				 * are allowed to access a path from the
+> > +				 * exported root.
+> > +				 */
+> > +				mutex_lock(&nn->estale_rate_limit_mutex);
+> > +				msleep(15);
+> > +				mutex_unlock(&nn->estale_rate_limit_mutex);
+> 
+> The global mutex serializes all ESTALE errors across all nfsd threads
+> in the network namespace. The impact on legitimate workloads must be
+> carefully considered.
+> 
+> For example, during file deletion or migration, multiple clients may
+> encounter genuinely stale file handles simultaneously. With N
+> concurrent ESTALE errors, the total delay becomes N * 15ms as each
+> thread waits for the mutex. With 100 concurrent stale handle accesses,
+> this adds 1.5 seconds of accumulated latency.
+
+Deleting a file that clients might be using is always problematic.  This
+certainly does make it more problematic.  1.5 seconds isn't good, but
+for an unusual event it shouldn't be a big problem.
+
+> 
+> Additionally, an attacker does not need to successfully guess file
+> handles to cause harm. Simply sending requests with invalid file
+> handles at a modest rate (e.g., 10/sec) can monopolize 15% of the
+> mutex time, slowing all legitimate ESTALE processing on the server.
+
+Remember that that attacker already has access to the server and is
+permitted to send access some files.  Causing "some harm" is a risk you
+have to take when you give anyone any access to your server.
+The goal here isn't to prevent any harm, it is to prevent access to
+sensitive data.
+
+> 
+> Would per-client rate limiting (e.g., a token bucket per client IP)
+> avoid penalizing legitimate operations while still throttling attacks?
+
+Per svc_export or per client-IP would be OK.  An attacker with access to
+multiple IP addresses could find a gen number is less than 1 year, but
+with added added attack detection it would still be impractical I think.
+
+> 
+> Or, as Jeff suggested, narrowing the blast radius to per-inode
+> limiting?
+
+per-inode requires help from each fs - not impossible but awkward.
+And if 100 client are all accessing the one inode which is removed, you
+still get the 1.5 second delay for that inode.
+
+> 
+> Lastly, we've spilled a large number of electrons trying to remove
+> needless delays of nfsd threads (eg, waiting synchronously for NFS
+> clients to respond to NFSv4 callbacks) because a malicious client
+> can use this delay as a timing attack to determine the (maximum)
+> number of available nfsd threads and simply keep them all busy,
+> preventing the server from doing useful work.
+> 
+
+Again, this is client which is allowed to access at least one export.
+Such a client can problem figure out how many threads you have running
+already.
+
+> 
+> >  			}
+> >  		}
+> >  	}
+> 
+> I think given the gaps in covering exports of first-tier file
+> systems such as btrfs, the unknowns in protecting re-exported
+> NFS mounts, and the increase in the surface of timing attacks,
+> this approach needs significant refinement before I would feel
+> comfortable with it.
+
+Thanks a lot for the thoughtful review.
+
+In terms of defence-in-depth I think this is still a good approach.
+Maybe I'll resubmit with some fine tuning and better explanations.  I
+see how time works out.
+
+Thanks,
+NeilBrown
 
 
