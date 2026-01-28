@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18544-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18545-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kIb1ND9eeWn+wgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18544-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 01:54:23 +0100
+	id +OKpOTpeeWn+wgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18545-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 01:54:18 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0E669BC6C
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 01:54:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D12219BC4F
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 01:54:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 401CE30095C3
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 00:54:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C5315300DEE1
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 00:54:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75FC21D5AF;
-	Wed, 28 Jan 2026 00:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50BC9221277;
+	Wed, 28 Jan 2026 00:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HaOL8BbR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRO//2/4"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53951FECCD;
-	Wed, 28 Jan 2026 00:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2F122068A;
+	Wed, 28 Jan 2026 00:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769561646; cv=none; b=T6ocFOzRUpto0FmbKUbqbR0dw7S/5GQOhv9H3qMqHijxBAuLrlweEr0N7pomTV3gBdZVZKL9a/ZUmaRQRrMFgK/ecTaSWgsEpcE9rY3mG9gr140R3QjRr4UBna10hlnD1Sc0q07aymPMzeHkfNkAlXG20T2Gwkxl5ZiNdqp3c74=
+	t=1769561647; cv=none; b=uZmOp5r8FhsRCjjKu6NUA33mEbkpt8affsEn9xzACeTVX+Jo73u0ZymXfqtG9C8XUlGSY1wmeXXcZepuHFCKcQ0gM159nkA3MQ0uAPCK+nPgPqkM2hHIwD84Ks2G0Iq+n3f1ze+z/l3Z7CUnEIkXyTnUad9ZDkHjeRXRObuGK4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769561646; c=relaxed/simple;
-	bh=P6BWSy5B1emluoa2Q8PyFunu+KfrkTt9lNO65WKdz8o=;
+	s=arc-20240116; t=1769561647; c=relaxed/simple;
+	bh=uMm4tDV+S7A6KF8OYG0+QEpLtdpGZUsIWulLmR44pVU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=brMNTx2UIp8zPCVDRPVTnDCzelhC4uwTELOXFV3JrnYXMiXzLRjGFnx+KcQVYHO1AjO3MLmF6YjTQFpjxxrtO292VH/ugyFwW7pxcjpyx+MX+pOlbeG44XswC/HQzA8gHVPz1F1pGX9uBh/bC2ojRaK5DArRX3pOoV+GatzSGr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HaOL8BbR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6CF8C116D0;
-	Wed, 28 Jan 2026 00:54:05 +0000 (UTC)
+	 MIME-Version; b=HBeekeV0P+yEsXKGWxERF0HMoe9PqRtmcm/GNEzxuD1EJY3gNqrqsJq0aWTxxjRDAoGiAop1BwyqNUwG1lmDdfMaE6orXQJBX75rMxJ3L9e7mRaW6CTyZmhq2sRuBzR56koh3Q+H9E4BDTrK8Hoc0iCD/e1hFTHmjT4dht9Pd0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRO//2/4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6810AC116C6;
+	Wed, 28 Jan 2026 00:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1769561646;
-	bh=P6BWSy5B1emluoa2Q8PyFunu+KfrkTt9lNO65WKdz8o=;
+	bh=uMm4tDV+S7A6KF8OYG0+QEpLtdpGZUsIWulLmR44pVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HaOL8BbR2ImM/fNAdVT6Rdlw57PcHHkxP4SI77lp/gU1v9VVJN1GzPWw4RLwqKNUh
-	 eNAYX7y25uBPM0XPLibJIjYBw2mgA8Fb/UTu7EKtenFBMgfnBHZ4Ov+T6fLmCbFjIl
-	 sbH1xCJfoGMSoqARkdwyJINELHAoS9bcSh1FSTPkbXwfeP+41F+pS9ntCoRebi8tTu
-	 c61/MclLQL1lJ71+GnQIHFKoW5m+m6xU5Ltg0bNep4IJP2RFTv1bKyeXKRVixDsy0B
-	 7Dvp43BGk1NU4veN0UndXXWLEnfAzlrY09NRE4VciPTUWAsUv/j6peUL/dA+Ew+1lW
-	 5rd1WxTO9YZPA==
+	b=VRO//2/48dnfiPYYQvWIJKXGFnT/9wysAzWG702o1tsm73pk2GvYXdrUFG+0vrf+t
+	 ejIIKGjaMi1uX2QADy2oiIDhzpV+efE3+tsRk0lThJjAIcK0toLzQTAwg9fYrRiV5i
+	 QGlZz/TX2sTdzlw+hXSFujyv+qy7xBXvLNb1Ej3CoP9hiJS2YOG3ggCauhDIWLUhFU
+	 MTSTebZvOZQ2yup3cPH13vChHLcPJAJ+GbFRra6NK8nraxRgXVOVHcPNRJ7/OjKs1S
+	 41/A3WVvPg7UcfZN/AyidKmXjKfM8QqnkszLO3Qrx9mUQfXDYqZvwxA1KZiU61VZma
+	 5fTHD3U27qUJQ==
 From: Chuck Lever <cel@kernel.org>
 To: Leon Romanovsky <leon@kernel.org>,
 	Christoph Hellwig <hch@lst.de>,
@@ -51,9 +51,9 @@ To: Leon Romanovsky <leon@kernel.org>,
 Cc: <linux-rdma@vger.kernel.org>,
 	<linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v5 3/5] RDMA/core: add MR support for bvec-based RDMA operations
-Date: Tue, 27 Jan 2026 19:53:58 -0500
-Message-ID: <20260128005400.25147-4-cel@kernel.org>
+Subject: [PATCH v5 4/5] RDMA/core: add rdma_rw_max_sge() helper for SQ sizing
+Date: Tue, 27 Jan 2026 19:53:59 -0500
+Message-ID: <20260128005400.25147-5-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20260128005400.25147-1-cel@kernel.org>
 References: <20260128005400.25147-1-cel@kernel.org>
@@ -70,13 +70,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18544-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18545-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -90,311 +90,156 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: F0E669BC6C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,lst.de:email]
+X-Rspamd-Queue-Id: D12219BC4F
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The bvec-based RDMA API currently returns -EOPNOTSUPP when Memory
-Region registration is required. This prevents iWARP devices from
-using the bvec path, since iWARP requires MR registration for RDMA
-READ operations. The force_mr debug parameter is also unusable with
-bvec input.
+svc_rdma_accept() computes sc_sq_depth as the sum of rq_depth and the
+number of rdma_rw contexts (ctxts). This value is used to allocate the
+Send CQ and to initialize the sc_sq_avail credit pool.
 
-Add rdma_rw_init_mr_wrs_bvec() to handle MR registration for bvec
-arrays. The approach creates a synthetic scatterlist populated with
-DMA addresses from the bvecs, then reuses the existing ib_map_mr_sg()
-infrastructure. This avoids driver changes while keeping the
-implementation small.
+However, when the device uses memory registration for RDMA operations,
+rdma_rw_init_qp() inflates the QP's max_send_wr by a factor of three
+per context to account for REG and INV work requests. The Send CQ and
+credit pool remain sized for only one work request per context,
+causing Send Queue exhaustion under heavy NFS WRITE workloads.
 
-The synthetic scatterlist is stored in the rdma_rw_ctx for cleanup.
-On destroy, the MRs are returned to the pool and the bvec DMA
-mappings are released using the stored addresses.
+Introduce rdma_rw_max_sge() to compute the actual number of Send Queue
+entries required for a given number of rdma_rw contexts. Upper layer
+protocols call this helper before creating a Queue Pair so that their
+Send CQs and credit accounting match the QP's true capacity.
 
+Update svc_rdma_accept() to use rdma_rw_max_sge() when computing
+sc_sq_depth, ensuring the credit pool reflects the work requests
+that rdma_rw_init_qp() will reserve.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 00bd1439f464 ("RDMA/rw: Support threshold for registration vs scattering to local pages")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- drivers/infiniband/core/rw.c | 189 ++++++++++++++++++++++++++++-------
- include/rdma/rw.h            |   1 +
- 2 files changed, 154 insertions(+), 36 deletions(-)
+ drivers/infiniband/core/rw.c             | 53 +++++++++++++++++-------
+ include/rdma/rw.h                        |  2 +
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |  8 +++-
+ 3 files changed, 46 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
-index c2fc8cba972e..2c148457b589 100644
+index 2c148457b589..518095d82d5d 100644
 --- a/drivers/infiniband/core/rw.c
 +++ b/drivers/infiniband/core/rw.c
-@@ -122,6 +122,36 @@ static int rdma_rw_init_one_mr(struct ib_qp *qp, u32 port_num,
- 	return count;
+@@ -1071,34 +1071,57 @@ unsigned int rdma_rw_mr_factor(struct ib_device *device, u32 port_num,
  }
+ EXPORT_SYMBOL(rdma_rw_mr_factor);
  
-+static int rdma_rw_init_reg_wr(struct rdma_rw_reg_ctx *reg,
-+		struct rdma_rw_reg_ctx *prev, struct ib_qp *qp, u32 port_num,
-+		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
++/**
++ * rdma_rw_max_send_wr - compute max Send WRs needed for RDMA R/W contexts
++ * @dev: RDMA device
++ * @port_num: port number
++ * @max_rdma_ctxs: number of rdma_rw_ctx structures
++ * @create_flags: QP create flags (pass IB_QP_CREATE_INTEGRITY_EN if
++ *                data integrity will be enabled on the QP)
++ *
++ * Returns the total number of Send Queue entries needed for
++ * @max_rdma_ctxs. The result accounts for memory registration and
++ * invalidation work requests when the device requires them.
++ *
++ * ULPs use this to size Send Queues and Send CQs before creating a
++ * Queue Pair.
++ */
++unsigned int rdma_rw_max_send_wr(struct ib_device *dev, u32 port_num,
++				 unsigned int max_rdma_ctxs, u32 create_flags)
 +{
-+	if (prev) {
-+		if (reg->mr->need_inval)
-+			prev->wr.wr.next = &reg->inv_wr;
-+		else
-+			prev->wr.wr.next = &reg->reg_wr.wr;
-+	}
++	unsigned int factor = 1;
++	unsigned int result;
 +
-+	reg->reg_wr.wr.next = &reg->wr.wr;
++	if (create_flags & IB_QP_CREATE_INTEGRITY_EN ||
++	    rdma_rw_can_use_mr(dev, port_num))
++		factor += 2;	/* reg + inv */
 +
-+	reg->wr.wr.sg_list = &reg->sge;
-+	reg->wr.wr.num_sge = 1;
-+	reg->wr.remote_addr = remote_addr;
-+	reg->wr.rkey = rkey;
-+
-+	if (dir == DMA_TO_DEVICE) {
-+		reg->wr.wr.opcode = IB_WR_RDMA_WRITE;
-+	} else if (!rdma_cap_read_inv(qp->device, port_num)) {
-+		reg->wr.wr.opcode = IB_WR_RDMA_READ;
-+	} else {
-+		reg->wr.wr.opcode = IB_WR_RDMA_READ_WITH_INV;
-+		reg->wr.wr.ex.invalidate_rkey = reg->mr->lkey;
-+	}
-+
-+	return 1;
++	if (check_mul_overflow(factor, max_rdma_ctxs, &result))
++		return UINT_MAX;
++	return result;
 +}
++EXPORT_SYMBOL(rdma_rw_max_send_wr);
 +
- static int rdma_rw_init_mr_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 		u32 port_num, struct scatterlist *sg, u32 sg_cnt, u32 offset,
- 		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
-@@ -147,30 +177,8 @@ static int rdma_rw_init_mr_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 		if (ret < 0)
- 			goto out_free;
- 		count += ret;
--
--		if (prev) {
--			if (reg->mr->need_inval)
--				prev->wr.wr.next = &reg->inv_wr;
--			else
--				prev->wr.wr.next = &reg->reg_wr.wr;
--		}
--
--		reg->reg_wr.wr.next = &reg->wr.wr;
--
--		reg->wr.wr.sg_list = &reg->sge;
--		reg->wr.wr.num_sge = 1;
--		reg->wr.remote_addr = remote_addr;
--		reg->wr.rkey = rkey;
--		if (dir == DMA_TO_DEVICE) {
--			reg->wr.wr.opcode = IB_WR_RDMA_WRITE;
--		} else if (!rdma_cap_read_inv(qp->device, port_num)) {
--			reg->wr.wr.opcode = IB_WR_RDMA_READ;
--		} else {
--			reg->wr.wr.opcode = IB_WR_RDMA_READ_WITH_INV;
--			reg->wr.wr.ex.invalidate_rkey = reg->mr->lkey;
--		}
--		count++;
--
-+		count += rdma_rw_init_reg_wr(reg, prev, qp, port_num,
-+				remote_addr, rkey, dir);
- 		remote_addr += reg->sge.length;
- 		sg_cnt -= nents;
- 		for (j = 0; j < nents; j++)
-@@ -193,6 +201,92 @@ static int rdma_rw_init_mr_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 	return ret;
- }
- 
-+static int rdma_rw_init_mr_wrs_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
-+		u32 port_num, const struct bio_vec *bvecs, u32 nr_bvec,
-+		struct bvec_iter *iter, u64 remote_addr, u32 rkey,
-+		enum dma_data_direction dir)
-+{
-+	struct ib_device *dev = qp->pd->device;
-+	struct rdma_rw_reg_ctx *prev = NULL;
-+	u32 pages_per_mr = rdma_rw_fr_page_list_len(dev, qp->integrity_en);
-+	struct scatterlist *sg;
-+	int i, ret, count = 0;
-+	u32 nents = 0;
-+
-+	ctx->reg = kcalloc(DIV_ROUND_UP(nr_bvec, pages_per_mr),
-+			   sizeof(*ctx->reg), GFP_KERNEL);
-+	if (!ctx->reg)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Build scatterlist from bvecs using the iterator. This follows
-+	 * the pattern from __blk_rq_map_sg.
-+	 */
-+	ctx->reg[0].sgt.sgl = kmalloc_array(nr_bvec,
-+					    sizeof(*ctx->reg[0].sgt.sgl),
-+					    GFP_KERNEL);
-+	if (!ctx->reg[0].sgt.sgl) {
-+		ret = -ENOMEM;
-+		goto out_free_reg;
-+	}
-+	sg_init_table(ctx->reg[0].sgt.sgl, nr_bvec);
-+
-+	for (sg = ctx->reg[0].sgt.sgl; iter->bi_size; sg = sg_next(sg)) {
-+		struct bio_vec bv = mp_bvec_iter_bvec(bvecs, *iter);
-+
-+		if (nents >= nr_bvec) {
-+			ret = -EINVAL;
-+			goto out_free_sgl;
-+		}
-+		sg_set_page(sg, bv.bv_page, bv.bv_len, bv.bv_offset);
-+		bvec_iter_advance(bvecs, iter, bv.bv_len);
-+		nents++;
-+	}
-+	sg_mark_end(sg_last(ctx->reg[0].sgt.sgl, nents));
-+	ctx->reg[0].sgt.orig_nents = nents;
-+
-+	/* DMA map the scatterlist */
-+	ret = ib_dma_map_sgtable_attrs(dev, &ctx->reg[0].sgt, dir, 0);
-+	if (ret)
-+		goto out_free_sgl;
-+
-+	ctx->nr_ops = DIV_ROUND_UP(ctx->reg[0].sgt.nents, pages_per_mr);
-+
-+	sg = ctx->reg[0].sgt.sgl;
-+	nents = ctx->reg[0].sgt.nents;
-+	for (i = 0; i < ctx->nr_ops; i++) {
-+		struct rdma_rw_reg_ctx *reg = &ctx->reg[i];
-+		u32 sge_cnt = min(nents, pages_per_mr);
-+
-+		ret = rdma_rw_init_one_mr(qp, port_num, reg, sg, sge_cnt, 0);
-+		if (ret < 0)
-+			goto out_free_mrs;
-+		count += ret;
-+		count += rdma_rw_init_reg_wr(reg, prev, qp, port_num,
-+				remote_addr, rkey, dir);
-+		remote_addr += reg->sge.length;
-+		nents -= sge_cnt;
-+		sg += sge_cnt;
-+		prev = reg;
-+	}
-+
-+	if (prev)
-+		prev->wr.wr.next = NULL;
-+
-+	ctx->type = RDMA_RW_MR;
-+	return count;
-+
-+out_free_mrs:
-+	while (--i >= 0)
-+		ib_mr_pool_put(qp, &qp->rdma_mrs, ctx->reg[i].mr);
-+	ib_dma_unmap_sgtable_attrs(dev, &ctx->reg[0].sgt, dir, 0);
-+out_free_sgl:
-+	kfree(ctx->reg[0].sgt.sgl);
-+out_free_reg:
-+	kfree(ctx->reg);
-+	return ret;
-+}
-+
- static int rdma_rw_init_map_wrs(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 		struct scatterlist *sg, u32 sg_cnt, u32 offset,
- 		u64 remote_addr, u32 rkey, enum dma_data_direction dir)
-@@ -547,19 +641,13 @@ EXPORT_SYMBOL(rdma_rw_ctx_init);
-  * @rkey:	remote key to operate on
-  * @dir:	%DMA_TO_DEVICE for RDMA WRITE, %DMA_FROM_DEVICE for RDMA READ
-  *
-- * Accepts bio_vec arrays directly, avoiding scatterlist conversion for
-- * callers that already have data in bio_vec form. Prefer this over
-- * rdma_rw_ctx_init() when the source data is a bio_vec array.
-- *
-- * This function does not support devices requiring memory registration.
-- * iWARP devices and configurations with force_mr=1 should use
-- * rdma_rw_ctx_init() with a scatterlist instead.
-+ * Maps the bio_vec array directly, avoiding intermediate scatterlist
-+ * conversion. Supports MR registration for iWARP devices and force_mr mode.
-  *
-  * Returns the number of WQEs that will be needed on the workqueue if
-  * successful, or a negative error code:
-  *
-  *   * -EINVAL  - @nr_bvec is zero or @iter.bi_size is zero
-- *   * -EOPNOTSUPP - device requires MR path (iWARP or force_mr=1)
-  *   * -ENOMEM - DMA mapping or memory allocation failed
-  */
- int rdma_rw_ctx_init_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
-@@ -567,14 +655,24 @@ int rdma_rw_ctx_init_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 		struct bvec_iter iter, u64 remote_addr, u32 rkey,
- 		enum dma_data_direction dir)
+ void rdma_rw_init_qp(struct ib_device *dev, struct ib_qp_init_attr *attr)
  {
-+	struct ib_device *dev = qp->pd->device;
- 	int ret;
+-	u32 factor;
++	unsigned int factor = 1;
  
- 	if (nr_bvec == 0 || iter.bi_size == 0)
- 		return -EINVAL;
- 
--	/* MR path not supported for bvec - reject iWARP and force_mr */
--	if (rdma_rw_io_needs_mr(qp->device, port_num, dir, nr_bvec))
--		return -EOPNOTSUPP;
-+	/*
-+	 * iWARP requires MR registration for all RDMA READs. The force_mr
-+	 * debug option also mandates MR usage.
-+	 */
-+	if (dir == DMA_FROM_DEVICE && rdma_protocol_iwarp(dev, port_num))
-+		return rdma_rw_init_mr_wrs_bvec(ctx, qp, port_num, bvecs,
-+						nr_bvec, &iter, remote_addr,
-+						rkey, dir);
-+	if (unlikely(rdma_rw_force_mr))
-+		return rdma_rw_init_mr_wrs_bvec(ctx, qp, port_num, bvecs,
-+						nr_bvec, &iter, remote_addr,
-+						rkey, dir);
- 
- 	if (nr_bvec == 1)
- 		return rdma_rw_init_single_wr_bvec(ctx, qp, bvecs, &iter,
-@@ -582,13 +680,23 @@ int rdma_rw_ctx_init_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 	WARN_ON_ONCE(attr->port_num == 0);
  
  	/*
- 	 * Try IOVA-based mapping first for multi-bvec transfers.
--	 * This reduces IOTLB sync overhead by batching all mappings.
-+	 * IOVA coalesces bvecs into a single DMA-contiguous region,
-+	 * reducing the number of WRs needed and avoiding MR overhead.
+-	 * Each context needs at least one RDMA READ or WRITE WR.
+-	 *
+-	 * For some hardware we might need more, eventually we should ask the
+-	 * HCA driver for a multiplier here.
+-	 */
+-	factor = 1;
+-
+-	/*
+-	 * If the device needs MRs to perform RDMA READ or WRITE operations,
+-	 * we'll need two additional MRs for the registrations and the
+-	 * invalidation.
++	 * If the device uses MRs to perform RDMA READ or WRITE operations,
++	 * or if data integrity is enabled, account for registration and
++	 * invalidation work requests.
  	 */
- 	ret = rdma_rw_init_iova_wrs_bvec(ctx, qp, bvecs, &iter, remote_addr,
- 			rkey, dir);
- 	if (ret != -EOPNOTSUPP)
- 		return ret;
+ 	if (attr->create_flags & IB_QP_CREATE_INTEGRITY_EN ||
+ 	    rdma_rw_can_use_mr(dev, attr->port_num))
+-		factor += 2;	/* inv + reg */
++		factor += 2;	/* reg + inv */
  
-+	/*
-+	 * IOVA mapping not available. Check if MR registration provides
-+	 * better performance than multiple SGE entries.
-+	 */
-+	if (rdma_rw_io_needs_mr(dev, port_num, dir, nr_bvec))
-+		return rdma_rw_init_mr_wrs_bvec(ctx, qp, port_num, bvecs,
-+						nr_bvec, &iter, remote_addr,
-+						rkey, dir);
-+
- 	return rdma_rw_init_map_wrs_bvec(ctx, qp, bvecs, nr_bvec, &iter,
- 			remote_addr, rkey, dir);
- }
-@@ -833,6 +941,8 @@ void rdma_rw_ctx_destroy(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+ 	attr->cap.max_send_wr += factor * attr->cap.max_rdma_ctxs;
  
- 	switch (ctx->type) {
- 	case RDMA_RW_MR:
-+		/* Bvec MR contexts must use rdma_rw_ctx_destroy_bvec() */
-+		WARN_ON_ONCE(ctx->reg[0].sgt.sgl);
- 		for (i = 0; i < ctx->nr_ops; i++)
- 			ib_mr_pool_put(qp, &qp->rdma_mrs, ctx->reg[i].mr);
- 		kfree(ctx->reg);
-@@ -880,6 +990,13 @@ void rdma_rw_ctx_destroy_bvec(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
- 	u32 i;
- 
- 	switch (ctx->type) {
-+	case RDMA_RW_MR:
-+		for (i = 0; i < ctx->nr_ops; i++)
-+			ib_mr_pool_put(qp, &qp->rdma_mrs, ctx->reg[i].mr);
-+		ib_dma_unmap_sgtable_attrs(dev, &ctx->reg[0].sgt, dir, 0);
-+		kfree(ctx->reg[0].sgt.sgl);
-+		kfree(ctx->reg);
-+		break;
- 	case RDMA_RW_IOVA:
- 		dma_iova_destroy(dev->dma_device, &ctx->iova.state,
- 				 ctx->iova.mapped_len, dir, 0);
+ 	/*
+-	 * But maybe we were just too high in the sky and the device doesn't
+-	 * even support all we need, and we'll have to live with what we get..
++	 * The device might not support all we need, and we'll have to
++	 * live with what we get.
+ 	 */
+ 	attr->cap.max_send_wr =
+ 		min_t(u32, attr->cap.max_send_wr, dev->attrs.max_qp_wr);
 diff --git a/include/rdma/rw.h b/include/rdma/rw.h
-index 205e16ed6cd8..3400c017bfb6 100644
+index 3400c017bfb6..6a1d08614e09 100644
 --- a/include/rdma/rw.h
 +++ b/include/rdma/rw.h
-@@ -47,6 +47,7 @@ struct rdma_rw_ctx {
- 			struct ib_reg_wr	reg_wr;
- 			struct ib_send_wr	inv_wr;
- 			struct ib_mr		*mr;
-+			struct sg_table		sgt;
- 		} *reg;
- 	};
- };
+@@ -86,6 +86,8 @@ int rdma_rw_ctx_post(struct rdma_rw_ctx *ctx, struct ib_qp *qp, u32 port_num,
+ 
+ unsigned int rdma_rw_mr_factor(struct ib_device *device, u32 port_num,
+ 		unsigned int maxpages);
++unsigned int rdma_rw_max_send_wr(struct ib_device *dev, u32 port_num,
++		unsigned int max_rdma_ctxs, u32 create_flags);
+ void rdma_rw_init_qp(struct ib_device *dev, struct ib_qp_init_attr *attr);
+ int rdma_rw_init_mrs(struct ib_qp *qp, struct ib_qp_init_attr *attr);
+ void rdma_rw_cleanup_mrs(struct ib_qp *qp);
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index b7b318ad25c4..9b623849723e 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -462,7 +462,10 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		newxprt->sc_max_bc_requests = 2;
+ 	}
+ 
+-	/* Arbitrary estimate of the needed number of rdma_rw contexts.
++	/* Estimate the needed number of rdma_rw contexts. The maximum
++	 * Read and Write chunks have one segment each. Each request
++	 * can involve one Read chunk and either a Write chunk or Reply
++	 * chunk; thus a factor of three.
+ 	 */
+ 	maxpayload = min(xprt->xpt_server->sv_max_payload,
+ 			 RPCSVC_MAXPAYLOAD_RDMA);
+@@ -470,7 +473,8 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		rdma_rw_mr_factor(dev, newxprt->sc_port_num,
+ 				  maxpayload >> PAGE_SHIFT);
+ 
+-	newxprt->sc_sq_depth = rq_depth + ctxts;
++	newxprt->sc_sq_depth = rq_depth +
++		rdma_rw_max_send_wr(dev, newxprt->sc_port_num, ctxts, 0);
+ 	if (newxprt->sc_sq_depth > dev->attrs.max_qp_wr)
+ 		newxprt->sc_sq_depth = dev->attrs.max_qp_wr;
+ 	atomic_set(&newxprt->sc_sq_avail, newxprt->sc_sq_depth);
 -- 
 2.49.0
 
