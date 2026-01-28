@@ -1,601 +1,668 @@
-Return-Path: <linux-nfs+bounces-18584-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18585-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qJ37E0dPemnk5AEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18584-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 19:02:47 +0100
+	id aGskJqpVemlm5QEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18585-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 19:30:02 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEFBEA76AF
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 19:02:46 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3F68A7C53
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 19:30:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9EF9E303205A
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 18:01:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2F8FD300290A
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 18:28:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 307A2371062;
-	Wed, 28 Jan 2026 18:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D3737105B;
+	Wed, 28 Jan 2026 18:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMj4Liyg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BbY4YNlR";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hUyU90Dc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9838937105F;
-	Wed, 28 Jan 2026 18:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769623266; cv=none; b=RmxlZAIkk6dmzuoc+jf7yu0QK/EHAD7paofFRREQLlCffeb0eXT0gOFVcHlREPJuUO3d7dJWNj3Tt9aToBDDkMAVwuyCnOyKL/Ie+CRXtLudLNNU5aUj5oCoPypL70LDd5jLIAndXAy46AgEb8z8Vxd3jVixU7XWVLPRQOQVHyk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769623266; c=relaxed/simple;
-	bh=8HCTFdaEET777TsS1Bk4+idpe2LB4hcuablG4zozL7E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=u3wMrJUmYQ172J3y3a85S9JdftPccVnxbAB+589VuRNhg9ce7UOQJXNEHj4bs3K7ysMyBhqWiHb5+bAc2KFONCKR2MwgXjhfvArI11+A+eCvrHPvZ8ddO/4NJV3nmsyYd3rY8Nrmm2j0TrkLAru80Pg71458ZhPfnsMoom5TkC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMj4Liyg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95368C4CEF1;
-	Wed, 28 Jan 2026 18:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769623265;
-	bh=8HCTFdaEET777TsS1Bk4+idpe2LB4hcuablG4zozL7E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LMj4Liyg/Jty+K8/gvo5cWbZvtTzOIQMFsqWnbCnYrdCIcGaDJdz7Lq2Ht+iHejI4
-	 CXrhb/uIHvARtiOAFUabcVQugjGlM7AfL0d7aAM7CbIoyLRWAGSvaIAq+pLSDPkFkP
-	 GTAYqjTQIQgDmLx8aEMlwyM9gfXrbBvFRuTrvMIbtepvj0HvLHnYZe+hrtEvRtVNjm
-	 DhiRJyCxvoJ9B8tSxfK2fXjMy/t+UjmTdqAyTW8pN+izXRwdNxCTNH4ygUayWwwg7d
-	 yqtzh61BEyAMGb0bWrkLkEhF5f4ttkHkc7FkAxQYVH6MrIlYKsnHFGYti6IwaYdD0E
-	 hOAaTDdE26MgA==
-Message-ID: <ac6601d20f1f48db9eca7ba204be8030fc16a1d0.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5AA2C1586;
+	Wed, 28 Jan 2026 18:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769624916; cv=fail; b=qN1eC1t/BfEjBmjbPTD/eiU3qm8/koRptlBCE9koOwhNcovzwQpxq7Otsz7l8I95D3KpS6MCnMwxMbzJ6IjE+pCqww4qwIzjwZF85bRy3VW+brz70u25IiU3zc+dE/ur7+iDE4O5sGnDVlNkZ9C6zTvgopIEaGfIpbMEm47nKCU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769624916; c=relaxed/simple;
+	bh=RsklJyNACAFfiUMN7LyRM0L/H8DxXCnZeExx6THWqOo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oTX/Q7NiQSnAEXz7pEAYjzKcCKrLxvGs0bzuLQXWkadNVpYMQrx7toBu2onrTANlVmHv2Aa1gv1Udcb+WbBRa1L5ZcaUJ8O4QkOPQvXQ9kZDqwONJRbjeFKfNNogpqosT1EoOyofjwo2Bl505lpCwTMSeu2NHzHbamfKUopyKZo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BbY4YNlR; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hUyU90Dc; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60SGll4F1562539;
+	Wed, 28 Jan 2026 18:28:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=SmcIzINZDGf3ksssrktHp4md+7rS/ByEIkMEY+u3QaQ=; b=
+	BbY4YNlRguYZ79tKXptYuPPx+kZZiUQNierEgEiQptpauLsQmFgmQ/f49x3Olllz
+	5W9/Z9bjc/0nIllcIh1UhYgaN+SLbKV/Uyj2wsYJTpv+ArTVr6igYqNy4mjn7tOc
+	SlhiBEw6FHW/vRL1G0IgO8oggSxVfbzOk37o2Xk+nIbDuEe2m9Co9PGaBMKSH511
+	es7a4RsGPTsLJUD+O+/PVeNCg5H/cHO5FidusN0zmAwHkh0baKJdr7v6m2silNL2
+	Pw5xtvdjF3IojjqTW/6lj7mxtjU+j/AQZuTehS2Iro45KdPbn+H6gtW16lJ3jjhB
+	1bl8DHxHKLXM6DCxNq6kdQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4by2vghx65-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Jan 2026 18:28:21 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60SHjaBx034800;
+	Wed, 28 Jan 2026 18:28:20 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010051.outbound.protection.outlook.com [40.93.198.51])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4bvmhb8xf7-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Jan 2026 18:28:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XYSemeTNLd7GGiApNKVmSUtdH0x43/G9LEh+fJSPfwNygEEiJ7cJmJxLASi+p0dTQXlU/1A75db6Fzolzk1ipbKCrCVRrQQ3YtcHE+AIiTHbaC0L7crJGY0VKUPT8T9pdyVn70P67fY4z2CnrDgHbSUYYzO8YZASGSA7oaDivj+WHrevJMewblhOmCIC3bPDXqzAYUEL4W6f17MnD9qe6ADKHL5XJmpWdv+ceYUeKQHcnv9Ny2Eq7xGn9g5SHN6DjjVt0YBgc1/SDsxLFKSk2oy7axYRtdJA1AjZBXBsXewazHDJdiQgJYAgMkjBGlRpGxi/buG4EskTLG0nMg6Ayg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SmcIzINZDGf3ksssrktHp4md+7rS/ByEIkMEY+u3QaQ=;
+ b=VxhZbs/v98bXzFtQhtyexqvLLvsQSlB6nsQ5JIkxZRfce5CYWYePpnPIVajArNqidqyQ1t81Uku2wUBNy6X7DMDbQTaUGLJxiFG9MG2Xx5UQf8xnrR0iDIbd6rQ7Uqo7zjvmNbVJAswG4IpRXfrUGXJC4FNs6TfKndp2mQt3Y2MX3TcBDPPJ6oLklMlscEisTylWsqjYQOaPcql43eNoM3ZWWQX/SzHMqmTtbl85tMypKKXhm6XeTSPVMbafjeDjjctHb6lOF2Jz8EQApscqOJv8EObIOeaNMHXqE0tMPtQ/lu4R0QUYM1GrwdOuD+ciDcRjofxZ0Ik2S9XBTRZgfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SmcIzINZDGf3ksssrktHp4md+7rS/ByEIkMEY+u3QaQ=;
+ b=hUyU90DcXZ4aLK+XjLy3MKqoeFlKPR4UyUm23KsSD6PiINthwsqWq7V2F0QC8YRwt+QW8pmOqpowp5xEZmezUKthpEQlTSBjGNk2D+yY+WLcOrWfKm7UPHAaLcjwAc2roOVKe+SS2rkDdSDfd4qa1IzHwoZU7T5McwomviYSY3w=
+Received: from MW6PR10MB7639.namprd10.prod.outlook.com (2603:10b6:303:244::14)
+ by PH7PR10MB6377.namprd10.prod.outlook.com (2603:10b6:510:1a7::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Wed, 28 Jan
+ 2026 18:28:01 +0000
+Received: from MW6PR10MB7639.namprd10.prod.outlook.com
+ ([fe80::69ee:3509:9565:9cd6]) by MW6PR10MB7639.namprd10.prod.outlook.com
+ ([fe80::69ee:3509:9565:9cd6%6]) with mapi id 15.20.9564.006; Wed, 28 Jan 2026
+ 18:28:01 +0000
+Message-ID: <267c6448-20b6-46f4-b287-833bbbff8479@oracle.com>
+Date: Wed, 28 Jan 2026 10:27:58 -0800
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 1/1] NFSD: Enforce Timeout on Layout Recall and
  Integrate Lease Manager Fencing
-From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neil@brown.name, 
-	okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+To: Jeff Layton <jlayton@kernel.org>, chuck.lever@oracle.com, neil@brown.name,
+        okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
 Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Wed, 28 Jan 2026 13:01:03 -0500
-In-Reply-To: <c566182b-2256-45a0-844e-a7c8614ec895@oracle.com>
 References: <20260127005013.552805-1-dai.ngo@oracle.com>
-	 <5d2288d77498582f78152bdb411222930a7e5978.camel@kernel.org>
-	 <c566182b-2256-45a0-844e-a7c8614ec895@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+ <5d2288d77498582f78152bdb411222930a7e5978.camel@kernel.org>
+ <c566182b-2256-45a0-844e-a7c8614ec895@oracle.com>
+ <ac6601d20f1f48db9eca7ba204be8030fc16a1d0.camel@kernel.org>
+Content-Language: en-US
+From: Dai Ngo <dai.ngo@oracle.com>
+In-Reply-To: <ac6601d20f1f48db9eca7ba204be8030fc16a1d0.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PH7P220CA0165.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::14) To MW6PR10MB7639.namprd10.prod.outlook.com
+ (2603:10b6:303:244::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR10MB7639:EE_|PH7PR10MB6377:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc65559b-b5b9-4ccb-5053-08de5e9af7ef
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?bEtTY0dxMFU0RDF5bmtrNnZ1SXl6SzMwc0J1dmVhd1BNcmNQUXc4OFV5dnVo?=
+ =?utf-8?B?bFhwcVdxTHZSZlJaWmpTaUloQzFPUnltSXR5cGE3enl0REVWSDdnV2oxVE1I?=
+ =?utf-8?B?ZjEybXE2R1ZSdUQ5NDlsU05pSkRzK1JxVGZaQkZVdGR4a3RGTXBlWlZTdGFk?=
+ =?utf-8?B?aXUwYWxjT2VSYk0rMkdYbjIwSGlyUlRmajg5VzMxdS8vVVpDYmZtYUNYTVNL?=
+ =?utf-8?B?R2NaUEsrdG9sSUdXMEVuc1Vxb3N4ZHBEOWhvcXU5TWtYN1UyeXpBR0pDeUJE?=
+ =?utf-8?B?QWJtbHNud2RKczJxQ3BScDNYU25mV1hlTnAzTEV3RlpyZ0c1S01FOUNZeWM0?=
+ =?utf-8?B?TlBMcDg4a2NUZVgvQWhqVjVWL0MrSVBVMTFveERZdzRiNUoyV0NoNk9SN0ll?=
+ =?utf-8?B?a256Nis2c1ZXVVNVR3ZvbUJ6dFE1elBlUVAyMHFndmFoTzRJamNoYUhuVExR?=
+ =?utf-8?B?Ylhzc3ZaczJBMVMxTDhBS3JPd2tMRmRSM2M4ak5hZENHVGRWNU1Ma0FOWlpD?=
+ =?utf-8?B?R1BWMnExUk95eFI3Smx2NEJWWG8wQkhELzBmcXpPNFU2bjBHMEpycTRUM0Zh?=
+ =?utf-8?B?b1dKTk5RdHlpR3FtVHRpeXR5aGVxd2F0a2Y0RFN6Y1BTM3dSa2xyMUFKRVZ3?=
+ =?utf-8?B?UUROQWRJNEM3M29WMDcrNUhpMy8vNFVOQWh2S1B1aVBsK1lCWnVSdERBZ0FW?=
+ =?utf-8?B?MTBWRVJpYmF0azl6dVl3V3hIczQ5WkVoZGdUbEJUZzlqd3pHeGxNbisvQU9w?=
+ =?utf-8?B?MjVQaW5KVGRGVi9PbkVHS2hUcDRFSXZVaXpERkdhRUlvTHZQUmNhMnNQT1lP?=
+ =?utf-8?B?VjF6VDJnTE4zRkhXZlZGR1MvRWJOVFRFRmhOUUt1Q1BvR1dqOTZ2R2U3LzNN?=
+ =?utf-8?B?Z1lsd2xGUnZ3NmtOcUlsZTJVRm5TclJYMVREQk51c25EM3BxV2MyeU94ckdK?=
+ =?utf-8?B?NmIwK3BjY016dk80ZnU0Z0NoOXU2UVZDNC9TckcxKys0UDRLZUp1cnJwYjVj?=
+ =?utf-8?B?Z1hKbUZHbUJlTnR3ZDdFN1Q3dy9nOUsya2FFTmdKQmhDNWNYd2ZKcUZnWjZL?=
+ =?utf-8?B?NGhHSmRhRDY1NDNCOHYycktseXh6QnNxQ3ZkNUNESWJJdEdUWEUvMW5YcmxJ?=
+ =?utf-8?B?SDVodjJrK3R0cVhlbkg1cHJDVUhtWDZWTlhESWtHZHd6dDVJUzJOazd4enMv?=
+ =?utf-8?B?L0w2UnhvY1dQRTVqc2lqRllNNHJubGRrRi9EYjczeUhMSzYvK3FlaTV1dXhY?=
+ =?utf-8?B?cmNSaEk2bWhmN3c0RHByaE9BaDVwQ3AyUU1KSTRHQUlmckU1dXZNZTBRS01z?=
+ =?utf-8?B?aS9tQzJaRW1NUGFIT2RvRE9uUkwxbHZmbENPTGZDS2pObXRDVGcvY2Qycld4?=
+ =?utf-8?B?MW9OS282ekx5ZitSQ0FnaGtoYkdBWE9Icm9lUm03cCswbVl0MTIrQUtHWDB2?=
+ =?utf-8?B?SFo0dEluZ1FVMmFDSko3OVJRN2ZTcTBuQjBsWk1RN0JaWG1Cc3lHK3d2RXcz?=
+ =?utf-8?B?SFZyTWhnYU9sR0d4S3MxQzdOTXlUTm81SVJid2h6NXRYTzMvdXJuQ2xFK25Q?=
+ =?utf-8?B?RWRmckw5Rmx3VlgrOWp3elJkSVlBNmx5UDdMVmFHNGlSc3lqbkt3QW90MitF?=
+ =?utf-8?B?TzVuOURFS3FhZk8yVXh4N3JMaGdYdGp4ZlU1QjBveThzNHNycFNaYUQzTVFI?=
+ =?utf-8?B?eHNMQm01RFpqb1pVS2VUNkZ5c3hlaXo1Y2VlMjZuTmdnTmVyaHZwWXpsVEp3?=
+ =?utf-8?B?V0JpYVdYOEl5YnNTQW9rTm1nVFJrbysrcU5VYnQ3eTJwN3pOdENTTDY2L3hV?=
+ =?utf-8?B?TWM0T1p1ZklmNG1iUmRnenNwOXFlU3V4SGNPbmNLeTdqV1R2bkR0a1VYaUg4?=
+ =?utf-8?B?cjlDbm1qSGZ1Q052SnIwYldwV0lqbnlsNCtUdEcvd3g0M2JLWG9nMU44blY0?=
+ =?utf-8?B?bVZPODE2M1k5MXpvMDA1bHdDd0xJZTBRc0drK1JRb0Vma2tudWNuenhpUGxz?=
+ =?utf-8?B?dTYwMEF4cWdST3Y2UGJ1ZUNnVEsrSkptZkMwN1h2VTRNaWNSRFRTOGo0QkZZ?=
+ =?utf-8?B?NGtOeW5KTTdncm5yMnpRNDJWdWU1VHo3c0h6WE1qVWhvb01lQm1JdGFJV1pk?=
+ =?utf-8?B?RmxzTkZtU2Vuc2RDMS9Wa1gvcFdlZVRXWitQSVlaa0JIbElwcXh0c05sOC9Z?=
+ =?utf-8?B?dkE9PQ==?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR10MB7639.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?QnFibndDeHprZkJVcUxNa2MvM3d6UHp0dnVvREpmYWMvTVRmb3NPSE91UE1H?=
+ =?utf-8?B?YmdTeTdJZmd2REpZZzdWZldRbWNyQ1lUNjliTzg1OFBhWnVqTVpLampaTzJm?=
+ =?utf-8?B?Y29YSmVqZDY1UHN5YXJrdGZYdmhFVnR1ZG5sTnR6VmlqQzc3QnV4Z0N2b1FO?=
+ =?utf-8?B?NEphSmFCK1JyZGFCUGllNVRzVlJVVVFWZU5XcnBhZms2d1NnczA1MmNqOFhR?=
+ =?utf-8?B?Sm9DMjBINkQ1K0ZzR1pVdGJPTFhjU2ZHK1ljL2dXbEx6aG1kaW50TThZVlJB?=
+ =?utf-8?B?UHE4bHBXQ2VKeE9KR1Y1TExVUjMzOUZLOUFLVFhnN1M2NHFHa1R0TmNJNk1L?=
+ =?utf-8?B?aWl4TTVRMFZ3Z21zaVlUV0dVb01PVW5ES0h5dVk0SG9wYUh4VEwrU2tQN2Jo?=
+ =?utf-8?B?K0NuTEhCYlNBV083Vkt2Q3FXbVMrdStINzhPallSQUZ0amtZS2NrQ1NJemdn?=
+ =?utf-8?B?NUt0Z1Uvbm1YZlRDaWdWVnI5ajFhdmFHdjNIZFA1SGpSZ3N4cG5aaXNtcThB?=
+ =?utf-8?B?RklOSmNwcG5ZZjRQUHBwMTdYd1ZhWDE1R0sxTmJDNDlwVml3K2FuajVlc2tU?=
+ =?utf-8?B?UU96WGVways0YnN4dmFub3hPVXZScCtJKytZN1Q5MTRZeW53TmxkZll1TWJ6?=
+ =?utf-8?B?aVBKazNHeFVYbXk3enZ5ZmNBdnM3VGZucGtqMEdadzdBTDZsdlBIbUgzOFBP?=
+ =?utf-8?B?OHFSUVNjMHhyT2lwdVFRclI2TGtQdHV6dkpUUkppMnVuU0M4N1piQzBXNHNW?=
+ =?utf-8?B?REJLNmYwa2NVOG9ZYVV6TmI2ODJxbW04NTZOWmVtTi9zRUFFdTNPZmF1aVJ3?=
+ =?utf-8?B?dHZnNXQxMlJHQ0FZRDVmeGZrZm5wVytyS0FybnkvZjQ3TXJ6MjZ5SkpFbjdj?=
+ =?utf-8?B?VlNVbmFQam1wZElGTkJ0K3dqU0hXWk16N0VBOVQ0NmZCc1NJM1hlWDcxR3lE?=
+ =?utf-8?B?Y2hwODd0OFlCZWE0Y1dHRmVkbjNlemNQeVVpNWZtUWtRa1c3WmlDbjhkWmJ3?=
+ =?utf-8?B?TnJVQXdYOWtNcTIrWHBEQ0ZKZ0xUdEJKWXN4Nnc1ZjEvbmxFdXBndmJJdTNH?=
+ =?utf-8?B?d3YwZXorQTdJRnRqS1kxaE1kZDNKUVpVWmxFYWhvRWV6NGJCckE5RUkrTU5t?=
+ =?utf-8?B?MUdpaFJ6cDVrdWExZGZFeHVtT28vZEZrSVBqajRoSS9oK3RxRE9JSm5UdzdI?=
+ =?utf-8?B?ajZZZXB2UUJHVjRsRzJONUc3LzZaNnVjTFRMcTc0bEhKeWpGNDA3L2NzL0Fm?=
+ =?utf-8?B?TFgreHhHcUpWMkt0VlRMUlRQc00wWUxPZ0VBR1kremFmUHJnTDljRy90KzBV?=
+ =?utf-8?B?eWpOYTVwS3lsUWh6MVlWeHBuRkpscHRIUkZIc3Y4dysxakZaYTBvY1Y2bTR3?=
+ =?utf-8?B?cGZ5V1hBdnRqeXhXcVhERG5BU0RVWTQwZlM4MXloN3FXaThQKzR0Mm1scnNM?=
+ =?utf-8?B?elVCeEhkOUcydldTRi90WEJXSVF2TFg5eHdjYjNwOC9qUDA0dlRGeUdRQ0hW?=
+ =?utf-8?B?K0dvRFg0bWtQOXlySVRWVitWcUh2RkVXRkg4bmFjcDhtU1FoOXdvYU85VW4z?=
+ =?utf-8?B?dmtHdm9lMTRkY0UzT1EvbTFncGwyWjJhZVFRcEFUOHpKZTNYcDZzdG1ycW56?=
+ =?utf-8?B?RUtudHBxaUhQOUFrLzZCRk1LMXYzSk0ya3FQNE4rb2oyZm5lc1JWeTFYcTdL?=
+ =?utf-8?B?Wmo2UGJvVmlmK0UvSnNDTHlFeTdWSjFFbjB1V2RGL0xCY0VrNHlqb1BHakVP?=
+ =?utf-8?B?cGlySlcvc2VhWUdpSkxXRzZPRUVqV1JBb1h2L00xOUVsaE5kS2oycGlLcVQ2?=
+ =?utf-8?B?ZlpxZ0wzSGRUZ1V1S2VnYkhMbVZENmMzY3lxbWJMWWJMRDJ1SXArTzF5c21K?=
+ =?utf-8?B?bGEyaVpqcEtZUUZ5SmNRaTFTbjBzcXJ0ZGJjbUNWa0hzVjhISWpHRjJLeE9Q?=
+ =?utf-8?B?S0laL2IzcGxIVldkdElLZzJicTc0Vkp5RHQzdnpoVzNTODVrMWdaT1I5WlVE?=
+ =?utf-8?B?RWpzUmM4V3FQWnl0L1g0SlRRSUh1aXlCekRIdG5jaHhLN2hHSUQ0VjdsYXpW?=
+ =?utf-8?B?d1BZVnFRMTZPdXhrOUQyVnpMZlZjbjJ2Zk9LZEhkKzQ1NjlHNUtYMWo2RU9Y?=
+ =?utf-8?B?a2FkaEI0TGFyLzYwNmhGdmo4blo0MGtFOTBreGkzVXJsd3U0eWE4L2ZzaU9v?=
+ =?utf-8?B?V3NkRUQ5OStIS2hsc0dYazlEVXZ4UFo0TUpid2I0aklHL1J2WEhRS0Rad3FS?=
+ =?utf-8?B?Q3ExSFdQYjVLcGhHUkt4RWxtU0FiQ3cvZ1J2SnpQdzV3M29HZ20yT1ZwYkhY?=
+ =?utf-8?B?dENkenlQcW9RZHNNamZlV2Z4bFZWbnlkZCt4R25DMm9BMi9pdFdadz09?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	f3vtUB40a/fXNaSuEcfZAABQ8zSqbGFB9WbTxhxvSlSOuerhQlvX2ZsaAS6OxU1uOv2wgou8fyitpHHliopKXdiRcazVs4/pBFIl/5nTNXzHSk8t9aQ4CN450Yr7SW5bDepUx8ytTWk+OL4vcvi4e2UCA+bytK7b3XTOYN77by7LdjAtm6r6qBTotXP2S12HVNkvytOEIOV+sB8ow9FLOWvnm0RRFiH0/AkuUiaCb3r+srj8CgV89qpECi3FSwoBdgzK01c7JnvPaMNyp+mEwxrgSl6OIttIxgyx9nRTtF3d8EzUY2nnxwxClUa+SKBazwOBMwwbE/te8y6Pt2dTJfIwAjGSJrwH2vLz3Bx1durMuIV1jPCZOU25D0HMhZJvwY7o7EDnQ5nGwntvrTg+E6jAJrs0ZjoH5DdHf4rqGyDFnR7g0IrSkpW6EbYVsHgsKgVYJXB9K5qvUGHncQGeUtcCwj3jfSM0JN6SA9CuE9Pe/swNkcigCMlXkfzkkZI/whawqFVOpRDUupAMeEvI+gCsX9lM9IltJFI+tPMXHJiSpFjxgRyRcD+5lu/wD/kxue+mM2blohZVTvhbCFhBjau0y8SrO40blpn8HGNTMGk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc65559b-b5b9-4ccb-5053-08de5e9af7ef
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR10MB7639.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2026 18:28:01.3274
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vbRA9SV0zCItjacbR+vEy+0alepwqVEQ1id9XjJCNqFGR5hhKsuoZaqENeqX2ONERJdPvBTTckWuO6kelMEdgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6377
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-01-28_04,2026-01-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 spamscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2601280152
+X-Proofpoint-GUID: PzRQrgsTkE7WM64PO1kbKqaBxfyRX1W0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI4MDE1MiBTYWx0ZWRfX+VfbalPzRl+Y
+ UMu8NGt/i0Us+/NL33AiqJvOl3mYXUaXO73j5HPcizwlrAbHmTrrm2S353m6NFIceJqALWqLaDr
+ +PtirV+wqe3eQYihAnEx4gX8TaKDIBmZn2+nMebiUlwyn7It6PwUl4pGOas7JK4JrR+OvzvlrIh
+ PZqwrTH24RWHd0eQppLuMLCgGl4oNrVehgID1VlndmKsN3tXGFfkyzEPcVC2Yx/PBpfOjBRN6RG
+ OeGTN1bzpP4CYFBAxHn2QZF/adK35qNp+AcbwYPmeDYnEJHry4HiMwa2AXubLuQeoJOmXSTjqmV
+ S0FhQNyEWPqJGWtK602iTzguWVsBraX+PnNiZVeYpL3OlSFoShnofnZkewGrux3HJZWbMUvh76X
+ 5a6Xt0hrG9//YWta1SQIXdBmP/DZivo//fsHVlitLczs3bov2GJiy25odWBKe7WTL3VftgfSlRk
+ uHsJiV6tG7nf12Z9IYw==
+X-Proofpoint-ORIG-GUID: PzRQrgsTkE7WM64PO1kbKqaBxfyRX1W0
+X-Authority-Analysis: v=2.4 cv=a7s9NESF c=1 sm=1 tr=0 ts=697a5545 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=yPCof4ZbAAAA:8 a=bT8oth9F-bxFjDFTkGsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-18585-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18584-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,lst.de,gmail.com,zeniv.linux.org.uk,kernel.org,suse.cz];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	FREEMAIL_TO(0.00)[kernel.org,oracle.com,brown.name,redhat.com,talpey.com,lst.de,gmail.com,zeniv.linux.org.uk,suse.cz];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:dkim,oracle.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: CEFBEA76AF
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: C3F68A7C53
 X-Rspamd-Action: no action
 
-On Wed, 2026-01-28 at 09:25 -0800, Dai Ngo wrote:
-> On 1/27/26 9:54 AM, Jeff Layton wrote:
-> > On Mon, 2026-01-26 at 16:50 -0800, Dai Ngo wrote:
-> > > When a layout conflict triggers a recall, enforcing a timeout is
-> > > necessary to prevent excessive nfsd threads from being blocked in
-> > > __break_lease ensuring the server continues servicing incoming
-> > > requests efficiently.
-> > >=20
-> > > This patch introduces a new function to lease_manager_operations:
-> > >=20
-> > > lm_breaker_timedout: Invoked when a lease recall times out and is
-> > > about to be disposed of. This function enables the lease manager
-> > > to inform the caller whether the file_lease should remain on the
-> > > flc_list or be disposed of.
-> > >=20
-> > > For the NFSD lease manager, this function now handles layout recall
-> > > timeouts. If the layout type supports fencing and the client has not
-> > > been fenced, a fence operation is triggered to prevent the client
-> > > from accessing the block device.
-> > >=20
-> > > While the fencing operation is in progress, the conflicting file_leas=
-e
-> > > remains on the flc_list until fencing is complete. This guarantees
-> > > that no other clients can access the file, and the client with
-> > > exclusive access is properly blocked before disposal.
-> > >=20
-> > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > > ---
-> > >   Documentation/filesystems/locking.rst |  2 +
-> > >   fs/locks.c                            | 10 +++-
-> > >   fs/nfsd/blocklayout.c                 | 38 ++++++-------
-> > >   fs/nfsd/nfs4layouts.c                 | 79 ++++++++++++++++++++++++=
-+--
-> > >   fs/nfsd/nfs4state.c                   |  1 +
-> > >   fs/nfsd/state.h                       |  6 ++
-> > >   include/linux/filelock.h              |  1 +
-> > >   7 files changed, 110 insertions(+), 27 deletions(-)
-> > >=20
-> > > v2:
-> > >      . Update Subject line to include fencing operation.
-> > >      . Allow conflicting lease to remain on flc_list until fencing
-> > >        is complete.
-> > >      . Use system worker to perform fencing operation asynchronously.
-> > >      . Use nfs4_stid.sc_count to ensure layout stateid remains
-> > >        valid before starting the fencing operation, nfs4_stid.sc_coun=
-t
-> > >        is released after fencing operation is complete.
-> > >      . Rework nfsd4_scsi_fence_client to:
-> > >           . wait until fencing to complete before exiting.
-> > >           . wait until fencing in progress to complete before
-> > >             checking the NFSD_MDS_PR_FENCED flag.
-> > >      . Remove lm_need_to_retry from lease_manager_operations.
-> > > v3:
-> > >      . correct locking requirement in locking.rst.
-> > >      . add max retry count to fencing operation.
-> > >      . add missing nfs4_put_stid in nfsd4_layout_fence_worker.
-> > >      . remove special-casing of FL_LAYOUT in lease_modify.
-> > >      . remove lease_want_dispose.
-> > >      . move lm_breaker_timedout call to time_out_leases.
-> > > v4:
-> > >      . only increment ls_fence_retry_cnt after successfully
-> > >        schedule new work in nfsd4_layout_lm_breaker_timedout.
-> > >=20
-> > > diff --git a/Documentation/filesystems/locking.rst b/Documentation/fi=
-lesystems/locking.rst
-> > > index 04c7691e50e0..a339491f02e4 100644
-> > > --- a/Documentation/filesystems/locking.rst
-> > > +++ b/Documentation/filesystems/locking.rst
-> > > @@ -403,6 +403,7 @@ prototypes::
-> > >   	bool (*lm_breaker_owns_lease)(struct file_lock *);
-> > >           bool (*lm_lock_expirable)(struct file_lock *);
-> > >           void (*lm_expire_lock)(void);
-> > > +        void (*lm_breaker_timedout)(struct file_lease *);
-> > >  =20
-> > >   locking rules:
-> > >  =20
-> > > @@ -417,6 +418,7 @@ lm_breaker_owns_lease:	yes     	no			no
-> > >   lm_lock_expirable	yes		no			no
-> > >   lm_expire_lock		no		no			yes
-> > >   lm_open_conflict	yes		no			no
-> > > +lm_breaker_timedout     yes             no                      no
-> > >   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >  =20
-> > >   buffer_head
-> > > diff --git a/fs/locks.c b/fs/locks.c
-> > > index 46f229f740c8..1b63aa704598 100644
-> > > --- a/fs/locks.c
-> > > +++ b/fs/locks.c
-> > > @@ -1524,6 +1524,7 @@ static void time_out_leases(struct inode *inode=
-, struct list_head *dispose)
-> > >   {
-> > >   	struct file_lock_context *ctx =3D inode->i_flctx;
-> > >   	struct file_lease *fl, *tmp;
-> > > +	bool remove =3D true;
-> > >  =20
-> > >   	lockdep_assert_held(&ctx->flc_lock);
-> > >  =20
-> > > @@ -1531,8 +1532,13 @@ static void time_out_leases(struct inode *inod=
-e, struct list_head *dispose)
-> > >   		trace_time_out_leases(inode, fl);
-> > >   		if (past_time(fl->fl_downgrade_time))
-> > >   			lease_modify(fl, F_RDLCK, dispose);
-> > > -		if (past_time(fl->fl_break_time))
-> > > -			lease_modify(fl, F_UNLCK, dispose);
-> > > +
-> > > +		if (past_time(fl->fl_break_time)) {
-> > > +			if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
-> > > +				remove =3D fl->fl_lmops->lm_breaker_timedout(fl);
-> > > +			if (remove)
-> > > +				lease_modify(fl, F_UNLCK, dispose);
-> > I'd not bother with the return code to lm_breaker_timedout.
-> >=20
-> > Make it void return and have it call lease_modify itself before
-> > returning in the cases where you have it returning true. If the
-> > operation isn't defined then just do the lease_modify here like we
-> > always have.
->=20
-> The first call to lm_breaker_timedout schedules the fence worker so
-> fencing is not done yet. If lm_breaker_timedout return to time_out_leases
-> without any return value then lease_modify is called to remove the lease.
->=20
-> Am i missing something?
->=20
-> -Dai
->=20
 
-if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
-	fl->fl_lmops->lm_breaker_timedout(fl);
-else
-	lease_modify(fl, F_UNLCK, dispose);
+On 1/28/26 10:01 AM, Jeff Layton wrote:
+> On Wed, 2026-01-28 at 09:25 -0800, Dai Ngo wrote:
+>> On 1/27/26 9:54 AM, Jeff Layton wrote:
+>>> On Mon, 2026-01-26 at 16:50 -0800, Dai Ngo wrote:
+>>>> When a layout conflict triggers a recall, enforcing a timeout is
+>>>> necessary to prevent excessive nfsd threads from being blocked in
+>>>> __break_lease ensuring the server continues servicing incoming
+>>>> requests efficiently.
+>>>>
+>>>> This patch introduces a new function to lease_manager_operations:
+>>>>
+>>>> lm_breaker_timedout: Invoked when a lease recall times out and is
+>>>> about to be disposed of. This function enables the lease manager
+>>>> to inform the caller whether the file_lease should remain on the
+>>>> flc_list or be disposed of.
+>>>>
+>>>> For the NFSD lease manager, this function now handles layout recall
+>>>> timeouts. If the layout type supports fencing and the client has not
+>>>> been fenced, a fence operation is triggered to prevent the client
+>>>> from accessing the block device.
+>>>>
+>>>> While the fencing operation is in progress, the conflicting file_lease
+>>>> remains on the flc_list until fencing is complete. This guarantees
+>>>> that no other clients can access the file, and the client with
+>>>> exclusive access is properly blocked before disposal.
+>>>>
+>>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+>>>> ---
+>>>>    Documentation/filesystems/locking.rst |  2 +
+>>>>    fs/locks.c                            | 10 +++-
+>>>>    fs/nfsd/blocklayout.c                 | 38 ++++++-------
+>>>>    fs/nfsd/nfs4layouts.c                 | 79 +++++++++++++++++++++++++--
+>>>>    fs/nfsd/nfs4state.c                   |  1 +
+>>>>    fs/nfsd/state.h                       |  6 ++
+>>>>    include/linux/filelock.h              |  1 +
+>>>>    7 files changed, 110 insertions(+), 27 deletions(-)
+>>>>
+>>>> v2:
+>>>>       . Update Subject line to include fencing operation.
+>>>>       . Allow conflicting lease to remain on flc_list until fencing
+>>>>         is complete.
+>>>>       . Use system worker to perform fencing operation asynchronously.
+>>>>       . Use nfs4_stid.sc_count to ensure layout stateid remains
+>>>>         valid before starting the fencing operation, nfs4_stid.sc_count
+>>>>         is released after fencing operation is complete.
+>>>>       . Rework nfsd4_scsi_fence_client to:
+>>>>            . wait until fencing to complete before exiting.
+>>>>            . wait until fencing in progress to complete before
+>>>>              checking the NFSD_MDS_PR_FENCED flag.
+>>>>       . Remove lm_need_to_retry from lease_manager_operations.
+>>>> v3:
+>>>>       . correct locking requirement in locking.rst.
+>>>>       . add max retry count to fencing operation.
+>>>>       . add missing nfs4_put_stid in nfsd4_layout_fence_worker.
+>>>>       . remove special-casing of FL_LAYOUT in lease_modify.
+>>>>       . remove lease_want_dispose.
+>>>>       . move lm_breaker_timedout call to time_out_leases.
+>>>> v4:
+>>>>       . only increment ls_fence_retry_cnt after successfully
+>>>>         schedule new work in nfsd4_layout_lm_breaker_timedout.
+>>>>
+>>>> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+>>>> index 04c7691e50e0..a339491f02e4 100644
+>>>> --- a/Documentation/filesystems/locking.rst
+>>>> +++ b/Documentation/filesystems/locking.rst
+>>>> @@ -403,6 +403,7 @@ prototypes::
+>>>>    	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>>>>            bool (*lm_lock_expirable)(struct file_lock *);
+>>>>            void (*lm_expire_lock)(void);
+>>>> +        void (*lm_breaker_timedout)(struct file_lease *);
+>>>>    
+>>>>    locking rules:
+>>>>    
+>>>> @@ -417,6 +418,7 @@ lm_breaker_owns_lease:	yes     	no			no
+>>>>    lm_lock_expirable	yes		no			no
+>>>>    lm_expire_lock		no		no			yes
+>>>>    lm_open_conflict	yes		no			no
+>>>> +lm_breaker_timedout     yes             no                      no
+>>>>    ======================	=============	=================	=========
+>>>>    
+>>>>    buffer_head
+>>>> diff --git a/fs/locks.c b/fs/locks.c
+>>>> index 46f229f740c8..1b63aa704598 100644
+>>>> --- a/fs/locks.c
+>>>> +++ b/fs/locks.c
+>>>> @@ -1524,6 +1524,7 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
+>>>>    {
+>>>>    	struct file_lock_context *ctx = inode->i_flctx;
+>>>>    	struct file_lease *fl, *tmp;
+>>>> +	bool remove = true;
+>>>>    
+>>>>    	lockdep_assert_held(&ctx->flc_lock);
+>>>>    
+>>>> @@ -1531,8 +1532,13 @@ static void time_out_leases(struct inode *inode, struct list_head *dispose)
+>>>>    		trace_time_out_leases(inode, fl);
+>>>>    		if (past_time(fl->fl_downgrade_time))
+>>>>    			lease_modify(fl, F_RDLCK, dispose);
+>>>> -		if (past_time(fl->fl_break_time))
+>>>> -			lease_modify(fl, F_UNLCK, dispose);
+>>>> +
+>>>> +		if (past_time(fl->fl_break_time)) {
+>>>> +			if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
+>>>> +				remove = fl->fl_lmops->lm_breaker_timedout(fl);
+>>>> +			if (remove)
+>>>> +				lease_modify(fl, F_UNLCK, dispose);
+>>> I'd not bother with the return code to lm_breaker_timedout.
+>>>
+>>> Make it void return and have it call lease_modify itself before
+>>> returning in the cases where you have it returning true. If the
+>>> operation isn't defined then just do the lease_modify here like we
+>>> always have.
+>> The first call to lm_breaker_timedout schedules the fence worker so
+>> fencing is not done yet. If lm_breaker_timedout return to time_out_leases
+>> without any return value then lease_modify is called to remove the lease.
+>>
+>> Am i missing something?
+>>
+>> -Dai
+>>
+> if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
+> 	fl->fl_lmops->lm_breaker_timedout(fl);
+> else
+> 	lease_modify(fl, F_UNLCK, dispose);
+>
+> ... the lm_breaker_timedout() function (or the workqueue job it spawns)
+> is then responsible for calling lease_modify() at the appropriate time.
+>
+> In most cases you're going to need to queue a workqueue job to fence,
+> and you don't want to clear out the lease until after it's done.
 
-... the lm_breaker_timedout() function (or the workqueue job it spawns)
-is then responsible for calling lease_modify() at the appropriate time.
+Oh I see, thank you!
 
-In most cases you're going to need to queue a workqueue job to fence,
-and you don't want to clear out the lease until after it's done.
+-Dai
 
-
-> >=20
-> > > +		}
-> > >   	}
-> > >   }
-> > >  =20
-> > > diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> > > index 7ba9e2dd0875..69d3889df302 100644
-> > > --- a/fs/nfsd/blocklayout.c
-> > > +++ b/fs/nfsd/blocklayout.c
-> > > @@ -443,6 +443,14 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode=
-, struct svc_rqst *rqstp,
-> > >   	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
-> > >   }
-> > >  =20
-> > > +/*
-> > > + * Perform the fence operation to prevent the client from accessing =
-the
-> > > + * block device. If a fence operation is already in progress, wait f=
-or
-> > > + * it to complete before checking the NFSD_MDS_PR_FENCED flag. Once =
-the
-> > > + * operation is complete, check the flag. If NFSD_MDS_PR_FENCED is s=
-et,
-> > > + * update the layout stateid by setting the ls_fenced flag to indica=
-te
-> > > + * that the client has been fenced.
-> > > + */
-> > >   static void
-> > >   nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd=
-_file *file)
-> > >   {
-> > > @@ -450,31 +458,23 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stat=
-eid *ls, struct nfsd_file *file)
-> > >   	struct block_device *bdev =3D file->nf_file->f_path.mnt->mnt_sb->s=
-_bdev;
-> > >   	int status;
-> > >  =20
-> > > -	if (nfsd4_scsi_fence_set(clp, bdev->bd_dev))
-> > > +	mutex_lock(&clp->cl_fence_mutex);
-> > > +	if (nfsd4_scsi_fence_set(clp, bdev->bd_dev)) {
-> > > +		ls->ls_fenced =3D true;
-> > > +		mutex_unlock(&clp->cl_fence_mutex);
-> > > +		nfs4_put_stid(&ls->ls_stid);
-> > >   		return;
-> > > +	}
-> > >  =20
-> > I don't understand what this new mutex is protecting, and this all
-> > seems overly complex. If feels kind of like you want nfsd to be driving
-> > the fencing retries, but I don't think we really do. Here's what I'd
-> > do.
-> >=20
-> > I'd just make ->fence_client a bool or int return, and have it indicate
-> > whether the client was successfully fenced or not. If it was
-> > successfully fenced, then have the caller call lease_modify() to remove
-> > the lease.=C2=A0If it wasn't successfully fenced, have the caller (the
-> > workqueue job) requeue itself if you want to retry. If the caller is
-> > ready to give up, then call lease_modify() on it and remove it (and
-> > probably throw a pr_warn()).
-> >=20
-> > >   	status =3D bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_=
-PR_KEY,
-> > >   			nfsd4_scsi_pr_key(clp),
-> > >   			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
-> > > -	/*
-> > > -	 * Reset to allow retry only when the command could not have
-> > > -	 * reached the device. Negative status means a local error
-> > > -	 * (e.g., -ENOMEM) prevented the command from being sent.
-> > > -	 * PR_STS_PATH_FAILED, PR_STS_PATH_FAST_FAILED, and
-> > > -	 * PR_STS_RETRY_PATH_FAILURE indicate transport path failures
-> > > -	 * before device delivery.
-> > > -	 *
-> > > -	 * For all other errors, the command may have reached the device
-> > > -	 * and the preempt may have succeeded. Avoid resetting, since
-> > > -	 * retrying a successful preempt returns PR_STS_IOERR or
-> > > -	 * PR_STS_RESERVATION_CONFLICT, which would cause an infinite
-> > > -	 * retry loop.
-> > > -	 */
-> > > -	if (status < 0 ||
-> > > -	    status =3D=3D PR_STS_PATH_FAILED ||
-> > > -	    status =3D=3D PR_STS_PATH_FAST_FAILED ||
-> > > -	    status =3D=3D PR_STS_RETRY_PATH_FAILURE)
-> > > +	if (status)
-> > >   		nfsd4_scsi_fence_clear(clp, bdev->bd_dev);
-> > > +	else
-> > > +		ls->ls_fenced =3D true;
-> > > +	mutex_unlock(&clp->cl_fence_mutex);
-> > > +	nfs4_put_stid(&ls->ls_stid);
-> > >  =20
-> > >   	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
-> > >   }
-> > > diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-> > > index ad7af8cfcf1f..1c498f3cd059 100644
-> > > --- a/fs/nfsd/nfs4layouts.c
-> > > +++ b/fs/nfsd/nfs4layouts.c
-> > > @@ -222,6 +222,29 @@ nfsd4_layout_setlease(struct nfs4_layout_stateid=
- *ls)
-> > >   	return 0;
-> > >   }
-> > >  =20
-> > > +static void
-> > > +nfsd4_layout_fence_worker(struct work_struct *work)
-> > > +{
-> > > +	struct nfsd_file *nf;
-> > > +	struct delayed_work *dwork =3D to_delayed_work(work);
-> > > +	struct nfs4_layout_stateid *ls =3D container_of(dwork,
-> > > +			struct nfs4_layout_stateid, ls_fence_work);
-> > > +	u32 type;
-> > > +
-> > > +	rcu_read_lock();
-> > > +	nf =3D nfsd_file_get(ls->ls_file);
-> > > +	rcu_read_unlock();
-> > > +	if (!nf) {
-> > > +		nfs4_put_stid(&ls->ls_stid);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	type =3D ls->ls_layout_type;
-> > > +	if (nfsd4_layout_ops[type]->fence_client)
-> > > +		nfsd4_layout_ops[type]->fence_client(ls, nf);
-> > If you make fence_client an int/bool return, then you could just
-> > requeue this job to try it again.
-> >=20
-> > > +	nfsd_file_put(nf);
-> > > +}
-> > > +
-> > >   static struct nfs4_layout_stateid *
-> > >   nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
-> > >   		struct nfs4_stid *parent, u32 layout_type)
-> > > @@ -271,6 +294,10 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound=
-_state *cstate,
-> > >   	list_add(&ls->ls_perfile, &fp->fi_lo_states);
-> > >   	spin_unlock(&fp->fi_lock);
-> > >  =20
-> > > +	INIT_DELAYED_WORK(&ls->ls_fence_work, nfsd4_layout_fence_worker);
-> > > +	ls->ls_fenced =3D false;
-> > > +	ls->ls_fence_retry_cnt =3D 0;
-> > > +
-> > >   	trace_nfsd_layoutstate_alloc(&ls->ls_stid.sc_stateid);
-> > >   	return ls;
-> > >   }
-> > > @@ -708,9 +735,10 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, =
-struct rpc_task *task)
-> > >   		rcu_read_unlock();
-> > >   		if (fl) {
-> > >   			ops =3D nfsd4_layout_ops[ls->ls_layout_type];
-> > > -			if (ops->fence_client)
-> > > +			if (ops->fence_client) {
-> > > +				refcount_inc(&ls->ls_stid.sc_count);
-> > >   				ops->fence_client(ls, fl);
-> > > -			else
-> > > +			} else
-> > >   				nfsd4_cb_layout_fail(ls, fl);
-> > >   			nfsd_file_put(fl);
-> > >   		}
-> > > @@ -747,11 +775,9 @@ static bool
-> > >   nfsd4_layout_lm_break(struct file_lease *fl)
-> > >   {
-> > >   	/*
-> > > -	 * We don't want the locks code to timeout the lease for us;
-> > > -	 * we'll remove it ourself if a layout isn't returned
-> > > -	 * in time:
-> > > +	 * Enforce break lease timeout to prevent NFSD
-> > > +	 * thread from hanging in __break_lease.
-> > >   	 */
-> > > -	fl->fl_break_time =3D 0;
-> > >   	nfsd4_recall_file_layout(fl->c.flc_owner);
-> > >   	return false;
-> > >   }
-> > > @@ -782,10 +808,51 @@ nfsd4_layout_lm_open_conflict(struct file *filp=
-, int arg)
-> > >   	return 0;
-> > >   }
-> > >  =20
-> > > +/**
-> > > + * nfsd4_layout_lm_breaker_timedout - The layout recall has timed ou=
-t.
-> > > + * If the layout type supports a fence operation, schedule a worker =
-to
-> > > + * fence the client from accessing the block device.
-> > > + *
-> > > + * @fl: file to check
-> > > + *
-> > > + * Return true if the file lease should be disposed of by the caller=
-;
-> > > + * otherwise, return false.
-> > > + */
-> > > +static bool
-> > > +nfsd4_layout_lm_breaker_timedout(struct file_lease *fl)
-> > > +{
-> > > +	struct nfs4_layout_stateid *ls =3D fl->c.flc_owner;
-> > > +	bool ret;
-> > > +
-> > > +	if (!nfsd4_layout_ops[ls->ls_layout_type]->fence_client)
-> > > +		return true;
-> > > +	if (ls->ls_fenced || ls->ls_fence_retry_cnt >=3D LO_MAX_FENCE_RETRY=
-)
-> > > +		return true;
-> > > +
-> > > +	if (work_busy(&ls->ls_fence_work.work))
-> > > +		return false;
-> > > +	/* Schedule work to do the fence operation */
-> > > +	ret =3D mod_delayed_work(system_dfl_wq, &ls->ls_fence_work, 0);
-> > > +	if (!ret) {
-> > > +		/*
-> > > +		 * If there is no pending work, mod_delayed_work queues
-> > > +		 * new task. While fencing is in progress, a reference
-> > > +		 * count is added to the layout stateid to ensure its
-> > > +		 * validity. This reference count is released once fencing
-> > > +		 * has been completed.
-> > > +		 */
-> > > +		refcount_inc(&ls->ls_stid.sc_count);
-> > > +		++ls->ls_fence_retry_cnt;
-> > > +		return true;
-> > The cases where the fencing didn't work after too many retries, or the
-> > job couldn't be queued should probably get a pr_warn or something. The
-> > admin needs to know that data corruption is possible and that they
-> > might need to nuke the client manually.
-> >=20
-> > > +	}
-> > > +	return false;
-> > > +}
-> > > +
-> > >   static const struct lease_manager_operations nfsd4_layouts_lm_ops =
-=3D {
-> > >   	.lm_break		=3D nfsd4_layout_lm_break,
-> > >   	.lm_change		=3D nfsd4_layout_lm_change,
-> > >   	.lm_open_conflict	=3D nfsd4_layout_lm_open_conflict,
-> > > +	.lm_breaker_timedout	=3D nfsd4_layout_lm_breaker_timedout,
-> > >   };
-> > >  =20
-> > >   int
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index 583c13b5aaf3..a57fa3318362 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -2385,6 +2385,7 @@ static struct nfs4_client *alloc_client(struct =
-xdr_netobj name,
-> > >   #endif
-> > >   #ifdef CONFIG_NFSD_SCSILAYOUT
-> > >   	xa_init(&clp->cl_dev_fences);
-> > > +	mutex_init(&clp->cl_fence_mutex);
-> > >   #endif
-> > >   	INIT_LIST_HEAD(&clp->async_copies);
-> > >   	spin_lock_init(&clp->async_lock);
-> > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > > index 713f55ef6554..57e54dfb406c 100644
-> > > --- a/fs/nfsd/state.h
-> > > +++ b/fs/nfsd/state.h
-> > > @@ -529,6 +529,7 @@ struct nfs4_client {
-> > >   	time64_t		cl_ra_time;
-> > >   #ifdef CONFIG_NFSD_SCSILAYOUT
-> > >   	struct xarray		cl_dev_fences;
-> > > +	struct mutex		cl_fence_mutex;
-> > >   #endif
-> > >   };
-> > >  =20
-> > > @@ -738,8 +739,13 @@ struct nfs4_layout_stateid {
-> > >   	stateid_t			ls_recall_sid;
-> > >   	bool				ls_recalled;
-> > >   	struct mutex			ls_mutex;
-> > > +	struct delayed_work		ls_fence_work;
-> > > +	bool				ls_fenced;
-> > > +	int				ls_fence_retry_cnt;
-> > >   };
-> > >  =20
-> > > +#define	LO_MAX_FENCE_RETRY		5
-> > > +
-> > >   static inline struct nfs4_layout_stateid *layoutstateid(struct nfs4=
-_stid *s)
-> > >   {
-> > >   	return container_of(s, struct nfs4_layout_stateid, ls_stid);
-> > > diff --git a/include/linux/filelock.h b/include/linux/filelock.h
-> > > index 2f5e5588ee07..13b9c9f04589 100644
-> > > --- a/include/linux/filelock.h
-> > > +++ b/include/linux/filelock.h
-> > > @@ -50,6 +50,7 @@ struct lease_manager_operations {
-> > >   	void (*lm_setup)(struct file_lease *, void **);
-> > >   	bool (*lm_breaker_owns_lease)(struct file_lease *);
-> > >   	int (*lm_open_conflict)(struct file *, int);
-> > > +	bool (*lm_breaker_timedout)(struct file_lease *fl);
-> > >   };
-> > >  =20
-> > >   struct lock_manager {
-
---=20
-Jeff Layton <jlayton@kernel.org>
+>
+>
+>>>> +		}
+>>>>    	}
+>>>>    }
+>>>>    
+>>>> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+>>>> index 7ba9e2dd0875..69d3889df302 100644
+>>>> --- a/fs/nfsd/blocklayout.c
+>>>> +++ b/fs/nfsd/blocklayout.c
+>>>> @@ -443,6 +443,14 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode, struct svc_rqst *rqstp,
+>>>>    	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
+>>>>    }
+>>>>    
+>>>> +/*
+>>>> + * Perform the fence operation to prevent the client from accessing the
+>>>> + * block device. If a fence operation is already in progress, wait for
+>>>> + * it to complete before checking the NFSD_MDS_PR_FENCED flag. Once the
+>>>> + * operation is complete, check the flag. If NFSD_MDS_PR_FENCED is set,
+>>>> + * update the layout stateid by setting the ls_fenced flag to indicate
+>>>> + * that the client has been fenced.
+>>>> + */
+>>>>    static void
+>>>>    nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
+>>>>    {
+>>>> @@ -450,31 +458,23 @@ nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file *file)
+>>>>    	struct block_device *bdev = file->nf_file->f_path.mnt->mnt_sb->s_bdev;
+>>>>    	int status;
+>>>>    
+>>>> -	if (nfsd4_scsi_fence_set(clp, bdev->bd_dev))
+>>>> +	mutex_lock(&clp->cl_fence_mutex);
+>>>> +	if (nfsd4_scsi_fence_set(clp, bdev->bd_dev)) {
+>>>> +		ls->ls_fenced = true;
+>>>> +		mutex_unlock(&clp->cl_fence_mutex);
+>>>> +		nfs4_put_stid(&ls->ls_stid);
+>>>>    		return;
+>>>> +	}
+>>>>    
+>>> I don't understand what this new mutex is protecting, and this all
+>>> seems overly complex. If feels kind of like you want nfsd to be driving
+>>> the fencing retries, but I don't think we really do. Here's what I'd
+>>> do.
+>>>
+>>> I'd just make ->fence_client a bool or int return, and have it indicate
+>>> whether the client was successfully fenced or not. If it was
+>>> successfully fenced, then have the caller call lease_modify() to remove
+>>> the lease. If it wasn't successfully fenced, have the caller (the
+>>> workqueue job) requeue itself if you want to retry. If the caller is
+>>> ready to give up, then call lease_modify() on it and remove it (and
+>>> probably throw a pr_warn()).
+>>>
+>>>>    	status = bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
+>>>>    			nfsd4_scsi_pr_key(clp),
+>>>>    			PR_EXCLUSIVE_ACCESS_REG_ONLY, true);
+>>>> -	/*
+>>>> -	 * Reset to allow retry only when the command could not have
+>>>> -	 * reached the device. Negative status means a local error
+>>>> -	 * (e.g., -ENOMEM) prevented the command from being sent.
+>>>> -	 * PR_STS_PATH_FAILED, PR_STS_PATH_FAST_FAILED, and
+>>>> -	 * PR_STS_RETRY_PATH_FAILURE indicate transport path failures
+>>>> -	 * before device delivery.
+>>>> -	 *
+>>>> -	 * For all other errors, the command may have reached the device
+>>>> -	 * and the preempt may have succeeded. Avoid resetting, since
+>>>> -	 * retrying a successful preempt returns PR_STS_IOERR or
+>>>> -	 * PR_STS_RESERVATION_CONFLICT, which would cause an infinite
+>>>> -	 * retry loop.
+>>>> -	 */
+>>>> -	if (status < 0 ||
+>>>> -	    status == PR_STS_PATH_FAILED ||
+>>>> -	    status == PR_STS_PATH_FAST_FAILED ||
+>>>> -	    status == PR_STS_RETRY_PATH_FAILURE)
+>>>> +	if (status)
+>>>>    		nfsd4_scsi_fence_clear(clp, bdev->bd_dev);
+>>>> +	else
+>>>> +		ls->ls_fenced = true;
+>>>> +	mutex_unlock(&clp->cl_fence_mutex);
+>>>> +	nfs4_put_stid(&ls->ls_stid);
+>>>>    
+>>>>    	trace_nfsd_pnfs_fence(clp, bdev->bd_disk->disk_name, status);
+>>>>    }
+>>>> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+>>>> index ad7af8cfcf1f..1c498f3cd059 100644
+>>>> --- a/fs/nfsd/nfs4layouts.c
+>>>> +++ b/fs/nfsd/nfs4layouts.c
+>>>> @@ -222,6 +222,29 @@ nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
+>>>>    	return 0;
+>>>>    }
+>>>>    
+>>>> +static void
+>>>> +nfsd4_layout_fence_worker(struct work_struct *work)
+>>>> +{
+>>>> +	struct nfsd_file *nf;
+>>>> +	struct delayed_work *dwork = to_delayed_work(work);
+>>>> +	struct nfs4_layout_stateid *ls = container_of(dwork,
+>>>> +			struct nfs4_layout_stateid, ls_fence_work);
+>>>> +	u32 type;
+>>>> +
+>>>> +	rcu_read_lock();
+>>>> +	nf = nfsd_file_get(ls->ls_file);
+>>>> +	rcu_read_unlock();
+>>>> +	if (!nf) {
+>>>> +		nfs4_put_stid(&ls->ls_stid);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	type = ls->ls_layout_type;
+>>>> +	if (nfsd4_layout_ops[type]->fence_client)
+>>>> +		nfsd4_layout_ops[type]->fence_client(ls, nf);
+>>> If you make fence_client an int/bool return, then you could just
+>>> requeue this job to try it again.
+>>>
+>>>> +	nfsd_file_put(nf);
+>>>> +}
+>>>> +
+>>>>    static struct nfs4_layout_stateid *
+>>>>    nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+>>>>    		struct nfs4_stid *parent, u32 layout_type)
+>>>> @@ -271,6 +294,10 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+>>>>    	list_add(&ls->ls_perfile, &fp->fi_lo_states);
+>>>>    	spin_unlock(&fp->fi_lock);
+>>>>    
+>>>> +	INIT_DELAYED_WORK(&ls->ls_fence_work, nfsd4_layout_fence_worker);
+>>>> +	ls->ls_fenced = false;
+>>>> +	ls->ls_fence_retry_cnt = 0;
+>>>> +
+>>>>    	trace_nfsd_layoutstate_alloc(&ls->ls_stid.sc_stateid);
+>>>>    	return ls;
+>>>>    }
+>>>> @@ -708,9 +735,10 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
+>>>>    		rcu_read_unlock();
+>>>>    		if (fl) {
+>>>>    			ops = nfsd4_layout_ops[ls->ls_layout_type];
+>>>> -			if (ops->fence_client)
+>>>> +			if (ops->fence_client) {
+>>>> +				refcount_inc(&ls->ls_stid.sc_count);
+>>>>    				ops->fence_client(ls, fl);
+>>>> -			else
+>>>> +			} else
+>>>>    				nfsd4_cb_layout_fail(ls, fl);
+>>>>    			nfsd_file_put(fl);
+>>>>    		}
+>>>> @@ -747,11 +775,9 @@ static bool
+>>>>    nfsd4_layout_lm_break(struct file_lease *fl)
+>>>>    {
+>>>>    	/*
+>>>> -	 * We don't want the locks code to timeout the lease for us;
+>>>> -	 * we'll remove it ourself if a layout isn't returned
+>>>> -	 * in time:
+>>>> +	 * Enforce break lease timeout to prevent NFSD
+>>>> +	 * thread from hanging in __break_lease.
+>>>>    	 */
+>>>> -	fl->fl_break_time = 0;
+>>>>    	nfsd4_recall_file_layout(fl->c.flc_owner);
+>>>>    	return false;
+>>>>    }
+>>>> @@ -782,10 +808,51 @@ nfsd4_layout_lm_open_conflict(struct file *filp, int arg)
+>>>>    	return 0;
+>>>>    }
+>>>>    
+>>>> +/**
+>>>> + * nfsd4_layout_lm_breaker_timedout - The layout recall has timed out.
+>>>> + * If the layout type supports a fence operation, schedule a worker to
+>>>> + * fence the client from accessing the block device.
+>>>> + *
+>>>> + * @fl: file to check
+>>>> + *
+>>>> + * Return true if the file lease should be disposed of by the caller;
+>>>> + * otherwise, return false.
+>>>> + */
+>>>> +static bool
+>>>> +nfsd4_layout_lm_breaker_timedout(struct file_lease *fl)
+>>>> +{
+>>>> +	struct nfs4_layout_stateid *ls = fl->c.flc_owner;
+>>>> +	bool ret;
+>>>> +
+>>>> +	if (!nfsd4_layout_ops[ls->ls_layout_type]->fence_client)
+>>>> +		return true;
+>>>> +	if (ls->ls_fenced || ls->ls_fence_retry_cnt >= LO_MAX_FENCE_RETRY)
+>>>> +		return true;
+>>>> +
+>>>> +	if (work_busy(&ls->ls_fence_work.work))
+>>>> +		return false;
+>>>> +	/* Schedule work to do the fence operation */
+>>>> +	ret = mod_delayed_work(system_dfl_wq, &ls->ls_fence_work, 0);
+>>>> +	if (!ret) {
+>>>> +		/*
+>>>> +		 * If there is no pending work, mod_delayed_work queues
+>>>> +		 * new task. While fencing is in progress, a reference
+>>>> +		 * count is added to the layout stateid to ensure its
+>>>> +		 * validity. This reference count is released once fencing
+>>>> +		 * has been completed.
+>>>> +		 */
+>>>> +		refcount_inc(&ls->ls_stid.sc_count);
+>>>> +		++ls->ls_fence_retry_cnt;
+>>>> +		return true;
+>>> The cases where the fencing didn't work after too many retries, or the
+>>> job couldn't be queued should probably get a pr_warn or something. The
+>>> admin needs to know that data corruption is possible and that they
+>>> might need to nuke the client manually.
+>>>
+>>>> +	}
+>>>> +	return false;
+>>>> +}
+>>>> +
+>>>>    static const struct lease_manager_operations nfsd4_layouts_lm_ops = {
+>>>>    	.lm_break		= nfsd4_layout_lm_break,
+>>>>    	.lm_change		= nfsd4_layout_lm_change,
+>>>>    	.lm_open_conflict	= nfsd4_layout_lm_open_conflict,
+>>>> +	.lm_breaker_timedout	= nfsd4_layout_lm_breaker_timedout,
+>>>>    };
+>>>>    
+>>>>    int
+>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>> index 583c13b5aaf3..a57fa3318362 100644
+>>>> --- a/fs/nfsd/nfs4state.c
+>>>> +++ b/fs/nfsd/nfs4state.c
+>>>> @@ -2385,6 +2385,7 @@ static struct nfs4_client *alloc_client(struct xdr_netobj name,
+>>>>    #endif
+>>>>    #ifdef CONFIG_NFSD_SCSILAYOUT
+>>>>    	xa_init(&clp->cl_dev_fences);
+>>>> +	mutex_init(&clp->cl_fence_mutex);
+>>>>    #endif
+>>>>    	INIT_LIST_HEAD(&clp->async_copies);
+>>>>    	spin_lock_init(&clp->async_lock);
+>>>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+>>>> index 713f55ef6554..57e54dfb406c 100644
+>>>> --- a/fs/nfsd/state.h
+>>>> +++ b/fs/nfsd/state.h
+>>>> @@ -529,6 +529,7 @@ struct nfs4_client {
+>>>>    	time64_t		cl_ra_time;
+>>>>    #ifdef CONFIG_NFSD_SCSILAYOUT
+>>>>    	struct xarray		cl_dev_fences;
+>>>> +	struct mutex		cl_fence_mutex;
+>>>>    #endif
+>>>>    };
+>>>>    
+>>>> @@ -738,8 +739,13 @@ struct nfs4_layout_stateid {
+>>>>    	stateid_t			ls_recall_sid;
+>>>>    	bool				ls_recalled;
+>>>>    	struct mutex			ls_mutex;
+>>>> +	struct delayed_work		ls_fence_work;
+>>>> +	bool				ls_fenced;
+>>>> +	int				ls_fence_retry_cnt;
+>>>>    };
+>>>>    
+>>>> +#define	LO_MAX_FENCE_RETRY		5
+>>>> +
+>>>>    static inline struct nfs4_layout_stateid *layoutstateid(struct nfs4_stid *s)
+>>>>    {
+>>>>    	return container_of(s, struct nfs4_layout_stateid, ls_stid);
+>>>> diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+>>>> index 2f5e5588ee07..13b9c9f04589 100644
+>>>> --- a/include/linux/filelock.h
+>>>> +++ b/include/linux/filelock.h
+>>>> @@ -50,6 +50,7 @@ struct lease_manager_operations {
+>>>>    	void (*lm_setup)(struct file_lease *, void **);
+>>>>    	bool (*lm_breaker_owns_lease)(struct file_lease *);
+>>>>    	int (*lm_open_conflict)(struct file *, int);
+>>>> +	bool (*lm_breaker_timedout)(struct file_lease *fl);
+>>>>    };
+>>>>    
+>>>>    struct lock_manager {
 
