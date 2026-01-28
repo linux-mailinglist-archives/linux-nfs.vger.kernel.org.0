@@ -1,48 +1,49 @@
-Return-Path: <linux-nfs+bounces-18566-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18567-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OAnwABcpemlk3QEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18566-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 16:19:51 +0100
+	id FT16Cx4peml/3gEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18567-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 16:19:58 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D1E5A3A7F
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 16:19:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 64579A3A8C
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 16:19:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F26543002E22
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 15:19:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 639803012C80
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 Jan 2026 15:19:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42CE52FFDDE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB3DD36A01B;
 	Wed, 28 Jan 2026 15:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4iAt9/9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nki0qlR+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205032BD5AF
-	for <linux-nfs@vger.kernel.org>; Wed, 28 Jan 2026 15:19:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE382BD5AF
+	for <linux-nfs@vger.kernel.org>; Wed, 28 Jan 2026 15:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769613578; cv=none; b=sjpZ+L+3mllgXNK4jybhRcTtz2dl4wQWuRiSF0j0muzABHvIZMhptmptY2cW+qpuB6zI3jLh+0LwNdhWW2wsYG88kWw49d+jp2TXinxs93hNBMHJm1JEm5sbvCphHDqY9mH2skPcnN//npJc6+5sPrH4rEOGqcrLvnhkKPwTBu4=
+	t=1769613578; cv=none; b=WRBHNsXgKyAlwRiVGeNwGMhHYeqMQhRvPQ4GQSdijMTCkqjekSeNHPubn5fFtETPhjMPs9KucUXiEDdFRze+omfeGUQBYEMRnzWdBssZqNg2jj1wIU5+UO8cXcjT8T+8xVh97Yy0DQ82WKzQ1DBfHXd2zcwa5tl4kTORqkDn3Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769613578; c=relaxed/simple;
-	bh=eFxmbVXKNIHOJ0p5t6uvtE36/T2eNE8w3m/tt9Ne0kw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LeEbAivuKqcB7Is/m2acYgRarES212Oc5UKZo6GHZ/Uco6d+TCfZY4AVkNLcQ3tT9klWqwUr9LaECe76nLFXAWZbfKKA/LLbJCnYScNaOkSM7G4SO+oLq5IcHSJYbhuEJHJrUdcMKlddy1qrzYgKSwqZetH7op5fklV5Jj7vaQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4iAt9/9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD61C4CEF1;
+	bh=YTdROeVV9pacPvZoAwA8uFi9Qi1gPw1NPvMpUCKXSU0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DCzQW9sboM6yeuKGONKGsKyuyX6+p+pavr8fFo+A6Jgs3lxa+JBTx8RRf+bgCBjfa9MrjEHFbHHKcYvEeGPhgBiHIGJjfl5gNnC4MGvxrTu8ZOTufC/Zn40pWn2TO2irlgcZhN3zBi6emI63O/Vt90gcb+uil/Y0A44ONyhjRuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nki0qlR+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF53C4CEF7;
 	Wed, 28 Jan 2026 15:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769613577;
-	bh=eFxmbVXKNIHOJ0p5t6uvtE36/T2eNE8w3m/tt9Ne0kw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X4iAt9/9z/tXcbRuK6HTYC1wS4KguJ6vQpiZy1DEEpk/dUS4qepdMqu0DmmIhptu3
-	 OLqUBulCTYY+ikccZRm/db94Pq65WioKaEKTYHhokwolDXU3I8AvA+0ffFMz8NUCiU
-	 lB8q9oQu2F+Nzogc9v9KGrcPwhPQHE/b9MRfkRTHiqSNlAVZYwRgjMzoh4N4kVcFyz
-	 s3JoyCytYWuz/nqvIu8rbo7b8Fu7alVOZ8trEq3AvAndnyWvdXWFK+Uke7wvl2kbnt
-	 XZM5KQdpmooWBy6EveK1cT5NkQJIcLkVsJYDO1+wudl62ygS2HTvL/GLxL4lbD4NW6
-	 Gpg7md9/HjjFQ==
+	s=k20201202; t=1769613578;
+	bh=YTdROeVV9pacPvZoAwA8uFi9Qi1gPw1NPvMpUCKXSU0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Nki0qlR+54fpsjArh7stVAt7E9OX9B60ownO3A9QX0gzoWaIMLl1uDNicBohdOO0d
+	 rIn/3GkJZ8qIrJ5RIYeiFfbXB0fNM/vxvbqXgZp+U5hNdaLWUCTfLlsG0E5HPiNiCC
+	 2YloHwKksfAXJ2Oqf6g1EnySD4RcjxObc1MJh4W99PIYq+0U56zZAyvfxdrHrXndf2
+	 tIa+c2onlnJL8oNFz1TwLK0PkWWgMrocwhLX90WqdsUCNzI+/aEyHB+rPXYyuQ4Huy
+	 SUa1Xs8GoqAnAylyjGYikFVRtgvK7lGVfMZZoriJZeeMYTcbiXSS/JPkitBPDiOauF
+	 N8af5kCbTSHWA==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -51,10 +52,12 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v4 00/14] Subject: Clarify module API boundaries
-Date: Wed, 28 Jan 2026 10:19:21 -0500
-Message-ID: <20260128151935.1646063-1-cel@kernel.org>
+Subject: [PATCH v4 01/14] lockd: Simplify cast_status() in svcproc.c
+Date: Wed, 28 Jan 2026 10:19:22 -0500
+Message-ID: <20260128151935.1646063-2-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260128151935.1646063-1-cel@kernel.org>
+References: <20260128151935.1646063-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -73,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18566-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18567-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -91,109 +94,80 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7D1E5A3A7F
+X-Rspamd-Queue-Id: 64579A3A8C
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The patches in this series refactor the lockd code base to clearly
-separate its public API from internal implementation and NLM
-protocol details.
+Clean up: The svcproc.c file handles only NLM v1 and v3 requests.
+NLMv4 requests are routed to a separate procedure table in
+svc4proc.c, so rqstp->rq_vers can never be 4 in this context.
 
-As context, the patches in this series are pre-requisite to the
-XDR changes posted earlier:
+Remove the unused vers parameter and the dead "vers != 4" check from
+cast_to_nlm(). This eliminates the need for the macro wrapper.
 
-  https://lore.kernel.org/linux-nfs/f41b27dc-fd7a-4a39-b490-1a19b3947f90@kernel.org/T/#t
-
-The lockd subsystem currently exposes internal implementation headers
-through include/linux/lockd/, creating implicit API contracts that
-complicate maintenance. External consumers such as NFSD and the NFS
-client have developed dependencies on internal structures like struct
-nlm_host, and wire protocol constants leak into high-level module
-interfaces.
-
-These patches work to establish clean architectural boundaries. The
-public API in include/linux/lockd/ is reduced to bind.h and nlm.h,
-which define the contract between lockd and its consumers. Private
-implementation details including XDR definitions, share management,
-and host structures are relocated to fs/lockd/ where they belong.
-Layering violations are corrected: the NFS client now uses accessor
-helpers instead of dereferencing internal structures, and nlm_fopen()
-returns errno values instead of wire protocol codes.
-
-These changes enable subsequent work to modernize the NLMv4 XDR
-layer using xdrgen without risk of breaking external consumers.
-This work appears in the remaining patches in this series, which
-are presented here only to provide context for the API adjustments.
-No need to review those closely just yet.
-
-The series is based on the public nfsd-testing branch.
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ fs/lockd/svcproc.c | 40 +++++++++++++++++++---------------------
+ 1 file changed, 19 insertions(+), 21 deletions(-)
 
-Changes since v3:
-- Address a build failure due to header reorganization
-
-Changes since v2:
-- Serialize client-side NLM shutdown to avoid UAF and NPD
-- Address a build failure due to header reorganization
-- Rename internal status code nlm_drop_reply
-
-Changes since v1:
-- Refine the pre-requisite header adjustments
-- Reduce stack consumption by moving large structures to wrappers
-- Additional extensive clean up
-
-Chuck Lever (14):
-  lockd: Simplify cast_status() in svcproc.c
-  lockd: Relocate and rename nlm_drop_reply
-  lockd: Introduce nlm__int__deadlock
-  lockd: Have nlm_fopen() return errno values
-  lockd: Relocate nlmsvc_unlock API declarations
-  NFS: Use nlmclnt_shutdown_rpc_clnt() to safely shut down NLM
-  lockd: Move xdr4.h from include/linux/lockd/ to fs/lockd/
-  lockd: Move share.h from include/linux/lockd/ to fs/lockd/
-  lockd: Relocate include/linux/lockd/lockd.h
-  lockd: Remove lockd/debug.h
-  lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
-  lockd: Make linux/lockd/nlm.h an internal header
-  lockd: Move nlm4svc_set_file_lock_range()
-  lockd: Relocate svc_version definitions to XDR layer
-
- fs/lockd/clnt4xdr.c                 |   7 +-
- fs/lockd/clntlock.c                 |   2 +-
- fs/lockd/clntproc.c                 |   2 +-
- fs/lockd/clntxdr.c                  |   3 +-
- fs/lockd/host.c                     |  31 +++++++-
- {include/linux => fs}/lockd/lockd.h |  94 +++++++++++++++++-----
- fs/lockd/mon.c                      |   2 +-
- {include/linux => fs}/lockd/nlm.h   |   8 +-
- {include/linux => fs}/lockd/share.h |   8 +-
- fs/lockd/svc.c                      |  50 +++---------
- fs/lockd/svc4proc.c                 |  77 ++++++++++++++----
- fs/lockd/svclock.c                  |  16 ++--
- fs/lockd/svcproc.c                  | 119 ++++++++++++++++++++--------
- fs/lockd/svcshare.c                 |   5 +-
- fs/lockd/svcsubs.c                  |  32 ++++++--
- fs/lockd/trace.h                    |   3 +-
- fs/lockd/xdr.c                      |   3 +-
- {include/linux => fs}/lockd/xdr.h   |  15 +---
- fs/lockd/xdr4.c                     |  16 +---
- {include/linux => fs}/lockd/xdr4.h  |  16 +---
- fs/nfs/nfs3proc.c                   |   1 +
- fs/nfs/sysfs.c                      |   4 +-
- fs/nfsd/lockd.c                     |  50 +++++++-----
- fs/nfsd/nfsctl.c                    |   2 +-
- include/linux/lockd/bind.h          |  26 +++---
- include/linux/lockd/debug.h         |  40 ----------
- 26 files changed, 368 insertions(+), 264 deletions(-)
- rename {include/linux => fs}/lockd/lockd.h (85%)
- rename {include/linux => fs}/lockd/nlm.h (91%)
- rename {include/linux => fs}/lockd/share.h (85%)
- rename {include/linux => fs}/lockd/xdr.h (91%)
- rename {include/linux => fs}/lockd/xdr4.h (80%)
- delete mode 100644 include/linux/lockd/debug.h
-
+diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+index 5817ef272332..95c6bf7ab757 100644
+--- a/fs/lockd/svcproc.c
++++ b/fs/lockd/svcproc.c
+@@ -17,32 +17,30 @@
+ #define NLMDBG_FACILITY		NLMDBG_CLIENT
+ 
+ #ifdef CONFIG_LOCKD_V4
+-static __be32
+-cast_to_nlm(__be32 status, u32 vers)
++static inline __be32 cast_status(__be32 status)
+ {
+-	/* Note: status is assumed to be in network byte order !!! */
+-	if (vers != 4){
+-		switch (status) {
+-		case nlm_granted:
+-		case nlm_lck_denied:
+-		case nlm_lck_denied_nolocks:
+-		case nlm_lck_blocked:
+-		case nlm_lck_denied_grace_period:
+-		case nlm_drop_reply:
+-			break;
+-		case nlm4_deadlock:
+-			status = nlm_lck_denied;
+-			break;
+-		default:
+-			status = nlm_lck_denied_nolocks;
+-		}
++	switch (status) {
++	case nlm_granted:
++	case nlm_lck_denied:
++	case nlm_lck_denied_nolocks:
++	case nlm_lck_blocked:
++	case nlm_lck_denied_grace_period:
++	case nlm_drop_reply:
++		break;
++	case nlm4_deadlock:
++		status = nlm_lck_denied;
++		break;
++	default:
++		status = nlm_lck_denied_nolocks;
+ 	}
+ 
+-	return (status);
++	return status;
+ }
+-#define	cast_status(status) (cast_to_nlm(status, rqstp->rq_vers))
+ #else
+-#define cast_status(status) (status)
++static inline __be32 cast_status(__be32 status)
++{
++	return status;
++}
+ #endif
+ 
+ /*
 -- 
 2.52.0
 
