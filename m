@@ -1,211 +1,234 @@
-Return-Path: <linux-nfs+bounces-18611-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18612-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8D3qLd7Ve2klIwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-18611-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jan 2026 22:49:18 +0100
+	id 6Mo0GM8KfGkEKQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18612-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 02:35:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41302B5114
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jan 2026 22:49:18 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82CA5B62E9
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 02:35:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 23CC4300F5D0
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jan 2026 21:48:04 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AF73E3004068
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 01:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1476361DBB;
-	Thu, 29 Jan 2026 21:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 317FC331219;
+	Fri, 30 Jan 2026 01:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGM4QlsA"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="otUc/knw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCC1341654;
-	Thu, 29 Jan 2026 21:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B3B2E093C
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Jan 2026 01:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769723282; cv=none; b=oB5wqz0uwaMdAW7SiySafWpnMaBNbf9SHXICvfm+C7y6/Booy41t+9P0+YKVXlblbeGG6OO/dtZsZ/eUV4VnWgKCuje0PlRIm7PnOPib7iMKh2wbKjnemyIgoU73icCZwIm7SqVqYZcEDc1i2KFVCt3IcI15upgLZihmCNbYG7M=
+	t=1769736906; cv=none; b=BXQrvIOW5RgTOg+NuMLJe0RkcGxJJl34b74Yn1LCnDVOuBkcCAP++NgTCl0g3TX+fqtMUewq0+QDoBqOGAoRgg61cbuNgTcsb6zK19eYlkZqA/SntGy26qjlZ/02sIvCQljoDbJ4vzIcBlQZHYd1+W46zeehquKC5xmla+y9hgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769723282; c=relaxed/simple;
-	bh=KCfHIRNIzQzmMNTHvMxpX0pCBVPoHL5AjM3bzx+Vkkw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eoxNz2kTE6Jrbrmo7lQvVMRw6K/aZlNFPakI+vpsn7hBXNfGq+GAptMkueqX9qjGDmeGgmNspNOiCNWug/prTg9rdC1jj0Xzw7aQE+EzLQoZwX6GrdWL/ZluLKqdI//li611U/ypp+eW7aBptzdKtEbFTwUgje1qMI9fBlrwVr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGM4QlsA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6036AC16AAE;
-	Thu, 29 Jan 2026 21:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769723282;
-	bh=KCfHIRNIzQzmMNTHvMxpX0pCBVPoHL5AjM3bzx+Vkkw=;
-	h=From:Date:Subject:To:Cc:From;
-	b=UGM4QlsAOHzAAKw+pey3jrNubJB5kW37QUeQnvbQupC9CbT+bJNdOcsaFvEq7D2St
-	 dH2QssLyuGop60g0+uEHyxojZkQRhPxhWy7per3Okupw7k41utSybokypch3dvzpJz
-	 HfWnbeyQY1Vepm7+PVh3S+FGqKumCeVHvgnTppgpgeJRs9tpP7CpR6uGo0NDTa+Pjb
-	 h8e/LZuivP0MuLXVoazjJbpAmwaxUqZubxqmWVgnXgd/+a/otCsrjdcLa7iTOn7NUn
-	 YIoFUJax3ISjHzJ1NS61YoK+YeizpoEuaBg/rJpvfQ1b4Tsd8t5Y/ltrpXAd5Zvcip
-	 cDVsMF7hXqN8g==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 29 Jan 2026 16:47:43 -0500
-Subject: [PATCH] vfs: add FS_USERNS_DELEGATABLE flag and set it for NFS
+	s=arc-20240116; t=1769736906; c=relaxed/simple;
+	bh=fLG3MyyHJKFnJjMljskdIb4ePX5x7fo0LlvOmAEyjn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XjsBd4QUTyliGm9qj5S9BUjSagNPEjEU3H7IGaS27X6+Zt0JKZ4Bw0IBYmEv2XTXjB2+QuGN3AbM2yauzJHqUZ/Tee+v8KsiTqWwDcKuJCp0zEmwnRDhVwKjdpFSl21emYvA7Ym3R0jnmeQ+J/NOyp2ZzTqFNF2zW18QE+ciOgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=otUc/knw; arc=none smtp.client-ip=113.46.200.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=sNf0cQjyck4WCQU4OXC/lyV5tCo7Qg8H1/ffOEaoWYE=;
+	b=otUc/knwn9yBTOXMfQq560v7eVSTEyV1aU59lW9hmRU/1ANVNdWGEnytJFITw0OO/GdS6dN+L
+	Nt1bmwzEVf7m2ndkYkBAx8VdfbmRGkSoQLQfJtTuI9jK/HeqDnR93ZA7xJab9gq0qDTbRUIhDQz
+	G8cedBufKiCkPHuLTE+DSI0=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4f2JPv713dz1cyT9;
+	Fri, 30 Jan 2026 09:31:31 +0800 (CST)
+Received: from kwepemj200013.china.huawei.com (unknown [7.202.194.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id 75C4F40565;
+	Fri, 30 Jan 2026 09:35:00 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemj200013.china.huawei.com (7.202.194.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 30 Jan 2026 09:34:59 +0800
+Message-ID: <584f2b79-0648-4390-9007-16b7adfa7a0a@huawei.com>
+Date: Fri, 30 Jan 2026 09:34:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260129-twmount-v1-1-4874ed2a15c4@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDQyNL3ZLy3PzSvBJdQ0OTlJS0FBNjEyMDJaDqgqLUtMwKsEnRsbW1AOG
- EbDJZAAAA
-X-Change-ID: 20260129-twmount-114ddfd43420
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>, 
- Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4122; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=KCfHIRNIzQzmMNTHvMxpX0pCBVPoHL5AjM3bzx+Vkkw=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpe9WJYdNlDRR4DQUZwjy+Kw7c8bELmz6k50tvG
- aD6NrrhEM+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaXvViQAKCRAADmhBGVaC
- FZSZEACjhfeKy/f4a0++5uPJ8ofQjK6wTeKpOdiOCXRjAfh1MpNm9k6GbKsLa44mSi5smG394Lu
- 8hbLmn9OyLhKsAHBZ84KNgAVua4BgFgJE+Tgy1gBu9f1qhCR8mM4JZZaNK6TBGsmRhgb55NGrm5
- 9DSJ4xjkGrYlzMiEZf9upR5SCiGrKfdrpT/XJd3xfvw0dS6BOSd8vI/6M8Fx8hCu3JRQ402cghf
- 0v1FOfCpuPhvwNSdYVBnJacJhkIOH1ev3uDDXrii+SkBTf4D2SOcYLI5CaSCHh7JCijKP5/nKtZ
- hHurNW0rJkVay9OpwMXlAUtrXI+iuJwedmlBw91RV9yx85acZ52WwhmaDoiL81WFztlSTgwnQ+Y
- 1MHrjTUCSk4eBiXvBNdp9Oyi9vkBjU1qnZeK2/wJs2ZKlEI0umYRtdxT7xE8V+R2Cnjh4nNZCxX
- hZd5Pbopqr3wx/ZnzRE+iMsQlBViTTcFaAPnC87chNoYUclXk2WcIbacliurni4tTA2jW6gaAVj
- QBB9jYB0rNJZZIIlDZ5AZeZCVHHO7Uh+/HaTbi8UP182c+K7HjpnV2auwJtfCvgVI2XkUBD9s7t
- d74W2xenRt/fLoLPP2OeVV+WkQPCJx1mdSDmUvZa3EuwVAn6uyzVfjMqhVAPpArKqZzJSGzOmjU
- xaVx+XzcZm/iVzQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH 0/6] Fix up NFS client mount option regressions
+To: Trond Myklebust <trondmy@kernel.org>, Alkis Georgopoulos
+	<alkisg@gmail.com>
+CC: <linux-nfs@vger.kernel.org>, yangerkun <yangerkun@huawei.com>,
+	"chengzhihao1@huawei.com" <chengzhihao1@huawei.com>, "zhangyi (F)"
+	<yi.zhang@huawei.com>, Hou Tao <houtao1@huawei.com>,
+	<wangzhaolong1@huawei.com>
+References: <cbd4d74d-21c4-42d6-9442-276fd98313ee@gmail.com>
+ <cover.1764388528.git.trond.myklebust@hammerspace.com>
+ <cb5cd472-8989-451d-9da7-7d250027c27e@huawei.com>
+ <5d5f6605c0ba8751723b588a4d8e1def37e23c78.camel@kernel.org>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <5d5f6605c0ba8751723b588a4d8e1def37e23c78.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemj200013.china.huawei.com (7.202.194.25)
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18611-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18612-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[lilingfeng3@huawei.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 41302B5114
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,huawei.com:mid,huawei.com:dkim]
+X-Rspamd-Queue-Id: 82CA5B62E9
 X-Rspamd-Action: no action
 
-Commit e1c5ae59c0f2 ("fs: don't allow non-init s_user_ns for filesystems
-without FS_USERNS_MOUNT") prevents the mount of any filesystem inside a
-container that doesn't have FS_USERNS_MOUNT set.
+Hi Trond,
 
-This broke NFS mounts in our containerized environment. We have a daemon
-somewhat like systemd-mountfsd running in the init_ns. A process does a
-fsopen() inside the container and passes it to the daemon via unix
-socket.
+在 2026/1/30 0:00, Trond Myklebust 写道:
+> On Thu, 2026-01-29 at 15:06 +0800, Li Lingfeng wrote:
+>> Hi Trond,
+>>
+>> 在 2025/11/29 12:06, Trond Myklebust 写道:
+>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>
+>>> The recent changes to suppress the 'ro' and 'rw' mount options when
+>>> mounting the same NFS filesystem with different settings are
+>>> causing
+>>> confusion with users, and are an unnecessary restriction. They
+>>> represent
+>>> a functionality regression.
+>>>
+>>> The following patch set reverts the regressions, before applying a
+>>> different set of fixes to address the original problem, which was
+>>> one of
+>>> the NFSv4 mount automounter code failing to propagate the correct
+>>> mount
+>>> options.
+>>>
+>>> Trond Myklebust (6):
+>>>     Revert "nfs: ignore SB_RDONLY when remounting nfs"
+>>>     Revert "nfs: clear SB_RDONLY before getting superblock"
+>>>     Revert "nfs: ignore SB_RDONLY when mounting nfs"
+>>>     NFS: Automounted filesystem should inherit ro,noexec,nodev,sync
+>>> flags
+>>>     NFS: Fix inheritance of the block sizes when automounting
+>>>     NFS: Fix up the automount fs_context to use the correct cred
+>>>
+>>>    fs/nfs/client.c           | 21 +++++++++++++++++----
+>>>    fs/nfs/internal.h         |  3 +--
+>>>    fs/nfs/namespace.c        | 16 +++++++++++++++-
+>>>    fs/nfs/nfs4client.c       | 18 ++++++++++++++----
+>>>    fs/nfs/super.c            | 33 +++------------------------------
+>>>    include/linux/nfs_fs_sb.h |  5 +++++
+>>>    6 files changed, 55 insertions(+), 41 deletions(-)
+>> After this series of patches was merged, I found that the issue
+>> described
+>> in link [1] has appeared again.
+>>
+>> [root@nfs-client1 ~]# mount /dev/sda /mnt2
+>> [root@nfs-client1 ~]# echo "/mnt2 *(rw,no_root_squash,fsid=0)"
+>>> /etc/exports
+>> [root@nfs-client1 ~]# systemctl restart nfs-server
+>> [root@nfs-client1 ~]# mount -t nfs -o ro,vers=4 127.0.0.1:/ /mnt/sdaa
+>> [root@nfs-client1 ~]# mount -t nfs -o rw,vers=4 127.0.0.1:/ /mnt/sdaa
+>> [root@nfs-client1 ~]# mount -t nfs -o ro,vers=4 127.0.0.1:/ /mnt/sdaa
+>> [root@nfs-client1 ~]# mount -t nfs -o rw,vers=4 127.0.0.1:/ /mnt/sdaa
+>> [root@nfs-client1 ~]# mount | grep nfs4
+>> 127.0.0.1:/ on /mnt/sdaa type nfs4
+>> (ro,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fat
+>> al_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=12
+>> 7.0.0.1,local_lock=none,addr=127.0.0.1)
+>> 127.0.0.1:/ on /mnt/sdaa type nfs4
+>> (rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fat
+>> al_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=12
+>> 7.0.0.1,local_lock=none,addr=127.0.0.1)
+>> 127.0.0.1:/ on /mnt/sdaa type nfs4
+>> (ro,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fat
+>> al_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=12
+>> 7.0.0.1,local_lock=none,addr=127.0.0.1)
+>> 127.0.0.1:/ on /mnt/sdaa type nfs4
+>> (rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fat
+>> al_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=12
+>> 7.0.0.1,local_lock=none,addr=127.0.0.1)
+>> [root@nfs-client1 ~]# uname -a
+>> Linux nfs-client1 6.19.0-rc7+ #178 SMP PREEMPT_DYNAMIC Thu Jan 29
+>> 14:06:54 CST 2026 x86_64 x86_64 x86_64 GNU/Linux
+>> [root@nfs-client1 ~]#
+>>
+>> [1]
+>> https://lore.kernel.org/all/20241114045303.1656426-1-lilingfeng3@huawei.com/
+>>
+>> Thanks,
+>> Lingfeng.
+> What does the output of "cat /proc/fs/nfsfs/volumes" show? Does it show
+> more than 2 devices associated with that fsid?
+>   
 
-The daemon then vets that the request is for an allowed NFS server and
-performs the mount. This now fails because the fc->user_ns is set to the
-value in the container and NFS doesn't set FS_USERNS_MOUNT.  We don't
-want to add FS_USERNS_MOUNT to NFS since that would allow the container
-to mount any NFS server (even malicious ones).
+Here is the result of the test:
 
-Add a new FS_USERNS_DELEGATABLE flag, and enable it on NFS.
+[root@nfs-client1 ~]# mount /dev/sda /mnt2
+[root@nfs-client1 ~]# echo "/mnt2 *(rw,no_root_squash,fsid=0)" >/etc/exports
+[root@nfs-client1 ~]# systemctl restart nfs-server
+[root@nfs-client1 ~]# mount -t nfs -o ro,vers=4 127.0.0.1:/ /mnt/sdaa
+[root@nfs-client1 ~]# cat /proc/fs/nfsfs/volumes
+NV SERVER   PORT DEV          FSID FSC
+v4 7f000001  801 0:51         0:0                               no
+[root@nfs-client1 ~]# mount -t nfs -o rw,vers=4 127.0.0.1:/ /mnt/sdaa
+[root@nfs-client1 ~]# cat /proc/fs/nfsfs/volumes
+NV SERVER   PORT DEV          FSID FSC
+v4 7f000001  801 0:51         0:0                               no
+v4 7f000001  801 0:52         0:0                               no
+[root@nfs-client1 ~]# mount | grep nfs4
+127.0.0.1:/ on /mnt/sdaa type nfs4 
+(ro,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1)
+127.0.0.1:/ on /mnt/sdaa type nfs4 
+(rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1)
+[root@nfs-client1 ~]# mount -t nfs -o ro,vers=4 127.0.0.1:/ /mnt/sdaa
+[root@nfs-client1 ~]# mount -t nfs -o rw,vers=4 127.0.0.1:/ /mnt/sdaa
+[root@nfs-client1 ~]# cat /proc/fs/nfsfs/volumes
+NV SERVER   PORT DEV          FSID FSC
+v4 7f000001  801 0:51         0:0                               no
+v4 7f000001  801 0:52         0:0                               no
+[root@nfs-client1 ~]# mount | grep nfs4
+127.0.0.1:/ on /mnt/sdaa type nfs4 
+(ro,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1)
+127.0.0.1:/ on /mnt/sdaa type nfs4 
+(rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1)
+127.0.0.1:/ on /mnt/sdaa type nfs4 
+(ro,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1)
+127.0.0.1:/ on /mnt/sdaa type nfs4 
+(rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,fatal_neterrors=none,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1)
+[root@nfs-client1 ~]#
 
-Fixes: e1c5ae59c0f2 ("fs: don't allow non-init s_user_ns for filesystems without FS_USERNS_MOUNT")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfs/fs_context.c |  8 ++++++--
- fs/super.c          | 11 ++++++-----
- include/linux/fs.h  |  1 +
- 3 files changed, 13 insertions(+), 7 deletions(-)
+There are only 2 devices associated with that fsid.
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index b4679b7161b0968810e13f57c889052ea015bf56..128ebd48b4f4ba1c17e8b5b1b9dcefbd7a97db1a 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1768,7 +1768,9 @@ struct file_system_type nfs_fs_type = {
- 	.init_fs_context	= nfs_init_fs_context,
- 	.parameters		= nfs_fs_parameters,
- 	.kill_sb		= nfs_kill_super,
--	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
-+	.fs_flags		= FS_RENAME_DOES_D_MOVE	|
-+				  FS_BINARY_MOUNTDATA	|
-+				  FS_USERNS_DELEGATABLE,
- };
- MODULE_ALIAS_FS("nfs");
- EXPORT_SYMBOL_GPL(nfs_fs_type);
-@@ -1780,7 +1782,9 @@ struct file_system_type nfs4_fs_type = {
- 	.init_fs_context	= nfs_init_fs_context,
- 	.parameters		= nfs_fs_parameters,
- 	.kill_sb		= nfs_kill_super,
--	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
-+	.fs_flags		= FS_RENAME_DOES_D_MOVE	|
-+				  FS_BINARY_MOUNTDATA	|
-+				  FS_USERNS_DELEGATABLE,
- };
- MODULE_ALIAS_FS("nfs4");
- MODULE_ALIAS("nfs4");
-diff --git a/fs/super.c b/fs/super.c
-index 3d85265d14001d51524dbaec0778af8f12c048ac..b7f1bb2b679b43261fbdcd586971c551b85e8372 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -738,12 +738,13 @@ struct super_block *sget_fc(struct fs_context *fc,
- 	int err;
- 
- 	/*
--	 * Never allow s_user_ns != &init_user_ns when FS_USERNS_MOUNT is
--	 * not set, as the filesystem is likely unprepared to handle it.
--	 * This can happen when fsconfig() is called from init_user_ns with
--	 * an fs_fd opened in another user namespace.
-+	 * Never allow s_user_ns != &init_user_ns when FS_USERNS_MOUNT or
-+	 * FS_USERNS_DELEGATABLE is not set, as the filesystem is likely
-+	 * unprepared to handle it. This can happen when fsconfig() is called
-+	 * from init_user_ns with an fs_fd opened in another user namespace.
- 	 */
--	if (user_ns != &init_user_ns && !(fc->fs_type->fs_flags & FS_USERNS_MOUNT)) {
-+	if (user_ns != &init_user_ns &&
-+	    !(fc->fs_type->fs_flags & (FS_USERNS_MOUNT | FS_USERNS_DELEGATABLE))) {
- 		errorfc(fc, "VFS: Mounting from non-initial user namespace is not allowed");
- 		return ERR_PTR(-EPERM);
- 	}
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index a01621fa636a60764e1dfe83f2260caf50c4037e..94695ce5e25b5fbe4f321d5478172b8cb24e00d1 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2273,6 +2273,7 @@ struct file_system_type {
- #define FS_MGTIME		64	/* FS uses multigrain timestamps */
- #define FS_LBS			128	/* FS supports LBS */
- #define FS_POWER_FREEZE		256	/* Always freeze on suspend/hibernate */
-+#define FS_USERNS_DELEGATABLE	512	/* Can be mounted inside userns from outside */
- #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
- 	int (*init_fs_context)(struct fs_context *);
- 	const struct fs_parameter_spec *parameters;
-
----
-base-commit: 8dfce8991b95d8625d0a1d2896e42f93b9d7f68d
-change-id: 20260129-twmount-114ddfd43420
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+Thanks,
+Lingfeng.
 
 
