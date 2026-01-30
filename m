@@ -1,399 +1,169 @@
-Return-Path: <linux-nfs+bounces-18615-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18616-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uFJWCJkifGnJKgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-18615-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 04:16:41 +0100
+	id wFk8BCusfGkaOQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18616-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 14:03:39 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73EB7B6C48
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 04:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 639A1BAD9C
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 14:03:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2654A304F359
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 03:14:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 10BB23065433
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jan 2026 12:59:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045C62FDC5C;
-	Fri, 30 Jan 2026 03:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFCA337F749;
+	Fri, 30 Jan 2026 12:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+3/yiNY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYWwVwOl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6331314D26
-	for <linux-nfs@vger.kernel.org>; Fri, 30 Jan 2026 03:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769742861; cv=none; b=Qr7ZQS40N+ZNB19DqSp2rW1Sc+FcpTq2DrO+wFMAAOSr/qXHdR13l3/a1ru4rhRfXDNvbWaoRQDyzK5BekKHHvyrl1hh8DaCSLURIisPPcXtlGFYMTtfC98wNH4UR6f1EXs0XuK6SMQ5NUr2OlL9Cm49LRBZi6V/H9PN+pKgubg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769742861; c=relaxed/simple;
-	bh=+Kfilr2UVqLfGAePhoiaNaNRbAXGfYZ8uLXksgKmvEk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RJZR3F2mUeWabvbjeouny8Xk55Kc04K4hoTpIjdqPqigkb4gvICNse2iaBE4XLY+8RMsVRJIAkfQHBBpfzqXZQOx5kievXHrJWoyMewX6qAbVmVDKrQ2hNe6y98ujPZShUseaL6Z0hS8kDzRRx5Uj5IjLEMoXTk4Y1ye9sZEu6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+3/yiNY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B032DC4CEF7;
-	Fri, 30 Jan 2026 03:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769742861;
-	bh=+Kfilr2UVqLfGAePhoiaNaNRbAXGfYZ8uLXksgKmvEk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=M+3/yiNYgWMjnTiVoqMdq0tq0JGiNFxss8h4JX8FRTF9DQKRHPGWnu6zBZ5ws3N0Q
-	 kSoTGtXBziliWdzbTFyf3896Jtt4P7ijWMfjjncDI9REGgTC0pcKgtcSJaiALmdtjL
-	 RsR5A4IfYRFNr1JGvTvEkfhRTP88772iITLVFQzRxqTRTmkVwuix9hr2B63ttq28JY
-	 c/QEFSPMzMe2XOFPTPhLhJfyW5u0XmvjvZVsUozTSNdV9xG601uNGNESVco+DZVrDv
-	 l0wW9oBj+Le+/575qoHcx/pJT9YTRM20lLOwNmRzyp4x6uHYLu8CNTbIE+iTkRj+Ws
-	 yQosbTCIrManQ==
-Message-ID: <2c116c2c46972ed095d1d4856af9eb1128736eb7.camel@kernel.org>
-Subject: Re: [PATCH 0/6] Fix up NFS client mount option regressions
-From: Trond Myklebust <trondmy@kernel.org>
-To: Li Lingfeng <lilingfeng3@huawei.com>, Alkis Georgopoulos
- <alkisg@gmail.com>
-Cc: linux-nfs@vger.kernel.org, yangerkun <yangerkun@huawei.com>, 
- "chengzhihao1@huawei.com"
-	 <chengzhihao1@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao
-	 <houtao1@huawei.com>, wangzhaolong1@huawei.com
-Date: Thu, 29 Jan 2026 22:14:19 -0500
-In-Reply-To: <12072fd2-b5ca-40f1-b0cb-d9bc8873caa1@huawei.com>
-References: <cbd4d74d-21c4-42d6-9442-276fd98313ee@gmail.com>
-	 <cover.1764388528.git.trond.myklebust@hammerspace.com>
-	 <cb5cd472-8989-451d-9da7-7d250027c27e@huawei.com>
-	 <5d5f6605c0ba8751723b588a4d8e1def37e23c78.camel@kernel.org>
-	 <584f2b79-0648-4390-9007-16b7adfa7a0a@huawei.com>
-	 <f8bf92fb35e7bfd4c0b87c108ac7e8d2813899a4.camel@kernel.org>
-	 <12072fd2-b5ca-40f1-b0cb-d9bc8873caa1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383FF352C47
+	for <linux-nfs@vger.kernel.org>; Fri, 30 Jan 2026 12:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769777963; cv=pass; b=mvW0XW/QZSreS7RpgAY7F8gvUzONN8ywdwapOy36edV32+Xf0GR7x47TNRRWS7I3WWrkgNxfrIk6ZRokVOXhdNb7nozW9fYZ6+/UbSrjuYjtFasbPIUuQ91lJ1cG/Orgu+dwIU8VvPZbTCfYK3A6bc8By4zDYQOUnvsNbydaDXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769777963; c=relaxed/simple;
+	bh=xG0HoGtWgtaeO6rMJ6ftZ42hhmA+SOj2D6UatodVRxE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=EQl5JkIoxmGpbcfGbbNbpZVbkmOA9HvoEVDFmw4Y9tdgCaafRgQ7P10m24uqOd1TNWPAmyrkJ4dKfj0f91dc/8j8x+nBmiHL2eoUjjU8PaCZaRl5Lc8ULErNa8IaNEB4ukUCpsE5RHSrTDt/Nn28LIG5SEORlhTe7HvRu85wFhU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYWwVwOl; arc=pass smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-658ad86082dso3727246a12.0
+        for <linux-nfs@vger.kernel.org>; Fri, 30 Jan 2026 04:59:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769777960; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dqRbCG+az2I9nzrB04StZClC1sdHH22KjwQDZJ4nve7DZ0BbPekIRfLzZRGC00YCHw
+         fgZgt8yATDt4/ed2ac+cEQo1je9w7tVks9SuajJe5QkkazaJz0B3VKcX89qVObNIXI6b
+         bKVQ+pSJVgB+bU6vZsJdlZyoZ4lTCqR+lUh1ip6uKVUiQhqn9fIMTbj7j201DfhpNdQD
+         Vp5CW8aPQ3PqNpD8WZumT4Ys/PnvcqDb6Tg/Li8lrif1c9WNl58fQwR8KZ8YH8Xsqlru
+         EnGk4gRgcgUeXSr1C921gznLLyidJ0qApCX42+Ck46f0qJEYkX9e/ZwM7eRcD9opuevz
+         wNIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=/5hVLHdfoH2KEaRhGo53o2eC57XReA1/Lk8YzkL01/8=;
+        fh=VPlw6eW/mgLYvQ1ksAncKYnztFRvo6nV4qZ9Xo9aFiw=;
+        b=GSeHnvsqKs5Tj9fCme02FbpYOqD/mmkww0qOpeUou2vwDOgDd3QyJbxZg66r7wRvsn
+         uPkrC4DUJcV/ZCJWh3YJs765+6zPsEkXG4dMP7ViG4opyk4Q9Zp0TSxvRFIzSlraculf
+         u9FOkrIfwUa/pjqI4VjHiedcG06Jo0azspfCV9bP5Ept7cKwRfKIOGVQsWexEB2JGZ7s
+         2nQI75yxtzNioGVMrGs+eNrs6qNfNwyx84DccAwqdKb2nB415uE0uTnxYNA2udi8KB9o
+         zRnnAEErvNvpUyXx0syjLPe4Puj/XayTpeolQgVfDkfCTjkme7EccnoAZxO5/mgobx8r
+         TObA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769777960; x=1770382760; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/5hVLHdfoH2KEaRhGo53o2eC57XReA1/Lk8YzkL01/8=;
+        b=lYWwVwOlgaPWDuDiRwKlFgDXMzdOrGvIXHLY8DKNG1lenuvrI5RvK4G8Qw/jlkBjCW
+         TuWUcRkZnTBpUv6AgjdMngTt+a+7mLecXSFWkg6w/ZBldxl5T6FxafK+tYJ64IiW1x9x
+         zQwTvmL42+yNz9VkV03ndd5W8ER1d8x644mZfRWDrKU3WzDxkVwWVA9/QHiyENZDIh7Z
+         DQszxYhE0zB6XXH+jqYCvT+8cKE063yS+0nep5Wn/bvYXBxuwPtGa69zQ7wYTZ1/fb8g
+         Phh6r2HZGMR4/JL/pk16RkMCJ3dFw91M+gHWP6Pe7fWLPa/Es7KGLGg+83Izlope8zSk
+         39Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769777960; x=1770382760;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/5hVLHdfoH2KEaRhGo53o2eC57XReA1/Lk8YzkL01/8=;
+        b=EfWSHVWOXNoIvKDsw6XJPyFB35KZaEDQXBRD0Sqo5wj6GleZDPzdDCkpv3eGL6zyGw
+         V/mBemLnLEg4ycg2NwOcwLgQctD0tHfm5hsJ4316Cc0kLvgyuRbnrKNFSR/pUXfW4cwm
+         NNkndL++zE0/JAvBxNhjlpiAezelbVbpgBQnoSHaZ/hP/q2YN1ZcmaH+IbV9MwiKIPmY
+         TM6WSVV3IUw9DA8eSMJMhs5un72ID1/+s2jEsREqhqUYaz7tNcLm1OtslEfvvE0qF3fz
+         MBx82WebRemXK5RFWEtUbGFP9rdYBSoRa+VhWWavXtAmW3h+Tw7ZiHPCPDH1V20ayzaw
+         6ZgA==
+X-Gm-Message-State: AOJu0YzfF9BR/0iyv0oap1+DC2CKOrHXxlLO1tPirmoxQhC6Dp8j48RM
+	nEauPMhnZIE8ZLniBXJ3SniSQBgfDkDvUO689wlwTJLFCCn/HsknVMEDkQN5gTGaX/mpTWyZXYz
+	SSE3MAs2jtZhioHk/C8sEK7/2Mq2mQ4ElWw==
+X-Gm-Gg: AZuq6aLmaxfRCuWaZPt8ORgpF7nZ/EbBfsppAoWviRtQ6zBjlk4gpR8eckvGb8DEZMB
+	RYIgisXto07b8ak/97fW0Z3PxIbWHK01BbzCVHh0Cjiy+cccm4kH0d2oYvuXLrNIZdSYA/yHec1
+	Hc8hdo2B1bA5WfKhLLnnbLrpUkkRxE2HGyc1rUx3stWGS0K6dSD/VCSUILgjOymFK1VFi4oauaL
+	vkM9BqaEzW621oeFJ4uePnydV0wj3jz2gAEjdEHi1TPuAo72/7tQ1/PiAH0PsaUSeCxgQ==
+X-Received: by 2002:a17:907:9303:b0:b87:1b2b:32fc with SMTP id
+ a640c23a62f3a-b8dff221092mr159144566b.0.1769777959652; Fri, 30 Jan 2026
+ 04:59:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <cover.1769026777.git.bcodding@hammerspace.com> <0aaa9ca4fd3edc7e0d25433ad472cb873560bf7d.1769026777.git.bcodding@hammerspace.com>
+In-Reply-To: <0aaa9ca4fd3edc7e0d25433ad472cb873560bf7d.1769026777.git.bcodding@hammerspace.com>
+From: Lionel Cons <lionelcons1972@gmail.com>
+Date: Fri, 30 Jan 2026 13:58:42 +0100
+X-Gm-Features: AZwV_Qg9cHb_cy5s1iZbkKmSD6O6rh8Vs18I0Fb-ECMjeghOuBS5bTI7gCCvHXs
+Message-ID: <CAPJSo4XhEOGncxBRZcOL6KmyBRY+pERiCLUkWzN7Zw+8oUmXGg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] NFSD: Sign filehandles
+To: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18615-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[huawei.com,gmail.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-18616-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lionelcons1972@gmail.com,linux-nfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nfs-client1:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 73EB7B6C48
+	FREEMAIL_FROM(0.00)[gmail.com]
+X-Rspamd-Queue-Id: 639A1BAD9C
 X-Rspamd-Action: no action
 
-On Fri, 2026-01-30 at 10:41 +0800, Li Lingfeng wrote:
-> Hi Trond,
->=20
-> =E5=9C=A8 2026/1/30 9:43, Trond Myklebust =E5=86=99=E9=81=93:
-> > On Fri, 2026-01-30 at 09:34 +0800, Li Lingfeng wrote:
-> > > Hi Trond,
-> > >=20
-> > > =E5=9C=A8 2026/1/30 0:00, Trond Myklebust =E5=86=99=E9=81=93:
-> > > > On Thu, 2026-01-29 at 15:06 +0800, Li Lingfeng wrote:
-> > > > > Hi Trond,
-> > > > >=20
-> > > > > =E5=9C=A8 2025/11/29 12:06, Trond Myklebust =E5=86=99=E9=81=93:
-> > > > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > > > >=20
-> > > > > > The recent changes to suppress the 'ro' and 'rw' mount
-> > > > > > options
-> > > > > > when
-> > > > > > mounting the same NFS filesystem with different settings
-> > > > > > are
-> > > > > > causing
-> > > > > > confusion with users, and are an unnecessary restriction.
-> > > > > > They
-> > > > > > represent
-> > > > > > a functionality regression.
-> > > > > >=20
-> > > > > > The following patch set reverts the regressions, before
-> > > > > > applying a
-> > > > > > different set of fixes to address the original problem,
-> > > > > > which
-> > > > > > was
-> > > > > > one of
-> > > > > > the NFSv4 mount automounter code failing to propagate the
-> > > > > > correct
-> > > > > > mount
-> > > > > > options.
-> > > > > >=20
-> > > > > > Trond Myklebust (6):
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 Revert "nfs: ignore SB_RDONLY when rem=
-ounting nfs"
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 Revert "nfs: clear SB_RDONLY before ge=
-tting
-> > > > > > superblock"
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 Revert "nfs: ignore SB_RDONLY when mou=
-nting nfs"
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 NFS: Automounted filesystem should inh=
-erit
-> > > > > > ro,noexec,nodev,sync
-> > > > > > flags
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 NFS: Fix inheritance of the block size=
-s when
-> > > > > > automounting
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 NFS: Fix up the automount fs_context t=
-o use the
-> > > > > > correct
-> > > > > > cred
-> > > > > >=20
-> > > > > > =C2=A0=C2=A0=C2=A0 fs/nfs/client.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 21 +++++++++++++++++----
-> > > > > > =C2=A0=C2=A0=C2=A0 fs/nfs/internal.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +--
-> > > > > > =C2=A0=C2=A0=C2=A0 fs/nfs/namespace.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 16 +++++++++++++++-
-> > > > > > =C2=A0=C2=A0=C2=A0 fs/nfs/nfs4client.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 18 ++++++++++++++----
-> > > > > > =C2=A0=C2=A0=C2=A0 fs/nfs/super.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 33 +++---------------------
-> > > > > > -----
-> > > > > > ----
-> > > > > > =C2=A0=C2=A0=C2=A0 include/linux/nfs_fs_sb.h |=C2=A0 5 +++++
-> > > > > > =C2=A0=C2=A0=C2=A0 6 files changed, 55 insertions(+), 41 deleti=
-ons(-)
-> > > > > After this series of patches was merged, I found that the
-> > > > > issue
-> > > > > described
-> > > > > in link [1] has appeared again.
-> > > > >=20
-> > > > > [root@nfs-client1 ~]# mount /dev/sda /mnt2
-> > > > > [root@nfs-client1 ~]# echo "/mnt2
-> > > > > *(rw,no_root_squash,fsid=3D0)"
-> > > > > > /etc/exports
-> > > > > [root@nfs-client1 ~]# systemctl restart nfs-server
-> > > > > [root@nfs-client1 ~]# mount -t nfs -o ro,vers=3D4 127.0.0.1:/
-> > > > > /mnt/sdaa
-> > > > > [root@nfs-client1 ~]# mount -t nfs -o rw,vers=3D4 127.0.0.1:/
-> > > > > /mnt/sdaa
-> > > > > [root@nfs-client1 ~]# mount -t nfs -o ro,vers=3D4 127.0.0.1:/
-> > > > > /mnt/sdaa
-> > > > > [root@nfs-client1 ~]# mount -t nfs -o rw,vers=3D4 127.0.0.1:/
-> > > > > /mnt/sdaa
-> > > > > [root@nfs-client1 ~]# mount | grep nfs4
-> > > > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > > > (ro,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D=
-255,
-> > > > > hard
-> > > > > ,fat
-> > > > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys=
-,clien
-> > > > > tadd
-> > > > > r=3D12
-> > > > > 7.0.0.1,local_lock=3Dnone,addr=3D127.0.0.1)
-> > > > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > > > (rw,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D=
-255,
-> > > > > hard
-> > > > > ,fat
-> > > > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys=
-,clien
-> > > > > tadd
-> > > > > r=3D12
-> > > > > 7.0.0.1,local_lock=3Dnone,addr=3D127.0.0.1)
-> > > > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > > > (ro,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D=
-255,
-> > > > > hard
-> > > > > ,fat
-> > > > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys=
-,clien
-> > > > > tadd
-> > > > > r=3D12
-> > > > > 7.0.0.1,local_lock=3Dnone,addr=3D127.0.0.1)
-> > > > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > > > (rw,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D=
-255,
-> > > > > hard
-> > > > > ,fat
-> > > > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys=
-,clien
-> > > > > tadd
-> > > > > r=3D12
-> > > > > 7.0.0.1,local_lock=3Dnone,addr=3D127.0.0.1)
-> > > > > [root@nfs-client1 ~]# uname -a
-> > > > > Linux nfs-client1 6.19.0-rc7+ #178 SMP PREEMPT_DYNAMIC Thu
-> > > > > Jan 29
-> > > > > 14:06:54 CST 2026 x86_64 x86_64 x86_64 GNU/Linux
-> > > > > [root@nfs-client1 ~]#
-> > > > >=20
-> > > > > [1]
-> > > > > https://lore.kernel.org/all/20241114045303.1656426-1-lilingfeng3@=
-huawei.com/
-> > > > >=20
-> > > > > Thanks,
-> > > > > Lingfeng.
-> > > > What does the output of "cat /proc/fs/nfsfs/volumes" show? Does
-> > > > it
-> > > > show
-> > > > more than 2 devices associated with that fsid?
-> > > > =C2=A0=C2=A0=20
-> > > Here is the result of the test:
-> > >=20
-> > > [root@nfs-client1 ~]# mount /dev/sda /mnt2
-> > > [root@nfs-client1 ~]# echo "/mnt2 *(rw,no_root_squash,fsid=3D0)"
-> > > > /etc/exports
-> > > [root@nfs-client1 ~]# systemctl restart nfs-server
-> > > [root@nfs-client1 ~]# mount -t nfs -o ro,vers=3D4 127.0.0.1:/
-> > > /mnt/sdaa
-> > > [root@nfs-client1 ~]# cat /proc/fs/nfsfs/volumes
-> > > NV SERVER=C2=A0 =C2=A0PORT DEV=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 FSID=
- FSC
-> > > v4 7f000001=C2=A0 801 0:51=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00:0=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0
-> > > =C2=A0no
-> > > [root@nfs-client1 ~]# mount -t nfs -o rw,vers=3D4 127.0.0.1:/
-> > > /mnt/sdaa
-> > > [root@nfs-client1 ~]# cat /proc/fs/nfsfs/volumes
-> > > NV SERVER=C2=A0 =C2=A0PORT DEV=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 FSID=
- FSC
-> > > v4 7f000001=C2=A0 801 0:51=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00:0=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0
-> > > =C2=A0no
-> > > v4 7f000001=C2=A0 801 0:52=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00:0=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0
-> > > =C2=A0no
-> > > [root@nfs-client1 ~]# mount | grep nfs4
-> > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > (ro,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D255,=
-hard
-> > > ,fat
-> > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,cli=
-entadd
-> > > r=3D12
-> > > 7.0.0.1)
-> > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > (rw,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D255,=
-hard
-> > > ,fat
-> > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,cli=
-entadd
-> > > r=3D12
-> > > 7.0.0.1)
-> > > [root@nfs-client1 ~]# mount -t nfs -o ro,vers=3D4 127.0.0.1:/
-> > > /mnt/sdaa
-> > > [root@nfs-client1 ~]# mount -t nfs -o rw,vers=3D4 127.0.0.1:/
-> > > /mnt/sdaa
-> > > [root@nfs-client1 ~]# cat /proc/fs/nfsfs/volumes
-> > > NV SERVER=C2=A0 =C2=A0PORT DEV=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 FSID=
- FSC
-> > > v4 7f000001=C2=A0 801 0:51=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00:0=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0
-> > > =C2=A0no
-> > > v4 7f000001=C2=A0 801 0:52=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00:0=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0
-> > > =C2=A0no
-> > > [root@nfs-client1 ~]# mount | grep nfs4
-> > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > (ro,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D255,=
-hard
-> > > ,fat
-> > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,cli=
-entadd
-> > > r=3D12
-> > > 7.0.0.1)
-> > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > (rw,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D255,=
-hard
-> > > ,fat
-> > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,cli=
-entadd
-> > > r=3D12
-> > > 7.0.0.1)
-> > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > (ro,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D255,=
-hard
-> > > ,fat
-> > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,cli=
-entadd
-> > > r=3D12
-> > > 7.0.0.1)
-> > > 127.0.0.1:/ on /mnt/sdaa type nfs4
-> > > (rw,relatime,vers=3D4.2,rsize=3D1048576,wsize=3D1048576,namlen=3D255,=
-hard
-> > > ,fat
-> > > al_neterrors=3Dnone,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,cli=
-entadd
-> > > r=3D12
-> > > 7.0.0.1)
-> > > [root@nfs-client1 ~]#
-> > >=20
-> > > There are only 2 devices associated with that fsid.
-> > >=20
-> > Then it is working as expected. It's not the kernel's job to stop
-> > people from stacking one mount on top of another. If it were, then
-> > the
-> > right place to do that would be in the VFS and not the NFS client.
-> >=20
-> > However the NFS client does try to ensure that mounts of the same
-> > remote filesystem with the same set of mount options gets mapped to
-> > the
-> > same super block (and hence device). The exception is if you're
-> > playing
-> > with the nosharecache option; in that case you're knowingly asking
-> > the
-> > kernel to ignore that constraint.
-> For local file systems like ext4, when I attempt to mount a file
-> system
-> as read-only after it has already been mounted for read and write, I
-> encounter an EBUSY error (from the `get_tree` callback
-> `ext4_get_tree`).
->=20
-> [root@nfs-client1 ~]# mount -o rw /dev/sdb /mnt3
-> [root@nfs-client1 ~]# mount -o ro /dev/sdb /mnt3
-> [ 2524.071442][ T1281] sdb: Can't mount, would change RO state
-> mount: /mnt3: /dev/sdb already mounted on /mnt3.
-> [root@nfs-client1 ~]# df -Th | grep sdb
-> /dev/sdb=C2=A0 =C2=A0 =C2=A0 =C2=A0ext4=C2=A0 =C2=A0 =C2=A0 =C2=A020G=C2=
-=A0 =C2=A028K=C2=A0 =C2=A019G=C2=A0 =C2=A01% /mnt3
-> [root@nfs-client1 ~]#
->=20
-> Do you think NFS should have a similar restriction, allowing only one
-> mount per mount point?
+On Wed, 21 Jan 2026 at 22:03, Benjamin Coddington
+<bcodding@hammerspace.com> wrote:
+>
+> NFS clients may bypass restrictive directory permissions by using
+> open_by_handle() (or other available OS system call) to guess the
+> filehandles for files below that directory.
+>
+> In order to harden knfsd servers against this attack, create a method to
+> sign and verify filehandles using siphash as a MAC (Message Authentication
+> Code).  Filehandles that have been signed cannot be tampered with, nor can
+> clients reasonably guess correct filehandles and hashes that may exist in
+> parts of the filesystem they cannot access due to directory permissions.
+>
+> Append the 8 byte siphash to encoded filehandles for exports that have set
+> the "sign_fh" export option.  The filehandle's fh_auth_type is set to
+> FH_AT_MAC(1) to indicate the filehandle is signed.  Filehandles received from
+> clients are verified by comparing the appended hash to the expected hash.
+> If the MAC does not match the server responds with NFS error _BADHANDLE.
+> If unsigned filehandles are received for an export with "sign_fh" they are
+> rejected with NFS error _BADHANDLE.
 
-Why would we do that?
+Random questions:
+1. CPU load: Linux NFSv4 servers consume LOTS of CPU time, which has
+become a HUGE problem for hosting them on embedded hardware (so no
+realistic NFSv4 server performance on an i.mx6 or RISC/V machine). And
+this has become much worse in the last two years. Did anyone measure
+the impact of this patch series?
+2. Do NFS clients require any changes for this?
 
-The above is a reflection of the fact that for ext4, the block device
-can only be associated with one filesystem. After you've mounted that
-block device in one place, you can't mount it read-only anywhere else.
-
-The only way to create both a read-only and a read-write mount with
-ext4 is to use a bind mount to create the read-only mount point.
-
-NFS has no need for that restriction, so what would be the point of
-duplicating it? In particular why would we want to break backward
-compatibility for people who may already be relying on the current
-behaviour?
-
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+Lionel
 
