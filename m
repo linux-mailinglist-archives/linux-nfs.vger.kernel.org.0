@@ -1,103 +1,103 @@
-Return-Path: <linux-nfs+bounces-18634-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18635-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2Mx9I++Of2k9tgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-18634-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 01 Feb 2026 18:35:43 +0100
+	id KBqvLA6Pf2k9tgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18635-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 01 Feb 2026 18:36:14 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35FAEC6BF9
-	for <lists+linux-nfs@lfdr.de>; Sun, 01 Feb 2026 18:35:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14B0FC6C00
+	for <lists+linux-nfs@lfdr.de>; Sun, 01 Feb 2026 18:36:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9F44F300102E
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Feb 2026 17:35:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3209530048F6
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Feb 2026 17:36:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FFF726B955;
-	Sun,  1 Feb 2026 17:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B997C26B955;
+	Sun,  1 Feb 2026 17:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="di/J842x";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="YvgrP5oI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FgGsX6cb";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="WO1FvGC1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37A619B5A7
-	for <linux-nfs@vger.kernel.org>; Sun,  1 Feb 2026 17:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5489519B5A7
+	for <linux-nfs@vger.kernel.org>; Sun,  1 Feb 2026 17:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769967341; cv=none; b=rbBxlCd80YHQg1YXdvPJ0ERuRn3YWZq0kWaeINmfcjNvWYUwuajGO1Bu5C7z+Eypba/2nAvgv4ramisDLpKL1LD/lRDM+q6zv7bttKOi3KBeR5liq0Ddls93glUH40PLnYJFMoX5Gmx4LmomrGPAyT9BAI1yLLjZFUNrbzLqIAI=
+	t=1769967371; cv=none; b=OZOAbtnkg0k/H1y8br36W7K3hZY7VtDcMb/CSGy1l+G7G3KLxMdFE5vSVNjtCUCFoYYTwI6tXfPlCfnSZSS2WTi80nYRtrHlA4cZg3i7U68ljVtO8IfgeE1cYN4zSbtPICSZytDW2bi0J+2X+9svzB5t1Zb7WTyb94c6RhIXoC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769967341; c=relaxed/simple;
-	bh=x5CZ5ceQlHnQUFYL+UpJWkHsA0kLQ3jyYDOZ/Xz/lBg=;
+	s=arc-20240116; t=1769967371; c=relaxed/simple;
+	bh=qnoKjULasIJzN4sEPhDtVyrVYIKqXYmsBILckV5EXFo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Aba+z6WpKf5qxWJqW39JzwPRat7D21QwLpleURyFc+cHhQ0nyJiaICwtAMc1qbZ675Uh6ZpmJtCi6MkqaZWjPBmavNQCo2LFaqbeJb1C2pMNiEejojBTBozz9A4ECgCUF+eNP+Vh5myzeNi1EXTH508Z7d2EYFiR6FlFsTdCbZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=di/J842x; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=YvgrP5oI; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=m76KzNiftTaWBuyXccjnKn/Xfk2TSHVzQ1qfa5Ys0r2ZerqBQplCPYclOnNqUfpfFpQjgtvUifnAy+6fOYMGjgj20YyRO5JxgSJsrbs6HI+5GJwPkHILLlv3g9jDAldP/4AgGjzn7e1mi7qyCsGq0gwgTINR0kp/w1ahkirfxu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FgGsX6cb; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=WO1FvGC1; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769967338;
+	s=mimecast20190719; t=1769967369;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3q7wiY7Th8mFhEfwAeQ4QxXiFfYpPHGoB0qMZjJiNcI=;
-	b=di/J842xpyqbiNa8+ljduma7HkuLW26ClzLlPmDLQDfWCovyDrQEyfcPVusoJ0nc0lrS/y
-	X5LXm9qpxHL3kUTnQ5iXbtbn8dbcDI8p3Pnzp/W7k3xTSjDBGDL5Y/Bi7S+C36Lka4hKb3
-	E3DHZf7kz51d7eK5W0kQ45FIwyDUir0=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=7F19pYJiRWTNPB9oNoCudWoajIWOXDcFEQPvqE6CMAc=;
+	b=FgGsX6cbNKDWssy3WFSXpGCJ/gLd9wJmGdXAhQi0R5xKzQW8H9vdBZIPZVK5cw1cGXqt5N
+	rXADQ3ZxJC8NU5rNzllpFoDzmmVD0dHWSSR4xBF0IqEmCzCFjC2OLTKve53g2CNt6qT4vz
+	c2bwa5UreP3Re7KBaQmalPZoj3l7Q/w=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-J2_62bnJP7i3Um16mvl2RQ-1; Sun, 01 Feb 2026 12:35:37 -0500
-X-MC-Unique: J2_62bnJP7i3Um16mvl2RQ-1
-X-Mimecast-MFC-AGG-ID: J2_62bnJP7i3Um16mvl2RQ_1769967337
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8c70ab7f67fso1698160085a.3
-        for <linux-nfs@vger.kernel.org>; Sun, 01 Feb 2026 09:35:37 -0800 (PST)
+ us-mta-319-lC4yb97wPyG8rS6_HyzLKQ-1; Sun, 01 Feb 2026 12:36:08 -0500
+X-MC-Unique: lC4yb97wPyG8rS6_HyzLKQ-1
+X-Mimecast-MFC-AGG-ID: lC4yb97wPyG8rS6_HyzLKQ_1769967368
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-501473ee94fso192323901cf.3
+        for <linux-nfs@vger.kernel.org>; Sun, 01 Feb 2026 09:36:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1769967337; x=1770572137; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1769967368; x=1770572168; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=3q7wiY7Th8mFhEfwAeQ4QxXiFfYpPHGoB0qMZjJiNcI=;
-        b=YvgrP5oIabkbUvsigstPTucjqzULxlRrHlF4zQm2SYUxmSjNgQ55ZL3O+9wJwHAcv4
-         eFm873iC+b/4fDawtbfq6yADQRRT/1WLOi6ptm8A3D/ZM7nv6OV5gCt7aPzXD7OIhxvF
-         cVwfBHyWZTRLsteyVl95x24yYjDqyJd0vrPdnxc2itwhy4mXdkOjAU9nxSZ8MCaxu9xH
-         Btg/fsQhai/rJ/PmbO8HL/XYD7/zaLyTWf1Wo0goA9XmncTmyY0eKwteauh+PQwv99Ro
-         tNfHA3wtMfMKxY7GhAdhloJqUNWwk261IE/SRmEcHiFlPTcaZAZR/6PBxyUQBuSiDr8Q
-         P+Ew==
+        bh=7F19pYJiRWTNPB9oNoCudWoajIWOXDcFEQPvqE6CMAc=;
+        b=WO1FvGC1S0CnDFWqGoezFhsC0zusRRKSf8EUOBg8kEkf6Qcu4a8k56hFJHR/QW+F8V
+         NqXexDMWDZm8vNZlQNklhVKExizHejda5QUd2kDuOyOnwBJAFDPQqceQ7OgYqXhUKD9L
+         7DdqCuzkwMXEkHjhLXsBGDd2JC0xp5Rj+iS1SdrAM48Z8NFCU+u2mIHmRmq1i+3rfHRF
+         9qYj1eyPqIrERktpWOwj4c9p9VV+fxrfWgkFubQdLkjXw33NTBz9fPgEqUitvFhj7wJJ
+         yxCi6ktOFE4YP3mAmR9vfve+4t6I6yXR6E6rJDzRF9cUV/YVXl2mMU6W2Gm9eVQD1Xok
+         xU7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769967337; x=1770572137;
+        d=1e100.net; s=20230601; t=1769967368; x=1770572168;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3q7wiY7Th8mFhEfwAeQ4QxXiFfYpPHGoB0qMZjJiNcI=;
-        b=FNl3hL/3jC/H39+jD3Kxsj4SNqwBsrxEL+Cm/y+2bG35suKiq7PxrZQuhLCa2A7Iyz
-         ps/FVo9KP4ya39vKhXFyD+EeXDuAL4U66BH5njUsPFBZ9FOMgVMrkTIsV4qCfOWBBXOO
-         oM7ABBSXodKauvyWBEu5HXQkYP6vzSjLi22z7r5wsh6KbJm7q0pE1c8PkKpeIHoOWth9
-         Ny5xSrXl67bkKJOUmfRqsBrizyC3v370gAEgjPmeRoEvpUBPDvkgmoLp3cmW57EJXzey
-         hxuM7AKM5DI3/CP7nhld7s2xKrmT9nlGXFnjRiE8a+/d51VUWmaSvlh/mfkKB5L5ART9
-         Ge3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWHZ39GEW7tWq0OOBgszrc6yudr6nbYkutYwBdtLxx5QSEmB9jKPH6xYJtLbwlMqmVCdXwdXcKz1LA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymHfE/BeIAvJdch290++8hIo7vOLeYZKm6DDdXTeeUZQ0LoXKs
-	LPeiML0V/6Lsbdgwtk+uJlAzivmOOQVecBf70xo3R1pF0Sh62vLfPKEEnCLMtvEDUP1Wtu2Tgsc
-	15bLCsmTnylp12oSaDThh/1gUFT0u+E8DeiYaWWOHJhPSU0TITe6GgVHhVAe9Gg==
-X-Gm-Gg: AZuq6aLQRdhcRV6tFfDhxwLeeTuTkvht3O/7ARS+Rfl4X1ynWZzY/nwN7wmbnmSgey1
-	mp8fbpScudm/U7b/GWqBeFdehwR/jaxYUDz8EeR1EhNqfm9K+Lxb4bPF7lILSeExbtSI/rDtbJ3
-	16D9DZyykkKbrwbtekIZKYPr/Tb8cBmkPuTOI9IX10HX5aUlm3D+TIJv50jI2xqJsK3uyVIQ7tz
-	fwyYPiep1LgHZfiiwE31YRyYAT8S+ltE4vYAsRy1NN+hd6x5c9XKcraUJ+7ik8rKjClyBJbFoZH
-	l5XZFTFmCiAQcPgQrtJ5ZDyBKqLbpuc+1QsjUhi+LRt6eCjj6vCG2MkwwPXjtPUMZZjbm6qKGyT
-	9Ow45IVR1
-X-Received: by 2002:a05:620a:25d1:b0:8b1:1585:2252 with SMTP id af79cd13be357-8c9eb1e6af3mr1233617785a.1.1769967337109;
-        Sun, 01 Feb 2026 09:35:37 -0800 (PST)
-X-Received: by 2002:a05:620a:25d1:b0:8b1:1585:2252 with SMTP id af79cd13be357-8c9eb1e6af3mr1233616185a.1.1769967336754;
-        Sun, 01 Feb 2026 09:35:36 -0800 (PST)
+        bh=7F19pYJiRWTNPB9oNoCudWoajIWOXDcFEQPvqE6CMAc=;
+        b=GzlSoRcgeXgNDwDhFCIgmJTZSSJDXGIrQCcJKHLBgojATpngyW1vezwvJErecKkieL
+         3vjKzciasy8wfbuUQkiONVtrk5XzyFa7dn1Dey9tVPYiuMF/iA6zzgy+WOoWMJ4i5SW+
+         CuxvKrrrLuq6qE66PpQR7IkObePe0WNIhoHG48wXaACHtVaupgnuLESLJMNfBRKD6lxY
+         bTvdM0yFz3eWIaQqx6u8wQKr9uNecq8MtASkpHNkemcZq0CZbvdXVrYhAfC+ENgQQXNJ
+         d0u6zrCh0oSRG1srzgH/IIRfFq56+oP8Z4Fil1ScVYnZ1+fHNm03ElAMDEIUczkHNXVK
+         buyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHeJ08NCEx1gymEK71e4ZuBD2WTNehwc/UVqUbfEGHxeVt0qn7vyP7zDRkVQc3GzxtbYdwyi+Bn68=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqUFVLRQYsysazQ7lRynmRQ94DR7dvhQ5b9QNEX2wshwBfsnis
+	KVLAZ2dkVyytqDKvFs1/v9lbvrBQXZpBmmxzpveuzvdjkHOhM5bJy8lVJeeMLkusJ109Jm65ptv
+	LgJf18avy69ExjRXElpIMDTpRasshmDSEFrydLajJ2320qAWjB6AXzXMo5WuGQA==
+X-Gm-Gg: AZuq6aJCxK794qHTsemxYO0Z+My03oJuXD8itKTaWfSEc07LMSEdX5svOcdypc1G56V
+	PDkueJmT4y8K1i+L4ySReg3BXKYsXk+g6/X7XzXQaRbt3ErPodkwqTzjvftG7cUdvo81mYr6mjE
+	/oiEpDuZq7VzcVg5PAqYeXgOtz+NHm2yvs3B9SUlyqS2E4nB1bArS/72TlE/7xWB8y5cAR1yeLE
+	2QX5F6UkuyBO2GUxmRU5o+miCpQYpbXPU4xghSE9IhWkNFjPb4ai9cQl8efid/3F4TGYDSd1oml
+	UhQqSedJh8KZY3btUntbCmXb/M9Qn49SAJXEVUt783k9QJdqUgcADCLrvMO6KxL0V6yXU2owZYS
+	Yykx2+vt7
+X-Received: by 2002:a05:622a:282:b0:4ee:1e82:e3f4 with SMTP id d75a77b69052e-505d22c33fdmr114392741cf.64.1769967367852;
+        Sun, 01 Feb 2026 09:36:07 -0800 (PST)
+X-Received: by 2002:a05:622a:282:b0:4ee:1e82:e3f4 with SMTP id d75a77b69052e-505d22c33fdmr114392581cf.64.1769967367512;
+        Sun, 01 Feb 2026 09:36:07 -0800 (PST)
 Received: from [172.31.1.12] ([70.105.242.59])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-894d36c443fsm100769146d6.18.2026.02.01.09.35.34
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5033f0a8466sm82173341cf.18.2026.02.01.09.36.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Feb 2026 09:35:35 -0800 (PST)
-Message-ID: <be9f663f-aaec-4fff-8e22-7fa0ca340d36@redhat.com>
-Date: Sun, 1 Feb 2026 12:35:34 -0500
+        Sun, 01 Feb 2026 09:36:06 -0800 (PST)
+Message-ID: <adec1599-ddef-464e-9cb6-5aec4c8e822b@redhat.com>
+Date: Sun, 1 Feb 2026 12:36:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -105,13 +105,13 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH 06/10] gssd: fix typos in man page
+Subject: Re: [nfs-utils PATCH 07/10] nfs.man: fix a typo in man page
 To: "Seiichi Ikarashi (Fujitsu)" <s.ikarashi@fujitsu.com>,
  "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
-References: <OSZPR01MB7772E5C0868DAFB0156521FD889EA@OSZPR01MB7772.jpnprd01.prod.outlook.com>
+References: <OSZPR01MB777218E8A381E36AFFA041AF889EA@OSZPR01MB7772.jpnprd01.prod.outlook.com>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <OSZPR01MB7772E5C0868DAFB0156521FD889EA@OSZPR01MB7772.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSZPR01MB777218E8A381E36AFFA041AF889EA@OSZPR01MB7772.jpnprd01.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
@@ -119,12 +119,12 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[redhat.com:+];
-	TAGGED_FROM(0.00)[bounces-18634-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18635-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_ALL(0.00)[];
@@ -134,13 +134,13 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_FIVE(0.00)[6];
 	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MIME_TRACE(0.00)[0:+]
-X-Rspamd-Queue-Id: 35FAEC6BF9
+X-Rspamd-Queue-Id: 14B0FC6C00
 X-Rspamd-Action: no action
 
 
@@ -152,40 +152,22 @@ Committed... (tag: nfs-utils-2-8-5-rc3)
 steved.
 
 > ---
->   utils/gssd/gssd.man | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>   utils/mount/nfs.man | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
-> index 4a75b056..f81b24cd 100644
-> --- a/utils/gssd/gssd.man
-> +++ b/utils/gssd/gssd.man
-> @@ -190,7 +190,7 @@ name exactly as requested.  e.g. for NFS
->   it is the server name in the "servername:/path" mount request.  Only if this
->   servername appears to be an IP address (IPv4 or IPv6) or an
->   unqualified name (no dots) will a reverse DNS lookup
-> -will be performed to get the canoncial server name.
-> +will be performed to get the canonical server name.
->   
+> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+> index 94dc29d4..9a461579 100644
+> --- a/utils/mount/nfs.man
+> +++ b/utils/mount/nfs.man
+> @@ -557,7 +557,7 @@ If
+>   .BR pos " or " positive
+>   is specified, the client assumes positive entries are valid
+>   until their parent directory's cached attributes expire, but
+> -always revalidates negative entires before an application
+> +always revalidates negative entries before an application
+>   can use them.
+>   .IP
 >   If
->   .B \-D
-> @@ -244,7 +244,7 @@ This option specifies a colon separated list of directories that
->   .B rpc.gssd
->   searches for credential files.  The default value is
->   .IR/tmp:/run/user/%U .
-> -The literal sequence "%U" can be specified to substitue the UID
-> +The literal sequence "%U" can be specified to substitute the UID
->   of the user for whom credentials are being searched.
->   .TP
->   .B -M
-> @@ -404,7 +404,7 @@ Note that this is unrelated to the functionality that
->   provides on behalf of the NFS server.  For more information, see
->   .BRhttps://github.com/gssapi/gssproxy/blob/main/docs/NFS.md#nfs-client .
->   .P
-> -In addtion, the following value is recognized from the
-> +In addition, the following value is recognized from the
->   .B [general]
->   section:
->   .TP
 > -- 2.47.3
 > 
 
