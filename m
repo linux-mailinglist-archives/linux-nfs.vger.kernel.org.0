@@ -1,194 +1,133 @@
-Return-Path: <linux-nfs+bounces-18651-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18652-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6JvkN4MogWkxEgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18651-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Feb 2026 23:43:15 +0100
+	id gKGYGOxKgWkPFgMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18652-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 02:10:04 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43551D25C4
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Feb 2026 23:43:15 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0DD6D33DA
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 02:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F0E95310CA1F
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Feb 2026 22:38:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ADB5F300E173
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Feb 2026 01:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F30355814;
-	Mon,  2 Feb 2026 22:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wwo3Yrxf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7EC31CDFD5;
+	Tue,  3 Feb 2026 01:09:59 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D26B652;
-	Mon,  2 Feb 2026 22:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B0F199385;
+	Tue,  3 Feb 2026 01:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770071554; cv=none; b=aJwbFihdVhqLoCGO/TLaYimihEyovLias9B4KmkN1Xvnm+Mo5lQW7jH2RXlO7KXg5kBiw+KmoUl8pSJ5UjOF03L6OA/OJRAeHpLzM0JjMjxe3mVldRCqAf9S8l+SlqtT+/edpKFzOM5JQGm6Q9/mDPMundXF1+G8zdZKqzkaKe0=
+	t=1770080999; cv=none; b=NKi6Ga29HqvnkyvkF10647uuAt9Qh/dFeJ8fqeR+KkPziO2IeQEfkJV75tdu8fYniedMdcsUbT2mTcU80m/OAXSebrMK35Buq6QrtLCgZKozPXhs4p/c/UuOoOcFdL6bRTy1Td3gGMxAv2n+2fsVjnu8Gkhqgw5SNppuJ8Dz2us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770071554; c=relaxed/simple;
-	bh=RkwvJ/eaG/ubSf4GeTmV9ctxLTvA9ARikKcdQA5n5PA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P8fOeegz4d3fGo7NpUJAWXN3PxdAt5GIBnFkWpJ4eLfoXTLhkWQn06iEsDdwkupLcrfkdz0L351kbor3dKvkc+J6hw2BsxO0SNj5pIumwtw7NH//wrzfixl/RKEdKTIs0eLhch3lRBW7cP4Do9xql9oNGV+WyM3wPRhk0vUDdWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wwo3Yrxf; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770071551; x=1801607551;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RkwvJ/eaG/ubSf4GeTmV9ctxLTvA9ARikKcdQA5n5PA=;
-  b=Wwo3Yrxf+7RnT7YVLqPmFJVkmyK5vM4YmLhWMgJgimZAbXV4bElJDHO5
-   unZ5JSV8/MUx4N3bT4Lw4TC9sXg3d7aFkKf/vLq1CBk1Hn4sSkS1hm3kO
-   E6s9/SCiuFfLlcQzsZ8LmU57j/VQUMlXN2o6o40R36VscHJOlcqKlY/a1
-   7F0fyQ+ClJE6ExZcNfOdcY8fnhs3NyHelQ73uiT93pghAUQZk6PO3uFUS
-   kQDo+d41opkJ6qGUNDhPUBsJifIgj+fiUBglvUGwxqVvyYO6njlqGEcsU
-   zx0QYg1pS1cVwErVhLS8V5dsx40JNr/OUcDqhE1vSXF3EqFT3ykq6iDVN
-   A==;
-X-CSE-ConnectionGUID: l0VF0J8gRPufzvYr2QI2kQ==
-X-CSE-MsgGUID: JILgaMbASCin1EUGr4lZlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71276589"
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="71276589"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 14:32:31 -0800
-X-CSE-ConnectionGUID: Hbxrtp+LSiCoLVQlQdZWyA==
-X-CSE-MsgGUID: Ek3RB598Quy6MtEbEFKVDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="208938576"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 02 Feb 2026 14:32:28 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vn2T3-00000000g1O-13HM;
-	Mon, 02 Feb 2026 22:32:25 +0000
-Date: Tue, 3 Feb 2026 06:31:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Benjamin Coddington <bcodding@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Rick Macklem <rick.macklem@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] NFSD: Add a key for signing filehandles
-Message-ID: <202602030619.d8NUY35L-lkp@intel.com>
-References: <e3806f53c351c03725ecb12fb7ad100786df04f6.1770046529.git.bcodding@hammerspace.com>
+	s=arc-20240116; t=1770080999; c=relaxed/simple;
+	bh=y46Ve4DwzKMxajJAUyedX9tIR36VRRGmwhiyC+ZOUEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wl/rpj966JVdPDUYb5fSQcR7WA1KewYJvC1cvlxKFsIWrXr3ECvuU2CwDLfMlxGFJrC2XNVJU1t4ySgsqwwOszVHGXOZEAJQspGzEw50blrV7iko22TIrqFAuu50rCeX0wMIMF6m350DOT4iZPGCcNtEFGIHBQMQ7QLrnu3Ma+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowAC31dziSoFpXE+RBw--.40134S2;
+	Tue, 03 Feb 2026 09:09:54 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] nfs: nfs4proc: Convert comma to semicolon
+Date: Tue,  3 Feb 2026 09:09:40 +0800
+Message-Id: <20260203010940.366106-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3806f53c351c03725ecb12fb7ad100786df04f6.1770046529.git.bcodding@hammerspace.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAC31dziSoFpXE+RBw--.40134S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4rCw4kuw4kuw1xGrW3ZFb_yoWfZwb_ZF
+	4fJa1ku348KF4j9F4UCa1ayF1Fg3y0k3WkZFW7GF45C34UJFWUCrsrXr1Iqrn8Ww4Ykr1f
+	Gw1qgrWYgayfujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbs8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
+	W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43
+	ZEXa7VUb-txDUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18651-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[hammerspace.com,oracle.com,kernel.org,brown.name,gmail.com];
-	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18652-lists,linux-nfs=lfdr.de];
+	DMARC_NA(0.00)[iscas.ac.cn];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[nichen@iscas.ac.cn,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
+	R_DKIM_NA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,intel.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 43551D25C4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[iscas.ac.cn:mid,iscas.ac.cn:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D0DD6D33DA
 X-Rspamd-Action: no action
 
-Hi Benjamin,
+Replace comma between expressions with semicolons.
 
-kernel test robot noticed the following build warnings:
+Using a ',' in place of a ';' can have unintended side effects.
+Although that is not the case here, it is seems best to use ';'
+unless ',' is intended.
 
-[auto build test WARNING on dabff11003f9aaf293bd8f907a62f3366bd5e65f]
+Found by inspection.
+No functional change intended.
+Compile tested only.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Coddington/NFSD-Add-a-key-for-signing-filehandles/20260203-002703
-base:   dabff11003f9aaf293bd8f907a62f3366bd5e65f
-patch link:    https://lore.kernel.org/r/e3806f53c351c03725ecb12fb7ad100786df04f6.1770046529.git.bcodding%40hammerspace.com
-patch subject: [PATCH v3 1/3] NFSD: Add a key for signing filehandles
-config: x86_64-buildonly-randconfig-003-20260203 (https://download.01.org/0day-ci/archive/20260203/202602030619.d8NUY35L-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260203/202602030619.d8NUY35L-lkp@intel.com/reproduce)
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602030619.d8NUY35L-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> fs/nfsd/nfsctl.c:1588:6: warning: variable 'fh_key' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-    1588 |         if (!nn->fh_key) {
-         |             ^~~~~~~~~~~
-   fs/nfsd/nfsctl.c:1594:9: note: uninitialized use occurs here
-    1594 |         memcpy(fh_key, nla_data(attr), sizeof(siphash_key_t));
-         |                ^~~~~~
-   fs/nfsd/nfsctl.c:1588:2: note: remove the 'if' if its condition is always true
-    1588 |         if (!nn->fh_key) {
-         |         ^~~~~~~~~~~~~~~~
-   fs/nfsd/nfsctl.c:1583:23: note: initialize the variable 'fh_key' to silence this warning
-    1583 |         siphash_key_t *fh_key;
-         |                              ^
-         |                               = NULL
-   1 warning generated.
-
-
-vim +1588 fs/nfsd/nfsctl.c
-
-  1573	
-  1574	/**
-  1575	 * nfsd_nl_fh_key_set - helper to copy fh_key from userspace
-  1576	 * @attr: nlattr NFSD_A_SERVER_FH_KEY
-  1577	 * @nn: nfsd_net
-  1578	 *
-  1579	 * Callers should hold nfsd_mutex, returns 0 on success or negative errno.
-  1580	 */
-  1581	static int nfsd_nl_fh_key_set(const struct nlattr *attr, struct nfsd_net *nn)
-  1582	{
-  1583		siphash_key_t *fh_key;
-  1584	
-  1585		if (nla_len(attr) != sizeof(siphash_key_t))
-  1586			return -EINVAL;
-  1587	
-> 1588		if (!nn->fh_key) {
-  1589			fh_key = kmalloc(sizeof(siphash_key_t), GFP_KERNEL);
-  1590			if (!fh_key)
-  1591				return -ENOMEM;
-  1592		}
-  1593	
-  1594		memcpy(fh_key, nla_data(attr), sizeof(siphash_key_t));
-  1595		nn->fh_key = fh_key;
-  1596		return 0;
-  1597	}
-  1598	
-
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 7c9cf0983366..dacd330fc623 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5016,7 +5016,7 @@ static void nfs4_proc_rename_setup(struct rpc_message *msg,
+ 	if (same_parent)
+ 		nfs_request_directory_delegation(same_parent);
+ 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_RENAME];
+-	res->server = server,
++	res->server = server;
+ 	nfs4_init_sequence(server->nfs_client, &arg->seq_args,
+ 			   &res->seq_res, 1, 0);
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
 
