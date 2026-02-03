@@ -1,133 +1,160 @@
-Return-Path: <linux-nfs+bounces-18652-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18653-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gKGYGOxKgWkPFgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18652-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 02:10:04 +0100
+	id +Ct/EeufgWkoIAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18653-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 08:12:43 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0DD6D33DA
-	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 02:10:03 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E74B7D5942
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 08:12:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ADB5F300E173
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Feb 2026 01:10:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 49F8030294E2
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Feb 2026 07:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7EC31CDFD5;
-	Tue,  3 Feb 2026 01:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AF72392803;
+	Tue,  3 Feb 2026 07:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dZ+sz8Cz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B0F199385;
-	Tue,  3 Feb 2026 01:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396423921F9;
+	Tue,  3 Feb 2026 07:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770080999; cv=none; b=NKi6Ga29HqvnkyvkF10647uuAt9Qh/dFeJ8fqeR+KkPziO2IeQEfkJV75tdu8fYniedMdcsUbT2mTcU80m/OAXSebrMK35Buq6QrtLCgZKozPXhs4p/c/UuOoOcFdL6bRTy1Td3gGMxAv2n+2fsVjnu8Gkhqgw5SNppuJ8Dz2us=
+	t=1770102711; cv=none; b=kI3flw9usneL+8vzKZNXBXfdMJa4YxNCEHL4sFKUNOo5d+oxO4pd9ZsggNf5eN/Ku9eg102X41siNE68igAQwwamWueCmZ2VSGmsgscyV8c8SFWsqk+d7x9Us2+6foNIQxPGDAlP3qnLwN3Qm4T4QOsTdsg2r9HHBhei2wIvaBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770080999; c=relaxed/simple;
-	bh=y46Ve4DwzKMxajJAUyedX9tIR36VRRGmwhiyC+ZOUEg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wl/rpj966JVdPDUYb5fSQcR7WA1KewYJvC1cvlxKFsIWrXr3ECvuU2CwDLfMlxGFJrC2XNVJU1t4ySgsqwwOszVHGXOZEAJQspGzEw50blrV7iko22TIrqFAuu50rCeX0wMIMF6m350DOT4iZPGCcNtEFGIHBQMQ7QLrnu3Ma+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAC31dziSoFpXE+RBw--.40134S2;
-	Tue, 03 Feb 2026 09:09:54 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] nfs: nfs4proc: Convert comma to semicolon
-Date: Tue,  3 Feb 2026 09:09:40 +0800
-Message-Id: <20260203010940.366106-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1770102711; c=relaxed/simple;
+	bh=Tg20fcLNMaoCzT6bisqT/GU9JY66d1uJBrhI2VyXOUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ISf+nER1CFv+i75wrds4+RxsH6tbdjVA7v6ziu/ui1JE6yCNYNBjecweCKW64oz+4CblT5+cMzuwRDvcHFvjAsH7kFCMHTzBPOrcGfUK9Daopmv85HUAzheyK6xeLuyX6tjubKppgJ1886QVHhWpNgwm1nbbSLGw8RSDbFvYEhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dZ+sz8Cz; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770102710; x=1801638710;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Tg20fcLNMaoCzT6bisqT/GU9JY66d1uJBrhI2VyXOUg=;
+  b=dZ+sz8CzpjR5abLdgUswDaYT7b99Pkeghl7dbQjgS27ZNoj19giJINac
+   wkjNIdgNlvu1Pibq2iMvKQKJVOCkbAVFgeqfxTfZnQMwbF2h7flmADLzG
+   wxs6ZfRse44ug1v3CRqxnxJ79jTNxMtLdvtvazjiW6zXUENsROtL+ziQe
+   TjelLysz8Er1xJpVwDSH3VusLcNc8u7BkTUa8cDvFGjiJsL1Kw3sSPLu2
+   NeNkfx6ivQQzX+TpiUwQmn5cs2mPg8GaQyF/ikgIUtHux1JiRunshj4Zz
+   3vxb66vSh8AGQMEnglnjIHkhkWIWJahfxmhrw+LMZ9xRVEOS/YPhp+882
+   w==;
+X-CSE-ConnectionGUID: SEZEDzM0SCuAnyuyTIWk2A==
+X-CSE-MsgGUID: YTO3cywHQYWZesUrgsGgRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="70991639"
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="70991639"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 23:11:49 -0800
+X-CSE-ConnectionGUID: 3YTZ7BrnRSW1lPu5CbhUaw==
+X-CSE-MsgGUID: 6PERgo2rQkeGrLgSaXIB0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="213883170"
+Received: from igk-lkp-server01.igk.intel.com (HELO afc5bfd7f602) ([10.211.93.152])
+  by orviesa003.jf.intel.com with ESMTP; 02 Feb 2026 23:11:46 -0800
+Received: from kbuild by afc5bfd7f602 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vnAZc-000000003KX-061T;
+	Tue, 03 Feb 2026 07:11:44 +0000
+Date: Tue, 3 Feb 2026 08:11:17 +0100
+From: kernel test robot <lkp@intel.com>
+To: Benjamin Coddington <bcodding@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Rick Macklem <rick.macklem@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] NFSD: Sign filehandles
+Message-ID: <202602030854.mD7cfzBx-lkp@intel.com>
+References: <11253ead28024160aaf8abf5c234de6605cc93b5.1770046529.git.bcodding@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAC31dziSoFpXE+RBw--.40134S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4rCw4kuw4kuw1xGrW3ZFb_yoWfZwb_ZF
-	4fJa1ku348KF4j9F4UCa1ayF1Fg3y0k3WkZFW7GF45C34UJFWUCrsrXr1Iqrn8Ww4Ykr1f
-	Gw1qgrWYgayfujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbs8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
-	W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43
-	ZEXa7VUb-txDUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <11253ead28024160aaf8abf5c234de6605cc93b5.1770046529.git.bcodding@hammerspace.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-18653-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[hammerspace.com,oracle.com,kernel.org,brown.name,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18652-lists,linux-nfs=lfdr.de];
-	DMARC_NA(0.00)[iscas.ac.cn];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[nichen@iscas.ac.cn,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[iscas.ac.cn:mid,iscas.ac.cn:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D0DD6D33DA
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,intel.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,01.org:url]
+X-Rspamd-Queue-Id: E74B7D5942
 X-Rspamd-Action: no action
 
-Replace comma between expressions with semicolons.
+Hi Benjamin,
 
-Using a ',' in place of a ';' can have unintended side effects.
-Although that is not the case here, it is seems best to use ';'
-unless ',' is intended.
+kernel test robot noticed the following build warnings:
 
-Found by inspection.
-No functional change intended.
-Compile tested only.
+[auto build test WARNING on dabff11003f9aaf293bd8f907a62f3366bd5e65f]
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Coddington/NFSD-Add-a-key-for-signing-filehandles/20260203-002703
+base:   dabff11003f9aaf293bd8f907a62f3366bd5e65f
+patch link:    https://lore.kernel.org/r/11253ead28024160aaf8abf5c234de6605cc93b5.1770046529.git.bcodding%40hammerspace.com
+patch subject: [PATCH v3 3/3] NFSD: Sign filehandles
+reproduce: (https://download.01.org/0day-ci/archive/20260203/202602030854.mD7cfzBx-lkp@intel.com/reproduce)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 7c9cf0983366..dacd330fc623 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5016,7 +5016,7 @@ static void nfs4_proc_rename_setup(struct rpc_message *msg,
- 	if (same_parent)
- 		nfs_request_directory_delegation(same_parent);
- 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_RENAME];
--	res->server = server,
-+	res->server = server;
- 	nfs4_init_sequence(server->nfs_client, &arg->seq_args,
- 			   &res->seq_res, 1, 0);
- }
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602030854.mD7cfzBx-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   ERROR: Cannot find file ./include/linux/jbd2.h
+   ERROR: Cannot find file ./include/linux/jbd2.h
+   WARNING: No kernel-doc for file ./include/linux/jbd2.h
+   ERROR: Cannot find file ./include/linux/netfs.h
+   WARNING: No kernel-doc for file ./include/linux/netfs.h
+>> Documentation/filesystems/nfs/exporting.rst:264: WARNING: Title underline too short.
+
+
+vim +264 Documentation/filesystems/nfs/exporting.rst
+
+   262	
+   263	Configuration
+ > 264	~~~~~~~~~~~~
+   265	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
