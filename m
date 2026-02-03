@@ -1,279 +1,287 @@
-Return-Path: <linux-nfs+bounces-18658-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18659-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oPGWO4cagmmZPAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18658-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 16:55:52 +0100
+	id iF+aACkggmlIPgMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18659-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 17:19:53 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D56EDB922
-	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 16:55:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94B90DBD28
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Feb 2026 17:19:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EA1E3305245C
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Feb 2026 15:55:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE374315FBDE
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Feb 2026 16:12:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D2593B8BCE;
-	Tue,  3 Feb 2026 15:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 322CE3C1998;
+	Tue,  3 Feb 2026 16:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="cDBsRjzF"
+	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="AxhekHSE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11023081.outbound.protection.outlook.com [40.107.201.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E65E3B95FC
-	for <linux-nfs@vger.kernel.org>; Tue,  3 Feb 2026 15:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370573C1985
+	for <linux-nfs@vger.kernel.org>; Tue,  3 Feb 2026 16:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770134135; cv=fail; b=IjpN0LEDPtgFhv5R5jpb8FKkmjqBh+QIFTyhta0TphgGV/UmEF9lxLHE4iejpNDK5fFCYYwkfbjKcgPamFsPHlvahRkPdFsGI3nvbRziXi8ZzulwwnLLwyQ5Qrc2ohrN/26YWS0Z+5Ui9wdRAJaUMBuOVp15hbrcjpMO3YNrOOM=
+	t=1770135133; cv=pass; b=IjdDwD3KQ7oRfhySGSm5kjMNHlvnqy7l5+2SdRAUe6ehSywA+I1Smu/VUgOyED7gkG/kW2Lo4Te51D/Q/seXEeZlApJXbHrh0lfMgm/i8IRSkAVzr6831OshEb92hmjgL16llO1s9xcMuGYVQg4yhl/aOoUWnjRJal2M3QQpPGE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770134135; c=relaxed/simple;
-	bh=lWyrPg037rbEmmyBvh5/8hBbGukiNLsV1gzq2lzdjo8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UBRIyconQsRxI299aGV228AK+qV7p0icCQvahLYcQH9LSP+LMaztzkVxu0zxyMNmZPEhY1XFn5faBRb8KgqN9yTkNjzbCukMksib0UUlK1W3TziwbrFbZnM8WMDt8pkeQhOIKMLhqj0qc2k76IelKix3dN+O70c+l0ujTniGnHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=cDBsRjzF; arc=fail smtp.client-ip=40.107.201.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fb6UYtu9A5om6snopibAK2LgrfVrbK05gR9Dbq9nsG3Njgerr0cDlN8Iz4JlaPSeZ+wXIRW1tos3ee8c9S7gsSePG1FDPrkDLznsZfptQXp7ekRTZLxxsxY2esfgfkZjyng59z8Cw6/YI/C9FvffsQBEb+6koEOL3KenxINZKPSzFaF2WihTgQQNPK0AY0MxYPATxGChNIspAd3LTVoUEicbbMz1D4+JFnTL4VzoqHztj1hfxeGcmY7jhHp9VorGYs83l5Yo7p7CAsqfiA3nevDN9ghGHN+10YkiIjA5S57j7+b/EQudpcHWqKKgh2ljj2EtWhJ8RevQLtXp2K6e/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VqT+giTHNC3H4ez7/AhTvULPzf+DUrZJ094NiXIHBm8=;
- b=f2CXJlDV27MYm8ytW9jjm8dU25lJscGmH/wvbDmBY1hsS7uGK1knDj941yVEjLovrbckQ3VmZ/YJJMbCpby6EDekuzr1GyP7p2ea704SYrv9yENDA5QxOLWArzvMB8I4wUoPRjd3oh4cJC5QNFHEeiXBD/nxasNDGoXpMRM/iyoLnrc6KwZf6VxKdQmxBl9kCuZwQunP047P9YWb4xTqnufgKU9iQ70hL3UzsPo++wVon8JWDwutV4MciD2hMCheEHRyxmAYMIx6pKeIpT/ooz9sdg5Pv96npCDpBKGyyyouNXOHjWYe//ihQajvUVnINFdRWuQryuhhGWGs110q1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VqT+giTHNC3H4ez7/AhTvULPzf+DUrZJ094NiXIHBm8=;
- b=cDBsRjzF1c1V5ywIWrGPx185sM+vcDeZ/c21bt8E2x5IBd1u9CIfDV7twUZYrBPdl38FX6c0yKwDxBudSzFb7l1BNigU+l3e/Gv4jWHN0k7ZIX/s6pEdE2kWvJMrJ6C04mfTKJys2jYIvmc62qcqMJ8EXjKy2iJRrsrLZzkgIjw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-Received: from DM8PR13MB5239.namprd13.prod.outlook.com (2603:10b6:5:314::5) by
- BY3PR13MB5041.namprd13.prod.outlook.com (2603:10b6:a03:36b::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9564.16; Tue, 3 Feb 2026 15:55:26 +0000
-Received: from DM8PR13MB5239.namprd13.prod.outlook.com
- ([fe80::fa6e:7b5:d1ec:92f3]) by DM8PR13MB5239.namprd13.prod.outlook.com
- ([fe80::fa6e:7b5:d1ec:92f3%4]) with mapi id 15.20.9564.016; Tue, 3 Feb 2026
- 15:55:26 +0000
-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Steve Dickson <steved@redhat.com>, linux-nfs@vger.kernel.org,
- NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v3 1/2] exportfs: Add support for export option sign_fh
-Date: Tue, 03 Feb 2026 10:55:22 -0500
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <2FB11C41-9BE0-47AC-AB38-B274C8B203F7@hammerspace.com>
-In-Reply-To: <b303b933-530d-44b1-a614-c8bb91ce9f34@oracle.com>
-References: <cover.1770051230.git.bcodding@hammerspace.com>
- <60b48050a0998ca214526bbfec406ed084305617.1770051230.git.bcodding@hammerspace.com>
- <b303b933-530d-44b1-a614-c8bb91ce9f34@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR16CA0023.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::36) To DM8PR13MB5239.namprd13.prod.outlook.com
- (2603:10b6:5:314::5)
+	s=arc-20240116; t=1770135133; c=relaxed/simple;
+	bh=A8RN4GDLWQ83r49qq2Mz8+c6CAijfCOfj8JYE67qE84=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eMxkXBweq7qtTlnjSPsKrbgXiPpGHV/vjN+oPuYqL8OKinLU9JBzz0pI7xdZLWGLUtgjHPTQnn8QRVgPbJRCvATtqRBITpN8sfwM3pfkWZEgFWDl73BaH724dZ9qLCW0+CO6Cn9Amka5FmyHZdlXCcQwFkRKhGfZxRPNlKCZQZQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=AxhekHSE; arc=pass smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59dd9aef51eso6661117e87.2
+        for <linux-nfs@vger.kernel.org>; Tue, 03 Feb 2026 08:12:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770135128; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Y1HEe/jeMtFEccfveagOSdyW0mp6cQt/Fi6NUAnuSTDk7aNb1rDBp3o3kdLtZ+Lpci
+         Mg4GLV5AUXxA8767012Wdm812kCKocHbIR114Xq4pCTaRNqr3tAKs45600Z8UTuHxEN6
+         9glaHzMrHynN3MEL4I0xSGMyfE8p6aV/qt8TaA88pAChiAn4Jwo0VNeBe9mu6Pr5c78e
+         uUnRCFQDmpVbstWPZU4bCB1KSYulfUxojNMblL+DCspIlulvZQofqEC/sk4URNl+pI43
+         H5CubhKGk0dmZNqaGGQU4/xUehO1qDEzrf4Q7g3nUz6bJWkrIT3UrTOol3CfqBU3DarG
+         zF9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=AQpego8feKFB7r7Kf6rf1Qb5zSTvuesnvWGekYZ4xX4=;
+        fh=pwXuzeKi0xXUa9h05b3owNlkTlxekHt4QQMBmoF4uk4=;
+        b=FY0yZ6tKoiBpETBoV/XMt3M+zLXN/TLcWQfy3tOUfSIFltUoqRC2J3h/67SicnSZMH
+         8T2Pr2M9GykdzpOZLVQ+Yu/B+FtvSNRAmaZmj84717ozJDQdWk/pHUXg62L8bsV8ZqaB
+         HOtwgIvwkRd4Iew62DXqt6xoM5r1TPqi71tMzefAQhJXmPAOOOOVy/2WnbzPXuY8WhXj
+         1twrwfqadvxbyrXAAuuy2xBR2m11SclJFqDgRST1ax9ptDj20T0tuf+0pgfd3dr+4hFp
+         RQcz4MXiAIEAlCTx6PJ4exMZXDsFjegxYKiZa9zznJ4VEQp6VAtjQXWtBcgcuFvUS1wB
+         ZFTQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mihalicyn.com; s=mihalicyn; t=1770135128; x=1770739928; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AQpego8feKFB7r7Kf6rf1Qb5zSTvuesnvWGekYZ4xX4=;
+        b=AxhekHSELVLKOo3FYHbVT2qZpM6RKlitYeyZqwDwVR/4s7jxrV+h9SiHNbmQdr/3D6
+         57gKBKJZDEj1OEnS0itIagto3vVC6Qq8FlE3V/H0c/elq4YYAb9DZ+I8RXFPmzw7+kDQ
+         G0ZLdoG/KQu28HDJAD8f/BcHB8Uc4mTIhFQ5c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770135128; x=1770739928;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AQpego8feKFB7r7Kf6rf1Qb5zSTvuesnvWGekYZ4xX4=;
+        b=Bz9IMaDC28PcgzDRwTxRsJ4OJ93/epFcj16SujeOX1yPe3Kcxe8Q4nzHlOISE5ujnV
+         fZ9L5TYMATcyCdJrRufLrSjfHDr0HtCYIxWVXM3xA8SOMvkBK5wNz8M7hGmLnE3Xx4Y4
+         BPjdCqCqbboUDSJ+WxnCgpcdNIcxYW0GByhybPxl68rNa9Yo5jH3JvF0gEKukYt+4Ygx
+         Yvarkf3+R2TzN72NXG8dDlhCf95S/wwmx/gkxfu886wHMUAJ0sRQDFaJumVwnCG7xfUa
+         Nvk+ve8X7CEM9vr+QFsHZbxf7wGMP6bcv0mGEW908QDbTH/NWxCvT8mddk86JGwz83EQ
+         hFxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtlkL106LnABnE1WX/p9/fPRd4LaFcgnGV3pl9W6Qi/tIXr7SIv0XIBw4bYCvNobEc1bK4y/624OU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE4frG1ONDB7Bc9WLFWlhz3FIB6lfzi2E3mHzF0yJaMVQTG9uP
+	r3Zb57cQlId7+q2WuCgvVkyfAP9r3J5yQvLpowPvzjRwykHLtz2jzxkWn8wVJYnu1QfIuoeuaT+
+	V3LWvzE3LTJbE4thkm+jsgKKUreG2i4HXoG4kZIDnwQ==
+X-Gm-Gg: AZuq6aJJQLvCvoE/dI/ZHAThBfEzkeIoH83h9d3wew0ELnFxAzFohXJP5j2tr1vX1C9
+	Q8PDz+Y18Vze9U0s4Ec9547yYB9cdrTy8VVjryH5mNYZGGrDv/wJkVh/amlOLl0lY9BCOb9hLtz
+	kSZma3enYP+wpvV156dvoKj/sWnUfOCV5nRi1dHLlWi25PGimkOLqr2LDu2/LniWrrceMoICLhd
+	VMZ12j3t3CpSPJCxm82bqMPRK5+d333hYeM3IjHv0TnGVnLPDeDRvosCuVvisxwrfB8wA==
+X-Received: by 2002:a05:6512:361a:b0:59e:174e:fce0 with SMTP id
+ 2adb3069b0e04-59e174efd13mr3804850e87.42.1770135127877; Tue, 03 Feb 2026
+ 08:12:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM8PR13MB5239:EE_|BY3PR13MB5041:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41678563-fc30-4106-f4de-08de633ca567
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7142099003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vUwctY3Tyiu64wgpsCXBb+jz9k0m+OMozySovccrKI4IdKC2MNHgqktBVTJw?=
- =?us-ascii?Q?NtV+MdQLmPXW+cXiEyHQeo1+JG3IhTd674jW3+16VKTB7V6qPs+boYWCdvYy?=
- =?us-ascii?Q?l9D2LUEJpiN/kzhCuu4tHQtJTtpoUW1u54OV7i6L3ycT5yMpXl7tvA19wzka?=
- =?us-ascii?Q?ZA+vbwIy1dEbfpGRwr2sjJcyvVy+BmpOAcQ1pu9ono/HXmYBnaOUDSZfFFZB?=
- =?us-ascii?Q?47Lx/exSjqBUZKr9bru3v44zyxuuV+3FDvwGKzBjk9K3iuBCpM+RVOXnNV65?=
- =?us-ascii?Q?SSKqDy7GPp+O/Wk5hM/XApI1bkw8BbRHIsdcy+yMkvSg10Gzyvz44rONKteG?=
- =?us-ascii?Q?+mwKt4poQ5BcdhVlsa0MQIr23D+/wYOv3NDOuOpC4G919Q+YDe4R4BXPU7uS?=
- =?us-ascii?Q?iacqLXpFSMPkY0D4y0dVRTg3jzeGXnMK1XvErie41dlX3MGu151387z3kHbS?=
- =?us-ascii?Q?gjBjX/ewdLxm/YRtbgAis5K3abdJyadGijbwuPaMqet2CVYG9HPTmafI1bgj?=
- =?us-ascii?Q?60FvtAk6JKpWGony9b9+h5bBBq5XeR8u3CO8hs2AWd233DhqemXis44++Q1F?=
- =?us-ascii?Q?IPVEZvKaZ6eq2gEZ1GKGcy2zzjj440aNXK/g8eMiZQilON4azIhnWpNPK/3t?=
- =?us-ascii?Q?dDWVEx1CXe8Dlz5ekef0OVfkQku/f4UvU7luPuOI8a/9/SCCbM6cnWgRqDEj?=
- =?us-ascii?Q?wH9Nycx6DcbbdeEYiOY36FWtk4qTrsxZ+HifS+znl3wtKdyxUwFG0PDsUr76?=
- =?us-ascii?Q?pQWf8AMxhk6f87oAt2IR4zX/La43gINuv6d0heoc5UJ+513UGqVdOEPTP1Yx?=
- =?us-ascii?Q?Z8EjycnXUBA0VTzvMx48PEndPTRUv0ebiHKZM5BtBPpdZmOwF9WcnaNtTDnF?=
- =?us-ascii?Q?exjktozldKYFF/AAfKruiIPs0OO4vYXbTr+ylg+NjvicoGxFM4Z+Z3K9VmVE?=
- =?us-ascii?Q?/tWHUOS7Efg3vNPN6ZbwqzUROUoGJP6ffHG2kx3P3qF2pFxbT+asZGmRoeFU?=
- =?us-ascii?Q?dij0lMSM8r7TSK1+Kc2gWmODY6A56hnYm4CGOp0JSvRW7k+sD8UqXm2Hwfh2?=
- =?us-ascii?Q?npW9NZqlMb9Cu9Arj9eCrqjlq+bjK/uuAPn5fZhbw28v5HAPzJM62CWSdEV4?=
- =?us-ascii?Q?mQqbLvcnGGO0tkbz+rX3tTd7U72K58Vt+pZCJOYy4LQhpxX/Z5RrwZ0Z9kap?=
- =?us-ascii?Q?TJLoLG0OrtAAdgXEmcB30N7ou+bTFoVC7cTJPqQ8FkYiYiKZE/mp+qHATkRR?=
- =?us-ascii?Q?1HxvetcM7LJhjXAwk8RvmpYDNRw2yLH7iNOju01f6qVfYOr0c+mWkCWs0Q+0?=
- =?us-ascii?Q?ESEyuDXTvoMiTbU/zsLtE7LQO4y6Bd3y9P80hHpKchWlgNEr0E2L3SmmFUCA?=
- =?us-ascii?Q?j/rsrWkBY+OqxEbJ6RtK1x/eFIAXC3sL9W93ZcSJRXb5b89cx3uiG4mIojfz?=
- =?us-ascii?Q?q3CMFxHBT5E4nTf7Cr4E2uclE3FooSZD8YredHaZVtrQayQO2smHGrvIv9NP?=
- =?us-ascii?Q?PZi04dtUwX4duvcQjycTr7x/XcwxQbzSytJ9rG2kmWHTP3FU7C87yyxoP8/x?=
- =?us-ascii?Q?ujXQj5ze8K4HVxpKAMs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5239.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7142099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZtTheLWM3dv2yMViYbOdnA+cZ0iCWhQVqUYy56gWgB77MdKZR8B+Lh2thRmf?=
- =?us-ascii?Q?8zWO2z3VF58O94iK/iseRXFIyNsBtd/4wlHZ2TKWt024/gzbpoyFnb8t9jWc?=
- =?us-ascii?Q?ONBudspwz+YZf9sT+8cQhYBGij3RcNeB42BzT3j4ew8Vr5CW7vfiCcHonSqX?=
- =?us-ascii?Q?NUkdvxL7XVPnyuDLnH4DgbikpP/+Cv6A4wiRCF2RF21S2eDIim1Od9GLxn48?=
- =?us-ascii?Q?vPZKm8KkHLPL3v93V551r3u1ZI6ylUtg3SWrmICI66F/nO+KAzIpVPV5WRQB?=
- =?us-ascii?Q?qm399f0ymoYADEf92AvZoDdRi1xiEggA0q9n9OTcVJFkWdisfwcOYEg78dO2?=
- =?us-ascii?Q?YKU1Egusb5thOBF1bHZ3Eiw+ZAqGZAxF4fn+obzSyPXOchPu56tE+9RzPUHp?=
- =?us-ascii?Q?u5VvvCuQO++yP8vQinhc+y+H9IEH3yzTRZX07BFPsAEbOiC9BIBciGRQAgZy?=
- =?us-ascii?Q?5SAzbG4PPW6Xj/eWn7BWa8Fp9Q+/aD201R14t5ev4owCsS3ZCP+n4NuZwV/m?=
- =?us-ascii?Q?6Tv5IosMdZ17wgYzASmv4uTHwif7/R5kJqz3nXSaXAB1GjX4dxqgQKkoENlm?=
- =?us-ascii?Q?cm9F1YtqjeVvit4QLvTjkZG90W7OhIp0MwgguvQ+3OhqPZkLI7Djhbipb1rG?=
- =?us-ascii?Q?rxzmglBLokohq0cwl/YpEWlrhkx9anKJbmB6ARDD06TZWM75+RmVWO8y2TpY?=
- =?us-ascii?Q?7AG3mzufOfRQSlKmTkFM10RimmfMWsYupZEmIBV4z82TwBA9o2rOD/dgzw+1?=
- =?us-ascii?Q?inEYqe/rCTmIs7us7g7Ghh+8cnvz+WTqSUoq6ejKNu4BQzyaobKG0czRKAoB?=
- =?us-ascii?Q?g4PGPiZWwL7vvU8molXyQiq289u3oqRfIlBifs6MURjsuR8VP9EI3+Qp9xFM?=
- =?us-ascii?Q?QG+e7dOjryLfo9fnRMaPOFJR0lkIYZ3Vp6qwlrlstk8FNMDcOaCB/NljaAt/?=
- =?us-ascii?Q?pHm4dNrZHWAbJQDr9Lhw/WwbJGGXiN2T72V08t1faINJ2s7qbHPcfIdw5um2?=
- =?us-ascii?Q?mb6N2+wc7ME2QHqbwYLQ5F7OKu/R7iMzHKz4vHmw4zxkeO0vlfwKNTfLBlB1?=
- =?us-ascii?Q?YS8Wv/tapoTZKarzIqXAZtBwh4/uwdKWad1AUglLxKdAKxRZwCczmUt9oSos?=
- =?us-ascii?Q?tBalZcrv6MOG5zri41pEH+6iFdFc3tqTs9VfaLrdtC38Q+WsVy8UFw1YOFDg?=
- =?us-ascii?Q?sQPllwLNLVHvQomPg3kp2Zu4o3qllfhv8/38XaHb9OTHvvrdDEIxPYvNyeX5?=
- =?us-ascii?Q?TKXWXIcxMpOeynr/Zy+5Pi7YJvHXtUOnJdWcY2B751xGLdBhPW1yEq6I1Yjb?=
- =?us-ascii?Q?J/jH1o6jmL8ciV3k8ueq3oOuJjBOOfP2XQyR3PTi+AEuURoWlmYh0ytDTIq5?=
- =?us-ascii?Q?9MjgNrDaXmR7gIPLtr2hEXN5ypr3vklrSmUoO88w06YKDbZX4wbVypY9BtRD?=
- =?us-ascii?Q?rcY+TvSALrNNTTh5fQbpHGNGL+3yfQ8SGNMorIyPfQYpOdjlrdt46BQNxmYN?=
- =?us-ascii?Q?x1t+/n7xU6fv7+ewdGisqmiaeGY1TGrLGUPunaqAr6ordKRAsgoREK19ejKG?=
- =?us-ascii?Q?+8Bq8GEaqR1W86H2uL14S9GHd+VT9HhsoT99seTZpz5dlzHlqMdtgWvll/uy?=
- =?us-ascii?Q?uvaY6qDxgU4icOmY3VFnxsjF63rxsoLtEIKWxYLs8wiBy1EWTGQpBYwpJToJ?=
- =?us-ascii?Q?jWVFakoBBpCnqjxB7RymlYNejWuI+yaGW2CbRjsFfa2ziy4O0xilGll4lJv2?=
- =?us-ascii?Q?ufwOM/ZmYnEK3S2btC7e4QR0yYfWUGI=3D?=
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41678563-fc30-4106-f4de-08de633ca567
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5239.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2026 15:55:26.0460
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QYBEWvtc+iKWaDLyrg7ss8Md0Ct6Tvrd62pcXMMEWNyRfs3+MOqybuaBlgV6IPw7wEuLsJnVO42vnNmFGA8E5OTs1AyGIA6CtBHa2jFQevw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR13MB5041
+References: <20260129-twmount-v1-1-4874ed2a15c4@kernel.org>
+In-Reply-To: <20260129-twmount-v1-1-4874ed2a15c4@kernel.org>
+From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Date: Tue, 3 Feb 2026 17:11:55 +0100
+X-Gm-Features: AZwV_Qh3STuAfXyfImYoG9ogVPD44LxztQyiZo154t6EomlvRura8CdCgjeoM8I
+Message-ID: <CAJqdLrphO1GnAZ2=n8wQAP7B+ZwFnD0wSLY7sAjacZTpLZrqBg@mail.gmail.com>
+Subject: Re: [PATCH] vfs: add FS_USERNS_DELEGATABLE flag and set it for NFS
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	"Seth Forshee (DigitalOcean)" <sforshee@kernel.org>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=selector2];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[mihalicyn.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[mihalicyn.com:s=mihalicyn];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18658-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bcodding@hammerspace.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-18659-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[mihalicyn.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alexander@mihalicyn.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6D56EDB922
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[futurfusion.io:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,mihalicyn.com:dkim]
+X-Rspamd-Queue-Id: 94B90DBD28
 X-Rspamd-Action: no action
 
-On 3 Feb 2026, at 9:17, Chuck Lever wrote:
-
-> On 2/2/26 11:59 AM, Benjamin Coddington wrote:
->> If configured with "sign_fh", exports will be flagged to signal that
->> filehandles should be signed with a Message Authentication Code (MAC).
->>
->> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
->> ---
->>  support/include/nfs/export.h | 2 +-
->>  support/nfs/exports.c        | 4 ++++
->>  utils/exportfs/exportfs.c    | 2 ++
->>  utils/exportfs/exports.man   | 9 +++++++++
->>  4 files changed, 16 insertions(+), 1 deletion(-)
->>
->> diff --git a/support/include/nfs/export.h b/support/include/nfs/export.h
->> index be5867cffc3c..ef3f3e7ea684 100644
->> --- a/support/include/nfs/export.h
->> +++ b/support/include/nfs/export.h
->> @@ -19,7 +19,7 @@
->>  #define NFSEXP_GATHERED_WRITES	0x0020
->>  #define NFSEXP_NOREADDIRPLUS	0x0040
->>  #define NFSEXP_SECURITY_LABEL	0x0080
->> -/* 0x100 unused */
->> +#define NFSEXP_SIGN_FH		0x0100
->>  #define NFSEXP_NOHIDE		0x0200
->>  #define NFSEXP_NOSUBTREECHECK	0x0400
->>  #define NFSEXP_NOAUTHNLM	0x0800
->> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
->> index 21ec6486ba3d..6b4ca87ee957 100644
->> --- a/support/nfs/exports.c
->> +++ b/support/nfs/exports.c
->> @@ -310,6 +310,8 @@ putexportent(struct exportent *ep)
->>  		fprintf(fp, "nordirplus,");
->>  	if (ep->e_flags & NFSEXP_SECURITY_LABEL)
->>  		fprintf(fp, "security_label,");
->> +	if (ep->e_flags & NFSEXP_SIGN_FH)
->> +		fprintf(fp, "sign_fh,");
->>  	fprintf(fp, "%spnfs,", (ep->e_flags & NFSEXP_PNFS)? "" : "no_");
->>  	if (ep->e_flags & NFSEXP_FSID) {
->>  		fprintf(fp, "fsid=%d,", ep->e_fsid);
->> @@ -676,6 +678,8 @@ parseopts(char *cp, struct exportent *ep, int *had_subtree_opt_ptr)
->>  			setflags(NFSEXP_NOREADDIRPLUS, active, ep);
->>  		else if (!strcmp(opt, "security_label"))
->>  			setflags(NFSEXP_SECURITY_LABEL, active, ep);
->> +		else if (!strcmp(opt, "sign_fh"))
->> +			setflags(NFSEXP_SIGN_FH, active, ep);
->>  		else if (!strcmp(opt, "nohide"))
->>  			setflags(NFSEXP_NOHIDE, active, ep);
->>  		else if (!strcmp(opt, "hide"))
->> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
->> index 748c38e3e966..54ce62c5ce9a 100644
->> --- a/utils/exportfs/exportfs.c
->> +++ b/utils/exportfs/exportfs.c
->> @@ -718,6 +718,8 @@ dump(int verbose, int export_format)
->>  				c = dumpopt(c, "nordirplus");
->>  			if (ep->e_flags & NFSEXP_SECURITY_LABEL)
->>  				c = dumpopt(c, "security_label");
->> +			if (ep->e_flags & NFSEXP_SIGN_FH)
->> +				c = dumpopt(c, "sign_fh");
->>  			if (ep->e_flags & NFSEXP_NOACL)
->>  				c = dumpopt(c, "no_acl");
->>  			if (ep->e_flags & NFSEXP_PNFS)
->> diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
->> index 39dc30fb8290..bd6669f431ba 100644
->> --- a/utils/exportfs/exports.man
->> +++ b/utils/exportfs/exports.man
->> @@ -351,6 +351,15 @@ file.  If you put neither option,
->>  .B exportfs
->>  will warn you that the change has occurred.
->>
->> +.TP
->> +.IR sign_fh
->> +This option enforces signing filehandles on the export.  If the server has
->> +been configured with a secret key for such purpose, filehandles will include
->> +a hash to verify the filehandle was created by the server in order to guard
->> +against filehandle guessing attacks which can bypass path-name based access
->> +restrictions.  Note that for NFSv2 and NFSv3, some exported filesystems may
->> +exceed the maximum filehandle size when the signing hash is added.
+Am Do., 29. Jan. 2026 um 22:48 Uhr schrieb Jeff Layton <jlayton@kernel.org>:
 >
-> Now I thought NFSv2 wasn't supported.
+> Commit e1c5ae59c0f2 ("fs: don't allow non-init s_user_ns for filesystems
+> without FS_USERNS_MOUNT") prevents the mount of any filesystem inside a
+> container that doesn't have FS_USERNS_MOUNT set.
+>
 
-My mistake, I will update this wording.  There's nothing here (or in the
-kernel patches) that tries to handle the NFSv2 case.
+Hi Jeff,
 
-Ben
+> This broke NFS mounts in our containerized environment. We have a daemon
+> somewhat like systemd-mountfsd running in the init_ns. A process does a
+> fsopen() inside the container and passes it to the daemon via unix
+> socket.
+>
+> The daemon then vets that the request is for an allowed NFS server and
+> performs the mount. This now fails because the fc->user_ns is set to the
+> value in the container and NFS doesn't set FS_USERNS_MOUNT.  We don't
+> want to add FS_USERNS_MOUNT to NFS since that would allow the container
+> to mount any NFS server (even malicious ones).
+>
+> Add a new FS_USERNS_DELEGATABLE flag, and enable it on NFS.
+
+Great idea, very similar to what we have with BPFFS/BPF Tokens.
+
+Taking into account this patch, shouldn't we drop FS_USERNS_MOUNT and
+replace it with
+FS_USERNS_DELEGATABLE for bpffs too?
+
+I mean something like:
+
+======================
+$ git diff
+diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
+index 9f866a010dad..d8dfdc846bd0 100644
+--- a/kernel/bpf/inode.c
++++ b/kernel/bpf/inode.c
+@@ -1009,10 +1009,6 @@ static int bpf_fill_super(struct super_block
+*sb, struct fs_context *fc)
+        struct inode *inode;
+        int ret;
+
+-       /* Mounting an instance of BPF FS requires privileges */
+-       if (fc->user_ns != &init_user_ns && !capable(CAP_SYS_ADMIN))
+-               return -EPERM;
+-
+        ret = simple_fill_super(sb, BPF_FS_MAGIC, bpf_rfiles);
+        if (ret)
+                return ret;
+@@ -1085,7 +1081,7 @@ static struct file_system_type bpf_fs_type = {
+        .init_fs_context = bpf_init_fs_context,
+        .parameters     = bpf_fs_parameters,
+        .kill_sb        = bpf_kill_super,
+-       .fs_flags       = FS_USERNS_MOUNT,
++       .fs_flags       = FS_USERNS_DELEGATABLE,
+ };
+
+ static int __init bpf_init(void)
+======================
+
+Because it feels like we were basically implementing this FS_USERNS_DELEGATABLE
+flag implicitly for BPFFS before. I can submit a patch for BPFFS later
+after testing.
+
+>
+> Fixes: e1c5ae59c0f2 ("fs: don't allow non-init s_user_ns for filesystems without FS_USERNS_MOUNT")
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+
+Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@futurfusion.io>
+
+Kind regards,
+Alex
+
+> ---
+>  fs/nfs/fs_context.c |  8 ++++++--
+>  fs/super.c          | 11 ++++++-----
+>  include/linux/fs.h  |  1 +
+>  3 files changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index b4679b7161b0968810e13f57c889052ea015bf56..128ebd48b4f4ba1c17e8b5b1b9dcefbd7a97db1a 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -1768,7 +1768,9 @@ struct file_system_type nfs_fs_type = {
+>         .init_fs_context        = nfs_init_fs_context,
+>         .parameters             = nfs_fs_parameters,
+>         .kill_sb                = nfs_kill_super,
+> -       .fs_flags               = FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
+> +       .fs_flags               = FS_RENAME_DOES_D_MOVE |
+> +                                 FS_BINARY_MOUNTDATA   |
+> +                                 FS_USERNS_DELEGATABLE,
+>  };
+>  MODULE_ALIAS_FS("nfs");
+>  EXPORT_SYMBOL_GPL(nfs_fs_type);
+> @@ -1780,7 +1782,9 @@ struct file_system_type nfs4_fs_type = {
+>         .init_fs_context        = nfs_init_fs_context,
+>         .parameters             = nfs_fs_parameters,
+>         .kill_sb                = nfs_kill_super,
+> -       .fs_flags               = FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
+> +       .fs_flags               = FS_RENAME_DOES_D_MOVE |
+> +                                 FS_BINARY_MOUNTDATA   |
+> +                                 FS_USERNS_DELEGATABLE,
+>  };
+>  MODULE_ALIAS_FS("nfs4");
+>  MODULE_ALIAS("nfs4");
+> diff --git a/fs/super.c b/fs/super.c
+> index 3d85265d14001d51524dbaec0778af8f12c048ac..b7f1bb2b679b43261fbdcd586971c551b85e8372 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -738,12 +738,13 @@ struct super_block *sget_fc(struct fs_context *fc,
+>         int err;
+>
+>         /*
+> -        * Never allow s_user_ns != &init_user_ns when FS_USERNS_MOUNT is
+> -        * not set, as the filesystem is likely unprepared to handle it.
+> -        * This can happen when fsconfig() is called from init_user_ns with
+> -        * an fs_fd opened in another user namespace.
+> +        * Never allow s_user_ns != &init_user_ns when FS_USERNS_MOUNT or
+> +        * FS_USERNS_DELEGATABLE is not set, as the filesystem is likely
+> +        * unprepared to handle it. This can happen when fsconfig() is called
+> +        * from init_user_ns with an fs_fd opened in another user namespace.
+>          */
+> -       if (user_ns != &init_user_ns && !(fc->fs_type->fs_flags & FS_USERNS_MOUNT)) {
+> +       if (user_ns != &init_user_ns &&
+> +           !(fc->fs_type->fs_flags & (FS_USERNS_MOUNT | FS_USERNS_DELEGATABLE))) {
+>                 errorfc(fc, "VFS: Mounting from non-initial user namespace is not allowed");
+>                 return ERR_PTR(-EPERM);
+>         }
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index a01621fa636a60764e1dfe83f2260caf50c4037e..94695ce5e25b5fbe4f321d5478172b8cb24e00d1 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2273,6 +2273,7 @@ struct file_system_type {
+>  #define FS_MGTIME              64      /* FS uses multigrain timestamps */
+>  #define FS_LBS                 128     /* FS supports LBS */
+>  #define FS_POWER_FREEZE                256     /* Always freeze on suspend/hibernate */
+> +#define FS_USERNS_DELEGATABLE  512     /* Can be mounted inside userns from outside */
+>  #define FS_RENAME_DOES_D_MOVE  32768   /* FS will handle d_move() during rename() internally. */
+>         int (*init_fs_context)(struct fs_context *);
+>         const struct fs_parameter_spec *parameters;
+>
+> ---
+> base-commit: 8dfce8991b95d8625d0a1d2896e42f93b9d7f68d
+> change-id: 20260129-twmount-114ddfd43420
+>
+> Best regards,
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
 
