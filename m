@@ -1,67 +1,68 @@
-Return-Path: <linux-nfs+bounces-18724-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18725-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WA68Ixerg2lvsgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18724-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 21:24:55 +0100
+	id EJBoCxmrg2lvsgMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18725-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 21:24:57 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31255EC6C5
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 21:24:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 71126EC6CC
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 21:24:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5833F301952C
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7B6F0301A386
 	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 20:24:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B6142DFE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3418542DFE5;
 	Wed,  4 Feb 2026 20:24:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mAXpVD0Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JDKiUT3A"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC6D42982B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A9C42B734;
 	Wed,  4 Feb 2026 20:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770236690; cv=none; b=LcJkr4n7TMRAzrR1uWcyBpV8XjOowh/3VvFord6M/PkxfYXiIaTa8rQtG4rW8uY1jJkdLc54BUV365GLEG4L1Ok+wLYuMRA4tR7cDg/RFQEiGNop/pqWhUqd0gN/6UKB1r26FsoGeXYyo7ocYtt/l2E+QC3NaaNtFz371kgd6tw=
+	t=1770236690; cv=none; b=TVKjldbZt9GsyfHOONlL0+2Zr+Cb8O4mhHjDaMLMa3UDgJTSEBMQxaU+ewJ8G/Pjw/Ki/qjKLjn84lDQJ5mynLMEuPPKklHAbnTakC59YQL/JuWrsCb/X3PkjLyiiH3eqlVSN3/aL4iSymAUT2o7HmB2vMMHux432p4VrxEPvhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770236690; c=relaxed/simple;
-	bh=T/dcOdL7PdKPM1aTApTKDAXOtzj4TI4M3Q4ie+c+VSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nnjon9VUrqcR/Y7S6TvlP22IkvWDyUCMx93CfrIVUDXVx0NPeq0rGDg+TtbYAoWhu/9gBClKNwkxFPCtkdLEpXaNwyfH2R/dkIJo+YNKLNeB611Y5MpZRLLnXSDW6GBaaImxK90M4S7V5wzVaoi8HyjXYy1oOOkcyy1d6+yv2Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mAXpVD0Z; arc=none smtp.client-ip=198.175.65.21
+	bh=OlUC+x5nhHFV5fOq7wpyv8K9/gz0YbcLlcJ9oT/FA4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PkM443RR/7VzvYnDp/9GIL4takX5YeIUUueY8zMoKq6pLxrVTtkiim2NDlpkk9Wa/rv5Zy8vRdZK8dpvx913DGHg6LPH5iDWJ+rkvjQuWqfGO4e6J7uVGZd8u7O8DqF7YfNLdu+lRhuhYucQNicL8rAS7vOdzf/nYCBnrGBSBU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JDKiUT3A; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1770236690; x=1801772690;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=T/dcOdL7PdKPM1aTApTKDAXOtzj4TI4M3Q4ie+c+VSQ=;
-  b=mAXpVD0ZON+4i0lLMWkJrSBzttOuZkPClo2B+9DNb7FZqm7LyuBKaDK2
-   7PRCr52RhEsWWDvs/wiEJZW32sgWTBsJozwVxsKZiOCovKpCTuQu1c4Hn
-   ioMDx3Bh/4Hb1WvfiO4LaztscMk6l8AzEepCRZuYWMqCjNKdwHNX6k8fs
-   WxuNs7QcqCTS8aL9VF70og4o3MNSaHfU74N12oqbjHUOmZxticdXuQ6nV
-   1j0vQDsjqVYhFwb4I1f9Ak7vMXridYrM+cHv8RXXVKK8XVkMgt6fyVH4J
-   hMyt8wwOg94TWU7SS88ZjrY1hmwkBnFZVbbi/5IaDOUY34EinKsXOmfXB
-   w==;
-X-CSE-ConnectionGUID: 4sWStrhyR/GV6Bt3lgReqw==
-X-CSE-MsgGUID: evKBdHrcQ1+iFO9UY35ryw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71335489"
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OlUC+x5nhHFV5fOq7wpyv8K9/gz0YbcLlcJ9oT/FA4M=;
+  b=JDKiUT3AWuRAHQGGtsNlZn8UKCYqTh+IVWk9wqKj/q3/tidKlFoCX3Ne
+   64I6lvJCnc4uZ0Dewloftt+dCZwZheJ4tiqlQ8BxcR9gGdMLc8uus8xV5
+   h583QMq27NWA3uZLqzwUkyp/Em1iQjuoS8+LnMgRSKPfkNA5z7GV79jux
+   eshjC+alakncUQzo5SX8Ge+xsT8pcP3ays7yxYltcCnu31Wy745fGZLKu
+   YtgjZZbPvgGrDXXKSSbdBiQMSn2Oo6wGBptfQUo5eJaKCnFf2HeVa0ju6
+   3D5S5xi1ZiQYGQKMMGUQQCA16LxCyKLjOaE6HpRt09MQMlMjh1cVbzxvA
+   A==;
+X-CSE-ConnectionGUID: LXIQfvVPTl2aWL05Bdc3oQ==
+X-CSE-MsgGUID: p0BRKqyURuKkA1MymjelCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="88853926"
 X-IronPort-AV: E=Sophos;i="6.21,273,1763452800"; 
-   d="scan'208";a="71335489"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 12:24:49 -0800
-X-CSE-ConnectionGUID: +A/vSLIwQaeyrCWARic52Q==
-X-CSE-MsgGUID: AgJQ4IMgQBGw2VwgkEsHAg==
+   d="scan'208";a="88853926"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 12:24:50 -0800
+X-CSE-ConnectionGUID: +ueJ6/YOQ0evEnqGTjKfXA==
+X-CSE-MsgGUID: CKId/F1hRj66Hgv5xkL1Fw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,273,1763452800"; 
-   d="scan'208";a="210051957"
+   d="scan'208";a="209567816"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa009.jf.intel.com with ESMTP; 04 Feb 2026 12:24:45 -0800
+  by orviesa010.jf.intel.com with ESMTP; 04 Feb 2026 12:24:45 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 794E595; Wed, 04 Feb 2026 21:24:43 +0100 (CET)
+	id 7CA8198; Wed, 04 Feb 2026 21:24:43 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -85,11 +86,14 @@ Cc: Trond Myklebust <trondmy@kernel.org>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 0/3] sunrpc: Fix `make W=1` build issues
-Date: Wed,  4 Feb 2026 21:21:48 +0100
-Message-ID: <20260204202437.2762161-1-andriy.shevchenko@linux.intel.com>
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Anna Schumaker <anna.schumkaer@oracle.com>
+Subject: [PATCH v3 1/3] nfs/blocklayout: Fix compilation error (`make W=1`) in bl_write_pagelist()
+Date: Wed,  4 Feb 2026 21:21:49 +0100
+Message-ID: <20260204202437.2762161-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260204202437.2762161-1-andriy.shevchenko@linux.intel.com>
+References: <20260204202437.2762161-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -110,9 +114,9 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[kernel.org,redhat.com,oracle.com,talpey.com,davemloft.net,google.com,gmail.com,linux.intel.com];
-	RCPT_COUNT_TWELVE(0.00)[23];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-18724-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18725-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -125,42 +129,53 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs,lkml];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:email,intel.com:dkim]
-X-Rspamd-Queue-Id: 31255EC6C5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 71126EC6CC
 X-Rspamd-Action: no action
 
-Compiler is not happy about unused variables (especially when
-dprintk() call is defined as no-op). Here is the series to
-address the issues.
+Clang compiler is not happy about set but unused variable
+(when dprintk() is no-op):
 
-Changelog v3:
-- removed ifdeffery to have struct rpc_task::tk_pid available (LKP)
-- collected more tags (Anna, Jeff)
+.../blocklayout/blocklayout.c:384:9: error: variable 'count' set but not used [-Werror,-Wunused-but-set-variable]
 
-v2: 20260204094500.2443455-1-andriy.shevchenko@linux.intel.com
+Remove a leftover from the previous cleanup.
 
-Changelog v2:
-- added patch to kill RPC_IFDEBUG() macro (LKP, Geert)
-- united separate patches in the series
-- collected tags (Geert)
+Fixes: 3a6fd1f004fc ("pnfs/blocklayout: remove read-modify-write handling in bl_write_pagelist")
+Acked-by: Anna Schumaker <anna.schumkaer@oracle.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ fs/nfs/blocklayout/blocklayout.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-v1: 20260204010402.2149563-1-andriy.shevchenko@linux.intel.com
-v1: 20260204010415.2149607-1-andriy.shevchenko@linux.intel.com
-
-Andy Shevchenko (3):
-  nfs/blocklayout: Fix compilation error (`make W=1`) in
-    bl_write_pagelist()
-  sunrpc: Kill RPC_IFDEBUG()
-  sunrpc: Fix compilation error (`make W=1`) when dprintk() is no-op
-
- fs/lockd/svclock.c                       |  5 +++++
- fs/nfs/blocklayout/blocklayout.c         |  4 +---
- fs/nfsd/nfsfh.c                          |  9 +++++---
- include/linux/sunrpc/debug.h             | 10 +++++----
- include/linux/sunrpc/sched.h             |  3 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c | 27 ++++++++++++------------
- 6 files changed, 32 insertions(+), 26 deletions(-)
-
+diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
+index 0e4c67373e4f..83e4a32b3018 100644
+--- a/fs/nfs/blocklayout/blocklayout.c
++++ b/fs/nfs/blocklayout/blocklayout.c
+@@ -381,14 +381,13 @@ bl_write_pagelist(struct nfs_pgio_header *header, int sync)
+ 	sector_t isect, extent_length = 0;
+ 	struct parallel_io *par = NULL;
+ 	loff_t offset = header->args.offset;
+-	size_t count = header->args.count;
+ 	struct page **pages = header->args.pages;
+ 	int pg_index = header->args.pgbase >> PAGE_SHIFT;
+ 	unsigned int pg_len;
+ 	struct blk_plug plug;
+ 	int i;
+ 
+-	dprintk("%s enter, %zu@%lld\n", __func__, count, offset);
++	dprintk("%s enter, %u@%lld\n", __func__, header->args.count, offset);
+ 
+ 	/* At this point, header->page_aray is a (sequential) list of nfs_pages.
+ 	 * We want to write each, and if there is an error set pnfs_error
+@@ -429,7 +428,6 @@ bl_write_pagelist(struct nfs_pgio_header *header, int sync)
+ 		}
+ 
+ 		offset += pg_len;
+-		count -= pg_len;
+ 		isect += (pg_len >> SECTOR_SHIFT);
+ 		extent_length -= (pg_len >> SECTOR_SHIFT);
+ 	}
 -- 
 2.50.1
 
