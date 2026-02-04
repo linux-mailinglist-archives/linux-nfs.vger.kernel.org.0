@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-18690-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18691-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UDq+NGkWg2lnhgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18690-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 10:50:33 +0100
+	id aFWAOjcVg2nihQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18691-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 10:45:27 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46477E4134
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 10:50:33 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E17FE4051
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 10:45:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BBC7730AC53F
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 09:45:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8D56330078AD
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 09:45:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7833B8BC6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D203B8BCD;
 	Wed,  4 Feb 2026 09:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bDjXvFsY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfNdAEEM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A6F3B8BB4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F7E3B8BBA;
 	Wed,  4 Feb 2026 09:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770198317; cv=none; b=ScMjGbRSstuhEtkE0TRdNVMqMW1FHIuBS5LW6uHFyG0MEWjO1OIn3gWXoeTaaBjXJXT4gFAtWCIUMMvtNp3qw6yLxmv/dlIZjuvqlZhh3XtD2oeDgQKE99RecTsRJHBQQzVxgRlIwp71w5SzafKyEZWv9Mo+HXWeTaqF3E/rOeY=
+	t=1770198317; cv=none; b=nMOsoVushry1Z9UUNIERcGy4wujStylgwhG13dQXnCZ8KAKBYC+eeLoBetwE1f1+RuQb+Ix+eNm3GYz/dOY4m6EbMWWQDikOZ411E8M4/5T6QPifeWgAc2Vk/5oxj8zO7TH1Hbzbm7CnlWrG2hpfHq6ojO825dRmVZTalfAP+ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770198317; c=relaxed/simple;
-	bh=Qj9IYpqXA2nmuwZJsCBesC4DxgJFjbmtatJ+ozIipWE=;
+	bh=YrUQlyrHEX5MNyRLxbo3Ww4o9KuASOkuXaymD1/wJ98=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QqpPP+WS5tBrZvgMw8hY7YH+D1rQLQ6BCLyEl6qVrV+Dd5+0VhOnusBEYcsnarsYCz6NPIPpVW7fiLLv89CB2rAsnWWwA1hhmNCPz2KFHbD8jF+qc7TOSK8ON2qy0K3/g9v8qH+pjD90W6CW4rqifF4xUYA5IzgYV1ByQLh0PeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bDjXvFsY; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=hCh1fvwS543yAG59AHOud0cwwOaZ/fxyx3btZb20ZvZ+Z85WfU615W4Ki1KVmVMoC1NpCh/qt26Kn68LN91SvqCJIaNTk+Tqlv9prKahjnpA69PuoephNkuhGNk/y87rkyP/MeK8GF/hlgGMpKJUESqn7U9pZeHWcgdy7NgDk7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfNdAEEM; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -39,30 +39,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1770198318; x=1801734318;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Qj9IYpqXA2nmuwZJsCBesC4DxgJFjbmtatJ+ozIipWE=;
-  b=bDjXvFsY49RPxWX+ArHgbdzzSNCZ0iKNPUWvC7oSho+xL1yjCPMUKIt4
-   +aJ6+TwKSr6/ZqBbJIwEyTw6hBOK5Cu1SfZntAXyWuAJ5LxVqDpX+MGHA
-   8e3jOcGDitJjG1hHL9NEAjs1YOWVambRzklKcUuKFpO8XLRqxm5XEq3lO
-   jdVRq+OAxa41VQE5hsf5LBP/EUqYgjRIlDTP01BFegBeXdKgLSQFRuNuD
-   dN9Jtfg5Id5TeTS0HLfs71MwhsrvaxNBeAP3QHLs/qflleY59rMYner8M
-   xb8YH0Ktdw75fYv9TXy9+m7svdWSDndhn3+G31w3hI4hum8BLusEYBSik
-   g==;
-X-CSE-ConnectionGUID: UhZQPcU8R5q6m7Q+VUOcAA==
-X-CSE-MsgGUID: mBbdwxxbQ0CtVDT4DZZGYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="75001284"
+  bh=YrUQlyrHEX5MNyRLxbo3Ww4o9KuASOkuXaymD1/wJ98=;
+  b=nfNdAEEMn8ichNAvnGrf3j2Vl/Cl96AgRsT45SqmTOOMukBXyMtVbddT
+   zPDh47EprxOwf1/XOB5ARhFnjsWwJ4eCdKHtuEsYfscMUUmB+mkxPuZt7
+   JUg6p0RR9/mjkM9A7eGVBORBqSHOISzyjJ4Swk4U6BRG/VAXPr6A7N8rg
+   ImCyPco8b7Qgtv65fA7xazM9zjqFA54G2LzkcVCjTwGy3BtBsmM8Y0QfR
+   Wz00VxFwKdKaZovNdhyCmvAdPFW4y8810k6Z3xHiQm5FuR3E6hPJOPR+S
+   DKMjMarApgBnN2rslAUh1EA4wUs9CFYT4I72EVK/9vsewmA+zKmr1SAGH
+   w==;
+X-CSE-ConnectionGUID: SVcFdlMlSr+MBz2OxwHqLA==
+X-CSE-MsgGUID: fBszilsgQUqqCbWdVGWwCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71110501"
 X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="75001284"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 01:45:17 -0800
-X-CSE-ConnectionGUID: VXPMAlcoSCi4g5uJLVZAbQ==
-X-CSE-MsgGUID: FeqAuVWYTRCKA5M/Bitm7w==
+   d="scan'208";a="71110501"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 01:45:17 -0800
+X-CSE-ConnectionGUID: zINygFoMTM+ROCfeM5ib3g==
+X-CSE-MsgGUID: kaE1IdPVQPafwuOWu0sj+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="214810887"
+   d="scan'208";a="214597138"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa004.fm.intel.com with ESMTP; 04 Feb 2026 01:45:12 -0800
+  by fmviesa005.fm.intel.com with ESMTP; 04 Feb 2026 01:45:12 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 17A6C99; Wed, 04 Feb 2026 10:45:11 +0100 (CET)
+	id 1C4B49B; Wed, 04 Feb 2026 10:45:11 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	NeilBrown <neil@brown.name>,
@@ -85,10 +85,11 @@ Cc: Trond Myklebust <trondmy@kernel.org>,
 	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 2/3] sunrpc: Kill RPC_IFDEBUG()
-Date: Wed,  4 Feb 2026 10:41:22 +0100
-Message-ID: <20260204094500.2443455-3-andriy.shevchenko@linux.intel.com>
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 3/3] sunrpc: Fix compilation error (`make W=1`) when dprintk() is no-op
+Date: Wed,  4 Feb 2026 10:41:23 +0100
+Message-ID: <20260204094500.2443455-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260204094500.2443455-1-andriy.shevchenko@linux.intel.com>
 References: <20260204094500.2443455-1-andriy.shevchenko@linux.intel.com>
@@ -106,15 +107,15 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,redhat.com,oracle.com,talpey.com,davemloft.net,google.com,gmail.com,linux.intel.com];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,oracle.com,talpey.com,davemloft.net,google.com,gmail.com,linux.intel.com,glider.be];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-18690-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18691-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -124,109 +125,79 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[intel.com:+];
 	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-nfs,lkml];
+	TAGGED_RCPT(0.00)[linux-nfs,lkml,renesas];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.intel.com:mid,intel.com:email,intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 46477E4134
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.intel.com:mid,intel.com:email,intel.com:dkim,glider.be:email]
+X-Rspamd-Queue-Id: 8E17FE4051
 X-Rspamd-Action: no action
 
-RPC_IFDEBUG() is used in only two places. In one the user of
-the definition is guarded by ifdeffery, in the second one
-it's implied due to dprintk() usage. Kill the macro and move
-the ifdeffery to the regular condition with the variable defined
-inside, while in the second case add the same conditional and
-move the respective code there.
+Clang compiler is not happy about set but unused variables:
 
+.../flexfilelayout/flexfilelayoutdev.c:56:9: error: variable 'ret' set but not used [-Werror,-Wunused-but-set-variable]
+.../flexfilelayout/flexfilelayout.c:1505:6: error: variable 'err' set but not used [-Werror,-Wunused-but-set-variable]
+.../nfs4proc.c:9244:12: error: variable 'ptr' set but not used [-Werror,-Wunused-but-set-variable]
+
+Fix these by forwarding parameters of dprintk() to no_printk().
+The positive side-effect is a format-string checker enabled even for the cases
+when dprintk() is no-op.
+
+Fixes: d67ae825a59d ("pnfs/flexfiles: Add the FlexFile Layout Driver")
+Fixes: fc931582c260 ("nfs41: create_session operation")
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- fs/nfsd/nfsfh.c                          |  9 +++++---
- include/linux/sunrpc/debug.h             |  2 --
- net/sunrpc/xprtrdma/svc_rdma_transport.c | 27 ++++++++++++------------
- 3 files changed, 20 insertions(+), 18 deletions(-)
+ fs/lockd/svclock.c           | 5 +++++
+ include/linux/sunrpc/debug.h | 8 ++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index ed85dd43da18..68b629fbaaeb 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -105,9 +105,12 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
- {
- 	/* Check if the request originated from a secure port. */
- 	if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
--		RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
--		dprintk("nfsd: request from insecure port %s!\n",
--		        svc_print_addr(rqstp, buf, sizeof(buf)));
-+		if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
-+			char buf[RPC_MAX_ADDRBUFLEN];
-+
-+			dprintk("nfsd: request from insecure port %s!\n",
-+			        svc_print_addr(rqstp, buf, sizeof(buf)));
-+		}
- 		return nfserr_perm;
- 	}
+diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+index 712df1e025d8..dcd3e0b4d997 100644
+--- a/fs/lockd/svclock.c
++++ b/fs/lockd/svclock.c
+@@ -80,6 +80,11 @@ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
  
-diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
-index 891f6173c951..e947d668f7b7 100644
---- a/include/linux/sunrpc/debug.h
-+++ b/include/linux/sunrpc/debug.h
-@@ -51,12 +51,10 @@ do {									\
- 	}								\
- } while (0)
- 
--# define RPC_IFDEBUG(x)		x
- #else
- # define ifdebug(fac)		if (0)
- # define dfprintk(fac, fmt, ...)	do {} while (0)
- # define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
--# define RPC_IFDEBUG(x)
+ 	return buf;
+ }
++#else
++static inline const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
++{
++	return "???";
++}
  #endif
  
  /*
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 9b623849723e..f2d72181a6fe 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -414,7 +414,6 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	struct ib_qp_init_attr qp_attr;
- 	struct ib_device *dev;
- 	int ret = 0;
--	RPC_IFDEBUG(struct sockaddr *sap);
+diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
+index e947d668f7b7..82239d5c262e 100644
+--- a/include/linux/sunrpc/debug.h
++++ b/include/linux/sunrpc/debug.h
+@@ -40,6 +40,8 @@ extern unsigned int		nlm_debug;
+ do {									\
+ 	ifdebug(fac)							\
+ 		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
++	else								\
++		no_printk(fmt, ##__VA_ARGS__);				\
+ } while (0)
  
- 	listen_rdma = container_of(xprt, struct svcxprt_rdma, sc_xprt);
- 	clear_bit(XPT_CONN, &xprt->xpt_flags);
-@@ -560,18 +559,20 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 		goto errout;
- 	}
+ # define dfprintk_rcu(fac, fmt, ...)					\
+@@ -48,13 +50,15 @@ do {									\
+ 		rcu_read_lock();					\
+ 		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+ 		rcu_read_unlock();					\
++	} else {							\
++		no_printk(fmt, ##__VA_ARGS__);				\
+ 	}								\
+ } while (0)
  
--#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
--	dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
--	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
--	dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
--	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
--	dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
--	dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
--	dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
--	dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
--	dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
--	dprintk("    ord             : %d\n", conn_param.initiator_depth);
--#endif
-+	if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
-+		struct sockaddr *sap;
-+
-+		dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
-+		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
-+		dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
-+		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
-+		dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
-+		dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
-+		dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
-+		dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
-+		dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
-+		dprintk("    ord             : %d\n", conn_param.initiator_depth);
-+	}
+ #else
+ # define ifdebug(fac)		if (0)
+-# define dfprintk(fac, fmt, ...)	do {} while (0)
+-# define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
++# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
++# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
+ #endif
  
- 	return &newxprt->sc_xprt;
- 
+ /*
 -- 
 2.50.1
 
