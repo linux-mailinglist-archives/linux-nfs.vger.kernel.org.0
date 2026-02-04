@@ -1,170 +1,182 @@
-Return-Path: <linux-nfs+bounces-18717-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18718-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oIiIIfh4g2nyngMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18717-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:51:04 +0100
+	id KGg3KXJ8g2nyngMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18718-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 18:05:54 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A58DAEA8F5
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:51:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FBAEEAC6E
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 18:05:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D7F88301493F
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 16:48:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 52D1F302C906
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 16:59:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C493233C1A5;
-	Wed,  4 Feb 2026 16:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99BB4341044;
+	Wed,  4 Feb 2026 16:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMstBoQw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ksyb/Mwb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21FB27B327
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Feb 2026 16:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4322833F390;
+	Wed,  4 Feb 2026 16:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770223730; cv=none; b=JgVqYNvCUJ789rGUn8bRJy+0WmZzABo1IQX83t+BKkjxVhU5/Fdgz8ebs+XtwOdvQkkPcUbggxsWm4ShR9JXB28hijkpyqFdqXgbvYl0JDmaJVgLnWjY0PDB+gq45HBYGKgzywk1aAq161N1jdaG+zn6CnfeyD2ImCDfW63VvUU=
+	t=1770224340; cv=none; b=iZCiZuwkXAokt6s2i4bSL8aHBcNLQvL8N57JWm5jfKSpTMGMQVhRO4UFINDn9voAo5BTDF5EMlyUKpbAMacMtVzZTXcL/hZACU1LZzzM/euDBGiV0dcu/tU+uJJ8+X0Ud/nBbecROmJ+zDgmnl3QNfdSh0UvlVZyAm08fJwehuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770223730; c=relaxed/simple;
-	bh=AlvKAXEx3vzyEsO3AxSAuqpcAHBHwm+4jfisbIYt++k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XgHElQaWABUDh+YqFfYIWmu4+g57btFf9akd/2UHWSAqJxkmGSwtqJ6m6RXNdTV6/5JxOymc/fgrhjCqM4xzlwThcCzDLnJDh9T0kla1yjxBnBt39jn8VcmDf07gReo+tqRYj86//y+O/DMNOXMhWs6wPPiNQ4ymGeDj8Fw3S+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMstBoQw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F45C19424;
-	Wed,  4 Feb 2026 16:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770223730;
-	bh=AlvKAXEx3vzyEsO3AxSAuqpcAHBHwm+4jfisbIYt++k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DMstBoQwNf5J5MEdG7sJXCyqkIzPkhgYG6Z6FG93Pxm02RUuVQfXzayy5yeqTFUMv
-	 CLcOG1yNkGKx9pk32bET4Yb1zFY4337/FMFSO5lY0WUw7gFeIG9d948L0D8+A022pm
-	 EI2hPUSQ+QTvyW/rL96a1AviUV9PHb/+AQs18jCnIQAty8R50t5N/ewi3ZXVGXiOF8
-	 BAhl28pK/bLsuP/LMSNpY3xpqV5Oj6hJ7ciWs1wB+VkWuzZ58DjKCjBCa5uxFBVtdH
-	 NPTTGKPUXsAjvyXaVxdgH878xiGb/5WbEQM6zUm2Vov6BJskc567UOQKlYqreHC01n
-	 THdeqdKBdOimw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 04 Feb 2026 11:48:25 -0500
-Subject: [PATCH nfs-utils v2 4/4] nfsdctl: remove unneeded newlines from
- xlog() format strings
+	s=arc-20240116; t=1770224340; c=relaxed/simple;
+	bh=5p4eUAg3z+8rWM3HHAefWU2eIILWHVSOg4eCtv94Be8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YYQ2Q5gRfTRGZovQYsQ3wkevuJpnR4KabuBbGFuWCmb5fwPWXMIaPvXIy+3UbLDDJALcyygLWEYRgtKAyDzYfJnxNNv0pHVARH20s7FNyyGhSYIqUheivsYvfHqkHDNqJvKx2oWilxv4SRReTcwwI8GLcplgKsxuZPf0DIvHEj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ksyb/Mwb; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770224340; x=1801760340;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5p4eUAg3z+8rWM3HHAefWU2eIILWHVSOg4eCtv94Be8=;
+  b=Ksyb/Mwbs19SoWAkhfAS5GmljW8bNWZ1cEWDEHDBrb4Z6SDfmDFgtJ1/
+   M8Z2TeOPW0K0xl4YvgEgelj1WT+iIcD8wQu0ZTvuOOtcWx4hsxS9267D+
+   +8ak3XE59GvsxMiV6qaZbBQZWg0cTQhpraUx1UiGjnY5PEzk4lJRjxfxx
+   N/FUQKxQPLLOu4eAw5GD/DmtH2eEOZbD6gZJnxe5vuBKIUDzQ2z3JvTZY
+   2pEqyC3ZMGbNvqsq0iarG2iEruCpjtrC0AZO9rLdihd22t5ZDHHKCuJnw
+   IKdyarISivPSrsZJOX58BNyuP69c5oigolKa9glp1O4rALMQyBEUSj2kx
+   A==;
+X-CSE-ConnectionGUID: jZA7+tuISp6pMP32jyus5g==
+X-CSE-MsgGUID: 5vScNTRMR1aLToSafRv6gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="82047809"
+X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
+   d="scan'208";a="82047809"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 08:58:59 -0800
+X-CSE-ConnectionGUID: Bw+BDVbtRHK1sm+swOUD+w==
+X-CSE-MsgGUID: +/Lw7ZhnRkaIdrvvE/BVmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
+   d="scan'208";a="214748988"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 08:58:54 -0800
+Date: Wed, 4 Feb 2026 18:58:52 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v2 3/3] sunrpc: Fix compilation error (`make W=1`) when
+ dprintk() is no-op
+Message-ID: <aYN6zA79q6yOLFmA@smile.fi.intel.com>
+References: <20260204094500.2443455-1-andriy.shevchenko@linux.intel.com>
+ <20260204094500.2443455-4-andriy.shevchenko@linux.intel.com>
+ <aYN35agQMKaIGZA0@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260204-minthreads-v2-4-a7eba34201e9@kernel.org>
-References: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
-In-Reply-To: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
-To: Steve Dickson <steved@redhat.com>
-Cc: Ben Coddington <bcodding@hammerspace.com>, 
- Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1707; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=AlvKAXEx3vzyEsO3AxSAuqpcAHBHwm+4jfisbIYt++k=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpg3huTVEDwzJ7liuwcYVi+ixdkJl0v6nzvcTae
- lD2fiABhGOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaYN4bgAKCRAADmhBGVaC
- FTLLEACaYtbCKA9CaXfGoVCZVYwGIO3mHJTMH3+LtCJyAX8NL9PTQB5LSCYB3lbbb+TuFYtp47I
- pokvKrdDVpH2kCU2Kz/rswqKPPNO5a84SZAiSiBCAbXMGv9LctGGv800pLvuidxK0exhF2Giorn
- 3zBeXbP0hW12HIRSyCu9uf2opP23aVisg2f9ZkduK3njO7KePRLLhM+wpqLfjJlcsieryU6YI91
- dTozvROPejnjoWceeT/WA5qk7flCjanc2HqGPd4wJii9kdcWDHCJK2HsdBVZ4e+//ngqhQvW2WH
- v5cWnULZLbNIM3XSg31uH2AB9Ng7sETxSFuRJRQQ3ACu2yKw0+38QDOWEmzP0/xsvW8n5ZSmHDj
- 8V4lhNHVv7LPmdp69lG7Iz8xqdcYs2za1ypkP64K9KlmFpIx6r2ScwKOQv9pPmpFPJtOhPTQ11z
- LqNKuUUIeah66fOV+ChPmOv9vPphthx/7LWGdHYPsXWRJJGZ/tBkBBDzWuS0dmswXf1E47R9hqx
- nyHgzY6zj/KuV9ksqMgef+lLMxvl5R+lT57+3Kgdbej9o0J7wz1CRIw7Y9hpVC6NBgkdHzubxvj
- IVmWALeArK190tFQL+uOvGo0K6frKUKKSQS9oWcK4qUTqS3RzfnaV3V/ft/dgSnr9RZKB72aL48
- Tdh01me9P8J+mLA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aYN35agQMKaIGZA0@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18717-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,oracle.com,talpey.com,davemloft.net,google.com,gmail.com,glider.be];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-18718-lists,linux-nfs=lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A58DAEA8F5
+	TAGGED_RCPT(0.00)[linux-nfs,lkml,renesas];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 1FBAEEAC6E
 X-Rspamd-Action: no action
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- utils/nfsdctl/nfsdctl.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Wed, Feb 04, 2026 at 06:46:36PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 04, 2026 at 10:41:23AM +0100, Andy Shevchenko wrote:
+> > Clang compiler is not happy about set but unused variables:
+> > 
+> > .../flexfilelayout/flexfilelayoutdev.c:56:9: error: variable 'ret' set but not used [-Werror,-Wunused-but-set-variable]
+> > .../flexfilelayout/flexfilelayout.c:1505:6: error: variable 'err' set but not used [-Werror,-Wunused-but-set-variable]
+> > .../nfs4proc.c:9244:12: error: variable 'ptr' set but not used [-Werror,-Wunused-but-set-variable]
+> > 
+> > Fix these by forwarding parameters of dprintk() to no_printk().
+> > The positive side-effect is a format-string checker enabled even for the cases
+> > when dprintk() is no-op.
+> 
+> I'm afraid this is not end of story...
+> I received a dozen of minutes ago a new report and now I'm investigating.
+> 
+> Patches 1 & 2 though are ready to go.
 
-diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index 4a3744a1c22e6beac7c039bded05fc087a121200..2b01f705874a4a3cad04042f6dfad22a66a7536f 100644
---- a/utils/nfsdctl/nfsdctl.c
-+++ b/utils/nfsdctl/nfsdctl.c
-@@ -1514,14 +1514,14 @@ static int lockd_config_doit(struct nl_sock *sock, int cmd, int grace, int tcppo
- 
- 	cb = nl_cb_alloc(NL_CB_CUSTOM);
- 	if (!cb) {
--		xlog(L_ERROR, "failed to allocate netlink callbacks\n");
-+		xlog(L_ERROR, "failed to allocate netlink callbacks");
- 		ret = 1;
- 		goto out;
- 	}
- 
- 	ret = nl_send_auto(sock, msg);
- 	if (ret < 0) {
--		xlog(L_ERROR, "send failed (%d)!\n", ret);
-+		xlog(L_ERROR, "send failed (%d)!", ret);
- 		goto out_cb;
- 	}
- 
-@@ -1534,7 +1534,7 @@ static int lockd_config_doit(struct nl_sock *sock, int cmd, int grace, int tcppo
- 	while (ret > 0)
- 		nl_recvmsgs(sock, cb);
- 	if (ret < 0) {
--		xlog(L_ERROR, "Error: %s\n", strerror(-ret));
-+		xlog(L_ERROR, "Error: %s", strerror(-ret));
- 		ret = 1;
- 	}
- out_cb:
-@@ -1554,7 +1554,7 @@ static int get_service(const char *svc)
- 
- 	ret = getaddrinfo(NULL, svc, &hints, &res);
- 	if (ret) {
--		xlog(L_ERROR, "getaddrinfo of \"%s\" failed: %s\n",
-+		xlog(L_ERROR, "getaddrinfo of \"%s\" failed: %s",
- 			svc, gai_strerror(ret));
- 		return -1;
- 	}
-@@ -1575,7 +1575,7 @@ static int get_service(const char *svc)
- 		}
- 		break;
- 	default:
--		xlog(L_ERROR, "Bad address family: %d\n", res->ai_family);
-+		xlog(L_ERROR, "Bad address family: %d", res->ai_family);
- 		port = -1;
- 	}
- 	freeaddrinfo(res);
+Okay, if I'm not mistaken the only leftover is the missing tk_pid field due to
+conditional inclusion. However, if we do that unconditionally the data structure
+won't be expanded (there is a gap of 3 bytes. (Dunno about m68k, there may be
+actually +2 bytes due to 2-byte alignment.) The rest of the conditionally included
+members seem not being used in dprintk().
+
+That said, removing ifdeffery around tk_pid in struct rpc_task should fix that
+problem.
+
+If you can fold this to the patch 3, would be nice:
+
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index ccba79ebf893..0dbdf3722537 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -95,10 +95,7 @@ struct rpc_task {
+ 	int			tk_rpc_status;	/* Result of last RPC operation */
+ 	unsigned short		tk_flags;	/* misc flags */
+ 	unsigned short		tk_timeouts;	/* maj timeouts */
+-
+-#if IS_ENABLED(CONFIG_SUNRPC_DEBUG) || IS_ENABLED(CONFIG_TRACEPOINTS)
+ 	unsigned short		tk_pid;		/* debugging aid */
+-#endif
+ 	unsigned char		tk_priority : 2,/* Task priority */
+ 				tk_garb_retry : 2,
+ 				tk_cred_retry : 2;
+
+Otherwise I can send a new version.
 
 -- 
-2.52.0
+With Best Regards,
+Andy Shevchenko
+
 
 
