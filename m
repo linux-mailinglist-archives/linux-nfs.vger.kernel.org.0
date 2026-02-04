@@ -1,71 +1,71 @@
-Return-Path: <linux-nfs+bounces-18682-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18683-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wMLgBUvugmmqfAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18682-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 07:59:23 +0100
+	id 8IzVFqnxgmmWfQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18683-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 08:13:45 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31054E274C
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 07:59:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE20DE2910
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 08:13:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 225C83009B0B
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 06:59:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 51F0E302F712
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 07:13:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F332038887D;
-	Wed,  4 Feb 2026 06:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD5938B7A9;
+	Wed,  4 Feb 2026 07:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="axq4UpQ3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgBCh9h1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22C53876AE;
-	Wed,  4 Feb 2026 06:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE216226863;
+	Wed,  4 Feb 2026 07:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770188354; cv=none; b=tIb0nlnbcvSmzjs02vBy8Wf+6uPusm3kXcbtcdC/oKELTpMqLkb3dGH+r9EKi4OCJWnnQwgBT/CvkhA+fW7t+Q7nUJtiijB5diAJ5NfFejzpb4xfaf91OVSZY1WAqX6o+7tLuJuKtQn2Bk3m3f2ffH8xAkNHf3Q4FCBfPoWFDJQ=
+	t=1770189186; cv=none; b=RdnVBOh0h9a5ROdgm79nC9OAu7i7A6hpZal52sKnUTiCjwanEr7l3+f4Qc0RJLxunsgp33XbbvG6/vyK5ja5Xto/EaftI8MFSGzYqm5n/zMUOQZaSaw7sGzxGOimS7rqK9Q9uKFwi9isJIyVjr/ewH1b3WP1safdxjuNHaeJv2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770188354; c=relaxed/simple;
-	bh=/cREo0VCPJ/xFFeGONa1JIHLsGm2BBhqLSPESn72vJk=;
+	s=arc-20240116; t=1770189186; c=relaxed/simple;
+	bh=02qV1wRhkupr57wdfslXPJ7GaoBObNT0IGEKd2BaOXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e7tvmy9q7KrjPbP7QKvloT1Hour1UViA4VLUmyYibK3QpNKn3X3lBvQol/++g0Lil6tSSCd8IUEJ/PqxL4ZwBXN3pfkwpm4JkKbO+qaArhVQA8z5KojcjWID46fQiuVRwoNfRClZoZQf8K08kD3h2LkghnvK1tKECeBKZvSxm84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=axq4UpQ3; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=J36m5B0VybqXlqExH9P4iBNTgJykhLaHIdBbKkcMyRTPu+4oaBgq7zfwHOOEyOlH7O5xZ0NCcoalyCfp3Yd8EiblwO4K8+Zfo1XmEMLK7VvPr9PcxNHiB6cvEw51dJ995U5aM8p35xyMah8QnYV8c+X2N6nSy5mBqERYyBkC94o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WgBCh9h1; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770188355; x=1801724355;
+  t=1770189187; x=1801725187;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=/cREo0VCPJ/xFFeGONa1JIHLsGm2BBhqLSPESn72vJk=;
-  b=axq4UpQ3Z5xH4lTOjPqejlYIvtzlk3WdMBX8VKf9aHcILygETNxLHgwN
-   klONL6L/qBQWpD92EpupXUdUWYMBvMKqT0MZINbp7QXLg6h1dLt0BtBVF
-   JYqgWBKT3jI1tugiDtk7zHt0lPsPvrJ8SrgabOYx5IWQSj9fyzK1tg6s7
-   VlKo0SQsjNZ0P0ZRRDb9ET69yyhu0Q0C5T+4e2k1aHBfShX+bCUf6YpKm
-   qKVb+5CFWBinpwv/uXb2+SM50NTYWv/uVQ2chgA/KECaGrtiA2h7r/BRe
-   TfgwATm2sR+El/BLERDqCFtmciNvx9/EG8Lc69+iT0qc39pvbNH8Yh9rS
-   Q==;
-X-CSE-ConnectionGUID: CpScSajrSLOjBoSfpmJCQw==
-X-CSE-MsgGUID: ZSoyM9QWSI6z6U4i71pLZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71095110"
+  bh=02qV1wRhkupr57wdfslXPJ7GaoBObNT0IGEKd2BaOXg=;
+  b=WgBCh9h125ff1pAB21guMZv2yBLRl4VUAQQgTUFqj63QIU6w+GEBb2BU
+   I7BY00JfHDjZlGlvzqeQQmGTTyikv3nRtGIDqzrj5g38Wyikuc16lMtEs
+   evoW1gUObbapPiX8W9JvLEZlVdIS6O9BwaYVmpWaVVRmIBPojccaeKxmY
+   BCazRHabfX9vc+ntF++XJk0iJryBVRB1yoIqJaDo7ULw6doqyRi6T+Wf9
+   PVpp/uDMtUmAtSfpsNDhTswt3FDOCJIN4j2KVw6Zd9FpKFRZ67kaTiRn6
+   sDK8nRNQjfEAJ3K1ZSoVmKavinr94vlGk0d97/BWuZkTSit37nXwgOBCv
+   g==;
+X-CSE-ConnectionGUID: r1NAbIcySQuAcYK/gaTumw==
+X-CSE-MsgGUID: C4wIfq2OQ9CqekOhDS7QuQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71096869"
 X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="71095110"
+   d="scan'208";a="71096869"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 22:59:15 -0800
-X-CSE-ConnectionGUID: 8xe69QTwR2Csqr5YYOAwiw==
-X-CSE-MsgGUID: p/wO5pK2RqaGjPlv1mYtgA==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 23:13:06 -0800
+X-CSE-ConnectionGUID: +YL51UHGReKn9pvGG2pz4Q==
+X-CSE-MsgGUID: 8kwQ20YORa2sIOOD1RQT+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="214620735"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 03 Feb 2026 22:59:11 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+   d="scan'208";a="214624061"
+Received: from igk-lkp-server01.igk.intel.com (HELO afc5bfd7f602) ([10.211.93.152])
+  by orviesa004.jf.intel.com with ESMTP; 03 Feb 2026 23:13:02 -0800
+Received: from kbuild by afc5bfd7f602 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vnWqy-00000000hXU-0B5I;
-	Wed, 04 Feb 2026 06:59:08 +0000
-Date: Wed, 4 Feb 2026 14:59:01 +0800
+	id 1vnX4N-000000003ev-1pmm;
+	Wed, 04 Feb 2026 07:12:59 +0000
+Date: Wed, 4 Feb 2026 08:12:01 +0100
 From: kernel test robot <lkp@intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
@@ -83,7 +83,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH v1 1/1] sunrpc: Fix compilation error (`make W=1`) when
  dprintk() is no-op
-Message-ID: <202602041427.kUmPVYOW-lkp@intel.com>
+Message-ID: <202602040816.q9CtxevA-lkp@intel.com>
 References: <20260204010415.2149607-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -100,14 +100,14 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	FREEMAIL_CC(0.00)[lists.linux.dev,redhat.com,oracle.com,talpey.com,kernel.org,gmail.com,google.com,linux.intel.com];
-	TAGGED_FROM(0.00)[bounces-18682-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18683-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -119,11 +119,11 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs,lkml];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[git-scm.com:url,intel.com:email,intel.com:dkim,intel.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 31054E274C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[git-scm.com:url,intel.com:email,intel.com:dkim,intel.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EE20DE2910
 X-Rspamd-Action: no action
 
 Hi Andy,
@@ -140,14 +140,14 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/sunrpc-Fi
 base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
 patch link:    https://lore.kernel.org/r/20260204010415.2149607-1-andriy.shevchenko%40linux.intel.com
 patch subject: [PATCH v1 1/1] sunrpc: Fix compilation error (`make W=1`) when dprintk() is no-op
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260204/202602041427.kUmPVYOW-lkp@intel.com/config)
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260204/202602040816.q9CtxevA-lkp@intel.com/config)
 compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260204/202602041427.kUmPVYOW-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260204/202602040816.q9CtxevA-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602041427.kUmPVYOW-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602040816.q9CtxevA-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
