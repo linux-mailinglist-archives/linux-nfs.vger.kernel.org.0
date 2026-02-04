@@ -1,147 +1,195 @@
-Return-Path: <linux-nfs+bounces-18709-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18710-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YIWWEKZrg2l+mgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18709-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 16:54:14 +0100
+	id ALsxBOlyg2mFmwMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18710-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:25:13 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADFB6E98D0
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 16:54:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63C00EA2D5
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:25:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4F1A13001477
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 15:51:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF34430869A9
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 15:53:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C8FD4218B6;
-	Wed,  4 Feb 2026 15:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9780421A1A;
+	Wed,  4 Feb 2026 15:53:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ALK/qwkl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDPQotzc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B1A2C026F;
-	Wed,  4 Feb 2026 15:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BA441C2E8;
+	Wed,  4 Feb 2026 15:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770220292; cv=none; b=mDc43vuLfrnw30uDc8bAvz5ULQUF/9YMZS231MCnEg+WXIsNGcaQTxSvBp4+Wu3mee0P9PB2M7BuKW8o/UO7o8mQY8eub66szbV+fus6S10jJ0/kugJ35vG4R2z2qp8rFXv0Jz9bbSySsG1lC9HSk/djbC3deDJFPaIvf85m9Vg=
+	t=1770220428; cv=none; b=C0UnZdyTQtksfCn5mKn/6Wv7Cc2mRGIOH8cRkk3wqCDbyoTqgJCh525IFbvZrWZvRdsqb4uW0c+qRiWIo2A7lNkSoTCWmD7Jiw6RxBvPIfVKqmK+ARJ2EHUxzUx4NRMRjnM5VkJbwAxFiXNBveohxQ8QEnOgTRnn5i9JC+tyk9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770220292; c=relaxed/simple;
-	bh=uyBCUjP/mwjgx//FVeT4gz8yf648jspRHIOMRLzx6GQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q0Di4BtY0stVHL0RFDjgjd8+BbKQO6dzL614W4yuUzv8JgEFVUDJLw0h4DWjWU76U01gHZ3dlH1g/gy3teHKNASdNDhj0srRvLZV7Pt/Z1Wk2tWtIs9gRYuZUN5VheOm/BFRZgBZEAKjvzSxhMweMP+6aZs7pWAsj6WQefgLsFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ALK/qwkl; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770220292; x=1801756292;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uyBCUjP/mwjgx//FVeT4gz8yf648jspRHIOMRLzx6GQ=;
-  b=ALK/qwklIWkXON9r2dnOSmHhJ2oVknkmhHm/SdQzUr4hHbWN+TT8TMS2
-   dDZ6zsSE3QhT2ec0nbpEcFcXPXIMIRv7b97ZsfT1sjDQUD8JDSTLt6+Lp
-   MPZ7d31euFUL1MdTgFItOJtcogZX+G2p7hk5hu+6xVSXCt3ux7SyZOKpn
-   3FXEdtQ61LYGk+2VhsdZ2qmirnxOkMzVPjaOc16dANV5YmUbCO/4ac2SS
-   sgnsC0LT6XKoWiSPNKz4awKGhPa0NI6EBpi/63/xn1abswVGP2GE+MP3E
-   Y0OioKg8s3ZtnpKSGfjeRanyGx07PvWKZsBG6t+DUib4cBaYTVZeu0KwC
-   Q==;
-X-CSE-ConnectionGUID: 5fjRa/6dTwC1eAQccT3JIg==
-X-CSE-MsgGUID: ehnLUmwARFCMOvQJCnKOIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="82845518"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="82845518"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 07:51:32 -0800
-X-CSE-ConnectionGUID: DdqKZCfuQg6+wVF0bCBX7w==
-X-CSE-MsgGUID: PFTl2NZWTq+XwlXAndXRlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="214693284"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 07:51:26 -0800
-Date: Wed, 4 Feb 2026 17:51:24 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, llvm@lists.linux.dev,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v2 0/3] sunrpc: Fix `make W=1` build issues
-Message-ID: <aYNq_PdXPo-S-ItG@smile.fi.intel.com>
-References: <20260204094500.2443455-1-andriy.shevchenko@linux.intel.com>
- <177021968762.97318.15008544066362314853.b4-ty@oracle.com>
+	s=arc-20240116; t=1770220428; c=relaxed/simple;
+	bh=jZC6O6pOSk1/r2WwwU9Psyn3i/e3i6vnjbcVbv/gHU0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pR1zZFHJoK8mAy2CilXVXMyPgoNOoopwD0ptYrWEcXURA8ICYq74nXvQjZTaLhkqQLjIIo6G7ijNc+VuCiAdhDZt03NtmigWFzKYJDEPCw9JKJZDNggKBudKtgJTtkb/j1AVM3M6TGDAKVwVve0Iu+gvTuCLiljFXiC+zZdGXzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDPQotzc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1917C116C6;
+	Wed,  4 Feb 2026 15:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770220428;
+	bh=jZC6O6pOSk1/r2WwwU9Psyn3i/e3i6vnjbcVbv/gHU0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=IDPQotzcFTEaIZWpBbRSrRkZRgo15kltyVWS8ICWypSrpDwq+mXk9NvAHpHwyFO8B
+	 Z38K27cXJVDtKKIs5Wa/edtDrVXimla1pPj0fNda/XnMD6K00MYFfa+5OPK0apFxS2
+	 SJAOdIEBzrtwn+4lelcMMb+xpO5CIlwCA2/Z5js2dTaonkVdoRR1/m7j2dLT6BiTni
+	 qXmJxI+fy7tWJhrnXqKKq3Hni1iVHtCGvuIs/jLwmUAftB6XJViwoBJJxk8tbiAtvd
+	 sHw+qGgyNPyDkfJBGhF7pu3qlwAtQ/T7C/J0KWSSoRZiG2U4pDbUyYbsNNZWal7nGa
+	 uf7b7sX0DcXbw==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id DBAC0F40070;
+	Wed,  4 Feb 2026 10:53:46 -0500 (EST)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Wed, 04 Feb 2026 10:53:46 -0500
+X-ME-Sender: <xms:imuDaZ10sGuCclnXHdqBMSbd4M9pfWqIF9eB5zvPzDunqlFW2hCXsQ>
+    <xme:imuDaa6IMeUrsrgvC3bFp8fABG-tI2qCLDBKMBWwU50puEyGrvbh3zmT3waB2lsQY
+    0SgNUnQs4JevWM0b-NYZLVlekfjDJ5lnn7BlPeHPAYAEr3iSNLN4XI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukedvkeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnnhgr
+    ucfutghhuhhmrghkvghrfdcuoegrnhhnrgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeefieekjeeileegtedtueekjeehgefhudfhjeejgfefteffteekgefhteev
+    ieeukeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhhnrgdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijeejuddvtdej
+    ledqfeefvddvfeegjeduqdgrnhhnrgeppehkvghrnhgvlhdrohhrghesnhhofihhvgihtg
+    hrvggrmhgvrhihrdgtohhmpdhnsggprhgtphhtthhopedvuddpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopegurg
+    hvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepnhhitghkrdguvghsrghu
+    lhhnihgvrhhsodhlkhhmlhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgrii
+    gvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhhushhtihhnshhtihhtthesghho
+    ohhglhgvrdgtohhmpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhrtg
+    hpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthho
+    nheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:imuDaVlKOAlQmXp3cYkARdJa2pQXzeeTcXIcYXXrVW3oAQZ8AZxnLw>
+    <xmx:imuDabVFi-JxLhenLIXcRyTUx4U-tRsiJB2fUqOCezu0cGeOjBAkwA>
+    <xmx:imuDaYnp7hTJm3bInGpmMq2MlTaLpPc5nP3ix9sceckWrUO5JUq3IQ>
+    <xmx:imuDaYRMQ8OEJXIgaHuHdpODRS9PuU8-CnuVUCUt5IXzBq_EEd3SDQ>
+    <xmx:imuDacFv1HCby6-IKhdS2cJ3vFJew8UrB1uIs5lCth2iQNX6Jiaz9RrG>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id AAA17B6006F; Wed,  4 Feb 2026 10:53:46 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <177021968762.97318.15008544066362314853.b4-ty@oracle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-ThreadId: A_RUi7nt7k_J
+Date: Wed, 04 Feb 2026 10:53:26 -0500
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
+Cc: "Trond Myklebust" <trondmy@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>
+Message-Id: <5bdb5b9d-30eb-4511-b839-21b073a6ce43@app.fastmail.com>
+In-Reply-To: <20260204094500.2443455-2-andriy.shevchenko@linux.intel.com>
+References: <20260204094500.2443455-1-andriy.shevchenko@linux.intel.com>
+ <20260204094500.2443455-2-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 1/3] nfs/blocklayout: Fix compilation error (`make W=1`) in
+ bl_write_pagelist()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.65 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[brown.name,kernel.org,vger.kernel.org,lists.linux.dev,oracle.com,redhat.com,talpey.com,davemloft.net,google.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-18709-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-18710-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,oracle.com,talpey.com,davemloft.net,google.com,gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,oracle.com:email];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.996];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs,lkml];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ADFB6E98D0
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 63C00EA2D5
 X-Rspamd-Action: no action
 
-On Wed, Feb 04, 2026 at 10:42:06AM -0500, Chuck Lever wrote:
-> On Wed, 04 Feb 2026 10:41:20 +0100, Andy Shevchenko wrote:
 
-[...]
 
-> Applied to nfsd-testing, thanks!
+On Wed, Feb 4, 2026, at 4:41 AM, Andy Shevchenko wrote:
+> Clang compiler is not happy about set but unused variable
+> (when dprintk() is no-op):
+>
+> .../blocklayout/blocklayout.c:384:9: error: variable 'count' set but 
+> not used [-Werror,-Wunused-but-set-variable]
+>
+> Remove a leftover from the previous cleanup.
+>
+> Fixes: 3a6fd1f004fc ("pnfs/blocklayout: remove read-modify-write 
+> handling in bl_write_pagelist")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Acked-by: Anna Schumaker <anna.schumkaer@oracle.com>
+
+> ---
+>  fs/nfs/blocklayout/blocklayout.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/fs/nfs/blocklayout/blocklayout.c 
+> b/fs/nfs/blocklayout/blocklayout.c
+> index 0e4c67373e4f..83e4a32b3018 100644
+> --- a/fs/nfs/blocklayout/blocklayout.c
+> +++ b/fs/nfs/blocklayout/blocklayout.c
+> @@ -381,14 +381,13 @@ bl_write_pagelist(struct nfs_pgio_header *header, 
+> int sync)
+>  	sector_t isect, extent_length = 0;
+>  	struct parallel_io *par = NULL;
+>  	loff_t offset = header->args.offset;
+> -	size_t count = header->args.count;
+>  	struct page **pages = header->args.pages;
+>  	int pg_index = header->args.pgbase >> PAGE_SHIFT;
+>  	unsigned int pg_len;
+>  	struct blk_plug plug;
+>  	int i;
 > 
-> Acks from the NFS client maintainers on 1/3 are welcome.
-
-Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> -	dprintk("%s enter, %zu@%lld\n", __func__, count, offset);
+> +	dprintk("%s enter, %u@%lld\n", __func__, header->args.count, offset);
+> 
+>  	/* At this point, header->page_aray is a (sequential) list of nfs_pages.
+>  	 * We want to write each, and if there is an error set pnfs_error
+> @@ -429,7 +428,6 @@ bl_write_pagelist(struct nfs_pgio_header *header, int sync)
+>  		}
+> 
+>  		offset += pg_len;
+> -		count -= pg_len;
+>  		isect += (pg_len >> SECTOR_SHIFT);
+>  		extent_length -= (pg_len >> SECTOR_SHIFT);
+>  	}
+> -- 
+> 2.50.1
 
