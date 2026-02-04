@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-18716-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18717-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yGYfKvJ4g2nyngMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18716-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:50:58 +0100
+	id oIiIIfh4g2nyngMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18717-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:51:04 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6AC1EA8EE
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:50:57 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A58DAEA8F5
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:51:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E22013013FD9
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 16:48:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D7F88301493F
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 16:48:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFAC833BBD9;
-	Wed,  4 Feb 2026 16:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C493233C1A5;
+	Wed,  4 Feb 2026 16:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5Y00AqQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMstBoQw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1C427B327
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Feb 2026 16:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21FB27B327
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Feb 2026 16:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770223729; cv=none; b=VL1bLpPgXyayRH3/SHgIAZCUmHsxhLZCPADX+cURD/gtgDYysC57DCz5BvQFOyVJEJZF5KHcIQJCpfsdUdAhPCYy9evrPE1pCJw/i8jQIV6wBMbqMOUvx2yHJqAgmauQuVzGRDrMKRbyKkHdw14q1a8LCCrFTfK8fFo69//o0L4=
+	t=1770223730; cv=none; b=JgVqYNvCUJ789rGUn8bRJy+0WmZzABo1IQX83t+BKkjxVhU5/Fdgz8ebs+XtwOdvQkkPcUbggxsWm4ShR9JXB28hijkpyqFdqXgbvYl0JDmaJVgLnWjY0PDB+gq45HBYGKgzywk1aAq161N1jdaG+zn6CnfeyD2ImCDfW63VvUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770223729; c=relaxed/simple;
-	bh=rmXxO4FkWl+No9pwIE14K7Rao9XIGDztrYneyjSFgaQ=;
+	s=arc-20240116; t=1770223730; c=relaxed/simple;
+	bh=AlvKAXEx3vzyEsO3AxSAuqpcAHBHwm+4jfisbIYt++k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RIz8TZ4MPVdftM3Cvv+K1jFB6ZYdezXiYaXpEMmqhpz05K+AXbDcDAKP4lrv2p1jKQ6aV2mm6d6WMeRDiRvLqhZTQTPHtIG5sfxsyCK4PUOZu5AKJ6EQmBv8bqUzzlKFkI1pMGAzHoPsRGgke/gLodTuoyGzA7yuyQi0fEdUuvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5Y00AqQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218CCC19423;
+	 In-Reply-To:To:Cc; b=XgHElQaWABUDh+YqFfYIWmu4+g57btFf9akd/2UHWSAqJxkmGSwtqJ6m6RXNdTV6/5JxOymc/fgrhjCqM4xzlwThcCzDLnJDh9T0kla1yjxBnBt39jn8VcmDf07gReo+tqRYj86//y+O/DMNOXMhWs6wPPiNQ4ymGeDj8Fw3S+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMstBoQw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F45C19424;
 	Wed,  4 Feb 2026 16:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770223729;
-	bh=rmXxO4FkWl+No9pwIE14K7Rao9XIGDztrYneyjSFgaQ=;
+	s=k20201202; t=1770223730;
+	bh=AlvKAXEx3vzyEsO3AxSAuqpcAHBHwm+4jfisbIYt++k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=J5Y00AqQz8QFQhyhUbhFfGjsCWXNxm2W5z71uHnXlJNZipb5HIde7AitQWjbv3QY0
-	 zBDw2J5APTrp12a49MYroK4zev8kIdkiGtCKFh3rSG5XoltsSJeRN7L2H4n16pYBDx
-	 X1UFCh+Mra3DFPLLe48iRTLrsQOwqjrZfMGYBZOYNMhGg9I3DJzqpHvf0/EZrw6at7
-	 z8+eWW4zv29+fEwYDHPuHfwzvLiQ3XqqZbpdwtKSZKZYfwSJOC8UUMRgAcx0FYw7/1
-	 fGSgBBm9cP+S7IXi/5WSTYKzq4OjsDmzbQIZhMs+nt8cXihjw+fES1v/NdVljxgzZS
-	 0svLS//ifAxBA==
+	b=DMstBoQwNf5J5MEdG7sJXCyqkIzPkhgYG6Z6FG93Pxm02RUuVQfXzayy5yeqTFUMv
+	 CLcOG1yNkGKx9pk32bET4Yb1zFY4337/FMFSO5lY0WUw7gFeIG9d948L0D8+A022pm
+	 EI2hPUSQ+QTvyW/rL96a1AviUV9PHb/+AQs18jCnIQAty8R50t5N/ewi3ZXVGXiOF8
+	 BAhl28pK/bLsuP/LMSNpY3xpqV5Oj6hJ7ciWs1wB+VkWuzZ58DjKCjBCa5uxFBVtdH
+	 NPTTGKPUXsAjvyXaVxdgH878xiGb/5WbEQM6zUm2Vov6BJskc567UOQKlYqreHC01n
+	 THdeqdKBdOimw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 04 Feb 2026 11:48:24 -0500
-Subject: [PATCH nfs-utils v2 3/4] nfsdctl: query netlink policy before
- sending the minthreads attribute to kernel
+Date: Wed, 04 Feb 2026 11:48:25 -0500
+Subject: [PATCH nfs-utils v2 4/4] nfsdctl: remove unneeded newlines from
+ xlog() format strings
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260204-minthreads-v2-3-a7eba34201e9@kernel.org>
+Message-Id: <20260204-minthreads-v2-4-a7eba34201e9@kernel.org>
 References: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
 In-Reply-To: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
 To: Steve Dickson <steved@redhat.com>
@@ -64,40 +64,40 @@ Cc: Ben Coddington <bcodding@hammerspace.com>,
  Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4926; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=rmXxO4FkWl+No9pwIE14K7Rao9XIGDztrYneyjSFgaQ=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpg3humaAU9ogp0higsxyjZeTPoSRq5gzEdJB1W
- 2zghXiWA9SJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaYN4bgAKCRAADmhBGVaC
- FYHXD/0SZ6b1dJiJg2ynp/SW55nuPdAeOcpX7YdRiTzjCzeS+8c2ERCIRYz9BBwvJXFZmvzU+Sf
- YLYjrSZAqbZ4Sn1BUWuWbEezi68sVYXWB7eu4dfWOjTfFk1G7MNJWHxnBxHdznIhXKYBFE5K2Ta
- rsah8CUeOeA25n4vAe/bPs43JXSMCqHxClLo3sJzPoPvKjhObb8STgVp1fbzSWPk7DuZmw7hrCA
- iYMe7G3MlnFdXvGIrSTvjvz+6Qz509F1MBPNplFDxVD1I5+iyJM74Nsfa6KTsrzlLGMF/D0z2PO
- e07PVpxi1em3wlT4hdrqNEPk7XjaXST9YEzM1LTl+JmyKG2pOBrcJ47Wm3DwpD/JFh6akf1ly2b
- RQWD2dRT94le+xN4FVRgPIUgTKzmgdKyjAE2ILWCiBEK6YGirSBGzg3TryDC1y3IUyDY+ohgX5Y
- C9VfAIVdigMGJs4nP/+bICzC/Zq7pK4aCb1xNGtEpc25O7Dd7mJpEeavgyc8jd2k50Kk3Zuf6C/
- x2Se0xYt3S3zq5uLNyd/piJFLa+xclt6XTBt1P0ov4nFlhyM/imGFKQkAoAPCnbE3OkYNS1yiOJ
- JyetIOM+7B07g0WwsXAKyNuhjCLxW2sOUEWCI+0Y4ke8hZTQjognSSJSfH1bQuThFGp2EZ5KMlM
- o+ZvGBb5DyDjgJQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1707; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=AlvKAXEx3vzyEsO3AxSAuqpcAHBHwm+4jfisbIYt++k=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpg3huTVEDwzJ7liuwcYVi+ixdkJl0v6nzvcTae
+ lD2fiABhGOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaYN4bgAKCRAADmhBGVaC
+ FTLLEACaYtbCKA9CaXfGoVCZVYwGIO3mHJTMH3+LtCJyAX8NL9PTQB5LSCYB3lbbb+TuFYtp47I
+ pokvKrdDVpH2kCU2Kz/rswqKPPNO5a84SZAiSiBCAbXMGv9LctGGv800pLvuidxK0exhF2Giorn
+ 3zBeXbP0hW12HIRSyCu9uf2opP23aVisg2f9ZkduK3njO7KePRLLhM+wpqLfjJlcsieryU6YI91
+ dTozvROPejnjoWceeT/WA5qk7flCjanc2HqGPd4wJii9kdcWDHCJK2HsdBVZ4e+//ngqhQvW2WH
+ v5cWnULZLbNIM3XSg31uH2AB9Ng7sETxSFuRJRQQ3ACu2yKw0+38QDOWEmzP0/xsvW8n5ZSmHDj
+ 8V4lhNHVv7LPmdp69lG7Iz8xqdcYs2za1ypkP64K9KlmFpIx6r2ScwKOQv9pPmpFPJtOhPTQ11z
+ LqNKuUUIeah66fOV+ChPmOv9vPphthx/7LWGdHYPsXWRJJGZ/tBkBBDzWuS0dmswXf1E47R9hqx
+ nyHgzY6zj/KuV9ksqMgef+lLMxvl5R+lT57+3Kgdbej9o0J7wz1CRIw7Y9hpVC6NBgkdHzubxvj
+ IVmWALeArK190tFQL+uOvGo0K6frKUKKSQS9oWcK4qUTqS3RzfnaV3V/ft/dgSnr9RZKB72aL48
+ Tdh01me9P8J+mLA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18716-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18717-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -106,167 +106,63 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: D6AC1EA8EE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A58DAEA8F5
 X-Rspamd-Action: no action
 
-Ben reported a problem when using new nfs-utils with an old kernel that
-doesn't support the min-threads setting. While netlink is an extensible
-format, genetlink (which we are using) will reject unknown attributes by
-default with -EINVAL.
-
-We could fix this in the kernel by having it ignore unknown attributes,
-but there is no way to fix old kernels and silently ignoring it is less
-than ideal. By handling this in userland, we can properly error out when
-the kernel doesn't support this attribute.
-
-When starting, have nfsdctl query the kernel for the "policy" of the
-threads operation, and determine the highest attribute index it
-supports.  For the "threads" command, have it fail if the --min-threads
-option is passed and the kernel doesn't support it. For "autostart", log
-a warning and ignore the setting.
-
-Fixes: 00e2e62b8998 ("nfsdctl: add support for min-threads parameter")
-Reported-by: Ben Coddington <bcodding@hammerspace.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- utils/nfsdctl/nfsdctl.c | 95 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 1 deletion(-)
+ utils/nfsdctl/nfsdctl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index 86a4a944d4e131f1114ca358d81779de0a034872..4a3744a1c22e6beac7c039bded05fc087a121200 100644
+index 4a3744a1c22e6beac7c039bded05fc087a121200..2b01f705874a4a3cad04042f6dfad22a66a7536f 100644
 --- a/utils/nfsdctl/nfsdctl.c
 +++ b/utils/nfsdctl/nfsdctl.c
-@@ -52,6 +52,9 @@ static int lockd_nl_family;
- /* The index of the "nfsd" netlink family */
- static int nfsd_nl_family;
+@@ -1514,14 +1514,14 @@ static int lockd_config_doit(struct nl_sock *sock, int cmd, int grace, int tcppo
  
-+/* The highest attribute index supported by NFSD_CMD_THREADS_SET on this kernel */
-+int nfsd_threads_max_nlattr;
-+
- struct nfs_version {
- 	uint8_t	major;
- 	uint8_t	minor;
-@@ -480,6 +483,83 @@ static int nfsd_nl_family_setup(struct nl_sock *sock)
- 	return nfsd_nl_family;
- }
- 
-+static int getpolicy_handler(struct nl_msg *msg, void *arg)
-+{
-+	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
-+	struct nlattr *attr;
-+	int rem;
-+
-+	nla_for_each_attr(attr, genlmsg_attrdata(gnlh, 0), genlmsg_attrlen(gnlh, 0), rem) {
-+		struct nlattr *a, *b;
-+		int i, j, index;
-+
-+		if (nla_type(attr) == CTRL_ATTR_POLICY) {
-+			nla_for_each_nested(a, attr, i) {
-+				nla_for_each_nested(b, a, j) {
-+					int idx = nla_type(b);
-+
-+					if (nfsd_threads_max_nlattr < idx)
-+						nfsd_threads_max_nlattr = idx;
-+				}
-+			}
-+		}
-+	}
-+	return NL_SKIP;
-+}
-+
-+static int query_nfsd_nl_policy(struct nl_sock *sock)
-+{
-+	struct genlmsghdr *ghdr;
-+	struct nlmsghdr *nlh;
-+	struct nl_msg *msg;
-+	struct nl_cb *cb;
-+	int opt, ret, id;
-+
-+	if (!nfsd_nl_family_setup(sock))
-+		return 1;
-+
-+	msg = netlink_msg_alloc(sock, GENL_ID_CTRL);
-+	if (!msg)
-+		return 1;
-+
-+	nlh = nlmsg_hdr(msg);
-+	nlh->nlmsg_flags |= NLM_F_DUMP;
-+	ghdr = nlmsg_data(nlh);
-+	ghdr->cmd = CTRL_CMD_GETPOLICY;
-+
-+	cb = nl_cb_alloc(NL_CB_CUSTOM);
-+	if (!cb) {
+ 	cb = nl_cb_alloc(NL_CB_CUSTOM);
+ 	if (!cb) {
+-		xlog(L_ERROR, "failed to allocate netlink callbacks\n");
 +		xlog(L_ERROR, "failed to allocate netlink callbacks");
-+		ret = 1;
-+		goto out;
-+	}
-+
-+	nla_put_u16(msg, CTRL_ATTR_FAMILY_ID, nfsd_nl_family);
-+	nla_put_u32(msg, CTRL_ATTR_OP, NFSD_CMD_THREADS_SET);
-+
-+	ret = nl_send_auto(sock, msg);
-+	if (ret < 0)
-+		goto out_cb;
-+
-+	ret = 1;
-+	nl_cb_err(cb, NL_CB_CUSTOM, error_handler, &ret);
-+	nl_cb_set(cb, NL_CB_FINISH, NL_CB_CUSTOM, finish_handler, &ret);
-+	nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, ack_handler, &ret);
-+	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, getpolicy_handler, NULL);
-+
-+	while (ret > 0)
-+		nl_recvmsgs(sock, cb);
-+	if (ret < 0) {
-+		xlog(L_ERROR, "Error: %s", strerror(-ret));
-+		ret = 1;
-+	}
-+out_cb:
-+	nl_cb_put(cb);
-+out:
-+	nlmsg_free(msg);
-+	return ret;
-+}
-+
- static void status_usage(void)
- {
- 	printf("Usage: %s status\n", taskname);
-@@ -639,6 +719,11 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
- 			threads_usage();
- 			return 0;
- 		case 'm':
-+			if (nfsd_threads_max_nlattr < NFSD_A_SERVER_MIN_THREADS) {
-+				xlog(L_ERROR, "This kernel does not support dynamic threading.");
-+				return 1;
-+			}
-+
- 			errno = 0;
- 			minthreads = strtoul(optarg, NULL, 0);
- 			if (minthreads == ULONG_MAX && errno != 0) {
-@@ -1743,7 +1828,12 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
- 
- 	lease = conf_get_num("nfsd", "lease-time", 0);
- 	scope = conf_get_str("nfsd", "scope");
--	minthreads = conf_get_num("nfsd", "min-threads", 0);
-+	minthreads = conf_get_num("nfsd", "min-threads", -1);
-+
-+	if (minthreads >= 0 && nfsd_threads_max_nlattr < NFSD_A_SERVER_MIN_THREADS) {
-+		xlog(L_WARNING, "This kernel does not support dynamic threading. min-threads setting ignored.");
-+		minthreads = -1;
-+	}
- 
- 	ret = threads_doit(sock, NFSD_CMD_THREADS_SET, grace, lease, pools,
- 			   threads, scope, minthreads);
-@@ -1936,6 +2026,9 @@ int main(int argc, char **argv)
- 		return 1;
+ 		ret = 1;
+ 		goto out;
  	}
  
-+	if (query_nfsd_nl_policy(sock))
-+		return 1;
-+
- 	if (optind > argc) {
- 		usage();
- 		return 1;
+ 	ret = nl_send_auto(sock, msg);
+ 	if (ret < 0) {
+-		xlog(L_ERROR, "send failed (%d)!\n", ret);
++		xlog(L_ERROR, "send failed (%d)!", ret);
+ 		goto out_cb;
+ 	}
+ 
+@@ -1534,7 +1534,7 @@ static int lockd_config_doit(struct nl_sock *sock, int cmd, int grace, int tcppo
+ 	while (ret > 0)
+ 		nl_recvmsgs(sock, cb);
+ 	if (ret < 0) {
+-		xlog(L_ERROR, "Error: %s\n", strerror(-ret));
++		xlog(L_ERROR, "Error: %s", strerror(-ret));
+ 		ret = 1;
+ 	}
+ out_cb:
+@@ -1554,7 +1554,7 @@ static int get_service(const char *svc)
+ 
+ 	ret = getaddrinfo(NULL, svc, &hints, &res);
+ 	if (ret) {
+-		xlog(L_ERROR, "getaddrinfo of \"%s\" failed: %s\n",
++		xlog(L_ERROR, "getaddrinfo of \"%s\" failed: %s",
+ 			svc, gai_strerror(ret));
+ 		return -1;
+ 	}
+@@ -1575,7 +1575,7 @@ static int get_service(const char *svc)
+ 		}
+ 		break;
+ 	default:
+-		xlog(L_ERROR, "Bad address family: %d\n", res->ai_family);
++		xlog(L_ERROR, "Bad address family: %d", res->ai_family);
+ 		port = -1;
+ 	}
+ 	freeaddrinfo(res);
 
 -- 
 2.52.0
