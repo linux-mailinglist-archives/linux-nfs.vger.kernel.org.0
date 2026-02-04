@@ -1,218 +1,336 @@
-Return-Path: <linux-nfs+bounces-18695-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18696-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IAypOWgmg2kxigMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18695-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 11:58:48 +0100
+	id CKoaFfkog2kxigMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18696-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 12:09:45 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12F60E4D48
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 11:58:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9CD9E4EC7
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 12:09:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C2D283005172
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 10:58:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A64E300EFBA
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 11:09:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB2703D4124;
-	Wed,  4 Feb 2026 10:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A1B3E8C78;
+	Wed,  4 Feb 2026 11:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P/rXH+g6"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="FcFFvJj1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B1B39903E;
-	Wed,  4 Feb 2026 10:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770202721; cv=none; b=DpdIpIKv48+G1be8XRNZ1Y01uf/bErvMnI4bJU+Vj5rWZ6WwTgL8ZE5VmgdKmhvdsypt5xoyDff9OK1a/4yfZL/W54oBGLg4Gr+Nbr9ulsIjdJ30E4azzB/NAA2qV4uV5Fd/jNqJu7MUFZJj4XJT+P4xmiHZZhHmwFMy9XTGV34=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770202721; c=relaxed/simple;
-	bh=e4OYY/P0s+n3f6l0Un+2wnNzSCxA9PSWh2mQE2h/QLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FfSqTBetpmnUBCBZUYYLO9V3Z35kpksT6kzY+xJhIlpc6tMwbrPvrD18nN/1gu+iHyWhiokZdqENJZl8v+quNXF0FT4eBDWpKS3EnD8lrlGXn7UYGWYfbBeYNzWw9jXpw0Ol6GxMEveGaTVkYYzhhzAFinlC5pbmmHBzcMjSc4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P/rXH+g6; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770202721; x=1801738721;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=e4OYY/P0s+n3f6l0Un+2wnNzSCxA9PSWh2mQE2h/QLI=;
-  b=P/rXH+g67RmGvsKf8fW9NdXPYHiQBhjsXbEl5xs9cdbkru+GcsMpIjPF
-   ZgAZq2ETt877WT5m1Nx94gr4d/N8pblUQCmq0mKcAFYCIgNnY/plSvsix
-   hRJI37HGYUCi6SsOHqLspIZPElnW8hWE1s7I4u8Jn5ukSrBFAhWLIpE3Q
-   /PbylfvfXNN1S6/ThdghhLi0XtxG+ti5kvtasAmdX1ChGVh0jl0Z5jj93
-   EcqXLKNG+XUJW/L18PkEMzfb7RMvEgbHyog1thFe9zVGQxO2yc22+6sth
-   uwrsDhQoDtZsGIHRiQ3nKCCICPIvXqgCFaQPD2nPLnkzN30pOaAj//87J
-   w==;
-X-CSE-ConnectionGUID: Uqeby7skSJGEmc0KRBFotA==
-X-CSE-MsgGUID: qm180nDqQvud+jqMORzq4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="88807943"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="88807943"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 02:58:40 -0800
-X-CSE-ConnectionGUID: oBTx9fyySBW7CeLiYKyMow==
-X-CSE-MsgGUID: 6hswnyijS3qwmcCTJ28ksw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="209230824"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 04 Feb 2026 02:58:17 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vnaaN-00000000hii-2R8J;
-	Wed, 04 Feb 2026 10:58:15 +0000
-Date: Wed, 4 Feb 2026 18:58:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: NeilBrown <neilb@ownmail.net>, Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: Re: [PATCH 04/13] Apparmor: Use simple_start_creating() /
- simple_done_creating()
-Message-ID: <202602041851.x2RfFgKO-lkp@intel.com>
-References: <20260204050726.177283-5-neilb@ownmail.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9C63E8C5D
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Feb 2026 11:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770203358; cv=pass; b=B9Uk2W5gFgrOPZcCL1zZlsF/4JsX5rkH0v2wtT1Xo+CzfUcvXroHgrD1A25FIm/cmK7n32RXgxAFFfBRBQiFAXRxgxUON/X4cFve3XwBZVz1XRJn9SVrANM62KmQKEWe3ekYz7io6OcaXzEedUDpCgxsRDf+RGqZhlgqbd5S81s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770203358; c=relaxed/simple;
+	bh=h7WyMZU3aPYHDv5fuo7ziDUM7+U5/kHIvqg5dPvwavc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=lOjAhozXqEX9585EG5BlsRowt3EhWEs3pl2k0UuZ+nH6QkJBzVb19eyqcgXOPXQvJjGmaMLOt+MQSqrzzpVmS7JsyoZnpvlT3QqJK0eFrKcB0gsIixAqD93mUUob9qHPGDYnYkczOm4d7KdaX2Q3lsTbFuYmZVacfGbwsnnsOns=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=FcFFvJj1; arc=pass smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6580dbdb41eso9997073a12.0
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Feb 2026 03:09:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770203356; cv=none;
+        d=google.com; s=arc-20240605;
+        b=FNhMmpA4tjp/wN925B31V8gU+Re/rJ5xsdm3aYEteDoEf3ilQ5fW/gTdOqN78DUaJQ
+         HKR0LaU8Bd6CK03uEKfnY18wXsunpMV9ASM0GgtQ0l2HqRfy4gRX7CfGJ7Mp22RSIuZU
+         V8CWU32ItAx+OaL5TfWJOy//HLSJuCWWxXvDww2oPHYiiTMuBzP8Jpkc2tLcR7X2XF5W
+         WYV6yzqLqa62ckcueGWo1qLIhBDSPVYQ0/jPUWNvLafwvpjP+211t65OESAzHWi6ATAt
+         iOVJttAtQkcpjBgQp9UuHEGWaIrt7KdYGWJjcuMWTOdc5MeN+vi7caUkSZvlTnLDV9Y1
+         QE9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=tgaecH22Ny2L+M9qTaZn/lOjZd8pKk0qHrFwroy3y8k=;
+        fh=Mys3y4MwsHRytUQMpdfGBn3oGRYLcLloxNwkFYMYMmg=;
+        b=knzEC2BdDoR7ye/etrp2An97Ac8xZwuTaUUcAZG2ugXdau5cnU0JbXZjdQ5EHB8SLb
+         /e3u/48qTo8tSsbUpSzYFwJdGuxYvPx1JnJJ4hV8KTZ1DvyCr2wbVGB3kygTsUla0U3T
+         sfsAD9xiucofA6P1hKQtHXCWW4kyP09yyUHWxc34ZLi/UOYFsluOnRb8LWl9NU3PAnwx
+         ZeXy8Mdm05+fRsYmlhbh7aL3Z79lPcS+W5SLVXMXZxchwtrAOFFVW5COGlAugxJrngR7
+         4CKjQHow2wysFzFVfuV7o70NYPgOJ6id3z2Xwiqv6uzprtwZ9T/K4H+1G9Q5DVymTw4S
+         IKmQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1770203356; x=1770808156; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tgaecH22Ny2L+M9qTaZn/lOjZd8pKk0qHrFwroy3y8k=;
+        b=FcFFvJj1tKZerkEeLr3rFCNS5cmzDZKyi90dl/1cPSRekaKDTK/ei8bzHFWBCOb9Nz
+         rwR4xKGPBSupb1gxB64vcvbxjuQQF0I1u9Nzp5wxbIExzMefOb15ro5Qa2fAg84xCF+R
+         k3X8/7DeqG6Ela/A7UUvOCVylBuD4SfZldvitB6hVC6WVNL9xo4KKqiJcKn/cGlKd2BG
+         WR5WkMq6dR82mX1mEqjMuzWGsBJO4LyPHfbRUANYmAC2zfa7m0ap9p28CkcIydwKqLDn
+         6tcWJYnJ15bHKqR8uf/lmxzwph4H4r7sJ5Ys/fzub2kN2fIGpN95UUKH/Xj25ap9O2qp
+         BvPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770203356; x=1770808156;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tgaecH22Ny2L+M9qTaZn/lOjZd8pKk0qHrFwroy3y8k=;
+        b=nasOjC5KBjz571Ms7O8i+WbSr16VWhzfrSxYvDV2brRPfas+gRJhGyr0qbAtnH2Oh2
+         VVqqTnWL5i4idrg+cE5uQ7BLGp/mH3HIqNus0z84eAJ//oO6ftOsOfQqiUpXHiIRBg1T
+         sKd2DjyubZMF39ESylmQuovi65bSMcmJXS5VCOxM3qqWB3FxUFCtv7yeHmpCPG/RaUer
+         IkH6jHnWtzLM0m2r/+hlliZDZTE2dyVNFJXyo5jMWN8UJJB9tzJzR4vwNMLjpFXr+VRQ
+         xf62aU3ist4nHcW0wGUZ6Ne/StgyzcgWRhF/l3qysnBE6wCydBCSokA/SGujyvlDCN3k
+         7XSQ==
+X-Gm-Message-State: AOJu0Ywm7IYOyFTSKb2WQbTwEhGfwLLLrtmpcPMp+NCYQCLIO6Ow9zrO
+	7Em5wrRKtkDQuYvzTUMdlNLr59ZOPuggHt9HMmqm7416miO9SNgp+ZKbbgZPr5xegMiQvb1MmkY
+	Ungog2deai3a4xPGvH+jasTHBMeplJ3tfc3klEa2xl0pqt03MMXu7UXE=
+X-Gm-Gg: AZuq6aLtTwwcbz9bJgqmHU0/wOheQ4Wo6NYEIGd1WZcb5pYUEfctbvQKgg1ANOU9/mp
+	j/RAk0gfj+0VOIxDE/TWxVlAj0U23afCM5FZJXfmC9H4w/iTh/eejMt9aWymbC5op6BGeIgeONp
+	cikhEqrkVJVxR/uBoEhDWglWlMmNBEHQR5bgUxkAqjsFle39inXlB8rADB90Z+HDwv0/UtO+7F4
+	/qCNnNNGaa4mbfqlBnWwYefOU1agHUqkzeM4PcQ6JXKrq4NOrLSaBZeaTgOIC1Sh3V9BqY=
+X-Received: by 2002:a05:6402:210a:b0:649:d81b:7b7e with SMTP id
+ 4fb4d7f45d1cf-65949ab43dcmr1879529a12.8.1770203355842; Wed, 04 Feb 2026
+ 03:09:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260204050726.177283-5-neilb@ownmail.net>
+From: Michael Stoler <michael.stoler@vastdata.com>
+Date: Wed, 4 Feb 2026 13:09:04 +0200
+X-Gm-Features: AZwV_Qjr70u1dFFtIcT1McxVsruW3jbQdu967FatnK1TRXacBdLVPxJ1hu5bP8I
+Message-ID: <CAGztG2DRZrEVcMnNjDPwKft8c+2M3CSsZ1ZVzXyqn0x17Nnsbg@mail.gmail.com>
+Subject: Unnecessary page cache invalidation
+To: linux-nfs@vger.kernel.org
+Content-Type: multipart/mixed; boundary="00000000000034dc8e0649fd9643"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[vastdata.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[vastdata.com:s=google];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-18696-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18695-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_THREE(0.00)[4];
+	HAS_ATTACHMENT(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:~,4:~];
+	RCPT_COUNT_ONE(0.00)[1];
+	DKIM_TRACE(0.00)[vastdata.com:+];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[git-scm.com:url,intel.com:email,intel.com:dkim,intel.com:mid]
-X-Rspamd-Queue-Id: 12F60E4D48
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[michael.stoler@vastdata.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A9CD9E4EC7
 X-Rspamd-Action: no action
 
-Hi NeilBrown,
+--00000000000034dc8e0649fd9643
+Content-Type: multipart/alternative; boundary="00000000000034dc8d0649fd9641"
 
-kernel test robot noticed the following build warnings:
+--00000000000034dc8d0649fd9641
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[auto build test WARNING on brauner-vfs/vfs.all]
-[also build test WARNING on viro-vfs/for-next linus/master v6.19-rc8 next-20260203]
-[cannot apply to pcmoore-selinux/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+    I=E2=80=99m seeing a performance issue with an NFS driver based on Linu=
+x 6.6.
+When untar extracts an archive, it sets file attributes and timestamps
+after each file is created. As a result, the inodes of these files are
+marked as OOO (out-of-order write), which causes valid page cache to be
+dropped on subsequent opens.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/fs-proc-Don-t-lock-root-inode-when-creating-self-and-thread-self/20260204-131659
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20260204050726.177283-5-neilb%40ownmail.net
-patch subject: [PATCH 04/13] Apparmor: Use simple_start_creating() / simple_done_creating()
-config: arm-randconfig-r133-20260204 (https://download.01.org/0day-ci/archive/20260204/202602041851.x2RfFgKO-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260204/202602041851.x2RfFgKO-lkp@intel.com/reproduce)
+    This flase OOO tagging occurs during the nfs_setattr() inode method.
+The reason is that inode attributes are updated twice: first in the
+protocol-version-specific
+method nfs*_proc_setattr(), and then again in nfs_setattr() itself via
+nfs_refresh_inode(), even though the inode state has already been updated
+by nfs_update_inode() in protocol-version-specific method. As a result,
+nfs_refresh_inode() falsely detects the second attempt to apply the same
+file attributes as an out-of-order operation and marks the inode with an
+OOO range.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602041851.x2RfFgKO-lkp@intel.com/
+    The proposed patch resolves this issue by eliminating the second inode
+attribute update in nfs_refresh_inode() when the inode has already been
+updated.
 
-sparse warnings: (new ones prefixed by >>)
->> security/apparmor/apparmorfs.c:295:16: sparse: sparse: Using plain integer as NULL pointer
 
-vim +295 security/apparmor/apparmorfs.c
+Regards,
 
-   247	
-   248	/**
-   249	 * aafs_create - create a dentry in the apparmorfs filesystem
-   250	 *
-   251	 * @name: name of dentry to create
-   252	 * @mode: permissions the file should have
-   253	 * @parent: parent directory for this dentry
-   254	 * @data: data to store on inode.i_private, available in open()
-   255	 * @link: if symlink, symlink target string
-   256	 * @fops: struct file_operations that should be used for
-   257	 * @iops: struct of inode_operations that should be used
-   258	 *
-   259	 * This is the basic "create a xxx" function for apparmorfs.
-   260	 *
-   261	 * Returns a pointer to a dentry if it succeeds, that must be free with
-   262	 * aafs_remove(). Will return ERR_PTR on failure.
-   263	 */
-   264	static struct dentry *aafs_create(const char *name, umode_t mode,
-   265					  struct dentry *parent, void *data, void *link,
-   266					  const struct file_operations *fops,
-   267					  const struct inode_operations *iops)
-   268	{
-   269		struct dentry *dentry;
-   270		struct inode *dir;
-   271		int error;
-   272	
-   273		AA_BUG(!name);
-   274		AA_BUG(!parent);
-   275	
-   276		if (!(mode & S_IFMT))
-   277			mode = (mode & S_IALLUGO) | S_IFREG;
-   278	
-   279		error = simple_pin_fs(&aafs_ops, &aafs_mnt, &aafs_count);
-   280		if (error)
-   281			return ERR_PTR(error);
-   282	
-   283		dir = d_inode(parent);
-   284	
-   285		dentry = simple_start_creating(parent, name);
-   286		if (IS_ERR(dentry)) {
-   287			error = PTR_ERR(dentry);
-   288			goto fail;
-   289		}
-   290	
-   291		error = __aafs_setup_d_inode(dir, dentry, mode, data, link, fops, iops);
-   292		simple_done_creating(dentry);
-   293		if (error)
-   294			goto fail;
- > 295		return 0;
-   296	fail:
-   297		simple_release_fs(&aafs_mnt, &aafs_count);
-   298		return ERR_PTR(error);
-   299	}
-   300	
+    Michael Stoler
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--00000000000034dc8d0649fd9641
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">
+
+
+
+
+
+<p class=3D"gmail-p1" style=3D"margin:0px;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;font-size-adjust:n=
+one;font-kerning:auto;font-feature-settings:normal;font-stretch:normal;line=
+-height:normal;font-family:Menlo;color:rgb(0,0,0)"><span class=3D"gmail-s1"=
+ style=3D"font-variant-ligatures:no-common-ligatures">=C2=A0 =C2=A0 I=E2=80=
+=99m seeing a performance issue with an NFS driver based on Linux 6.6. When=
+ untar extracts an archive, it sets file attributes and timestamps after ea=
+ch file is created. As a result, the inodes of these files are marked as OO=
+O (out-of-order write), which causes valid page cache to be dropped on subs=
+equent opens.</span></p><p class=3D"gmail-p1" style=3D"margin:0px;font-vari=
+ant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:n=
+ormal;font-size-adjust:none;font-kerning:auto;font-feature-settings:normal;=
+font-stretch:normal;line-height:normal;font-family:Menlo;color:rgb(0,0,0)">=
+<span class=3D"gmail-s1" style=3D"font-variant-ligatures:no-common-ligature=
+s">=C2=A0 =C2=A0 This flase OOO tagging occurs during the nfs_setattr() ino=
+de method. The reason is that inode attributes are updated twice: first in =
+the </span><span class=3D"gmail-s2" style=3D"font-variant-ligatures:no-comm=
+on-ligatures;background-color:rgb(224,228,9)">protocol</span><span class=3D=
+"gmail-s1" style=3D"font-variant-ligatures:no-common-ligatures">-version-sp=
+ecific method nfs*_proc_setattr(), and then again in nfs_setattr() itself v=
+ia nfs_refresh_inode(), even though the inode state has already been update=
+d by nfs_update_inode() in </span><span class=3D"gmail-s2" style=3D"font-va=
+riant-ligatures:no-common-ligatures;background-color:rgb(224,228,9)">protoc=
+ol</span><span class=3D"gmail-s1" style=3D"font-variant-ligatures:no-common=
+-ligatures">-version-specific method. As a result, nfs_refresh_inode() fals=
+ely detects the second attempt to apply the same file attributes as an out-=
+of-order operation and marks the inode with an OOO range.</span></p>
+<p class=3D"gmail-p1" style=3D"margin:0px;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;font-size-adjust:n=
+one;font-kerning:auto;font-feature-settings:normal;font-stretch:normal;line=
+-height:normal;font-family:Menlo;color:rgb(0,0,0)"><span class=3D"gmail-s1"=
+ style=3D"font-variant-ligatures:no-common-ligatures">=C2=A0 =C2=A0 The pro=
+posed patch resolves this issue by eliminating the second inode attribute u=
+pdate in nfs_refresh_inode() when the inode has already been updated.</span=
+></p><p class=3D"gmail-p1" style=3D"margin:0px;font-variant-numeric:normal;=
+font-variant-east-asian:normal;font-variant-alternates:normal;font-size-adj=
+ust:none;font-kerning:auto;font-feature-settings:normal;font-stretch:normal=
+;line-height:normal;font-family:Menlo;color:rgb(0,0,0)"><span class=3D"gmai=
+l-s1" style=3D"font-variant-ligatures:no-common-ligatures"><br></span></p><=
+p style=3D"margin:0px;font-variant-numeric:normal;font-variant-east-asian:n=
+ormal;font-variant-alternates:normal;font-size-adjust:none;font-kerning:aut=
+o;font-feature-settings:normal;font-stretch:normal;line-height:normal;font-=
+family:Menlo;color:rgb(0,0,0)"><span style=3D"font-variant-ligatures:no-com=
+mon-ligatures">Regards,</span></p><p class=3D"gmail-p1" style=3D"margin:0px=
+;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-al=
+ternates:normal;font-size-adjust:none;font-kerning:auto;font-feature-settin=
+gs:normal;font-stretch:normal;line-height:normal;font-family:Menlo;color:rg=
+b(0,0,0)"><span class=3D"gmail-s1" style=3D"font-variant-ligatures:no-commo=
+n-ligatures"></span></p><p style=3D"margin:0px;font-variant-numeric:normal;=
+font-variant-east-asian:normal;font-variant-alternates:normal;font-size-adj=
+ust:none;font-kerning:auto;font-feature-settings:normal;font-stretch:normal=
+;line-height:normal;font-family:Menlo;color:rgb(0,0,0)"><span style=3D"font=
+-variant-ligatures:no-common-ligatures">=C2=A0 =C2=A0 Michael Stoler</span>=
+</p><p style=3D"margin:0px;font-variant-numeric:normal;font-variant-east-as=
+ian:normal;font-variant-alternates:normal;font-size-adjust:none;font-kernin=
+g:auto;font-feature-settings:normal;font-stretch:normal;line-height:normal;=
+font-family:Menlo;color:rgb(0,0,0)"><span style=3D"font-variant-ligatures:n=
+o-common-ligatures"><br></span></p></div>
+
+--00000000000034dc8d0649fd9641--
+--00000000000034dc8e0649fd9643
+Content-Type: application/octet-stream; name="nfs-463.patch"
+Content-Disposition: attachment; filename="nfs-463.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_ml7xcvzu0>
+X-Attachment-Id: f_ml7xcvzu0
+
+Y29tbWl0IGY2YTU3MWEzYTkzMWRiYWNkZmEyNDc0MGI2ZDBkZDlkNjBlZTVkMTMKQXV0aG9yOiBN
+aWNoYWVsIFN0b2xlciA8bWljaGFlbC5zdG9sZXJAdmFzdGRhdGEuY29tPgpEYXRlOiAgIFRodSBK
+YW4gMSAxMDozNjo0NiAyMDI2ICswMDAwCgogICAgbmZzOiBhdm9pZCB0cmlnZ2VyaW5nIG91dC1v
+Zi1vcmRlciB3cml0ZSBoYW5kbGluZyBpbiBuZnNfc2V0YXR0cigpCiAgICAKICAgIFRoZSBjdXJy
+ZW50IE5GUyBpbXBsZW1lbnRhdGlvbiBhdHRlbXB0cyB0byB1cGRhdGUgaW5vZGUgcHJvcGVydGll
+cyB0d2ljZSB3aGVuCiAgICBuZnNfc2V0YXR0cigpIGlzIGNhbGxlZCBmb3IgYW4gTkZTIGlub2Rl
+LiBGaXJzdCwgaW5vZGUgcHJvcGVydGllcyBhcmUKICAgIHVuY29uZGl0aW9uYWxseSB1cGRhdGVk
+IGJ5IG5mc191cGRhdGVfaW5vZGUoKSBkdXJpbmcgdGhlIGludm9jYXRpb24gb2YgdGhlIE5GUwog
+ICAgcHJvdG9jb2zigJN2ZXJzaW9u4oCTc3BlY2lmaWMgbWV0aG9kIG5mcypfcHJvY19zZXRhdHRy
+KCksIHdoaWNoIGludGVybmFsbHkgY2FsbHMKICAgIG5mc19zZXRhdHRyX3VwZGF0ZV9pbm9kZSgp
+LgogICAgCiAgICBUaGUgc2Vjb25kIGF0dGVtcHQgb2NjdXJzIGF0IHRoZSBlbmQgb2YgbmZzX3Nl
+dGF0dHIoKSwgd2hlbiBuZnNfcmVmcmVzaF9pbm9kZSgpCiAgICBpcyBpbnZva2VkLiBUaGlzIGNh
+bGwgY29uZGl0aW9uYWxseSB0cmlnZ2VycyBuZnNfdXBkYXRlX2lub2RlKCkgYWZ0ZXIgY2hlY2tp
+bmcKICAgIHRoZSB1cGRhdGUgb3JkZXJpbmcuIEhvd2V2ZXIsIHNpbmNlIHRoZSBpbm9kZSBwcm9w
+ZXJ0aWVzIGhhdmUgYWxyZWFkeSBiZWVuCiAgICB1cGRhdGVkIGR1cmluZyB0aGUgZmlyc3QgYXR0
+ZW1wdCwgdGhpcyBzZWNvbmQgdXBkYXRlIHNlcnZlcyBvbmx5IHRvIGNoZWNrIHRoZQogICAgZXJy
+b3Igc3RhdGUoLUVTVEFMRSkuCiAgICAKICAgIFRoaXMgYXBwcm9hY2ggd2FzIGFkZXF1YXRlIHVu
+dGlsIHRoZSBpbnRyb2R1Y3Rpb24gb2Yg4oCcTkZTdjM6IGhhbmRsZSBvdXQtb2Ytb3JkZXIKICAg
+IHdyaXRlIHJlcGxpZXPigJ0gKHVwc3RyZWFtIGNvbW1pdCAzZGI2M2RhYWJlMjEwKS4gVGhlIGxh
+dHRlciBjb2xsZWN0cyBvdXQtb2Ytb3JkZXIKICAgIGRhdGEgaW4gbmZzX3JlZnJlc2hfaW5vZGUo
+KSBpbnZvY2F0aW9uIC4gQXMgYSByZXN1bHQsIG5mc19zZXRhdHRyKCkgbWF5CiAgICBpbmFkdmVy
+dGVudGx5IHN3aWNoIG9uIHRoZSBvdXQtb2Ytb3JkZXIgc3RhdGUgaW4gbmZzX3JlZnJlc2hfaW5v
+ZGUoKSBpbnZvY2F0aW9uLAogICAgd2hpY2ggdHJpZ2dlcnMgYW4gaW5vZGUncyBwYWdlLWNhY2hl
+IGludmFsaWRhdGlvbiBhbmQgc3Vic2VxdWVudGx5IGRlZ3JhZGVzIHJlYWQKICAgIHBlcmZvcm1h
+bmNlLgogICAgCiAgICBUaGlzIHBhdGNoIHNpbXBsaWZpZXMgaW5vZGUgYXR0cmlidXRlIHVwZGF0
+ZXMgaW4gbmZzX3NldGF0dHIoKSBieSBtZXJnaW5nIHRoZQogICAgdHdvIHByZXZpb3VzbHkgZGVz
+Y3JpYmVkIHN0YWdlcyBpbnRvIGEgc2luZ2xlIGNhbGwgdG8gbmZzX3NldGF0dHJfdXBkYXRlX2lu
+b2RlKCkuCiAgICBUaGlzIGVsaW1pbmF0ZXMgaW5jb3JyZWN0IG91dC1vZi1vcmRlciBkZXRlY3Rp
+b24gYW5kIHRoZSByZXN1bHRpbmcgcmVhZAogICAgcGVyZm9ybWFuY2UgZGVncmFkYXRpb24uCiAg
+ICAKZGlmZiAtLWdpdCBhL2ZzL25mcy9pbm9kZS5jIGIvZnMvbmZzL2lub2RlLmMKaW5kZXggNzZj
+YzBlZjU5Li5iMjY2YThkNzMgMTAwNjQ0Ci0tLSBhL2ZzL25mcy9pbm9kZS5jCisrKyBiL2ZzL25m
+cy9pbm9kZS5jCkBAIC04NDgsOCArODQ4LDYgQEAgbmZzX3NldGF0dHIoQ09NUEFUX1NUUlVDVF9N
+TlRfSURNQVAgKmlkbWFwLCBzdHJ1Y3QgZGVudHJ5ICpkZW50cnksCiAJfQogCiAJZXJyb3IgPSBO
+RlNfUFJPVE8oaW5vZGUpLT5zZXRhdHRyKGRlbnRyeSwgZmF0dHIsIGF0dHIpOwotCWlmIChlcnJv
+ciA9PSAwKQotCQllcnJvciA9IG5mc19yZWZyZXNoX2lub2RlKGlub2RlLCBmYXR0cik7CiAJbmZz
+X2ZyZWVfZmF0dHIoZmF0dHIpOwogb3V0OgogCXRyYWNlX25mc19zZXRhdHRyX2V4aXQoaW5vZGUs
+IGVycm9yKTsKQEAgLTkwMSw5ICs4OTksMTEgQEAgb3V0OgogICogTm90ZTogd2UgZG8gdGhpcyBp
+biB0aGUgKnByb2MuYyBpbiBvcmRlciB0byBlbnN1cmUgdGhhdAogICogICAgICAgaXQgd29ya3Mg
+Zm9yIHRoaW5ncyBsaWtlIGV4Y2x1c2l2ZSBjcmVhdGVzIHRvby4KICAqLwotdm9pZCBuZnNfc2V0
+YXR0cl91cGRhdGVfaW5vZGUoc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGlhdHRyICphdHRy
+LAoraW50IG5mc19zZXRhdHRyX3VwZGF0ZV9pbm9kZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1
+Y3QgaWF0dHIgKmF0dHIsCiAJCXN0cnVjdCBuZnNfZmF0dHIgKmZhdHRyKQogeworCWludCByZXQg
+PSAwOworCiAJLyogQmFycmllcjogYnVtcCB0aGUgYXR0cmlidXRlIGdlbmVyYXRpb24gY291bnQu
+ICovCiAJbmZzX2ZhdHRyX3NldF9iYXJyaWVyKGZhdHRyKTsKIApAQCAtOTczLDggKzk3MywxMCBA
+QCB2b2lkIG5mc19zZXRhdHRyX3VwZGF0ZV9pbm9kZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1
+Y3QgaWF0dHIgKmF0dHIsCiAJCQkJCXwgTkZTX0lOT19JTlZBTElEX0NUSU1FKTsKIAl9CiAJaWYg
+KGZhdHRyLT52YWxpZCkKLQkJbmZzX3VwZGF0ZV9pbm9kZShpbm9kZSwgZmF0dHIpOworCQlyZXQg
+PSBuZnNfdXBkYXRlX2lub2RlKGlub2RlLCBmYXR0cik7CiAJc3Bpbl91bmxvY2soJmlub2RlLT5p
+X2xvY2spOworCisJcmV0dXJuIHJldDsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKG5mc19zZXRhdHRy
+X3VwZGF0ZV9pbm9kZSk7CiAKZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnMzcHJvYy5jIGIvZnMvbmZz
+L25mczNwcm9jLmMKaW5kZXggMjlhMDA0OTc1Li4xZWJjMTFjMjAgMTAwNjQ0Ci0tLSBhL2ZzL25m
+cy9uZnMzcHJvYy5jCisrKyBiL2ZzL25mcy9uZnMzcHJvYy5jCkBAIC0xNTMsNyArMTUzLDcgQEAg
+bmZzM19wcm9jX3NldGF0dHIoc3RydWN0IGRlbnRyeSAqZGVudHJ5LCBzdHJ1Y3QgbmZzX2ZhdHRy
+ICpmYXR0ciwKIAlzdGF0dXMgPSBuZnMzX3JwY19jYWxsX3N5bmNfbXVsdGlwYXRoKE5GU19DTElF
+TlQoaW5vZGUpLCAmbXNnLCAwLAogCQkJCQkgICAgICBORlNfRkhfSEFTSF9JTk9ERShpbm9kZSks
+IHt9KTsKIAlpZiAoc3RhdHVzID09IDApIHsKLQkJbmZzX3NldGF0dHJfdXBkYXRlX2lub2RlKGlu
+b2RlLCBzYXR0ciwgZmF0dHIpOworCQlzdGF0dXMgPSBuZnNfc2V0YXR0cl91cGRhdGVfaW5vZGUo
+aW5vZGUsIHNhdHRyLCBmYXR0cik7CiAJCWlmIChORlNfSShpbm9kZSktPmNhY2hlX3ZhbGlkaXR5
+ICYgTkZTX0lOT19JTlZBTElEX0FDTCkKIAkJCW5mc196YXBfYWNsX2NhY2hlKGlub2RlKTsKIAl9
+CmRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jCmluZGV4
+IDUzN2UyZWJiNi4uN2NmZTU2OTQ1IDEwMDY0NAotLS0gYS9mcy9uZnMvbmZzNHByb2MuYworKysg
+Yi9mcy9uZnMvbmZzNHByb2MuYwpAQCAtNDU2Niw3ICs0NTY2LDcgQEAgbmZzNF9wcm9jX3NldGF0
+dHIoc3RydWN0IGRlbnRyeSAqZGVudHJ5LCBzdHJ1Y3QgbmZzX2ZhdHRyICpmYXR0ciwKIAogCXN0
+YXR1cyA9IG5mczRfZG9fc2V0YXR0cihpbm9kZSwgY3JlZCwgZmF0dHIsIHNhdHRyLCBjdHgsIE5V
+TEwpOwogCWlmIChzdGF0dXMgPT0gMCkgewotCQluZnNfc2V0YXR0cl91cGRhdGVfaW5vZGUoaW5v
+ZGUsIHNhdHRyLCBmYXR0cik7CisJCXN0YXR1cyA9IG5mc19zZXRhdHRyX3VwZGF0ZV9pbm9kZShp
+bm9kZSwgc2F0dHIsIGZhdHRyKTsKIAkJbmZzX3NldHNlY3VyaXR5KGlub2RlLCBmYXR0cik7CiAJ
+fQogCXJldHVybiBzdGF0dXM7CmRpZmYgLS1naXQgYS9mcy9uZnMvcHJvYy5jIGIvZnMvbmZzL3By
+b2MuYwppbmRleCA5NmUxOTgyYzEuLmRlODRhMTdlMSAxMDA2NDQKLS0tIGEvZnMvbmZzL3Byb2Mu
+YworKysgYi9mcy9uZnMvcHJvYy5jCkBAIC0xNDcsNyArMTQ3LDcgQEAgbmZzX3Byb2Nfc2V0YXR0
+cihzdHJ1Y3QgZGVudHJ5ICpkZW50cnksIHN0cnVjdCBuZnNfZmF0dHIgKmZhdHRyLAogCW5mc19m
+YXR0cl9pbml0KGZhdHRyKTsKIAlzdGF0dXMgPSBycGNfY2FsbF9zeW5jKE5GU19DTElFTlQoaW5v
+ZGUpLCAmbXNnLCAwLCB7fSk7CiAJaWYgKHN0YXR1cyA9PSAwKQotCQluZnNfc2V0YXR0cl91cGRh
+dGVfaW5vZGUoaW5vZGUsIHNhdHRyLCBmYXR0cik7CisJCXN0YXR1cyA9IG5mc19zZXRhdHRyX3Vw
+ZGF0ZV9pbm9kZShpbm9kZSwgc2F0dHIsIGZhdHRyKTsKIAlkcHJpbnRrKCJORlMgcmVwbHkgc2V0
+YXR0cjogJWRcbiIsIHN0YXR1cyk7CiAJcmV0dXJuIHN0YXR1czsKIH0KZGlmZiAtLWdpdCBhL2lu
+Y2x1ZGUvbGludXgvbmZzX2ZzLmggYi9pbmNsdWRlL2xpbnV4L25mc19mcy5oCmluZGV4IDNhN2Yy
+YjI1Zi4uNGI0NDdkOWI5IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L25mc19mcy5oCisrKyBi
+L2luY2x1ZGUvbGludXgvbmZzX2ZzLmgKQEAgLTQ1Myw3ICs0NTMsNyBAQCBleHRlcm4gYm9vbCBu
+ZnNfbWFwcGluZ19uZWVkX3JldmFsaWRhdGVfaW5vZGUoc3RydWN0IGlub2RlICppbm9kZSk7CiBl
+eHRlcm4gaW50IG5mc19yZXZhbGlkYXRlX21hcHBpbmcoc3RydWN0IGlub2RlICppbm9kZSwgc3Ry
+dWN0IGFkZHJlc3Nfc3BhY2UgKm1hcHBpbmcpOwogZXh0ZXJuIGludCBuZnNfcmV2YWxpZGF0ZV9t
+YXBwaW5nX3JjdShzdHJ1Y3QgaW5vZGUgKmlub2RlKTsKIGV4dGVybiBpbnQgbmZzX3NldGF0dHIo
+c3RydWN0IG1udF9pZG1hcCAqLCBzdHJ1Y3QgZGVudHJ5ICosIHN0cnVjdCBpYXR0ciAqKTsKLWV4
+dGVybiB2b2lkIG5mc19zZXRhdHRyX3VwZGF0ZV9pbm9kZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCBz
+dHJ1Y3QgaWF0dHIgKmF0dHIsIHN0cnVjdCBuZnNfZmF0dHIgKik7CitleHRlcm4gaW50IG5mc19z
+ZXRhdHRyX3VwZGF0ZV9pbm9kZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgaWF0dHIgKmF0
+dHIsIHN0cnVjdCBuZnNfZmF0dHIgKik7CiBleHRlcm4gdm9pZCBuZnNfc2V0c2VjdXJpdHkoc3Ry
+dWN0IGlub2RlICppbm9kZSwgc3RydWN0IG5mc19mYXR0ciAqZmF0dHIpOwogZXh0ZXJuIHN0cnVj
+dCBuZnNfb3Blbl9jb250ZXh0ICpnZXRfbmZzX29wZW5fY29udGV4dChzdHJ1Y3QgbmZzX29wZW5f
+Y29udGV4dCAqY3R4KTsKIGV4dGVybiB2b2lkIHB1dF9uZnNfb3Blbl9jb250ZXh0KHN0cnVjdCBu
+ZnNfb3Blbl9jb250ZXh0ICpjdHgpOwo=
+--00000000000034dc8e0649fd9643--
 
