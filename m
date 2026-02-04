@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-18713-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18714-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kIFGOQd6g2nyngMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18713-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:55:35 +0100
+	id CEzPMXV4g2mFmwMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18714-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:48:53 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48EE0EA9B7
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:55:35 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BF41EA86B
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Feb 2026 17:48:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C81BE30541D4
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 16:48:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A110C3008C0D
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Feb 2026 16:48:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD84E33B6CC;
-	Wed,  4 Feb 2026 16:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E85C313531;
+	Wed,  4 Feb 2026 16:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEvmMtzs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdKkkoaB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB26C313531
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Feb 2026 16:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B94A33B97E
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Feb 2026 16:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770223727; cv=none; b=hDZVIMnxoz2qh5TMbV+7prl9VH8lquNu9yqIwJ2W92Vytu0lIb1A2lGsV1ILIE1+hFPKElXuRDZCx7R9BIEgrkWNtis7Qs06IZQJQ7CU4eOy4pPqniSl8F7KUREU/yWBW6ouLIj9n2tM/lOJiqfhzj/Jth+PBv3aU5pghsAVZRU=
+	t=1770223728; cv=none; b=ZATv/jnXzk62EFCyn9XanfnKh/nC38TIrwQBYp5aVVHozysgzP8f1XeDxbSxThvbO5nxgEyHRCjxVjL1U8MxGS8YBnTUkU2aeT3O2jE8y0T855Ynr9zZtLarB5C68IOBD9g+hWhnH7fLaKlpkUZF78+EB4NlHDHisex1gLxOJjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770223727; c=relaxed/simple;
-	bh=GM33+VQ4KCtofNP2S3WEt4RBKBIqZKjoLejPwlIWouA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dO8mp8mwswiwKWAIRt1Z+UZhN4E1XY6fHKEgUZ6Z5ndrPBowhwl+HOBvXV2qzZzBsGljXyl1bqqZZzyRPKpkBQUrSEePF6ziRFLIQkuyDM9NINkJ8B9zpE86ovQZT9khLL/AqpeCVlqaKtr1hSodhCQ0Dkr3U53yXbIS0pdcyDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEvmMtzs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6E2C4CEF7;
-	Wed,  4 Feb 2026 16:48:46 +0000 (UTC)
+	s=arc-20240116; t=1770223728; c=relaxed/simple;
+	bh=IWa++nWlBsO8ZnSovrLgs4i5S2IaSaCSxEtp68oxyuk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VsMRmaaUvjZaGbDQB+lqIIjChBuWCCbRA+lK3x7/K/doclzVyoqGQVGi6McYb+1ti+4mnX8P3X+h2o0Mv5vw/WVD1ITy3EL1zWmE/BQhy1BVaLuoKJ6CCLIVvFIYX89prSTNY1tpDjYbcXRpsjA+0p/7HCMms7xd1EC7/2GEB9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdKkkoaB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98EA0C19425;
+	Wed,  4 Feb 2026 16:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770223727;
-	bh=GM33+VQ4KCtofNP2S3WEt4RBKBIqZKjoLejPwlIWouA=;
-	h=From:Subject:Date:To:Cc:From;
-	b=SEvmMtzsDJOoeeBIf482uq5im9Db/eHOVhU7AG/55nyrIsvRPpkTvL7hsZaZ0MUcr
-	 poxdwlKaBvn5wXkNxj40XkzD5j/iMGetD4w9zS7tkAZHsd8N7bRQtd9CmsVqwnntux
-	 Zt6KiucPf2w2O5+F+RkguIIK7dZQmiIxY6TxE/KZRB7yvobvvjwVjInLPtO9IVYKVv
-	 krkrMBLFgbsWTrOK4jMZLHgpugSiPA4V6uxOPwV4e4I3YcXHGp1rYk26xVR/fQmeXY
-	 plFUmbk514NlUeD+C472xLD1YKUuqr+CSn+bB6rV20tKe5eAgxMdeJsKH0LknSC/xx
-	 el82rePnPqxtw==
+	s=k20201202; t=1770223728;
+	bh=IWa++nWlBsO8ZnSovrLgs4i5S2IaSaCSxEtp68oxyuk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MdKkkoaB7CQUBuuWW3lvSCd30YP22198qnGjEWsof3qad45DODpeTnbAXPCO/ToLf
+	 8x0Vmt5nF57WRDbKzmRBHqTzJY6+ic18HzhQbJ/Z3DBro76NtLPHG1rcStLgHK01yy
+	 yQ4fbaCUEw2DZa8Y19KnHtQfFcesq8y6UnNuYufDgVTxOtXAi8N45+oRw9McAkuyqP
+	 Uk8Rv/PaDIppi4MgBaklVOi/wSwCb92VDo2ENE/0rU3timuRmECDDT+gFsEWX1dIb1
+	 W/1UHEECQ0X9X3YeohcwaMdthh4eY8CmrEG9e1yXyXeZvm/rlCCf9+A7/Eqh/hpgwk
+	 aJyEPo4tUKOwQ==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH nfs-utils v2 0/4] nfsdctl: properly handle older kernels
- that don't support min-threads
-Date: Wed, 04 Feb 2026 11:48:21 -0500
-Message-Id: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
+Date: Wed, 04 Feb 2026 11:48:22 -0500
+Subject: [PATCH nfs-utils v2 1/4] nfsdctl: unconditionally enable support
+ for min-threads
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,50 +56,48 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/02NwQ6CMBBEf4Xs2ZqlNFg8+R+GA4EtbMRCdpFoC
- P9uQzx4fJmZNxsoCZPCNdtAaGXlKSawpwzaoYk9Ge4Sg0VbosXCPDkug1DTqXFoW/IXrEpCSIN
- ZKPD7kN0hBjWvhUeFOkUD6zLJ57hZ86PwM7p/45obNFUonC/RB+/d7UESaTxP0kO97/sXXnFVZ
- bAAAAA=
-X-Change-ID: 20260203-minthreads-402ce87096e0
+Message-Id: <20260204-minthreads-v2-1-a7eba34201e9@kernel.org>
+References: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
+In-Reply-To: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
 To: Steve Dickson <steved@redhat.com>
 Cc: Ben Coddington <bcodding@hammerspace.com>, 
  Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1453; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=GM33+VQ4KCtofNP2S3WEt4RBKBIqZKjoLejPwlIWouA=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpg3hodZ2lns00nmPhzkT9lJGpQw0tk7uGWJ3Eo
- C3oPhaEfdWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaYN4aAAKCRAADmhBGVaC
- FWm/D/0YxXexGmQheqq2abCanDQ3ruGblDEqzoS3n8ak/JSOaCkblgV07cP79wz6qZT/dNBrst7
- 7UWsS3c1AcsyyJ2s2QqvsB6bBDx+Z4SUdOYiE0EbN1kzAwf2ymgSTKjErZ+VjPuCASNDBecEw0W
- K2rUKsuD8TCl0MKNzZy+c0cFDQdQKwYi1Rf1dQOX7BJmMXrMtUVbbk2SXh213gEN0ANmNlDc6GO
- 9mxIbDF9USB9oq8DiX+MNluqwQnUZOSt6hsPSJlqnPZtISTxinIiQrC6Wj+c1LbnWx+eieP2/Nq
- EVDo/OfWpTDcfjgWIQwl6swuRbn0onYCRE4trFz4G2EzdpUfnXLlFnG/jKu/XPDwvzoERv8o1a+
- ddzciHzevc+s60sU5Mo+1irVMxBSll7pG+IANhX3LDOZ0rCA4nSdi/AGTosc999oO2Ahrn9/PDT
- pkDASblWohVtZgxPVJf368HcyV72e8dx20n21rfzjirJ2lcWx/ni2HDSHIm8pUpPlgIW0Scf46n
- J43McSyYH4vCdqEAj3stQe4wIXI4DZ/xoMdm964ZrUHqqWgGBb1YkV1jdUBwIRQpASlqj1497oM
- rm9LZbjCpHovLIREg+9uySZcyrNiqQ9AS3U4A3NHMyHMbCU+CM24fkWf0r22C9C4M1AHPh4Vy50
- uuQK/6D0L+5Xb8Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4645; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=IWa++nWlBsO8ZnSovrLgs4i5S2IaSaCSxEtp68oxyuk=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpg3ht3jSx1SaVbhW2L09L5RmzC76OA7G37hqlq
+ vL07yYyd++JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaYN4bQAKCRAADmhBGVaC
+ FcpnD/9yZoLQH+ddtB03o8LYObB6RD0Gv25vTEbGT3LdBYoAJ6L2dI2YiJorLiWaY/juAqviG4v
+ 7yDm+Gk8Q1FxdOO88qjUbrkfHJAuy9tB+Opu2MA3ODF++qwUFtn66EYVb6FqvnpVKwUqXSuVy15
+ 1yeAHgOJIj2IAFdV/sikTuONPY3RXbpdOE5+TfFU5tV49Qw7XBdco6HuR/bA3KFtLcgYDkKmot7
+ YczSVTd4CHDGE/+i0cg/Fh17+/UfyBrYaIzCsq/QDYU9qZN+29A4alsEsmx5YSYtyeUEsbSeguf
+ 7U0CJ9lxCE/3d1ss3OYJEQBg7Kxx72z1rcVlZr9ZVmDrA+UYUlnnk/cQjtEDDd8e+lveHoMijqo
+ 7MUrYgmSf2IYUm67R+u6vDe3Ih8LW+ekoEsfEZQj+HscapdgTEAfJuaG6dOgJGj1uwe+ecL+/Z9
+ v+ibFNRsHpIF5Gi9lLHeLAQLy9Fcey3drorTPyQOvTc8OQ6iucVHw3sU1WQIhPhUe7/MnatNvzt
+ zRWP2llBPwp2WmZ+VDvkAHuEhz6pSFHqRqeF4ULZIE0Ik2BH5NlM8AVSlwieVAwBJ45sfAw0dwu
+ sfDYvbc/8+q4j82OVV/n1a6OqI5VGKSLo5hyaGtXNbYCNa13g+gmWoHTqOftxK4JakjfFt1w5QZ
+ noqks69T7kIubWQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18713-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18714-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -108,46 +106,136 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 48EE0EA9B7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6BF41EA86B
 X-Rspamd-Action: no action
 
-Ben reported a problem with using new userland with old kernel. If he
-tried to send down a setting that the kernel doesn't support, it returns
--EINVAL to the call.
-
-This patch series adds a mechanism for nfsdctl to tell what attributes
-are supported by the "threads" command. If can then use that to
-determine whether to pass down the min-threads attribute or report an
-error or warning.
-
-This also removes the dependency on the UAPI headers by properly
-maintaining the private nfsd_netlink.h file.
+I originally had this depend on the system header, but if we maintain
+our copy of nfsd_netlink.h in tree, then we can unconditionally compile
+in support for the MIN_THREADS option.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- Add patch to unconditionally compile in min-threads support
-- Make getpolicy_handler() return NL_SKIP
-- Link to v1: https://lore.kernel.org/r/20260204-minthreads-v1-0-9f348608f884@kernel.org
+ configure.ac                 |  6 ++----
+ utils/nfsdctl/nfsd_netlink.h |  2 ++
+ utils/nfsdctl/nfsdctl.c      | 16 +---------------
+ 3 files changed, 5 insertions(+), 19 deletions(-)
 
----
-Jeff Layton (4):
-      nfsdctl: unconditionally enable support for min-threads
-      nfsdctl: only resolve netlink family names once
-      nfsdctl: query netlink policy before sending the minthreads attribute to kernel
-      nfsdctl: remove unneeded newlines from xlog() format strings
+diff --git a/configure.ac b/configure.ac
+index 5cc1e9186542c975abf200edbef30bc8f6ecb8ee..a65c7837b8cb72eaa2f3dbb89069599c074be4ec 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -262,12 +262,10 @@ AC_ARG_ENABLE(nfsdctl,
+ 		PKG_CHECK_MODULES(LIBNLGENL3, libnl-genl-3.0 >= 3.1)
+ 		PKG_CHECK_MODULES(LIBREADLINE, readline)
+ 		AC_CHECK_HEADERS(linux/nfsd_netlink.h)
+-		AC_CHECK_DECLS([NFSD_A_SERVER_MIN_THREADS], , ,
+-			       [#include <linux/nfsd_netlink.h>])
+ 
+-		# ensure we have the pool-mode commands
++		# ensure we have the MIN_THREADS attribute
+ 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
+-				                   [[int foo = NFSD_CMD_POOL_MODE_GET;]])],
++				                   [[int foo = NFSD_A_SERVER_MIN_THREADS;]])],
+ 				   [AC_DEFINE([USE_SYSTEM_NFSD_NETLINK_H], 1,
+ 					      ["Use system's linux/nfsd_netlink.h"])])
+ 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/lockd_netlink.h>]],
+diff --git a/utils/nfsdctl/nfsd_netlink.h b/utils/nfsdctl/nfsd_netlink.h
+index 887cbd12b695f2398c96976ba2d70e68ee0d93c0..e9efbc9e63d83ed25fcd790b7a877c0023638f15 100644
+--- a/utils/nfsdctl/nfsd_netlink.h
++++ b/utils/nfsdctl/nfsd_netlink.h
+@@ -2,6 +2,7 @@
+ /* Do not edit directly, auto-generated from: */
+ /*	Documentation/netlink/specs/nfsd.yaml */
+ /* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+ 
+ #ifndef _UAPI_LINUX_NFSD_NETLINK_H
+ #define _UAPI_LINUX_NFSD_NETLINK_H
+@@ -34,6 +35,7 @@ enum {
+ 	NFSD_A_SERVER_GRACETIME,
+ 	NFSD_A_SERVER_LEASETIME,
+ 	NFSD_A_SERVER_SCOPE,
++	NFSD_A_SERVER_MIN_THREADS,
+ 
+ 	__NFSD_A_SERVER_MAX,
+ 	NFSD_A_SERVER_MAX = (__NFSD_A_SERVER_MAX - 1)
+diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+index c906a2c8ba6d357e182d341a30610e367e74c093..6b3c98009488d1687e7e751eaed6c4f1d9613d39 100644
+--- a/utils/nfsdctl/nfsdctl.c
++++ b/utils/nfsdctl/nfsdctl.c
+@@ -324,11 +324,9 @@ static void parse_threads_get(struct genlmsghdr *gnlh)
+ 		case NFSD_A_SERVER_THREADS:
+ 			pool_threads[i++] = nla_get_u32(attr);
+ 			break;
+-#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
+ 		case NFSD_A_SERVER_MIN_THREADS:
+ 			printf("min-threads: %u\n", nla_get_u32(attr));
+ 			break;
+-#endif
+ 		default:
+ 			break;
+ 		}
+@@ -546,10 +544,8 @@ static int threads_doit(struct nl_sock *sock, int cmd, int grace, int lease,
+ 			nla_put_u32(msg, NFSD_A_SERVER_LEASETIME, lease);
+ 		if (scope)
+ 			nla_put_string(msg, NFSD_A_SERVER_SCOPE, scope);
+-#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
+ 		if (minthreads >= 0)
+ 			nla_put_u32(msg, NFSD_A_SERVER_MIN_THREADS, minthreads);
+-#endif
+ 		for (i = 0; i < pool_count; ++i)
+ 			nla_put_u32(msg, NFSD_A_SERVER_THREADS, pool_threads[i]);
+ 	}
+@@ -591,24 +587,16 @@ out:
+ static void threads_usage(void)
+ {
+ 	printf("Usage: %s threads { --min-threads=X } [ pool0_count ] [ pool1_count ] ...\n", taskname);
+-#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
+ 	printf("    --min-threads= set the minimum thread count per pool to value\n");
+-#endif
+ 	printf("    pool0_count: thread count for pool0, etc...\n");
+ 	printf("Omit any arguments to show current thread counts.\n");
+ }
+ 
+-#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
+ static const struct option threads_options[] = {
+ 	{ "help", no_argument, NULL, 'h' },
+ 	{ "min-threads", required_argument, NULL, 'm' },
+ 	{ },
+ };
+-#define THREADS_OPTSTRING "hm:"
+-#else
+-#define threads_options help_only_options
+-#define THREADS_OPTSTRING "h"
+-#endif
+ 
+ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ {
+@@ -618,12 +606,11 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ 	int opt, pools = 0;
+ 
+ 	optind = 1;
+-	while ((opt = getopt_long(argc, argv, THREADS_OPTSTRING, threads_options, NULL)) != -1) {
++	while ((opt = getopt_long(argc, argv, "hm:", threads_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'h':
+ 			threads_usage();
+ 			return 0;
+-#if HAVE_DECL_NFSD_A_SERVER_MIN_THREADS
+ 		case 'm':
+ 			errno = 0;
+ 			minthreads = strtoul(optarg, NULL, 0);
+@@ -632,7 +619,6 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ 				return 1;
+ 			}
+ 			break;
+-#endif
+ 		}
+ 	}
+ 
 
- configure.ac                 |   6 +-
- utils/nfsdctl/nfsd_netlink.h |   2 +
- utils/nfsdctl/nfsdctl.c      | 204 ++++++++++++++++++++++++++++++++++---------
- 3 files changed, 168 insertions(+), 44 deletions(-)
----
-base-commit: 8f54511aefe1455161a6c4406ed8c770139f61e3
-change-id: 20260203-minthreads-402ce87096e0
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.52.0
 
 
