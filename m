@@ -1,51 +1,52 @@
-Return-Path: <linux-nfs+bounces-18744-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18745-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8N6QOziPhGl43QMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18744-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:38:16 +0100
+	id sMjfOPmPhGkh3gMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18745-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:41:29 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99819F2A4B
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:38:16 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99652F2B53
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:41:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1B0AC300AB1C
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 12:38:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 93A8730185B1
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 12:38:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A35C23D3326;
-	Thu,  5 Feb 2026 12:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494083D34B7;
+	Thu,  5 Feb 2026 12:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSHNMtIn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBjBx33o"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8083AE70E;
-	Thu,  5 Feb 2026 12:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DC03B8D5C;
+	Thu,  5 Feb 2026 12:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770295087; cv=none; b=Gw/+IHJsseLpRf3hz83Izk7yBR+Xda2v74AEvNRZjw5yckwm8pVmY8hv/xrqkIwRhCnKXeJbNb/6ZS8Zzj/AGxlYkwsn4XzEFMnK2hWzwKmXXwAgVrn12DqsaM2a3XjoEuZWMLtgDEl+eg8vK2hyclHDEZ2HLH/ssjRWPPVzMkg=
+	t=1770295114; cv=none; b=nNGnaThO9rP2kGDXfX+2DujQ7gZjVgsFnYsBm2h2IOH8lm4X0VZsgLFhne0Ni/8aiNb5gddqw8TjW3EC2jI5paSZ/wTq6m2889kVUlly/+hwL0PjrUZfNlzRxglSY4Cq2PoM8NAgRwBpMFiWzbRSuMq9+Ns/wrQQKEhhr+qvZCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770295087; c=relaxed/simple;
-	bh=QbRCtR0CacyYKzFJoIJunN+5tZHIJYiysqUP3sn1Aqc=;
+	s=arc-20240116; t=1770295114; c=relaxed/simple;
+	bh=ZFCAVurOAODnUWuC42DcwQ1f8hacTr/mLSJJhxqxUJE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Nm847cGv8l1pFxgDv1xUQDcoEOTr3CQ4i6zE2qx1tEqj2KRcbljJQYdY0zqODudVnAX+/VCeYdaKm7MLeCvXyOuXFrX4CMJ9hrFeOZQK+avdcj3PhWTmE42mVqFbsHE6apZzN2LinlM7/d3mjQrPYqA961taicyMCWLKrELhnFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSHNMtIn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A69C16AAE;
-	Thu,  5 Feb 2026 12:38:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=NeA9PQuqMvnLq8IxoEZ74km0vEukrvEwteY//ko6USZdWh5ctdqgIIALDVWV/qAokEQ3ASbvBSDzH+N7qMB5SX0YdGk/frmD8wYLgIZayBMwtno+VWCfW9v6Axb9JZnlQptUtq+JCVmRPLH9w/+KXStkmN8oYWqS0r9uqhUYXNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBjBx33o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B16C16AAE;
+	Thu,  5 Feb 2026 12:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770295087;
-	bh=QbRCtR0CacyYKzFJoIJunN+5tZHIJYiysqUP3sn1Aqc=;
+	s=k20201202; t=1770295113;
+	bh=ZFCAVurOAODnUWuC42DcwQ1f8hacTr/mLSJJhxqxUJE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qSHNMtIn2aYx7PISfiGAyJQ1vWR63E1VyXMRnILSIUleY28dg+XQ8lfpFgpLmC5lI
-	 5JY94j5zofPxM4tDfogBiYojMv291jnvC/1OTe6kQTRGBXHBosRlUQhQ/MPMmV1XaO
-	 pbD0VlyOR4TJP2mKeJvVP7wFkUFs+ySFPCAe0dKdCGM0j35SzMe4GOrt931U+yEKP+
-	 c4Lb6rd5NKQFR30D0YqwATn9IP/9nCvVcFInpXmBon+VwCbRVidWZm+K6dMagp9DTB
-	 rD6r/o8JQ7mpqJ836GNtcImMjLksL9+c3djR4Xmtyg4XQyabJOIlKkIeaUEnQsqJ35
-	 l0tdvX9eXc0Gw==
-Message-ID: <5d273a008fc51a2fded785efbe30e5bd2a89b985.camel@kernel.org>
-Subject: Re: [PATCH 08/13] ovl: Simplify ovl_lookup_real_one()
+	b=KBjBx33oVnMR9gFD5SCO3tA1yh1XFz0bmnu2AneWHNpOYVSruH05XhP/Mp38yecGa
+	 sUbdRkUWAP0n0mJxp3G22N2PTV0W+u3/PT5xe3sV6bG9ngAONpiTVQ/czJtA8aXZ9A
+	 rAMgH+4iNVeYTSxT+KI3oQlAc7Ngbih98XreqyfxiN7WctB6CMVNJKi1YP5Ywh1WEO
+	 Xrs7jZKWZiJEYR8ou82aFGU50tf21JUDdAIeW36CWqQoZ0dbJj0kYIZCXcB47Y002O
+	 fdvy8PUqeaQAJsdtvD3PZnSPVAghvjHAiWgES8M0vav55p4PCWarwRAaEgEg55cuZ4
+	 sTdY0SSdgJkYA==
+Message-ID: <4d2c35c1b627f1ad26062a92d653677d7b79bd81.camel@kernel.org>
+Subject: Re: [PATCH 09/13] cachefiles: change cachefiles_bury_object to use
+ start_renaming_dentry()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, 
  Alexander Viro <viro@zeniv.linux.org.uk>, David Howells
@@ -59,10 +60,10 @@ Cc: linux-kernel@vger.kernel.org, netfs@lists.linux.dev,
 	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
 	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Date: Thu, 05 Feb 2026 07:38:03 -0500
-In-Reply-To: <20260204050726.177283-9-neilb@ownmail.net>
+Date: Thu, 05 Feb 2026 07:38:30 -0500
+In-Reply-To: <20260204050726.177283-10-neilb@ownmail.net>
 References: <20260204050726.177283-1-neilb@ownmail.net>
-	 <20260204050726.177283-9-neilb@ownmail.net>
+	 <20260204050726.177283-10-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -152,12 +153,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18744-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18745-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[brown.name,kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -173,134 +174,159 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,brown.name:email]
-X-Rspamd-Queue-Id: 99819F2A4B
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,brown.name:email]
+X-Rspamd-Queue-Id: 99652F2B53
 X-Rspamd-Action: no action
 
 On Wed, 2026-02-04 at 15:57 +1100, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> The primary purpose of this patch is to remove the locking from
-> ovl_lookup_real_one() as part of centralising all locking of directories
-> for name operations.
+> Rather then using lock_rename() and lookup_one() etc we can use
+> the new start_renaming_dentry().  This is part of centralising dir
+> locking and lookup so that locking rules can be changed.
 >=20
-> The locking here isn't needed.  By performing consistency tests after
-> the lookup we can be sure that the result of the lookup was valid at
-> least for a moment, which is all the original code promised.
->=20
-> lookup_noperm_unlocked() is used for the lookup and it will take the
-> lock if needed only where it is needed.
->=20
-> Also:
->  - don't take a reference to real->d_parent.  The parent is
->    only use for a pointer comparison, and no reference is needed for
->    that.
->  - Several "if" statements have a "goto" followed by "else" - the
->    else isn't needed: the following statement can directly follow
->    the "if" as a new statement
->  - Use a consistent pattern of setting "err" before performing a test
->    and possibly going to "fail".
->  - remove the "out" label (now that we don't need to dput(parent) or
->    unlock) and simply return from fail:.
+> Some error check are removed as not necessary.  Checks for rep being a
+> non-dir or IS_DEADDIR and the check that ->graveyard is still a
+> directory only provide slightly more informative errors and have been
+> dropped.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/overlayfs/export.c | 61 ++++++++++++++++++-------------------------
->  1 file changed, 26 insertions(+), 35 deletions(-)
+>  fs/cachefiles/namei.c | 76 ++++++++-----------------------------------
+>  1 file changed, 14 insertions(+), 62 deletions(-)
 >=20
-> diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
-> index 83f80fdb1567..dcd28ffc4705 100644
-> --- a/fs/overlayfs/export.c
-> +++ b/fs/overlayfs/export.c
-> @@ -359,59 +359,50 @@ static struct dentry *ovl_lookup_real_one(struct de=
-ntry *connected,
->  					  struct dentry *real,
->  					  const struct ovl_layer *layer)
+> diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
+> index e5ec90dccc27..3af42ec78411 100644
+> --- a/fs/cachefiles/namei.c
+> +++ b/fs/cachefiles/namei.c
+> @@ -270,7 +270,8 @@ int cachefiles_bury_object(struct cachefiles_cache *c=
+ache,
+>  			   struct dentry *rep,
+>  			   enum fscache_why_object_killed why)
 >  {
-> -	struct inode *dir =3D d_inode(connected);
-> -	struct dentry *this, *parent =3D NULL;
-> +	struct dentry *this;
->  	struct name_snapshot name;
->  	int err;
+> -	struct dentry *grave, *trap;
+> +	struct dentry *grave;
+> +	struct renamedata rd =3D {};
+>  	struct path path, path_to_graveyard;
+>  	char nbuffer[8 + 8 + 1];
+>  	int ret;
+> @@ -302,77 +303,36 @@ int cachefiles_bury_object(struct cachefiles_cache =
+*cache,
+>  		(uint32_t) ktime_get_real_seconds(),
+>  		(uint32_t) atomic_inc_return(&cache->gravecounter));
 > =20
->  	/*
-> -	 * Lookup child overlay dentry by real name. The dir mutex protects us
-> -	 * from racing with overlay rename. If the overlay dentry that is above
-> -	 * real has already been moved to a parent that is not under the
-> -	 * connected overlay dir, we return -ECHILD and restart the lookup of
-> -	 * connected real path from the top.
-> +	 * @connected is a directory in the overlay and @real is an object
-> +	 * on @layer which is expected to be a child of @connected.
-> +	 * The goal is to return a dentry from the overlay which corresponds
-> +	 * to @real.  This is done by looking up the name from @real in
-> +	 * @connected and checking that the result meets expectations.
-> +	 *
-> +	 * Return %-ECHILD if the parent of @real no-longer corresponds to
-> +	 * @connected, and %-ESTALE if the dentry found by lookup doesn't
-> +	 * correspond to @real.
->  	 */
-> -	inode_lock_nested(dir, I_MUTEX_PARENT);
-> -	err =3D -ECHILD;
-> -	parent =3D dget_parent(real);
-> -	if (ovl_dentry_real_at(connected, layer->idx) !=3D parent)
-> -		goto fail;
-> =20
-> -	/*
-> -	 * We also need to take a snapshot of real dentry name to protect us
-> -	 * from racing with underlying layer rename. In this case, we don't
-> -	 * care about returning ESTALE, only from dereferencing a free name
-> -	 * pointer because we hold no lock on the real dentry.
-> -	 */
->  	take_dentry_name_snapshot(&name, real);
-> -	/*
-> -	 * No idmap handling here: it's an internal lookup.
-> -	 */
-> -	this =3D lookup_noperm(&name.name, connected);
-> +	this =3D lookup_noperm_unlocked(&name.name, connected);
->  	release_dentry_name_snapshot(&name);
-> +
-> +	err =3D -ECHILD;
-> +	if (ovl_dentry_real_at(connected, layer->idx) !=3D real->d_parent)
-> +		goto fail;
-> +
->  	err =3D PTR_ERR(this);
-> -	if (IS_ERR(this)) {
-> +	if (IS_ERR(this))
->  		goto fail;
-> -	} else if (!this || !this->d_inode) {
-> -		dput(this);
-> -		err =3D -ENOENT;
-> +
-> +	err =3D -ENOENT;
-> +	if (!this || !this->d_inode)
->  		goto fail;
-> -	} else if (ovl_dentry_real_at(this, layer->idx) !=3D real) {
-> -		dput(this);
-> -		err =3D -ESTALE;
-> +
-> +	err =3D -ESTALE;
-> +	if (ovl_dentry_real_at(this, layer->idx) !=3D real)
->  		goto fail;
+> -	/* do the multiway lock magic */
+> -	trap =3D lock_rename(cache->graveyard, dir);
+> -	if (IS_ERR(trap))
+> -		return PTR_ERR(trap);
+> -
+> -	/* do some checks before getting the grave dentry */
+> -	if (rep->d_parent !=3D dir || IS_DEADDIR(d_inode(rep))) {
+> -		/* the entry was probably culled when we dropped the parent dir
+> -		 * lock */
+> -		unlock_rename(cache->graveyard, dir);
+> -		_leave(" =3D 0 [culled?]");
+> -		return 0;
 > -	}
+> -
+> -	if (!d_can_lookup(cache->graveyard)) {
+> -		unlock_rename(cache->graveyard, dir);
+> -		cachefiles_io_error(cache, "Graveyard no longer a directory");
+> -		return -EIO;
+> -	}
+> -
+> -	if (trap =3D=3D rep) {
+> -		unlock_rename(cache->graveyard, dir);
+> -		cachefiles_io_error(cache, "May not make directory loop");
+> +	rd.mnt_idmap =3D &nop_mnt_idmap;
+> +	rd.old_parent =3D dir;
+> +	rd.new_parent =3D cache->graveyard;
+> +	rd.flags =3D 0;
+> +	ret =3D start_renaming_dentry(&rd, 0, rep, &QSTR(nbuffer));
+> +	if (ret) {
+> +		cachefiles_io_error(cache, "Cannot lock/lookup in graveyard");
+>  		return -EIO;
+>  	}
 > =20
-> -out:
-> -	dput(parent);
-> -	inode_unlock(dir);
->  	return this;
+>  	if (d_mountpoint(rep)) {
+> -		unlock_rename(cache->graveyard, dir);
+> +		end_renaming(&rd);
+>  		cachefiles_io_error(cache, "Mountpoint in cache");
+>  		return -EIO;
+>  	}
 > =20
->  fail:
->  	pr_warn_ratelimited("failed to lookup one by real (%pd2, layer=3D%d, co=
-nnected=3D%pd2, err=3D%i)\n",
->  			    real, layer->idx, connected, err);
-> -	this =3D ERR_PTR(err);
-> -	goto out;
-> +	if (!IS_ERR(this))
-> +		dput(this);
-> +	return ERR_PTR(err);
+> -	grave =3D lookup_one(&nop_mnt_idmap, &QSTR(nbuffer), cache->graveyard);
+> -	if (IS_ERR(grave)) {
+> -		unlock_rename(cache->graveyard, dir);
+> -		trace_cachefiles_vfs_error(object, d_inode(cache->graveyard),
+> -					   PTR_ERR(grave),
+> -					   cachefiles_trace_lookup_error);
+> -
+> -		if (PTR_ERR(grave) =3D=3D -ENOMEM) {
+> -			_leave(" =3D -ENOMEM");
+> -			return -ENOMEM;
+> -		}
+> -
+> -		cachefiles_io_error(cache, "Lookup error %ld", PTR_ERR(grave));
+> -		return -EIO;
+> -	}
+> -
+> +	grave =3D rd.new_dentry;
+>  	if (d_is_positive(grave)) {
+> -		unlock_rename(cache->graveyard, dir);
+> -		dput(grave);
+> +		end_renaming(&rd);
+>  		grave =3D NULL;
+>  		cond_resched();
+>  		goto try_again;
+>  	}
+> =20
+>  	if (d_mountpoint(grave)) {
+> -		unlock_rename(cache->graveyard, dir);
+> -		dput(grave);
+> +		end_renaming(&rd);
+>  		cachefiles_io_error(cache, "Mountpoint in graveyard");
+>  		return -EIO;
+>  	}
+> =20
+> -	/* target should not be an ancestor of source */
+> -	if (trap =3D=3D grave) {
+> -		unlock_rename(cache->graveyard, dir);
+> -		dput(grave);
+> -		cachefiles_io_error(cache, "May not make directory loop");
+> -		return -EIO;
+> -	}
+> -
+>  	/* attempt the rename */
+>  	path.mnt =3D cache->mnt;
+>  	path.dentry =3D dir;
+> @@ -382,13 +342,6 @@ int cachefiles_bury_object(struct cachefiles_cache *=
+cache,
+>  	if (ret < 0) {
+>  		cachefiles_io_error(cache, "Rename security error %d", ret);
+>  	} else {
+> -		struct renamedata rd =3D {
+> -			.mnt_idmap	=3D &nop_mnt_idmap,
+> -			.old_parent	=3D dir,
+> -			.old_dentry	=3D rep,
+> -			.new_parent	=3D cache->graveyard,
+> -			.new_dentry	=3D grave,
+> -		};
+>  		trace_cachefiles_rename(object, d_inode(rep)->i_ino, why);
+>  		ret =3D cachefiles_inject_read_error();
+>  		if (ret =3D=3D 0)
+> @@ -402,8 +355,7 @@ int cachefiles_bury_object(struct cachefiles_cache *c=
+ache,
+>  	}
+> =20
+>  	__cachefiles_unmark_inode_in_use(object, d_inode(rep));
+> -	unlock_rename(cache->graveyard, dir);
+> -	dput(grave);
+> +	end_renaming(&rd);
+>  	_leave(" =3D 0");
+>  	return 0;
 >  }
-> =20
->  static struct dentry *ovl_lookup_real(struct super_block *sb,
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
