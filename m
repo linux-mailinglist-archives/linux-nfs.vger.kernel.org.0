@@ -1,59 +1,69 @@
-Return-Path: <linux-nfs+bounces-18749-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18750-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KGA6BtqThGk43gMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18749-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:58:02 +0100
+	id mroAGRiUhGl73gMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18750-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:59:04 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B0F5F2E0B
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:58:01 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0B44F2E49
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:59:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C5D6030484DD
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 12:55:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4E97C301F79D
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 12:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4727F3D4137;
-	Thu,  5 Feb 2026 12:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B830F3D522E;
+	Thu,  5 Feb 2026 12:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTEQ4UV3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0PDIpJq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D193D4132
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Feb 2026 12:55:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9349D3ACF0D;
+	Thu,  5 Feb 2026 12:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770296109; cv=none; b=ilbvAJ+N4wD2CRHxv/AQxuQNebhR9MQ/u6Qs7FGfsIwMsmH+XA/tVE1kU/dZAXa6w8/TdIaPPP3KQX/fkpOkXu6ToEvwUFGxzvVgs+7Zo2/l3LhvuoBJocmVtPsvGw1KGjzsS+gNmkUgCGP2hLITXQzTKPLcMdnITyIlb3vlAaY=
+	t=1770296335; cv=none; b=AXYunK3XiITsWPcbhMuBWsLfuJOvNr74tCqq00qWoz1dVONZ3KMUSjf/gfmPtRY/rwaIq9HPwxUmQei593SGClyEnuJgguvZO48n38yah32sp+5veYkc4ApZv+GuwtT+4xJ2mBVIB1hYKq/ETUTdsIsASFQOwDI0LqKqAaQTqAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770296109; c=relaxed/simple;
-	bh=FSCXgOjYN3G3oG3AorwWZ7r91s+XYeTKeAg7chckMXk=;
+	s=arc-20240116; t=1770296335; c=relaxed/simple;
+	bh=9Q7RomOb06jXqeFlfjuA47rwkNfZ48q07KB0txG+cDU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qWhQqxpz7dB0PDVRsFAsGj7ybMGJrzQq10kYbMB/OXtL7md7JFwuLOlYuL+QDfMSO4CzJGi6pAAEL6fZln7lfZXlvJ/cacwfTg+XjyKAv3JIrlPRbO3cVDbXOlcx9K0isWvbtwNPZbo4jk0iMNyltQt1GidhNPTgGpwzwoWSvc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTEQ4UV3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FA6C4CEF7;
-	Thu,  5 Feb 2026 12:55:07 +0000 (UTC)
+	 Content-Type:MIME-Version; b=g/6+SIMlIbscZOztGaMxumfKht2yM0uuzCc35e4Xm7wogXSDyQTs/DEgvt1DkRX9ajLwRME1cRyzgun+g98JWUyD6QM/nwiK/ZRWkAyxQBfGg/cYzFbJ2LDU42Jh3aXGIeoQfKaAj1tcSGFNGzTsYP632I3H5FUev/h3nNE0ZgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d0PDIpJq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B856C19424;
+	Thu,  5 Feb 2026 12:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770296108;
-	bh=FSCXgOjYN3G3oG3AorwWZ7r91s+XYeTKeAg7chckMXk=;
+	s=k20201202; t=1770296335;
+	bh=9Q7RomOb06jXqeFlfjuA47rwkNfZ48q07KB0txG+cDU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pTEQ4UV3aFXl2NUBWZ/6f2p++K6f0uVhpgwtbcbYeJ+jcZOo/sfuI3c85lh8LjOht
-	 7k/bdJ4VMu8xIzsr+Zj0DUQbbZvyIqh/Hk32DRwGwJaCTlyUD+SLjOP5PeyzJaePoh
-	 GZXUSfMFeQ1yLGw58/jAWbr3SK2Ve9j47rTmtYjkdk1/v2oJ4aiXfYr4jwRuud+4OT
-	 wMRRbR6d6WFdahOwakrLrliubkBcPYLgfdZAcbaKL7Nb2rUIuVYmZK+ijcXEAE/Si1
-	 D5qQdCIJxzMiPM2dCdwHBNQxdZ8Wp6mn4cI515lJ421eHU9L/ThPcFAiwsPKW91Umj
-	 Ot0wc8nkBc+JA==
-Message-ID: <5f9a6e139094ffedeec0dcfe0e41fa086e7b8f96.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSD: fix nfs4_file access extra count in
- nfsd4_add_rdaccess_to_wrdeleg
+	b=d0PDIpJqdaagnxHuoM+slc3pVT8cJDMtTaD6ptFqt4pbITjYOIIBy92VgM8dFquWp
+	 gHCC72pgm3N2zYkM+SKGDi1y74CJr9ny0oJ3aWBQ7ige4nCo586bJfwRqcv/McH/+A
+	 DN6Cy52ELCGQNpT7B1YMYEpiPGTE1pp1yDpP9w1begCDMOhy4M5SpzomdVrtLp8Sox
+	 QBWnNZFlOuzKSBXcXE1H5KaTnXaFRhc+sdmEBAPezbSo3Z3rc7gC9rohb7vuw054nH
+	 tNPaaTijYXxpyTOkVAJv+oD5lyTmwITC6Fbv9tyeXC3CdjfcG3rwcv1574GXblSDzQ
+	 FYYfj7rQPrZDQ==
+Message-ID: <7fbfbeb0d57484172304b727bd888d1a1105f96d.camel@kernel.org>
+Subject: Re: [PATCH 04/13] Apparmor: Use simple_start_creating() /
+ simple_done_creating()
 From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neil@brown.name, 
-	okorniev@redhat.com, tom@talpey.com, hch@lst.de
-Cc: linux-nfs@vger.kernel.org
-Date: Thu, 05 Feb 2026 07:55:07 -0500
-In-Reply-To: <20260204210807.4134644-1-dai.ngo@oracle.com>
-References: <20260204210807.4134644-1-dai.ngo@oracle.com>
+To: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, David Howells
+ <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, Chuck Lever
+ <chuck.lever@oracle.com>, Miklos Szeredi <miklos@szeredi.hu>, Amir
+ Goldstein	 <amir73il@gmail.com>, John Johansen
+ <john.johansen@canonical.com>, Paul Moore	 <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>, "Serge E. Hallyn"	 <serge@hallyn.com>, Stephen
+ Smalley <stephen.smalley.work@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Date: Thu, 05 Feb 2026 07:58:52 -0500
+In-Reply-To: <20260204050726.177283-5-neilb@ownmail.net>
+References: <20260204050726.177283-1-neilb@ownmail.net>
+	 <20260204050726.177283-5-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,75 +148,144 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18749-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-18750-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[brown.name,kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5B0F5F2E0B
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F0B44F2E49
 X-Rspamd-Action: no action
 
-On Wed, 2026-02-04 at 13:07 -0800, Dai Ngo wrote:
-> In nfsd4_add_rdaccess_to_wrdeleg, when there is a race condition where
-> fp->fi_fds[O_RDONLY] is not NULL, __nfs4_file_get_access should not be
-> called to increment the access count nfs4_file since that was already
-> done by the thread that adds READ access to the file. The extra fi_access
-> count in nfs4_file can prevent the corresponding nfsd_file to be freed.
+On Wed, 2026-02-04 at 15:57 +1100, NeilBrown wrote:
+> From: NeilBrown <neil@brown.name>
 >=20
-> When stopping nfs-server service, these extra access counts trigger a
-> BUG in kmem_cache_destroy() that shows nfsd_file object remaining on
-> __kmem_cache_shutdown.
+> Instead of explicitly locking the parent and performing a look up in
+> apparmor, use simple_start_creating(), and then simple_done_creating()
+> to unlock and drop the dentry.
 >=20
-> This problem can be reproduced by running the git test.
+> This removes the need to check for an existing entry (as
+> simple_start_creating() acts like an exclusive create and can return
+> -EEXIST), simplifies error paths, and keeps dir locking code
+> centralised.
 >=20
-> Fixes: 8072e34e1387 ("nfsd: fix nfsd_file reference leak in nfsd4_add_rda=
-ccess_to_wrdeleg()")
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfs4state.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  security/apparmor/apparmorfs.c | 38 ++++++++--------------------------
+>  1 file changed, 9 insertions(+), 29 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index d5e0f3a52d4f..66babf8fadcb 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6252,12 +6252,12 @@ nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rq=
-stp, struct nfsd4_open *open,
->  			return (false);
->  		fp =3D stp->st_stid.sc_file;
->  		spin_lock(&fp->fi_lock);
-> -		__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
->  		if (!fp->fi_fds[O_RDONLY]) {
-> +			__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
->  			fp->fi_fds[O_RDONLY] =3D nf;
-> +			fp->fi_rdeleg_file =3D nfsd_file_get(fp->fi_fds[O_RDONLY]);
->  			nf =3D NULL;
->  		}
-> -		fp->fi_rdeleg_file =3D nfsd_file_get(fp->fi_fds[O_RDONLY]);
->  		spin_unlock(&fp->fi_lock);
->  		if (nf)
->  			nfsd_file_put(nf);
+> diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorf=
+s.c
+> index 907bd2667e28..7f78c36e6e50 100644
+> --- a/security/apparmor/apparmorfs.c
+> +++ b/security/apparmor/apparmorfs.c
+> @@ -282,32 +282,19 @@ static struct dentry *aafs_create(const char *name,=
+ umode_t mode,
+> =20
+>  	dir =3D d_inode(parent);
+> =20
+> -	inode_lock(dir);
+> -	dentry =3D lookup_noperm(&QSTR(name), parent);
+> +	dentry =3D simple_start_creating(parent, name);
+>  	if (IS_ERR(dentry)) {
+>  		error =3D PTR_ERR(dentry);
+> -		goto fail_lock;
+> -	}
+> -
+> -	if (d_really_is_positive(dentry)) {
+> -		error =3D -EEXIST;
+> -		goto fail_dentry;
+> +		goto fail;
+>  	}
+> =20
+>  	error =3D __aafs_setup_d_inode(dir, dentry, mode, data, link, fops, iop=
+s);
+> +	simple_done_creating(dentry);
+>  	if (error)
+> -		goto fail_dentry;
+> -	inode_unlock(dir);
+> -
+> -	return dentry;
+> -
+> -fail_dentry:
+> -	dput(dentry);
+> -
+> -fail_lock:
+> -	inode_unlock(dir);
+> +		goto fail;
+> +	return 0;
+
+As KTR points out, this should be "return NULL;"
+
+> +fail:
+>  	simple_release_fs(&aafs_mnt, &aafs_count);
+> -
+>  	return ERR_PTR(error);
+>  }
+> =20
+> @@ -2572,8 +2559,7 @@ static int aa_mk_null_file(struct dentry *parent)
+>  	if (error)
+>  		return error;
+> =20
+> -	inode_lock(d_inode(parent));
+> -	dentry =3D lookup_noperm(&QSTR(NULL_FILE_NAME), parent);
+> +	dentry =3D simple_start_creating(parent, NULL_FILE_NAME);
+>  	if (IS_ERR(dentry)) {
+>  		error =3D PTR_ERR(dentry);
+>  		goto out;
+> @@ -2581,7 +2567,7 @@ static int aa_mk_null_file(struct dentry *parent)
+>  	inode =3D new_inode(parent->d_inode->i_sb);
+>  	if (!inode) {
+>  		error =3D -ENOMEM;
+> -		goto out1;
+> +		goto out;
+>  	}
+> =20
+>  	inode->i_ino =3D get_next_ino();
+> @@ -2593,18 +2579,12 @@ static int aa_mk_null_file(struct dentry *parent)
+>  	aa_null.dentry =3D dget(dentry);
+>  	aa_null.mnt =3D mntget(mount);
+> =20
+> -	error =3D 0;
+> -
+> -out1:
+> -	dput(dentry);
+>  out:
+> -	inode_unlock(d_inode(parent));
+> +	simple_done_creating(dentry);
+>  	simple_release_fs(&mount, &count);
+>  	return error;
+>  }
+> =20
+> -
+> -
+>  static const char *policy_get_link(struct dentry *dentry,
+>  				   struct inode *inode,
+>  				   struct delayed_call *done)
+
+Assuming you fix the minor problem above.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
