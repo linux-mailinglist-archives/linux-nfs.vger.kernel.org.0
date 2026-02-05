@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18761-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18762-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EJpaFPy9hGmd5AMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18761-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 16:57:48 +0100
+	id 8G1xK3W/hGnG4wMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18762-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 17:04:05 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE58AF4D8B
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 16:57:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B52FF4EEB
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 17:04:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2545130098AA
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 15:57:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30835305D6EB
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 15:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C278A42B757;
-	Thu,  5 Feb 2026 15:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909F242B75D;
+	Thu,  5 Feb 2026 15:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDi6vN3d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agdk3jvp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0791421F10
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Feb 2026 15:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9E542DFE0
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Feb 2026 15:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770307058; cv=none; b=ODdB0Z1Q29Q/rErqDacFfPO0Mip01iRYUyMAJQ0rq/obXTceC2oHedS3FtgtuZbJ/mOPpzVVOVfby/Y6g0ZTvoTsQ1mCZRxvVLwh7vx2GNH7nJRwh1ggDng+sF597/2undmHuNCH0PPoDzQY2y+Ev74TOC/t8IjGzroycxXgxMY=
+	t=1770307059; cv=none; b=EgXZSOXCIPia7umOL2ZXMMKM22MOSTteUOgBpbBuvQKBOT7NB3EzLvOh/jRUpj1Q/EhEgJMdytL3VfVmNiWi5m58dFqj8UOKmZOZpHLgBbtukSszv4euBJGxuYpbRz//YsE9xMwdlK2WZ+uWPNfWhR25ETZM2u2p2NkCChWsfWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770307058; c=relaxed/simple;
-	bh=jH47tJ8mCR4W9PMrsQo96roO5p+Txm2Z5LjXe+D38ow=;
+	s=arc-20240116; t=1770307059; c=relaxed/simple;
+	bh=RSIdZ4cOhHWX8/J9c5Ft1Tl8m/g4jrn6lzxTgbmgNSk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tmxM7d1D8ZzRDsg6YTFVTX9b8A9yg7w80STEc+AdZcFVyPc9db+QsM0IuVtv43fIhp/OHNLM9psS+DH6q3/5F+wNPq09u9yG8mJ1WGfuzJ+iY3w06gB8UTV08QFFjcaPQoCEIzIC4BERxPj3Wn8N4VLBbZXiSvPNnK1s7DmP9i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDi6vN3d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A269AC19423;
-	Thu,  5 Feb 2026 15:57:37 +0000 (UTC)
+	 MIME-Version; b=ATO0mLsTANx4XU4qDwZTsSLiADZ9PzYS/AsVJ8SyhcI9YuO5+NRMZq+qSkOjKwRCdkzz0yqMLxxKQb9k3dlV4zeID3MuohkUWaxBVzy4+bc0cTdlfDeoXB+oVC8VHiOAFcJjqmvMBVD+mP5bmgbKdMZr9Y/5mbTg7JUI01BNMyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agdk3jvp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954CAC19424;
+	Thu,  5 Feb 2026 15:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770307058;
-	bh=jH47tJ8mCR4W9PMrsQo96roO5p+Txm2Z5LjXe+D38ow=;
+	s=k20201202; t=1770307059;
+	bh=RSIdZ4cOhHWX8/J9c5Ft1Tl8m/g4jrn6lzxTgbmgNSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HDi6vN3d33UV5ooqeOV4fZ2SjwXu3Ic0Izo9npn4/Rda1Yw2Swz4jueRxdDyrVMw5
-	 9rmn1DmntlxknfDv4v8dp+hd82sUxFKOuBdHo5/I2viXV8xkbeF/gCNGmltdrkcl+t
-	 ZIput0rhesWv6tgXcAlYd3qAv8rIztiB3aj5jAwQM7O64VGAM2UJdWd1VWgD+Hd7Od
-	 zIlYm3UZRUnHg4C++Nh3QUVJMlRFLrvrzYrSM5mG9A6L5tT63wJWqzQGg9ukm6N7MQ
-	 3zVpCdTH5Tq1V8x42egT84msVQtWdkSGy3OG6ADo3uQ6LpsIt+xc3F9eeuuE4Ykqul
-	 xZFf4yxfOS6Iw==
+	b=agdk3jvpP9fj+7ABvw6YqJCZE3t9wFTTctGIliBH4QTrA7wk/yll7NwHemenWfOlu
+	 K/9amHbLR7ZpEoPil2cjsCMhBLgxoh8qWZAAxxLX02yqe4det+/iAJR75ZYbzAwU2h
+	 rl7/N1L2VZ/jXICfj/uM/OU7LHQBo/0aoNEsVZdTNDlzje2tOsEC+5nfs69d4YxDpn
+	 WB2EqbZWUOGjTik9QlPt922ZoAFtXJydfig1JUdLKfOaFmugl6T6vL4QtydtbBoN0D
+	 NApP27r/U49MLUjTtMw89q92Cf0hGk933Zk4dDD0dyYC+NvsoRJiXZ35lHpN2TRWkO
+	 7iT07pdkuwcXQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -54,9 +54,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Mike Snitzer <snitzer@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 6/7] sunrpc: unify fore and backchannel server TCP send paths
-Date: Thu,  5 Feb 2026 10:57:28 -0500
-Message-ID: <20260205155729.6841-7-cel@kernel.org>
+Subject: [RFC PATCH 7/7] SUNRPC: Set explicit TCP socket buffer sizes for NFSD
+Date: Thu,  5 Feb 2026 10:57:29 -0500
+Message-ID: <20260205155729.6841-8-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260205155729.6841-1-cel@kernel.org>
 References: <20260205155729.6841-1-cel@kernel.org>
@@ -69,330 +69,165 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18761-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,dneg.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18762-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,dneg.com];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: EE58AF4D8B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1B52FF4EEB
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-High latency in callback processing for NFSv4.1+ sessions can occur
-when the fore channel sustains heavy request traffic. The backchannel
-implementation acquires xpt_mutex directly while the fore channel
-uses flat combining to batch socket operations. A thread in the
-combining loop processes queued sends continuously until the llist
-empties, which under load means backchannel threads block on xpt_mutex
-for extended periods waiting for a turn at the socket. Delegation
-recalls and other callback operations carry time constraints that
-make this starvation problematic.
+NFSD TCP sockets currently rely on system defaults with TCP
+auto-tuning. On networks with large bandwidth-delay products, the
+default maximum buffer sizes (6MB receive, 4MB send) can throttle
+throughput. Administrators must resort to system-wide sysctl
+adjustments (tcp_rmem/tcp_wmem), which affect all TCP connections
+rather than just NFS traffic.
 
-Routing backchannel sends through the same flat combining
-infrastructure eliminates this starvation; a shared llist queue
-replaces direct mutex acquisition and separate code paths. The
-struct svc_pending_send now holds an xdr_buf pointer instead of
-svc_rqst, decoupling the queueing mechanism from RPC request
-structures. A new svc_tcp_send() function accepts an xprt, xdr_buf,
-and marker, then either enters the combining loop or enqueues for
-processing by an active combiner.
+This change sets explicit buffer sizes for NFSD TCP data sockets.
+The buffer size is set to 4 * sv_max_mesg, yielding approximately
+16MB with default NFS payload sizes. On memory-constrained systems,
+the buffer size is capped at 1/1024 of physical RAM, with a hard
+ceiling of 16MB. SOCK_SNDBUF_LOCK and SOCK_RCVBUF_LOCK disable
+auto-tuning, providing predictable memory consumption.
 
-The fore channel path through svc_tcp_sendto() now calls
-svc_tcp_send() after preparing its xdr_buf. The backchannel
-bc_send_request() similarly calls svc_tcp_send() in place of its
-former mutex acquisition and direct bc_sendto() invocation. Both
-channels queue into the same llist, so backchannel operations
-receive fair treatment in the send ordering. When a backchannel
-send queues behind fore channel traffic, the combining loop
-processes both together with shared socket lock acquisition and
-MSG_MORE coalescing where applicable.
+The existing svc_sock_setbufsize() is renamed to
+svc_udp_setbufsize() to reflect its UDP-specific purpose, and a
+new svc_tcp_setbufsize() handles TCP data connections. Listener
+sockets remain unaffected, as listeners do not transfer data.
 
-Maintenance burden decreases with a single code path for TCP sends.
-The backchannel gains batching benefits when concurrent with fore
-channel load, and starvation no longer occurs because queueing
-provides deterministic ordering independent of mutex contention
-timing.
+This approach improves throughput on high-speed networks without
+requiring system-wide configuration changes, while automatically
+scaling down buffer sizes on small systems.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svcsock.h |  2 +
- net/sunrpc/svcsock.c           | 76 +++++++++++++++++++++++++---------
- net/sunrpc/xprtsock.c          | 60 ++++++---------------------
- 3 files changed, 71 insertions(+), 67 deletions(-)
+ net/sunrpc/svcsock.c | 52 ++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 48 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
-index d085093769a1..f7f0c5e47fc5 100644
---- a/include/linux/sunrpc/svcsock.h
-+++ b/include/linux/sunrpc/svcsock.h
-@@ -101,6 +101,8 @@ static inline u32 svc_sock_final_rec(struct svc_sock *svsk)
-  */
- void		svc_recv(struct svc_rqst *rqstp);
- void		svc_send(struct svc_rqst *rqstp);
-+int		svc_tcp_send(struct svc_xprt *xprt, struct xdr_buf *xdr,
-+			     rpc_fraghdr marker);
- int		svc_addsock(struct svc_serv *serv, struct net *net,
- 			    const int fd, char *name_return, const size_t len,
- 			    const struct cred *cred);
 diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 0a8f5695daf3..8d7ac777dfe3 100644
+index 8d7ac777dfe3..e019ae285d47 100644
 --- a/net/sunrpc/svcsock.c
 +++ b/net/sunrpc/svcsock.c
-@@ -1667,13 +1667,13 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
-  */
- struct svc_pending_send {
- 	struct llist_node	node;
--	struct svc_rqst		*rqstp;
-+	struct xdr_buf		*xdr;
- 	rpc_fraghdr		marker;
- 	struct completion	done;
- 	int			result;
- };
+@@ -50,6 +50,7 @@
+ #include <net/handshake.h>
+ #include <linux/uaccess.h>
+ #include <linux/highmem.h>
++#include <linux/mm.h>
+ #include <asm/ioctls.h>
+ #include <linux/key.h>
  
--static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
-+static int svc_tcp_sendmsg(struct svc_sock *svsk, struct xdr_buf *xdr,
- 			   rpc_fraghdr marker, int msg_flags);
+@@ -377,9 +378,12 @@ static ssize_t svc_tcp_read_msg(struct svc_rqst *rqstp, size_t buflen,
+ }
  
  /*
-@@ -1734,6 +1734,8 @@ static void svc_tcp_combine_sends(struct svc_sock *svsk, struct svc_xprt *xprt)
- 	start = ktime_get_ns();
- 
- 	for (node = pending; node; node = next) {
-+		size_t expected;
-+
- 		next = node->next;
- 		ps = container_of(node, struct svc_pending_send, node);
- 
-@@ -1748,17 +1750,30 @@ static void svc_tcp_combine_sends(struct svc_sock *svsk, struct svc_xprt *xprt)
- 		 * Set MSG_MORE if there are more items queued, hinting
- 		 * TCP to delay pushing until the batch completes.
- 		 */
--		sent = svc_tcp_sendmsg(svsk, ps->rqstp, ps->marker,
-+		sent = svc_tcp_sendmsg(svsk, ps->xdr, ps->marker,
- 				       next ? MSG_MORE : 0);
- 		trace_svcsock_tcp_send(xprt, sent);
- 
--		if (sent == ps->rqstp->rq_res.len + sizeof(ps->marker)) {
-+		expected = ps->xdr->len + sizeof(ps->marker);
-+		if (sent == expected) {
- 			ps->result = sent;
- 		} else {
- 			pr_notice("rpc-srv/tcp: %s: %s (%d of %zu bytes) - shutting down socket\n",
- 				  xprt->xpt_server->sv_name,
--				  sent < 0 ? "send error" : "short send", sent,
--				  ps->rqstp->rq_res.len + sizeof(ps->marker));
-+				  sent < 0 ? "send error" : "short send",
-+				  sent, expected);
-+			pr_notice("rpc-srv/tcp: %s: %s (%d of %zu bytes) - shutting down socket\n",
-+				  xprt->xpt_server->sv_name,
-+				  sent < 0 ? "send error" : "short send",
-+				  sent, expected);
-+			pr_notice("rpc-srv/tcp: %s: %s (%d of %zu bytes) - shutting down socket\n",
-+				  xprt->xpt_server->sv_name,
-+				  sent < 0 ? "send error" : "short send",
-+				  sent, expected);
-+			pr_notice("rpc-srv/tcp: %s: %s (%d of %zu bytes) - shutting down socket\n",
-+				  xprt->xpt_server->sv_name,
-+				  sent < 0 ? "send error" : "short send",
-+				  sent, expected);
- 			svc_xprt_deferred_close(xprt);
- 			transport_dead = true;
- 			ps->result = -EAGAIN;
-@@ -1778,7 +1793,7 @@ static void svc_tcp_combine_sends(struct svc_sock *svsk, struct svc_xprt *xprt)
-  * copy operations in this path. Therefore the caller must ensure
-  * that the pages backing @xdr are unchanging.
+- * Set socket snd and rcv buffer lengths
++ * Set socket snd and rcv buffer lengths for UDP sockets.
++ *
++ * UDP sockets need large buffers because pending requests remain
++ * in the receive buffer until processed by a worker thread.
   */
--static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
-+static int svc_tcp_sendmsg(struct svc_sock *svsk, struct xdr_buf *xdr,
- 			   rpc_fraghdr marker, int msg_flags)
+-static void svc_sock_setbufsize(struct svc_sock *svsk, unsigned int nreqs)
++static void svc_udp_setbufsize(struct svc_sock *svsk, unsigned int nreqs)
  {
- 	struct msghdr msg = {
-@@ -1798,39 +1813,40 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, struct svc_rqst *rqstp,
- 	memcpy(buf, &marker, sizeof(marker));
- 	bvec_set_virt(svsk->sk_bvec, buf, sizeof(marker));
- 
--	count = xdr_buf_to_bvec(svsk->sk_bvec + 1, rqstp->rq_maxpages,
--				&rqstp->rq_res);
-+	count = xdr_buf_to_bvec(svsk->sk_bvec + 1, svsk->sk_maxpages, xdr);
- 
- 	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, svsk->sk_bvec,
--		      1 + count, sizeof(marker) + rqstp->rq_res.len);
-+		      1 + count, sizeof(marker) + xdr->len);
- 	ret = sock_sendmsg(svsk->sk_sock, &msg);
- 	page_frag_free(buf);
- 	return ret;
+ 	unsigned int max_mesg = svsk->sk_xprt.xpt_server->sv_max_mesg;
+ 	struct socket *sock = svsk->sk_sock;
+@@ -393,6 +397,45 @@ static void svc_sock_setbufsize(struct svc_sock *svsk, unsigned int nreqs)
+ 	release_sock(sock->sk);
  }
  
- /**
-- * svc_tcp_sendto - Send out a reply on a TCP socket
-- * @rqstp: completed svc_rqst
-+ * svc_tcp_send - Send an XDR buffer on a TCP socket using flat combining
-+ * @xprt: the transport to send on
-+ * @xdr: the XDR buffer to send
-+ * @marker: RPC record marker
-  *
-  * Uses flat combining to reduce mutex contention: threads enqueue their
-  * send requests and one thread (the "combiner") processes the batch.
-  * xpt_mutex ensures RPC-level serialization while the combiner holds it.
-  *
-+ * Can be used for both fore channel (NFS replies) and backchannel
-+ * (NFSv4 callbacks) sends since both share the same TCP connection
-+ * and xpt_mutex.
-+ *
-  * Returns the number of bytes sent, or a negative errno.
-  */
--static int svc_tcp_sendto(struct svc_rqst *rqstp)
-+int svc_tcp_send(struct svc_xprt *xprt, struct xdr_buf *xdr,
-+		 rpc_fraghdr marker)
- {
--	struct svc_xprt *xprt = rqstp->rq_xprt;
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct xdr_buf *xdr = &rqstp->rq_res;
- 	struct svc_pending_send ps = {
--		.rqstp = rqstp,
--		.marker = cpu_to_be32(RPC_LAST_STREAM_FRAGMENT | (u32)xdr->len),
-+		.xdr = xdr,
-+		.marker = marker,
- 	};
- 
--	svc_tcp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
--	rqstp->rq_xprt_ctxt = NULL;
--
- 	init_completion(&ps.done);
- 
- 	/* Enqueue this send request; lock-free via llist */
-@@ -1875,6 +1891,26 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
- 
- 	return ps.result;
- }
-+EXPORT_SYMBOL_GPL(svc_tcp_send);
++/* Accommodate high bandwidth-delay product connections */
++#define SVC_TCP_SNDBUF_MAX	(16 * 1024 * 1024)
++#define SVC_TCP_RCVBUF_MAX	(16 * 1024 * 1024)
 +
-+/**
-+ * svc_tcp_sendto - Send out a reply on a TCP socket
-+ * @rqstp: completed svc_rqst
++/*
++ * Set socket snd and rcv buffer lengths for TCP data sockets.
 + *
-+ * Returns the number of bytes sent, or a negative errno.
++ * Buffers are sized to accommodate high-bandwidth data transfers on
++ * high-latency networks (large bandwidth-delay product). Automatic
++ * buffer tuning is disabled to allow control of server memory
++ * consumption.
 + */
-+static int svc_tcp_sendto(struct svc_rqst *rqstp)
++static void svc_tcp_setbufsize(struct svc_sock *svsk)
 +{
-+	struct svc_xprt *xprt = rqstp->rq_xprt;
-+	struct xdr_buf *xdr = &rqstp->rq_res;
-+	rpc_fraghdr marker = cpu_to_be32(RPC_LAST_STREAM_FRAGMENT |
-+					 (u32)xdr->len);
++	struct svc_serv *serv = svsk->sk_xprt.xpt_server;
++	struct socket *sock = svsk->sk_sock;
++	unsigned long mem_cap, ideal;
++	unsigned int sndbuf, rcvbuf;
 +
-+	svc_tcp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
-+	rqstp->rq_xprt_ctxt = NULL;
++	/* Buffer multiple in-flight RPC messages */
++	ideal = serv->sv_max_mesg * 4;
 +
-+	return svc_tcp_send(xprt, xdr, marker);
++	/* Memory-based cap: 1/1024 of physical RAM */
++	mem_cap = (totalram_pages() >> 10) << PAGE_SHIFT;
++
++	sndbuf = clamp_t(unsigned long, ideal,
++			 serv->sv_max_mesg, min(mem_cap, SVC_TCP_SNDBUF_MAX));
++	rcvbuf = clamp_t(unsigned long, ideal,
++			 serv->sv_max_mesg, min(mem_cap, SVC_TCP_RCVBUF_MAX));
++
++	lock_sock(sock->sk);
++	sock->sk->sk_sndbuf = sndbuf;
++	sock->sk->sk_rcvbuf = rcvbuf;
++	sock->sk->sk_userlocks |= SOCK_SNDBUF_LOCK;
++	sock->sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
++	sock->sk->sk_write_space(sock->sk);
++	release_sock(sock->sk);
 +}
- 
- static struct svc_xprt *svc_tcp_create(struct svc_serv *serv,
- 				       struct net *net,
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 2e1fe6013361..4e1d82186b00 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2979,36 +2979,13 @@ static void bc_free(struct rpc_task *task)
- 	free_page((unsigned long)buf);
- }
- 
--static int bc_sendto(struct rpc_rqst *req)
--{
--	struct xdr_buf *xdr = &req->rq_snd_buf;
--	struct sock_xprt *transport =
--			container_of(req->rq_xprt, struct sock_xprt, xprt);
--	struct msghdr msg = {
--		.msg_flags	= 0,
--	};
--	rpc_fraghdr marker = cpu_to_be32(RPC_LAST_STREAM_FRAGMENT |
--					 (u32)xdr->len);
--	unsigned int sent = 0;
--	int err;
--
--	req->rq_xtime = ktime_get();
--	err = xdr_alloc_bvec(xdr, rpc_task_gfp_mask());
--	if (err < 0)
--		return err;
--	err = xprt_sock_sendmsg(transport->sock, &msg, xdr, 0, marker, &sent);
--	xdr_free_bvec(xdr);
--	if (err < 0 || sent != (xdr->len + sizeof(marker)))
--		return -EAGAIN;
--	return sent;
--}
--
- /**
-  * bc_send_request - Send a backchannel Call on a TCP socket
-  * @req: rpc_rqst containing Call message to be sent
-  *
-- * xpt_mutex ensures @rqstp's whole message is written to the socket
-- * without interruption.
-+ * Uses flat combining via svc_tcp_send() to participate in batched
-+ * sending with fore channel traffic, ensuring fair ordering and
-+ * reduced lock contention.
-  *
-  * Return values:
-  *   %0 if the message was sent successfully
-@@ -3016,29 +2993,18 @@ static int bc_sendto(struct rpc_rqst *req)
-  */
- static int bc_send_request(struct rpc_rqst *req)
++
+ static void svc_sock_secure_port(struct svc_rqst *rqstp)
  {
--	struct svc_xprt	*xprt;
--	int len;
-+	struct xdr_buf *xdr = &req->rq_snd_buf;
-+	struct svc_xprt *xprt = req->rq_xprt->bc_xprt;
-+	rpc_fraghdr marker = cpu_to_be32(RPC_LAST_STREAM_FRAGMENT |
-+					 (u32)xdr->len);
-+	int ret;
+ 	if (svc_port_is_privileged(svc_addr(rqstp)))
+@@ -656,7 +699,7 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
+ 	     * provides an upper bound on the number of threads
+ 	     * which will access the socket.
+ 	     */
+-	    svc_sock_setbufsize(svsk, serv->sv_nrthreads + 3);
++	    svc_udp_setbufsize(svsk, serv->sv_nrthreads + 3);
  
--	/*
--	 * Get the server socket associated with this callback xprt
--	 */
--	xprt = req->rq_xprt->bc_xprt;
-+	req->rq_xtime = ktime_get();
-+	ret = svc_tcp_send(xprt, xdr, marker);
+ 	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+ 	err = kernel_recvmsg(svsk->sk_sock, &msg, NULL,
+@@ -872,7 +915,7 @@ static void svc_udp_init(struct svc_sock *svsk, struct svc_serv *serv)
+ 	 * receive and respond to one request.
+ 	 * svc_udp_recvfrom will re-adjust if necessary
+ 	 */
+-	svc_sock_setbufsize(svsk, 3);
++	svc_udp_setbufsize(svsk, 3);
  
--	/*
--	 * Grab the mutex to serialize data as the connection is shared
--	 * with the fore channel
--	 */
--	mutex_lock(&xprt->xpt_mutex);
--	if (test_bit(XPT_DEAD, &xprt->xpt_flags))
--		len = -ENOTCONN;
--	else
--		len = bc_sendto(req);
--	mutex_unlock(&xprt->xpt_mutex);
--
--	if (len > 0)
--		len = 0;
--
--	return len;
-+	if (ret < 0)
-+		return ret;
-+	return 0;
- }
+ 	/* data might have come in before data_ready set up */
+ 	set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
+@@ -1986,6 +2029,7 @@ static void svc_tcp_init(struct svc_sock *svsk, struct svc_serv *serv)
+ 		       svsk->sk_maxpages * sizeof(struct page *));
  
- static void bc_close(struct rpc_xprt *xprt)
+ 		tcp_sock_set_nodelay(sk);
++		svc_tcp_setbufsize(svsk);
+ 
+ 		switch (sk->sk_state) {
+ 		case TCP_SYN_RECV:
 -- 
 2.52.0
 
