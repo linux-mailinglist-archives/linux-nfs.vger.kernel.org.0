@@ -1,64 +1,69 @@
-Return-Path: <linux-nfs+bounces-18736-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18737-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oAGiFp58hGl/3AMAu9opvQ
-	(envelope-from <linux-nfs+bounces-18736-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 12:18:54 +0100
+	id CDhuH8uLhGl43QMAu9opvQ
+	(envelope-from <linux-nfs+bounces-18737-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:23:39 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64B73F1C92
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 12:18:53 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21CE8F2626
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Feb 2026 13:23:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8E04130028C1
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 11:18:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF811304F363
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Feb 2026 12:19:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DA42609E3;
-	Thu,  5 Feb 2026 11:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A72023D3488;
+	Thu,  5 Feb 2026 12:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ9fPeD0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LX7uYxxq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EA113C918;
-	Thu,  5 Feb 2026 11:18:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD653AE709;
+	Thu,  5 Feb 2026 12:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770290327; cv=none; b=VPiugyFZzwzlonJb6/1mWO+SE5kT5qyWMv8L3M7WEVR4i7r1ewzIjdj1E6mf6oQJ1PM8qIne5dSbS23Pcy5Q8j2QMEfWTE6IvhzH5WQPokrbmEtN5VuqnHal84ElYhq+RNg2mOs8p4IoviWcFHwhl6XhCgLIWV35HaPKPZB/P1g=
+	t=1770293989; cv=none; b=pIro9/PRcRBxamWsPrZiuWPzlv+hO/AtYdl/jJbFXRHPeD0zGbXHQXvcBFBPZBYHDRn2f2Iw25lAA94RC/WfkZ/fZh9xGIA/goiNA1wf7y8NoCG4RcFi1xU+Vjv9XeKmGV0s7G0P6zOuOJtiQ/1/MDsPRz0wZwxrL4qm4RDywR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770290327; c=relaxed/simple;
-	bh=BlcIuNYWPg9lpO6h13T4Wsx856P2IBJ0XmWZYz80JCQ=;
+	s=arc-20240116; t=1770293989; c=relaxed/simple;
+	bh=z3KU6pequ5UORHIA7zVEBwJwRpnNOFlwskEISNJb7+4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Le1/cFEa2TY+fYSaFbE2usIpt2vCcM3b+nzhBZuLTabl5i8zT2qPLDGBOeV2HSwIJspLh2hmpjVmZ1NfES/w95DA2fBTtyUjxsorD3s9BoAP7xxzx5i3DU39lfVv+QnArEZ7gjMYeBQ7ujbIAG1y2WLOuQrhxP0KY/G5koHVX10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQ9fPeD0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80FD5C4CEF7;
-	Thu,  5 Feb 2026 11:18:46 +0000 (UTC)
+	 Content-Type:MIME-Version; b=qSpsVB8gi5tmt3UI/i9Mou8mxFKjb2+pxQoQuJiIfQZbdHOdOMhcaBfiMmN5RuM+9jrW/AjnRMh52wFTO9i5RgHkJI0PLMGTIP7I1yd2Sd70qN5rm/EVImL8gJwrxKCyFv1pIwGUhO3IwW2jbv1YxPvq85/k3XS6Rdbm349qNjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LX7uYxxq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 214F5C4CEF7;
+	Thu,  5 Feb 2026 12:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770290327;
-	bh=BlcIuNYWPg9lpO6h13T4Wsx856P2IBJ0XmWZYz80JCQ=;
+	s=k20201202; t=1770293989;
+	bh=z3KU6pequ5UORHIA7zVEBwJwRpnNOFlwskEISNJb7+4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=nQ9fPeD0PcHJ7dmIl/IPzNaVHkg7fa1HMYVYlh6/maepQJY8M5E4pESSCC/cf79+i
-	 mEN4NhgOHG/inVBNoY6JwZGqreNAJCDFEYfBRn3siYhAh1sJ+WmUaEvmDD3j8Uu2gu
-	 xIzzeiwo3JV2NJz/Pg6gMtxb1occcbUmbZ725gLMMjDbepzYgfNZSDek7Pd3XcAh/f
-	 NLHiWHixHi/hmUrFUfDnGqMEp/oOJrGVgvLseTfIQ8tYJfllY5dQUibEJsD2XFDfar
-	 zpsuCgJ0TpW0lesLUPAnpWDA1gPYFftKtRAAXJTVOTAMRSSs42Oea8mOjM91TdzxMd
-	 /f2CMBiQFOVfQ==
-Message-ID: <d0484cf69968e0415e4c0b9fca9217ebeca928e7.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: report the requested maximum number of threads
- instead of number running
+	b=LX7uYxxq1pV5VILRYDffEw0VxJ2nJpZfybd+ATxWh3LxbYiN0fF45TFfR+Xq7Jjmm
+	 Sp31HuzCDH3vMYwhuUo2D4GPujnkJQS0DHl6thQ+14hRxNjm3QbqaYCeR8dA3VZly9
+	 hL89Bj4mo706ujxgAezw7kxRsCy8+gwiSUkrJif5nT83eZ85A/sQn983v3AP+XyFw4
+	 zaTQn9vbVrwF+tFJ7Jqz2NbSwQXFFm4cPlURtWzJ3GxD+WMt9fekNQuWetEJOaQOib
+	 6+rOTXQ5QkJCRjw2XDPYjw4y9vf+9sO6yHt+x1x99rplFvQdD9K0xlOGydW81RneLY
+	 2uQhHapcSmnnA==
+Message-ID: <8d907c67ccab1db0e7bcabe0c34c66722a2970e2.camel@kernel.org>
+Subject: Re: [PATCH 03/13] libfs: change simple_done_creating() to use
+ end_creating()
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Owen <mjnowen@gmail.com>, Chuck Lever <cel@kernel.org>, Chuck Lever
-	 <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 05 Feb 2026 06:18:45 -0500
-In-Reply-To: <6944906a-9256-4f10-88fa-822a639eb5eb@gmail.com>
-References: <20260204-minthreads-v1-1-7480176baf35@kernel.org>
-	 <2abf7a33-789f-405d-8993-8fbf30153aaa@app.fastmail.com>
-	 <bb9c7c2c53d5a4196ceb0ec81dcee747dd7df5e9.camel@kernel.org>
-	 <6944906a-9256-4f10-88fa-822a639eb5eb@gmail.com>
+To: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, David Howells
+ <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, Chuck Lever
+ <chuck.lever@oracle.com>, Miklos Szeredi <miklos@szeredi.hu>, Amir
+ Goldstein	 <amir73il@gmail.com>, John Johansen
+ <john.johansen@canonical.com>, Paul Moore	 <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>, "Serge E. Hallyn"	 <serge@hallyn.com>, Stephen
+ Smalley <stephen.smalley.work@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Date: Thu, 05 Feb 2026 07:19:45 -0500
+In-Reply-To: <20260204050726.177283-4-neilb@ownmail.net>
+References: <20260204050726.177283-1-neilb@ownmail.net>
+	 <20260204050726.177283-4-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,167 +148,64 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18736-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-18737-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[brown.name,kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,svennd.be:url]
-X-Rspamd-Queue-Id: 64B73F1C92
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 21CE8F2626
 X-Rspamd-Action: no action
 
-You won't be able to get to the min-threads setting from /proc. That's
-only available via netlink. If you enable dynamic threading (via
-netlink), then the traditional "th" count in /proc currently shows you
-the number of running threads. If this patch is applied, it'll show you
-the requested maximum instead.
-
-So, with this patch applied you can query both the min and max number
-of threads via netlink. We don't yet have an interface to query the
-number of threads currently running. In principle, you can get that
-info from "ps", but we could add that to the netlink interface if
-someone can make a good use-case for it.
-
--- Jeff
-
-On Thu, 2026-02-05 at 10:01 +0000, Mike Owen wrote:
-> Hi,
-> I currently rely on: "/proc/net/rpc/nfsd" to retrieve the current number =
-of threads via "th": https://svennd.be/nfsd-stats-explained-procnetrpcnfsd/
-> After the various patches to introduce dynamic threading, where in the fu=
-ture, would a user retrieve the currently set min, max and actual running t=
-hread count reliably?
-> Would be lovely if the man page indicated this.
-> Thanks,
-> Mike
+On Wed, 2026-02-04 at 15:57 +1100, NeilBrown wrote:
+> From: NeilBrown <neil@brown.name>
 >=20
-> On 04/02/2026 19:13, Jeff Layton wrote:
-> > On Wed, 2026-02-04 at 13:51 -0500, Chuck Lever wrote:
-> > >=20
-> > > On Wed, Feb 4, 2026, at 12:23 PM, Jeff Layton wrote:
-> > > > The current netlink and /proc interfaces deviate from their traditi=
-onal
-> > > > values when dynamic threading is enabled, and there is currently no=
- way
-> > > > to know what the current setting is. This patch brings the reportin=
-g
-> > > > back in line with traditional behavior.
-> > > >=20
-> > > > Make these interfaces report the requested maximum number of thread=
-s
-> > > > instead of the number currently running.
-> > > >=20
-> > > > Fixes: d8316b837c2c ("nfsd: add controls to set the minimum number =
-of=20
-> > > > threads per pool")
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > I think this is less surprising than the current behavior of what's=
- in
-> > > > Chuck's tree. We could also consider adding netlink attributes to r=
-eport
-> > > > the number of running threads, but you can get that info from ps to=
-o.
-> > > > ---
-> > > >  fs/nfsd/nfsctl.c | 2 +-
-> > > >  fs/nfsd/nfssvc.c | 7 ++++---
-> > > >  2 files changed, 5 insertions(+), 4 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > > index=20
-> > > > 4d8e3c1a7be3b3a4e4f5248b27b60d6b3ae88d51..178c7646b2e25630b85de937d=
-7ced18947c047f9=20
-> > > > 100644
-> > > > --- a/fs/nfsd/nfsctl.c
-> > > > +++ b/fs/nfsd/nfsctl.c
-> > > > @@ -1700,7 +1700,7 @@ int nfsd_nl_threads_get_doit(struct sk_buff *=
-skb,=20
-> > > > struct genl_info *info)
-> > > >  			struct svc_pool *sp =3D &nn->nfsd_serv->sv_pools[i];
-> > > >=20
-> > > >  			err =3D nla_put_u32(skb, NFSD_A_SERVER_THREADS,
-> > > > -					  sp->sp_nrthreads);
-> > > > +					  sp->sp_nrthrmax);
-> > > >  			if (err)
-> > > >  				goto err_unlock;
-> > > >  		}
-> > > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > > > index=20
-> > > > 8184514c58de8e396795cd4714a04d66d9637f17..be0add971c2d994948c3e8fca=
-19bcf6f3c75dfaf=20
-> > > > 100644
-> > > > --- a/fs/nfsd/nfssvc.c
-> > > > +++ b/fs/nfsd/nfssvc.c
-> > > > @@ -239,12 +239,13 @@ static void nfsd_net_free(struct percpu_ref *=
-ref)
-> > > >=20
-> > > >  int nfsd_nrthreads(struct net *net)
-> > > >  {
-> > > > -	int rv =3D 0;
-> > > > +	int i, rv =3D 0;
-> > > >  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > > >=20
-> > > >  	mutex_lock(&nfsd_mutex);
-> > > >  	if (nn->nfsd_serv)
-> > > > -		rv =3D nn->nfsd_serv->sv_nrthreads;
-> > > > +		for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; ++i)
-> > > > +			rv +=3D nn->nfsd_serv->sv_pools[i].sp_nrthrmax;
-> > > >  	mutex_unlock(&nfsd_mutex);
-> > > >  	return rv;
-> > > >  }
-> > > > @@ -673,7 +674,7 @@ int nfsd_get_nrthreads(int n, int *nthreads, st=
-ruct=20
-> > > > net *net)
-> > > >=20
-> > > >  	if (serv)
-> > > >  		for (i =3D 0; i < serv->sv_nrpools && i < n; i++)
-> > > > -			nthreads[i] =3D serv->sv_pools[i].sp_nrthreads;
-> > > > +			nthreads[i] =3D serv->sv_pools[i].sp_nrthrmax;
-> > > >  	return 0;
-> > > >  }
-> > >=20
-> > > AI code review observes that:
-> > >=20
-> > > The documentation should be updated to reflect that these interfaces
-> > > now report the configured maximum threads rather than running threads=
-:
-> > >=20
-> > > 1. Documentation/netlink/specs/nfsd.yaml line 168 - threads-get is
-> > >    documented as "get the number of running threads" but now returns
-> > >    the configured maximum
-> > > 2. fs/nfsd/nfsctl.c lines 387-405 - The write_threads() docstring
-> > >    says it reports "the number of running NFSD threads" but now
-> > >    reports the configured maximum
-> > > 3. fs/nfsd/nfsctl.c lines 1666-1673 - The nfsd_nl_threads_get_doit()
-> > >    docstring says "get the number of running threads"
-> > >=20
-> >=20
-> > Ok, I'll do that for v2.
-> >=20
-> > Thanks,
+> simple_done_creating() and end_creating() are identical.
+> So change the former to use the latter.  This further centralises
+> unlocking of directories.
 >=20
+> Signed-off-by: NeilBrown <neil@brown.name>
+> ---
+>  fs/libfs.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/fs/libfs.c b/fs/libfs.c
+> index f1860dff86f2..db18b53fc189 100644
+> --- a/fs/libfs.c
+> +++ b/fs/libfs.c
+> @@ -2318,7 +2318,6 @@ EXPORT_SYMBOL(simple_start_creating);
+>  /* parent must have been held exclusive since simple_start_creating() */
+>  void simple_done_creating(struct dentry *child)
+>  {
+> -	inode_unlock(child->d_parent->d_inode);
+> -	dput(child);
+> +	end_creating(child);
+>  }
+>  EXPORT_SYMBOL(simple_done_creating);
 
+nit: seems like it would be better to turn this into a static inline
 --=20
 Jeff Layton <jlayton@kernel.org>
 
