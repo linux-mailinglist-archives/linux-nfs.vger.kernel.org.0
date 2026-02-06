@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-18785-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18786-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cOjeLGANhmkRJQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-18785-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 16:48:48 +0100
+	id +OlrFqYPhmk1JgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-18786-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 16:58:30 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C139FFE3C
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 16:48:48 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67309FFF66
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 16:58:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 35EC93039314
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Feb 2026 15:46:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 98E313006235
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Feb 2026 15:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 132412D94BE;
-	Fri,  6 Feb 2026 15:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889482E1EF4;
+	Fri,  6 Feb 2026 15:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+CeFl0h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZL8LPUmL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB90C2877F4;
-	Fri,  6 Feb 2026 15:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649FB2DF155
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Feb 2026 15:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770392803; cv=none; b=Lp87GVpFG4qk78w79xgYNasSIHFJHBEMhFtcPrvjJqIVH29eflWdBVEYY3+LfLQ8sfQBARTZEpumMlpWVOChdZfu9oia6r+W+E0POZnWtV5dfR9bXyQuE0mT8aSjzgba/63xlXt+m5AZMJNyEd/BOUWkLQjOZRI5MUbtTn4Tskw=
+	t=1770393505; cv=none; b=fCFRAXuq7dWj7u/KzVPwqEQ+/Y+cyS9Oyra8up/vYB3F9s86gvoc3SnYeIwY53K8RnTDSTUHIGFCREIK03pL0wy1w2DGXmjTWvIdIBRCwP/Dr8P9qcy+UBD9xztpF5S5lMivvJRcRsb/2cpQVwsWrBIbC1U1loWZZR41ARSUzcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770392803; c=relaxed/simple;
-	bh=MhNETv0IhsRLuQ3ixvARUQ0qQ08sqY7ZhIPw0IfKWSY=;
+	s=arc-20240116; t=1770393505; c=relaxed/simple;
+	bh=38dO7zzNDUwSfWcErdzE8ZBI084rKolkhud/CkWVgf0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M98fo0MLmEqi32nuPTpE8vRa6ofCDJaxbNChW4I9Kw6oCjUvZY1WG+jSbga/egg+Nm1HTaZ/rWnjKx9qbvDBh/tlyPpYOoQff+7hoOr82Gx4Lbz4ldm+Wq7f1tQou1sLtWGFRvurltaC9JwZrtd5NPSmH2UUl8yi8wfrR4ITuzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+CeFl0h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657ECC116C6;
-	Fri,  6 Feb 2026 15:46:42 +0000 (UTC)
+	 Content-Type:MIME-Version; b=RIOV26inMiJCzVVQPWjT9Fg4mhiTxgie9yoOtqaRhx70Op9bZGp1OnmiUK7CLGGryWa4O9cXPXmdl7wNSyiYkz7SnT99/8ZFThNfExZcOGL20o8eycIze7ilbNauDyGR5M81s7UoFxs6BsVyt4vyEPYkcCtmjX8weSWomUklnL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZL8LPUmL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F002C116C6;
+	Fri,  6 Feb 2026 15:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770392803;
-	bh=MhNETv0IhsRLuQ3ixvARUQ0qQ08sqY7ZhIPw0IfKWSY=;
+	s=k20201202; t=1770393505;
+	bh=38dO7zzNDUwSfWcErdzE8ZBI084rKolkhud/CkWVgf0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q+CeFl0hwS91Ta1c97g/uX381BcJ//9+TKmhG98Hr9Z7HdrMH5OlJ4XukiZcuGpie
-	 2P9qzGzxAEPuputpzAphA5RrRAsjK6JKB9ipo8KIdzQSvW4KIL8YHMZwLTQqwiIzcf
-	 9/9cLIFVk4MQlgzVuvJczzyzbJG19LYuDOUMF0yIGtFE+wPWVvmZ77/g5eMiurj21+
-	 R+N/ZIMbKOQUTT3c5FDtxyL1fM+s13pSQREAgVSYpVZHyCfGPNge3KZUW8fKSWcXP9
-	 0wwlvcQFdps2xJWX7F8nCB17mZLI7eTozdKlwXOptY01Fy/T/0qNb9JJB35xxcfv+W
-	 ObHtPGjCdjgNw==
-Message-ID: <6789380caa630c8efefce6862c77bf6780af45da.camel@kernel.org>
-Subject: Re: [PATCH v4 0/3] kNFSD Signed Filehandles
+	b=ZL8LPUmL3188RfxYDsdpOO9I0RagS6pCK9cbaB3Yi2fquC8cW2ZjibXPu0fWmETJ5
+	 0wbO8w1GeJIxTH5Fhf8PHC8uddBsNzmar7QhmI/SbzQmoI7q+kmyVM3V9E6FFuRpJA
+	 Sofwr3GTA1EqQ7Z4m47k4FVQo+hiTHRoCCgv2LXtVlQPyfKK9xkIqbKnkkiKtJwMsg
+	 Eaxqjf4b1M5aNvM8RR2cju6EusILzEaG/dGgq+XEojJ7WsI8s6iUYvXrFPoXkymHkS
+	 Yn0YrNWLgvrZ/92EvB0WNdMDjHtm/APpJ+TmyHgJPEt3rHGj6tSymE6a/nolZOMqHb
+	 5HQUXtFPOknAg==
+Message-ID: <621062de3bfe3ca8fc8909db85a3d9cb5ca140f5.camel@kernel.org>
+Subject: Re: [PATCH v4 2/2] nfsdctl/rpc.nfsd: Add support for passing
+ encrypted filehandle key
 From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@hammerspace.com>, Chuck Lever
-	 <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Trond Myklebust
-	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Eric Biggers
-	 <ebiggers@kernel.org>, Rick Macklem <rick.macklem@gmail.com>
-Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org
-Date: Fri, 06 Feb 2026 10:46:41 -0500
-In-Reply-To: <cover.1770390036.git.bcodding@hammerspace.com>
-References: <cover.1770390036.git.bcodding@hammerspace.com>
+To: Benjamin Coddington <bcodding@hammerspace.com>, Steve Dickson
+	 <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+ NeilBrown	 <neil@brown.name>
+Date: Fri, 06 Feb 2026 10:58:23 -0500
+In-Reply-To: <733f98f0464b882574cfb58a7b108e270b843372.1770390642.git.bcodding@hammerspace.com>
+References: <cover.1770390642.git.bcodding@hammerspace.com>
+	 <733f98f0464b882574cfb58a7b108e270b843372.1770390642.git.bcodding@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,197 +140,385 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18785-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18786-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[hammerspace.com,oracle.com,brown.name,kernel.org,gmail.com];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.989];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4C139FFE3C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 67309FFF66
 X-Rspamd-Action: no action
 
-On Fri, 2026-02-06 at 10:09 -0500, Benjamin Coddington wrote:
-> The following series enables the linux NFS server to add a Message
-> Authentication Code (MAC) to the filehandles it gives to clients.  This
-> provides additional protection to the exported filesystem against filehan=
-dle
-> guessing attacks.
+On Fri, 2026-02-06 at 10:15 -0500, Benjamin Coddington wrote:
+> If fh-key-file=3D<path> is set in the nfsd section of nfs.conf, the "nfsd=
+ctl
+> autostart" command will hash the contents of the file with libuuid's
+> uuid_generate_sha1 and send the first 16 bytes into the kernel on
+> NFSD_A_SERVER_FH_KEY.
 >=20
-> Filesystems generate their own filehandles through the export_operation
-> "encode_fh" and a filehandle provides sufficient access to open a file
-> without needing to perform a lookup.  A trusted NFS client holding a vali=
-d
-> filehandle can remotely access the corresponding file without reference t=
-o
-> access-path restrictions that might be imposed by the ancestor directorie=
-s
-> or the server exports.
+> A compatible kernel can use this key to sign filehandles.
 >=20
-> In order to acquire a filehandle, you must perform lookup operations on t=
-he
-> parent directory(ies), and the permissions on those directories may prohi=
-bit
-> you from walking into them to find the files within.  This would normally=
- be
-> considered sufficient protection on a local filesystem to prohibit users
-> from accessing those files, however when the filesystem is exported via N=
-FS
-> an exported file can be accessed whenever the NFS server is presented wit=
-h
-> the correct filehandle, which can be guessed or acquired by means other t=
-han
-> LOOKUP.
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> ---
+>  nfs.conf                     |  1 +
+>  support/include/nfslib.h     |  2 +
+>  support/nfs/Makefile.am      |  4 +-
+>  support/nfs/fh_key_file.c    | 79 ++++++++++++++++++++++++++++++++++++
+>  systemd/nfs.conf.man         |  1 +
+>  utils/nfsd/nfssvc.h          |  1 +
+>  utils/nfsdctl/nfsd_netlink.h |  1 +
+>  utils/nfsdctl/nfsdctl.c      | 39 ++++++++++++++++--
+>  8 files changed, 122 insertions(+), 6 deletions(-)
+>  create mode 100644 support/nfs/fh_key_file.c
 >=20
-> Filehandles are easy to guess because they are well-formed.  The
-> open_by_handle_at(2) man page contains an example C program
-> (t_name_to_handle_at.c) that can display a filehandle given a path.  Here=
-'s
-> an example filehandle from a fairly modern XFS:
->=20
-> # ./t_name_to_handle_at /exports/foo=20
-> 57
-> 12 129    99 00 00 00 00 00 00 00 b4 10 0b 8c
->=20
->           ^---------  filehandle  ----------^
->           ^------- inode -------^ ^-- gen --^
->=20
-> This filehandle consists of a 64-bit inode number and 32-bit generation
-> number.  Because the handle is well-formed, its easy to fabricate
-> filehandles that match other files within the same filesystem.  You can
-> simply insert inode numbers and iterate on the generation number.
-> Eventually you'll be able to access the file using open_by_handle_at(2).
-> For a local system, open_by_handle_at(2) requires CAP_DAC_READ_SEARCH, wh=
-ich
-> protects against guessing attacks by unprivileged users.
->=20
-> Simple testing confirms that the correct generation number can be found
-> within ~1200 minutes using open_by_handle_at() over NFS on a local system
-> and it is estimated that adding network delay with genuine NFS calls may
-> only increase this to around 24 hours.
->=20
-> In contrast to a local user using open_by_handle(2), the NFS server must
-> permissively allow remote clients to open by filehandle without being abl=
+> diff --git a/nfs.conf b/nfs.conf
+> index 3cca68c3530d..39068c19d7df 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -76,6 +76,7 @@
+>  # vers4.2=3Dy
+>  rdma=3Dy
+>  rdma-port=3D20049
+> +# fh-key-file=3D/etc/nfs_fh.key
+> =20
+>  [statd]
+>  # debug=3D0
+> diff --git a/support/include/nfslib.h b/support/include/nfslib.h
+> index eff2a486307f..c8601a156cba 100644
+> --- a/support/include/nfslib.h
+> +++ b/support/include/nfslib.h
+> @@ -22,6 +22,7 @@
+>  #include <paths.h>
+>  #include <rpcsvc/nfs_prot.h>
+>  #include <nfs/nfs.h>
+> +#include <uuid/uuid.h>
+>  #include "xlog.h"
+> =20
+>  #ifndef _PATH_EXPORTS
+> @@ -132,6 +133,7 @@ struct rmtabent *	fgetrmtabent(FILE *fp, int log, lon=
+g *pos);
+>  void			fputrmtabent(FILE *fp, struct rmtabent *xep, long *pos);
+>  void			fendrmtabent(FILE *fp);
+>  void			frewindrmtabent(FILE *fp);
+> +int				hash_fh_key_file(const char *fh_key_file, uuid_t hash);
+> =20
+>  _Bool state_setup_basedir(const char *, const char *);
+>  int setup_state_path_names(const char *, const char *, const char *, con=
+st char *, struct state_paths *);
+> diff --git a/support/nfs/Makefile.am b/support/nfs/Makefile.am
+> index 2e1577cc12df..775bccc6c5ea 100644
+> --- a/support/nfs/Makefile.am
+> +++ b/support/nfs/Makefile.am
+> @@ -7,8 +7,8 @@ libnfs_la_SOURCES =3D exports.c rmtab.c xio.c rpcmisc.c r=
+pcdispatch.c \
+>  		   xcommon.c wildmat.c mydaemon.c \
+>  		   rpc_socket.c getport.c \
+>  		   svc_socket.c cacheio.c closeall.c nfs_mntent.c \
+> -		   svc_create.c atomicio.c strlcat.c strlcpy.c
+> -libnfs_la_LIBADD =3D libnfsconf.la
+> +		   svc_create.c atomicio.c strlcat.c strlcpy.c fh_key_file.c
+> +libnfs_la_LIBADD =3D libnfsconf.la -luuid
+>  libnfs_la_CPPFLAGS =3D $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/suppor=
+t/reexport
+> =20
+>  libnfsconf_la_SOURCES =3D conffile.c xlog.c
+> diff --git a/support/nfs/fh_key_file.c b/support/nfs/fh_key_file.c
+> new file mode 100644
+> index 000000000000..ee26df5b70bd
+> --- /dev/null
+> +++ b/support/nfs/fh_key_file.c
+> @@ -0,0 +1,79 @@
+> +/*
+> + * Copyright (c) 2025 Benjamin Coddington <bcodding@hammerspace.com>
+> + * All rights reserved.
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions
+> + * are met:
+> + * 1. Redistributions of source code must retain the above copyright
+> + *    notice, this list of conditions and the following disclaimer.
+> + * 2. Redistributions in binary form must reproduce the above copyright
+> + *    notice, this list of conditions and the following disclaimer in th=
 e
-> to check or trust the remote caller's access. Therefore additional
-> protection against this attack is needed for NFS case.  We propose to sig=
-n
-> filehandles by appending an 8-byte MAC which is the siphash of the
-> filehandle from a key set from the nfs-utilities.  NFS server can then
-> ensure that guessing a valid filehandle+MAC is practically impossible
-> without knowledge of the MAC's key.  The NFS server performs optional
-> signing by possessing a key set from userspace and having the "sign_fh"
-> export option.
->=20
-> Because filehandles are long-lived, and there's no method for expiring th=
-em,
-> the server's key should be set once and not changed.  It also should be
-> persisted across restarts.  The methods to set the key allow only setting=
- it
-> once, afterward it cannot be changed.  A separate patchset for nfs-utils
-> contains the userspace changes required to set the server's key.
->=20
-> I had planned on adding additional work to enable the server to check whe=
-ther the
-> 8-byte MAC will overflow maximum filehandle length for the protocol at
-> export time.  There could be some filesystems with 40-byte fileid and
-> 24-byte fsid which would break NFSv3's 64-byte filehandle maximum with an
-> 8-byte MAC appended.  The server should refuse to export those filesystem=
-s
-> when "sign_fh" is requested.  However, the way the export caches work (th=
-e
-> server may not even be running when a user sets up the export) its
-> impossible to do this check at export time.  Instead, the server will ref=
-use
-> to give out filehandles at mount time and emit a pr_warn().
->=20
-> Thanks for any comments and critique.
->=20
-> Changes from encrypt_fh posting:
-> https://lore.kernel.org/linux-nfs/510E10A4-11BE-412D-93AF-C4CC969954E7@ha=
-mmerspace.com
-> 	- sign filehandles instead of encrypt them (Eric Biggers)
-> 	- fix the NFSEXP_ macros, specifically NFSEXP_ALLFLAGS (NeilBrown)
-> 	- rebase onto cel/nfsd-next (Chuck Lever)
-> 	- condensed/clarified problem explantion (thanks Chuck Lever)
-> 	- add nfsctl file "fh_key" for rpc.nfsd to also set the key
->=20
-> Changes from v1 posting:
-> https://lore.kernel.org/linux-nfs/cover.1768573690.git.bcodding@hammerspa=
-ce.com
-> 	- remove fh_fileid_offset() (Chuck Lever)
-> 	- fix pr_warns, fix memcmp (Chuck Lever)
-> 	- remove incorrect rootfh comment (NeilBrown)
-> 	- make fh_key setting an optional attr to threads verb (Jeff Layton)
-> 	- drop BIT() EXP_ flag conversion
-> 	- cover-letter tune-ups (NeilBrown, Chuck Lever)
-> 	- fix NFSEXP_ALLFLAGS on 2/3
-> 	- cast fh->fh_size + sizeof(hash) result to int (avoid x86_64 WARNING)
-> 	- move MAC signing into __fh_update() (Chuck Lever)
->=20
-> Changes from v2 posting:
-> https://lore.kernel.org/linux-nfs/cover.1769026777.git.bcodding@hammerspa=
-ce.com
-> 	- more cover-letter detail (NeilBrown)
-> 	- Documentation/filesystems/nfs/exporting.rst section (Jeff Layton)
-> 	- fix key copy (Eric Biggers)
-> 	- use NFSD_A_SERVER_MAX (NeilBrown)
-> 	- remove procfs fh_key interface (Chuck Lever)
-> 	- remove FH_AT_MAC (Chuck Lever)
-> 	- allow fh_key change when server is not running (Chuck/Jeff)
-> 	- accept fh_key as netlink attribute instead of command (Jeff Layton)
->=20
-> Changes from v3 posting:
-> https://lore.kernel.org/linux-nfs/cover.1770046529.git.bcodding@hammerspa=
-ce.com
-> 	- /actually/ fix up endianness problems (Eric Biggers)
-> 	- comment typo
-> 	- fix Documentation underline warnings
-> 	- fix possible uninitialized fh_key var
->=20
-> Benjamin Coddington (3):
->   NFSD: Add a key for signing filehandles
->   NFSD/export: Add sign_fh export option
->   NFSD: Sign filehandles
->=20
->  Documentation/filesystems/nfs/exporting.rst | 85 +++++++++++++++++++++
->  Documentation/netlink/specs/nfsd.yaml       |  6 ++
->  fs/nfsd/export.c                            |  5 +-
->  fs/nfsd/netlink.c                           |  5 +-
->  fs/nfsd/netns.h                             |  2 +
->  fs/nfsd/nfsctl.c                            | 37 ++++++++-
->  fs/nfsd/nfsfh.c                             | 64 +++++++++++++++-
->  fs/nfsd/trace.h                             | 25 ++++++
->  include/uapi/linux/nfsd/export.h            |  4 +-
->  include/uapi/linux/nfsd_netlink.h           |  1 +
->  10 files changed, 225 insertions(+), 9 deletions(-)
->=20
->=20
-> base-commit: e3934bbd57c73b3835a77562ca47b5fbc6f34287
+> + *    documentation and/or other materials provided with the distributio=
+n.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+> + * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRAN=
+TIES
+> + * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIME=
+D.
+> + * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, =
+BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF =
+USE,
+> + * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE=
+ OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +#include <sys/types.h>
+> +#include <unistd.h>
+> +#include <errno.h>
+> +#include <uuid/uuid.h>
+> +
+> +#include "nfslib.h"
+> +
+> +#define HASH_BLOCKSIZE  256
+> +int hash_fh_key_file(const char *fh_key_file, uuid_t uuid)
+> +{
+> +	const char seed_s[] =3D "8fc57f1b-1a6f-482f-af92-d2e007c1ae58";
+> +	FILE *sfile =3D NULL;
+> +	char buf[HASH_BLOCKSIZE];
+> +	size_t pos;
+> +	int ret =3D 0;
+> +
+> +	sfile =3D fopen(fh_key_file, "r");
+> +	if (!sfile) {
+> +		ret =3D errno;
+> +		xlog(L_ERROR, "Unable to read fh-key-file %s: %s", fh_key_file, strerr=
+or(errno));
+> +		goto out;
+> +	}
+> +
+> +	uuid_parse(seed_s, uuid);
+> +
+> +	while (1) {
+> +		size_t sread;
+> +		pos =3D 0;
+> +
+> +		if (feof(sfile))
+> +			goto finish_block;
+> +
+> +		sread =3D fread(buf + pos, 1, HASH_BLOCKSIZE - pos, sfile);
+> +		pos +=3D sread;
+> +
+> +		if (pos =3D=3D HASH_BLOCKSIZE)
+> +			break;
+> +
+> +		if (sread !=3D HASH_BLOCKSIZE) {
+> +			ret =3D ferror(sfile);
+> +			if (ret)
+> +				goto out;
+> +			goto finish_block;
+> +		}
+> +		uuid_generate_sha1(uuid, uuid, buf, HASH_BLOCKSIZE);
+> +	}
+> +finish_block:
+> +	if (pos)
+> +		uuid_generate_sha1(uuid, uuid, buf, pos);
+> +out:
+> +	if (sfile)
+> +		fclose(sfile);
+> +	return ret;
+> +}
+> diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+> index ecdc4fc90327..a6b5c907b457 100644
+> --- a/systemd/nfs.conf.man
+> +++ b/systemd/nfs.conf.man
+> @@ -176,6 +176,7 @@ Recognized values:
+>  .BR vers4.1 ,
+>  .BR vers4.2 ,
+>  .BR rdma ,
+> +.BR fh-key-file ,
+> =20
+>  Version and protocol values are Boolean values as described above,
+>  and are also used by
+> diff --git a/utils/nfsd/nfssvc.h b/utils/nfsd/nfssvc.h
+> index 4d53af1a8bc3..463110cac804 100644
+> --- a/utils/nfsd/nfssvc.h
+> +++ b/utils/nfsd/nfssvc.h
+> @@ -30,3 +30,4 @@ void	nfssvc_setvers(unsigned int ctlbits, unsigned int =
+minorvers4,
+>  		       unsigned int minorvers4set, int force4dot0);
+>  int	nfssvc_threads(int nrservs);
+>  void	nfssvc_get_minormask(unsigned int *mask);
+> +int nfssvc_setfh_key(const char *fh_key_file);
+> diff --git a/utils/nfsdctl/nfsd_netlink.h b/utils/nfsdctl/nfsd_netlink.h
+> index e9efbc9e63d8..97c7447f4d14 100644
+> --- a/utils/nfsdctl/nfsd_netlink.h
+> +++ b/utils/nfsdctl/nfsd_netlink.h
+> @@ -36,6 +36,7 @@ enum {
+>  	NFSD_A_SERVER_LEASETIME,
+>  	NFSD_A_SERVER_SCOPE,
+>  	NFSD_A_SERVER_MIN_THREADS,
+> +	NFSD_A_SERVER_FH_KEY,
+> =20
+>  	__NFSD_A_SERVER_MAX,
+>  	NFSD_A_SERVER_MAX =3D (__NFSD_A_SERVER_MAX - 1)
+> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> index 6a20d180a81e..2369a8495954 100644
+> --- a/utils/nfsdctl/nfsdctl.c
+> +++ b/utils/nfsdctl/nfsdctl.c
+> @@ -29,6 +29,7 @@
+> =20
+>  #include <readline/readline.h>
+>  #include <readline/history.h>
+> +#include <uuid/uuid.h>
+> =20
+>  #ifdef USE_SYSTEM_NFSD_NETLINK_H
+>  #include <linux/nfsd_netlink.h>
+> @@ -42,6 +43,7 @@
+>  #include "lockd_netlink.h"
+>  #endif
+> =20
+> +#include "nfslib.h"
+>  #include "nfsdctl.h"
+>  #include "conffile.h"
+>  #include "xlog.h"
+> @@ -636,8 +638,10 @@ out:
+>  }
+> =20
+>  static int threads_doit(struct nl_sock *sock, int cmd, int grace, int le=
+ase,
+> -			int pool_count, int *pool_threads, char *scope, int minthreads)
+> +			int pool_count, int *pool_threads, char *scope, int minthreads,
+> +			uuid_t fh_key)
+>  {
+> +	struct nl_data *fh_key_data =3D NULL;
+>  	struct genlmsghdr *ghdr;
+>  	struct nlmsghdr *nlh;
+>  	struct nl_msg *msg;
 
+I think you should add a --fh-key-file=3D option to the "threads" command
+too.
 
-Nice work, Ben. This looks good to me!
+> @@ -663,6 +667,19 @@ static int threads_doit(struct nl_sock *sock, int cm=
+d, int grace, int lease,
+>  			nla_put_string(msg, NFSD_A_SERVER_SCOPE, scope);
+>  		if (minthreads >=3D 0)
+>  			nla_put_u32(msg, NFSD_A_SERVER_MIN_THREADS, minthreads);
+> +		if (!uuid_is_null(fh_key)) {
+> +			if (nfsd_threads_max_nlattr < NFSD_A_SERVER_FH_KEY) {
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I would move this check into the caller, so you can handle errors
+differently. The "threads" command should fail if someone specifies
+--fh-key-file and it can't be set. That command is intended to be
+interactive.
+
+For "autostart", I'm not sure:
+
+Wouldn't it be better to fail to start if the kernel doesn't support
+setting a key? The clients are going to end up with stale filehandles
+in that case, no?
+
+I'd hate to mistakenly boot into an old kernel and end up with all of
+my clients falling over.
+
+> +				xlog(L_ERROR, "This kernel does not support signed filehandles.");
+> +			} else {
+> +				fh_key_data =3D nl_data_alloc(fh_key, sizeof(uuid_t));
+> +				if (!fh_key_data) {
+> +					xlog(L_ERROR, "failed to allocate netlink data");
+> +					ret =3D 1;
+> +					goto out;
+> +				}
+> +				nla_put_data(msg, NFSD_A_SERVER_FH_KEY, fh_key_data);
+> +			}
+> +		}
+
+I think it would be best if the "threads" command failed with a hard
+error if the key can't be set, but I'm OK with the=20
+
+>  		for (i =3D 0; i < pool_count; ++i)
+>  			nla_put_u32(msg, NFSD_A_SERVER_THREADS, pool_threads[i]);
+>  	}
+> @@ -697,6 +714,8 @@ static int threads_doit(struct nl_sock *sock, int cmd=
+, int grace, int lease,
+>  out_cb:
+>  	nl_cb_put(cb);
+>  out:
+> +	if (fh_key_data)
+> +		nl_data_free(fh_key_data);
+>  	nlmsg_free(msg);
+>  	return ret;
+>  }
+> @@ -721,6 +740,7 @@ static int threads_func(struct nl_sock *sock, int arg=
+c, char **argv)
+>  	int *pool_threads =3D NULL;
+>  	int minthreads =3D -1;
+>  	int opt, pools =3D 0;
+> +	uuid_t fh_key;
+> =20
+>  	optind =3D 1;
+>  	while ((opt =3D getopt_long(argc, argv, "hm:", threads_options, NULL)) =
+!=3D -1) {
+> @@ -768,7 +788,9 @@ static int threads_func(struct nl_sock *sock, int arg=
+c, char **argv)
+>  			}
+>  		}
+>  	}
+> -	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL, minthre=
+ads);
+> +	uuid_clear(fh_key);
+> +	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL,
+> +				minthreads, fh_key);
+>  }
+> =20
+>  /*
+> @@ -1760,8 +1782,9 @@ static int autostart_func(struct nl_sock *sock, int=
+ argc, char ** argv)
+>  	int *threads, grace, lease, idx, ret, opt, pools, minthreads;
+>  	struct conf_list *thread_str;
+>  	struct conf_list_node *n;
+> -	char *scope, *pool_mode;
+> +	char *scope, *pool_mode, *fh_key_file;
+>  	bool failed_listeners =3D false;
+> +	uuid_t fh_key;
+> =20
+>  	optind =3D 1;
+>  	while ((opt =3D getopt_long(argc, argv, "h", help_only_options, NULL)) =
+!=3D -1) {
+> @@ -1836,6 +1859,14 @@ static int autostart_func(struct nl_sock *sock, in=
+t argc, char ** argv)
+>  		threads[0] =3D DEFAULT_AUTOSTART_THREADS;
+>  	}
+> =20
+> +	uuid_clear(fh_key);
+> +	fh_key_file =3D conf_get_str("nfsd", "fh-key-file");
+> +	if (fh_key_file) {
+> +		ret =3D hash_fh_key_file(fh_key_file, fh_key);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	lease =3D conf_get_num("nfsd", "lease-time", 0);
+>  	scope =3D conf_get_str("nfsd", "scope");
+>  	minthreads =3D conf_get_num("nfsd", "min-threads", -1);
+> @@ -1846,7 +1877,7 @@ static int autostart_func(struct nl_sock *sock, int=
+ argc, char ** argv)
+>  	}
+> =20
+>  	ret =3D threads_doit(sock, NFSD_CMD_THREADS_SET, grace, lease, pools,
+> -			   threads, scope, minthreads);
+> +			   threads, scope, minthreads, fh_key);
+>  out:
+>  	free(threads);
+>  	return ret;
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
