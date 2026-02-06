@@ -1,303 +1,327 @@
-Return-Path: <linux-nfs+bounces-18775-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18776-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WKiLGbXuhWlvIQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-18775-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 14:37:57 +0100
+	id mJ3TIyH8hWmzIwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-18776-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 15:35:13 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E509FE405
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 14:37:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10268FF086
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 15:35:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A93B6305021C
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Feb 2026 13:35:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9DE143080FE6
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Feb 2026 14:28:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD5D3A9624;
-	Fri,  6 Feb 2026 13:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94C4A41B37D;
+	Fri,  6 Feb 2026 14:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8ekIMW4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJMRrXkc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D941D3B8BA9
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Feb 2026 13:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770384939; cv=pass; b=LVWDH26tOKAYT+1bCHXGMDCAUyZSfW+AoENa3Q9rF5XKRITo2+3+oBoS6z+Espi9Cmd/mZ4abw5xYheWyhRwcfA9gA5VfX0cnjw/y3RXiDHS2Is4WIQcfW0OhkUN0SwihCpIJ6k3xTeS2gmEixSk2GOJG6RBXPCQdN/8JQf+76Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770384939; c=relaxed/simple;
-	bh=RxTY2ZddbzZaifKXYPGFFlp4mavJ0NrEEi4EM4pjmj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OEHzs/ge3WV0KoA+tjh8gWh5Od6sMCsJYXXPf47eCf7rYiRM8gPLNm80oqB8pOm7of7r7gcgDQNEC8ypSBTufqJGPE1MLRq3Uz5OX9/jqWRCy+gpGq4JEfG4EfH+Eis4hBWFVhRp7DIQcEXMTEnp0Xhp0X8pbAF8hndnBv7F1+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8ekIMW4; arc=pass smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-653780e9eb3so2806899a12.1
-        for <linux-nfs@vger.kernel.org>; Fri, 06 Feb 2026 05:35:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770384937; cv=none;
-        d=google.com; s=arc-20240605;
-        b=WSX2B2iN6fOw4BlgpSfoy++VitbJArn5nrKWMcA9nNBiR7D+6/cJK0ZSIGKeXf2GfM
-         S4y9r1zwkxBslq+hJYbRExzYp6dhROwgXXEAq5KHZtTAOPuvkBPCCukJXyBJG+xcC+qY
-         nM00iI4YjUQYa0I+GOApQON2WuwAWQDKE6Dlv9Br0Dht39Gp2kgvnnKE2suy58EQEzoo
-         5+nbDAO3AIEb3Zl3uCesijaElCs5v7zzKOkTJ+nTClbQE1bIwxJGv1rZcY1pqF+EvCpl
-         LmnjSot9oDhT8pVLblcf8IFA9HlYSQHol5JEsl3iyNFg0Y0B3R7ckXQ9He/Lqdmtd94Q
-         /Scw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=EpmWnKuQAvcxfN2n9Aws3fxLD/5TLycZ+iQI8ZhYj4E=;
-        fh=v4ZJhhEixre9UNdI/g5a+7YePWgTesHASLPN9lnbGI0=;
-        b=XJZ2vGxAtt1H51BBvrPmQOQUOoWR/nwcJCgDDzCUb+Mh2osmhyGIEkuoHO883x03/e
-         pI46pELA9JPq1uoGMJ4Wd47FPfELVZMQROeU6+f3zO4yE7ywKryKV//bS2HjAdSs1yYp
-         f3p6VXEY3aoDtdlU0d0hToTp8ToR3gjXGmQ/BUP+rCcbkAgfzkZVomvD+EOLIHVz7BJs
-         +N8oAXmwMF22b20yig+tebZfgPLmD9Pc1QkDFzQZtHtIITdgtSGhqkT6W4joDLyuj8rP
-         ivD0x2rmPsCuQSudGv5gR9QZWztkyNLaELcNqpsOnP1PniBh3pf8djYOuljOhnuSp8uo
-         xuxg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770384937; x=1770989737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EpmWnKuQAvcxfN2n9Aws3fxLD/5TLycZ+iQI8ZhYj4E=;
-        b=G8ekIMW4Rdfti92YPZTjnFCLgDeLQsQHUoyr2TCfEQZQCVb2c5M0+6TtOw0kY1Q8Dq
-         Zwsgc5IHRrC4+tiEcyZfpbeNxRSa8S1XeY4M0IEFpO5u3HYsFfPtY2Iyf6Y4cFvl3bBW
-         0WaeRK9TSDIMbSsRkVPrveGXRINO7LkR7MPN++bwTK5jQPOcRvKW6XAo4YpEpefzRchr
-         CHKCNtKhjFPRXMgwINs7cqLC+ctgxPTkv5XV/dQUt9LQywZGXWp7GRq1iOy4FEmJ/2Sn
-         S00BW1/MFWgFOOGOg4hTQ4zHqu8AM64BwotbYNzlMqPYxDoJyE44thsYEvydDdRMfZDl
-         pCcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770384937; x=1770989737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EpmWnKuQAvcxfN2n9Aws3fxLD/5TLycZ+iQI8ZhYj4E=;
-        b=QUXgmEIA9912Rs41y8bWzyiZbj+Mi0HLFwB1Ly4GRvjFMc2J6flvOsC6hZaDV63Tt7
-         p9BxvxEEHIvMBoxPiv0es1dP8OkepgU8yLve1/lVlNsa6DgfaBhB3WK578PsNJSwdVGw
-         DjUfxCf01n/ZcsmIoRouavgYupK3ys1oIaBCoCONG/6zXAcbF3YhOPymKil/1cGIzAox
-         YpaK7/CGooXv+lvJ0H5Eu/6DpXZquxafEkl8NqjZnxm3WJp82CPrgn8WGr+yGEXKrTO/
-         RX4ivhSvwHWNWvTmjoJQHLD0PjbAxloYoMbr8WKvQ7BQsjuMMu3afKyHJ1IMT6G5r41A
-         v2BA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIzm+pDq9syKDk+LPaEQJy+8kDgKXvSIJ7fMybWVzOzTrDBepMpHsLJzoClvkehkFxVm1RuwJEzrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyc0/JwRGU5nl0ED2A+07/NIUAKMgotqrHfR/QAsx5sZJzg7j1c
-	oizZkJ9AhHAmfaVkq8bH7r1yAia4kDClAlqQTxejsjS9OO9HhaHPEv22d9WnohH9Iz7fce/S7O7
-	wJ9EyofwWMv03ya+1EcWYUrAWmUpiNsY=
-X-Gm-Gg: AZuq6aJ24BsEFvu1SVbHUQxUfCzuTRqbNNgewtolYUJUPolOmOm5F3q51t0+CCNnoMY
-	67voCE8Y4m98oUp1af1sF1N+JOBY6FDstUi8pAsf2AtApFRG2bjYl8UKnKze1EjmSkFA5HJ15Ez
-	6DOsUNf/Y0o1Rf5J2vLY+mQWeW/+EG36S+rPVwnPIK7QfuxURRbN9iAJN7Vrx/JE9I9+j8uvFeh
-	FIbvKBqCgVQ+ciJJqaTis1mmjOyMXLsqNX60XChmU68Vwy+R0qmVwvE2QOycAI3C+//HFaDxc5T
-	F/xwHIPpr+ErCpilgiLUc+6siN6V/FjVe6UrXxx3
-X-Received: by 2002:a05:6402:518f:b0:658:bd60:43e2 with SMTP id
- 4fb4d7f45d1cf-659841692cdmr1419837a12.17.1770384937041; Fri, 06 Feb 2026
- 05:35:37 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7131B413247;
+	Fri,  6 Feb 2026 14:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770388091; cv=none; b=oqrSv37J6eFP+1nJJu4Xqf5kSLITbU9UUAQFnW0a04IkADkCaw0xNrkuEw6s4fXF/xptPfvuLRfF17LrcNZSz55fXFpBHfw53ILdTGhXHm2dnW0WSoCcblJ4ZuJGlIirxSM81ILIzBvtaAs3weRWzAwLrvpsfv3jBmduJniYqNc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770388091; c=relaxed/simple;
+	bh=OnuY73oyurAZjtvDP9VqH8mS5yKoRavmsQGmwDd5Dq8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kHpth24QC+ZWXPGI6AAQ74/bVMWJXwoSgcWIUyu9gt2roYin77U4Z8fEViHRh+mqjMfp0LlcWlQie78hC8ptMIgn1we4jNEjkRGr5fnRROAvPpidgMUH1RfpRTSRYWedAze2RKalyNXZUVYDIPJwZok2cSPp02+XpQTofAZdnrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJMRrXkc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A29C19421;
+	Fri,  6 Feb 2026 14:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770388090;
+	bh=OnuY73oyurAZjtvDP9VqH8mS5yKoRavmsQGmwDd5Dq8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=MJMRrXkc5zS8PGCWDQkrsEnlAsCMnb0bivMgavSd9Dctm9509WQcmjo1fJfID0bUM
+	 zGZWFS2NTOUEdxZHyLO8IC/mHaK0MqVfKKCKAcijtD4EDqX6ASGyEeJjP53hwJPRyM
+	 grqL8jmFVX4w8p1GJXPfoCu8vKohL2jP7ISLembSGx0Xx/Lbx3kcvaaXSCeaO9Hxvp
+	 7v+exdPH5sIAvigDYkz8ySReacunzEAi9AdgNgCzjzi8Npncf6QNcpmQlYRjWiE5wE
+	 72jwkv9hLsCW7eUtMGi/gC/Wq9iYhsXROipu5M2nqcDhy7LKO3cslrDxykQf3bhtho
+	 Hnl/hwh0nQyEg==
+Message-ID: <9194ce4db4391c0e6428f97b05fcee53706fb485.camel@kernel.org>
+Subject: Re: [PATCH v5 1/1] NFSD: Enforce timeout on layout recall and
+ integrate lease manager fencing
+From: Jeff Layton <jlayton@kernel.org>
+To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neil@brown.name, 
+	okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Date: Fri, 06 Feb 2026 09:28:08 -0500
+In-Reply-To: <20260205202929.879846-1-dai.ngo@oracle.com>
+References: <20260205202929.879846-1-dai.ngo@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260204050726.177283-1-neilb@ownmail.net> <20260204050726.177283-11-neilb@ownmail.net>
- <CAOQ4uxh-MLgwZCstwr6HyPXHVRmtj2F_=xS8pE3FN6Ex-wex4w@mail.gmail.com> <177034031005.16766.246184445940612287@noble.neil.brown.name>
-In-Reply-To: <177034031005.16766.246184445940612287@noble.neil.brown.name>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 6 Feb 2026 14:35:25 +0100
-X-Gm-Features: AZwV_QjjYiogfyc5arz_rTitKV8bnytIdEM4CjRfI_5mGtvMvwFYoZk4un_zak4
-Message-ID: <CAOQ4uxiWE5eVTrL-2EWVHGQEpEX7HSstj_+kEp-b7xZrnfoXMA@mail.gmail.com>
-Subject: Re: [PATCH 10/13] ovl: change ovl_create_real() to get a new lock
- when re-opening created file.
-To: NeilBrown <neil@brown.name>
-Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-kernel@vger.kernel.org, 
-	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18775-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-18776-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,lst.de,gmail.com,zeniv.linux.org.uk,kernel.org,suse.cz];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,canonical.com,paul-moore.com,namei.org,hallyn.com,gmail.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
+	NEURAL_HAM(-0.00)[-0.986];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,ownmail.net:email,brown.name:email]
-X-Rspamd-Queue-Id: 0E509FE405
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 10268FF086
 X-Rspamd-Action: no action
 
-On Fri, Feb 6, 2026 at 2:11=E2=80=AFAM NeilBrown <neilb@ownmail.net> wrote:
->
-> On Thu, 05 Feb 2026, Amir Goldstein wrote:
-> > On Wed, Feb 4, 2026 at 6:09=E2=80=AFAM NeilBrown <neilb@ownmail.net> wr=
-ote:
-> > >
-> > > From: NeilBrown <neil@brown.name>
-> > >
-> > > When ovl_create_real() is used to create a file on the upper filesyst=
-em
-> > > it needs to return the resulting dentry - positive and hashed.
-> > > It is usually the case the that dentry passed to the create function
-> > > (e.g.  vfs_create()) will be suitable but this is not guaranteed.  Th=
-e
-> > > filesystem may unhash that dentry forcing a repeat lookup next time t=
-he
-> > > name is wanted.
-> > >
-> > > So ovl_create_real() must be (and is) aware of this and prepared to
-> > > perform that lookup to get a hash positive dentry.
-> > >
-> > > This is currently done under that same directory lock that provided
-> > > exclusion for the create.  Proposed changes to locking will make this
-> > > not possible - as the name, rather than the directory, will be locked=
-.
-> > > The new APIs provided for lookup and locking do not and cannot suppor=
-t
-> > > this pattern.
-> > >
-> > > The lock isn't needed.  ovl_create_real() can drop the lock and then =
-get
-> > > a new lock for the lookup - then check that the lookup returned the
-> > > correct inode.  In a well-behaved configuration where the upper
-> > > filesystem is not being modified by a third party, this will always w=
-ork
-> > > reliably, and if there are separate modification it will fail cleanly=
-.
-> > >
-> > > So change ovl_create_real() to drop the lock and call
-> > > ovl_start_creating_upper() to find the correct dentry.  Note that
-> > > start_creating doesn't fail if the name already exists.
-> > >
-> > > This removes the only remaining use of ovl_lookup_upper, so it is
-> > > removed.
-> > >
-> > > Signed-off-by: NeilBrown <neil@brown.name>
-> > > ---
-> > >  fs/overlayfs/dir.c       | 24 ++++++++++++++++++------
-> > >  fs/overlayfs/overlayfs.h |  7 -------
-> > >  2 files changed, 18 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-> > > index ff3dbd1ca61f..ec08904d084d 100644
-> > > --- a/fs/overlayfs/dir.c
-> > > +++ b/fs/overlayfs/dir.c
-> > > @@ -219,21 +219,33 @@ struct dentry *ovl_create_real(struct ovl_fs *o=
-fs, struct dentry *parent,
-> > >                 err =3D -EIO;
-> > >         } else if (d_unhashed(newdentry)) {
-> > >                 struct dentry *d;
-> > > +               struct name_snapshot name;
-> > >                 /*
-> > >                  * Some filesystems (i.e. casefolded) may return an u=
-nhashed
-> > > -                * negative dentry from the ovl_lookup_upper() call b=
-efore
-> > > +                * negative dentry from the ovl_start_creating_upper(=
-) call before
-> > >                  * ovl_create_real().
-> >
-> >
-> > According to the new locking rules, if the hashed dentry itself is
-> > the synchronization object, is it going to be allowed to
-> > filesystem to unhash the dentry while the dentry still in the
-> > "creating" scope? It is hard for me to wrap my head around this.
->
-> It can be confusing....
->
-> It will be important for the name the remain locked (and hashed) until
-> the operation (create, remove, rename) either succeeds or fails.  So
-> leaving a dentry unhashed will be OK providing a subsequent lookup will
-> also succeed or fail in the same way.  The caller must be able to use
-> the dentry to access the object (i.e.  the inode) on success, but they
-> is nothing in POSIX that requires that the object still has any
-> particular name.
->
-> >
-> > Or do we need this here because some filesystems (casefold in
-> > particular) are not going to support parallel creations?
->
-> There is no reason that a casefolding filesystem would not support parall=
-el
-> ops. And it isn't just casefolding that acts like this.  At least one of
-> the special filesystems (tracefs maybe) always unhashes on create.  You
-> only ever get a hashed positive dentry as a result of lookup.
-> (overlayfs would never see this case of course).
->
-> >
-> > >                  * In that case, lookup again after making the newden=
-try
-> > >                  * positive, so ovl_create_upper() always returns a h=
-ashed
-> > >                  * positive dentry.
-> > > +                * As we have to drop the lock before the lookup a ra=
-ce
-> > > +                * could result in a lookup failure.  In that case we=
- return
-> > > +                * an error.
-> > >                  */
-> > > -               d =3D ovl_lookup_upper(ofs, newdentry->d_name.name, p=
-arent,
-> > > -                                    newdentry->d_name.len);
-> > > -               dput(newdentry);
-> > > -               if (IS_ERR_OR_NULL(d))
-> > > +               take_dentry_name_snapshot(&name, newdentry);
-> > > +               end_creating_keep(newdentry);
-> > > +               d =3D ovl_start_creating_upper(ofs, parent, &name.nam=
-e);
-> > > +               release_dentry_name_snapshot(&name);
-> >
-> > OK. not saying no to this (yet) but I have to admit that it is pretty
-> > ugly that the callers of ovl_create_real() want to create a specific
-> > stable name, which is could be passed in as const char *name
-> > and yet we end up doing this weird dance here just to keep the name
-> > from newdentry.
->
-> There are three callers of ovl_create_real()
->
-> ovl_lookup_or_create() does have a "const char *name".
-> ovl_create_upper() has a stable dentry from which it can copy a QSTR
-> ovl_create_temp() would need some sort of dance to keep hold of the
-> temporary name that was allocated.
->
-> If it weren't for ovl_create_temp() I would agree with you.
->
-> Though we could have the three callers of ovl_start_creating_temp() pass =
-a
-> "char name[OVL_TEMPNAME_SIZE]" in, then ovl_create_temp() would have
-> easy access.
-> I could do that if you like.
+On Thu, 2026-02-05 at 12:29 -0800, Dai Ngo wrote:
+> When a layout conflict triggers a recall, enforcing a timeout is
+> necessary to prevent excessive nfsd threads from being blocked in
+> __break_lease ensuring the server continues servicing incoming
+> requests efficiently.
+>=20
+> This patch introduces a new function to lease_manager_operations:
+>=20
+> lm_breaker_timedout: Invoked when a lease recall times out and is
+> about to be disposed of. This function enables the lease manager
+> to inform the caller whether the file_lease should remain on the
+> flc_list or be disposed of.
+>=20
+> For the NFSD lease manager, this function now handles layout recall
+> timeouts. If the layout type supports fencing and the client has not
+> been fenced, a fence operation is triggered to prevent the client
+> from accessing the block device.
+>=20
+> While the fencing operation is in progress, the conflicting file_lease
+> remains on the flc_list until fencing is complete. This guarantees
+> that no other clients can access the file, and the client with
+> exclusive access is properly blocked before disposal.
+>=20
 
-Yes, considering that two of the callers are from the same function
-(ovl_whiteout()) I think that would end up looking nicer.
+Fair point. However...
 
-Thanks,
-Amir.
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  Documentation/filesystems/locking.rst |   2 +
+>  fs/locks.c                            |  15 +++-
+>  fs/nfsd/blocklayout.c                 |  41 ++++++++--
+>  fs/nfsd/nfs4layouts.c                 | 113 +++++++++++++++++++++++++-
+>  fs/nfsd/nfs4state.c                   |   1 +
+>  fs/nfsd/pnfs.h                        |   2 +-
+>  fs/nfsd/state.h                       |   8 ++
+>  include/linux/filelock.h              |   1 +
+>  8 files changed, 169 insertions(+), 14 deletions(-)
+>=20
+> v2:
+>     . Update Subject line to include fencing operation.
+>     . Allow conflicting lease to remain on flc_list until fencing
+>       is complete.
+>     . Use system worker to perform fencing operation asynchronously.
+>     . Use nfs4_stid.sc_count to ensure layout stateid remains
+>       valid before starting the fencing operation, nfs4_stid.sc_count
+>       is released after fencing operation is complete.
+>     . Rework nfsd4_scsi_fence_client to:
+>          . wait until fencing to complete before exiting.
+>          . wait until fencing in progress to complete before
+>            checking the NFSD_MDS_PR_FENCED flag.
+>     . Remove lm_need_to_retry from lease_manager_operations.
+> v3:
+>     . correct locking requirement in locking.rst.
+>     . add max retry count to fencing operation.
+>     . add missing nfs4_put_stid in nfsd4_layout_fence_worker.
+>     . remove special-casing of FL_LAYOUT in lease_modify.
+>     . remove lease_want_dispose.
+>     . move lm_breaker_timedout call to time_out_leases.
+> v4:
+>     . only increment ls_fence_retry_cnt after successfully
+>       schedule new work in nfsd4_layout_lm_breaker_timedout.
+> v5:
+>     . take reference count on layout stateid before starting
+>       fence worker.
+>     . restore comments in nfsd4_scsi_fence_client and the
+>       code that check for specific errors.
+>     . cancel fence worker before freeing layout stateid.
+>     . increase fence retry from 5 to 20.
+>=20
+> NOTE:
+>     I experimented with having the fence worker handle lease
+>     disposal after fencing the client. However, this requires
+>     the lease code to export the lease_dispose_list function,
+>     and for the fence worker to acquire the flc_lock in order
+>     to perform the disposal. This approach adds unnecessary
+>     complexity and reduces code clarity, as it exposes internal
+>     lease code details to the nfsd worker, which should not
+>     be the case.
+>=20
+>     Instead, the lm_breaker_timedout operation should simply
+>     notify the lease code about how to handle a lease that
+>     times out during a lease break, rather than directly
+>     manipulating the lease list.
+>=20
+
+Ok, fair point.
+
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
+stems/locking.rst
+> index 04c7691e50e0..79bee9ae8bc3 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -403,6 +403,7 @@ prototypes::
+>  	bool (*lm_breaker_owns_lease)(struct file_lock *);
+>          bool (*lm_lock_expirable)(struct file_lock *);
+>          void (*lm_expire_lock)(void);
+> +        bool (*lm_breaker_timedout)(struct file_lease *);
+> =20
+>  locking rules:
+> =20
+> @@ -417,6 +418,7 @@ lm_breaker_owns_lease:	yes     	no			no
+>  lm_lock_expirable	yes		no			no
+>  lm_expire_lock		no		no			yes
+>  lm_open_conflict	yes		no			no
+> +lm_breaker_timedout     yes             no                      no
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  buffer_head
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 46f229f740c8..0e77423cf000 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -1524,6 +1524,7 @@ static void time_out_leases(struct inode *inode, st=
+ruct list_head *dispose)
+>  {
+>  	struct file_lock_context *ctx =3D inode->i_flctx;
+>  	struct file_lease *fl, *tmp;
+> +	bool remove =3D true;
+> =20
+>  	lockdep_assert_held(&ctx->flc_lock);
+> =20
+> @@ -1531,8 +1532,18 @@ static void time_out_leases(struct inode *inode, s=
+truct list_head *dispose)
+>  		trace_time_out_leases(inode, fl);
+>  		if (past_time(fl->fl_downgrade_time))
+>  			lease_modify(fl, F_RDLCK, dispose);
+> -		if (past_time(fl->fl_break_time))
+> -			lease_modify(fl, F_UNLCK, dispose);
+> +
+> +		if (past_time(fl->fl_break_time)) {
+> +			/*
+> +			 * Consult the lease manager when a lease break times
+> +			 * out to determine whether the lease should be disposed
+> +			 * of.
+> +			 */
+> +			if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
+> +				remove =3D fl->fl_lmops->lm_breaker_timedout(fl);
+> +			if (remove)
+> +				lease_modify(fl, F_UNLCK, dispose);
+
+When remove is false, and lease_modify() doesn't happen (i.e., the
+common case where we queue the wq job), when do you actually remove the
+lease?
+
+Are you just assuming that after the client is fenced, that the layout
+stateid's refcount will go to zero? I'm curious what drives that
+process, if so.
+
+
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
