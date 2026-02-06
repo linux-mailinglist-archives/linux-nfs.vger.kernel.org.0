@@ -1,327 +1,333 @@
-Return-Path: <linux-nfs+bounces-18776-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18777-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mJ3TIyH8hWmzIwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-18776-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 15:35:13 +0100
+	id 2BfaHIgBhmlhJAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-18777-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 15:58:16 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10268FF086
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 15:35:13 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9267DFF5E6
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Feb 2026 15:58:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9DE143080FE6
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Feb 2026 14:28:27 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9B83A3001FA2
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Feb 2026 14:58:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94C4A41B37D;
-	Fri,  6 Feb 2026 14:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1587F35FF5B;
+	Fri,  6 Feb 2026 14:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJMRrXkc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQKXmkSI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7131B413247;
-	Fri,  6 Feb 2026 14:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71903EDAC8
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Feb 2026 14:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770388091; cv=none; b=oqrSv37J6eFP+1nJJu4Xqf5kSLITbU9UUAQFnW0a04IkADkCaw0xNrkuEw6s4fXF/xptPfvuLRfF17LrcNZSz55fXFpBHfw53ILdTGhXHm2dnW0WSoCcblJ4ZuJGlIirxSM81ILIzBvtaAs3weRWzAwLrvpsfv3jBmduJniYqNc=
+	t=1770389881; cv=none; b=g3SOGQyclWQxPhl8azsM8+uljl843XWmVyyr22uPLttI/YVF60kjTKmbvfSmlz0ZSU4eVLUErfODQXBnB4nRXyZyKzMypxKkNwVSRQP77kHpMuU3vYSorOTTOlvGm1Pu2qbltbUTzB/muIWf8+JW4bYJoxOYhhcwyIlYiJp56Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770388091; c=relaxed/simple;
-	bh=OnuY73oyurAZjtvDP9VqH8mS5yKoRavmsQGmwDd5Dq8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kHpth24QC+ZWXPGI6AAQ74/bVMWJXwoSgcWIUyu9gt2roYin77U4Z8fEViHRh+mqjMfp0LlcWlQie78hC8ptMIgn1we4jNEjkRGr5fnRROAvPpidgMUH1RfpRTSRYWedAze2RKalyNXZUVYDIPJwZok2cSPp02+XpQTofAZdnrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJMRrXkc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A29C19421;
-	Fri,  6 Feb 2026 14:28:09 +0000 (UTC)
+	s=arc-20240116; t=1770389881; c=relaxed/simple;
+	bh=EJYorvNmgeooWwgABMDy6ONdD9KIdVpjZ94GouZSYVM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=JBSMcOCmDPt9t+rCeEW0QhaIGZtGrxjfR3qvPQoKz57+UEIajdTa2E1GTpY2v9vi5ef1JstrbGvajFZupX4vRl0bB25fp9gVpfFuobqCKDJWuCapBNzIAJXU9Ow0wQqP9Yzlr0IVh8lYH2pl6+WznFrkHdXagD4xXM4mO7s943o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQKXmkSI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0B36C16AAE;
+	Fri,  6 Feb 2026 14:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770388090;
-	bh=OnuY73oyurAZjtvDP9VqH8mS5yKoRavmsQGmwDd5Dq8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MJMRrXkc5zS8PGCWDQkrsEnlAsCMnb0bivMgavSd9Dctm9509WQcmjo1fJfID0bUM
-	 zGZWFS2NTOUEdxZHyLO8IC/mHaK0MqVfKKCKAcijtD4EDqX6ASGyEeJjP53hwJPRyM
-	 grqL8jmFVX4w8p1GJXPfoCu8vKohL2jP7ISLembSGx0Xx/Lbx3kcvaaXSCeaO9Hxvp
-	 7v+exdPH5sIAvigDYkz8ySReacunzEAi9AdgNgCzjzi8Npncf6QNcpmQlYRjWiE5wE
-	 72jwkv9hLsCW7eUtMGi/gC/Wq9iYhsXROipu5M2nqcDhy7LKO3cslrDxykQf3bhtho
-	 Hnl/hwh0nQyEg==
-Message-ID: <9194ce4db4391c0e6428f97b05fcee53706fb485.camel@kernel.org>
-Subject: Re: [PATCH v5 1/1] NFSD: Enforce timeout on layout recall and
- integrate lease manager fencing
-From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neil@brown.name, 
-	okorniev@redhat.com, tom@talpey.com, hch@lst.de, alex.aring@gmail.com, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Fri, 06 Feb 2026 09:28:08 -0500
-In-Reply-To: <20260205202929.879846-1-dai.ngo@oracle.com>
-References: <20260205202929.879846-1-dai.ngo@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=k20201202; t=1770389880;
+	bh=EJYorvNmgeooWwgABMDy6ONdD9KIdVpjZ94GouZSYVM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=UQKXmkSItGCIV0ObClphmz4WNwWACF9DUSQCN+zzxHDfXFequLAuv8zzLDX9faA+Z
+	 +vusz7ydov+5b+3qEG8n41+oOsHLPrxdg2QJoWBfSYzMkxO48afoj2VSUGH42DI/8+
+	 aVkzthm4jhw8JXmFCNSvgtNQ0e9YEkFDy1WXF3S0tnKTedaQ5WTEN6ZU/CJjv3McO7
+	 v/pejoI3fysvassrH8Yscc47bz1n+B62EDlqVBI/UjXSwF8gRgZSs54evzKroBI+g4
+	 TnkFtJBzuZhPpO2tlxam1bQNKRRWNdcJZ/D+wmVr/lQzRNbou+fHTAlN7Yxa5A2XYe
+	 kXf2EiJTjvFHA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E036CF40068;
+	Fri,  6 Feb 2026 09:57:58 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 06 Feb 2026 09:57:58 -0500
+X-ME-Sender: <xms:dgGGadOpzJDRvrSh6Q6Z8OTLewQMp_mfmTfqClC4AiHFgCS70A40mA>
+    <xme:dgGGaay0yusec6ol0fyEWkQIRMxpNdw5qLvwTOYoZaLnBCo3UTGUIDo0QrdWNIqnw
+    ZwQVNRJmrbVgdUDNfHzNXBFkoFnv5yWXIoi_LTzQcxEkhjBkak8Tw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeekgeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrihhrvgesughnvghgrdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepshhnihhtiigvrheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpth
+    htohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepnhgvihhlsges
+    ohifnhhmrghilhdrnhgvthdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrd
+    gtohhmpdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoheplhhi
+    nhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:dgGGaSpieMdZ1VmQZdnXFEI91qi6_KSD0hW-RXh2XJ-uS0vTn_G7dA>
+    <xmx:dgGGaVk9uA4pJUFiK9479G_6j9pXp1aPrr5nvXRro9Swrcw22W8gEw>
+    <xmx:dgGGabdEHAmVR2sdj8S09bmzxiNQ9pv981azE3PQzmBH4w8ddj4RfQ>
+    <xmx:dgGGaRpiG2P-sHqttYOSY-Zg3TcACWIqpykBP2KbbtMMjUevpsNA8g>
+    <xmx:dgGGaVMdy5Fn45rovXL-MfIz-1Gyqdw2LTHnV0zM18oLTytiMVhn_VOy>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A0CC5780070; Fri,  6 Feb 2026 09:57:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: AxQmJ9jYsyqs
+Date: Fri, 06 Feb 2026 09:57:37 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: NeilBrown <neilb@ownmail.net>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Daire Byrne" <daire@dneg.com>,
+ "Mike Snitzer" <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <af3a034c-4829-469d-b55d-9414409ee425@app.fastmail.com>
+In-Reply-To: <20260205155729.6841-2-cel@kernel.org>
+References: <20260205155729.6841-1-cel@kernel.org>
+ <20260205155729.6841-2-cel@kernel.org>
+Subject: Re: [RFC PATCH 1/7] workqueue: Automatic affinity scope fallback for
+ single-pod topologies
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18776-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,lst.de,gmail.com,zeniv.linux.org.uk,kernel.org,suse.cz];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	XM_UA_NO_VERSION(0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.986];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-18777-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,dneg.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:email,app.fastmail.com:mid];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.968];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 10268FF086
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 9267DFF5E6
 X-Rspamd-Action: no action
 
-On Thu, 2026-02-05 at 12:29 -0800, Dai Ngo wrote:
-> When a layout conflict triggers a recall, enforcing a timeout is
-> necessary to prevent excessive nfsd threads from being blocked in
-> __break_lease ensuring the server continues servicing incoming
-> requests efficiently.
->=20
-> This patch introduces a new function to lease_manager_operations:
->=20
-> lm_breaker_timedout: Invoked when a lease recall times out and is
-> about to be disposed of. This function enables the lease manager
-> to inform the caller whether the file_lease should remain on the
-> flc_list or be disposed of.
->=20
-> For the NFSD lease manager, this function now handles layout recall
-> timeouts. If the layout type supports fencing and the client has not
-> been fenced, a fence operation is triggered to prevent the client
-> from accessing the block device.
->=20
-> While the fencing operation is in progress, the conflicting file_lease
-> remains on the flc_list until fencing is complete. This guarantees
-> that no other clients can access the file, and the client with
-> exclusive access is properly blocked before disposal.
->=20
 
-Fair point. However...
 
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+On Thu, Feb 5, 2026, at 10:57 AM, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> The default affinity scope WQ_AFFN_CACHE assumes systems have
+> multiple last-level caches. On systems where all CPUs share a
+> single LLC (common with Intel monolithic dies), this scope
+> degenerates to a single worker pool. All queue_work() calls then
+> contend on that pool's single lock, causing severe performance
+> degradation under high-throughput workloads.
+>
+> For example, on a 12-core system with a single shared L3 cache
+> running NFS over RDMA with 12 fio jobs, perf shows approximately
+> 39% of CPU cycles spent in native_queued_spin_lock_slowpath,
+> nearly all from __queue_work() contending on the single pool lock.
+>
+> On such systems WQ_AFFN_CACHE, WQ_AFFN_SMT, and WQ_AFFN_NUMA
+> scopes all collapse to a single pod.
+>
+> Add wq_effective_affn_scope() to detect when a selected affinity
+> scope provides only one pod despite having multiple CPUs, and
+> automatically fall back to a finer-grained scope. This enables lock
+> distribution to scale with CPU count without requiring manual
+> configuration via the workqueue.default_affinity_scope parameter or
+> per-workqueue sysfs tuning.
+>
+> The fallback is conservative: it triggers only when a scope
+> degenerates to exactly one pod, and respects explicitly configured
+> (non-default) scopes.
+>
+> Also update wq_affn_scope_show() to display the effective scope
+> when fallback occurs, making the behavior transparent to
+> administrators via sysfs (e.g., "default (cache -> smt)").
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  Documentation/filesystems/locking.rst |   2 +
->  fs/locks.c                            |  15 +++-
->  fs/nfsd/blocklayout.c                 |  41 ++++++++--
->  fs/nfsd/nfs4layouts.c                 | 113 +++++++++++++++++++++++++-
->  fs/nfsd/nfs4state.c                   |   1 +
->  fs/nfsd/pnfs.h                        |   2 +-
->  fs/nfsd/state.h                       |   8 ++
->  include/linux/filelock.h              |   1 +
->  8 files changed, 169 insertions(+), 14 deletions(-)
->=20
-> v2:
->     . Update Subject line to include fencing operation.
->     . Allow conflicting lease to remain on flc_list until fencing
->       is complete.
->     . Use system worker to perform fencing operation asynchronously.
->     . Use nfs4_stid.sc_count to ensure layout stateid remains
->       valid before starting the fencing operation, nfs4_stid.sc_count
->       is released after fencing operation is complete.
->     . Rework nfsd4_scsi_fence_client to:
->          . wait until fencing to complete before exiting.
->          . wait until fencing in progress to complete before
->            checking the NFSD_MDS_PR_FENCED flag.
->     . Remove lm_need_to_retry from lease_manager_operations.
-> v3:
->     . correct locking requirement in locking.rst.
->     . add max retry count to fencing operation.
->     . add missing nfs4_put_stid in nfsd4_layout_fence_worker.
->     . remove special-casing of FL_LAYOUT in lease_modify.
->     . remove lease_want_dispose.
->     . move lm_breaker_timedout call to time_out_leases.
-> v4:
->     . only increment ls_fence_retry_cnt after successfully
->       schedule new work in nfsd4_layout_lm_breaker_timedout.
-> v5:
->     . take reference count on layout stateid before starting
->       fence worker.
->     . restore comments in nfsd4_scsi_fence_client and the
->       code that check for specific errors.
->     . cancel fence worker before freeing layout stateid.
->     . increase fence retry from 5 to 20.
->=20
-> NOTE:
->     I experimented with having the fence worker handle lease
->     disposal after fencing the client. However, this requires
->     the lease code to export the lease_dispose_list function,
->     and for the fence worker to acquire the flc_lock in order
->     to perform the disposal. This approach adds unnecessary
->     complexity and reduces code clarity, as it exposes internal
->     lease code details to the nfsd worker, which should not
->     be the case.
->=20
->     Instead, the lm_breaker_timedout operation should simply
->     notify the lease code about how to handle a lease that
->     times out during a lease break, rather than directly
->     manipulating the lease list.
->=20
-
-Ok, fair point.
-
-> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
-stems/locking.rst
-> index 04c7691e50e0..79bee9ae8bc3 100644
-> --- a/Documentation/filesystems/locking.rst
-> +++ b/Documentation/filesystems/locking.rst
-> @@ -403,6 +403,7 @@ prototypes::
->  	bool (*lm_breaker_owns_lease)(struct file_lock *);
->          bool (*lm_lock_expirable)(struct file_lock *);
->          void (*lm_expire_lock)(void);
-> +        bool (*lm_breaker_timedout)(struct file_lease *);
-> =20
->  locking rules:
-> =20
-> @@ -417,6 +418,7 @@ lm_breaker_owns_lease:	yes     	no			no
->  lm_lock_expirable	yes		no			no
->  lm_expire_lock		no		no			yes
->  lm_open_conflict	yes		no			no
-> +lm_breaker_timedout     yes             no                      no
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
->  buffer_head
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 46f229f740c8..0e77423cf000 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -1524,6 +1524,7 @@ static void time_out_leases(struct inode *inode, st=
-ruct list_head *dispose)
->  {
->  	struct file_lock_context *ctx =3D inode->i_flctx;
->  	struct file_lease *fl, *tmp;
-> +	bool remove =3D true;
-> =20
->  	lockdep_assert_held(&ctx->flc_lock);
-> =20
-> @@ -1531,8 +1532,18 @@ static void time_out_leases(struct inode *inode, s=
-truct list_head *dispose)
->  		trace_time_out_leases(inode, fl);
->  		if (past_time(fl->fl_downgrade_time))
->  			lease_modify(fl, F_RDLCK, dispose);
-> -		if (past_time(fl->fl_break_time))
-> -			lease_modify(fl, F_UNLCK, dispose);
+>  include/linux/workqueue.h |  8 ++++-
+>  kernel/workqueue.c        | 68 +++++++++++++++++++++++++++++++++++----
+>  2 files changed, 69 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> index dabc351cc127..1fca5791337d 100644
+> --- a/include/linux/workqueue.h
+> +++ b/include/linux/workqueue.h
+> @@ -128,10 +128,16 @@ struct rcu_work {
+>  	struct workqueue_struct *wq;
+>  };
+> 
+> +/*
+> + * Affinity scopes are ordered from finest to coarsest granularity. 
+> This
+> + * ordering is used by the automatic fallback logic in 
+> wq_effective_affn_scope()
+> + * which walks from coarse toward fine when a scope degenerates to a 
+> single pod.
+> + */
+>  enum wq_affn_scope {
+>  	WQ_AFFN_DFL,			/* use system default */
+>  	WQ_AFFN_CPU,			/* one pod per CPU */
+> -	WQ_AFFN_SMT,			/* one pod poer SMT */
+> +	WQ_AFFN_SMT,			/* one pod per SMT */
+> +	WQ_AFFN_CLUSTER,		/* one pod per cluster */
+>  	WQ_AFFN_CACHE,			/* one pod per LLC */
+>  	WQ_AFFN_NUMA,			/* one pod per NUMA node */
+>  	WQ_AFFN_SYSTEM,			/* one pod across the whole system */
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 253311af47c6..32598b9cd1c2 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -405,6 +405,7 @@ static const char *wq_affn_names[WQ_AFFN_NR_TYPES] 
+> = {
+>  	[WQ_AFFN_DFL]		= "default",
+>  	[WQ_AFFN_CPU]		= "cpu",
+>  	[WQ_AFFN_SMT]		= "smt",
+> +	[WQ_AFFN_CLUSTER]	= "cluster",
+>  	[WQ_AFFN_CACHE]		= "cache",
+>  	[WQ_AFFN_NUMA]		= "numa",
+>  	[WQ_AFFN_SYSTEM]	= "system",
+> @@ -4753,6 +4754,39 @@ static void wqattrs_actualize_cpumask(struct 
+> workqueue_attrs *attrs,
+>  		cpumask_copy(attrs->cpumask, unbound_cpumask);
+>  }
+> 
+> +/*
+> + * Determine the effective affinity scope. If the configured scope results
+> + * in a single pod (e.g., WQ_AFFN_CACHE on a system with one shared LLC),
+> + * fall back to a finer-grained scope to distribute pool lock contention.
+> + *
+> + * The search stops at WQ_AFFN_CPU, which always provides one pod per CPU
+> + * and thus cannot degenerate further.
+> + *
+> + * Returns the scope to actually use, which may differ from the configured
+> + * scope on systems where coarser scopes degenerate.
+> + */
+> +static enum wq_affn_scope wq_effective_affn_scope(enum wq_affn_scope scope)
+> +{
+> +	struct wq_pod_type *pt;
 > +
-> +		if (past_time(fl->fl_break_time)) {
-> +			/*
-> +			 * Consult the lease manager when a lease break times
-> +			 * out to determine whether the lease should be disposed
-> +			 * of.
-> +			 */
-> +			if (fl->fl_lmops && fl->fl_lmops->lm_breaker_timedout)
-> +				remove =3D fl->fl_lmops->lm_breaker_timedout(fl);
-> +			if (remove)
-> +				lease_modify(fl, F_UNLCK, dispose);
+> +	/*
+> +	 * Walk from the requested scope toward finer granularity. Stop
+> +	 * when a scope provides more than one pod, or when CPU scope is
+> +	 * reached. CPU scope always provides nr_possible_cpus() pods.
+> +	 */
+> +	while (scope > WQ_AFFN_CPU) {
+> +		pt = &wq_pod_types[scope];
+> +
+> +		/* Multiple pods at this scope; no fallback needed */
+> +		if (pt->nr_pods > 1)
+> +			break;
+> +
+> +		scope--;
+> +	}
+> +
+> +	return scope;
+> +}
+> +
+>  /* find wq_pod_type to use for @attrs */
+>  static const struct wq_pod_type *
+>  wqattrs_pod_type(const struct workqueue_attrs *attrs)
+> @@ -4763,8 +4797,13 @@ wqattrs_pod_type(const struct workqueue_attrs *attrs)
+>  	/* to synchronize access to wq_affn_dfl */
+>  	lockdep_assert_held(&wq_pool_mutex);
+> 
+> +	/*
+> +	 * For default scope, apply automatic fallback for degenerate
+> +	 * topologies. Explicit scope selection via sysfs or per-workqueue
+> +	 * attributes bypasses fallback, preserving administrator intent.
+> +	 */
+>  	if (attrs->affn_scope == WQ_AFFN_DFL)
+> -		scope = wq_affn_dfl;
+> +		scope = wq_effective_affn_scope(wq_affn_dfl);
+>  	else
+>  		scope = attrs->affn_scope;
+> 
+> @@ -7206,16 +7245,27 @@ static ssize_t wq_affn_scope_show(struct device *dev,
+>  				  struct device_attribute *attr, char *buf)
+>  {
+>  	struct workqueue_struct *wq = dev_to_wq(dev);
+> +	enum wq_affn_scope scope, effective;
+>  	int written;
+> 
+>  	mutex_lock(&wq->mutex);
+> -	if (wq->unbound_attrs->affn_scope == WQ_AFFN_DFL)
+> -		written = scnprintf(buf, PAGE_SIZE, "%s (%s)\n",
+> -				    wq_affn_names[WQ_AFFN_DFL],
+> -				    wq_affn_names[wq_affn_dfl]);
+> -	else
+> +	if (wq->unbound_attrs->affn_scope == WQ_AFFN_DFL) {
+> +		scope = wq_affn_dfl;
+> +		effective = wq_effective_affn_scope(scope);
+> +		if (wq_pod_types[effective].nr_pods >
+> +		    wq_pod_types[scope].nr_pods)
+> +			written = scnprintf(buf, PAGE_SIZE, "%s (%s -> %s)\n",
+> +					    wq_affn_names[WQ_AFFN_DFL],
+> +					    wq_affn_names[scope],
+> +					    wq_affn_names[effective]);
+> +		else
+> +			written = scnprintf(buf, PAGE_SIZE, "%s (%s)\n",
+> +					    wq_affn_names[WQ_AFFN_DFL],
+> +					    wq_affn_names[scope]);
+> +	} else {
+>  		written = scnprintf(buf, PAGE_SIZE, "%s\n",
+>  				    wq_affn_names[wq->unbound_attrs->affn_scope]);
+> +	}
+>  	mutex_unlock(&wq->mutex);
+> 
+>  	return written;
+> @@ -8023,6 +8073,11 @@ static bool __init cpus_share_smt(int cpu0, int cpu1)
+>  #endif
+>  }
+> 
+> +static bool __init cpus_share_cluster(int cpu0, int cpu1)
+> +{
+> +	return cpumask_test_cpu(cpu0, topology_cluster_cpumask(cpu1));
+> +}
+> +
+>  static bool __init cpus_share_numa(int cpu0, int cpu1)
+>  {
+>  	return cpu_to_node(cpu0) == cpu_to_node(cpu1);
+> @@ -8042,6 +8097,7 @@ void __init workqueue_init_topology(void)
+> 
+>  	init_pod_type(&wq_pod_types[WQ_AFFN_CPU], cpus_dont_share);
+>  	init_pod_type(&wq_pod_types[WQ_AFFN_SMT], cpus_share_smt);
+> +	init_pod_type(&wq_pod_types[WQ_AFFN_CLUSTER], cpus_share_cluster);
+>  	init_pod_type(&wq_pod_types[WQ_AFFN_CACHE], cpus_share_cache);
+>  	init_pod_type(&wq_pod_types[WQ_AFFN_NUMA], cpus_share_numa);
+> 
+> -- 
+> 2.52.0
 
-When remove is false, and lease_modify() doesn't happen (i.e., the
-common case where we queue the wq job), when do you actually remove the
-lease?
-
-Are you just assuming that after the client is fenced, that the layout
-stateid's refcount will go to zero? I'm curious what drives that
-process, if so.
+Tejun has rejected this one. However I've worked up a patch
+that replaces svcrdma_wq with a kthread that does not have an
+issue with the workqueue pool spin lock, and that solves the
+same issue this one does (for NFSD).
 
 
-
---=20
-Jeff Layton <jlayton@kernel.org>
+-- 
+Chuck Lever
 
