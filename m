@@ -1,161 +1,166 @@
-Return-Path: <linux-nfs+bounces-18808-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18809-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yJPDA49piWks8gQAu9opvQ
-	(envelope-from <linux-nfs+bounces-18808-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 05:58:55 +0100
+	id +J3ELGCuiWndAgUAu9opvQ
+	(envelope-from <linux-nfs+bounces-18809-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 10:52:32 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86DE710BAE9
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 05:58:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D05310DCD0
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 10:52:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3DFE830071D3
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Feb 2026 04:58:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E313E306464C
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Feb 2026 09:47:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A40274B48;
-	Mon,  9 Feb 2026 04:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF2C73659E1;
+	Mon,  9 Feb 2026 09:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2Ou/SDb"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="dLqrVPUl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28A91A9FB0
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Feb 2026 04:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770613109; cv=none; b=oafMZMlwH0c123UgVZelFODiXwQ2SnnuocJxC07qL6qcqLGcAvJhcCLuPU7KZPXRtwhupDGSY1UzI6m3KsAo7nzGGkcnHAap1YRunjghGNBm9vZjkA98iOUoeroeUoDnlOrMyEwFzAnM1SFmZmA7hwY/ZlNrVGe2YNDhWT43dpY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770613109; c=relaxed/simple;
-	bh=kBBRCIEGOxP71duR9Pdkyw6icI+O41FhThI+xmeNQyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DebXjtJclLFPzfhjq/q4zLmwTToQPaSoOVCQIq5XXild2k5Cj8u9bsxFDTCTVzKNce5vx0jOItpirBBEXIIw8qMQebPfS2RrWpTjb8d1auAbugKC7UZqo0lWOgDnS9VaZg29lXYv+Z3/K2A/FRj5Y+IxGjst9PJXmX8ZRBD1ao4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2Ou/SDb; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-43767807da6so649399f8f.2
-        for <linux-nfs@vger.kernel.org>; Sun, 08 Feb 2026 20:58:28 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CDF2EA156
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Feb 2026 09:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770630428; cv=pass; b=CaDnUefxG4BV1IC5zLsscQOea2nqJGHJHTD2WfTgqFtU8RiBjLHFa3RyXj6aJGC1g9IVAG2rJxc8VwnmsqeVh4E53KDumbewquKU5h6u8bMTPDpjudNKOmVpGR3RuC6xIOSx+C3YLQBSwWwNJ9S1T8QTGj395Ax3Zav2xT+iLA8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770630428; c=relaxed/simple;
+	bh=kslYdqR/Eeds+pnHFX4dOlw3YR4a+aL+uxqVvQbwvrY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tPugniNqC7dF0orx3RL7jCCg9n9Rp7o9GHjvwnlB0s+C+h8y8826cYHkvsBVTIURKyNAQPH95SagAfViat3HjQWME4zT6ou7XMZOE1db8eWGwXEUhl+ZNU4q+aeVNAIC5AgyzA2NsVLRXEG9Vv5foYkj0605Ahz32c8xsgentGI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=dLqrVPUl; arc=pass smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8966bd9da41so12962866d6.2
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Feb 2026 01:47:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770630426; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ToctPE2kQMvH6cgoBXlezLoY5ybyrJXqXFSk3FKkEij3YAkREEcDpY/D3D16JcP1dm
+         BEVDun2nDJgEdvizGxypI7q0vx5X/0bJYPrzWadX6WeZi0iNNrA0gHkRtJU+MkKeWawr
+         8QjSODjd//ia+LyX8cb4ztvyzlkxiUIb/gigLwRQXO098H6YIPkGQsxUHOeo0jftirwo
+         0BrNUMExey+CxufDqjj4sBgxuTBFA/GySpuMx0DNW0nkQuwjA2Jp2jdIrIwz26eZa6j2
+         N349LfxONnMkJMm+eBMlbPJIZLBm+JXkXRPe9pztRRW0GaZ4EX3QVgKA4HJxHK31okiY
+         GUUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=MhbUYQBRSHqJLFTCcNvNjXM5Nu9GEAvwhrEdsxUNUHw=;
+        fh=myi6+dTaTzi35er4T2NoiWCgvovdSZFsxCxxzYX/KqY=;
+        b=hbIe8wuFPkHvIoC3JxHEBzpF6OqKRBUIfPN/q08oe1xjXofy8w5RJw4L6XPLiaQDo3
+         WJorQ5sqs3+qNOq7cp+EC18GZLo8CXg76AFaFKzfuCfxntNQr5JFCd26OLuHuvJUxptx
+         U1galLBXproB50lZy6Yu6RAsPIYs1MgnsHr2SALZrCl/yAdMQMm0U2BQp/smYN2lhqrx
+         afBp0aRdp1v9qkrhKVGIlVSVQq3Z7k7WUypfIcQ1BRlcJLFS3PPFmSBFJ4I0q+LCe4wC
+         UPsRwC8kEs951iJAjFbPmJ5x7tLhG1QRptvacfIXuksqJjmAkC9sQGIYbZ7xjELygYq7
+         CDbw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770613107; x=1771217907; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4peVNB+5ELYTcHmDpzvkLXgbTr9tYPUTjyVW9rxozv8=;
-        b=M2Ou/SDb3JlBres7u+FI08FLc+5RxjpFScUBVas3Z156Gh+M9lam72UDYdTT64k1PC
-         xj86hp28oMUOZbX4PAZwQJEUYvTVklybKdQkBRH87EvJDb9WZULF9o2jD3+KZ3Rtam4F
-         1LR4475fCwXkLXu2nkzjwMj/kPKFSzIssS3GMqR1EIuM2WBgrEoRnI5iBtbBlvU/dkMJ
-         As6zESs4jsjBLWTjSy+A2FwEi/dNINqf3gnYZtvTqW4pRwJJH4fF/e8E932IzGxjklgP
-         5g/l2EUZcDXqUBIq6TxmqwPmIfpSauOQriCn7L5syZgD3/jWVyfPv5R9YU4d9PMIS/Jk
-         T3zg==
+        d=szeredi.hu; s=google; t=1770630426; x=1771235226; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MhbUYQBRSHqJLFTCcNvNjXM5Nu9GEAvwhrEdsxUNUHw=;
+        b=dLqrVPUlgWH8s70iuf87BTLXR0c3co+h9xD4nuv93T7Xk3UtPACbeTo+5mu2YD/tf2
+         MLoysDWLD5MwAAtrg5WyxovXcu+Wm6kbGFNeoWszMaMdS9LbwB31VzyazUJOVZKQsUIy
+         YVzsnY7Uc8RS4cevalkd7RvfQ35FV0mFGPSQk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770613107; x=1771217907;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4peVNB+5ELYTcHmDpzvkLXgbTr9tYPUTjyVW9rxozv8=;
-        b=Q2jFRnID7pZqG/gnP7u0NuaC7U6na9WkQVA4V90yucFsS6PquL8UWNCd1cOONM8Ob0
-         bT5/lhT4imNTeIN2nn8T93VkkRTnEO7VZhkEMhWAJKu/ObgG8pdLPqQxTU7IM30HsFsB
-         HLHOi1ND0gnDyzbnMoerEbMJdPSBhJpNT5AnPCwKie18tWG46bOdtBapPiBFjyIHLjnd
-         6eo6272gP+23J0Mj9vDJ4pVf2y6aD9ZDA9GUiWysCah/6JgyODSMtg1zXwNHHJK6ddeA
-         wdE+rRAA5+WStyZQjHvZ/lH9us4Mc1tFqDZAHUpvqGMUiOU05XWg6xgF3SyH/XPnuGAE
-         5PVw==
-X-Gm-Message-State: AOJu0YyYvo2iHw5rP9kXNEyZzCIA7vxmAY1zFtgM7EFURIgmXphaPRnf
-	teEGutaMCCuwLsVkx3z+XnzDub8vqz8JvoNzTL4CCjVeHFS9Z/0+gvBaazaNvM1c
-X-Gm-Gg: AZuq6aI2Zi4Ydf1ckCh3Eg1ij24Zwvntj7evqBtVuhvlmXyxxg0XRlG/0tJHs2xoPee
-	WTr5vVCgwi9JrT4uuWK8nMjm4RwG1cAzj4EsmC6tSoN9AwGc2NVnfmi+PIazykJDtRUsdz1EvPH
-	+rlef7gxN9ZPOme1TwztpmEp8sprg85MATr7gY7kifqIF9o44dAbw5JSoKT0ymu29AFQKKtUuAm
-	Kd6AAlZe5ydvVBgAIH24P/giZeHEPn1+9lwyAUSLx3HR3VQs5wOvxjuG+zopm3/P/qCENii5fAG
-	JjCiYPb1i3/g7u8xHsyxAFa6Xc+OuWilx7DLE+OB4cXodRKnVcnXqCB/AIWuyzr48ZpUMaSR6t/
-	YM9fa2pDWXwEfaJnPo8YpjjKv64kuz9ZM/gCFlVzpOWCKOy3H1DMxOcXP1EOrhqJ3YPS6IVMgls
-	hWpEucWH4L16CkZzgZMXpn+zy7qB6RRYx1/dFgc5mxQk7mRuwi3jQ9XGM=
-X-Received: by 2002:a05:6000:2889:b0:436:1a24:df81 with SMTP id ffacd0b85a97d-4362904b702mr13678811f8f.2.1770613106865;
-        Sun, 08 Feb 2026 20:58:26 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4376a78d796sm8070092f8f.20.2026.02.08.20.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Feb 2026 20:58:25 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 587D7BE2DE0; Mon, 09 Feb 2026 05:58:24 +0100 (CET)
-Date: Mon, 9 Feb 2026 05:58:24 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Steve Dickson <steved@redhat.com>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: ANNOUNCE: nfs-utils-2.8.5 released.
-Message-ID: <aYlpcPkq_glykQvJ@eldamar.lan>
-References: <fdf3631f-e924-4e4c-bd9f-db5b40a90bfe@redhat.com>
+        d=1e100.net; s=20230601; t=1770630426; x=1771235226;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MhbUYQBRSHqJLFTCcNvNjXM5Nu9GEAvwhrEdsxUNUHw=;
+        b=WJ1aavZr2in4CzEmocpam/RpYV6pJyESLcTuw2+GdbmduTmTbBwy7X6GBbSNtyd3tP
+         4SNnkwgPU/MhYj2tj+LEISXunLJ2YNK8zFubDi5c08NPf5ga6noT/wi3oUy7zOJ8Brt0
+         dI4ECChSMhYGz5/IFXoE/buHo0A44OUSjERrxRySaKTcvv1wZMOiCajkW+PboXp6+vC+
+         7kt+28egj7ebpy+eKgQ3BIjLDq6h/SOBJgAw8TVKQscKi4Z9kUCDqIvTtQDXRhybBwHD
+         c4/JgMRDjUzLMHJpuFVg+VJeGUyEh6AG5bzjDK1GecZU8SgS8elEn296rqyD0yFqeBwA
+         agfQ==
+X-Gm-Message-State: AOJu0YzUW7mu5Y2fxylRQd9Jtb/otUJccaroX0dQCpwpI7EfirvxZmiz
+	ZYfUtP38NfPnpl6Emobak0Nm6s/qvFn7Ha0W2gwOXRkb3yPY3LplHRdfdbkIk59h8Lof9vzEwng
+	9V9/pTq6xJdH8JiriJ4/u/TVVoQUq06vSPh5D28+I4Q==
+X-Gm-Gg: AZuq6aJ1on9+KErVYIXIA8GA3MmISGzP45yx6q0LZkKtfnuw4WcmgD/CbwAqGV8gy4/
+	DeoUCZh+IoBSt56vsrWtAYqaAqjIHqsERQ34RlCAsdxYnUumXa2fHPnqOOMP7Fl3nMZ8+z/Uiqy
+	OolK4sRHKE26plNknMGu33kNgZ0aUD8pwo9w7uBMcBB2654dnKf3EroTA1WiMl4ksfCGIJZgiwN
+	4Tyh8bEsPZP5JVPvQTrYIKz8hnAjPQa8FMs/9YHuhD+LGal0IO9nntn4HeYWEGwz8ye+Q==
+X-Received: by 2002:a05:6214:1313:b0:894:2cb3:d11f with SMTP id
+ 6a1803df08f44-8953c7e4bf2mr170464966d6.18.1770630426393; Mon, 09 Feb 2026
+ 01:47:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdf3631f-e924-4e4c-bd9f-db5b40a90bfe@redhat.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 9 Feb 2026 10:46:54 +0100
+X-Gm-Features: AZwV_Qjy3xnJNEFhzfsyr6-tHP122kxtgH4LciILKjduIFPXSjrwE2RS0X3s71w
+Message-ID: <CAJfpegu0PrfCemFdimcvDfw6BZ2R5=kaZ=Zrt6U5T37W=mfEAw@mail.gmail.com>
+Subject: [LSF/MM/BPF TOPIC] xattr caching
+To: lsf-pc <lsf-pc@lists.linux-foundation.org>, linux-fsdevel@vger.kernel.org
+Cc: Linux NFS list <linux-nfs@vger.kernel.org>, Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[szeredi.hu,quarantine];
+	R_DKIM_ALLOW(-0.20)[szeredi.hu:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18808-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18809-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[debian.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[carnil@debian.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-0.996];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[eldamar.lan:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 86DE710BAE9
+	DKIM_TRACE(0.00)[szeredi.hu:+];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[miklos@szeredi.hu,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	NEURAL_HAM(-0.00)[-0.994];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[szeredi.hu:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 1D05310DCD0
 X-Rspamd-Action: no action
 
-Hi Steve,
+I'm looking at implementing xattr caching for fuse and wondering how to do this.
 
-On Mon, Feb 02, 2026 at 06:45:30AM -0500, Steve Dickson wrote:
-> Hello,
-> 
-> This release contains the following:
-> 
->     * Man page corrections
->     * min-threads parameter added to nfsdctl.
->     * systemd updates to rpc-statd-notify.
->     * blkmapd not built by default (--enable-blkmapd to re-enable)
->     * A number of other bug fixes.
-> 
-> The tarballs can be found in
->   https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.5/
-> or
->   http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.5
-> 
-> The change log is in
->    https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.5/2.8.5-Changelog
-> or
->  http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.4/2.8.5-Changelog
-> 
-> 
-> The git tree is at:
->    git://linux-nfs.org/~steved/nfs-utils
+Why is there no common infrastructure?
 
-While 2.8.5 was released, I do not see yet a release commit and tag in
-the git repository, is this correct?
+Should we create one?
 
-Regards,
-Salvatore
+What currently exists:
+
+- mb_cache for ext2/4.  This seems to be used for deduplicating data,
+so it's no good for fuse, afaics.
+
+- simple_xattr for tmpfs/kernfs. This looks good, except it doesn't
+have a shrinker, for obvious reasons.
+
+- nfs4_xattr_cache for nfs. I don't really understand the design
+choice of separate cache tables for each inode, which seems wasteful
+for the common case of just a couple of xattrs per inode(*).
+
+Without having looked deeply at each implementation, I'd think that
+combining the features of all of the above into a common utility would
+make sense.
+
+Large, multi page xattrs (which I haven't seen in the wild, but I'm
+sure they are out there) should be cached similarly to file data.
+Small values could be stored "inline".
+
+Deduplication of keys, values and lists is probably also useful.
+
+Shrinking would not be used for tmpfs and kin, just like the other caches.
+
+Any other considerations?
+
+Thanks,
+Miklos
+
+(*) Either a global hash table or per-inode rb-trees would be saner choices.
 
