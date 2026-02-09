@@ -1,198 +1,170 @@
-Return-Path: <linux-nfs+bounces-18810-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18811-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YL/SNVHXiWlZCQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18810-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 13:47:13 +0100
+	id 4MMBFPPUiWmBCAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18811-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 13:37:07 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9079810EF4C
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 13:47:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC0810EC5B
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Feb 2026 13:37:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9027A30054FA
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Feb 2026 11:28:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9D9153008A49
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Feb 2026 12:27:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA26C36EAAE;
-	Mon,  9 Feb 2026 11:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A5AD36BCF5;
+	Mon,  9 Feb 2026 12:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kiqlLj/L";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cSIkMvd+";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kiqlLj/L";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cSIkMvd+"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ASg7GNXk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C7D25D216
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Feb 2026 11:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770636534; cv=none; b=Bt5uMp9FkAHMqb0Q92Wrl5Zmx332P+dfJdbt0nbSBlMoUNWcMwwNJzZkP0XxSOj12jlUMJXyW4RI5gZdOpak1RYhjCTfKAwgQ0zlICIG1u1EJSvwz23KmckE6fRQDikHWegsUpP3Q1bvE1952pgskjpDqwFtbMnd4YCAMgWA/kg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770636534; c=relaxed/simple;
-	bh=1zaqITieQNkgMziduoZI/dVIuTvEqRCK1r4c8nOVtds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJEe33sScA+LkXf/BsW+S5vLIxhWO3WrYLoc2t61wKGrkoEHa7VSi/Ymrne9teABU7w8sXcgq0yKvYdwcl7fxQhFw2YBvJXWHPqyPxwCId4wgeL9Jn3E2QIOV3Ec1him4DijZQfKdoYnoPdK5FUYf19nG98hsvd4sjJGOiPfVJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kiqlLj/L; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cSIkMvd+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kiqlLj/L; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cSIkMvd+; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 876E95BD10;
-	Mon,  9 Feb 2026 11:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1770636532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OzlQrhAOB0G6tZe8ExjaUd0JTAYTy0qS2QjfxPtG3Wk=;
-	b=kiqlLj/LfHLDBmggXQwQQ+3MbuzoI8cx0FaKVOXEYkDlTvlQ06Brrna3iJ2qL8qWzrFSB2
-	kgJl/vGhRfZ+4ZiMgkO07AGkAwXNWB7xQ6qhgQUvopWF7S5lb5WBKkggIqfHMOdfGRr79F
-	c1u2AHo6y+qBVreo3aVeJ0z7NZo2Q+4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1770636532;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OzlQrhAOB0G6tZe8ExjaUd0JTAYTy0qS2QjfxPtG3Wk=;
-	b=cSIkMvd+eMW9Au2DQjCjHT1rD6oHSWQeT6WJ8jc0kxm9pgiEPencXkyRW/oq87Pw68mmw5
-	eUXntGC0QVlD8zCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="kiqlLj/L";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=cSIkMvd+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1770636532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OzlQrhAOB0G6tZe8ExjaUd0JTAYTy0qS2QjfxPtG3Wk=;
-	b=kiqlLj/LfHLDBmggXQwQQ+3MbuzoI8cx0FaKVOXEYkDlTvlQ06Brrna3iJ2qL8qWzrFSB2
-	kgJl/vGhRfZ+4ZiMgkO07AGkAwXNWB7xQ6qhgQUvopWF7S5lb5WBKkggIqfHMOdfGRr79F
-	c1u2AHo6y+qBVreo3aVeJ0z7NZo2Q+4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1770636532;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OzlQrhAOB0G6tZe8ExjaUd0JTAYTy0qS2QjfxPtG3Wk=;
-	b=cSIkMvd+eMW9Au2DQjCjHT1rD6oHSWQeT6WJ8jc0kxm9pgiEPencXkyRW/oq87Pw68mmw5
-	eUXntGC0QVlD8zCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 743E93EA63;
-	Mon,  9 Feb 2026 11:28:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id isZUHPTEiWnzXgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 09 Feb 2026 11:28:52 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 38953A061E; Mon,  9 Feb 2026 12:28:52 +0100 (CET)
-Date: Mon, 9 Feb 2026 12:28:52 +0100
-From: Jan Kara <jack@suse.cz>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: lsf-pc <lsf-pc@lists.linux-foundation.org>, 
-	linux-fsdevel@vger.kernel.org, Linux NFS list <linux-nfs@vger.kernel.org>, 
-	Jan Kara <jack@suse.cz>
-Subject: Re: [LSF/MM/BPF TOPIC] xattr caching
-Message-ID: <z24xrtha2ha4ppxomzcqzdkevgtpoiazwb2aehfocyfqwnhkoe@clrijunqda67>
-References: <CAJfpegu0PrfCemFdimcvDfw6BZ2R5=kaZ=Zrt6U5T37W=mfEAw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0221E3019CB
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Feb 2026 12:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770640028; cv=pass; b=N18uSd0r3CQYIC1EW4AMYN1F2h7FmOwyItzdxNsUI0PUmZUBVUVDl/SnhuSTP0ivz6oXgezcfq+OPE9qvNduFBZ+442tnCmaJIB3n6SIdflNyndCNBiMctgn6Ub/1r7FDEY/nbKLHPr7MXYV6AwirkBIc4gJ20PrliFyZqsHLkg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770640028; c=relaxed/simple;
+	bh=jmJSIAHjW/ZE3aK860YMveWUZJCZq7MQeEOdmveoq18=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=osLa+gC1b6FjqMQ5fR0eW5xjfIsACo2Bc3E2k4v22bfpsrowQ20d58pEsg9tzvW1joCMihTBKtLGr2J4KKpqHT1XW5c/zO6j00/+ZtnM7kmzaVOsat+zrFS143hwNDUgH0zghdQQXaNIl8vHQEB3AlpVrSK91hQpc6VmJj/pX7k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=ASg7GNXk; arc=pass smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5032e951106so38223531cf.0
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Feb 2026 04:27:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770640027; cv=none;
+        d=google.com; s=arc-20240605;
+        b=FwtHn/ET+I+INeSJBYS+bjPSlH8sOYUiXXAQEC9zwSsNemCDo++hIa55kbaMn5m+84
+         ieXLSy2ScpAMnUIYcXbOH/KWji4pTJ/a8zq6K8CryXq97O4qaysRaGY8xB51TtRggASY
+         d75fM2+kFpwn5dWkH9cy8wyylHqPiTUT2uwZFRQ9DtvvR0K2NhvESQaHyDFXIuZWwO3E
+         ENzvWKYV+l8M3rFnb7Yr3QCofeSzZ/q6IdvxO+9J5Q+dfsemD4IMG+XaYujRG5vQ4ewV
+         J0IbjG7supUuil6+I4BkFero69dNs8l4z+Od+E26dx4AepoMHDiLTLWHbInyWWujPNfG
+         Uzww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=0jDR9Z9XZFkuvZsBRmesOdlnfns+s15FYa5ik6TAHNs=;
+        fh=Ae0Xeu2s8Koxny2/ypZ5ITGZff6fOLNPAzGt40ToKas=;
+        b=OF/Yf71IZOwEQLHS4NX+F49t1J8zgyidvT0vnPvnzZ5OwseJY8EHEFAOuuuRqJYCX5
+         CJvcZQijbJkCkK39tlRhlvan93Tx2dSERIw9B1NFG9REqpFXYC0QsKyyF7C/3tJH0e/c
+         0lJZeqX5dJRe79QHKMBfDy8K0lPsFZXX5fwjfZNad7FtFWUcdTfyb1xqT83V8DH1ibVD
+         NLvkPfFzh7GdTx4AFm4vfcvUwo1I4T6Gzsv0wcYpofxh3q13hzMJdxj/gWLDN6QHkuR5
+         PWZjIEDFWSvr9XBbLK893ggQqzFA9u577pRlvbzrrtQxq7gZHD0JF7GoJmg0x5f2i7l0
+         GU1A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1770640027; x=1771244827; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0jDR9Z9XZFkuvZsBRmesOdlnfns+s15FYa5ik6TAHNs=;
+        b=ASg7GNXk/9yTmliatiEHtrXq+ggMYlMjdqyR5lWqNPXKJd5+mW44ERvhP0cjBQvXq8
+         vrkt31wabjOgjPqNEk3+ipXeHMnPu+vd7rb4C5xHBKP9tHR4MKMQdcv4xqhXUsZnCfLx
+         QI+FWEur+t0blWzmyUcNIci3laYk+tnHqfNHk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770640027; x=1771244827;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0jDR9Z9XZFkuvZsBRmesOdlnfns+s15FYa5ik6TAHNs=;
+        b=eC2KHyWwQyn/m7RhUiN/UdNqDbNljcwVRDoeMWvPbNX+FYYtVDzeGvBRXLCt7zJ7wy
+         GTJNQgFo9F8502lx9+Qjs/OFA8RJGz9FnFH7lOKMxfoldKWUwLBXEO+/Id4Gmy+V2unc
+         2f4FduMjrXpncVUzyE9r4YZMEX1/qPPdYc81Ytp5JuUEjrschn2jbxSMp1VIUnpBvxpf
+         XEspbcjhLLA+4hNlmTIMqpOE0h0smENFUQh01HrrsxM1a0/y+JDvIWLHX74DMg+ACIge
+         C/WBdNswRuKwRM+Ib6ovRo6+BKx0c9hLl8nF9AGhv/nezIe6vC0ixAeaf8gOjG+NOiv2
+         2lWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXL3dV0KX/TW2xG/7gi78d/wlNbByckOEU+OcYfPd6Us+Jflqkhsk4W+9aqb+sO5gKbNhRZ8092dPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/mzzuC0aB7QrVG2ZpmkXzskQgloxyzv0VqZdH3CFFf/U616Fs
+	MWPSfwZrE5KNzhgn3FMbmYJ1wsvxryxmin+0RFIdRoFTEPBWYJqAseVgxfLV3IVhlEjHyAtFG9y
+	hsfLv9K46p6aJc7MBnRVg0qRSntSMS1VBWRZDB6pVV7hrN7MD8N/748Y=
+X-Gm-Gg: AZuq6aIH8rfhRtz6X6Ngs8nzbASWJfjnSb4vFlm1Hc8wasfeBPBdozCTJB/S1j6cN3q
+	C0MGquZ7qiTtrm6Sh4iVLpRHdTDR7f+DUfl268/atzzQTYpK9lbQO3Va1X+NWcpAnT5N7thHLQN
+	3Dt1G88KDvYymOTpwlUj71enMugtDzMDeRvuMF13hnq9Vvts0h8idMsb+SdJS4irDfOGC8Mywkl
+	BdBoMShb1Fb8Pr93wVUeo6Da3EzYUZYksYiXncBM9tA2uUp5KIkdba1p45zgV9+99C3rg==
+X-Received: by 2002:a05:622a:13ca:b0:501:147a:a215 with SMTP id
+ d75a77b69052e-506399af94emr141986801cf.73.1770640026918; Mon, 09 Feb 2026
+ 04:27:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegu0PrfCemFdimcvDfw6BZ2R5=kaZ=Zrt6U5T37W=mfEAw@mail.gmail.com>
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
-X-Spam-Level: 
+References: <CAJfpegu0PrfCemFdimcvDfw6BZ2R5=kaZ=Zrt6U5T37W=mfEAw@mail.gmail.com>
+ <z24xrtha2ha4ppxomzcqzdkevgtpoiazwb2aehfocyfqwnhkoe@clrijunqda67>
+In-Reply-To: <z24xrtha2ha4ppxomzcqzdkevgtpoiazwb2aehfocyfqwnhkoe@clrijunqda67>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 9 Feb 2026 13:26:54 +0100
+X-Gm-Features: AZwV_QjlWYoFVM5VksJebwYdDgN2oeT-5JhqsKgKntThwhk0fQay5xVYrVKDbIE
+Message-ID: <CAJfpegvjEzu_mgDaKgNQcnpES8vNu0d+UniS65UFQMsKcaH55w@mail.gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC] xattr caching
+To: Jan Kara <jack@suse.cz>
+Cc: lsf-pc <lsf-pc@lists.linux-foundation.org>, linux-fsdevel@vger.kernel.org, 
+	Linux NFS list <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[szeredi.hu,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[szeredi.hu:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
-	DMARC_NA(0.00)[suse.cz];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18810-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.cz:+];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[miklos@szeredi.hu,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18811-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 9079810EF4C
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[szeredi.hu:+]
+X-Rspamd-Queue-Id: EEC0810EC5B
 X-Rspamd-Action: no action
 
-On Mon 09-02-26 10:46:54, Miklos Szeredi wrote:
-> I'm looking at implementing xattr caching for fuse and wondering how to
-> do this.
-> 
-> Why is there no common infrastructure?
+On Mon, 9 Feb 2026 at 12:28, Jan Kara <jack@suse.cz> wrote:
 
-As you write below, accessing xattrs is relatively rare. Also frequently
-accessed information stored in xattrs (such as ACLs) are generally cached
-in the layer handling them. Finally, e.g. ext4 ends up caching xattrs in
-the buffer cache / page cache as any other metadata. So I guess the
-practical gains from such layer won't be generally big?
+> As you write below, accessing xattrs is relatively rare.
 
-> Should we create one?
+I was referring to large xattrs.   Small (<1k) sized xattrs are quite
+common I think.
 
-I'm not against such layer but it would be good to define about which
-practical workloads we care and see how much we can gain with such
-caching...
+> Also frequently
+> accessed information stored in xattrs (such as ACLs) are generally cached
+> in the layer handling them.
 
-> What currently exists:
-> 
-> - mb_cache for ext2/4.  This seems to be used for deduplicating data,
-> so it's no good for fuse, afaics.
+Yes, that's true of most system.* xattrs.  But user (and trusted)
+xattrs are generally not cached.
 
-Yes, this is about deduplication of identical sets of xattrs among inodes.
-Furthermore it is currently kind of specific to ext4 on-disk format.
+> Finally, e.g. ext4 ends up caching xattrs in
+> the buffer cache / page cache as any other metadata. So I guess the
+> practical gains from such layer won't be generally big?
 
-> - simple_xattr for tmpfs/kernfs. This looks good, except it doesn't
-> have a shrinker, for obvious reasons.
-> 
-> - nfs4_xattr_cache for nfs. I don't really understand the design
-> choice of separate cache tables for each inode, which seems wasteful
-> for the common case of just a couple of xattrs per inode(*).
-> 
-> Without having looked deeply at each implementation, I'd think that
-> combining the features of all of the above into a common utility would
-> make sense.
-> 
-> Large, multi page xattrs (which I haven't seen in the wild, but I'm
-> sure they are out there) should be cached similarly to file data.
-> Small values could be stored "inline".
-> 
-> Deduplication of keys, values and lists is probably also useful.
-> 
-> Shrinking would not be used for tmpfs and kin, just like the other caches.
-> 
-> Any other considerations?
+For network fs and userspace fs caching would be a clear win.,
 
-As I wrote above, I'm just not sure about the load that would measurably
-benefit from this. Otherwise it sounds as a fine idea.
+For local fs I guess it depends on a number of factors.  I'll do an
+xattr benchmark.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> As I wrote above, I'm just not sure about the load that would measurably
+> benefit from this. Otherwise it sounds as a fine idea.
+
+I'm not saying all fs should be converted.  But NFS already has an
+xattr cache, and fuse definitely would benefit from one, while tmpfs
+"lives in the cache".  So there'd be at least three users and possibly
+more.
+
+Thanks,
+Miklos
 
