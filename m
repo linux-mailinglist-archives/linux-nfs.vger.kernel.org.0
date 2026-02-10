@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18846-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18847-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6ArjFdxdi2mYUAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18846-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:33:32 +0100
+	id cAT4Lqldi2mYUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18847-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:32:41 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB05511D3D3
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:33:31 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id D344611D369
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:32:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DA4E4304522C
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 16:32:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E49D1300E1BC
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 16:32:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C922F3C02;
-	Tue, 10 Feb 2026 16:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F49E2F3C02;
+	Tue, 10 Feb 2026 16:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PVLrP9YU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKrWQ4Pk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AEA3A1C9;
-	Tue, 10 Feb 2026 16:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3193EBF03;
+	Tue, 10 Feb 2026 16:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770741149; cv=none; b=BBylCre0UXFZowmrsfnpGcRsQNq5N+sq29sWBupWKnh3HNK+aaJPgUG7WeCrL4VItcjGZ9zRvwLbNz7WiuFibFhD0CxztdlPSz3pxxha9EMXJkc+8xZcQPnJ2dhOGZgyR5qHK74TvEVHzhyrOeDz5hwSOK8iit6I1sbifiYriFk=
+	t=1770741150; cv=none; b=oqtv/5UPvovafZxKSrzprmFt1CQgLq9i50BES92s/gyS09LqQfh62IBjSg18lOE8dwYIXJ1gWz02jo9yBJm6iB148MpWVgIpMLRGGZRav+0y7PsDHbHG2e7ru0JpBoRhOtOzhI2K5TXqgBuCyPaikQXEERWnRghkPveCtN/jVCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770741149; c=relaxed/simple;
-	bh=4V+/pALjiiIGT2vjcnAo7AdCD08dDUNSo+Umu5NfQWA=;
+	s=arc-20240116; t=1770741150; c=relaxed/simple;
+	bh=W9SX5JJHn1hsjl/VjfI4B/U7UPzV2/DMmpCbdLNzKTk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R/hbW5lwhAUvKbm1/gdQ9+4RjMNzgKEHVU65GJ0VjFcFbv6C/+Lhf8eERr+4mHqjiFIf1bh/Liz3uKRVlnBqCKsTqPuBwGKOUICEiT8XSnqQt+Rd9CTtjscW40H11aj7vdCA/Q+XNhqhWe4+p93QJ67pBx1t95Ye+R1+GYthrO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PVLrP9YU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E17C19421;
-	Tue, 10 Feb 2026 16:32:28 +0000 (UTC)
+	 MIME-Version; b=cFQ2NbOeR2kohuWDvHbRgNFtVJzljoTsq/0y9lDSIowvsqurupqueHXHZJdBNl1iSfK+FVrhf9jq5H0bjn5if7uFiQmVWPUJlGj1nj9J9pGQH2GlOzC6nn/E3pK+295DdC9daSh/V+z+KTfYmY6MiDp4j83hr9CqBmBi2qV+2Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKrWQ4Pk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4669DC116C6;
+	Tue, 10 Feb 2026 16:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770741149;
-	bh=4V+/pALjiiIGT2vjcnAo7AdCD08dDUNSo+Umu5NfQWA=;
+	bh=W9SX5JJHn1hsjl/VjfI4B/U7UPzV2/DMmpCbdLNzKTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PVLrP9YU/DtG1eVRxgLt0+oo3VrsDsCm4Qhcj/5hQt/KhJ3SZjHMZ6ag4630nQW0N
-	 x/w4zfYMnU2R+zjZdn3qPhsEUJjjLbYUeKfPhJiY83TdWRmu3ZWUCLGyI5vSG4Mzhq
-	 lAew5TxprykSlX9VmzU30tVNko2m2jcXfQjWj3fUc7m12chL0RSmKSakmwnCoOGK32
-	 V07s8xw2+FoQkgiyAou8ULcaPHVJCcRyEChiGfcjCsYJ3QQZ2iY45CIwU0JTODEayt
-	 Kf8vrh7KFjxEf9PU++79gfpO17VqRx4+9wjZDr7nYygnmbO+PVJM7516B0FcXU579R
-	 k/xB3/+qUYUaQ==
+	b=ZKrWQ4PkNHopZZ42BJ6GfriZKjf3YyohUdGAZhD20BFVhQeEsXlVhghBV9vnzHmxr
+	 jmT3mZQn4oJqdl2D6j3s0/FeNibfSpvN6r36QXkG4c9uTH7WXYSaNIAQ974ex1ZKu4
+	 HpFTI1awumtsQJJ1OHvdv3A6F5ZwZI9D8JvlpJuYA/iuROMyBGN0NtwpiSMaVfOwv9
+	 I0oCPUyVM1Ev3QtXGG/zjL8fOXI+JBJLYALtuxKIBmvE354SEIDM4ktyl0erOa5VRr
+	 vfb1hFTWRAnBwkmgq4hGIhRwwDX83Bk0bHk/pfazZYireuvAlqO8yS/BDpqCYlTxFd
+	 ztcyEgJ3p6Sfg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -53,9 +53,9 @@ To: NeilBrown <neilb@ownmail.net>,
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 03/15] svcrdma: Clean up use of rdma->sc_pd->device
-Date: Tue, 10 Feb 2026 11:32:10 -0500
-Message-ID: <20260210163222.2356793-4-cel@kernel.org>
+Subject: [RFC PATCH 04/15] svcrdma: Add Write chunk WRs to the RPC's Send WR chain
+Date: Tue, 10 Feb 2026 11:32:11 -0500
+Message-ID: <20260210163222.2356793-5-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260210163222.2356793-1-cel@kernel.org>
 References: <20260210163222.2356793-1-cel@kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-18846-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18847-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -93,95 +93,287 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CB05511D3D3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D344611D369
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-I can't think of a reason why svcrdma is using the PD's device. Most
-other consumers of the IB DMA API use the ib_device pointer from the
-connection's rdma_cm_id.
+Previously, Write chunk RDMA Writes were posted via a separate
+ib_post_send() call with their own completion handler. Each Write
+chunk incurred a doorbell and generated a completion event.
 
-I don't think there's any functional difference between the two, but
-it is a little confusing to see some uses of rdma_cm_id and some of
-ib_pd.
+Link Write chunk WRs onto the RPC Reply's Send WR chain so that a
+single ib_post_send() call posts both the RDMA Writes and the Send
+WR. A single completion event signals that all operations have
+finished. This reduces both doorbell rate and completion rate, as
+well as eliminating the latency of a round-trip between the Write
+chunk completion and the subsequent Send WR posting.
+
+The lifecycle of Write chunk resources changes: previously, the
+svc_rdma_write_done() completion handler released Write chunk
+resources when RDMA Writes completed. With WR chaining, resources
+remain live until the Send completion. A new sc_write_info_list
+tracks Write chunk metadata attached to each Send context, and
+svc_rdma_write_chunk_release() frees these resources when the
+Send context is released.
+
+The svc_rdma_write_done() handler now handles only error cases.
+On success it returns immediately since the Send completion handles
+resource release. On failure (WR flush), it closes the connection
+to signal to the client that the RPC Reply is incomplete.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_sendto.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ include/linux/sunrpc/svc_rdma.h       | 13 +++-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c     | 94 ++++++++++++++++++++-------
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c | 10 ++-
+ 3 files changed, 91 insertions(+), 26 deletions(-)
 
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index f68ac035fec6..d84946cf6176 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -215,6 +215,7 @@ struct svc_rdma_recv_ctxt {
+  */
+ struct svc_rdma_write_info {
+ 	struct svcxprt_rdma	*wi_rdma;
++	struct list_head	wi_list;
+ 
+ 	const struct svc_rdma_chunk	*wi_chunk;
+ 
+@@ -243,7 +244,10 @@ struct svc_rdma_send_ctxt {
+ 	struct ib_cqe		sc_cqe;
+ 	struct xdr_buf		sc_hdrbuf;
+ 	struct xdr_stream	sc_stream;
++
++	struct list_head	sc_write_info_list;
+ 	struct svc_rdma_write_info sc_reply_info;
++
+ 	void			*sc_xprt_buf;
+ 	int			sc_page_count;
+ 	int			sc_cur_sge_no;
+@@ -276,11 +280,14 @@ extern void svc_rdma_cc_init(struct svcxprt_rdma *rdma,
+ extern void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
+ 				struct svc_rdma_chunk_ctxt *cc,
+ 				enum dma_data_direction dir);
++extern void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
++					 struct svc_rdma_send_ctxt *ctxt);
+ extern void svc_rdma_reply_chunk_release(struct svcxprt_rdma *rdma,
+ 					 struct svc_rdma_send_ctxt *ctxt);
+-extern int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
+-				    const struct svc_rdma_recv_ctxt *rctxt,
+-				    const struct xdr_buf *xdr);
++extern int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
++				       const struct svc_rdma_recv_ctxt *rctxt,
++				       struct svc_rdma_send_ctxt *sctxt,
++				       const struct xdr_buf *xdr);
+ extern int svc_rdma_prepare_reply_chunk(struct svcxprt_rdma *rdma,
+ 					const struct svc_rdma_pcl *write_pcl,
+ 					const struct svc_rdma_pcl *reply_pcl,
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index 921dd2542d0d..6057966d3502 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -230,6 +230,28 @@ static void svc_rdma_write_info_free(struct svc_rdma_write_info *info)
+ 	queue_work(svcrdma_wq, &info->wi_work);
+ }
+ 
++/**
++ * svc_rdma_write_chunk_release - Release Write chunk I/O resources
++ * @rdma: controlling transport
++ * @ctxt: Send context that is being released
++ *
++ * Write chunk resources remain live until Send completion because
++ * Write WRs are chained to the Send WR. This function releases all
++ * write_info structures accumulated on @ctxt->sc_write_info_list.
++ */
++void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
++				  struct svc_rdma_send_ctxt *ctxt)
++{
++	struct svc_rdma_write_info *info;
++
++	while (!list_empty(&ctxt->sc_write_info_list)) {
++		info = list_first_entry(&ctxt->sc_write_info_list,
++					struct svc_rdma_write_info, wi_list);
++		list_del(&info->wi_list);
++		svc_rdma_write_info_free(info);
++	}
++}
++
+ /**
+  * svc_rdma_reply_chunk_release - Release Reply chunk I/O resources
+  * @rdma: controlling transport
+@@ -286,13 +308,11 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
+ 	struct ib_cqe *cqe = wc->wr_cqe;
+ 	struct svc_rdma_chunk_ctxt *cc =
+ 			container_of(cqe, struct svc_rdma_chunk_ctxt, cc_cqe);
+-	struct svc_rdma_write_info *info =
+-			container_of(cc, struct svc_rdma_write_info, wi_cc);
+ 
+ 	switch (wc->status) {
+ 	case IB_WC_SUCCESS:
+ 		trace_svcrdma_wc_write(&cc->cc_cid);
+-		break;
++		return;
+ 	case IB_WC_WR_FLUSH_ERR:
+ 		trace_svcrdma_wc_write_flush(wc, &cc->cc_cid);
+ 		break;
+@@ -300,12 +320,11 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
+ 		trace_svcrdma_wc_write_err(wc, &cc->cc_cid);
+ 	}
+ 
+-	svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
+-
+-	if (unlikely(wc->status != IB_WC_SUCCESS))
+-		svc_xprt_deferred_close(&rdma->sc_xprt);
+-
+-	svc_rdma_write_info_free(info);
++	/* The RDMA Write has flushed, so the client won't get
++	 * some of the outgoing RPC message. Signal the loss
++	 * to the client by closing the connection.
++	 */
++	svc_xprt_deferred_close(&rdma->sc_xprt);
+ }
+ 
+ /**
+@@ -591,13 +610,27 @@ static int svc_rdma_xb_write(const struct xdr_buf *xdr, void *data)
+ 	return xdr->len;
+ }
+ 
+-static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
+-				     const struct svc_rdma_chunk *chunk,
+-				     const struct xdr_buf *xdr)
++/*
++ * svc_rdma_prepare_write_chunk - Link Write WRs for @chunk onto @sctxt's chain
++ *
++ * Write WRs are prepended to the Send WR chain so that a single
++ * ib_post_send() posts both RDMA Writes and the final Send. Only
++ * the first WR in each chunk gets a CQE for error detection;
++ * subsequent WRs complete without individual completion events.
++ * The Send WR's signaled completion indicates all chained
++ * operations have finished.
++ */
++static int svc_rdma_prepare_write_chunk(struct svcxprt_rdma *rdma,
++					struct svc_rdma_send_ctxt *sctxt,
++					const struct svc_rdma_chunk *chunk,
++					const struct xdr_buf *xdr)
+ {
+ 	struct svc_rdma_write_info *info;
+ 	struct svc_rdma_chunk_ctxt *cc;
++	struct ib_send_wr *first_wr;
+ 	struct xdr_buf payload;
++	struct list_head *pos;
++	struct ib_cqe *cqe;
+ 	int ret;
+ 
+ 	if (xdr_buf_subsegment(xdr, &payload, chunk->ch_position,
+@@ -613,10 +646,25 @@ static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
+ 	if (ret != payload.len)
+ 		goto out_err;
+ 
+-	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
+-	ret = svc_rdma_post_chunk_ctxt(rdma, cc);
+-	if (ret < 0)
++	ret = -EINVAL;
++	if (unlikely(sctxt->sc_sqecount + cc->cc_sqecount > rdma->sc_sq_depth))
+ 		goto out_err;
++
++	first_wr = sctxt->sc_wr_chain;
++	cqe = &cc->cc_cqe;
++	list_for_each(pos, &cc->cc_rwctxts) {
++		struct svc_rdma_rw_ctxt *rwc;
++
++		rwc = list_entry(pos, struct svc_rdma_rw_ctxt, rw_list);
++		first_wr = rdma_rw_ctx_wrs(&rwc->rw_ctx, rdma->sc_qp,
++					   rdma->sc_port_num, cqe, first_wr);
++		cqe = NULL;
++	}
++	sctxt->sc_wr_chain = first_wr;
++	sctxt->sc_sqecount += cc->cc_sqecount;
++	list_add(&info->wi_list, &sctxt->sc_write_info_list);
++
++	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
+ 	return 0;
+ 
+ out_err:
+@@ -625,17 +673,19 @@ static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
+ }
+ 
+ /**
+- * svc_rdma_send_write_list - Send all chunks on the Write list
++ * svc_rdma_prepare_write_list - Construct WR chain for sending Write list
+  * @rdma: controlling RDMA transport
+  * @rctxt: Write list provisioned by the client
++ * @sctxt: Send WR resources
+  * @xdr: xdr_buf containing an RPC Reply message
+  *
+- * Returns zero on success, or a negative errno if one or more
+- * Write chunks could not be sent.
++ * Returns zero on success, or a negative errno if WR chain
++ * construction fails for one or more Write chunks.
+  */
+-int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
+-			     const struct svc_rdma_recv_ctxt *rctxt,
+-			     const struct xdr_buf *xdr)
++int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
++				const struct svc_rdma_recv_ctxt *rctxt,
++				struct svc_rdma_send_ctxt *sctxt,
++				const struct xdr_buf *xdr)
+ {
+ 	struct svc_rdma_chunk *chunk;
+ 	int ret;
+@@ -643,7 +693,7 @@ int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
+ 	pcl_for_each_chunk(chunk, &rctxt->rc_write_pcl) {
+ 		if (!chunk->ch_payload_length)
+ 			break;
+-		ret = svc_rdma_send_write_chunk(rdma, chunk, xdr);
++		ret = svc_rdma_prepare_write_chunk(rdma, sctxt, chunk, xdr);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index da0d637ba4fb..eb21544f4a61 100644
+index eb21544f4a61..e9056039c118 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -116,7 +116,7 @@ static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc);
- static struct svc_rdma_send_ctxt *
- svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- {
--	int node = ibdev_to_node(rdma->sc_cm_id->device);
-+	struct ib_device *device = rdma->sc_cm_id->device;
- 	struct svc_rdma_send_ctxt *ctxt;
- 	unsigned long pages;
- 	dma_addr_t addr;
-@@ -124,21 +124,22 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- 	int i;
+@@ -150,6 +150,7 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	ctxt->sc_send_wr.sg_list = ctxt->sc_sges;
+ 	ctxt->sc_send_wr.send_flags = IB_SEND_SIGNALED;
+ 	ctxt->sc_cqe.done = svc_rdma_wc_send;
++	INIT_LIST_HEAD(&ctxt->sc_write_info_list);
+ 	ctxt->sc_xprt_buf = buffer;
+ 	xdr_buf_init(&ctxt->sc_hdrbuf, ctxt->sc_xprt_buf,
+ 		     rdma->sc_max_req_size);
+@@ -237,6 +238,7 @@ static void svc_rdma_send_ctxt_release(struct svcxprt_rdma *rdma,
+ 	struct ib_device *device = rdma->sc_cm_id->device;
+ 	unsigned int i;
  
- 	ctxt = kzalloc_node(struct_size(ctxt, sc_sges, rdma->sc_max_send_sges),
--			    GFP_KERNEL, node);
-+			    GFP_KERNEL, ibdev_to_node(device));
- 	if (!ctxt)
- 		goto fail0;
- 	pages = svc_serv_maxpages(rdma->sc_xprt.xpt_server);
- 	ctxt->sc_pages = kcalloc_node(pages, sizeof(struct page *),
--				      GFP_KERNEL, node);
-+				      GFP_KERNEL, ibdev_to_node(device));
- 	if (!ctxt->sc_pages)
- 		goto fail1;
- 	ctxt->sc_maxpages = pages;
--	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
-+	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL,
-+			      ibdev_to_node(device));
- 	if (!buffer)
- 		goto fail2;
--	addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
--				 rdma->sc_max_req_size, DMA_TO_DEVICE);
--	if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
-+	addr = ib_dma_map_single(device, buffer, rdma->sc_max_req_size,
-+				 DMA_TO_DEVICE);
-+	if (ib_dma_mapping_error(device, addr))
- 		goto fail3;
++	svc_rdma_write_chunk_release(rdma, ctxt);
+ 	svc_rdma_reply_chunk_release(rdma, ctxt);
  
- 	svc_rdma_send_cid_init(rdma, &ctxt->sc_cid);
-@@ -175,15 +176,14 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
-  */
- void svc_rdma_send_ctxts_destroy(struct svcxprt_rdma *rdma)
- {
-+	struct ib_device *device = rdma->sc_cm_id->device;
- 	struct svc_rdma_send_ctxt *ctxt;
- 	struct llist_node *node;
+ 	if (ctxt->sc_page_count)
+@@ -1015,6 +1017,12 @@ void svc_rdma_send_error_msg(struct svcxprt_rdma *rdma,
+ 	sctxt->sc_send_wr.num_sge = 1;
+ 	sctxt->sc_send_wr.opcode = IB_WR_SEND;
+ 	sctxt->sc_sges[0].length = sctxt->sc_hdrbuf.len;
++
++	/* Ensure only the error message is posted, not any previously
++	 * prepared Write chunk WRs.
++	 */
++	sctxt->sc_wr_chain = &sctxt->sc_send_wr;
++	sctxt->sc_sqecount = 1;
+ 	if (svc_rdma_post_send(rdma, sctxt))
+ 		goto put_ctxt;
+ 	return;
+@@ -1062,7 +1070,7 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
+ 	if (!p)
+ 		goto put_ctxt;
  
- 	while ((node = llist_del_first(&rdma->sc_send_ctxts)) != NULL) {
- 		ctxt = llist_entry(node, struct svc_rdma_send_ctxt, sc_node);
--		ib_dma_unmap_single(rdma->sc_pd->device,
--				    ctxt->sc_sges[0].addr,
--				    rdma->sc_max_req_size,
--				    DMA_TO_DEVICE);
-+		ib_dma_unmap_single(device, ctxt->sc_sges[0].addr,
-+				    rdma->sc_max_req_size, DMA_TO_DEVICE);
- 		kfree(ctxt->sc_xprt_buf);
- 		kfree(ctxt->sc_pages);
- 		kfree(ctxt);
-@@ -412,7 +412,7 @@ int svc_rdma_post_send(struct svcxprt_rdma *rdma,
- 	might_sleep();
+-	ret = svc_rdma_send_write_list(rdma, rctxt, &rqstp->rq_res);
++	ret = svc_rdma_prepare_write_list(rdma, rctxt, sctxt, &rqstp->rq_res);
+ 	if (ret < 0)
+ 		goto put_ctxt;
  
- 	/* Sync the transport header buffer */
--	ib_dma_sync_single_for_device(rdma->sc_pd->device,
-+	ib_dma_sync_single_for_device(rdma->sc_cm_id->device,
- 				      send_wr->sg_list[0].addr,
- 				      send_wr->sg_list[0].length,
- 				      DMA_TO_DEVICE);
 -- 
 2.52.0
 
