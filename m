@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18849-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18850-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oObqFa1di2mYUAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18849-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:32:45 +0100
+	id QMHXKwRei2mYUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18850-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:34:12 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1ED211D379
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:32:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4800611D3F9
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:34:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 64945300F1D2
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 16:32:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AFC683067787
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 16:32:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3B3F3033D2;
-	Tue, 10 Feb 2026 16:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30AA83033D2;
+	Tue, 10 Feb 2026 16:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ma03cR7U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzOVU2Mb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14582F3C02;
-	Tue, 10 Feb 2026 16:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5C92EDD58;
+	Tue, 10 Feb 2026 16:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770741151; cv=none; b=mXsHjJ/X5i3+elgnx6q7bHPan2eNEdOLn4lgAuBA7W7pPqbmdfimE1rDvyHzzD6Vii2KOr3sOe7RGWJLA+roRB13XsWsNy7eRNedll9X7A76A4Fx3tmiCS8hJ3ciYhzA70dmjGHxIHj+TZKTXrT1RT0DQE5ywCd3+O8JViVJNso=
+	t=1770741153; cv=none; b=ULVkKYV0ZXCw1I4J0a80PPn4P5eqRholrUQua/uUfRrko4fcxeABoa0AYxWoUajywg4ZNG4E1X1+l8xm6zJzQH+7ymF9Lkpcjrc3UvrNUlYDwe17ikoE77b/e1aceWH4zMzYOvD9VThE8AK4ouTGcnBVuUs7+5UMdzUM+4luGP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770741151; c=relaxed/simple;
-	bh=bYTm8YyhQJdCqGCyN3x64Zown9DkSNlSA/sSuBD9mm0=;
+	s=arc-20240116; t=1770741153; c=relaxed/simple;
+	bh=9GFU1ermKRaO5E7EmoQrrBCIjwsXzYZnkONzAyWR7nc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C23m/LVO+fWL+7P8d0DanX4yNML3DJ/kFcvnKFr0vB+nRnC7LAXH0LMXR6EHN3QUBWLlxodxyvoE50RUHEgsyvorwJN/x4LD+qLJ38k+18hsN+FOGbL38psBZ6+HPtq+NYTIjU1Tdz5cAZCEotb7WgsXI0zuE540fUEfbxA7F0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ma03cR7U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 030C2C19425;
-	Tue, 10 Feb 2026 16:32:30 +0000 (UTC)
+	 MIME-Version; b=K2KOVn4v/SVozDkr+nfN1AIG71Q/lvnFVsPQv3gylMxClRF0A6tod/pfC4aakm9WuryEY4hJvORJHm+qebXG5mLNm/xfM4HXZ1j93dso3SLK+qEEGmtvV81Ebklwy6r5MDmEJC27CU6ypNfQEsWTeF2z6J0KgAgRr0wNSXtmE/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzOVU2Mb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40A5C19424;
+	Tue, 10 Feb 2026 16:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770741151;
-	bh=bYTm8YyhQJdCqGCyN3x64Zown9DkSNlSA/sSuBD9mm0=;
+	s=k20201202; t=1770741152;
+	bh=9GFU1ermKRaO5E7EmoQrrBCIjwsXzYZnkONzAyWR7nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ma03cR7UAv+HzLtuh1xOGx+yu1fGOBZFalV2T0k0Z3x1jSGvhl/ETlR+O/H0O1ySy
-	 IF/OXzwhnm2Gp5c5otICwD6qOQHRLadaz839XQK1d5M8/BTtdlqtJ7Gv5FjNOQHF4E
-	 +RJrn3Zbgebf5UncGthaiXrnk1xgNpfcf3aG204Ff/i8Z5d8PkR/mMU0eT+3H1PQAM
-	 2O1TZLStlu9g1fkrZz/wNNzoKuyEBNql1iJgvQFWwi1bPziCDwoAcYaKU2Zx/s8zh/
-	 stpV0ZbD0Aqd4lsK2fCRJALzYoKXVjSvSIFqXqLfEKlnZ0AXl12WVZ+nosMkuvEK+i
-	 qzReZDj2F75mg==
+	b=YzOVU2MbYcZqZuMaASh+Wt2TibEMHjhGGQ47XD4ZRg+LfU0xlvZa7CLfPB3pf/WOE
+	 tYGPPEJ7AA10s+RboOSIyLzZdY/orDTNMAT6kOJfOK+ibcBbfHnLvLay1xgyHRaOOO
+	 cKJVU9qMKVRIxA+gfC22ANkpnzbgx1GiihPYQZW603hfkVunC0K2BrY4VZ+AXOH7Ze
+	 L6BFfSo1bpoDXqiVGioaPRrz7jXRFul+JOqD7Dx9rlxXwdtJBImIA5pR+meTtjJQgz
+	 Kl3dm4h0z+LnWWredncpJb2BoGin70b1xpBOWEenGe9n6EppMnEpp6hCkPXWbTmiDD
+	 1LF5ZS+QEFbfw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -53,9 +53,9 @@ To: NeilBrown <neilb@ownmail.net>,
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 06/15] svcrdma: Reduce false sharing in struct svcxprt_rdma
-Date: Tue, 10 Feb 2026 11:32:13 -0500
-Message-ID: <20260210163222.2356793-7-cel@kernel.org>
+Subject: [RFC PATCH 07/15] svcrdma: Use lock-free list for Receive Queue tracking
+Date: Tue, 10 Feb 2026 11:32:14 -0500
+Message-ID: <20260210163222.2356793-8-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260210163222.2356793-1-cel@kernel.org>
 References: <20260210163222.2356793-1-cel@kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-18849-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18850-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -93,97 +93,140 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B1ED211D379
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4800611D3F9
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Several frequently-modified fields in struct svcxprt_rdma reside
-in the same cache line, causing false sharing between independent
-code paths:
+The sc_rq_dto_lock spinlock is acquired on every receive completion
+to add the completed receive context to the sc_rq_dto_q list. Under
+high message rates this creates contention between softirq contexts
+processing completions.
 
- - sc_sq_avail: atomic, modified on every ib_post_send and
-   completion
- - sc_send_lock/sc_send_ctxts: Send context cache, accessed during
-   reply construction
- - sc_rw_ctxt_lock/sc_rw_ctxts: R/W context cache, accessed during
-   Read/Write chunk processing
+Replace sc_rq_dto_q with a lock-free llist. Receive completions now
+use llist_add() which requires no locking. The consumer uses
+llist_del_first() to retrieve one item at a time.
 
-When any of these fields is modified, the entire cache line is
-invalidated on other CPUs. Under load, concurrent operations on
-different code paths cause the cache line to bounce between cores,
-degrading performance.
+The lock remains for sc_read_complete_q, but the primary hot path
+(receive completion and consumption) no longer requires it. This
+eliminates producer-side contention entirely.
 
-Insert ____cacheline_aligned_in_smp annotations to place the Send
-context cache, R/W context cache, and receive-path fields into
-separate cache lines. To utilize the padding this creates:
-
- - Move sc_pd, sc_ord, sc_max_send_sges into the Send cache line
-   (sc_pd is accessed during send context setup)
- - Move sc_qp, sc_port_num, sc_rq_cq, sc_sq_cq into the R/W cache
-   line (sc_qp and sc_port_num are accessed together during every
-   rdma_rw_ctx_wrs call)
+Note that llist provides LIFO ordering rather than FIFO. For
+independent RPC requests this has no semantic impact and avoids
+the overhead of reversing the list on the consumer side.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ include/linux/sunrpc/svc_rdma.h          |  2 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  | 38 +++++++++++++++++-------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |  2 +-
+ 3 files changed, 29 insertions(+), 13 deletions(-)
 
 diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index d84946cf6176..972d446439a6 100644
+index 972d446439a6..ae4300364491 100644
 --- a/include/linux/sunrpc/svc_rdma.h
 +++ b/include/linux/sunrpc/svc_rdma.h
-@@ -78,8 +78,6 @@ struct svcxprt_rdma {
- 	struct rdma_cm_id    *sc_cm_id;		/* RDMA connection id */
- 	struct list_head     sc_accept_q;	/* Conn. waiting accept */
- 	struct rpcrdma_notification sc_rn;	/* removal notification */
--	int		     sc_ord;		/* RDMA read limit */
--	int                  sc_max_send_sges;
- 	bool		     sc_snd_w_inv;	/* OK to use Send With Invalidate */
- 
- 	atomic_t             sc_sq_avail;	/* SQEs ready to be consumed */
-@@ -90,23 +88,30 @@ struct svcxprt_rdma {
- 	u32		     sc_max_requests;	/* Max requests */
- 	u32		     sc_max_bc_requests;/* Backward credits */
- 	int                  sc_max_req_size;	/* Size of each RQ WR buf */
--	u8		     sc_port_num;
- 
--	struct ib_pd         *sc_pd;
--
--	spinlock_t	     sc_send_lock;
-+	/* Send context cache */
-+	spinlock_t	     sc_send_lock ____cacheline_aligned_in_smp;
- 	struct llist_head    sc_send_ctxts;
--	spinlock_t	     sc_rw_ctxt_lock;
--	struct llist_head    sc_rw_ctxts;
-+	/* sc_pd accessed during send context alloc */
-+	struct ib_pd         *sc_pd;
-+	int		     sc_ord;		/* RDMA read limit */
-+	int                  sc_max_send_sges;
- 
--	u32		     sc_pending_recvs;
-+	/* R/W context cache */
-+	spinlock_t	     sc_rw_ctxt_lock ____cacheline_aligned_in_smp;
-+	struct llist_head    sc_rw_ctxts;
-+	/* sc_qp and sc_port_num accessed together */
-+	struct ib_qp         *sc_qp;
-+	u8		     sc_port_num;
-+	struct ib_cq         *sc_rq_cq;
-+	struct ib_cq         *sc_sq_cq;
-+
-+	/* Receive path */
-+	u32		     sc_pending_recvs ____cacheline_aligned_in_smp;
+@@ -109,7 +109,7 @@ struct svcxprt_rdma {
+ 	/* Receive path */
+ 	u32		     sc_pending_recvs ____cacheline_aligned_in_smp;
  	u32		     sc_recv_batch;
- 	struct list_head     sc_rq_dto_q;
+-	struct list_head     sc_rq_dto_q;
++	struct llist_head    sc_rq_dto_q;
  	struct list_head     sc_read_complete_q;
  	spinlock_t	     sc_rq_dto_lock;
--	struct ib_qp         *sc_qp;
--	struct ib_cq         *sc_rq_cq;
--	struct ib_cq         *sc_sq_cq;
  
- 	spinlock_t	     sc_lock;		/* transport lock */
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index 29a71fa79e2b..fd4d3fbd7054 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -361,11 +361,12 @@ static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
+ 	/* All wc fields are now known to be valid */
+ 	ctxt->rc_byte_len = wc->byte_len;
  
+-	spin_lock(&rdma->sc_rq_dto_lock);
+-	list_add_tail(&ctxt->rc_list, &rdma->sc_rq_dto_q);
+-	/* Note the unlock pairs with the smp_rmb in svc_xprt_ready: */
++	llist_add(&ctxt->rc_node, &rdma->sc_rq_dto_q);
++	/*
++	 * The implicit barrier of llist_add's cmpxchg pairs with
++	 * the smp_rmb in svc_xprt_ready.
++	 */
+ 	set_bit(XPT_DATA, &rdma->sc_xprt.xpt_flags);
+-	spin_unlock(&rdma->sc_rq_dto_lock);
+ 	if (!test_bit(RDMAXPRT_CONN_PENDING, &rdma->sc_flags))
+ 		svc_xprt_enqueue(&rdma->sc_xprt);
+ 	return;
+@@ -388,13 +389,16 @@ static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
+ void svc_rdma_flush_recv_queues(struct svcxprt_rdma *rdma)
+ {
+ 	struct svc_rdma_recv_ctxt *ctxt;
++	struct llist_node *node;
+ 
+ 	while ((ctxt = svc_rdma_next_recv_ctxt(&rdma->sc_read_complete_q))) {
+ 		list_del(&ctxt->rc_list);
+ 		svc_rdma_recv_ctxt_put(rdma, ctxt);
+ 	}
+-	while ((ctxt = svc_rdma_next_recv_ctxt(&rdma->sc_rq_dto_q))) {
+-		list_del(&ctxt->rc_list);
++	node = llist_del_all(&rdma->sc_rq_dto_q);
++	while (node) {
++		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
++		node = node->next;
+ 		svc_rdma_recv_ctxt_put(rdma, ctxt);
+ 	}
+ }
+@@ -930,6 +934,7 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+ 	struct svcxprt_rdma *rdma_xprt =
+ 		container_of(xprt, struct svcxprt_rdma, sc_xprt);
+ 	struct svc_rdma_recv_ctxt *ctxt;
++	struct llist_node *node;
+ 	int ret;
+ 
+ 	/* Prevent svc_xprt_release() from releasing pages in rq_pages
+@@ -949,13 +954,24 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+ 		svc_rdma_read_complete(rqstp, ctxt);
+ 		goto complete;
+ 	}
+-	ctxt = svc_rdma_next_recv_ctxt(&rdma_xprt->sc_rq_dto_q);
+-	if (ctxt)
+-		list_del(&ctxt->rc_list);
+-	else
++	spin_unlock(&rdma_xprt->sc_rq_dto_lock);
++
++	node = llist_del_first(&rdma_xprt->sc_rq_dto_q);
++	if (node) {
++		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
++	} else {
++		ctxt = NULL;
+ 		/* No new incoming requests, terminate the loop */
+ 		clear_bit(XPT_DATA, &xprt->xpt_flags);
+-	spin_unlock(&rdma_xprt->sc_rq_dto_lock);
++
++		/*
++		 * If a completion arrived after llist_del_first but
++		 * before clear_bit, the producer's set_bit would be
++		 * cleared above. Recheck to close this race window.
++		 */
++		if (!llist_empty(&rdma_xprt->sc_rq_dto_q))
++			set_bit(XPT_DATA, &xprt->xpt_flags);
++	}
+ 
+ 	/* Unblock the transport for the next receive */
+ 	svc_xprt_received(xprt);
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index d1dcffbf2fe7..e7f8898d09db 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -173,7 +173,7 @@ static struct svcxprt_rdma *svc_rdma_create_xprt(struct svc_serv *serv,
+ 
+ 	svc_xprt_init(net, &svc_rdma_class, &cma_xprt->sc_xprt, serv);
+ 	INIT_LIST_HEAD(&cma_xprt->sc_accept_q);
+-	INIT_LIST_HEAD(&cma_xprt->sc_rq_dto_q);
++	init_llist_head(&cma_xprt->sc_rq_dto_q);
+ 	INIT_LIST_HEAD(&cma_xprt->sc_read_complete_q);
+ 	init_llist_head(&cma_xprt->sc_send_ctxts);
+ 	init_llist_head(&cma_xprt->sc_recv_ctxts);
 -- 
 2.52.0
 
