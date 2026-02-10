@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18857-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18858-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yOdmJUhei2mYUAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18857-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:35:20 +0100
+	id gNVCF09ei2msUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18858-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:35:27 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC99F11D470
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:35:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2F3E11D47F
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 17:35:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A6A443082050
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 16:32:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 29A033084F21
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Feb 2026 16:32:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD073112DC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB5DF314B66;
 	Tue, 10 Feb 2026 16:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFogwoJy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RD8ybHmG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C983930C608;
-	Tue, 10 Feb 2026 16:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD0C3128A3;
+	Tue, 10 Feb 2026 16:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770741158; cv=none; b=jjk3XJlDDZdLvbThyMdObi1tfklcSWsXkkRIgMUEkjYukc5uxBRgpu266/GBrOT5pBOgvPGTe6Ibj7qjulw7GetAq5Xxj+1as4ED7fxUn6xVQIsZ+zHa3XxUKoKBFYxeHmpx9nSzKJ8hp5afK7daF8xALbQlcvc/LB5yc7ZZGqw=
+	t=1770741159; cv=none; b=KefmoN9izFUkMumk+Wlcuwqj+IOKnFLYdYlFa1NDbsp/1g6H2cav7BrWCNDDazckk1+kvQKhChAwzevvFP4agUpcDXqVnBtg4tJgLmIUYfAjjgmQlh0LtMOeiynYs2gL6lH3PDuDEE51V29bjgFkVVJrpXkcOT7bG01R21uDIf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770741158; c=relaxed/simple;
-	bh=khSActo4A1X98gu20W8ohNobqcA+itkS33JnJ7SwFJk=;
+	s=arc-20240116; t=1770741159; c=relaxed/simple;
+	bh=hR4VdN4VMCJY5NmLZ0h4LG/BIHWdKzeiN0apOJUlzRw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EABgCsri6BWqMv/SnDHvPGTG5tQ9zLqWhX8CJOnIPCL170vfDbtFZUC0Z1Wjh3qHYg51nY3T+Mq4eS1LGVAUNhpaNRRde06+tzLSD4mtnkFjv9w6TWpDwnbSz6vbgzBHTXSvbBOY76dWhQBt9E4lNVpMCTjF2ons7AtQjWcGkzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFogwoJy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF9CC19425;
-	Tue, 10 Feb 2026 16:32:37 +0000 (UTC)
+	 MIME-Version; b=lI8Gu4GIhaK6LP85eiBiCRilkLAbvIy9U7Yvosx9DkZZx3eOcjVVywJ8UNBQkK+BgwozPN8tYN0HYD6S59LbLMNoR+qBvEaT19qbXQqQa7u2ZUVlPjjLUx2A3pIFW/pjz7FCnl/MLmCxy7zFfK4XHT4BQ7+hrUh3L8Stcgub+0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RD8ybHmG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE4AC19421;
+	Tue, 10 Feb 2026 16:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770741158;
-	bh=khSActo4A1X98gu20W8ohNobqcA+itkS33JnJ7SwFJk=;
+	s=k20201202; t=1770741159;
+	bh=hR4VdN4VMCJY5NmLZ0h4LG/BIHWdKzeiN0apOJUlzRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mFogwoJyjRGcCNCh3jkw5C/l+eZ1rZWpwmvOLFjGBBvChbQtC5ZmRKvaukaJ4XRPv
-	 tL7pS9lSTnlKttgCgJpeSNofJ41Oi0MajFY78Z1e7zCpS/xvrDfzvx8IVDjiQBXbSJ
-	 CS7rqYbVcRWJdC4UTyuFKFrGEfXdYcXTLRk8/gbngcvDhxxnmvEWEl640l04PjZODE
-	 vZDwbQ17oNUjYzleIEdYswbIR6dzMxTHnzDxDPFfcuC/EL7OS+3pHH9VJbN3Xp1h1b
-	 mbZO6wVMri0k7i/VovuDwSc+d3JF2wgtlXFBishJpJ4bnwkaCPdARyJ1WtRKUaKiKY
-	 mwlOUpV+eSJBw==
+	b=RD8ybHmGC7cYumdG/mCLEmsZvJ4wsiczf4PvLeonyVPjc/xOCG3QP50NZFDlvTESz
+	 oEjh+9WtZdrBlBA0E6m1SuEw/Jp0isQibRDe+2xY1z68aYJkG24yY4e9y7QW+wGODU
+	 H/0gSPXP1BNMJDTxsRPwVjfXEeewBiXDIpY7/mzGPfGP+/Xqv0XmxwaszQm9RxgFns
+	 7rDW++71fgSegAI8yow2Ipr6lQYPF7oTvoEbGLaMJYNL9xfBwjTLtUDbLH65f4wYY4
+	 vKtElfU3yJ38oe7P1tJQHOkVG8yjRsQlerwQH7bWX1iyu9l8zvvMUZacRbUneN9NFQ
+	 XgRE7N4wOTPBg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -53,9 +53,9 @@ To: NeilBrown <neilb@ownmail.net>,
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 14/15] svcrdma: retry when receive queues drain transiently
-Date: Tue, 10 Feb 2026 11:32:21 -0500
-Message-ID: <20260210163222.2356793-15-cel@kernel.org>
+Subject: [RFC PATCH 15/15] svcrdma: clear XPT_DATA on sc_rq_dto_q consumption
+Date: Tue, 10 Feb 2026 11:32:22 -0500
+Message-ID: <20260210163222.2356793-16-cel@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260210163222.2356793-1-cel@kernel.org>
 References: <20260210163222.2356793-1-cel@kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-18857-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18858-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -94,69 +94,55 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: EC99F11D470
+X-Rspamd-Queue-Id: D2F3E11D47F
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-When svc_rdma_recvfrom finds both sc_read_complete_q
-and sc_rq_dto_q empty, svc_rdma_update_xpt_data clears
-XPT_DATA, executes a barrier, and rechecks the queues.
-If a completion arrived between the llist_del_first and
-the recheck, XPT_DATA is re-set, but recvfrom returns
-zero regardless. The thread then traverses the full
-svc_recv cycle -- page allocation, dequeue, recvfrom,
-release -- only to find the item that was already
-available at the time of the recheck.
+svc_rdma_wc_receive() sets XPT_DATA when adding a
+completed Receive to sc_rq_dto_q. When
+svc_rdma_recvfrom() consumes the item from sc_rq_dto_q,
+XPT_DATA is left set. The subsequent svc_xprt_received()
+clears XPT_BUSY and re-enqueues the transport; because
+stale XPT_DATA remains set, svc_xprt_enqueue() dispatches
+a second thread. That thread finds both queues empty,
+accomplishes nothing, and returns zero.
 
 Trace data from a 256KB NFSv3 workload over RDMA shows
-267,848 of 464,355 transport dequeues (57.7%) are these
-empty bounces. Each bounce costs roughly 37 us. During
-the READ phase, empty bounces consume 8.6% of thread
-capacity and inflate inter-RPC gaps by an average of
-87 us.
+172,280 of 467,171 transport dequeues (36.9%) are these
+spurious dispatches. The READ phase averages 1.99
+dequeues per RPC (expected 1.0) and the WRITE phase
+averages 2.77 (expected 2.0). Each wasted cycle traverses
+svc_alloc_arg, svc_thread_wait_for_work,
+svc_rdma_recvfrom, and svc_xprt_release before the
+thread can accept new work.
 
-The calling thread holds XPT_BUSY for the duration, so
-no other consumer can drain the queue between the
-recheck and the retry. A retry is therefore guaranteed
-to find data on its first iteration.
+Add svc_rdma_update_xpt_data() on the sc_rq_dto_q
+success path, matching the existing call on the
+sc_read_complete_q path added by commit 6807f36a39b7
+("svcrdma: clear XPT_DATA on sc_read_complete_q
+consumption"). The same barrier semantics apply: the
+clear/recheck pattern in svc_rdma_update_xpt_data()
+ensures a concurrent producer's llist_add + set_bit
+is not lost.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index 2ee9819a53d7..a124c6ed057a 100644
+index a124c6ed057a..c56d70658068 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -981,6 +981,7 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
- 
- 	rqstp->rq_xprt_ctxt = NULL;
- 
-+retry:
- 	node = llist_del_first(&rdma_xprt->sc_read_complete_q);
+@@ -994,6 +994,7 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+ 	node = llist_del_first(&rdma_xprt->sc_rq_dto_q);
  	if (node) {
  		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
-@@ -995,8 +996,17 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
- 		ctxt = llist_entry(node, struct svc_rdma_recv_ctxt, rc_node);
++		svc_rdma_update_xpt_data(rdma_xprt);
  	} else {
  		ctxt = NULL;
--		/* No new incoming requests, terminate the loop */
  		svc_rdma_update_xpt_data(rdma_xprt);
-+		/*
-+		 * A completion may have arrived between the
-+		 * llist_del_first above and the queue recheck
-+		 * inside svc_rdma_update_xpt_data. This thread
-+		 * holds XPT_BUSY, preventing any other consumer
-+		 * from draining the queue in the meantime.
-+		 * Retry to avoid a full svc_recv round-trip.
-+		 */
-+		if (test_bit(XPT_DATA, &xprt->xpt_flags))
-+			goto retry;
- 	}
- 
- 	/* Unblock the transport for the next receive */
 -- 
 2.52.0
 
