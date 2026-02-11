@@ -1,186 +1,205 @@
-Return-Path: <linux-nfs+bounces-18881-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18882-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oHtNBWhdjGmWlwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18881-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 11:43:52 +0100
+	id GFfOK9aEjGn6qAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18882-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 14:32:06 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B495123890
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 11:43:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04D1B124C7D
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 14:32:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 56D58301ECE8
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 10:40:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0168B3018BDE
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 13:30:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4DD6350D55;
-	Wed, 11 Feb 2026 10:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B88C1E9B35;
+	Wed, 11 Feb 2026 13:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="YNtdMdd6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMq2q1Y8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA2336923C
-	for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 10:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770806412; cv=pass; b=e0YrQX7pOnD4sgiFEe8Y4fCiT1BMmSt5JEwkPDVpQRLtIfzxv4PdAOQh1jZLKwTgRwK2q/6XvtsMCcuhigdmRIWAaWLjRha528Z3tM5qOlLol2R92AvFkLfb3+YUxYyShRgnjtntIPRIaFVNSa1qGOVrVa94zYOFlRQo9e83NJk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770806412; c=relaxed/simple;
-	bh=+PVZWfyJIUEQH9lyjVtGt+MNAcBL4BJMJmk8FffsVnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gqlHRNfA1rPWC/a5LvY7jHRhVTM6CSV9pJFtLC2vckv5EIxYTLosEQozf2SdeB1R9CXO9h4gBJy3hWvPEzUQPqqVkUB5keD9At307eSuGFNOPC5t0yCC0YB0Rch8ZzXQf/x+Imx4QxPDy6Jak5Cac4IlFpbiEyGW/GDfd2SHCTw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=YNtdMdd6; arc=pass smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dneg.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-65815ec51d3so8033857a12.2
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 02:40:10 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770806409; cv=none;
-        d=google.com; s=arc-20240605;
-        b=NPEakAbCZ5LuWyHTXRFYzNRhcqvwPUe6CQAS0MfN61G4pv6EklbOMhK008p7S2nM6v
-         OrddGgBe3mSGtswEhr0xW0+gdAFJsMxP+WEvwUeTGa6dscqRwlTzyG+deB9ljeXvaldy
-         s8JyF3OkskOadDwPuIhuNtCuSOGt1IhXTsMitTj2Ga2IXtxV4mRvpbZ+rMG9ApHU7Dbw
-         HlfqDUmiwSE2m89PNpRdA4bOZG5rxvtJJTPV+LsyUCsbMrPpocm0YQGqPQe6d/na8sVu
-         +PAEuTBuEPEW4BFKLImK2ZiAhkI2KxZX8xd4VISAupQnTGCnjc6cg4gyhCNoQ8Ol18y7
-         XN6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=+PVZWfyJIUEQH9lyjVtGt+MNAcBL4BJMJmk8FffsVnw=;
-        fh=fHHF/Ols5kY+nXCl9h0bqkW/1GiNipAqlLa1h6uk2iA=;
-        b=VTb2PwRu8ODqoquHyukbymLoHJjs5TV45opeHWxqu8t4VmC8CCLLhdSYQKPo9EVvoj
-         Utm5MNEXG0Ve0VyFP9aYJYUBvuetCqlgURqomvSIxWSEzi8QTc+Bv/MBZ1DpOUbGa6k3
-         p/3VvWlJh0oMgOhcQjlmWIbijWxhPeSVX/zdChI9m3YizKTfdFP7YUnm4BoxzkCd9k3C
-         Jt9D+0yvkIxxqWLW8xfOu6qSSRNiqYKzf7fEBhUZT5bgzy5gfWv5Za4u68e86vLJhXIb
-         s4QyW8wa0Yd0gc2iRVMxQiKn4nlzYUwaZgdd7j+wnCwL2PeFYCkg4dyCV6cfRlD+r9pC
-         aUWg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1770806409; x=1771411209; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PVZWfyJIUEQH9lyjVtGt+MNAcBL4BJMJmk8FffsVnw=;
-        b=YNtdMdd6jkT2aXxFznyZBDTbw8J/C5QPB4LG+o3OOsuyz9Dl/c2JlvkW/nXTITTm2R
-         ucrDiZQOdF6q5QA66+LMTBnvrVgEXM0t/6KjsnkN9Bj+YbZavYKUQ5hpVlq0EeOIiQZg
-         Rbqu3D04r/DNuS7UlCzA+oDmHTy4bZl9zcoSb391MxVjeWlnFED7l6krXlIJHQ1IOSel
-         MxD5kXUgb0dOUbXHi6QNDmvVwEJSR/UphGhm5Ye0zSKum4BaUThA6EzfQHWurbkX0NtZ
-         pyjJNiFLL6j/CRM3rou2pkNTgh39g0ILHEN1cAYt0HXRulwZU3sdens8XonUnxWBbbm6
-         9+Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770806409; x=1771411209;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+PVZWfyJIUEQH9lyjVtGt+MNAcBL4BJMJmk8FffsVnw=;
-        b=L3wqL0xpO6+3g6DO52R9ufcLkGTcbV4/VSaNlyDufdmI/nnbkrqGVSdB49Le6VsM8N
-         m1oDYZX5OoN9HkxpvXd5Alp1VtZQxo0Z6rOB/DgLLQUdT2r1m80ztdYIeYCv2yoNF2Ln
-         opAYWrg2oVoYMGNAUsiBNlgm4iM7UWwDl83LzqbwHhZra2Yex0fWeP9ZE1+hoIAOMupQ
-         yAqCTNfdUfSk74XoujslxZ8R0UZoqHj8Ig+h1sr51C9EsGNO+08OsD8RFxumphXB/C/0
-         9sKWIKWjqu+pbdXmj/5AGZO4W142ko+FXNRcyMHLW/fRx5i7tdbjfxVS3bi1CfqX2BjC
-         7mlA==
-X-Gm-Message-State: AOJu0Yy25SxWeSvyAaiv+g5r6zVsple8+HedG4rjzYtacHsYIS4itQVB
-	4gB6rvl2492Tcl2Vw3HGMSivYxBb9ruBMkQ3cRnG1CvEPapNp/SOKneaevpDpKXvbUTF64hoLUf
-	oXA7wgCasDJXZgrZsvG7qfNTaWC193C25YwySZSY7HR5HHT6s6IfR2ZhBLQl++iQ=
-X-Gm-Gg: AZuq6aLl8XgRI/dZTMi9bCVA4Ulct2hhaTg6wq+7fRnpg93bhxX8gINcw5ZFME330r3
-	k0vaaPoo1ysNeRva/aftB3eD98ODSrrTRV8F1CeJ2w9dF3NgeChh+pCl0f/KBgcTokWWXZ+LkiL
-	TyT0EWe+lX/zmCAwM0uxfvbCujKIKJVLqcR35A28VYNI6iRkawROWy15dbHWV6dAZKfcbxw/4Z5
-	+OsmSxb35PmOFYrojX9T8AvMKgewvFESQIr43YBeG0yeThnq+k0tl8fSct70yRmS1K3pFrDcz4c
-	iTlFaA==
-X-Received: by 2002:a05:6402:2345:b0:658:1421:b569 with SMTP id
- 4fb4d7f45d1cf-65a39b034aemr1120914a12.14.1770806409395; Wed, 11 Feb 2026
- 02:40:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268D51E1DE5;
+	Wed, 11 Feb 2026 13:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770816626; cv=none; b=Z6QUuWO8voJeqcQsuzpP9CRm80PGTS8Cv3vyEpwfSOKdbG8aGf91nxwyi2u8Kj55CvJ5OMkrHJ7nrIytrtwkg7vLrZYeDwiaA+RGjU+l6TYLzcaH+MWx54gEKxItOMsW//rp+mjVhEDQwpaFblr1Bpit4cV78EvdEp3xIqDjwIE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770816626; c=relaxed/simple;
+	bh=eCdIGEmlQC3hsCzEv0VStBX+H9d2huLhyXUnbaIx4JM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=frlyiXWRvtAkrUsRKFYaQCx3caH8yh9XZbAMQqlqVH9IMmJMDyEHwjQfFey6pr7tVB3qod+iq8d4CxM399MJzHuS2bjDsAoViYHKl5P+/lmkE7n73vhJGFmiTl5jhKYdNc4Q2V0sCTCatXQfrbgRK77N8OFWYfQmCQTs4hv2ydE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMq2q1Y8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF568C4CEF7;
+	Wed, 11 Feb 2026 13:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770816625;
+	bh=eCdIGEmlQC3hsCzEv0VStBX+H9d2huLhyXUnbaIx4JM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=OMq2q1Y8uAeI8rYGiX0xXXWOXy3t0xIyMyhJUq5nVUTsHQSjKA8WM7YsOmpO/HSV6
+	 +Rs5RbOtyBknjAbBQRXX9PBmoTX9yEM52tkFIdOnP0HPMAhAgSVwNH6HBPkgk9WtlB
+	 dWWGr38Y+fd6B25Ock/cGdqtSCI784G7XgvpaPOdGGU7kV4P15bwBpYPZOqrS1pJ1C
+	 H1k21aZdW/uuzhwlMQMhMGp8Xsj5M9+9/pkIVda/Co/onEbxxY5h/ydHIDqTf7BMvv
+	 eEDCXUsKkbGsys5MZfi4LuEH8bZB4Cbtw25k8W1af56dbcFMnj1nAnMpBTH2GHSXvA
+	 PmNcSZOQcTjmg==
+Message-ID: <c830a8afe51514ac40fa272558eed4fcbb5efcea.camel@kernel.org>
+Subject: Re: [PATCH 0/4] Avoid filesystem references to writeback internals
+From: Jeff Layton <jlayton@kernel.org>
+To: Kundan Kumar <kundan.kumar@samsung.com>, jaegeuk@kernel.org, 
+	chao@kernel.org, agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org, 
+	hch@lst.de, brauner@kernel.org, jack@suse.cz, viro@zeniv.linux.org.uk, 
+	djwong@kernel.org, pankaj.raghav@linux.dev
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, gost.dev@samsung.com, 
+	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com,
+ mcgrof@kernel.org
+Date: Wed, 11 Feb 2026 08:30:22 -0500
+In-Reply-To: <20260211070057.22001-1-kundan.kumar@samsung.com>
+References: 
+	<CGME20260211070533epcas5p32f50f317b20250bb61b1b5a0b3a2a5d9@epcas5p3.samsung.com>
+	 <20260211070057.22001-1-kundan.kumar@samsung.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPt2mGNAGaO8hP9u4M+oH0_w0dbSNAmDF=g0jyb26ED5R_mhOA@mail.gmail.com>
- <a1b6c46f-e49d-4ae6-ae5e-3c08ed40e359@app.fastmail.com> <CAPt2mGNL4neF1NX7_1=9svnNz_iXhadHw0AEjZ_B-50-vwNtUg@mail.gmail.com>
- <723418cf-cec6-4afc-906e-b93a55e85fc9@app.fastmail.com> <CAPt2mGNkGbWujzTzxoTGTvAWoOL9aUUhN93SEJQYJTQyV4xu7Q@mail.gmail.com>
- <d9926f9e-50bf-46e7-9109-21b30dd695c1@app.fastmail.com> <CAPt2mGNbZm9YDjuCUwJHiJUQUUnKQtbf1ggYPzAytgWjMp68LA@mail.gmail.com>
- <CAPt2mGOsCLrG30s7mrOvd3N5t018T+gJhGWd88pw0WbOnagO=A@mail.gmail.com>
- <110b6190-ed55-41d0-a3ca-580ebc38c1e5@app.fastmail.com> <CAPt2mGPMvQMyMcNUnznqU=0pSZ4xVDB32Q61_gTkL9TvHyKXrA@mail.gmail.com>
- <d97b4a81-7fbe-405e-b5dd-82e74630c9d9@app.fastmail.com>
-In-Reply-To: <d97b4a81-7fbe-405e-b5dd-82e74630c9d9@app.fastmail.com>
-From: Daire Byrne <daire@dneg.com>
-Date: Wed, 11 Feb 2026 10:39:33 +0000
-X-Gm-Features: AZwV_QiFmrPWNsxLc6PjLsprfHA_mV1sL8yYAyYJn3UANmCNO6FNy1jW_PYb0WA
-Message-ID: <CAPt2mGNVMthai4J0QRSaJdWHP4X+K_mzqBxWQGUzdOihMyU_KQ@mail.gmail.com>
-Subject: Re: knfsd read iops limits?
-To: Chuck Lever <cel@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[dneg.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[dneg.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_ALL(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWO(0.00)[2];
-	TAGGED_FROM(0.00)[bounces-18881-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18882-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daire@dneg.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[dneg.com:+];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,dneg.com:dkim]
-X-Rspamd-Queue-Id: 3B495123890
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 04D1B124C7D
 X-Rspamd-Action: no action
 
-On Tue, 10 Feb 2026 at 21:21, Chuck Lever <cel@kernel.org> wrote:
->
->
->
-> On Tue, Feb 10, 2026, at 1:34 PM, Daire Byrne wrote:
-> > On Tue, 10 Feb 2026 at 16:53, Chuck Lever <cel@kernel.org> wrote:
-> >> On Mon, Feb 9, 2026, at 6:43 PM, Daire Byrne wrote:
-> >>
-> >> > Anyway, the attached lockstat is consistent in both cases - the nfsd
-> >> > threads are using all the cores of both sockets.
-> >> >
-> >> > I don't see much difference in the patched and vanilla cases. I will
-> >> > triple check that the patch series was applied successfully and I
-> >> > didn't mess up the install.
-> >>
-> >> The lockstat data shows that the patches are applied and that flat
-> >> combining is reducing xpt_mutex contention, as designed.
-> >>
-> >> This time, the lwq spinlock in the thread pool dispatch path
-> >> shows very high contention (246M events, 54k seconds total wait).
-> >>
-> >> Could you collect "perf record -a -g -- sleep 30" during the same
-> >> workload? A perf profile should show whether that's the throughput-
-> >> limiting factor or whether nfsd threads are spending their time
-> >> elsewhere.
-> >>
-> >
-> > Sure thing. I have attached a perf report of the workload with one of
-> > the nfsd threads expanded.
->
-> Thanks. The two significant contention areas are the lwq idle
-> list in the SunRPC thread dispatcher and the group sort in
-> nfsd_setuser. I'll post some patches to test in a day or two.
+On Wed, 2026-02-11 at 12:30 +0530, Kundan Kumar wrote:
+> The series introduces writeback helper APIs and converts f2fs, gfs2
+> and nfs to stop accessing writeback internals directly.
+>=20
+> As suggested by Christoph [1], filesystem code that directly accesses
+> writeback internals is split out:
+> [1] https://lore.kernel.org/all/20251015072912.GA11294@lst.de/
+>=20
+> No functional changes intended
+>=20
+> Kundan Kumar (4):
+>   writeback: prep helpers for dirty-limit and writeback accounting
+>   f2fs: stop using writeback internals for dirty_exceeded checks
+>   gfs2: stop using writeback internals for dirty_exceeded check
+>   nfs: stop using writeback internals for WB_WRITEBACK accounting
+>=20
+>  fs/f2fs/node.c              |  4 ++--
+>  fs/f2fs/segment.h           |  2 +-
+>  fs/gfs2/super.c             |  2 +-
+>  fs/nfs/internal.h           |  2 +-
+>  fs/nfs/write.c              |  4 ++--
+>  include/linux/backing-dev.h | 11 +++++++++++
+>  6 files changed, 18 insertions(+), 7 deletions(-)
+>=20
+>=20
+> base-commit: 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b
 
-I'm not sure if it's relevant to nfsd_setuser, but we do use
---manage-gids and have lots and lots of users and groups that the
-server needs to parse (sssd -> AD).
+Seems sensible.
 
-For this workload, on the server, I am a member of 737 groups....
-
-Daire
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
