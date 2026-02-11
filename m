@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-18874-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18873-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mDA1Lzjyi2lXdwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18874-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 04:06:32 +0100
+	id kPgBGybyi2lXdwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18873-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 04:06:14 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F023120D9A
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 04:06:32 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEA8A120D93
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 04:06:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 47B253013D66
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 03:06:10 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1C14C30138F8
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 03:06:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A40E3358A3;
-	Wed, 11 Feb 2026 03:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A5452EFD90;
+	Wed, 11 Feb 2026 03:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.cn header.i=@sina.cn header.b="QLdJZrdx"
+	dkim=pass (1024-bit key) header.d=sina.cn header.i=@sina.cn header.b="KRLmMQoT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp134-31.sina.com.cn (smtp134-31.sina.com.cn [180.149.134.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B497E2ECE9D
-	for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 03:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C812F83AC
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 03:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770779167; cv=none; b=CIs0vIIrQ0+UZ52M9ZYbsefydXpOEn7iP6swKLtkO7V/5QF9zHqbxnNs6qXhfscQBKrhyK973HnquWpt/V5mvZBsL5/ud2X0p2vO7C893pS8rZT6Zezg6mB1yYx9sXGJlCBsi9eX0Ht+vwl/zVk/1KPw7DalO57T1IqDkyX10V8=
+	t=1770779157; cv=none; b=cAHBBpm4ZvyL8XRoS0RZ2KnLJMYCFaeieke2Vjkw+3LA7U/skVUY6rOxJpBrp+4dXdyhtczAJi12Yt3MjtwlWItx5W5AY2AfE5Wk8IPDi/ARvH/twJJI7rdAr4Sn/69tCgrG75vAenjQlSwFFAxsWtYt+VTV1PELmUHh925hrSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770779167; c=relaxed/simple;
-	bh=npc2dbBOGo7Aif7S5+nDohPa5CRcvAM4noA1HV94vxI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nrQ0JX5/sXhhOyh8bFm0eJlOoeLSGXQvzGvjjzcJKzlgTaq34t1TICcKmbhgtSWC+qCU3FCJjcOzZUdlalfc55iS09C3lgfjoLVfXyHYdOcoqzzIsB+SnQIrqVjgBiPjr6gHZq8PfiK/vxdFqooVEpA1bGqWWtEu3uxiOzbMm0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.cn; spf=pass smtp.mailfrom=sina.cn; dkim=pass (1024-bit key) header.d=sina.cn header.i=@sina.cn header.b=QLdJZrdx; arc=none smtp.client-ip=180.149.134.31
+	s=arc-20240116; t=1770779157; c=relaxed/simple;
+	bh=v8iINxg0bJjLdNNVaLgZPUcs7PeAVr8+bDLdRAlO0YE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YjZcjRnEJ5+tSgjweg/nwimKcXtt063vpXv5ZHLC1j8Ce2706NcQNXW1APaRdDjzvcEdZdySVO+bDwm4YHhEa2dgotnYdVVMS6jUI0NKAiH6W2YzrtRAb4nq2WyAtWR7OAlcpU9EWcc5/+CN291dyBmAxv36olzWB29ryMLj/B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.cn; spf=pass smtp.mailfrom=sina.cn; dkim=pass (1024-bit key) header.d=sina.cn header.i=@sina.cn header.b=KRLmMQoT; arc=none smtp.client-ip=180.149.134.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.cn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.cn; s=201208; t=1770779164;
-	bh=cEK/QkXNtxabPBN96UfAuh6tuWmLKbXJW7876CwA5zw=;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.cn; s=201208; t=1770779151;
+	bh=FcN+WJYVOanO0TRi+d2Jep7FBu8EZr4GrWb/MbbLiRc=;
 	h=From:Subject:Date:Message-Id;
-	b=QLdJZrdxF4OfpdjSypN1n9RQr5eooXi1tvyAo8O6FtLwwEJrdd8GIeBXySMpZAw9q
-	 9p2JebEpBmWyR+xYZO+9jnCn99clqmKJxUeuMzANTox4nJcViecsr0Cztg7ZMKGpM5
-	 DIRNpT0Y6fYROQV/Hjqyn3dFdX+ssgpLefRj5eTk=
+	b=KRLmMQoTDOhYnsxIMp0dJA+1eLSIvjmWYhG1l+gg4k8mZh21vRa+AsXgHas3k17LD
+	 +fp8GtETLUx9UQayTBBjwbMiMfcW2aoARNGoEr79N4v+6tUvGESeoAHkiusoUcRmkY
+	 kUc9STmkPtKeS7uFKIlwfYfZA2u6pkLjHYGCdr4w=
 X-SMAIL-HELO: NTT-kernel-dev
 Received: from unknown (HELO NTT-kernel-dev)([60.247.85.88])
 	by sina.cn (10.185.250.21) with ESMTP
-	id 698BF1F200002A1A; Wed, 11 Feb 2026 11:05:24 +0800 (CST)
+	id 698BF20900003361; Wed, 11 Feb 2026 11:05:48 +0800 (CST)
 X-Sender: jianqkang@sina.cn
 X-Auth-ID: jianqkang@sina.cn
 Authentication-Results: sina.cn;
 	 spf=none smtp.mailfrom=jianqkang@sina.cn;
 	 dkim=none header.i=none;
 	 dmarc=none action=none header.from=jianqkang@sina.cn
-X-SMAIL-MID: 6981733408340
-X-SMAIL-UIID: 20AF8401DD9D4EF6ADD6BCF3D67D7D2A-20260211-110524-1
+X-SMAIL-MID: 5076723408759
+X-SMAIL-UIID: B325631BC0DC4C5E9D7B21F2FB9DA4F7-20260211-110548-1
 From: Jianqiang kang <jianqkang@sina.cn>
 To: gregkh@linuxfoundation.org,
 	stable@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc: patches@lists.linux.dev,
 	Dai.Ngo@oracle.com,
 	tom@talpey.com,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH 6.6.y] nfsd: don't ignore the return code of svc_proc_register()
-Date: Wed, 11 Feb 2026 11:05:22 +0800
-Message-Id: <20260211030522.2697146-1-jianqkang@sina.cn>
+Subject: [PATCH 6.1.y] nfsd: don't ignore the return code of svc_proc_register()
+Date: Wed, 11 Feb 2026 11:05:45 +0800
+Message-Id: <20260211030545.2704021-1-jianqkang@sina.cn>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -81,7 +81,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[sina.cn,none];
 	R_DKIM_ALLOW(-0.20)[sina.cn:s=201208];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -89,9 +89,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18874-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18873-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[sina.cn:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FREEMAIL_FROM(0.00)[sina.cn];
 	FROM_NEQ_ENVFROM(0.00)[jianqkang@sina.cn,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -100,8 +100,8 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,appspotmail.com:email,sina.cn:mid,sina.cn:dkim,sina.cn:email,oracle.com:email]
-X-Rspamd-Queue-Id: 0F023120D9A
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,sina.cn:mid,sina.cn:dkim,sina.cn:email]
+X-Rspamd-Queue-Id: AEA8A120D93
 X-Rspamd-Action: no action
 
 From: Jeff Layton <jlayton@kernel.org>
@@ -136,10 +136,10 @@ Signed-off-by: Jianqiang kang <jianqkang@sina.cn>
  3 files changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 78ebdf20c1ef..4703e2a93568 100644
+index ba2eaf3744ef..cc0dea883fbd 100644
 --- a/fs/nfsd/nfsctl.c
 +++ b/fs/nfsd/nfsctl.c
-@@ -1526,17 +1526,24 @@ static __net_init int nfsd_net_init(struct net *net)
+@@ -1460,17 +1460,24 @@ static __net_init int nfsd_init_net(struct net *net)
  	retval = nfsd_stat_counters_init(nn);
  	if (retval)
  		goto out_repcache_error;
@@ -166,10 +166,10 @@ index 78ebdf20c1ef..4703e2a93568 100644
  	nfsd_idmap_shutdown(net);
  out_idmap_error:
 diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
-index 9f606fa08bd4..0a629a18831f 100644
+index 36f1373bbe3f..336878cf3b07 100644
 --- a/fs/nfsd/stats.c
 +++ b/fs/nfsd/stats.c
-@@ -115,11 +115,11 @@ void nfsd_stat_counters_destroy(struct nfsd_net *nn)
+@@ -113,11 +113,11 @@ void nfsd_stat_counters_destroy(struct nfsd_net *nn)
  	nfsd_percpu_counters_destroy(nn->counter, NFSD_STATS_COUNTERS_NUM);
  }
  
@@ -184,7 +184,7 @@ index 9f606fa08bd4..0a629a18831f 100644
  
  void nfsd_proc_stat_shutdown(struct net *net)
 diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
-index d2753e975dfd..b1f7d21cbcd1 100644
+index 14525e854cba..b9329285bc1d 100644
 --- a/fs/nfsd/stats.h
 +++ b/fs/nfsd/stats.h
 @@ -15,7 +15,7 @@ void nfsd_percpu_counters_reset(struct percpu_counter *counters, int num);
