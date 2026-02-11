@@ -1,199 +1,156 @@
-Return-Path: <linux-nfs+bounces-18883-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18884-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Mh7NheJjGmHqgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-18883-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 14:50:15 +0100
+	id eDjrMT+TjGlIrQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-18884-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 15:33:35 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55132124F24
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 14:50:15 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58CE112545A
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 15:33:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BE03B3015850
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 13:50:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F15A4301682F
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Feb 2026 14:33:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFAC9315D3F;
-	Wed, 11 Feb 2026 13:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9B92C3266;
+	Wed, 11 Feb 2026 14:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eR/238IG";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Up8uyZ8p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvGIYMkG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BC2D0C7A
-	for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 13:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770817811; cv=pass; b=inYZlWUKsEPQmxrVi6AYpyz50CQthDl9nJFXbRxIKTJgXHBFe3P0KgbgYPJeEkm0JFd4LsmSoM4ieF7E7jfcEC93mY2ljJC5Z0hf2VBUWWw81b1AlujeBBdo5sn9i/CaBBS5xuAOcuAoz1+iZjj058a+nCJilBMkstO+r5gOWLA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770817811; c=relaxed/simple;
-	bh=9sZWJXMrsvFSIpM2gpX8H/TzEeebXEBNrwxUqhUTzq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GL+8C4J1YFEB+S21At2t6xTexIvPVFv+TYxSAL3wGXh+LJynNlT7ONXs7EJVL+0QpSvT2EqV/YA1KdvZKbzNrnTr1Y4G5wRi61BjSE0Cd+YHAtd7fyPyhQm5cqHe1r7gja7p0ruEp/GyQRh+GfSaeYeuY6OxNTJR7TCfuSOKSsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eR/238IG; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Up8uyZ8p; arc=pass smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770817808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NyGxR5LQHMgd3AjzZ3ErlH/2lpT7HfDqYV4EqF+AD+E=;
-	b=eR/238IGT8jTn4sdPWxALomPmhLJ9TURIwDpwULelgISUfh6cqH8X1crohw0mHWW/lNjvl
-	T1qFo/+ac+nIyVJ4EaHIKdxRCXFctPOW6tf0VbfW/4LtHituayTA16vcBVhzk6Tt6cczt7
-	kDDhKE9484QaK8E8UGqkQRw7oqre8JI=
-Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com
- [74.125.224.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-KHHr-TQQN_qIWwSjAn1hWg-1; Wed, 11 Feb 2026 08:50:07 -0500
-X-MC-Unique: KHHr-TQQN_qIWwSjAn1hWg-1
-X-Mimecast-MFC-AGG-ID: KHHr-TQQN_qIWwSjAn1hWg_1770817807
-Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-649f0d26e5eso6956030d50.0
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 05:50:07 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770817807; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UR0+Jx6RkjOVcby8DzobE7SkHN1FfccRzRIp4v5FA8MLGD3lk7tmS1GBx6zIZwM8P5
-         ZDz7J4JLiVU+A37cEuLlzLTDoVCvSrVFOGnDIJ7mRFbi7I9j8lwAxax2BqjCJ+xygBy6
-         NLFFpAM7jmMnsYxld/VEtCgAd0x6Tg9Z9H+QnTi6d7yddr1BaCnoo5iC79Haa8Dogdqs
-         tZm9ONf5Z6f+ZP0VJbm/PSZvLL8gTX0pug/gO8BsioM3t/vu4vQVoAhf0mbPMcXouc7y
-         Y/vWMgjY9KvsFOTdgGYiJb9bXIyBl7s8E6yIn2NGTD6JdU73SgjFEF4U/q2aDD+KH8Af
-         VLzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NyGxR5LQHMgd3AjzZ3ErlH/2lpT7HfDqYV4EqF+AD+E=;
-        fh=ySyllMYeJ9xtFyYTtxTpiaAopgjAC9ZIZLbcHClCjXE=;
-        b=KGVpw50qBE+84GQXxiSLtOc0hgxm4HCi4Hos7QkC1HbX4vEDMSSTOXbnfGSi+KzRvS
-         b3HRMEcX5hGTKY8ZQNopjIv2BjsSzM+0CKZU72bnopoBfgJaFdNKXwZg9eWd+YK3k+at
-         zV4PGBBpGzbiJVw2poVMS0SsAK/+1ihnR1Vh/qDPEoJGA6Hzy1Rwy2+AYwR+LtJ8qT2t
-         fpfwjgA4Mv2brrwutcY1w9Ct2+/QIZqsOwrkJeoU58LM64A2cLRI3I1FUuIJQL+jeoH/
-         bsSzHlYKCDZdDu4llb22K+dpLIFeFRLpjOCbpIyB6egxapmsC9U1ngAI7wGI6h5gmFlp
-         P0qg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1770817807; x=1771422607; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NyGxR5LQHMgd3AjzZ3ErlH/2lpT7HfDqYV4EqF+AD+E=;
-        b=Up8uyZ8ppUWl6aBt6Jl960luNUXobnReYdrQHNdnqiCIGfnfxO9aQ9K7nZNP8koeeI
-         Xega/NqaYK07Yz6v5f3ctcmZ3LUu02jCXLVVwafXPqkrf/b4rlGCs4ns103Dd8I+swAN
-         D8+9cByOq6g7Tler8hoShPmTEo5FxLUgvCgqJu4M/oH5JhQg3L+eXGbOeWtqzqfJWykT
-         YBpWYUgmS9Mj/p5UB8167o28yc33uUFU3BRzwMAfKiYp8wlnB6uQ3yalXxPFN9t0bAiM
-         pLk1NGIdVwQcFsINq26jlOeT4qVQJUy5Trvf4aZLkku2Qrrv+4z7viB2E9ayU8F2GgZn
-         g1hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770817807; x=1771422607;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NyGxR5LQHMgd3AjzZ3ErlH/2lpT7HfDqYV4EqF+AD+E=;
-        b=U0Fg5M/+nnad1siV+aP62meEB96LRWmKYV487yfIzCxdACtJgMhGdNkNXA6sF6IjeP
-         C2GhOjm40qo0fA6Wcu7rR8qFli9aK0F4lS7vPrJLt3gAuzEAo+liFDhaNXiiFkMOSHHJ
-         dbGPDrVNWasdncAvRmLhC9JOH4hTHWxCFWk9Ev0SmXHfy6lHmB+9O+frE8EJ5Q8Mcq46
-         1RLSovMFvpu+/ydnGc4m8AQzPcQE3fK3dhDA80VTT425hPVazSVmp4FZK3PsqCS2n+rd
-         vTCGXvPkq/xAn2bJcyeivQqGj4eOkuS5jT9ix8zQ2lGfIq/pBLoVhRpS0McAz5UCcR8+
-         FQ0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWh4ot74VhQ1oaL3ME443w+CfRL3rH1tMvmgeBbqsA+/puxNDY1SoDBK6b2RNAkSNDkZw8e5JfdQJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLEKqVM2U7H3Tcjs0BJ6RH3RaX8Bj0odUmjJie5gLX9xlxd9d1
-	AZ3xhzrTJozpHRgTIcMO0kNdTKujB6U6rflWkSagDc3uwdQbAl/MrqBHCtS4qDHU+HNu+PFY7uG
-	XSCkGN1JkVi1HTjFhHdCcSrbWVct5N28dyTp7y+iK0zbtD2Kd2Sv7L8FuDoHsonCH6stxxKmmDy
-	AF/cTVYaiGe8LkDbRVBxzDyZ35uMF+mM+QXTpd
-X-Gm-Gg: AZuq6aL+uI3p5L+asmuYKB+2Er2dyMqYX68eb9na5IW52cM+y1LcQtN1VjUtISCD7ep
-	ZJjbYxlg66JMYawlmKRYbeao/HG3LqaWi0/W2keASx1ogU5JK31tai3/DEKdEk15KvtfBKi/2J7
-	hbbyK54bspNgEJUlt55fMKZGWfCQsDGLPtB2Bgm0II0Pvtdyl6ONedgiw6XQ59I85Pu2RQW3LUt
-	4f2+kaxCsY4oWMjNEh4TXYdDL0safExn41MT/3Lc0kOsPUb6ndSSb0KCdCSxV1aPg==
-X-Received: by 2002:a05:690e:dcf:b0:64a:dd9d:e944 with SMTP id 956f58d0204a3-64afe30abbcmr1311178d50.25.1770817806886;
-        Wed, 11 Feb 2026 05:50:06 -0800 (PST)
-X-Received: by 2002:a05:690e:dcf:b0:64a:dd9d:e944 with SMTP id
- 956f58d0204a3-64afe30abbcmr1311156d50.25.1770817806461; Wed, 11 Feb 2026
- 05:50:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1692D7D2A
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 14:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770820407; cv=none; b=T49IAY0vIvgT+GjYy5wNtjgVPMCWT01UUSzvQbmeOLMjVvzvYxDmSD41Ix90ZkUL8bSxWR55yRsnBFo8XQBHDVCR2GDAn1KtsbaU6oUvzOqWjayy15+XPGjgo23z1hWE0DV4A350p8O/b1HqDQWcOY6OOn4BUUGZ+CNyJChXWy4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770820407; c=relaxed/simple;
+	bh=t2bJpXQc4AFVnX1fm0vsWVczpFog9jcuRtYBlYChLTs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Og+8h6/7JGS9uVE91ES/NgRNjln6ge9G+Xv2Y8h51foBf0XVc0LCqIIgLPaH6wPhGFvzCihwIBy70P/I7PB9w427bO+d6eJyQn/EVsG+SFPdnJs6hUeOIBQAPiSNN768hbQxlk5CXv9xvdEdIK+Y0jOcrLI3o/1RoCp1cbSQekc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvGIYMkG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE9EC19424
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Feb 2026 14:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770820406;
+	bh=t2bJpXQc4AFVnX1fm0vsWVczpFog9jcuRtYBlYChLTs=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=QvGIYMkG+mgNxBJkQFX/zttLS6CRcExyNAuoqr9AZfY+cM2G1Uy9ZFHpk0ii/kdpL
+	 Bc20PIaJw03vw+GQlhC+B3ifSdJxHqELuEgegBwwz3HVgYH207yCoN/Amtne+Ofg7i
+	 EjHlaXfxvUSSNQJRG1SReQb5H8RqssoBcNGnY1vbMS6Lp5Jf3hOyI4/4AWenVc/WU2
+	 XpAlK1CYd9Kn4ckh4xXRBgavjSoAQ0vIrBvLvt6KGzQ+UnZ3In5FobXNINFdNQQ6Yt
+	 8DmsY59u1BZaxfoKniHY+8QsYZd84Zv2AdCIE2hE9wJBKGhrJXHj+wCygFLpKb8l3T
+	 gmavg8LuUfzUA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id CEFE0F40068;
+	Wed, 11 Feb 2026 09:33:25 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 11 Feb 2026 09:33:25 -0500
+X-ME-Sender: <xms:NZOMaehL4o_FrItSCcLHCJcnCUIlHiNoO7a4JDUlP2Uqe-BhdNq5QQ>
+    <xme:NZOMaZ2V-5jTntAOd23hl9Xp5p5Kxosnd11fVF9n-F6iHX-j0IH0gYOlJpGcF8uOD
+    6QEtmqbM3FO-lqmdpeJ9gUPtrd2C99gTic0snsO9GRzjNL5cdeyUls>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvtddvjeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrihhrvgesughnvghgrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfsh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:NZOMaRN9d60t9JqfdgR9DDt-WO1BkgdHHD6tpnRyntxPKu6FYVnF5w>
+    <xmx:NZOMaR6cnSX7OyEfUqWaE1ipaiwirz4EbOMPLKygeg4sIRkiopyLEQ>
+    <xmx:NZOMaX3qzHeoKJz7ausysZXXf0alLnRQjEHNr_1Bf2vZlR_e5e-y6A>
+    <xmx:NZOMaaYQwEuFwx3qi5vV8WbXjB4iP6DECf5jiHf5gKusISDosmmONQ>
+    <xmx:NZOMaXDtWPi0o7jhDHW5b6Bj6sDIlcYWp8neYWE5QRsB22_SRctK8OxS>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B44BB780070; Wed, 11 Feb 2026 09:33:25 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20260211070533epcas5p32f50f317b20250bb61b1b5a0b3a2a5d9@epcas5p3.samsung.com>
- <20260211070057.22001-1-kundan.kumar@samsung.com>
-In-Reply-To: <20260211070057.22001-1-kundan.kumar@samsung.com>
-From: Andreas Gruenbacher <agruenba@redhat.com>
-Date: Wed, 11 Feb 2026 14:49:55 +0100
-X-Gm-Features: AZwV_QjumAFlbk9ZsPEeDmvoG4FkvqsDNDq1VBbfmeKSRae7isamuXkM1GDbV04
-Message-ID: <CAHc6FU4O4YTm-0cU+kpqY2L3BRaA_Jsyh20tTk2KjmGN7-kKCg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Avoid filesystem references to writeback internals
-To: Kundan Kumar <kundan.kumar@samsung.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, trondmy@kernel.org, anna@kernel.org, 
-	hch@lst.de, brauner@kernel.org, jack@suse.cz, viro@zeniv.linux.org.uk, 
-	djwong@kernel.org, pankaj.raghav@linux.dev, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, gost.dev@samsung.com, 
-	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com, 
-	mcgrof@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: A7FasjyZ6tmc
+Date: Wed, 11 Feb 2026 09:33:02 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Daire Byrne" <daire@dneg.com>
+Cc: linux-nfs <linux-nfs@vger.kernel.org>
+Message-Id: <5ce9e049-1c6c-445d-8d02-44892db8760b@app.fastmail.com>
+In-Reply-To: 
+ <CAPt2mGNVMthai4J0QRSaJdWHP4X+K_mzqBxWQGUzdOihMyU_KQ@mail.gmail.com>
+References: 
+ <CAPt2mGNAGaO8hP9u4M+oH0_w0dbSNAmDF=g0jyb26ED5R_mhOA@mail.gmail.com>
+ <a1b6c46f-e49d-4ae6-ae5e-3c08ed40e359@app.fastmail.com>
+ <CAPt2mGNL4neF1NX7_1=9svnNz_iXhadHw0AEjZ_B-50-vwNtUg@mail.gmail.com>
+ <723418cf-cec6-4afc-906e-b93a55e85fc9@app.fastmail.com>
+ <CAPt2mGNkGbWujzTzxoTGTvAWoOL9aUUhN93SEJQYJTQyV4xu7Q@mail.gmail.com>
+ <d9926f9e-50bf-46e7-9109-21b30dd695c1@app.fastmail.com>
+ <CAPt2mGNbZm9YDjuCUwJHiJUQUUnKQtbf1ggYPzAytgWjMp68LA@mail.gmail.com>
+ <CAPt2mGOsCLrG30s7mrOvd3N5t018T+gJhGWd88pw0WbOnagO=A@mail.gmail.com>
+ <110b6190-ed55-41d0-a3ca-580ebc38c1e5@app.fastmail.com>
+ <CAPt2mGPMvQMyMcNUnznqU=0pSZ4xVDB32Q61_gTkL9TvHyKXrA@mail.gmail.com>
+ <d97b4a81-7fbe-405e-b5dd-82e74630c9d9@app.fastmail.com>
+ <CAPt2mGNVMthai4J0QRSaJdWHP4X+K_mzqBxWQGUzdOihMyU_KQ@mail.gmail.com>
+Subject: Re: knfsd read iops limits?
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+X-Spamd-Result: default: False [-1.15 / 15.00];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	TO_DN_ALL(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	TAGGED_FROM(0.00)[bounces-18884-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[agruenba@redhat.com,linux-nfs@vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_FIVE(0.00)[5];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18883-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	DKIM_TRACE(0.00)[redhat.com:+]
-X-Rspamd-Queue-Id: 55132124F24
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 58CE112545A
 X-Rspamd-Action: no action
 
-On Wed, Feb 11, 2026 at 8:13=E2=80=AFAM Kundan Kumar <kundan.kumar@samsung.=
-com> wrote:
-> The series introduces writeback helper APIs and converts f2fs, gfs2
-> and nfs to stop accessing writeback internals directly.
->
-> As suggested by Christoph [1], filesystem code that directly accesses
-> writeback internals is split out:
-> [1] https://lore.kernel.org/all/20251015072912.GA11294@lst.de/
->
-> No functional changes intended
->
-> Kundan Kumar (4):
->   writeback: prep helpers for dirty-limit and writeback accounting
->   f2fs: stop using writeback internals for dirty_exceeded checks
->   gfs2: stop using writeback internals for dirty_exceeded check
->   nfs: stop using writeback internals for WB_WRITEBACK accounting
->
->  fs/f2fs/node.c              |  4 ++--
->  fs/f2fs/segment.h           |  2 +-
->  fs/gfs2/super.c             |  2 +-
->  fs/nfs/internal.h           |  2 +-
->  fs/nfs/write.c              |  4 ++--
->  include/linux/backing-dev.h | 11 +++++++++++
->  6 files changed, 18 insertions(+), 7 deletions(-)
->
->
-> base-commit: 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b
 
-Sure, that won't hurt.
 
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+On Wed, Feb 11, 2026, at 5:39 AM, Daire Byrne wrote:
+> On Tue, 10 Feb 2026 at 21:21, Chuck Lever <cel@kernel.org> wrote:
+>> Thanks. The two significant contention areas are the lwq idle
+>> list in the SunRPC thread dispatcher and the group sort in
+>> nfsd_setuser. I'll post some patches to test in a day or two.
+>
+> I'm not sure if it's relevant to nfsd_setuser, but we do use
+> --manage-gids and have lots and lots of users and groups that the
+> server needs to parse (sssd -> AD).
+>
+> For this workload, on the server, I am a member of 737 groups....
 
+Right, the group_sort() done for every nfsd_setuser() will be a
+significant overhead for you.
+
+
+-- 
+Chuck Lever
 
