@@ -1,65 +1,65 @@
-Return-Path: <linux-nfs+bounces-18916-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18917-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qP63LSS8jmkWEQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18916-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 06:52:36 +0100
+	id ODTCAz68jmkWEQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18917-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 06:53:02 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E00B9133190
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 06:52:35 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 803251331AC
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 06:53:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1C27430152CD
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 05:51:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E115A30A8CAB
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 05:51:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E34D274B44;
-	Fri, 13 Feb 2026 05:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43BD326CE2B;
+	Fri, 13 Feb 2026 05:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U02feq5O"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sR5Bd++N"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD0727FD45
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Feb 2026 05:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA58626E173
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Feb 2026 05:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770961902; cv=none; b=ckT7WCs1yPCec0Gz4b8Q9D+c9vOlDkznQcZqpKq0jKyd1zXqUQwReVKoRwSWGqoM//p48F0wp5s+7QLeXoLSFOEFbcshwcMAcszVhKJ7YAAVI1nevbTFsei0BpN/iP9AZLotAr4R9XAQRHEAqRnSuEXmHMIb1H8+2oZaO3GY9Jw=
+	t=1770961909; cv=none; b=u+IqvCsfHA1llSySgX8XFUYrsW5SaAQUG9bso2L5y7UTGelAe+YRlb2HfV15voFsFrMvCmMeb2C4dBq4sV0RW9fQ8234OsEG9imaJK+K11FmS91lM+Tq4Mlm4p+qDmVKcFcFfOVJ/S3Bw6LLkRjZFG8qEag6I+U72j4kvGY3NRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770961902; c=relaxed/simple;
-	bh=/fK1jbngMa6/JqpfIDNdSzD4oX+xXtcOum67V4za5Oo=;
+	s=arc-20240116; t=1770961909; c=relaxed/simple;
+	bh=j+bCGXMTmziZDXXtEy5hW+Hxg9b93ucLfIZcyJ7PM6g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=aulcVqTfoV8hySgU80/YCae/43xhrQFEf4r8Xo7wX8xLMUsFD9+E0h96hdtdig1qfrDpPxz+ieaLFyAnYT1XR4oRGpLrG/Cp/8+6pQdDjjLnnclxJ9BS0kGRp4CPvSVJIyv2Ph3H9Krr/JfD5i+i39V9vvplNld7LyQnUNmZW6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=U02feq5O; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=bGNtSG0d51Ml7H3hpYEyWkEnXy1Ncyz7D4CRhe0HOidOfymoD5rjz3C28/g2mfEtvToVj6B9LFRAxD18ze4aVwZgTU18ArM7KdiFK6+ebroSYGdqG8P39pPu5/TsrwTIJvxZf2L37BSVHW7OKZloDO8AbQVfXZa7eCNuE+jW730=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=sR5Bd++N; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260213055138epoutp043d0a4acd610568343dcbb9e153922123~TuHa_dj4x1088410884epoutp04L
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Feb 2026 05:51:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260213055138epoutp043d0a4acd610568343dcbb9e153922123~TuHa_dj4x1088410884epoutp04L
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260213055145epoutp021ee30d9001d3f6e815466d9d95e56fce~TuHhrfdMB3228632286epoutp02e
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Feb 2026 05:51:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260213055145epoutp021ee30d9001d3f6e815466d9d95e56fce~TuHhrfdMB3228632286epoutp02e
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1770961898;
-	bh=GDVcAGbX+6+fS68q52mUWNCiGdwubcd88imzb/VPBgA=;
+	s=mail20170921; t=1770961905;
+	bh=WVUkVxdLZh7dLWtrxwE5uvhOTSw4xvRRD2G/b4/jnPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U02feq5OZn+prBrZ000m3xY3Q7QnAOuiFmLpupV/9E5QYUsvmsjVgQidPaarY+R91
-	 dcpYqLoGcAJMNaaYzHFpml2wIcn/kJK94lcNyANF+RzNcX8VXwykYFbOZkOJ3wO1t8
-	 ty1HtwnJCiXyi8r8xjIgPP+WJpQvfv5o44yV+yto=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20260213055138epcas5p2cff9e249420c9e1e49533df5ec6b97a5~TuHaeL41X0260502605epcas5p2D;
-	Fri, 13 Feb 2026 05:51:38 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.87]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4fC1WY09tSz3hhTJ; Fri, 13 Feb
-	2026 05:51:37 +0000 (GMT)
+	b=sR5Bd++N6xGlqfBAAQiW4PWY+ytP+oZxAcdXOEaUOH6XAZb1QkXjhFn4p88p7fSQp
+	 IgW4+oU4mBdLfnk6XE2hKG56ZHj1qHTbApD7vuAr2A7jSdX/EN3ss1wPf4YyS9iNad
+	 ATftZG7KD0BUsolWwXrEw1qL9TWSqOL+eBeNyUQw=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20260213055145epcas5p4af1fac07bbabbaf11e521102bd53c538~TuHhJu_df2583525835epcas5p4U;
+	Fri, 13 Feb 2026 05:51:45 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.88]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4fC1Wd1twtz6B9m5; Fri, 13 Feb
+	2026 05:51:41 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260213055136epcas5p2f13881eb387cff40137199086e06f965~TuHY1bZy32327923279epcas5p2L;
-	Fri, 13 Feb 2026 05:51:36 +0000 (GMT)
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20260213055140epcas5p31b62f7026bd30c79f804c8c0fc02e276~TuHcw1i4J2435024350epcas5p3_;
+	Fri, 13 Feb 2026 05:51:40 +0000 (GMT)
 Received: from localhost.localdomain (unknown [107.99.41.245]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260213055131epsmtip21d249fe955d6286e5d3a1f88d5825e9f~TuHUyS2XA2622126221epsmtip2D;
-	Fri, 13 Feb 2026 05:51:31 +0000 (GMT)
+	20260213055136epsmtip2f67a407f2147b68c7ca6a288c6a4ead3~TuHZIiX9u2622126221epsmtip2G;
+	Fri, 13 Feb 2026 05:51:36 +0000 (GMT)
 From: Kundan Kumar <kundan.kumar@samsung.com>
 To: jaegeuk@kernel.org, chao@kernel.org, agruenba@redhat.com,
 	trondmy@kernel.org, anna@kernel.org, hch@lst.de, brauner@kernel.org,
@@ -68,10 +68,10 @@ Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
 	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, gost.dev@samsung.com,
 	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com, Kundan
 	Kumar <kundan.kumar@samsung.com>
-Subject: [PATCH v2 3/4] gfs2: stop using writeback internals for
- dirty_exceeded check
-Date: Fri, 13 Feb 2026 11:16:33 +0530
-Message-Id: <20260213054634.79785-4-kundan.kumar@samsung.com>
+Subject: [PATCH v2 4/4] nfs: stop using writeback internals for WB_WRITEBACK
+ accounting
+Date: Fri, 13 Feb 2026 11:16:34 +0530
+Message-Id: <20260213054634.79785-5-kundan.kumar@samsung.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260213054634.79785-1-kundan.kumar@samsung.com>
 Precedence: bulk
@@ -81,32 +81,32 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260213055136epcas5p2f13881eb387cff40137199086e06f965
+X-CMS-MailID: 20260213055140epcas5p31b62f7026bd30c79f804c8c0fc02e276
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260213055136epcas5p2f13881eb387cff40137199086e06f965
+X-CMS-RootMailID: 20260213055140epcas5p31b62f7026bd30c79f804c8c0fc02e276
 References: <20260213054634.79785-1-kundan.kumar@samsung.com>
-	<CGME20260213055136epcas5p2f13881eb387cff40137199086e06f965@epcas5p2.samsung.com>
+	<CGME20260213055140epcas5p31b62f7026bd30c79f804c8c0fc02e276@epcas5p3.samsung.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
 	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[20];
-	TAGGED_FROM(0.00)[bounces-18916-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18917-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:mid,samsung.com:dkim,samsung.com:email,lst.de:email];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,samsung.com:mid,samsung.com:dkim,samsung.com:email,lst.de:email];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[kundan.kumar@samsung.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -116,34 +116,47 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: E00B9133190
+X-Rspamd-Queue-Id: 803251331AC
 X-Rspamd-Action: no action
 
-Convert gfs2 dirty_exceeded handling to use the writeback core helper
-instead of accessing writeback directly.
+Convert NFS WB_WRITEBACK accounting to writeback helper, eliminating
+direct access to writeback.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Suggested-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Kundan Kumar <kundan.kumar@samsung.com>
 Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
 ---
- fs/gfs2/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/internal.h | 2 +-
+ fs/nfs/write.c    | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index f6cd907b3ec6..7ddeee19dec4 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -447,7 +447,7 @@ static int gfs2_write_inode(struct inode *inode, struct writeback_control *wbc)
- 		gfs2_log_flush(GFS2_SB(inode), ip->i_gl,
- 			       GFS2_LOG_HEAD_FLUSH_NORMAL |
- 			       GFS2_LFC_WRITE_INODE);
--	if (bdi->wb.dirty_exceeded)
-+	if (bdi_wb_dirty_exceeded(bdi))
- 		gfs2_ail1_flush(sdp, wbc);
- 	else
- 		filemap_fdatawrite(metamapping);
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 2e596244799f..96249d6d9132 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -866,7 +866,7 @@ static inline void nfs_folio_mark_unstable(struct folio *folio,
+ 		 * writeback is happening on the server now.
+ 		 */
+ 		node_stat_mod_folio(folio, NR_WRITEBACK, nr);
+-		wb_stat_mod(&inode_to_bdi(inode)->wb, WB_WRITEBACK, nr);
++		bdi_wb_stat_mod(inode, WB_WRITEBACK, nr);
+ 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
+ 	}
+ }
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index bf412455e8ed..9053e0c4a836 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -872,8 +872,7 @@ static void nfs_folio_clear_commit(struct folio *folio)
+ 		long nr = folio_nr_pages(folio);
+ 
+ 		node_stat_mod_folio(folio, NR_WRITEBACK, -nr);
+-		wb_stat_mod(&inode_to_bdi(folio->mapping->host)->wb,
+-			    WB_WRITEBACK, -nr);
++		bdi_wb_stat_mod(folio->mapping->host, WB_WRITEBACK, -nr);
+ 	}
+ }
+ 
 -- 
 2.25.1
 
