@@ -1,184 +1,162 @@
-Return-Path: <linux-nfs+bounces-18931-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18932-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uTVGGYipj2mZSQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18931-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 23:45:28 +0100
+	id Ww83No28j2niTAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18932-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Feb 2026 01:06:37 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF324139D64
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 23:45:27 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE0F313A19B
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Feb 2026 01:06:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EF6FC3036ECF
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Feb 2026 22:45:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2E4A130055DB
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Feb 2026 00:06:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE68248880;
-	Fri, 13 Feb 2026 22:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081AA1FC7;
+	Sat, 14 Feb 2026 00:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SulMCdlV"
+	dkim=pass (2048-bit key) header.d=selfcaring-info.20230601.gappssmtp.com header.i=@selfcaring-info.20230601.gappssmtp.com header.b="NELBXOZA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35A427FB1C
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Feb 2026 22:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771022725; cv=none; b=E6NrC1CuPkcpwzf/4sO7+F1tyjXaFPaPFoWYlxSGfdUnIttEQ99YFZaIKtxnZnSqQBZWP0b3wt/hgyKGvvm/BZFJH1jheH8Ni9ahaDK7jr1wQktyjFXW8C0xF2HKpOZ1i3CUKdBmH1FbZ+w4Eu/6DI+a2uUZJhQlXr5LY5HNKsU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771022725; c=relaxed/simple;
-	bh=s7CLhm0OasmFTT7eeYLC2YltpK1BsylhM1qlilZlqQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZYQU57s94NXdy6IDbtSzEzSQVJBeREpo/OCj2HlxC3/B4rTeUJdfZ2abVFkGD1QksSivjRaT7ionxPpjTcCce4yzwYJJWp5lcAGGR031Me3oJqkF74tkEEbMU14G/5aabPJADcId8B8ZGRoy2eajMWzpV2pzBzR9IHpbNnUGbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SulMCdlV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771022722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U5PmaZ9/kcRtyOg8rKdLnblVUUKmJMTuD7MtPieS92A=;
-	b=SulMCdlV2luRndL437/Hpp7iCSX4HeOD/MPza4AiVWryej0xDwKzPiThcTB1P+nVtWSv6X
-	fP7fKROOyCVZwRwE5kgGhehnjl3sGEwv89VZLFNi9M/TiIwD7jwiVXwnZI5w3A1mJ8wLQa
-	e3//S00hslkrqSVLJm5OvGfigpYcagk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-527-FWaWLOCzPz2X7sSL6rOloA-1; Fri,
- 13 Feb 2026 17:45:19 -0500
-X-MC-Unique: FWaWLOCzPz2X7sSL6rOloA-1
-X-Mimecast-MFC-AGG-ID: FWaWLOCzPz2X7sSL6rOloA_1771022718
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E3A001800366;
-	Fri, 13 Feb 2026 22:45:17 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.88.127])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8EB5219560B9;
-	Fri, 13 Feb 2026 22:45:17 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id B88686B6A00; Fri, 13 Feb 2026 17:45:15 -0500 (EST)
-Date: Fri, 13 Feb 2026 17:45:15 -0500
-From: Scott Mayhew <smayhew@redhat.com>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, trondmy@kernel.org,
-	anna@kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: Check if we need to recalculate slack estimates
-Message-ID: <aY-pe7-FhRpPy5J2@aion>
-References: <20251119133231.3660975-1-smayhew@redhat.com>
- <ccd7d6aa-f307-4d4a-86fd-1920580bdd79@oracle.com>
- <aVe7TOFVxckWdF1m@eldamar.lan>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC213EBF3B
+	for <linux-nfs@vger.kernel.org>; Sat, 14 Feb 2026 00:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771027591; cv=pass; b=rtMMLiBEZY7JfW1MPLW7GTUzZP7gEiSlvhc3eG2RGjwKwbIQhRqDEoWpfQ/MCdZRaodyvlgg2bucc2280tgcB0bT/EduWiwIlzgBDPfIPSoRQ7QsTTmhB2zNPMqnNjznWhguzHTrGpL/7jCAfF61DBravhiD3/l2pNtcL3FD02E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771027591; c=relaxed/simple;
+	bh=0fIebdV37JLmHnDJXs8eipD8bNouzsdrjWI8f3p6NdE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=tHiVaI9ZBvGhdfI+yjcxflepBdid75W+i3RDw5n//oTQQuCnu9SqaAItXe/drTLt1mrRx0XTHZo5THIRLoUH1W5EzGdU3/ILLq6jYuMk3ETkSg0vNziSIzav5FT3E7i/8hoakcuKMOcErk+R5KY5yjWYLzUwg/Ii036bnh6RXz8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=selfcaring.info; spf=pass smtp.mailfrom=selfcaring.info; dkim=pass (2048-bit key) header.d=selfcaring-info.20230601.gappssmtp.com header.i=@selfcaring-info.20230601.gappssmtp.com header.b=NELBXOZA; arc=pass smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=selfcaring.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=selfcaring.info
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-354a7b089bbso868168a91.2
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Feb 2026 16:06:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771027590; cv=none;
+        d=google.com; s=arc-20240605;
+        b=OkZlbai3ISSPEX4dkER4qdK7EChDOEZ3/XYK9iLoOpFe9QYxAiwFD27WcKd0xynxJe
+         69ZL/6PnVrQuii2Bikigp9zkLsGwxL+5lMrPZYMSwzca4kLfJprwry2L+TYtJimXSn1j
+         dQtNuUzCW9RncASxCWon6ZKYwOqIpRi7BLjXVqCNdfUAHAQUZJlCLHmKhjUsuuQA/GHW
+         tq9440Zyw0xZqpW6ogTZ4qiDd8VTbLuBljZnYykWi03QcqyiePwKOIJRem8vtQoQCcTQ
+         2yeDNYXnvZAOx+xKwvQfPTf6vm84ZEPo16OxyCSrvY1OEa7G9o1l5dSpfJ9raPA6G9IQ
+         qf1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=0fIebdV37JLmHnDJXs8eipD8bNouzsdrjWI8f3p6NdE=;
+        fh=Mys3y4MwsHRytUQMpdfGBn3oGRYLcLloxNwkFYMYMmg=;
+        b=R7gQeyYD0ADkDzjH9MqRrv6LAPHaygE7Jk2LDkic+R0f0CgsG9RIRYASkarTfkO/hI
+         Zz0xsz1PxUHVqzoZFt84d5wGEedxHnzBKTudrPsM4tU4orUjJ3OjDdYJCHsjvTrXFq3W
+         EkaR+a3+I9YEm87JCvME7ppsF4Czak2D25K0iSH7UDpTPIpiQnCCCP3bWA+oSWn9kPuQ
+         pcZKHuyQs9C4qVyyKLgj684h0ZRGANR0rPCsvExKbDyCsY11ErnQnjeJfVMp5OVMiX/a
+         Pm95uMjoynisGbcXVpS51W/u0NYPEaif64D4ojFWHpkGjY/PlIdYAUJycyCRSiWmfmeO
+         GZYA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=selfcaring-info.20230601.gappssmtp.com; s=20230601; t=1771027590; x=1771632390; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0fIebdV37JLmHnDJXs8eipD8bNouzsdrjWI8f3p6NdE=;
+        b=NELBXOZAsnmwPgL3C/PFPEeNIrHUIKuiHMkd7AyH9yR0VBclxkk90n1xikWO5vgt0t
+         EtqgdXZ0PRg2hdzyoIsLRiCNFiW3ylimown60IyCxbwTu3DIcYrBLYAVHRwOa9/hUWKl
+         XuceutH+aEAEIIyUx6oTqBtC5oRerx+qgqjbnf68Bxo07XSPlspvcx+tQP4ggdP6chch
+         8ZHXZOYd6v84K8cxXdBczs4EaJSXQ1g4glzB0vQCdnsbO+kPZPWhxuJrhIZ9IK1n7Vwq
+         V1pSQ6jdZ8c/S3j28DofdyGBBrlv6+OeudvMNW0VW0yYIZTQyStlWu7+6ruWhLG97SXw
+         /WPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771027590; x=1771632390;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0fIebdV37JLmHnDJXs8eipD8bNouzsdrjWI8f3p6NdE=;
+        b=wPChscJNW56sm8iW0bYumWE416M+L8U4/ZRQjWcLWj3S7KPHEjJiudCm3K9hQq8jlD
+         ZpBlws+894poM9a1uUtAFJwvQX8vdK/LLK6IdAXBV3dEO1Ona+8fJavJOIQytWky38Sd
+         NHioEf4OfsCNMTqtuWsazURbFzUMS/M5xWvlYnZ3FNAQfqFu7DBknRKxvKZ7z4h34JlV
+         1w8o1bvCTbP+J8fAku4GWycZaZk+K1po27pfWJFJRwFxYTCrVPCxKPVKdS1shAyZlSqb
+         phPOag0KNlavsCZ/9BeBSCZhQzC+tqVscaX/xGIuEzyWELLX5HZdPz7ILCOkdtlLqFH5
+         qiUg==
+X-Gm-Message-State: AOJu0YzFZaf+J2cnW2oFRtutmkAXl31LqUCzfgVK4G1EQDdN5B6+ijMt
+	n0zu9uN+6UnBtjLHem6STpwVGCcz2KdhL8VMsdaz0yBefyOsoRyaul43wymqKbqIo+g3zPoYl4v
+	+mTN7ArXj7F6CJfbZsRJWPvDJoR/itDDfvgU73yvdRsr6YtU/cr/G
+X-Gm-Gg: AZuq6aK5ip2uQCB6YaBNNxJyz+0WxNYgIzauRjH6gKqR5egUOrH1zmkw8DH5LFQOOcf
+	US/kN3U5je5RyFbStDiwHlVaq5HzfWdX2homg5qI14Z+wzgDNcRfH/YAa+emzezwUYxWzpeUNmP
+	G7+BIdzs8Mapqj18Ym+KOOBeTlHrDCuwsX7V/oHWb/VCUszrs6ZzvAeq/4Y6ouXDVvg94lhCgqN
+	FiHOtLYRArOSnk2aAwOZEewRBSZb0Z8dmWbNnX7O25q+mzN8BfxzDdgoKD/rwOfDoNEDfgwGqzB
+	xbuhRVWPtAEnMLpvJb2SsB3IEF7bj/lZNmSIx04=
+X-Received: by 2002:a17:90a:dfc7:b0:356:2bda:a857 with SMTP id
+ 98e67ed59e1d1-356aad3cbd7mr3759425a91.18.1771027589775; Fri, 13 Feb 2026
+ 16:06:29 -0800 (PST)
+Received: from 785115219520 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 13 Feb 2026 18:06:29 -0600
+Received: from 785115219520 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 13 Feb 2026 18:06:29 -0600
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aVe7TOFVxckWdF1m@eldamar.lan>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+From: Brad Krause <bkrause@selfcaring.info>
+Date: Fri, 13 Feb 2026 18:06:29 -0600
+X-Gm-Features: AZwV_Qgi9lbvTlG3SVVVsIWs15-R7zsK1zJMkENw9t7eNMHPZfwDfva-ufyN7JM
+Message-ID: <CAP04xS6ro73sRJ8rD2UxZChDcgFkEU4gFZ-AWGr-dsjDdoiEsg@mail.gmail.com>
+Subject: Could you please double-check this for me?
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+X-Spamd-Result: default: False [-0.56 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	R_DKIM_ALLOW(-0.20)[selfcaring-info.20230601.gappssmtp.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[selfcaring.info : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18931-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[selfcaring-info.20230601.gappssmtp.com:+];
+	TAGGED_FROM(0.00)[bounces-18932-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_ONE(0.00)[1];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	PRECEDENCE_BULK(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[bkrause@selfcaring.info,linux-nfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: AF324139D64
+	TO_DN_NONE(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid,selfcaring-info.20230601.gappssmtp.com:dkim]
+X-Rspamd-Queue-Id: DE0F313A19B
 X-Rspamd-Action: no action
 
-On Fri, 02 Jan 2026, Salvatore Bonaccorso wrote:
+Hi,
 
-> Hi Chuck, Scott,
-> 
-> On Wed, Nov 19, 2025 at 10:48:47AM -0500, Chuck Lever wrote:
-> > On 11/19/25 8:32 AM, Scott Mayhew wrote:
-> > > If the incoming GSS verifier is larger than what we previously recorded
-> > > on the gss_auth, that would indicate the GSS cred/context used for that
-> > > RPC is using a different enctype than the one used by the machine
-> > > cred/context, and we should recalculate the slack variables accordingly.
-> > > 
-> > > Link: https://bugs.debian.org/1120598
-> > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > > ---
-> > >  net/sunrpc/auth_gss/auth_gss.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-> > > index 5c095cb8cb20..6da9ca08370d 100644
-> > > --- a/net/sunrpc/auth_gss/auth_gss.c
-> > > +++ b/net/sunrpc/auth_gss/auth_gss.c
-> > > @@ -1721,6 +1721,14 @@ gss_validate(struct rpc_task *task, struct xdr_stream *xdr)
-> > >  	if (maj_stat)
-> > >  		goto bad_mic;
-> > >  
-> > > +	/*
-> > > +	 * Normally we only recalculate the slack variables once after
-> > > +	 * creating a new gss_auth, but we should also do it if the incoming
-> > > +	 * verifier has a larger size than what was previously recorded.
-> > 
-> > No quibble with the code change, but IMO the comment should work a
-> > little harder to explain why the increase is needed. Something like:
-> > 
-> > 	* When the incoming verifier is larger than expected, the
-> > 	* GSS context is using a different enctype than the one used
-> > 	* initially by the machine credential. Force a slack size update
-> > 	* to maintain good payload alignment.
-> > 
-> > I'm summarizing based on your commit message above...
-> > 
-> > 
-> > > +	 */
-> > > +	if (cred->cr_auth->au_verfsize < (XDR_QUADLEN(len) + 2))
-> > > +		__set_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth->au_flags);
-> > > +
-> > >  	/* We leave it to unwrap to calculate au_rslack. For now we just
-> > >  	 * calculate the length of the verifier: */
-> > >  	if (test_bit(RPCAUTH_AUTH_UPDATE_SLACK, &cred->cr_auth->au_flags))
-> 
-> I was looking in Debian for the state of this and noticed this was
-> later on never applied/submitted to mainline, is this correct? Did it
-> felt through the cracks or is it considered not to be a problem to
-> further tackle?
-> 
-> Thanks a lot for your work and your help!
+Dealing with cancer involves much more than just managing the physical
+symptoms. It=E2=80=99s also about nurturing emotional and spiritual
+well-being. Simple self-care practices like deep breathing, nutritious
+eating, regular exercise, and setting healthy boundaries can do
+wonders to your body.
 
-Sorry for the delay.  After having had a chance to take a deeper look,
-I think it would be better to try to address this from the rpc.gssd side
-instead of trying to make the kernel cope with having to bounce around
-between different encryption types.
+I=E2=80=99d love to write an article for your site that delves into these
+strategies, offering great tips to help those battling cancer feel
+more empowered and cared for.
 
-Unfortunately I fat-fingered your email address when I sent the patches,
-so here's the link:
-https://lore.kernel.org/linux-nfs/20260213224012.2608126-1-smayhew@redhat.com/T/#t
+Let me know if this piece could earn a spot on your site, and I=E2=80=99ll
+send it over to you right away!
 
--Scott
-> 
-> Regards,
-> Salvatore
-> 
+Warm regards,
+Brad Krause of SelfCaring.info
+Be the best you that you can be.
 
+
+P.S. Not a fan of this idea? Just say the word - I=E2=80=99ll whip up a new
+topic that clicks with your site and still shines in AI and search.
 
