@@ -1,284 +1,235 @@
-Return-Path: <linux-nfs+bounces-18939-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18940-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wFMpMQRrkWkJigEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18939-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 07:43:16 +0100
+	id GIflEUBwkWnOigEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18940-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 08:05:36 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FD2B13E220
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 07:43:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9389F13E2D1
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 08:05:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E586A3016EFD
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 06:43:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C3D2C300C93B
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 07:05:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29C32279324;
-	Sun, 15 Feb 2026 06:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=dirk.behme@gmx.de header.b="kxYs6qEq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D247F23D7F5;
+	Sun, 15 Feb 2026 07:05:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from SY2PR01CU004.outbound.protection.outlook.com (mail-australiaeastazon11021143.outbound.protection.outlook.com [40.107.39.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1C74C97;
-	Sun, 15 Feb 2026 06:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771137784; cv=none; b=Ex9SixDSK4nkrTcoq044famr0e5WY3Do2/whVLwQnckdAaOZQDs59vKN60TgrCUi8kutD2yGo3eLWLYQVGV2wTayLSL77tWhnvzxgZXvX3dxVWVfhY1MwE2qMsgyJyXI+NLvrfELEz7qJlPPjKjfPiSld3EgAVmXBzvZz9ioDeo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771137784; c=relaxed/simple;
-	bh=7cFx0wxiBt2oOL6vallIz5WVa9qyZze8EQtIXIrvi3I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z88etidK5uXXch8R+6Cs1VBqbF1AebyGb3gzJudEV47EO3QK/bj2oEM1rVhviO3+aE2jr0ShFJ6T9POxJx4tMQSYaoPhAMXkr6dDDXIlkUPZs+YXFJt9DTQkndJLdpVCfVoqOxv/jRrLxER9tB+CMuazNKGsQiWUCHxFywHpO+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=dirk.behme@gmx.de header.b=kxYs6qEq; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1771137759; x=1771742559; i=dirk.behme@gmx.de;
-	bh=AdcHYF4G/k6Zrjgfn4uMhaEygzOQ4eiFPqSXvL8Shyw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=kxYs6qEqggL4ULenD08/H++rJS0Qa/he2vbgbQgsRcdvarSVx5NCEuvol5nZwqF1
-	 gMmKWgicGg4pKMqidqBV9UV9zpqaX4hWeJ/okoQKhAXHSFzRaNopdmIEt/7T5nsPf
-	 P6Zn6sCQjN5LXQ6Ki/BZY2JqtYZIIH4rDUFAQzWdw00Po45heUOMN1R7uaTRpt4KD
-	 LFsXG6c25x4RjQb8bDxc9Wj/uJv5oDgu42hMlr0sqZuP1sf1bjpK1eLbG5GsRhiLq
-	 rwbDKh3cMZ2k1p/mz3PK56xYvZyaEtSslfwY3WbwIdo0k1DijkkubS+3volbhR5Tk
-	 L6HHLjNGIwoifE21sw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.178.42] ([84.129.20.229]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRmjq-1wKXx63E5K-00OJ5P; Sun, 15
- Feb 2026 07:42:39 +0100
-Message-ID: <ab0b9f9c-3a05-42f3-b4a7-ddb6ab0d37a4@gmx.de>
-Date: Sun, 15 Feb 2026 07:42:05 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8FA19F11B
+	for <linux-nfs@vger.kernel.org>; Sun, 15 Feb 2026 07:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.39.143
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771139132; cv=fail; b=rJ5ka64Wz2Ba+/bwkEZh4jU9PGo8YZAlO+9LXNmA9i9ey6u/m4LWZ3LemLevaYsfjJfZC2dqZSvEvj4/eKtKyCqq8KrnIFFxGO++QunFouBkAOgLEkMsdj3lfoXnuYUTEz7uPFhd93PQJpwtCTZk9BxGBWQr/QkDngnd32+M8QU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771139132; c=relaxed/simple;
+	bh=MTZuLf+Ym5VHPRwtQampXVUUhBfB9saD10XYyE6prFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=NliVN4UCeZYZErpgGcuSItZJVmQgmsgODjrr218BLK9d1hgM+tJvUsf9ZS1KW4e9R7GcnFbqOAf8cU5NyzC84khNWHdvVBG+jKI/MtqpwaaHUBbu3JfCDsnrzmxDbodCy7CG1ZCaSJuMUtdyXF0IErAT/1VK1zS4xV4GqFB9JZc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=heitbaum.com; spf=pass smtp.mailfrom=heitbaum.com; arc=fail smtp.client-ip=40.107.39.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=heitbaum.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heitbaum.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F25UFhYuCkMOSQ0BMu2lwPdmFRHcWO7FxleEtnfaoJ/vwCjm2FR60jWBZ00OixBXnGGyuKxONouqDtE4YRQPnJu6rmv3QDLx6voGKKIOKu2cv30mHCpOtnoW/mIrWW+f9Ut1KgfjiimEuwc/0YbIKieRfKxKGKMBdur0q4OVHOdwLf4NDkrmGUTOVU8a7f/Px+EGiH0SiB7hxU+N/wB1SJ/Rli9LPI/6G0RL8Rg76R68Y7b/p8cFlFbzTy36TlGZ2mSKujAXdi43txmgM/Qcy84LxU47CJDo4ZY3GIZ1HOuZ3ci3APxI82+0KLDi+h8w0n2h4aNU2aRywGJH1yOk5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7/BaPDXtHV3CFUtVoAojZOupu2Z0vF7AMVfeTrMUtfU=;
+ b=Je/cuQceZcX9I8D/SCIw1PpTPaowNCX2wkznorZc7jYCkbiXQki73K4jbDgZBH9Jf5n6QcjRTGJnuywZuHx07OWvjpUjc7u5X4w7lFlGgnVU814TOrMAocIgD8lt6lCTC6cS0plt0e0rYCKyVs0uNzJe3LypVv4udZhwxcplBpH5NoqdJ2hpNjxG4yT/T9efTAusGbHMeMiMZYbOqV06jprwI83Fj7G01t2pO2lr6cKbTF+RD35gFIGEpB0qfeSN4OFB7FAmTn5gQncbVUW4u8tJActczDJJ6XDp/VJnr9GwQTmUAsxf8EksNtCmzrdZE+ztn7/+QvhYEpBA3uW6Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=heitbaum.com; dmarc=pass action=none header.from=heitbaum.com;
+ dkim=pass header.d=heitbaum.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=heitbaum.com;
+Received: from SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:73::13) by
+ SY8P282MB5022.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:2b5::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9611.15; Sun, 15 Feb 2026 07:05:26 +0000
+Received: from SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::7340:fb70:eaa2:ee1f]) by SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::7340:fb70:eaa2:ee1f%4]) with mapi id 15.20.9611.013; Sun, 15 Feb 2026
+ 07:05:24 +0000
+Date: Sun, 15 Feb 2026 07:05:10 +0000
+From: Rudi Heitbaum <rudi@heitbaum.com>
+To: linux-nfs@vger.kernel.org
+Cc: rudi@heitbaum.com
+Subject: [PATCH 1/2] nfs-utils: mount.nfs: fix discards const from pointer
+ target
+Message-ID: <aZFwJmiqqLgWYSl6@1eac07209f0d>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: MEWP282CA0015.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:220:1e6::17) To SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:73::13)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 31/42] dept: assign unique dept_key to each distinct
- wait_for_completion() caller
-To: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org
-Cc: kernel_team@skhynix.com, torvalds@linux-foundation.org,
- damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org,
- adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, mingo@redhat.com,
- peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
- rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
- daniel.vetter@ffwll.ch, duyuyang@gmail.com, johannes.berg@intel.com,
- tj@kernel.org, tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
- amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
- linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
- minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
- sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
- penberg@kernel.org, rientjes@google.com, vbabka@suse.cz, ngupta@vflare.org,
- linux-block@vger.kernel.org, josef@toxicpanda.com,
- linux-fsdevel@vger.kernel.org, jack@suse.cz, jlayton@kernel.org,
- dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
- dri-devel@lists.freedesktop.org, rodrigosiqueiramelo@gmail.com,
- melissa.srw@gmail.com, hamohammed.sa@gmail.com, harry.yoo@oracle.com,
- chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
- max.byungchul.park@gmail.com, boqun.feng@gmail.com, longman@redhat.com,
- yunseong.kim@ericsson.com, ysk@kzalloc.com, yeoreum.yun@arm.com,
- netdev@vger.kernel.org, matthew.brost@intel.com, her0gyugyu@gmail.com,
- corbet@lwn.net, catalin.marinas@arm.com, bp@alien8.de, x86@kernel.org,
- hpa@zytor.com, luto@kernel.org, sumit.semwal@linaro.org,
- gustavo@padovan.org, christian.koenig@amd.com, andi.shyti@kernel.org,
- arnd@arndb.de, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- rppt@kernel.org, surenb@google.com, mcgrof@kernel.org, petr.pavlu@suse.com,
- da.gomez@kernel.org, samitolvanen@google.com, paulmck@kernel.org,
- frederic@kernel.org, neeraj.upadhyay@kernel.org, joelagnelf@nvidia.com,
- josh@joshtriplett.org, urezki@gmail.com, mathieu.desnoyers@efficios.com,
- jiangshanlai@gmail.com, qiang.zhang@linux.dev, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, chuck.lever@oracle.com,
- neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
- trondmy@kernel.org, anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
- clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
- kristina.martsenko@arm.com, wangkefeng.wang@huawei.com, broonie@kernel.org,
- kevin.brodsky@arm.com, dwmw@amazon.co.uk, shakeel.butt@linux.dev,
- ast@kernel.org, ziy@nvidia.com, yuzhao@google.com,
- baolin.wang@linux.alibaba.com, usamaarif642@gmail.com,
- joel.granados@kernel.org, richard.weiyang@gmail.com,
- geert+renesas@glider.be, tim.c.chen@linux.intel.com, linux@treblig.org,
- alexander.shishkin@linux.intel.com, lillian@star-ark.net,
- chenhuacai@kernel.org, francesco@valla.it, guoweikang.kernel@gmail.com,
- link@vivo.com, jpoimboe@kernel.org, masahiroy@kernel.org,
- brauner@kernel.org, thomas.weissschuh@linutronix.de, oleg@redhat.com,
- mjguzik@gmail.com, andrii@kernel.org, wangfushuai@baidu.com,
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-i2c@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-modules@vger.kernel.org, rcu@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- 2407018371@qq.com, dakr@kernel.org, miguel.ojeda.sandonis@gmail.com,
- neilb@ownmail.net, bagasdotme@gmail.com, wsa+renesas@sang-engineering.com,
- dave.hansen@intel.com, geert@linux-m68k.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu, rust-for-linux@vger.kernel.org
-References: <20251205071855.72743-1-byungchul@sk.com>
- <20251205071855.72743-32-byungchul@sk.com>
-Content-Language: de-AT-frami, en-US
-From: Dirk Behme <dirk.behme@gmx.de>
-In-Reply-To: <20251205071855.72743-32-byungchul@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aWhWMgelEECPmC8s4cDGobXX6S7QtiNME6Biy1AWp+3e//5sbQ5
- y9wEC0GO6LExJy0TTxPgi7hn9knznFwU+a3hirtKlPOCAxJAmR+f4VZcqBi5p6St8Nc30fU
- oiV/7SpKGjIQCoOsBc01ZMd0fVmfFXBllNez+QIS6oLVPBXw4NlthHwsLkGV+AXk0sSs7K4
- GRT5XuyhIHBhQJdzZpoIw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OmiIocz3wZw=;W0wkBau9AOTYHToDyhFSvTXvQnG
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SYYP282MB0960:EE_|SY8P282MB5022:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba448f29-e53d-46b9-e77f-08de6c609760
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BkyrUBU9u8codIWrB4hUNhDAGvGW/FxadvyUGJYZ2IVuS75ooQbEzklN6t1j?=
+ =?us-ascii?Q?L7+f8YDY2VVs0pQ/hVuYuyq+CtFW9s3RN5lXyfxCtYpCm1bwgWu01LtqHx4Z?=
+ =?us-ascii?Q?wjvn5EWB6uVyLhCeWSuLP2d5cIWFavIQ+SRt0sIEOYpnhqbVoIQvtEm9LVoF?=
+ =?us-ascii?Q?X9GDfbUU0xQY6gEl5cNGATImxKQE6yuW6OpNmm6gThR+o22+cB8NnT19cK5t?=
+ =?us-ascii?Q?BVuacNcIUa36jbJi6qQnfkLOG6YH8JAfRkttKBbYJKHR93e7offe1goHexFX?=
+ =?us-ascii?Q?Q6Uxc0VyBIifoxjkpVVyzJ7UR1WDl5PdLltzAdDR0Wdwp2HSjLFZAqDVBAWc?=
+ =?us-ascii?Q?O2kiroMkZkeB2UWMDwLB8xUJao1bt2u/1nhXE9mQbkRsUrqgn+6Tm7fkjVN3?=
+ =?us-ascii?Q?EQPXNzm/pQsMF6GbyAT4bANl7ylSEcjJGa+F6sVav/DMfdY530cWuuzw2muW?=
+ =?us-ascii?Q?Hn5m19eUDuh74J+Knz8VpGJTScD0QjhTFddshoUnbd498Qe4SAFM6dgnXa5+?=
+ =?us-ascii?Q?+pGNUMAjc26SRz4mnZwqUKVmgNYF7lJDQTwhl/XCIFBYqEWHIsMTn/DVbHj6?=
+ =?us-ascii?Q?Gy4A3LVDAxgNVXQexuEvIaMmZ5xKug58lRgZAXPnDnjEAAlGfpKfDyXcRPZF?=
+ =?us-ascii?Q?I0Z60nZPkiYmhZ5JZEW4nR6zLe6w/Vu6IYBS2SVsGbF0QeYn24D7KOTeMts1?=
+ =?us-ascii?Q?OXlhuL3/NN75HMbDewRxXiObKwaW5p930Hx2hGX5J6NdQzjN323MdFEnitSl?=
+ =?us-ascii?Q?wAK+AJnYfN/h1z2NH2sy51kUDyiYl3MTropK26Bi80xjoiJcjfHK6pGXM9ju?=
+ =?us-ascii?Q?Cx39C2tEIs2KfN78CKEvWVSU+zMEbZJ0Q+Fsct6Tb2x5Fazf+ZwqLyd5WA0y?=
+ =?us-ascii?Q?cj3QZuGSl8XJR7cpEO6AXrYTOlM6pos9n2H6eiRV7O/NAvCqGR8SEsST9Aqd?=
+ =?us-ascii?Q?Jda8BCGv2OAk5+yXoc9d5iMwnVzO47HpXioRU6dX5vlUMtpQKhTXdvSyYUQc?=
+ =?us-ascii?Q?8M6NicKXAoOuTLNzr3P0MlpNrCRdGl/s0aocxR1Jcz7w2o4TH9XvCiNpjGkr?=
+ =?us-ascii?Q?YNYRhglnJ8jdXB8sEq6rFUL7jnBYVDgQbRDBhpfWAwzv4bBo6KBUs4TAFHLU?=
+ =?us-ascii?Q?Lf9PQOo2Iomee5B7PoqygvekoIylYsDa/y1PZBB/CgGN8dMwqtg0DpLNtYbn?=
+ =?us-ascii?Q?kS1ktLsB1bqBzYstlEbhQhhpGRpR6NNczeEpMI1Bu6jdLZqHHphLI36k1Dq9?=
+ =?us-ascii?Q?wFJ2ZTPBC+d9aASM+jlpztQbT9J3YmoUSTtMYylr0dqqTyPXY5PAlDQvKsc1?=
+ =?us-ascii?Q?qq5UFSLw9eRTqw3eBDwNcyQU3+dYHtH1/jgDAEt33r3k/y5evLfA/oM+L5TQ?=
+ =?us-ascii?Q?4DwBnbtKQB8Wp7piBD/WwjFPXhBfXRq0ZVop7ZIRnHqXBLVP41RPG1i+el4N?=
+ =?us-ascii?Q?MgWqtF7pxWsweimLs2BkKALpQeGsGY4R7lbE6+RTTh/DODDEnFNiFwKiya9l?=
+ =?us-ascii?Q?1WGMBHv413lOFKln0bGcQgFDGaC0skXHu2gGPdod/sONjo9Ik60wRr5M4djy?=
+ =?us-ascii?Q?a/bZrePLVyBIDySptIk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?q3fHrQtTrCuF3yVjtVN9z2oiAlL53Y5ZbO7PV3UdQIos022TW9Q/DWYIk/Pg?=
+ =?us-ascii?Q?xWQu9ZvG7Zl/NqFmSff745liLvgobhV7dpkUxQTo196LUG8dnPbzOysVpXdl?=
+ =?us-ascii?Q?WxGF+AWqSyQOceTMCO3WX6gWhOi3a7Q8TDxA9dHGrzTz1WCNoSgbBHuTlenW?=
+ =?us-ascii?Q?Kglb8JQxagjUPUUQJUxwGgYoesCHUwhblh40UmgQ/KLJITUHetJtv2+NM/st?=
+ =?us-ascii?Q?gcc+h/GZK699kVMCJRmM8hRJATdiS6usm/4VhwJiKpxLcRdWWYeihwh31/M5?=
+ =?us-ascii?Q?NquKgl8wFhZ9njPpfrpbovlvfCkIWyhjHt98qvtUmmSxYNjUtXs5Y120JYC3?=
+ =?us-ascii?Q?V2JAAHk+uPCOpUMlLxe3z6NrQhWOd9abs87KG6kKPUv9/U15cUvi5q4Dbhcq?=
+ =?us-ascii?Q?pdwoC+7bzyMoCLpUa8MuX3DT44R3PW5xBAOTppKRHCag1MZSsaaAYO2uNgZC?=
+ =?us-ascii?Q?zUD4bt0TkEBouVGhYRHEJOFveEF8NRisnQeEtaQq1Cu4Ce5APNbKLAH0fj36?=
+ =?us-ascii?Q?AZW/+sYxWg1sEZVYIRWeTrxU1OLUY4EgrEMxbF6XsKXXxCCjrfs/ytifLMwi?=
+ =?us-ascii?Q?QJJkHQ+z0RgVPJJS9xXu6hbFPox1GDJ9R/rw1b8o/4IXuEmQrWCcORMvtOWg?=
+ =?us-ascii?Q?9ktAG61YvIXe8O9lflzHZMVUuVQAWUc37K6K2JeOmi+pF/gIapsqsqnjfriu?=
+ =?us-ascii?Q?36blSQVG9dtlVXt6Fl93GzePHqOhTrt0pqWc4E5fECd6YEwuO3nnMQkhdhef?=
+ =?us-ascii?Q?6pWeduHnDEcWiIRJABnE4zRkJOaBgz739YD0EJ2ITsmodG0B/QcXJ1hmqihD?=
+ =?us-ascii?Q?TzxBBPIBNyxzZlaSMZFF175u4KNi6791TEkDNgymy8MH8+UJ6waQrsf7X7Qa?=
+ =?us-ascii?Q?HH31U9wIHfRATPkALVvrnXSa18w2G3MklkKH7AvWRvxvTjM0ZInVgv446fIw?=
+ =?us-ascii?Q?H95j3S796NKhZi7OfMi0I49GnKaLx9OocNHX3bhD3fWMwjDhDK1mLtYxXRcY?=
+ =?us-ascii?Q?S6vLXVGu1+o1CWUDrjfSi0nqnpCZvnsLr+3vBbPzzjwmQBhOhcL0inu168DP?=
+ =?us-ascii?Q?7fGPfZItA+MA5OkTdCaJcfWXi752cUK6bf5WN7Ow+YH1VRXqnD3Eb/pEfen/?=
+ =?us-ascii?Q?N5CKq+qwMcF/MUCPjANg50y09jiTpl34AlB8zDZheTNu1nYSbB7xgaXCjz0m?=
+ =?us-ascii?Q?g+YCQB/pTn5Gi04kkY0kU2h3leWTkn8Q8pPklf9CshCuWa6ruK9WEYJ7DSlQ?=
+ =?us-ascii?Q?Kjncr7IcFvcuZz++5ohmOMWJQkVxH6X+jqSzquvbTf0JzoJ5bRb8kyZhZxHM?=
+ =?us-ascii?Q?oyIDxzuBXTJWEgXMN7B9GNg2MO6KS/YTo65u1M269RZ8nA7GpymQ5Q6dfNRc?=
+ =?us-ascii?Q?W3cnNpjdfAAcKQuRLInetH3dP5Z0O7y5BdjM9YTQcH8TZSI3RFjfW/D16mbs?=
+ =?us-ascii?Q?TR/sACmJkFeINS9qVaoEv96mUw3+En0em3q9DozXty5RkhzoiVNDptxQzipt?=
+ =?us-ascii?Q?jzYOFB6RfSTeMCLypd+2/8yNCYZRUr3gXd4nmpkbZmFMmqOxYC1dL0hyxcrR?=
+ =?us-ascii?Q?x6Eoq5kitvJFl0rUy2VfAzjMVcEiI/KLOR1WxAF7NW5znmPHQ3PHZubA3kWR?=
+ =?us-ascii?Q?+J8TBtWIqMoKkyON0NvSW6N/mslVIy5hfMnK0sFjCcXbONdD6u8K54lrKa+G?=
+ =?us-ascii?Q?wKxMY3qLg27XrLFoTkEAbKByAkQAlrc7Yewq75qSYbPoc5Ee?=
+X-OriginatorOrg: heitbaum.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba448f29-e53d-46b9-e77f-08de6c609760
+X-MS-Exchange-CrossTenant-AuthSource: SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2026 07:05:24.6746
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 35ffebb5-7282-4da6-8519-efab29b0108e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FaKkweZPXW44zyso+sSMggBz5wEfN4ud8VnZWfLJnJS+o/1KjRu2i8r6LO63kQYeoHqf4/aF3IbpYo+eyuwCOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY8P282MB5022
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmx.de,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmx.de:s=s31663417];
+X-Spamd-Result: default: False [3.04 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[heitbaum.com : SPF not aligned (relaxed), No valid DKIM,reject];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18939-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[skhynix.com,linux-foundation.org,opensource.wdc.com,vger.kernel.org,dilger.ca,redhat.com,infradead.org,kernel.org,linutronix.de,goodmis.org,joelfernandes.org,ffwll.ch,gmail.com,intel.com,mit.edu,fromorbit.com,linuxfoundation.org,lge.com,kvack.org,cmpxchg.org,linux.com,google.com,suse.cz,vflare.org,toxicpanda.com,lists.freedesktop.org,oracle.com,ericsson.com,kzalloc.com,arm.com,lwn.net,alien8.de,zytor.com,linaro.org,padovan.org,amd.com,arndb.de,suse.com,nvidia.com,joshtriplett.org,efficios.com,linux.dev,suse.de,brown.name,talpey.com,huawei.com,amazon.co.uk,linux.alibaba.com,glider.be,linux.intel.com,treblig.org,star-ark.net,valla.it,vivo.com,baidu.com,lists.infradead.org,lists.linaro.org,lists.linux.dev,qq.com,ownmail.net,sang-engineering.com,linux-m68k.org,garyguo.net,protonmail.com,umich.edu];
-	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
+	R_DKIM_NA(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rudi@heitbaum.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmx.de];
-	RCPT_COUNT_GT_50(0.00)[166];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dirk.behme@gmx.de,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmx.de:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,gmx.de:mid,gmx.de:dkim]
-X-Rspamd-Queue-Id: 6FD2B13E220
+	TAGGED_FROM(0.00)[bounces-18940-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9389F13E2D1
 X-Rspamd-Action: no action
 
-On 05.12.25 08:18, Byungchul Park wrote:
-> wait_for_completion() can be used at various points in the code and it's
-> very hard to distinguish wait_for_completion()s between different usages=
-.
-> Using a single dept_key for all the wait_for_completion()s could trigger
-> false positive reports.
->=20
-> Assign unique dept_key to each distinct wait_for_completion() caller to
-> avoid false positive reports.
->=20
-> While at it, add a rust helper for wait_for_completion() to avoid build
-> errors.
->=20
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  include/linux/completion.h | 100 +++++++++++++++++++++++++++++++------
->  kernel/sched/completion.c  |  60 +++++++++++-----------
->  rust/helpers/completion.c  |   5 ++
->  3 files changed, 120 insertions(+), 45 deletions(-)
->=20
-...
-> diff --git a/rust/helpers/completion.c b/rust/helpers/completion.c
-> index b2443262a2ae..5bae5e749def 100644
-> --- a/rust/helpers/completion.c
-> +++ b/rust/helpers/completion.c
-> @@ -6,3 +6,8 @@ void rust_helper_init_completion(struct completion *x)
->  {
->  	init_completion(x);
->  }
-> +
-> +void rust_helper_wait_for_completion(struct completion *x)
+dev is passed by nfs_parse_devname to nfs_parse_... as a copy of the
+device name, the parser destructively modifies dev, so pass as non const
+so that it can be modified without warning.
 
-Please add `__rust_helper`:
+fixes:
+    parse_dev.c: In function 'nfs_parse_simple_hostname':
+    parse_dev.c:89:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+       89 |         colon = strchr(dev, ':');
+          |               ^
+    parse_dev.c:100:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+      100 |         comma = strchr(dev, ',');
+          |               ^
+    parse_dev.c: In function 'nfs_parse_square_bracket':
+    parse_dev.c:146:16: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+      146 |         cbrace = strchr(dev, ']');
+          |                ^
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
-/rust/helpers/completion.c?h=3Dnext-20260213&id=3D1c7a6f48f7eeb3014584d2fc=
-55fc67f0cbaeef69
+Signed-off-by: Rudi Heitbaum <rudi@heitbaum.com>
+---
+ utils/mount/parse_dev.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Best regards
-
-Dirk
+diff --git a/utils/mount/parse_dev.c b/utils/mount/parse_dev.c
+index 2ade5d5d..a6354bba 100644
+--- a/utils/mount/parse_dev.c
++++ b/utils/mount/parse_dev.c
+@@ -79,7 +79,7 @@ static int nfs_pdn_missing_brace_err(void)
+ /*
+  * Standard hostname:path format
+  */
+-static int nfs_parse_simple_hostname(const char *dev,
++static int nfs_parse_simple_hostname(char *dev,
+ 				     char **hostname, char **pathname)
+ {
+ 	size_t host_len, path_len;
+@@ -134,7 +134,7 @@ static int nfs_parse_simple_hostname(const char *dev,
+  * There could be anything in between the brackets, but we'll
+  * let DNS resolution sort it out later.
+  */
+-static int nfs_parse_square_bracket(const char *dev,
++static int nfs_parse_square_bracket(char *dev,
+ 				    char **hostname, char **pathname)
+ {
+ 	size_t host_len, path_len;
+@@ -185,7 +185,7 @@ static int nfs_parse_square_bracket(const char *dev,
+  * with the mount request and failing with a cryptic error message
+  * later.
+  */
+-static int nfs_parse_nfs_url(__attribute__((unused)) const char *dev,
++static int nfs_parse_nfs_url(__attribute__((unused)) char *dev,
+ 			     __attribute__((unused)) char **hostname,
+ 			     __attribute__((unused)) char **pathname)
+ {
+-- 
+2.51.0
 
 
