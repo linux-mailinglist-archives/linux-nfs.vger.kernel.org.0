@@ -1,241 +1,307 @@
-Return-Path: <linux-nfs+bounces-18941-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18942-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UDQlJItwkWnOigEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18941-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 08:06:51 +0100
+	id AH7XLNk6kmnUsAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18942-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 22:30:01 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1498A13E2EF
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 08:06:50 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53A1713FC49
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 22:30:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 380DB3004F56
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 07:06:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8E4973007495
+	for <lists+linux-nfs@lfdr.de>; Sun, 15 Feb 2026 21:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6055244675;
-	Sun, 15 Feb 2026 07:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2237D296BD6;
+	Sun, 15 Feb 2026 21:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mB5iRs2e"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from MEUPR01CU001.outbound.protection.outlook.com (mail-australiasoutheastazon11020091.outbound.protection.outlook.com [52.101.152.91])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB6517993
-	for <linux-nfs@vger.kernel.org>; Sun, 15 Feb 2026 07:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.152.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F97242D88
+	for <linux-nfs@vger.kernel.org>; Sun, 15 Feb 2026 21:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771139196; cv=fail; b=sQOKGE+N6gFAX0h/K41sU9iTK6QVLlwh6GDEZNsdxozsJ6HxQd8DH8Pgj6IKc9DrcOYwAX/abGyjxPiiF2+80q1fjoFyD5cW4GFKN9Fv5F0WsBaoSz9YkKZChvYHVkv8QGzjLm9ROHa7dBo7XB98kGNNHR3JOKrIwxkR9R6aTyk=
+	t=1771190998; cv=pass; b=t/IZ8O8w85PLHZzeTtsjhAEXgQyqXhaoZu9M45K4kwTVYCnpxM9xVdO0VvtS2k1rOUtVfLYJ79irQJziF8NLWmEMWE9PeJFnz71TKIBa2XerwJaBN+8bBRp1zKC2exbmZKEwfJBwKA+M07Qf5K6meoPy9r6HWZ5BNPCK/qAuKg8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771139196; c=relaxed/simple;
-	bh=CLGffWfXr9SxETpkZq1YYIzIiR6Rfuj6/KTE2o2Rh7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=KdMu52rWmIkl/z56vDrQvtFs0n3sDjfJvLQnlTqjGxoZ5XMMSRGI4mQ6vPzxVG4Jdl3z8AvDEeZsm+Ijb5QKST9ei/e9xOoygOKgkMspjayHMnmXdb3R4P7UhMHYzhRCPPZu2C0ON/jl7QSSGKB+zvhG3cDpOYuyx3F0JUW1iI8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=heitbaum.com; spf=pass smtp.mailfrom=heitbaum.com; arc=fail smtp.client-ip=52.101.152.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=heitbaum.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heitbaum.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KxkyICkkORuekYrjGD+afn00bdEQW9OeN/UhMD+kl+J/QoYqbXSpaxmdTBmxVNiHaImNJBb9j9Nzq9ETVPFoV7raUnxBI+TkO3UCRkRAQmWFVFFyCvVBtw3+glHyxNHccHAl6ZbCC9rImN/xyOWx6DVZMvioTsIO1ARibZVdlG+hObVQiPhYuoKhnyO2kcLGqJjE6t7zdFVRDwN3+GSG6HpxcJ8SQeMSWiuh3i6h50nnb6O7RtK9Rw6qkrKLHYfK3qEZWiq98vRLkLXrt+VxoRrkPGcP8rYA7zwPSsCGy8uXUIrzbytBtuSfUompR0BBicGPQFFrT6gjsOmAzYeH9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6rWTX/v6zFBIQi9rZzmPdNIsK+N54oiE02xHiYIJvxk=;
- b=WeORH/AQOceRBvaqSySLIaRuJPrFx6v9z12zeot4/annvTiltWsRc1jl4CeL12+pNRV/BPozgDz/e/NlTgZzkWJAhn1JMoQiI2B+cnG8vqr9kfJ407G0yXFjw4m1YxDB8zxVTcYTyrKIKNVQ9rmhQqkstpiHGcO0nAOvnF4OEi6Ap1/Q+p4oCpOPWTAfZuGx3ozCDUTdiYCxuZyic6DU4ZIVRdcSKjkUPgx2x0D7mxAAFo26JkYhFLd55ED7AhRr7Jn465xEdRrso/+N4EnM58F4ZBO4GpY14GIW6Du6hI5zZx03K1Gwo/dQlLMktcvMO50Bp2nRmGnjpXH1CX+Clg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=heitbaum.com; dmarc=pass action=none header.from=heitbaum.com;
- dkim=pass header.d=heitbaum.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=heitbaum.com;
-Received: from SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:73::13) by
- SY8P282MB5022.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:2b5::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9611.15; Sun, 15 Feb 2026 07:06:32 +0000
-Received: from SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
- ([fe80::7340:fb70:eaa2:ee1f]) by SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
- ([fe80::7340:fb70:eaa2:ee1f%4]) with mapi id 15.20.9611.013; Sun, 15 Feb 2026
- 07:06:32 +0000
-Date: Sun, 15 Feb 2026 07:06:18 +0000
-From: Rudi Heitbaum <rudi@heitbaum.com>
-To: linux-nfs@vger.kernel.org
-Cc: rudi@heitbaum.com
-Subject: [PATCH 2/2] nfs-utils: conffile: fix discards const from pointer
- target
-Message-ID: <aZFwasmAQKAa7nCc@1eac07209f0d>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-ClientProxiedBy: MEVP282CA0074.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:202::16) To SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:73::13)
+	s=arc-20240116; t=1771190998; c=relaxed/simple;
+	bh=ih/cRVN7RnHhFku6DkHST33md8mQf5cEn+jxf3dF/gQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=S6+KqEjd9+Ad7dSk2oTdkHZC9/OKKIr0ATcYqEvLsMMEvNwK3X4tLOHkeyNvSnuH/2osPc+/wTzPscJev9GxaY0y7TkqFuhGVaUkBad7FvGKD+Vn8EQhbVcsTdqV/k3v6210e6NTLKdpIvKInArgGbeAfeW7VHOb16z7u+R5yMw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mB5iRs2e; arc=pass smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-65a40f3f048so4056878a12.3
+        for <linux-nfs@vger.kernel.org>; Sun, 15 Feb 2026 13:29:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771190994; cv=none;
+        d=google.com; s=arc-20240605;
+        b=apKAi5dcBfHocdRnTi2w9VDPGISJplSiDxflXGWLK3HOwBJYaTUmtmy5+q5pPx5VU/
+         /nG53wykrxHdUZREJSy8TW/VJxVgodCfXqv9gKAESDWOR/Vu1wgj16FJdaiBGBUuDXQH
+         pqup287BM5iO7eVIE26a+5kajbovxFPQJWdAMNI3npFhaD+YA2kmEXU5+iCd+nKoFKfq
+         4dSWYnaRVVnFKAyEjdJKMTvHcco2IFpgiwPvB1aG1+xaSD6wwO16hcsGSDl5z9t9NydD
+         RYie5E/UMTyWPf9bWssRisC2S0okiYQFlK2TYzEuHZ9Enk7nowGXXJQ70hTqZ6ORKydX
+         pWHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=bUac4J3PaBYOVgqxb8+P1q3CBbONpKXd195PT0hnmpA=;
+        fh=A3pMOUK00huGibGCZBFsLekFLVbB5hHGKjUNNKwO+5E=;
+        b=A4fsQi1qaxxWd8qPdo66NyZfjBMHIkFuDm+HyNdN9Wno+JoLuh0y9HpizCL9wbNJan
+         b58ud2jh/9/yEjGx7s7fePXT1kKfnML0I/VUFgcpltcvcUwf49PuQyCxKBj/SgEtPbsK
+         Bo8B39Jg0su+JrquIUNlYzLBt43bRwAeST/QU0KRd2nxGZoxRhvIKjVnHNuJdnfwiRdx
+         TNy3ex3fwDaTYL6ntUeucMNHxIMtoENQfxovTTqfNDzqigsYynth4fahg0HTmvgkkgPB
+         qqxM3MyfCsqIv2KFfRAN8YhHepPDz4Pd02RIFxixNv5l4EHkDsfjP9PwLqO9t1IGohJW
+         2zWw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771190994; x=1771795794; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bUac4J3PaBYOVgqxb8+P1q3CBbONpKXd195PT0hnmpA=;
+        b=mB5iRs2eYMys9dZ1A+GmeY739yBPCzMnzUNSnJ8pqDakhVQSnqgGLYEHJUnSaTADZ8
+         6lFBs5/BqJMI8MDPi+ubW3rkd6wOHbo+UISr3tZmvJvljYMipy8RnTCAbIyHNI4gCwXQ
+         aSuocufSVpf0VviwmrSmjmSdqAAv8QwRo3flMNoEUf18Bcaq7ZbtTCogjxJ0WpbFOqsT
+         ebd9NslbFQLCv3RVqshca3ZHNzuNUYvLIE+BswR0m8JyPveX3nvzKQsBRV2lFhrQ94J1
+         ElIjBy1g1U1vDMAjCkciZGoSkFfYnC/t3DSF8Cv7nVjRMqUX91uClUfkm0tUgOZEMcc9
+         6yZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771190994; x=1771795794;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bUac4J3PaBYOVgqxb8+P1q3CBbONpKXd195PT0hnmpA=;
+        b=mTTNtawP00eRtVS375il1BdQNxCLH4OVpd4aNsqFJtNfeXzNquKIevuOiGC9JvIAs2
+         JaKB9RbzNN/PHmMFm8YvRJrWLfCGraxVQ7Qu6ninoMw/648UIcvuhHLDUBpl9widp/ol
+         lPVDBWVx9xkafw6O9kegOccfXPR3ZBedw0sPuuVTruGbikb8ZIowzLXwqf2MolzI2F7m
+         EpnW2MDSbAoASBwMt/4wqMXCoAC30Re8inN1MKWuuoxRXTXZ8tqv2/4GbBlBHr24rAYE
+         1AQHg03zb+edEiyFeLoN5rav57gd73XcoajsPyiqZdoE5BIjROD4CREvc6swjez8Aeo6
+         CrXg==
+X-Gm-Message-State: AOJu0YwwrUiPantlJ2if3UWcYTQcWELFwZDfcAR0H91nXj7OtFXE1ZwE
+	tlnm9MLm4GGBX+XLrrp/A4s80OsEIqCr1yc66jCR0zqVQ5j66tmXQNTSEHmk2TxDQzZ6/ayB7RB
+	Gdhv31gSCHyISPZ9+cwiyfVdlOvHLRT8gbOMT
+X-Gm-Gg: AZuq6aIums7gMV8oBd5uA6eeRVQduftVLFRU6xU+fqN/jWPjvGLk82FbKwWw78D+TXP
+	yGwGkVF64qYL7ek83Ic6+9J+KMNDqBzfZ1ePGIv4ooQqM1pHBiVUmzRi3u6uF6psjA7QOkPQbPm
+	M1l3gH7A7urA3ftnxokQo9ZOuH8VK/b02oFhFV+9JC++0g6UMd8Iz2/StsyRvZbgEeInDSQ+cC7
+	DHJUOx/kG+YzdcNP3ArfP5+hAMFc1fgajgwuveUeAWUafkmZXXgt+qhBwFq0K7aTTBWfSTlisjY
+	jw5C1aro0baEQYl/
+X-Received: by 2002:a05:6402:1ece:b0:659:329a:bc12 with SMTP id
+ 4fb4d7f45d1cf-65bb13b7f0amr3928061a12.29.1771190994283; Sun, 15 Feb 2026
+ 13:29:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SYYP282MB0960:EE_|SY8P282MB5022:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3149fb08-02d8-433c-6eec-08de6c60bfa8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qyJM2k0wjVvHMV9hij0ceq4zpWh4lp/BNgujL38D61mBEJzmTu4kmnjUx6js?=
- =?us-ascii?Q?rqwsbCpLlgaS2tW2YezH4LXDgjuXCXND+6EQAqh0avqlIkiiu6ED6QiYDRw6?=
- =?us-ascii?Q?HMW6maaBFse7moZN1ZpLUAZ8/C0nDI67ggNd/d2GeQ58l+cKWKfAy9k44MNc?=
- =?us-ascii?Q?JkYI4uh1ZeQWlN7C/3AMbnVd1fIJOnq1yL2iIMFU9sdgVYT2Y8NYUsilVO6+?=
- =?us-ascii?Q?8ycuH/aGPsNThcgk8jCUVgeNWA5/dDU52sqDv+l5ckA1OTOIdyuj20Cckucy?=
- =?us-ascii?Q?jYHq6dJeFofySpHBHU0efSSUhH46vq2yct665hcEn+K9XVtst/MEqSBbzYq6?=
- =?us-ascii?Q?ELYYdKqSU8HC0lKgHYWsYT5m1pMVobtnyhZAYYVbYNt5Fp8k4kPkFmvbxCab?=
- =?us-ascii?Q?YjIWCdBJGur25eYW35LwLpsP7ftYuRNme/S3K3loPnMBjFEeAM6ClenPCDf0?=
- =?us-ascii?Q?FVScNaIzWl+sEeWgzdxD7ebKSpPgNsm8KI6IiAnSmNiw7vw6W/qO9CQWQNll?=
- =?us-ascii?Q?junxcRt0pLc0as90Yi1YHjx4AyTxpTzL4rH+r0NaMBoCHleKntOShyNObcco?=
- =?us-ascii?Q?y7wWVJ4Htw5ICDStIJ24W+tM8UpRhb1Yg6GwAQthKNEcUHVA/bDGISEeAjXa?=
- =?us-ascii?Q?79eYQ2YSwaDL7qLY3ZL/6l2VSNT1cGDZEcAQj7mbMeb+8WIB9yEz8X9MBeMb?=
- =?us-ascii?Q?BSEgB1HWOjEua3JnOtcNOMqEpMCRcdouYJ0FSYyhQeOTXNClfEG1lBM6gHaU?=
- =?us-ascii?Q?5qZU+Jt+J7hdy3xSIhkWn/ZVEVyP9rzXXcX9XpwGCSx5B17dMwjFoyHZsJjE?=
- =?us-ascii?Q?8oxaqgR1feOVAnbWp7phwN97tE/piUhIEK7dJdzialpx5z6U39Ef4dxHG6k0?=
- =?us-ascii?Q?rX15qvfgeTDA2jHymeZXEdKi8xcxvW5+QZDE826hI8ncvv85rI96ullaC/oq?=
- =?us-ascii?Q?P16I25cMJ6vH/mwV8+1uVLZpRKB4LuRmOiB/Lz0dXUIgN6We5d049RVgwmE4?=
- =?us-ascii?Q?TWVPvmhoWjiCsZRnV20+jCrDUWvaKu8NRrDLgoZRDj5Q9CkT8mfyBq8K438S?=
- =?us-ascii?Q?OlVlL8DZSm4+CK9v6J+na6C4g9Nu5Xm7OIg+/AgXHUO7O4gfjnbh5xnr185N?=
- =?us-ascii?Q?/awYbWchj9aSwmXEW3oFapHkBwaA6vMGFv/o7+mhUwFGDWEa8AYPQUXZCZQ9?=
- =?us-ascii?Q?6o1aHUx+v7r60dfa5DSORbBm7vURE1m7QWsn/cbnzwgjpMBNfh5rUzd1Nkpc?=
- =?us-ascii?Q?Pn/EVWbC/Lm0i5FmBdnB0q6isSH810DgrCrpf65xsOo4Kc4SJrxYuPmpVVxG?=
- =?us-ascii?Q?mBPIdHiAz0sZaGLdxaNsUKw1SokIM/p1OrHG9DgLLXGbBHFsdMnQiVO3x6mq?=
- =?us-ascii?Q?ELeEulthI++0xPH7RAZEP+QyFDPNdtTM6W/JTI21ftc/UdiyVhjBNn4OgsFy?=
- =?us-ascii?Q?5etgF0XJkOJHbf3uTBw+KrC7NA00MetdV/rnh7dx79gm2zb4FU8Ibq9c96Tk?=
- =?us-ascii?Q?CIcKo4hvfM1FGcJJbpCMKwvexo439hUH7i5xS7QrJl8Q0sWZgXmQ+Sv5v1lE?=
- =?us-ascii?Q?MkVISi6Ib3BjgruYPGE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?M1vpfmqjWY6Ix/LKwZvD8D4PnAa7TVlIMawZxqVYhFPs8f9BF9UICsBptyPJ?=
- =?us-ascii?Q?nKnMNIacIDd3rsU0X22Mac6UzyBx1ZCyszMSbd63C30wHuKFyX6DOCLBwaxr?=
- =?us-ascii?Q?6ia5jOBkxHLmT211Mo2jQvj3BZtpSNudt38WHFlJBeQpome0Glsa2HDp3Wts?=
- =?us-ascii?Q?rG44Bu2SghsZKEIcZcaa9+y0C/Ave3y919PO1Iy4dbdZTTSyztEnzfcaDqdU?=
- =?us-ascii?Q?GEd9na5az/9Dx3YsBS6f5vTVI+7xZHZojwwAkBMvFfbwWErgKyGih7uqlczi?=
- =?us-ascii?Q?drBtk7SO3XMWNkRIFzw+75n/mZ5jAuFJRz7i6ns8K/c8dZalDU6WqYZMykR0?=
- =?us-ascii?Q?9462prfAg6i0Nbi12GXKCnvsQ0S46VcPSwyXXVvVJP32rbneSWj3hrUFU6td?=
- =?us-ascii?Q?90n/ndymnCiD57bhm4pJuweCARFPZcPAuEzvyxHojsQlPiF1YdrXFxjnBKli?=
- =?us-ascii?Q?tlP3BrT191yYpyXASgkC04usbDQjzHWnC/5N0qusRz4D1/4cV1j8wMPDhY5A?=
- =?us-ascii?Q?sgFZsmZj9Se/bOmhueCqTCKb/C6cvdJyz9A37mBGfpEEGesSbvSsGvNxU40N?=
- =?us-ascii?Q?MvV8JdHWfOn2/NnL+bHhKOYHySIWGF3j8kwpnebHJ+v91M60cZ9yz9DI/rOq?=
- =?us-ascii?Q?E3x3ouJT/hAYX/leeMH7hfPMexk2Sv0PqRMMLJ516EME1IVn/ZKNqlOMaO9U?=
- =?us-ascii?Q?lhtgf1w20Kn7QZwi7mGXTv/hegEbLo1hfGiyzGx/1zZ1FxxmyRPp4HcxeGT/?=
- =?us-ascii?Q?9qBUcY8d4AN/3lhB303FUqEclS0W2Mh/VtkfKt4yJZ4u01zW0ITcEcmXk+bQ?=
- =?us-ascii?Q?JPVTsr65HHOqx9C/pB3hikKlB/87KBQbhYDAib+W9ySq0/xO7yaaXtPXg92F?=
- =?us-ascii?Q?dOK+irXNa/u8Q1wFO3Dyz1BatZwI0+affAJkl5n2yiI4RpsEKRWLXe9cH1d4?=
- =?us-ascii?Q?wMSa5BVF7iWT7LwxOhguyi1xGnpCiNXYLkThSTLDSkWi+MKJ9VBNk4klwOgi?=
- =?us-ascii?Q?8bEPpzX3rfUG4kW0LNaGShta+VVYhc9o5/7IaSJZmAiV5hAD7h5MNt2lZYri?=
- =?us-ascii?Q?rbcxPVRN1mhZzrSS9uBHAjROUyHiqI4F2Fp6woSwR4gSojxnFjtAgAtw5+mv?=
- =?us-ascii?Q?pSty3ndyqiXANHJUx8nJ36NI4AlNHAuVYQ78E7bKHh35LK16HtkLKbXN9gAv?=
- =?us-ascii?Q?4MFwpP0rakQ2M5QNnNkdBn1ECNHBmY+RlA4M3ejm40iyuMXBd8YTiAVSp1X/?=
- =?us-ascii?Q?3zcSw2TrGXg+f/JeBFdddQ2hUq1sSwnybORIcjcWI+D0ITrsZtxtwJTuYjlo?=
- =?us-ascii?Q?7EmbRXSQLYt1Ru9zd1YZPcAZKrEk+THcv3A0UkqJb41qkyUn7BopEsKR5kQ2?=
- =?us-ascii?Q?Jmm1pB0nx97AiIGFEWrbFKE3DaAggxzpnUG22kBDaG5jHcV4D9uwP6D/fbCj?=
- =?us-ascii?Q?GxX83AK8tKPU/lvW50Ujip2Hx0yBN92Ak4dMskLzEzDBe9bZBynui62S40Rv?=
- =?us-ascii?Q?/l2XOP8OqpM76MkHNvhAYJI5MURomS9jaY2DICHIqTw6Dc+AuQDNM4jEhhjn?=
- =?us-ascii?Q?w3cGTopKGd4xEwuowLoQzKlIcSBLmKnu8TriWtHtKYc2UyiFaJ6nD9xwV7vr?=
- =?us-ascii?Q?nA0N0vz7+M7DTBaAkj9BoafEsc0KaEVI0WYENXrvwDzxusRM6ihJDBvfsmcu?=
- =?us-ascii?Q?2hnhjus0exEDz36EI7Y42KQVTPEEzDThCa+lzYaS1+UzeY2k?=
-X-OriginatorOrg: heitbaum.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3149fb08-02d8-433c-6eec-08de6c60bfa8
-X-MS-Exchange-CrossTenant-AuthSource: SYYP282MB0960.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2026 07:06:32.2741
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 35ffebb5-7282-4da6-8519-efab29b0108e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FoJ+G0b3xdwrgIOgpIAp1Qjjk8CyrQ8+vEAh3pm95WtfgcYZjVNHYqu1Ik7FrXOkPEj7gZCognyihJ+jcKe+rg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY8P282MB5022
+References: <CAKAoaQm_Z89aaE39Rqp0-o2h9ybsgUMaqReND4y_UvPxhUKsgQ@mail.gmail.com>
+In-Reply-To: <CAKAoaQm_Z89aaE39Rqp0-o2h9ybsgUMaqReND4y_UvPxhUKsgQ@mail.gmail.com>
+From: Martin Wege <martin.l.wege@gmail.com>
+Date: Sun, 15 Feb 2026 22:29:18 +0100
+X-Gm-Features: AaiRm50MhJe28Z-99TCTGEI8sSWqX4lWh5sQh-CRG4lDawm1mukoqJrwJ_C5vV0
+Message-ID: <CANH4o6PdZbvX80JjsH5t-aVX6A5YM6wW_bt+5d1hSFxd3daE_Q@mail.gmail.com>
+Subject: Fwd: [Ms-nfs41-client-devel] [Announcement] NFSv4.2/NFSv4.1
+ filesystem client Windows driver binaries for Windows 10/11+WindowsServer
+ 2019/2022/2025 for testing, 2026-02-14 ...
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.04 / 15.00];
-	DMARC_POLICY_REJECT(2.00)[heitbaum.com : SPF not aligned (relaxed), No valid DKIM,reject];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rudi@heitbaum.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	R_DKIM_NA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	TO_DN_ALL(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18941-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1498A13E2EF
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_ONE(0.00)[1];
+	TAGGED_FROM(0.00)[bounces-18942-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[martinlwege@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,0.0.8.1:email,nrubsig.org:url,nrubsig.org:email]
+X-Rspamd-Queue-Id: 53A1713FC49
 X-Rspamd-Action: no action
 
-end is used as the return from strchr(line) which is a const char and
-then again as the return from strchr(name) which is a char pointer to
-the strdup(line). Declare a const char * pounter for use in the first
-case, addressing the warning.
+Hello,
 
-fixes:
-    conffile.c: In function 'is_tag':
-    conffile.c:1711:13: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     1711 |         end = strchr(line, '=');
-          |             ^
-    conffile.c: In function 'is_taggedcomment':
-    conffile.c:1825:13: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     1825 |         end = strchr(line, ':');
-          |             ^
+Please test the binaries. The NFSv4.2/4.1 client is for Windows 10/11
+ARM64+AMD64+x86 and Windows Server 2019+2022+2025/AMD64, but
+Interoperability feedback with NFSv4.1/NFSv4.2 servers based on Linux
+6.6+ LTS and 6.19+/7.0 would be great.
 
-Signed-off-by: Rudi Heitbaum <rudi@heitbaum.com>
----
- support/nfs/conffile.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+News:
+See announcement below; Windows Alternate Streams (Win32 streams)
+support, including winstreamsutil.exe, was added, xcopy.exe/cmd.exe
+copy/MS Explorer file copy acceleration via NFS server side copies and
+copy-by-block-cloning are IMO the most interesting new features
+(cloning now works with FreeBSD 14.3/15.0 nfsd and Linux nfsd
+exporting btrfs&xfs filesystems, server side copy with FreeBSD+Linux
+with all filesystems), because it's "on" by default for all Windows 11
+applications which copy files, followed by wings.exe (Linux users read
+man sg(1)) with powershell support.
 
-diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
-index 137fac8d..8d242c2f 100644
---- a/support/nfs/conffile.c
-+++ b/support/nfs/conffile.c
-@@ -1704,12 +1704,13 @@ static bool
- is_tag(const char *line, const char *tagname)
- {
- 	char *end;
-+	const char *equal;
- 	char *name;
- 	bool found = false;
- 
- 	/* quick check, is this even an assignment line */
--	end = strchr(line, '=');
--	if (end == NULL)
-+	equal = strchr(line, '=');
-+	if (equal == NULL)
- 		return false;
- 
- 	/* skip leading white space before tag name */
-@@ -1807,6 +1808,7 @@ static bool
- is_taggedcomment(const char *line, const char *field)
- {
- 	char *end;
-+	const char *equal;
- 	char *name;
- 	bool found = false;
- 
-@@ -1822,8 +1824,8 @@ is_taggedcomment(const char *line, const char *field)
- 	line++;
- 
- 	/* quick check, is this even a likely formatted line */
--	end = strchr(line, ':');
--	if (end == NULL)
-+	equal = strchr(line, ':');
-+	if (equal == NULL)
- 		return false;
- 
- 	/* skip leading white space before field name */
--- 
-2.51.0
+Thanks,
+Martin
 
+---------- Forwarded message ---------
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Sat, Feb 14, 2026 at 1:58=E2=80=AFPM
+Subject: [Ms-nfs41-client-devel] [Announcement] NFSv4.2/NFSv4.1
+filesystem client Windows driver binaries for Windows
+10/11+WindowsServer 2019/2022/2025 for testing, 2026-02-14 ...
+To: <ms-nfs41-client-devel@lists.sourceforge.net>
+
+
+Hi!
+
+
+----
+
+We've created a set of test binaries for the NFSv4.2/NFSv4.1
+filesystem client driver for Windows 10 (32bit x86, x86-64, ARM64),
+Windows 11 (x86-64, ARM64)+Windows Server 2019/2022/2025 (x86-64,
+ARM64), based on https://github.com/kofemann/ms-nfs41-client (commit
+id #7fb793265ab83889d01b2d5773c2af43f9053fd4, git bundle in tarball),
+for testing and feedback.
+
+** FULL release readme:
+- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
+/msnfs41client_cygwin_64bit32bit_binaries_20260214_11h08m_git7fb7932.html
+- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
+/msnfs41client_cygwin_64bit32bit_binaries_20260214_11h08m_git7fb7932.readme
+
+** Download URL (all architectures+platforms):
+- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
+/msnfs41client_cygwin_64bit32bit_binaries_20260214_11h08m_git7fb7932.tar.bz=
+2
+
+** Download hash sums:
+SHA2-256(msnfs41client_cygwin_64bit32bit_binaries_20260214_11h08m_git7fb793=
+2.html)=3D
+69504bb0c4376df8e5998b96945f57ae0b0834226990fc5da591e378090e3617
+SHA2-256(msnfs41client_cygwin_64bit32bit_binaries_20260214_11h08m_git7fb793=
+2.readme)=3D
+3e4fd46454567d3a16e761ba1a82c29e6f23c69b8136c89cca5422375b2f8f73
+SHA2-256(msnfs41client_cygwin_64bit32bit_binaries_20260214_11h08m_git7fb793=
+2.tar.bz2)=3D
+895405a1e3c274fd978349eb9a5ad7ed7dc824cb0114d89c6cb64b478b1bad21
+
+
+** Major changes since the last release:
+- Support for Win32 named streams/Alternate Data Streams (ADS), if the
+NFSv4.x server support NFS named attributes (e.g. Solaris >=3D 11.4,
+Illumos, FreeBSD >=3D 15.0, ...), including NTFS-style renaming support.
+This also includes new utilities (e.g. winstreamsutil.exe) to find,
+list, create, rename, delete etc. Win32 named streams
+- Support for Windows "SRVOpen collapsing", which enables file handles
+with the access/permission/etc attributes to share one NFS file handle
+(saving open/close round trips to the NFS server)
+- Symlinks are now using the group defined by Win32 PrimaryGroup
+(which can be set via Cygwin newgrp(1)/|setgid()| or winsg(1))
+- Added a new standalone tool called catdbgprint.exe which can be used
+to listen to Windows kernel |DbgPrint()| debug messages (DbgView.exe
+from Windows Internals still works, but this avoids installing an
+extra tool)
+- Added support for Windows "Extended Create Parameters" |ECP
+QUERY_ON_CREATE| |QoCFileStatInformation| and |QoCFileLxInformation|
+- Added support for setting a file's ACL at file creation time
+- Bugfixes for FreeBSD NFS server
+- Fixed issues probing sparse files when using the nfs-ganesha NFS server
+- Disk and CDROM/DVD images can now be mounted via
+https://github.com/gisburn/filedisk-sparse/
+- UNC path format changed to <hostname>@<protocol>@<port>, e.g.
+ournfsserver@NFS@2049, to support future transport+mount options (e.g.
+RDMA , TLS/SSL etc.)
+- Window 11/ARM64 is now supported (native aarch64 kernel module and
+nfs*.exe userland utilities)
+- /sbin/nfs_globalmount, a new tool for Administrators to manage
+global/machine-wide mounts which are available to all Windows
+users/services/logons
+- New "nfsclientdctl" utility to change the NFS client daemon
+parameters at runtime
+- support for case-insensitive filesystems (e.g. Windows Server NTFS)
+- NFS referrals now work with custom (non-TCP/2049) port numbers
+- Implemented |FSCTL_OFFLOAD_READ|+|FSCTL_OFFLOAD_WRITE| (e.g. used by
+Windows 10 xcopy, Windows Explorer etc) for server-side NFSv4.2 COPY
+- Better FreeBSD 14.x/15.0 nfsd compatibility
+- More software tested for compatibility: MariaDB, Microsoft Office
+2016, Visual Studio 2022 work with msnfs41client
+- Volume label is now the nfs://-URL to the server (up to 31
+characters for Windows Explorer compatibility)
+- Support for user and group names with non-ASCII (e.g. Unicode) names
+(like German umlauts) in ms-nfs41-client, winsg.exe etc.
+- winsg.exe now has a /P option to run powershell.exe with the requested gr=
+oup
+- nfs_mount.exe now enforces that normal mounts need nfs://-URLs with
+absolute paths, and "public NFS" mounts need relative paths in a
+nfs://-URL
+- sec=3Dnone support
+- Improved /sbin/cygwinaccount2nfs4account script to better handle
+creation of Windows Domain accounts on the NFS server side
+- *.(exe|dll) executables are now signed with a WDK test signature,
+helping with *rare* cases that Windows Defender with paranoid settings
+wrongly recognising the binaries as potential threads. A *.cer
+certificate file is supplied which can be imported into the Windows
+Defender to whitelist the binaries if this happens.
+- Support for |FSCTL_DUPLICATE_EXTENTS_TO_FILE|, which allows Windows
+11 applications which use |CopyFile2()| (like cmd.exe  copy, xcopy.exe
+etc) to copy files via block cloning. Requires NFSv4.2 NFS server with
+{ CLONE, SEEK, DEALLOCATE } support, exporting a filesystem which
+supports block cloning (e.g. btrfs, xfs). This includes correct
+cloning of sparse files.
+- Sparse file support (requires NFSv4.2 server { SEEK, ALLOCATE,
+DEALLOCATE } and the |FATTR4_WORD1_SPACE_USED| attr), including
+hole/data range enumeration, punching holes etc., e.g. $ fsutil sparse
+queryrange mysparsefile # and Win32 named stream support
+- Improved Windows Extended Attribute (EA) support (requires NFS named
+attributes support in the NFS server (e.g. Solaris >=3D 11.4, Illumos,
+FreeBSD >=3D 15.0, ...)), including create/read/write/delete
+- Support for Storage32-API (e.g. enables use of *.msi installer files
+on NFS filesystems)
+- Cygwin /usr/bin/svn and Windows '/cygdrive/c/Program
+Files/Git/cmd/git' now work
+- Illumos NFSv4.2 server is now supported
+- Solaris 11.4 NFSv4.1 server is now supported
+- Windows Server 2022 NFSv4.1 server is now supported (compared to
+WS2019 this NFS server version has ACL support)
+
+** Please send comments, bugs, test reports, complaints etc. to the
+MailMan mailing list at
+https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-deve=
+l
+
+----
+
+Bye,
+Roland
+--
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /=3D=3D\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
+
+
+_______________________________________________
+Ms-nfs41-client-devel mailing list
+Ms-nfs41-client-devel@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/ms-nfs41-client-devel
 
