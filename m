@@ -1,242 +1,204 @@
-Return-Path: <linux-nfs+bounces-18945-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18946-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8ElIHmM4k2mV2gEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18945-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Feb 2026 16:31:47 +0100
+	id AH35FTFNk2mi3AEAu9opvQ
+	(envelope-from <linux-nfs+bounces-18946-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Feb 2026 18:00:33 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 110C21459BD
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Feb 2026 16:31:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74D4F146871
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Feb 2026 18:00:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 053A230068CC
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Feb 2026 15:31:46 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 927D43003722
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Feb 2026 17:00:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4975330670;
-	Mon, 16 Feb 2026 15:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5E753EBF12;
+	Mon, 16 Feb 2026 17:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYtlKvG1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3d21Hcp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818C2330663
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Feb 2026 15:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857A61A23B9
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Feb 2026 17:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771255904; cv=none; b=jxKFMinNByC4RPGnzx/Am4PCbLIDROiWIr2ZuzLxeFF/RkfMD5eRAc48+U5s42q640m3Wj6pn9auhADroslEPIzG/5fe+YZBnTqBu3b2zD536x6KvrdP4ckLgrous3fWg+36Sas/pR707DpF6TbtlVnlCjrGT91gWLkzviBjl0o=
+	t=1771261225; cv=none; b=AUFsffNQy+74exjnkJ0sz5vjwGLrDPnsNNx6Y1K1uWZUEJ7dEae/mabUMAdMbTEKMKrWsQAziepQ3kCTV+HCsLWo80CHowoFbzKGjkUw9pErh5YRTe+aXZtYdS9vacmlgH7gs1zxDw4gu8iwgrdzYIvelO7I2T9Ns8KSOn1LDNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771255904; c=relaxed/simple;
-	bh=K7+ij6mlkHSQRbtHyK9+K2ag/lNvAxLxBJhCDrz3rb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MhJK38vOq6c0bOnJKLm31FKDyHxlFBjZuSEdkKqLKv7utC59S9QbwiYMqte3gf7aA9RPYJt2V75jSTRnROivmlGflKlq0EQ00l1v33l12H7yM1Sp1m8dGaNXSvuSHpk7MAawLllhWeRaX891gMZuAEB0QICkjFHk4cJ0qoZMjq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYtlKvG1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18653C116C6;
-	Mon, 16 Feb 2026 15:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771255904;
-	bh=K7+ij6mlkHSQRbtHyK9+K2ag/lNvAxLxBJhCDrz3rb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kYtlKvG1nki9RLoPZtpoQt/pSTpbdbsnRRWkIRVqC6FM1wZHutiKxOIYEorz0xc9W
-	 0lF1KJCunK1B3Ipvk21S//EpDVP6vXcVUjsRiZR6n0pKAPR4JiTQknHi09da3lPjK7
-	 yQRZjyxVNF4z99O64BYwxccTiiQq+Erooe8lTodwAh+Ma7oiAbzKKQEK7EwjaoYzjc
-	 87s76TCboSB7bsmXvLGQ4z+DC5U6UTlldziKNFq+7qA2cuo+Cu4nTT+YfNJG07P0HQ
-	 d/o/jV+sBPwTWovypmAwvX9LW4ijXHkgKepOUcJieAILTTc84kbF0fc5CWDsTbxnLi
-	 ls7aNlZX08RMw==
-Date: Mon, 16 Feb 2026 16:31:40 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, torvalds@linux-foundation.org,
-	dlemoal@kernel.org
-Subject: Re: [GIT PULL] Please Pull NFS Client Updates for Linux 7.0
-Message-ID: <aZM4XPFLM4V3YtsD@ryzen>
-References: <20260212220625.358550-1-anna@kernel.org>
+	s=arc-20240116; t=1771261225; c=relaxed/simple;
+	bh=9gRLJcy79or1/WKvApiFk44TE/4+RkpzZaCO0pyJipg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y5F7IJp6wfIEJeWPZ/pZAln3lOxil0ppjh9rfDu/7haY3bweX5Qkul8Ne93ZRaNxJJ6MmLsmUyy3DK2ARRr6N9Cfh229KBaYwuavDNJbDzy6i1O4c8O+MZey9FWPiHFw16s6LRZVPNqnZXJ397rmRkrgeAMqQ0OD+ScW7zOsuJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3d21Hcp; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-82418b0178cso1822632b3a.1
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Feb 2026 09:00:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771261224; x=1771866024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6RL6PqLI4urJjmYITsxktReGvY/7dE5J3r1kbbY2fw=;
+        b=a3d21HcpXgsAvb6B2mbIFGgxKxohcoF7s4y+MXCGYiQvynPUx+f1c+INhQgD8+lyc8
+         GcHTfxnLvBT87RbY3Xx8nZ8NYfsUBisnZba0BY27JF7Ki44++J7fYNZLa0fH9MOT3KnW
+         uAUSQtuvnq14mhfM+lFchFNAL0LlvucfUCdi8CeuO4HqOzBcPnY0sWSqo715HDCjZCUZ
+         TVfhuJAHq6O8FwTJFB6wJt9CUuDIACJkvDE6UvY9+u3a1shM6htePax/k97b/k7b8Tre
+         wmvPaiVq7HpDv8PIWIXCULFNk2IYlhQ2OIesanCU9n8L7d/Uog3+Se3AGfs519Tu/6e/
+         syCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771261224; x=1771866024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O6RL6PqLI4urJjmYITsxktReGvY/7dE5J3r1kbbY2fw=;
+        b=Bj+Fj65x/KJ4oKjQm2YVz3gX/8MIpjYNloeweVa0JoWGlTcEVA4X6Q5l3879sbdV2b
+         yV+30X0qvKXScQmy26G6T5vLVsYwJi6gvA2BJcm3CGIovSEjITPa/xTPdXJMrQbWn5nN
+         pBmvFrciq8mz0x2VXN+y0GJqqJrUwB3S2WlqF9VewnnFsE2vXdwHyqMxDBufDimojQiO
+         JpCJvqY8FWOmv/T5dOiXc7gXFgsOjfFsEfQZejN+RekkAM0SjPkXRxQtAGFLaXH2l5ht
+         os77zd0/IOAH2BvsXHnorM3VKRvKUNX9s/G7sJCcisxAG5mcVORvhvD49F9+iSgqZeMF
+         LCVA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/QOdIr4HX7zal1mW+e7Re96p2hJrb48K69Vmidm5awii3+xCQsC+QYVr9YwexuUasiV6gnSWCLk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU7n6tEwIiqEZm8bgkLuytDzBtz8ZzBPfZbHoK6egPSDAW6VuZ
+	7oCtGVT6L+fTIdFFDq5PIuIl9adIv9NOIn2HMiJgm8RKQK093yYTiPZ3
+X-Gm-Gg: AZuq6aIXbwZWIqrtqWwtrVSUnQmg1zFgcCUYYuGaO6pwt+YB2Os0jAFp20AExc0pBed
+	6IgXUUPBjn4v+B4Gh/dtJFdSlCPS0rL/sz9Wkkc0TcBiIJqJN4kxzJdtdJzc+7ZAP08XfLWU+nm
+	f69teAraRkAiyaurIwCNvfgV/r3IkxxSNZsvmmW4NjXciIj4lxND0XQpc18ZuSO4oKSd0r+Le9Z
+	9HM2MgNrOVzB1ENQB55AMQxLDDPZD4meeq/XX3rbYtBddUW6vA8bqW0vTA69GUuu2KsFQGJ1Oa0
+	tLvEiJ//KhOuLkWxtB9JgqItlpO6qUxC1G5eX+Zl7zN1Fj/XQSSpp2rzdn3S6q5gsJ76G29d97m
+	ywtsU0MipEQ7blc2gm/XOMnvKdsT7H4BLnjgRUvudbnEEuxV1EJ6r0uf4Hmj7ZpGldmGyVVI0oP
+	9WfBxiaCndEBCkl6mmOjQXXkUvVUpMhQXGrI3RF21Lzn8P/86qQoiSwDSptlBDQaQwGLVV
+X-Received: by 2002:a05:6a00:a111:b0:81b:13c5:b6b2 with SMTP id d2e1a72fcca58-824c95c1151mr9294051b3a.33.1771261223326;
+        Mon, 16 Feb 2026 09:00:23 -0800 (PST)
+Received: from sean-All-Series.. (1-160-221-65.dynamic-ip.hinet.net. [1.160.221.65])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-824c6a431f2sm11940512b3a.22.2026.02.16.09.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Feb 2026 09:00:22 -0800 (PST)
+From: Sean Chang <seanwascoding@gmail.com>
+To: nicolas.ferre@microchip.com,
+	claudiu.beznea@tuxon.dev,
+	trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sean Chang <seanwascoding@gmail.com>
+Subject: [PATCH] treewide: fix unused variable and format-truncation warnings
+Date: Tue, 17 Feb 2026 01:00:04 +0800
+Message-Id: <20260216170004.448754-1-seanwascoding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260212220625.358550-1-anna@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18945-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-18946-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 110C21459BD
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 74D4F146871
 X-Rspamd-Action: no action
 
-On Thu, Feb 12, 2026 at 05:06:25PM -0500, Anna Schumaker wrote:
-> Hi Linus,
-> 
-> The following changes since commit 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7:
-> 
->   Linux 6.19-rc6 (2026-01-18 15:42:45 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-7.0-1
-> 
-> for you to fetch changes up to dd2fdc3504592d85e549c523b054898a036a6afe:
-> 
->   SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path (2026-02-09 16:39:50 -0500)
-> 
-> ----------------------------------------------------------------
-> NFS Client Updates for Linux 7.0
-> 
-> New Features:
->  * Use an LRU list for returning unused delegations
->  * Introduce a KConfig option to disable NFS v4.0 and make NFS v4.1 the default
-> 
-> Bugfixes:
->  * NFS/localio: Handle short writes by retrying
->  * NFS/localio: prevent direct reclaim recursion into NFS via nfs_writepages
->  * NFS/localio: use GFP_NOIO and non-memreclaim workqueue in nfs_local_commit
->  * NFS/localio: remove -EAGAIN handling in nfs_local_doio()
->  * pNFS: fix a missing wake up while waiting on NFS_LAYOUT_DRAIN
->  * fs/nfs: Fix a readdir slow-start regression
->  * SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path
-> 
-> Other Cleanups and Improvements:
->   * A few other NFS/localio cleanups
->   * Various other delegation handling cleanups from Christoph
->   * Unify security_inode_listsecurity() calls
->   * Improvements to NFSv4 lease handling
->   * Clean up SUNRPC *_debug fields when CONFIG_SUNRPC_DEBUG is not set
-> 
-> Thanks,
-> Anna
+Address several compiler warnings across NFS and MACB drivers to
+enable a cleaner build:
 
-Hello Anna,
+- nfs: add __maybe_unused to 'err' in flexfilelayout.c
+- nfs: add __maybe_unused to 'ret' in flexfilelayoutdev.c
+- nfs: add __maybe_unused to 'ptr' in nfs4proc.c
+- macb: use precision specifier in snprintf to ensure string fits
+  within ETH_GSTRING_LEN (32 bytes) in macb_main.c
 
-This seems to break my setup:
+Signed-off-by: Sean Chang <seanwascoding@gmail.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c  | 4 ++--
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 2 +-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 3 ++-
+ fs/nfs/nfs4proc.c                         | 2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-[  103.402033] VFS: Unable to mount root fs via NFS.
-[  103.402476] devtmpfs: mounted
-[  103.406171] Freeing unused kernel memory: 4352K
-[  103.406633] Run /sbin/init as init process
-[  103.406993]   with arguments:
-[  103.407253]     /sbin/init
-[  103.407491]   with environment:
-[  103.407767]     HOME=/
-[  103.407976]     TERM=linux
-[  103.408228] Run /etc/init as init process
-[  103.408580]   with arguments:
-[  103.408841]     /etc/init
-[  103.409071]   with environment:
-[  103.409346]     HOME=/
-[  103.409553]     TERM=linux
-[  103.409802] Run /bin/init as init process
-[  103.410153]   with arguments:
-[  103.410414]     /bin/init
-[  103.410644]   with environment:
-[  103.410920]     HOME=/
-[  103.411128]     TERM=linux
-[  103.411367] Run /bin/sh as init process
-[  103.411703]   with arguments:
-[  103.411963]     /bin/sh
-[  103.412179]   with environment:
-[  103.412454]     HOME=/
-[  103.412662]     TERM=linux
-[  103.412904] Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance.
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 43cd013bb70e..26f9ccadd9f6 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3159,8 +3159,8 @@ static void gem_get_ethtool_strings(struct net_device *dev, u32 sset, u8 *p)
+ 
+ 		for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
+ 			for (i = 0; i < QUEUE_STATS_LEN; i++, p += ETH_GSTRING_LEN) {
+-				snprintf(stat_string, ETH_GSTRING_LEN, "q%d_%s",
+-						q, queue_statistics[i].stat_string);
++				snprintf(stat_string, ETH_GSTRING_LEN, "q%u_%.19s",
++					 q, queue_statistics[i].stat_string);
+ 				memcpy(p, stat_string, ETH_GSTRING_LEN);
+ 			}
+ 		}
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 9056f05a67dc..de9e8bad6af2 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1502,7 +1502,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ {
+ 	struct nfs4_ff_layout_mirror *mirror;
+ 	u32 status = *op_status;
+-	int err;
++	int err __maybe_unused;
+ 
+ 	if (status == 0) {
+ 		switch (error) {
+diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+index c2d8a13a9dbd..3fb8dba0abf5 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -53,7 +53,8 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 	u32 mp_count;
+ 	u32 version_count;
+ 	__be32 *p;
+-	int i, ret = -ENOMEM;
++	int i;
++	int ret __maybe_unused = -ENOMEM;
+ 
+ 	/* set up xdr stream */
+ 	scratch = folio_alloc(gfp_flags, 0);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 180229320731..f76c23cdc888 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -9241,7 +9241,7 @@ static int _nfs4_proc_create_session(struct nfs_client *clp,
+ int nfs4_proc_create_session(struct nfs_client *clp, const struct cred *cred)
+ {
+ 	int status;
+-	unsigned *ptr;
++	unsigned *ptr __maybe_unused;
+ 	struct nfs4_session *session = clp->cl_session;
+ 	struct nfs4_add_xprt_data xprtdata = {
+ 		.clp = clp,
+-- 
+2.34.1
 
-
-Doing a git bisect results in:
-
-commit 4e0269352534715915aae3fb84dd4d3bb3ff3738
-Author: Anna Schumaker <anna.schumaker@oracle.com>
-Date:   Fri Nov 21 14:53:50 2025 -0500
-
-    NFS: Add a way to disable NFS v4.0 via KConfig
-
-    I introduce NFS4_MIN_MINOR_VERSION as a parallel to
-    NFS4_MAX_MINOR_VERSION to check if NFS v4.0 has been compiled in and
-    return an appropriate error if not.
-
-
-
-Before commit above my config has:
-CONFIG_NFS_FS=y
-CONFIG_NFS_V4=y
-CONFIG_NFS_V4_1=y
-CONFIG_NFS_V4_2=y
-
-after commit above (with make olddefconfig), my config has:
-CONFIG_NFS_FS=y
-CONFIG_NFS_V4=y
-# CONFIG_NFS_V4_0 is not set
-CONFIG_NFS_V4_1=y
-CONFIG_NFS_V4_2=y
-
-
-
-My kernel command line has:
-nfsroot=192.168.1.10:/srv/nfs/rootfs,nfsvers=4
-
-
-I notice that I am probably stupid who has the above, as I assumed that
-it meant use the best NFS 4.x version supported by the kernel.
-
-
-If I change it to:
-nfsroot=192.168.1.10:/srv/nfs/rootfs,nfsvers=4.2
-
-The config:
-CONFIG_NFS_FS=y
-CONFIG_NFS_V4=y
-# CONFIG_NFS_V4_0 is not set
-CONFIG_NFS_V4_1=y
-CONFIG_NFS_V4_2=y
-
-successfully mounts my rootfs.
-
-
-So AFAICT, it seems that nfsvers=4 actually means nfsvers=4.0
-
-I am probably not the only person to who has "nfsvers=4" on the kernel
-command line.
-
-
-
-Possible solutions I can see:
-
-If the intention is for commit 4e0269352534 ("NFS: Add a way to disable
-NFS v4.0 via KConfig") to allow people to disable NFS 4.0, we could
-change the new "config NFS_V4_0" to be either "default y".
-
-or
-
-Perhaps we could modify "nfsvers=4" to actually mean "use whatever highest
-NFS 4.x version supported by the kernel", rather than use NFS 4.0 and only
-4.0.
-
-
-
-Kind regards,
-Niklas
 
