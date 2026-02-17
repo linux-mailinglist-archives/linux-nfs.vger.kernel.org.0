@@ -1,88 +1,60 @@
-Return-Path: <linux-nfs+bounces-18982-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18983-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0IEJCX7ilGmWIgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-18982-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:49:50 +0100
+	id ED8AKaDmlGmjIgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18983-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:28 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBEDA150FEA
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:49:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6503C15149E
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8755C301E5DA
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 21:48:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C953030039BF
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0CBE2FBDF0;
-	Tue, 17 Feb 2026 21:48:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D778C31328B;
+	Tue, 17 Feb 2026 22:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4yebb6l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rnfyfH6g"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB90C2FB969;
-	Tue, 17 Feb 2026 21:48:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5785313276
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771364908; cv=none; b=Ysd6yhLV11aag/PSB4OXHH7ESSGMDw/7tYnmQ/+oenYaNnJOmiQjnab+zn4k5H4ihwTgbpEm/jtGShLs/oHQpvsSegeC8R7YEZry/6GD2kLjlepbM1/GjPx0CaG48SRF4HEEg2OxxB1ptH2q8u91ymjFFl382k6Roeu3FVTgA3E=
+	t=1771366046; cv=none; b=brVX5dxLS9FSe0cQG3IEJkhMVVfOX2lqyx/z17hR7K8ytOxp3Fc7oXuMa9vPdLmvA01BzWsez83m4CStjsCoTJEOum+x2I45bFBSRJf8boNrkmz6KpH1/1BI0ujHzeEneKddNcC2jOKjlcfAyf+6Jcs4+5LIYmG+fJnEbRI8UBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771364908; c=relaxed/simple;
-	bh=/ikJUIG0jvt2cNahwy/tuVk+f4fXHtX9vTuCLPZ9sHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ug5JbCO1WHucuORzyp/lsk+6PhA0WTYKFsumiAB8mxGEuIRx/Y7Os5X6GfTh8dXWr3mbf8pqN2fTfq9ENxRjfsW/Wpj1EVxbIaZtp4sz+rf0SuSQeF2Jks3HCHhzJVz/NXUuVvYSFGy55LpDov2DyoUKokNBvpA343197us8r/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4yebb6l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CC81C19421;
-	Tue, 17 Feb 2026 21:48:26 +0000 (UTC)
+	s=arc-20240116; t=1771366046; c=relaxed/simple;
+	bh=eMlcK0Jqf3u8gXsSPN0q/Y2ywQB2hmXqqOT0tKd+io0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=umh2R0YN12PM0qQaAkgtsgHRZ6t/4Izr1erqryuQlpck/aFgmb1IeMPFr2jcgM56yx0xLe5s8VlklFOtLqTfY1UMpLdctoOXPdeCldMKOSFq1MsbxKDhI/y/P6h5cs+++72ikqRr4vh3MNmYSEuhRoMhG5a87q49WfPfnLm5K8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rnfyfH6g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B990BC4CEF7;
+	Tue, 17 Feb 2026 22:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771364908;
-	bh=/ikJUIG0jvt2cNahwy/tuVk+f4fXHtX9vTuCLPZ9sHc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G4yebb6lDUKgImX3qbUhm1n02dmHbi6NZQ/mJeduFaOczLJjuFZqVlksQ1UGqu+9X
-	 N4syxRhBuswQKeeDi1S08Ol25XYfnUo4T5sDnl5y+P1w7afiLXXFUrRBsBGPJT7I96
-	 xqBZjXPigKKB8apX0Vf6wiSIqMYje4ZguCbdwoicw8+LyQ9YPwI5ebdypQFNMLzXOZ
-	 agCJgWAiI7QxdgQYeFa/LbYJkQG7uXftxfvdOSy7mbQKF3KLm4GgW7anY7iQzII/0n
-	 ceMSo2jb5oaHpmGtU6vVEc+QhGZQnK2bAeq57lqSzd4zx4GcxeZObzEKABlVcEfiHu
-	 TndurdBcWP8JQ==
+	s=k20201202; t=1771366046;
+	bh=eMlcK0Jqf3u8gXsSPN0q/Y2ywQB2hmXqqOT0tKd+io0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rnfyfH6gfLNEtLrixjPTZ68sVwA9GE37yqt3Z9b28ImWCBNiRd393cNWNzcihkQPw
+	 IFWEWgeF2fr77ZITY9aIjoY0i05weMp2JR5YSmJ6QKE5M2LZt1rG+DcILAiLNroSy9
+	 JvvyteYH0WH82+QLlI3T9FQwJYCnesWQts1LDodGHKs01RLZ6pZWChiahydhYzH2N0
+	 kHnA9TIeNGsCQoS407zROifEVXfKFauX9LFxtFbX/Cs79jsWYG11y3VZtwa4Eh/MgF
+	 wVT6v7aH4yceVLjb0EfOzdrlklZLT9aNrvBGoTnbvEvn3WGe9IdGmv+kD9OXFSGNN7
+	 /mU7RvFNz3O2g==
 From: Chuck Lever <cel@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	hirofumi@mail.parknet.co.jp,
-	linkinjeon@kernel.org,
-	sj1557.seo@samsung.com,
-	yuezhang.mo@sony.com,
-	almaz.alexandrovich@paragon-software.com,
-	slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de,
-	frank.li@vivo.com,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	cem@kernel.org,
-	sfrench@samba.org,
-	pc@manguebit.org,
-	ronniesahlberg@gmail.com,
-	sprasad@microsoft.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	jaegeuk@kernel.org,
-	chao@kernel.org,
-	hansg@kernel.org,
-	senozhatsky@chromium.org,
+To: NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v8 17/17] ksmbd: Report filesystem case sensitivity via FS_ATTRIBUTE_INFORMATION
-Date: Tue, 17 Feb 2026 16:47:41 -0500
-Message-ID: <20260217214741.1928576-18-cel@kernel.org>
+Subject: [PATCH v3 00/29] Convert lockd to use xdrgen for NLMv4
+Date: Tue, 17 Feb 2026 17:06:52 -0500
+Message-ID: <20260217220721.1928847-1-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260217214741.1928576-1-cel@kernel.org>
-References: <20260217214741.1928576-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -94,102 +66,98 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
+	TAGGED_FROM(0.00)[bounces-18983-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-18982-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[32];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EBEDA150FEA
+X-Rspamd-Queue-Id: 6503C15149E
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-ksmbd hard-codes FILE_CASE_SENSITIVE_SEARCH and
-FILE_CASE_PRESERVED_NAMES in FS_ATTRIBUTE_INFORMATION responses,
-incorrectly indicating all exports are case-sensitive. This breaks
-clients accessing case-insensitive filesystems like exFAT or
-ext4/f2fs directories with casefold enabled.
+This series modernizes the NLMv4 XDR layer using XDR generated by
+the xdrgen tool.
 
-Query actual case behavior via vfs_fileattr_get() and report accurate
-attributes to SMB clients. Filesystems without ->fileattr_get continue
-reporting default POSIX behavior (case-sensitive, case-preserving).
+Based on the public nfsd-testing branch.
 
-SMB's FS_ATTRIBUTE_INFORMATION reports per-share attributes from the
-share root, not per-file. Shares mixing casefold and non-casefold
-directories report the root directory's behavior.
-
-Acked-by: Namjae Jeon <linkinjeon@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/smb/server/smb2pdu.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index cbb31efdbaa2..d2a64afdd950 100644
---- a/fs/smb/server/smb2pdu.c
-+++ b/fs/smb/server/smb2pdu.c
-@@ -13,6 +13,7 @@
- #include <linux/falloc.h>
- #include <linux/mount.h>
- #include <linux/filelock.h>
-+#include <linux/fileattr.h>
- 
- #include "glob.h"
- #include "smbfsctl.h"
-@@ -5497,16 +5498,28 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
- 	case FS_ATTRIBUTE_INFORMATION:
- 	{
- 		FILE_SYSTEM_ATTRIBUTE_INFO *info;
-+		struct file_kattr fa = {};
- 		size_t sz;
-+		u32 attrs;
-+		int err;
- 
- 		info = (FILE_SYSTEM_ATTRIBUTE_INFO *)rsp->Buffer;
--		info->Attributes = cpu_to_le32(FILE_SUPPORTS_OBJECT_IDS |
--					       FILE_PERSISTENT_ACLS |
--					       FILE_UNICODE_ON_DISK |
--					       FILE_CASE_PRESERVED_NAMES |
--					       FILE_CASE_SENSITIVE_SEARCH |
--					       FILE_SUPPORTS_BLOCK_REFCOUNTING);
-+		attrs = FILE_SUPPORTS_OBJECT_IDS |
-+			FILE_PERSISTENT_ACLS |
-+			FILE_UNICODE_ON_DISK |
-+			FILE_SUPPORTS_BLOCK_REFCOUNTING;
- 
-+		err = vfs_fileattr_get(path.dentry, &fa);
-+		if (err && err != -ENOIOCTLCMD) {
-+			path_put(&path);
-+			return err;
-+		}
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASEFOLD))
-+			attrs |= FILE_CASE_SENSITIVE_SEARCH;
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASENONPRESERVING))
-+			attrs |= FILE_CASE_PRESERVED_NAMES;
-+
-+		info->Attributes = cpu_to_le32(attrs);
- 		info->Attributes |= cpu_to_le32(server_conf.share_fake_fscaps);
- 
- 		if (test_share_config_flag(work->tcon->share_conf,
+Changes since v2:
+- Pre-requisite changes have been applied to nfsd-testing
+
+Chuck Lever (29):
+  Documentation: Add the RPC language description of NLM version 4
+  lockd: Use xdrgen XDR functions for the NLMv4 NULL procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
+  lockd: Refactor nlm4svc_callback()
+  lockd: Use xdrgen XDR functions for the NLMv4 TEST_MSG procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 LOCK_MSG procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_MSG procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_MSG procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_MSG procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 TEST_RES procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 LOCK_RES procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_RES procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_RES procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_RES procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
+  lockd: Convert server-side undefined procedures to xdrgen
+  lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
+  lockd: Prepare share helpers for xdrgen conversion
+  lockd: Use xdrgen XDR functions for the NLMv4 SHARE procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
+  lockd: Use xdrgen XDR functions for the NLMv4 FREE_ALL procedure
+  lockd: Add LOCKD_SHARE_SVID constant for DOS sharing mode
+  lockd: Remove C macros that are no longer used
+  lockd: Remove dead code from fs/lockd/xdr4.c
+
+ Documentation/sunrpc/xdr/nlm4.x    |  211 ++++
+ fs/lockd/Makefile                  |   30 +-
+ fs/lockd/clnt4xdr.c                |    2 -
+ fs/lockd/lockd.h                   |    7 +
+ fs/lockd/nlm4xdr_gen.c             |  724 ++++++++++++
+ fs/lockd/nlm4xdr_gen.h             |   32 +
+ fs/lockd/share.h                   |   11 +-
+ fs/lockd/svc4proc.c                | 1773 +++++++++++++++++++---------
+ fs/lockd/svcproc.c                 |    7 +-
+ fs/lockd/svcshare.c                |   35 +-
+ fs/lockd/xdr.c                     |    3 +-
+ fs/lockd/xdr4.c                    |  337 ------
+ fs/lockd/xdr4.h                    |   33 -
+ include/linux/sunrpc/xdrgen/nlm4.h |  233 ++++
+ 14 files changed, 2474 insertions(+), 964 deletions(-)
+ create mode 100644 Documentation/sunrpc/xdr/nlm4.x
+ create mode 100644 fs/lockd/nlm4xdr_gen.c
+ create mode 100644 fs/lockd/nlm4xdr_gen.h
+ delete mode 100644 fs/lockd/xdr4.c
+ delete mode 100644 fs/lockd/xdr4.h
+ create mode 100644 include/linux/sunrpc/xdrgen/nlm4.h
+
 -- 
 2.53.0
 
