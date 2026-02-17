@@ -1,156 +1,170 @@
-Return-Path: <linux-nfs+bounces-18954-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18955-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id xVJWEZjyk2n+9wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-18954-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 05:46:16 +0100
+	id 0DqOGzI7lGntAgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18955-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 10:56:02 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A1D2148B97
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 05:46:15 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8001814A96C
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 10:56:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F32F13013D71
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 04:46:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 22F103004611
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 09:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42022153EA;
-	Tue, 17 Feb 2026 04:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B5131A81F;
+	Tue, 17 Feb 2026 09:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmL61kHQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrIQ6pfK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953F71DF271
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 04:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B248A31A7F9
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 09:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771303572; cv=pass; b=i6dexqRK6JJ+GnIzJEeKm5HWAl0ATuH+Q5rQ+5J6h8eegtQA0547bkOsawrtbAhPmnX8PCMARmTfb0OZwOQDRSKGW01ded0qA0+WSNZL/JHEXir+AA2Q00RHytxrfo6EWc1yK2t1MPpANileKRPFgGTgC/RxrkOA89wSOkXM4zM=
+	t=1771322157; cv=pass; b=QVBuswPs0t9Y3BaDAJfpKZdgRxJgVMsiOJQcZ47Q0N6B3+CMU6I5Lzghs7FMogGq0TVUhjjt+vrXCZOZOrV4xLwtIBm2W+CpAbbb8mTqYT/7/XLXO7wbug0FVHATuT3t36LfBdWCdbKEEY+lbJuw31g8l6wwTy9itqeOVELaCag=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771303572; c=relaxed/simple;
-	bh=nKGvllvCG75fwMdLnJD7PMiU4Ur/hq+HZsbw0YKAafk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=nnJLEKs5FaMU0RWPhH7URJuD00iXH5vmmLaLE33YFfzh0F5YIGmpmRAmXIjDSk5FY8B/5RikAhX5NDbkacLn/BH+Vmt8vikTTxgCNPV34RDOZwCHZqzfhs2pWLLAPDfAhWJscaPtl5JYTO81P0d/1GMZWY+biqnie1he0Xt1Xvw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmL61kHQ; arc=pass smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1771322157; c=relaxed/simple;
+	bh=uQcxrS5XtLzaUDzx5mBZIEaJIdBq7YHFdQeDi+x5Y28=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=loT//iudDlRexqjQWTspYNuDy/jwFcUpfbpGiC1OZVG71PnEbEype47Nwq/DeQRLkXFbyRjHc3n9p3OIPjhQoHYdzQjrCMZkvVkain7DmoHRjwaTvtqA9jjhm1AltQ/GR5qF1Kg9UZ/K+B0A7vnGWu8OyGBskIXrtG2zKgQheU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MrIQ6pfK; arc=pass smtp.client-ip=209.85.217.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-65a36583ef9so6438136a12.0
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Feb 2026 20:46:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771303570; cv=none;
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-5fdecf79484so688094137.1
+        for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 01:55:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771322155; cv=none;
         d=google.com; s=arc-20240605;
-        b=KyYPOPFSTWnvRLcR+MmLmmKd1uUAz5HcmbxYvxzlmE7jytk1on5bIkuVU84GvETvIi
-         pyWyV75Kx5UVawbIC/hSWwN77BDt5pNjIGdp60lQxaSndB5MJ24c2k2wxdEHCjOxlrIE
-         RguEL2wpxiylYrmWk5rsUsQ7U5g7nBmomVjX4B+EX3i157wK9M9qrGRqm5PZ+wFT3I9y
-         H/N0ocSJppUt082osF7ZGOqIA/JDLX4Ssrd8PWi710ZNb4ifBnmRGkVQNgwfKhIHBz9w
-         s5iIK80jDkV+QGQ5e6DqSFFiFYcLRs3BtDMd78DpeRnQk8l6k984t2fUsP1VpJUsvcsK
-         CMvA==
+        b=J5WXxRUcZuvCmc7BYCOvNeTGrDHfrAWy8wR/cGb0DgdR11XDCDQF99YNfhs4wyLnMW
+         5B9EYY7oq1l4fwgmbQZRYSv726M74ckZo3Mnp2Gnq17kVF9o02MaQInuPhQ2F73dzQxe
+         tWhhL2c4AIDfzHZuZ5BHAJ5u3JcjJld0e2eb1hE9Kw2Nl0gTAIByKxwpIUtR9sFXTCgh
+         40xCimB5xtvlrkfWjuvaQlQns5KCdtPc6Eyk8scGbnf/Ykh6tzQ4K8nSYQUYj+yotKFg
+         5Q4gP9B4/jrutdOykUynOzyC/PFIr0r57Tps2oYB2Qr0aLJxEfe44FBgBAISPiXACNJ1
+         MxtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=xmAbP1npaRP/EktzRfWlFJfADINwj1eoIm5/zjg+zdA=;
-        fh=wRiIL5sPCMM3SBgdS42bapEcaLi9fWzU8xUBo5gOSFs=;
-        b=LWsC5RsRzUdPfQkFq3eTTqbT+s+lZhprZGPuqzH+Q4Ww7MWpvIkv+R3WSbTZBQXrfV
-         TKa/zTsLFAx3gpLWpO/oja54DdSFnCEkuPkRVRQpR/XpAu7NeqHZwtWoAKiiAnTmlQkx
-         7F44N63/QSzEcr4Jx7DMD+QcYG6U9I42hMEwM1DQm7P6jYlYb0lvBt+vErEXh8PC1Pr9
-         zZ68Zc8wGo5VQK5PNeMYTloi0q+tVftA25iBn+McCyOODLOoMuVmQilwOKGhg2Jif7wW
-         WUsjl86QifolqGVsxs04U86QMhHOI3P/yT4SfQ9BmTldYZCegWRN2/Q8FFd6tMpyxa4Q
-         DUcA==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uQcxrS5XtLzaUDzx5mBZIEaJIdBq7YHFdQeDi+x5Y28=;
+        fh=nfJPPjR5OH2jXoechLQUnNXC/4RBvBNySR5gTRKw2Rg=;
+        b=ddJzhqBdUIhDynCYFCX9a/SUctSLM57NV0gWvkyU1FAzVHTVCqfaOGKg3FdWfv0kKU
+         7OewCumYWKyYypGScUQyEvkwJ2K5xNRacouyE5IEN/jSxl8Q+3VFXD6KgmlB4UMmOYWU
+         n6RIGWqpj6YKwYGVfx0+LtC8rwYqAqK2UULOvlijlohN8TYHXjm9F7zzJDle/6BMtnD1
+         M9ERWDLUsVsuS2Rw0NUU2EwZijFyQXuP4YVAWzt2eJ3pE/k4sEefiPV7+s84klXcoVXb
+         k0pjwKYQhOBvFamfSUCPpvJSWbWiDeu0otYEKvROUL+esUyOuu4MOQatyczsZx5a6092
+         juig==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771303570; x=1771908370; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xmAbP1npaRP/EktzRfWlFJfADINwj1eoIm5/zjg+zdA=;
-        b=HmL61kHQ48KFTO1gsVXarVuiJNXp50WTfuB63Okct4sieIhJfriayZIVlmYOu1xVwW
-         MDKhesC6dJ09fcmTla5KrSOj+RwWWP9TMVjSaqx6suXMPohnE6SUR1QLbJV61uzvj80O
-         It0mp8L5Wpdn3tFodQZX+1URJcOCtgJxx8Ig3cv5E8P2gUJ1dZ7shE0VsyH8ZyyXnQi8
-         qpreqeBufuzZbVdbP6DFXvdY6fzphWloXRDgngtJr7MdGeALb8IsJr6611/PwlcFbmI3
-         atBCDWPqoxR0ktyP32f4SRjGT3voDrqyghUijtWySbjsivmu6u9RcPZctpZS345FEoFh
-         Ffsg==
+        d=gmail.com; s=20230601; t=1771322155; x=1771926955; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uQcxrS5XtLzaUDzx5mBZIEaJIdBq7YHFdQeDi+x5Y28=;
+        b=MrIQ6pfKM/YNhSYduwhPxzWa5RmJtXm959CSceSEV//q8COdGQ2p6/AwwWpJ1rtcp/
+         QTCOQZAZZ2e9KAjV3NsAvhqxkshKRhlARd2J7UCh7D550iPSWSZgARWJcOFK9RRGNRuv
+         XnQCWlHNYklgwHqKy1GkcxMWYg8Eufp6OOGgU/bHM5KkHXYB3K14RHkLieLQz+HnfCBA
+         OtBhAqmpR0usvWGETI4f7liyW2mC3ANFz6NbpoBkwL7Vn7uy4iooVn2G2/hhepHL/XjV
+         ePp7/L0urHDohTUgrDZNBd0t7JCdEyejfI+7Uh8lUuV3NqJjWiAn8nJaqju+/ARX0e7n
+         UmpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771303570; x=1771908370;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xmAbP1npaRP/EktzRfWlFJfADINwj1eoIm5/zjg+zdA=;
-        b=rG0Y5fP6Q2hTT+yBGXc4Fn2Gnpz+rqgSFkOk+8TrvbMv5gcp2MU+q2ta7TdzrfUuoa
-         gfA+XlVFij1FM+QjHqrRVeKGDEWOWATOYvE4Noqn4lTz7hf3Zj6uUVUH6yF3GAMo5o9/
-         Vwv1QlvNhnI3FvancPbmeOafy7B+oGefmCrGXGmHAVp37uN8jT74zQTh5akR+RdJBol9
-         2h4maCaCu7SAogKIZ+EA3gVamSrm6ADT/zSripz+vkNjuOmiDlI+b3Bb+csztgAdx4hH
-         NYwEHSx9Ltqa4GhAeoYXj/PLLp+6+HyM2kUk2HueATtq/C+lxwlSf8SGr0SptQDHMLgM
-         QosQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoBqqIZUyoh5Q7a6bWTVD1ejo2BKu3P/4scugeUvQ54/3XC8sEjMGDOfaadKaIj59DotE3hkoG0WE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR3xNhDC7H5Kmcphvtpk4rms9yb/fuUhf2ebS6ue+EYY4j6kVv
-	E+sbgyYmYVJMepdVoVaeOWl2v/5AqnoTxrhif5PnOiZYUESASsjnfLXn/XTWfh9cKiSdG+KPiQX
-	27l+f8FAWNUOJcbthJXJrlDstzdtcGUlfHbxF
-X-Gm-Gg: AZuq6aJtS1bXxgeDtB3/+bSvXxfEZXJBVxVzYS+gNTiw34Ye56yGtj0zdzWZMZtdDD1
-	lQPapW3UovJCsQLLPzOmCybaTDXs9dOoApQlXYT2L3UXnDri7yQNdLKViAZwXu58Eew/whl0EGl
-	5C8Bv8Yx3N87UaDR/RX0YlMv+05x7oxIlAWGiA3xcRl1vF3VJrU7XsyYjYKbd6JYUXVKJUAtQms
-	od0lYoVo/ZOfhHpByM96EnO+tZIcmUYhyNzIwMLdBmUkoJVHYJ8NKQd2kMq5Gg47UHrM2qOY7Ib
-	w3sX3g==
-X-Received: by 2002:a05:6402:3554:b0:659:31af:b9af with SMTP id
- 4fb4d7f45d1cf-65bc41dc297mr5553172a12.0.1771303569746; Mon, 16 Feb 2026
- 20:46:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1771322155; x=1771926955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uQcxrS5XtLzaUDzx5mBZIEaJIdBq7YHFdQeDi+x5Y28=;
+        b=l30qCbxjAIeebd3H0I+ALHznmwd11jBjPhDB5l4++g5gpGZdZrOlSk5MiRHRA+5mhi
+         qg4J7pk4AxicY8zsTitppQck9yG9bnG17EwjjVKyUZXxTm0tRaZhcoBl8d38NiRfxG7W
+         Xv1z/5gG13V3losK/cOD243PbxTHrfyjNbQvpn+ElNRvqBlpHQlzFaF+2CmTXIBXA51O
+         YEaJ9g+QEb0Odn5DdSKjiD0wuQMQZumrbDg0kvTkdVE4Jwr2nrmMS61f4IG2i34KFKRj
+         IFoxM9/IOQvQ6Z+NLy1c1qoE2zaTYeJYjhLmU3DV12QZF4suMp3RZdcS5UmYMtlM4a6p
+         TpAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwmYYmfe8UNmD9j7iklx4vlVb38YrDGda3rlavDFjIAxp/32oFxh881NYcHI20IgiWURCdOIUuDQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMAo6MEHoFovlB4DjFpy2iGyYmsz/alXXA7ZA6wkRK9SkFtGSh
+	t+zf/lEQZyzWKBF3SBUsop/BqMxevkjG4R70PUkFharWNmrZkvANQof0lyBgEKvVJ8iRZ9kOPz7
+	K3yMd26Qi5ULQEJSk/EG3ZbGe+XpqFUg=
+X-Gm-Gg: AZuq6aJfTwD1YR3a22GRa8u4C6jqFEPwU1CwnypAsPa7MB5by8gSlB1ZabwYLGwzQCk
+	I3QbmsdMtFVuFleo9LkE3ojxEe5uKvPoj1slIEjDWvECw6A9fL/upceh41RY1zyu/Jh4wbKlmtL
+	4hjskFOY2FdY+onw6AALjWFMN3eHufDWw57iEiMR4nr1F+dfOF/tLifd9AYMa71IowFt8+gOGrL
+	BUXm1GagaedCeW7UoJPBddjjfi9f1mDJR62SGgmGf+BClz0n+/79VFSsm3gVWUilrPb1rrGjklu
+	oMiuDPbPFBShJG7c
+X-Received: by 2002:a05:6102:3f08:b0:5f5:4121:9b0a with SMTP id
+ ada2fe7eead31-5fe16f5d356mr4577718137.36.1771322155559; Tue, 17 Feb 2026
+ 01:55:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Shyam Prasad N <nspmangalore@gmail.com>
-Date: Tue, 17 Feb 2026 10:15:58 +0530
-X-Gm-Features: AaiRm50t13k44Sen9NRCY3Mfw1UqRelWB9C2dA3RFTYoLt5Y4mPqd0YjIZDY934
-Message-ID: <CANT5p=orpQdzqxjNronnnKUo5HFGjuVwkwpjiGHQRmwh8es0Pw@mail.gmail.com>
-Subject: [LSF/MM/BPF TOPIC] Support to split superblocks during remount
-To: linux-fsdevel <linux-fsdevel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
-	linux-nfs@vger.kernel.org, David Howells <dhowells@redhat.com>
+References: <20260216174950.455244-1-seanwascoding@gmail.com>
+ <20260216174950.455244-2-seanwascoding@gmail.com> <2e3bf4db-cea6-4f55-a82b-4e99bb3f44fe@lunn.ch>
+In-Reply-To: <2e3bf4db-cea6-4f55-a82b-4e99bb3f44fe@lunn.ch>
+From: Sean <seanwascoding@gmail.com>
+Date: Tue, 17 Feb 2026 17:55:43 +0800
+X-Gm-Features: AaiRm53vZLvkKhlBjILeLIYC1fodHSKYlOPAnjQL4nEJLrwpsrtIJFsCO7n8eJg
+Message-ID: <CAAb=EJVmDS7vKHsw77SARnD9uff-9vBrg97jo3tbYJS-z1KAgw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] nfs: fix unused variable warnings
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev, 
+	trond.myklebust@hammerspace.com, anna@kernel.org, netdev@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18954-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-18955-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nspmangalore@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 8A1D2148B97
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 8001814A96C
 X-Rspamd-Action: no action
 
-Filesystems today use sget/sget_fc at the time of mount to share
-superblocks when possible to reuse resources. Often the reuse of
-superblocks is a function of the mount options supplied. At the time
-of umount, VFS handles the cleaning up of the superblock and only
-notifies the filesystem when the last of those references is dropped.
+On Tue, Feb 17, 2026 at 4:06=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+>
+> There is no #ifdef'ery here. How is ptr not used? Is status always
+> true, so the goto it always taken? But then rpcdata should also be
+> unused?
+>
 
-Some mount options could change during remount, and remount is
-associated with a mount point and not the superblock it uses. Ideally,
-during remount, the mount API needs to provide the filesystem an
-option to call sget to get a new superblock (that can also be shared)
-and do a put_super on the old superblock.
+If CONFIG_SUNRPC_DEBUG is not enabled, dprintk expands to
+do {} while (0) during preprocessing. This means unsigned *ptr has
+no remaining references in the function, as its only 'read' was inside
+the macro.
 
-I do realize that there are challenges here about how to transparently
-failover resources (files, inodes, dentries etc) to the new
-superblock. I would still like to understand if this is an idea worth
-pursuing?
+Regarding rpcdata, the compiler's unused-variable check doesn't care if a
+specific branch (like the goto out) might skip the variable's usage at runt=
+ime.
+As long as there is at least one valid code path where the variable is
+referenced
+which there is for rpcdata in the call to
+rpc_clnt_probe_trunked_xprts() -> the warning is avoided.
+For ptr, the macro expansion leaves it with zero references in any path.
 
--- 
-Regards,
-Shyam
+Best regards,
+Sean
 
