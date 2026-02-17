@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-19010-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19011-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UBFHB1HnlGmjIgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19010-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:10:25 +0100
+	id GMerC1XnlGmjIgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19011-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:10:29 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4815151585
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B311915158C
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:10:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 227AE307C4A7
+	by sea.lore.kernel.org (Postfix) with ESMTP id 78FF7307E0B9
 	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70C80313547;
-	Tue, 17 Feb 2026 22:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2AE313E0F;
+	Tue, 17 Feb 2026 22:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlUOPIzL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYxNPnKT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFBD313525
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D657313525
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771366068; cv=none; b=NTV4plXfDdsFqdowqS32Fsu+lcNtWWpiXA4UXxq6DWKy7Nmre96UvkAtzZbk9lMGhqDo9vYo8qz5L+ZpkiEXH6zqlQ4v5JH7NGRTgkSjxtxTJ3cTlWCmrfNmM4+g/ZQ4jkbtwJlxmADmEBPZIXZzOZEviNPxrUzf3FiF6TaC/QY=
+	t=1771366069; cv=none; b=R/3gnmCX90fzqa2lKdI85TdPUF7qObMgX2djZKGo2ZswWhvD6jh2/wAUS1MBcVOXARAqSCYPiG6H2FpZn2qeQPRYHVC5NSntNl4bgTeof1j0wsbNSUGDN8I+DCGrFRdqnf7z+c2MhT6unR9uMhX5Tl04QzVTv9pOleEb9sF3CP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771366068; c=relaxed/simple;
-	bh=3p2HDtjpwK9JkbjiFgr0GI4hZa/XqYnb9gMWRE2WOKU=;
+	s=arc-20240116; t=1771366069; c=relaxed/simple;
+	bh=lLMmtPwkMLyBLnVC89hvp0mtU2KF0XEECLc51/H67dw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sQif/gPX/m4/YOX03jsFSic095RZV5Ij2GfC1WkknRlayQwslkNzm22RtiP23Qpg9O+Y9xA4p4U0si+sZ4aKdKS5cBNGLmUwiWmAtnnqFel6Ji9c4mTENfYccwZ5oxJmRLOa/nMTZm0d3vJ9+VzJGLRoYqoYAv0Au1+EIyOyv/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlUOPIzL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9670FC19423;
-	Tue, 17 Feb 2026 22:07:47 +0000 (UTC)
+	 MIME-Version; b=HWl5WLIz6Ld4+T5cMSf2t3sAWdRwd+CIIOO9gKgV5clCw98yqOKbBkka7zFgjgyDwlxi4aHIsgC45rT0go1Qbi/8XMu0iK30OzEpRV2EtjzNj/b3OFfXO0togFaJRWeNS/wbBRI62GnZwwofon4+AbjOHnCoe9CgPVUm9RlrXNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYxNPnKT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696D0C4CEF7;
+	Tue, 17 Feb 2026 22:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771366068;
-	bh=3p2HDtjpwK9JkbjiFgr0GI4hZa/XqYnb9gMWRE2WOKU=;
+	s=k20201202; t=1771366069;
+	bh=lLMmtPwkMLyBLnVC89hvp0mtU2KF0XEECLc51/H67dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UlUOPIzLavEPL4TiU1SJ2tLm69XD/0c9CKIcv+A7lAIwZJOteS41H6J05vKFIh1uw
-	 oqdW8bcSC4y1yxYyEvTbLjlRF+LkQCfCfufuOPorePxCwJqGYOmeHNOPIT/jWLjEGm
-	 PqH5E0otv9EEwLf8EnS7dMJR74cBYJXYfCKFgvFA7xVjQ4ZNDSk1Tmfnug+cBFU/8f
-	 dk5U3tduD+CVH8HmlKN2sh/DILoeyspWhWsYi3RHoBI41GlilQRX4t7nbCuQ9vBTlz
-	 J69F4c9bEvI5ajVzgVMPI9/YWG+b6wqUfYd+bvrjeQOJsxcHVafrXvqBzKP8AnTglA
-	 O0TcuUwmf7xtg==
+	b=TYxNPnKTSnX3AJgzQ1/jwKkEDmMHehABEqvwNrEOPTy/Gwl4DP449pe/PdFnDmrZw
+	 BPot0gf/ldcFxMOBIHe9BVCvw4jJMGOfyihIrvbMqd2eiLwDVspt+1eJ7QzQIi5sRo
+	 GR98WeWQYZwG0VHIk0wkJDSwnAZOaiMuba/Dh2ozyyEbGQGowgxcvwy4tAu+NwKikP
+	 c9oWbM573fxPOeJCLx4CVUoRE7LBOO+GPEvZMKHi/m79XYQQY8vf182JyKuPehNMwq
+	 FsFYAerXJNzkdD+2/LeE9ndSf3v37UizxTErnGEoWvCbT0NLdyXlJbqKUMjDCzC5T1
+	 5h2Ve+0KJ57TA==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 27/29] lockd: Add LOCKD_SHARE_SVID constant for DOS sharing mode
-Date: Tue, 17 Feb 2026 17:07:19 -0500
-Message-ID: <20260217220721.1928847-28-cel@kernel.org>
+Subject: [PATCH v3 28/29] lockd: Remove C macros that are no longer used
+Date: Tue, 17 Feb 2026 17:07:20 -0500
+Message-ID: <20260217220721.1928847-29-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260217220721.1928847-1-cel@kernel.org>
 References: <20260217220721.1928847-1-cel@kernel.org>
@@ -77,7 +77,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-19010-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19011-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,81 +93,58 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B4815151585
+X-Rspamd-Queue-Id: B311915158C
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Replace the magic value ~(u32)0 with a named constant. This value
-is used as a synthetic svid when looking up lockowners for DOS
-share operations, which have no real process ID associated with
-them.
+The conversion of all NLMv4 procedures to xdrgen-generated
+XDR functions is complete. The hand-rolled XDR size
+calculation macros (Ck, No, St, Rg) and the nlm_void
+structure definition served only the older implementations
+and are now unused.
+
+Also removes NLMDBG_FACILITY, which was set to the client
+debug flag in server-side code but never referenced, and
+corrects a comment to specify "NLMv4 Server procedures".
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/share.h    | 3 +++
- fs/lockd/svc4proc.c | 4 ++--
- fs/lockd/xdr.c      | 3 ++-
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ fs/lockd/svc4proc.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/fs/lockd/share.h b/fs/lockd/share.h
-index a2867e30c593..20ea8ee49168 100644
---- a/fs/lockd/share.h
-+++ b/fs/lockd/share.h
-@@ -8,6 +8,9 @@
- #ifndef _LOCKD_SHARE_H
- #define _LOCKD_SHARE_H
- 
-+/* Synthetic svid for lockowner lookup during share operations */
-+#define LOCKD_SHARE_SVID	(~(u32)0)
-+
- /*
-  * DOS share for a specific file
-  */
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index ca0409ea6b2d..ce340ea0d304 100644
+index ce340ea0d304..4044459b7c49 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -985,7 +985,7 @@ static __be32 nlm4svc_proc_share(struct svc_rqst *rqstp)
- 	struct nlm4_lock xdr_lock = {
- 		.fh		= argp->xdrgen.share.fh,
- 		.oh		= argp->xdrgen.share.oh,
--		.svid		= ~(u32)0,
-+		.svid		= LOCKD_SHARE_SVID,
- 	};
+@@ -26,8 +26,6 @@
+ #include "nlm4xdr_gen.h"
+ #include "xdr4.h"
  
- 	resp->xdrgen.cookie = argp->xdrgen.cookie;
-@@ -1051,7 +1051,7 @@ static __be32 nlm4svc_proc_unshare(struct svc_rqst *rqstp)
- 	struct nlm4_lock xdr_lock = {
- 		.fh		= argp->xdrgen.share.fh,
- 		.oh		= argp->xdrgen.share.oh,
--		.svid		= ~(u32)0,
-+		.svid		= LOCKD_SHARE_SVID,
- 	};
- 	struct nlm_host	*host = NULL;
- 	struct nlm_file	*file = NULL;
-diff --git a/fs/lockd/xdr.c b/fs/lockd/xdr.c
-index 5aac49d1875a..dfca8b8dab73 100644
---- a/fs/lockd/xdr.c
-+++ b/fs/lockd/xdr.c
-@@ -19,6 +19,7 @@
- #include <uapi/linux/nfs2.h>
+-#define NLMDBG_FACILITY		NLMDBG_CLIENT
+-
+ /*
+  * Wrapper structures combine xdrgen types with legacy nlm_lock.
+  * The xdrgen field must be first so the structure can be cast
+@@ -1152,16 +1150,9 @@ static __be32 nlm4svc_proc_free_all(struct svc_rqst *rqstp)
  
- #include "lockd.h"
-+#include "share.h"
- #include "svcxdr.h"
  
- static inline loff_t
-@@ -274,7 +275,7 @@ nlmsvc_decode_shareargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ /*
+- * NLM Server procedures.
++ * NLMv4 Server procedures.
+  */
  
- 	memset(lock, 0, sizeof(*lock));
- 	locks_init_lock(&lock->fl);
--	lock->svid = ~(u32)0;
-+	lock->svid = LOCKD_SHARE_SVID;
- 
- 	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
- 		return false;
+-struct nlm_void			{ int dummy; };
+-
+-#define	Ck	(1+XDR_QUADLEN(NLM_MAXCOOKIELEN))	/* cookie */
+-#define	No	(1+1024/4)				/* netobj */
+-#define	St	1					/* status */
+-#define	Rg	4					/* range (offset + length) */
+-
+ static const struct svc_procedure nlm4svc_procedures[24] = {
+ 	[NLMPROC4_NULL] = {
+ 		.pc_func	= nlm4svc_proc_null,
 -- 
 2.53.0
 
