@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18986-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18987-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CM1FOgHnlGmjIgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-18986-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:09:05 +0100
+	id oIfeKwXnlGmjIgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18987-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:09:09 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 510C5151503
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:09:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5353B15150A
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:09:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B84F63061442
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1519C30620D0
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6DC313276;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E3A313526;
 	Tue, 17 Feb 2026 22:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFR6aQHx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wok8zMWc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3881131328B
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C443D31328B
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771366049; cv=none; b=JBI41cEXHe9HQb2vLmmOP0H2PLBHrqwC8pZerfnM4LIHJqfUrqcqyrFMt7wfxc7kGwBHjFqNdjLvWyc5Tvcq18s1Z7DGiZ60EpgZ9qCFdpKUhsx71bFWcVlOyhO6uDCnVghM0wi8i+blWTRZrqvKZ0AgBkG59x7z083pZLPZN2Y=
+	t=1771366049; cv=none; b=CGgh4c7gRcYum4uS2424KDfho+BSjBL/NL/gnPHJzpy1aQ4eCXWsmfPelM+1HlRF+VZQxsHUcpLL/1HEJ/q6wK6Mxkf7HbJQvKujTGfXlV7bV11P6bmhIVCwjajinS7PQtQcb4l3nJ6tRocJzqlKtunDykfkhbkzH2loLBZURcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1771366049; c=relaxed/simple;
-	bh=2bqltGzHT4xkR8Ul7BnUL+53iF6WyU2GaMkXnk1Oxng=;
+	bh=yioTrCItEo/gAvPmFKB4nn1+5f509okxKUcfVTRouEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B/fkG0lP5uCDmMw+Q0UeOQHGw+NXHNy0JcMDZ/GgWNbvT6ptfIuQnzDVXX/83iArxqU/9YfUWePHlJa+XltPf+AbkQvqIC/wqbmac0ktW5851g/9JLsLl2UCLsH6HT5IQUQZZlnJJBuATjSmmwxf5HbUuRZRx5XbVDKHxRyqs9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFR6aQHx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41621C19423;
+	 MIME-Version; b=eD8MaVV1hW32lDB+qFo9R41Cff80mVym44/TZYN9zZ4aHXQ93cblRZd/rXIeQ7uoeDQ889ZrOCj+eKAKoB6UYaTViWvfTT6xWf/AzRqUVnfoUmyu6q1TRbcsZaKqs1fiNTofO26SGH25LznMjQu5NMAa7dBpMC2Ldjno0Nwoqdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wok8zMWc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DAF0C19421;
 	Tue, 17 Feb 2026 22:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771366048;
-	bh=2bqltGzHT4xkR8Ul7BnUL+53iF6WyU2GaMkXnk1Oxng=;
+	s=k20201202; t=1771366049;
+	bh=yioTrCItEo/gAvPmFKB4nn1+5f509okxKUcfVTRouEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BFR6aQHxct49gtbPlmNHRU1eFQ0p6pkb/krfX0jzChrlMfu6gk0VrhE65Annb9aYs
-	 hyLQdR9pPHF1z3G+OGmWfQNhI6tbK7MGdKN20p9xjJiQ+WnzhdRTGWU0KNh3x9ExKf
-	 pnbHpURtJNr5rbMSWIUQBfwf6T0nmdckzr3kMNvuRUQwV/B9w4vzKhg+OTEqTyGJ7Q
-	 iJUQq88x0wzNkuYPBgUU6uTURvYoLDKbBE+6cJl5ehLvGPKf/BP5LQo3HTnUAzwFjb
-	 lcv5WiSxCYCDDfDio3UyXcLqI046Wi8ZC29GUKChZ2R7acDTYkC30d9OQ9idAyJw9d
-	 dY/PiQs31XYDQ==
+	b=Wok8zMWcQJaGUMyKeKKyCWZze/QoYgQPX8fkeykij1Sea93/TDt3QnxHt5teafjox
+	 t1533AB3Dz3AUMziPiBEE7+AGVp1IxOx4TU7JWqRvBT0QD9QMnLawrx9qQizQzPNe7
+	 U5Bd/ZUrlKq/Hz2i/icpEudj4MShqflkcCcLgPABHo4ndGjhY0Cu+BjSdfYlEZ2njN
+	 OT83xEH7TqtAV++nbx7CBNzyUdvx88dqS2rLDbNCOyAfuOOwz9RQ0bBwYvwGDiRePw
+	 Du9CiuzHQAKetuvVu7Ba4ERmQhVr7zzZz0l79PyLOxpH8tep7+e67iBcyccu++Dzk3
+	 FUMSjk0wmU1PQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 03/29] lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
-Date: Tue, 17 Feb 2026 17:06:55 -0500
-Message-ID: <20260217220721.1928847-4-cel@kernel.org>
+Subject: [PATCH v3 04/29] lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
+Date: Tue, 17 Feb 2026 17:06:56 -0500
+Message-ID: <20260217220721.1928847-5-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260217220721.1928847-1-cel@kernel.org>
 References: <20260217220721.1928847-1-cel@kernel.org>
@@ -71,18 +71,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-18986-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18987-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -93,185 +93,97 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 510C5151503
+X-Rspamd-Queue-Id: 5353B15150A
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The NLM TEST procedure requires host and file lookups to check
-lock state, operations that will be common across multiple NLM
-procedures being migrated to xdrgen. By introducing the helper
-functions nlm4svc_lookup_host() and nlm4svc_lookup_file() now,
-we establish reusable patterns for subsequent conversions in
-this series.
+Replace legacy XDR handling in the LOCK procedure with xdrgen-
+generated functions nlm4_svc_decode_lockargs and
+nlm4_svc_encode_res.
 
-This patch converts the TEST procedure to use xdrgen functions
-nlm4_svc_decode_testargs and nlm4_svc_encode_testres generated
-from the NLM version 4 protocol specification. The procedure
-handler is rewritten to use xdrgen types through wrapper
-structures that bridge between generated code and the legacy
-nlm_lock representation still used by the core lockd logic.
-TEST_MSG is to be converted in a subsequent patch.
+The new nlm4svc_do_lock() handler replaces __nlm4svc_proc_lock()
+at the NLMPROC4_LOCK entry point. Wrapper structures bridge
+xdrgen types to the legacy nlm_lock representation used by core
+lockd. The nlm4svc_lookup_host() and nlm4svc_lookup_file()
+helpers from the TEST conversion handle host and file lookup.
 
-The pc_argzero field is set to zero because xdrgen decoders
-reliably initialize all arguments in the argp->xdrgen field,
-making the early defensive memset unnecessary. Remaining argp
-fields are cleared as needed.
+The pc_argzero field is set to zero: xdrgen-generated decoders
+initialize all fields in argp->xdrgen, so a defensive memset is
+unnecessary. The wrapper's cookie and lock fields are cleared
+by nlm4svc_do_lock() before use.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c | 186 +++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 174 insertions(+), 12 deletions(-)
+ fs/lockd/svc4proc.c | 127 +++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 115 insertions(+), 12 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 4fcd66beb4df..b07ab4d60871 100644
+index b07ab4d60871..2cad72562ef2 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -28,6 +28,95 @@
+@@ -40,6 +40,14 @@ struct nlm4_testargs_wrapper {
  
- #define NLMDBG_FACILITY		NLMDBG_CLIENT
+ static_assert(offsetof(struct nlm4_testargs_wrapper, xdrgen) == 0);
  
-+/*
-+ * Wrapper structures combine xdrgen types with legacy nlm_lock.
-+ * The xdrgen field must be first so the structure can be cast
-+ * to its XDR type for the RPC dispatch layer.
-+ */
-+struct nlm4_testargs_wrapper {
-+	struct nlm4_testargs		xdrgen;
++struct nlm4_lockargs_wrapper {
++	struct nlm4_lockargs		xdrgen;
++	struct nlm_cookie		cookie;
 +	struct nlm_lock			lock;
 +};
 +
-+static_assert(offsetof(struct nlm4_testargs_wrapper, xdrgen) == 0);
++static_assert(offsetof(struct nlm4_lockargs_wrapper, xdrgen) == 0);
 +
-+struct nlm4_testres_wrapper {
-+	struct nlm4_testres		xdrgen;
-+	struct nlm_lock			lock;
+ struct nlm4_testres_wrapper {
+ 	struct nlm4_testres		xdrgen;
+ 	struct nlm_lock			lock;
+@@ -47,6 +55,22 @@ struct nlm4_testres_wrapper {
+ 
+ static_assert(offsetof(struct nlm4_testres_wrapper, xdrgen) == 0);
+ 
++struct nlm4_res_wrapper {
++	struct nlm4_res			xdrgen;
 +};
 +
-+static_assert(offsetof(struct nlm4_testres_wrapper, xdrgen) == 0);
-+
-+static struct nlm_host *
-+nlm4svc_lookup_host(struct svc_rqst *rqstp, string caller, bool monitored)
-+{
-+	struct nlm_host *host;
-+
-+	if (!nlmsvc_ops)
-+		return NULL;
-+	host = nlmsvc_lookup_host(rqstp, caller.data, caller.len);
-+	if (!host)
-+		return NULL;
-+	if (monitored && nsm_monitor(host) < 0) {
-+		nlmsvc_release_host(host);
-+		return NULL;
-+	}
-+	return host;
-+}
++static_assert(offsetof(struct nlm4_res_wrapper, xdrgen) == 0);
 +
 +static __be32
-+nlm4svc_lookup_file(struct svc_rqst *rqstp, struct nlm_host *host,
-+		    struct nlm_lock *lock, struct nlm_file **filp,
-+		    struct nlm4_lock *xdr_lock, unsigned char type)
++nlm4_netobj_to_cookie(struct nlm_cookie *cookie, netobj *object)
 +{
-+	struct file_lock *fl = &lock->fl;
-+	struct nlm_file *file = NULL;
-+	__be32 error;
-+
-+	if (xdr_lock->fh.len > NFS_MAXFHSIZE)
++	if (object->len > NLM_MAXCOOKIELEN)
 +		return nlm_lck_denied_nolocks;
-+	lock->fh.size = xdr_lock->fh.len;
-+	memcpy(lock->fh.data, xdr_lock->fh.data, xdr_lock->fh.len);
-+
-+	lock->oh.len = xdr_lock->oh.len;
-+	lock->oh.data = xdr_lock->oh.data;
-+
-+	lock->svid = xdr_lock->svid;
-+	lock->lock_start = xdr_lock->l_offset;
-+	lock->lock_len = xdr_lock->l_len;
-+
-+	if (lock->lock_start > OFFSET_MAX ||
-+	    (lock->lock_len && ((lock->lock_len - 1) > (OFFSET_MAX - lock->lock_start))))
-+		return nlm4_fbig;
-+
-+	locks_init_lock(fl);
-+	fl->c.flc_type = type;
-+	lockd_set_file_lock_range4(fl, lock->lock_start, lock->lock_len);
-+
-+	error = nlm_lookup_file(rqstp, &file, lock);
-+	switch (error) {
-+	case nlm_granted:
-+		break;
-+	case nlm__int__stale_fh:
-+		return nlm4_stale_fh;
-+	case nlm__int__failed:
-+		return nlm4_failed;
-+	default:
-+		return error;
-+	}
-+	*filp = file;
-+
-+	fl->c.flc_flags = FL_POSIX;
-+	fl->c.flc_file = file->f_file[lock_to_openmode(fl)];
-+	fl->c.flc_pid = current->tgid;
-+	fl->fl_lmops = &nlmsvc_lock_operations;
-+	nlmsvc_locks_init_private(fl, host, (pid_t)lock->svid);
-+	if (!fl->c.flc_owner)
-+		return nlm_lck_denied_nolocks;
-+
++	cookie->len = object->len;
++	memcpy(cookie->data, object->data, object->len);
 +	return nlm_granted;
 +}
 +
- /*
-  * Obtain client and file from arguments
-  */
-@@ -151,10 +240,81 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
+ static struct nlm_host *
+ nlm4svc_lookup_host(struct svc_rqst *rqstp, string caller, bool monitored)
+ {
+@@ -355,10 +379,88 @@ __nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
  	return rc;
  }
  
--static __be32
--nlm4svc_proc_test(struct svc_rqst *rqstp)
-+/**
-+ * nlm4svc_proc_test - TEST: Check for conflicting lock
-+ * @rqstp: RPC transaction context
-+ *
-+ * Returns:
-+ *   %rpc_success:		RPC executed successfully.
-+ *   %rpc_drop_reply:		Do not send an RPC reply.
-+ *
-+ * RPC synopsis:
-+ *   nlm4_testres NLMPROC4_TEST(nlm4_testargs) = 1;
-+ *
-+ * Permissible procedure status codes:
-+ *   %NLM4_GRANTED:		The server would be able to grant the
-+ *				requested lock.
-+ *   %NLM4_DENIED:		The requested lock conflicted with existing
-+ *				lock reservations for the file.
-+ *   %NLM4_DENIED_NOLOCKS:	The server could not allocate the resources
-+ *				needed to process the request.
-+ *   %NLM4_DENIED_GRACE_PERIOD:	The server has recently restarted and is
-+ *				re-establishing existing locks, and is not
-+ *				yet ready to accept normal service requests.
-+ *
-+ * The Linux NLM server implementation also returns:
-+ *   %NLM4_STALE_FH:		The request specified an invalid file handle.
-+ *   %NLM4_FBIG:		The request specified a length or offset
-+ *				that exceeds the range supported by the
-+ *				server.
-+ *   %NLM4_FAILED:		The request failed for an unspecified reason.
-+ */
-+static __be32 nlm4svc_proc_test(struct svc_rqst *rqstp)
- {
--	return __nlm4svc_proc_test(rqstp, rqstp->rq_resp);
-+	struct nlm4_testargs_wrapper *argp = rqstp->rq_argp;
++static __be32
++nlm4svc_do_lock(struct svc_rqst *rqstp, bool monitored)
++{
++	struct nlm4_lockargs_wrapper *argp = rqstp->rq_argp;
 +	unsigned char type = argp->xdrgen.exclusive ? F_WRLCK : F_RDLCK;
-+	struct nlm4_testres_wrapper *resp = rqstp->rq_resp;
++	struct nlm4_res_wrapper *resp = rqstp->rq_resp;
 +	struct nlm_file	*file = NULL;
-+	struct nlm_host	*host;
++	struct nlm_host	*host = NULL;
 +
 +	resp->xdrgen.cookie = argp->xdrgen.cookie;
 +
++	resp->xdrgen.stat.stat = nlm4_netobj_to_cookie(&argp->cookie,
++						       &argp->xdrgen.cookie);
++	if (resp->xdrgen.stat.stat)
++		goto out;
++
 +	resp->xdrgen.stat.stat = nlm_lck_denied_nolocks;
-+	host = nlm4svc_lookup_host(rqstp, argp->xdrgen.alock.caller_name, false);
++	host = nlm4svc_lookup_host(rqstp, argp->xdrgen.alock.caller_name,
++				   monitored);
 +	if (!host)
 +		goto out;
 +
@@ -281,24 +193,13 @@ index 4fcd66beb4df..b07ab4d60871 100644
 +	if (resp->xdrgen.stat.stat)
 +		goto out;
 +
-+	resp->xdrgen.stat.stat = nlmsvc_testlock(rqstp, file, host,
-+						 &argp->lock, &resp->lock);
++	resp->xdrgen.stat.stat = nlmsvc_lock(rqstp, file, host, &argp->lock,
++					     argp->xdrgen.block, &argp->cookie,
++					     argp->xdrgen.reclaim);
++	if (resp->xdrgen.stat.stat == nlm__int__deadlock)
++		resp->xdrgen.stat.stat = nlm4_deadlock;
++
 +	nlmsvc_release_lockowner(&argp->lock);
-+
-+	if (resp->xdrgen.stat.stat == nlm_lck_denied) {
-+		struct nlm_lock *conf = &resp->lock;
-+		struct nlm4_holder *holder = &resp->xdrgen.stat.u.holder;
-+
-+		holder->exclusive = (conf->fl.c.flc_type != F_RDLCK);
-+		holder->svid = conf->svid;
-+		holder->oh.len = conf->oh.len;
-+		holder->oh.data = conf->oh.data;
-+		holder->l_offset = conf->fl.fl_start;
-+		if (conf->fl.fl_end == OFFSET_MAX)
-+			holder->l_len = 0;
-+		else
-+			holder->l_len = conf->fl.fl_end - conf->fl.fl_start + 1;
-+	}
 +
 +out:
 +	if (file)
@@ -306,43 +207,96 @@ index 4fcd66beb4df..b07ab4d60871 100644
 +	nlmsvc_release_host(host);
 +	return resp->xdrgen.stat.stat == nlm__int__drop_reply ?
 +		rpc_drop_reply : rpc_success;
++}
++
++/**
++ * nlm4svc_proc_lock - LOCK: Establish a monitored lock
++ * @rqstp: RPC transaction context
++ *
++ * Returns:
++ *   %rpc_success:		RPC executed successfully.
++ *   %rpc_drop_reply:		Do not send an RPC reply.
++ *
++ * RPC synopsis:
++ *   nlm4_res NLMPROC4_LOCK(nlm4_lockargs) = 2;
++ *
++ * Permissible procedure status codes:
++ *   %NLM4_GRANTED:		The requested lock was granted.
++ *   %NLM4_DENIED:		The requested lock conflicted with existing
++ *				lock reservations for the file.
++ *   %NLM4_DENIED_NOLOCKS:	The server could not allocate the resources
++ *				needed to process the request.
++ *   %NLM4_BLOCKED:		The blocking request cannot be granted
++ *				immediately. The server will send an
++ *				NLMPROC4_GRANTED callback to the client when
++ *				the lock can be granted.
++ *   %NLM4_DENIED_GRACE_PERIOD:	The server has recently restarted and is
++ *				re-establishing existing locks, and is not
++ *				yet ready to accept normal service requests.
++ *
++ * The Linux NLM server implementation also returns:
++ *   %NLM4_DEADLCK:		The request could not be granted and
++ *				blocking would cause a deadlock.
++ *   %NLM4_STALE_FH:		The request specified an invalid file handle.
++ *   %NLM4_FBIG:		The request specified a length or offset
++ *				that exceeds the range supported by the
++ *				server.
++ *   %NLM4_FAILED:		The request failed for an unspecified reason.
++ */
+ static __be32
+ nlm4svc_proc_lock(struct svc_rqst *rqstp)
+ {
+-	return __nlm4svc_proc_lock(rqstp, rqstp->rq_resp);
++	return nlm4svc_do_lock(rqstp, true);
  }
  
  static __be32
-@@ -557,15 +717,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
- 		.pc_xdrressize	= XDR_void,
- 		.pc_name	= "NULL",
+@@ -629,7 +731,7 @@ nlm4svc_proc_nm_lock(struct svc_rqst *rqstp)
+ 	dprintk("lockd: NM_LOCK       called\n");
+ 
+ 	argp->monitor = 0;		/* just clean the monitor flag */
+-	return nlm4svc_proc_lock(rqstp);
++	return __nlm4svc_proc_lock(rqstp, rqstp->rq_resp);
+ }
+ 
+ /*
+@@ -727,15 +829,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
+ 		.pc_xdrressize	= NLM4_nlm4_testres_sz,
+ 		.pc_name	= "TEST",
  	},
--	[NLMPROC_TEST] = {
--		.pc_func = nlm4svc_proc_test,
--		.pc_decode = nlm4svc_decode_testargs,
--		.pc_encode = nlm4svc_encode_testres,
+-	[NLMPROC_LOCK] = {
+-		.pc_func = nlm4svc_proc_lock,
+-		.pc_decode = nlm4svc_decode_lockargs,
+-		.pc_encode = nlm4svc_encode_res,
 -		.pc_argsize = sizeof(struct nlm_args),
 -		.pc_argzero = sizeof(struct nlm_args),
 -		.pc_ressize = sizeof(struct nlm_res),
--		.pc_xdrressize = Ck+St+2+No+Rg,
--		.pc_name = "TEST",
-+	[NLMPROC4_TEST] = {
-+		.pc_func	= nlm4svc_proc_test,
-+		.pc_decode	= nlm4_svc_decode_nlm4_testargs,
-+		.pc_encode	= nlm4_svc_encode_nlm4_testres,
-+		.pc_argsize	= sizeof(struct nlm4_testargs_wrapper),
+-		.pc_xdrressize = Ck+St,
+-		.pc_name = "LOCK",
++	[NLMPROC4_LOCK] = {
++		.pc_func	= nlm4svc_proc_lock,
++		.pc_decode	= nlm4_svc_decode_nlm4_lockargs,
++		.pc_encode	= nlm4_svc_encode_nlm4_res,
++		.pc_argsize	= sizeof(struct nlm4_lockargs_wrapper),
 +		.pc_argzero	= 0,
-+		.pc_ressize	= sizeof(struct nlm4_testres_wrapper),
-+		.pc_xdrressize	= NLM4_nlm4_testres_sz,
-+		.pc_name	= "TEST",
++		.pc_ressize	= sizeof(struct nlm4_res_wrapper),
++		.pc_xdrressize	= NLM4_nlm4_res_sz,
++		.pc_name	= "LOCK",
  	},
- 	[NLMPROC_LOCK] = {
- 		.pc_func = nlm4svc_proc_lock,
-@@ -793,6 +953,8 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
-  * Storage requirements for XDR arguments and results
+ 	[NLMPROC_CANCEL] = {
+ 		.pc_func = nlm4svc_proc_cancel,
+@@ -954,9 +1056,10 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
   */
  union nlm4svc_xdrstore {
-+	struct nlm4_testargs_wrapper	testargs;
-+	struct nlm4_testres_wrapper	testres;
+ 	struct nlm4_testargs_wrapper	testargs;
++	struct nlm4_lockargs_wrapper	lockargs;
+ 	struct nlm4_testres_wrapper	testres;
++	struct nlm4_res_wrapper		res;
  	struct nlm_args			args;
- 	struct nlm_res			res;
+-	struct nlm_res			res;
  	struct nlm_reboot		reboot;
+ };
+ 
 -- 
 2.53.0
 
