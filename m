@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-19002-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19003-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4JtrO7DmlGmjIgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19002-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:44 +0100
+	id mBneED3nlGmjIgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19003-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:10:05 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 963A81514AC
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6F9B151561
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:10:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B6628301DD79
+	by sea.lore.kernel.org (Postfix) with ESMTP id D8AE33075FA8
 	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF5A3313E1B;
-	Tue, 17 Feb 2026 22:07:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1480313555;
+	Tue, 17 Feb 2026 22:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uusEnXe6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSHLTvzU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC57313276
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E818313276
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771366061; cv=none; b=NvzX/ibq7WnUKWsdDgbgpIMmGdJ7P+pjYLvarF75izURURBt9Xzb1cG6kjQlRO66FAAzC7bek1WRK8BA5NXvGktCLJXkGsa1QTtdHbL8Am0JAEeakcx2MdJZHKO+CLQHnoJQpxtQz3g92uOpASW6i4vaTi69fOCLOVp0d+kNgxo=
+	t=1771366062; cv=none; b=Gqy2FbhSjLvrczjDRHPJwI444yYEvJ+5//giqEL8SPv9NeTola1/RtomOVBjJEyyZz9AaIbaJRx8R2TKRD9+QwJUz0xk+GsWJTUn2HcxeCnwIDoWSjplwOCLKdWDTir3vFfjGbSCQgxu2GaBRskuGB1UPO6MdvNZLvN4BrgcX6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771366061; c=relaxed/simple;
-	bh=AgB7+7AJpvfyjKPUFLyb9ggPzwZ6LuB0P/68kGOaxTk=;
+	s=arc-20240116; t=1771366062; c=relaxed/simple;
+	bh=nR3RFyhiUIy6wY20suTCNgLAt6HshQkyBppuUdxAGsw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r2WsDz2WSxOzTJNBggBntP9JnzClGwSX0LmwwE91AUM7i4va7E4bmr/xtP2ur8tStU3l+9yxhrcBIFJ3LVnzHDKRitv2W7nHO7zvsMKzWWqtSFrLVmqmUywNSMlrvRhBBKGN9pkAoLSBNxfi0Slz0Pb4jG9Kq68yCSlhNMuK7v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uusEnXe6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2308AC4CEF7;
+	 MIME-Version; b=mFu8aAI9WJFu0c9ziON2XvrgmOYffKDEW7sveTt4hUMfWIY3fmCVaP66KoBJRemxes/dNy9D9eW0A8T62G9IWCGsbWKw6OsK7IT/n4hSuldNtB/S3x8VUi8UfUEYUaBlMKVLbfqtKscfUSsIHEpNU4cGr7z+KR6gwnYk7fUTnYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSHLTvzU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5835C19421;
 	Tue, 17 Feb 2026 22:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771366061;
-	bh=AgB7+7AJpvfyjKPUFLyb9ggPzwZ6LuB0P/68kGOaxTk=;
+	s=k20201202; t=1771366062;
+	bh=nR3RFyhiUIy6wY20suTCNgLAt6HshQkyBppuUdxAGsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uusEnXe6zYsRtX3WsnGgisbx2LODXAHK2iOAfed1olUt4bfOV6fApRu5WGzhwgIZ3
-	 wzxJavjxj7Rux+DBKO9Bdnsg/5s1uivnsDLD3ZjWX9WwNvUKIGo68T155vxkeWWc8h
-	 eOek1N8JY1U7xFbzGD1nG6Lb9Vgynjg0sOpnBzIRzJoUy962zxgrv1YHQVQYuGuas0
-	 PurC6+XPzDYMYSyUT7QUMIVDUw9IZX17pSPd9z2MU08zQZGu4/u7J4AlSVWBrO37Ez
-	 dKsVpB6Nf9E0txp7W/SC/1lwcU9tmLp3Jmpk+kDq2dNnGerlyc7kzhkrgjqdWirjnB
-	 ePwvIhqXC6ajw==
+	b=TSHLTvzU+newSsL+3NMGhNzKvxF8uQ/F0iY/bPtdq2svObw1nkCR0jFpzhSo+ZX3r
+	 j5S4Clfe6pY5dxo+UeG0xCF2rAMNNRANo/ZuiGavIMvxBFtK6ncnNUgL7Pj1yvj2Dh
+	 mhKnXdsiGN6PonKNOeeZaLitHHVCEVPRLUPIBQKuUsOWS82IvoVw1pihkBYGUST8yt
+	 SHyNSJ6Y8h08oEXuJHE/pcPR5kmF9hyBjoPIkVg5ctywfiK3iHAcFJVFMw0ncHH97C
+	 SLFts8aAYUUUvmMsWn/wmFZMqwNxax5JdlNBYcgwb65jDV/rVDtx0FvO/IIEovRSHs
+	 wvQ/2Ac88OVRg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 19/29] lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
-Date: Tue, 17 Feb 2026 17:07:11 -0500
-Message-ID: <20260217220721.1928847-20-cel@kernel.org>
+Subject: [PATCH v3 20/29] lockd: Convert server-side undefined procedures to xdrgen
+Date: Tue, 17 Feb 2026 17:07:12 -0500
+Message-ID: <20260217220721.1928847-21-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260217220721.1928847-1-cel@kernel.org>
 References: <20260217220721.1928847-1-cel@kernel.org>
@@ -71,18 +71,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-19002-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19003-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -92,164 +92,135 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 963A81514AC
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C6F9B151561
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Convert the SM_NOTIFY procedure to use xdrgen functions
-nlm4_svc_decode_nlm4_notifyargs and nlm4_svc_encode_void.
-SM_NOTIFY is a private callback from statd to notify lockd
-when a remote host has rebooted.
+The NLMv4 protocol defines several procedure slots that are
+not implemented. These undefined procedures need proper
+handling to return rpc_proc_unavail to clients that
+mistakenly invoke them.
 
-This patch introduces struct nlm4_notifyargs_wrapper to
-bridge between the xdrgen-generated nlm4_notifyargs and
-the nlm_reboot structure expected by nlm_host_rebooted().
-The wrapper contains both the xdrgen-decoded arguments
-and a reboot field for the existing API.
+This patch converts the three undefined procedure entries
+(slots 17, 18, and 19) to use xdrgen functions
+nlm4_svc_decode_void and nlm4_svc_encode_void. The
+nlm4svc_proc_unused function is also moved earlier in the
+file to follow the convention of placing procedure
+implementations before the procedure table.
 
-The pc_argzero field is set to zero because xdrgen decoders
-reliably initialize all arguments, making the early
-defensive memset unnecessary.
+The pc_argsize, pc_ressize, and pc_argzero fields are now
+correctly set to zero since no arguments or results are
+processed. The pc_xdrressize field is updated to XDR_void
+to accurately reflect the response size.
 
-This change also corrects the pc_xdrressize field, which
-previously contained a placeholder value.
+This conversion completes the migration of all NLMv4
+server-side procedures to use xdrgen-generated XDR
+functions, improving type safety and eliminating
+hand-written XDR code.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c | 86 +++++++++++++++++++++++++++++----------------
- 1 file changed, 55 insertions(+), 31 deletions(-)
+ fs/lockd/svc4proc.c | 66 ++++++++++++++++++++++++---------------------
+ 1 file changed, 36 insertions(+), 30 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index f986cdac5d00..4f8c41046ed6 100644
+index 4f8c41046ed6..b4ed77125f68 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -62,6 +62,13 @@ struct nlm4_unlockargs_wrapper {
- 
- static_assert(offsetof(struct nlm4_unlockargs_wrapper, xdrgen) == 0);
- 
-+struct nlm4_notifyargs_wrapper {
-+	struct nlm4_notifyargs		xdrgen;
-+	struct nlm_reboot		reboot;
-+};
-+
-+static_assert(offsetof(struct nlm4_notifyargs_wrapper, xdrgen) == 0);
-+
- struct nlm4_testres_wrapper {
- 	struct nlm4_testres		xdrgen;
- 	struct nlm_lock			lock;
-@@ -984,6 +991,44 @@ static __be32 nlm4svc_proc_granted_res(struct svc_rqst *rqstp)
+@@ -1029,6 +1029,18 @@ static __be32 nlm4svc_proc_sm_notify(struct svc_rqst *rqstp)
  	return rpc_success;
  }
  
 +/**
-+ * nlm4svc_proc_sm_notify - SM_NOTIFY: Peer has rebooted
++ * nlm4svc_proc_unused - stub for unused procedures
 + * @rqstp: RPC transaction context
 + *
 + * Returns:
-+ *   %rpc_success:		RPC executed successfully.
-+ *   %rpc_system_err:		RPC execution failed.
-+ *
-+ * The SM_NOTIFY procedure is a private callback from Linux statd and is
-+ * not part of the official NLM protocol.
-+ *
-+ * RPC synopsis:
-+ *   void NLMPROC4_SM_NOTIFY(nlm4_notifyargs) = 16;
++ *   %rpc_proc_unavail:	Program can't support procedure.
 + */
-+static __be32 nlm4svc_proc_sm_notify(struct svc_rqst *rqstp)
++static __be32 nlm4svc_proc_unused(struct svc_rqst *rqstp)
 +{
-+	struct nlm4_notifyargs_wrapper *argp = rqstp->rq_argp;
-+	struct nlm_reboot *reboot = &argp->reboot;
-+
-+	if (!nlm_privileged_requester(rqstp)) {
-+		char buf[RPC_MAX_ADDRBUFLEN];
-+
-+		pr_warn("lockd: rejected NSM callback from %s\n",
-+			svc_print_addr(rqstp, buf, sizeof(buf)));
-+		return rpc_system_err;
-+	}
-+
-+	reboot->len = argp->xdrgen.notify.name.len;
-+	reboot->mon = (char *)argp->xdrgen.notify.name.data;
-+	reboot->state = argp->xdrgen.notify.state;
-+	memcpy(&reboot->priv.data, argp->xdrgen.private,
-+	       sizeof(reboot->priv.data));
-+
-+	nlm_host_rebooted(SVC_NET(rqstp), reboot);
-+
-+	return rpc_success;
++	return rpc_proc_unavail;
 +}
 +
  /*
   * SHARE: create a DOS share or alter existing share.
   */
-@@ -1088,27 +1133,6 @@ nlm4svc_proc_free_all(struct svc_rqst *rqstp)
+@@ -1133,12 +1145,6 @@ nlm4svc_proc_free_all(struct svc_rqst *rqstp)
  	return rpc_success;
  }
  
--/*
-- * SM_NOTIFY: private callback from statd (not part of official NLM proto)
-- */
 -static __be32
--nlm4svc_proc_sm_notify(struct svc_rqst *rqstp)
+-nlm4svc_proc_unused(struct svc_rqst *rqstp)
 -{
--	struct nlm_reboot *argp = rqstp->rq_argp;
--
--	dprintk("lockd: SM_NOTIFY     called\n");
--
--	if (!nlm_privileged_requester(rqstp)) {
--		char buf[RPC_MAX_ADDRBUFLEN];
--		printk(KERN_WARNING "lockd: rejected NSM callback from %s\n",
--				svc_print_addr(rqstp, buf, sizeof(buf)));
--		return rpc_system_err;
--	}
--
--	nlm_host_rebooted(SVC_NET(rqstp), argp);
--	return rpc_success;
+-	return rpc_proc_unavail;
 -}
 -
- static __be32
- nlm4svc_proc_unused(struct svc_rqst *rqstp)
- {
-@@ -1288,15 +1312,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
- 		.pc_xdrressize	= XDR_void,
- 		.pc_name	= "GRANTED_RES",
+ 
+ /*
+  * NLM Server procedures.
+@@ -1323,34 +1329,34 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
+ 		.pc_name	= "SM_NOTIFY",
  	},
--	[NLMPROC_NSM_NOTIFY] = {
--		.pc_func = nlm4svc_proc_sm_notify,
--		.pc_decode = nlm4svc_decode_reboot,
+ 	[17] = {
+-		.pc_func = nlm4svc_proc_unused,
+-		.pc_decode = nlm4svc_decode_void,
 -		.pc_encode = nlm4svc_encode_void,
--		.pc_argsize = sizeof(struct nlm_reboot),
--		.pc_argzero = sizeof(struct nlm_reboot),
+-		.pc_argsize = sizeof(struct nlm_void),
+-		.pc_argzero = sizeof(struct nlm_void),
 -		.pc_ressize = sizeof(struct nlm_void),
--		.pc_xdrressize = St,
--		.pc_name = "SM_NOTIFY",
-+	[NLMPROC4_SM_NOTIFY] = {
-+		.pc_func	= nlm4svc_proc_sm_notify,
-+		.pc_decode	= nlm4_svc_decode_nlm4_notifyargs,
+-		.pc_xdrressize = 0,
+-		.pc_name = "UNUSED",
++		.pc_func	= nlm4svc_proc_unused,
++		.pc_decode	= nlm4_svc_decode_void,
 +		.pc_encode	= nlm4_svc_encode_void,
-+		.pc_argsize	= sizeof(struct nlm4_notifyargs_wrapper),
++		.pc_argsize	= 0,
 +		.pc_argzero	= 0,
 +		.pc_ressize	= 0,
 +		.pc_xdrressize	= XDR_void,
-+		.pc_name	= "SM_NOTIFY",
++		.pc_name	= "UNUSED",
  	},
- 	[17] = {
- 		.pc_func = nlm4svc_proc_unused,
-@@ -1378,10 +1402,10 @@ union nlm4svc_xdrstore {
- 	struct nlm4_lockargs_wrapper	lockargs;
- 	struct nlm4_cancargs_wrapper	cancargs;
- 	struct nlm4_unlockargs_wrapper	unlockargs;
-+	struct nlm4_notifyargs_wrapper	notifyargs;
- 	struct nlm4_testres_wrapper	testres;
- 	struct nlm4_res_wrapper		res;
- 	struct nlm_args			args;
--	struct nlm_reboot		reboot;
- };
- 
- static DEFINE_PER_CPU_ALIGNED(unsigned long,
+ 	[18] = {
+-		.pc_func = nlm4svc_proc_unused,
+-		.pc_decode = nlm4svc_decode_void,
+-		.pc_encode = nlm4svc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_void),
+-		.pc_argzero = sizeof(struct nlm_void),
+-		.pc_ressize = sizeof(struct nlm_void),
+-		.pc_xdrressize = 0,
+-		.pc_name = "UNUSED",
++		.pc_func	= nlm4svc_proc_unused,
++		.pc_decode	= nlm4_svc_decode_void,
++		.pc_encode	= nlm4_svc_encode_void,
++		.pc_argsize	= 0,
++		.pc_argzero	= 0,
++		.pc_ressize	= 0,
++		.pc_xdrressize	= XDR_void,
++		.pc_name	= "UNUSED",
+ 	},
+ 	[19] = {
+-		.pc_func = nlm4svc_proc_unused,
+-		.pc_decode = nlm4svc_decode_void,
+-		.pc_encode = nlm4svc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_void),
+-		.pc_argzero = sizeof(struct nlm_void),
+-		.pc_ressize = sizeof(struct nlm_void),
+-		.pc_xdrressize = 0,
+-		.pc_name = "UNUSED",
++		.pc_func	= nlm4svc_proc_unused,
++		.pc_decode	= nlm4_svc_decode_void,
++		.pc_encode	= nlm4_svc_encode_void,
++		.pc_argsize	= 0,
++		.pc_argzero	= 0,
++		.pc_ressize	= 0,
++		.pc_xdrressize	= XDR_void,
++		.pc_name	= "UNUSED",
+ 	},
+ 	[NLMPROC_SHARE] = {
+ 		.pc_func = nlm4svc_proc_share,
 -- 
 2.53.0
 
