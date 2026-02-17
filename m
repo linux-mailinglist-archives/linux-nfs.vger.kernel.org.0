@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-18998-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-18999-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mML/LLXmlGmjIgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-18998-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:49 +0100
+	id GCGWIbfmlGmjIgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-18999-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:51 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CAE31514BB
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F24D41514D0
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 19B0A300C6D4
+	by sin.lore.kernel.org (Postfix) with ESMTP id DD2E1300B9C6
 	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B275431328B;
-	Tue, 17 Feb 2026 22:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 817C6313527;
+	Tue, 17 Feb 2026 22:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PST6ODTq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ay8G8pf/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904EC313276
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F936313276
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771366058; cv=none; b=THF2apblQCRxz1UjC2jOqRDRJOA1e6SazS329pYJOEwcRJQqvNBepIU9aeBxgNDa5WAz7WI83+yZZs/yUY+91lR5XjxaU+mZfG8Qjb3HGfen2V59wPG+0KjXOsRSJidZOMl+aHsU1iV2lWBoXzYzf1gyYs+xjYC20zznOrCutWk=
+	t=1771366059; cv=none; b=DR4Jq4j9MgsHC4ngGB9M9t0fKbO9BYEI5/cS02LkDw3wqhPdty3hg3ZtJuQ0h2qfRndP3nrkHxRQFFV1VBff28+BEJwN1/4T+Tjz8zdoGM+pX6eUCZUPkjPl7tbRWlsCBIQgaALUaYzCRsgp0UeWHF7IfuVjFVrysf6+HgJxV14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771366058; c=relaxed/simple;
-	bh=yGsPh+AlX/kq5PoiVNX7M8kSG42g+4rH8UoN/2D0Reo=;
+	s=arc-20240116; t=1771366059; c=relaxed/simple;
+	bh=3veHAv+302ELqqfK+vGtHUHVOqejOIZszYbyCHzPX/E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JqsFWZds6d5KIsLU0dQimpd57pwCWQfypcJuU8D9ky1tYtUCFDCZMuSsPpygc0cD/o7BvbkFpfqaTog2P28Mv6GAm0gpsCYrAHUtQAnXF024MzC1MJ7Z9xY100aodYXpqxSsElVZAMUOOL43sTdLt9mgPjou2mK59m0NgCx6cfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PST6ODTq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E97C19425;
-	Tue, 17 Feb 2026 22:07:37 +0000 (UTC)
+	 MIME-Version; b=FYwqsuN2uODm9+hlNE4+fNI1qfCz8URxMV7+VB/gLR91HrAYx1vHDcw5ZxpbPUlHv4uoK9glNdCGEwdH1nLC+J46nwsIgbiuC4a2di9ckDPKPIPjucOKzCSOqs7BVnuOzIs/HPJqOefrq9//MNigXXjRVskDn36Us809U9B8JlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ay8G8pf/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9234C19421;
+	Tue, 17 Feb 2026 22:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771366058;
-	bh=yGsPh+AlX/kq5PoiVNX7M8kSG42g+4rH8UoN/2D0Reo=;
+	s=k20201202; t=1771366059;
+	bh=3veHAv+302ELqqfK+vGtHUHVOqejOIZszYbyCHzPX/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PST6ODTqDck8AcAcPJCl0FR9T0/QOK4wafFNY6jDp9gEDD/89rfSisvlFcA2vA/hH
-	 uQhxRTE/zyS4BGvs78Q57ecrteCWuZMXT4DsR1VRhmshPhu0enmbXPMdDYQNNNo9PL
-	 XVLbTYr429tN6huChq1kFOu1bypUM/2zBLHymCYU1K7Bd2ueyJpJ3ERiyhPzN3u7g1
-	 os3tI23oF5TNMoLUMjmknQ3ADxMzk2RB9AFC7FnrniwV+UR8K9xDOOm1p6dNdvKdKV
-	 sTDyBLl5U+SJFIhSq7wqmg7yqIB3vv+mKg7l2//6W9GN2cTeFkygmagjbUErpwVKI+
-	 r7NzkIAPtnkaw==
+	b=Ay8G8pf/TLFJ5r/Nlkz3Oxo/PvKRBRWSy3FF6BKGd2bc7TGJ9QFP7kFuDJoup1w3s
+	 NVHS65qtH9U1OlbzU61oagXOmSIBdiloALyHHxOVXH5whaWjBPUSlisUV/jIIIceA7
+	 Qc9mGcVDh90KktkScnbvljtzAoNHLSuhTI0eWCpFs9cSLDtIQRb/LjqDUZRsn79NVY
+	 uh1Nz8Id0U+5lPmnpTfvIhxSfiZkZi1vl/DVvgKn4g9c8gh8BordThcG9vlZT/j4Om
+	 jgTHsLz70tiyMODP6xZ1e0JByRkJh+a1HIhtVMWK+WrBGgCHlgIsN4LxseLj1siqb6
+	 FvlW60KNt54Mg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 15/29] lockd: Use xdrgen XDR functions for the NLMv4 LOCK_RES procedure
-Date: Tue, 17 Feb 2026 17:07:07 -0500
-Message-ID: <20260217220721.1928847-16-cel@kernel.org>
+Subject: [PATCH v3 16/29] lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_RES procedure
+Date: Tue, 17 Feb 2026 17:07:08 -0500
+Message-ID: <20260217220721.1928847-17-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260217220721.1928847-1-cel@kernel.org>
 References: <20260217220721.1928847-1-cel@kernel.org>
@@ -77,7 +77,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-18998-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18999-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,15 +93,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 0CAE31514BB
+X-Rspamd-Queue-Id: F24D41514D0
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Convert the LOCK_RES procedure to use xdrgen functions
+Convert the CANCEL_RES procedure to use xdrgen functions
 nlm4_svc_decode_nlm4_res and nlm4_svc_encode_void.
-LOCK_RES is a callback procedure where the client sends
-lock results back to the server after an async LOCK
+CANCEL_RES is a callback procedure where the client sends
+cancel results back to the server after an async CANCEL
 request.
 
 The pc_argzero field is set to zero because xdrgen decoders
@@ -118,14 +118,14 @@ Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
  1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 6b391ec49341..c5f21fc2228c 100644
+index c5f21fc2228c..e9834b0077a0 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -1240,15 +1240,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
+@@ -1250,15 +1250,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
  		.pc_xdrressize	= XDR_void,
- 		.pc_name	= "TEST_RES",
+ 		.pc_name	= "LOCK_RES",
  	},
--	[NLMPROC_LOCK_RES] = {
+-	[NLMPROC_CANCEL_RES] = {
 -		.pc_func = nlm4svc_proc_null,
 -		.pc_decode = nlm4svc_decode_void,
 -		.pc_encode = nlm4svc_encode_void,
@@ -133,8 +133,8 @@ index 6b391ec49341..c5f21fc2228c 100644
 -		.pc_argzero = sizeof(struct nlm_res),
 -		.pc_ressize = sizeof(struct nlm_void),
 -		.pc_xdrressize = St,
--		.pc_name = "LOCK_RES",
-+	[NLMPROC4_LOCK_RES] = {
+-		.pc_name = "CANCEL_RES",
++	[NLMPROC4_CANCEL_RES] = {
 +		.pc_func	= nlm4svc_proc_null,
 +		.pc_decode	= nlm4_svc_decode_nlm4_res,
 +		.pc_encode	= nlm4_svc_encode_void,
@@ -142,9 +142,9 @@ index 6b391ec49341..c5f21fc2228c 100644
 +		.pc_argzero	= 0,
 +		.pc_ressize	= 0,
 +		.pc_xdrressize	= XDR_void,
-+		.pc_name	= "LOCK_RES",
++		.pc_name	= "CANCEL_RES",
  	},
- 	[NLMPROC_CANCEL_RES] = {
+ 	[NLMPROC_UNLOCK_RES] = {
  		.pc_func = nlm4svc_proc_null,
 -- 
 2.53.0
