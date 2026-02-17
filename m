@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-19007-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19008-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qID9ELXmlGmjIgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19007-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:49 +0100
+	id SNeVDrbmlGmjIgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19008-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:50 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 247DE1514BC
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 251D91514C9
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 23:07:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5FC1430229AC
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 322AD3023699
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Feb 2026 22:07:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08A4F313525;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5D4313525;
 	Tue, 17 Feb 2026 22:07:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtGFMvXo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7+nmDdo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAC7313527
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB00A31328B
+	for <linux-nfs@vger.kernel.org>; Tue, 17 Feb 2026 22:07:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771366065; cv=none; b=TxK6D5ETWw0eVjxDMbRXRA7GKrTNZaTNrBHfDwGCAhgNtIk+dcTHA0gCI0eSgtnEHvjr6IjTI5xg9ZmlktD8DCGZuuZhxqkgAY0aDwKdEfZ3w2gx+GUlDNgVxtsY1p/SrbYPnNQjpQowPXvHhmjaug3nI83ewJO+Dd2huP8l+ZQ=
+	t=1771366066; cv=none; b=IpBWr3fgrgF1UDGoItlK76vUHres7yIrUZ+gv8WgsNKpCXI0aA66RN8VYOPGjsn76syiQxHeiA7Sx2zUXM/qOBo+MZO5rMYVok2xWq8zvWx8QMr3Jq3OrWA9X+ZaqXj7mNTPVGP4tMWMcnxh7by+BDlEZKEKtRcuwGQ8NNVXWu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771366065; c=relaxed/simple;
-	bh=arx9fibHHJMakw9fvTaHYqIL6O+fHUHcg0ORI68f1BQ=;
+	s=arc-20240116; t=1771366066; c=relaxed/simple;
+	bh=5bjKPV6a4kv998TDS8ngfS2MJIjn2wLWKR/TOawapDM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UJgsAX7YLlUuPDeuCeSzmcaQAGd7T8ZNWmhwLykXwm0AUCIsVoONlfbYJ3d6lcvIL+JMXyo38ibXYV9EbjAOpHQ5MQRs7ZPHl7r6ToU+lBnThVhyL8heQ27y8GxbOcRmSnO4LnNRmVGPjH+w2OFUq2ysra6nQYSEFEEaDdNf+Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtGFMvXo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 310F6C19421;
+	 MIME-Version; b=JtwuSeUX6fpFeiK2yelWct3cxLVauajGX6UKuzU7+Xv2iSsqAyLtf0B+wrM8a8oZOF4bPQDOL3YYbPh/y+VJh9PWyY4liCXVBwGtuv7d7YrUqczqV4H7u4EfeeCmF+//sc0cPdapQrFRMhz/l6tfcToctiELLUiqOccgxH/eTgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7+nmDdo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01EDEC4CEF7;
 	Tue, 17 Feb 2026 22:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771366065;
-	bh=arx9fibHHJMakw9fvTaHYqIL6O+fHUHcg0ORI68f1BQ=;
+	s=k20201202; t=1771366066;
+	bh=5bjKPV6a4kv998TDS8ngfS2MJIjn2wLWKR/TOawapDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GtGFMvXoRBnVGOjbzbd7URIdKkdu1h4Kud6QlDsOafQu9viUluzNdSf8NswyHEFAq
-	 9Ik9kqkw/4oq3aF2jvxV45Cl8hid9mXqnjjNA2kKj6npaLQcLddnihQu8Thu9o920J
-	 BqGIgX0I0GxrWsnr/kaV1loLZ3Up3uORmp0xcdtREThkU9OMwqfcbKNVtKOQJOjxKq
-	 XQZKBXmE8ZBkJ3+Eitqej1ShnbGJBoVKAUfEmRiJlPNAQn8UBOJ+BqkjtPAXa25fKI
-	 InV6o1JADr7XL57F/Unfl0ICf0gyb0+JehnvIOf/MVT5kd3nTOQpd3sqCcOWP61zEV
-	 o1Xr0HaI5Xieg==
+	b=t7+nmDdoQ6ZCTi8MQxxqHCbk5ims0bFqCMaH3zyzkRzgNaQYSoaJcnPr8uoGV/GG7
+	 JvmIeap07GTj2fQRa7l5AFB8NRvIpRh0d3l1ctNMx2oACdi21ZigMEjrHPK20V0g6b
+	 QL+qayklt0pYtJFzr3T8L551mKar+EwdYvx79KKY4eX0kspw+UypqT9Sucu2yU2Gez
+	 waY90s4UyUozb55gwIhc0fQSwMylY8RtlJTMLbMqpXd6jIGJDxLb1Y4352xZ2O9t6p
+	 L3X0++txih57x2WXaaOyTC9vK3beuRU56zxiO1g0uPathbG887Qrt2AD7TuQzvExGV
+	 W0I45QH7IzGzw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 24/29] lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
-Date: Tue, 17 Feb 2026 17:07:16 -0500
-Message-ID: <20260217220721.1928847-25-cel@kernel.org>
+Subject: [PATCH v3 25/29] lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
+Date: Tue, 17 Feb 2026 17:07:17 -0500
+Message-ID: <20260217220721.1928847-26-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260217220721.1928847-1-cel@kernel.org>
 References: <20260217220721.1928847-1-cel@kernel.org>
@@ -77,7 +77,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
-	TAGGED_FROM(0.00)[bounces-19007-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19008-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,22 +93,22 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 247DE1514BC
+X-Rspamd-Queue-Id: 251D91514C9
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Now that the share helpers have been decoupled from the
-NLMv3-specific struct nlm_args and file_lock initialization
-has been hoisted into the procedure handler, the NLMv4 UNSHARE
+Now that nlm4svc_do_lock() has been introduced to handle both
+monitored and non-monitored lock requests, the NLMv4 NM_LOCK
 procedure can be converted to use xdrgen-generated XDR
-functions.
+functions. This conversion allows the removal of
+__nlm4svc_proc_lock(), a helper function that was previously
+shared between the LOCK and NM_LOCK procedures.
 
-Replace the NLMPROC4_UNSHARE entry in the nlm_procedures4
+Replace the NLMPROC4_NM_LOCK entry in the nlm_procedures4
 array with an entry that uses xdrgen-built XDR decoders and
-encoders. The procedure handler is updated to use the new
-wrapper structures (nlm4_shareargs_wrapper and
-nlm4_shareres_wrapper) and access arguments through the
+encoders. The procedure handler is updated to call
+nlm4svc_do_lock() directly and access arguments through the
 argp->xdrgen hierarchy.
 
 The .pc_argzero field is set to zero because xdrgen decoders
@@ -120,21 +120,66 @@ needed.
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svc4proc.c | 98 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 62 insertions(+), 36 deletions(-)
+ fs/lockd/svc4proc.c | 101 +++++++++++++++++++-------------------------
+ 1 file changed, 44 insertions(+), 57 deletions(-)
 
 diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index fbbc5db7a4f7..5d85f888fdf4 100644
+index 5d85f888fdf4..62c90827dfae 100644
 --- a/fs/lockd/svc4proc.c
 +++ b/fs/lockd/svc4proc.c
-@@ -1124,44 +1124,70 @@ static __be32 nlm4svc_proc_share(struct svc_rqst *rqstp)
+@@ -358,44 +358,6 @@ static __be32 nlm4svc_proc_test(struct svc_rqst *rqstp)
+ 		rpc_drop_reply : rpc_success;
+ }
+ 
+-static __be32
+-__nlm4svc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
+-{
+-	struct nlm_args *argp = rqstp->rq_argp;
+-	struct nlm_host	*host;
+-	struct nlm_file	*file;
+-	__be32 rc = rpc_success;
+-
+-	dprintk("lockd: LOCK          called\n");
+-
+-	resp->cookie = argp->cookie;
+-
+-	/* Obtain client and file */
+-	if ((resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file)))
+-		return resp->status == nlm__int__drop_reply ?
+-			rpc_drop_reply : rpc_success;
+-
+-	/* Now try to lock the file */
+-	resp->status = nlmsvc_lock(rqstp, file, host, &argp->lock,
+-					argp->block, &argp->cookie,
+-					argp->reclaim);
+-	switch (resp->status) {
+-	case nlm__int__drop_reply:
+-		rc = rpc_drop_reply;
+-		break;
+-	case nlm__int__deadlock:
+-		resp->status = nlm4_deadlock;
+-		fallthrough;
+-	default:
+-		dprintk("lockd: LOCK         status %d\n", ntohl(resp->status));
+-	}
+-
+-	nlmsvc_release_lockowner(&argp->lock);
+-	nlmsvc_release_host(host);
+-	nlm_release_file(file);
+-	return rc;
+-}
+-
+ static __be32
+ nlm4svc_do_lock(struct svc_rqst *rqstp, bool monitored)
+ {
+@@ -1190,18 +1152,43 @@ static __be32 nlm4svc_proc_unshare(struct svc_rqst *rqstp)
  		rpc_drop_reply : rpc_success;
  }
  
 -/*
-- * UNSHARE: Release a DOS share.
+- * NM_LOCK: Create an unmonitored lock
 +/**
-+ * nlm4svc_proc_unshare - UNSHARE: Release a share reservation
++ * nlm4svc_proc_nm_lock - NM_LOCK: Establish a non-monitored lock
 + * @rqstp: RPC transaction context
 + *
 + * Returns:
@@ -142,16 +187,25 @@ index fbbc5db7a4f7..5d85f888fdf4 100644
 + *   %rpc_drop_reply:		Do not send an RPC reply.
 + *
 + * RPC synopsis:
-+ *   nlm4_shareres NLMPROC4_UNSHARE(nlm4_shareargs) = 21;
++ *   nlm4_res NLMPROC4_NM_LOCK(nlm4_lockargs) = 22;
 + *
 + * Permissible procedure status codes:
-+ *   %NLM4_GRANTED:		The share reservation was released.
++ *   %NLM4_GRANTED:		The requested lock was granted.
++ *   %NLM4_DENIED:		The requested lock conflicted with existing
++ *				lock reservations for the file.
++ *   %NLM4_DENIED_NOLOCKS:	The server could not allocate the resources
++ *				needed to process the request.
++ *   %NLM4_BLOCKED:		The blocking request cannot be granted
++ *				immediately. The server will send an
++ *				NLMPROC4_GRANTED callback to the client when
++ *				the lock can be granted.
 + *   %NLM4_DENIED_GRACE_PERIOD:	The server has recently restarted and is
 + *				re-establishing existing locks, and is not
 + *				yet ready to accept normal service requests.
 + *
 + * The Linux NLM server implementation also returns:
-+ *   %NLM4_DENIED_NOLOCKS:	A needed resource could not be allocated.
++ *   %NLM4_DEADLCK:		The request could not be granted and
++ *				blocking would cause a deadlock.
 + *   %NLM4_STALE_FH:		The request specified an invalid file handle.
 + *   %NLM4_FBIG:		The request specified a length or offset
 + *				that exceeds the range supported by the
@@ -159,97 +213,44 @@ index fbbc5db7a4f7..5d85f888fdf4 100644
 + *   %NLM4_FAILED:		The request failed for an unspecified reason.
   */
 -static __be32
--nlm4svc_proc_unshare(struct svc_rqst *rqstp)
-+static __be32 nlm4svc_proc_unshare(struct svc_rqst *rqstp)
+-nlm4svc_proc_nm_lock(struct svc_rqst *rqstp)
++static __be32 nlm4svc_proc_nm_lock(struct svc_rqst *rqstp)
  {
 -	struct nlm_args *argp = rqstp->rq_argp;
--	struct nlm_res *resp = rqstp->rq_resp;
-+	struct nlm4_shareargs_wrapper *argp = rqstp->rq_argp;
-+	struct nlm4_shareres_wrapper *resp = rqstp->rq_resp;
- 	struct nlm_lock	*lock = &argp->lock;
--	struct nlm_host	*host;
--	struct nlm_file	*file;
-+	struct nlm4_lock xdr_lock = {
-+		.fh		= argp->xdrgen.share.fh,
-+		.oh		= argp->xdrgen.share.oh,
-+		.svid		= ~(u32)0,
-+	};
-+	struct nlm_host	*host = NULL;
-+	struct nlm_file	*file = NULL;
- 
--	dprintk("lockd: UNSHARE       called\n");
-+	resp->xdrgen.cookie = argp->xdrgen.cookie;
- 
--	resp->cookie = argp->cookie;
-+	resp->xdrgen.stat = nlm_lck_denied_grace_period;
-+	if (locks_in_grace(SVC_NET(rqstp)))
-+		goto out;
- 
--	/* Don't accept requests during grace period */
--	if (locks_in_grace(SVC_NET(rqstp))) {
--		resp->status = nlm_lck_denied_grace_period;
--		return rpc_success;
--	}
-+	resp->xdrgen.stat = nlm_lck_denied_nolocks;
-+	host = nlm4svc_lookup_host(rqstp, argp->xdrgen.share.caller_name, true);
-+	if (!host)
-+		goto out;
- 
--	/* Obtain client and file */
--	locks_init_lock(&lock->fl);
--	lock->svid = ~(u32)0;
--	resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file);
--	if (resp->status)
--		return resp->status == nlm__int__drop_reply ?
--			rpc_drop_reply : rpc_success;
-+	resp->xdrgen.stat = nlm4svc_lookup_file(rqstp, host, lock, &file,
-+						&xdr_lock, F_RDLCK);
-+	if (resp->xdrgen.stat)
-+		goto out;
- 
--	/* Now try to unshare the file */
--	resp->status = nlmsvc_unshare_file(host, file, &lock->oh);
-+	resp->xdrgen.stat = nlmsvc_unshare_file(host, file, &lock->oh);
- 
--	dprintk("lockd: UNSHARE       status %d\n", ntohl(resp->status));
- 	nlmsvc_release_lockowner(lock);
-+
-+out:
-+	if (file)
-+		nlm_release_file(file);
- 	nlmsvc_release_host(host);
--	nlm_release_file(file);
--	return rpc_success;
-+	return resp->xdrgen.stat == nlm__int__drop_reply ?
-+		rpc_drop_reply : rpc_success;
+-
+-	dprintk("lockd: NM_LOCK       called\n");
+-
+-	argp->monitor = 0;		/* just clean the monitor flag */
+-	return __nlm4svc_proc_lock(rqstp, rqstp->rq_resp);
++	return nlm4svc_do_lock(rqstp, false);
  }
  
  /*
-@@ -1419,15 +1445,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
+@@ -1455,15 +1442,15 @@ static const struct svc_procedure nlm4svc_procedures[24] = {
  		.pc_xdrressize	= NLM4_nlm4_shareres_sz,
- 		.pc_name	= "SHARE",
+ 		.pc_name	= "UNSHARE",
  	},
--	[NLMPROC_UNSHARE] = {
--		.pc_func = nlm4svc_proc_unshare,
--		.pc_decode = nlm4svc_decode_shareargs,
--		.pc_encode = nlm4svc_encode_shareres,
+-	[NLMPROC_NM_LOCK] = {
+-		.pc_func = nlm4svc_proc_nm_lock,
+-		.pc_decode = nlm4svc_decode_lockargs,
+-		.pc_encode = nlm4svc_encode_res,
 -		.pc_argsize = sizeof(struct nlm_args),
 -		.pc_argzero = sizeof(struct nlm_args),
 -		.pc_ressize = sizeof(struct nlm_res),
--		.pc_xdrressize = Ck+St+1,
--		.pc_name = "UNSHARE",
-+	[NLMPROC4_UNSHARE] = {
-+		.pc_func	= nlm4svc_proc_unshare,
-+		.pc_decode	= nlm4_svc_decode_nlm4_shareargs,
-+		.pc_encode	= nlm4_svc_encode_nlm4_shareres,
-+		.pc_argsize	= sizeof(struct nlm4_shareargs_wrapper),
+-		.pc_xdrressize = Ck+St,
+-		.pc_name = "NM_LOCK",
++	[NLMPROC4_NM_LOCK] = {
++		.pc_func	= nlm4svc_proc_nm_lock,
++		.pc_decode	= nlm4_svc_decode_nlm4_lockargs,
++		.pc_encode	= nlm4_svc_encode_nlm4_res,
++		.pc_argsize	= sizeof(struct nlm4_lockargs_wrapper),
 +		.pc_argzero	= 0,
-+		.pc_ressize	= sizeof(struct nlm4_shareres_wrapper),
-+		.pc_xdrressize	= NLM4_nlm4_shareres_sz,
-+		.pc_name	= "UNSHARE",
++		.pc_ressize	= sizeof(struct nlm4_res_wrapper),
++		.pc_xdrressize	= NLM4_nlm4_res_sz,
++		.pc_name	= "NM_LOCK",
  	},
- 	[NLMPROC_NM_LOCK] = {
- 		.pc_func = nlm4svc_proc_nm_lock,
+ 	[NLMPROC_FREE_ALL] = {
+ 		.pc_func = nlm4svc_proc_free_all,
 -- 
 2.53.0
 
