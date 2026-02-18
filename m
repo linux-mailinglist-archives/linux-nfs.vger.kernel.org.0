@@ -1,62 +1,59 @@
-Return-Path: <linux-nfs+bounces-19016-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19017-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UCFCOHvDlWmTUgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19016-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Feb 2026 14:49:47 +0100
+	id kBaAGmXKlWlfUwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19017-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Feb 2026 15:19:17 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D11A156D67
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Feb 2026 14:49:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD87C157003
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Feb 2026 15:19:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2F70F300E609
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Feb 2026 13:49:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 429C5301724E
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Feb 2026 14:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D70324B23;
-	Wed, 18 Feb 2026 13:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A351C327C00;
+	Wed, 18 Feb 2026 14:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nR9HaMcK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JtDwI+Q4"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC8B28B4FA;
-	Wed, 18 Feb 2026 13:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F51422D4DC
+	for <linux-nfs@vger.kernel.org>; Wed, 18 Feb 2026 14:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771422585; cv=none; b=BdKp4AAdIQkGJDtJWKGYw35fJHxILoNS+p/xuwitpZuMkrwbIlGpyE9Ph166ISdSLw3a7mSt9Jz8kZOPBtl1fetQM/7kBbipBtpN9Y0LGJhBbNg2TC5jqSMlh5C4lyQG/WzGfkXedbUnXK+vSE9sVEBB8YwCrYjMrG+p7oNWpRE=
+	t=1771424354; cv=none; b=QRfm5454kiT36335nwvu85lARdECEeHNIzKHlPsgL/YyZtayh7IFmUga2fTixVBB6TRImtpYWFc9vLJ3ivNrgUPkssEcTnYcesHbrVn8dNcVTDA66uJT9VgYSeaS4uyK9HJ5XFXEt6G5L8pIX4DoiuH2j/bnH0NsvljJYkMYe/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771422585; c=relaxed/simple;
-	bh=n7hXSW+9MHcxvjmgR7+s8GgLwfkHyHdZWPaE/8Sei1M=;
+	s=arc-20240116; t=1771424354; c=relaxed/simple;
+	bh=2xqmAFXXCxG0+Y97hrHlvQZKjDfMOPEvuBbtdtwohAE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JBa31tjH5Q6Sie342+JBnPHRlp/PkvlhvGmgNE9jGWaasXbv+D5rko7aMDOySrdDDXmPw0ZwOGBo3RD+dxeSKHC0DhsC64j/6NJrsrJ9Xjs+i8HjMtT8TQtrkXolFG7XVrB6B1MY+sCcPW0zXtrh/WrZ3MfipkXybka2OcbFn9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nR9HaMcK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58433C19421;
-	Wed, 18 Feb 2026 13:49:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=SfUZCVIV207TjxaryrKWjr9y+TtNDwQbbm8ParDkp9dXMlQ5LKi4ciokLvP4Nx8p7bEPiRUW7BtxnYNf0sFAO6w7mlIYT7gaNDyawN8FDjppQUt5sWHyqCSzkz0V3C0vGMoazapoqTjLdaTL0uEr/NGRxDa9j24LEOpzFYXs7Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JtDwI+Q4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B745C116D0;
+	Wed, 18 Feb 2026 14:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771422584;
-	bh=n7hXSW+9MHcxvjmgR7+s8GgLwfkHyHdZWPaE/8Sei1M=;
+	s=k20201202; t=1771424354;
+	bh=2xqmAFXXCxG0+Y97hrHlvQZKjDfMOPEvuBbtdtwohAE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=nR9HaMcKw4m+t/XruBmMsecMKKH2we2aUNx728dssSep3M+nk7LloOrQMXaXjZqHg
-	 6pEJcGIIlMBoTvnsCIJ/FIPONxJit152zzxC/PqtPvXQo1v2f7Xg61K8XkFYnuujPi
-	 rqZUa1yMveSdQNUJV1J8Yr+TRvpdF/wabSPxFKq+XSabT6adp9ldFzQ+3MGxbGQunh
-	 4FsWsV51JVT0T9Wo/IOWPp2xIOBzKTXT6XOwBx1a3seLODcH9SwXrXhhEW+a3YxYVl
-	 2mLRpLkQJBT/9DjnILMVe8fkAJx+89ZXRNRQJ4YkCj/GoEtEyas+FdiGDui426mOE0
-	 FUQpWUFeHlSrA==
-Message-ID: <d11b39cb43ffe437868eef4bc1c01d3bce8509e9.camel@kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] VFS idmappings support in NFS
+	b=JtDwI+Q4TSJrECIUtoEDc8Ajmlm3zNRoSPuNIr4SLZo3SXFpGjJQHR+TbV7KJAeXI
+	 IRev9/UrUdnIqv6zEWkZaks7bz1PHA1lglGVEHsMXfOnnggkiN+NDkS7OPosbAFYmU
+	 YxG4qfLnn/GfGZ2pktRZtdsWYTxSDmH/S2tSCLYYPRdBxYAMjgZaROXijvMGLDsgd9
+	 lQcwkkS+IvL47S5swvvPZ8INdvhQbOS07VRmOzxb+1wSwg5aZjUQRrc0rL5Fcyb80I
+	 L0Ab84yIvLdccVP7qMqYZ/EJY77LpU4MNKfop1jVOJqRry0+rkQ7mAe7O+3EJbZmji
+	 fXyosRUB2r14w==
+Message-ID: <3c9dbad30b43bc02e07d8e2a8af31702eb793366.camel@kernel.org>
+Subject: Re: [PATCH nfs-utils v2 0/4] nfsdctl: properly handle older kernels
+ that don't support min-threads
 From: Jeff Layton <jlayton@kernel.org>
-To: Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-	lsf-pc@lists.linux-foundation.org
-Cc: aleksandr.mikhalitsyn@futurfusion.io, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, stgraber@stgraber.org, brauner@kernel.org, 
-	ksugihara@preferred.jp, utam0k@preferred.jp, trondmy@kernel.org,
- anna@kernel.org, 	chuck.lever@oracle.com, neilb@suse.de, miklos@szeredi.hu,
- jack@suse.cz, 	amir73il@gmail.com, trapexit@spawn.link
-Date: Wed, 18 Feb 2026 08:49:42 -0500
-In-Reply-To: <65a53a2d6fcc053edeed688a8c8d580c03bd6f3b.camel@mihalicyn.com>
-References: <65a53a2d6fcc053edeed688a8c8d580c03bd6f3b.camel@mihalicyn.com>
+To: Steve Dickson <steved@redhat.com>
+Cc: Ben Coddington <bcodding@hammerspace.com>, Chuck Lever
+	 <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Date: Wed, 18 Feb 2026 09:19:11 -0500
+In-Reply-To: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
+References: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -145,120 +142,73 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19016-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19017-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[futurfusion.io,vger.kernel.org,stgraber.org,kernel.org,preferred.jp,oracle.com,suse.de,szeredi.hu,suse.cz,gmail.com,spawn.link];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_THREE(0.00)[4];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[futurfusion.io:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5D11A156D67
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,configure.ac:url]
+X-Rspamd-Queue-Id: AD87C157003
 X-Rspamd-Action: no action
 
-On Wed, 2026-02-18 at 13:44 +0100, Alexander Mikhalitsyn wrote:
-> Dear friends,
+On Wed, 2026-02-04 at 11:48 -0500, Jeff Layton wrote:
+> Ben reported a problem with using new userland with old kernel. If he
+> tried to send down a setting that the kernel doesn't support, it returns
+> -EINVAL to the call.
 >=20
-> I would like to propose "VFS idmappings support in NFS" as a topic for di=
-scussion at the LSF/MM/BPF Summit.
+> This patch series adds a mechanism for nfsdctl to tell what attributes
+> are supported by the "threads" command. If can then use that to
+> determine whether to pass down the min-threads attribute or report an
+> error or warning.
 >=20
-> Previously, I worked on VFS idmap support for FUSE/virtiofs [2] and cephf=
-s [1] with support/guidance
-> from Christian.
+> This also removes the dependency on the UAPI headers by properly
+> maintaining the private nfsd_netlink.h file.
 >=20
-> This experience with Cephfs & FUSE has shown that VFS idmap semantics, wh=
-ile being very elegant and
-> intuitive for local filesystems, can be quite challenging to combine with=
- network/network-like (e.g. FUSE)
-> FSes. In case of Cephfs we had to modify its protocol (!) (see [2]) as a =
-part of our agreement with
-> ceph folks about the right way to support idmaps.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v2:
+> - Add patch to unconditionally compile in min-threads support
+> - Make getpolicy_handler() return NL_SKIP
+> - Link to v1: https://lore.kernel.org/r/20260204-minthreads-v1-0-9f348608=
+f884@kernel.org
 >=20
-> One obstacle here was that cephfs has some features that are not very Lin=
-ux-wayish, I would say.
-> In particular, system administrator can configure path-based UID/GID rest=
-rictions on a *server*-side (Ceph MDS).
-> Basically, you can say "I expect UID 1000 and GID 2000 for all files unde=
-r /stuff directory".
-> The problem here is that these UID/GIDs are taken from a syscall-caller's=
- creds (not from (struct file *)->f_cred)
-> which makes cephfs FDs not very transferable through unix sockets. [3]
+> ---
+> Jeff Layton (4):
+>       nfsdctl: unconditionally enable support for min-threads
+>       nfsdctl: only resolve netlink family names once
+>       nfsdctl: query netlink policy before sending the minthreads attribu=
+te to kernel
+>       nfsdctl: remove unneeded newlines from xlog() format strings
 >=20
-> These path-based UID/GID restrictions mean that server expects client to =
-send UID/GID with every single request,
-> not only for those OPs where UID/GID needs to be written to the disk (mkn=
-od, mkdir, symlink, etc).
-> VFS idmaps API is designed to prevent filesystems developers from making =
-a mistakes when supporting FS_ALLOW_IDMAP.
-> For example, (struct mnt_idmap *) is not passed to every single i_op, but=
- instead to only those where it can be
-> used legitimately. Particularly, readlink/listxattr or rmdir are not expe=
-cted to use idmapping information anyhow.
+>  configure.ac                 |   6 +-
+>  utils/nfsdctl/nfsd_netlink.h |   2 +
+>  utils/nfsdctl/nfsdctl.c      | 204 ++++++++++++++++++++++++++++++++++---=
+------
+>  3 files changed, 168 insertions(+), 44 deletions(-)
+> ---
+> base-commit: 8f54511aefe1455161a6c4406ed8c770139f61e3
+> change-id: 20260203-minthreads-402ce87096e0
 >=20
-> We've seen very similar challenges with FUSE. Not a long time ago on Linu=
-x Containers project forum, there
-> was a discussion about mergerfs (a popular FUSE-based filesystem) & VFS i=
-dmaps [5]. And I see that this problem
-> of "caller UID/GID are needed everywhere" still blocks VFS idmaps adoptio=
-n in some usecases.
-> Antonio Musumeci (mergerfs maintainer) claimed that in many cases filesys=
-tems behind mergerfs may not be fully
-> POSIX and basically, when mergerfs does IO on the underlying FSes it need=
-s to do UID/GID switch to caller's UID/GID
-> (taken from FUSE request header).
->=20
-> We don't expect NFS to be any simpler :-) I would say that supporting NFS=
- is a final boss. It would be great
-> to have a deep technical discussion with VFS/FSes maintainers and develop=
-ers about all these challenges and
-> make some conclusions and identify a right direction/approach to these pr=
-oblems. From my side, I'm going
-> to get more familiar with high-level part of NFS (or even make PoC if tim=
-e permits), identify challenges,
-> summarize everything and prepare some slides to navigate/plan discussion.
->=20
-> [1] cephfs https://lore.kernel.org/linux-fsdevel/20230807132626.182101-1-=
-aleksandr.mikhalitsyn@canonical.com
-> [2] cephfs protocol changes https://github.com/ceph/ceph/pull/52575
-> [3] cephfs & f_cred https://lore.kernel.org/lkml/CAEivzxeZ6fDgYMnjk21qXYz=
-13tHqZa8rP-cZ2jdxkY0eX+dOjw@mail.gmail.com/
-> [4] fuse/virtiofs https://lore.kernel.org/linux-fsdevel/20240903151626.26=
-4609-1-aleksandr.mikhalitsyn@canonical.com/
-> [5]
-> mergerfshttps://discuss.linuxcontainers.org/t/is-it-the-case-that-you-can=
-not-use-shift-true-for-disk-devices-where-the-source-is-a-mergerfs-mount-is=
--there-a-workaround/25336/11?u=3Damikhalitsyn
->=20
-> Kind regards,
-> Alexander Mikhalitsyn @ futurfusion.io
+> Best regards,
 
+Steve, ping? Can we get this merged?
 
-IIUC, people mostly use vfs-layer idmappings because they want to remap
-the uid/gid values of files that get stored on the backing store (disk,
-ceph MDS, or whatever).
-
-I've never used idmappings myself much in practice. Could you lay out
-an example of how you would use them with NFS in a real environment so
-I understand the problem better? I'd start by assuming a simple setup
-with AUTH_SYS and no NFSv4 idmapping involved, since that case should
-be fairly straightforward.
-
-Mixing in AUTH_GSS and real idmapping will be where things get harder,
-so let's not worry about those cases for now.
+Thanks,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
