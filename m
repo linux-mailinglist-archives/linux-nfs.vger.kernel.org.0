@@ -1,254 +1,208 @@
-Return-Path: <linux-nfs+bounces-19037-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19038-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4HnXIxtnl2nfxwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19037-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 20:40:11 +0100
+	id oE1mEHFol2nfxwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19038-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 20:45:53 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4E20162138
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 20:40:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FBAA162256
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 20:45:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AC775301370D
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 19:40:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 21EC1301FFA9
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 19:44:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19D72FFF9B;
-	Thu, 19 Feb 2026 19:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FAD23093C3;
+	Thu, 19 Feb 2026 19:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Gx9H+qDn"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="YkZIZDS3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021139.outbound.protection.outlook.com [40.93.194.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0227A2E0B71
-	for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 19:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF2F2D0600
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 19:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.172
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771530007; cv=fail; b=pbmYHLQl+YJGcWf7QBiUTqLcuq9p6FymoWmss+Ojeb8PmKcv6G2ghHA2Km4iZPrFiaIR8PS8VA/gS+fv8wYmUYbPGSf4PcOIm2of+rpyFJQXHDOc/CZJV49iYeeoCpM4R71AFMb3W8t0gg0UgLhHCWNAtGRMGQq3cbJBZGuRNx0=
+	t=1771530256; cv=pass; b=E5JTIgDgPYCqxuRM0QUppV1YQYogJ2toRbAev9lF1BcmwJ5DN4586Jm1pCaUtGi29fekmRXewzp3H+zWS1Y5BN4S2No2veQJroW58T1HK236nNn//FrAjNCQquppgoydZ0+GAocLwATub9pU5FrlG4tRv2xmAFi3zaMCfKadtWk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771530007; c=relaxed/simple;
-	bh=fvEHR26AD5v6rwBL/VbuFhvkznWBeYiYs7jbyeZ6VBA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZPgth/bc4lp//yCMPQ5GFgX0hm2h453cr6PFRqi8WGdPKh7f0fqRsBaux9plfUn6ic/L+ZI82mGW5atufQXBe7dVlFlQo4eS77tR7mPoVnuFQO3Ik7cUDWa0bkchhoCgBlog8WRNtezCVOSQwqIyJVQhnU/c0Qo/eroqjORy34U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Gx9H+qDn; arc=fail smtp.client-ip=40.93.194.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HSpF22jNkCVBBJWYLDXkSoPaJGkgvO7ryUnOJUASxWtHvr8GM/uQ9hBjdjVzAqadZ8tlyRaoNzYM724IpS0WaM88APfiBoZjmJqxbRJ0ZsT+O05mnPzUPTwyK+wltxXeSaVfPYvPyOIoxSXO9sgNKCJiyBkEmxkNn/aRsoBfTuzBYRw7Dgj7c2Qu2vEdaHpgg2wlRoVtSVuJR8ZV0M0YOzIc03atBjv8S1V5WmtX7zGBKgoIz1reoUahu9nSxX1Ko2KoKRL9IIKNbZrR48JyI+DMqXwHVOjgJiKGUS8A9KMuSmufTEdqn+XrHmk1Z9huFt0q39TxJuZYxx5O9UsIww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fvEHR26AD5v6rwBL/VbuFhvkznWBeYiYs7jbyeZ6VBA=;
- b=LKFCrk2tEnYSHhaLmvUCwqOwZYZd/4yw1ARcrkLCio/Qlz2llfINl3lkOr4QCascgzif7Q19EKt9VIb5GCpRLxUG8msS9FRqkyycG33lIk48i4TBwNgLkJmJrMxTRx2dG5d4Pqij1CiYcwvWG0v6+HEzzYdmS3i17t6N31i85zHZBbRgGxMxxP2HCq7mNU78PJS/CYiSRo4s8026Nfc7GdB8mwNVI5wpRekQwKSTwEFRUObi5r0TUIMwRuLIYI0rZil6BtUi0qZCR7+esUl2HEzZW5Tky0vBnSCgSj7ZHpnjDujLbn2lGB0XvLRlqsmLGf002RK8ms5+QF/r9ic1gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fvEHR26AD5v6rwBL/VbuFhvkznWBeYiYs7jbyeZ6VBA=;
- b=Gx9H+qDnp2j8viRt0nDXrl+ZjUBhfggHhNrk5oH1zfPXIPKIrkEus/VLKY/AgwPrEnpCn54EznOMUUoR1UAHOKltBUq5sIr/ELPqpHzO9XFMSBx9n3BsqFFhCXZTmmE9MV8+sWeGkfBPlfntIYUHHnIAM5apOafac7k4o6Yc0fg=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB3815.namprd13.prod.outlook.com (2603:10b6:610:91::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.15; Thu, 19 Feb
- 2026 19:40:01 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1400:cb63:420c:6aac]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1400:cb63:420c:6aac%3]) with mapi id 15.20.9632.010; Thu, 19 Feb 2026
- 19:40:00 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "okorniev@redhat.com" <okorniev@redhat.com>, "anna@kernel.org"
-	<anna@kernel.org>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] pnfs: improve "Server wrote zero bytes" error
-Thread-Topic: [PATCH 1/1] pnfs: improve "Server wrote zero bytes" error
-Thread-Index: AQHcodU+Bumj66/Xpku0tQio+nizDbWKa2WA
-Date: Thu, 19 Feb 2026 19:40:00 +0000
-Message-ID: <c6be70378ce90b3316c997bfc9443172eaa145c5.camel@hammerspace.com>
-References: <20260219192327.34732-1-okorniev@redhat.com>
-In-Reply-To: <20260219192327.34732-1-okorniev@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|CH2PR13MB3815:EE_
-x-ms-office365-filtering-correlation-id: 46bd3834-039d-4111-d00b-08de6feeabcb
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?VW9MTmNwZGVNNC9nWUx5dFlnK3lmUHNYdlYzcm1rNHJVcktpeUFGVC81blR6?=
- =?utf-8?B?aWI1WnJ1RzhJZHZ1VkIxUExhTUUrZGF1eVB2eElHRGtSZWtsc2NHYys2RjN6?=
- =?utf-8?B?ZDF3Q3BTTE9ka2dLLzJoY2tSYStPWjBwdzh2UTdZZzJOUmlrajJTa2RHWUpy?=
- =?utf-8?B?clYrVkI4cmJHeGdkbFlNMEVSQ1dPNXZka2VQbjZabTM2dUNvS1JhdXJ1VkxI?=
- =?utf-8?B?Wjl4MWtBcjlYR3V4VTJjSG5OYkZLR2xLQkJmd041NjlOTi9WWGpSVktheUNa?=
- =?utf-8?B?NjFmR0hPTUVNZC9pNEVRTTBmSkpFcXUrTzJJSC9RaHFqd1RaYWQ5eVN4bFdL?=
- =?utf-8?B?MkVzRmptOW85M09NeDY0L0U4NmJsQmNkc21FaC9hT1Vwbzc0Q1hhNnNlOFZq?=
- =?utf-8?B?UWh1KzJpQkxTWGRqemJEeUdOSXcwVTBKa2FHUWlNTk84S1M0ek1XVklISFo0?=
- =?utf-8?B?T2QzYVF4MGJpSVdEcThNMFNhQS9LNWlkc3hHYjE2RE5QS2NUT0xnSHcrOFI0?=
- =?utf-8?B?bmJ6UHVhdTlQOE5tOUx2SEhlRTkrVDlIZEZXNWd4MHFSTVoxZjNUK2FRR3RB?=
- =?utf-8?B?MVVvRUlBVnAreFQ1VGFzTU5JS3VWMmhZUTNLWGlkTVdMdXk1RkJwcnJqYkR4?=
- =?utf-8?B?R2puRWxKc0JST1crUGNCYUo3eThiNTBwK3h5QjdjVGNnYnA1anNhMThpejJw?=
- =?utf-8?B?SHNpN041Nm5oVDQvS0ozR2l5VHVzUjdWZHV5cGdOY0FwajJ6cW9BSlJESHJ5?=
- =?utf-8?B?ZUlQem1FRkNaV3YvMU13cnhwY2JnVkhhUTdab1dCRWptd213NUxoSzBEdHNS?=
- =?utf-8?B?L2JmbUxTMDU1aEl2WlE5RjU5d2dNaStzK0xJV1d4WVVhRk80ekJ3YmROTFpE?=
- =?utf-8?B?S2xFcnN2cmZENG9UbGhRbzhTOTJsV1BhVTFoR3RoSVNWV1V4VWtnVUoyUkRp?=
- =?utf-8?B?dzhhaWdpUUZndHovOUFxMGR5dWFnQkhET0g5UlZ6K1ZLcFRQUlMrM2FoYmJ3?=
- =?utf-8?B?MlJPV1paR3dpMm9GTThHUVUzdWxGa0tsRUFYRHcyUVhaZFBGT2JPdjZOUExD?=
- =?utf-8?B?NlZDK1ZqVS81YnJFL055ckR5YnBIZ1V4dEFCQ1Z1WXlPTmx0blVub2VCbmF3?=
- =?utf-8?B?RU9XcjFpQTl6eEYxQkNvTUtVQ1hjUEFKTnNjeEFEb3RNa3Z5ekpXUlB5SjAw?=
- =?utf-8?B?aEFOWkU3b0Myb0lraVpkalpUU0F0eTFWbWorWUZBYzdHWmVHc0FkWWo1eTBv?=
- =?utf-8?B?OU95QWNLcXExMFN4cTVmZk91ZE9HKzF3Q04yTVpxYkt4N3o4VmI2S2V6VFhl?=
- =?utf-8?B?MTJWY2V4NTBzRWY5VGZnVFA2Y0lOV2tpVEVjNWYvZi83TjNjRVZNbFNURGUy?=
- =?utf-8?B?ajNMb1BHY2lhSTVoTmdMb3hhSUtJaXZKdlJMVVhzWjlzbWhjN3o4NGpFOVhX?=
- =?utf-8?B?Y0pTMzZ4WVUzOTJ5OVlaVVpaYWp1dWtQS1l1aGd6RFd1U2xic1BPdXcwWTZU?=
- =?utf-8?B?WjdpSjc0THQ3T283dzR3blA1ekhpSDErN25zNUt3WXl4TUtwamlJTVdPRVBn?=
- =?utf-8?B?YURWKzZyNjJGUFF6VUFTZ1RYdjEzTkFZQjBJNlVnMXdZd2pCTzZVVG5scGFD?=
- =?utf-8?B?eHNLRTdJNnoyNGVYSjNUMnkyZjRCZHBDWnpLYU1OQnRzTHpyY0pqMG12M3Vp?=
- =?utf-8?B?R0N0NUxNVTR6MVJMWmFoN3lvRmNGL1RuVjk3NVlyQ2VrTEhpY1BVS3dhSzVL?=
- =?utf-8?B?cTl1L2pianRNZEpEOFNLOEpEaUdKYkRRZG5Kbmw3YXJZdHFXSENHKzJUNjRu?=
- =?utf-8?B?b29JNGx5cm5vMFBNWVBqRnR6MTFTRDZKMXZnZlNuOURzWTNUVXlTMVlvN1kw?=
- =?utf-8?B?by9SYTRJUVFnS0FsYXlCNjFVRmhDZmF6V2JKSW9kUktoV3RXalJ4bzVpcXV6?=
- =?utf-8?B?ZmUvU0J2c01hT0wxakFudjFyaURldTBiaURSR0wvSlVBbVJYNXZKL2tLRTYv?=
- =?utf-8?B?OEFlSkVEM2I0UE5qdXgxR1RkVm9ldFdNVWpqN05sL3cwRkJBeDUyLzRpVWx2?=
- =?utf-8?B?UkhrWmJ4YVA0RGM3Vis5Vm41cVc0SW0vcXNvVWlVd0tqcGJlVUZ2b2VVZm9u?=
- =?utf-8?B?Zk5icUJxV2xJQlY5WlN6TENtYndtcmlMQ09wRnBFVlQzR01rRUE0UUhkUDRx?=
- =?utf-8?Q?o5Ufyp94him3oPFtA+i5DmY=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?QlFuTnhEVHltNkhHWS81S3NnODBaNVRtQ1Z6MFFVZEVZNHJNcEpqK1dqR3hh?=
- =?utf-8?B?T0RGT0dTZmtKblZYZ1NpaXdtNTdkelVjUHNvOFh3QmtrQitsUjJJWXNKTE52?=
- =?utf-8?B?YWpCd0NXM1l2M3JndW4vVlhLNkhOelExTDM5YUZpdVoyb2hNV0xwZHk5VmU4?=
- =?utf-8?B?VFIvMDQzaDVyOWVENTdxNXdMQ3RrczBtRkVybXR0TTdBOVhxVkVDbkE3S2tj?=
- =?utf-8?B?Nms2dGRnZHdpVmdNdFRQTFRLdUJEeE9DWnRPeUhIaFRVcXRJSjJuWkFISEI2?=
- =?utf-8?B?aTc5SVlrUFhlV2hrMFNVa0ZVUFVKRU94YUphOXRoM1NmU2RkT3h3QUhSUElp?=
- =?utf-8?B?VDZFbURRY3JYc0FNblJ1Q2ZMTWw2aUVmSnR4N2ZpYVI2UHlVU094TmtrMWp1?=
- =?utf-8?B?MFpmTDltSWJvV0YxSys4RytYRkkxS1FVWVZBMXYzRmE5elUrMWRMSlhRcE10?=
- =?utf-8?B?NEpjTHM0TmQveDZlME5HTjU2YWszbUxEdkxMZ3VyYmZXNmk1bGlMUHdxRC9P?=
- =?utf-8?B?ejFENlUyRzUxMnhQeUU4TGs5STZRMnNjOGtTcFJCVWxaVCtWdnJKNWRMMDc3?=
- =?utf-8?B?TmZZWlF1dEg3MmUzeTZzTUE5UG9zRWhURkM5T3lFOFFzR2hzamlTVUQ3SmtL?=
- =?utf-8?B?bGNocDRZMlhrMnF6ZklwZ1ZzdzVQWkZtVCtFNVl4N1liMkZ5NklMSXRZL1NM?=
- =?utf-8?B?cHJ3UGV5UkZHNU9pd0F4SjJCZVhNYVpmWTJRelRKVnVnWUtaR0ZCeGtUK0gv?=
- =?utf-8?B?WExSYXYrcVpFS2lONUt6UVZvV1FEUXZLY3djb0M3TE5JMUJxYUEyWEQ4dWpV?=
- =?utf-8?B?UGg1UlVkem5JaXcyY3hGL3lUbjMyMUY4K0NtSTMyS3RxbkxxczNZN1l6VmlL?=
- =?utf-8?B?MVNvYVZISXdoUDBTSVNsRGRTVEY4aE5WT0owdGV3Q2NFNWk4dTJYc2NVUG92?=
- =?utf-8?B?V3NsbFhTUnV2Wjg5TkYwVXdSTTJEZzd6SWRvSU9jTkNIc2xkcjA3R1lac2Vn?=
- =?utf-8?B?dlVTMElpTVhvRlVNWFVjbzFpMC9kYTF1Vmg0R0lQRXdVeHhWT2tnbWF3VFdv?=
- =?utf-8?B?aVVWYTFxdVBac092Rm1Dd0dkQ3NhWVdIMGVtMG52VlBUU3YvVjJMcnQzRUI0?=
- =?utf-8?B?U3RvN0FhNkNqT1BYbWpKOHBIc3JFK3IxOVBRd1dHVTlRZjVJOE1oTC9zQ0xi?=
- =?utf-8?B?U2w2VmRWVjVLRGFYNTJ4bFhoeTN2UzcxeXRPTW5aUE5QakJ0VGtIUHBWbFRH?=
- =?utf-8?B?UUdkSUMyRlZ6QjBNeVoxTGJLYzAybGVYdms2L3Y5SExwdHVSNHhYd25GY0ls?=
- =?utf-8?B?b095TTREQjBaKzBSRVlaSm56S3dnNFJoOXFFWENHMUJub0t3aHVaS01LbVFn?=
- =?utf-8?B?LzF4MmZMRWlJOUp2bUVIRHNERzJObzdWVFNKemFNT3lLWjcwRnBUanYvaG4v?=
- =?utf-8?B?RllIMTB1V2pNZWRwNnoxc1NMRmJKZlVrUnZwRmZEeGxJcUJHeFAwTkN3Nk9w?=
- =?utf-8?B?ZElmK0lGbVhrZ3J2ZURoakp3NDRQeVUwczhwZ3NXWkcyTXdLcmduQ2xhblM0?=
- =?utf-8?B?RVpmc1Z6RlBqZnJrQnJ3SGJNWWJFTFlBMCthZHFhS1M4S0U2Vys5V2ZaVWVH?=
- =?utf-8?B?MHZVT1RmSkpobXNDSXIwcUl4WTdYczExZXlZd1Bpb0Z6NzNzNm82dDl2TUtw?=
- =?utf-8?B?RHFhcUpvWmtrWkNGN3dKd1BZc3NiZXZ0ZEE3YjhpcVc4MDNmTEx1WlRXblo4?=
- =?utf-8?B?NDI3L2hQa3R2S2RMWGNjV2VmcjZ5N1hpN2JPcVJQVVppais2bFducDJFWVFQ?=
- =?utf-8?B?Zm9nMUlaaDFBQXU1NDhvTTNIbCsxaTIvSTRTTGFkVnJqSllWbDdZTkVqZXpn?=
- =?utf-8?B?cG9jN1UzS0lJdHpWc2lLMlFuSjN3Zjd4dWNjOGZmYldISzZmLzFWckNLOUJX?=
- =?utf-8?B?YzlsZEtZcC9RLzVPTENSbGI2N08zYnBSbjIzV3BWWFdTaEtKNDl4eC8va3pQ?=
- =?utf-8?B?NWZtbDRUU3pXVXJjeXZya2xTMmZmTHFEZHFZR2xmTG02NWU2TmdZbWFRazM5?=
- =?utf-8?B?K2dxeVhMRTdRZjRVSHhucE1ubVlQeFVGeE8vaHkzVnFVbEk1YlFOS3NmS1pz?=
- =?utf-8?B?RGUzSGJwcEZEMmZyQUJLMFlua1N3WWtTYzlsREtnQ0lpb3lBNitzcGlrakhJ?=
- =?utf-8?B?dnAxbEZWMWZOSkJsUVpFR3Y2NXBrcFdZdklLZGJQdXlSSEVnVDBLNWFrVzV3?=
- =?utf-8?B?eXJZU0xrTFBUczN6bGN0MVBSUEo4YUQrRDl3WjRJTklycFhhRFBJQ2dIRHZT?=
- =?utf-8?B?TUNLL05KTlp0d3BGUTFURmFXYWpEdVg2YUFpUi9LcndJVUdaNXpVSUZXb2wr?=
- =?utf-8?Q?uvWJ1ZEMRPQlT80w=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4B6AA4C09BBE16449CE6CD08496EB9B0@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1771530256; c=relaxed/simple;
+	bh=hsZT6RS5nLhfg9oC2IDk8/0IDDbujvnD9lesm/d3ugM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MMRzqdRr8iOz7m5SlfskX/tE5oTSWN4tP2+4Rj7lc4D1YmX9arIYDdck3NE9tAlfzRzXxHrFF+V/sYLAJ9dk6K696gjBvQUE8+x7zQfell+WHGLsZvNPcyAdid2HkO1XJefIFlYWTmLBy0Ea7jTM1fThD65nsyKKj500Q+MKScY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=YkZIZDS3; arc=pass smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-385c23b88e8so11838081fa.3
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 11:44:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771530252; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RnNpoLmZC8U87eDeAMMF8jxfKlbWJzS6CxgTwleaQnaeLRjiYD0+EO1Hf+WvNmNUUP
+         fVXoOEmZYU4vDZdYOwj0d2rtUYCrO2VD3vtER76xMGp14M0YDrW/mgsxpuzC0sUk7eZH
+         BmUAhDU047CLMdrsCZFHL5MbykHFjVvYsEotftEdvWyO+RqWx9wYrIY8yIZE3nmen7cy
+         r+g1frKd5jqiTwJ6Oj/DdfGuVLmYGeUx9zvq0iBBXeuhQF9biIEPYiXtFPxnYaRflrQf
+         UwgdNXlsM7c8gz5xm381Aadm+I1uA8igMTy8OVjPCm1MMlzjT3Wlf6GYjY+IZew/TMse
+         v/Zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=NAoKDdyZBPE7OWmJqiO7HIs5ZuFQhWuCWqvHd1qiLK0=;
+        fh=vsOVM1LEn2YwrKdqyD2OM75AYysN1GGIChhcYgJukgM=;
+        b=hXsphenuP3B9rb5S+xd3ysXZfgYgCvdwOMbjtENfJ0EJAd/MFd37mJ/2e1fWPXLlrw
+         OVV0HZQ7V76NK4uFdzT0bIqWi7jJ7KMAKKvzZb8tXSlnxN20RTDA9AM8s2a2NGzsbUu7
+         fxqdFap3UR6mXD++VX9w+NGXDu5xpm4Wa4lFmoa+HALtnknwwwj9r+T+GlQNHjdfVwnb
+         4wf/MOfskuAJDENubKOPJ2c1XuiWd4KV5NfNRREeKg0VkAnATZB7QLykP0+6260oRaQs
+         oDs72q8S1hJP6tgGKqouZNv7unvsD2WzG5YX6k+k/UtfFiWnWJW8f+PdQk6RePH9f9eS
+         kjeg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1771530252; x=1772135052; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NAoKDdyZBPE7OWmJqiO7HIs5ZuFQhWuCWqvHd1qiLK0=;
+        b=YkZIZDS3EWaRKpU3oIRZkdqsds18bvL5pM/T36wR2sed7CNDRlTkAAELGDHZYyf9It
+         dlXkrBBmGC1ddKMmMp6n3jZg3yaNQJm39cnGmI4yOt6bs2x2Y6z1eM5HhRbOzAz2CuGM
+         TiKCiRCuISsgt6HAmM9Xm8h1mscKyLrKZ9bUBps6HR1TiDsGvU5JOaXcSbslCyGJloMs
+         SV+0StaAV/cp7eWfa1tLIsajZUwofMdKcbl/c1dKIyKQYtIpsZJhyIzDMYsXH+B3IAUi
+         17Gn/mhsmyU+AV43ewkE6uY8pLuYwR+QZmrgzhZXP1Rbl5AV3ZyvK1yDiLO3+Du9jJpl
+         7hJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771530252; x=1772135052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NAoKDdyZBPE7OWmJqiO7HIs5ZuFQhWuCWqvHd1qiLK0=;
+        b=ryoYENWyUxr7gw10dreSbWf/aNKDinGUi2A3tuW+JPBU9HzIN+F5aZyaGIpJAE9ZOB
+         ZRMrKKA6b35yH1jXzUygc5rMkjiNZMrWkIQEDCC+HnnmythxlWcpmSh7M2Yr5jJZwQXK
+         a8yg1jpLyv3TO1G027F6ztrvokqCFU9M0CQ4jKruRf+ueQiEbSZkbBW6/wG00SLagfH8
+         Wd1HWkMcXjRVzp80oTaC3wQe8pLMeSQAK8xSazjjK/2g/kZYdieEqa2igd5RLe9S3+qp
+         UV+aNKnC+YNKrUOYo1BZp2u3zgR1h1gwMimwiCO9KuVC+x3+VbQ5ceCyA5fUOjxBM/cQ
+         MwfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVE4/ewbgn++/pfv9f1W+6J0vXG9wJtEJp3zBn2nKr/7/YIx403mXA1K/sY6K179WdlwTDlC9uEayU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDmf0o68DvBbBHTibk8q+7MyRhocGN5jJZrUXZsUdvNiG6MUUF
+	/OXiEpvjNBcJBW0DozVyO4w+GKaGxSoz6cZjkgCfP5K1UK2kXQ9V2ngKwUj+PUfPbHyoSEraY8s
+	zt7ckn6iOqhPl8Hf1sbnhkexEHuQc2Pw=
+X-Gm-Gg: AZuq6aL+RKaQLbJ+VqFrWQv9vIjNMXr/UKPeEksSQWc27M+Vt0PRPSm44EjyG16JjX1
+	sbXfcd3UUU5x/etfufq+qfGfABjO/3o1q+1eFzyHwZNz7iqaXiPhEJTsEEAKHARAYO6xsiQO54F
+	wX0igUwXHhRvnuXZTVLjR86stQHwY9DwPPacluOA3dDtzXJoPrwT67mdl6rk3u99V4egE+k362e
+	t+YTJpUE39WatQt0ZfsaMqRuijQV4AMCdAIZwj46Dp5C2A1sHhyhMEM0i3TgeiVbdo0YaW1fDHG
+	q9275tGVn6O7qYIwRrZVKXYqY5YyiD2qb54fSa0img==
+X-Received: by 2002:a05:651c:507:b0:386:91a1:f207 with SMTP id
+ 38308e7fff4ca-3885056d42amr10235631fa.2.1771530252050; Thu, 19 Feb 2026
+ 11:44:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46bd3834-039d-4111-d00b-08de6feeabcb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2026 19:40:00.8309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CF+OLElR74/2oPbEX4NdJhUB70avZWqhn0Rb5PBmSvCsJGEDJLnVDkxKls9Q8ecrT0sjtP7OJ/WNcx7TlyS4/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3815
+References: <20260219192327.34732-1-okorniev@redhat.com> <c6be70378ce90b3316c997bfc9443172eaa145c5.camel@hammerspace.com>
+In-Reply-To: <c6be70378ce90b3316c997bfc9443172eaa145c5.camel@hammerspace.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Thu, 19 Feb 2026 14:44:00 -0500
+X-Gm-Features: AaiRm50ZxgQUuThLbVrkQDRO7oLtsZE4lO3vtfsLnhbAXsiZGFd66sfI8nqRPAg
+Message-ID: <CAN-5tyFec2nw1=1-wsGYj4TnXmSbw4p+qW_1v9sPD+nPKiP1Gg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pnfs: improve "Server wrote zero bytes" error
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "okorniev@redhat.com" <okorniev@redhat.com>, "anna@kernel.org" <anna@kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,none];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[umich.edu,none];
+	R_DKIM_ALLOW(-0.20)[umich.edu:s=google-2016-06-03];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_EQ_ADDR_ALL(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19037-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19038-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[umich.edu:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@hammerspace.com,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-0.994];
+	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B4E20162138
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,hammerspace.com:email]
+X-Rspamd-Queue-Id: 1FBAA162256
 X-Rspamd-Action: no action
 
-SGkgT2xnYSwNCg0KT24gVGh1LCAyMDI2LTAyLTE5IGF0IDE0OjIzIC0wNTAwLCBPbGdhIEtvcm5p
-ZXZza2FpYSB3cm90ZToNCj4gV2hlbiBhIHBuZnMgZXJyb3Igb2NjdXJzLCB0aGUgSU8gaXMgcmV0
-cmllZCBhZ2FpbnN0IHRoZSBNRFMuIEhvd2V2ZXIsDQo+IHRoZSBpbml0aWFsIElPIGxlYWRzIHRv
-IHRoZSBrZXJuZWwgbG9nZ2luZyAiU2VyZXIgd3JvdGUgemVybyBieXRlcyINCj4gd2hlbiBpbiBm
-YWN0IHRoZSBNRFMgSU8gd2lsbCBub3QgZmFpbCBhbmQgdGh1cyB0aGUgZXJyb3IgbWlzbGVhZHMN
-Cj4gYWRtaW5pc3RyYXRvcnMgdGhhdCB0aGUgc3lzdGVtIGlzIGV4cGVyaWVuY2luZyBpc3N1ZXMu
-DQo+IA0KPiBJbnN0ZWFkLCByZWNvZ25pemUgdGhhdCBhIHJlLXRyeS1hZ2FpbnN0LU1EUyB0eXBl
-IG9mIGVycm9yIGhhcw0KPiBvY2N1cmllZCBiZWZvcmUgcHJpbnRpbmcgdGhlICJTZXJ2ZXIgd3Jv
-dGUgemVybyBieXRlcyIgd2FybmluZy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9sZ2EgS29ybmll
-dnNrYWlhIDxva29ybmlldkByZWRoYXQuY29tPg0KPiAtLS0NCj4gwqBmcy9uZnMvZmlsZWxheW91
-dC9maWxlbGF5b3V0LmMgfCAxICsNCj4gwqBmcy9uZnMvd3JpdGUuY8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHwgMiArLQ0KPiDCoDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25z
-KCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2ZpbGVsYXlvdXQv
-ZmlsZWxheW91dC5jDQo+IGIvZnMvbmZzL2ZpbGVsYXlvdXQvZmlsZWxheW91dC5jDQo+IGluZGV4
-IDVjNDU1MTExN2M1OC4uMmNmNDA1YzM3MGI0IDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvZmlsZWxh
-eW91dC9maWxlbGF5b3V0LmMNCj4gKysrIGIvZnMvbmZzL2ZpbGVsYXlvdXQvZmlsZWxheW91dC5j
-DQo+IEBAIC0zMjMsNiArMzIzLDcgQEAgc3RhdGljIGludCBmaWxlbGF5b3V0X3dyaXRlX2RvbmVf
-Y2Ioc3RydWN0DQo+IHJwY190YXNrICp0YXNrLA0KPiDCoA0KPiDCoAlzd2l0Y2ggKGVycikgew0K
-PiDCoAljYXNlIC1ORlM0RVJSX1JFU0VUX1RPX01EUzoNCj4gKwkJaGRyLT5wbmZzX2Vycm9yID0g
-dGFzay0+dGtfc3RhdHVzOw0KPiDCoAkJZmlsZWxheW91dF9yZXNldF93cml0ZShoZHIpOw0KPiDC
-oAkJcmV0dXJuIHRhc2stPnRrX3N0YXR1czsNCj4gwqAJY2FzZSAtRUFHQUlOOg0KPiBkaWZmIC0t
-Z2l0IGEvZnMvbmZzL3dyaXRlLmMgYi9mcy9uZnMvd3JpdGUuYw0KPiBpbmRleCAyZDBlNGE3NjVh
-ZWIuLjhlOGUzZjhlZjM2MiAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL3dyaXRlLmMNCj4gKysrIGIv
-ZnMvbmZzL3dyaXRlLmMNCj4gQEAgLTE1NTgsNyArMTU1OCw3IEBAIHN0YXRpYyB2b2lkIG5mc193
-cml0ZWJhY2tfcmVzdWx0KHN0cnVjdA0KPiBycGNfdGFzayAqdGFzaywNCj4gwqAJCW5mc19pbmNf
-c3RhdHMoaGRyLT5pbm9kZSwgTkZTSU9TX1NIT1JUV1JJVEUpOw0KPiDCoA0KPiDCoAkJLyogSGFz
-IHRoZSBzZXJ2ZXIgYXQgbGVhc3QgbWFkZSBzb21lIHByb2dyZXNzPyAqLw0KPiAtCQlpZiAocmVz
-cC0+Y291bnQgPT0gMCkgew0KPiArCQlpZiAocmVzcC0+Y291bnQgPT0gMCAmJiAhaGRyLT5wbmZz
-X2Vycm9yKSB7DQo+IMKgCQkJaWYgKHRpbWVfYmVmb3JlKGNvbXBsYWluLCBqaWZmaWVzKSkgew0K
-PiDCoAkJCQlwcmludGsoS0VSTl9XQVJOSU5HDQo+IMKgCQkJCcKgwqDCoMKgwqDCoCAiTkZTOiBT
-ZXJ2ZXIgd3JvdGUgemVybw0KPiBieXRlcywgZXhwZWN0ZWQgJXUuXG4iLA0KDQpIbW0uLi4gSXMg
-dGhpcyBuZWVkZWQ/IFNob3VsZG4ndCB0aGUgdGVzdCBmb3IgdGFzay0+dGtfc3RhdHVzIDwgMCBp
-bg0KbmZzX3BnaW9fcmVzdWx0KCkgZW5zdXJlIHRoYXQgd2UgY2FuJ3QgY2FsbCBuZnNfd3JpdGVi
-YWNrX3Jlc3VsdCgpIGluDQp0aGUgYWJvdmUgY2FzZT8NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QN
-CkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kbXlAa2VybmVs
-Lm9yZywgdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0K
+On Thu, Feb 19, 2026 at 2:40=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
+>
+> Hi Olga,
+>
+> On Thu, 2026-02-19 at 14:23 -0500, Olga Kornievskaia wrote:
+> > When a pnfs error occurs, the IO is retried against the MDS. However,
+> > the initial IO leads to the kernel logging "Serer wrote zero bytes"
+> > when in fact the MDS IO will not fail and thus the error misleads
+> > administrators that the system is experiencing issues.
+> >
+> > Instead, recognize that a re-try-against-MDS type of error has
+> > occuried before printing the "Server wrote zero bytes" warning.
+> >
+> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > ---
+> >  fs/nfs/filelayout/filelayout.c | 1 +
+> >  fs/nfs/write.c                 | 2 +-
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfs/filelayout/filelayout.c
+> > b/fs/nfs/filelayout/filelayout.c
+> > index 5c4551117c58..2cf405c370b4 100644
+> > --- a/fs/nfs/filelayout/filelayout.c
+> > +++ b/fs/nfs/filelayout/filelayout.c
+> > @@ -323,6 +323,7 @@ static int filelayout_write_done_cb(struct
+> > rpc_task *task,
+> >
+> >       switch (err) {
+> >       case -NFS4ERR_RESET_TO_MDS:
+> > +             hdr->pnfs_error =3D task->tk_status;
+> >               filelayout_reset_write(hdr);
+> >               return task->tk_status;
+> >       case -EAGAIN:
+> > diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> > index 2d0e4a765aeb..8e8e3f8ef362 100644
+> > --- a/fs/nfs/write.c
+> > +++ b/fs/nfs/write.c
+> > @@ -1558,7 +1558,7 @@ static void nfs_writeback_result(struct
+> > rpc_task *task,
+> >               nfs_inc_stats(hdr->inode, NFSIOS_SHORTWRITE);
+> >
+> >               /* Has the server at least made some progress? */
+> > -             if (resp->count =3D=3D 0) {
+> > +             if (resp->count =3D=3D 0 && !hdr->pnfs_error) {
+> >                       if (time_before(complain, jiffies)) {
+> >                               printk(KERN_WARNING
+> >                                      "NFS: Server wrote zero
+> > bytes, expected %u.\n",
+>
+> Hmm... Is this needed? Shouldn't the test for task->tk_status < 0 in
+
+task_status is 0 when it gets to nfs_writeback_done because in
+filelayout/filelayout.c in filelayout_reset_write() is doing this
+
+task->tk_status =3D pnfs_write_done_resend_to_mds(hdr);
+
+> nfs_pgio_result() ensure that we can't call nfs_writeback_result() in
+> the above case?
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trondmy@kernel.org, trond.myklebust@hammerspace.com
 
