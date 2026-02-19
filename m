@@ -1,401 +1,154 @@
-Return-Path: <linux-nfs+bounces-19030-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19031-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2FeZLJzPlmkZoQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19030-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 09:53:48 +0100
+	id MLwIFWj8lmkXtQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19031-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 13:04:56 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6652015D214
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 09:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB3A915E7E2
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 13:04:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4DB293029A4D
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 08:53:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4437C30099AA
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 12:04:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405BD336EE8;
-	Thu, 19 Feb 2026 08:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F38B2FF17D;
+	Thu, 19 Feb 2026 12:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=preferred.jp header.i=@preferred.jp header.b="Y4c/XF2o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WTpwunSP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9D433344A
-	for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 08:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771491223; cv=pass; b=RYFu6KB2msbOqf4Fzn0rq9pvJBXEt1t/wRIay5nvQXEzcbqoHKV1/bplC0G6bxXai/DXSSZOg7ieJH6POK9or7aFJUQROVgq7UAEyookA88MUx/mUT5aT3kRyueQRtXaVxgHHosQfaXpXRZKEMCaTixDI0CLOht1tn5b6JgyiJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771491223; c=relaxed/simple;
-	bh=2Z37UknHdfEmu6EzNUZ/Wm/7+gIp2RWZkRG5ASGOTjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sb3Gi5BQJcksF7LE8FDNacVl6l+dYNwIT6j3kmaXDrL0qu0DbbI5YCAI3C2GKQyOt0/lwY0KMZeZCAHOP642tAtJyyRgERYSjLYPxGwDNuFyZwVyK9bWmCCJRtLOTYPDbEysGes26Yw2rkS6B5RjRX397EYoymO3F0jwfIKnB+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=preferred.jp; spf=pass smtp.mailfrom=preferred.jp; dkim=pass (2048-bit key) header.d=preferred.jp header.i=@preferred.jp header.b=Y4c/XF2o; arc=pass smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=preferred.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=preferred.jp
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5069c08cd32so1141201cf.2
-        for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 00:53:40 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771491219; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Ubtx1DUpkDmdf7aztwAEO8R1aDPbe7utVDZofwWjGwUKxSQiw6HT2NTepLbDZSvtCn
-         Tbeifp4Jr63cEpeVIdWR9ivqi0qyJiLCtUp5ryf1+wRn0CtzwocXew+MLhz+GeN6Fg+h
-         8oSxoNbImGJzt37bZ1mSm2GbPfHjf+W+VUuX68Ex9Au7I2165Ux4Iha+k0UvzsDJpng2
-         bvkFoiqAdcSCZfrWITx/ax7g8ZCVg+BxExBir0E9h0LTOO720U8gnjk53BY8gAScrSg0
-         SgEQrLj4dDZx8+Qdj8THdq2kFyoY7TvpqIBKsK8t7rUaXO2Gx3nhObJdumwya4U18sYv
-         x+2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=z6MXi+iRm0MTdGT6Ba+AzL8QY3gsZXbVDEv55SpTrIY=;
-        fh=ERDt+IdKINyuYMW3jarNjJZyeovZeE7Jl4qVZQBxdBY=;
-        b=R3XF5T761l5DBLfW/S1Z5MIzX4FKYVpwpV7MzXRPn//E8437W+QLAe98yqhFFIziZk
-         rXodCQeL9LLehuYr7LRxthtW78FgeuPbfrvEkep86SvTZajBp1J85rNcoYn2L9/S90pI
-         iQtmbXrhVoCmMkyf1OoGsppA0KR681wXOxIunjnc/JCITVD4THE/X1jg37XlF927/Y+N
-         wtFsPRNQ/TjdPIejDUc5dqNOcXh1Lo6lTENUCeLy5qYkTyWJIlLlNECgvhggJ3T84KX4
-         KLm4XZelnz32GOyNTe95+JLNXLt4xZ8ZaBnfmecwXWI41N5yySHvqswFjJRQLH9JCuSp
-         5xew==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=preferred.jp; s=google; t=1771491219; x=1772096019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z6MXi+iRm0MTdGT6Ba+AzL8QY3gsZXbVDEv55SpTrIY=;
-        b=Y4c/XF2o7mSxxZrjkFKdy4HvIjEEzZKQHjlSQasJ5k0uQdwf3guY0QXQa3VRyRmIgw
-         C3Q5k3XcIiL0nAssZWU8M8lV0MM/h4HjdZHwF4B/ENxhNoOEeOisKJPleE8MHfsjb6CE
-         K6LzCbD41l/1vtInsDkh2csD9Irtn1qBNdPt57K0K1AmJ5aUoOELyCo6xTJS8RRpWqcr
-         cjsYeuHAkXpcD4fh91iV+yi/vFINfQcqxMA8BSIWNnShwJMxS/CBMnA1EvwNrwpuPYyv
-         S3htHhUSNZ6nDmhyObt83f7RmwPl9wgqlo0Ht2ungPbeZLZiBn0QAHqUPI4kPVxAukqH
-         9xMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771491219; x=1772096019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=z6MXi+iRm0MTdGT6Ba+AzL8QY3gsZXbVDEv55SpTrIY=;
-        b=gq5nB+oq9VlDrN7mn7gL0sgGZ1A3j3CWRwfOGakJ5kJyvlovr+niNFOf1aLQRUhLlM
-         fgFkm9rN478yP8tcueqhVvzFVziNvCCZ+BZ0ElsV409KRUIc7GmfF72R7EQi4uJ0lH8T
-         Y9O9mt6NIUE68KWObaQc876rpv6Q5CzXb7OYaBYdh19t2V6dCENkEji4uTGY3GosHQKz
-         DjTzGbAwGCjc/CZsE06WdV6JEBgxF5KuujER6xyL3Vh53t0Zhcw9byZr4xXCNqB0n7rv
-         jDqkqfSzJby8zbd+xpyuTi2AaSTq3Gl2IuWqQWzffkCnDBLHfzZUQ1dIq6fzt2Rk2edb
-         CVLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQJIr/3lDMMTXfiVhq5pYu4Yg5tz2bu+RTsbi/5zBXewMBYw4EM1UbJjgxjTquWLXpdojk8wyUlN8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/JU3S1/0YJjb415D3wHI4rYcRCo7Lt1NtfMh6Fe0foM8EHUQl
-	S+bm8Gtjadp7nyt98QubTpo5S+9kaeB9vlj2NH7JYjVa6hFwZ5HjGjs+QV6Av6dYTilHAPiSDbA
-	LOIhjLU81FOkRO2XNMSk8ayeXU9vsycVZSSXgjZjGnA==
-X-Gm-Gg: AZuq6aLbCpnHiok90YIANiFrqZOLb6m4Z8CNIjhXTH92LhVINtfA6kYDbprAiJm/6om
-	Z/HVbdzCY6x7ltTVDsjc8T4xy91UEBGpDF+J98CH4BqL2z3SvE2sReb36IWmdTLbmTzaxZYXhz9
-	W7+4gs3PiLjKdsw9fjCE6QEQEKedmzSdQCSfttRO9ReZrQVYUT1FCOnvbv0+1xQEzncPqfUy9aZ
-	DZSAl6/q/vU0FnHfkkuAc4+ZxkJmskZLMdB6DL+UJB5PlHHZmdeTYxG1AuBr+ZH0D+rOfj73v4D
-	5Nl7wVDZZyMMWSRpYXXBHXGfhmsvzdcaC07pdQOM
-X-Received: by 2002:ac8:7f82:0:b0:4f4:b372:db38 with SMTP id
- d75a77b69052e-506a6a7e4c3mr216494071cf.5.1771491219468; Thu, 19 Feb 2026
- 00:53:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6F82F067E
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 12:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771502689; cv=none; b=Cxn4GgKYTK/JrrM4iP6y8RTci05bF8GfdWUwCeISMHFYlDzUk45nUEh6caNmOmppy8gJOpFcZDQ1zvS+21DGQpxfdAMEtrCG5/84aezvyPZUU5cBR4xZBoXELDbXDESeUjFgW+6Y5ym7Wjo+Kxz1NTelopZj+SiQdYd6DWKVXNI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771502689; c=relaxed/simple;
+	bh=/8hfK/BtS7DH+CZu+D7W5pnZBl3+KC23GO3mrFnfrHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RZ/7kV/APM4Q4zg56SOWRWo5TgvoXfyLnqrmm5mnFPl/481mFO2qW+q0eggfA8sy8kastgE0psr9nIpXUadHXvTgETg3mAbxfM+VFl8IzxBE1rYn+U0Z9iBFBFvhpi6MJvI4F6wMy+9o45rpACwKzMbHEuekxdOH561EvYQYLaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WTpwunSP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771502687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t1mmqpR0edyHsebNjx1C92XDYMVNnYLEaiSrjhOGHBI=;
+	b=WTpwunSPNdKJJ7JR9FoEzJA27G/RraaKz88fFhTT2W3LbX3pGHp0a/sAroiVC+X+jxMsGj
+	SYqTqStN0JqLgBdzQMptVoVjO40rLjtCCNb/kss4b50lTOGrhcHhq+q28wyxkSm6XPGUyF
+	m0rbqj7kMYtxPgMjpcmJyMHcXuLB6Rc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-587-YbDLcfI8M16HNRW5PxZsRw-1; Thu,
+ 19 Feb 2026 07:04:43 -0500
+X-MC-Unique: YbDLcfI8M16HNRW5PxZsRw-1
+X-Mimecast-MFC-AGG-ID: YbDLcfI8M16HNRW5PxZsRw_1771502682
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B71531956089;
+	Thu, 19 Feb 2026 12:04:42 +0000 (UTC)
+Received: from idlethread.mad.redhat.com (unknown [10.32.160.145])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B44D21800349;
+	Thu, 19 Feb 2026 12:04:41 +0000 (UTC)
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+To: linux-nfs@vger.kernel.org
+Cc: trondmy@kernel.org,
+	neil@brown.name
+Subject: [PATCH] nfs: return EISDIR on nfs3_proc_create if d_alias is a dir
+Date: Thu, 19 Feb 2026 13:04:40 +0100
+Message-ID: <20260219120440.766178-1-rbergant@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <65a53a2d6fcc053edeed688a8c8d580c03bd6f3b.camel@mihalicyn.com>
- <d11b39cb43ffe437868eef4bc1c01d3bce8509e9.camel@kernel.org>
- <CAJqdLrqNzXRwMF2grTGCkaMKCEXAwemQLEi3wsL5Lp2W9D-ZVg@mail.gmail.com>
- <e0be58df89ffaf41763312dfffe8402fdcb9d023.camel@kernel.org> <177146267901.8396.9601896246772305364@noble.neil.brown.name>
-In-Reply-To: <177146267901.8396.9601896246772305364@noble.neil.brown.name>
-From: Kohei Sugihara <ksugihara@preferred.jp>
-Date: Thu, 19 Feb 2026 17:53:00 +0900
-X-Gm-Features: AaiRm50jPBxWPod9hsVLk0IwJJa7_hpa82MowfxDEHYTeiCBKTPRCCr-PKlSPAY
-Message-ID: <CAGY9O4mFJz1fbVUUsdhvFTBcgAGcYYrQBLQxkdOWoQe7LvDYWQ@mail.gmail.com>
-Subject: Re: [LSF/MM/BPF TOPIC] VFS idmappings support in NFS
-To: NeilBrown <neil@brown.name>
-Cc: Jeff Layton <jlayton@kernel.org>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-	lsf-pc@lists.linux-foundation.org, aleksandr.mikhalitsyn@futurfusion.io, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	stgraber@stgraber.org, brauner@kernel.org, utam0k@preferred.jp, 
-	trondmy@kernel.org, anna@kernel.org, chuck.lever@oracle.com, 
-	miklos@szeredi.hu, jack@suse.cz, amir73il@gmail.com, trapexit@spawn.link
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	R_DKIM_ALLOW(-0.20)[preferred.jp:s=google];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[preferred.jp];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19030-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,mihalicyn.com,lists.linux-foundation.org,futurfusion.io,vger.kernel.org,stgraber.org,preferred.jp,oracle.com,szeredi.hu,suse.cz,gmail.com,spawn.link];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ksugihara@preferred.jp,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[preferred.jp:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19031-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rbergant@redhat.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lpc.events:url,ownmail.net:email,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,preferred.jp:url,preferred.jp:dkim]
-X-Rspamd-Queue-Id: 6652015D214
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: BB3A915E7E2
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 9:58=E2=80=AFAM NeilBrown <neilb@ownmail.net> wrote=
-:
->
-> On Thu, 19 Feb 2026, Jeff Layton wrote:
-> > On Wed, 2026-02-18 at 15:36 +0100, Alexander Mikhalitsyn wrote:
-> > > Am Mi., 18. Feb. 2026 um 14:49 Uhr schrieb Jeff Layton <jlayton@kerne=
-l.org>:
-> > > >
-> > > > On Wed, 2026-02-18 at 13:44 +0100, Alexander Mikhalitsyn wrote:
-> > > > > Dear friends,
-> > > > >
-> > > > > I would like to propose "VFS idmappings support in NFS" as a topi=
-c for discussion at the LSF/MM/BPF Summit.
-> > > > >
-> > > > > Previously, I worked on VFS idmap support for FUSE/virtiofs [2] a=
-nd cephfs [1] with support/guidance
-> > > > > from Christian.
-> > > > >
-> > > > > This experience with Cephfs & FUSE has shown that VFS idmap seman=
-tics, while being very elegant and
-> > > > > intuitive for local filesystems, can be quite challenging to comb=
-ine with network/network-like (e.g. FUSE)
-> > > > > FSes. In case of Cephfs we had to modify its protocol (!) (see [2=
-]) as a part of our agreement with
-> > > > > ceph folks about the right way to support idmaps.
-> > > > >
-> > > > > One obstacle here was that cephfs has some features that are not =
-very Linux-wayish, I would say.
-> > > > > In particular, system administrator can configure path-based UID/=
-GID restrictions on a *server*-side (Ceph MDS).
-> > > > > Basically, you can say "I expect UID 1000 and GID 2000 for all fi=
-les under /stuff directory".
-> > > > > The problem here is that these UID/GIDs are taken from a syscall-=
-caller's creds (not from (struct file *)->f_cred)
-> > > > > which makes cephfs FDs not very transferable through unix sockets=
-. [3]
-> > > > >
-> > > > > These path-based UID/GID restrictions mean that server expects cl=
-ient to send UID/GID with every single request,
-> > > > > not only for those OPs where UID/GID needs to be written to the d=
-isk (mknod, mkdir, symlink, etc).
-> > > > > VFS idmaps API is designed to prevent filesystems developers from=
- making a mistakes when supporting FS_ALLOW_IDMAP.
-> > > > > For example, (struct mnt_idmap *) is not passed to every single i=
-_op, but instead to only those where it can be
-> > > > > used legitimately. Particularly, readlink/listxattr or rmdir are =
-not expected to use idmapping information anyhow.
-> > > > >
-> > > > > We've seen very similar challenges with FUSE. Not a long time ago=
- on Linux Containers project forum, there
-> > > > > was a discussion about mergerfs (a popular FUSE-based filesystem)=
- & VFS idmaps [5]. And I see that this problem
-> > > > > of "caller UID/GID are needed everywhere" still blocks VFS idmaps=
- adoption in some usecases.
-> > > > > Antonio Musumeci (mergerfs maintainer) claimed that in many cases=
- filesystems behind mergerfs may not be fully
-> > > > > POSIX and basically, when mergerfs does IO on the underlying FSes=
- it needs to do UID/GID switch to caller's UID/GID
-> > > > > (taken from FUSE request header).
-> > > > >
-> > > > > We don't expect NFS to be any simpler :-) I would say that suppor=
-ting NFS is a final boss. It would be great
-> > > > > to have a deep technical discussion with VFS/FSes maintainers and=
- developers about all these challenges and
-> > > > > make some conclusions and identify a right direction/approach to =
-these problems. From my side, I'm going
-> > > > > to get more familiar with high-level part of NFS (or even make Po=
-C if time permits), identify challenges,
-> > > > > summarize everything and prepare some slides to navigate/plan dis=
-cussion.
-> > > > >
-> > > > > [1] cephfs https://lore.kernel.org/linux-fsdevel/20230807132626.1=
-82101-1-aleksandr.mikhalitsyn@canonical.com
-> > > > > [2] cephfs protocol changes https://github.com/ceph/ceph/pull/525=
-75
-> > > > > [3] cephfs & f_cred https://lore.kernel.org/lkml/CAEivzxeZ6fDgYMn=
-jk21qXYz13tHqZa8rP-cZ2jdxkY0eX+dOjw@mail.gmail.com/
-> > > > > [4] fuse/virtiofs https://lore.kernel.org/linux-fsdevel/202409031=
-51626.264609-1-aleksandr.mikhalitsyn@canonical.com/
-> > > > > [5]
-> > > > > mergerfshttps://discuss.linuxcontainers.org/t/is-it-the-case-that=
--you-cannot-use-shift-true-for-disk-devices-where-the-source-is-a-mergerfs-=
-mount-is-there-a-workaround/25336/11?u=3Damikhalitsyn
-> > > > >
-> > > > > Kind regards,
-> > > > > Alexander Mikhalitsyn @ futurfusion.io
-> > > >
-> > >
-> > > Hi Jeff,
-> > >
-> > > thanks for such a fast reply! ;)
-> > >
-> > > >
-> > > > IIUC, people mostly use vfs-layer idmappings because they want to r=
-emap
-> > > > the uid/gid values of files that get stored on the backing store (d=
-isk,
-> > > > ceph MDS, or whatever).
-> > >
-> > > yes, precisely.
-> > >
-> > > >
-> > > > I've never used idmappings myself much in practice. Could you lay o=
-ut
-> > > > an example of how you would use them with NFS in a real environment=
- so
-> > > > I understand the problem better? I'd start by assuming a simple set=
-up
-> > > > with AUTH_SYS and no NFSv4 idmapping involved, since that case shou=
-ld
-> > > > be fairly straightforward.
-> > >
-> > > For me, from the point of LXC/Incus project, idmapped mounts are used=
- as
-> > > a way to "delegate" filesystems (or subtrees) to the containers:
-> > > 1. We, of course, assume that container enables user namespaces and
-> > > user can't mount a filesystem
-> > > inside because it has no FS_USERNS_MOUNT flag set (like in case of Ce=
-phfs, NFS,
-> > > CIFS and many others).
-> > > 2. At the same time host's system administrator wants to avoid
-> > > remapping between container's user ns and
-> > > sb->s_user_ns (which is init_user_ns for those filesystems). [
-> > > motivation here is that in many
-> > > cases you may want to have the same subtree to be shared with other
-> > > containers and even host users too and
-> > > you want UIDs to be "compatible", i.e UID 1000 in one container and
-> > > UID 1000 in another container should
-> > > land as UID 1000 on the filesystem's inode ]
-> > >
-> > > For this usecase, when we bind-mount filesystem to container, we appl=
-y
-> > > VFS idmap equal to container's
-> > > user namespace. This makes a behavior I described.
-> > >
-> >
-> > Ok: so you have a process running in a userns as UID 2000 and you want
-> > to use vfs layer idmapping so that when you create a file as that user
-> > that it ends up being owned by UID 1000. Is that basically correct?
-> >
-> > Typically, the RPC credentials used in an OPEN or CREATE call is what
-> > determines its ownership (at least until a SETATTR comes in). With
-> > AUTH_SYS, the credential is just a uid and set of gids.
-> >
-> > So in this case, it sounds like you would need just do that conversion
-> > (maybe at the RPC client layer?) when issuing an RPC. You don't really
-> > need a protocol extension for that case.
->
-> You also need to consider the conversion when receiving an RPC.
->
-> If you use krb5 and NFSv3 then you really want the mapping between krb5
-> identity and uid to be the same on client and server, so then when an
-> application creates a file and the stats it, it sees that it owns it.
->
-> If I use a krb5 identity in an idmapped NFS filesystem I'll want the
-> server to map the identity to the "underlying" uid (was would be stored
-> in a local filesystem) and then when the client gets a GETATTR reply,
-> the VFS maps back to the uid seen by the application.
+If we found an alias through nfs3_do_create/nfs_add_or_obtain
+/d_splice_alias which happens to be a dir dentry, we don't return
+any error, and simply forget about this alias, but the original
+dentry we were adding and passed as parameter remains negative.
 
+This later causes an oops on nfs_atomic_open_v23/finish_open since we
+supply a negative dentry to do_dentry_open.
 
-Thank you Alex for the proposal and quick follow-ups. We're really
-interested in this feature and we'd like to share our use case.
+This has been observed running lustre-racer, where dirs and files are
+created/removed concurrently with the same name and O_EXCL is not
+used to open files (frequent file redirection).
 
-> > > But this is just one use case. I'm pretty sure there are some more
-> > > around here :)
-> > > I know that folks from Preferred Networks (preferred.jp) are also
-> > > interested in VFS idmap support in NFS,
-> > > probably they can share some ideas/use cases too.
+While d_splice_alias typically returns a directory alias or NULL, we
+explicitly check d_is_dir() to ensure that we don't attempt to perform
+file operations (like finish_open) on a directory inode, which triggers
+the observed oops.
 
-Our use case is running multi-tenant Kubernetes clusters with
-Kubernetes User Namespaces [1]. Basically we need to share a single
-storage endpoint among multiple pods using ReadWriteMany (RWX) access
-mode. Implementations that support both RWX and ID-mapped mount are
-limited [2].
+Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC correctly.")
+Reviewed-by: Olga Kornievskaia <okorniev@redhat.com>
+Reviewed-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+---
+ fs/nfs/nfs3proc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-NFS is operationally common, so I am interested in supporting NFS for
-ID-mapping, but NFS is complex due to its variety of mount options and
-security features as Trond mentioned. We'd like to share our use case
-and define the minimum goal. Our goal is here:
+diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+index 1181f9cc6dbd..f8bc9bffdad9 100644
+--- a/fs/nfs/nfs3proc.c
++++ b/fs/nfs/nfs3proc.c
+@@ -392,8 +392,13 @@ nfs3_proc_create(struct inode *dir, struct dentry *dentry, struct iattr *sattr,
+ 	if (status != 0)
+ 		goto out_release_acls;
+ 
+-	if (d_alias)
++	if (d_alias) {
++		if (d_is_dir(d_alias)) {
++			status = -EISDIR;
++			goto out_dput;
++		}
+ 		dentry = d_alias;
++	}
+ 
+ 	/* When we created the file with exclusive semantics, make
+ 	 * sure we set the attributes afterwards. */
+-- 
+2.45.0
 
-- 1: Mount the same NFS export as a persistent volume from multiple
-Kubernetes Pods running on different compute nodes. Each tenant has
-its own exports.
-- 2: UID/GID in a container in the pod can be configurable to an
-arbitrary value by runAsUser/runAsGroup (e.g. runAsUser/Group is set
-to 1000).
-- 3: We can access the export from the container as 1000:1000. At
-minimum, ownership should be consistent from the container view (i.e.
-stat shows 1000:1000 for files that the container creates). Today,
-ID-mapped mount does not support NFS. The NFS client ends up using the
-host-mapped uid/gid (e.g. container 1000 becomes host 11000), so the
-container view becomes inconsistent across nodes.
-
-There are (at least) two possible models here:
-a) the NFS client sends 1000:1000 on the wire and the server stores
-1000:1000 (so server-side ownership matches the container uid/gid), or
-b) the server stores the host uid/gid (e.g. 11000:11000) and the
-client/VFS maps it so that the container still sees 1000:1000.
-My intuition is that (a) is simpler for a multi-node RWX setup, but it
-may have security / policy implications depending on how the server
-does authorization (especially with sec=3Dsys). I think it=E2=80=99s worth
-discussing what the safe and reasonable minimum should be.
-
-In this case, UID/GID in the host node is not deterministic for the
-process in the container due to user_namespaces(7), so we need to do
-ID-mapping to unify UID/GID between container and file system. Also,
-we likely need to consider both request and reply paths (e.g. GETATTR)
-to keep the view consistent.
-
-> Mixing in AUTH_GSS and real idmapping will be where things get harder,
-> so let's not worry about those cases for now.
-I totally agree with Jeff. We can start a minimum PoC with AUTH_SYS.
-
-> With NFSv4 and the idmapper you wouldn't need (or want) the kernel
-> idmapping to be used at all.  You would want the idmapper deamon to run
-> in the user-namespace and map from on-the-wire names to the appropriate
-> app-level uids.
-> This would mean that a given NFS mount would need to be an a given user
-> namespace.  Maybe that isn't desired.
-Neil, thank you for your comment. We initially expected it to be in
-NFSv4. I totally agree with you and exactly our concern is how do we
-make it consistent with idmapd(8). In the Kubernetes case, we cannot
-pass CAP_SYS_ADMIN to allow pods to mount NFS directly, so mount will
-be done on the host. As you mentioned, we think we can share a single
-NFS export from multiple hosts and pods, so I think introducing
-ID-mapping into the VFS layer (with referencing local id-mapping
-table) is appropriate.
-
-We can start by picking a small case. My concern was whether this
-could violate NFS protocol or not, whether things can be done on the
-client side or not, and this topic is suitable for dealing with this
-as the VFS community. If things can be done on the client side, we can
-cover existing NFS server implementations (e.g. OpenZFS, proprietary
-appliances). I believe this can be applied to recent containerized
-runtime environments, even this small working set.
-
-Adding more context, Kubernetes and the container community actively
-work on host isolation using the Linux user namespace feature.
-Recently they experienced RCE vulnerabilities on container runtime but
-it could be mitigated by host isolation using the user namespace
-isolation [3]. Along with migrating the runtime environment to user
-namespace, extending file system support will be worth discussing.
-
-Kind regards,
-Kohei
-
-[1] https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
-[2] https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-=
-modes
-[3] https://lpc.events/event/19/contributions/2065/
 
