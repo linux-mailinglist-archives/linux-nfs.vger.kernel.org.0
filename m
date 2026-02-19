@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-19045-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19046-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0IwcCTmLl2n/0AIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19045-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 23:14:17 +0100
+	id gOxwJz2Ll2n/0AIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19046-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 23:14:21 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63B721630FE
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 23:14:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D068163105
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 23:14:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7AF49303B4E4
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 22:13:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 092C6303FAF3
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Feb 2026 22:13:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24AC32DB79E;
-	Thu, 19 Feb 2026 22:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2122DB79E;
+	Thu, 19 Feb 2026 22:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdtV2Z2K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6QjzWPF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028981DE3B5
-	for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 22:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796B81DE3B5
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Feb 2026 22:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771539237; cv=none; b=CWJgNoxPQzQ47i+d6c1hdSFzIAG38x52e/tmw88mmpfYjbRZSx1CIPsE8UotPMgqWPA3SDDBXthoJ2BLmevWzMvvTZkx6r/JacW6dzk4OMXRYFyS8464/rH9dQpydq799yrqEfy2Xtgsf5OquSk7e0qI6ZquqVpAw0rvrr7IYHA=
+	t=1771539238; cv=none; b=h7MtZ4/RL/QWDk7JPRv1YoV9YKSWXQnWsc+eb898O/tHm3Gh1BQXpkIEprmj+LoxrY/jP2mvVSpSXYuXQfU3d+PkKQNu1fygG38Bn4Lo5nwNytqrzjGOosIpm02qUO728KGpunRvN3NEceT24W5O0MOZubP7bjsEsjSKVJIz0E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771539237; c=relaxed/simple;
-	bh=MiPX/YdEHSHEomqdh9JhFI3hEfEmd/f8lUiYQHtQCJQ=;
+	s=arc-20240116; t=1771539238; c=relaxed/simple;
+	bh=kc+/5R0A768BORNoltu7Ib8dyIX56o06TSVgpfaJeNU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eS3XXso5ZysbiCXq3+cWIGkTlXneDBRlQ6dwlg3Ys8ZCTl5F+s2h/ZpCI1Q730qt1NWq6X3Cb51DiWc2tqg8wBTLmngG1wZRLtKB8/+uo0+/96DpNu91RHqm/7FvS+3Sx1T/OgIfXXqpWSxt8WMe6rVuOFNN2WMs2CcMtQufJpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdtV2Z2K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85DEBC4CEF7;
-	Thu, 19 Feb 2026 22:13:56 +0000 (UTC)
+	 MIME-Version; b=ZCjq+pI0/9J837Udp4dCeTYRtyFCgbSNlpys13hMuMnYwXFc1wYmszJvL8+/MUycszyYdSeWFjLX4kfyOcK7ooWtfKPZf/cEIZ0S5ZW3EZtvqV616wJbhaNOz6rdwiPks8quzQQm+5DVzzMEUFYGZ/STddoTNQ+Td8PyHsOo+k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6QjzWPF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8AABC116C6;
+	Thu, 19 Feb 2026 22:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771539236;
-	bh=MiPX/YdEHSHEomqdh9JhFI3hEfEmd/f8lUiYQHtQCJQ=;
+	s=k20201202; t=1771539238;
+	bh=kc+/5R0A768BORNoltu7Ib8dyIX56o06TSVgpfaJeNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hdtV2Z2KTnJStNgqAWG0YtESHbFqXsttbe7k/4bvYJXccwMllQOKlEosNRX9dylk6
-	 +O/Pcq7k5SVHy9is1iKcHbMCZu6JYCGKCGRYMrCC4/5BJrwIi6+jAf9pgYGZ+4fiIP
-	 P1C3AdlYy7G3P4e6dEKv/KrpdrYBo/SJ9YlMbsif+TYW4vE2r18LQRSy2yi9tsn/tY
-	 nlgaCqmno74KrtMccrS0NT4DRNRQXfZp04KIfc03QI3PM7aRhTSFHm11PoCDYpiIaE
-	 L3OOuaRucRtxXiSAGTnJkRXlBvU9dWt5XyePtsyrz6qyAttJEgjUAFeI9liilYZKT1
-	 8gqdBVlr7EC3Q==
+	b=K6QjzWPFJTeYYA3zihxsiPaYrNx0VUeqrETkl/G2pG1Tt7Mq23wiWx+DNRh/7OoN5
+	 S2OnS9sEOiSiDzBdwkPm+F3QmVZGgGLmal4f4YDuASvvIkbG7Nb2gA2yvGkAxd2L2N
+	 mP1x4pETG8xZu6adWeIobWqs4I9pYXkp2Ej0cDjfcg1qCJOp1E9G6lAB64bfF9Qe96
+	 EOhun/3cFEUkO+bKXwEStNWgSRw+tV/h1hH5WkgiBIBMc/xwHavyAFAJLmuACChNhd
+	 kv3B/wtjQ2qdC5t8pDVp1NJ5ER31rXqtT+aXt98uHq3Wywqb1ztxK2OkxDsP8vtXE0
+	 FYbJTrHq6FiJw==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 02/11] NFSD: factor out nfsd_supports_nfs4_acl() to nfsd/acl.h
-Date: Thu, 19 Feb 2026 17:13:43 -0500
-Message-ID: <20260219221352.40554-3-snitzer@kernel.org>
+Subject: [RFC PATCH 03/11] NFS/NFSD: data structure enablement for nfs4_acl passthru support
+Date: Thu, 19 Feb 2026 17:13:44 -0500
+Message-ID: <20260219221352.40554-4-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20260219221352.40554-1-snitzer@kernel.org>
 References: <20260219221352.40554-1-snitzer@kernel.org>
@@ -75,7 +75,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19045-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19046-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -91,90 +91,143 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_FIVE(0.00)[5];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 63B721630FE
+X-Rspamd-Queue-Id: 3D068163105
 X-Rspamd-Action: no action
 
 From: Mike Snitzer <snitzer@hammerspace.com>
 
-Check both IS_POSIXACL() and exportfs_may_passthru_nfs4acl() to
-prepare for passing through nfs4_acl directly to NFSv4 filesystem
-(NFSv4 will set EXPORT_OP_NFSV4_ACL_PASSTHRU flag in later commit).
+Add setacl and getacl to export_operations structure. Both of these
+methods allow NFSD to pass an nfs4_acl structure to exported
+filesystem.
+
+Update the nfs4_acl structure to allow for dual use of the new
+nfs4_acl passthru support in addition to its existing usage. This
+duality is reflected through use of a union, but the xdr_buf payload
+is used to initialize all members in the union needed for passthru (in
+a later NFSD commit).
+
+Move nfs4_acl_type structure to include/linux/nfsacl.h so that it can
+be used by NFS and NFSD.
 
 Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
 ---
- fs/nfsd/acl.h      | 8 ++++++++
- fs/nfsd/nfs4proc.c | 2 +-
- fs/nfsd/nfs4xdr.c  | 6 +++---
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ include/linux/exportfs.h |  9 +++++++++
+ include/linux/nfs4.h     | 23 +++++++++++++++++++++--
+ include/linux/nfs_xdr.h  |  7 -------
+ include/linux/nfsacl.h   |  7 +++++++
+ 4 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfsd/acl.h b/fs/nfsd/acl.h
-index 2003523d0e65..699a3b19bdb8 100644
---- a/fs/nfsd/acl.h
-+++ b/fs/nfsd/acl.h
-@@ -35,6 +35,8 @@
- #ifndef LINUX_NFS4_ACL_H
- #define LINUX_NFS4_ACL_H
+diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+index 0262c9258b34..e73e7ba5ef45 100644
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -10,6 +10,7 @@ struct inode;
+ struct iomap;
+ struct super_block;
+ struct vfsmount;
++struct nfs4_acl;
  
-+#include <linux/exportfs.h>
+ /* limit the handle size to NFSv4 handle size now */
+ #define MAX_HANDLE_SZ 128
+@@ -215,6 +216,12 @@ struct fid {
+  * commit_metadata:
+  *    @commit_metadata should commit metadata changes to stable storage.
+  *
++ * setacl:
++ *    @setacl will use the nfs4_acl @acl to establish the acl using SETATTR.
++ *
++ * getacl:
++ *    @getacl will use the nfs4_acl @acl to retrieve the acl using GETATTR.
++ *
+  * Locking rules:
+  *    get_parent is called with child->d_inode->i_mutex down
+  *    get_name is not (which is possibly inconsistent)
+@@ -238,6 +245,8 @@ struct export_operations {
+ 			  bool write, u32 *device_generation);
+ 	int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
+ 			     int nr_iomaps, struct iattr *iattr);
++	int (*setacl)(struct inode *inode, struct nfs4_acl *acl);
++	int (*getacl)(struct inode *inode, struct nfs4_acl *acl);
+ #define	EXPORT_OP_NOWCC			(0x1) /* don't collect v3 wcc data */
+ #define	EXPORT_OP_NOSUBTREECHK		(0x2) /* no subtree checking */
+ #define	EXPORT_OP_CLOSE_BEFORE_UNLINK	(0x4) /* close files before unlink */
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index 147a4d178c12..28c10edeea5b 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -16,6 +16,7 @@
+ #include <linux/list.h>
+ #include <linux/uidgid.h>
+ #include <uapi/linux/nfs4.h>
++#include <linux/sunrpc/xdr.h>
+ #include <linux/sunrpc/msg_prot.h>
+ #include <linux/sunrpc/xdrgen/nfs4_1.h>
+ 
+@@ -38,8 +39,26 @@ struct nfs4_ace {
+ };
+ 
+ struct nfs4_acl {
+-	uint32_t	naces;
+-	struct nfs4_ace	aces[];
++	union {
++		struct {
++			/*
++			 * Payload to use for deferred decode into
++			 * pages once ACL passthru is required
++			 * (which uses abnormal members below).
++			 */
++			struct xdr_buf payload;
++			/* Normal counted list of ACEs */
++			uint32_t naces;
++			struct nfs4_ace	aces[];
++		} __attribute__ ((packed));
++		struct {
++			/* Abnormal counted list of pages */
++			uint32_t type;
++			uint32_t len;
++			uint32_t pgbase;
++			struct page *pages[];
++		} __attribute__ ((packed));
++	};
+ };
+ 
+ #define NFS4_MAXLABELLEN	2048
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 2b30af613bab..65dbe7c05346 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -827,13 +827,6 @@ struct nfs_setattrargs {
+ 	const struct nfs4_label		*label;
+ };
+ 
+-enum nfs4_acl_type {
+-	NFS4ACL_NONE = 0,
+-	NFS4ACL_ACL,
+-	NFS4ACL_DACL,
+-	NFS4ACL_SACL,
+-};
+-
+ struct nfs_setaclargs {
+ 	struct nfs4_sequence_args	seq_args;
+ 	struct nfs_fh *			fh;
+diff --git a/include/linux/nfsacl.h b/include/linux/nfsacl.h
+index 8e76a79cdc6a..a1941dc56db0 100644
+--- a/include/linux/nfsacl.h
++++ b/include/linux/nfsacl.h
+@@ -22,6 +22,13 @@
+ #define NFS_ACL_MAX_ENTRIES_INLINE	(5)
+ #define NFS_ACL_INLINE_BUFSIZE	((2*(2+3*NFS_ACL_MAX_ENTRIES_INLINE)) << 2)
+ 
++enum nfs4_acl_type {
++	NFS4ACL_NONE = 0,
++	NFS4ACL_ACL,
++	NFS4ACL_DACL,
++	NFS4ACL_SACL,
++};
 +
- struct nfs4_acl;
- struct svc_fh;
- struct svc_rqst;
-@@ -51,4 +53,10 @@ __be32 nfsd4_acl_to_attr(enum nfs_ftype4 type, struct nfs4_acl *acl,
- 			 struct nfsd_attrs *attr);
- void sort_pacl_range(struct posix_acl *pacl, int start, int end);
- 
-+static inline bool nfsd_supports_nfs4_acl(struct dentry *dentry)
-+{
-+	return IS_POSIXACL(d_inode(dentry)) ||
-+		exportfs_may_passthru_nfs4acl(dentry->d_sb->s_export_op);
-+}
-+
- #endif /* LINUX_NFS4_ACL_H */
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 293d149332e4..9a21e94a4215 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -89,7 +89,7 @@ check_attr_support(struct nfsd4_compound_state *cstate, u32 *bmval,
- 
- 	if (!nfsd_attrs_supported(cstate->minorversion, bmval))
- 		return nfserr_attrnotsupp;
--	if ((bmval[0] & FATTR4_WORD0_ACL) && !IS_POSIXACL(d_inode(dentry)))
-+	if ((bmval[0] & FATTR4_WORD0_ACL) && !nfsd_supports_nfs4_acl(dentry))
- 		return nfserr_attrnotsupp;
- 	if ((bmval[2] & (FATTR4_WORD2_POSIX_DEFAULT_ACL |
- 					FATTR4_WORD2_POSIX_ACCESS_ACL)) &&
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index aca3a1906f40..f048245b8592 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3195,7 +3195,7 @@ static __be32 nfsd4_encode_fattr4_supported_attrs(struct xdr_stream *xdr,
- 	u32 supp[3];
- 
- 	memcpy(supp, nfsd_suppattrs[minorversion], sizeof(supp));
--	if (!IS_POSIXACL(d_inode(args->dentry)))
-+	if (!nfsd_supports_nfs4_acl(args->dentry))
- 		supp[0] &= ~FATTR4_WORD0_ACL;
- 	if (!args->contextsupport)
- 		supp[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-@@ -3328,7 +3328,7 @@ static __be32 nfsd4_encode_fattr4_aclsupport(struct xdr_stream *xdr,
- 	u32 mask;
- 
- 	mask = 0;
--	if (IS_POSIXACL(d_inode(args->dentry)))
-+	if (nfsd_supports_nfs4_acl(args->dentry))
- 		mask = ACL4_SUPPORT_ALLOW_ACL | ACL4_SUPPORT_DENY_ACL;
- 	return nfsd4_encode_uint32_t(xdr, mask);
- }
-@@ -3600,7 +3600,7 @@ static __be32 nfsd4_encode_fattr4_suppattr_exclcreat(struct xdr_stream *xdr,
- 	u32 supp[3];
- 
- 	memcpy(supp, nfsd_suppattrs[resp->cstate.minorversion], sizeof(supp));
--	if (!IS_POSIXACL(d_inode(args->dentry)))
-+	if (!nfsd_supports_nfs4_acl(args->dentry))
- 		supp[0] &= ~FATTR4_WORD0_ACL;
- 	if (!args->contextsupport)
- 		supp[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
+ static inline unsigned int
+ nfsacl_size(struct posix_acl *acl_access, struct posix_acl *acl_default)
+ {
 -- 
 2.44.0
 
