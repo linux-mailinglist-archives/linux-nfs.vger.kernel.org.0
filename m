@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-19066-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19067-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cFhoGs+CmGlMJQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19066-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 16:50:39 +0100
+	id m6UYHzqDmGnKJQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19067-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 16:52:26 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAD4C1690D3
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 16:50:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB8681690E3
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 16:52:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AEE233032F66
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 15:50:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 575423011135
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 15:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E2E2D9EE4;
-	Fri, 20 Feb 2026 15:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C228328F50F;
+	Fri, 20 Feb 2026 15:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNQUnbth"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udOxSL5s"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FEF2C11D0
-	for <linux-nfs@vger.kernel.org>; Fri, 20 Feb 2026 15:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7E6242D97
+	for <linux-nfs@vger.kernel.org>; Fri, 20 Feb 2026 15:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771602612; cv=none; b=edB6ORg6jQ21s8t1W0cp3vGp4LNmVysANY7qOcSF1uJnzAJuL6tej72y8YZVO8ZbiCJCTr2PLVwDdqlT8GoMIaAw4U97sEf7pGoJL8kYlOo+vlJU3xrXor3nRF/Ksnl4s9FcQH1wH5qjQhqAsZ9aR38ErTxh/rsCfMYgTwzBfYc=
+	t=1771602743; cv=none; b=dV+oMyr7sCm7LtRC1jKvnYf8DFnFqKsMM1v7QYVtw0zYN8ZeNO8t3L+HzQCAe1HuSKbQMIFGtsjUtu/5QAIkDMt6xD4cVVP0QAXl92gDlxI+YZ5ULjbDJc9s5cODV9vmdffXJD2E6LrPUhXddmcOmgskC4C2mgb5Pcs7cun7LH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771602612; c=relaxed/simple;
-	bh=pUGU759SqhDyNWxNbsMJpk/4NspSuxO4zi98DaYeEK4=;
+	s=arc-20240116; t=1771602743; c=relaxed/simple;
+	bh=3gy82krFxqVHn+fQb2VnwFyAE8tRvJx6ws3P8f9WMO8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QGgAiunuGMJY3t0tmDT4i25X/1miYbu1wuyOHjwZMPrAKNH93KXHzP8huaIZC8ZX+ul0dkczC5DqJHyMPoh2vC7Y2jN/xrI4ILCimREhvuQPZ/m2sYX1nLRF0+BWDVgnY9plS3M+lID0UwoYd7CojTwyGpIKLody+h2xkaF9P9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNQUnbth; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11005C116C6;
-	Fri, 20 Feb 2026 15:50:10 +0000 (UTC)
+	 Content-Type:MIME-Version; b=C26FE0IQ6Jm4ycfEqV877Y73q8ImJ7vBlOxQbk8LJzWQLvtvUkceqdJ9qLRVzoOTRkBdcgtc177TvC3q1cg4rDxnyWjPxW/c2Hu++BCNr/X1Fi+nN5dpnYMHI3QcJXaADlGAjZAkPCly1nawaERF2gJSE3yzT2JFAHD8JKwVMMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udOxSL5s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7811EC116C6;
+	Fri, 20 Feb 2026 15:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771602611;
-	bh=pUGU759SqhDyNWxNbsMJpk/4NspSuxO4zi98DaYeEK4=;
+	s=k20201202; t=1771602743;
+	bh=3gy82krFxqVHn+fQb2VnwFyAE8tRvJx6ws3P8f9WMO8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qNQUnbthb0TLVVdSrfA7+YtcInd6/Sl+WjaQkeOPfbkcd+V8r4fa+wthf+MyPNyUB
-	 wX40gPc2riOlieyZdNgFs/C0r9WvRGeEggW+UthhU3I0VFjW0PdPhFw4LBec/wU1Vh
-	 wfZNxW6l0iNnbMzM7+JIAGfJOhKX1zUhMjfUYBqNu/x+1+KdkYjGagp3tpwjHoBJ7e
-	 US+fOeXycHZz1bBUbAyc3qTdGDI2mjg1TN/jxlexKwZsmHFSxJuoHd9h+xg5Goh3Bz
-	 ByPC+af/sTnpj29H5rjtPe+2iEWQ8Tvk+/hcw9mYGOkQX451n7aNbV1gSxAUd82nn9
-	 hR4UViMOi8auw==
-Message-ID: <ae5f1ee0c43eda94f86bc60b1b223c86e0f24805.camel@kernel.org>
-Subject: Re: [PATCH v1 1/2] NFSD: Defer sub-object cleanup in export put
- callbacks
+	b=udOxSL5sXe0SJA/k96Xt/3eV16VPZZVfudzEm3hCAhyK8T6g6OH9zDo24QV+GHwWr
+	 eXswU9G1GmyPzu2tgg0FR57VHUWIPWBrkSqe9S7EsptbTiHE8UGU3V+ya3tPfj/ryq
+	 JkPZ0u2Ji/Su2Mxzk8SqJz5ym2NpxGiGEayNFJa+HkHAsEvr/rcMAJBDdDaq8CsF3o
+	 aXovQmBoMqvh63WErTOeDGry/ERT9gnfRkupSYZbiuDGV24F++D/KSqFm2nNd86hWn
+	 7MO5zcLdZ2Iq8xZfiAa7MIxe5xuiLX8KKWXy3c4EQQt511QL1ejhIYDiwQ3/CCbhA1
+	 Fbp/VLJ6ig+PQ==
+Message-ID: <2fa166bf4183cbc049350dc892eeb6656d9ed081.camel@kernel.org>
+Subject: Re: [PATCH v1 2/2] NFSD: Hold net reference for the lifetime of
+ /proc/fs/nfs/exports fd
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, misanjum@linux.ibm.com, NeilBrown
 	 <neilb@ownmail.net>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
 	 <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 20 Feb 2026 10:50:09 -0500
-In-Reply-To: <20260219215017.1769-2-cel@kernel.org>
+Date: Fri, 20 Feb 2026 10:52:21 -0500
+In-Reply-To: <20260219215017.1769-3-cel@kernel.org>
 References: <20260219215017.1769-1-cel@kernel.org>
-	 <20260219215017.1769-2-cel@kernel.org>
+	 <20260219215017.1769-3-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,12 +143,12 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19066-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19067-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[kernel.org,linux.ibm.com,ownmail.net,redhat.com,oracle.com,talpey.com];
@@ -167,248 +167,83 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: BAD4C1690D3
+X-Rspamd-Queue-Id: CB8681690E3
 X-Rspamd-Action: no action
 
 On Thu, 2026-02-19 at 16:50 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> svc_export_put() calls path_put() and auth_domain_put() immediately
-> when the last reference drops, before the RCU grace period. RCU
-> readers in e_show() and c_show() access both ex_path (via
-> seq_path/d_path) and ex_client->name (via seq_escape) without
-> holding a reference. If cache_clean removes the entry and drops the
-> last reference concurrently, the sub-objects are freed while still
-> in use, producing a NULL pointer dereference in d_path.
+> The /proc/fs/nfs/exports proc entry is created at module init
+> and persists for the module's lifetime. exports_proc_open()
+> captures the caller's current network namespace and stores
+> its svc_export_cache in seq->private, but takes no reference
+> on the namespace. If the namespace is subsequently torn down
+> (e.g. container destruction after the opener does setns() to a
+> different namespace), nfsd_net_exit() calls nfsd_export_shutdown()
+> which frees the cache. Subsequent reads on the still-open fd
+> dereference the freed cache_detail, walking a freed hash table.
 >=20
-> Commit 2530766492ec ("nfsd: fix UAF when access ex_uuid or
-> ex_stats") moved kfree of ex_uuid and ex_stats into the
-> call_rcu callback, but left path_put() and auth_domain_put() running
-> before the grace period because both may sleep and call_rcu
-> callbacks execute in softirq context.
->=20
-> Replace call_rcu/kfree_rcu with queue_rcu_work(), which defers the
-> callback until after the RCU grace period and executes it in process
-> context where sleeping is permitted. This allows path_put() and
-> auth_domain_put() to be moved into the deferred callback alongside
-> the other resource releases. Apply the same fix to expkey_put(),
-> which has the identical pattern with ek_path and ek_client.
->=20
-> A dedicated workqueue scopes the shutdown drain to only NFSD
-> export release work items; flushing the shared
-> system_unbound_wq would stall on unrelated work from other
-> subsystems. nfsd_export_shutdown() uses rcu_barrier() followed
-> by flush_workqueue() to ensure all deferred release callbacks
-> complete before the export caches are destroyed.
+> Hold a reference on the struct net for the lifetime of the open
+> file descriptor. This prevents nfsd_net_exit() from running --
+> and thus prevents nfsd_export_shutdown() from freeing the cache
+> -- while any exports fd is open. cache_detail already stores
+> its net pointer (cd->net, set by cache_create_net()), so
+> exports_release() can retrieve it without additional per-file
+> storage.
 >=20
 > Reported-by: Misbah Anjum N <misanjum@linux.ibm.com>
 > Closes: https://lore.kernel.org/linux-nfs/dcd371d3a95815a84ba7de52cef447b=
 8@linux.ibm.com/
-> Fixes: c224edca7af0 ("nfsd: no need get cache ref when protected by rcu")
-> Fixes: 1b10f0b603c0 ("SUNRPC: no need get cache ref when protected by rcu=
-")
+> Fixes: 96d851c4d28d ("nfsd: use proper net while reading "exports" file")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/export.c | 63 +++++++++++++++++++++++++++++++++++++++++-------
->  fs/nfsd/export.h |  7 ++++--
->  fs/nfsd/nfsctl.c |  8 +++++-
->  3 files changed, 66 insertions(+), 12 deletions(-)
+>  fs/nfsd/nfsctl.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index 04b18f0f402f..53fe66784ed2 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -36,19 +36,30 @@
->   * second map contains a reference to the entry in the first map.
->   */
-> =20
-> +static struct workqueue_struct *nfsd_export_wq;
-> +
->  #define	EXPKEY_HASHBITS		8
->  #define	EXPKEY_HASHMAX		(1 << EXPKEY_HASHBITS)
->  #define	EXPKEY_HASHMASK		(EXPKEY_HASHMAX -1)
-> =20
-> -static void expkey_put(struct kref *ref)
-> +static void expkey_release(struct work_struct *work)
->  {
-> -	struct svc_expkey *key =3D container_of(ref, struct svc_expkey, h.ref);
-> +	struct svc_expkey *key =3D container_of(to_rcu_work(work),
-> +					      struct svc_expkey, ek_rwork);
-> =20
->  	if (test_bit(CACHE_VALID, &key->h.flags) &&
->  	    !test_bit(CACHE_NEGATIVE, &key->h.flags))
->  		path_put(&key->ek_path);
->  	auth_domain_put(key->ek_client);
-> -	kfree_rcu(key, ek_rcu);
-> +	kfree(key);
-> +}
-> +
-> +static void expkey_put(struct kref *ref)
-> +{
-> +	struct svc_expkey *key =3D container_of(ref, struct svc_expkey, h.ref);
-> +
-> +	INIT_RCU_WORK(&key->ek_rwork, expkey_release);
-> +	queue_rcu_work(nfsd_export_wq, &key->ek_rwork);
->  }
-> =20
->  static int expkey_upcall(struct cache_detail *cd, struct cache_head *h)
-> @@ -353,11 +364,13 @@ static void export_stats_destroy(struct export_stat=
-s *stats)
->  					    EXP_STATS_COUNTERS_NUM);
->  }
-> =20
-> -static void svc_export_release(struct rcu_head *rcu_head)
-> +static void svc_export_release(struct work_struct *work)
->  {
-> -	struct svc_export *exp =3D container_of(rcu_head, struct svc_export,
-> -			ex_rcu);
-> +	struct svc_export *exp =3D container_of(to_rcu_work(work),
-> +					      struct svc_export, ex_rwork);
-> =20
-> +	path_put(&exp->ex_path);
-> +	auth_domain_put(exp->ex_client);
->  	nfsd4_fslocs_free(&exp->ex_fslocs);
->  	export_stats_destroy(exp->ex_stats);
->  	kfree(exp->ex_stats);
-> @@ -369,9 +382,8 @@ static void svc_export_put(struct kref *ref)
->  {
->  	struct svc_export *exp =3D container_of(ref, struct svc_export, h.ref);
-> =20
-> -	path_put(&exp->ex_path);
-> -	auth_domain_put(exp->ex_client);
-> -	call_rcu(&exp->ex_rcu, svc_export_release);
-> +	INIT_RCU_WORK(&exp->ex_rwork, svc_export_release);
-> +	queue_rcu_work(nfsd_export_wq, &exp->ex_rwork);
->  }
-> =20
->  static int svc_export_upcall(struct cache_detail *cd, struct cache_head =
-*h)
-> @@ -1481,6 +1493,36 @@ const struct seq_operations nfs_exports_op =3D {
->  	.show	=3D e_show,
->  };
-> =20
-> +/**
-> + * nfsd_export_wq_init - allocate the export release workqueue
-> + *
-> + * Called once at module load. The workqueue runs deferred svc_export an=
-d
-> + * svc_expkey release work scheduled by queue_rcu_work() in the cache pu=
-t
-> + * callbacks.
-> + *
-> + * Return values:
-> + *   %0: workqueue allocated
-> + *   %-ENOMEM: allocation failed
-> + */
-> +int nfsd_export_wq_init(void)
-> +{
-> +	nfsd_export_wq =3D alloc_workqueue("nfsd_export", WQ_UNBOUND, 0);
-> +	if (!nfsd_export_wq)
-> +		return -ENOMEM;
-> +	return 0;
-> +}
-> +
-> +/**
-> + * nfsd_export_wq_shutdown - drain and free the export release workqueue
-> + *
-> + * Called once at module unload. Per-namespace teardown in
-> + * nfsd_export_shutdown() has already drained all deferred work.
-> + */
-> +void nfsd_export_wq_shutdown(void)
-> +{
-> +	destroy_workqueue(nfsd_export_wq);
-> +}
-> +
->  /*
->   * Initialize the exports module.
->   */
-> @@ -1542,6 +1584,9 @@ nfsd_export_shutdown(struct net *net)
-> =20
->  	cache_unregister_net(nn->svc_expkey_cache, net);
->  	cache_unregister_net(nn->svc_export_cache, net);
-> +	/* Drain deferred export and expkey release work. */
-> +	rcu_barrier();
-> +	flush_workqueue(nfsd_export_wq);
->  	cache_destroy_net(nn->svc_expkey_cache, net);
->  	cache_destroy_net(nn->svc_export_cache, net);
->  	svcauth_unix_purge(net);
-> diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-> index d2b09cd76145..b05399374574 100644
-> --- a/fs/nfsd/export.h
-> +++ b/fs/nfsd/export.h
-> @@ -7,6 +7,7 @@
-> =20
->  #include <linux/sunrpc/cache.h>
->  #include <linux/percpu_counter.h>
-> +#include <linux/workqueue.h>
->  #include <uapi/linux/nfsd/export.h>
->  #include <linux/nfs4.h>
-> =20
-> @@ -75,7 +76,7 @@ struct svc_export {
->  	u32			ex_layout_types;
->  	struct nfsd4_deviceid_map *ex_devid_map;
->  	struct cache_detail	*cd;
-> -	struct rcu_head		ex_rcu;
-> +	struct rcu_work		ex_rwork;
->  	unsigned long		ex_xprtsec_modes;
->  	struct export_stats	*ex_stats;
->  };
-> @@ -92,7 +93,7 @@ struct svc_expkey {
->  	u32			ek_fsid[6];
-> =20
->  	struct path		ek_path;
-> -	struct rcu_head		ek_rcu;
-> +	struct rcu_work		ek_rwork;
->  };
-> =20
->  #define EX_ISSYNC(exp)		(!((exp)->ex_flags & NFSEXP_ASYNC))
-> @@ -110,6 +111,8 @@ __be32 check_nfsd_access(struct svc_export *exp, stru=
-ct svc_rqst *rqstp,
->  /*
->   * Function declarations
->   */
-> +int			nfsd_export_wq_init(void);
-> +void			nfsd_export_wq_shutdown(void);
->  int			nfsd_export_init(struct net *);
->  void			nfsd_export_shutdown(struct net *);
->  void			nfsd_export_flush(struct net *);
 > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 664a3275c511..4166f59908f4 100644
+> index 4166f59908f4..3d5a676e1d14 100644
 > --- a/fs/nfsd/nfsctl.c
 > +++ b/fs/nfsd/nfsctl.c
-> @@ -2308,9 +2308,12 @@ static int __init init_nfsd(void)
->  	if (retval)
->  		goto out_free_pnfs;
->  	nfsd_lockd_init();	/* lockd->nfsd callbacks */
-> +	retval =3D nfsd_export_wq_init();
-> +	if (retval)
-> +		goto out_free_lockd;
->  	retval =3D register_pernet_subsys(&nfsd_net_ops);
->  	if (retval < 0)
-> -		goto out_free_lockd;
-> +		goto out_free_export_wq;
->  	retval =3D register_cld_notifier();
->  	if (retval)
->  		goto out_free_subsys;
-> @@ -2339,6 +2342,8 @@ static int __init init_nfsd(void)
->  	unregister_cld_notifier();
->  out_free_subsys:
->  	unregister_pernet_subsys(&nfsd_net_ops);
-> +out_free_export_wq:
-> +	nfsd_export_wq_shutdown();
->  out_free_lockd:
->  	nfsd_lockd_shutdown();
->  	nfsd_drc_slab_free();
-> @@ -2359,6 +2364,7 @@ static void __exit exit_nfsd(void)
->  	nfsd4_destroy_laundry_wq();
->  	unregister_cld_notifier();
->  	unregister_pernet_subsys(&nfsd_net_ops);
-> +	nfsd_export_wq_shutdown();
->  	nfsd_drc_slab_free();
->  	nfsd_lockd_shutdown();
->  	nfsd4_free_slabs();
+> @@ -149,9 +149,19 @@ static int exports_net_open(struct net *net, struct =
+file *file)
+> =20
+>  	seq =3D file->private_data;
+>  	seq->private =3D nn->svc_export_cache;
+> +	get_net(net);
+>  	return 0;
+>  }
+> =20
+> +static int exports_release(struct inode *inode, struct file *file)
+> +{
+> +	struct seq_file *seq =3D file->private_data;
+> +	struct cache_detail *cd =3D seq->private;
+> +
+> +	put_net(cd->net);
+> +	return seq_release(inode, file);
+> +}
+> +
+>  static int exports_nfsd_open(struct inode *inode, struct file *file)
+>  {
+>  	return exports_net_open(inode->i_sb->s_fs_info, file);
+> @@ -161,7 +171,7 @@ static const struct file_operations exports_nfsd_oper=
+ations =3D {
+>  	.open		=3D exports_nfsd_open,
+>  	.read		=3D seq_read,
+>  	.llseek		=3D seq_lseek,
+> -	.release	=3D seq_release,
+> +	.release	=3D exports_release,
+>  };
+> =20
+>  static int export_features_show(struct seq_file *m, void *v)
+> @@ -1376,7 +1386,7 @@ static const struct proc_ops exports_proc_ops =3D {
+>  	.proc_open	=3D exports_proc_open,
+>  	.proc_read	=3D seq_read,
+>  	.proc_lseek	=3D seq_lseek,
+> -	.proc_release	=3D seq_release,
+> +	.proc_release	=3D exports_release,
+>  };
+> =20
+>  static int create_proc_exports_entry(void)
 
-Looks good.
-
-Reviwed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
