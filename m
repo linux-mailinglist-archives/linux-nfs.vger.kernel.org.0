@@ -1,140 +1,180 @@
-Return-Path: <linux-nfs+bounces-19069-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19070-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CGEjGVXVmGk4NQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19069-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 22:42:45 +0100
+	id mGFOJqDkmGn3NwMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19070-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 23:48:00 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD55C16B07F
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 22:42:44 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C9E816B4D4
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 23:47:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 955C23028EF9
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 21:42:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 64C87300678C
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Feb 2026 22:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3435430C345;
-	Fri, 20 Feb 2026 21:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91CE719DF8D;
+	Fri, 20 Feb 2026 22:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qv7wi8J4"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="YdaW2WuQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC5330F924
-	for <linux-nfs@vger.kernel.org>; Fri, 20 Feb 2026 21:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771623747; cv=none; b=RHmqUIb4ya1y9HQ70GIhu8lu6exEXx4Tw88lq1X0+l1BzQHfdq8fIfvCiVhC5uNZSz7153QhmpHyf7+nVW/vmZqtXHRZQKPS8Fp+aGF3vrykrdc22FxC7tzkzuRXTJwk1iZ0U7/pX7W6OSdbAXaRBB3XFse5AfkYFUs+AginaQY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771623747; c=relaxed/simple;
-	bh=lq/EldmgTuPW+yf4qZazKNCoILMBJ5fR/yMxxfKF9nc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s7kQ8W48tXPsOSubbH6Gt9k+pcrvDD12uCIKXVYUeNEYIQiLz+dGXO2mlLO3w4qsOeXFfnSwcemvFcUei0WR6uVavSDiTTt0xJdfyoKVN5EYclHiLZflYu0zWHuj3eFKrbDvghAJz1lV7uYE9dAeaflF+JCIAwXjnPGrDqH6Xs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qv7wi8J4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771623744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=G3ZR6RfuU4OWvrHUm+pX5q7ViLCSlmylbviSHdz6gOY=;
-	b=Qv7wi8J4LdLs2XTnRSTOFWcY8qoMUwX4ktlR+XDn26sULRoG+77BANAa/ynVtnYEmu2+4Y
-	qBNJ2ypJFZvh8zfc1L9wdZexA2k0t2vuNEmrCIl9Bt7B5vVcgK7H1bu+TmDzPNpFJZFdda
-	YXnWvnVwd9N47v6nVfpLwiXC4VjFjqI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-wOV0sPv7MdSMjZLruTQ-aQ-1; Fri,
- 20 Feb 2026 16:42:21 -0500
-X-MC-Unique: wOV0sPv7MdSMjZLruTQ-aQ-1
-X-Mimecast-MFC-AGG-ID: wOV0sPv7MdSMjZLruTQ-aQ_1771623740
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0F8261956088;
-	Fri, 20 Feb 2026 21:42:20 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.80.103])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4E8C8195419E;
-	Fri, 20 Feb 2026 21:42:19 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trond.myklebust@hammerspace.com,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFS: improve "Server wrote zero bytes" error
-Date: Fri, 20 Feb 2026 16:42:18 -0500
-Message-ID: <20260220214218.78581-1-okorniev@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7DA3101BA
+	for <linux-nfs@vger.kernel.org>; Fri, 20 Feb 2026 22:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771627677; cv=pass; b=RrQM9EYGZ0DTJlmOPjGbh2NyA7pper6La3CIzmmq8C+cpD/rpOwGy9lModh5DDoDwbZINE7CDosc1wzGEWsZMwqRcRlz6ZR4ef68Zz9DVYSM7aZIX63e1QNUBAsiFTGrYPDiyGSxVDZOtiJxNqEJES1XojHimuAbVNSTKSvnyfk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771627677; c=relaxed/simple;
+	bh=cSO5ddvam+3etx0tA+nKexvNvZkPWOiJ4oLj72nGz0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BQVygIfmmGjHQ5g1z4yv2ctJ+3z+d/NIAjTlZ5l/k3Clm+0f8T9pYWRVErDRXs5U8+iqilOsXy21uH7CyamsLAoMk5iv0zjWLCdQxc9YvQhg9oReQh0Q/NP84AEsczF3BfBwAfIo5cn1dnkLlyhHxWQcDkKzQs40EajtAEVSuT4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=YdaW2WuQ; arc=pass smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-352dda4a34eso1100043a91.1
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Feb 2026 14:47:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771627676; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hlBIvZqhhpGBD4REhUvK+eyGIBAfowrM1w9QmSxkBF3gzxirDyLu6nyKABd5ifxFvu
+         aRY30yLIF36ySh4Qj2wTRwAjOsLYwp97mFFzO7fel/GShLWUzlGISrkZjWzXjDiuOIpn
+         gBWT1+/NC5XLm/nqzaYPLeyLTwlKLUEe31MYBGq3ZqqRRG+jXlCb3zEzFuT6uLuAab0l
+         e3grvS0KtwwcImxr0k1FZntymDco+/VTCCpj6tz0ue6dnR3eXKHyIswx8RU5yfxh6hNm
+         ZPzx91TsTwbA37hTu8mvBGKZ38lj2wXrM9eVL32rvw+to2dIbQ4GDpIqllHiHsmmaA4s
+         CSGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=DDXd3tXPluWk2oCytZ/1RJVm/UKOezpDOPY6avX6ips=;
+        fh=ynD+d7Dix5sWarPsniQC5WukCvbml3SlrnJtrfFjv9E=;
+        b=cOzEVanlt0+qiLwNC6IAS3ZTiXKt4ym9sUd+CudIguj8Ar9UMujpl7FKxfHeZjVqzE
+         RZ6ErTFZ6MVxQuN4rf0x99Yr81iaYACvCqqSbQTio/XECfMfSi8ca4YdQD8jUX9wuxJm
+         GAksi1Ap0NbdulJRhF+M2Y6+3y38ZWSvi3JTIXeNWtQuHxrQo21ix97Q5ACDcz3HfUjq
+         L20k/AvrrA/eelQd42kFmXQtTX4J0JSa6bsQ2vV0MMb1gYzcyUscU/xK5LQODDQx5KyT
+         4y5ouGpbeiYH4xcW5chHpcCGRkz/FMoRTUblp4bBOrdgOOoVzUdGQx0XjDstrUr03/Ph
+         mL7A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1771627676; x=1772232476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DDXd3tXPluWk2oCytZ/1RJVm/UKOezpDOPY6avX6ips=;
+        b=YdaW2WuQ41wM5N1ATcsiXfFOfi8o+6IN5OMQAoEAgbdAjJkGfZ63rBEdcJ8rnXF3yy
+         zZPc6a4bONe+ldk+YsvYsyF2kj29Z3wp3gNZOieGr1bx02kYKEQmVczXkyhrdPBmsOu+
+         02nizDc9/b0WQGtrOR1H3GqDf0CUX/xKMH2X8B4mZpv+1BEK8dbBgL7id+rR5kElX7Bx
+         n0PhraKR1StZolJE3zbIKZZSH2znoCletYgDWkfimFsMFY3R/x3k3KRCEkMEvmLYEC89
+         hBRTOgyFJXJMoXD0XtDvmQ6JKkjmqmwBDtqojqDUbUMVLPW7sn6eTqD1FLjRPj4//pn+
+         8/jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771627676; x=1772232476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DDXd3tXPluWk2oCytZ/1RJVm/UKOezpDOPY6avX6ips=;
+        b=VpnNbllw+RBKotVhEUl/acWuANqIMc/3pZedr37cuKsEEreIqhU9+I6UI8UjHBTfaZ
+         RPNoGDd1QAtTRksr4N/Dfi8Sl+ZGhamWJQ2fUH9aPk4yeQyjtldhISOsZm6rUXp8AeMu
+         DXyPW6YTkIfclLAiY2MzczT0BXi+ER38yIXyZaO6YPyDc2olkU88SNmSfSRG6BkIGWqR
+         s0HMVAN9q3lQCpV5VZAQD3RenJEKYWm1eCmb1lfRNXylDV8xWLD2/pvwvt+yhdb3N+uY
+         KhyvZtf6axdCFvcRBb6557nQn0Bun0tgVGGzV3Yr0Q7uQ7h8DDB5JbjBQ1kjKRO6MG4C
+         GBAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWX/r83dDScn7hCw971IR5lU4GbhKY37mgPaK9uhKzsS1ILJbzaAz9j8Ez2vrH5fX99GuTvPe5y+rc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx08KxxMnY1e5RRG2Wv4vqz+4i4qftFLOtqVwuVqS86WFJ10qN6
+	K9k1Cv9QmGWRIh8I11nfOd2LVm5En6jZUdjRJQZRQxQAyiA/G5hrpFUnRHALxs9BQn3zWe7eoV0
+	KYAEUsY6RgI9G9SB2nKpdpu8VY2XvFzh6EJ9NMkJA
+X-Gm-Gg: AZuq6aJOfBo0fVewxtdH0HzJmjD2Ts+RXuM3ZqefNtV1SI8CyGPm7bmGc12Y6WFKrjw
+	IRPZgXTzeyU9YRQC1/q8IwjyIilqKBpHoIN3OEtJyrrsdKPeDM8fD2at/1HRgEeXmC4Ih/lN/6p
+	rIcr3bUNytwAG1ulhiwwN/fKmpjMxoiXhYXAU4imwxSdGsPoec4ki95nDkCDxEHb9GCYUyjg77z
+	5y+/V52HrNl1h7iJCwV2E67Hal06qrdH+RCfEn6NeR3iP9esWcJKqcG9BZWl8b1exZRnFSq4YC9
+	NvtBqiw=
+X-Received: by 2002:a17:90b:3a08:b0:34c:fe7e:84fe with SMTP id
+ 98e67ed59e1d1-358ae8c0983mr894544a91.28.1771627675691; Fri, 20 Feb 2026
+ 14:47:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20260204050726.177283-1-neilb@ownmail.net> <20260204050726.177283-6-neilb@ownmail.net>
+In-Reply-To: <20260204050726.177283-6-neilb@ownmail.net>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 20 Feb 2026 17:47:42 -0500
+X-Gm-Features: AaiRm531rz23NInLiaMybHfJxR35OGBc7KTvM6WC-U0WofFc5pma3F6ygsFUv1A
+Message-ID: <CAHC9VhThChVk1Dk+f-KANGj7Tu7zzHCiA==taeQ+=nQaH6a7sg@mail.gmail.com>
+Subject: Re: [PATCH 05/13] selinux: Use simple_start_creating() / simple_done_creating()
+To: NeilBrown <neil@brown.name>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, John Johansen <john.johansen@canonical.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-kernel@vger.kernel.org, 
+	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19069-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-19070-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email]
-X-Rspamd-Queue-Id: CD55C16B07F
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,namei.org,hallyn.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[paul-moore.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[paul-moore.com:url,paul-moore.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,brown.name:email,ownmail.net:email]
+X-Rspamd-Queue-Id: 2C9E816B4D4
 X-Rspamd-Action: no action
 
-When a pnfs error occurs, the IO is retried against the MDS. However,
-the initial IO leads to the kernel logging "Serer wrote zero bytes"
-when in fact the MDS IO will not fail and thus the error misleads
-administrators that the system is experiencing issues.
+On Wed, Feb 4, 2026 at 12:08=E2=80=AFAM NeilBrown <neilb@ownmail.net> wrote=
+:
+>
+> From: NeilBrown <neil@brown.name>
+>
+> Instead of explicitly locking the parent and performing a lookup in
+> selinux, use simple_start_creating(), and then use
+> simple_done_creating() to unlock.
+>
+> This extends the region that the directory is locked for, and also
+> performs a lookup.
+> The lock extension is of no real consequence.
+> The lookup uses simple_lookup() and so always succeeds.  Thus when
+> d_make_persistent() is called the dentry will already be hashed.
+> d_make_persistent() handles this case.
+>
+> Signed-off-by: NeilBrown <neil@brown.name>
+> ---
+>  security/selinux/selinuxfs.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
 
-When pnfs IO fails which triggers pnfs_write_done_resent_to_mds() which
-would end up clearing nfs_pgio_header's pages structure (copying the
-content into a new one to do new RPC calls to the MDS). Thus,
-in nfs_writeback_result() when we have no pages to work with no need
-to try and also therefore skip logging the message about 0bytes.
+Unless I'm missing something, there is no reason why I couldn't take
+just this patch into the SELinux tree once the merge window closes,
+yes?
 
-Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
----
- fs/nfs/write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 2d0e4a765aeb..fe9930f8405b 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1551,7 +1551,7 @@ static void nfs_writeback_result(struct rpc_task *task,
- 	struct nfs_pgio_args	*argp = &hdr->args;
- 	struct nfs_pgio_res	*resp = &hdr->res;
- 
--	if (resp->count < argp->count) {
-+	if (resp->count < argp->count && !list_empty(&hdr->pages)) {
- 		static unsigned long    complain;
- 
- 		/* This a short write! */
--- 
-2.52.0
-
+--=20
+paul-moore.com
 
