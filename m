@@ -1,158 +1,157 @@
-Return-Path: <linux-nfs+bounces-19089-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19090-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id xIQnO8cjm2mUtgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19089-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 16:41:59 +0100
+	id wF6pCr0sm2llugMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19090-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 17:20:13 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D74916F8B3
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 16:41:59 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D84916F9AD
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 17:20:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8799300CE5C
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 15:41:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4C2B5300722E
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 16:20:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CF0A352F9B;
-	Sun, 22 Feb 2026 15:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C97413D891;
+	Sun, 22 Feb 2026 16:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tLdCbbfu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDQaQa96"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD69834F263
-	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 15:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8C83D3B3
+	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 16:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771774916; cv=none; b=MGc72fmG7RPgH0snRxq+w9mrO97Fve3v7NQbS8MpB8ml1wV2W2AEVyw/1mudC0ALOo68E56Wnt2Ty6w1CwRB5wOFHjXLBjvSd2Y2WvhuX+GJ09gJNsTyTwtQcP+TE1cQ0JhWPxEevpxeGQfVaet+MFkI73iP2G91LQpHK1IDRW4=
+	t=1771777206; cv=none; b=CYE+TiRrl0NwgMiZxi2BaL9P6STtnA0raLz0Cls0j+m/17KfJnoDoZ4fPW0NGNtvvBFjIq1MKr1nMNAhIZtbGkQYAVKbNxU1dh5QAaJFiAb2rLlNFOum3+Rr//9Kyjp5GbKUHmQuKjqUB9gZsWUNYvnbXcC2ImyqZhGK61dzHEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771774916; c=relaxed/simple;
-	bh=izZuT6jyEr5LF4TelrPdbOh9riI0WBoKyiiJwoJWLAk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=WOeIMDWv07aqOvx2woNWwRm1nG90DKoAQicnXYyYbduDCP+533vtMIckQ7wbd1JRogJLvhVMAotY07MzCEwMgK/TIf7sOT42phsh/x/zGB6DGpBKI0lHoegUSq2exgLNfv7FftgC204PgA7IwZRchIETVmUCxomdStGqHgFiLvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tLdCbbfu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E9EC19424;
-	Sun, 22 Feb 2026 15:41:56 +0000 (UTC)
+	s=arc-20240116; t=1771777206; c=relaxed/simple;
+	bh=p8FhBUxEKNFAXFuXBq85P7yWfX1TQUzHqVz1UpmQcxc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eXPw4TBBfYfHxYRwCjVoxyFoMDfOTg4gB/RJc5Amr+gxR13aiOb+pISF6m5ChrpVwP6NC6pvhzpwEGtFEJ315Pxa/3S8ta+mtpZ4Jm6oDSRx1lyadLsR+JARYKOiDiaDpain7w75UdkE9S8/NJSebz71ctuTj9H2DdLXIzV2mo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDQaQa96; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF128C116D0;
+	Sun, 22 Feb 2026 16:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771774916;
-	bh=izZuT6jyEr5LF4TelrPdbOh9riI0WBoKyiiJwoJWLAk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=tLdCbbfumy6WVtyg8E5HW5jOhpLcK7y28AKHgnNiCVBTH9E/igUxDoJmnInbwP1Lq
-	 8fdeB9wW7oJfGGyLJ2yDaRCr/Pv/NTlt3L+a36PV3A2X6Hze/2Pr8+kVyJV/BGjoIf
-	 5vTPg7VJb0ZRogSDL3EjkZlqT6mmEKPDMq/vfg0eR8wT7zP3l5E90n+GfUtfFC+Jrc
-	 x/2uEoU/ev9mB2J+p5BBs998aqr4z6GiRXBN1UXQsaS7PVdyRpk2Y/rakO+kroKyAg
-	 Rb8XbSra/P0bkW/sm3P9vLipIlTk8YIK98enyJk6eJZ6tz1OOZtnESgnwsL0z0orXo
-	 sLdSIQ04dxmAQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1AED9F4006A;
-	Sun, 22 Feb 2026 10:41:55 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sun, 22 Feb 2026 10:41:55 -0500
-X-ME-Sender: <xms:wyObaWaMULumWMI6PeT4-HGk1UOPAvACa6Iwody76OaclkvzvYUMsw>
-    <xme:wyObaUM_Bt0truEbnPzbwBvYOh6wT-F1kWdu9e6sSgwbVwkJU08hBW11bzPT3J7HX
-    dAuQodyujwoA2jdBFGlwZK_gr6D3nJd8exNbOs3IPYPS9BCH956-es>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeegjedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpeejvefhudehleetvdejhfejvefghfelgeejvedvgfduuefffeegtdejuefhiedukeen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
-    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
-    peekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnvghilhessghrohifnhdrnh
-    grmhgvpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepmhhishgrnhhjuhhmsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtoheptghhuh
-    gtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepuggrihdrnhhgohes
-    ohhrrggtlhgvrdgtohhmpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtg
-    homhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehlihhn
-    uhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:wyObaYYVabiONopIxjWibfeLZ3goUecvYvyAVrAVC2Jw488FryxDkQ>
-    <xmx:wyObafaLVNpgQ75d6wcH26pj4R-E-uZLb9dtb8h--c-vjyvcWRHbBQ>
-    <xmx:wyObaVLsSck6q9MhnaRofpwg_Le0nZTP47u_4NYk3s01dC2WCTS_Ew>
-    <xmx:wyObaTsrF0mgHNqo4-1FB0cYhZIO0coiDl52ISEGeIraWk0SvkcfNw>
-    <xmx:wyObaRU_Nns-fXyNxXlEHMOqrm03RFVnma4rhumqyKFE593eDFd-WMOV>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E33CF780082; Sun, 22 Feb 2026 10:41:54 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1771777206;
+	bh=p8FhBUxEKNFAXFuXBq85P7yWfX1TQUzHqVz1UpmQcxc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bDQaQa96m6fnz5lXlYoSs+YkxdipA1+YE9QmgXza7WPAaY64f5uNYtGdxJ9YfAoiO
+	 zp4ginJeJtvETndqX/G3SWzcJbwxZ0cwCfI94s+Iwi/BP0t1n2XRBcQNIkbdG/JXU7
+	 ZRdBaBDcn4w3FEpsZ9nUNuTiLHeLPlsTicp6XRBAYmu8T6jSwNIP9+DXx37bYPqEFu
+	 guHda6FI4EE1/cHIQH0+SlO96fMxRodi9KZBVDEEoj0FKIDiG66UdxZl1gQm34xK28
+	 SC7RceEzE6kkedi97kdzt3+2Y7ii3fCYmOkcfGurV2UNNb7YQWA6l2qdugTruXDbXy
+	 oC56okQ4/vrGQ==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neilb@ownmail.net>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH 0/6] Optimize NFSD buffer page management
+Date: Sun, 22 Feb 2026 11:19:56 -0500
+Message-ID: <20260222162002.10613-1-cel@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ADX66Kwc3vDJ
-Date: Sun, 22 Feb 2026 10:41:34 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: misanjum@linux.ibm.com, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <7ae720fc-b121-4d32-9a02-255911c694ca@app.fastmail.com>
-In-Reply-To: <177171464397.8396.10030110076107851635@noble.neil.brown.name>
-References: <20260219215017.1769-1-cel@kernel.org>
- <177171464397.8396.10030110076107851635@noble.neil.brown.name>
-Subject: Re: [PATCH v1 0/2] Address UAF in sunrpc cache show callbacks
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-19090-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19089-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 3D74916F8B3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3D84916F9AD
 X-Rspamd-Action: no action
 
+From: Chuck Lever <chuck.lever@oracle.com>
 
+This series solves two problems. First:
 
-On Sat, Feb 21, 2026, at 5:57 PM, NeilBrown wrote:
-> On Fri, 20 Feb 2026, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->> 
->> Attempt to address three crashes reported here:
->> 
->> https://lore.kernel.org/linux-nfs/dcd371d3a95815a84ba7de52cef447b8@linux.ibm.com/
->> 
->> These are compile-tested and regression-tested, but as I do not have
->> a PowerPC system handy, I will need someone who has one to test
->> whether they actually address the crashes.
->> 
->> Chuck Lever (2):
->>   NFSD: Defer sub-object cleanup in export put callbacks
->>   NFSD: Hold net reference for the lifetime of /proc/fs/nfs/exports fd
->
-> Nice.  I particularly liked the thorough commit descriptions!
->
-> Reviewed-by: NeilBrown <neil@brown.name>
+ NFSv3 operations have complementary Request and Response sizes.
+ When a Request message is large, the corresponding Response
+ message is small, and vice versa. The sum of the two message
+ sizes is never more than the maximum transport payload size. So
+ NFSD could get away with maintaining a single array of pages,
+ split between the RPC send and Receive buffer.
 
-Thanks Neil!
+ NFSv4 is not as cut and dried. An NFSv4 client may construct an
+ NFSv4 COMPOUND that is arbitrarily complex, mixing operations
+ that can have large Request size with operations that have a
+ large Response size. The resulting server-side buffer size
+ requirement can be larger than the maximum transport payload size.
+
+ Therefore we must increase the allocated RPC Call landing zone and
+ the RPC Reply construction zone to ensure that arbitrary NFSv4
+ COMPOUNDs can be handled.
+
+Second:
+
+ Due to the above, and because NFSD can now handle payload sizes
+ considerably larger than 1MB, the number of array entries that
+ alloc_bulk_pages() walks through to reset the rqst page arrays
+ after each RPC completes has increased dramatically.
+
+ But we observe that the mean size of NFS requests remains smaller
+ than a few pages. If only a few pages are consumed while processing
+ each RPC, then traversing all of the pages in the page arrays for
+ refills is wasted effort. The CPU cost of walking these arrays is
+ noticeable in "perf" captures.
+
+ It would be more efficient to keep track of which entries need to
+ be refilled, since that is likely to be a small number in the most
+ common case, and use alloc_bulk_pages() to fill only those entries.
+ 
+---
+
+Chuck Lever (6):
+  sunrpc: Tighten bounds checking in svc_rqst_replace_page
+  sunrpc: Allocate a separate Reply page array
+  sunrpc: Handle NULL entries in svc_rqst_release_pages
+  svcrdma: preserve rq_next_page in svc_rdma_save_io_pages
+  sunrpc: Track consumed rq_pages entries
+  sunrpc: Optimize rq_respages allocation in svc_alloc_arg
+
+ include/linux/sunrpc/svc.h              | 55 ++++++++++++++----------
+ net/sunrpc/svc.c                        | 57 ++++++++++++++++++-------
+ net/sunrpc/svc_xprt.c                   | 47 +++++++++++++++-----
+ net/sunrpc/svcsock.c                    |  7 +--
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 15 ++-----
+ net/sunrpc/xprtrdma/svc_rdma_rw.c       |  1 +
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c   |  6 +--
+ 7 files changed, 119 insertions(+), 69 deletions(-)
 
 -- 
-Chuck Lever
+2.53.0
+
 
