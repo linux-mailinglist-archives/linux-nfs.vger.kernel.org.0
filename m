@@ -1,240 +1,195 @@
-Return-Path: <linux-nfs+bounces-19087-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19088-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id B3+dMVsHm2nBqQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19087-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 14:40:43 +0100
+	id ANH3E5MQm2lArgMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19088-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 15:20:03 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 172D916F3F9
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 14:40:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3AE016F528
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 15:20:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BF872300D14D
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 13:40:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 03D30301907A
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 14:19:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4553F2236E3;
-	Sun, 22 Feb 2026 13:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E404350299;
+	Sun, 22 Feb 2026 14:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="E6qEKAJi"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Nx8KjheQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA01AEACD
-	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 13:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771767641; cv=none; b=RGJYYsh/TOadPVHMTiMxwi8KMz4OP3094fA7cNPbmkDXdzFTjsaSZPEec05o6AXZig1Vqf38UfPBK22+z5q84PPyABEzQiMxP/VM2/mU1TKax8DCSREbJwUKrbddUrJM6yZXkEbAUohnm3Z6wpCwz7LkbpStiFj2Vmte2FNK7nc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771767641; c=relaxed/simple;
-	bh=XQRKxRQE10H7yg7a6G0mXTMDsK5YQfJYdmfTfnJRA2I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UHdlGAf/XEVH9KUv3b9pgI91MmuBRjxnqp/zMPN+4X3x54eLINcB8eApooRo6PXpfehZPUbuXPCQiS1krr8V4TjouA7K8l7+dRrloAydocyQH0JKXyIIJlmQ8uLaeJ8PKc7YDXXxUPaDUD/JsyVHulMlrLtObWIq1nxh1dQyulg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=E6qEKAJi; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-480706554beso41635865e9.1
-        for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 05:40:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4236634F498
+	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 14:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771769985; cv=pass; b=KvlHVXNQzvNhViwqEUHt2FWt4+DFEEReeIOS6DLG5br9Dn5zw5SghbEjR/pzbca4m9ICfvBUFM+HsxJvrGIqQ5TSZfPuwJILB5RxRccy9RAw6sVeBbIt8T4vCGQd84Zvg/bddYE71nM5rFeseFDnFEQC10xmEyjAxA5JAY9RS6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771769985; c=relaxed/simple;
+	bh=ln+l2+kKkFDBmSOGuUA2y37XlX40B6GZOr01SweZv58=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n+j90i9R3kwBGK8rk3UIOTNTcAj3l32EkB5dwXZWR1l6wuI/uNfPq7O1fmID5VGy6MaWDjlF5N/UbZ/wilxJucpUMq+pjRmMx64nDsHXqrpcmqxEgzpyLLDXajQ0bG2wQ9KnUtThk3oe1yOw6J3AJ+MlHchebkfidFlxNMCteZg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Nx8KjheQ; arc=pass smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8230f8f27cfso1820205b3a.0
+        for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 06:19:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771769982; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YZp86dO4hj+OWsJ1gBRluxtipSd02N358pvHABszeEoYic2WxODC1hbIfwInN+6Cvn
+         5DH3GZvfGdvdRdNlucKaNSovctEDRB0GkEFwjwIzd2xoOLnvG2XfpxUa75g9c3FPXlWz
+         3KS68MPK5P8bhwst9g8jEd7GlfmnmSCZ+jFRFHBLmGWnIks9vIPObJRLL4kqEDf4iokP
+         nPrtmkAxxG3KfIkjRiearsiW6DRE49I5qOhZ4RsuCrOkakGUffVEWn6anxVK8bV3rQSN
+         UX/JaJErmZlXspFe4MMIyP8VlzOwdjGEhf94zmpVW6P7ZsApxlOI3ulUiryC1pjsRIGt
+         rOlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=X8lBMrpe1LcWoNp46tVs1SnCv/oupmsi0daofTsKyx8=;
+        fh=fL6F8MAweRNUnyTOqMy8DtoFp6CkS4kmOV40Em2t1Bc=;
+        b=HNVbPD0HmtF1MPDJ7iwtRSGdMTfqRYauZOStdi2LlWD1Auj5SpWFxk1T5aB1JBx//O
+         M4PdAbQctE3xUOcw3wfMY4VzCEjXXK4o+NchNk63mVaQhD3Qvi0xcm4wOB+bzpZZhw16
+         /pdOcCt8Y1ELOoojKN6klwDT8RP0KjJ3hBXKYwyvR6ychMUEbcco9GNpjzffnVTN2nyB
+         YJINrJBhFIpQmX04B8MZxRjt8JACrbJSUPpleKfRv4PiJo85SGiZVxH4ZtCNt3Y3R5GQ
+         SxCWIuwHy71rQK3lDdYSLhV/mKhBUI8OPtaZMLJ77VeDRCufgrbXDCbVnY2Vy47NrE0O
+         aMaw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google; t=1771767638; x=1772372438; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X5hTB7rp2v2Ky3DPucmsZgzTt1Xqw3GkUdh/l/h8Rmg=;
-        b=E6qEKAJi1duusAqJpOv685BV2nHH3A38gYZgXDo/N2UEDCi6k10PtuvNK+AKqPH7Pr
-         dVsaFggeWA9LO6SAU5HmWEL/W99gn8bQ5mTjgiRDzQ9J8Hu3fZrKXNFgjQaGUtfaPhZF
-         RhRDwqR8swqPeou6+GrZy1VixtC5UNYZehgqn+0ps2uEkjhlrioexQmxD4PijMTSn3f8
-         iMMT79Y1BfeRsCSupSu49rdDO4bniDw3+dEkMb8Axqy5Ksjkpa7TGzD2hup/llP5YJSM
-         un8gba3FS3KOf5TZ1mx0JKazK3SeqyHzQh75Qh1ZYLTKw21fZc6qqXOg/0VrD7hxsV/C
-         c+dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771767638; x=1772372438;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1771769982; x=1772374782; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X5hTB7rp2v2Ky3DPucmsZgzTt1Xqw3GkUdh/l/h8Rmg=;
-        b=Q/0exPFa3uMSJyIQlY0D/9CSrWfPnvdyvRSI2r9cX2A8Rwr+V3raJGs5EM8+d39mWe
-         hWY72V0hYOLNpmCy1T7vmDZNDN5nioZoidmHA+tDTNdOUIwzrDS+parXeLQEVN8hv9kI
-         785tY4KpHouiH20t2GwIDsIsrYrhOum5Ya3p5xhIqUVVJYwhgeSURnkiV4br0CpPjt0H
-         gvEQhrZGqlQFkLAJZXf3dMVp4T1cs8QlsAllfwGulFiGkr8oUVL0OTbkvNgtS9UwYSao
-         idwgcnUIqEU3Y3QqSRlAHCXjnC8RgNIRG0DWpYaTMD6jirOM2mcyFlgQ5FiUAz8D+mpA
-         L+Ig==
-X-Gm-Message-State: AOJu0YxpvjypvK1rqgQidml7SQhNMclTdLaZ9YpHt087290WPsEl9H4m
-	O/tg0kUTJBDLWElpdaOyQugJmceE9Sglyxi5fKxfwtud60RXiKE4hl1aOnk+0DYQ+ac=
-X-Gm-Gg: AZuq6aJmCgLyPuVUawcVpUWgegm4nvbknt0ACcp/h9pJxzC/0zDikGt6IcV8v0EOWlJ
-	bUCwTIsEqjkmXZa5dHBORrEmgvC3rBzswBBQHTolvJlBDTdeZR8fTjoQJmTJeQBblIAK9MkIdvH
-	SRKRMejm5oVyqduMDvRUcXMBYoDz6TcpVrtptqH/2I0vLUSt9VhnDnnIK7wJRS0iQRgbbYclRS7
-	B67aGmyA3SR4dJ9I4wy1VYJ8xjbxr/UtZx4wMSDsrTXd3v48se4g6CwGHSV3kRcmsuZK09yfo+j
-	zoGa71ppMzFGBYqPRPr2qPx2XoGEsmS1jiqPOl8cfsXdIWkLM+XRw60nvMJvmby5Wd5SA3Th3Bg
-	d3vd+C8dd8v7rPi3shhh/xsggQgGkVb4hyKSn+R4HzndPpnXcxGHA6y2ul2pzH0WlMLcQygc6HM
-	nrU30jh37pMMm9UBQ62hKYF6x55aGsa17coYfy9yjdgTuCYxqcIWxswLHaVq20I+O7VEhet8Dxk
-	LamGG09PqU5MQrhnVVJxqb2J3U/tVw2DnV4ykTPNJAxBFhwcOjFS311
-X-Received: by 2002:a05:600c:8b63:b0:47e:e87f:4bba with SMTP id 5b1f17b1804b1-483a9637833mr86975115e9.29.1771767638156;
-        Sun, 22 Feb 2026 05:40:38 -0800 (PST)
-Received: from michaelstoler-MacBook-Pro.vastdata.com (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a42f3968sm75221035e9.19.2026.02.22.05.40.37
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 22 Feb 2026 05:40:37 -0800 (PST)
-From: Michael Stoler <michael.stoler@vastdata.com>
-To: jlayton@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	Michael Stoler <michael.stoler@vastdata.com>
-Subject: [PATCH] nfs: avoid triggering out-of-order write handling in nfs_setattr()
-Date: Sun, 22 Feb 2026 15:40:19 +0200
-Message-ID: <20260222134019.21516-1-michael.stoler@vastdata.com>
-X-Mailer: git-send-email 2.53.0
+        bh=X8lBMrpe1LcWoNp46tVs1SnCv/oupmsi0daofTsKyx8=;
+        b=Nx8KjheQqYFoKeSsWjSjDkljl7DeLxDbijMH0TCbUekr4yIocKBCavivrkgn95uFed
+         XuSYjq8Pcd+5CapXKZGXMujHyPS8CM2XMsK1VFq/NEU9BlgNRr0AX30vP4yE32dv7A5Y
+         Hbv2Gia3NHVN7Dbg7SLniPYX1r0AX1nZqO/QynXl0UmultKmwbPnGnBn1UVWQBCgarfe
+         8XAXggaIceD/wiAeYgSlFc6fVQeagqwn9JRq9mELPGKgvBWXjAAEHwqVz4J9E4ZYYqaN
+         3M/u7GK2xgYQYx/5yhpHJ3oZznFZe7PrOTMXiMph7pHCPiT63E99Qjf7j/+JE40HxrtR
+         KZUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771769982; x=1772374782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=X8lBMrpe1LcWoNp46tVs1SnCv/oupmsi0daofTsKyx8=;
+        b=CeqcgHA/65Jwr674V1hapPCemKbTZF4zR5QpQ9LW4+6Kei3v5yFBy+SjsVGq8DM+wU
+         Q4bc+VkFUlG15krftgiEjLtIX2cOt7ap79En/6u3OaW2cPdqn7XbeFjTjcZVodTsr/Q9
+         WKM1Rsgnk7u0G2mPJ9DvkQBy47QlAeJPepKqbD7G/iz8aHzgRmAsqGc+QDdZnGAms2kd
+         pp/fvjxLNDvTI1P/gX0ClW55HQ6gLOCWdnZAPmxuts1tfy4ZkigoCVpNVVkg6McGQgev
+         MH49rwQU/jABovKqJoWZ3/dgTbF80U0+ihoyBhFbBdpHDqb7fskaQ1LO/3jRMcxjcNZ3
+         5X9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQPIwwKMaefd1AqWxezmI7PmULeuPUI93LGDIka43fUt3ES9y9cj3sTHJV0HHRCamWlsj/ewQJpDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJMTCz8lDrUmdBUYQncwTEP5bB3xGcrhYG1Q43bD0E0wU0FpyU
+	Mfg1XPky8zpXxEgTaWV79RBo2rX0P4kbCntwizL3nihPulcRtdNBaNEak7CeAmLQ2Hb67DTwfM6
+	8W8cFkEp2gxjouB657oiEmOgow2UyGz65pEX1eeAV
+X-Gm-Gg: AZuq6aJP/8z2U7+0TZNaMOpmvroXuQvuDPhXuxzdI79NHFgfJ9WQhYG3vIPtTIsw56O
+	gw8HIo9617GAVF3m3e3B7cSpyIXFCZyZ88Qbxp6eznNK5rgWTRRNWcS8zl/H5QfMR6/ukoS9WJ6
+	sIn07Wlw2Wb/kZF6/XTJ9CI5seemZuHvKsL6rUW7RZD/IKiV/md08ukDZf5BzpZI8D8fNLADLKF
+	nhy1FANrI5mAqR8cwQDsQrZNqA/q2bhAhKODl2eXwZ2IkG3c8zm/egnIcp4FsgcZNsOBJwr+UwK
+	Vjmqb+c=
+X-Received: by 2002:a05:6a21:6003:b0:38d:ebc4:b552 with SMTP id
+ adf61e73a8af0-39545ed5054mr4712151637.27.1771769982592; Sun, 22 Feb 2026
+ 06:19:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260204050726.177283-1-neilb@ownmail.net> <20260204050726.177283-6-neilb@ownmail.net>
+ <CAHC9VhThChVk1Dk+f-KANGj7Tu7zzHCiA==taeQ+=nQaH6a7sg@mail.gmail.com> <177171292163.8396.10671162503209732019@noble.neil.brown.name>
+In-Reply-To: <177171292163.8396.10671162503209732019@noble.neil.brown.name>
+From: Paul Moore <paul@paul-moore.com>
+Date: Sun, 22 Feb 2026 09:19:30 -0500
+X-Gm-Features: AaiRm50aSxTeiNBHciBrrBXQYNf54mJgxuioR2fz7pTB6PQcKrI6Gq_TY-UauFU
+Message-ID: <CAHC9VhTv+K44q7+5d17jS8h9fJY_JfQVUw5NPNvPzjkHDpqp=g@mail.gmail.com>
+Subject: Re: [PATCH 05/13] selinux: Use simple_start_creating() / simple_done_creating()
+To: NeilBrown <neil@brown.name>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, John Johansen <john.johansen@canonical.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-kernel@vger.kernel.org, 
+	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[vastdata.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[vastdata.com:s=google];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[vastdata.com:+];
-	TAGGED_FROM(0.00)[bounces-19087-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19088-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,namei.org,hallyn.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[michael.stoler@vastdata.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[paul-moore.com:+];
 	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 172D916F3F9
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,paul-moore.com:dkim,paul-moore.com:url,paul-moore.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E3AE016F528
 X-Rspamd-Action: no action
 
-    I’m seeing a performance issue with an NFS driver based on Linux 6.6. When
-untar extracts an archive, it sets file attributes and timestamps after each
-file is created. As a result, the inodes of these files are marked as OOO
-(out-of-order write), which causes valid page cache to be dropped on subsequent
-opens.
-    This false OOO tagging occurs during the nfs_setattr() inode method. The
-reason is that inode attributes are updated twice: first in the protocol version
-specific method nfs*_proc_setattr(), and then again in nfs_setattr() itself via
-nfs_refresh_inode(), even though the inode state has already been updated by
-nfs_update_inode() in protocol-version-specific method. As a result,
-nfs_refresh_inode() falsely detects the second attempt to apply the same file
-attributes as an out-of-order operation and marks the inode with an OOO range.
-    The proposed patch resolves this issue by eliminating the second inode
-attribute update in nfs_refresh_inode() when the inode has already been updated.
+On Sat, Feb 21, 2026 at 5:28=E2=80=AFPM NeilBrown <neilb@ownmail.net> wrote=
+:
+> On Sat, 21 Feb 2026, Paul Moore wrote:
+> > On Wed, Feb 4, 2026 at 12:08=E2=80=AFAM NeilBrown <neilb@ownmail.net> w=
+rote:
+> > >
+> > > From: NeilBrown <neil@brown.name>
+> > >
+> > > Instead of explicitly locking the parent and performing a lookup in
+> > > selinux, use simple_start_creating(), and then use
+> > > simple_done_creating() to unlock.
+> > >
+> > > This extends the region that the directory is locked for, and also
+> > > performs a lookup.
+> > > The lock extension is of no real consequence.
+> > > The lookup uses simple_lookup() and so always succeeds.  Thus when
+> > > d_make_persistent() is called the dentry will already be hashed.
+> > > d_make_persistent() handles this case.
+> > >
+> > > Signed-off-by: NeilBrown <neil@brown.name>
+> > > ---
+> > >  security/selinux/selinuxfs.c | 15 +++++++--------
+> > >  1 file changed, 7 insertions(+), 8 deletions(-)
+> >
+> > Unless I'm missing something, there is no reason why I couldn't take
+> > just this patch into the SELinux tree once the merge window closes,
+> > yes?
+>
+> Yes - but ...
+>
+> Once this series lands (hopefully soon - I will resend after -rc1 is
+> out) I have another batch which depends on the new start_creating etc
+> API being used everywhere ...
 
-Signed-off-by: Michael Stoler <michael.stoler@vastdata.com>
----
- fs/nfs/inode.c         | 10 ++++++----
- fs/nfs/nfs3proc.c      |  2 +-
- fs/nfs/nfs4proc.c      |  2 +-
- fs/nfs/proc.c          |  2 +-
- include/linux/nfs_fs.h |  2 +-
- 5 files changed, 10 insertions(+), 8 deletions(-)
+Okay, thanks for letting me know.  I was curious about something like
+that based on the cover letter, but the timing wasn't clear.
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 0d7facfdafb9..13ac5dffd3e6 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -657,8 +657,6 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	}
- 
- 	error = NFS_PROTO(inode)->setattr(dentry, fattr, attr);
--	if (error == 0)
--		error = nfs_refresh_inode(inode, fattr);
- 	nfs_free_fattr(fattr);
- out:
- 	trace_nfs_setattr_exit(inode, error);
-@@ -709,9 +707,11 @@ static int nfs_vmtruncate(struct inode * inode, loff_t offset)
-  * Note: we do this in the *proc.c in order to ensure that
-  *       it works for things like exclusive creates too.
-  */
--void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
-+int nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
- 		struct nfs_fattr *fattr)
- {
-+	int ret = 0;
-+
- 	/* Barrier: bump the attribute generation count. */
- 	nfs_fattr_set_barrier(fattr);
- 
-@@ -780,8 +780,10 @@ void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
- 					| NFS_INO_INVALID_CTIME);
- 	}
- 	if (fattr->valid)
--		nfs_update_inode(inode, fattr);
-+		ret = nfs_update_inode(inode, fattr);
- 	spin_unlock(&inode->i_lock);
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(nfs_setattr_update_inode);
- 
-diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-index 715753f41fb0..dc9f33735cf2 100644
---- a/fs/nfs/nfs3proc.c
-+++ b/fs/nfs/nfs3proc.c
-@@ -144,7 +144,7 @@ nfs3_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
- 	nfs_fattr_init(fattr);
- 	status = rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
- 	if (status == 0) {
--		nfs_setattr_update_inode(inode, sattr, fattr);
-+		status = nfs_setattr_update_inode(inode, sattr, fattr);
- 		if (NFS_I(inode)->cache_validity & NFS_INO_INVALID_ACL)
- 			nfs_zap_acl_cache(inode);
- 	}
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index fe6986939bc9..a41c5b046205 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4436,7 +4436,7 @@ nfs4_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
- 
- 	status = nfs4_do_setattr(inode, cred, fattr, sattr, ctx, NULL);
- 	if (status == 0) {
--		nfs_setattr_update_inode(inode, sattr, fattr);
-+		status = nfs_setattr_update_inode(inode, sattr, fattr);
- 		nfs_setsecurity(inode, fattr);
- 	}
- 	return status;
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index e3570c656b0f..edf3edf6720a 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -147,7 +147,7 @@ nfs_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
- 	nfs_fattr_init(fattr);
- 	status = rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
- 	if (status == 0)
--		nfs_setattr_update_inode(inode, sattr, fattr);
-+		status = nfs_setattr_update_inode(inode, sattr, fattr);
- 	dprintk("NFS reply setattr: %d\n", status);
- 	return status;
- }
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 832b7e354b4e..a1bcec8d0992 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -434,7 +434,7 @@ extern bool nfs_mapping_need_revalidate_inode(struct inode *inode);
- extern int nfs_revalidate_mapping(struct inode *inode, struct address_space *mapping);
- extern int nfs_revalidate_mapping_rcu(struct inode *inode);
- extern int nfs_setattr(struct mnt_idmap *, struct dentry *, struct iattr *);
--extern void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr, struct nfs_fattr *);
-+extern int nfs_setattr_update_inode(struct inode *inode, struct iattr *attr, struct nfs_fattr *);
- extern void nfs_setsecurity(struct inode *inode, struct nfs_fattr *fattr);
- extern struct nfs_open_context *get_nfs_open_context(struct nfs_open_context *ctx);
- extern void put_nfs_open_context(struct nfs_open_context *ctx);
--- 
-2.53.0
+Acked-by: Paul Moore <paul@paul-moore.com>
 
+--=20
+paul-moore.com
 
