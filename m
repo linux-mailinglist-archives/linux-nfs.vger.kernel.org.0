@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-19093-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19094-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2OapFMEsm2llugMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19093-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 17:20:17 +0100
+	id CK1MF8Qsm2llugMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19094-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 17:20:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC06516F9C8
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 17:20:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A473316F9CF
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 17:20:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D0442300107E
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 16:20:11 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8BF5C300C36C
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 16:20:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E743350A3A;
-	Sun, 22 Feb 2026 16:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A4D13D891;
+	Sun, 22 Feb 2026 16:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kAoVh6b8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpAqjIvs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C40A3D3B3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ADB3D3B3
 	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 16:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771777209; cv=none; b=dXVfYL8p/xMQfW6KK0cER2CAPijXs735sdpQNLUxubZmgDOHWyhRdR3Ix/g3YWvnPIOD0HpNdFyB81d+UHwWxAFraUdYt528NIaqLgztRIVbukqyxxYxTqfCVjajhJoJDJ05srojUY+e38O7aALsQvZCyP0UxITVSbI0NGuMhRQ=
+	t=1771777210; cv=none; b=a+L+x3ip062IKJNyeSCAHY2j9U3cgEpnUIlU72Y5iGSVc+8IpP3t9aXOduo1wcR7Q2mBLGi9t1B3ugy4Fbb8s11NSOL3a4E5a+BE1I5fZtV6DGnsdEa6+V+e7IB7u2nh5TWtl5i9vSWVXGDzqFoivG7d9zJTRSe6kSXkIYDxZxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771777209; c=relaxed/simple;
-	bh=VFyA/3xbtENe5w9y9gbMB5Ioss1AJvv4HBPiVC3hu9I=;
+	s=arc-20240116; t=1771777210; c=relaxed/simple;
+	bh=4drtyQqJi6epl5UJ7/kbc4iy6grWlDqd+DG4WPbY8VI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WPbyChXk+Y/T3XGKURfhH7zIHufPd5mR0raTXJ+H9ZxzIutj4E+KUSP4QrTBNv1OEwyusHVgvDMzO+o5RHsNZGGmUXAXyXel9k3QHHdIi2HxrwW8t471yy4SGai0bCsNamWQygxhAz5/W7OC6/Ca5GeTnUJf5WlLzzX0BAB/DRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kAoVh6b8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61CA1C2BC86;
-	Sun, 22 Feb 2026 16:20:08 +0000 (UTC)
+	 MIME-Version; b=jYqYQXheqs9KnpuVtBm9swwqQcefSfmYBY8qcUKNn15uZ/z7aG7145ooyTSuzPxyyKTQxezZpbYibjHAkTEe81g4zOyBm34nyyjx5J1B/SGQ8Sa3sI3p7kjbPnCApHDRnsKC84DtSVeRRl+xgd+eenumq78kBIZZqTW16S0eobg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpAqjIvs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EACC19425;
+	Sun, 22 Feb 2026 16:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1771777209;
-	bh=VFyA/3xbtENe5w9y9gbMB5Ioss1AJvv4HBPiVC3hu9I=;
+	bh=4drtyQqJi6epl5UJ7/kbc4iy6grWlDqd+DG4WPbY8VI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kAoVh6b8FZT+/Ksuc5Je160lKsDU5Gt6emyQqoOEqI5f3Dv+pb70Rdw7Tfz0xR5pt
-	 YCDSvUqjrvFh6AJ7ypXU5/J0ZMgYrmlCo58ehXKYtTYwNtsgXJr2i1GwK4T3+sx0uN
-	 G8rXGFgJ2i2Qtqiw8ZwsZ1s7WdowqJBypHy43RBebLMP9dZBhG/56EU19BN/l/lBGA
-	 c4GYx44J4AXO49R0ayBwXnu6NW3wgdmiuXO9xiVgwGZYc1S+smmLTv4IwbsZEol/+j
-	 ayWU4ySIbf4ARq5J3XzPZrn0wLtmfVjbyOOyDLjHtUnnW9bNZe0T12hFmThR1uTe04
-	 /6Fu2yRjD4nMQ==
+	b=PpAqjIvszT44fa+li/Mph/k5AaoiBch1Ams7fBHu/UAin0aqunYBwqxnJWfDMXKWP
+	 iV8qY7piE1+/HxHVYdUvgM4PDjw0epN8Qv5uFBLZ4TTpCmBVBEFma327bZ3RdawPV5
+	 0sYgNCU51KB2iQ/um3I996cHrhXjVi5YRwd65pgSkr6/FkZSrDo6FRtSaqr4gfnIgp
+	 TmdB3fxRhMHY/urvGQVANY0vpF0mStWtUYXQA8EyQSqGsxSWkNn4TaOzx6SmFItosx
+	 6c6BHFYx1yNxRpz5EDUG9uz9GauB9ZiZLzVHHLxozJzKE31WQAVQ5HsKZ0fGOU8n6P
+	 PtrRwGIrNpxRw==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 3/6] sunrpc: Handle NULL entries in svc_rqst_release_pages
-Date: Sun, 22 Feb 2026 11:19:59 -0500
-Message-ID: <20260222162002.10613-4-cel@kernel.org>
+Subject: [RFC PATCH 4/6] svcrdma: preserve rq_next_page in svc_rdma_save_io_pages
+Date: Sun, 22 Feb 2026 11:20:00 -0500
+Message-ID: <20260222162002.10613-5-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222162002.10613-1-cel@kernel.org>
 References: <20260222162002.10613-1-cel@kernel.org>
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19093-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19094-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,66 +93,53 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: AC06516F9C8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A473316F9CF
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-svc_rqst_release_pages() releases response pages between rq_respages
-and rq_next_page. It currently passes the entire range to
-release_pages(), which does not expect NULL entries.
+svc_rdma_save_io_pages() transfers response pages to the send
+context and sets those slots to NULL. It then resets rq_next_page
+to equal rq_respages, hiding the NULL region from
+svc_rqst_release_pages().
 
-A subsequent patch preserves the rq_next_page pointer in
-svc_rdma_save_io_pages() so that it accurately records how many
-response pages were consumed. After that change, the range
-[rq_respages, rq_next_page) can contain NULL entries where pages
-have already been transferred to a send context.
-
-Iterate through the range entry by entry, skipping NULLs, to handle
-this case correctly.
+Now that svc_rqst_release_pages() handles NULL entries, this
+reset is no longer necessary. Removing it preserves the
+invariant that the range [rq_respages, rq_next_page) accurately
+describes how many response pages were consumed, enabling a
+subsequent optimization in svc_alloc_arg() that refills only
+the consumed range.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svc.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index f850a2af90c2..620de9abedbb 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -989,18 +989,24 @@ EXPORT_SYMBOL_GPL(svc_rqst_replace_page);
-  * svc_rqst_release_pages - Release Reply buffer pages
-  * @rqstp: RPC transaction context
-  *
-- * Release response pages that might still be in flight after
-- * svc_send, and any spliced filesystem-owned pages.
-+ * Release response pages in the range [rq_respages, rq_next_page).
-+ * NULL entries in this range are skipped, allowing transports to
-+ * transfer pages to a send context before this function runs.
-  */
- void svc_rqst_release_pages(struct svc_rqst *rqstp)
- {
--	int i, count = rqstp->rq_next_page - rqstp->rq_respages;
-+	struct page **pp;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index 914cd263c2f1..17c8429da9d5 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -858,7 +858,8 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
  
--	if (count) {
--		release_pages(rqstp->rq_respages, count);
--		for (i = 0; i < count; i++)
--			rqstp->rq_respages[i] = NULL;
-+	for (pp = rqstp->rq_respages; pp < rqstp->rq_next_page; pp++) {
-+		if (*pp) {
-+			if (!folio_batch_add(&rqstp->rq_fbatch,
-+					     page_folio(*pp)))
-+				__folio_batch_release(&rqstp->rq_fbatch);
-+			*pp = NULL;
-+		}
+ /* The svc_rqst and all resources it owns are released as soon as
+  * svc_rdma_sendto returns. Transfer pages under I/O to the ctxt
+- * so they are released by the Send completion handler.
++ * so they are released only after Send completion, and not by
++ * svc_rqst_release_pages().
+  */
+ static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
+ 				   struct svc_rdma_send_ctxt *ctxt)
+@@ -870,9 +871,6 @@ static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
+ 		ctxt->sc_pages[i] = rqstp->rq_respages[i];
+ 		rqstp->rq_respages[i] = NULL;
  	}
-+	if (rqstp->rq_fbatch.nr)
-+		__folio_batch_release(&rqstp->rq_fbatch);
+-
+-	/* Prevent svc_xprt_release from releasing pages in rq_pages */
+-	rqstp->rq_next_page = rqstp->rq_respages;
  }
  
- /**
+ /* Prepare the portion of the RPC Reply that will be transmitted
 -- 
 2.53.0
 
