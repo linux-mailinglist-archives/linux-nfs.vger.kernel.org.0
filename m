@@ -1,192 +1,240 @@
-Return-Path: <linux-nfs+bounces-19086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19087-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 5YN2GyOummmUfwMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19086-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 08:20:03 +0100
+	id B3+dMVsHm2nBqQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19087-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 14:40:43 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA84016E946
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 08:20:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 172D916F3F9
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 14:40:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 12095300E5FA
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 07:20:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF872300D14D
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Feb 2026 13:40:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ADF51D5147;
-	Sun, 22 Feb 2026 07:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4553F2236E3;
+	Sun, 22 Feb 2026 13:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwtvKFVx"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="E6qEKAJi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C531C1C8626
-	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 07:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771744796; cv=pass; b=SdfR6BA9ILcV2nucQZ0IT9IfAd8FQK3QK0Lo/tcIOZs4nd5biUr0jiDrdBjXsDvYaqxOrEWIQyD5kqVWtBJww+TDP+s8N82Y3L9k+h0AOsK/kb5qZ2x7FSBwyria4ibtxXo3RiSxRir31FemPgRjQHXH/RVyB6h4sqE3h60Z/sM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771744796; c=relaxed/simple;
-	bh=0lDfK3AuaNxxPB1Mx5JPD44YULX91cix/sE9XtEee8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OdobE2f49SmPRRSGPjrUB2uGZU9+5EIYVxLPKfWcrPZtcBO93acWtv9mUcbr4owAudTUvK4e0utsD8lppXfDmsoMOYJk8xkQTgeVBxFnlFCruAj1e2aKIZkaXKX88sUUuJvANJjBuxguomLZbuwgoTGpWBdOFJ0/lKFdRqdHpSg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iwtvKFVx; arc=pass smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5663601fe8bso3199468e0c.1
-        for <linux-nfs@vger.kernel.org>; Sat, 21 Feb 2026 23:19:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771744794; cv=none;
-        d=google.com; s=arc-20240605;
-        b=L+KXwLGNxjxtUDY5o65cHpyCTYihVnklEJWmPb3cFx18QAPcCxTh53xXdcoXZ3YreT
-         OSkJtO3CSXHVIwvNX7ZDo9qjVUDR7s5JYX9gBsDVKdLebzWq0fa2B+LmzySR6rBYsrOq
-         8K38Hy2cPz6VLG3CkCxguJevMl6l/dk6VuRVqHG92UFTIAYsUY/tSli+39yZAp8fwqzo
-         eZsFEunDTtu/PCA8FeV5wsW3qTn/2BowIkX6XxcYUjvJ16Abt1tGqeR2ATeq+ktDbMYN
-         omOqQkUTrG0otXpq9v7EGakUN7Gh/OuQF1IthBBgRK7sIzEmDpbmK0zmDMYepS2mjuLW
-         nvRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=OILCq3HcP44ucOZfdh81GCluvZoTsk6wk990N+3C0dA=;
-        fh=FWZNi9K2XScL3fMhdaTqQ3qYS0CK4rZccHpXtKzOZAE=;
-        b=IQwiHmiji6aLuay6yAPJw5zoDPtPeBtqFsycqBCz1jgoK5xCzRqM6QASRHkBO9U9Xj
-         7QXLlzeWoBOEpvz4d9D3Da+HQSn1VrQnx6CYy5WLMAFy9K56HHQUavnj4gwZyhwfzdN2
-         K7psXPCob2652srIoNFk0Qe5wZYXW0u24oY7ZUdWB7CTdTMJjrgF1MPP2lkubiuWWdsf
-         TlrrZJCm+IeH/9shc2zutsY7/tvyLWf+XhUdHcnW8puSm9EqUYicnrG8y935iexdWnMP
-         J5CT3iioRv0hOYQA9xhVp/S4KRWW9bKIGOLMhyxw8OcpIFqMxtSD1YtBWMPK5yHJobBU
-         y+gw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA01AEACD
+	for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 13:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771767641; cv=none; b=RGJYYsh/TOadPVHMTiMxwi8KMz4OP3094fA7cNPbmkDXdzFTjsaSZPEec05o6AXZig1Vqf38UfPBK22+z5q84PPyABEzQiMxP/VM2/mU1TKax8DCSREbJwUKrbddUrJM6yZXkEbAUohnm3Z6wpCwz7LkbpStiFj2Vmte2FNK7nc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771767641; c=relaxed/simple;
+	bh=XQRKxRQE10H7yg7a6G0mXTMDsK5YQfJYdmfTfnJRA2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UHdlGAf/XEVH9KUv3b9pgI91MmuBRjxnqp/zMPN+4X3x54eLINcB8eApooRo6PXpfehZPUbuXPCQiS1krr8V4TjouA7K8l7+dRrloAydocyQH0JKXyIIJlmQ8uLaeJ8PKc7YDXXxUPaDUD/JsyVHulMlrLtObWIq1nxh1dQyulg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=E6qEKAJi; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-480706554beso41635865e9.1
+        for <linux-nfs@vger.kernel.org>; Sun, 22 Feb 2026 05:40:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771744794; x=1772349594; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OILCq3HcP44ucOZfdh81GCluvZoTsk6wk990N+3C0dA=;
-        b=iwtvKFVxJY411/9ogEeNuKuIL+swHngOLh4yrtBI6Td3Zvrhz9GAxS6djLXc2BeeOf
-         nwptn4OPwALolDkNO4yfUKWVGz6BTUQ/ZjsrhDkQelUcEp3u211ABAUwyaGfWUa3xyIl
-         8TncN5e/ul82aK3psRyH0mTUkoioWE7HxKEG5Tl+V4ZPPo1duell20yNXLiz/uGQbSYH
-         7yGlXL3++eZgdVawMupcKZlupPjYixQ8Rl23W+szYf64S6Jow0ieM/ciHxBMW07CFwOu
-         mPqgTy21kVuM+pHA2DPgrWsLpiGUpwbZYMi/pXNbvGHP1UIGZhLEeFn1TM96mjwZUN8t
-         bpvA==
+        d=vastdata.com; s=google; t=1771767638; x=1772372438; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5hTB7rp2v2Ky3DPucmsZgzTt1Xqw3GkUdh/l/h8Rmg=;
+        b=E6qEKAJi1duusAqJpOv685BV2nHH3A38gYZgXDo/N2UEDCi6k10PtuvNK+AKqPH7Pr
+         dVsaFggeWA9LO6SAU5HmWEL/W99gn8bQ5mTjgiRDzQ9J8Hu3fZrKXNFgjQaGUtfaPhZF
+         RhRDwqR8swqPeou6+GrZy1VixtC5UNYZehgqn+0ps2uEkjhlrioexQmxD4PijMTSn3f8
+         iMMT79Y1BfeRsCSupSu49rdDO4bniDw3+dEkMb8Axqy5Ksjkpa7TGzD2hup/llP5YJSM
+         un8gba3FS3KOf5TZ1mx0JKazK3SeqyHzQh75Qh1ZYLTKw21fZc6qqXOg/0VrD7hxsV/C
+         c+dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771744794; x=1772349594;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OILCq3HcP44ucOZfdh81GCluvZoTsk6wk990N+3C0dA=;
-        b=Trq0T2lHS4oU87dTBNV2jrVcvyBlh2tf4oijbv8V5dXI8vULlrGu94wQt47whHwWW8
-         eHmrwF8Sjbvg9RdAe4QM/zlpNje2hYPUeXLzJWancgiUF5HJp9Ai9doAjgprKNVsOt12
-         z5caR7iEwUymX7EUCoJD1XgBhJ1TsLc6S4X+ZNyzwj3ilINFGDgGr7bMNq+w+uw/aXS9
-         aUu4CGOvpdX+7UV7dQSDWxcIUmnRI9bXSNSrCaOKY3c0IgbDAUeN0PNap4j93KllP7WX
-         3Yuthn6SSTi+13kJMWu7t5YxkBMybt3j0PUQrERxQcx0cDme56L4Qx4u/HF6F2DUeEKH
-         7WgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxlckya5sDH3gOaEdoTsKk92Qe9vwCRHxaxfXp4kRDx4t1VSK18y2RCYWXepbIa4BIB4qb7qOVpTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGwoPALlZsBCSwjOuenJeuYKfaYOWlFK5FBr9V61QuBl6QmGRs
-	bGmAgXo3rNQYq2gOmS6b+c/qd1s/eWA/oXlGPkCjaP+KTExg/dV0KdFpUFx+y2D+z29o54cPrUT
-	4rgpCiZP7sFeqjc4Shymuo1AG/jhhnMY=
-X-Gm-Gg: AZuq6aLMr2nBrH+tQP9NgL8neXso8UqOBK6u2jnq1+e6OPGIKwa5CSn1ffYV2bE+WKZ
-	YzXfaCrQTkzGjIvpf+fRtikUspZB4r+JB/JGtZFN3xgu/A/zyydsxu19kf3PerFLf2syWU8R8MQ
-	HTs/NoS2BjAe4UPc3mR7RMu7MOSD2yIfMLx6M3LuRWaJ1OGBziey3+mTN6mY3CGnVr0xgo36FCn
-	nZyrN2FnGfeSUQRO+dE+zRV/Usgt0ERWTVnm5IBJzfbr5WpDKQkBI3yPEpU2bd1q6TfiiPusVwE
-	3ce4eVvjtOHcAaFdRbWIg6gGiFrOELHhdjflX7uRPZAKqpMHOzsX8Q==
-X-Received: by 2002:a05:6123:2c6:b0:55a:ab0d:bf74 with SMTP id
- 71dfb90a1353d-568e489e04bmr2702083e0c.13.1771744793575; Sat, 21 Feb 2026
- 23:19:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1771767638; x=1772372438;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X5hTB7rp2v2Ky3DPucmsZgzTt1Xqw3GkUdh/l/h8Rmg=;
+        b=Q/0exPFa3uMSJyIQlY0D/9CSrWfPnvdyvRSI2r9cX2A8Rwr+V3raJGs5EM8+d39mWe
+         hWY72V0hYOLNpmCy1T7vmDZNDN5nioZoidmHA+tDTNdOUIwzrDS+parXeLQEVN8hv9kI
+         785tY4KpHouiH20t2GwIDsIsrYrhOum5Ya3p5xhIqUVVJYwhgeSURnkiV4br0CpPjt0H
+         gvEQhrZGqlQFkLAJZXf3dMVp4T1cs8QlsAllfwGulFiGkr8oUVL0OTbkvNgtS9UwYSao
+         idwgcnUIqEU3Y3QqSRlAHCXjnC8RgNIRG0DWpYaTMD6jirOM2mcyFlgQ5FiUAz8D+mpA
+         L+Ig==
+X-Gm-Message-State: AOJu0YxpvjypvK1rqgQidml7SQhNMclTdLaZ9YpHt087290WPsEl9H4m
+	O/tg0kUTJBDLWElpdaOyQugJmceE9Sglyxi5fKxfwtud60RXiKE4hl1aOnk+0DYQ+ac=
+X-Gm-Gg: AZuq6aJmCgLyPuVUawcVpUWgegm4nvbknt0ACcp/h9pJxzC/0zDikGt6IcV8v0EOWlJ
+	bUCwTIsEqjkmXZa5dHBORrEmgvC3rBzswBBQHTolvJlBDTdeZR8fTjoQJmTJeQBblIAK9MkIdvH
+	SRKRMejm5oVyqduMDvRUcXMBYoDz6TcpVrtptqH/2I0vLUSt9VhnDnnIK7wJRS0iQRgbbYclRS7
+	B67aGmyA3SR4dJ9I4wy1VYJ8xjbxr/UtZx4wMSDsrTXd3v48se4g6CwGHSV3kRcmsuZK09yfo+j
+	zoGa71ppMzFGBYqPRPr2qPx2XoGEsmS1jiqPOl8cfsXdIWkLM+XRw60nvMJvmby5Wd5SA3Th3Bg
+	d3vd+C8dd8v7rPi3shhh/xsggQgGkVb4hyKSn+R4HzndPpnXcxGHA6y2ul2pzH0WlMLcQygc6HM
+	nrU30jh37pMMm9UBQ62hKYF6x55aGsa17coYfy9yjdgTuCYxqcIWxswLHaVq20I+O7VEhet8Dxk
+	LamGG09PqU5MQrhnVVJxqb2J3U/tVw2DnV4ykTPNJAxBFhwcOjFS311
+X-Received: by 2002:a05:600c:8b63:b0:47e:e87f:4bba with SMTP id 5b1f17b1804b1-483a9637833mr86975115e9.29.1771767638156;
+        Sun, 22 Feb 2026 05:40:38 -0800 (PST)
+Received: from michaelstoler-MacBook-Pro.vastdata.com (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a42f3968sm75221035e9.19.2026.02.22.05.40.37
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 22 Feb 2026 05:40:37 -0800 (PST)
+From: Michael Stoler <michael.stoler@vastdata.com>
+To: jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	Michael Stoler <michael.stoler@vastdata.com>
+Subject: [PATCH] nfs: avoid triggering out-of-order write handling in nfs_setattr()
+Date: Sun, 22 Feb 2026 15:40:19 +0200
+Message-ID: <20260222134019.21516-1-michael.stoler@vastdata.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFfO_h7TJbB_170eoeobuanDKa2A+64o7-sb5Mpk3ts1oVUHtg@mail.gmail.com>
- <20260221234553.2024832-1-safinaskar@gmail.com>
-In-Reply-To: <20260221234553.2024832-1-safinaskar@gmail.com>
-From: Dorjoy Chowdhury <dorjoychy111@gmail.com>
-Date: Sun, 22 Feb 2026 13:19:42 +0600
-X-Gm-Features: AaiRm51yAd7WZH0JTtET-y37usKeLDtT6X5Vgs22uOg_jqenzkdmMaQOnOQPf2k
-Message-ID: <CAFfO_h4dNydbmKSTP8uD9X6ouEZTyJUGoTBXrEHWeHtD1B=p5w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] OPENAT2_REGULAR flag support in openat2
-To: Askar Safin <safinaskar@gmail.com>
-Cc: ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, 
-	linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[vastdata.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[vastdata.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19086-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[vastdata.com:+];
+	TAGGED_FROM(0.00)[bounces-19087-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dorjoychy111@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[michael.stoler@vastdata.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: BA84016E946
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 172D916F3F9
 X-Rspamd-Action: no action
 
-On Sun, Feb 22, 2026 at 5:46=E2=80=AFAM Askar Safin <safinaskar@gmail.com> =
-wrote:
->
-> Dorjoy Chowdhury <dorjoychy111@gmail.com>:
-> > I am not sure if my patch series made it properly to the mailing
-> > lists. https://lore.kernel.org/linux-fsdevel/  is showing a broken
-> > series, only the 2/4, 3/4, 4/4 and I don't see cover-letter or 1/4.
-> > The patch series does have a big cc list (what I got from
-> > get_maintainers.pl excluding commit-signers) and I used git send-email
-> > to send to everyone. It's also showing properly in my gmail inbox. Is
-> > it just the website that's not showing it properly? Should I prune the
-> > cc list and resend? is there any limitations to sending patches to
-> > mailing lists with many cc-s via gmail?
->
-> I see all 5 emails on
-> https://lore.kernel.org/linux-fsdevel/CAFfO_h7TJbB_170eoeobuanDKa2A+64o7-=
-sb5Mpk3ts1oVUHtg@mail.gmail.com/T/#t .
->
+    I’m seeing a performance issue with an NFS driver based on Linux 6.6. When
+untar extracts an archive, it sets file attributes and timestamps after each
+file is created. As a result, the inodes of these files are marked as OOO
+(out-of-order write), which causes valid page cache to be dropped on subsequent
+opens.
+    This false OOO tagging occurs during the nfs_setattr() inode method. The
+reason is that inode attributes are updated twice: first in the protocol version
+specific method nfs*_proc_setattr(), and then again in nfs_setattr() itself via
+nfs_refresh_inode(), even though the inode state has already been updated by
+nfs_update_inode() in protocol-version-specific method. As a result,
+nfs_refresh_inode() falsely detects the second attempt to apply the same file
+attributes as an out-of-order operation and marks the inode with an OOO range.
+    The proposed patch resolves this issue by eliminating the second inode
+attribute update in nfs_refresh_inode() when the inode has already been updated.
 
-Yes, indeed. They showed up after a while.
+Signed-off-by: Michael Stoler <michael.stoler@vastdata.com>
+---
+ fs/nfs/inode.c         | 10 ++++++----
+ fs/nfs/nfs3proc.c      |  2 +-
+ fs/nfs/nfs4proc.c      |  2 +-
+ fs/nfs/proc.c          |  2 +-
+ include/linux/nfs_fs.h |  2 +-
+ 5 files changed, 10 insertions(+), 8 deletions(-)
 
-> So this was some temporary problem on lore.kernel.org .
->
-> Sometimes gmail indeed rejects mails if you try to send too many emails
-> to too many people. So I suggest adding "--batch-size=3D1 --relogin-delay=
-=3D20"
-> to your send-email invocation. I hope this will make probability of
-> rejection by gmail less. I usually add these flags.
->
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 0d7facfdafb9..13ac5dffd3e6 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -657,8 +657,6 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	}
+ 
+ 	error = NFS_PROTO(inode)->setattr(dentry, fattr, attr);
+-	if (error == 0)
+-		error = nfs_refresh_inode(inode, fattr);
+ 	nfs_free_fattr(fattr);
+ out:
+ 	trace_nfs_setattr_exit(inode, error);
+@@ -709,9 +707,11 @@ static int nfs_vmtruncate(struct inode * inode, loff_t offset)
+  * Note: we do this in the *proc.c in order to ensure that
+  *       it works for things like exclusive creates too.
+  */
+-void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
++int nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
+ 		struct nfs_fattr *fattr)
+ {
++	int ret = 0;
++
+ 	/* Barrier: bump the attribute generation count. */
+ 	nfs_fattr_set_barrier(fattr);
+ 
+@@ -780,8 +780,10 @@ void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
+ 					| NFS_INO_INVALID_CTIME);
+ 	}
+ 	if (fattr->valid)
+-		nfs_update_inode(inode, fattr);
++		ret = nfs_update_inode(inode, fattr);
+ 	spin_unlock(&inode->i_lock);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(nfs_setattr_update_inode);
+ 
+diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+index 715753f41fb0..dc9f33735cf2 100644
+--- a/fs/nfs/nfs3proc.c
++++ b/fs/nfs/nfs3proc.c
+@@ -144,7 +144,7 @@ nfs3_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
+ 	nfs_fattr_init(fattr);
+ 	status = rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
+ 	if (status == 0) {
+-		nfs_setattr_update_inode(inode, sattr, fattr);
++		status = nfs_setattr_update_inode(inode, sattr, fattr);
+ 		if (NFS_I(inode)->cache_validity & NFS_INO_INVALID_ACL)
+ 			nfs_zap_acl_cache(inode);
+ 	}
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index fe6986939bc9..a41c5b046205 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -4436,7 +4436,7 @@ nfs4_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
+ 
+ 	status = nfs4_do_setattr(inode, cred, fattr, sattr, ctx, NULL);
+ 	if (status == 0) {
+-		nfs_setattr_update_inode(inode, sattr, fattr);
++		status = nfs_setattr_update_inode(inode, sattr, fattr);
+ 		nfs_setsecurity(inode, fattr);
+ 	}
+ 	return status;
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index e3570c656b0f..edf3edf6720a 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -147,7 +147,7 @@ nfs_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
+ 	nfs_fattr_init(fattr);
+ 	status = rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
+ 	if (status == 0)
+-		nfs_setattr_update_inode(inode, sattr, fattr);
++		status = nfs_setattr_update_inode(inode, sattr, fattr);
+ 	dprintk("NFS reply setattr: %d\n", status);
+ 	return status;
+ }
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 832b7e354b4e..a1bcec8d0992 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -434,7 +434,7 @@ extern bool nfs_mapping_need_revalidate_inode(struct inode *inode);
+ extern int nfs_revalidate_mapping(struct inode *inode, struct address_space *mapping);
+ extern int nfs_revalidate_mapping_rcu(struct inode *inode);
+ extern int nfs_setattr(struct mnt_idmap *, struct dentry *, struct iattr *);
+-extern void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr, struct nfs_fattr *);
++extern int nfs_setattr_update_inode(struct inode *inode, struct iattr *attr, struct nfs_fattr *);
+ extern void nfs_setsecurity(struct inode *inode, struct nfs_fattr *fattr);
+ extern struct nfs_open_context *get_nfs_open_context(struct nfs_open_context *ctx);
+ extern void put_nfs_open_context(struct nfs_open_context *ctx);
+-- 
+2.53.0
 
-Understood. I did not know about these flags.
-
-> If you still expirence some problems with gmail, then you may apply
-> for linux.dev email (go to linux.dev). They are free for Linux contributo=
-rs.
->
-
-Alright.
-
-Thank you!
-
-Regards,
-Dorjoy
 
