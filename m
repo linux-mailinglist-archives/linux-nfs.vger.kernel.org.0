@@ -1,131 +1,200 @@
-Return-Path: <linux-nfs+bounces-19150-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19151-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id TETEIAfCnGnJKAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19150-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 22:09:27 +0100
+	id GAyoKeTQnGllKQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19151-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 23:12:52 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F13B17D603
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 22:09:26 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67ECB17E11B
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 23:12:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9E269300D743
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 21:09:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 82518316D6B7
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 22:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DAEA377576;
-	Mon, 23 Feb 2026 21:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F395337998B;
+	Mon, 23 Feb 2026 22:04:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzRvlX94"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Ws9UlC4r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gSfvEOQL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE69E314B6A;
-	Mon, 23 Feb 2026 21:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135B136BCFD;
+	Mon, 23 Feb 2026 22:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771880961; cv=none; b=Kwa6e5NuNrrGs829fdDtoy7yJOB3R5xBeDnA27ka9RfvDreBjg4H8dA7nfdcig0/kdRdMgfTx9ABQ8V2zB2rK2giVOELuS+g/Bcc+4JQKyQ109IZLUiPg8gM4UMC7nAj4zmVC8xHgeHlaOQUEHpOdqAvjNx60A/xIk1NnhPUzN4=
+	t=1771884282; cv=none; b=PFNxKgmcarWkf0zqVFJqnDCQd8DBpzccSsvgDOJjTLbb5Q/7o6osOX2M1xkCfNlBk62bAiSPE/JctfX/xduSssh+lke5fHo0cT0Ls60bocVs4qceZf4fxddZtyjp5UQtnxtoQi3Z7Gqiomi/g7A8cYGFl/p/zik9t9tyXp0YgOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771880961; c=relaxed/simple;
-	bh=Iksp7bInjD+fbadXoMvyFRua7XJx8qD+o3C0sR+Mn2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ecHFM/+khBtWANpLa7ytx0GXsw/l0CYmZtn7ahqKOB7geomSARVsC7QJ+NUEeVbMgRheMuVHv/xS3mlGrmox8RJogRgEge+IWj5LD+QoUN0UE018YxYUnncNHTYJbjbfNu0HNgOtO/2+mDIBxhDSR9NTYk3lY68HZOPJqcwM2L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzRvlX94; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88466C116C6;
-	Mon, 23 Feb 2026 21:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771880961;
-	bh=Iksp7bInjD+fbadXoMvyFRua7XJx8qD+o3C0sR+Mn2A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SzRvlX94W7oP/WEwTQ/213G+0/7Sn/OamrWg91VU6acDI5h1IeJ+3CLh6vxUGEGPi
-	 rc1qnEl1ky9aZyjDTJgDTYez0EnhbY6VO9XkBRDzsD5kzPaF0b5YQhbb4MVZHa3Wtp
-	 hz2HCV3sHSVbvYNjinWInQdoNEvXD5b2ezyaHxaOGdK4hos4tr2MopBBZ5sEtkyOru
-	 9jOrm3uVg0LGcSj0L2MDgwKIkQD+T07fzxavzA73Y5TIgM8mhXg9NDtEmom++tB8p9
-	 PO6h4jf0mZP29e5tG4IWK0Q5TggrdrA0e4nkhaFO+UCY4Ywe37rExyFhHUuWg06n39
-	 1GdzoM2he9TTw==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	NeilBrown <neilb@ownmail.net>
-Subject: Re: [PATCH v2 0/4] sunrpc: cache infrastructure scalability improvements
-Date: Mon, 23 Feb 2026 16:09:15 -0500
-Message-ID: <177188092388.32759.9563088581417995762.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260223-sunrpc-cache-v2-0-91fc827c4d33@kernel.org>
-References: <20260223-sunrpc-cache-v2-0-91fc827c4d33@kernel.org>
+	s=arc-20240116; t=1771884282; c=relaxed/simple;
+	bh=b8ebazC08m5tcyqPoSGgh7JjSJ9g1Sz97a83jABjm2g=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=cXpEl0TDc4IMleNFkGw89iZW3YT3VX5E1v3uqxZ1UAjUYOjs+GSqqd4vUZ92nNHHohY0CYXRoo5LLQ213guMYYF+ncKUizu3binolqjNPazIniF5kcvyma+3YeiMdkiLZTZ7N6yWINlu+Ry6W1ugk8+YMlvGrJrsT0b505LMS3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Ws9UlC4r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gSfvEOQL; arc=none smtp.client-ip=103.168.172.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id 321D11380B23;
+	Mon, 23 Feb 2026 17:04:40 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Mon, 23 Feb 2026 17:04:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1771884280; x=1771891480; bh=irJDLVX2qQd7f5zlPhvRXNbNOW59zFnQ/W/
+	IgkKi5wQ=; b=Ws9UlC4rdriRa58ciza8b/c8892GSffjK4vkvwK954POlcz2OLd
+	VocxQMBMIDIuYSfHzGqq1u5KvY1ucluTa8LIMX0UGJUqfwEePKk83cHtYriVfunu
+	hDcEejJZw0ihKjkBsQifj50+BH2BTncg1WYH53Sa4hXmmgw+tvUfbL62iD5CIbLM
+	e+bGRRQxJxafgNPvlM52xGDBrGl3uBBnwTRlbpJdBEycTqioZhsoEJobcQeWg/8b
+	9+KNyq6UcQ/ckMD6PHGquMFUrOuo5l7JnPCdf4YKbzQ6Z1YWnnN0+AyDt/FQgf37
+	V3RHM7FhB4x1u7gi8ODZn1J8lxdpWQ2Dwbg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771884280; x=
+	1771891480; bh=irJDLVX2qQd7f5zlPhvRXNbNOW59zFnQ/W/IgkKi5wQ=; b=g
+	SfvEOQLw03OJS55vANdkI8ZK0mDTjV4rbPiMQP5hk6tPdiUTcgzHORJVzlnh5yhW
+	MhpnHbAVh3lvmU1AOT+1Q4s4jALw3pvSXLsufb4tq8KacyUcoBx2R5WCgFxr4J+f
+	LIs8YnOBRBhlbxePazNlKj4WmdTLL89NDXcQFYuYEA2O7XioXR6xuqEkAMnk8hXM
+	+LEVTJAUGamZd6PHdG2P1yxTMEdJLbtMzbHLDNj0wOmIZ0WwBcw8jGxhAbpjVpgX
+	9Tp5bK3mSBrg4VKtftuNK4jj9oz8BdO7KI6/Yp/0Y+w2KEttE+RiTcBS9oEr1xXs
+	P/rN2/vGT8nSvuCIgPRIw==
+X-ME-Sender: <xms:9s6caajI56O9imISxyOkzDSC_MpwrChoCCPHEQJo0aQxIfr3tWOa6w>
+    <xme:9s6caXKOeQt2WKMFpfvQ0M6rtsLaOeE6RUgFu7T32IgxFtnf8nXYHcFqhYmtOvHR1
+    O2GGx91cKWKeMEZxzbbl1myQDCyLQiY8X13fNZTGLITpedG8w>
+X-ME-Received: <xmr:9s6cad5eHm4bz9KWixR0h9Yx4lOHceVBloWp1EP5PO2FzM3jijsihFMEheV0EkxjYQqbo-mPF6h1P8WQ8NOY6VIdP8n1_0ww6BJoDU_OgeVC>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeekfeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhr
+    tghpthhtohepjhgrtghksehsuhhsvgdrtgii
+X-ME-Proxy: <xmx:9s6caclzLrgKfeDhlox16fw51GXG-3HrDff5GauOyjg85bKiL4YmNg>
+    <xmx:9s6caX6TGDCjSAAqAFbyiuqfkVrSrwQwMHwy5d8W07K53q3z5lNFXw>
+    <xmx:9s6caV_2kCQ1Lik20KddbFxgbSwKSj3rN2G2aUmuymGiRuDLfloUBA>
+    <xmx:9s6caXidElUn8Kg0ersqdtpRNxuaxlxy_QnaPAYc7wp0BUi5SC4-8Q>
+    <xmx:-M6caRagjaoVbqBcqtcqEGXNSfbjV9m04SvT9GVJMVNOcNe_crWGDOHL>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Feb 2026 17:04:32 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Chris Mason" <clm@meta.com>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "David Howells" <dhowells@redhat.com>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Miklos Szeredi" <miklos@szeredi.hu>, "Amir Goldstein" <amir73il@gmail.com>,
+ "John Johansen" <john.johansen@canonical.com>,
+ "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
+ netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ selinux@vger.kernel.org
+Subject: Re: [PATCH v2 01/15] VFS: note error returns is documentation for
+ various lookup functions
+In-reply-to: <20260223135517.1229434-1-clm@meta.com>
+References: <20260223011210.3853517-1-neilb@ownmail.net>,
+ <20260223011210.3853517-2-neilb@ownmail.net>,
+ <20260223135517.1229434-1-clm@meta.com>
+Date: Tue, 24 Feb 2026 09:04:27 +1100
+Message-id: <177188426768.8396.6205782771317375008@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm3,messagingengine.com:s=fm3];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19150-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[oracle.com,vger.kernel.org,ownmail.net];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19151-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8F13B17D603
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ownmail.net:email,ownmail.net:dkim,noble.neil.brown.name:mid,messagingengine.com:dkim]
+X-Rspamd-Queue-Id: 67ECB17E11B
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Tue, 24 Feb 2026, Chris Mason wrote:
+> NeilBrown <neilb@ownmail.net> wrote:
+> > From: NeilBrown <neil@brown.name>
+> >=20
+> > Darrick recently noted that try_lookup_noperm() is documented as
+> > "Look up a dentry by name in the dcache, returning NULL if it does not
+> > currently exist." but it can in fact return an error.
+> >=20
+> > So update the documentation for that and related function.
+> >
+>=20
+> Hi everyone,
+>=20
+> I don't normally forward the typos, but since this is a documentation-y pat=
+ch:
 
-On Mon, 23 Feb 2026 12:09:57 -0500, Jeff Layton wrote:
-> The first patch fixes a pre-existing bug that Neil spotted during the
-> review of v1. The next two patches convert the global spinlock and
-> waitqueue to be per-cache_detail instead.
-> 
-> The last patch splits up the cache_detail->queue into two lists: one to
-> hold cache_readers and one for cache_requests. This simplifies the code,
-> and the new sequence number that helps the readers track position may
-> help with implementing netlink upcalls.
-> 
-> [...]
+I'm certainly happy to receive them.  Thanks for these and the others
 
-Applied to nfsd-testing, replacing v1. Thanks!
+I also found ....
+>=20
+> commit 0254b9b974f23889898562aa94f6428bf30eb6b5
+> Author: NeilBrown <neil@brown.name>
+>=20
+> VFS: note error returns is documentation for various lookup functions
+>                        ^^^^^ in?
+>=20
+> Darrick recently noted that try_lookup_noperm() is documented as
+> "Look up a dentry by name in the dcache, returning NULL if it does not
+> currently exist." but it can in fact return an error. So update the
+> documentation for that and related function.
+                                     ^^functions=20
 
-[1/4] sunrpc: fix cache_request leak in cache_release
-      commit: dad5f78046759eb5c95970198eb9865550eb6227
-[2/4] sunrpc: convert queue_lock from global spinlock to per-cache-detail lock
-      commit: c94ad34b7ecd5928cf3fdb6ea4fcf6ef55765e97
-[3/4] sunrpc: convert queue_wait from global to per-cache-detail waitqueue
-      commit: 951696964e9c370a5f91d5e3e136d39aa08d912c
-[4/4] sunrpc: split cache_detail queue into request and reader lists
-      commit: 3557b9c71039b2435b383fc57283a0b847b40144
-
---
-Chuck Lever
-
+Thanks,
+NeilBrown
 
