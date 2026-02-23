@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-19138-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19139-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4GsWDLKLnGl8JQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19138-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:17:38 +0100
+	id 0G/zIbiLnGl8JQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19139-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:17:44 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C983D17A92B
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:17:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02BC917A941
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:17:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 70DB7316CEF7
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 17:10:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DD592317093A
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 17:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 414E2327C09;
-	Mon, 23 Feb 2026 17:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D20329E46;
+	Mon, 23 Feb 2026 17:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBt7ncO4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iotOkam2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02505329E56;
-	Mon, 23 Feb 2026 17:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2770B2727FC;
+	Mon, 23 Feb 2026 17:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771866618; cv=none; b=Yl7Yt+9yt/Vwr88aZj+clnjCTKBcyfd0fqTuS+tGrc9W6h+d8hb/r2Jq9TgNU054mUZvMC8fEYXvAlIzBnLeTXyJoY5SE2EmfkNTpeLWLiM3DmwHs5Wkyxi0PmjCHq8PRlgA5EFWWXLMUmscj6E+Z1kFs98TPNqbjEoDmGa/GSg=
+	t=1771866619; cv=none; b=Qom+Hk4hkmFWSkttM4PAYmzC5ARklCpJF8EqGzG7SxRTgyxg1shACNqZzBLfJLat8743ycf6tDHITTYifwEuXQ9dH1e9U/Qskll+gA/g200+61MNM0v43YZBK1pahkqhe3x3G8fzBt/AtZuoaVi3Q0EPhYQLehQQjAwQwVaaPtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771866618; c=relaxed/simple;
-	bh=+3hPFAempSsx15KzcGGSFWNynFsWTG7kcMUzs7TivxQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MZ0vGRFo+AswA1sm3rK4d8ifDCSTEuHQ3ufs8xIsqa2clMQ9sqm7+KYsTs3WUwHN8dMHf7+/WckN7xkgJAsW48XgurR/uX2pMH2MvIHqHMKTRP8VWiX8/NXRtsr/Qyk81S2DFsuFydkDdA+qx3vpwwUGhLOo2dlHl8uyRqBDzVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBt7ncO4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71C68C19423;
-	Mon, 23 Feb 2026 17:10:16 +0000 (UTC)
+	s=arc-20240116; t=1771866619; c=relaxed/simple;
+	bh=HgXUYRIJ3uMhjEi7JEY7sJBsQZ1d46lcqUMgcKlCt4U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XocHaEPspAdD/WmX/FwYIWNQCVJiBpSW4F22O+uO1CwE7O5vt+fz+2gPV3pauiwbPvPpRQcj1GGnfDfnhaFxyZrycbLBARdWdRp+Ue9nGQxCBBdlypTdJQPERKMVKpbtxpV27hs3x83PRH5FGj3m+VuFbzc7fYAt9BfAC8yfDvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iotOkam2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB4DC19421;
+	Mon, 23 Feb 2026 17:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771866617;
-	bh=+3hPFAempSsx15KzcGGSFWNynFsWTG7kcMUzs7TivxQ=;
-	h=From:Subject:Date:To:Cc:From;
-	b=MBt7ncO4LRTbdyENK1/RUFLtiAzDqWUSAMen9WpCoEDB8tfubqlFuZr0LGScgTJfo
-	 ksiFzQaqoOq54lQ5sr4Tnj/knc1lvhcmOm1K7/ylfmID2rDN08Uj/KpdIdwgNXGEtz
-	 lufHq0pYtw70OjnoMHyQ35vbqOeiP9za/b3K2sscmvgOIumXai+LPJlO9OtdH0m03b
-	 YmKggaXBZdc2N5/7EsVhclo5mO5vsEwxbiyEfymxWv+16qmHufBaS6V4ZM4904xyBk
-	 Kwdx5wwFi+w4o5A/dMgZYy8dZQDUuaLGj5xBu2PHveGyKNcnxVn/Tb4Dxuc36YabfQ
-	 VLhpegs53zUBQ==
+	s=k20201202; t=1771866618;
+	bh=HgXUYRIJ3uMhjEi7JEY7sJBsQZ1d46lcqUMgcKlCt4U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=iotOkam2ISt+FodG5GU2DJaX22tW5sTIIa45v1M36nCWqVQzJrMbGovaotFvuMKYr
+	 xUAIsFOg+sBDyXaAE6wF1dQ7nDpLZZvmAD7r9Gd9Bi7igavVeWo/XhgczlAh22wdPw
+	 yGNW508nnGIW3pTECNGp6A3lRUXOSAVNvNNETLeNlqT3fkqG/NEIXodWiJnp4g7+JE
+	 rwGyooTdJLZKB1TWhABNKXaIrltaN8YOTjW4h2qiSVI9vB3JMdQ6KaPNzYDYKRP9Fe
+	 xqP1Ostmm4M5JK6llKCyra7r22UMc4UHHRenS1b1UJKIV9yRrszq2wPbVeQuLBc7m3
+	 YthtUY4vx1Fqw==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 0/4] sunrpc: cache infrastructure scalability
- improvements
-Date: Mon, 23 Feb 2026 12:09:57 -0500
-Message-Id: <20260223-sunrpc-cache-v2-0-91fc827c4d33@kernel.org>
+Date: Mon, 23 Feb 2026 12:09:58 -0500
+Subject: [PATCH v2 1/4] sunrpc: fix cache_request leak in cache_release
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,10 +55,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XMQQrCMBCF4auUWTuSpKOCK+8hXZRk2gQlKZMal
- JK7G7t3+T943waZJXCGa7eBcAk5pNjCHDqwfowzY3CtwShzVsYozK8oi0U7Ws84MVlHRLp3PbT
- LIjyF987dh9Y+5DXJZ9eL/q1/oKJRIV2cIqXJGjrdHiyRn8ckMwy11i98Ly4zqQAAAA==
-X-Change-ID: 20260220-sunrpc-cache-fe4cd44413d3
+Message-Id: <20260223-sunrpc-cache-v2-1-91fc827c4d33@kernel.org>
+References: <20260223-sunrpc-cache-v2-0-91fc827c4d33@kernel.org>
+In-Reply-To: <20260223-sunrpc-cache-v2-0-91fc827c4d33@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
@@ -67,27 +65,27 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@ownmail.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1391; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=+3hPFAempSsx15KzcGGSFWNynFsWTG7kcMUzs7TivxQ=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpnInxUSOosFLGglvxcLG5ngUmE3XdlMwermcIZ
- 8R7bjjNNvOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaZyJ8QAKCRAADmhBGVaC
- FYlcD/9jGq9wy6KzdffEFQPt05K5UlgIqqaFylaCzfUlBUKiIIx/RwNu0Q8X+2T569rDzbgmWuw
- zEliPAYp8M6W9DV4Zov1doEXHJhHCEYYUKTQf6KWdmwaMsTXy7NRLIJk+Z0mzgHxXrWmoNrQavy
- aKCwXKn6jUbaulgkWOmq/JdYVImn0+BCkoaVTLOKUHqYxKImFyzqFQ0noT/73JGfRjymbVYMn/t
- rNwU6lgbhioQwkNe6VebmLz8/xPMnv+9D52fQf4RA3fktGgHMf6bv7MeQCz4CyhqSNz52NFm0B5
- aHf4Efy3fKFc8ZUlnhyZIFHlo6Tlst3ZrZkjdETXhrFepLkJB4Ifm9Tm80MUG19ClWucG0520eC
- exrHY/jBu3MC6zNdzmEcfasIEnwrYOIXlzeGDpQ1Zp1wbKBVL1zVAsghl+5ocxgI5vmAt7Xg2IX
- IR2uSMBgZIf8R8QR+QVX0ibnr33jTBWYeq0kCiNlrXnagmzuB7qVaRzKJJWzwXanVaGFDuJXxnf
- pW+0Hpn9IM2wNsjVvEkKXwXqxAKRBme+rbhVgy/9fX70nN/kpl4FTE+gTd+DS2t8dlaafou9MwK
- D+xB5xe+5ID7aGWrqI78ZMYxcqIQiVphozN7a5+yDO9oDENVE+U1KJErd4+T0YSh5SYHpJuhGnR
- 91eCuqJ7yR61I/Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2648; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=HgXUYRIJ3uMhjEi7JEY7sJBsQZ1d46lcqUMgcKlCt4U=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpnIn3YtioMuJ6isoY+vhVzeS4I7a0QwN9K1spA
+ 79epzNIpSaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaZyJ9wAKCRAADmhBGVaC
+ FXgsD/9O3UtxRjNSCMdntB2K5fWq+vl4BX7xOJQRXf0GETa9GTchwJZ7ExEuMym98/QWbNdDoAw
+ SIlKIexuBGY/7vM0UqrcKoWMr62NFZIqMZwbWSOEM3APIDwz0aU8n7iUjYPqKataOvgVAKscXqy
+ Y7PAO+s/ajyjbLMU12b6LZm3S6o5s1Y43cOefS8uAAOLoS4IK2krrsGD2b8EOpnKkRKMXwrFV8Z
+ XETJxoaPn787Gck8elWQPQb6zDQTiW5Y+4COyfSS3ytK0h1GN6twpjnaEc1vTsaxExqve8/yG4W
+ N80BVRZ3o+52ooX04HYiV0s2CqF3+9OrKZgwRJRsfBX62EaS4v2uy1VEc/XnODHtzvXhI9ILw/Q
+ nRSKbrR9wPZRLY8VaxA8QVIW3pVHIoA1KH54e1Sz4xBrYq7GhtZlLtoHgbohp+cT3gRHEwVIa2D
+ GD3SJzUPxy8x4P764vX1B0e2lnfvpVD/wREwyko5SWwTpbuf1vaAFZoGwWdOL6vKlwARdVqCTxZ
+ 2UXCtc6u1peKsF3CFecrOakK1vNOun9ALW7KBsQxvd0y8ZitKv8N2oJ64gwGcWCIwvCw3zqkvAr
+ BAhBl9eh5Xec/xRq5bYkVENOQxaiFWXLbASCs9Y+hL75AEudBlD4kKHIaKT21fCXrO5rFOx9jpH
+ sRQZV+8Iexv5gWw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -95,7 +93,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,ownmail.net];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-19138-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19139-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -105,49 +103,92 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C983D17A92B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:email]
+X-Rspamd-Queue-Id: 02BC917A941
 X-Rspamd-Action: no action
 
-The first patch fixes a pre-existing bug that Neil spotted during the
-review of v1. The next two patches convert the global spinlock and
-waitqueue to be per-cache_detail instead.
+When a reader's file descriptor is closed while in the middle of reading
+a cache_request (rp->offset != 0), cache_release() decrements the
+request's readers count but never checks whether it should free the
+request.
 
-The last patch splits up the cache_detail->queue into two lists: one to
-hold cache_readers and one for cache_requests. This simplifies the code,
-and the new sequence number that helps the readers track position may
-help with implementing netlink upcalls.
+In cache_read(), when readers drops to 0 and CACHE_PENDING is clear, the
+cache_request is removed from the queue and freed along with its buffer
+and cache_head reference. cache_release() lacks this cleanup.
 
-Please consider these for v7.1.
+The only other path that frees requests with readers == 0 is
+cache_dequeue(), but it runs only when CACHE_PENDING transitions from
+set to clear. If that transition already happened while readers was
+still non-zero, cache_dequeue() will have skipped the request, and no
+subsequent call will clean it up.
 
+Add the same cleanup logic from cache_read() to cache_release(): after
+decrementing readers, check if it reached 0 with CACHE_PENDING clear,
+and if so, dequeue and free the cache_request.
+
+Reported-by: NeilBrown <neilb@ownmail.net>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- Don't spinlock around rp->next_seqno updates
-- Fix potential cache_request leak in cache_release()
-- Link to v1: https://lore.kernel.org/r/20260220-sunrpc-cache-v1-0-47d04014c245@kernel.org
+ net/sunrpc/cache.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
----
-Jeff Layton (4):
-      sunrpc: fix cache_request leak in cache_release
-      sunrpc: convert queue_lock from global spinlock to per-cache-detail lock
-      sunrpc: convert queue_wait from global to per-cache-detail waitqueue
-      sunrpc: split cache_detail queue into request and reader lists
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index b82f7cde0c9be6071ee4040150672872e548161d..86b3fd5a429d77f7f917f398a02cb7a5ff8dd1e0 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -1062,14 +1062,25 @@ static int cache_release(struct inode *inode, struct file *filp,
+ 	struct cache_reader *rp = filp->private_data;
+ 
+ 	if (rp) {
++		struct cache_request *rq = NULL;
++
+ 		spin_lock(&queue_lock);
+ 		if (rp->offset) {
+ 			struct cache_queue *cq;
+-			for (cq= &rp->q; &cq->list != &cd->queue;
+-			     cq = list_entry(cq->list.next, struct cache_queue, list))
++			for (cq = &rp->q; &cq->list != &cd->queue;
++			     cq = list_entry(cq->list.next,
++					     struct cache_queue, list))
+ 				if (!cq->reader) {
+-					container_of(cq, struct cache_request, q)
+-						->readers--;
++					struct cache_request *cr =
++						container_of(cq,
++						struct cache_request, q);
++					cr->readers--;
++					if (cr->readers == 0 &&
++					    !test_bit(CACHE_PENDING,
++						      &cr->item->flags)) {
++						list_del(&cr->q.list);
++						rq = cr;
++					}
+ 					break;
+ 				}
+ 			rp->offset = 0;
+@@ -1077,9 +1088,14 @@ static int cache_release(struct inode *inode, struct file *filp,
+ 		list_del(&rp->q.list);
+ 		spin_unlock(&queue_lock);
+ 
++		if (rq) {
++			cache_put(rq->item, cd);
++			kfree(rq->buf);
++			kfree(rq);
++		}
++
+ 		filp->private_data = NULL;
+ 		kfree(rp);
+-
+ 	}
+ 	if (filp->f_mode & FMODE_WRITE) {
+ 		atomic_dec(&cd->writers);
 
- include/linux/sunrpc/cache.h |   7 +-
- net/sunrpc/cache.c           | 189 ++++++++++++++++++++-----------------------
- 2 files changed, 95 insertions(+), 101 deletions(-)
----
-base-commit: 8fd7d969255c89fb28cd9f34e0d729150da79d68
-change-id: 20260220-sunrpc-cache-fe4cd44413d3
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.53.0
 
 
