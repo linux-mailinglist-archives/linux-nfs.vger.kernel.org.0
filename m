@@ -1,211 +1,190 @@
-Return-Path: <linux-nfs+bounces-19135-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19136-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mNWUJShonGmsFwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19135-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 15:46:00 +0100
+	id aIB3IglxnGmcGAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19136-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 16:23:53 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE73A17836D
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 15:45:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E258E178AD2
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 16:23:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 98D53305B08C
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 14:44:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 98BC33059AA1
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 15:20:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DB134D391;
-	Mon, 23 Feb 2026 14:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF5E28505E;
+	Mon, 23 Feb 2026 15:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtHtCQpU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQV5w5uU";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="QvQz7P+7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D21346AF0
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 14:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882F927A107
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 15:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771857854; cv=none; b=QL8GACcMoxl1a6dk4k1JN9DQTT1r8nb57t6BBncFSX97pQv+Ncvav7AeBWpYmKZdNBeKYGyL2PJdSDvH251lbHHde7p4DXo7uGZVjq9DyqG8TbZDQnO1GOIRk9x1feKCO8zWBmkIWsUoCsAtASnqB6qAERYwZDNjXum/AUlVL74=
+	t=1771860006; cv=none; b=QhIYFco6WU0ux8XiF2X5Dnk4FBK8ckF9dtoYJltMFWWHtV+JsBt2bqSvCsKcOMgvlbZvBe8bDVGzHVNFO3Z4PkxRs4StKnaslAUnAVNkBmnTi5+1JA+c5bdtvMjn94Kxx5NFANuaysqWjzLiaKt7uPer6+BzqXtjvi8AehSJv74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771857854; c=relaxed/simple;
-	bh=DyZkrXqO+K00P93aTzYQYoBgQTBB7ntcRbBm1uhvF78=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NfpfZEikLu2KPwFmKXEoElr8Y9khF2Ihk7+zLowXLXpC+yo6UjCxFcZ0aezH4sGwJmgtxRx4Mz23efKuksBNPzhACSVRgi8jJTg0UiIB3awy/f8vFFnmJZk/6wnx2QlpRRE80IS2cLIEkb4cPeWpCqYByPyvdzldMGhCPHrzjD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtHtCQpU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34226C116C6;
-	Mon, 23 Feb 2026 14:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771857854;
-	bh=DyZkrXqO+K00P93aTzYQYoBgQTBB7ntcRbBm1uhvF78=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=QtHtCQpURk4MQ3HL4TyRzmmMauYZCEyeyVOomZkX7Zb2OMvJPQ3BkiqBPLNmHjG7L
-	 MwUWKHptqs3oL1TAwty/FpJyO8Nn1nt3VwxWkLJKJoAgyX7wxcKSPGffCqVGt0mRO0
-	 jT0e8aQkm6AbNlQL3LzdVpaohJE5MDMbugBz8uVuKEgVU69c40ERbrRjoPTKG8a4bm
-	 UlHwNQHbQrUwi/No3UUJCkBPlQuj4uyyB12ZJVYuhwRd47yEylXY3aWha1XT2DQbR+
-	 dJMnNsSB2249YSRpsGMNNHKiGyvwlvDIXgfpdb/QP/yNQ+Xel7/fGBF3VfmqAjMgSF
-	 fB4x9plnwfIrQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 24731F40068;
-	Mon, 23 Feb 2026 09:44:13 -0500 (EST)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 23 Feb 2026 09:44:13 -0500
-X-ME-Sender: <xms:vWecaVZ65H3P8FRI18i4TLg6tmmCxuLvb_tXMRd4D0RyGas8FFAHqA>
-    <xme:vWecaXMuCBdSj3RaRIBdRGhpkL9eVIFMTUImkXYNybV91Z3LZvZWrajgfI73E3tzp
-    wb39bJt_6EfZlqvuqZ_SvunGKLglImX7lgER-24a4n8pURk3k9tjGY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeejhedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghl
-    vgdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtghomhdprhgtph
-    htthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhes
-    thgrlhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:vWecafQrdsCjY0cWsKVSy_Dvl12wz4ZEJQ_T3nATC7U-WKUwphwl6A>
-    <xmx:vWecaRddbcmivP7PYqKrwbdSuaR-QoDuQSqvRA61sCfdtkQes06TKA>
-    <xmx:vWecaTAhHBB_VEmcOGmxmgRmQn8roYveDKkffp8fvYCwxcJFGWapsg>
-    <xmx:vWecaTmhWKywjy615LkYvLwTEkn0yGz5ONisWypv0L7wMqTHQ9yZ-Q>
-    <xmx:vWecaec2_IR-Rmou11TdsaeXEsKNiNnjHuMlXGYNV8VgIhiv1tZn2AML>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id ED5A9780078; Mon, 23 Feb 2026 09:44:12 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1771860006; c=relaxed/simple;
+	bh=SMW54dkMxPwApN7cZmHnt7Uc0G2zXI8pUknWzsEed8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ht8iqVC1xQ0Nw38VvylbR8LzkjPFONgpk/gmPzxXsI3ItlQETEhqQEkEVSt9jIO8fBYjcxtnkliuv1ulWzZUC2s5Sj/Gf6n9oBZzJqH70FzDAV7RtXZM9GNxu4sghwllVJu/wNkfaIuitHknurdzeH/gDRaSxhtAGvTuWMjfR80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OQV5w5uU; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=QvQz7P+7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771860004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pK2XtuQTTUx1Xy7HvCkO6jj5LO3P5vXMOu99U5zkxZs=;
+	b=OQV5w5uU8isFV/BZTua0bHsMNwwhAoaeBtq3BUmaKHzYlkMUlKMNtiKddJSHgv0zO5k0u0
+	9C4tDSPehCRxXfV/K332eS1NZmR8DNpJ5MTA1kDtpssKo21G8eSIjrDxN1A2gZRSm4zJGa
+	yhxZTWSxj9LhKuVQQn/DDo4Fzno6xLo=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-FGLVvieIONudVjMKNFrCtA-1; Mon, 23 Feb 2026 10:20:02 -0500
+X-MC-Unique: FGLVvieIONudVjMKNFrCtA-1
+X-Mimecast-MFC-AGG-ID: FGLVvieIONudVjMKNFrCtA_1771860002
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8cb403842b6so4756751085a.1
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 07:20:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1771860002; x=1772464802; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pK2XtuQTTUx1Xy7HvCkO6jj5LO3P5vXMOu99U5zkxZs=;
+        b=QvQz7P+7dRzQNtUBInKjX9wq9iEWa81fE/+CYeloF9DZEroIgepQ99Uljc51jPzuLc
+         LwaoQiOTPExCtqhhtGiqDOCieC3L1ZCa7LJt1kBONl+9S7eByK9D8QJ5ZOLuvQ/xaa67
+         i9zEZtQ0D5iDdKIagP+7EUoESfLEqmkvO9lEMWZ2MUmVW62KK1SgLx76PbPp2yo0GdyH
+         FBXVWWAVXyQzNxgHFM9w7fvXzmmtoNs3jrshrmucuq9BukPH0977KPADiw2Ajrtxwbbb
+         /RC32SnAHVehGneL1M072wRjDXrtoRoVmC/AvNsowAGnV0gMDkjLJ2P0d5ChRjSXA/ZO
+         KvMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771860002; x=1772464802;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pK2XtuQTTUx1Xy7HvCkO6jj5LO3P5vXMOu99U5zkxZs=;
+        b=mgu6fZt2TSeanDVjcpdMbBrj5IWUH8tsJ4KRHZbm/3FuAXe0I1m0pjBJhgIzliFPEG
+         ZFGx3MGTNipEcZgDza6Jz6oQmZ4uouyf9/wEkjwELnoTLnNf5NdFkzspzd5tpdyhZok9
+         CDsMgqdUvMpJ6UKt7sS2uDEVZzWF+mdAj/MGTp11NKIoF/B6A/maMXKcA6bjEqma+4Rm
+         IhswjUPTkYTm5BTdmWA9fClHNYbZu0CNxPerataHzrK1CUhXRARXhJf4AlIHNlhojngG
+         Nr4rUZ6W+hm2Qs3fQfYv7EfWuex9kyjkfZAiGr7lNZ0wzsJd0oMhehdlVlOfM+3BYvUN
+         soyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVp9DkabLehJ2DpxLi/IfBMhDN1qQbxQkFg/fpazIZC8RkPlaXF9nJaOauC4mcyBnqo0FF7BHRg2rY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlC1ItjDlZjHG9XzKjfai4e8EHxfovSZyTl7hB3et/8C0th/vi
+	Fv4OLwGKOo4oRt3QlvR+ybnH0lBZC6IxhGk2p6+23bnuGOSx9/I2E773SLLb8yJZ0u58z31SUBu
+	JwA7SMhbpsx52v4TSFqUho+QJhCPA+9/fGhckRnz48Cmw3ImIOBAKfDkspYvzdQ==
+X-Gm-Gg: AZuq6aLxTSxHpuvywWej3Z/FQ02LokziuEBFqKH/3t2Fc57YOd2uBGRMrTNdjCpxR+g
+	AFxccl+9BZCqvTfl0zqzPscUWUNlaKiyVKnPJpa/BWYJ62XViTUWPripbuP2QN36Rk8/zkmHXYF
+	ehuGKEloF3htlMwFTJfY1HeGEpkV2swEBS4Gl23zm/o9SbtrwFJuyL12RshU7+Om0xyxLP1vlrS
+	bAUcoU7ZZznVSP4O6f/+lxjLJp72xZCXOSnLXumF+5D3GnkZUxUAnmRsmGy2eXvD8FxqWD0Re69
+	/WskXEmk7ysdzZAlt6R3ye0oTK1JRPIWgFpohKb5YBwR22qnFVarZOjw/sQYNvOOCzpcz//E8Dv
+	d8aRRpQ+BcELH64vopYcd
+X-Received: by 2002:a05:620a:3943:b0:8ca:3c67:891d with SMTP id af79cd13be357-8cb8ca76d85mr1058013885a.54.1771860001864;
+        Mon, 23 Feb 2026 07:20:01 -0800 (PST)
+X-Received: by 2002:a05:620a:3943:b0:8ca:3c67:891d with SMTP id af79cd13be357-8cb8ca76d85mr1057995985a.54.1771859999911;
+        Mon, 23 Feb 2026 07:19:59 -0800 (PST)
+Received: from [172.31.1.12] ([70.105.240.20])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d1202e2sm728593185a.44.2026.02.23.07.19.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Feb 2026 07:19:57 -0800 (PST)
+Message-ID: <2e309a9f-9e3c-4de8-9435-efdb36a6f4f4@redhat.com>
+Date: Mon, 23 Feb 2026 10:19:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AgEhKVKDMhLN
-Date: Mon, 23 Feb 2026 09:43:34 -0500
-From: "Chuck Lever" <cel@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <c707ce06-3771-4339-b107-c22f1f9d04ea@app.fastmail.com>
-In-Reply-To: <177180571733.8396.6283139237611600966@noble.neil.brown.name>
-References: <20260222162002.10613-1-cel@kernel.org>
- <20260222162002.10613-3-cel@kernel.org>
- <177180571733.8396.6283139237611600966@noble.neil.brown.name>
-Subject: Re: [RFC PATCH 2/6] sunrpc: Allocate a separate Reply page array
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH nfs-utils v2 0/4] nfsdctl: properly handle older kernels
+ that don't support min-threads
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Ben Coddington <bcodding@hammerspace.com>,
+ Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+References: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20260204-minthreads-v2-0-a7eba34201e9@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19135-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19136-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: EE73A17836D
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: E258E178AD2
 X-Rspamd-Action: no action
 
 
 
-On Sun, Feb 22, 2026, at 7:15 PM, NeilBrown wrote:
-> On Mon, 23 Feb 2026, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->> 
->> struct svc_rqst uses a single dynamically-allocated page array
->> (rq_pages) for both the incoming RPC Call message and the
->> outgoing RPC Reply message. rq_respages is a sliding pointer
->> into rq_pages that each transport receive path must compute
->> based on how many pages the Call consumed. This boundary
->> tracking is a source of confusion and bugs, and prevents an
->> RPC transaction from having both a large Call and a large
->> Reply simultaneously.
->> 
->> Allocate rq_respages as its own page array, eliminating the
->> boundary arithmetic. This decouples Call and Reply buffer
->> lifetimes, following the precedent set by rq_bvec (a separate
->> dynamically-allocated array for I/O vectors).
->> 
->> rq_next_page is initialized in svc_alloc_arg() and
->> svc_process() during Reply construction, and in
->> svc_rdma_recvfrom() as a precaution on error paths.
->> Transport receive paths no longer compute it from the
->> Call size.
->
-> I do like that you have split the one array in two - it is certainly
-> conceptually cleaner.
->
-> I don't like that you now allocate twice as many pages.  This could have
-> a significant impact on a smaller server, and should at least be
-> highlighted in the commit description.
+On 2/4/26 11:48 AM, Jeff Layton wrote:
+> Ben reported a problem with using new userland with old kernel. If he
+> tried to send down a setting that the kernel doesn't support, it returns
+> -EINVAL to the call.
+> 
+> This patch series adds a mechanism for nfsdctl to tell what attributes
+> are supported by the "threads" command. If can then use that to
+> determine whether to pass down the min-threads attribute or report an
+> error or warning.
+> 
+> This also removes the dependency on the UAPI headers by properly
+> maintaining the private nfsd_netlink.h file.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Committed... (tag: nfs-utils-2-8-6-rc1)
 
-The number of pages nailed down by NFSD is directly controlled by the
-number of nfsd threads. So on small-memory servers, run fewer threads.
-We have a dynamic thread count facility now, which keeps the number
-of threads minimal on an idle server.
+steved.
+> ---
+> Changes in v2:
+> - Add patch to unconditionally compile in min-threads support
+> - Make getpolicy_handler() return NL_SKIP
+> - Link to v1: https://lore.kernel.org/r/20260204-minthreads-v1-0-9f348608f884@kernel.org
+> 
+> ---
+> Jeff Layton (4):
+>        nfsdctl: unconditionally enable support for min-threads
+>        nfsdctl: only resolve netlink family names once
+>        nfsdctl: query netlink policy before sending the minthreads attribute to kernel
+>        nfsdctl: remove unneeded newlines from xlog() format strings
+> 
+>   configure.ac                 |   6 +-
+>   utils/nfsdctl/nfsd_netlink.h |   2 +
+>   utils/nfsdctl/nfsdctl.c      | 204 ++++++++++++++++++++++++++++++++++---------
+>   3 files changed, 168 insertions(+), 44 deletions(-)
+> ---
+> base-commit: 8f54511aefe1455161a6c4406ed8c770139f61e3
+> change-id: 20260203-minthreads-402ce87096e0
+> 
+> Best regards,
 
-For 16 threads and 1MB maximum payload size, that's an extra 16MB of
-nailed memory. That might have been a lot of memory to nail down on
-typical systems 25 years ago, but these days, I don't think it's that
-significant and it's entirely under the control of the NFSD
-administrator.
-
-
-> For NFSv3, this is complete waste.
-
-Perhaps, but I don't see a way around that. nfsd threads are
-fungible: they are called upon to handle all NFS versions, and
-thus have to be prepared to deal with either NFSv3 or NFSv4
-requests.
-
-
-> For NFSv4 we do have the option is returning NFS4ERR_RESOURCE for ops
-> that we cannot reply to.
-
-NFS4ERR_RESOURCE is NFSv4.0-only. NFSv4.1 and above advertise their
-maximum message sizes via CREATE_SESSION, and currently those numbers
-are a lie.
-
-
-> So could we allocate reply pages on demand, either stealing them from
-> the end of the request buffer, to using kmalloc when request buffer has
-> no spare?
-
-The most pernicious cost of the second array is the CPU time spent
-repopulating it, and subsequent patches in this series deal with that.
-
-If NFSD starts stealing pages out of rq_pages for building the reply,
-then alloc_bulk_pages() will have to walk the entire array to ensure
-all pages are filled, and that's something I'd like to avoid.
-
-As far as allocating pages on demand, there is a cost to that as
-well (in terms of contention with other memory allocators) that I
-want to keep out of the I/O paths.
-
-
--- 
-Chuck Lever
 
