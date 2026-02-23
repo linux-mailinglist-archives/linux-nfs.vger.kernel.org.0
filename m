@@ -1,262 +1,228 @@
-Return-Path: <linux-nfs+bounces-19123-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19124-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gMCVKVyqm2mb4QMAu9opvQ
-	(envelope-from <linux-nfs+bounces-19123-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 02:16:12 +0100
+	id eBUlEX0fnGkZ/wMAu9opvQ
+	(envelope-from <linux-nfs+bounces-19124-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 10:35:57 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3676171331
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 02:16:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7271173FF4
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 10:35:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 19424302B777
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 01:14:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5D13730104B2
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 09:35:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C392257827;
-	Mon, 23 Feb 2026 01:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02CBF34F49A;
+	Mon, 23 Feb 2026 09:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="UznpjAVp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w1SGuZn0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvjUXwJM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-a1-smtp.messagingengine.com (flow-a1-smtp.messagingengine.com [103.168.172.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF88720B80B;
-	Mon, 23 Feb 2026 01:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771809285; cv=none; b=d+B1yAe4NYN5Z69WatWuPdkE5AiKM0dW4jswynGO3M7fgFZLabpwGvHUqB6XZqTPwRPvnFfXgvc1PhiY2IX9ymXa6dkoHomSmo3kb+7W08TIf17I2hrlCTYfQ8dIHTQl3Cxyh+G8yphNOrSU0WkxhOOJedd6w8Zlq2CQ7TB37Mk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771809285; c=relaxed/simple;
-	bh=pigC+YhXx91fsgFDb3eu05KS5NlfXiF14Ef/VbbdAsE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AHjFP/3Ls42XvMrAiZq3avJMTX9iNYOGefi1hsD9NwpJt5BbIAePXMaT7EC7TwfGjS3XVs2OE+kcLSq3SZhKQsdCs+PmXgD+nlcbhZtgy1JwmpINmhaPc6HovxW9lZwVTTu9/WN9D3o2R7Vy3p7w/82CMnCSOvH2y0St3XicFik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=UznpjAVp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=w1SGuZn0; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailflow.phl.internal (Postfix) with ESMTP id 6A41013807AC;
-	Sun, 22 Feb 2026 20:14:43 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Sun, 22 Feb 2026 20:14:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm3; t=1771809283;
-	 x=1771816483; bh=9JVzNxT6kiATvBNU36XHsusPIDRZh6GsFbpCz+D3u+w=; b=
-	UznpjAVpOBZUSAox2zQH5APdkCm0TKU7fptBaatjmXKVi4DDnyQXw6ckxpy01sYI
-	6QOeZ5MXohvtwUYK8B9YIGLFscXZnBBS/DSyQ4LP7pxWCkGZRN6Tf3mfyFDFg1FE
-	fli/A0VPEi8BoKJyVzWgmwo8BCVSMdtW5Bnhis5fOG4gIc2wkwzi/4Iql7OCj2GP
-	LEPclS9LECSzzit3R7ZFB9zq6q4geSm5sZJEZOUPt6VpHgPKbaxMKe7z0vHjXlHK
-	Rren+sFpH1dmHGX9qw2ctN/8ppnI7rR8sr9B3cRF9S5NsPtEeMHZZSP+syQoOMkP
-	xSeHvZ2PI3uueIdX79WnsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1771809283; x=1771816483; bh=9
-	JVzNxT6kiATvBNU36XHsusPIDRZh6GsFbpCz+D3u+w=; b=w1SGuZn0605fv1q3w
-	yzpxKUkn4RNdPtlCwSmBYUUdJ45429x3KTsk+NV5pw+CWfKxX5q0YJ9hVv4JXZAI
-	g5ZndlNJnAWD3YscJxttt7chx42J2Z7qW098iXuMw+gthKAK3YF7WZxl6Gx8b2RF
-	EOJY3OlbqFwuvb1OvXCmFPJT9P0LTAB8GdSraCdKWNImgZa0blrVKnj53iEZCoEb
-	Odq6lGNRYBu/Q/Ng3NOfZLseagnGgpZTbJxjP5Trc5E/eiyVc4mM34qcgVkMVXvP
-	XV5+0vQUpaeABFG/uPM+QvbGmpqtOluIaGxXAiKOMcEONxk+FNm975k9az/Dlims
-	7Hfkw==
-X-ME-Sender: <xms:A6qbaUrYDi95LMuWiaQg1tfpPHmfCvCsNXCNVnwSXLJpwKjsN1g3_w>
-    <xme:A6qbaenaBr5j4V9G7hirkM8x4tJQ_FE-Ys9t5TZoT6_jmUeV_Kztl11cUEQ-R5VMi
-    EcyhCG2vPfNELHhD36jqWy-rLuitXN5xNcUCtCAhXDQhJvO>
-X-ME-Received: <xmr:A6qbaRvLITdZNH6tzTSmMq2BszNl0qYxjNt7OLuFVETOuuu3GDvIUvkk1JMu8RHWh3Zr0QxlLIdoUsZFetr23tKakiu8LVtPZ4bjgtESaBtf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeehkeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepvddvpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhr
-    tghpthhtohepjhgrtghksehsuhhsvgdrtgii
-X-ME-Proxy: <xmx:A6qbaVfNne5kz3F0bBBSsUjpvfLGHE8Vodz2-5pSZWTyN4RURgTPVw>
-    <xmx:A6qbabbqqOwYPeE7IYjfe8PRxGhz1s0ec8Tj2n_726AIQtc0FKfYpA>
-    <xmx:A6qbaV2F3LkKoqFvjsmfPYQ43q0XHWVVXvRVJVlGm16S4iBvr_myPg>
-    <xmx:A6qbacp8YyrjOajri9zoaE-AfzAk-TdLPbxUqNvOrDd3eZTBn4mRGA>
-    <xmx:A6qbaQi-rpxiaLayoUEtGSqnfltMKKZ0h1_81yuOIkYVc8X2W4_VMRkH>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 22 Feb 2026 20:14:37 -0500 (EST)
-From: NeilBrown <neilb@ownmail.net>
-To: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	David Howells <dhowells@redhat.com>,
-	Jan Kara <jack@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [PATCH v2 15/15] VFS: unexport lock_rename(), lock_rename_child(), unlock_rename()
-Date: Mon, 23 Feb 2026 12:06:30 +1100
-Message-ID: <20260223011210.3853517-16-neilb@ownmail.net>
-X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
-In-Reply-To: <20260223011210.3853517-1-neilb@ownmail.net>
-References: <20260223011210.3853517-1-neilb@ownmail.net>
-Reply-To: NeilBrown <neil@brown.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA1434EEEF
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 09:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771839328; cv=pass; b=QMIFtltTrXMhgly3y7+0zS6RFkysLdxjfEwzk8gk7TU0Rdr5N04gVNEbaklTQPfKOtzoNM9Id2Xe92sGf1JcQhPwEsDPDAoDw+6wYFTFVVCta4e/OPAML1phf1KOULuJT+5KQpk1xBnHuCMvIcAjRoEdyK1TN9LXPOs6q6A63kM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771839328; c=relaxed/simple;
+	bh=mAAOjC5VpT1HkXsRAwtGw0eUE/35I2Skqe677nArRZE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tvgkJLyGgNlE1jxFTKHuF08XuXeEBoAUS0TNyQ8C92mJWOkTP7B5gJU5lp8sLYPO1kpmLGclvSLrKHfdfAs+Ubh/L9pS4wrXmXL//b23kWDu+uvxuXxVklM4Lrc947eLv1Zz+dk4skdPpfBcJPUEcbgWivlCGjjmcSlDDsdyjfc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvjUXwJM; arc=pass smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b7cf4a975d2so722588366b.2
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 01:35:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771839326; cv=none;
+        d=google.com; s=arc-20240605;
+        b=BIxGmsX3GsoMYGl5BGc+6v0zoFrZhJaq8MdGDN6X2uYSrMWypgMpyUACJUS+R1ld5w
+         lopBzHu3oPYyjMOcqU0X5pEYmGGo8VoN17MlHlZ7KZzqa/b4XsTRPQOfYAv3VciT3MyR
+         ph0pJPJVdYhktQ2gIUdTk533SbBGHE/yYXExRQXVlGULyZXtXhetSg+8UPJ0I/8dvWXH
+         pXq/QvHN0UiFtJMNTsOE/NtjJkeDirtfzYyq4jPI/YlcywYYkxOhmvASp+UPVwb5a44W
+         A8d7g9hu4+lxKxoQD4+qm4YGB6wakVfrDeAmVdgteb0MH5hE2rR8R1FtGnuVCF7MY2IW
+         WEQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5/tsVKpvOF9hjEuBModNYiVpSPXtrrKrMQ519faKcis=;
+        fh=mF1r9umH+nX/Q/ec9i7JRxSmlBJexvEhk35McSZWQMY=;
+        b=f/+4h7rKeqs/hbmq0M84RGEFJ2NvSmhg/77S0eI6WPiv3VWxLUE0UTLpjaIExhMdna
+         nKjZybC8qpk28poYWLjI/aNGAT3tVY6AfAf6IDY+0qwjHde2tkX7u/zbqmIHUnY910c6
+         BgnIKDm+JoJu+LhWp6Hfbhj6QYLbRbrBVhGRV+sw6YEvdncexF1M2HqGT3Gdw0p7BLCE
+         ppCmrIlhfQ/0ZgPxcO3Yv8Z+AesiMAlLqt356MsOu5mh0/0NLrjJvq7Q2bC0lNUjqTU2
+         SIif62d6xvryKYG62EzCahZDMexeXW4TCtTxEVJaFEZysETD9Dn5mSjxIaA15QXR6eOD
+         m1YQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771839326; x=1772444126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5/tsVKpvOF9hjEuBModNYiVpSPXtrrKrMQ519faKcis=;
+        b=lvjUXwJMFDUVNdE9/6JGFIIEgXAr+NW/nxJYiNKP83A2h2rSdOYnS2Qap5SEi8qvuc
+         Xvv8mX7Ib5UTjZ2Ntgfe8sP1Y8sbStPRBVlVXYlUG96b6S34FcSJuKZLdABzCTwQSawB
+         6kEeAv1Xy3QQTZBXYrCOuzdG6KW4vFjs2HUXgSqvz4TtzIzp1VaFIlsTAa6b5Sp1Jd34
+         8+G7qchOZolFb2NrtqZ2ma6izvwW8ElQncc0YNDtZAtfeVwNdlTIquDlE1K/HvvMVBW5
+         MVSWix+ReYo/KfT3GNcH4MXXhrxRSIQZW2RW+9DJtcTlAkJOfHQiKIYj+U2ejfaspoaD
+         g7tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771839326; x=1772444126;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5/tsVKpvOF9hjEuBModNYiVpSPXtrrKrMQ519faKcis=;
+        b=NFJMmCr2yu5HgMq0zgf4YsoUcoXQB35U9acUwc8/QaKFsTqc0VI64bklBfCK3BflQX
+         zGTV1/UveC+NdDTjFxCQ08TmW2W1GIFJE3aFatuBDG7s4CE8Xijs8e8kEvPmr8+KNYGo
+         BTHITBJEWvER5c+7kklqAzFMWxg+1xOxRdviPIADWOXlp2IToouujtqJ+66a7G5ZngO1
+         LJORymoWycFDl7w0RVt8AdeVJKueAe9/tyALEjbQ3Z6CjbFUhDjqanCwPd/75FgrDa8D
+         GBRnQoH2CCGdiIktqfAtAnfdM4I7unhdqo6SxCJUGLNK7uit1uQGR5vi82kCJBoKpDT+
+         x8nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgo5ALVM99Y7Jmhgyf4R4RtENqk6z4wBwvw2+B4QxqHJaFq6FJmFeQb8pBzWHgccHylrPWr8Me8Nc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC/eY8Ct7f5lISaLHUHGBQJ/WkryV2yyJ1ni0qRihTi4XhlFFO
+	f5wrN+VvrP4dHiFXlH0WkqSiSSGgTVO/TUVDNhQyCULr7i8blZ85TA0JzDis7hkWmwM2rk3rQkU
+	mYI3SoYDuVEMiIK2v7ORRQAP2kSDcRBU=
+X-Gm-Gg: AZuq6aLLzSLlQGwKpGSadRk2ow8api53H3L55eme9Uv+FbwYm1q0VAs1OnXQ20lPzOK
+	Q2E4OJ4RuzHnrpdT+QWFBf6YfDowZeQf+n9ZB5I70hV689PSmiQ8td7a6Tj3vRusABl0v4vU/dD
+	iEOgRGIXq8hB9sF5GcCT+dOXb3jJckBkz16lwD71BLBHk8PQN61UuZx5hAnlqMRWWRwkQ7Pu+/e
+	7u8fL/+DLExKt0+rjO6sp/yBCamadrxpw9Ks7vQ33XTnMb2ES3zNkAJ3Lb+DWrxGkVhQSvQzGV6
+	T6r7uh2DbMOr880EcaE/8DFx6Hj9njbaWArhlNp7/g==
+X-Received: by 2002:a17:906:7307:b0:b88:5002:50c0 with SMTP id
+ a640c23a62f3a-b90819db296mr564028666b.20.1771839325394; Mon, 23 Feb 2026
+ 01:35:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260223011210.3853517-1-neilb@ownmail.net> <20260223011210.3853517-12-neilb@ownmail.net>
+In-Reply-To: <20260223011210.3853517-12-neilb@ownmail.net>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 23 Feb 2026 11:35:14 +0200
+X-Gm-Features: AaiRm51zLgcrRbPb_4HmwkH5uY0J9aukMWrvlX2vP_E-cCHRJFMZshxY7_A02Xw
+Message-ID: <CAOQ4uxibL=2Z0FZMz5wMAo=JMaJouOVo3p7t3Fi3FR59U5Tu=g@mail.gmail.com>
+Subject: Re: [PATCH v2 11/15] ovl: pass name buffer to ovl_start_creating_temp()
+To: NeilBrown <neil@brown.name>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
+	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm3,messagingengine.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	TAGGED_FROM(0.00)[bounces-19123-lists,linux-nfs=lfdr.de];
-	FREEMAIL_FROM(0.00)[ownmail.net];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	PRECEDENCE_BULK(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19124-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,canonical.com,paul-moore.com,namei.org,hallyn.com,gmail.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,brown.name:replyto,brown.name:email,ownmail.net:mid,ownmail.net:dkim,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: D3676171331
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C7271173FF4
 X-Rspamd-Action: no action
 
-From: NeilBrown <neil@brown.name>
+On Mon, Feb 23, 2026 at 2:14=E2=80=AFAM NeilBrown <neilb@ownmail.net> wrote=
+:
+>
+> From: NeilBrown <neil@brown.name>
+>
+> Now ovl_start_creating_temp() is passed a buffer in which to store the
+> temp name.  This will be useful in a future patch were ovl_create_real()
+> will need access to that name.
+>
+> Signed-off-by: NeilBrown <neil@brown.name>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-These three function are now only used in namei.c, so they don't need to
-be exported.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: NeilBrown <neil@brown.name>
----
- Documentation/filesystems/porting.rst | 7 +++++++
- fs/namei.c                            | 9 +++------
- include/linux/namei.h                 | 3 ---
- 3 files changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index 1dd31ab417a2..d02aa57e4477 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -1368,3 +1368,10 @@ lifetime, consider using inode_set_cached_link() instead.
- 
- lookup_one_qstr_excl() is no longer exported - use start_creating() or
- similar.
-+---
-+
-+** mandatory**
-+
-+lock_rename(), lock_rename_child(), unlock_rename() are no
-+longer available.  Use start_renaming() or similar.
-+
-diff --git a/fs/namei.c b/fs/namei.c
-index e6a3717d7065..3547a2a1bfd1 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3775,7 +3775,7 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
- /*
-  * p1 and p2 should be directories on the same fs.
-  */
--struct dentry *lock_rename(struct dentry *p1, struct dentry *p2)
-+static struct dentry *lock_rename(struct dentry *p1, struct dentry *p2)
- {
- 	if (p1 == p2) {
- 		inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
-@@ -3785,12 +3785,11 @@ struct dentry *lock_rename(struct dentry *p1, struct dentry *p2)
- 	mutex_lock(&p1->d_sb->s_vfs_rename_mutex);
- 	return lock_two_directories(p1, p2);
- }
--EXPORT_SYMBOL(lock_rename);
- 
- /*
-  * c1 and p2 should be on the same fs.
-  */
--struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
-+static struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
- {
- 	if (READ_ONCE(c1->d_parent) == p2) {
- 		/*
-@@ -3827,9 +3826,8 @@ struct dentry *lock_rename_child(struct dentry *c1, struct dentry *p2)
- 	mutex_unlock(&c1->d_sb->s_vfs_rename_mutex);
- 	return NULL;
- }
--EXPORT_SYMBOL(lock_rename_child);
- 
--void unlock_rename(struct dentry *p1, struct dentry *p2)
-+static void unlock_rename(struct dentry *p1, struct dentry *p2)
- {
- 	inode_unlock(p1->d_inode);
- 	if (p1 != p2) {
-@@ -3837,7 +3835,6 @@ void unlock_rename(struct dentry *p1, struct dentry *p2)
- 		mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
- 	}
- }
--EXPORT_SYMBOL(unlock_rename);
- 
- /**
-  * __start_renaming - lookup and lock names for rename
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index c7a7288cdd25..2ad6dd9987b9 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -165,9 +165,6 @@ extern int follow_down_one(struct path *);
- extern int follow_down(struct path *path, unsigned int flags);
- extern int follow_up(struct path *);
- 
--extern struct dentry *lock_rename(struct dentry *, struct dentry *);
--extern struct dentry *lock_rename_child(struct dentry *, struct dentry *);
--extern void unlock_rename(struct dentry *, struct dentry *);
- int start_renaming(struct renamedata *rd, int lookup_flags,
- 		   struct qstr *old_last, struct qstr *new_last);
- int start_renaming_dentry(struct renamedata *rd, int lookup_flags,
--- 
-2.50.0.107.gf914562f5916.dirty
-
+> ---
+>  fs/overlayfs/dir.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
+> index ff3dbd1ca61f..c4feb89ad1e3 100644
+> --- a/fs/overlayfs/dir.c
+> +++ b/fs/overlayfs/dir.c
+> @@ -66,10 +66,9 @@ void ovl_tempname(char name[OVL_TEMPNAME_SIZE])
+>  }
+>
+>  static struct dentry *ovl_start_creating_temp(struct ovl_fs *ofs,
+> -                                             struct dentry *workdir)
+> +                                             struct dentry *workdir,
+> +                                             char name[OVL_TEMPNAME_SIZE=
+])
+>  {
+> -       char name[OVL_TEMPNAME_SIZE];
+> -
+>         ovl_tempname(name);
+>         return start_creating(ovl_upper_mnt_idmap(ofs), workdir,
+>                               &QSTR(name));
+> @@ -81,11 +80,12 @@ static struct dentry *ovl_whiteout(struct ovl_fs *ofs=
+)
+>         struct dentry *whiteout, *link;
+>         struct dentry *workdir =3D ofs->workdir;
+>         struct inode *wdir =3D workdir->d_inode;
+> +       char name[OVL_TEMPNAME_SIZE];
+>
+>         guard(mutex)(&ofs->whiteout_lock);
+>
+>         if (!ofs->whiteout) {
+> -               whiteout =3D ovl_start_creating_temp(ofs, workdir);
+> +               whiteout =3D ovl_start_creating_temp(ofs, workdir, name);
+>                 if (IS_ERR(whiteout))
+>                         return whiteout;
+>                 err =3D ovl_do_whiteout(ofs, wdir, whiteout);
+> @@ -97,7 +97,7 @@ static struct dentry *ovl_whiteout(struct ovl_fs *ofs)
+>         }
+>
+>         if (!ofs->no_shared_whiteout) {
+> -               link =3D ovl_start_creating_temp(ofs, workdir);
+> +               link =3D ovl_start_creating_temp(ofs, workdir, name);
+>                 if (IS_ERR(link))
+>                         return link;
+>                 err =3D ovl_do_link(ofs, ofs->whiteout, wdir, link);
+> @@ -247,7 +247,9 @@ struct dentry *ovl_create_temp(struct ovl_fs *ofs, st=
+ruct dentry *workdir,
+>                                struct ovl_cattr *attr)
+>  {
+>         struct dentry *ret;
+> -       ret =3D ovl_start_creating_temp(ofs, workdir);
+> +       char name[OVL_TEMPNAME_SIZE];
+> +
+> +       ret =3D ovl_start_creating_temp(ofs, workdir, name);
+>         if (IS_ERR(ret))
+>                 return ret;
+>         ret =3D ovl_create_real(ofs, workdir, ret, attr);
+> --
+> 2.50.0.107.gf914562f5916.dirty
+>
 
