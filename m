@@ -1,236 +1,215 @@
-Return-Path: <linux-nfs+bounces-19143-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19144-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YDDLDdGPnGnRJQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19143-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:35:13 +0100
+	id QF0TCb+dnGmyJgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19144-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 19:34:39 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B67C17AE44
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:35:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72DAA17B943
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 19:34:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 293953006157
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 17:31:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 96C94303DD3E
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 18:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3206A332904;
-	Mon, 23 Feb 2026 17:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36B5366DCB;
+	Mon, 23 Feb 2026 18:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="F+M8ReRS"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="VL36tq+Y"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F5329E57
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 17:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771867917; cv=pass; b=tj0+xCa8bd4qcgxbOcPfnKHC+tOzbbZvnppJBa+jJjnPJBNpBGveU284TPrk/sRNFyHEObaw6r8pBZjCKv9ROjXv8AU/y3ZTkgOg0T+/1lmaiIRHd761hCQ4MlpEkZdUuKo3u0C57TY+7UOCcs28xP5DfMY9kGKcfYQYz0634eg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771867917; c=relaxed/simple;
-	bh=hK/0jeoKCkucbRZSvX1AYVctVojQdWNjxRFJpKPT85c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lwDOElIvLjyezxN3sHvi4WDB8GMLZL4wW44KYYxog/nApNQGogUEX9ifhnzfwN+1mE7jgZBI9zJRru5jeFaIhnHu7fRaxLPy7A3ky6ECX/rRqSI4V74X/zFxaYw1cxAX+PvjOjsJwO/BZ3RPnUIpoB+cyX9sy86ZnymtKd0P0xw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=F+M8ReRS; arc=pass smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-352ccc61658so1709658a91.0
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 09:31:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771867915; cv=none;
-        d=google.com; s=arc-20240605;
-        b=EeNtQgZqSWJ6hiPrl+R2O6MFMZJIdSULWA/rROA07V+DLXjJ16+HdpKzxopETeelrr
-         VidFEUrd7mXumg1L7bX8HXULndhaj2Sm9mlvATNdLv60G+VE6FyunrVuCeghhP39Av7e
-         VCtTY4Sl1Q1+BbewzLHncx+nQC+Q/cFKUhmaiiJ/y2uheoixOPHES0y7Yy4yzYleMtdF
-         BfGNSTBoseQFvb6cQY0efXVR2o6NYfoB31uhI/DYXzVnNZIdUAODCUZIdLALrx7jXVrB
-         9Cxq7Y1sWWCP8NVyws0n0Ya7HAoNeueEx2M9CM6ZO4qS5o78KbwQMpDphik+fbMG3m6r
-         gFAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=6UKo5s8UZQoKFDeeGaREA8NHzO9NWVOgEQkt9hAvBaw=;
-        fh=qOdqTxGbkmkJUMyt94srskYz2bGDv+ynaZzekgaTHM4=;
-        b=Pe5DuswfxvN2/OloeVOM3+7jn38IXgk8RwM8uLm+bEtTrcolB66n9DenfOE497PneG
-         53CGqUVo55YFmNqx8dM3J+CmRpHGgdMxyYst2D73GxEF/DinDxfOaUFRayVeT5RkQ6QA
-         WrG/0y7DkZHcy+iSAki7GgTMro6KXkolcv9bEAmEnlMq8vkh0/IRrMBHWiL/3X9Kcnbq
-         A/tFR/3Y1YzyIyockrk3YjZZcNX/RQ8VwxdKg8Q3Z+J5tZkHecgyugupQbYw1ksmjoBa
-         FHI8+/tqLsis7qgtq/9acNuwIVpQh4cn1YLA5iHdDyEZwAVl0D6ZnOUXWtJF/6RcWAIj
-         z43Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D6933065D
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 18:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771871464; cv=none; b=AyIXTRDvJtzPu5PQiZq8nKSjLpqIstNzgJUuJBP4HCGFJMTwkiLIRTzogKvToLEgDolGsRBSUkFsCz8mSsCrSFlXmQp7Dg30sENpAcfeQx5VwcqjNn+onFKF1AX84/s9yaC4PedBORvxeU2Ges9+OZ9vMjHfP6Vodcr1rJxZP4A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771871464; c=relaxed/simple;
+	bh=Kdu1cMXgA2XqjBYc7dvRjH7dxfg9Vy4WuG4CB6nfJ0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h+ytM40UqCrYDFQ5/vU19beeCGJzu7FapbXSMC3xwNSbXPEB3fyUYIkr6wbRKnkNp74p7sRhwgW4523YXHDff8OPIFwF1KCOMcrJm3/JBYUWBsgeheDAlTw6qiSPYeaklL6mORSShmFLx/ooGX6Dajn7+a9D3kXzwuSYwhu085M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=VL36tq+Y; arc=none smtp.client-ip=74.125.82.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-2bd9a485bd6so2157731eec.1
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 10:31:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1771867915; x=1772472715; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6UKo5s8UZQoKFDeeGaREA8NHzO9NWVOgEQkt9hAvBaw=;
-        b=F+M8ReRSjHBcODwL6YMsB62k5KM9tS8sOWzeJ5+cgWNwRgCriw3XQa/eD8Yx/Hni30
-         IdB+LiB/ApJjquQB5KcxVEI5HLkLWuZ1vTpKyL0E0HUfvIQZRWdXowU9+z67g7Gwx52C
-         +oyHQZzV3WLMrQboFAG7U9dC2B2apXVJrFgLqbBoeCt8vO8eZLDHjMm8iii0dsQnf5WW
-         Z+IHssdjgGYFzkGRQY1XVAsJ4gq0CVWEFyPOg2QbuYKPHrO7FhEUN0jl57qhGgMjZ2bq
-         zTkZ+QXwpKHtOYw10dJFzE57zltv532RD2Y3Hk+vJDyanvg3sI0G/4PpvFt2TNvnCaPd
-         NKxw==
+        d=purestorage.com; s=google2022; t=1771871462; x=1772476262; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hNnIbQepM7OsxG8YtXelmWTZHGkDq1OrrS+VLi1UfmQ=;
+        b=VL36tq+YYHcnLb2Pj+T4XlYEo3uzETDIKhaWyb6z5S6lIveu+xKuGB467pJcnNuBFf
+         LIYeFMlH5/GsbZ/A8e03iPAPqwLNtVPiPEQDHqRhrCEJ0+OG61j7YNWT5hZhlXHgjg3P
+         v1Dm5EY0EVpxiS80akpdro7fktC4ufNKnCT7A+Qfdtos/WP4sU8b3wHJN00pIjD/XsS/
+         KhsaJJJ4uBytQaagJD/abcGH1U1lj0MbJCCf2Nc/tFByl1JiCypHWvAJLR2FGvV6qgZy
+         /9LaFbbKzu0LE5V1u7q27fbJuyR5LJkyXGkWiy98X4AQkEn1JxmfV3/LCr9kU1pX7To2
+         nIuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771867915; x=1772472715;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6UKo5s8UZQoKFDeeGaREA8NHzO9NWVOgEQkt9hAvBaw=;
-        b=bzTlFqJzigp4ABYiEuKY3zF/MBzFTfHHRmzBUD+SmFYyypq3h0gsjzpNhiLdWaudeg
-         csdHjPk1zq5J9MpIAKIb/VrvzgayQN3X/pfuosurjUYe3P6FkI+2dlR3d/K/PLsbnsVx
-         iuBNzyHPxpHFpmtW7y4Sh60pSLqkqFHXXwshTWHK+IkabCO4jN/e9pfJrJdZbgrzM8QZ
-         NCxY/hHiAjtcbY0zJi8uvb1rGru3UZdhrlkvTschwlhILbhOeCoDzTW6yNnAZkyoeEnA
-         333I/AsiDP791v5Q4RbzmmaPky7XsUQ/sqy+f4a6ak1/O2M0V4j1SKX7MioITjAamY0u
-         EB5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWhnG3XNnP0UkPMIVeFMKgi89QwdL7xtcMHwXkDBIGB6coxD0dS2sLbE9Y3/gwmYe1Z4B2/aMZKM8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9+dFXl3jl75cIVa/+v1zRAb7S3jWy4wu5B/QftxeDBt2dUFaj
-	DhQyHeuUZT4DJVWT4KPpyx5kvoSgWFABWuiDvEtAo1NDRot6Ug6SdlhegzX9GrSpPX1JQ0ozA8n
-	J7Rx2l4LEbmwbY/qZCvXqrKUNXH8dliFSY1CON7Lv
-X-Gm-Gg: ATEYQzyqRWDTWw5Ww7NnVkUP3E8eO3pXBV3Wa3daytrqjdDH4L/ei3na5PzteKh9C2a
-	/LuzD3Nng74ahyNuAsnLHDgWA1Tsb0g4IWEYbK5zHtGpac2VYnzHMUEhNdr47rZ+SjhSba+ZXKG
-	psv2zX13BV461BVbdAntDFIk6DOCjo5EsJ+QOU84tahUQqmzPcWx12W73gsoZbxG5f3sO2EeQd/
-	Bf00j3sE1bDfjntgdNyEIC3DZHZDxAeLyEhF5tgYD8la8X/Yj/aFnI6CvNfd6E/f9PGM+hLUgkv
-	JyTDLMo=
-X-Received: by 2002:a17:90b:2543:b0:352:b674:2592 with SMTP id
- 98e67ed59e1d1-358ae7c3605mr8357173a91.7.1771867914678; Mon, 23 Feb 2026
- 09:31:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1771871462; x=1772476262;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hNnIbQepM7OsxG8YtXelmWTZHGkDq1OrrS+VLi1UfmQ=;
+        b=IrbFLENkcfoNr4EHwEmTWXled6ah5KlNPrneRNZba4DnyoQqzYDWqqjoPnckcNp5Dq
+         LvCd1mK4OwQqkZOhY190lkT3JFIeZvhw9CrUqrvH9IKS8uMcKMCXSHz0s8ynq5fC9Qr2
+         Sxe/5xGUmNuWhNIJgzZzVvj9zYYtgoCMifn3/WCql6fsTWpDQ6f/5V8u5agu7ADtVPrM
+         16EDr1o/ggIs9o4vJH4p8UxeTCGvoWgkcAkIwNmutfeKLikRdAaCgn63XxLBSlffYlGP
+         3+c1TRbLUy6mAHjyWM9Xh7luX0+Ci6vtwWTPBPAv3+FGKdC2oQXBphgxRoURTjJ7MP2O
+         1UuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFvCEAXN/DAYVphKjZaRhrOcpuybob9LXgkZLmHYEGlaOzTEbuoOFlgqBPNCwgLheC6OegJqmorGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFpJBjXjBoczGa2nEDn5FfEtVFmCdfjwzCn4h6+zeLEvtWjIht
+	6Re2zq2x5tyMw/KW3eYBF2DF8K/mg0pt7CWboJcGbTX1qRykfNH6uxpzZHyayi1gcY8=
+X-Gm-Gg: ATEYQzxeo51TQqX+HoC27KAaTaT6AqHczxzMrCrmHeytBP2DMAe4dAoJRlyY65PJj/l
+	F3MSbACIagWZc1WGJxSmtSigsNg5qZi0wM46X38lT3+OtnE4D0fr6a8qWZfHViiaJd2tNLZhsS+
+	Rn9xFfD3ZnTVb9VeLXU0GjSJQmRnDZj+2ebZoU1sfhOzC0ijOlT+PKuVb6hG3LEWSloph5cFDn9
+	ZLsplVT6kszVjwutlNXScnu19xzyaD1XYb2RZT/UqBGFDOy6TKluKECO+d7RACIbGa3ypsEw/hh
+	PIvOXJkTgFxZowy9AmMkc2OiCLSfk9KDv5IlK7KB1q5SK0tjmbJE39ecmtFrCgcqJPoFw22yWdI
+	BEf41+nSlzQVvDnKNfkcXjW0LufLMtHjHeAltfUK8l0Pgn0uNazKM/aZYb/wegYxZf3DxzVh/Vu
+	d/V+jbslEA+ZCLdWpqKD8hpxksv+Q5vdB1mKt9r9rabo7BiumqhA==
+X-Received: by 2002:a05:7301:9f18:b0:2ba:a098:ae64 with SMTP id 5a478bee46e88-2bd7bd58cf5mr3962238eec.34.1771871462146;
+        Mon, 23 Feb 2026 10:31:02 -0800 (PST)
+Received: from goldfish.dev.purestorage.com ([208.88.152.253])
+        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2bd7dc169e2sm5814354eec.29.2026.02.23.10.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Feb 2026 10:31:01 -0800 (PST)
+From: Eric Badger <ebadger@purestorage.com>
+To: ebadger@purestorage.com
+Cc: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-nfs@vger.kernel.org (open list:NFS, SUNRPC, AND LOCKD CLIENTS),
+	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] xprtrdma: Decrement re_receiving on the early exit paths
+Date: Mon, 23 Feb 2026 10:28:55 -0800
+Message-ID: <20260223182858.1158739-1-ebadger@purestorage.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260223011210.3853517-1-neilb@ownmail.net> <20260223011210.3853517-7-neilb@ownmail.net>
- <20260223132533.136328-1-clm@meta.com>
-In-Reply-To: <20260223132533.136328-1-clm@meta.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 23 Feb 2026 12:31:40 -0500
-X-Gm-Features: AaiRm52jwDH7iM8Njra-WDPg6xnZ2flvbCTBnLCHZ5MkdIrvbyo0z9crRKbktmQ
-Message-ID: <CAHC9VhSVjLNeTdxHmwYsGX75Z4FOAP+26=PjVdFxpmEkTrPvxA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/15] selinux: Use simple_start_creating() / simple_done_creating()
-To: Chris Mason <clm@meta.com>
-Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	John Johansen <john.johansen@canonical.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[purestorage.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[purestorage.com:s=google2022];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19143-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-19144-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FREEMAIL_CC(0.00)[brown.name,kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,namei.org,hallyn.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FROM_NEQ_ENVFROM(0.00)[ebadger@purestorage.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[paul-moore.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,paul-moore.com:dkim,paul-moore.com:url,paul-moore.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,meta.com:email,ownmail.net:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 6B67C17AE44
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[purestorage.com:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,purestorage.com:mid,purestorage.com:dkim,purestorage.com:email]
+X-Rspamd-Queue-Id: 72DAA17B943
 X-Rspamd-Action: no action
 
-On Mon, Feb 23, 2026 at 8:26=E2=80=AFAM Chris Mason <clm@meta.com> wrote:
-> NeilBrown <neilb@ownmail.net> wrote:
-> > From: NeilBrown <neil@brown.name>
-> >
-> > Instead of explicitly locking the parent and performing a lookup in
-> > selinux, use simple_start_creating(), and then use
-> > simple_done_creating() to unlock.
-> >
->
-> Hi everyone,
->
-> Amir suggested I run these through, and this commit was flagged:
->
-> commit bc981629767980bbaee2ca3c7348b5a648665a9d
-> Author: NeilBrown <neil@brown.name>
->
-> selinux: Use simple_start_creating() / simple_done_creating()
->
-> Instead of explicitly locking the parent and performing a lookup in
-> selinux, use simple_start_creating(), and then use
-> simple_done_creating() to unlock.
->
-> This extends the region that the directory is locked for, and also
-> performs a lookup. The lock extension is of no real consequence.
-> The lookup uses simple_lookup() and so always succeeds. Thus when
-> d_make_persistent() is called the dentry will already be hashed.
-> d_make_persistent() handles this case.
->
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Acked-by: Paul Moore <paul@paul-moore.com>
->
-> > diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.=
-c
-> > index 3245cc531555b..7d4f90e5b12a0 100644
-> > --- a/security/selinux/selinuxfs.c
-> > +++ b/security/selinux/selinuxfs.c
-> > @@ -1931,15 +1931,16 @@ static const struct inode_operations swapover_d=
-ir_inode_operations =3D {
-> >  static struct dentry *sel_make_swapover_dir(struct super_block *sb,
-> >                                               unsigned long *ino)
-> >  {
-> > -     struct dentry *dentry =3D d_alloc_name(sb->s_root, ".swapover");
-> > +     struct dentry *dentry;
-> >       struct inode *inode;
-> >
-> > -     if (!dentry)
-> > +     inode =3D sel_make_inode(sb, S_IFDIR);
-> > +     if (!inode)
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > -     inode =3D sel_make_inode(sb, S_IFDIR);
-> > -     if (!inode) {
-> > -             dput(dentry);
-> > +     dentry =3D simple_start_creating(sb->s_root, ".swapover");
-> > +     if (!dentry) {
-> > +             iput(inode);
-> >               return ERR_PTR(-ENOMEM);
-> >       }
->
-> Can this cause a kernel crash when simple_start_creating() fails?
->
-> The function simple_start_creating() returns ERR_PTR on failure, not
-> NULL. The check `if (!dentry)` only catches NULL values. When
-> simple_start_creating() fails and returns an ERR_PTR value like
-> ERR_PTR(-ENOMEM), this value is non-NULL and the error check is bypassed.
->
-> Execution would continue to d_make_persistent(dentry, inode), which
-> attempts to lock dentry->d_lock, dereferencing the ERR_PTR value and
-> causing a kernel crash.
->
-> The old code used d_alloc_name() which returns NULL on error. The new
-> code uses simple_start_creating() which returns ERR_PTR on error, but
-> the error checking pattern wasn't updated to match.
->
-> Should the check be `if (IS_ERR(dentry))` instead, and return dentry
-> rather than ERR_PTR(-ENOMEM) to preserve the actual error code?
+In the event that rpcrdma_post_recvs() fails to create a work request
+(due to memory allocation failure, say) or otherwise exits early, we
+should decrement ep->re_receiving before returning. Otherwise we will
+hang in rpcrdma_xprt_drain() as re_receiving will never reach zero and
+the completion will never be triggered.
 
-Good catch Chris, yes, please change this Neil and feel free to preserve my=
- ACK.
+On a system with high memory pressure, this can appear as the following
+hung task:
 
---=20
-paul-moore.com
+    INFO: task kworker/u385:17:8393 blocked for more than 122 seconds.
+          Tainted: G S          E       6.19.0 #3
+    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+    task:kworker/u385:17 state:D stack:0     pid:8393  tgid:8393  ppid:2      task_flags:0x4248060 flags:0x00080000
+    Workqueue: xprtiod xprt_autoclose [sunrpc]
+    Call Trace:
+     <TASK>
+     __schedule+0x48b/0x18b0
+     ? ib_post_send_mad+0x247/0xae0 [ib_core]
+     schedule+0x27/0xf0
+     schedule_timeout+0x104/0x110
+     __wait_for_common+0x98/0x180
+     ? __pfx_schedule_timeout+0x10/0x10
+     wait_for_completion+0x24/0x40
+     rpcrdma_xprt_disconnect+0x444/0x460 [rpcrdma]
+     xprt_rdma_close+0x12/0x40 [rpcrdma]
+     xprt_autoclose+0x5f/0x120 [sunrpc]
+     process_one_work+0x191/0x3e0
+     worker_thread+0x2e3/0x420
+     ? __pfx_worker_thread+0x10/0x10
+     kthread+0x10d/0x230
+     ? __pfx_kthread+0x10/0x10
+     ret_from_fork+0x273/0x2b0
+     ? __pfx_kthread+0x10/0x10
+     ret_from_fork_asm+0x1a/0x30
+
+Fixes: 15788d1d1077 ("xprtrdma: Do not refresh Receive Queue while it is draining")
+Signed-off-by: Eric Badger <ebadger@purestorage.com>
+---
+ net/sunrpc/xprtrdma/verbs.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 63262ef0c2e3..8abbd9c4045a 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1362,7 +1362,7 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed)
+ 	needed += RPCRDMA_MAX_RECV_BATCH;
+ 
+ 	if (atomic_inc_return(&ep->re_receiving) > 1)
+-		goto out;
++		goto out_dec;
+ 
+ 	/* fast path: all needed reps can be found on the free list */
+ 	wr = NULL;
+@@ -1385,7 +1385,7 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed)
+ 		++count;
+ 	}
+ 	if (!wr)
+-		goto out;
++		goto out_dec;
+ 
+ 	rc = ib_post_recv(ep->re_id->qp, wr,
+ 			  (const struct ib_recv_wr **)&bad_wr);
+@@ -1400,9 +1400,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed)
+ 			--count;
+ 		}
+ 	}
++
++out_dec:
+ 	if (atomic_dec_return(&ep->re_receiving) > 0)
+ 		complete(&ep->re_done);
+-
+ out:
+ 	trace_xprtrdma_post_recvs(r_xprt, count);
+ 	ep->re_receive_count += count;
+-- 
+2.43.0
+
 
