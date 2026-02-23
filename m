@@ -1,297 +1,270 @@
-Return-Path: <linux-nfs+bounces-19146-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19147-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aLdeNuG1nGkNKAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19146-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 21:17:37 +0100
+	id cAoKF3G2nGkNKAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19147-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 21:20:01 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D19F17CCD1
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 21:17:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD9EE17CD08
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 21:20:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48360301BC05
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 20:16:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80EC33020A5A
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 20:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92078376BCA;
-	Mon, 23 Feb 2026 20:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5D2B374750;
+	Mon, 23 Feb 2026 20:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nowheycreamery.com header.i=@nowheycreamery.com header.b="nALxLfxd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k8YrQIpX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaxyuNoo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C653382DE
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 20:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2158192B7D
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Feb 2026 20:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771877817; cv=none; b=kC3EtZO1s7jtneS5pGejF1dE5fmdZ7dz7nca6BCLUDLaNAyJN7xVxnoAPPpZ/Hss6Fdr1zVW6xZ4XXY+4Ptb1jdUjz/8FcncXUVESbyGqt7ZTX6CofTj/+toXmqXjOl0C6xC3QaNjFwVcQ/VpYgl+lywhzqpEl2G29izrKVfUH4=
+	t=1771877990; cv=none; b=uYmAFYmqDO/SlPrEdua/KoSAF0zj8OdO04bhDFEbm1E9RnoVDzyfSl+tifWK9LcoVFE/5E9iCeLXigILtJNHdo7mvsREIlcIGysZnKIa4zXuZ1z2RLad0kAXbqBpWu/M2QT3mAtH8Hbw5xqZ/HOo8OvbPc68wQeShd4xrgkbyxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771877817; c=relaxed/simple;
-	bh=+K8084vGL5cPwyDA4Mh/IzyoxblsT41ZEXXmTUddA5o=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lqqMtwp6u+vunTeupFyCco3aQLFWHrVz0xvQo6ZQ+fC4B9SgqjqmK40kBX1+5XgZsJHBj1UJD2ZPfAY5FprGwWmZyWqQqyV5uQxBxcEN9EhNzzpdEHy0y09docPsrVXd2feicGPfUKAkK+kfvqlrQUeEQt8fB23lNnhk4kckAM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nowheycreamery.com; spf=pass smtp.mailfrom=nowheycreamery.com; dkim=pass (2048-bit key) header.d=nowheycreamery.com header.i=@nowheycreamery.com header.b=nALxLfxd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k8YrQIpX; arc=none smtp.client-ip=202.12.124.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nowheycreamery.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nowheycreamery.com
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.stl.internal (Postfix) with ESMTP id 859C51300CCE;
-	Mon, 23 Feb 2026 15:16:54 -0500 (EST)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-02.internal (MEProxy); Mon, 23 Feb 2026 15:16:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	nowheycreamery.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1771877814; x=1771881414; bh=16a6WDrz18
-	8MbKYohvYp5o2Z6jOCLJEHe9FpgqNPSzk=; b=nALxLfxdgWIbHgHTxUzdCe0ePv
-	GsODfjke1B+10EkdBjHjTE54dG9xD3E3d3TRzpexWSeUMUXQL1JtDtnAm5z4sjo6
-	K8pXJxETgHxORz8IlUXEly5MWMrlSsr6iFdOA00qzDECn1aizfmDYkHRr5NXMDzW
-	XYIPICTPNGqr0Bwf/4o/rpLQKfT/CeKWMncUHdnwu+IGnMaATDeL6Bwhdd4rmPFl
-	n+YWDYj3pb1i1tG2UOAVs9/3HDAuvYqWXyZTUN8W3c8VTRmtWnXsTOaaCVt09IGs
-	hczk6TyV29608AFFneXxydeVkVm8Xu+qnXq/LFIoWoHK7lLwZPGhERA1O0kQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771877814; x=
-	1771881414; bh=16a6WDrz188MbKYohvYp5o2Z6jOCLJEHe9FpgqNPSzk=; b=k
-	8YrQIpXDcCrcOPD7j459SOv4CtuPfRdLSM00aAxy62wO5gsgK9gi7A/I2ntK1Cwf
-	rC2xYCxgyabGnPdvRFgmIwpiH1/VR7TlGAjUmPdpK1kkWZkapikNBpS/H1yis3WH
-	ckmZGYGH76I5c1fXvL7+lyRjj7fWIaLvVhL4u1BJ7m7Wbzb2hTOfku1g+cWFoLPk
-	ASnoZHnjquMOXQov/A8BSGzNzsAd+NomQQivm/PLUFYsFLXtFz76aoDYc8VOnIxL
-	qx0ahcSAcisOF491qE3CiNKpTVsz1MeAvPeBXwi/gOVVEGBVq33894bHUBJBIcne
-	0qWrEZDnxaWvwWMHykGmw==
-X-ME-Sender: <xms:trWcaUG0vGE9gDcJFU_CtCfQ5ftt3-OdOXlXSZNNjljbPiRoQP9yDg>
-    <xme:trWcaYL5xYy9Pcct1AFlS_xLkxiILrbtvwxuPlTL7FZgLqe6-mokmU2BUpL-ulGe8
-    afzXigtjhxiYbnVZm8BDW594Bq4OPLpX0nFWWPNbhbCIc_FYPhfL24>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeekudekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehnnhgr
-    ucfutghhuhhmrghkvghrfdcuoegrnhhnrgesnhhofihhvgihtghrvggrmhgvrhihrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedttdekledtleeiffekfffhhfeghfehvddvtdehuedu
-    geeiueeivdefleektdfgkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpegrnhhnrgesnhhofihhvgihtghrvggrmhgvrhihrdgtohhmpdhnsggp
-    rhgtphhtthhopeefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjlhgrhihtoh
-    hnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihgthhgrvghlrdhsthholhgvrhes
-    vhgrshhtuggrthgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:trWcadAnBpN0eRtbLefQU_nTTfoPbZPtWZrjxLPVmS7BhkdzUSFNyw>
-    <xmx:trWcaTRX7h21t_2cW2uYcARr-vezPuQyb_8h_FBjk9a34P5dsmrHaw>
-    <xmx:trWcabpUJccPMzHW-jTP42pPreg-kvBlCelXDVHKlxdL2jLvFnuxVw>
-    <xmx:trWcaVywDccwKJfhHramkYUZUZmO7WS67deZU8kKeixjL2GafioyWA>
-    <xmx:trWcadPhvnfAlfVaw5L07YbOGBiaGS3mI9IIO75mLrYJYlKR2_9Isv3a>
-Feedback-ID: i67c64855:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id EAD97B6006E; Mon, 23 Feb 2026 15:16:53 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1771877990; c=relaxed/simple;
+	bh=O6kaJ6BqoSgo2YWlp/Ph32I5Ra/YPQ2Pvj+/ly6tr1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+y+37v4ZZJ0PE6cDdUtfWymP0IiLnduJJfEPaIKmZf/UAgvLpGr5bdfF0OIYa9KxBdu3oQvGzI7/66Irg6/5C/zdPTVoxv1j9fBLyH8mlR+Z5R09OF25R1RZ/2FgX93f5PVbGQYGL/zM5MEPeglIL950mvFCr+t3IrVKpV67Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaxyuNoo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFE0C116C6;
+	Mon, 23 Feb 2026 20:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771877990;
+	bh=O6kaJ6BqoSgo2YWlp/Ph32I5Ra/YPQ2Pvj+/ly6tr1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LaxyuNoo1ePRejwSrX1HXatf9uNcmA9RJSqku1TGepzVQBOXYou3rRFi6n+hIj4dZ
+	 aBhV68FIMmhgZm+96PK8w2Ggr1o8noIVpeRRAp9u9ldYAotFYsqgBcPT6wfbPKTM9B
+	 dGMNhkKMOlStgnWRJ1ewRDfAoTzuBACDoujH8l2n74F8GpnXhKcQPz6nxm+J7b16XM
+	 IAu1WX760uncsqVjzGHZUIR/ZpW2tDt1TeUT6OnWtPdRk8yO7YJpwdEpDyBUpVib7+
+	 dWg6IxQ5NhHq6ePr5S8EB+80ImoLz+m8F8PQ78IDGIIM+t4R93j6hZFC+xTNRX4Yix
+	 ONdNW6xpOxlng==
+Date: Mon, 23 Feb 2026 15:19:48 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Anna Schumaker <anna@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, linux-nfs@vger.kernel.org,
+	torvalds@linux-foundation.org, dlemoal@kernel.org
+Subject: Re: [GIT PULL] Please Pull NFS Client Updates for Linux 7.0
+Message-ID: <aZy2ZKfttaLhioBV@kernel.org>
+References: <20260212220625.358550-1-anna@kernel.org>
+ <aZM4XPFLM4V3YtsD@ryzen>
+ <537b11ee-575a-4d03-8100-fc70afbefd5d@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AlqJssKda3Mc
-Date: Mon, 23 Feb 2026 15:16:32 -0500
-From: "Anna Schumaker" <anna@nowheycreamery.com>
-To: "Michael Stoler" <michael.stoler@vastdata.com>,
- "Jeff Layton" <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Message-Id: <d3f9fb99-998c-4307-ac6f-351ec37c501b@app.fastmail.com>
-In-Reply-To: <20260222134019.21516-1-michael.stoler@vastdata.com>
-References: <20260222134019.21516-1-michael.stoler@vastdata.com>
-Subject: Re: [PATCH] nfs: avoid triggering out-of-order write handling in nfs_setattr()
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <537b11ee-575a-4d03-8100-fc70afbefd5d@app.fastmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.65 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[nowheycreamery.com:s=fm1,messagingengine.com:s=fm3];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19147-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[nowheycreamery.com];
-	TAGGED_FROM(0.00)[bounces-19146-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[nowheycreamery.com:+,messagingengine.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anna@nowheycreamery.com,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	NEURAL_HAM(-0.00)[-0.999];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,messagingengine.com:dkim,nowheycreamery.com:dkim,vastdata.com:email,app.fastmail.com:mid]
-X-Rspamd-Queue-Id: 0D19F17CCD1
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AD9EE17CD08
 X-Rspamd-Action: no action
 
-Hi Michael,
+On Wed, Feb 18, 2026 at 11:24:42AM -0500, Anna Schumaker wrote:
+> 
+> 
+> On Mon, Feb 16, 2026, at 10:31 AM, Niklas Cassel wrote:
+> > On Thu, Feb 12, 2026 at 05:06:25PM -0500, Anna Schumaker wrote:
+> >> Hi Linus,
+> >> 
+> >> The following changes since commit 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7:
+> >> 
+> >>   Linux 6.19-rc6 (2026-01-18 15:42:45 -0800)
+> >> 
+> >> are available in the Git repository at:
+> >> 
+> >>   git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-7.0-1
+> >> 
+> >> for you to fetch changes up to dd2fdc3504592d85e549c523b054898a036a6afe:
+> >> 
+> >>   SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path (2026-02-09 16:39:50 -0500)
+> >> 
+> >> ----------------------------------------------------------------
+> >> NFS Client Updates for Linux 7.0
+> >> 
+> >> New Features:
+> >>  * Use an LRU list for returning unused delegations
+> >>  * Introduce a KConfig option to disable NFS v4.0 and make NFS v4.1 the default
+> >> 
+> >> Bugfixes:
+> >>  * NFS/localio: Handle short writes by retrying
+> >>  * NFS/localio: prevent direct reclaim recursion into NFS via nfs_writepages
+> >>  * NFS/localio: use GFP_NOIO and non-memreclaim workqueue in nfs_local_commit
+> >>  * NFS/localio: remove -EAGAIN handling in nfs_local_doio()
+> >>  * pNFS: fix a missing wake up while waiting on NFS_LAYOUT_DRAIN
+> >>  * fs/nfs: Fix a readdir slow-start regression
+> >>  * SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path
+> >> 
+> >> Other Cleanups and Improvements:
+> >>   * A few other NFS/localio cleanups
+> >>   * Various other delegation handling cleanups from Christoph
+> >>   * Unify security_inode_listsecurity() calls
+> >>   * Improvements to NFSv4 lease handling
+> >>   * Clean up SUNRPC *_debug fields when CONFIG_SUNRPC_DEBUG is not set
+> >> 
+> >> Thanks,
+> >> Anna
+> >
+> > Hello Anna,
+> >
+> > This seems to break my setup:
+> >
+> > [  103.402033] VFS: Unable to mount root fs via NFS.
+> > [  103.402476] devtmpfs: mounted
+> > [  103.406171] Freeing unused kernel memory: 4352K
+> > [  103.406633] Run /sbin/init as init process
+> > [  103.406993]   with arguments:
+> > [  103.407253]     /sbin/init
+> > [  103.407491]   with environment:
+> > [  103.407767]     HOME=/
+> > [  103.407976]     TERM=linux
+> > [  103.408228] Run /etc/init as init process
+> > [  103.408580]   with arguments:
+> > [  103.408841]     /etc/init
+> > [  103.409071]   with environment:
+> > [  103.409346]     HOME=/
+> > [  103.409553]     TERM=linux
+> > [  103.409802] Run /bin/init as init process
+> > [  103.410153]   with arguments:
+> > [  103.410414]     /bin/init
+> > [  103.410644]   with environment:
+> > [  103.410920]     HOME=/
+> > [  103.411128]     TERM=linux
+> > [  103.411367] Run /bin/sh as init process
+> > [  103.411703]   with arguments:
+> > [  103.411963]     /bin/sh
+> > [  103.412179]   with environment:
+> > [  103.412454]     HOME=/
+> > [  103.412662]     TERM=linux
+> > [  103.412904] Kernel panic - not syncing: No working init found.  Try 
+> > passing init= option to kernel. See Linux 
+> > Documentation/admin-guide/init.rst for guidance.
+> >
+> >
+> > Doing a git bisect results in:
+> >
+> > commit 4e0269352534715915aae3fb84dd4d3bb3ff3738
+> > Author: Anna Schumaker <anna.schumaker@oracle.com>
+> > Date:   Fri Nov 21 14:53:50 2025 -0500
+> >
+> >     NFS: Add a way to disable NFS v4.0 via KConfig
+> >
+> >     I introduce NFS4_MIN_MINOR_VERSION as a parallel to
+> >     NFS4_MAX_MINOR_VERSION to check if NFS v4.0 has been compiled in and
+> >     return an appropriate error if not.
+> >
+> >
+> >
+> > Before commit above my config has:
+> > CONFIG_NFS_FS=y
+> > CONFIG_NFS_V4=y
+> > CONFIG_NFS_V4_1=y
+> > CONFIG_NFS_V4_2=y
+> >
+> > after commit above (with make olddefconfig), my config has:
+> > CONFIG_NFS_FS=y
+> > CONFIG_NFS_V4=y
+> > # CONFIG_NFS_V4_0 is not set
+> > CONFIG_NFS_V4_1=y
+> > CONFIG_NFS_V4_2=y
+> >
+> >
+> >
+> > My kernel command line has:
+> > nfsroot=192.168.1.10:/srv/nfs/rootfs,nfsvers=4
+> >
+> >
+> > I notice that I am probably stupid who has the above, as I assumed that
+> > it meant use the best NFS 4.x version supported by the kernel.
+> >
+> >
+> > If I change it to:
+> > nfsroot=192.168.1.10:/srv/nfs/rootfs,nfsvers=4.2
+> >
+> > The config:
+> > CONFIG_NFS_FS=y
+> > CONFIG_NFS_V4=y
+> > # CONFIG_NFS_V4_0 is not set
+> > CONFIG_NFS_V4_1=y
+> > CONFIG_NFS_V4_2=y
+> >
+> > successfully mounts my rootfs.
+> >
+> >
+> > So AFAICT, it seems that nfsvers=4 actually means nfsvers=4.0
+> >
+> > I am probably not the only person to who has "nfsvers=4" on the kernel
+> > command line.
+> >
+> >
+> >
+> > Possible solutions I can see:
+> >
+> > If the intention is for commit 4e0269352534 ("NFS: Add a way to disable
+> > NFS v4.0 via KConfig") to allow people to disable NFS 4.0, we could
+> > change the new "config NFS_V4_0" to be either "default y".
+> 
+> This is what I intended, actually. I don't know how the missing "default y"
+> slipped through the cracks for this long. Thanks for pointing it out, I'll
+> get this fixed up!
+> 
+> Anna
+> 
+> >
+> > or
+> >
+> > Perhaps we could modify "nfsvers=4" to actually mean "use whatever highest
+> > NFS 4.x version supported by the kernel", rather than use NFS 4.0 and only
+> > 4.0.
 
-On Sun, Feb 22, 2026, at 8:40 AM, Michael Stoler wrote:
-> I=E2=80=99m seeing a performance issue with an NFS driver based on Lin=
-ux 6.6. When
+Another related problem I just encountered, when doing a bisect that
+pivoted from 7.0-rc1 back down to 6.19, is that "make olddefconfig"
+using the 7.0-rc1's .config as starting point against 6.19 kernel
+results in:
 
-Linux 6.6 was from late 2023. Have you checked if this problem is still =
-there
-on a more recent upstream Linux kernel?
+# CONFIG_NFS_V4_1 is not set
+# CONFIG_NFS_V4_2 is not set
 
-> untar extracts an archive, it sets file attributes and timestamps afte=
-r each
-> file is created. As a result, the inodes of these files are marked as =
-OOO
-> (out-of-order write), which causes valid page cache to be dropped on s=
-ubsequent
-> opens.
->     This false OOO tagging occurs during the nfs_setattr() inode metho=
-d. The
-> reason is that inode attributes are updated twice: first in the protoc=
-ol version
-> specific method nfs*_proc_setattr(), and then again in nfs_setattr() i=
-tself via
-> nfs_refresh_inode(), even though the inode state has already been upda=
-ted by
-> nfs_update_inode() in protocol-version-specific method. As a result,
-> nfs_refresh_inode() falsely detects the second attempt to apply the sa=
-me file
-> attributes as an out-of-order operation and marks the inode with an OO=
-O range.
->     The proposed patch resolves this issue by eliminating the second i=
-node
-> attribute update in nfs_refresh_inode() when the inode has already bee=
-n updated.
->
-> Signed-off-by: Michael Stoler <michael.stoler@vastdata.com>
-> ---
->  fs/nfs/inode.c         | 10 ++++++----
->  fs/nfs/nfs3proc.c      |  2 +-
->  fs/nfs/nfs4proc.c      |  2 +-
->  fs/nfs/proc.c          |  2 +-
->  include/linux/nfs_fs.h |  2 +-
->  5 files changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 0d7facfdafb9..13ac5dffd3e6 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -657,8 +657,6 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry=
- *dentry,
->  	}
->=20
->  	error =3D NFS_PROTO(inode)->setattr(dentry, fattr, attr);
-> -	if (error =3D=3D 0)
-> -		error =3D nfs_refresh_inode(inode, fattr);
+CONFIG_PNFS_FLEXFILE_LAYOUT=m doesn't exist, etc.  So this change
+seriously breaks NFS bisect-ability.
 
-The code in this area has changed in the last 6 months and does an extra
-ATTR_SIZE check in this if statement that you're removing. Any chance
-you can rebase your patch on current upstream and resubmit?
+Feels like the new CONFIG_NFS_V4_0 control should be standalone and
+CONFIG_NFS_V4_1 shouldn't be removed. But the devil is in the details
+I'm sure...
 
-Thanks,
-Anna
-
->  	nfs_free_fattr(fattr);
->  out:
->  	trace_nfs_setattr_exit(inode, error);
-> @@ -709,9 +707,11 @@ static int nfs_vmtruncate(struct inode * inode,=20
-> loff_t offset)
->   * Note: we do this in the *proc.c in order to ensure that
->   *       it works for things like exclusive creates too.
->   */
-> -void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
-> +int nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
->  		struct nfs_fattr *fattr)
->  {
-> +	int ret =3D 0;
-> +
->  	/* Barrier: bump the attribute generation count. */
->  	nfs_fattr_set_barrier(fattr);
->=20
-> @@ -780,8 +780,10 @@ void nfs_setattr_update_inode(struct inode *inode=
-,=20
-> struct iattr *attr,
->  					| NFS_INO_INVALID_CTIME);
->  	}
->  	if (fattr->valid)
-> -		nfs_update_inode(inode, fattr);
-> +		ret =3D nfs_update_inode(inode, fattr);
->  	spin_unlock(&inode->i_lock);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(nfs_setattr_update_inode);
->=20
-> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-> index 715753f41fb0..dc9f33735cf2 100644
-> --- a/fs/nfs/nfs3proc.c
-> +++ b/fs/nfs/nfs3proc.c
-> @@ -144,7 +144,7 @@ nfs3_proc_setattr(struct dentry *dentry, struct=20
-> nfs_fattr *fattr,
->  	nfs_fattr_init(fattr);
->  	status =3D rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
->  	if (status =3D=3D 0) {
-> -		nfs_setattr_update_inode(inode, sattr, fattr);
-> +		status =3D nfs_setattr_update_inode(inode, sattr, fattr);
->  		if (NFS_I(inode)->cache_validity & NFS_INO_INVALID_ACL)
->  			nfs_zap_acl_cache(inode);
->  	}
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index fe6986939bc9..a41c5b046205 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -4436,7 +4436,7 @@ nfs4_proc_setattr(struct dentry *dentry, struct=20
-> nfs_fattr *fattr,
->=20
->  	status =3D nfs4_do_setattr(inode, cred, fattr, sattr, ctx, NULL);
->  	if (status =3D=3D 0) {
-> -		nfs_setattr_update_inode(inode, sattr, fattr);
-> +		status =3D nfs_setattr_update_inode(inode, sattr, fattr);
->  		nfs_setsecurity(inode, fattr);
->  	}
->  	return status;
-> diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-> index e3570c656b0f..edf3edf6720a 100644
-> --- a/fs/nfs/proc.c
-> +++ b/fs/nfs/proc.c
-> @@ -147,7 +147,7 @@ nfs_proc_setattr(struct dentry *dentry, struct=20
-> nfs_fattr *fattr,
->  	nfs_fattr_init(fattr);
->  	status =3D rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
->  	if (status =3D=3D 0)
-> -		nfs_setattr_update_inode(inode, sattr, fattr);
-> +		status =3D nfs_setattr_update_inode(inode, sattr, fattr);
->  	dprintk("NFS reply setattr: %d\n", status);
->  	return status;
->  }
-> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> index 832b7e354b4e..a1bcec8d0992 100644
-> --- a/include/linux/nfs_fs.h
-> +++ b/include/linux/nfs_fs.h
-> @@ -434,7 +434,7 @@ extern bool=20
-> nfs_mapping_need_revalidate_inode(struct inode *inode);
->  extern int nfs_revalidate_mapping(struct inode *inode, struct=20
-> address_space *mapping);
->  extern int nfs_revalidate_mapping_rcu(struct inode *inode);
->  extern int nfs_setattr(struct mnt_idmap *, struct dentry *, struct=20
-> iattr *);
-> -extern void nfs_setattr_update_inode(struct inode *inode, struct iatt=
-r=20
-> *attr, struct nfs_fattr *);
-> +extern int nfs_setattr_update_inode(struct inode *inode, struct iattr=20
-> *attr, struct nfs_fattr *);
->  extern void nfs_setsecurity(struct inode *inode, struct nfs_fattr=20
-> *fattr);
->  extern struct nfs_open_context *get_nfs_open_context(struct=20
-> nfs_open_context *ctx);
->  extern void put_nfs_open_context(struct nfs_open_context *ctx);
-> --=20
-> 2.53.0
+Mike
 
