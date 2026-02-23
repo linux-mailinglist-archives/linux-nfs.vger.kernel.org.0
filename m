@@ -1,99 +1,98 @@
-Return-Path: <linux-nfs+bounces-19153-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19154-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6HjDOgHTnGkJLAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19153-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 23:21:53 +0100
+	id 0FjuH17VnGkJLAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19154-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 23:31:58 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69A8B17E3A9
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 23:21:53 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FF9317E61D
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 23:31:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5726B3018400
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 22:21:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D2AB310B6D4
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Feb 2026 22:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6067437A4A1;
-	Mon, 23 Feb 2026 22:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194BB37B407;
+	Mon, 23 Feb 2026 22:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="TEIwR9nl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RyOg2bLr"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="djhRLti+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kVmRdWfn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA374379971;
-	Mon, 23 Feb 2026 22:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA66D334C35;
+	Mon, 23 Feb 2026 22:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771885311; cv=none; b=SJnmTCMSUT/Yn2YNDcIzk7jYrfdeFMFKdLbm2sNL4ajCaHC81wHssmTW7ZkNXwD6RE8q/MPztmunM8XYiq9ETZp3XWcKXN0KaR4Qp07kVbgu6oeXoYzl9Hzsv0iShtbIJjnT8IBHGbdVLzLIa6Jssubu57sO53/1ASBp1pE7lCg=
+	t=1771885825; cv=none; b=ok1rklj0xKwZUP+/X4N1k+bPj1RbacGiPftlLdnRe9UkViiHvrtF+ZNPzqIyFveqi5VAfCYtJ3pISB7CMzHVfMRVY3gJruqYmu0C01E5qyIBPfFJIEbUEtmvtynKVGnhLCMFcGdoJX7HgPxHQwm1TOr8SVI9WkzRcC0cvXMnx2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771885311; c=relaxed/simple;
-	bh=dM+orVg1M+gx4gejhpXDmj9vF5lhOO92gKDAcM5f5Yw=;
+	s=arc-20240116; t=1771885825; c=relaxed/simple;
+	bh=/5WFghxPGeFYVrk72aGIi9ZnNXwEdI2MoZ8rzkMC3Kk=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=DxadUWur/E3sjyrnqW6+rk3xXNLCbUrkm+cSIeUYARbpRRuRrWKq0CUJAY/w3Ow3PUjlPz9Y4XtoZybRcnSa62FPJB9DrCnoMYWEzPyGmObkaMwQ6plw5wibE+KzIwKCcdxa3Cfp+dqOVJGaYrZ2qcet4B8xYf6clxtpeoKOlFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=TEIwR9nl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RyOg2bLr; arc=none smtp.client-ip=103.168.172.138
+	 References:Date:Message-id; b=LHex+miy5xXaIerO+TZMxsxqBDQ1TJ0/h7VTAVhJB+dvVkg+Np9LfKtpmmPobW8l0FdlQtyyf86n4G63xODdtz+fFXp0QMtQH964RF31mgMRlEDu4XgAwQail8uVptTqEnJRhbl0oXqtr96DPgYalxDjNvt7ToeOMSbIrvdtJS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=djhRLti+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kVmRdWfn; arc=none smtp.client-ip=103.168.172.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.phl.internal (Postfix) with ESMTP id 27B3213805B8;
-	Mon, 23 Feb 2026 17:21:49 -0500 (EST)
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id F1CAA1380AB6;
+	Mon, 23 Feb 2026 17:30:22 -0500 (EST)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 23 Feb 2026 17:21:49 -0500
+  by phl-compute-04.internal (MEProxy); Mon, 23 Feb 2026 17:30:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1771885309; x=1771892509; bh=QscLC93BCn/K88HS4BcmEHkBzeHFa+prXXF
-	RZ+3co+s=; b=TEIwR9nlLLMV+a+XHjbRROsUBUFvaWn70jzOTYE2XRa265wyOEY
-	1rbgL0QDDpuda2vuAdDAZPH9f5+Kq4LZLdiM7kj1w5zdygzX8zkA7UCO6RcIcjoJ
-	/3heBBGePEEore6u0lcs4UtP7l+tfbApYauxqUhZR6TulhKVKKnTCq6AMh9j2cBb
-	Hd4zENKPxXTC/uRtvYOKWSwMCBuP7Y3HoVrmCHDUX7HcYLdyyojwrlse2ojhRmQk
-	GGsvhtfHhdGnH936x5+IeiDBvs1DceF/T5s1TDt3Sgb85ZasmPNAnJxuSU7U9nZr
-	TTczRqJilh8Rj6azBSAmgAQWWJRnLNggrYw==
+	1771885822; x=1771893022; bh=QzPV/qCsvxJY4RwTgulk7KEWJKUjbc4FEPm
+	hIim+IiA=; b=djhRLti+RvB4XemjfWD0EGKH+SyajCh3gm9zwfTCWq4STAmXhK6
+	u2+/KfXPPOvJdAeU54mCxbV71Pi1BCNPB17vZnN2110NQSzU4FGeZkXDaDS2AF7b
+	G/ezW2vhfH0RO5zFxgazqijD1F+SMVKZSUeUVdAE7VhDjDMs2oY3wSlkFuTOWJIm
+	GqdKEmRTD3DHvuon+RnZ0A6a4NRyTeTkgqOuVg7zFtCltMu40B6gWucVLaWrHoqB
+	TYnsKZ4h6jgbYKkYuHY9vzfknKqMf4mud88OA8e6yJFrx19KO3aVO7y60QWiwnkj
+	KDk/ISG745cbpvclm1EQjUSQRC2prpvPpiQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771885309; x=
-	1771892509; bh=QscLC93BCn/K88HS4BcmEHkBzeHFa+prXXFRZ+3co+s=; b=R
-	yOg2bLr4RvOTTU69B+aGgK+C+dOAniXOCtg2ornrFxNiuvCQTddKrb21ux9az24W
-	pBdSDY2ZSAXcZi7SabD8oRbO5/GN8QdiUiFe0rNjeb0ZRnUWio6njA+9KBrhmz/M
-	gDFGRk30ISrl4YWh8k433WITg7J8MmDQcpQJYrlpNI+2RyCSmMchuNCRFabxm/0p
-	QrvMztF9UFcbtOS6FpmnpMeQE7RZnYs9sX/iUd77Hn1D7OarZU/M8Qn3MbNHR9WG
-	90v3uGmE5Nr7JTsittQ0aI1o6HnIz2DB/z2bpcenvrwqpcOjfT4lr40mUOJRv96N
-	/PUeBH+/xvwPj9X3K5Yhw==
-X-ME-Sender: <xms:_NKcaRt_XOTF-o-_5LjLDIrqYbEREM-Zl4DokEDYYYnME9GvDAVqxQ>
-    <xme:_NKcaWmPGkUvLJaJbwEGgg4EevvAGRPvCOUjUKeeTAxkcRsVOQl5OH0E5FGj76H0x
-    ltEvYhObscVTqef0cyE-RI3W781BP9H4BYUDEirx_cxLojrdg>
-X-ME-Received: <xmr:_NKcaQmyPbTYgcEutw4lhHx6bPlo43rUcOxtVQ2Pn8rRqwrV2HikKa_FqJuEMFw7WjZN1wuTqCS-ZoXIr5sCX7yPikmOPg07T_b-e5XgGHuD>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeekgeefucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771885822; x=
+	1771893022; bh=QzPV/qCsvxJY4RwTgulk7KEWJKUjbc4FEPmhIim+IiA=; b=k
+	VmRdWfnIrkeJyEoqdscTtwVT706JFZqlgJWfXPtESrxAPRmLPhIxguvo3m9eCjv6
+	EPTSmJcXbrVXTs5wxxQMu6ZmrMxaXNlhXH7dMdg/HUQh8AnTHsQxs766764EN1K9
+	Pl1GUL3dFynomKEenFL8gRr/iWKUGU5xF9kdwsPUvtfjCTsias/z4Ora+NhB+HvA
+	/ONGi/I1SHx3V3FGSnEeiI/Mx0KOwlK6pqAhyw3udewuNZ+FQAVgUtLvg9jPIMof
+	K2/CDV2eimzzbpRZlM3ycw1rJJRGy8q7cNpOAt7S4CmaHcKQBeHi2YARveRlxsR/
+	Lt6IeYvaPpPsa8OcYhhPQ==
+X-ME-Sender: <xms:_tScaYCVOuOT5HF7SS7Ns-60gnJ9sHBVIc4G4rgk7eCI06DME4NG4g>
+    <xme:_tScaWrW5IwCYdtB8R1FACRpoo7NbI-dLI5fXlDaub2sLit8cTFp4OtrASLfWECHR
+    B0YKnggJSYi2Vo4mvXKq_CdfDjTDbbna361hTsCMUUZaCVRpg>
+X-ME-Received: <xmr:_tScaXbTFFTa5dkWNYh-O-hx7ORzbjajQ29KCg8vwjcV07r-8ojO9nWqJ9z0rLYt3WzMeuPRRRN1lRfkPawTdkgjLU-ER6jIBfbmMILB3mlk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeekgeegucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
     rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epieefhedthfefgfeigfefgeeujeetkefhleffkedvfeffieejudekueefheegtddtnecu
-    ffhomhgrihhnpehgihhthhhusgdrtghomhdpvhhfshdrmhgunecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnhhmrghilhdr
-    nhgvthdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhuthdprhgtphhtth
-    hopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepshgv
-    lhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtg
-    hksehsuhhsvgdrtgii
-X-ME-Proxy: <xmx:_NKcaRh_4a1NmDcThYSlt8o_SSi7gFLj9gjFEXGrKcxWZ2ox9udfOg>
-    <xmx:_NKcaSFeUZhSxrGOpi0bN5ef_NkRBr2Sf-JtVuhPIXeiTOBJVWYZZw>
-    <xmx:_NKcacavEbPR0orVJuQ27EGmxygwZIRZKvsrOd8XroQehwPD9jaKxA>
-    <xmx:_NKcaVMYaOWkqj7U9AIjEqMPtT1TkFOBUmnNbg5G684jXpoIdR_40A>
-    <xmx:_dKcaYkCkSSTDZx1SUaAwVyI1claiFN0jBCTiIsXy7GgOwOyBJdkdsP9>
+    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhr
+    tghpthhtohepjhgrtghksehsuhhsvgdrtgii
+X-ME-Proxy: <xmx:_tScaYGo_lqp-egiVcRdWUjPAhdxRr-P0HT0Gek5_qsPVsGfDLpXkA>
+    <xmx:_tScadZVvLvB_E-eV5b_oH55r9FAloGTyz4tjDrjkZiagukPs_ZL1A>
+    <xmx:_tScadfFBTM_fc4MAdPMac2eX6IsH3FJBHJWmkD9DMvxzQW5YAwsDQ>
+    <xmx:_tScaZDD1MGGGm2IS_KjTsY4Jp5l0Plp2q95xNlGhLq3BdTcMO1phA>
+    <xmx:_tScae7MQvlqGATc6P23ySuIK9WPMcHeQyrDKLc_2QLOT0hbBUadUWqj>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 23 Feb 2026 17:21:41 -0500 (EST)
+ 23 Feb 2026 17:30:16 -0500 (EST)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -103,12 +102,12 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: NeilBrown <neilb@ownmail.net>
-To: "Amir Goldstein" <amir73il@gmail.com>
-Cc: "Chris Mason" <clm@meta.com>, "Christian Brauner" <brauner@kernel.org>,
+To: "Chris Mason" <clm@meta.com>
+Cc: "Christian Brauner" <brauner@kernel.org>,
  "Alexander Viro" <viro@zeniv.linux.org.uk>,
  "David Howells" <dhowells@redhat.com>, "Jan Kara" <jack@suse.cz>,
  "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Miklos Szeredi" <miklos@szeredi.hu>, "Amir Goldstein" <amir73il@gmail.com>,
  "John Johansen" <john.johansen@canonical.com>,
  "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
  "Serge E. Hallyn" <serge@hallyn.com>,
@@ -118,277 +117,188 @@ Cc: "Chris Mason" <clm@meta.com>, "Christian Brauner" <brauner@kernel.org>,
  linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
  apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
  selinux@vger.kernel.org
-Subject: Re: [PATCH v2 09/15] ovl: Simplify ovl_lookup_real_one()
-In-reply-to:
- <CAOQ4uxirM8dW9rOw4SvGtfH-s0Eg9LGuFk1aZooMvEDc=2tbyA@mail.gmail.com>
+Subject: Re: [PATCH v2 12/15] ovl: change ovl_create_real() to get a new lock
+ when re-opening created file.
+In-reply-to: <20260223132424.105125-1-clm@meta.com>
 References: <20260223011210.3853517-1-neilb@ownmail.net>,
- <20260223011210.3853517-10-neilb@ownmail.net>,
- <20260223132027.4165509-1-clm@meta.com>,
- <CAOQ4uxirM8dW9rOw4SvGtfH-s0Eg9LGuFk1aZooMvEDc=2tbyA@mail.gmail.com>
-Date: Tue, 24 Feb 2026 09:21:40 +1100
-Message-id: <177188530015.8396.7140929443922458208@noble.neil.brown.name>
+ <20260223011210.3853517-13-neilb@ownmail.net>,
+ <20260223132424.105125-1-clm@meta.com>
+Date: Tue, 24 Feb 2026 09:30:14 +1100
+Message-id: <177188581436.8396.15474182964858193799@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm3,messagingengine.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19153-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19154-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[23];
-	FREEMAIL_CC(0.00)[meta.com,kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,canonical.com,paul-moore.com,namei.org,hallyn.com,gmail.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,lists.linux.dev,lists.ubuntu.com];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:email,ownmail.net:dkim,brown.name:replyto,brown.name:email,noble.neil.brown.name:mid,meta.com:email,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: 69A8B17E3A9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim,noble.neil.brown.name:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:email,ownmail.net:dkim]
+X-Rspamd-Queue-Id: 1FF9317E61D
 X-Rspamd-Action: no action
 
-On Tue, 24 Feb 2026, Amir Goldstein wrote:
-> On Mon, Feb 23, 2026 at 2:20=E2=80=AFPM Chris Mason <clm@meta.com> wrote:
-> >
-> > NeilBrown <neilb@ownmail.net> wrote:
-> > > From: NeilBrown <neil@brown.name>
-> > >
-> > > The primary purpose of this patch is to remove the locking from
-> > > ovl_lookup_real_one() as part of centralising all locking of directories
-> > > for name operations.
-> > >
-> > > The locking here isn't needed.  By performing consistency tests after
-> > > the lookup we can be sure that the result of the lookup was valid at
-> > > least for a moment, which is all the original code promised.
-> > >
-> > > lookup_noperm_unlocked() is used for the lookup and it will take the
-> > > lock if needed only where it is needed.
-> > >
-> > > Also:
-> > >  - don't take a reference to real->d_parent.  The parent is
-> > >    only use for a pointer comparison, and no reference is needed for
-> > >    that.
-> > >  - Several "if" statements have a "goto" followed by "else" - the
-> > >    else isn't needed: the following statement can directly follow
-> > >    the "if" as a new statement
-> > >  - Use a consistent pattern of setting "err" before performing a test
-> > >    and possibly going to "fail".
-> > >  - remove the "out" label (now that we don't need to dput(parent) or
-> > >    unlock) and simply return from fail:.
-> >
-> > Hi everyone,
-> >
-> > Amir asked me to run these through, and this commit was flagged.  I recen=
-tly
-> > changed the prompts to include some vfs knowledge:
+On Tue, 24 Feb 2026, Chris Mason wrote:
+> NeilBrown <neilb@ownmail.net> wrote:
+> > From: NeilBrown <neil@brown.name>
+> >=20
+> > When ovl_create_real() is used to create a file on the upper filesystem
+> > it needs to return the resulting dentry - positive and hashed.
+> > It is usually the case the that dentry passed to the create function
+> > (e.g.  vfs_create()) will be suitable but this is not guaranteed.  The
+> > filesystem may unhash that dentry forcing a repeat lookup next time the
+> > name is wanted.
+> >=20
 >=20
-> Thanks Chris!
+> Hi everyone,
 >=20
-> >
-> > https://github.com/masoncl/review-prompts/blob/main/kernel/subsystem/vfs.=
-md
-> >
-> > And I also put in some words to make it prefer reporting problems that mi=
-ght
-> > not be bugs, but that do violate some rule in the .md files.  This might
-> > be a false positive from that new shift toward blindly trusting the guide=
-s,
-> > but I'll let everyone here decide:
-> >
-> > commit d1bfcef048896cdc9e4c57e3249b6ad344d64c02
-> > Author: NeilBrown <neil@brown.name>
-> >
-> > ovl: Simplify ovl_lookup_real_one()
-> >
-> > This patch removes locking from ovl_lookup_real_one() and reorganizes the
-> > control flow. The function now uses lookup_noperm_unlocked() instead of
-> > lookup_noperm() and performs consistency validation after the lookup rath=
-er
-> > than holding a lock during the operation.
-> >
-> > > diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
-> > > index 83f80fdb15674..b448fc9424b64 100644
-> > > --- a/fs/overlayfs/export.c
-> > > +++ b/fs/overlayfs/export.c
-> > > @@ -349,69 +349,64 @@ static struct dentry *ovl_dentry_real_at(struct d=
-entry *dentry, int idx)
-> > >       return NULL;
-> > >  }
-> > >
-> > > -/*
-> > > - * Lookup a child overlay dentry to get a connected overlay dentry who=
-se real
-> > > - * dentry is @real. If @real is on upper layer, we lookup a child over=
-lay
-> > > - * dentry with the same name as the real dentry. Otherwise, we need to=
- consult
-> > > - * index for lookup.
-> > > +/**
-> > > + * ovl_lookup_real_one -  Lookup a child overlay dentry to get an over=
-lay dentry whose real dentry is given
-> > > + * @connected: parent overlay dentry
-> > > + * @real: given child real dentry
-> > > + * @layer: layer in which @real exists
-> > > + *
-> > > + *
-> > > + * Lookup a child overlay dentry in @connected with the same name as t=
-he @real
-> > > + * dentry.  Then check that the parent of the result is the real dentr=
-y for
-> > > + * @connected, and @real is the real dentry for the result.
-> > > + *
-> > > + * Returns:
-> > > + *   %-ECHILD if the parent of @real is no longer the real dentry for =
-@connected.
-> > > + *   %-ESTALE if @real is no the real dentry of the found dentry.
-> >                                        ^^
-> > There's a typo here: "is no the" should be "is not the".
-> >
-> > > + *   Otherwise the found dentry is returned.
-> > >   */
-> > >  static struct dentry *ovl_lookup_real_one(struct dentry *connected,
-> > >                                         struct dentry *real,
-> > >                                         const struct ovl_layer *layer)
-> > >  {
-> > > -     struct inode *dir =3D d_inode(connected);
-> > > -     struct dentry *this, *parent =3D NULL;
-> > > +     struct dentry *this;
-> > >       struct name_snapshot name;
-> > >       int err;
-> > >
-> > >       /*
-> > > -      * Lookup child overlay dentry by real name. The dir mutex protec=
-ts us
-> > > -      * from racing with overlay rename. If the overlay dentry that is=
- above
-> > > -      * real has already been moved to a parent that is not under the
-> > > -      * connected overlay dir, we return -ECHILD and restart the looku=
-p of
-> > > -      * connected real path from the top.
-> > > -      */
-> > > -     inode_lock_nested(dir, I_MUTEX_PARENT);
-> > > -     err =3D -ECHILD;
-> > > -     parent =3D dget_parent(real);
-> > > -     if (ovl_dentry_real_at(connected, layer->idx) !=3D parent)
-> > > -             goto fail;
-> > > -
-> > > -     /*
-> > > -      * We also need to take a snapshot of real dentry name to protect=
- us
-> > > +      * We need to take a snapshot of real dentry name to protect us
-> > >        * from racing with underlying layer rename. In this case, we don=
-'t
-> > >        * care about returning ESTALE, only from dereferencing a free na=
-me
-> > >        * pointer because we hold no lock on the real dentry.
-> > >        */
-> > >       take_dentry_name_snapshot(&name, real);
-> > > -     /*
-> > > -      * No idmap handling here: it's an internal lookup.
-> > > -      */
-> > > -     this =3D lookup_noperm(&name.name, connected);
-> > > +     this =3D lookup_noperm_unlocked(&name.name, connected);
-> > >       release_dentry_name_snapshot(&name);
-> > > +
-> > > +     err =3D -ECHILD;
-> > > +     if (ovl_dentry_real_at(connected, layer->idx) !=3D real->d_parent)
-> > > +             goto fail;
-> > > +
-> >
-> > A subsystem pattern flags this as potentially concerning: the VFS subsyst=
-em
-> > guide indicates that TOCTOU validation checking d_parent should also check
-> > d_unhashed() because a dentry can be unhashed (removed from dcache by
-> > concurrent operations) while its d_parent pointer remains unchanged.
-> >
-> > The old code held inode_lock_nested(dir, I_MUTEX_PARENT) during the entire
-> > lookup and validation, which serialized with operations that could unhash=
- the
-> > dentry. The new lockless pattern creates a window where:
-> >
-> > 1. lookup_noperm_unlocked() completes and returns dentry `this`
-> > 2. A concurrent unlink/remove operation unhashes `this`
-> > 3. The d_parent validation passes (parent pointer unchanged)
-> > 4. The function returns an unhashed dentry
-> >
-> > Other overlayfs code uses the complete pattern. For example, in
-> > ovl_lock_rename_workdir() at fs/overlayfs/util.c:
-> >
-> >     if (work->d_parent !=3D workdir || d_unhashed(work)) {
-> >         ...
-> >     }
-> >
-> > Could this validation miss a race where the dentry is unhashed but d_pare=
-nt
-> > still matches? The subsequent checks (!this->d_inode for -ENOENT,
-> > wrong real dentry for -ESTALE) might catch some cases, but is that
-> > sufficient for all the scenarios where an unhashed dentry could cause
-> > problems?
-> >
+> Amir suggested I run these through, and this commit was flagged:
 >=20
-> It's a very good comment and very important rule to check, since
-> we have at least 3 fix commits on breaking this rule, but as this
-> code is utterly confusing to most human I do not blame LLM for getting
-> confused here.
+> commit 62d49d1e44667e4f93bec415faabec5526992ac0
+> Author: NeilBrown <neil@brown.name>
 >=20
-> The lock not taken on 'dir' which is the overlayfs inode and the checked
-> 'real' dentry is on the underlying fs.
+> ovl: change ovl_create_real() to get a new lock when re-opening created fil=
+e.
 >=20
-> Therefore, the check of real->d_parent was not protected in old code as
-> well as in new code - it is a mere best effort sanity check, so I think
-> there is no added risk here.
+> This commit changes ovl_create_real() to drop the directory lock and
+> reacquire a new lock for lookup when the created dentry is unhashed. It
+> also removes ovl_lookup_upper() which is no longer used.
 >=20
-> Neil, do you agree?
+> Signed-off-by: NeilBrown <neil@brown.name>
+>=20
+> > diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
+> > index c4feb89ad1e39..6285069ccc590 100644
+> > --- a/fs/overlayfs/dir.c
+> > +++ b/fs/overlayfs/dir.c
+> > @@ -159,7 +159,8 @@ int ovl_cleanup_and_whiteout(struct ovl_fs *ofs, stru=
+ct dentry *dir,
+> >  }
+> >
+> >  struct dentry *ovl_create_real(struct ovl_fs *ofs, struct dentry *parent,
+> > -			       struct dentry *newdentry, struct ovl_cattr *attr)
+> > +			       struct dentry *newdentry, struct qstr *qname,
+> > +			       struct ovl_cattr *attr)
+> >  {
+> >  	struct inode *dir =3D parent->d_inode;
+> >  	int err;
+> > @@ -221,19 +222,29 @@ struct dentry *ovl_create_real(struct ovl_fs *ofs, =
+struct dentry *parent,
+> >  		struct dentry *d;
+> >  		/*
+> >  		 * Some filesystems (i.e. casefolded) may return an unhashed
+> > -		 * negative dentry from the ovl_lookup_upper() call before
+> > +		 * negative dentry from the ovl_start_creating_upper() call before
+> >  		 * ovl_create_real().
+> >  		 * In that case, lookup again after making the newdentry
+> >  		 * positive, so ovl_create_upper() always returns a hashed
+> > -		 * positive dentry.
+> > +		 * positive dentry.  We lookup using qname which should be
+> > +		 * the same name as newentry, but is certain not to change.
+> > +		 * As we have to drop the lock before the lookup a race
+> > +		 * could result in a lookup failure.  In that case we return
+> > +		 * an error.
+> >  		 */
+> > -		d =3D ovl_lookup_upper(ofs, newdentry->d_name.name, parent,
+> > -				     newdentry->d_name.len);
+> > -		dput(newdentry);
+> > -		if (IS_ERR_OR_NULL(d))
+> > +		end_creating_keep(newdentry);
+> > +		d =3D ovl_start_creating_upper(ofs, parent, qname);
+> > +
+> > +		if (IS_ERR_OR_NULL(d)) {
+> >  			err =3D d ? PTR_ERR(d) : -ENOENT;
+> > +		} else if (d->d_inode !=3D newdentry->d_inode) {
+> > +			err =3D -EIO;
+> > +			dput(newdentry);
+> > +		} else {
+> > +			dput(newdentry);
+> >  			return d;
+> > +		}
+> > +		return ERR_PTR(err);
+> >  	}
+>=20
+> Does this leak the newdentry reference when IS_ERR_OR_NULL(d) is true?
+>=20
+> The code now calls end_creating_keep(newdentry) which keeps the reference,
+> then calls ovl_start_creating_upper(). If that returns an error or NULL,
+> the function returns ERR_PTR(err) without cleaning up newdentry:
+>=20
+> 	end_creating_keep(newdentry);
+> 	d =3D ovl_start_creating_upper(ofs, parent, qname);
+>=20
+> 	if (IS_ERR_OR_NULL(d)) {
+> 		err =3D d ? PTR_ERR(d) : -ENOENT;
+> 	} ...
+> 	return ERR_PTR(err);
+>=20
+> The old code always went through the 'out:' label which called
+> end_creating(newdentry) on error. The new code bypasses that cleanup.
+>=20
+>=20
+> Does this leak both the parent lock and the dentry 'd' when the lookup
+> returns a different inode?
+>=20
+> When d->d_inode !=3D newdentry->d_inode, the code sets err =3D -EIO and cal=
+ls
+> dput(newdentry), but doesn't clean up 'd':
+>=20
+> 	} else if (d->d_inode !=3D newdentry->d_inode) {
+> 		err =3D -EIO;
+> 		dput(newdentry);
+> 	} ...
+> 	return ERR_PTR(err);
+>=20
+> The dentry 'd' was returned by ovl_start_creating_upper() with the parent
+> directory lock held. The code needs to call end_creating(d) to release the
+> lock via end_dirop()->inode_unlock() and release the dentry reference via
+> end_dirop()->dput().
+>=20
+>=20
 
-Yes, I agree.
+Yes, that code is rather messed up - thanks.
 
-The relevant part of Chris' prompt is:
+I've made it:
 
- When a dentry reference is obtained without holding the parent inode
- lock (e.g., via lookup, creation, or cached reference), and the lock is
- acquired later, a TOCTOU window exists=20
+		end_creating_keep(newdentry);
+		d =3D ovl_start_creating_upper(ofs, parent, qname);
 
-"the lock is acquired later" is significant.  In this code the lock
-hasn't been acquired so the rule doesn't apply.
-
-In this code I don't think we are testing real->d_parent, we are testing
-ovl_dentry_real_at(connected, layer->idx) and making sure it is
-consistent.
-It is true that "real" might have been renamed and that would cause a
-failure too, but that isn't really interesting.  It could be renamed
-just after the test just as easily (as we don't hold any locks).
-In general overlayfs doesn't try to handle independent changes in the
-underlying filesystems beyond "don't crash".
-
-So it was a good comment to get, but I don't think there is any need to
-change the code (though I have fixed the typo).
+		if (IS_ERR_OR_NULL(d)) {
+			err =3D d ? PTR_ERR(d) : -ENOENT;
+		} else if (d->d_inode !=3D newdentry->d_inode) {
+			err =3D -EIO;
+		} else {
+			dput(newdentry);
+			return d;
+		}
+		end_creating(d);
+		dput(newdentry);
+		return ERR_PTR(err);
 
 Thanks,
 NeilBrown
-
-
->=20
-> Thanks,
-> Amir.
->=20
-
 
