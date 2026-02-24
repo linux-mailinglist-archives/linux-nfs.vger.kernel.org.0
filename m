@@ -1,102 +1,103 @@
-Return-Path: <linux-nfs+bounces-19169-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19170-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eBN/Ce6enWnwQgQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19169-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 13:51:58 +0100
+	id sKXGEBOfnWnwQgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19170-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 13:52:35 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 517141873D4
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 13:51:57 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7D151873F2
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 13:52:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DD4173042FFF
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 12:51:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 454683051704
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 12:52:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EE1739A7E8;
-	Tue, 24 Feb 2026 12:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA5F339A81D;
+	Tue, 24 Feb 2026 12:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2ouxBUa";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="QgvAzbeX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bi9yidcE";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/mQQt7/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8EFE555
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 12:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC8F39A7FF
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 12:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771937506; cv=none; b=hpm1AfWbEbTQPwN96gkiSydoWBg5bKeoam9TVxkVvShMk4QZcu80E5FVeafzrZYyDlmaKJhJx0CjRTpQdesDtdV4Q36j1MLX2tTOWp1EhKQYJkpmcyPHsfJRkDd3/2iJ9N0XdvwN7KJsJ07R5kvpAu+IdqKtX/zeNFcD6d2HpY0=
+	t=1771937537; cv=none; b=I8weEBYHQ1i604kejdDLbuw2eLYvn302HHAQBA5k8m2fkuH40XgziAIlppLc22O7tSa6aqhG3KxJL43yPuJX98KwxujI9DAVdDkl2T0DrHkXf043cef28ZC+sRy771Z2olV3ENjmfojASoX40gg+qh676arSZY3oqO6HNDoiM9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771937506; c=relaxed/simple;
-	bh=uMmL1+qYrdiy9K42L2o4nVazqnruxbQ9nVegi9wuO4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TgOb1h+wtPq9UX4Bbf6nfHaYCMHa2eiFzZChupArKOEdA09K9bH+9ggH74Gbbgqk9QqlNcD/VLCErVAwDKpaS2U9yzC9kAz7L0S0SQgJTvy0sykTA7i76tPwkZG0LMnLg165kX/YYcSK06NFtseR9eUvkmi9/5q6WOiDidabkAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2ouxBUa; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=QgvAzbeX; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1771937537; c=relaxed/simple;
+	bh=Xu0MW6PHLv6SM2Gre5O763nqnX+HyGQsvYaPy8h74AI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Tyhud68PT8SEe39KL9fLzYIP+0RR7jaSFiUkQtisHt355kZdO5/Aryty/eXiq4pT2ppp39SlFzY5m/XySn+YI0o+7LX98tiEdciBhPkwu5EqoersLoxFMl7tpSeNhRX3BVAN33+RdV8cVc4haoJNOVq+UvQ8dNK+xlFExEDpzJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bi9yidcE; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=J/mQQt7/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771937503;
+	s=mimecast20190719; t=1771937535;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y0ava7PHbpy0bjI5XfoeIKz3rLDrQzQw02LVHHRDRkQ=;
-	b=A2ouxBUai4ZcTppdnJz3avcG3vtkV0h7nkOr1PtoE94+pf647P0NhrzfO7xpXzyty1xW7U
-	B37ZfnHrr6CYVOQPG7d0Ts19LXbgq8SeuPsF1YLnvqlk3yxsQE0hTQCfasix4poI3v8Yyt
-	iPoROI9A5D2rPnLChQkSD03mAsSk5/0=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=nunSLlrfo0aHIx2GjSNZyErxKKsKlHCvHB5gz5WdYoY=;
+	b=bi9yidcEwRDfzgdAhxIxlPsMWquivK6b3nn2ifKc3c2CBEou3+XQaRQNt2a5sPuVHY9Ofq
+	7RCa+hRMrva8cdrz5AtTQrazUabItez7ktDmE0nm558mVK70CPbdSpe1x3/eg+mZaxyEvN
+	zWVjRTFTJ7JLIWL325k4Oj8wvhYK4Js=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-477-UT7Gup8iMEiQo-MAm4CDwg-1; Tue, 24 Feb 2026 07:51:42 -0500
-X-MC-Unique: UT7Gup8iMEiQo-MAm4CDwg-1
-X-Mimecast-MFC-AGG-ID: UT7Gup8iMEiQo-MAm4CDwg_1771937501
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-897021ebe91so543522776d6.0
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 04:51:42 -0800 (PST)
+ us-mta-380-0M_Ra2u0Mr6Jcs1OQjU89g-1; Tue, 24 Feb 2026 07:52:13 -0500
+X-MC-Unique: 0M_Ra2u0Mr6Jcs1OQjU89g-1
+X-Mimecast-MFC-AGG-ID: 0M_Ra2u0Mr6Jcs1OQjU89g_1771937533
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50341fddb89so573609951cf.3
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 04:52:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1771937501; x=1772542301; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1771937532; x=1772542332; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y0ava7PHbpy0bjI5XfoeIKz3rLDrQzQw02LVHHRDRkQ=;
-        b=QgvAzbeX/WLwjZUd6nOAi8/lZPoeujNQ9uId9Wcl4JGLSvyaSwa0q4Hv21kIKDUnWk
-         jS3zlG0ROIHs0FGkDWHiMIR8QcvuCT/svm63RyjIgQpljzUUASsU1k8dNErhGm/8zIi5
-         MB2/aM5LUfbAIk90dnThyuEvo4ufldqJUrroQkpHWR+b1aUvglwN7DHz2OZwkid5t4Qk
-         Nas68qosRsfpYgcUgz/nJjtq7twrPpWoa7ReKD3qxkE47oVUFWLb3sAnGh0N5GlId8uc
-         FuCFPAv5cfwz3c9JCOFP/jEzmq4KD71H/i8029QBYFE+fHdZ8TQuOiG3mbzeYc7HCF9T
-         DQCQ==
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nunSLlrfo0aHIx2GjSNZyErxKKsKlHCvHB5gz5WdYoY=;
+        b=J/mQQt7/atzTzfVVz2DpARGdGDxeBakO//TJrdRKiyyTfijdEtZf6x/ROOWqkfxnPt
+         dOFqjzMY8v+Ss4AQXhKZp1MAAhm4WLNMOAcFlhn+fKlqWhp4G2Pj752PbetGlHS2666H
+         1T8x5yOOv3ayQ3UMsiiTmhsZTULxmSYt588NQyj9IPeoquFdm0vsqMoJ0BcnRSbcB6CP
+         eb4lyKCDdM9G+UFJj96jHqzQUrDduO/nWJCa+pyxx8HQWpuXeFFlwMxp2oMiidPz9b1W
+         E2COhQf4devosbmLwmJcKHSmioXFMEwlaMT8FgaMVlfZRM9f8zYyJGcmffT3q9YV9u3a
+         5h2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771937501; x=1772542301;
+        d=1e100.net; s=20230601; t=1771937532; x=1772542332;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y0ava7PHbpy0bjI5XfoeIKz3rLDrQzQw02LVHHRDRkQ=;
-        b=GxffJe9xPXLJzdG5sWEVGRTkHpBq36FOvTvt643qX29PAlSsOYRxk5T8T1zKWGQflx
-         ehmbhDeyQfH0+qmSlhxAlpIuWcZFE6HWwi/4TryU3PEHfRfuARtyQ81bh2fad7fXt4gI
-         LtWJ234uvdzAX6CjgKyUTrxBeikpIC+BzRX+LOfTYIkTgc1dOGEmhW2i5KWoNeteajJA
-         xRSXAWBtoArzLQ8CniiFnmiWubk0cqYaNHHkeNGB6aBVH9l0h9tuuyW7IjqDnNOFFQzf
-         7yHwM0SApZkyrbx+zfQYpkY5ftB6C/v20e5/7ZoyE13PdwjQHngWtM+/8X4a65UVBrDO
-         rWOQ==
-X-Gm-Message-State: AOJu0Yy2eOTo/B29sEOuQzRJyxPZLUAaZLnZHlfLhuBi+SEZDTZxUb8Y
-	dXvoo4MvrOqPOnVaRC6tErqYDornKGoKK4/Trlz072emO4nz66u7xldCYuxUrB5VQzV20LnuqCw
-	ikhiOiwG1AkdEv+yzhjiabc1ev6s84PIUGJJjygSJKqSFcZH653Caz14L/ULQnw==
-X-Gm-Gg: ATEYQzxTOpwQmDUd2Rq/UURku9wTuwk+6ejC79qEhmLnONrKd9h9c3SSRKIzRTQ8G+M
-	6d+f/HnPa2Q5EFYFKSgBCwgatfAZvJH9dMd+1KUZF1Q6eEOJZoY/d9yPeorHquUG4meKYJGP5yg
-	+uHMUjJhUJSbYT6lnDTZeAbyCWa3p0V47hnkLQIr26nboHtLjO8S+jGL8zKVCzLHkzhk9PTCJB4
-	zR8XDB2chh0cnaEFASjM0w12KAfF622JqqlIDn+7rHHAhLoy0cNSw4/945EMXJd9EBeRK74lw/c
-	K3o3lb/8tqWom+POa3MaAhjUIia9YjeZhJxETxOcr5JJbUOc5KYvr/RMey36RQ1zlK55Qs/Dr97
-	G1pEkgN2eSIqVZLZzOqOh
-X-Received: by 2002:a05:6214:1245:b0:88e:6db7:f999 with SMTP id 6a1803df08f44-89979c561c9mr175290956d6.6.1771937501401;
-        Tue, 24 Feb 2026 04:51:41 -0800 (PST)
-X-Received: by 2002:a05:6214:1245:b0:88e:6db7:f999 with SMTP id 6a1803df08f44-89979c561c9mr175290546d6.6.1771937500805;
-        Tue, 24 Feb 2026 04:51:40 -0800 (PST)
+        bh=nunSLlrfo0aHIx2GjSNZyErxKKsKlHCvHB5gz5WdYoY=;
+        b=JGGjoBQ2h50EJgRVtORkc70ThGhDROG2/NZM3QwimzSrFgew+1+NCBhDPv4cS/mbSE
+         F0Wb1Ks+eC08oIj6MnvEZrB+6DquhiprNKBSWi/cJUI2QeK/hdHZQgcimbhoy7oCEpfc
+         LAtA63EqRTZO+5/fM1Gg+paeM09Fu1OrSJRh8kH6ys2F9sBCp1adU7WJ3EXoQ1WqVLTu
+         ZDvdYGHYu7a+C3U6zWWNUTzRs7/22L+g616FRwk/GJIT5vvoB2kF6iaXuLeFi0ZN4Fl6
+         bQsDfrgsF5+f37m9fg/EhboEstpz2/bDAIY9Y5HuJlxWX9+Bz2qvNt6UOhXC/+DfoTgn
+         uzXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbGX0IMbUvetP14f2p67442UOWZXHpCTptB0rv4P3tJAMZaMvNoNO8l/O3HhUThZECYaYAoVueLmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwyaVOIfxGnRxTeOTOtHiDzV1CUgjI3gtrcXC+Uw9cd/Qy5wV2
+	l9grkJdX18kWTsOTOejtXAxnJ9bVTBWbbxZljAOH9mVzHBsFyYhG3B0nK5rD87b/PTqAl8E7aD1
+	9wiD4woAL5nIpssogf9L7ronZUnFKeF5zvFJWaH7fTPgL7jXLf900tGKHqwvfbzKQdVBkvQ==
+X-Gm-Gg: AZuq6aLU7THG9AVf5DoAsaqXw23996UyoYdfrf+kGHTDGRTEVudsgsJGNkkGS9G7Ezu
+	VfLW8/965Wp+9ZLqkyYWm57K+c3X6kyROj5md5FhXkN3+7y+JwHv+I7eqNYp1GHP6hVa+gsS8iI
+	JH4jj3zPPbxw5tvIX70K6jqYJ2Z+4bncOqCU4uz1/ro3OwOfNeMFU/wvM+2xpCAqfYSkgrQowjA
+	9LLTMsbTOlWn0oE/71MzYa3jTlr2mEQ53V8BZJxxZde0hNrp8PzWsJcLiAJ2mVN+cRuwdMRmaZE
+	TX80PJHkhsVz2+ihW0KtdCsJMFjuCnwWYSibcWNvObiIzojatVWiI+TlKL1JXNqWrVHAqR8r/HK
+	ckX5JeL6I8uip4j5J1BlQ
+X-Received: by 2002:a05:620a:40c4:b0:8cb:4cc2:c5d3 with SMTP id af79cd13be357-8cb8ca93042mr1533755185a.73.1771937532375;
+        Tue, 24 Feb 2026 04:52:12 -0800 (PST)
+X-Received: by 2002:a05:620a:40c4:b0:8cb:4cc2:c5d3 with SMTP id af79cd13be357-8cb8ca93042mr1533753285a.73.1771937532000;
+        Tue, 24 Feb 2026 04:52:12 -0800 (PST)
 Received: from [172.31.1.12] ([70.105.240.20])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d54000fsm96108981cf.10.2026.02.24.04.51.38
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb8d0461a5sm1010717685a.1.2026.02.24.04.52.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Feb 2026 04:51:39 -0800 (PST)
-Message-ID: <abcff839-6bf9-4ab9-916b-54e407ddbb19@redhat.com>
-Date: Tue, 24 Feb 2026 07:51:37 -0500
+        Tue, 24 Feb 2026 04:52:11 -0800 (PST)
+Message-ID: <bed68038-34eb-4b08-92d0-06c2a1f817fa@redhat.com>
+Date: Tue, 24 Feb 2026 07:52:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -104,140 +105,103 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfsrahead: enable event-driven mountinfo monitoring
-To: Aaron Tomlin <atomlin@atomlin.com>, tbecker@redhat.com
-Cc: linux-nfs@vger.kernel.org
-References: <20260211190122.3878196-1-atomlin@atomlin.com>
+Subject: Re: [PATCH 1/2] nfs-utils: mount.nfs: fix discards const from pointer
+ target
+To: Rudi Heitbaum <rudi@heitbaum.com>, linux-nfs@vger.kernel.org
+References: <aZFwJmiqqLgWYSl6@1eac07209f0d>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20260211190122.3878196-1-atomlin@atomlin.com>
+In-Reply-To: <aZFwJmiqqLgWYSl6@1eac07209f0d>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
+	TAGGED_FROM(0.00)[bounces-19170-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19169-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 517141873D4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C7D151873F2
 X-Rspamd-Action: no action
 
 
 
-On 2/11/26 2:01 PM, Aaron Tomlin wrote:
-> The nfsrahead utility relies on parsing "/proc/self/mountinfo" to
-> correlate a device number with a specific NFS mount point. However, due
-> to the asynchronous nature of system initialisation, the relevant entry
-> in mountinfo may not be immediately available when the tool is executed.
+On 2/15/26 2:05 AM, Rudi Heitbaum wrote:
+> dev is passed by nfs_parse_devname to nfs_parse_... as a copy of the
+> device name, the parser destructively modifies dev, so pass as non const
+> so that it can be modified without warning.
 > 
-> Currently, the utility employs a naive polling mechanism, retrying the
-> search five times with a fixed 50ms delay (totalling 250ms). This
-> approach proves brittle on systems under high load or during
-> distinctively slow boot sequences, where the population of the mount
-> table may exceed this brief window. Consequently, nfsrahead fails to
-> configure the readahead value.
+> fixes:
+>      parse_dev.c: In function 'nfs_parse_simple_hostname':
+>      parse_dev.c:89:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>         89 |         colon = strchr(dev, ':');
+>            |               ^
+>      parse_dev.c:100:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>        100 |         comma = strchr(dev, ',');
+>            |               ^
+>      parse_dev.c: In function 'nfs_parse_square_bracket':
+>      parse_dev.c:146:16: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>        146 |         cbrace = strchr(dev, ']');
+>            |                ^
 > 
-> To mitigate this race condition and improve robustness, update
-> get_device_info() to utilise the libmount monitoring API.
-> 
-> The new implementation:
-> 
->      1.	Initialises a monitor on /proc/self/mountinfo using
-> 	mnt_new_monitor().
-> 
->      2.	Replaces the fixed polling loop with mnt_monitor_wait(),
-> 	allowing the process to sleep until the Linux kernel notifies
-> 	userspace of a change to the mount table.
-> 
->      3.	Increases the maximum wait time to 10 seconds (MNT_NM_TIMEOUT),
-> 	significantly reducing the likelihood of a timeout failure
-> 	whilst ensuring the tool returns immediately once the mount
-> 	appears.
-> 
->      4.	Retains the original polling logic as a fallback mechanism
-> 	should the monitor fail to initialise.
-> 
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> Signed-off-by: Rudi Heitbaum <rudi@heitbaum.com>
 Committed... (tag: nfs-utils-2-8-6-rc2)
 
 steved.
 > ---
->   tools/nfsrahead/main.c | 35 ++++++++++++++++++++++++++++++++++-
->   1 file changed, 34 insertions(+), 1 deletion(-)
+>   utils/mount/parse_dev.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/nfsrahead/main.c b/tools/nfsrahead/main.c
-> index b7b889ff..64953346 100644
-> --- a/tools/nfsrahead/main.c
-> +++ b/tools/nfsrahead/main.c
-> @@ -16,6 +16,7 @@
->   
->   #define CONF_NAME "nfsrahead"
->   #define NFS_DEFAULT_READAHEAD 128
-> +#define MNT_NM_TIMEOUT 10000
->   
->   /* Device information from the system */
->   struct device_info {
-> @@ -117,7 +118,39 @@ out_free_device_info:
->   
->   static int get_device_info(const char *device_number, struct device_info *device_info)
+> diff --git a/utils/mount/parse_dev.c b/utils/mount/parse_dev.c
+> index 2ade5d5d..a6354bba 100644
+> --- a/utils/mount/parse_dev.c
+> +++ b/utils/mount/parse_dev.c
+> @@ -79,7 +79,7 @@ static int nfs_pdn_missing_brace_err(void)
+>   /*
+>    * Standard hostname:path format
+>    */
+> -static int nfs_parse_simple_hostname(const char *dev,
+> +static int nfs_parse_simple_hostname(char *dev,
+>   				     char **hostname, char **pathname)
 >   {
-> -	int ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-> +	int ret;
-> +	struct libmnt_monitor *mn = NULL;
-> +	int timeout_ms = MNT_NM_TIMEOUT;
-> +
-> +	ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-> +	if (ret == 0)
-> +		return 0;
-> +
-> +	mn = mnt_new_monitor();
-> +	if (!mn)
-> +		goto fallback;
-> +
-> +	if (mnt_monitor_enable_kernel(mn, 1) < 0) {
-> +		mnt_unref_monitor(mn);
-> +		goto fallback;
-> +	}
-> +
-> +	while (timeout_ms > 0) {
-> +		int rc = mnt_monitor_wait(mn, timeout_ms);
-> +		if (rc > 0) {
-> +			ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-> +			if (ret == 0) {
-> +				mnt_unref_monitor(mn);
-> +				return 0;
-> +			}
-> +		} else {
-> +			break;
-> +		}
-> +	}
-> +	mnt_unref_monitor(mn);
-> +	return ret;
-> +
-> +fallback:
->   	for (int retry_count = 0; retry_count < 5 && ret != 0; retry_count++) {
->   		usleep(50000);
->   		ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
+>   	size_t host_len, path_len;
+> @@ -134,7 +134,7 @@ static int nfs_parse_simple_hostname(const char *dev,
+>    * There could be anything in between the brackets, but we'll
+>    * let DNS resolution sort it out later.
+>    */
+> -static int nfs_parse_square_bracket(const char *dev,
+> +static int nfs_parse_square_bracket(char *dev,
+>   				    char **hostname, char **pathname)
+>   {
+>   	size_t host_len, path_len;
+> @@ -185,7 +185,7 @@ static int nfs_parse_square_bracket(const char *dev,
+>    * with the mount request and failing with a cryptic error message
+>    * later.
+>    */
+> -static int nfs_parse_nfs_url(__attribute__((unused)) const char *dev,
+> +static int nfs_parse_nfs_url(__attribute__((unused)) char *dev,
+>   			     __attribute__((unused)) char **hostname,
+>   			     __attribute__((unused)) char **pathname)
+>   {
 
 
