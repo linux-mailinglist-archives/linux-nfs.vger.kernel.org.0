@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-19185-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19186-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gFl/M+blnWlDSgQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19185-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:54:46 +0100
+	id iPwjDC7mnWlDSgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19186-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:55:58 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E6D918ACA5
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:54:46 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6AE918ACF7
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:55:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 26C4C303900F
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 17:54:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0846A303E6BB
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 17:55:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C663A7F5F;
-	Tue, 24 Feb 2026 17:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1BC13A9628;
+	Tue, 24 Feb 2026 17:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FJx2QJD7"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TsOFVTHF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2741F3A9D8D;
-	Tue, 24 Feb 2026 17:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631EC3A7F5F;
+	Tue, 24 Feb 2026 17:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771955684; cv=none; b=pTZH7618R20J0N3kcrtxt7bdIujqORuZloy6MCAett/IiUcLfEcYUsXvXRcr6QVq7DAb9cwte8CH8STxIv4uz4upAWnlvPz2Rjx/ri87dc9ndX7eRmo+2x/6LN2SEK20pA45kzcqfSMfA5hmFthHGESg+HD1stvYomAEv9LSrK4=
+	t=1771955756; cv=none; b=fV63CPmLEgxLU6QJxdtaTymaiy2zJp7V/8VmrqiKspmtL4jvAboosRyI9EY9RTGP5u4B94p1mf+eJ5xPl1XMtVjVDwZ6Vvn6sgfXKb/smz6RdjhUGSBpw75nIPoIJbqtx6snRFuKVHRWkOHHDuowtNkqsj5O96M3+DGH3wkhUSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771955684; c=relaxed/simple;
-	bh=sRojY1dmgu1SyxAfQQtY2z7zl3cRmyWOWNS/bWU3SAc=;
+	s=arc-20240116; t=1771955756; c=relaxed/simple;
+	bh=98IuLBbUZjwROztS4gFmszZmMvMreP3SfmF0X5PeUb8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZcQV8WhVFq9AaIBmoN0vRIfOYvgrrwLBcu/Hx/1qLExZLuhRaudngHW4whdyP6EIE66K20Jriy5/Fim5+p+SiUa26mKjF6OeVrSaEsnsWiL1w9UjT1MB5Ej1IOUvsJmhckOgZN4FdaQu6FS+7fKq6noM0FajDOD1QerZu2hkP44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FJx2QJD7; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqW0faxukprhJ67712h+7xqyNYJ/OrlWrwpTX2HOKLhEllgURv1p75e+YikF9ZCh7TgomcO+Fl8Sp+EFakZvlhIjks/mTHGC6bEF97atmeHKnI7PZSPfe36+7YoJyV/hDVUvSGqnf8SgPhRAyeFQs/A5/C1j1P9jViBAgLQB+bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TsOFVTHF; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -39,24 +39,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QXigi2nK3SDfHh3A5lurODPTPbH1RaxAQPTqnpmP9o8=; b=FJx2QJD7ypH2/wfmwtUXNWGJ8s
-	FgtvcOhUqzTU+pJbur60tTSCjHqi/SXLaGUFg75X4KtCWcjkXW0zwjuOek2MTFs1HZISfuz8T4Nrq
-	fHtKNOQJZe2QirywIEtz0eZo6usDLMjbOtdVZ9LrlDB/Xi0HNFmyq315djUaQLvUy4bs=;
+	bh=sd3o1yQOPLA4LCRvfJKT0MuX1lJbSN5LQG5t+uQCyLQ=; b=TsOFVTHFa3hMinSo01EQicgq6L
+	1HeI5/nzl5bgK7QHoiQSxwPzSJ9a/BV0XIDwqYOFrvNHbKz4WKRswi7BECg+rpHmvXeCcuju1NpMP
+	cfenXb3JL+IrIrO9si7PIeVES9DOjLv4Pi1IXXPWjCdmwhrloApsRQ6xc0fSt975V3gE=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1vuwcF-008dan-Ir; Tue, 24 Feb 2026 18:54:35 +0100
-Date: Tue, 24 Feb 2026 18:54:35 +0100
+	id 1vuwdR-008dc0-BI; Tue, 24 Feb 2026 18:55:49 +0100
+Date: Tue, 24 Feb 2026 18:55:49 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Sean Chang <seanwascoding@gmail.com>
 Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
 	trond.myklebust@hammerspace.com, anna@kernel.org,
 	netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] nfs: fix unused variable warning when
- CONFIG_SUNRPC_DEBUG is disabled
-Message-ID: <55375148-e26f-4d62-8690-c0eae8bb1b39@lunn.ch>
+Subject: Re: [PATCH v3 2/2] net: macb: use ethtool_sprintf to fill ethtool
+ stats strings
+Message-ID: <4cbcc1ba-7850-4dee-b563-22e8ac2ca0d0@lunn.ch>
 References: <20260224165435.17648-1-seanwascoding@gmail.com>
- <20260224165435.17648-2-seanwascoding@gmail.com>
+ <20260224165435.17648-3-seanwascoding@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,25 +65,25 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260224165435.17648-2-seanwascoding@gmail.com>
+In-Reply-To: <20260224165435.17648-3-seanwascoding@gmail.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19185-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19186-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[lunn.ch:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
@@ -93,54 +93,22 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:url,lunn.ch:mid,lunn.ch:dkim]
-X-Rspamd-Queue-Id: 9E6D918ACA5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:mid,lunn.ch:dkim,lunn.ch:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C6AE918ACF7
 X-Rspamd-Action: no action
 
-On Wed, Feb 25, 2026 at 12:54:34AM +0800, Sean Chang wrote:
-> When CONFIG_SUNRPC_DEBUG is disabled, the dprintk() macro expands to
-> an empty do-while loop. This causes variables used solely within
-> dprintk() calls to appear unused to the compiler, triggering
-> -Wunused-variable warnings.
+On Wed, Feb 25, 2026 at 12:54:35AM +0800, Sean Chang wrote:
+> The RISC-V toolchain triggers a stringop-truncation warning when using
+> snprintf() with a fixed ETH_GSTRING_LEN (32 bytes) buffer.
 > 
-> Fix this by adding __maybe_unused to the affected variables. This
-> ensures the code builds cleanly across different configurations,
-> including RISC-V, ARM, and ARM64 allmodconfig, as verified in the
-> mailing list discussion.
+> Convert the driver to use the modern ethtool_sprintf() API from
+> linux/ethtool.h. This removes the need for manual snprintf() and
+> memcpy() calls, handles the 32-byte padding automatically, and
+> simplifies the logic by removing manual pointer arithmetic.
 > 
 > Signed-off-by: Sean Chang <seanwascoding@gmail.com>
-> ---
->  fs/nfs/flexfilelayout/flexfilelayout.c    | 2 +-
->  fs/nfs/flexfilelayout/flexfilelayoutdev.c | 3 ++-
->  fs/nfs/nfs4proc.c                         | 2 +-
->  3 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-> index 9056f05a67dc..de9e8bad6af2 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-> @@ -1502,7 +1502,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
->  {
->  	struct nfs4_ff_layout_mirror *mirror;
->  	u32 status = *op_status;
-> -	int err;
-> +	int err __maybe_unused;
 
-Sorry, but this is ugly. There must be a better way to fix this.
-
-Maybe look at no_printk().
-
-https://elixir.bootlin.com/linux/v6.19.3/source/drivers/video/fbdev/core/fbmon.c#L50
-
-#ifdef DEBUG
-#define DPRINTK(fmt, args...) printk(fmt,## args)
-#else
-#define DPRINTK(fmt, args...) no_printk(fmt, ##args)
-#endif
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
     Andrew
-
----
-pw-bot: cr
-
 
