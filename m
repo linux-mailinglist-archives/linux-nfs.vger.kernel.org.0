@@ -1,64 +1,94 @@
-Return-Path: <linux-nfs+bounces-19179-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19180-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YIPFJHrXnWmFSQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19179-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 17:53:14 +0100
+	id mGAPNBranWk0SQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19180-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:04:26 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09C8018A1AC
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 17:53:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67DDF18A43D
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:04:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 85D533249843
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 16:41:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 90EF631E2D63
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 16:55:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E5993AE6F2;
-	Tue, 24 Feb 2026 16:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB5B3A9618;
+	Tue, 24 Feb 2026 16:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqHZPIvk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjbWoA9b"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0013A0EAA;
-	Tue, 24 Feb 2026 16:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84563A961E
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 16:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771951154; cv=none; b=dENJ0C9yPt0z/Fe4RM1mxlThGj7jNXGbrDpRnONcW7K19StkXZ0onoh1XHKNKNV6qQlnXaqhUhYtENuRht8PaukXN0D6Ilsl8t2+5Z0SIvEZhmxByABG3XXIhjUun237CTDqnWNzktXvFJ9a0YRDjXZnjoV6FlyL48qz5nyIDZY=
+	t=1771952103; cv=none; b=UTZV4tCOZ15ygrrUggOzaJ6d9s4WV42v2n8e+LNbipsFqBZJNdj32F8j9HEcI2OAQkoXs47Y3edIZmcoAwUM2/uUJOKoLWepSPFTgGmEtnmiXJbBMDvfzqMmwQcXV/jmQf9ObC/V+CmRo7Yunmzqjq+i8RuMr5H8JL/lxuLWQxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771951154; c=relaxed/simple;
-	bh=SRXw5r0DNxoiGNo85P/BdKmiW9+p6kKaZFM13ivQvbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lg6Nm5I2gnV638kHRtBT/P0fJq1vzS2wPrzrlDlhGHt+wM+51eNySbL9tcvt1MWWRKg7uqVl+xbV/XB4kA3SZ1vlA1K6cPqnHakVeTxVucHsBfkH+WozKOQKTZbmjg5bO9Slpbu+7msN6F6uIGrjVV+PA3XXu/RkpHKkehPmrQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqHZPIvk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 928C3C19423;
-	Tue, 24 Feb 2026 16:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771951154;
-	bh=SRXw5r0DNxoiGNo85P/BdKmiW9+p6kKaZFM13ivQvbY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nqHZPIvkPZfHEKr1XV7omAH/GodtqeUl0sttNOYCbvWDHnDYqQQXZfoI9n+cDNx2R
-	 oLQO9poDJNOOmAz5TMv4nC9Ufkt+h0SaJqsF4vZlWXH6tw2bm5KF9zRODR/za88Nvx
-	 2T+Jf0x6IjV9oC+00LsBdPJZJLUXZOPjL1oY+sT9JTsf4+RGU3oE0VUinN1h6oUvJu
-	 l7i0WdjIIFYQgwJJdJFY63ZkpTktv/vSHFXNVhGGODK5wI9WkocdZYMd6A7FJL5QuG
-	 +9y6qkNSOvUhYXhSl398mybFYy6CfVWfg5bqYhlYswyyUOyeG5ASe+jIT+0HH+255K
-	 4/cfnS1WuRIQA==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 3/3] nfsd: close cached files on filesystem unmount
-Date: Tue, 24 Feb 2026 11:39:08 -0500
-Message-ID: <20260224163908.44060-4-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260224163908.44060-1-cel@kernel.org>
-References: <20260224163908.44060-1-cel@kernel.org>
+	s=arc-20240116; t=1771952103; c=relaxed/simple;
+	bh=Gev4JxKQDlXRqalOeq8zqK6EMWuJbyxdWEwEhnXRylA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=koq03UAW6Hy/mR5pzDUkFN6i7SYIGxeR37D+TD1mYSHtPNYr0DUNe6ht2uzBRnDL+LCx9laGgD/GzENL6pl4roqaSI73wBcxhRWEPPwB7qbTSTBi8C0ySSBQcZkk8yus1rDZ+2wlZ6b6WCQL3SoHSToWUo56/t132HskR2GOm1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RjbWoA9b; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2a9296b3926so40506645ad.1
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 08:55:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771952101; x=1772556901; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zkJVNfBlJNbQabv0Sb5iZABOR5GcPOWmUOF0eD8AXjk=;
+        b=RjbWoA9bagCIOUeCSdFDM7PY4LPNwuA29AA0oGlrfM2NZCxy292I6aAfwIHAi8wqzL
+         O8nsswTCwkOc98n9pnkkv9tt4U5x0sA59tI/1PKAYWifgwDqUoMeEjDGPhUrDTu5zsIb
+         F7FnZL8A825+8U16Ixr58afqrR5fJi4I2RUBj67ztvvgNqnIMsZlXdY4iRjQzRfmMGwz
+         VlQzKp2EB/Cc4dXtfAsc48Z+/nYQtrmsKmgDsM3pyzURlDdEqwMPqKD5eeVxh5gQLZ53
+         KfOslsC0aSB7HQPfzGS43xrJJ4hXmqElML53dl8DAA3Xx+tgUMM8wRWkpRzqfYzOcvei
+         /7pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771952101; x=1772556901;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zkJVNfBlJNbQabv0Sb5iZABOR5GcPOWmUOF0eD8AXjk=;
+        b=ohYpFu9/f89DPD8WN4qc3cw1HYHGnG6zhg8PTZpMbdjBCjFMkrUiP8n053IpoZOl60
+         /+6oPJxdGOaqTWUGRitEJZFxk53pVVLRaPAIhT7wEvIfCLABtFMCdd8q1Kq6dT7Kqa1C
+         TW4NytrhMrCfSaDjgwHONstkkdK6Cc+pCT/FiEMxwqq3U4xzZRSJSIojZyyIPQ1OCpL4
+         aJIladZkr4I8H7gwhpHCiay3JfRv+CQjMpo5w8mqVTOZE0QlvFCcklw8yeOUCZNoqqiB
+         ea9Cr7Dfeu5R8u8mHtqoIPx+cPnw9IS7oryORsElGgUl5KBvmpe7BMbD15y51zuFCJpW
+         GUdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOTmP+B+DR6ExN7FfNMcpFjESDQ3iHkCUB7jR6QviilUGmcQocWkTvl8t9r6kCA0vgqjej4FFEWmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnrySUruJw1aSJgoL29JwpMHjLrSHJyYyKMja1L3KZCWDh5Ozd
+	XRQJ64sDnLB1ls66IWMgCk0Gv2OIh7L7tm9S8Nv3CIyt8MZWPE7v7fZT
+X-Gm-Gg: ATEYQzxAlQrFCSXq6BNJ80kmrut8C19ugmaHZ5Mm41NIZQtFzwdp81JXs4K6eA1+q/H
+	zayXcOBg1tPKsRJWJC4+iok5DXvcQr8Vmo69N+HJ+dIEUMd+MpXB5+upxHQ3EhF16YdKwYnX1lu
+	6ckv79Wo8Btp7cLlemGQurySFB4ngNWTxEx0roQNr3YjvO/xnd5apfQKvsQYAZRUamgjROWeMcl
+	a4JCAJB0fGOtzlWTvhRWIyiWUfDoZbplE/pS0P/GjCDHFlrsD2EY4EL72WYMoxpCzyP/UPIJOip
+	RAkpISQ1tHe7ALpwGxrqf/jBpF4oGop9I+Up/YQboTfjfD+FtFUFJ+mW07ehCv3nMVvHX6sHbWj
+	Gt94UvFXzUUKNZrmA5oRU/2kIrbe63hI/0fppHlQH0btcgNdUzhaGiK5yqqXcqVkKgPrWUUmaYt
+	vbM6xDOZ22Ces5c5ygzhV771q0LNyAqqIshpQdOUGTrmZz50VIWS5NSeSysYSbrjWvBuFAOYcqo
+	A==
+X-Received: by 2002:a17:902:ce0c:b0:2aa:dee9:dcf4 with SMTP id d9443c01a7336-2ad7447b9a3mr120365845ad.25.1771952101133;
+        Tue, 24 Feb 2026 08:55:01 -0800 (PST)
+Received: from sean-All-Series.. (59-115-199-112.dynamic-ip.hinet.net. [59.115.199.112])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c70b7256f32sm12364083a12.27.2026.02.24.08.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Feb 2026 08:55:00 -0800 (PST)
+From: Sean Chang <seanwascoding@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	nicolas.ferre@microchip.com,
+	claudiu.beznea@tuxon.dev,
+	trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sean Chang <seanwascoding@gmail.com>
+Subject: [PATCH v3 0/2] Fix warnings for RISC-V builds
+Date: Wed, 25 Feb 2026 00:54:33 +0800
+Message-Id: <20260224165435.17648-1-seanwascoding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,170 +100,64 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19179-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-19180-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 09C8018A1AC
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 67DDF18A43D
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+This series addresses several compiler warnings found when building the
+kernel for RISC-V.
 
-When a filesystem is unmounted while NFS is exporting it, the
-unmount can fail with EBUSY even after NFSv4 state has been revoked.
-This occurs because the nfsd_file cache holds open NFSv2/3 file
-handles that pin the filesystem.
+The first patch fixes unused variable warnings in the NFS client (including
+nfs4proc and flexfilelayout) that occur in certain build configurations.
 
-Extend the mechanism that revokes NFSv4 state on unmount to also
-close cached file handles. nfsd_file_close_sb() walks the nfsd_file
-cache and disposes of entries belonging to the target superblock.
-It runs after NFSv4 state revocation, handling NFSv2/3 file handles
-that remain in the cache.
+The second patch fixes a format-truncation warning in the MACB ethernet
+driver by ensuring the snprintf output fits within the destination buffer.
 
-Entries under construction (nf_file not yet set) are skipped; these
-have no open file to close.
+v3:
+- Expand commit descriptions to include technical details regarding macro
+expansion, as requested by Andrew Lunn.
+- Test the different platform, such as ARM, ARM64, X86_64.
 
-The hashtable walk releases the mutex periodically to avoid blocking
-other NFSD operations during large cache walks. Entries are disposed
-incrementally in batches, keeping memory usage bounded and spreading
-the I/O load.
+v2:
+- Split the original treewide patch into subsystem-specific commits.
+- Added more detailed commit descriptions to satisfy checkpatch.
 
-A log message is emitted when cached file handles are closed during
-unmount, informing administrators that NFS clients may receive stale
-file handle errors.
+Sean Chang (2):
+  nfs: fix unused variable warning when CONFIG_SUNRPC_DEBUG is disabled
+  net: macb: use ethtool_sprintf to fill ethtool stats strings
 
-A flush_workqueue() call is added to nfsd_sb_watch_shutdown() to
-ensure that any work items still executing complete before shutdown
-proceeds. Without this, if an unmount notification returns early
-due to signal interruption while the work function is still running,
-nfsd_file_cache_shutdown() could destroy the file cache slab while
-nfsd_file_close_sb() is still disposing entries.
+ drivers/net/ethernet/cadence/macb_main.c  | 7 ++-----
+ fs/nfs/flexfilelayout/flexfilelayout.c    | 2 +-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 3 ++-
+ fs/nfs/nfs4proc.c                         | 2 +-
+ 4 files changed, 6 insertions(+), 8 deletions(-)
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/filecache.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/filecache.h |  1 +
- fs/nfsd/sb_watch.c  | 10 ++++++++++
- 3 files changed, 56 insertions(+)
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 1e2b38ed1d35..d1a6f7cf40b2 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -894,6 +894,51 @@ __nfsd_file_cache_purge(struct net *net)
- 	nfsd_file_dispose_list(&dispose);
- }
- 
-+/**
-+ * nfsd_file_close_sb - close GC-managed cached files for a superblock
-+ * @sb: target superblock
-+ *
-+ * Walk the nfsd_file cache and close out GC-managed entries (those
-+ * acquired via nfsd_file_acquire_gc) that belong to @sb. Called during
-+ * filesystem unmount after NFSv4 state revocation to release remaining
-+ * cached file handles that may be pinning the filesystem.
-+ */
-+void nfsd_file_close_sb(struct super_block *sb)
-+{
-+	struct rhashtable_iter iter;
-+	struct nfsd_file *nf;
-+	unsigned int closed = 0;
-+	LIST_HEAD(dispose);
-+
-+	if (!test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags))
-+		return;
-+
-+	rhltable_walk_enter(&nfsd_file_rhltable, &iter);
-+	do {
-+		rhashtable_walk_start(&iter);
-+
-+		nf = rhashtable_walk_next(&iter);
-+		while (!IS_ERR_OR_NULL(nf)) {
-+			if (test_bit(NFSD_FILE_GC, &nf->nf_flags) &&
-+			    nf->nf_file &&
-+			    file_inode(nf->nf_file)->i_sb == sb) {
-+				nfsd_file_cond_queue(nf, &dispose);
-+				closed++;
-+			}
-+			nf = rhashtable_walk_next(&iter);
-+		}
-+
-+		rhashtable_walk_stop(&iter);
-+	} while (nf == ERR_PTR(-EAGAIN));
-+	rhashtable_walk_exit(&iter);
-+
-+	nfsd_file_dispose_list(&dispose);
-+
-+	if (closed)
-+		pr_info("nfsd: closed %u cached file handle%s on %s\n",
-+			closed, closed == 1 ? "" : "s", sb->s_id);
-+}
-+
- static struct nfsd_fcache_disposal *
- nfsd_alloc_fcache_disposal(void)
- {
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index b383dbc5b921..66ca7fc6189b 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -70,6 +70,7 @@ struct net *nfsd_file_put_local(struct nfsd_file __rcu **nf);
- struct nfsd_file *nfsd_file_get(struct nfsd_file *nf);
- struct file *nfsd_file_file(struct nfsd_file *nf);
- void nfsd_file_close_inode_sync(struct inode *inode);
-+void nfsd_file_close_sb(struct super_block *sb);
- void nfsd_file_net_dispose(struct nfsd_net *nn);
- bool nfsd_file_is_cached(struct inode *inode);
- __be32 nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
-diff --git a/fs/nfsd/sb_watch.c b/fs/nfsd/sb_watch.c
-index 8f711956a12e..34e50afe566c 100644
---- a/fs/nfsd/sb_watch.c
-+++ b/fs/nfsd/sb_watch.c
-@@ -65,6 +65,7 @@ static void nfsd_sb_revoke_work(struct work_struct *work)
- 	/* Errors are logged by lockd; no recovery is possible. */
- 	(void)nlmsvc_unlock_all_by_sb(watch->sb);
- 	nfsd4_revoke_states(nn, watch->sb);
-+	nfsd_file_close_sb(watch->sb);
- 
- 	pr_info("nfsd: state revocation for %s complete\n", watch->sb->s_id);
- 
-@@ -257,6 +258,15 @@ void nfsd_sb_watch_shutdown(struct nfsd_net *nn)
- {
- 	umount_unregister_notifier(&nn->nfsd_umount_notifier);
- 	nfsd_sb_watches_destroy(nn);
-+	/*
-+	 * Ensure any work items still running complete before shutdown
-+	 * proceeds. This handles the case where an unmount notification
-+	 * returned early due to signal interruption but the work function
-+	 * is still executing nfsd_file_close_sb(). Without this flush,
-+	 * nfsd_file_cache_shutdown() could destroy the slab while the
-+	 * work function is still disposing file cache entries.
-+	 */
-+	flush_workqueue(nfsd_sb_watch_wq);
- }
- 
- int nfsd_sb_watch_init(void)
 -- 
-2.53.0
+2.34.1
 
 
