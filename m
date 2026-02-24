@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-19181-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19182-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eEH6D8rYnWk0SQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19181-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 17:58:50 +0100
+	id sBvXEdnZnWk0SQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19182-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:03:21 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17DEA18A30D
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 17:58:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E72EE18A418
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 18:03:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4E1D3308E437
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 16:55:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3854C31F9886
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 16:55:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCCDB3A9DBA;
-	Tue, 24 Feb 2026 16:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415703A962E;
+	Tue, 24 Feb 2026 16:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwYJIlxL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5lf/U2e"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9B63A9DA8
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 16:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C853AA1A1
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 16:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771952106; cv=none; b=W/h+5NieMIflTY/OKbYxZvgWrjYtHqFt8iG5I3Ke2RXa2SShMXd9sDu/4Ly7I0toExc00u9FX+ng4lNORCfTZf1C43O8rc/dFycKgeCicwbXWnHW3FQE8EptA4Dvvr8+rYNm8u3S5Hx3b+D8jdk8ZlL77Pf/JYz17x80UALxhfE=
+	t=1771952109; cv=none; b=HOieWuRJRoaOkuIsNnF5U/EXQz+JjljiUX/ALVLknDe8oVKyz4JIk8AIIt4Mx/50okWeboIwZKPualclPEl6BEoBGaLuTBuX32pm314WfJGJnrw2WIekeQnjBytRGlDcfgBLkwv7b70SScN8YGH9c3qB5IUYxk94V0O9iwptT1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771952106; c=relaxed/simple;
-	bh=YQW0EfAeLICvyMNg/tfBC2TK594tWmLxtymR/cKwzGI=;
+	s=arc-20240116; t=1771952109; c=relaxed/simple;
+	bh=6D2xm2u7a0Ard8UD5jhMoGvejwPvgyeFwzrZ6ep9k/s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DNRa96KOMlxdwRsUajW84V5YKKJszrSnfB84m1ypD0Z9yIdZxg7WK7SdmW2UYjGcozB/QXAdot9aYBWLshg9jlR92CpstY4QypLhMaF4SNKen/ENq5S+X/fBCURnV+bbKjot4Ee3yYHL/WMzfYRTSlSbIHHkDexhQtFnR50MmKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwYJIlxL; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=ry7jNC8LNu8fbWmT3t4+XTyD4TizvLvVGa687Nj43EadNYaRs66oUp6kiacS5IkcvfFYp++2pgtaefsQjpGjhPziBSM222yDCjGrhNI8LCNqrwa0DPzdhBHFCDmTCJhBMkUF0DpOuNOMI8onGcEu7FlsNfjrClTaRIqT/p0L6oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5lf/U2e; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-82361bcbd8fso3035559b3a.0
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 08:55:04 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a871daa98fso40830085ad.1
+        for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 08:55:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771952104; x=1772556904; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1771952107; x=1772556907; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+qm9aAVKRhdXbmvZ9eNzRctppVAHInh8i2MIXKl/+Wg=;
-        b=mwYJIlxLKjYKko/wvpn5zNTqn2jXpvmo24X3KL/Sly2GOmvJgmanjwa6FRfv8AmIxA
-         GobsqqCl1Uca57eQb2CS74RpHbkc51PYcdApnoLaSgo/nJnFEmn19oWv9o4ndS6b1FuZ
-         BDQqQ5wBiRfNnFSAHnJ5/dqNJWRWR76YUdn7nXRdcz3035bktqpMAcd3kdsDNqX18O2Z
-         7npt+V0pXaHV5Aa5Tbyqwxs37WYK8zUeKj9jSbTyKD6hYdmc92WjEDNGe9E9tgok0H0z
-         HZEjlyQetw0rlq+L/aEsKdLeBVnrfamPuPhGVkB2MjDPA6gbPWORuWkhyYFyhkmL/Ynp
-         mgXg==
+        bh=/dk99oPBkOKQC4NJdNNbbUKUujZV8OZzxFj2+2UXmSY=;
+        b=b5lf/U2e+Fzcg26x6XgKDfQlnHZEW4cshIEkFjtlRi33fVqo5AS8ha4h8ABOtZaB/U
+         xy3UjcOwnWvjtcqFAtYbVsdOSgn/SClA3t5l1GSkiwGooJgqJj13kPmriGJdwpAAMPU0
+         ipfXes1XdEzintpKmD+dZ1jBjI1Ccek1GDWOmFy8nFJIsA3TN2EKzryC52qYNvvm0iQJ
+         ADF33DVBdCTyGSSmS0GtWDIBtNv2PO5i1yeDJcTsQi1YEZ5vOJIJOk7BFQrfd3Rgm8Vm
+         yW40PBck7HXrZmRw+QFJdhc9aD9nKm8kETdQg8BN4rEvo/dwlm2Sl0tot9aJnhrpakmZ
+         n3yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771952104; x=1772556904;
+        d=1e100.net; s=20230601; t=1771952107; x=1772556907;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+qm9aAVKRhdXbmvZ9eNzRctppVAHInh8i2MIXKl/+Wg=;
-        b=QsoS0axwtbrDNAyNn+2NAXWLalt3QTyEQPtRvc2Cf6rU0NrRLoWfM6qddKuAh44OUk
-         FLSE0SFRPp28xqnKm2rg/9pdmbqQ9aoMzpbs5Wu0XrwONhDv78S0HRAvT4IobUYLW0v+
-         DDe9zS1bhRMdbpGNsC3nynDlNif7SYKnWUG6dyFbYeZLA2F1nylYCWnCZCZYYAjxGxxv
-         u7H/axKsS270r4Equ7z5xkYZwL9JphXXB7wdlR1/UZWIpQIGywUPEGzKqQDvzFlJYPpw
-         EZSp9JjFvPoiA+ZzA7vFAuh1NEXBngr3CgT8py8V6ncsMQn541C7i4Rhw6rMCTrkTCEh
-         y2Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/QlM0VfNy2xbixCdTxhD3GCFQ8swJhX4jiwq/2h6sDQZtIXqYDCb31qwbgUFSur5rTsNBanzMbVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWZGEwWQUYVMgWyNCyzDBqWSwsu2D8GofaiLr4kzRLUoKWejHE
-	S+xuQrXo9woEsNrNWXSpFZcY4SvKbITTk1PzXqQzUns4rNlnoQPyT5VE
-X-Gm-Gg: AZuq6aKraFzM+j4KxnbSs8igkvcH95al1BZPR0y4WkAU6v7eSEi7Twn161WSglXAtQE
-	Hy1HjcRzrSHon6eyXgK4MghXY26A0d/xsaANLGjozKQ3GGWXie3+4voHfw5P5DwhRUpNaH42t/f
-	qT6tjNBPVIpnZK0T0wlQi/pc8Il4/NT0HzDApWQ130DHBUxtMZbS9WWG7TIjZFZI+wXOaovJLQV
-	jdtVVPGB9K1lM7WWYOGGPnpooew2vcJQ45s3IEHFcvgHVKoEi5QNRzv1M8/wXWruLWCBjn8hEwW
-	y2dJKW/PUvMPZl8rJRYN4yqTxdTWNxaJ9V98vV5Sr/38GXYPI+HlMsp2ZpOzCpCPxcyZj78nDCd
-	fHbRSNMrFLzl3jAkdYlufTlJOPfScW2hrNs5GvqZMy/BVx3aGnenEVV32jt56QX3Uu1mj0duD3D
-	6q45geIJ8CTvn+vSh40fhHpuoGDNh9BA9dftvqr6NFzED1b5Z5IKKui5o7h8WWSj71MZTeciAwn
-	A==
-X-Received: by 2002:a05:6a21:6d9a:b0:35f:b96d:af11 with SMTP id adf61e73a8af0-39545e3c7a7mr11945453637.5.1771952103875;
-        Tue, 24 Feb 2026 08:55:03 -0800 (PST)
+        bh=/dk99oPBkOKQC4NJdNNbbUKUujZV8OZzxFj2+2UXmSY=;
+        b=tR/n4eqO9RQFmILV35pkM3jaafgFoeQrUe+cbSTn8T9zkrCtD0h0DEyUOikUj3sygF
+         QuBLZJVW+yZdPY2agSc3vjT6+j3HImjlzDgKjGHaYhwQTkCT897UivLUIuPzu2fnY1v5
+         uqYeQzk6ydF+bfaJw6aHsgz0CDzZYKnpOkslOeZ2Q7q1fpqJQWRTUbvuUNCgLK5SzUT5
+         eTO4i8HwOwOuN4B4D+ypdF+bXgPlfR1val/ORQZ0lTUQZhv4vnnDV5TNtqiyjunsjOxa
+         siuACi2GYR7h7pXrQ1/9VYx/gnGzvPe67XjlU1zreYlNV44y5lS6b4s4zI/C0zBKzXFZ
+         gH+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVTFoEdnmeHNJXw38BNGM+g+sh0wavwnJWubAre5JVOY3ozIW4ZQA6T41dpX+Ozd0+kz1NlpZzhzG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDQy8DCVhKh9lb2bDzuBPxkndkyte5eSv9VYnWEUU24YEAoW7X
+	cz12mHj0Ccel4de535HExP+/gvpsXBspHssfF4vtdP9w5RLjVA1yc6Cc
+X-Gm-Gg: ATEYQzwXzoRCyfOZPZQ9NKhPB4LFHG0WFPaP015v+zgJYAa69D5xZY/yZIWhsO8W0Dn
+	VZJsuz/blUXyKaiqK1H905aGaUZXS4+oRYqkRrBiYm5qp+bFakpeIuYAsAY87QDJb9Op84t+mg+
+	Fsk14DQZWrcU0g297iLr7wRWIqcF+wMv3PVKuYk7eMRcYkRh8pMYtIHXPlsaqABxLiv7tlhBmGu
+	3llc2gV1YVRipA5eNgrJJ1g+48AcOA8AzGbxbKyp7cI2MubtjVJ0ez4h56btkG0R9t6OqNKWwXQ
+	Rq7MMzpvOTvgZB27VQF807Pmcw8R12z7sEIHOnW0t2nOqHE/Wp5DvygZrTtFXQKtMXKwHJJsyAf
+	pg0pFlhbvaN36gB24eHfZExW9D2s5KdYT1qenPxgM5SzCjiEQVuvyC9u3cpeMRkNHn+Bp4Izcyt
+	i3MpZwekUcpqMlGrvwyiWz8ozTI3PYM9sXlAzajZLiNLX8aLICBJl03aZNjY/JY8l5cHmiHqipn
+	g==
+X-Received: by 2002:a17:903:285:b0:2ab:2bc5:4365 with SMTP id d9443c01a7336-2ad74464438mr87550565ad.19.1771952107313;
+        Tue, 24 Feb 2026 08:55:07 -0800 (PST)
 Received: from sean-All-Series.. (59-115-199-112.dynamic-ip.hinet.net. [59.115.199.112])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c70b7256f32sm12364083a12.27.2026.02.24.08.55.01
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c70b7256f32sm12364083a12.27.2026.02.24.08.55.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 08:55:03 -0800 (PST)
+        Tue, 24 Feb 2026 08:55:06 -0800 (PST)
 From: Sean Chang <seanwascoding@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	nicolas.ferre@microchip.com,
@@ -87,9 +87,9 @@ Cc: netdev@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sean Chang <seanwascoding@gmail.com>
-Subject: [PATCH v3 1/2] nfs: fix unused variable warning when CONFIG_SUNRPC_DEBUG is disabled
-Date: Wed, 25 Feb 2026 00:54:34 +0800
-Message-Id: <20260224165435.17648-2-seanwascoding@gmail.com>
+Subject: [PATCH v3 2/2] net: macb: use ethtool_sprintf to fill ethtool stats strings
+Date: Wed, 25 Feb 2026 00:54:35 +0800
+Message-Id: <20260224165435.17648-3-seanwascoding@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260224165435.17648-1-seanwascoding@gmail.com>
 References: <20260224165435.17648-1-seanwascoding@gmail.com>
@@ -104,92 +104,74 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-19181-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19182-lists,linux-nfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RSPAMD_EMAILBL_FAIL(0.00)[seanwascoding.gmail.com:query timed out];
+	RCVD_COUNT_FIVE(0.00)[5];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 17DEA18A30D
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E72EE18A418
 X-Rspamd-Action: no action
 
-When CONFIG_SUNRPC_DEBUG is disabled, the dprintk() macro expands to
-an empty do-while loop. This causes variables used solely within
-dprintk() calls to appear unused to the compiler, triggering
--Wunused-variable warnings.
+The RISC-V toolchain triggers a stringop-truncation warning when using
+snprintf() with a fixed ETH_GSTRING_LEN (32 bytes) buffer.
 
-Fix this by adding __maybe_unused to the affected variables. This
-ensures the code builds cleanly across different configurations,
-including RISC-V, ARM, and ARM64 allmodconfig, as verified in the
-mailing list discussion.
+Convert the driver to use the modern ethtool_sprintf() API from
+linux/ethtool.h. This removes the need for manual snprintf() and
+memcpy() calls, handles the 32-byte padding automatically, and
+simplifies the logic by removing manual pointer arithmetic.
 
 Signed-off-by: Sean Chang <seanwascoding@gmail.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c    | 2 +-
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 3 ++-
- fs/nfs/nfs4proc.c                         | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 9056f05a67dc..de9e8bad6af2 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -1502,7 +1502,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- {
- 	struct nfs4_ff_layout_mirror *mirror;
- 	u32 status = *op_status;
--	int err;
-+	int err __maybe_unused;
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 43cd013bb70e..616823e9fc5b 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3145,7 +3145,6 @@ static int gem_get_sset_count(struct net_device *dev, int sset)
  
- 	if (status == 0) {
- 		switch (error) {
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index c2d8a13a9dbd..3fb8dba0abf5 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -53,7 +53,8 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 	u32 mp_count;
- 	u32 version_count;
- 	__be32 *p;
--	int i, ret = -ENOMEM;
-+	int i;
-+	int ret __maybe_unused = -ENOMEM;
- 
- 	/* set up xdr stream */
- 	scratch = folio_alloc(gfp_flags, 0);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 180229320731..f76c23cdc888 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9241,7 +9241,7 @@ static int _nfs4_proc_create_session(struct nfs_client *clp,
- int nfs4_proc_create_session(struct nfs_client *clp, const struct cred *cred)
+ static void gem_get_ethtool_strings(struct net_device *dev, u32 sset, u8 *p)
  {
- 	int status;
--	unsigned *ptr;
-+	unsigned *ptr __maybe_unused;
- 	struct nfs4_session *session = clp->cl_session;
- 	struct nfs4_add_xprt_data xprtdata = {
- 		.clp = clp,
+-	char stat_string[ETH_GSTRING_LEN];
+ 	struct macb *bp = netdev_priv(dev);
+ 	struct macb_queue *queue;
+ 	unsigned int i;
+@@ -3158,10 +3157,8 @@ static void gem_get_ethtool_strings(struct net_device *dev, u32 sset, u8 *p)
+ 			       ETH_GSTRING_LEN);
+ 
+ 		for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
+-			for (i = 0; i < QUEUE_STATS_LEN; i++, p += ETH_GSTRING_LEN) {
+-				snprintf(stat_string, ETH_GSTRING_LEN, "q%d_%s",
+-						q, queue_statistics[i].stat_string);
+-				memcpy(p, stat_string, ETH_GSTRING_LEN);
++			for (i = 0; i < QUEUE_STATS_LEN; i++) {
++				ethtool_sprintf(&p, "q%u_%s", q, queue_statistics[i].stat_string);
+ 			}
+ 		}
+ 		break;
 -- 
 2.34.1
 
