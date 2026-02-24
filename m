@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-19191-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19192-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +PGwLSP7nWmeSwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19191-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 20:25:23 +0100
+	id gPgiCjP7nWmeSwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19192-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 20:25:39 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C72118C095
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 20:25:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0D4018C09D
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 20:25:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B60BA30ED50B
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 19:24:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B6BD0306377C
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Feb 2026 19:24:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAA63ACA7B;
-	Tue, 24 Feb 2026 19:24:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFA663ACEE6;
+	Tue, 24 Feb 2026 19:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqBNKwlv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ic4L5g8x"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931903ACA75
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 19:24:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72323ACEF7
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Feb 2026 19:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771961085; cv=none; b=eFRd/2o2E063ZQJyeA8mBEUoa37qbQ6KRJm1pcDvddY0r70OjBLijud5vgDFIbzNVieiK+5u2aQhzNpwLaxpWe6nmShQvBsVmMIQxF44NAkwfWlaScwzx2g4uubjwpqLKJ7V46dhp84uw7VTKdxJPkmlqu0od0EwUXBHHgHuS3M=
+	t=1771961086; cv=none; b=V59h2IQ7TRzqMjXT7FQQE+iZPjfCZgYW6UmTz2XQwGYHplhz2AlmUowYpqa5P1O4JamKsvtf/h6/bBob0L8KtAtNhjhqPM35ftS/v662BGBXZsxOU8SNlo7LnYCX4gHQf2v/SR+0C/WUHmwJWmKapk9SBt62ITsGk2oGg55G+ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771961085; c=relaxed/simple;
-	bh=gcG4eaYUR3LXyAEZNS4vMikEVnrbLPhffb+RnSAm0BQ=;
+	s=arc-20240116; t=1771961086; c=relaxed/simple;
+	bh=2nrYNcvPLK95yLAiLQA3UW4jmWZmQ7g61ijS28jYQxo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cUyVkYU2QIgpIwr38FEGeBO6fHyNA5VnRrEVq7Nf1AFAEQDVr6X4SSBNslfo1D9HxJ0NlsqEpcnWYF1GxVQl1FHN+YhHrcLpZ/THaTOpTQqxGSNVtNCIN/yoyKJ75+kNMi+zxNRF+76eATUA/qB2sDVJoCSMdwIx21e+STZq3Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqBNKwlv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5676C19422;
-	Tue, 24 Feb 2026 19:24:44 +0000 (UTC)
+	 MIME-Version; b=FUdpQZsJiSZu6t9HoFzQKaz0mY0C0XZdh9A2wpxJrf3+TN38jr1BOEXqrgIJOx/tR+unLYqbiqRY+FU1TJ9k/zLyKJuimG4Na7z2rHJKWfHPEw6QuyZlECh4mXM+a2yW3YzLXGT/mtinKb+LJSCeXGVvaEQHbV2JGveEQApbrn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ic4L5g8x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5E5C19423;
+	Tue, 24 Feb 2026 19:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771961085;
-	bh=gcG4eaYUR3LXyAEZNS4vMikEVnrbLPhffb+RnSAm0BQ=;
+	s=k20201202; t=1771961086;
+	bh=2nrYNcvPLK95yLAiLQA3UW4jmWZmQ7g61ijS28jYQxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YqBNKwlvWI7NM1WlKBZi36vW8Z7jhf8ReFEXkJvb5A1+qJDeXZAXenKQjoH0iJlhO
-	 QNRkCEVflxjM0lX+Ltd7LDLd0896+y/ZgI7Thcva4Bj5wUi01zfyyrP3ihYsQ0hH9v
-	 2AvAiyMUE9Vqah3YQ50UEvWabIhcANlzEuU4WPUGIds7xzb4BcIMchfkE9hNGZN3UA
-	 gUBRb4WZZlSNf2KOLHJCZWyPgF0xwv+uT8DWZzukVWvGqrT+32ko9mihE3YLvtC3+t
-	 zg19F8wMkbvYL9/2vYJf+qM/yfKO4ZykZeIynBgdDZfKLnNi0JMPBw8Uxw2kA25GoN
-	 YJM6SJQRf6ClQ==
+	b=ic4L5g8xj1JRt5Qhr+XG8i4W3WsP8tOOFHpUd9b0OZ6gEC9rvoH1vQ5D/H2ZsIDN/
+	 4aYquZ0bTK8bwXVRoQPl3PlQw/I+nHNxyGCoOk6O1tVDuMtWavOl4jVeyc48VTf4TO
+	 Slnm2bvKmlarhYgJJfeke3nH1eg7ToGrVKxxVZYdmQ0UHX2ilBwmg4kmaahNNrKZq4
+	 zG+HquwrhwbmujSJXILzRB5WYIUoARms47n+UV/lw0qx98CfY1tT1f4mhzNn9tyRFe
+	 jAoGR552GyC/2IpR+4OpZRRF5fj/vUn8XfruLCXk0eh1GXFrNpcFEyqYbOrOVM6DLq
+	 agxWE8YF/OU5w==
 From: Mike Snitzer <snitzer@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>
 Cc: linux-nfs@vger.kernel.org
-Subject: [RFC PATCH v2 04/11] NFSD: prepare to support SETACL nfs4_acl passthru
-Date: Tue, 24 Feb 2026 14:24:31 -0500
-Message-ID: <20260224192438.25351-5-snitzer@kernel.org>
+Subject: [RFC PATCH v2 05/11] NFSD: add NFS4 reexport support for SETACL nfs4_acl passthru
+Date: Tue, 24 Feb 2026 14:24:32 -0500
+Message-ID: <20260224192438.25351-6-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20260224192438.25351-1-snitzer@kernel.org>
 References: <20260224192438.25351-1-snitzer@kernel.org>
@@ -75,7 +75,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19191-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19192-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -91,140 +91,168 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_FIVE(0.00)[5];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 1C72118C095
+X-Rspamd-Queue-Id: A0D4018C09D
 X-Rspamd-Action: no action
 
 From: Mike Snitzer <snitzer@hammerspace.com>
 
-Use a separate xdr_buf and xdr_stream in both nfsd4_decode_acl() and
-nfsd4_decode_nfsace4().
+Allow NFSD's 4.1 reexport of a 4.2 mount to perform SETACL by passing
+thru nfs4_acl that was decoded from 4.1 client directly to 4.2
+client.
 
-This prepares for nfsd4_decode_acl() to save off the xdr_buf
-associated with the ACL payload so that deferred decode is possible
-when nfs4_acl passthru is needed (in next commit).
+Update nfsd4_decode_acl() to save the ACL's payload off to an xdr_buf
+in the nfs4_acl. But only do the work to decode that ACL payload into
+pages stored in the nfs4_acl, via nfsd4_decode_nfs4_acl_passthru(), if
+the exported filesystem supports nfs4_acl passthru (like NFSv4 client
+does).
 
 Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
 ---
- fs/nfsd/nfs4xdr.c | 57 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 37 insertions(+), 20 deletions(-)
+ fs/nfsd/nfs4proc.c | 27 +++++++++++++++++++++------
+ fs/nfsd/nfs4xdr.c  | 43 ++++++++++++++++++++++++++++++++++++++++++-
+ fs/nfsd/xdr4.h     |  2 ++
+ 3 files changed, 65 insertions(+), 7 deletions(-)
 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index bd847db8b8b4..d05ac00f934e 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1224,6 +1224,7 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	};
+ 	bool save_no_wcc, deleg_attrs;
+ 	struct nfs4_stid *st = NULL;
++	struct dentry *dentry;
+ 	struct inode *inode;
+ 	__be32 status = nfs_ok;
+ 	int err;
+@@ -1281,12 +1282,14 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		goto out;
+ 	}
+ 
+-	inode = cstate->current_fh.fh_dentry->d_inode;
+-	status = nfsd4_acl_to_attr(S_ISDIR(inode->i_mode) ? NF4DIR : NF4REG,
+-				   setattr->sa_acl, &attrs);
+-
+-	if (status)
+-		goto out;
++	dentry = cstate->current_fh.fh_dentry;
++	inode = dentry->d_inode;
++	if (IS_POSIXACL(inode)) {
++		status = nfsd4_acl_to_attr(S_ISDIR(inode->i_mode) ? NF4DIR : NF4REG,
++					   setattr->sa_acl, &attrs);
++		if (status)
++			goto out;
++	}
+ 	save_no_wcc = cstate->current_fh.fh_no_wcc;
+ 	cstate->current_fh.fh_no_wcc = true;
+ 	status = nfsd_setattr(rqstp, &cstate->current_fh, &attrs, NULL);
+@@ -1297,6 +1300,18 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		status = nfserrno(attrs.na_dpaclerr);
+ 	if (!status)
+ 		status = nfserrno(attrs.na_paclerr);
++	if (!status && !IS_POSIXACL(inode) && setattr->sa_acl &&
++	    exportfs_may_passthru_nfs4acl(dentry->d_sb->s_export_op)) {
++		const struct export_operations *ops = dentry->d_sb->s_export_op;
++		if (likely(ops->setacl)) {
++			status = nfsd4_decode_nfs4_acl_passthru(rqstp->rq_argp,
++					setattr->sa_bmval, &setattr->sa_acl);
++			if (status)
++				goto out;
++			status = nfserrno(ops->setacl(inode, setattr->sa_acl));
++		} else
++			status = nfserr_attrnotsupp;
++	}
+ out:
+ 	fh_drop_write(&cstate->current_fh);
+ out_err:
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index e7793c53d214..464c301d6655 100644
+index 464c301d6655..62b1d79f80cb 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -288,31 +288,32 @@ nfsd4_decode_bitmap4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen)
+@@ -287,6 +287,45 @@ nfsd4_decode_bitmap4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen)
+ 	return status == -EBADMSG ? nfserr_bad_xdr : nfs_ok;
  }
  
- static __be32
--nfsd4_decode_nfsace4(struct nfsd4_compoundargs *argp, struct nfs4_ace *ace)
-+nfsd4_decode_nfsace4(struct xdr_stream *xdr, struct svc_rqst *rqstp,
-+		     struct nfs4_ace *ace)
- {
- 	__be32 *p, status;
- 	u32 length;
- 
--	if (xdr_stream_decode_u32(argp->xdr, &ace->type) < 0)
-+	if (xdr_stream_decode_u32(xdr, &ace->type) < 0)
- 		return nfserr_bad_xdr;
--	if (xdr_stream_decode_u32(argp->xdr, &ace->flag) < 0)
-+	if (xdr_stream_decode_u32(xdr, &ace->flag) < 0)
- 		return nfserr_bad_xdr;
--	if (xdr_stream_decode_u32(argp->xdr, &ace->access_mask) < 0)
-+	if (xdr_stream_decode_u32(xdr, &ace->access_mask) < 0)
- 		return nfserr_bad_xdr;
- 
--	if (xdr_stream_decode_u32(argp->xdr, &length) < 0)
-+	if (xdr_stream_decode_u32(xdr, &length) < 0)
- 		return nfserr_bad_xdr;
--	p = xdr_inline_decode(argp->xdr, length);
-+	p = xdr_inline_decode(xdr, length);
- 	if (!p)
- 		return nfserr_bad_xdr;
- 	ace->whotype = nfs4_acl_get_whotype((char *)p, length);
- 	if (ace->whotype != NFS4_ACL_WHO_NAMED)
- 		status = nfs_ok;
- 	else if (ace->flag & NFS4_ACE_IDENTIFIER_GROUP)
--		status = nfsd_map_name_to_gid(argp->rqstp,
-+		status = nfsd_map_name_to_gid(rqstp,
- 				(char *)p, length, &ace->who_gid);
- 	else
--		status = nfsd_map_name_to_uid(argp->rqstp,
-+		status = nfsd_map_name_to_uid(rqstp,
- 				(char *)p, length, &ace->who_uid);
- 
- 	return status;
-@@ -320,35 +321,51 @@ nfsd4_decode_nfsace4(struct nfsd4_compoundargs *argp, struct nfs4_ace *ace)
- 
- /* A counted array of nfsace4's */
- static noinline __be32
--nfsd4_decode_acl(struct nfsd4_compoundargs *argp, struct nfs4_acl **acl)
-+nfsd4_decode_acl(struct nfsd4_compoundargs *argp, struct nfs4_acl **acl,
-+		 u32 acl_len)
- {
-+
-+	struct xdr_buf payload;
++__be32 nfsd4_decode_nfs4_acl_passthru(struct nfsd4_compoundargs *argp,
++				      u32 *bmval, struct nfs4_acl **acl)
++{
++	u32 acl_len = (*acl)->payload.len;
++	unsigned int pgbase, num_pages;
 +	struct xdr_stream xdr;
- 	struct nfs4_ace *ace;
--	__be32 status;
 +	__be32 status = nfs_ok;
- 	u32 count;
- 
--	if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
-+	if (!xdr_stream_subsegment(argp->xdr, &payload, acl_len))
- 		return nfserr_bad_xdr;
- 
--	if (count > xdr_stream_remaining(argp->xdr) / 20)
-+	xdr_init_decode(&xdr, &payload, payload.head[0].iov_base, NULL);
++	void *p;
 +
-+	if (xdr_stream_decode_u32(&xdr, &count) < 0) {
++	xdr_init_decode(&xdr, &(*acl)->payload,
++			(*acl)->payload.head[0].iov_base, NULL);
++
++	p = xdr_inline_decode(&xdr, acl_len);
++	if (p == NULL) {
 +		status = nfserr_bad_xdr;
 +		goto out;
 +	}
 +
-+	if (count > xdr_stream_remaining(&xdr) / 20) {
- 		/*
- 		 * Even with 4-byte names there wouldn't be
- 		 * space for that many aces; something fishy is
- 		 * going on:
- 		 */
--		return nfserr_fbig;
-+		status = nfserr_fbig;
-+		goto out;
-+	}
- 
- 	*acl = svcxdr_tmpalloc(argp, nfs4_acl_bytes(count));
--	if (*acl == NULL)
--		return nfserr_jukebox;
++	pgbase = (unsigned long)p & ~PAGE_MASK;
++	num_pages = DIV_ROUND_UP(pgbase + acl_len, PAGE_SIZE);
++
++	*acl = svcxdr_tmpalloc(argp, (sizeof(struct nfs4_acl) +
++				      num_pages * sizeof(struct page *)));
 +	if (*acl == NULL) {
 +		status = nfserr_jukebox;
 +		goto out;
 +	}
- 
- 	(*acl)->naces = count;
- 	for (ace = (*acl)->aces; ace < (*acl)->aces + count; ace++) {
--		status = nfsd4_decode_nfsace4(argp, ace);
-+		status = nfsd4_decode_nfsace4(&xdr, argp->rqstp, ace);
- 		if (status)
--			return status;
-+			goto out;
- 	}
--
--	return nfs_ok;
++
++	(*acl)->type = NFS4ACL_ACL;
++	(*acl)->len = acl_len;
++	(*acl)->pgbase = pgbase;
++
++	for (int i = 0; i < num_pages; i++)
++		(*acl)->pages[i] = virt_to_page(p + (i << PAGE_SHIFT));
 +out:
 +	xdr_finish_decode(&xdr);
 +	return status;
- }
++}
++
+ static __be32
+ nfsd4_decode_nfsace4(struct xdr_stream *xdr, struct svc_rqst *rqstp,
+ 		     struct nfs4_ace *ace)
+@@ -325,7 +364,7 @@ nfsd4_decode_acl(struct nfsd4_compoundargs *argp, struct nfs4_acl **acl,
+ 		 u32 acl_len)
+ {
  
- static noinline __be32
-@@ -514,7 +531,7 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
- 		iattr->ia_valid |= ATTR_SIZE;
+-	struct xdr_buf payload;
++	struct xdr_buf payload, saved_payload;
+ 	struct xdr_stream xdr;
+ 	struct nfs4_ace *ace;
+ 	__be32 status = nfs_ok;
+@@ -333,6 +372,7 @@ nfsd4_decode_acl(struct nfsd4_compoundargs *argp, struct nfs4_acl **acl,
+ 
+ 	if (!xdr_stream_subsegment(argp->xdr, &payload, acl_len))
+ 		return nfserr_bad_xdr;
++	memcpy(&saved_payload, &payload, sizeof(struct xdr_buf));
+ 
+ 	xdr_init_decode(&xdr, &payload, payload.head[0].iov_base, NULL);
+ 
+@@ -356,6 +396,7 @@ nfsd4_decode_acl(struct nfsd4_compoundargs *argp, struct nfs4_acl **acl,
+ 		status = nfserr_jukebox;
+ 		goto out;
  	}
- 	if (bmval[0] & FATTR4_WORD0_ACL) {
--		status = nfsd4_decode_acl(argp, acl);
-+		status = nfsd4_decode_acl(argp, acl, attrlist4_count);
- 		if (status)
- 			return status;
- 	} else
++	memcpy(&(*acl)->payload, &saved_payload, sizeof(struct xdr_buf));
+ 
+ 	(*acl)->naces = count;
+ 	for (ace = (*acl)->aces; ace < (*acl)->aces + count; ace++) {
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 417e9ad9fbb3..d3561ce76a12 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -1011,6 +1011,8 @@ extern __be32 nfsd4_test_stateid(struct svc_rqst *rqstp,
+ extern __be32 nfsd4_free_stateid(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *, union nfsd4_op_u *);
+ extern void nfsd4_bump_seqid(struct nfsd4_compound_state *, __be32 nfserr);
++__be32 nfsd4_decode_nfs4_acl_passthru(struct nfsd4_compoundargs *,
++		u32 *bmval, struct nfs4_acl **acl);
+ 
+ enum nfsd4_op_flags {
+ 	ALLOWED_WITHOUT_FH = 1 << 0,    /* No current filehandle required */
 -- 
 2.44.0
 
