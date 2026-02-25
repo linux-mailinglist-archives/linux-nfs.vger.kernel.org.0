@@ -1,74 +1,74 @@
-Return-Path: <linux-nfs+bounces-19232-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19233-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yLshDy6fnmkZWgQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19232-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Feb 2026 08:05:18 +0100
+	id OB3HKRfQnmnwXQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19233-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Feb 2026 11:33:59 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6966192E7A
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Feb 2026 08:05:17 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 114D3195CDE
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Feb 2026 11:33:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4F8DC3094962
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Feb 2026 07:03:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3AD213019FC2
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Feb 2026 10:33:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB35A2D5926;
-	Wed, 25 Feb 2026 07:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A602E2DFB;
+	Wed, 25 Feb 2026 10:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OTFD5BG2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Jk0E3+EX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A2A28B4FD
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Feb 2026 07:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCC232A3D1
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Feb 2026 10:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772002856; cv=none; b=J/cpFKA4jeLCwAdOgo8S+TauteVy3aOtk0tAw/LWKEK3l9xPmU/vESIuqeN5PNmxKwqfrzGD0Gj8JlQeuiuK2vFJWTBZ7sODMHct04dDQoAP2NeSzzWyvYCMa07H44Y+ZE5lp3dqZjCT1FMz7xBwqaQrLLJbOVjw2wanmN+CyaM=
+	t=1772015634; cv=none; b=P/xDWSJMO7BqGt+QAp+8f0XbVu1de+lHSzdjkYhp9T0Y1JGC3DyKyJefocnMpOa9/L26Qfh6bT6Bchm46vA0G6sDmIOg/CnkQZjXqWmzxp4NjIL2FTdu/25XwcX3g/Lla4Hm7GA+d4FALUiKqZDtJfpQE/d7T4flYhOpOuseXW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772002856; c=relaxed/simple;
-	bh=ESBMV9TRSN0Jb8DIPfoBy6Z/feheM/8hKgFCzEnjsn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nYU/LmZMpZpa3LmS7I+u2AI1840MtBI7mrPsG0n1LQeK81wavu54blicwBQyKFerIVLU1x1zCI8wRy13tKHpe79y97eEijL/vhraezI7XJhTccSxupXLxWmX+FClxP48pEb3G7jmySSiMrSzZ6vA4e4YaOyz95c3K6Pr3f6xahw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=OTFD5BG2; arc=none smtp.client-ip=205.220.177.32
+	s=arc-20240116; t=1772015634; c=relaxed/simple;
+	bh=0pfty/ETi9SSmG8iAf6yqrT36uOz5XzNEi+28GWauf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rcVxVdnloYYoxBWDsl8+FWfU+0x/mmfUdAMR1A/KamyAaV0oTp53cjJB/q6fsNekJMLe3OSvsmsBIsJK9pL1FS2Wce7l6XNr86cINKFJnu7x8gEwAqWbA4a5BYkco078wk06e9a9p4mdTa7RJ8UVBTdGV3EpkRaquyVJuME+gXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Jk0E3+EX; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61OIuPAI719584;
-	Wed, 25 Feb 2026 07:00:44 GMT
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61P1xJMf1059873;
+	Wed, 25 Feb 2026 10:33:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=S6gcp0xfkTqKxwhFgwrJBzBE2DoaN
-	a+6MaJR1Grj4Lg=; b=OTFD5BG27ga2y1zxiMYUdbIlFnRbqIQ9krc7sScwKmHev
-	u1+5LwP+aT7/U2qhqYBW+8mGJjqApSJLntm6wFjkY/40i3/0x4JnxTVnwJWbubd5
-	wLfDAxVVIv200IVPX63peCv4NQJyg46VZAFrU1t7C25nU+h3vFwLayhewznd4z4q
-	pQ5fqd3Rz/TiUNpXF0o4QliWloK0Pi37oTUnD9jQwGCYjU5bjEe6yU5c0Gv3pSFH
-	P3syrbV51B1a//+5UJ3AZQvni7/eoz+uFQ6SzEbPoU6AOvRAgmrbHbSUZUFKlydg
-	8Dd8IxUftd09KafEZX4wgttKxYUcKLhzARAay83nw==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cf34b5knj-1
+	:subject:to; s=corp-2025-04-25; bh=kcvh1Kve7aXdZ3cKUi5w6urdICy+9
+	AV9IPA27yAxO1E=; b=Jk0E3+EXfgIrdExbecAlm/fi9bacupkAtMxGiGVcueA7Z
+	sDs8Uyf61oXfyy7s2kUVZIlTOEGrbwYWKQ5GnurAifE+USdPTzfGi8jKXH1gyiSR
+	+lxCvzXSJXSUXXtUZLMF8PMiL0tRaHr6O3FbbMvd/u0CZPIQpOKFVc3oogufLKDK
+	kohGJlqf428A6ysYVYyekSPWdEM8bqQ740ACBHrki9joV7wFLFXoq+0/G9xQmcVA
+	UFo6iajrcMa/THwGqpoZ5eOIfQIdnQaVtLLFu03QuqGBHQS2+svLiQjPTr7BOZ2b
+	e+dnXePsxAF84j9WhZkOc7iQ+g6TnIg0qCViWlxrA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cf3m7wvub-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Feb 2026 07:00:44 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 61P5n2VS028537;
-	Wed, 25 Feb 2026 07:00:43 GMT
+	Wed, 25 Feb 2026 10:33:42 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 61P9GRX8015638;
+	Wed, 25 Feb 2026 10:33:41 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4cf35aq4wb-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4cf35b5xa5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Feb 2026 07:00:43 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 61P6tmFj015256;
-	Wed, 25 Feb 2026 07:00:42 GMT
+	Wed, 25 Feb 2026 10:33:41 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 61PAXf97026172;
+	Wed, 25 Feb 2026 10:33:41 GMT
 Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4cf35aq4vy-1;
-	Wed, 25 Feb 2026 07:00:42 +0000
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4cf35b5x9r-1;
+	Wed, 25 Feb 2026 10:33:40 +0000
 From: Dai Ngo <dai.ngo@oracle.com>
 To: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
         okorniev@redhat.com, tom@talpey.com, hch@lst.de
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSD: move accumulated callback ops to per-net namespace
-Date: Tue, 24 Feb 2026 23:00:27 -0800
-Message-ID: <20260225070040.532511-1-dai.ngo@oracle.com>
+Subject: [PATCH v2 1/1] NFSD: move accumulated callback ops to per-net namespace
+Date: Wed, 25 Feb 2026 02:30:14 -0800
+Message-ID: <20260225103337.587416-1-dai.ngo@oracle.com>
 X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -80,52 +80,52 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-02-24_03,2026-02-23_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2602130000
- definitions=main-2602250067
-X-Authority-Analysis: v=2.4 cv=GrlPO01C c=1 sm=1 tr=0 ts=699e9e1c cx=c_pps
- a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ definitions=main-2602250103
+X-Authority-Analysis: v=2.4 cv=O5U0fR9W c=1 sm=1 tr=0 ts=699ed006 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
  a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=yPCof4ZbAAAA:8 a=XQ25xVWbFr9NG-82UFAA:9
-X-Proofpoint-ORIG-GUID: mcU7sS7PdGIHB4aDpH-nn5Nv0Oi0Xxl4
-X-Proofpoint-GUID: mcU7sS7PdGIHB4aDpH-nn5Nv0Oi0Xxl4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI1MDA2NyBTYWx0ZWRfXxtpYCZtByr96
- JT8AkpnSRDtm5b89wdwt9sTlfE/2Wprau4CSzlvFQVyCfFDyv6+WYHbzSrNfnyDPzRznUXMacrY
- APxHMeg2/2pAgXG/pFlka3NHG+QumpV6wNegyZLAQ6MukNg4rBrTT6KvG8HiOaKpkjRn8SbHD6o
- Ifw4nEokZcnDDIten9g4duNuAkuTLfLiGg3ZzionlsXH1rHvhswc+bWXry/BSF6jQfJZUsD48Ua
- f8YvDgXsxfdfX3pVRnkGTZKjS1r7mBISVbvCVftoHFe69G+Zat03sMUOEsb6IL1U0Jy2echvQqB
- jwS/tlRmZl98Xkk3r2YOrojBnBr6iR5SVVJvr7NBO9a07jd/R5nVaLFNuCwi9hMQMvvu3AR6jYs
- PtBAv+qgFUAY2XL0lTFTfpnG44AkFlHQ39XCH/kKH5A06MHP9TBQT3ZhnPSXhbW6om2hDjY7APs
- 6rAxxbfjhypFEBmejMA==
+ a=GgsMoib0sEa3-_RKJdDe:22 a=yPCof4ZbAAAA:8 a=TcovN42iIufsKO83s8cA:9
+X-Proofpoint-GUID: NbJPhjW5QVqrhrkNpKkpzdP3brmQ-4d8
+X-Proofpoint-ORIG-GUID: NbJPhjW5QVqrhrkNpKkpzdP3brmQ-4d8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI1MDEwMyBTYWx0ZWRfX92dbv4BNAxn0
+ i41zFTWt1lfCtI2OASBR3yHSWzeUBmkitiQNjjLUdrKMQgZ7Up3m3JHekEk/SXccxL6WcCBmnnc
+ komOtLlfMChHz1X9eitz9uXAdTi/kegSihbsl016LPnKqmaI7d4XA8s5ITjCG2z3inPEKv/1gmB
+ eu+knGoY97jNmTiZ3HAilS+2/3xTRID9jFa/VayLSWuZgGpYEjuLZ7w7oiy+ePqPSnqUpgIOG9Q
+ eQXRlTaKuQN3gFgIwdmA1i7O302Ti9adKjZuDjA9fpalCKFooLB7tmNez9Pi/Np6MpVgwsVBxJy
+ daFyCavgk1s2+G9iD7ZXXWq86Zuzw8q19X2GSAPCmzbFDpSLUK7Pi9Pl6qslXNXYtj0YUMwLCFK
+ zBMJcka2/eopkuAcSMb3CbWvZVe1amNjJW4GllU95UqOhsxNGbsT/NhaiKQ/KyB5VFIb/fPbDES
+ rYaA/jC2e+fUa9aHnZA==
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19232-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[oracle.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:mid,oracle.com:dkim,oracle.com:email];
+	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19233-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:dkim,oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[oracle.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: D6966192E7A
+X-Rspamd-Queue-Id: 114D3195CDE
 X-Rspamd-Action: no action
 
 Track accumulated callback operations on a per-network-namespace basis
@@ -136,9 +136,13 @@ Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
  fs/nfsd/netns.h        |  4 +++
  fs/nfsd/nfs4callback.c | 75 ++++++++++++++++++++++--------------------
- fs/nfsd/nfsctl.c       |  4 +++
+ fs/nfsd/nfsctl.c       |  5 +++
  fs/nfsd/state.h        |  2 ++
- 4 files changed, 50 insertions(+), 35 deletions(-)
+ 4 files changed, 51 insertions(+), 35 deletions(-)
+
+v2:
+  . free memory allocated for nn->nfsd_cb_version4.counts in
+    nfsd_net_cb_stats_init() on error in nfsd_net_init().
 
 diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
 index 9fa600602658..62a5949490ea 100644
@@ -156,7 +160,7 @@ index 9fa600602658..62a5949490ea 100644
  
  /* Simple check to find out if a given net was properly initialized */
 diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index aea8bdd2fdc4..6d9db9360748 100644
+index aea8bdd2fdc4..aad4276b2f1b 100644
 --- a/fs/nfsd/nfs4callback.c
 +++ b/fs/nfsd/nfs4callback.c
 @@ -1016,7 +1016,7 @@ static int nfs4_xdr_dec_cb_offload(struct rpc_rqst *rqstp,
@@ -231,7 +235,7 @@ index aea8bdd2fdc4..6d9db9360748 100644
  	return queued;
  }
 +
-+void nfsd_net_cb_stats_exit(struct nfsd_net *nn)
++void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn)
 +{
 +	kfree(nn->nfsd_cb_version4.counts);
 +}
@@ -268,7 +272,7 @@ index aea8bdd2fdc4..6d9db9360748 100644
 +	return 0;
 +}
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index e9acd2cd602c..b6f5a7822cd3 100644
+index e9acd2cd602c..b24a838afcaa 100644
 --- a/fs/nfsd/nfsctl.c
 +++ b/fs/nfsd/nfsctl.c
 @@ -2158,6 +2158,9 @@ static __net_init int nfsd_net_init(struct net *net)
@@ -277,20 +281,28 @@ index e9acd2cd602c..b6f5a7822cd3 100644
  
 +	retval = nfsd_net_cb_stats_init(nn);
 +	if (retval)
-+		goto out_export_error;
++		return retval;
  	retval = nfsd_export_init(net);
  	if (retval)
  		goto out_export_error;
-@@ -2227,6 +2230,7 @@ static __net_exit void nfsd_net_exit(struct net *net)
+@@ -2198,6 +2201,7 @@ static __net_init int nfsd_net_init(struct net *net)
+ out_idmap_error:
+ 	nfsd_export_shutdown(net);
+ out_export_error:
++	nfsd_net_cb_stats_shutdown(nn);
+ 	return retval;
+ }
+ 
+@@ -2227,6 +2231,7 @@ static __net_exit void nfsd_net_exit(struct net *net)
  {
  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
  
-+	nfsd_net_cb_stats_exit(nn);
++	nfsd_net_cb_stats_shutdown(nn);
  	nfsd_proc_stat_shutdown(net);
  	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
  	nfsd_idmap_shutdown(net);
 diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 6fcbf1e427d4..30d3ff1a4ad7 100644
+index 6fcbf1e427d4..72d98088627a 100644
 --- a/fs/nfsd/state.h
 +++ b/fs/nfsd/state.h
 @@ -877,4 +877,6 @@ struct nfsd4_get_dir_delegation;
@@ -298,7 +310,7 @@ index 6fcbf1e427d4..30d3ff1a4ad7 100644
  						struct nfsd4_get_dir_delegation *gdd,
  						struct nfsd_file *nf);
 +int nfsd_net_cb_stats_init(struct nfsd_net *nn);
-+void nfsd_net_cb_stats_exit(struct nfsd_net *nn);
++void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn);
  #endif   /* NFSD4_STATE_H */
 -- 
 2.47.3
