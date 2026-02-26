@@ -1,265 +1,281 @@
-Return-Path: <linux-nfs+bounces-19266-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19267-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YEmgELgGoGl/fQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19266-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 09:39:20 +0100
+	id mD8YKQMKoGm4fQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19267-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 09:53:23 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E41B1A2AE7
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 09:39:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D88E41A2EEA
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 09:53:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7F8FE3022606
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 08:34:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ED4CA311D967
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 08:48:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51603393DFC;
-	Thu, 26 Feb 2026 08:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61016396B66;
+	Thu, 26 Feb 2026 08:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="muAVjgRr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiSsZ5YY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D1F394465;
-	Thu, 26 Feb 2026 08:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42F1396B61;
+	Thu, 26 Feb 2026 08:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772094858; cv=none; b=UkFaHvP9zoWFtZdMnj7vTWJC1xveFEOdXbmwpl/sDspKU+n4Ni500kGJrzGkHbLxobBAIB+h+xosixC4yxjw0WhWOPKSxJjkmgFikjE9pW5Bq6kZq7B/vsuCz0BrXm+NkzGbFL7P0SixNgbixt4BFcfpBh/B1h8ry95wVzwizXg=
+	t=1772095710; cv=none; b=HeUY2ez7/kas5wYBqK/LD7zjoM3I/qkIn85azywGKSQL5zDuSN+zN93bXrU+4KF0uHk2KMmT1hBDcSMK85WAVTKj0dgKSwpslZuJuhJRbFAbhUDpOOT5x0lwiHGNlVNQGv2dogkAr/1h6USkHJL3q2aMEoFPHii0ASgSopT7Hlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772094858; c=relaxed/simple;
-	bh=VBRnKydwyb9rmp9mJLILzMVACEA0F0hDliHQq5zrjJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aBEsC0f9wEWVX4qvBldld8cB7FbwEV5WWrAPOO9GxLsuiNs2GDhZLRkIx5+n10exWshyrG3fq+JXQg1XwLiPUEnJxAuuxpk3XAME/lUNtBbll0ACcwbLhPqFnKi1XelRE2WK9RHazO/1iWRuf77h4+DjDYwY88lYQNllDbyu9hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=muAVjgRr; arc=none smtp.client-ip=113.46.200.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=4vtmQrQDBtzHPF/dkeyVbrNQBQef3q+OahkMeqRajRA=;
-	b=muAVjgRrdpn903t7Q5nfFjus27sJY21f3A0eSXEKLlyVONp3XwNeq2u+aIn4+7q5JXA63gOHi
-	SmejkHhB6mXsDH8fYCzt8yr2kXE4vsOUh/zaBLppDOxefrMaDn+1n/zacEclpwMClcwKFntZqzZ
-	Imvy1K2SO/cxoRJMZzs1TrU=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fM4Pd75Hdz1K96h;
-	Thu, 26 Feb 2026 16:29:25 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17B97402AB;
-	Thu, 26 Feb 2026 16:34:11 +0800 (CST)
-Received: from [10.174.176.240] (10.174.176.240) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 26 Feb 2026 16:34:10 +0800
-Message-ID: <6ffe642b-148c-462e-83a5-0019ce92e87e@huawei.com>
-Date: Thu, 26 Feb 2026 16:34:09 +0800
+	s=arc-20240116; t=1772095710; c=relaxed/simple;
+	bh=w4oVPVQRMVcLrJZ9FE68GA/q3tGqL3PF88KSsK03EaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQKLcroxNG/Bv3OSiofSG8jOXe8PHvIlzHYX0NoITosYeMN1P0ZBvctxDXGB8UYB5o64mLuPMnMlFBN1IcRXisXP2OIE27jDADBW+bOhl03iCIURroytAK7zdhJoPO49NQH0NiQRwKxd0/2TV51SmSBY5zkcpHCyEiCJSOF6Hrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uiSsZ5YY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE446C19425;
+	Thu, 26 Feb 2026 08:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772095709;
+	bh=w4oVPVQRMVcLrJZ9FE68GA/q3tGqL3PF88KSsK03EaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uiSsZ5YYuKxaWZM6sd4kOli6PcyX95Q/98BaXY6hhtk1sgAkD587FShCq4l5RXBhw
+	 jU/RKIyw7dZiXOuR73Vfkr6dCI80yhPEoAXeNb92NU1SAC5+RCkWJ+oqQelPQfwePE
+	 HRgM1DJlEZVfTzD3ZY+RaPTKIDFzg4BX948BjA6MfZnnRFrK8nVb4zBR+vbdzhjH80
+	 cNeayPzW06T5LPfaWvUhf8l4ejlQtrqfiB/Z3VjF7UIRb3jStq7N+6qQscYbyPvFjA
+	 Wo6gsnB7f6fMpvd2cHNT//yxPFGg5KJFjE6yNrz0Q9KTopnirFgGmBClyjg05A7Xhe
+	 oRt9fLNKrfyRw==
+Date: Thu, 26 Feb 2026 09:48:24 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Jan Kara <jack@suse.com>, 
+	Amir Goldstein <amir73il@gmail.com>
+Cc: NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
+ unmount notification
+Message-ID: <20260226-alimente-kunst-fb9eae636deb@brauner>
+References: <20260224163908.44060-1-cel@kernel.org>
+ <20260224163908.44060-2-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
- lock list
-To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
-	<chuck.lever@oracle.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yangerkun@huaweicloud.com>, <lilingfeng3@huawei.com>,
-	<zhangjian496@h-partners.com>, <yi.zhang@huawei.com>
-References: <20260226012203.3962997-1-yangerkun@huawei.com>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <20260226012203.3962997-1-yangerkun@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemf100006.china.huawei.com (7.202.181.220)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260224163908.44060-2-cel@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [2.34 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_FROM(0.00)[bounces-19266-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[huawei.com:+];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19267-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[kernel.org,suse.com,gmail.com];
+	FREEMAIL_CC(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:mid,huawei.com:dkim,huawei.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8E41B1A2AE7
+	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: D88E41A2EEA
 X-Rspamd-Action: no action
 
-Hi all,
-
-This issue has been known for a long time now, and I am really looking 
-forward to some discussion on this problem and the solution I have proposed.
-
-Thanks,
-Erkun.
-
-在 2026/2/26 9:22, Yang Erkun 写道:
-> Lingfeng identified a bug and suggested two solutions, but both appear
-> to have issues.
+On Tue, Feb 24, 2026 at 11:39:06AM -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Generally, we cannot release flc_lock while iterating over the file lock
-> list to avoid use-after-free (UAF) problems with file locks. However,
-> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
-> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
-> may take a long time. To resolve this, NFS switches to using nfsi->rwsem
-> for the same protection, and nfs_reclaim_locks follows this approach.
-> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
-> this is inadequate since a single inode can have multiple nfs4_state
-> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
+> Kernel subsystems occasionally need notification when a filesystem
+> is unmounted. Until now, the only mechanism available is the fs_pin
+> infrastructure, which has limited adoption (only BSD process
+> accounting uses it) and VFS maintainers consider it deprecated.
 > 
-> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte range
-> lock must be atomic with the stateid update"), the functions
-> nfs4_locku_done and nfs4_lock_done also break this rule because they
-> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
-> this protection could cause many deadlocks, so instead, the call to
-> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
-> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
-> lock must be atomic with the stateid update"), it has been resolved
-> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly triggering
-> state recovery") because all slots are drained before calling
-> nfs4_do_reclaim, which prevents concurrent stateid changes along this path.
-> Also, nfs_delegation_claim_locks does not cause this concurrency either
-> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no RPC is
-> sent, so nfs4_lock_done is not called. Therefore,
-> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the first
-> time the stateid is set.
+> Add an SRCU notifier chain that fires during mount teardown,
+> following the pattern established by lease_notifier_chain in
+> fs/locks.c. The notifier fires after processing stuck children but
+> before fsnotify_vfsmount_delete(), at which point SB_ACTIVE is
+> still set and the superblock remains fully accessible.
+
+What I don't understand is why you need this per-mount especially
+because you say above "when a filesystem is mounted. Could you explain
+this in some more details, please?
+
+Also this should take namespaces into account somehow, right? As Al
+correctly observed anything that does CLONE_NEWNS and inherits your
+mountable will generate notifications. Like, if systemd spawns services,
+if a container runtime start, if someone uses unshare you'll get
+absolutely flooded with events. I'm pretty sure that is not what you
+want and that is defo not what the VFS should do...
+
+Another thing: These ad-hoc notifiers are horrific. So I'm pitching
+another idea and I hope that Jan and Amir can tell me that this is
+doable...
+
+Can we extend fsnotify so that it's possible for a filesystem to
+register "internal watches" on relevant objects such as mounts and
+superblocks and get notified and execute blocking stuff if needed.
+
+Then we don't have to add another set of custom notification mechanisms
+but have it available in a single subsystem and uniformely available.
+
+> The SRCU notifier type is chosen because:
+>  - Unmount is relatively infrequent, so the overhead of SRCU
+>    registration and unregistration is acceptable
+>  - Callbacks run in process context and may sleep
+>  - No cache bounces occur during chain traversal
 > 
-> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
-> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-lilingfeng3@huawei.com/
-> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-lilingfeng3@huawei.com/
-> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
-> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+> NFSD requires this mechanism to revoke NFSv4 state (opens, locks,
+> delegations) and release cached file handles when a filesystem is
+> unmounted, avoiding EBUSY errors that occur when client state pins
+> the mount.
+> 
+> Suggested-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->   fs/nfs/delegation.c     |  9 ++++++++-
->   fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
->   include/linux/nfs_xdr.h |  1 -
->   3 files changed, 19 insertions(+), 13 deletions(-)
+>  fs/namespace.c        | 69 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mount.h |  4 +++
+>  2 files changed, 73 insertions(+)
 > 
-> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-> index 122fb3f14ffb..9546d2195c25 100644
-> --- a/fs/nfs/delegation.c
-> +++ b/fs/nfs/delegation.c
-> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t type)
->   static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
->   {
->   	struct inode *inode = state->inode;
-> +	struct nfs_inode *nfsi = NFS_I(inode);
->   	struct file_lock *fl;
->   	struct file_lock_context *flctx = locks_inode_context(inode);
->   	struct list_head *list;
-> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->   		goto out;
->   
->   	list = &flctx->flc_posix;
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index ebe19ded293a..269e007e9312 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/mnt_idmapping.h>
+>  #include <linux/pidfs.h>
+>  #include <linux/nstree.h>
+> +#include <linux/notifier.h>
+>  
+>  #include "pnode.h"
+>  #include "internal.h"
+> @@ -73,6 +74,70 @@ static u64 event;
+>  static DEFINE_XARRAY_FLAGS(mnt_id_xa, XA_FLAGS_ALLOC);
+>  static DEFINE_IDA(mnt_group_ida);
+>  
+> +/*
+> + * Kernel subsystems can register to be notified when a filesystem is
+> + * unmounted. This is used by (e.g.) nfsd to revoke state associated
+> + * with files on the filesystem being unmounted.
+> + */
+> +static struct srcu_notifier_head umount_notifier_chain;
 > +
-> +	/* Guard against reclaim and new lock/unlock calls */
-> +	down_write(&nfsi->rwsem);
->   	spin_lock(&flctx->flc_lock);
->   restart:
->   	for_each_file_lock(fl, list) {
-> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->   			continue;
->   		spin_unlock(&flctx->flc_lock);
->   		status = nfs4_lock_delegation_recall(fl, state, stateid);
-> -		if (status < 0)
-> +		if (status < 0) {
-> +			up_write(&nfsi->rwsem);
->   			goto out;
-> +		}
->   		spin_lock(&flctx->flc_lock);
->   	}
->   	if (list == &flctx->flc_posix) {
-> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->   		goto restart;
->   	}
->   	spin_unlock(&flctx->flc_lock);
-> +	up_write(&nfsi->rwsem);
->   out:
->   	return status;
->   }
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 91bcf67bd743..9d6fbca8798b 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
->   	switch (task->tk_status) {
->   		case 0:
->   			renew_lease(calldata->server, calldata->timestamp);
-> -			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
->   			if (nfs4_update_lock_stateid(calldata->lsp,
->   					&calldata->res.stateid))
->   				break;
-> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   	case 0:
->   		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
->   				data->timestamp);
-> -		if (data->arg.new_lock && !data->cancelled) {
-> -			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
-> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
-> -				goto out_restart;
-> -		}
->   		if (data->arg.new_lock_owner != 0) {
->   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
->   			nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
-> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
->   	msg.rpc_argp = &data->arg;
->   	msg.rpc_resp = &data->res;
->   	task_setup_data.callback_data = data;
-> -	if (recovery_type > NFS_LOCK_NEW) {
-> -		if (recovery_type == NFS_LOCK_RECLAIM)
-> -			data->arg.reclaim = NFS_LOCK_RECLAIM;
-> -	} else
-> -		data->arg.new_lock = 1;
+> +/**
+> + * umount_register_notifier - register for unmount notifications
+> + * @nb: notifier_block to register
+> + *
+> + * Registers a notifier to be called when any filesystem is
+> + * unmounted. The callback is invoked after stuck children are
+> + * processed but before fsnotify_vfsmount_delete(), while SB_ACTIVE
+> + * is still set and the superblock remains fully accessible.
+> + *
+> + * Callback signature:
+> + *   int (*callback)(struct notifier_block *nb,
+> + *                   unsigned long val, void *data)
+> + *
+> + *   @val:  always 0 (reserved for future extension)
+> + *   @data: struct super_block * for the unmounting filesystem
+> + *
+> + * Callbacks run in process context and may sleep. Return
+> + * NOTIFY_DONE from the callback; return values are ignored and
+> + * cannot prevent unmount. Callbacks must handle their own error
+> + * recovery internally.
+> + *
+> + * The notification fires once per mount instance. Bind mounts of
+> + * the same filesystem trigger multiple callbacks with the same
+> + * super_block pointer; callbacks must handle duplicate
+> + * notifications idempotently.
+> + *
+> + * The super_block pointer is valid only for the duration of the
+> + * callback. Callbacks must not retain this pointer for
+> + * asynchronous use; to access the filesystem after the callback
+> + * returns, acquire a separate reference (e.g., via an open file)
+> + * during callback execution.
+> + *
+> + * Returns: 0 on success, negative error code on failure.
+> + */
+> +int umount_register_notifier(struct notifier_block *nb)
+> +{
+> +	return srcu_notifier_chain_register(&umount_notifier_chain, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(umount_register_notifier);
 > +
-> +	if (recovery_type == NFS_LOCK_RECLAIM)
-> +		data->arg.reclaim = NFS_LOCK_RECLAIM;
+> +/**
+> + * umount_unregister_notifier - unregister an unmount notifier
+> + * @nb: notifier_block to unregister
+> + *
+> + * Unregisters a previously registered notifier. This function may
+> + * block due to SRCU synchronization.
+> + *
+> + * Must not be called from within a notifier callback; doing so
+> + * causes deadlock. Must be called before module unload if the
+> + * notifier_block resides in module memory.
+> + */
+> +void umount_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	srcu_notifier_chain_unregister(&umount_notifier_chain, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(umount_unregister_notifier);
 > +
->   	task = rpc_run_task(&task_setup_data);
->   	if (IS_ERR(task))
->   		return PTR_ERR(task);
-> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
->   	up_read(&nfsi->rwsem);
->   	mutex_unlock(&sp->so_delegreturn_mutex);
->   	status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
-> +	if (status)
-> +		goto out;
+>  /* Don't allow confusion with old 32bit mount ID */
+>  #define MNT_UNIQUE_ID_OFFSET (1ULL << 31)
+>  static u64 mnt_id_ctr = MNT_UNIQUE_ID_OFFSET;
+> @@ -1307,6 +1372,8 @@ static void cleanup_mnt(struct mount *mnt)
+>  		hlist_del(&m->mnt_umount);
+>  		mntput(&m->mnt);
+>  	}
+> +	/* Notify registrants before superblock deactivation */
+> +	srcu_notifier_call_chain(&umount_notifier_chain, 0, mnt->mnt.mnt_sb);
+>  	fsnotify_vfsmount_delete(&mnt->mnt);
+>  	dput(mnt->mnt.mnt_root);
+>  	deactivate_super(mnt->mnt.mnt_sb);
+> @@ -6189,6 +6256,8 @@ void __init mnt_init(void)
+>  {
+>  	int err;
+>  
+> +	srcu_init_notifier_head(&umount_notifier_chain);
 > +
-> +	down_read(&nfsi->rwsem);
-> +	request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
-> +	status = locks_lock_inode_wait(state->inode, request);
-> +	up_read(&nfsi->rwsem);
->   out:
->   	request->c.flc_flags = flags;
->   	return status;
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index ff1f12aa73d2..9599ad15c3ad 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -580,7 +580,6 @@ struct nfs_lock_args {
->   	struct nfs_lowner	lock_owner;
->   	unsigned char		block : 1;
->   	unsigned char		reclaim : 1;
-> -	unsigned char		new_lock : 1;
->   	unsigned char		new_lock_owner : 1;
->   };
->   
-
+>  	mnt_cache = kmem_cache_create("mnt_cache", sizeof(struct mount),
+>  			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
+>  
+> diff --git a/include/linux/mount.h b/include/linux/mount.h
+> index acfe7ef86a1b..9a46ab40dffd 100644
+> --- a/include/linux/mount.h
+> +++ b/include/linux/mount.h
+> @@ -21,6 +21,7 @@ struct file_system_type;
+>  struct fs_context;
+>  struct file;
+>  struct path;
+> +struct notifier_block;
+>  
+>  enum mount_flags {
+>  	MNT_NOSUID	= 0x01,
+> @@ -109,4 +110,7 @@ extern void kern_unmount_array(struct vfsmount *mnt[], unsigned int num);
+>  
+>  extern int cifs_root_data(char **dev, char **opts);
+>  
+> +int umount_register_notifier(struct notifier_block *nb);
+> +void umount_unregister_notifier(struct notifier_block *nb);
+> +
+>  #endif /* _LINUX_MOUNT_H */
+> -- 
+> 2.53.0
+> 
 
