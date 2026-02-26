@@ -1,193 +1,146 @@
-Return-Path: <linux-nfs+bounces-19276-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19277-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCdEEHRMoGnvhwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19276-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 14:36:52 +0100
+	id sB0eFHNNoGnvhwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19277-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 14:41:07 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC18B1A6AD0
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 14:36:51 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E49DE1A6CAA
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 14:41:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DC485309E3FE
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 13:33:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 377A43051DE0
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 13:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02EB83624B0;
-	Thu, 26 Feb 2026 13:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A8E261B9B;
+	Thu, 26 Feb 2026 13:40:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y+q9NdJG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4IojGsaJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y+q9NdJG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4IojGsaJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EbOLKPL+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F380F362127
-	for <linux-nfs@vger.kernel.org>; Thu, 26 Feb 2026 13:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA03E23AB88
+	for <linux-nfs@vger.kernel.org>; Thu, 26 Feb 2026 13:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772112786; cv=none; b=IiXSoQUQ02muuBzTcBRzA6IRDyM6EH0iXtXuRBZ7QF5x7zDCk3Oo1EPQmO9Wpb9b9C9GGmZNULZJNbDCm8A4b7h20K20YC3o+Se6QGz3C2WXfqCi4+NHreH7nljSNf1ifWWtR04mp1MDW/N/JUW63uGozsg4NwAX6H1Tb+NP9ig=
+	t=1772113216; cv=none; b=XGY4cEXVlDTpWXdy2VmZdFUzMI+gO2tNISdDbQdnEnASt/Zrqsjb7nZYWirSoFNncJTkuxs4ReQzDB02dQjswd4TAkwvhqTkaFQG7fSnH4elQxDJ6BhdwGv/fjdGQyflv/b2zeItfXOHXIKcI24gHWgx6sUkezuS7OFRm7ZOsks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772112786; c=relaxed/simple;
-	bh=icM4sWmEUXc517pw/21Vdp7W9VDjo99t0kDWbhlImgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKwBPs5liRvHTTEtT8zdaqj0uxJmoeNMLrf3mUT6gi96+HTuZFaozbJvH/TAIBKrRc+T8wPoga1XQtKvcL5RKeNDc80EgXbjtJjzMUNYY+Aaroqej5LzYdBexo+rC71R4jUeqWOChlmefd9En+5GWID+nH4WD9nWbpYJRH9t0SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y+q9NdJG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4IojGsaJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y+q9NdJG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4IojGsaJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 24FCA1FAD4;
-	Thu, 26 Feb 2026 13:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1772112779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DqeshdE86FdxvwODzfcSa0evwotA046BXGucN70U7O4=;
-	b=y+q9NdJGg7TPdS33AsrHYvX/yNo8C3X6rGlWzN7dR90ITYRobGSn3ZNzNz1CKna9r+2KZl
-	SdDTdxS1YmAvGghxHX0ss8CMg35m5DitpUYOP5ZEmAoNJ+o413x5W33XOkvh3xkWmbc54o
-	2aLV/lKecM1P7ANwg0g+avwI4j4ye8Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1772112779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DqeshdE86FdxvwODzfcSa0evwotA046BXGucN70U7O4=;
-	b=4IojGsaJfgqpae2U79zkBQzOJA+mxWqzdQmb+O2OK9r+KlNrs6HprhykRJ5dlgicMIVn/G
-	X8eChwVI6vUf6LAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1772112779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DqeshdE86FdxvwODzfcSa0evwotA046BXGucN70U7O4=;
-	b=y+q9NdJGg7TPdS33AsrHYvX/yNo8C3X6rGlWzN7dR90ITYRobGSn3ZNzNz1CKna9r+2KZl
-	SdDTdxS1YmAvGghxHX0ss8CMg35m5DitpUYOP5ZEmAoNJ+o413x5W33XOkvh3xkWmbc54o
-	2aLV/lKecM1P7ANwg0g+avwI4j4ye8Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1772112779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DqeshdE86FdxvwODzfcSa0evwotA046BXGucN70U7O4=;
-	b=4IojGsaJfgqpae2U79zkBQzOJA+mxWqzdQmb+O2OK9r+KlNrs6HprhykRJ5dlgicMIVn/G
-	X8eChwVI6vUf6LAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1A1753EA62;
-	Thu, 26 Feb 2026 13:32:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id c71XBotLoGl+XQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 26 Feb 2026 13:32:59 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id CF0EAA0A27; Thu, 26 Feb 2026 14:32:54 +0100 (CET)
-Date: Thu, 26 Feb 2026 14:32:54 +0100
-From: Jan Kara <jack@suse.cz>
-To: Chuck Lever <cel@kernel.org>
-Cc: Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.com>, 
-	NeilBrown <neilb@ownmail.net>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Chuck Lever <chuck.lever@oracle.com>, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
- unmount notification
-Message-ID: <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
-References: <20260224163908.44060-1-cel@kernel.org>
- <20260224163908.44060-2-cel@kernel.org>
- <20260226-alimente-kunst-fb9eae636deb@brauner>
- <CAOQ4uxhEpf1p3agEF7_HBrhUeKz1Fb_yKAQ0Pjo0zztTJfMoXA@mail.gmail.com>
- <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>
+	s=arc-20240116; t=1772113216; c=relaxed/simple;
+	bh=KU+pLVUQEic5daDKCJmTHeE2ukp0gjkkeO7IzT+B44Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VqJ3SAKkPIOvovqTBVy/twogNMPE/2UCG73yTSq2LzT5svwOHoP77KduZuKqslXvFFmVv2lM9PJpI2UHxT8qRob4BJ/qgGdh5rCo5ZHjwKCL2hgKgGNnrakFXaqP2nz35Cyp7GF5WLD8UBnyJIqooolu+fHuaxmhLOeY0NpJmyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EbOLKPL+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591CAC116C6;
+	Thu, 26 Feb 2026 13:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772113215;
+	bh=KU+pLVUQEic5daDKCJmTHeE2ukp0gjkkeO7IzT+B44Y=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=EbOLKPL+fJqC7aIQK6/QmThQWt5i30dsUhzPp0oJ+OavGvXFbNLxTeh5KNc7Mhw/w
+	 Kyq8CcGj9keqLzALH7lnZ22S7JWYY3YQWyrQB/3/ChT3Y1aW4neJbF00HajKk2uJFk
+	 4oNFSbKOWAL5AkeRhnUu0ZuaqyiR8h9QFvel78UWnCwbcWDK48Sr61jAYO3BEGybfX
+	 /SqlxhJ//di+9I7jg/qn+DhAp6Fy4CjVUg2XL4CJsa56+6mxuD3SQHnrgkZp5UloHo
+	 L48b94/i32DnE82m/tihxi5tIKPm8uwkO4kLOdPy1z5C1QAtm61tDambc+bTIqRa5T
+	 PCwGx2U5u+s7g==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 57745F40068;
+	Thu, 26 Feb 2026 08:40:14 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Thu, 26 Feb 2026 08:40:14 -0500
+X-ME-Sender: <xms:Pk2gaZNEbA99bIV0oLqLRQgX6lDBVHY7A9u-q3sv1ISRgcS6rZNcgw>
+    <xme:Pk2gaWwYyGOJ3ZdGI3BaRs4Ay3afeu92ViBkuDoCF2AwS0XktPqfI5hHjeiXIDObR
+    O_dEU2m7HEdZHm3IwY_RaKefrQ5pLUUBnOzv75A5St0EM1LWdMbaWo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeeiudekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthho
+    pegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopegurghird
+    hnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughh
+    rghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoh
+    eplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:Pk2gaShBkfv9K24DPvH0-Gv884hAChX7JAD6KBuHiX9fRgiW5o6Xig>
+    <xmx:Pk2gadDLK9NLJ0bBm52iMcHkBQEVCRoXSFOz6MRKHTmoK_DW1-956Q>
+    <xmx:Pk2gaQs2wa7mHRSJ0z4LOwTJ1Wyd7h4uZU2cnJwFGr0rXeYerZ9cnQ>
+    <xmx:Pk2gaZfirTvK_NgqSaagwZaoMjIE8QBnD3sk_AuBvpemUVISuQV0fw>
+    <xmx:Pk2gad90lPoWqrAB12qc2RFmLWgV92_1ZlVaOfc6WV0JKaI61qPGiy5K>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 30F84780070; Thu, 26 Feb 2026 08:40:14 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>
-X-Spam-Score: -3.80
-X-Spam-Level: 
-X-Spam-Flag: NO
+X-ThreadId: A0dCGpBvaPrB
+Date: Thu, 26 Feb 2026 08:39:54 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Dai Ngo" <dai.ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
+ "Christoph Hellwig" <hch@lst.de>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <655f3bd4-9428-4b38-94c6-30f28b181581@app.fastmail.com>
+In-Reply-To: <20260225195024.754489-1-dai.ngo@oracle.com>
+References: <20260225195024.754489-1-dai.ngo@oracle.com>
+Subject: Re: [PATCH v4 1/1] NFSD: move accumulated callback ops to per-net namespace
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19276-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,suse.cz:dkim];
-	DMARC_NA(0.00)[suse.cz];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,suse.com,ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19277-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,app.fastmail.com:mid,oracle.com:email];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: AC18B1A6AD0
+X-Rspamd-Queue-Id: E49DE1A6CAA
 X-Rspamd-Action: no action
 
-On Thu 26-02-26 08:27:00, Chuck Lever wrote:
-> On 2/26/26 5:52 AM, Amir Goldstein wrote:
-> > On Thu, Feb 26, 2026 at 9:48 AM Christian Brauner <brauner@kernel.org> wrote:
-> >> Another thing: These ad-hoc notifiers are horrific. So I'm pitching
-> >> another idea and I hope that Jan and Amir can tell me that this is
-> >> doable...
-> >>
-> >> Can we extend fsnotify so that it's possible for a filesystem to
-> >> register "internal watches" on relevant objects such as mounts and
-> >> superblocks and get notified and execute blocking stuff if needed.
-> >>
-> > 
-> > You mean like nfsd_file_fsnotify_group? ;)
-> > 
-> >> Then we don't have to add another set of custom notification mechanisms
-> >> but have it available in a single subsystem and uniformely available.
-> >>
-> > 
-> > I don't see a problem with nfsd registering for FS_UNMOUNT
-> > event on sb (once we add it).
-> > 
-> > As a matter of fact, I think that nfsd can already add an inode
-> > mark on the export root path for FS_UNMOUNT event.
-> 
-> There isn't much required here aside from getting a synchronous notice
-> that the final file system unmount is going on. I'm happy to try
-> whatever mechanism VFS maintainers are most comfortable with.
 
-Yeah, then as Amir writes placing a mark with FS_UNMOUNT event on the
-export root path and handling the event in
-nfsd_file_fsnotify_handle_event() should do what you need?
 
-								Honza
+On Wed, Feb 25, 2026, at 2:49 PM, Dai Ngo wrote:
+> Moves the callback RPC program, version, and stats structures from
+> global statics into struct nfsd_net so that each network namespace
+> gets its own callback counters and program definition.
+>
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+
+The new patch description is rather inferior to the original. Most
+importantly, it doesn't explain why this change is necessary, but
+instead simply repeats the content of the diff.
+
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Chuck Lever
 
