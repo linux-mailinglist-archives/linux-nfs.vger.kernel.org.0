@@ -1,199 +1,265 @@
-Return-Path: <linux-nfs+bounces-19265-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19266-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YOtDGy2jn2lfdAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19265-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 02:34:37 +0100
+	id YEmgELgGoGl/fQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19266-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 09:39:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA06519FD57
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 02:34:36 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E41B1A2AE7
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 09:39:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E471B3021473
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 01:34:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7F8FE3022606
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Feb 2026 08:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB3D8371040;
-	Thu, 26 Feb 2026 01:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51603393DFC;
+	Thu, 26 Feb 2026 08:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="TyFPTUuN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ib+fb/df"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="muAVjgRr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
+Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AAB2D060D;
-	Thu, 26 Feb 2026 01:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D1F394465;
+	Thu, 26 Feb 2026 08:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772069661; cv=none; b=Sc88sOZ/tASe6LRjOJbWwRYOcyfUKGmLhozvf56lciKIvrp12SQNvc5QvoEYzrA8IFPP56dvjE1mOmryed1gKf0F8K2S72OsFmpTHhpIStei4yFBBZboIL5MhscaxJ9dlSNBqgWSqG8LYEcUAol2En+J8kyJBGH+Xs9ZLAEyFpg=
+	t=1772094858; cv=none; b=UkFaHvP9zoWFtZdMnj7vTWJC1xveFEOdXbmwpl/sDspKU+n4Ni500kGJrzGkHbLxobBAIB+h+xosixC4yxjw0WhWOPKSxJjkmgFikjE9pW5Bq6kZq7B/vsuCz0BrXm+NkzGbFL7P0SixNgbixt4BFcfpBh/B1h8ry95wVzwizXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772069661; c=relaxed/simple;
-	bh=s0GI5iI3wRZDhofWKjF/FkmAMYAMF4AS6inKjugXtHI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=tsB1oEd6BCOKX9TPmUubX5rybg/RijfIlGeTBfiweZ0/80qHKoxtZeajQDixfJYsgtKMXM+yytbk8+p/yn5EsEK6GCur0lfqAjjWeHulEnw9yRrl/9vDeAlp7PflImfxqT/5qVSdRBq3Ay3eLsMbluJH+IJOOZGsQnHCHCTXrz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=TyFPTUuN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ib+fb/df; arc=none smtp.client-ip=202.12.124.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.stl.internal (Postfix) with ESMTP id 770D01301436;
-	Wed, 25 Feb 2026 20:34:18 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Wed, 25 Feb 2026 20:34:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1772069658; x=1772076858; bh=xFBd+sgdAigxjeaFROdJjStbv2bZWH9W94w
-	m4HgXADY=; b=TyFPTUuNpFO4HIfohypp+ntLH4SQw2KPz+k2oQocgPVXp9IMTnX
-	YTwXn0B0NRR1FYYXcaTtalmso1CAnAtpqQXesgp6NXUx9quUYAHLB9YpC7bcAFIk
-	TvZwg0C4FEHSiJIWxgFCFZeZtQNbnePdiIhVa5xxbKLS4C0AAupb2KhOapT87xq6
-	/3dFNWglRa3+Asvjf363pYv350SKI+bTeFGj0Ke0oZ/HCmva0nyqttckU6ALPSJC
-	tKc9PZzn6EA/vn9yNXu2DyW0UREtAZ/UTz1GA6V09Li6HeUdi6bLRfdCD5cAE4/8
-	WK60qtisykmi10YVhcXga6K3ltYHqs7v/qg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1772069658; x=
-	1772076858; bh=xFBd+sgdAigxjeaFROdJjStbv2bZWH9W94wm4HgXADY=; b=I
-	b+fb/dfhFB2brFsDKPdocEWfgR6l5L1tGXqcmDEUm3dOayVudiX+HaadK36d/22y
-	X+hujziwNR1hhTLDE2AI+F4JYwsusV2edxzfklPwQ2qZG64OmPoEcH5DheOy4vAg
-	yZobw4gbMhMooYzr+mwhaa5gBqWaBtLl4E4sefLwDLQNuUzHEvbFUl+50coVVzRQ
-	uUSfLvsYvt4ZHYuBH0TtNmKmiN2iTjqr/WfXIN4vsdjnHDbYjLnhZrQP2i/uHaKd
-	hi1uQRctV8MB4SMWSP8frR1+kHQsrbBVM9bNFci7X5iHcoMOp5CM90AYY1GGHLla
-	lsHXTe1M7Jgjucp7xuAqA==
-X-ME-Sender: <xms:GaOfaZdxVZrAzznSHl1LN0ciatDBWLW_4Ro8DTat2U9_lQfv7c3xVg>
-    <xme:GaOfaU3CQnGhH_qC9WVaUqiJ_NCnEVlJXvoCDEyQujfqIEFNjcJ-KobsK6_w0bXRA
-    1o46wyvYNXYHRmuB2DKHe8Qk8RpFZRs_31jtFSaYRrHAyZ0>
-X-ME-Received: <xmr:GaOfaZ56MuiAcHw3-TwPARtUbYmsMUpCo2Tgrqvdk_rKhN1qr8rZK8mNn6nhWrEZy_AkfhXlZTsDqCDkE90mmkyGUJoOWVM0jUxttdORdGVn>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeegjeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepfedupdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqtghifhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepvggtrhihphhtfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheptggvphhhqdguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:GaOfabL1dxc7_aM4UDs5Mnpgjmz6nRiprNnIb1cnNlkCnzS-DCI01w>
-    <xmx:GaOfadZA0aqqd6hc81DmwuMDHkptr7xfpw9R6OlYEqEEXQp_JHd2Tg>
-    <xmx:GaOfaQ1gMPhOOVjW9cB40OYojuSXNA5JDysMhyGtEuX2KAF1dKYb1w>
-    <xmx:GaOfaXPevv-IvnTNjJUThP9sr3Z22JJ883VL2eHqz1vQzs-Pzf2nZA>
-    <xmx:GqOfaQqK_qAYvtHo1ixO-4yAHtdC6htK7kcrEBnPb9SzuKAO8kARg5HQ>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Feb 2026 20:34:09 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1772094858; c=relaxed/simple;
+	bh=VBRnKydwyb9rmp9mJLILzMVACEA0F0hDliHQq5zrjJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aBEsC0f9wEWVX4qvBldld8cB7FbwEV5WWrAPOO9GxLsuiNs2GDhZLRkIx5+n10exWshyrG3fq+JXQg1XwLiPUEnJxAuuxpk3XAME/lUNtBbll0ACcwbLhPqFnKi1XelRE2WK9RHazO/1iWRuf77h4+DjDYwY88lYQNllDbyu9hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=muAVjgRr; arc=none smtp.client-ip=113.46.200.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=4vtmQrQDBtzHPF/dkeyVbrNQBQef3q+OahkMeqRajRA=;
+	b=muAVjgRrdpn903t7Q5nfFjus27sJY21f3A0eSXEKLlyVONp3XwNeq2u+aIn4+7q5JXA63gOHi
+	SmejkHhB6mXsDH8fYCzt8yr2kXE4vsOUh/zaBLppDOxefrMaDn+1n/zacEclpwMClcwKFntZqzZ
+	Imvy1K2SO/cxoRJMZzs1TrU=
+Received: from mail.maildlp.com (unknown [172.19.163.127])
+	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fM4Pd75Hdz1K96h;
+	Thu, 26 Feb 2026 16:29:25 +0800 (CST)
+Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
+	by mail.maildlp.com (Postfix) with ESMTPS id 17B97402AB;
+	Thu, 26 Feb 2026 16:34:11 +0800 (CST)
+Received: from [10.174.176.240] (10.174.176.240) by
+ kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Thu, 26 Feb 2026 16:34:10 +0800
+Message-ID: <6ffe642b-148c-462e-83a5-0019ce92e87e@huawei.com>
+Date: Thu, 26 Feb 2026 16:34:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "David Howells" <dhowells@redhat.com>,
- "Marc Dionne" <marc.dionne@auristor.com>, "Xiubo Li" <xiubli@redhat.com>,
- "Ilya Dryomov" <idryomov@gmail.com>, "Tyler Hicks" <code@tyhicks.com>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
- "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>,
- "Steve French" <sfrench@samba.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>,
- "Carlos Maiolino" <cem@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-afs@lists.infradead.org, netfs@lists.linux.dev,
- ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org,
- linux-um@lists.infradead.org, linux-nfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/11] VFS: allow d_splice_alias() and d_add() to work on
- hashed dentries.
-In-reply-to: <177206761798.7472.8904569543245678825@noble.neil.brown.name>
-References: <20250812235228.3072318-1-neil@brown.name>, <>,
- <20250812235228.3072318-9-neil@brown.name>, <>,
- <20250813050717.GD222315@ZenIV>,
- <177206761798.7472.8904569543245678825@noble.neil.brown.name>
-Date: Thu, 26 Feb 2026 12:34:06 +1100
-Message-id: <177206964635.7472.10143856965392266372@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
+ lock list
+To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
+	<chuck.lever@oracle.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yangerkun@huaweicloud.com>, <lilingfeng3@huawei.com>,
+	<zhangjian496@h-partners.com>, <yi.zhang@huawei.com>
+References: <20260226012203.3962997-1-yangerkun@huawei.com>
+From: yangerkun <yangerkun@huawei.com>
+In-Reply-To: <20260226012203.3962997-1-yangerkun@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemf100006.china.huawei.com (7.202.181.220)
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm3,messagingengine.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19265-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-19266-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[huawei.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,suse.cz,redhat.com,auristor.com,gmail.com,tyhicks.com,szeredi.hu,nod.at,cambridgegreys.com,sipsolutions.net,oracle.com,samba.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,brown.name:replyto,ownmail.net:dkim,noble.neil.brown.name:mid]
-X-Rspamd-Queue-Id: CA06519FD57
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:mid,huawei.com:dkim,huawei.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8E41B1A2AE7
 X-Rspamd-Action: no action
 
-On Thu, 26 Feb 2026, NeilBrown wrote:
-> 
-> d_add_hashed() would be much the same as d_instantiate(), and that
-> could be used for d_splice_alias() when the dentry is hashed.
-> There aren't any cases where d_splice_alias() is called with a directory
-> inode and a hashed dentry.
+Hi all,
 
-There are of course... mkdir() is given a hashed negative dentry and may
-need to use d_splice_alias() if there is any chance the inode was
-accessible (e.g. by fhandle) before the splice can happen.
-
-Maybe we could always give mkdir a d_in_lookup() alias?
-
-As it is, generic "create object" code inside a filesystem may need to
-handle three cases:
-
- d_in_lookup() - use d_splice_alias()
- otherwise if non-dir: - use d_instantiate
- otherwise - use some new d_add_or_obtain (name taken from NFS) which 
-     does the right thing with directories.
-
-Currently most d_drop() and use d_splice_alias() but I need to avoid the
-d_drop().
+This issue has been known for a long time now, and I am really looking 
+forward to some discussion on this problem and the solution I have proposed.
 
 Thanks,
-NeilBrown
+Erkun.
+
+在 2026/2/26 9:22, Yang Erkun 写道:
+> Lingfeng identified a bug and suggested two solutions, but both appear
+> to have issues.
+> 
+> Generally, we cannot release flc_lock while iterating over the file lock
+> list to avoid use-after-free (UAF) problems with file locks. However,
+> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
+> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
+> may take a long time. To resolve this, NFS switches to using nfsi->rwsem
+> for the same protection, and nfs_reclaim_locks follows this approach.
+> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
+> this is inadequate since a single inode can have multiple nfs4_state
+> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
+> 
+> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte range
+> lock must be atomic with the stateid update"), the functions
+> nfs4_locku_done and nfs4_lock_done also break this rule because they
+> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
+> this protection could cause many deadlocks, so instead, the call to
+> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
+> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
+> lock must be atomic with the stateid update"), it has been resolved
+> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly triggering
+> state recovery") because all slots are drained before calling
+> nfs4_do_reclaim, which prevents concurrent stateid changes along this path.
+> Also, nfs_delegation_claim_locks does not cause this concurrency either
+> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no RPC is
+> sent, so nfs4_lock_done is not called. Therefore,
+> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the first
+> time the stateid is set.
+> 
+> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-lilingfeng3@huawei.com/
+> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-lilingfeng3@huawei.com/
+> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
+> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+> ---
+>   fs/nfs/delegation.c     |  9 ++++++++-
+>   fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
+>   include/linux/nfs_xdr.h |  1 -
+>   3 files changed, 19 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> index 122fb3f14ffb..9546d2195c25 100644
+> --- a/fs/nfs/delegation.c
+> +++ b/fs/nfs/delegation.c
+> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t type)
+>   static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
+>   {
+>   	struct inode *inode = state->inode;
+> +	struct nfs_inode *nfsi = NFS_I(inode);
+>   	struct file_lock *fl;
+>   	struct file_lock_context *flctx = locks_inode_context(inode);
+>   	struct list_head *list;
+> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
+>   		goto out;
+>   
+>   	list = &flctx->flc_posix;
+> +
+> +	/* Guard against reclaim and new lock/unlock calls */
+> +	down_write(&nfsi->rwsem);
+>   	spin_lock(&flctx->flc_lock);
+>   restart:
+>   	for_each_file_lock(fl, list) {
+> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
+>   			continue;
+>   		spin_unlock(&flctx->flc_lock);
+>   		status = nfs4_lock_delegation_recall(fl, state, stateid);
+> -		if (status < 0)
+> +		if (status < 0) {
+> +			up_write(&nfsi->rwsem);
+>   			goto out;
+> +		}
+>   		spin_lock(&flctx->flc_lock);
+>   	}
+>   	if (list == &flctx->flc_posix) {
+> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
+>   		goto restart;
+>   	}
+>   	spin_unlock(&flctx->flc_lock);
+> +	up_write(&nfsi->rwsem);
+>   out:
+>   	return status;
+>   }
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 91bcf67bd743..9d6fbca8798b 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
+>   	switch (task->tk_status) {
+>   		case 0:
+>   			renew_lease(calldata->server, calldata->timestamp);
+> -			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
+>   			if (nfs4_update_lock_stateid(calldata->lsp,
+>   					&calldata->res.stateid))
+>   				break;
+> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+>   	case 0:
+>   		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
+>   				data->timestamp);
+> -		if (data->arg.new_lock && !data->cancelled) {
+> -			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
+> -				goto out_restart;
+> -		}
+>   		if (data->arg.new_lock_owner != 0) {
+>   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
+>   			nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
+> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
+>   	msg.rpc_argp = &data->arg;
+>   	msg.rpc_resp = &data->res;
+>   	task_setup_data.callback_data = data;
+> -	if (recovery_type > NFS_LOCK_NEW) {
+> -		if (recovery_type == NFS_LOCK_RECLAIM)
+> -			data->arg.reclaim = NFS_LOCK_RECLAIM;
+> -	} else
+> -		data->arg.new_lock = 1;
+> +
+> +	if (recovery_type == NFS_LOCK_RECLAIM)
+> +		data->arg.reclaim = NFS_LOCK_RECLAIM;
+> +
+>   	task = rpc_run_task(&task_setup_data);
+>   	if (IS_ERR(task))
+>   		return PTR_ERR(task);
+> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
+>   	up_read(&nfsi->rwsem);
+>   	mutex_unlock(&sp->so_delegreturn_mutex);
+>   	status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
+> +	if (status)
+> +		goto out;
+> +
+> +	down_read(&nfsi->rwsem);
+> +	request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+> +	status = locks_lock_inode_wait(state->inode, request);
+> +	up_read(&nfsi->rwsem);
+>   out:
+>   	request->c.flc_flags = flags;
+>   	return status;
+> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> index ff1f12aa73d2..9599ad15c3ad 100644
+> --- a/include/linux/nfs_xdr.h
+> +++ b/include/linux/nfs_xdr.h
+> @@ -580,7 +580,6 @@ struct nfs_lock_args {
+>   	struct nfs_lowner	lock_owner;
+>   	unsigned char		block : 1;
+>   	unsigned char		reclaim : 1;
+> -	unsigned char		new_lock : 1;
+>   	unsigned char		new_lock_owner : 1;
+>   };
+>   
+
 
