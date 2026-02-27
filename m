@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-19413-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19414-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iA7YLHimoWmivQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19413-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:13:12 +0100
+	id uK9hDnymoWmqvQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19414-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:13:16 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B6F21B8879
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:13:12 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5BAA1B888F
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:13:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B1C5030EE1B1
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 14:10:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 77B1E30EF324
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 14:10:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85959413237;
-	Fri, 27 Feb 2026 14:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6881643DA2E;
+	Fri, 27 Feb 2026 14:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HL7L/Vwb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6ZbxaVp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D18413224
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Feb 2026 14:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4643F413224
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Feb 2026 14:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772201041; cv=none; b=J9aujvKxkjB8j3mR/OZtZdh6yNF3jevQmSjUQ1p5NYia+9rTsjoiGr5QjRWhXXV8Uw5LEWOD12Fj5h0TUMhew2dnTC9k/PMtTssoHiZnKwNOcIdhiDiGUe96Ov+Ktv5PxLetwUk/ZyAPAbs9Po/ums3/bUjOgsdmNEe98JzEZAs=
+	t=1772201042; cv=none; b=QhaSM15gkBjiX6RXQKbTm93CIr76+MdwhSiiM1Ev8bL2ScSfrjlSWplXopwJojRwNb7Qs2MQ4g13NvwAfhhEAQC9v4rzmfmS9/SHw2DNXYn7Hcomrz1csKnDNAF5WuqY3b0IykKLqbrNLTgh6sBdWOif4SJfjFxX+TRrQ3l1bLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772201041; c=relaxed/simple;
-	bh=V81B/ANI+9mC2RgoYz+9iFMrifbJjiz2wbafSndLrTk=;
+	s=arc-20240116; t=1772201042; c=relaxed/simple;
+	bh=ZQUCoTSOuetgU65z+aORZVWRuQ+TP43ReL9UCzmKKvI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ui+6X+dqjyPgwZhjtGPIuL0/F5F3wu6l5qOMD9ExlfhUfPefrxYfR9sbxAUpLaxMvlhMGc5XCWoD+RD44ZBy960/CwYQP3nlAxlK2N8Rj18KXT/97jCc9XDO6h1kUnOklEh87xye5C3dW4pg5LdGfyQH0Jn1sC4QOmhMF+9YP68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HL7L/Vwb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CA2C2BC86;
-	Fri, 27 Feb 2026 14:04:00 +0000 (UTC)
+	 MIME-Version; b=AJL8gtDhP2UzBtM9LWTIYpnDFA6OH+qNjzdLCf41p/vvxJlfxyrjSgqXJCH/zfLltrRIsMWcnz0ruLbIinplPFm5oDP5B7Kh341DZZ3LjRaF9NvqYIKDxX73qZyAdGVW2XVhTAj3X0e1cONsVxNRHgUiUOQwkf2yk5Lnb9tR6ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6ZbxaVp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 559E0C116C6;
+	Fri, 27 Feb 2026 14:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1772201041;
-	bh=V81B/ANI+9mC2RgoYz+9iFMrifbJjiz2wbafSndLrTk=;
+	bh=ZQUCoTSOuetgU65z+aORZVWRuQ+TP43ReL9UCzmKKvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HL7L/Vwbdm4b/LCKqJYk/M2CscdlBYcH2jgY154SjgkLa/YyWff6LSMaut2iTmaAn
-	 KTrKWKG8/uvL3ui5euW/ptWsoSl33E65SWyrOMJlyAjpyrEJBY3TFPOD1RTat3SF9K
-	 +Y5+6MAuLoJ7ECWvVPl5AhakJO8717HLsNS9F1GjjXUYQfSJnIQT7VTnQOSY7jo9zt
-	 Zj7XAuqw05QrqpavhlGQtJxDtu77xytcrrXfpcadKznymVt0xeXqSoY2fqC/BMG2+K
-	 hu8/zY5Z9dR834nqzM4T+0BPb/GEBzz56GDSZ5O/hWiEfagAwWAdC7GVPKBHtvWGRd
-	 4zmYkEBbesw9A==
+	b=Z6ZbxaVp3NIPDE8d7uscypgKB+0zAtz10O0IWJcivrCgmunZjvWKHkqN70ygQB5O/
+	 CmyuFdgOCumXjXfAgbTTZWPqIHEoRMLgqqI/Kw3a8rQwgA0JY+CeJjdwklKFl0JQqV
+	 bgfaxucJJGClKIHeHf69NKezZqziBFip8n657JkQfF+IJylv+yhyK4WxRWVIpfXWJS
+	 DAz1iNAc4uiEWQowJ1+jjur8ugMJ5uJPwS/5kxC4SP3DS/YXbnlpy5ITyuL/cF5eg5
+	 h/QqQ3uehc7FN3SvGR15Q7EwkavWDSRMBmrKfTiPiNNuGB3udUjxsXggxvRm1LA8tm
+	 MDfXiFmP9qSCA==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neilb@ownmail.net>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neilb@ownmail.net>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 16/18] sunrpc: skip svc_xprt_enqueue when no work is pending
-Date: Fri, 27 Feb 2026 09:03:43 -0500
-Message-ID: <20260227140345.40488-17-cel@kernel.org>
+Subject: [PATCH v2 17/18] sunrpc: skip svc_xprt_enqueue in svc_xprt_received when idle
+Date: Fri, 27 Feb 2026 09:03:44 -0500
+Message-ID: <20260227140345.40488-18-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260227140345.40488-1-cel@kernel.org>
 References: <20260227140345.40488-1-cel@kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19413-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19414-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -94,90 +94,66 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4B6F21B8879
+X-Rspamd-Queue-Id: E5BAA1B888F
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-svc_reserve() and svc_xprt_release_slot() call
-svc_xprt_enqueue() after modifying xpt_reserved or
-xpt_nr_rqsts. The purpose is to re-dispatch the
-transport when write-space or a slot becomes available.
-However, when neither XPT_DATA nor XPT_DEFERRED is
-set, no thread can make progress on the transport and
-the enqueue accomplishes nothing.
+svc_xprt_received() unconditionally calls
+svc_xprt_enqueue() after clearing XPT_BUSY. When no
+work flags are pending, the enqueue traverses
+svc_xprt_ready() -- executing an smp_rmb(), READ_ONCE(),
+and tracepoint -- before returning false.
 
-Trace data from a 256KB NFSv3 WRITE workload over RDMA
-shows 11.2 svc_xprt_enqueue() calls per RPC. Of these,
-6.9 per RPC lack XPT_DATA and exit svc_xprt_ready()
-immediately after executing the smp_rmb(), READ_ONCE(),
-and tracepoint. svc_reserve() and svc_xprt_release_slot()
-account for roughly five of these per RPC.
+Trace data from a 256KB NFSv3 workload over RDMA shows
+85% of svc_xprt_received() invocations reach
+svc_xprt_enqueue() with no pending work flags. In the
+WRITE phase, 167,335 of 196,420 calls find no work; in
+the READ phase, 97,165 of 98,276. Each unnecessary call
+executes a memory barrier, a flags read, and (when
+tracing is active) fires the svc_xprt_enqueue
+tracepoint.
 
-A new helper, svc_xprt_resource_released(), checks
-XPT_DATA | XPT_DEFERRED before calling
-svc_xprt_enqueue(). The existing smp_wmb() barriers
-are upgraded to smp_mb() to ensure the flags check
-observes a concurrent producer's set_bit(XPT_DATA).
-Each producer (svc_rdma_wc_receive, etc.) both sets
-XPT_DATA and calls svc_xprt_enqueue(), so even if the
-check reads a stale value, the producer's own enqueue
-provides a fallback path.
+Add a flags pre-check between clear_bit(XPT_BUSY) and
+svc_xprt_enqueue(). Both the clear and the subsequent
+READ_ONCE operate on the same xpt_flags word, so
+cache-line serialization of the atomic bitops ensures
+the read observes any flag set by a concurrent producer
+before the line was acquired for the clear. If a
+producer's set_bit occurs after the clear_bit, that
+producer's own svc_xprt_enqueue() call observes
+!XPT_BUSY and dispatches the transport.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svc_xprt.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ net/sunrpc/svc_xprt.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 56a663b8939f..73149280167c 100644
+index 73149280167c..36c8437cfd8d 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -425,13 +425,28 @@ static bool svc_xprt_reserve_slot(struct svc_rqst *rqstp, struct svc_xprt *xprt)
- 	return true;
- }
- 
-+/*
-+ * After a caller releases write-space or a request slot,
-+ * re-enqueue the transport only when there is pending
-+ * work that a thread could act on. The smp_mb() pairs
-+ * with the smp_rmb() in svc_xprt_ready() and orders the
-+ * preceding counter update before the flags read so a
-+ * concurrent set_bit(XPT_DATA) is visible here.
-+ */
-+static void svc_xprt_resource_released(struct svc_xprt *xprt)
-+{
-+	smp_mb();
-+	if (READ_ONCE(xprt->xpt_flags) &
-+	    (BIT(XPT_DATA) | BIT(XPT_DEFERRED)))
-+		svc_xprt_enqueue(xprt);
-+}
+@@ -234,7 +234,19 @@ void svc_xprt_received(struct svc_xprt *xprt)
+ 	svc_xprt_get(xprt);
+ 	smp_mb__before_atomic();
+ 	clear_bit(XPT_BUSY, &xprt->xpt_flags);
+-	svc_xprt_enqueue(xprt);
 +
- static void svc_xprt_release_slot(struct svc_rqst *rqstp)
- {
- 	struct svc_xprt	*xprt = rqstp->rq_xprt;
- 	if (test_and_clear_bit(RQ_DATA, &rqstp->rq_flags)) {
- 		atomic_dec(&xprt->xpt_nr_rqsts);
--		smp_wmb(); /* See smp_rmb() in svc_xprt_ready() */
--		svc_xprt_enqueue(xprt);
-+		svc_xprt_resource_released(xprt);
- 	}
++	/*
++	 * Skip the enqueue when no actionable flags are set.
++	 * Each producer both sets its flag (XPT_DATA, XPT_CLOSE,
++	 * etc.) and calls svc_xprt_enqueue(); if a set_bit races
++	 * with this check, the producer's own enqueue observes
++	 * !XPT_BUSY and dispatches the transport.
++	 */
++	if (READ_ONCE(xprt->xpt_flags) &
++	    (BIT(XPT_CONN) | BIT(XPT_CLOSE) | BIT(XPT_HANDSHAKE) |
++	     BIT(XPT_DATA) | BIT(XPT_DEFERRED)))
++		svc_xprt_enqueue(xprt);
++
+ 	svc_xprt_put(xprt);
  }
- 
-@@ -525,10 +540,10 @@ void svc_reserve(struct svc_rqst *rqstp, int space)
- 	space += rqstp->rq_res.head[0].iov_len;
- 
- 	if (xprt && space < rqstp->rq_reserved) {
--		atomic_sub((rqstp->rq_reserved - space), &xprt->xpt_reserved);
-+		atomic_sub((rqstp->rq_reserved - space),
-+			   &xprt->xpt_reserved);
- 		rqstp->rq_reserved = space;
--		smp_wmb(); /* See smp_rmb() in svc_xprt_ready() */
--		svc_xprt_enqueue(xprt);
-+		svc_xprt_resource_released(xprt);
- 	}
- }
- EXPORT_SYMBOL_GPL(svc_reserve);
+ EXPORT_SYMBOL_GPL(svc_xprt_received);
 -- 
 2.53.0
 
