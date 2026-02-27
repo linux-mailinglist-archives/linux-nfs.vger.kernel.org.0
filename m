@@ -1,148 +1,184 @@
-Return-Path: <linux-nfs+bounces-19416-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19417-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iGNcJvGqoWm1vQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19416-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:32:17 +0100
+	id uMcJHLG1oWmMvgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19417-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 16:18:09 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F41441B9011
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:32:16 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E08431B9932
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 16:18:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1DC8303CE27
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 14:21:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EF6DE314DEF7
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:10:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC94244692;
-	Fri, 27 Feb 2026 14:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B544A4219F8;
+	Fri, 27 Feb 2026 15:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g5GlOZM0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYPB2qwQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F20F20B212
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Feb 2026 14:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C4C436356;
+	Fri, 27 Feb 2026 15:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772202092; cv=none; b=KIDwF+CtbKYdK8bAazCLRRMUwpUGS26lCKBJvXQ1uRm8u0MA1lu+F0lO11H0UIf4YrInPhPkAVdYZ0+QdKViy1IxgCm7cAvA4GZJRb5cFDLFu2LX/lusLb2a/AhT79VY8cncxrw8IEx/qQnH51AasSdiNbRHz9Ev1YO0fqPNhJ0=
+	t=1772205019; cv=none; b=LtUN3ENMjUkmtCQURPVupM16CLwZrLsFddq1NvxUM7xUxZ/Nn+Fy8Jg3egz6KBiYl3PII8sl7/cI6h7truOruk5z8cmy9zvI/gcyYmUtvItErDV0DaUvH+jPFR3b5MvxhQnl5lXwHHxFFp0SbLn21A6WrKqTAOxCQl3cfWRO9LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772202092; c=relaxed/simple;
-	bh=ZOmTIo50fH6c4ujpWPybnS/mBqgKW8YwmdlzpgQ06gI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/VIAz45PPHlcU000oEZs0rKfzexg48Bvo+D2F/JPA2Cb2SyeyYa8mxF/ErXHnaDR24H8xU0dxjcAXrN4f+KI5yyLiNDDuga/TuuDbhJP74iFqj9qUvb+JZ2UKzQ1VLCOASuauPFMGgwaedmAkjjwyH9XG9hy5wXBjMwaThLpU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g5GlOZM0; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772202090; x=1803738090;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZOmTIo50fH6c4ujpWPybnS/mBqgKW8YwmdlzpgQ06gI=;
-  b=g5GlOZM0OC9JUv3guVPtFRKdHg20XP1En7y4r1sYOrs3Y+A7iznO347N
-   2recQ0e+6xO08Hhc7YGNi5lZNSpFsSIPJUk/uPljRhmhC7iQiSqu2JDyA
-   mFVk4R91kTj6FFed8wmKXjs8QoQuW1pipcesSLfWeThw3bWW8o9cCw94Y
-   xAtZIEuxob4R2LDaMzJ+Tr8DlLF4ai1QfrkfXf0yZRIP7w+4bt3lP1Lqp
-   pgqcyCLUEYhmfPjQ0hUmIYaN+EGi1QbruHxbPl27UhyXAwcM+V2svAkSO
-   A8Tp+/imf7O7ZzYLKMgh9zUcFRXvkuEttneUj+fhAkWQw2Owy4pxd7LGD
-   g==;
-X-CSE-ConnectionGUID: tAy2ddavSae70mJ0sm/R/Q==
-X-CSE-MsgGUID: DgHKTZipQM+vti0JjuDz6w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="83614930"
-X-IronPort-AV: E=Sophos;i="6.21,314,1763452800"; 
-   d="scan'208";a="83614930"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 06:21:29 -0800
-X-CSE-ConnectionGUID: xg/LfvwLTdCzmHoL4C4PPQ==
-X-CSE-MsgGUID: o+6egniDQsiRNZi4nk7xjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,314,1763452800"; 
-   d="scan'208";a="215546798"
-Received: from lkp-server02.sh.intel.com (HELO a3936d6a266d) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 27 Feb 2026 06:21:26 -0800
-Received: from kbuild by a3936d6a266d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vvyhl-00000000Aep-419p;
-	Fri, 27 Feb 2026 14:21:20 +0000
-Date: Fri, 27 Feb 2026 22:20:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
-	jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
-	tom@talpey.com, hch@lst.de
-Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] NFSD: move accumulated callback ops to per-net
- namespace
-Message-ID: <202602272240.e34pGKuR-lkp@intel.com>
-References: <20260225172624.707224-1-dai.ngo@oracle.com>
+	s=arc-20240116; t=1772205019; c=relaxed/simple;
+	bh=wnLzP+olm9LzrB34JLMNYVuHGs1RANXyxuRdPEAj4LM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n363D492KCQqxitck7QUIPD2gY/Db9pDeSEQc84mh5ZIb2jpfdlSGtH+8jvoq3HHfDV11x9hXJuqQ9fqhphyoGL0emDohKYFYS6Msr1VfxX1XDbZS0QEwdrgZUnWt2GEgSOZM0namwzaoTP8+4x+egCVJ84YDNe6Eh/VZnYUv/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYPB2qwQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F42C19422;
+	Fri, 27 Feb 2026 15:10:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772205019;
+	bh=wnLzP+olm9LzrB34JLMNYVuHGs1RANXyxuRdPEAj4LM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HYPB2qwQXLk2C8IL9q1I9HlqLtkGkDzdVHLjV6VE7hiTcQYK5LpnzpfnSjqmBio5w
+	 t20CAqX2rmwxVnwn+XIonnZdCPVLaacEUSH9NJdXmZNUmTmIruEmTRQHVTfS3zcdHO
+	 dqfBZtqMpozPxkhBK4PrEk3JY0rtvIga/Litj55UZ7PraiUzUCY2Sj/ASYppcgJwgp
+	 fjbIMSj3R/CnFINYsQDMf2zgehiJZAzz+z5M5eOV12A6yor0HeNeSHsLTZHoLMC3qn
+	 iZNrwOnIXh/zzmsuEdsUwUw7dpUp4UOk86QJmw8PGr9IH25Frt/gmrxDuzUJF8p31u
+	 YAZw3N6Jcu+uw==
+Message-ID: <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>
+Date: Fri, 27 Feb 2026 10:10:17 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260225172624.707224-1-dai.ngo@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
+ unmount notification
+To: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+ Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.com>, NeilBrown <neilb@ownmail.net>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>
+References: <20260224163908.44060-1-cel@kernel.org>
+ <20260224163908.44060-2-cel@kernel.org>
+ <20260226-alimente-kunst-fb9eae636deb@brauner>
+ <CAOQ4uxhEpf1p3agEF7_HBrhUeKz1Fb_yKAQ0Pjo0zztTJfMoXA@mail.gmail.com>
+ <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>
+ <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
+From: Chuck Lever <cel@kernel.org>
+Content-Language: en-US
+Organization: kernel.org
+In-Reply-To: <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TAGGED_FROM(0.00)[bounces-19416-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19417-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[suse.cz,gmail.com,kernel.org];
+	FREEMAIL_CC(0.00)[suse.com,ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,01.org:url,git-scm.com:url]
-X-Rspamd-Queue-Id: F41441B9011
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E08431B9932
 X-Rspamd-Action: no action
 
-Hi Dai,
+On 2/26/26 8:32 AM, Jan Kara wrote:
+> On Thu 26-02-26 08:27:00, Chuck Lever wrote:
+>> On 2/26/26 5:52 AM, Amir Goldstein wrote:
+>>> On Thu, Feb 26, 2026 at 9:48 AM Christian Brauner <brauner@kernel.org> wrote:
+>>>> Another thing: These ad-hoc notifiers are horrific. So I'm pitching
+>>>> another idea and I hope that Jan and Amir can tell me that this is
+>>>> doable...
+>>>>
+>>>> Can we extend fsnotify so that it's possible for a filesystem to
+>>>> register "internal watches" on relevant objects such as mounts and
+>>>> superblocks and get notified and execute blocking stuff if needed.
+>>>>
+>>>
+>>> You mean like nfsd_file_fsnotify_group? ;)
+>>>
+>>>> Then we don't have to add another set of custom notification mechanisms
+>>>> but have it available in a single subsystem and uniformely available.
+>>>>
+>>>
+>>> I don't see a problem with nfsd registering for FS_UNMOUNT
+>>> event on sb (once we add it).
+>>>
+>>> As a matter of fact, I think that nfsd can already add an inode
+>>> mark on the export root path for FS_UNMOUNT event.
+>>
+>> There isn't much required here aside from getting a synchronous notice
+>> that the final file system unmount is going on. I'm happy to try
+>> whatever mechanism VFS maintainers are most comfortable with.
+> 
+> Yeah, then as Amir writes placing a mark with FS_UNMOUNT event on the
+> export root path and handling the event in
+> nfsd_file_fsnotify_handle_event() should do what you need?
 
-kernel test robot noticed the following build errors:
+Turns out FS_UNMOUNT doesn't do what I need.
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on linus/master v7.0-rc1 next-20260226]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+1/3 here has a fatal flaw: the SRCU notifier does not fire until all
+files on the mount are closed. The problem is that NFSD holds files
+open when there is outstanding NFSv4 state. So the SRCU notifier will
+never fire, on umount, to release that state.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dai-Ngo/NFSD-move-accumulated-callback-ops-to-per-net-namespace/20260226-012940
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20260225172624.707224-1-dai.ngo%40oracle.com
-patch subject: [PATCH v3 1/1] NFSD: move accumulated callback ops to per-net namespace
-config: parisc-randconfig-002-20260227 (https://download.01.org/0day-ci/archive/20260227/202602272240.e34pGKuR-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260227/202602272240.e34pGKuR-lkp@intel.com/reproduce)
+FS_UNMOUNT notifiers have the same issue.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602272240.e34pGKuR-lkp@intel.com/
+They fire from fsnotify_sb_delete() inside generic_shutdown_super(),
+which runs inside deactivate_locked_super(), which runs when s_active
+drops to 0. That requires all mounts to be freed, which requires all
+NFSD files to be closed: the same problem.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+For any notification approach to actually do what is needed, it needs to
+fire during do_umount(), before propagate_mount_busy(). Something like:
 
->> ERROR: modpost: "nfsd_net_cb_stats_shutdown" [fs/nfsd/nfsd.ko] undefined!
->> ERROR: modpost: "nfsd_net_cb_stats_init" [fs/nfsd/nfsd.ko] undefined!
+do_umount(mnt):
+    <- NEW: notify subsystems, allow them to release file refs
+    retval = propagate_mount_busy(mnt, 2)   // now passes
+    umount_tree(mnt, ...)
+
+This is what Christian's "internal watches... execute blocking stuff"
+would need to enable. The existing fsnotify plumbing (groups, marks,
+event dispatch) provides the infrastructure, but a new notification hook
+in do_umount() is required — neither fsnotify_vfsmount_delete() nor
+fsnotify_sb_delete() fires early enough.
+
+But a hook in do_umount() fires for every mount namespace teardown, not
+just admin-initiated unmounts. NFSD's callback would need to filter
+(e.g., only act when it's the last mount of a superblock that NFSD is
+exporting).
+
+This is why I originally went with fs_pin. Not saying the series should
+go back to that, but this is the basic requirement: NFSD needs
+notification of a umount request while files are still open on that
+mount, so that it can revoke the NFSv4 state and close those files.
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Chuck Lever
 
