@@ -1,137 +1,64 @@
-Return-Path: <linux-nfs+bounces-19432-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19433-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EESdJw3yoWkwxgQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19432-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 20:35:41 +0100
+	id KK9kI4P1oWkwxgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19433-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 20:50:27 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6D321BCE44
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 20:35:40 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE8B91BD172
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 20:50:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id EC5BE3053A2A
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 19:35:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C82713019C91
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 19:45:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BA044D69A;
-	Fri, 27 Feb 2026 19:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1830246AEDE;
+	Fri, 27 Feb 2026 19:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAkmYX5x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpctUt5x"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B85627FD52;
-	Fri, 27 Feb 2026 19:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89404611CE
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Feb 2026 19:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772220922; cv=none; b=TedUPTIdcqLNhVU18j6tfV1H5MIuHHcx0IflHyrdQEl/SzSzzxXRG74fP+J5G/8H3Kwh3snpVTzxoZr+ird6+tg14QBHe+2VKnBREL61e8Qx+GOMagx7tThtUEUa7BeAHRxqPyQkCnr+C1WroSX/2xFq0o4zfy+YDbd8FZzutAY=
+	t=1772221543; cv=none; b=goDUSUVqmm05JmVL/JgLUp6OQtnk8zvk/jk8MKyeAWXEXhMWLzxXK0bSWd6/OBi+MYkQliU1OevugcXVAxZ4gu6v/1WnnOCGvp+8tbxT4iUZKaaLcpqRCxrIEe5c8+aEhBBJpkrhMB1y0/Ux9zrWdXbP2SBWEODY+fCzTKyVVRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772220922; c=relaxed/simple;
-	bh=x8aY1qdgt0C9tMQnJs5wAf8ATVjxdYsE22ORECBTQj8=;
+	s=arc-20240116; t=1772221543; c=relaxed/simple;
+	bh=16ZI5eGEORJ5fn9I0Si9ijRN2DBmLAMbo+kRF2J4iNQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y6JohbC+Jcboc0hd9EiJao3H7icj/jxS/zbR8SbQo1BAUrYrZ6tM+FMWjC6pvfFgnyKx8WMeg0uxJ3lmBqjCxdZ+jcWisXGjkSUd36KnRzY1yU3YoN6e8XrZkmAMqHpz5uPgbv9pqiIF8rvq8srPd4n1cyWgXyrOn/pguZZHb/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAkmYX5x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA034C116C6;
-	Fri, 27 Feb 2026 19:35:09 +0000 (UTC)
+	 Content-Type:MIME-Version; b=F1PsRqX57l6HjnEU4XBZ5Bfne3TVd+N8gUlOkERXeDztl63UOJ59g/WOhNNcdKH/62dcECNyJKqVB/TjipQpI8oRfp324EhNvmWcwZuNELBqBm+KupPRSmB/8Xcy6sPtzkxtAvP0y1Q3c5s8utT/yaperbMY3AKDNX4mRlC7kwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpctUt5x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA21AC116C6;
+	Fri, 27 Feb 2026 19:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772220921;
-	bh=x8aY1qdgt0C9tMQnJs5wAf8ATVjxdYsE22ORECBTQj8=;
+	s=k20201202; t=1772221542;
+	bh=16ZI5eGEORJ5fn9I0Si9ijRN2DBmLAMbo+kRF2J4iNQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HAkmYX5xTgBJmIGTCpFCAMumPV3f8DHhz01MTU4lrlW/PYE/DFJ+TEip9CuHfwFXg
-	 wnHRz8ZTqfNRIPcBsUq9VTxyJWqdA9nlRsXGMvIckPT60T4/pSY8VCbkQMz+sjJhK+
-	 mWfZVqS3uf9mDqmTL7J0s+SnfU2wnKlWt403NJJww5ajMnIEf3ZfUnrEEWVuZszNa0
-	 rG/7QKHn/vcdJlevA3dXj9ATPEG3uYHz4fBjrOh4zYSYsTphR2iVHIcDM/v7NujRPN
-	 TIXwMfR/DPbY7XmlodpNk5WbW8qaLWuk8MmV9nxkf+H4qvlNLD1pukmeB+4AMz907b
-	 WqDtYisysW8PA==
-Message-ID: <1b38afe8ff4ba5880835d919c42e094d77a9d5ce.camel@kernel.org>
-Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
+	b=QpctUt5xIOXMKt5cchuDsto7D+3ArjWoP81IsbnRhvejii4NmblJHItnQG1pNFixV
+	 Iz5fUE2OrCJsgnn/SLvjv5Soc3g2i0k8v1QWxcPeLqvumWzzSXX5X3O+zv+9fg1nK4
+	 D2gfmZySdCHMYrrhhj/8Dbr7YHMJqVHG5CGBxd0KKLELlQaQGvRQ1ATXwPBwd3AZH9
+	 atUcAUrQ+SwosKJnOiLjTzgmvPBG5PPJsyjItoZUkTzKN8PbO+56q+Pi7HeHN+hNYd
+	 QQgk4ceRZAZ5EQbnkX0B4NmDJADaGly7L+y82kT6mFMelgPGPCsJ2riTauWV/MGRhy
+	 z+I1E5Ys2xDRQ==
+Message-ID: <7ce6c46bef16d20f6e8ae8da1576b1a765cea1ca.camel@kernel.org>
+Subject: Re: [PATCH v5 1/1] NFSD: move accumulated callback ops to per-net
+ namespace
 From: Jeff Layton <jlayton@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Matthew Wilcox
-	 <willy@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Dan Williams
-	 <dan.j.williams@intel.com>, Eric Biggers <ebiggers@kernel.org>, "Theodore
- Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>,  David Hildenbrand	 <david@kernel.org>, David
- Howells <dhowells@redhat.com>, Paulo Alcantara	 <pc@manguebit.org>, Andreas
- Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>, Jaegeuk Kim
- <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,  Trond Myklebust
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
- <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>,  Shyam Prasad N <sprasad@microsoft.com>,
- Bharath SM <bharathsm@microsoft.com>, Alexander Aring	
- <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Viacheslav Dubeyko	 <slava@dubeyko.com>, Eric Van Hensbergen
- <ericvh@kernel.org>, Latchesar Ionkov	 <lucho@ionkov.net>, Dominique
- Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
- <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, Marc Dionne	
- <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, Luis de
- Bethencourt	 <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
- "Tigran A. Aivazian"	 <aivazian.tigran@gmail.com>, Ilya Dryomov
- <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Jan Harkes
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,  Nicolas Pitre <nico@fluxnic.net>,
- Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
- Christoph Hellwig	 <hch@infradead.org>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>,  Yangtao Li <frank.li@vivo.com>, Mikulas
- Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse	
- <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Dave Kleikamp	
- <shaggy@kernel.org>, Konstantin Komarov	
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
- <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Anders Larsen
- <al@alarsen.net>, Zhihao Cheng	 <chengzhihao1@huawei.com>, Damien Le Moal
- <dlemoal@kernel.org>, Naohiro Aota	 <naohiro.aota@wdc.com>, Johannes
- Thumshirn <jth@kernel.org>, John Johansen	 <john.johansen@canonical.com>,
- Paul Moore <paul@paul-moore.com>, James Morris	 <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Mimi Zohar	 <zohar@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
- Wu	 <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
- <casey@schaufler-ca.com>, Alex Deucher	 <alexander.deucher@amd.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter	 <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Eric Dumazet	 <edumazet@google.com>, Kuniyuki
- Iwashima <kuniyu@google.com>, Paolo Abeni	 <pabeni@redhat.com>, Willem de
- Bruijn <willemb@google.com>, "David S. Miller"	 <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman	 <horms@kernel.org>, Oleg
- Nesterov <oleg@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland	 <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>, "Darrick
- J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
- autofs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
- codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
- devel@lists.orangefs.org, 	linux-unionfs@vger.kernel.org,
- apparmor@lists.ubuntu.com, 	linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, 	selinux@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, 	dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, 	linaro-mm-sig@lists.linaro.org,
- netdev@vger.kernel.org, 	linux-perf-users@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, 	linux-xfs@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
-Date: Fri, 27 Feb 2026 14:35:07 -0500
-In-Reply-To: <b808e186-3eeb-46ed-9826-b0ae6cdcdb8b@efficios.com>
-References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
-	 <aaB5lgKd8FOIizPg@casper.infradead.org>
-	 <4a462d40899698586c110add96ce3fab6ddac30b.camel@kernel.org>
-	 <b808e186-3eeb-46ed-9826-b0ae6cdcdb8b@efficios.com>
+To: Chuck Lever <cel@kernel.org>, Dai Ngo <dai.ngo@oracle.com>, Chuck Lever	
+ <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Tom Talpey <tom@talpey.com>, Christoph Hellwig
+ <hch@lst.de>
+Cc: linux-nfs@vger.kernel.org
+Date: Fri, 27 Feb 2026 14:45:39 -0500
+In-Reply-To: <77566649-f3ea-445e-a85a-afa1235ac9e1@kernel.org>
+References: <20260226193611.1038076-1-dai.ngo@oracle.com>
+	 <a4bf76dc-2805-415e-be50-5501ea1ebf9a@app.fastmail.com>
+	 <e4b79d8b-ff77-4e1c-b2c6-8408b8310c5f@oracle.com>
+	 <77566649-f3ea-445e-a85a-afa1235ac9e1@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -216,106 +143,406 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,goodmis.org,intel.com,mit.edu,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,infradead.org,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.linaro.org];
+	TAGGED_FROM(0.00)[bounces-19433-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-19432-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_GT_50(0.00)[145];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: E6D321BCE44
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: EE8B91BD172
 X-Rspamd-Action: no action
 
-On Fri, 2026-02-27 at 14:01 -0500, Mathieu Desnoyers wrote:
-> On 2026-02-27 12:19, Jeff Layton wrote:
-> > On Thu, 2026-02-26 at 16:49 +0000, Matthew Wilcox wrote:
-> > > On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
-> > > > The bulk of the changes are to format strings and tracepoints, sinc=
-e the
-> > > > kernel itself doesn't care that much about the i_ino field. The fir=
-st
-> > > > patch changes some vfs function arguments, so check that one out
-> > > > carefully.
+On Fri, 2026-02-27 at 14:21 -0500, Chuck Lever wrote:
+> On 2/27/26 1:20 PM, Dai Ngo wrote:
+> >=20
+> > On 2/27/26 7:56 AM, Chuck Lever wrote:
 > > >=20
-> > > Why are the format strings all done as separate patches?  Don't we ge=
+> > > On Thu, Feb 26, 2026, at 2:35 PM, Dai Ngo wrote:
+> > > > Track accumulated callback operations on a per-network-namespace ba=
+sis
+> > > > instead of globally, ensuring proper isolation and behavior when ru=
+nning
+> > > > nfsd in containers.
+> > > Where are the consumers of this information? "Subsequent patch"
+> > > is an OK answer, but that should be indicated here in your patch
+> > > description.
+> >=20
+> > Should I first expand the output of /proc/net/rpc/nfsd and then follow
+> > up with a netlink-based implementation? Or are we trying to avoid addin=
+g
+> > anything new under /proc at this point?
+>=20
+> The current kernel-wide policy, as I understand it, is that subsystems
+> are to avoid adding new items under /proc unless absolutely needed.
+>=20
+
++1
+
+Dealing with file-based interfaces for this sort of thing is a giant
+PITA for userland. Netlink is a much cleaner interface to deal with. No
+partial reads of the file, etc...
+
+> I believe nfsdctl and the NFSD netlink protocol does not yet have an
+> operation to retrieve statistics. Jeff can help you put that together.
+>=20
+
+There is a rpc-status-get command, but that's a bit different from what
+this is adding. You'll probably want to add a new netlink command to
+get these stats and a new set of attributes for them.
+
+Have a look at Documentation/netlink/specs/nfsd.yaml. You'll want to
+extend that and regenerate the headers and code, and then implement the
+new commands.
+
+For this, it might be best to first replicate the stats that
+/proc/net/rpc/nfsd already provides to be accessible via netlink. Then
+you could add support for the new stats you want to add. Then in
+userland, you could extend nfsstat to attempt to use netlink first and
+only fall back to /proc scraping if the command doesn't exist.
+
+>=20
+> > Also, is there currently any user-space utility that can extract nfsd
+> > statistics via the netlink interface?
+> >=20
+> > -Dai
+> >=20
+> > >=20
+> > >=20
+> > > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> > > > ---
+> > > > =C2=A0 fs/nfsd/netns.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 5 +++
+> > > > =C2=A0 fs/nfsd/nfs4callback.c | 75 ++++++++++++++++++++++----------=
+----------
+> > > > =C2=A0 fs/nfsd/nfsctl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+ 5 +++
+> > > > =C2=A0 fs/nfsd/state.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 2 ++
+> > > > =C2=A0 4 files changed, 52 insertions(+), 35 deletions(-)
+> > > >=20
+> > > > v2:
+> > > > =C2=A0=C2=A0 . free memory allocated for nn->nfsd_cb_version4.count=
+s in
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 nfsd_net_cb_stats_init() on error in nfsd_=
+net_init().
+> > > > v3:
+> > > > =C2=A0=C2=A0 . reword commit message.
+> > > > =C2=A0=C2=A0 . fix initialization of nn->nfsd_cb_program.nrvers.
+> > > > v4:
+> > > > =C2=A0=C2=A0 . fix merge conflict in nfsd_net_exit in nfsd-testing =
+branch.
+> > > > v5:
+> > > > =C2=A0=C2=A0 . restore commit message to the original in v1
+> > > >=20
+> > > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> > > > index 6ad3fe5d7e12..c101bf2c24c2 100644
+> > > > --- a/fs/nfsd/netns.h
+> > > > +++ b/fs/nfsd/netns.h
+> > > > @@ -228,6 +228,11 @@ struct nfsd_net {
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct list_head=C2=A0=C2=A0=C2=A0 l=
+ocal_clients;
+> > > > =C2=A0 #endif
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 siphash_key_t=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 *fh_key;
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0 struct rpc_version=C2=A0=C2=A0=C2=A0 nfsd_cb_ve=
+rsion4;
+> > > > +=C2=A0=C2=A0=C2=A0 const struct rpc_version *nfsd_cb_versions[2];
+> > > I know this is copy-paste of existing code, but can you find a
+> > > proper symbolic constant to use here instead of "2" ?
+> > >=20
+> > >=20
+> > > > +=C2=A0=C2=A0=C2=A0 struct rpc_program=C2=A0=C2=A0=C2=A0 nfsd_cb_pr=
+ogram;
+> > > > +=C2=A0=C2=A0=C2=A0 struct rpc_stat=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 nfsd_cb_stat;
+> > > > =C2=A0 };
+> > > >=20
+> > > > =C2=A0 /* Simple check to find out if a given net was properly init=
+ialized */
+> > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > > index aea8bdd2fdc4..759f24657c34 100644
+> > > > --- a/fs/nfsd/nfs4callback.c
+> > > > +++ b/fs/nfsd/nfs4callback.c
+> > > > @@ -1016,7 +1016,7 @@ static int nfs4_xdr_dec_cb_offload(struct
+> > > > rpc_rqst *rqstp,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .p_decode=C2=A0 =3D nfs4_xdr_dec_##r=
+estype,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .p_arglen=C2=A0 =3D NFS4_enc_##argty=
+pe##_sz,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .p_replen=C2=A0 =3D NFS4_dec_##resty=
+pe##_sz,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > > -=C2=A0=C2=A0=C2=A0 .p_statidx =3D NFSPROC4_CB_##call,=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 \
+> > > > +=C2=A0=C2=A0=C2=A0 .p_statidx =3D NFSPROC4_CLNT_##proc,=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 \
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .p_name=C2=A0=C2=A0=C2=A0 =3D #proc,=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > > =C2=A0 }
+> > > Previously all compound-based callbacks mapped to statidx 1
+> > > (NFSPROC4_CB_COMPOUND); now each operation gets its own counter
+> > > slot (values 0=E2=80=937). This changes what stats are reported, IIUC=
+.
+> > > So bundling it here means a bisect on a stats regression cannot
+> > > isolate when accounting changed, and reverting either change
+> > > forces reverting both.
+> > >=20
+> > > IMO this should be a pre-requisite commit with its own
+> > > rationale.
+> > >=20
+> > >=20
+> > > > @@ -1032,40 +1032,7 @@ static const struct rpc_procinfo
+> > > > nfs4_cb_procedures[] =3D {
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PROC(CB_GETATTR,=C2=A0=C2=A0=C2=A0 C=
+OMPOUND,=C2=A0=C2=A0=C2=A0 cb_getattr,=C2=A0=C2=A0=C2=A0 cb_getattr),
+> > > > =C2=A0 };
+> > > >=20
+> > > > -static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)]=
+;
+> > > > -static const struct rpc_version nfs_cb_version4 =3D {
+> > > > -/*
+> > > > - * Note on the callback rpc program version number: despite langua=
+ge
+> > > > in rfc
+> > > > - * 5661 section 18.36.3 requiring servers to use 4 in this field, =
+the
+> > > > - * official xdr descriptions for both 4.0 and 4.1 specify version =
+1,
+> > > > and
+> > > > - * in practice that appears to be what implementations use.=C2=A0 =
+The
+> > > > section
+> > > > - * 18.36.3 language is expected to be fixed in an erratum.
+> > > > - */
+> > > > -=C2=A0=C2=A0=C2=A0 .number=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D 1,
+> > > > -=C2=A0=C2=A0=C2=A0 .nrprocs=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 =3D ARRAY_SIZE(nfs4_cb_procedures),
+> > > > -=C2=A0=C2=A0=C2=A0 .procs=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D nfs4_cb_procedures,
+> > > > -=C2=A0=C2=A0=C2=A0 .counts=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D nfs4_cb_counts,
+> > > > -};
+> > > > -
+> > > > -static const struct rpc_version *nfs_cb_version[2] =3D {
+> > > > -=C2=A0=C2=A0=C2=A0 [1] =3D &nfs_cb_version4,
+> > > > -};
+> > > > -
+> > > > -static const struct rpc_program cb_program;
+> > > > -
+> > > > -static struct rpc_stat cb_stats =3D {
+> > > > -=C2=A0=C2=A0=C2=A0 .program=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 =3D &cb_program
+> > > > -};
+> > > > -
+> > > > =C2=A0 #define NFS4_CALLBACK 0x40000000
+> > > > -static const struct rpc_program cb_program =3D {
+> > > > -=C2=A0=C2=A0=C2=A0 .name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =3D "nfs4_cb",
+> > > > -=C2=A0=C2=A0=C2=A0 .number=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D NFS4_CALLBACK,
+> > > > -=C2=A0=C2=A0=C2=A0 .nrvers=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D ARRAY_SIZE(nfs_cb_version),
+> > > > -=C2=A0=C2=A0=C2=A0 .version=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 =3D nfs_cb_version,
+> > > > -=C2=A0=C2=A0=C2=A0 .stats=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D &cb_stats,
+> > > > -=C2=A0=C2=A0=C2=A0 .pipe_dir_name=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 =3D "nfsd4_cb",
+> > > > -};
+> > > >=20
+> > > > =C2=A0 static int max_cb_time(struct net *net)
+> > > > =C2=A0 {
+> > > > @@ -1152,14 +1119,15 @@ static int setup_callback_client(struct
+> > > > nfs4_client *clp, struct nfs4_cb_conn *c
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .addrsize=C2=
+=A0=C2=A0=C2=A0 =3D conn->cb_addrlen,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .saddress=C2=
+=A0=C2=A0=C2=A0 =3D (struct sockaddr *) &conn->cb_saddr,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .timeout=C2=
+=A0=C2=A0=C2=A0 =3D &timeparms,
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .program=C2=A0=C2=A0=C2=
+=A0 =3D &cb_program,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .version=C2=
+=A0=C2=A0=C2=A0 =3D 1,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .flags=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D (RPC_CLNT_CREATE_NOPING |
+> > > > RPC_CLNT_CREATE_QUIET),
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cred=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D current_cred(),
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rpc_clnt *client;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct cred *cred;
+> > > > +=C2=A0=C2=A0=C2=A0 struct nfsd_net *nn =3D net_generic(clp->net, n=
+fsd_net_id);
+> > > Nit: Reverse Christmas tree ordering -- this new declaration
+> > > belongs close to the top.
+> > >=20
+> > >=20
+> > > > +=C2=A0=C2=A0=C2=A0 args.program =3D &nn->nfsd_cb_program;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (clp->cl_minorversion =3D=3D 0) {
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!clp->cl=
+_cred.cr_principal &&
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 (clp->cl_cred.cr_flavor >=3D RPC_AUTH_GSS_KRB5)) {
+> > > > @@ -1786,3 +1754,40 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd41_cb_in=
+flight_end(clp);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return queued;
+> > > > =C2=A0 }
+> > > > +
+> > > > +void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn)
+> > > > +{
+> > > > +=C2=A0=C2=A0=C2=A0 kfree(nn->nfsd_cb_version4.counts);
+> > > > +}
+> > > > +
+> > > > +int nfsd_net_cb_stats_init(struct nfsd_net *nn)
+> > > > +{
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_version4.counts =3D kzalloc_objs(un=
+signed int,
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ ARRAY_SIZE(nfs4_cb_procedures), GFP_KERNEL);
+> > > > +=C2=A0=C2=A0=C2=A0 if (!nn->nfsd_cb_version4.counts)
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+> > > > +=C2=A0=C2=A0=C2=A0 /*
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 * Note on the callback rpc program versio=
+n number: despite
+> > > > language
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 * in rfc 5661 section 18.36.3 requiring s=
+ervers to use 4 in this
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 * field, the official xdr descriptions fo=
+r both 4.0 and 4.1
+> > > > specify
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 * version 1, and in practice that appears=
+ to be what
+> > > > implementations
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 * use. The section 18.36.3 language is ex=
+pected to be fixed in an
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 * erratum.
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_version4.number =3D 1;
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_version4.nrprocs =3D ARRAY_SIZE(nfs=
+4_cb_procedures);
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_version4.procs =3D nfs4_cb_procedur=
+es;
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_versions[1] =3D &nn->nfsd_cb_versio=
+n4;
+> > > Could you add a comment explaining that slot 0 is intentionally
+> > > NULL and slot 1 corresponds to the CB protocol version number?
+> > > The original designated-initializer syntax made this self-
+> > > evident; the replacement imperative assignment here does not.
+> > >=20
+> > >=20
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0 memset(&nn->nfsd_cb_stat, 0, sizeof(nn->nfsd_cb=
+_stat));
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_program.name =3D "nfs4_cb";
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_program.number =3D NFS4_CALLBACK;
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_program.nrvers =3D ARRAY_SIZE(nn->n=
+fsd_cb_versions);
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_program.version =3D &nn->nfsd_cb_ve=
+rsions[0];
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_program.pipe_dir_name =3D "nfsd4_cb=
+";
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_program.stats =3D &nn->nfsd_cb_stat=
+;
+> > > > +=C2=A0=C2=A0=C2=A0 nn->nfsd_cb_stat.program =3D &nn->nfsd_cb_progr=
+am;
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0 return 0;
+> > > > +}
+> > > New non-static functions should get kernel-doc comments.
+> > >=20
+> > >=20
+> > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > > index 032ab44feb70..5daa647ef0fa 100644
+> > > > --- a/fs/nfsd/nfsctl.c
+> > > > +++ b/fs/nfsd/nfsctl.c
+> > > > @@ -2216,6 +2216,9 @@ static __net_init int nfsd_net_init(struct ne=
 t
-> > > bisection hazards by splitting it apart this way?
-> >=20
-> > Circling back to this...
-> >=20
-> > I have a v2 series (~107 patches) that I'm testing now that does this
-> > more bisectably with the typedef and macro scaffolding that Mathieu
-> > suggested. I'll probably send it early next week.
-> >=20
-> > I had done it this way originally since I figured it was best to break
-> > this up by subsystem. Should I continue with this series as a set of
-> > patches broken up this way, or is it preferable to combine the pile of
-> > format changes into fewer patches?
+> > > > *net)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int retval;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int i;
+> > > >=20
+> > > > +=C2=A0=C2=A0=C2=A0 retval =3D nfsd_net_cb_stats_init(nn);
+> > > > +=C2=A0=C2=A0=C2=A0 if (retval)
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return retval;
+> > > Does this build if CONFIG_NFSD_V4 is not enabled?
+> > >=20
+> > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retval =3D nfsd_export_init(net);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (retval)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_exp=
+ort_error;
+> > > > @@ -2256,6 +2259,7 @@ static __net_init int nfsd_net_init(struct ne=
+t
+> > > > *net)
+> > > > =C2=A0 out_idmap_error:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd_export_shutdown(net);
+> > > > =C2=A0 out_export_error:
+> > > > +=C2=A0=C2=A0=C2=A0 nfsd_net_cb_stats_shutdown(nn);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return retval;
+> > > > =C2=A0 }
+> > > >=20
+> > > > @@ -2286,6 +2290,7 @@ static __net_exit void nfsd_net_exit(struct n=
+et
+> > > > *net)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfsd_net *nn =3D net_generic(=
+net, nfsd_net_id);
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree_sensitive(nn->fh_key);
+> > > > +=C2=A0=C2=A0=C2=A0 nfsd_net_cb_stats_shutdown(nn);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd_proc_stat_shutdown(net);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 percpu_counter_destroy_many(nn->coun=
+ter, NFSD_STATS_COUNTERS_NUM);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfsd_idmap_shutdown(net);
+> > > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > > > index 9b05462da4cc..490193c1877d 100644
+> > > > --- a/fs/nfsd/state.h
+> > > > +++ b/fs/nfsd/state.h
+> > > > @@ -895,4 +895,6 @@ struct nfsd4_get_dir_delegation;
+> > > > =C2=A0 struct nfs4_delegation *nfsd_get_dir_deleg(struct
+> > > > nfsd4_compound_state *cstate,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 struct nfsd4_get_dir_delegation *gdd,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 struct nfsd_file *nf);
+> > > > +int nfsd_net_cb_stats_init(struct nfsd_net *nn);
+> > > > +void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn);
+> > > > =C2=A0 #endif=C2=A0=C2=A0 /* NFSD4_STATE_H */
+> > > > --=C2=A0
+> > > > 2.47.3
 >=20
-> Here is the approach I would recommend to maximize signal over noise
-> for the follow up email thread discussions:
->=20
-> Now that your series is bisectable, you could post a [RFC PATCH v2]
-> series with the following:
->=20
-> - Patch 00 introduces the series, points to your git branch implementing
->    the whole series,
-> - The first few patches introduce the new type (kino_t) and macro to
->    do the format string transition. Initially kino_t would typedef to
->    unsigned long (no changes).
-> - Followed by patches implementing the type + format string changes for
->    a few key subsystems.
-> - The final patch would change kino_t and the format string macro to
->    64-bit integers.
->=20
 
-That's pretty much the approach the set I have takes. The current set
-is here:
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/log/?=
-h=3Diino-u64
-
-My question was more about whether I should batch some of the changes
-together. My inclination is that doing it in small, incremental patches
-is a good thing, but I figured I'd ask before I spam everyone with a
-100+ patch series.
-
-> Once everyone agree on those core changes, you could proceed to post
-> patches that change additional subsystems in a subsequent round.
->=20
-> One more comment: have you tried using Coccinelle to do this kind of
-> semantic code change ?
-
-I've use coccinelle before for this sort of change, but my skills with
-it are pretty primitive. The problem I saw with using it here is that
-the main set of changes involved format strings, and that didn't look
-straightforward to do with coccinelle. The LLM seems to have sorted it
-out with no trouble though.
-
-On a related note, has anyone has taught an LLM how to use Coccinelle.
-I wonder if it might give it a better tool for its toolbox, since
-Claude at least seems to mostly use bash, perl or python to make
-changes across the tree.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
