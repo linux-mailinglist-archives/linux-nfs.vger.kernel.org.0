@@ -1,195 +1,148 @@
-Return-Path: <linux-nfs+bounces-19415-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19416-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2CmzIn6moWmqvQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19415-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:13:18 +0100
+	id iGNcJvGqoWm1vQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19416-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:32:17 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 431EB1B88A7
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:13:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F41441B9011
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 15:32:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2D63B30EFFF5
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 14:10:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D1DC8303CE27
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Feb 2026 14:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0333941322F;
-	Fri, 27 Feb 2026 14:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC94244692;
+	Fri, 27 Feb 2026 14:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtL3xNcH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g5GlOZM0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EE9413224
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Feb 2026 14:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F20F20B212
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Feb 2026 14:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772201042; cv=none; b=SpU/RjQ4pm/5X0nqOC3lDvn9jnK/gmkYkCEsIWUodltk5RALPKSY3bidQFzxa4bWFAL+Pr/OXS/MfWcueF39FRaSj0O+OQguukdtBGhBDpi3lELBFp/ECxAjv+wWZ7fdxjInTbFZADB65fMhqDUkM8opGAH0OrmI/iUoJ21d4ww=
+	t=1772202092; cv=none; b=KIDwF+CtbKYdK8bAazCLRRMUwpUGS26lCKBJvXQ1uRm8u0MA1lu+F0lO11H0UIf4YrInPhPkAVdYZ0+QdKViy1IxgCm7cAvA4GZJRb5cFDLFu2LX/lusLb2a/AhT79VY8cncxrw8IEx/qQnH51AasSdiNbRHz9Ev1YO0fqPNhJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772201042; c=relaxed/simple;
-	bh=Lpve2/+PMjaOx+yXhMWLaQ5hoCTTwYs44LZmhlZSWpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fh/DytfDexblXQDIO3xvkS6vr8zWJ70mcHpmg+dpafxd26uPjM2wQc+LD06nSs8U9ur2BHBuDRh2QwFDUlMFtGZtF3oYZNXzPe1MDGIZqezZoad9gnE7niEKOFV/A+Fp0UaOC310AV+NFWzXO4ZsiIO0U9Nw+hGGuboyJ6StDos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtL3xNcH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8EFC19425;
-	Fri, 27 Feb 2026 14:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772201042;
-	bh=Lpve2/+PMjaOx+yXhMWLaQ5hoCTTwYs44LZmhlZSWpA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KtL3xNcHi1uVD25gQczepiVudwxws7swFRpxtm2crLOmj1BUEfoQqBrS+5oWzdhoy
-	 OQ3LGXzXT9Z526GhqCy2fd3rhTnRHYp4EaCM4oVHfGUh7Z36Q1P5NJNzpcB79XJnUV
-	 Sq0MnMD08Gg2ut1Pvo/d9NvCQ7znGkPrMZt1wruISmYzcPGwwE8tSzN4NP7vRIXO3G
-	 2EA8i+gPlaWPQRCcOU21x11uuLDNNeuiuwlniKMns8yF7MauSkE+f5FeFULkTF6kbZ
-	 mp7yAbXmFwxUEflWldz6pej0AjxgPLxQCTiCjwMyATuDqYnv4fY8OTeLQsWq4y34sp
-	 N5tmZm4V8ChnQ==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 18/18] sunrpc: Skip xpt_reserved accounting for non-UDP transports
-Date: Fri, 27 Feb 2026 09:03:45 -0500
-Message-ID: <20260227140345.40488-19-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260227140345.40488-1-cel@kernel.org>
-References: <20260227140345.40488-1-cel@kernel.org>
+	s=arc-20240116; t=1772202092; c=relaxed/simple;
+	bh=ZOmTIo50fH6c4ujpWPybnS/mBqgKW8YwmdlzpgQ06gI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A/VIAz45PPHlcU000oEZs0rKfzexg48Bvo+D2F/JPA2Cb2SyeyYa8mxF/ErXHnaDR24H8xU0dxjcAXrN4f+KI5yyLiNDDuga/TuuDbhJP74iFqj9qUvb+JZ2UKzQ1VLCOASuauPFMGgwaedmAkjjwyH9XG9hy5wXBjMwaThLpU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g5GlOZM0; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772202090; x=1803738090;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZOmTIo50fH6c4ujpWPybnS/mBqgKW8YwmdlzpgQ06gI=;
+  b=g5GlOZM0OC9JUv3guVPtFRKdHg20XP1En7y4r1sYOrs3Y+A7iznO347N
+   2recQ0e+6xO08Hhc7YGNi5lZNSpFsSIPJUk/uPljRhmhC7iQiSqu2JDyA
+   mFVk4R91kTj6FFed8wmKXjs8QoQuW1pipcesSLfWeThw3bWW8o9cCw94Y
+   xAtZIEuxob4R2LDaMzJ+Tr8DlLF4ai1QfrkfXf0yZRIP7w+4bt3lP1Lqp
+   pgqcyCLUEYhmfPjQ0hUmIYaN+EGi1QbruHxbPl27UhyXAwcM+V2svAkSO
+   A8Tp+/imf7O7ZzYLKMgh9zUcFRXvkuEttneUj+fhAkWQw2Owy4pxd7LGD
+   g==;
+X-CSE-ConnectionGUID: tAy2ddavSae70mJ0sm/R/Q==
+X-CSE-MsgGUID: DgHKTZipQM+vti0JjuDz6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="83614930"
+X-IronPort-AV: E=Sophos;i="6.21,314,1763452800"; 
+   d="scan'208";a="83614930"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 06:21:29 -0800
+X-CSE-ConnectionGUID: xg/LfvwLTdCzmHoL4C4PPQ==
+X-CSE-MsgGUID: o+6egniDQsiRNZi4nk7xjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,314,1763452800"; 
+   d="scan'208";a="215546798"
+Received: from lkp-server02.sh.intel.com (HELO a3936d6a266d) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 27 Feb 2026 06:21:26 -0800
+Received: from kbuild by a3936d6a266d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vvyhl-00000000Aep-419p;
+	Fri, 27 Feb 2026 14:21:20 +0000
+Date: Fri, 27 Feb 2026 22:20:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
+	jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
+	tom@talpey.com, hch@lst.de
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] NFSD: move accumulated callback ops to per-net
+ namespace
+Message-ID: <202602272240.e34pGKuR-lkp@intel.com>
+References: <20260225172624.707224-1-dai.ngo@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260225172624.707224-1-dai.ngo@oracle.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19415-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
+	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	TAGGED_FROM(0.00)[bounces-19416-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 431EB1B88A7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,01.org:url,git-scm.com:url]
+X-Rspamd-Queue-Id: F41441B9011
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Dai,
 
-The xpt_reserved counter exists for UDP socket-buffer back-pressure:
-svc_udp_has_wspace() is the only has_wspace implementation that
-consults it. Neither svc_tcp_has_wspace() nor svc_rdma_has_wspace()
-read this counter.
+kernel test robot noticed the following build errors:
 
-On TCP and RDMA transports, svc_reserve() fires twice per RPC, each
-time executing an atomic_sub on xpt_reserved, smp_mb(), and a
-svc_xprt_enqueue() attempt that bails on XPT_BUSY. At 257K ops/sec
-over NFS/RDMA, this is measurable dead overhead.
+[auto build test ERROR on brauner-vfs/vfs.all]
+[also build test ERROR on linus/master v7.0-rc1 next-20260226]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc_xprt.h |  2 ++
- net/sunrpc/svc_xprt.c           | 22 +++++++++++++---------
- net/sunrpc/svcsock.c            |  1 +
- 3 files changed, 16 insertions(+), 9 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Dai-Ngo/NFSD-move-accumulated-callback-ops-to-per-net-namespace/20260226-012940
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20260225172624.707224-1-dai.ngo%40oracle.com
+patch subject: [PATCH v3 1/1] NFSD: move accumulated callback ops to per-net namespace
+config: parisc-randconfig-002-20260227 (https://download.01.org/0day-ci/archive/20260227/202602272240.e34pGKuR-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260227/202602272240.e34pGKuR-lkp@intel.com/reproduce)
 
-diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index da2a2531e110..077cec38ed8d 100644
---- a/include/linux/sunrpc/svc_xprt.h
-+++ b/include/linux/sunrpc/svc_xprt.h
-@@ -37,6 +37,8 @@ struct svc_xprt_class {
- 	struct list_head	xcl_list;
- 	u32			xcl_max_payload;
- 	int			xcl_ident;
-+	u32			xcl_flags;
-+#define SVC_XPRT_FLAG_WSPACE_RESERVE	BIT(0)
- };
- 
- /*
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 36c8437cfd8d..94d21b68c1f8 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -468,11 +468,11 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
- 
- 	/*
- 	 * If another cpu has recently updated xpt_flags,
--	 * sk_sock->flags, xpt_reserved, or xpt_nr_rqsts, we need to
--	 * know about it; otherwise it's possible that both that cpu and
--	 * this one could call svc_xprt_enqueue() without either
--	 * svc_xprt_enqueue() recognizing that the conditions below
--	 * are satisfied, and we could stall indefinitely:
-+	 * sk_sock->flags, xpt_reserved (UDP only), or xpt_nr_rqsts,
-+	 * we need to know about it; otherwise it's possible that both
-+	 * that cpu and this one could call svc_xprt_enqueue() without
-+	 * either svc_xprt_enqueue() recognizing that the conditions
-+	 * below are satisfied, and we could stall indefinitely:
- 	 */
- 	smp_rmb();
- 	xpt_flags = READ_ONCE(xprt->xpt_flags);
-@@ -552,10 +552,13 @@ void svc_reserve(struct svc_rqst *rqstp, int space)
- 	space += rqstp->rq_res.head[0].iov_len;
- 
- 	if (xprt && space < rqstp->rq_reserved) {
--		atomic_sub((rqstp->rq_reserved - space),
--			   &xprt->xpt_reserved);
-+		if (xprt->xpt_class->xcl_flags & SVC_XPRT_FLAG_WSPACE_RESERVE) {
-+			atomic_sub((rqstp->rq_reserved - space),
-+				   &xprt->xpt_reserved);
-+		}
- 		rqstp->rq_reserved = space;
--		svc_xprt_resource_released(xprt);
-+		if (xprt->xpt_class->xcl_flags & SVC_XPRT_FLAG_WSPACE_RESERVE)
-+			svc_xprt_resource_released(xprt);
- 	}
- }
- EXPORT_SYMBOL_GPL(svc_reserve);
-@@ -834,7 +837,8 @@ static void svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
- 		else
- 			len = xprt->xpt_ops->xpo_recvfrom(rqstp);
- 		rqstp->rq_reserved = serv->sv_max_mesg;
--		atomic_add(rqstp->rq_reserved, &xprt->xpt_reserved);
-+		if (xprt->xpt_class->xcl_flags & SVC_XPRT_FLAG_WSPACE_RESERVE)
-+			atomic_add(rqstp->rq_reserved, &xprt->xpt_reserved);
- 		if (len <= 0)
- 			goto out;
- 
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index f28c6076f7e8..ce840f8e86c6 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -828,6 +828,7 @@ static struct svc_xprt_class svc_udp_class = {
- 	.xcl_ops = &svc_udp_ops,
- 	.xcl_max_payload = RPCSVC_MAXPAYLOAD_UDP,
- 	.xcl_ident = XPRT_TRANSPORT_UDP,
-+	.xcl_flags = SVC_XPRT_FLAG_WSPACE_RESERVE,
- };
- 
- static void svc_udp_init(struct svc_sock *svsk, struct svc_serv *serv)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602272240.e34pGKuR-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "nfsd_net_cb_stats_shutdown" [fs/nfsd/nfsd.ko] undefined!
+>> ERROR: modpost: "nfsd_net_cb_stats_init" [fs/nfsd/nfsd.ko] undefined!
+
 -- 
-2.53.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
