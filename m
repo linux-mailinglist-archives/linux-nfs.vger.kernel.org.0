@@ -1,56 +1,95 @@
-Return-Path: <linux-nfs+bounces-19443-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19444-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCR9EZBMo2nW/AQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19443-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:14:08 +0100
+	id 8KKoDyVeo2myBQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-19444-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 22:29:09 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A79AC1C8113
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:14:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9721D1C91BB
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 22:29:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7F65231B1974
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 19:42:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 55EF4337847A
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 19:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142E04301BD;
-	Sat, 28 Feb 2026 17:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21327383C78;
+	Sat, 28 Feb 2026 18:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK6CtK9u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qh9cuxdC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59744301BC
-	for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 17:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF66346AD3
+	for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 18:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772300817; cv=none; b=dg4rlapj5iGBVeYybkqewK1hJMY9vnKz6WBDMT9wF10mu5wF16NZWB0y3MNi8ZGudV6PO241INiYY7OCNGBNjO9UetuwQkYX4MObAyltrF1n9SRiaOEUD3uWEu4N+p//5AsNT/iQmCookqAKMlvDxw/Kp2sFghmzqXcQnL4UukM=
+	t=1772302116; cv=none; b=KXXjImVxcueR0tHT5y3Ko3xRAzStEanyaPkYuGvdxZOS3hpspr0P9SextaKRhHUAf9Dt0iMBgi60exmhGXOThALgc03m44Y1ReofoYLJERvJA5PhOC2Hn7uk6MmCToW3q758g9MNn+GXM9B5LEiN9NakzpIP+4U2ATN9x8cSIrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772300817; c=relaxed/simple;
-	bh=Zq3U2WpQL01tg4siPgjvCwrDjfak6yQQYAVG5jwhW0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qFtgc9mkpvqA6u5bpLPpeUn7wD9oAa5im+nqL3+eL31lHu0VvXciQy7mdaGtUS4DX9fz9LwXrH2i9QXAqtu2qb8gpIfgB0MpTGeF8WjFSlE8YYR52K4mQdgK0YU0WP1eFg/FCL3bRONL2lgy0dpibFseHOoJB6PFM/KzrvRpiIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK6CtK9u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB05C116D0;
-	Sat, 28 Feb 2026 17:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772300816;
-	bh=Zq3U2WpQL01tg4siPgjvCwrDjfak6yQQYAVG5jwhW0g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eK6CtK9uU+dE6/WLCaEep88N/Njbsk6qgOAZn/OGpvhXVzgR/IDqD8Z+ZIIgZEFi+
-	 GPQy6CJBBitC/n2fPpG4cAlo8lg8TAkoXupguI1zBoTUI/ngTqFRH7tgMighiAwm8P
-	 e1AVNAFoeSutkGXQrKk4Sd8GxFNHv8XXQurb7twOz76tQF18/4fVbOAH52taap6E/J
-	 2Btte6RDUsJT6Id6OyFq1s/cHlIf+iCVAbKL2gsZ9uwgmKfJdlfqsK14hCIprtotgz
-	 5rGo4/cn7xNCwFzxFEw60hMZ2qaBtP/T2gJodE9lJZcOJMkFrS8Ipr6RhLb3hB6byC
-	 jKOBCCnLKRB6A==
-From: Chuck Lever <cel@kernel.org>
-To: Steve Dickson <SteveD@redhat.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH] mountstats: Fix per-operation percentages with nconnect
-Date: Sat, 28 Feb 2026 12:46:54 -0500
-Message-ID: <20260228174654.129309-1-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1772302116; c=relaxed/simple;
+	bh=T8MKheElYMCrERWIN1kNw9bUZSTVWnvnyWPev6Vi2q4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lZfBWe9KFzJytKV7fROUwqciwtsmiZgI5d3wZObimD27qp/3L95J5E/NCPF3wzLbDFRULTvp5FKLGouV5Pjp6RQQKP0HpaQBc+8m5oZE8oDsIlPmDF7UHMJMtkzI6Euv2wORYdSQ8T2K+JDSfLvwFJSH30zPS/REc6/yvEttQLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qh9cuxdC; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-826c49b7628so2028548b3a.0
+        for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 10:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772302114; x=1772906914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YwAc3eqfbsDFXKOI/9IkPHAT12S5GKUgm1F1AhZ+6RA=;
+        b=Qh9cuxdCQH3S62ZI9AB4FAacbmVPclHt8fLDNJDIG4n2PdkGE8YH5vNuMUFGzQJa0O
+         Zip3umfmYiM34ZAI7vb4qilbKtnQcTD4VSzn6jQxXbXtw1iEfg9Z9+dckmm36usFTQdt
+         5SA+Bdf6DfFjFykaP+27+LS7lrvNkDzMbbxV581Ch+SRzjmTtxxZupvvN8Y98+50pixy
+         S5+kppVM3R27o/gOQYMdRvqJqD667t4L/EpOwqsyBCc2MhFOJb3qkdJrL+E9gaxRUaKf
+         kSuvwPGzgnS3eWPthJ/SP5bufqDcBl3WO6NN+Yr+GWM3kTmCQxOvtmPfMqgtPV1JX7/J
+         dsoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772302114; x=1772906914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YwAc3eqfbsDFXKOI/9IkPHAT12S5GKUgm1F1AhZ+6RA=;
+        b=fn44Bxhq1Gc65he+J26Ele9KXcPxya1gDv0XUfUEkXGvMdZeXiZfaensSJaDVd5+dx
+         9HbDDTwd88MSMX53gC7pzm52S0jLDI3ws/QMYF/AnyJ/6BypztB2tAZD1GiKEkgyiOcw
+         TAtTluMwEKTTzd5vfgrnVl07qu6eahdDnpxp6jfgyA2b0J1pfBOkP1Q9FiO7YUsT5HEe
+         bcqEeuwgWaZgbZv7aL1PoqPZvB9TVIRDkOL56hiCoOPeUM3tXJWEqioetIWj4BwgYNoY
+         R+npcpo0EA9xJpRS3fE3i0WM2oHWAEt0vXKuvK8X2P7HGIKAk/JHBLHUyifE038yvXOD
+         mxAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpvzX4y+SE0tg7Jme/2svl7f6znAa+wFGnsm1nK/ErLmNFyozs0lZtUQr3MArWNqVZ7mLKmsLGDsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcG9pGPpMtre8lfsD6/7NrPhhxi2AyogXUKzfSjwDayJm0hT9u
+	Glkrw8kI1lb8U08WCiiljlNf66hr1a4ZIJ77ESZqcdbdeH54FoWV+Eu/
+X-Gm-Gg: ATEYQzz5taIEAaGiz5qXOVsg9PobeEgMi+CLdmV75dPJk+izsleMf5QJD+xPa2flJL+
+	e9tfCRlRT6gIfFvViqcJZ9R7Fkc9S9Y/Y/Wu2+XLQKTf/+nEFDZCq3OaAY4XLaR7dxkpNMJMTqq
+	WoEow1HTdSkcMmFCR7Fp+v2IOgGhhWoxZ5h1WkGf94xaXp5FECbXM7Ujrr3lchK6mDEwzcSBt9t
+	XGglFL5TGuzX/YBkAD2lJ7ET3VG8ey866HxrSobvkZpRwIDnvl529NbcihGnUFs7pYVpuIk2J0y
+	Od7i2fmca5bKVe9saJKNxXWb3QLsISgDhAkpQETfIDmyjxlvM1uV5zYzv0OHdi0Hup5F+9rsqq0
+	ovrIqPc8P3UzpVZ4K2hFoo8XdJR70MieQgTzR30hRW5AgQn+Ir2KUPd8QH45qa+68GRlXG5xQ6n
+	Qfqa5fmVy6CHZkcKqQyNSOcpU3YZO5NT+uYm8UYAyHFcTYREWVWXEcJ49JpogxkIE+93D8
+X-Received: by 2002:a05:6a00:2e89:b0:823:786:1990 with SMTP id d2e1a72fcca58-8274d99c2d7mr5907758b3a.21.1772302114190;
+        Sat, 28 Feb 2026 10:08:34 -0800 (PST)
+Received: from sean-All-Series.. (1-160-203-78.dynamic-ip.hinet.net. [1.160.203.78])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82739ff1ca9sm8065154b3a.36.2026.02.28.10.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Feb 2026 10:08:33 -0800 (PST)
+From: Sean Chang <seanwascoding@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	nicolas.ferre@microchip.com,
+	claudiu.beznea@tuxon.dev,
+	trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sean Chang <seanwascoding@gmail.com>
+Subject: [PATCH v5 0/2] Fix compiler warnings/errors in SUNRPC and MACB
+Date: Sun,  1 Mar 2026 02:08:19 +0800
+Message-Id: <20260228180821.811683-1-seanwascoding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,150 +98,86 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[lunn.ch,oracle.com,gmail.com,microchip.com,tuxon.dev,hammerspace.com,kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19443-lists,linux-nfs=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_THREE(0.00)[3];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A79AC1C8113
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-19444-lists,linux-nfs=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9721D1C91BB
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+This series addresses compiler warnings and a build error identified across 
+different architectures and configurations.
 
-Per-operation percentages reported by "mountstats --rpc" are
-inaccurate when an NFS mount uses nconnect.
+The first patch refactors the dfprintk macros in the SUNRPC subsystem. This 
+global fix silences unused variable warnings and, by incorporating 
+no_printk(), ensures continued compiler type checking. It also includes 
+a specific fix for a build error in nfsd (nfsfh.c) uncovered by syzbot 
+in non-debug configurations.
 
-With nconnect=N, the kernel emits N separate "xprt:" lines in
-/proc/self/mountstats, one per transport.  Each transport tracks
-its own rpcsends counter reflecting only RPCs routed through that
-connection.
+The second patch fixes a format-truncation warning in the MACB ethernet
+driver by ensuring the snprintf output fits within the destination buffer.
 
-The parser overwrites rpcsends on each "xprt:" line, keeping only
-the last transport's value.  Per-operation counts (READ, WRITE,
-etc.) are maintained in a single array per RPC client and reflect
-all RPCs across all transports.
+v5:
+- Simplify dfprintk and dfprintk_rcu macros by removing the redundant 'fmt' 
+  argument and calling no_printk(__VA_ARGS__) directly, as suggested by 
+  David Laight.
+- Fix a build error in fs/nfsd/nfsfh.c reported by syzbot. The error was 
+  caused by a mismatch between the variable's lifecycle (defined via 
+  RPC_IFDEBUG) and its usage in dprintk.
+- Add Link tag to the syzbot build failure report.
+- Update series title to reflect the general nature of the fixes.
 
-With nconnect=3 and balanced round-robin, rpcsends holds roughly
-one third of total RPCs while per-op counts hold the full total.
-display_rpc_op_stats() computes (op_count * 100) / rpcsends,
-yielding percentages roughly three times too large.
+v4:
+- Refactor patch 1 to use no_printk() in sunrpc headers instead of marking
+  variables as __maybe_unused. This provides a cleaner, global fix and
+  enables compiler type checking.
 
-Accumulate rpcsends, rpcreceives, badxids, backlogutil,
-sendutil, and pendutil across multiple "xprt:" lines. These are
-cumulative counters where the sum across transports gives the
-correct aggregate.  Per-connection properties (port, bind_count,
-connect_count, connect_time, idle_time, maxslots, inflightsends)
-retain the value from the last transport seen.
+v3:
+- Expand commit descriptions to include technical details regarding macro
+  expansion, as requested by Andrew Lunn.
+- Test the different platform, such as ARM, ARM64, X86_64.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- tools/mountstats/mountstats.py | 61 +++++++++++++++++++++++++---------
- 1 file changed, 46 insertions(+), 15 deletions(-)
+v2:
+- Split the original treewide patch into subsystem-specific commits.
+- Added more detailed commit descriptions to satisfy checkpatch.
 
-diff --git a/tools/mountstats/mountstats.py b/tools/mountstats/mountstats.py
-index d488f9e1c258..a6adab344d0e 100755
---- a/tools/mountstats/mountstats.py
-+++ b/tools/mountstats/mountstats.py
-@@ -140,6 +140,38 @@ XprtRdmaCounters = [
-     'reply_waits_for_send',
- ]
- 
-+# Counters that should be summed across transports when nconnect > 1.
-+# Each is stored in a per-transport structure in the kernel
-+# (xprt->stat or rpcrdma_xprt.rx_stats) and represents a cumulative
-+# event count or utilization value.  Per-connection properties (port,
-+# bind_count, connect_count, connect_time, idle_time, maxslots,
-+# inflightsends) retain the value from the last transport seen.
-+XprtAccumulatedCounters = {
-+    'rpcsends',
-+    'rpcreceives',
-+    'badxids',
-+    'backlogutil',
-+    'sendutil',
-+    'pendutil',
-+    'read_segments',
-+    'write_segments',
-+    'reply_segments',
-+    'total_rdma_req',
-+    'total_rdma_rep',
-+    'pullup',
-+    'fixup',
-+    'hardway',
-+    'failed_marshal',
-+    'bad_reply',
-+    'nomsg_calls',
-+    'recovered_mrs',
-+    'orphaned_mrs',
-+    'allocated_mrs',
-+    'local_invalidates',
-+    'empty_sendctx_q',
-+    'reply_waits_for_send',
-+}
-+
- Nfsv3ops = [
-     'NULL',
-     'GETATTR',
-@@ -291,23 +323,22 @@ class DeviceData:
-         elif words[0] == 'xprt:':
-             self.__rpc_data['protocol'] = words[1]
-             if words[1] == 'udp':
--                i = 2
--                for key in XprtUdpCounters:
--                    if i < len(words):
--                        self.__rpc_data[key] = int(words[i])
--                    i += 1
-+                counters = XprtUdpCounters
-             elif words[1] == 'tcp':
--                i = 2
--                for key in XprtTcpCounters:
--                    if i < len(words):
--                        self.__rpc_data[key] = int(words[i])
--                    i += 1
-+                counters = XprtTcpCounters
-             elif words[1] == 'rdma':
--                i = 2
--                for key in XprtRdmaCounters:
--                    if i < len(words):
--                        self.__rpc_data[key] = int(words[i])
--                    i += 1
-+                counters = XprtRdmaCounters
-+            else:
-+                counters = []
-+            i = 2
-+            for key in counters:
-+                if i < len(words):
-+                    val = int(words[i])
-+                    if key in XprtAccumulatedCounters and key in self.__rpc_data:
-+                        self.__rpc_data[key] += val
-+                    else:
-+                        self.__rpc_data[key] = val
-+                i += 1
-         elif words[0] == 'per-op':
-             self.__rpc_data['per-op'] = words
-         else:
+Sean Chang (2):
+  sunrpc: simplify dfprintk macros and fix nfsd build error
+  net: macb: use ethtool_sprintf to fill ethtool stats strings
+
+ drivers/net/ethernet/cadence/macb_main.c | 7 ++-----
+ fs/nfsd/nfsfh.c                          | 2 ++
+ include/linux/sunrpc/debug.h             | 4 ++--
+ 3 files changed, 6 insertions(+), 7 deletions(-)
+
 -- 
-2.53.0
+2.34.1
 
 
