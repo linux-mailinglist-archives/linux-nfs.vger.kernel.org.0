@@ -1,79 +1,81 @@
-Return-Path: <linux-nfs+bounces-19444-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19445-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8KKoDyVeo2myBQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-19444-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 22:29:09 +0100
+	id cO+HIk5do2nW/AQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19445-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 22:25:34 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9721D1C91BB
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 22:29:08 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E1971C908B
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 22:25:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 55EF4337847A
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 19:50:17 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id DFD8D3197A41
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 19:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21327383C78;
-	Sat, 28 Feb 2026 18:08:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4631138CFEC;
+	Sat, 28 Feb 2026 18:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qh9cuxdC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igEuzZYs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF66346AD3
-	for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 18:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C65B383C98
+	for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 18:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772302116; cv=none; b=KXXjImVxcueR0tHT5y3Ko3xRAzStEanyaPkYuGvdxZOS3hpspr0P9SextaKRhHUAf9Dt0iMBgi60exmhGXOThALgc03m44Y1ReofoYLJERvJA5PhOC2Hn7uk6MmCToW3q758g9MNn+GXM9B5LEiN9NakzpIP+4U2ATN9x8cSIrc=
+	t=1772302120; cv=none; b=BD6iOjxzwZffg+VJAhLRGc/JDc90k//hvRoG4BmOFVcp1RE4DgRWOytopJBVwDyrPJq12UZ4Jr4b5S5I80cj43L049IFFabmv3qNSBsshYfMOSOw2+QzCFReJGHi/1rhLWnHVVeJwbiG5LI2/K2JY5c5dSjGcNqPZgPB/9VF3qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772302116; c=relaxed/simple;
-	bh=T8MKheElYMCrERWIN1kNw9bUZSTVWnvnyWPev6Vi2q4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lZfBWe9KFzJytKV7fROUwqciwtsmiZgI5d3wZObimD27qp/3L95J5E/NCPF3wzLbDFRULTvp5FKLGouV5Pjp6RQQKP0HpaQBc+8m5oZE8oDsIlPmDF7UHMJMtkzI6Euv2wORYdSQ8T2K+JDSfLvwFJSH30zPS/REc6/yvEttQLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qh9cuxdC; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1772302120; c=relaxed/simple;
+	bh=EO7jsIkjy8zcpTckBUW3cT/KYocmnqn8xEzGqyuAgvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iF0TJrCmOx59tl7yrMNvbYOH8+bePt7M+gFnWCzjhCWcK2kRzbm7lA+7z7KGKnH8+9NyDDRx+dLZHNZ8TcVPIKGGp3YUQXGwfP8wcxIDr/4Qef1r52KHPXWDXcVLgh75+/DFElEzqV/ge5jvii0gvSSExYZc1v6h0heGfdkypwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igEuzZYs; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-826c49b7628so2028548b3a.0
-        for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 10:08:34 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-82735a41985so1812906b3a.2
+        for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 10:08:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772302114; x=1772906914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YwAc3eqfbsDFXKOI/9IkPHAT12S5GKUgm1F1AhZ+6RA=;
-        b=Qh9cuxdCQH3S62ZI9AB4FAacbmVPclHt8fLDNJDIG4n2PdkGE8YH5vNuMUFGzQJa0O
-         Zip3umfmYiM34ZAI7vb4qilbKtnQcTD4VSzn6jQxXbXtw1iEfg9Z9+dckmm36usFTQdt
-         5SA+Bdf6DfFjFykaP+27+LS7lrvNkDzMbbxV581Ch+SRzjmTtxxZupvvN8Y98+50pixy
-         S5+kppVM3R27o/gOQYMdRvqJqD667t4L/EpOwqsyBCc2MhFOJb3qkdJrL+E9gaxRUaKf
-         kSuvwPGzgnS3eWPthJ/SP5bufqDcBl3WO6NN+Yr+GWM3kTmCQxOvtmPfMqgtPV1JX7/J
-         dsoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772302114; x=1772906914;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1772302117; x=1772906917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YwAc3eqfbsDFXKOI/9IkPHAT12S5GKUgm1F1AhZ+6RA=;
-        b=fn44Bxhq1Gc65he+J26Ele9KXcPxya1gDv0XUfUEkXGvMdZeXiZfaensSJaDVd5+dx
-         9HbDDTwd88MSMX53gC7pzm52S0jLDI3ws/QMYF/AnyJ/6BypztB2tAZD1GiKEkgyiOcw
-         TAtTluMwEKTTzd5vfgrnVl07qu6eahdDnpxp6jfgyA2b0J1pfBOkP1Q9FiO7YUsT5HEe
-         bcqEeuwgWaZgbZv7aL1PoqPZvB9TVIRDkOL56hiCoOPeUM3tXJWEqioetIWj4BwgYNoY
-         R+npcpo0EA9xJpRS3fE3i0WM2oHWAEt0vXKuvK8X2P7HGIKAk/JHBLHUyifE038yvXOD
-         mxAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpvzX4y+SE0tg7Jme/2svl7f6znAa+wFGnsm1nK/ErLmNFyozs0lZtUQr3MArWNqVZ7mLKmsLGDsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcG9pGPpMtre8lfsD6/7NrPhhxi2AyogXUKzfSjwDayJm0hT9u
-	Glkrw8kI1lb8U08WCiiljlNf66hr1a4ZIJ77ESZqcdbdeH54FoWV+Eu/
-X-Gm-Gg: ATEYQzz5taIEAaGiz5qXOVsg9PobeEgMi+CLdmV75dPJk+izsleMf5QJD+xPa2flJL+
-	e9tfCRlRT6gIfFvViqcJZ9R7Fkc9S9Y/Y/Wu2+XLQKTf/+nEFDZCq3OaAY4XLaR7dxkpNMJMTqq
-	WoEow1HTdSkcMmFCR7Fp+v2IOgGhhWoxZ5h1WkGf94xaXp5FECbXM7Ujrr3lchK6mDEwzcSBt9t
-	XGglFL5TGuzX/YBkAD2lJ7ET3VG8ey866HxrSobvkZpRwIDnvl529NbcihGnUFs7pYVpuIk2J0y
-	Od7i2fmca5bKVe9saJKNxXWb3QLsISgDhAkpQETfIDmyjxlvM1uV5zYzv0OHdi0Hup5F+9rsqq0
-	ovrIqPc8P3UzpVZ4K2hFoo8XdJR70MieQgTzR30hRW5AgQn+Ir2KUPd8QH45qa+68GRlXG5xQ6n
-	Qfqa5fmVy6CHZkcKqQyNSOcpU3YZO5NT+uYm8UYAyHFcTYREWVWXEcJ49JpogxkIE+93D8
-X-Received: by 2002:a05:6a00:2e89:b0:823:786:1990 with SMTP id d2e1a72fcca58-8274d99c2d7mr5907758b3a.21.1772302114190;
-        Sat, 28 Feb 2026 10:08:34 -0800 (PST)
+        bh=1b/B2f0Vk0y2rjHQ9oplWOwEPv2E78m9d0l1U5eNgvc=;
+        b=igEuzZYs0FLulukX5TLCjH0ZFbTEc0NPSxnQ653Bq4me+wQxy/P/2utSkQNO4k4bfn
+         XHDE185wIdFwTIyaJjd4xRBv5v8c6jutrodQAex8+pwtsq+L8qhj+EQSMUKlNrpED0Zm
+         JUbYEOOJp410I2e1byDReMYeRr6mdV2wsKEl3bLh0AMKYVt1Hm0dX4/9Mgf76roBKZyj
+         zP3RSa/raDoTv2lyfhHmR0j38wl2k6EvCcBL5xFOSyIm0OKXRdzNrPWTxb19RUNyyMz1
+         cz+vyFdhuX59a63ALhsaN2IYwLIa96zB2f2f0XLWqGliICVl/i4/hgksVqokID/aRiM6
+         /7JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772302117; x=1772906917;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1b/B2f0Vk0y2rjHQ9oplWOwEPv2E78m9d0l1U5eNgvc=;
+        b=HtW/05S1MDfaH/QnD9cZkh7vQkukls/4xvxJ9y0DBas8JcWVgO1w56QcpF7v8z8L4B
+         PEIP4VvOEbYHTs7tSgshTO2pqFyL8c0R5r0X59FncmvKavD/+afQtH1+iDk+8YOoRmgT
+         CWNrEC5C1RzhMld03kuejVk3K12oPnkXDg+LWTI1bbtDrQ7FlmBUj0i3QAgU6LzY6Lti
+         vRdupekGR4MurbVn+yPPs/eZFRIyBXPHS+uJ4zdHJ5VV0izGdeLvL1J0JLbGYPxNpXvq
+         ZO89Hvtc5DIVKv95Tz9lJvPhhCSfvzPxwKwldmoQi6cGEPvQFp0gEzLqGVGMraDZfoXU
+         /Wow==
+X-Forwarded-Encrypted: i=1; AJvYcCVrc9PUXi6PW8eGY26ph5DzoYEWjbYyRjN7W0InZMLzWJtFkGe5YS27c2u1ZxHKhbbnfscJo+hi5E4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzakdvHK7hus1bL/1cBFCrXVpR5JE7fQkkWLfeMznZIOoFbu8lM
+	lTjCVITcw9O0J1hCcd7Ue6GCP7I95yteBBwvoy/1f6IJlMIBKL2apJ9HtQLADw==
+X-Gm-Gg: ATEYQzwL2dNMAq7vJ99a0Eb31/ZGycdM2Jr/F5DjUnpBlaZbB4c7BBdkETQ6RPtrs1D
+	psjWUCw6jwOuGyMk7Nx3QduoVDR5NZLOwP1j9Fg5F76yUjx/xuoD1xDYCJUH5E/0WGt4tmoKWuu
+	ErTSgEoO2/4ByEeXxSV4Dco1kHMKkvfOTzCqab+PPGnEZVvPWzGXwrtaEGqSI2UhdIgZle+j0tT
+	dkdNP1/KDTXOBgKcz7y7HU8YLjF7ncKQ46U1EZDyF3spYQ6PGB2arwm9qWTfSm5XSJ/6bJvVTMA
+	lRne5oPHyOunmYhZBOWBl2FSCGPjqqZ0XE5Y7stkbugi9A31gSYRGbOgZDGDMHRE64k06FXQdjs
+	QYIQOOJ73FOdkARF0gSQ2ms76giBhaRKtEz+4ScN+3PihxVCen/94ye3II3L+asi4809QbuKZtW
+	ej+4A7Bl2vUeOROIGzFt9NuSqSHUB9iPp7k+z1XR4BGFT2G091OTcFdv6l/YoKeHlQrhR9
+X-Received: by 2002:a05:6a00:1a0b:b0:81d:a1b1:731b with SMTP id d2e1a72fcca58-8274d998763mr4706209b3a.19.1772302117279;
+        Sat, 28 Feb 2026 10:08:37 -0800 (PST)
 Received: from sean-All-Series.. (1-160-203-78.dynamic-ip.hinet.net. [1.160.203.78])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82739ff1ca9sm8065154b3a.36.2026.02.28.10.08.31
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82739ff1ca9sm8065154b3a.36.2026.02.28.10.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Feb 2026 10:08:33 -0800 (PST)
+        Sat, 28 Feb 2026 10:08:37 -0800 (PST)
 From: Sean Chang <seanwascoding@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Chuck Lever <chuck.lever@oracle.com>,
@@ -86,10 +88,12 @@ Cc: netdev@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sean Chang <seanwascoding@gmail.com>
-Subject: [PATCH v5 0/2] Fix compiler warnings/errors in SUNRPC and MACB
-Date: Sun,  1 Mar 2026 02:08:19 +0800
-Message-Id: <20260228180821.811683-1-seanwascoding@gmail.com>
+Subject: [PATCH v5 1/2] sunrpc: simplify dfprintk macros and fix nfsd build error
+Date: Sun,  1 Mar 2026 02:08:20 +0800
+Message-Id: <20260228180821.811683-2-seanwascoding@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260228180821.811683-1-seanwascoding@gmail.com>
+References: <20260228180821.811683-1-seanwascoding@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -105,7 +109,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -115,8 +119,8 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-19444-lists,linux-nfs=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-19445-lists,linux-nfs=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -128,55 +132,66 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9721D1C91BB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8E1971C908B
 X-Rspamd-Action: no action
 
-This series addresses compiler warnings and a build error identified across 
-different architectures and configurations.
+When CONFIG_SUNRPC_DEBUG is disabled, the dfprintk() macros currently
+expand to empty do-while loops. This causes variables used solely
+within these calls to appear unused, triggering -Wunused-variable
+warnings.
 
-The first patch refactors the dfprintk macros in the SUNRPC subsystem. This 
-global fix silences unused variable warnings and, by incorporating 
-no_printk(), ensures continued compiler type checking. It also includes 
-a specific fix for a build error in nfsd (nfsfh.c) uncovered by syzbot 
-in non-debug configurations.
+Following David Laight's suggestion, simplify the macro definitions by
+removing the unnecessary 'fmt' argument and using no_printk(__VA_ARGS__)
+directly. This ensures the compiler performs type checking and "sees"
+the variables, silencing the warnings without emitting any code.
 
-The second patch fixes a format-truncation warning in the MACB ethernet
-driver by ensuring the snprintf output fits within the destination buffer.
+Additionally, fix a build error in fs/nfsd/nfsfh.c reported by syzbot.
+In nfsd_setuser_and_check_port(), the variable 'buf' is conditionally
+defined via RPC_IFDEBUG. Since no_printk() now performs type checking,
+it triggers an 'undeclared identifier' error when debug is disabled.
+Wrap the dprintk call in an #if block to synchronize its lifecycle
+with 'buf', following the pattern in svc_rdma_transport.c.
 
-v5:
-- Simplify dfprintk and dfprintk_rcu macros by removing the redundant 'fmt' 
-  argument and calling no_printk(__VA_ARGS__) directly, as suggested by 
-  David Laight.
-- Fix a build error in fs/nfsd/nfsfh.c reported by syzbot. The error was 
-  caused by a mismatch between the variable's lifecycle (defined via 
-  RPC_IFDEBUG) and its usage in dprintk.
-- Add Link tag to the syzbot build failure report.
-- Update series title to reflect the general nature of the fixes.
+Link: https://lore.kernel.org/all/69a2e269.050a0220.3a55be.003e.GAE@google.com/
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Suggested-by: David Laight <david.laight.linux@gmail.com>
+Signed-off-by: Sean Chang <seanwascoding@gmail.com>
+---
+ fs/nfsd/nfsfh.c              | 2 ++
+ include/linux/sunrpc/debug.h | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-v4:
-- Refactor patch 1 to use no_printk() in sunrpc headers instead of marking
-  variables as __maybe_unused. This provides a cleaner, global fix and
-  enables compiler type checking.
-
-v3:
-- Expand commit descriptions to include technical details regarding macro
-  expansion, as requested by Andrew Lunn.
-- Test the different platform, such as ARM, ARM64, X86_64.
-
-v2:
-- Split the original treewide patch into subsystem-specific commits.
-- Added more detailed commit descriptions to satisfy checkpatch.
-
-Sean Chang (2):
-  sunrpc: simplify dfprintk macros and fix nfsd build error
-  net: macb: use ethtool_sprintf to fill ethtool stats strings
-
- drivers/net/ethernet/cadence/macb_main.c | 7 ++-----
- fs/nfsd/nfsfh.c                          | 2 ++
- include/linux/sunrpc/debug.h             | 4 ++--
- 3 files changed, 6 insertions(+), 7 deletions(-)
-
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index ed85dd43da18..f7386fd483a6 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -106,8 +106,10 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+ 	/* Check if the request originated from a secure port. */
+ 	if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
+ 		RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
++#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ 		dprintk("nfsd: request from insecure port %s!\n",
+ 		        svc_print_addr(rqstp, buf, sizeof(buf)));
++#endif
+ 		return nfserr_perm;
+ 	}
+ 
+diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
+index eb4bd62df319..cb33c7e1f370 100644
+--- a/include/linux/sunrpc/debug.h
++++ b/include/linux/sunrpc/debug.h
+@@ -52,8 +52,8 @@ do {									\
+ # define RPC_IFDEBUG(x)		x
+ #else
+ # define ifdebug(fac)		if (0)
+-# define dfprintk(fac, fmt, ...)	do {} while (0)
+-# define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
++# define dfprintk(fac, ...)		no_printk(__VA_ARGS__)
++# define dfprintk_rcu(fac, ...)	no_printk(__VA_ARGS__)
+ # define RPC_IFDEBUG(x)
+ #endif
+ 
 -- 
 2.34.1
 
