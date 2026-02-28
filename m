@@ -1,163 +1,175 @@
-Return-Path: <linux-nfs+bounces-19448-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19449-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eNwYH9BMo2nW/AQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19448-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:15:12 +0100
+	id mKBgAv9Ro2nW/AQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19449-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:37:19 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECC3E1C8166
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:15:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 787971C873B
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:37:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AEB45367AEF5
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 20:05:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6F2E13000E3C
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 20:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965DA430B90;
-	Sat, 28 Feb 2026 20:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC78A2DF137;
+	Sat, 28 Feb 2026 20:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G85XoUUw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvS5WHj7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA1E430B86;
-	Sat, 28 Feb 2026 20:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BF2DCF67
+	for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 20:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772309114; cv=none; b=N0t0x8jjuSMivFijq5V1IlAlk1vPgth4iZHlSXeUA6y4LgkSWOtNZZ2nsLGgKV8iYTi3ne9A9kgaZR76/PkSCSEq0zKCmzC0Lu73o3xpuRZNmsPkT1HquxwRywpPJQRENWV3rXLEPLhTZYC2j6fRvEg+A/jjO/ZX5lSyccyFn/0=
+	t=1772311020; cv=none; b=jp87RfqcUvgxwBtd5WETWDQpVYJnxOyNufu8exqm7cxtqAMnCfR5izQqbEg417ppX1rUJ59/LM70urxvhXjaRgGMPHppG/yqtc3TOfgx6aIlSw4vmqLF2O4C98VZKxzq7widVa0sVIawkESw0+7FRIQK6akvCr9oAcSNnGFrsOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772309114; c=relaxed/simple;
-	bh=vdMGG4/8Hix+4FoWu/B8a1mMs7X6rU62YDOscX2pIp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nc3uxKBYxHCKsPTD9nj5l9ByUBhREGhE4bQXwmYVvFCgb7YpuhIvfxUzaTZxLZX0Qfe0F6XMYkb2xd5ZDvrwcd8orFHWZfIpXtuf9ZbDA+LdZMYJ9ivwZiGln78BKXkxWBuIOQi3tFE6nvzAZM4z+28/AOSmdXAUIgG1a7mDI20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=G85XoUUw; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=WPcP+4kIV12LpNOXbcBdaDqCQ0c2Ambd6oz7BD835wA=; b=G85XoUUwHa+W9v+OFm/sWWzV4d
-	/2ewIGltz8zebm3VXrDy9xdTNRTF7bSakNQI0FlWdLWSZ7V4vUIowg/vmYEyC48w98kOvYV/X55/b
-	SkkOgenle8kdifdOqEhoikmXjPCyLehMwukYBgeAe7icZx5Zni8P1d5SkcGW9XJTILEI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1vwQYZ-009DVs-Iy; Sat, 28 Feb 2026 21:04:55 +0100
-Date: Sat, 28 Feb 2026 21:04:55 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sean Chang <seanwascoding@gmail.com>
-Cc: David Laight <david.laight.linux@gmail.com>,
-	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	trond.myklebust@hammerspace.com, anna@kernel.org,
-	netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] sunrpc: fix unused variable warnings by using
- no_printk
-Message-ID: <177cb226-7466-44df-a358-ce92c5612187@lunn.ch>
-References: <20260227152624.164964-1-seanwascoding@gmail.com>
- <20260227152624.164964-2-seanwascoding@gmail.com>
- <20260227173814.2f928556@pumpkin>
- <c28cbfc2-208f-47db-9c5a-21b54b2be8c1@lunn.ch>
- <20260227181532.1616f720@pumpkin>
- <CAAb=EJXmQDc2EzVKCELoXaZehov_YBWMHcSzh0_ReqxDadfnFg@mail.gmail.com>
- <CAAb=EJVCA-xxqiXqy1oNgvEhv48ecDxd=OicFpFrtqrHCvhmiA@mail.gmail.com>
+	s=arc-20240116; t=1772311020; c=relaxed/simple;
+	bh=dgs2tif451tml21lqPDMNrSYKCBGFCrBmA3QyW4vmpU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=YrhbZ/u2hSt9S5BeUNxyq5rr0KD0sFCy38BSp6EALVHIFRv+Y2WKJQtKSa5nlEOgf0ehCcKHxDQcl85LwswUjtuQOaoDVG3w+o4oCUPSswBwWjCKNKiMfSj/b469OPq7A5h0f4fTBAJdC8axpWdfrxN+XT7ePIQBoDWIx4LG6IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvS5WHj7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91F7C19423;
+	Sat, 28 Feb 2026 20:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772311020;
+	bh=dgs2tif451tml21lqPDMNrSYKCBGFCrBmA3QyW4vmpU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=PvS5WHj70zlCbLIahrDCFhpAYhpE8hXH85jLl079gQTTYQZhVcLybQ/ZPVYVm1nqY
+	 yPg9vM8z3alr6iz9abTDTy8QBRcSjTYdoK8IYUC3+2cQLel+xnabeKlYYGAc6fZPVx
+	 Gm+o8ctxCrxlhk8tzj57+L63fCzahjUObwY50hw5seLpk91R6w7Ipi9aBpHkNRtZ+I
+	 q1uonOB1SE3IHzJquZc23XpE8RVPavzFVah9kmWkvohxHxakwTQ8zfczr83A1mh/bZ
+	 rqzqIluIG9AAcbQjlIbu6KPUXPdjhZgmfisthVwI5MPq5b39WD0piB29sSB98KDaWs
+	 yatBauZcVdEfg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 91897F40068;
+	Sat, 28 Feb 2026 15:36:58 -0500 (EST)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Sat, 28 Feb 2026 15:36:58 -0500
+X-ME-Sender: <xms:6lGjaQc_ewHixyQpnhQGFr8HKrfNXWjNpNVxXAGXW5urT_J6yKFmqQ>
+    <xme:6lGjadDzHGQIqLDwqXOSoUxvznS1kNwq3GXI3c0lGddB9MIOZffwuyCEJ8wl7DPIV
+    RLWUsjepyCXhuQGxWrXDzLvx3GUO4Glrwjv13TdMXFw-dx3-HVxXfk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvhedvkeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeejvefhudehleetvdejhfejvefghfelgeejvedvgfduuefffeegtdejuefhiedukeen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
+    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
+    peelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnvghilhessghrohifnhdrnh
+    grmhgvpdhrtghpthhtohepkhhunhhihihusehgohhoghhlvgdrtghomhdprhgtphhtthho
+    pehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhrvghniihose
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtgho
+    mhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtph
+    htthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhes
+    thgrlhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:6lGjaf5p6inmYk6vcDedTdANO4i-83mBHMZerz-t7a7JAJr0VNTnNQ>
+    <xmx:6lGjaZ0Kvnv_ng5xLPtus-pgSP__jSswsJgleFAdJgzT1aGgwSfg4g>
+    <xmx:6lGjaavCr93AmsGIl-g31zhiwdqFQkv_neb3Npag-uWk3diUGP0ZOw>
+    <xmx:6lGjaf46AR5_xJSkhzabtqJ0fkRzox4GLn7X-N5xsNTEn8Xm4jRz_Q>
+    <xmx:6lGjaWdOtVA-_wZrnWLxZ41Nbz7XHAa9vI-Y3vFZ-gWqOflBjHsYYWKx>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 65296780070; Sat, 28 Feb 2026 15:36:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAb=EJVCA-xxqiXqy1oNgvEhv48ecDxd=OicFpFrtqrHCvhmiA@mail.gmail.com>
+X-ThreadId: Ah8axHBZ7Grs
+Date: Sat, 28 Feb 2026 15:36:38 -0500
+From: "Chuck Lever" <cel@kernel.org>
+To: "Kuniyuki Iwashima" <kuniyu@google.com>
+Cc: "Dai Ngo" <Dai.Ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ lorenzo@kernel.org, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>
+Message-Id: <de6fb992-9f1c-4c82-b51f-7eda327d55d2@app.fastmail.com>
+In-Reply-To: <20260228200214.964918-1-kuniyu@google.com>
+References: <176931125800.30355.7451399373487878151.b4-ty@oracle.com>
+ <20260228200214.964918-1-kuniyu@google.com>
+Subject: Re: [PATCH v1 0/2] nfsd: Fix cred refcount leak.
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19448-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,microchip.com,tuxon.dev,hammerspace.com,kernel.org,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19449-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,app.fastmail.com:mid];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[lunn.ch:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lunn.ch:mid,lunn.ch:dkim]
-X-Rspamd-Queue-Id: ECC3E1C8166
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 787971C873B
 X-Rspamd-Action: no action
 
-> HI all,
-> I've also identified the cause of the build error in fs/nfsd/nfsfh.c
-> reported by syzbot [1]. The "use of undeclared identifier 'buf'" occurs
-> because buf is only declared within the RPC_IFDEBUG macro,
-> which is removed when CONFIG_SUNRPC_DEBUG is disabled.
-> To fix this, I will follow the pattern used in net/sunrpc/xprtrdma/
-> svc_rdma_transport.c by wrapping the dprintk call that references
-> buf within an #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) block.
 
-Please try to avoid adding such #if code. Compile testing does not
-work as well if there are millions of #if def combinations. Ideally we
-want the stub functions to allow as much as possible to be compiled,
-and then let the optimizer throw it out because it is unreachable.
 
-> 
-> static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
-> {
-> ....
-> RPC_IFDEBUG(struct sockaddr *sap);
-> ...
-> #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-> dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
-> sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
-> dprintk(" local address : %pIS:%u\n", sap, rpc_get_port(sap));
-> sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
-> dprintk(" remote address : %pIS:%u\n", sap, rpc_get_port(sap));
-> dprintk(" max_sge : %d\n", newxprt->sc_max_send_sges);
-> dprintk(" sq_depth : %d\n", newxprt->sc_sq_depth);
-> dprintk(" rdma_rw_ctxs : %d\n", ctxts);
-> dprintk(" max_requests : %d\n", newxprt->sc_max_requests);
-> dprintk(" ord : %d\n", conn_param.initiator_depth);
-> #endif
-> ...
-> }
-> 
-> The refactor in fs/nfsd/nfsfh.c will look like this:
-> 
-> static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
-> struct svc_cred *cred,
-> struct svc_export *exp)
-> {
->     /* Check if the request originated from a secure port. */
->     if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
->        RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
-> +#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
->        dprintk("nfsd: request from insecure port %s!\n",
->        svc_print_addr(rqstp, buf, sizeof(buf)));
-> +#endif
+On Sat, Feb 28, 2026, at 3:01 PM, Kuniyuki Iwashima wrote:
+> Hi Chuck,
+>
+> From: Chuck Lever <cel@kernel.org>
+> Date: Sat, 24 Jan 2026 22:21:05 -0500
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>> 
+>> On Sat, 24 Jan 2026 04:18:39 +0000, Kuniyuki Iwashima wrote:
+>> > get_current_cred() is misused in nfsd_nl_listener_set_doit()
+>> > and nfsd_nl_threads_set_doit(), leaking the cred refcount.
+>> > 
+>> > Patch 1 & 2 fixes the leak in each function.
+>> > 
+>> > 
+>> > Kuniyuki Iwashima (2):
+>> >   nfsd: Fix cred ref leak in nfsd_nl_threads_set_doit().
+>> >   nfsd: Fix cred ref leak in nfsd_nl_listener_set_doit().
+>> > 
+>> > [...]
+>> 
+>> Applied to nfsd-testing, thanks!
+>> 
+>> [1/2] nfsd: Fix cred ref leak in nfsd_nl_threads_set_doit().
+>>       commit: c14b0c3b5966a1e2cf6a7f219c4f4b3fafeb89d0
+>> [2/2] nfsd: Fix cred ref leak in nfsd_nl_listener_set_doit().
+>>       commit: 687b9b69fcda9de606e998fd2edccb8a14406e19
+>
+> While rebasing my local branch, I just noticed both patches
+> are not in the mainline and I couldn't find both SHA1 in your
+> tree.
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?id=c14b0c3b5966a1e2cf6a7f219c4f4b3fafeb89d0
+>
+> Could you double check ?
 
-In this case, now dprintk() uses it arguments, i think you can drop
-the RPC_IFDEBUG() and always have buf. This code then gets
-compiled. Ask make to produce fs/nfsd/nfsfh.lst and see if it
-generated any code for this, or has it optimized it out.
+The patches are in my nfsd-fixes branch. I'm planning to submit them
+soon for 7.0-rc .
 
-	  Andrew
+-- 
+Chuck Lever
 
