@@ -1,152 +1,163 @@
-Return-Path: <linux-nfs+bounces-19447-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19448-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGs5EuRMo2nW/AQAu9opvQ
-	(envelope-from <linux-nfs+bounces-19447-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:15:32 +0100
+	id eNwYH9BMo2nW/AQAu9opvQ
+	(envelope-from <linux-nfs+bounces-19448-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:15:12 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C45D21C8183
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:15:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECC3E1C8166
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 21:15:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CAC1930A0DB4
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 20:04:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AEB45367AEF5
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Feb 2026 20:05:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92C2215E8B;
-	Sat, 28 Feb 2026 20:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965DA430B90;
+	Sat, 28 Feb 2026 20:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D4WA+Tza"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G85XoUUw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413282139C9
-	for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 20:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA1E430B86;
+	Sat, 28 Feb 2026 20:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772308938; cv=none; b=u2Sb81FMJJoacvs9jioBq36ciNxR2vrNTYR2St7hVgSvcdxhI2kSr1yjRvAhg4Da5zQdmrNKUk0WsjPIQoNnywmV7WbVcFBarzJPkYTzw1xwk18sXb6L4MdLZBD/sbiMdEcmt09RhipzVU7uBC4GrCwBw5cQ4QotTlZs+ej9zok=
+	t=1772309114; cv=none; b=N0t0x8jjuSMivFijq5V1IlAlk1vPgth4iZHlSXeUA6y4LgkSWOtNZZ2nsLGgKV8iYTi3ne9A9kgaZR76/PkSCSEq0zKCmzC0Lu73o3xpuRZNmsPkT1HquxwRywpPJQRENWV3rXLEPLhTZYC2j6fRvEg+A/jjO/ZX5lSyccyFn/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772308938; c=relaxed/simple;
-	bh=XvjNHPApBvoxKp7X7UEuNkr3XhH3TVUo+miTo22XOF8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QM1EADU5ffr8SLcuPG2Miah0yZUOxU8w4DcsVUTVcpURU9xd6ir0eahe/wiHuxD9N1c1H+hY4ESBLxTw2PFCS7lw5hfFht5u1ZjXC+54GipVXKbZgYafOgHfMabDnrAAasHXT5/k4bXE76qaoOT+rxSsfunA/NbYen/v+0Cjimg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D4WA+Tza; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2ae49080364so128585ad.0
-        for <linux-nfs@vger.kernel.org>; Sat, 28 Feb 2026 12:02:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772308936; x=1772913736; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vXs10pSXUN0V44OtAaL0Cx7xxnnSoeqCxL4vnLRCp+0=;
-        b=D4WA+Tza1H5DX00uOvqC8A3JmnGVhtUalXoamS//dGDoxPsU97AgZWxHunhjJVxrkX
-         n4VD7W9bB2AMV4PUmNdhGH6pqPP2/ihUVfOAtW7sr7f81GB3zWP5Dn02VNr5rnephX5n
-         LalDja/FamHurwN8fI+1s1WPtyVn/gm9qbPiExrnFm3nxWmgA8gCMObbSOB5GooCKgit
-         kufJYMB0vsYWNgAt1M3ZsBeXkWuOM00qNUY+Cu3Aqhq2MaMa/MVDVAAzuntLkLXGo71i
-         TWp4uNLoM/7BeFOU+IRIczMul3NmiiGpxTrXSVgEa1Sy9x4i4Nt1RM1lX74uY4EuIGGA
-         U/tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772308936; x=1772913736;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vXs10pSXUN0V44OtAaL0Cx7xxnnSoeqCxL4vnLRCp+0=;
-        b=qui6dHeuEmD9VwSImvvyJwVJ/YbwTloPIl4WGihCF2ZS2Q5yjuhL55Igen8CxBxZ2O
-         +DlyJilUTppQ6tEjPBufJzMM+ILP3dz9x0jwWaCV2UE8GK6DYwHaD3s+8hPramNIePs1
-         8kMI0hBYRWdvncuvv6zRPzcDzn7jHNX/dbf15jKuGJY/pU74VNrfYjTiA1waXjD2R6r2
-         TzXnyM2bV/ELuV632sIWrdr5XHPmSPe/E8HQzMBYJRYXqY7stGndThZuebfcbj0rKjey
-         A4B4fH/NEo6788Uqv/7m+wwcq4gff1vtmBkEjFDK3OjfrIhzfBSLmROT7/IdPYIRVvRY
-         Coww==
-X-Forwarded-Encrypted: i=1; AJvYcCX9+q8jsm8ofyAX60EbSfB41puf8dJaMuzJ1fcjsJbr5rN5jnDB17GExvonAffSffsKBCK5Wyi0Svg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUiV7dSyIjGpqtg8MTnFNMc2IcmiJyb8B83CqIhAFeWJyeeZBC
-	uYDMtvb3JxkwmoJ0tBLPwXFWiRDSQp97NwOmlhNafqSXV3W0higwfM3qX4Eqk/jN+CL9DKcyX9V
-	MMFaQVg==
-X-Received: from plot6.prod.google.com ([2002:a17:902:8c86:b0:2aa:d604:fb13])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c4b:b0:2aa:d506:d189
- with SMTP id d9443c01a7336-2ae2e496d75mr64410135ad.34.1772308936236; Sat, 28
- Feb 2026 12:02:16 -0800 (PST)
-Date: Sat, 28 Feb 2026 20:01:26 +0000
-In-Reply-To: <176931125800.30355.7451399373487878151.b4-ty@oracle.com>
+	s=arc-20240116; t=1772309114; c=relaxed/simple;
+	bh=vdMGG4/8Hix+4FoWu/B8a1mMs7X6rU62YDOscX2pIp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nc3uxKBYxHCKsPTD9nj5l9ByUBhREGhE4bQXwmYVvFCgb7YpuhIvfxUzaTZxLZX0Qfe0F6XMYkb2xd5ZDvrwcd8orFHWZfIpXtuf9ZbDA+LdZMYJ9ivwZiGln78BKXkxWBuIOQi3tFE6nvzAZM4z+28/AOSmdXAUIgG1a7mDI20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=G85XoUUw; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=WPcP+4kIV12LpNOXbcBdaDqCQ0c2Ambd6oz7BD835wA=; b=G85XoUUwHa+W9v+OFm/sWWzV4d
+	/2ewIGltz8zebm3VXrDy9xdTNRTF7bSakNQI0FlWdLWSZ7V4vUIowg/vmYEyC48w98kOvYV/X55/b
+	SkkOgenle8kdifdOqEhoikmXjPCyLehMwukYBgeAe7icZx5Zni8P1d5SkcGW9XJTILEI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1vwQYZ-009DVs-Iy; Sat, 28 Feb 2026 21:04:55 +0100
+Date: Sat, 28 Feb 2026 21:04:55 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sean Chang <seanwascoding@gmail.com>
+Cc: David Laight <david.laight.linux@gmail.com>,
+	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
+	trond.myklebust@hammerspace.com, anna@kernel.org,
+	netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] sunrpc: fix unused variable warnings by using
+ no_printk
+Message-ID: <177cb226-7466-44df-a358-ce92c5612187@lunn.ch>
+References: <20260227152624.164964-1-seanwascoding@gmail.com>
+ <20260227152624.164964-2-seanwascoding@gmail.com>
+ <20260227173814.2f928556@pumpkin>
+ <c28cbfc2-208f-47db-9c5a-21b54b2be8c1@lunn.ch>
+ <20260227181532.1616f720@pumpkin>
+ <CAAb=EJXmQDc2EzVKCELoXaZehov_YBWMHcSzh0_ReqxDadfnFg@mail.gmail.com>
+ <CAAb=EJVCA-xxqiXqy1oNgvEhv48ecDxd=OicFpFrtqrHCvhmiA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <176931125800.30355.7451399373487878151.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260228200214.964918-1-kuniyu@google.com>
-Subject: Re: [PATCH v1 0/2] nfsd: Fix cred refcount leak.
-From: Kuniyuki Iwashima <kuniyu@google.com>
-To: cel@kernel.org
-Cc: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	kuniyu@google.com, linux-nfs@vger.kernel.org, lorenzo@kernel.org, 
-	neil@brown.name, okorniev@redhat.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAb=EJVCA-xxqiXqy1oNgvEhv48ecDxd=OicFpFrtqrHCvhmiA@mail.gmail.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	MV_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19447-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[google.com:+];
+	TAGGED_FROM(0.00)[bounces-19448-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,microchip.com,tuxon.dev,hammerspace.com,kernel.org,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuniyu@google.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C45D21C8183
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[lunn.ch:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lunn.ch:mid,lunn.ch:dkim]
+X-Rspamd-Queue-Id: ECC3E1C8166
 X-Rspamd-Action: no action
 
-Hi Chuck,
+> HI all,
+> I've also identified the cause of the build error in fs/nfsd/nfsfh.c
+> reported by syzbot [1]. The "use of undeclared identifier 'buf'" occurs
+> because buf is only declared within the RPC_IFDEBUG macro,
+> which is removed when CONFIG_SUNRPC_DEBUG is disabled.
+> To fix this, I will follow the pattern used in net/sunrpc/xprtrdma/
+> svc_rdma_transport.c by wrapping the dprintk call that references
+> buf within an #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) block.
 
-From: Chuck Lever <cel@kernel.org>
-Date: Sat, 24 Jan 2026 22:21:05 -0500
-> From: Chuck Lever <chuck.lever@oracle.com>
+Please try to avoid adding such #if code. Compile testing does not
+work as well if there are millions of #if def combinations. Ideally we
+want the stub functions to allow as much as possible to be compiled,
+and then let the optimizer throw it out because it is unreachable.
+
 > 
-> On Sat, 24 Jan 2026 04:18:39 +0000, Kuniyuki Iwashima wrote:
-> > get_current_cred() is misused in nfsd_nl_listener_set_doit()
-> > and nfsd_nl_threads_set_doit(), leaking the cred refcount.
-> > 
-> > Patch 1 & 2 fixes the leak in each function.
-> > 
-> > 
-> > Kuniyuki Iwashima (2):
-> >   nfsd: Fix cred ref leak in nfsd_nl_threads_set_doit().
-> >   nfsd: Fix cred ref leak in nfsd_nl_listener_set_doit().
-> > 
-> > [...]
+> static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+> {
+> ....
+> RPC_IFDEBUG(struct sockaddr *sap);
+> ...
+> #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+> dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
+> sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+> dprintk(" local address : %pIS:%u\n", sap, rpc_get_port(sap));
+> sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+> dprintk(" remote address : %pIS:%u\n", sap, rpc_get_port(sap));
+> dprintk(" max_sge : %d\n", newxprt->sc_max_send_sges);
+> dprintk(" sq_depth : %d\n", newxprt->sc_sq_depth);
+> dprintk(" rdma_rw_ctxs : %d\n", ctxts);
+> dprintk(" max_requests : %d\n", newxprt->sc_max_requests);
+> dprintk(" ord : %d\n", conn_param.initiator_depth);
+> #endif
+> ...
+> }
 > 
-> Applied to nfsd-testing, thanks!
+> The refactor in fs/nfsd/nfsfh.c will look like this:
 > 
-> [1/2] nfsd: Fix cred ref leak in nfsd_nl_threads_set_doit().
->       commit: c14b0c3b5966a1e2cf6a7f219c4f4b3fafeb89d0
-> [2/2] nfsd: Fix cred ref leak in nfsd_nl_listener_set_doit().
->       commit: 687b9b69fcda9de606e998fd2edccb8a14406e19
+> static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+> struct svc_cred *cred,
+> struct svc_export *exp)
+> {
+>     /* Check if the request originated from a secure port. */
+>     if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
+>        RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
+> +#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>        dprintk("nfsd: request from insecure port %s!\n",
+>        svc_print_addr(rqstp, buf, sizeof(buf)));
+> +#endif
 
-While rebasing my local branch, I just noticed both patches
-are not in the mainline and I couldn't find both SHA1 in your
-tree.
+In this case, now dprintk() uses it arguments, i think you can drop
+the RPC_IFDEBUG() and always have buf. This code then gets
+compiled. Ask make to produce fs/nfsd/nfsfh.lst and see if it
+generated any code for this, or has it optimized it out.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?id=c14b0c3b5966a1e2cf6a7f219c4f4b3fafeb89d0
-
-Could you double check ?
-
-Thanks !
+	  Andrew
 
