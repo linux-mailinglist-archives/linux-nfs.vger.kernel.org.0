@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-19464-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19465-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oNjhCa6eo2k3IQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-19464-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:04:30 +0100
+	id AHE7NV6fo2k3IQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-19465-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:07:26 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29FEB1CCD1A
-	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:04:29 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DFA91CD044
+	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:07:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7F52B303CD9C
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2026 01:55:47 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3F6DB30A9041
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2026 02:02:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C006A307481;
-	Sun,  1 Mar 2026 01:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 881C32F3C19;
+	Sun,  1 Mar 2026 02:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jE3ATKLw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIaM0mg7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1D42FDC3C;
-	Sun,  1 Mar 2026 01:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DD42DF153;
+	Sun,  1 Mar 2026 02:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772330109; cv=none; b=RQiZVL+RoCjVCas1MXt1r4BknR1sOwayg4jnOGB0UckVsfs8f6h7dhqy5y1RcE8bKIIa/FTKHClYx5i7by2HQhU+Ul1NhiLHVzd87ofunD8Mjbcua6eWcN/Vw9bTCNPp+nK4dghD8JdUikkwcxdNgat/u/MRcJVS81NNmK3Xrms=
+	t=1772330531; cv=none; b=HLLiIallQa/0dHq+Yr57hs/mA0QuwhuQC/fAwCVwPQ357edg/rsUr/Sw9Xv0DKU3pKQthTpUdJGP3x0A3o6DW1HxLHWgn5S3iiId0sMYmAlwowKVCicyFx6Nx693HBAxzL/TOgCvc44lN5RvIXXTrljoJYzGVVSioVvHaSiAGbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772330109; c=relaxed/simple;
-	bh=cSJeQhbI6pB3AN1s863qk+ib3NYzwAJMbo2hpD05AvI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qcyLlfdhi8+O3kqstJXPLga2AJcWOmFbOMZhuMGy//7FcXQU8dvzbj0NWafjHvuFeu+3WwLUWtIjWAAL8JbJEgxelUhvx7MwbMdjiF6zZc2gf7PpDxSCjzZnxkDSBIyZ4lartX1l1fbu9lDCYJdM7rj4kdSkSgu9p0oCZ3IZVFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jE3ATKLw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A01AC19421;
-	Sun,  1 Mar 2026 01:55:08 +0000 (UTC)
+	s=arc-20240116; t=1772330531; c=relaxed/simple;
+	bh=NamtEnGI/HkmjmarOx7aAI07EIBhuFENGu/CrzT+W1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PsaTfU/KqiBr123Yy8RlnnjbrceiJcrGu5w070i7vl+L3JzzjStl8ctygJAtmPVRMeOI0YvyQErQKvtYMJXF+plLw24uDL0j2+k/mJIjbtC+cz+wJGc73tY5m+KCxvDdPQmowOjHzlfycbvlZgUP4JD6nWB5eAMRwvy3eu6Svl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIaM0mg7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2012C19421;
+	Sun,  1 Mar 2026 02:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772330109;
-	bh=cSJeQhbI6pB3AN1s863qk+ib3NYzwAJMbo2hpD05AvI=;
+	s=k20201202; t=1772330531;
+	bh=NamtEnGI/HkmjmarOx7aAI07EIBhuFENGu/CrzT+W1o=;
 	h=From:To:Cc:Subject:Date:From;
-	b=jE3ATKLwjNRA/D0GY2RlOrDshtoKXn2LDYmkznRmxKkChFEQw5IByDYCqF0smW+Bs
-	 vctSD/+4X0X1Z1UxU62JUI8yJ2bl/uzZkpEZRV8L6Y++PmSNe26hq9K6+tGimyZ+Ms
-	 LeLea2DeX7gDVD8/FNyac7SMhnw5DwR79VGLBsjmL34QTHpKde190KSak8ocPQflfg
-	 iemMQJzSF9fh2dFUN7p3/zdWmd6CTbSJds5X/ONgYbZArCijWZBgM89fK+qyY3llul
-	 Z3aAZ9IWm+temLVHizA6PqH9TbslNMiIUrmJ2jp2Gwx/Zu75ssllmQYFqo5BWHL+rO
-	 djAJq9nr0Hf2g==
+	b=vIaM0mg7Uej9gkJJPNGfxUT+Mskka2aUlbz7E0qu8Lp7Vnt0LZPYv9WY15Ukn+H/+
+	 On65o/OHlik63PHDvhYgNPBPDdI17xYPZf8V8GHgT7IJ4/p7ttFLwZq1OGnNy8PqrK
+	 Z+Vh8W+vw/NS4r+jF49aRpxvDrYaLpmOop1zhCZ8azZqdWzFqtoO+bODQXo/NCrASf
+	 uO5stBhS2i2rlMPdDsbefi8i5n40w2sWDzFLWGw2vqFjROXW859n9JQAelYRT3qJ5r
+	 i+zURuKzbsCgLEGk7XLYP0K9d9/Eqy9Z/suHrlvN+VDjCPPDzguBb7GGj6Wg87a1Bt
+	 EFOHy+WMjvRKw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	git@danielhodges.dev
-Cc: Anna Schumaker <anna.schumaker@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: FAILED: Patch "SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path" failed to apply to 5.15-stable tree
-Date: Sat, 28 Feb 2026 20:55:07 -0500
-Message-ID: <20260301015507.1722249-1-sashal@kernel.org>
+	ailiop@suse.com
+Cc: NeilBrown <neil@brown.name>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org
+Subject: FAILED: Patch "nfsd: fix return error code for nfsd_map_name_to_[ug]id" failed to apply to 5.10-stable tree
+Date: Sat, 28 Feb 2026 21:02:09 -0500
+Message-ID: <20260301020209.1729645-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -68,18 +68,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19464-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19465-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-nfs@vger.kernel.org];
@@ -89,11 +89,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,danielhodges.dev:email,oracle.com:email]
-X-Rspamd-Queue-Id: 29FEB1CCD1A
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oracle.com:email,brown.name:email,suse.com:email]
+X-Rspamd-Queue-Id: 7DFA91CD044
 X-Rspamd-Action: no action
 
-The patch below does not apply to the 5.15-stable tree.
+The patch below does not apply to the 5.10-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
@@ -103,54 +103,56 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From dd2fdc3504592d85e549c523b054898a036a6afe Mon Sep 17 00:00:00 2001
-From: Daniel Hodges <git@danielhodges.dev>
-Date: Fri, 6 Feb 2026 15:41:46 -0500
-Subject: [PATCH] SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path
+From 404d779466646bf1461f2090ff137e99acaecf42 Mon Sep 17 00:00:00 2001
+From: Anthony Iliopoulos <ailiop@suse.com>
+Date: Mon, 22 Dec 2025 14:30:05 -0500
+Subject: [PATCH] nfsd: fix return error code for nfsd_map_name_to_[ug]id
 
-Commit 5940d1cf9f42 ("SUNRPC: Rebalance a kref in auth_gss.c") added
-a kref_get(&gss_auth->kref) call to balance the gss_put_auth() done
-in gss_release_msg(), but forgot to add a corresponding kref_put()
-on the error path when kstrdup_const() fails.
+idmap lookups can time out while the cache is waiting for a userspace
+upcall reply. In that case cache_check() returns -ETIMEDOUT to callers.
 
-If service_name is non-NULL and kstrdup_const() fails, the function
-jumps to err_put_pipe_version which calls put_pipe_version() and
-kfree(gss_msg), but never releases the gss_auth reference. This leads
-to a kref leak where the gss_auth structure is never freed.
+The nfsd_map_name_to_[ug]id functions currently proceed with attempting
+to map the id to a kuid despite a potentially temporary failure to
+perform the idmap lookup. This results in the code returning the error
+NFSERR_BADOWNER which can cause client operations to return to userspace
+with failure.
 
-Add a forward declaration for gss_free_callback() and call kref_put()
-in the err_put_pipe_version error path to properly release the
-reference taken earlier.
+Fix this by returning the failure status before attempting kuid mapping.
 
-Fixes: 5940d1cf9f42 ("SUNRPC: Rebalance a kref in auth_gss.c")
+This will return NFSERR_JUKEBOX on idmap lookup timeout so that clients
+can retry the operation instead of aborting it.
+
+Fixes: 65e10f6d0ab0 ("nfsd: Convert idmap to use kuids and kgids")
 Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Hodges <git@danielhodges.dev>
-Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
+Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+Reviewed-by: NeilBrown <neil@brown.name>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/auth_gss.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfsd/nfs4idmap.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 5c095cb8cb201..bb3c3db2713b1 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -39,6 +39,8 @@ static const struct rpc_authops authgss_ops;
- static const struct rpc_credops gss_credops;
- static const struct rpc_credops gss_nullops;
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index b5b3d45979c9b..c319c31b0f647 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -672,6 +672,8 @@ __be32 nfsd_map_name_to_uid(struct svc_rqst *rqstp, const char *name,
+ 		return nfserr_inval;
  
-+static void gss_free_callback(struct kref *kref);
-+
- #define GSS_RETRY_EXPIRED 5
- static unsigned int gss_expired_cred_retry_delay = GSS_RETRY_EXPIRED;
+ 	status = do_name_to_id(rqstp, IDMAP_TYPE_USER, name, namelen, &id);
++	if (status)
++		return status;
+ 	*uid = make_kuid(nfsd_user_namespace(rqstp), id);
+ 	if (!uid_valid(*uid))
+ 		status = nfserr_badowner;
+@@ -707,6 +709,8 @@ __be32 nfsd_map_name_to_gid(struct svc_rqst *rqstp, const char *name,
+ 		return nfserr_inval;
  
-@@ -551,6 +553,7 @@ gss_alloc_msg(struct gss_auth *gss_auth,
- 	}
- 	return gss_msg;
- err_put_pipe_version:
-+	kref_put(&gss_auth->kref, gss_free_callback);
- 	put_pipe_version(gss_auth->net);
- err_free_msg:
- 	kfree(gss_msg);
+ 	status = do_name_to_id(rqstp, IDMAP_TYPE_GROUP, name, namelen, &id);
++	if (status)
++		return status;
+ 	*gid = make_kgid(nfsd_user_namespace(rqstp), id);
+ 	if (!gid_valid(*gid))
+ 		status = nfserr_badowner;
 -- 
 2.51.0
 
