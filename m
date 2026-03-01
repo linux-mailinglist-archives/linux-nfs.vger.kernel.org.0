@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-19466-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19467-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sPCTDICjo2mRIwUAu9opvQ
-	(envelope-from <linux-nfs+bounces-19466-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:25:04 +0100
+	id 8C1SK3iko2lXJAUAu9opvQ
+	(envelope-from <linux-nfs+bounces-19467-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:29:12 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 909C41CD892
-	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:25:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ADB31CD980
+	for <lists+linux-nfs@lfdr.de>; Sun, 01 Mar 2026 03:29:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C61D13078715
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2026 02:02:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0FC8533447F5
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Mar 2026 02:04:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85FE2F6911;
-	Sun,  1 Mar 2026 02:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87C1302147;
+	Sun,  1 Mar 2026 02:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpwrZowt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxCnuj3o"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EE22F3C37;
-	Sun,  1 Mar 2026 02:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B566C190664;
+	Sun,  1 Mar 2026 02:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772330537; cv=none; b=OlBtsvsnkxuWpPdfbGVUyvtEaDJXh/G4rMsngSZ1pcKBZcrLX7JBfRw10wA1WoVAv/8xpK20YK1s32Fas/QQfEVLz+rRuoa3mOyhh4SbNyOvI7zUkMy5u184GXiABXiOW4ZGQtx6n6JpvAj1cyj7jRWlNgAfRihQXBGG2fK5e6M=
+	t=1772330693; cv=none; b=c3CkmM3sP4Xe7K68kkJUr+lkv0cZEmMJPtHhfN1TOEGCUzcSmdi2QtA+NSsF6Ff3X794u5+40raymC+WXO9NFprAaUW4gh5P5+SD+/tfiWb2dsvjBoBZ0ZjytzYQTBkorvS6UMdbhkmVq0/6ud5wm4PlpjSptUaBb88W7Lj75J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772330537; c=relaxed/simple;
-	bh=R1AZHaVsMa4PdxU6i+xPmifjcoHR7rnNANoQGskjYl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gYkSAbgRKHPlDLD2zcBdBH3tX35OByfMQ3wfpvIxHvLXuuHgrsqHee2ioRwMF6D5ywslHJj+Ije8TD44FvWdYVUq2aDNDq5zms+AQ1t084Q1JZ/nmh+1hve/k4ckkOtN11qAy7p4c74GzCIa1xfs3oZDXpThFjhq6lUHjdrKKDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpwrZowt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF540C19421;
-	Sun,  1 Mar 2026 02:02:16 +0000 (UTC)
+	s=arc-20240116; t=1772330693; c=relaxed/simple;
+	bh=caKWZYL5O7q0hLqaeYoNM0JGfpq/Z1+OaVwX/7/f1/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZjcNJkTAW1qIfPx54xjhFbrOBObDROSGtczw3y6UB1zpc60agXxAUCRX2qsUaNgqqb0cDxOh4qBbNKn327E7wDorfQItQCSDk5btRJ/0oaj3NBJV5b+zNawzo/5R7B2k9EeQhI0NAQ0gjIww2B+C326we1ceSt4lzdnUiN3LUAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxCnuj3o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4A4C19421;
+	Sun,  1 Mar 2026 02:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772330537;
-	bh=R1AZHaVsMa4PdxU6i+xPmifjcoHR7rnNANoQGskjYl0=;
+	s=k20201202; t=1772330693;
+	bh=caKWZYL5O7q0hLqaeYoNM0JGfpq/Z1+OaVwX/7/f1/Q=;
 	h=From:To:Cc:Subject:Date:From;
-	b=FpwrZowtwsMkPUgHTdoJ4XM/02j+gSsG2TXpnDJp5OuLtmk+BQNLZAcQHLxs0XpcH
-	 5ovIy7ZS0prJwMNqdMZOdi4Q7QbrKUM0PntSm0enkDvzWzE6vGiQsl133DFXfwcDCV
-	 Fv/ukJKe1pzEPMUKBU+Xf11x2sj4sZ0la/pDUebZLr0Q1wy2Ql/BE1H5nLqKpm2dZz
-	 aIEowFfRu3ofr4b429dPhCQICy7EgMLCsrkTeA31ghSggC+hSCTE4qMR8eKawCy+ZL
-	 HTkAUZG6YRjbkCOPQqN3hHZJgsgDr75ImjxZWlEGTzQHOTTbiW2uvDMFZDnJVMLVIp
-	 QMv0jvIdlQoHw==
+	b=RxCnuj3o/u7dDvxrwRSotkRJQe5BXMag7jBIfCMi7VOUo+x7qnI/1B0LLLJsh8Bbr
+	 ANPx3FGDdp0BdB72yqPIsTy7F6IcP1slV6RIqH4U3wQJ2kxYG7STCJaw8isBWKZgFD
+	 n1ss4AKmCNf1f4sT8G+Pcpk4sw4z3GzO1iP0SkiziEeuXIPh2RQBfXycdqQmc6otQE
+	 7FGzmb/h5XXMlVQLfyITL42R+T828QVlx978H4rO5d9WXH5dWyoM7+OXQM+d2V9Z+O
+	 T/NC5UdA6Se9JJm/q/oAuAaYBoNUSZeompcIh9hTcRiQledftDsTC9Sv3MC41YLQHx
+	 ZTzvjgl3HHAFg==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	chuck.lever@oracle.com
-Cc: Xingjing Deng <micro6947@gmail.com>,
-	Jeff Layton <jlayton@kernel.org>,
+	git@danielhodges.dev
+Cc: Anna Schumaker <anna.schumaker@oracle.com>,
 	linux-nfs@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: FAILED: Patch "SUNRPC: auth_gss: fix memory leaks in XDR decoding error paths" failed to apply to 5.10-stable tree
-Date: Sat, 28 Feb 2026 21:02:15 -0500
-Message-ID: <20260301020215.1729821-1-sashal@kernel.org>
+Subject: FAILED: Patch "SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path" failed to apply to 5.10-stable tree
+Date: Sat, 28 Feb 2026 21:04:51 -0500
+Message-ID: <20260301020451.1733398-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -75,14 +74,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19467-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-19466-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -90,9 +88,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 909C41CD892
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,danielhodges.dev:email]
+X-Rspamd-Queue-Id: 0ADB31CD980
 X-Rspamd-Action: no action
 
 The patch below does not apply to the 5.10-stable tree.
@@ -105,226 +103,54 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 3e6397b056335cc56ef0e9da36c95946a19f5118 Mon Sep 17 00:00:00 2001
-From: Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 26 Dec 2025 10:15:32 -0500
-Subject: [PATCH] SUNRPC: auth_gss: fix memory leaks in XDR decoding error
- paths
+From dd2fdc3504592d85e549c523b054898a036a6afe Mon Sep 17 00:00:00 2001
+From: Daniel Hodges <git@danielhodges.dev>
+Date: Fri, 6 Feb 2026 15:41:46 -0500
+Subject: [PATCH] SUNRPC: fix gss_auth kref leak in gss_alloc_msg error path
 
-The gssx_dec_ctx(), gssx_dec_status(), and gssx_dec_name()
-functions allocate memory via gssx_dec_buffer(), which calls
-kmemdup(). When a subsequent decode operation fails, these
-functions return immediately without freeing previously
-allocated buffers, causing memory leaks.
+Commit 5940d1cf9f42 ("SUNRPC: Rebalance a kref in auth_gss.c") added
+a kref_get(&gss_auth->kref) call to balance the gss_put_auth() done
+in gss_release_msg(), but forgot to add a corresponding kref_put()
+on the error path when kstrdup_const() fails.
 
-The leak in gssx_dec_ctx() is particularly relevant because
-the caller (gssp_accept_sec_context_upcall) initializes several
-buffer length fields to non-zero values, resulting in memory
-allocation:
+If service_name is non-NULL and kstrdup_const() fails, the function
+jumps to err_put_pipe_version which calls put_pipe_version() and
+kfree(gss_msg), but never releases the gss_auth reference. This leads
+to a kref leak where the gss_auth structure is never freed.
 
-    struct gssx_ctx rctxh = {
-        .exported_context_token.len = GSSX_max_output_handle_sz,
-        .mech.len = GSS_OID_MAX_LEN,
-        .src_name.display_name.len = GSSX_max_princ_sz,
-        .targ_name.display_name.len = GSSX_max_princ_sz
-    };
+Add a forward declaration for gss_free_callback() and call kref_put()
+in the err_put_pipe_version error path to properly release the
+reference taken earlier.
 
-If, for example, gssx_dec_name() succeeds for src_name but
-fails for targ_name, the memory allocated for
-exported_context_token, mech, and src_name.display_name
-remains unreferenced and cannot be reclaimed.
-
-Add error handling with goto-based cleanup to free any
-previously allocated buffers before returning an error.
-
-Reported-by: Xingjing Deng <micro6947@gmail.com>
-Closes: https://lore.kernel.org/linux-nfs/CAK+ZN9qttsFDu6h1FoqGadXjMx1QXqPMoYQ=6O9RY4SxVTvKng@mail.gmail.com/
-Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+Fixes: 5940d1cf9f42 ("SUNRPC: Rebalance a kref in auth_gss.c")
 Cc: stable@vger.kernel.org
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Daniel Hodges <git@danielhodges.dev>
+Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- net/sunrpc/auth_gss/gss_rpc_xdr.c | 82 ++++++++++++++++++++++++-------
- 1 file changed, 64 insertions(+), 18 deletions(-)
+ net/sunrpc/auth_gss/auth_gss.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-index 7d2cdc2bd374e..f320c0a8e6049 100644
---- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
-+++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-@@ -320,29 +320,47 @@ static int gssx_dec_status(struct xdr_stream *xdr,
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index 5c095cb8cb201..bb3c3db2713b1 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -39,6 +39,8 @@ static const struct rpc_authops authgss_ops;
+ static const struct rpc_credops gss_credops;
+ static const struct rpc_credops gss_nullops;
  
- 	/* status->minor_status */
- 	p = xdr_inline_decode(xdr, 8);
--	if (unlikely(p == NULL))
--		return -ENOSPC;
-+	if (unlikely(p == NULL)) {
-+		err = -ENOSPC;
-+		goto out_free_mech;
-+	}
- 	p = xdr_decode_hyper(p, &status->minor_status);
- 
- 	/* status->major_status_string */
- 	err = gssx_dec_buffer(xdr, &status->major_status_string);
- 	if (err)
--		return err;
-+		goto out_free_mech;
- 
- 	/* status->minor_status_string */
- 	err = gssx_dec_buffer(xdr, &status->minor_status_string);
- 	if (err)
--		return err;
-+		goto out_free_major_status_string;
- 
- 	/* status->server_ctx */
- 	err = gssx_dec_buffer(xdr, &status->server_ctx);
- 	if (err)
--		return err;
-+		goto out_free_minor_status_string;
- 
- 	/* we assume we have no options for now, so simply consume them */
- 	/* status->options */
- 	err = dummy_dec_opt_array(xdr, &status->options);
-+	if (err)
-+		goto out_free_server_ctx;
- 
-+	return 0;
++static void gss_free_callback(struct kref *kref);
 +
-+out_free_server_ctx:
-+	kfree(status->server_ctx.data);
-+	status->server_ctx.data = NULL;
-+out_free_minor_status_string:
-+	kfree(status->minor_status_string.data);
-+	status->minor_status_string.data = NULL;
-+out_free_major_status_string:
-+	kfree(status->major_status_string.data);
-+	status->major_status_string.data = NULL;
-+out_free_mech:
-+	kfree(status->mech.data);
-+	status->mech.data = NULL;
- 	return err;
- }
+ #define GSS_RETRY_EXPIRED 5
+ static unsigned int gss_expired_cred_retry_delay = GSS_RETRY_EXPIRED;
  
-@@ -505,28 +523,35 @@ static int gssx_dec_name(struct xdr_stream *xdr,
- 	/* name->name_type */
- 	err = gssx_dec_buffer(xdr, &dummy_netobj);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* name->exported_name */
- 	err = gssx_dec_buffer(xdr, &dummy_netobj);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* name->exported_composite_name */
- 	err = gssx_dec_buffer(xdr, &dummy_netobj);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* we assume we have no attributes for now, so simply consume them */
- 	/* name->name_attributes */
- 	err = dummy_dec_nameattr_array(xdr, &dummy_name_attr_array);
- 	if (err)
--		return err;
-+		goto out_free_display_name;
- 
- 	/* we assume we have no options for now, so simply consume them */
- 	/* name->extensions */
- 	err = dummy_dec_opt_array(xdr, &dummy_option_array);
-+	if (err)
-+		goto out_free_display_name;
- 
-+	return 0;
-+
-+out_free_display_name:
-+	kfree(name->display_name.data);
-+	name->display_name.data = NULL;
- 	return err;
- }
- 
-@@ -649,32 +674,34 @@ static int gssx_dec_ctx(struct xdr_stream *xdr,
- 	/* ctx->state */
- 	err = gssx_dec_buffer(xdr, &ctx->state);
- 	if (err)
--		return err;
-+		goto out_free_exported_context_token;
- 
- 	/* ctx->need_release */
- 	err = gssx_dec_bool(xdr, &ctx->need_release);
- 	if (err)
--		return err;
-+		goto out_free_state;
- 
- 	/* ctx->mech */
- 	err = gssx_dec_buffer(xdr, &ctx->mech);
- 	if (err)
--		return err;
-+		goto out_free_state;
- 
- 	/* ctx->src_name */
- 	err = gssx_dec_name(xdr, &ctx->src_name);
- 	if (err)
--		return err;
-+		goto out_free_mech;
- 
- 	/* ctx->targ_name */
- 	err = gssx_dec_name(xdr, &ctx->targ_name);
- 	if (err)
--		return err;
-+		goto out_free_src_name;
- 
- 	/* ctx->lifetime */
- 	p = xdr_inline_decode(xdr, 8+8);
--	if (unlikely(p == NULL))
--		return -ENOSPC;
-+	if (unlikely(p == NULL)) {
-+		err = -ENOSPC;
-+		goto out_free_targ_name;
-+	}
- 	p = xdr_decode_hyper(p, &ctx->lifetime);
- 
- 	/* ctx->ctx_flags */
-@@ -683,17 +710,36 @@ static int gssx_dec_ctx(struct xdr_stream *xdr,
- 	/* ctx->locally_initiated */
- 	err = gssx_dec_bool(xdr, &ctx->locally_initiated);
- 	if (err)
--		return err;
-+		goto out_free_targ_name;
- 
- 	/* ctx->open */
- 	err = gssx_dec_bool(xdr, &ctx->open);
- 	if (err)
--		return err;
-+		goto out_free_targ_name;
- 
- 	/* we assume we have no options for now, so simply consume them */
- 	/* ctx->options */
- 	err = dummy_dec_opt_array(xdr, &ctx->options);
-+	if (err)
-+		goto out_free_targ_name;
-+
-+	return 0;
- 
-+out_free_targ_name:
-+	kfree(ctx->targ_name.display_name.data);
-+	ctx->targ_name.display_name.data = NULL;
-+out_free_src_name:
-+	kfree(ctx->src_name.display_name.data);
-+	ctx->src_name.display_name.data = NULL;
-+out_free_mech:
-+	kfree(ctx->mech.data);
-+	ctx->mech.data = NULL;
-+out_free_state:
-+	kfree(ctx->state.data);
-+	ctx->state.data = NULL;
-+out_free_exported_context_token:
-+	kfree(ctx->exported_context_token.data);
-+	ctx->exported_context_token.data = NULL;
- 	return err;
- }
- 
+@@ -551,6 +553,7 @@ gss_alloc_msg(struct gss_auth *gss_auth,
+ 	}
+ 	return gss_msg;
+ err_put_pipe_version:
++	kref_put(&gss_auth->kref, gss_free_callback);
+ 	put_pipe_version(gss_auth->net);
+ err_free_msg:
+ 	kfree(gss_msg);
 -- 
 2.51.0
 
