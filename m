@@ -1,160 +1,155 @@
-Return-Path: <linux-nfs+bounces-19497-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19498-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6PolLoyQpWmoDgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-19497-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 14:28:44 +0100
+	id AAsGF6yYpWnxEgYAu9opvQ
+	(envelope-from <linux-nfs+bounces-19498-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 15:03:24 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B27971D9C00
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 14:28:43 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CADFC1DA4DB
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 15:03:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F2DFE301733E
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 13:27:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8A62D30A02C8
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 13:57:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AAB13EFD38;
-	Mon,  2 Mar 2026 13:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043203FB041;
+	Mon,  2 Mar 2026 13:57:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eHa17lyG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jd2LsCVC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499C038553D;
-	Mon,  2 Mar 2026 13:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43343E5563;
+	Mon,  2 Mar 2026 13:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772458059; cv=none; b=UW56El26jnGJE14he9FBkRA7aBKXn8H0xELzWbbUHuk/KF9ROm0CpTEklujVjUUWKfTZh/uk7nRh1L43TLLkDgA4XuJoUIm+4rKpcp7D1jXC0C1hf+fjaKyHArvj0nrr+7s+me4PMx/KG3OM+a/3LE02TGS04gze9NwhSxym+xo=
+	t=1772459850; cv=none; b=gxMHg/1MDny2NCI/5VgYwPpXgH44FZcJ7fcPHdlPpt3W2jRZ+jcxSk9wdX5F+v8j4l1wW+vAzvfJffhnvUG7jAy7yD2VI0SeBjs4Y+pHCBobZKqi4FAq8U6YO6ycoUR33yqLpDp9BEJ4lqkIu6owiR888xhW014MevKbUAQ0goI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772458059; c=relaxed/simple;
-	bh=gNNQMuJ4vbSo9Z3upH+zjkbLMLvNRBdyx1c84fv+xLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WhAD2Dv97LSeMgsL4W7Qg8Zjpma0756KynJRa0cFaKkMlyq8pY6YV+7tpYz6OAFVK0HSrQIsKdw1ScS8CHC5YjWRnrrhElzhlkqwQoBVM8npVZJkvbF3OQkKQxXHfeZEreQx9SRVmZs4lwjjv/AQLsdDUSuO/nO02SsB0gBALdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eHa17lyG; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772458051; x=1803994051;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gNNQMuJ4vbSo9Z3upH+zjkbLMLvNRBdyx1c84fv+xLo=;
-  b=eHa17lyGd4R6zt79iDXbLa8fkqpXmKOkiU+1UT9nQpM3x5N5OYnY0JQL
-   LwwyE3q7NdYBnjl8CNaAj/JD6XHxdUZZbCvg8aMgxiahukh5E4/Hoykm2
-   qp0bWe+XcRXtcZDn2vW1sAJGfrvFqzQsz1arN6BVPUk4IY2uHOVH0FtOB
-   EDU9hdzrhtKz1Ofy+dNoJqrcNcoaPhhtN8ZJUmIbQ7JIlEp8FRATUXvEA
-   CBJA0nTjkuKd5UYpF2n0be+TzhtZujkn+tgQl+HTfe4WwAN1dlNHYmnhm
-   putUeuyfxxHsFKfZXZm14M/yL21au54NUn+p/IYYqRpgEMHnBUK/awflw
-   Q==;
-X-CSE-ConnectionGUID: j/HjKenMRSC1HUu/su+gKg==
-X-CSE-MsgGUID: vZNEYDZDT7uIRUZy+PUhhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="73650237"
-X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
-   d="scan'208";a="73650237"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 05:27:30 -0800
-X-CSE-ConnectionGUID: Ou0KlTdmS5CBy46B8e3nPA==
-X-CSE-MsgGUID: xuCyVknAS9eAo9HCYKU7rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
-   d="scan'208";a="215636206"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa007.fm.intel.com with ESMTP; 02 Mar 2026 05:27:28 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 4475899; Mon, 02 Mar 2026 14:27:27 +0100 (CET)
-Date: Mon, 2 Mar 2026 14:27:27 +0100
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Sean Chang <seanwascoding@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Chuck Lever <chuck.lever@oracle.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	trond.myklebust@hammerspace.com, anna@kernel.org,
-	netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v6 1/2] sunrpc: simplify dprintk macros and cleanup
- redundant debug guards
-Message-ID: <aaWQPw-My_eo1myI@black.igk.intel.com>
-References: <20260301161709.1365975-1-seanwascoding@gmail.com>
- <20260301161709.1365975-2-seanwascoding@gmail.com>
+	s=arc-20240116; t=1772459850; c=relaxed/simple;
+	bh=UV2mNPBNzqomza8bGMJZVxSDC6YpRR0TOAlLfetIp9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eiyieAFqxgRjvk8xSbOZnYfaEccU4LIqHPuI413eTFS9HRhBzc8VuBzRQqlRbJEj3JbBzbcwqqhCCYlFpX2Awlt6wzvvB5/lonsvhKs+Z323s6JxX/sqxjxTYI0srG3kD6z79FjqCTMM9XcZtaUhXSCqpL03Q1XfFDhjBKF0l4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jd2LsCVC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80786C19423;
+	Mon,  2 Mar 2026 13:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772459850;
+	bh=UV2mNPBNzqomza8bGMJZVxSDC6YpRR0TOAlLfetIp9M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Jd2LsCVCQ7xuIl5ZNQ/Usg0S+rgGGYa+BwwiymmVREWmOaCSGbGfPcTHS60e3cECR
+	 eieLMPUsvOqbrIzsQuCDbaGARJ5YxKGeohDjdJzjpDI+uVaZ3uGcbJtSDAiZ/o1Hjo
+	 zzZkvU9Jjm1Z4sKQMokRZOrB7wRIhNt9GzMTUhMi1O+HoDBUACxdvdJ8RIspigE9zh
+	 iu/+2FmrskCm3sYPA8MiWu0qCrX6J2MdJeMQ3Z7uxoWvGmNaGGaTGANfhRwNNQmDbw
+	 h9LidjBVhgij0rY8yI90uTAochDeVyjY4FexLkmaD5atdgFlx54jV7iuT/WT2+oW4s
+	 9VQ00DlFkw2xQ==
+Message-ID: <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
+Date: Mon, 2 Mar 2026 08:57:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260301161709.1365975-2-seanwascoding@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
+ unmount notification
+To: NeilBrown <neil@brown.name>
+Cc: Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.com>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>
+References: <20260224163908.44060-1-cel@kernel.org>
+ <20260224163908.44060-2-cel@kernel.org>
+ <20260226-alimente-kunst-fb9eae636deb@brauner>
+ <CAOQ4uxhEpf1p3agEF7_HBrhUeKz1Fb_yKAQ0Pjo0zztTJfMoXA@mail.gmail.com>
+ <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>
+ <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
+ <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>
+ <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>
+ <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>
+ <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>
+ <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
+ <177242454307.7472.11164903103911826962@noble.neil.brown.name>
+From: Chuck Lever <cel@kernel.org>
+Content-Language: en-US
+Organization: kernel.org
+In-Reply-To: <177242454307.7472.11164903103911826962@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lunn.ch,oracle.com,gmail.com,microchip.com,tuxon.dev,hammerspace.com,kernel.org,vger.kernel.org,intel.com];
-	TAGGED_FROM(0.00)[bounces-19497-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,suse.cz,kernel.org,suse.com,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19498-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	HAS_ORG_HEADER(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	NEURAL_HAM(-0.00)[-0.994];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[black.igk.intel.com:mid,intel.com:dkim]
-X-Rspamd-Queue-Id: B27971D9C00
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CADFC1DA4DB
 X-Rspamd-Action: no action
 
-On Mon, Mar 02, 2026 at 12:17:08AM +0800, Sean Chang wrote:
-> When CONFIG_SUNRPC_DEBUG is disabled, the dfprintk() macros currently
-> expand to empty do-while loops. This causes variables used solely
-> within these calls to appear unused, triggering -Wunused-variable
-> warnings.
+On 3/1/26 11:09 PM, NeilBrown wrote:
+> On Mon, 02 Mar 2026, Chuck Lever wrote:
+>>
+>> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
+>>> On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
+>>>> Perhaps that description nails down too much implementation detail,
+>>>> and it might be stale. A broader description is this user story:
+>>>>
+>>>> "As a system administrator, I'd like to be able to unexport an NFSD
+>>>
+>>> Doesn't "unexporting" involve communicating to nfsd?
+>>> Meaning calling to svc_export_put() to path_put() the
+>>> share root path?
+>>>
+>>>> share that is being accessed by NFSv4 clients, and then unmount it,
+>>>> reliably (for example, via automation). Currently the umount step
+>>>> hangs if there are still outstanding delegations granted to the NFSv4
+>>>> clients."
+>>>
+>>> Can't svc_export_put() be the trigger for nfsd to release all resources
+>>> associated with this share?
+>>
+>> Currently unexport does not revoke NFSv4 state. So, that would
+>> be a user-visible behavior change. I suggested that approach a
+>> few months ago to linux-nfs@ and there was push-back.
+>>
 > 
-> Following David Laight's suggestion, simplify the macro definitions by
-> removing the unnecessary 'fmt' argument and using no_printk(__VA_ARGS__)
-> directly. This ensures the compiler performs type checking and "sees"
-> the variables, silencing the warnings without emitting any code.
-> 
-> Verification with .lst files under -O2 confirms that the compiler
-> successfully performs "dead code elimination". Even when variables
-> (like char buf[] in nfsfh.c) or static helper functions (like
-> nlmdbg_cookie2a in svclock.c) are declared without #ifdef, they are
-> completely optimized out (no stack allocation, no symbol references in
-> the final executable) as they are only referenced within no_printk().
-> 
-> This allows for significant cleanup:
-> - Remove RPC_IFDEBUG() and associated #if blocks in fs/nfsd/nfsfh.c
->   and net/sunrpc/xprtrdma/svc_rdma_transport.c.
-> - Remove the #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) guard around
->   nlmdbg_cookie2a in fs/lockd/svclock.c.
-> - Consolidate the dprintk definition to be more idiomatic.
-> 
-> This fixes the build errors reported by the kernel test robot while
-> improving code maintainability.
+> Could we add a "-F" or similar flag to "exportfs -u" which implements the
+> desired semantic?  i.e.  asking nfsd to release all locks and close all
+> state on the filesystem.
 
-If you feel something has to be done against nfsd-next, please rebase and send
-as a standalone patch.
+That meets my needs, but should be passed by the linux-nfs@ review
+committee.
+
+-F could probably just use the existing "unlock filesystem" API
+after it does the unexport.
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Chuck Lever
 
