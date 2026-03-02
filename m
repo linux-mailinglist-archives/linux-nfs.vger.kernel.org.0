@@ -1,128 +1,210 @@
-Return-Path: <linux-nfs+bounces-19499-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19500-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kNEEJgmcpWmfEwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-19499-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 15:17:45 +0100
+	id kBkqCUmtpWmpDgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19500-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 16:31:21 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 977461DA884
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 15:17:44 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 946891DBE13
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 16:31:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 55029303D4DE
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 14:11:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 472ED309D0A8
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 15:26:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D90893FD13A;
-	Mon,  2 Mar 2026 14:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4296F430BB1;
+	Mon,  2 Mar 2026 15:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mI1Z5QaF"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGg0RbnZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3xlrUM9c";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGg0RbnZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3xlrUM9c"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67CEC8EB;
-	Mon,  2 Mar 2026 14:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA319401480
+	for <linux-nfs@vger.kernel.org>; Mon,  2 Mar 2026 15:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772460691; cv=none; b=AgflpCCKsNfyLis3EwAuYOGHc5i6mAOIQshEVnCDWGzExAFUzMyZn3XXQkHTJFRl3oBDoltjr5JAc6rf28kgxpWoa/938QZqvc1FutZwoTcROlJfuGpyv+jexA7gIlSvw87+Ws3TZl8w3M49Dj0ACnGAA+mixaKH/PgIi9O1oEU=
+	t=1772465201; cv=none; b=SSiHDbh2NW8XCJ/0FKzLJM8i6Je+JGkplRCNgqexkFOeo8ypkDigSSf0227o+QZeKnySfKIREoHbOGZFXWQq1y+xD3lFgnjP259Jn6KdRB1Y8Jqypj3ekqIvs4s2uXBZhO/7FT3moBv0wMXQPhfOrRtMmiTk52FgDI04iLZPGMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772460691; c=relaxed/simple;
-	bh=MDftjcC1mSgCSd2IuUj1q3+4aSGvqwrNZNcMgNWygWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pNpiEohY9/3WqladBOzbriik6CjewL7AeMniDVaMtgos5WkWgtNXgEYOfQeE0AbJe88j7/dhfcK4AjMI4jKEI1giwkK6K9RnQj3j+o6C5kVslIfs46s1RrZaM6sARYZlOe0jmAZEAoT5YSoJMttoOlOa8mRVMkgvUaNcrLSMJpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mI1Z5QaF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064DAC19423;
-	Mon,  2 Mar 2026 14:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772460691;
-	bh=MDftjcC1mSgCSd2IuUj1q3+4aSGvqwrNZNcMgNWygWs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mI1Z5QaFAyKNDFwSibI6KgA/4Rj3xuss0tq8TUZ4iFLeHer9W8RMVH4Xg1evu8O8S
-	 umMZ2bj5B6QLQ7wLYW6mJWRDeoeAtmdMs7HGGnVVEhyzdiOdawE8dYcIKmRTFszUN5
-	 yiv12h2KPIF1qxw3sauIISxtJQWj7uVBIwGyY+Et/U39ZAR897BWDN5HwRyB4xmHth
-	 SZwh8tLyn781HgbED1/LnUTTdhmpxVOadZRBFWa/cB+RcCYNT1TnI/PAnAo1FVIk2y
-	 5SSU75H1h8gZpGhMOeL0G9KdYPrGy49r6Q4FsfZJYdTprtr9kthZH1w/riM9RmEtMj
-	 ozDyLH+6lswcQ==
-From: Chuck Lever <cel@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] First round of NFSD fixes for v7.0
-Date: Mon,  2 Mar 2026 09:11:29 -0500
-Message-ID: <20260302141130.9098-1-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1772465201; c=relaxed/simple;
+	bh=bgemlqptfQf70G9CaWcSSsg+IrumiQx9bGnpjSrqn0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WU9wWG0w+cZ6H5ib/5iWsLDdAOFcD7uPX2vhiPFgv7l9XjXXhrHo/MpICAmkcZy7C6lftynP/NHJQAc59iM5XRB9sRFYmgY41aeXI0qdJ3QU8m4Me+ahs1bYlBYGpFDrUQ/8NWg8Fvsot9+DlJGHNMn1BrlJ3c0hBGQG7vEVTl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGg0RbnZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3xlrUM9c; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGg0RbnZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3xlrUM9c; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 08AD43E806;
+	Mon,  2 Mar 2026 15:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1772465198; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
+	b=LGg0RbnZOdE+jawXdzONokxu+AkKVBpzTL2ZNpA5MDO3hZXL7P2Co1jjPgLL/BmFX+5jvC
+	cm9+8sH82d8mSP3pnClpz5CJn/JNFZt8AovenqjGPfLHY8LfkiwoL6AVFxQcS7XUwjTEew
+	xz1058M3P7Y/8eZyCH/jYF22OVxzJ9U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1772465198;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
+	b=3xlrUM9c5wuSVfrAVh3BOee6r/24aqpE1z1dswcivZfQl52I2XCblp1lpu9WTjyXNopVJr
+	PJdgdSjEr0uPIQDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LGg0RbnZ;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=3xlrUM9c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1772465198; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
+	b=LGg0RbnZOdE+jawXdzONokxu+AkKVBpzTL2ZNpA5MDO3hZXL7P2Co1jjPgLL/BmFX+5jvC
+	cm9+8sH82d8mSP3pnClpz5CJn/JNFZt8AovenqjGPfLHY8LfkiwoL6AVFxQcS7XUwjTEew
+	xz1058M3P7Y/8eZyCH/jYF22OVxzJ9U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1772465198;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
+	b=3xlrUM9c5wuSVfrAVh3BOee6r/24aqpE1z1dswcivZfQl52I2XCblp1lpu9WTjyXNopVJr
+	PJdgdSjEr0uPIQDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F10493EA69;
+	Mon,  2 Mar 2026 15:26:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Q9PROi2spWnkdgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 02 Mar 2026 15:26:37 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A6149A0A0B; Mon,  2 Mar 2026 16:26:37 +0100 (CET)
+Date: Mon, 2 Mar 2026 16:26:37 +0100
+From: Jan Kara <jack@suse.cz>
+To: Chuck Lever <cel@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Amir Goldstein <amir73il@gmail.com>, 
+	Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.com>, 
+	Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
+ unmount notification
+Message-ID: <3r5imygq5ah4khza5fsbgam6ss6ohla24p4ikmbpfpjoj4qmns@f6bw344w4axz>
+References: <CAOQ4uxhEpf1p3agEF7_HBrhUeKz1Fb_yKAQ0Pjo0zztTJfMoXA@mail.gmail.com>
+ <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>
+ <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
+ <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>
+ <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>
+ <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>
+ <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>
+ <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
+ <177242454307.7472.11164903103911826962@noble.neil.brown.name>
+ <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 946891DBE13
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19500-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim];
+	DMARC_NA(0.00)[suse.cz];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19499-lists,linux-nfs=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[brown.name,gmail.com,suse.cz,kernel.org,suse.com,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.995];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 977461DA884
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-The following changes since commit e939bd675634fd52d559b90e2cf58333e16afea8:
+On Mon 02-03-26 08:57:28, Chuck Lever wrote:
+> On 3/1/26 11:09 PM, NeilBrown wrote:
+> > On Mon, 02 Mar 2026, Chuck Lever wrote:
+> >> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
+> >>> On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
+> >>>> Perhaps that description nails down too much implementation detail,
+> >>>> and it might be stale. A broader description is this user story:
+> >>>>
+> >>>> "As a system administrator, I'd like to be able to unexport an NFSD
+> >>>
+> >>> Doesn't "unexporting" involve communicating to nfsd?
+> >>> Meaning calling to svc_export_put() to path_put() the
+> >>> share root path?
+> >>>
+> >>>> share that is being accessed by NFSv4 clients, and then unmount it,
+> >>>> reliably (for example, via automation). Currently the umount step
+> >>>> hangs if there are still outstanding delegations granted to the NFSv4
+> >>>> clients."
+> >>>
+> >>> Can't svc_export_put() be the trigger for nfsd to release all resources
+> >>> associated with this share?
+> >>
+> >> Currently unexport does not revoke NFSv4 state. So, that would
+> >> be a user-visible behavior change. I suggested that approach a
+> >> few months ago to linux-nfs@ and there was push-back.
+> >>
+> > 
+> > Could we add a "-F" or similar flag to "exportfs -u" which implements the
+> > desired semantic?  i.e.  asking nfsd to release all locks and close all
+> > state on the filesystem.
+> 
+> That meets my needs, but should be passed by the linux-nfs@ review
+> committee.
+> 
+> -F could probably just use the existing "unlock filesystem" API
+> after it does the unexport.
 
-  NFSD: Add POSIX ACL file attributes to SUPPATTR bitmasks (2026-01-29 09:48:33 -0500)
+If this option flies, then I guess it is the most sensible variant. If it
+doesn't work for some reason, then something like ->umount_begin sb
+callback could be twisted (may possibly need some extension) to provide
+the needed notification? At least in my naive understanding it was created
+for usecases like this...
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-7.0-1
-
-for you to fetch changes up to 364410170ab33f6e7ef0eb2afb12bf89b0feb3a6:
-
-  nfsd: report the requested maximum number of threads instead of number running (2026-02-24 10:27:51 -0500)
-
-----------------------------------------------------------------
-nfsd-7.0 fixes:
-
-NFSD fixes that arrived too late for the 7.0 merge window.
-
-Fixes for commits merged in 7.0:
-- Restore previous nfsd thread count reporting behavior
-
-Issues that need expedient stable backports:
-- Fix credential reference leaks in the NFSD netlink admin protocol
-
-----------------------------------------------------------------
-Jeff Layton (1):
-      nfsd: report the requested maximum number of threads instead of number running
-
-Kuniyuki Iwashima (2):
-      nfsd: Fix cred ref leak in nfsd_nl_threads_set_doit().
-      nfsd: Fix cred ref leak in nfsd_nl_listener_set_doit().
-
- Documentation/netlink/specs/nfsd.yaml |  4 ++--
- fs/nfsd/nfsctl.c                      | 22 +++++++++++-----------
- fs/nfsd/nfssvc.c                      |  7 ++++---
- 3 files changed, 17 insertions(+), 16 deletions(-)
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
