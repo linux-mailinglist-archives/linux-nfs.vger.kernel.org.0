@@ -1,210 +1,284 @@
-Return-Path: <linux-nfs+bounces-19500-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19501-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kBkqCUmtpWmpDgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19500-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 16:31:21 +0100
+	id qHNcBW+4pWkiFQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19501-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 17:18:55 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 946891DBE13
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 16:31:20 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACECD1DC9BD
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 17:18:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 472ED309D0A8
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 15:26:49 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C5C2330234F2
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 16:18:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4296F430BB1;
-	Mon,  2 Mar 2026 15:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F45E2FBDE0;
+	Mon,  2 Mar 2026 16:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGg0RbnZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3xlrUM9c";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LGg0RbnZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3xlrUM9c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ozvc3BXp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA319401480
-	for <linux-nfs@vger.kernel.org>; Mon,  2 Mar 2026 15:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B5F2F3C13
+	for <linux-nfs@vger.kernel.org>; Mon,  2 Mar 2026 16:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772465201; cv=none; b=SSiHDbh2NW8XCJ/0FKzLJM8i6Je+JGkplRCNgqexkFOeo8ypkDigSSf0227o+QZeKnySfKIREoHbOGZFXWQq1y+xD3lFgnjP259Jn6KdRB1Y8Jqypj3ekqIvs4s2uXBZhO/7FT3moBv0wMXQPhfOrRtMmiTk52FgDI04iLZPGMw=
+	t=1772468314; cv=none; b=X9IBXoS03/ZxFECebNwnl6zA/a9U/V29KA3HYb2z5b7Ju2zCmmX42bwTj5p+gYzZi5UBT6otLQirPHTdOJr1Tiq3Kn9oQey6eLYuLVGSuMprngwo0LIbYnvH0dEQeGBOmJdzmwGqAl6j86rVZYSwBVeTu51bZhx+sWshSO3ZUS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772465201; c=relaxed/simple;
-	bh=bgemlqptfQf70G9CaWcSSsg+IrumiQx9bGnpjSrqn0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WU9wWG0w+cZ6H5ib/5iWsLDdAOFcD7uPX2vhiPFgv7l9XjXXhrHo/MpICAmkcZy7C6lftynP/NHJQAc59iM5XRB9sRFYmgY41aeXI0qdJ3QU8m4Me+ahs1bYlBYGpFDrUQ/8NWg8Fvsot9+DlJGHNMn1BrlJ3c0hBGQG7vEVTl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGg0RbnZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3xlrUM9c; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LGg0RbnZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3xlrUM9c; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 08AD43E806;
-	Mon,  2 Mar 2026 15:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1772465198; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
-	b=LGg0RbnZOdE+jawXdzONokxu+AkKVBpzTL2ZNpA5MDO3hZXL7P2Co1jjPgLL/BmFX+5jvC
-	cm9+8sH82d8mSP3pnClpz5CJn/JNFZt8AovenqjGPfLHY8LfkiwoL6AVFxQcS7XUwjTEew
-	xz1058M3P7Y/8eZyCH/jYF22OVxzJ9U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1772465198;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
-	b=3xlrUM9c5wuSVfrAVh3BOee6r/24aqpE1z1dswcivZfQl52I2XCblp1lpu9WTjyXNopVJr
-	PJdgdSjEr0uPIQDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LGg0RbnZ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=3xlrUM9c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1772465198; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
-	b=LGg0RbnZOdE+jawXdzONokxu+AkKVBpzTL2ZNpA5MDO3hZXL7P2Co1jjPgLL/BmFX+5jvC
-	cm9+8sH82d8mSP3pnClpz5CJn/JNFZt8AovenqjGPfLHY8LfkiwoL6AVFxQcS7XUwjTEew
-	xz1058M3P7Y/8eZyCH/jYF22OVxzJ9U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1772465198;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F89b+aS5l0gzlJ6qVHGzvbZZ/UFggSDUfwTM8BVPn7M=;
-	b=3xlrUM9c5wuSVfrAVh3BOee6r/24aqpE1z1dswcivZfQl52I2XCblp1lpu9WTjyXNopVJr
-	PJdgdSjEr0uPIQDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F10493EA69;
-	Mon,  2 Mar 2026 15:26:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Q9PROi2spWnkdgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 02 Mar 2026 15:26:37 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A6149A0A0B; Mon,  2 Mar 2026 16:26:37 +0100 (CET)
-Date: Mon, 2 Mar 2026 16:26:37 +0100
-From: Jan Kara <jack@suse.cz>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Amir Goldstein <amir73il@gmail.com>, 
-	Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.com>, 
-	Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
- unmount notification
-Message-ID: <3r5imygq5ah4khza5fsbgam6ss6ohla24p4ikmbpfpjoj4qmns@f6bw344w4axz>
-References: <CAOQ4uxhEpf1p3agEF7_HBrhUeKz1Fb_yKAQ0Pjo0zztTJfMoXA@mail.gmail.com>
- <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>
- <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
- <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>
- <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>
- <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>
- <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>
- <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
- <177242454307.7472.11164903103911826962@noble.neil.brown.name>
- <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
+	s=arc-20240116; t=1772468314; c=relaxed/simple;
+	bh=3RyZw1J33eIoZOy7izeY54Rk6a6ye5Bzt8iY6XpOGr0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RmMlcapmjpe1YaDh/hHWa8yKdpZXZvi5kofk2h0d2zDDXw0gU2zcBH+HsLpMDnP6jVsCAl2cqLuzVb6IOOkBUF5TkynXoY4OoEhLl1nD86ZuPcdmm2s9+XtFHla3y5jKpq3gx8Tws/pHw/Jr/DuA1xKqYKOYuyuvbYCkC7tLtBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ozvc3BXp; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-827307b12dfso2534284b3a.1
+        for <linux-nfs@vger.kernel.org>; Mon, 02 Mar 2026 08:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772468312; x=1773073112; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/n5FdJUguFV7iKwaO9oDyh+DvXwYdzvA1C7E2VBJBfk=;
+        b=Ozvc3BXpneokbe6KbtH45nsGIvPWtKkHwO58Jadeqi7vTgvLiiUVIM1tBqHx8ALq8A
+         WJzrUjB5m51087G5bHlg5+M/EVwikeO5GTrKwJdxPA+Jd9Tq6p+FUkepSUJmympBcljK
+         tqNBkzBikJccfFJxpJ/EuaQyXZ9Lwg9EwdGbxFnOAqD7+troZZiyakacAT0BddIbJNaI
+         NtXlCX5tzercuTT5/HsUQ7ZP+CNEIyamE71xPxjJzvTWpq5VhXXrHsCpRtiBR/sUIWn5
+         IvVLVvWU4TbfU6sHLY0YEWODlA1G8HMt9CYy3xnna3WQKVE2LBuQKSKyP73Ynp3Y+esM
+         qpMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772468312; x=1773073112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/n5FdJUguFV7iKwaO9oDyh+DvXwYdzvA1C7E2VBJBfk=;
+        b=tNWtNRqhtfttSZHUJm+io8Sl2moD/wOQhUPdHlVfWg0GY+ykIAX5EZYhC3FRl+Waxt
+         Dw9QF0VULwtT5+DC1dkHlfmquv3hE4mJkbeJBuhlDcev+L3JOKMd9FEbjWFG/suVAfxP
+         2dqXv3zORmo9IdG/lfsJN0QDMwsRf53qT4XuGqadOi+BOZOT0ZniqmERbX3LBU4g0CmN
+         sb638Lv+A6PrHgstSoCBm0L3L+XY9EgxQdr/wITZ+m8Ybve6RROhfocArZWVzNXyKhNO
+         cwXM1c663JRICSiFcOdnkgbPqkyXh2kuHtZZmRVledck20jJYKvnNZDV5QIyCiH80URS
+         BSPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7pIGCa+57UZGutc07/eAnbCoQfgiGMqys68xMeckeumSp7wjBMU2pJDdwn9nNFHrVAm99amuIZMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4ih5aAeyFAi0f46g+PkP+plMLEJgHz1Ojjxo0UjPsNYMhfbUN
+	jjqPWe4UsSs0gyFgqMdjxvUyVYV2yiKowWjugQG3fKi2zX5DSysVYiKI
+X-Gm-Gg: ATEYQzxcbaL9MPmhBFhp8YJUqEMD+1W1fV6MrWPYUxbXqgq7A7cBJLn+hNVIvG8fJ1Y
+	S5wgITlhdNSjtwo7KJLKEIpUoNwBujNRAWwSOZboi9X7+x0+/bWNZGeEgrYcZgWMSToNgSeui8k
+	C2NlBTstz1ioL2tCO0o8tLJmtJCIxYaubQR0qzTIARDTC1DKdJG+s8Sq/HslMNmrLGKuIjTOxhH
+	n2rkoKy1SUij67waXJTuYc/3g9AYMFqXHxgVzgcPhZGFPsTPb50exeSmOQsZcQ0kd6+aRR76PoK
+	sBLv/UeHWC8AqSci4GM3RAxkFjAUBFx4MRpvqH8SME0yA8jf77zqhNG0A2wGejMZrC5HSpzdslV
+	j/zpgjd9g5w1Bd0pdKYN62M/8JFgZapHDcc+H08M7EquqNC4tJqpMEa/l2LYeJTq121yFAdQZ6R
+	/UvXHbDGrbQS1zSbYV8oaneSJ+LEtxtbgBSB9O1w35Zfxq7wikgXqiDSgTb8x15ogq5dTx
+X-Received: by 2002:a05:6a21:594:b0:394:6440:c13 with SMTP id adf61e73a8af0-395c476ef25mr11709902637.29.1772468312103;
+        Mon, 02 Mar 2026 08:18:32 -0800 (PST)
+Received: from sean-All-Series.. (1-160-230-14.dynamic-ip.hinet.net. [1.160.230.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb69fa5asm147567775ad.60.2026.03.02.08.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 08:18:31 -0800 (PST)
+From: Sean Chang <seanwascoding@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: netdev@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sean Chang <seanwascoding@gmail.com>
+Subject: [PATCH] sunrpc: simplify dprintk macros and cleanup redundant debug guards
+Date: Tue,  3 Mar 2026 00:18:18 +0800
+Message-Id: <20260302161818.63651-1-seanwascoding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 946891DBE13
+X-Rspamd-Queue-Id: ACECD1DC9BD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19500-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[lunn.ch,oracle.com,gmail.com,kernel.org,intel.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim];
-	DMARC_NA(0.00)[suse.cz];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[brown.name,gmail.com,suse.cz,kernel.org,suse.com,redhat.com,oracle.com,talpey.com,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-19501-lists,linux-nfs=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.995];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,lunn.ch:email]
 X-Rspamd-Action: no action
 
-On Mon 02-03-26 08:57:28, Chuck Lever wrote:
-> On 3/1/26 11:09 PM, NeilBrown wrote:
-> > On Mon, 02 Mar 2026, Chuck Lever wrote:
-> >> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
-> >>> On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
-> >>>> Perhaps that description nails down too much implementation detail,
-> >>>> and it might be stale. A broader description is this user story:
-> >>>>
-> >>>> "As a system administrator, I'd like to be able to unexport an NFSD
-> >>>
-> >>> Doesn't "unexporting" involve communicating to nfsd?
-> >>> Meaning calling to svc_export_put() to path_put() the
-> >>> share root path?
-> >>>
-> >>>> share that is being accessed by NFSv4 clients, and then unmount it,
-> >>>> reliably (for example, via automation). Currently the umount step
-> >>>> hangs if there are still outstanding delegations granted to the NFSv4
-> >>>> clients."
-> >>>
-> >>> Can't svc_export_put() be the trigger for nfsd to release all resources
-> >>> associated with this share?
-> >>
-> >> Currently unexport does not revoke NFSv4 state. So, that would
-> >> be a user-visible behavior change. I suggested that approach a
-> >> few months ago to linux-nfs@ and there was push-back.
-> >>
-> > 
-> > Could we add a "-F" or similar flag to "exportfs -u" which implements the
-> > desired semantic?  i.e.  asking nfsd to release all locks and close all
-> > state on the filesystem.
-> 
-> That meets my needs, but should be passed by the linux-nfs@ review
-> committee.
-> 
-> -F could probably just use the existing "unlock filesystem" API
-> after it does the unexport.
+Following David Laight's suggestion, simplify the macro definitions by
+removing the unnecessary 'fmt' argument and using no_printk(__VA_ARGS__)
+directly. This ensures the compiler performs type checking and "sees"
+the variables, silencing the warnings without emitting any code.
 
-If this option flies, then I guess it is the most sensible variant. If it
-doesn't work for some reason, then something like ->umount_begin sb
-callback could be twisted (may possibly need some extension) to provide
-the needed notification? At least in my naive understanding it was created
-for usecases like this...
+Verification with .lst files under -O2 confirms that the compiler
+successfully performs "dead code elimination". Even when variables
+(like char buf[] in nfsfh.c) or static helper functions (like
+nlmdbg_cookie2a in svclock.c) are declared without #ifdef, they are
+completely optimized out (no stack allocation, no symbol references in
+the final executable) as they are only referenced within no_printk().
 
-								Honza
+This allows for significant cleanup:
+- Remove redundant #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) from
+  fs/nfsd/nfsfh.c and net/sunrpc/xprtrdma/svc_rdma_transport.c
+- Remove the #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) guard around
+  nlmdbg_cookie2a and stub function in fs/lockd/svclock.c
+- Consolidate the dprintk definition to be more idiomatic.
+
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Suggested-by: David Laight <david.laight.linux@gmail.com>
+Signed-off-by: Sean Chang <seanwascoding@gmail.com>
+---
+ fs/lockd/svclock.c                       |  7 -------
+ fs/nfsd/nfsfh.c                          |  8 +++-----
+ include/linux/sunrpc/debug.h             |  8 ++------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c | 25 +++++++++++-------------
+ 4 files changed, 16 insertions(+), 32 deletions(-)
+
+diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+index ee23f5802af1..9b978a087b3c 100644
+--- a/fs/lockd/svclock.c
++++ b/fs/lockd/svclock.c
+@@ -47,7 +47,6 @@ static const struct rpc_call_ops nlmsvc_grant_ops;
+ static LIST_HEAD(nlm_blocked);
+ static DEFINE_SPINLOCK(nlm_blocked_lock);
+ 
+-#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+ {
+ 	/*
+@@ -74,12 +73,6 @@ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+ 
+ 	return buf;
+ }
+-#else
+-static inline const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+-{
+-	return "???";
+-}
+-#endif
+ 
+ /*
+  * Insert a blocked lock into the global list
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 68b629fbaaeb..91514326d1b4 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -105,12 +105,10 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+ {
+ 	/* Check if the request originated from a secure port. */
+ 	if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
+-		if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
+-			char buf[RPC_MAX_ADDRBUFLEN];
++		char buf[RPC_MAX_ADDRBUFLEN];
+ 
+-			dprintk("nfsd: request from insecure port %s!\n",
+-			        svc_print_addr(rqstp, buf, sizeof(buf)));
+-		}
++		dprintk("nfsd: request from insecure port %s!\n",
++			svc_print_addr(rqstp, buf, sizeof(buf)));
+ 		return nfserr_perm;
+ 	}
+ 
+diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
+index ab61bed2f7af..f6f2a106eeaf 100644
+--- a/include/linux/sunrpc/debug.h
++++ b/include/linux/sunrpc/debug.h
+@@ -38,8 +38,6 @@ extern unsigned int		nlm_debug;
+ do {									\
+ 	ifdebug(fac)							\
+ 		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+-	else								\
+-		no_printk(fmt, ##__VA_ARGS__);				\
+ } while (0)
+ 
+ # define dfprintk_rcu(fac, fmt, ...)					\
+@@ -48,15 +46,13 @@ do {									\
+ 		rcu_read_lock();					\
+ 		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+ 		rcu_read_unlock();					\
+-	} else {							\
+-		no_printk(fmt, ##__VA_ARGS__);				\
+ 	}								\
+ } while (0)
+ 
+ #else
+ # define ifdebug(fac)		if (0)
+-# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
+-# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
++# define dfprintk(fac, ...)		no_printk(__VA_ARGS__)
++# define dfprintk_rcu(fac, ...)	no_printk(__VA_ARGS__)
+ #endif
+ 
+ /*
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index f2d72181a6fe..ba6fe0fd387d 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -414,6 +414,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 	struct ib_qp_init_attr qp_attr;
+ 	struct ib_device *dev;
+ 	int ret = 0;
++	struct sockaddr *sap;
+ 
+ 	listen_rdma = container_of(xprt, struct svcxprt_rdma, sc_xprt);
+ 	clear_bit(XPT_CONN, &xprt->xpt_flags);
+@@ -559,20 +560,16 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		goto errout;
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
+-		struct sockaddr *sap;
+-
+-		dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
+-		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+-		dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
+-		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+-		dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
+-		dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
+-		dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
+-		dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
+-		dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
+-		dprintk("    ord             : %d\n", conn_param.initiator_depth);
+-	}
++	dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
++	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
++	dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
++	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
++	dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
++	dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
++	dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
++	dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
++	dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
++	dprintk("    ord             : %d\n", conn_param.initiator_depth);
+ 
+ 	return &newxprt->sc_xprt;
+ 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
 
