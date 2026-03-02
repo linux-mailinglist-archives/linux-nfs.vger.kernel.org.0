@@ -1,194 +1,160 @@
-Return-Path: <linux-nfs+bounces-19489-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19490-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EAFxCnENpWmT0gUAu9opvQ
-	(envelope-from <linux-nfs+bounces-19489-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 05:09:21 +0100
+	id aGK3LTY4pWnt5wUAu9opvQ
+	(envelope-from <linux-nfs+bounces-19490-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 08:11:50 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A79D1D2E33
-	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 05:09:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC6CF1D3AE2
+	for <lists+linux-nfs@lfdr.de>; Mon, 02 Mar 2026 08:11:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3927430055DF
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 04:09:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A75103005142
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Mar 2026 07:11:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FA75248891;
-	Mon,  2 Mar 2026 04:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 616E5383C62;
+	Mon,  2 Mar 2026 07:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="jwgdHYRr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hrbCb7Me"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDEnjBC/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DFA23C4F2;
-	Mon,  2 Mar 2026 04:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D20937702F;
+	Mon,  2 Mar 2026 07:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772424555; cv=none; b=glXzVQB1+ll6nzOUWpbJnl6+CJqwlAIJIo7woVFRiKbcAl57m/+mY0EnE77J21wMfyG+NovoVtaToTOBumKHvNIUtfoGZga6cuPN9ZeR3QDOUaT6ZOfUUQZMJIdGEBMxeuSz8QorECBIdJaEFBvy/Szf8+vWIkuR5ylh9tVM1uY=
+	t=1772435504; cv=none; b=XKzh+N0lNYP8Zv0slcKdwYpt8Y1P0rPrGfQ4AsANRSYgisBcA/P4HoSN7AjAQu6ocOoX5r6uAXRJoaVht5rlJxcleRtrsUWHAByqDZoKoB8ClYvNzZrOsVUWrDMk70rD4hM3wOIQVpH3nw9dL+qUgVACS4THX7/tVN6yodKZzf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772424555; c=relaxed/simple;
-	bh=RL7YHfo9DlN6erX11ZBVFCufHA/U7iCLg3LKMdHX4LA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=EkYFaHoA9CBVgp7Qp3VmfoSKxypWfwmGdZwCn/oUU1bBTLQf28WLJO9bOc1oYdO5YbsQdKlcY++anf4pR9+RSYa02QA+etiucmFHpaYrMTFe1SyEDYKkUwNLQ/sGomNDei8dYFhcTCuLlAunG0MIR18n2KNyZOCBRNCys9xCf1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=jwgdHYRr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hrbCb7Me; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id B2B2B1D00187;
-	Sun,  1 Mar 2026 23:09:11 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Sun, 01 Mar 2026 23:09:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1772424551; x=1772510951; bh=xdPM9Ho77dh5HWd18OeTmi5IVBzLIHu1iNH
-	8LvaFcAg=; b=jwgdHYRrfQSaRj5Ikn7XXxeFhosDsAMqF/FmnKcRRKkg+mi4ptg
-	ifPg0qK7rH2l2jVLJxVE4MYik22w/BruwcQ9QguHTWyMbL2+sSZRDQGAA62vag7P
-	Nxx6R3oMlWzvfzBHKxnNbmlvy3ijWnc0V32wv2nMSK+zSWvNS6O7/yoa6T7XEgB3
-	wXpUfObUIJDO0oxtU6w9a4LKuOe/WfgRutEZqhBIyW4vNDT5ujcaqSdDZszuwCXB
-	yksjsoOKRPu7QXIJbkzu9NsO/j8osBflj8buJsRRiF5knUo/yuzbbrXViKiKbBSd
-	o1AYFSGwbFlSexZzoXVBN4pE23Hu7rjK90w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772424551; x=
-	1772510951; bh=xdPM9Ho77dh5HWd18OeTmi5IVBzLIHu1iNH8LvaFcAg=; b=h
-	rbCb7MeT51nKiLff/BxLJouP7U3ydtmgkFI2J0Y5UqnBlnMBfiUAlh/rotdaRopj
-	X93+ZuVxQMR9k1r6mgT+DQXBJHhqun1OFl3OI+EA9nAcPANm97vUAcikqMDih+/X
-	b4I4aAZexFRw+qqlF6axkpBQormXyeL2RDz/c7ikJ9G4MLvbq8h50ubbXVJhTBIS
-	j8LnVkiGrYeu1k4uoeb8Ou9DlIbwsoQcQOkvj1IWJVIDc4n5fYHsTxKJ/ra/b1Si
-	Me99qrAzKD+2QXbrzzAuQBGHp0vCC8hLq0DgXA2mk5UdL0V64IA28p1RR1neICBl
-	1W2jnJXMi0PqWCQ1WW+UQ==
-X-ME-Sender: <xms:Zw2laUXtx87Ec_EYOzof9RplFox5VvQGLATmW55jwJYoFBeg_D4MzQ>
-    <xme:Zw2laaJBlm5YcyYwXENs8qAcyHMZLQySaZMpNh5buWs4VtF7em9eKYQK8vzK9oD-j
-    y_MRU0WB2l-vtBhn3sYog0j_TTbfLc9E0bpdu43eTzV0Fc0gg>
-X-ME-Received: <xmr:Zw2laXoU1FgOObyiNQb7dztklqAzbekWwmQZGypPlttrslnI7vDQ1fv9Z_FAYfkiAk_eCezD__jyaxiGBPU_BwPqkMo4JyMBQ7K3Hcd_WZam>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvheeiieejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtkeertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epvdfhgfehkeekiedtleefhefhkeevvdegfffhgfduffeiveelffehlefhfeehveetnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomhdprhgtphhtthhopehjrg
-    gtkhesshhushgvrdgtiidprhgtphhtthhopehjrggtkhesshhushgvrdgtohhmpdhrtghp
-    thhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghird
-    hnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrseho
-    rhgrtghlvgdrtghomhdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Zw2laZwlKTSO1r6zJAWUt85cyqlmbZ78zAiSl_xFMTinilyP2jB5KA>
-    <xmx:Zw2laTs5uOpt2mpaDvQ2hUxoPr_5XZYvhywERIASc3E8jyD2Vk6hnQ>
-    <xmx:Zw2laa3eqbLISs5Ww8YezMWTKOTQCEEhDSrmx54FnhLCG-8R_npI9A>
-    <xmx:Zw2laTBfz3rpgopvxw4iDNEA-WiPx-XA0Vjq5fDy1pXF8a19XS8k4g>
-    <xmx:Zw2laadawXE9PF8Pj_DcFFEkKMaOG9ft98CQ7KuR-Xt5U7Fiwin66dMn>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 1 Mar 2026 23:09:07 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1772435504; c=relaxed/simple;
+	bh=dw3y0ZYsmbmXggZenP0NempbD26buVG5VGWsEkxE7pg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EEXUrdT+4WaX6Pf/F8kuLsP0uUdBouXhFP027924hCl/2kXqBNPMCDh5KPCGfyUmpEvPk+D2Qo2dZft4Xw/mn2U+gPQI08nfVcZcyYwTJcCqVEXdClnpFw10XduBceR5ZLvBEMkMSKeymUfdq+LSaePlVdJ1cOVTrNk/hfyGzOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDEnjBC/; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772435501; x=1803971501;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dw3y0ZYsmbmXggZenP0NempbD26buVG5VGWsEkxE7pg=;
+  b=cDEnjBC/6lM3ONhMxKpvz9aWB7q2jIwQx2W/76Y2TqnoJzPK7Lm2yW3K
+   He2AyoGVSgrN6ViOtdfqsyUZvwckvDXuG7bCnrJBemVGdAIebTZXLV9Vq
+   Q8r+TyZB1u1TWUIWZvruRpfIJUy0AyuIXNSfU6wGvmzjunlQHY9H2phMr
+   rRhkys0iJ16FfaWmDvqNSZfRou87MPVymcpDIAI3ukrJ8mK/+5At4tiYx
+   kDoSl8EU5kqG3zECih5QKxIwdb/eMSVOaWmfDSov1bYdulQ6E/xYQ7I+e
+   XZIvqyrFqcDMOr9WSuTG1cmub/Rve4V+SNlI2KdYMzEP89gkx8kgfaCZf
+   w==;
+X-CSE-ConnectionGUID: 4VoHbrjCQ12X/FP3XHxHgw==
+X-CSE-MsgGUID: zty68Ck7Q76RhwlOJxQYcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11716"; a="84901544"
+X-IronPort-AV: E=Sophos;i="6.21,319,1763452800"; 
+   d="scan'208";a="84901544"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2026 23:11:40 -0800
+X-CSE-ConnectionGUID: ba4D5QFXRH+vlpV/hQieQQ==
+X-CSE-MsgGUID: O7XdcXJmS/6H4IZriEXdWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,319,1763452800"; 
+   d="scan'208";a="217465832"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.52])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2026 23:11:34 -0800
+Date: Mon, 2 Mar 2026 09:11:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, llvm@lists.linux.dev,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v3 0/3] sunrpc: Fix `make W=1` build issues
+Message-ID: <aaU4I1l5RiZWMNZR@ashevche-desk.local>
+References: <20260204202437.2762161-1-andriy.shevchenko@linux.intel.com>
+ <177024270291.126397.9981743455921781902.b4-ty@oracle.com>
+ <aYXDpqqM0qrEVzvy@smile.fi.intel.com>
+ <aaLNTpODbiNCwmps@ashevche-desk.local>
+ <bf983b54-6a1d-4520-b07b-29cba47d5665@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Amir Goldstein" <amir73il@gmail.com>, "Jan Kara" <jack@suse.cz>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <dai.ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
- unmount notification
-In-reply-to: <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
-References: <20260224163908.44060-1-cel@kernel.org>,
- <20260224163908.44060-2-cel@kernel.org>,
- <20260226-alimente-kunst-fb9eae636deb@brauner>,
- <CAOQ4uxhEpf1p3agEF7_HBrhUeKz1Fb_yKAQ0Pjo0zztTJfMoXA@mail.gmail.com>,
- <1165a90b-acbf-4c0d-a7e3-3972eba0d35a@kernel.org>,
- <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>,
- <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>,
- <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>,
- <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>,
- <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>,
- <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
-Date: Mon, 02 Mar 2026 15:09:03 +1100
-Message-id: <177242454307.7472.11164903103911826962@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf983b54-6a1d-4520-b07b-29cba47d5665@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19489-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,brown.name,hammerspace.com,vger.kernel.org,lists.linux.dev,oracle.com,redhat.com,talpey.com,davemloft.net,google.com,gmail.com];
+	TAGGED_FROM(0.00)[bounces-19490-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,suse.cz,kernel.org,suse.com,redhat.com,oracle.com,talpey.com,vger.kernel.org];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-0.999];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,noble.neil.brown.name:mid]
-X-Rspamd-Queue-Id: 3A79D1D2E33
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-nfs,lkml];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AC6CF1D3AE2
 X-Rspamd-Action: no action
 
-On Mon, 02 Mar 2026, Chuck Lever wrote:
-> 
-> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
-> > On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
-> >> Perhaps that description nails down too much implementation detail,
-> >> and it might be stale. A broader description is this user story:
-> >>
-> >> "As a system administrator, I'd like to be able to unexport an NFSD
-> >
-> > Doesn't "unexporting" involve communicating to nfsd?
-> > Meaning calling to svc_export_put() to path_put() the
-> > share root path?
-> >
-> >> share that is being accessed by NFSv4 clients, and then unmount it,
-> >> reliably (for example, via automation). Currently the umount step
-> >> hangs if there are still outstanding delegations granted to the NFSv4
-> >> clients."
-> >
-> > Can't svc_export_put() be the trigger for nfsd to release all resources
-> > associated with this share?
-> 
-> Currently unexport does not revoke NFSv4 state. So, that would
-> be a user-visible behavior change. I suggested that approach a
-> few months ago to linux-nfs@ and there was push-back.
-> 
+On Sat, Feb 28, 2026 at 12:02:53PM -0500, Chuck Lever wrote:
+> On Sat, Feb 28, 2026, at 6:11 AM, Andy Shevchenko wrote:
+> > On Fri, Feb 06, 2026 at 12:34:21PM +0200, Andy Shevchenko wrote:
+> >> On Wed, Feb 04, 2026 at 05:05:35PM -0500, Chuck Lever wrote:
+> >> > On Wed, 04 Feb 2026 21:21:48 +0100, Andy Shevchenko wrote:
 
-Could we add a "-F" or similar flag to "exportfs -u" which implements the
-desired semantic?  i.e.  asking nfsd to release all locks and close all
-state on the filesystem.
+[...]
 
-NeilBrown
+> >> > Applied to nfsd-testing, thanks!
+> >> 
+> >> Thanks!
+> >> 
+> >> FWIW, I have got a success report from LKP.
+> >
+> > Any estimations when this appears in Linux Next (or even vanilla)?
+> 
+> Applied to nfsd-next just now. Should appear in linux-next the next
+> time nfsd-next is pulled (Sunday night US/Eastern, maybe?)
+
+Yep, I think it will be in today's Linux Next, thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
