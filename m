@@ -1,258 +1,282 @@
-Return-Path: <linux-nfs+bounces-19677-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19678-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wEJ2NinrpmnjZgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19677-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 03 Mar 2026 15:07:37 +0100
+	id MMznIE/rpmnjZgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19678-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Mar 2026 15:08:15 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80BED1F10E8
-	for <lists+linux-nfs@lfdr.de>; Tue, 03 Mar 2026 15:07:37 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCAD91F111C
+	for <lists+linux-nfs@lfdr.de>; Tue, 03 Mar 2026 15:08:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 35E453041C89
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Mar 2026 14:00:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 99A053007A61
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Mar 2026 14:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D09336BCCF;
-	Tue,  3 Mar 2026 14:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2A735F5ED;
+	Tue,  3 Mar 2026 14:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2ANHMPvU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDB0noCF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672ED366046;
-	Tue,  3 Mar 2026 14:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF45F36405D
+	for <linux-nfs@vger.kernel.org>; Tue,  3 Mar 2026 14:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772546416; cv=none; b=U4Bs3q6Ktna2DHJ/QNYk3ogIzoG1mi5WnDBGJVKJBk7v3LpjNDLw7WJ83j3IjR7WzMlVU81IHjuX/ED92Ud/pRNHs3QGNFMgcGfEPCWtVjXo5CO/HKrUWTTC2z3eKef4DMCYfJjfte2aroVCQEevIg6H+8+mNyKtP2POYGtATbQ=
+	t=1772546861; cv=none; b=qLi6iN+4K6iHp8v/SJBuhlMHRn/4/oOyU/eDHG2ykp0o7oOQSpiPGwhrf/67/VHqRgfRCSLmEwSSxeNBmKeo3yf7EnNasHT9hGGLSAt+9LrvPKg5WX7AZJVgdLFhQG+cTfrNYvEOVqvL8bsGZVAEJEl9YdTbNwcZ2iMWO/SmIfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772546416; c=relaxed/simple;
-	bh=6cVtm8XqyQSVMwAybnkNYIPTy2c7NROxpTQLDmXGUDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MVY4yWlxwoI6NnxOQbDik1/p7sI9zKx/ToLtAsNBtoY3MgE4B31VF4EGBDuGLwLC5moWXN1HVHH+JgkkqqKsmijAj7oJTNjWJNf3R+QRkWLuBcW2J1NVBk29md9BzoxD6PlFojnXHCTF8cfqyXT7zd0/D0ar9pAWVwwYangXt8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=2ANHMPvU; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=oEZ/VbvFt7cbfXL60uAzuqwL1Xkzmb3tbb5L5pK1U5I=; b=2ANHMPvUqrwVZI/9ItBiSdTN6F
-	l8UfE7UMSvuHVZaJWhK09McBQCC5Aai6wPynwg24bukYeaGzQiK2R02Dq4Op8tWnLUmkN7XZ4ajfM
-	Le9GGPICxIH2eRNnZgTpAzJLkRC2JC1BgOkZOOC4aPxulPKDiAeWNkWlYYiPws1+XvyX4ORTgwCM5
-	U8CK5pP5X5qGQXNTHXXptzr7rmd2nNzFK6HNJZiuSvla56S2Wqhn5KBNWjoA9mRrXVtgSFTmyfqZY
-	Owt+6ulyfJRIOIinFxUHBEz425U0gcsijCxEc2D7tW+/wVqapcxIPHte6W40vmHC4FO8ERdb3AHRo
-	q5JRoAUg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxQHV-0000000FH1T-2Wa9;
-	Tue, 03 Mar 2026 13:59:25 +0000
-Date: Tue, 3 Mar 2026 05:59:25 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, Theodore Tso <tytso@mit.edu>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
+	s=arc-20240116; t=1772546861; c=relaxed/simple;
+	bh=UwehxMHrmwHSRNEekpwxr0PA0ZKFDi1e3KFwspH0cx4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mwoAigQ3RJmNilzVmGiMu/73uLBLPN0jhGwb9wvjAShl4fmcW8AuAESMLPUjfsxtzRCUFd0bqZQQSUUNrUrC1YLQCz8LjLPWy+0RSkz3uQuVyQWdNvMHpqMveMIjGlBQuVUhLkeGVj9wINAi6iX6WF9cjd4Vvj+UC0QMaJcMXD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDB0noCF; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8273e0fb87aso3126055b3a.1
+        for <linux-nfs@vger.kernel.org>; Tue, 03 Mar 2026 06:07:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772546859; x=1773151659; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qGn42rpsqVcew2iPbY1Z01ZsVFTS4vK/usD0Aqx9bko=;
+        b=BDB0noCFjax3JP13xxyOi5P7EUxHpT6hwrH7R0QW95IgZj1ChU9Y9WrQnQoV24zXg8
+         WATruYC7DnQGNdk6G6r7CSMpwg1fe6YT1J3lSIG54vnHX9ytgrnfkRmIiOq4UKt9TmP/
+         cbbZeaEkkMGoVIcScEV8tMv+BlSM3Rx3ER+wxk4VuxlZ8v90aQBn6iY4vI8AF0Fm+A3x
+         vqoTtNtMFd3qWHzzkqbvt1wzyvTtd7q84U2YnLnOFwfW1WKmauViXyg43ZTnW7uewbOk
+         tGBdWxSJHqRO8V/mesBr2y3F+rGWhg0YSxhLhIKRqvp8kISQ6GEeZVTrDenT6t1xBGIh
+         BolA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772546859; x=1773151659;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qGn42rpsqVcew2iPbY1Z01ZsVFTS4vK/usD0Aqx9bko=;
+        b=QNCW/DLWJ9UcBbaQataoRxaYVHYHa3JXQ1lyNmz4pjL2dQcuTNUdsWGidPC/u139WB
+         erU0mI7JCLv1WAYMOjONroZeZU7RzmHvsB57t5vPLW9DWME4JtEo49xLOmCKpXqyVeJu
+         kxKWdw+Q0O3A8ZEFjFH6BOc867+cSSg1naq/OUXHOS4pRYZ+AWF0T9qV2Bmt1pdVTbz6
+         QO0/P2Ro2gW8iMBZ9FcS4VCe8Fww/5hpspWeYSnaCXJS9aa9xKdYrdzuH+E/tlunlCc6
+         wYCqiyHdUKM4CtTLFXBm8fm/6lRJbax+vEaHUfKiVRxfnq3zJiw3oJEKvfvfMnG6S/Xi
+         jF+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWt+9B3dZ+XaAUrLozapRPzQvLL4HLhz5PrqVOzWJbhE8ypFFJWn6Avn+U1aIiZAD0l4jWGMXdtE+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNaWYvKVGIoXbRFPcjHPLlW4KJAANzadB8O2bqwd7sjJLOwDMy
+	C5xJ1PPNkee7VGAGNF0TLcw5/gV9ppsu/uOqpQUP5hR6ur62TDvIVEST
+X-Gm-Gg: ATEYQzzYWTyiSdhJ46MbKiVFZ8T1LJT8kfsIC2oAwx0eqcC1fWDRMz3voM30XUqatCX
+	peFUesCgI/q79/ywPREYdzbIZsCXNvFYIm6AApnRyuto/B/9u6X6rWUMOVZLrG/VtwAl8TVK8yJ
+	d+NLt2erI4o0uvKBszHVualH25um4MPduJW+LCDLPi5ytdyH+cAaG9llBSelKrbclbzwOcVEUzP
+	BCXs/DHIuZN9oKUnnC70YO0PvfJiP2Q1lXkrC9krB55M60iOBZFPRNfaquQ3g7tiZP5mXRSKjyu
+	b4hpUK2F925gsk0dpiueOtw7KKnSWt4T7OcfqFm+yg6cldViEEaIntsXlhn/BknnNLfkeGLqwVo
+	QfS4Fq+ghzt3zirdmav7D5Z7zODbmM4CLDYrc2lkTb37UEXVEpoobvxUN6PVJd+PyPJHNcKNg6R
+	HENuLlRZAvC0nZDPVlBLh7c//dx5ePqW6DBplyzcuqa5cs/oUxjteOMP0eSJM5wLnvtyXx
+X-Received: by 2002:a05:6a00:ab84:b0:81c:96b7:7faa with SMTP id d2e1a72fcca58-8274da12630mr14276407b3a.41.1772546858952;
+        Tue, 03 Mar 2026 06:07:38 -0800 (PST)
+Received: from sean-All-Series.. (1-160-230-14.dynamic-ip.hinet.net. [1.160.230.14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82739db3ab8sm16045781b3a.27.2026.03.03.06.07.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 06:07:38 -0800 (PST)
+From: Sean Chang <seanwascoding@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	David Laight <david.laight.linux@gmail.com>,
 	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Steve French <sfrench@samba.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	David Sterba <dsterba@suse.com>,
-	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	David Ahern <dsahern@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
-	audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
- format macro
-Message-ID: <aabpPQxCTweoTp8Z@infradead.org>
-References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
- <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
- <20260303012556.GA6520@macsyma-wired.lan>
- <20260303042546.GF13868@frogsfrogsfrogs>
- <33228005140684201de2ca0c157441d3b6a06413.camel@kernel.org>
- <aabkBadGzo7IZpSU@infradead.org>
- <19e4e79a59dcfc4c61c8cf263af345d0d7026fc8.camel@kernel.org>
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: netdev@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sean Chang <seanwascoding@gmail.com>
+Subject: [PATCH v2] sunrpc: simplify dprintk() macros and cleanup redundant debug guards
+Date: Tue,  3 Mar 2026 22:07:25 +0800
+Message-Id: <20260303140725.86260-1-seanwascoding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19e4e79a59dcfc4c61c8cf263af345d0d7026fc8.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Rspamd-Queue-Id: 80BED1F10E8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: BCAD91F111C
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,mit.edu,zeniv.linux.org.uk,suse.cz,goodmis.org,efficios.com,intel.com,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,yaina.de,holtmann.org,hartkopp.net,pengutronix.de,secunet.com,gondor.apana.org.au,fomichev.me,iogearbox.net,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,telemann.coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.
- linaro.org];
-	TAGGED_FROM(0.00)[bounces-19677-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[lunn.ch,oracle.com,gmail.com,kernel.org,intel.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[172];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-19678-lists,linux-nfs=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,infradead.org:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Tue, Mar 03, 2026 at 08:43:15AM -0500, Jeff Layton wrote:
-> On Tue, 2026-03-03 at 05:37 -0800, Christoph Hellwig wrote:
-> > On Tue, Mar 03, 2026 at 05:53:39AM -0500, Jeff Layton wrote:
-> > > Like I said to Ted, this is just temporary scaffolding for the change.
-> > > The PRIino macro is removed in the end. Given that, perhaps you can
-> > > overlook the bikeshed's color in this instance?
-> > 
-> > So why add it in the first place?  
-> 
-> Bisectability. The first version I did of this would have broken the
-> ability to bisect properly across these changes. I don't love the
-> "churn" here either, but this should be cleanly bisectable.
+Following David Laight's suggestion, simplify the macro definitions by
+removing the unnecessary 'fmt' argument and using no_printk(__VA_ARGS__)
+directly.
 
-What do you need to bisect in format string changes?  Splitting
-every variable type change outside of the main i_ino out - sure.
-But bisecting that "change to u64 in ext4" really broke ext4 and
-not "change to u64" is not very useful.  Commits should do one
-well defined thing.  Adding a weird transition layer for a format
-thing that just gets dropped is not one well defined thing.
+Verification with .lst files under -O2 confirms that the compiler
+successfully performs "dead code elimination". Even when variables
+(like char buf[] in nfsfh.c) or static helper functions (like
+nlmdbg_cookie2a() in svclock.c) are declared without #ifdef, they are
+completely optimized out (no stack allocation, no symbol references in
+the final executable) as they are only referenced within no_printk().
+
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Suggested-by: David Laight <david.laight.linux@gmail.com>
+Signed-off-by: Sean Chang <seanwascoding@gmail.com>
+---
+v2:
+ - Follow reversed xmas tree order for variables in svc_rdma_transport.c
+   as requested by Andy Shevchenko.
+ - Polish commit message: use dprintk() and remove redundant file list.
+ - Correct the technical claim about dprintk() type checking.
+
+ fs/lockd/svclock.c                       |  7 -------
+ fs/nfsd/nfsfh.c                          |  8 +++-----
+ include/linux/sunrpc/debug.h             |  8 ++------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c | 25 +++++++++++-------------
+ 4 files changed, 16 insertions(+), 32 deletions(-)
+
+diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+index ee23f5802af1..9b978a087b3c 100644
+--- a/fs/lockd/svclock.c
++++ b/fs/lockd/svclock.c
+@@ -47,7 +47,6 @@ static const struct rpc_call_ops nlmsvc_grant_ops;
+ static LIST_HEAD(nlm_blocked);
+ static DEFINE_SPINLOCK(nlm_blocked_lock);
+ 
+-#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+ {
+ 	/*
+@@ -74,12 +73,6 @@ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+ 
+ 	return buf;
+ }
+-#else
+-static inline const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+-{
+-	return "???";
+-}
+-#endif
+ 
+ /*
+  * Insert a blocked lock into the global list
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 68b629fbaaeb..91514326d1b4 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -105,12 +105,10 @@ static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+ {
+ 	/* Check if the request originated from a secure port. */
+ 	if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
+-		if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
+-			char buf[RPC_MAX_ADDRBUFLEN];
++		char buf[RPC_MAX_ADDRBUFLEN];
+ 
+-			dprintk("nfsd: request from insecure port %s!\n",
+-			        svc_print_addr(rqstp, buf, sizeof(buf)));
+-		}
++		dprintk("nfsd: request from insecure port %s!\n",
++			svc_print_addr(rqstp, buf, sizeof(buf)));
+ 		return nfserr_perm;
+ 	}
+ 
+diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
+index ab61bed2f7af..f6f2a106eeaf 100644
+--- a/include/linux/sunrpc/debug.h
++++ b/include/linux/sunrpc/debug.h
+@@ -38,8 +38,6 @@ extern unsigned int		nlm_debug;
+ do {									\
+ 	ifdebug(fac)							\
+ 		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+-	else								\
+-		no_printk(fmt, ##__VA_ARGS__);				\
+ } while (0)
+ 
+ # define dfprintk_rcu(fac, fmt, ...)					\
+@@ -48,15 +46,13 @@ do {									\
+ 		rcu_read_lock();					\
+ 		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+ 		rcu_read_unlock();					\
+-	} else {							\
+-		no_printk(fmt, ##__VA_ARGS__);				\
+ 	}								\
+ } while (0)
+ 
+ #else
+ # define ifdebug(fac)		if (0)
+-# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
+-# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
++# define dfprintk(fac, ...)		no_printk(__VA_ARGS__)
++# define dfprintk_rcu(fac, ...)	no_printk(__VA_ARGS__)
+ #endif
+ 
+ /*
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index f2d72181a6fe..0759444bda50 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -413,6 +413,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 	struct rpcrdma_connect_private pmsg;
+ 	struct ib_qp_init_attr qp_attr;
+ 	struct ib_device *dev;
++	struct sockaddr *sap;
+ 	int ret = 0;
+ 
+ 	listen_rdma = container_of(xprt, struct svcxprt_rdma, sc_xprt);
+@@ -559,20 +560,16 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		goto errout;
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
+-		struct sockaddr *sap;
+-
+-		dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
+-		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+-		dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
+-		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+-		dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
+-		dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
+-		dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
+-		dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
+-		dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
+-		dprintk("    ord             : %d\n", conn_param.initiator_depth);
+-	}
++	dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
++	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
++	dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
++	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
++	dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
++	dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
++	dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
++	dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
++	dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
++	dprintk("    ord             : %d\n", conn_param.initiator_depth);
+ 
+ 	return &newxprt->sc_xprt;
+ 
+-- 
+2.34.1
 
 
