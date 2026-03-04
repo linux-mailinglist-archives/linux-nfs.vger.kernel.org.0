@@ -1,496 +1,303 @@
-Return-Path: <linux-nfs+bounces-19719-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19720-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mK6fBdDFp2nTjgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19719-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 06:40:32 +0100
+	id SNPpDgvRp2l7kAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19720-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 07:28:27 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E0C1FAEBA
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 06:40:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 868E61FB205
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 07:28:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7136B314BB44
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 05:37:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8D7F33055D41
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 06:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B75937F720;
-	Wed,  4 Mar 2026 05:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6771D381B1F;
+	Wed,  4 Mar 2026 06:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dys2z8fA"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="QGqGuB1H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oyBs4Cid"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99637D133
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 05:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E557A37FF61;
+	Wed,  4 Mar 2026 06:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772602619; cv=none; b=Dv+Y9zjoVRdClWcuzUPn0Qjpl1MlwnSjAI4YpOyDJZR6aCGf5hTIBpAZgoAuoFlH0L9H7nze1ug2t6TueEU8YbUtzS830i+/gOK6uv8YEOAOcI3JBPrUqM8sQwPWjHlwCLRxkc5X0Z+RhdmpI+t06N0SlCdRQM5QJiJavizI0AE=
+	t=1772605679; cv=none; b=J+6lWQVeiOeom71q4u9g+OYBMoV2pDjpl0v1Ks1FxvqOP4Z6hAOL4gdS0QJzItwxf7BdEZpx9harDXba05CE/N4HVAJjtxkiO8lP+7kdKjpqY/cA8HrpPJ+xVNoTxuiz5zI2LZMC8wtyynO6iagrvTAdIv7/MtgrjG0oTs1Fmxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772602619; c=relaxed/simple;
-	bh=VW3M4SYeAYi3H4yI1kcS4akTS2EsE5+h2XWp6OqZeYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OTy4Rto5IB8oXaB50Dei9XMyVSAHkmJ861uIRtIQ5q5/VWlGKLX9Kp2pSiJ6X07U6b8Whjgcd2JCYyq6xE7VyqmAzsb8CVhzuHj6bKXs1GC+uTbmrOBy4Wqb3C3JFotcjBxNN9rE6B2mNETlNgAZ3IWjZbX2loYwWewzkd22hMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dys2z8fA; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-359866a1d02so2866572a91.0
-        for <linux-nfs@vger.kernel.org>; Tue, 03 Mar 2026 21:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772602617; x=1773207417; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZTos+cQe/JmZkdeA5lh2ZAdOl1XgvXlmqs7be9JqOns=;
-        b=dys2z8fAvIJVmsE6OI0DxZzNEZuPfwGoAAfxC5I95aP6pAD8t3JBpuxw1OmviEECfz
-         aQ1uMlZ7m9Nh1+hmnoKbzzt7LArJJVtECEt7iRhBzQ3rhToF73E2C/UA2XanPAcnSvkD
-         oBoeD8eEjqoHRhoIYDFj46MEAAhGDEj2mwSfHvPinsyMjL5JGs36/mRj2N5lqmBMAy77
-         oSIsw/5fF+Cqp4ifbMj4eGrGc255/QvHeQuFXpAUgIxu6xkpmQqwhp2dZwWZOqw4jvwB
-         Dqz7WtQ737e121XT8+nZP/525AhfCbFxAwBKQmLMWB3ClLKc9CHPq6Rz5tHQc7+vbubT
-         GObg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772602617; x=1773207417;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZTos+cQe/JmZkdeA5lh2ZAdOl1XgvXlmqs7be9JqOns=;
-        b=Cs3ZydmuyWgg35Ta9CpGmGW0TaJxGAnm/XjUXCsAYfh7oc2o1enFD1zITjtJ+kybhQ
-         90Z4ejmWLuyLVYG7gScoenLk1kWETBC2nP8IEAaIKfpIA7DE/LIxqjgDxlwEIkWB3fGW
-         5BMVbtyLMYnSqeP4g+Jbv8GQxbZW2ZyCl+oabBDLlP5FvDd4xl6bHKiwEM54UnS6Dda8
-         4qdmmdYxLCng4AqHbYN8wFCQQWRSjRDBBRBK/s+8eGZJLOYnSu0FdfR9zsqXWaL5vhvA
-         YWIetCUyTb27iFXPtiKhIgi7gobe9hhvLjkDx2O8Xbi1ebPZ2IIEKN7HlY9zevOw7RIB
-         /FbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8fwSV2+EkIE5w7CxHXJEJVVoCp91vaUqdfM3QU1yMyQ6FLTThuEIjRsEK5qEw4omStVX7iBpe/v0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJfa1ndS3YOOGeV0AkMm09AbI2mn0e9gcV2q95wQNlem85aTix
-	UcuS4pQ27tvAaygjEmyyhJZOEMvFnAcUAbDK/HL5SZAYelRAEcGuLMdx
-X-Gm-Gg: ATEYQzy3IswdnHebvcEbjwswLPkFpK3zp50Li2KyWlmqhi8jmD0gL7HwzzTqvaORNUe
-	UeLGf8V+LSb8Rue40rIvjgDnI47RnZsh37bjc2f7ulPGvVMVeMptLuHy+Mvmn25dhhFwvw6HZDy
-	OL77SaMrnaazpHyhalSei32PsRqSNd9qGW2Cgm6wthypbHmxGURj5/ovvMuI4Hd7zN5Fjc5NsAY
-	AW1AMPOSlV759RSGjAyIrrrd8VeLaPamtPbtxLVbBG+oFfHdnMTnzSvu9Euh/TvOaIQO90oV4Vu
-	oJnj0nG1cyq085jYJJHFz1+qLXBYZs1SKhIAhY19+DAOAZMo0pWDhEqfJSjmeX43dmiDUp9mJZy
-	A9piE4J4BZnrwv8dd1E5lyTnRFhqT2QWElSfOdR+TllSOsWxbECEKg3zSwLWLGqPagMeuD0923/
-	TXXUW/CoSs81KteCbr5en+tUXBmMOl3Qp66XidAHccwA==
-X-Received: by 2002:a17:90b:3c46:b0:354:bf10:e6a5 with SMTP id 98e67ed59e1d1-359a69c2310mr979466a91.10.1772602617080;
-        Tue, 03 Mar 2026 21:36:57 -0800 (PST)
-Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:6209:4521:6813:45b7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3599c090bfdsm4020057a91.8.2026.03.03.21.36.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2026 21:36:56 -0800 (PST)
-From: alistair23@gmail.com
-X-Google-Original-From: alistair.francis@wdc.com
-To: chuck.lever@oracle.com,
-	hare@kernel.org,
-	kernel-tls-handshake@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	linux-nfs@vger.kernel.org
-Cc: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	hare@suse.de,
-	alistair23@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v7 5/5] nvmet-tcp: Support KeyUpdate
-Date: Wed,  4 Mar 2026 15:35:00 +1000
-Message-ID: <20260304053500.590630-6-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260304053500.590630-1-alistair.francis@wdc.com>
-References: <20260304053500.590630-1-alistair.francis@wdc.com>
+	s=arc-20240116; t=1772605679; c=relaxed/simple;
+	bh=r4qocZurAwsI94u1up+Vdusek7Vi5253Hd7N48BDko4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=NNcPsvT/SXIPEaC4J9rxwf12NuytDrrqcJuzg+LZ+EV2yxDekV6ziDVjvYXWowAQF8SqD+7qLzzJ/BAw8ueSFGo+K6WT7nvMfgrKZ85JQBCtU9xj2ApDC1Qg6vvI94D5PcYufVWh/z9O8wGRzgIMp42t9t7ZSMDwNFIBcvt9LN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=QGqGuB1H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oyBs4Cid; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailflow.phl.internal (Postfix) with ESMTP id C99AF1380E87;
+	Wed,  4 Mar 2026 01:27:55 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Wed, 04 Mar 2026 01:27:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1772605675; x=1772612875; bh=5+RTgashw6751XVNDWQdZH+Q/6MhJxiaQle
+	0ycbNIPA=; b=QGqGuB1HfRnACei6sx6c+uNgMwLaYwouTEpFj2VP0mlDfEqPtRY
+	hq1PRy4CBOv70+oVSYpqqZpM0oM/LMhJunekgV3eBzmsgcDG0OI2C4tzloWCpVvl
+	4i3VE4LhXttp25s0ZK9pW3oyxGl321uWgHvjWqgL414piiUtcU8j/RBBg3lpxTfz
+	hyOETJnm1GZ3Vny7khF6LstdjtjpNA05Sn0+69teOfVwM8bTgFFfpYoCWjZ2d4gj
+	zJQVyFRZl/QUmgQAY8aclFxSMlCDdqzk+ns1JfsxU4GqHtILyAxxV1rlJifkZ7nV
+	XCXCXCRkAeoUwFwEPnGvyan/ZZjUaQt5PAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772605675; x=
+	1772612875; bh=5+RTgashw6751XVNDWQdZH+Q/6MhJxiaQle0ycbNIPA=; b=o
+	yBs4Cidn0fowkiQNkfBBbpvMteFnmb6KK9N9BnOLF7DAXMw7rLEfq8O8XkeXs0++
+	AItJEKwgOy6+J2k0jKmt5y/gjZkZygq6/z20y552PqK0SvgaS8EPmsW6WcRrV1pP
+	Cka6lApHFX3ajwbAqxHOCPa0WJuwpyjOxVf4rBBc72uzD/6CW2235GcM//0i19W8
+	7L5pQzsL0OaBqS4U5vUHJiQNiyzDfXHteA0Tj9OpC2tpQ91dxDiKNGlVpY+sXR+u
+	F/1B+M7f+72ADS4w6cTGLYwsrCBQ9Ty53UNfXLWsSJmwJfMdphzrO6855O9pzOSm
+	tL559XeFSYE02Ng/iW/iA==
+X-ME-Sender: <xms:4tCnaSNbDrQ_gxgn-FDSHw2lZNLRjN-bQWFxNuyRrlsjf6GtgESQmg>
+    <xme:4tCnacDbxasyEcYHsybPZFFbKL0qOs4hHCyDZ8PnwLz-6RsB4wLBwEgkGnXcsPOlZ
+    vDBEl8eoy7hp-6BzaC204ogbJpjXhIDJYl7RZzbFer_2uIshg>
+X-ME-Received: <xmr:4tCnaYoX3ksWGbwPjYXqqxsqc0TduUwk20wMvX7c0reLYwrKoLdGz80eJTir0A1PtkE58RYexQ3nSkgmperFT043a9PjJpOJNYr5279CEe3n>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddviedvjeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtjeertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epudetfefhudevhedvfeeufedvffekveekgfdtfefggfekheejgefhteeihffggfelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepudejuddpmhhouggvpehsmhht
+    phhouhhtpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukh
+    dprhgtphhtthhopehjrhgvuhhtvghrseihrghinhgrrdguvgdprhgtphhtthhopehnrgho
+    hhhirhhordgrohhtrgesfigutgdrtghomhdprhgtphhtthhopehfrhgrnhhkrdhlihesvh
+    hivhhordgtohhmpdhrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheplhhinhhugidqgidvheesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:4tCnaVnhO8CafOSbZVc9pJUxfys9OoZeY1Z5ndlwHjH7CSajOCGlDw>
+    <xmx:4tCnafRh4kpYARpWLK-yCUUMUT7nS6ebAyXQDsGD0JLDF2Tv3K7JJQ>
+    <xmx:4tCnac5DU4GRJRJMC10qjpWx3MESrDXeWNEaJqiwQejNUX5p7MDMMw>
+    <xmx:4tCnaZg3__L3okNus_55Ab1m3xjLlY3uKakknX-vQwxPKM6XDQv_Ng>
+    <xmx:69CnafTUulKHVEiWHbvsFlAmyCSQisz6ZPFKNRFf-ai8k8007x9TdQYK>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 4 Mar 2026 01:27:03 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A4E0C1FAEBA
+From: NeilBrown <neilb@ownmail.net>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "David Howells" <dhowells@redhat.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Matthew Wilcox" <willy@infradead.org>,
+ "Eric Biggers" <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Oscar Salvador" <osalvador@suse.de>,
+ "David Hildenbrand" <david@kernel.org>,
+ "Paulo Alcantara" <pc@manguebit.org>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Steve French" <sfrench@samba.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Bharath SM" <bharathsm@microsoft.com>,
+ "Alexander Aring" <alex.aring@gmail.com>,
+ "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>,
+ "Eric Van Hensbergen" <ericvh@kernel.org>,
+ "Latchesar Ionkov" <lucho@ionkov.net>,
+ "Dominique Martinet" <asmadeus@codewreck.org>,
+ "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+ "David Sterba" <dsterba@suse.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>, "Ian Kent" <raven@themaw.net>,
+ "Luis de Bethencourt" <luisbg@kernel.org>,
+ "Salah Triki" <salah.triki@gmail.com>,
+ "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ "Ilya Dryomov" <idryomov@gmail.com>,
+ "Alex Markuze" <amarkuze@redhat.com>, "Jan Harkes" <jaharkes@cs.cmu.edu>,
+ coda@cs.cmu.edu, "Nicolas Pitre" <nico@fluxnic.net>,
+ "Tyler Hicks" <code@tyhicks.com>, "Amir Goldstein" <amir73il@gmail.com>,
+ "Christoph Hellwig" <hch@infradead.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Yangtao Li" <frank.li@vivo.com>,
+ "Mikulas Patocka" <mikulas@artax.karlin.mff.cuni.cz>,
+ "David Woodhouse" <dwmw2@infradead.org>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Dave Kleikamp" <shaggy@kernel.org>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
+ "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>, "Anders Larsen" <al@alarsen.net>,
+ "Zhihao Cheng" <chengzhihao1@huawei.com>,
+ "Damien Le Moal" <dlemoal@kernel.org>,
+ "Naohiro Aota" <naohiro.aota@wdc.com>,
+ "Johannes Thumshirn" <jth@kernel.org>,
+ "John Johansen" <john.johansen@canonical.com>,
+ "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, "Mimi Zohar" <zohar@linux.ibm.com>,
+ "Roberto Sassu" <roberto.sassu@huawei.com>,
+ "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>,
+ "Eric Snowberg" <eric.snowberg@oracle.com>, "Fan Wu" <wufan@kernel.org>,
+ "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+ "Ondrej Mosnacek" <omosnace@redhat.com>,
+ "Casey Schaufler" <casey@schaufler-ca.com>,
+ "Alex Deucher" <alexander.deucher@amd.com>,
+ Christian =?utf-8?q?K=C3=B6nig?= <christian.koenig@amd.com>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Sumit Semwal" <sumit.semwal@linaro.org>,
+ "Eric Dumazet" <edumazet@google.com>,
+ "Kuniyuki Iwashima" <kuniyu@google.com>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Willem de Bruijn" <willemb@google.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Simon Horman" <horms@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>,
+ "Adrian Hunter" <adrian.hunter@intel.com>,
+ "James Clark" <james.clark@linaro.org>,
+ "Darrick J. Wong" <djwong@kernel.org>, "Martin Schiller" <ms@dev.tdt.de>,
+ "Eric Paris" <eparis@redhat.com>, "Joerg Reuter" <jreuter@yaina.de>,
+ "Marcel Holtmann" <marcel@holtmann.org>,
+ "Johan Hedberg" <johan.hedberg@gmail.com>,
+ "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
+ "Oliver Hartkopp" <socketcan@hartkopp.net>,
+ "Marc Kleine-Budde" <mkl@pengutronix.de>,
+ "David Ahern" <dsahern@kernel.org>,
+ "Neal Cardwell" <ncardwell@google.com>,
+ "Steffen Klassert" <steffen.klassert@secunet.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Remi Denis-Courmont" <courmisch@gmail.com>,
+ "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>,
+ "Xin Long" <lucien.xin@gmail.com>,
+ "Magnus Karlsson" <magnus.karlsson@intel.com>,
+ "Maciej Fijalkowski" <maciej.fijalkowski@intel.com>,
+ "Stanislav Fomichev" <sdf@fomichev.me>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+ linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+ v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+ autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+ linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+ ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
+ audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
+ bpf@vger.kernel.org
+Subject:
+ Re: [PATCH v2 000/110] vfs: change inode->i_ino from unsigned long to u64
+In-reply-to: <1c28e34c7167acf4e20c3e201476504135aa44e8.camel@kernel.org>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>,
+ <1787281.1772535332@warthog.procyon.org.uk>,
+ <1c28e34c7167acf4e20c3e201476504135aa44e8.camel@kernel.org>
+Date: Wed, 04 Mar 2026 17:26:59 +1100
+Message-id: <177260561903.7472.14075475865748618717@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
+X-Rspamd-Queue-Id: 868E61FB205
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19719-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,kernel.dk,lst.de,grimberg.me,nvidia.com,suse.de,gmail.com,wdc.com];
+	TAGGED_FROM(0.00)[bounces-19720-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,zeniv.linux.org.uk,kernel.org,suse.cz,goodmis.org,efficios.com,intel.com,infradead.org,mit.edu,linux.dev,suse.de,manguebit.org,dilger.ca,suse.com,oracle.com,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,yaina.de,holtmann.org,hartkopp.net,pengutronix.de,secunet.com,gondor.apana.org.au,fomichev.me,iogearbox.net,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.linaro.org];
+	FREEMAIL_FROM(0.00)[ownmail.net];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FROM_NO_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alistair23@gmail.com,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_GT_50(0.00)[171];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.de:email,ietf.org:url,wdc.com:mid,wdc.com:email,lst.de:email]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,brown.name:replyto,noble.neil.brown.name:mid]
 X-Rspamd-Action: no action
 
-From: Alistair Francis <alistair.francis@wdc.com>
+On Tue, 03 Mar 2026, Jeff Layton wrote:
+> On Tue, 2026-03-03 at 10:55 +0000, David Howells wrote:
+> > Jeff Layton <jlayton@kernel.org> wrote:
+> > 
+> > > This version splits the change up to be more bisectable. It first adds a
+> > > new kino_t typedef and a new "PRIino" macro to hold the width specifier
+> > > for format strings. The conversion is done, and then everything is
+> > > changed to remove the new macro and typedef.
+> > 
+> > Why remove the typedef?  It might be better to keep it.
+> > 
+> 
+> Why? After this change, internel kernel inodes will be u64's -- full
+> stop. I don't see what the macro or typedef will buy us at that point.
 
-If the nvmet_tcp_try_recv() function return EKEYEXPIRED or if we receive
-a KeyUpdate handshake type then the underlying TLS keys need to be
-updated.
+Implicit documentation?
+ktime_t is (now) always s64, but we still keep the typedef;
 
-If the NVMe Host (TLS client) initiates a KeyUpdate this patch will
-allow the NVMe layer to process the KeyUpdate request and forward the
-request to userspace. Userspace must then update the key to keep the
-connection alive.
+It would be cool if we could teach vsprintf to understand some new
+specifier to mean "kinode_t" or "ktime_t" etc.  But that would trigger
+gcc warnings.
 
-This patch allows us to handle the NVMe host sending a KeyUpdate
-request without aborting the connection. At this time we don't support
-initiating a KeyUpdate.
-
-Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
-v7:
- - No change
-v6:
- - Simplify the nvmet_tls_key_expired() check
-v5:
- - No change
-v4:
- - Restructure code to avoid #ifdefs and forward declarations
- - Use a helper function for checking -EKEYEXPIRED
- - Remove all support for initiating KeyUpdate
- - Use helper function for restoring callbacks
-v3:
- - Use a write lock for sk_user_data
- - Fix build with CONFIG_NVME_TARGET_TCP_TLS disabled
- - Remove unused variable
-v2:
- - Use a helper function for KeyUpdates
- - Ensure keep alive timer is stopped
- - Wait for TLS KeyUpdate to complete
-
- drivers/nvme/target/tcp.c | 200 ++++++++++++++++++++++++++------------
- 1 file changed, 139 insertions(+), 61 deletions(-)
-
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 7f1c651a52a4..d1937fe7a0d2 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -175,6 +175,7 @@ struct nvmet_tcp_queue {
- 
- 	/* TLS state */
- 	key_serial_t		tls_pskid;
-+	key_serial_t		handshake_session_id;
- 	struct delayed_work	tls_handshake_tmo_work;
- 
- 	unsigned long           poll_end;
-@@ -186,6 +187,8 @@ struct nvmet_tcp_queue {
- 	struct sockaddr_storage	sockaddr_peer;
- 	struct work_struct	release_work;
- 
-+	struct completion       tls_complete;
-+
- 	int			idx;
- 	struct list_head	queue_list;
- 
-@@ -214,6 +217,10 @@ static struct workqueue_struct *nvmet_tcp_wq;
- static const struct nvmet_fabrics_ops nvmet_tcp_ops;
- static void nvmet_tcp_free_cmd(struct nvmet_tcp_cmd *c);
- static void nvmet_tcp_free_cmd_buffers(struct nvmet_tcp_cmd *cmd);
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
-+				   enum handshake_key_update_type keyupdate);
-+#endif
- 
- static inline u16 nvmet_tcp_cmd_tag(struct nvmet_tcp_queue *queue,
- 		struct nvmet_tcp_cmd *cmd)
-@@ -848,6 +855,20 @@ static int nvmet_tcp_try_send_one(struct nvmet_tcp_queue *queue,
- 	return 1;
- }
- 
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+static bool nvmet_tls_key_expired(struct nvmet_tcp_queue *queue, int ret)
-+{
-+	return ret == -EKEYEXPIRED &&
-+		queue->state != NVMET_TCP_Q_DISCONNECTING &&
-+		queue->state != NVMET_TCP_Q_TLS_HANDSHAKE;
-+}
-+#else
-+static bool nvmet_tls_key_expired(struct nvmet_tcp_queue *queue, int ret)
-+{
-+	return false;
-+}
-+#endif
-+
- static int nvmet_tcp_try_send(struct nvmet_tcp_queue *queue,
- 		int budget, int *sends)
- {
-@@ -1134,6 +1155,103 @@ static inline bool nvmet_tcp_pdu_valid(u8 type)
- 	return false;
- }
- 
-+static void nvmet_tcp_release_queue(struct kref *kref)
-+{
-+	struct nvmet_tcp_queue *queue =
-+		container_of(kref, struct nvmet_tcp_queue, kref);
-+
-+	WARN_ON(queue->state != NVMET_TCP_Q_DISCONNECTING);
-+	queue_work(nvmet_wq, &queue->release_work);
-+}
-+
-+static void nvmet_tcp_schedule_release_queue(struct nvmet_tcp_queue *queue)
-+{
-+	spin_lock_bh(&queue->state_lock);
-+	if (queue->state == NVMET_TCP_Q_TLS_HANDSHAKE) {
-+		/* Socket closed during handshake */
-+		tls_handshake_cancel(queue->sock->sk);
-+	}
-+	if (queue->state != NVMET_TCP_Q_DISCONNECTING) {
-+		queue->state = NVMET_TCP_Q_DISCONNECTING;
-+		kref_put(&queue->kref, nvmet_tcp_release_queue);
-+	}
-+	spin_unlock_bh(&queue->state_lock);
-+}
-+
-+static void nvmet_tcp_restore_socket_callbacks(struct nvmet_tcp_queue *queue)
-+{
-+	struct socket *sock = queue->sock;
-+
-+	if (!queue->state_change)
-+		return;
-+
-+	write_lock_bh(&sock->sk->sk_callback_lock);
-+	sock->sk->sk_data_ready =  queue->data_ready;
-+	sock->sk->sk_state_change = queue->state_change;
-+	sock->sk->sk_write_space = queue->write_space;
-+	sock->sk->sk_user_data = NULL;
-+	write_unlock_bh(&sock->sk->sk_callback_lock);
-+}
-+
-+#ifdef CONFIG_NVME_TARGET_TCP_TLS
-+static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w)
-+{
-+	struct nvmet_tcp_queue *queue = container_of(to_delayed_work(w),
-+			struct nvmet_tcp_queue, tls_handshake_tmo_work);
-+
-+	pr_warn("queue %d: TLS handshake timeout\n", queue->idx);
-+	/*
-+	 * If tls_handshake_cancel() fails we've lost the race with
-+	 * nvmet_tcp_tls_handshake_done() */
-+	if (!tls_handshake_cancel(queue->sock->sk))
-+		return;
-+	spin_lock_bh(&queue->state_lock);
-+	if (WARN_ON(queue->state != NVMET_TCP_Q_TLS_HANDSHAKE)) {
-+		spin_unlock_bh(&queue->state_lock);
-+		return;
-+	}
-+	queue->state = NVMET_TCP_Q_FAILED;
-+	spin_unlock_bh(&queue->state_lock);
-+	nvmet_tcp_schedule_release_queue(queue);
-+	kref_put(&queue->kref, nvmet_tcp_release_queue);
-+}
-+
-+static int update_tls_keys(struct nvmet_tcp_queue *queue)
-+{
-+	int ret;
-+
-+	cancel_work(&queue->io_work);
-+	queue->state = NVMET_TCP_Q_TLS_HANDSHAKE;
-+
-+	nvmet_tcp_restore_socket_callbacks(queue);
-+
-+	INIT_DELAYED_WORK(&queue->tls_handshake_tmo_work,
-+			  nvmet_tcp_tls_handshake_timeout);
-+
-+	ret = nvmet_tcp_tls_handshake(queue, HANDSHAKE_KEY_UPDATE_TYPE_RECEIVED);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = wait_for_completion_interruptible_timeout(&queue->tls_complete,
-+							10 * HZ);
-+
-+	if (ret <= 0) {
-+		tls_handshake_cancel(queue->sock->sk);
-+		return ret;
-+	}
-+
-+	queue->state = NVMET_TCP_Q_LIVE;
-+
-+	return 0;
-+}
-+#else
-+static int update_tls_keys(struct nvmet_tcp_queue *queue)
-+{
-+	return -EPFNOSUPPORT;
-+}
-+#endif
-+
- static int nvmet_tcp_tls_record_ok(struct nvmet_tcp_queue *queue,
- 		struct msghdr *msg, char *cbuf)
- {
-@@ -1159,6 +1277,9 @@ static int nvmet_tcp_tls_record_ok(struct nvmet_tcp_queue *queue,
- 			ret = -EAGAIN;
- 		}
- 		break;
-+	case TLS_RECORD_TYPE_HANDSHAKE:
-+		ret = -EAGAIN;
-+		break;
- 	default:
- 		/* discard this record type */
- 		pr_err("queue %d: TLS record %d unhandled\n",
-@@ -1368,6 +1489,8 @@ static int nvmet_tcp_try_recv(struct nvmet_tcp_queue *queue,
- 	for (i = 0; i < budget; i++) {
- 		ret = nvmet_tcp_try_recv_one(queue);
- 		if (unlikely(ret < 0)) {
-+			if (nvmet_tls_key_expired(queue, ret))
-+					goto done;
- 			nvmet_tcp_socket_error(queue, ret);
- 			goto done;
- 		} else if (ret == 0) {
-@@ -1379,29 +1502,6 @@ static int nvmet_tcp_try_recv(struct nvmet_tcp_queue *queue,
- 	return ret;
- }
- 
--static void nvmet_tcp_release_queue(struct kref *kref)
--{
--	struct nvmet_tcp_queue *queue =
--		container_of(kref, struct nvmet_tcp_queue, kref);
--
--	WARN_ON(queue->state != NVMET_TCP_Q_DISCONNECTING);
--	queue_work(nvmet_wq, &queue->release_work);
--}
--
--static void nvmet_tcp_schedule_release_queue(struct nvmet_tcp_queue *queue)
--{
--	spin_lock_bh(&queue->state_lock);
--	if (queue->state == NVMET_TCP_Q_TLS_HANDSHAKE) {
--		/* Socket closed during handshake */
--		tls_handshake_cancel(queue->sock->sk);
--	}
--	if (queue->state != NVMET_TCP_Q_DISCONNECTING) {
--		queue->state = NVMET_TCP_Q_DISCONNECTING;
--		kref_put(&queue->kref, nvmet_tcp_release_queue);
--	}
--	spin_unlock_bh(&queue->state_lock);
--}
--
- static inline void nvmet_tcp_arm_queue_deadline(struct nvmet_tcp_queue *queue)
- {
- 	queue->poll_end = jiffies + usecs_to_jiffies(idle_poll_period_usecs);
-@@ -1432,8 +1532,12 @@ static void nvmet_tcp_io_work(struct work_struct *w)
- 		ret = nvmet_tcp_try_recv(queue, NVMET_TCP_RECV_BUDGET, &ops);
- 		if (ret > 0)
- 			pending = true;
--		else if (ret < 0)
-+		else if (ret < 0) {
-+			if (ret == -EKEYEXPIRED)
-+				break;
-+
- 			return;
-+		}
- 
- 		ret = nvmet_tcp_try_send(queue, NVMET_TCP_SEND_BUDGET, &ops);
- 		if (ret > 0)
-@@ -1443,6 +1547,11 @@ static void nvmet_tcp_io_work(struct work_struct *w)
- 
- 	} while (pending && ops < NVMET_TCP_IO_WORK_BUDGET);
- 
-+	if (ret == -EKEYEXPIRED) {
-+		update_tls_keys(queue);
-+		pending = true;
-+	}
-+
- 	/*
- 	 * Requeue the worker if idle deadline period is in progress or any
- 	 * ops activity was recorded during the do-while loop above.
-@@ -1545,21 +1654,6 @@ static void nvmet_tcp_free_cmds(struct nvmet_tcp_queue *queue)
- 	kvfree(cmds);
- }
- 
--static void nvmet_tcp_restore_socket_callbacks(struct nvmet_tcp_queue *queue)
--{
--	struct socket *sock = queue->sock;
--
--	if (!queue->state_change)
--		return;
--
--	write_lock_bh(&sock->sk->sk_callback_lock);
--	sock->sk->sk_data_ready =  queue->data_ready;
--	sock->sk->sk_state_change = queue->state_change;
--	sock->sk->sk_write_space = queue->write_space;
--	sock->sk->sk_user_data = NULL;
--	write_unlock_bh(&sock->sk->sk_callback_lock);
--}
--
- static void nvmet_tcp_uninit_data_in_cmds(struct nvmet_tcp_queue *queue)
- {
- 	struct nvmet_tcp_cmd *cmd = queue->cmds;
-@@ -1822,6 +1916,7 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
- 	}
- 	if (!status) {
- 		queue->tls_pskid = peerid;
-+		queue->handshake_session_id = handshake_session_id;
- 		queue->state = NVMET_TCP_Q_CONNECTING;
- 	} else
- 		queue->state = NVMET_TCP_Q_FAILED;
-@@ -1837,28 +1932,7 @@ static void nvmet_tcp_tls_handshake_done(void *data, int status,
- 	else
- 		nvmet_tcp_set_queue_sock(queue);
- 	kref_put(&queue->kref, nvmet_tcp_release_queue);
--}
--
--static void nvmet_tcp_tls_handshake_timeout(struct work_struct *w)
--{
--	struct nvmet_tcp_queue *queue = container_of(to_delayed_work(w),
--			struct nvmet_tcp_queue, tls_handshake_tmo_work);
--
--	pr_warn("queue %d: TLS handshake timeout\n", queue->idx);
--	/*
--	 * If tls_handshake_cancel() fails we've lost the race with
--	 * nvmet_tcp_tls_handshake_done() */
--	if (!tls_handshake_cancel(queue->sock->sk))
--		return;
--	spin_lock_bh(&queue->state_lock);
--	if (WARN_ON(queue->state != NVMET_TCP_Q_TLS_HANDSHAKE)) {
--		spin_unlock_bh(&queue->state_lock);
--		return;
--	}
--	queue->state = NVMET_TCP_Q_FAILED;
--	spin_unlock_bh(&queue->state_lock);
--	nvmet_tcp_schedule_release_queue(queue);
--	kref_put(&queue->kref, nvmet_tcp_release_queue);
-+	complete(&queue->tls_complete);
- }
- 
- static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
-@@ -1880,11 +1954,15 @@ static int nvmet_tcp_tls_handshake(struct nvmet_tcp_queue *queue,
- 	args.ta_data = queue;
- 	args.ta_keyring = key_serial(queue->port->nport->keyring);
- 	args.ta_timeout_ms = tls_handshake_timeout * 1000;
-+	args.ta_handshake_session_id = queue->handshake_session_id;
-+
-+	init_completion(&queue->tls_complete);
- 
- 	if (keyupdate == HANDSHAKE_KEY_UPDATE_TYPE_UNSPEC)
- 		ret = tls_server_hello_psk(&args, GFP_KERNEL);
- 	else
- 		ret = tls_server_keyupdate_psk(&args, GFP_KERNEL, keyupdate);
-+
- 	if (ret) {
- 		kref_put(&queue->kref, nvmet_tcp_release_queue);
- 		pr_err("failed to start TLS, err=%d\n", ret);
--- 
-2.53.0
-
+NeilBrown
 
