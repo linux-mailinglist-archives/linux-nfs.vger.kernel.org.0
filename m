@@ -1,225 +1,191 @@
-Return-Path: <linux-nfs+bounces-19759-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19760-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YPsjEhNOqGlbtAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19759-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 16:21:55 +0100
+	id aLw9Ko1RqGnUtAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19760-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 16:36:45 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A90A2028B6
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 16:21:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17B25202E60
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 16:36:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 16354308BCEF
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 15:15:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9B34E3070DD2
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 15:28:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BEEB24676D;
-	Wed,  4 Mar 2026 15:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27B8933F8B1;
+	Wed,  4 Mar 2026 15:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7mD8yPW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuHkQCV/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C1C1A6819;
-	Wed,  4 Mar 2026 15:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772637331; cv=none; b=NuaYKuYiK5ncA/IE81JVm6GmuDrUAZNF3nLFjTQBRrHM4pldxgZNt+ZNFAGf/vMCNj90LTXDX4rp8YU/XkKjhLLe+KI+0QXZhaHC6xf7JjC2qJ4kJZI2Ecs1s1d5v85je0bnRm8HvIcz150hoZO+6nELUhu7K8MA1X+IE+XOUEg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772637331; c=relaxed/simple;
-	bh=pbOvXCEKkljl0nZLh4tnepkT3i2IOCwHhGwSKDWqiJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tghLzR/7cb429YZGaFEr5X0RPBi8zjeHimOhQplINhROPkt465sEcj1xL9m5QAFBWfvCkN8p8/bTtCDg4prSEBxg98bPSxiOxV4fJi5ZF5/M40vHly11hqf4wyCVH7Mo4llZK04Ut+AlgPE5r4zvW+R2i3UXY3tZPKXbbSt3ULg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7mD8yPW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F185C4CEF7;
-	Wed,  4 Mar 2026 15:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772637331;
-	bh=pbOvXCEKkljl0nZLh4tnepkT3i2IOCwHhGwSKDWqiJE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P7mD8yPWVmoBcNL+ijGmQzbYjbp7FqU4magnqIBXvJoCeyZU9cTHUF2mRPSq7rQLw
-	 Kzn809Nb7227Gan1PVM5fON3v3kN5P2idvbwzIOdxozk0H5PUGmkDCdmGWuJXzzknO
-	 XQ0aQP6nx3mRujkArqadY9BSKdYE6Q6r+EuvwGKrMEW6hD7rTX5f6QLAF71Zs5SFRp
-	 JO96Z+QXzMTCDrTZJ1SzBLlmiT6HA2VDPvsenBbEpQ53JfQdKLx0kRBSD5tFX9r1Od
-	 XyGPIjxehi0YQG8ealSNWQuipLT9R7EmjqYg6/ldfpuXSRUcjoQZ0UTrJNACGc3808
-	 ppevVtBViPbnA==
-Message-ID: <09872553-f271-4d7f-99d0-1defbd99db81@kernel.org>
-Date: Wed, 4 Mar 2026 10:15:29 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4CA33BBBD
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 15:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772638137; cv=pass; b=JqKmxf/OH+khAlvxyiLWxjUgO37/v7yA1g60qyB+O+RGQBa1IZt/dktpDaWs/KHUZP/tbZfmUYnv9JymBjt0BtJ10244oir94/FYFh9IsGvAHsni0Ja26uA6Sf35L3bO+qQnAFuLxmguxzRJE7LeNlwvLoYPAZAAmCB19YWEXAc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772638137; c=relaxed/simple;
+	bh=QXgnaupTOR4EHZcvNrR8+mOFrNjx7Wk4vmJzGUnHFLY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ev3wq8Qslk2wGHZo9RJa1Ga3mLgiEgyMUOJoKkrjFtEkIiTOWBh8MLfEKgJic3R1lu7XsiNQsnwrN2tIXNyxkiajXMGMBmMkmLa2Iwgjm2lvLEnh6XwSbg8KeUIjr4JleDzo+OCb8NhSc2gLx/ZwVlNoOW8AZ4ZXd/4xlUXp/zI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UuHkQCV/; arc=pass smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-65f8c8c3a4aso12898194a12.2
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Mar 2026 07:28:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772638134; cv=none;
+        d=google.com; s=arc-20240605;
+        b=fm7SDmRa1tbmfbgaDAp/AfPEmcLbiFfWXbF55DApJ5evMLYu+ZkcFdE/TyRts6w51+
+         hO4kTjet92UXfno2hI3oHT/2NquheajrxDSYVoEldMbQqtxyGX8P7rzQzA49C9aHMv4+
+         KmxFRbKHbSwJEcbd/T5NgKlOcW8ZuCP04ED4giEohuDYgfNWeDf/NwCdBsIug6J+bzS3
+         gOUvRqwFSjUm9O2ctmi7gvqd0IEpMVwAaSCbCsAq2iJCtuRgytDAj8vReVoUU3A/TOUJ
+         NPjhnQBZQKhxRYCeqkjaY7uBbLMyQDcpWqMC1fdwY1QaPZIHKKoRR0bbTSPKMofMvczS
+         7jsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=QXgnaupTOR4EHZcvNrR8+mOFrNjx7Wk4vmJzGUnHFLY=;
+        fh=ObPFx+Ti/juY6zdO4o3zszejDrmS04OF/TYUxjstWpI=;
+        b=WbBwgV10f+pwhJHPd2tMjw5PCxveeeH0peRNM0UYu9HPOorYlmOPtvl/z8ewGmiPlE
+         NoKHywInbz8b/ZcOatQTc79D/lXZIKhn5F5c/N3k17Z3ln+KBxEF9kJW3TIqLGaum1ho
+         CFFSfZE6cNGT/49K6UV8C5i53nTkdqvYi57TvRC5kdEZDOd97I3ycFJ3uGriEKyYGYIh
+         wWAD/ea8NZSkdC26Tk8xNk8ulrWDI6Usj9+fn6V1bcU0NsZrCgoJ5E21axdF4l8XFq0d
+         FVmn0tzWN6Qt/foOQhNz0orOmktwjfen8TG0ULeGu4VTRqsMldJU3o5x19hLGhJgB1tp
+         7qjA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772638134; x=1773242934; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QXgnaupTOR4EHZcvNrR8+mOFrNjx7Wk4vmJzGUnHFLY=;
+        b=UuHkQCV/N9gktZmi72dOdADRFYWr8FJD6dEYo9ZxSWD254FAbWMxTMZNFUiRrxNdYC
+         hDoP/8pbzZrGvbFdjzWAhfx3yXP47oZsgdQAqZSOS9nQvqERHJNx00yniKqrq9pE4er+
+         QXeWKfH0hNwXcgU24K8rhoOaGLBGEz+ckUpjVEEbEyejr/Z7TAg2pRxAOsSVRxU/pzhS
+         baHFDyZ51f7kGX9hsQHBwhY0inGmO3CXJIkFCvlcGYLGHUzw54RxpxXwFeRxe1/7phE5
+         yvChzMrvtgLeEdjrRP4gR6lPsfc2rHn/Ep+d/58SPB1TeZ4DF4PSeTBLr8u2ZVilicyx
+         S89Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772638134; x=1773242934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QXgnaupTOR4EHZcvNrR8+mOFrNjx7Wk4vmJzGUnHFLY=;
+        b=q+/9NHPGvk/JQfVugNNwCsMA2aWrmAtzjM6mDbci3F2fM+3LwAAgIdkplqlSW7TfIa
+         qi60fLa16MwsrQVkL0wpJY+dz/tv2XsLzmDkrZuA4FLbYMPkz8BMJJsW/mdkWYBvtrqm
+         abSPqjkUPCZ11IrCmtDhSnS6ZR6vQtnbhjAM9oJh1+EyYs8vOx1ke5IHlTYuMJlHjvuD
+         JmqZ5nSmMezffenw3TKTQl721HJd+ylz5cALrHtSOdiCQWOg0FSezVb7cPHE4K7ckOPw
+         aeV+muUoul9DJRHprnSkgPolEZvXeET62U54N0wwikDBMrw9LkmyetMtDZ3wlqUlMLjl
+         2+FA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4XgbT7SRjeT/Gqu42pkmep9STATQ57wSm+vp/ZEOENxmc4CGSTAba/dBaPgXIg1odGrRBVxB8mNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy8unEDBr0YflAH7c2wAc00cL21MXWLYN/XArT++rhD+537bW2
+	WTSL0xdLz5dcvEivuXxkBAFfoRij+id80MKku1PkNnpRZeHGqLWgtifmM7vbNwuN3L7oLN5R4yy
+	0jg+kTLCj4ChU8JzK4UqFMWcGN9c0cSg=
+X-Gm-Gg: ATEYQzy/OrT94T++mBvymDWgSb6C8PhzxiaujmgBIB1d970rfmXQbaVzlBo0mUBcf0m
+	fuWfN9JmMZZUc5YJnRGpZ3NzHtMQ0lv7aazMnq7x49Jxp4fbYDDpSsdlBcjXhz3qzfiXBZiPkxt
+	1M1DKd0NkXlxOnWLPz/j6VtO8Di9byKQLaGaNIE654eYMInXB7tVuLvsk0BBJwPIHSLICBJTwGe
+	0M/6qvMb+n20zcgHWLsUTvVxPcsY7+7pmYMTY3ljQKwVgxme6bSMFSNiby0Yn5CCbBW9b9nEjfJ
+	eOoNDfgz25cFuX635R29NbjUxritw+Xoifnrxcuo
+X-Received: by 2002:a17:906:fe07:b0:b93:edc0:e2e8 with SMTP id
+ a640c23a62f3a-b93f159439fmr173698266b.48.1772638133729; Wed, 04 Mar 2026
+ 07:28:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
- unmount notification
-To: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, NeilBrown <neil@brown.name>,
- Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.com>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>
- <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>
- <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>
- <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
- <177242454307.7472.11164903103911826962@noble.neil.brown.name>
- <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
- <3r5imygq5ah4khza5fsbgam6ss6ohla24p4ikmbpfpjoj4qmns@f6bw344w4axz>
- <74db1cb73ef8571e2e38187b668a83d28e19933b.camel@kernel.org>
- <2fdaxflmm7hottalnc3wbyzvjp4i5cd6etyvgzq4v3oktfwuuf@spgdoi45urqd>
- <d65b010cec3df6d999becf8afb3186d2a101a369.camel@kernel.org>
- <20260304-lagebericht-narrte-a85cfc96fffd@brauner>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <20260304-lagebericht-narrte-a85cfc96fffd@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 9A90A2028B6
+References: <20260225010853.15916-1-ericterminal@gmail.com>
+ <20260225033840.33000-1-ericterminal@gmail.com> <aaRbWCeu-wNdWGzB@horms.kernel.org>
+In-Reply-To: <aaRbWCeu-wNdWGzB@horms.kernel.org>
+From: Eric_Terminal <ericterminal@gmail.com>
+Date: Wed, 4 Mar 2026 23:28:42 +0800
+X-Gm-Features: AaiRm53HxF5F9P5qVnAjApnPFfDhasNN9x-M6tagR-mOrAogX8sxQv-oIasNUdM
+Message-ID: <CAKNPVZA2sFv7k=wyf5iBGyOUQcHkAdpVLVNjuqr+7XBXDKxNbg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] net: replace deprecated simple_strto* parsers with kstrto*
+To: Simon Horman <horms@kernel.org>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, Eric Van Hensbergen <ericvh@kernel.org>, 
+	Latchesar Ionkov <lucho@ionkov.net>, "David S . Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	v9fs@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nikolay Aleksandrov <razor@blackwall.org>, bridge@lists.linux.dev, 
+	Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 17B25202E60
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[suse.cz,brown.name,gmail.com,suse.com,redhat.com,oracle.com,talpey.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-19759-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19760-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ericterminal@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-On 3/4/26 8:17 AM, Christian Brauner wrote:
-> On Mon, Mar 02, 2026 at 12:53:17PM -0500, Jeff Layton wrote:
->> On Mon, 2026-03-02 at 18:37 +0100, Jan Kara wrote:
->>> On Mon 02-03-26 12:10:52, Jeff Layton wrote:
->>>> On Mon, 2026-03-02 at 16:26 +0100, Jan Kara wrote:
->>>>> On Mon 02-03-26 08:57:28, Chuck Lever wrote:
->>>>>> On 3/1/26 11:09 PM, NeilBrown wrote:
->>>>>>> On Mon, 02 Mar 2026, Chuck Lever wrote:
->>>>>>>> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
->>>>>>>>> On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
->>>>>>>>>> Perhaps that description nails down too much implementation detail,
->>>>>>>>>> and it might be stale. A broader description is this user story:
->>>>>>>>>>
->>>>>>>>>> "As a system administrator, I'd like to be able to unexport an NFSD
->>>>>>>>>
->>>>>>>>> Doesn't "unexporting" involve communicating to nfsd?
->>>>>>>>> Meaning calling to svc_export_put() to path_put() the
->>>>>>>>> share root path?
->>>>>>>>>
->>>>>>>>>> share that is being accessed by NFSv4 clients, and then unmount it,
->>>>>>>>>> reliably (for example, via automation). Currently the umount step
->>>>>>>>>> hangs if there are still outstanding delegations granted to the NFSv4
->>>>>>>>>> clients."
->>>>>>>>>
->>>>>>>>> Can't svc_export_put() be the trigger for nfsd to release all resources
->>>>>>>>> associated with this share?
->>>>>>>>
->>>>>>>> Currently unexport does not revoke NFSv4 state. So, that would
->>>>>>>> be a user-visible behavior change. I suggested that approach a
->>>>>>>> few months ago to linux-nfs@ and there was push-back.
->>>>>>>>
->>>>>>>
->>>>>>> Could we add a "-F" or similar flag to "exportfs -u" which implements the
->>>>>>> desired semantic?  i.e.  asking nfsd to release all locks and close all
->>>>>>> state on the filesystem.
->>>>>>
->>>>>> That meets my needs, but should be passed by the linux-nfs@ review
->>>>>> committee.
->>>>>>
->>>>>> -F could probably just use the existing "unlock filesystem" API
->>>>>> after it does the unexport.
->>>>>
->>>>> If this option flies, then I guess it is the most sensible variant. If it
->>>>> doesn't work for some reason, then something like ->umount_begin sb
->>>>> callback could be twisted (may possibly need some extension) to provide
->>>>> the needed notification? At least in my naive understanding it was created
->>>>> for usecases like this...
->>>>>
->>>>> 								Honza
->>>>
->>>> umount_begin is a superblock op that only occurs when MNT_FORCE is set.
->>>> In this case though, we really want something that calls back into
->>>> nfsd, rather than to the fs being unmounted.
->>>
->>> I see OK.
->>>
->>>> You could just wire up a bunch of umount_begin() operations but that
->>>> seems rather nasty. Maybe you could add some sort of callback that nfsd
->>>> could register that runs just before umount_begin does?
->>>
->>> Thinking about this more - Chuck was also writing about the problem of
->>> needing to shutdown the state only when this is the last unmount of a
->>> superblock but until we grab namespace_lock(), that's impossible to tell in
->>> a race-free manner? And how about lazy unmounts? There it would seem to be
->>> extra hard to determine when NFS needs to drop it's delegations since you
->>> need to figure out whether all file references are NFS internal only? It
->>> all seems like a notification from VFS isn't the right place to solve this
->>> issue...
->>>
->>
->> The issue is that traditionally, "exportfs -u" is what unexports the
->> filesystem and at that point you can (usually) unmount it. We'd ideally
->> like to have a solution that doesn't create extra steps or change this,
->> since there is already a lot of automation and muscle memory around
->> these commands.
->>
->> This method mostly works with v3, since there is no long term state
->> (technically lockd can hold some, but that's only for file locking).
->> With v4 that changed and nfsd holds files open for much longer.
->>
->> We can't drop all the state when fs is unexported, as it's not uncommon
->> for it to be reexported soon afterward, and we can't force a grace
->> period at that point to allow reclaim.
->>
->> Unmounting seems like the natural place for this. At the point where
->> you're unmounting, there can be no more state and the admin's intent is
->> clear. Tearing down nfsd state at that point seems pretty safe.
->>
->> If we can't add some sort of hook to the umount path, then I'll
->> understand, but it would be a nice to have for this use-case.
-> 
-> At first glance, umount seems like a natural place for a lot of things.
-> 
-> The locking and the guarantees that we have traditionally given to
-> userspace make it a very convoluted codepath and I'm very hesitant to
-> add more complexity in this part of the code.
-> 
-> Now I suggested the fsnotify mechanism because it's already there and if
-> it is _reasonably_ easy to provide the notification that nfs needs to
-> clean up whatever it needs to clean up than this is probably fine. What
-> I absolutely don't want is to have another custom notification
-> mechanism in the VFS layer.
-> 
-> But if we can solve this in userspace then it is absolutely the
-> preferred variant and what we should do.
+On Sun, Mar 1, 2026 at 11:29=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
+te:
+> Hi,
+>
+> Thanks for your patches.
+>
+> I would like to understand what testing has been performed on these patch=
+es.
+>
+> With the possible exception of patch 3/4, I feel that unless they
+> are motivated as bug fixes, these changes are too complex to accept
+> without testing. Although the opinions of the relevant maintainers
+> may differ.
+>
+> And as for 3/4, I lean towards falling into the policy regarding
+> clean-ups not being generally accepted unless it is part of other work.
 
-No problem with that line of reasoning. Right now it looks like we can
-do this with changes to exportfs, so I will pursue that.
+Hi,
 
+Thanks for the feedback. I've verified the series using virtme-ng and
+a userspace mock harness (for the 9p tokenizing logic).
 
--- 
-Chuck Lever
+Regarding Patch 1: This is primarily a stability fix. I've tested the
+error paths by forcing init failures on a non-Xen system; dmesg
+confirms the new sentinel-based cleanup (NULL-ing intf/data and
+checking INVALID_GRANT_REF) correctly prevents double-frees and Oops
+during teardown.
+
+Regarding the "complexity" in Patch 2: The strsep + kstrtouint
+approach was chosen for strictness. I've verified it handles cases
+like "1,,2" (empty tokens) and "1abc" (malformed input) correctly. The
+latter is now rejected with -EINVAL, whereas simple_strto* would have
+silently accepted partial values.
+
+The same applies to Patches 3 and 4. The migration to kstrto* ensures
+that sysfs/procfs interfaces now properly validate the entire input
+string.
+
+P.S. I used a translation tool for the message above, so please excuse
+any awkward wording.
+
+Thanks,
 
