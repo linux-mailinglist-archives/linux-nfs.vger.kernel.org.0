@@ -1,252 +1,150 @@
-Return-Path: <linux-nfs+bounces-19750-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19751-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oDCKMfM/qGl6rQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19750-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:21:39 +0100
+	id iJLtEIZEqGkfsAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19751-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:41:10 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD48A201401
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:21:39 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F3D7201C34
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:41:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8D47B309F219
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 14:13:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CF3B6305F56C
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 14:22:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40FA43B7B7C;
-	Wed,  4 Mar 2026 14:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C04023E33D;
+	Wed,  4 Mar 2026 14:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAz02NRT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MwwfeGQ+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24E53B5822;
-	Wed,  4 Mar 2026 14:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BC4344DB9
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 14:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772633441; cv=none; b=mHGQ/udfHkxLShc095b2/VVSeTc/2X4T1F9n/8hQ0J6j2edAaVsCeoaLmKTBORILTkm5RHMQRHVL8txltE7YgmDIo2X9iI7m5yV+uXxC+O83Jnqk50EOk+RrliOw1Bu7w2Wyaiy+QNcFUO3E2hhG0xzQ0lU3C7pBzLXWVMfHrGo=
+	t=1772634131; cv=none; b=oTpxSE1PUitthm3TzvJhFjjKdScJKrN3KNOFAp2FGbRujSPr5iSTOgQL/tOsB4K68Qnz87zzIFvrr1TquI8Q5ls68n4ocvUplGrc8bKZmNyqcfyB5drPJhP49wO87seLJwz9Vk01mbYIN3fFrEfnD8tenhlzcRuc61lEoExJo90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772633441; c=relaxed/simple;
-	bh=Bku8AHYCvwFigaxdtJ0ELP83jX+2snVdp3SrZhQcXMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tmNU6mqBywqNMRy32hYSebiZt7xCsblSFGfiRkTlNc1jLMVdNDi7iWoVSBjWUvpjq0azYsI6Yb20A5vweTtD9wK+6qSJ/JyEERp101GeUYUUh8jUXotEVFkdqVAf7Y7VSbGAmJUwwJMUZergnQrhnueTZ5DpXAK8iYdapcExJv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAz02NRT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DE7C4CEF7;
-	Wed,  4 Mar 2026 14:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772633441;
-	bh=Bku8AHYCvwFigaxdtJ0ELP83jX+2snVdp3SrZhQcXMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sAz02NRT42GUSH/XghziBQEfEYYLQ50Z6H4Fr0B2eA5Ig7mTdF9TqYffX1JwUH063
-	 6iPM05ojth9/rEwbEh7LlaKMnW/u/G/DBwkw1D4RYJpuNNZv9BhCLvT5PBe8IK+opn
-	 1prADkLNYfSK2LwBPPaKHTGvsA77KEstjjcpOVzMmR0TqLvIhVflYrknnXy1YVCUsF
-	 KNWXNBL4UGedCW/N+3VD8K8WE8OpUqMxkpT+k7q13zK536d/Te1lHCzdRyNNW/lFIe
-	 pg0r1tP0OVdv3K3K3qvZzr4Ne1W/IxrE/2XIks7z/Ez5vNzwXN9J6wfHu8zNwQlTwO
-	 dc6E9EejFM6tg==
-Date: Wed, 4 Mar 2026 15:10:03 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Theodore Tso <tytso@mit.edu>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Bharath SM <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	David Sterba <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Ian Kent <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>, 
-	Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Nicolas Pitre <nico@fluxnic.net>, 
-	Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
-	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Anders Larsen <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, 
-	Johannes Thumshirn <jth@kernel.org>, John Johansen <john.johansen@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>, 
-	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp <socketcan@hartkopp.net>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Remi Denis-Courmont <courmisch@gmail.com>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-mm@kvack.org, netfs@lists.linux.dev, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev, 
-	linux-afs@lists.infradead.org, autofs@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
-	linux-x25@vger.kernel.org, audit@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
- format macro
-Message-ID: <20260304-gebadet-zufahrt-3dd11ba681d6@brauner>
-References: <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
- <20260303012556.GA6520@macsyma-wired.lan>
- <20260303042546.GF13868@frogsfrogsfrogs>
- <33228005140684201de2ca0c157441d3b6a06413.camel@kernel.org>
- <aabkBadGzo7IZpSU@infradead.org>
- <19e4e79a59dcfc4c61c8cf263af345d0d7026fc8.camel@kernel.org>
- <aabpPQxCTweoTp8Z@infradead.org>
- <1310fc5c09cce52ec00344b936275fe584c88dea.camel@kernel.org>
- <aabwflLfe2HcGv7X@infradead.org>
- <4d3b9b92da613ad329b822f3f6043fa08f534451.camel@kernel.org>
+	s=arc-20240116; t=1772634131; c=relaxed/simple;
+	bh=sLMatqRTz5IwZh2UV4N6XY96dPJOvgLZIoTqJhjuy5o=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=GUDFabi6MdELpXQp13IR1gGwtQEMW/E76CAA+y905T0UIl8Odc7jZtswkrAe7/VnLb7iU9SI6Gc8wNYNDA9F9LZ2kALKGqiDTY6mqBW1S49NdtboCPBggjWa7HCO2dx9uTDx0vzmmJ7dyaqGiLTj1DGeNRFI74CYk6nJbatFJSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MwwfeGQ+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772634129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KS194M8/hP3yO+8wnnkGW3joc3YD+fF2p3HAB/aV4GM=;
+	b=MwwfeGQ+q6r6OBonTniLEhPI/PFBw0fdLYsEqHYgGAScIWJGjuPV0oQJgbQEletrU4Yr96
+	3dQ2yG0+tHS5eSEGWSlwOsTCRYpkdbGGikv9xTEzOYsaZcdIcNE7HLOWBMTCaJvNvduKrU
+	2dB0GjF9TpLjWezJcnUimFKDulcIHsA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-mIEEh07FNsmkxpV8oYyAkQ-1; Wed,
+ 04 Mar 2026 09:22:03 -0500
+X-MC-Unique: mIEEh07FNsmkxpV8oYyAkQ-1
+X-Mimecast-MFC-AGG-ID: mIEEh07FNsmkxpV8oYyAkQ_1772634121
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 934FB180035C;
+	Wed,  4 Mar 2026 14:22:01 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.44.32.194])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2858430001A1;
+	Wed,  4 Mar 2026 14:21:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <aag8fPUDCY_g-_LY@infradead.org>
+References: <aag8fPUDCY_g-_LY@infradead.org> <20260304140328.112636-1-dhowells@redhat.com> <20260304140328.112636-3-dhowells@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+    Jens Axboe <axboe@kernel.dk>, Leon Romanovsky <leon@kernel.org>,
+    Christian Brauner <christian@brauner.io>,
+    Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org, Paulo Alcantara <pc@manguebit.org>,
+    Steve French <sfrench@samba.org>,
+    Namjae Jeon <linkinjeon@kernel.org>, Tom Talpey <tom@talpey.com>,
+    Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH 02/17] vfs: Implement a FIEMAP callback
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4d3b9b92da613ad329b822f3f6043fa08f534451.camel@kernel.org>
-X-Rspamd-Queue-Id: AD48A201401
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <114165.1772634114.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Mar 2026 14:21:54 +0000
+Message-ID: <114166.1772634114@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Rspamd-Queue-Id: 3F3D7201C34
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.84 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19750-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19751-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,mit.edu,zeniv.linux.org.uk,suse.cz,goodmis.org,efficios.com,intel.com,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,yaina.de,holtmann.org,hartkopp.net,pengutronix.de,secunet.com,gondor.apana.org.au,fomichev.me,iogearbox.net,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,telemann.coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.
- linaro.org];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[171];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,warthog.procyon.org.uk:mid]
 X-Rspamd-Action: no action
 
-On Tue, Mar 03, 2026 at 10:14:27AM -0500, Jeff Layton wrote:
-> On Tue, 2026-03-03 at 06:30 -0800, Christoph Hellwig wrote:
-> > On Tue, Mar 03, 2026 at 09:19:42AM -0500, Jeff Layton wrote:
-> > > On Tue, 2026-03-03 at 05:59 -0800, Christoph Hellwig wrote:
-> > > > On Tue, Mar 03, 2026 at 08:43:15AM -0500, Jeff Layton wrote:
-> > > > > On Tue, 2026-03-03 at 05:37 -0800, Christoph Hellwig wrote:
-> > > > > > On Tue, Mar 03, 2026 at 05:53:39AM -0500, Jeff Layton wrote:
-> > > > > > > Like I said to Ted, this is just temporary scaffolding for the change.
-> > > > > > > The PRIino macro is removed in the end. Given that, perhaps you can
-> > > > > > > overlook the bikeshed's color in this instance?
-> > > > > > 
-> > > > > > So why add it in the first place?  
-> > > > > 
-> > > > > Bisectability. The first version I did of this would have broken the
-> > > > > ability to bisect properly across these changes. I don't love the
-> > > > > "churn" here either, but this should be cleanly bisectable.
-> > > > 
-> > > > What do you need to bisect in format string changes?  Splitting
-> > > > every variable type change outside of the main i_ino out - sure.
-> > > > But bisecting that "change to u64 in ext4" really broke ext4 and
-> > > > not "change to u64" is not very useful.  Commits should do one
-> > > > well defined thing.  Adding a weird transition layer for a format
-> > > > thing that just gets dropped is not one well defined thing.
-> > > 
-> > > In the middle stages of the series, you will get warnings or errors on
-> > > 32-bit hosts when i_ino's type doesn't match what the format string
-> > > expects.
-> > > 
-> > > There are really only three options here:
-> > > 
-> > > 1/ Do (almost) all of the changes in one giant patch
-> > > 
-> > > 2/ Accept that the build may break during the interim stages
-> > > 
-> > > 3/ This series: using a typedef and macro to work around the breakage
-> > > until the type can be changed, at the expense of some extra churn in
-> > > the codebase
-> > > 
-> > > 3 seems like the lesser evil.
-> > 
-> > No, 1 is by far the least evil.  Note that it's not really almost all,
-> > as all the local variables can easily and sanely be split out.  It's
-> > all of the format strings, and that makes sense.  The only "regressions"
-> > there are incorrect format strings which have good warnings and can
-> > be fixed easily.
-> 
-> Well, I've done 2 and 3 already. Why not 1? :)
-> 
-> It's not so much the regressions that are a problem here, but the merge
-> conflicts for anyone wanting to backport later patches that are near
-> these format changes. Having that change broken up by subsystem makes
-> it easier to handle that piecemeal later.
-> 
-> I think we'll be looking at close to a 1000 line patch that touches
-> nearly 200 files if go that route. Roughly:
-> 
->  182 files changed, 910 insertions(+), 912 deletions(-)
-> 
-> There are some tracepoint changes in some of the per-subsystem patches
-> that will need to be split out, so the count isn't exact, but it'll be
-> fairly close.
-> 
-> Since Christian will probably end up taking this series, I'd like to
-> get his opinion before I respin anything.
+Christoph Hellwig <hch@infradead.org> wrote:
 
-I'm kinda surprised that we suddenly started caring about the amount of
-individual patches. I personally don't care either way. Do it in one
-giant patch if this moves us forward. I've done 1 and 3 and what you
-did. And I'd be really annoyed if during a bisect I start to get
-pointless build failures because someone did 2.
+> On Wed, Mar 04, 2026 at 02:03:09PM +0000, David Howells wrote:
+> > Implement a callback in the internal kernel FIEMAP API so that kernel =
+users
+> > can make use of it as the filler function expects to write to userspac=
+e.
+> > This allows the FIEMAP data to be captured and parsed.  This is useful=
+ for
+> > cachefiles and also potentially for knfsd and ksmbd to implement their
+> > equivalents of FIEMAP remotely rather than using SEEK_DATA/SEEK_HOLE.
+> =
+
+> Hell no.  FIEMAP is purely a debugging toool and must not get anywhere
+> near a data path.  NAK to all of this.
+
+So I have to stick with SEEK_DATA/SEEK_HOLE for this?
+
+(Before you ask, yes, I do want to keep track of this myself, but working =
+out
+the best way to do that without reinventing the filesystem is the issue -
+well, that and finding time to do it).
+
+David
+
 
