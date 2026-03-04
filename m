@@ -1,195 +1,172 @@
-Return-Path: <linux-nfs+bounces-19727-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19728-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CLchEHIqqGkdpAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19727-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 13:49:54 +0100
+	id 4MFJD00uqGlPpQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19728-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 14:06:21 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D0491FFD98
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 13:49:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A86662000B0
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 14:06:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E0C9E304B064
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 12:48:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1302C305D286
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 13:05:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F099320C00A;
-	Wed,  4 Mar 2026 12:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C8826C385;
+	Wed,  4 Mar 2026 13:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U5NhpZCn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUIK8MgA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB0A1E5B68;
-	Wed,  4 Mar 2026 12:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F95C1DEFE0;
+	Wed,  4 Mar 2026 13:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772628492; cv=none; b=T7JMNVU4O0qVbH+hZ9kFF873vfg8YZHC4ZBEWq2YPicKQaZk0MYgQI1Xu9yCJZ7zCZOeEGN3McuAhahB0GJAZZeVlgD4Jj6eLOmdMH26fbP9oytkinlRcacgCm/9JCq+b13GJQjwrplm80iMsoli8ySrDEy3HHqTXMb0hY9SYgo=
+	t=1772629553; cv=none; b=YYXGidQjD4ByKYxOA2DveAYB3JjRhalBlCXEZfbqR9kFC0ApaMcj91EUMyu7Q+DxHIV8jXxC5ae4xvkOech2VjINv7SQvl6MlyVkpS2GpPIvA0iNjF16MXuEcpFluRg/+vhXFUZiwQSlRFEdcoLOG/SiUCrboWmfy6bJSAM5cl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772628492; c=relaxed/simple;
-	bh=ZqxKumdP+DNsxXXslcjyg5g3aU/VfpjJU2mvzXFg4hE=;
+	s=arc-20240116; t=1772629553; c=relaxed/simple;
+	bh=sAZHSXg/Be+oJJsHWSs3WSwZYlPzTKpJZfIGcEDYo10=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dy1SJW5kA264gHFLvdfEHrvMBsl4yppJR340k91AqnYcVap1dAXWhIak3rsYMddSlzDUlzdjHUKDt14MzyMWl2c1p8kyFSgZjnr41TdafcLhb+dJL9a3MHPgoUnqPjKaB8EdGKMbnUREn8kMH2aJr1CMLZvQ/zCztAIVI4/mbeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U5NhpZCn; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YsXg2qDZ+ZjnQnj/eNfiIgU3SLUyimkRR7bx5y5oB4w=; b=U5NhpZCn934XojSyVFL1nj1S/W
-	2SwNvFKnKgDXQSzq6m51IMvSlZX+ne4bEh4E01vZtYgpLee5ixUDi8qEHb4R97fy2f4d2ReNAtXFl
-	2Myy/FM9yjpIi4F5MCjGcXNEoyN2WDgyc7039UPkredIXwYhk1etVNasHnwai+IB6c4ro8VQTd24m
-	dlAjACdWYLWNFfSy+VdBxKivYhNczBRSHxMPHao0CvqQusPNjCznq/i4rksmb+FqExqEhxu3s5ruZ
-	HIicL8wW2i2h8YBWX0vQS1a34HK9wPAQFs79TabY9VaeD6tSKbvzAdMAvOXPYXBWy7iVhi1jbb7PJ
-	KVa5pNSQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxle2-00000004Z41-2FWR;
-	Wed, 04 Mar 2026 12:48:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 07040300666; Wed, 04 Mar 2026 13:48:06 +0100 (CET)
-Date: Wed, 4 Mar 2026 13:48:05 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Jakub Kicinski <kuba@kernel.org>,
-	Yury Norov <ynorov@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Theodore Ts'o <tytso@mit.edu>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Anna Schumaker <anna@kernel.org>,
-	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Aswin Karuvally <aswin@linux.ibm.com>,
-	Borislav Petkov <bp@alien8.de>, Carlos Maiolino <cem@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chao Yu <chao@kernel.org>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Dongsheng Yang <dongsheng.yang@linux.dev>,
-	Eric Dumazet <edumazet@google.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ingo Molnar <mingo@redhat.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Linus Walleij <linusw@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <pjw@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>, Takashi Iwai <tiwai@suse.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Zheng Gu <cengku@gmail.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	dm-devel@lists.linux.dev, netdev@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-	v9fs@lists.linux.dev, virtualization@lists.linux.dev,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH 0/8] mm: globalize rest_of_page() macro
-Message-ID: <20260304124805.GB2277644@noisy.programming.kicks-ass.net>
-References: <20260304012717.201797-1-ynorov@nvidia.com>
- <20260303182845.250bb2de@kernel.org>
- <f8d86743-6231-414d-a5e8-65e867123fea@kernel.dk>
- <aaedwFwXh9QXS3Ju@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cn+nvRAF46csDuUzofokQpk/0EWxEFlMYJsjacMmnFv+5WSonH8e8EpxwJZ4GabIpuw7E5BZ9MwhyVJBe3c1dl9mXIDyNHu1Faktx1uKw9Z+vgMynnzlIRP0VpcVMfAhD/O240D2CFV5qNz+jkBxzen6dnjYInBMxc50NebMlN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUIK8MgA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF40C2BC87;
+	Wed,  4 Mar 2026 13:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772629553;
+	bh=sAZHSXg/Be+oJJsHWSs3WSwZYlPzTKpJZfIGcEDYo10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZUIK8MgAcoH1zIYpc5f3SDv8Y5laSL5KmVwfql3dOAIhTS4U2AHYyvvwOnPdDOA9L
+	 RK2EM1CI3uQm9Rb7tdxy8y68ixzPjuYV3m+V58t0lxM5oWNsaD1s7stzJxA7NSRfRl
+	 4nhrOXj0KeZAYruV+3kCq90JSL5/c6VaWh1qKpr/3ZxcbG6c66j2ED+aTSeanCk4uW
+	 FwHgbZ/6u39pDdq9d5NPlmxT1dJ3oa2mualPKEqgCQekKJVb2KfPOu/av3v/hdBNOD
+	 akvUhgQpdpnFc7Y52nMv++su85d1ca/TQDnc17SCj8futudao7Vtn5XMMB0ZiUzsuH
+	 DL5cEoNAn42nw==
+Date: Wed, 4 Mar 2026 14:05:48 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
+	Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
+ unmount notification
+Message-ID: <20260304-leitbild-erhielten-49507b3a6f59@brauner>
+References: <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
+ <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>
+ <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>
+ <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>
+ <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>
+ <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
+ <177242454307.7472.11164903103911826962@noble.neil.brown.name>
+ <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
+ <f52659c6-37ed-4b5f-90a1-de5455745ab7@oracle.com>
+ <177248378665.7472.10406837112182319577@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aaedwFwXh9QXS3Ju@google.com>
-X-Rspamd-Queue-Id: 5D0491FFD98
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <177248378665.7472.10406837112182319577@noble.neil.brown.name>
+X-Rspamd-Queue-Id: A86662000B0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [2.34 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=desiato.20200630];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.dk,kernel.org,nvidia.com,linux-foundation.org,davemloft.net,redhat.com,mit.edu,eecs.berkeley.edu,fb.com,linux.ibm.com,zeniv.linux.org.uk,dilger.ca,lunn.ch,opensynergy.com,alien8.de,arm.com,linux.intel.com,gmail.com,codewreck.org,linux.dev,google.com,gondor.apana.org.au,perex.cz,ionkov.net,ellerman.id.au,szeredi.hu,dabbelt.com,intel.com,ffwll.ch,suse.com,ursulin.net,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-19727-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19728-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[oracle.com,gmail.com,suse.cz,suse.com,kernel.org,redhat.com,talpey.com,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peterz@infradead.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[85];
-	TAGGED_RCPT(0.00)[linux-nfs,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,noisy.programming.kicks-ass.net:mid]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Tue, Mar 03, 2026 at 06:49:36PM -0800, Sean Christopherson wrote:
-> On Tue, Mar 03, 2026, Jens Axboe wrote:
-> > On 3/3/26 7:28 PM, Jakub Kicinski wrote:
-> > > On Tue,  3 Mar 2026 20:27:08 -0500 Yury Norov wrote:
-> > >> The net/9p networking driver has a handy macro to calculate the
-> > >> amount of bytes from a given pointer to the end of page. Move it
-> > >> to core/mm, and apply tree-wide. No functional changes intended.
+On Tue, Mar 03, 2026 at 07:36:26AM +1100, NeilBrown wrote:
+> On Tue, 03 Mar 2026, Chuck Lever wrote:
+> > On 3/2/26 8:57 AM, Chuck Lever wrote:
+> > > On 3/1/26 11:09 PM, NeilBrown wrote:
+> > >> On Mon, 02 Mar 2026, Chuck Lever wrote:
+> > >>>
+> > >>> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
+> > >>>> On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
+> > >>>>> Perhaps that description nails down too much implementation detail,
+> > >>>>> and it might be stale. A broader description is this user story:
+> > >>>>>
+> > >>>>> "As a system administrator, I'd like to be able to unexport an NFSD
+> > >>>>
+> > >>>> Doesn't "unexporting" involve communicating to nfsd?
+> > >>>> Meaning calling to svc_export_put() to path_put() the
+> > >>>> share root path?
+> > >>>>
+> > >>>>> share that is being accessed by NFSv4 clients, and then unmount it,
+> > >>>>> reliably (for example, via automation). Currently the umount step
+> > >>>>> hangs if there are still outstanding delegations granted to the NFSv4
+> > >>>>> clients."
+> > >>>>
+> > >>>> Can't svc_export_put() be the trigger for nfsd to release all resources
+> > >>>> associated with this share?
+> > >>>
+> > >>> Currently unexport does not revoke NFSv4 state. So, that would
+> > >>> be a user-visible behavior change. I suggested that approach a
+> > >>> few months ago to linux-nfs@ and there was push-back.
+> > >>>
 > > >>
-> > >> This series was originally introduced as a single patch #07/12 in:
-> > >>
-> > >> https://lore.kernel.org/all/20260219181407.290201-1-ynorov@nvidia.com/
-> > >>
-> > >> Split it for better granularity and submit separately.
+> > >> Could we add a "-F" or similar flag to "exportfs -u" which implements the
+> > >> desired semantic?  i.e.  asking nfsd to release all locks and close all
+> > >> state on the filesystem.
 > > > 
-> > > I don't get what the motivation is here. Another helper developers
-> > > and readers of the code will need to know about just to replace 
-> > > obvious and easy to comprehend math.
+> > > That meets my needs, but should be passed by the linux-nfs@ review
+> > > committee.
 > > 
-> > I fully agree, I had the same thought reading this.
+> > Discussed with the reporter. -F addresses the automation requirement,
+> > but users still expect "exportfs -u" to work the same way for NFSv3 and
+> > NFSv4: "unexport" followed by "unmount" always works.
+> > 
+> > I am not remembering clearly why the linux-nfs folks though that NFSv4
+> > delegations should stay in place after unexport. In my view, unexport
+> > should be a security boundary, stopping access to the files on the
+> > export.
 > 
-> +1 from KVM-land.
+> At the time when the API was growing, delegations were barely an
+> unhatched idea.
+> 
+> unexport may be a security boundary, but it is not so obvious that it is
+> a state boundary.
+> 
+> The kernel is not directly involved in whether something is exported or
+> not.  That is under the control of mountd/exportfs.  The kernel keeps a
+> cache of info from there.  So if you want to impose a state boundary, it
+> really should involved mountd/exportfs.
+> 
+> There was once this idea floating around that policy didn't belong in
+> the kernel.
 
-Right, this. I hate these pointless helpers that obscure perfectly
-sensible and obvious code -- and for me that includes things like
-rounddown() and DIV_ROUND_UP().
-
-It just makes the code harder to read.
+Very much agree.
 
