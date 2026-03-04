@@ -1,126 +1,140 @@
-Return-Path: <linux-nfs+bounces-19753-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19754-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CFc7ODdGqGlOrwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19753-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:48:23 +0100
+	id CDWbIg5DqGmRrwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19754-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:34:54 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 520F6201E56
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:48:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 448CA2019AE
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 15:34:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A8A043128DA9
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 14:27:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 86A76303EFD0
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 14:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED4EE3A873C;
-	Wed,  4 Mar 2026 14:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 509CB39FCDD;
+	Wed,  4 Mar 2026 14:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9Pmz57O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S35+Gxqf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACCA37474D;
-	Wed,  4 Mar 2026 14:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6C83A6EE4
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 14:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772634437; cv=none; b=n89HtrMUwJnwj4WJ3rElRaUd5SzXpgd4EDG6nC4wqdXpfFCpKkBQkyVMsbDsdkKcN2brUPRPLc/6U1Lz+o1VwUeAz67FgzfxmqDlQjSOU0FwyjM50OMz1CluILeAQgVJ/VNLZF7bcYFxG1Zf45A+jowbFV0BVbmQ+8FwIJEBiLI=
+	t=1772634861; cv=none; b=tacL3ecgffIlJezfS1c3KhF9CABaB+joZOBJJ+xKon09Fw6Acb2cyz15pTkj+pGatDPP4JIGwUj0WNUOc3aifdoxP7W5nrAIDktjhUwDmndMayjTXqybJMbBCKhOPUH86t56ouXVlehVS5JpbjMse5U1PKZjNVhG+nwVIQiouis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772634437; c=relaxed/simple;
-	bh=JudY2E+RxzF6UxTLm0DE2MBtJYZZkh1AFdJTmpR1Zx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HA3tXIFWh1n9uoR5ilpWYJXC04PL3Iz34MagDcPJkrraZxVUO/VycuhsXzCGrv1HTLcTNyILzk8enKoy55hlpeziJPw9ivTw9gJgsPUgt4UrK51lDcoIpOeN6hdoudgPwnCXp7U2sFr6KDtqHtaGTq/Ykymzv5tHJa4RXy3PnNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9Pmz57O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D847AC2BC9E;
-	Wed,  4 Mar 2026 14:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772634437;
-	bh=JudY2E+RxzF6UxTLm0DE2MBtJYZZkh1AFdJTmpR1Zx4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q9Pmz57Oo7szCV4iwPb1d/AzzRDY0vhawctaKUqBOKiJtAwVt6t3H1lOe45bA1xoO
-	 U3P7fX76qF876U+OBcf61YjrdjXVyTHeSVKRRDTvanq0wwWU3mIJX4L6DlveJ/w6Kf
-	 CxDL05WY9pA173w5ty/1XKu2T45lw1TGsJGSycrBBDxE6VnHb8QRkM83RhZ+8QOF8u
-	 TNKiBPVjtSnPwuxHnDcMNIX+Wf9avF+IZcS6VOh2ONll+zOEZExse4eDlVfBb4lrUu
-	 7IeJPNhEYmOCgC/+mPzDi2l3ZyRPmlWAD/Cz6pdtyPDJ316jDvnggEhDtHxhaaayJ8
-	 m8vXXwEnUGMyA==
-From: Chuck Lever <cel@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: xdr.h: fix all kernel-doc warnings
-Date: Wed,  4 Mar 2026 09:27:13 -0500
-Message-ID: <177263442643.249131.15665053279331005070.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260228220922.2982492-1-rdunlap@infradead.org>
-References: <20260228220922.2982492-1-rdunlap@infradead.org>
+	s=arc-20240116; t=1772634861; c=relaxed/simple;
+	bh=bpuGRVu4Y18L5xc3H1PJ2lREyhify4Ay9P9h5KY76nk=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=oYo3gRSZdjAw5Ma2J/UV/o6NmEEaC1WlQ1Wm8lbkCX+pCb5WDv246OdlEZ6n+X5XH0NEAfd73rAQxhty1/WFSieZgvmbEYzX3bJGc5h0tql+Zrxl6MgIAmNoph2te7xh4CdFeB/FK89dqilVZOMv9Vc8VbVxPIPkuXmA8kQx9Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S35+Gxqf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772634859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZLC9JL4iyVNeLfPEDV0W2Yxh7iNZYOFRw/HOSKzzhuk=;
+	b=S35+GxqfnDyMeuj3hAGhe/v89Ard3q3ZkaUBfLnl5d3eHRXTzGrIzgC0nTD4C2knuWjyMW
+	HMHn4CCC+6/JuXD0Qr/V3qnRXqEiKmTQcF+T40JmaF8FTg2CrgICvZki1gkDzaIQj29pbQ
+	wpEW/CAhfrh7sjzaVJXMP9shvyhMEQY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-S9NpySwlNAOll3R8_b-uzg-1; Wed,
+ 04 Mar 2026 09:34:14 -0500
+X-MC-Unique: S9NpySwlNAOll3R8_b-uzg-1
+X-Mimecast-MFC-AGG-ID: S9NpySwlNAOll3R8_b-uzg_1772634851
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E89519560B0;
+	Wed,  4 Mar 2026 14:34:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.44.32.194])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 40E33300019F;
+	Wed,  4 Mar 2026 14:34:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <aahA7rQVf5liFYMv@infradead.org>
+References: <aahA7rQVf5liFYMv@infradead.org> <aag8fPUDCY_g-_LY@infradead.org> <20260304140328.112636-1-dhowells@redhat.com> <20260304140328.112636-3-dhowells@redhat.com> <114166.1772634114@warthog.procyon.org.uk>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+    Jens Axboe <axboe@kernel.dk>, Leon Romanovsky <leon@kernel.org>,
+    Christian Brauner <christian@brauner.io>,
+    Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org, Paulo Alcantara <pc@manguebit.org>,
+    Steve French <sfrench@samba.org>,
+    Namjae Jeon <linkinjeon@kernel.org>, Tom Talpey <tom@talpey.com>,
+    Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH 02/17] vfs: Implement a FIEMAP callback
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 520F6201E56
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <156718.1772634844.1@warthog.procyon.org.uk>
+Date: Wed, 04 Mar 2026 14:34:04 +0000
+Message-ID: <156719.1772634844@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Rspamd-Queue-Id: 448CA2019AE
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19753-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19754-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:mid,oracle.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,warthog.procyon.org.uk:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Christoph Hellwig <hch@infradead.org> wrote:
 
-On Sat, 28 Feb 2026 14:09:22 -0800, Randy Dunlap wrote:
-> Correct a function parameter name (s/page/folio/) and add function
-> return value sections for multiple functions to eliminate
-> kernel-doc warnings:
+> > So I have to stick with SEEK_DATA/SEEK_HOLE for this?
 > 
-> Warning: include/linux/sunrpc/xdr.h:298 function parameter 'folio' not
->  described in 'xdr_set_scratch_folio'
-> Warning: include/linux/sunrpc/xdr.h:337 No description found for return
->  value of 'xdr_stream_remaining'
-> Warning: include/linux/sunrpc/xdr.h:357 No description found for return
->  value of 'xdr_align_size'
-> Warning: include/linux/sunrpc/xdr.h:374 No description found for return
->  value of 'xdr_pad_size'
-> Warning: include/linux/sunrpc/xdr.h:387 No description found for return
->  value of 'xdr_stream_encode_item_present'
-> 
-> [...]
+> Yes.  Why do you even want to move away from that?  It's the far
+> better API.  Of course like all other reporting APIs it still is
+> racy, but has far less problems than fiemap.
 
-Applied to nfsd-testing, thanks!
+To find the next two extents of data, say, I have to make four calls into the
+backing filesystem rather than one - with all the context set up and locking
+those might incur.
 
-[1/1] SUNRPC: xdr.h: fix all kernel-doc warnings
-      commit: fba9ddf80198d61673738d5118566250cfae936d
+Granted, the vast majority of files aren't sparse, so one pair of
+SEEK_DATA/SEEK_HOLE should be able to establish that.
 
---
-Chuck Lever
+David
 
 
