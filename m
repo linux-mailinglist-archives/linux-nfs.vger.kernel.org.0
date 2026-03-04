@@ -1,172 +1,143 @@
-Return-Path: <linux-nfs+bounces-19728-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19729-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4MFJD00uqGlPpQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19728-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 14:06:21 +0100
+	id SOHOIKovqGlPpQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19729-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 14:12:10 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A86662000B0
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 14:06:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA798200233
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 14:12:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1302C305D286
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 13:05:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1D445301C5A7
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 13:11:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C8826C385;
-	Wed,  4 Mar 2026 13:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69CC35949;
+	Wed,  4 Mar 2026 13:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUIK8MgA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wtOTT0/h"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F95C1DEFE0;
-	Wed,  4 Mar 2026 13:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89F3277CA5
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 13:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772629553; cv=none; b=YYXGidQjD4ByKYxOA2DveAYB3JjRhalBlCXEZfbqR9kFC0ApaMcj91EUMyu7Q+DxHIV8jXxC5ae4xvkOech2VjINv7SQvl6MlyVkpS2GpPIvA0iNjF16MXuEcpFluRg/+vhXFUZiwQSlRFEdcoLOG/SiUCrboWmfy6bJSAM5cl4=
+	t=1772629915; cv=none; b=GaSbFGi2KcovljP62UFTf/UaXUJk0v7Yl4kfTyPLpTmBIS5BZGNBXW6sSzVfBYy+Zow8psezLETVtL2t6EkMMj8blkAGTFWaWqBas6EFF0x0LvXby/0VMUb4F65RgagAG/1e4d526oQpVp5qzl1DU/MMQ1ldIo5n9emAIKKbOBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772629553; c=relaxed/simple;
-	bh=sAZHSXg/Be+oJJsHWSs3WSwZYlPzTKpJZfIGcEDYo10=;
+	s=arc-20240116; t=1772629915; c=relaxed/simple;
+	bh=YGYeg+A5NvhOwfu3cvm6IaOHvA6F0cieUAXj4lOSWBo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cn+nvRAF46csDuUzofokQpk/0EWxEFlMYJsjacMmnFv+5WSonH8e8EpxwJZ4GabIpuw7E5BZ9MwhyVJBe3c1dl9mXIDyNHu1Faktx1uKw9Z+vgMynnzlIRP0VpcVMfAhD/O240D2CFV5qNz+jkBxzen6dnjYInBMxc50NebMlN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUIK8MgA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF40C2BC87;
-	Wed,  4 Mar 2026 13:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772629553;
-	bh=sAZHSXg/Be+oJJsHWSs3WSwZYlPzTKpJZfIGcEDYo10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZUIK8MgAcoH1zIYpc5f3SDv8Y5laSL5KmVwfql3dOAIhTS4U2AHYyvvwOnPdDOA9L
-	 RK2EM1CI3uQm9Rb7tdxy8y68ixzPjuYV3m+V58t0lxM5oWNsaD1s7stzJxA7NSRfRl
-	 4nhrOXj0KeZAYruV+3kCq90JSL5/c6VaWh1qKpr/3ZxcbG6c66j2ED+aTSeanCk4uW
-	 FwHgbZ/6u39pDdq9d5NPlmxT1dJ3oa2mualPKEqgCQekKJVb2KfPOu/av3v/hdBNOD
-	 akvUhgQpdpnFc7Y52nMv++su85d1ca/TQDnc17SCj8futudao7Vtn5XMMB0ZiUzsuH
-	 DL5cEoNAn42nw==
-Date: Wed, 4 Mar 2026 14:05:48 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Chuck Lever <chuck.lever@oracle.com>, 
-	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, Jan Kara <jack@suse.com>, 
-	Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] fs: add umount notifier chain for filesystem
- unmount notification
-Message-ID: <20260304-leitbild-erhielten-49507b3a6f59@brauner>
-References: <jxyalrg3a2yjtjfmdylncg7fz63jstbq6pwhhqlaaxju5sk72f@55lb7mfucc5i>
- <3cff098e-74a8-4111-babb-9c13c7ba2344@kernel.org>
- <CAOQ4uxiX5anNeZge9=uzw8Dkbad3bMBk5Ana5S94t9VfKNFO5g@mail.gmail.com>
- <d7f2562a-7d32-41d5-a02e-904aa4203ed3@app.fastmail.com>
- <CAOQ4uxiO+NCjhBme=YWCfnVyhJ=Zcg4zmnfoRspJab3n5waSCA@mail.gmail.com>
- <07a2af61-6737-4e47-ad69-652af18eb47b@app.fastmail.com>
- <177242454307.7472.11164903103911826962@noble.neil.brown.name>
- <d7abef36-ce90-4b36-af16-e8bd61b963ed@kernel.org>
- <f52659c6-37ed-4b5f-90a1-de5455745ab7@oracle.com>
- <177248378665.7472.10406837112182319577@noble.neil.brown.name>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DspKisuVe31zOVxfNlYs0FeJkFRGld27wDx7nBKLvF/gbAD/mXXkkdyVxuuTQSLxrBYWBBjr4SGPzoyM+jqg3Z6Ryn1SVAwRGk78yN7/ds2zCzIM80GdFc55IUoy73N0pGXzQQSSlSByyURutCPgJy0SHke7pV8qsQvx63jfII0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wtOTT0/h; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GBt/gjriJNs5vQMe7KLnskiEP5TAkf9OoxIGvdS+aiQ=; b=wtOTT0/hEHANh1L0D+I0ArMvMy
+	N2RDMAfy0Gi6BU/E0VVv3uDQcWFZ+dRCgtal/V0SlWQUVVqy3vMZfvscVLnQXxU4fO9bJ0PeBhDHI
+	BL7v1YsjzDfyitUqmmLO9lcFoLMzseFhzy9pqbOso5OfUS0V5Z9p4Pvlt9IWKMJZVHVNMA9cjKTXQ
+	XiCAjuzOOXzxyRPF9FACwIftnXgsNdcUezYowgmzd28QOv9GXGEaO3FlxHR0uGdUHlLqOQRf8Dy/t
+	RXk6mJIoQ2lAkYq2YeyyCdsxP+e2xFEFeg4T8eWgt7cvxR7NCVBGwNzc3WirZ088IrCEMuRu5acVX
+	9q+VWMtQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vxm14-0000000HEJA-1iFI;
+	Wed, 04 Mar 2026 13:11:54 +0000
+Date: Wed, 4 Mar 2026 05:11:54 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>, trondmy@kernel.org,
+	anna@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] pNFS: Serialize SCSI PR registration to avoid
+ reservation conflicts
+Message-ID: <aagvmtZ0t-GKwrZ4@infradead.org>
+References: <20260302005138.1844156-1-dai.ngo@oracle.com>
+ <aab_XbwjYoIPk2_a@infradead.org>
+ <53291a21-4a4a-4f43-8f8d-73f9415d6128@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <177248378665.7472.10406837112182319577@noble.neil.brown.name>
-X-Rspamd-Queue-Id: A86662000B0
+In-Reply-To: <53291a21-4a4a-4f43-8f8d-73f9415d6128@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Rspamd-Queue-Id: DA798200233
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19728-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[oracle.com,gmail.com,suse.cz,suse.com,kernel.org,redhat.com,talpey.com,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19729-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DKIM_TRACE(0.00)[infradead.org:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,infradead.org:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Tue, Mar 03, 2026 at 07:36:26AM +1100, NeilBrown wrote:
-> On Tue, 03 Mar 2026, Chuck Lever wrote:
-> > On 3/2/26 8:57 AM, Chuck Lever wrote:
-> > > On 3/1/26 11:09 PM, NeilBrown wrote:
-> > >> On Mon, 02 Mar 2026, Chuck Lever wrote:
-> > >>>
-> > >>> On Sun, Mar 1, 2026, at 1:09 PM, Amir Goldstein wrote:
-> > >>>> On Sun, Mar 1, 2026 at 6:21 PM Chuck Lever <cel@kernel.org> wrote:
-> > >>>>> Perhaps that description nails down too much implementation detail,
-> > >>>>> and it might be stale. A broader description is this user story:
-> > >>>>>
-> > >>>>> "As a system administrator, I'd like to be able to unexport an NFSD
-> > >>>>
-> > >>>> Doesn't "unexporting" involve communicating to nfsd?
-> > >>>> Meaning calling to svc_export_put() to path_put() the
-> > >>>> share root path?
-> > >>>>
-> > >>>>> share that is being accessed by NFSv4 clients, and then unmount it,
-> > >>>>> reliably (for example, via automation). Currently the umount step
-> > >>>>> hangs if there are still outstanding delegations granted to the NFSv4
-> > >>>>> clients."
-> > >>>>
-> > >>>> Can't svc_export_put() be the trigger for nfsd to release all resources
-> > >>>> associated with this share?
-> > >>>
-> > >>> Currently unexport does not revoke NFSv4 state. So, that would
-> > >>> be a user-visible behavior change. I suggested that approach a
-> > >>> few months ago to linux-nfs@ and there was push-back.
-> > >>>
-> > >>
-> > >> Could we add a "-F" or similar flag to "exportfs -u" which implements the
-> > >> desired semantic?  i.e.  asking nfsd to release all locks and close all
-> > >> state on the filesystem.
-> > > 
-> > > That meets my needs, but should be passed by the linux-nfs@ review
-> > > committee.
-> > 
-> > Discussed with the reporter. -F addresses the automation requirement,
-> > but users still expect "exportfs -u" to work the same way for NFSv3 and
-> > NFSv4: "unexport" followed by "unmount" always works.
-> > 
-> > I am not remembering clearly why the linux-nfs folks though that NFSv4
-> > delegations should stay in place after unexport. In my view, unexport
-> > should be a security boundary, stopping access to the files on the
-> > export.
+On Tue, Mar 03, 2026 at 10:21:07AM -0800, Dai Ngo wrote:
+> > >   			struct pnfs_block_dev_map *map);
+> > > +	struct mutex			pbd_mutex;
+> > Can you keep this up with the non-function pointer fields?
 > 
-> At the time when the API was growing, delegations were barely an
-> unhatched idea.
-> 
-> unexport may be a security boundary, but it is not so obvious that it is
-> a state boundary.
-> 
-> The kernel is not directly involved in whether something is exported or
-> not.  That is under the control of mountd/exportfs.  The kernel keeps a
-> cache of info from there.  So if you want to impose a state boundary, it
-> really should involved mountd/exportfs.
-> 
-> There was once this idea floating around that policy didn't belong in
-> the kernel.
+> Can you please clarify this, you meant move this mutex up above
+> the (*map)() declaration?
 
-Very much agree.
+Yes.
+
+> > > -	if (test_and_set_bit(PNFS_BDEV_REGISTERED, &dev->flags))
+> > > +	mutex_lock(&dev->pbd_mutex);
+> > > +	if (test_and_set_bit(PNFS_BDEV_REGISTERED, &dev->flags)) {
+> > > +		mutex_unlock(&dev->pbd_mutex);
+> > >   		return true;
+> > > +	}
+> > This seems to only lock the registration side, and not the
+> > unregistration side, which is a bit odd.
+> 
+> The reason I did not use the mutex on unregistration is because
+> unregistration happens when the export is unmounted and I don't
+> see any race condition can happen at that time. Besides, even if
+> there is race condition on the unregistration the consequence is
+> a duplicate SCSI PR unregistration which is harmless.
+> 
+> However, if you think we should also protect the unregistration
+> then I can add it in. At the very least, it makes the code look
+> symmetric.
+
+And it clearly defines what the mutex protects, so please yes.
+
+> 
+> >    If you fully protect
+> > register/unregister we also don't need atomic bitops for
+> > PNFS_BDEV_REGISTERED and have a more consistent locking scheme.
+> 
+> Even we fully protect register/unregister don't we still need the
+> PNFS_BDEV_REGISTERED bit so the others thread can check and skip
+> the register/unregister op?
+
+Yes, but it doesn't need to use the atomic bit ops.
+
 
