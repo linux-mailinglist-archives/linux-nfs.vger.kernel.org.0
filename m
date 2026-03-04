@@ -1,214 +1,234 @@
-Return-Path: <linux-nfs+bounces-19713-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19714-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8B0DCHaop2kqjAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19713-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 04:35:18 +0100
+	id CNVcL+XEp2mYjgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19714-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 06:36:37 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EDD61FA6D1
-	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 04:35:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2344E1FAE23
+	for <lists+linux-nfs@lfdr.de>; Wed, 04 Mar 2026 06:36:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 126EA300D0E8
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 03:35:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C490302658A
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Mar 2026 05:36:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D740366DAE;
-	Wed,  4 Mar 2026 03:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14A837CD59;
+	Wed,  4 Mar 2026 05:36:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="V/RVqeIg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuTlsCCG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E02366829
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 03:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F133364943
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Mar 2026 05:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772595310; cv=none; b=tYrFGaVgVwfpuValFbdH4sTl0g/cv49zxMAAbEEG+uwvkwX6ImGNpsnPijlQPt7P3UmwCaCHt6MV23ChCP7DFkAjlE8uwD3fGxgmFUkPWHAhdg7HlYycqfA6lNnMC1AGVdHipeFjAZG/sMtwdjSk9p0PzAqabKQ6ODYpeBYUeGc=
+	t=1772602588; cv=none; b=V2YVaLFwX4wwxj0dWxnAQFkl6OdtrTdptvAHDW2d/rcVsFV6gREXGLIEPJHPs7+v2jJ/rsR1Valk1VX5JNH++89qUEtn1v+kjmO0cDpV+gqG3WgAssU2y5rln5m7GZLuV529bJgBbHZvgoVxgzwM8TmcOUE18BiGQ3iYq4cvd2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772595310; c=relaxed/simple;
-	bh=XLiJ2nD8DJIVsSYbftRzQJ/qqbqmFgul82tptWrTWOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FLYgtUtzgQw/Cy6q3zLT5Q8xAcePEW+vJ0VwrnJwlqgD+zdGma6Ov6s+6otTpNvAuE9U6XbzTsiCSKSLnsmVPw+sb4OstljY9QZgnxjLWPuOK6SbbO5j86SyRVHfyYR95v0KX23Y3vqaBlyvPNRkGSI7sn2EI4pCbbe9PyhJ79o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=V/RVqeIg; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7d18f80b5c2so4853011a34.3
-        for <linux-nfs@vger.kernel.org>; Tue, 03 Mar 2026 19:35:07 -0800 (PST)
+	s=arc-20240116; t=1772602588; c=relaxed/simple;
+	bh=DdGnEi2MIzcNo3q2Zph5X3WR+wOdcO1pfRapVm1aFa4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QvVjfXtuUUO1YCbPxXkgnsU2dCTgQ1hWR5matraeoiTJC9kGF3pEydCNC84ikhrUzwrqvbVRc3WJ4CnwzwarYLTxmwDNiDsNFl+4vfvtEZ1gbweORuCL6WFisbDvrWgO22GsOFlAqsii2yYKtnHmAgprOWvdAuUdXeNw1sHfzFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OuTlsCCG; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3598b95ad7dso2245581a91.2
+        for <linux-nfs@vger.kernel.org>; Tue, 03 Mar 2026 21:36:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1772595307; x=1773200107; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NrE0zI+7ilR1NedBJHHio8t27882PDymrHrpls6UPoo=;
-        b=V/RVqeIgbll4o4ue74s/NYWOyn6ZZujuTFopUtqhjail3GEAE5/viHb45qoLBheA0C
-         FjThpB0c+lktkioT8cLcDCupPIwr6ZtFjugZdaWmjPYCZvExg28dp2j5GNZKC+dwFIRT
-         nMYTLvuq7I98ei43l1fO8SZa0kkKx926Q5k3OSaMudvEhiEEeEmS0+UTFtTKWPCx5BtH
-         jppJ7leZ920nl2rr1NSxO3EsCbm7kJQgCQktDg8tjxpMgjzbh601eaHfku+ZFLcNfn/I
-         i2IKtcx8h6KQ7DdzF6qyt1xEaUJ+G7gmzB4DX6DIGKuctT6KVr0ZXVqee2uy5eeWmU1x
-         Tdcw==
+        d=gmail.com; s=20230601; t=1772602587; x=1773207387; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tBaAO3EhPpnhGGnT8RJsqBThiWnEysWAZzlV8WTFAvE=;
+        b=OuTlsCCGosBzUauHhHv5Nr7SBeMDsCXXi/oaeAz4l/KEd7iFMpPBEJqJt7TcTTKxK8
+         8bgrhiFB+b/UTAMcuxQeBoSACq+7yzePEhALqejpcZBMoqOndRG4fy+qqqf4VqKdg3N0
+         DLy9URN+ZQxO3oiDhjabuDFyfSTFTcqttQwibmZVH3nfZqC6y18Js3EO1IjpyLkPVgat
+         c/eio31GNapjWF1nNIsDCajiAmzky0aU01VIp4LMWYdRVwsJX0cGSfpJmRf+1easyKDr
+         WdLdQzVlIJm91LxptvPCU7qzjKnesnqfjJ6o2lIVlvVfrjW0eOs6TA2P+uF+k7noTs/v
+         Yy1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772595307; x=1773200107;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NrE0zI+7ilR1NedBJHHio8t27882PDymrHrpls6UPoo=;
-        b=sbjBb21cH5dpthruEb4CYQWl401TUKwKwLDWVv+6jPw4e/olCl/tev5GQAWV5zmo0a
-         NzSkdBsAVMkyN3R+HHLvNF40Ne5dHaQFMZGWc8JrSmQ8ALvESlFSqBRoFGN/6TwlX8+1
-         EU0nsyd8pik+4Kmh21D1K+rzfyD1+35cOeoyEaFkeIkCfdVLikeduLlQCQ1xi5N6nq/T
-         cb2Ehn8jOQuoswAP4PjIxp5acqYVmVDvnzkP9w3wsEPbDd8aaUf5G6YFUrF3bx3f/bh5
-         F0ksKG7B0ALu3SKlzFy0y2u+Ee+guVVCLrs25jovXl34QxqnMF1eyufjoB2AWK9zmSTS
-         ICng==
-X-Forwarded-Encrypted: i=1; AJvYcCUU8S2e49SjdJI0OFEzEM/uHiuBIZ8ME1/jzKq7jqWRNlu91IQFXwAoC9mxEDNWr73GVqYRjhbdKNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfv3QBBVOGefAXGfGe6emnkMyGWBMyKZVMZXrH9YrB2JD7IQNz
-	HGZdIa8xO5SjoKCuiuPuG8kmvg2fHi/B6lv0eY7i3srTOZLYqfvkNWhtHPu/vcRO+fM=
-X-Gm-Gg: ATEYQzzge8EWyeEoHS/BSdPhI2XcrRPms+j0q6cSpV3wI/B7sNj134md3uO9pI/or9L
-	McDoJDZOqYWhnCL39eRjPeGS6h42xVslaUHXrBJUW7pITI27vDDKqz2gwwy5GjbBw1aKwfR0nZQ
-	t0hQGavRDv7VE53LUHtRayC8LT3F4vlLDthzli4ArBwIG7dnV7Bf854okRFws/2SM59LOu6Rthb
-	+9UZDATi/kj2vbOExmQlbcGMLL84yvvDBVUfdRvPj1GSym8/9Frhg3sIGuHGpbbitOFqWSnEIQH
-	4GPoM6rznLaLxEqsP+KW2bW97QunQW5KxnwQqmBZ9/+PEJhOFpQognR2J5cScwxazBh3ykz3C0w
-	uWD10AO0W5hTrhcBt6sMrVNNKCf3OJ/JLLFY9vcveUyLrc4X94QMl07201eU+54ikJQ5lRLircS
-	duWahZaG08M612ORQ/FdSo6W6gq7x99wI7vgAM4VJWPWejF9O0Pxnrv6OnFdi2IR4PwdUZwymro
-	iSVfe5KNw==
-X-Received: by 2002:a05:6830:6185:b0:7c7:6977:17cb with SMTP id 46e09a7af769-7d6d139f788mr450044a34.21.1772595307034;
-        Tue, 03 Mar 2026 19:35:07 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d586653f6asm15202012a34.19.2026.03.03.19.35.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2026 19:35:06 -0800 (PST)
-Message-ID: <e96e851a-9050-4d8c-b1e5-bc3b5d91a84c@kernel.dk>
-Date: Tue, 3 Mar 2026 20:35:01 -0700
+        d=1e100.net; s=20230601; t=1772602587; x=1773207387;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tBaAO3EhPpnhGGnT8RJsqBThiWnEysWAZzlV8WTFAvE=;
+        b=E7N0PFv7ATR+8Rve4l/3Qa2Eq061VtJDlYJAYF/PdQ1Ru8RZunYJQd1PL2monTdf8j
+         3AdyvELMZpc5iMry9uLUumGRYxfS7L0bOz/o8RraSZhjXW+lvfMzEa2CDxbLUUiU9HBP
+         hHoic5nK8rot/1cruhC9YIWjhHaaceidJfRx4UH3E3mhroG8JMdOJYq23XeWGZQ993QT
+         vXCdh1+V2en+VU3WKfDGUGRXnCo1ePRBytN9ojCWu0U/7PNOEsnM27jHY061FoNdM12D
+         3+0bZhkIj7MCdOwSRX/07ug+PRKPtrVm4SDfouqQTmHcpbZ99bJ2XgL8wiuchayy0DjY
+         V3Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCV20taPMn75YoQ9GucG/tg364a2u179dGkNcGH51DoX7pVv/Wtomr2t+VRGCcSeDCfByZo+3ZRkY1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCo7H41BshANlK6m3loo2cIUKTv8q/Xyy9um1WqJlFj/bo963F
+	wC+KBvGymvfczjmfUFsjq/VmOAQBvA7303+RWbRQU7DRpzvKh72Fcj4t
+X-Gm-Gg: ATEYQzw//QgmAtcSJRWIGuC6oYncN1FgTf0mLMnaLo2CY2gKB8TxnOxRDRIIkLLbCeo
+	yuYZcPve9frFKKyA1U8eXJBAF55mrM7n/K2xDg3lxXk3eOzkgGzv5IL2Uhr/Ueg7YbmarBJfN6t
+	cNBKcFudnQdc/FZWkrk/UjpQlf9w48NItZ+bqURi+VxV65AFJ0BJ4UBs9wfAym5cVS2w9X5LU12
+	qJlIfbc2QR/2+EM8hv5NoptyMEInC7BlnOCmaOr2lxgRQERpDaEWGO/pYcVIkYmRuS58s6bWl95
+	QM+Vzd/yQ8MfhOph90M0yz6hUY0jxOgOohizRobyyf6g9DssTmvKSWW1wyk/152IF322Ou+uENB
+	GGmozFw9/g3OTibbWkC4MFv6RQjr0EvC9B3E0ogwWuDPoYlYNqGVr5qbSpxVxR76maozHtzBnzg
+	tZ/n2438rBs638fyPUArC0HVVaCULLFakr4zXSMv8KWQ==
+X-Received: by 2002:a17:90b:3952:b0:339:ec9c:b275 with SMTP id 98e67ed59e1d1-359a69aec32mr1042348a91.6.1772602586933;
+        Tue, 03 Mar 2026 21:36:26 -0800 (PST)
+Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:6209:4521:6813:45b7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3599c090bfdsm4020057a91.8.2026.03.03.21.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 21:36:26 -0800 (PST)
+From: alistair23@gmail.com
+X-Google-Original-From: alistair.francis@wdc.com
+To: chuck.lever@oracle.com,
+	hare@kernel.org,
+	kernel-tls-handshake@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	linux-nfs@vger.kernel.org
+Cc: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	hare@suse.de,
+	alistair23@gmail.com,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v7 0/5] nvme-tcp: Support receiving KeyUpdate requests
+Date: Wed,  4 Mar 2026 15:34:55 +1000
+Message-ID: <20260304053500.590630-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] mm: globalize rest_of_page() macro
-To: Yury Norov <ynorov@nvidia.com>, Sean Christopherson <seanjc@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>, "Michael S. Tsirkin"
- <mst@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexander Duyck <alexanderduyck@fb.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Alexandra Winter <wintera@linux.ibm.com>,
- Andreas Dilger <adilger.kernel@dilger.ca>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker <anna@kernel.org>,
- Anton Yakovlev <anton.yakovlev@opensynergy.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>,
- Carlos Maiolino <cem@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Chao Yu <chao@kernel.org>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Christian Brauner <brauner@kernel.org>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, David Airlie <airlied@gmail.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Dongsheng Yang <dongsheng.yang@linux.dev>, Eric Dumazet
- <edumazet@google.com>, Eric Van Hensbergen <ericvh@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>,
- Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Latchesar Ionkov <lucho@ionkov.net>, Linus Walleij <linusw@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>,
- Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Tvrtko Ursulin <tursulin@ursulin.net>,
- Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
- Yury Norov <yury.norov@gmail.com>, Zheng Gu <cengku@gmail.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- dm-devel@lists.linux.dev, netdev@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev,
- virtualization@lists.linux.dev, linux-sound@vger.kernel.org
-References: <20260304012717.201797-1-ynorov@nvidia.com>
- <20260303182845.250bb2de@kernel.org>
- <f8d86743-6231-414d-a5e8-65e867123fea@kernel.dk>
- <aaedwFwXh9QXS3Ju@google.com> <aaen2pGs0UeiJqz1@yury>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <aaen2pGs0UeiJqz1@yury>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1EDD61FA6D1
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 2344E1FAE23
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel-dk.20230601.gappssmtp.com:s=20230601];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_NA(0.00)[kernel.dk];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,davemloft.net,redhat.com,mit.edu,eecs.berkeley.edu,fb.com,linux.ibm.com,zeniv.linux.org.uk,dilger.ca,lunn.ch,opensynergy.com,alien8.de,arm.com,linux.intel.com,gmail.com,codewreck.org,linux.dev,google.com,gondor.apana.org.au,perex.cz,ionkov.net,ellerman.id.au,szeredi.hu,dabbelt.com,infradead.org,intel.com,ffwll.ch,suse.com,ursulin.net,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19713-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel-dk.20230601.gappssmtp.com:+];
+	TAGGED_FROM(0.00)[bounces-19714-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,kernel.dk,lst.de,grimberg.me,nvidia.com,suse.de,gmail.com,wdc.com];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NO_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[axboe@kernel.dk,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCPT_COUNT_GT_50(0.00)[85];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alistair23@gmail.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kernel.dk:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ietf.org:url,infradead.org:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,wdc.com:mid,wdc.com:email]
 X-Rspamd-Action: no action
 
-On 3/3/26 8:32 PM, Yury Norov wrote:
-> My motivation is that it helps to simplify constructions like this:
-> 
-> -               loff_t cmp_len = min(PAGE_SIZE - offset_in_page(srcoff),
-> -                                    PAGE_SIZE - offset_in_page(dstoff));
-> +               loff_t cmp_len = min(rest_of_page(srcoff), rest_of_page(dstoff));
-> 
-> Or this:
-> 
-> -               if (folio_test_highmem(dst_folio) &&
-> -                   chunk > PAGE_SIZE - offset_in_page(dst_off))
-> -                       chunk = PAGE_SIZE - offset_in_page(dst_off);
-> -               if (folio_test_highmem(src_folio) &&
-> -                   chunk > PAGE_SIZE - offset_in_page(src_off))
-> -                       chunk = PAGE_SIZE - offset_in_page(src_off);
-> +               if (folio_test_highmem(dst_folio) && chunk > rest_of_page(dst_off))
-> +                       chunk = rest_of_page(dst_off);
-> +               if (folio_test_highmem(src_folio) && chunk > rest_of_page(src_off))
-> +                       chunk = rest_of_page(src_off);
-> 
-> To a point where I don't have to use my brains to decode them. I agree
-> it's an easy math. It's just too bulky to my (and 9p guys too) taste.
+From: Alistair Francis <alistair.francis@wdc.com>
 
-The thing is, now I have to go lookup what on earth rest_of_page() does,
-whereas PAGE_SIZE - offset_in_page(page) is immediately obvious. It's a
-classic case of "oh let's add this helper to simplify things" which
-really just makes it worse, because now you have to jump to the
-definition of rest_of_page().
+The TLS 1.3 specification allows the TLS client or server to send a
+KeyUpdate. This is generally used when the sequence is about to
+overflow or after a certain amount of bytes have been encrypted.
 
-IOW, just no.
+The TLS spec doesn't mandate the conditions though, so a KeyUpdate
+can be sent by the TLS client or server at any time. This includes
+when running NVMe-OF over a TLS 1.3 connection.
+
+As such Linux should be able to handle a KeyUpdate event, as the
+other NVMe side could initiate a KeyUpdate.
+
+Upcoming WD NVMe-TCP hardware controllers implement TLS support
+and send KeyUpdate requests.
+
+This series builds on top of the existing TLS EKEYEXPIRED work,
+which already detects a KeyUpdate request. We can now pass that
+information up to the NVMe layer (target and host) and then pass
+it up to userspace.
+
+Userspace (ktls-utils) will need to save the connection state
+in the keyring during the initial handshake. The kernel then
+provides the key serial back to userspace when handling a
+KeyUpdate. Userspace can use this to restore the connection
+information and then update the keys, this final process
+is similar to the initial handshake.
+
+This series depends on the read_sock_cmsg() kernel patch:
+https://lore.kernel.org/kernel-tls-handshake/20260217222033.1929211-1-cel@kernel.org
+
+ktls-utils (tlshd) userspace patches are available at:
+https://lore.kernel.org/kernel-tls-handshake/CAKmqyKNpFhPtM8HAkgRMKQA8_N7AgoeqaSTe2=0spPnb+Oz2ng@mail.gmail.com/T/#mb277f5c998282666d0f41cc02f4abf516fcc4e9c
+
+Link: https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.3
+
+Based-on: 20260217222033.1929211-1-cel@kernel.org
+
+v7:
+ - Don't use recvmsg() (see [1]) instead use read_sock_cmsg()
+ - Remove reviews from patch 4, as it changed a bit to support read_sock_cmsg()
+v6:
+ - Don't free handshake request on completion (handshake_sk_destruct_req())
+ - Add handshake_req_keyupdate() which reuses existing handshake request
+   for a KeyUpdate
+ - Other small improvements and tidyups
+v5:
+ - Cleanup code flow for nvme-tcp
+ - When using recvmsg in the host code first check for MSG_CTRUNC
+   in the msg_flags returned from recvmsg() and use that to determine
+   if it's a control message
+ - Drop clientkeyupdaterequest and serverkeyupdaterequest
+v4:
+ - Don't stop the keep-alive timer
+ - Remove any support for sending a KeyUpdate
+ - Add tls_client_keyupdate_psk()' and 'tls_server_keyupdate_psk()'
+ - Code cleanups
+ - Change order of patches
+v3:
+ - Rebase on the recvmsg() workflow patch
+ - Add debugfs support for the host
+ - Don't cancel an ongoing request
+ - Ensure a request is destructed on completion
+v2:
+ - Change "key-serial" to "session-id"
+ - Fix reported build failures
+ - Drop tls_clear_err() function
+ - Stop keep alive timer during KeyUpdate
+ - Drop handshake message decoding in the NVMe layer
+
+1: https://lists.infradead.org/pipermail/linux-nvme/2026-February/061252.html
+
+Alistair Francis (5):
+  net/handshake: Store the key serial number on completion
+  net/handshake: Define handshake_req_keyupdate
+  net/handshake: Support KeyUpdate message types
+  nvme-tcp: Support KeyUpdate
+  nvmet-tcp: Support KeyUpdate
+
+ Documentation/netlink/specs/handshake.yaml |  20 +-
+ Documentation/networking/tls-handshake.rst |   1 +
+ drivers/nvme/host/tcp.c                    |  80 +++++++-
+ drivers/nvme/target/tcp.c                  | 213 ++++++++++++++-------
+ include/net/handshake.h                    |  11 +-
+ include/uapi/linux/handshake.h             |  12 ++
+ net/handshake/genl.c                       |   5 +-
+ net/handshake/handshake.h                  |   2 +
+ net/handshake/request.c                    |  97 ++++++++++
+ net/handshake/tlshd.c                      |  97 +++++++++-
+ net/sunrpc/svcsock.c                       |   4 +-
+ net/sunrpc/xprtsock.c                      |   4 +-
+ 12 files changed, 467 insertions(+), 79 deletions(-)
 
 -- 
-Jens Axboe
+2.53.0
+
 
