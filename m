@@ -1,236 +1,142 @@
-Return-Path: <linux-nfs+bounces-19797-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19798-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cOo4FxqWqWnYAQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-19797-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 15:41:30 +0100
+	id UEBgBdKcqWnGAwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-19798-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 16:10:10 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0909A213A90
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 15:41:29 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11061214379
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 16:10:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E6B3F31B1FD3
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2026 14:26:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1EFCD303BCCC
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2026 14:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ACBD3ACA41;
-	Thu,  5 Mar 2026 14:25:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED073A9D90;
+	Thu,  5 Mar 2026 14:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N/OnFzWa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIUjFHFv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260483A7F6E;
-	Thu,  5 Mar 2026 14:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD793A9638;
+	Thu,  5 Mar 2026 14:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772720745; cv=none; b=MQ3cv50hn6gfs+15TGW6UGE6A8zpIQgU02th+qKYo+eOzbqEFTjmDmx5yGGl5j1p3nJ26JdVAJ+CGliUtCKcqoiEbxG5eecja27IebdUQwrpsKFIVz6lsDueojzf0mFD0QqzSlTzlUApSl+8xQ7qiFVBOMdqsp8i3Md2MMaELTk=
+	t=1772722267; cv=none; b=sIzVRLO951RY+cvdP7qDeyLplqZcJAGGXT53VG+BA2StUdfoVNRry2VaQJ4Zu9XLoB33TiHLHGUsfF9jg8rFBmQuXOWSpH2HyHKdNArD4A0HmzMtdpd84A25I1KXi4iE9gZcnOitW3x2WdGnGRP3W6cw+ZrFV71W5kjGAqr8PAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772720745; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AoWs93sJMlT32P4cjGOVTGkLesR/bxcqDAF5tY7h6QI2nP9Tx9gu5+LPBNk9lhesm3EspHj4Bs9qtOKTGjwZzTHauEy7UBXjTxzb8GU1r/K4Fith8Q5i4BLMBEPPxZmlYhyuAt747/eKCHXs+/24uJ/7QtY10R9mD4Lkd1j0gVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N/OnFzWa; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=N/OnFzWa9k33Gb8WoaORaZf8/1
-	omQzMxzv7AKB0iGBOiFBTlfDd8cv/SFY2cN/xlhCF9LD4axDr458b3KkJDHIqY9jaYSeX0Iuke/ea
-	ruLhr6C+ymLhOMKavxBklyL56gQe5kOFHaR9GqikFPQ4+YspElC14XRfWh6kM52omEOHgMpsSREro
-	y5uto1k++Slfwuo7nq2YzlvQFOIu0vNsS5w8AUmDYAa3V8L257/vRobIemRsPwt43jEH4dMBKvjE9
-	qvJU8j7WutreciL7iwRXCEmJf59WsaeHF8hGB2PcyqrdNOf6OBCyjpqgu7qzQ+34Omj2U+HU1z4kP
-	lBT6VZKQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vy9dP-00000001z65-3qix;
-	Thu, 05 Mar 2026 14:25:03 +0000
-Date: Thu, 5 Mar 2026 06:25:03 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Steve French <sfrench@samba.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	David Sterba <dsterba@suse.com>,
-	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	David Ahern <dsahern@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
-	audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v3 12/12] treewide: change inode->i_ino from unsigned
- long to u64
-Message-ID: <aamSP0KKicK3dvIf@infradead.org>
-References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
- <20260304-iino-u64-v3-12-2257ad83d372@kernel.org>
+	s=arc-20240116; t=1772722267; c=relaxed/simple;
+	bh=fPV5ZVhneR8ZJSE+10+wVcHcZK9+lbtLn7p4+H33Tzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vqj/GOUP/nfe0oqgWR/sEAhg9+HjCo5tRUX4rzJAySxZ5XVGzweoBfGOqffD7hiCX/eNp7tcsM0kCbO8baBafxcuvYC0ol9xA5lb4efZ36Oi3Es5cQ2JbFTZunMTQ2iyjDN8exZ7UAMcDtm8IFd2D9/yQVMqK2fKcmQgt6iKZ4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIUjFHFv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C7EC116C6;
+	Thu,  5 Mar 2026 14:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772722267;
+	bh=fPV5ZVhneR8ZJSE+10+wVcHcZK9+lbtLn7p4+H33Tzk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bIUjFHFvU9tZaVnhCYG1ELUQcnZd67ZwN6whypQYP0W6g8jvEVaVsYzAElOfYIWPS
+	 4Zi6v7tl9aY4l+MV++Z2Mq7zyDEfssDgAqTXQe5LiH3jB9Mf5CZ5Z/+LrWNf6PVh7G
+	 YxhhU+q0w8m0tTXiiKtZm70BOc3nOrJhevCbEVg2zp1fjZXsZsy8W7UT5XuhqDnBwG
+	 PaNJ7NuLbkY/nNylhtXW1IyXk93gzGCnEjtqm+mROPrRV96ag5mr00XWo3CxvvaTAp
+	 Od3RmDrFC3TBeo4Gwl4sods1BPaOIQwMj2PILzMn7mv+ZU7VunUHine3b2f3os9S0L
+	 CsPhiCDE0/8xA==
+From: Chuck Lever <cel@kernel.org>
+To: Anna Schumaker <anna@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	<linux-nfs@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v2 0/8] Fix various races in xprtrdma
+Date: Thu,  5 Mar 2026 09:50:55 -0500
+Message-ID: <20260305145054.7096-10-cel@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260304-iino-u64-v3-12-2257ad83d372@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Rspamd-Queue-Id: 0909A213A90
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1717; i=chuck.lever@oracle.com; h=from:subject; bh=eZ3hxbviwh21eOl3yeHsTTZ/XYkx1AAWgktHfHZB/YE=; b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpqZhORTJbwmYnfGVmWH7E/xUJ2+Pt23WC3yG4b KE5VggLmmyJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaamYTgAKCRAzarMzb2Z/ l9p5D/9w1sqXSNVGIqaNnqTE+iBZoerD90t1INA5iKAfmBC32pPFNb9LDOAqALcuVisYki4pU1V D8wwUpgMbhFZNQ8ttxGn4XxAYTGzDuuqG1FR2ueF8EfQfDyd+ayhS1rb3/Nc1i0uTXLBNm46IUL XCy89tnBJYrb1Xxabw9e3/PmTFzG2DRfumhKdvevoT22i8AjscL8HcSun8pNNsAXCOzIbihHlw4 UEJJLC9on768s47TkFvFLf9t4sEJ5XxNjkof3qeU6Crqbj9uC8XaUFVPN6t0XbFLuCN8WHo7dvH k6WuE3E/agJsQcoQCO6pHSF6qQEVV3yQNeNvpdGUKARC62+mIgLoLm4lNGt7R18Jtdim1rd3Hcb BV4f3STla5+5XmlnmToHiL8mZ3HgS8CP9mjByTfeKeDZ1h4AeXyqiG4lCVfvEqAACHhxFa/4UbG jyNpqJ48bE+3smABLUNO68pQcA0L0ERKSxdXQmmDiG76cfzDPSZNJQtrt8Fbxlcij0X2H9U3xU6 zlHdFQOf78tLED/DLfHU4iMa9r7PIHRI1SAR3y8CaCFV48QZwxiRqMlmO2iEIJUq5IWO9HDHhRt r66uvYDu3QqiSWDC4D9yieEwtV2h6YpmmUMnRgPKqvfEkHvm+mq/zugd3aP+PZdknLVOfxG9iGx NCDmDFV/6QfDclA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 11061214379
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,goodmis.org,efficios.com,intel.com,mit.edu,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,infradead.org,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,yaina.de,holtmann.org,hartkopp.net,pengutronix.de,secunet.com,gondor.apana.org.au,fomichev.me,iogearbox.net,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.linaro.or
- g];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19798-lists,linux-nfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-19797-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[171];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[]
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,oracle.com:email]
 X-Rspamd-Action: no action
 
-Looks good:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Since commit b326df4a8ec6 ("NFS: enable nconnect for RDMA"), the
+nconnect mount option has been enabled on proto=rdma NFS mount
+points. Utilizing this option increases the IOPS throughput that
+an NFS mount point is capable of.
+
+To test some ongoing NFS server performance scalability work, I've
+started to enable nconnect while testing. I've found that, as well
+as enabling much better utilization of fast network fabrics, it
+surfaces some subtle race conditions that are well-buried when there
+is only a single QP.
+
+This series addresses a few bugs and makes some performance
+scalability enhancements to make nconnect with NFS/RDMA even better.
+
+---
+
+Changes since v1:
+- Expand single-patch series with more fixes
+
+Chuck Lever (7):
+  xprtrdma: Close sendctx get/put race that can block a transport
+  xprtrdma: Avoid 250 ms delay on backlog wakeup
+  xprtrdma: Close lost-wakeup race in xprt_rdma_alloc_slot
+  xprtrdma: Decouple frwr_wp_create from frwr_map
+  xprtrdma: Replace rpcrdma_mr_seg with xdr_buf cursor
+  xprtrdma: Scale receive batch size with credit window
+  xprtrdma: Post receive buffers after RPC completion
+
+Eric Badger (1):
+  xprtrdma: Decrement re_receiving on the early exit paths
+
+ include/linux/sunrpc/xprt.h     |   2 +
+ include/trace/events/rpcrdma.h  |  28 ++---
+ net/sunrpc/xprt.c               |  16 +++
+ net/sunrpc/xprtrdma/frwr_ops.c  | 176 ++++++++++++++++++++++++++------
+ net/sunrpc/xprtrdma/rpc_rdma.c  | 174 ++++++++++++-------------------
+ net/sunrpc/xprtrdma/transport.c |  17 ++-
+ net/sunrpc/xprtrdma/verbs.c     |  26 ++++-
+ net/sunrpc/xprtrdma/xprt_rdma.h |  43 +++++---
+ 8 files changed, 305 insertions(+), 177 deletions(-)
+
+-- 
+2.53.0
 
 
