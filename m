@@ -1,236 +1,180 @@
-Return-Path: <linux-nfs+bounces-19785-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19786-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kCyaHGvbqGnGxwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-19785-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 02:24:59 +0100
+	id uB/wD6E2qWlk3AAAu9opvQ
+	(envelope-from <linux-nfs+bounces-19786-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 08:54:09 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B25E209CAA
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 02:24:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8CC120CFA6
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 08:54:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6D19F301BCCB
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2026 01:24:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 71316303266A
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2026 07:53:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7AC23A9AD;
-	Thu,  5 Mar 2026 01:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 328E03358AF;
+	Thu,  5 Mar 2026 07:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="fS1CK1OA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zUZbV8qF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ku4RhVWj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF1516A395;
-	Thu,  5 Mar 2026 01:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B032335546;
+	Thu,  5 Mar 2026 07:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772673892; cv=none; b=HUNGic+pbZouFe+KSkUfL2tW5TQ8+Ml8khUJ+epidq2oiLEcDvFmZ7Vsl4NqmT6FHCEv09ZJah5DE0kWHQYmU+9o+VGdDbZkdGV7PT616behYBbc4Mr3OhNNuGwYTPC1mNFFLNjrlVw3osIIYYZQzX0b4vh6bPfgTI7C1AzR8Bk=
+	t=1772697216; cv=none; b=PhWFqQbtpyW+qNXF9hNbRffZzs8cb7YHY0QVuxjgZXNOXIHRxTDqasPKIfEpt+O52emHJiculTPqfEiufMT0RYOSNW6nr6tW3kYs6TVv2ay5RmQX/cMw8/6OLETV9A2rMJc0B9xvikJJdPRhybEHQqtdDYKyxy1b/RYm/C0D8Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772673892; c=relaxed/simple;
-	bh=PMX6JyRSnu2E5Zy7NOXER9HT8+AOuMaqShL4u2efzKc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=QLmUCPH9PaXLPZ637KqL69LpR+Qt0Ad+xDWrQ+UlT7uYVuQezD+sPGUP2Tbo73hzo13uwZrfqK2LmqeDJnO+4omLu8Qwnrt7OwyCBnT/fPJLQYWpb4Zi820rPIJlrHWQBPPg0zMxXRktZ4aYtq51fV5iqmrCB3FCJO6rcBxlhRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=fS1CK1OA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zUZbV8qF; arc=none smtp.client-ip=103.168.172.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailflow.phl.internal (Postfix) with ESMTP id 0F5ED1380E14;
-	Wed,  4 Mar 2026 20:24:49 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Wed, 04 Mar 2026 20:24:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1772673889; x=1772681089; bh=pHow27CTfPDvgGL29iyDc6nQ4fjpzyYL5lv
-	mt+hLriQ=; b=fS1CK1OAQhIegJ19aVS0NBBw14oXk8mzezIRJvAKaXQt6wZk1QN
-	QyLs07K4449ND+SR7dhuFNaz+DkpMCENe9edX65fMOZE8vNIETM4ctq15oQJ1xAj
-	IASPRLB3GuikAUa+P85jb1NzwDHQVSJaLr3PiCo5pjUpXgZMT6tUnaKsZPUpMoTB
-	q4MuZ1PkwcVP0wuHrDCy1sq1os7WCw2al7Ao5rBGZjtk4WImMh25cAcGYH7IzMYt
-	qUGQwsG1Gl/qRF+/hfqX5Go7tCF6J2Eg4mWLzByuGIWjbhm60CkTkyu3nsAFg5gh
-	QsB62PwimFCALvZrNF8SuGoR2RASKF+9N9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772673889; x=
-	1772681089; bh=pHow27CTfPDvgGL29iyDc6nQ4fjpzyYL5lvmt+hLriQ=; b=z
-	UZbV8qF1pUA4oX+oEhgbjXEd6Qz84vUCLWVNrmELGTAt7XsjDqlWTNaFfPpHE3bJ
-	kMNZTY8rLo9r5EDXJxEyZ3A1QJS87loj+JnftGi9XEKIpAJQVpo11yA5L0nVKBbb
-	1UyY7juYTNfIaFa7hWHhHDfDhoXGb4g6P1eBDBFXNOWDwoTu5tDWOsMK+UfDlsJ3
-	8BXfwlGl8fvuqlXSD6JbeESKC/r2tbA+X5Ib8Ao6050Wenr8ysEYn6SF1uPhd7m3
-	oM4l2EDbDeEQoQmu734V1MTKW1dg57hrCOO9MPgWK0xcwEz5ZsIsMSk0rPkOz1nl
-	C08mNGz1OuRmU4Mnj/mOQ==
-X-ME-Sender: <xms:X9uoaZyO8jjwzvZMObvAu_oGj1IqHp_V3PfAvAnBAuUZkRw8xP3l4Q>
-    <xme:X9uoadMnYbkMLjUd7fzbzl4AMAvZQ8WNnha6k3Czu0U52hyQQonXEZLS12MaLKN2C
-    MfhzvgweCg0JiTEgSIDO8Vk741TqUiGR_ieVtepTGiwddvfEQ>
-X-ME-Received: <xmr:X9uoab3GZjHMqCmmD6HykudsWGTS1J0FNhd6kvBf8XStgOYIntA2X2d8AdRjB-PjdvYSry1kxymqO-MTcopwZgHWFz-z3NynmgT-IKGCm4BC>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieehtdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepvddvpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhr
-    tghpthhtohepjhgrtghksehsuhhsvgdrtgii
-X-ME-Proxy: <xmx:X9uoaVF9aO2rFJfMo9ZYL-rjkjx-_hWBa1Y12rAj2w8CayyWtOGBWw>
-    <xmx:X9uoaSh0iIkn877feRTUOzlbn3ySdhcr3gz3o8Kxm7eMSJUmXq0DRg>
-    <xmx:X9uoaed2nuv1cxb9PBp9Rv7ou0Gkx-R2lM9ok6f10GCTojgs9qF02A>
-    <xmx:X9uoaYxQMfDOzeYFQ4QFTCd42scQ48clntS8IR4tMTF1ZFP2AxKpCA>
-    <xmx:YduoaeI_V-Uu4J5ku4xeQFzYsT6m2VzogBuSJbtMi1at18Dh4rQfWEYV>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 4 Mar 2026 20:24:41 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1772697216; c=relaxed/simple;
+	bh=0IRCN5orXpBlDp5bbe+hP/a4OpxCZ/kKP/mq46MHsUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JqouC96eiTfDcq6jUkRjXKH4BpgTV9aoPT0HkRlOzLFmwlvxiPe9AqlE54tSxFsDZAh+FNVZDQqdsNTN811ilkQmjzwl90magp3mg4aMZMXBUlSr8FoKH78zXOb0DfjMsguCsxiq7RejZ95B1AziUtq0ZGoGw+qNA17J6rgI8dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ku4RhVWj; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772697214; x=1804233214;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0IRCN5orXpBlDp5bbe+hP/a4OpxCZ/kKP/mq46MHsUc=;
+  b=ku4RhVWjH8Y7sbPrjrY2nOl8fKf5gE31ZDAIsoI4ljsRBHenNpCh8mBT
+   vc6QuuKPcgENAVqRadzecw3s3IYWNPcEUkzGmM00lyO+sovbyqb8I2mLe
+   icajiDrmvYFA8914q6AJZ1TOkwlgFI85sHg7VYTZ3v0hfcxE2mqWJu1b9
+   aRh32O4hzRi6KzXTB7aKzd0ty2cdVeZURRrvg/md3kKF6sN64Br5m+EGP
+   DPpx6UcGEnGfPJSJV5zwG2IJs56RU3Yp5WH6mYWlxDT50mSAHOxFCXH4S
+   3G70Ltyj+5DvehKeFJXA3DCQbRF2wJw0NSUMJkUc90i6ZYgBVcfJwv2CM
+   Q==;
+X-CSE-ConnectionGUID: Ob4yd1NeTt+W4FLMQq/VZw==
+X-CSE-MsgGUID: 9nBb3wlpQRyzRDAiY1Vq/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="77646905"
+X-IronPort-AV: E=Sophos;i="6.21,325,1763452800"; 
+   d="scan'208";a="77646905"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 23:53:32 -0800
+X-CSE-ConnectionGUID: w663kWYfQVa8o27u4O5rSw==
+X-CSE-MsgGUID: kwe5FhppRZ2RDxvcFi9xoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,325,1763452800"; 
+   d="scan'208";a="221500100"
+Received: from lkp-server01.sh.intel.com (HELO cadc4577a874) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 04 Mar 2026 23:53:27 -0800
+Received: from kbuild by cadc4577a874 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vy3WF-000000000Du-3zCf;
+	Thu, 05 Mar 2026 07:53:15 +0000
+Date: Thu, 5 Mar 2026 15:52:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: alistair23@gmail.com, chuck.lever@oracle.com, hare@kernel.org,
+	kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kbusch@kernel.org,
+	axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, kch@nvidia.com,
+	hare@suse.de, alistair23@gmail.com,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v7 4/5] nvme-tcp: Support KeyUpdate
+Message-ID: <202603051502.9qxZ0noK-lkp@intel.com>
+References: <20260304053500.590630-5-alistair.francis@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "David Howells" <dhowells@redhat.com>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Miklos Szeredi" <miklos@szeredi.hu>, "Amir Goldstein" <amir73il@gmail.com>,
- "John Johansen" <john.johansen@canonical.com>,
- "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>,
- "Stephen Smalley" <stephen.smalley.work@gmail.com>,
- "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netfs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Subject:
- Re: [PATCH v3 00/15] Further centralising of directory locking for name ops.
-In-reply-to: <20260224222542.3458677-1-neilb@ownmail.net>
-References: <20260224222542.3458677-1-neilb@ownmail.net>
-Date: Thu, 05 Mar 2026 12:24:38 +1100
-Message-id: <177267387855.7472.13497219877141601891@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-X-Rspamd-Queue-Id: 1B25E209CAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260304053500.590630-5-alistair.francis@wdc.com>
+X-Rspamd-Queue-Id: D8CC120CFA6
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19785-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FREEMAIL_CC(0.00)[lists.linux.dev,kernel.org,kernel.dk,lst.de,grimberg.me,nvidia.com,suse.de,gmail.com,wdc.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	TAGGED_FROM(0.00)[bounces-19786-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,redhat.com,suse.cz,oracle.com,szeredi.hu,gmail.com,canonical.com,paul-moore.com,namei.org,hallyn.com];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_TO(0.00)[gmail.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-0.988];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	NEURAL_HAM(-0.00)[-0.996];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,noble.neil.brown.name:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,intel.com:dkim,intel.com:email,intel.com:mid]
 X-Rspamd-Action: no action
 
+Hi,
 
-Hi Christian,
- do you have thoughts about this series?  Any idea when you might have
- time to review and (hopefully) apply them?
+kernel test robot noticed the following build errors:
 
-Thanks,
-NeilBrown
+[auto build test ERROR on trondmy-nfs/linux-next]
+[also build test ERROR on net/main net-next/main linus/master v7.0-rc2 next-20260304]
+[cannot apply to linux-nvme/for-next horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/alistair23-gmail-com/net-handshake-Store-the-key-serial-number-on-completion/20260304-134148
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20260304053500.590630-5-alistair.francis%40wdc.com
+patch subject: [PATCH v7 4/5] nvme-tcp: Support KeyUpdate
+config: x86_64-buildonly-randconfig-006-20260305 (https://download.01.org/0day-ci/archive/20260305/202603051502.9qxZ0noK-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260305/202603051502.9qxZ0noK-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603051502.9qxZ0noK-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/nvme/host/tcp.c:1429:24: error: no member named 'read_sock_cmsg' in 'struct proto_ops'
+    1429 |         consumed = sock->ops->read_sock_cmsg(sk, &rd_desc, nvme_tcp_recv_skb,
+         |                    ~~~~~~~~~  ^
+   1 error generated.
 
 
-On Wed, 25 Feb 2026, NeilBrown wrote:
-> Following Chris Mason's tool-based review, here is v3 with some fixes.
-> Particularly 06/15 mistakenly tested the result of start_creating for NULL
-> and 09/15 had some really messed up flow in error handling.
-> Also human-language typos fixed.
->=20
-> This code is in=20
->   github.com:neilbrown/linux.git
->   branch pdirops
->=20
-> For anyone interested, my next batch is in branch pdirops-next
->=20
-> Original patch description below.
->=20
-> Thanks,
-> NeilBrown
->=20
-> I am working towards changing the locking rules for name-operations: locking
-> the name rather than the whole directory.
->=20
-> The current part of this process is centralising all the locking so that
-> it can be changed in one place.
->=20
-> Recently "start_creating", "start_removing", "start_renaming" and related
-> interaces were added which combine the locking and the lookup.  At that time
-> many callers were changed to use the new interfaces.  However there are sti=
-ll
-> an assortment of places out side of fs/namei.c where the directory is locked
-> explictly, whether with inode_lock() or lock_rename() or similar.  These we=
-re
-> missed in the first pass for an assortment of uninteresting reasons.
->=20
-> This series addresses the remaining places where explicit locking is
-> used, and changes them to use the new interfaces, or otherwise removes
-> the explicit locking.
->=20
-> The biggest changes are in overlayfs.  The other changes are quite
-> simple, though maybe the cachefiles changes is the least simple of those.
->=20
-> I'm running the --overlay tests in xfstests and nothing has popped yet.
-> I'll continue with this and run some NFS tests too.
->=20
-> Thanks for your review of these patches!
->=20
-> NeilBrown
->=20
->  [PATCH v3 01/15] VFS: note error returns in documentation for various
->  [PATCH v3 02/15] fs/proc: Don't lock root inode when creating "self"
->  [PATCH v3 03/15] VFS: move the start_dirop() kerndoc comment to
->  [PATCH v3 04/15] libfs: change simple_done_creating() to use
->  [PATCH v3 05/15] Apparmor: Use simple_start_creating() /
->  [PATCH v3 06/15] selinux: Use simple_start_creating() /
->  [PATCH v3 07/15] nfsd: switch purge_old() to use
->  [PATCH v3 08/15] VFS: make lookup_one_qstr_excl() static.
->  [PATCH v3 09/15] ovl: Simplify ovl_lookup_real_one()
->  [PATCH v3 10/15] cachefiles: change cachefiles_bury_object to use
->  [PATCH v3 11/15] ovl: pass name buffer to ovl_start_creating_temp()
->  [PATCH v3 12/15] ovl: change ovl_create_real() to get a new lock when
->  [PATCH v3 13/15] ovl: use is_subdir() for testing if one thing is a
->  [PATCH v3 14/15] ovl: remove ovl_lock_rename_workdir()
->  [PATCH v3 15/15] VFS: unexport lock_rename(), lock_rename_child(),
->=20
->=20
+vim +1429 drivers/nvme/host/tcp.c
 
+  1417	
+  1418	static int nvme_tcp_try_recv(struct nvme_tcp_queue *queue)
+  1419	{
+  1420		struct socket *sock = queue->sock;
+  1421		struct sock *sk = sock->sk;
+  1422		read_descriptor_t rd_desc;
+  1423		int consumed;
+  1424	
+  1425		rd_desc.arg.data = queue;
+  1426		rd_desc.count = 1;
+  1427		lock_sock(sk);
+  1428		queue->nr_cqe = 0;
+> 1429		consumed = sock->ops->read_sock_cmsg(sk, &rd_desc, nvme_tcp_recv_skb,
+  1430						     nvme_tcp_recv_cmsg);
+  1431		release_sock(sk);
+  1432		return consumed == -EAGAIN ? 0 : consumed;
+  1433	}
+  1434	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
