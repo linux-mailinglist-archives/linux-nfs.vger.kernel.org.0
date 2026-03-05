@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-19800-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19801-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6HIrFeeZqWm7AgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-19800-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 15:57:43 +0100
+	id gGCNLeOZqWm7AgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-19801-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 15:57:39 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF807213FB4
-	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 15:57:42 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A44C0213FAD
+	for <lists+linux-nfs@lfdr.de>; Thu, 05 Mar 2026 15:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EE34331CDC03
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2026 14:51:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D84C53067AD5
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Mar 2026 14:51:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E847C3AA1B9;
-	Thu,  5 Mar 2026 14:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4933ACA46;
+	Thu,  5 Mar 2026 14:51:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCqUfgDt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZrOJCQl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE563AA1A4;
-	Thu,  5 Mar 2026 14:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FEF3A9D9E;
+	Thu,  5 Mar 2026 14:51:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772722268; cv=none; b=YtdhC6WpRBI+wzqIx7JaKD/p0ybmdKh/l9DzZGPhTiW5HvA0LDqEFDneXZRJ0LFUCY7xlR+k7E4s51LI3KG2VBtMpCr5HLaYeibv4hOb33c72/+cRHhtT8CsUPDEQS1kpmjkboRZ0sv4fyKRgp3EAxJpUDCQq4j/MzJDZ5Dqg6Q=
+	t=1772722269; cv=none; b=Os/YoLsXIAd33yU63YPh1yfPOAnN+gqGXV6HN6AkC8Upa4N/QjTD0Q0tPiZsisTW/lACsfOMfHAVhJYsjoiOOoBkgOUnNLR//AMCrasng0f0RlYp4UbBH/D7bIkLSxWW+O7L321iJt9U1SMauGKGEP1XUDZ1w7SKAAoJ8IU9Gq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772722268; c=relaxed/simple;
-	bh=z1MJC3FRweYmPEPq5YHZ5jyoBMGe/oJK14mlqTwgr2g=;
+	s=arc-20240116; t=1772722269; c=relaxed/simple;
+	bh=JhNI3uLIe+HscvLElfDY7j7edv7/hA6m2Mcu+1L3lKA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oTd2fhhCijYlekbnyRgEVYfq7uC21jQAFmk1dhcpdY6y+lZ5yjSIBtP2kP+MGAxY18sg0lg80moShWYNxqqdl3BfLa0sZqzR90THtO81h7PrkWSqRnpQbli1P7inKSYO8JNXJm0i5shMlJsYPR8vu9D1vc572JY80j8tgi2IzMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCqUfgDt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A6DC2BCB2;
+	 MIME-Version; b=Ifj5NJSF4mDlRwr1Lfp1XcTRzGHCJ8YktGQ1+uSoO8JsX4JBzTo7yDU9PLpBtwpYVMjX93Or8Gpd1rOXFBSES0QRkZ2BtCVfnasCYqtPrYc9Zj6bJaA4Tf/RoqlLjXHapQlaCNzK4WGrv8HR3cqhaJ87W50OS8/vVEBeVHjePoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZrOJCQl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF47EC19423;
 	Thu,  5 Mar 2026 14:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772722268;
-	bh=z1MJC3FRweYmPEPq5YHZ5jyoBMGe/oJK14mlqTwgr2g=;
+	s=k20201202; t=1772722269;
+	bh=JhNI3uLIe+HscvLElfDY7j7edv7/hA6m2Mcu+1L3lKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WCqUfgDtAMRuBloIeMBdO5woK5MhRvEABy/vWszqjFiasJwr1FEBPGf0f9m8AcWTL
-	 DAde67hUsfYOPH27zL88wNZhNtBT2+7ACPnoZl1MgdFx90ZQcQn8hi5168Nmr/s+1x
-	 VgLYJqT6do7fWh2EMqaospMZ7wXf/ah/r1oOmyXRqbSaoejvXUj1NRpqeJOOZC3bTl
-	 W9QMj84j28rGJyIbhLnZ9dftosgBB8ot5czDpbo4MPsxZXi/PAdsZEXNYlUIEriFQJ
-	 AtcvdvFyL2f89IlhTAvWUMYaJnre8dETjS1vD2A7ERUuPKMNlHb2FdtdOqiV/7ZxCL
-	 U65Cy5p+6OxKg==
+	b=WZrOJCQlZ9x8kpIzig6LcQ/2bbLN+jmbANNSTxaAhGtBKqyCprD0V2r1WsJUVgIAc
+	 HzDIjXvuLD2Xi+enyTFuPLJwe4eNS/1w6C8sLVTwSXhVoylpSryC7qZysuFsatkHi9
+	 vKZmffdLUsoCg41XPazGoRKmCtems+P1kg3PaeRNi7BcHheOjKowQUqU/QrgLdo6PV
+	 kRpBRflWphpouyB5/v4v99E/gbqnyo8ys9p36Wmhn98zc9HrJG4FjG5992qinKDkMU
+	 5lQu7dQaCUTMqvVAxc/v1n0TRXGtnoRmqaGU1VEiuxqKKKIExMlwkmGeGJkWjJY2Ii
+	 QVYYHEnaUJlmw==
 From: Chuck Lever <cel@kernel.org>
 To: Anna Schumaker <anna@kernel.org>
 Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	<linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 2/8] xprtrdma: Close sendctx get/put race that can block a transport
-Date: Thu,  5 Mar 2026 09:50:57 -0500
-Message-ID: <20260305145054.7096-12-cel@kernel.org>
+Subject: [PATCH v2 3/8] xprtrdma: Avoid 250 ms delay on backlog wakeup
+Date: Thu,  5 Mar 2026 09:50:58 -0500
+Message-ID: <20260305145054.7096-13-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260305145054.7096-10-cel@kernel.org>
 References: <20260305145054.7096-10-cel@kernel.org>
@@ -62,28 +62,28 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2576; i=chuck.lever@oracle.com; h=from:subject; bh=Vj3diU24cdWhFoe5Txt6pOMwv2moztIOqmveQ9QcMSA=; b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpqZhVOKb0U0pFAM9Sh6N1f9tHKLUfISLAkXkA2 QBwL5FiF3yJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaamYVQAKCRAzarMzb2Z/ l1JsD/9kKf+u9X3l2tWUdIRSqNc4lrN7FEKsX3eMM9G27ATvQzuFSAF3nbTe/mJtL5NgiXFTLOK WGQQ/pv7qYXA0/MTZBz6iinLJJvzmS3+DruEfH0CiOOGIUWFztxQyIpnJd215hXM02yIIbN+LTd 77sdq9RE7hK8H23DxiU1N9FsginCfnM7gJP8/suwlhOiCb0o2YORRNmVBUfoh83HWgFCmGw107k QuXhaIDkEeZm5sJp1pIPrGbn4q3nZc1Y/3tKBAKcR7XdIp83dnGNxOCjBaAf5HE+qLyBOEQeH2i Nwf2BGU0UV+BC1RfBG+5RcC2L8ots8vzeBEaDpia+vmqv1lEXCOgyHfifsnnUlgAJIj7uqqixP7 DFSUKnd7Kaiu0PodUNNOFpLf9aWBsmQAY/qTwE/QfjrlE9Dm9LS7TBVkMH4auzGWuqd4yINORxg oUyKlFGmmuWKn/48+oivy4X3onj5PLPc/bjER0f/jMg9rI8td7dhtgA6csNLMR3+nRop4aPgZcP Ivr/fD7DLbVxf4tVc0mrwDPiugibv/MAxbRZIUVrNSk17FwMYG3ILeUU5/Wyl2blKbJTD++keCp A7JqOOkrUovwEKoV5Dki/+s4/s23EXpksrDeTJBkzfrsbHh6rzSwWPhgBQYCaeERWyFEVRS2dFP XDk/RvipE3ODmXg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=chuck.lever@oracle.com; h=from:subject; bh=6pyUQpuVLSBToOuVdJ5zWkakk4/utGhpsQKz929K/qI=; b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpqZhWlrcWStJfY0WLXFrjBf/nqK/fWjn5VyDsm /UrIZ0W1PWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaamYVgAKCRAzarMzb2Z/ lwULD/0XariwHfphPw8zxolWuduY3JKC4f+UI0vPT44olFrLAdQACuiCPozoHn8TG2OVQfwq/Zx /YfovpvX095bhM7phIc7G9skA3Ip4OcgJlDsxbG7J9d9e23RWdohuDSP+PfHA9oj8zShIGMdvBy BEnQgU2yNuUqI9GHVi1s9hgh2p52YaKcq/qtF5urTv4CITDyPX+HtsqYU0dNCnbRr/2C8SlFdC4 QApI+NmbVhdqC95uE8NWrpZGpQSYsWvy+tbH+AnUGYGJWIYk/m1hGVrXuDVFx7xPRRwZzymrO0h TwwBSfqjEVTTRmkIyTEfy7yrAgG0k89+NK2fl6O7UzoijZjytACUzL8B4JDmLJWWO3uPgVu0/Vd VIlIRDp81L93/wAL5Lg20s4nkF0BATQNDNI6QsypHs+G0TZuy5gO48mGFNI09KYo9V+KH/Jobh8 IO9DThqMNARSKUIkKQkdkmQbKdIDuuJZpCyl90ajOja5R842cWSAOuV7y9h9cVHuU43LeiBWd9k bJ+ByDoM0zInNpTqCg1fmDHpH2iSWi0Sb9Fhk2PxXhTHRjAseLlzbr7Hl3n+FIApun2plwECuP+ GJULeQAy+k23tGtGbYu3lt6v2tXNQsK5OKmM9jiq+3ksLSVaKJJwFr/VRF7MBkCOxHEbE3/YVgX q9lH0V65Wp8dqEQ==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AF807213FB4
+X-Rspamd-Queue-Id: A44C0213FAD
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19800-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19801-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -93,76 +93,42 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,oracle.com:email]
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-rpcrdma_sendctx_get_locked() and rpcrdma_sendctx_put_locked() can
-race in a way that leaves XPRT_WRITE_SPACE set permanently, blocking
-all further sends on the transport:
+Commit a721035477fb ("SUNRPC/xprt: async tasks mustn't block waiting
+for memory") changed xprt_rdma_alloc_slot() to set tk_status to
+-ENOMEM so that call_reserveresult() would sleep HZ/4 before
+retrying.  That rationale applies to xprt_dynamic_alloc_slot(),
+where an immediate retry under memory pressure wastes CPU, but not
+to the RDMA backlog path: a task woken from the backlog has a slot
+waiting for it, so the 250 ms rpc_delay adds latency without
+benefit.
 
-  get_locked              put_locked (Send completion)
-  ----------              --------------------------
-  read rb_sc_tail
-    -> ring full
-                          advance rb_sc_tail
-                          xprt_write_space():
-                            test_bit(WRITE_SPACE)
-                            -> not set, return
-  set_bit(WRITE_SPACE)
-  return NULL (-EAGAIN)
+This also aligns the code with the existing kernel-doc for
+xprt_rdma_alloc_slot(), which already documented %-EAGAIN.
 
-After the sender releases XPRT_LOCKED, the release path refuses to
-wake the next task because XPRT_WRITE_SPACE is set. The sender
-retries, finds XPRT_WRITE_SPACE still set, and sleeps on
-xprt_sending. No further Send completions arrive to clear the flag
-because no new Sends can be posted.
-
-With nconnect, the stalled transport's share of congestion credits
-are never returned, starving the remaining transports as well.
-
-Fixes: 05eb06d86685 ("xprtrdma: Fix occasional transport deadlock")
+Fixes: a721035477fb ("SUNRPC/xprt: async tasks mustn't block waiting for memory")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/verbs.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index b51a162885bb..90fd83f2d846 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -708,6 +708,18 @@ struct rpcrdma_sendctx *rpcrdma_sendctx_get_locked(struct rpcrdma_xprt *r_xprt)
- 	 */
- 	xprt_wait_for_buffer_space(&r_xprt->rx_xprt);
- 	r_xprt->rx_stats.empty_sendctx_q++;
-+
-+	/* Recheck: a Send completion between the ring-empty test
-+	 * and the set_bit could cause its xprt_write_space() to
-+	 * miss, leaving XPRT_WRITE_SPACE set with a non-full ring.
-+	 * The smp_mb__after_atomic() pairs with smp_store_release()
-+	 * in rpcrdma_sendctx_put_locked().
-+	 */
-+	smp_mb__after_atomic();
-+	next_head = rpcrdma_sendctx_next(buf, buf->rb_sc_head);
-+	if (next_head != READ_ONCE(buf->rb_sc_tail))
-+		xprt_write_space(&r_xprt->rx_xprt);
-+
- 	return NULL;
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 9a8ce5df83ca..ca079439f9cc 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -510,7 +510,7 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	return;
+ 
+ out_sleep:
+-	task->tk_status = -ENOMEM;
++	task->tk_status = -EAGAIN;
+ 	xprt_add_backlog(xprt, task);
  }
  
-@@ -739,7 +751,10 @@ static void rpcrdma_sendctx_put_locked(struct rpcrdma_xprt *r_xprt,
- 
- 	} while (buf->rb_sc_ctxs[next_tail] != sc);
- 
--	/* Paired with READ_ONCE */
-+	/* Paired with READ_ONCE in rpcrdma_sendctx_get_locked():
-+	 * both the fast-path ring-full test and the post-set_bit
-+	 * recheck in the slow path depend on this store-release.
-+	 */
- 	smp_store_release(&buf->rb_sc_tail, next_tail);
- 
- 	xprt_write_space(&r_xprt->rx_xprt);
 -- 
 2.53.0
 
