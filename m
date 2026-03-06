@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-19850-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19851-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SJIzAZxNq2lZcAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-19850-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 22:56:44 +0100
+	id ABjRG9lNq2lYcAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-19851-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 22:57:45 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07D18228211
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 22:56:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED87A22825B
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 22:57:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4C79F301730F
+	by sea.lore.kernel.org (Postfix) with ESMTP id D68FE3074138
 	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2026 21:56:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9BBE3EDADC;
-	Fri,  6 Mar 2026 21:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F67D3EF0D8;
+	Fri,  6 Mar 2026 21:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHmBoGpH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aAZ9Iyor"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F14349B02;
-	Fri,  6 Mar 2026 21:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4E5349B02;
+	Fri,  6 Mar 2026 21:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772834194; cv=none; b=J3ujhNc5Cb7H6T7alqW8UmHj32obWr131bVm/BmppXSEhjDr6sURVjozyrXuZl7p7RkFaH2zOUJRQCpEOgtLKW3k7Vbb3mBNVyW69TZgrfvwJmRtQ+go6lv3abShV2yloFefjE2KYNHVhp6ouEo1pCgfUsmUFH6jQa20Lgabrwk=
+	t=1772834195; cv=none; b=oSFtwKiINQvP1AhbcCccK5oz/oxtGWyZAY1U6D+iqo2mdPU4eBiGgznySK36WrYQmxRQGsw4ysOXOHFeOac/ruefHjP9wNiVSANnmkUsdxMPEbJVwA5WYtaSrgvgBGsL44LMrfdeGC9RYnmFdQ+EwB6Et+ZrXlbJcXoAWAXFtfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772834194; c=relaxed/simple;
-	bh=TyOiju2Wf7J6YXRzAafEYDEFmmJy56IWDlPHutamhog=;
+	s=arc-20240116; t=1772834195; c=relaxed/simple;
+	bh=JoHnB+hEOdt0RDk7MkYUyVXmPLQfiIYySS3DTCMwrCA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eJPE/8uoQ0wKTHOVzIeOegtlIbP/LMBK/oKrVgZx0MqFccECuzCKhxpw3O3UI/Bay3js3vYsdpIWh8AFay7WLFsc5aluG1ieIOtvP28mv06Qjmj99FeuNcK/zWCQrk+Vu+iQ/JaRMWrALyBdFgvHVSjxZYHWKBF4n7uTeqvFHh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHmBoGpH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A1BC2BC86;
+	 MIME-Version; b=oS9LF58i5POXqgs0OVu4Fw/gXZmUUruhdBFanO7iclY1iUcxSj3VJIaZxaYIV0IrsQ+7IMlcS58xh9r1ObLBFe+iCEi15b+de07jIJCXmtnslq0hsLxsYLctbeDBYLfZHgR9d6e1rIrN/azvGIi8UnAVzDFQ2wGsgAlpLlcdUWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aAZ9Iyor; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFA8C2BC9E;
 	Fri,  6 Mar 2026 21:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772834194;
-	bh=TyOiju2Wf7J6YXRzAafEYDEFmmJy56IWDlPHutamhog=;
+	s=k20201202; t=1772834195;
+	bh=JoHnB+hEOdt0RDk7MkYUyVXmPLQfiIYySS3DTCMwrCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JHmBoGpH2M2d7k0efA4Kuz7B6h7NStlWy8uOxIf5Os9crHm/0OzwaTl81O/6a8foC
-	 BOiOKtP8pO18VowAP2aYcjXmn3R5M7L9nbJ2QN18KGKbyINjN0vvDcROfGPBLPqOK1
-	 EBj63GoG5cVIdn9iqqH5bj+u/kfXH60WgY5jAQFXsWzdkPxc337wcqCqYi5dCC22G/
-	 kpDV6Q4OqF7qFfGdhef4UzBs99NIXAQWcGQg8FuQx+WNsHm5qWkdhrklC5AVElgk2c
-	 992OrAeNxDgInm3eV3u3LE3cEMwEFHrkXEe+pQQl9Yg4eu/JnhYOP3TsqNoRwx278e
-	 P7XqRMcaToo5Q==
+	b=aAZ9Iyor8MqPI5k32843mqFctyZz3CnMTbnJbPSy5flF3k+HrEp3a+/xZQTC3nv/O
+	 cW2XB9jLwBT06NLaTTtV7pfq9REUxwXxbVvE8+WENDq13Z6H9C3KhFQK0pYxyATS9w
+	 VksnRL+7aYu0HFt8aZ9MV7dcTzMRl7OYHaPIWfJPPQZhVDpyKUUPQ+8IvWDEAKd6JN
+	 wf8t805Xw9+3j+b8e7pepqC7cR999y7Qw/Ibxd0XK4YDD860IOh/hUTrlJz8J7sZRT
+	 7yz7A40Ni9V3JrP909mrChVQi0knM2iG5FU5aEmOdflQk1k5Tu3WuMPzlBzdE4Jdlb
+	 MEHHpRxGHBkUQ==
 From: Chuck Lever <cel@kernel.org>
 To: Anna Schumaker <anna@kernel.org>
 Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	<linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 3/7] xprtrdma: Close lost-wakeup race in xprt_rdma_alloc_slot
-Date: Fri,  6 Mar 2026 16:56:24 -0500
-Message-ID: <20260306215620.3668-12-cel@kernel.org>
+Subject: [PATCH v3 4/7] xprtrdma: Decouple frwr_wp_create from frwr_map
+Date: Fri,  6 Mar 2026 16:56:25 -0500
+Message-ID: <20260306215620.3668-13-cel@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260306215620.3668-9-cel@kernel.org>
 References: <20260306215620.3668-9-cel@kernel.org>
@@ -62,136 +62,147 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3733; i=chuck.lever@oracle.com; h=from:subject; bh=3v1qbCp1Drc/F/QuuTenhJQlhYXMoTVhIUgDkFZxhbw=; b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpq02N5Y1/78DzqNVzi56DHudgZXfJPYZmtRISI 9jL+BtH5aWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaatNjQAKCRAzarMzb2Z/ l+ZTD/0SlktINlJYLB24A4I6faBxJ7budJucUUMadfkzhcTSIKUylsxhJLU7FhnXsa/g1b+iUcR HvNwSlOT4tf+FjFBbHKzbXqGBT2kvo4jU8TfpWyM4+9lYxDtaw8buyEC27hVXfaGA7xF/jc1jnX aRZG9E1S1atDasIPLycWMKaWZ23MW/QWG/9oJayB2ORjmtywqbwoZqo0XBKPkr9AmjKrUS9ae+g HLuChNdVH1lJbxEbyFmrD6AoSebSyLVfTr4l1+9NyFTzlKJPk0Qlldlc6dINLzhg3uoCCNosfFO V1wntcBNqxY7uhrBEzoHzju5qfCvVnZ580Q+JvcSG8fJ3PGESABMGsDA2l/upCKAX7+JDbS2rg9 ebWGiEIOQUh85dae4BjMujEmqhAkNXqOypF84B9DY1ks+LzD+TEg984fXejixtJ7r0HWgDMMBOJ iOVmfwp+2I0euimpSrYnwEjCp/f76tmjm5D8ZXBe55I1OYfLNKsq6a0numafQUTElzHkeVWeaHf Tgr3Rvj43TMjesmybHUHms2qr3zieum6kqmo/lBBl9w23Q2dY7a18yN6Y5tic5MXOpeC1pXG1fU t8YuVR4pK4IslKtunqb8J9G+Cdsiw9AQoh1ZX5PxEG41tx4kHgStru/huOABPdsxeURuz8PJVaz Vra+4hvWTPkaJQQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3542; i=chuck.lever@oracle.com; h=from:subject; bh=CWjYGjf0teI7A/d6aez5Ld3HwZtIWt188Yba0L+ue14=; b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpq02NhJiTg9aBRUoKoH+B/j6PxstWmBKxoPCJP t6bq55T14mJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaatNjQAKCRAzarMzb2Z/ lxiMD/oC90HJhUqbmLgR0HVFDgqLPAJ20AveKiGCNxq8dlNMDaX2I9fppHGOzxMr7qOxqFaU50Z ZA+L7hZPLoTrsbNRDCvBltYmY1Di2BEYhhm7gZXW5QzuIjwqNMzjeTvd+o+jD5mx/4bg2+0gGyj hOUkVd5x513YAlmoEWYKDwD5ozRqFodiprVaTc415VdnyDu2znXKJvt1z4uQqhP+tvW36IRCv03 aculyiSOPLVVWrwZgUKY6LuM06syxdmVrE0gzm3Jlopg0H25CL73CDKt8scavVJBacEF2Llp2to +xGsHD57jq3jJHcA+C9j73TRJey017vQixfkymWFbeJ8fVm2hLhFBrfi+DfFKgp8mVqE80/lqUk Ym26UsiwQrXgqXDblC1tN7179g/xqEgvH4f3E1Y23BfQBPKAi7n3EQDKtEweppwB1+n9gFmGJ7p B8owuhTKtG3xswPizDJJN+ZvwdCd/e8pD4yHteZMiSEm5jprokPtW47IGke1ZHTYRsBLLwrYgpd Lko5uiTBAT/1YNVrnMwkI7jc0Kf3os/VkFKTXv3AB54COxRWGY8SH3hdFyOFb5NCyCxISKlDKL/ 6jqroRRh0VOs2yHUscmjZKLhhS5wGuE2vXgrz1jjdGVuIH6qgniMomN2cMm0V2DAmA3qO1qzqSq rkZVRcabwbFD8Pg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 07D18228211
+X-Rspamd-Queue-Id: ED87A22825B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19850-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19851-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.984];
+	NEURAL_HAM(-0.00)[-0.983];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-xprt_rdma_alloc_slot() and xprt_rdma_free_slot() lack serialization
-between the buffer pool and the backlog queue.  A buffer freed
-after rpcrdma_buffer_get() finds the pool empty but before
-rpc_sleep_on() places the task on the backlog is returned to the
-pool with no waiter to wake, leaving the task stuck on the backlog
-indefinitely.
+frwr_wp_create is the only caller of frwr_map outside the encode
+path. It registers a single 4-byte write-pad region from a stack-
+local rpcrdma_mr_seg. Inlining the registration logic directly
+(sg_init_table + sg_set_page + ib_dma_map_sg + ib_map_mr_sg +
+IOVA mangle + reg_wr setup) eliminates the coupling that would
+otherwise complicate the removal of rpcrdma_mr_seg from frwr_map's
+interface.
 
-After joining the backlog, re-check the pool and route any
-recovered buffer through xprt_wake_up_backlog(), whose queue lock
-serializes with concurrent wakeups and avoids double-assignment
-of slots.
+The inlined version adds a proper error-unwind ladder: on failure,
+the DMA mapping (if established) is released, ep->re_write_pad_mr is
+cleared, and the MR is returned to the transport free list. The old
+frwr_map-based code relied on rpcrdma_mrs_destroy at teardown to
+reclaim partially-initialized MRs.
 
-Because xprt_rdma_free_slot() does not hold reserve_lock, the
-XPRT_CONGESTED double-check in xprt_throttle_congested() is
-ineffective: a task can join the backlog through that path after
-free_slot has already found it empty and cleared the bit.  Avoid
-this by using xprt_add_backlog_noncongested(), which queues the
-task without setting XPRT_CONGESTED, so every allocation reaches
-xprt_rdma_alloc_slot() and its post-sleep re-check.
+This is a one-time setup path; duplicating ~20 lines is a reasonable
+tradeoff for decoupling the write-pad registration from the data-
+path MR registration.
 
-Fixes: edb41e61a54e ("xprtrdma: Make rpc_rqst part of rpcrdma_req")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/xprt.h     |  2 ++
- net/sunrpc/xprt.c               | 16 ++++++++++++++++
- net/sunrpc/xprtrdma/transport.c | 15 ++++++++++++++-
- 3 files changed, 32 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/frwr_ops.c | 57 +++++++++++++++++++++++++++++-----
+ 1 file changed, 50 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index f46d1fb8f71a..a82045804d34 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -404,6 +404,8 @@ struct rpc_xprt *	xprt_alloc(struct net *net, size_t size,
- 				unsigned int max_req);
- void			xprt_free(struct rpc_xprt *);
- void			xprt_add_backlog(struct rpc_xprt *xprt, struct rpc_task *task);
-+void			xprt_add_backlog_noncongested(struct rpc_xprt *xprt,
-+					struct rpc_task *task);
- bool			xprt_wake_up_backlog(struct rpc_xprt *xprt, struct rpc_rqst *req);
- void			xprt_cleanup_ids(void);
- 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 4fbb57a29704..48a3618cbb29 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1663,6 +1663,22 @@ void xprt_add_backlog(struct rpc_xprt *xprt, struct rpc_task *task)
- }
- EXPORT_SYMBOL_GPL(xprt_add_backlog);
- 
-+/**
-+ * xprt_add_backlog_noncongested - queue task on backlog
-+ * @xprt: transport whose backlog queue receives the task
-+ * @task: task to queue
-+ *
-+ * Like xprt_add_backlog, but does not set XPRT_CONGESTED.
-+ * For transports whose free_slot path does not synchronize
-+ * with xprt_throttle_congested via reserve_lock.
-+ */
-+void xprt_add_backlog_noncongested(struct rpc_xprt *xprt,
-+				   struct rpc_task *task)
-+{
-+	rpc_sleep_on(&xprt->backlog, task, xprt_complete_request_init);
-+}
-+EXPORT_SYMBOL_GPL(xprt_add_backlog_noncongested);
-+
- static bool __xprt_set_rq(struct rpc_task *task, void *data)
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index 31434aeb8e29..4331b0b65f4c 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -669,9 +669,13 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+  */
+ int frwr_wp_create(struct rpcrdma_xprt *r_xprt)
  {
- 	struct rpc_rqst *req = data;
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index ca079439f9cc..61706df5e485 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -511,7 +511,20 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
++	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+ 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+-	struct rpcrdma_mr_seg seg;
++	struct ib_reg_wr *reg_wr;
+ 	struct rpcrdma_mr *mr;
++	struct ib_mr *ibmr;
++	int dma_nents;
++	int ret;
  
- out_sleep:
- 	task->tk_status = -EAGAIN;
--	xprt_add_backlog(xprt, task);
-+	xprt_add_backlog_noncongested(xprt, task);
-+	/* A buffer freed between buffer_get and rpc_sleep_on
-+	 * goes back to the pool with no waiter to wake.
-+	 * Re-check after joining the backlog to close that gap.
-+	 */
-+	req = rpcrdma_buffer_get(&r_xprt->rx_buf);
-+	if (req) {
-+		struct rpc_rqst *rqst = &req->rl_slot;
+ 	mr = rpcrdma_mr_get(r_xprt);
+ 	if (!mr)
+@@ -679,11 +683,39 @@ int frwr_wp_create(struct rpcrdma_xprt *r_xprt)
+ 	mr->mr_req = NULL;
+ 	ep->re_write_pad_mr = mr;
+ 
+-	seg.mr_len = XDR_UNIT;
+-	seg.mr_page = virt_to_page(ep->re_write_pad);
+-	seg.mr_offset = offset_in_page(ep->re_write_pad);
+-	if (IS_ERR(frwr_map(r_xprt, &seg, 1, true, xdr_zero, mr)))
+-		return -EIO;
++	sg_init_table(mr->mr_sg, 1);
++	sg_set_page(mr->mr_sg, virt_to_page(ep->re_write_pad),
++		    XDR_UNIT, offset_in_page(ep->re_write_pad));
 +
-+		if (!xprt_wake_up_backlog(xprt, rqst)) {
-+			memset(rqst, 0, sizeof(*rqst));
-+			rpcrdma_buffer_put(&r_xprt->rx_buf, req);
-+		}
++	mr->mr_dir = DMA_FROM_DEVICE;
++	mr->mr_nents = 1;
++	dma_nents = ib_dma_map_sg(ep->re_id->device, mr->mr_sg,
++				  mr->mr_nents, mr->mr_dir);
++	if (!dma_nents) {
++		ret = -EIO;
++		goto out_mr;
 +	}
- }
++	mr->mr_device = ep->re_id->device;
++
++	ibmr = mr->mr_ibmr;
++	if (ib_map_mr_sg(ibmr, mr->mr_sg, dma_nents, NULL,
++			 PAGE_SIZE) != dma_nents) {
++		ret = -EIO;
++		goto out_unmap;
++	}
++
++	/* IOVA is not tagged with an XID; the write-pad is not RPC-specific. */
++	ib_update_fast_reg_key(ibmr, ib_inc_rkey(ibmr->rkey));
++
++	reg_wr = &mr->mr_regwr;
++	reg_wr->mr = ibmr;
++	reg_wr->key = ibmr->rkey;
++	reg_wr->access = IB_ACCESS_REMOTE_WRITE | IB_ACCESS_LOCAL_WRITE;
++
++	mr->mr_handle = ibmr->rkey;
++	mr->mr_length = ibmr->length;
++	mr->mr_offset = ibmr->iova;
++
+ 	trace_xprtrdma_mr_fastreg(mr);
  
- /**
+ 	mr->mr_cqe.done = frwr_wc_fastreg;
+@@ -693,5 +725,16 @@ int frwr_wp_create(struct rpcrdma_xprt *r_xprt)
+ 	mr->mr_regwr.wr.opcode = IB_WR_REG_MR;
+ 	mr->mr_regwr.wr.send_flags = 0;
+ 
+-	return ib_post_send(ep->re_id->qp, &mr->mr_regwr.wr, NULL);
++	ret = ib_post_send(ep->re_id->qp, &mr->mr_regwr.wr, NULL);
++	if (!ret)
++		return 0;
++
++out_unmap:
++	frwr_mr_unmap(mr);
++out_mr:
++	ep->re_write_pad_mr = NULL;
++	spin_lock(&buf->rb_lock);
++	rpcrdma_mr_push(mr, &buf->rb_mrs);
++	spin_unlock(&buf->rb_lock);
++	return ret;
+ }
 -- 
 2.53.0
 
