@@ -1,851 +1,227 @@
-Return-Path: <linux-nfs+bounces-19836-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19837-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id vJq5AgMCq2nDZQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-19836-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:34:11 +0100
+	id MBQ6O4IBq2msZQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-19837-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:32:02 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C401225020
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:34:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F919224EED
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:32:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EF8D03055C5C
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2026 16:28:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3C3BC30031F6
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2026 16:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD9663EF0B9;
-	Fri,  6 Mar 2026 16:28:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74F613EDACA;
+	Fri,  6 Mar 2026 16:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1O3nzd1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="g1+Kp7XF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7F93EF0CB
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Mar 2026 16:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FE53988EE
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Mar 2026 16:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772814513; cv=none; b=ckcOqj3gWzyNEhqebN7kIgu3Zr3s533hI+JasD8TuouvHLffxkKMHPjovxX1MGWclhlY7sEcq547w0VlvS4yDv2UfIsv6pa9pgwkD8WCAkxGwnZJzKYMuv6CkChAR/9RvqPugFZ5VJmBHfP+KkNVQo3fqHXBiFk8fvKY23w7R9Q=
+	t=1772814586; cv=none; b=AMbISxHfUYX/bcUzHejnbvmR34UpTQir5JweqVahP+ddjr01LDwVj2ZXHIPVRMsEBlm7In4k2Rdk3wnkQ+y1YqIPPERxTMacG/DdHMxuEt8AoQ8rfDVI38GAC2LgFcLZIfwn5oHmDvfHqOFx4Zc49uretGvjt9Zscah9LjFU140=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772814513; c=relaxed/simple;
-	bh=oMQp1JAnd5qUJswUPYshwc7TdsU7AfZfcrm04NfhbE4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=LyWhlSeNJEiUw6LdRiNv6zZmQip2Qn3jlIH5djFV6sL651Lu13l7XyVTtlTK5/73pzzWP+/Od84agjLJgBpjSCx/VRXLSjQ6OS9tGTwrTf4NNvF4fgvqsjlUa5mAi1RqEpdAPF/abX/X6OiqcWFsjTlNBS5mGKjA4mTwRVzWRDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1O3nzd1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF62C2BC86;
-	Fri,  6 Mar 2026 16:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772814512;
-	bh=oMQp1JAnd5qUJswUPYshwc7TdsU7AfZfcrm04NfhbE4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=L1O3nzd1WS6nXGw64TioFCVspqBV/eTjMA+bjrO/mxApGbsDfNJEuEgTy/MMiJy9K
-	 u16MIJPN7RKAM6riER/TDnlbmVGCcqjZ3BEEEk/iqOqq7Uu/9T1B/nfi8Lw4A1G4Bw
-	 GsgHSd2H/2CYTfZ9c4M+WAsraVhgk7nBYZ0Y53M7V5muqNYqiANm69am8V5wZHzIeb
-	 Ymfy+OU8wPgbzebzfCD+7tm85LPmkVJOF2bEkXX/6GfGSXWbR3+g9q5LnvO2+Aded+
-	 +2yRNM3cBlfGm3/7PJ8OFD2BQMDFoGeOHoTDjfJeQZGAZ0t7+piO7Khf6ARuOwQGw9
-	 /G7TyHHhsCegA==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 33325F4006A;
-	Fri,  6 Mar 2026 11:28:31 -0500 (EST)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-02.internal (MEProxy); Fri, 06 Mar 2026 11:28:31 -0500
-X-ME-Sender: <xms:rwCraeYHNyV0iLjLtgEsqIBqLa-0fl-dW8pk8un8EFvFN5TgaLS4PA>
-    <xme:rwCracPUHeEbGIxRzxcMuhm6d01jhdHDCJDBRobDI_WQX4FTj-NBVTVGsKIOY2oKM
-    23wllPNqVrmO7QtA9TsYFhUqQZzojRqSrInRWU1lffH-DksVJSuOmM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieeljeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnnhgr
-    ucfutghhuhhmrghkvghrfdcuoegrnhhnrgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeefieekjeeileegtedtueekjeehgefhudfhjeejgfefteffteekgefhteev
-    ieeukeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grnhhnrgdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijeejuddvtdej
-    ledqfeefvddvfeegjeduqdgrnhhnrgeppehkvghrnhgvlhdrohhrghesnhhofihhvgihtg
-    hrvggrmhgvrhihrdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehtrhhonhgurdhmhihklhgvsghushhtsehhrghmmhgvrhhsphgrtg
-    gvrdgtohhmpdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    tghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugi
-    dqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhr
-    ughmrgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:rwCrabnc2aFf5VoE0KmjFdfTHruu4fwuSHwaaO8ZmtFG4WtuGfkCEw>
-    <xmx:rwCraXyKmZLtzTvpMd_icYLjWuCEomNdiWPLMV-3joTcxjIH-mM4Qg>
-    <xmx:rwCradOmVOYck0t6BtcHARrS9G2vCgBxVItKfkfjplCIvrwCySikHg>
-    <xmx:rwCraTrb4duI4bEhUeiv_cQhwG9YrYXLJLU5jfwceNAWPtzqKg4gxA>
-    <xmx:rwCraWHOWzgdg2oKC9j7Kx30ztI37U7PdN7x2EwzK4N0W9bQxk21SLk_>
-Feedback-ID: i20964851:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 09193B6006F; Fri,  6 Mar 2026 11:28:31 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1772814586; c=relaxed/simple;
+	bh=NFEikTdtv3rQ0cy54GdJNryBH6H26yKat9B2I25PBEg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gxe2wcDFILfcJezarz0kXx8pPYEOQe2kmuv+sJWUxj3WXxuKZ3PD3nRrqkGgHrf1dcEvkS7Ryhgjy3060dZViSZi1ubIl/zQlKA2FsFR+AGQFgEv08cTdS9UdDcl68OftH95Uq0VIYrmxgh0PSKRCR5O91svk2Rs8+ruyTQEMt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=g1+Kp7XF; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 626GHrVR3463847;
+	Fri, 6 Mar 2026 16:29:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=t0LPF0q6YiZGdy+1ETcnMx/Gdfrx4
+	2GegZ+B9duTAHU=; b=g1+Kp7XF5WUEmb2WMBTxWefU2MyASVB3BiqarVGq/KNth
+	fMcoq/moeTkfJEAu3D3NFtyfnXvASiUdU7s8uexgN6uJqSxn0v0XmBjHeb9FX8wf
+	ovae5mO4chGgU/H0v22X3/YmkrQeeFVzPB1O0bob/vXJQ7d2FWo7O/oj3pful15e
+	jL81pVKH3LsgG1/vW3xWpZLWae3tBd73v8K22A1H+uUuPM/PprkSYRKz1qfgxk6y
+	Fk1+pdk74m4k7Hkz3hkSBVD+V3yYTmFdvZbWxNA67TGui1X9XANx8Oh7pQFnVW3G
+	QqszCTozA9DucfL3Z726hclZJZWdkENfZXmh+dhrw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cr2asr0qf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 06 Mar 2026 16:29:31 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 626GT84J023057;
+	Fri, 6 Mar 2026 16:29:30 GMT
+Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4ckptk5h0r-1;
+	Fri, 06 Mar 2026 16:29:30 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: trondmy@kernel.org, anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v3 1/1] pNFS: Serialize SCSI PR registration to avoid reservation conflicts
+Date: Fri,  6 Mar 2026 08:29:22 -0800
+Message-ID: <20260306162927.3276695-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A4i0e0eL3YLZ
-Date: Fri, 06 Mar 2026 11:28:10 -0500
-From: "Anna Schumaker" <anna@kernel.org>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Trond Myklebust" <trond.myklebust@hammerspace.com>,
- linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <0f75a763-5ec9-4829-85b8-9a6ccb059704@app.fastmail.com>
-In-Reply-To: <20260305145054.7096-16-cel@kernel.org>
-References: <20260305145054.7096-10-cel@kernel.org>
- <20260305145054.7096-16-cel@kernel.org>
-Subject: Re: [PATCH v2 6/8] xprtrdma: Replace rpcrdma_mr_seg with xdr_buf cursor
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6C401225020
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-06_05,2026-03-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2602130000
+ definitions=main-2603060156
+X-Proofpoint-GUID: DI7L29DDgH3QZeDl40jTQyjRMW9cUSvD
+X-Proofpoint-ORIG-GUID: DI7L29DDgH3QZeDl40jTQyjRMW9cUSvD
+X-Authority-Analysis: v=2.4 cv=ZdUQ98VA c=1 sm=1 tr=0 ts=69ab00eb b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=o5oIOnhZENCTenyL_yNV:22 a=yPCof4ZbAAAA:8 a=w8h26E0HzORGd8iTHiwA:9 cc=ntf
+ awl=host:12267
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDE1NSBTYWx0ZWRfX1XI2oGx/jmxN
+ EJW178ts0FHhdfc2Vr7TzmtvBQuYBraHaMEqnvQCAFLZ3YhrZOh0W7kAmymGg4dCvx/imCLs2Ea
+ 6mXiyP4sG+yEMNfuekyaQ0m0S1+BSrjNkm3/EJyz2mt9ITpbxinamE2xwuUSThKrwdU3KtCl36g
+ w0S8JUY6VmPOhjr9oI4tx2DEUlhD1F/7q2RlOl9gZbjqwYmQntbipGGC5VOWY8t8wi4RShLPRQH
+ MGFXQRuiIpx74ajyhPN5nXOYUpb5f2mdlu2S5PRxd2f46h7Sde5vPF7KVDWGOMwwInj4ws959hI
+ 7ZsGkgTJ/qq7gxeQBbBNVrik9jEB8txNa5hO51uocKnvSic5aZdo2uhgNzq0r0wqeHXO+Pcw18n
+ 408xPR8xwbRkRsfoEz85siTkxpeicTtx56YN0XXBUEE0kXn9AldbUIhdMfBCHsfAQKUe3X6KWyT
+ A6kvVYDUWiAs6eh/my7rUFMt+/sdPbzkCfQ5DqPk=
+X-Rspamd-Queue-Id: 6F919224EED
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19836-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,app.fastmail.com:mid,oracle.com:email];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19837-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.991];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oracle.com:dkim,oracle.com:email,oracle.com:mid];
+	RCPT_COUNT_THREE(0.00)[3];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	NEURAL_HAM(-0.00)[-0.970];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-Hi Chuck,
+With SCSI layouts, the NFS client must not submit I/O to the data server
+until the Persistent Reservation (PR) registration has completed.
 
-On Thu, Mar 5, 2026, at 9:51 AM, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> The FRWR registration path converts data through three
-> representations: xdr_buf -> rpcrdma_mr_seg[] ->
-> scatterlist[] -> ib_map_mr_sg(). The rpcrdma_mr_seg
-> intermediate is a relic of when multiple registration
-> strategies existed (FMR, physical, FRWR). Only FRWR
-> remains, so the indirection serves no purpose.
->
-> Introduce struct rpcrdma_xdr_cursor to track position
-> within an xdr_buf during iterative MR registration.
-> The cursor is 16 bytes on the stack (a pointer and two
-> unsigned ints), replacing the 6240-byte rl_segments[260]
-> array that was embedded in each rpcrdma_req.
->
-> Rewrite frwr_map to populate scatterlist entries directly
-> from the xdr_buf regions (head kvec, page list, tail
-> kvec) via the cursor. The boundary logic for non-SG_GAPS
-> devices is simpler than before because the xdr_buf
-> structure guarantees that page-region entries after the
-> first start at offset 0, and that head/tail kvecs are
-> separate regions that naturally break at MR boundaries.
->
-> Rewrite the three chunk-encoding functions
-> (rpcrdma_encode_read_list, rpcrdma_encode_write_list,
-> rpcrdma_encode_reply_chunk) to use cursor-based iteration
-> instead of the two-pass convert-then-register approach.
->
-> Fix a pre-existing bug in rpcrdma_encode_write_list where
-> the write-pad statistics accumulator added mr->mr_length
-> from the last data MR rather than the write-pad MR. The
-> refactored code uses ep->re_write_pad_mr->mr_length.
->
-> Delete rpcrdma_convert_kvec, rpcrdma_convert_iovs, struct
-> rpcrdma_mr_seg, rl_segments, and RPCRDMA_MAX_IOV_SEGS.
-> Adapt the chunk tracepoints to take a bool is_last
-> parameter instead of the now-eliminated nsegs count.
+Currently, bl_register_scsi() sets PNFS_BDEV_REGISTERED before performing
+the PR operation. If multiple threads concurrently start I/O to the same
+SCSI device, the first thread sets the flag and begins registration,
+while other threads observe the flag, skip registration, and proceed to
+issue I/O. Those I/Os can hit RESERVATION CONFLICT, forcing fall back to
+the MDS.
 
-After this patch I start to see a bunch of errors running cthon
-tests with both soft iwarp and soft roce.  With NFSv3 I see IO errors:
+Protect the registration path with a mutex so only one thread performs
+PR registration at a time. Other threads wait for registration to finish
+and only then re-check PNFS_BDEV_REGISTERED, ensuring no I/O is issued
+until PR registration is complete.
 
-./server -b -o v3,proto=rdma,sec=sys -m /mnt/test/server/nfs3 -p /srv/test/xfs/anna/nfs3 server
-The '-b' test using 'v3,proto=rdma,sec=sys' options to server: Failed!!
-/tmp/nfsv3rdma-11:10:46.error:
-        sh ./runtests  -b -t /mnt/test/server/nfs3/client.test
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/nfs/blocklayout/blocklayout.h |  8 +++-----
+ fs/nfs/blocklayout/dev.c         | 15 ++++++++++++---
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
-        Starting BASIC tests: test directory /mnt/test/server/nfs3/client.test (arg: -t)
-        mkdir: cannot create directory '/mnt/test/server/nfs3/client.test': Input/output error
-        Can't make directory /mnt/test/server/nfs3/client.test
-        basic tests failed
-        Tests failed, leaving /mnt/test/server/nfs3 mounted
+v2:
+    . remove fio test from commit message.
+    . rename pbd_mutex to pbd_registration_mutex and add a description
+      of its usage.
+    . move declaration of pbd_registration_mutex before the (*map)().
+    . protect unregistration op with pbd_registration_mutex.
+v3:
+    . replace PNFS_BDEV_REGISTERED flag in pnfs_block_dev with
+      blkdev_registered boolean.
 
-I can't even get that far with NFSv4.2, the mounts just fail:
+diff --git a/fs/nfs/blocklayout/blocklayout.h b/fs/nfs/blocklayout/blocklayout.h
+index 6da40ca19570..311b14334902 100644
+--- a/fs/nfs/blocklayout/blocklayout.h
++++ b/fs/nfs/blocklayout/blocklayout.h
+@@ -111,17 +111,15 @@ struct pnfs_block_dev {
+ 
+ 	struct file			*bdev_file;
+ 	u64				disk_offset;
+-	unsigned long			flags;
+ 
++	bool				blkdev_registered;
+ 	u64				pr_key;
++	/* Mutex to serialize SCSI PR register/unregister operations. */
++	struct mutex			pbd_registration_mutex;
+ 
+ 	bool (*map)(struct pnfs_block_dev *dev, u64 offset,
+ 			struct pnfs_block_dev_map *map);
+-};
+ 
+-/* pnfs_block_dev flag bits */
+-enum {
+-	PNFS_BDEV_REGISTERED = 0,
+ };
+ 
+ /* sector_t fields are all in 512-byte sectors */
+diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
+index cc6327d97a91..f1e77c4290ae 100644
+--- a/fs/nfs/blocklayout/dev.c
++++ b/fs/nfs/blocklayout/dev.c
+@@ -33,10 +33,15 @@ static bool bl_register_scsi(struct pnfs_block_dev *dev)
+ 	const struct pr_ops *ops = bdev->bd_disk->fops->pr_ops;
+ 	int status;
+ 
+-	if (test_and_set_bit(PNFS_BDEV_REGISTERED, &dev->flags))
++	mutex_lock(&dev->pbd_registration_mutex);
++	if (dev->blkdev_registered) {
++		mutex_unlock(&dev->pbd_registration_mutex);
+ 		return true;
++	}
++	dev->blkdev_registered = true;
+ 
+ 	status = ops->pr_register(bdev, 0, dev->pr_key, true);
++	mutex_unlock(&dev->pbd_registration_mutex);
+ 	if (status) {
+ 		trace_bl_pr_key_reg_err(bdev, dev->pr_key, status);
+ 		return false;
+@@ -55,9 +60,12 @@ static void bl_unregister_dev(struct pnfs_block_dev *dev)
+ 		return;
+ 	}
+ 
+-	if (dev->type == PNFS_BLOCK_VOLUME_SCSI &&
+-		test_and_clear_bit(PNFS_BDEV_REGISTERED, &dev->flags))
++	mutex_lock(&dev->pbd_registration_mutex);
++	if (dev->type == PNFS_BLOCK_VOLUME_SCSI && dev->blkdev_registered) {
++		dev->blkdev_registered = false;
+ 		bl_unregister_scsi(dev);
++	}
++	mutex_unlock(&dev->pbd_registration_mutex);
+ }
+ 
+ bool bl_register_dev(struct pnfs_block_dev *dev)
+@@ -572,6 +580,7 @@ bl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 	top = kzalloc_obj(*top, gfp_mask);
+ 	if (!top)
+ 		goto out_free_volumes;
++	mutex_init(&top->pbd_registration_mutex);
+ 
+ 	ret = bl_parse_deviceid(server, top, volumes, nr_volumes - 1, gfp_mask);
+ 
+-- 
+2.47.3
 
-./server -b -o v4.2,proto=rdma,sec=sys -m /mnt/test/server/nfs4.2 -p /srv/test/xfs/anna/nfs4.2 server
-Waiting for '-b' to finish ... 
-The '-b' test using 'v4.2,proto=rdma,sec=sys' options to server: Failed!!
-/tmp/nfsv4.2rdma-11:15:07.error:
-        mount.nfs: mount system call failed for /mnt/test/server/nfs4.2
-        Can't mount server:/srv/test/xfs/anna/nfs4.2 on /mnt/test/server/nfs4.2
-Done: 11:15:07
-
-
-Is there anything specific I should look at to try to figure out what's going on?
-
-Anna
-
->
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  include/trace/events/rpcrdma.h  |  28 +++---
->  net/sunrpc/xprtrdma/frwr_ops.c  | 116 ++++++++++++++++++-----
->  net/sunrpc/xprtrdma/rpc_rdma.c  | 160 +++++++++++---------------------
->  net/sunrpc/xprtrdma/xprt_rdma.h |  42 ++++++---
->  4 files changed, 189 insertions(+), 157 deletions(-)
->
-> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-> index e6a72646c507..b79913048e1a 100644
-> --- a/include/trace/events/rpcrdma.h
-> +++ b/include/trace/events/rpcrdma.h
-> @@ -392,10 +392,10 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
->  		const struct rpc_task *task,
->  		unsigned int pos,
->  		struct rpcrdma_mr *mr,
-> -		int nsegs
-> +		bool is_last
->  	),
-> 
-> -	TP_ARGS(task, pos, mr, nsegs),
-> +	TP_ARGS(task, pos, mr, is_last),
-> 
->  	TP_STRUCT__entry(
->  		__field(unsigned int, task_id)
-> @@ -405,7 +405,7 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
->  		__field(u32, handle)
->  		__field(u32, length)
->  		__field(u64, offset)
-> -		__field(int, nsegs)
-> +		__field(bool, is_last)
->  	),
-> 
->  	TP_fast_assign(
-> @@ -416,7 +416,7 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
->  		__entry->handle = mr->mr_handle;
->  		__entry->length = mr->mr_length;
->  		__entry->offset = mr->mr_offset;
-> -		__entry->nsegs = nsegs;
-> +		__entry->is_last = is_last;
->  	),
-> 
->  	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
-> @@ -424,7 +424,7 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
->  		__entry->task_id, __entry->client_id,
->  		__entry->pos, __entry->length,
->  		(unsigned long long)__entry->offset, __entry->handle,
-> -		__entry->nents < __entry->nsegs ? "more" : "last"
-> +		__entry->is_last ? "last" : "more"
->  	)
->  );
-> 
-> @@ -434,18 +434,18 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
->  					const struct rpc_task *task,	\
->  					unsigned int pos,		\
->  					struct rpcrdma_mr *mr,		\
-> -					int nsegs			\
-> +					bool is_last			\
->  				),					\
-> -				TP_ARGS(task, pos, mr, nsegs))
-> +				TP_ARGS(task, pos, mr, is_last))
-> 
->  DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
->  	TP_PROTO(
->  		const struct rpc_task *task,
->  		struct rpcrdma_mr *mr,
-> -		int nsegs
-> +		bool is_last
->  	),
-> 
-> -	TP_ARGS(task, mr, nsegs),
-> +	TP_ARGS(task, mr, is_last),
-> 
->  	TP_STRUCT__entry(
->  		__field(unsigned int, task_id)
-> @@ -454,7 +454,7 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
->  		__field(u32, handle)
->  		__field(u32, length)
->  		__field(u64, offset)
-> -		__field(int, nsegs)
-> +		__field(bool, is_last)
->  	),
-> 
->  	TP_fast_assign(
-> @@ -464,7 +464,7 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
->  		__entry->handle = mr->mr_handle;
->  		__entry->length = mr->mr_length;
->  		__entry->offset = mr->mr_offset;
-> -		__entry->nsegs = nsegs;
-> +		__entry->is_last = is_last;
->  	),
-> 
->  	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
-> @@ -472,7 +472,7 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
->  		__entry->task_id, __entry->client_id,
->  		__entry->length, (unsigned long long)__entry->offset,
->  		__entry->handle,
-> -		__entry->nents < __entry->nsegs ? "more" : "last"
-> +		__entry->is_last ? "last" : "more"
->  	)
->  );
-> 
-> @@ -481,9 +481,9 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
->  				TP_PROTO(				\
->  					const struct rpc_task *task,	\
->  					struct rpcrdma_mr *mr,		\
-> -					int nsegs			\
-> +					bool is_last			\
->  				),					\
-> -				TP_ARGS(task, mr, nsegs))
-> +				TP_ARGS(task, mr, is_last))
-> 
->  TRACE_DEFINE_ENUM(DMA_BIDIRECTIONAL);
->  TRACE_DEFINE_ENUM(DMA_TO_DEVICE);
-> diff --git a/net/sunrpc/xprtrdma/frwr_ops.c 
-> b/net/sunrpc/xprtrdma/frwr_ops.c
-> index 4331b0b65f4c..ef6a6ab9f940 100644
-> --- a/net/sunrpc/xprtrdma/frwr_ops.c
-> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
-> @@ -268,10 +268,9 @@ int frwr_query_device(struct rpcrdma_ep *ep, const 
-> struct ib_device *device)
->  }
-> 
->  /**
-> - * frwr_map - Register a memory region
-> + * frwr_map - Register a memory region from an xdr_buf cursor
->   * @r_xprt: controlling transport
-> - * @seg: memory region co-ordinates
-> - * @nsegs: number of segments remaining
-> + * @cur: cursor tracking position within the xdr_buf
->   * @writing: true when RDMA Write will be used
->   * @xid: XID of RPC using the registered memory
->   * @mr: MR to fill in
-> @@ -279,34 +278,103 @@ int frwr_query_device(struct rpcrdma_ep *ep, 
-> const struct ib_device *device)
->   * Prepare a REG_MR Work Request to register a memory region
->   * for remote access via RDMA READ or RDMA WRITE.
->   *
-> - * Returns the next segment or a negative errno pointer.
-> - * On success, @mr is filled in.
-> + * Returns 0 on success (cursor advanced past consumed data,
-> + * @mr populated) or a negative errno on failure.
->   */
-> -struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
-> -				struct rpcrdma_mr_seg *seg,
-> -				int nsegs, bool writing, __be32 xid,
-> -				struct rpcrdma_mr *mr)
-> +int frwr_map(struct rpcrdma_xprt *r_xprt,
-> +	     struct rpcrdma_xdr_cursor *cur,
-> +	     bool writing, __be32 xid,
-> +	     struct rpcrdma_mr *mr)
->  {
->  	struct rpcrdma_ep *ep = r_xprt->rx_ep;
-> +	const struct xdr_buf *xdrbuf = cur->xc_buf;
-> +	bool sg_gaps = ep->re_mrtype == IB_MR_TYPE_SG_GAPS;
-> +	unsigned int max_depth = ep->re_max_fr_depth;
->  	struct ib_reg_wr *reg_wr;
->  	int i, n, dma_nents;
->  	struct ib_mr *ibmr;
->  	u8 key;
-> 
-> -	if (nsegs > ep->re_max_fr_depth)
-> -		nsegs = ep->re_max_fr_depth;
-> -	for (i = 0; i < nsegs;) {
-> -		sg_set_page(&mr->mr_sg[i], seg->mr_page,
-> -			    seg->mr_len, seg->mr_offset);
-> +	i = 0;
-> 
-> -		++seg;
-> -		++i;
-> -		if (ep->re_mrtype == IB_MR_TYPE_SG_GAPS)
-> -			continue;
-> -		if ((i < nsegs && seg->mr_offset) ||
-> -		    offset_in_page((seg-1)->mr_offset + (seg-1)->mr_len))
-> -			break;
-> +	/* Head kvec */
-> +	if (!(cur->xc_flags & XC_HEAD_DONE)) {
-> +		const struct kvec *head = &xdrbuf->head[0];
-> +
-> +		sg_set_page(&mr->mr_sg[i],
-> +			    virt_to_page(head->iov_base),
-> +			    head->iov_len,
-> +			    offset_in_page(head->iov_base));
-> +		cur->xc_flags |= XC_HEAD_DONE;
-> +		i++;
-> +		/* Without sg-gap support, each non-contiguous region
-> +		 * must be registered as a separate MR.  Returning
-> +		 * here after the head kvec causes the caller to
-> +		 * invoke frwr_map() again for the page list and
-> +		 * tail.
-> +		 */
-> +		if (!sg_gaps)
-> +			goto finish;
->  	}
-> +
-> +	/* Page list */
-> +	if (!(cur->xc_flags & XC_PAGES_DONE) && xdrbuf->page_len) {
-> +		unsigned int page_base, remaining;
-> +		struct page **ppages;
-> +
-> +		remaining = xdrbuf->page_len - cur->xc_page_offset;
-> +		page_base = offset_in_page(xdrbuf->page_base +
-> +					   cur->xc_page_offset);
-> +		ppages = xdrbuf->pages +
-> +			 ((xdrbuf->page_base + cur->xc_page_offset)
-> +			  >> PAGE_SHIFT);
-> +
-> +		while (remaining > 0 && i < max_depth) {
-> +			unsigned int len;
-> +
-> +			len = min_t(unsigned int,
-> +				    PAGE_SIZE - page_base, remaining);
-> +			sg_set_page(&mr->mr_sg[i], *ppages,
-> +				    len, page_base);
-> +			cur->xc_page_offset += len;
-> +			i++;
-> +			ppages++;
-> +			remaining -= len;
-> +
-> +			if (!sg_gaps && remaining > 0 &&
-> +			    offset_in_page(page_base + len))
-> +				goto finish;
-> +			page_base = 0;
-> +		}
-> +		if (remaining == 0)
-> +			cur->xc_flags |= XC_PAGES_DONE;
-> +	} else if (!(cur->xc_flags & XC_PAGES_DONE)) {
-> +		cur->xc_flags |= XC_PAGES_DONE;
-> +	}
-> +
-> +	/* Tail kvec */
-> +	if (!(cur->xc_flags & XC_TAIL_DONE) && xdrbuf->tail[0].iov_len &&
-> +	    i < max_depth) {
-> +		const struct kvec *tail = &xdrbuf->tail[0];
-> +
-> +		if (!sg_gaps && i > 0) {
-> +			struct scatterlist *prev = &mr->mr_sg[i - 1];
-> +
-> +			if (offset_in_page(prev->offset + prev->length))
-> +				goto finish;
-> +		}
-> +		sg_set_page(&mr->mr_sg[i],
-> +			    virt_to_page(tail->iov_base),
-> +			    tail->iov_len,
-> +			    offset_in_page(tail->iov_base));
-> +		cur->xc_flags |= XC_TAIL_DONE;
-> +		i++;
-> +	} else if (!(cur->xc_flags & XC_TAIL_DONE) &&
-> +		   !xdrbuf->tail[0].iov_len) {
-> +		cur->xc_flags |= XC_TAIL_DONE;
-> +	}
-> +
-> +finish:
->  	mr->mr_dir = rpcrdma_data_dir(writing);
->  	mr->mr_nents = i;
-> 
-> @@ -338,15 +406,15 @@ struct rpcrdma_mr_seg *frwr_map(struct 
-> rpcrdma_xprt *r_xprt,
->  	mr->mr_offset = ibmr->iova;
->  	trace_xprtrdma_mr_map(mr);
-> 
-> -	return seg;
-> +	return 0;
-> 
->  out_dmamap_err:
->  	trace_xprtrdma_frwr_sgerr(mr, i);
-> -	return ERR_PTR(-EIO);
-> +	return -EIO;
-> 
->  out_mapmr_err:
->  	trace_xprtrdma_frwr_maperr(mr, n);
-> -	return ERR_PTR(-EIO);
-> +	return -EIO;
->  }
-> 
->  /**
-> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-> index 3aac1456e23e..2ce50e8ce5fd 100644
-> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
-> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-> @@ -200,67 +200,27 @@ rpcrdma_alloc_sparse_pages(struct xdr_buf *buf)
->  	return 0;
->  }
-> 
-> -/* Convert @vec to a single SGL element.
-> - *
-> - * Returns pointer to next available SGE, and bumps the total number
-> - * of SGEs consumed.
-> - */
-> -static struct rpcrdma_mr_seg *
-> -rpcrdma_convert_kvec(struct kvec *vec, struct rpcrdma_mr_seg *seg,
-> -		     unsigned int *n)
-> +static void
-> +rpcrdma_xdr_cursor_init(struct rpcrdma_xdr_cursor *cur,
-> +			const struct xdr_buf *xdrbuf,
-> +			unsigned int pos, enum rpcrdma_chunktype type)
->  {
-> -	seg->mr_page = virt_to_page(vec->iov_base);
-> -	seg->mr_offset = offset_in_page(vec->iov_base);
-> -	seg->mr_len = vec->iov_len;
-> -	++seg;
-> -	++(*n);
-> -	return seg;
-> +	cur->xc_buf = xdrbuf;
-> +	cur->xc_page_offset = 0;
-> +	cur->xc_flags = 0;
-> +
-> +	if (pos != 0)
-> +		cur->xc_flags |= XC_HEAD_DONE;
-> +	if (type == rpcrdma_readch || type == rpcrdma_writech)
-> +		cur->xc_flags |= XC_TAIL_DONE;
->  }
-> 
-> -/* Convert @xdrbuf into SGEs no larger than a page each. As they
-> - * are registered, these SGEs are then coalesced into RDMA segments
-> - * when the selected memreg mode supports it.
-> - *
-> - * Returns positive number of SGEs consumed, or a negative errno.
-> - */
-> -
-> -static int
-> -rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
-> -		     unsigned int pos, enum rpcrdma_chunktype type,
-> -		     struct rpcrdma_mr_seg *seg)
-> +static bool
-> +rpcrdma_xdr_cursor_done(const struct rpcrdma_xdr_cursor *cur)
->  {
-> -	unsigned long page_base;
-> -	unsigned int len, n;
-> -	struct page **ppages;
-> -
-> -	n = 0;
-> -	if (pos == 0)
-> -		seg = rpcrdma_convert_kvec(&xdrbuf->head[0], seg, &n);
-> -
-> -	len = xdrbuf->page_len;
-> -	ppages = xdrbuf->pages + (xdrbuf->page_base >> PAGE_SHIFT);
-> -	page_base = offset_in_page(xdrbuf->page_base);
-> -	while (len) {
-> -		seg->mr_page = *ppages;
-> -		seg->mr_offset = page_base;
-> -		seg->mr_len = min_t(u32, PAGE_SIZE - page_base, len);
-> -		len -= seg->mr_len;
-> -		++ppages;
-> -		++seg;
-> -		++n;
-> -		page_base = 0;
-> -	}
-> -
-> -	if (type == rpcrdma_readch || type == rpcrdma_writech)
-> -		goto out;
-> -
-> -	if (xdrbuf->tail[0].iov_len)
-> -		rpcrdma_convert_kvec(&xdrbuf->tail[0], seg, &n);
-> -
-> -out:
-> -	if (unlikely(n > RPCRDMA_MAX_SEGS))
-> -		return -EIO;
-> -	return n;
-> +	return (cur->xc_flags & (XC_HEAD_DONE | XC_PAGES_DONE |
-> +				 XC_TAIL_DONE)) ==
-> +	       (XC_HEAD_DONE | XC_PAGES_DONE | XC_TAIL_DONE);
->  }
-> 
->  static int
-> @@ -292,11 +252,10 @@ encode_read_segment(struct xdr_stream *xdr, 
-> struct rpcrdma_mr *mr,
->  	return 0;
->  }
-> 
-> -static struct rpcrdma_mr_seg *rpcrdma_mr_prepare(struct rpcrdma_xprt 
-> *r_xprt,
-> -						 struct rpcrdma_req *req,
-> -						 struct rpcrdma_mr_seg *seg,
-> -						 int nsegs, bool writing,
-> -						 struct rpcrdma_mr **mr)
-> +static int rpcrdma_mr_prepare(struct rpcrdma_xprt *r_xprt,
-> +			      struct rpcrdma_req *req,
-> +			      struct rpcrdma_xdr_cursor *cur,
-> +			      bool writing, struct rpcrdma_mr **mr)
->  {
->  	*mr = rpcrdma_mr_pop(&req->rl_free_mrs);
->  	if (!*mr) {
-> @@ -307,13 +266,13 @@ static struct rpcrdma_mr_seg 
-> *rpcrdma_mr_prepare(struct rpcrdma_xprt *r_xprt,
->  	}
-> 
->  	rpcrdma_mr_push(*mr, &req->rl_registered);
-> -	return frwr_map(r_xprt, seg, nsegs, writing, req->rl_slot.rq_xid, *mr);
-> +	return frwr_map(r_xprt, cur, writing, req->rl_slot.rq_xid, *mr);
-> 
->  out_getmr_err:
->  	trace_xprtrdma_nomrs_err(r_xprt, req);
->  	xprt_wait_for_buffer_space(&r_xprt->rx_xprt);
->  	rpcrdma_mrs_refresh(r_xprt);
-> -	return ERR_PTR(-EAGAIN);
-> +	return -EAGAIN;
->  }
-> 
->  /* Register and XDR encode the Read list. Supports encoding a list of 
-> read
-> @@ -336,10 +295,10 @@ static int rpcrdma_encode_read_list(struct 
-> rpcrdma_xprt *r_xprt,
->  				    enum rpcrdma_chunktype rtype)
->  {
->  	struct xdr_stream *xdr = &req->rl_stream;
-> -	struct rpcrdma_mr_seg *seg;
-> +	struct rpcrdma_xdr_cursor cur;
->  	struct rpcrdma_mr *mr;
->  	unsigned int pos;
-> -	int nsegs;
-> +	int ret;
-> 
->  	if (rtype == rpcrdma_noch_pullup || rtype == rpcrdma_noch_mapped)
->  		goto done;
-> @@ -347,24 +306,20 @@ static int rpcrdma_encode_read_list(struct 
-> rpcrdma_xprt *r_xprt,
->  	pos = rqst->rq_snd_buf.head[0].iov_len;
->  	if (rtype == rpcrdma_areadch)
->  		pos = 0;
-> -	seg = req->rl_segments;
-> -	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_snd_buf, pos,
-> -				     rtype, seg);
-> -	if (nsegs < 0)
-> -		return nsegs;
-> +	rpcrdma_xdr_cursor_init(&cur, &rqst->rq_snd_buf, pos, rtype);
-> 
->  	do {
-> -		seg = rpcrdma_mr_prepare(r_xprt, req, seg, nsegs, false, &mr);
-> -		if (IS_ERR(seg))
-> -			return PTR_ERR(seg);
-> +		ret = rpcrdma_mr_prepare(r_xprt, req, &cur, false, &mr);
-> +		if (ret)
-> +			return ret;
-> 
->  		if (encode_read_segment(xdr, mr, pos) < 0)
->  			return -EMSGSIZE;
-> 
-> -		trace_xprtrdma_chunk_read(rqst->rq_task, pos, mr, nsegs);
-> +		trace_xprtrdma_chunk_read(rqst->rq_task, pos, mr,
-> +					  rpcrdma_xdr_cursor_done(&cur));
->  		r_xprt->rx_stats.read_chunk_count++;
-> -		nsegs -= mr->mr_nents;
-> -	} while (nsegs);
-> +	} while (!rpcrdma_xdr_cursor_done(&cur));
-> 
->  done:
->  	if (xdr_stream_encode_item_absent(xdr) < 0)
-> @@ -394,20 +349,16 @@ static int rpcrdma_encode_write_list(struct 
-> rpcrdma_xprt *r_xprt,
->  {
->  	struct xdr_stream *xdr = &req->rl_stream;
->  	struct rpcrdma_ep *ep = r_xprt->rx_ep;
-> -	struct rpcrdma_mr_seg *seg;
-> +	struct rpcrdma_xdr_cursor cur;
->  	struct rpcrdma_mr *mr;
-> -	int nsegs, nchunks;
-> +	int nchunks, ret;
->  	__be32 *segcount;
-> 
->  	if (wtype != rpcrdma_writech)
->  		goto done;
-> 
-> -	seg = req->rl_segments;
-> -	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf,
-> -				     rqst->rq_rcv_buf.head[0].iov_len,
-> -				     wtype, seg);
-> -	if (nsegs < 0)
-> -		return nsegs;
-> +	rpcrdma_xdr_cursor_init(&cur, &rqst->rq_rcv_buf,
-> +				rqst->rq_rcv_buf.head[0].iov_len, wtype);
-> 
->  	if (xdr_stream_encode_item_present(xdr) < 0)
->  		return -EMSGSIZE;
-> @@ -418,30 +369,30 @@ static int rpcrdma_encode_write_list(struct 
-> rpcrdma_xprt *r_xprt,
-> 
->  	nchunks = 0;
->  	do {
-> -		seg = rpcrdma_mr_prepare(r_xprt, req, seg, nsegs, true, &mr);
-> -		if (IS_ERR(seg))
-> -			return PTR_ERR(seg);
-> +		ret = rpcrdma_mr_prepare(r_xprt, req, &cur, true, &mr);
-> +		if (ret)
-> +			return ret;
-> 
->  		if (encode_rdma_segment(xdr, mr) < 0)
->  			return -EMSGSIZE;
-> 
-> -		trace_xprtrdma_chunk_write(rqst->rq_task, mr, nsegs);
-> +		trace_xprtrdma_chunk_write(rqst->rq_task, mr,
-> +					   rpcrdma_xdr_cursor_done(&cur));
->  		r_xprt->rx_stats.write_chunk_count++;
->  		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
->  		nchunks++;
-> -		nsegs -= mr->mr_nents;
-> -	} while (nsegs);
-> +	} while (!rpcrdma_xdr_cursor_done(&cur));
-> 
->  	if (xdr_pad_size(rqst->rq_rcv_buf.page_len)) {
->  		if (encode_rdma_segment(xdr, ep->re_write_pad_mr) < 0)
->  			return -EMSGSIZE;
-> 
->  		trace_xprtrdma_chunk_wp(rqst->rq_task, ep->re_write_pad_mr,
-> -					nsegs);
-> +					true);
->  		r_xprt->rx_stats.write_chunk_count++;
-> -		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
-> +		r_xprt->rx_stats.total_rdma_request +=
-> +			ep->re_write_pad_mr->mr_length;
->  		nchunks++;
-> -		nsegs -= mr->mr_nents;
->  	}
-> 
->  	/* Update count of segments in this Write chunk */
-> @@ -471,9 +422,9 @@ static int rpcrdma_encode_reply_chunk(struct 
-> rpcrdma_xprt *r_xprt,
->  				      enum rpcrdma_chunktype wtype)
->  {
->  	struct xdr_stream *xdr = &req->rl_stream;
-> -	struct rpcrdma_mr_seg *seg;
-> +	struct rpcrdma_xdr_cursor cur;
->  	struct rpcrdma_mr *mr;
-> -	int nsegs, nchunks;
-> +	int nchunks, ret;
->  	__be32 *segcount;
-> 
->  	if (wtype != rpcrdma_replych) {
-> @@ -482,10 +433,7 @@ static int rpcrdma_encode_reply_chunk(struct 
-> rpcrdma_xprt *r_xprt,
->  		return 0;
->  	}
-> 
-> -	seg = req->rl_segments;
-> -	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf, 0, wtype, seg);
-> -	if (nsegs < 0)
-> -		return nsegs;
-> +	rpcrdma_xdr_cursor_init(&cur, &rqst->rq_rcv_buf, 0, wtype);
-> 
->  	if (xdr_stream_encode_item_present(xdr) < 0)
->  		return -EMSGSIZE;
-> @@ -496,19 +444,19 @@ static int rpcrdma_encode_reply_chunk(struct 
-> rpcrdma_xprt *r_xprt,
-> 
->  	nchunks = 0;
->  	do {
-> -		seg = rpcrdma_mr_prepare(r_xprt, req, seg, nsegs, true, &mr);
-> -		if (IS_ERR(seg))
-> -			return PTR_ERR(seg);
-> +		ret = rpcrdma_mr_prepare(r_xprt, req, &cur, true, &mr);
-> +		if (ret)
-> +			return ret;
-> 
->  		if (encode_rdma_segment(xdr, mr) < 0)
->  			return -EMSGSIZE;
-> 
-> -		trace_xprtrdma_chunk_reply(rqst->rq_task, mr, nsegs);
-> +		trace_xprtrdma_chunk_reply(rqst->rq_task, mr,
-> +					   rpcrdma_xdr_cursor_done(&cur));
->  		r_xprt->rx_stats.reply_chunk_count++;
->  		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
->  		nchunks++;
-> -		nsegs -= mr->mr_nents;
-> -	} while (nsegs);
-> +	} while (!rpcrdma_xdr_cursor_done(&cur));
-> 
->  	/* Update count of segments in the Reply chunk */
->  	*segcount = cpu_to_be32(nchunks);
-> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
-> index 8147d2b41494..37bba72065e8 100644
-> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
-> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-> @@ -283,19 +283,36 @@ struct rpcrdma_mr {
->   * registered or invalidated. Must handle a Reply chunk:
->   */
->  enum {
-> -	RPCRDMA_MAX_IOV_SEGS	= 3,
-> +	RPCRDMA_MAX_IOV_SEGS	= 3,	/* head, page-boundary, tail */
->  	RPCRDMA_MAX_DATA_SEGS	= ((1 * 1024 * 1024) / PAGE_SIZE) + 1,
->  	RPCRDMA_MAX_SEGS	= RPCRDMA_MAX_DATA_SEGS +
->  				  RPCRDMA_MAX_IOV_SEGS,
->  };
-> 
-> -/* Arguments for DMA mapping and registration */
-> -struct rpcrdma_mr_seg {
-> -	u32		mr_len;		/* length of segment */
-> -	struct page	*mr_page;	/* underlying struct page */
-> -	u64		mr_offset;	/* IN: page offset, OUT: iova */
-> +/**
-> + * struct rpcrdma_xdr_cursor - tracks position within an xdr_buf
-> + *     for iterative MR registration
-> + * @xc_buf: the xdr_buf being iterated
-> + * @xc_page_offset: byte offset into the page region consumed so far
-> + * @xc_flags: combination of XC_* bits
-> + *
-> + * Each XC_*_DONE flag indicates that this region has no
-> + * remaining MR registration work.  That condition holds both when the region
-> + * has already been registered by a prior frwr_map() call and
-> + * when the region is excluded from this chunk type (pre-set
-> + * at init time by rpcrdma_xdr_cursor_init()).  frwr_map()
-> + * treats the two cases identically: skip the region.
-> + */
-> +struct rpcrdma_xdr_cursor {
-> +	const struct xdr_buf		*xc_buf;
-> +	unsigned int			xc_page_offset;
-> +	unsigned int			xc_flags;
->  };
-> 
-> +#define XC_HEAD_DONE	BIT(0)
-> +#define XC_PAGES_DONE	BIT(1)
-> +#define XC_TAIL_DONE	BIT(2)
-> +
->  /* The Send SGE array is provisioned to send a maximum size
->   * inline request:
->   * - RPC-over-RDMA header
-> @@ -330,7 +347,6 @@ struct rpcrdma_req {
-> 
->  	struct list_head	rl_free_mrs;
->  	struct list_head	rl_registered;
-> -	struct rpcrdma_mr_seg	rl_segments[RPCRDMA_MAX_SEGS];
->  };
-> 
->  static inline struct rpcrdma_req *
-> @@ -450,8 +466,8 @@ rpcrdma_portstr(const struct rpcrdma_xprt *r_xprt)
->  }
-> 
->  /* Setting this to 0 ensures interoperability with early servers.
-> - * Setting this to 1 enhances certain unaligned read/write performance.
-> - * Default is 0, see sysctl entry and rpc_rdma.c rpcrdma_convert_iovs() */
-> + * Setting this to 1 enhances unaligned read/write performance.
-> + * Default is 0, see sysctl entry and rpc_rdma.c */
->  extern int xprt_rdma_pad_optimize;
-> 
->  /* This setting controls the hunt for a supported memory
-> @@ -535,10 +551,10 @@ void frwr_reset(struct rpcrdma_req *req);
->  int frwr_query_device(struct rpcrdma_ep *ep, const struct ib_device *device);
->  int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr);
->  void frwr_mr_release(struct rpcrdma_mr *mr);
-> -struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
-> -				struct rpcrdma_mr_seg *seg,
-> -				int nsegs, bool writing, __be32 xid,
-> -				struct rpcrdma_mr *mr);
-> +int frwr_map(struct rpcrdma_xprt *r_xprt,
-> +	     struct rpcrdma_xdr_cursor *cur,
-> +	     bool writing, __be32 xid,
-> +	     struct rpcrdma_mr *mr);
->  int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
->  void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs);
->  void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
-> -- 
-> 2.53.0
 
