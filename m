@@ -1,295 +1,851 @@
-Return-Path: <linux-nfs+bounces-19835-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19836-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CLWvKQ8Aq2lxZQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-19835-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:25:51 +0100
+	id vJq5AgMCq2nDZQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-19836-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:34:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02044224DD7
-	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:25:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C401225020
+	for <lists+linux-nfs@lfdr.de>; Fri, 06 Mar 2026 17:34:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 74A553173DD8
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2026 16:19:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF8D03055C5C
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Mar 2026 16:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC053D3329;
-	Fri,  6 Mar 2026 16:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD9663EF0B9;
+	Fri,  6 Mar 2026 16:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1O3nzd1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022121.outbound.protection.outlook.com [52.101.96.121])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4FA3ED12E
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Mar 2026 16:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772813978; cv=fail; b=g+rIDmbKeZujPv6ybhL4G897xrrYo8TLccNVymiDaT5oNt5CebeZ43xOjSwN8uADzRj/2NlTLBvbA8BbM/Lf7bBdzDt1kIlJEunAbv+C5AO8w+hvsnbu7camzzUjaZGVFglh8uGzlrNxULRT6UWaGzvmyrDFSr2Jah9J0MHRJOs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772813978; c=relaxed/simple;
-	bh=YRb9qGchanMXkbfShzm1HKov+3TuiBpSJsM6qHZX9fg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HpZK5DlRODz8w633Iw6C3EJhG+LW9Xvg9AKhCV2SLNLZkLLtLOw6vLat8nsC1lqkVbHpkN+A0Gor6j7LiiusPN27ozURBN2bJ92kY4J4S6OuPq8m9+hlTbH5tVhp/dNUXPBl4VkUktp4idV1kGrePLmZcZDiC0Spd0dwCBDiO8I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jDRPmUsnKrWaTLdOTPz1sMC8MtVi7j1opd5bk1c7vnDBufSZ2jT4gSi1jSSENBwEFWan9MM9tdEvzTFfmHLX1Gmq/OBfSaySbFvyFQ8eP59RN6KvJOFucKRw0ZktBUttUCYa9iosJ2exdSLnOqY8sllIbT4yX0wzkW7UdpbppzSA8pCFGP0iRvaynjYENTr3c2xLwVSuP6DEFmmrbKaIvymnnQdsJqep0xxhbF6qJYAflxG53Lx1lWE+4Ce/Gc2JykJW86CAhzJMxYFZHX9QJoAxnpwUH1j4XHh1SguYFz1Ue1NVYu62qxVoxHUnauRWX1JGuSB/2ODt4i1u21qcqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LGo+KjrEz8gFbwinKPosJ5jHcWo+VjE50t2tN/jzieM=;
- b=xRMdQ5JJT4CGazBnvs9R9bISg6EmnHD0JJrjavCxclXw0FNCgnDBLoJWFYkf2LCj8AXHRfAobipa0XN5rYPM3Nr/D/V+fM8C2+62SMlufLQq2pH5ctsZrx/EKAIyfuCosLrOTIX2gFeXB+hvA4iwet6QoceMQPWJqjcWORvyJ2RP4zN+5/tvNZLfmk0p/FlUaYAJ1tkiZsC1/vFXUeq3U+B26HKgoCt+drl28vBibj8XHkIA/l9+2mMjStsqJWIGcP/8z1cibdsEn8FlVpOxIWBDlCpHM1oVY8O5rIlPkp6Y+NyW7xdJTSLlkSBYlMLIBapv07zNwebcnTaamvZoDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by CW1P123MB8870.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:272::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.19; Fri, 6 Mar
- 2026 16:19:33 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%2]) with mapi id 15.20.9678.017; Fri, 6 Mar 2026
- 16:19:33 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: steved@redhat.com,
-	tbecker@redhat.com
-Cc: yi.zhang@redhat.com,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsrahead: enable event-driven mountinfo monitoring and skip non-NFS devices
-Date: Fri,  6 Mar 2026 11:19:29 -0500
-Message-ID: <20260306161929.4148128-1-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.51.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: IA1P220CA0023.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:464::7) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7F93EF0CB
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Mar 2026 16:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772814513; cv=none; b=ckcOqj3gWzyNEhqebN7kIgu3Zr3s533hI+JasD8TuouvHLffxkKMHPjovxX1MGWclhlY7sEcq547w0VlvS4yDv2UfIsv6pa9pgwkD8WCAkxGwnZJzKYMuv6CkChAR/9RvqPugFZ5VJmBHfP+KkNVQo3fqHXBiFk8fvKY23w7R9Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772814513; c=relaxed/simple;
+	bh=oMQp1JAnd5qUJswUPYshwc7TdsU7AfZfcrm04NfhbE4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=LyWhlSeNJEiUw6LdRiNv6zZmQip2Qn3jlIH5djFV6sL651Lu13l7XyVTtlTK5/73pzzWP+/Od84agjLJgBpjSCx/VRXLSjQ6OS9tGTwrTf4NNvF4fgvqsjlUa5mAi1RqEpdAPF/abX/X6OiqcWFsjTlNBS5mGKjA4mTwRVzWRDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1O3nzd1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF62C2BC86;
+	Fri,  6 Mar 2026 16:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772814512;
+	bh=oMQp1JAnd5qUJswUPYshwc7TdsU7AfZfcrm04NfhbE4=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=L1O3nzd1WS6nXGw64TioFCVspqBV/eTjMA+bjrO/mxApGbsDfNJEuEgTy/MMiJy9K
+	 u16MIJPN7RKAM6riER/TDnlbmVGCcqjZ3BEEEk/iqOqq7Uu/9T1B/nfi8Lw4A1G4Bw
+	 GsgHSd2H/2CYTfZ9c4M+WAsraVhgk7nBYZ0Y53M7V5muqNYqiANm69am8V5wZHzIeb
+	 Ymfy+OU8wPgbzebzfCD+7tm85LPmkVJOF2bEkXX/6GfGSXWbR3+g9q5LnvO2+Aded+
+	 +2yRNM3cBlfGm3/7PJ8OFD2BQMDFoGeOHoTDjfJeQZGAZ0t7+piO7Khf6ARuOwQGw9
+	 /G7TyHHhsCegA==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 33325F4006A;
+	Fri,  6 Mar 2026 11:28:31 -0500 (EST)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Fri, 06 Mar 2026 11:28:31 -0500
+X-ME-Sender: <xms:rwCraeYHNyV0iLjLtgEsqIBqLa-0fl-dW8pk8un8EFvFN5TgaLS4PA>
+    <xme:rwCracPUHeEbGIxRzxcMuhm6d01jhdHDCJDBRobDI_WQX4FTj-NBVTVGsKIOY2oKM
+    23wllPNqVrmO7QtA9TsYFhUqQZzojRqSrInRWU1lffH-DksVJSuOmM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieeljeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehnnhgr
+    ucfutghhuhhmrghkvghrfdcuoegrnhhnrgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeefieekjeeileegtedtueekjeehgefhudfhjeejgfefteffteekgefhteev
+    ieeukeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhhnrgdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijeejuddvtdej
+    ledqfeefvddvfeegjeduqdgrnhhnrgeppehkvghrnhgvlhdrohhrghesnhhofihhvgihtg
+    hrvggrmhgvrhihrdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehtrhhonhgurdhmhihklhgvsghushhtsehhrghmmhgvrhhsphgrtg
+    gvrdgtohhmpdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    tghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugi
+    dqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhr
+    ughmrgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rwCrabnc2aFf5VoE0KmjFdfTHruu4fwuSHwaaO8ZmtFG4WtuGfkCEw>
+    <xmx:rwCraXyKmZLtzTvpMd_icYLjWuCEomNdiWPLMV-3joTcxjIH-mM4Qg>
+    <xmx:rwCradOmVOYck0t6BtcHARrS9G2vCgBxVItKfkfjplCIvrwCySikHg>
+    <xmx:rwCraTrb4duI4bEhUeiv_cQhwG9YrYXLJLU5jfwceNAWPtzqKg4gxA>
+    <xmx:rwCraWHOWzgdg2oKC9j7Kx30ztI37U7PdN7x2EwzK4N0W9bQxk21SLk_>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 09193B6006F; Fri,  6 Mar 2026 11:28:31 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|CW1P123MB8870:EE_
-X-MS-Office365-Filtering-Correlation-Id: 073920d7-827d-433f-2932-08de7b9c26c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	/1WoF/3OoLhfqKOOcfja3+22XlI83uktjyEcOgsgnArmBAOKTTg7s+WnWi4X6z+BScns9GejJ8Kkeqp47UC9nSvKevzjEvloKi3r6ZAM7VdAi9uNQTcGGSEBfjQkwJBh/xLklEXgfgzqhlSTXA568f4z//g8WwRKW/u5zq+wN8LYGpjlLiwqNhtWgrMVwkUB5lVtWiOTpEpHrWmnZw1gZG0XMwyJKyHNO6w9yNki37GWGF2tV/cJjhw4q5uQZuviRa0dE0PLKCflKjoZfY9GijD9qKErZA/xMn44zIw6bc2OZafNOvRNH4SP6fLStEf8ibZJEP9AraZLOO8nnlIATSMEPz0r1KaCMaInuHpgOTQCmgXnVyhJt8fj8RbhhIxHyXKnMOgXfjIiL82fNE8IoLt+Q1bRh+Rz5bTB/pF1UuGZguKxECmDOkqTqUE7Af6b6f0uj+J8GR0GvOuLDnFdq+0pc63QxeAIdrifP1/tLA+1yODQ8y/vMy84sta3THq9pFTOVhZBOjNhFVEdJf/CIFbfHs5jFjfJr2TBEstCdiS6vOYh4VBmDTxL4H4rEWeRsoROpjwTlYG9JhjxAv5FQbJlOBmXacKUVFKOQNIP9RhDVkGImnvtE2c1ZYv17lITjvgPozVPrUn0hfIgbAvZ83Ezd3DC0Sv2gvpYKtdZ+1c5Dphft8LynZDv0UjIJ+TN
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?WXp/KSvab1A34hEaFyi3yuFS4yb2uvhIOQSBXzzb7hXq/TbjCow03Ru2WuxD?=
- =?us-ascii?Q?9ckH1NaOBs+hM14orcZ1kPvZ8mxBBGkrB6ARw347DSh9Fj7E5E6AVY2rwiK0?=
- =?us-ascii?Q?xGuRh9bd2qbFbeUc0ZNYtMfjYcEbpOvJXZwTBmL3mN8uRmS42ElvG2cwpq4M?=
- =?us-ascii?Q?LKwm0LRYxCdl0wRzHa/e5tm8roDVDyzb6+zgwWGP2DjSmHgNw1JqSXpHfZjI?=
- =?us-ascii?Q?f0UDmm1UJ5NoFY8c7aHpDtWh4pGy/2eTQW02Yp0JMeDtHlv4K8KP8zdqbVTy?=
- =?us-ascii?Q?HuqJUGXolM/SlCSOsp32NrpGkCRUwMiLKcH8a5LdbQPTarNVfE4Aktl5isFs?=
- =?us-ascii?Q?hiY6DEy1ezQ8pzyWfpJeWzA9jhr0OgAkbDtUYjkeeu817j73XHmVBLxXkm6k?=
- =?us-ascii?Q?8DE6xsisDnwrWhjrq2qwo9QTo9P6VfUgAEcrj9qfqaTg6EV4dxyC363uIkFi?=
- =?us-ascii?Q?gHwANfAQZ2th/fVEDthIwalP0shbqjv/ZuNuhYOeDFq5yZ99mZ/qeN3H83vb?=
- =?us-ascii?Q?iM3ES1CncPnQe7mIuHuj10s5I7tUPUVsvt9Wdh4ZfV7bMmeP/VOsLneynlIs?=
- =?us-ascii?Q?y/KKGWgwmqjkSQUHIHHAtxeGxGa6K5WXRIGcrrhzo830slfMhZL4vr2VxYUH?=
- =?us-ascii?Q?oOTYk0PxfotZF7hoVEdTE7p7telmKfXenpjOeQqx8CBxO1wet7+RNFOvdb7f?=
- =?us-ascii?Q?bNBMdI6qtvpn36l9HKSN4nFmgT43HtTQNPGVWStyU1C2mIufDhTKUuFXYSvS?=
- =?us-ascii?Q?CEKRPoecCy+iD0dS5+G3WIYUGttWBAHgy8WFuPY8gLXNTuNn6d+No6+ekv4X?=
- =?us-ascii?Q?idjV3au37WuGDA9e+4lGgVf/DowB2Kp80iQcJCwwVKJRxHqLEQlh5Rj8wqOu?=
- =?us-ascii?Q?zrYapQ464Zy1CwJbDoY1AL9783b5pcY/G6SAtpYo52kRXEEjLCo7SubMXUYq?=
- =?us-ascii?Q?E0g9wXvsjOPsq6vX1x+0h5scrmnKzlTgpc4M9sqqqevFkvRskLTRNap7Y+ld?=
- =?us-ascii?Q?OFu1gT9vNYPA9SW92Ibk7rxoFmm/DwvqAUeRG8oBhfr0Pt7Nukw9BYgZFbcJ?=
- =?us-ascii?Q?dbE6HREfZlgmRIePjIihwXqhmLnfzJ+cOaw/YZz0+nUNsmeSuINIcqUDXuzh?=
- =?us-ascii?Q?Z/sZYWTJfxsOBW6BgPiNMGO1LQ9wU5kiRXfIkM2XsBGm+cE61dYlaI8QgoeA?=
- =?us-ascii?Q?5aNgP/+LvrPaCtKGMd0mBVOtXR9oNX2q/F2BrmOFssdHB+9QwwBraNpNbWc5?=
- =?us-ascii?Q?X42WaGS4WfeKHPX16zv74W9KqaYHYd+jIZK+L0LK9dTyLKK/EfswgB963qP7?=
- =?us-ascii?Q?cI+hwG2bPMZOtoBlbXMOd6FTlL48m0Fk40ye2iovuYfCDnOk0uI+2rEXNOp3?=
- =?us-ascii?Q?G+An/cmu/thbLvaXV9FVmL+CbF7HuzoraHyqW8SbTAi2eoXASMYcEAitdLxT?=
- =?us-ascii?Q?AMclAzAEJjS39+LFKSVIEw+qnaxK6rzh/rgtfuYqY40EmAqPaCeyFx+I5sYP?=
- =?us-ascii?Q?PtQqXKdCTwVsW+mLmS4ZiWGqoG2PKvKzeAtGa2Tc7u4q58WdFIh/H+j/9oel?=
- =?us-ascii?Q?QexZAPaau4yBrlmznhcT7rkw0V2roFKX3jzWuPcwpVBjhLdoo88rH0tbDayG?=
- =?us-ascii?Q?+J4OSoKUJ44/Mjaj38vtHA9sRjjv4qfVQmIuPTP5HO7GPduZVtFM8Dhc8QZj?=
- =?us-ascii?Q?qxo6V2Vsxfj1QgoXVqlDFLbbwZ08tIKnMfunvSAv2elq64XD/HzeL5V7HzMr?=
- =?us-ascii?Q?LMTZW0vOOw=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 073920d7-827d-433f-2932-08de7b9c26c2
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2026 16:19:33.2098
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dunjHdd4qc0hdI94oUdh3mJEeIIvjUKA4SE1fbaHMcuWKrobPu8SugeuLephhfqcRcl3PLc4hLcdb0Hq4z906g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB8870
-X-Rspamd-Queue-Id: 02044224DD7
+X-ThreadId: A4i0e0eL3YLZ
+Date: Fri, 06 Mar 2026 11:28:10 -0500
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+ linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <0f75a763-5ec9-4829-85b8-9a6ccb059704@app.fastmail.com>
+In-Reply-To: <20260305145054.7096-16-cel@kernel.org>
+References: <20260305145054.7096-10-cel@kernel.org>
+ <20260305145054.7096-16-cel@kernel.org>
+Subject: Re: [PATCH v2 6/8] xprtrdma: Replace rpcrdma_mr_seg with xdr_buf cursor
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6C401225020
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.04 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-2.15 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19835-lists,linux-nfs=lfdr.de];
-	DMARC_NA(0.00)[atomlin.com];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	R_DKIM_NA(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[atomlin@atomlin.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19836-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,app.fastmail.com:mid,oracle.com:email];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.561];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,atomlin.com:mid,atomlin.com:email]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	NEURAL_HAM(-0.00)[-0.970];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-The nfsrahead utility relies on parsing "/proc/self/mountinfo" to
-correlate a device number with a specific NFS mount point. However, due
-to the asynchronous nature of system initialisation, the relevant entry
-in mountinfo may not be immediately available when the tool is executed.
+Hi Chuck,
 
-Currently, the utility employs a naive polling mechanism, retrying the
-search five times with a fixed 50ms delay (totalling 250ms). This
-approach proves brittle on systems under heavy load or during
-distinctively slow boot sequences.
+On Thu, Mar 5, 2026, at 9:51 AM, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> The FRWR registration path converts data through three
+> representations: xdr_buf -> rpcrdma_mr_seg[] ->
+> scatterlist[] -> ib_map_mr_sg(). The rpcrdma_mr_seg
+> intermediate is a relic of when multiple registration
+> strategies existed (FMR, physical, FRWR). Only FRWR
+> remains, so the indirection serves no purpose.
+>
+> Introduce struct rpcrdma_xdr_cursor to track position
+> within an xdr_buf during iterative MR registration.
+> The cursor is 16 bytes on the stack (a pointer and two
+> unsigned ints), replacing the 6240-byte rl_segments[260]
+> array that was embedded in each rpcrdma_req.
+>
+> Rewrite frwr_map to populate scatterlist entries directly
+> from the xdr_buf regions (head kvec, page list, tail
+> kvec) via the cursor. The boundary logic for non-SG_GAPS
+> devices is simpler than before because the xdr_buf
+> structure guarantees that page-region entries after the
+> first start at offset 0, and that head/tail kvecs are
+> separate regions that naturally break at MR boundaries.
+>
+> Rewrite the three chunk-encoding functions
+> (rpcrdma_encode_read_list, rpcrdma_encode_write_list,
+> rpcrdma_encode_reply_chunk) to use cursor-based iteration
+> instead of the two-pass convert-then-register approach.
+>
+> Fix a pre-existing bug in rpcrdma_encode_write_list where
+> the write-pad statistics accumulator added mr->mr_length
+> from the last data MR rather than the write-pad MR. The
+> refactored code uses ep->re_write_pad_mr->mr_length.
+>
+> Delete rpcrdma_convert_kvec, rpcrdma_convert_iovs, struct
+> rpcrdma_mr_seg, rl_segments, and RPCRDMA_MAX_IOV_SEGS.
+> Adapt the chunk tracepoints to take a bool is_last
+> parameter instead of the now-eliminated nsegs count.
 
-To mitigate this race condition and improve robustness, update
-get_device_info() to utilise the libmount monitoring API.
+After this patch I start to see a bunch of errors running cthon
+tests with both soft iwarp and soft roce.  With NFSv3 I see IO errors:
 
-The new implementation introduces the following logic:
+./server -b -o v3,proto=rdma,sec=sys -m /mnt/test/server/nfs3 -p /srv/test/xfs/anna/nfs3 server
+The '-b' test using 'v3,proto=rdma,sec=sys' options to server: Failed!!
+/tmp/nfsv3rdma-11:10:46.error:
+        sh ./runtests  -b -t /mnt/test/server/nfs3/client.test
 
-    1.  Initialises a monitor on /proc/self/mountinfo using
-        mnt_new_monitor().
+        Starting BASIC tests: test directory /mnt/test/server/nfs3/client.test (arg: -t)
+        mkdir: cannot create directory '/mnt/test/server/nfs3/client.test': Input/output error
+        Can't make directory /mnt/test/server/nfs3/client.test
+        basic tests failed
+        Tests failed, leaving /mnt/test/server/nfs3 mounted
 
-    2.  Replaces the fixed polling loop with mnt_monitor_wait().
+I can't even get that far with NFSv4.2, the mounts just fail:
 
-    3.  Increases the maximum wait time to 10 seconds (MNT_NM_TIMEOUT).
-
-    4.  Introduces a fast-path rejection mechanism. NFS backing devices are
-        allocated from the kernel's unnamed block device pool (major number
-        0). While some local multi-device filesystems (such as Btrfs) also
-        utilise anonymous device numbers, physical hardware block devices
-        (e.g., sda, nvme) always possess specific, non-zero major numbers.
-        By instantly exiting with -ENODEV for any device string not
-        beginning with "0:", we safely bypass the monitor for physical
-        drives, preventing the exhaustion of udev worker threads.
-        See set_anon_super() and get_anon_bdev().
-
-    5.  Implements strict monotonic deadline tracking within the monitor
-        loop to prevent indefinite blocking.
-
-Fixes: 2b62ac4c ("nfsrahead: enable event-driven mountinfo monitoring")
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Link: https://lore.kernel.org/linux-block/CAHj4cs8URj2fJ7KyP9ViAm6npVOaMiAErnw2uFyPYEU2wb7G_w@mail.gmail.com/T/#t
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
----
-
-Hi Steve,
-
-This patch should resolve the udev worker exhaustion issue reported by
-Yi. It applies cleanly on top of the current nfs-utils tree, after your
-revert [1].
-
-Thank you.
-
-[1]: https://lore.kernel.org/linux-nfs/20260305124221.55407-1-steved@redhat.com/
+./server -b -o v4.2,proto=rdma,sec=sys -m /mnt/test/server/nfs4.2 -p /srv/test/xfs/anna/nfs4.2 server
+Waiting for '-b' to finish ... 
+The '-b' test using 'v4.2,proto=rdma,sec=sys' options to server: Failed!!
+/tmp/nfsv4.2rdma-11:15:07.error:
+        mount.nfs: mount system call failed for /mnt/test/server/nfs4.2
+        Can't mount server:/srv/test/xfs/anna/nfs4.2 on /mnt/test/server/nfs4.2
+Done: 11:15:07
 
 
- tools/nfsrahead/main.c | 55 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
+Is there anything specific I should look at to try to figure out what's going on?
 
-diff --git a/tools/nfsrahead/main.c b/tools/nfsrahead/main.c
-index b7b889ff..78cd2581 100644
---- a/tools/nfsrahead/main.c
-+++ b/tools/nfsrahead/main.c
-@@ -3,6 +3,7 @@
- #include <stdlib.h>
- #include <errno.h>
- #include <unistd.h>
-+#include <time.h>
- 
- #include <libmount/libmount.h>
- #include <sys/sysmacros.h>
-@@ -17,6 +18,8 @@
- #define CONF_NAME "nfsrahead"
- #define NFS_DEFAULT_READAHEAD 128
- 
-+#define MNT_NM_TIMEOUT 10000
-+
- /* Device information from the system */
- struct device_info {
- 	char *device_number;
-@@ -117,7 +120,57 @@ out_free_device_info:
- 
- static int get_device_info(const char *device_number, struct device_info *device_info)
- {
--	int ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-+	int ret;
-+	struct libmnt_monitor *mn = NULL;
-+	struct timespec start, now;
-+	int remaining_ms = MNT_NM_TIMEOUT;
-+
-+	/*
-+	 * Fast-path rejection:
-+	 * NFS backing devices always use the anonymous block device major number (0).
-+	 * If the device number does not start with "0:", it is a physical block device
-+	 * and will never be an NFS mount. Exit immediately to prevent blocking udev.
-+	 */
-+	if (strncmp(device_number, "0:", 2) != 0)
-+		return -ENODEV;
-+
-+	ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-+	if (ret == 0)
-+		return 0;
-+
-+	mn = mnt_new_monitor();
-+	if (!mn)
-+		goto fallback;
-+
-+	if (mnt_monitor_enable_kernel(mn, 1) < 0) {
-+		mnt_unref_monitor(mn);
-+		goto fallback;
-+	}
-+
-+	clock_gettime(CLOCK_MONOTONIC, &start);
-+
-+	while (remaining_ms > 0) {
-+		int rc = mnt_monitor_wait(mn, remaining_ms);
-+		if (rc > 0) {
-+			ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
-+			if (ret == 0) {
-+				mnt_unref_monitor(mn);
-+				return 0;
-+			}
-+		} else {
-+			break;
-+		}
-+
-+		clock_gettime(CLOCK_MONOTONIC, &now);
-+		long elapsed_ms = (now.tv_sec - start.tv_sec) * 1000 +
-+				  (now.tv_nsec - start.tv_nsec) / 1000000;
-+		remaining_ms = MNT_NM_TIMEOUT - elapsed_ms;
-+	}
-+
-+	mnt_unref_monitor(mn);
-+	return ret;
-+
-+fallback:
- 	for (int retry_count = 0; retry_count < 5 && ret != 0; retry_count++) {
- 		usleep(50000);
- 		ret = get_mountinfo(device_number, device_info, MOUNTINFO_PATH);
--- 
-2.51.0
+Anna
 
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/trace/events/rpcrdma.h  |  28 +++---
+>  net/sunrpc/xprtrdma/frwr_ops.c  | 116 ++++++++++++++++++-----
+>  net/sunrpc/xprtrdma/rpc_rdma.c  | 160 +++++++++++---------------------
+>  net/sunrpc/xprtrdma/xprt_rdma.h |  42 ++++++---
+>  4 files changed, 189 insertions(+), 157 deletions(-)
+>
+> diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+> index e6a72646c507..b79913048e1a 100644
+> --- a/include/trace/events/rpcrdma.h
+> +++ b/include/trace/events/rpcrdma.h
+> @@ -392,10 +392,10 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
+>  		const struct rpc_task *task,
+>  		unsigned int pos,
+>  		struct rpcrdma_mr *mr,
+> -		int nsegs
+> +		bool is_last
+>  	),
+> 
+> -	TP_ARGS(task, pos, mr, nsegs),
+> +	TP_ARGS(task, pos, mr, is_last),
+> 
+>  	TP_STRUCT__entry(
+>  		__field(unsigned int, task_id)
+> @@ -405,7 +405,7 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
+>  		__field(u32, handle)
+>  		__field(u32, length)
+>  		__field(u64, offset)
+> -		__field(int, nsegs)
+> +		__field(bool, is_last)
+>  	),
+> 
+>  	TP_fast_assign(
+> @@ -416,7 +416,7 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
+>  		__entry->handle = mr->mr_handle;
+>  		__entry->length = mr->mr_length;
+>  		__entry->offset = mr->mr_offset;
+> -		__entry->nsegs = nsegs;
+> +		__entry->is_last = is_last;
+>  	),
+> 
+>  	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
+> @@ -424,7 +424,7 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
+>  		__entry->task_id, __entry->client_id,
+>  		__entry->pos, __entry->length,
+>  		(unsigned long long)__entry->offset, __entry->handle,
+> -		__entry->nents < __entry->nsegs ? "more" : "last"
+> +		__entry->is_last ? "last" : "more"
+>  	)
+>  );
+> 
+> @@ -434,18 +434,18 @@ DECLARE_EVENT_CLASS(xprtrdma_rdch_event,
+>  					const struct rpc_task *task,	\
+>  					unsigned int pos,		\
+>  					struct rpcrdma_mr *mr,		\
+> -					int nsegs			\
+> +					bool is_last			\
+>  				),					\
+> -				TP_ARGS(task, pos, mr, nsegs))
+> +				TP_ARGS(task, pos, mr, is_last))
+> 
+>  DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
+>  	TP_PROTO(
+>  		const struct rpc_task *task,
+>  		struct rpcrdma_mr *mr,
+> -		int nsegs
+> +		bool is_last
+>  	),
+> 
+> -	TP_ARGS(task, mr, nsegs),
+> +	TP_ARGS(task, mr, is_last),
+> 
+>  	TP_STRUCT__entry(
+>  		__field(unsigned int, task_id)
+> @@ -454,7 +454,7 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
+>  		__field(u32, handle)
+>  		__field(u32, length)
+>  		__field(u64, offset)
+> -		__field(int, nsegs)
+> +		__field(bool, is_last)
+>  	),
+> 
+>  	TP_fast_assign(
+> @@ -464,7 +464,7 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
+>  		__entry->handle = mr->mr_handle;
+>  		__entry->length = mr->mr_length;
+>  		__entry->offset = mr->mr_offset;
+> -		__entry->nsegs = nsegs;
+> +		__entry->is_last = is_last;
+>  	),
+> 
+>  	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
+> @@ -472,7 +472,7 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
+>  		__entry->task_id, __entry->client_id,
+>  		__entry->length, (unsigned long long)__entry->offset,
+>  		__entry->handle,
+> -		__entry->nents < __entry->nsegs ? "more" : "last"
+> +		__entry->is_last ? "last" : "more"
+>  	)
+>  );
+> 
+> @@ -481,9 +481,9 @@ DECLARE_EVENT_CLASS(xprtrdma_wrch_event,
+>  				TP_PROTO(				\
+>  					const struct rpc_task *task,	\
+>  					struct rpcrdma_mr *mr,		\
+> -					int nsegs			\
+> +					bool is_last			\
+>  				),					\
+> -				TP_ARGS(task, mr, nsegs))
+> +				TP_ARGS(task, mr, is_last))
+> 
+>  TRACE_DEFINE_ENUM(DMA_BIDIRECTIONAL);
+>  TRACE_DEFINE_ENUM(DMA_TO_DEVICE);
+> diff --git a/net/sunrpc/xprtrdma/frwr_ops.c 
+> b/net/sunrpc/xprtrdma/frwr_ops.c
+> index 4331b0b65f4c..ef6a6ab9f940 100644
+> --- a/net/sunrpc/xprtrdma/frwr_ops.c
+> +++ b/net/sunrpc/xprtrdma/frwr_ops.c
+> @@ -268,10 +268,9 @@ int frwr_query_device(struct rpcrdma_ep *ep, const 
+> struct ib_device *device)
+>  }
+> 
+>  /**
+> - * frwr_map - Register a memory region
+> + * frwr_map - Register a memory region from an xdr_buf cursor
+>   * @r_xprt: controlling transport
+> - * @seg: memory region co-ordinates
+> - * @nsegs: number of segments remaining
+> + * @cur: cursor tracking position within the xdr_buf
+>   * @writing: true when RDMA Write will be used
+>   * @xid: XID of RPC using the registered memory
+>   * @mr: MR to fill in
+> @@ -279,34 +278,103 @@ int frwr_query_device(struct rpcrdma_ep *ep, 
+> const struct ib_device *device)
+>   * Prepare a REG_MR Work Request to register a memory region
+>   * for remote access via RDMA READ or RDMA WRITE.
+>   *
+> - * Returns the next segment or a negative errno pointer.
+> - * On success, @mr is filled in.
+> + * Returns 0 on success (cursor advanced past consumed data,
+> + * @mr populated) or a negative errno on failure.
+>   */
+> -struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
+> -				struct rpcrdma_mr_seg *seg,
+> -				int nsegs, bool writing, __be32 xid,
+> -				struct rpcrdma_mr *mr)
+> +int frwr_map(struct rpcrdma_xprt *r_xprt,
+> +	     struct rpcrdma_xdr_cursor *cur,
+> +	     bool writing, __be32 xid,
+> +	     struct rpcrdma_mr *mr)
+>  {
+>  	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+> +	const struct xdr_buf *xdrbuf = cur->xc_buf;
+> +	bool sg_gaps = ep->re_mrtype == IB_MR_TYPE_SG_GAPS;
+> +	unsigned int max_depth = ep->re_max_fr_depth;
+>  	struct ib_reg_wr *reg_wr;
+>  	int i, n, dma_nents;
+>  	struct ib_mr *ibmr;
+>  	u8 key;
+> 
+> -	if (nsegs > ep->re_max_fr_depth)
+> -		nsegs = ep->re_max_fr_depth;
+> -	for (i = 0; i < nsegs;) {
+> -		sg_set_page(&mr->mr_sg[i], seg->mr_page,
+> -			    seg->mr_len, seg->mr_offset);
+> +	i = 0;
+> 
+> -		++seg;
+> -		++i;
+> -		if (ep->re_mrtype == IB_MR_TYPE_SG_GAPS)
+> -			continue;
+> -		if ((i < nsegs && seg->mr_offset) ||
+> -		    offset_in_page((seg-1)->mr_offset + (seg-1)->mr_len))
+> -			break;
+> +	/* Head kvec */
+> +	if (!(cur->xc_flags & XC_HEAD_DONE)) {
+> +		const struct kvec *head = &xdrbuf->head[0];
+> +
+> +		sg_set_page(&mr->mr_sg[i],
+> +			    virt_to_page(head->iov_base),
+> +			    head->iov_len,
+> +			    offset_in_page(head->iov_base));
+> +		cur->xc_flags |= XC_HEAD_DONE;
+> +		i++;
+> +		/* Without sg-gap support, each non-contiguous region
+> +		 * must be registered as a separate MR.  Returning
+> +		 * here after the head kvec causes the caller to
+> +		 * invoke frwr_map() again for the page list and
+> +		 * tail.
+> +		 */
+> +		if (!sg_gaps)
+> +			goto finish;
+>  	}
+> +
+> +	/* Page list */
+> +	if (!(cur->xc_flags & XC_PAGES_DONE) && xdrbuf->page_len) {
+> +		unsigned int page_base, remaining;
+> +		struct page **ppages;
+> +
+> +		remaining = xdrbuf->page_len - cur->xc_page_offset;
+> +		page_base = offset_in_page(xdrbuf->page_base +
+> +					   cur->xc_page_offset);
+> +		ppages = xdrbuf->pages +
+> +			 ((xdrbuf->page_base + cur->xc_page_offset)
+> +			  >> PAGE_SHIFT);
+> +
+> +		while (remaining > 0 && i < max_depth) {
+> +			unsigned int len;
+> +
+> +			len = min_t(unsigned int,
+> +				    PAGE_SIZE - page_base, remaining);
+> +			sg_set_page(&mr->mr_sg[i], *ppages,
+> +				    len, page_base);
+> +			cur->xc_page_offset += len;
+> +			i++;
+> +			ppages++;
+> +			remaining -= len;
+> +
+> +			if (!sg_gaps && remaining > 0 &&
+> +			    offset_in_page(page_base + len))
+> +				goto finish;
+> +			page_base = 0;
+> +		}
+> +		if (remaining == 0)
+> +			cur->xc_flags |= XC_PAGES_DONE;
+> +	} else if (!(cur->xc_flags & XC_PAGES_DONE)) {
+> +		cur->xc_flags |= XC_PAGES_DONE;
+> +	}
+> +
+> +	/* Tail kvec */
+> +	if (!(cur->xc_flags & XC_TAIL_DONE) && xdrbuf->tail[0].iov_len &&
+> +	    i < max_depth) {
+> +		const struct kvec *tail = &xdrbuf->tail[0];
+> +
+> +		if (!sg_gaps && i > 0) {
+> +			struct scatterlist *prev = &mr->mr_sg[i - 1];
+> +
+> +			if (offset_in_page(prev->offset + prev->length))
+> +				goto finish;
+> +		}
+> +		sg_set_page(&mr->mr_sg[i],
+> +			    virt_to_page(tail->iov_base),
+> +			    tail->iov_len,
+> +			    offset_in_page(tail->iov_base));
+> +		cur->xc_flags |= XC_TAIL_DONE;
+> +		i++;
+> +	} else if (!(cur->xc_flags & XC_TAIL_DONE) &&
+> +		   !xdrbuf->tail[0].iov_len) {
+> +		cur->xc_flags |= XC_TAIL_DONE;
+> +	}
+> +
+> +finish:
+>  	mr->mr_dir = rpcrdma_data_dir(writing);
+>  	mr->mr_nents = i;
+> 
+> @@ -338,15 +406,15 @@ struct rpcrdma_mr_seg *frwr_map(struct 
+> rpcrdma_xprt *r_xprt,
+>  	mr->mr_offset = ibmr->iova;
+>  	trace_xprtrdma_mr_map(mr);
+> 
+> -	return seg;
+> +	return 0;
+> 
+>  out_dmamap_err:
+>  	trace_xprtrdma_frwr_sgerr(mr, i);
+> -	return ERR_PTR(-EIO);
+> +	return -EIO;
+> 
+>  out_mapmr_err:
+>  	trace_xprtrdma_frwr_maperr(mr, n);
+> -	return ERR_PTR(-EIO);
+> +	return -EIO;
+>  }
+> 
+>  /**
+> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+> index 3aac1456e23e..2ce50e8ce5fd 100644
+> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
+> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+> @@ -200,67 +200,27 @@ rpcrdma_alloc_sparse_pages(struct xdr_buf *buf)
+>  	return 0;
+>  }
+> 
+> -/* Convert @vec to a single SGL element.
+> - *
+> - * Returns pointer to next available SGE, and bumps the total number
+> - * of SGEs consumed.
+> - */
+> -static struct rpcrdma_mr_seg *
+> -rpcrdma_convert_kvec(struct kvec *vec, struct rpcrdma_mr_seg *seg,
+> -		     unsigned int *n)
+> +static void
+> +rpcrdma_xdr_cursor_init(struct rpcrdma_xdr_cursor *cur,
+> +			const struct xdr_buf *xdrbuf,
+> +			unsigned int pos, enum rpcrdma_chunktype type)
+>  {
+> -	seg->mr_page = virt_to_page(vec->iov_base);
+> -	seg->mr_offset = offset_in_page(vec->iov_base);
+> -	seg->mr_len = vec->iov_len;
+> -	++seg;
+> -	++(*n);
+> -	return seg;
+> +	cur->xc_buf = xdrbuf;
+> +	cur->xc_page_offset = 0;
+> +	cur->xc_flags = 0;
+> +
+> +	if (pos != 0)
+> +		cur->xc_flags |= XC_HEAD_DONE;
+> +	if (type == rpcrdma_readch || type == rpcrdma_writech)
+> +		cur->xc_flags |= XC_TAIL_DONE;
+>  }
+> 
+> -/* Convert @xdrbuf into SGEs no larger than a page each. As they
+> - * are registered, these SGEs are then coalesced into RDMA segments
+> - * when the selected memreg mode supports it.
+> - *
+> - * Returns positive number of SGEs consumed, or a negative errno.
+> - */
+> -
+> -static int
+> -rpcrdma_convert_iovs(struct rpcrdma_xprt *r_xprt, struct xdr_buf *xdrbuf,
+> -		     unsigned int pos, enum rpcrdma_chunktype type,
+> -		     struct rpcrdma_mr_seg *seg)
+> +static bool
+> +rpcrdma_xdr_cursor_done(const struct rpcrdma_xdr_cursor *cur)
+>  {
+> -	unsigned long page_base;
+> -	unsigned int len, n;
+> -	struct page **ppages;
+> -
+> -	n = 0;
+> -	if (pos == 0)
+> -		seg = rpcrdma_convert_kvec(&xdrbuf->head[0], seg, &n);
+> -
+> -	len = xdrbuf->page_len;
+> -	ppages = xdrbuf->pages + (xdrbuf->page_base >> PAGE_SHIFT);
+> -	page_base = offset_in_page(xdrbuf->page_base);
+> -	while (len) {
+> -		seg->mr_page = *ppages;
+> -		seg->mr_offset = page_base;
+> -		seg->mr_len = min_t(u32, PAGE_SIZE - page_base, len);
+> -		len -= seg->mr_len;
+> -		++ppages;
+> -		++seg;
+> -		++n;
+> -		page_base = 0;
+> -	}
+> -
+> -	if (type == rpcrdma_readch || type == rpcrdma_writech)
+> -		goto out;
+> -
+> -	if (xdrbuf->tail[0].iov_len)
+> -		rpcrdma_convert_kvec(&xdrbuf->tail[0], seg, &n);
+> -
+> -out:
+> -	if (unlikely(n > RPCRDMA_MAX_SEGS))
+> -		return -EIO;
+> -	return n;
+> +	return (cur->xc_flags & (XC_HEAD_DONE | XC_PAGES_DONE |
+> +				 XC_TAIL_DONE)) ==
+> +	       (XC_HEAD_DONE | XC_PAGES_DONE | XC_TAIL_DONE);
+>  }
+> 
+>  static int
+> @@ -292,11 +252,10 @@ encode_read_segment(struct xdr_stream *xdr, 
+> struct rpcrdma_mr *mr,
+>  	return 0;
+>  }
+> 
+> -static struct rpcrdma_mr_seg *rpcrdma_mr_prepare(struct rpcrdma_xprt 
+> *r_xprt,
+> -						 struct rpcrdma_req *req,
+> -						 struct rpcrdma_mr_seg *seg,
+> -						 int nsegs, bool writing,
+> -						 struct rpcrdma_mr **mr)
+> +static int rpcrdma_mr_prepare(struct rpcrdma_xprt *r_xprt,
+> +			      struct rpcrdma_req *req,
+> +			      struct rpcrdma_xdr_cursor *cur,
+> +			      bool writing, struct rpcrdma_mr **mr)
+>  {
+>  	*mr = rpcrdma_mr_pop(&req->rl_free_mrs);
+>  	if (!*mr) {
+> @@ -307,13 +266,13 @@ static struct rpcrdma_mr_seg 
+> *rpcrdma_mr_prepare(struct rpcrdma_xprt *r_xprt,
+>  	}
+> 
+>  	rpcrdma_mr_push(*mr, &req->rl_registered);
+> -	return frwr_map(r_xprt, seg, nsegs, writing, req->rl_slot.rq_xid, *mr);
+> +	return frwr_map(r_xprt, cur, writing, req->rl_slot.rq_xid, *mr);
+> 
+>  out_getmr_err:
+>  	trace_xprtrdma_nomrs_err(r_xprt, req);
+>  	xprt_wait_for_buffer_space(&r_xprt->rx_xprt);
+>  	rpcrdma_mrs_refresh(r_xprt);
+> -	return ERR_PTR(-EAGAIN);
+> +	return -EAGAIN;
+>  }
+> 
+>  /* Register and XDR encode the Read list. Supports encoding a list of 
+> read
+> @@ -336,10 +295,10 @@ static int rpcrdma_encode_read_list(struct 
+> rpcrdma_xprt *r_xprt,
+>  				    enum rpcrdma_chunktype rtype)
+>  {
+>  	struct xdr_stream *xdr = &req->rl_stream;
+> -	struct rpcrdma_mr_seg *seg;
+> +	struct rpcrdma_xdr_cursor cur;
+>  	struct rpcrdma_mr *mr;
+>  	unsigned int pos;
+> -	int nsegs;
+> +	int ret;
+> 
+>  	if (rtype == rpcrdma_noch_pullup || rtype == rpcrdma_noch_mapped)
+>  		goto done;
+> @@ -347,24 +306,20 @@ static int rpcrdma_encode_read_list(struct 
+> rpcrdma_xprt *r_xprt,
+>  	pos = rqst->rq_snd_buf.head[0].iov_len;
+>  	if (rtype == rpcrdma_areadch)
+>  		pos = 0;
+> -	seg = req->rl_segments;
+> -	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_snd_buf, pos,
+> -				     rtype, seg);
+> -	if (nsegs < 0)
+> -		return nsegs;
+> +	rpcrdma_xdr_cursor_init(&cur, &rqst->rq_snd_buf, pos, rtype);
+> 
+>  	do {
+> -		seg = rpcrdma_mr_prepare(r_xprt, req, seg, nsegs, false, &mr);
+> -		if (IS_ERR(seg))
+> -			return PTR_ERR(seg);
+> +		ret = rpcrdma_mr_prepare(r_xprt, req, &cur, false, &mr);
+> +		if (ret)
+> +			return ret;
+> 
+>  		if (encode_read_segment(xdr, mr, pos) < 0)
+>  			return -EMSGSIZE;
+> 
+> -		trace_xprtrdma_chunk_read(rqst->rq_task, pos, mr, nsegs);
+> +		trace_xprtrdma_chunk_read(rqst->rq_task, pos, mr,
+> +					  rpcrdma_xdr_cursor_done(&cur));
+>  		r_xprt->rx_stats.read_chunk_count++;
+> -		nsegs -= mr->mr_nents;
+> -	} while (nsegs);
+> +	} while (!rpcrdma_xdr_cursor_done(&cur));
+> 
+>  done:
+>  	if (xdr_stream_encode_item_absent(xdr) < 0)
+> @@ -394,20 +349,16 @@ static int rpcrdma_encode_write_list(struct 
+> rpcrdma_xprt *r_xprt,
+>  {
+>  	struct xdr_stream *xdr = &req->rl_stream;
+>  	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+> -	struct rpcrdma_mr_seg *seg;
+> +	struct rpcrdma_xdr_cursor cur;
+>  	struct rpcrdma_mr *mr;
+> -	int nsegs, nchunks;
+> +	int nchunks, ret;
+>  	__be32 *segcount;
+> 
+>  	if (wtype != rpcrdma_writech)
+>  		goto done;
+> 
+> -	seg = req->rl_segments;
+> -	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf,
+> -				     rqst->rq_rcv_buf.head[0].iov_len,
+> -				     wtype, seg);
+> -	if (nsegs < 0)
+> -		return nsegs;
+> +	rpcrdma_xdr_cursor_init(&cur, &rqst->rq_rcv_buf,
+> +				rqst->rq_rcv_buf.head[0].iov_len, wtype);
+> 
+>  	if (xdr_stream_encode_item_present(xdr) < 0)
+>  		return -EMSGSIZE;
+> @@ -418,30 +369,30 @@ static int rpcrdma_encode_write_list(struct 
+> rpcrdma_xprt *r_xprt,
+> 
+>  	nchunks = 0;
+>  	do {
+> -		seg = rpcrdma_mr_prepare(r_xprt, req, seg, nsegs, true, &mr);
+> -		if (IS_ERR(seg))
+> -			return PTR_ERR(seg);
+> +		ret = rpcrdma_mr_prepare(r_xprt, req, &cur, true, &mr);
+> +		if (ret)
+> +			return ret;
+> 
+>  		if (encode_rdma_segment(xdr, mr) < 0)
+>  			return -EMSGSIZE;
+> 
+> -		trace_xprtrdma_chunk_write(rqst->rq_task, mr, nsegs);
+> +		trace_xprtrdma_chunk_write(rqst->rq_task, mr,
+> +					   rpcrdma_xdr_cursor_done(&cur));
+>  		r_xprt->rx_stats.write_chunk_count++;
+>  		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
+>  		nchunks++;
+> -		nsegs -= mr->mr_nents;
+> -	} while (nsegs);
+> +	} while (!rpcrdma_xdr_cursor_done(&cur));
+> 
+>  	if (xdr_pad_size(rqst->rq_rcv_buf.page_len)) {
+>  		if (encode_rdma_segment(xdr, ep->re_write_pad_mr) < 0)
+>  			return -EMSGSIZE;
+> 
+>  		trace_xprtrdma_chunk_wp(rqst->rq_task, ep->re_write_pad_mr,
+> -					nsegs);
+> +					true);
+>  		r_xprt->rx_stats.write_chunk_count++;
+> -		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
+> +		r_xprt->rx_stats.total_rdma_request +=
+> +			ep->re_write_pad_mr->mr_length;
+>  		nchunks++;
+> -		nsegs -= mr->mr_nents;
+>  	}
+> 
+>  	/* Update count of segments in this Write chunk */
+> @@ -471,9 +422,9 @@ static int rpcrdma_encode_reply_chunk(struct 
+> rpcrdma_xprt *r_xprt,
+>  				      enum rpcrdma_chunktype wtype)
+>  {
+>  	struct xdr_stream *xdr = &req->rl_stream;
+> -	struct rpcrdma_mr_seg *seg;
+> +	struct rpcrdma_xdr_cursor cur;
+>  	struct rpcrdma_mr *mr;
+> -	int nsegs, nchunks;
+> +	int nchunks, ret;
+>  	__be32 *segcount;
+> 
+>  	if (wtype != rpcrdma_replych) {
+> @@ -482,10 +433,7 @@ static int rpcrdma_encode_reply_chunk(struct 
+> rpcrdma_xprt *r_xprt,
+>  		return 0;
+>  	}
+> 
+> -	seg = req->rl_segments;
+> -	nsegs = rpcrdma_convert_iovs(r_xprt, &rqst->rq_rcv_buf, 0, wtype, seg);
+> -	if (nsegs < 0)
+> -		return nsegs;
+> +	rpcrdma_xdr_cursor_init(&cur, &rqst->rq_rcv_buf, 0, wtype);
+> 
+>  	if (xdr_stream_encode_item_present(xdr) < 0)
+>  		return -EMSGSIZE;
+> @@ -496,19 +444,19 @@ static int rpcrdma_encode_reply_chunk(struct 
+> rpcrdma_xprt *r_xprt,
+> 
+>  	nchunks = 0;
+>  	do {
+> -		seg = rpcrdma_mr_prepare(r_xprt, req, seg, nsegs, true, &mr);
+> -		if (IS_ERR(seg))
+> -			return PTR_ERR(seg);
+> +		ret = rpcrdma_mr_prepare(r_xprt, req, &cur, true, &mr);
+> +		if (ret)
+> +			return ret;
+> 
+>  		if (encode_rdma_segment(xdr, mr) < 0)
+>  			return -EMSGSIZE;
+> 
+> -		trace_xprtrdma_chunk_reply(rqst->rq_task, mr, nsegs);
+> +		trace_xprtrdma_chunk_reply(rqst->rq_task, mr,
+> +					   rpcrdma_xdr_cursor_done(&cur));
+>  		r_xprt->rx_stats.reply_chunk_count++;
+>  		r_xprt->rx_stats.total_rdma_request += mr->mr_length;
+>  		nchunks++;
+> -		nsegs -= mr->mr_nents;
+> -	} while (nsegs);
+> +	} while (!rpcrdma_xdr_cursor_done(&cur));
+> 
+>  	/* Update count of segments in the Reply chunk */
+>  	*segcount = cpu_to_be32(nchunks);
+> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+> index 8147d2b41494..37bba72065e8 100644
+> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
+> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+> @@ -283,19 +283,36 @@ struct rpcrdma_mr {
+>   * registered or invalidated. Must handle a Reply chunk:
+>   */
+>  enum {
+> -	RPCRDMA_MAX_IOV_SEGS	= 3,
+> +	RPCRDMA_MAX_IOV_SEGS	= 3,	/* head, page-boundary, tail */
+>  	RPCRDMA_MAX_DATA_SEGS	= ((1 * 1024 * 1024) / PAGE_SIZE) + 1,
+>  	RPCRDMA_MAX_SEGS	= RPCRDMA_MAX_DATA_SEGS +
+>  				  RPCRDMA_MAX_IOV_SEGS,
+>  };
+> 
+> -/* Arguments for DMA mapping and registration */
+> -struct rpcrdma_mr_seg {
+> -	u32		mr_len;		/* length of segment */
+> -	struct page	*mr_page;	/* underlying struct page */
+> -	u64		mr_offset;	/* IN: page offset, OUT: iova */
+> +/**
+> + * struct rpcrdma_xdr_cursor - tracks position within an xdr_buf
+> + *     for iterative MR registration
+> + * @xc_buf: the xdr_buf being iterated
+> + * @xc_page_offset: byte offset into the page region consumed so far
+> + * @xc_flags: combination of XC_* bits
+> + *
+> + * Each XC_*_DONE flag indicates that this region has no
+> + * remaining MR registration work.  That condition holds both when the region
+> + * has already been registered by a prior frwr_map() call and
+> + * when the region is excluded from this chunk type (pre-set
+> + * at init time by rpcrdma_xdr_cursor_init()).  frwr_map()
+> + * treats the two cases identically: skip the region.
+> + */
+> +struct rpcrdma_xdr_cursor {
+> +	const struct xdr_buf		*xc_buf;
+> +	unsigned int			xc_page_offset;
+> +	unsigned int			xc_flags;
+>  };
+> 
+> +#define XC_HEAD_DONE	BIT(0)
+> +#define XC_PAGES_DONE	BIT(1)
+> +#define XC_TAIL_DONE	BIT(2)
+> +
+>  /* The Send SGE array is provisioned to send a maximum size
+>   * inline request:
+>   * - RPC-over-RDMA header
+> @@ -330,7 +347,6 @@ struct rpcrdma_req {
+> 
+>  	struct list_head	rl_free_mrs;
+>  	struct list_head	rl_registered;
+> -	struct rpcrdma_mr_seg	rl_segments[RPCRDMA_MAX_SEGS];
+>  };
+> 
+>  static inline struct rpcrdma_req *
+> @@ -450,8 +466,8 @@ rpcrdma_portstr(const struct rpcrdma_xprt *r_xprt)
+>  }
+> 
+>  /* Setting this to 0 ensures interoperability with early servers.
+> - * Setting this to 1 enhances certain unaligned read/write performance.
+> - * Default is 0, see sysctl entry and rpc_rdma.c rpcrdma_convert_iovs() */
+> + * Setting this to 1 enhances unaligned read/write performance.
+> + * Default is 0, see sysctl entry and rpc_rdma.c */
+>  extern int xprt_rdma_pad_optimize;
+> 
+>  /* This setting controls the hunt for a supported memory
+> @@ -535,10 +551,10 @@ void frwr_reset(struct rpcrdma_req *req);
+>  int frwr_query_device(struct rpcrdma_ep *ep, const struct ib_device *device);
+>  int frwr_mr_init(struct rpcrdma_xprt *r_xprt, struct rpcrdma_mr *mr);
+>  void frwr_mr_release(struct rpcrdma_mr *mr);
+> -struct rpcrdma_mr_seg *frwr_map(struct rpcrdma_xprt *r_xprt,
+> -				struct rpcrdma_mr_seg *seg,
+> -				int nsegs, bool writing, __be32 xid,
+> -				struct rpcrdma_mr *mr);
+> +int frwr_map(struct rpcrdma_xprt *r_xprt,
+> +	     struct rpcrdma_xdr_cursor *cur,
+> +	     bool writing, __be32 xid,
+> +	     struct rpcrdma_mr *mr);
+>  int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+>  void frwr_reminv(struct rpcrdma_rep *rep, struct list_head *mrs);
+>  void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req);
+> -- 
+> 2.53.0
 
