@@ -1,170 +1,214 @@
-Return-Path: <linux-nfs+bounces-19867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19868-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mphOHw6NrGkCqwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-19867-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 07 Mar 2026 21:39:42 +0100
+	id CPsuBbwXrWmyyAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-19868-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 08 Mar 2026 07:31:24 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDEDF22D87C
-	for <lists+linux-nfs@lfdr.de>; Sat, 07 Mar 2026 21:39:41 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A96BD22EBA0
+	for <lists+linux-nfs@lfdr.de>; Sun, 08 Mar 2026 07:31:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4D6F43014951
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Mar 2026 20:39:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A780C3006B5F
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Mar 2026 06:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8607A34CFAE;
-	Sat,  7 Mar 2026 20:39:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B862A35893;
+	Sun,  8 Mar 2026 06:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFb6uIx5";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="K4tA227I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoBC7Wij"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412DD2F7462
-	for <linux-nfs@vger.kernel.org>; Sat,  7 Mar 2026 20:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772915978; cv=none; b=X54QuykvGzCXLTcUY5sJ568t7Ny/nGrKOy7PG7T4a07YLg0FJ/wH3EcGGgqf0UIm2hrQ9JtvwxoGBju3CX1KTSlkXGt5LhCddDp2ia/l75UWXHSfsjU94CDT8qqYqg/D7bYDfsUKWBELnBX16fVaVPO+ugrQRjULWLs+fSeq1ww=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772915978; c=relaxed/simple;
-	bh=1wNXwrUo3UJjkzs5KJCShM2dOrnW6rmk1ulLrPJOqAU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=DfMOWptt1PHgrAZVgJO3FBCi5wr9Q9V65uNbXpu8gEyCEdTZ8sg2LhCeqcHb0fIOfSGseIu+V/7rKnq6Ca2M1qe/RgOcGbZJigLaZG2AqxV14bDGulQTe8TiiGECZWVRDdCcAeFTg5+IArdMmHnkVdtKtiiyEB5cx1QTux9yf7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FFb6uIx5; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=K4tA227I; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772915976;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=T9OxiP3l3t/dSfco7PULw7gMtUpegbGKrMUBctUMchM=;
-	b=FFb6uIx5kS7ctTahWPukZ5iL4WPM92b4kqn3koNSKTBW5AwSxKfrZSKngC65t6wbCcuHdk
-	JDF1XDDIxmN1SqVHz493wKPVsvCQnuOsXdR8kGgICfBFGF7zvT3cw3WkbRAzgUJfYE6mlA
-	wj07Sgl6X0m+mX+wZIwwp7tnjhQafMs=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-459-O1nouLYmNQuJBU4gc7ksOQ-1; Sat, 07 Mar 2026 15:39:35 -0500
-X-MC-Unique: O1nouLYmNQuJBU4gc7ksOQ-1
-X-Mimecast-MFC-AGG-ID: O1nouLYmNQuJBU4gc7ksOQ_1772915974
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8950562d351so977718946d6.3
-        for <linux-nfs@vger.kernel.org>; Sat, 07 Mar 2026 12:39:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655712DC76A
+	for <linux-nfs@vger.kernel.org>; Sun,  8 Mar 2026 06:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772951479; cv=pass; b=PDJ56T52fjRGLzgz9/kw3SfKK/kNRARznrakSiypqwbPNogM6M0Lct1MK7W02PbGhd0fPdiJj7ZcHuXsJiyY/0s++BJUVk6s0gYNjA4+TyQ/lR9Wl/ADfof0LIlVQzdAG7yc/y2rfdPM7By9Rg6+PetaDplp+3T+T1JWwAylyzo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772951479; c=relaxed/simple;
+	bh=bqMEOQ0Ckcrgyric5QOWebyRcZKyiXhkKZw3Ukws05o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BI5YrYedZbb9qHOHWrFdXixqlYXV8vb//1Xnbe8J2jL0CSHTNQbr6nce+dLJrx974acEWqH1Ayti0l9MWESnoAQ64VTgygw7TPmqdnstxKmgWqTnOF8uoRwuYFXrAcZJXE+JO5EL1xwZfIrgLXVMmKYQVNqKZWFsa0XuTL6mmuU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UoBC7Wij; arc=pass smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-94de664b541so2992246241.1
+        for <linux-nfs@vger.kernel.org>; Sat, 07 Mar 2026 22:31:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772951477; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Y7O+09Vrwfatl4OxcFcpMhPHqwnIhZy2xxN2egSolxMNHsJcheKpYeijFfq6FO9Oq6
+         meQ9YqcMe4wPgAFE+Ic1K7zBhgJGmrphxSzJVRLSLPDPyyvqk8OEGqvkfN0RV/qcfYTG
+         Shh5IkucOwuP/JTZfQ0qkXGugFIjpPXK75qIACU5ut8E8jruUW+u8u/jWhZaQ2uWauF3
+         tQeK/l/7wVANu+BdTxcXezQmJsVc6QDSXMcH2gmRB4MpFiLP1htSrAa8xrYgaRylkGsz
+         hoCEHxOV/AKP1jIcwton9+So/6nQZtu0mr52bswzS7mmxaSgokex/3HHtif76e8eWST5
+         yw7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=wmFGvCnSNVovQCGgt6RuGUFVOm9BbgW1X0Xq7Fd9owU=;
+        fh=SIDbn0BKKKfmpqJBFxO3gorhx8+6/MEPGseFlkvBob0=;
+        b=jUr1NYLimzSjLEg9eSXcQ6ix3mvvuRCDdBtwOOZsmfHCJjsE5re6qLbYLe5+ybwnaC
+         PyjHrLfwY6GN46GAh6YPEuxaA32om3tcw4EfE2bxS99ZSn8NXMP+m2sLg3YeLYduvnAG
+         bzvAZPwr+EA1x5WeFv9m+jDMtRviGjmCv41/CFMPW6XxCLedcj8jRSz+YVp6e4ZxcHEC
+         6GikQ/6Fu8P7K3RWe5DZBVkw5rSAu/iCa0ZQEsj0J3Y4aJhxtJBotJBNeZ8JiLWzJlS+
+         tiPw+JUvPqlVB6kulBY7rU4jPho+fbe0HgPCRmpD+ayKdVMCh/SfB3mhtAZfP/qIwUdH
+         WF9g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1772915973; x=1773520773; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1772951477; x=1773556277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T9OxiP3l3t/dSfco7PULw7gMtUpegbGKrMUBctUMchM=;
-        b=K4tA227IdFgBbZ9kxBUSZmaCbTXTp1GXLoSbJCEkK/o8pry0gnijLUTHuHJDt0iSYP
-         k8Gvkc7/Pw7qPtyZSyn31Tr6Man8RCN6H51LaZmm0rrWOHoQKmJFxavTXrxloGq6+ZEB
-         UmP6bcFVRig5IKIUZKH/PyHAGh7ppUizLOCHoThp1kxvVZsk+bqLttLDA44mZF8gqAXH
-         V2wDqpVJFPjzAv0zapNhyJm+cDcEbDpVC6byDfBJmETjI7Xvh8sgONykYGuAcHOFzLQj
-         fbMkzDwvUj3yc0aGRZAujs11KseidZrVoZMDvgF8xnItmhCkz7aXy7CoiyVLpvsYqXls
-         vvsA==
+        bh=wmFGvCnSNVovQCGgt6RuGUFVOm9BbgW1X0Xq7Fd9owU=;
+        b=UoBC7WijfmQjVlLHxpWqT3DlTCrRD4bQJHimo+Ve0AMx+0bxsR3bN/1HscBrJM5qp4
+         hAoHmEH3IXVxPHPjHP72bQjLwytOTAT5lJd6vLsKUfcx09gi0FJHs8GAtUs2Zp97KKRS
+         FEk475ub7vx4XQABNB53DotIZxjsKUBLPuPd0GzyFt/3v07yHqf9qXCPxfHICyaytCF/
+         wULC1pF4Xso5tHqPjvY31TUJdWMLPO7UZMC4SdrzuK11/bdvaGVzvdmvJy12Y+tEql+T
+         EYn1klj2Rf4ROnNVpKQExB+BChYuTiyYbqJmdmRYKShyl6hiOYBewDd9lUoEbhAHN1Ij
+         57aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772915973; x=1773520773;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T9OxiP3l3t/dSfco7PULw7gMtUpegbGKrMUBctUMchM=;
-        b=pctkZFhJ+z5XJ67Spk6vZ1DNv2BFPv1cQWn4LSmYptVDjl5qS/PlboivJFhPfmpcs7
-         LcEQWkKIhtnO8IqaghoV5o9mBHdcBKVrWw6jtWn84XDCWgHbC9n7CSYbp8+Vq2avhFHb
-         3Rd5mGqScAI2zIty9mD3sId6sp1hrLAJlreJb4DgF7hyOK2H8ZU7DLTv+N8BIgWddhgA
-         NcOpSeBUskPdrCOuLik/gWMfxfdxoCEEu/R4HIS/4fERJzPqi2j4rXHvHn+D4/huSI5r
-         EcbfzYEz2a7du2KzaEt1NItIs2PH/IbQ8BmiS4vVtSjPyh6L7IHmuX4v/KTW0U1J0D+V
-         CVWA==
-X-Gm-Message-State: AOJu0YxGoQt3Uv/+Z+vzkzBjm6f8x5ELbNqzoIMPeuR6GK5s5BDyO690
-	WK+2z0iMPrTuAsuPoD5dIOPxGmocNeQZlHH4Qbu4aHg1SbdjcOdhhOpck3uAEGq8QLRTct34Hev
-	TqTlgWt0h9GW1rOhYfhM7OCTQXit32JoljVn00VDJFfQdFir9Gj3w0Mg1V6R90FDA+QDOpKReS0
-	1BjsgFIaCZcIWuFwtyK/ZSdexhcX4RKf0InPUCbF4jOuM=
-X-Gm-Gg: ATEYQzzbJxiKta5ta3RocPOy7tbotmwrjSC12+prVZDDT9yJTF45gAGfd5FHY6/9zoc
-	YhG24wkPRI6eZa7etxpq378G4BkhmhW4nj0kvLb0GqchB9Wmu8ykmXjALYRRnd3svUNnPZhxjwF
-	BPSRXQT8ZXTP78wPhATmDDt9zj84Q1x6gBuzSUBOhsVbsJUqeDULJoVmtv1yDAgyzYJIPlpFc3D
-	Ryy+ssQQ3qB1S3k61nGck4wdlQONF2njlHaCjy7+93I6SuRjN+LS7rGH/8NxaicB+OVs0PbCU1d
-	UWTqGnpO+px2i5ZMJVsjiVY2If9DZX11m9uaYNv2Bc6fVh/UGaGiZLwWB9Epc/RHZoIPNRQY3vX
-	Jf0UAAEzoB1UsNicMC8aK
-X-Received: by 2002:a05:620a:2946:b0:8c6:a8a6:e164 with SMTP id af79cd13be357-8cd6d4b504cmr848458885a.45.1772915972834;
-        Sat, 07 Mar 2026 12:39:32 -0800 (PST)
-X-Received: by 2002:a05:620a:2946:b0:8c6:a8a6:e164 with SMTP id af79cd13be357-8cd6d4b504cmr848457185a.45.1772915972417;
-        Sat, 07 Mar 2026 12:39:32 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.240.20])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cd6f56da77sm389027585a.44.2026.03.07.12.39.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2026 12:39:31 -0800 (PST)
-Message-ID: <4d58bf28-a3e0-4496-bae8-05387da27054@redhat.com>
-Date: Sat, 7 Mar 2026 15:39:30 -0500
+        d=1e100.net; s=20230601; t=1772951477; x=1773556277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wmFGvCnSNVovQCGgt6RuGUFVOm9BbgW1X0Xq7Fd9owU=;
+        b=O7bY8UJyR2Mi2JYd46InhrNaTlTYaitqYh4nUjILT9PQlwRIKtojjdJa5HwGMtNXa8
+         fRryYoGwHK90LPtlGosfazvQAGr7gkWK2nMrwg0XBoRottmTkt1v/n8h6/5sdtWLa6Zi
+         c5ytT6Ro3ey7TpuXBdJFjoNNzc/qtWNO1ZeCLz80CGQJnXGxmu+T2dgRBuJZc10fApXh
+         I26t0T1RRc7uNxVGQhL3ioiMMflFtH7Hp4V2r8zYrKTLT5cYdS2zeM55tlNpHrxSGZaP
+         14mLkzRR2FA30XWe7HPs61scbGQekuDL9wAB1VO0MsXJ3hIRqgpYAF7WaFdcTlgUwgru
+         FOWw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7iNerVdU3B/92M+4xh6kFcyei9LQ2rFjR8kPX3/RSi4Y870kZKdqzcPGnMJYOjsO2k6CzWv8U0t4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaaDdafc6m6Tftaj3njjLQgK8w/3G6ZvowpJ4woR/g7ZpK1nAC
+	JUuLNuwW/j0m1s3wzDSoK0kw4I+Ik+ZK8CkalizeLjVH4HH/PN+xgur0Cyt7vjwoAc8II7eYNXq
+	9mjbz48l3UQX8XaayO5akhCAMPCEqOr4=
+X-Gm-Gg: ATEYQzzosBX+r5l6b9aiR74ukL4AFVfhkwRbY79e7n4c/TcwvuyrPvj7eSI3sk+MJ0F
+	HGrBYnoySh3krOHYlw2dTobrD8pmb9Mex6yaA86Z3KQX0buJIHbW07pcjR6G1HDuMT1KbUTv0d+
+	4tnIEGhyr5MUpbIc9sWjtR69WCv2X4veyGFoWSxMWhuDC3GPiu6uODsz2dipVw2DpMl79h19SZK
+	Q208y60mC0Oj10gM+UIAu11uROfdBs3sZ+O6hZwOAWllWKUyy1hLM+jYWtcjpLtWH/9wGQ+asow
+	AMn69/wBB5CY3Qwob0SDYvEvY6s6j51rJcaI5BzD0Q==
+X-Received: by 2002:a05:6102:41a6:b0:600:11e1:2a4b with SMTP id
+ ada2fe7eead31-60011e12bf3mr732622137.34.1772951477120; Sat, 07 Mar 2026
+ 22:31:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Steve Dickson <steved@redhat.com>
-Subject: ANNOUNCE: nfs-utils-2.8.6 released.
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CDEDF22D87C
+References: <20260307140726.70219-1-dorjoychy111@gmail.com>
+ <20260307140726.70219-2-dorjoychy111@gmail.com> <CALCETrXVBA9uGEUdQPEZ2MVdxjLwwcWi5kzhOr1NdOWSSRaROw@mail.gmail.com>
+In-Reply-To: <CALCETrXVBA9uGEUdQPEZ2MVdxjLwwcWi5kzhOr1NdOWSSRaROw@mail.gmail.com>
+From: Dorjoy Chowdhury <dorjoychy111@gmail.com>
+Date: Sun, 8 Mar 2026 12:31:06 +0600
+X-Gm-Features: AaiRm51WCqo6sYLOpIV6hZ1XNIYME3jM_VRhuXhqPcz8hjUnJuRMBp96SANcO1M
+Message-ID: <CAFfO_h4g-QtE1gsp3nw7+BUYnRj29au=pYs1goEnppbdU-8DbA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] openat2: new OPENAT2_REGULAR flag support
+To: Andy Lutomirski <luto@amacapital.net>, brauner@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	jlayton@kernel.org, chuck.lever@oracle.com, alex.aring@gmail.com, 
+	arnd@arndb.de, adilger@dilger.ca, mjguzik@gmail.com, smfrench@gmail.com, 
+	richard.henderson@linaro.org, mattst88@gmail.com, linmag7@gmail.com, 
+	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
+	deller@gmx.de, davem@davemloft.net, andreas@gaisler.com, idryomov@gmail.com, 
+	amarkuze@redhat.com, slava@dubeyko.com, agruenba@redhat.com, 
+	trondmy@kernel.org, anna@kernel.org, sfrench@samba.org, pc@manguebit.org, 
+	ronniesahlberg@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
+	bharathsm@microsoft.com, shuah@kernel.org, miklos@szeredi.hu, 
+	hansg@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: A96BD22EBA0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19867-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19868-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[43];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,zeniv.linux.org.uk,suse.cz,kernel.org,oracle.com,gmail.com,arndb.de,dilger.ca,linaro.org,alpha.franken.de,hansenpartnership.com,gmx.de,davemloft.net,gaisler.com,redhat.com,dubeyko.com,samba.org,manguebit.org,microsoft.com,talpey.com,szeredi.hu];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.973];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.972];
+	FROM_NEQ_ENVFROM(0.00)[dorjoychy111@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Hello,
+On Sun, Mar 8, 2026 at 12:56=E2=80=AFAM Andy Lutomirski <luto@amacapital.ne=
+t> wrote:
+>
+> On Sat, Mar 7, 2026 at 6:09=E2=80=AFAM Dorjoy Chowdhury <dorjoychy111@gma=
+il.com> wrote:
+> >
+> > This flag indicates the path should be opened if it's a regular file.
+> > This is useful to write secure programs that want to avoid being
+> > tricked into opening device nodes with special semantics while thinking
+> > they operate on regular files. This is a requested feature from the
+> > uapi-group[1].
+> >
+>
+> I think this needs a lot more clarification as to what "regular"
+> means.  If it's literally
+>
+> > A corresponding error code EFTYPE has been introduced. For example, if
+> > openat2 is called on path /dev/null with OPENAT2_REGULAR in the flag
+> > param, it will return -EFTYPE. EFTYPE is already used in BSD systems
+> > like FreeBSD, macOS.
+>
+> I think this needs more clarification as to what "regular" means,
+> since S_IFREG may not be sufficient.  The UAPI group page says:
+>
+> Use-Case: this would be very useful to write secure programs that want
+> to avoid being tricked into opening device nodes with special
+> semantics while thinking they operate on regular files. This is
+> particularly relevant as many device nodes (or even FIFOs) come with
+> blocking I/O (or even blocking open()!) by default, which is not
+> expected from regular files backed by =E2=80=9Cfast=E2=80=9D disk I/O. Co=
+nsider
+> implementation of a naive web browser which is pointed to
+> file://dev/zero, not expecting an endless amount of data to read.
+>
+> What about procfs?  What about sysfs?  What about /proc/self/fd/17
+> where that fd is a memfd?  What about files backed by non-"fast" disk
+> I/O like something on a flaky USB stick or a network mount or FUSE?
+>
+> Are we concerned about blocking open?  (open blocks as a matter of
+> course.)  Are we concerned about open having strange side effects?
+> Are we concerned about write having strange side effects?  Are we
+> concerned about cases where opening the file as root results in
+> elevated privilege beyond merely gaining the ability to write to that
+> specific path on an ordinary filesystem?
+>
 
-This release contains the following:
+Good questions. I had assumed regular file means S_IFREG when
+implementing this as mentioned in the UAPI page:
+"O_REGULAR (inspired by the existing O_DIRECTORY flag for open()),
+which opens a file only if it is of type S_IFREG"
+I think Christian Brauner (cc-d) can better answer your above questions.
 
-     * CVE-2025-12801 resolved
-     * gssd improvements.
-     * nfsrahead updates.
-     * nfsdctl fixes.
-     * A number of other bug fixes.
-
-The tarballs can be found in
-   https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.6/
-or
-   http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.6
-
-The change log is in
-https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.6/2.8.6-Changelog
-or
-  http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.6/2.8.6-Changelog
-
-The git tree is at:
-    git://linux-nfs.org/~steved/nfs-utils
-
-Please send comments/bugs to linux-nfs@vger.kernel.org
-
-steved.
-
+Regards,
+Dorjoy
 
