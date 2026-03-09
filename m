@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-19883-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19884-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cAkZGMXUrmlhJAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19883-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:10:13 +0100
+	id UAegMFjVrmlhJAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19884-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:12:40 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B34B523A4AE
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:10:12 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0A4623A529
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:12:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B89DB3010DAE
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 14:09:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 164B03007A54
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 14:12:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B803B8D65;
-	Mon,  9 Mar 2026 14:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1D93CF680;
+	Mon,  9 Mar 2026 14:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGnSOyF5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctcWF/ZD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE543A6EE9;
-	Mon,  9 Mar 2026 14:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985D63CF678;
+	Mon,  9 Mar 2026 14:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773065355; cv=none; b=u/N1X6mSZRAiRvU1w/ZoCkT0W4ay8HLXQPIqaNudTrsBIegentzQCFZ7qsbaG8eCmT7bE2dygps2XPT5/GHCnZ4Qa6MAdCllt237H/sGUwCAshTsfvfE1QEdCIWRgmOn9olZMhIV+GcPaAIT7KFWAxGApqQstBfk0Q2rhbVZVUc=
+	t=1773065555; cv=none; b=cpocsMJTheaHZU65EjpdmkiCLpvrnz+8q01fHRsCQpj1t1AZZR2KGFML6cQzRHhOb0IHgRu7FqVhuCLCW2CtaS4OvAKfwfJarqCR2xd1MBtqaiocXyrJa9xESfrxRegw58VmlG4u+OM0mVGzxtZvZz0iAXSyfTioylthh6vkELk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773065355; c=relaxed/simple;
-	bh=LQRT6PvoVC6osFxMO+pxLs6EXD2b+g8aiuXbdd92Sk4=;
+	s=arc-20240116; t=1773065555; c=relaxed/simple;
+	bh=EQOgYKFPmhDD+NDV+u/4t459Y/mlKzkysbh01evsqco=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tZAWNPFYrRBr3Owx2lDY2dlf0nbOygRuzD+Zxxhpv9lxsCbNjodIP9ksTR6ra7emlOsG+86EbsTXHNkw9FePBZwVUFgY4T6UbOnn0EE1cMd44J4WLH4Gvz6fK8SZpSK1WvWR5vjt7CUhbHns/qyin25qyOzUDvlhm63PeiMLQeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGnSOyF5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD034C4CEF7;
-	Mon,  9 Mar 2026 14:09:13 +0000 (UTC)
+	 Content-Type:MIME-Version; b=tEX6PUn49ph+TM92Lp0GPndc0v6yhkLtbPkMu4by/NnTdJJQE4sZu4g78F7/PcmWGLP7UY3vZUQQY1ytHG2tuIy/27Rvn7JWzPN+L/Y3pz6c/7coA3EJ5+zKK4hd8r+ORb8rASUmePqgYHxWx49qqHBDBRBjkYKWkAYqW1FKFIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctcWF/ZD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 466EBC2BC86;
+	Mon,  9 Mar 2026 14:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773065354;
-	bh=LQRT6PvoVC6osFxMO+pxLs6EXD2b+g8aiuXbdd92Sk4=;
+	s=k20201202; t=1773065555;
+	bh=EQOgYKFPmhDD+NDV+u/4t459Y/mlKzkysbh01evsqco=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SGnSOyF5CUvSEC6b+ODiCy66f/Mx9NO6kD+HrMvMsSDNsiUA8sNh6JASM4esBCKSr
-	 kff4Kc8EqgLeAypyCaJc53031pSxEc82lzG/fO7FWxtSutfGerkWsSvaug/PK5xwbR
-	 Vtutwsmy0RqMbjLaDxE/5J9tVH5Xoa326GEgi5OGRk/FLXLTwPKTWoiyvWU97ja5l3
-	 f8j3UbLFFQw2ien7QA+UwrG7TtytC9jf47O+vQmVZY09yFx+4qF0n1VwaCOlODVchr
-	 t5j7tAP+6fhMsmbeRagRrcFtNN3at6nhZ49U0OeokRYmBGoOAbNWAhhPm2nKlXsctE
-	 WxrKxxb9vpQFw==
-Message-ID: <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
+	b=ctcWF/ZDG3yl5SLxXjeE3JvvOlvlDOGWMJyvjmuL5jrInD/C/V3TPXyowOKx/fKvB
+	 F6SSG+dtHIZBSXYFzQ1BeEiHr/a123ato0By0+XquUdRSHUMqKMCj5q0K+2nLypTGu
+	 T9SV7PPTninQdbnkq4vCFdbOjnD4mLCPhWWVO0AuAh0JBI+RAoKcA0GjBdn6bhJ9Z0
+	 x3a0ju5rzWw4y93dtkEe+guVvr6Kw1bkmfKw+kwNz8l40O/eXyKZwJrmUNekpO2iI3
+	 DIS1bF1TrZBXrQzglE88cc3ZtHjoD+QkHaxyizHIyP6UIsSDbYcZ0IiMagKqjbyM9B
+	 V4U0qEImw+mNg==
+Message-ID: <c5c31ffa3557e0aab5c1a75d6ff69cb7c7806dc1.camel@kernel.org>
 Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the
  file lock list
 From: Jeff Layton <jlayton@kernel.org>
@@ -53,7 +53,7 @@ To: Yang Erkun <yangerkun@huawei.com>, trondmy@kernel.org, anna@kernel.org,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	yangerkun@huaweicloud.com, lilingfeng3@huawei.com,
  zhangjian496@h-partners.com, 	yi.zhang@huawei.com
-Date: Mon, 09 Mar 2026 10:09:11 -0400
+Date: Mon, 09 Mar 2026 10:12:22 -0400
 In-Reply-To: <20260226012203.3962997-1-yangerkun@huawei.com>
 References: <20260226012203.3962997-1-yangerkun@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
@@ -139,17 +139,17 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: B34B523A4AE
+X-Rspamd-Queue-Id: D0A4623A529
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19883-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19884-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -161,12 +161,12 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-0.933];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
 On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
@@ -334,7 +334,24 @@ te, int cmd, struct file_lock
 >  };
 > =20
 
-Nice work!
+FWIW, I did point Claude at this too and it found no regressions. The
+commit log was a bit hard to parse, Claude's summary is here:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+This patch fixes a use-after-free bug in NFS file lock list traversal.
+The core problem was that nfs_delegation_claim_locks released flctx-
+>flc_lock during iteration (to call nfs4_lock_delegation_recall, which
+can block on RPCs) and relied on so_delegreturn_mutex for protection =E2=80=
+=94
+but that mutex is per-state-owner, not per-inode, so multiple state
+owners on the same inode could race.                               =20
+                                                                           =
+         =20
+The fix uses nfsi->rwsem (per-inode) for proper protection, matching
+the existing pattern in nfs4_reclaim_locks. It also moves
+locks_lock_inode_wait out of RPC callbacks (nfs4_lock_done,
+nfs4_locku_done) into the synchronous caller (_nfs4_proc_setlk) so it
+can be called under nfsi->rwsem.                                     =20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
