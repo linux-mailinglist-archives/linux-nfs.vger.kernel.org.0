@@ -1,229 +1,229 @@
-Return-Path: <linux-nfs+bounces-19881-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19882-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MBPNJrDKrmnEIwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19881-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 14:27:12 +0100
+	id IPQNFVDLrmnEIwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19882-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 14:29:52 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DE2239B99
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 14:27:11 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 414B3239C09
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 14:29:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D0687304023A
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 13:23:04 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 851503017DCA
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 13:29:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48EC43A7F44;
-	Mon,  9 Mar 2026 13:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EedMA1ov"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E9F21B3925;
+	Mon,  9 Mar 2026 13:29:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020074.outbound.protection.outlook.com [52.101.195.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5A23B5312
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Mar 2026 13:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773062584; cv=none; b=MFTMK01uvNkq7ug3p7I7Qywx+ww1zl4/TuUgpYws857tyoN/KUUjOuyWclURZdY5usoHW/SYHqF/HrngKcIc17UF2kyqP4JqlxZLriB1Gae+nuB+pbudyQ+okqXHtXE8gxku4H10T1ZzV/8WHQqeYT52AszQoPy/FlbZlC0xTNM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773062584; c=relaxed/simple;
-	bh=CDMbHzOyiYwCK+NTxgsJNExVm7yzDLO+SyVZe+dSh2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n520KyKWgzI5BPy9zpwNqE0jxgd/NNGE0YkwIfAaWWtn89woGmewS7wPl4fT2Kq7e2F2KA2oh/l0n1vw9x4fB4w/7slAh2pHy9IN9jRcDPjR81BmwLvUsGD7KJyqCEzIm9nluB7pFRSww43ytrNZ3PQyNNtynz055nU1yIKEjCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EedMA1ov; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2a8fba3f769so50595115ad.2
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Mar 2026 06:23:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773062581; x=1773667381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h/8sxaR6Udi4hucwXNgPS4OOBhRNDaLccHenaA3fy0A=;
-        b=EedMA1ovGlI+4gxb3Mljx3i/L86Q78RJIb6i2XL23Uox+MIx+ADuCpg23I/Sx8PRhD
-         ThIsZAFM8GONI+IxmxVZBNwKwqHWfPNYAdLPIczwfXqnD729MihzyEpEEneMaI3LD0d8
-         /2QXSTWCKvFlFJARxGU7udqpYtWCP6lRWryOrcyaRPM+7CKE8lXZA+G1PBMjKoAGqIXy
-         +kz4otblpWLx5iT/tuQL5uVQdWW7GZPbnkD1pL2vE6/KIP5zYvrdQGDQijMKmE3YCt+f
-         UluS8sTVHthiy1N3WVdZD/CwEvGClJTQk/DNXkSfUvjtU3cNcnExsLlMye9VKVgRK9QF
-         5I0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773062581; x=1773667381;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h/8sxaR6Udi4hucwXNgPS4OOBhRNDaLccHenaA3fy0A=;
-        b=HdxtmsRQoZORtvYLMYXkpysQ5e1K1poV98AxgEPF9EcJAseXMlaUv/nAsjb3teRo0J
-         LkQKpIrkTe+PqUFh2wSmslnhmH/SU/7Q2Z02dAjtMPGLyjkejoVkIXxiJlTJUeXX6G2o
-         Nucoq+bsmq4x9gf/yWW2TJXZo8OesH+8PKA5vqtf7FOT5/EsY7p/lpFAX+JfxfF7/02p
-         xTr2uEQl5uT2pNh5LBM8eIR2TsxfopUXPL36b6FMy6z6PKeCZOLwOfLeyizeLLo2fe8i
-         /PC+Ai1xFOPqVudNscjk7F8twMHYjT+chvBuJ59L1PxRN9qbKaECME3Cy4P2mat3GINf
-         JieA==
-X-Gm-Message-State: AOJu0YzaeHIIM6B853k+tMAd7PJh6QEszqhqIwzXp4ONwN60Pkkfo09q
-	49mCxJqX/OMjLrSh8Np540S6Wfl2JS+PMGCuVUZY/Q1PANLsFfThyTiTxBh+1zZLWpc=
-X-Gm-Gg: ATEYQzz/adnlS2VlXTVLjKIhAZmk21wpBYZs1Iytl28VLr0/zkk+u8ZZlxrNjoU9cD9
-	uwWqCBGXK3mHqWaCMbtARWpBev9QE5nGNGe7yBpYVBaSWPce+AmqyLIURqvPLCHQQjdf+YTL+nL
-	g/+cFCpciTL17sfReL5k/8L8mnutsva07Ew4WvIq/wbXP/auNA/EQP/3uJ5QljqUQcxLo58vbRd
-	fIAcqFQc5izI/oXh2gdUxnJ2IWgS+8j0khDemNYEORgD8vOKj8/RsLspzm6lt5eQ80Y48Sh21S8
-	7OvjXpsKUDlUHSWJiv8Y47CGs+oRqyXHZc9HH6p/zJy7oolzXsE/yqpJvbxuD3P0epi47o4Zy6P
-	WbFlhMTR8hGDfaPnJAcK7EHISFyWTI+OYNs0ZWKniHKM8t2aTHagHFUmcI2KYt0Od6VChwcsuGi
-	yXkLNEKlA868loJesFEy6akjvW4XXSqJXv/iQEqQ1W+jaCT7DLOYb2Spawu+j/WfquFs1zlQ==
-X-Received: by 2002:a17:903:2348:b0:2ae:67b7:188a with SMTP id d9443c01a7336-2ae8238ce35mr111041765ad.14.1773062581222;
-        Mon, 09 Mar 2026 06:23:01 -0700 (PDT)
-Received: from henry-machine.taileee5f2.ts.net ([2408:8606:18c1:c673:8291:e4d6:2556:af63])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83eafc64sm156491155ad.40.2026.03.09.06.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 06:23:00 -0700 (PDT)
-From: bsdhenrymartin@gmail.com
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Henry <bsdhenrymartin@gmail.com>
-Subject: [PATCH] NFS: map TCP_TLS to TCP for mountd transport
-Date: Mon,  9 Mar 2026 21:22:53 +0800
-Message-ID: <20260309132253.1393804-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C725212542
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Mar 2026 13:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773062989; cv=fail; b=hbn9k5vg47usjEeqNF/I+eGjySDbo3nD2sl+rs8Dudw660aPRiB/MHxAhPQ/Y5AYusQzgLBbqJWIDtdqE1D2bybwOaXhIpdkyB3V1cKtAruGY2fW5tq8w7FOSG2Dzl8yoAV4UetRZKXj1/aNaodyVoNZPqPp1x7sqy4atIc0K4c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773062989; c=relaxed/simple;
+	bh=Tgt+VTey/TdqYF7q1tR1EdlBbGu9SmZJBqtzREEWuVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bI63Wm/dwGi2vFnoPxf2d79CSt8q1hTxnGQ27hzcHgttO5MxPh3g8zcKktBmyH7OtEVZpVcJkCLLdMxDUqjg2M/aHozxV+thdpzFUhyWmD6MB+7j58DaTyy4Xide9NQlxD+sEC1yXsWhOQ+oFiOzX8Gt9ku6FeZ2DftyT4nOPfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Cj7yr+M0JJL3fdu/XE4Tnnt8YkEpH939v5SIAGlN4PEaZFfb4mtoNmtaIdyaWvwz+Qk78u6G236ix2OfcX9WUgn4OE84VWvCN2HgVN8vmEFLPyBC62WyOoLOMDCcDyBP7d4tDLVtjvex9GueUMCvEUMGVect9sANu1WtvQiAgDV+/1BeZvyaln5duVsLyGW4pM9dqPvNEZjLDWEcYVJwgBh6H+o6+stlvapwj0/OQsaab6Wct+//5e9jyJ/+t90n4qOxpZbdUqCRnZkCehu5/fJT9YSwHzVmLJCqm7uK+Q42+WMUdnAtiCt11N/FswSjovr8PkIeFHGZRw/uxBS7ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zVJkCECU1+N1KAAB0Ip/eXo/rWX5sSxUBCVjaHAL/FQ=;
+ b=g/KzyOVr+6hc5AVFnSczzAtZfGJo0mwuhNFf6O2WS7hVDE6eRQb+iOuyQM+3yK+2zX9wH2ow1dsblsKs7fp7jDM97FK680U7dluf89HmAM8ZvNhcAjchMAnVG7u1RetkfRH4c1aWwNQoSpxjrfzW1Y3JdPpwFea6ZP7uGMKpVMNuWcYbAD0uB9Q7HFKyC8CzQQMrp4sB1dbL1q+yoGGp+QKet5hsBdEizcwau+jcgmiQeU5/5ETV2m8O2rzT9MoZkbNFkr0mG0moWP7orFEnSmnG7i6+21uF5FR0xPecAKVBIBP9KloOdsJAGE8bEB+nSPUnev9zYf2CA4GRYt7L6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
+ by LOBP123MB8908.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:482::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.25; Mon, 9 Mar
+ 2026 13:29:45 +0000
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::de8e:2e4f:6c6:f3bf%2]) with mapi id 15.20.9678.017; Mon, 9 Mar 2026
+ 13:29:45 +0000
+Date: Mon, 9 Mar 2026 09:29:40 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Yi Zhang <yi.zhang@redhat.com>
+Cc: Steve Dickson <steved@redhat.com>, tbecker@redhat.com, 
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsrahead: enable event-driven mountinfo monitoring and
+ skip non-NFS devices
+Message-ID: <be4dsl73wdridt67nhccl5ccj2d66hymkbstm3tykwsqe3ykfr@cc7r4yawfk62>
+References: <20260306161929.4148128-1-atomlin@atomlin.com>
+ <ea495f1d-1464-4f9d-91de-dd3fe828fcff@redhat.com>
+ <CAHj4cs-Eg7sJZLju_32yiQv5x=WHvVUpkgFshzr2AQZek+z1=Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHj4cs-Eg7sJZLju_32yiQv5x=WHvVUpkgFshzr2AQZek+z1=Q@mail.gmail.com>
+X-ClientProxiedBy: MN2PR22CA0023.namprd22.prod.outlook.com
+ (2603:10b6:208:238::28) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:70::10)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E7DE2239B99
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LOBP123MB8908:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad5cb8a3-a045-4063-6486-08de7ddfed55
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	zZArT+iqpaKlmRFSGOlZnpmOX6TY5vermZgZ9i25E+OtBs+jlHHYglYKrNMP3y51QhdQ47uITgZkoOr+sZIKRuhdXdl/W/cBwTTPK8Heyt/Jc3v2AbORd2c+qhKotQa8Vvh74Il7BJhXopEYdSkklBjiqtJZ/Jq6rx//B6mfxQAG418L8Ik4nV5O9GuieDM6CdBJoBH/VOV4YYJ/X0bVoodltoqtl6qGc/as2Jnppu/J/B3MWW+w1Qdjl0TCyqMSgAjNTdS/PVx8DT2g/4dG/ExJz9nYt0OKy/QioUAA84EEuA0BrK+IvcRMF5PtwflojD/uBoaVH3ztbv/3pnjva+XHDj6SYOGMjw39hfSujwbTZOiThHfWfFvO67RM1XM0eJjTzozS7XGe3c7x52ZIohu1IbHrdutpkqzt7/4LiANTXQdLKeVDbuDyCuwR8GunysliXtDczos2C5dVxMUHDi3lGh5mOwlAJbmNQa8Gn71CA8nxREBwMqmcSRO06LS0pfZsphD+aN2vPuOX8WNRWxbrXZ7lm5V/u8ZROcReIOdB6OdrFdgo1wUnZRW/GU78sxYH6MiV6/TUIeiqgnlE67Lag7NhqAIfgLuVXOJ95kXUtFA969vZaybiAUTLroiJ5xfOoinb5Fm0CQ1/xpT0BMIVTP7x78iigPOmHZLWiqFzS1AJLkSOmvoF39J297oqCB4L4ZFwegepJOrQGg4+fkIuEu3NsJP6eZm7ZWL3DpA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U0k1ZlZwb3JKWmY1MnhPYmtWcThrWFNOOWMvQkVtNzZGV0NWRURPRFVWcldK?=
+ =?utf-8?B?azQwenZPcnF1SjhpSmZQdjl2R2ZLZnJzU3orU1FKdVJZY3hNVXA4ckxoUjZo?=
+ =?utf-8?B?WlJWSTV1QjRNaU1oZ2tSWmZuclBGYVdtQjZFNWZVcGw3ejhaY08zNEFSNlJ0?=
+ =?utf-8?B?SmJZM1VIbkVDWUttMDRiSEtWSWRlREpvaWdhYUVaekVBazRkSDRwOS9aQmtq?=
+ =?utf-8?B?QS9ubkMwaEUvZ1B0QW5NbXBGMXorVXR2anFNRXJ6ZzliRGpjU21ISmpzbjF2?=
+ =?utf-8?B?VVEvdnUrb0prL2tHZlg4aTM5TkdMYzVHVmpvTGZsM1dJZERpb0Y1WklQMllk?=
+ =?utf-8?B?VnNqN0tYYnUyWm9ZSkU0cmVLZlVzN1RTT2syTWtxRUw2OCs5dkVGakRwNDRj?=
+ =?utf-8?B?K25wTlJsS2YzRGE4OHZ6RHU5a3pLNjlNNzFrY3hnWFRjUzc4Q0ZVSEhUbWhp?=
+ =?utf-8?B?cXRUQ3hsRmRaclFaNCtUWDl4Rk1ZNVp0blFnbk5oVWh4OGI0MW9vR1grbElp?=
+ =?utf-8?B?L2VzUEl6N0VVSWo2WVhWL0ptNnh3UmFZNnA5REFaN2NFYkM0THhhWWtFclJn?=
+ =?utf-8?B?NXgxMmNLa2dlak5RTFVPS0dvVHh4NVJiZDVlcDF2SUk2dTZqdEM2cHJHQ3Jl?=
+ =?utf-8?B?N0FCdEhUMkJRTExWWHBjbEJBS3FHaUwyQjNyMWlSaFJUTFRrbzYwV1dRM2d4?=
+ =?utf-8?B?NmJJcURIRFhIQ0Z3RFMvL3hON1pSd1krN2xyTHV6VkNLY1hOWWxuemtMaDhY?=
+ =?utf-8?B?TGdBWGNWQ1lOUkF4a1BIeGgxVHltVnNremdTTnREWGEyNlhlRWpqRjM3eUhj?=
+ =?utf-8?B?YnpmME4rZlo3aEdpNTU2SWp4cm5ocDNiZlBMS3JBMkE2eHczK2lmUVIrSHV3?=
+ =?utf-8?B?akU2YnFFeTFGUkVZNlRrbXhmYUprVXV1di9qQTNiVlFIQURWWVZ2NjUraGRm?=
+ =?utf-8?B?MUErRUZ3UzVzci9uWkRXcWFuaEdvdTQ1amRIenVjMFIwNVhGeXNFL3o0WjBY?=
+ =?utf-8?B?NWpBKytuWlZIUnhFZUFsY3JvQ0lGaHU3THhvdTQwMEFhWDgxbURNT09MZjNo?=
+ =?utf-8?B?NzJmcGU0NEIxeDc5U0R1OHNKRVlSTjlGVHRURVlWdnlnQTVSSmRYVG42ai9y?=
+ =?utf-8?B?MHRoNm0wa3lhRVlFd29Md1Q5N2hDdjdMVVFnc09PZzhoOUt5SDJaYldtM0FH?=
+ =?utf-8?B?QVpGSElhakFGWEVrbGo4K1FsSjNGK25mMk8xK09QeU5Tc1BvRENUbXhmVUxV?=
+ =?utf-8?B?Vm82RnNsZ3RweEl0azFPLzZ3OWgvQ0lWUWxQb0JVQlorNDZMTmlFbzhVZ0hH?=
+ =?utf-8?B?dFJoTk8wVEFEcWZPMEEyVW5YaTFJM0xhZWlRNXZnNjFUNHJ1MTRpcDg2L2x5?=
+ =?utf-8?B?SGpHdUlNTENROWFycXMremV0ZmVsMmhnZDY4dzYyNEhZdGRqbmFFbGdtMXQ2?=
+ =?utf-8?B?SVFTZEIwbGhaVW1MQUNUTDUxbUJFcW5yUkQ2NWxKVjBaT2s5bmNYNzZid2kz?=
+ =?utf-8?B?dWZ3YTFnUTM2eW5YWGlIWW5XaktoRG1sYnFtbjhudzBVR2lHejhqdytKdytW?=
+ =?utf-8?B?SUpkaHpoa0JKcFJDaEJxWW8vN1JHanJReUMzbTVLNG9RZzVIYnowNDF1TmRD?=
+ =?utf-8?B?K216WEJMcHJSYmt6M0F4Sng0cVVubTNObUEzOHFqL0R4b3cxZlduRkdZYjZi?=
+ =?utf-8?B?RzJZQzc2NXhySVBkZGJpVUlDeExHNitFaGVvSEY4TFoxQnVnR3ZFUlBSbmlM?=
+ =?utf-8?B?eVZRMDRQQmNyV2ViV2lXOTdXeFlkOWU5VHBXaVhHQTVuTVJXd0VsZ1ZYY2U1?=
+ =?utf-8?B?d0VBRk93V3NGOCs3SzJyQjFIMElGaDU2SlVxcWZ1T1prVTM3SUU2cjQzdVla?=
+ =?utf-8?B?eEc0Z1lkaER2V3FjZm5UbVNUS1ByaFZINUtEZXh0K2VTTE93ODVMbEFYbFBQ?=
+ =?utf-8?B?NDZEY0NOeitIck50SmdVcmxOc0wxWHJZNHVaOUNZZ2NDWWQ3STQ3SHpKaUt4?=
+ =?utf-8?B?NEY4VEFJeHNVbkRqZ25qYk95bXlLUktrMDdCYWhmRG9uem9Dd25QZkhtUk9r?=
+ =?utf-8?B?ek8wN1hMNkd6aVEzd2xmTEtoelhRN1BuQ2Mvam1vWERrQmJIaGJmRHZxaU9q?=
+ =?utf-8?B?c1BhR01nSmNYU2NwTGJ2ZXh0ZHN6YldIVGRYRTh6TllYaE1iTzNqNFh1T3dB?=
+ =?utf-8?B?WUZUYVExUmY5VjhWbi9KNkU1Y3NzS2tLK2Fmc0J2b0RHYy9ZMjJVSy9SLzBW?=
+ =?utf-8?B?enlmS3ppc1ZIM3F0WVp1a0xTQjJOOVhwT0RVQnBYZTgwcVNZcmtYTW1zMmE1?=
+ =?utf-8?B?TWttb202M3JtbG43bFRqVGI3bGR5NitQTFZYbjNBYjhPOVNhemZxQT09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad5cb8a3-a045-4063-6486-08de7ddfed55
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 13:29:44.9086
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6uw595EMjNqRt4cl3leAr4B3QlJGxZkYwNVXdfczUutRBdgbxIkbRLKCdTc80oYDAGyUl6JYR6QRBQyWfOp2Ng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOBP123MB8908
+X-Rspamd-Queue-Id: 414B3239C09
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+X-Spamd-Result: default: False [1.04 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19881-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-19882-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[atomlin.com];
+	RCPT_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bsdhenrymartin@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.988];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[atomlin@atomlin.com,linux-nfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.039];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-From: Henry <bsdhenrymartin@gmail.com>
+On Mon, Mar 09, 2026 at 08:38:54PM +0800, Yi Zhang wrote:
+> Hi Steve/Aaron
+> The patch seems still have issues. Here is the journal log during
+> blktests:
 
-[  202.116047] ------------[ cut here ]------------
-[  202.117481] kernel BUG at fs/nfs/client.c:512!
-[  202.120419] Oops: invalid opcode: 0000 [#9] SMP KASAN NOPTI
-[  202.122038] CPU: 0 UID: 0 PID: 407 Comm: poc Tainted: G      D          N  7.0.0-rc3 #4 PREEMPT(full) 
-[  202.125867] Tainted: [D]=DIE, [N]=TEST
-[  202.126673] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  202.129634] RIP: 0010:nfs_init_timeout_values+0x235/0x27a
-[  202.131128] Code: ff ff 37 00 48 c1 e0 2a 80 3c 02 00 74 09 48 8b 7d d0 e8 a0 e9 bc ff 48 c7 43 08 60 ea 00 00 41 b4 01 eb 08 e8 f1 06 8c ff 90 <0f> 0b e8 e9 06 8c ff 48 8d 7b 1c b8 ff ff 37 00 48 89 fa 48 c1 e0
-[  202.136017] RSP: 0018:ffffc90000b1f808 EFLAGS: 00010246
-[  202.137484] RAX: 0000000000000000 RBX: ffffc90000b1f8a0 RCX: ffffffff81d77b27
-[  202.140499] RDX: 0000000000000000 RSI: ffff88810da88000 RDI: 0000000000000002
-[  202.142664] RBP: ffffc90000b1f838 R08: 0000000000000010 R09: 0000000000000001
-[  202.145157] R10: ffff88810da1f8af R11: ffffed1021b43f15 R12: ffffffffffffff9c
-[  202.147239] R13: 00000000ffffffff R14: 0000000000000000 R15: 00000000ffffffff
-[  202.149156] FS:  00007f85976b7740(0000) GS:ffff888270a6b000(0000) knlGS:0000000000000000
-[  202.152515] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  202.153976] CR2: 00007fac4e3057e0 CR3: 000000010da6b000 CR4: 0000000000750ef0
-[  202.155319] PKRU: 55555554
-[  202.155848] Call Trace:
-[  202.156321]  <TASK>
-[  202.156759]  nfs_mount+0x4bc/0x93f
-[  202.157485]  ? __pfx_nfs_mount+0x10/0x10
-[  202.158238]  ? __kmalloc_node_track_caller_noprof+0x336/0x37a
-[  202.159951]  ? kmemdup_nul+0x3d/0xa1
-[  202.161437]  ? nfs_get_tree+0xae3/0x1442
-[  202.162622]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.165287]  ? write_comp_data+0x2e/0x8e
-[  202.166193]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.167766]  ? write_comp_data+0x2e/0x8e
-[  202.169683]  nfs_request_mount.constprop.0+0x575/0x64e
-[  202.171319]  ? __pfx_nfs_request_mount.constprop.0+0x10/0x10
-[  202.172594]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.173908]  ? write_comp_data+0x2e/0x8e
-[  202.174687]  nfs_try_get_tree+0x221/0xad3
-[  202.175585]  ? __pfx_nfs_try_get_tree+0x10/0x10
-[  202.176927]  ? kasan_save_track+0x18/0x32
-[  202.178446]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.179587]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.180655]  ? poison_kmalloc_redzone+0x61/0x6e
-[  202.181673]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.182746]  ? __kasan_kmalloc+0x3e/0x4c
-[  202.183637]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.184667]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.185713]  ? write_comp_data+0x2e/0x8e
-[  202.186842]  nfs_get_tree+0x1415/0x1442
-[  202.187734]  vfs_get_tree+0x9a/0x2a1
-[  202.188526]  vfs_cmd_create+0xff/0x252
-[  202.189345]  __do_sys_fsconfig+0x571/0x8e3
-[  202.190226]  ? __pfx___do_sys_fsconfig+0x10/0x10
-[  202.191379]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.192436]  ? write_comp_data+0x2e/0x8e
-[  202.193428]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  202.195304]  ? write_comp_data+0x2e/0x8e
-[  202.196426]  __x64_sys_fsconfig+0xdd/0xec
-[  202.197673]  x64_sys_call+0x1fa5/0x2105
-[  202.198835]  do_syscall_64+0x1b3/0x420
-[  202.199946]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[  202.201362] RIP: 0033:0x7f859752725d
-[  202.202455] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8b bb 0d 00 f7 d8 64 89 01 48
-[  202.207616] RSP: 002b:00007ffc2b1e3bd8 EFLAGS: 00000246 ORIG_RAX: 00000000000001af
-[  202.209855] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f859752725d
-[  202.212372] RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000003
-[  202.214434] RBP: 0000000000031491 R08: 0000000000000000 R09: 0000007500000019
-[  202.216521] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc2b1e3bec
-[  202.218776] R13: 431bde82d7b634db R14: 00005640cbc6ad28 R15: 00007f85976fe000
-[  202.220449]  </TASK>
-[  202.221106] Modules linked in:
-[  202.222234] ---[ end trace 0000000000000000 ]---
+Hi Yi, Steve,
 
-xprtsec=tls upgrades nfs_server.protocol to XPRT_TRANSPORT_TCP_TLS.
-For NFSv3, nfs_set_mount_transport_protocol() does not handle
-XPRT_TRANSPORT_TCP_TLS, and mount_server.protocol can remain invalid.
+> malloc_printerr (libc.so.6 + 0x7fd2c)
+>                                         #5  0x00007f7a2fde4710
+> _int_free_merge_chunk (libc.so.6 + 0x81710)
+>                                         #6  0x00007f7a2fde4789
+> _int_free_chunk (libc.so.6 + 0x81789)
+>                                         #7  0x000056327361bd47 main
+> (/usr/libexec/nfsrahead + 0xd47)
+>                                         #8  0x00007f7a2fd66681
+> __libc_start_call_main (libc.so.6 + 0x3681)
+>                                         #9  0x00007f7a2fd66798
+> __libc_start_main@@GLIBC_2.34 (libc.so.6 + 0x3798)
+>                                         #10 0x000056327361bfc5 _start
+> (/usr/libexec/nfsrahead + 0xfc5)
+>                                         ELF object binary
+> architecture: AMD x86-64
+> Mar 09 08:35:07 (udev-worker)[9115]: 8:16: Process
+> '/usr/libexec/nfsrahead 8:16' terminated by signal ABRT.
+> Mar 09 08:35:07 (udev-worker)[9115]: 8:16: Failed to wait for spawned
+> command '/usr/libexec/nfsrahead 8:16': Input/output error
+> Mar 09 08:35:07 (udev-worker)[9115]: 8:16:
+> /usr/lib/udev/rules.d/99-nfs.rules:1 PROGRAM="/usr/libexec/nfsrahead
+> %k": Failed to execute "/usr/libexec/nfsrahead 8:16": Input/output
+> error
 
-The mount protocol client passes this value into
-nfs_init_timeout_values(), which can hit BUG() on an invalid protocol.
+Thank you for reporting this issue and for providing such a detailed
+journal log. It is incredibly helpful in pinpointing the problem.
 
-Handle XPRT_TRANSPORT_TCP_TLS like TCP/RDMA and map it to TCP for
-mountd transport setup.
+The log points directly to an unintended side effect of the recent
+fast-path optimisation. While the new logic correctly rejects non-NFS block
+devices (such as 8:16) without blocking the udev worker, this early exit
+completely bypasses the initialisation of the device_info struct in main().
 
-Fixes: c8407f2e560c ("NFS: Add an "xprtsec=" NFS mount option")
-Cc: stable@vger.kernel.org
-Signed-off-by: Henry <bsdhenrymartin@gmail.com>
----
- fs/nfs/fs_context.c | 1 +
- 1 file changed, 1 insertion(+)
+Consequently, when the code jumps to the cleanup path upon exiting,
+free_device_info() attempts to free pointers containing uninitialised stack
+memory. This is what triggers the glibc abort(3) you observed during the
+tests.
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index c105882edd16..5fedc5f113f0 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -402,6 +402,7 @@ static void nfs_set_mount_transport_protocol(struct nfs_fs_context *ctx)
- 		ctx->mount_server.protocol = XPRT_TRANSPORT_UDP;
- 		break;
- 	case XPRT_TRANSPORT_TCP:
-+	case XPRT_TRANSPORT_TCP_TLS:
- 	case XPRT_TRANSPORT_RDMA:
- 		ctx->mount_server.protocol = XPRT_TRANSPORT_TCP;
- 	}
+The fix is quite straightforward. I will shortly send a patch that
+explicitly zero-initialises the struct at its declaration:
+    struct device_info device = { 0 };
+
+This ensures all internal pointers begin as NULL, allowing the cleanup path
+to safely handle an early exit without crashing.
+
+I will Cc you on the patch once it is sent. I would appreciate it if you
+could test it against your blktests environment to confirm the issue is
+fully resolved.
+
+
+Kind regards,
 -- 
-2.43.0
+Aaron Tomlin
 
