@@ -1,331 +1,282 @@
-Return-Path: <linux-nfs+bounces-19898-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19899-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aLvtJRwYr2nHNgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19898-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 19:57:32 +0100
+	id OHqpIRYZr2nHNgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19899-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 20:01:42 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44F8223F025
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 19:57:32 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 068EB23F161
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 20:01:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A3694301134E
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 18:57:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5E32F302E7E5
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 19:01:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C973ED5AB;
-	Mon,  9 Mar 2026 18:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6342235DA79;
+	Mon,  9 Mar 2026 19:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=schu.net header.i=schu@schu.net header.b="ND7v+M7x"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d2IgH4d2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from ssl.schu.net (ssl.schu.net [136.143.158.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC8F3ED11C
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Mar 2026 18:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.143.158.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E006114A4CC;
+	Mon,  9 Mar 2026 19:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773082649; cv=none; b=RMIUL9bMOi885+Qsni8+r1A0EyJlzvzL9C2LMrrHSZ4NFl4NPCYwapKsfcLaBcQwNRq4cjwwhGP1jTht5dYBIWtcqxAmDxnUvvBz5p1krshrg0amx5m84BQ61Ulp1Yb0A7fXsRniUVgjrS8jagpgvqbUGJlO42UeUrrH3hmtrhg=
+	t=1773082873; cv=none; b=aZqu906/3H8AZ1W0bOaFhhO3F1b1/f3wkfFQswIL/BTwx2Q9H3xqD2j+QlLBPm1OHEyz66wrqF5yXGEkoRhW06tJWAZ1UZM9tg2IRIDCKu/AoIrpduOw8rxyEGmgZ+aspxn+D5zoNMsthOks5PwDsdNlnFMXxxCKrJRUoAwXHrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773082649; c=relaxed/simple;
-	bh=B7KAMARPwEaCd5USio6/S7xKwQ9/OKzi8sUBysxym6o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Gn8ytq5C6ZaCB01Fb4s7RLSrcld+Wc49WGxSPoX+jEMAg7rxiQ1gO+leHi/++9tclhAzXHBPlcIaW/v+IzcCcKkPTpdDlfgqL/CE4Pd0qoiBZJETGpt5HDWJEJbHv0F8mQYdfRH4hoezjlCEKHGLdkz6ihighkpSt6afJwmnKX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=schu.net; spf=pass smtp.mailfrom=schu.net; dkim=pass (2048-bit key) header.d=schu.net header.i=schu@schu.net header.b=ND7v+M7x; arc=none smtp.client-ip=136.143.158.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=schu.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=schu.net
-Received: from [192.168.120.145] (2-97-186-64.aptalaska.net [64.186.97.2])
-	(authenticated bits=0)
-	by ssl.schu.net (8.15.2/8.15.2) with ESMTPSA id 629IvBUI009288
-	(version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-	Mon, 9 Mar 2026 11:57:11 -0700
-Message-ID: <6214ba33-1ed3-4c8b-bba1-8d4894cb2dd1@schu.net>
-Date: Mon, 9 Mar 2026 11:57:10 -0700
+	s=arc-20240116; t=1773082873; c=relaxed/simple;
+	bh=zuZybXxG4NWtCCamlMtgm4GPhCUwWs75GokKHhfMbyA=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=QCmBAwOLqWrnXR8eva6gXElo4OqrkXzQuB5QYgU3FvYWtoDJC7B85wjJTWwGoLp5rzxGkemZmw0E57Jvh2Atm6KSaM5c86CDvWQ/ujg1lSONgiypvYEUN/lpO0DGycqC65/yg5OSCt0zXJJXHxjsbOWwPU75UcJZPDJlQBPVqhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d2IgH4d2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629BiYp9402979;
+	Mon, 9 Mar 2026 19:00:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=5swsN0
+	rUxxavDq9zMYnPJS2Jv47BUk07HnZRz0pbh40=; b=d2IgH4d2cI76xjXosS08+5
+	z7p4cmRM3+vsUQToHiG2nB8DP/joMF596z7727f61cqMRXeNJJpaPHxOajT8sUoA
+	4hdB+fd4u1HsuNVMFr3OsadtAG1CKvM35tVtsMpgaqqCM2ZBMMXJkpG++BlAdorh
+	a25OzV7jJWb6oFmtakhiLNn+qzaAmqYeRhvuloIidiB6X0BgKDL71O4yfuzN3RUh
+	AoqpvZ653XjMWMMwrSPrZbVK8uRNsl6RplSUCc6nWvYsnXyDf2A2VF2Up7qZowSZ
+	aJlNA2A77/MP8caSRZkmC6D9PsUx9bOXT5BvUfyuxzfxj3qWmymQF0ir3jH77L1w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcun7rdb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Mar 2026 19:00:09 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 629FvaW1015771;
+	Mon, 9 Mar 2026 19:00:08 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs121ww0t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Mar 2026 19:00:08 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 629J079s4915810
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 9 Mar 2026 19:00:08 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B444C58064;
+	Mon,  9 Mar 2026 19:00:07 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E09F35805A;
+	Mon,  9 Mar 2026 19:00:04 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.72.80])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  9 Mar 2026 19:00:04 +0000 (GMT)
+Message-ID: <c9500adc562665d44feaca9206f23a5ba07432c1.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 00/12] vfs: change inode->i_ino from unsigned long
+ to u64
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+        fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+        autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
+        audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
+        bpf@vger.kernel.org
+In-Reply-To: <f22758116dabd3c135a833bcb5cfcd2ea4f6ecf4.camel@kernel.org>
+References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
+		 <05b5d55c49b5a1bbc43a5315e3c84872e7e634b3.camel@linux.ibm.com>
+	 <f22758116dabd3c135a833bcb5cfcd2ea4f6ecf4.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 09 Mar 2026 15:00:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Current state of nfsdv4 recovery.
-To: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-References: <0d586513-819c-4af9-8c9f-8d09d326e547@schu.net>
- <1fcd27cb44217d5db08e488528a2648c2906a435.camel@kernel.org>
-Content-Language: en-US
-From: Matthew Schumacher <schu@schu.net>
-In-Reply-To: <1fcd27cb44217d5db08e488528a2648c2906a435.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Report: Content analysis details:   (-2.5 points)
-	pts  rule name              description
-	---- ---------------------- -------------------------------------------
-	-1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
-	-1.5 BAYES_00               BODY: Bayes spam probability is 0 to 1%
-	                            [score: 0.0000]
-X-Spam-Bayes: Learn: no autolearn_force=no
-X-Spam-Score: No, -2.5 hits
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=schu.net; h=message-id
-	:date:mime-version:subject:to:references:from:in-reply-to
-	:content-type:content-transfer-encoding; s=schu; i=
-	schu@schu.net; t=1773082632; bh=B7KAMARPwEaCd5USio6/S7xKwQ9/OKzi
-	8sUBysxym6o=; b=ND7v+M7xUXwDgIQQACuRnoJqMsdi+q83HcS7DMVkatnGSuMG
-	9tZlvN1er7BhwWhpWdXGXk6jkbi9FN9yynQIvK7w+Z8bC0OeHK3xdsAYC07FLVBP
-	Fu44vkbzl6QzN624FhNKlSIbYT/axDwK+ceCDUin8k50+0OUG3McQLW1FCNzdDHd
-	deV/3VT6ILbryMgquqWY45r8iRakWW3d2UGkV+1yTt4iUoQHaIOngmeO5zSRvEm9
-	Fq4lR8362dz2xwKXNWYUZdb51qh4dxyiI4prtHrtdK9XNHDjGYeOWR6rUvWj5jb0
-	2bvbLyj7u5LHwMEQk7kK5DVA5I5AnsPn9YJ32w==
-X-Scanned-By: MIMEDefang 3.2 on 192.168.98.12
-X-Rspamd-Queue-Id: 44F8223F025
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IXXixi4WEaMt5ZLipHNyYmLY2v6HWLsd
+X-Authority-Analysis: v=2.4 cv=Hp172kTS c=1 sm=1 tr=0 ts=69af18ba cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=o9bg_TheAfZNAX0b3qsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDE2NSBTYWx0ZWRfX6z/xa1oiKPHE
+ y5EqU++9e+D9gbPsThEA40KAIQaMNONuQFv6rphXC4UXK9hbuizpabscJIBcCstT+gR2HtuKysP
+ juuUkxGaMl7wxMTZHQleqdpaj1BApzfJEmhJlxbY5TY+zaAhKCE7FmRzIMEIOEQTi0cM+UreNNn
+ frwDdmfnFwh4sJREHHlQDdGWVECyjZbYar7Sfrv1WmeMPxeeCh8/LcWzrRHQxRnw2tvA2a4D8NR
+ c7ma8KolSpfVjNgJ0OleioMQBwEZGtoJr7jBKqVpvCDiflI9IHYr2EnI/OMDVmsDQcjOAtzHE2E
+ Cqs2ZZL0dk00OuX7g/sw5bXFEAXaWjWvfls2vJrY4HNOaz6u97184uDaehJuW5B2dmjBv87lTJU
+ mdY20MyhE/Ql/CExB+A/Xcl6KkN3u1kmsdTu44KKD0LP1RVDdsR5dGWPIvWKEchoHvJnuy6WqMG
+ FGu2ZyF+vBxNE+HNtfg==
+X-Proofpoint-ORIG-GUID: IXXixi4WEaMt5ZLipHNyYmLY2v6HWLsd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-09_05,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603090165
+X-Rspamd-Queue-Id: 068EB23F161
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[schu.net,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[schu.net:s=schu];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19898-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[schu.net:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[schu@schu.net,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[45];
+	TAGGED_FROM(0.00)[bounces-19899-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zohar@linux.ibm.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	PRECEDENCE_BULK(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux-nfs.org:url,schu.net:dkim,schu.net:mid]
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Action: no action
 
-On 3/6/26 12:49 PM, Jeff Layton wrote:
-> On Fri, 2026-03-06 at 11:46 -0800, Matthew Schumacher wrote:
->> Hello List,
->>
->> I am building an HA nfsv4 cluster and need to have my locking migrate
->> when a node fails or goes into standby for maint.  There is a lot of
->> documentation around the net, but some of it seems old, like this:
->> https://wiki.linux-nfs.org/wiki/index.php/Nfsd4_server_recovery. I think
->> I have what I need worked out, but I'm still losing locks on recovery.
->> Can someone help me understand how this currently works or point me to
->> the up to date documentation?
->>
->> This is what I'm currently doing:
->>
->> Moving from nodeA to nodeB
->>
->> NodeA: Remove nfsd ip address
->> NodeA: /usr/sbin/exportfs -au
->> NodeA: /usr/sbin/rpc.nfsd 0
->> NodeA: killall --ns $$ -q -v -w rpc.mountd
->> NodeA: killall --ns $$ -q -v -w nfsdcld
->> NodeA: killall --ns $$ -q -v -w rpc.idmapd
->> NodeA: killall --ns $$ -q -v -w rpcbind
->> NodeA: umount /var/lib/nfs/rpc_pipefs
->> NodeA: zpool export (which umounts /var/lib/nfs)
->>
->> NodeB: zpool import (which mounts /var/lib/nfs)
->> NodeB: mount /proc/fs/nfs if not previously mounted
->> NodeB: mount -t rpc_pipefs -o nodev sunrpc /var/lib/nfs/rpc_pipefs
->> NodeB: /sbin/rpcbind -l -w
->> NodeB: /usr/sbin/rpc.idmapd
->> NodeB: /usr/sbin/nfsdcld -d
->> NodeB: /usr/sbin/exportfs -av
->> NodeB: /usr/sbin/rpc.mountd
->> NodeB: /usr/sbin/rpc.nfsd -s -V 4.2 -U -t 8
->> NodeB: start nfsd ip address
->>
->>   From what I understand, nfsdcld writes the lock information to
->> /var/lib/nfs/nfsdcltrack/main.sqlite which is moved to the other side
->> and everything is started, but I still lose locks when I migrate.
->>
->> Mar  6 08:39:14 nfsha user.warn kernel: [37675.787509] NFS:
->> 10.255.255.3: lost 1 locks
->>
->> I think the problem is that kernel (6.12.74) isn't getting the locks
->> reported to it when nfsdcld starts.  Here are some logs:
->>
-<snip old logs>
->>
->> I think the problem is that nfsdcld can't pass the locks to the kernel
->> using /var/lib/nfs/rpc_pipefs/nfsd/cld as it's missing.  I'm not sure
->> why, /var/lib/nfs/rpc_pipefs/ has everything else:
->>
-<snip old pipefs>
->>
-> 
-> That's very odd. You might want to look in dmesg and see if there are
-> any warnings in there about creating the pipes in rpc_pipefs.
-> 
+On Mon, 2026-03-09 at 13:59 -0400, Jeff Layton wrote:
+> On Mon, 2026-03-09 at 13:47 -0400, Mimi Zohar wrote:
+> > [ I/O socket time out.  Trimming the To list.]
+> >=20
+> > On Wed, 2026-03-04 at 10:32 -0500, Jeff Layton wrote:
+> > > This version squashes all of the format-string changes and the i_ino
+> > > type change into the same patch. This results in a giant 600+ line pa=
+tch
+> > > at the end of the series, but it does remain bisectable.  Because the
+> > > patchset was reorganized (again) some of the R-b's and A-b's have bee=
+n
+> > > dropped.
+> > >=20
+> > > The entire pile is in the "iino-u64" branch of my tree, if anyone is
+> > > interested in testing this.
+> > >=20
+> > >     https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git=
+/
+> > >=20
+> > > Original cover letter follows:
+> > >=20
+> > > ----------------------8<-----------------------
+> > >=20
+> > > Christian said [1] to "just do it" when I proposed this, so here we a=
+re!
+> > >=20
+> > > For historical reasons, the inode->i_ino field is an unsigned long,
+> > > which means that it's 32 bits on 32 bit architectures. This has cause=
+d a
+> > > number of filesystems to implement hacks to hash a 64-bit identifier
+> > > into a 32-bit field, and deprives us of a universal identifier field =
+for
+> > > an inode.
+> > >=20
+> > > This patchset changes the inode->i_ino field from an unsigned long to=
+ a
+> > > u64. This shouldn't make any material difference on 64-bit hosts, but
+> > > 32-bit hosts will see struct inode grow by at least 4 bytes. This cou=
+ld
+> > > have effects on slabcache sizes and field alignment.
+> > >=20
+> > > The bulk of the changes are to format strings and tracepoints, since =
+the
+> > > kernel itself doesn't care that much about the i_ino field. The first
+> > > patch changes some vfs function arguments, so check that one out
+> > > carefully.
+> > >=20
+> > > With this change, we may be able to shrink some inode structures. For
+> > > instance, struct nfs_inode has a fileid field that holds the 64-bit
+> > > inode number. With this set of changes, that field could be eliminate=
+d.
+> > > I'd rather leave that sort of cleanups for later just to keep this
+> > > simple.
+> > >=20
+> > > Much of this set was generated by LLM, but I attributed it to myself
+> > > since I consider this to be in the "menial tasks" category of LLM usa=
+ge.
+> > >=20
+> > > [1]: https://lore.kernel.org/linux-fsdevel/20260219-portrait-winkt-95=
+9070cee42f@brauner/
+> > >=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> >=20
+> > Jeff, missing from this patch set is EVM.  In hmac_add_misc() EVM copie=
+s the
+> > i_ino and calculates either an HMAC or file meta-data hash, which is th=
+en
+> > signed.=20
+> >=20
+> >=20
+>=20
+> Thanks Mimi, good catch.
+>=20
+> It looks like we should just be able to change the ino field to a u64
+> alongside everything else. Something like this:
+>=20
+> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm=
+/evm_crypto.c
+> index c0ca4eedb0fe..77b6c2fa345e 100644
+> --- a/security/integrity/evm/evm_crypto.c
+> +++ b/security/integrity/evm/evm_crypto.c
+> @@ -144,7 +144,7 @@ static void hmac_add_misc(struct shash_desc *desc, st=
+ruct inode *inode,
+>                           char type, char *digest)
+>  {
+>         struct h_misc {
+> -               unsigned long ino;
+> +               u64 ino;
+>                 __u32 generation;
+>                 uid_t uid;
+>                 gid_t gid;
+>=20
+
+Agreed.
+
+>=20
+> That should make no material difference on 64-bit hosts. What's the
+> effect on 32-bit? Will they just need to remeasure everything or would
+> the consequences be more dire? Do we have any clue whether anyone is
+> using EVM in 32-bit environments?
+
+All good questions. Unfortunately I don't know the answer to most of them. =
+What
+we do know: changing the size of the i_ino field would affect EVM file meta=
+data
+verification and would require relabeling the filesystem.  Even packages
+containing EVM portable signatures, which don't include or verify the i_ino
+number, would be affected.
+
+Mimi
 
 
-Hello Jeff, others...
-I did get nfsdcld to talk to the kernel, but I still lose my sessions 
-when I move NFS from one node to another.  I wonder if my understanding 
-is correct:
 
-If I have /var/lib/nfs mounted, and nfsdcld running, then it should 
-persist my sessions and locks to the main.sqlite database, then when I 
-shut down nfsdcld, umount /var/lib/nfs, then mount /var/lib/nfs on a 
-different node and start nfsdcld it should tell the kernel about my 
-sessions and locks and everything keep working.
-
-Is that correct?
-
-Right now I see my client happily working with a session:
-
-Mar  9 11:39:46 nodeA user.warn kernel: [245803.517797] encode_sequence: 
-sessionid=1773078573:732586373:19:0 seqid=1939 slotid=0 max_slotid=0 
-cache_this=0
-
-Then when I move the NFS server to another node and assume the same IP 
-address, the clients session is reset:
-
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155392] 
-nfs41_sequence_process ERROR: -10052 Reset session
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155394] nfs4_free_slot: 
-slotid 0 highest_used_slotid 4294967295
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155396] 
-nfs41_sequence_process: Error -10052 free the slot
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155397] 
-nfs41_sequence_call_done ERROR -10052
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155397] 
-nfs4_schedule_lease_recovery: scheduling lease recovery for server 
-10.255.255.3
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155411] 
-nfs41_sequence_call_done rpc_cred 000000009fd26b60
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155413] 
-nfs4_schedule_state_renewal: requeueing work. Lease period = 5
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155570] NFS: Got error 
--10052 from the server on DESTROY_SESSION. Session has been destroyed 
-regardless...
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155572] --> 
-nfs4_proc_create_session clp=00000000ea3d2c57 session=00000000348f3ed3
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155574] 
-nfs4_init_channel_attrs: Fore Channel : max_rqst_sz=1049620 
-max_resp_sz=1049480 max_ops=8 max_reqs=64
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155576] 
-nfs4_init_channel_attrs: Back Channel : max_rqst_sz=4096 
-max_resp_sz=4096 max_resp_sz_cached=0 max_ops=2 max_reqs=16
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155732] 
-nfs4_reset_session: session reset failed with status -10022 for server 
-10.255.255.3!
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155734] 
-nfs4_handle_reclaim_lease_error: handled error -10022 for server 
-10.255.255.3
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.155946] 
-_nfs4_proc_exchange_id: server_scope mismatch detected
-Mar  9 11:45:55 nodeA user.warn kernel: [246172.193390] NFS: 
-10.255.255.3: lost 1 locks
-
-
-On the server side I see:
-
-Mar  9 11:45:05 nodeB daemon.notice rpc.mountd[26917]: Version 2.8.5 
-starting
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: 
-sqlite_startup_query_grace: current_epoch=6 recovery_epoch=0
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: 
-sqlite_check_db_health: returning 0
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_pipe_init: init 
-pipe handlers
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_pipe_open: opening 
-upcall pipe /var/lib/nfs/rpc_pipefs/nfsd/cld
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_pipe_open: open of 
-/var/lib/nfs/rpc_pipefs/nfsd/cld failed: No such file or directory
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: main: Starting event 
-dispatch handler.
-Mar  9 11:45:05 nodeB user.warn kernel: [246116.696423] set_max_drc 
-nfsd_drc_max_mem 259694592
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_inotify_cb: called 
-for EV_READ
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_pipe_open: opening 
-upcall pipe /var/lib/nfs/rpc_pipefs/nfsd/cld
-Mar  9 11:45:05 nodeB user.warn kernel: [246116.697573] nfsd: creating 
-service
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_get_version: 
-version = 2.
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: Doing downcall with 
-status 0
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_gracestart: 
-updating grace epochs
-Mar  9 11:45:05 nodeB user.warn kernel: [246116.801997] 
-alloc_cld_upcall: allocated xid 0
-Mar  9 11:45:05 nodeB user.warn kernel: [246116.802105] 
-nfsd4_cld_get_version: userspace returned version 2
-Mar  9 11:45:05 nodeB user.warn kernel: [246116.802107] 
-alloc_cld_upcall: allocated xid 1
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: sqlite_grace_start: 
-current_epoch=7 recovery_epoch=6
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: cld_gracestart: 
-sending client records to the kernel
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: Sending client Linux 
-NFSv4.2 nodeA
-Mar  9 11:45:05 nodeB daemon.info nfsdcld[26920]: Doing downcall with 
-status 0
-Mar  9 11:45:05 nodeB user.info kernel: [246117.076010] NFSD: Using 
-nfsdcld client tracking operations.
-Mar  9 11:45:05 nodeB user.info kernel: [246117.076012] NFSD: starting 
-90-second grace period (net f0000000)
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001121] 
-__find_in_sessionid_hashtbl: 1773078573:732586373:19:0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001124] 
-__find_in_sessionid_hashtbl: session not found
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001460] 
-nfsd4_destroy_session: 1773078573:732586373:19:0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001463] 
-__find_in_sessionid_hashtbl: 1773078573:732586373:19:0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001464] 
-__find_in_sessionid_hashtbl: session not found
-Mar  9 11:45:55 nodeB daemon.notice rpc.mountd[26917]: v4.2 client 
-attached: 0x5f2a885f69af1531 from "10.255.255.1:39802"
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001785] 
-nfsd4_exchange_id rqstp=00000000c4f6faf6 exid=00000000ac47a836 
-clname.len=32 clname.data=00000000c870e87d ip_addr=10.255.255.1 flags 
-103, spa_how 0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.001797] 
-nfsd4_exchange_id seqid 0 flags 20001
-Mar  9 11:45:55 nodeB daemon.info nfsdcld[26920]: cld_create: create 
-client record.
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.003796] 
-__find_in_sessionid_hashtbl: 1773081905:1596622943:23:0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.003798] nfsd4_sequence: 
-slotid 0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004116] found domain 
-10.255.255.0/24
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004118] found fsidtype 1
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004119] found fsid length 4
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004120] Path seems to be </>
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004121] Found the path /
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004190] nfsd: 
-fh_compose(exp 00:12/1 /, ino=1)
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004209] --> 
-nfsd4_store_cache_entry slot 00000000640dc198
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004464] 
-__find_in_sessionid_hashtbl: 1773081905:1596622943:23:0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004466] nfsd4_sequence: 
-slotid 0
-Mar  9 11:45:55 nodeB user.warn kernel: [246167.004468] 
-alloc_cld_upcall: allocated xid 2
-Mar  9 11:45:55 nodeB daemon.info nfsdcld[26920]: 
-sqlite_insert_client_and_princhash: returning 0
-Mar  9 11:45:55 nodeB daemon.info nfsdcld[26920]: Doing downcall with 
-status 0
-Mar  9 11:45:55 nodeB daemon.info nfsdcld[26920]: cld_gracedone: grace done.
-
-When the session is reset and the lock lost my VM no longer performs I/O 
-until it's restarted.
-
-Should my locks and sessions be moving over or am I missing something?
-
-Thanks!
 
 
