@@ -1,229 +1,340 @@
-Return-Path: <linux-nfs+bounces-19882-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19883-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IPQNFVDLrmnEIwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19882-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 14:29:52 +0100
+	id cAkZGMXUrmlhJAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19883-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:10:13 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 414B3239C09
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 14:29:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B34B523A4AE
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:10:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 851503017DCA
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 13:29:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B89DB3010DAE
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 14:09:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E9F21B3925;
-	Mon,  9 Mar 2026 13:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B803B8D65;
+	Mon,  9 Mar 2026 14:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGnSOyF5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020074.outbound.protection.outlook.com [52.101.195.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C725212542
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Mar 2026 13:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773062989; cv=fail; b=hbn9k5vg47usjEeqNF/I+eGjySDbo3nD2sl+rs8Dudw660aPRiB/MHxAhPQ/Y5AYusQzgLBbqJWIDtdqE1D2bybwOaXhIpdkyB3V1cKtAruGY2fW5tq8w7FOSG2Dzl8yoAV4UetRZKXj1/aNaodyVoNZPqPp1x7sqy4atIc0K4c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773062989; c=relaxed/simple;
-	bh=Tgt+VTey/TdqYF7q1tR1EdlBbGu9SmZJBqtzREEWuVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bI63Wm/dwGi2vFnoPxf2d79CSt8q1hTxnGQ27hzcHgttO5MxPh3g8zcKktBmyH7OtEVZpVcJkCLLdMxDUqjg2M/aHozxV+thdpzFUhyWmD6MB+7j58DaTyy4Xide9NQlxD+sEC1yXsWhOQ+oFiOzX8Gt9ku6FeZ2DftyT4nOPfk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Cj7yr+M0JJL3fdu/XE4Tnnt8YkEpH939v5SIAGlN4PEaZFfb4mtoNmtaIdyaWvwz+Qk78u6G236ix2OfcX9WUgn4OE84VWvCN2HgVN8vmEFLPyBC62WyOoLOMDCcDyBP7d4tDLVtjvex9GueUMCvEUMGVect9sANu1WtvQiAgDV+/1BeZvyaln5duVsLyGW4pM9dqPvNEZjLDWEcYVJwgBh6H+o6+stlvapwj0/OQsaab6Wct+//5e9jyJ/+t90n4qOxpZbdUqCRnZkCehu5/fJT9YSwHzVmLJCqm7uK+Q42+WMUdnAtiCt11N/FswSjovr8PkIeFHGZRw/uxBS7ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zVJkCECU1+N1KAAB0Ip/eXo/rWX5sSxUBCVjaHAL/FQ=;
- b=g/KzyOVr+6hc5AVFnSczzAtZfGJo0mwuhNFf6O2WS7hVDE6eRQb+iOuyQM+3yK+2zX9wH2ow1dsblsKs7fp7jDM97FK680U7dluf89HmAM8ZvNhcAjchMAnVG7u1RetkfRH4c1aWwNQoSpxjrfzW1Y3JdPpwFea6ZP7uGMKpVMNuWcYbAD0uB9Q7HFKyC8CzQQMrp4sB1dbL1q+yoGGp+QKet5hsBdEizcwau+jcgmiQeU5/5ETV2m8O2rzT9MoZkbNFkr0mG0moWP7orFEnSmnG7i6+21uF5FR0xPecAKVBIBP9KloOdsJAGE8bEB+nSPUnev9zYf2CA4GRYt7L6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LOBP123MB8908.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:482::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.25; Mon, 9 Mar
- 2026 13:29:45 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%2]) with mapi id 15.20.9678.017; Mon, 9 Mar 2026
- 13:29:45 +0000
-Date: Mon, 9 Mar 2026 09:29:40 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Yi Zhang <yi.zhang@redhat.com>
-Cc: Steve Dickson <steved@redhat.com>, tbecker@redhat.com, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsrahead: enable event-driven mountinfo monitoring and
- skip non-NFS devices
-Message-ID: <be4dsl73wdridt67nhccl5ccj2d66hymkbstm3tykwsqe3ykfr@cc7r4yawfk62>
-References: <20260306161929.4148128-1-atomlin@atomlin.com>
- <ea495f1d-1464-4f9d-91de-dd3fe828fcff@redhat.com>
- <CAHj4cs-Eg7sJZLju_32yiQv5x=WHvVUpkgFshzr2AQZek+z1=Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHj4cs-Eg7sJZLju_32yiQv5x=WHvVUpkgFshzr2AQZek+z1=Q@mail.gmail.com>
-X-ClientProxiedBy: MN2PR22CA0023.namprd22.prod.outlook.com
- (2603:10b6:208:238::28) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE543A6EE9;
+	Mon,  9 Mar 2026 14:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773065355; cv=none; b=u/N1X6mSZRAiRvU1w/ZoCkT0W4ay8HLXQPIqaNudTrsBIegentzQCFZ7qsbaG8eCmT7bE2dygps2XPT5/GHCnZ4Qa6MAdCllt237H/sGUwCAshTsfvfE1QEdCIWRgmOn9olZMhIV+GcPaAIT7KFWAxGApqQstBfk0Q2rhbVZVUc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773065355; c=relaxed/simple;
+	bh=LQRT6PvoVC6osFxMO+pxLs6EXD2b+g8aiuXbdd92Sk4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tZAWNPFYrRBr3Owx2lDY2dlf0nbOygRuzD+Zxxhpv9lxsCbNjodIP9ksTR6ra7emlOsG+86EbsTXHNkw9FePBZwVUFgY4T6UbOnn0EE1cMd44J4WLH4Gvz6fK8SZpSK1WvWR5vjt7CUhbHns/qyin25qyOzUDvlhm63PeiMLQeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGnSOyF5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD034C4CEF7;
+	Mon,  9 Mar 2026 14:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773065354;
+	bh=LQRT6PvoVC6osFxMO+pxLs6EXD2b+g8aiuXbdd92Sk4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=SGnSOyF5CUvSEC6b+ODiCy66f/Mx9NO6kD+HrMvMsSDNsiUA8sNh6JASM4esBCKSr
+	 kff4Kc8EqgLeAypyCaJc53031pSxEc82lzG/fO7FWxtSutfGerkWsSvaug/PK5xwbR
+	 Vtutwsmy0RqMbjLaDxE/5J9tVH5Xoa326GEgi5OGRk/FLXLTwPKTWoiyvWU97ja5l3
+	 f8j3UbLFFQw2ien7QA+UwrG7TtytC9jf47O+vQmVZY09yFx+4qF0n1VwaCOlODVchr
+	 t5j7tAP+6fhMsmbeRagRrcFtNN3at6nhZ49U0OeokRYmBGoOAbNWAhhPm2nKlXsctE
+	 WxrKxxb9vpQFw==
+Message-ID: <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
+Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the
+ file lock list
+From: Jeff Layton <jlayton@kernel.org>
+To: Yang Erkun <yangerkun@huawei.com>, trondmy@kernel.org, anna@kernel.org, 
+	chuck.lever@oracle.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	yangerkun@huaweicloud.com, lilingfeng3@huawei.com,
+ zhangjian496@h-partners.com, 	yi.zhang@huawei.com
+Date: Mon, 09 Mar 2026 10:09:11 -0400
+In-Reply-To: <20260226012203.3962997-1-yangerkun@huawei.com>
+References: <20260226012203.3962997-1-yangerkun@huawei.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LOBP123MB8908:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad5cb8a3-a045-4063-6486-08de7ddfed55
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	zZArT+iqpaKlmRFSGOlZnpmOX6TY5vermZgZ9i25E+OtBs+jlHHYglYKrNMP3y51QhdQ47uITgZkoOr+sZIKRuhdXdl/W/cBwTTPK8Heyt/Jc3v2AbORd2c+qhKotQa8Vvh74Il7BJhXopEYdSkklBjiqtJZ/Jq6rx//B6mfxQAG418L8Ik4nV5O9GuieDM6CdBJoBH/VOV4YYJ/X0bVoodltoqtl6qGc/as2Jnppu/J/B3MWW+w1Qdjl0TCyqMSgAjNTdS/PVx8DT2g/4dG/ExJz9nYt0OKy/QioUAA84EEuA0BrK+IvcRMF5PtwflojD/uBoaVH3ztbv/3pnjva+XHDj6SYOGMjw39hfSujwbTZOiThHfWfFvO67RM1XM0eJjTzozS7XGe3c7x52ZIohu1IbHrdutpkqzt7/4LiANTXQdLKeVDbuDyCuwR8GunysliXtDczos2C5dVxMUHDi3lGh5mOwlAJbmNQa8Gn71CA8nxREBwMqmcSRO06LS0pfZsphD+aN2vPuOX8WNRWxbrXZ7lm5V/u8ZROcReIOdB6OdrFdgo1wUnZRW/GU78sxYH6MiV6/TUIeiqgnlE67Lag7NhqAIfgLuVXOJ95kXUtFA969vZaybiAUTLroiJ5xfOoinb5Fm0CQ1/xpT0BMIVTP7x78iigPOmHZLWiqFzS1AJLkSOmvoF39J297oqCB4L4ZFwegepJOrQGg4+fkIuEu3NsJP6eZm7ZWL3DpA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U0k1ZlZwb3JKWmY1MnhPYmtWcThrWFNOOWMvQkVtNzZGV0NWRURPRFVWcldK?=
- =?utf-8?B?azQwenZPcnF1SjhpSmZQdjl2R2ZLZnJzU3orU1FKdVJZY3hNVXA4ckxoUjZo?=
- =?utf-8?B?WlJWSTV1QjRNaU1oZ2tSWmZuclBGYVdtQjZFNWZVcGw3ejhaY08zNEFSNlJ0?=
- =?utf-8?B?SmJZM1VIbkVDWUttMDRiSEtWSWRlREpvaWdhYUVaekVBazRkSDRwOS9aQmtq?=
- =?utf-8?B?QS9ubkMwaEUvZ1B0QW5NbXBGMXorVXR2anFNRXJ6ZzliRGpjU21ISmpzbjF2?=
- =?utf-8?B?VVEvdnUrb0prL2tHZlg4aTM5TkdMYzVHVmpvTGZsM1dJZERpb0Y1WklQMllk?=
- =?utf-8?B?VnNqN0tYYnUyWm9ZSkU0cmVLZlVzN1RTT2syTWtxRUw2OCs5dkVGakRwNDRj?=
- =?utf-8?B?K25wTlJsS2YzRGE4OHZ6RHU5a3pLNjlNNzFrY3hnWFRjUzc4Q0ZVSEhUbWhp?=
- =?utf-8?B?cXRUQ3hsRmRaclFaNCtUWDl4Rk1ZNVp0blFnbk5oVWh4OGI0MW9vR1grbElp?=
- =?utf-8?B?L2VzUEl6N0VVSWo2WVhWL0ptNnh3UmFZNnA5REFaN2NFYkM0THhhWWtFclJn?=
- =?utf-8?B?NXgxMmNLa2dlak5RTFVPS0dvVHh4NVJiZDVlcDF2SUk2dTZqdEM2cHJHQ3Jl?=
- =?utf-8?B?N0FCdEhUMkJRTExWWHBjbEJBS3FHaUwyQjNyMWlSaFJUTFRrbzYwV1dRM2d4?=
- =?utf-8?B?NmJJcURIRFhIQ0Z3RFMvL3hON1pSd1krN2xyTHV6VkNLY1hOWWxuemtMaDhY?=
- =?utf-8?B?TGdBWGNWQ1lOUkF4a1BIeGgxVHltVnNremdTTnREWGEyNlhlRWpqRjM3eUhj?=
- =?utf-8?B?YnpmME4rZlo3aEdpNTU2SWp4cm5ocDNiZlBMS3JBMkE2eHczK2lmUVIrSHV3?=
- =?utf-8?B?akU2YnFFeTFGUkVZNlRrbXhmYUprVXV1di9qQTNiVlFIQURWWVZ2NjUraGRm?=
- =?utf-8?B?MUErRUZ3UzVzci9uWkRXcWFuaEdvdTQ1amRIenVjMFIwNVhGeXNFL3o0WjBY?=
- =?utf-8?B?NWpBKytuWlZIUnhFZUFsY3JvQ0lGaHU3THhvdTQwMEFhWDgxbURNT09MZjNo?=
- =?utf-8?B?NzJmcGU0NEIxeDc5U0R1OHNKRVlSTjlGVHRURVlWdnlnQTVSSmRYVG42ai9y?=
- =?utf-8?B?MHRoNm0wa3lhRVlFd29Md1Q5N2hDdjdMVVFnc09PZzhoOUt5SDJaYldtM0FH?=
- =?utf-8?B?QVpGSElhakFGWEVrbGo4K1FsSjNGK25mMk8xK09QeU5Tc1BvRENUbXhmVUxV?=
- =?utf-8?B?Vm82RnNsZ3RweEl0azFPLzZ3OWgvQ0lWUWxQb0JVQlorNDZMTmlFbzhVZ0hH?=
- =?utf-8?B?dFJoTk8wVEFEcWZPMEEyVW5YaTFJM0xhZWlRNXZnNjFUNHJ1MTRpcDg2L2x5?=
- =?utf-8?B?SGpHdUlNTENROWFycXMremV0ZmVsMmhnZDY4dzYyNEhZdGRqbmFFbGdtMXQ2?=
- =?utf-8?B?SVFTZEIwbGhaVW1MQUNUTDUxbUJFcW5yUkQ2NWxKVjBaT2s5bmNYNzZid2kz?=
- =?utf-8?B?dWZ3YTFnUTM2eW5YWGlIWW5XaktoRG1sYnFtbjhudzBVR2lHejhqdytKdytW?=
- =?utf-8?B?SUpkaHpoa0JKcFJDaEJxWW8vN1JHanJReUMzbTVLNG9RZzVIYnowNDF1TmRD?=
- =?utf-8?B?K216WEJMcHJSYmt6M0F4Sng0cVVubTNObUEzOHFqL0R4b3cxZlduRkdZYjZi?=
- =?utf-8?B?RzJZQzc2NXhySVBkZGJpVUlDeExHNitFaGVvSEY4TFoxQnVnR3ZFUlBSbmlM?=
- =?utf-8?B?eVZRMDRQQmNyV2ViV2lXOTdXeFlkOWU5VHBXaVhHQTVuTVJXd0VsZ1ZYY2U1?=
- =?utf-8?B?d0VBRk93V3NGOCs3SzJyQjFIMElGaDU2SlVxcWZ1T1prVTM3SUU2cjQzdVla?=
- =?utf-8?B?eEc0Z1lkaER2V3FjZm5UbVNUS1ByaFZINUtEZXh0K2VTTE93ODVMbEFYbFBQ?=
- =?utf-8?B?NDZEY0NOeitIck50SmdVcmxOc0wxWHJZNHVaOUNZZ2NDWWQ3STQ3SHpKaUt4?=
- =?utf-8?B?NEY4VEFJeHNVbkRqZ25qYk95bXlLUktrMDdCYWhmRG9uem9Dd25QZkhtUk9r?=
- =?utf-8?B?ek8wN1hMNkd6aVEzd2xmTEtoelhRN1BuQ2Mvam1vWERrQmJIaGJmRHZxaU9q?=
- =?utf-8?B?c1BhR01nSmNYU2NwTGJ2ZXh0ZHN6YldIVGRYRTh6TllYaE1iTzNqNFh1T3dB?=
- =?utf-8?B?WUZUYVExUmY5VjhWbi9KNkU1Y3NzS2tLK2Fmc0J2b0RHYy9ZMjJVSy9SLzBW?=
- =?utf-8?B?enlmS3ppc1ZIM3F0WVp1a0xTQjJOOVhwT0RVQnBYZTgwcVNZcmtYTW1zMmE1?=
- =?utf-8?B?TWttb202M3JtbG43bFRqVGI3bGR5NitQTFZYbjNBYjhPOVNhemZxQT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad5cb8a3-a045-4063-6486-08de7ddfed55
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 13:29:44.9086
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6uw595EMjNqRt4cl3leAr4B3QlJGxZkYwNVXdfczUutRBdgbxIkbRLKCdTc80oYDAGyUl6JYR6QRBQyWfOp2Ng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOBP123MB8908
-X-Rspamd-Queue-Id: 414B3239C09
+X-Rspamd-Queue-Id: B34B523A4AE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.04 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-19883-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19882-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[atomlin.com];
-	RCPT_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.933];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[atomlin@atomlin.com,linux-nfs@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.039];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Mon, Mar 09, 2026 at 08:38:54PM +0800, Yi Zhang wrote:
-> Hi Steve/Aaron
-> The patch seems still have issues. Here is the journal log during
-> blktests:
+On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
+> Lingfeng identified a bug and suggested two solutions, but both appear
+> to have issues.
+>=20
+> Generally, we cannot release flc_lock while iterating over the file lock
+> list to avoid use-after-free (UAF) problems with file locks. However,
+> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
+> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
+> may take a long time. To resolve this, NFS switches to using nfsi->rwsem
+> for the same protection, and nfs_reclaim_locks follows this approach.
+> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
+> this is inadequate since a single inode can have multiple nfs4_state
+> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
+>=20
+> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte range
+> lock must be atomic with the stateid update"), the functions
+> nfs4_locku_done and nfs4_lock_done also break this rule because they
+> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
+> this protection could cause many deadlocks, so instead, the call to
+> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
+> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
+> lock must be atomic with the stateid update"), it has been resolved
+> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly triggeri=
+ng
+> state recovery") because all slots are drained before calling
+> nfs4_do_reclaim, which prevents concurrent stateid changes along this pat=
+h.
+> Also, nfs_delegation_claim_locks does not cause this concurrency either
+> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no RPC is
+> sent, so nfs4_lock_done is not called. Therefore,
+> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the first
+> time the stateid is set.
+>=20
+> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-lilingfeng3@=
+huawei.com/
+> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-lilingfeng3@=
+huawei.com/
+> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic=
+ with the stateid update")
+> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+> ---
+>  fs/nfs/delegation.c     |  9 ++++++++-
+>  fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
+>  include/linux/nfs_xdr.h |  1 -
+>  3 files changed, 19 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> index 122fb3f14ffb..9546d2195c25 100644
+> --- a/fs/nfs/delegation.c
+> +++ b/fs/nfs/delegation.c
+> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_=
+t type)
+>  static int nfs_delegation_claim_locks(struct nfs4_state *state, const nf=
+s4_stateid *stateid)
+>  {
+>  	struct inode *inode =3D state->inode;
+> +	struct nfs_inode *nfsi =3D NFS_I(inode);
+>  	struct file_lock *fl;
+>  	struct file_lock_context *flctx =3D locks_inode_context(inode);
+>  	struct list_head *list;
+> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct nfs4_sta=
+te *state, const nfs4_state
+>  		goto out;
+> =20
+>  	list =3D &flctx->flc_posix;
+> +
+> +	/* Guard against reclaim and new lock/unlock calls */
+> +	down_write(&nfsi->rwsem);
+>  	spin_lock(&flctx->flc_lock);
+>  restart:
+>  	for_each_file_lock(fl, list) {
+> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct nfs4_st=
+ate *state, const nfs4_state
+>  			continue;
+>  		spin_unlock(&flctx->flc_lock);
+>  		status =3D nfs4_lock_delegation_recall(fl, state, stateid);
+> -		if (status < 0)
+> +		if (status < 0) {
+> +			up_write(&nfsi->rwsem);
+>  			goto out;
+> +		}
+>  		spin_lock(&flctx->flc_lock);
+>  	}
+>  	if (list =3D=3D &flctx->flc_posix) {
+> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct nfs4_sta=
+te *state, const nfs4_state
+>  		goto restart;
+>  	}
+>  	spin_unlock(&flctx->flc_lock);
+> +	up_write(&nfsi->rwsem);
+>  out:
+>  	return status;
+>  }
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 91bcf67bd743..9d6fbca8798b 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task *task, =
+void *data)
+>  	switch (task->tk_status) {
+>  		case 0:
+>  			renew_lease(calldata->server, calldata->timestamp);
+> -			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
+>  			if (nfs4_update_lock_stateid(calldata->lsp,
+>  					&calldata->res.stateid))
+>  				break;
+> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task *task, =
+void *calldata)
+>  	case 0:
+>  		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
+>  				data->timestamp);
+> -		if (data->arg.new_lock && !data->cancelled) {
+> -			data->fl.c.flc_flags &=3D ~(FL_SLEEP | FL_ACCESS);
+> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
+> -				goto out_restart;
+> -		}
+>  		if (data->arg.new_lock_owner !=3D 0) {
+>  			nfs_confirm_seqid(&lsp->ls_seqid, 0);
+>  			nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
+> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state *stat=
+e, int cmd, struct file_lock *f
+>  	msg.rpc_argp =3D &data->arg;
+>  	msg.rpc_resp =3D &data->res;
+>  	task_setup_data.callback_data =3D data;
+> -	if (recovery_type > NFS_LOCK_NEW) {
+> -		if (recovery_type =3D=3D NFS_LOCK_RECLAIM)
+> -			data->arg.reclaim =3D NFS_LOCK_RECLAIM;
+> -	} else
+> -		data->arg.new_lock =3D 1;
+> +
+> +	if (recovery_type =3D=3D NFS_LOCK_RECLAIM)
+> +		data->arg.reclaim =3D NFS_LOCK_RECLAIM;
+> +
+>  	task =3D rpc_run_task(&task_setup_data);
+>  	if (IS_ERR(task))
+>  		return PTR_ERR(task);
+> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state *sta=
+te, int cmd, struct file_lock
+>  	up_read(&nfsi->rwsem);
+>  	mutex_unlock(&sp->so_delegreturn_mutex);
+>  	status =3D _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
+> +	if (status)
+> +		goto out;
+> +
+> +	down_read(&nfsi->rwsem);
+> +	request->c.flc_flags &=3D ~(FL_SLEEP | FL_ACCESS);
+> +	status =3D locks_lock_inode_wait(state->inode, request);
+> +	up_read(&nfsi->rwsem);
+>  out:
+>  	request->c.flc_flags =3D flags;
+>  	return status;
+> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> index ff1f12aa73d2..9599ad15c3ad 100644
+> --- a/include/linux/nfs_xdr.h
+> +++ b/include/linux/nfs_xdr.h
+> @@ -580,7 +580,6 @@ struct nfs_lock_args {
+>  	struct nfs_lowner	lock_owner;
+>  	unsigned char		block : 1;
+>  	unsigned char		reclaim : 1;
+> -	unsigned char		new_lock : 1;
+>  	unsigned char		new_lock_owner : 1;
+>  };
+> =20
 
-Hi Yi, Steve,
+Nice work!
 
-> malloc_printerr (libc.so.6 + 0x7fd2c)
->                                         #5  0x00007f7a2fde4710
-> _int_free_merge_chunk (libc.so.6 + 0x81710)
->                                         #6  0x00007f7a2fde4789
-> _int_free_chunk (libc.so.6 + 0x81789)
->                                         #7  0x000056327361bd47 main
-> (/usr/libexec/nfsrahead + 0xd47)
->                                         #8  0x00007f7a2fd66681
-> __libc_start_call_main (libc.so.6 + 0x3681)
->                                         #9  0x00007f7a2fd66798
-> __libc_start_main@@GLIBC_2.34 (libc.so.6 + 0x3798)
->                                         #10 0x000056327361bfc5 _start
-> (/usr/libexec/nfsrahead + 0xfc5)
->                                         ELF object binary
-> architecture: AMD x86-64
-> Mar 09 08:35:07 (udev-worker)[9115]: 8:16: Process
-> '/usr/libexec/nfsrahead 8:16' terminated by signal ABRT.
-> Mar 09 08:35:07 (udev-worker)[9115]: 8:16: Failed to wait for spawned
-> command '/usr/libexec/nfsrahead 8:16': Input/output error
-> Mar 09 08:35:07 (udev-worker)[9115]: 8:16:
-> /usr/lib/udev/rules.d/99-nfs.rules:1 PROGRAM="/usr/libexec/nfsrahead
-> %k": Failed to execute "/usr/libexec/nfsrahead 8:16": Input/output
-> error
-
-Thank you for reporting this issue and for providing such a detailed
-journal log. It is incredibly helpful in pinpointing the problem.
-
-The log points directly to an unintended side effect of the recent
-fast-path optimisation. While the new logic correctly rejects non-NFS block
-devices (such as 8:16) without blocking the udev worker, this early exit
-completely bypasses the initialisation of the device_info struct in main().
-
-Consequently, when the code jumps to the cleanup path upon exiting,
-free_device_info() attempts to free pointers containing uninitialised stack
-memory. This is what triggers the glibc abort(3) you observed during the
-tests.
-
-The fix is quite straightforward. I will shortly send a patch that
-explicitly zero-initialises the struct at its declaration:
-    struct device_info device = { 0 };
-
-This ensures all internal pointers begin as NULL, allowing the cleanup path
-to safely handle an early exit without crashing.
-
-I will Cc you on the patch once it is sent. I would appreciate it if you
-could test it against your blktests environment to confirm the issue is
-fully resolved.
-
-
-Kind regards,
--- 
-Aaron Tomlin
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
