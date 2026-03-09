@@ -1,61 +1,64 @@
-Return-Path: <linux-nfs+bounces-19884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UAegMFjVrmlhJAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19884-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:12:40 +0100
+	id kLGYKlXermm/JQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19885-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:51:01 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0A4623A529
-	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:12:39 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id D33FC23AE7F
+	for <lists+linux-nfs@lfdr.de>; Mon, 09 Mar 2026 15:51:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 164B03007A54
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 14:12:37 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 53FF5301429A
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Mar 2026 14:45:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1D93CF680;
-	Mon,  9 Mar 2026 14:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C6962737EE;
+	Mon,  9 Mar 2026 14:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctcWF/ZD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cawZ6xUu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985D63CF678;
-	Mon,  9 Mar 2026 14:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0520627A462;
+	Mon,  9 Mar 2026 14:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773065555; cv=none; b=cpocsMJTheaHZU65EjpdmkiCLpvrnz+8q01fHRsCQpj1t1AZZR2KGFML6cQzRHhOb0IHgRu7FqVhuCLCW2CtaS4OvAKfwfJarqCR2xd1MBtqaiocXyrJa9xESfrxRegw58VmlG4u+OM0mVGzxtZvZz0iAXSyfTioylthh6vkELk=
+	t=1773067543; cv=none; b=QjQoxxPgIp7sjhbJprMycLgnO467KhlTWCxNglbANMteicrt8q+wjmxT1p5NVmTwRo0q16/vmspqDfyYFDy6AngAwzCb78acVPsaHpPVkViZZjjzFddfc37WbFfKwugoM7AXOYKqiLd1teZjxZOeOe4LaXcdMXXKEo0zS/xzzps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773065555; c=relaxed/simple;
-	bh=EQOgYKFPmhDD+NDV+u/4t459Y/mlKzkysbh01evsqco=;
+	s=arc-20240116; t=1773067543; c=relaxed/simple;
+	bh=2wqsGTFQwUSQyWgwJu0JYBDsIA/zrexRXS0BfoNFkFo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tEX6PUn49ph+TM92Lp0GPndc0v6yhkLtbPkMu4by/NnTdJJQE4sZu4g78F7/PcmWGLP7UY3vZUQQY1ytHG2tuIy/27Rvn7JWzPN+L/Y3pz6c/7coA3EJ5+zKK4hd8r+ORb8rASUmePqgYHxWx49qqHBDBRBjkYKWkAYqW1FKFIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctcWF/ZD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 466EBC2BC86;
-	Mon,  9 Mar 2026 14:12:34 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iECG9/vBfqJArSge86gZZvZA0MN/A58S+ESD3uMQQPRYqU3oGtsCGInTPMfISUFgD02txPg1grLHb92sHcBskMMNqEgXtgYgKNlaYq2JMEiHZl/6lUY8ag0g8n+1PhJ8Y0M1hdXzstfiT2c4R6DtCNvXQlNxo5E4VdUWQ1S3UAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cawZ6xUu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36F1C4CEF7;
+	Mon,  9 Mar 2026 14:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773065555;
-	bh=EQOgYKFPmhDD+NDV+u/4t459Y/mlKzkysbh01evsqco=;
+	s=k20201202; t=1773067542;
+	bh=2wqsGTFQwUSQyWgwJu0JYBDsIA/zrexRXS0BfoNFkFo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ctcWF/ZDG3yl5SLxXjeE3JvvOlvlDOGWMJyvjmuL5jrInD/C/V3TPXyowOKx/fKvB
-	 F6SSG+dtHIZBSXYFzQ1BeEiHr/a123ato0By0+XquUdRSHUMqKMCj5q0K+2nLypTGu
-	 T9SV7PPTninQdbnkq4vCFdbOjnD4mLCPhWWVO0AuAh0JBI+RAoKcA0GjBdn6bhJ9Z0
-	 x3a0ju5rzWw4y93dtkEe+guVvr6Kw1bkmfKw+kwNz8l40O/eXyKZwJrmUNekpO2iI3
-	 DIS1bF1TrZBXrQzglE88cc3ZtHjoD+QkHaxyizHIyP6UIsSDbYcZ0IiMagKqjbyM9B
-	 V4U0qEImw+mNg==
-Message-ID: <c5c31ffa3557e0aab5c1a75d6ff69cb7c7806dc1.camel@kernel.org>
-Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the
- file lock list
+	b=cawZ6xUu8ZqmzRLsciYfSU0vL07nvcbwarLlpK8RIGl4iel/TZzusAyax8EsiG5LT
+	 MA6+Qz34gxy4wVhCwaYFZAcVT7Mzn5PmwTzQnPeuQyLqLAmKNX3C5w0GaRtJn8Bo7D
+	 PwrXqJaAbVeud9lL1/pHpKG+6AFi1dRDhtr46m28ejYauXHdPT1/gok4hIE9HzEgjZ
+	 gEDuLtcItJj/exko9lXcIzFkstSjbR9sfwfPfWuL8W+VSl1zP2a4l/QtKv8vrAdzN6
+	 TWmuoo/Wq5iX95hDIWF/h/A9zlOgleiEHWIJJhadH8mO0DTPe9LWPs0833Q8ga65LC
+	 bVLaDoAXGzD2Q==
+Message-ID: <938915c4cf4575960db8e2c57633dc16884bc010.camel@kernel.org>
+Subject: Re: [PATCH] sunrpc: fix TLS connect_worker rpc_clnt lifetime UAF
 From: Jeff Layton <jlayton@kernel.org>
-To: Yang Erkun <yangerkun@huawei.com>, trondmy@kernel.org, anna@kernel.org, 
-	chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yangerkun@huaweicloud.com, lilingfeng3@huawei.com,
- zhangjian496@h-partners.com, 	yi.zhang@huawei.com
-Date: Mon, 09 Mar 2026 10:12:22 -0400
-In-Reply-To: <20260226012203.3962997-1-yangerkun@huawei.com>
-References: <20260226012203.3962997-1-yangerkun@huawei.com>
+To: bsdhenrymartin@gmail.com, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>, "David S. Miller"	 <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Date: Mon, 09 Mar 2026 10:45:38 -0400
+In-Reply-To: <20260309112041.1336519-1-bsdhenrymartin@gmail.com>
+References: <20260309112041.1336519-1-bsdhenrymartin@gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,219 +142,246 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: D0A4623A529
+X-Rspamd-Queue-Id: D33FC23AE7F
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19884-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-19885-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.933];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.920];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
-> Lingfeng identified a bug and suggested two solutions, but both appear
-> to have issues.
+On Mon, 2026-03-09 at 19:19 +0800, bsdhenrymartin@gmail.com wrote:
+> From: Henry Martin <bsdhenrymartin@gmail.com>
 >=20
-> Generally, we cannot release flc_lock while iterating over the file lock
-> list to avoid use-after-free (UAF) problems with file locks. However,
-> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
-> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
-> may take a long time. To resolve this, NFS switches to using nfsi->rwsem
-> for the same protection, and nfs_reclaim_locks follows this approach.
-> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
-> this is inadequate since a single inode can have multiple nfs4_state
-> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
+> In xs_connect(), transport->clnt is assigned from task->tk_client
+> without taking a reference when a TLS connect worker is queued.
 >=20
-> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte range
-> lock must be atomic with the stateid update"), the functions
-> nfs4_locku_done and nfs4_lock_done also break this rule because they
-> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
-> this protection could cause many deadlocks, so instead, the call to
-> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
-> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
-> lock must be atomic with the stateid update"), it has been resolved
-> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly triggeri=
-ng
-> state recovery") because all slots are drained before calling
-> nfs4_do_reclaim, which prevents concurrent stateid changes along this pat=
-h.
-> Also, nfs_delegation_claim_locks does not cause this concurrency either
-> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no RPC is
-> sent, so nfs4_lock_done is not called. Therefore,
-> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the first
-> time the stateid is set.
+> If the RPC task finishes before connect_worker runs, tk_client can be
+> released and its cl_cred can be freed. Later, xs_tcp_tls_setup_socket()
+> dereferences upper_clnt->cl_cred and passes it to rpc_create(), where
+> rpc_new_client() calls get_cred() and triggers a slab-use-after-free.
 >=20
-> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
-> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-lilingfeng3@=
-huawei.com/
-> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-lilingfeng3@=
-huawei.com/
-> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic=
- with the stateid update")
-> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+> [   93.358371] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   93.359597] BUG: KASAN: slab-use-after-free in rpc_new_client+0x387/0x=
+dcc
+> [   93.360748] Write of size 4 at addr ffff88810d67bfa8 by task kworker/u=
+4:4/44
+> [   93.361919]=20
+> [   93.362225] CPU: 0 UID: 0 PID: 44 Comm: kworker/u4:4 Tainted: G       =
+          N  7.0.0-rc3 #2 PREEMPT(full)=20
+> [   93.362297] Tainted: [N]=3DTEST
+> [   93.362313] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996),=
+ BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   93.362348] Workqueue: xprtiod xs_tcp_tls_setup_socket
+> [   93.362433] Call Trace:
+> [   93.362447]  <TASK>
+> [   93.362462]  dump_stack_lvl+0xad/0xf9
+> [   93.362513]  ? rpc_new_client+0x387/0xdcc
+> [   93.362574]  print_report+0x171/0x4d6
+> [   93.362653]  ? __virt_addr_valid+0x353/0x364
+> [   93.362719]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.362784]  ? kmem_cache_debug_flags+0x11/0x26
+> [   93.362839]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.362913]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.362978]  ? kasan_complete_mode_report_info+0x1c2/0x1d1
+> [   93.363057]  ? rpc_new_client+0x387/0xdcc
+> [   93.363122]  kasan_report+0xb3/0xe2
+> [   93.363202]  ? rpc_new_client+0x387/0xdcc
+> [   93.363266]  __asan_report_store4_noabort+0x1b/0x21
+> [   93.363339]  rpc_new_client+0x387/0xdcc
+> [   93.363399]  ? __sanitizer_cov_trace_pc+0x24/0x5a
+> [   93.363451]  rpc_create_xprt+0x1ac/0x3b4
+> [   93.363519]  rpc_create+0x5f9/0x703
+> [   93.363588]  ? __pfx_rpc_create+0x10/0x10
+> [   93.363654]  ? __sanitizer_cov_trace_pc+0x24/0x5a
+> [   93.363706]  ? __pfx_default_wake_function+0x10/0x10
+> [   93.363808]  ? __dequeue_entity+0x5d2/0x6c3
+> [   93.363887]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.363952]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.364016]  ? write_comp_data+0x2e/0x8e
+> [   93.364063]  xs_tcp_tls_setup_socket+0x476/0xff0
+> [   93.364151]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.364217]  ? __pfx_xs_tcp_tls_setup_socket+0x10/0x10
+> [   93.364315]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.364386]  ? __kasan_check_write+0x18/0x1e
+> [   93.364468]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.364540]  ? set_work_data+0x70/0x9c
+> [   93.364603]  process_scheduled_works+0x66c/0xa15
+> [   93.364699]  ? __sanitizer_cov_trace_pc+0x24/0x5a
+> [   93.364763]  worker_thread+0x440/0x547
+> [   93.364867]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.364937]  ? __pfx_worker_thread+0x10/0x10
+> [   93.365024]  kthread+0x375/0x38a
+> [   93.365097]  ? __pfx_kthread+0x10/0x10
+> [   93.365185]  ret_from_fork+0xa8/0x872
+> [   93.365247]  ? __pfx_ret_from_fork+0x10/0x10
+> [   93.365309]  ? __sanitizer_cov_trace_pc+0x24/0x5a
+> [   93.365364]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [   93.365428]  ? __switch_to+0xc44/0xc5a
+> [   93.365509]  ? __pfx_kthread+0x10/0x10
+> [   93.365593]  ret_from_fork_asm+0x1a/0x30
+> [   93.365684]  </TASK>
+> [   93.365701]=20
+> [   93.405276] Allocated by task 392:
+> [   93.405852]  kasan_save_stack+0x3c/0x5e
+> [   93.406581]  kasan_save_track+0x18/0x32
+> [   93.407230]  kasan_save_alloc_info+0x3b/0x49
+> [   93.407932]  __kasan_slab_alloc+0x52/0x62
+> [   93.408606]  kmem_cache_alloc_noprof+0x266/0x304
+> [   93.409359]  prepare_creds+0x32/0x338
+> [   93.409965]  copy_creds+0x188/0x425
+> [   93.410545]  copy_process+0x1022/0x5320
+> [   93.411208]  kernel_clone+0x23d/0x61a
+> [   93.411870]  __do_sys_clone+0xf8/0x139
+> [   93.412530]  __x64_sys_clone+0xde/0xed
+> [   93.413192]  x64_sys_call+0x33f/0x2105
+> [   93.413883]  do_syscall_64+0x1b3/0x420
+> [   93.414588]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> [   93.416895]=20
+> [   93.417169] Freed by task 396:
+> [   93.417673]  kasan_save_stack+0x3c/0x5e
+> [   93.418321]  kasan_save_track+0x18/0x32
+> [   93.418972]  kasan_save_free_info+0x43/0x52
+> [   93.419652]  poison_slab_object+0x33/0x3c
+> [   93.420315]  __kasan_slab_free+0x25/0x4a
+> [   93.420973]  kmem_cache_free+0x1e5/0x2e4
+> [   93.421616]  put_cred_rcu+0x2e7/0x2f4
+> [   93.422219]  rcu_do_batch+0x5b6/0xa82
+> [   93.422833]  rcu_core+0x264/0x298
+> [   93.423475]  rcu_core_si+0x12/0x18
+> [   93.424086]  handle_softirqs+0x21c/0x488
+> [   93.424750]  __do_softirq+0x14/0x1a
+> [   93.425346]=20
+> [   93.425612] Last potentially related work creation:
+> [   93.426358]  kasan_save_stack+0x3c/0x5e
+> [   93.427024]  kasan_record_aux_stack+0x92/0x9e
+> [   93.427739]  call_rcu+0xe4/0xb2b
+> [   93.428337]  __put_cred+0x13e/0x14c
+> [   93.428937]  put_cred_many+0x50/0x5e
+> [   93.429530]  exit_creds+0x95/0xbc
+> [   93.430099]  __put_task_struct+0x173/0x26a
+> [   93.430770]  __put_task_struct_rcu_cb+0x22/0x29
+> [   93.431513]  rcu_do_batch+0x5b6/0xa82
+> [   93.432144]  rcu_core+0x264/0x298
+> [   93.432737]  rcu_core_si+0x12/0x18
+> [   93.433345]  handle_softirqs+0x21c/0x488
+> [   93.434030]  __do_softirq+0x14/0x1a
+> [   93.434632]=20
+> [   93.434910] The buggy address belongs to the object at ffff88810d67bf0=
+0
+> [   93.434910]  which belongs to the cache cred of size 184
+> [   93.436720] The buggy address is located 168 bytes inside of
+> [   93.436720]  freed 184-byte region [ffff88810d67bf00, ffff88810d67bfb8=
+)
+> [   93.438582]=20
+> [   93.438868] The buggy address belongs to the physical page:
+> [   93.439734] page: refcount:0 mapcount:0 mapping:0000000000000000 index=
+:0x0 pfn:0x10d67b
+> [   93.440982] memcg:ffff88810d67b0c9
+> [   93.441546] flags: 0x200000000000000(node=3D0|zone=3D2)
+> [   93.442327] page_type: f5(slab)
+> [   93.442878] raw: 0200000000000000 ffff88810088d140 dead000000000122 00=
+00000000000000
+> [   93.444091] raw: 0000000000000000 0000010000100010 00000000f5000000 ff=
+ff88810d67b0c9
+> [   93.445365] page dumped because: kasan: bad access detected
+> [   93.446334]=20
+> [   93.446638] Memory state around the buggy address:
+> [   93.447505]  ffff88810d67be80: 00 00 00 00 00 00 00 fc fc fc fc fc fc =
+fc fc fc
+> [   93.448748]  ffff88810d67bf00: fa fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb
+> [   93.449973] >ffff88810d67bf80: fb fb fb fb fb fb fb fc fc fc fc fc fc =
+fc fc fc
+> [   93.451147]                                   ^
+> [   93.452039]  ffff88810d67c000: fa fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb
+> [   93.453227]  ffff88810d67c080: fb fb fb fb fb fb fb fb fb fb fb fb fb =
+fc fc fc
+> [   93.454455] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   93.577640] Disabling lock debugging due to kernel taint
+> [ 1206.114037] kworker/u4:1 (26) used greatest stack depth: 24168 bytes l=
+eft
+>=20
+> Fix this by taking a client reference when queuing a TLS connect worker
+> and dropping that reference when the worker exits. Also release any
+> still-pinned client in xs_destroy() after cancel_delayed_work_sync() to
+> cover the case where queued work is canceled before execution.
+>=20
+> Fixes: 75eb6af7acdf ("SUNRPC: Add a TCP-with-TLS RPC transport class")
+> Cc: stable@vger.kernel.org # 6.5+
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 > ---
->  fs/nfs/delegation.c     |  9 ++++++++-
->  fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
->  include/linux/nfs_xdr.h |  1 -
->  3 files changed, 19 insertions(+), 13 deletions(-)
+>  net/sunrpc/xprtsock.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-> index 122fb3f14ffb..9546d2195c25 100644
-> --- a/fs/nfs/delegation.c
-> +++ b/fs/nfs/delegation.c
-> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_=
-t type)
->  static int nfs_delegation_claim_locks(struct nfs4_state *state, const nf=
-s4_stateid *stateid)
->  {
->  	struct inode *inode =3D state->inode;
-> +	struct nfs_inode *nfsi =3D NFS_I(inode);
->  	struct file_lock *fl;
->  	struct file_lock_context *flctx =3D locks_inode_context(inode);
->  	struct list_head *list;
-> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct nfs4_sta=
-te *state, const nfs4_state
->  		goto out;
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index 2e1fe6013361..6bf1cf20a86e 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -1362,6 +1362,10 @@ static void xs_destroy(struct rpc_xprt *xprt)
+>  	dprintk("RPC:       xs_destroy xprt %p\n", xprt);
 > =20
->  	list =3D &flctx->flc_posix;
-> +
-> +	/* Guard against reclaim and new lock/unlock calls */
-> +	down_write(&nfsi->rwsem);
->  	spin_lock(&flctx->flc_lock);
->  restart:
->  	for_each_file_lock(fl, list) {
-> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct nfs4_st=
-ate *state, const nfs4_state
->  			continue;
->  		spin_unlock(&flctx->flc_lock);
->  		status =3D nfs4_lock_delegation_recall(fl, state, stateid);
-> -		if (status < 0)
-> +		if (status < 0) {
-> +			up_write(&nfsi->rwsem);
->  			goto out;
-> +		}
->  		spin_lock(&flctx->flc_lock);
->  	}
->  	if (list =3D=3D &flctx->flc_posix) {
-> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct nfs4_sta=
-te *state, const nfs4_state
->  		goto restart;
->  	}
->  	spin_unlock(&flctx->flc_lock);
-> +	up_write(&nfsi->rwsem);
->  out:
->  	return status;
->  }
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 91bcf67bd743..9d6fbca8798b 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task *task, =
-void *data)
->  	switch (task->tk_status) {
->  		case 0:
->  			renew_lease(calldata->server, calldata->timestamp);
-> -			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
->  			if (nfs4_update_lock_stateid(calldata->lsp,
->  					&calldata->res.stateid))
->  				break;
-> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task *task, =
-void *calldata)
->  	case 0:
->  		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
->  				data->timestamp);
-> -		if (data->arg.new_lock && !data->cancelled) {
-> -			data->fl.c.flc_flags &=3D ~(FL_SLEEP | FL_ACCESS);
-> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
-> -				goto out_restart;
-> -		}
->  		if (data->arg.new_lock_owner !=3D 0) {
->  			nfs_confirm_seqid(&lsp->ls_seqid, 0);
->  			nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
-> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state *stat=
-e, int cmd, struct file_lock *f
->  	msg.rpc_argp =3D &data->arg;
->  	msg.rpc_resp =3D &data->res;
->  	task_setup_data.callback_data =3D data;
-> -	if (recovery_type > NFS_LOCK_NEW) {
-> -		if (recovery_type =3D=3D NFS_LOCK_RECLAIM)
-> -			data->arg.reclaim =3D NFS_LOCK_RECLAIM;
-> -	} else
-> -		data->arg.new_lock =3D 1;
-> +
-> +	if (recovery_type =3D=3D NFS_LOCK_RECLAIM)
-> +		data->arg.reclaim =3D NFS_LOCK_RECLAIM;
-> +
->  	task =3D rpc_run_task(&task_setup_data);
->  	if (IS_ERR(task))
->  		return PTR_ERR(task);
-> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state *sta=
-te, int cmd, struct file_lock
->  	up_read(&nfsi->rwsem);
->  	mutex_unlock(&sp->so_delegreturn_mutex);
->  	status =3D _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
-> +	if (status)
-> +		goto out;
-> +
-> +	down_read(&nfsi->rwsem);
-> +	request->c.flc_flags &=3D ~(FL_SLEEP | FL_ACCESS);
-> +	status =3D locks_lock_inode_wait(state->inode, request);
-> +	up_read(&nfsi->rwsem);
->  out:
->  	request->c.flc_flags =3D flags;
->  	return status;
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index ff1f12aa73d2..9599ad15c3ad 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -580,7 +580,6 @@ struct nfs_lock_args {
->  	struct nfs_lowner	lock_owner;
->  	unsigned char		block : 1;
->  	unsigned char		reclaim : 1;
-> -	unsigned char		new_lock : 1;
->  	unsigned char		new_lock_owner : 1;
->  };
+>  	cancel_delayed_work_sync(&transport->connect_worker);
+> +	if (transport->clnt !=3D NULL) {
+> +		rpc_release_client(transport->clnt);
+> +		transport->clnt =3D NULL;
+> +	}
+>  	xs_close(xprt);
+>  	cancel_work_sync(&transport->recv_worker);
+>  	cancel_work_sync(&transport->error_worker);
+> @@ -2758,6 +2762,8 @@ static void xs_tcp_tls_setup_socket(struct work_str=
+uct *work)
+>  out_unlock:
+>  	current_restore_flags(pflags, PF_MEMALLOC);
+>  	upper_transport->clnt =3D NULL;
+> +	if (upper_clnt !=3D NULL)
+> +		rpc_release_client(upper_clnt);
+>  	xprt_unlock_connect(upper_xprt, upper_transport);
+>  	return;
 > =20
+> @@ -2805,7 +2811,11 @@ static void xs_connect(struct rpc_xprt *xprt, stru=
+ct rpc_task *task)
+>  	} else
+>  		dprintk("RPC:       xs_connect scheduled xprt %p\n", xprt);
+> =20
+> -	transport->clnt =3D task->tk_client;
+> +	if (transport->connect_worker.work.func =3D=3D xs_tcp_tls_setup_socket)=
+ {
+> +		WARN_ON_ONCE(transport->clnt !=3D NULL);
+> +		refcount_inc(&task->tk_client->cl_count);
+> +		transport->clnt =3D task->tk_client;
+> +	}
+>  	queue_delayed_work(xprtiod_workqueue,
+>  			&transport->connect_worker,
+>  			delay);
 
-FWIW, I did point Claude at this too and it found no regressions. The
-commit log was a bit hard to parse, Claude's summary is here:
-
-This patch fixes a use-after-free bug in NFS file lock list traversal.
-The core problem was that nfs_delegation_claim_locks released flctx-
->flc_lock during iteration (to call nfs4_lock_delegation_recall, which
-can block on RPCs) and relied on so_delegreturn_mutex for protection =E2=80=
-=94
-but that mutex is per-state-owner, not per-inode, so multiple state
-owners on the same inode could race.                               =20
-                                                                           =
-         =20
-The fix uses nfsi->rwsem (per-inode) for proper protection, matching
-the existing pattern in nfs4_reclaim_locks. It also moves
-locks_lock_inode_wait out of RPC callbacks (nfs4_lock_done,
-nfs4_locku_done) into the synchronous caller (_nfs4_proc_setlk) so it
-can be called under nfsi->rwsem.                                     =20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
