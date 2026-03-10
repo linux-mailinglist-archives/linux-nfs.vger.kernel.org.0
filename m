@@ -1,269 +1,208 @@
-Return-Path: <linux-nfs+bounces-19904-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19905-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sOsUCRF1r2msZgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19904-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 02:34:09 +0100
+	id KG4kLOYAsGm0eQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19905-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 12:30:46 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE7FB243A72
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 02:34:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5620824AE02
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 12:30:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C7AC93020E88
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 01:34:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 90C7E32645AD
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 11:24:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E892C21F6;
-	Tue, 10 Mar 2026 01:34:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9156C3876DE;
+	Tue, 10 Mar 2026 11:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="tXGrb22+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkOoejQb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBA3175A80;
-	Tue, 10 Mar 2026 01:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689413876B0;
+	Tue, 10 Mar 2026 11:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773106445; cv=none; b=Mg8Uogyhd/KINZbP/L3PLo7/+zp3/Au5n2zIMJ7XmVtzgQHVRlzOMVd5/UcubNDj0dUWp4ZPSRWFip5ej9k1taxlQJy3thxUdjRgv6FgddjPfEYOlKBF9QI5koVywhjmPk705Y88rhDB1s8N9hW/8a/7gGVFN0/vbZnLyJY7PC8=
+	t=1773141858; cv=none; b=VeTUd4UCVxmrskyMzm87HzIkcQDWfwEELIyEPvzvjZ1z/CToxLjseW9v+5dVrxC0FspmgHKpOYBnGHonHhNYInGF6TpRY3/09ZBDNDsEQ+UforgiDsXIBUu7r+p5CxXdnNwcjB9NiEZ0c6dOD6zKDewFZT5C95Rk+QSbiaE9NP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773106445; c=relaxed/simple;
-	bh=Qoz6Ke5wVb/oUSfYpQ0xUC+o95yKooeL030cr1LnHSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aiSwgu6BPt+CEvsh47PUpgD9q6tJklPyFvhp41no2Yv2q/i/v6gjJgfuE3K13YHIcXioR2NkCsje97h26EC0JbCxmP3V8ixKnvNxWt6HR2ZbSKRPPmW2c2F0+kKshKVQojJO1oLnsv/XJsk0Elhqxspod2QlbXzLP0s4XxMMxNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=tXGrb22+; arc=none smtp.client-ip=113.46.200.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=TKRET9Ix6lH7rbTzHN+aOm5d0UIZfF0G+vhJA/+aPo4=;
-	b=tXGrb22+3q5+rttTlwLvlvfilqiDTNbJBEbyMLZnAsk7IxmRjbNFPfkH9nrlr3KNFDqvb6yvz
-	VwWxjUaXA78fMVUh/f+ZvPDdMuOyV5iAadt9Qn5uDCIk8S40sDHuL8XKkzXSCjh0KN+i8oT2nqr
-	SRysntoGUzLVGVGvxXs9QeY=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4fVGW55mBMzLlVp;
-	Tue, 10 Mar 2026 09:29:05 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3A54840561;
-	Tue, 10 Mar 2026 09:34:00 +0800 (CST)
-Received: from [10.174.176.240] (10.174.176.240) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Tue, 10 Mar 2026 09:33:59 +0800
-Message-ID: <3d7e7fa3-242f-4350-8c7f-0ea81199e16c@huawei.com>
-Date: Tue, 10 Mar 2026 09:33:59 +0800
+	s=arc-20240116; t=1773141858; c=relaxed/simple;
+	bh=xT53Ttf/NyogikS/gfdkFymB7LtDXRO0Yz6j+bwKsPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aX1r5lG+WDjqGkk0Fwqqs1hScgJi2aitgJJMRJiBwd2iN1Yn+leS1n+Ocle9dUuoq/aZRRv8QyaTfSaIqHHb0GsFiE2JNGWQHzztFTZdLlqS7cLwTQq3n+LEpqNaqTZtmSs2KQ3Ebcwg2PJ00Bj8qnW5qMgigTuTWtOeqo/7388=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkOoejQb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8497BC19423;
+	Tue, 10 Mar 2026 11:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773141858;
+	bh=xT53Ttf/NyogikS/gfdkFymB7LtDXRO0Yz6j+bwKsPU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JkOoejQbIY5sFLhLxCkOVN4kxiKJQN7lTCbiqMhI2bPYZCWqCDH0QcPHkf9E94N1P
+	 jGKWxOZDnrBvfZwk3KlNfSPE8lrfyGUmy/E8KZRXnZ3WA2W+jaNVCXVB0fdXzl2Epk
+	 xdyGfd3tLRQx0V4K/FAplurzOKD4T7ZCDXJbb1/yW+bnAtN/DEPHfz+j7RrHKIT4et
+	 mst/xUtfedv4qkVcmjou7az+d7Do3wm3dxVhtCDP9L1/BM2ZP0qghkq/jyHg4SSkSp
+	 MiB5UsygHd+YPYVvodLr6rfXKh/5Fgbcu9NvSb0LZNXu/UpDt3L4jAOcvxUwz9rzo4
+	 xluXx/3QcCvGA==
+Date: Tue, 10 Mar 2026 12:24:05 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Jeff Layton <jlayton@kernel.org>, 
+	Dorjoy Chowdhury <dorjoychy111@gmail.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, chuck.lever@oracle.com, 
+	alex.aring@gmail.com, arnd@arndb.de, adilger@dilger.ca, mjguzik@gmail.com, 
+	smfrench@gmail.com, richard.henderson@linaro.org, mattst88@gmail.com, 
+	linmag7@gmail.com, tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
+	deller@gmx.de, davem@davemloft.net, andreas@gaisler.com, idryomov@gmail.com, 
+	amarkuze@redhat.com, slava@dubeyko.com, agruenba@redhat.com, trondmy@kernel.org, 
+	anna@kernel.org, sfrench@samba.org, pc@manguebit.org, ronniesahlberg@gmail.com, 
+	sprasad@microsoft.com, tom@talpey.com, bharathsm@microsoft.com, shuah@kernel.org, 
+	miklos@szeredi.hu, hansg@kernel.org
+Subject: Re: [PATCH v5 1/4] openat2: new OPENAT2_REGULAR flag support
+Message-ID: <20260310-ausdehnen-wahrnehmen-f9d9c6224799@brauner>
+References: <20260307140726.70219-1-dorjoychy111@gmail.com>
+ <20260307140726.70219-2-dorjoychy111@gmail.com>
+ <CALCETrXVBA9uGEUdQPEZ2MVdxjLwwcWi5kzhOr1NdOWSSRaROw@mail.gmail.com>
+ <801cf2c42b80d486726ea0a3774e52abcb158100.camel@kernel.org>
+ <CALCETrVt7o+7JCMfTX3Vu9PANJJgR8hB5Z2THcXzam61kG9Gig@mail.gmail.com>
+ <20260309-umsturz-herfallen-067eb2df7ec2@brauner>
+ <CALCETrWjb+V-zrMT412MtmgDCx9y8simJBQ7+45C9MtdiSMnuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
- lock list
-To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<chuck.lever@oracle.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yangerkun@huaweicloud.com>, <lilingfeng3@huawei.com>,
-	<zhangjian496@h-partners.com>, <yi.zhang@huawei.com>
-References: <20260226012203.3962997-1-yangerkun@huawei.com>
- <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemf100006.china.huawei.com (7.202.181.220)
-X-Rspamd-Queue-Id: CE7FB243A72
+In-Reply-To: <CALCETrWjb+V-zrMT412MtmgDCx9y8simJBQ7+45C9MtdiSMnuw@mail.gmail.com>
+X-Rspamd-Queue-Id: 5620824AE02
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [3.84 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19904-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19905-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,lists.linux.dev,zeniv.linux.org.uk,suse.cz,oracle.com,arndb.de,dilger.ca,linaro.org,alpha.franken.de,hansenpartnership.com,gmx.de,davemloft.net,gaisler.com,redhat.com,dubeyko.com,samba.org,manguebit.org,microsoft.com,talpey.com,szeredi.hu];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.976];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,huawei.com:dkim,huawei.com:email,huawei.com:mid]
+	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[43];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-
-在 2026/3/9 22:09, Jeff Layton 写道:
-> On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
->> Lingfeng identified a bug and suggested two solutions, but both appear
->> to have issues.
->>
->> Generally, we cannot release flc_lock while iterating over the file lock
->> list to avoid use-after-free (UAF) problems with file locks. However,
->> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
->> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
->> may take a long time. To resolve this, NFS switches to using nfsi->rwsem
->> for the same protection, and nfs_reclaim_locks follows this approach.
->> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
->> this is inadequate since a single inode can have multiple nfs4_state
->> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
->>
->> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte range
->> lock must be atomic with the stateid update"), the functions
->> nfs4_locku_done and nfs4_lock_done also break this rule because they
->> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
->> this protection could cause many deadlocks, so instead, the call to
->> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
->> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
->> lock must be atomic with the stateid update"), it has been resolved
->> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly triggering
->> state recovery") because all slots are drained before calling
->> nfs4_do_reclaim, which prevents concurrent stateid changes along this path.
->> Also, nfs_delegation_claim_locks does not cause this concurrency either
->> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no RPC is
->> sent, so nfs4_lock_done is not called. Therefore,
->> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the first
->> time the stateid is set.
->>
->> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
->> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-lilingfeng3@huawei.com/
->> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-lilingfeng3@huawei.com/
->> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
->> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
->> ---
->>   fs/nfs/delegation.c     |  9 ++++++++-
->>   fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
->>   include/linux/nfs_xdr.h |  1 -
->>   3 files changed, 19 insertions(+), 13 deletions(-)
->>
->> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
->> index 122fb3f14ffb..9546d2195c25 100644
->> --- a/fs/nfs/delegation.c
->> +++ b/fs/nfs/delegation.c
->> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t type)
->>   static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
->>   {
->>   	struct inode *inode = state->inode;
->> +	struct nfs_inode *nfsi = NFS_I(inode);
->>   	struct file_lock *fl;
->>   	struct file_lock_context *flctx = locks_inode_context(inode);
->>   	struct list_head *list;
->> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->>   		goto out;
->>   
->>   	list = &flctx->flc_posix;
->> +
->> +	/* Guard against reclaim and new lock/unlock calls */
->> +	down_write(&nfsi->rwsem);
->>   	spin_lock(&flctx->flc_lock);
->>   restart:
->>   	for_each_file_lock(fl, list) {
->> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->>   			continue;
->>   		spin_unlock(&flctx->flc_lock);
->>   		status = nfs4_lock_delegation_recall(fl, state, stateid);
->> -		if (status < 0)
->> +		if (status < 0) {
->> +			up_write(&nfsi->rwsem);
->>   			goto out;
->> +		}
->>   		spin_lock(&flctx->flc_lock);
->>   	}
->>   	if (list == &flctx->flc_posix) {
->> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->>   		goto restart;
->>   	}
->>   	spin_unlock(&flctx->flc_lock);
->> +	up_write(&nfsi->rwsem);
->>   out:
->>   	return status;
->>   }
->> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->> index 91bcf67bd743..9d6fbca8798b 100644
->> --- a/fs/nfs/nfs4proc.c
->> +++ b/fs/nfs/nfs4proc.c
->> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
->>   	switch (task->tk_status) {
->>   		case 0:
->>   			renew_lease(calldata->server, calldata->timestamp);
->> -			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
->>   			if (nfs4_update_lock_stateid(calldata->lsp,
->>   					&calldata->res.stateid))
->>   				break;
->> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->>   	case 0:
->>   		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
->>   				data->timestamp);
->> -		if (data->arg.new_lock && !data->cancelled) {
->> -			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
->> -				goto out_restart;
->> -		}
->>   		if (data->arg.new_lock_owner != 0) {
->>   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
->>   			nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
->> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
->>   	msg.rpc_argp = &data->arg;
->>   	msg.rpc_resp = &data->res;
->>   	task_setup_data.callback_data = data;
->> -	if (recovery_type > NFS_LOCK_NEW) {
->> -		if (recovery_type == NFS_LOCK_RECLAIM)
->> -			data->arg.reclaim = NFS_LOCK_RECLAIM;
->> -	} else
->> -		data->arg.new_lock = 1;
->> +
->> +	if (recovery_type == NFS_LOCK_RECLAIM)
->> +		data->arg.reclaim = NFS_LOCK_RECLAIM;
->> +
->>   	task = rpc_run_task(&task_setup_data);
->>   	if (IS_ERR(task))
->>   		return PTR_ERR(task);
->> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
->>   	up_read(&nfsi->rwsem);
->>   	mutex_unlock(&sp->so_delegreturn_mutex);
->>   	status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
->> +	if (status)
->> +		goto out;
->> +
->> +	down_read(&nfsi->rwsem);
->> +	request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->> +	status = locks_lock_inode_wait(state->inode, request);
->> +	up_read(&nfsi->rwsem);
->>   out:
->>   	request->c.flc_flags = flags;
->>   	return status;
->> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
->> index ff1f12aa73d2..9599ad15c3ad 100644
->> --- a/include/linux/nfs_xdr.h
->> +++ b/include/linux/nfs_xdr.h
->> @@ -580,7 +580,6 @@ struct nfs_lock_args {
->>   	struct nfs_lowner	lock_owner;
->>   	unsigned char		block : 1;
->>   	unsigned char		reclaim : 1;
->> -	unsigned char		new_lock : 1;
->>   	unsigned char		new_lock_owner : 1;
->>   };
->>   
+On Mon, Mar 09, 2026 at 09:50:18AM -0700, Andy Lutomirski wrote:
+> On Mon, Mar 9, 2026 at 1:58 AM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > On Sun, Mar 08, 2026 at 10:10:05AM -0700, Andy Lutomirski wrote:
+> > > On Sun, Mar 8, 2026 at 4:40 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > > >
+> > > > On Sat, 2026-03-07 at 10:56 -0800, Andy Lutomirski wrote:
+> > > > > On Sat, Mar 7, 2026 at 6:09 AM Dorjoy Chowdhury <dorjoychy111@gmail.com> wrote:
+> > > > > >
+> > > > > > This flag indicates the path should be opened if it's a regular file.
+> > > > > > This is useful to write secure programs that want to avoid being
+> > > > > > tricked into opening device nodes with special semantics while thinking
+> > > > > > they operate on regular files. This is a requested feature from the
+> > > > > > uapi-group[1].
+> > > > > >
+> > > > >
+> > > > > I think this needs a lot more clarification as to what "regular"
+> > > > > means.  If it's literally
+> > > > >
+> > > > > > A corresponding error code EFTYPE has been introduced. For example, if
+> > > > > > openat2 is called on path /dev/null with OPENAT2_REGULAR in the flag
+> > > > > > param, it will return -EFTYPE. EFTYPE is already used in BSD systems
+> > > > > > like FreeBSD, macOS.
+> > > > >
+> > > > > I think this needs more clarification as to what "regular" means,
+> > > > > since S_IFREG may not be sufficient.  The UAPI group page says:
+> > > > >
+> > > > > Use-Case: this would be very useful to write secure programs that want
+> > > > > to avoid being tricked into opening device nodes with special
+> > > > > semantics while thinking they operate on regular files. This is
+> > > > > particularly relevant as many device nodes (or even FIFOs) come with
+> > > > > blocking I/O (or even blocking open()!) by default, which is not
+> > > > > expected from regular files backed by “fast” disk I/O. Consider
+> > > > > implementation of a naive web browser which is pointed to
+> > > > > file://dev/zero, not expecting an endless amount of data to read.
+> > > > >
+> > > > > What about procfs?  What about sysfs?  What about /proc/self/fd/17
+> > > > > where that fd is a memfd?  What about files backed by non-"fast" disk
+> > > > > I/O like something on a flaky USB stick or a network mount or FUSE?
+> > > > >
+> > > > > Are we concerned about blocking open?  (open blocks as a matter of
+> > > > > course.)  Are we concerned about open having strange side effects?
+> > > > > Are we concerned about write having strange side effects?  Are we
+> > > > > concerned about cases where opening the file as root results in
+> > > > > elevated privilege beyond merely gaining the ability to write to that
+> > > > > specific path on an ordinary filesystem?
+> >
+> > I think this is opening up a barrage of question that I'm not sure are
+> > all that useful. The ability to only open regular file isn't intended to
+> > defend against hung FUSE or NFS servers or other random Linux
+> > special-sauce murder-suicide file descriptor traps. For a lot of those
+> > we have O_PATH which can easily function with the new extension. A lot
+> > of the other special-sauce files (most anonymous inode fds) cannot even
+> > be reopened via e.g., /proc.
 > 
-> Nice work!
-> 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> On the flip side, /proc itself can certainly be opened.  Should
+> O_REGULAR be able to open the more magical /proc and /sys files?  Are
+> there any that are problematic?
 
-Hi Jeff, thanks a lot for your review!
+If procfs job isn't to provide problematic files to userspace I'm not
+sure what it is. Joking aside, I think in general you are of course
+right that procfs is full of files that under a very strict
+interpretation of "regular file" should absolutely not count as a
+regular file. sysfs probably as well and let's ignore debugfs and
+tracefs and all the other magic filesystems or files.
 
-> 
-> 
+In general, Linux has been so loosey-goosey with "regular file" for such
+a long-time that making OPENAT2_REGULAR come up with some strict
+definition of "this is a regular file - no really, pinky-promise a
+regular one" - is just doomed to fail.
 
+The other problem is that we cannot reasonably determine what odd file
+the user really wanted to defend against opening with OPENAT2_REGULAR.
+A caller may really want to open /proc/kmsg and just be sure that
+someone didn't overmount it with a fifo (systemd does that in containers
+iirc).
+
+My personal "hot take" is that adding an api built around a regular file
+with immediate irreversible side-effects for the caller on VFS
+syscall-based open [1] is a bug. Such broken semantics is what ioctl()s
+are for.
+
+[1]: I mean specifically open(), openat2() etc. I'm excluding all
+     dedicated APIs that return file descriptors that cannot be reopened
+     via regular lookup.
+
+From my pov, what would help is if one had a flexible way to scope opens
+on e.g., filesystem. But imo, that is not policy the kernel can
+reasonably express at the syscall api layer - it would look fugly as
+hell and how many other knobs would we have to add to satisfy all needs.
+I think that is best left to an lsm hooking into security_file_open()
+which can maintain a map of files and filesystems to allow or deny - a
+bpf lsm can do this quite nicely.
 
