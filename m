@@ -1,51 +1,52 @@
-Return-Path: <linux-nfs+bounces-19969-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19970-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GI/KOM0isGlhgQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19969-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 14:55:25 +0100
+	id qKDSOYsisGkkgQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19970-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 14:54:19 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F21EA250FFE
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 14:55:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15C09250F94
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 14:54:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0A809315F4A4
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 12:58:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CC03E33252ED
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 12:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21BBE3C455C;
-	Tue, 10 Mar 2026 12:23:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE9C03C3448;
+	Tue, 10 Mar 2026 12:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USBW0I5R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkez07Tl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA31C3BD231;
-	Tue, 10 Mar 2026 12:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B1B3B9DA0;
+	Tue, 10 Mar 2026 12:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773145389; cv=none; b=i5eB2nZCPYrf28XlM/gWKg7DIIzAzgB537xGOSPzrwDstO8p/IDDFpTfPOpqP3fxCxHcpFdq/nFmzpS09V3ReaQ0X1tW9E50iSI56hJcW2cUySmQwAxKVBNn7CNrfNEaqaCs7SsqrMX73n8KQg1cG9jQ0bCetD9nJ+9xIGUprgI=
+	t=1773145413; cv=none; b=A5IMII5AxxkfGQuSYr+7muVeTCh2QDjGYw8vpdfiLwUwFWGFnEWbxTIClOpC9I8caB7psB9MTjHsMnzMsvswVQDwJTukFLxoYL7StmBbyjFTmzvHIF8Wkn0peO62byA3jmPA9Z11llOxaqldoFQrvaNeG6bJ1WAjqlLXXGmAwo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773145389; c=relaxed/simple;
-	bh=GC3Sg9J7xD8kIPv5UD36basFOlkNvWWf+dL0gpcN4gs=;
+	s=arc-20240116; t=1773145413; c=relaxed/simple;
+	bh=dKSFFzRnVfNET7rWuE5Oko4JdMIW5clek3Ra8qeLWt0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MyQWJkFdrlXY7mgKMSQn0Zdt/fEPoBa4dTtSAhU5H0clPTVmyjoXXYhbvz6L/vDXSP3+nnsWvFjfLxRI5U5jPe4r3huaXasjutyVgWNWwt0/lbRcOmUyKFIKAoo5zOnyhEhIyQUUNu2P5cJ6sVtFjHxx6uM3K+ieMcJ0v9doe9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USBW0I5R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C6FC19423;
-	Tue, 10 Mar 2026 12:23:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Tvu+3sBL8hmaPMkTpe4bZY4OHGPWB3daqTlabcAZFxjC0nQMPriUzI5b4dwhtI5nYIKkY3/ssnz4ZhOy4uOlqQMzsAa4xXT0cAOOq4FMquhvfWETA5JcwxAN4hCZhgj2Q/ynVa/Vzb42iw9J21sQq4BT1LDMyCdp41qa01x7trA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkez07Tl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10E4C19423;
+	Tue, 10 Mar 2026 12:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773145389;
-	bh=GC3Sg9J7xD8kIPv5UD36basFOlkNvWWf+dL0gpcN4gs=;
+	s=k20201202; t=1773145413;
+	bh=dKSFFzRnVfNET7rWuE5Oko4JdMIW5clek3Ra8qeLWt0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=USBW0I5R1IRmIxXZQ4igYISdfUhrLNnzBamW3ly9QC3INE+BegS2zslKhDKzhXDG7
-	 fKMU7RIbXNpol1PHCzCb5aV7jzNo2emhRzvTpOYCvay1rk9VpMjF/PBmugESDxkXYL
-	 S0eTx6lMzIbdUYaaQJ7wmSE0g/aO76gzcuT07juTvznRsdelMLPOv9tAcL33MuZDV4
-	 MJfe/XfyamWxe2yqSYGMcVQ926M3F363GVs0b2nOXa4FFqyaQNv/s+Jdn7Lo043fzU
-	 f7A0IS8nsfHXq1XpvhuTTXROF4mFHi4SpARL1EaftIE0z7e8v+uGDZL5stw1zyUhEs
-	 3V3NLgotla0yg==
-Message-ID: <2ff39929dad06ca7d009ccd6dfe873da22a07c8a.camel@kernel.org>
-Subject: Re: [PATCH 61/61] file: Drop unlikely() around IS_ERR_OR_NULL()
+	b=fkez07TlE1bfdj9q72lfPh33xZUWj92R+6N34570wM83IJULMKkc+t1NI+NIthPJ8
+	 udd0+wDsOsLyEYtc2rUq6c/04oYHs4Ijd8GvgL72KdgHcTTjuge6542A67j9ng4nMs
+	 ibR7d2V6NwLDyu/uVXWq0145yHAFZxvc42G+2L2+sUZ3uktv+EclNSS20uQ7swL0HP
+	 LWOaDsIKcth0kzayTnUnDFQv7L72QnV4UUeRrzt36Vk9ZcP+WXEjov00vhjcxe3Gp8
+	 CPc1GnWeA6B7VfYAg6uLBaadmh06wX7OXgaehJVXZ7xVcjj32thXyrmbMa6Rym7GyL
+	 HCCmPdJG4zvRQ==
+Message-ID: <d97c4fd76d7b7fc8b38d3bb4e4ed700b1003ecba.camel@kernel.org>
+Subject: Re: [PATCH 30/61] net/sunrpc: Prefer IS_ERR_OR_NULL over manual
+ NULL check
 From: Jeff Layton <jlayton@kernel.org>
 To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org, 
 	apparmor@lists.ubuntu.com, bpf@vger.kernel.org, ceph-devel@vger.kernel.org,
@@ -73,11 +74,16 @@ To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
  ntfs3@lists.linux.dev, 	samba-technical@lists.samba.org,
  sched-ext@lists.linux.dev, 	target-devel@vger.kernel.org,
  tipc-discussion@lists.sourceforge.net, 	v9fs@lists.linux.dev
-Cc: Christian Brauner <brauner@kernel.org>
-Date: Tue, 10 Mar 2026 08:23:01 -0400
-In-Reply-To: <20260310-b4-is_err_or_null-v1-61-bd63b656022d@avm.de>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>,  Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>,  Simon Horman <horms@kernel.org>
+Date: Tue, 10 Mar 2026 08:23:26 -0400
+In-Reply-To: <20260310-b4-is_err_or_null-v1-30-bd63b656022d@avm.de>
 References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-	 <20260310-b4-is_err_or_null-v1-61-bd63b656022d@avm.de>
+	 <20260310-b4-is_err_or_null-v1-30-bd63b656022d@avm.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -161,69 +167,110 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: F21EA250FFE
+X-Rspamd-Queue-Id: 15C09250F94
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-19969-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19970-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[55];
+	RCPT_COUNT_GT_50(0.00)[66];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,oracle.com:email,talpey.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Tue, 2026-03-10 at 12:49 +0100, Philipp Hahn wrote:
-> IS_ERR_OR_NULL() already uses likely(!ptr) internally. checkpatch does
-> not like nesting it:
-> > WARNING: nested (un)?likely() calls, IS_ERR_OR_NULL already uses
-> > unlikely() internally
-> Remove the explicit use of unlikely().
+On Tue, 2026-03-10 at 12:48 +0100, Philipp Hahn wrote:
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
 >=20
 > Change generated with coccinelle.
 >=20
-> To: Christian Brauner <brauner@kernel.org>
+> To: Trond Myklebust <trondmy@kernel.org>
+> To: Anna Schumaker <anna@kernel.org>
+> To: Chuck Lever <chuck.lever@oracle.com>
 > To: Jeff Layton <jlayton@kernel.org>
+> To: NeilBrown <neil@brown.name>
+> To: Olga Kornievskaia <okorniev@redhat.com>
+> To: Dai Ngo <Dai.Ngo@oracle.com>
+> To: Tom Talpey <tom@talpey.com>
+> To: "David S. Miller" <davem@davemloft.net>
+> To: Eric Dumazet <edumazet@google.com>
+> To: Jakub Kicinski <kuba@kernel.org>
+> To: Paolo Abeni <pabeni@redhat.com>
+> To: Simon Horman <horms@kernel.org>
+> Cc: linux-nfs@vger.kernel.org
+> Cc: netdev@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
 > Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 > ---
->  include/linux/file.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index 27484b444d3155685cdbb89f546f26ef66e3e1b4..007b9b9d365a052c1c056e125=
-71eaf4f8ef5a45c 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -163,7 +163,7 @@ static inline void class_fd_prepare_destructor(const =
-struct fd_prepare *fdf)
->  {
->  	if (unlikely(fdf->__fd >=3D 0))
->  		put_unused_fd(fdf->__fd);
-> -	if (unlikely(!IS_ERR_OR_NULL(fdf->__file)))
-> +	if (!IS_ERR_OR_NULL(fdf->__file))
->  		fput(fdf->__file);
->  }
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrd=
+ma/svc_rdma_transport.c
+> index 9b623849723ed0eb74b827881c6f32d3434c891b..b4d03e59a8202f20360cff1e2=
+e79b1e325396517 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> @@ -578,7 +578,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xp=
+rt *xprt)
+>   errout:
+>  	/* Take a reference in case the DTO handler runs */
+>  	svc_xprt_get(&newxprt->sc_xprt);
+> -	if (newxprt->sc_qp && !IS_ERR(newxprt->sc_qp))
+> +	if (!IS_ERR_OR_NULL(newxprt->sc_qp))
+>  		ib_destroy_qp(newxprt->sc_qp);
+>  	rdma_destroy_id(newxprt->sc_cm_id);
+>  	rpcrdma_rn_unregister(dev, &newxprt->sc_rn);
+> @@ -608,7 +608,7 @@ static void svc_rdma_free(struct svc_xprt *xprt)
+>  	might_sleep();
 > =20
+>  	/* This blocks until the Completion Queues are empty */
+> -	if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
+> +	if (!IS_ERR_OR_NULL(rdma->sc_qp))
+>  		ib_drain_qp(rdma->sc_qp);
+>  	flush_workqueue(svcrdma_wq);
+> =20
+> @@ -619,16 +619,16 @@ static void svc_rdma_free(struct svc_xprt *xprt)
+>  	svc_rdma_recv_ctxts_destroy(rdma);
+> =20
+>  	/* Destroy the QP if present (not a listener) */
+> -	if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
+> +	if (!IS_ERR_OR_NULL(rdma->sc_qp))
+>  		ib_destroy_qp(rdma->sc_qp);
+> =20
+> -	if (rdma->sc_sq_cq && !IS_ERR(rdma->sc_sq_cq))
+> +	if (!IS_ERR_OR_NULL(rdma->sc_sq_cq))
+>  		ib_free_cq(rdma->sc_sq_cq);
+> =20
+> -	if (rdma->sc_rq_cq && !IS_ERR(rdma->sc_rq_cq))
+> +	if (!IS_ERR_OR_NULL(rdma->sc_rq_cq))
+>  		ib_free_cq(rdma->sc_rq_cq);
+> =20
+> -	if (rdma->sc_pd && !IS_ERR(rdma->sc_pd))
+> +	if (!IS_ERR_OR_NULL(rdma->sc_pd))
+>  		ib_dealloc_pd(rdma->sc_pd);
+> =20
+>  	/* Destroy the CM ID */
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
