@@ -1,61 +1,59 @@
-Return-Path: <linux-nfs+bounces-20004-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20005-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2IwMBylhsGloigIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20004-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:21:29 +0100
+	id OJ5pAUFhsGloigIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20005-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:21:53 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ADF0256574
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:21:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 745BF25657C
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:21:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2D28F31825F6
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 18:18:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2820B3031CE5
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 18:19:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B172E27816C;
-	Tue, 10 Mar 2026 18:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65015295DAC;
+	Tue, 10 Mar 2026 18:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1kxkxfp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoJ/Dpr0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D369261B9E
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 18:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4056621E098
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 18:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773166688; cv=none; b=ER4341oWTGCjN9h4euIEzqYtMa4NNkhG4uhvGWKcGval0l3VdApfLXyZMB8iJCnHLGKjfS3YH01gONdas+0IDGF5IUnsVpRhMu5ZLgA0HdpwOJzYbYOxnQHCCr2yM9PWAWkBIejR/aPwxWXPexsFeE2NlXzVjSO9XdoHmNfb1iU=
+	t=1773166792; cv=none; b=DLmdhcxoCMEATuAhIF/J86dSxwpiLBXx65AOBuUKwYq9KYUD8OTrRV3/nPR7lTzEEAP8WcRHPFgNnIqB8o5APG95L2FnbDUP5d5AmK+PgGLtLH1tXsvPgZQ/X6ZCfs8gBEJ1TXjhGr1Fq6uYGjnPBSThKgQU0JB0SThwnFgK7WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773166688; c=relaxed/simple;
-	bh=calE2aKXukq/udCoH2552ZrG8B1tn0eIBCI/MvlqZZM=;
+	s=arc-20240116; t=1773166792; c=relaxed/simple;
+	bh=ExqHSgsZgm9l7gxw6VZxDGncKwnIV7nH3xjdm5/+zSc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y6rOY3G9eH9irBFCXarHNCjm/Am8ozIbBsvbk0BM+WYRpRNGb3nuhKXsAx9RkhnRIZfUSqyShxw4b6pUU7e5tcckTveKaKCP/TZs/byn2FOGGttxN5W1NWPvrxEhpr/mRbKPG6oSsVhRkThY0bQZeklEsodEq4YlK9qI57We3lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1kxkxfp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEFAC19423;
-	Tue, 10 Mar 2026 18:18:07 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Gg9ANFn9iSRPF3pYhP+mrWkFDxw2ig5z2QxIaiMbjv5tFLUo6qWv/xKYFA4iZnudg+cOAkU7QHiucuDmM81ZPDG533H55gBdQfOsOR01iZ6IxeD19SDc5JxdmU0m+WI/bwQ6yVA5ZjKw/IDzs4Xo4FfRz/LVyAfAbdOTwrw5Jok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoJ/Dpr0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38848C19423;
+	Tue, 10 Mar 2026 18:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773166688;
-	bh=calE2aKXukq/udCoH2552ZrG8B1tn0eIBCI/MvlqZZM=;
+	s=k20201202; t=1773166791;
+	bh=ExqHSgsZgm9l7gxw6VZxDGncKwnIV7nH3xjdm5/+zSc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=D1kxkxfpnQwPj1T0YeNWJhPZDuE3mNMBQJd72UKV9RYIXciZ960kBM3OzkfHuDUne
-	 uL+KC2zn5TvHBlHpcDLnu0ZKIMAOM1IbSBO5Jg2ALRyHIYKOSToomXn1rCVvZmD7ao
-	 6u/y5Ax0xKkzsgcp8xt7/PdbSnHXH9Sz1vYcq6KBcpnaVyNlCaYFFOn1Kr7WIumuC0
-	 PkLe9Ym6RUvYXgflv0jttaecyrUmxegKST9HjrdYNz/a2XbebXDS93AvfLb+WL7vAP
-	 PNUwXzYCVHdN6YIuakmNyaCI5iBfnj5GJjvdXBT/BVKuGyNK8VVgnnE42T4uHv8QZb
-	 /4BpdkQFeSiNw==
-Message-ID: <55dcd6100b395ddda26d1f6bae001c02ed928507.camel@kernel.org>
-Subject: Re: [PATCH v2 6/6] SUNRPC: Optimize rq_respages allocation in
- svc_alloc_arg
+	b=FoJ/Dpr0mlS9cb4WkrfD4iMib9L7TgflLZLA1FPRjofYqH7FYy1XkTuzk5XfJYPr2
+	 7mUqtSzZNzAZkiqKHXFGtRw+WaR5ooCR8v3LyVR222sz6P+5bcPAPU719JGO6h8wy7
+	 XIV86t41KZLq9pk+2trps8Icb6/FG2PYHzfSmEO3zEUNP6weV2oW/jOU4J5oiMsIFy
+	 yI4LFrbZdKZMdD2b1HU+QEYjigxwwGI8/vaQq6dsvTYuebPn/sln4i/DN5B6qq7QLz
+	 JvhfxArLZ/gkr0d+sOSSVYwwMB6+SA5ACpPk2MhhPCDmX8+GjKnY8NhHx7DnWK2Pxf
+	 FS0S6Uh9IaCKQ==
+Message-ID: <2496d230c2cc7abf8941927bb8e7bd944127a769.camel@kernel.org>
+Subject: Re: [PATCH v2 0/6] Optimize NFSD buffer page management
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 10 Mar 2026 14:18:05 -0400
-In-Reply-To: <20260226144739.193129-7-cel@kernel.org>
+Date: Tue, 10 Mar 2026 14:19:48 -0400
+In-Reply-To: <20260226144739.193129-1-cel@kernel.org>
 References: <20260226144739.193129-1-cel@kernel.org>
-	 <20260226144739.193129-7-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,7 +137,7 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 5ADF0256574
+X-Rspamd-Queue-Id: 745BF25657C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -149,7 +147,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20004-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20005-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
@@ -173,78 +171,70 @@ X-Rspamd-Action: no action
 On Thu, 2026-02-26 at 09:47 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> svc_alloc_arg() invokes alloc_pages_bulk() with the full rq_maxpages
-> count (~259 for 1MB messages) for the rq_respages array, causing a
-> full-array scan despite most slots holding valid pages.
+> This series solves two problems. First:
 >=20
-> svc_rqst_release_pages() NULLs only the range
+>  NFSv3 operations have complementary Request and Response sizes.
+>  When a Request message is large, the corresponding Response
+>  message is small, and vice versa. The sum of the two message
+>  sizes is never more than the maximum transport payload size. So
+>  NFSD could get away with maintaining a single array of pages,
+>  split between the RPC send and Receive buffer.
 >=20
->   [rq_respages, rq_next_page)
+>  NFSv4 is not as cut and dried. An NFSv4 client may construct an
+>  NFSv4 COMPOUND that is arbitrarily complex, mixing operations
+>  that can have large Request size with operations that have a
+>  large Response size. The resulting server-side buffer size
+>  requirement can be larger than the maximum transport payload size.
 >=20
-> after each RPC, so only that range contains NULL entries. Limit the
-> rq_respages fill in svc_alloc_arg() to that range instead of
-> scanning the full array.
+>  Therefore we must increase the allocated RPC Call landing zone and
+>  the RPC Reply construction zone to ensure that arbitrary NFSv4
+>  COMPOUNDs can be handled.
 >=20
-> svc_init_buffer() initializes rq_next_page to span the entire
-> rq_respages array, so the first svc_alloc_arg() call fills all
-> slots.
+> Second:
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>  Due to the above, and because NFSD can now handle payload sizes
+>  considerably larger than 1MB, the number of array entries that
+>  alloc_bulk_pages() walks through to reset the rqst page arrays
+>  after each RPC completes has increased dramatically.
+>=20
+>  But we observe that the mean size of NFS requests remains smaller
+>  than a few pages. If only a few pages are consumed while processing
+>  each RPC, then traversing all of the pages in the page arrays for
+>  refills is wasted effort. The CPU cost of walking these arrays is
+>  noticeable in "perf" captures.
+>=20
+>  It would be more efficient to keep track of which entries need to
+>  be refilled, since that is likely to be a small number in the most
+>  common case, and use alloc_bulk_pages() to fill only those entries.
+> =20
 > ---
->  include/linux/sunrpc/svc.h | 4 ++++
->  net/sunrpc/svc.c           | 1 +
->  net/sunrpc/svc_xprt.c      | 8 +++++++-
->  3 files changed, 12 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index b5a842dd97a4..7315c529f88a 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -152,6 +152,10 @@ extern u32 svc_max_payload(const struct svc_rqst *rq=
-stp);
->   * still in transport use, and set rq_pages_nfree to the count.
->   * svc_alloc_arg() refills only that many rq_pages entries.
->   *
-> + * For rq_respages, svc_rqst_release_pages() NULLs entries in
-> + * [rq_respages, rq_next_page) after each RPC. svc_alloc_arg()
-> + * refills only that range.
-> + *
->   * xdr_buf holds responses; the structure fits NFS read responses
->   * (header, data pages, optional tail) and enables sharing of
->   * client-side routines.
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 6e57e35fa6d6..5e0b5ec2fd52 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -656,6 +656,7 @@ svc_init_buffer(struct svc_rqst *rqstp, const struct =
-svc_serv *serv, int node)
->  	}
-> =20
->  	rqstp->rq_pages_nfree =3D rqstp->rq_maxpages;
-> +	rqstp->rq_next_page =3D rqstp->rq_respages + rqstp->rq_maxpages;
->  	return true;
->  }
-> =20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index 795b5729525f..b16e710926c1 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -686,8 +686,14 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->  		rqstp->rq_pages_nfree =3D 0;
->  	}
-> =20
-> -	if (!svc_fill_pages(rqstp, rqstp->rq_respages, pages))
-> +	if (WARN_ON_ONCE(rqstp->rq_next_page < rqstp->rq_respages))
->  		return false;
-> +	nfree =3D rqstp->rq_next_page - rqstp->rq_respages;
-> +	if (nfree) {
-> +		if (!svc_fill_pages(rqstp, rqstp->rq_respages, nfree))
-> +			return false;
-> +	}
-> +
->  	rqstp->rq_next_page =3D rqstp->rq_respages;
->  	rqstp->rq_page_end =3D &rqstp->rq_respages[pages];
->  	/* svc_rqst_replace_page() dereferences *rq_next_page even
+> Changes since RFC:
+> - Clarify a number of comments based on review (NeilBrown)
+> - Possible NFSv3 waste is still open for discussion
+>=20
+> Chuck Lever (6):
+>   SUNRPC: Tighten bounds checking in svc_rqst_replace_page
+>   SUNRPC: Allocate a separate Reply page array
+>   SUNRPC: Handle NULL entries in svc_rqst_release_pages
+>   svcrdma: preserve rq_next_page in svc_rdma_save_io_pages
+>   SUNRPC: Track consumed rq_pages entries
+>   SUNRPC: Optimize rq_respages allocation in svc_alloc_arg
+>=20
+>  include/linux/sunrpc/svc.h              | 61 +++++++++++++++----------
+>  net/sunrpc/svc.c                        | 59 +++++++++++++++++-------
+>  net/sunrpc/svc_xprt.c                   | 47 +++++++++++++++----
+>  net/sunrpc/svcsock.c                    |  7 +--
+>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 15 ++----
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c       |  1 +
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c   |  6 +--
+>  7 files changed, 125 insertions(+), 71 deletions(-)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+The patches all look good to me. I like getting rid of the old "sliding
+window", which was error prone. The extra memory consumption sort of
+sucks, but an extra 1M per thread should be no big deal for most nfsd
+deployments.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
