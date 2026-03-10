@@ -1,61 +1,60 @@
-Return-Path: <linux-nfs+bounces-20002-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20003-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLKfBQdgsGloigIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20002-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:16:39 +0100
+	id ABqzGfRfsGloigIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20003-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:16:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 972262564A4
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:16:38 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE9D025648E
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 19:16:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 424EA31685FE
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 18:13:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 395023006111
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 18:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21D1314D08;
-	Tue, 10 Mar 2026 18:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF66621A92F;
+	Tue, 10 Mar 2026 18:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwvQiHyv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNbGMZNc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE412D8762
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 18:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEDB175A7B
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 18:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773166422; cv=none; b=IiqO3M3+zwadedpP0kjS79V53AMh3Nv7uaJwq25enY1cHcvJGVyksyCk8FkPzFgGaiJcB1ImD/tJ8BmjlEEMUfnhB3jegXYugz8jroGM3D9gwWy77H3enIlhlW+1rt9n4gVq85ojF31b+P0xCcz80Hj3GEr1qqUbZDfYhmbmI/o=
+	t=1773166576; cv=none; b=U0nFc3vsSz2ZStGV06B2OBRxcMC9mjZhUb1cWWnAdFiPoBYJGuyG0e84Y4lm7sy/a0PnD/W5rbXNFF/5Tp3nqJmC+IQ7y+dsPoheIROLJaPfUXzj7aWPH2hNiAQ2je1R7vtrgUbKCKTlTVbWC3yl7B8OCZ9urG+rZ7OFHlpLVxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773166422; c=relaxed/simple;
-	bh=ZaWrV6ybpOnE+IdeU3UWwtakD61XbdEAuPiXcGvUbx4=;
+	s=arc-20240116; t=1773166576; c=relaxed/simple;
+	bh=TLGfOoOFHLjZQ0w5+WPp8K8IHfTGkY++B2IiKUDXLMs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tecnqPvND2Y/dysERXxw8XOcb3sKtEcztQF1tFNtBEhtyejyH/UBxxBRG7hdf5jd8Q2tTvXjQGKeI/2akPmEDq5PNWnJcxDPiTlUgHhY+URBOp9R5rl4LK6PCb49EbEd1+IiOUpExEcTmKwrK7pjAghusZJHrzjou40YRPpCh4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwvQiHyv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94FBFC19425;
-	Tue, 10 Mar 2026 18:13:41 +0000 (UTC)
+	 Content-Type:MIME-Version; b=rcmKu9Fi9dXM45shpjnngGEarN7BTHwejEktL1o/cxBiVgjUlIBW0v+J9oU3sLXTYq6U7nplH9alCdYJg0BlnM+do5v1ZYIiOSvMEFVAvg3GQqBIl87xY/FNIAdRTY4oUgzlYGisdCDjnOLA5Beo6U7lxh6Q8iuBD77n2CxcvKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNbGMZNc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F369DC19423;
+	Tue, 10 Mar 2026 18:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773166422;
-	bh=ZaWrV6ybpOnE+IdeU3UWwtakD61XbdEAuPiXcGvUbx4=;
+	s=k20201202; t=1773166576;
+	bh=TLGfOoOFHLjZQ0w5+WPp8K8IHfTGkY++B2IiKUDXLMs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=UwvQiHyvejqc5Z4P4V9qzuUY4+KAN/AaWNKlvk+k88X47Tu23GeAflVSin3x1jxXZ
-	 SJ/iJ5OMpZsI1ZWFa7QSKfwe7wHzLBO+6HMmj/KP1AzLcG1fgValz+QLuqicGwR2/g
-	 uPCa4afFrRgora5CP2zDg67Zs+P5K+Sfdohy7ILeiV4Ltn2OG5gQO+tblkOCwxGvml
-	 TFbv5tXkm7pKgCvrD7fy+EkYWYNS8mB+HmkSfcDmbzxocpEOE/VNJrnUbTG4OSDfLm
-	 ULSXeSDCc/JfW8z9aRD/UAWa/8UDq8EpdqLVOmI+JrUu4pNZWX2ebKC2yNFYqaMM6y
-	 WBiPTVQSFjPqg==
-Message-ID: <5f7049460ba843855e8469cbc2fe4d2d1b2a343f.camel@kernel.org>
-Subject: Re: [PATCH v2 4/6] svcrdma: preserve rq_next_page in
- svc_rdma_save_io_pages
+	b=bNbGMZNckQAGwGqska982lwfH9T0vihKjykk9SJyPTwdZu/lIpRY17QpXfMpBfdaF
+	 lw0srFhlCOBvNEpLYNKvNVlnZnQqfOIfa0WD/mSesIlcd3ykIdPPAn2NVt1NGDNNTg
+	 QX/k2rMDM5I/KSkUDQZUxQZNioA+cuNzMWIBtaunbXBdzuc3yHxsQQfcjC3prBGb76
+	 VUON90fvAQgvmHO3e1KrRMrCpXcuGPeH5B/9ieOs/hA6oVzSQzqJ3qsxskgUmGPhGe
+	 STv5tSy2cPW7fpjrQKAsYkgct/1Tix9csMhdnVn7wSxMqR0TNtF8yQEatDVDmXaETn
+	 6XhBGk1/j9LSQ==
+Message-ID: <5fc627e55db806a8b29e9c0c0638e5801105e820.camel@kernel.org>
+Subject: Re: [PATCH v2 5/6] SUNRPC: Track consumed rq_pages entries
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 10 Mar 2026 14:13:38 -0400
-In-Reply-To: <20260226144739.193129-5-cel@kernel.org>
+Date: Tue, 10 Mar 2026 14:16:13 -0400
+In-Reply-To: <20260226144739.193129-6-cel@kernel.org>
 References: <20260226144739.193129-1-cel@kernel.org>
-	 <20260226144739.193129-5-cel@kernel.org>
+	 <20260226144739.193129-6-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,17 +138,17 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 972262564A4
+X-Rspamd-Queue-Id: BE9D025648E
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20002-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20003-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
@@ -159,62 +158,143 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
 On Thu, 2026-02-26 at 09:47 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> svc_rdma_save_io_pages() transfers response pages to the send
-> context and sets those slots to NULL. It then resets rq_next_page to
-> equal rq_respages, hiding the NULL region from
-> svc_rqst_release_pages().
+> The rq_pages array holds pages allocated for incoming RPC requests.
+> Two transport receive paths NULL entries in rq_pages to prevent
+> svc_rqst_release_pages() from freeing pages that the transport has
+> taken ownership of:
 >=20
-> Now that svc_rqst_release_pages() handles NULL entries, this reset
-> is no longer necessary. Removing it preserves the invariant that the
-> range [rq_respages, rq_next_page) accurately describes how many
-> response pages were consumed, enabling a subsequent optimization in
-> svc_alloc_arg() that refills only the consumed range.
+> - svc_tcp_save_pages() moves partial request data pages to
+>   svsk->sk_pages during multi-fragment TCP reassembly.
+>=20
+> - svc_rdma_clear_rqst_pages() moves request data pages to
+>   head->rc_pages because they are targets of active RDMA Read WRs.
+>=20
+> A new rq_pages_nfree field in struct svc_rqst records how many
+> entries were NULLed. svc_alloc_arg() uses it to refill only those
+> entries rather than scanning the full rq_pages array. In steady
+> state, the transport NULLs a handful of entries per RPC, so the
+> allocator visits only those entries instead of the full ~259 slots
+> (for 1MB messages).
 >=20
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  include/linux/sunrpc/svc.h        | 10 ++++++++++
+>  net/sunrpc/svc.c                  |  1 +
+>  net/sunrpc/svc_xprt.c             | 11 ++++++++---
+>  net/sunrpc/svcsock.c              |  1 +
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c |  1 +
+>  5 files changed, 21 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/=
-svc_rdma_sendto.c
-> index 914cd263c2f1..17c8429da9d5 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-> @@ -858,7 +858,8 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
-> =20
->  /* The svc_rqst and all resources it owns are released as soon as
->   * svc_rdma_sendto returns. Transfer pages under I/O to the ctxt
-> - * so they are released by the Send completion handler.
-> + * so they are released only after Send completion, and not by
-> + * svc_rqst_release_pages().
->   */
->  static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
->  				   struct svc_rdma_send_ctxt *ctxt)
-> @@ -870,9 +871,6 @@ static void svc_rdma_save_io_pages(struct svc_rqst *r=
-qstp,
->  		ctxt->sc_pages[i] =3D rqstp->rq_respages[i];
->  		rqstp->rq_respages[i] =3D NULL;
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 3559de664f64..b5a842dd97a4 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -143,6 +143,15 @@ extern u32 svc_max_payload(const struct svc_rqst *rq=
+stp);
+>   * server thread needs to allocate more to replace those used in
+>   * sending.
+>   *
+> + * rq_pages request page contract:
+> + *
+> + * Transport receive paths that move request data pages out of
+> + * rq_pages -- TCP multi-fragment reassembly (svc_tcp_save_pages)
+> + * and RDMA Read I/O (svc_rdma_clear_rqst_pages) -- NULL those
+> + * entries to prevent svc_rqst_release_pages() from freeing pages
+> + * still in transport use, and set rq_pages_nfree to the count.
+> + * svc_alloc_arg() refills only that many rq_pages entries.
+> + *
+>   * xdr_buf holds responses; the structure fits NFS read responses
+>   * (header, data pages, optional tail) and enables sharing of
+>   * client-side routines.
+> @@ -201,6 +210,7 @@ struct svc_rqst {
+>  	struct folio		*rq_scratch_folio;
+>  	struct xdr_buf		rq_res;
+>  	unsigned long		rq_maxpages;	/* entries per page array */
+> +	unsigned long		rq_pages_nfree;	/* rq_pages entries NULLed by transport =
+*/
+>  	struct page *		*rq_pages;	/* Call buffer pages */
+>  	struct page *		*rq_respages;	/* Reply buffer pages */
+>  	struct page *		*rq_next_page; /* next reply page to use */
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 0ce16e9abdf6..6e57e35fa6d6 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -655,6 +655,7 @@ svc_init_buffer(struct svc_rqst *rqstp, const struct =
+svc_serv *serv, int node)
+>  		return false;
 >  	}
-> -
-> -	/* Prevent svc_xprt_release from releasing pages in rq_pages */
-> -	rqstp->rq_next_page =3D rqstp->rq_respages;
+> =20
+> +	rqstp->rq_pages_nfree =3D rqstp->rq_maxpages;
+>  	return true;
 >  }
 > =20
->  /* Prepare the portion of the RPC Reply that will be transmitted
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index e027765f4307..795b5729525f 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -675,12 +675,17 @@ static bool svc_fill_pages(struct svc_rqst *rqstp, =
+struct page **pages,
+>  static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>  {
+>  	struct xdr_buf *arg =3D &rqstp->rq_arg;
+> -	unsigned long pages;
+> +	unsigned long pages, nfree;
+> =20
+>  	pages =3D rqstp->rq_maxpages;
+> =20
+> -	if (!svc_fill_pages(rqstp, rqstp->rq_pages, pages))
+> -		return false;
+> +	nfree =3D rqstp->rq_pages_nfree;
+> +	if (nfree) {
+> +		if (!svc_fill_pages(rqstp, rqstp->rq_pages, nfree))
+> +			return false;
+> +		rqstp->rq_pages_nfree =3D 0;
+> +	}
+> +
+>  	if (!svc_fill_pages(rqstp, rqstp->rq_respages, pages))
+>  		return false;
+>  	rqstp->rq_next_page =3D rqstp->rq_respages;
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index c86f28f720f7..2ce43f9995f1 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -1009,6 +1009,7 @@ static void svc_tcp_save_pages(struct svc_sock *svs=
+k, struct svc_rqst *rqstp)
+>  		svsk->sk_pages[i] =3D rqstp->rq_pages[i];
+>  		rqstp->rq_pages[i] =3D NULL;
+>  	}
+> +	rqstp->rq_pages_nfree =3D npages;
+>  }
+> =20
+>  static void svc_tcp_clear_pages(struct svc_sock *svsk)
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_=
+rdma_rw.c
+> index 4ec2f9ae06aa..cf4a1762b629 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> @@ -1107,6 +1107,7 @@ static void svc_rdma_clear_rqst_pages(struct svc_rq=
+st *rqstp,
+>  		head->rc_pages[i] =3D rqstp->rq_pages[i];
+>  		rqstp->rq_pages[i] =3D NULL;
+>  	}
+> +	rqstp->rq_pages_nfree =3D head->rc_page_count;
+>  }
+> =20
+>  /**
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
