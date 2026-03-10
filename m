@@ -1,186 +1,171 @@
-Return-Path: <linux-nfs+bounces-19996-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-19997-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLQJFx1GsGnFhgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-19996-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 17:26:05 +0100
+	id wFoyF8xOsGnFhgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-19997-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 18:03:08 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5DE4254B0B
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 17:26:04 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66013255331
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 18:03:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E1E0F32A9F18
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 15:54:09 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 255CA30DDE90
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Mar 2026 16:42:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149842E5B09;
-	Tue, 10 Mar 2026 15:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764AD3CBE62;
+	Tue, 10 Mar 2026 16:42:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HttFZ2bc";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixRDDgQS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxpC6Woy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F35335564
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 15:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6AC3CBE60
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 16:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773158048; cv=none; b=NbFWCXgH5Ewmoh9JJ8s7nylS4E51fHB4l8PWaXnvbAu7upxyCy2yEHIowU32YufLzdlNHBPD6PVSkEAldsbRVLJegCKsUNrYi84UHN6r2XJSNyHXW1RNEH2bDoOcdgfEBQXK4wIiAgPwb/6nvgM0yOS3W2V+My+TbdaJMlCy+Hk=
+	t=1773160961; cv=none; b=B58MLFG+eb9OMgAq0cgR8g0UQBa2GLs+lZE62Y2OApZ0/kFnSWFZswGlituUjciU0edwwdrseuEptfgxy2oyyrdFny6OuKg1Q8rumbiSG1cVT8b2pOjCZh74thiRUgc81Xv/WymVsDbPIBfS6VcUSTMmLJilZobX2nWO+cpkREg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773158048; c=relaxed/simple;
-	bh=7ioZg7a21Rv9QZoScWBj+SMby5OM3ZgiP3sGqe4puAE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C9XvQThFMh1VtXEWsW6/afCh/uQZEZjCQJB8cXwZeOlhPvyCYU+RhTzdCrVpGABBZcED4MMsnUO5RImaa+anB20Hy9kn2p++qFQq7oC0fBn7OhXf5qvdH9KdPQaMB+HMNM10VmC0/vZDSX9D/1DWAsl5Rr0r1nFW5uADNBZYOhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HttFZ2bc; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixRDDgQS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773158045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jpt9mFqhFlyM1KgSXg/5BnGp4jYfmibnU9uxuFIL7VU=;
-	b=HttFZ2bcJPrkbDaGygTI6TmSd8HMvJntb2glLTsbaFsEUciTnK3OqPBfjAcF/ZWAOwEQU9
-	z3RNQ0zi51wHbsMKV+/lvf79MsTsF7YAVvrKirT2vX2Hl8of8dYUlcmnNFm/ELbeaTgoW7
-	Au4ERzbymSg3SHwU4LzHnwn3lgmf0HA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-AhvnWthyMuOLWSLMbBRUJA-1; Tue, 10 Mar 2026 11:54:03 -0400
-X-MC-Unique: AhvnWthyMuOLWSLMbBRUJA-1
-X-Mimecast-MFC-AGG-ID: AhvnWthyMuOLWSLMbBRUJA_1773158042
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4853a9467c5so14832155e9.2
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Mar 2026 08:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1773158040; x=1773762840; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jpt9mFqhFlyM1KgSXg/5BnGp4jYfmibnU9uxuFIL7VU=;
-        b=ixRDDgQSw7owrkyg2iVZOKtl3goUm8TmNWrmkTadnIXIsfEwVlkQB2hu21/Wm4nnoY
-         93xODnKdDHe5PFi0rZUXGoLSTq88wxLgZcie0gUSUZdbeMGJif5JvR+P9mcHziqnPz8E
-         nfKSL1JznuIAcG4n4OvHBb6eSUtBselhPOGOYu3D7KyX1lMLiuEIpnGZ9aOUv1mJM5Ko
-         AqSQnMyWInGNRSKb7LAb4NXAgL2TYFAql0K6Qo9wbF+7pMoUWvGw+01SscNU6/riweOp
-         eyQAl8QqnMnQnmTL78H8XoJVbGLY5NgWe7E8NWMSNDiSHyqc9+KGTfvhtzEOfIs0BS81
-         mKNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773158040; x=1773762840;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jpt9mFqhFlyM1KgSXg/5BnGp4jYfmibnU9uxuFIL7VU=;
-        b=NNUxA0hTjELwv/CPw3d1cyHTVebile9EbZHtI5FNJEfrRkSHvlPIcqG6/mdL8FdVKY
-         05LjxdtMm1XaUdYhk4eClZbmXGaDwZn29SnjWBWK3bHBpbPkNNBgfiZ7JzUwVmzmRMoh
-         jx6T/sPWK0KSA/kvgKv2EZ/Ob1eW07G/MHC+JFjwboDThrCxZnBIhdDtZDpJZ4uSqtPX
-         fsigKrg1+3qKE7MMraRdAC2SZYb7EMOmHUFW7ijRTkRe9TYfWH1CHu06R8UChwXMJ8MO
-         U7GW2s8Hr/0oHeP6UpybCOJ9nQCzKLHY1hTqkA1KxjtjnUPFPfFnSkhCb1eAPm4JrBj/
-         Im4Q==
-X-Gm-Message-State: AOJu0Yzerk1xLCwlVBtDPYwMbDZVfgyl6rJotklOeHzWq7NF1bfGexbP
-	L6LQT2dFxmd7DF7OW5OSB9ztpYpAoiS85oR/lcXN1oa/S59IYIaBnQONrIhB/zB3uWuk/DvnBu4
-	pC2hp+Euy2sJdsgjyP+ZgCalKVN8EunTVZtbzemvi10ZSZboJwtUv9Lp9ZWrEKBcYVVFUwA==
-X-Gm-Gg: ATEYQzwyl3/H9YmWmYcHYsbfIz+fIOhxqWgKVdUb8OthtqlLaG3iHWUmLTadECDe/N3
-	0h9UvaqAEdWPF5GpICp1G7SNH3TsTat6p7jZt+FD9sK4mtn6FZDZOF856PTJ+ffv0zNfTddGbWW
-	auHCldJ0n7WCx9dEKJnLXRWcCReDttfzQxVQ+zUeN4fI6Ug7RAIQuE5E7KM92vZcn+l/HnaXHZ0
-	PbGmXR/ywL2z1KHCzzbXoYMO6teIoh7I5SZIrKzgTv7+mNVtvYUhMPH+KivYSNcJiZB4bFbOK9f
-	2g/GagjjbF5H6vUYK9hJz5vX4mZIcqmoj1iQl8wFUjOvhoEP4DUwl3dfPY09O+gzBKmwSBwiV3t
-	dW7GUfDmOpS8Yv3BJWyH11UmI
-X-Received: by 2002:a05:600c:138a:b0:47e:e2eb:bc22 with SMTP id 5b1f17b1804b1-4852691c5bamr281188685e9.5.1773158040431;
-        Tue, 10 Mar 2026 08:54:00 -0700 (PDT)
-X-Received: by 2002:a05:600c:138a:b0:47e:e2eb:bc22 with SMTP id 5b1f17b1804b1-4852691c5bamr281188235e9.5.1773158039887;
-        Tue, 10 Mar 2026 08:53:59 -0700 (PDT)
-Received: from [10.193.213.69] ([144.121.52.163])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48541acea11sm95368475e9.7.2026.03.10.08.53.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2026 08:53:58 -0700 (PDT)
-Message-ID: <7a6d7d71-b57d-4d57-ab79-ccf56e15308a@redhat.com>
-Date: Tue, 10 Mar 2026 11:53:48 -0400
+	s=arc-20240116; t=1773160961; c=relaxed/simple;
+	bh=LG/ZIzmuMkMb13xqUdE0Nt4JmXj5YbeJt/T1+UiXztQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=TThEmS71l7tP9ZpHnbNIURtUs2glsz/d8/qa006Gg4bMe3j7L2BDWUfLpBrrkjJzxk/8fznFJ2ZCrXhXc8Mw8SDOXtRIkyYSdafu0plNvZZdHOLNrxuaDq0bgCD3OVk+dk56qZn8Z7IeE/0BLe5ZdARTm5OtiLrDtgRdO941igE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxpC6Woy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE1BC4AF09;
+	Tue, 10 Mar 2026 16:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773160961;
+	bh=LG/ZIzmuMkMb13xqUdE0Nt4JmXj5YbeJt/T1+UiXztQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=TxpC6WoyMBNQfumtHpujZ4sZdtFu8XDle57z455B7A0d+jEVyI9fUdz5cLVsg4PL1
+	 DtUbKCLjBDrhgh3TKBg1JgKv8CxvGAakZEmXZJ7Zp8/e0yc4fdwK15ye78j56Iacfi
+	 liDU9KJR0sYZifqKSfYTqO6aAneygIRwqYy957NHzTCvIgAAv4ZyioI8iuakqYLrbP
+	 g5DuTBbaqpsVWpw8aGAJrbEsxapkS2qfVqZz+T3vm6dgsCwD3CuPdDB2a/sQte4Zik
+	 oVHL3qKpzQ6Dj7n6MPnSTaevF01MRxlIGvQRn55a2CItQNfifsGjNHVSHGiG8zRDfZ
+	 UnGwyj7Q4mpDQ==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B7876F4006A;
+	Tue, 10 Mar 2026 12:42:39 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 10 Mar 2026 12:42:39 -0400
+X-ME-Sender: <xms:_0mwacK5ttFYs5hIqmIKlQXFksVIih_xIPnrf6C5cqVC_EpclmUVsg>
+    <xme:_0mwaW83GMyc0nsU4OuoGNY8fcZyIv9UaMYzOEt85ktHt4WOYhUgi7-GrOnTpmJEp
+    6rrzqQzAKvjw0SHlkN0TULRYhId64YGkpLWfKcLNv76jCnV7iYWHo0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeduheefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehjlhgrhihtoh
+    hnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsnhhithiivghrsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehtrhhonhgumhihsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopegrnhhnrgdrshgthhhumhgrkhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohep
+    tghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugi
+    dqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:_0mwaYD7zCeSJWDSH3N9Ra5WpsE9_N8T4lz2WZS_AvLmJpI9pvcOoA>
+    <xmx:_0mwabOD64R9igiVUP4UruY9hR2otOUse9wdfCiyLN2Tt2M2FCt-wA>
+    <xmx:_0mwaZy5Uhs2B5mxGs18KzSqzchCLzO8mdj8dUveTjZW0FQH8FDtVg>
+    <xmx:_0mwaTWPGKv4y3jdb0TOQV3Ex1PwNBEPcMfb8jZKPopV0zRg5dIqxA>
+    <xmx:_0mwaTPz1FgA7hpk7iqlGmoyo7bbf2o2UMlMMaUULktHYlEN3lJXlZLp>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8F8B8780075; Tue, 10 Mar 2026 12:42:39 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "nfsrahead: enable event-driven mountinfo
- monitoring and skip non-NFS devices"
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20260310123623.53580-1-steved@redhat.com>
- <pfrnxhemafqrmfgvo26j5dal4o7g4sxu5thtdgwmwxvlwabynh@p6ssyobhcehn>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <pfrnxhemafqrmfgvo26j5dal4o7g4sxu5thtdgwmwxvlwabynh@p6ssyobhcehn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: Aa1mxY0eGpf7
+Date: Tue, 10 Mar 2026 12:41:31 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Christoph Hellwig" <hch@infradead.org>,
+ "Trond Myklebust" <trondmy@kernel.org>
+Cc: "Mike Snitzer" <snitzer@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Anna Schumaker" <anna.schumaker@oracle.com>, linux-nfs@vger.kernel.org
+Message-Id: <124af63a-b7a2-4c37-adc1-f3a07c10acec@app.fastmail.com>
+In-Reply-To: <abAxp5ulzweVS7sb@infradead.org>
+References: <20260224192438.25351-1-snitzer@kernel.org>
+ <abAb8NYJECfXkRLg@infradead.org>
+ <1c630798e0c931310f86f636abe84a72b86f7aae.camel@kernel.org>
+ <abAxp5ulzweVS7sb@infradead.org>
+Subject: Re: [RFC PATCH v2 00/11] NFS/NFSD: nfs4_acl passthru for NFSv4 reexport
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: E5DE4254B0B
+X-Rspamd-Queue-Id: 66013255331
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19996-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_ALL(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19997-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.893];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
 
 
-On 3/10/26 9:28 AM, Aaron Tomlin wrote:
-> On Tue, Mar 10, 2026 at 08:36:23AM -0400, Steve Dickson wrote:
->>   #1  0x00007f1a8670b15e raise (libc.so.6 + 0x1a15e)
->>   #2  0x00007f1a866f26d0 abort (libc.so.6 + 0x16d0)
->>   #3  0x00007f1a866f373b __libc_message_impl.cold (libc.so.6 + 0x273b)
->>   #4  0x00007f1a8676f665 malloc_printerr (libc.so.6 + 0x7e665)
->>   #5  0x00007f1a8676f684 malloc_printerr_tail (libc.so.6 + 0x7e684)
->>   #6  0x00005624543b1d32 main (/usr/libexec/nfsrahead + 0xd32)
->>   #7  0x00007f1a866f45b5 __libc_start_call_main (libc.so.6 + 0x35b5)
->>   #8  0x00007f1a866f4668 __libc_start_main@@GLIBC_2.34 (libc.so.6 + 0x3668)
->>   #9  0x00005624543b1fb5 _start (/usr/libexec/nfsrahead + 0xfb5)
->> ELF object binary architecture: AMD x86-64
-> 
-> Hi Steve,
-> 
->> https://bodhi.fedoraproject.org/updates/FEDORA-2026-e033b6bafe
->>
->> This reverts commit 0f5fe65d83f7455112aea82bf96f99523cb03ca7.
->> ---
-> 
-> I thought this was resolved with [PATCH 1/2] nfsrahead: zero-initialise device_info struct [1], no?
-> 
-> [1]: https://lore.kernel.org/linux-nfs/20260309145025.107623-1-atomlin@atomlin.com/T/#t
-> 
-> Please note that series [2] is based on this particular patch.
-> 
-> 
-> [2]: https://lore.kernel.org/linux-nfs/20260309145025.107623-1-atomlin@atomlin.com/T/#m1309a5bf24457934f3d2db7ca5706e240aae51d1
-> 
-> 
-> Kind regards,
-Okay... v2 does apply so I'll go with those....
+On Tue, Mar 10, 2026, at 10:58 AM, Christoph Hellwig wrote:
+> On Tue, Mar 10, 2026 at 10:53:56AM -0400, Trond Myklebust wrote:
+>> If the upstream community is unwilling to take patches to address the
+>> issue, then we're quite happy to maintain the code separately. It will
+>> still be available to those who need it through our github site.
+>
+> For something so special purpose I think that is the better way.
 
-steved.
+My experience is that Hammerspace is not the only consumer of
+NFSv4 re-export, so I regard the issue as a shortcoming of the
+current NFSD NFSv4 ACL implementation that will have broader
+impact than one storage vendor. Thus I feel that having Hammerspace
+maintain this feature separately will in the end not be good for
+the community -- it should be merged upstream if it can be.
 
+Even so, NFS re-export itself is not a commonly used feature. It
+would be helpful to construct ACL bypass so that some or much of
+it can be tested in common configurations. Then it can benefit
+from commodity testing experience, rather than languishing as a
+niche feature. This is why I encouraged the implementation of
+FATR4_DACL and FATTR4_SACL as full-fledged features rather than
+specifically and only for NFS re-export. That enables the
+construction of pynfs and other unit tests that can be deployed
+in CI without having to set up a re-export scenario.
 
+Where I have trouble generally with Hammerspace's contributions
+is that they do tend towards the niche, and frequently they are
+presented here without consideration for how the community will
+test, support, and maintain them in the long run. The proposed
+features are often complex and they will have real ongoing costs
+for us.
+
+Food for discussion.
+
+-- 
+Chuck Lever
 
