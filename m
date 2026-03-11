@@ -1,298 +1,206 @@
-Return-Path: <linux-nfs+bounces-20022-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20023-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MOxGM5cosWkBrgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20022-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 09:32:23 +0100
+	id 6KcmAy4psWkBrgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20023-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 09:34:54 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B97FB25F5FF
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 09:32:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A55FC25F68C
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 09:34:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 025D930E3D93
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 08:24:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F2C753050010
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 08:27:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00DB235A399;
-	Wed, 11 Mar 2026 08:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB988359A8F;
+	Wed, 11 Mar 2026 08:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="QMM2M6Vv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HuZJ8Iky";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="SUGc1Vsd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5B930C35F;
-	Wed, 11 Mar 2026 08:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773217400; cv=none; b=FaaQ1LzzV7mhx/MgbLNvXdc944iQB7KQ+LEux8EMNXtO7ZfZmfK3Bhf20FRS/7+nig6Lcjt5n+aRzT/cgseQBJGbcvfThZ5zj6adYeiubsaQCM22ynM29SP7NkeFl3G1AtkZznDmFkWGASsc5OeuOVFU4DMAPHHjt6UcpPB/E6w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773217400; c=relaxed/simple;
-	bh=4eSZyoFAwEUMZ81ixtbBeaHswzP34BePZ92kjzklOBY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:Content-Type; b=S2W33VaYe6p2KrA+YgA816pTEVq5BzU+swLfi+HIsl9PCbKU9NGtozDxar5g8eIV3PJrh0PzNAafCmy168gzmnjleS/TNsxf1lyMx1bUqzxReKy5yhD8jwGP+6ueGRkKWBf9PgmbLwJmanzllNGRk6syE2+skC10jx9RWmVK2jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=QMM2M6Vv; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nG6kOv9RugoOWjX5D9vaNFJbG9fivW5371xa0ifivZ4=;
-	b=QMM2M6VvaZjizR1KDlpy5SFI3tPBCfltBW2OVwknTOPPithwWhegG4iUQQYWZOXxxJXeoX8i5
-	2rjOkx1F1bgIaIVA0f9nK5FTc6rSpv/Y/ZHaNflTYlb6X45H7wszdJ2oDaEhztz/oelHaqoSDbH
-	BoeNZoZUWEQcAYjpfIuBTj8=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fW3XW260YzpStF;
-	Wed, 11 Mar 2026 16:18:03 +0800 (CST)
-Received: from kwepemj200013.china.huawei.com (unknown [7.202.194.25])
-	by mail.maildlp.com (Postfix) with ESMTPS id BBE012022B;
-	Wed, 11 Mar 2026 16:23:14 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemj200013.china.huawei.com (7.202.194.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Mar 2026 16:23:13 +0800
-Message-ID: <55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com>
-Date: Wed, 11 Mar 2026 16:23:13 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53844359A6C
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 08:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.133.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773217642; cv=pass; b=K5QhX9SLEHh1K9VS0Rdqe9S38yWn7KOk0+c7QTXThgw2MVMrLFNEQaxqbRhZ0qtZ5ZQ+3y4HoHBBeZc+Adw6CQFE76kt01GBy59yKN+eazJ8CTqHuxy1VIB4AZlTvxn/WGQ29Ifubv4R4h9wwWlnwtfvIDIErHW4DGQXsDhFiFI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773217642; c=relaxed/simple;
+	bh=nJ2q3IpA0YHrVpjb++MKGtv21cG2AhHuvZBj/KNZLBU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OblYIjFNHuR9T4S8hs4Aqo15J1YLcKcBf97bPkFNnGV0T7UzBB7zTIwHWW5z7nKQ3GchlzWX5ShksKSiN+iHLOTeKi9YDfDkIm0wVHVpPh8QhumNXRuj6kvWlATMOkUlxrooy30BcZw+EJQr7tylYntaFBLh3fPzhTbEeVeDQik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HuZJ8Iky; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=SUGc1Vsd; arc=pass smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773217640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ta2zU8IPOH3qbg7tBAvO082q0HZS82bipGoP6zDp+gY=;
+	b=HuZJ8IkysyvCtu4tske7Y6IJcuILKJtoWmhKQa+HQKjSfYbjU53mmvyJBQZZjqWxhJkpwA
+	am74xjT95FtSAyaHrEjW8h4DrpI6s+lFAt3kgyKWNNx1slYTvJKVXnC4Cx228EF1vBuoqj
+	xV1KQxhEi0rt2ah8TRlxV7N6SAWMQMQ=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636--b71ZiTyOfqnHHhh8vad0Q-1; Wed, 11 Mar 2026 04:27:18 -0400
+X-MC-Unique: -b71ZiTyOfqnHHhh8vad0Q-1
+X-Mimecast-MFC-AGG-ID: -b71ZiTyOfqnHHhh8vad0Q_1773217637
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-38a2f76333aso41441011fa.0
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 01:27:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773217637; cv=none;
+        d=google.com; s=arc-20240605;
+        b=d6o0HcBAXigN87SzfT8Tmd/SL5XNkByOIcj4i4TPfYIslXFmp2vC6IyFEvxXj9msTp
+         Zy0QHDWS0lQcBKIdw3z+vhMqP/3gVzxvLMkGy/w8no60Gl4A/cjul2uUb6ok+l+cTtJn
+         pDbxhgMK1QGH/U1KVTFSja7zLS9ywmuI9Ob8Sv1rPcaDH8g3lmcr3T4YEMqq/U3ikENN
+         +VxIAPXr2/Cud+HQ2suKUCK7rHJKAXfE5JDZ3sLnqhjeumuRwLDUoXcYGoYOBWt0qVMX
+         QaQUbdewU3pPSykqrngMDTsSjMmVnAvaxH+cHgtjElfXfpN076sNBDT9PrtUUm21XwuD
+         hjgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Ta2zU8IPOH3qbg7tBAvO082q0HZS82bipGoP6zDp+gY=;
+        fh=uJFe3LQ0PDTPJWtDVoBD6Ai3XdgBPEjXcSR0ubU1t4s=;
+        b=EQe2/yUihctz7LDBj2+4PD6WUHen2GDOxx+vym3TJWDWCb7qjZVprlBsYTP6jrkp9b
+         RbyT6q4CIU2Au2o7c/Y8pHezZnx86PHBhgO2KqcLqKS37CkOh1IF0cyi1onZjMy+5JkS
+         8J+fzvxmuBElIb0rxVI4oCEoCZ/wT0t6QrNSG3AXGR3jFMivKCbxEknuQ2oDyv0FMh4E
+         BA8IpScyo1suhR8J9Pp8w8UHsGWZHn9AQvAAnFBMbdrUBcSQBR4S2KcZRPbtulNto9+E
+         8dUWCsy0Cpook1Qv+k2Oa72VMoBa94P1E5HraSdyHEf1kDW3JRE91a8iqw15jESesNuj
+         3C8g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1773217637; x=1773822437; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ta2zU8IPOH3qbg7tBAvO082q0HZS82bipGoP6zDp+gY=;
+        b=SUGc1VsdobatgVsKQwQIE8jPT9ZnRi/LL/NBo+xL1obQVTdUlBkyC/nNuCjK0hwPnY
+         G1PNCKKiuSgsHabUc6wz/RRkI6DXVH48qCNH7U/dNzMbF0gy33dhYHnfcux/NgheMDfV
+         6HgqNcEn1ZeE4TVM0g72p1LRX+PljqcOSLqeT7KULHKk+6UT3wRJNOf/OwI0L6VwQEeP
+         GAiEDpqP62xUpv7riPVZeMVxlrwoPvNt/qNN16qwvRH/0M5mw2h+g6qEVe1wy7jBHEel
+         01tv93qwR29mp5Q1oRCJXkA9ntCIcLXv71bLUytH4tEgxB5b+jovTLbpfLmu7feXtPLW
+         P4MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773217637; x=1773822437;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ta2zU8IPOH3qbg7tBAvO082q0HZS82bipGoP6zDp+gY=;
+        b=Bh7ci5B38aBRHI+16vJgk8HErzu8PCj2bCAxARXtGBEyM/vKPJfZeRV0ss7wwx4fZa
+         CFFM0LST2fvOm7RVdkTleaDvQ1EE4UYvuFyvWQx+PjCZX+1CgR81iyNF9uu88FNyXZGG
+         XGdsx/BL38Z6G1wK+NpVTSS6TLfViayS27Mx/0nEF66JG+N0Z80s0zXr5mhCBijqLsDC
+         aFUaTkDAJ48U0u061skil8cnhgTDQ4/QRByq8J+QXYs/2VZpt0+Dq3VYeDOgJKZH86Fd
+         4tersWQIIca0hOQ+JqQQaNcick+TwJ5SE3wT9XmhuTek+AbSvOXFktMppCTtIAawzQK+
+         9L5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWlISk8fmyngMMMyJa77HGLShHo0iwAn1eaFHf9ioN8qiS2oIT1qGzGDYDvCm6U9D7c/tyT1HqNXLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwaKMjiBLu8F2rEotlGs/BzLKGQQb1W1EV0bUW5hCsFFzMLv/g
+	Uj1pzSNFNjrikucMbfVi8z8nnqR4LFoVWvCUtz0trjRbrCqib5LNkXkvQWFiRuFv/LupqiaiSWT
+	AqlTZ61KudAVEvprnwjBl6Wcu/QlzbyHORUdXiVS5x4eliAvTXIXGO+U1pGZ+x6o/C4w9MmsqIu
+	jzb2c3OhFXSH7SoCM3KZ4ElE6yd19SmgdqnD4F
+X-Gm-Gg: ATEYQzwtr56F9A44GhcM0nIgH2DBH6CAnJ6/+8+biSHg+gWU5nBu1z0yYXtwnhwWFTr
+	SMtyn9/ghHqkoKe8ec2HNpVhHi0MOY3G4K7HZ22iSWfTgGf4wvo560unay4A6X9l3nI8O7EwxBT
+	LnPNcyHfMzq4XzINz2ggSzjWiePTM81J2ef/jIzNDfBHKKxHBaY149QX5ksbaJ0AV53cqzNDMMj
+	XbmOGIXoWlWkVdVy+vu0DW4N5dFtWWcAZxP5B4OXYDVcOOidUA=
+X-Received: by 2002:a2e:a887:0:b0:38a:29e9:d29f with SMTP id 38308e7fff4ca-38a67e7e201mr6177501fa.35.1773217637241;
+        Wed, 11 Mar 2026 01:27:17 -0700 (PDT)
+X-Received: by 2002:a2e:a887:0:b0:38a:29e9:d29f with SMTP id
+ 38308e7fff4ca-38a67e7e201mr6177451fa.35.1773217636756; Wed, 11 Mar 2026
+ 01:27:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-From: Li Lingfeng <lilingfeng3@huawei.com>
-Subject: [BUG] Server returns nfserr_grace causing client infinite loop
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yangerkun
-	<yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao
-	<houtao1@huawei.com>, "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
-	"zhangjian (CG)" <zhangjian496@huawei.com>, Li Lingfeng
-	<lilingfeng@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemj200013.china.huawei.com (7.202.194.25)
-X-Rspamd-Queue-Id: B97FB25F5FF
+References: <20260309145025.107623-1-atomlin@atomlin.com>
+In-Reply-To: <20260309145025.107623-1-atomlin@atomlin.com>
+From: Yi Zhang <yi.zhang@redhat.com>
+Date: Wed, 11 Mar 2026 16:27:04 +0800
+X-Gm-Features: AaiRm53g3b9N54jScxHExbID5iTy7i77bXokBseDkKzXlhznXmcDzr1ORtBJzi8
+Message-ID: <CAHj4cs8zCdtm7PYcbqtsQpWWCB9n71D00b5LPksLq5op7WUd=Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] nfsrahead: fix uninitialised memory crash and refine
+ fast-path logging
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: steved@redhat.com, tbecker@redhat.com, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: A55FC25F68C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	TAGGED_FROM(0.00)[bounces-20022-lists,linux-nfs=lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lilingfeng3@huawei.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	TAGGED_FROM(0.00)[bounces-20023-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yi.zhang@redhat.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,huawei.com:dkim,huawei.com:mid,nfs-client1:email]
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,atomlin.com:email]
 X-Rspamd-Action: no action
 
-We recently encountered an issue where the NFS client's state manager gets
-stuck in an infinite loop, making the client unresponsive to user
-operations. The problem occurs when the server returns nfserr_grace during
-open reclaim.
+Hi Aaron
 
-Stack trace from the client:
-// client
-nfs4_state_manager
-  nfs4_do_reclaim // NFS4CLNT_RECLAIM_NOGRACE
-   nfs4_reclaim_open_state
-    __nfs4_reclaim_open_state
-     nfs41_open_expired // ops->recover_open
-      nfs4_open_expired
-       nfs4_do_open_expired
-        _nfs4_open_expired // gets NFS4ERR_GRACE and retries
+Verified the issue was fixed now with your patch, thanks.
 
-On the server side, nfsd4_open returns nfserr_grace because:
-1. The session exists
-2. The NFSD4_CLIENT_RECLAIM_COMPLETE flag is not set
-3. The op_claim_type is not NFS4_OPEN_CLAIM_PREVIOUS
+Tested-by: Yi Zhang <yi.zhang@redhat.com>
+
+On Mon, Mar 9, 2026 at 10:50=E2=80=AFPM Aaron Tomlin <atomlin@atomlin.com> =
+wrote:
+>
+> Hi Steve, Yi,
+>
+> This series addresses two issues stemming from the recent fast-path
+> optimisation used to reject non-NFS block devices, which were caught duri=
+ng
+> blktests.
+>
+>     1.  [PATCH 1/2] fixes the glibc abort(3) by explicitly
+>         zero-initialising the device_info struct. This prevents the clean=
+up
+>         path from attempting to free uninitialised stack memory when the
+>         fast-path triggers an early exit.
+>
+>     2.  [PATCH 2/2] updates the error handling in main() to log a
+>         descriptive debug message rather than a general error when a devi=
+ce
+>         is intentionally skipped, preventing misleading udev journal spam=
+.
+>
+> Aaron Tomlin (2):
+>   nfsrahead: zero-initialise device_info struct
+>   nfsrahead: quieten misleading error for non-NFS block devices
+>
+>  tools/nfsrahead/main.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> --
+> 2.51.0
+>
 
 
-Steps to reproduce:
-
-1. Normal mount on client
-    On server:
-    mkfs.ext4 -F /dev/sdb
-    mount /dev/sdb /mnt/sdb
-    echo "/mnt *(rw,no_root_squash,fsid=0)" > /etc/exports
-    echo "/mnt/sdb *(rw,no_root_squash,fsid=1)" >> /etc/exports
-    systemctl restart nfs-server
-    echo 123 > /mnt/sdb/testfile
-
-    On client:
-    mount -t nfs -o rw 192.168.122.251:/sdb /mnt/sdbb
-
-2. Client opens a file and prepares a delay before entering the
-NFS4CLNT_RECLAIM_NOGRACE branch in the state manager
-    exec 100>/mnt/sdbb/testfile
-    rpcdebug -m nfs -s proc
-
-3. Change hostname on server
-    hostname server-nfs
-
-4. Restart NFS service on server
-    systemctl restart nfs-server
-
-5. Wait for client to set NFS4CLNT_RECLAIM_NOGRACE and enter the delay
-before the NFS4CLNT_RECLAIM_NOGRACE branch in the state manager
-
-6. Enable delay for force_expire_client on server
-    rpcdebug -m nfsd -s proc
-
-7. Trigger client expiration on server (stop at the delay point)
-    echo "expire" > /proc/fs/nfsd/clients/4/ctl &
-
-8. Enable delay for the NFS4CLNT_LEASE_EXPIRED branch on client, and
-disable the delay for the NFS4CLNT_RECLAIM_NOGRACE branch
-    rpcdebug -m nfs -s xdr
-    rpcdebug -m nfs -c proc
-
-9. Client state now has flags NFS4CLNT_LEASE_EXPIRED,
-NFS4CLNT_RECLAIM_NOGRACE, and NFS4CLNT_MANAGER_RUNNING, and is stopped at
-the delay point in the NFS4CLNT_LEASE_EXPIRED branch
-
-10. Disable delay on server
-     rpcdebug -m nfsd -c proc
-
-11. Disable delay on client
-     rpcdebug -m nfs -c xdr
-
-12. Client state manager enters an infinite loop in the
-NFS4CLNT_RECLAIM_NOGRACE branch
-[root@nfs-client1 ~]# cat /proc/779/stack
-[<0>] nfs4_handle_exception+0x245/0x600
-[<0>] nfs4_do_open_expired+0x2c8/0x4e0
-[<0>] nfs4_open_expired+0x31/0x90
-[<0>] nfs41_open_expired+0x18b/0x290
-[<0>] __nfs4_reclaim_open_state+0x4f/0x330
-[<0>] nfs4_reclaim_open_state+0x1e9/0x530
-[<0>] nfs4_do_reclaim+0x2a9/0x470
-[<0>] nfs4_state_manager+0x1644/0x17f0
-[<0>] nfs4_run_state_manager+0x1cc/0x490
-[<0>] kthread+0x327/0x410
-[<0>] ret_from_fork+0x360/0x6c0
-[<0>] ret_from_fork_asm+0x1a/0x30
-[root@nfs-client1 ~]#
-
-base:
-Linux 7.0-rc3
-master 1f318b96cc84d7c2ab792fcc0bfd42a7ca890681
-
-diff:
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 305a772e5497..5d0b1eef5d9b 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1315,6 +1315,7 @@ int nfs4_state_mark_reclaim_nograce(struct 
-nfs_client *clp, struct nfs4_state *s
-         clear_bit(NFS_STATE_RECLAIM_REBOOT, &state->flags);
-         set_bit(NFS_OWNER_RECLAIM_NOGRACE, &state->owner->so_flags);
-         set_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
-+       printk("%s set NFS4CLNT_RECLAIM_NOGRACE for clp %px\n", 
-__func__, clp);
-         return 1;
-  }
-
-@@ -1814,6 +1815,7 @@ static int nfs4_recovery_handle_error(struct 
-nfs_client *clp, int error)
-                 break;
-         case -NFS4ERR_EXPIRED:
-                 set_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
-+               printk("%s set NFS4CLNT_LEASE_EXPIRED for clp %px\n", 
-__func__, clp);
-                 nfs4_state_start_reclaim_nograce(clp);
-                 break;
-         case -NFS4ERR_BADSESSION:
-@@ -2540,6 +2542,14 @@ static void nfs4_state_manager(struct nfs_client 
-*clp)
-
-                 if (test_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state)) {
-                         section = "lease expired";
-+                       while (1) {
-+                               ifdebug(XDR) {
-+                                       printk("%s sleep before lease 
-expired\n", __func__);
-+                                       msleep(5 * 1000);
-+                                       continue;
-+                               }
-+                               break;
-+                       }
-                         /* We're going to have to re-establish a 
-clientid */
-                         status = nfs4_reclaim_lease(clp);
-                         if (status < 0)
-@@ -2616,9 +2626,18 @@ static void nfs4_state_manager(struct nfs_client 
-*clp)
-
-                 /* Now recover expired state... */
-                 if (test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state)) {
-+                       while (1) {
-+                               ifdebug(PROC) {
-+                                       printk("%s sleep before deal 
-NFS4CLNT_RECLAIM_NOGRACE\n", __func__);
-+                                       msleep(5 * 1000);
-+                                       continue;
-+                               }
-+                               break;
-+                       }
-                         section = "reclaim nograce";
-                         status = nfs4_do_reclaim(clp,
-clp->cl_mvops->nograce_recovery_ops);
-+                       printk("%s nograce reclaim status %d 
-clp->cl_state 0x%lx\n", __func__, status, clp->cl_state);
-                         if (status == -EAGAIN)
-                                 continue;
-                         if (status < 0)
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 6b9c399b89df..203f1d7c6c5f 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3146,6 +3146,14 @@ static void force_expire_client(struct 
-nfs4_client *clp)
-         clp->cl_time = 0;
-         spin_unlock(&nn->client_lock);
-
-+       while (1) {
-+               ifdebug(PROC) {
-+                       printk("%s sleep before destroy session\n", 
-__func__);
-+                       msleep(5 * 1000);
-+                       continue;
-+               }
-+               break;
-+       }
-         wait_event(expiry_wq, atomic_read(&clp->cl_rpc_users) == 0);
-         spin_lock(&nn->client_lock);
-         already_expired = list_empty(&clp->cl_lru);
-
- From the server's perspective, returning nfserr_grace is reasonable when
-no RECLAIM_COMPLETE request has set the NFSD4_CLIENT_RECLAIM_COMPLETE
-flag. However, I suspect the loss of the NFSD4_CLIENT_RECLAIM_COMPLETE
-flag is related to the server-side "expire" write. Therefore, I'm unsure
-whether this issue should be attributed to the server or the client.
-
-Please let me know if you need any further information or testing.
-
-Thanks,
-Lingfeng.
+--=20
+Best Regards,
+  Yi Zhang
 
 
