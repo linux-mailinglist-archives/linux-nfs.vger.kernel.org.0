@@ -1,138 +1,159 @@
-Return-Path: <linux-nfs+bounces-20050-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20051-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cL67M+/isWksGwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20050-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 22:47:27 +0100
+	id MIXwHer0sWl7HQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20051-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 00:04:10 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 509BA26A8B0
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 22:47:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00D0326B14D
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 00:04:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 435713027368
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 21:47:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6096A303EBAA
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 23:03:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8916229BDBF;
-	Wed, 11 Mar 2026 21:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E51713A1683;
+	Wed, 11 Mar 2026 23:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEQtPWlA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WxcdvAR4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAD0126F3B;
-	Wed, 11 Mar 2026 21:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969E039DBF5;
+	Wed, 11 Mar 2026 23:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773265643; cv=none; b=FIdJsBbqywbHR0pTbejwOa10o7h3JuUExXG1BHgC34wOijX4plnvrEqXkcfGasKHlpl3QZU7kesyHIWh8wv/6mDzrCbFWMDPk1GSwypD4yCF/hKNhwtNrC4tt0vywFcir3ngwkMceVYnOtwAzBCIvXj+T/5C9kEHXYErH4i8Ifo=
+	t=1773270226; cv=none; b=AkA2Gnlxmrw7n8wlICODGs3io7QO9Oh/YDy07WP09JF/KFh9g5IxYQ17wt6vWQVzPCB+iYEQu7P3mBvtqRc+n31lnQN5NVwKohchMiBQHqmgSZE6jhjwc4hv3UUzJs1InFDBm/aIiY3ylNEkhCwq8TX0CYHFVkpY9m+PERgjhT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773265643; c=relaxed/simple;
-	bh=AfzgWescQI12VbDmGcofZ3H+xed6L8D2mUifEiyldjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S1ctQwO40NAVMKrTzkkYZMFRGB+rniquZsGyr2Mqkj9LjlaELcegd2DxpqE4TgfATEQpEGBB4xwCFyNFO8jmJLOX/s5f5nc8kNpEVMJ6uCwOP2UbJh3MYUsWCrhI+KRpZZIoFfk3Ul+ZxR7nY2kdUCWiL5cUjbSa7Scc9VY++/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEQtPWlA; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773265642; x=1804801642;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AfzgWescQI12VbDmGcofZ3H+xed6L8D2mUifEiyldjg=;
-  b=QEQtPWlAUDhLOEBYlT9NFD6Q301D5HrmTrSisnpNkGKC3yy6epTBCBsq
-   Z1gYQyFA2ohJ5bzW6P36A62mcsgCf4s/t49ViCDEImMV0GnUEJksLlUzF
-   V9WZRz+H86y3G0jJYzaX2GqWNUi+U78vpSMvPsOizfIYQX7tlSENSDFc1
-   kasPdk/YpdfcYZfQiRNcERd6teudHsOE+aCuExInZYdZL22a2q1Ru6i52
-   QIuJ1z/jtQx56O1YJQrtyUtxEZQ0P9XnmBlXUBGNJJ86o3j+FGmiUiCN3
-   u/0cqSequJlb0jp+9fHcpujZgoWdmlFVwz7wEz3B7eTNbh2dIUsz6JUaJ
-   g==;
-X-CSE-ConnectionGUID: Pmwxxah1R/OwvNBwg75TKA==
-X-CSE-MsgGUID: EaEbJf6zTtGNcQw62taZkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="91730013"
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="91730013"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 14:47:21 -0700
-X-CSE-ConnectionGUID: RTEzrkycTEuwrVh0Fv2pPg==
-X-CSE-MsgGUID: SM4OfwNfSpO07ENE0Tpd8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,115,1770624000"; 
-   d="scan'208";a="220781669"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.178])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 14:47:19 -0700
-Date: Wed, 11 Mar 2026 23:47:17 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Sean Chang <seanwascoding@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Chuck Lever <chuck.lever@oracle.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Anna Schumaker <anna@kernel.org>, netdev@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sunrpc: simplify dprintk() macros and cleanup
- redundant debug guards
-Message-ID: <abHi5SOPaaly-v1l@ashevche-desk.local>
-References: <20260303140725.86260-1-seanwascoding@gmail.com>
+	s=arc-20240116; t=1773270226; c=relaxed/simple;
+	bh=ATo3aRyKmYSXuSYD8x/NeBUp5LJcLKbzHVpozNXQJC0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=riWYrESCcc9KNXqP13SZYyXzR58RrYMlS+b2xha5iOXuuIp+StTrVizqL6ketCeeYmMEMoyxUK8taVuLlBt+IYJOKFEOgMITJUBE5YxvJbFyx57ukqqJFBTg7MI8yXilCszhmCyW65ADzTthRqCB0cIhFeDkNxgzAb+Zf6dy7s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=fail (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WxcdvAR4 reason="signature verification failed"; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from monstersaurus.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CD91E448;
+	Thu, 12 Mar 2026 00:02:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1773270149;
+	bh=ATo3aRyKmYSXuSYD8x/NeBUp5LJcLKbzHVpozNXQJC0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=WxcdvAR4zphcUuTNTLXCbLGiiCOKCwemLRMbnRdmW3ARcBHAWQiYVeysDpnfCIDuk
+	 B8rMCjKjDjoWJdgj4Zp0scfHxrPnr5P3xl9hFANY/wyWKZBZYHzyf2qsFxVEe9S31Y
+	 m9r/HjFnopry9bsUUdk6/id/Q3d97jYK/FiMa+Qw=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260303140725.86260-1-seanwascoding@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260310-b4-is_err_or_null-v1-49-bd63b656022d@avm.de>
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-49-bd63b656022d@avm.de>
+Subject: Re: [PATCH 49/61] media: Prefer IS_ERR_OR_NULL over manual NULL check
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
+	apparmor@lists.ubuntu.com, bpf@vger.kernel.org,
+	ceph-devel@vger.kernel.org, cocci@inria.fr, dm-devel@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, gfs2@lists.linux.dev,
+	intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+	iommu@lists.linux.dev, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-phy@lists.infradead.org,
+	lin@web.codeaurora.org, ux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
+	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
+Date: Wed, 11 Mar 2026 23:03:33 +0000
+Message-ID: <177327021364.3167621.11851238159935183684@ping.linuxembedded.co.uk>
+User-Agent: alot/0.9.1
+X-Spamd-Result: default: False [3.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_REJECT(1.00)[signature check failed: fail, {[1] = sig:subspace.kernel.org:reject}];
+	R_DKIM_REJECT(1.00)[ideasonboard.com:s=mail];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[ideasonboard.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20050-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_CC(0.00)[lunn.ch,oracle.com,gmail.com,kernel.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	TAGGED_FROM(0.00)[bounces-20051-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ashevche-desk.local:mid]
-X-Rspamd-Queue-Id: 509BA26A8B0
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[57];
+	FROM_NEQ_ENVFROM(0.00)[kieran.bingham@ideasonboard.com,linux-nfs@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[ideasonboard.com:-];
+	NEURAL_HAM(-0.00)[-0.726];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,avm.de:email,linuxfoundation.org:email,ping.linuxembedded.co.uk:mid,ideasonboard.com:email]
+X-Rspamd-Queue-Id: 00D0326B14D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 03, 2026 at 10:07:25PM +0800, Sean Chang wrote:
-> Following David Laight's suggestion, simplify the macro definitions by
-> removing the unnecessary 'fmt' argument and using no_printk(__VA_ARGS__)
-> directly.
-> 
-> Verification with .lst files under -O2 confirms that the compiler
-> successfully performs "dead code elimination". Even when variables
-> (like char buf[] in nfsfh.c) or static helper functions (like
-> nlmdbg_cookie2a() in svclock.c) are declared without #ifdef, they are
-> completely optimized out (no stack allocation, no symbol references in
-> the final executable) as they are only referenced within no_printk().
+Quoting Philipp Hahn (2026-03-10 11:49:15)
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+>=20
+> Change generated with coccinelle.
+>=20
+> To: Shuah Khan <skhan@linuxfoundation.org>
+> To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> To: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+> ---
+>  drivers/media/test-drivers/vimc/vimc-streamer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/me=
+dia/test-drivers/vimc/vimc-streamer.c
+> index 15d863f97cbf96b7ca7fbf3d7b6b6ec39fcc8ae3..da5aca50bcb4990c06f28e5a8=
+83eb398606991e9 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> @@ -167,7 +167,7 @@ static int vimc_streamer_thread(void *data)
+>                 for (i =3D stream->pipe_size - 1; i >=3D 0; i--) {
+>                         frame =3D stream->ved_pipeline[i]->process_frame(
+>                                         stream->ved_pipeline[i], frame);
+> -                       if (!frame || IS_ERR(frame))
+> +                       if (IS_ERR_OR_NULL(frame))
 
-Does this patch fixes also 202603110038.P6d14oxa-lkp@intel.com?
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>                                 break;
+>                 }
+>                 //wait for 60hz
+>=20
+> --=20
+> 2.43.0
+>
 
