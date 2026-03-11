@@ -1,168 +1,169 @@
-Return-Path: <linux-nfs+bounces-20038-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20039-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GNoyMA9KsWlCtAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20038-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 11:55:11 +0100
+	id ME/5HQZusWlVvAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20039-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 14:28:38 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C96B2629E0
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 11:55:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D4543264860
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 14:28:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2D7DF338C248
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 10:47:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D72EF30659C0
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 13:22:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6323D410E;
-	Wed, 11 Mar 2026 10:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+NfnaGG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0470E1AC44D;
+	Wed, 11 Mar 2026 13:22:31 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2153D3CE6
-	for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 10:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40861EEA3C
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 13:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773226062; cv=none; b=Qoq4OzOxgympGwTI+GbawDUesOzkBpN3rRlBjAPheq4/Dzv8OaRy1784NNz6mQk8T+03TfCq5+pXA/N1swpmEi/0MRKlfM1eJTGB+rDylV7lEuhNX23ge4B3siyXPr62oTxxhBRDV+fFnkvQrjMgfYEUVxYmyGF/8UC7aGMHKLI=
+	t=1773235350; cv=none; b=BT5GYLtRtbWqZoklfx7UYddt1Hup8TGbV3/VgQ0RhDfy2/4aLF96j3SJSgb9w0AD6j3mqZzjhfWLxOHLYuBCimD3UA1pbBruEIaDKTBJIZ/vlL4jy27g/lAQjPiRPkO6j9JHa4Y4R1bGEERe9Q9G8XRkfhP3lyU2wA5xO3PNBJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773226062; c=relaxed/simple;
-	bh=zRCIOZXGAulewyBbqGE0TlQlTPqeFeIDTbPGyy24MV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/Kvey38hxllltljXfUMcc0Q0tWF+/5PyKrN9phktKQxGWnHkG3ATtbdm6KS0CpsAme7GrSDTLiT9fBCVdIL57ALELxUEsO1pj0IgxmWrCUGRlRMNdO7Et2C3DSFDYEl0Y2ARDIs2wdfyOtsmkSOaIdm1vxK5oWecDvWPZ648R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+NfnaGG; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1773235350; c=relaxed/simple;
+	bh=bQRlE5OR+3/41N9B/xBGXfMeOTv3hgeQ2WrY6jcTpBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BkvIBG2QFx0xb7TpNmqPnS91W0NqyA7/GAjHWzNO42L2R/mbqRA7Gof99+ow6tmzOL+em7WghlXXykwnHdhmwQu9rkIregHfWTfBsBH6BIwiTgxRAlKLh518TkB7/VzNVmqzkU73O5EyVx/ByVk9H1oKkz6AA8dnNy3FyY4PGrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-485409ab264so6052225e9.1
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 03:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773226059; x=1773830859; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=us9WYwCiTBLLsk5cVeG22xmuXfkRkjPu0Kbcd1njBZs=;
-        b=l+NfnaGGhGE/Qag8NAZKtowOcVY2wLQCbEgf8MnpvieTQKfxTgLXG7gVpu41GQE3Cp
-         lhcuSJ3ojhuoA+XvMW4ZK8DqWwguSBIQJdzHM+m0gGn1i58Im+PG8aw4GSSmMwNkHayu
-         W9J2Et5BO3MOuAYEpSQbP4o8f9J9gsDj/OANzpqDRda1qkC6GXeo6tLR1/FbLVhhy7Cf
-         MUxhHc5jx0lvSaHnxQ6WahuluHX1XzGqARVN8PyVe1PrQbU+agAKtUfEmOiyxhtTA+gY
-         BR6kn5ugraDiB91Rov4L/mant481Z758KVbs1s66hkgz+KSI4U1uv3Da1yI4gGWMgZ4d
-         Uvjg==
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5675d609621so11791478e0c.2
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 06:22:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773226059; x=1773830859;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=us9WYwCiTBLLsk5cVeG22xmuXfkRkjPu0Kbcd1njBZs=;
-        b=CISN/DECOtAbgbf/+5xMctUtyweHV4Q5FHyFYEs3t5Hdh/x4mOddYudu55/RSAcm2o
-         lwojJiwlyGLLnDYptneYx6ht4t7kg4psyx7PShoDy3oq+KGiFlSBhYmUvvNE685Rxh5H
-         dFSbLh+El5iQdKN6T47A8CrQgaWrstZE9gFhXFsrcPIChjAQQX2vQWmkzqZwAS5e5k8I
-         fLAxloHO14T7BiXfm1WqWcp3wXhj6s+G90OHiLZ5e5nQnJniHsyDw9qGu5kJqTXHxUKY
-         /tIUU6rnYCtSzhydPc2DzAxqLRCKLNd7hmSDZLnHg43E0crzzGykwX7GZblNht1BYzxS
-         3fMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEaMxGCzqL32qeW3sAMfYHxn08xcGnccP6tpYcxraYgnxZgZ6PUFXCuapC5nreZc8jBIzIKl077LA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcn7mxlA6WBBNc+jXpToWO14D6oYXjP5g/wfDkFQL9fBXEFkOD
-	JNX46oAKy6gVJvaqPzA3lwrW7YNsURf4hy5Zj+IkT73wl/BYvrbKxUl5
-X-Gm-Gg: ATEYQzysdsUHHN/c7rKafocM6KGdogr8eeCzGt6Z6PGThcK1Kcud1huoNWtwqnPGfhC
-	RwMtqDfW8xabOC5A5259uz44Lfyz3I4b2VsPdcH+yBAy9gMb2ef0hPo9N11LWQ+RtCz5wCMJwZe
-	FIyIrzGrPbhVOnxQDyTRTL7uNdJABgGXDWd6jlLQnCUnqFSyhRCWQhgqpuQYK7FmhDnugrxd8nh
-	SetQYOtpM/8F1Q0sKHTfbm4UvCpux8kIFfPWAMIDMZpUmqBeMDsCVNuc6VsvRIB6P/TThqEN6nK
-	ri7novtcMcnAC57IJqb9YCdN5+SFRKVsgoZ+Xxpc038yLTpWd2Cjq6q/KihlKObxdpqOOK8bNso
-	XTELe6ew7oU3XSDTNzXjex8/SFOvfZpKeDgw2p76SdSMDufgmfHUvYUI76yUGkydID11i0azgUk
-	aRV1I58Hy+3ZgIjwgctYJwo0HBA9LsoEI8Sto3AeRAceyuajS0dmcOl3gnW7/24mhmqps8txnTt
-	fc=
-X-Received: by 2002:a05:600c:5298:b0:479:13e9:3d64 with SMTP id 5b1f17b1804b1-4854b291dc2mr30148705e9.15.1773226058755;
-        Wed, 11 Mar 2026 03:47:38 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f820a2f1sm5725154f8f.30.2026.03.11.03.47.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 03:47:38 -0700 (PDT)
-Date: Wed, 11 Mar 2026 10:47:36 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-nfs@vger.kernel.org, bpf@vger.kernel.org, kunit-dev@googlegroups.com,
- linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- netfs@lists.linux.dev, io-uring@vger.kernel.org, audit@vger.kernel.org,
- rcu@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux.dev,
- netdev@vger.kernel.org, linux-mm@kvack.org,
- linux-security-module@vger.kernel.org, Christian Loehle
- <christian.loehle@arm.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] kthread: remove kthread_exit()
-Message-ID: <20260311104736.51b53405@pumpkin>
-In-Reply-To: <20260310-work-kernel-exit-v2-1-30711759d87b@kernel.org>
-References: <20260310-work-kernel-exit-v2-0-30711759d87b@kernel.org>
-	<20260310-work-kernel-exit-v2-1-30711759d87b@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1773235349; x=1773840149;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=34DR94e/1PAvLLEaib58vFA4GW0m5SGe6jvxchEhMek=;
+        b=rHDosC4FshS/6VmX3hVpse8734havBYnM71GCv5P1nTcsEpXjRKjH/Yi2bIarg0X8v
+         mT9sAnAb0RTv6NwbZam82tgkO+PjcZdlQr7eaVDWT2feCL7VbRCIF84cx1qJoLJbnl38
+         kUCOdA+K6UEJQR3t6EaofC+LWqe/VWaVcmkHpViGbQyakxYdrh+RdbTRYIs86mSi1jEg
+         bxOb2LZWyYm+gvgOImRUplbJ95G4JXpAmyQxKSyAcAk76MHh1XMPh4GaWZfZrqUna0Zr
+         a9XQwabfPqAO1zeSmDij0G08FCcdYSA3kq/nO9yO6GMMq+pjGVNUZAoPbKVDMdyTYaEp
+         D6zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqUNpFBNfBZRw/UfarAYvvjvveJ4yw07RVax/Q1Tc7k4xMDhYmXKf9XQuavqYKgqPW4wWdByiCAac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztB5WdbP2haQBOLguhA3/Bo+3Yf0/CZUyZL1XJm4Yrac0G/VxE
+	iU/hNPyhcFO+d76GrWhHot1a5AE+zuZD3sntOcN1DBiejFL67PddTAeXZJutqqLZpnw=
+X-Gm-Gg: ATEYQzw20b9Cc9f5YU0gXnuuRplTZJv8mI0uWLfOJUJphxCfoIe8WQjVweUmLx83q2O
+	ZHiy55ReFtl4SQhzTsdfnzYI/jsM68sSdh84EA7RmTn5IjHfl/QOkXtyby8JUGsDAck3LehJs/L
+	Bb1DozAzQhdpZMqXtylPL4YkpPPwFucpR/wa+pjgWKbbM/iSOCm9lC82a7LVckFOyBVvv7RXxfC
+	HY9xp7bh1lwrNa+iEXOombIz2OgkSlDe9/j1EWJqQUKmBzYT7m5JSchvFbX+AgSI0/UN0EsA3P3
+	d2YBbjVyZ0hLr9bx1xp10P6DxihLbrmScwXtzuqB5Rz6OmIAWiAv9AVcdH/tBdv8aTBws0tOLvl
+	5bT+b8GIjYZ/BMv3BAl4oogq2+Kwgrhzvqhcfm1PS/+heoyz7h2sPqtEkO1BKZ9rt7QAO50m9R5
+	ZievW+dFlSQu3Mh/nsulTJ6a37mxg6i3bbBxB5/leNRFKV7uccN3TsaSvIhlyO
+X-Received: by 2002:a05:6122:1820:b0:56b:1f83:bc60 with SMTP id 71dfb90a1353d-56b47685394mr819851e0c.18.1773235348761;
+        Wed, 11 Mar 2026 06:22:28 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56b46311c18sm940445e0c.1.2026.03.11.06.22.28
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2026 06:22:28 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-5fff774800cso3499967137.0
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Mar 2026 06:22:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXFHm41V9ozVp6dEYa+uR3pnfblGP0KjmQ2//sJlfptLqsM4HOLquI1JBGqJmGFiWkzNhIFleZ0vgs=@vger.kernel.org
+X-Received: by 2002:a05:6122:1d05:b0:55b:7494:177b with SMTP id
+ 71dfb90a1353d-56b4752d806mr922396e0c.10.1773234967338; Wed, 11 Mar 2026
+ 06:16:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3C96B2629E0
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-36-bd63b656022d@avm.de>
+In-Reply-To: <20260310-b4-is_err_or_null-v1-36-bd63b656022d@avm.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 11 Mar 2026 14:15:56 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXQ8Q4jvkgFRJYhghz2BZRDC-9Mk6DbXxuaOc6C9DFHZQ@mail.gmail.com>
+X-Gm-Features: AaiRm52J84H77ROK64ZWWtJfaiCpnFeKyoSRmPbi-NC8CN6Ju1TJEFxJU9gZQQ8
+Message-ID: <CAMuHMdXQ8Q4jvkgFRJYhghz2BZRDC-9Mk6DbXxuaOc6C9DFHZQ@mail.gmail.com>
+Subject: Re: [PATCH 36/61] arch/sh: Prefer IS_ERR_OR_NULL over manual NULL check
+To: Philipp Hahn <phahn-oss@avm.de>
+Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
+	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
+	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
+	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
+	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
+	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
+	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+	v9fs@lists.linux.dev, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: D4543264860
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20038-lists,linux-nfs=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_FROM(0.00)[bounces-20039-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[linux-m68k.org];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-nfs@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCPT_COUNT_GT_50(0.00)[57];
+	R_DKIM_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sourceforge.jp:email,linux-m68k.org:email,avm.de:email,glider.be:email,mail.gmail.com:mid,libc.org:email,fu-berlin.de:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Tue, 10 Mar 2026 15:56:09 +0100
-Christian Brauner <brauner@kernel.org> wrote:
+On Tue, 10 Mar 2026 at 12:56, Philipp Hahn <phahn-oss@avm.de> wrote:
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+>
+> Change generated with coccinelle.
+>
+> To: Yoshinori Sato <ysato@users.sourceforge.jp>
+> To: Rich Felker <dalias@libc.org>
+> To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Cc: linux-sh@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 
-> In 28aaa9c39945 ("kthread: consolidate kthread exit paths to prevent use-after-free")
-> we folded kthread_exit() into do_exit() when we fixed a nasty UAF bug.
-> We left kthread_exit() around as an alias to do_exit(). Remove it
-> completely.
-...
-> -#define module_put_and_kthread_exit(code) kthread_exit(code)
-> +#define module_put_and_kthread_exit(code) do_exit(code)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I'm intrigued...
-How does that actually know to do the module_put()?
-(I know it does one - otherwise my driver wouldn't unload.)
+Gr{oetje,eeting}s,
 
-The corresponding try_module_get(THIS_MODULE) is done before the
-kthread_run() (and has to be 'put' if that fails).
-So there is an explicit 'get' but an implicit 'put'.
+                        Geert
 
-While a loadable module that creates a kthread usually needs to give
-the kthread a reference to its module and then have that reference
-released as the kthread exits, I can imagine cases where that isn't true.
-(Or broken code that just hopes the module won't be unloaded just
-as the kthread exits.)
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-It actually makes me think that module_put_and_exit() ought to have
-a 'module' parameter.
-Or, perhaps, kthread_create() should have the module parameter and
-hold a reference to that module until it exits.
-
-	David
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
