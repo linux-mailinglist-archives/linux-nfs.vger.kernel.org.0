@@ -1,391 +1,463 @@
-Return-Path: <linux-nfs+bounces-20065-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20066-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6MK+HZXCsmmvPAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20065-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 14:41:41 +0100
+	id OEPANzfZsmlDQAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20066-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 16:18:15 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7A2D272C6E
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 14:41:40 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 815C827424F
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 16:18:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8990C30ED7D7
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:40:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6B439302098A
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 15:10:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E613A3807;
-	Thu, 12 Mar 2026 13:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C0631F997;
+	Thu, 12 Mar 2026 15:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n78Z12Z4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URJ7+3ZH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DE13876B0;
-	Thu, 12 Mar 2026 13:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3359640DFD6
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2026 15:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773322814; cv=none; b=LRNZGaQIhC8ADljSZsX0/yZNVFpx2OLfI1ktwWZPX6z3IEYiOzcBV5ghHAH6CMuCgXUFxeLRVmfXH2OIha4Ie7J8bkHw2CEn+0l2I8qzUIiAH6YNc/fhj41TikuUHP0vDojE1QthNzfMtVDd1Yud562zREm5UQVe4WpzVTrFF3M=
+	t=1773328243; cv=none; b=Y1YflgkjTV5UxW+9k5pVK/7pwM8bxSWBvYscRBFkEaEbjPWYq6SNS4QvXDCxfohHQfZCQguPgzGmr3OXB0MABKDaxCuzgu3rMWXsum9HX/OlwbZnM/GWKxgy0haSye2iZMZOoeMQF3/gSFGdR8PmwIQb9XAUGetXohJrVDdllKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773322814; c=relaxed/simple;
-	bh=jRm3qDGimsB3fj7AU3quNzuAraeQfUckoE0bF8Opk4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PBkyLuIgHxDsxrTUPi8lCdFPEfHIYseYum+lbdlrhEibTVEZ5bAWflM73O5mSyA5ODlS99QNfO2jPejhNt+QF52aQFtuJJm6bajYvBBSNO7vQUiQhi4TEkYPfi+ojMWkB6QC2+w3Ex03qPC9RMjowY7HdHsiOm2Z/KITMfGntO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n78Z12Z4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 147F4C2BCAF;
-	Thu, 12 Mar 2026 13:40:13 +0000 (UTC)
+	s=arc-20240116; t=1773328243; c=relaxed/simple;
+	bh=REjh/6icliPqLRMoK2Hqv57KcaiXPSmwOcDtmXUxz9g=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=UQMQR/n+peX/nCltARam1V1ygeVmGOvGReZFTv1U4v1yHFxN8Z39dDL54esqkQBqExVqYLblCv/K1aN5wIr3z/Iz+QFnI7to/7L1eCvmx65Rh/bXMmPJs/FYp1/8X2bAXHSugtS4t8+qpNxhs0cdfezPxErqnTkGNd4FBsth6Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URJ7+3ZH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CF9C19424;
+	Thu, 12 Mar 2026 15:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773322814;
-	bh=jRm3qDGimsB3fj7AU3quNzuAraeQfUckoE0bF8Opk4s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n78Z12Z4QRCwRFmw3+dmhusB//kiIJYdFMw5s5RxZ1nkfOzkhmnCqtx3WgVNlJiMa
-	 LVW8ox373FEWQX+Mpote7O72GhVe6Bw5++ciGRmc0CZdQc5Vo8qlxwpYg2S+M1RrsI
-	 EtFDRpP/hMM5Ne8X6jXNtCgU0NsN87TNNO5gcBn7X2zuXUmFOfiMPlgQwYhLm7NaWs
-	 JNZBFxJqCipnbicPyZfAv1cGHXTT0y9ix43j+uFHRP9TIfK1tlM+iKv/iI4QPSjXhy
-	 kbkRzQwW2H0WwGdCKuz07XLHUGf1atICPt5pHT63pmYiZ2Nl0PuMjQTO5zQLtOXWZk
-	 4JVn3JoBnsjXw==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v2 2/2] svcrdma: Use contiguous pages for RDMA Read sink buffers
-Date: Thu, 12 Mar 2026 09:40:08 -0400
-Message-ID: <20260312134008.7387-3-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260312134008.7387-1-cel@kernel.org>
-References: <20260312134008.7387-1-cel@kernel.org>
+	s=k20201202; t=1773328242;
+	bh=REjh/6icliPqLRMoK2Hqv57KcaiXPSmwOcDtmXUxz9g=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=URJ7+3ZHzzYMkuQDryLe/0OdkCk5rpa/K5IXlhR+lZ8GOxV4RoRwMY9rw5J+WACQZ
+	 J2XoxcPZfWi+q2zURD1e/0l40yNrj1u23FUFf6YPMfRfdQXJF/wuMz6MpANx9YMS6z
+	 J9H9xyiKCTAMTWDwCJ+4pVO3SYKj2PSUa2tHu6TA4rCrsLHui2UBd46WP1vBW09Omw
+	 CmDwAkKnUxs1jNkWHa1Y2QtOiXIiY37aMa2a5Gg5YpiJF46qpO+7rfItpNGwoqHuMY
+	 wT7ehNpkC/R4uLYZUQkeuHgR8MTmutxVByVxEyIdxYMTP4g5KCCos8Ku8nIUFsIV9G
+	 IULH4S1J+EqlA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8C223F40069;
+	Thu, 12 Mar 2026 11:10:41 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Thu, 12 Mar 2026 11:10:41 -0400
+X-ME-Sender: <xms:cdeyaXvLToFUn5yUPZ5qyYFGfbFyjZ3qCgFCM_Pux_XXzFmvl9-_kg>
+    <xme:cdeyaTT5T_TusmlISrvTGzoHodFVY6lMu7v3HMr8dSPc7N1ynhEoYkQZONFBZtr09
+    Wgje5xliACbn5fMBieV0u18QVfGsw0gE58vRMUkRIOwTQrdI9H0Gw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeejuddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhgedvteeiueeghfffvedvveduudeghfdvjeefgeelhedvieeglefhtdfftdfhheen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgrrhhgshdrnhgvthenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklhgvvhgvrhdo
+    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleehledqfedvle
+    ekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdp
+    nhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghsug
+    hhvghnrhihmhgrrhhtihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsggtohguughi
+    nhhgsehhrghmmhgvrhhsphgrtggvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepshhnihhtiigvrheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepthhrohhnughmhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
+    hnnhgrrdhstghhuhhmrghkvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhn
+    uhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:cdeyaRHx4vRHleKWxDYNuUPpR3hA-XFj-lKo8Mltn5Npd0B6tt3qkg>
+    <xmx:cdeyaXBYkbGRVaakkj7tlmc71xjtIE5SBZyMdXQrmhsgAUsBTbXFAA>
+    <xmx:cdeyaRUcTB-tOcq8hvfT_I-oxt003o6bEpOhmCIO3fl-cUqzWy4NtA>
+    <xmx:cdeyaboyTCDuKwueNVz133QU8TQNjDHRTXTIjFh3qMioIurIhrlLnw>
+    <xmx:cdeyadQQV7nFOnpjD2uRme54lZ_Qjs0CX3GVBnYsZ6AXZ0C9_1aYan6d>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 60B3A780075; Thu, 12 Mar 2026 11:10:41 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-ThreadId: AY9Gdyo4Of1o
+Date: Thu, 12 Mar 2026 11:10:21 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Benjamin Coddington" <bcodding@hammerspace.com>,
+ bsdhenrymartin@gmail.com, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna.schumaker@oracle.com>
+Cc: linux-nfs@vger.kernel.org, "Mike Snitzer" <snitzer@kernel.org>,
+ "Jeff Layton" <jlayton@kernel.org>
+Message-Id: <25094279-518a-4477-bfdb-772a48c744b5@app.fastmail.com>
+In-Reply-To: 
+ <a57879782d2d383e2d1af292fe2b9005a43ea06c.1773263233.git.bcodding@hammerspace.com>
+References: 
+ <a57879782d2d383e2d1af292fe2b9005a43ea06c.1773263233.git.bcodding@hammerspace.com>
+Subject: Re: [RFC PATCH] sunrpc: refactor TLS transport to remove rpc_clnt dependency
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20065-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,lst.de];
-	RCVD_TLS_LAST(0.00)[];
+	XM_UA_NO_VERSION(0.01)[];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20066-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_TO(0.00)[hammerspace.com,gmail.com,kernel.org,oracle.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email,infradead.org:email]
-X-Rspamd-Queue-Id: E7A2D272C6E
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 815C827424F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
 
-svc_rdma_build_read_segment() constructs RDMA Read sink
-buffers by consuming pages one-at-a-time from rq_pages[]
-and building one bvec per page. A 64KB NFS READ payload
-produces 16 separate bvecs, 16 DMA mappings, and
-potentially multiple RDMA Read WRs.
 
-A single higher-order allocation followed by split_page()
-yields physically contiguous memory while preserving
-per-page refcounts. A single bvec spanning the contiguous
-range causes rdma_rw_ctx_init_bvec() to take the
-rdma_rw_init_single_wr_bvec() fast path: one DMA mapping,
-one SGE, one WR.
+On Wed, Mar 11, 2026, at 5:23 PM, Benjamin Coddington wrote:
+> The TLS connection worker (xs_tcp_tls_setup_socket) currently
+> requires a reference to the upper-layer rpc_clnt to populate arguments
+> for rpc_create() when setting up the lower-layer transport for the
+> RPC_AUTH_TLS probe. This dependency led to lifetime issues and a
+> use-after-free (UAF) of the client's credentials if the task finished
+> before the worker ran addressed previously in linux-nfs upstream 
+> posting:
+> https://lore.kernel.org/linux-nfs/20260309112041.1336519-1-bsdhenrymartin@gmail.com/
+>
+> However, it is architecturally cleaner to decouple the transport
+> connection logic from the RPC client entirely.
 
-The split sub-pages replace the original rq_pages[] entries,
-so all downstream page tracking, completion handling, and
-xdr_buf assembly remain unchanged.
+It's probably worth expanding (briefly) on the architectural
+cleanliness argument a bit. Why not simply bump the reference
+count on the rpc_clnt to prevent the UAF? There is definitely
+a bit of abuse in the current code that is removed by your
+refactor.
 
-Allocation uses __GFP_NORETRY | __GFP_NOWARN and falls back
-through decreasing orders. If even order-1 fails, the
-existing per-page path handles the segment.
 
-When nr_pages is not a power of two, get_order() rounds up
-and the allocation yields more pages than needed. The extra
-split pages replace existing rq_pages[] entries (freed via
-put_page() first), so there is no net increase in per-
-request page consumption. Successive segments reuse the
-same padding slots, preventing accumulation. The
-rq_maxpages guard rejects any allocation that would
-overrun the array, falling back to the per-page path.
-Under memory pressure, __GFP_NORETRY causes the higher-
-order allocation to fail without stalling.
+> The TLS probe requires
+> the upper-layer's RPC program and version to facilitate the probe.
+>
+> Refactor the TLS transport setup to:
+> - Remove the clnt member from struct sock_xprt.
+> - Save the RPC program number and version from the task
+>   during xs_connect() into the sock_xprt structure.
+> - Update xs_tcp_tls_setup_socket to use these saved parameters for
+>   lower-layer client creation in dummy program definitiions.
 
-The contiguous path is attempted when the segment starts
-page-aligned (rc_pageoff == 0) and spans at least two
-pages. NFS WRITE segments carry application-modified byte
-ranges of arbitrary length, so the optimization is not
-restricted to power-of-two page counts.
+^definitiions^definitions
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 220 ++++++++++++++++++++++++++++++
- 1 file changed, 220 insertions(+)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 4ec2f9ae06aa..63fcf677c96c 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -732,6 +732,216 @@ int svc_rdma_prepare_reply_chunk(struct svcxprt_rdma *rdma,
- 	return xdr->len;
- }
- 
-+#if PAGE_SIZE < SZ_64K
-+
-+/*
-+ * Limit contiguous RDMA Read sink allocations to 64KB
-+ * (order-4 on 4KB-page systems). Higher orders risk
-+ * allocation failure under __GFP_NORETRY, which would
-+ * negate the benefit of the contiguous fast path.
-+ */
-+#define SVC_RDMA_CONTIG_MAX_ORDER	get_order(SZ_64K)
-+
-+/**
-+ * svc_rdma_alloc_read_pages - Allocate physically contiguous pages
-+ * @nr_pages: number of pages needed
-+ * @order: on success, set to the allocation order
-+ *
-+ * Attempts a higher-order allocation, falling back to smaller orders.
-+ * The returned pages are split immediately so each sub-page has its
-+ * own refcount and can be freed independently.
-+ *
-+ * Returns a pointer to the first page on success, or NULL if even
-+ * order-1 allocation fails.
-+ */
-+static struct page *
-+svc_rdma_alloc_read_pages(unsigned int nr_pages, unsigned int *order)
-+{
-+	unsigned int o;
-+	struct page *page;
-+
-+	o = get_order(nr_pages << PAGE_SHIFT);
-+	if (o > SVC_RDMA_CONTIG_MAX_ORDER)
-+		o = SVC_RDMA_CONTIG_MAX_ORDER;
-+
-+	while (o >= 1) {
-+		page = alloc_pages(GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN,
-+				   o);
-+		if (page) {
-+			split_page(page, o);
-+			*order = o;
-+			return page;
-+		}
-+		o--;
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * svc_rdma_fill_contig_bvec - Replace rq_pages with a contiguous allocation
-+ * @rqstp: RPC transaction context
-+ * @head: context for ongoing I/O
-+ * @bv: bvec entry to fill
-+ * @pages_left: number of data pages remaining in the segment
-+ * @len_left: bytes remaining in the segment
-+ *
-+ * On success, fills @bv with a bvec spanning the contiguous range and
-+ * advances rc_curpage/rc_page_count. Returns the byte length covered,
-+ * or zero if the allocation failed or would overrun rq_maxpages.
-+ */
-+static unsigned int
-+svc_rdma_fill_contig_bvec(struct svc_rqst *rqstp,
-+			  struct svc_rdma_recv_ctxt *head,
-+			  struct bio_vec *bv, unsigned int pages_left,
-+			  unsigned int len_left)
-+{
-+	unsigned int order, alloc_nr, chunk_pages, chunk_len, i;
-+	struct page *page;
-+
-+	page = svc_rdma_alloc_read_pages(pages_left, &order);
-+	if (!page)
-+		return 0;
-+	alloc_nr = 1 << order;
-+
-+	if (head->rc_curpage + alloc_nr > rqstp->rq_maxpages) {
-+		for (i = 0; i < alloc_nr; i++)
-+			__free_page(page + i);
-+		return 0;
-+	}
-+
-+	for (i = 0; i < alloc_nr; i++) {
-+		svc_rqst_page_release(rqstp,
-+				      rqstp->rq_pages[head->rc_curpage + i]);
-+		rqstp->rq_pages[head->rc_curpage + i] = page + i;
-+	}
-+
-+	chunk_pages = min(alloc_nr, pages_left);
-+	chunk_len = min_t(unsigned int, chunk_pages << PAGE_SHIFT, len_left);
-+	bvec_set_page(bv, page, chunk_len, 0);
-+	head->rc_page_count += chunk_pages;
-+	head->rc_curpage += chunk_pages;
-+	return chunk_len;
-+}
-+
-+/*
-+ * svc_rdma_fill_page_bvec - Add a single rq_page to the bvec array
-+ * @head: context for ongoing I/O
-+ * @ctxt: R/W context whose bvec array is being filled
-+ * @cur: page to add
-+ * @bvec_idx: pointer to current bvec index, not advanced on merge
-+ * @len_left: bytes remaining in the segment
-+ *
-+ * If @cur is physically contiguous with the preceding bvec, it is
-+ * merged by extending that bvec's length. Otherwise a new bvec
-+ * entry is created. Returns the byte length covered.
-+ */
-+static unsigned int
-+svc_rdma_fill_page_bvec(struct svc_rdma_recv_ctxt *head,
-+			struct svc_rdma_rw_ctxt *ctxt, struct page *cur,
-+			unsigned int *bvec_idx, unsigned int len_left)
-+{
-+	unsigned int chunk_len = min_t(unsigned int, PAGE_SIZE, len_left);
-+
-+	head->rc_page_count++;
-+	head->rc_curpage++;
-+
-+	if (*bvec_idx > 0) {
-+		struct bio_vec *prev = &ctxt->rw_bvec[*bvec_idx - 1];
-+
-+		if (page_to_phys(prev->bv_page) + prev->bv_offset +
-+		    prev->bv_len == page_to_phys(cur)) {
-+			prev->bv_len += chunk_len;
-+			return chunk_len;
-+		}
-+	}
-+
-+	bvec_set_page(&ctxt->rw_bvec[*bvec_idx], cur, chunk_len, 0);
-+	(*bvec_idx)++;
-+	return chunk_len;
-+}
-+
-+/**
-+ * svc_rdma_build_read_segment_contig - Build RDMA Read WR with contiguous pages
-+ * @rqstp: RPC transaction context
-+ * @head: context for ongoing I/O
-+ * @segment: co-ordinates of remote memory to be read
-+ *
-+ * Greedily allocates higher-order pages to cover the segment,
-+ * building one bvec per contiguous chunk. Each allocation is
-+ * split so sub-pages have independent refcounts. When a
-+ * higher-order allocation fails, remaining pages are covered
-+ * individually, merging adjacent pages into the preceding bvec
-+ * when they are physically contiguous. The split sub-pages
-+ * replace entries in rq_pages[] so downstream cleanup is
-+ * unchanged.
-+ *
-+ * Returns:
-+ *   %0: the Read WR was constructed successfully
-+ *   %-ENOMEM: allocation failed
-+ *   %-EIO: a DMA mapping error occurred
-+ */
-+static int svc_rdma_build_read_segment_contig(struct svc_rqst *rqstp,
-+						struct svc_rdma_recv_ctxt *head,
-+						const struct svc_rdma_segment *segment)
-+{
-+	struct svcxprt_rdma *rdma = svc_rdma_rqst_rdma(rqstp);
-+	struct svc_rdma_chunk_ctxt *cc = &head->rc_cc;
-+	unsigned int nr_data_pages, bvec_idx;
-+	struct svc_rdma_rw_ctxt *ctxt;
-+	unsigned int len_left;
-+	int ret;
-+
-+	nr_data_pages = PAGE_ALIGN(segment->rs_length) >> PAGE_SHIFT;
-+	if (head->rc_curpage + nr_data_pages > rqstp->rq_maxpages)
-+		return -ENOMEM;
-+
-+	ctxt = svc_rdma_get_rw_ctxt(rdma, nr_data_pages);
-+	if (!ctxt)
-+		return -ENOMEM;
-+
-+	bvec_idx = 0;
-+	len_left = segment->rs_length;
-+	while (len_left) {
-+		unsigned int pages_left = PAGE_ALIGN(len_left) >> PAGE_SHIFT;
-+		unsigned int chunk_len = 0;
-+
-+		if (pages_left >= 2)
-+			chunk_len = svc_rdma_fill_contig_bvec(rqstp, head,
-+					&ctxt->rw_bvec[bvec_idx],
-+					pages_left, len_left);
-+		if (chunk_len) {
-+			bvec_idx++;
-+		} else {
-+			struct page *cur =
-+				rqstp->rq_pages[head->rc_curpage];
-+			chunk_len = svc_rdma_fill_page_bvec(head, ctxt, cur,
-+							    &bvec_idx,
-+							    len_left);
-+		}
-+
-+		len_left -= chunk_len;
-+	}
-+
-+	ctxt->rw_nents = bvec_idx;
-+
-+	head->rc_pageoff = offset_in_page(segment->rs_length);
-+	if (head->rc_pageoff)
-+		head->rc_curpage--;
-+
-+	ret = svc_rdma_rw_ctx_init(rdma, ctxt, segment->rs_offset,
-+				   segment->rs_handle, segment->rs_length,
-+				   DMA_FROM_DEVICE);
-+	if (ret < 0)
-+		return -EIO;
-+	percpu_counter_inc(&svcrdma_stat_read);
-+
-+	list_add(&ctxt->rw_list, &cc->cc_rwctxts);
-+	cc->cc_sqecount += ret;
-+	return 0;
-+}
-+
-+#endif /* PAGE_SIZE < SZ_64K */
-+
- /**
-  * svc_rdma_build_read_segment - Build RDMA Read WQEs to pull one RDMA segment
-  * @rqstp: RPC transaction context
-@@ -758,6 +968,16 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- 	if (check_add_overflow(head->rc_pageoff, len, &total))
- 		return -EINVAL;
- 	nr_bvec = PAGE_ALIGN(total) >> PAGE_SHIFT;
-+
-+#if PAGE_SIZE < SZ_64K
-+	if (head->rc_pageoff == 0 && nr_bvec >= 2) {
-+		ret = svc_rdma_build_read_segment_contig(rqstp, head,
-+							   segment);
-+		if (ret != -ENOMEM)
-+			return ret;
-+	}
-+#endif
-+
- 	ctxt = svc_rdma_get_rw_ctxt(rdma, nr_bvec);
- 	if (!ctxt)
- 		return -ENOMEM;
+> - Update TLS-related tracepoints to remove the rpc_clnt dependency.
+> - Remove the rpc_clnt refcounting and assignment in xs_connect.
+>
+> This simplifies state management and eliminates the risk of UAF without
+> requiring the transport to pin the upper-layer client.
+>
+> Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+
+More below.
+
+
+> ---
+>
+> I'm not sure I like what came out here.  It adds a lot of boilerplate, and
+> it reduces the tracepoint data (pretty necessary due to the race, however).
+>
+> Most of the fix is from just not setting cl_cred - it stays NULL.  Probably
+> the other values we get from the upper rpc_clnt are still hanging around.
+
+Can the patch description provide a rationale for why using a
+NULL cred is safe?
+
+
+> We could reduce the dummy definition boilerplate by passing the rpc_program
+> pointer, but then there's a potential null-dref if the calling module gets
+> unloaded.
+>
+> Can RCU the upper rpc_clnt?  Any other ideas?
+>
+> This is lightly tested by hand..
+>
+> Ben
+>
+> ---
+>
+>  include/linux/sunrpc/xprtsock.h |  3 +-
+>  include/trace/events/sunrpc.h   | 16 +++------
+>  net/sunrpc/xprtsock.c           | 59 +++++++++++++++++++++++++++------
+>  3 files changed, 55 insertions(+), 23 deletions(-)
+>
+> diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
+> index 700a1e6c047c..7cafc3057bfa 100644
+> --- a/include/linux/sunrpc/xprtsock.h
+> +++ b/include/linux/sunrpc/xprtsock.h
+> @@ -61,7 +61,8 @@ struct sock_xprt {
+>  	struct sockaddr_storage	srcaddr;
+>  	unsigned short		srcport;
+>  	int			xprt_err;
+> -	struct rpc_clnt		*clnt;
+> +	u32			connect_prog;
+> +	u32			connect_vers;
+> 
+>  	/*
+>  	 * UDP socket buffer size parameters
+> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+> index 750ecce56930..8088a8ad83d4 100644
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@ -1528,28 +1528,23 @@ TRACE_EVENT(rpcb_unregister,
+> 
+>  DECLARE_EVENT_CLASS(rpc_tls_class,
+>  	TP_PROTO(
+> -		const struct rpc_clnt *clnt,
+>  		const struct rpc_xprt *xprt
+>  	),
+> 
+> -	TP_ARGS(clnt, xprt),
+> +	TP_ARGS(xprt),
+> 
+>  	TP_STRUCT__entry(
+>  		__field(unsigned long, requested_policy)
+> -		__field(u32, version)
+>  		__string(servername, xprt->servername)
+> -		__string(progname, clnt->cl_program->name)
+>  	),
+> 
+>  	TP_fast_assign(
+> -		__entry->requested_policy = clnt->cl_xprtsec.policy;
+> -		__entry->version = clnt->cl_vers;
+> +		__entry->requested_policy = xprt->xprtsec.policy;
+>  		__assign_str(servername);
+> -		__assign_str(progname);
+>  	),
+> 
+> -	TP_printk("server=%s %sv%u requested_policy=%s",
+> -		__get_str(servername), __get_str(progname), __entry->version,
+> +	TP_printk("server=%s requested_policy=%s",
+> +		__get_str(servername),
+>  		rpc_show_xprtsec_policy(__entry->requested_policy)
+>  	)
+>  );
+> @@ -1557,10 +1552,9 @@ DECLARE_EVENT_CLASS(rpc_tls_class,
+>  #define DEFINE_RPC_TLS_EVENT(name) \
+>  	DEFINE_EVENT(rpc_tls_class, rpc_tls_##name, \
+>  			TP_PROTO( \
+> -				const struct rpc_clnt *clnt, \
+>  				const struct rpc_xprt *xprt \
+>  			), \
+> -			TP_ARGS(clnt, xprt))
+> +			TP_ARGS(xprt))
+> 
+>  DEFINE_RPC_TLS_EVENT(unavailable);
+>  DEFINE_RPC_TLS_EVENT(not_started);
+
+The requested_policy field that is retained is irrelevant to
+the RPC_AUTH_TLS probe (though it matters later during
+xs_tls_handshake_sync). But the program number and version that
+/are/ dropped are what actually go on the wire in the AUTH_TLS
+NULL call, so if the probe fails, the administrator wants to
+know which program/version pair was rejected, not whether the
+handshake that never happened would have been tls or mtls.
+
+Note that this information is recoverable via container_of(xprt,
+struct sock_xprt, xprt)->connect_prog/connect_vers without
+needing rpc_clnt.
+
+
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index 2e1fe6013361..5f3103e9a8f2 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -61,6 +61,45 @@
+>  #include "socklib.h"
+>  #include "sunrpc.h"
+> 
+> +/* Helper macro to define repetitive rpc_version structures */
+> +#define RPC_VERSION_DEFINE(prog, v_num)                 \
+> +static const struct rpc_version rpc_##prog##_version##v_num = { \
+> +    .number     = v_num,                                \
+> +    .nrprocs    = ARRAY_SIZE(rpc_##prog##_procs),       \
+> +    .procs      = rpc_##prog##_procs,                   \
+> +    .counts     = rpc_##prog##_counts,                  \
+> +}
+> +
+> +static struct rpc_stat rpc_tls_dummy_stats;
+> +
+> +static const struct rpc_procinfo rpc_tls_dummy_procs[] = {
+> +    [0] = {
+> +        .p_encode   = NULL,
+> +        .p_decode   = NULL,
+> +    },
+> +};
+> +
+> +static unsigned int 
+> rpc_tls_dummy_counts[ARRAY_SIZE(rpc_tls_dummy_procs)];
+> +
+> +/* Generate the structures for versions 2, 3, and 4 */
+> +RPC_VERSION_DEFINE(tls_dummy, 2);
+> +RPC_VERSION_DEFINE(tls_dummy, 3);
+> +RPC_VERSION_DEFINE(tls_dummy, 4);
+> +
+> +static const struct rpc_version *rpc_tls_dummy_versions[5] = {
+> +    [2] = &rpc_tls_dummy_version2,
+> +    [3] = &rpc_tls_dummy_version3,
+> +    [4] = &rpc_tls_dummy_version4,
+> +};
+
+This is a layering violation.
+
+Today's Linux NFS client stack implements TLS only for the NFS
+protocol, which has support for only versions 2, 3, and 4. But
+what if we want to implement TLS for NLM (or any other RPC
+protocol) -- NLM has v1, v3, and v4.
+
+A simpler design: use a single dummy version at index 0 with
+args->version = 0 always, relying solely on args->prognumber
+for the wire program number. The TLS probe never consults
+cl_vers -- it uses a fixed proc via msg.rpc_proc.
+
+(Ultimately that is still a hack, but you get the idea).
+
+> +
+> +static const struct rpc_program rpc_tls_dummy_program = {
+> +    .name       = "tls_probe",
+> +    .number     = 0,
+> +    .nrvers     = ARRAY_SIZE(rpc_tls_dummy_versions),
+> +    .version    = rpc_tls_dummy_versions,
+> +    .stats      = &rpc_tls_dummy_stats,
+> +};
+> +
+
+Nit: All of the new static structures and the macro use 4-space
+indentation rather than tabs.  Other rpc_program definitions
+in the tree (rpcb_program in rpcb_clnt.c, gssp_program in
+gss_rpc_upcall.c) use tabs per the kernel coding style.
+
+
+>  static void xs_close(struct rpc_xprt *xprt);
+>  static void xs_reset_srcport(struct sock_xprt *transport);
+>  static void xs_set_srcport(struct sock_xprt *transport, struct socket 
+> *sock);
+> @@ -2687,24 +2726,21 @@ static void xs_tcp_tls_setup_socket(struct 
+> work_struct *work)
+>  {
+>  	struct sock_xprt *upper_transport =
+>  		container_of(work, struct sock_xprt, connect_worker.work);
+> -	struct rpc_clnt *upper_clnt = upper_transport->clnt;
+>  	struct rpc_xprt *upper_xprt = &upper_transport->xprt;
+>  	struct rpc_create_args args = {
+>  		.net		= upper_xprt->xprt_net,
+>  		.protocol	= upper_xprt->prot,
+>  		.address	= (struct sockaddr *)&upper_xprt->addr,
+>  		.addrsize	= upper_xprt->addrlen,
+> -		.timeout	= upper_clnt->cl_timeout,
+> +		.timeout	= upper_xprt->timeout,
+
+The timeout source changed here from the upper-layer client's
+configured timeout to the transport's default timeout.  These
+can differ: upper_clnt->cl_timeout points to a copy of the
+NFS-configured timeout (set via nfs_init_timeout_values()), while
+upper_xprt->timeout points to xs_tcp_default_timeout.
+
+For default NFS TCP mounts, nfs_init_timeout_values() produces
+to_maxval = 180 * HZ and to_increment = 60 * HZ, whereas
+xs_tcp_default_timeout has to_maxval = 60 * HZ and
+to_increment = 0.
+
+Was this change intentional?  The commit message does not mention
+it, and it alters the retry behavior for the TLS probe on mounts
+with custom timeout settings.
+
+
+>  		.servername	= upper_xprt->servername,
+> -		.program	= upper_clnt->cl_program,
+> -		.prognumber	= upper_clnt->cl_prog,
+> -		.version	= upper_clnt->cl_vers,
+> +		.prognumber = upper_transport->connect_prog,
+
+Whitespace damage.
+
+
+> +		.version	= upper_transport->connect_vers,
+> +		.program	= &rpc_tls_dummy_program,
+>  		.authflavor	= RPC_AUTH_TLS,
+> -		.cred		= upper_clnt->cl_cred,
+>  		.xprtsec	= {
+>  			.policy		= RPC_XPRTSEC_NONE,
+>  		},
+> -		.stats		= upper_clnt->cl_stats,
+>  	};
+>  	unsigned int pflags = current->flags;
+>  	struct rpc_clnt *lower_clnt;
+> @@ -2719,7 +2755,7 @@ static void xs_tcp_tls_setup_socket(struct 
+> work_struct *work)
+>  	/* This implicitly sends an RPC_AUTH_TLS probe */
+>  	lower_clnt = rpc_create(&args);
+>  	if (IS_ERR(lower_clnt)) {
+> -		trace_rpc_tls_unavailable(upper_clnt, upper_xprt);
+> +		trace_rpc_tls_unavailable(upper_xprt);
+>  		clear_bit(XPRT_SOCK_CONNECTING, &upper_transport->sock_state);
+>  		xprt_clear_connecting(upper_xprt);
+>  		xprt_wake_pending_tasks(upper_xprt, PTR_ERR(lower_clnt));
+> @@ -2739,7 +2775,7 @@ static void xs_tcp_tls_setup_socket(struct 
+> work_struct *work)
+> 
+>  	status = xs_tls_handshake_sync(lower_xprt, &upper_xprt->xprtsec);
+>  	if (status) {
+> -		trace_rpc_tls_not_started(upper_clnt, upper_xprt);
+> +		trace_rpc_tls_not_started(upper_xprt);
+>  		goto out_close;
+>  	}
+> 
+> @@ -2757,7 +2793,6 @@ static void xs_tcp_tls_setup_socket(struct 
+> work_struct *work)
+> 
+>  out_unlock:
+>  	current_restore_flags(pflags, PF_MEMALLOC);
+> -	upper_transport->clnt = NULL;
+>  	xprt_unlock_connect(upper_xprt, upper_transport);
+>  	return;
+> 
+> @@ -2805,7 +2840,9 @@ static void xs_connect(struct rpc_xprt *xprt, 
+> struct rpc_task *task)
+>  	} else
+>  		dprintk("RPC:       xs_connect scheduled xprt %p\n", xprt);
+> 
+> -	transport->clnt = task->tk_client;
+> +	transport->connect_prog = task->tk_client->cl_prog;
+> +	transport->connect_vers = task->tk_client->cl_vers;
+> +
+>  	queue_delayed_work(xprtiod_workqueue,
+>  			&transport->connect_worker,
+>  			delay);
+> -- 
+> 2.53.0
+
+The proposed refactoring seems like a sensible direction.
+
+The UAF potential is eliminated structurally, and some of the
+transport-to-client coupling (and layering violation) is removed.
+
+
 -- 
-2.52.0
-
+Chuck Lever
 
