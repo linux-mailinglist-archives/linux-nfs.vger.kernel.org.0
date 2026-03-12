@@ -1,63 +1,61 @@
-Return-Path: <linux-nfs+bounces-20057-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20058-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6A2MGUStsmkjOwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20057-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:10:44 +0100
+	id AA2mHwiysmmYOwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20058-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:31:04 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3B09271756
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:10:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFF62271CAD
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:31:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D6B4C302A067
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 12:10:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D8C3F300F9C1
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 12:30:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EDB3B7B87;
-	Thu, 12 Mar 2026 12:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6E8248F7C;
+	Thu, 12 Mar 2026 12:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwsE8gQp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHhvj9wv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6D136DA09;
-	Thu, 12 Mar 2026 12:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC79921D3CC;
+	Thu, 12 Mar 2026 12:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773317429; cv=none; b=ux9kK3QA62TL+qaxiJR9catFvfJWtH6Psf6SlmOTrIyURaPty1RGuGV6ys7zXgFWFtI8RezWYoJ0SeCmASX1rymYUi6qUV/K8fT6aJXUj4E5jvnhCnJ9wZCS/0itzIB03JdCSxBnEEHYhLzrSShCx45pXvqsl4NUbFX/CjhLB3I=
+	t=1773318636; cv=none; b=QKoh0O3Y13wh/cQaAM5ZP2kxvKoo818z9GWEv0BzD5iV90K73nXwsRE/kdqPb/xr/S4GiNa4zQF5TnHZ7lLsdFo5paaiZNomXXj48NCdLkXNFULMgoiCu9Ht7aJtLtGZH9giTv051XDD2AKV3o8GXxzLOxN6WwXEnvoyrgTkT/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773317429; c=relaxed/simple;
-	bh=HltwtVdjzVMHydU/ixyI56sfvFOm/UycX9ON36RAijA=;
+	s=arc-20240116; t=1773318636; c=relaxed/simple;
+	bh=3rQV6fu9IBxl5KAypj1ffZpgq/x8RwA0iJypFzSq9gI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JGnq+gL4Jb99v0NZFk2fVeYLDYndPmTcMg35AlKQhcEdwJr2pJfieyI/uPQqG90i9Arj+q+nO8NSaKIsXBNsv9fCHMMgzLAEG8o+/4+6d8qAHPyXSGdXATImjU49UVeUooHlwFTT4Q57FRs6kDGBhZQaaNPb5KH6SDHPhdKGT+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwsE8gQp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA72C4CEF7;
-	Thu, 12 Mar 2026 12:10:27 +0000 (UTC)
+	 Content-Type:MIME-Version; b=J1p8g1m31l+HAWJAUwb6vPyzc2rTPzlRyJ3UqWvuuKw/NGDaBqh8G0265drsfs0rVCm+pjYTVjAyjUwk7AVlIgeZt2IMg+i1FwNsDR5QznrhUspDbWBGTQi6KOVQltvFvk/h3KCCOLql2z4F34kzLJPXyVBK07O42cgAylQ6xl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHhvj9wv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B31C4CEF7;
+	Thu, 12 Mar 2026 12:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773317428;
-	bh=HltwtVdjzVMHydU/ixyI56sfvFOm/UycX9ON36RAijA=;
+	s=k20201202; t=1773318635;
+	bh=3rQV6fu9IBxl5KAypj1ffZpgq/x8RwA0iJypFzSq9gI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GwsE8gQp0p94VRRrY/tI3piy2wAQpZ523wNvmQfPnzbw6g/H1bUbq8rvWKQyzwN5r
-	 VCZbXKxAIl6x4zqFRCfKJS9cpD3AFhskIyQmz7Os+u+L7isxclvN57gC0OC6VnatAe
-	 hhpebG17crgt6Fd5wch6Dz5viG5mHIljR5SGK1x2PoXGPlpp6DiVXW7DavqJnrOtLr
-	 usJMcMyvgf7Dgjh+Hpm9tU6AlvztH2XQR2jkYWCWFgOKdHYvL+3cMrHv8PeYvNnRgm
-	 QjqGS3YECyFfDxPryxAhUXnfXDGYfWl8PV1fw3llcExkNA1wKXPuk5j6FuPP7XJIE6
-	 6ibtFHXgwlZGA==
-Message-ID: <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>
+	b=eHhvj9wvPJocIiYXMVclMnCJCEWNU6xAkAO+9zEEAe4r9fJ258yJ0SDLMWacgNurQ
+	 EHpSIp1LCowfYaPM0p8ExJ686RzUUBabiHWZkUZdmyT0GccKNV2cTNz35NBzHfF/RJ
+	 Fz12VZpXlNrY8eBt08MHmeKDXP6mWwEA04HF6YJGPcgGUVr62mPpneQJWmLLfRWewx
+	 lYXqS4wMhbruAXDEsX23J1OVZIpOzJHzNOgdgSs+LV6vWHnx+20m22ZpF93NK0Ze5o
+	 cxuwteNSNJQwj21a9/4Bglm6yVI+9uYJLkfk+x527w/7tXVka8YXp53RwAt1QBYKeU
+	 ZnAAZDAHlS5SQ==
+Message-ID: <5a302dcfcb54a87366dd6a9bc5ec27df179f7f58.camel@kernel.org>
 Subject: Re: Regression: Missing check in nfsd_permission() causes -ENOLCK
  No locks available
 From: Jeff Layton <jlayton@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, NeilBrown
- <neil@brown.name>
-Cc: 1128861@bugs.debian.org, Tj <tj.iam.tj@proton.me>, 
-	linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, 
-	stable@vger.kernel.org
-Date: Thu, 12 Mar 2026 08:10:24 -0400
-In-Reply-To: <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>,
+ 	1128861@bugs.debian.org, Neil Brown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, 
+	stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Thu, 12 Mar 2026 08:30:32 -0400
+In-Reply-To: <418f30b5-06ae-471f-bf5f-f14f3f75deff@leemhuis.info>
 References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
-	 <177266540127.7472.3460090956713656639@noble.neil.brown.name>
-	 <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
+	 <418f30b5-06ae-471f-bf5f-f14f3f75deff@leemhuis.info>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -144,12 +142,12 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20057-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20058-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -161,191 +159,36 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C3B09271756
+X-Rspamd-Queue-Id: EFF62271CAD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 2026-03-12 at 09:55 +0100, Thorsten Leemhuis wrote:
-> On 3/5/26 00:03, NeilBrown wrote:
-> > On Tue, 24 Feb 2026, Tj wrote:
-> > > Upstream commit 4cc9b9f2bf4dfe13fe573 "nfsd: refine and rename=20
-> > > NFSD_MAY_LOCK" and
-> > >  =C2=A0stable v6.12.54 commit 18744bc56b0ec=C2=A0 (re)moves checks fr=
-om=20
-> > > fs/nfsd/vfs.c::nfsd_permission().
-> > >=20
-> > >  =C2=A0This causes NFS clients to see
-> > >=20
-> > > $ flock -e -w 4 /srv/NAS/test/debian-13.3.0-amd64-netinst.iso sleep 1
-> > > flock: /srv/NAS/test/debian-13.3.0-amd64-netinst.iso: No locks availa=
-ble
-> > >=20
-> > > Keeping the check in nfsd_permission() whilst also copying it to=20
-> > > fs/nfsd/nfsfh.c::__fh_verify() resolves the issue.
-> > >=20
-> > > This was discovered on the Debian openQA infrastructure server when=
+On Fri, 2026-02-27 at 10:54 +0100, Thorsten Leemhuis wrote:
+> > This was discovered on the Debian openQA infrastructure server when=20
+> > upgrading kernel from v6.12.48 to later v6.12.y where worker hosts (wit=
+h=20
+> > any earlier or later kernel version) pass NFSv3 mounted ISO images to=
 =20
-> > > upgrading kernel from v6.12.48 to later v6.12.y where worker hosts (w=
-ith=20
-> > > any earlier or later kernel version) pass NFSv3 mounted ISO images to=
-=20
-> > > qemu-system-x86_64 and it reports:
->=20
-> Neil, thx for the explanation.
->=20
-> Jeff, do you have any opinion on what Neil suggested (see quote below).
->=20
-> But as Neil mentioned, it's a regression, so it must be handled some
-> way. And it looks like this stalled. Given that the commit in that
-> caused this is somewhat old, I wonder:
->=20
-> Is that something we expect other people to run into?
->=20
-> If yes, I'd say Linus expects us to fix this.
->=20
-> And if not: is there something the Debian openQA infra (a) can and (b)
-> is willing to do to work around this regression cleanly (by upgrading
-> Qemu or something like that maybe)? Then we maybe can leave things as
-> they are[1].
->=20
-> Ciao, Thorsten
->=20
-> [1] see the hand-holding aspect mention in
-> https://www.kernel.org/doc/html/next/process/handling-regressions.html#on=
--exceptions-to-the-no-regressions-rule
->=20
+> > qemu-system-x86_64 and it reports:
+> >=20
+> > !!! : qemu-system-x86_64: -device=20
+> > scsi-cd,id=3Dcd0-device,drive=3Dcd0-overlay0,serial=3Dcd0: Failed to ge=
+t=20
+> > "consistent read" lock: No locks available
+> > QEMU: Is another process using the image=20
+> > [/var/lib/openqa/pool/2/20260223-1-debian-testing-amd64-netinst.iso]?
+> >=20
 
+I have to wonder if this is a QEMU bug too:
 
-Yes. NAK on the patch below. It would break legitimate cases where the
-lock should be denied. Neil is right not to encourage its use.
-
-As Neil points out, exclusive locks on NLM require write access. We're
-constrained by a protocol that doesn't have a provision for flock()
-style locks. It may technically be a regression since it worked before,
-but I'm wondering whether it ever should have.
-
-Has anyone experiencing this tried using the no_auth_nlm export option
-on the server? ISTM that that should work around the problem for these
-folks, even if it's not ideal.
-=20
-> > > !!! : qemu-system-x86_64: -device=20
-> > > scsi-cd,id=3Dcd0-device,drive=3Dcd0-overlay0,serial=3Dcd0: Failed to =
-get=20
-> > > "consistent read" lock: No locks available
-> > > QEMU: Is another process using the image=20
-> > > [/var/lib/openqa/pool/2/20260223-1-debian-testing-amd64-netinst.iso]?
-> > >=20
-> > > A simple reproducer with the server using:
-> > >=20
-> > > # cat /etc/exports.d/test.exports
-> > > /srv/NAS/test=20
-> > > fdff::/64(fsid=3D0,rw,no_root_squash,sync,no_subtree_check,auth_nlm)
-> > >=20
-> > > and clients using:
-> > >=20
-> > > # mount -t nfs [fdff::2]:/srv/NAS/test /srv/NAS/test -o=20
-> > > proto=3Dtcp6,ro,fsc,soft
-> >=20
-> > Linux has two quite different sorts of locks - flock and fcntl.
-> > flocks lock the whole file, shared or exclusive.
-> > fcntl can lock any byte-range (including the whole file), shared or
-> > exclusive.  flock and fcntl locks don't conflict.
-> >=20
-> > exclusive flock locks only require read access to the file
-> > exclusive fcntl locks require write access to the file.
-> >=20
-> > The NLM protocol only supports one type of byte-range lock.  It is
-> > natural to map fcntl locks onto NLM locks.  The early Linux NFS
-> > implementation handled flock locks entirely locally so different client=
-s
-> > didn't conflict.  This could be confusing but was widely documented and
-> > understood.
-> > Some years ago Linux NFS was enhanced to handle flock locks like
-> > whole-file fcntl locks.  This means that clients with flock locks would
-> > conflict (maybe good) but that flock locks and fcntl locks would now
-> > conflict (maybe bad).
-> > You can still get the old behaviour with "-o local_lock=3Dflock".
-> >=20
-> > So if you open a file on NFS read-only and attempt an exclusive flock,
-> > that will be sent to the server as a full-range fcntl lock which should
-> > require write access.  If the server finds you don't have write access =
--
-> > you lose.
-> >=20
-> > It would seems to make sense to tell qemu that the device is read-only.=
-=20
-> > Then it will hopefully only request a shared lock.  Can you try that?
-> >=20
-> > Note that even before my patch, if the filesystem was exported read-onl=
-y
-> > or mounted read-only on the server, then exclusive flock locks would
-> > fail.
-> >=20
-> > I think that the current behaviour is correct, however I do understand
-> > that it is a regression and maybe that justifies incorrect behaviour.
-> > Maybe Jeff, as locking maintainer, would be willing to do something lik=
-e
-> >=20
-> > diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
-> > index dd0214dcb695..6c674fc51bab 100644
-> > --- a/fs/lockd/svcsubs.c
-> > +++ b/fs/lockd/svcsubs.c
-> > @@ -73,6 +73,14 @@ static inline unsigned int file_hash(struct nfs_fh *=
-f)
-> > =20
-> >  int lock_to_openmode(struct file_lock *lock)
-> >  {
-> > +	/*
-> > +	 * flock only requires READ access and to support
-> > +	 * clients which send flock locks via NLM we
-> > +	 * report O_RDONLY for full-file locks.
-> > +	 */
-> > +	if (lock->fl_start =3D=3D 0 &&
-> > +	    lock->fl_end =3D=3D NLM4_OFFSET_MAX)
-> > +		return O_RDONLY;
-> >  	return lock_is_write(lock) ? O_WRONLY : O_RDONLY;
-> >  }
-> > =20
-> >=20
-> > But I wouldn't encourage him to.
-> >=20
-> > NeilBrown
-> >=20
-> >=20
-> > >=20
-> > > will trigger the error as shown above:
-> > >=20
-> > > $ flock -e -w 4 /srv/NAS/test/debian-13.3.0-amd64-netinst.iso sleep 1
-> > > flock: /srv/NAS/test/debian-13.3.0-amd64-netinst.iso: No locks availa=
-ble
-> > >=20
-> > > A simple test program calling fcntl() with the same arguments QEMU us=
-es=20
-> > > also fails in the same way.
-> > >=20
-> > > $ ./nfs3_range_lock_test=20
-> > > /srv/NAS/test/debian-13.3.0-amd64-netinst.{iso,overlay}
-> > > Opened base file: /srv/NAS/test/debian-13.3.0-amd64-netinst.iso
-> > > Opened overlay file: /srv/NAS/test/debian-13.3.0-amd64-netinst.overla=
-y
-> > > Attempting lock at 4 on /srv/NAS/test/debian-13.3.0-amd64-netinst.iso
-> > > fcntl(fd, F_GETLK, &fl) failed on base: No locks available
-> > > Attempting lock at 8 on /srv/NAS/test/debian-13.3.0-amd64-netinst.ove=
-rlay
-> > > fcntl(fd, F_GETLK, &fl) failed on overlay: No locks available
-> > >=20
-> > >=20
-> > >=20
-> > >=20
-> >=20
->=20
-
+Why is it opening a file read-only and then taking out an exclusive
+lock on it? What's the point of denying access to other readers?
 --=20
 Jeff Layton <jlayton@kernel.org>
 
