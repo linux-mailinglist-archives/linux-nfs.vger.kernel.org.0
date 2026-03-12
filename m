@@ -1,194 +1,177 @@
-Return-Path: <linux-nfs+bounces-20058-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20059-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AA2mHwiysmmYOwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20058-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:31:04 +0100
+	id iM+YGYO2smmYOwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20059-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:50:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFF62271CAD
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:31:03 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DD64272018
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:50:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D8C3F300F9C1
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 12:30:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 73778300F112
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 12:50:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6E8248F7C;
-	Thu, 12 Mar 2026 12:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74DFC2DF151;
+	Thu, 12 Mar 2026 12:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHhvj9wv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ISAbWvAo";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="HYhf8viT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC79921D3CC;
-	Thu, 12 Mar 2026 12:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E0931716C
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2026 12:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773318636; cv=none; b=QKoh0O3Y13wh/cQaAM5ZP2kxvKoo818z9GWEv0BzD5iV90K73nXwsRE/kdqPb/xr/S4GiNa4zQF5TnHZ7lLsdFo5paaiZNomXXj48NCdLkXNFULMgoiCu9Ht7aJtLtGZH9giTv051XDD2AKV3o8GXxzLOxN6WwXEnvoyrgTkT/8=
+	t=1773319808; cv=none; b=mQvN6kr21DCXzjuEzGj3MwVLZhm70/hDB2pDqeBK5X3IXd+uLcYg2fO8M3M8wUaYc+b7WJJLeDU21LbA3arFxMTpHJ2Sj6PW7UM/OX9Rvlh5eG+BG+GonedGTpU5PCIhPljm8XBYm/uGMVi5ftgRwqJ9KRMawG/08doKJ2kX4v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773318636; c=relaxed/simple;
-	bh=3rQV6fu9IBxl5KAypj1ffZpgq/x8RwA0iJypFzSq9gI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J1p8g1m31l+HAWJAUwb6vPyzc2rTPzlRyJ3UqWvuuKw/NGDaBqh8G0265drsfs0rVCm+pjYTVjAyjUwk7AVlIgeZt2IMg+i1FwNsDR5QznrhUspDbWBGTQi6KOVQltvFvk/h3KCCOLql2z4F34kzLJPXyVBK07O42cgAylQ6xl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHhvj9wv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B31C4CEF7;
-	Thu, 12 Mar 2026 12:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773318635;
-	bh=3rQV6fu9IBxl5KAypj1ffZpgq/x8RwA0iJypFzSq9gI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eHhvj9wvPJocIiYXMVclMnCJCEWNU6xAkAO+9zEEAe4r9fJ258yJ0SDLMWacgNurQ
-	 EHpSIp1LCowfYaPM0p8ExJ686RzUUBabiHWZkUZdmyT0GccKNV2cTNz35NBzHfF/RJ
-	 Fz12VZpXlNrY8eBt08MHmeKDXP6mWwEA04HF6YJGPcgGUVr62mPpneQJWmLLfRWewx
-	 lYXqS4wMhbruAXDEsX23J1OVZIpOzJHzNOgdgSs+LV6vWHnx+20m22ZpF93NK0Ze5o
-	 cxuwteNSNJQwj21a9/4Bglm6yVI+9uYJLkfk+x527w/7tXVka8YXp53RwAt1QBYKeU
-	 ZnAAZDAHlS5SQ==
-Message-ID: <5a302dcfcb54a87366dd6a9bc5ec27df179f7f58.camel@kernel.org>
-Subject: Re: Regression: Missing check in nfsd_permission() causes -ENOLCK
- No locks available
-From: Jeff Layton <jlayton@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>,
- 	1128861@bugs.debian.org, Neil Brown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, 
-	stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Thu, 12 Mar 2026 08:30:32 -0400
-In-Reply-To: <418f30b5-06ae-471f-bf5f-f14f3f75deff@leemhuis.info>
-References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
-	 <418f30b5-06ae-471f-bf5f-f14f3f75deff@leemhuis.info>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1773319808; c=relaxed/simple;
+	bh=+cNQjYBSIzMe7SxhmbHyoHm/DRqpVGTg0hxMC/b9coU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qVin3aMVf4bU+zEeXUGqWOaz2DKJzPy22NVyppgvkuBHQVUkRWvsTm/3iK6dHzsGi+sjffNACXjyM7ZWNvcrf5Q9WSpfpKKc52B9pRS3JV9TtAjTHzgL2MXvJJsF36FbtrawrIhzs78NOiccZFGsXQ1E6dVkglKPO0lm9uHOWlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ISAbWvAo; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=HYhf8viT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773319806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TLYrmsrjorNW+o7wBDZ2PStl5u18MdB19xBYidZwUik=;
+	b=ISAbWvAoOj28Cc6/if9yDK8mRIdMFyF0hzKo4aK/h5BOv+xo1IwGckt1LyjmMbo20vdAmH
+	WpgLyu/LzojsGY/n9NgNJzSg905ODkJH1hSoBaOQTNSF5/Fh7t6zneDDH930PvZzKqJeAv
+	WPKR+27rUm3sT1iKIs+WPmm28joEBL8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-645-T5VmofuTN1exFZIylthIIg-1; Thu, 12 Mar 2026 08:50:04 -0400
+X-MC-Unique: T5VmofuTN1exFZIylthIIg-1
+X-Mimecast-MFC-AGG-ID: T5VmofuTN1exFZIylthIIg_1773319804
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-50917afa521so126878161cf.0
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2026 05:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1773319804; x=1773924604; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TLYrmsrjorNW+o7wBDZ2PStl5u18MdB19xBYidZwUik=;
+        b=HYhf8viTQ1z15TcfYDd7hMXJFMmpB0riMH398OvkF+zQCd6rIaW6SCDc4D1QtTmSji
+         bQElJkMmhuR6Xdzb8xPSfCk91FVFinZ85KSqX+1ibwNThf9ul5HNGQxYQIJ62EvkUt7Q
+         0dCio7qgQHDYrWPoRmmprzHhXUwE8ppUwdQK9s9y+jpeQFDrSZZzfhH2GggpGKZ7zgtb
+         Z6S0/Q4+4YIi/BD46GXblTwL5vzCJwBiscLqo4mH+dmviW7SmeMK2ZCz/CUG3DTZ61tw
+         FCxyjUr9+djxs0Fmp+ojXAYrY+TN4zmDTS0+ikg+Pqax5uv+n7BxQoshRd0bWbhDtG0O
+         /6SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773319804; x=1773924604;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TLYrmsrjorNW+o7wBDZ2PStl5u18MdB19xBYidZwUik=;
+        b=BSQvk6xLw5pk2M14LOiBEs3xS/6j0bZmcADQFmYZDauk5Ix+m/izWTXRWCCV1a7Oy7
+         TC/IGobzNWOJN4bkPgaOn9fxYoDl6esiFbZQhlhJtULnn6CZSWlYLfk76b3ctvOL/77j
+         Tg6bAkedCoCLIZe/891kMnkwxx/nzP04fvkeAK7Ik1UOmzeTIwP95hCCqYAjhCY8yNYj
+         zXtzCcHNXQFITEFsWJinQzpGMI4oIObnUZGflwKoxIi6uzu47lo9np8F+dFY2PVMRepw
+         yOzt3yqs5DEPVWWS5rEzwHDg0yHbrSfhcmpCruyCkldpK06UHMtX9MiF4dgTMuEE9Qcq
+         Ehmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgl0R4mOa1Ism6Abj6i+mi/kjW3WbR2qbz8XCZkm+9SqRbxXMQlAhuUfShTb8MfpDP/A6xm1wsq+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzm9Zo6W3UFjB7rZQ/2gsxEfmuMRYtSPWDrHgFCluORJkdvjTt
+	TtjnrHzWaRvBKjCG24MEcS2IvhZtzCQF9g+p/pGpcYC3jBQUrYjxhFREubrUcXrYxxVV1aepCGW
+	2/iMY34efE7NcOvzmDFplilztBIZnECJIg1T8qQrtIOxiUK6FR22sQMVa9IWXDA==
+X-Gm-Gg: ATEYQzyt9YNuvpgpf4tNoPW4CDQ07uQI5Djtg5ez/ymOQoKiUdPF+kxoiFcUTMcP2C7
+	WDX2Bb6U+byNQNA4f+im1sA/GBGI5XvMa8FzDwl9VGgaqJmEZ5bidyNiZiKtXqfDxrM0xEYKQKh
+	w/Mt2t4BrgwpIhmukNinbs4x+2ckheeoQz5pH0IxgRolaNNuziKsXiDn/BlPVDITYZb1UhG1Ng4
+	XzKxg1cpdAxtO5mUxT/2YPrjfSvNT5j61xg4YnaVmRwoL+t8wpV52vTZew+GMHROo19l5+8mHXz
+	YRDSnedau07GGI8kalWK1/1Q2eca5nvNRmu0O7xabcuais6Z+/MwvEN2eaJxFxL3k3tkCM26foP
+	lTh2667AIVyIhGYiG6cPL1w==
+X-Received: by 2002:ac8:5a51:0:b0:509:d0a:5649 with SMTP id d75a77b69052e-509472bb41amr39588311cf.37.1773319804315;
+        Thu, 12 Mar 2026 05:50:04 -0700 (PDT)
+X-Received: by 2002:ac8:5a51:0:b0:509:d0a:5649 with SMTP id d75a77b69052e-509472bb41amr39588041cf.37.1773319803920;
+        Thu, 12 Mar 2026 05:50:03 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.248.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5093a116d86sm31229991cf.23.2026.03.12.05.50.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2026 05:50:03 -0700 (PDT)
+Message-ID: <4f92f9b4-5e8e-4ed4-8056-3539b0f19684@redhat.com>
+Date: Thu, 12 Mar 2026 08:50:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] nfsrahead: fix uninitialised memory crash and refine
+ fast-path logging
+To: Aaron Tomlin <atomlin@atomlin.com>, tbecker@redhat.com
+Cc: yi.zhang@redhat.com, linux-nfs@vger.kernel.org
+References: <20260309145025.107623-1-atomlin@atomlin.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20260309145025.107623-1-atomlin@atomlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20058-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20059-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EFF62271CAD
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0DD64272018
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-02-27 at 10:54 +0100, Thorsten Leemhuis wrote:
-> > This was discovered on the Debian openQA infrastructure server when=20
-> > upgrading kernel from v6.12.48 to later v6.12.y where worker hosts (wit=
-h=20
-> > any earlier or later kernel version) pass NFSv3 mounted ISO images to=
-=20
-> > qemu-system-x86_64 and it reports:
-> >=20
-> > !!! : qemu-system-x86_64: -device=20
-> > scsi-cd,id=3Dcd0-device,drive=3Dcd0-overlay0,serial=3Dcd0: Failed to ge=
-t=20
-> > "consistent read" lock: No locks available
-> > QEMU: Is another process using the image=20
-> > [/var/lib/openqa/pool/2/20260223-1-debian-testing-amd64-netinst.iso]?
-> >=20
 
-I have to wonder if this is a QEMU bug too:
 
-Why is it opening a file read-only and then taking out an exclusive
-lock on it? What's the point of denying access to other readers?
---=20
-Jeff Layton <jlayton@kernel.org>
+On 3/9/26 10:50 AM, Aaron Tomlin wrote:
+> Hi Steve, Yi,
+> 
+> This series addresses two issues stemming from the recent fast-path
+> optimisation used to reject non-NFS block devices, which were caught during
+> blktests.
+> 
+>      1.  [PATCH 1/2] fixes the glibc abort(3) by explicitly
+>          zero-initialising the device_info struct. This prevents the cleanup
+>          path from attempting to free uninitialised stack memory when the
+>          fast-path triggers an early exit.
+> 
+>      2.  [PATCH 2/2] updates the error handling in main() to log a
+>          descriptive debug message rather than a general error when a device
+>          is intentionally skipped, preventing misleading udev journal spam.
+> 
+> Aaron Tomlin (2):
+>    nfsrahead: zero-initialise device_info struct
+>    nfsrahead: quieten misleading error for non-NFS block devices
+> 
+>   tools/nfsrahead/main.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+Committed... (tag: nfs-utils-2-8-7-rc1)
+
+steved.
+
 
