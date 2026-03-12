@@ -1,205 +1,146 @@
-Return-Path: <linux-nfs+bounces-20114-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20115-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +NfmAthAs2l6TgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20114-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:40:24 +0100
+	id UNhqDZFOs2mNUgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20115-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 00:38:57 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1237E27B011
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:40:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A217E27B4A6
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 00:38:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 52B5D303ABF2
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 22:39:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 804063065AFB
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:38:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 113EF374162;
-	Thu, 12 Mar 2026 22:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Zg58F/SG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WrAckuAK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B22401A0C;
+	Thu, 12 Mar 2026 23:38:53 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14B42F3C26;
-	Thu, 12 Mar 2026 22:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D043D0921;
+	Thu, 12 Mar 2026 23:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773355183; cv=none; b=Jsf6svfHDdJQCtPMcuvFMDnQK7Atc+ps9KbUHQhc4oz/u14rUehc+gfqAP0AlI4fp6dnv8txZz1E4g6Zk7oGT9rtwl3yqd65IiOShAsdztVYNN35su8e8aayYNs9giPVZrOx3jQ4Gjw2PGIS1NGL2g3oPyas6Yr9HTKER9sNQB0=
+	t=1773358733; cv=none; b=gNc7QzVANDcghrzlXK9ogXcKcIQ4CL6h7lL1fp0b6P+dcjGMjADiI7+bw02kwq92U/AkKRPyEnI4UpvBO+z+SxSt78lul8514e8qJlo4fkaKvStQDIukEwckiRrBT5SuQmTAxG7XRL5oL0w/6h7m2iV9zXK2XuM1n9lV3/LwIVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773355183; c=relaxed/simple;
-	bh=TrSIwL97TYjCsfniuvWwlpXozZqpTBen/RyGtj6qNGI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pIwJkM0RK7I3NYVKoktQTVswiFXha12F9D4O8ck2t5w6Soen5Cuh+1FQoi7m9SDYgXwAva9Rfq+OvuuGEiYubDvWc2AernEHMzI+vz+v4LuLuCJHQyD+q6215p+WuMSJq8kUuwly9sJjVmtPW9gtv6puw3gv12RPNQARCReNio4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Zg58F/SG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WrAckuAK; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C439B7A00DC;
-	Thu, 12 Mar 2026 18:39:41 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Thu, 12 Mar 2026 18:39:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1773355181; x=1773441581; bh=I2HYPiTpoKa15Sjzz4VE4VCGc6yGT1w0F7V
-	AuMJaieQ=; b=Zg58F/SG4cEEkupxG9ZGyGrZZbAXgqmbaA/FjbjaRm5BhwJL85u
-	Gp9jMT6nHQwB3M5xkk4EP5nS9qzA9EQN8bTk4x0PcS+9X99Unl9P+or1e5Lp2hNh
-	J7VHJTzMxpF7WnMR2EwCVd7s6+aGiOg78a3K1gCK1Y/TD/474wdhvHXQsEWAuo69
-	/UJK8/Z6Dn9mfd9+1f0HBFIYqBO9FMN6g9rh8rnQDlyGy1Ca3NPxcNQM4wmamptO
-	BVnIGN+tyZASYfPQosBD3rshfntDx/ULxpg4Ds6nm/+PnKSruQAPvlakDGF2Ahpk
-	Dhtb5eZvnBxxFpu3VejgyWkcgefV88C4pEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773355181; x=
-	1773441581; bh=I2HYPiTpoKa15Sjzz4VE4VCGc6yGT1w0F7VAuMJaieQ=; b=W
-	rAckuAK8770Z3UhHmRJ9ux+tYQYJDzUHQO9TWTsjPaZXoDDMLvvd1gfmQa3zCMYs
-	1BW43YLoSIovg8t8kM97n1CUL5wMV5jkaFXK34n+iamzwp3ArxcyPHKcG6Qzc/C6
-	L927NDNdo4IbLmqaCIZbM48aZSmkjX723r+dSMJfZ70LTcAO+LuoyLBu0WuzQP6o
-	XXSozHrEiieVK/TOpKXJ51pqKHaIi4AyHmG5w3qJaFMg7fhaHW8ae2cA5CgVDMTC
-	WIK63EK/PtVzqV3suqo0cbHNVoGUI/8R34j/+cBSB+nnZuOpRDROvKeE5cudE0SS
-	l+DUAMWicGxQ+UDf7uAmQ==
-X-ME-Sender: <xms:rUCzaQMwoNOGmCKTpbSVurvmnFjeisK77hCcNEyN1xzQC3sLuUXKdw>
-    <xme:rUCzaS8h08PRiVcfYWFHYKN8lweBxloY-PAAGDLiiw60-BvM42zwhNgj3NacmohIX
-    qWMjOi1q9eBr6v96rnnOWsbDk2GjbjWsoCdsUYlzCjT3VW92g>
-X-ME-Received: <xmr:rUCzaZerzOxDZLRGwnd_WGpV-Q7qF7xZ__waUuHucpIidlVBChPwLCRhvFjKncoI_EN4PCTm2jyU7LuFOepgtu2jjiIDbKqnzzgvoTM0Cujz>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeektddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhjrdhirg
-    hmrdhtjhesphhrohhtohhnrdhmvgdprhgtphhtthhopegthhhutghkrdhlvghvvghrseho
-    rhgrtghlvgdrtghomhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlvggvmhhhuh
-    hishdrihhnfhhopdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtohepudduvdekkeeiudessghughhsrdguvggsihgrnhdrohhrgh
-X-ME-Proxy: <xmx:rUCzaZyZNgnYCGd9HOH9RwusgXbqIUsM676iFwMWqLPy6M6FM4HYmA>
-    <xmx:rUCzaWJkL2UG5EKfDNWRtLEZjpgN2uG2V04i5uBb7qCu0cTyev4qog>
-    <xmx:rUCzaTF_Qj3vNs54_A8djcEaMYYu6KnynkpX8mHNuKlwrU-ykFoTTw>
-    <xmx:rUCzaa9dQhRis9D_w9bsB4mq-xKNY3Kt5RrYn5xXvd0likLyuBZeXw>
-    <xmx:rUCzaW2_W14jtmfrliFgW71omBzy-KpH9C_omS_yT-CSSqC-IQiqweJq>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Mar 2026 18:39:38 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1773358733; c=relaxed/simple;
+	bh=PjQnm7PdIi0z/ruBJQNhneZVuQrhBMEPnKL7b5RdF4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mHOn912MrD9Mv4A7skBR0PKUAd2YQONvoGuwmegZk+aLI9xDD64Nugvzp0iJt4bxlkIkoSwd5wWoP6lhbKURLpIEvFTAfF8iFVn0f6tUGppkidhOO0VZp2fruKxRiTKt/8m8dYiPUK2EujsuU6cB8wBkEbJ+7EAzu6l1zAKT4i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 75BA61A0463;
+	Thu, 12 Mar 2026 23:38:47 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 437DE20024;
+	Thu, 12 Mar 2026 23:38:32 +0000 (UTC)
+Date: Thu, 12 Mar 2026 19:38:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: NeilBrown <neilb@ownmail.net>
+Cc: NeilBrown <neil@brown.name>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Jeff
+ Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>, Carlos Maiolino <cem@kernel.org>, Miklos
+ Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Jan
+ Harkes <jaharkes@cs.cmu.edu>, Hugh Dickins <hughd@google.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, David Howells <dhowells@redhat.com>, Marc
+ Dionne <marc.dionne@auristor.com>, Steve French <sfrench@samba.org>, Namjae
+ Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
+ Yuezhang Mo <yuezhang.mo@sony.com>, Andreas Hindborg
+ <a.hindborg@kernel.org>, Breno Leitao <leitao@debian.org>, "Theodore Ts'o"
+ <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, Alex
+ Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
+ Tyler Hicks <code@tyhicks.com>, Andreas Gruenbacher <agruenba@redhat.com>,
+ Richard Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel
+ <ardb@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, coda@cs.cmu.edu, linux-mm@kvack.org,
+ linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+ ecryptfs@vger.kernel.org, gfs2@lists.linux.dev,
+ linux-um@lists.infradead.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH RFC 00/53] lift lookup out of exclive lock for dir ops
+Message-ID: <20260312193847.28c32a2c@gandalf.local.home>
+In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
+References: <20260312214330.3885211-1-neilb@ownmail.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>,
- "Tj" <tj.iam.tj@proton.me>, 1128861@bugs.debian.org,
- linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
- stable@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: Regression: Missing check in nfsd_permission() causes -ENOLCK No
- locks available
-In-reply-to: <5a302dcfcb54a87366dd6a9bc5ec27df179f7f58.camel@kernel.org>
-References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>,
- <418f30b5-06ae-471f-bf5f-f14f3f75deff@leemhuis.info>,
- <5a302dcfcb54a87366dd6a9bc5ec27df179f7f58.camel@kernel.org>
-Date: Fri, 13 Mar 2026 09:39:36 +1100
-Message-id: <177335517622.5556.4792770517095870331@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: uw6f48jbt5c7m69ogen7zm3qrgdgnged
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX188/YrC5TApof6JUD5+VNztl2shXsvgY5o=
+X-HE-Tag: 1773358712-902307
+X-HE-Meta: U2FsdGVkX1+OxQ2+Isx7vF4UixzzITSWoLGanhQdmOUQzHc1ErHaC2HhfFr20UjnVfuApzdY0CnNI9X2EzaFzoxWkp+inh8h89+ue9tsCje/WXI2p8TViZKD1rgZ9aRmWPzAaOFt9AR3SlccruGvmKX1nd3X2qcHF/Qj4v2Ic2F2kBtdL+HvK1KWscULRrzA7ZXclvIVR+DpEPprYwt/KKB72qtNEyxLFZN/ZdoFOmgI0OmUW9WSqFmPDtGp6NNUkGL68vmGr0d1dJsWkcANTfDGT58FCBs3Q3TWI/CNur9ihaDpBPfKeDQH86AL8k3ONIIfeCwhZyBEr7FfTAOuyi2fOWNNYZopJrxvZi0zu3x2dKf/Woo8mIogKoo/MSw6
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[goodmis.org : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20114-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[brown.name,linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,cs.cmu.edu,google.com,linux.alibaba.com,redhat.com,auristor.com,samba.org,samsung.com,sony.com,debian.org,mit.edu,dilger.ca,dubeyko.com,tyhicks.com,nod.at,cambridgegreys.com,sipsolutions.net,ozlabs.org,vger.kernel.org,kvack.org,lists.infradead.org,lists.linux.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20115-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[ownmail.net];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,brown.name:replyto,noble.neil.brown.name:mid,ownmail.net:dkim,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: 1237E27B011
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rostedt@goodmis.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.991];
+	RCPT_COUNT_GT_50(0.00)[52];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: A217E27B4A6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 12 Mar 2026, Jeff Layton wrote:
-> On Fri, 2026-02-27 at 10:54 +0100, Thorsten Leemhuis wrote:
-> > > This was discovered on the Debian openQA infrastructure server when=20
-> > > upgrading kernel from v6.12.48 to later v6.12.y where worker hosts (wit=
-h=20
-> > > any earlier or later kernel version) pass NFSv3 mounted ISO images to=20
-> > > qemu-system-x86_64 and it reports:
-> > >=20
-> > > !!! : qemu-system-x86_64: -device=20
-> > > scsi-cd,id=3Dcd0-device,drive=3Dcd0-overlay0,serial=3Dcd0: Failed to ge=
-t=20
-> > > "consistent read" lock: No locks available
-> > > QEMU: Is another process using the image=20
-> > > [/var/lib/openqa/pool/2/20260223-1-debian-testing-amd64-netinst.iso]?
-> > >=20
->=20
-> I have to wonder if this is a QEMU bug too:
->=20
-> Why is it opening a file read-only and then taking out an exclusive
-> lock on it? What's the point of denying access to other readers?
+On Fri, 13 Mar 2026 08:11:47 +1100
+NeilBrown <neilb@ownmail.net> wrote:
 
-It turns out that I mis-diagnosed the problem.  i.e. I guess wrong as to
-what weird thing qemu is doing.
+> *[PATCH 26/53] smb/client: don't unhashed and rehash to prevent new
+> *[PATCH 27/53] smb/client: use d_splice_alias() in atomic_open
+>  [PATCH 28/53] smb/client: Use d_alloc_noblock() in
+> *[PATCH 29/53] exfat: simplify exfat_lookup()
+> *[PATCH 30/53] configfs: remove d_add() calls before
+>  [PATCH 31/53] configfs: stop using d_add().
+> *[PATCH 32/53] ext4: move dcache modifying code out of __ext4_link()
+> *[PATCH 33/53] ext4: use on-stack dentries in
 
-qemu isn't using flock().  It is using fcntl() locking but at this point
-isn't trying to GET a lock, it is testing if a lock already exists.
-i.e. F_GETLK or F_OFD_GETLK.
+>  [PATCH 34/53] tracefs: stop using d_add().
 
-F_GETLK doesn't require WRITE access, even when getting an exclusive
-lock.
-But NFSD does :-)
+Hmm, another reason I hate being Cc'd on every patch of a patch bomb where
+I only need to look at one (and maybe the first) patch.
 
-So maybe this is the fix that we want.
+For some reason, I'm missing several patches, and this is one of them :-p
 
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 255a847ca0b6..67234686ef8c 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -632,7 +632,7 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *=
-file,
- 		goto out;
- 	}
-=20
--	mode =3D lock_to_openmode(&lock->fl);
-+	mode =3D O_RDONLY;
- 	locks_init_lock(&conflock->fl);
- 	/* vfs_test_lock only uses start, end, and owner, but tests flc_file */
- 	conflock->fl.c.flc_file =3D lock->fl.c.flc_file;
+-- Steve
 
 
-
-????
-NeilBrown
+>  [PATCH 35/53] cephfs: stop using d_add().
+> *[PATCH 36/53] cephfs: remove d_alloc from CEPH_MDS_OP_LOOKUPNAME
+>  [PATCH 37/53] cephfs: Use d_alloc_noblock() in
+>  [PATCH 38/53] cephfs: Don't d_drop() before d_splice_alias()
+>  [PATCH 39/53] ecryptfs: stop using d_add().
+>  [PATCH 40/53] gfs2: stop using d_add().
 
