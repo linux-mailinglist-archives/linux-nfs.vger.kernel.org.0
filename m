@@ -1,154 +1,299 @@
-Return-Path: <linux-nfs+bounces-20061-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20062-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2LN5Ew+7smmvPAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20061-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 14:09:35 +0100
+	id +Ci3J5G9smmvPAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20062-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 14:20:17 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EE6E2724C8
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 14:09:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4BBA2726CA
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 14:20:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 63EE13004637
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:09:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8B37B3011F33
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 13:20:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72ECE3C5533;
-	Thu, 12 Mar 2026 13:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDE553C6617;
+	Thu, 12 Mar 2026 13:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QuXu+KMY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8JmDsT5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E808E3BE641;
-	Thu, 12 Mar 2026 13:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE6A3C554B
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2026 13:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773320968; cv=none; b=dsNaRjuqWD1kZtXsjq8rO/XbkMTm5kIoo4hA2vtc9pp67wQnX3vcQmSJ+Ct5sJnlxHIyVGTqcIrdWRIz+BJrH7LUC8l56Ijv7RCbHAknVmHztoEzs6D0mtlAeK4G03v++bn9vFt9X3YzFgKKor6bVxp588bB1dUpGlw7LZ7YAKE=
+	t=1773321613; cv=none; b=FNaH35PADyaVCSXnZ51m4qhqPkt98nHzNB96+dlIzV9Y+43VBEhYCn+X4cp1LUoFLZ5o9X/XMfflXwm0NLk2TGO/xO1ChbGQWrfEBeJ4azIZpZidlAyF+1yFHxn6WPtaCyGxS2/k/9mvr6EUlYU+XzguNe791LpL2jRs9Bcl+W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773320968; c=relaxed/simple;
-	bh=Yz3OL1KpyG2yKr6gkMaSuXdDFnsxy/KItTSgPiff9iE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=chh2BIMzvxYHeXxsaFc7NWcAGgh08f5u6RFga3zwXSPN9CWIkvZwmhCmOlIx7WMpIz2sciQd8bTziUHsUXdsIa4xpvg5NZAib48t5GZRMPO4YwrbEFsx6fiNeyb4lcLX+aLzIF77ypbhI0JrNF4JKitJ4BF/yM3z5BAgkEiOYb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QuXu+KMY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118D6C4CEF7;
-	Thu, 12 Mar 2026 13:09:26 +0000 (UTC)
+	s=arc-20240116; t=1773321613; c=relaxed/simple;
+	bh=u4iqMoQGwOqxKnOrGqci8L3jVaTwfHQlcaKI9FiMdwU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RBsy82xgPnIEMavWUfqnKZAwqogJzPy9yq/a3LH+CKrB3l3kO3J9XMmIjYPtypzjQaihSq6/IwLVeRkKNTubxikL3+tgVlqqWS7uRDmR4kWNn0PSK9S/f58oXJlljXR1tZsXdqPHG4ASOckedM9ilFeWWiDq646c4Vvpz7PInsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8JmDsT5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C476C4AF09;
+	Thu, 12 Mar 2026 13:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773320967;
-	bh=Yz3OL1KpyG2yKr6gkMaSuXdDFnsxy/KItTSgPiff9iE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=QuXu+KMYo0Dz81SKmHU0iceDsh3gobD4WKjLriMKyMQ68Jk5UQbLsk1trb0JJ72Vx
-	 sGeCMF5O9WsydacKEbPe+HuX5kDaa1LYi7t1XEit7mRXTnVbHmTEB/E4S5XRtzMjLU
-	 XCh4ezUNG/5VcwnrPaAAQPk8oCmEb/NzCpXBgdWKVlpf/NrG9OLDnx7FyYjt1QnkhB
-	 gJDYUTTWPKS+APcCu0qy2ZZrdO/Y8jxEq0oSKFtu9q1zygutoONyllAbSaaca/1/tL
-	 0p9ntMOxBD/zbzjkmv02mIEEP3OmElYV6d+qH0kKCOze098Ue2l/Zc3Sf2aIPThUlV
-	 /Kq9jhjUUIcpg==
-Message-ID: <c42bc9a8ccb53e4afbb74734a9705459c45d7909.camel@kernel.org>
-Subject: Re: [Question]nfs: should nfs timeout even with
- NFS_CS_NO_RETRANS_TIMEOUT ?
-From: Trond Myklebust <trondmy@kernel.org>
-To: "zhangjian (CG)" <zhangjian496@huawei.com>, anna@kernel.org, Jeff Layton
-	 <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 12 Mar 2026 09:09:26 -0400
-In-Reply-To: <77b2c3ea-52d0-4f2f-8cca-4481f3426fc5@huawei.com>
-References: <ff8debe9-6877-4cf7-ba29-fc98eae0ffa0@huawei.com>
-	 <850dcbf562b7eb5848278937092d2d8511eb648f.camel@kernel.org>
-	 <1e1eadf5-fab9-4919-a71a-864aa7109c7b@huawei.com>
-	 <23b52d16-4b74-43e4-9fff-73ac57c9ef89@huawei.com>
-	 <80c9ba69f1d35928ea9d21e146e60f194cff7405.camel@kernel.org>
-	 <77b2c3ea-52d0-4f2f-8cca-4481f3426fc5@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=k20201202; t=1773321612;
+	bh=u4iqMoQGwOqxKnOrGqci8L3jVaTwfHQlcaKI9FiMdwU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=A8JmDsT5i+VOlvvKYgkrsW6UEnWoZUgq4lqGr/DJy9m72XnxRP6uGUShmcajY2Esr
+	 JsC6Vl78TPgBR+HhecXGJRAxCdWug7umOtUvqQg1SzVjdQodthCXyGxm2BQRJEnxDN
+	 1r0Qi4c7R6k4VXctHQdHSXe7gQt2ymXgAskTb9ifisLbsF2U4+N9JZq/gBSCaaBR6i
+	 evacDfhjoc8c48n+Wz+oCznz9gFUG814eVmkoN3I6mWo6W2TVjy0GgEQE/bYfzh7Hb
+	 WsgZw3n9q3NgnLusIrqoQJjO2s+Oqf1b8aq5tHU9qzobxApYJjbsKVzv+hEV8B9Rbe
+	 V4tDjvtCfIs+w==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6498AF4006A;
+	Thu, 12 Mar 2026 09:20:11 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Thu, 12 Mar 2026 09:20:11 -0400
+X-ME-Sender: <xms:i72yaQIWt3nNh7ii4Q-HsoSJhthcB3hS_ycBRzAsfPzWUAtrD-gRPA>
+    <xme:i72yaa_-IDLCM-cbjl6FmMyO-XTOIPQ_6dVg-V43yfItedFRFLSqRePwS5S2nWtur
+    DMN3Inmz10WZxfO9WnvSvkH1rbv3e2BLz3DZQexH0pOXs9oRJdlB58>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeeikeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrvhhiugdrlhgrihhghhhtrdhlihhnuhigsehgmhgrihhlrdgtohhmpdhrtg
+    hpthhtohepshgvrghnfigrshgtohguihhnghesghhmrghilhdrtghomhdprhgtphhtthho
+    pegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoh
+    eprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhn
+    rdgthhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:i72yaSrLdf8yjsQ4BPDIn4752fJEm_1T5o_JMESdbTVuDQ74Umlxmg>
+    <xmx:i72yadMjM8gW09vE4Bwi-blaND2KNHSfNscTmBQIFoUIBPR3B-jzxQ>
+    <xmx:i72yaboLIKQt7bs1iYOhQrX7PW1XN1Hieq8i_hU-WM6Pa5G80baPAQ>
+    <xmx:i72yaYsbG_h1I2lTOBHugLuvNcn_vWjOQqdP0RClwgdvYkAwceXxZQ>
+    <xmx:i72yaS10i0gtmCuVPAUKqwjHaRD3oyFgbL0F9n-ioD_1Ry_nwSBFkzz5>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3E44C780070; Thu, 12 Mar 2026 09:20:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-ThreadId: AhbZdgiYvuX7
+Date: Thu, 12 Mar 2026 09:19:51 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Sean Chang" <seanwascoding@gmail.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "David Laight" <david.laight.linux@gmail.com>,
+ "Anna Schumaker" <anna@kernel.org>,
+ "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Cc: netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <de652c45-9492-4bb8-a173-efce703b5174@app.fastmail.com>
+In-Reply-To: <20260303140725.86260-1-seanwascoding@gmail.com>
+References: <20260303140725.86260-1-seanwascoding@gmail.com>
+Subject: Re: [PATCH v2] sunrpc: simplify dprintk() macros and cleanup redundant debug
+ guards
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.65 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	SUBJECT_ENDS_QUESTION(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20062-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,app.fastmail.com:mid,lunn.ch:email];
+	FREEMAIL_TO(0.00)[gmail.com,lunn.ch,oracle.com,kernel.org,intel.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20061-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 4EE6E2724C8
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: E4BBA2726CA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 2026-03-12 at 12:19 +0800, zhangjian (CG) wrote:
->=20
->=20
-> On 3/6/2026 12:49 PM, Trond Myklebust wrote:
-> > On Fri, 2026-03-06 at 10:46 +0800, zhangjian (CG) wrote:
-> > > Hi experts on NFS:
-> > >=20
-> > > Recently we meet an error:
-> > > 1.Nfs wait for sunrpc
-> > > 2.Sunrpc send OPEN message and hang the rpc task onto sunrpc
-> > > pending
-> > > queue.
-> > > 3.Server never reply, and since NFS_CS_NO_RETRANS_TIMEOUT is
-> > > forced
-> > > and
-> > > connection is ESTABLISHED, task will never be retransmitted.
-> > > This cause procedures waiting on this file hang forever.
-> > > I know using "umount -f " to kill rpc task works. And the key to
-> > > the
-> > > problem most likely lies in the network layer. But should nfs
-> > > retransmit
-> > > it after waiting for so long?
-> > >=20
-> > > Wish for reply. Thanks
-> > >=20
-> > > Zhangjian
-> > >=20
-> > Please read the NFSv4 spec. It very clearly states that the client
-> > should never retransmit unless the connection breaks.
-> >=20
->=20
-> NFSv4 spec said client should never retransmit, but not said client
-> need
-> to wait forever. Maybe sunrpc should tell nfs -ETIMEOUT and nfs
-> return
-> ERROR rather than retransmit.
 
-You are 100% free to use the existing 'soft' or 'softerr' mount options
-if you have applications that can parse those (non-POSIX) errors.
-Note however that there is no way to tell the server that you are
-'cancelling' an RPC call, so it will hold onto that slot until it is
-done executing the call (see RFC8881, Section 2.10.6.1.). So you are
-eventually going to run out of usable slots, and the system will gum up
-anyway.
 
-The default mount option is 'hard', because those are the only
-semantics that are compatible with POSIX and NFSv4.x.
+On Tue, Mar 3, 2026, at 9:07 AM, Sean Chang wrote:
+> Following David Laight's suggestion, simplify the macro definitions by
+> removing the unnecessary 'fmt' argument and using no_printk(__VA_ARGS__)
+> directly.
+>
+> Verification with .lst files under -O2 confirms that the compiler
+> successfully performs "dead code elimination". Even when variables
+> (like char buf[] in nfsfh.c) or static helper functions (like
+> nlmdbg_cookie2a() in svclock.c) are declared without #ifdef, they are
+> completely optimized out (no stack allocation, no symbol references in
+> the final executable) as they are only referenced within no_printk().
+>
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Suggested-by: David Laight <david.laight.linux@gmail.com>
+> Signed-off-by: Sean Chang <seanwascoding@gmail.com>
+> ---
+> v2:
+>  - Follow reversed xmas tree order for variables in svc_rdma_transport.c
+>    as requested by Andy Shevchenko.
+>  - Polish commit message: use dprintk() and remove redundant file list.
+>  - Correct the technical claim about dprintk() type checking.
+>
+>  fs/lockd/svclock.c                       |  7 -------
+>  fs/nfsd/nfsfh.c                          |  8 +++-----
+>  include/linux/sunrpc/debug.h             |  8 ++------
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c | 25 +++++++++++-------------
+>  4 files changed, 16 insertions(+), 32 deletions(-)
+>
+> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> index ee23f5802af1..9b978a087b3c 100644
+> --- a/fs/lockd/svclock.c
+> +++ b/fs/lockd/svclock.c
+> @@ -47,7 +47,6 @@ static const struct rpc_call_ops nlmsvc_grant_ops;
+>  static LIST_HEAD(nlm_blocked);
+>  static DEFINE_SPINLOCK(nlm_blocked_lock);
+> 
+> -#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>  static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+>  {
+>  	/*
+> @@ -74,12 +73,6 @@ static const char *nlmdbg_cookie2a(const struct 
+> nlm_cookie *cookie)
+> 
+>  	return buf;
+>  }
+> -#else
+> -static inline const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
+> -{
+> -	return "???";
+> -}
+> -#endif
+> 
+>  /*
+>   * Insert a blocked lock into the global list
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 68b629fbaaeb..91514326d1b4 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -105,12 +105,10 @@ static __be32 nfsd_setuser_and_check_port(struct 
+> svc_rqst *rqstp,
+>  {
+>  	/* Check if the request originated from a secure port. */
+>  	if (rqstp && !nfsd_originating_port_ok(rqstp, cred, exp)) {
+> -		if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
+> -			char buf[RPC_MAX_ADDRBUFLEN];
+> +		char buf[RPC_MAX_ADDRBUFLEN];
+> 
+> -			dprintk("nfsd: request from insecure port %s!\n",
+> -			        svc_print_addr(rqstp, buf, sizeof(buf)));
+> -		}
+> +		dprintk("nfsd: request from insecure port %s!\n",
+> +			svc_print_addr(rqstp, buf, sizeof(buf)));
+>  		return nfserr_perm;
+>  	}
+> 
+> diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
+> index ab61bed2f7af..f6f2a106eeaf 100644
+> --- a/include/linux/sunrpc/debug.h
+> +++ b/include/linux/sunrpc/debug.h
+> @@ -38,8 +38,6 @@ extern unsigned int		nlm_debug;
+>  do {									\
+>  	ifdebug(fac)							\
+>  		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+> -	else								\
+> -		no_printk(fmt, ##__VA_ARGS__);				\
+>  } while (0)
+> 
+>  # define dfprintk_rcu(fac, fmt, ...)					\
+> @@ -48,15 +46,13 @@ do {									\
+>  		rcu_read_lock();					\
+>  		__sunrpc_printk(fmt, ##__VA_ARGS__);			\
+>  		rcu_read_unlock();					\
+> -	} else {							\
+> -		no_printk(fmt, ##__VA_ARGS__);				\
+>  	}								\
+>  } while (0)
+> 
+>  #else
+>  # define ifdebug(fac)		if (0)
+> -# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
+> -# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
+> +# define dfprintk(fac, ...)		no_printk(__VA_ARGS__)
+> +# define dfprintk_rcu(fac, ...)	no_printk(__VA_ARGS__)
+>  #endif
+> 
+>  /*
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c 
+> b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> index f2d72181a6fe..0759444bda50 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+> @@ -413,6 +413,7 @@ static struct svc_xprt *svc_rdma_accept(struct 
+> svc_xprt *xprt)
+>  	struct rpcrdma_connect_private pmsg;
+>  	struct ib_qp_init_attr qp_attr;
+>  	struct ib_device *dev;
+> +	struct sockaddr *sap;
+>  	int ret = 0;
+> 
+>  	listen_rdma = container_of(xprt, struct svcxprt_rdma, sc_xprt);
+> @@ -559,20 +560,16 @@ static struct svc_xprt *svc_rdma_accept(struct 
+> svc_xprt *xprt)
+>  		goto errout;
+>  	}
+> 
+> -	if (IS_ENABLED(CONFIG_SUNRPC_DEBUG)) {
+> -		struct sockaddr *sap;
+> -
+> -		dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
+> -		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+> -		dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
+> -		sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+> -		dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
+> -		dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
+> -		dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
+> -		dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
+> -		dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
+> -		dprintk("    ord             : %d\n", conn_param.initiator_depth);
+> -	}
+> +	dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
+> +	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+> +	dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
+> +	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+> +	dprintk("    remote address  : %pIS:%u\n", sap, rpc_get_port(sap));
+> +	dprintk("    max_sge         : %d\n", newxprt->sc_max_send_sges);
+> +	dprintk("    sq_depth        : %d\n", newxprt->sc_sq_depth);
+> +	dprintk("    rdma_rw_ctxs    : %d\n", ctxts);
+> +	dprintk("    max_requests    : %d\n", newxprt->sc_max_requests);
+> +	dprintk("    ord             : %d\n", conn_param.initiator_depth);
+> 
+>  	return &newxprt->sc_xprt;
+> 
+> -- 
+> 2.34.1
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+Has a subsystem tree been chosen through which to merge these two patches?
+
+
+-- 
+Chuck Lever
 
