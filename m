@@ -1,70 +1,56 @@
-Return-Path: <linux-nfs+bounces-20073-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20074-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sNcWJen0smmLRAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20073-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 18:16:25 +0100
+	id eKJGEqf7smmQRQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20074-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 18:45:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31CB627674A
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 18:16:25 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 438C3276BD6
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 18:45:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 539F63028B38
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 17:15:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 36F513030B8F
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 17:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A9A3EE1FB;
-	Thu, 12 Mar 2026 17:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05AA43D332F;
+	Thu, 12 Mar 2026 17:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X/MZ4nRW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfGyi+WG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9723A6B79
-	for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2026 17:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F84390C94
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Mar 2026 17:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773335737; cv=none; b=lWmJifeQ5V8KugBWpT+fEKUVPfxSHm0+FcvGSZmhtBbOVLo8si+eSs7psEEs7a1NsvwVceYsan1QsD6012/Z9YihspgQ7B+BguV8AYXF69U18uKrL1n9dgHdrjymwxzCuuCSPwOktKytC7oLH0dAG5geqF+NNWPIl1qx+yOsWN8=
+	t=1773337421; cv=none; b=b/LoycNUUWqWK2BC2jj0KwlCvy+50MblHm9/kvvLfTkVur2zb2fH3vkNwzxG11jo9eCS39B4L+UHHVxOgqYtiMbFTWziHLtJoYqNv/FUWAqS9dVfCPnqdR+UV/OQxNatkNrGFLNn+wAvpxEq94v3C5NrNmoEnBbbVuhhd6A3/48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773335737; c=relaxed/simple;
-	bh=iE5P1RQx/CdeE6W7PL88sQCi/JoH1+vzmYFuR/LWryY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s9O3h0TNAZ93kYJNd6SpEyUJrtVAVGZCxLfdYjvFRrZcFH6nxjppzR04eNSQsaYzmqL5ouhbwWYkAjAgiaOrl8O/dh1oAhFc+G78ZQNfz/rPTFCoh9gz5aHc3EZ+sLIDROqfXJ3CmbqsA+zlm1vMqOd8W4Qpx+a9+TAecq4lXmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X/MZ4nRW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773335733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ftwAQkQJq//C+nFF6LOnuD+WBhMT8EHQknCoDTo8eBo=;
-	b=X/MZ4nRWjB2AqTWWw0Vn/X4zytS2vt1k1mJJw4BE8N4x2HMA6KcwR7pkf/LtWiJPgGqTzR
-	skcmv5odIef8QH06wq3jqkk9KJrePrtLkbYoMkPEbC3dWQrTI3GoJa9yuWo3TzhH5EVtI4
-	SKW0oCA7pIQS6lCStECCFWDBfD+ihnA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-613--qA9DtUGMvq-nqlnGmwVUA-1; Thu,
- 12 Mar 2026 13:15:29 -0400
-X-MC-Unique: -qA9DtUGMvq-nqlnGmwVUA-1
-X-Mimecast-MFC-AGG-ID: -qA9DtUGMvq-nqlnGmwVUA_1773335728
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 405EC197768B;
-	Thu, 12 Mar 2026 17:15:28 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.81.226])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 872CA19540C2;
-	Thu, 12 Mar 2026 17:15:27 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trondmy@kernel.org,
-	anna.schumaker@oracle.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 1/1] NFS: fix writeback in presence of errors
-Date: Thu, 12 Mar 2026 13:15:26 -0400
-Message-ID: <20260312171526.85759-1-okorniev@redhat.com>
+	s=arc-20240116; t=1773337421; c=relaxed/simple;
+	bh=fFA11/0bpeC6r3NQkDeHDh677LcEJN8Jl6Uf1ByApP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CIim67ZHEQ8oGNylQBotBejPm1u3qq2Ypxy/OH2hKYoH6ABFyF+0URRH/BseNtOVQ5UNPFF+k5Nw0JGwKTwLCoo9uGgDZcRgDjyYpX0byDjftLED+nsMQyjU/MKlXnu7oIirj7rhDppGTZBps9ymQ54laNpWzYgy1bvdD0xRyEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfGyi+WG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FFC8C4CEF7;
+	Thu, 12 Mar 2026 17:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773337421;
+	bh=fFA11/0bpeC6r3NQkDeHDh677LcEJN8Jl6Uf1ByApP8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hfGyi+WGjFHqmIB/FZMKXw7uoBNiVP/LsmpIXBH2TZDh3L8nZaYP9HzehAsk5qlUx
+	 VrfViWcepeu5lvLXaD4o6PzCvtzZ1WX1XY2zdxyTmdkgpshXZ0x7nEpeGYO/Sy6wq1
+	 igbJLhqBy2NHgmeFwhNT7TYPLpcJYkwgKByjX0qtjTw3AAsIwy97HTh/wf+Vky9z/8
+	 0w9lyF/3wz7sEsb7gqin/nGs1RnnGXfUpLTgEqAIAK1sb6g6OsYo9GSlsr2xSQwJjg
+	 V9JtVwscDpt5ng4vk2m1eRyCfyX2IzqcDT9sUQ2H/rnI1PpDDxa3Evm62tfo/ks/z9
+	 ad/0W5APiUUdw==
+From: Anna Schumaker <anna@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	torvalds@linux-foundation.org
+Cc: anna@kernel.org
+Subject: [GIT PULL] Please Pull NFS CLient Bugfixes for Linux 7.0-rc
+Date: Thu, 12 Mar 2026 13:43:40 -0400
+Message-ID: <20260312174340.310766-1-anna@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -72,116 +58,73 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20073-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-20074-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 31CB627674A
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 438C3276BD6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-After running xfstest generic/751, in certain conditions, can have
-a writeback IO stuck while experiencing one of the two patterns.
+Hi Linus,
 
-Pattern#1: writeback IO experiences ENOSPC on an offset smaller
-than the filesize. Example,
-write offset=0 len=4096 how=unstable OK
-write offset=8192 len=4096 how=unstable OK
-write offset=12288 len=4096 how=unstable ENOSPC
-write offset=4096 len=4096 how=unstable ENOSPC
-client sends a commit and receives a verifier which is different
-from the last successful write. It marks pages dirty and writeback
-retries. But it again send writes unstable and gets into the same
-pattern, running into the ENOSPC error and sending a commit because
-writes were sent at unstable.
+The following changes since commit 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f:
 
-Pattern#2: an unstable write followed by a short write and ENOSPC.
-write offset=0 len=4096 how=unstable OK
-write offset=4096 len=4096 how=unstable returns OK but count=100
-write offset=4197 len=3996 how=stable returns ENOSPC
-client send a commit and receives a verifier different from
-the last unstable write. The same behaviour is retried in a loop.
+  Linux 7.0-rc1 (2026-02-22 13:18:59 -0800)
 
-Instead, this patch proposes to identify those conditions and mark
-requests to be done synchronously instead.
+are available in the Git repository at:
 
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
----
- fs/nfs/pagelist.c        | 2 ++
- fs/nfs/write.c           | 2 ++
- include/linux/nfs_page.h | 1 +
- 3 files changed, 5 insertions(+)
+  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-7.0-2
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index a9373de891c9..b835b197a223 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1186,6 +1186,8 @@ static int __nfs_pageio_add_request(struct nfs_pageio_descriptor *desc,
- 
- 	nfs_page_group_lock(req);
- 
-+	if (test_bit(PG_SYNC, &req->wb_flags))
-+		desc->pg_ioflags |= FLUSH_STABLE;
- 	subreq = req;
- 	subreq_size = subreq->wb_bytes;
- 	for(;;) {
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 1ed4b3590b1a..78f412851d59 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1554,6 +1554,7 @@ static void nfs_writeback_result(struct rpc_task *task,
- 	if (resp->count < argp->count) {
- 		static unsigned long    complain;
- 
-+		set_bit(PG_SYNC, &hdr->req->wb_flags);
- 		/* This a short write! */
- 		nfs_inc_stats(hdr->inode, NFSIOS_SHORTWRITE);
- 
-@@ -1837,6 +1838,7 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
- 		/* We have a mismatch. Write the page again */
- 		dprintk(" mismatch\n");
- 		nfs_mark_request_dirty(req);
-+		set_bit(PG_SYNC, &req->wb_flags);
- 		atomic_long_inc(&NFS_I(data->inode)->redirtied_pages);
- 	next:
- 		nfs_unlock_and_release_request(req);
-diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-index afe1d8f09d89..e28599bebd44 100644
---- a/include/linux/nfs_page.h
-+++ b/include/linux/nfs_page.h
-@@ -37,6 +37,7 @@ enum {
- 	PG_REMOVE,		/* page group sync bit in write path */
- 	PG_CONTENDED1,		/* Is someone waiting for a lock? */
- 	PG_CONTENDED2,		/* Is someone waiting for a lock? */
-+	PG_SYNC,		/* writeback must write stable */
- };
- 
- struct nfs_inode;
--- 
-2.52.0
+for you to fetch changes up to 4529e0015432977af3ecc3b9f940fc2a1ef1b265:
 
+  NFS: Fix NFS KConfig typos (2026-02-27 15:42:14 -0500)
+
+----------------------------------------------------------------
+NFS CLient Bugfixes for Linux 7.0-rc
+
+Bugfixes:
+ * Fix NFS KConfig typos
+ * Decrement re_receiving on the early exit paths
+ * return EISDIR on nfs3_proc_create if d_alias is a dir
+
+Thanks,
+Anna
+
+----------------------------------------------------------------
+Anna Schumaker (1):
+      NFS: Fix NFS KConfig typos
+
+Eric Badger (1):
+      xprtrdma: Decrement re_receiving on the early exit paths
+
+Roberto Bergantinos Corpas (1):
+      nfs: return EISDIR on nfs3_proc_create if d_alias is a dir
+
+ fs/nfs/Kconfig              | 3 ++-
+ fs/nfs/nfs3proc.c           | 7 ++++++-
+ net/sunrpc/xprtrdma/verbs.c | 7 ++++---
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
