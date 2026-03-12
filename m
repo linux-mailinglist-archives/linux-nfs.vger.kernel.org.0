@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-20099-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20100-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OA5LCv83s2ntSwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20099-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:02:39 +0100
+	id 8H6sOTc4s2ntSwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20100-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:03:35 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80EFD27AA93
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:02:38 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED53627AB0A
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 23:03:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 46B6532157E0
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 21:55:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8973E3051182
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 21:55:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A44E338B135;
-	Thu, 12 Mar 2026 21:55:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018E83AB290;
+	Thu, 12 Mar 2026 21:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="LvUkteWZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FJNskYCq"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="H9EUTHF4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mgyMS/w/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A82838C2C0;
-	Thu, 12 Mar 2026 21:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFDC38B135;
+	Thu, 12 Mar 2026 21:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773352508; cv=none; b=nVA4uhkf8lAaJqxbKAXSpFy8bcyQW/OhW4DXqC/GoJFL3QANkYaUouXHorbLpP+dMcWyokZhunOLerWG062i6JzhzD4HrkY6cM+4AMZSaZ2cLpXqpYuF2lNyRA7fnjh8mluR6d+SAQheLUU595p18Phc2tM9omwsJwK70nrqt0Q=
+	t=1773352525; cv=none; b=XjDOosGqDATTbwwZwuuABMOFiZM5uRcKqwZ8aiyQXuR0D8KRYSFjRXGtBy8bA20YX0O80GmkTH4X08uQ928MI5KTBrOQaUORYM4+qugXQHTx/5L48cPn4DCtdRmyoQTmsvw6RDFzCc0l2+v79rHhSsvKu3/upARsDEs7xIW1u4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773352508; c=relaxed/simple;
-	bh=9VTSF8yUpjoy7Ucs3aGsu4bxlj0Czeu92BoI1xPbgH0=;
+	s=arc-20240116; t=1773352525; c=relaxed/simple;
+	bh=LfNbjqer1Kv+ypM57v2HBgD2IirhDRkKCBZt5umc0Rs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HMgT/GzU8MuU8qwcSS8EbXz9lhBv8mXmoTn7RtEjMriMXrIGWJWlOUCoyPXb6v7uip6a7+ivkPWosmxlcEZKO7hEWg077QidMJAK5hR3JRQ/4Jp5hncH58RfffOg+IkJv553UlS/LTX86gSzEBM3JIazKGqAhW/2LpUvZVUVlr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=LvUkteWZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FJNskYCq; arc=none smtp.client-ip=202.12.124.141
+	 MIME-Version; b=fb+vGx7I0a2DIrDKe9YZmVxo9Gd7Ya4ZaxsCHFSdNqZSYltvuzlW+Qz+7HFsusoqBi4BVZK43z+/cl0/yYbAnsdP6Z33RkCyS9wwVAdF94GZAJoHtDRohf0ZJxGOluLAM54hoQbMtWSjeIRXwQF6cX4gSUJOGuShHPvrLCL3oZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=H9EUTHF4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mgyMS/w/; arc=none smtp.client-ip=202.12.124.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailflow.stl.internal (Postfix) with ESMTP id A5B1B1301B6A;
-	Thu, 12 Mar 2026 17:55:05 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 12 Mar 2026 17:55:06 -0400
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+	by mailflow.stl.internal (Postfix) with ESMTP id B10021301BB1;
+	Thu, 12 Mar 2026 17:55:22 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Thu, 12 Mar 2026 17:55:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1773352505;
-	 x=1773359705; bh=QdLbzmw/KSDnf0Z+kMRVM204bGIQfGT5DsH4LYpn9rk=; b=
-	LvUkteWZCDaoWYqvI6Uisnfitx8+ggZ7C+jDVARmw4MfgDHjnDypqJJX1nPL95Es
-	Nag0d95y4bOlXv5m+pKizu4jWh5ahcynJTeDGkIUolBj+IgzzhsyXjFo2bfH0Qyv
-	tKaQT582rw+TPUHzjlFD/YzofmzYyhPIuVAyhZa+ANuqDH7cXjyaGIOgEiIAmPMj
-	/yBD02o3rX20ddAj2X9Lja60A73KqNH7Vbumy6bJPWqkV/J7oJhkcQE+7e0oY9oj
-	8yrxJYAMSoJ2oQnH4ii8XAtCwFXq0JdtQ+OZyBx9LBztC94estrJlQ7Fb2RpHNci
-	j9HTBYX57sNFqJtdD257YA==
+	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1773352522;
+	 x=1773359722; bh=3if7F0C5AAC1JbkpbjSMCxjLy6rTA44JQ48V382ux68=; b=
+	H9EUTHF4r4ntt850sUfeaQwtq1wg4xsapXTK+Bmbed5aBY6rGmecjBhkdb50KJJw
+	yozmTs8rF52SI0/+6uErAmNlGCje+eaAeWizSuONzzKl6bXgUCbXrhvC50Ypb7Af
+	BuGa9IVDBtnD0iI8cWgMLPEUvMmEROZjn+AsiwMbv31vHNMtLCOR4d07pF0F4Lhg
+	SNbbwsak0t8uJDaZE9lEde5l/a/YGjv6Xm4eNNckpbnB0IlGBxn/KhnzKdHNNzFZ
+	knquaTl2pgOiMYO5E3YdT59XdMgZ0B1OMFY55kq1VrLl65vHBs54fKiIaiYZmgZO
+	fqr3ecAc7MP8Ib5llOeGMA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1773352505; x=1773359705; bh=Q
-	dLbzmw/KSDnf0Z+kMRVM204bGIQfGT5DsH4LYpn9rk=; b=FJNskYCqOEZkh+b+X
-	kjQKFHwDK4nlkiMOH79i49kx6oyszytp/7cRmbQdR4TG6i+WX1zSfAfDFSj2Y1NX
-	urfJRQbAe2/ZivP8ZlFzYw5Xx4Tjt0gBM+SYtqpX6Kgsv306S8wBnJ3NPxRIo8Gr
-	U5NJ5syIF6Ijl8lBWd3BsfXtGZ4Xp0xg+1uBM5qufDdgQAu95mr5nsWl6MMtoXlQ
-	/0yyYgynJbthg1j1IiLBfYq1sU6SKAay8XiDekf9/sJ9Swz/so6Zcq4L7c2DgnYV
-	ED/qOoO5zm9sFslZ6prlPbvaBfLftMXMK7/uaBYc2tOu/H1h5F+TOPuSFUXn/JDI
-	t0ykw==
-X-ME-Sender: <xms:ODazaQF7k1KATwaGFlcBZZKpfc2WG5qJMk5fnlfxm1Vi7B8CBF9F0A>
-    <xme:ODazadD_2IL7856JUXB5PVFIBNMwA3rDwgll_qpc4ZhOz7e-JQ0NuRoov0eB42WUc
-    EF3bvsNaNg3qYNH_6PwXS9evSOT0CwL1GdwzFrQraqer4PE>
-X-ME-Received: <xmr:ODazaVPZS9YqF9ZefzQt107DROar1zD2G1yJvDbPvT3o3mATZ6mSjon75F5jB5LVrojnzHvcAo4afzSenxq3zbhqdyMRDGucrx4hX3BDj38C>
+	:x-me-sender:x-sasl-enc; s=fm1; t=1773352522; x=1773359722; bh=3
+	if7F0C5AAC1JbkpbjSMCxjLy6rTA44JQ48V382ux68=; b=mgyMS/w//zLJozQuG
+	iBMTVjEfl0NOrr7Zw66UNwTwbYxizmZhVHmA+lAQV7/jBPswUdXTZ/qZkmNM0DbI
+	hKs8be9mTKQLa70XyuohH5vgJkcJ1Lf8CHfRHjX7K138+x0nvdCHx2JEpJOh8Q9K
+	b7tWB+BgUW+qbsdIbWL49y0BSSPZZBWkUT/0NROD3UXKrVMw/3e1jvhZvGmRDQPf
+	rIucBRKYZcMMA5TWkb9RLF9azs/HYd20sSGyOiiSqcmLp07MuJSg0uO1QiHA+HDc
+	kRdsREoMdkfSJ28UBPTNkNY1lteIgQBwopJWj/nyyb32cXnM/7f4uBkmUlEFoI/+
+	ZjyBQ==
+X-ME-Sender: <xms:SjazachlAWJOSN8lEQ87olBQ4THW8YdF9RlFWlc9v1XRyDGCmGTfvg>
+    <xme:SjazaesTvDYRW7k5iGIwjm9wIQkza8VuF4_UiMEvTBY5e4FYpn8LFq750dz1l4Dbi
+    5jkSM07bgIUuiPmW8hzI3cpP5dADZ3FHZwwfkLfWGcWx44OaA>
+X-ME-Received: <xmr:SjazabB8Fiq6DqmKllIMxsq_KLyOsejW5MZSugEFwbVXYgw_6r5d_7imDhHWM-mTZXu0THro99dT64wYsu4Hzq_iSBjowV-xxI_6AyXiDiTE>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeejleduucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
@@ -86,14 +86,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeejleduucetufdote
     hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhn
     vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlh
     drohhrgh
-X-ME-Proxy: <xmx:ODazafj5iHEVaQbQL9xUSPUswOF968qjB-7fYOVT8Wqivk1HLaeLDA>
-    <xmx:OTazab1bv4yDY87VbPr_S6wN9LMoF8mSMxvCKipOcZJol4AgbiLq4A>
-    <xmx:OTazaRplVN--MsA_JdAYXWXr-dyaNK_CIRfy2b-VOFGs-cHK8Mzl1A>
-    <xmx:OTazaY3AxBB1DDvGyksBA06N9SqB_ZPRuIzdc1Nf4sBn6Jnxpg8YxA>
-    <xmx:OTazaQQzPhe-KJWsJjAclLfJeMdfP4VJ_ZU2q5xz2RTb5aOEmQxLEFQB>
+X-ME-Proxy: <xmx:SjazaRVUEVbr5DICwZBK751qOvfjCumW4QjiWYsKS2grgUvd77XOSg>
+    <xmx:SjazaZIyen0EDW-Ii1W8JpDgpqmir2JNlPjLTK8IUePBHyms0uCV8Q>
+    <xmx:SjazaaUMF9hRGxMFgBbvbfSm7iXGN_MPHRezxnabrg7dw7H8WZk0EQ>
+    <xmx:SjazaSR3lRAk_iK5JZ_cuPeri7l3gQKqEqg_Vuzki0vn4_fQDAwXYw>
+    <xmx:SjazaXyIFx6sW7VqeUJx3htwVItRXiIok1LvXEF8SiWSLKfBtXaSuRZS>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Mar 2026 17:54:50 -0400 (EDT)
+ 12 Mar 2026 17:55:09 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -136,9 +136,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	gfs2@lists.linux.dev,
 	linux-um@lists.infradead.org,
 	linux-efi@vger.kernel.org
-Subject: [PATCH 40/53] gfs2: stop using d_add().
-Date: Fri, 13 Mar 2026 08:12:27 +1100
-Message-ID: <20260312214330.3885211-41-neilb@ownmail.net>
+Subject: [PATCH 41/53] libfs: stop using d_add().
+Date: Fri, 13 Mar 2026 08:12:28 +1100
+Message-ID: <20260312214330.3885211-42-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
 References: <20260312214330.3885211-1-neilb@ownmail.net>
@@ -156,7 +156,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -165,58 +165,54 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FREEMAIL_FROM(0.00)[ownmail.net];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20099-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20100-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,cs.cmu.edu,google.com,linux.alibaba.com,redhat.com,auristor.com,samba.org,samsung.com,sony.com,debian.org,mit.edu,dilger.ca,goodmis.org,dubeyko.com,tyhicks.com,nod.at,cambridgegreys.com,sipsolutions.net,ozlabs.org];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	PRECEDENCE_BULK(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
 	RCPT_COUNT_GT_50(0.00)[51];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,messagingengine.com:dkim,brown.name:email,brown.name:replyto,ownmail.net:dkim,ownmail.net:mid]
-X-Rspamd-Queue-Id: 80EFD27AA93
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:dkim,ownmail.net:mid,messagingengine.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,brown.name:email,brown.name:replyto]
+X-Rspamd-Queue-Id: ED53627AB0A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: NeilBrown <neil@brown.name>
 
 "Best practice" is to use d_splice_alias() at the end of a ->lookup
-function.  d_add() often works and is not incorrect in gfs2, as the
+function.  d_add() often works and is not incorrect in libfs, as the
 inode is always NULL, but as it is planned to remove d_add(), change to
 use d_splice_alias().
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/gfs2/inode.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/libfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/inode.c b/fs/gfs2/inode.c
-index 8344040ecaf7..9997fbc1084c 100644
---- a/fs/gfs2/inode.c
-+++ b/fs/gfs2/inode.c
-@@ -988,10 +988,9 @@ static struct dentry *__gfs2_lookup(struct inode *dir, struct dentry *dentry,
- 	int error;
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 63b4fb082435..75f44341f98b 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -79,8 +79,7 @@ struct dentry *simple_lookup(struct inode *dir, struct dentry *dentry, unsigned
+ 	if (IS_ENABLED(CONFIG_UNICODE) && IS_CASEFOLDED(dir))
+ 		return NULL;
  
- 	inode = gfs2_lookupi(dir, &dentry->d_name, 0);
--	if (inode == NULL) {
--		d_add(dentry, NULL);
--		return NULL;
--	}
-+	if (inode == NULL)
-+		return d_splice_alias(NULL, dentry);
-+
- 	if (IS_ERR(inode))
- 		return ERR_CAST(inode);
+-	d_add(dentry, NULL);
+-	return NULL;
++	return d_splice_alias(NULL, dentry);
+ }
+ EXPORT_SYMBOL(simple_lookup);
  
 -- 
 2.50.0.107.gf914562f5916.dirty
