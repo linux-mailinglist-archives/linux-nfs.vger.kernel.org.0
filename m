@@ -1,159 +1,142 @@
-Return-Path: <linux-nfs+bounces-20051-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20052-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MIXwHer0sWl7HQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20051-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 00:04:10 +0100
+	id MAZsOiA/smk6KQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20052-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 05:20:48 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D0326B14D
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 00:04:09 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B25F326D0B2
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 05:20:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6096A303EBAA
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Mar 2026 23:03:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 66BE13073A70
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Mar 2026 04:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E51713A1683;
-	Wed, 11 Mar 2026 23:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BCE138C404;
+	Thu, 12 Mar 2026 04:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WxcdvAR4"
+	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="ALblATZc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969E039DBF5;
-	Wed, 11 Mar 2026 23:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3953932F9;
+	Thu, 12 Mar 2026 04:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773270226; cv=none; b=AkA2Gnlxmrw7n8wlICODGs3io7QO9Oh/YDy07WP09JF/KFh9g5IxYQ17wt6vWQVzPCB+iYEQu7P3mBvtqRc+n31lnQN5NVwKohchMiBQHqmgSZE6jhjwc4hv3UUzJs1InFDBm/aIiY3ylNEkhCwq8TX0CYHFVkpY9m+PERgjhT4=
+	t=1773289199; cv=none; b=Na4Prc73p6ZLowty4aevGh+8AKDa983puDydZ1H8BPysxV6LckGTY0j2FWANsPd1ccrphzbb0qFWef4zw8V+2t8mKnhwfBNMk/xGIWArAEfplkXvBxAt35uj/IQ8CIFifIstqVuZJzMzuJLRa+quFzlfYkdEjEVgUvHDLIqd5IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773270226; c=relaxed/simple;
-	bh=ATo3aRyKmYSXuSYD8x/NeBUp5LJcLKbzHVpozNXQJC0=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=riWYrESCcc9KNXqP13SZYyXzR58RrYMlS+b2xha5iOXuuIp+StTrVizqL6ketCeeYmMEMoyxUK8taVuLlBt+IYJOKFEOgMITJUBE5YxvJbFyx57ukqqJFBTg7MI8yXilCszhmCyW65ADzTthRqCB0cIhFeDkNxgzAb+Zf6dy7s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=fail (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WxcdvAR4 reason="signature verification failed"; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from monstersaurus.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CD91E448;
-	Thu, 12 Mar 2026 00:02:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1773270149;
-	bh=ATo3aRyKmYSXuSYD8x/NeBUp5LJcLKbzHVpozNXQJC0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=WxcdvAR4zphcUuTNTLXCbLGiiCOKCwemLRMbnRdmW3ARcBHAWQiYVeysDpnfCIDuk
-	 B8rMCjKjDjoWJdgj4Zp0scfHxrPnr5P3xl9hFANY/wyWKZBZYHzyf2qsFxVEe9S31Y
-	 m9r/HjFnopry9bsUUdk6/id/Q3d97jYK/FiMa+Qw=
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1773289199; c=relaxed/simple;
+	bh=onY0noDIOZY0It9o6m2cbzlm+ygi2PZFHDQzINxi4d4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=slSXAH3O6Es+5ZoYV88oJCWspor0XhNbDbSuMZi1+sTh3NMaK3oq/5gfWEdpgby03Wa+mtfgz2ZOHGHCV3JLllshOP83opmzwwLXsRq1GcOuusL9hpN4+tU2TUyUcFFtdOaLmvugRccSQLGKmnjxhB07k7OFJ+PPL3XofiUnW+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=ALblATZc; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=L5tV3rBARWrY6aK902XrsCccBNL9R4uJiM3GHUwNye4=;
+	b=ALblATZcf1nks3bwTRFtediE/0n33vyZ5b4AcyfMCDlQx3Cc0j85wGj/Qc7fLDibzzW0UVTMP
+	CZnTWLwl19cwVPxOCu11huO/2ka0yQTuu1/Qu8uAaV710zXkOQfwqqq5DxY7SrO4oiQMkc0TeoT
+	thxqXM6RE3w69nEtxqrGVyw=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fWZ5P75cTz1prLl;
+	Thu, 12 Mar 2026 12:14:49 +0800 (CST)
+Received: from dggpemr100013.china.huawei.com (unknown [7.185.36.198])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1C8D040561;
+	Thu, 12 Mar 2026 12:19:48 +0800 (CST)
+Received: from [10.174.186.66] (10.174.186.66) by
+ dggpemr100013.china.huawei.com (7.185.36.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Thu, 12 Mar 2026 12:19:47 +0800
+Message-ID: <77b2c3ea-52d0-4f2f-8cca-4481f3426fc5@huawei.com>
+Date: Thu, 12 Mar 2026 12:19:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20260310-b4-is_err_or_null-v1-49-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-49-bd63b656022d@avm.de>
-Subject: Re: [PATCH 49/61] media: Prefer IS_ERR_OR_NULL over manual NULL check
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
-	apparmor@lists.ubuntu.com, bpf@vger.kernel.org,
-	ceph-devel@vger.kernel.org, cocci@inria.fr, dm-devel@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, gfs2@lists.linux.dev,
-	intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-	iommu@lists.linux.dev, kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-phy@lists.infradead.org,
-	lin@web.codeaurora.org, ux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
-Date: Wed, 11 Mar 2026 23:03:33 +0000
-Message-ID: <177327021364.3167621.11851238159935183684@ping.linuxembedded.co.uk>
-User-Agent: alot/0.9.1
-X-Spamd-Result: default: False [3.14 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[signature check failed: fail, {[1] = sig:subspace.kernel.org:reject}];
-	R_DKIM_REJECT(1.00)[ideasonboard.com:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Question]nfs: should nfs timeout even with
+ NFS_CS_NO_RETRANS_TIMEOUT ?
+To: Trond Myklebust <trondmy@kernel.org>, <anna@kernel.org>, Jeff Layton
+	<jlayton@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <ff8debe9-6877-4cf7-ba29-fc98eae0ffa0@huawei.com>
+ <850dcbf562b7eb5848278937092d2d8511eb648f.camel@kernel.org>
+ <1e1eadf5-fab9-4919-a71a-864aa7109c7b@huawei.com>
+ <23b52d16-4b74-43e4-9fff-73ac57c9ef89@huawei.com>
+ <80c9ba69f1d35928ea9d21e146e60f194cff7405.camel@kernel.org>
+From: "zhangjian (CG)" <zhangjian496@huawei.com>
+In-Reply-To: <80c9ba69f1d35928ea9d21e146e60f194cff7405.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemr100013.china.huawei.com (7.185.36.198)
+X-Spamd-Result: default: False [0.84 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[huawei.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),quarantine];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_DKIM_ALLOW(-0.20)[h-partners.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[ideasonboard.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20051-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[h-partners.com:+];
+	TAGGED_FROM(0.00)[bounces-20052-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[57];
-	FROM_NEQ_ENVFROM(0.00)[kieran.bingham@ideasonboard.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[ideasonboard.com:-];
-	NEURAL_HAM(-0.00)[-0.726];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zhangjian496@huawei.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,avm.de:email,linuxfoundation.org:email,ping.linuxembedded.co.uk:mid,ideasonboard.com:email]
-X-Rspamd-Queue-Id: 00D0326B14D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B25F326D0B2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Quoting Philipp Hahn (2026-03-10 11:49:15)
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
->=20
-> Change generated with coccinelle.
->=20
-> To: Shuah Khan <skhan@linuxfoundation.org>
-> To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> To: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
-> ---
->  drivers/media/test-drivers/vimc/vimc-streamer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/me=
-dia/test-drivers/vimc/vimc-streamer.c
-> index 15d863f97cbf96b7ca7fbf3d7b6b6ec39fcc8ae3..da5aca50bcb4990c06f28e5a8=
-83eb398606991e9 100644
-> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
-> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
-> @@ -167,7 +167,7 @@ static int vimc_streamer_thread(void *data)
->                 for (i =3D stream->pipe_size - 1; i >=3D 0; i--) {
->                         frame =3D stream->ved_pipeline[i]->process_frame(
->                                         stream->ved_pipeline[i], frame);
-> -                       if (!frame || IS_ERR(frame))
-> +                       if (IS_ERR_OR_NULL(frame))
 
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
->                                 break;
->                 }
->                 //wait for 60hz
->=20
-> --=20
-> 2.43.0
->
+On 3/6/2026 12:49 PM, Trond Myklebust wrote:
+> On Fri, 2026-03-06 at 10:46 +0800, zhangjian (CG) wrote:
+>> Hi experts on NFS:
+>>
+>> Recently we meet an error:
+>> 1.Nfs wait for sunrpc
+>> 2.Sunrpc send OPEN message and hang the rpc task onto sunrpc pending
+>> queue.
+>> 3.Server never reply, and since NFS_CS_NO_RETRANS_TIMEOUT is forced
+>> and
+>> connection is ESTABLISHED, task will never be retransmitted.
+>> This cause procedures waiting on this file hang forever.
+>> I know using "umount -f " to kill rpc task works. And the key to the
+>> problem most likely lies in the network layer. But should nfs
+>> retransmit
+>> it after waiting for so long?
+>>
+>> Wish for reply. Thanks
+>>
+>> Zhangjian
+>>
+> Please read the NFSv4 spec. It very clearly states that the client
+> should never retransmit unless the connection breaks.
+> 
+
+NFSv4 spec said client should never retransmit, but not said client need
+to wait forever. Maybe sunrpc should tell nfs -ETIMEOUT and nfs return
+ERROR rather than retransmit.
+
+> IOW: the problem here is your broken server, not the client.
+
 
