@@ -1,74 +1,74 @@
-Return-Path: <linux-nfs+bounces-20127-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20126-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mH84FGBes2k3VgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20127-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:46:24 +0100
+	id KIggJRJes2k3VgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20126-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:45:06 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1361A27BCB1
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:46:24 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD39B27BBE0
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:45:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1996A3070991
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 00:45:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B66BB302A437
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 00:45:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EFD830E82D;
-	Fri, 13 Mar 2026 00:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02564308F26;
+	Fri, 13 Mar 2026 00:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="gZ+8j40U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zzfvAvPP"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="CqROUpl0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="z24mIuT+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3DE3093B5;
-	Fri, 13 Mar 2026 00:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E515D242D7F;
+	Fri, 13 Mar 2026 00:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773362715; cv=none; b=QS3yD+xZLaE7/TTP7OlHesNNXJq2byHHesBC/Ibg5fq91w9zPx3FDNS17oo5GorrytrL34Qir1pzC5vVEB5s4EmRXaMFzUVCkgUn81fKjy27CQCVrf1VbABjeYF7nWu431U9qtwQcolw5zhRxBP6WRcvCG/FCPClAsieapeHHog=
+	t=1773362698; cv=none; b=WcTBQk8n5rJYwwM5Tw4Na0PX42E9cOdlQoxn3QMquHCcKnhZJgSRq+Ewlear1qW5w4jwOCCxVs3jKFWsAZHyJ59krvRoQdHDRaxmqRpcfWEJkII+sXS5Au93/untsuQxIYwZkHmfa0X+T1/ULBOqxHRhhjb6Xc9Wp1D1KwLwlgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773362715; c=relaxed/simple;
-	bh=f18OcmtFFvcADSvzQSJbfW5cw/pwFr0vZirs7YULIMU=;
+	s=arc-20240116; t=1773362698; c=relaxed/simple;
+	bh=1GEdUWGxzBWcip32FwhChqRsoRwk1KYoMgvnGuh140U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y477s2gl/oxvy1cQcGqagqNEcbCvdWX/Eq7jS5n+bn1vvpXD+Pk5LJnOv54Bcj7VkY/eD6suhLU+MvU6Tx3v/bbHKASwjVGcbc/dY8tk5HSmtBtQGscp/TFKCyC/KBwoj3kVGyLCnBywp601xMkFcZZsY7cr+EgMIMtZTbWFqo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=gZ+8j40U; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zzfvAvPP; arc=none smtp.client-ip=202.12.124.140
+	 MIME-Version; b=O2wb/09Mh94SJDGmh4qYpLAC4dRiB6QLi8VWcP3EL7fvTpBfHSRXQbM6BTOKcDC3I5ByYGmoSjdgoKZIK4NL4/iCNvaRsmUyUDUriFr0xgRrSssA8xwlJQteX52d31pKVQiZNzZG+DbDShMHx9mn8dsCyAp6JR2cZgug3Ue28Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=CqROUpl0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=z24mIuT+; arc=none smtp.client-ip=202.12.124.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailflow.stl.internal (Postfix) with ESMTP id 4ED741301B42;
-	Thu, 12 Mar 2026 20:45:12 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Thu, 12 Mar 2026 20:45:13 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.stl.internal (Postfix) with ESMTP id 273051301B3C;
+	Thu, 12 Mar 2026 20:44:55 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 12 Mar 2026 20:44:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1773362712;
-	 x=1773369912; bh=WEn/ifGqMa6Ax93LDCMof9WVE/J3cBfFQIVVntI4FSU=; b=
-	gZ+8j40UJfd35YHLEn8GltXBxrkHPPJuG8UzNQ3aeCppl0Bx/G/7pz2k7GhTJmjj
-	mMkAf0dDw+XbG44/22ZHnC0JRrXwzH8q+b82+ON+NK+C1ecJu5I0G6cz+Vt/yust
-	YtInsQcWto7IBJEOT8YxmPsZCQpX3QkE4fAQTc0qcS4tV0zoArACYwrCYiAcYuR2
-	IU3IwRQR4aA2y5hgvfqRNgHlsCxk0iBegjLC050ZkP1ZyWpg+OZEQdX1QuP/ytZl
-	/kpi2YCwgiIZQX+OdMfzYWmhsrdWZfMNXzIpSMtOnpwWF/EVPknBbGGcynUfDN8U
-	DaCcDEvlgv1AfZcLYJmQlA==
+	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1773362695;
+	 x=1773369895; bh=epUsWlAclv1DX2KFvnl7YFoPpzqQm77MgVOFM+B8UxU=; b=
+	CqROUpl0SFgdLYM+5S4HfZslkqN7s5xdFeJrWFhMGpiUdyODd7Z+7ZvN1Cp31hpK
+	ZT7KdwX8nus+Re9RyFZ7Lmx2HS/y4aAbuKPyjNSlyG4QT9GlQP35c7Qc/wveUpJc
+	R6fyTEJL1SYXniLv5tJqSk0lVP4TG9izP0Z5673lCC1cVr3QRjNHb2xuAnovPDIN
+	SWebynoCqykrPAnihTtAf4L4HNSaXCdZDUwo3lrKJrbCjD9/oexYvaM0MJCepNAl
+	UAzWnRabXqQJKdQ+UqQhD+TSINUJmdz5L/8VPRv5cvG/4/0ylXxVgi/4RB5tBewr
+	q+8rr17BgBMChmtR+WIx8A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1773362712; x=1773369912; bh=W
-	En/ifGqMa6Ax93LDCMof9WVE/J3cBfFQIVVntI4FSU=; b=zzfvAvPPEd2RUPFHZ
-	l0AGY0rUFybvZ//8GerfoYDoJ/RiOp618aTFUWOlyRcqPbjs+TwRL0gLxxsIgn9B
-	9D19+ZiWTLY6YmJghBQ0EtLyi32bLsLapT86+x3V0Oyr4WcdSP8ViASeFCxFlipW
-	+h2cuSFfiKsYtmGkwNjMFh5Wks22+oCYAhUFbfGjj9uat3x3i2ZjM/1YiaEpE+e8
-	nv5myRHW2Ieskf5HzoPTOIZ08+j8wF95yGOTtnv4tZUYVtQggkg0IQjwJNs9fLnp
-	cK+VOUlhixrvzRekBrrG3Sdeah9seF20NJJD+piNW3SbCTgj0k1feZCLF4BxGTMl
-	+rclw==
-X-ME-Sender: <xms:F16zad072LGVm4nNLtXOrAE0R4MHeFys17F8aeOgTGGFFsxEqmoKvw>
-    <xme:F16zadwY6MqKqvxEVnzjXXhu7yGKdN8mP1ZYLTT82CbpvlqHQLwBO6PUewUXY56Z4
-    w_T6uLZaMp1MNL1uJYJMMEsjNPZEnmlMzDtz_GAFuTpukfY5IY>
-X-ME-Received: <xmr:F16zaU0dcVnke18uj6A9ullyKRr_uxRR96urzCzwQghQnjqU3W37o55JhZUAG9djAg834APpoywNrQ9x-erMjL6ihxt3rxm9oYrK8MIg3Qtx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeekvdehucetufdoteggodetrf
+	:x-me-sender:x-sasl-enc; s=fm1; t=1773362695; x=1773369895; bh=e
+	pUsWlAclv1DX2KFvnl7YFoPpzqQm77MgVOFM+B8UxU=; b=z24mIuT+M2aYx8BDn
+	/SvHK2UeiuT9Zv020rqyHMZx6iwO9BhUEN4xj0P9wfCsYHthOQ7I3eXW+qtsed2n
+	/hGxBGJFKKkTmgXNYq9tJp1zytp6kg+1P5x0LuPwfGAY/urC++X+Rh/67vfy5hZl
+	DF1pkcDi9UQPUY2J1H/YNQzRgxd7MjUUl8aQvK/mKz5IoPlHl9bi+l9YIlwoaZgH
+	Zk1LmrrSqNDSvYiABRJ2cxUaljb/oxyhp6EmBjDzWaeW+e+D8vTq2jf3ic7Ke1iv
+	RjnCU9b8SvZ4hBQDdVmd8EVd30w+Luquz27gPL6jEjG5gzX9KlTD0SzRez021FFn
+	iosiw==
+X-ME-Sender: <xms:Bl6zaStXJ9WAw-16S3bYaCz_RnS8tYIFCyfwjxNZHNrhQ9Ae5W9-Xg>
+    <xme:Bl6zabJ5U1axuX6nlB6VWQLXTnvvS2mY7Jgk-rmULAb0W5ZhgWxydmDeaAFefR9aW
+    TEl-nDM2wCNr6XpJ9HBJO6rHcSSiZmkWgKeXXxmS55kQhKFIA>
+X-ME-Received: <xmr:Bl6zaY3KSkPbpdXhtNRFclXHaXrF71EMYZcvCFtn3vRjXfFhyhDzrAo3wC1O5tXXPk3IWimgPTOXKMOae_kBFPhBSEbSvIB5v8w_BH0Myp5z>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeekvdeiucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
@@ -86,14 +86,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeekvdehucetufdote
     hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhn
     vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlh
     drohhrgh
-X-ME-Proxy: <xmx:F16zae7EsCLuKwBwXpUVK-Wp3nq9hST10o2DtFm4ZdVUHUDoH0CyuA>
-    <xmx:F16zafc0zBIwpnROPq_jVe_3OyVNu6Wd_Kvb5bA0x0ZLMd_ZIBFK6g>
-    <xmx:F16zaabPROXdG8W7YqgtteFTEoudtOzuCKNyVM0SFp6wLn5_edfCfA>
-    <xmx:F16zaZFkMG282SjUNBy4FH7U4gLvxD_T1KDRXugWgu8krhv9pGNr4A>
-    <xmx:GF6zaeGFHDmk1taakt1v2R44Go7b4oaB3SIGvOOEo_CQeTBJb9IsLDae>
+X-ME-Proxy: <xmx:Bl6zaarLR5ShQVdaOoWUVtIhXP2j0-a8MHXe_bBheeqOXSt1kFPCYw>
+    <xmx:Bl6zaYeQfHS5JnVFj1qQxZXh5cdBT39G07cL5E5Dm-e7x3pBmT-Rgg>
+    <xmx:Bl6zaRxbiV781OoMd07m9PkrWVRBBoGMyd0NWxXe_GpCM4BzatSIGA>
+    <xmx:Bl6zaWdLL1WOPvL9MrrQBGVzVZJ-LjPPQ0X0uOHzWW3JziVEDBVF8Q>
+    <xmx:B16zab6RlMl90xxVmmES_1mzBODI5Ga6UsScuDL74A1RJ5HwqAPRxTmx>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Mar 2026 20:44:58 -0400 (EDT)
+ 12 Mar 2026 20:44:41 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -136,9 +136,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	gfs2@lists.linux.dev,
 	linux-um@lists.infradead.org,
 	linux-efi@vger.kernel.org
-Subject: [PATCH 30/53] configfs: remove d_add() calls before configfs_attach_group()
-Date: Fri, 13 Mar 2026 08:12:17 +1100
-Message-ID: <20260312214330.3885211-31-neilb@ownmail.net>
+Subject: [PATCH 31/53] configfs: stop using d_add().
+Date: Fri, 13 Mar 2026 08:12:18 +1100
+Message-ID: <20260312214330.3885211-32-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
 References: <20260312214330.3885211-1-neilb@ownmail.net>
@@ -156,7 +156,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -165,7 +165,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FREEMAIL_FROM(0.00)[ownmail.net];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20127-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20126-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,cs.cmu.edu,google.com,linux.alibaba.com,redhat.com,auristor.com,samba.org,samsung.com,sony.com,debian.org,mit.edu,dilger.ca,goodmis.org,dubeyko.com,tyhicks.com,nod.at,cambridgegreys.com,sipsolutions.net,ozlabs.org];
 	RCVD_TLS_LAST(0.00)[];
@@ -180,61 +180,39 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[51];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,brown.name:replyto,messagingengine.com:dkim,ownmail.net:dkim,ownmail.net:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1361A27BCB1
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,brown.name:replyto,ownmail.net:dkim,ownmail.net:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,messagingengine.com:dkim]
+X-Rspamd-Queue-Id: DD39B27BBE0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: NeilBrown <neil@brown.name>
 
-These d_add() calls cannot be necessary.  The inode given is NULL so all
-they do is attach the dentry to the hash table.
-
-If configfs_attach_group() fails, then d_drop() is called so the dentry
-will be detached.
-If configfs_attach_group() succeeds, then
- configfs_attach_group -> configfs_attach_item ->configfs_create_dir
-must have succeeded, so d_instantiate() will have been called and the
-dentry hashed there.
-
-So the only effect is that the dentry will be hashed-negative for a
-short period which will allow a lookup to find nothing without waiting
-for the directory i_rwsem.  I can find no indication that this might be
-important.
-
-Adding a dentry as negative, and then later making it positive is an
-unusual pattern and appears to be unnecessary, so it is best avoided.
+"Best practice" is to use d_splice_alias() at the end of a ->lookup
+function.  d_add() often works and is not incorrect in configfs, but as
+it is planned to remove d_add(), change to use d_splice_alias().
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/configfs/dir.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/configfs/dir.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 362b6ff9b908..c82eca0b5d73 100644
+index c82eca0b5d73..6ec589b6b8a4 100644
 --- a/fs/configfs/dir.c
 +++ b/fs/configfs/dir.c
-@@ -706,8 +706,6 @@ static int create_default_group(struct config_group *parent_group,
- 	ret = -ENOMEM;
- 	child = d_alloc_name(parent, group->cg_item.ci_name);
- 	if (child) {
--		d_add(child, NULL);
--
- 		ret = configfs_attach_group(&parent_group->cg_item,
- 					    &group->cg_item, child, frag);
- 		if (!ret) {
-@@ -1904,8 +1902,6 @@ int configfs_register_subsystem(struct configfs_subsystem *subsys)
- 	err = -ENOMEM;
- 	dentry = d_alloc_name(root, group->cg_item.ci_name);
- 	if (dentry) {
--		d_add(dentry, NULL);
--
- 		err = configfs_dirent_exists(dentry);
- 		if (!err)
- 			err = configfs_attach_group(sd->s_element,
+@@ -501,8 +501,7 @@ static struct dentry * configfs_lookup(struct inode *dir,
+ 	}
+ 	spin_unlock(&configfs_dirent_lock);
+ done:
+-	d_add(dentry, inode);
+-	return NULL;
++	return d_splice_alias(inode, dentry);
+ }
+ 
+ /*
 -- 
 2.50.0.107.gf914562f5916.dirty
 
