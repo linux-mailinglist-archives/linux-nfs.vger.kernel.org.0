@@ -1,348 +1,242 @@
-Return-Path: <linux-nfs+bounces-20118-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20119-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SKeREPxWs2kRVQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20118-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:14:52 +0100
+	id WEjEJwRYs2kRVQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20119-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:19:16 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 456B027B7CE
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:14:51 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B6E27B884
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 01:19:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 55D74302510D
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 00:14:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 987F8302ECAE
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 00:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95DB928690;
-	Fri, 13 Mar 2026 00:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA4CB257827;
+	Fri, 13 Mar 2026 00:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K2E19C5f"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="gHD+X8LZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cCdkekOP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C3226299
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2026 00:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93875191;
+	Fri, 13 Mar 2026 00:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773360886; cv=none; b=r+bkYdg7YzcXgMwu/xO3Lw4MJhviJT3eabigxm862SFRseJYrv6ZR/SHv9oKMIETZwW8aIC/ME7Wx40X7vgSWU/PjfWI6cS9jbtYafhnfuY34X2NPEdBkkWrHh9vtJStL50HzmrnRXkrPc3YJWO8MXPNK1nau9bg+jCn/HpQPCM=
+	t=1773361147; cv=none; b=AzsiR7Wkyaex8qDknmU3dNmJejChFfrbPhR6bCWiBjY15UsdYm+59Z7MjRQnPo3Gmr6QJ9taLhsy6EMxgFyjiPLTbV6P3hXHiI1Mcjkn+n0bteYwhp88GwYcTrqX/gekV18KdkkSdgt4V7Ajte0qo9TDRjYWHq6AXRIvkhbDySQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773360886; c=relaxed/simple;
-	bh=y5mH+LDeDN6jkej9a1QBI1IIOsbdd0INrp4s6xXtR20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q3LYUG7h1SnybUnMyx/wPYwMmO7CfmxDTMaKTmzUFSxjUIGsZ2HoBnfyZncVfl6yyIQh9OxbN1NdKgPI5bLN3GPG655d40HqTStkbh5W0haceC7QTJmuyf2bIk8jOPKoQ4e53o/kPGZZIBlxxPQFkv3o9dATQSJkouBPcrG1Iao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=K2E19C5f; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62CLJCKY2023390;
-	Fri, 13 Mar 2026 00:14:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=/UHRUuemil94Z5Gd5/9BizDWxcpdJ
-	NbVHPOsNhszwwY=; b=K2E19C5fqm1ibD7L3O6qH2BIxnS7PiFr08Hxe4mkRMMNo
-	9Qt3bpt6ibsfJuYsXcm2wHtiWmir+3sA+CIinSQDQeXcBYScYjylaNyNlpZYcb4j
-	1hIJZwtfBAdRCO/037yeJx0E8rHDYgOK6RhNgwNYw7ALB88EUf0RKBDbhbmeg1m6
-	bEIc+TjeJTGpCILFx3weX/n1XAHKcYyBrWbk4Smsxksq4VJxbrIVeDh026P8Ok80
-	WiinsYpTXLrOGFYlEVyBZE83TJu8GRQxzeX8Vo0h+fa0BC+9eWwjI8i86fUr3UwP
-	6UOWM5VHklt7TEVzCLKO36oWfUyl2+cbDWVcJlS/g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cuh4kj25c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Mar 2026 00:14:33 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 62CMJlFb022287;
-	Fri, 13 Mar 2026 00:14:32 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4cuh5m146f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Mar 2026 00:14:31 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 62D0EVrH003670;
-	Fri, 13 Mar 2026 00:14:31 GMT
-Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4cuh5m145x-1;
-	Fri, 13 Mar 2026 00:14:31 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
-        okorniev@redhat.com, tom@talpey.com, hch@lst.de
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v6 1/1] NFSD: move accumulated callback ops to per-net namespace
-Date: Thu, 12 Mar 2026 17:14:21 -0700
-Message-ID: <20260313001428.2599438-1-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1773361147; c=relaxed/simple;
+	bh=KDownSrJa5S3EqGFi/GZy1HPESB/36MNwmQwJTfITNs=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=LXOJLgK2hIr46xWJEMJLAapItWGFd9kRKjO7S676rr7rLFynCxJ/vH0dpCvvesB225rs0KpTLnpk9mYOF9W6VOpKm55aMhHnntub3ECUO5VI7LJgZa2DnrbbxU8QCoorKuq7bKGidQWKeKlvwXz26Eyfb+Sp0Ou48pfmce6YWQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=gHD+X8LZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cCdkekOP; arc=none smtp.client-ip=202.12.124.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.stl.internal (Postfix) with ESMTP id 8CEA61301B20;
+	Thu, 12 Mar 2026 20:19:04 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Thu, 12 Mar 2026 20:19:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1773361144; x=1773368344; bh=mVG8eebTQIYrNSCfz5AoYNPWvAP9zOmA/oS
+	XBEUNMDg=; b=gHD+X8LZJV5BmcTxyVzSi4eOH+f9NWdLk6voSZ3Dk2TmtFtrTPT
+	n0z2oXB44COIaMxym9EotuPwl3zhBchA17LQD1aiXLP0HZVx+1sB2rDvs+59CClN
+	HQKjtkq+MLlefiP50e3G0ZUzDRVImhJt8LXC5Gk+3LL4kz0dWCTiZEgkORI83H3g
+	IYzMIhIFS+pW8u+iq3O1fDK+eB6xv0w3oEKr75CQKG3ENMDVGe/ATK98/l7Dvx/P
+	8BZhP/BMTsa8A8nINOCn4yT0evPyJ+NeT9UVxbDjMi1RnmCTf2Vmbpsgbeb+2prd
+	AnO6/VSTlvk8uuzd90K874TkKVJWxfC+iOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773361144; x=
+	1773368344; bh=mVG8eebTQIYrNSCfz5AoYNPWvAP9zOmA/oSXBEUNMDg=; b=c
+	CdkekOPdZGeTHq9Q9fn6kwRHxICBqhAbEe7Mbn8RL0/ghUTZud8i2luiteEmp2Ir
+	nIdMJTy2arC7PIdd3QUxuvFoTPxCOMLV9z6Gm7Dry2+55WAsz8/lpUpp6KLCvOb5
+	vppTuCMIOaaruvILxo7wGqRgbVRfmvszAtPJWbhzUWIoBUdJz8+7BU3zgxJSlbc3
+	fpGHsm7gMQ5BqZ2Qbs1zxa7FgNneoKrfT70cZbcDqlzmSr5Rt1Zdfq8ZqH/0hCpG
+	u4ztiIjqn7BZ94m/pkzsJPqZlNum+Fn4NWKv3hqcNWG2BtBRflNBWi/TcF8QJ+Eo
+	3H4DqYmdO0Ph/KIpM2FGA==
+X-ME-Sender: <xms:9lezaf2biEH_YUoVtaJ788TBctRMYMGJjfZ2DGR5uanh1iY0Bnn1tg>
+    <xme:9lezaRxzKm32RjDuV_b2LpuNVPPb6Y2SpMCDjskankSuVyTtPWjSsFcMWwjNHIFU7
+    GLRMDp98i1zC2yMmBsdKulbM_AH2YMuIt5X8wc4fPQA-OpC2Q>
+X-ME-Received: <xmr:9lezaa84oPqo9JeTHF-KiyHUZaJt4h0JSykKqUiirLVobFQ0qtPIFeYYpGFOGnN83U9sO87B36Hyg9vaeC9k5oIsMjNlS0OCsh5IMJauHcVf>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeekvddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epffevjeeljeehueejgeehleelueevudehjeekgeevueffteevhfefvedtueeugfejnecu
+    ffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnhhm
+    rghilhdrnhgvthdpnhgspghrtghpthhtohephedupdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthht
+    oheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:9lezaSQ88me8CYxNCjygrSQBmtG4cdv1lL3aUTLRRuM52pJKUU1ccw>
+    <xmx:9lezaXkQlDHP4UxMpnGEVP1brRONq1oRM3xyFBblzX9245pjYr4Vpw>
+    <xmx:9lezaSZBls0VHhctSLEpvUTcq6jJd_Fbrs8I5U1SyxvxEE-JGS1Fuw>
+    <xmx:9lezaak5kvHNn-TYlzGIxM5qxPwoE_QzIk7oFu49dZPa1Fp3mUUnVA>
+    <xmx:-FezaRCDWnLXkmnc85hbOjTGKD_omhp2YPsIbC_7rVSfPvFCo06RTGxC>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Mar 2026 20:18:49 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-12_03,2026-03-12_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
- spamscore=0 suspectscore=0 phishscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2603050001
- definitions=main-2603130000
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDAwMCBTYWx0ZWRfX329nTz8H8SUd
- JNgN6X2/91zbkDnim0ucjnwPCHkIM+4M9JcAIPOhT8frYO7Jl3oEjfja2gINzy4BHIp3flhbHoK
- LnGHpSiVRZPbfUCxD12aKG0YwjJILpauEfPTEKpAkatu00+UyE9p2aqiC8e2iM72o9byiozJOVA
- s2uedI074AJmSEGAR741T6L3hJPtflLlUvfuba1CaDlEF0rNZRHB2oC9q7+GlYeKDiTjibnHmTZ
- XW7DVB2/zTufED5v8j3e5UdhiA7aW61gHCQbIB5ylQ3qjIMjULUE63uwNBia37GFmDZmRzxywFJ
- G+86hatSF5t8RdiHcx1HdC2tJoI4yOqQTtis5rEz3+3KbfdZeZanPYRBo6nyTwECDnv1HVD3Qth
- VHiGg6pB2Xys2wnIntJep9SrP6fGLQkrA43FxxMuGirtciMpLHzZo1l6oAf3QayqDFLZIpiKdTE
- /8b0out1vXW9shacejk5bRJcbuBRMGV86hlba+U8=
-X-Proofpoint-GUID: eYDKnZ9cslC1NVncoVCBz5Of7LaOcik4
-X-Proofpoint-ORIG-GUID: eYDKnZ9cslC1NVncoVCBz5Of7LaOcik4
-X-Authority-Analysis: v=2.4 cv=Ob2VzxTY c=1 sm=1 tr=0 ts=69b356e9 b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
- a=x0eKOSpe3m1H3M0S9YoZ:22 a=yPCof4ZbAAAA:8 a=6kqtG6ALdFBeoBnK5hsA:9 cc=ntf
- awl=host:12272
+From: NeilBrown <neilb@ownmail.net>
+To: "Steven Rostedt" <rostedt@goodmis.org>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Carlos Maiolino" <cem@kernel.org>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Jan Harkes" <jaharkes@cs.cmu.edu>, "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "David Howells" <dhowells@redhat.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>,
+ "Steve French" <sfrench@samba.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Sungjong Seo" <sj1557.seo@samsung.com>,
+ "Yuezhang Mo" <yuezhang.mo@sony.com>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Breno Leitao" <leitao@debian.org>, "Theodore Ts'o" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Ilya Dryomov" <idryomov@gmail.com>,
+ "Alex Markuze" <amarkuze@redhat.com>,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>,
+ "Tyler Hicks" <code@tyhicks.com>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Jeremy Kerr" <jk@ozlabs.org>, "Ard Biesheuvel" <ardb@kernel.org>,
+ linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+ coda@cs.cmu.edu, linux-mm@kvack.org, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ ceph-devel@vger.kernel.org, ecryptfs@vger.kernel.org,
+ gfs2@lists.linux.dev, linux-um@lists.infradead.org,
+ linux-efi@vger.kernel.org
+Subject: Re: [PATCH RFC 00/53] lift lookup out of exclive lock for dir ops
+In-reply-to: <20260312193847.28c32a2c@gandalf.local.home>
+References: <20260312214330.3885211-1-neilb@ownmail.net>,
+ <20260312193847.28c32a2c@gandalf.local.home>
+Date: Fri, 13 Mar 2026 11:18:47 +1100
+Message-id: <177336112755.5556.2850267364383380917@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20118-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[oracle.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:dkim,oracle.com:email,oracle.com:mid];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-20119-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,cs.cmu.edu,google.com,linux.alibaba.com,redhat.com,auristor.com,samba.org,samsung.com,sony.com,debian.org,mit.edu,dilger.ca,dubeyko.com,tyhicks.com,nod.at,cambridgegreys.com,sipsolutions.net,ozlabs.org,vger.kernel.org,kvack.org,lists.infradead.org,lists.linux.dev];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_GT_50(0.00)[51];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: 456B027B7CE
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_REPLYTO(0.00)[neil@brown.name];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,noble.neil.brown.name:mid,ownmail.net:dkim,ownmail.net:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,brown.name:replyto]
+X-Rspamd-Queue-Id: 88B6E27B884
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The RPC statistics for the NFSD fore channel are tracked per network
-namespace, but the backchannel (callback) RPC statistics are currently
-maintained globally. This causes statistics to be shared across network
-namespaces and can produce misleading results when nfsd is run in
-containers.
+On Fri, 13 Mar 2026, Steven Rostedt wrote:
+> On Fri, 13 Mar 2026 08:11:47 +1100
+> NeilBrown <neilb@ownmail.net> wrote:
+>=20
+> > *[PATCH 26/53] smb/client: don't unhashed and rehash to prevent new
+> > *[PATCH 27/53] smb/client: use d_splice_alias() in atomic_open
+> >  [PATCH 28/53] smb/client: Use d_alloc_noblock() in
+> > *[PATCH 29/53] exfat: simplify exfat_lookup()
+> > *[PATCH 30/53] configfs: remove d_add() calls before
+> >  [PATCH 31/53] configfs: stop using d_add().
+> > *[PATCH 32/53] ext4: move dcache modifying code out of __ext4_link()
+> > *[PATCH 33/53] ext4: use on-stack dentries in
+>=20
+> >  [PATCH 34/53] tracefs: stop using d_add().
+>=20
+> Hmm, another reason I hate being Cc'd on every patch of a patch bomb where
+> I only need to look at one (and maybe the first) patch.
 
-Move the accumulated backchannel/callback RPC statistics into
-per-network-namespace storage so each netns maintains independent
-counters.
+I could try to refine my tooling, but you can't please all the people
+all the time...  I wonder how many people would be bothered if only the
+cover-letter was sent to everyone, and the patches only went to lkml -
+to be fetched from lore if not subscribed.
 
-This change only relocates the accounting. User-facing retrieval and
-display of these per-netns callback statistics will be added in a
-follow-up patch.
+You would probably need to look at 02/53
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/netns.h        |  5 +++
- fs/nfsd/nfs4callback.c | 75 ++++++++++++++++++++++--------------------
- fs/nfsd/nfsctl.c       | 11 +++++++
- fs/nfsd/state.h        |  2 ++
- 4 files changed, 58 insertions(+), 35 deletions(-)
+https://github.com/neilbrown/linux/commit/aebdc6545eb18e5b6a7d41320f30d752996=
+b3c6c
 
-v2:
-  . free memory allocated for nn->nfsd_cb_version4.counts in
-    nfsd_net_cb_stats_init() on error in nfsd_net_init().
-v3:
-  . reword commit message. 
-  . fix initialization of nn->nfsd_cb_program.nrvers.
-v4:
-  . fix merge conflict in nfsd_net_exit in nfsd-testing branch.
-v5:
-  . restore commit message to the original in v1
-v6:
-  . put the call nfsd_net_cb_stats_init and nfsd_net_cb_stats_shutdown
-    under CONFIG_NFSD_V4.
+to have the context to understand 34/53
 
-  . reword commit message to clarify the intention of the patch.
+>=20
+> For some reason, I'm missing several patches, and this is one of them :-p
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 6ad3fe5d7e12..c101bf2c24c2 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -228,6 +228,11 @@ struct nfsd_net {
- 	struct list_head	local_clients;
- #endif
- 	siphash_key_t		*fh_key;
-+
-+	struct rpc_version	nfsd_cb_version4;
-+	const struct rpc_version *nfsd_cb_versions[2];
-+	struct rpc_program	nfsd_cb_program;
-+	struct rpc_stat		nfsd_cb_stat;
- };
- 
- /* Simple check to find out if a given net was properly initialized */
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index aea8bdd2fdc4..759f24657c34 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1016,7 +1016,7 @@ static int nfs4_xdr_dec_cb_offload(struct rpc_rqst *rqstp,
- 	.p_decode  = nfs4_xdr_dec_##restype,				\
- 	.p_arglen  = NFS4_enc_##argtype##_sz,				\
- 	.p_replen  = NFS4_dec_##restype##_sz,				\
--	.p_statidx = NFSPROC4_CB_##call,				\
-+	.p_statidx = NFSPROC4_CLNT_##proc,				\
- 	.p_name    = #proc,						\
- }
- 
-@@ -1032,40 +1032,7 @@ static const struct rpc_procinfo nfs4_cb_procedures[] = {
- 	PROC(CB_GETATTR,	COMPOUND,	cb_getattr,	cb_getattr),
- };
- 
--static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
--static const struct rpc_version nfs_cb_version4 = {
--/*
-- * Note on the callback rpc program version number: despite language in rfc
-- * 5661 section 18.36.3 requiring servers to use 4 in this field, the
-- * official xdr descriptions for both 4.0 and 4.1 specify version 1, and
-- * in practice that appears to be what implementations use.  The section
-- * 18.36.3 language is expected to be fixed in an erratum.
-- */
--	.number			= 1,
--	.nrprocs		= ARRAY_SIZE(nfs4_cb_procedures),
--	.procs			= nfs4_cb_procedures,
--	.counts			= nfs4_cb_counts,
--};
--
--static const struct rpc_version *nfs_cb_version[2] = {
--	[1] = &nfs_cb_version4,
--};
--
--static const struct rpc_program cb_program;
--
--static struct rpc_stat cb_stats = {
--	.program		= &cb_program
--};
--
- #define NFS4_CALLBACK 0x40000000
--static const struct rpc_program cb_program = {
--	.name			= "nfs4_cb",
--	.number			= NFS4_CALLBACK,
--	.nrvers			= ARRAY_SIZE(nfs_cb_version),
--	.version		= nfs_cb_version,
--	.stats			= &cb_stats,
--	.pipe_dir_name		= "nfsd4_cb",
--};
- 
- static int max_cb_time(struct net *net)
- {
-@@ -1152,14 +1119,15 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 		.addrsize	= conn->cb_addrlen,
- 		.saddress	= (struct sockaddr *) &conn->cb_saddr,
- 		.timeout	= &timeparms,
--		.program	= &cb_program,
- 		.version	= 1,
- 		.flags		= (RPC_CLNT_CREATE_NOPING | RPC_CLNT_CREATE_QUIET),
- 		.cred		= current_cred(),
- 	};
- 	struct rpc_clnt *client;
- 	const struct cred *cred;
-+	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
-+	args.program = &nn->nfsd_cb_program;
- 	if (clp->cl_minorversion == 0) {
- 		if (!clp->cl_cred.cr_principal &&
- 		    (clp->cl_cred.cr_flavor >= RPC_AUTH_GSS_KRB5)) {
-@@ -1786,3 +1754,40 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
- 		nfsd41_cb_inflight_end(clp);
- 	return queued;
- }
-+
-+void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn)
-+{
-+	kfree(nn->nfsd_cb_version4.counts);
-+}
-+
-+int nfsd_net_cb_stats_init(struct nfsd_net *nn)
-+{
-+	nn->nfsd_cb_version4.counts = kzalloc_objs(unsigned int,
-+			ARRAY_SIZE(nfs4_cb_procedures), GFP_KERNEL);
-+	if (!nn->nfsd_cb_version4.counts)
-+		return -ENOMEM;
-+	/*
-+	 * Note on the callback rpc program version number: despite language
-+	 * in rfc 5661 section 18.36.3 requiring servers to use 4 in this
-+	 * field, the official xdr descriptions for both 4.0 and 4.1 specify
-+	 * version 1, and in practice that appears to be what implementations
-+	 * use. The section 18.36.3 language is expected to be fixed in an
-+	 * erratum.
-+	 */
-+	nn->nfsd_cb_version4.number = 1;
-+
-+	nn->nfsd_cb_version4.nrprocs = ARRAY_SIZE(nfs4_cb_procedures);
-+	nn->nfsd_cb_version4.procs = nfs4_cb_procedures;
-+	nn->nfsd_cb_versions[1] = &nn->nfsd_cb_version4;
-+
-+	memset(&nn->nfsd_cb_stat, 0, sizeof(nn->nfsd_cb_stat));
-+	nn->nfsd_cb_program.name = "nfs4_cb";
-+	nn->nfsd_cb_program.number = NFS4_CALLBACK;
-+	nn->nfsd_cb_program.nrvers = ARRAY_SIZE(nn->nfsd_cb_versions);
-+	nn->nfsd_cb_program.version = &nn->nfsd_cb_versions[0];
-+	nn->nfsd_cb_program.pipe_dir_name = "nfsd4_cb";
-+	nn->nfsd_cb_program.stats = &nn->nfsd_cb_stat;
-+	nn->nfsd_cb_stat.program = &nn->nfsd_cb_program;
-+
-+	return 0;
-+}
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 14d9458aeff0..ce69bdccbb48 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2216,6 +2216,11 @@ static __net_init int nfsd_net_init(struct net *net)
- 	int retval;
- 	int i;
- 
-+#ifdef CONFIG_NFSD_V4
-+	retval = nfsd_net_cb_stats_init(nn);
-+	if (retval)
-+		return retval;
-+#endif
- 	retval = nfsd_export_init(net);
- 	if (retval)
- 		goto out_export_error;
-@@ -2256,6 +2261,9 @@ static __net_init int nfsd_net_init(struct net *net)
- out_idmap_error:
- 	nfsd_export_shutdown(net);
- out_export_error:
-+#ifdef CONFIG_NFSD_V4
-+	nfsd_net_cb_stats_shutdown(nn);
-+#endif
- 	return retval;
- }
- 
-@@ -2286,6 +2294,9 @@ static __net_exit void nfsd_net_exit(struct net *net)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
- 	kfree_sensitive(nn->fh_key);
-+#ifdef CONFIG_NFSD_V4
-+	nfsd_net_cb_stats_shutdown(nn);
-+#endif
- 	nfsd_proc_stat_shutdown(net);
- 	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
- 	nfsd_idmap_shutdown(net);
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 9b05462da4cc..490193c1877d 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -895,4 +895,6 @@ struct nfsd4_get_dir_delegation;
- struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
- 						struct nfsd4_get_dir_delegation *gdd,
- 						struct nfsd_file *nf);
-+int nfsd_net_cb_stats_init(struct nfsd_net *nn);
-+void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn);
- #endif   /* NFSD4_STATE_H */
--- 
-2.47.3
+They don't seem to have made it to lore.kernel.org either.  Maybe I'm
+being rate-limited somewhere.
+
+https://github.com/neilbrown/linux/commit/77074c04a94176d6b2b2caf44dd84f0788a=
+420c4
+
+Thanks,
+NeilBrown
+
+>=20
+> -- Steve
+>=20
+>=20
+> >  [PATCH 35/53] cephfs: stop using d_add().
+> > *[PATCH 36/53] cephfs: remove d_alloc from CEPH_MDS_OP_LOOKUPNAME
+> >  [PATCH 37/53] cephfs: Use d_alloc_noblock() in
+> >  [PATCH 38/53] cephfs: Don't d_drop() before d_splice_alias()
+> >  [PATCH 39/53] ecryptfs: stop using d_add().
+> >  [PATCH 40/53] gfs2: stop using d_add().
+>=20
 
 
