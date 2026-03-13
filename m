@@ -1,248 +1,357 @@
-Return-Path: <linux-nfs+bounces-20146-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20147-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wK0JHz0dtGlLhQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20146-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 15:20:45 +0100
+	id WJ8BEXsrtGkEigAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20147-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 16:21:31 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E777B284D2A
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 15:20:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 488B4285D55
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 16:21:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8BE0B3068307
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 14:11:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 448AF306BDA9
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 15:02:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C565B3947BE;
-	Fri, 13 Mar 2026 14:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F3D3A8742;
+	Fri, 13 Mar 2026 15:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9BQrxVC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4IO1wJd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF753932F8;
-	Fri, 13 Mar 2026 14:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51CA3A8740
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2026 15:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773411116; cv=none; b=PDCR1LEBqScqNoNYaLvbEK4y73HlVFA86eVrCyFssAbTJ3fMCqO8XNV91hxHOhkL+m/Kb5lF6kmfX7VgxrSXNsI7kUitLv39WubQV0ZDnv1bhab3Sqcd7P93uL5XuMgVCPyAYsU5lD2RqPfX8ANlq1IHhWwdhy1cJmco6ROlfqI=
+	t=1773414119; cv=none; b=l3pkT0IW6552QD25uqcX1a+v7fWP6tFshB2M9ivI6XMtMD4UzSWg1m0t+1ZhPo7+q1ppLB6HcQeB90CvdPW1sEsPNF8dW+H8tDihf+iPJE6gThByCK8ONqKglvKqlSLvVZfESKtGdRois1BREbp02y0ExscIZI2feNgEQW0Tloc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773411116; c=relaxed/simple;
-	bh=uK5+CyldpVp/j6tcYu6nVBXkafPOkthPsnjITViySe0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p3mhIdmKmO5CmcSJF2XHyDGCx0gc14q08FRZEyBxH9e1takM1i5Ch9L9RLq7O1s32blZUjLq5MYedppx3lhXPJlZPaaDt6NrKL5CSPlV1t4gmZa9Op+bZd/6erCuwgDFfSUBThK0jis1plxkKtm2TztkE/nIYXGbS0kiTWvNmqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9BQrxVC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD48FC19421;
-	Fri, 13 Mar 2026 14:11:55 +0000 (UTC)
+	s=arc-20240116; t=1773414119; c=relaxed/simple;
+	bh=c0mySo/z+77zq8T6qGtP9A7vMAWZJ73r+ZNzBso+IR0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CJvwVa9665aCO7s7bgfVICWPLk86S8xeo6IL2aDb6hoItFRIJ17piFPaXQou85R2t3cyavpo+y4zzTnrFwuvMnT+1f0kV6+UjBJkSrXy9PoUU2Zj/GlbBp5QFVSdTdOiWNWxSvqlEJS2w6xnrPKCmsojTNiXpLDhclzV2vo2fDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4IO1wJd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77357C2BC87;
+	Fri, 13 Mar 2026 15:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773411116;
-	bh=uK5+CyldpVp/j6tcYu6nVBXkafPOkthPsnjITViySe0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=h9BQrxVCW3e3/1Q3nxcwd5+w8zOe3baOIKQ/hEjCEE710q9SITGnh7m3RvMv6Zjc+
-	 vwh5orFisj5W0tE0oLxjCywreUxkwOr+t7jAWuk0LTxezAmjVzYfbWmHbAx7vc6B6b
-	 kJhT172ujTPX6vomPFjq2Lkfb89WVhUB9lkVRHjB3cTx18y6YJX/YodARBOWqoAJFM
-	 81QRQh8/EPAYP30QQzg3ZGSw+GZwE5AsSXh/WCzIeHolDLboJoev0CcbF9nM7gk6/e
-	 +xM9qcOSE/kItwHB5zqBJRiRxxAGbcouN6mRLsd4irmd/M7g+fH2Aa0FdlZGmiVoXw
-	 B66LzJV5F/RKw==
-Message-ID: <168e9376b5bf9836fa05bb35c6955f4c3e63a8ed.camel@kernel.org>
-Subject: Re: Regression: Missing check in nfsd_permission() causes -ENOLCK
- No locks available
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>,
- 	1128861@bugs.debian.org, linux-nfs@vger.kernel.org, Olga Kornievskaia	
- <okorniev@redhat.com>, stable@vger.kernel.org, Chuck Lever	
- <chuck.lever@oracle.com>
-Date: Fri, 13 Mar 2026 10:11:52 -0400
-In-Reply-To: <177335517622.5556.4792770517095870331@noble.neil.brown.name>
-References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
-	, <418f30b5-06ae-471f-bf5f-f14f3f75deff@leemhuis.info>
-	, <5a302dcfcb54a87366dd6a9bc5ec27df179f7f58.camel@kernel.org>
-	 <177335517622.5556.4792770517095870331@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=k20201202; t=1773414118;
+	bh=c0mySo/z+77zq8T6qGtP9A7vMAWZJ73r+ZNzBso+IR0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=K4IO1wJdYWs09Vqfz9lhXyszNfM9Z3Y+nYstcyCaDzi3YTUs2d8CX2OV/UaTDc9VL
+	 lSgvAFRSq4XE6ysHNqErJGAuwkvzSQqTuDmpHivP4FU9/hbCN2/s9LTPDmM2TAdqQh
+	 NZ82RGAvdOYTgfrfIhbfk0/Egi1xypQ9Vvajc3DhlVFjeOk6KCv15ptqOu5w9LEd1+
+	 6eLDiSJJFaMBGwuXNqXudWiBWm7Pg9/lLL6xD4692vkv1a7vbolpTJjn7uKZZoqGOT
+	 dbcgWYNPk2VQ5PP19io1mKzNU/JpTOEiN/aCiYHlr6Y4L6cuTaoNroSppyx96ghcSZ
+	 mNeDP0W4t0Cxg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 5536DF40068;
+	Fri, 13 Mar 2026 11:01:57 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 13 Mar 2026 11:01:57 -0400
+X-ME-Sender: <xms:5Sa0aZj2NkYWHwccaCJdHh5Ly32mJEsRynzAC2YGnRjE3xg8uMCc6w>
+    <xme:5Sa0aY1iokZH0FONyndmyizGJCMUkef3ZUz2ed9AMeqzIfYblE_pI9YTNcm50nDR6
+    aFsZkZHU_WPNhExR3x98FclijymAltyGrEE7VD3j3ke0d3Tx1P1vG8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeelleejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthho
+    pegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopegurghird
+    hnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughh
+    rghtrdgtohhmpdhrtghpthhtohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtoh
+    eplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:5Sa0aT3cf2ADm7hQYHxcds8rTFF1C-SVIOK-V5Iw54hUVhNWoqq0qw>
+    <xmx:5Sa0acGxdFmqtGxiuxOJwUpEjZZR80TZFE1RH6VLLsEUTpLYVVFlig>
+    <xmx:5Sa0aaijjVJNX5XZGtWj0ldel_qBy39zKelMGGIacdaWz680Bem2oQ>
+    <xmx:5Sa0aXCc79a_MTl7l4MwDrUSLD8JMpO9IN6QViFf7ndjNNfNgniedg>
+    <xmx:5Sa0aUSMlaQGBPqUCoHpG55XcZ-x1ysvY0bQI5Iupjk8qq6uMLQHEQ2A>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2575E780070; Fri, 13 Mar 2026 11:01:57 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-ThreadId: AMUnDyOFIn2o
+Date: Fri, 13 Mar 2026 11:01:36 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Dai Ngo" <dai.ngo@oracle.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
+ "Christoph Hellwig" <hch@lst.de>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <856fb692-7dfe-4bb6-a72b-98bb79a184ff@app.fastmail.com>
+In-Reply-To: <20260313001428.2599438-1-dai.ngo@oracle.com>
+References: <20260313001428.2599438-1-dai.ngo@oracle.com>
+Subject: Re: [PATCH v6 1/1] NFSD: move accumulated callback ops to per-net namespace
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20146-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20147-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,app.fastmail.com:mid];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E777B284D2A
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 488B4285D55
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-03-13 at 09:39 +1100, NeilBrown wrote:
-> On Thu, 12 Mar 2026, Jeff Layton wrote:
-> > On Fri, 2026-02-27 at 10:54 +0100, Thorsten Leemhuis wrote:
-> > > > This was discovered on the Debian openQA infrastructure server when=
-=20
-> > > > upgrading kernel from v6.12.48 to later v6.12.y where worker hosts =
-(with=20
-> > > > any earlier or later kernel version) pass NFSv3 mounted ISO images =
-to=20
-> > > > qemu-system-x86_64 and it reports:
-> > > >=20
-> > > > !!! : qemu-system-x86_64: -device=20
-> > > > scsi-cd,id=3Dcd0-device,drive=3Dcd0-overlay0,serial=3Dcd0: Failed t=
-o get=20
-> > > > "consistent read" lock: No locks available
-> > > > QEMU: Is another process using the image=20
-> > > > [/var/lib/openqa/pool/2/20260223-1-debian-testing-amd64-netinst.iso=
-]?
-> > > >=20
-> >=20
-> > I have to wonder if this is a QEMU bug too:
-> >=20
-> > Why is it opening a file read-only and then taking out an exclusive
-> > lock on it? What's the point of denying access to other readers?
->=20
-> It turns out that I mis-diagnosed the problem.  i.e. I guess wrong as to
-> what weird thing qemu is doing.
->=20
-> qemu isn't using flock().  It is using fcntl() locking but at this point
-> isn't trying to GET a lock, it is testing if a lock already exists.
-> i.e. F_GETLK or F_OFD_GETLK.
->=20
-> F_GETLK doesn't require WRITE access, even when getting an exclusive
-> lock.
-> But NFSD does :-)
->=20
-> So maybe this is the fix that we want.
->=20
-> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-> index 255a847ca0b6..67234686ef8c 100644
-> --- a/fs/lockd/svclock.c
-> +++ b/fs/lockd/svclock.c
-> @@ -632,7 +632,7 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_fi=
-le *file,
->  		goto out;
->  	}
-> =20
-> -	mode =3D lock_to_openmode(&lock->fl);
-> +	mode =3D O_RDONLY;
->  	locks_init_lock(&conflock->fl);
->  	/* vfs_test_lock only uses start, end, and owner, but tests flc_file */
->  	conflock->fl.c.flc_file =3D lock->fl.c.flc_file;
->=20
->=20
->=20
-> ????
-> NeilBrown
 
-Oh! That makes much more sense.
 
-We definitely allow F_GETLK requests on local files when the task
-doesn't have write access to the file, so I don't see any issue with
-allowing it here. Your fix seems sensible to me.
+On Thu, Mar 12, 2026, at 8:14 PM, Dai Ngo wrote:
+> The RPC statistics for the NFSD fore channel are tracked per network
+> namespace, but the backchannel (callback) RPC statistics are currently
+> maintained globally. This causes statistics to be shared across network
+> namespaces and can produce misleading results when nfsd is run in
+> containers.
+>
+> Move the accumulated backchannel/callback RPC statistics into
+> per-network-namespace storage so each netns maintains independent
+> counters.
+>
+> This change only relocates the accounting. User-facing retrieval and
+> display of these per-netns callback statistics will be added in a
+> follow-up patch.
+>
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/netns.h        |  5 +++
+>  fs/nfsd/nfs4callback.c | 75 ++++++++++++++++++++++--------------------
+>  fs/nfsd/nfsctl.c       | 11 +++++++
+>  fs/nfsd/state.h        |  2 ++
+>  4 files changed, 58 insertions(+), 35 deletions(-)
+>
+> v2:
+>   . free memory allocated for nn->nfsd_cb_version4.counts in
+>     nfsd_net_cb_stats_init() on error in nfsd_net_init().
+> v3:
+>   . reword commit message. 
+>   . fix initialization of nn->nfsd_cb_program.nrvers.
+> v4:
+>   . fix merge conflict in nfsd_net_exit in nfsd-testing branch.
+> v5:
+>   . restore commit message to the original in v1
+> v6:
+>   . put the call nfsd_net_cb_stats_init and nfsd_net_cb_stats_shutdown
+>     under CONFIG_NFSD_V4.
+>
+>   . reword commit message to clarify the intention of the patch.
+>
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 6ad3fe5d7e12..c101bf2c24c2 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -228,6 +228,11 @@ struct nfsd_net {
+>  	struct list_head	local_clients;
+>  #endif
+>  	siphash_key_t		*fh_key;
+> +
+> +	struct rpc_version	nfsd_cb_version4;
+> +	const struct rpc_version *nfsd_cb_versions[2];
+> +	struct rpc_program	nfsd_cb_program;
+> +	struct rpc_stat		nfsd_cb_stat;
+>  };
+> 
+>  /* Simple check to find out if a given net was properly initialized */
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index aea8bdd2fdc4..759f24657c34 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -1016,7 +1016,7 @@ static int nfs4_xdr_dec_cb_offload(struct rpc_rqst *rqstp,
+>  	.p_decode  = nfs4_xdr_dec_##restype,				\
+>  	.p_arglen  = NFS4_enc_##argtype##_sz,				\
+>  	.p_replen  = NFS4_dec_##restype##_sz,				\
+> -	.p_statidx = NFSPROC4_CB_##call,				\
+> +	.p_statidx = NFSPROC4_CLNT_##proc,				\
+>  	.p_name    = #proc,						\
+>  }
+> 
+> @@ -1032,40 +1032,7 @@ static const struct rpc_procinfo nfs4_cb_procedures[] = {
+>  	PROC(CB_GETATTR,	COMPOUND,	cb_getattr,	cb_getattr),
+>  };
+> 
+> -static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
+> -static const struct rpc_version nfs_cb_version4 = {
+> -/*
+> - * Note on the callback rpc program version number: despite language in rfc
+> - * 5661 section 18.36.3 requiring servers to use 4 in this field, the
+> - * official xdr descriptions for both 4.0 and 4.1 specify version 1, and
+> - * in practice that appears to be what implementations use.  The section
+> - * 18.36.3 language is expected to be fixed in an erratum.
+> - */
+> -	.number			= 1,
+> -	.nrprocs		= ARRAY_SIZE(nfs4_cb_procedures),
+> -	.procs			= nfs4_cb_procedures,
+> -	.counts			= nfs4_cb_counts,
+> -};
+> -
+> -static const struct rpc_version *nfs_cb_version[2] = {
+> -	[1] = &nfs_cb_version4,
+> -};
+> -
+> -static const struct rpc_program cb_program;
+> -
+> -static struct rpc_stat cb_stats = {
+> -	.program		= &cb_program
+> -};
+> -
+>  #define NFS4_CALLBACK 0x40000000
+> -static const struct rpc_program cb_program = {
+> -	.name			= "nfs4_cb",
+> -	.number			= NFS4_CALLBACK,
+> -	.nrvers			= ARRAY_SIZE(nfs_cb_version),
+> -	.version		= nfs_cb_version,
+> -	.stats			= &cb_stats,
+> -	.pipe_dir_name		= "nfsd4_cb",
+> -};
+> 
+>  static int max_cb_time(struct net *net)
+>  {
+> @@ -1152,14 +1119,15 @@ static int setup_callback_client(struct 
+> nfs4_client *clp, struct nfs4_cb_conn *c
+>  		.addrsize	= conn->cb_addrlen,
+>  		.saddress	= (struct sockaddr *) &conn->cb_saddr,
+>  		.timeout	= &timeparms,
+> -		.program	= &cb_program,
+>  		.version	= 1,
+>  		.flags		= (RPC_CLNT_CREATE_NOPING | RPC_CLNT_CREATE_QUIET),
+>  		.cred		= current_cred(),
+>  	};
+>  	struct rpc_clnt *client;
+>  	const struct cred *cred;
+> +	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+> 
+> +	args.program = &nn->nfsd_cb_program;
+>  	if (clp->cl_minorversion == 0) {
+>  		if (!clp->cl_cred.cr_principal &&
+>  		    (clp->cl_cred.cr_flavor >= RPC_AUTH_GSS_KRB5)) {
+> @@ -1786,3 +1754,40 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
+>  		nfsd41_cb_inflight_end(clp);
+>  	return queued;
+>  }
+> +
+> +void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn)
+> +{
+> +	kfree(nn->nfsd_cb_version4.counts);
+> +}
+> +
+> +int nfsd_net_cb_stats_init(struct nfsd_net *nn)
+> +{
+> +	nn->nfsd_cb_version4.counts = kzalloc_objs(unsigned int,
+> +			ARRAY_SIZE(nfs4_cb_procedures), GFP_KERNEL);
+> +	if (!nn->nfsd_cb_version4.counts)
+> +		return -ENOMEM;
+> +	/*
+> +	 * Note on the callback rpc program version number: despite language
+> +	 * in rfc 5661 section 18.36.3 requiring servers to use 4 in this
+> +	 * field, the official xdr descriptions for both 4.0 and 4.1 specify
+> +	 * version 1, and in practice that appears to be what implementations
+> +	 * use. The section 18.36.3 language is expected to be fixed in an
+> +	 * erratum.
+> +	 */
+> +	nn->nfsd_cb_version4.number = 1;
+> +
+> +	nn->nfsd_cb_version4.nrprocs = ARRAY_SIZE(nfs4_cb_procedures);
+> +	nn->nfsd_cb_version4.procs = nfs4_cb_procedures;
+> +	nn->nfsd_cb_versions[1] = &nn->nfsd_cb_version4;
+> +
+> +	memset(&nn->nfsd_cb_stat, 0, sizeof(nn->nfsd_cb_stat));
+> +	nn->nfsd_cb_program.name = "nfs4_cb";
+> +	nn->nfsd_cb_program.number = NFS4_CALLBACK;
+> +	nn->nfsd_cb_program.nrvers = ARRAY_SIZE(nn->nfsd_cb_versions);
+> +	nn->nfsd_cb_program.version = &nn->nfsd_cb_versions[0];
+> +	nn->nfsd_cb_program.pipe_dir_name = "nfsd4_cb";
+> +	nn->nfsd_cb_program.stats = &nn->nfsd_cb_stat;
+> +	nn->nfsd_cb_stat.program = &nn->nfsd_cb_program;
+> +
+> +	return 0;
+> +}
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 14d9458aeff0..ce69bdccbb48 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -2216,6 +2216,11 @@ static __net_init int nfsd_net_init(struct net *net)
+>  	int retval;
+>  	int i;
+> 
+> +#ifdef CONFIG_NFSD_V4
+> +	retval = nfsd_net_cb_stats_init(nn);
+> +	if (retval)
+> +		return retval;
+> +#endif
+>  	retval = nfsd_export_init(net);
+>  	if (retval)
+>  		goto out_export_error;
+> @@ -2256,6 +2261,9 @@ static __net_init int nfsd_net_init(struct net *net)
+>  out_idmap_error:
+>  	nfsd_export_shutdown(net);
+>  out_export_error:
+> +#ifdef CONFIG_NFSD_V4
+> +	nfsd_net_cb_stats_shutdown(nn);
+> +#endif
+>  	return retval;
+>  }
+> 
+> @@ -2286,6 +2294,9 @@ static __net_exit void nfsd_net_exit(struct net *net)
+>  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> 
+>  	kfree_sensitive(nn->fh_key);
+> +#ifdef CONFIG_NFSD_V4
+> +	nfsd_net_cb_stats_shutdown(nn);
+> +#endif
+>  	nfsd_proc_stat_shutdown(net);
+>  	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
+>  	nfsd_idmap_shutdown(net);
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 9b05462da4cc..490193c1877d 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -895,4 +895,6 @@ struct nfsd4_get_dir_delegation;
+>  struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
+>  						struct nfsd4_get_dir_delegation *gdd,
+>  						struct nfsd_file *nf);
+> +int nfsd_net_cb_stats_init(struct nfsd_net *nn);
+> +void nfsd_net_cb_stats_shutdown(struct nfsd_net *nn);
+>  #endif   /* NFSD4_STATE_H */
+> -- 
+> 2.47.3
 
-Looking back, it looks like this may have been broken back in 2021 in:
+There are at least five unaddressed previous review comments
+here in v6. Since this is a simple clean-up that seems to have
+stalled out, I'll fix those up and apply it.
 
-    7f024fcd5c97 ("Keep read and write fds with each nlm_file")
 
-?
-
-Cheers,
---=20
-Jeff Layton <jlayton@kernel.org>
+-- 
+Chuck Lever
 
