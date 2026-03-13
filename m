@@ -1,174 +1,242 @@
-Return-Path: <linux-nfs+bounces-20144-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20145-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MP7ICMoEtGnjfQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20144-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 13:36:26 +0100
+	id QDzTHm0EtGmXfgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20145-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 13:34:53 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F1332831BF
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 13:36:25 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C7A828314F
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 13:34:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A879430813EB
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 12:34:08 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 53F6A300AB31
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Mar 2026 12:34:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E7D38F647;
-	Fri, 13 Mar 2026 12:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B8F3932FB;
+	Fri, 13 Mar 2026 12:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SA1sO63I";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="OYfQBY8V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBh3eSYJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2250391846
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2026 12:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EC33932F4
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2026 12:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773405248; cv=none; b=buO3ei5QqGP73YLBSHmz5QMzOGg1LsTwpO0FM6LymYm2mLxXC+DzKB6W0AmcUZ6A0bR9vI5yV/YZDlH/IV3lDpw0U2f3LI8vDhqOK+IRfdmpxSGjtA8kCxRQuRcGiczC9guWh0hINJyf44FVRue3eaD46wjNMRSProLIhUSUM2g=
+	t=1773405289; cv=none; b=aPXSveE3szAeH+ILE5Jmra5KRczOg6H2VuviRCf7mPlT14uALsOX59h0uTYt6XRbTpsCYp+YtmY2H3l5FP5wYNBPcv962FCvLp1UBknKn9oTbx5U9P32AIGwacbRDgaw3hj5X8Q1akxRIgMeW8appB9YMetg0T95WIMusosVpQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773405248; c=relaxed/simple;
-	bh=0+jmGfASOQpL5pqp2GBWNab5/cK7ZIFZVpy9YoKuICs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=MAFllDcEsjBXaesYTSpcHDPA4LqfB5v82SRCySAIs0AAS22AG+b7Mivy0QWmU49szpgHwid3Cp2K7bCi8RS53xpXr2iUMF7WhOHHMvwa+w2iokNJc+Bz8AzfE0n2uhRvyprR2x5tI1Rjfx/C44j1nZZ0qdyU2YA4oGnycn9GbE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SA1sO63I; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=OYfQBY8V; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773405243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9obGIpUR/NoWbwOoT3DbWmrgxAhcjPxe9q4vNT8R/gY=;
-	b=SA1sO63IAFfkhQlgoxPLPFLSDNf0faGGh1lnI0PPWhObleyaIS2yTQrCtSwMoOeyNiQbAD
-	33tVTFdIG82RtrkgFTToYXh4g+xf9Sn+NeAsiTFjd2a2iNqOanKuTIjLubw81iSGAqy6xq
-	kLoXK4NA4EKIIJ4uruj4djckHO96310=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-yn_A4JBsM_a4zPe3zOcNzw-1; Fri, 13 Mar 2026 08:34:02 -0400
-X-MC-Unique: yn_A4JBsM_a4zPe3zOcNzw-1
-X-Mimecast-MFC-AGG-ID: yn_A4JBsM_a4zPe3zOcNzw_1773405242
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8cd7a25c5a9so1172632085a.2
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Mar 2026 05:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1773405240; x=1774010040; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9obGIpUR/NoWbwOoT3DbWmrgxAhcjPxe9q4vNT8R/gY=;
-        b=OYfQBY8VkhouVaKsOMiysi4v+c7UDmvP3W7OeeJaY+bS0OK/bW3wR4vtEpeTjj1wDz
-         TA6j67mjeIEqE2U2TUkWnOSwisml700HtQaD1zyNRIKQwk/jc2hpehrLWDuW29SM2WlY
-         NBXdoObaGfWmLH7/FdenAmC/biY7hMD2wB+IzOMEPihukDunXkzsMcHzL8zYWe7IwT04
-         hZT9eGYfzZRHHJpi+T9X0F+8IOWHfP716RiXsbaRJKwu4k1cDghZwMd60dhAxdYtYJ57
-         z5RDYNqRBvklm48ryEdub0ZZDQeUgdNyucwAye2OfS4vm2lk57oc+3gvaQ1tTC3OWAGu
-         2iWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773405240; x=1774010040;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9obGIpUR/NoWbwOoT3DbWmrgxAhcjPxe9q4vNT8R/gY=;
-        b=MB8EPdhdspzyMuNy2mPvMWRsqPwKg51buKHVxNjFMWZEh+J/mCcpF6Ux1f2WeHl8Zt
-         z2/wwsCc7EDo/fC7WUpWgAKzJ+9QlcbFIuGg1pz1YdSk0PZKAFdoRbNi0ApDB2DBnxv1
-         IJnr6JZ9bwALSQiW0JFWtC5gHh3XjIEwm3U/NXiili0LgVFXApKacY0QE930u55/ocef
-         vaFu+1Djoyq4wxpzdGt5at2EgArqTA0Ywci5qISxpPhTeHZARSMZMLcB/gCEvAFd6n50
-         XiIwzpmLzJU3gJ6NT/fH8vxIQC/20r5POCm160rA5VpQ3EjueOuj3JFfOVJUZVYmbxJi
-         tThw==
-X-Gm-Message-State: AOJu0YwSRydAqvX0qgp0bwuV0jdnKmuP82yd6QMf+Wd8D0fakhtFzMlW
-	5+MF56KB/O7kpFpkRIuvEG5Bw3ij1vo6Vz5b2osY96g+vuL2+PtBxIpP/6gFqETOfwE29qpXbRn
-	iSqp3gY/uzfLWtvaxsgdSzRm2M8bPRIJb+jiHq4AzrPaJ+SLHHozeSgbJ4UWLF0qL61SHbQGXpB
-	VQ8OP4lTO5zv+YiRmwgKU204ST/uVrEGj8FcUe7K4hsr4=
-X-Gm-Gg: ATEYQzyf2bv0B4/dmLYrF/3jKNtxgga5L6yFyFIQDKunpZdZEkCJpT9h5BXqrlSYfgi
-	AVqno84DEUSAG2AEQCaWZ8waXkzoKv47maU5c8uXI//UV3iSE2CH+PA2Axc/to5lTswQolUKpeO
-	j11sqbzXEKR4nw8CU0L816Np49Wd5IX4mfOgzGWJmSjEbP20a++4E9S1yd0m8uLvGAwkpf8NUhj
-	aXD/eq/Eek+pvOPq+rtvbLSybzWRarvZ+Hk2LAn5UjAHR458P1LbXIPY1Xi18R1doN3aZs5LHpZ
-	G2EtNo6Q/PKH1rLxo3LaRoFaKid3lBxeYytdiFY+LsBuzMIJtBtMFkIFt+T6ICoM1LPemQC3JM3
-	hwH1xiZ9A2cVfuJjoeDcQPA==
-X-Received: by 2002:a05:620a:690d:b0:8cd:8ee7:446b with SMTP id af79cd13be357-8cdb5b3ce8fmr367908685a.55.1773405240237;
-        Fri, 13 Mar 2026 05:34:00 -0700 (PDT)
-X-Received: by 2002:a05:620a:690d:b0:8cd:8ee7:446b with SMTP id af79cd13be357-8cdb5b3ce8fmr367905485a.55.1773405239776;
-        Fri, 13 Mar 2026 05:33:59 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.248.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cda1fbcd2esm588237485a.5.2026.03.13.05.33.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2026 05:33:58 -0700 (PDT)
-Message-ID: <4d11b9d7-7b49-4a1e-8c26-29ecb2fefe2f@redhat.com>
-Date: Fri, 13 Mar 2026 08:33:54 -0400
+	s=arc-20240116; t=1773405289; c=relaxed/simple;
+	bh=q4NkIXz94tX49lQm0vCXwKQOPrCWBUwy5/8VXwwEplc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=s8MkKKV0BZvRZmLmeIMZLkXMtkQVsB389I/vePbOU4FjNSjm6PUa0T6ZsLhkqgwvMEoXlMuLAYm5cSIuZVU6khTd42XIsxuctlaX3q0FK/fTEx0oLLWUug3F2yyXp0suePINUPffqNfYFTdUIV9uI1Pb/W1WFnIbNMuUpWmKfdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBh3eSYJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF882C19423;
+	Fri, 13 Mar 2026 12:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773405289;
+	bh=q4NkIXz94tX49lQm0vCXwKQOPrCWBUwy5/8VXwwEplc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=QBh3eSYJk2SC3dH2dF/xsDYTRRpu8CPM3fPm/iq6bP8GwYDN12OpZm6qfRPrVHDFu
+	 J5YbEgxE36MXfoC8Vf1bfQYyOO1sd6N1dtO7x9RdCugQ7GgstfuJn21G/0IXdrKvri
+	 DvbkPHXvZ6ebVgztVDNtvvfTbWxmdTPP9mp4/EAYr4cNsc8OEPo+wEfaCYhUyTzZmz
+	 OfbbrU544qHCsiSyT3FG42QqDOWtZWZSkL1wKFY100OnYoY9JbptkK4ajjnvYMvOfe
+	 Aq4hOrHaAhrkSD9gQ/r9goLeevxABjk4/0itXQhYzxSbV51AFQIdxHLjKxlaautq7F
+	 WnVK+j997LwSw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id CA78BF40068;
+	Fri, 13 Mar 2026 08:34:47 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 13 Mar 2026 08:34:47 -0400
+X-ME-Sender: <xms:ZwS0aaEEAb8jhtBfMpXp2e8nAkKuBjqiKQSlY30wWIkpqx0jgw8kRg>
+    <xme:ZwS0aWJykvs9-C2LMOh4njp1Doni3OGR59TpIqyAnjJWv6liuvlX8XO7fFhbFBxZ4
+    XPP9nir84xS7RaUfU8bzdREAowOLo5anJ9JbUvI9smaR3X44NAaPl0B>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeelieejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeeiveegteffveekveefkeejvdegjefhvdeutefggfekudffffevfeekveehteehkeen
+    ucffohhmrghinhepghhithdqshgtmhdrtghomhdpghhithhhuhgsrdgtohhmpdhkvghrnh
+    gvlhdrohhrghdptddurdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhhthhhpvghrsh
+    honhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlheppehkvghr
+    nhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopeduvddpmh
+    houggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgt
+    phhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvghonh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohgvqdhksghuihhlugdqrghllheslhhi
+    shhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtph
+    htthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopegu
+    rghirdhnghhosehorhgrtghlvgdrtghomhdprhgtphhtthhopehnvghilhgssehofihnmh
+    grihhlrdhnvghtpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomh
+X-ME-Proxy: <xmx:ZwS0aSCpbxYrKXsJ9J-J_StOEDtOr19xHwklpmxoVQm_lxCbmzzXzA>
+    <xmx:ZwS0aS5BaNtEnmFTraT29RwPo6aMRneicx6N7aYDDzguELa9LikOrg>
+    <xmx:ZwS0aR02S40YjsedhaafNZk-ZF2vNA00uhcAPdUHEJ20huF7utxUPA>
+    <xmx:ZwS0aem3zSkeApCm01sNjyKell1D2BTywMq5XAoEZJDFCyK5kzEE4A>
+    <xmx:ZwS0af6uiNHephBLroMPATSKcaqyF5uwOCbXdv9_GfunLsoWvueOSEs9>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9CFEB780070; Fri, 13 Mar 2026 08:34:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Steve Dickson <steved@redhat.com>
-Subject: ANNOUNCE: nfs-utils-2.8.7 released.
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: A_hcazk5esrJ
+Date: Fri, 13 Mar 2026 08:34:26 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "kernel test robot" <lkp@intel.com>, NeilBrown <neilb@ownmail.net>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Leon Romanovsky" <leon@kernel.org>,
+ "Christoph Hellwig" <hch@lst.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+ linux-rdma@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <6264577a-784a-4501-b02f-bea8b4e49e27@app.fastmail.com>
+In-Reply-To: <202603130922.uCz0Ofwx-lkp@intel.com>
+References: <20260312134008.7387-3-cel@kernel.org>
+ <202603130922.uCz0Ofwx-lkp@intel.com>
+Subject: Re: [PATCH v2 2/2] svcrdma: Use contiguous pages for RDMA Read sink buffers
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20144-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[intel.com,ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,lst.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_FROM(0.00)[bounces-20145-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,git-scm.com:url];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8F1332831BF
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 1C7A828314F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello,
-
-This is a updated release of nfs-utils-2.8.7
-
-     * Fixes the nfsrahead bug that was in 2.8.6.
-
-This was a community effort of debugging and testing
-this fix... Thank you all!
-
-Also note there will be an upcoming release (2.9.1)
-that will be tuning off NFSv4.0 by default on the server
-which is already turned off in the client in 7.0 kernels.
 
 
-The tarballs can be found in
-   https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.7/
-or
-   http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.7
+On Fri, Mar 13, 2026, at 4:51 AM, kernel test robot wrote:
+> Hi Chuck,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on v7.0-rc1]
+> [also build test ERROR on next-20260312]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    
+> https://github.com/intel-lab-lkp/linux/commits/Chuck-Lever/RDMA-rw-Fix-MR-pool-exhaustion-in-bvec-RDMA-READ-path/20260313-085521
+> base:   v7.0-rc1
+> patch link:    
+> https://lore.kernel.org/r/20260312134008.7387-3-cel%40kernel.org
+> patch subject: [PATCH v2 2/2] svcrdma: Use contiguous pages for RDMA 
+> Read sink buffers
+> config: x86_64-rhel-9.4 
+> (https://download.01.org/0day-ci/archive/20260313/202603130922.uCz0Ofwx-lkp@intel.com/config)
+> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> reproduce (this is a W=1 build): 
+> (https://download.01.org/0day-ci/archive/20260313/202603130922.uCz0Ofwx-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new 
+> version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: 
+> https://lore.kernel.org/oe-kbuild-all/202603130922.uCz0Ofwx-lkp@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    net/sunrpc/xprtrdma/svc_rdma_rw.c: In function 'svc_rdma_fill_contig_bvec':
+>>> net/sunrpc/xprtrdma/svc_rdma_rw.c:813:17: error: implicit declaration of function 'svc_rqst_page_release'; did you mean 'svc_rdma_cc_release'? [-Wimplicit-function-declaration]
+>      813 |                 svc_rqst_page_release(rqstp,
+>          |                 ^~~~~~~~~~~~~~~~~~~~~
+>          |                 svc_rdma_cc_release
 
-The change log is in
-https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.7/2.8.7-Changelog
-or
-https://sourceforge.net/projects/nfs/files/nfs-utils/2.8.7/2.8.7-Changelog
+The current version of the series is missing a patch that provides
+this helper function. Next version (if one is needed) will include
+it.
 
-The git tree is at:
-    git://linux-nfs.org/~steved/nfs-utils
 
-Please send comments/bugs to linux-nfs@vger.kernel.org
+> vim +813 net/sunrpc/xprtrdma/svc_rdma_rw.c
+>
+>    779	
+>    780	/*
+>    781	 * svc_rdma_fill_contig_bvec - Replace rq_pages with a 
+> contiguous allocation
+>    782	 * @rqstp: RPC transaction context
+>    783	 * @head: context for ongoing I/O
+>    784	 * @bv: bvec entry to fill
+>    785	 * @pages_left: number of data pages remaining in the segment
+>    786	 * @len_left: bytes remaining in the segment
+>    787	 *
+>    788	 * On success, fills @bv with a bvec spanning the contiguous 
+> range and
+>    789	 * advances rc_curpage/rc_page_count. Returns the byte length 
+> covered,
+>    790	 * or zero if the allocation failed or would overrun rq_maxpages.
+>    791	 */
+>    792	static unsigned int
+>    793	svc_rdma_fill_contig_bvec(struct svc_rqst *rqstp,
+>    794				  struct svc_rdma_recv_ctxt *head,
+>    795				  struct bio_vec *bv, unsigned int pages_left,
+>    796				  unsigned int len_left)
+>    797	{
+>    798		unsigned int order, alloc_nr, chunk_pages, chunk_len, i;
+>    799		struct page *page;
+>    800	
+>    801		page = svc_rdma_alloc_read_pages(pages_left, &order);
+>    802		if (!page)
+>    803			return 0;
+>    804		alloc_nr = 1 << order;
+>    805	
+>    806		if (head->rc_curpage + alloc_nr > rqstp->rq_maxpages) {
+>    807			for (i = 0; i < alloc_nr; i++)
+>    808				__free_page(page + i);
+>    809			return 0;
+>    810		}
+>    811	
+>    812		for (i = 0; i < alloc_nr; i++) {
+>  > 813			svc_rqst_page_release(rqstp,
+>    814					      rqstp->rq_pages[head->rc_curpage + i]);
+>    815			rqstp->rq_pages[head->rc_curpage + i] = page + i;
+>    816		}
+>    817	
+>    818		chunk_pages = min(alloc_nr, pages_left);
+>    819		chunk_len = min_t(unsigned int, chunk_pages << PAGE_SHIFT, 
+> len_left);
+>    820		bvec_set_page(bv, page, chunk_len, 0);
+>    821		head->rc_page_count += chunk_pages;
+>    822		head->rc_curpage += chunk_pages;
+>    823		return chunk_len;
+>    824	}
+>    825	
+>
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
-steved.
-
+-- 
+Chuck Lever
 
