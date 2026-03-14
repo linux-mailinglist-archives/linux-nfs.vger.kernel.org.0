@@ -1,444 +1,401 @@
-Return-Path: <linux-nfs+bounces-20167-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20168-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sC7oH+BOtWm8zAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20167-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Mar 2026 13:04:48 +0100
+	id IFGdBS9TtWlGzQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20168-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Mar 2026 13:23:11 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D733328CFA9
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Mar 2026 13:04:47 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8715B28D1C3
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Mar 2026 13:23:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9B6C5300F120
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Mar 2026 12:04:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 80E5D3023A4F
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Mar 2026 12:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55F5A25A640;
-	Sat, 14 Mar 2026 12:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 336171AF4D5;
+	Sat, 14 Mar 2026 12:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fa+9ZINj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uf+2gEM4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C0D218845
-	for <linux-nfs@vger.kernel.org>; Sat, 14 Mar 2026 12:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EC017DE36
+	for <linux-nfs@vger.kernel.org>; Sat, 14 Mar 2026 12:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773489885; cv=none; b=l6QWqAZodJGqo0OaJBUcVmS64UQviOYlDXKpS+t9tmcc/iR0KUsBcrvXnVdZdboJyjbKdGwV/Jtfjyh6Tbqv8MeHy79ldNjCbU8o2Lbvgwq7CsPSgkkAacxbN+j9/VAx1nRrzV800nkKqAdm9FmxFid1FvV/DobMxudA7Z9GF2I=
+	t=1773490988; cv=none; b=NAARBB4Xn3IvsQylOBYmGNATO3JRVulOqJApOvajSOKcB99Yu60Whaix22oGUCESSe4PU+Gq+mee5EDj2YnPjDLsnxILo4xXJm8+Ag6QqbTCVjn8GZQiU84z9i8fRsncIu8j2VfzbebQYaQErZkSI/JXoEoHyVunBxIbnlzFQZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773489885; c=relaxed/simple;
-	bh=Y7ckMZgEl00LznNwTECA3T/nE5iwTMV5CweFHfTxmaw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HqZbiIvgWGjLgjj1EOu1p3t9ptrOQH1aMB+7QbqSkRlAZ0DMPDaIf6T67Dikvvc/CfcfF8uP+kPK0TZXTvD7r/Srt2/3upvCeh5DILfuX4hjAV6/SSghzcPm4NDW+CghseP6ueUO1P26vUDOFLStWNKVvOTO34/3X84quuDlb+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fa+9ZINj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353EBC116C6;
-	Sat, 14 Mar 2026 12:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773489884;
-	bh=Y7ckMZgEl00LznNwTECA3T/nE5iwTMV5CweFHfTxmaw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Fa+9ZINjUuVHhvaUPx798s03bMiMc46lUwzFsEk447RMHbSMaS+re416n73ELfodt
-	 c5I2uO+eA9ZGlO8jeUDqp779e+96NFsyZFmOvabf1ESTQdp53xhjzlAwhGJy3p9cXf
-	 ZeiZelgigb7l48Ylm8xUViBCtHB9WnUabCNcnfQqDTUvdjXag0BoVzl3+Jgp9QlsvS
-	 6/zpLXfday7kvMJ03cI8QC0dRDk6jnnyNuYGS7mjMXpqM8s1V3U6ocC7ghwk4tvC7r
-	 zJRVjLPWh1c+axDqpFe3gkvzj3Xj92yrFwEuiinm9s4VqHd6m1EtXOiezniNhFGXki
-	 SzFvDHt9j+nrg==
-Message-ID: <5df3076a22438f5be6b070e62c0d3fc567341b20.camel@kernel.org>
-Subject: Re: [PATCH v7 2/2] NFSD: convert callback RPC program to per-net
- namespace
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Sat, 14 Mar 2026 08:04:42 -0400
-In-Reply-To: <20260313163148.281676-3-cel@kernel.org>
-References: <20260313163148.281676-1-cel@kernel.org>
-	 <20260313163148.281676-3-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1773490988; c=relaxed/simple;
+	bh=buPks5PBxGSwGL8vkwFfugwS6GFMYIcHl01QQPzIf6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UTiE7c6nhOXiKzzFCtzN2Ma66OhHawzm6Ir0KBDmWcw1aaaGApZ1hSNIGqRkFny1Pj4JmCyWBctR6O8mMHZ0fR4YXdWJ/5r7vUtG79WbtYM3CgzTdMzg69yUQ/wPAzMKdOaigPsqjtQlcwzbczeylfPf2c0x5wrfZICbx33+p1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uf+2gEM4; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-485409ab264so21365135e9.1
+        for <linux-nfs@vger.kernel.org>; Sat, 14 Mar 2026 05:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773490984; x=1774095784; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=AJjipUbO1IhGzwZcApN0bsywZyvfnfUBT0/hLHzwY3c=;
+        b=Uf+2gEM4LFk2hRixkKfmp4KsCqIPn2d4QTZlUEs7wDieaZQzAmfJmsIhaY0Z0AkPMB
+         x79PJ0ZOx9j062BHhZuWyLQBRV//bypdTbhoFM5myFGIqnFiJcctYn+oGXcv7kwW0Igf
+         +vtC7h+LGqusBX1u78GGPauT3kdWPXA5xZv0aHq3Av6W/3RzYbVsSg8Ny/VyaJp9jFMw
+         ts3JprTlZvoZPTisrMLciuf4RiOKVHKse1VDq0oN0K8kKG4ZKo8skvRh8OdjRaj48lKb
+         HjIGdkYqPIzgs4rpSw+kHzQ7+kj6o616u1xEsS3ubVAnmPWXHjJutdRCdCDC0MZDE/fh
+         x8lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773490984; x=1774095784;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AJjipUbO1IhGzwZcApN0bsywZyvfnfUBT0/hLHzwY3c=;
+        b=DlA8fGQE9Oo2CFVtuj6m8LcSqFyq36rPKZwGW+pI9MstJ5JPP2fdvhR9GqA1fzvhHq
+         G+ft7DYMqw0txgBhN2+3iiS2rtRNVg54qEzGX5Qoi5zWbtn2ZWVPib6nJlW4D7sF6f7B
+         PzSt3xpbj3Li3Z+8jQaneumpkCrfPCNVkwaQz9inqG8MozAcR6AuVyJ/F1k3dLLh5BMN
+         nhRDOLVX6UyJ3HA5W9xvI869LwIYYKSk8A4mjrPN3b00smBndQh7Nyxtb3fiAalYm79f
+         DjKdmcILbk/eoIF1PSgheymVZy63ehucrxaLFo0lokTQC4nvD8jo4poH90h9LByWOLyN
+         hZcA==
+X-Gm-Message-State: AOJu0YzZ1Snj6+kuUs2Cnneezh9VRJwd10ZHkhTmsyLudbGKLjiKQA4L
+	pG7+W4zsMLauyH1f/03FawxvWOfmblzbm4jFxBeifn3+wRqa0VS4J8zj
+X-Gm-Gg: ATEYQzymPB/cZjk39321n6JSZg9IQ3B0ZC1m7LvbYWcCvg1ftUYgNuxZ22oIKfMhMGO
+	5n7xsy/R+5ajl+fZ6RIBJ24RugmpbFvkCMrd+SUSom7JsaY47rlw0XAhElwF5bMBtrfGkUTgE7T
+	ZcSMQZiR/poUgcA8GQzZwgmkA9WTcqemfGOszBkL/Jxx7KXdzpPDiyxlYQWFz/FIqxRXRoU7AMz
+	e67p15XnuZ/ThHQnmksBzGEQRw1kmEg5Ay9Qp/MZjxXeg7VeGm7GZv1IbsxrBwk3Z4a9mdiUrUJ
+	9ewZI+wu6KGO7o9w/bQT4jSAxhEZ+i5FUCE8n1CpKcLCovfCRtvt0PTIfpXHkf8X/9c+PurBJdG
+	vpJKJoa5moydyI9+pBfPVK5gU2IqmNNDI86NXn0Yk1XDUZfvKjwYULaJa8T4KceQlu7N1fw3Tqc
+	fdoeiKGWMZTl0JEoV2B3+FTkXNWJaMSFNfjwAAwViQjBr4fGAYM3vuuoqnIc0=
+X-Received: by 2002:a05:600c:8488:b0:485:3b4a:f707 with SMTP id 5b1f17b1804b1-48555b2c89fmr99738645e9.10.1773490984178;
+        Sat, 14 Mar 2026 05:23:04 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854b5e912fsm734044495e9.2.2026.03.14.05.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2026 05:23:03 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 77473BE2EE7; Sat, 14 Mar 2026 13:23:02 +0100 (CET)
+Date: Sat, 14 Mar 2026 13:23:02 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Maik Nergert <maik.nergert@uni-hamburg.de>,
+	Valentin SAMIR <valentin.samir@magellium.fr>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, 1128834@bugs.debian.org
+Subject: [regression] Large rsize/wsize (1MB) causes EIO after 2b092175f5e3
+ ("NFS: Fix inheritance of the block sizes when automounting")
+Message-ID: <177349021750.3039212.10211295677877269201@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20167-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_FROM(0.00)[bounces-20168-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[debian.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[carnil@debian.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D733328CFA9
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8715B28D1C3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-03-13 at 12:31 -0400, Chuck Lever wrote:
-> From: Dai Ngo <dai.ngo@oracle.com>
->=20
-> The callback channel's rpc_program, rpc_version, rpc_stat,
-> and per-procedure counts are declared as file-scope statics in
-> nfs4callback.c, shared across all network namespaces.
-> Forechannel RPC statistics are already maintained per-netns
-> (via nfsd_svcstats in struct nfsd_net); the backchannel
-> has no such separation. When backchannel statistics are
-> eventually surfaced to userspace, the global counters would
-> expose cross-namespace data.
->=20
-> Allocate per-netns copies of these structures through a new
-> opaque struct nfsd_net_cb, managed by nfsd_net_cb_init()
-> and nfsd_net_cb_shutdown(). The struct definition is private
-> to nfs4callback.c; struct nfsd_net holds only a pointer.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/netns.h        |   3 ++
->  fs/nfsd/nfs4callback.c | 111 ++++++++++++++++++++++++++++-------------
->  fs/nfsd/nfsctl.c       |   5 ++
->  fs/nfsd/state.h        |   9 ++++
->  4 files changed, 94 insertions(+), 34 deletions(-)
->=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 6ad3fe5d7e12..27da1a3edacb 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -25,6 +25,7 @@
->  #define SESSION_HASH_SIZE	512
-> =20
->  struct cld_net;
-> +struct nfsd_net_cb;
->  struct nfsd4_client_tracking_ops;
-> =20
->  enum {
-> @@ -228,6 +229,8 @@ struct nfsd_net {
->  	struct list_head	local_clients;
->  #endif
->  	siphash_key_t		*fh_key;
-> +
-> +	struct nfsd_net_cb	*nfsd_cb;
+Control: forwarded -1 https://lore.kernel.org/regressions/177349021750.3039212.10211295677877269201@eldamar.lan
+Control: tags -1 + upstream
 
-Given that there will only ever be one nfsd_cb per net, why not just
-embed this struct inside the nfsd_net instead of doing a separate
-allocation?
+Hi Trond, hi Anna
 
->  };
-> =20
->  /* Simple check to find out if a given net was properly initialized */
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 74effafdd0dc..50827405468d 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -1032,39 +1032,14 @@ static const struct rpc_procinfo nfs4_cb_procedur=
-es[] =3D {
->  	PROC(CB_GETATTR,	COMPOUND,	cb_getattr,	cb_getattr),
->  };
-> =20
-> -static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
-> -static const struct rpc_version nfs_cb_version4 =3D {
-> -/*
-> - * Note on the callback rpc program version number: despite language in =
-rfc
-> - * 5661 section 18.36.3 requiring servers to use 4 in this field, the
-> - * official xdr descriptions for both 4.0 and 4.1 specify version 1, and
-> - * in practice that appears to be what implementations use.  The section
-> - * 18.36.3 language is expected to be fixed in an erratum.
-> - */
-> -	.number			=3D 1,
-> -	.nrprocs		=3D ARRAY_SIZE(nfs4_cb_procedures),
-> -	.procs			=3D nfs4_cb_procedures,
-> -	.counts			=3D nfs4_cb_counts,
-> -};
-> +#define NFS4_CB_PROGRAM	0x40000000
-> +#define NFS4_CB_VERSION	1
-> =20
-> -static const struct rpc_version *nfs_cb_version[2] =3D {
-> -	[1] =3D &nfs_cb_version4,
-> -};
-> -
-> -static const struct rpc_program cb_program;
-> -
-> -static struct rpc_stat cb_stats =3D {
-> -	.program		=3D &cb_program
-> -};
-> -
-> -#define NFS4_CALLBACK 0x40000000
-> -static const struct rpc_program cb_program =3D {
-> -	.name			=3D "nfs4_cb",
-> -	.number			=3D NFS4_CALLBACK,
-> -	.nrvers			=3D ARRAY_SIZE(nfs_cb_version),
-> -	.version		=3D nfs_cb_version,
-> -	.stats			=3D &cb_stats,
-> -	.pipe_dir_name		=3D "nfsd4_cb",
-> +struct nfsd_net_cb {
-> +	struct rpc_version	version4;
-> +	const struct rpc_version *versions[NFS4_CB_VERSION + 1];
-> +	struct rpc_program	program;
-> +	struct rpc_stat		stat;
->  };
-> =20
->  static int max_cb_time(struct net *net)
-> @@ -1140,6 +1115,7 @@ static const struct cred *get_backchannel_cred(stru=
-ct nfs4_client *clp, struct r
-> =20
->  static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb=
-_conn *conn, struct nfsd4_session *ses)
->  {
-> +	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
->  	int maxtime =3D max_cb_time(clp->net);
->  	struct rpc_timeout	timeparms =3D {
->  		.to_initval	=3D maxtime,
-> @@ -1152,14 +1128,14 @@ static int setup_callback_client(struct nfs4_clie=
-nt *clp, struct nfs4_cb_conn *c
->  		.addrsize	=3D conn->cb_addrlen,
->  		.saddress	=3D (struct sockaddr *) &conn->cb_saddr,
->  		.timeout	=3D &timeparms,
-> -		.program	=3D &cb_program,
-> -		.version	=3D 1,
-> +		.version	=3D NFS4_CB_VERSION,
->  		.flags		=3D (RPC_CLNT_CREATE_NOPING | RPC_CLNT_CREATE_QUIET),
->  		.cred		=3D current_cred(),
->  	};
->  	struct rpc_clnt *client;
->  	const struct cred *cred;
-> =20
-> +	args.program =3D &nn->nfsd_cb->program;
->  	if (clp->cl_minorversion =3D=3D 0) {
->  		if (!clp->cl_cred.cr_principal &&
->  		    (clp->cl_cred.cr_flavor >=3D RPC_AUTH_GSS_KRB5)) {
-> @@ -1786,3 +1762,70 @@ bool nfsd4_run_cb(struct nfsd4_callback *cb)
->  		nfsd41_cb_inflight_end(clp);
->  	return queued;
->  }
-> +
-> +/**
-> + * nfsd_net_cb_shutdown - release per-netns callback RPC program resourc=
-es
-> + * @nn: NFS server network namespace
-> + *
-> + * Frees resources allocated by nfsd_net_cb_init().
-> + */
-> +void nfsd_net_cb_shutdown(struct nfsd_net *nn)
-> +{
-> +	struct nfsd_net_cb *cb =3D nn->nfsd_cb;
-> +
-> +	if (cb) {
-> +		kfree(cb->version4.counts);
-> +		kfree(cb);
-> +		nn->nfsd_cb =3D NULL;
-> +	}
-> +}
-> +
-> +/**
-> + * nfsd_net_cb_init - initialize per-netns callback RPC program
-> + * @nn: NFS server network namespace
-> + *
-> + * Sets up the callback RPC program, version table, procedure
-> + * counts, and statistics structure for @nn. Caller must release
-> + * these resources using nfsd_net_cb_shutdown().
-> + *
-> + * Return: 0 on success, or -ENOMEM if allocation fails.
-> + */
-> +int nfsd_net_cb_init(struct nfsd_net *nn)
-> +{
-> +	struct nfsd_net_cb *cb;
-> +
-> +	cb =3D kzalloc(sizeof(*cb), GFP_KERNEL);
-> +	if (!cb)
-> +		return -ENOMEM;
-> +
-> +	cb->version4.counts =3D kzalloc_objs(unsigned int,
-> +			ARRAY_SIZE(nfs4_cb_procedures), GFP_KERNEL);
-> +	if (!cb->version4.counts) {
-> +		kfree(cb);
-> +		return -ENOMEM;
-> +	}
-> +	/*
-> +	 * Note on the callback rpc program version number: despite language
-> +	 * in rfc 5661 section 18.36.3 requiring servers to use 4 in this
-> +	 * field, the official xdr descriptions for both 4.0 and 4.1 specify
-> +	 * version 1, and in practice that appears to be what implementations
-> +	 * use. The section 18.36.3 language is expected to be fixed in an
-> +	 * erratum.
-> +	 */
-> +	cb->version4.number =3D NFS4_CB_VERSION;
-> +	cb->version4.nrprocs =3D ARRAY_SIZE(nfs4_cb_procedures);
-> +	cb->version4.procs =3D nfs4_cb_procedures;
-> +	cb->versions[NFS4_CB_VERSION] =3D &cb->version4;
-> +
-> +	cb->program.name =3D "nfs4_cb";
-> +	cb->program.number =3D NFS4_CB_PROGRAM;
-> +	cb->program.nrvers =3D ARRAY_SIZE(cb->versions);
-> +	cb->program.version =3D &cb->versions[0];
-> +	cb->program.pipe_dir_name =3D "nfsd4_cb";
-> +	cb->program.stats =3D &cb->stat;
-> +	cb->stat.program =3D &cb->program;
-> +
-> +	nn->nfsd_cb =3D cb;
-> +
-> +	return 0;
-> +}
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 14d9458aeff0..988a79ec4a79 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -2216,6 +2216,9 @@ static __net_init int nfsd_net_init(struct net *net=
-)
->  	int retval;
->  	int i;
-> =20
-> +	retval =3D nfsd_net_cb_init(nn);
-> +	if (retval)
-> +		return retval;
->  	retval =3D nfsd_export_init(net);
->  	if (retval)
->  		goto out_export_error;
-> @@ -2256,6 +2259,7 @@ static __net_init int nfsd_net_init(struct net *net=
-)
->  out_idmap_error:
->  	nfsd_export_shutdown(net);
->  out_export_error:
-> +	nfsd_net_cb_shutdown(nn);
->  	return retval;
->  }
-> =20
-> @@ -2286,6 +2290,7 @@ static __net_exit void nfsd_net_exit(struct net *ne=
-t)
->  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> =20
->  	kfree_sensitive(nn->fh_key);
-> +	nfsd_net_cb_shutdown(nn);
->  	nfsd_proc_stat_shutdown(net);
->  	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
->  	nfsd_idmap_shutdown(net);
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 9b05462da4cc..953675eba5c3 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -862,6 +862,8 @@ struct nfsd_file *find_any_file(struct nfs4_file *f);
->  #ifdef CONFIG_NFSD_V4
->  void nfsd4_revoke_states(struct nfsd_net *nn, struct super_block *sb);
->  void nfsd4_cancel_copy_by_sb(struct net *net, struct super_block *sb);
-> +int nfsd_net_cb_init(struct nfsd_net *nn);
-> +void nfsd_net_cb_shutdown(struct nfsd_net *nn);
->  #else
->  static inline void nfsd4_revoke_states(struct nfsd_net *nn, struct super=
-_block *sb)
->  {
-> @@ -869,6 +871,13 @@ static inline void nfsd4_revoke_states(struct nfsd_n=
-et *nn, struct super_block *
->  static inline void nfsd4_cancel_copy_by_sb(struct net *net, struct super=
-_block *sb)
->  {
->  }
-> +static inline int nfsd_net_cb_init(struct nfsd_net *nn)
-> +{
-> +	return 0;
-> +}
-> +static inline void nfsd_net_cb_shutdown(struct nfsd_net *nn)
-> +{
-> +}
->  #endif
-> =20
->  /* grace period management */
+In Debian we got reports of a NFS client regression where large
+rsize/wsize (1MB) causes EIO after the commit 2b092175f5e3 ("NFS: Fix
+inheritance of the block sizes when automounting") and its backports
+to the stable series. The report in full is at:
+https://bugs.debian.org/1128834
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Maik reported:
+> after upgrading from Linux 6.1.158 to 6.1.162, NFS client writes fail with input/output errors (EIO).
+> 
+> Environment:
+> - Debian Bookworm
+> - Kernel: 6.1.0-43-amd64 (6.1.162-1)
+> - NFSv4.2 (also reproducible with 4.1)
+> - Default mount options include rsize=1048576,wsize=1048576
+> 
+> Reproducer:
+> dd if=/dev/zero of=~/testfile bs=1M count=500
+> or
+> dd if=/dev/zero of=~/testfile bs=4k count=100000
+> 
+> On different computers and VMs!
+> 
+> 
+> Result:
+> dd: closing output file: Input/output error
+> 
+> Workaround:
+> Mount with:
+> rsize=65536,wsize=65536
+> 
+> With reduced I/O size, the issue disappears completely.
+> 
+> Impact:
+> - File writes fail (file >1M)
+> - KDE Plasma crashes due to corrupted cache/config writes
+> 
+> The issue does NOT occur on kernel 6.1.0-42 (6.1.158).
+
+I was not able to reproduce the problem, and it turned out that it
+seems to be triggerable when on NFS server side a Dell EMC (Isilion)
+system was used. So the issue was not really considered initially as
+beeing "our" issue.
+
+Valentin SAMIR, a second user affected, did as well report the issue
+to Dell, and Dell seems to point at a client issue instead. Valentin
+writes:
+
+> We are facing the same issue. Dell seems to point to a client issue:
+> The kernel treats the max size as the nfs payload max size whereas
+> OneFs treat the max size as the overall compound packet max size
+> (everything related to NFS in the call). Hence when OneFS receives a
+> call with a payload of 1M, the overall NFS packet is slightly bigger
+> and it returns an NFS4ERR_REQ_TOO_BIG.
+> 
+> So the question is: should max req size/max resp size be treated as the
+> nfs payload max size or the whole nfs packet max size?
+
+His reply in https://bugs.debian.org/1128834#55 contains a quote from
+the response Valentin got from Dell, I'm full quoting it here for
+easier followup in case needed:
+
+> I have been looking at the action plan output we captured.
+> Specifically around when you first mounted and then repro'ed the
+> error.
+>
+> Looking at the pcap we gathered, firstly, lets concentrate on the
+> "create session" calls between Client / Node.
+> Here we can these max sizes advertised - per screenshot.
+>
+>
+> Frame 17: 306 bytes on wire (2448 bits), 306 bytes captured (2448
+> bits)
+> Ethernet II, Src: SuperMicroCo_1d:7d:b2 (ac:1f:6b:1d:7d:b2), Dst:
+> MellanoxTech_bd:8c:7a (c4:70:bd:bd:8c:7a)
+> Internet Protocol Version 4, Src: 172.22.1.132, Dst: 172.22.16.29
+> Transmission Control Protocol, Src Port: 810, Dst Port: 2049, Seq:
+> 613, Ack: 277, Len: 240
+> Remote Procedure Call, Type:Call XID:0x945b7e1d
+> Network File System, Ops(1): CREATE_SESSION
+>     [Program Version: 4]
+>     [V4 Procedure: COMPOUND (1)]
+>     Tag: <EMPTY>
+>     minorversion: 2
+>     Operations (count: 1): CREATE_SESSION
+>         Opcode: CREATE_SESSION (43)
+>             clientid: 0x36adef626e919bf4
+>             seqid: 0x00000001
+>             csa_flags: 0x00000003, CREATE_SESSION4_FLAG_PERSIST,
+> CREATE_SESSION4_FLAG_CONN_BACK_CHAN
+>             csa_fore_chan_attrs
+>                 hdr pad size: 0
+>                 max req size: 1049620
+>                 max resp size: 1049480
+>                 max resp size cached: 7584
+>                 max ops: 8
+>                 max reqs: 64
+>             csa_back_chan_attrs
+>                 hdr pad size: 0
+>                 max req size: 4096
+>                 max resp size: 4096
+>                 max resp size cached: 0
+>                 max ops: 2
+>                 max reqs: 16
+>             cb_program: 0x40000000
+>             flavor: 1
+>             stamp: 2087796144
+>             machine name: srv-transfert.ad.phedre.fr
+>             uid: 0
+>             gid: 0
+>     [Main Opcode: CREATE_SESSION (43)]
+>
+>
+> And the Node responds, as expected confirming the max size of
+> 1048576.
+>
+>
+> Frame 19: 194 bytes on wire (1552 bits), 194 bytes captured (1552
+> bits)
+> Ethernet II, Src: MellanoxTech_bd:8c:7a (c4:70:bd:bd:8c:7a), Dst:
+> IETF-VRRP-VRID_3f (00:00:5e:00:01:3f)
+> Internet Protocol Version 4, Src: 172.22.16.29, Dst: 172.22.1.132
+> Transmission Control Protocol, Src Port: 2049, Dst Port: 810, Seq:
+> 321, Ack: 853, Len: 128
+> Remote Procedure Call, Type:Reply XID:0x945b7e1d
+> Network File System, Ops(1): CREATE_SESSION
+>     [Program Version: 4]
+>     [V4 Procedure: COMPOUND (1)]
+>     Status: NFS4_OK (0)
+>     Tag: <EMPTY>
+>     Operations (count: 1)
+>         Opcode: CREATE_SESSION (43)
+>             Status: NFS4_OK (0)
+>             sessionid: f49b916e62efad36f200000006000000
+>             seqid: 0x00000001
+>             csr_flags: 0x00000002,
+> CREATE_SESSION4_FLAG_CONN_BACK_CHAN
+>             csr_fore_chan_attrs
+>                 hdr pad size: 0
+>                 max req size: 1048576
+>                 max resp size: 1048576
+>                 max resp size cached: 7584
+>                 max ops: 8
+>                 max reqs: 64
+>             csr_back_chan_attrs
+>                 hdr pad size: 0
+>                 max req size: 4096
+>                 max resp size: 4096
+>                 max resp size cached: 0
+>                 max ops: 2
+>                 max reqs: 16
+>     [Main Opcode: CREATE_SESSION (43)]
+>
+>
+> Now if we look later on in the sequence when the Client sends the
+> write request to the Node - we see in the frame, the max size is as
+> expected 1048576
+>
+>
+> Frame 747: 1998 bytes on wire (15984 bits), 1998 bytes captured
+> (15984 bits)
+> Ethernet II, Src: SuperMicroCo_1d:7d:b2 (ac:1f:6b:1d:7d:b2), Dst:
+> MellanoxTech_bd:8c:7a (c4:70:bd:bd:8c:7a)
+> Internet Protocol Version 4, Src: 172.22.1.132, Dst: 172.22.16.29
+> Transmission Control Protocol, Src Port: 810, Dst Port: 2049, Seq:
+> 1054149, Ack: 6009, Len: 1932
+> [345 Reassembled TCP Segments (1048836 bytes): #84(1448), #85(5792),
+> #87(5792), #89(1448), #90(1448), #92(4344), #94(4344), #96(2896),
+> #98(1448), #99(2896), #101(4344), #103(4344), #105(1448), #106(1448),
+> #108(2896), #110(1448), #111(2896)]
+> Remote Procedure Call, Type:Call XID:0xb45b7e1d
+> Network File System, Ops(4): SEQUENCE, PUTFH, WRITE, GETATTR
+>     [Program Version: 4]
+>     [V4 Procedure: COMPOUND (1)]
+>     Tag: <EMPTY>
+>     minorversion: 2
+>     Operations (count: 4): SEQUENCE, PUTFH, WRITE, GETATTR
+>         Opcode: SEQUENCE (53)
+>         Opcode: PUTFH (22)
+>         Opcode: WRITE (38)
+>             StateID
+>             offset: 0
+>             stable: FILE_SYNC4 (2)
+>             Write length: 1048576
+>             Data: <DATA>
+>         Opcode: GETATTR (9)
+>     [Main Opcode: WRITE (38)]
+>
+>
+> However we then see the Node reply a short time later with (as below)
+> REQ_TOO_BIG - meaning the max size has been exceeded.
+>
+> Frame 749: 114 bytes on wire (912 bits), 114 bytes captured (912
+> bits)
+> Ethernet II, Src: MellanoxTech_bd:8c:7a (c4:70:bd:bd:8c:7a), Dst:
+> IETF-VRRP-VRID_3f (00:00:5e:00:01:3f)
+> Internet Protocol Version 4, Src: 172.22.16.29, Dst: 172.22.1.132
+> Transmission Control Protocol, Src Port: 2049, Dst Port: 810, Seq:
+> 6009, Ack: 1056081, Len: 48
+> Remote Procedure Call, Type:Reply XID:0xb45b7e1d
+> Network File System, Ops(1): SEQUENCE(NFS4ERR_REQ_TOO_BIG)
+>     [Program Version: 4]
+>     [V4 Procedure: COMPOUND (1)]
+>     Status: NFS4ERR_REQ_TOO_BIG (10065)
+>     Tag: <EMPTY>
+>     Operations (count: 1)
+>         Opcode: SEQUENCE (53)
+>             Status: NFS4ERR_REQ_TOO_BIG (10065)
+>     [Main Opcode: SEQUENCE (53)]
+>
+>
+> Why is this?
+>
+> The reason for this seems to be related to the Client.
+>
+> From the Cluster side, the max rsize/wsize is the overall compound
+> packet max size (everything related to NFS in the call)
+>
+> So for example with a compound call in nfsv4.2 - this might include
+> the below type detail which does not exceed the overall size 1048576:
+>
+> [
+> COMPOUND header
+> SEQUENCE ....
+> PUTFH ...
+> WRITE header
+> WRITE payload
+> ]     (overall) < 1mb
+>
+>
+> However the Client instead uses r/wsize from mount option, as a limit
+> for the write payload.
+>
+> So with the same example
+> COMPOUND header
+> SEQUENCE ....
+> PUTFH ...
+> WRITE header
+>
+> [
+> WRITE payload
+> ]    (write) < 1mb
+>
+> But overall this ends up being 1mb + all the overhead of write
+> header, compound header, putfh etc
+> Puts it over the channel limit of  1048576 and hence the error
+> returned.
+>
+> So it seems here the Client ignores that value and insists on the
+> WRITE with a payload == wszie; which in total with WRITE overhead and
+> all other requests in COMPOUND (PUTFH, etc) exceeds maxrequestsize,
+> which prompts NFS4ERR_REQ_TOO_BIG.
+>
+>
+> And as you can see, once you reduce the size within the mount options
+> on the Client side, it no longer exceeds its limits.
+> Meaning you don't get the I/O error.
+
+So question, are we behaving here correctly or is it our Problem, or is the
+issue still considered on Dell's side?
+
+#regzbot introduced: 2b092175f5e301cdaa935093edfef2be9defb6df
+#regzbot monitor: https://bugs.debian.org/1128834 
+
+How to proceeed from here?
+
+Regards,
+Salvatore
 
