@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-20204-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20205-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GHrlAE4huGmdZQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-20204-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 16:27:10 +0100
+	id wImBDBwhuGmdZQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-20205-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 16:26:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 609BF29C4E0
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 16:27:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D085129C49E
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 16:26:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2D10131476C6
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 15:18:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 069853054CAC
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 15:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06973A6413;
-	Mon, 16 Mar 2026 15:16:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C3FB3A2540;
+	Mon, 16 Mar 2026 15:17:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WO5SfOW7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOCqirdb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0F33A640A
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Mar 2026 15:16:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5213A1A5B
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Mar 2026 15:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773674218; cv=none; b=Ec4Cn0j+pJT1a+V4F01Xhn5h1+U/hqlZEiDtc9u3jKUzTlAZJTee1ldkyakb66EdyfwCe+STgnaKwNWX4hbVbeHaL9zdsNGsFBEKEaVa7XG5aJTmfbWnfHbCxVFnx2yGKnWPM3KqbECzVTzc5OXBv/GhRb84O9OZhQlxBytBqXs=
+	t=1773674219; cv=none; b=a2TsklaagfBPfrIvGfYw+G/CyDIWfAZUzjDfG3gfXL8UpGgQlODlsObGt+QvrS2vzpE8q5V+99QukXrVMiEKpnQ0UyP3SYBcL0d9Zk7kIqwJrZt1VJprXQBOU1JQic3MoKUOCnzXShUJ2brrBcYIxYi9W1+tSGCTGu2HJFacYlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773674218; c=relaxed/simple;
-	bh=JvbeddlOm0xcRydnLMdh41j9nnPNMQAY2tLLE0K/e3s=;
+	s=arc-20240116; t=1773674219; c=relaxed/simple;
+	bh=gPKPvQuSEi2Rhu6IBIYF+sfDVmSgFIgQSGf8j1v3HLY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JEfUK8haR6uUcHim7UAxN4mw8BldYHd44SNCa9upXazN5ZmQklT0fs+C1YF7foKTH5+VKr92Xj1oIiF2XsprwZb9ddfgsqHCSTjG2W2iLYjWeoXixqbvHwmdodLCVMrDa9ZTZFr3mIYSALfn2Wju7UF+Z97QMBver3gWZCJJa24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WO5SfOW7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB40C19421;
-	Mon, 16 Mar 2026 15:16:57 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=GXwCbzFEJjB/DNMLKEECY42pd4DJXc4zML0WIwKmkvA6W5kYmWbahDkvpVN7j1GMWTMNYmRWusBq9mtZe4ZtDbR2QgvnheyodJktmteG9V9IQ4W1HuF1woRapjaG6FcB9+myOUKQB7qYB7HGyd7TL4Mbw0Gzd7wJzC0zDd4IuCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOCqirdb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C996FC2BC9E;
+	Mon, 16 Mar 2026 15:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773674218;
-	bh=JvbeddlOm0xcRydnLMdh41j9nnPNMQAY2tLLE0K/e3s=;
+	s=k20201202; t=1773674219;
+	bh=gPKPvQuSEi2Rhu6IBIYF+sfDVmSgFIgQSGf8j1v3HLY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WO5SfOW7E6x3Vo2+teqbX39aDHRJffV7X4Eb8UVM7UwUOQXBqh2EZ0/fuoXczdmF3
-	 fP0MMQvIqAFTYXl9hVr4eWsN11EhI7sV/4igRwmUGttcgp6SjZ9F/kB8W5E3AAyhxd
-	 Ixz4g1xDGJgNiZPwcQV3pHWrliKUPXJcOp9vvh5+8Gvw+RDSkc+3O0jlpveeaRChnQ
-	 xIMISzwxkEeoOVlAQpJ24ZSGsL0LGE1RmkzhpuTjVl1WWMA+Za2f/fgumhgvYF6cKi
-	 u0u6k9BOWIAOYgbEUJB7nSf18Y/q/XyEXY/8U/ju15I9Tomx7qjfwZZRqCjUHGDKP6
-	 hwUz3zaWsRBrA==
+	b=EOCqirdbpmGWhCoGM+BYC08p4xIO5ETe0t7HjoO86K8qO/POgG994X8fc3AP0qSAI
+	 C3r4bmHTqfiWTocDApZ3J/5G4HZtojmSpX6dFoOa8VVYF871dG+1J6vKa5CuVo/3Of
+	 kXcDXlneYR++6EsuwSoVOpDYIAW2UVkD0FZELjgHX54KAVfj964r6iWRVgAB1rTE9/
+	 mYHa8JK9lM8pBNwnAGN9Qqz81Z7no34K6wKFHLWGPO2/JiY8ep0uzrjPzAaXWuuUfA
+	 qVDFVGKDgtwDwLmMuCPXtdu4PNW8IkURxdyS76b3jgdtDfV8LON6Vqvg/xIdCzziD1
+	 89XIjxkwkhfpg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 16 Mar 2026 11:16:43 -0400
-Subject: [PATCH nfs-utils 05/17] build: add libnl3 and netlink header
- support for exportd and mountd
+Date: Mon, 16 Mar 2026 11:16:44 -0400
+Subject: [PATCH nfs-utils 06/17] xlog: claim D_FAC3 as D_NETLINK
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260316-exportd-netlink-v1-5-9a408a0b389d@kernel.org>
+Message-Id: <20260316-exportd-netlink-v1-6-9a408a0b389d@kernel.org>
 References: <20260316-exportd-netlink-v1-0-9a408a0b389d@kernel.org>
 In-Reply-To: <20260316-exportd-netlink-v1-0-9a408a0b389d@kernel.org>
 To: Steve Dickson <steved@redhat.com>
@@ -66,31 +65,31 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4767; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=JvbeddlOm0xcRydnLMdh41j9nnPNMQAY2tLLE0K/e3s=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpuB7gnf8jx3LAMfPbFgKVWtiSqhKhwKPOAiuBh
- Y2S2aDc1xeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCabge4AAKCRAADmhBGVaC
- FRWHEACoymGBeK07U+hZUm9Snyr+06SyNytdyLJ0b+tMoB7utraw4PMo+4jBODxNULT/DeZr3XN
- tyr6PwRF/8fnK6EJraJZfYJPt8iLU6pvCvPo/RzC+da3nfpz0zyOtvlc5zHUISRB/ZzWUNH7rHP
- 5j/rmIxpM996NKGeTA3mjsZuX75QnlU4ceTwZeA2cSmaB40Kq0gYT22WhCD5miaOfyxVw4kB3Qf
- XOPf4tJ+udInym0b4WHE0HhQY2KxusjMjnhzKLY4rV78xJgjqm+iVFpwaNKBVlY/PUXmu39+iTG
- t28bPyf7h2x7bYRSwnNQtmYSWxP4vlCEjS3lHfjNI/Tx9wVGxH1i9GE3Duk38r5mlbUvx8OLULs
- 34n0i1I4K9KYIQ5dfndszNiVO6WeBRR0pEU2TC5VXGeg8Zhvg5tHSjdTI2CJb5h3Q7Kyf+XrudE
- i52sthbW6Bkw7WJWa7aZR30zq4FbzG+G5uWz1QhFWONFu08eXMb1bhM++j067Wmr+MhFCHh025c
- rfkNyTC7Oc7LDkDk8v25TTrXkkoWwhKzwb21+oC9ycmF89jAxcwyltPqjB1aXsnCYnM5xtRsv19
- rioIY2rZFyY+3lkGE1pkJRfPDyCwobAdY0fRZoflGcLoke5dUnjpVmi5EmJCVOkixFLaUZE9JEi
- F+ne9b367oLiRow==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=729; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=gPKPvQuSEi2Rhu6IBIYF+sfDVmSgFIgQSGf8j1v3HLY=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpuB7hqsI+RJbEkNXxFnTiONWrRa0jejbX8IcD2
+ KxevtX+J9mJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCabge4QAKCRAADmhBGVaC
+ FRrTEACpSUtpgGJ8lG2zYaad97T0KcwXbs93ouFeQR6mC0/cRyA3sHyNq0eQ5jqa9Wy27hZ68sW
+ BW5gL5oqisIseohqC/1MkrxI6dKsSX788TrKrh/Dhzf9qgO8uYqISvkZGCOJODXn52TtXmO4Dt8
+ FnG6fqquvXBVhIfdnJDIwv1w4vN2pgYov6uLe5a/cwBdXZwEaE9eRP2Ly77bLvp2y3fmKDqUcyi
+ E7YBcFhXFDmxbL0ZT+pBGDcAdmfyPbvyK5yFzVqh+OXgzNipgc8lxe176hQJivEgZIxi3HzndQq
+ mz9QXNx69xso2pE5E7tYlEn4GuzM+M8GwLkyKys+BO+DfneInIoLz4C8g+JVkdT7Xjbec91z+KH
+ fl2ELlQ3rebQ+6T/bAvWEfJrgbHXoJlTA3/XG3toVtQILyBIlnKvtInc8UWAQ6YOQMgvI6sunzL
+ NmbeKOA0KFye1JlPC+fu15/LrTXx0TZZf8TGTvnC7W5Yru0PBXRKLaomFuK0MsTCR2nOeEibCtb
+ tX0lyidttyPdFdpf2MsCQBvVPfXihzn/V1lt11L7aWraUOLYb911tQseRhqPrccyEJl+JeCKqni
+ yAKWsIjZRy/87uktwiqwdp0OEFzJlOUBDBWRHJlY2B6ZOpLbjtYjK1bA3hTqbqL98g2L3Mn8DzB
+ C6i2lOWrANO4ALg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20204-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20205-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,120 +101,37 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,configure.ac:url]
-X-Rspamd-Queue-Id: 609BF29C4E0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D085129C49E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add libnl3 dependency and netlink header detection for exportd and
-mountd builds. Update the nfsd_netlink.h sentinel to check for
-NFSD_A_EXPKEY_SEQNO to ensure the system header includes expkey
-support. Add AC_COMPILE_IFELSE check for sunrpc_netlink.h using
-SUNRPC_CMD_CACHE_NOTIFY as sentinel.
+Nothing uses the D_FAC* debugging bits, so claim D_FAC3 as D_NETLINK
+for logging about netlink activity.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- configure.ac               | 32 +++++++++++++++++++-------------
- support/export/Makefile.am |  3 ++-
- utils/exportd/Makefile.am  |  2 +-
- utils/mountd/Makefile.am   |  2 +-
- 4 files changed, 23 insertions(+), 16 deletions(-)
+ support/include/xlog.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/configure.ac b/configure.ac
-index b134c98c7c6e1ba56c2b2a0b4e8d614d58093f35..f8c04fbfeaaafa63c07f7552dd7c71ef234eab10 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -252,26 +252,32 @@ AC_ARG_ENABLE(nfsdcltrack,
- 	enable_nfsdcltrack=$enableval,
- 	enable_nfsdcltrack="no")
- 
-+PKG_CHECK_MODULES(LIBNL3, libnl-3.0 >= 3.1)
-+PKG_CHECK_MODULES(LIBNLGENL3, libnl-genl-3.0 >= 3.1)
-+
-+AC_CHECK_HEADERS(linux/nfsd_netlink.h)
-+
-+# ensure we have the expkey attributes
-+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
-+			                   [[int foo = NFSD_A_EXPKEY_SEQNO;]])],
-+			   [AC_DEFINE([USE_SYSTEM_NFSD_NETLINK_H], 1,
-+				      ["Use system's linux/nfsd_netlink.h"])])
-+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/lockd_netlink.h>]],
-+			                   [[int foo = LOCKD_CMD_SERVER_GET;]])],
-+			   [AC_DEFINE([USE_SYSTEM_LOCKD_NETLINK_H], 1,
-+				      ["Use system's linux/lockd_netlink.h"])])
-+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/sunrpc_netlink.h>]],
-+			                   [[int foo = SUNRPC_CMD_CACHE_NOTIFY;]])],
-+			   [AC_DEFINE([USE_SYSTEM_SUNRPC_NETLINK_H], 1,
-+				      ["Use system's linux/sunrpc_netlink.h"])])
-+
- AC_ARG_ENABLE(nfsdctl,
- 	[AS_HELP_STRING([--disable-nfsdctl],[disable nfsdctl program for controlling nfsd@<:@default=no@:>@])],
- 	enable_nfsdctl=$enableval,
- 	enable_nfsdctl="yes")
- 	AM_CONDITIONAL(CONFIG_NFSDCTL, [test "$enable_nfsdctl" = "yes" ])
- 	if test "$enable_nfsdctl" = yes; then
--		PKG_CHECK_MODULES(LIBNL3, libnl-3.0 >= 3.1)
--		PKG_CHECK_MODULES(LIBNLGENL3, libnl-genl-3.0 >= 3.1)
- 		PKG_CHECK_MODULES(LIBREADLINE, readline)
--		AC_CHECK_HEADERS(linux/nfsd_netlink.h)
--
--		# ensure we have the MIN_THREADS attribute
--		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
--				                   [[int foo = NFSD_A_SERVER_MIN_THREADS;]])],
--				   [AC_DEFINE([USE_SYSTEM_NFSD_NETLINK_H], 1,
--					      ["Use system's linux/nfsd_netlink.h"])])
--		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/lockd_netlink.h>]],
--				                   [[int foo = LOCKD_CMD_SERVER_GET;]])],
--				   [AC_DEFINE([USE_SYSTEM_LOCKD_NETLINK_H], 1,
--					      ["Use system's linux/lockd_netlink.h"])])
- 	fi
- 
- AC_ARG_ENABLE(nfsv4server,
-diff --git a/support/export/Makefile.am b/support/export/Makefile.am
-index 7338e1c7e719b2684745e0d71810c9f52d08a3c9..ae7ace44112b889f1c461c5473fb1bd42a42f182 100644
---- a/support/export/Makefile.am
-+++ b/support/export/Makefile.am
-@@ -14,7 +14,8 @@ libexport_a_SOURCES = client.c export.c hostname.c \
- 		      xtab.c mount_clnt.c mount_xdr.c \
- 		      cache.c auth.c v4root.c fsloc.c \
- 		      v4clients.c
--libexport_a_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport
-+libexport_a_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport \
-+		       $(LIBNL3_CFLAGS) $(LIBNLGENL3_CFLAGS)
- 
- BUILT_SOURCES 	= $(GENFILES)
- 
-diff --git a/utils/exportd/Makefile.am b/utils/exportd/Makefile.am
-index 26078c9b11b54d2af7bce0273f1cac577f0d8097..e25166b1aa1871492d11a83decd63e76a1528f9b 100644
---- a/utils/exportd/Makefile.am
-+++ b/utils/exportd/Makefile.am
-@@ -18,7 +18,7 @@ exportd_LDADD = ../../support/export/libexport.a \
- 			../../support/misc/libmisc.a \
- 			../../support/reexport/libreexport.a \
- 			$(OPTLIBS) $(LIBBLKID) $(LIBPTHREAD) \
--			-luuid
-+			-luuid $(LIBNL3_LIBS) $(LIBNLGENL3_LIBS)
- 
- exportd_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) \
- 		-I$(top_srcdir)/support/export
-diff --git a/utils/mountd/Makefile.am b/utils/mountd/Makefile.am
-index 197ef29b4fe4a855da3b26c701fa0b41916ea59c..808baf318fe54ccee13cf60b4cd71ade0444508b 100644
---- a/utils/mountd/Makefile.am
-+++ b/utils/mountd/Makefile.am
-@@ -20,7 +20,7 @@ mountd_LDADD = ../../support/export/libexport.a \
- 	       ../../support/reexport/libreexport.a \
- 	       $(OPTLIBS) \
- 	       $(LIBBSD) $(LIBWRAP) $(LIBNSL) $(LIBBLKID) -luuid $(LIBTIRPC) \
--	       $(LIBPTHREAD)
-+	       $(LIBPTHREAD) $(LIBNL3_LIBS) $(LIBNLGENL3_LIBS)
- 
- mountd_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) \
- 		  -I$(top_builddir)/support/include \
+diff --git a/support/include/xlog.h b/support/include/xlog.h
+index 69cdf61eaf370bf70a0da57c422f65f2f49ee06b..755105e0dc9a0298a17be6a3f63f0b471c53f8a4 100644
+--- a/support/include/xlog.h
++++ b/support/include/xlog.h
+@@ -25,7 +25,7 @@
+ #define D_GENERAL	0x0001		/* general debug info */
+ #define D_CALL		0x0002
+ #define D_AUTH		0x0004
+-#define D_FAC3		0x0008
++#define D_NETLINK	0x0008
+ #define D_FAC4		0x0010
+ #define D_FAC5		0x0020
+ #define D_PARSE		0x0040
 
 -- 
 2.53.0
