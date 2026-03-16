@@ -1,208 +1,187 @@
-Return-Path: <linux-nfs+bounces-20227-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20228-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wEbFBpmAuGltfAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-20227-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 23:13:45 +0100
+	id MJ9GCPOTuGnCgAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-20228-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Mar 2026 00:36:19 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7400E2A1559
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 23:13:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 809DA2A203A
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Mar 2026 00:36:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7201930B84AF
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 22:11:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A233C3035A96
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Mar 2026 23:35:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52BFD372667;
-	Mon, 16 Mar 2026 22:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 215B6186A;
+	Mon, 16 Mar 2026 23:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="eyO5nsRG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="guCypQjf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="altaj9U9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B41364E85;
-	Mon, 16 Mar 2026 22:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773699061; cv=none; b=X2HD+TcaXbBKqJwG3FOGvtGJ46b+9I3gceqYyzbiFh6CNe9xr5K5tYkgxy7/FPoH9bW5ibjyU1GRsjl45lwRwaFkYUlkIK460MM/W7tnIzi7BdP62SHY3AFNuzkzLwFRLz8crKfu/KWSHUHvsA941n8ETVzAIJYgBbCgkdzV/Y8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773699061; c=relaxed/simple;
-	bh=bR3l1XBxxG0Br6WPViaTYx4jBj801ByLeboUNggNeu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A38yHLwEglJnAk0B2QCy7stC9vMmro0enVPstLHcOoOWf+ISPC3fMoHAiOFXJpgQ+JEGYQrlTu0OIZqL9gIfg9EuELK7OlOHQThyqCuvdDItVMWZTKlH5lCT2EoHtG4zqNZ3haS7IZ2EcyWbx12HIJK/xKpWlKg0tgYFk4eMcz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=eyO5nsRG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=guCypQjf; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.phl.internal (Postfix) with ESMTP id 96E81138028E;
-	Mon, 16 Mar 2026 18:10:56 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 16 Mar 2026 18:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1773699056;
-	 x=1773706256; bh=pZj8f0JboyjKt94J8KB7OLIiCOoml43GOZ4w8rDpLPA=; b=
-	eyO5nsRGgscBaSPTlSrjx8D8qsmxFZTD+YBT90C8JLtkSU+JG9otBsGP68/aDjfq
-	Ip8/CY7pDqj8uLfl6tk9PaoCLmHFx9BmC+OLDsgQIKz5wruWwvglBIFTzX8Bgo1G
-	D7tyDhfcq/yYvbxAZYbPlVlov+W1BUQwVVZx34myYfSzzczy+o0TvO2AJR+dEy1d
-	h9Fy4zA0IHy3AyAu2lJw7cTPeRVsoH7Q9DZJUhPGVmEq8IZ5byXvr46eUf3RwYLV
-	Pd21rN+O2sxo21UD0KoApMpHYwnhY5vI1CKlHqs6nb1Q0ON5mjBcz18/WvPyI4M2
-	g7ed/wORmv3aHNEvlM9NEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773699056; x=
-	1773706256; bh=pZj8f0JboyjKt94J8KB7OLIiCOoml43GOZ4w8rDpLPA=; b=g
-	uCypQjfxr+Zi7JxdTC/p3wGQ4VV0q/Wv3rf4QuOSSvRwPZ4hwWoKXSQwRlJppx/A
-	eTD/kX8ytMBkqeeAHXi8QojGoDJPwhemKEl1A5BQyy+VTfQ0kjCklEhRU0D9TNU6
-	QzoouUhJdY7Fi24kVLMS4vkfF5Xif+sxcGuZ+ZH9bmNOAZhg/6jHFnuxjrIUYo4Y
-	sJAjmQ/c58h+MsTVokuL8c2t4xBbVGwnTgXIvKplEwnaY81NNzKXbPGa+zPU58N/
-	vwQ/zZfUYT5zYdyXfBWrfC5sZSkqzhpuD1WACxXIM/TD7Jh2N1ZXy8qS+O1DtSBY
-	h24uS6YuZ9c79L+rKNYRA==
-X-ME-Sender: <xms:73-4aYdtUUIQC679P0YPl8k6UZ10Tz8-qTD319yDZEtXusdBhZuXRA>
-    <xme:73-4aTUav9FvduIIOmc0jldmINr5W_MhUsWQFGzP1fBm1dpf8ggOxSMvCMHniLmCu
-    LbRPk360ujIo39hLA6fsP95YlnCLki5WcrUsiuRyEwh6NcxWlxF>
-X-ME-Received: <xmr:73-4aSY56rJyFtQwMFw-H9dfM29zbbMWxWkWrpi3kYaZ1kbqDyXdf5bHU5U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvleelheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfgjfhfogggtgfesthejre
-    dtredtvdenucfhrhhomheptehlvgigucghihhllhhirghmshhonhcuoegrlhgvgiesshhh
-    rgiisghothdrohhrgheqnecuggftrfgrthhtvghrnhepvdekfeejkedvudfhudfhteekud
-    fgudeiteetvdeukedvheetvdekgfdugeevueeunecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhgpdhnsg
-    gprhgtphhtthhopeehhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphhhrghh
-    nhdqohhsshesrghvmhdruggvpdhrtghpthhtoheprghmugdqghhfgieslhhishhtshdrfh
-    hrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegrphhprghrmhhorheslhhishht
-    shdruhgsuhhnthhurdgtohhmpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopegtvghphhdquggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopegtohgttghisehinhhrihgrrdhfrhdprhgtphhtthhopegumh
-    dquggvvhgvlheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegurhhiqdgu
-    vghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepgh
-    hfshdvsehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:73-4aQltNdDVIdEqvCmz7Mlt0qW50NA4CHgJQUMNlacMN4MGiVKHfA>
-    <xmx:73-4acHdFw15OLpR73_B1AdIXJMG-pYssiD_C0T2dj2N-8ux7fVHFg>
-    <xmx:73-4aU6P6J2BtdvPwSPzfrUNjz9-qYacHOOWBucSAMlha23fXDTcIg>
-    <xmx:73-4aaO5YEqAXlnOLRO88GZx1RbxPW8QtXAeqZQNaqmxlgOL7PgFkQ>
-    <xmx:8H-4abIvs_QYur641c9BpnDuFQ6ssCC-7-o-rPLEHWyRxStBDxJEr6SL>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Mar 2026 18:10:52 -0400 (EDT)
-Date: Mon, 16 Mar 2026 16:10:50 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
- bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
- dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
- gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
- intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
- kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
- sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
- alex@shazbot.org
-Subject: Re: [PATCH 46/61] vfio: Prefer IS_ERR_OR_NULL over manual NULL
- check
-Message-ID: <20260316161050.01c82973@shazbot.org>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-46-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-	<20260310-b4-is_err_or_null-v1-46-bd63b656022d@avm.de>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BF734B434
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Mar 2026 23:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773704152; cv=pass; b=I3v2WQvQsaNBAKBXDFp6RTqiI3P3IXNn+5lcIUlGG/XgmQNb+78U6feln1eGbrqjCePCsjFEy8065389guUQV4Aho2/o9AIEtFLmtZ2SlaHCofG7Y5q0If3ssgKxb/AcYjgRrHNEGbzEI/tEW7Y9gtCAiKT4z9UTIQ/Tr/o/Dew=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773704152; c=relaxed/simple;
+	bh=akdds+26r0Mp2szMBzYxMJ9d3JRKrYxVtSoTjjWvr2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dYS6w0medRMvVdeqm3GLcL+qEKNWH3K1qYr2F/aEVWDnNBRpDp9DO3ju4Ht1ka93z8GTL60ewO7iKNabVzBsQognxQiqf0RywU9vXmJano+0XliWmLTDo5FjJcUD0/xhUKrEvuPm9QGKvrVcHpXgFPNR+owFU11QDSQFU8desWk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=altaj9U9; arc=pass smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-665634cb208so2765308a12.3
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Mar 2026 16:35:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773704149; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KaJ+7jgSQ6kvR746aqPvGh2igKRGeyVhs6PQAzBvY3KjyGIwkk/ivOGxVNwCQ3rDdm
+         cVb1Zto4jFXag6KXR90kA7ioa00oMQ5WS9YHfVtgtWNkgNNrWMw3ByzaSqQiCi3VSP2c
+         WgoBITfFZFaG+f4bxtQS6IyGOoRk/v6e0hE5j478/gL5LDJMD5TQtVl8OPlrW5FB7wWc
+         u+ChhAmNbJHjIcnigZBtdO2uSWi36i0nb1Q3JCWa5nlnrT9Wk9zfzgLiuqUv6evHqwQy
+         rsAylhD/7g7HWl3/mx8rhdaA6wLORaki2gsPm67VvkyIrq6HIU0djWxnMlr3Z/L/04iZ
+         CCsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=gDnw5u7ykZOKoxVfBOxkESOt2PuapwQmU2YMOnTLTAk=;
+        fh=oNxWaH9oxjx2mxCqwOI5NNEIowOj9p0NSEbePPziJpw=;
+        b=WYjlXMsBbyn0Id/UsfhQMUPKhQNRfgV2WRv1PmOY1xLVuVtu5kvRBxYJK7R1+BktjH
+         /YWdIGGZnHDBD/rL080V3eb23T5x6lGk2ZA/sa6K3F6qInYgucJy8U4pF2Hjaw4zjA7N
+         2l8VnZ3+7CetCXZuwX0/ozJJJ350ZGXvbkC0C915KRXCzG1A/mIG/2DBSEf8/ir60RnJ
+         9X1N3ZABM3KNCGSFwi4CwPFhpuKk8RPsQw19O30388BE5bneRVz9Ye7uGta0zZJ22Isp
+         n7bFuPYOBQHhEZf4HrpxR1RIkW27J+pM2sUAfwJrcu2o73iwqA9Ly9gIuR1Jf46dSimW
+         rbgQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773704149; x=1774308949; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gDnw5u7ykZOKoxVfBOxkESOt2PuapwQmU2YMOnTLTAk=;
+        b=altaj9U9Dmz/f8LKDq+jiGM0pWpSlf/Hhk7Kvw+DTGY2NdyO3frtohDm1cZ2toAZx8
+         a/Sg7tijTJa+hCHXU/5/2ZkELReQDMxqM/V6pOcAn84AQukLVwbZ/QO5LsaPsL33Of/Q
+         XA5l5RfGYJDjD/ke1DvIRCczp+SqfJgqkeokgV7ScxyIrpiCJ4xYs4ttvBooaj9ZO0qC
+         2fa6K+Ji64YIfuLdw3+O1AdLN6LjQl+ybvwKxma1/itIXpTRSKPd+9yILilKjAxj66fF
+         hHdziPSbkp5+G41nuvyt7YRcN1P8bZHkJW1EozZgw+ErTo3r7RlBIHI4ViaEkhZd2zEM
+         xjpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773704149; x=1774308949;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gDnw5u7ykZOKoxVfBOxkESOt2PuapwQmU2YMOnTLTAk=;
+        b=OqqbEOlMh28MEj3DNwfpdZKyBSYKPykfX2tGCTpOOTccgrMw5UZvUwSKV780FPMj0W
+         8kER/AF59af0mDACoCS2AZTLesV0b7RRlqHFp1YyjaQ3WWJy6aIlc1iSCwpapQ761lAv
+         BXhBEpC4NMR9SjgeuaA/OSo1aGfqXa8aEKUzSXJH94QxKK5agspAZy82dyWVYDaOftI2
+         n4HpZkWC65pY+WfGwc1lEpgONRVDdFDj2EdskN1Yv+L/1N8vhZrlKFP0wphUun+JPLOF
+         22MD9LNCo+XYVbzl7B5r0vYFvW0aPuqdt7ok302QdUaVzyGzq42qwA06KYkxbkIpOXJ9
+         /9Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUyC4q/g1Atg2TrlisjQ/fx95+a+oRroYkPm6XpnP2DpJqjToIn4Hhwyphc1P0RJWJOOjcRTY1kIg8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySlV7jtW66JIt0YAhuPLLukDXEqQar5TZhG9rjAM2hdX24yJdw
+	A7dsP6zrc+OmUTAvVC2AWjgBJlwjAWFd/dp8cY6o0dshqSrqVQOMY0tmOzGwNJAfZW/P4GmBwhh
+	8ll6R66Gm9vMgYdq2F2sy+GNlfhKvJ9QH
+X-Gm-Gg: ATEYQzxmhpNPSbjl8uVALwZypfp4A9LHKOaVGQht4gKJEWG0MtRsQkvlIV3CWSvh6/+
+	UM9dm2t1wzfBWhDZHjUouVpcalQyZX2eutPjZ+vlHPCDnf7/VfatXxMsAcCbi7OSjjL9FgtSb8/
+	mmO5oluOHKzE1j0gOqs7QJ/fo8Ae7L4aHB/XH83zLeb2Ye8YC+9Nz+nc2d4jjcYEQ39kq6Wi4LV
+	hskoYc26lB1OXnRKoFggPwIFKBW6VONU+lzjRtkSU507mMBzBusYMQVK5C7dHjpWl9VyU0MHdZf
+	oB276bfbBlTK2ifvOZRe04Oy+PwC3gK21Ns0Uw==
+X-Received: by 2002:a50:cbc9:0:b0:664:d419:6e69 with SMTP id
+ 4fb4d7f45d1cf-664d419716emr3383482a12.13.1773704148968; Mon, 16 Mar 2026
+ 16:35:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
+References: <CALXu0UdOR8mVr=8pwNP95FnOsOk1w1A2=DcayKk3YnDfS+PzUA@mail.gmail.com>
+ <5acaa8e7-0691-4cbd-b501-c26831a7be81@app.fastmail.com>
+In-Reply-To: <5acaa8e7-0691-4cbd-b501-c26831a7be81@app.fastmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Mon, 16 Mar 2026 16:35:34 -0700
+X-Gm-Features: AaiRm52rCfBU4ApKhYP_77dve_KolFF8Io_TK7wN08F_X_XbArYrtND_6zOkUNg
+Message-ID: <CAM5tNy7GG0awNYYJWv0968e5CMoUstr0GcrNwuNKP4x3Yrp3JQ@mail.gmail.com>
+Subject: Re: Increase default NFSv4 server size "max_block_size" to 4MB
+To: Chuck Lever <cel@kernel.org>
+Cc: Cedric Blancher <cedric.blancher@gmail.com>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm3,messagingengine.com:s=fm1];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[shazbot.org:+,messagingengine.com:+];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20228-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20227-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[55];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 7400E2A1559
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rickmacklem@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 809DA2A203A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 10 Mar 2026 12:49:12 +0100
-Philipp Hahn <phahn-oss@avm.de> wrote:
+On Mon, Mar 16, 2026 at 5:41=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+>
+>
+> On Mon, Mar 16, 2026, at 3:51 AM, Cedric Blancher wrote:
+> > As debated a while ago, can the default NFSv4 server size for
+> > "max_block_size" be increased to 4MB, please?
+>
+> There is an administrative setting to raise this limit for
+> recent versions of the kernel. Can you report your experience
+> when you raise the limit? Hiccups, performance issues, etc? I
+> would kind of like this exercise to be data-driven.
+>
+> What is still unknown to me is which NFS client implementations
+> can support 4MB or 8MB. Without client support, an increase in
+> the default in NFSD doesn't mean anything. Rick, Anna, Roland?
+Although it has not seen much testing, it is possible to do a > 1Mbyte NFSv=
+4
+mount in FreeBSD.
+For a 2Mbyte mount, (the only size > 1Mbyte I've tried) the settings would =
+be..
+In /boot/loader.conf
+kern.maxphys=3D2097152
+vfs.maxbcachebuf=3D2097152
 
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
-> 
-> Change generated with coccinelle.
-> 
-> To: Alex Williamson <alex@shazbot.org>
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
-> ---
->  drivers/vfio/vfio_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-> index 742477546b15d4dbaf9ebcfb2e67627db71521e0..d71922dfde5885967398deddec3e9e04b05adfec 100644
-> --- a/drivers/vfio/vfio_main.c
-> +++ b/drivers/vfio/vfio_main.c
-> @@ -923,7 +923,7 @@ vfio_ioctl_device_feature_mig_device_state(struct vfio_device *device,
->  
->  	/* Handle the VFIO_DEVICE_FEATURE_SET */
->  	filp = device->mig_ops->migration_set_state(device, mig.device_state);
-> -	if (IS_ERR(filp) || !filp)
-> +	if (IS_ERR_OR_NULL(filp))
->  		goto out_copy;
->  
->  	return vfio_ioct_mig_return_fd(filp, arg, &mig);
-> 
+and in /etc/sysctl.conf
+kern.ipc.maxsockbuf=3D9455616
 
-As others have expressed in general, this doesn't seem to be cleaner
-and tends to mask that we consider IS_ERR() and NULL as separate cases
-in the goto.  This code looks like it could use some refactoring, and
-likely that refactoring should handle the IS_ERR() and NULL cases
-separately, but conflating them here is not an improvement.  Thanks,
+Then a mount will use 2Mbytes if the server supports it.
 
-Alex
+I doubt anyone does this, but it works for trivial tests.
+
+Maybe I'll do it during the next bakeathon? rick
+ps:It would be really nice if Roland could show up
+     (you can attend remotely via tailscale like I do)
+     at the next bakeathon.
+
+>
+> --
+> Chuck Lever
+>
 
