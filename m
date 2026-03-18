@@ -1,96 +1,153 @@
-Return-Path: <linux-nfs+bounces-20250-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20251-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sDn8Cg62umlWawIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20250-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2026 15:26:22 +0100
+	id gB/KNvK3umlWawIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20251-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2026 15:34:26 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7E882BD0F6
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2026 15:26:21 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4127F2BD38C
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2026 15:34:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B86343213D37
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2026 14:15:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AB47F31D0AD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Mar 2026 14:21:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A503DBD74;
-	Wed, 18 Mar 2026 14:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04EB3DA7C7;
+	Wed, 18 Mar 2026 14:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXOR+ehl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hi/1cJ9E"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD513D9DBE;
-	Wed, 18 Mar 2026 14:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B533DA5CE;
+	Wed, 18 Mar 2026 14:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773843330; cv=none; b=ufL4OPqnHzntBf1626rzMPY/08d3Ds0YFqVwySKH3bmByLO+3Ok/mHL3BeN2wI85vIjal7jRWoZrLrMH8iffTl6jS0pBzDb6GEOJorzbUO7z6olAvrxHRev6ZzelTrjCkayhQsZ6MYq+KK2vsDEgxyb97LsC1wicYTQwEoyr3uw=
+	t=1773843707; cv=none; b=El+wosqqONT5LR1fvqKl0dYt6fPG5JMtzvUrmF4QStDq0ZkijI3A7mbXPLFMHfqWSZVspIm6E9VAIZYYU+YMMnApLhiDIXeu0RuzSsijVkICcITUQcMeWTzedOqG19WmUPS+M2A4/Fv43nPYWn7WTDIt6W0bpbVa+Xtk/kFDpP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773843330; c=relaxed/simple;
-	bh=WfblvdFGtIF0rUv9XNsk7ycA7a+TEB7OybXZ3BPp7NU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dz0SfVqG9utUzk9wm41GtuuWkVBbuWX0tV9ACUbcHaIYLCsM0R5HKfDlhVDJJfcXGqLMJOewwEuVT06Z7KG1LzccoVpyFxTxJB2PJvcWXxYANcHNFRhj/0YrRQLbhlMY7ab7VwbMJSKx3Ba0TlIteKQyRtQY/5KEGVopncB5xqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXOR+ehl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4DB3C2BCB2;
-	Wed, 18 Mar 2026 14:15:29 +0000 (UTC)
+	s=arc-20240116; t=1773843707; c=relaxed/simple;
+	bh=Ryp3Z6JHfeiN0hRQbLyPIpIxWpC2oyV8td8FF9RwkIE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QDFVBIsO9KsQ9lDvLqvNjGa8yvFXjvdB4j0LbxTJ2zVmRosjm20sc2iSXOVP4idrjJBdOl8/TK95iPJWfkbnZKfWM1sZzwa8jcCYwrK6mhfJO4Ja1Vp5ESOdX2NylE+XeBYcoGMPJ03td4wz3CAAxsLVwlEgVG0UuotVHFC1yk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hi/1cJ9E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E372CC19424;
+	Wed, 18 Mar 2026 14:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773843330;
-	bh=WfblvdFGtIF0rUv9XNsk7ycA7a+TEB7OybXZ3BPp7NU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VXOR+ehljFDfmx9/CoNcDbRyACm/WVWOU1e/fthnq6/C8ooCwvsLbWzPOLmwt9cYn
-	 4mb+HmhxiYCDT4mccYwkM8MzGupTX6A3BTFka/OvN9ivocWrQKz+WeS33bN09MLe+k
-	 EWsvWOPXvK+2UKbYiGdmQoUaPshcvDM66dUFF+g9/34qM7RpBg2Sq6KNKClNmj7Fzt
-	 GKyll+QZS2/AC+IGNjzxCjlwvVlQJjwh1St0qvCQCZx0u2TNOTAUwCI8em533DuwRA
-	 2sDVgIwexIXwY8aNkLdkm5pe+vPAdlHkczExiBPUQVH+dbOWLcGcrpyM8aQj62xJxP
-	 nQpD4pQLunS/Q==
-From: Chuck Lever <cel@kernel.org>
-Date: Wed, 18 Mar 2026 10:15:08 -0400
-Subject: [PATCH v4 6/6] NFSD: Add nfsd_file_close_export() for file cache
- cleanup
+	s=k20201202; t=1773843707;
+	bh=Ryp3Z6JHfeiN0hRQbLyPIpIxWpC2oyV8td8FF9RwkIE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Hi/1cJ9E4PwrwlZUEg39SlrR+FbWHHuxsnGiQShuM+OQ4D2tbCzqo3OEbPgOdgfnK
+	 UrD3w7STUplprQqcdhd5e0XloDQy5FxRe83tlrPYvr4eG5+znc9JA7lZPZdwSm7hih
+	 03HODMbaMVAtbHHrsH0mxVRUTErvFZggRBYCWqIzd2Ipq/4mU1RzmqXJHJnW9ZKgje
+	 1FvHbAgZS4VSohJGEfrxRKcSuPXFUdKOZTaKzwJohR6lzSDe8D+EeGX6HEz70GPKB8
+	 mRwb7CFmFou90bhPrwRObzt90ruVTAzdN4CiPxrP9fWL/xE8YQ6OFZkj93VWPH+M5K
+	 mgNZydDZ3B18Q==
+Message-ID: <7288d90cf67a4a8b3473b0118f3ce844e3538a3b.camel@kernel.org>
+Subject: Re: [PATCH v4 1/6] NFSD: Extract revoke_one_stid() utility function
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, Chuck Lever
+	 <chuck.lever@oracle.com>
+Date: Wed, 18 Mar 2026 10:21:45 -0400
+In-Reply-To: <20260318-umount-kills-nfsv4-state-v4-1-56aad44ab982@oracle.com>
+References: <20260318-umount-kills-nfsv4-state-v4-0-56aad44ab982@oracle.com>
+	 <20260318-umount-kills-nfsv4-state-v4-1-56aad44ab982@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260318-umount-kills-nfsv4-state-v4-6-56aad44ab982@oracle.com>
-References: <20260318-umount-kills-nfsv4-state-v4-0-56aad44ab982@oracle.com>
-In-Reply-To: <20260318-umount-kills-nfsv4-state-v4-0-56aad44ab982@oracle.com>
-To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4015;
- i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=LGVN7sc2eqL9hTHKy7nquo+MwN9593ppYM/wySuya8I=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpurN8O7wsqip+pvd39ru02JEbaJiTfIoVASZqn
- USDNwJqRQSJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCabqzfAAKCRAzarMzb2Z/
- lwulEAC20W4SJp/f7qZz28z36RNGZdZZ3k70CP8cbM+Ldh4I2whxddRPDVqmiHvsPHwupvhLZxd
- impFyNobHOHl2EEOHwiq9/D9kT+qU8wEtWq/P30gNE99R7xvpmNI1sPLloL7iB728eo6nPlOahD
- b0f2Qi3BsQfOD31VTHpmBnor/kYRHhoK+3IZqKAQ4SMUM+y/uA/sO3UDBE8WFfigtIzrWScYPPS
- Ti9kZ3qpr4ZIRZuEG8bPLt1Kj1js0fgjR0eEiq5QJMo6wQxgMKZD3V0ndgxLU9AfnVwpjz73ozb
- CEN4S+TuDAon7Gi2xx/pFDK5EQ59rOzJ3zHt2i7Goe7Tj8tmENbyRTEYtGSwDxZ1YVXYXdMHSsT
- evWTD9edHv3etRHcqRfLM7xBDw8Zh0EaPwfK9/BpgUQK4GyQePmoII3Gr6+cZYGiF1Zsvj4dydZ
- wrPMw6z39QWOyFWSurHgt7MptH7FXRbG2bg75ZKNpr7g3x7Fh12Mp0y5iTqoAT1MpyXTqZEvDZp
- 06ki3DmHZ0Syn/Ttl0Yw5oqE0lN0iM5mfsiztXTevBqpFPhCZqOZTT4obkj3o95Ir+ENzlDLifD
- aK6ykmhLp2oHWP9rYzHiQtAGCqrzokcJXxx6V/oukbW24PmMVM0A74BmhXDt1ilgvIWC+htxfOW
- GkgdA5ktp47m9fg==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
- fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20250-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20251-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -99,131 +156,195 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C7E882BD0F6
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 4127F2BD38C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, 2026-03-18 at 10:15 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> The per-stateid revocation logic in nfsd4_revoke_states() handles
+> four stateid types in a deeply nested switch. Extract two helpers:
+>=20
+> revoke_ol_stid() performs admin-revocation of an open or lock
+> stateid with st_mutex already held: marks the stateid as
+> SC_STATUS_ADMIN_REVOKED, closes POSIX locks for lock stateids,
+> and releases file access.
+>=20
+> revoke_one_stid() dispatches by sc_type, acquires st_mutex with
+> the appropriate lockdep class for open and lock stateids, and
+> handles delegation unhash and layout close inline.
+>=20
+> No functional change. Preparation for adding export-scoped state
+> revocation which reuses revoke_one_stid().
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 126 ++++++++++++++++++++++++++--------------------=
+------
+>  1 file changed, 63 insertions(+), 63 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 6b9c399b89df..d476192e4b27 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1757,6 +1757,68 @@ static struct nfs4_stid *find_one_sb_stid(struct n=
+fs4_client *clp,
+>  	return stid;
+>  }
+> =20
+> +static void revoke_ol_stid(struct nfs4_client *clp,
+> +			   struct nfs4_ol_stateid *stp)
+> +{
+> +	struct nfs4_stid *stid =3D &stp->st_stid;
+> +
+> +	lockdep_assert_held(&stp->st_mutex);
+> +	spin_lock(&clp->cl_lock);
+> +	if (stid->sc_status =3D=3D 0) {
+> +		stid->sc_status |=3D SC_STATUS_ADMIN_REVOKED;
+> +		atomic_inc(&clp->cl_admin_revoked);
+> +		spin_unlock(&clp->cl_lock);
+> +		if (stid->sc_type =3D=3D SC_TYPE_LOCK) {
+> +			struct nfs4_lockowner *lo =3D
+> +				lockowner(stp->st_stateowner);
+> +			struct nfsd_file *nf;
+> +
+> +			nf =3D find_any_file(stp->st_stid.sc_file);
+> +			if (nf) {
+> +				get_file(nf->nf_file);
+> +				filp_close(nf->nf_file, (fl_owner_t)lo);
+> +				nfsd_file_put(nf);
+> +			}
+> +		}
+> +		release_all_access(stp);
+> +	} else
+> +		spin_unlock(&clp->cl_lock);
+> +}
+> +
+> +static void revoke_one_stid(struct nfs4_client *clp, struct nfs4_stid *s=
+tid)
+> +{
+> +	struct nfs4_ol_stateid *stp;
+> +	struct nfs4_delegation *dp;
+> +
+> +	switch (stid->sc_type) {
+> +	case SC_TYPE_OPEN:
+> +		stp =3D openlockstateid(stid);
+> +		mutex_lock_nested(&stp->st_mutex, OPEN_STATEID_MUTEX);
+> +		revoke_ol_stid(clp, stp);
+> +		mutex_unlock(&stp->st_mutex);
+> +		break;
+> +	case SC_TYPE_LOCK:
+> +		stp =3D openlockstateid(stid);
+> +		mutex_lock_nested(&stp->st_mutex, LOCK_STATEID_MUTEX);
+> +		revoke_ol_stid(clp, stp);
+> +		mutex_unlock(&stp->st_mutex);
+> +		break;
+> +	case SC_TYPE_DELEG:
+> +		refcount_inc(&stid->sc_count);
+> +		dp =3D delegstateid(stid);
+> +		spin_lock(&state_lock);
+> +		if (!unhash_delegation_locked(dp, SC_STATUS_ADMIN_REVOKED))
+> +			dp =3D NULL;
+> +		spin_unlock(&state_lock);
+> +		if (dp)
+> +			revoke_delegation(dp);
+> +		break;
+> +	case SC_TYPE_LAYOUT:
+> +		nfsd4_close_layout(layoutstateid(stid));
+> +		break;
+> +	}
+> +}
+> +
+>  /**
+>   * nfsd4_revoke_states - revoke all nfsv4 states associated with given f=
+ilesystem
+>   * @nn:   used to identify instance of nfsd (there is one per net namesp=
+ace)
+> @@ -1787,70 +1849,8 @@ void nfsd4_revoke_states(struct nfsd_net *nn, stru=
+ct super_block *sb)
+>  			struct nfs4_stid *stid =3D find_one_sb_stid(clp, sb,
+>  								  sc_types);
+>  			if (stid) {
+> -				struct nfs4_ol_stateid *stp;
+> -				struct nfs4_delegation *dp;
+> -				struct nfs4_layout_stateid *ls;
+> -
+>  				spin_unlock(&nn->client_lock);
+> -				switch (stid->sc_type) {
+> -				case SC_TYPE_OPEN:
+> -					stp =3D openlockstateid(stid);
+> -					mutex_lock_nested(&stp->st_mutex,
+> -							  OPEN_STATEID_MUTEX);
+> -
+> -					spin_lock(&clp->cl_lock);
+> -					if (stid->sc_status =3D=3D 0) {
+> -						stid->sc_status |=3D
+> -							SC_STATUS_ADMIN_REVOKED;
+> -						atomic_inc(&clp->cl_admin_revoked);
+> -						spin_unlock(&clp->cl_lock);
+> -						release_all_access(stp);
+> -					} else
+> -						spin_unlock(&clp->cl_lock);
+> -					mutex_unlock(&stp->st_mutex);
+> -					break;
+> -				case SC_TYPE_LOCK:
+> -					stp =3D openlockstateid(stid);
+> -					mutex_lock_nested(&stp->st_mutex,
+> -							  LOCK_STATEID_MUTEX);
+> -					spin_lock(&clp->cl_lock);
+> -					if (stid->sc_status =3D=3D 0) {
+> -						struct nfs4_lockowner *lo =3D
+> -							lockowner(stp->st_stateowner);
+> -						struct nfsd_file *nf;
+> -
+> -						stid->sc_status |=3D
+> -							SC_STATUS_ADMIN_REVOKED;
+> -						atomic_inc(&clp->cl_admin_revoked);
+> -						spin_unlock(&clp->cl_lock);
+> -						nf =3D find_any_file(stp->st_stid.sc_file);
+> -						if (nf) {
+> -							get_file(nf->nf_file);
+> -							filp_close(nf->nf_file,
+> -								   (fl_owner_t)lo);
+> -							nfsd_file_put(nf);
+> -						}
+> -						release_all_access(stp);
+> -					} else
+> -						spin_unlock(&clp->cl_lock);
+> -					mutex_unlock(&stp->st_mutex);
+> -					break;
+> -				case SC_TYPE_DELEG:
+> -					refcount_inc(&stid->sc_count);
+> -					dp =3D delegstateid(stid);
+> -					spin_lock(&state_lock);
+> -					if (!unhash_delegation_locked(
+> -						    dp, SC_STATUS_ADMIN_REVOKED))
+> -						dp =3D NULL;
+> -					spin_unlock(&state_lock);
+> -					if (dp)
+> -						revoke_delegation(dp);
+> -					break;
+> -				case SC_TYPE_LAYOUT:
+> -					ls =3D layoutstateid(stid);
+> -					nfsd4_close_layout(ls);
+> -					break;
+> -				}
+> +				revoke_one_stid(clp, stid);
+>  				nfs4_put_stid(stid);
+>  				spin_lock(&nn->client_lock);
+>  				if (clp->cl_minorversion =3D=3D 0)
 
-After NFSv4 state revocation, GC-managed entries in the
-nfsd_file cache can still pin a filesystem and prevent unmount. Add
-nfsd_file_close_export() to close cached files scoped to a specific
-export subtree, matching the granularity of
-nfsd4_revoke_export_states().
+Much nicer anyway.
 
-nfsd_file_close_export() walks the nfsd_file rhashtable and
-disposes GC-managed entries whose backing file resides on the
-target superblock and under the export root dentry. When the export
-root is the filesystem root, the is_subdir() check is elided.
-
-nfsd_nl_unlock_by_filesystem() calls nfsd_file_close_export() after
-state revocation to release any remaining file cache references.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/filecache.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/filecache.h |  1 +
- fs/nfsd/nfsctl.c    |  6 ++++--
- 3 files changed, 50 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index cd09be0c5465..0944019ef645 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -926,6 +926,51 @@ bool nfsd_file_inode_is_in_subtree(struct inode *inode,
- 	return found;
- }
- 
-+/**
-+ * nfsd_file_close_export - close cached files for an export
-+ * @sb:           super_block of the export's filesystem
-+ * @root_dentry:  dentry of the export root directory
-+ *
-+ * Walk the nfsd_file cache and close GC-managed entries whose files
-+ * reside under @root_dentry on @sb.  When @root_dentry is the
-+ * filesystem root, all GC-managed entries on @sb are closed.
-+ *
-+ * Non-GC entries are opened by NFSv4, which closes them explicitly
-+ * via CLOSE or state revocation; they require no cache-level flush.
-+ */
-+void nfsd_file_close_export(struct super_block *sb, struct dentry *root_dentry)
-+{
-+	struct rhashtable_iter iter;
-+	struct nfsd_file *nf;
-+	LIST_HEAD(dispose);
-+
-+	lockdep_assert_held(&nfsd_mutex);
-+	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) == 0)
-+		return;
-+
-+	rhltable_walk_enter(&nfsd_file_rhltable, &iter);
-+	do {
-+		rhashtable_walk_start(&iter);
-+
-+		nf = rhashtable_walk_next(&iter);
-+		while (!IS_ERR_OR_NULL(nf)) {
-+			if (test_bit(NFSD_FILE_GC, &nf->nf_flags) &&
-+			    nf->nf_file &&
-+			    file_inode(nf->nf_file)->i_sb == sb &&
-+			    (root_dentry == sb->s_root ||
-+			     nfsd_file_inode_is_in_subtree(
-+				file_inode(nf->nf_file), root_dentry)))
-+				nfsd_file_cond_queue(nf, &dispose);
-+			nf = rhashtable_walk_next(&iter);
-+		}
-+
-+		rhashtable_walk_stop(&iter);
-+	} while (nf == ERR_PTR(-EAGAIN));
-+	rhashtable_walk_exit(&iter);
-+
-+	nfsd_file_dispose_list(&dispose);
-+}
-+
- static struct nfsd_fcache_disposal *
- nfsd_alloc_fcache_disposal(void)
- {
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index 36c9a8e388d2..c324f85b495f 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -71,6 +71,7 @@ struct nfsd_file *nfsd_file_get(struct nfsd_file *nf);
- struct file *nfsd_file_file(struct nfsd_file *nf);
- void nfsd_file_close_inode_sync(struct inode *inode);
- bool nfsd_file_inode_is_in_subtree(struct inode *inode, struct dentry *root_dentry);
-+void nfsd_file_close_export(struct super_block *sb, struct dentry *root_dentry);
- void nfsd_file_net_dispose(struct nfsd_net *nn);
- bool nfsd_file_is_cached(struct inode *inode);
- __be32 nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index d9c61c939059..55392f2d7882 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2206,11 +2206,13 @@ static int nfsd_nl_unlock_by_filesystem(struct genl_info *info)
- 	error = nlmsvc_unlock_all_by_sb(path.dentry->d_sb);
- 
- 	mutex_lock(&nfsd_mutex);
--	if (nn->nfsd_serv)
-+	if (nn->nfsd_serv) {
- 		nfsd4_revoke_export_states(nn, path.dentry->d_sb,
- 					   path.dentry);
--	else
-+		nfsd_file_close_export(path.dentry->d_sb, path.dentry);
-+	} else {
- 		error = -EINVAL;
-+	}
- 	mutex_unlock(&nfsd_mutex);
- 
- 	path_put(&path);
-
--- 
-2.53.0
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
