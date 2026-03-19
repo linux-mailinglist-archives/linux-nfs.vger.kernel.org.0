@@ -1,338 +1,538 @@
-Return-Path: <linux-nfs+bounces-20281-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20282-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8OA5BOg+vGn6vgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20281-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2026 19:22:32 +0100
+	id 4P3NIUBEvGmAwAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20282-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2026 19:45:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA972D0BF7
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2026 19:22:31 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EE102D13AB
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2026 19:45:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EFF52300B185
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2026 18:22:30 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 72500300D343
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Mar 2026 18:45:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B4A3ED12E;
-	Thu, 19 Mar 2026 18:22:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E70335063;
+	Thu, 19 Mar 2026 18:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdaJKv0k"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XHtOBDCX";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="oKhtrbVR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC72A38D685;
-	Thu, 19 Mar 2026 18:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773944548; cv=none; b=DMWtt15W4o5dHoJoHWKxCJFNB9RnYOgEPRkUHDjo2ssTwF6f640wl8eInd83lLhT07PA/AYXIMORroh4XvMz8JlLsIs+N2TNHACqjGczlMqzFi54hMrsfgq5dBjiczYpPAFMymmdEIdQXJxHMSK4LH0RVkYr2ccZaBcqdYfaF84=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773944548; c=relaxed/simple;
-	bh=Xc/xBoq/UjF0S/fSdiqUyiKLDJSNLSpMj78/1XWgJYI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ClFoDlC7tTpGi7hyzWf+z/JJaZPQhz0omzKLheQw6eIr7SCHR/vtAdjdDIwsh4ShJSvXjy1JJw4q+viyyhOBLCXmqF/8/UIcAVgcmiUYfp1h/bJsyN7PzgpL5YJxpoWkKaCkgHIex7EkfzbO3lAaYhkMbB3GG7yLRhq/iu6MceI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdaJKv0k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A9DC19424;
-	Thu, 19 Mar 2026 18:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773944548;
-	bh=Xc/xBoq/UjF0S/fSdiqUyiKLDJSNLSpMj78/1XWgJYI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SdaJKv0kJ4Nxclf8wb6Hahoalxxg2n5XMKnxyWFuLaCHczhxDBgmqpbVywdRlp/2d
-	 8rsrvYftvaEshcGeMxMET2sMX+nDdPF5bIR1/Am5Y8HlanEqm6fNkxxzYuY65ETp0Q
-	 UkKA6K4rbxRak/xY855GyFhJxBC0Dnp3xlB/4Ixaly5GQ9JZFILjORvHR0kO1iYwO1
-	 +xLVNSmjXO3adS/y3N7sQNYzyM0WmBHObexq+HZG/iZy+qmFVjRcbA9088Qe1Uls9B
-	 TRNzq+wvCBa4a/JH1nrSNIkZhOhqL8hKdjEdMGMlO43XzDo5Ce902zPwVDLeGhfzeq
-	 G2OLGKKVLFeHg==
-Message-ID: <579b0239abbbb0b95d619e6b400bb919fedab60d.camel@kernel.org>
-Subject: Re: [PATCH 06/14] sunrpc: add helpers to count and snapshot pending
- cache requests
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 19 Mar 2026 14:22:25 -0400
-In-Reply-To: <0908b7ac-658f-491b-89be-f5a1d97e991e@oracle.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391740DFDF;
+	Thu, 19 Mar 2026 18:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773945915; cv=fail; b=n4PUFYSbBwPwccpNOhAkUkDXCa6XViICdFlKuL7WjP1HhNABis1dMgAYNgZNov8SBp1FvtvbfRdh/QlAE721FmwxOChhhSNDgmrOv4i6sTCURIrPjMXK4j+vT3UmrRzL2C1OYNboZV5VtkMHaSe/5S3XuTlripx0nn61VHm1a1o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773945915; c=relaxed/simple;
+	bh=Yi2gHq4bt/NE+BNbND4Lk+ChVufvOZjG/UaYxuzS7/4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DDVyoKkUI5nGa21JH2N4NNCNYCvnlpkJ7RE7Y8M+GlIyJpjRygxNjdVqvI9sDk4YiIvePHYjmlONDgi1erwbaiNZ3sEB5Y/HAKxslhKuzRkoLnEAcFIyvCnxqtbLd7dyg7rjxomaRTQ64BhpKe3yZZpkyGlGUcFHKz00ArU3VV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XHtOBDCX; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=oKhtrbVR; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62JHSGYp2307286;
+	Thu, 19 Mar 2026 18:45:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=alE8W+QafkP1oBiyBivKUr4AQrDi6GgLlomlwkZAPnM=; b=
+	XHtOBDCX1pNx780+bdvddJEoYZTUi4V9JYzEj0Ub8hghpme8yFcn1Tn9iGfOj3wP
+	d2XX2llPtGvLloYscOJwRoyGh0ad0deGkXVeMh5GCAFVjkEZ9MMY9mS0nf8+xqlq
+	WuCd+yRk+L8qpRC9pkSlrZLhD1xkbHoSXxBno+duCY7bmLHcc8uIfhS4aLMjv3nI
+	7uQRzb0f5iyHkZF41cFj02ow8QRJL2ZbuNlRwmI/yd3giJRnO9cbDoXNF4qTEcFn
+	Uwv8/XRJvUb9PHoWuGYpYcehlVd5JDfytTt/Vt1sskeDFYkUM3mGpsdttGPw0WU0
+	+f6dL2tno8Z0kKWjKWGv6Q==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cvy9s0b5t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Mar 2026 18:45:07 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 62JHVHgS014043;
+	Thu, 19 Mar 2026 18:45:06 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011069.outbound.protection.outlook.com [52.101.52.69])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4cvx4d95kv-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Mar 2026 18:45:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EIOJ2CIFx+46KQKa1ieSqVKYn6HOZ5F9a+fA2gJmyYlamku7LoBIvyZdLKEbjL/XWAwOjb4+iKFdX+JUEXVfSkTcUwTQfmsZLeAAnqMbVss4GqinRjIDgjAEG+tsBfGqiw2GjsUBQdQvqLEPWLtKxrEaPvlK0nNxz155yI/b9hWfMot7z9FZqxlDyuu3fAQ4oIBZChSibuIJkGNav7yxfeNezEZMY2GLnbvJjUOZCP8K+kut5Wl0LLZ7SID669Kw0AlQBX4mUd8erUbUBKLsZWT2FqQzVjWyltjvutR3wiOA2pvYoZJP4NiLpmI+pTXc09GY/KK4F6bIVIos+f87+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=alE8W+QafkP1oBiyBivKUr4AQrDi6GgLlomlwkZAPnM=;
+ b=wLb5mr3mQ3sbDktdN4eaaEllk1khymNq4yv0wL5w35gnnCti13Af9uSQHKaqd0ijXGfw9fsw3n+qFBc0ZnJhqZ1vdD35o1nCl7rs0IY9XdIoH5X62UZHS74wVhG95f7JxFPaaMaHOEqCtlGFCO/Gb/sGhidGc0N6wh2n/8CIlPuRRIHlE7WUaBddZGF1PyEZ3JhNTnN4avR6ur9GO9V/TXt1S60+02q/4hMfdXtBpHgMxduAKed7VCSOEkklX5CUEC7dlFDoekt9q0QsgdkxQCfLymQ5GMCbtBzOd+PvGPEtpcYUFQKqUrhtQ3B4qIaJcLpsN+KrFpGoneJkBVZuQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=alE8W+QafkP1oBiyBivKUr4AQrDi6GgLlomlwkZAPnM=;
+ b=oKhtrbVRCMzz6lTT6YM2KTMGUnLzEp3jWnf5Vgmk45CMI0XGkzTpZwsew1vKICDvXPc4c/bps4xs9vBVILN5KFYLP0cOpmTP6wm8qwlK1K4ukFD4UGZGm1X/EwjFjsSiWisGzzFJFOwen+3PYBt71bZ2FsZiTsR3zTAdckuGnEc=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH0PR10MB5081.namprd10.prod.outlook.com (2603:10b6:610:c2::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Thu, 19 Mar
+ 2026 18:45:01 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::4083:91ab:47a4:f244]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::4083:91ab:47a4:f244%4]) with mapi id 15.20.9723.019; Thu, 19 Mar 2026
+ 18:45:01 +0000
+Message-ID: <e527b377-028f-4074-850f-5ec97c5048e6@oracle.com>
+Date: Thu, 19 Mar 2026 14:44:59 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/14] sunrpc: add a generic netlink family for cache
+ upcalls
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260316-exportd-netlink-v1-0-6125dc62b955@kernel.org>
-	 <20260316-exportd-netlink-v1-6-6125dc62b955@kernel.org>
-	 <0908b7ac-658f-491b-89be-f5a1d97e991e@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+ <20260316-exportd-netlink-v1-7-6125dc62b955@kernel.org>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20260316-exportd-netlink-v1-7-6125dc62b955@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0067.namprd03.prod.outlook.com
+ (2603:10b6:610:cc::12) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH0PR10MB5081:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4d9e04a-ad41-45c0-0d32-08de85e7a0a0
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|56012099003|18002099003|7053199007|22082099003;
+X-Microsoft-Antispam-Message-Info:
+ mouWTwHRGS6+RSQwyE5qTSeI6tg8fVBxlz3g+ABo8diFGG+l8LgUK3n6O4Mr79bR9pUpk2iHUJeRrqUOFGQ7TXJASZnMfXLX92wnnUN+GrOZpWGJonPTYr4F3GKhMJbM3OVpqXzZm7ST2X3g9nGUSHmBIipMtupJ1zNI5BIxlp16EdPQ+gazYYPO8NUJSyJDRIuiAOPWv/Evk0zr294taZKbiqazx29OxCyAKEpEurLsIg8qejK3Iy46oLoBCCZIdZDcRFc/a/FKFFiZsTMFOU44G2iiYfp4CdxpBsI/v7fVBWFpMsMXDAjp3NNjjAwyzuZ8kw91PUo4EiJkjnmsNyJnNkc7ZrFO1jA/iTVeelXb+YdjsDAom6r/taz6wGtXCJeLHVIm4y6+bR9wyPZXTKLq9l0zdY776JGBK+9M01jfBCWet8aHRpluQSkqow9jY3K6kT1BBPD9EvvtbsErvPLn/tT2XAEODMoyQ0U2plh+PYo3tpWNUSKawrDwLofwHsLeZuOqfA48sRsZyHYAkxUbRIWIWC5nBwvQIBIMZ4lj2YOVN+aXDah22wMA4F+RbhRaYAJkb6wqN+Iub/kerdMrppv2DGt5PDJJDbaS7dSJ0FMFlsgFVRXWXEONOaoQqhkqvzKkQnUwqCTq1dK71zWXzLfHHp+3Qd2I7MjzagHBA3W7DCydkSHvQSgWH27DS9nhhWE+D8swIN6jHdmnlDaqRgyNj3Xs3Sl+p9vXtGU=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(56012099003)(18002099003)(7053199007)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?WjRhdXpFRmJRdTRlWXVPUFBCNDFGeE5HNHJKM0VnQnpoTUU0SVpYbE1tM3p5?=
+ =?utf-8?B?dmZzUFRoUWlDSWtkZTc3c21URldFSXI5OHYvbWtZNHVEcXBnOE15UmxiUW5Y?=
+ =?utf-8?B?dG1HVEk0bkZxMHNBOVZxUk5qQXVibXBJRmlTQ2xuUWloQmowaUppM0RLTFJu?=
+ =?utf-8?B?Mmp3L2F2eGV0elpnMkZEaTUxZlF5UmZhYUNzaGZ4bFBEY0VSc0JpWUJ2QXM4?=
+ =?utf-8?B?MnBSd001S1Z0VFpENW16NHJSbUVBRE9VbCtLVlBZb1NyU0djZ2F0dU9DVU5s?=
+ =?utf-8?B?NGlQekhscXE1Ulh5S3I3L2VOYlJGYlJVTk95SUpqUlNTZmFxTU9GYlFHdzBG?=
+ =?utf-8?B?YktrNkhKTTAzVEtjTnlFYUlTTmREZWhHbDEzMnl5elFKWkRtR3Z4dzZUVWFp?=
+ =?utf-8?B?MFZGZ3dkWnRtNWpOWUg2WUt2Wm1zMFhhNVN4b09zUXJSZWhCN2hKU2o2SUY1?=
+ =?utf-8?B?Z01ab3k3dGtGMm5BZFc1UVVRKyttaGR3YVpFMkNDY0hKR0hSNU1VdUROYmhK?=
+ =?utf-8?B?VEFCWmRiLzhtWmE5KzZ2MG02RUlsd3NuY2ZEZ0ViWStUMGhPelVaQS95dDEr?=
+ =?utf-8?B?ZUdtUnk4MG1KdGpkdUZEWk8vbDlSYm9ZNDJwcy9ZNjBkOU9LcHRBQTg4Rzh5?=
+ =?utf-8?B?OG5uNzJtVHRFRU5CS1JjYVNqc0VmU3NQWkJqdW1IemxoTU44KzVSWVM1ZkZS?=
+ =?utf-8?B?aTcrN2FqN29nYklFd3djVzV6RHQxOEU3MEhjMldXRzZURk1xaXpuOTR6c2Yw?=
+ =?utf-8?B?V3UxaGM4VWRGYlplL2NvMlh4TktEeHlaaU9oSHZ6c2JDL29vVXlUK1NWeDcz?=
+ =?utf-8?B?K1FDNXRkdW5wVW5MTDJBVU1GVEZoNGsrQTNSZzVFM3hheGwwTnRPMTVFbXph?=
+ =?utf-8?B?aUIwR1BNM3Zod3NXNmk2Ny9DUnNTcGREcVkydXArYklieUF6ekhBTU1iR0Zs?=
+ =?utf-8?B?SUtVQWoyb1hJOXV0SHVYMXIyak4wRTdhS2t6TjRoNkIxcldFRzZlcU9XalZm?=
+ =?utf-8?B?eVVuSDJmRzFyR0s1djlkdkpaa0RwS2w1T25MU09DTXNJalRoMFN4bjdwcVZx?=
+ =?utf-8?B?RGlIcVkrU25UUE16Ym1oRVBOMmk0bzBBc0hkajhQNzA1M0ZOL3RwdU1jaE5Q?=
+ =?utf-8?B?MWc3bm95SUhRTWtTNlZKaWxtU1RUVTZody9Bdnh0T0tPMmw5cjQrNVJwNjM3?=
+ =?utf-8?B?bkRnNzFDRk9yNHE1dU5sUTExVUJaa1RoRTZ6SjVsRnRmWko1WjlpeUNMMHJ2?=
+ =?utf-8?B?MnpWc290RTFnbTNLZklMWUlKNDdrdm1pZjZzNEJoNEZ2TW4vODZ6NWZNY3hU?=
+ =?utf-8?B?c0FVTXVRbmtrTEc3dStLOVkwb09OMTFQcjJQM05wYkZjTHlxN0lxMW5HME95?=
+ =?utf-8?B?Y0swa096SHBHR0dkenVTa0tFTThNUk03MjI1VjJZMEZFaEQzcW1uNlFvVGFS?=
+ =?utf-8?B?dWZFNmRUWUhEQmM3UTZ4ZzlWK0V2eVZ5THZ4VUhjOGZzNVVsWTNCTzZXczlt?=
+ =?utf-8?B?eWxkdEFNN2RKVFFGRzZYTmgzSU9uM3dSblprUEErTWtITHYwbU5jS0FuQ0sz?=
+ =?utf-8?B?WEY0TisyMHlsdWlNR1RFTkpFd3dhYWV2czF6ajFEZDFxemR3S3JRT3o2WGFW?=
+ =?utf-8?B?eks1VDhNSDRrZ0lxYU94ZmF5YXlwcElIQ1FtS3poOEpOenJYNzJzRHdmZnJ2?=
+ =?utf-8?B?cHlpMXU4T1lWMEVXUUFpN2FTYTFpaS9XSzV4SHg0QXhSZHFXT1Uzbno0M3E3?=
+ =?utf-8?B?VW9GMTZOUkxSMlJrR3ZzK214T05BbjNVMGFoZXFLZGh1a2YyZDdnVzdUeWd6?=
+ =?utf-8?B?Q3R6VnQ0MG5GK0l1a0VrcHZYNTBsTis3WVdCOVNzL01qbUIzU2Q4MXYzaW96?=
+ =?utf-8?B?QUFGRXB6WGZkV3ZEaXVpT2tiZzZrQTh3YlRRb0ZVMHZrK1ZHT0lvS3Bxb3VN?=
+ =?utf-8?B?WnAzRndCV0ZySi9mVmpGVURBR3ZhNDVpNHdLb0Zsb2RjUFNyakVRMHVTeks1?=
+ =?utf-8?B?czBQZmsrS2x4YTdiUjAxUVJKY3hNcExCUit5QzRBUnZ6OEFSQ0tOOVdaZld4?=
+ =?utf-8?B?S0d5QjFSNTN1clFjdUNzRTdtcTlNd2VXdjd2UlFjWjRMeXFGMVZyaGduU0oy?=
+ =?utf-8?B?U1c3NkFxVTVNTU1PcDhOaGk1bnhwcDIwQXU0dFFnREZwNlM4MHBNK2FXc0lS?=
+ =?utf-8?B?cEF4SHZnY3BSQkdUaHdjc2YyRjBNTVJvQmEzQXljRUVGYjJoTnZtZ1djaHlp?=
+ =?utf-8?B?Qk15TnBuaDdrdExaTEhVUkNMMFdyczFWVG5nRmovZTZMR0FheXQ4SlZSdDVV?=
+ =?utf-8?B?VU1nK1V2RTh5Mzdrd0tLTGpFMFlTVmxRQVllMDcwYmc4b203TU05UT09?=
+X-Exchange-RoutingPolicyChecked:
+	XOjyoUInSkNRsf9/ytnty++TWuxThblLDlRTRgR2l9Jb8RFj/+AWhLuGKEe41vxDmPv2LgEKZOIBoVH72IzziXpaoRzrI/rSBZMRv/s8QFZTSZrI1ZFDYZgzG++WbikNlNd8KFDsR6TLiCrFvlaIjq3AHOeqYak000tHAku73g5PF26QpL4PLPGbQE1ccoPBHhyB2cxXOQM7hZ4NBiBnkJnPZp7iVn+6AmqkT37bYWJ/mMo6cs07CvRtQ6pE+B+z1eRHYNuZNpFx1pM6k3OaSBffXnuCvJ0fFu2yuNn2DG2pVBFugufKfMVq2FUFi4j4LKqB4jQbA+1tzf6n981qAA==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	05ulPuouVNadJYURR763yI6a/YaXIvUeXPFAh5wKSB+TW3RTB1K7Fpv6CHnrC9cSxvqi5MnF43vYmqK1TOPlN88MANuIluscz2CDFjP7KBBLaIavTxSaSywZfhiAxb1ZllxsJDvZ4vvFsQaezcnR61PZnKG1lKgkFjaTHvwBFLApyaGB7JEaE2z6oTqJRlW2VlGbsDDb/nR6HFyh/PWiONDXMkcd7hN2+Ilq4CoilQrrWe5LKNHpDLzhqGVLIG7ia4Ro7+wlKhaVUWmaR0iMfB/XgmJ/RTiT13l6nbJS9XG4IKU/AC8JhSlAZvmYDoxdv3vFaCHTrNLvoDrPO07cDVceBBcl8yh8xB9VDdZPGqio+Al2vESl8NwXnquIdjDFw2P3hCXijtRbfzL77hRmm4e1d1iULxzHjvKLZu1b+lWQ42L7T4DAzE2vkA3Nyl0c0LOecBkTBGtwyP6m0/JD774Q+x6qRpSdwhS9QGwgjzf9pspvcEo6uxlBGjbUyunZHguZRjcUXPlR2zb28yjMO8g5lWcS3w78MLQ3mGkeajXixPZbHoKT4IO/QSDXyxzIvJB1NXi0/gXhQsxvbm941SC3ocNpOaTplk0S9pEvdjA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4d9e04a-ad41-45c0-0d32-08de85e7a0a0
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2026 18:45:01.4142
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wx9qE+4fcFh49BHX8zFeRlDj11Kg/3b74LgdDTsLh1WLtjLcdhB5izEl1daacCcmGaSxSBVC0laGTlqaEWrrMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5081
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-19_03,2026-03-19_05,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 bulkscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2603050001
+ definitions=main-2603190150
+X-Authority-Analysis: v=2.4 cv=X5Vf6WTe c=1 sm=1 tr=0 ts=69bc4433 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=jiCTI4zE5U7BLdzWsZGv:22 a=3I1J8UUJPc9JN9BFgKH3:22 a=VwQbUJbxAAAA:8
+ a=fcBPgAWQy6f62UrYKpsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDE1MCBTYWx0ZWRfX5q0X7lw/Dw9p
+ M8nHgncvW+pYTWNkOALtOUont79wt15eLcxkG0SZ95Hw0etzJ8XRsJkWuLdqX+1jVoKDik1YtIr
+ M+8kegUOIGknBD4n4lRu9bOcdrIi70uxi/jUT0N7221VVS9WXnZ9hn54aktzIuuKaMKKLNF0Yvd
+ aZs1jNYZlORMdcGlbPHhjJs76dxu8Rozikn1uL1rcy/WhUxfla8nCxR9P1J28Y+XHP/EfRi2C4e
+ q2lcp8Y7N6/NtFKAkwrhrcvsoLnOaN4ggUEw7sODL8RIgXuTsB+yunIKobtqN0cRaefxdxYzXAP
+ iYaqknvXq+QUnUdbGqcEMLMyiRaFM6diMT7ovDAfkL2Q15Xo85zblIXxmPyx9w0sueyJXcdZFrj
+ v2z5THpw8OcJ3rZ7WFsGeIp/LSIHUsKdYkGruHSMbW7K2llPlE9LrxnUahEjTiHgRhBz52d2MtY
+ HC3+rZfvNtMJ8RRszCw==
+X-Proofpoint-GUID: jAByZT0-3Fb2gizo0Suc0h8N7glsWOqq
+X-Proofpoint-ORIG-GUID: jAByZT0-3Fb2gizo0Suc0h8N7glsWOqq
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20281-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20282-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oracle.onmicrosoft.com:dkim,oracle.com:dkim,oracle.com:mid];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[chuck.lever@oracle.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ABA972D0BF7
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 2EE102D13AB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 2026-03-19 at 14:07 -0400, Chuck Lever wrote:
-> On 3/16/26 11:14 AM, Jeff Layton wrote:
-> > Add sunrpc_cache_requests_count() and sunrpc_cache_requests_snapshot()
-> > to allow callers to count and snapshot the pending upcall request list
-> > without exposing struct cache_request outside of cache.c.
-> >=20
-> > Both functions skip entries that no longer have CACHE_PENDING set.
-> >=20
-> > The snapshot function takes a cache_get() reference on each item so the
-> > caller can safely use them after the queue_lock is released.
-> >=20
-> > These will be used by the nfsd generic netlink dumpit handler for
-> > svc_export upcall requests.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  include/linux/sunrpc/cache.h |  5 ++++
-> >  net/sunrpc/cache.c           | 57 ++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  2 files changed, 62 insertions(+)
-> >=20
-> > diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.=
-h
-> > index c358151c23950ab48e83991c6138bb7d0e049ace..343f0fb675d761e019989e4=
-7e03645484e0aa30f 100644
-> > --- a/include/linux/sunrpc/cache.h
-> > +++ b/include/linux/sunrpc/cache.h
-> > @@ -251,6 +251,11 @@ extern int sunrpc_cache_register_pipefs(struct den=
-try *parent, const char *,
-> >  extern void sunrpc_cache_unregister_pipefs(struct cache_detail *);
-> >  extern void sunrpc_cache_unhash(struct cache_detail *, struct cache_he=
-ad *);
-> > =20
-> > +int sunrpc_cache_requests_count(struct cache_detail *cd);
-> > +int sunrpc_cache_requests_snapshot(struct cache_detail *cd,
-> > +				   struct cache_head **items,
-> > +				   u64 *seqnos, int max);
-> > +
-> >  /* Must store cache_detail in seq_file->private if using next three fu=
-nctions */
-> >  extern void *cache_seq_start_rcu(struct seq_file *file, loff_t *pos);
-> >  extern void *cache_seq_next_rcu(struct seq_file *file, void *p, loff_t=
- *pos);
-> > diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> > index 819f12add8f26562fdc6aaa200f55dec0180bfbc..2a78560edee5ca07be0fce9=
-0f87ce43a19df245f 100644
-> > --- a/net/sunrpc/cache.c
-> > +++ b/net/sunrpc/cache.c
-> > @@ -1906,3 +1906,60 @@ void sunrpc_cache_unhash(struct cache_detail *cd=
-, struct cache_head *h)
-> >  		spin_unlock(&cd->hash_lock);
-> >  }
-> >  EXPORT_SYMBOL_GPL(sunrpc_cache_unhash);
-> > +
-> > +/**
-> > + * sunrpc_cache_requests_count - count pending upcall requests
-> > + * @cd: cache_detail to query
-> > + *
-> > + * Returns the number of requests on the cache's request list that
-> > + * still have CACHE_PENDING set.
-> > + */
-> > +int sunrpc_cache_requests_count(struct cache_detail *cd)
-> > +{
-> > +	struct cache_request *crq;
-> > +	int cnt =3D 0;
-> > +
-> > +	spin_lock(&cd->queue_lock);
-> > +	list_for_each_entry(crq, &cd->requests, list) {
-> > +		if (test_bit(CACHE_PENDING, &crq->item->flags))
-> > +			cnt++;
-> > +	}
-> > +	spin_unlock(&cd->queue_lock);
-> > +	return cnt;
-> > +}
-> > +EXPORT_SYMBOL_GPL(sunrpc_cache_requests_count);
-> > +
-> > +/**
-> > + * sunrpc_cache_requests_snapshot - snapshot pending upcall requests
-> > + * @cd: cache_detail to query
-> > + * @items: array to fill with cache_head pointers (caller-allocated)
-> > + * @seqnos: array to fill with sequence numbers (caller-allocated)
-> > + * @max: size of the arrays
-> > + *
-> > + * Only entries with CACHE_PENDING set are included. Takes a reference
-> > + * on each cache_head via cache_get(). Caller must call cache_put()
-> > + * on each returned item when done.
-> > + *
-> > + * Returns the number of entries filled.
-> > + */
-> > +int sunrpc_cache_requests_snapshot(struct cache_detail *cd,
-> > +				   struct cache_head **items,
-> > +				   u64 *seqnos, int max)
-> > +{
-> > +	struct cache_request *crq;
-> > +	int i =3D 0;
-> > +
-> > +	spin_lock(&cd->queue_lock);
-> > +	list_for_each_entry(crq, &cd->requests, list) {
-> > +		if (i >=3D max)
-> > +			break;
-> > +		if (!test_bit(CACHE_PENDING, &crq->item->flags))
-> > +			continue;
-> > +		items[i] =3D cache_get(crq->item);
-> > +		seqnos[i] =3D crq->seqno;
-> > +		i++;
-> > +	}
-> > +	spin_unlock(&cd->queue_lock);
-> > +	return i;
-> > +}
-> > +EXPORT_SYMBOL_GPL(sunrpc_cache_requests_snapshot);
-> >=20
->=20
-> This API architecture introduces a TOCTOU, since as soon as the
-> queue_lock is dropped, the count can immediately become stale.
->=20
-> The count returned by sunrpc_cache_requests_count() is used as the array
-> bound. To wit:
->=20
->   cnt =3D sunrpc_cache_requests_count(cd);
->=20
->   items =3D kcalloc(cnt, sizeof(*items), GFP_KERNEL);
->=20
->   seqnos =3D kcalloc(cnt, sizeof(*seqnos), GFP_KERNEL);
->=20
->   cnt =3D sunrpc_cache_requests_snapshot(cd, items, seqnos, cnt);
->=20
->=20
->=20
-> This appears in all four dumpit handlers (ip_map, unix_gid, svc_export,
-> expkey).
->=20
-> This isn't a memory safety issue; _snapshot() caps its output at max, so
-> if the list grows between the two calls, entries are silently truncated
-> rather than overflowing the buffer. If the list shrinks, the arrays are
-> merely oversized.
->=20
-> However, the practical risk is incomplete data returned to userspace. If
-> the caller is guaranteed to be re-invoked (e.g., the netlink dumpit
-> callback gets called again until it returns 0), then missing items due
-> to list growth between count() and snapshot() is harmless: they'll be
-> picked up on the next pass.
->=20
-> But looking at the callers, they all do this:
->=20
->   if (cb->args[0])
->       return 0;
->=20
-> and then set cb->args[0] after the single snapshot dump.
->=20
-> The dumpit is a one-shot: it snapshots once and signals completion. If
-> the list grows between count() and snapshot(), the truncated entries are
-> silently lost and there's no subsequent pass to pick them up, IIUC.
->=20
+On 3/16/26 11:14 AM, Jeff Layton wrote:
+> The auth.unix.ip and auth.unix.gid caches live in the sunrpc module,
+> so they cannot use the nfsd generic netlink family. Create a new
+> "sunrpc" generic netlink family with its own "exportd" multicast
+> group to support cache upcall notifications for sunrpc-resident
+> caches.
+> 
+> Define a YAML spec (sunrpc_cache.yaml) with a cache-type enum
+> (ip_map, unix_gid), a cache-notify multicast event, and the
+> corresponding uapi header.
+> 
+> Implement sunrpc_cache_notify() which mirrors the nfsd_cache_notify()
+> pattern: check for listeners on the exportd multicast group, build
+> and send SUNRPC_CMD_CACHE_NOTIFY with the cache-type attribute.
+> 
+> Register/unregister the sunrpc_nl_family in init_sunrpc() and
+> cleanup_sunrpc().
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  Documentation/netlink/specs/sunrpc_cache.yaml | 40 ++++++++++++++++
+>  fs/nfsd/netlink.c                             |  2 +-
+>  include/uapi/linux/sunrpc_netlink.h           | 35 ++++++++++++++
+>  net/sunrpc/Makefile                           |  2 +-
+>  net/sunrpc/netlink.c                          | 66 +++++++++++++++++++++++++++
+>  net/sunrpc/netlink.h                          | 25 ++++++++++
+>  net/sunrpc/sunrpc_syms.c                      | 10 ++++
+>  7 files changed, 178 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/netlink/specs/sunrpc_cache.yaml b/Documentation/netlink/specs/sunrpc_cache.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f4aa699598bca9ce0215bbc418d9ddcae25c0110
+> --- /dev/null
+> +++ b/Documentation/netlink/specs/sunrpc_cache.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
+> +---
+> +name: sunrpc
+> +protocol: genetlink
+> +uapi-header: linux/sunrpc_netlink.h
+> +
+> +doc: SUNRPC cache upcall support over generic netlink.
+> +
+> +definitions:
+> +  -
+> +    type: flags
+> +    name: cache-type
+> +    entries: [ip_map, unix_gid]
+> +
+> +attribute-sets:
+> +  -
+> +    name: cache-notify
+> +    attributes:
+> +      -
+> +        name: cache-type
+> +        type: u32
+> +        enum: cache-type
+> +
+> +operations:
+> +  list:
+> +    -
+> +      name: cache-notify
+> +      doc: Notification that there are cache requests that need servicing
+> +      attribute-set: cache-notify
+> +      mcgrp: exportd
+> +      event:
+> +        attributes:
+> +          - cache-type
+> +
+> +mcast-groups:
+> +  list:
+> +    -
+> +      name: none
+> +    -
+> +      name: exportd
+> diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+> index 4e08c1a6b3943cda5b44c2b64bcf3a00173a08db..81c943345d13db849483bf0d6773458115ff0134 100644
+> --- a/fs/nfsd/netlink.c
+> +++ b/fs/nfsd/netlink.c
+> @@ -59,7 +59,7 @@ static const struct genl_split_ops nfsd_nl_ops[] = {
+>  		.cmd		= NFSD_CMD_THREADS_SET,
+>  		.doit		= nfsd_nl_threads_set_doit,
+>  		.policy		= nfsd_threads_set_nl_policy,
+> -		.maxattr	= NFSD_A_SERVER_MAX,
+> +		.maxattr	= NFSD_A_SERVER_FH_KEY,
+>  		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+>  	},
+>  	{
+> diff --git a/include/uapi/linux/sunrpc_netlink.h b/include/uapi/linux/sunrpc_netlink.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..6135d9b3eef155a9192d9710c8c690283ec49073
+> --- /dev/null
+> +++ b/include/uapi/linux/sunrpc_netlink.h
+> @@ -0,0 +1,35 @@
+> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
+> +/* Do not edit directly, auto-generated from: */
+> +/*	Documentation/netlink/specs/sunrpc_cache.yaml */
+> +/* YNL-GEN uapi header */
+> +/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+> +
+> +#ifndef _UAPI_LINUX_SUNRPC_NETLINK_H
+> +#define _UAPI_LINUX_SUNRPC_NETLINK_H
+> +
+> +#define SUNRPC_FAMILY_NAME	"sunrpc"
+> +#define SUNRPC_FAMILY_VERSION	1
+> +
+> +enum sunrpc_cache_type {
+> +	SUNRPC_CACHE_TYPE_IP_MAP = 1,
+> +	SUNRPC_CACHE_TYPE_UNIX_GID = 2,
+> +};
+> +
+> +enum {
+> +	SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE = 1,
+> +
+> +	__SUNRPC_A_CACHE_NOTIFY_MAX,
+> +	SUNRPC_A_CACHE_NOTIFY_MAX = (__SUNRPC_A_CACHE_NOTIFY_MAX - 1)
+> +};
+> +
+> +enum {
+> +	SUNRPC_CMD_CACHE_NOTIFY = 1,
+> +
+> +	__SUNRPC_CMD_MAX,
+> +	SUNRPC_CMD_MAX = (__SUNRPC_CMD_MAX - 1)
+> +};
+> +
+> +#define SUNRPC_MCGRP_NONE	"none"
+> +#define SUNRPC_MCGRP_EXPORTD	"exportd"
+> +
+> +#endif /* _UAPI_LINUX_SUNRPC_NETLINK_H */
+> diff --git a/net/sunrpc/Makefile b/net/sunrpc/Makefile
+> index f89c10fe7e6acc71d47273200d85425a2891a08a..96727df3aa85435a2de63a8483eab9d75d5b3495 100644
+> --- a/net/sunrpc/Makefile
+> +++ b/net/sunrpc/Makefile
+> @@ -14,7 +14,7 @@ sunrpc-y := clnt.o xprt.o socklib.o xprtsock.o sched.o \
+>  	    addr.o rpcb_clnt.o timer.o xdr.o \
+>  	    sunrpc_syms.o cache.o rpc_pipe.o sysfs.o \
+>  	    svc_xprt.o \
+> -	    xprtmultipath.o
+> +	    xprtmultipath.o netlink.o
+>  sunrpc-$(CONFIG_SUNRPC_DEBUG) += debugfs.o
+>  sunrpc-$(CONFIG_SUNRPC_BACKCHANNEL) += backchannel_rqst.o
+>  sunrpc-$(CONFIG_PROC_FS) += stats.o
+> diff --git a/net/sunrpc/netlink.c b/net/sunrpc/netlink.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e59ee82dfab358fc367045d9f04c394000c812ec
+> --- /dev/null
+> +++ b/net/sunrpc/netlink.c
+> @@ -0,0 +1,66 @@
+> +// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
+> +/* Do not edit directly, auto-generated from: */
+> +/*	Documentation/netlink/specs/sunrpc_cache.yaml */
+> +/* YNL-GEN kernel source */
+> +/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+> +
+> +#include <net/netlink.h>
+> +#include <net/genetlink.h>
+> +#include <linux/sunrpc/cache.h>
+> +
+> +#include "netlink.h"
+> +
+> +#include <uapi/linux/sunrpc_netlink.h>
+> +
+> +/* Ops table for sunrpc */
+> +static const struct genl_split_ops sunrpc_nl_ops[] = {
+> +};
+> +
+> +static const struct genl_multicast_group sunrpc_nl_mcgrps[] = {
+> +	[SUNRPC_NLGRP_NONE] = { "none", },
+> +	[SUNRPC_NLGRP_EXPORTD] = { "exportd", },
+> +};
+> +
+> +struct genl_family sunrpc_nl_family __ro_after_init = {
+> +	.name		= SUNRPC_FAMILY_NAME,
+> +	.version	= SUNRPC_FAMILY_VERSION,
+> +	.netnsok	= true,
+> +	.parallel_ops	= true,
+> +	.module		= THIS_MODULE,
+> +	.split_ops	= sunrpc_nl_ops,
+> +	.n_split_ops	= ARRAY_SIZE(sunrpc_nl_ops),
+> +	.mcgrps		= sunrpc_nl_mcgrps,
+> +	.n_mcgrps	= ARRAY_SIZE(sunrpc_nl_mcgrps),
+> +};
+> +
+> +int sunrpc_cache_notify(struct cache_detail *cd, struct cache_head *h,
+> +			u32 cache_type)
+> +{
+> +	struct genlmsghdr *hdr;
+> +	struct sk_buff *msg;
+> +
+> +	if (!genl_has_listeners(&sunrpc_nl_family, cd->net,
+> +				SUNRPC_NLGRP_EXPORTD))
+> +		return -ENOLINK;
+> +
+> +	msg = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	hdr = genlmsg_put(msg, 0, 0, &sunrpc_nl_family, 0,
+> +			  SUNRPC_CMD_CACHE_NOTIFY);
+> +	if (!hdr) {
+> +		nlmsg_free(msg);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	if (nla_put_u32(msg, SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE, cache_type)) {
+> +		nlmsg_free(msg);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	genlmsg_end(msg, hdr);
+> +	return genlmsg_multicast_netns(&sunrpc_nl_family, cd->net, msg, 0,
+> +				       SUNRPC_NLGRP_EXPORTD, GFP_KERNEL);
+> +}
+> +EXPORT_SYMBOL_GPL(sunrpc_cache_notify);
 
-Userland will receive a separate notify request whenever a
-cache_request is queued, and that notification is only sent after the
-cache_request is queued.
+Is sunrpc_cache_notify() hand-written? If it is, can you find another
+initial landing place for it (I think it is moved out in a later patch)?
 
-So while it might not receive all of the queued requests from the
-kernel in the race you describe, it won't matter because select() will
-return the notify descriptor again on the next pass and mountd will
-pick up the remaining entries at that point.
---=20
-Jeff Layton <jlayton@kernel.org>
+
+> diff --git a/net/sunrpc/netlink.h b/net/sunrpc/netlink.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..efb05f87b89513fe738964a1b27637a09f9b88a9
+> --- /dev/null
+> +++ b/net/sunrpc/netlink.h
+> @@ -0,0 +1,25 @@
+> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
+> +/* Do not edit directly, auto-generated from: */
+> +/*	Documentation/netlink/specs/sunrpc_cache.yaml */
+> +/* YNL-GEN kernel header */
+> +/* To regenerate run: tools/net/ynl/ynl-regen.sh */
+> +
+> +#ifndef _LINUX_SUNRPC_GEN_H
+> +#define _LINUX_SUNRPC_GEN_H
+> +
+> +#include <net/netlink.h>
+> +#include <net/genetlink.h>
+> +
+> +#include <uapi/linux/sunrpc_netlink.h>
+> +
+> +enum {
+> +	SUNRPC_NLGRP_NONE,
+> +	SUNRPC_NLGRP_EXPORTD,
+> +};
+> +
+> +extern struct genl_family sunrpc_nl_family;
+> +
+> +int sunrpc_cache_notify(struct cache_detail *cd, struct cache_head *h,
+> +			u32 cache_type);
+
+Ditto...
+
+
+> +
+> +#endif /* _LINUX_SUNRPC_GEN_H */
+> diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
+> index bab6cab2940524a970422b62b3fa4212c61c4f43..ab88ce46afb556cb0a397fe5c9df3901813ad01e 100644
+> --- a/net/sunrpc/sunrpc_syms.c
+> +++ b/net/sunrpc/sunrpc_syms.c
+> @@ -23,9 +23,12 @@
+>  #include <linux/sunrpc/rpc_pipe_fs.h>
+>  #include <linux/sunrpc/xprtsock.h>
+>  
+> +#include <net/genetlink.h>
+> +
+>  #include "sunrpc.h"
+>  #include "sysfs.h"
+>  #include "netns.h"
+> +#include "netlink.h"
+>  
+>  unsigned int sunrpc_net_id;
+>  EXPORT_SYMBOL_GPL(sunrpc_net_id);
+> @@ -108,6 +111,10 @@ init_sunrpc(void)
+>  	if (err)
+>  		goto out5;
+>  
+> +	err = genl_register_family(&sunrpc_nl_family);
+> +	if (err)
+> +		goto out6;
+> +
+>  	sunrpc_debugfs_init();
+>  #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>  	rpc_register_sysctl();
+> @@ -116,6 +123,8 @@ init_sunrpc(void)
+>  	init_socket_xprt();	/* clnt sock transport */
+>  	return 0;
+>  
+> +out6:
+> +	rpc_sysfs_exit();
+>  out5:
+>  	unregister_rpc_pipefs();
+>  out4:
+> @@ -131,6 +140,7 @@ init_sunrpc(void)
+>  static void __exit
+>  cleanup_sunrpc(void)
+>  {
+> +	genl_unregister_family(&sunrpc_nl_family);
+>  	rpc_sysfs_exit();
+>  	rpc_cleanup_clids();
+>  	xprt_cleanup_ids();
+> 
+
+
+-- 
+Chuck Lever
 
