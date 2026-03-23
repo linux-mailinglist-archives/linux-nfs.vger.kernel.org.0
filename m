@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20321-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20322-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2IYAHnTnwGl6OQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20321-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 08:10:44 +0100
+	id OFy/M7PnwGl6OQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20322-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 08:11:47 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21F1F2ED530
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 08:10:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49DB42ED548
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 08:11:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 421D73030E89
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 07:08:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 547F8303D2ED
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 07:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A9735C1AD;
-	Mon, 23 Mar 2026 07:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 504DD35DA56;
+	Mon, 23 Mar 2026 07:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GSBhtEX8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hqlUgWlO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91135BDC7;
-	Mon, 23 Mar 2026 07:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1577235D615;
+	Mon, 23 Mar 2026 07:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774249690; cv=none; b=H7oVSpfv5zqouwySokoSWjay8r/rNgeTYzuLljy+mvBRfpvzbywbdEiVFWdTl16p/hPC+dsNl4l+HxRECq5TdQdWdAc0dtdiQcm/l/lIJ0SMF3yRJE35708V1fazOwMPc+Vo16xRSqAXWdqhDDa7+5p+Zg/KvWLmixLOTxuK7QE=
+	t=1774249693; cv=none; b=DFFQja73v1dzhu9UKIId+lVjF55Z42ngQ43WhZ5G6PChlVCS6iJ8JC7TeF0MHtAyZTci+gEl2/I1Yk1UUnHSwieSAdZVPCaBBYtvMfbZ34ZRH0RakcLs81HOZtIm5hzHH61S2In985cRl0YmvdKt1Zgu/4JHzTcSA2u7/vwtSWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774249690; c=relaxed/simple;
-	bh=Fomd3p+71AswWQHe/O4lhXQ4WDEj7ITV3IcFwh6vJLw=;
+	s=arc-20240116; t=1774249693; c=relaxed/simple;
+	bh=gzgkeVdrcAuemWHiyZDuhYNQ+ZxC+E1VhWzlMbeJpN0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W3hxLKiwC35e3fEVc4b+g/ekdkgfraot6wgkL84xCtRD/LKGBrhpFhH87aw2KWVh11F1UTY05qNcjrPmtph/n4FeVHrAGZG9BxTWfE7BHYGO0v3X6tR9IsQ++JF52ciFQYQBKL0e0FdUQdNU30SZxfnU7+AQ78e7U3D7TjLAuvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GSBhtEX8; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=rS9OT2hpdh6LgAq0iJQU+lr6DLITMFRu7qGec+/J6Sb5x6QYgVAXDlp6pRKdrXPncHtIEpMZevQPHPqWlERWGWxFz0dNOIIzlUTLIes9QEFjz8vX8SIFKomWXXRdN8HcidTywYzsDXqjzu28g3PFdtinUX+ygiH1dhpjhhRUevU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hqlUgWlO; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=0hE8nfCzmGFHh1tB/W/8F54JG4+mG/XWosALwegiL2I=; b=GSBhtEX8O6afNIpe3Eo941pFKi
-	SYAk6K86Xa8rsRoQOANLXBNpAAo1gv3KftRDH8w8G0NrJ+UdDjRQrnq3c6pH0BYxrwxSLsUjkV/6t
-	HIFMOncxErVkF5twrS8tNWAVTP4DqPoV+72eTEkPWeuJ+242+Ln3Vd3tnAwbNSmKldeEYMoTDMjDk
-	qO9pPscwsSR8X2UP5Ekz4oQIzmCEX7eEdRYH71itC3xHnc568Ti8pO/wlivOq7ae/gv5t8I1xwNMp
-	VYXbXwa/9Y5UrNQ8gGKOSbv1bxGzIYdr6JPuxlPENrBR3fCwrtTQUb3HUKwKdw/s1nhcO2EsrJ77B
-	m7ldMf0A==;
+	bh=ShY/Bhmu2Gwar+ZmjbjrgOxtlsTF4MqK+A/Ie9KeEjo=; b=hqlUgWlOWcsY933tYLbze7PPpL
+	FwJcR5ZMscaRFdt2zpooaJPG05pa5v9eQJaS2nCcqyewKb4vVJ9l+RnpBDhvAoakw98mkocj9K0rf
+	ke8bP01jQj96hn6qamuCus8estYD3bquqdPZIvDUldHlnWk/Xqtgco9BCbFhfMW2f3HSN998HnNKk
+	GWCbWV7PavbmziB5k2RDubVXYUmDX1GLqDs4h+1Lg9VNxKcC81U8GpFHvgPO+jjhJq/kWbHpePRbq
+	fxv2EOGhHhSPKdDyUx6BfABY+cOIkFsoRDgASgQNLUZcRo0PyBUcYsUhMVKcs/V78jb/051Qgltsq
+	8ahWmOjg==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4ZOQ-0000000GAMK-1jlP;
-	Mon, 23 Mar 2026 07:08:06 +0000
+	id 1w4ZOU-0000000GAMk-2Lbn;
+	Mon, 23 Mar 2026 07:08:10 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -60,9 +60,9 @@ Cc: NeilBrown <neil@brown.name>,
 	linux-nfs@vger.kernel.org,
 	linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 3/7] exportfs,nfsd: rework checking for layout-based block device access support
-Date: Mon, 23 Mar 2026 08:07:19 +0100
-Message-ID: <20260323070746.2940140-4-hch@lst.de>
+Subject: [PATCH 4/7] nfsd: support multiple pNFS device IDs
+Date: Mon, 23 Mar 2026 08:07:20 +0100
+Message-ID: <20260323070746.2940140-5-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260323070746.2940140-1-hch@lst.de>
 References: <20260323070746.2940140-1-hch@lst.de>
@@ -79,19 +79,19 @@ X-Spamd-Result: default: False [-0.06 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20321-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20322-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[oracle.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	DKIM_TRACE(0.00)[infradead.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
@@ -102,199 +102,122 @@ X-Spamd-Result: default: False [-0.06 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:email,lst.de:mid]
-X-Rspamd-Queue-Id: 21F1F2ED530
+X-Rspamd-Queue-Id: 49DB42ED548
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Currently NFSD hard codes checking support for block-style layouts.
-Lift the checks into a file system-helper and provide a exportfs-level
-helper to implement the typical checks.
-
-This prepares for supporting block layout export of multiple devices
-per file system.
+Add support for a device index in the device ID so that we can support
+multiple different devices and not just different generations when
+the devids are refreshed.  This will be used for block layout exports
+of multi-device file systems.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfsd/export.c               |  3 +-
- fs/nfsd/nfs4layouts.c          | 26 +++++------------
- fs/xfs/xfs_pnfs.c              | 13 +++++++++
- include/linux/exportfs_block.h | 52 +++++++++++++++++++++++++++++++++-
- 4 files changed, 73 insertions(+), 21 deletions(-)
+ fs/nfsd/blocklayout.c    | 2 +-
+ fs/nfsd/flexfilelayout.c | 3 +--
+ fs/nfsd/nfs4layouts.c    | 3 ++-
+ fs/nfsd/pnfs.h           | 2 +-
+ fs/nfsd/xdr4.h           | 5 +++--
+ 5 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 8e8a76a44ff0..e20298f9212f 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -735,7 +735,8 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
- 			goto out4;
- 		err = 0;
- 
--		nfsd4_setup_layout_type(&exp);
-+		if (exp.ex_flags & NFSEXP_PNFS)
-+			nfsd4_setup_layout_type(&exp);
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 0dd36f3d5a51..8ca8fd8f70cb 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -75,7 +75,7 @@ nfsd4_block_map_extent(struct inode *inode, const struct svc_fh *fhp,
+ 		return nfserr_layoutunavailable;
  	}
  
- 	expp = svc_export_lookup(&exp);
+-	error = nfsd4_set_deviceid(&bex->vol_id, fhp, device_generation);
++	error = nfsd4_set_deviceid(&bex->vol_id, fhp, 0, device_generation);
+ 	if (error)
+ 		return nfserrno(error);
+ 
+diff --git a/fs/nfsd/flexfilelayout.c b/fs/nfsd/flexfilelayout.c
+index 6d531285ab43..b57db4b4dda7 100644
+--- a/fs/nfsd/flexfilelayout.c
++++ b/fs/nfsd/flexfilelayout.c
+@@ -24,7 +24,6 @@ nfsd4_ff_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
+ 		const struct svc_fh *fhp, struct nfsd4_layoutget *args)
+ {
+ 	struct nfsd4_layout_seg *seg = &args->lg_seg;
+-	u32 device_generation = 0;
+ 	int error;
+ 	uid_t u;
+ 
+@@ -57,7 +56,7 @@ nfsd4_ff_proc_layoutget(struct svc_rqst *rqstp, struct inode *inode,
+ 		fl->uid = inode->i_uid;
+ 	fl->gid = inode->i_gid;
+ 
+-	error = nfsd4_set_deviceid(&fl->deviceid, fhp, device_generation);
++	error = nfsd4_set_deviceid(&fl->deviceid, fhp, 0, 0);
+ 	if (error)
+ 		goto out_error;
+ 
 diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 616984fe3873..7b849b637b5e 100644
+index 7b849b637b5e..ace6057f5d63 100644
 --- a/fs/nfsd/nfs4layouts.c
 +++ b/fs/nfsd/nfs4layouts.c
-@@ -2,7 +2,6 @@
- /*
-  * Copyright (c) 2014 Christoph Hellwig.
-  */
--#include <linux/blkdev.h>
- #include <linux/exportfs_block.h>
- #include <linux/kmod.h>
- #include <linux/file.h>
-@@ -126,28 +125,17 @@ nfsd4_set_deviceid(struct nfsd4_deviceid *id, const struct svc_fh *fhp,
+@@ -110,7 +110,7 @@ nfsd4_find_devid_map(int idx)
  
- void nfsd4_setup_layout_type(struct svc_export *exp)
+ int
+ nfsd4_set_deviceid(struct nfsd4_deviceid *id, const struct svc_fh *fhp,
+-		u32 device_generation)
++		u32 dev_idx, u32 device_generation)
  {
--#if defined(CONFIG_NFSD_BLOCKLAYOUT) || defined(CONFIG_NFSD_SCSILAYOUT)
- 	struct super_block *sb = exp->ex_path.mnt->mnt_sb;
--	struct exportfs_block_ops *bops = sb->s_export_op->block_ops;
--#endif
--
--	if (!(exp->ex_flags & NFSEXP_PNFS))
--		return;
-+	expfs_block_layouts_t block_supported = exporfs_layouts_supported(sb);
+ 	if (!fhp->fh_export->ex_devid_map) {
+ 		nfsd4_alloc_devid_map(fhp);
+@@ -120,6 +120,7 @@ nfsd4_set_deviceid(struct nfsd4_deviceid *id, const struct svc_fh *fhp,
  
--#ifdef CONFIG_NFSD_FLEXFILELAYOUT
--	exp->ex_layout_types |= 1 << LAYOUT_FLEX_FILES;
--#endif
--#ifdef CONFIG_NFSD_BLOCKLAYOUT
--	if (bops->get_uuid && bops->map_blocks && bops->commit_blocks)
-+	if (IS_ENABLED(CONFIG_NFSD_FLEXFILELAYOUT))
-+		exp->ex_layout_types |= 1 << LAYOUT_FLEX_FILES;
-+	if (IS_ENABLED(CONFIG_NFSD_BLOCKLAYOUT) &&
-+	    (block_supported & EXPFS_BLOCK_IN_BAND_ID))
- 		exp->ex_layout_types |= 1 << LAYOUT_BLOCK_VOLUME;
--#endif
--#ifdef CONFIG_NFSD_SCSILAYOUT
--	if (bops->map_blocks && bops->commit_blocks &&
--	    sb->s_bdev &&
--	    sb->s_bdev->bd_disk->fops->pr_ops &&
--	    sb->s_bdev->bd_disk->fops->get_unique_id)
-+	if (IS_ENABLED(CONFIG_NFSD_SCSILAYOUT) &&
-+	    (block_supported & EXPFS_BLOCK_OUT_OF_BAND_ID))
- 		exp->ex_layout_types |= 1 << LAYOUT_SCSI;
--#endif
+ 	id->fsid_idx = fhp->fh_export->ex_devid_map->idx;
+ 	id->generation = device_generation;
++	id->dev_idx = dev_idx;
+ 	return 0;
  }
  
- void nfsd4_close_layout(struct nfs4_layout_stateid *ls)
-diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-index fee782a3edbe..acefa0b99f53 100644
---- a/fs/xfs/xfs_pnfs.c
-+++ b/fs/xfs/xfs_pnfs.c
-@@ -13,6 +13,7 @@
- #include "xfs_bmap.h"
- #include "xfs_iomap.h"
- #include "xfs_pnfs.h"
-+#include <linux/exportfs_block.h>
+diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
+index db9af780438b..4a6b0ad2ec9b 100644
+--- a/fs/nfsd/pnfs.h
++++ b/fs/nfsd/pnfs.h
+@@ -65,7 +65,7 @@ __be32 nfsd4_return_client_layouts(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate,
+ 		struct nfsd4_layoutreturn *lrp);
+ int nfsd4_set_deviceid(struct nfsd4_deviceid *id, const struct svc_fh *fhp,
+-		u32 device_generation);
++		u32 dev_idx, u32 device_generation);
+ struct nfsd4_deviceid_map *nfsd4_find_devid_map(int idx);
+ #endif /* CONFIG_NFSD_V4 */
  
- /*
-  * Ensure that we do not have any outstanding pNFS layouts that can be used by
-@@ -45,6 +46,17 @@ xfs_break_leased_layouts(
- 	return error;
- }
- 
-+static expfs_block_layouts_t
-+xfs_fs_layouts_supported(
-+	struct super_block	*sb)
-+{
-+	expfs_block_layouts_t	supported = EXPFS_BLOCK_IN_BAND_ID;
-+
-+	if (exportfs_bdev_supports_out_of_band_id(sb->s_bdev))
-+		supported |= EXPFS_BLOCK_OUT_OF_BAND_ID;
-+	return supported;
-+}
-+
- /*
-  * Get a unique ID including its location so that the client can identify
-  * the exported device.
-@@ -335,6 +347,7 @@ xfs_fs_commit_blocks(
- }
- 
- struct exportfs_block_ops xfs_export_block_ops = {
-+	.layouts_supported	= xfs_fs_layouts_supported,
- 	.get_uuid		= xfs_fs_get_uuid,
- 	.map_blocks		= xfs_fs_map_blocks,
- 	.commit_blocks		= xfs_fs_commit_blocks,
-diff --git a/include/linux/exportfs_block.h b/include/linux/exportfs_block.h
-index d1dec4689b14..8d5b0b0c5a82 100644
---- a/include/linux/exportfs_block.h
-+++ b/include/linux/exportfs_block.h
-@@ -7,13 +7,35 @@
- #ifndef LINUX_EXPORTFS_BLOCK_H
- #define LINUX_EXPORTFS_BLOCK_H 1
- 
--#include <linux/types.h>
-+#include <linux/blkdev.h>
-+#include <linux/exportfs.h>
-+#include <linux/fs.h>
- 
- struct inode;
- struct iomap;
- struct super_block;
- 
-+/*
-+ * There are the two types of block-style layout support:
-+ *  - In-band implies a device identified by a unique cookie inside the actual
-+ *    device address space checked by the ->get_uuid method as used by the pNFS
-+ *    block layout.  This is a bit dangerous and deprecated.
-+ *  - Out of band implies identification by out of band unique identifiers
-+ *    specified by the storage protocol, which is much safer and used by the
-+ *    pNFS SCSI/NVMe layouts.
-+ */
-+typedef unsigned int __bitwise expfs_block_layouts_t;
-+#define EXPFS_BLOCK_FLAG(__bit) \
-+	((__force expfs_block_layouts_t)(1u << __bit))
-+#define EXPFS_BLOCK_IN_BAND_ID		EXPFS_BLOCK_FLAG(0)
-+#define EXPFS_BLOCK_OUT_OF_BAND_ID	EXPFS_BLOCK_FLAG(1)
-+
- struct exportfs_block_ops {
-+	/*
-+	 * Returns the EXPFS_BLOCK_* bitmap of supported layout types.
-+	 */
-+	expfs_block_layouts_t (*layouts_supported)(struct super_block *sb);
-+
- 	/*
- 	 * Get the in-band device unique signature exposed to clients.
- 	 */
-@@ -35,4 +57,32 @@ struct exportfs_block_ops {
- 			int nr_iomaps, loff_t new_size);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 417e9ad9fbb3..ddeba134b9af 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -602,6 +602,7 @@ struct nfsd4_reclaim_complete {
+ struct nfsd4_deviceid {
+ 	u64			fsid_idx;
+ 	u32			generation;
++	u32			dev_idx;
  };
  
-+static inline bool
-+exportfs_bdev_supports_out_of_band_id(struct block_device *bdev)
-+{
-+	return bdev->bd_disk->fops->pr_ops &&
-+		bdev->bd_disk->fops->get_unique_id;
-+}
-+
-+#ifdef CONFIG_EXPORTFS_BLOCK_OPS
-+static inline expfs_block_layouts_t
-+exporfs_layouts_supported(struct super_block *sb)
-+{
-+	struct exportfs_block_ops *bops = sb->s_export_op->block_ops;
-+
-+	if (!bops ||
-+	    !bops->layouts_supported ||
-+	    WARN_ON_ONCE(!bops->map_blocks) ||
-+	    WARN_ON_ONCE(!bops->commit_blocks))
-+		return 0;
-+	return bops->layouts_supported(sb);
-+}
-+#else
-+static inline expfs_block_layouts_t
-+exporfs_layouts_supported(struct super_block *sb)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_EXPORTFS_BLOCK_OPS */
-+
- #endif /* LINUX_EXPORTFS_BLOCK_H */
+ static inline __be32 *
+@@ -612,7 +613,7 @@ svcxdr_encode_deviceid4(__be32 *p, const struct nfsd4_deviceid *devid)
+ 	*q = (__force __be64)devid->fsid_idx;
+ 	p += 2;
+ 	*p++ = (__force __be32)devid->generation;
+-	*p++ = xdr_zero;
++	*p++ = (__force __be32)devid->dev_idx;
+ 	return p;
+ }
+ 
+@@ -624,7 +625,7 @@ svcxdr_decode_deviceid4(__be32 *p, struct nfsd4_deviceid *devid)
+ 	devid->fsid_idx = (__force u64)(*q);
+ 	p += 2;
+ 	devid->generation = (__force u32)(*p++);
+-	p++; /* NFSD does not use the remaining octets */
++	devid->dev_idx = (__force u32)(*p++);
+ 	return p;
+ }
+ 
 -- 
 2.47.3
 
