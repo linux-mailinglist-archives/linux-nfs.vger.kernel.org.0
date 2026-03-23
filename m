@@ -1,69 +1,90 @@
-Return-Path: <linux-nfs+bounces-20338-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20339-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4K4OCJukwWknUQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20338-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:37:47 +0100
+	id eKRiMM6zwWnlUgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20339-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 22:42:38 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D0182FD5A9
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:37:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D8272FDE33
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 22:42:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 82420300E6AF
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 20:37:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7CAFC3055606
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFB63E0C5F;
-	Mon, 23 Mar 2026 20:37:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91A037268A;
+	Mon, 23 Mar 2026 21:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eDPAGtet"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RumkR2cW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE393E121C
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 20:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59106376BE5
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 21:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774298236; cv=none; b=La1d7kOgNHg0vQoS0wTaogr65upEN1QFdRXSAekRJN2OL7GyOwnnegWgyFvZntCDNuRDvfnzlhpY61v2Q6EkGZMVKiSsxdddv9O90R/j+RjSqMhJKtKhhw9Jv+rtH/44olKFpk+kJ7knUUhBR7xdVXvi1xPdp0xwaBexD7JrlsE=
+	t=1774302108; cv=none; b=YnuDDlTT2PiTRQnqcYML21X0pSmdSVGt8Aiey0Js9XcgEbYELK/qxED6EZ/M4bLIiogXoEACjiPVKhH0Vr8SzwI2MLzR33zjQhYMaMDsEkPVIOaTczoS3gZVMX4cxyCFjOyg41zY8mwWWVPcXgLttE/8voN3w79cBHvtZx/834k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774298236; c=relaxed/simple;
-	bh=S91miKWk95aYJmvKZTwjAtqM3EoOw9IRJnXmQtV0DWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OXEnSK+IfGuJD4d/nBtOUUEXsdwq6OIVsPPm8WpUqFMqVeUZuDK92+iCYYvWIZRrykFMEV5Hnp3NSE1X4oWumrPXK2aIVFv/WtTLBNfSRhtCiAFKRN3BkdnTiCHt7h/uY2G9dyTpkrX01Q51AiC2q4i+yhXQ1kk0FY4k1PE5td0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eDPAGtet; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774298234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1uNQGjBx4IeJNslF34FAR3MMmyiROPiaXS1Y36SU7EU=;
-	b=eDPAGtetBc0f2sFifFT1l/Zpl6/V2sQ0KRpupAieTsW+mVmiYnvtHRA8XZMxEnSTmsEfdC
-	nNOd0wtxp2IaulxZusNrlzP6zmZxB1fRcf2hXcu29SRUa1aesHcbx0/U0Ic0MPUJspkljU
-	aKGy1RQq2+efVWkKY0Psp5S2Jv2uS8E=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-z7eC9ynVOK2RUsh1MCW1Zw-1; Mon,
- 23 Mar 2026 16:37:12 -0400
-X-MC-Unique: z7eC9ynVOK2RUsh1MCW1Zw-1
-X-Mimecast-MFC-AGG-ID: z7eC9ynVOK2RUsh1MCW1Zw_1774298231
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BE507195609F
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 20:37:11 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.65.38])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 386E8180058B;
-	Mon, 23 Mar 2026 20:37:11 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: steved@redhat.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] nfsdctl: check for listeners before starting threads
-Date: Mon, 23 Mar 2026 16:37:10 -0400
-Message-ID: <20260323203710.83237-1-okorniev@redhat.com>
+	s=arc-20240116; t=1774302108; c=relaxed/simple;
+	bh=cx7IxrVtG6jBbtfVIc2mXJy3yhUWbxhYQF9v7xm0jIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uoqFF5JHXEJTOB6ao1GKgdqYMDJmjtiv1GR2Yor1AtPcgsAFqze7HCEuvNnzpIIgwjrniBuJP+TlpUtdocu+6Y/cqoyha9O3/wgxa3FfBSSHVGzJIZjCZDoHirRtWUkzR7t6p6sx/7IhjRNTvSP5LL9doYKXhVoUW1QsaRGIEEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RumkR2cW; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-486fd5360d4so6579515e9.1
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 14:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774302106; x=1774906906; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=RwUz9DsG6Yh4YcejvaSJvj8Cg92DdW9RYhyMqthbjMQ=;
+        b=RumkR2cWYLhIRGgKrU7I1NGMNmeVEMsVOoNJgNfMLxc51odqnajczvRSAcM8X4k65F
+         L0lWQr5kn9kYMniSmogYb+GSowrlvMGi8gTovC7I9A+5Ycjrm7dHtVpGrA2h+400lDfu
+         g1G02mEzjUywazplrP8YaVBnfdVRltY1nIOwB5vTYFypFLi6KFVrQf9839fVDU2g5YrM
+         Qw4Hc+5n1JH9uPxD8vDE6/jxPs9mqq+gzM/uxPmM+qpPMzaVRtf2OSsbhUvgKAaIFK8T
+         bw4D8rVZiMeJKTi4ROXtr8qFKNCmFJNu9r+JBOfq8A/YfLNGmxEMg5mGcBpsppSz7oj3
+         PxwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774302106; x=1774906906;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RwUz9DsG6Yh4YcejvaSJvj8Cg92DdW9RYhyMqthbjMQ=;
+        b=mGCrZThMMbzVu34lhVGaFIhmBQ1bJ0pYipyVjCY1asfr49PKOuJgf7J5k6jvBfCL04
+         0/MkTcrTb4seaRt5kLLkrI8/egQH7yYwnSGb6+kesVh5Pj4GIB9LGnxMj4oG1VPLixWT
+         IbhOh7tkxd7vyGCM6PNuEd0hlx/p8ex3yJ5xZIt5imRm/OTfXdQyU4+F9VWJRJz6ZHuP
+         nWA0bKB/jcbBWR1bK9x47Mo9C5BsXd/Y/SWiPBINAaYiIbzrxDnAL+8+zGRBYjQrmINs
+         uV0rweB6wU9jC42jRsCIqn4744SX0ysWpDecDATzr41KygUpX1SjZfeJKelHeFs1jjYA
+         MsNA==
+X-Gm-Message-State: AOJu0Yx+dIc+/ahF6c2780KTbnOmy8B8lWK1yPlwd812u9gcsECnaSnv
+	Gyszz5I7J0TtDdh8Yrd8jHtQi5rSPX+O9jqn0fePeE61FNeVu3DiuKGSilY45Upm
+X-Gm-Gg: ATEYQzxcrqqziMTEE9YGhzd/i5zESTr8CZgcv/UxuDftqa2/K+NKMjl1pdNuvjKL7TO
+	cTKHSiSwmlDPcTvH9TCo4Br7qRk1T2QtOt2hZ0FMAlrVLRN5b0wT0v4snSDIIQvEVnF0ZdJqA/X
+	neP5vw4vGXD3Yym9ejoybdcWypVJXhoX1nakCWtjrqdJebFivX6QkC6oC3xCXK2+OgoR/F/2B5h
+	TQSTHj2nqwYqI3IzQtu6gbbovkHd8+kbnH5uu5qXyMVahwftJF8tcYpT8+p+pbUmx4Zr1ZgO/wG
+	0ibITihSm6pdfTooWjs06DL7GofoJVIcJs5yQf42wgtfixa4CKqWlKBzk4cAwW7r2KLCRN/Ce4o
+	lmO7gegexM8I1UeyT1nmWJx7wP3ozwY9SXu7kWsEhLpTdfbze8AflxcftQjlURD0PqqFmi7hSnK
+	/LtzaMJJEhe9oW3iw7TPD1i1Ame7qNHBS2Bvq4w2GtzGauBUQWp3dXqj8TzdqIJ1PyKJHwpQ==
+X-Received: by 2002:a05:600c:8b66:b0:486:f9d0:aac8 with SMTP id 5b1f17b1804b1-486fee0f835mr170089825e9.18.1774302105493;
+        Mon, 23 Mar 2026 14:41:45 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48711007753sm2830505e9.5.2026.03.23.14.41.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2026 14:41:44 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id B8B39BE2EE7; Mon, 23 Mar 2026 22:41:43 +0100 (CET)
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jeff Layton <jlayton@kernel.org>,
+	Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org,
+	Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH] nfs.conf: nfsd: Reflect disable v4.0 by default value
+Date: Mon, 23 Mar 2026 22:41:14 +0100
+Message-ID: <20260323214113.3336878-2-carnil@debian.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -71,102 +92,64 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20339-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20338-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	RCPT_COUNT_TWO(0.00)[2];
-	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
+	DMARC_NA(0.00)[debian.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1D0182FD5A9
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[carnil@debian.org,linux-nfs@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[6];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2D8272FDE33
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When a thread command is executed and yet no listeners have been
-added prior to it, instead of failing with EIO error print an
-informative error. Also, "thread 0" command should not error
-regardless of the listener status.
+In bb3f98c848a0 ("nfsd: disable v4.0 by default") and 27b9d85dbc30
+("nfsdctl: disable v4.0 by default") v4.0 was switched to be disabled by
+default. For consistency reflect as well the 'default off' change in the
+commented entry for vers4.0 in the nfsd section of the nfs.conf
+configuration file.
 
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Steve Dickson <steved@redhat.com>
+Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
 ---
- utils/nfsdctl/nfsdctl.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ nfs.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index 6a20d180..ac23e753 100644
---- a/utils/nfsdctl/nfsdctl.c
-+++ b/utils/nfsdctl/nfsdctl.c
-@@ -162,6 +162,8 @@ static const char *nfsd4_ops[] = {
- 	[OP_REMOVEXATTR]	= "OP_REMOVEXATTR",
- };
- 
-+static int fetch_current_listeners(struct nl_sock *sock);
-+
- static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err,
- 			 void *arg)
- {
-@@ -721,6 +723,7 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
- 	int *pool_threads = NULL;
- 	int minthreads = -1;
- 	int opt, pools = 0;
-+	bool zero_threads = false;
- 
- 	optind = 1;
- 	while ((opt = getopt_long(argc, argv, "hm:", threads_options, NULL)) != -1) {
-@@ -762,12 +765,31 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
- 			}
- 
- 			pool_threads[i] = strtol(targv[i], &endptr, 0);
-+			if (!pool_threads[i])
-+				zero_threads = true;
- 			if (!endptr || *endptr != '\0') {
- 				xlog(L_ERROR, "Invalid threads value %s.", argv[1]);
- 				return 1;
- 			}
- 		}
- 	}
-+	/* check if there are active listeners added */
-+	if (fetch_current_listeners(sock)) {
-+		xlog(L_ERROR, "Unable to determine if listeners were added");
-+		return 1;
-+	}
-+	if (!nfsd_socket_count) {
-+		if (zero_threads) {
-+			/* Note: we can never have a server with threads and no
-+			 * listener. If we ever add functionality to remove
-+			 * listeners on an active server, we need to revisit this.
-+			 */
-+			return 0;
-+		}
-+		xlog(L_ERROR, "No active listeners added, not starting threads");
-+		return 1;
-+	}
-+
- 	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL, minthreads);
- }
- 
+diff --git a/nfs.conf b/nfs.conf
+index 18a1b319a524..3628b2f2d540 100644
+--- a/nfs.conf
++++ b/nfs.conf
+@@ -71,7 +71,7 @@
+ # tcp=y
+ # vers3=y
+ # vers4=y
+-# vers4.0=y
++# vers4.0=n
+ # vers4.1=y
+ # vers4.2=y
+ rdma=y
 -- 
-2.52.0
+2.53.0
 
 
