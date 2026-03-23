@@ -1,137 +1,172 @@
-Return-Path: <linux-nfs+bounces-20337-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20338-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gJIbDhihwWmFUAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20337-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:22:48 +0100
+	id 4K4OCJukwWknUQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20338-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:37:47 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAC8C2FD24F
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:22:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D0182FD5A9
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:37:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4891B309D72F
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 20:15:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 82420300E6AF
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 20:37:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7ACA36C9D2;
-	Mon, 23 Mar 2026 20:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFB63E0C5F;
+	Mon, 23 Mar 2026 20:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BuggZgv6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eDPAGtet"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712563E2749
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 20:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE393E121C
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 20:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774296885; cv=none; b=W+BAp1yca+GdXERaRF7f7zWIIrMdoXtQpeBYoIBwYIRlM+ntwfLCRxXbg1Apz+v7TqmXUnMBTafTiMMnu0XiLCryWo3RtIGeqiRKNdF1bEhllcf7oGsaXqIemPyC2u7FV6ZWL6ZWYE3MhRAP4vYn8YvZulmhMhp9eMStgUiBeFA=
+	t=1774298236; cv=none; b=La1d7kOgNHg0vQoS0wTaogr65upEN1QFdRXSAekRJN2OL7GyOwnnegWgyFvZntCDNuRDvfnzlhpY61v2Q6EkGZMVKiSsxdddv9O90R/j+RjSqMhJKtKhhw9Jv+rtH/44olKFpk+kJ7knUUhBR7xdVXvi1xPdp0xwaBexD7JrlsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774296885; c=relaxed/simple;
-	bh=CLdnA3HKaQpw2E+DK6Es/dEh/73c0GMWs6hlZ0iX8Cw=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=cUKvT48f3WUgSB8I/zD+TlTPpH7+aHfNQwnQtnN3BA+7bc5cp6oeHh+wCw5x2P53IiCNzhm/s86V/E4dfU0KvFJxiJarxVbAxyQZsqMmZr0nbxvpj1yTkznoVcN1oGfnnNXU2PdGqx5iqg204CAD6PH2Cctlfu7F5N62Cjibx9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BuggZgv6; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1774298236; c=relaxed/simple;
+	bh=S91miKWk95aYJmvKZTwjAtqM3EoOw9IRJnXmQtV0DWc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OXEnSK+IfGuJD4d/nBtOUUEXsdwq6OIVsPPm8WpUqFMqVeUZuDK92+iCYYvWIZRrykFMEV5Hnp3NSE1X4oWumrPXK2aIVFv/WtTLBNfSRhtCiAFKRN3BkdnTiCHt7h/uY2G9dyTpkrX01Q51AiC2q4i+yhXQ1kk0FY4k1PE5td0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eDPAGtet; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774296883;
+	s=mimecast20190719; t=1774298234;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DYa0tTMe+fh3t2cBObuxsAe/E5w0S9HN28FrVDi7GMQ=;
-	b=BuggZgv6lVbSmu2us7iDrqx1n7ua1kicOKTeQQDRg/BHmwo1aVjKxbhElgZIRr8zcxBlvm
-	Igpvi8hOXwInj+x0FFuaOhBi0ygWYtxU6yiatuQJI7oEAN8plf8pfvtTy0q5bQ/6jTEbzX
-	jAATd0jcsrujHROQ3F/kVT+KkjcWwHY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1uNQGjBx4IeJNslF34FAR3MMmyiROPiaXS1Y36SU7EU=;
+	b=eDPAGtetBc0f2sFifFT1l/Zpl6/V2sQ0KRpupAieTsW+mVmiYnvtHRA8XZMxEnSTmsEfdC
+	nNOd0wtxp2IaulxZusNrlzP6zmZxB1fRcf2hXcu29SRUa1aesHcbx0/U0Ic0MPUJspkljU
+	aKGy1RQq2+efVWkKY0Psp5S2Jv2uS8E=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-279-abKn93TAPU2bn-bvqjtKYQ-1; Mon,
- 23 Mar 2026 16:14:35 -0400
-X-MC-Unique: abKn93TAPU2bn-bvqjtKYQ-1
-X-Mimecast-MFC-AGG-ID: abKn93TAPU2bn-bvqjtKYQ_1774296873
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-z7eC9ynVOK2RUsh1MCW1Zw-1; Mon,
+ 23 Mar 2026 16:37:12 -0400
+X-MC-Unique: z7eC9ynVOK2RUsh1MCW1Zw-1
+X-Mimecast-MFC-AGG-ID: z7eC9ynVOK2RUsh1MCW1Zw_1774298231
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62D281955D57;
-	Mon, 23 Mar 2026 20:14:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.33.121])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 79DED19560B1;
-	Mon, 23 Mar 2026 20:14:23 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <2d8ce118-2f7a-4b7f-8786-4581b29cb74e@chenxiaosong.com>
-References: <2d8ce118-2f7a-4b7f-8786-4581b29cb74e@chenxiaosong.com> <20260304140328.112636-1-dhowells@redhat.com> <20260304140328.112636-18-dhowells@redhat.com>
-To: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-Cc: dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-    Christoph Hellwig <hch@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-    Leon Romanovsky <leon@kernel.org>, Steve French <smfrench@gmail.com>,
-    Christian Brauner <christian@brauner.io>,
-    Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org, Paulo Alcantara <pc@manguebit.org>
-Subject: Re: [RFC PATCH 17/17] netfs: Combine prepare and issue ops and grab the buffers on request
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BE507195609F
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 20:37:11 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.65.38])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 386E8180058B;
+	Mon, 23 Mar 2026 20:37:11 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v2 1/1] nfsdctl: check for listeners before starting threads
+Date: Mon, 23 Mar 2026 16:37:10 -0400
+Message-ID: <20260323203710.83237-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3574142.1774296862.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Mar 2026 20:14:22 +0000
-Message-ID: <3574143.1774296862@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[redhat.com,infradead.org,kernel.dk,kernel.org,gmail.com,brauner.io,manguebit.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,manguebit.org];
-	TAGGED_FROM(0.00)[bounces-20337-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20338-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_TWO(0.00)[2];
+	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[redhat.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[chenxiaosong.com:email,warthog.procyon.org.uk:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: AAC8C2FD24F
+	TO_DN_NONE(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1D0182FD5A9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-ChenXiaoSong <chenxiaosong@chenxiaosong.com> wrote:
+When a thread command is executed and yet no listeners have been
+added prior to it, instead of failing with EIO error print an
+informative error. Also, "thread 0" command should not error
+regardless of the listener status.
 
-> I reviewed this patch in your repository's netfs-next branch (it looks
-> slightly different from the version posted to the mailing list) and foun=
-d two
-> issues, the following additional changes are needed:
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ utils/nfsdctl/nfsdctl.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Thanks!  I've been testing the patches further and cleaning them up.  I wi=
-ll
-hopefully post them again soon.
-
-David
+diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+index 6a20d180..ac23e753 100644
+--- a/utils/nfsdctl/nfsdctl.c
++++ b/utils/nfsdctl/nfsdctl.c
+@@ -162,6 +162,8 @@ static const char *nfsd4_ops[] = {
+ 	[OP_REMOVEXATTR]	= "OP_REMOVEXATTR",
+ };
+ 
++static int fetch_current_listeners(struct nl_sock *sock);
++
+ static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err,
+ 			 void *arg)
+ {
+@@ -721,6 +723,7 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ 	int *pool_threads = NULL;
+ 	int minthreads = -1;
+ 	int opt, pools = 0;
++	bool zero_threads = false;
+ 
+ 	optind = 1;
+ 	while ((opt = getopt_long(argc, argv, "hm:", threads_options, NULL)) != -1) {
+@@ -762,12 +765,31 @@ static int threads_func(struct nl_sock *sock, int argc, char **argv)
+ 			}
+ 
+ 			pool_threads[i] = strtol(targv[i], &endptr, 0);
++			if (!pool_threads[i])
++				zero_threads = true;
+ 			if (!endptr || *endptr != '\0') {
+ 				xlog(L_ERROR, "Invalid threads value %s.", argv[1]);
+ 				return 1;
+ 			}
+ 		}
+ 	}
++	/* check if there are active listeners added */
++	if (fetch_current_listeners(sock)) {
++		xlog(L_ERROR, "Unable to determine if listeners were added");
++		return 1;
++	}
++	if (!nfsd_socket_count) {
++		if (zero_threads) {
++			/* Note: we can never have a server with threads and no
++			 * listener. If we ever add functionality to remove
++			 * listeners on an active server, we need to revisit this.
++			 */
++			return 0;
++		}
++		xlog(L_ERROR, "No active listeners added, not starting threads");
++		return 1;
++	}
++
+ 	return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL, minthreads);
+ }
+ 
+-- 
+2.52.0
 
 
