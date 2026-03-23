@@ -1,62 +1,60 @@
-Return-Path: <linux-nfs+bounces-20335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20336-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kGOBMJycwWmFUAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20335-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:03:40 +0100
+	id 6G//ESWewWmFUAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20336-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:10:13 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2CD02FCD56
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:03:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEBB92FCECE
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 21:10:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DA029301CC50
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 20:00:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C29A1304117F
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 20:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4F93E1211;
-	Mon, 23 Mar 2026 20:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3884536998B;
+	Mon, 23 Mar 2026 20:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9M0AD90"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvolYivQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2C63E0C41;
-	Mon, 23 Mar 2026 20:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0CA39A7FB
+	for <linux-nfs@vger.kernel.org>; Mon, 23 Mar 2026 20:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774296023; cv=none; b=TAD2Mbp60jSlY941xCmTjcqRy0D+cb21zOlKPu2LERbAkZM95nJnxsKjtIb0AG8HB8rT8N/VsT57yd2HlNukC7v1h6WCADPuh7nwJisGndXzZz/ySG5OPLhDMnbhpf44qlFO3q5JgpQOWoF/V844lYlcoSAbzYG861WKIJLGQuQ=
+	t=1774296487; cv=none; b=MGbPJQgkhHUdoMnd+1FH6pFdZFv4E8E7wrdQP2QT6hoMtU8th2+ToNjxiiDkxQ4ZfNeFvgV3YO3li3RP21svLs6xK5wo/HVM4XsyVv3UJXhfWx260iyZduI35LcBPfVWXtQ+Bripcppm5dLHmDYtwgZZRJ30GT3VjTQJKMmA6II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774296023; c=relaxed/simple;
-	bh=c0FFVo7a7T4mjNLDLshF6PptikAsvEx9Yv/O58PMoWE=;
+	s=arc-20240116; t=1774296487; c=relaxed/simple;
+	bh=8bDHM55eYb5EpXeSFqK+swbFyF3Z2jonbgr15yJK1FU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Svf10ln5O8Y/6piWxYWRZVTt0qJ8P1TWBRFWF3RJ/YALYZbjOwpEu7U6wVzIEF4Sbj9m3g/Ep32rBp5xKKRPbyCwPVwSRrICX2lLOCNZ+8CkjzpPQ+p5WmcE6FqLLcbasrLBJmtYmQ+UovWVNjpabeGApiiApv62oR7cMurLdiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9M0AD90; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED463C2BC9E;
-	Mon, 23 Mar 2026 20:00:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Ojyuc+ls0y/siNxXyyXpkEukotj7vapAIyD2LCDLE7bvRz0NBY6rFsw56AsQn5dkZYMj9j4v10/UuVN79+HyJLr/6EZ6LKa8iawyBLF3e3pRtpCFfMW1+Glaf7iLQaxvsqAD2x1gt3THEr0wt3SIoOPK58xvr3wb+cuHbB192HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvolYivQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9261BC4CEF7;
+	Mon, 23 Mar 2026 20:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774296023;
-	bh=c0FFVo7a7T4mjNLDLshF6PptikAsvEx9Yv/O58PMoWE=;
+	s=k20201202; t=1774296487;
+	bh=8bDHM55eYb5EpXeSFqK+swbFyF3Z2jonbgr15yJK1FU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=U9M0AD90gkqTgPe6eGgoLCPEhgGhrtdsyazQjg0xb43THIVFc4vJB+zZJW31v4zra
-	 Qu3tRfPDqgP2GMVxQUfqnPbOxcmFPLCChXS8VpF2rr24gYYbEy0A9BBMDvMU2UhM1F
-	 ylJfxrzGSi3Bk5D2JGqg49z73xyJSfQJ7dFOWi8Kdq4H37HGrwbO97fEjTm3tptpMm
-	 ak8KuCCGQqpBIDtFS7D5RcxGOeR9VY6EX9i3SawkEbWC7TB1NjtDpc4Io/e5XquUz2
-	 uePxxH74BPBnp1N0drI9p9YyaHu+Ov5ulsuquAgifbVnqvfJpXuo8jxjv1DQAunOEa
-	 /tUdd/RcOLS7Q==
-Message-ID: <f5d48ab675f4cf41df18c66d1e94d7d709d119a1.camel@kernel.org>
-Subject: Re: [PATCH 10/14] nfsd: add new netlink spec for svc_export upcall
+	b=nvolYivQGqv3og1Kh8kM/8nSOtS/RyXy8rRcDXYpGNtv6B7BnkfKYJEaxq+nha7mk
+	 +/yVplzbNvGuLHpWGGp51t0PTOt8eEshOEDngn+PL3fmqt2FwlhJYDLeljYBpRaXn4
+	 iCCwHOgiec6igQ5GO1Dy/AeVW/fYN4SA3gdzdB9NmkeavVwNA7AUA5xyIFNFN8DGZx
+	 WtwSlQFtBCAb5pGymSLkojJd1HSZ9uun0Pj44NfdBca6iWpQm6PH6OLnJRZ2P4pT6x
+	 krTZAUIlWvsPgqHmlwKqWitw+Qlcog6mapqqNG62PebufiIdUCWrPZbQP/ltGmtpmw
+	 cC36u4tQcNWkw==
+Message-ID: <b81829af10a86c9d201ddde31c25d523865b781a.camel@kernel.org>
+Subject: Re: [PATCH 1/1] nfsdctl: check for listeners before starting threads
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 23 Mar 2026 16:00:20 -0400
-In-Reply-To: <9f91bda8-b39f-4bc1-a53d-dffb63ca47ed@oracle.com>
-References: <20260316-exportd-netlink-v1-0-6125dc62b955@kernel.org>
-	 <20260316-exportd-netlink-v1-10-6125dc62b955@kernel.org>
-	 <9f91bda8-b39f-4bc1-a53d-dffb63ca47ed@oracle.com>
+To: Olga Kornievskaia <aglo@umich.edu>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, steved@redhat.com, 
+	linux-nfs@vger.kernel.org
+Date: Mon, 23 Mar 2026 16:08:04 -0400
+In-Reply-To: <CAN-5tyEQe5KrqKNy_HtMfciyrKsxLm8Xu=ugUEBpH+gtf7OYGw@mail.gmail.com>
+References: <20260323182142.79465-1-okorniev@redhat.com>
+	 <24a15058d09d238ab627a6359ca9241e6aa499ce.camel@kernel.org>
+	 <CAN-5tyEQe5KrqKNy_HtMfciyrKsxLm8Xu=ugUEBpH+gtf7OYGw@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,103 +141,138 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20335-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20336-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C2CD02FCD56
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AEBB92FCECE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-03-20 at 11:17 -0400, Chuck Lever wrote:
-> On 3/16/26 11:14 AM, Jeff Layton wrote:
-> > ...and generate the headers.
+On Mon, 2026-03-23 at 15:57 -0400, Olga Kornievskaia wrote:
+> On Mon, Mar 23, 2026 at 2:52=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
+wrote:
 > >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  Documentation/netlink/specs/nfsd.yaml | 172 ++++++++++++++++++++++++++=
-++++++++
-> >  fs/nfsd/netlink.c                     |  61 ++++++++++++
-> >  fs/nfsd/netlink.h                     |  13 +++
-> >  include/uapi/linux/nfsd_netlink.h     | 102 ++++++++++++++++++++
-> >  net/sunrpc/netlink.c                  |  49 ++--------
-> >  net/sunrpc/netlink.h                  |   6 +-
-> >  6 files changed, 357 insertions(+), 46 deletions(-)
+> > On Mon, 2026-03-23 at 14:21 -0400, Olga Kornievskaia wrote:
+> > > When a thread command is executed and yet no listeners have been
+> > > added prior to it, instead of failing with EIO error print an
+> > > informative error. Also, "thread 0" command should not error
+> > > regardless of the listener status.
+> > >=20
+> > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > ---
+> > >  utils/nfsdctl/nfsdctl.c | 52 ++++++++++++++++++++++++++++++++-------=
+--
+> > >  1 file changed, 41 insertions(+), 11 deletions(-)
+> > >=20
+> > > diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> > > index 6a20d180..d03e2c9f 100644
+> > > --- a/utils/nfsdctl/nfsdctl.c
+> > > +++ b/utils/nfsdctl/nfsdctl.c
+> > > @@ -162,6 +162,9 @@ static const char *nfsd4_ops[] =3D {
+> > >       [OP_REMOVEXATTR]        =3D "OP_REMOVEXATTR",
+> > >  };
+> > >=20
+> > > +static int fetch_current_listeners(struct nl_sock *sock);
+> > > +static int print_listeners(int output);
+> > > +
+> > >  static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *e=
+rr,
+> > >                        void *arg)
+> > >  {
+> > > @@ -720,7 +723,7 @@ static int threads_func(struct nl_sock *sock, int=
+ argc, char **argv)
+> > >       uint8_t cmd =3D NFSD_CMD_THREADS_GET;
+> > >       int *pool_threads =3D NULL;
+> > >       int minthreads =3D -1;
+> > > -     int opt, pools =3D 0;
+> > > +     int opt, pools =3D 0, zero_threads =3D 0;
+> > >=20
+> > >       optind =3D 1;
+> > >       while ((opt =3D getopt_long(argc, argv, "hm:", threads_options,=
+ NULL)) !=3D -1) {
+> > > @@ -762,12 +765,31 @@ static int threads_func(struct nl_sock *sock, i=
+nt argc, char **argv)
+> > >                       }
+> > >=20
+> > >                       pool_threads[i] =3D strtol(targv[i], &endptr, 0=
+);
+> > > +                     if (!pool_threads[i])
+> > > +                             zero_threads++;
+> > >                       if (!endptr || *endptr !=3D '\0') {
+> > >                               xlog(L_ERROR, "Invalid threads value %s=
+.", argv[1]);
+> > >                               return 1;
+> > >                       }
+> > >               }
+> > >       }
+> > > +     /* check if there are listeners added */
+> > > +     if (fetch_current_listeners(sock)) {
+> > > +             xlog(L_ERROR, "Unable to determine if listeners were ad=
+ded\n");
+> > > +             return 1;
+> > > +     }
+> > > +     if (!print_listeners(0)) {
+> > > +             if (zero_threads && zero_threads =3D=3D pools) {
+> > > +                     /* Note: we can never have a server with thread=
+s and no
+> > > +                      * listeners. If we ever add functionality to r=
+emove
+> > > +                      * listeners on an active server, we need to re=
+visit this.
+> > > +                      */
+> > > +                     return 0;
+> > > +             }
+> > > +             xlog(L_ERROR, "No listeners added, not starting threads=
+\n");
+> > > +             return 1;
+> > > +     }
+> > > +
+> > >       return threads_doit(sock, cmd, 0, 0, pools, pool_threads, NULL,=
+ minthreads);
+> > >  }
+> > >=20
+> > > @@ -1077,9 +1099,9 @@ out:
+> > >       return ret;
+> > >  }
+> > >=20
+> > > -static void print_listeners(void)
+> > > +static int print_listeners(int output)
 > >=20
+> > Maybe instead of adding the "output" parameter, you could just add a
+> > count_listeners() function?
 >=20
+> Well, I thought would need to do all the work of print_listener(), I
+> would assume we'd want to do all the checks done by print_listener
+> before it prints the value or in my case count it as a listener. And
+> thus I opted for re-using the function but adding the count.
 >=20
-> This is the last patch in this series that applied cleanly to the
-> current nfsd-testing branch, so I'm stopping with this one.
->=20
-> I'm going to whine only a little about the commit message being not even
-> a full sentence. </whine>
->=20
-> review-prompts seems to think that removing sunrpc_cache_notify in this
-> patch will break the build (temporarily). I mention that only for due
-> diligence -- my earlier request to move sunrpc_cache_notify out of
-> tool-generated files will probably make this moot.
+> If you think it's sufficient to just check if sock->name is non-empty
+> and active and do no further checking, I can.
 >=20
 
-Fixed in my current tree.
-
-> The svc-export-req attribute set isn't used in this patch; perhaps
-> its introduction should be deferred to a patch where it is used.
-> NFSD_CMD_CACHE_NOTIFY looks like the same: dead code for now.
->=20
-
-Ok. I'll see about moving those bits.
-
-> 0x3ffff and 0x7 in the NLA policy masks correspond to NFSEXP_ALLFLAGS
-> and NFSEXP_XPRTSEC_ALL from include/uapi/linux/nfsd/export.h, but the
-> policy uses raw hex. Adding a new export flag requires updating three
-> independent locations with no compile-time check. Using the named
-> constants directly in the policy would make the link more explicit. I
-> don't have a good suggestion about the list of flags in the YAML spec.
->=20
-
-+	[NFSD_A_SVC_EXPORT_XPRTSEC] =3D NLA_POLICY_MASK(NLA_U32, 0x7),
-+	[NFSD_A_SVC_EXPORT_FLAGS] =3D NLA_POLICY_MASK(NLA_U32, 0x3ffff),
-
-These are generated by ynl from the provided flags in the spec. I'm not
-sure there is much we can do here. ynl just has no idea that those
-constants exist. All it cares about is filtering out flags that it
-doesn't understand.
-
-Ease of adding new flags is a valid concern though. That's one of the
-main reasons for doing this. I'll think about this some more.
-
-
-> Several AI reviewers noted that GENLMSG_DEFAULT_SIZE is 8KB, yet the
-> request and reply attributes for some of the commands added in this
-> series are no larger than sizeof(u32).
->=20
-> Recommend you add Jakub to the cc: for the series for closer human
-> inspection of the YAML / netlink protocol aspects.
->=20
-
-I'll do that on the next posting.
-
-Thanks for all the review so far! I'm working on addressing your other
-comments too.
+The "active" flag is only used on the set side of things. Anything read
+by "get" is considered active. If you fetch_current_listeners() first,
+then I think you can just check that nfsd_socket_count is non-zero.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
