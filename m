@@ -1,240 +1,164 @@
-Return-Path: <linux-nfs+bounces-20314-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20315-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id TFEROU1iwGkHHQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20314-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Mar 2026 22:42:37 +0100
+	id UJ/gL4mVwGmxIwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20315-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 02:21:13 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4239F2EAE4F
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Mar 2026 22:42:37 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DDC82EB6FF
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 02:21:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DDCFE3004C22
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Mar 2026 21:42:35 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B139C3003D03
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Mar 2026 01:21:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B30136672;
-	Sun, 22 Mar 2026 21:42:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CE4C1B424F;
+	Mon, 23 Mar 2026 01:21:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlfJsVu4"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="iJnPb9cc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9BB3B7A8
-	for <linux-nfs@vger.kernel.org>; Sun, 22 Mar 2026 21:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2BC1EB19B;
+	Mon, 23 Mar 2026 01:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774215753; cv=none; b=J4zPVpD4Kt6wTClmJpS2ZEAWYYfMmkceS4mtmOFURS7uJZFkx4TaMvA2knS/Ki46E5xXtw0Og+y5rnAm4uUi0TQUv6ekKsQe1azVl98qyYJqrBxD8GB6MIpZ65c36yW9RxF50QpoR+mcgVFtupHyXiio7KdRL4fL1AtmkY2Mu4M=
+	t=1774228871; cv=none; b=e2NSWTUxQrn6yG1GfwtKzaeic8BN01U/bkdhY4+tn/DIY17p1JwL5MZBiPu9UCxcfpiXChEymJAjvvfLPSO7xZF3L0SDFCesmuobj6/dAFMfDYlVmw4CaMhlDqc8SAqXRr0YoR6afthvMTwBOb/HN2+vGqQbiZaVmbGWmMtsB/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774215753; c=relaxed/simple;
-	bh=K6Dhb9ni1C1C9JbALWm0Lcy3CkoYNWKR9FDZCdpWGLc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=REEB0liKcu+awp6pZ0fkZColx6cGrneoWjkkf5brP0StIOGv8K0ltAVArNGE6U9NhOfH0n26u8L1DXxIOxWgLhkXWOHCSxmHIfotweUOJjFujTtOTwWhYzL0Ri31IIs8zKShzYRggEV6sjLZxPzr7ufipYd6T3s/IyN6PmZUtu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlfJsVu4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F10C19424;
-	Sun, 22 Mar 2026 21:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774215752;
-	bh=K6Dhb9ni1C1C9JbALWm0Lcy3CkoYNWKR9FDZCdpWGLc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZlfJsVu4y7EirhKiQBDBYBEhaZuQk82qOxVznTHzDyxrMV+VDkstoK5Vm2Z5l352T
-	 9JioBJZOsvwxphN30vaXLkFsjNNzOPBqiLTB8LrOFB8NNO2JFno8tThc7T6OvLrQIB
-	 xCywvK0Y68Lrl88podCYoKn+f7ZjXNafr+Dg5NqwR195o/H/NfAWA6dKOfUElBiO5Z
-	 zixowyaE3erU1VvkSwI9NqY+OB5EGyv9xOpevxc11HL6dXcl+X6G9pjzwU8rqGWd1t
-	 QxxeU7AaM9z0rVy56kV/NaIMSVONQHl6aKQRQcfl7+qZ4hT18pAj6jpZDilpWRm2g0
-	 jXgyEIReRYaCw==
-Message-ID: <643b2d6bb1bdda8c2602535da9c679e6dfbe68a7.camel@kernel.org>
-Subject: Re: [PATCH 0/2] nfsd/nfsdctl: default to starting with v4.0 servers
- disabled
-From: Jeff Layton <jlayton@kernel.org>
-To: Salvatore Bonaccorso <carnil@debian.org>, Steve Dickson
- <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Sun, 22 Mar 2026 17:42:29 -0400
-In-Reply-To: <acBfpHr2e6LMmiGQ@eldamar.lan>
-References: <20251008-master-v1-0-c879be4973c8@kernel.org>
-	 <a04afd6b-e295-4100-a785-2b6feb6b3cf7@redhat.com>
-	 <acBfpHr2e6LMmiGQ@eldamar.lan>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1774228871; c=relaxed/simple;
+	bh=+MxQgVy0WrDNiEahkajd88knw3xB3Tyf14U3HZXJjKs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M9pISCPPJkOtrsh9hw3Fo4EyqeHv5raVDRSx9fdZxJ1LdIvbyPItdZfyfhQxt9DkGZSCgfRx/AdzWaQofyQmnaGY6I0XHVlMP4LZMdQyPRasClKK8A2J9DEDUdE/VNTzgMVoU5dCwWz8bNftDnb8/k8RS7ABSbtJjZX53a7vopk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=iJnPb9cc; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=zJQ0Xohrtmr2fJV+Ux5Rb7EBv7iz4UwLOc9o26blc4k=;
+	b=iJnPb9cckwud83n9W7SXcHLiWu6MiKxkMvGgpuaOZoLQoltoyV8KIJjyByxa456nQqO2OnsOO
+	2o88qAIyFT798rCguYFWJIEesqSA96ME83JCcfxufvOBg7VdtLnhIkCL4YxA6fKrcnP9/2rc7Kq
+	8MmMeuZCbIdlI+OCLE/su38=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4ffFZj0C5sz1prp9;
+	Mon, 23 Mar 2026 09:14:53 +0800 (CST)
+Received: from kwepemj200013.china.huawei.com (unknown [7.202.194.25])
+	by mail.maildlp.com (Postfix) with ESMTPS id F0A8D40567;
+	Mon, 23 Mar 2026 09:20:59 +0800 (CST)
+Received: from huawei.com (10.50.85.155) by kwepemj200013.china.huawei.com
+ (7.202.194.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Mar
+ 2026 09:20:59 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<chengzhihao1@huawei.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <zhangjian496@h-partners.com>,
+	<lilingfeng@huaweicloud.com>, <lilingfeng3@huawei.com>
+Subject: [PATCH] NFS: stop trying writing page after getting -EBADF
+Date: Mon, 23 Mar 2026 09:16:30 +0800
+Message-ID: <20260323011630.3547783-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemj200013.china.huawei.com (7.202.194.25)
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20314-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20315-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lilingfeng3@huawei.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4239F2EAE4F
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8DDC82EB6FF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sun, 2026-03-22 at 22:31 +0100, Salvatore Bonaccorso wrote:
-> Hi Steve, Jeff,
->=20
-> On Sun, Mar 22, 2026 at 04:30:02PM -0400, Steve Dickson wrote:
-> >=20
-> >=20
-> > On 10/8/25 4:13 PM, Jeff Layton wrote:
-> > > At this week's NFS Bakeathon, we had a discussion around deprecating =
-the
-> > > NFSv4.0 protocol. To prepare for that eventuality, make the NFS serve=
-r
-> > > only accept NFSv4.0 if it was explicitly requested in the config file=
- or
-> > > in command-line options.
-> > >=20
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > > Jeff Layton (2):
-> > >        nfsd: disable v4.0 by default
-> > >        nfsdctl: disable v4.0 by default
-> > >=20
-> > >   utils/nfsd/nfsd.c       | 5 +++--
-> > >   utils/nfsdctl/nfsdctl.c | 2 +-
-> > >   2 files changed, 4 insertions(+), 3 deletions(-)
-> > > ---
-> > > base-commit: 612e407c46b848932c32be00b835a7b5317e3d08
-> > > change-id: 20251008-master-724587cca99a
-> > >=20
-> > > Best regards,
-> > Committed... (tag: nfs-utils-2-9-1-rc1)
-> >=20
-> > My apologies for taking so long... The CVE
-> > took longer than expected and there was
-> > some issues with recent patches,
-> > which caused another release..
-> >=20
-> > Turning off a protocol version (v4.0)
-> > on the server by default which this rc
-> > release does, is not a small thing
-> > although with the 7.X kernels the
-> > v4.0 client is already off.
->=20
-> I have one small followup question on that. The nfs.conf reads:
->=20
-> [nfsd]
-> # debug=3D0
-> # threads=3D16
-> # host=3D
-> # port=3D0
-> # grace-time=3D90
-> # lease-time=3D90
-> # udp=3Dn
-> # tcp=3Dy
-> # vers3=3Dy
-> # vers4=3Dy
-> # vers4.0=3Dy
-> # vers4.1=3Dy
-> # vers4.2=3Dy
-> [...]
->=20
-> Should the 'default off' change as well be reflected in the commented
-> entry for vers4.0 and read vers4.0=3Dn for consistency?
->=20
+We encountered an infinite loop in nfs_writepages. The process is as
+follows:
 
-Yes, good catch. Would you mind spinning up a patch? If not, I'll do
-one in the near future.
---=20
-Jeff Layton <jlayton@kernel.org>
+nfs4_do_reclaim
+ nfs4_reclaim_open_state
+  __nfs4_reclaim_open_state // get -ESTALE
+  nfs4_state_mark_recovery_failed
+   nfs4_state_mark_open_context_bad
+    set_bit // NFS_CONTEXT_BAD
+
+wb_workfn
+ wb_do_writeback
+  wb_writeback
+   writeback_sb_inodes
+    __writeback_single_inode
+     do_writepages
+      nfs_writepages // loop here
+       write_cache_pages
+        nfs_writepages_callback
+         nfs_do_writepage
+          nfs_page_async_flush
+           nfs_pageio_add_request
+            nfs_pageio_add_request_mirror
+             __nfs_pageio_add_request
+              nfs_create_subreq
+               nfs_page_create // return -EBADF
+
+After a server restart, it may fail to recognize file handles sent by the
+client and return -ESTALE. As a result, the client sets NFS_CONTEXT_BAD in
+nfs_open_context.
+
+During the writeback of dirty pages, the presence of NFS_CONTEXT_BAD
+causes -EBADF to be returned. Since NFS_CONTEXT_BAD is not cleared and
+-EBADF is treated as a non-fatal error, nfs_writepages() keeps retrying
+and eventually falls into an infinite loop.
+
+Exit the loop when -EBADF is encountered to avoid this issue.
+
+Fixes: c6fd3511c339 ("NFS: Further fixes to the writeback error handling")
+Link: https://lore.kernel.org/all/64fecc88-6b11-4fdf-a26f-271c4445be1a@huawei.com/
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfs/write.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 1ed4b3590b1a..608b299b1613 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -692,7 +692,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 		nfs_pageio_complete(&pgio);
+ 		if (err == -EAGAIN && mntflags & NFS_MOUNT_SOFTERR)
+ 			break;
+-	} while (err < 0 && !nfs_error_is_fatal(err));
++	} while (err < 0 && !nfs_error_is_fatal(err) && (err != -EBADF));
+ 	nfs_io_completion_put(ioc);
+ 
+ 	if (err > 0)
+-- 
+2.52.0
+
 
