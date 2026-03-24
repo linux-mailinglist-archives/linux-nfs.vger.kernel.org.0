@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-20364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OBqJKaPKwmmIlgQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20364-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 18:32:19 +0100
+	id AObjNVzLwmkBmQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20365-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 18:35:24 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76BBA31A0D3
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 18:32:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35E8D31A1EE
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 18:35:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D22EA3032263
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 17:32:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7C78530480B9
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 17:32:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56833D5258;
-	Tue, 24 Mar 2026 17:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0403407595;
+	Tue, 24 Mar 2026 17:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngBRIGFk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/Z4Z/t/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A283750A2;
-	Tue, 24 Mar 2026 17:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9E240758E;
+	Tue, 24 Mar 2026 17:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774373537; cv=none; b=anWSCAUQqZRKbY+aW1rlAsJhS+wRlBrbZ9wqy3txEgMAWEHkgWAKz3hzo+B+LiGOMYdU85Vs3Aw24E5id3b6chh4DQxsksmC8WFfGyYqb93YAct0cSIwxoIapmmdD0WePWrHO4X/7XX8nG0DuWCxSvVcmwImwbQgkHqPOJ5QxCM=
+	t=1774373538; cv=none; b=GrYcymlaoL0txqUv1fsKk5z3I5x1dse96AhUv3wARr4sG1lOZVMO/I1rcfUIOlcvLRdMJOZh5L91mYtN1TZpLHC9Af4hV2PDB/tPm4OGVpR03aCTUE2fWbAzPzRNw+xcSkHFahpaHFRS3ee4BMWu/AB+aAGF/mu81LJi9cIhlo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774373537; c=relaxed/simple;
-	bh=fufUQlEvyvQqQs6zE/Je2VGFJWTmcMJGn4+UxsNiNPg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WdPJVqP1AUnJguvi4uofPjkxIebpWj13BApKN+YOqg3nbvXnF5weKGQrXvWGMEhFfm3qvC12gE16y2uGd5E8JDEBx2LIyhRsrAGJv9caNvOr6amCTNGouhbil8aYufXaj1VkuCoaVY8k1Z5O2B6WVnmPSyEAkF3/NYFdNueB5jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngBRIGFk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E03B2C19424;
-	Tue, 24 Mar 2026 17:32:16 +0000 (UTC)
+	s=arc-20240116; t=1774373538; c=relaxed/simple;
+	bh=AOjD8zFqz3UKl9M/3fUGPTeSXDBXvJKvQHy4gsFjQIQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cThCFF6K5HsbadivwKpL351QwPJx3Hh5gkNZnXAALDmMel8PUpEnin5DvSMCI1Y6Z1IMR5KB4/qgruuMOWj1ATy0FRDb8mMYuPwJc9PPX4gzVm9sGaobxCUi+be7IT9iijxsNA5RKcRxyPmwVM11gSCaNAbR+XgT946hEVYzU7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/Z4Z/t/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B347DC2BC87;
+	Tue, 24 Mar 2026 17:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774373537;
-	bh=fufUQlEvyvQqQs6zE/Je2VGFJWTmcMJGn4+UxsNiNPg=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ngBRIGFksw3RPUMCKU1HGKaQtdJN4c5EqPHnEr9eq8kk9TxEBmGyeyPhbCRJLLqaJ
-	 IReKitwYAN4L11fc1UmVEFmKeYI+V4rN0zYc4ouV/lhhJkthxQ1Fs5y0iEjR3o8Pki
-	 J0IVMdso8w8OJOMbGQWwcT8Pto3gjObbk5z5RliEB5KH/9xs+dxmwj1p6W3L8rHFXS
-	 jiBzS9ofE0upazxvf3kohpyjmBgfCQ5rXRMJZEfYjPvimfG8VfcrjKXnLYW1Dr6ZuQ
-	 PLSIk0VbcVfQ/incZzT4vINwrtg4b95ns3JXad/WObjk8HQxqJohQruuw4rBLAikfh
-	 s4V/DCdy+vO7A==
+	s=k20201202; t=1774373538;
+	bh=AOjD8zFqz3UKl9M/3fUGPTeSXDBXvJKvQHy4gsFjQIQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=i/Z4Z/t/YLBjRHYkS04UwjiLGTVP/DFxGRCLktEh/FhNOXfzLOp0UnHInukFn6pbx
+	 ME04fMbl4kAAppaLi44cgH/ZrGw6nyrf3iu6Ls7WkkdfKW5w2tQpF1X8yj6EgaRwcT
+	 MRIRsWbjiaaxvTygjXqa8K4/tuM2sZmclKgDIrozasv6N43KXZ3vRdhndKnDG8ix1n
+	 DGiP7b3C2kBTP7BX6TYy4yrCfvDtL7C1qqg51xV3kJgHCg6BI6XNV0zRjyxJzwNPmk
+	 HvtJaH2vFA7RT466zsydqwTOglaLVZ2MOsQzB2mJRaRUGfRnNrvi73xHJ8HJ4G8czA
+	 UwfZedhiYdt7A==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 0/2] nfs: delegated attribute fixes
-Date: Tue, 24 Mar 2026 13:32:10 -0400
-Message-Id: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
+Date: Tue, 24 Mar 2026 13:32:11 -0400
+Subject: [PATCH v2 1/2] nfs: fix utimensat() for atime with delegated
+ timestamps
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,47 +56,46 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2XMQQrCMBCF4auUWTsySU1rXXkP6ULTSTsoiSQSl
- JK7G7t1+T8e3wqJo3CCU7NC5CxJgq+hdw3Y5epnRplqgybdUUsGvUvYo8LB9epmJzZHa6C+n5G
- dvDfpMtZeJL1C/GxwVr/138gKCVlrItcNbA7t+c7R82Mf4gxjKeULz33rPZ8AAAA=
-X-Change-ID: 20260305-nfs-7-1-9f71bcde58c5
+Message-Id: <20260324-nfs-7-1-v2-1-d110da3c0036@kernel.org>
+References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
+In-Reply-To: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: Olga Kornievskaia <aglo@umich.edu>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=776; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=fufUQlEvyvQqQs6zE/Je2VGFJWTmcMJGn4+UxsNiNPg=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpwsqgD93ClFbyPzxwIQ2Nn1N65LKO35UHKctKX
- zGGwkM6Vq2JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacLKoAAKCRAADmhBGVaC
- Fcw1D/wJZOg0R5Pin0goaCcFkYCoY/wQ725eqsjv/Ow3X8o07E7P2/RDnEt7CRBs+fpOieyus+M
- Hnb/mLCQ0yWwps72OzTJ8DK2KxVe/cRgd66JH7AD6xvskx5HF2B+yYUmistLigkHUiEUADjxt/b
- 61ZOnUSYe3rr4q1pKT9sW4lGy7g8NkzC1SiPojRJkjVbpoDzLB637SW2latm2dwvESwoRHGaKTr
- DT18/MnGo0+6yvmTIi8XLZe+qftTCaopkMhrSK85R5UJuNR4Pn+naon4RjggoGBnQrJ1+y1CMUB
- lHi2kJMrEsrX0K+5PTdV1F8ouMfolXmHQfK06E7rkaMAg8fQyijI3+Wfgu71xpK1/FLIBmXGN7v
- bq5rZImn9lDeR1wDej+ptPYTq8Yv5o3ysuhHnDzXhO63xmYMCaOtq0D1imunB0ad+3uyKyoIv2T
- Hjh6lWss+hEMaHAvcJx9RXq7lnEFXDkqsQ26mfc2DHF2DNCacemUHLGoooHjQmYU75t6OHYdeOD
- R0LD2/iFRXrNaDEl520HfqWLBVdfHabuZ522Enp26beP0K2fUFdRcJoq5yoSXwPsIgWwLREIcub
- LcstaMY0LrBvq7cAWwvjYRa4ajYezd4voC/5Sk1CA6eCRKtCwgQuaG9hOsfQnc3fFiCcFAx8XyQ
- cMjhqiExPAmDZzA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1708; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=AOjD8zFqz3UKl9M/3fUGPTeSXDBXvJKvQHy4gsFjQIQ=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpwsqgYk2UMGvXNmntncvmMKFZOgYPej1663gYV
+ e+aYzJLDeOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacLKoAAKCRAADmhBGVaC
+ FTXHD/4u55JTmrcx1hJrcxAz7gokvtpcBY32elXYkUPQ0eZDKmfjv6gm8eUuUV9vReywKVdwths
+ gvCNgAZEqj15w0h4YOmbVuLRTFiPFQnl1K4DzOp5dbIgJtyBiD45+1TIxtx0alUTMld06KV33J3
+ 2n8mzd3suJJHFcUqGxw/kLLDxOerylAwB3GUIpMc8ln7VBbxCyRHCzz9D/XSJaC+LzRKrhlfedd
+ CZ5dwiIOEyH6rkZfotcLiEzmCTlAxCsiVY8BnynGzrXbKDVoDpCCMaK6C5bv6ZlMHRzggfaMWsP
+ 6/xVJd0ak18qqVBLZXzJypqW5d6wDzP4OeGL6VuonZjLfGrq3L/eFs+V6JNjrtz0XDMioGS/5NO
+ rKDNKJnIZEbk60II/TacelfG6jMmtSu7D/FHxjzwv9a8X55hYWPN85kLVGynkUXGtdiQHrFaun6
+ aLJDPndOUV7z3VK1kxKNSAoE9ATnhbuz6WaH9Tt82pgHrqR21vznLBZDRUOvag7UIzWsby+9bqH
+ Lwdi9Hvg4MoFcdEXIerg0CF7e2X0xVI5auWDQ8G61eNqQWTv5Vwsh+T9sHOD+gfa/qVUox9LZ2I
+ XB0CnvmiLg01ux3qkyuXQUr7cj1S2gLe9ZzKT94EwAVZpmsaX9gK01kCkWGQl2y2D0Wm1jn7L15
+ DDoQClmWPVvSRHw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20364-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20365-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -104,35 +104,52 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 76BBA31A0D3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,umich.edu:email]
+X-Rspamd-Queue-Id: 35E8D31A1EE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This is the same set I sent a few weeks ago, with Fixes: tags added.
+xfstest generic/221 is failing with delegated timestamps enabled.  When
+the client holds a WRITE_ATTRS_DELEG delegation, and a userland process
+does a utimensat() for only the atime, the ctime is not properly
+updated. The problem is that the client tries to cache the atime update,
+but there is no mtime update, so the delegated attribute update never
+updates the ctime.
 
+Delegated timestamps don't have a mechanism to update the ctime in
+accordance with atime-only changes due to utimensat() and the like.
+Change the client to issue an RPC in this case, so that the ctime gets
+properly updated alongside the atime.
+
+Fixes: 40f45ab3814f ("NFS: Further fixes to attribute delegation a/mtime changes")
+Reported-by: Olga Kornievskaia <aglo@umich.edu>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- Add fixes tags
-- Link to v1: https://lore.kernel.org/r/20260305-nfs-7-1-v1-0-e2200f69e543@kernel.org
+ fs/nfs/inode.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
----
-Jeff Layton (2):
-      nfs: fix utimensat() for atime with delegated timestamps
-      nfs: update inode ctime after removexattr operation
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 4786343eeee0f874aa1f31ace2f35fdcb83fc7a6..3a5bba7e3c92d4d4fcd65234cd2f10e56f78dee0 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -757,14 +757,7 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	} else if (nfs_have_delegated_atime(inode) &&
+ 		   attr->ia_valid & ATTR_ATIME &&
+ 		   !(attr->ia_valid & ATTR_MTIME)) {
+-		if (attr->ia_valid & ATTR_ATIME_SET) {
+-			if (uid_eq(task_uid, owner_uid)) {
+-				spin_lock(&inode->i_lock);
+-				nfs_set_timestamps_to_ts(inode, attr);
+-				spin_unlock(&inode->i_lock);
+-				attr->ia_valid &= ~(ATTR_ATIME|ATTR_ATIME_SET);
+-			}
+-		} else {
++		if (!(attr->ia_valid & ATTR_ATIME_SET)) {
+ 			nfs_update_delegated_atime(inode);
+ 			attr->ia_valid &= ~ATTR_ATIME;
+ 		}
 
- fs/nfs/inode.c          |  9 +--------
- fs/nfs/nfs42proc.c      | 18 ++++++++++++++++--
- fs/nfs/nfs42xdr.c       | 10 ++++++++--
- include/linux/nfs_xdr.h |  3 +++
- 4 files changed, 28 insertions(+), 12 deletions(-)
----
-base-commit: c107785c7e8dbabd1c18301a1c362544b5786282
-change-id: 20260305-nfs-7-1-9f71bcde58c5
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.53.0
 
 
