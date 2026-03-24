@@ -1,211 +1,237 @@
-Return-Path: <linux-nfs+bounces-20361-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20362-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yAbjDCSywmmRkwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20361-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 16:47:48 +0100
+	id UAC+BdzEwmmIlgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20362-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 18:07:40 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA8331859C
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 16:47:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35372319B5F
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 18:07:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C6DA43036061
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 15:31:54 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 019B03007290
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 16:55:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A562740757C;
-	Tue, 24 Mar 2026 15:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57FB34F48C;
+	Tue, 24 Mar 2026 16:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXTu5mXb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqginkQd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-dl1-f68.google.com (mail-dl1-f68.google.com [74.125.82.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2576C40756D
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2026 15:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F7D3603ED
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2026 16:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774366255; cv=none; b=ItaDgILYnkQNMnejwYWnkJukFJnRFU0xA+LFDOdPLZVE+BZS6fAC4AnANqkGJUX72OCj9c2HPFCV2IcZ339rlDpwbxASMbmgDuE6lvMKZ5SnRd/qGjriGfxfQCN0Wm65INyiim3PoeYF8XkCrWd/vC9lWB9K38iW5QWZ9PrZ9ng=
+	t=1774371300; cv=none; b=LgH4RIyPRvAPWPaijrN34MUFxBmzubXrRrdE767Nef8vumNgnnYq0KficZ0ooAmUZNbYkLBq5bRH4dRAxuOEIAtZIqjTdkYFz+U5ZE9zGo+Kfgi6NteboAld3E8vlAu1B3XbdZgPK6+LGiZ9inq8flGkytwqkAcSQ1suxc9RaQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774366255; c=relaxed/simple;
-	bh=IkRvC5Y3yv7EfUIouHSB7F/B/icLT44ICvi/VwM4Hso=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TnxPdrkZ9V1or0xdzGFB4qRUbIDxtoPzSXbQRfEykYZrq8HsarO/6KpJE4sbfXcSHJCmIF3i3Kc1chL81oRKXIjI2GtoDeDJinmBJqFQYPWNb3IL9CImEsNOgie7CkqVqjUIQBDJw6VAi8ewlEbLTzLzei6R54uEai0ndjMSRys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TXTu5mXb; arc=none smtp.client-ip=74.125.82.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f68.google.com with SMTP id a92af1059eb24-127380532eeso2671530c88.1
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2026 08:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774366249; x=1774971049; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WiVBh44Ha4wklKoyn3mQlolcP3I3uICA1aXisZpChwo=;
-        b=TXTu5mXbOvgnCld20uPbVAxA90LbgMSKWj4aY/HKBV/gqROu0t4G1KCmZ2aCvNvqKt
-         epK7amemp8fedLeQSshBoA7casRlnmbqXULDvFCPfWXcwN9gyTEC75lV7GwREypB9cDE
-         VWay9GSgNKSatkkoVjhRuz1aj3H5TSuZaTaO9wjqsEhQ+CBFKP/WjgNuWmH80+HUSLwR
-         yXO8vvt20J2zzGzm/lkhwelmWh8UQnbgZC2kCEyw5g4O34Be9y+OTn3arkD4sMn4ZS9Y
-         /70AwpNo1VY2VGpFZhxZxaYS2NdvElrxW/ra3sWja7DQ6w4Lj4KA3jQ14WjzA7crqjZe
-         WgAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774366249; x=1774971049;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WiVBh44Ha4wklKoyn3mQlolcP3I3uICA1aXisZpChwo=;
-        b=mH1ZpVatd9GWYGlMIKTc9Xj8LRAij107fbyKCRAXvVWXzZRLQS0bNWLLea0yQQylC4
-         6IPybhpC7mYGAiddEkNcDomX8VZxnNHalwtRCcvT/t0nyR7gu+MvxBSUA0soNACO6j6u
-         Vm7n0EfXj6PsW+SzeBh9VXrlkOJ/IntZuUyxNiEtC1a69vTvEWIk/xUAG3lAQL7VpZ6/
-         ilm1k1ueej1yC+p7dQ0K5+n9vx9QNhX58crhem26PF3AfOLZev96s6nUSMXuxnv3a994
-         O9PORVfJib5fvD9K5uiRarU2I+slTcE7cjNvhyzIUQi0UWZ0YcDuP4uiPoRRSKkyc4EL
-         MdcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+dgZUseF/K1U/7d4SAr6SeTAJvLwxUKXEFgNCLqCANgvkfwvpTYroh+71pVnShhWCkhKPmhatTzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS8pKYcjx24/v/FATjznC1LC/wvrOqClzN2rWRUHWJJbOMfUva
-	KxORTYNhVOIB61PGnwiIcsBtIacFY2IfA+Unu0ohgbw3EqLL63RHlDtl
-X-Gm-Gg: ATEYQzyKH0qkmHy+cllwubRzixhqPK0lNJIHY1e1B6cS8TeEgA/qGN9VJC8Qau1pV3P
-	dk0ztO+/WZ4jcECjz4tJ3N5tyTMJZNXuixdd17WiwJi3QKzA8XwSAh2bMHULDqyhMHG3QrBpqln
-	dm0jPjF0DomxpW5XKQ3IJtZWNQxeZU8I6yMc7x5GhPoxjMDUIxIXrX4ue7fcUx4j10+GTImgIN5
-	LwYV3icfssAtJkgJq6vY6ICbuy6tDT04ITpA4HUv/LIflugMojAjurCkNBezvpcZMvwV+1RH3JO
-	k4dhQTkTfDIWEpNjzqDq1G/zINlemDIy3pgkIUEOSpPNlXK4O/gf7PTrCVSPV0nMi/n97m5qVkp
-	Yn44EsPb/k/O2//G/qBagHdQLwWaCShGC2l4SidklxoIpIJ2ByU3wKC2t4b+BiLj4CxcAHzKJAt
-	CZrEmHKRSKr8sYYQGlhbftCKYh3TB/NQWqt6hBVKpRyHEOUE2PJRZyiMB3E+Ku0YesiZE81QFfg
-	JPg266n
-X-Received: by 2002:a05:7022:6709:b0:12a:6c84:601f with SMTP id a92af1059eb24-12a726dee93mr8317819c88.36.1774366249330;
-        Tue, 24 Mar 2026 08:30:49 -0700 (PDT)
-Received: from localhost.localdomain ([38.244.25.197])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12a736b952asm11668865c88.12.2026.03.24.08.30.45
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 24 Mar 2026 08:30:48 -0700 (PDT)
-From: Eric-Terminal <ericterminal@gmail.com>
-To: horms@kernel.org,
-	davem@davemloft.net,
-	kuba@kernel.org
-Cc: netdev@vger.kernel.org,
-	bridge@lists.linux.dev,
-	linux-nfs@vger.kernel.org,
-	Yufan Chen <ericterminal@gmail.com>
-Subject: [PATCH v3 2/2] net: sunrpc: replace deprecated simple_strtol with kstrtouint
-Date: Tue, 24 Mar 2026 23:30:36 +0800
-Message-ID: <20260324153036.86901-3-ericterminal@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260324153036.86901-1-ericterminal@gmail.com>
-References: <20260324153036.86901-1-ericterminal@gmail.com>
+	s=arc-20240116; t=1774371300; c=relaxed/simple;
+	bh=uQJF8WNARBwaAuot29+lUlDiafR2xE1YVZaIfjG3NxA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fzCryngheMKvUfXTOnA9bcbfi0UwHsOAKrx/Z7LnzmOoNUnY0uTNVIGd2Y5ixxA/Zm7ZPUyMAvZvK8XK49/w8sLXIxCruJ7UT9/SSDVHf5ZZnM12dDgJ26ZjaN8afY2wLj4x2eSRQ5oeZ9gDIkBZQ51phRkMBGcgqIiWY7Je1FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqginkQd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC11C19424;
+	Tue, 24 Mar 2026 16:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774371300;
+	bh=uQJF8WNARBwaAuot29+lUlDiafR2xE1YVZaIfjG3NxA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=IqginkQdbQzZ1lE+jHWXqMZmV567J/TOXdQwkIY1aVNjHqwuZ6iA1Cud7VoqSUtmi
+	 Z9uQodftlSAuWeO2TePlOpMhc+ugAT7Dvx4DDcpjwx6cyCOS1cTc5dd+8ZuY3o+O6b
+	 jyuuzke3q9DICLFlAXlyvEHjSOyG0m1+vezi2jJLdVws1zgZoY8hwKO2HnapqgKTVt
+	 GwBZPIsxvtdkqoW/V/xFvDR3NKsIm04bU1hsmvur3HPu22h/I039vZaHG5ylbFAVK3
+	 fdSjAjySX2Uu3dISeG9Q5lwkJbNS+XZYkKx9d77QSUIYMPg5Lr7r5PKntQN06D8PCY
+	 UyKWvshu+xMCA==
+Message-ID: <e9e404382c7bb54df498a6e368f522f2ae313820.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Fix delegation reference leak in
+ nfsd4_revoke_states
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Tue, 24 Mar 2026 12:54:57 -0400
+In-Reply-To: <20260324151812.85482-1-cel@kernel.org>
+References: <20260324151812.85482-1-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2022; i=ericterminal@gmail.com; h=from:subject; bh=6agocKJaIItyp0/DYq8x5bAU5b3NaTnGQ7RmsnHGIwk=; b=owGbwMvMwCXWM/dCzeS3H+sZT6slMWQeWqt142ldbiBb3nGxexem6LS+7Hnxdq9vf/LzfVUZT 5nv3p2b3jGRhUGMi8FSTJHl7v99c3O9bs25zn04F2YOKxPIEGmRBgYgYGHgy03MKzXSMdIz1TbU MzTSMdAxZuDiFICpDjzC8D//4YOUx4Y/r2h2zbm/a9vDWZO7Vn2bfVc+sG7JQ7GMaROfMfz3nsO 2NCFps1Lc2d3NjLcjXQzm9DgUTRafp86w+9q1i0kcAA==
-X-Developer-Key: i=ericterminal@gmail.com; a=openpgp; fpr=DDFFBE9D6D4ADA9CD70BC36D8C9DD07C93EDF17F
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20362-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,gmail.com];
-	TAGGED_FROM(0.00)[bounces-20361-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ericterminal@gmail.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ABA8331859C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 35372319B5F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Yufan Chen <ericterminal@gmail.com>
+On Tue, 2026-03-24 at 11:18 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> When revoking delegation state, nfsd4_revoke_states() takes an extra
+> reference on the stid before calling unhash_delegation_locked(). If
+> unhash_delegation_locked() returns false (the delegation was already
+> unhashed by a concurrent path), dp is set to NULL and
+> revoke_delegation() is skipped, but the extra reference is never
+> released. Each occurrence permanently pins the stid in memory. The
+> leaked reference also prevents nfs4_put_stid() from decrementing
+> cl_admin_revoked, leaving the counter permanently inflated.
+>=20
+> Drop the extra reference in the failure path.
+>=20
+> Fixes: 8dd91e8d31fe ("nfsd: fix race between laundromat and free_stateid"=
+)
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 6b9c399b89df..0fefae6b0a48 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1389,7 +1389,8 @@ static void destroy_delegation(struct nfs4_delegati=
+on *dp)
+>   * stateid or it's called from a laundromat thread (nfsd4_landromat()) t=
+hat
+>   * determined that this specific state has expired and needs to be revok=
+ed
+>   * (both mark state with the appropriate stid sc_status mode). It is als=
+o
+> - * assumed that a reference was taken on the @dp state.
+> + * assumed that a reference was taken on the @dp state. This function
+> + * consumes that reference.
+>   *
+>   * If this function finds that the @dp state is SC_STATUS_FREED it means
+>   * that a FREE_STATEID operation for this stateid has been processed and
+> @@ -1836,6 +1837,10 @@ void nfsd4_revoke_states(struct nfsd_net *nn, stru=
+ct super_block *sb)
+>  					mutex_unlock(&stp->st_mutex);
+>  					break;
+>  				case SC_TYPE_DELEG:
+> +					/* Extra reference guards against concurrent
+> +					 * FREE_STATEID; revoke_delegation() consumes
+> +					 * it, otherwise release it directly.
+> +					 */
+>  					refcount_inc(&stid->sc_count);
+>  					dp =3D delegstateid(stid);
+>  					spin_lock(&state_lock);
+> @@ -1845,6 +1850,8 @@ void nfsd4_revoke_states(struct nfsd_net *nn, struc=
+t super_block *sb)
+>  					spin_unlock(&state_lock);
+>  					if (dp)
+>  						revoke_delegation(dp);
+> +					else
+> +						nfs4_put_stid(stid);
+>  					break;
+>  				case SC_TYPE_LAYOUT:
+>  					ls =3D layoutstateid(stid);
 
-In proc_dodebug(), trim trailing whitespace and use kstrtouint() for
-full-token conversion, preserving acceptance of surrounding whitespace
-while rejecting malformed input.
+Good catch!
 
-This replaces the deprecated simple_strtol(), improves error reporting
-consistency, and avoids partially parsed values in control paths.
-
-Signed-off-by: Yufan Chen <ericterminal@gmail.com>
----
-v3:
-- Split from mixed series into a dedicated net series.
-- No functional changes since v2.
-
- net/sunrpc/sysctl.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/net/sunrpc/sysctl.c b/net/sunrpc/sysctl.c
-index bdb587a72..07072218b 100644
---- a/net/sunrpc/sysctl.c
-+++ b/net/sunrpc/sysctl.c
-@@ -12,6 +12,7 @@
- #include <linux/linkage.h>
- #include <linux/ctype.h>
- #include <linux/fs.h>
-+#include <linux/kernel.h>
- #include <linux/sysctl.h>
- #include <linux/module.h>
- 
-@@ -65,10 +66,11 @@ static int
- proc_dodebug(const struct ctl_table *table, int write, void *buffer, size_t *lenp,
- 	     loff_t *ppos)
- {
--	char		tmpbuf[20], *s = NULL;
-+	char		tmpbuf[20];
- 	char *p;
- 	unsigned int	value;
- 	size_t		left, len;
-+	int		ret;
- 
- 	if ((*ppos && !write) || !*lenp) {
- 		*lenp = 0;
-@@ -89,19 +91,17 @@ proc_dodebug(const struct ctl_table *table, int write, void *buffer, size_t *len
- 		if (left > sizeof(tmpbuf) - 1)
- 			return -EINVAL;
- 		memcpy(tmpbuf, p, left);
-+
-+		while (left && isspace(tmpbuf[left - 1]))
-+			left--;
- 		tmpbuf[left] = '\0';
-+		if (!tmpbuf[0])
-+			goto done;
- 
--		value = simple_strtol(tmpbuf, &s, 0);
--		if (s) {
--			left -= (s - tmpbuf);
--			if (left && !isspace(*s))
--				return -EINVAL;
--			while (left && isspace(*s)) {
--				left--;
--				s++;
--			}
--		} else
--			left = 0;
-+		ret = kstrtouint(tmpbuf, 0, &value);
-+		if (ret)
-+			return ret;
-+		left = 0;
- 		*(unsigned int *) table->data = value;
- 		/* Display the RPC tasks on writing to rpc_debug */
- 		if (strcmp(table->procname, "rpc_debug") == 0)
--- 
-2.47.3
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
