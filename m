@@ -1,233 +1,368 @@
-Return-Path: <linux-nfs+bounces-20356-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20357-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0EQ+L8aUwmkXfAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20356-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 14:42:30 +0100
+	id qBP/KyipwmkyggQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20357-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 16:09:28 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54B0B3099B7
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 14:42:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB3F6317B60
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 16:09:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B11BA3013471
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 13:42:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 466A430A7A2C
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Mar 2026 15:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A36D93FA5CF;
-	Tue, 24 Mar 2026 13:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9AC240244D;
+	Tue, 24 Mar 2026 15:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKaJC+Dn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuzX6Wll"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBF33D6CAB
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2026 13:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86843402432
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Mar 2026 15:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774359748; cv=none; b=ncyjotrVmyNtSPqMhatnXRbmAgIVHngQjekgHo4VVWr7cWjl2T5BildeVba3xibXQNzI0vavlAwOQWOdK1YAz+TId8BiKsD/PQ+yJ4lWqbGJaBzdIcnlCWX10DVq+Wjd7ojkfRnnNNe9WONH+KNJd+4ztuRifzQETPf57ipdb1c=
+	t=1774364416; cv=none; b=K+DNGUuNh9IMCUkT5nZGCIw20SmMaFQoEOKbvCKGiIOwf/tqL6sjUXW9Dh2oWxgu/Fzv0lkLCBEYZRZf9AwXNgVnwBAnqP0NdF3YM91d7Glr2il8VX0fkDnCSgo8xsr449XtkCcrzE2Dc2YPrekCMR/FsFjcwdRHf7bnpLfKgXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774359748; c=relaxed/simple;
-	bh=1hd/g8rlYkxdHIVU0+5IZQ7zszyvb+TSb11ohVAJ62g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fqq0zG02yvj5oFtbYwgL/3Tpmhq0gDTgfzxIKmb4N7S7u0ToD2r2OtQ+ZK5xUqTfuBTYooJKY5FeqPiHBiHEKpGdwZ1FN35YNubfdXHipqx5lvFxGhW5YT28NKi8OSjnMq4eGNM1uYs0Ym4m3+O9mnDGWdCdqFeTzZUcEN0LsGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKaJC+Dn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5796AC19424;
-	Tue, 24 Mar 2026 13:42:27 +0000 (UTC)
+	s=arc-20240116; t=1774364416; c=relaxed/simple;
+	bh=261DdpU44QDsAYYaBAf7FS0ZoMYcigVPbKOFrdwYZGg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RnYVuPIrKrTLsHEfyj+R+EElx7lZVx/M9jDSIVtdI7APHjxSfhtmm/08r19X516i8VQiFRCHJMWMPkQEej32W4v6YyQXkxx5a+KWIrLacdgp39e8zQH0zCs7fMluaxCAXCHQB70K60PUfBoCYzMRplbXRNB67s28lx2Gy3DrQ2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuzX6Wll; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C255C2BCB2;
+	Tue, 24 Mar 2026 15:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774359748;
-	bh=1hd/g8rlYkxdHIVU0+5IZQ7zszyvb+TSb11ohVAJ62g=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qKaJC+DnzMWKePMjYOU3AUHvk6bZBYjXum6NAY5evV7uY0Yxo1mvR2lEnAtn24UgH
-	 SLUvByjfBvypJ8GeGBHHTyjYW2wURRir/N51LQ8LRTGnhKb2MheuujYi9snAvs/1JL
-	 XvsygElETBt9T0GKHqqaao1vU0JNkqlGSjvMMvv/bTE9fx8S+W/3bkcMFuyYxrZkUR
-	 wWdyS0CB2HFQD36wMlMFyOdZHb8dkW/Mdr74dLGc/fUh10r4cK8GytcoUtbcSThtD3
-	 bdKlQtu3c04SG3pJ7fTmch5CuBduR8fd3uEJyOmEyu3kPSXFzaHHCW12zT54Uqgmby
-	 6JLQSpjNjEPXw==
-Message-ID: <294ffcf440317af6cc6198196e7687fe0af66c14.camel@kernel.org>
-Subject: Re: [PATCH 3/3] sunrpc: skip svc_xprt_enqueue when transport is busy
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 24 Mar 2026 09:42:25 -0400
-In-Reply-To: <20260324130449.16437-4-cel@kernel.org>
-References: <20260324130449.16437-1-cel@kernel.org>
-	 <20260324130449.16437-4-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=k20201202; t=1774364416;
+	bh=261DdpU44QDsAYYaBAf7FS0ZoMYcigVPbKOFrdwYZGg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=UuzX6WllLOng9crlTMDs+sNcNli4MM+6ZaEWdoExvQuUZGmDA7olC4JqkOw2RMsnO
+	 2o5Zvt52W7HscN4ijBP3X9HH7OBFyJOLN8j2+dwIQumZLa+z1WyFaNASnDlfScsTSg
+	 KPZEKQs6hsw0lKf/lI1a10/YG2WljVHe2zBYLF83g4jJ6jkvCXrJ3k8CTMTEjzNVhS
+	 JYb7iYYe0M5YuaXOwdUzophY0cQntAl1Ch5qZXShqDwVDt517DS7FybjHb+HG1fp27
+	 6/g2fCh7gFJMI+YRXMtFsiJC5kbpKFCy2YEWDqRMl2auC0aC973+MU27ez5CWlqwSt
+	 W1FMfEmAMNraA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id F0868F4008B;
+	Tue, 24 Mar 2026 11:00:14 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 24 Mar 2026 11:00:14 -0400
+X-ME-Sender: <xms:_qbCadBUO-0bYUoB0vGjdqezZoaLaD80117vFCwpIOud-f9BUxoN8w>
+    <xme:_qbCaWXQxLslikmeOCLsV7oUEleXHGgrOtVdWyOwc0f6B3bTEXNPE--cdQT0diOUD
+    FxBLBkNRawN5pFJevqwo1nvwR0VgsCmvADhjB6sIijiYOmuBJyXKb8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefvddukeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeejhfdutdetfeetvdevfeevtdelueelffdtleefledtteefteefgffhieefgeelieen
+    ucffohhmrghinhepuggvsghirghnrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
+    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
+    peekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnvghilhessghrohifnhdrnh
+    grmhgvpdhrtghpthhtohepudduvdekkeeiudessghughhsrdguvggsihgrnhdrohhrghdp
+    rhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrvg
+    hgrhgvshhsihhonhhssehlvggvmhhhuhhishdrihhnfhhopdhrtghpthhtohepthhjrdhi
+    rghmrdhtjhesphhrohhtohhnrdhmvgdprhgtphhtthhopehokhhorhhnihgvvhesrhgvug
+    hhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:_qbCaR00qauWG_tYV4eJhYXlmZJLKGQu6c3x0L5AWKutfPt0sK-bTg>
+    <xmx:_qbCaU8Tt9P2onLqUwOKK1y4RdT6_o4ZaHwAwtAPjaKmg8eAjrnIlQ>
+    <xmx:_qbCaRrorPwlFkwj6FgMLbbFWtq-COiuWbYxKPQYnZKzYGTgHnTG9g>
+    <xmx:_qbCaeRenvMokkRhRTagU16KjGyaLetVnI4AQObJu568b2YHatNmXw>
+    <xmx:_qbCaUP1gEdH97f1prFrE133DHqZSqmk2v-CX8pXLqDJQutBQ4SA8NBO>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C7477780077; Tue, 24 Mar 2026 11:00:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-ThreadId: A_jyC0Lb0WUR
+Date: Tue, 24 Mar 2026 10:59:54 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: NeilBrown <neil@brown.name>, "Jeff Layton" <jlayton@kernel.org>
+Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>, 1128861@bugs.debian.org,
+ Tj <tj.iam.tj@proton.me>, linux-nfs@vger.kernel.org,
+ "Olga Kornievskaia" <okorniev@redhat.com>, stable@vger.kernel.org
+Message-Id: <d4773958-5ae5-42d4-b785-6598b5c9b27a@app.fastmail.com>
+In-Reply-To: <177434721528.7102.13514118512738778346@noble.neil.brown.name>
+References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
+ <177266540127.7472.3460090956713656639@noble.neil.brown.name>
+ <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
+ <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>
+ <177434721528.7102.13514118512738778346@noble.neil.brown.name>
+Subject: Re: [PATCH] lockd: fix TEST handling when not all permissions are available.
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20356-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20357-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,proton.me:email,brown.name:email,app.fastmail.com:mid];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 54B0B3099B7
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: EB3F6317B60
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 2026-03-24 at 09:04 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> svc_xprt_resource_released() calls svc_xprt_enqueue()
-> whenever XPT_DATA or XPT_DEFERRED is set. During RPC
-> processing, svc_reserve_auth() reduces the reservation
-> counter and triggers this path while the current thread
-> still holds XPT_BUSY. The enqueue enters svc_xprt_ready(),
-> executes an smp_rmb(), READ_ONCE(), and tracepoint, then
-> returns false on seeing XPT_BUSY.
->=20
-> Trace data from a 256KB NFSv3 WRITE workload over TCP
-> shows this pattern generates roughly 195,000 wasted
-> enqueue calls -- approximately one per RPC -- each
-> paying the full svc_xprt_ready() cost for no benefit.
->=20
-> Add a BUSY check alongside the existing DATA|DEFERRED
-> check in svc_xprt_resource_released(). When the
-> transport is BUSY, the holder will call
-> svc_xprt_received() upon completion, which already
-> checks for pending work flags and re-enqueues.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/svc_xprt.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index 36c8437cfd8d..d2b8f0396b6a 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -440,16 +440,23 @@ static bool svc_xprt_reserve_slot(struct svc_rqst *=
-rqstp, struct svc_xprt *xprt)
->  /*
->   * After a caller releases write-space or a request slot,
->   * re-enqueue the transport only when there is pending
-> - * work that a thread could act on. The smp_mb() pairs
-> + * work that a thread could act on.  The smp_mb() pairs
->   * with the smp_rmb() in svc_xprt_ready() and orders the
->   * preceding counter update before the flags read so a
->   * concurrent set_bit(XPT_DATA) is visible here.
-> + *
-> + * When the transport is BUSY, the thread holding it will
-> + * call svc_xprt_received() upon completion, which checks
-> + * for pending work and re-enqueues as needed.
->   */
->  static void svc_xprt_resource_released(struct svc_xprt *xprt)
->  {
-> +	unsigned long xpt_flags;
-> +
->  	smp_mb();
-> -	if (READ_ONCE(xprt->xpt_flags) &
-> -	    (BIT(XPT_DATA) | BIT(XPT_DEFERRED)))
-> +	xpt_flags =3D READ_ONCE(xprt->xpt_flags);
-> +	if (xpt_flags & (BIT(XPT_DATA) | BIT(XPT_DEFERRED)) &&
-> +	    !(xpt_flags & BIT(XPT_BUSY)))
->  		svc_xprt_enqueue(xprt);
->  }
-> =20
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+On Tue, Mar 24, 2026, at 6:13 AM, NeilBrown wrote:
+> From: NeilBrown <neil@brown.name>
+>
+> The F_GETLK fcntl can work with either read access or write access or
+> both.  It can query F_RDLCK and F_WRLCK locks in either case.
+>
+> However lockd currently treats F_GETLK similar to F_SETLK in that read
+> access is required to query an F_RDLCK lock and write access is required
+> to query a F_WRLCK lock.
+>
+> This is wrong and can cause problem - e.g.  when qemu accesses a
+> read-only (e.g. iso) filesystem image over NFS (though why it queries
+> if it can get a write lock - I don't know.  But it does, and this works
+> with local filesystems).
+>
+> So we need TEST requests to be handled differently.  To do this:
+>
+> - change nlm_do_fopen() to accept O_RDWR as a mode and in that case
+>   succeed if either a O_RDONLY or O_WRONLY file can be opened.
+> - change nlm_lookup_file() to accept a mode argument from caller,
+>   instead of deducing base on lock time, and pass that on to nlm_do_fopen()
+> - change nlm4svc_retrieve_args() and nlmsvc_retrieve_args() to detect
+>   TEST requests and pass O_RDWR as a mode to nlm_lookup_file, passing
+>   the same mode as before for other requests.  Also set
+>    lock->fl.c.flc_file to whichever file is available for TEST requests.
+> - change nlmsvc_testlock() to also not calculate the mode, but to use
+>   whenever was stored in lock->fl.c.flc_file.
+>
+> Reported-by: Tj <tj.iam.tj@proton.me>
+> Link:  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1128861
+> Fixes: 7f024fcd5c97 ("Keep read and write fds with each nlm_file")
+> Signed-off-by: NeilBrown <neil@brown.name>
+
+Hi Neil, which kernels should this fix apply to?
+
+
+> ---
+>  fs/lockd/svc4proc.c         | 13 ++++++++++---
+>  fs/lockd/svclock.c          |  4 +---
+>  fs/lockd/svcproc.c          | 15 ++++++++++++---
+>  fs/lockd/svcsubs.c          | 26 +++++++++++++++++---------
+>  include/linux/lockd/lockd.h |  2 +-
+>  5 files changed, 41 insertions(+), 19 deletions(-)
+>
+> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> index 4b6f18d97734..75e020a8bfd0 100644
+> --- a/fs/lockd/svc4proc.c
+> +++ b/fs/lockd/svc4proc.c
+> @@ -26,6 +26,8 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, struct 
+> nlm_args *argp,
+>  	struct nlm_host		*host = NULL;
+>  	struct nlm_file		*file = NULL;
+>  	struct nlm_lock		*lock = &argp->lock;
+> +	bool			is_test = (rqstp->rq_proc == NLMPROC_TEST ||
+> +					   rqstp->rq_proc == NLMPROC_TEST_MSG);
+>  	__be32			error = 0;
+> 
+>  	/* nfsd callbacks must have been installed for this procedure */
+> @@ -46,15 +48,20 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, 
+> struct nlm_args *argp,
+>  	if (filp != NULL) {
+>  		int mode = lock_to_openmode(&lock->fl);
+> 
+> +		if (is_test)
+> +			mode = O_RDWR;
+> +
+>  		lock->fl.c.flc_flags = FL_POSIX;
+> 
+> -		error = nlm_lookup_file(rqstp, &file, lock);
+> +		error = nlm_lookup_file(rqstp, &file, lock, mode);
+>  		if (error)
+>  			goto no_locks;
+>  		*filp = file;
+> -
+>  		/* Set up the missing parts of the file_lock structure */
+> -		lock->fl.c.flc_file = file->f_file[mode];
+> +		if (is_test)
+> +			lock->fl.c.flc_file = nlmsvc_file_file(file);
+> +		else
+> +			lock->fl.c.flc_file = file->f_file[mode];
+>  		lock->fl.c.flc_pid = current->tgid;
+>  		lock->fl.fl_start = (loff_t)lock->lock_start;
+>  		lock->fl.fl_end = lock->lock_len ?
+> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> index 255a847ca0b6..adfd8c072898 100644
+> --- a/fs/lockd/svclock.c
+> +++ b/fs/lockd/svclock.c
+> @@ -614,7 +614,6 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct 
+> nlm_file *file,
+>  		struct nlm_lock *conflock)
+>  {
+>  	int			error;
+> -	int			mode;
+>  	__be32			ret;
+> 
+>  	dprintk("lockd: nlmsvc_testlock(%s/%ld, ty=%d, %Ld-%Ld)\n",
+> @@ -632,14 +631,13 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct 
+> nlm_file *file,
+>  		goto out;
+>  	}
+> 
+> -	mode = lock_to_openmode(&lock->fl);
+>  	locks_init_lock(&conflock->fl);
+>  	/* vfs_test_lock only uses start, end, and owner, but tests flc_file 
+> */
+>  	conflock->fl.c.flc_file = lock->fl.c.flc_file;
+>  	conflock->fl.fl_start = lock->fl.fl_start;
+>  	conflock->fl.fl_end = lock->fl.fl_end;
+>  	conflock->fl.c.flc_owner = lock->fl.c.flc_owner;
+> -	error = vfs_test_lock(file->f_file[mode], &conflock->fl);
+> +	error = vfs_test_lock(lock->fl.c.flc_file, &conflock->fl);
+>  	if (error) {
+>  		ret = nlm_lck_denied_nolocks;
+>  		goto out;
+> diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+> index 5817ef272332..d98e8d684376 100644
+> --- a/fs/lockd/svcproc.c
+> +++ b/fs/lockd/svcproc.c
+> @@ -55,6 +55,8 @@ nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct 
+> nlm_args *argp,
+>  	struct nlm_host		*host = NULL;
+>  	struct nlm_file		*file = NULL;
+>  	struct nlm_lock		*lock = &argp->lock;
+> +	bool			is_test = (rqstp->rq_proc == NLMPROC_TEST ||
+> +					   rqstp->rq_proc == NLMPROC_TEST_MSG);
+>  	int			mode;
+>  	__be32			error = 0;
+> 
+> @@ -70,15 +72,22 @@ nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct 
+> nlm_args *argp,
+> 
+>  	/* Obtain file pointer. Not used by FREE_ALL call. */
+>  	if (filp != NULL) {
+> -		error = cast_status(nlm_lookup_file(rqstp, &file, lock));
+> +		mode = lock_to_openmode(&lock->fl);
+> +
+> +		if (is_test)
+> +			mode = O_RDWR;
+> +
+> +		error = cast_status(nlm_lookup_file(rqstp, &file, lock, mode));
+>  		if (error != 0)
+>  			goto no_locks;
+>  		*filp = file;
+> 
+>  		/* Set up the missing parts of the file_lock structure */
+> -		mode = lock_to_openmode(&lock->fl);
+>  		lock->fl.c.flc_flags = FL_POSIX;
+> -		lock->fl.c.flc_file  = file->f_file[mode];
+> +		if (is_test)
+> +			lock->fl.c.flc_file = nlmsvc_file_file(file);
+> +		else
+> +			lock->fl.c.flc_file = file->f_file[mode];
+>  		lock->fl.c.flc_pid = current->tgid;
+>  		lock->fl.fl_lmops = &nlmsvc_lock_operations;
+>  		nlmsvc_locks_init_private(&lock->fl, host, (pid_t)lock->svid);
+> diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
+> index dd0214dcb695..b92eb032849f 100644
+> --- a/fs/lockd/svcsubs.c
+> +++ b/fs/lockd/svcsubs.c
+> @@ -82,18 +82,28 @@ int lock_to_openmode(struct file_lock *lock)
+>   *
+>   * We have to make sure we have the right credential to open
+>   * the file.
+> + *
+> + * mode can be O_RDONLY(0), O_WRONLY(1) or O_RDWR(2) meaning either
+>   */
+>  static __be32 nlm_do_fopen(struct svc_rqst *rqstp,
+>  			   struct nlm_file *file, int mode)
+>  {
+> -	struct file **fp = &file->f_file[mode];
+> +	struct file **fp;
+>  	__be32	nfserr;
+> +	int m;
+> 
+> -	if (*fp)
+> -		return 0;
+> -	nfserr = nlmsvc_ops->fopen(rqstp, &file->f_handle, fp, mode);
+> -	if (nfserr)
+> -		dprintk("lockd: open failed (error %d)\n", nfserr);
+> +	for (m = O_RDONLY ; m <= O_WRONLY ; m++) {
+> +		if (mode != O_RDWR && mode != m)
+> +			continue;
+> +
+> +		fp = &file->f_file[m];
+> +		if (*fp)
+> +			return 0;
+> +		nfserr = nlmsvc_ops->fopen(rqstp, &file->f_handle, fp, m);
+> +		if (!nfserr)
+> +			return 0;
+> +	}
+> +	dprintk("lockd: open failed (error %d)\n", nfserr);
+>  	return nfserr;
+>  }
+> 
+> @@ -103,17 +113,15 @@ static __be32 nlm_do_fopen(struct svc_rqst *rqstp,
+>   */
+>  __be32
+>  nlm_lookup_file(struct svc_rqst *rqstp, struct nlm_file **result,
+> -					struct nlm_lock *lock)
+> +		struct nlm_lock *lock, int mode)
+>  {
+>  	struct nlm_file	*file;
+>  	unsigned int	hash;
+>  	__be32		nfserr;
+> -	int		mode;
+> 
+>  	nlm_debug_print_fh("nlm_lookup_file", &lock->fh);
+> 
+>  	hash = file_hash(&lock->fh);
+> -	mode = lock_to_openmode(&lock->fl);
+> 
+>  	/* Lock file table */
+>  	mutex_lock(&nlm_file_mutex);
+> diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
+> index 330e38776bb2..fe5cdd4d66f4 100644
+> --- a/include/linux/lockd/lockd.h
+> +++ b/include/linux/lockd/lockd.h
+> @@ -294,7 +294,7 @@ void		  nlmsvc_locks_init_private(struct file_lock 
+> *, struct nlm_host *, pid_t);
+>   * File handling for the server personality
+>   */
+>  __be32		  nlm_lookup_file(struct svc_rqst *, struct nlm_file **,
+> -					struct nlm_lock *);
+> +				  struct nlm_lock *, int);
+>  void		  nlm_release_file(struct nlm_file *);
+>  void		  nlmsvc_put_lockowner(struct nlm_lockowner *);
+>  void		  nlmsvc_release_lockowner(struct nlm_lock *);
+> -- 
+> 2.50.0.107.gf914562f5916.dirty
+
+-- 
+Chuck Lever
 
