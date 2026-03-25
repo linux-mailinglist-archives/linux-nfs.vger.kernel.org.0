@@ -1,207 +1,168 @@
-Return-Path: <linux-nfs+bounces-20369-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20370-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GCOFCJGKw2nJrQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20369-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 08:11:13 +0100
+	id eGhuBk/aw2m1uQQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20370-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:51:27 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74384320856
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 08:11:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 679FC325302
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:51:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1322D303298C
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 07:08:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E7FC73356D7C
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 12:13:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F983624A3;
-	Wed, 25 Mar 2026 07:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E5B3DA7F4;
+	Wed, 25 Mar 2026 12:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="nv2BjE5c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S7AP5C9s"
+	dkim=pass (1024-bit key) header.d=ucloud.cn header.i=@ucloud.cn header.b="URNu2Cxg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from mail-m3295.qiye.163.com (mail-m3295.qiye.163.com [220.197.32.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7343537F1;
-	Wed, 25 Mar 2026 07:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6921B3D565E
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Mar 2026 12:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774422496; cv=none; b=UMar9XF9S/dz0frMImgs9yDv7JGlvUr4fbQIUMe+oZu/6pPjPKud7EsRcsssmXGyemJqH++03yfEyce/aIvAxXdaMGupY/Nuo0TfZgOQIeaW0kNWIRmfcA3EV0OYAvC9nUDs5bPHbSGhwOEsrtsZA/eD04YHr6Si63Jhs6lvvJ8=
+	t=1774440689; cv=none; b=fz6re4cWN6tPXjGzttyAy6gJoQPJf2bJXcIfu7RW2LUWpExyrXO0y6x084k8BO9mAwOcgtazjajgWOu8gar87qm7VeYhKJyT6sqMLK7pVC1AZpzuK8djaMVDgEd64Qp64IawG71Mqp2LdDxgnhKx2cM2miYBS403nTPg3ojz3Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774422496; c=relaxed/simple;
-	bh=zgjxWS+RhrJIBmIISCNaRGFpIX+HWHmqf8NKfZWo2mI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=aeVKDHEgtTwZfpCMSWc2gsyNo6tjxn2jArDj+dQsNjZzamNnajAVV3xX24JYztQboNodhmi1RqyKajR1EkNIFRIpwHw9jLI4wWF5qc2vN2XVs4EdT6EWgoVFMCJ9/1y0f4cnk2qXel2EUqpmmc+zHbsv6xVVfcJ4EqCMQ2jxeWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=nv2BjE5c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S7AP5C9s; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id 787D71D00210;
-	Wed, 25 Mar 2026 03:08:13 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Wed, 25 Mar 2026 03:08:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1774422493; x=1774508893; bh=yDHYE19CFaQ1R6/fwC2mCz5lsesvfQOwcSs
-	+b8LO3ho=; b=nv2BjE5cp9DCJInHCFLduVELnhTYa/jfVacFYwB4fUV5xLShMYS
-	PDOTz8oNxvcH8SJdZem/hqGPST6SrHT2y6XUPMkWLjxNdDAy377OhRzskNfbxI9m
-	5hZeZa7dGT3p0kHxnLM9iTOnJ9indDIQANMjvps7hGw29Q42CWZy+C96A0Su5PeK
-	CHDsLBwN13TemTlq6KychN6mD4zz0PUEWozKVwyt4P/uruL5rJL8Cy6rXjPu7Jwm
-	9OzmwPmsePEJZPk0gNlZzUQQYVpHo0zF5fVjiFcx0pMWkOVNutqgDOxefPi7x12v
-	R4lxLCE4NCYccIvyB/nJJWkfnQvjHKInt9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774422493; x=
-	1774508893; bh=yDHYE19CFaQ1R6/fwC2mCz5lsesvfQOwcSs+b8LO3ho=; b=S
-	7AP5C9sXtd+P1xNM0F0ZUbH5yIr8xLXqmuspbavDeckTUh4NLJmSVZNtgrzbh+SL
-	sQodz4m7Ill8z+aiLyaI8UykVe6K2af+HRqgy+7qT054saWURdUsuUBYV+q1NKYq
-	PyYfJA4Z+P7wuHsiLMvbm7Iwi3ARDQkeFiNWFclbEfViFZqjhPQwp0IwHSKre4zD
-	ppYcLEBe8vv/4QphEDnD3s02SF/5LQwWRWoURw4Q+QPQklw31MV11GcCFKlNkkFC
-	DgmFLWjsQc54c+EVXLMZx6IWBFQZuClDQz6A1o7gRhYxtfoyiASdXDu58GeZMNPd
-	GSgwxbarq6C8FnSk1JTSA==
-X-ME-Sender: <xms:3YnDabGwNcLWsHzkVvYbfyK8iTP-_Yv5vanwLYEZmi4CgnN-Dtz5qw>
-    <xme:3YnDaUU_fy8O0n2lJvNI1-mPqaP5TlBXSXYZAYH3pI_eA38N_mZpM7aN9mhtXNS2v
-    mGL3SB7wPI2d8rPib_bxqRxiDdAXPGBGjVzdEZU2FKNZ7RMpA>
-X-ME-Received: <xmr:3YnDafU-ZTgndwIwoQXEUdd_d_4pi3cNqNZST6sbkrhPigJbQ2b0HDeN-Lgj-EEjIZKVAlBsz7iDJSUOVEVy_6BLG9flPNOaG_sgvDf9AlR8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefvdefkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epudefueefheejhfeuhfehvdfhgeeulefgfeehffekffduvdettdelheeftdethfdvnecu
-    ffhomhgrihhnpeguvggsihgrnhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgrihhlrdhnvghtpdhnsggp
-    rhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhkohhrnhhivghvsehrvgguhh
-    grthdrtghomhdprhgtphhtthhopehtjhdrihgrmhdrthhjsehprhhothhonhdrmhgvpdhr
-    tghpthhtoheprhgvghhrvghsshhiohhnsheslhgvvghmhhhuihhsrdhinhhfohdprhgtph
-    htthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtvghlsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopeduuddvkeekiedusegsuhhgshdruggvsghirg
-    hnrdhorhhg
-X-ME-Proxy: <xmx:3YnDaaLMO6xat5ypM4si0ppgdUPRI4fIo1iPi4K4lpBlRrG7fxOlVw>
-    <xmx:3YnDafCBxbc4sQPLkaOOUXZK2GiN7NQmbenx68Q_2siWwB3HEYcjNw>
-    <xmx:3YnDaaeooqj0HGI2iBQVbCFT8HLaNshPysGhRJbimInceEPPAq9wzw>
-    <xmx:3YnDae0IPL41gf9aKm_ojn65Sg-juPaN8XRO1wWaFaEdJ2ECAEDszA>
-    <xmx:3YnDaZVoSAXHqNiaewSzZco6CaquCW4o4vbNaGw5aWx3womiOLxc9QvQ>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Mar 2026 03:08:10 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1774440689; c=relaxed/simple;
+	bh=n6EQXFmz8dbOCbohWl8OWWQ1reQTGqqaxNAcIf1FsPs=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=crb1XZ0Ig4N/NS6ITAuX48wKhKIFIXd8kfzPOklXdpBWJpcD1VkbDfbdPFIX/+No3RcQOAbmtHDwxdb+XMG0ZelxzSZxCf55/VhF7C/2PBPGfhQgK4+UUj2/rXrBDffuhjGSBs6t7Go6kBPPpVuy5xRM4wgZaSZTvdccSSNWoMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ucloud.cn; spf=pass smtp.mailfrom=ucloud.cn; dkim=pass (1024-bit key) header.d=ucloud.cn header.i=@ucloud.cn header.b=URNu2Cxg; arc=none smtp.client-ip=220.197.32.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ucloud.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucloud.cn
+Received: from smtpclient.apple (unknown [106.75.220.2])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1813ea914;
+	Wed, 25 Mar 2026 20:11:17 +0800 (GMT+08:00)
+From: user <wei.guo@ucloud.cn>
+Content-Type: text/plain;
+	charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Thorsten Leemhuis" <regressions@leemhuis.info>, 1128861@bugs.debian.org,
- "Tj" <tj.iam.tj@proton.me>, linux-nfs@vger.kernel.org,
- "Olga Kornievskaia" <okorniev@redhat.com>, stable@vger.kernel.org
-Subject:
- Re: [PATCH] lockd: fix TEST handling when not all permissions are available.
-In-reply-to: <d4773958-5ae5-42d4-b785-6598b5c9b27a@app.fastmail.com>
-References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>,
- <177266540127.7472.3460090956713656639@noble.neil.brown.name>,
- <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>,
- <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>,
- <177434721528.7102.13514118512738778346@noble.neil.brown.name>,
- <d4773958-5ae5-42d4-b785-6598b5c9b27a@app.fastmail.com>
-Date: Wed, 25 Mar 2026 18:08:07 +1100
-Message-id: <177442248735.2237155.773724155681455344@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.100.1.1.5\))
+Subject: [BUG] NFSv4.1 client hang in OPEN reclaim path
+ (rpc_wait_bit_killable) on 5.15
+Message-Id: <538B06AD-0307-4BD4-8E44-16BF6BAD7B4E@ucloud.cn>
+Date: Wed, 25 Mar 2026 20:11:07 +0800
+To: linux-nfs@vger.kernel.org,
+ trond.myklebust@hammerspace.com,
+ anna@kernel.org
+X-Mailer: Apple Mail (2.3864.100.1.1.5)
+X-HM-Tid: 0a9d24e8020a023bkunm7540f956680fb5
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaHx9JVk5DT0keGkgaSB0aH1YVFAkWGhdVGRETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS01VTE5VSUlLVUlZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE5VSktLVU
+	pCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=URNu2Cxg4/7tqZmyPOmtCFFhKL3JrnZAdvG9y1UWwJH4V9/bXGF2Z8yk5LqjIx/77BYo6XMCEtw7BoM0lZ6oLPVk35iYa7Hcb1McGWcxO2PO3+HkmslNmO31f6jVtyUGJMfs4i88rpUa8BE2MVPH+6s3FfL3y8EM4W5kfT6DHHQ=; c=relaxed/relaxed; s=default; d=ucloud.cn; v=1;
+	bh=n6EQXFmz8dbOCbohWl8OWWQ1reQTGqqaxNAcIf1FsPs=;
+	h=date:mime-version:subject:message-id:from;
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	DMARC_POLICY_ALLOW(-0.50)[ucloud.cn,quarantine];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ucloud.cn:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20369-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[ucloud.cn:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20370-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wei.guo@ucloud.cn,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:dkim,proton.me:email,messagingengine.com:dkim,brown.name:email,brown.name:replyto,noble.neil.brown.name:mid]
-X-Rspamd-Queue-Id: 74384320856
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ucloud.cn:dkim,ucloud.cn:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 679FC325302
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 25 Mar 2026, Chuck Lever wrote:
->=20
-> On Tue, Mar 24, 2026, at 6:13 AM, NeilBrown wrote:
-> > From: NeilBrown <neil@brown.name>
-> >
-> > The F_GETLK fcntl can work with either read access or write access or
-> > both.  It can query F_RDLCK and F_WRLCK locks in either case.
-> >
-> > However lockd currently treats F_GETLK similar to F_SETLK in that read
-> > access is required to query an F_RDLCK lock and write access is required
-> > to query a F_WRLCK lock.
-> >
-> > This is wrong and can cause problem - e.g.  when qemu accesses a
-> > read-only (e.g. iso) filesystem image over NFS (though why it queries
-> > if it can get a write lock - I don't know.  But it does, and this works
-> > with local filesystems).
-> >
-> > So we need TEST requests to be handled differently.  To do this:
-> >
-> > - change nlm_do_fopen() to accept O_RDWR as a mode and in that case
-> >   succeed if either a O_RDONLY or O_WRONLY file can be opened.
-> > - change nlm_lookup_file() to accept a mode argument from caller,
-> >   instead of deducing base on lock time, and pass that on to nlm_do_fopen=
-()
-> > - change nlm4svc_retrieve_args() and nlmsvc_retrieve_args() to detect
-> >   TEST requests and pass O_RDWR as a mode to nlm_lookup_file, passing
-> >   the same mode as before for other requests.  Also set
-> >    lock->fl.c.flc_file to whichever file is available for TEST requests.
-> > - change nlmsvc_testlock() to also not calculate the mode, but to use
-> >   whenever was stored in lock->fl.c.flc_file.
-> >
-> > Reported-by: Tj <tj.iam.tj@proton.me>
-> > Link:  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1128861
-> > Fixes: 7f024fcd5c97 ("Keep read and write fds with each nlm_file")
-> > Signed-off-by: NeilBrown <neil@brown.name>
->=20
-> Hi Neil, which kernels should this fix apply to?
->=20
+Hi,
 
-v6.13 and later. So linux-6.18.y and linux-6.19.y
+I hope you are doing well.
 
-The Fixes: tag is actually wrong.  This bug has been present forever.
-However a different bug that=20
-  Commit: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
-fixed was hiding the bug.
+We are currently investigating an issue with an NFSv4.1 client on Linux =
+kernel 5.15 (Ubuntu 22.04), and would really appreciate your guidance.
 
-So it should probably be marked
-  Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
-with an explanation.
+The issue starts when the server returns NFS4ERR_EXPIRED. The client =
+appears to enter recovery, but the reclaim process does not complete.
 
-NeilBrown
+The state manager thread is observed to be stuck with the following =
+stack:
+
+rpc_wait_bit_killable
+__rpc_wait_for_completion_task
+nfs4_run_open_task
+nfs4_open_recover_helper
+nfs4_open_recover
+nfs4_do_open_expired
+nfs40_open_expired
+__nfs4_reclaim_open_state
+nfs4_reclaim_open_state
+nfs4_do_reclaim
+nfs4_state_manager
+
+During this time:
+- The server continues to return NFS4ERR_EXPIRED
+- The client does not appear to successfully reclaim state
+- IO operations continue but repeatedly fail
+
+=46rom RPC statistics:
+- ~30 million calls have been made
+- retransmissions are very low (94)
+
+This seems to suggest that the issue may not be caused by network loss =
+or server unresponsiveness.
+
+Additionally, from our observations:
+- Network connectivity appears stable
+- The NFS server seems to be operating normally (no restart or failover =
+observed)
+
+One detail that we found particularly interesting is that:
+- We do observe ongoing RENEW / SEQUENCE-related traffic from the client
+- However, the client still eventually encounters NFS4ERR_EXPIRED
+
+This makes us wonder whether lease renewal might not be effectively =
+taking place, even though related traffic is being sent.
+
+Given that we are using NFSv4.1 (where lease renewal is implicit via =
+SEQUENCE operations), we would greatly appreciate any insights on the =
+following:
+
+1. Under what conditions might a client still hit NFS4ERR_EXPIRED =
+despite ongoing SEQUENCE activity and a seemingly healthy =
+server/network?
+2. Could there be scenarios where RPC completion, session slot handling, =
+or sequence handling prevents the lease from being properly renewed?
+3. Is this behavior something that has been observed before in the =
+NFSv4.1 recovery or session handling paths, particularly in 5.15?
+
+At the moment, it looks like the client is stuck in the OPEN reclaim =
+path waiting for RPC completion, and recovery is unable to make forward =
+progress.
+
+If there are any known fixes or relevant patches in newer kernels (e.g., =
+5.19 or 6.x), we would also be very interested to learn about them.
+
+Thank you very much for your time and for any suggestions you may have.
+
+Best regards,=
 
