@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20380-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20381-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YEllBfb9w2lXvQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20380-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 16:23:34 +0100
+	id qO1eJAH4w2nPvAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20381-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:58:09 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6620C327D87
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 16:23:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2A1A3274AF
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:58:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 72973302B3A4
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:43:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 93B4231FFEA2
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:44:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7263F211A;
-	Wed, 25 Mar 2026 14:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18F883F54DD;
+	Wed, 25 Mar 2026 14:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i108c/H1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACPYGFXL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D29A3F2105;
-	Wed, 25 Mar 2026 14:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47E63F54CA;
+	Wed, 25 Mar 2026 14:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449661; cv=none; b=Cl4aqjJcqzypqvZlt0mU0ayZe4AQ63+0TR4ACByBM9omWunCmKwEE+QPvr5cO1kLJd25hPjeoaKW/bTXAto7KfCQT0o5IQUaFNvJmLVZemxTF44uAPvtNx3jMH1Ch0a+L2fSMJj+61VwiaZcthISwJ7fJ9HgLvOHPL58FkfwGTU=
+	t=1774449662; cv=none; b=SR/B7QAbKuDYVzei/HYsleK737oaD2nog0koq1/sQ3KPBGiZ2HgAYO4dDkqXUVds3DAabrVVizlP1HRzcqShw+kqsmUK/HQdoRL2dTlCARVxOvVveOImdYEp32wpL0m7PmyOtCduTDzsND3Acy3+31zT2FyotzO1NNzdnS1+DbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449661; c=relaxed/simple;
-	bh=xHH5cRLi+97NSkxpPLYe0sdarAUIo3BqhkjHWnScunA=;
+	s=arc-20240116; t=1774449662; c=relaxed/simple;
+	bh=R95s6KprQ4g2IpY1Qnm+S/XyNYljJLg3MP0mx52dOMk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oBM95Jjqt5Y48g+E1jICD8hi4NhEXYwNYDAYf9xGZZqCWkKkpp5n1xOXVypK9iBzbqROUsrmJiQo4Rn6ivbuCGB1Zgw+htYG/Ln1AMTKePekZMmdzeJDswPr7fw/pLOYFNgLKWJuyJOmHjWwKedA6HTfUUA+vHS7g/ghQBaUZsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i108c/H1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF04C116C6;
-	Wed, 25 Mar 2026 14:40:59 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=rVdhlZkh8UPUo4cnFlsbQSSjKSohSjlXfXgvtIVtW4J1gF8wrHsoq05wOzoJcs/XhM+XbT+MBj+JOQMwoBLL9Vaop0TIK8PIuVmsAJHPWJ+WSvSAXm6rQQ30gHm5QQj8d2VxttfHIl6cdnnZM62OQi/FASxac7zk3uOxO71D914=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACPYGFXL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32976C4CEF7;
+	Wed, 25 Mar 2026 14:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774449660;
-	bh=xHH5cRLi+97NSkxpPLYe0sdarAUIo3BqhkjHWnScunA=;
+	s=k20201202; t=1774449662;
+	bh=R95s6KprQ4g2IpY1Qnm+S/XyNYljJLg3MP0mx52dOMk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=i108c/H1M4MaRbEu49YXKv1HRfRgVU4wCc07vJCFY8z5VjeMDCAC14MaGRTU00h4x
-	 qbINSn05GS0ZO3U+H/duc9j87311bp7QIgfJ6C70I/Zs1PeUjmUGjONnAGuZDqK1MH
-	 jhGmI1UcjLr8pDRtWuSe2bHAN3XGOXRrVucw9eO+RutxdDGJoNh4Fq8KjTnFqphFlg
-	 ph2eabcr5BVYlVgUP9eG/fXLyraLv+ba6LirRxPBdTtZLH/ERBMlWB4cLCrsgwhvvY
-	 Nc41qCcEIKvhb6TMSPja9z3cY+jREDSOE1fTXCH+KgJ1Ls9l286wdFTDhcf7F++Zca
-	 ZmiX5CphQYdOQ==
+	b=ACPYGFXLxabf3oY46V3ufPEIgSpHiqfjYUXrwMqmr+ZS26HyNSi/GGOHnBf9VCvPf
+	 eUVTxF9eqLXhgQJky0h93jLcgf6CeG0SzaxHMH3hBro4LvY2qZcCwO0TwwN9QjhCv3
+	 zCYwDIr0Y7lI+Fd8YiWlx0DjIRpkld15WuvMOFWnvi0C7CGZ0XXHKovyd5g4u3tX+1
+	 gHPCuGF5NpLGm940xA4ulmKNg+hExHuz+etraFFLGwOjYz6PePbYmRBBOH7b7Ggi1A
+	 QNrjbz3/fpb9Kht4YhOZZj1Vh+6aQ5UtGD7Ye8CmA9yyOEUTlexJB02owRgSAMzkf4
+	 9j03HqnqPZ1Jw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 25 Mar 2026 10:40:27 -0400
-Subject: [PATCH v2 06/13] sunrpc: add helpers to count and snapshot pending
- cache requests
+Date: Wed, 25 Mar 2026 10:40:28 -0400
+Subject: [PATCH v2 07/13] sunrpc: add a generic netlink family for cache
+ upcalls
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260325-exportd-netlink-v2-6-067df016ea95@kernel.org>
+Message-Id: <20260325-exportd-netlink-v2-7-067df016ea95@kernel.org>
 References: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
 In-Reply-To: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -69,20 +69,20 @@ Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3858; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=xHH5cRLi+97NSkxpPLYe0sdarAUIo3BqhkjHWnScunA=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpw/PuvlI5IZsC/pehjII95piczodTsmbgnpypX
- 5V8xjha2J+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacPz7gAKCRAADmhBGVaC
- FdZ7D/4p7zHkcMjKDNqf2i9yG+NocFs5MbxnhVjtFRG1wmhNyeUgivdSPztvbKXpMtbZgmCnYVv
- jiNFfi5/EmoYGcxClUL+D5r9pqjj8J8d/fwExmA9/U43CbHBiDhBY0WDmmAM5lkIJWJg0OxsCt/
- 50syNb9nF+ggRy/UPrrG9oqSiyWQFThFT9w4GtP9bSLEL+Rpz8F8HDVhF5C4AHfqyuvEW4xBaeZ
- ABwzkCXsjwSNZlPTOjlWz6kZ/Dckn5aVW3fbxS/s8TFipxpdavGhWI9VGQIkwboCS1Z1UxCLVj0
- Lk0n4JfkZ+hge/hXg3UTqQnEaYLFFM0VpMwdGGx1bMhTMteNA0mB5j2xypEl+bKxOon3Qxke3Qd
- mgG6a3fWBUJLdgzaUVuUhtCWdEByQyM+yLwvhgrPYZ6N+qHxMu8IMDnlOZ0thR4xHhYNm7S/iol
- I8c60v2AkK/nKBG2AdxNwSOApGcDZH8/5KvIpHS6+i4EN40av43nxm5EuJJLRJGu4eMWIb7bTho
- 9G5ino74hYWj6WacyM80/Ga97BvP6bDghROhvWAJnBcmoYl6qlIhEQRAKEqBEwhKSjK2TC0JICv
- jvVBFb7z4DSFZif3tLPVJj62BqbPqZA42QWcBbi+No8u3zigWeCAWMBuiCxvpEM86nZ+57hT8q3
- NuA2gNzHvjv+g9w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10109; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=R95s6KprQ4g2IpY1Qnm+S/XyNYljJLg3MP0mx52dOMk=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpw/PujPDyYjGHj2OXIqviuGAfsl5x4LJA70VHY
+ DvGXAho2BuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacPz7gAKCRAADmhBGVaC
+ FSR+EAC/KbEU4/KLRYprUuXVyN8zEsYMovgI1ANRUWFMefScDZUdcj5hezUuYicpEw9ijjFaer/
+ CYbdzeNggCqVB6AA/3gJ3cmaJbZ7YzVKvYudRfBXDRwmxRbKY3MSrnJ1gx3v2uIV1L7ykxrpd4Y
+ 8tfy1fq2UToKWF5zQhoFHsqU721O6ss+LSm0GG+W/v4aJnSfI5lxGqMRNEikLK43oiJy8I+2C3O
+ UP4v0SNPJ4La+ADA64hnYgjVYZ9TGtJM54TGxlC6WLtCibIcm3PauCPRzQCl4TOY4yUqdQZJeuM
+ 54T5xyyB6Pg+NJI1fiKTZ5BmluNHEtBn/AwMw0SIfmBYh5/Rw1PJQjl0QxYViZwKEsFQarkfMve
+ kv+83keMVs0+SEc4vSQmKnEz+tMxFrtyH/BAJAD8WTcKh/MfiHATYRCPbbodEt8GkHS3r/cv2Qv
+ h1W9be5JieVR7yeRuwW/51IeNHbg6HY4olrQw5k8/tN0DFMCSOBKiRp3kO1FPDCyryfZjd5HZ74
+ y8BeMMO7v3EX7stoKzESFxFnUS0wTXdYj2vF+WfExT2S00shPe1NLZlR6jITz81fmGfjlvs9h7p
+ uq3oIrR3PM+ntOZ3Jr5Enl3rXTQ8NmEm17+39B+K2UVDm5N0jNVDVaqGTZt9eJqcA4cgvuJ46uL
+ 2sq07CfFqfBZfEg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -90,12 +90,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20380-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20381-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -111,116 +111,329 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6620C327D87
+X-Rspamd-Queue-Id: B2A1A3274AF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add sunrpc_cache_requests_count() and sunrpc_cache_requests_snapshot()
-to allow callers to count and snapshot the pending upcall request list
-without exposing struct cache_request outside of cache.c.
+The auth.unix.ip and auth.unix.gid caches live in the sunrpc module,
+so they cannot use the nfsd generic netlink family. Create a new
+"sunrpc" generic netlink family with its own "exportd" multicast
+group to support cache upcall notifications for sunrpc-resident
+caches.
 
-Both functions skip entries that no longer have CACHE_PENDING set.
+Define a YAML spec (sunrpc_cache.yaml) with a cache-type enum
+(ip_map, unix_gid), a cache-notify multicast event, and the
+corresponding uapi header.
 
-The snapshot function takes a cache_get() reference on each item so the
-caller can safely use them after the queue_lock is released.
+Implement sunrpc_cache_notify() in cache.c, which checks for
+listeners on the exportd multicast group, builds and sends a
+SUNRPC_CMD_CACHE_NOTIFY message with the cache-type attribute.
 
-These will be used by the nfsd generic netlink dumpit handler for
-svc_export upcall requests.
+Register/unregister the sunrpc_nl_family in init_sunrpc() and
+cleanup_sunrpc().
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/sunrpc/cache.h |  6 +++++
- net/sunrpc/cache.c           | 61 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 67 insertions(+)
+ Documentation/netlink/specs/sunrpc_cache.yaml | 40 ++++++++++++++++++++++++
+ include/linux/sunrpc/cache.h                  |  2 ++
+ include/uapi/linux/sunrpc_netlink.h           | 35 +++++++++++++++++++++
+ net/sunrpc/Makefile                           |  2 +-
+ net/sunrpc/cache.c                            | 44 +++++++++++++++++++++++++++
+ net/sunrpc/netlink.c                          | 34 +++++++++++++++++++++
+ net/sunrpc/netlink.h                          | 22 ++++++++++++++
+ net/sunrpc/sunrpc_syms.c                      | 10 ++++++
+ 8 files changed, 188 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/netlink/specs/sunrpc_cache.yaml b/Documentation/netlink/specs/sunrpc_cache.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..f4aa699598bca9ce0215bbc418d9ddcae25c0110
+--- /dev/null
++++ b/Documentation/netlink/specs/sunrpc_cache.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
++---
++name: sunrpc
++protocol: genetlink
++uapi-header: linux/sunrpc_netlink.h
++
++doc: SUNRPC cache upcall support over generic netlink.
++
++definitions:
++  -
++    type: flags
++    name: cache-type
++    entries: [ip_map, unix_gid]
++
++attribute-sets:
++  -
++    name: cache-notify
++    attributes:
++      -
++        name: cache-type
++        type: u32
++        enum: cache-type
++
++operations:
++  list:
++    -
++      name: cache-notify
++      doc: Notification that there are cache requests that need servicing
++      attribute-set: cache-notify
++      mcgrp: exportd
++      event:
++        attributes:
++          - cache-type
++
++mcast-groups:
++  list:
++    -
++      name: none
++    -
++      name: exportd
 diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
-index c358151c23950ab48e83991c6138bb7d0e049ace..f88dc6bb17c7078781b3cf7e0371f369eddcb563 100644
+index f88dc6bb17c7078781b3cf7e0371f369eddcb563..2735c332ddb736ef043f811b5e9e6ad2f57c9ce7 100644
 --- a/include/linux/sunrpc/cache.h
 +++ b/include/linux/sunrpc/cache.h
-@@ -251,6 +251,12 @@ extern int sunrpc_cache_register_pipefs(struct dentry *parent, const char *,
- extern void sunrpc_cache_unregister_pipefs(struct cache_detail *);
- extern void sunrpc_cache_unhash(struct cache_detail *, struct cache_head *);
+@@ -256,6 +256,8 @@ int sunrpc_cache_requests_snapshot(struct cache_detail *cd,
+ 				   struct cache_head **items,
+ 				   u64 *seqnos, int max,
+ 				   u64 min_seqno);
++int sunrpc_cache_notify(struct cache_detail *cd, struct cache_head *h,
++			u32 cache_type);
  
-+int sunrpc_cache_requests_count(struct cache_detail *cd);
-+int sunrpc_cache_requests_snapshot(struct cache_detail *cd,
-+				   struct cache_head **items,
-+				   u64 *seqnos, int max,
-+				   u64 min_seqno);
-+
  /* Must store cache_detail in seq_file->private if using next three functions */
  extern void *cache_seq_start_rcu(struct seq_file *file, loff_t *pos);
- extern void *cache_seq_next_rcu(struct seq_file *file, void *p, loff_t *pos);
+diff --git a/include/uapi/linux/sunrpc_netlink.h b/include/uapi/linux/sunrpc_netlink.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..6135d9b3eef155a9192d9710c8c690283ec49073
+--- /dev/null
++++ b/include/uapi/linux/sunrpc_netlink.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* Do not edit directly, auto-generated from: */
++/*	Documentation/netlink/specs/sunrpc_cache.yaml */
++/* YNL-GEN uapi header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
++
++#ifndef _UAPI_LINUX_SUNRPC_NETLINK_H
++#define _UAPI_LINUX_SUNRPC_NETLINK_H
++
++#define SUNRPC_FAMILY_NAME	"sunrpc"
++#define SUNRPC_FAMILY_VERSION	1
++
++enum sunrpc_cache_type {
++	SUNRPC_CACHE_TYPE_IP_MAP = 1,
++	SUNRPC_CACHE_TYPE_UNIX_GID = 2,
++};
++
++enum {
++	SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE = 1,
++
++	__SUNRPC_A_CACHE_NOTIFY_MAX,
++	SUNRPC_A_CACHE_NOTIFY_MAX = (__SUNRPC_A_CACHE_NOTIFY_MAX - 1)
++};
++
++enum {
++	SUNRPC_CMD_CACHE_NOTIFY = 1,
++
++	__SUNRPC_CMD_MAX,
++	SUNRPC_CMD_MAX = (__SUNRPC_CMD_MAX - 1)
++};
++
++#define SUNRPC_MCGRP_NONE	"none"
++#define SUNRPC_MCGRP_EXPORTD	"exportd"
++
++#endif /* _UAPI_LINUX_SUNRPC_NETLINK_H */
+diff --git a/net/sunrpc/Makefile b/net/sunrpc/Makefile
+index f89c10fe7e6acc71d47273200d85425a2891a08a..96727df3aa85435a2de63a8483eab9d75d5b3495 100644
+--- a/net/sunrpc/Makefile
++++ b/net/sunrpc/Makefile
+@@ -14,7 +14,7 @@ sunrpc-y := clnt.o xprt.o socklib.o xprtsock.o sched.o \
+ 	    addr.o rpcb_clnt.o timer.o xdr.o \
+ 	    sunrpc_syms.o cache.o rpc_pipe.o sysfs.o \
+ 	    svc_xprt.o \
+-	    xprtmultipath.o
++	    xprtmultipath.o netlink.o
+ sunrpc-$(CONFIG_SUNRPC_DEBUG) += debugfs.o
+ sunrpc-$(CONFIG_SUNRPC_BACKCHANNEL) += backchannel_rqst.o
+ sunrpc-$(CONFIG_PROC_FS) += stats.o
 diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index a182a179a1bfdb883ceda417a5809d967659be5d..1282c61030d35efd924072e2739109cfae3472e2 100644
+index 1282c61030d35efd924072e2739109cfae3472e2..d477b19dbfa15fdff71f946ade2643b56c35d491 100644
 --- a/net/sunrpc/cache.c
 +++ b/net/sunrpc/cache.c
-@@ -1899,3 +1899,64 @@ void sunrpc_cache_unhash(struct cache_detail *cd, struct cache_head *h)
- 		spin_unlock(&cd->hash_lock);
+@@ -33,9 +33,11 @@
+ #include <linux/sunrpc/cache.h>
+ #include <linux/sunrpc/stats.h>
+ #include <linux/sunrpc/rpc_pipe_fs.h>
++#include <net/genetlink.h>
+ #include <trace/events/sunrpc.h>
+ 
+ #include "netns.h"
++#include "netlink.h"
+ #include "fail.h"
+ 
+ #define	 RPCDBG_FACILITY RPCDBG_CACHE
+@@ -1960,3 +1962,45 @@ int sunrpc_cache_requests_snapshot(struct cache_detail *cd,
+ 	return i;
  }
- EXPORT_SYMBOL_GPL(sunrpc_cache_unhash);
+ EXPORT_SYMBOL_GPL(sunrpc_cache_requests_snapshot);
 +
 +/**
-+ * sunrpc_cache_requests_count - count pending upcall requests
-+ * @cd: cache_detail to query
++ * sunrpc_cache_notify - send a netlink notification for a cache event
++ * @cd: cache_detail for the cache
++ * @h: cache_head entry (unused, reserved for future use)
++ * @cache_type: cache type identifier (e.g. SUNRPC_CACHE_TYPE_UNIX_GID)
 + *
-+ * Returns the number of requests on the cache's request list that
-+ * still have CACHE_PENDING set.
++ * Sends a SUNRPC_CMD_CACHE_NOTIFY multicast message on the "exportd"
++ * group if any listeners are present. Returns 0 on success or a
++ * negative errno.
 + */
-+int sunrpc_cache_requests_count(struct cache_detail *cd)
++int sunrpc_cache_notify(struct cache_detail *cd, struct cache_head *h,
++			u32 cache_type)
 +{
-+	struct cache_request *crq;
-+	int cnt = 0;
++	struct genlmsghdr *hdr;
++	struct sk_buff *msg;
 +
-+	spin_lock(&cd->queue_lock);
-+	list_for_each_entry(crq, &cd->requests, list) {
-+		if (test_bit(CACHE_PENDING, &crq->item->flags))
-+			cnt++;
++	if (!genl_has_listeners(&sunrpc_nl_family, cd->net,
++				SUNRPC_NLGRP_EXPORTD))
++		return -ENOLINK;
++
++	msg = genlmsg_new(nla_total_size(sizeof(u32)), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	hdr = genlmsg_put(msg, 0, 0, &sunrpc_nl_family, 0,
++			  SUNRPC_CMD_CACHE_NOTIFY);
++	if (!hdr) {
++		nlmsg_free(msg);
++		return -ENOMEM;
 +	}
-+	spin_unlock(&cd->queue_lock);
-+	return cnt;
-+}
-+EXPORT_SYMBOL_GPL(sunrpc_cache_requests_count);
 +
-+/**
-+ * sunrpc_cache_requests_snapshot - snapshot pending upcall requests
-+ * @cd: cache_detail to query
-+ * @items: array to fill with cache_head pointers (caller-allocated)
-+ * @seqnos: array to fill with sequence numbers (caller-allocated)
-+ * @max: size of the arrays
-+ * @min_seqno: only include entries with seqno > min_seqno (0 for all)
-+ *
-+ * Only entries with CACHE_PENDING set are included. Takes a reference
-+ * on each cache_head via cache_get(). Caller must call cache_put()
-+ * on each returned item when done.
-+ *
-+ * Returns the number of entries filled.
-+ */
-+int sunrpc_cache_requests_snapshot(struct cache_detail *cd,
-+				   struct cache_head **items,
-+				   u64 *seqnos, int max,
-+				   u64 min_seqno)
-+{
-+	struct cache_request *crq;
-+	int i = 0;
-+
-+	spin_lock(&cd->queue_lock);
-+	list_for_each_entry(crq, &cd->requests, list) {
-+		if (i >= max)
-+			break;
-+		if (!test_bit(CACHE_PENDING, &crq->item->flags))
-+			continue;
-+		if (crq->seqno <= min_seqno)
-+			continue;
-+		items[i] = cache_get(crq->item);
-+		seqnos[i] = crq->seqno;
-+		i++;
++	if (nla_put_u32(msg, SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE, cache_type)) {
++		nlmsg_free(msg);
++		return -ENOMEM;
 +	}
-+	spin_unlock(&cd->queue_lock);
-+	return i;
++
++	genlmsg_end(msg, hdr);
++	return genlmsg_multicast_netns(&sunrpc_nl_family, cd->net, msg, 0,
++				       SUNRPC_NLGRP_EXPORTD, GFP_KERNEL);
 +}
-+EXPORT_SYMBOL_GPL(sunrpc_cache_requests_snapshot);
++EXPORT_SYMBOL_GPL(sunrpc_cache_notify);
+diff --git a/net/sunrpc/netlink.c b/net/sunrpc/netlink.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..952de6de85e3f647ef9bc9c1e99651a247649abb
+--- /dev/null
++++ b/net/sunrpc/netlink.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
++/* Do not edit directly, auto-generated from: */
++/*	Documentation/netlink/specs/sunrpc_cache.yaml */
++/* YNL-GEN kernel source */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
++
++#include <net/netlink.h>
++#include <net/genetlink.h>
++#include <linux/sunrpc/cache.h>
++
++#include "netlink.h"
++
++#include <uapi/linux/sunrpc_netlink.h>
++
++/* Ops table for sunrpc */
++static const struct genl_split_ops sunrpc_nl_ops[] = {
++};
++
++static const struct genl_multicast_group sunrpc_nl_mcgrps[] = {
++	[SUNRPC_NLGRP_NONE] = { "none", },
++	[SUNRPC_NLGRP_EXPORTD] = { "exportd", },
++};
++
++struct genl_family sunrpc_nl_family __ro_after_init = {
++	.name		= SUNRPC_FAMILY_NAME,
++	.version	= SUNRPC_FAMILY_VERSION,
++	.netnsok	= true,
++	.parallel_ops	= true,
++	.module		= THIS_MODULE,
++	.split_ops	= sunrpc_nl_ops,
++	.n_split_ops	= ARRAY_SIZE(sunrpc_nl_ops),
++	.mcgrps		= sunrpc_nl_mcgrps,
++	.n_mcgrps	= ARRAY_SIZE(sunrpc_nl_mcgrps),
++};
+diff --git a/net/sunrpc/netlink.h b/net/sunrpc/netlink.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..74cf5183d745d778174abbbfed9514c4b6693e30
+--- /dev/null
++++ b/net/sunrpc/netlink.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* Do not edit directly, auto-generated from: */
++/*	Documentation/netlink/specs/sunrpc_cache.yaml */
++/* YNL-GEN kernel header */
++/* To regenerate run: tools/net/ynl/ynl-regen.sh */
++
++#ifndef _LINUX_SUNRPC_GEN_H
++#define _LINUX_SUNRPC_GEN_H
++
++#include <net/netlink.h>
++#include <net/genetlink.h>
++
++#include <uapi/linux/sunrpc_netlink.h>
++
++enum {
++	SUNRPC_NLGRP_NONE,
++	SUNRPC_NLGRP_EXPORTD,
++};
++
++extern struct genl_family sunrpc_nl_family;
++
++#endif /* _LINUX_SUNRPC_GEN_H */
+diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
+index bab6cab2940524a970422b62b3fa4212c61c4f43..ab88ce46afb556cb0a397fe5c9df3901813ad01e 100644
+--- a/net/sunrpc/sunrpc_syms.c
++++ b/net/sunrpc/sunrpc_syms.c
+@@ -23,9 +23,12 @@
+ #include <linux/sunrpc/rpc_pipe_fs.h>
+ #include <linux/sunrpc/xprtsock.h>
+ 
++#include <net/genetlink.h>
++
+ #include "sunrpc.h"
+ #include "sysfs.h"
+ #include "netns.h"
++#include "netlink.h"
+ 
+ unsigned int sunrpc_net_id;
+ EXPORT_SYMBOL_GPL(sunrpc_net_id);
+@@ -108,6 +111,10 @@ init_sunrpc(void)
+ 	if (err)
+ 		goto out5;
+ 
++	err = genl_register_family(&sunrpc_nl_family);
++	if (err)
++		goto out6;
++
+ 	sunrpc_debugfs_init();
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ 	rpc_register_sysctl();
+@@ -116,6 +123,8 @@ init_sunrpc(void)
+ 	init_socket_xprt();	/* clnt sock transport */
+ 	return 0;
+ 
++out6:
++	rpc_sysfs_exit();
+ out5:
+ 	unregister_rpc_pipefs();
+ out4:
+@@ -131,6 +140,7 @@ init_sunrpc(void)
+ static void __exit
+ cleanup_sunrpc(void)
+ {
++	genl_unregister_family(&sunrpc_nl_family);
+ 	rpc_sysfs_exit();
+ 	rpc_cleanup_clids();
+ 	xprt_cleanup_ids();
 
 -- 
 2.53.0
