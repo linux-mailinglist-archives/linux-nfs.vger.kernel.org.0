@@ -1,168 +1,227 @@
-Return-Path: <linux-nfs+bounces-20370-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20371-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eGhuBk/aw2m1uQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20370-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:51:27 +0100
+	id 4PWgBv3gw2kgugQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20371-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:19:57 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 679FC325302
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:51:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B849325976
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:19:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E7FC73356D7C
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 12:13:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 85F3731AA7E2
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 12:30:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E5B3DA7F4;
-	Wed, 25 Mar 2026 12:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D24D3D349F;
+	Wed, 25 Mar 2026 12:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucloud.cn header.i=@ucloud.cn header.b="URNu2Cxg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8ObDvte"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-m3295.qiye.163.com (mail-m3295.qiye.163.com [220.197.32.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6921B3D565E
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Mar 2026 12:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C2417BED0;
+	Wed, 25 Mar 2026 12:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774440689; cv=none; b=fz6re4cWN6tPXjGzttyAy6gJoQPJf2bJXcIfu7RW2LUWpExyrXO0y6x084k8BO9mAwOcgtazjajgWOu8gar87qm7VeYhKJyT6sqMLK7pVC1AZpzuK8djaMVDgEd64Qp64IawG71Mqp2LdDxgnhKx2cM2miYBS403nTPg3ojz3Bs=
+	t=1774441810; cv=none; b=P+mJ6IWYcVO3TlBBmSuMu2Y/YrLkXwetsr4qz6vPhQ//rysL6xh9VK+5hKvIMqF7v29nJrgO1gIjjhO0KJVR5Vc2oQC8j6v6YnUSDgPxU/KZuEu6wisGOrZKUfNi1wZmL5lJNRN/IoShX288SE5zpIT8GqNgc4/EC60jStWvPHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774440689; c=relaxed/simple;
-	bh=n6EQXFmz8dbOCbohWl8OWWQ1reQTGqqaxNAcIf1FsPs=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=crb1XZ0Ig4N/NS6ITAuX48wKhKIFIXd8kfzPOklXdpBWJpcD1VkbDfbdPFIX/+No3RcQOAbmtHDwxdb+XMG0ZelxzSZxCf55/VhF7C/2PBPGfhQgK4+UUj2/rXrBDffuhjGSBs6t7Go6kBPPpVuy5xRM4wgZaSZTvdccSSNWoMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ucloud.cn; spf=pass smtp.mailfrom=ucloud.cn; dkim=pass (1024-bit key) header.d=ucloud.cn header.i=@ucloud.cn header.b=URNu2Cxg; arc=none smtp.client-ip=220.197.32.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ucloud.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucloud.cn
-Received: from smtpclient.apple (unknown [106.75.220.2])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1813ea914;
-	Wed, 25 Mar 2026 20:11:17 +0800 (GMT+08:00)
-From: user <wei.guo@ucloud.cn>
-Content-Type: text/plain;
-	charset=us-ascii
+	s=arc-20240116; t=1774441810; c=relaxed/simple;
+	bh=cTDcJ3MqxLTBT4Ey3OO8LURnr7FfyeEB4ce9tm4YghU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VqOH/r0OuwazHi3fZk+qwMiecwudnKSHbRFskMnibVMSH+YcOk7KdCU/GiFQWQbbtrhItvpACo7PAf09AUzC5/CJK3m1OwRguGLoD/OE45mBdZu7FLlngTOFtxnGWLugKFL/krnXCXFYsJdmNSFMo6HcG83Fg6RPldWNqH93YjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8ObDvte; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22AB8C4CEF7;
+	Wed, 25 Mar 2026 12:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774441809;
+	bh=cTDcJ3MqxLTBT4Ey3OO8LURnr7FfyeEB4ce9tm4YghU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=H8ObDvte0MvXYIs/a7zZNOL/q80NnxEwe/5E7h0pZl3zCQIpvfRhS0IEC/LBpsJdG
+	 sCEQAmGjZwnSsCI1igoVvFDJzlW9GLTRtXn81jnKe+YeMiUHRWTFWvVnauYlR019xJ
+	 uMc9yVjcDGv7vKg5NQvItLyMAvuDR87Q9zQBzeLzQueLftQ6RwKI62QXFHD7lpyXxA
+	 i2AXcLOszuPM+8fEEa4QBVhfbJYOdSo7IABYt5UYgX6+Ogcu6VtqLmyytieGi+p1t1
+	 I9c/OrubMOhkyICelU0hZEf/jQV1Rpbz7ZJmVEN98sPEN3WB7tO+RbEp4NKpK2c0Tp
+	 Mo86pU8iHLvdg==
+Message-ID: <c36648f66b6e66f8aa555528c8969b1350c3a36f.camel@kernel.org>
+Subject: Re: [PATCH v2 1/2] nfs: fix utimensat() for atime with delegated
+ timestamps
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Olga Kornievskaia <aglo@umich.edu>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 25 Mar 2026 08:30:06 -0400
+In-Reply-To: <20260324-nfs-7-1-v2-1-d110da3c0036@kernel.org>
+References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
+	 <20260324-nfs-7-1-v2-1-d110da3c0036@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.100.1.1.5\))
-Subject: [BUG] NFSv4.1 client hang in OPEN reclaim path
- (rpc_wait_bit_killable) on 5.15
-Message-Id: <538B06AD-0307-4BD4-8E44-16BF6BAD7B4E@ucloud.cn>
-Date: Wed, 25 Mar 2026 20:11:07 +0800
-To: linux-nfs@vger.kernel.org,
- trond.myklebust@hammerspace.com,
- anna@kernel.org
-X-Mailer: Apple Mail (2.3864.100.1.1.5)
-X-HM-Tid: 0a9d24e8020a023bkunm7540f956680fb5
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaHx9JVk5DT0keGkgaSB0aH1YVFAkWGhdVGRETFh
-	oSFyQUDg9ZV1kYEgtZQVlKS01VTE5VSUlLVUlZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE5VSktLVU
-	pCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=URNu2Cxg4/7tqZmyPOmtCFFhKL3JrnZAdvG9y1UWwJH4V9/bXGF2Z8yk5LqjIx/77BYo6XMCEtw7BoM0lZ6oLPVk35iYa7Hcb1McGWcxO2PO3+HkmslNmO31f6jVtyUGJMfs4i88rpUa8BE2MVPH+6s3FfL3y8EM4W5kfT6DHHQ=; c=relaxed/relaxed; s=default; d=ucloud.cn; v=1;
-	bh=n6EQXFmz8dbOCbohWl8OWWQ1reQTGqqaxNAcIf1FsPs=;
-	h=date:mime-version:subject:message-id:from;
-X-Spamd-Result: default: False [-1.66 / 15.00];
+MIME-Version: 1.0
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ucloud.cn,quarantine];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ucloud.cn:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ucloud.cn:+];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-20370-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20371-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.guo@ucloud.cn,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ucloud.cn:dkim,ucloud.cn:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 679FC325302
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,umich.edu:email]
+X-Rspamd-Queue-Id: 6B849325976
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,
+On Tue, 2026-03-24 at 13:32 -0400, Jeff Layton wrote:
+> xfstest generic/221 is failing with delegated timestamps enabled.  When
+> the client holds a WRITE_ATTRS_DELEG delegation, and a userland process
+> does a utimensat() for only the atime, the ctime is not properly
+> updated. The problem is that the client tries to cache the atime update,
+> but there is no mtime update, so the delegated attribute update never
+> updates the ctime.
+>=20
+> Delegated timestamps don't have a mechanism to update the ctime in
+> accordance with atime-only changes due to utimensat() and the like.
+> Change the client to issue an RPC in this case, so that the ctime gets
+> properly updated alongside the atime.
+>=20
+> Fixes: 40f45ab3814f ("NFS: Further fixes to attribute delegation a/mtime =
+changes")
+> Reported-by: Olga Kornievskaia <aglo@umich.edu>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/nfs/inode.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+>=20
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 4786343eeee0f874aa1f31ace2f35fdcb83fc7a6..3a5bba7e3c92d4d4fcd65234c=
+d2f10e56f78dee0 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -757,14 +757,7 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *=
+dentry,
+>  	} else if (nfs_have_delegated_atime(inode) &&
+>  		   attr->ia_valid & ATTR_ATIME &&
+>  		   !(attr->ia_valid & ATTR_MTIME)) {
+> -		if (attr->ia_valid & ATTR_ATIME_SET) {
+> -			if (uid_eq(task_uid, owner_uid)) {
+> -				spin_lock(&inode->i_lock);
+> -				nfs_set_timestamps_to_ts(inode, attr);
+> -				spin_unlock(&inode->i_lock);
+> -				attr->ia_valid &=3D ~(ATTR_ATIME|ATTR_ATIME_SET);
+> -			}
+> -		} else {
 
-I hope you are doing well.
+This probably deserves a comment. How about something like:
 
-We are currently investigating an issue with an NFSv4.1 client on Linux =
-kernel 5.15 (Ubuntu 22.04), and would really appreciate your guidance.
+		/*
+		 * An atime-only update via an explicit setattr (e.g.: utimensat() and
+		 * the like) requires updating the ctime as well. Delegated timestamps
+		 * don't have a mechanism for updating the ctime with a delegated
+		 * atime-only update, so an RPC must be issued.
+		 */
 
-The issue starts when the server returns NFS4ERR_EXPIRED. The client =
-appears to enter recovery, but the reclaim process does not complete.
+> +		if (!(attr->ia_valid & ATTR_ATIME_SET)) {
+>  			nfs_update_delegated_atime(inode);
+>  			attr->ia_valid &=3D ~ATTR_ATIME;
+>  		}
 
-The state manager thread is observed to be stuck with the following =
-stack:
-
-rpc_wait_bit_killable
-__rpc_wait_for_completion_task
-nfs4_run_open_task
-nfs4_open_recover_helper
-nfs4_open_recover
-nfs4_do_open_expired
-nfs40_open_expired
-__nfs4_reclaim_open_state
-nfs4_reclaim_open_state
-nfs4_do_reclaim
-nfs4_state_manager
-
-During this time:
-- The server continues to return NFS4ERR_EXPIRED
-- The client does not appear to successfully reclaim state
-- IO operations continue but repeatedly fail
-
-=46rom RPC statistics:
-- ~30 million calls have been made
-- retransmissions are very low (94)
-
-This seems to suggest that the issue may not be caused by network loss =
-or server unresponsiveness.
-
-Additionally, from our observations:
-- Network connectivity appears stable
-- The NFS server seems to be operating normally (no restart or failover =
-observed)
-
-One detail that we found particularly interesting is that:
-- We do observe ongoing RENEW / SEQUENCE-related traffic from the client
-- However, the client still eventually encounters NFS4ERR_EXPIRED
-
-This makes us wonder whether lease renewal might not be effectively =
-taking place, even though related traffic is being sent.
-
-Given that we are using NFSv4.1 (where lease renewal is implicit via =
-SEQUENCE operations), we would greatly appreciate any insights on the =
-following:
-
-1. Under what conditions might a client still hit NFS4ERR_EXPIRED =
-despite ongoing SEQUENCE activity and a seemingly healthy =
-server/network?
-2. Could there be scenarios where RPC completion, session slot handling, =
-or sequence handling prevents the lease from being properly renewed?
-3. Is this behavior something that has been observed before in the =
-NFSv4.1 recovery or session handling paths, particularly in 5.15?
-
-At the moment, it looks like the client is stuck in the OPEN reclaim =
-path waiting for RPC completion, and recovery is unable to make forward =
-progress.
-
-If there are any known fixes or relevant patches in newer kernels (e.g., =
-5.19 or 6.x), we would also be very interested to learn about them.
-
-Thank you very much for your time and for any suggestions you may have.
-
-Best regards,=
+--=20
+Jeff Layton <jlayton@kernel.org>
 
