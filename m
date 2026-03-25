@@ -1,188 +1,199 @@
-Return-Path: <linux-nfs+bounces-20393-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20394-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QN/eKbY0xGkAxQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20393-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 20:17:10 +0100
+	id qG7QGL1FxGm1xwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20394-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 21:29:49 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3997332B1C5
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 20:17:10 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 662D432BD77
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 21:29:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4928030175E7
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 19:15:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F23DD3012810
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 20:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90D583537E0;
-	Wed, 25 Mar 2026 19:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PXjNBZR7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4850E372EF6;
+	Wed, 25 Mar 2026 20:29:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C890E1C84CB;
-	Wed, 25 Mar 2026 19:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47CD372ECF;
+	Wed, 25 Mar 2026 20:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774466152; cv=none; b=t1eJhqjS12ytkO6oaNE+zbAAWqFpptNYyB0OxWujIRPNOH9O5P/8z4uyRpfG+rhLWSaCh9/8JUBspfkRGM3huy7O+uDXnnV7bL5nIVVj1Yu6lTqi+WhD/I8OOfqdb8lLJGG+w5H0L9xhrDIirwjUyCpIqux5DjhZDjK9Px6q0Gs=
+	t=1774470579; cv=none; b=bzqHj93ee/TbfGN4lLJqEz/x5FNFf5AOsLyAf0v4+YSZ8bsysIktgJ5iEdoor9TYeaf8SZ64g0xjI3AtHdwnzeUav20yrtNyIniLMRFYLE55yx7CVQBg5TedcmPDQycSzHkEp/ZI+rvumADC4Iz1hfUBtorAsY7B0HMHii+3GuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774466152; c=relaxed/simple;
-	bh=C4P5kqlXZBwN8pvEi7dRsjH+Ubeb8VOuGcv8ZPBnTRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONXIZtMqVT6MTUg+HsjmkF2qzP3uM4b1EKyvEXEOD1SoeoggELiT+qxmTJMTChr1BVOSoxpNJXCjsXeOPlTQwttVwt/jCS3GRLhQpt9iZKojX4Sp4Ldxmyb8jsCUGIy8bIOqG9r6yCPmm30fU4txxnsX0HE80YbN8FRAH2eP3QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PXjNBZR7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4Ws0zxo76Oq8skurR4/Ct4jTfvOy+YmWkHbAMtBNRQw=; b=PXjNBZR7aTHA6Hz9FBJJqjN7Db
-	wIRsfz3JuwEYANUB9AaDi11hn6nh6/M8Yt1u2lh7xZ74+k10CalBjr8MrK+Nrwx21n4+aIKk2lPhW
-	ftJeYNMO2w0SOI46yedcw1nWwUzdRM7VeeL1Q4JkPGsR8iX3lFOynw+O8RZB1eESxJPw/e0kSAQ5O
-	B2aZiC14kT+lKYFCczKzfaugpqeSu3M88yANRuxYn6kzyfKCynn3AJ6nAs+i7GXfgOEixHdNBEAd3
-	+szXGpZFnv0gnrSxgaDNNjBGPuo9f3lOBbVoxNyvchKNAJNbxK3Bp2Oq/e0zo5Ry9iBIkvy4osERr
-	wmEZlTjg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5Thh-0000000GQBU-13Lr;
-	Wed, 25 Mar 2026 19:15:45 +0000
-Date: Wed, 25 Mar 2026 19:15:45 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Rushil Patel <rushil.patel@gsacapital.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Subject: Re: [RFC PATCH 0/1] mm/filemap: make writeback wait killable in
- __filemap_fdatawait_range()
-Message-ID: <acQ0YRLM_SxYfjfI@casper.infradead.org>
-References: <20260325113616.785496-1-rushil.patel@gsacapital.com>
+	s=arc-20240116; t=1774470579; c=relaxed/simple;
+	bh=J2KTQLJtj/cmPEnsk8n2KBtfd9UmjZewpH2hwmIc5kE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iX3k6/EfD6oKVgGWHnDm9LY+DWBEV8Y8GJIbrpIqH+eLXJ05ZBlKO8Up3X+ipaLrJZSx5Y+2HfM2NFh7S3DHp8u+UQCNxI73bqu3iMGN8Hx1JJzsgZa0Iv94Z+HUUcUx0hbZAdc3c/a2D8r1PHA/01GjhAumonqeF5cc2jMp18s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
+Received: from [2a02:1810:1d14:e000:db6f:81d2:6624:c91c] (helo=deadeye)
+	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1w5Uqu-001ofs-1V;
+	Wed, 25 Mar 2026 20:29:19 +0000
+Received: from ben by deadeye with local (Exim 4.99.1)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1w5Uqp-00000004iOy-2hHi;
+	Wed, 25 Mar 2026 21:29:15 +0100
+Message-ID: <eab4db41a02c4342bd6e5397f663c4e651f22e31.camel@decadent.org.uk>
+Subject: Re: Bug#1128861: [PATCH] lockd: fix TEST handling when not all
+ permissions are available.
+From: Ben Hutchings <ben@decadent.org.uk>
+To: NeilBrown <neil@brown.name>, 1128861@bugs.debian.org, Chuck Lever
+	 <cel@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Thorsten Leemhuis
+	 <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>, 
+	linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, 
+	stable@vger.kernel.org
+Date: Wed, 25 Mar 2026 21:29:09 +0100
+In-Reply-To: <177442248735.2237155.773724155681455344@noble.neil.brown.name>
+References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
+	, <177266540127.7472.3460090956713656639@noble.neil.brown.name>
+	, <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
+	, <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>
+	, <177434721528.7102.13514118512738778346@noble.neil.brown.name>
+	, <d4773958-5ae5-42d4-b785-6598b5c9b27a@app.fastmail.com>
+	 <177187492815.425331.14320091315652332093.reportbug@nimble>
+	 <177442248735.2237155.773724155681455344@noble.neil.brown.name>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-StOfTySkQjzSGJ9fd77x"
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260325113616.785496-1-rushil.patel@gsacapital.com>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-SA-Exim-Connect-IP: 2a02:1810:1d14:e000:db6f:81d2:6624:c91c
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+X-Spamd-Result: default: False [-3.56 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-20393-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 3997332B1C5
+	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DMARC_NA(0.00)[decadent.org.uk];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ben@decadent.org.uk,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20394-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[]
+X-Rspamd-Queue-Id: 662D432BD77
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 25, 2026 at 11:36:15AM +0000, Rushil Patel wrote:
-> We run Slurm on compute nodes with NFS mounts (NFSv4.1, NetApp).
-> When a job is cancelled, processes with dirty NFS pages get stuck
-> in D-state inside folio_wait_bit_common() because
-> __filemap_fdatawait_range() uses folio_wait_writeback(), which is
-> TASK_UNINTERRUPTIBLE. If the filer is slow to respond these processes are
-> unkillable - we've found the only recovery in practice is rebooting
-> the node.
 
-Hi Rushil.  Thanks for the patch!  I have a lot of sympathy for the
-problem you're trying to solve.  It was something similar which led
-to me introducing the TASK_KILLABLE infrastructure back in 2007.
-My problem was read-only though, and while I had an initial attempt
-to also handle write workloads, it didn't work and I didn't have a
-personal need for it, so I abandoned it.  Now you have a real need, so
-let's make it work.
+--=-StOfTySkQjzSGJ9fd77x
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The patch switches to folio_wait_writeback_killable() so SIGKILL can
-> interrupt the wait. Writeback itself continues on the server, we just stop
-> waiting for the ack. All 6 callers of __filemap_fdatawait_range() detect
-> errors independently via errseq_t / filemap_check_errors(), so the early
-> return doesn't suppress error reporting.
+On Wed, 2026-03-25 at 18:08 +1100, NeilBrown wrote:
+> On Wed, 25 Mar 2026, Chuck Lever wrote:
+> >=20
+> > On Tue, Mar 24, 2026, at 6:13 AM, NeilBrown wrote:
+> > > From: NeilBrown <neil@brown.name>
+> > >=20
+> > > The F_GETLK fcntl can work with either read access or write access or
+> > > both.  It can query F_RDLCK and F_WRLCK locks in either case.
+> > >=20
+> > > However lockd currently treats F_GETLK similar to F_SETLK in that rea=
+d
+> > > access is required to query an F_RDLCK lock and write access is requi=
+red
+> > > to query a F_WRLCK lock.
+> > >=20
+> > > This is wrong and can cause problem - e.g.  when qemu accesses a
+> > > read-only (e.g. iso) filesystem image over NFS (though why it queries
+> > > if it can get a write lock - I don't know.  But it does, and this wor=
+ks
+> > > with local filesystems).
+> > >=20
+> > > So we need TEST requests to be handled differently.  To do this:
+> > >=20
+> > > - change nlm_do_fopen() to accept O_RDWR as a mode and in that case
+> > >   succeed if either a O_RDONLY or O_WRONLY file can be opened.
+> > > - change nlm_lookup_file() to accept a mode argument from caller,
+> > >   instead of deducing base on lock time, and pass that on to nlm_do_f=
+open()
+> > > - change nlm4svc_retrieve_args() and nlmsvc_retrieve_args() to detect
+> > >   TEST requests and pass O_RDWR as a mode to nlm_lookup_file, passing
+> > >   the same mode as before for other requests.  Also set
+> > >    lock->fl.c.flc_file to whichever file is available for TEST reques=
+ts.
+> > > - change nlmsvc_testlock() to also not calculate the mode, but to use
+> > >   whenever was stored in lock->fl.c.flc_file.
+> > >=20
+> > > Reported-by: Tj <tj.iam.tj@proton.me>
+> > > Link:  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1128861
+> > > Fixes: 7f024fcd5c97 ("Keep read and write fds with each nlm_file")
+> > > Signed-off-by: NeilBrown <neil@brown.name>
+> >=20
+> > Hi Neil, which kernels should this fix apply to?
+> >=20
+>=20
+> v6.13 and later. So linux-6.18.y and linux-6.19.y
 
-Well ... I'm not entirely sure it doesn't suppress error reporting.
-But I think I see what you're trying to say, and I think the change
-of behaviour is one that was never guaranteed anyway.
+6.12.y is also affected since commit 4cc9b9f2bf4d was backported there
+(triggering this bug report).
 
-> The tricky part is a re-entry through do_exit(). Making the wait killable
-> alone isn't enough - we hit this in testing:
-> 
->   1. SIGKILL wakes the killable wait, signal is consumed by get_signal()
->   2. do_exit() -> exit_signals() sets PF_EXITING
->   3. do_exit() -> exit_files() -> nfs4_file_flush() -> nfs_wb_all()
->      re-enters __filemap_fdatawait_range()
->   4. wants_signal() checks PF_EXITING *before* the SIGKILL special case
->      (kernel/signal.c:951 vs 954), so it returns false
->   5. No signal can wake the second wait -> stuck in D-state again
+Ben.
 
-Yes, this was where I got stuck too!
+>=20
+> The Fixes: tag is actually wrong.  This bug has been present forever.
+> However a different bug that=20
+>   Commit: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
+> fixed was hiding the bug.
+>=20
+> So it should probably be marked
+>   Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
+> with an explanation.
+>=20
+> NeilBrown
 
-> The PF_EXITING check at the top of the function avoids re-entering the
-> wait entirely. This is the same pattern used in mm/oom_kill.c,
-> mm/memcontrol.c, block/blk-ioc.c, and io_uring/.
+--=20
+Ben Hutchings
+Theory and practice are closer in theory than in practice - John Levine
 
-I'm not entirely comfortable with the location of the check.  I feel
-that __filemap_fdatawait_range() is a bit too low level for a check
-of PF_EXITING.  I could see there being other places
-which really do want to wait, even in the presence of an exiting task.
-Maybe I'm being overly paranoid there, but I would suppress the call
-from nfs_wb_all().  Maybe something like this?
+--=-StOfTySkQjzSGJ9fd77x
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
--	ret = filemap_write_and_wait(inode->i_mapping);
-+	if (current->flags & PF_EXITING)
-+		ret = filemap_fdatawrite(inode->i_mapping);
-+	else
-+		ret = filemap_write_and_wait(inode->i_mapping);
+-----BEGIN PGP SIGNATURE-----
 
-What held me up from doing this though was the next part of
-nfs_wb_all():
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmnERZYACgkQ57/I7JWG
+EQkcsA/+P9OPKkweOPNqOeCWouseIy/CyJKqNhLGjkCMsT/c+K3UtHKmioGin2Zu
+2qKNGyPkfvdGfhlMZGcjE/0ZA6N/HD24fnNTH0p0xzcIE3U6OJ+lcaqbdOvs45y8
+wcLF/v8B4KD3HwzcxqIEty/yJjuzzvgii7xOHzeah59yhY2sElxYyZrNrxDaQ8hZ
+SeTGvVWWJEgm3zYTykG5Yu0pdCWgj2rkbJFBebRWw41fnHBbEw28zINjQRs5usaA
+40ZGQkM1F0QSOABWzuakN50XJfvs/XfKgiRAUzifeH0qaUXE2mC4Zdx+GGSwTRb8
+8l/ASuz3at8lDSNglY+E956o8zekI0TUN3jrv5ViO2dwvBfh3zIYXNHytroJNjBV
+ZiL+XpW94rWOSTvpSQd0a6W/2jbyiIy2brdqj71BbrbdpPcuoaEVOFodKqbcqmsd
+uBm6vApisOzLX5jwOUgfnYBdpj4XQh3gGgbTm6k3khLt0Ok6I7fWCJb3gHEHHFGU
+UfD185p1E1YdPXFYj8aWkKdO6RJnOIQKZ4w+s9PJDFl9h8wifCIqMOGlMIVbrWSN
+ZdU1Xs/lT6xH6NDY8z+iIJkrE6LBjO2+rS4GjqXk8I4FoFgP5BCP7TlZKnBwTczc
+XvNJ5reVXnDaFOcO9v420KZ8u2BbYjzk6f0jPe1omz9WJ9YJ82M=
+=Dg/J
+-----END PGP SIGNATURE-----
 
-        ret = nfs_commit_inode(inode, FLUSH_SYNC);
-
-I didn't trace through exactly what this would do, but I inferred from
-the FLUSH_SYNC that it would also wait for the file server to finish
-the write of the inode ...
-
-> Reproduced with iptables DROP on port 2049, confirmed the killable-only
-> revision gets stuck on re-entry, and the PF_EXITING + killable revision
-> kills cleanly.
-
-... but if your testing shows that it works, I must be mistaken about
-that.
-
-> Sending as RFC because this touches the generic writeback sync path in
-> mm/filemap.c rather than being NFS-specific. NFS can't really fix this on
-> its own - it reaches __filemap_fdatawait_range() through
-> filemap_write_and_wait() and doesn't own the wait. But I wanted to get
-> guidance on whether this is the right place for the fix, or if you'd prefer
-> a different approach.
-
-Appreciate your flexibillity on this ... sounds like you considered
-doing it this way, but didn't know about filemap_fdatawrite()?
-
-Anyway, adding the NFS people for their opinions.  Other filesystems
-don't do this flush-on-close behaviour (for various reasons, but
-basically NFS has a close-to-open consistency model).  I believe
-we can break this guarantee in this case as it's not an orderly close
-but an involuntary termination of the process.
+--=-StOfTySkQjzSGJ9fd77x--
 
