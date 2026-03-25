@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-20378-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20379-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6GN3KNv9w2lXvQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20378-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 16:23:07 +0100
+	id wFeZOs/3w2nPvAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20379-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:57:19 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51416327D78
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 16:23:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B0F7327468
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:57:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6BBA93035D6C
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:43:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EFE433043003
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:43:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194013F0A80;
-	Wed, 25 Mar 2026 14:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADAFE3F0ABB;
+	Wed, 25 Mar 2026 14:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJ4rHGIK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtR0VpPk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87953EE1E8;
-	Wed, 25 Mar 2026 14:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610793EFD3B;
+	Wed, 25 Mar 2026 14:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449657; cv=none; b=hhb8o8D6kky64VNLGPiGMWiGjpDLw+XCEYJudgCqwhySFef71h8RyLtshSjVnrZHY1gJ2JzLxYZMgTHS0voExGHoScI6jzRW8napcvkXRjSMRcuhPUTnhNgwj8nE0OASV2ktVYr6vdpbQnLwo25situEhFFVa7B8leNizhXoDGo=
+	t=1774449659; cv=none; b=UeTv/2a9+xH3ongYREhmjkvdXu/kBVf/oWZx7WTyXANtDRzd98vxma/H2TzaxgrUv/miEioNnbafI9mGZQcwDVVqK9AevzLo69fwnSxoob7Fi84iY5O8jUWO0LiQIICTBbxGg2ouPy/YVedszdKJzVdrms0f4PQOIqJKgU+8uSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449657; c=relaxed/simple;
-	bh=z1a50sShHbXLrt+MAFH1HTdDE4R/esAqUantftctegA=;
+	s=arc-20240116; t=1774449659; c=relaxed/simple;
+	bh=1AKPKcydftHop5CQp8Iwo1zeSc7b5Z2FWQsZ75X7nWw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W94Z1yDidCL87ZnVD+r10Sk3xIAFTX5XkuZ3V6vRXbfSmYas8sWMgWbdJZgpE1wZZ5ptlkWqJMB1Aj/OhBhR77AZOceQ9Pgim21owBWlFAV1WmdXpGoWJm/SBSvHEXXW/GzL7IdnLOSlwj9o0Y9gGoGy/ZC7W9mQh5tD/vVVEOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJ4rHGIK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B077FC2BCB3;
-	Wed, 25 Mar 2026 14:40:55 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=QNFNRWC4kie40LlFev26UtT0V6JOZJ67nEUj44W/nD8uAFZVRpuAyQr04RJcLDRM8SLyqboyCdgq4/GXZFIQzqc5YhDXpqb6ydSC7DH4khajXVFr2wCSuCKyOoYvHqMl6rUhLRidQSdwj8REaLSegkmw7YjZyRA6BYdJR/2j5ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtR0VpPk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B06C4CEF7;
+	Wed, 25 Mar 2026 14:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774449657;
-	bh=z1a50sShHbXLrt+MAFH1HTdDE4R/esAqUantftctegA=;
+	s=k20201202; t=1774449659;
+	bh=1AKPKcydftHop5CQp8Iwo1zeSc7b5Z2FWQsZ75X7nWw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IJ4rHGIK7luNIfUIam2SXp/QusjJDas8FuEwzNNI6qjAzD9xIQE8r17mUJeJL+sJy
-	 U8KpmltR3TiSBtIPYq2Z3u3QBhq2CofALLxvzPMmTZ8QEeigqJVFzEYRyRNIN2Fqct
-	 z+DnaEEY94t+Suw1OYWAUX9FyCQ7lGB0fB2A//d7qo7wzo0tBBIULCG926zVoBJaCX
-	 2HO5v1Jle/vN2zRAmjeFcyjnVT4BBtq2f/M5bpI4TMkF2Bd9gkKwljzuIAkrbHvaML
-	 cFVaauHn8JQvUU3ACbx9CD8lYIfXrDbZF0XXOe9zPrplxZDmIahLtGKTmktCCXluIw
-	 2OZ3JX4lCSzbw==
+	b=QtR0VpPkyZjdoD4F1UG3c+2efbEQ4bCoWzZETMhvg7xyQUJhvx+Lk5JOcwEsJNX2I
+	 0D2VH/1xcWLNJP+vQdxFZB0LSCLP1g0a0otQOJNJVKh9vvSHIVCkyO/Uao+4yvaxr8
+	 QSGKSwLjHB/9w83xwmIkTt2do7l120WSXKz7PQBEdDfKCgFLtGHBu0501ZiiHFFHbs
+	 VKNN8yMHvTkT6H3Fxj1mhspjcMxS0X+EhOFpJlDVzFu2ggchW/SSGRudjaWlJ31xQ4
+	 ntLFR3L3GhvpraLGIpwJa7NYrlT6XY+1+1idbh4J3rgVa8T+zxCGehVnk1ZjvfLvxD
+	 TXvvAC479yisg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 25 Mar 2026 10:40:25 -0400
-Subject: [PATCH v2 04/13] sunrpc: rename cache_pipe_upcall() to
- cache_do_upcall()
+Date: Wed, 25 Mar 2026 10:40:26 -0400
+Subject: [PATCH v2 05/13] sunrpc: add a cache_notify callback
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260325-exportd-netlink-v2-4-067df016ea95@kernel.org>
+Message-Id: <20260325-exportd-netlink-v2-5-067df016ea95@kernel.org>
 References: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
 In-Reply-To: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -69,20 +68,20 @@ Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1341; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=z1a50sShHbXLrt+MAFH1HTdDE4R/esAqUantftctegA=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpw/Pu5Bmosu3oHpACj8X6c/3sAR5ou/9/BofGi
- TVlWGjGXHuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacPz7gAKCRAADmhBGVaC
- Fa2ND/0cd0zYxSIw/WofuLVh5mteBJGnl7fZsxcsW/1ifWmWnqZcOVCffpn7gy+QaXejzd+cSuM
- v9hV/nujKyI33H5h9eMiKj8SMK041dF+b/WdEN977TYoUwMM1aAAUwY/j8tZ7cG/3CLQQIHX5BO
- K/Fmp1OXH01rC3lUb/eXpuFwiXPbT0IuQtglzwK1EkAhH3mtALqzDOVGehP6+uAB+sHOWYQqOl6
- xQWrTVH4tOarlhgtvPTTeQ8I0doCe6P7RAiuXNZLem9iaGXrrlUxPdH6FTWLoYKdI0o6+tAfj1c
- qC1QtFQPcHGTcF1HznCbZe7kdlHTRgHKARzilFn0USMvKs4JzFVHvJF3RRBokyv6riA7u2LZjQB
- wlLVoH18Ih1oO9npQUrC4m2vraQKEnOrw7qgL9uFoyjblOVAnyO5Tz6Uq8or77FQycBt94fizKh
- eS2O6MlxyBtOmiRKmcxcWPRZeD8sKMKeNBhK7J6Dci+NOheDGsOhWsVSJFcCpUHreV1FTb0xUvp
- 3HjhfuciEKBsNWSy1YDvk+gYtX2gpnv8jtCqA49DWf6KcAG/eM1DGesH/KpsXUONimVwgQXHiHy
- DIQkc1Hz441fszwsaIVWs11J5kKSKIMWeJS+kwG9Zd7ZFl2emH0pm3FYy5atGRIArG7P7uBnxVt
- ZhEZZArOyP5+d0g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1517; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=1AKPKcydftHop5CQp8Iwo1zeSc7b5Z2FWQsZ75X7nWw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpw/PuMNLtOswekS40u/7k9/vOEW6PhAWumjoLR
+ aUdI4T0eOGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacPz7gAKCRAADmhBGVaC
+ Ff5QD/0d0j0M06Nq0/dYUOn/kGW93mmPkvDM6lNvqGW/aDIJTQLWXllEsmCLwgTtXLmutUOzQch
+ lSVppYwI+huB2VUKcTfs4ZLSeEb0f8KZJFg6aBN1VG2m08A0TfpEZEVo3ccH126U90UeR2UoRL2
+ aRi0mtJbjMvY7Y3eLh3fb3LIjfkONklW5PhDhS2W9ppIXifpqHOc4l6fvWJ9Cncf0QqU6lk+TTs
+ uc0YttDh+oVYa4SUGRYKd3u9AopYiMQ3HPnaZBdxBrpLwHujqs46j7g+31KNCgZXN9zxqEwwuqa
+ A2RM1emehdUo/1mHwMuTH4mEsFMEKhPVpmMhgZ2q+S89cpsmhrAHY3GXvhItbvMHnYPKVilUUcj
+ LdJs+2VMnUThVVApaJGNTMooMgnMLrA7aQDu+xRm7B4/Bg/akkJqJ3DUINvowMBM2i9GDIb8xx1
+ sTj5MjyDU0tgEC5/8ocnB/6pNs+oTRJTkympkL7X1TTanR88jCxMWnsWlVblgWZXN1cadv/QG2x
+ IX20zPYSj5Z6fFWuIwQeoA7EzMDy2YhkQG5LWCMYiUbeZOFHn/0PJz3S38ufSpFI0NbERn0DG7V
+ VxZXMR4rhn2Lksi36t8Jk1FG0WaqI5xk1foOQk4khRX0zXJgS1jucNMi9FPwWukEjO5GvwiYxlK
+ kjmkq+mEF1q9d2A==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -95,7 +94,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20378-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20379-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -113,47 +112,47 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 51416327D78
+X-Rspamd-Queue-Id: 8B0F7327468
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Rename cache_pipe_upcall() to cache_do_upcall() in anticipation of the
-addition of a netlink-based upcall mechanism.
+A later patch will be changing the kernel to send a netlink notification
+when there is a pending cache_request. Add a new cache_notify operation
+to struct cache_detail for this purpose.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/cache.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/sunrpc/cache.h | 3 +++
+ net/sunrpc/cache.c           | 2 ++
+ 2 files changed, 5 insertions(+)
 
+diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
+index 80a3f17731d8fbc1c5252a830b202016faa41a18..c358151c23950ab48e83991c6138bb7d0e049ace 100644
+--- a/include/linux/sunrpc/cache.h
++++ b/include/linux/sunrpc/cache.h
+@@ -80,6 +80,9 @@ struct cache_detail {
+ 	int			(*cache_upcall)(struct cache_detail *,
+ 						struct cache_head *);
+ 
++	int			(*cache_notify)(struct cache_detail *cd,
++						struct cache_head *h);
++
+ 	void			(*cache_request)(struct cache_detail *cd,
+ 						 struct cache_head *ch,
+ 						 char **bpp, int *blen);
 diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 1b97102790f6642fa649ad6aab94fcba8158fa8e..8a66128a1bfabca42b52f274ea34c1b594a5920b 100644
+index 8a66128a1bfabca42b52f274ea34c1b594a5920b..a182a179a1bfdb883ceda417a5809d967659be5d 100644
 --- a/net/sunrpc/cache.c
 +++ b/net/sunrpc/cache.c
-@@ -1195,12 +1195,12 @@ static bool cache_listeners_exist(struct cache_detail *detail)
- }
- 
- /*
-- * register an upcall request to user-space and queue it up for read() by the
-- * upcall daemon.
-+ * register an upcall request to user-space and queue it up to be fetched by
-+ * the upcall daemon.
-  *
-  * Each request is at most one page long.
-  */
--static int cache_pipe_upcall(struct cache_detail *detail, struct cache_head *h)
-+static int cache_do_upcall(struct cache_detail *detail, struct cache_head *h)
- {
- 	char *buf;
- 	struct cache_request *crq;
-@@ -1245,7 +1245,7 @@ int sunrpc_cache_upcall(struct cache_detail *detail, struct cache_head *h)
- {
- 	if (test_and_set_bit(CACHE_PENDING, &h->flags))
- 		return 0;
--	return cache_pipe_upcall(detail, h);
-+	return cache_do_upcall(detail, h);
- }
- EXPORT_SYMBOL_GPL(sunrpc_cache_upcall);
- 
+@@ -1233,6 +1233,8 @@ static int cache_do_upcall(struct cache_detail *detail, struct cache_head *h)
+ 		/* Lost a race, no longer PENDING, so don't enqueue */
+ 		ret = -EAGAIN;
+ 	spin_unlock(&detail->queue_lock);
++	if (ret != -EAGAIN && detail->cache_notify)
++		detail->cache_notify(detail, h);
+ 	wake_up(&detail->queue_wait);
+ 	if (ret == -EAGAIN) {
+ 		kfree(buf);
 
 -- 
 2.53.0
