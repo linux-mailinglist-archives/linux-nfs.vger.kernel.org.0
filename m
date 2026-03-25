@@ -1,188 +1,204 @@
-Return-Path: <linux-nfs+bounces-20372-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20373-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ABhtAtjZw2lwuQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20372-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:49:28 +0100
+	id sDaCFKDmw2lvugQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20373-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:44:00 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6494C325266
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:49:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5DE326061
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:43:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 839173111FE1
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 12:34:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D021C31308A8
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 13:28:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98493D349A;
-	Wed, 25 Mar 2026 12:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 293C826A0A7;
+	Wed, 25 Mar 2026 13:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucloud.cn header.i=@ucloud.cn header.b="l/u0Gf7K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ufpw2dmd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-m19731102.qiye.163.com (mail-m19731102.qiye.163.com [220.197.31.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E953D1CC1
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Mar 2026 12:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F1C1E7660
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Mar 2026 13:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774442043; cv=none; b=YeqGIfXLUe124Bk4vdv7q7c+pI/ZBghBZLudSD5wljHnLlsoLh9ZgQaoZUugZx3X36ijhaAfoX1QRD25PYNAf2khGmW0WEYNb/pDwINeIPAFfiTft10jJ9x2jsxKGFlMlslPpzVAFXDWASj/3/RMyuPv/h3P/lQw+ZrLtdaeYAg=
+	t=1774445310; cv=none; b=nQ2hZwpgEK+tryn1vHsD5p+dgAsQMZBcpATb40WcB+0KEpGzA3RmCs6vEbw5v1xmjDh0xxvk7hswG8qotGuj3Dy6OZU3Pum2r4OdjtzL2tnuD95Rv3bBi/cX4O07lrV+IdlnorSAjdezuxH92/k87kK1ZuzX4HAjJON0Ff99+5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774442043; c=relaxed/simple;
-	bh=HOGW1zbHsdxkLgondHaktZLt/yKSXKIn2AC8GVLuuOY=;
-	h=From:Content-Type:Mime-Version:Subject:Date:References:To:
-	 In-Reply-To:Message-Id; b=fCd9GOV96RQtRrY9HQiFiWeLzNKwcFKWGKR7Tkr0fTQCJ6Zvv2dB4TFraFqk36ThXnT7E3f0GkOjaXJitz5sAgpzFDMu0itRsuSKzMSNg2LgagOIwCXuYt71G9/tLURfIoumlR3363GLFWLlUFUpMxNeCLucFP7ZxFVNLW3uhKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ucloud.cn; spf=pass smtp.mailfrom=ucloud.cn; dkim=pass (1024-bit key) header.d=ucloud.cn header.i=@ucloud.cn header.b=l/u0Gf7K; arc=none smtp.client-ip=220.197.31.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ucloud.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucloud.cn
-Received: from smtpclient.apple (unknown [106.75.220.2])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 18141b13d;
-	Wed, 25 Mar 2026 20:33:51 +0800 (GMT+08:00)
-From: user <wei.guo@ucloud.cn>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1774445310; c=relaxed/simple;
+	bh=VrtayuYLKmIwdMELbRfNa0BOEz+16aqgLPxRX1NOKPE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=S2AemWMv6lP7dhP7466Z4ufr2jI5UOFYZsusIGUZb+fWicVQ1Hc09fZ1PzOFRpXUA5/Y/LM4qpDzCiSUfHg0Ffa9ClJNZhGi3JpUconH5gDNUtD8HfjLZmbac4mydlmf60b95Lp80yReZ04rAIW6lSPbP1TXM9D1yRLU/y9bKnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ufpw2dmd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FF7C4AF0B;
+	Wed, 25 Mar 2026 13:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774445309;
+	bh=VrtayuYLKmIwdMELbRfNa0BOEz+16aqgLPxRX1NOKPE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Ufpw2dmd6/oA4c0ZAHC6bxe982nbyCkMRRmaYIDHiYe3iM/dbxnTP+6cYA3/IlQjC
+	 KF6VRYAq4jSZvVgPPuKK1jXNLPWkZSRIyRnWxAeOLn7nxSkpKTvfShyCqJlkwe+A44
+	 fnxV8sh8/LeW38RSE1q1ccPSMwbvMS0IaNm8EK3nwqqrjMj/uGEs4KP+SKtyrnYw0M
+	 Lqyo3KPyxaEzqJ6o4lQySiQ9PPQsxAaE7HWV8oVh+H9ZiR+2u8I1N2aRQkUsRmDSka
+	 8n6WHFfXyEp809GMPV99+pndJgphFxD0hT/uJ+YM4qHGdQ+mXLewhHNrZuaCqXyJet
+	 23PRSY16BkIDg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 68894F40070;
+	Wed, 25 Mar 2026 09:28:28 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 25 Mar 2026 09:28:28 -0400
+X-ME-Sender: <xms:_OLDaTfz9u7X5WeE3H20BwZG7x7IHAd7iaAPGplrwnk9JBi8ENJiMg>
+    <xme:_OLDaUDM62EKkYFlY0EAbXYExRpTDZii8UWo0Ub8s4xTeU0AJILNrCTJ2wGzaWAro
+    0KPjBqUxXG0vPKhHJlSTvk6m216UpMlvrQBX4gTpCjwxOvh49QiGKA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefvdegheekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeejhfdutdetfeetvdevfeevtdelueelffdtleefledtteefteefgffhieefgeelieen
+    ucffohhmrghinhepuggvsghirghnrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
+    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
+    peekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnvghilhessghrohifnhdrnh
+    grmhgvpdhrtghpthhtohepudduvdekkeeiudessghughhsrdguvggsihgrnhdrohhrghdp
+    rhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrvg
+    hgrhgvshhsihhonhhssehlvggvmhhhuhhishdrihhnfhhopdhrtghpthhtohepthhjrdhi
+    rghmrdhtjhesphhrohhtohhnrdhmvgdprhgtphhtthhopehokhhorhhnihgvvhesrhgvug
+    hhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:_OLDaQPHFcNP3khHfVWOshjoG-BFipJK1sc8KuhI1UX2ICVSOd-2ew>
+    <xmx:_OLDaZhOiuS-qOdUZWJcoUOnKINMRrv_UJuwaa6bdCnqNfnW35qldQ>
+    <xmx:_OLDaa7bvVz9YDK5eWMCUlSbLcH_xVXrKbbmzeZgKmoy5FfTT4ms7w>
+    <xmx:_OLDaY2SKYbNqFIPJL9SPxHHiHJ-ntLnE0awvimUNwhy8zA6mpUg3Q>
+    <xmx:_OLDadtD2lol2ZirswO9WjVuddTli5K98xdCbs98nMv79lzUVtwRMG_N>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3C3FF780076; Wed, 25 Mar 2026 09:28:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.100.1.1.5\))
-Subject: Re: [BUG] NFSv4.1 client hang in OPEN reclaim path
- (rpc_wait_bit_killable) on 5.15
-Date: Wed, 25 Mar 2026 20:33:40 +0800
-References: <538B06AD-0307-4BD4-8E44-16BF6BAD7B4E@ucloud.cn>
-To: linux-nfs@vger.kernel.org,
- trond.myklebust@hammerspace.com,
- anna@kernel.org
-In-Reply-To: <538B06AD-0307-4BD4-8E44-16BF6BAD7B4E@ucloud.cn>
-Message-Id: <D54322C3-58CA-459A-A195-CE4511225ECB@ucloud.cn>
-X-Mailer: Apple Mail (2.3864.100.1.1.5)
-X-HM-Tid: 0a9d24fca8d0023bkunmac093f2b683122
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQkJKVksYH0tMThhIGUJLHlYVFAkWGhdVGRETFh
-	oSFyQUDg9ZV1kYEgtZQVlKS01VTE5VSUlLVUlZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTElVSktLVU
-	pCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=l/u0Gf7Kzhg7akwoSt6zclZaEYm9AtJKGID8kVypfRtv4u0dlh0Zpt6VyM0GAMg+g37AZLf5gjG99m3W6w+D1t9Ytc8KBAFlJ08wb4UvviSOm0quuiwe1+1kw9rC0SxWh94gKodpb9Zxv+xFtj8+h1mkQhdBD9wPLXqpqv5srVA=; c=relaxed/relaxed; s=default; d=ucloud.cn; v=1;
-	bh=HOGW1zbHsdxkLgondHaktZLt/yKSXKIn2AC8GVLuuOY=;
-	h=date:mime-version:subject:message-id:from;
-X-Spamd-Result: default: False [-1.66 / 15.00];
+MIME-Version: 1.0
+X-ThreadId: A_jyC0Lb0WUR
+Date: Wed, 25 Mar 2026 09:28:08 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Thorsten Leemhuis" <regressions@leemhuis.info>, 1128861@bugs.debian.org,
+ Tj <tj.iam.tj@proton.me>, linux-nfs@vger.kernel.org,
+ "Olga Kornievskaia" <okorniev@redhat.com>, stable@vger.kernel.org
+Message-Id: <a6e6a731-2885-4510-87dd-45e6a8f4fbd7@app.fastmail.com>
+In-Reply-To: <177442248735.2237155.773724155681455344@noble.neil.brown.name>
+References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
+ <177266540127.7472.3460090956713656639@noble.neil.brown.name>
+ <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
+ <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>
+ <177434721528.7102.13514118512738778346@noble.neil.brown.name>
+ <d4773958-5ae5-42d4-b785-6598b5c9b27a@app.fastmail.com>
+ <177442248735.2237155.773724155681455344@noble.neil.brown.name>
+Subject: Re: [PATCH] lockd: fix TEST handling when not all permissions are available.
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ucloud.cn,quarantine];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ucloud.cn:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[ucloud.cn:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-20372-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20373-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,brown.name:email,proton.me:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.guo@ucloud.cn,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ucloud.cn:dkim,ucloud.cn:email,ucloud.cn:mid]
-X-Rspamd-Queue-Id: 6494C325266
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 0D5DE326061
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Server-side logs indicate that the client is sending stale stateids / =
-sequence IDs, and the server responds with NFS4ERR_OLD_STATEID.
-
-This suggests that the client state may not be properly updated after =
-previous operations.
 
 
-> 2026=E5=B9=B43=E6=9C=8825=E6=97=A5 =E4=B8=8B=E5=8D=888:11=EF=BC=8Cuser =
-<wei.guo@ucloud.cn> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Hi,
->=20
-> I hope you are doing well.
->=20
-> We are currently investigating an issue with an NFSv4.1 client on =
-Linux kernel 5.15 (Ubuntu 22.04), and would really appreciate your =
-guidance.
->=20
-> The issue starts when the server returns NFS4ERR_EXPIRED. The client =
-appears to enter recovery, but the reclaim process does not complete.
->=20
-> The state manager thread is observed to be stuck with the following =
-stack:
->=20
-> rpc_wait_bit_killable
-> __rpc_wait_for_completion_task
-> nfs4_run_open_task
-> nfs4_open_recover_helper
-> nfs4_open_recover
-> nfs4_do_open_expired
-> nfs40_open_expired
-> __nfs4_reclaim_open_state
-> nfs4_reclaim_open_state
-> nfs4_do_reclaim
-> nfs4_state_manager
->=20
-> During this time:
-> - The server continues to return NFS4ERR_EXPIRED
-> - The client does not appear to successfully reclaim state
-> - IO operations continue but repeatedly fail
->=20
-> =46rom RPC statistics:
-> - ~30 million calls have been made
-> - retransmissions are very low (94)
->=20
-> This seems to suggest that the issue may not be caused by network loss =
-or server unresponsiveness.
->=20
-> Additionally, from our observations:
-> - Network connectivity appears stable
-> - The NFS server seems to be operating normally (no restart or =
-failover observed)
->=20
-> One detail that we found particularly interesting is that:
-> - We do observe ongoing RENEW / SEQUENCE-related traffic from the =
-client
-> - However, the client still eventually encounters NFS4ERR_EXPIRED
->=20
-> This makes us wonder whether lease renewal might not be effectively =
-taking place, even though related traffic is being sent.
->=20
-> Given that we are using NFSv4.1 (where lease renewal is implicit via =
-SEQUENCE operations), we would greatly appreciate any insights on the =
-following:
->=20
-> 1. Under what conditions might a client still hit NFS4ERR_EXPIRED =
-despite ongoing SEQUENCE activity and a seemingly healthy =
-server/network?
-> 2. Could there be scenarios where RPC completion, session slot =
-handling, or sequence handling prevents the lease from being properly =
-renewed?
-> 3. Is this behavior something that has been observed before in the =
-NFSv4.1 recovery or session handling paths, particularly in 5.15?
->=20
-> At the moment, it looks like the client is stuck in the OPEN reclaim =
-path waiting for RPC completion, and recovery is unable to make forward =
-progress.
->=20
-> If there are any known fixes or relevant patches in newer kernels =
-(e.g., 5.19 or 6.x), we would also be very interested to learn about =
-them.
->=20
-> Thank you very much for your time and for any suggestions you may =
-have.
->=20
-> Best regards,
->=20
+On Wed, Mar 25, 2026, at 3:08 AM, NeilBrown wrote:
+> On Wed, 25 Mar 2026, Chuck Lever wrote:
+>> 
+>> On Tue, Mar 24, 2026, at 6:13 AM, NeilBrown wrote:
+>> > From: NeilBrown <neil@brown.name>
+>> >
+>> > The F_GETLK fcntl can work with either read access or write access or
+>> > both.  It can query F_RDLCK and F_WRLCK locks in either case.
+>> >
+>> > However lockd currently treats F_GETLK similar to F_SETLK in that read
+>> > access is required to query an F_RDLCK lock and write access is required
+>> > to query a F_WRLCK lock.
+>> >
+>> > This is wrong and can cause problem - e.g.  when qemu accesses a
+>> > read-only (e.g. iso) filesystem image over NFS (though why it queries
+>> > if it can get a write lock - I don't know.  But it does, and this works
+>> > with local filesystems).
+>> >
+>> > So we need TEST requests to be handled differently.  To do this:
+>> >
+>> > - change nlm_do_fopen() to accept O_RDWR as a mode and in that case
+>> >   succeed if either a O_RDONLY or O_WRONLY file can be opened.
+>> > - change nlm_lookup_file() to accept a mode argument from caller,
+>> >   instead of deducing base on lock time, and pass that on to nlm_do_fopen()
+>> > - change nlm4svc_retrieve_args() and nlmsvc_retrieve_args() to detect
+>> >   TEST requests and pass O_RDWR as a mode to nlm_lookup_file, passing
+>> >   the same mode as before for other requests.  Also set
+>> >    lock->fl.c.flc_file to whichever file is available for TEST requests.
+>> > - change nlmsvc_testlock() to also not calculate the mode, but to use
+>> >   whenever was stored in lock->fl.c.flc_file.
+>> >
+>> > Reported-by: Tj <tj.iam.tj@proton.me>
+>> > Link:  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1128861
+>> > Fixes: 7f024fcd5c97 ("Keep read and write fds with each nlm_file")
+>> > Signed-off-by: NeilBrown <neil@brown.name>
+>> 
+>> Hi Neil, which kernels should this fix apply to?
+>> 
+>
+> v6.13 and later. So linux-6.18.y and linux-6.19.y
 
+Assuming that includes upstream, I recommend that I take this
+into nfsd-testing / nfsd-next and let nature, ah, er, stable
+automation, take it's course.
+
+
+> The Fixes: tag is actually wrong.  This bug has been present forever.
+> However a different bug that 
+>   Commit: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
+> fixed was hiding the bug.
+>
+> So it should probably be marked
+>   Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
+> with an explanation.
+
+IIUC, we want Fixes: to point to the commit that introduced
+the issue (Fixes: since forever) and then use a "# v6.13+"
+comment on the Cc: stable to control how far back to backport
+it.
+
+Commit message could mention that 4cc9b9f2bf4d uncovered the
+issue.
+
+-- 
+Chuck Lever
 
