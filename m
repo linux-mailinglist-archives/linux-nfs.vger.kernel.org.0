@@ -1,81 +1,132 @@
-Return-Path: <linux-nfs+bounces-20388-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20389-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WNSEEmb+w2lXvQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20388-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 16:25:26 +0100
+	id mMrVFzMLxGk+vgQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20389-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 17:20:03 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F7D327E22
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 16:25:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 579F6328D99
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 17:20:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7DEE4344754A
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:13:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8FF5B32331F3
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD3D3F8DE1;
-	Wed, 25 Mar 2026 15:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 297B63E4C7F;
+	Wed, 25 Mar 2026 15:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4ytdH04"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WE8Cqive"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B46D3F99E1;
-	Wed, 25 Mar 2026 15:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774451377; cv=none; b=A/u6Dod8WGKjAEbs1tA8O7K2if6bfTlZLSxiTelp8r0PgnfkH477BTk4skCh4ujpuK5PBBW+SenL4NevQH5Y5+hgj8TrkmLMYji2FjltrdotED7ezoh0c3C4RcTeCdyt2/T/ce3a17DnzxvVQG4aQlpA/v6tw8H3YOa/ukHqwnE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774451377; c=relaxed/simple;
-	bh=pqb3PJuzB5DFy/kjGWTEYPqLMTtoozJqM6OF7+HH9Bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fmEQ+I0VxPutw9ctB0A6278HlvoCze803BpQRbLBajMlQwZ89UH9G1CYyGEl8xpBgdpUJ4x40DJv/ccfltAmhbyiCOg0b6tk/jjyh3ic/pXQAzejrJegv15vkOnDyARpNxmuAXoUQ59gKveiqa0gyhOUDA8qJPJebIPVlPsZJwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4ytdH04; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E73E9C4CEF7;
-	Wed, 25 Mar 2026 15:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774451377;
-	bh=pqb3PJuzB5DFy/kjGWTEYPqLMTtoozJqM6OF7+HH9Bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m4ytdH04FDid4KQ2aOODe/Mf5Uqo6wmRml9zGX4TibIkjXjcECV7jqZP7+i/+ujxW
-	 /ToFD9rIr2iHggpRRL0kodDfOTFJbx/Oh8ttL2pEAt0S5tYLd70sJOKMYL69ySwm0J
-	 iRfBk9jVnFryf3mLpFghUqfA7015Iml5fqY/DV28I6dbEJ9TNkxiaF38Ll+fxUSiVC
-	 HCT5x77EaUBcHXyA/inb3B9AaylJ7PTy1r7om/7SOoiK8lU9EeDyk97nFSaX5QW+JB
-	 ax8mbWjmC18pzVC3YvRPbxjQqsy2KM3P4N65lIcKs5+M58C21gmeZdz60oRMA5pw3r
-	 NpgyU3CevbWJg==
-Date: Wed, 25 Mar 2026 08:09:36 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Yongcheng Yang <yoyang@redhat.com>, fstests@vger.kernel.org,
-	smayhew@redhat.com, zlang@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] generic/551: prevent OOM on NFS on systems with no swap
- memory
-Message-ID: <20260325150936.GE6212@frogsfrogsfrogs>
-References: <20260325035854.2262636-1-yoyang@redhat.com>
- <acN4BV5QmtP2W_WK@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85FB3537DE
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Mar 2026 15:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774453802; cv=pass; b=inJBK6jN7KEhTWink0q/0bWzYGAEI//37aWzN88cqQmsp8LrgEq96jNO9VrP6qYOP9hlXPDuJpsVECMbtVq0+iE/cRPEPqBa4qQVfAxVdWEMbAfYCgzbIAL3Iw5jBTqFBTNloi5KZKne7qgReBi2Ac9DV321iLbf3mMl2AHjZCQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774453802; c=relaxed/simple;
+	bh=1Fp+vu62d7+GgDhpjAEu59FtZICCeLh/0ubMdeGXaXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s98gPPFj7hS29wCoEcX1Z7OFhLjjNe2qTxd5IwWUMeTJMxUTPTLSC/XVTSOsSpuHxULZzUdsN7UTR59uvwzhjVWxOUIqAUSSNB+HfbcFaKxSxlluMHxesdIcbNY5o7AN03ilC3n5qIw/ttPGrcweM4fDTBDGAwGWVQI1PI3GDdk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WE8Cqive; arc=pass smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-56ce54c8c82so24133e0c.2
+        for <linux-nfs@vger.kernel.org>; Wed, 25 Mar 2026 08:50:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774453800; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ODsbISXIk+gpYFfhjCmKwFAlWNz3tCPruXVzvwmYiUitzYXHJTtTp8iq9k6yKwJRnq
+         DpPes0LlIwjE33wgNXaTAHA2xb+yjiOdmQcnFX3lf7QMLUBn2lUSaPgU8+cwYao1IM5R
+         pGppx0NNECNnwpDZY6xQXcMcKipVeaNM4J6P8U2O/cGlr+sqIM64BNE1APta/n8Q458u
+         Tn2RCa4KIMlynpq5BTaqBXylhOz630ZeNoISxmoE2UPey6SRJrujKWKa2SSKIqr+8tXJ
+         cm6zE9Qre94bWHfZdvppRNt930q37YUvS4zck121jzBsjEOeZTlGKvJFkulT9eZY2cVR
+         mnEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4YyME46GpG0Gw1RKEMDOpkpe2Kju1Ab9MRx6y7uJH+s=;
+        fh=RMSsVRcOmnedGfQrkl9l/JR8l03Ml3cbP9J8nRVWtIA=;
+        b=Yk8g6B458snfsetMMFzbKlqok2At8fgNLSyqH0cBIaXswjSBWbyzGbqpq7vSezuEXp
+         gYN3ZdteodJz/pxH9ArVNwQAyukzCzrsMwsc/qWwooXbYw7IbA2SXSnONX2RorQ/PHe8
+         wcFEq7YaTOEuk80pDaD8xWAWznyZhBBqNxqMKUjErroPU3zRLjBLpr+nExt3aWRTPSvD
+         Bz7qAImln+9dZzuiXHTUSJUApBWNHiT5GZVUGNap+c5oQvBtLrZv8lHxHwEyKjeM+kH+
+         erfogsebmu75z/rpV6+Z3EpiisKl5ufndch3/44VtJfloE1+m2zVPqanUXfr8Ga8IZ34
+         g18A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774453800; x=1775058600; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4YyME46GpG0Gw1RKEMDOpkpe2Kju1Ab9MRx6y7uJH+s=;
+        b=WE8CqiveS2f9yxvxek8zFPMlu1+i6ro0LInBOuhLyzu76QvTxri3ZqSaQ9Y2Xe5Jsa
+         kvShTOJqz0cgXnMfHa8VMIePVTI5G4+9gN8o+fba6wFEjbi1nkQ4ZZ5aKZS3cxNMKkPv
+         wjeLJchu5xt0w2HnGe+Np39Leu2byrEURgllqLmJ/JS8DOSPLEue6AzyB2WjoBzF7zNJ
+         Ix1w0bNMnVtj4PbLg+gOQ43Gx0E6r4mBkUi9A4ULNDbicb/HUaEzRRikNrSWhkZVRpQ4
+         Yyh61cF0/oQ2zXU6Rrg/4BYdkCf77/V+o6OcEoLG5hKdsnRrBydiaId2qvB0Zf77s4AH
+         LU4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774453800; x=1775058600;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4YyME46GpG0Gw1RKEMDOpkpe2Kju1Ab9MRx6y7uJH+s=;
+        b=ZbPO6r4roI5wKNgFO2zJ+rZAkMiy74NYqu6u8w3qvkas10d4BN6ZleuJPuxGD8OAev
+         Pj9zr3z9MN1Hfokj9UxeWvTBm6KCXmeTMLeIu6Zgzrff48zUkeGSOZIOz5bIJmcgFtP0
+         Z7dDLuHg0KPfy3DFXWWTu4XHaOOY9qFaSvdNVifNwzkQeO8qOjz5ZQmtyjvzlailXHM8
+         sKDpIwlVEEM8xvVZSkp7KsK7+xSdXLvc71OeiaraeJ7qjJbZ/79a824bk8zy3EFzcU/v
+         unjyqJTjSg0aaFpQXJy8ctFnJ8mQ+rHfg173qGZiqApkL06TCv6qim4mNK0EUrndsUG/
+         ZG1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWxyjJ+n+24efrBQSGuxRuvrmURibJ4o9nXi6VUaxw2+tY0OI6Mm/dlxHYdVizfgyrxfFDqaUXpR74=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGh8u51qCrGj4tFum+yQwkIjqIdwWh0PGra689Bsz8GWQ7uJyQ
+	PWUrUqgTUJRblOEU1hoAUAFX79PUXWkDn3t1/mWgc734ef0x1FQEjGY4pokHmYWBDmW1NLIW+tb
+	MGOVirgceggySoy0+cj/25xU9hAk72mEfRyAf
+X-Gm-Gg: ATEYQzw7qVPGqeCPhd6wtgbXikNyUpXxQBGMD5V6+B3/L8kKyChuHuiks6IXdXHD1I/
+	0r0JAi3jAeNTYvf+LE8781FPOQ0my5aQMooY33ItKRd7F+Mg9FxU0FkaiDRtuoMpy0lNN5kLsXL
+	O7jfWu5leN1pmwBon8q0cuFkIzCgoi2cIBAMuisO8VdC5DlVD1dB80z4Sh9IaJcoV0J+/KnWmyr
+	HLkkVL93SKbR63lrbixKRu4TwGhy7jbhBSmrXipxv8HJ+9BVnw6gJvA21jEewRlmhj2UDAM5FTS
+	EpPontk=
+X-Received: by 2002:a05:6102:6cc:b0:5ff:bd9d:b1f8 with SMTP id
+ ada2fe7eead31-6037904bf43mr1717003137.9.1774453799647; Wed, 25 Mar 2026
+ 08:49:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acN4BV5QmtP2W_WK@infradead.org>
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+References: <20260321141510.68214-1-seanwascoding@gmail.com>
+ <20260321141510.68214-2-seanwascoding@gmail.com> <e3702d11-2157-46bb-b6aa-0ab60b51eecf@oracle.com>
+In-Reply-To: <e3702d11-2157-46bb-b6aa-0ab60b51eecf@oracle.com>
+From: Sean Chang <seanwascoding@gmail.com>
+Date: Wed, 25 Mar 2026 23:49:47 +0800
+X-Gm-Features: AQROBzCswDx5a73paus1YHqMqijxhn4uV_LUOu8mN6APcMZNUZeywNxTGqTTlLU
+Message-ID: <CAAb=EJV9-v4OsYeaQQH2ycDUCSx3VP2M2ji16xAzO3gT9OuzpA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] sunrpc: Fix dprintk type mismatch using do-while(0)
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, David Laight <david.laight.linux@gmail.com>, 
+	Anna Schumaker <anna@kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, netdev@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20389-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20388-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[lunn.ch,gmail.com,kernel.org,intel.com,vger.kernel.org];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -83,40 +134,74 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C2F7D327E22
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 579F6328D99
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 24, 2026 at 10:52:05PM -0700, Christoph Hellwig wrote:
-> On Wed, Mar 25, 2026 at 11:58:22AM +0800, Yongcheng Yang wrote:
-> > From: Scott Mayhew <smayhew@redhat.com>
-> > 
-> > We have frequently observed the oom-killer killing aio-dio-write-verify
-> > when generic/551 is run on NFS filesystems on virtual machines in AWS.
-> > 
-> > Virtual machines in AWS typically don't have a swap partition, so check
-> > for that condition when testing NFS and only use 90% of available memory
-> > when generating the list of write operations passed to
-> > aio-dio-write-verify.
-> 
-> I don't think this is a good idea.  The proper fix is reduce whatever
-> crazy large memory allocations this workloads causes in NFS.  I suspect
-> it might be page lists or similar, and just breaking them into somewhat
-> smaller chunks and/or using potentially failing allocations to
-> dynamically adjust would help.
+On Sun, Mar 22, 2026 at 12:38=E2=80=AFAM Chuck Lever <chuck.lever@oracle.co=
+m> wrote:
+>
+> On 3/21/26 10:15 AM, Sean Chang wrote:
+> > Following David Laight's suggestion, simplify the macro definitions by =
+removing
+> > the unnecessary 'fmt' argument and using no_printk(VA_ARGS) directly.
+>
+> Generally we prefer a commit message to open with an explanation of why
+> the change is needed. Your first paragraph instead opens with what was
+> done ("Following David Laight's suggestion, simplify ...") rather than
+> why the change is necessary. The Sparse warning motivation is buried in
+> the second paragraph. Consider leading with a problem statement in this
+> and subsequent patches in this series.
+>
+>
+> > To resolve a Sparse warning (void vs int mismatch) when dfprintk is use=
+d in
+> > conditional statements, wrap the non-debug definition in a do-while(0) =
+block.
+> > This ensures the macro always evaluates to a void expression.
+>
+> The non-debug definitions in the diff below are:
+>
+> > -# define dfprintk(fac, fmt, ...)        no_printk(fmt, ##__VA_ARGS__)
+> > -# define dfprintk_rcu(fac, fmt, ...)    no_printk(fmt, ##__VA_ARGS__)
+> > +# define dfprintk(fac, ...)             no_printk(__VA_ARGS__)
+> > +# define dfprintk_rcu(fac, ...) no_printk(__VA_ARGS__)
+>
+> These are not wrapped in do { ... } while (0), and no_printk()
+> evaluates to int (0), not void. The do-while(0) wrapping that
+> was discussed on the list and fixes the Sparse warning appears
+> to be in a later patch in this series (the nfs_errorf
+> refactoring), not in this one.
+>
+> Should the commit message second paragraph be removed or revised
+> to reflect what this patch actually does?
+>
 
-I run fstests on XFS every night on a fleets of VMs with no swap and
-never hit OOM.
+Hi Chuck,
+I notice that the commit messages are wrong because the current situation
+is not the same as when I first sent it, so I will fix this message to the
+correct one.
 
-Or at least I didn't until IT mandated CrowdStrike last week and now
-it's anyone's guess if the test results are valid. <grumble>
+It may be like:
+When RPC debugging is enabled, the dfprintk macros include redundant
+else-branches that call no_printk(). Since no_printk() is a no-op
+designed specifically for compile-time type checking, it is unnecessary
+to invoke it explicitly when the ifdebug(fac) condition is not met
+within a debug-enabled build.
 
---D
+Drop the explicit 'fmt' argument to allow the compiler to handle all
+arguments directly through __VA_ARGS__. Since no_printk()
+internally performs the same format string validation, passing the
+entire argument list is more efficient and reduces macro complexity.
+
+Best Regards,
+Sean
 
