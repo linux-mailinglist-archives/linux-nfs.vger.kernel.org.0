@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-20376-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20377-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CAH3Iqj2w2nPvAQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20376-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:52:24 +0100
+	id UKt5K6/3w2nPvAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20377-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:56:47 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 112C3327297
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:52:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3930B32742A
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 15:56:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 52BA831A5281
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:42:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4FF6031EFDB3
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 14:43:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 155133EF0CF;
-	Wed, 25 Mar 2026 14:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 229A03E8C68;
+	Wed, 25 Mar 2026 14:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LK6/Z+3E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmmckKiX"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C1F3E639C;
-	Wed, 25 Mar 2026 14:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9473EFD25;
+	Wed, 25 Mar 2026 14:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449654; cv=none; b=XZO4sgByHysJjkaThgta6SL7DWsSg/zKer4C0770q5WFYSgqlPyEFK7m/71MpYweohKgGq1m2a0wH9fsAAxpvf/iMK2Qe79pLN5+Up75nyY95hkhTLhSfiucwnPd+D61HI2silvsUjhNhAEM4DSuaU99g9iuMiLRJINjuy3R/pk=
+	t=1774449655; cv=none; b=KCu2+dUSnm5sjrYfHHhy0nezd/rwXKF6+wVt+9DYjjwOmzPGDnBfWjf2EWyNAzTo0K5yzFDbJ7A0k1rs8U6dnaLtNh+ngbKx6lECuDoYpuggbulzBeG1ICr7MItbcPiBAg0ZY1C8Jy4kDpNb6+b3tk3aXwYEASe0b1S8pT4PKeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449654; c=relaxed/simple;
-	bh=W0WCKgToW3dYYaxKd6T2t+Xr1kwru6qNqfGRBso4ZN8=;
+	s=arc-20240116; t=1774449655; c=relaxed/simple;
+	bh=7BXop0Fp9UyPm/+D9R6GkrQSaUlGooUSVMVmxCMPli4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TGXXZfytzfcHUTGH5W+Dt9tUslMjP0JLBYITX66Vw8YdvwnsE4fhyDeK5M7+ZBXX1IU9Dh9C66MHfmnkR0mVhkjbW5kWu+lKAP+Um/gsi5nTJ8RHAfM+yZXMuxJcHr1F0OTbEt2/3lDY87O9BGABKVZMKt2Kq7z+O2imMpYVJgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LK6/Z+3E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31236C4CEF7;
-	Wed, 25 Mar 2026 14:40:52 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=kfI7t9qcDriIgMZeU1S6FvZjyJoeYn8nGKtsRYlgcPnh+CdNVjW+mtiBfElaS2HcC+XfC1ELw6nUT92n9lrP7CBsounuhLUc5krqUs75UQhN1u7kzIfLBGOF5Mx3touKcNLIb0zk7qw8Pg844xORWLcf1ltbxFyK5j8powegifg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmmckKiX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA542C116C6;
+	Wed, 25 Mar 2026 14:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774449653;
-	bh=W0WCKgToW3dYYaxKd6T2t+Xr1kwru6qNqfGRBso4ZN8=;
+	s=k20201202; t=1774449655;
+	bh=7BXop0Fp9UyPm/+D9R6GkrQSaUlGooUSVMVmxCMPli4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LK6/Z+3Ew2vMzcH9Y3O8/lZZsYXW7Rh/2pzokcbhGGztIwDPFMgaqYwGBwdJS/WCH
-	 RWEQ/QPD+5wtuYs1TvrqNQ99UVJacHy/BRMKms5y2BdguIO14MnJTiD6Oq4wAbPGMK
-	 1qT1Vy/sBPGE2YRuIDjdhFogWQbFwpgplRo+PlbU0BkJGyJ1iCWvAxYrt7Zw+Cl4Gk
-	 pk/c8J7hzPSQf7H+3vGFDh6kP4ZVWEpm5KOH6lhs08Spd/kaB66C9wBAxYrXegYlIl
-	 TtKYGXmEWjjVWnnHYrFZRvSAp3RIk27nCXrTlhNBG738L6LZfsBR3KJIi81xZgoa+u
-	 qAwsgGLqQ5hdQ==
+	b=AmmckKiX6xiCFXxwHVYKE+UqSit1gsPLrE/hObogoZHof27XgchuaZCDYc+CmoYW3
+	 2S2LW8pi6Qcz9E0MDOvbUyuXaT8eFEOpjcUCyfRn1mvD/8fvfH1POv89QIW4w4ASdi
+	 w1W03hftfBaF5xmhQrC42u/EFJo2ag0rEFS6pDRWfGx8jYESn7F7LGdU9JpgMgAhkG
+	 6LHymTKN1WKmZZ4nVq80ZY4MqQ0x4AYxjZgFn1khJ8hXEa+u/60XSe/u8b3n/Tt+Nc
+	 rmLKX5Uz20pY3CQ1fw1p9q91CGj+k8Y/ZexjMbj9SzyCzsHNGyZY6gVJeL83dbmJhQ
+	 y5h3xhCabM4QQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 25 Mar 2026 10:40:23 -0400
-Subject: [PATCH v2 02/13] sunrpc: rename sunrpc_cache_pipe_upcall() to
- sunrpc_cache_upcall()
+Date: Wed, 25 Mar 2026 10:40:24 -0400
+Subject: [PATCH v2 03/13] sunrpc: rename sunrpc_cache_pipe_upcall_timeout()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260325-exportd-netlink-v2-2-067df016ea95@kernel.org>
+Message-Id: <20260325-exportd-netlink-v2-3-067df016ea95@kernel.org>
 References: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
 In-Reply-To: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -69,20 +68,20 @@ Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3407; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=W0WCKgToW3dYYaxKd6T2t+Xr1kwru6qNqfGRBso4ZN8=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpw/Pt/NdiuKiRT8ZjEaqA96P6UIgCysMsOAMHM
- n5klb0qYcCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacPz7QAKCRAADmhBGVaC
- FUicD/9jLPzBHdNptiukdzhjpva4kktYxBVk+kzu8iPD6tVQV94SSZSRSg0DCX6pZqs+oouzZrq
- 3nmFQjcug+lC5/uNKazus+/1Dp0rKa3siD1mGZAt61fTv+CIJ0GivUjKHfGiLP3roF+y5Sv5OXi
- 60fdKEew1fwtsYqDVqiEpMghQacwbI8HlCLo6xmDqI4BmEwTqCscu2PsoJPMQWcpOUZY6VFDmYq
- wWIAC1hcWI++gUKDJMGe26d9YzN8dZpTwlCL7AZGiKYSi1C5swRvVWm831CErxidk6Z6xnHsXWM
- tv7iU/ZTjXXX3U81JoamYbuR7sKKNlUJefA1TsEe+TD2DEZmD66N9LrkeBEA32Fe+zv99/5nJC1
- dXU8xRpxzIQj6Yfoh+IkRXh96FfY0kwLUhecqWE/eArJX67fXJ3yfgq6T4RsP+ULtQpud5w4Oo6
- nP4u6H2u6Zwz/zVDhu31nRrGq34zoXjyUnigVeicFwgfhoCFomai9ZWFwu47OtzjwtUQHVxfJU5
- kF+91rYTAVmp5dIr8MySGDUq90fdgY8hnjDlDE1thV5u+SxlqAig6VTX+Y2SspLQAfLXsRSR83K
- FYP2QxqFBi4Q86IWlIDjFV5yFLYSgkL/y0vYeV27HqYYsZ80EhGOpp/deEePFCGEZfF/jM466fH
- md9WDqDlhWT+MWw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4376; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=7BXop0Fp9UyPm/+D9R6GkrQSaUlGooUSVMVmxCMPli4=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpw/Pt+jgSD4Kh3oSApgx1OTUEuzDfU/XcBJgvM
+ lvC+vIbYheJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacPz7QAKCRAADmhBGVaC
+ FTLCEAC/pcWyPX2M5PmGYPtuuF1sHNuRJiH6W/fb8lVaciRQRh34hsjoBwYgdhNXc1jADhLYfq0
+ c8sWarYyJ1vpS5gIhblbCC4LF5XL5buI+O9uGZKCgl4cuEocvtkf7bRWsjFQofX1sZBrtVfw6mC
+ FYxyUhuL11pWR2qj0dGHW3eX5KCCf/ovpHr7rsI5boVZc+cwynaYhFudAw3PMlZT1p1mZHOxJgY
+ Kd/k6mus5mpT2y0cmKeKoeTZVUUWIJyfF3rK673ZX7kU26cDRyGwLXQlNHNZC9tTHc0hXEj/6rn
+ tyZOJDkf0pvE41WSdj1VzwWGPtnIDsXgTY7qEQligcTNmSoS6zc3KGOw/GKY3CX+ECWNtlvGv3O
+ HwK6mJEJ8o5KnwMzyn9W3Cwhovuh+0/mGTpYiN02jHaCZ1qAU1QxPUwfVNVJaljJLQI4jTIEWWh
+ O1BhhXL3d8nYxdne62p273vLdI+3SBEEq6OsQ8GbpecBKEvR7ZM999soOkpQ8RZe1jdQFBj2Dkt
+ nXyhfghV9P8JpIpMTQ5ISVfg1wdukKjjihrpWz2OEsmGJkQqS9x8MO320xAxHCML+4dXO2E3NSa
+ pcJ5CtR/DCbmpUfe9xywvrCQ548ccRgndCJumrTf4Ms+wKiiEOfHQVnPKPLKGWh8pAj58xEMxqu
+ I/TspdLNZ44pGsg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -90,12 +89,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20376-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20377-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -111,99 +110,124 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 112C3327297
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3930B32742A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Since it will soon also send an upcall via netlink, if configured.
+This function doesn't have anything to do with a timeout. The only
+difference is that it warns if there are no listeners. Rename it to
+sunrpc_cache_upcall_warn().
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/export.c             | 4 ++--
- include/linux/sunrpc/cache.h | 2 +-
- net/sunrpc/cache.c           | 6 +++---
- net/sunrpc/svcauth_unix.c    | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ fs/nfs/dns_resolve.c              | 2 +-
+ fs/nfsd/nfs4idmap.c               | 4 ++--
+ include/linux/sunrpc/cache.h      | 2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c | 2 +-
+ net/sunrpc/cache.c                | 6 +++---
+ net/sunrpc/svcauth_unix.c         | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 7f4a51b832ef75f6ecf1b70e7ab4ca9da2e5a1dc..e83e88e69d90ab48c7aff58ac2b36cd1a6e1bb71 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -64,7 +64,7 @@ static void expkey_put(struct kref *ref)
- 
- static int expkey_upcall(struct cache_detail *cd, struct cache_head *h)
- {
--	return sunrpc_cache_pipe_upcall(cd, h);
-+	return sunrpc_cache_upcall(cd, h);
+diff --git a/fs/nfs/dns_resolve.c b/fs/nfs/dns_resolve.c
+index 2ed2126201f4185fa9d6341f661e23be08d422ea..acd3511c04a6c74301c393e05e39aa8fcd52b390 100644
+--- a/fs/nfs/dns_resolve.c
++++ b/fs/nfs/dns_resolve.c
+@@ -156,7 +156,7 @@ static int nfs_dns_upcall(struct cache_detail *cd,
+ 	if (!nfs_cache_upcall(cd, key->hostname))
+ 		return 0;
+ 	clear_bit(CACHE_PENDING, &ch->flags);
+-	return sunrpc_cache_pipe_upcall_timeout(cd, ch);
++	return sunrpc_cache_upcall_warn(cd, ch);
  }
  
- static void expkey_request(struct cache_detail *cd,
-@@ -388,7 +388,7 @@ static void svc_export_put(struct kref *ref)
- 
- static int svc_export_upcall(struct cache_detail *cd, struct cache_head *h)
+ static int nfs_dns_match(struct cache_head *ca,
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index ba06d3d3e6dd9eeb368be42b5d1d83c05049a70c..71ba61b5d0a3aacfc196e8d3aa3c06b00fe0765b 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -126,7 +126,7 @@ idtoname_hash(struct ent *ent)
+ static int
+ idtoname_upcall(struct cache_detail *cd, struct cache_head *h)
  {
--	return sunrpc_cache_pipe_upcall(cd, h);
-+	return sunrpc_cache_upcall(cd, h);
+-	return sunrpc_cache_pipe_upcall_timeout(cd, h);
++	return sunrpc_cache_upcall_warn(cd, h);
  }
  
- static void svc_export_request(struct cache_detail *cd,
+ static void
+@@ -306,7 +306,7 @@ nametoid_hash(struct ent *ent)
+ static int
+ nametoid_upcall(struct cache_detail *cd, struct cache_head *h)
+ {
+-	return sunrpc_cache_pipe_upcall_timeout(cd, h);
++	return sunrpc_cache_upcall_warn(cd, h);
+ }
+ 
+ static void
 diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
-index b1e595c2615bd4be4d9ad19f71a8f4d08bd74a9b..981af830a0033f80090c5f6140e22e02f21ceccc 100644
+index 981af830a0033f80090c5f6140e22e02f21ceccc..80a3f17731d8fbc1c5252a830b202016faa41a18 100644
 --- a/include/linux/sunrpc/cache.h
 +++ b/include/linux/sunrpc/cache.h
-@@ -189,7 +189,7 @@ sunrpc_cache_update(struct cache_detail *detail,
- 		    struct cache_head *new, struct cache_head *old, int hash);
- 
+@@ -191,7 +191,7 @@ sunrpc_cache_update(struct cache_detail *detail,
  extern int
--sunrpc_cache_pipe_upcall(struct cache_detail *detail, struct cache_head *h);
-+sunrpc_cache_upcall(struct cache_detail *detail, struct cache_head *h);
+ sunrpc_cache_upcall(struct cache_detail *detail, struct cache_head *h);
  extern int
- sunrpc_cache_pipe_upcall_timeout(struct cache_detail *detail,
+-sunrpc_cache_pipe_upcall_timeout(struct cache_detail *detail,
++sunrpc_cache_upcall_warn(struct cache_detail *detail,
  				 struct cache_head *h);
+ 
+ 
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 161d02cc1c2c97321f311815c0324fade1e703fe..d14209031e1807e4ec19de44a2829d48e81e4d6c 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -206,7 +206,7 @@ static struct cache_head *rsi_alloc(void)
+ 
+ static int rsi_upcall(struct cache_detail *cd, struct cache_head *h)
+ {
+-	return sunrpc_cache_pipe_upcall_timeout(cd, h);
++	return sunrpc_cache_upcall_warn(cd, h);
+ }
+ 
+ static void rsi_request(struct cache_detail *cd,
 diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 7081c1214e6c3226f8ac82c8bc7ff6c36f598744..4729412ecd72241cb050dbed0ee2863629a8bef4 100644
+index 4729412ecd72241cb050dbed0ee2863629a8bef4..1b97102790f6642fa649ad6aab94fcba8158fa8e 100644
 --- a/net/sunrpc/cache.c
 +++ b/net/sunrpc/cache.c
-@@ -1241,13 +1241,13 @@ static int cache_pipe_upcall(struct cache_detail *detail, struct cache_head *h)
- 	return ret;
+@@ -1249,8 +1249,8 @@ int sunrpc_cache_upcall(struct cache_detail *detail, struct cache_head *h)
  }
+ EXPORT_SYMBOL_GPL(sunrpc_cache_upcall);
  
--int sunrpc_cache_pipe_upcall(struct cache_detail *detail, struct cache_head *h)
-+int sunrpc_cache_upcall(struct cache_detail *detail, struct cache_head *h)
+-int sunrpc_cache_pipe_upcall_timeout(struct cache_detail *detail,
+-				     struct cache_head *h)
++int sunrpc_cache_upcall_warn(struct cache_detail *detail,
++			     struct cache_head *h)
  {
- 	if (test_and_set_bit(CACHE_PENDING, &h->flags))
- 		return 0;
- 	return cache_pipe_upcall(detail, h);
- }
--EXPORT_SYMBOL_GPL(sunrpc_cache_pipe_upcall);
-+EXPORT_SYMBOL_GPL(sunrpc_cache_upcall);
- 
- int sunrpc_cache_pipe_upcall_timeout(struct cache_detail *detail,
- 				     struct cache_head *h)
-@@ -1257,7 +1257,7 @@ int sunrpc_cache_pipe_upcall_timeout(struct cache_detail *detail,
- 		trace_cache_entry_no_listener(detail, h);
- 		return -EINVAL;
+ 	if (!cache_listeners_exist(detail)) {
+ 		warn_no_listener(detail);
+@@ -1259,7 +1259,7 @@ int sunrpc_cache_pipe_upcall_timeout(struct cache_detail *detail,
  	}
--	return sunrpc_cache_pipe_upcall(detail, h);
-+	return sunrpc_cache_upcall(detail, h);
+ 	return sunrpc_cache_upcall(detail, h);
  }
- EXPORT_SYMBOL_GPL(sunrpc_cache_pipe_upcall_timeout);
+-EXPORT_SYMBOL_GPL(sunrpc_cache_pipe_upcall_timeout);
++EXPORT_SYMBOL_GPL(sunrpc_cache_upcall_warn);
  
+ /*
+  * parse a message from user-space and pass it
 diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 3be69c145d2a8055acd39ff5e0faacb1084936b7..9d5e07b900e11a8f6da767557eb6a46a65a57c26 100644
+index 9d5e07b900e11a8f6da767557eb6a46a65a57c26..87732c4cb8383c64b440538a0d3f3113a3009b4e 100644
 --- a/net/sunrpc/svcauth_unix.c
 +++ b/net/sunrpc/svcauth_unix.c
-@@ -152,7 +152,7 @@ static struct cache_head *ip_map_alloc(void)
+@@ -467,7 +467,7 @@ static struct cache_head *unix_gid_alloc(void)
  
- static int ip_map_upcall(struct cache_detail *cd, struct cache_head *h)
+ static int unix_gid_upcall(struct cache_detail *cd, struct cache_head *h)
  {
--	return sunrpc_cache_pipe_upcall(cd, h);
-+	return sunrpc_cache_upcall(cd, h);
+-	return sunrpc_cache_pipe_upcall_timeout(cd, h);
++	return sunrpc_cache_upcall_warn(cd, h);
  }
  
- static void ip_map_request(struct cache_detail *cd,
+ static void unix_gid_request(struct cache_detail *cd,
 
 -- 
 2.53.0
