@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-20431-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20432-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WE/3Bvh0xWnw+QQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20431-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:03:36 +0100
+	id 0AqPMfZ0xWnw+QQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20432-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:03:34 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75DA7339C4E
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:03:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34DF7339C47
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:03:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2649A3068EFF
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 17:55:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C0AE7306F394
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 17:55:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76AE23A5442;
-	Thu, 26 Mar 2026 17:55:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A51339C638;
+	Thu, 26 Mar 2026 17:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjkB7BDG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sG3SxSEq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C70F3A542E;
-	Thu, 26 Mar 2026 17:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47F039BFE2;
+	Thu, 26 Mar 2026 17:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774547738; cv=none; b=IEw+u2qLLawFeYb7KeaDHeEnXDyI3wXQWMEKLMS8bBDdQPk0HATaF1nKvR1hOQ3ah2b9chIkKCHEv9edGIuYys9Ou5rCJHz1of0OONKvUN8Ek8qHr2a2AK3zokqkYwwQfTFQUTVQFz2/ajSGgQGZnx7jnM417HoEXpkaWgSkRGs=
+	t=1774547739; cv=none; b=QzMoaWPMEXUsNhiOm0h2BCtc0EtTQg0ZNrsFHViH9voflI3OgmfLaLbzS62N4sFdxSPz2ItgdLqevY5YZyNEaWyppVOMmRhneH06/jFJ6F/ZSswSbPZ47F9hAy5kniHwSWTAQmn70XvWktcghhfjNetUkishJuk8ecOgeL8XwfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774547738; c=relaxed/simple;
-	bh=573rOMjFofMFYetwxaVyda1ip0dOG9X2gpm3vANf3hY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W1PNJCFmQS9kVOudnywUOnknCVLIyUl/YbEEysExq0loD6Hyyd+CcEL8qOZ0pwMgrID/A0E0JlDSvOacRb9kqcn1jX+9wtI+VwG0WZShze12jXewK2uQQ8q+7yy/9HnF0arUbpVSRUdfeJbmsgLnhYugYVjSKb/adw9S8Dl6G10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjkB7BDG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DDEC116C6;
-	Thu, 26 Mar 2026 17:55:36 +0000 (UTC)
+	s=arc-20240116; t=1774547739; c=relaxed/simple;
+	bh=B/yr8mUN8LFevSNr9Ez5JcqqgjzfQ1kqFAFD1dqsn/I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=INTFEeas9s/xE4Dr9A5BQ9XDMi1QOOaN59kAI6emAA0+Cgb1X6M6YTuYaESgoQ3t5Z/3zfzXAYOa6M+te3rTH/fBJ1hDkCLLDQViIhY/8QfV/W1ZSO36MqAtAn2d/z5RiWaCtRcxVk+hkq72WxYn4n5vKQX+tezAKsam8q0/3Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sG3SxSEq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7B60C2BCB1;
+	Thu, 26 Mar 2026 17:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774547737;
-	bh=573rOMjFofMFYetwxaVyda1ip0dOG9X2gpm3vANf3hY=;
-	h=From:Subject:Date:To:Cc:From;
-	b=LjkB7BDG8c0MFqni1Em5fmDz2T+8+K/B3o4BRQ4kOLN+q1UNv6kIt5W/UWbwPl5Bk
-	 estoQj3I1dq5kOz+lVFZsgr8EmY9ygDwgd9fy5nKe7h1lw9OHgw9wKv8FdaK/5ixxS
-	 YJGa/ZyXKHBp0rGsTiwopdw15Xfx1+isUg3dftDdKkRLJY8JLxHe8aL/lbXX44aoOt
-	 xji8jFfBF2BQ/F0QqKXFGR/RABxJo8ZRA2AEueVfKIJkiCbhDy+B3UK8rTQFVFDb+p
-	 OUiMw6TdyzvRR+VHT/vlExeFVGZ9EBWGDMkXGccM30vGRI8QNl2NSn30BxdiE4yzbh
-	 P18sRRbrVRQXw==
+	s=k20201202; t=1774547738;
+	bh=B/yr8mUN8LFevSNr9Ez5JcqqgjzfQ1kqFAFD1dqsn/I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=sG3SxSEqiMDVuu+SkfWYxX2055FQuxo+bp9dkARddtGv8huByRI7f2T/5IXGwGCFc
+	 0Vno8I/EN6V2DJ4PZYgXKpfpPrqWUwV/abGjJ9ME+bVmD9Bj4X8PdioTkPVRPOsCM3
+	 J18GkWneAvK6K9NwdLdHhjFqoU3KOwZVciSjNgGEZ7szi9WMfWtd0VmBvZlZ7uPD70
+	 zPJcCFbJ1oD5Rf3w6d8VE0/mhgMxuF8g8ZJ8rnRePP0sXFwm3MHAdb25FGOZI6/m0t
+	 1PT5BFLXyHxZlynEYNPJGpRjnfmV2kLhNw5ocrGcRFvIFqz72orufhb3A8q+/6H6OP
+	 Q7b1tQBaW+Umg==
 From: Chuck Lever <cel@kernel.org>
-Subject: [PATCH v5 0/7] Automatic NFSv4 state revocation on filesystem
- unmount
-Date: Thu, 26 Mar 2026 13:55:19 -0400
-Message-Id: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
+Date: Thu, 26 Mar 2026 13:55:20 -0400
+Subject: [PATCH v5 1/7] NFSD: Extract revoke_one_stid() utility function
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,43 +55,41 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAdzxWkC/42OQQ6CMBBFr2K6dhRqIejKexgXbRlgFFrTKURju
- LutXsDdvMn/L/8tGAMhi9PmLQIuxORdgmq7EXbQrkegNrGQhayLQ9nAPPnZRbjTODK4jhcFHHV
- EKA+NLJtOdgoLkeqPgB09v+rL9cc8mxvamH05YTQjmKCdHfLLB+rJ7ZOzhYgcyfU5NRBHH17fh
- YvKtj/GpKOAqta6VUqbYyPPPmg74s76SVzXdf0AdEumQPkAAAA=
-X-Change-ID: 20260318-umount-kills-nfsv4-state-138218f2f4e0
+Message-Id: <20260326-umount-kills-nfsv4-state-v5-1-d2ce071b3570@oracle.com>
+References: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
+In-Reply-To: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
 To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3572;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5489;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=573rOMjFofMFYetwxaVyda1ip0dOG9X2gpm3vANf3hY=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpxXMOkHEN2rx7WFGDjbIi9VG3EZ519p0YmwI0V
- ACMSrjl+pCJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCacVzDgAKCRAzarMzb2Z/
- l/LiEACT/+vfZ9tMUifIL9BAwnr9177hEYf0n4KyEj6INHrxpnl6TT+E1dPRal5kZqyQ0AlAeA9
- H9p3MRObycC/IYke/krcsrdTmwgAdVNP0xd5LGfoVUZrNVhIFmbJ2F7BBOrjsmJ0q3zUlUyRtmE
- friZ2M+MtpU1b3Si03C6/ELBwbqbJf8Fw+2+PCyNBDf7um8cvbfRcwLzXSh1zBBNGlPIXy1CLQW
- jPmdZo9ZWF+uk0k9tso3xnHmUg5XilOzz6whIR/4kHSpD5kzL5QfXw/fczzeryrmftJDhJO+D9q
- O9R72FK+lFKxeS8HHlJ5iCuG+DcvwpZ5JoWN3l5xD/4ze4Q+IoBczYrij49lbw50YR5aPgXwBdO
- HAV74j0jZ+Cw+VY7SWKm0Sjo22Jl3D5FpHtF3Y35qTY/NWcSgetB38PTn0kOEKXFfPcVaPhN6u/
- IS5SINcz1BEh/5xw9QRwHrcwBniqha37cVNFQWUz4GQ7yl2YHftv1i2ulmn4rg5x8+3c3j/nBTm
- r2JL3T7FfNKtKgbThRBd6bAlajoW2lHdA6InPMXMH8pjvVdIkgl7KvD+oIAyR/QiG35X3/AMlhn
- 1KkkkR/K0csv3Yp0gRps7zhCqtYhxoho9kvXybNeaRXAMALRVrcYqRdb5WSaB7ntOt/jyulz8Dj
- ADaVEbz8/SCryag==
+ bh=M7lkGISqPg+xmifg1EsVCEzsyTLVf7LnYRCYMeZ4IfY=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpxXMYhvNPSXnD5KrZ3ekrE0QbTtaVcSlifcKr9
+ l4NCN3HvReJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCacVzGAAKCRAzarMzb2Z/
+ l4GXEACjcSAiWfMk6l+P+/WzESnO0c5q9JUipBogmX2f/xvz1jx0mk4rAhN5+EHhKGc2IUSzY/w
+ 7X90kjjEQ44RtFfINmZ60SZ6bw1jZoOj2Dr9iU2xXzuSMQODIwny4jvw6KqPbi4NDW7Gupum5WH
+ EgC8+uGQU9NEAjJ5wkXQ7V4ycJJCsQjuBHNRjP2FlLGQg7mGCCPlTClORTPKTXWtoCN3Ts49f8Z
+ gBWJv9bxIZGOCIP0TgtvikPQN942i7jL21FblSTYopbQLZfJheizG/nvvs/6W/3LqSw+CBcuJrh
+ OVww2Hdef23K2JNpO0OyCrtv736QyBf0z5POZy7D3o2zMARBp7L+FYgZeEPOWgsSSmL1kecaUDG
+ k8/XaZPQaHS52RsRZloG3Il3mOeOZCaDx4SztEn86kHtIpdyvyuLLfbAmX+Jkx6S23kvgHDaFwQ
+ HVWQCsb1iVQF7t9i4xVyWrZ+gUhWDyjQrDYJ6So2ucxErtLHUS0E5/pe7/ajAcxBKZIcW0864A7
+ iAUgFZHKr6K+uuIVKtwNDn22RJ7qmow3RL5Rl/b9DPvtaKAjFn+ap2Y/JX8wKN0TWHd2jV08lWH
+ wlnOI+wDq84YufVk+wWZzYxcBO2DoNB0o/DJ5tQtfxejXchXfFhrMrY6kA/wVNVNyqT68Ej90CO
+ bmCs41+/ljaK9fg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20431-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20432-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -103,102 +100,196 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 75DA7339C4E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 34DF7339C47
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When an NFS server exports a filesystem and clients hold NFSv4
-state (opens, locks, delegations), unmounting the underlying
-filesystem fails with EBUSY. The /proc/fs/nfsd/unlock_ip and
-/proc/fs/nfsd/unlock_fs procfs interfaces handle this, but have
-no netlink equivalents, and unlock_fs operates at whole-superblock
-granularity.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-This series adds three new NFSD netlink commands, each with its own
-attribute set:
+The per-stateid revocation logic in nfsd4_revoke_states() handles
+four stateid types in a deeply nested switch. Extract two helpers:
 
- - NFSD_CMD_UNLOCK_IP releases NLM locks held by a client IP
-   address. Netlink equivalent of write_unlock_ip.
+revoke_ol_stid() performs admin-revocation of an open or lock
+stateid with st_mutex already held: marks the stateid as
+SC_STATUS_ADMIN_REVOKED, closes POSIX locks for lock stateids,
+and releases file access.
 
- - NFSD_CMD_UNLOCK_FILESYSTEM revokes all NFS state on a
-   superblock. Netlink equivalent of write_unlock_fs.
+revoke_one_stid() dispatches by sc_type, acquires st_mutex with
+the appropriate lockdep class for open and lock stateids, and
+handles delegation unhash and layout close inline.
 
- - NFSD_CMD_UNLOCK_EXPORT revokes NFSv4 state acquired through
-   exports of a specific path, regardless of client.
+No functional change. Preparation for adding export-scoped state
+revocation which reuses revoke_one_stid().
 
-UNLOCK_FILESYSTEM and UNLOCK_EXPORT serve different intents.
-UNLOCK_FILESYSTEM means "unmounting /data, release everything
-on this superblock." UNLOCK_EXPORT means "no clients remain for
-/data/projectA, release only the state acquired through exports
-of that path." Userspace (exportfs -u) sends UNLOCK_EXPORT after
-removing the last client for a given path, enabling the underlying
-filesystem to be unmounted.
-
-The path-only design for UNLOCK_EXPORT avoids the auth_domain
-naming complexity (use_ipaddr vs hostname-based domains) by not
-requiring the caller to identify a specific client. Since this
-mechanism is to be used to enable umount, this seemed like a
-reasonable compromise.
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
-Changes since v4:
-- 1/9 has been queued in nfsd-testing
-- Split single NFSD_CMD_UNLOCK into three separate commands
-- UNLOCK_EXPORT takes path only, no client attribute to avoid
-  auth_domain naming complexity with use_ipaddr
+ fs/nfsd/nfs4state.c | 137 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 68 insertions(+), 69 deletions(-)
 
-Changes since v3:
-- All VFS changes replaced with new netlink "unlock" operation
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 07df4511ba23..eb1bd1aae8f5 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1775,6 +1775,73 @@ static struct nfs4_stid *find_one_sb_stid(struct nfs4_client *clp,
+ 	return stid;
+ }
+ 
++static void revoke_ol_stid(struct nfs4_client *clp,
++			   struct nfs4_ol_stateid *stp)
++{
++	struct nfs4_stid *stid = &stp->st_stid;
++
++	lockdep_assert_held(&stp->st_mutex);
++	spin_lock(&clp->cl_lock);
++	if (stid->sc_status == 0) {
++		stid->sc_status |= SC_STATUS_ADMIN_REVOKED;
++		atomic_inc(&clp->cl_admin_revoked);
++		spin_unlock(&clp->cl_lock);
++		if (stid->sc_type == SC_TYPE_LOCK) {
++			struct nfs4_lockowner *lo =
++				lockowner(stp->st_stateowner);
++			struct nfsd_file *nf;
++
++			nf = find_any_file(stp->st_stid.sc_file);
++			if (nf) {
++				get_file(nf->nf_file);
++				filp_close(nf->nf_file, (fl_owner_t)lo);
++				nfsd_file_put(nf);
++			}
++		}
++		release_all_access(stp);
++	} else
++		spin_unlock(&clp->cl_lock);
++}
++
++static void revoke_one_stid(struct nfs4_client *clp, struct nfs4_stid *stid)
++{
++	struct nfs4_ol_stateid *stp;
++	struct nfs4_delegation *dp;
++
++	switch (stid->sc_type) {
++	case SC_TYPE_OPEN:
++		stp = openlockstateid(stid);
++		mutex_lock_nested(&stp->st_mutex, OPEN_STATEID_MUTEX);
++		revoke_ol_stid(clp, stp);
++		mutex_unlock(&stp->st_mutex);
++		break;
++	case SC_TYPE_LOCK:
++		stp = openlockstateid(stid);
++		mutex_lock_nested(&stp->st_mutex, LOCK_STATEID_MUTEX);
++		revoke_ol_stid(clp, stp);
++		mutex_unlock(&stp->st_mutex);
++		break;
++	case SC_TYPE_DELEG:
++		/*
++		 * Extra reference guards against concurrent FREE_STATEID.
++		 */
++		refcount_inc(&stid->sc_count);
++		dp = delegstateid(stid);
++		spin_lock(&state_lock);
++		if (!unhash_delegation_locked(dp, SC_STATUS_ADMIN_REVOKED))
++			dp = NULL;
++		spin_unlock(&state_lock);
++		if (dp)
++			revoke_delegation(dp);
++		else
++			nfs4_put_stid(stid);
++		break;
++	case SC_TYPE_LAYOUT:
++		nfsd4_close_layout(layoutstateid(stid));
++		break;
++	}
++}
++
+ /**
+  * nfsd4_revoke_states - revoke all nfsv4 states associated with given filesystem
+  * @nn:   used to identify instance of nfsd (there is one per net namespace)
+@@ -1805,76 +1872,8 @@ void nfsd4_revoke_states(struct nfsd_net *nn, struct super_block *sb)
+ 			struct nfs4_stid *stid = find_one_sb_stid(clp, sb,
+ 								  sc_types);
+ 			if (stid) {
+-				struct nfs4_ol_stateid *stp;
+-				struct nfs4_delegation *dp;
+-				struct nfs4_layout_stateid *ls;
+-
+ 				spin_unlock(&nn->client_lock);
+-				switch (stid->sc_type) {
+-				case SC_TYPE_OPEN:
+-					stp = openlockstateid(stid);
+-					mutex_lock_nested(&stp->st_mutex,
+-							  OPEN_STATEID_MUTEX);
+-
+-					spin_lock(&clp->cl_lock);
+-					if (stid->sc_status == 0) {
+-						stid->sc_status |=
+-							SC_STATUS_ADMIN_REVOKED;
+-						atomic_inc(&clp->cl_admin_revoked);
+-						spin_unlock(&clp->cl_lock);
+-						release_all_access(stp);
+-					} else
+-						spin_unlock(&clp->cl_lock);
+-					mutex_unlock(&stp->st_mutex);
+-					break;
+-				case SC_TYPE_LOCK:
+-					stp = openlockstateid(stid);
+-					mutex_lock_nested(&stp->st_mutex,
+-							  LOCK_STATEID_MUTEX);
+-					spin_lock(&clp->cl_lock);
+-					if (stid->sc_status == 0) {
+-						struct nfs4_lockowner *lo =
+-							lockowner(stp->st_stateowner);
+-						struct nfsd_file *nf;
+-
+-						stid->sc_status |=
+-							SC_STATUS_ADMIN_REVOKED;
+-						atomic_inc(&clp->cl_admin_revoked);
+-						spin_unlock(&clp->cl_lock);
+-						nf = find_any_file(stp->st_stid.sc_file);
+-						if (nf) {
+-							get_file(nf->nf_file);
+-							filp_close(nf->nf_file,
+-								   (fl_owner_t)lo);
+-							nfsd_file_put(nf);
+-						}
+-						release_all_access(stp);
+-					} else
+-						spin_unlock(&clp->cl_lock);
+-					mutex_unlock(&stp->st_mutex);
+-					break;
+-				case SC_TYPE_DELEG:
+-					/* Extra reference guards against concurrent
+-					 * FREE_STATEID; revoke_delegation() consumes
+-					 * it, otherwise release it directly.
+-					 */
+-					refcount_inc(&stid->sc_count);
+-					dp = delegstateid(stid);
+-					spin_lock(&nn->deleg_lock);
+-					if (!unhash_delegation_locked(
+-						    dp, SC_STATUS_ADMIN_REVOKED))
+-						dp = NULL;
+-					spin_unlock(&nn->deleg_lock);
+-					if (dp)
+-						revoke_delegation(dp);
+-					else
+-						nfs4_put_stid(stid);
+-					break;
+-				case SC_TYPE_LAYOUT:
+-					ls = layoutstateid(stid);
+-					nfsd4_close_layout(ls);
+-					break;
+-				}
++				revoke_one_stid(clp, stid);
+ 				nfs4_put_stid(stid);
+ 				spin_lock(&nn->client_lock);
+ 				if (clp->cl_minorversion == 0)
 
-Changes since v2:
-- Replace fs_pin with an SRCU umount notifier chain in VFS
-- Merge the pending COPY cancellation patch
-- Replace xa_cmpxchg() with xa_insert()
-- Use cancel_work_sync() instead of flush_workqueue()
-- Remove rcu_barrier()
-- Correct misleading claims in kdoc comments and commit messages
-
-Changes since v1:
-- Explain why drop_client() is being renamed
-- Finish implementing revocation on umount
-- Rename pin_insert_group
-- Clarified log output and code comments
-- Hold nfsd_mutex while closing nfsd_files
-
----
-Chuck Lever (7):
-      NFSD: Extract revoke_one_stid() utility function
-      NFSD: Add NFSD_CMD_UNLOCK_IP netlink command
-      NFSD: Add NFSD_CMD_UNLOCK_FILESYSTEM netlink command
-      NFSD: Replace idr_for_each_entry_ul in find_one_sb_stid()
-      NFSD: Track svc_export in nfs4_stid
-      NFSD: Add NFSD_CMD_UNLOCK_EXPORT netlink command
-      NFSD: Close cached file handles when revoking export state
-
- Documentation/netlink/specs/nfsd.yaml |  61 +++++++++
- fs/nfsd/filecache.c                   |  46 +++++++
- fs/nfsd/filecache.h                   |   1 +
- fs/nfsd/netlink.c                     |  36 ++++++
- fs/nfsd/netlink.h                     |   3 +
- fs/nfsd/nfs4layouts.c                 |   2 +
- fs/nfsd/nfs4state.c                   | 226 +++++++++++++++++++++++-----------
- fs/nfsd/nfsctl.c                      | 126 ++++++++++++++++++-
- fs/nfsd/state.h                       |   6 +
- fs/nfsd/trace.h                       |  32 ++++-
- include/uapi/linux/nfsd_netlink.h     |  24 ++++
- 11 files changed, 484 insertions(+), 79 deletions(-)
----
-base-commit: 65058e9e9b20619f920397f529072e853dd43811
-change-id: 20260318-umount-kills-nfsv4-state-138218f2f4e0
-
-Best regards,
---  
-Chuck Lever
+-- 
+2.53.0
 
 
