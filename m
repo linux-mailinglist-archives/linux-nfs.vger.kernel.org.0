@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-20435-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20436-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6FT5Msx0xWnw+QQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20435-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:02:52 +0100
+	id uKK/F850xWnw+QQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20436-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:02:54 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 726AA339C0D
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:02:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 034DF339C1A
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 19:02:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0A2FC3083353
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 17:55:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C81AC308B621
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 17:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA64038E5CF;
-	Thu, 26 Mar 2026 17:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD61E421A1B;
+	Thu, 26 Mar 2026 17:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAxsRgc1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOZIujq7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434A141B345;
-	Thu, 26 Mar 2026 17:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F72C3A5424;
+	Thu, 26 Mar 2026 17:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774547741; cv=none; b=UZKCtCVnWos9Zi43gvsoSJ7QI0CzkUeSJ/HutzMgP6NY43IMAddzmPlBrK7h0i8nud0MNIq4u6O05TV/ZUnLvS+4B/rxGbfuP3TJatlwdi7bZ0iTvJPYWEk2ev0wViVexDAhosAw/YfgJw8Lt5xzKklAGPV9cnK9foY1WulMTKw=
+	t=1774547742; cv=none; b=G090Xb2qcrzwBdJIjEvClcKO3VC69uIyGSRzwrF05UyLl1AUQrX+IIizY/UrofeHZfC5QFCs5T65XMvM4jTjWO+UgF4hEGLkfW+okd9qXj4dueCnwxZYsHlEnPpimSxHvHCTjaX+DpWF+BRJHoxKyUtls4EkHYhPPdv96yn1oEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774547741; c=relaxed/simple;
-	bh=9RK8pitkWP+Y6SqSLYKPueeQHdHD7//Tz8r7KF034sw=;
+	s=arc-20240116; t=1774547742; c=relaxed/simple;
+	bh=1CGZ0Y182RbyxJakCpmv/OIYtCD0/HdWCkMIuvqKxZo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RRRAC1vyHDiVCluY8XYpFgauKpXsm4v8t1IfGCTsTqFMQbkiN+mNUKdhRoBN6qCT0/jjhSiqQB2MV6mDR8LpByRPR6KLRSJ8meYftsgnOEVD7oDSxK+bkAeWF5L0iR4S3XIxwg37+Z9ZAIqE/9uo1Ec1R7misWCjuF1iRwymW6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAxsRgc1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA5FC2BCB6;
-	Thu, 26 Mar 2026 17:55:40 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=DeBht1Ypj6N75TByzhPR4/UuRoFoPVP/q2ktcLcz6Fc6iKnk9gg+PW1YJ1acYxjQVKZA1kgqqSDIS/6zG68Oz8K9KLcgHRRx6Ypn43WSFh2++P1z5fjMEOSFcnjB5pC+cntWzX/7FPq3s25bYMCRPO1tatQ4AhbJIULrord2G90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOZIujq7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB07C116C6;
+	Thu, 26 Mar 2026 17:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1774547741;
-	bh=9RK8pitkWP+Y6SqSLYKPueeQHdHD7//Tz8r7KF034sw=;
+	bh=1CGZ0Y182RbyxJakCpmv/OIYtCD0/HdWCkMIuvqKxZo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XAxsRgc1BLiShcaPFq9rya5HOdklOFyYH62k6AJvwXrccyLyQQG0F90KgEg01GeAQ
-	 OV+3aylCAYkHM2y42RygvSudJ1tTKaNh+Qp4mAHES5Lo0gIAI3FZqatdkgFOykPZlE
-	 Ad2itlji/vujFqXjva1qjgh06u0/zOcGeyC0HFigCOsjHBVldoW81NWlcA/8BT69Ax
-	 kBYuiBCoK1iWYT8J8abKc89bGbopT5+NGwHz7N55MOFHh+wE1Ir3OLBH+zb4E5eaKc
-	 DQ8YYM9SbvSxI4Ry920J7Je4O0FVDzdsnKs6/osmqW+a5/V16mQpEoyxuEKlrhMKVE
-	 u5rt4kmmeJGzg==
+	b=fOZIujq7WCFt3JUZTKqluIrhGZ4+cc9q/d7iISf8TE4VajPwmeqL1Ig3Sw5GSyb2k
+	 PFs+6df0MiH7dl4ZmdaMcZTqaIJrZRI9stPLAaOUUqvOvu70rrMAAaxA0XgKQW3OvN
+	 QNQAUR89pXCgxfaf9hKbBDFdPhR4eIOPCBEnqmekMHcBZeNtgqnSSWgxN4mICKyT6w
+	 QNQn4vcnWokAv4W7E3LdLDysecoHK48um3BisT7v8t3ANNb2xb2gWbQOUf6eM1c4sE
+	 nCG843QLPhVDgZHNcg0ewNQdHQgFPspyMpvNWTOXPc8Sawsycy2V4TGA7nI1urWCug
+	 yVbJUUFdwkHdA==
 From: Chuck Lever <cel@kernel.org>
-Date: Thu, 26 Mar 2026 13:55:23 -0400
-Subject: [PATCH v5 4/7] NFSD: Replace idr_for_each_entry_ul in
- find_one_sb_stid()
+Date: Thu, 26 Mar 2026 13:55:24 -0400
+Subject: [PATCH v5 5/7] NFSD: Track svc_export in nfs4_stid
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260326-umount-kills-nfsv4-state-v5-4-d2ce071b3570@oracle.com>
+Message-Id: <20260326-umount-kills-nfsv4-state-v5-5-d2ce071b3570@oracle.com>
 References: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
 In-Reply-To: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
 To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
@@ -65,21 +64,21 @@ To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
 Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1125;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3668;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=4D3NCNeDvxw+pDdnQLr461XqpXkpaxoswssFZr2pQV8=;
- b=kA0DAAoBM2qzM29mf5cByyZiAGnFcxjI7nU583l3y7W9/1DtuQz4pLxuSnpvZDC9JK/sBAfol
- YkCMwQAAQoAHRYhBCiy5bASht8kPPI+/jNqszNvZn+XBQJpxXMYAAoJEDNqszNvZn+X+CAP/iCw
- x6xdQ6uCcofnEIgWPzCVa5176BcCFMLSXApGPEFoOX0cHQ+wMPsbHEXkWaLkavbMXaG6BxXe2/M
- saOqkWb12u1vnUC2sgy+yHpr2j/5KGaZkfs1TKJmO01q+j293p+X/JMXxKyJ/tuJ7b8vtcXH/gu
- xVyyMkwz6TgrIP3KbroavGA7CYWcnaZck2ixbRSLOPl+XAPw78PZYm/3QX0iYGtXZQd/8mhp3PT
- E+CDaOKdO/p8poVXQzVsIlNQEpGsRnSx4Zpk+wgr8csYekeHq2w/k20U37wgUUgZ3Q0XGtso4zj
- h6FFVbkzs0VamO8Vu/KXFBlMF94KAwv3LZNCXI/AHflF90RX1RkqE1sGhbEyXb9UUgS756gMalS
- 7PD9//cMHIJhXbj03MH/SKjnEa3NzP588sO3yTWz/pVzrbDymJbIYPaN3n+WV0BV+hEqlrBTlc2
- cGLvFJBR3hnh8RyllvINXQWuRlJZYIh7lFWrM9VijIppwwvcwfn2PwEzPCmJpg81YtJmna9ZGLh
- XDjAkd43mxqD4n4f1F0HtCQMYqVhVNCcI8A8B/DQJO4K/K4X7v9xP0qAL3GNeNYfajA+i+LnvRn
- eH+qoovf10Q3LSAWsj5iW4R9vfW1FGXg7+JUzX5fxHbG2IT3aqlON6k1bCFtZq3gBm5AFthGY3A
- ya/VP
+ bh=DMg3d8d8A2jA1OL1P04JsWS9Lfy1e/GmfZOVAaikkCI=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpxXMY3OQ7NxBLfhpOpfnVK9XMHfgthfa4fyrEh
+ 2dUtX98QXaJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCacVzGAAKCRAzarMzb2Z/
+ l76aD/9IQRuA/V2Pl10NLSI+W8+G4BQYY+5/VKeonJptK9XSrLiddc45W4bbo1ZC1fFQdm+ZvkM
+ P1ptq/KN87hMoIC7dSoOvhKND5AmVb2czJhIs8FoY1LVq2ui7ptnuC8EgpH+drYZkyz7fjJKXSd
+ tHk0CgXWAanTEO8uZlOUa76mZAJ4rZ43E+yj8GDAoW70ddBXqieIXg21EsGwUbyZVJVa2De2VPd
+ MXfwpQub/lfvbNZLl4d2Wab5knHvLqHpAuZdZyLk24WRs+5CkI9VlXi5oyZyD3IkM7QpPGzFQOt
+ KJosYAayyg8E5tbW1+hMWB3htQT91kjngDRSOak+6Qk5GASjLBufM5A6EkCazm9DCXDnTWspaKh
+ yfWl1kSy5LKNzGEa+8zD9f9esEMsuOSNZvghIDLRHrKlv/W4DuEC9G5SPbfvrURhuTuyltF3iB8
+ mm9bKqilgdHUExggWtXjfyB8rNuKzxaDkl7Ls9D24GC3mYlWKlokT3wHVUVeQAwKudqMM1Cass7
+ QgRkZ0aDnsxQSxW8dEuJgYuk1N6mFNlp0Wi8lO54n9RYbdUUPXV+02QKk4/0NjzT+dKgxmM330x
+ 7JIoW+jhaYL9PNXuYu/nJM7kv5C1J7dJLiT/bA8Q0/e/iGJFvaPrKANaD68uZ7/AUkj2XwcPpoy
+ DdeiQ68AORKZv7g==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -90,7 +89,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20435-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20436-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -107,49 +106,122 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 726AA339C0D
+X-Rspamd-Queue-Id: 034DF339C1A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Replace idr_for_each_entry_ul() with a while loop over
-idr_get_next_ul() for consistency with find_one_export_stid(),
-added in a subsequent commit.
+Add an sc_export field to struct nfs4_stid so that each stateid
+records the export under which it was acquired.  The export
+reference is taken via exp_get() at stateid creation and released
+via exp_put() in nfs4_put_stid().
 
-No change in behavior.
+Open stateids record the export from current_fh->fh_export.
+Lock stateids and delegations inherit the export from their
+parent open stateid. Layout stateids inherit from their
+parent stateid. Directory delegations record the export from
+cstate->current_fh.
+
+A subsequent commit uses sc_export to scope state revocation to a
+specific export, avoiding the need to walk inode dentry aliases at
+revocation time.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4state.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4layouts.c |  2 ++
+ fs/nfsd/nfs4state.c   | 16 +++++++++++++++-
+ fs/nfsd/state.h       |  1 +
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 69e41105efdd..83d8fda53efd 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -247,6 +247,8 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+ 
+ 	get_nfs4_file(fp);
+ 	stp->sc_file = fp;
++	if (parent->sc_export)
++		stp->sc_export = exp_get(parent->sc_export);
+ 
+ 	ls = layoutstateid(stp);
+ 	INIT_LIST_HEAD(&ls->ls_perclnt);
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index eb1bd1aae8f5..62ebc7243c4f 100644
+index 62ebc7243c4f..ebbc83d7877e 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -1760,17 +1760,19 @@ static struct nfs4_stid *find_one_sb_stid(struct nfs4_client *clp,
- 					  struct super_block *sb,
- 					  unsigned int sc_types)
+@@ -1168,6 +1168,7 @@ alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
+ void
+ nfs4_put_stid(struct nfs4_stid *s)
  {
--	unsigned long id, tmp;
-+	unsigned long id = 0;
- 	struct nfs4_stid *stid;
++	struct svc_export *exp = s->sc_export;
+ 	struct nfs4_file *fp = s->sc_file;
+ 	struct nfs4_client *clp = s->sc_client;
  
- 	spin_lock(&clp->cl_lock);
--	idr_for_each_entry_ul(&clp->cl_stateids, stid, tmp, id)
-+	while ((stid = idr_get_next_ul(&clp->cl_stateids, &id)) != NULL) {
- 		if ((stid->sc_type & sc_types) &&
- 		    stid->sc_status == 0 &&
- 		    stid->sc_file->fi_inode->i_sb == sb) {
- 			refcount_inc(&stid->sc_count);
- 			break;
- 		}
-+		id++;
-+	}
+@@ -1183,6 +1184,8 @@ nfs4_put_stid(struct nfs4_stid *s)
+ 	nfs4_free_cpntf_statelist(clp->net, s);
  	spin_unlock(&clp->cl_lock);
- 	return stid;
+ 	s->sc_free(s);
++	if (exp)
++		exp_put(exp);
+ 	if (fp)
+ 		put_nfs4_file(fp);
  }
+@@ -6172,6 +6175,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	dp = alloc_init_deleg(clp, fp, odstate, dl_type);
+ 	if (!dp)
+ 		goto out_delegees;
++	if (stp->st_stid.sc_export)
++		dp->dl_stid.sc_export = exp_get(stp->st_stid.sc_export);
+ 
+ 	fl = nfs4_alloc_init_lease(dp);
+ 	if (!fl)
+@@ -6506,8 +6511,11 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+ 			goto out;
+ 		}
+ 
+-		if (!open->op_stp)
++		if (!open->op_stp) {
+ 			new_stp = true;
++			stp->st_stid.sc_export =
++				exp_get(current_fh->fh_export);
++		}
+ 	}
+ 
+ 	/*
+@@ -8203,6 +8211,9 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
+ 	stp->st_stateowner = nfs4_get_stateowner(&lo->lo_owner);
+ 	get_nfs4_file(fp);
+ 	stp->st_stid.sc_file = fp;
++	if (open_stp->st_stid.sc_export)
++		stp->st_stid.sc_export =
++			exp_get(open_stp->st_stid.sc_export);
+ 	stp->st_access_bmap = 0;
+ 	stp->st_deny_bmap = open_stp->st_deny_bmap;
+ 	stp->st_openstp = open_stp;
+@@ -9529,6 +9540,9 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
+ 	dp = alloc_init_deleg(clp, fp, NULL, NFS4_OPEN_DELEGATE_READ);
+ 	if (!dp)
+ 		goto out_delegees;
++	if (cstate->current_fh.fh_export)
++		dp->dl_stid.sc_export =
++			exp_get(cstate->current_fh.fh_export);
+ 
+ 	fl = nfs4_alloc_init_lease(dp);
+ 	if (!fl)
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 953675eba5c3..7d7e99eeffa5 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -145,6 +145,7 @@ struct nfs4_stid {
+ 	spinlock_t		sc_lock;
+ 	struct nfs4_client	*sc_client;
+ 	struct nfs4_file	*sc_file;
++	struct svc_export	*sc_export;
+ 	void			(*sc_free)(struct nfs4_stid *);
+ };
+ 
 
 -- 
 2.53.0
