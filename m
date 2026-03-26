@@ -1,199 +1,110 @@
-Return-Path: <linux-nfs+bounces-20394-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20395-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qG7QGL1FxGm1xwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-20394-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 21:29:49 +0100
+	id AATbDN7FxGmu3QQAu9opvQ
+	(envelope-from <linux-nfs+bounces-20395-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 06:36:30 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 662D432BD77
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 21:29:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBBCE32F707
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 06:36:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F23DD3012810
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Mar 2026 20:29:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1AEE63016830
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Mar 2026 05:34:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4850E372EF6;
-	Wed, 25 Mar 2026 20:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8184C2E62C3;
+	Thu, 26 Mar 2026 05:34:04 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [65.21.191.19])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47CD372ECF;
-	Wed, 25 Mar 2026 20:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.191.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E28C262FD0;
+	Thu, 26 Mar 2026 05:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774470579; cv=none; b=bzqHj93ee/TbfGN4lLJqEz/x5FNFf5AOsLyAf0v4+YSZ8bsysIktgJ5iEdoor9TYeaf8SZ64g0xjI3AtHdwnzeUav20yrtNyIniLMRFYLE55yx7CVQBg5TedcmPDQycSzHkEp/ZI+rvumADC4Iz1hfUBtorAsY7B0HMHii+3GuM=
+	t=1774503244; cv=none; b=Y9emtgk6o/gQcgadHM4BV52D12foVEEb0PF36rdDf/azVhyiqKMZULmu2JAGR/caI35xAIRyEh3SYyighP1479n55XN63yr1fzKFZ6crzaYEhfOQrTy5bCVTwQQiAhoXpTwWrVZtDLKv0D6If/otGVQWhOQtM2J9CQ5bOf4mkAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774470579; c=relaxed/simple;
-	bh=J2KTQLJtj/cmPEnsk8n2KBtfd9UmjZewpH2hwmIc5kE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iX3k6/EfD6oKVgGWHnDm9LY+DWBEV8Y8GJIbrpIqH+eLXJ05ZBlKO8Up3X+ipaLrJZSx5Y+2HfM2NFh7S3DHp8u+UQCNxI73bqu3iMGN8Hx1JJzsgZa0Iv94Z+HUUcUx0hbZAdc3c/a2D8r1PHA/01GjhAumonqeF5cc2jMp18s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk; spf=pass smtp.mailfrom=decadent.org.uk; arc=none smtp.client-ip=65.21.191.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=decadent.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=decadent.org.uk
-Received: from [2a02:1810:1d14:e000:db6f:81d2:6624:c91c] (helo=deadeye)
-	by maynard with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1w5Uqu-001ofs-1V;
-	Wed, 25 Mar 2026 20:29:19 +0000
-Received: from ben by deadeye with local (Exim 4.99.1)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1w5Uqp-00000004iOy-2hHi;
-	Wed, 25 Mar 2026 21:29:15 +0100
-Message-ID: <eab4db41a02c4342bd6e5397f663c4e651f22e31.camel@decadent.org.uk>
-Subject: Re: Bug#1128861: [PATCH] lockd: fix TEST handling when not all
- permissions are available.
-From: Ben Hutchings <ben@decadent.org.uk>
-To: NeilBrown <neil@brown.name>, 1128861@bugs.debian.org, Chuck Lever
-	 <cel@kernel.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>, 
-	linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, 
-	stable@vger.kernel.org
-Date: Wed, 25 Mar 2026 21:29:09 +0100
-In-Reply-To: <177442248735.2237155.773724155681455344@noble.neil.brown.name>
-References: <c0f15088-3fc0-487a-9f24-cf89c158420d@proton.me>
-	, <177266540127.7472.3460090956713656639@noble.neil.brown.name>
-	, <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
-	, <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>
-	, <177434721528.7102.13514118512738778346@noble.neil.brown.name>
-	, <d4773958-5ae5-42d4-b785-6598b5c9b27a@app.fastmail.com>
-	 <177187492815.425331.14320091315652332093.reportbug@nimble>
-	 <177442248735.2237155.773724155681455344@noble.neil.brown.name>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-StOfTySkQjzSGJ9fd77x"
-User-Agent: Evolution 3.56.2-9 
+	s=arc-20240116; t=1774503244; c=relaxed/simple;
+	bh=5MTA2DPMYyZniXlYbofp7xzCbU3fURObtreH4bfCMFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQMhav9k90IYCYucDj61fo91IjOf4Ih7Al8ch3tbrv4Tf31iV9YvHV66kdnqqv+RwPLueotCm4jsqP6OBkzWcF5B4O7gDflrInwVJMsZCmmQfssL9dPkzpNgdVssfj5pp0diEYi7nRqSzM6HCwhI4mAxCwdjSClj6rZ0XH5AuHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 9886168C4E; Thu, 26 Mar 2026 06:33:59 +0100 (CET)
+Date: Thu, 26 Mar 2026 06:33:59 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Chuck Lever <cel@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Carlos Maiolino <cem@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/7] exportfs: split out the ops for layout-based block
+ device access
+Message-ID: <20260326053359.GA23157@lst.de>
+References: <20260323070746.2940140-1-hch@lst.de> <20260323070746.2940140-2-hch@lst.de> <1fbdc5d9-d95c-4d1a-816e-028ffd1231b0@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a02:1810:1d14:e000:db6f:81d2:6624:c91c
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
-X-Spamd-Result: default: False [-3.56 / 15.00];
-	SIGNED_PGP(-2.00)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1fbdc5d9-d95c-4d1a-816e-028ffd1231b0@app.fastmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spamd-Result: default: False [-1.36 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20395-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_CC(0.00)[lst.de,oracle.com,kernel.org,gmail.com,brown.name,redhat.com,talpey.com,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DMARC_NA(0.00)[decadent.org.uk];
 	R_DKIM_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben@decadent.org.uk,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20394-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 662D432BD77
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: BBBCE32F707
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Mon, Mar 23, 2026 at 09:39:48AM -0400, Chuck Lever wrote:
+> > -	    sb->s_export_op->commit_blocks &&
+> > +	if (bops->map_blocks && bops->commit_blocks &&
+> >  	    sb->s_bdev &&
+> >  	    sb->s_bdev->bd_disk->fops->pr_ops &&
+> >  	    sb->s_bdev->bd_disk->fops->get_unique_id)
+> 
+> block_ops itself is NULL for any filesystem that does not provide
+> block layout support (everything other than XFS today).
+> 
+> When an admin exports such a filesystem with pNFS enabled
+> (NFSEXP_PNFS), svc_export_parse() calls nfsd4_setup_layout_type(),
+> and bops->get_uuid dereferences a NULL pointer.
+> 
+> Something like the following would restore the original behavior:
+> 
+>     if (bops && bops->get_uuid && ...)
 
---=-StOfTySkQjzSGJ9fd77x
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yes, I'll fix it up.
 
-On Wed, 2026-03-25 at 18:08 +1100, NeilBrown wrote:
-> On Wed, 25 Mar 2026, Chuck Lever wrote:
-> >=20
-> > On Tue, Mar 24, 2026, at 6:13 AM, NeilBrown wrote:
-> > > From: NeilBrown <neil@brown.name>
-> > >=20
-> > > The F_GETLK fcntl can work with either read access or write access or
-> > > both.  It can query F_RDLCK and F_WRLCK locks in either case.
-> > >=20
-> > > However lockd currently treats F_GETLK similar to F_SETLK in that rea=
-d
-> > > access is required to query an F_RDLCK lock and write access is requi=
-red
-> > > to query a F_WRLCK lock.
-> > >=20
-> > > This is wrong and can cause problem - e.g.  when qemu accesses a
-> > > read-only (e.g. iso) filesystem image over NFS (though why it queries
-> > > if it can get a write lock - I don't know.  But it does, and this wor=
-ks
-> > > with local filesystems).
-> > >=20
-> > > So we need TEST requests to be handled differently.  To do this:
-> > >=20
-> > > - change nlm_do_fopen() to accept O_RDWR as a mode and in that case
-> > >   succeed if either a O_RDONLY or O_WRONLY file can be opened.
-> > > - change nlm_lookup_file() to accept a mode argument from caller,
-> > >   instead of deducing base on lock time, and pass that on to nlm_do_f=
-open()
-> > > - change nlm4svc_retrieve_args() and nlmsvc_retrieve_args() to detect
-> > >   TEST requests and pass O_RDWR as a mode to nlm_lookup_file, passing
-> > >   the same mode as before for other requests.  Also set
-> > >    lock->fl.c.flc_file to whichever file is available for TEST reques=
-ts.
-> > > - change nlmsvc_testlock() to also not calculate the mode, but to use
-> > >   whenever was stored in lock->fl.c.flc_file.
-> > >=20
-> > > Reported-by: Tj <tj.iam.tj@proton.me>
-> > > Link:  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1128861
-> > > Fixes: 7f024fcd5c97 ("Keep read and write fds with each nlm_file")
-> > > Signed-off-by: NeilBrown <neil@brown.name>
-> >=20
-> > Hi Neil, which kernels should this fix apply to?
-> >=20
->=20
-> v6.13 and later. So linux-6.18.y and linux-6.19.y
-
-6.12.y is also affected since commit 4cc9b9f2bf4d was backported there
-(triggering this bug report).
-
-Ben.
-
->=20
-> The Fixes: tag is actually wrong.  This bug has been present forever.
-> However a different bug that=20
->   Commit: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
-> fixed was hiding the bug.
->=20
-> So it should probably be marked
->   Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
-> with an explanation.
->=20
-> NeilBrown
-
---=20
-Ben Hutchings
-Theory and practice are closer in theory than in practice - John Levine
-
---=-StOfTySkQjzSGJ9fd77x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmnERZYACgkQ57/I7JWG
-EQkcsA/+P9OPKkweOPNqOeCWouseIy/CyJKqNhLGjkCMsT/c+K3UtHKmioGin2Zu
-2qKNGyPkfvdGfhlMZGcjE/0ZA6N/HD24fnNTH0p0xzcIE3U6OJ+lcaqbdOvs45y8
-wcLF/v8B4KD3HwzcxqIEty/yJjuzzvgii7xOHzeah59yhY2sElxYyZrNrxDaQ8hZ
-SeTGvVWWJEgm3zYTykG5Yu0pdCWgj2rkbJFBebRWw41fnHBbEw28zINjQRs5usaA
-40ZGQkM1F0QSOABWzuakN50XJfvs/XfKgiRAUzifeH0qaUXE2mC4Zdx+GGSwTRb8
-8l/ASuz3at8lDSNglY+E956o8zekI0TUN3jrv5ViO2dwvBfh3zIYXNHytroJNjBV
-ZiL+XpW94rWOSTvpSQd0a6W/2jbyiIy2brdqj71BbrbdpPcuoaEVOFodKqbcqmsd
-uBm6vApisOzLX5jwOUgfnYBdpj4XQh3gGgbTm6k3khLt0Ok6I7fWCJb3gHEHHFGU
-UfD185p1E1YdPXFYj8aWkKdO6RJnOIQKZ4w+s9PJDFl9h8wifCIqMOGlMIVbrWSN
-ZdU1Xs/lT6xH6NDY8z+iIJkrE6LBjO2+rS4GjqXk8I4FoFgP5BCP7TlZKnBwTczc
-XvNJ5reVXnDaFOcO9v420KZ8u2BbYjzk6f0jPe1omz9WJ9YJ82M=
-=Dg/J
------END PGP SIGNATURE-----
-
---=-StOfTySkQjzSGJ9fd77x--
 
