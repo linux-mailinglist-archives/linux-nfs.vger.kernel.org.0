@@ -1,313 +1,271 @@
-Return-Path: <linux-nfs+bounces-20475-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20476-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2GeuL0DQxmkCPAUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20475-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:45:20 +0100
+	id cNg2A5fWxmkCPQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20476-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 20:12:23 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 383723491CC
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:45:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6214A349F4C
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 20:12:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F1333302444B
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 18:44:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0F6853000A43
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942494070F4;
-	Fri, 27 Mar 2026 18:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B10257821;
+	Fri, 27 Mar 2026 19:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b="dGJbHjfK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eXrY5W7Z";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BccxZkDX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from email.studentenwerk.mhn.de (dresden.studentenwerk.mhn.de [141.84.225.229])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FD53FBEA1
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 18:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.84.225.229
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774637070; cv=none; b=qgCesVmdJC2EyJ7gshi2PRCUoYwtNalNxsFMAgWJk1z1TZocKkhjRBO8lBXfgFa2GK7GKDtZ5Rv8CF/5VzddQzWVUEwCo4dwjb18fSQpOxMbr0HbLFbh2qOWZnGUXOb2Xr32EUdUtIAExPr3JVLVCYvblA0p3dXfJxJzp6ZediI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774637070; c=relaxed/simple;
-	bh=nhRONqpYuagmomyCQ4xfcVpx8he8Wi8qzkZO80ZB0ls=;
-	h=MIME-Version:Date:From:To:Subject:Message-ID:Content-Type; b=ZVRBaAC7NjMLga1ggDW0NS1mSkDBJAsja/gAVulrmWgcH5deB6iJIv9FO7ue3UWOIMFEHCeQTi/GxbesVOWvX5qg/1sIRFXNvfaZ2H8bvkADhG5N1nRooAQDfs7POPTqS/CJSEZjOeVcphYidPsVxiD0dzUj1FgaKfssaf1RI0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stwm.de; spf=pass smtp.mailfrom=stwm.de; dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b=dGJbHjfK; arc=none smtp.client-ip=141.84.225.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stwm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stwm.de
-Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
-	by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4fj8Wq2lBNzRhRC
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 19:37:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
-	t=1774636647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=QAaWKOCnuMpVrJqoyNAflfQPmYRYzxfta4IdUVNz628=;
-	b=dGJbHjfKGQIXmPFsvpx37rHJIUKFzzq+EyaphXC95GsveHlka0gIs5C80Q1NaBxBVVawa5
-	wUK8fJtsS1jrpZeCCMaPsEVCujm3SDA5krcAbBzWDstkLNII7Ll72PAi7URwj3LlKadyuS
-	cj5mMMXE4EcNh9NVlOUipKilbEEZS8iyY3MwKl+VCN9jwKhK/+cdDrMsc02IAfJC9T6oAM
-	MpQOnPvwzX0BTeNBuzL0Ry9eB68kT6bXr1BhEZ0rJm/czh4pRKA2s4QPOxjdGo3otV/0NL
-	lYOuRt9BVgyhZcyhGz8jTHfQ5hyeZe1Ib96ye4dcWEqEPuP+xu8J/k08DQkoCg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFB7329E5C
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 19:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774638507; cv=fail; b=OPa2OOkg2m9ZwHQZ49a7aPGp+gBHQHyfNx8r1OMetsUYxXAIEOQxBmgPJ0eGQ5aUx0uqr5OeE138tsVRgmM1fi1u29yszIzNvFp2ZHPpFHRy2TLOC4IE4uOjh9rxdY7qSkQRvUOck7SXKf4W8YBDejn1NUlKszCE56lQcQb8fSY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774638507; c=relaxed/simple;
+	bh=sVeNmfQbULZQWyzZBy2dPkmK4F2pLReDGpqiGwAUxrA=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PR6DQ5+fyLzxAjfdjtRtFuTQqdZzU1OVJ0akZMQ6nyJsuKT+5FOuS3ZPglbmVs9FqtxmZk0Ib9uXm/BYnYZFOLJwKGR8f+h1OacpSgcJ2TlJIyk1/XDF3HgCYkK/4gehN/evER10vx/JDB/Crqo214sHGbXraoEh7vHQBZZE33c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eXrY5W7Z; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BccxZkDX; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62RGvrQV980051;
+	Fri, 27 Mar 2026 19:08:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=C+dFzs4xPq3NufpRqUW7FLPdp6c50IRYy2i/j6eqWHM=; b=
+	eXrY5W7ZjT1G937nqnP1aIA6kQYSbMd9VSeMKNj6sN4Q6neD7+GIXOkc6YiXUoeD
+	uneaBycF9QB6Jf5y+GULe9ThcQPX3UTqfB3jn8NjQ+JSN10oZ2K2gI/YjU0PIuNT
+	ExTTvogdb6romomElCQ5kGZSkKGIFqsWqDgt22jvPZaMc6CZPg1/qvRXF9Wqvmza
+	pnyz2oAPuqdMS2hHXon8sAcb6iq1jRJl6aY5cmVtTaii+mfx8u6PdxBXsK/LUq1L
+	RB5ZuRlmvI44aoKPDaAUSu8r7WPnZpTR2QARWTyxvOiljOtfEmgtV1yHrKMX+qdg
+	mdWPw5+YTKSHyE6s+F8FIg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4d1kgftm5y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Mar 2026 19:08:18 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 62RIUUmk000591;
+	Fri, 27 Mar 2026 19:08:17 GMT
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010069.outbound.protection.outlook.com [52.101.56.69])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4d1hsesyc2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Mar 2026 19:08:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lxBorMKEDSGDY60RCBtc06yQBuK88AHjLltlKpoPhTS8r1UnpWB5UiKEVaOLEX/ph7FexKpG3Nc/16avBlZWlGFK2JGNU0Fa9r3KD8C6s06VJxeH8Y0RdUcQPME/b6txL10XqNUcIqzMut22bpPlf/BduSDFvXjmwpShmrpNOXt98xT0IoGFopydzHu+L29zlikS3kKRPpHL7ppyyNbc9joyZyRiHyxebhX5UU5dByZ8Mk1knacuBsWzx8D5gyeV4dFdt24520XNEKDzY5bnVHxp6QdYKM4SFQQPaCxqRvUW3Sh4+3rw3NJQhpZ1oqcFWik3LTl4zhmkhHDSqOiwbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C+dFzs4xPq3NufpRqUW7FLPdp6c50IRYy2i/j6eqWHM=;
+ b=M+aURDzL9UQ4egMzeinPzAnzaWmaR+P4CUDa8H8LI4qIPjdS/ucRnyZ3ijFn/9ld8Y2kWdR+uUh8WW0Fotb2PfjF0LDGMyk1vslZT21P2xOyNB8QEveMR5fZvkTx2ham6C6zVZNyPeh0m89gqz8cEgDADf/ZH02K7a5YDQ5L8axS+dIzQ7p99G73ZjFDGEl94ROnjITFkkdXSlnS3T2kfAbJIlk3HP4gv6GvJ+W7kUVi6iDkclHjODMoGrQsAvy+z2oCExv6r08lcUonDOVGyi9ebe6etLEUQIO5cPmG5E2XGt4Fo1x2JL/OzccFeZpRk5U5r6w3d1G5xPtkWVm6kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C+dFzs4xPq3NufpRqUW7FLPdp6c50IRYy2i/j6eqWHM=;
+ b=BccxZkDX6LwJDkEhyfEN4CuL63/GkqAPTio6hrvNXfsv55jPJoVColdFbX3ct70+QvBNo+BNgQV7ogIZnxC1+tQTc1IyFPsNjmPT/5LqUVNj2rYhKAyzLLZZAIOgZpGCgrF9iUZr886Exac+sBiiUPj176WlFwVfLL43tP9ophk=
+Received: from BN0PR10MB5143.namprd10.prod.outlook.com (2603:10b6:408:12c::7)
+ by IA0PR10MB7577.namprd10.prod.outlook.com (2603:10b6:208:483::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.31; Fri, 27 Mar
+ 2026 19:08:15 +0000
+Received: from BN0PR10MB5143.namprd10.prod.outlook.com
+ ([fe80::71c3:4ee5:93a1:85e9]) by BN0PR10MB5143.namprd10.prod.outlook.com
+ ([fe80::71c3:4ee5:93a1:85e9%5]) with mapi id 15.20.9745.024; Fri, 27 Mar 2026
+ 19:08:14 +0000
+Message-ID: <941d32c3-afec-476d-8962-543e34beb3e8@oracle.com>
+Date: Fri, 27 Mar 2026 19:08:12 +0000
+User-Agent: Thunderbird Daily
+Cc: Calum Mackay <calum.mackay@oracle.com>
+Subject: Re: pynfs-0.5 tagged and pushed
+To: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>,
+        linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <33de50bc-5cca-4071-ad32-05a82da89c77@oracle.com>
+ <CA+1jF5rbEzKyvzvq7ATzGhy0xthL8baRLV-zDCe7r=e2OVh3og@mail.gmail.com>
+ <CA+1jF5pguuUukL+5im41x0OewGX+kTtjFNEF3VD0g7nCC47XhA@mail.gmail.com>
+Content-Language: en-GB
+From: Calum Mackay <calum.mackay@oracle.com>
+Organization: Oracle
+In-Reply-To: <CA+1jF5pguuUukL+5im41x0OewGX+kTtjFNEF3VD0g7nCC47XhA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0455.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1aa::10) To BN0PR10MB5143.namprd10.prod.outlook.com
+ (2603:10b6:408:12c::7)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 27 Mar 2026 19:37:27 +0100
-From: Wolfgang Walter <linux@stwm.de>
-To: linux-nfs@vger.kernel.org
-Subject: 6.18.19 (and probably earlier): get BUG nfsd_file (Not tainted):
- Objects remaining on __kmem_cache_shutdown()
-Message-ID: <aa45976e7e85e06a426765c5a17865c1@stwm.de>
-X-Sender: linux@stwm.de
-Organization: =?UTF-8?Q?Studierendenwerk_M=C3=BCnchen_Oberbayern?=
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[stwm.de,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[stwm.de:s=stwm-20170627];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5143:EE_|IA0PR10MB7577:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6065e06d-9f67-49b7-15e1-08de8c34326e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	6UIULFrHSD8Fx/Xlcv2b/sjIJsST4soFY/HdTnv5TnwZh/xKNhV/OZtOLjtvDUR3UzgtrsCXMra7dD/IXgd54frIpe4q3nqMJ8kyltzi5NrCFMezv417p3DrRXYNvTtSeqZSRwwgUgtv2V8KvNvxlM269rJoJQ3tCk/qutvbulujYSUsQ8NDArh/sC8kVU1fTwM0u1XR4274HGkbai/MGs8SUUgAvQJcG19uPO0hDPyK2jog+nJcr2jnN00Wru7/9dzrVMNuUoZ5EIl/2YetV55EXClPhawl0XMIiKhBzg8utXrzFSowN2w/NoP/G3CmXE7pYTjfrMoHV4Y7B/BAYUTWbqLIrMAcXhDfxdH/kZ76eTuKBmy3t/1/dxinCX9GNrxtULbCJ1aFYve5uBVDl4I07lvJ8TDzPKWv1vzqy/STvTCfrBYI7KZRlhTkdAZgh5Vd3WJyz9yRgcElaB0jzzNNyNCjNgZoxnEI7zmo/Gvge2gpEBgqzhv3RHr0SsC6L4U2NH/CfyeQE/jZvlLArKWNr946zjUW0GPY8TH9ytVvlWsDn3rgtvIWKr4wWX8jSXRhdeUF1t6hGJLrHc8++rVBXggjVznd6urJHS1w3fTmcFgr3JP6Jr2THv9wVTWkOLTpKFgDyxilSwTiQipHExZN7F0U/yPbL/6T9qnsyHM6UOYI/KgQijOYfnAAiVpoxLxT2rscxsNILC5Lpbavu5ceJpWk4lBXGuzfHNNQIr0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5143.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RjVYMG5nTTRuaitMMFpqaWJleFJZUTdxRlpQa0R5ODNBbkJSSjQwWmVEbnhp?=
+ =?utf-8?B?RllKUjBPelg5SlpsZEo5N2pqMDg1cjBVcUQzU1RzekxEaEZxKzIzUmhhMDNt?=
+ =?utf-8?B?VDB4MVE0QjN3SnRBQmpqakY4WmVQMURxWStTZzJ4S1ZZZFk2Q3IrMzlyaWV0?=
+ =?utf-8?B?M1I0WjUvKzJ4NnJTN0xzUmZTMDZYdjJETXp0OVdNU0k3aDBUb2tmYjNobWlx?=
+ =?utf-8?B?dXNXUDhzUFBwZmUwWTg2bndPb0Y5cUU4MWkxYWYxaWJMajJvbndaamZYNzZS?=
+ =?utf-8?B?Q3pkcEhBNFhvRjg3aG02S3I1MTJtUVdMMWNQWEtCRlJ0WXkxSTJJdnRUbXU1?=
+ =?utf-8?B?Lzk5R09ieWhiTmR0K2ExWitJbHRQUXBGdlBZL0MydWhJeWIvY29LRmtNam8w?=
+ =?utf-8?B?bFF1OW54Q25vVEJXNjRBbVFvVFhEL21aMlRqTUJTZytscmgxUHhKRHVGZ2l5?=
+ =?utf-8?B?Q29YN0srRjZ2ek5lQm1FVzBoQ0Z2YXFxSDNka2Jobll2WktDeE0zNEYzblpX?=
+ =?utf-8?B?UUpwQmV1VzZqQmpZV1lKbXJyS3dRTmZBL0N6Mng0ZGgrZi93SGJDNm91VDYr?=
+ =?utf-8?B?dC9CZlJvbmNrekhHTCtxOWlCOGw0ZUlhSzJKd0h6ODZaZ1VEOTBlYzF4WmVN?=
+ =?utf-8?B?N3kvYm1lUjlEcE5CazRiSDRReHQzZDNqQlJrMVFzVFhUMmVZeVJVWnU0WExU?=
+ =?utf-8?B?QzlSaUZZdnh0eTdxQkVXRjlhMmxISFR3V3UwRkIwTnpTMlJ6b2pHZEZUQlVJ?=
+ =?utf-8?B?VDJPWFBOLzFCSWU5L2tCekgxWUppc29ZOUFpQTBHTEo5QlFsTHRXRjVUYkZl?=
+ =?utf-8?B?SGhGU2R1dVJuVlhENGY0YngwekFVMDQ0TzVXeE9Wa2psNVFGdC9FNjNBYXIy?=
+ =?utf-8?B?aGhiQWhQS1h3dzJlUXRPWkhnNlN1MGIrTDZPSURscHMyMmsrS3k3Q2M4RmM1?=
+ =?utf-8?B?ekdWYUZYODRKdmtBS0xRQkU5REdQQk9IdWNrVFA5NEc1aUR1d09zckg1U2N5?=
+ =?utf-8?B?eno4clFkMVZiWHhIb0c0WkJ2UEJIY2t6d2tCdFlOdTdPRW0wUmh6d2tJMm9x?=
+ =?utf-8?B?b1U4eXhPY2lxSUhtWnRHeTVnem9uU0N0aXFadytiSG53ZzQ1NVI2dGdSTGNY?=
+ =?utf-8?B?RXFNSXoxbTN6Qk01bVFITm1lSzZjbUJtRVhYZG9jMGFoanBVWllmWVEwNGgx?=
+ =?utf-8?B?YTRnRWpqNS8zWDhpL1lPTW1ZeVg5TFVrT2hRUXUyT0hSdjdocUtmaGx6Z2lF?=
+ =?utf-8?B?SzgyaWEyMkZBQ09xZ3pGVFJiUnVhS1RRbERZR1VRQmhMenVTWVhvcTVFVkFE?=
+ =?utf-8?B?SkNkeWYya3lNNXgwSTlwL2dLZmhBSVFiZVFZdXJMaEVFZEQ3TFZhNW1DNU84?=
+ =?utf-8?B?a0xUNmdWLzN5SmlUd3AraDlCUXlqNktxdEhleWtXUXF6ZXdHaGx3U3RheXFz?=
+ =?utf-8?B?bVRvdTc2YjB4SlpranN2WFl4d1J2K0xsb3hSdGVmMG5Tbm5wMFd5T3ZWa3VC?=
+ =?utf-8?B?eTVNSFZEUzV5SVo3bHMwcDNmd2F1VWNOMCtpenZsVENxWnpuNGxlT1pCTnNR?=
+ =?utf-8?B?REcybDMxaHZQRExXSS90RzNIWlB0WWloNTVqL204THJmUWZ6Z2ZkR01nRnN4?=
+ =?utf-8?B?czZwQVNnUS9oNFk1NkZDRFlHUDViaXJyZDhLWVdrYlN4SmQ3S2dza2dqSGYr?=
+ =?utf-8?B?dk81Mm82eVc4WTkxQk94VVpNdGZ5VmRvQmhFOTkvOGVSMnh3MU02a1NGVGxz?=
+ =?utf-8?B?YitTRkFDZ1dBakltaUZYamlCYUYvbkcxZE42T2NOeDlPL2RKVVhVL1hNUmYw?=
+ =?utf-8?B?NlZlMkRrTFIrbStMMWlKYk4weklBS1R3NXRGN1BjYWgzRkc1eFE3d1hBUzNC?=
+ =?utf-8?B?WUx4R3NiZ2Q5elNBQmxIclQ2M2t0djZidVE1bjNtUGY4Sno5SWsxZnFRa3Nv?=
+ =?utf-8?B?SThwaEZ6aU8wVlJnTHFLTzkrMHFrRVR1YVdwckVOVEhVTHFqTzI1Z2dKc1Ja?=
+ =?utf-8?B?aExNM080SC9iK2tUczE1M0o5cHgvL3VmT0lzWWhDTFRzZjFOTWNqVlI1VG1r?=
+ =?utf-8?B?STVzYnAyQzBoS0poNklxV0JSYWRQS1Qwcms1UTBaT2JRYnpMd0pmUkxWdkkv?=
+ =?utf-8?B?U202elBQZ2hCSjFFL0FmM2hieFAvOHVpdjZVL1VSTU9WV3VMeWJWVmNVOTlY?=
+ =?utf-8?B?RDQzMjZjbFA0ZVZMSmRCeFZKV2FYVENybDhlMzdteDE3Z0hma1F5bGZjNnF1?=
+ =?utf-8?B?d0dIV1JrKzl3Y0NGQW55M0JBcS9KT1ZYem5FczRZa2JaYVdLZTlXSUFHZXg5?=
+ =?utf-8?B?T0gzTUtaRXh6eU1OclNrV2NzYjR3N1lmMm5mNVhmd2N0VGc1eWZjQT09?=
+X-Exchange-RoutingPolicyChecked:
+	dhvCROuiAbEWesj6I1ixsCdEOBOvYOmV4aiYSk8eRFMq6I8ULJ0+Slsa+SpSy2psJP8VGn1BW3nA64D020WijvuKCK36PvLu3Qi7zpC4XMgJTBef+f9kHi0Y+Lsi/iyHJzYFnOCaOgVk4FNW23r5v4p/HVHaM5yVIYRcWi84fKgoElHawean8NFSNyJ8g5optSW5cBNnVjJ1Y8WoXk2GRqCSwQa72SRYu6ONZxvHsjMsTVUdP/dWIGEZMgfDU3S6hMnqCGHaR+lL12Ane68942sbJplGmiDEV6QRV53zf6unuRrhi9VjO7JLQVMSyGCDsK0WAXVm6awoz4pZa9Lpjg==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	rHNI5egFiKkVmV8FkLR4MJ2JrO25s1NLHwgopFKmkfNZTn3ZJT7WvjVMnqe/t712CfMmM4eE8C4YKexIscWLi6G5Y/XVxkBR64SgbIJk9T+CnEKblxdyVeN6x4hWTGR6Hz/qyHgX9yuRPPHBEShiX+MGFWXhcHu6rjXtGaUfDNwAGrm9y1HNzkW9FoGd6ILl7PJhtt7s0v/rz2Oquc52uSxkL5rjfLIWtIMBBFNhB+O1XJdNiCeytLoGdxkAnZXDNwKukVVKVCsoMJ9wiHYIfWP55VClPb6cv9I+zU6eAMDzx9ePbOqCouq5l5GWwBSL5dApSu/Z9oTmhjtjI5q6riXVIUACVSXM2pZtABtwEBjl+PYK9yzzd0KWw98MFJiZCcHJVJKMoKOeLeh8whCx7OR8KWiNWQABubZp24axRxvZ0JmALEVKnKj9YKv25LV8sQOTfq3BG8O6kofocDAMx6SZGQs2XTr3zJlCdy4Xuvi/tEDMigkYVb6r49s3F9OeGUq0/1qRFDCsoBjt98N7tMEEKZ+cxl9lMTcGnGtLnmktuvQDlp5a7/nA6ccgjq6Gu5FBPqIXYxHhpzu1+tpe51zAb2Dopdg8vcQD0gf9x5s=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6065e06d-9f67-49b7-15e1-08de8c34326e
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5143.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2026 19:08:14.7969
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CHYhgxEDmyUfweTBdLq1WW217SR5iRzZvl+oQzVnq6Lx95B6dcSgDwmulgAbt5s47VPzMDJwqSzeX4GRrZvrsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7577
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-27_01,2026-03-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2603050001
+ definitions=main-2603270133
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI3MDEzMyBTYWx0ZWRfXwyHF4oqKOXb8
+ 2ULjeI2dLhZay/IeFA22NZY95zzUvR8C38PP0+CHJHSUCLWPU3Rb6y+trZNsKXwNSOkbaXDd4Mt
+ e5JU42HklEyzTtLfTgyWa0/IR5RAVMPLemf9rcN3Bi/bmwDA0rGgCNpSNst3aWKufeyqqplcjYS
+ qcu3BcF3P+2WSAb4Pw4M9Q3nebrLzH/JO+iL1Usfmua1+cnollvGVzlmdyoAcR6yNnbVp5zynlS
+ 0oCjIbVL0oshoPD4HkDSLqYDT2Qat1z8fmHq6Azuqz8cBh/vsOP5Z+Y98PPdrBQ7SzlAUoPYdki
+ umxFsY3jMOwtgR5IDgpPs9YAh7ZFndVq1nffc4JVx6H04CB56xzM2ODU0KBz8Xbgj/M8mspeRLd
+ ancIzeVMyDMioE8PXgdcCQMYIrW5Kq5P3NgIXn4Gma62YGL+cWoKUOO9z47S8JONP6mkJRpf+tV
+ UiKUVK6yrDIiO9g9vqw==
+X-Authority-Analysis: v=2.4 cv=aq+/yCZV c=1 sm=1 tr=0 ts=69c6d5a2 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=jiCTI4zE5U7BLdzWsZGv:22 a=3I1J8UUJPc9JN9BFgKH3:22 a=pGLkceISAAAA:8
+ a=yPCof4ZbAAAA:8 a=_dYJ6i6rdxd0-U-sF48A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: o4YDFORroleBBLFDFti_BiRdbaVrf-87
+X-Proofpoint-GUID: o4YDFORroleBBLFDFti_BiRdbaVrf-87
+X-Spamd-Result: default: False [-0.15 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	HAS_ORG_HEADER(0.00)[];
-	DKIM_TRACE(0.00)[stwm.de:+];
-	RCPT_COUNT_ONE(0.00)[1];
-	TAGGED_FROM(0.00)[bounces-20475-lists,linux-nfs=lfdr.de];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-20476-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:dkim,oracle.com:email,oracle.com:mid];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org,oracle.com];
 	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
+	RCPT_COUNT_THREE(0.00)[4];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@stwm.de,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[calum.mackay@oracle.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[stwm.de:dkim,stwm.de:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 383723491CC
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 6214A349F4C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello,
+On 27/03/2026 4:26 pm, Aurélien Couderc wrote:
+> On Fri, Mar 27, 2026 at 3:47 PM Aurélien Couderc
+> <aurelien.couderc2002@gmail.com> wrote:
+>>
+>> On Fri, Mar 27, 2026 at 3:57 AM Calum Mackay <calum.mackay@oracle.com> wrote:
+>>>
+>>> I've applied most of the outstanding pynfs patches, and tagged and
+>>> pushed pynfs-0.5
+>>>
+>>> There were a couple of patches with which I'm having difficulties in
+>>> testing, and I've emailed the authors.
+>>>
+>>> If you have submitted a pynfs patch which doesn't appear below, and I've
+>>> not contacted you, apologies, and would you please let me know.
+>>
+>> @Chuck Lever wanted to contribute a test to set an ACL-on-file-create
+>> and ACL-on-dir-create.
+>> Was this never submitted?
 
-wenn rebooting our nfs-server I get almost always the following BUG:
+hi Aurélien,
 
-Mar 27 18:27:40 rummelplatz kernel: BUG nfsd_file (Not tainted): Objects 
-remaining on __kmem_cache_shutdown()
-Mar 27 18:27:40 rummelplatz kernel: 
------------------------------------------------------------------------------
-Mar 27 18:27:40 rummelplatz kernel: Object 0x000000004cc0c6e6 
-@offset=144
-Mar 27 18:27:40 rummelplatz kernel: Slab 0x00000000e17f7a52 objects=28 
-used=1 fp=0x00000000988570d2 
-flags=0x57ffffc0000200(workingset|node=1|zone=2|lastcpupid=0x1fffff)
-Mar 27 18:27:40 rummelplatz kernel: Disabling lock debugging due to 
-kernel taint
-Mar 27 18:27:40 rummelplatz kernel: ------------[ cut here ]------------
-Mar 27 18:27:40 rummelplatz kernel: WARNING: CPU: 3 PID: 1775323 at 
-mm/slub.c:1256 __slab_err+0x19/0x20
-Mar 27 18:27:40 rummelplatz kernel: Modules linked in: cpuid 
-rpcsec_gss_krb5 msr 8021q garp stp llc mrp binfmt_misc intel_rapl_msr 
-intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp 
-kvm_intel ipmi_ssif kvm snd_pcm irqbypass polyval_clmulni 
-ghash_clmulni_intel snd_timer rapl snd intel_cstate ast soundcore 
-drm_client_lib intel_uncore drm_shmem_helper vga16fb iTCO_wdt mei_me 
-vgastate pcspkr intel_pmc_bxt drm_kms_helper iTCO_vendor_support 
-acpi_power_meter mei watchdog ipmi_si i2c_algo_bit acpi_ipmi ioatdma 
-ipmi_devintf ipmi_msghandler evdev joydev button sg nfsd nfs_acl 
-chacha20poly1305 lockd aesni_intel cryptd auth_rpcgss grace nfs_localio 
-drbd drm sunrpc fuse lru_cache loop efi_pstore configfs ip_tables 
-x_tables autofs4 ext4 crc16 mbcache jbd2 efivarfs raid10 raid456 
-async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq 
-raid0 linear dm_mod raid1 md_mod hid_generic ses enclosure sd_mod usbhid 
-hid ixgbe libie_fwlog xfrm_algo dca mdio_devres of_mdio fixed_phy 
-xhci_pci ahci fwnode_mdio libahci mpt3sas
-Mar 27 18:27:40 rummelplatz kernel:  ehci_pci libphy xhci_hcd raid_class 
-libata ehci_hcd mdio_bus scsi_transport_sas usbcore ptp i2c_i801 
-i2c_smbus lpc_ich scsi_mod pps_core usb_common mdio scsi_common wmi
-Mar 27 18:27:40 rummelplatz kernel: CPU: 3 UID: 0 PID: 1775323 Comm: 
-rpc.nfsd Tainted: G    B               6.18.19-debian64.all+1.3 #1 
-PREEMPT(full)
-Mar 27 18:27:40 rummelplatz kernel: Tainted: [B]=BAD_PAGE
-Mar 27 18:27:40 rummelplatz kernel: Hardware name: Supermicro 
-X10DRi/X10DRI-T, BIOS 1.1a 10/16/2015
-Mar 27 18:27:40 rummelplatz kernel: RIP: 0010:__slab_err+0x19/0x20
-Mar 27 18:27:40 rummelplatz kernel: Code: 00 90 90 90 90 90 90 90 90 90 
-90 90 90 90 90 90 90 0f 1f 44 00 00 e8 76 ff ff ff be 01 00 00 00 bf 05 
-00 00 00 e8 47 e5 0e 00 <0f> 0b c3 cc cc cc cc 90 90 90 90 90 90 90 90 
-90 90 90 90 90 90 90
-Mar 27 18:27:40 rummelplatz kernel: RSP: 0018:ffffcd1b7ca83cb0 EFLAGS: 
-00010082
-Mar 27 18:27:40 rummelplatz kernel: RAX: 0000000000000000 RBX: 
-ffff89ac480e1fc0 RCX: 0000000000000027
-Mar 27 18:27:40 rummelplatz kernel: RDX: 0000000000000005 RSI: 
-0000000000000001 RDI: ffff89aa5fadcd80
-Mar 27 18:27:40 rummelplatz kernel: RBP: ffff89ac76c35d80 R08: 
-0000000000000000 R09: 00000000ffffdfff
-Mar 27 18:27:40 rummelplatz kernel: R10: ffffffff853559a0 R11: 
-ffffcd1b7ca83b50 R12: fffff85323756ac0
-Mar 27 18:27:40 rummelplatz kernel: R13: ffffcd1b7ca83cc8 R14: 
-ffff89aad5e5b800 R15: fffff85328203840
-Mar 27 18:27:40 rummelplatz kernel: FS:  00007fe216a77740(0000) 
-GS:ffff89aada811000(0000) knlGS:0000000000000000
-Mar 27 18:27:40 rummelplatz kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
-0000000080050033
-Mar 27 18:27:40 rummelplatz kernel: CR2: 00007f6d30aca3d8 CR3: 
-00000018eed27002 CR4: 00000000001726f0
-Mar 27 18:27:40 rummelplatz kernel: Call Trace:
-Mar 27 18:27:40 rummelplatz kernel:  <TASK>
-Mar 27 18:27:40 rummelplatz kernel:  
-__kmem_cache_shutdown.cold+0xe0/0xe5
-Mar 27 18:27:40 rummelplatz kernel:  kmem_cache_destroy+0x55/0x150
-Mar 27 18:27:40 rummelplatz kernel:  nfsd_file_cache_shutdown+0x7a/0x180 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  nfsd_destroy_serv+0x16c/0x1b0 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  nfsd_svc+0x1ee/0x320 [nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  write_threads+0xbb/0x180 [nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  ? __check_object_size+0x86/0x1f0
-Mar 27 18:27:40 rummelplatz kernel:  ? _copy_from_user+0x27/0x60
-Mar 27 18:27:40 rummelplatz kernel:  ? simple_transaction_get+0xd8/0x100
-Mar 27 18:27:40 rummelplatz kernel:  ? __pfx_write_threads+0x10/0x10 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  nfsctl_transaction_write+0x4a/0x80 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  vfs_write+0xce/0x440
-Mar 27 18:27:40 rummelplatz kernel:  ? do_sys_openat2+0x88/0xc0
-Mar 27 18:27:40 rummelplatz kernel:  ksys_write+0x6a/0xe0
-Mar 27 18:27:40 rummelplatz kernel:  do_syscall_64+0x63/0x800
-Mar 27 18:27:40 rummelplatz kernel:  ? exc_page_fault+0x7e/0x1a0
-Mar 27 18:27:40 rummelplatz kernel:  
-entry_SYSCALL_64_after_hwframe+0x76/0x7e
-Mar 27 18:27:40 rummelplatz kernel: RIP: 0033:0x7fe216b72340
-Mar 27 18:27:40 rummelplatz kernel: Code: 40 00 48 8b 15 c1 aa 0d 00 f7 
-d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d a1 32 0e 00 00 74 
-17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 
-00 48 83 ec 28 48 89
-Mar 27 18:27:40 rummelplatz kernel: RSP: 002b:00007ffffd5bb0b8 EFLAGS: 
-00000202 ORIG_RAX: 0000000000000001
-Mar 27 18:27:40 rummelplatz kernel: RAX: ffffffffffffffda RBX: 
-0000000000000003 RCX: 00007fe216b72340
-Mar 27 18:27:40 rummelplatz kernel: RDX: 0000000000000002 RSI: 
-000055c4e1a64300 RDI: 0000000000000003
-Mar 27 18:27:40 rummelplatz kernel: RBP: 000055c4e1a64300 R08: 
-0000000000000000 R09: 0000000000000064
-Mar 27 18:27:40 rummelplatz kernel: R10: 00007ffffd5bae07 R11: 
-0000000000000202 R12: 0000000000000007
-Mar 27 18:27:40 rummelplatz kernel: R13: 0000000000000007 R14: 
-00007ffffd5bb2b8 R15: 000055c4e1a64020
-Mar 27 18:27:40 rummelplatz kernel:  </TASK>
-Mar 27 18:27:40 rummelplatz kernel: ---[ end trace 0000000000000000 ]---
-Mar 27 18:27:40 rummelplatz kernel: ------------[ cut here ]------------
-Mar 27 18:27:40 rummelplatz kernel: kmem_cache_destroy nfsd_file: Slab 
-cache still has objects when called from 
-nfsd_file_cache_shutdown+0x7a/0x180 [nfsd]
-Mar 27 18:27:40 rummelplatz kernel: WARNING: CPU: 3 PID: 1775323 at 
-mm/slab_common.c:531 kmem_cache_destroy+0x142/0x150
-Mar 27 18:27:40 rummelplatz kernel: Modules linked in: cpuid 
-rpcsec_gss_krb5 msr 8021q garp stp llc mrp binfmt_misc intel_rapl_msr 
-intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp 
-kvm_intel ipmi_ssif kvm snd_pcm irqbypass polyval_clmulni 
-ghash_clmulni_intel snd_timer rapl snd intel_cstate ast soundcore 
-drm_client_lib intel_uncore drm_shmem_helper vga16fb iTCO_wdt mei_me 
-vgastate pcspkr intel_pmc_bxt drm_kms_helper iTCO_vendor_support 
-acpi_power_meter mei watchdog ipmi_si i2c_algo_bit acpi_ipmi ioatdma 
-ipmi_devintf ipmi_msghandler evdev joydev button sg nfsd nfs_acl 
-chacha20poly1305 lockd aesni_intel cryptd auth_rpcgss grace nfs_localio 
-drbd drm sunrpc fuse lru_cache loop efi_pstore configfs ip_tables 
-x_tables autofs4 ext4 crc16 mbcache jbd2 efivarfs raid10 raid456 
-async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq 
-raid0 linear dm_mod raid1 md_mod hid_generic ses enclosure sd_mod usbhid 
-hid ixgbe libie_fwlog xfrm_algo dca mdio_devres of_mdio fixed_phy 
-xhci_pci ahci fwnode_mdio libahci mpt3sas
-Mar 27 18:27:40 rummelplatz kernel:  ehci_pci libphy xhci_hcd raid_class 
-libata ehci_hcd mdio_bus scsi_transport_sas usbcore ptp i2c_i801 
-i2c_smbus lpc_ich scsi_mod pps_core usb_common mdio scsi_common wmi
-Mar 27 18:27:40 rummelplatz kernel: CPU: 3 UID: 0 PID: 1775323 Comm: 
-rpc.nfsd Tainted: G    B   W           6.18.19-debian64.all+1.3 #1 
-PREEMPT(full)
-Mar 27 18:27:40 rummelplatz kernel: Tainted: [B]=BAD_PAGE, [W]=WARN
-Mar 27 18:27:40 rummelplatz kernel: Hardware name: Supermicro 
-X10DRi/X10DRI-T, BIOS 1.1a 10/16/2015
-Mar 27 18:27:40 rummelplatz kernel: RIP: 
-0010:kmem_cache_destroy+0x142/0x150
-Mar 27 18:27:40 rummelplatz kernel: Code: 00 85 ed 74 9a eb b1 e8 9c f1 
-e1 ff eb 97 48 8b 53 68 48 8b 4c 24 10 48 c7 c6 60 25 04 84 48 c7 c7 78 
-d6 4b 84 e8 2e 43 d6 ff <0f> 0b e9 16 ff ff ff c3 cc cc cc cc 66 90 90 
-90 90 90 90 90 90 90
-Mar 27 18:27:40 rummelplatz kernel: RSP: 0018:ffffcd1b7ca83d18 EFLAGS: 
-00010246
-Mar 27 18:27:40 rummelplatz kernel: RAX: 0000000000000000 RBX: 
-ffff89aad5e5b800 RCX: 0000000000000027
-Mar 27 18:27:40 rummelplatz kernel: RDX: ffff89aa5fadcd88 RSI: 
-0000000000000001 RDI: ffff89aa5fadcd80
-Mar 27 18:27:40 rummelplatz kernel: RBP: 0000000000000001 R08: 
-0000000000000000 R09: 00000000ffffdfff
-Mar 27 18:27:40 rummelplatz kernel: R10: ffffffff853559a0 R11: 
-ffffcd1b7ca83bc0 R12: ffff89aac74fa190
-Mar 27 18:27:40 rummelplatz kernel: R13: ffffcd1b7ca83dbc R14: 
-0000000000000000 R15: 0000000000000001
-Mar 27 18:27:40 rummelplatz kernel: FS:  00007fe216a77740(0000) 
-GS:ffff89aada811000(0000) knlGS:0000000000000000
-Mar 27 18:27:40 rummelplatz kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
-0000000080050033
-Mar 27 18:27:40 rummelplatz kernel: CR2: 00007f6d30aca3d8 CR3: 
-00000018eed27002 CR4: 00000000001726f0
-Mar 27 18:27:40 rummelplatz kernel: Call Trace:
-Mar 27 18:27:40 rummelplatz kernel:  <TASK>
-Mar 27 18:27:40 rummelplatz kernel:  nfsd_file_cache_shutdown+0x7a/0x180 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  nfsd_destroy_serv+0x16c/0x1b0 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  nfsd_svc+0x1ee/0x320 [nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  write_threads+0xbb/0x180 [nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  ? __check_object_size+0x86/0x1f0
-Mar 27 18:27:40 rummelplatz kernel:  ? _copy_from_user+0x27/0x60
-Mar 27 18:27:40 rummelplatz kernel:  ? simple_transaction_get+0xd8/0x100
-Mar 27 18:27:40 rummelplatz kernel:  ? __pfx_write_threads+0x10/0x10 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  nfsctl_transaction_write+0x4a/0x80 
-[nfsd]
-Mar 27 18:27:40 rummelplatz kernel:  vfs_write+0xce/0x440
-Mar 27 18:27:40 rummelplatz kernel:  ? do_sys_openat2+0x88/0xc0
-Mar 27 18:27:40 rummelplatz kernel:  ksys_write+0x6a/0xe0
-Mar 27 18:27:40 rummelplatz kernel:  do_syscall_64+0x63/0x800
-Mar 27 18:27:40 rummelplatz kernel:  ? exc_page_fault+0x7e/0x1a0
-Mar 27 18:27:40 rummelplatz kernel:  
-entry_SYSCALL_64_after_hwframe+0x76/0x7e
-Mar 27 18:27:40 rummelplatz kernel: RIP: 0033:0x7fe216b72340
-Mar 27 18:27:40 rummelplatz kernel: Code: 40 00 48 8b 15 c1 aa 0d 00 f7 
-d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d a1 32 0e 00 00 74 
-17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 
-00 48 83 ec 28 48 89
-Mar 27 18:27:40 rummelplatz kernel: RSP: 002b:00007ffffd5bb0b8 EFLAGS: 
-00000202 ORIG_RAX: 0000000000000001
-Mar 27 18:27:40 rummelplatz kernel: RAX: ffffffffffffffda RBX: 
-0000000000000003 RCX: 00007fe216b72340
-Mar 27 18:27:40 rummelplatz kernel: RDX: 0000000000000002 RSI: 
-000055c4e1a64300 RDI: 0000000000000003
-Mar 27 18:27:40 rummelplatz kernel: RBP: 000055c4e1a64300 R08: 
-0000000000000000 R09: 0000000000000064
-Mar 27 18:27:40 rummelplatz kernel: R10: 00007ffffd5bae07 R11: 
-0000000000000202 R12: 0000000000000007
-Mar 27 18:27:40 rummelplatz kernel: R13: 0000000000000007 R14: 
-00007ffffd5bb2b8 R15: 000055c4e1a64020
-Mar 27 18:27:40 rummelplatz kernel:  </TASK>
-Mar 27 18:27:40 rummelplatz kernel: ---[ end trace 0000000000000000 ]---
+This is one of the patches with which I'm having test failures; no doubt 
+an issue with my test setup. I'll apply it as soon as we get that sorted 
+out.
+
+thanks again,
+calum.
 
 
-The kernel is vanilla stable 6.18.19. I built it myself.
 
-Regrads
--- 
-Wolfgang Walter
-Studierendenwerk München Oberbayern
-Anstalt des öffentlichen Rechts
+> 
+> Forgot to CC Chuck Lever
+> 
+> Aurélien
+
+
 
