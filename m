@@ -1,269 +1,786 @@
-Return-Path: <linux-nfs+bounces-20442-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20443-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QNACGifyxWkkEgUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20442-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 03:57:43 +0100
+	id IIrxKbIFxml2FQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20443-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 05:21:06 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9FF233E9BE
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 03:57:42 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2E5B33F129
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 05:21:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CE1C6301DD85
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 02:57:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 580A730151E9
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 04:18:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19E333F8D4;
-	Fri, 27 Mar 2026 02:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADFAD358365;
+	Fri, 27 Mar 2026 04:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e06McZJM";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wonVAgzO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgXagZcx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C097A33F8BC
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 02:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774580259; cv=fail; b=H/78t7yuFZnIXowzOgWDDZaYyCb/unn1t8Mutge+VpBw2kOWFNP4zUIDEyO1joxk55+u+MUa2mKEWW7dIEnJH6ZeT6YQAImIy8e5h1xB8SnadXOv4CU2jInj65l8fjEnWxeRzccQR/xuZXOfe/kTgknzszCRo7oZ3r/vPl16PUs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774580259; c=relaxed/simple;
-	bh=qQucRrDoI1CGOcc9cLBm4KLHE0Rqt0ZCVKClzFL0KlE=;
-	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=WEPe56pHseuVlZFuCUZMSHbBj4U1pG9XU20HCFLz73VJV7RGbJMqXC/LeeS90yngFbO0cithhbops7KYpL3k3/WliolyG0toIYUZO4V3VGhLH5fKWrkUdHWxU+Tki4SFx5uSdsS+oD+C3a8YEnvgwBnBuPRXBi33UsiwyTcMWh8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=e06McZJM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wonVAgzO; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62QFtv2N2588402
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 02:57:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2025-04-25; bh=c3EknkTZ3IB8ufR8
-	7imT0A319Z6/XPWQ3DlzEkIE3mM=; b=e06McZJMdX0hMOhhggdgztaJF8ii45c+
-	yJDaAKQ+9R+P0ChZsqbAdIRBCG7iygZhugOfp7ZUIOJ6eepj19kSoOABsyfaZ6vv
-	BQNH85UTUpnjCb4Q0RLd/FMzLFKssZUNqMIBBs0rGJqeZm5de1S08cfY78UfRPB2
-	0oSAQe4b1JFqEGXlWc8LAVozOw0cU4d5VlE5vnE2+dh14LrAvbbD+zt5Hx0TUrbd
-	e+Zc73NBedVKbbTeWA3r29MMyBYprRnuQVeTuB9IxIAX6v4ZnQ4ozpvmJ/NlX0ru
-	/jAtENW/jU2IHsE5aXzbQ0e0Y2FaJaEkb+oNzVqFnLaDCwASoXQqfA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4d1kja9e06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 02:57:36 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 62R1KkQ9029099
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 02:57:35 GMT
-Received: from ph7pr06cu001.outbound.protection.outlook.com (mail-westus3azon11010026.outbound.protection.outlook.com [52.101.201.26])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4d1hsdu6hp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 02:57:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vrRQtpbCr4WeLqyJvUcpkHS9sXjB3iB6yyAc4pCfsJg4LqA+vVopR7ebhCnBF7FDWOdRcg3VpCd8DxHGzUGex/PnRIUCeqUQoP7xvMzBHBoYPAGGsRYh5yFX6QbpGS+9qWICkZp1ht9Y8W7tB70BhR4Fm3b5LRmHLFS1aoPUnq9PV3hfu+aQ8kXQtDR1zlT3dH/Jtn3hFHCL7iCaMbCM/zKcRdzt8+yWvM8w+1/aa0Gh0htA83HnEwBtRhZ02uAQjpKPyk2h31lTCctNN5EWbACs/ymriJFe4kfbVcDehWcst1dJtXG7NdrMFAdcQ9AATQhRmJ1AbPi96OsGlHuh7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c3EknkTZ3IB8ufR87imT0A319Z6/XPWQ3DlzEkIE3mM=;
- b=gLQEIcCDIi9KRcfbv+wkcItsuzboOYHHWOQRVqbRHpO51Lfi0Uz98OKltQDEMpGdvyyYdN5VhW312iB5VFVwXAeG3D/K0U0dy40EDxtEA9WjwvIkNzoUJqunslBCMVUyc7kgltm3B5ew0CzZnPKgZZOKCPykwtaIGBwix/iK1gZwUDSYw0v5oSI7gsPZiUGev3EA0XN4HaHxK4gaZdpk7hjAW8mQZc07Y9J23He3JYLxwLY4oJUlYZjO1FLIzT1k0gFVY7cCrGE/6/ou5cPHWGe64+Y5rl1ubGQDcPkZeJFD+o8qZC1MBMLw+nqZ7L6mtvPu1fRyVNC9ZAq6FIML+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c3EknkTZ3IB8ufR87imT0A319Z6/XPWQ3DlzEkIE3mM=;
- b=wonVAgzO5dJTXmaE8Owz5K2tGB3kRMl2tM/nlDDyMJcf8AS9BldQI/PhL/vojVT+PdOW3ODFjJAQLjPJlUb1aGt+OXN2xqFfcS2JXbEcrgHdPVkeV9Cf3hzyHQ/sgr0/N/cOdI8VG1Lu3wWEHroKqqxamz3SVUIW16gIgGgcyy4=
-Received: from BN0PR10MB5143.namprd10.prod.outlook.com (2603:10b6:408:12c::7)
- by PH3PPF61A2638A8.namprd10.prod.outlook.com (2603:10b6:518:1::7a7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Fri, 27 Mar
- 2026 02:57:33 +0000
-Received: from BN0PR10MB5143.namprd10.prod.outlook.com
- ([fe80::71c3:4ee5:93a1:85e9]) by BN0PR10MB5143.namprd10.prod.outlook.com
- ([fe80::71c3:4ee5:93a1:85e9%5]) with mapi id 15.20.9745.023; Fri, 27 Mar 2026
- 02:57:33 +0000
-Message-ID: <33de50bc-5cca-4071-ad32-05a82da89c77@oracle.com>
-Date: Fri, 27 Mar 2026 02:57:31 +0000
-User-Agent: Thunderbird Daily
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2906D36C5B1
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 04:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774585111; cv=none; b=J3ss40rT9PMaJ0QVM95cg9UYPiq2DFNde5FqsS5Oh/gXkTOYSDd4W4Ra7wyxbAEwqeXatibeKXJ1ptiUokYUrLsGkJKFAm+E+4gWJDEQ22tAcmdzFEAlHh2bUe6kUSas2QVDhIBPAcjFOANcfA6RHkjfEauDk/O0gajHQgue+QI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774585111; c=relaxed/simple;
+	bh=KnYgn0+D5XvYTgDgxJI4Uz0wdzhw8pVvwQNUXHRKMl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cl7/bDYZ1wlXDysEsVhGmLSX0m8LLfnTCp+XxL3JlSkul8m8GJWYHte3PVJ/oacy2n3x1GVXw77EY283lIe94hTV7zf8J5545Nn6GfbCZbgbHgzQUAzH98+aueeRX8i4xbHmabLHnRGnC2m69f8F0QL2vDaPqrTBaGDZdG8Zdzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hgXagZcx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774585108;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nFq0HOKAJeTWAhT/0yWrmuqvdTdQzXK3rHFrtTyb9B0=;
+	b=hgXagZcxb9ZXGXH4TSfDvh5bYv9DMxVvDydPvxBflZ54FbeD6hFihPr3zVwC5zFQ9lscw/
+	dLFayutfbCn//2GP9mOze4BHg/k+VS25NhgEIumGYdHDTgifbNCa9W7K4e/MXTLxZEeUBK
+	68fqWt9FwIWuGuKqdw8xnfGc7odJdPE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-257-Ai6R_bAYNieP_9YH1dHvUg-1; Fri,
+ 27 Mar 2026 00:18:26 -0400
+X-MC-Unique: Ai6R_bAYNieP_9YH1dHvUg-1
+X-Mimecast-MFC-AGG-ID: Ai6R_bAYNieP_9YH1dHvUg_1774585104
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10405195608B;
+	Fri, 27 Mar 2026 04:18:24 +0000 (UTC)
+Received: from localhost (dell-per660-10.rhts.eng.pek2.redhat.com [10.73.4.30])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 951531800671;
+	Fri, 27 Mar 2026 04:18:22 +0000 (UTC)
+From: Jianhong Yin <jiyin@redhat.com>
 To: linux-nfs@vger.kernel.org
-Cc: Calum Mackay <calum.mackay@oracle.com>
-Content-Language: en-GB
-From: Calum Mackay <calum.mackay@oracle.com>
-Subject: pynfs-0.5 tagged and pushed
-Organization: Oracle
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0007.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ad::23) To BN0PR10MB5143.namprd10.prod.outlook.com
- (2603:10b6:408:12c::7)
+Cc: calum.mackay@oracle.com,
+	jlayton@kernel.org,
+	bcodding@redhat.com,
+	smayhew@redhat.com,
+	jiyin@redhat.com,
+	Jianhong Yin <yin-jianhong@163.com>
+Subject: [PATCH v2 1/4] pynfs: fix nfs4.1/nfs4server.py
+Date: Fri, 27 Mar 2026 12:16:18 +0800
+Message-ID: <20260327041620.2115456-2-jiyin@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5143:EE_|PH3PPF61A2638A8:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66c1ac97-c17d-4427-7e82-08de8bac979c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	yNREwaAjw3aFpeeVjN9UMyAHxYxzU3dGPLLx/xkARh4vIDVBvJK2oNJPVLwX/FC1NJ5c3NbCW11nEA3FTQ51WDE6emSk/Ee4w/bAHXId+91WcJTieMMKPp9Ti7qime9CN9ZTMjQ64ryn6BGrsEmzT4TmawSb/obkx+l3yMB9FFdfFteh49EMXmFqrZX2ddQaTsBO9bVdJCDcbMGn4j8/SOwqjg/AVcXTQsDb2EIGlX7qvo2GXdb6UkDWAvfS2ExNL1q+gcEcX8BX/V2xSLJxc2R+SW+My0v2CV0OXZ97+aMurUIUbLCwru8/UhdWbZRGceFn8FZy+J1Zz61owUZ2v6ohh289ibECIyhmTvOWgkG/i1M0cBnSlQhluXYS/0GmeD9oiiTL+Pe9j1d218zT7h1ZOAtnvnlcFkNjhTuktK0kx5DeEtR1/eREJeM+nSYXayB+r37e+jfHnB3xBNtGMQhCey1lwLRLNYvqCPB/QoYA2TPE12JvKsocdneCzXHc8PSKXd3kasAF40ki3ZaBmtUsqmUcY5LSjc4lC2jbd9VTQ6QGY4rKGnyxg8DgUtn537LzbPX7Obzh5Z6eJ7xO2ta0Xx7OI2V0xKtFd1PH5JMs6U+wY4VhM4qzPI8EeVRmf1W0K34g63pfNbU7OFO55sQSb7gwJTr6QCtabKWlzvUSEMLPTRQbz9hdU9v1R+cz
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5143.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MS9qdG9Da1c0cjBlVE01b055K0JFanh2Ly8xdWZTcnVEYTkvemY4enZxaXNy?=
- =?utf-8?B?SXNnTnJ3Z3NuTG5UOFBQUUlqZklyTXhKQk5rUnBaMklrejBFaDhSbTRRbExF?=
- =?utf-8?B?WjJnM3NKTVN0Mlg5OFZrVyt4WE5FdTlPUGJ5V3dSOWZ5QzQ4a0NOZi8yKzJK?=
- =?utf-8?B?MDJwVW95NW5jZXlzL3FwaVR1OHpFdE82YzZFSmgxTUdIVS8zaG5LZlI0cWhH?=
- =?utf-8?B?WFNGRUh1VU1lZEdYcWRGdFpJakROR0RyTVVBWHdUdlF5Zzl6T1hjYVhLUk9n?=
- =?utf-8?B?ejNRZ0VxTUtXdnhsVmFiUkhuaVAxTncrNEpQTzJaRi9vOXg0QzB1VUdxSHI4?=
- =?utf-8?B?Tmh6OVFQbTRTbDd4eWlYREtFZjNhdFpxTjBRWnd4MU5TTnk5cEVZNnROcUkr?=
- =?utf-8?B?NUZjTjllazEvUTZ1bTFzWTBNdk41Q09sR3pReDkwQkU5Q0E4UG0rRGkrYjlX?=
- =?utf-8?B?Vk1BbEpDUEVYa29VZkpESUxPTEx2dElFTXRwcWdhRUVkT1JKUTU2TFFzWUlr?=
- =?utf-8?B?QlZTbmxoSDdxV01FdXgrQ0JxVmZLbWE4dGQ5bW1tY0NqMDV6RC9ZYkJsVDVk?=
- =?utf-8?B?SGtWTjdKRDlVT1B1SHBKUkFGcGNiLzdNb0IwRW5PZXdwREMwTHd6SHQwNmdZ?=
- =?utf-8?B?SnpCTzZ4cm1obzFaekNRTExOSnFHZXhBOFRGQ1dHdkd1OWJtWkhWcXlxLzdp?=
- =?utf-8?B?QjNqZStJZ3ROL2JwcTJQNFFpWER5dW5OUkhKS1ViMEUyTDhUSHRUaS81WU1x?=
- =?utf-8?B?M0hRa1JNQXZDRk5DSGJkaERYQnJzYkJ5OWhkZzNCOG92MHdONjZYeDVMcm50?=
- =?utf-8?B?QnNpWU9kZDZQWnR0aGF0bURHM2gvMHRCY09wenJ3UVdFVXl1UHpscDFnMTB2?=
- =?utf-8?B?ZktzZUs5K2hZR1FXS0lRdnRHamtXcEYwejRFTVVBdFZBbndzYnkzL0ZsSk8y?=
- =?utf-8?B?SG93WHJPMFVMS1ozR25uekhlR1NzeXBrSVdPMW9GNG5KaVZPUVM4UWkyNVhF?=
- =?utf-8?B?eEttQlhSSXJyYXdVR2ZUcndKdnVvMFZLOWVub2I1WWN4ZWZBWExRZUJqMUc5?=
- =?utf-8?B?VVJpRndNamc5alduOVVvUGxBVkFNZ2JWWUdmSHNVUmhzMzUzVEJSWjFjanVO?=
- =?utf-8?B?UlRaSm9Wd1k0ZmJ4bVpzVG9BbXJFR2NjZnRzVk11dC9ZV3ZMdkRGQWxlNC9F?=
- =?utf-8?B?R2VaTGhQYWZBOURnTlJ1K1JydVdZU1hPRWp1Yll2WXJNR3JsMytHT2gxbVJK?=
- =?utf-8?B?S0kwMVlTZ09LU1E3S1FrR3Y5WGlxQVFCSGVsdjFOYXVyUXNCN1VURm44RDZO?=
- =?utf-8?B?TmIrbFpXSTBZV3FPeWlFaXB3YzFhWWlxSFNQVzNlWkN1c0Q3Z05ZS3ZLSUZk?=
- =?utf-8?B?WXdmTURGcW5Va2FacXoxNHhnWEFLdlFyZXMxU3lnUW5lR1RhV1BrNHM3WHdj?=
- =?utf-8?B?Z0dQc3FXcjU0dTdDdWt6eHgvOUVkY2tJVVdXc1M4Nm4vU3pXNG9hdVpvNlVT?=
- =?utf-8?B?ZTlWYzZVNkdubzQ1ZHRlTUV4TzF6OE1IeHRoTGFlYnJZQVJzZDljQ056YjBB?=
- =?utf-8?B?c1lsNElId08vTWJvUnV5M0JTUFk0VVpFYmFvaHB0U2N0bkIwK29GM0JFVGVv?=
- =?utf-8?B?cXhUU25DZTFHR2laaG5kM0JrcDlrV3BjZjY4bkY1R2N4aVo1ZnkwdkNBaHFl?=
- =?utf-8?B?VThVMjJXa0IxNWdDS2NYSGVkVlRhRnlwK21CaUpxNEhGZmJjZnpGU0hBVnln?=
- =?utf-8?B?M045WU5ZTlNqWXgwR3Z1YzI1Q0txMm5QVmNPeitiMkNPYVM2K1FWUmt6Z3Ev?=
- =?utf-8?B?Q1E0ZUtDWUZvOTljNS9FYXdIcjVKN3lqZlBzM05hd25oUmV3bUcxS2JPM3V4?=
- =?utf-8?B?cHVTdTNpRU1BRE9hdUdsQmtNMGdFclNyUzh4ZjRPZmQ0WGNOU0FjR3lvb05C?=
- =?utf-8?B?ZHpKNnZ1b2FZWVFZdVZjT0RPcG5IYnZlN1hydDc4ZjhVMGx6S05NMGY1WWdk?=
- =?utf-8?B?amZOUTN5M1l4WC9YTDlzK1RWM1hkbkN3a3VxNURjM1JYOVhHa1c2a0VnQ1Nh?=
- =?utf-8?B?RStuZmEvRlpJMkozRU5BTnNQMHB6SHVRc0RHYWRTeGVjV1l4Y1JYVmRIeFhW?=
- =?utf-8?B?MTBBTldUZUhoNjRaVVpNUXROb1h4cy9aWkJjQmg5bFM3SGtKQUVFYTNUYTJr?=
- =?utf-8?B?TmxBMzVsSnhBaDJUbXVuZ05lMURHdWdEb2pTRHJSRTgxeWJUNDdWaHE3bGZ1?=
- =?utf-8?B?bmMwM3NRdUoxemk3aE0wNXZTTmwzVVpEMjF5QW5WNVlEeFhubmRBVGRkTnhz?=
- =?utf-8?B?TTkrNmFnL3pyQjRQWnBRSkhIQ0V6VlRFZkJjRVN2M0lyTWRFd2s2UT09?=
-X-Exchange-RoutingPolicyChecked:
-	NLd4Reea8Ol1+//PgK86ri5NY+jBnr+fbiW+kVFn9fKi9ogwfx6oe9w67gQerVZksGuoqbfhX0BVmO9bNomghhCamm+euRmwEDqb/pvocEgRgs0cZupqg/7HX9QPcKvBs+nt9wXOYJra43jEgcghxv4WDuuZpvo9eFSOGo0E5CoPzFniLkoKzKPC7B3iJxO+5j/yAP4deJ3w43J0azwurW+ZN97VHRYvzljLhm8gabJ3rd8fMzaHA7MybMv4tdrabr2CXGTYjpbJklZzW3gHxBrJENvwthQI4y0ZeD6p9d7ltVD7sfkz228uXIl1FAJiTD+SCCkBmRpuXXbC0FoNCw==
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	o4vuVvoMg4qu/YtP6kSiE2kDmxwc8xgxImpMw3ThD96Yu67UNfW+MpzoDmEjan8fASFhXewQkjTlG0USb74QWdzS7nTeGnmSeGl6JhmMTINxN1a9XTG7Prm2JFhExC/DsOoSB2Eo0oxDgpBpBKyJJU2IaQzDeOSpzcurHXvAviZ/kIngq3ycH0fmvTe4bS6ffKUOenkS9CJbPqSNLUsblyU/zG4zsZcN0kj1KXKdMdjJ1umOnHb6fjPhwIFkVHMcQTBg0FFuJIVlGn0pSZ2JnGAh38X+x2otd2uK7uqfhj2NPNOnKecvqXrFAD7v+TkELeUltf0FdwT9bGEyN8grKtFN9ODNUNUYLrII+FdYh3ReaTSmEtseoBuk0qFQvG6sIhtdAx+/P2rHCFVV+ypsbwDw4MMhkQlR2zYBZOd+WsLU9oXC+8Oi7L1dX7RIrhl5JEVFCsAPU58ZFdqEUpR6Ohnp8mj3+XRw0AeoRd5kQgtNBqtmJueXkFmW3x5gNHftU2mSmR9IYKAB8GTUd2powA3x3BiM5indtojJVQZBuMIZ9cxXg4fUJEkfjoj/zFjO8ogcATuH2NbwVFX2NKS9DQPJf7dlBlpc6oYZq4Fdl5w=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66c1ac97-c17d-4427-7e82-08de8bac979c
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5143.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2026 02:57:32.9611
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1aDdgEzYAKW7LUmDuQpLN+flqkCw6IGiLFY+TMtuV3T3Hb8HTi4LgAHYB9gX+Gb0i6k6+faNL0v3WHNOM8lCPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF61A2638A8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-26_04,2026-03-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 suspectscore=0 spamscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2603050001
- definitions=main-2603270020
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI3MDAyMSBTYWx0ZWRfX302unBrJDRJP
- qdLfIlJpBHDV0vKpa5qNJowiBwf+cId3ix2yEewCPtIo9zXO49e23tVON2RzrVvyo3DSt8PM2qc
- wCkJtymNAmsLwW21BTZFgYsSocWJA+ewvVKb8mEKMV0I7f6e3QKojTW0azKNvqmgMgi3BdDyee1
- 06Y3hXUlyeaFVomPD45s1dalHvv8CQ85tcho10oxgpHE3yNqhtcUS2WWUvr9EP24sYK9kdGRJ+M
- 6konraSahax9ijGVEAdutIeScTNkBO0z90RRNQ0HXBDUsiFRLKZpzIrmFpiJjuvHhUHZm8+6xnp
- pgIqPUSIsPeBr82vVVH5xAk9SNQgCIes3WixFz5shmnbape/35hUcXp0SSpieL0LN1x2dFEhSvr
- 9ox7sPOaiTH0LJhQnKKXMyymp1lPz0l0x4KfEwSkvB3GkuT6msIXauHTB/A8wn/1HKTro9VCGLj
- SLmk+mMD73TpV6j4EFw==
-X-Proofpoint-GUID: 9rRUpiv8-Opf_yUEcMuquniQCF51j4u0
-X-Authority-Analysis: v=2.4 cv=TPdIilla c=1 sm=1 tr=0 ts=69c5f220 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=jiCTI4zE5U7BLdzWsZGv:22 a=o5oIOnhZENCTenyL_yNV:22 a=P6JkxrBpAAAA:8
- a=F-a7W6U8YhPLQpv7Om4A:9 a=QEXdDO2ut3YA:10 a=dwOG0T2NmQ8MtARghG3a:22
-X-Proofpoint-ORIG-GUID: 9rRUpiv8-Opf_yUEcMuquniQCF51j4u0
-X-Spamd-Result: default: False [-0.15 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20442-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux-nfs.org:url];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20443-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[oracle.com,kernel.org,redhat.com,163.com];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[calum.mackay@oracle.com,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jiyin@redhat.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
-	NEURAL_HAM(-0.00)[-0.998];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: D9FF233E9BE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F2E5B33F129
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-I've applied most of the outstanding pynfs patches, and tagged and 
-pushed pynfs-0.5
+From: Scott Mayhew <smayhew@redhat.com>
 
-There were a couple of patches with which I'm having difficulties in 
-testing, and I've emailed the authors.
+Signed-off-by: Jianhong Yin <yin-jianhong@163.com>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ nfs4.1/config.py                 | 20 ++++-----
+ nfs4.1/dataserver.py             | 30 ++++++-------
+ nfs4.1/fs.py                     | 37 ++++++++--------
+ nfs4.1/nfs4client.py             |  2 +-
+ nfs4.1/nfs4server.py             | 73 ++++++++++++++++----------------
+ nfs4.1/nfs4state.py              | 18 ++++----
+ nfs4.1/sample_code/ds_exports.py |  2 +-
+ nfs4.1/server_exports.py         | 12 +++---
+ 8 files changed, 93 insertions(+), 101 deletions(-)
 
-If you have submitted a pynfs patch which doesn't appear below, and I've 
-not contacted you, apologies, and would you please let me know.
+diff --git a/nfs4.1/config.py b/nfs4.1/config.py
+index 3777e31..8691e1c 100644
+--- a/nfs4.1/config.py
++++ b/nfs4.1/config.py
+@@ -117,8 +117,7 @@ class MetaConfig(type):
+             setattr(cls, attr.name, property(make_get(i), make_set(i),
+                                              None, attr.comment))
+ 
+-class ServerConfig(object):
+-    __metaclass__ = MetaConfig
++class ServerConfig(metaclass=MetaConfig):
+     attrs =  [ConfigLine("allow_null_data", False,
+                          "Server allows NULL calls to contain data"),
+               ConfigLine("tag_info", True,
+@@ -131,17 +130,16 @@ class ServerConfig(object):
+ 
+     def __init__(self):
+         self.minor_id = os.getpid()
+-        self.major_id = "PyNFSv4.1"
++        self.major_id = b"PyNFSv4.1"
+         self._owner = server_owner4(self.minor_id, self.major_id)
+-        self.scope = "Default_Scope"
+-        self.impl_domain = "citi.umich.edu"
+-        self.impl_name = "pynfs X.X"
++        self.scope = b"Default_Scope"
++        self.impl_domain = b"citi.umich.edu"
++        self.impl_name = b"pynfs X.X"
+         self.impl_date = 1172852767 # int(time.time())
+         self.impl_id = nfs_impl_id4(self.impl_domain, self.impl_name,
+                                  nfs4lib.get_nfstime(self.impl_date))
+ 
+-class ServerPerClientConfig(object):
+-    __metaclass__ = MetaConfig
++class ServerPerClientConfig(metaclass=MetaConfig):
+     attrs = [ConfigLine("maxrequestsize", 16384,
+                         "Maximum request size the server will accept"),
+              ConfigLine("maxresponsesize", 16384,
+@@ -175,15 +173,13 @@ _invalid_ops = [
+     OP_RELEASE_LOCKOWNER, OP_ILLEGAL,
+     ]
+ 
+-class OpsConfigServer(object):
+-    __metaclass__ = MetaConfig
++class OpsConfigServer(metaclass=MetaConfig):
+     value = ['ERROR', 0, 0] # Note must have value == _opline(value)
+     attrs = (lambda value=value: [ConfigLine(name.lower()[3:], value, "Generic comment", _opline)
+                                   for name in nfs_opnum4.values()])()
+ 
+ 
+-class Actions(object):
+-    __metaclass__ = MetaConfig
++class Actions(metaclass=MetaConfig):
+     attrs = [ConfigLine("reboot", 0,
+                         "Any write here will simulate a server reboot",
+                         _action),
+diff --git a/nfs4.1/dataserver.py b/nfs4.1/dataserver.py
+index f76ca5a..74ca864 100644
+--- a/nfs4.1/dataserver.py
++++ b/nfs4.1/dataserver.py
+@@ -59,27 +59,27 @@ class DataServer(object):
+ 
+     def get_netaddr4(self):
+         # STUB server multipathing not supported yet
+-        uaddr = '.'.join([self.server,
+-                          str(self.port >> 8),
+-                          str(self.port & 0xff)])
+-        return type4.netaddr4(self.proto, uaddr)
++        uaddr = b'.'.join([self.server.encode("utf-8"),
++                          str(self.port >> 8).encode("utf-8"),
++                          str(self.port & 0xff).encode("utf-8")])
++        return type4.netaddr4(self.proto.encode("utf-8"), uaddr)
+ 
+     def get_multipath_netaddr4s(self):
+         netaddr4s = []
+         for addr in self.multipath_servers:
+             server, port = addr
+-            uaddr = '.'.join([server,
+-                            str(port >> 8),
+-                            str(port & 0xff)])
+-            proto = "tcp"
++            uaddr = b'.'.join([server.encode("utf-8"),
++                            str(port >> 8).encode("utf-8"),
++                            str(port & 0xff).encode("utf-8")])
++            proto = b"tcp"
+             if server.find(':') >= 0:
+-                proto = "tcp6"
++                proto = b"tcp6"
+ 
+             netaddr4s.append(type4.netaddr4(proto, uaddr))
+         return netaddr4s
+ 
+     def fh_to_name(self, mds_fh):
+-        return hashlib.sha1("%r" % mds_fh).hexdigest()
++        return hashlib.sha1(mds_fh).hexdigest()
+ 
+     def connect(self):
+         raise NotImplemented
+@@ -122,7 +122,7 @@ class DataServer41(DataServer):
+                                         summary=self.summary)
+         self.c1.set_cred(self.cred1)
+         self.c1.null()
+-        c = self.c1.new_client("DS.init_%s" % self.server)
++        c = self.c1.new_client(b"DS.init_%s" % self.server.encode("utf-8"))
+         # This is a hack to ensure MDS/DS communication path is at least
+         # as wide as the client/MDS channel (at least for linux client)
+         fore_attrs = type4.channel_attrs4(0, 16384, 16384, 2868, 8, 8, [])
+@@ -154,11 +154,11 @@ class DataServer41(DataServer):
+         access = const4.OPEN4_SHARE_ACCESS_BOTH
+         deny = const4.OPEN4_SHARE_DENY_NONE
+         attrs = {const4.FATTR4_MODE: 0o777}
+-        owner = "mds"
++        owner = b"mds"
+         mode = const4.GUARDED4
+         verifier = self.sess.c.verifier
+         openflag = type4.openflag4(const4.OPEN4_CREATE, type4.createhow4(mode, attrs, verifier))
+-        name = self.fh_to_name(mds_fh)
++        name = self.fh_to_name(mds_fh).encode("utf-8")
+         while True:
+             if mds_fh in self.filehandles:
+                 return
+@@ -338,14 +338,14 @@ class DSDevice(object):
+                 server_list = server_list[:-1]
+                 try:
+                     log.info("Adding dataserver ip:%s port:%s path:%s" %
+-                             (server, port, '/'.join(path)))
++                             (server, port, b'/'.join(path)))
+                     ds = DataServer41(server, port, path, mdsds=self.mdsds,
+                                     multipath_servers=server_list,
+                                     summary=server_obj.summary)
+                     self.list.append(ds)
+                 except socket.error:
+                     log.critical("cannot access %s:%i/%s" %
+-                                 (server, port, '/'.join(path)))
++                                 (server, port, b'/'.join(path)))
+                     sys.exit(1)
+         self.active = 1
+         self.address_body = self._get_address_body()
+diff --git a/nfs4.1/fs.py b/nfs4.1/fs.py
+index 7f690bb..41149f1 100644
+--- a/nfs4.1/fs.py
++++ b/nfs4.1/fs.py
+@@ -6,10 +6,7 @@ from nfs4lib import NFS4Error
+ import struct
+ import logging
+ from locking import Lock, RWLock
+-try:
+-    import cStringIO.StringIO as StringIO
+-except:
+-    from io import StringIO
++from io import BytesIO
+ import time
+ from xdrdef.nfs4_pack import NFS4Packer
+ 
+@@ -182,7 +179,7 @@ class FSObject(object):
+ 
+     def init_file(self):
+         """Hook for subclasses that want to use their own file class"""
+-        return StringIO()
++        return BytesIO()
+ 
+     def _init_hook(self):
+         pass
+@@ -671,7 +668,7 @@ class RootFS(FileSystem):
+         self.fattr4_supported_attrs |= 1 << FATTR4_MAXWRITE
+         self.fattr4_supported_attrs |= 1 << FATTR4_MAXREAD
+         self.fsid = (0,0)
+-        self.read_only = True
++        self.read_only = False
+ 
+     def alloc_id(self):
+         self._nextid += 1
+@@ -711,7 +708,7 @@ class ConfigObj(FSObject):
+         self._reset()
+ 
+     def _reset(self):
+-        self.file = StringIO()
++        self.file = BytesIO()
+         self.file.write("# %s\n" % self.configline.comment)
+         value = self.configline.value
+         if type(value) is list:
+@@ -931,7 +928,7 @@ import shutil
+ import shelve
+ 
+ class StubFS_Disk(FileSystem):
+-    _fs_data_name = "fs_info" # DB name where we store persistent data
++    _fs_data_name = b"fs_info" # DB name where we store persistent data
+     def __init__(self, path, reset=False, fsid=None):
+         self._nextid = 0
+         self.path = path
+@@ -991,17 +988,17 @@ class StubFS_Disk(FileSystem):
+         self.root = self.find(d["root"])
+ 
+     def find_on_disk(self, id):
+-        fd = open(os.path.join(self.path, "m_%i" % id), "r")
++        fd = open(os.path.join(self.path, b"m_%i" % id), "rb")
+         # BUG - need to trap for file not found error
+         meta = pickle.load(fd)
+         fd.close()
+         obj = self.objclass(self, id, meta)
+         if obj.type == NF4REG:
+-            fd = open(os.path.join(self.path, "d_%i" % id), "r")
+-            obj.file = StringIO(fd.read())
++            fd = open(os.path.join(self.path, b"d_%i" % id), "rb")
++            obj.file = BytesIO(fd.read())
+             fd.close()
+         elif obj.type == NF4DIR:
+-            fd = open(os.path.join(self.path, "d_%i" % id), "r")
++            fd = open(os.path.join(self.path, b"d_%i" % id), "rb")
+             obj.entries = pickle.load(fd)
+             fd.close()
+         return obj
+@@ -1018,10 +1015,10 @@ class StubFS_Disk(FileSystem):
+             self._fs_data["_nextid"] = id
+             self._fs_data.sync()
+             # Create meta-data file
+-            fd = open(os.path.join(self.path, "m_%i" % id), "w")
++            fd = open(os.path.join(self.path, b"m_%i" % id), "wb")
+             fd.close()
+             # Create data file
+-            # fd = open(os.path.join(self.path, "d_%i" % id), "w")
++            # fd = open(os.path.join(self.path, b"d_%i" % id), "wb")
+             # fd.close()
+         finally:
+             self._disk_lock.release()
+@@ -1032,11 +1029,11 @@ class StubFS_Disk(FileSystem):
+         self._disk_lock.acquire()
+         try:
+             # Remove meta-data file
+-            meta = os.path.join(self.path, "m_%i" % id)
++            meta = os.path.join(self.path, b"m_%i" % id)
+             if os.path.isfile(meta):
+                 os.remove(meta)
+             # Remove data file
+-            data = os.path.join(self.path, "d_%i" % id)
++            data = os.path.join(self.path, b"d_%i" % id)
+             if os.path.isfile(data):
+                 os.remove(data)
+         finally:
+@@ -1049,20 +1046,20 @@ class StubFS_Disk(FileSystem):
+         try:
+             # Create meta-data file
+             log_fs.debug("writing metadata for id=%i" % id)
+-            fd = open(os.path.join(self.path, "m_%i" % id), "w")
++            fd = open(os.path.join(self.path, b"m_%i" % id), "wb")
+             log_fs.debug("%r" % obj.meta.__dict__)
+             pickle.dump(obj.meta, fd)
+             fd.close()
+             if obj.type == NF4REG:
+                 # Create data file
+-                fd = open(os.path.join(self.path, "d_%i" % id), "w")
++                fd = open(os.path.join(self.path, b"d_%i" % id), "wb")
+                 obj.file.seek(0)
+                 fd.write(obj.file.read())
+                 fd.close()
+             elif obj.type == NF4DIR:
+                 # Create dir entries
+                 log_fs.debug("writing dir %r" % obj.entries.keys())
+-                fd = open(os.path.join(self.path, "d_%i" % id), "w")
++                fd = open(os.path.join(self.path, b"d_%i" % id), "wb")
+                 pickle.dump(obj.entries, fd)
+                 fd.close()
+         finally:
+@@ -1408,7 +1405,7 @@ class FSLayoutFSObj(FSObject):
+     def init_file(self):
+         self.stripe_size = NFL4_UFLG_STRIPE_UNIT_SIZE_MASK & 0x4000
+         if self.fs.dsdevice.mdsds:
+-            return StringIO()
++            return BytesIO()
+         else:
+             return FileLayoutFile(self)
+ 
+diff --git a/nfs4.1/nfs4client.py b/nfs4.1/nfs4client.py
+index f4fabcc..073ea8b 100644
+--- a/nfs4.1/nfs4client.py
++++ b/nfs4.1/nfs4client.py
+@@ -183,7 +183,7 @@ class NFS4Client(rpc.Client, rpc.Server):
+                 return env
+         try:
+             self.check_utf8str_cs(args.tag)
+-        except NFS4Errror as e:
++        except NFS4Error as e:
+             env.results.set_empty_return(e.status, "Invalid utf8 tag")
+             return env
+         # Handle the individual operations
+diff --git a/nfs4.1/nfs4server.py b/nfs4.1/nfs4server.py
+index f56806e..47d6cba 100755
+--- a/nfs4.1/nfs4server.py
++++ b/nfs4.1/nfs4server.py
+@@ -21,7 +21,7 @@ from nfs4commoncode import CompoundState, encode_status, encode_status_by_name
+ from fs import RootFS, ConfigFS
+ from config import ServerConfig, ServerPerClientConfig, OpsConfigServer, Actions
+ 
+-logging.basicConfig(level=logging.WARN,
++logging.basicConfig(level=logging.DEBUG,
+                     format="%(levelname)-7s:%(name)s:%(message)s")
+ log_41 = logging.getLogger("nfs.server")
+ 
+@@ -350,7 +350,7 @@ class ClientRecord(object):
+                         state.delete()
+                     # STUB - what about LAYOUT?
+                     # STUB - config whether DELEG OK or not
+-            except StandardError as e:
++            except Exception as e:
+                 log_41.exception("Ignoring problem during state removal")
+         self.state = {}
+         self.lastused = time.time()
+@@ -365,7 +365,7 @@ class SessionRecord(object):
+     """The server's representation of a session and its state"""
+     def __init__(self, client, csa):
+         self.client = client # reference back to client which created this session
+-        self.sessionid = "%08x%08x" % (client.clientid,
++        self.sessionid = b"%08x%08x" % (client.clientid,
+                                     client.session_replay.seqid) # XXX does this work?
+         self.channel_fore = Channel(csa.csa_fore_chan_attrs, client.config) # Normal communication
+         self.channel_back = Channel(csa.csa_back_chan_attrs, client.config) # Callback communication
+@@ -570,18 +570,18 @@ class NFS4Server(rpc.Server):
+         self._fsids = {self.root.fs.fsid: self.root.fs} # {fsid: fs}
+         self.clients = ClientList() # List of attached clients
+         self.sessions = {} # List of attached sessions
+-        self.minor_versions = [1]
++        self.minor_versions = [1, 2]
+         self.config = ServerConfig()
+         self.opsconfig = OpsConfigServer()
+         self.actions = Actions()
+-        self.mount(ConfigFS(self), path="/config")
++        self.mount(ConfigFS(self), path=b"/config")
+         self.verifier = struct.pack('>d', time.time())
+         self.recording = Recording()
+         self.devid_counter = Counter(name="devid_counter")
+         self.devids = {} # {devid: device}
+         # default cred for the backchannel -- currently supports only AUTH_SYS
+         rpcsec = rpc.security.instance(rpc.AUTH_SYS)
+-        self.default_cred = rpcsec.init_cred(uid=4321,gid=42,name="mystery")
++        self.default_cred = rpcsec.init_cred(uid=4321,gid=42,name=b"mystery")
+         self.err_inc_dict = self.init_err_inc_dict()
+ 
+     def start(self):
+@@ -796,7 +796,7 @@ class NFS4Server(rpc.Server):
+         self.check_utf8str_cs(str)
+         if not str:
+             raise NFS4Error(NFS4ERR_INVAL, tag="Empty component")
+-        if '/' in str:
++        if b'/' in str:
+             raise NFS4Error(NFS4ERR_BADCHAR)
+ 
+     def op_compound(self, args, cred):
+@@ -808,7 +808,7 @@ class NFS4Server(rpc.Server):
+             return env
+         try:
+             self.check_utf8str_cs(args.tag)
+-        except NFS4Errror as e:
++        except NFS4Error as e:
+             env.results.set_empty_return(e.status, "Invalid utf8 tag")
+             return env
+         # Handle the individual operations
+@@ -834,10 +834,10 @@ class NFS4Server(rpc.Server):
+                     # catch error themselves to encode properly.
+                     result = encode_status_by_name(opname.lower()[3:],
+                                                    e.status, msg=e.tag)
+-                except NFS4Replay:
++                except NFS4Replay as e:
+                     # Just pass this on up
+                     raise
+-                except StandardError:
++                except Exception as e:
+                     # Uh-oh.  This is a server bug
+                     traceback.print_exc()
+                     result = encode_status_by_name(opname.lower()[3:],
+@@ -919,7 +919,7 @@ class NFS4Server(rpc.Server):
+         check_session(env, unique=True)
+         if arg.csa_flags & ~nfs4lib.create_session_mask:
+             return encode_status(NFS4ERR_INVAL,
+-                                 msg="Unknown bits set in flag")
++                                 msg=b"Unknown bits set in flag")
+         # Step 1: Client record lookup
+         c = self.clients[arg.csa_clientid]
+         if c is None: # STUB - or if c.frozen ???
+@@ -982,13 +982,13 @@ class NFS4Server(rpc.Server):
+         if protect.type != SP4_SSV:
+             # Per draft26 18.47.3
+             return encode_status(NFS4ERR_INVAL,
+-                                 msg="Did not request SP4_SSV protection")
++                                 msg=b"Did not request SP4_SSV protection")
+         # Do some argument checking
+         size = protect.context.ssv_len
+         if len(arg.ssa_ssv) != size:
+-            return encode_status(NFS4ERR_INVAL, msg="SSV size != %i" % size)
++            return encode_status(NFS4ERR_INVAL, msg=b"SSV size != %i" % size)
+         if arg.ssa_ssv == "\0" * size:
+-            return encode_status(NFS4ERR_INVAL, msg="SSV==0 not allowed")
++            return encode_status(NFS4ERR_INVAL, msg=b"SSV==0 not allowed")
+         # Now we need to compute and check digest, using SEQUENCE args
+         p = nfs4lib.FancyNFS4Packer()
+         p.pack_SEQUENCE4args(env.argarray[0].opsequence)
+@@ -1009,10 +1009,10 @@ class NFS4Server(rpc.Server):
+         check_session(env, unique=True)
+         # Check arguments for blatent errors
+         if arg.eia_flags & ~nfs4lib.exchgid_mask:
+-            return encode_status(NFS4ERR_INVAL, msg="Unknown flag")
++            return encode_status(NFS4ERR_INVAL, msg=b"Unknown flag")
+         if arg.eia_flags & EXCHGID4_FLAG_CONFIRMED_R:
+             return encode_status(NFS4ERR_INVAL,
+-                                 msg="Client used server-only flag")
++                                 msg=b"Client used server-only flag")
+         if arg.eia_client_impl_id:
+             impl_id = arg.eia_client_impl_id[0]
+             self.check_utf8str_cis(impl_id.nii_domain)
+@@ -1034,7 +1034,7 @@ class NFS4Server(rpc.Server):
+             if c is None:
+                 if update:
+                     # Case 7
+-                    return encode_status(NFS4ERR_NOENT, msg="No such client")
++                    return encode_status(NFS4ERR_NOENT, msg=b"No such client")
+                 else:
+                     # The simple, common case 1: a new client
+                     c = self.clients.add(arg, env.principal, self.sec_flavors)
+@@ -1042,7 +1042,7 @@ class NFS4Server(rpc.Server):
+                 if update:
+                     # Case 7
+                     return encode_status(NFS4ERR_NOENT,
+-                                         msg="Client not confirmed")
++                                         msg=b"Client not confirmed")
+                 else:
+                     # Case 4
+                     self.clients.remove(c.clientid)
+@@ -1057,11 +1057,11 @@ class NFS4Server(rpc.Server):
+                     if c.verifier != verf:
+                         # Case 8
+                         return encode_status(NFS4ERR_NOT_SAME,
+-                                             msg="Verifier mismatch")
++                                             msg=b"Verifier mismatch")
+                     elif c.principal != env.principal:
+                         # Case 9
+                         return encode_status(NFS4ERR_PERM,
+-                                             msg="Principal mismatch")
++                                             msg=b"Principal mismatch")
+                     else:
+                         # Case 6 - update
+                         c.update(arg, env.principal)
+@@ -1069,7 +1069,7 @@ class NFS4Server(rpc.Server):
+                     # Case 3
+                     # STUB - need to check state
+                     return encode_status(NFS4ERR_CLID_INUSE,
+-                                         msg="Principal mismatch")
++                                         msg=b"Principal mismatch")
+                 elif c.verifier != verf:
+                     # Case 5
+                     # Confirmed client reboot: this is the hard case
+@@ -1103,7 +1103,7 @@ class NFS4Server(rpc.Server):
+                                 c.protection.rv(arg.eia_state_protect),
+                                 self.config._owner, self.config.scope,
+                                 [self.config.impl_id])
+-        return encode_status(NFS4_OK, res, msg="draft21")
++        return encode_status(NFS4_OK, res, msg=b"draft21")
+ 
+     def client_reboot(self, c):
+         # STUB - locking?
+@@ -1143,9 +1143,9 @@ class NFS4Server(rpc.Server):
+             if arg.bctsa_digest:
+                 # QUESTION _INVAL or _BAD_SESSION_DIGEST also possible
+                 return encode_status(NFS4ERR_CONN_BINDING_NOT_ENFORCED,
+-                                     msg="Expected zero length digest")
++                                     msg=b"Expected zero length digest")
+             if arg.bctsa_step1 is False:
+-                return encode_status(NFS4ERR_INVAL, msg="Expected step1==True")
++                return encode_status(NFS4ERR_INVAL, msg=b"Expected step1==True")
+             dir = bind_to_channels(arg.bctsa_dir)
+             nonce = session.get_nonce(connection, [arg.bctsa_nonce])
+             # STUB this should be a session method
+@@ -1175,9 +1175,9 @@ class NFS4Server(rpc.Server):
+                 old_s_nonce, old_c_nonce = session.nonce[connection]
+             except KeyError:
+                 return encode_status(NFS4ERR_INVAL,
+-                                     msg="server has no record of step1")
++                                     msg=b"server has no record of step1")
+             if old_c_nonce == arg.bctsa_nonce:
+-                return encode_status(NFS4ERR_INVAL, msg="Client reused nonce")
++                return encode_status(NFS4ERR_INVAL, msg=b"Client reused nonce")
+             p = nfs4lib.FancyNFS4Packer()
+             p.pack_bctsr_digest_input4(bctsr_digest_input4(arg.bctsa_sessid,
+                                                            arg.bctsa_nonce,
+@@ -1208,8 +1208,7 @@ class NFS4Server(rpc.Server):
+         check_session(env)
+         # xxx add gss support
+         secinfo4_list = [ secinfo4(rpc.AUTH_SYS) ]
+-        res = SECINFO_NO_NAME4res(NFS4_OK, secinfo4_list)
+-        return encode_status(NFS4_OK, res)
++        return encode_status(NFS4_OK, secinfo4_list)
+ 
+     # op_putpubfh SHOULD be the same as op_putrootfh
+     # See draft23, section 18.20.3, line 25005
+@@ -1356,14 +1355,14 @@ class NFS4Server(rpc.Server):
+         claim_type = arg.claim.claim
+         if claim_type != CLAIM_NULL and arg.openhow.opentype == OPEN4_CREATE:
+             return encode_status(NFS4ERR_INVAL,
+-                                 msg="OPEN4_CREATE not compatible with %s" %
++                                 msg=b"OPEN4_CREATE not compatible with %s" %
+                                  open_claim_type4[claim_type])
+         # emulate switch(claim_type)
+         try:
+             func = getattr(self,
+                            "open_%s" % open_claim_type4[claim_type].lower())
+         except AttributeError:
+-            return encode_status(NFS4ERR_NOTSUPP, msg="Unsupported claim type")
++            return encode_status(NFS4ERR_NOTSUPP, msg=b"Unsupported claim type")
+         existing, cinfo, bitmask = func(arg, env)
+         # existing now points to file we want to open
+         if existing is None:
+@@ -1462,7 +1461,7 @@ class NFS4Server(rpc.Server):
+             ace = nfsace4(ACE4_ACCESS_DENIED_ACE_TYPE, 0,
+                           ACE4_GENERIC_EXECUTE |
+                           ACE4_GENERIC_WRITE | ACE4_GENERIC_READ,
+-                          "EVERYONE@")
++                          b"EVERYONE@")
+             deleg = open_read_delegation4(entry.get_id(), False, ace)
+             return open_delegation4(entry.deleg_type, deleg)
+ 
+@@ -1557,7 +1556,7 @@ class NFS4Server(rpc.Server):
+         check_cfh(env)
+         env.cfh.check_dir()
+         if arg.cookie in (1, 2) or \
+-               (arg.cookie==0 and arg.cookieverf != "\0" * 8):
++               (arg.cookie==0 and arg.cookieverf != b"\0" * 8):
+             return encode_status(NFS4ERR_BAD_COOKIE)
+         objlist, verifier = env.cfh.readdir(arg.cookieverf, env.session.client, env.principal) # (name, obj) pairs
+         # STUB - think through rdattr_error handling
+@@ -1690,7 +1689,7 @@ class NFS4Server(rpc.Server):
+         check_session(env)
+         check_cfh(env)
+         if env.cfh.fattr4_type != NF4LNK:
+-            return encode_status(NFS4_INVAL, msg="cfh type was %i" % i)
++            return encode_status(NFS4_INVAL, msg=b"cfh type was %i" % i)
+         res = READLINK4resok(env.cfh.linkdata)
+         return encode_status(NFS4_OK, res)
+ 
+@@ -1734,7 +1733,7 @@ class NFS4Server(rpc.Server):
+         self.check_component(arg.newname)
+         if not nfs4lib.test_equal(env.sfh.fattr4_fsid, env.cfh.fattr4_fsid,
+                                   kind="fsid4"):
+-            return encode_status(NFS4ERR_XDEV, msg="%r != %r" % (env.sfh.fattr4_fsid, env.cfh.fattr4_fsid))
++            return encode_status(NFS4ERR_XDEV, msg=b"%r != %r" % (env.sfh.fattr4_fsid, env.cfh.fattr4_fsid))
+         order = sorted(set([env.cfh, env.sfh])) # Used to prevent locking problems
+         # BUG fs locking
+         old_change_src = env.sfh.fattr4_change
+@@ -1891,10 +1890,10 @@ class NFS4Server(rpc.Server):
+             check_session(env)
+             check_cfh(env)
+             if arg.loga_length == 0:
+-                return encode_status(NFS4_INVAL, msg="length == 0")
++                return encode_status(NFS4_INVAL, msg=b"length == 0")
+             if arg.loga_length != 0xffffffffffffffff:
+                 if arg.loga_length + arg.loga_offset > 0xffffffffffffffff:
+-                     return encode_status(NFS4_INVAL, msg="offset+length too big")
++                     return encode_status(NFS4_INVAL, msg=b"offset+length too big")
+             if not env.session.has_backchannel:
+                 raise NFS4Error(NFS4ERR_LAYOUTTRYLATER)
+             # STUB do state locking and check on iomode,offset,length triple
+@@ -2047,7 +2046,7 @@ class NFS4Server(rpc.Server):
+         # "The server MUST specify...an ONC RPC version number equal to 4",
+         # Per the May 17, 2010 discussion on the ietf list, errataID 2291
+         # indicates it should in fact be 1
+-        return pipe.send_call(prog, 1, 0, "", credinfo)
++        return pipe.send_call(prog, 1, 0, b"", credinfo)
+ 
+     def cb_null(self, prog, pipe, credinfo=None):
+         """ Sends bc_null."""
+diff --git a/nfs4.1/nfs4state.py b/nfs4.1/nfs4state.py
+index e57b90a..d675a6b 100644
+--- a/nfs4.1/nfs4state.py
++++ b/nfs4.1/nfs4state.py
+@@ -215,10 +215,10 @@ class DictTree(object):
+     def itervalues(self):
+         def myiter(d, depth):
+             if depth == 1:
+-                for value in d.itervalues():
++                for value in d.values():
+                     yield value
+             else:
+-                for sub_d in d.itervalues():
++                for sub_d in d.values():
+                     for i in myiter(sub_d, depth - 1):
+                         yield i
+         for i in myiter(self._data, self._depth):
+@@ -250,7 +250,7 @@ class FileStateTyped(object):
+         # NOTE we are only using 9 bytes of 12
+         # NOTE this needs to be client-wide, since keys of client.state[]
+         # must be unique
+-        return "%s%s" % (struct.pack("!xxxB", self.type),
++        return b"%s%s" % (struct.pack("!xxxB", self.type),
+                          client.get_new_other())
+ 
+     def grab_entry(self, key, klass):
+@@ -290,13 +290,13 @@ class DelegState(FileStateTyped):
+             return True
+         # Find any delegation - use fact that all are of same type
+         for e in self._tree.itervalues():
++            # The only thing that doesn't conflict is access==READ with READ deleg
++            if e.deleg_type == OPEN_DELEGATE_READ and \
++                    not (access & OPEN4_SHARE_ACCESS_WRITE):
++                return False
++            else:
++                return True
+             break
+-        # The only thing that doesn't conflict is access==READ with READ deleg
+-        if e.deleg_type == OPEN_DELEGATE_READ and \
+-                not (access & OPEN4_SHARE_ACCESS_WRITE):
+-            return False
+-        else:
+-            return True
+ 
+     def recall_conflicting_delegations(self, dispatcher, client, access, deny):
+         # NOTE OK to have extra access/deny flags
+diff --git a/nfs4.1/sample_code/ds_exports.py b/nfs4.1/sample_code/ds_exports.py
+index 5d31148..1975e16 100644
+--- a/nfs4.1/sample_code/ds_exports.py
++++ b/nfs4.1/sample_code/ds_exports.py
+@@ -6,4 +6,4 @@ from fs import StubFS_Mem
+ 
+ def mount_stuff(server, opts):
+     B = StubFS_Mem(2)
+-    server.mount(B, path="/pynfs_mds")
++    server.mount(B, path=b"/pynfs_mds")
+diff --git a/nfs4.1/server_exports.py b/nfs4.1/server_exports.py
+index ef857ee..1271c4a 100644
+--- a/nfs4.1/server_exports.py
++++ b/nfs4.1/server_exports.py
+@@ -4,22 +4,22 @@ from dataserver import DSDevice
+ def mount_stuff(server, opts):
+     """Mount some filesystems to the server"""
+     # STUB - just testing stuff out
+-    A = StubFS_Disk("/tmp/py41/fs1", opts.reset, 1)
++    A = StubFS_Disk(b"/tmp/py41/fs1", opts.reset, 1)
+     B = StubFS_Mem(2)
+     C = StubFS_Mem(3)
+-    server.mount(A, path="/a")
+-    server.mount(B, path="/b")
+-    server.mount(C, path="/foo/bar/c")
++    server.mount(A, path=b"/a")
++    server.mount(B, path=b"/b")
++    server.mount(C, path=b"/foo/bar/c")
+     if opts.use_block:
+         dev = _create_simple_block_dev()
+         E = BlockLayoutFS(5, backing_device=dev)
+-        server.mount(E, path="/block")
++        server.mount(E, path=b"/block")
+     if opts.use_files:
+         dservers = _load_dataservers(opts.dataservers, server)
+         if dservers is None:
+             return
+         F = FileLayoutFS(6, dservers)
+-        server.mount(F, path="/files")
++        server.mount(F, path=b"/files")
+ 
+ def _create_simple_block_dev():
+     from block import Simple, Slice, Concat, Stripe, BlockVolume
+-- 
+2.53.0
 
-
-Thanks very much indeed.
-
-cheers,
-calum.
-
-
-https://git.linux-nfs.org/?p=cdmackay/pynfs.git
-
-Bryan Schmersal (5):
-       Actually reuse the slot only when the sequence op gets an 
-NFS4ERR_DELAY status. Before this patch, any NFS4ERR_DELAY would consume 
-a new slot even when the sequence op was not the culprit.
-       Replace references of non-existant StandardError with Exception
-       Use constants generated from the .x file for NFS_PROGRAM and 
-versions.
-       Add the ability to have NFS3Client connect using a secure port.
-       Allow max_retries and delay_time to be passed as arguments to 
-compound()
-
-Chuck Lever (1):
-       Add some tests for unsupported fattr4 attributes
-
-Scott Mayhew (4):
-       nfs4.1: make serverhelper() deal with "bytes" objects
-       pynfs: add an option to forcibly expire clients to the 
-serverhelper scripts
-       rudimentary CB_NOTIFY_LOCK support
-       4.1 server tests: add test for CB_NOTIFY_LOCK with an expired client
-
-Tigran Mkrtchyan (2):
-       pynfs: add test for read with delegation stateid after close
-       nfs4.1: mark slot free after compound op complete
 
