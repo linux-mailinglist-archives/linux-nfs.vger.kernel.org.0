@@ -1,62 +1,61 @@
-Return-Path: <linux-nfs+bounces-20451-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20452-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ICC6Bc1rxmmkJwUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20451-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 12:36:45 +0100
+	id APV/JoVxxmmkJwUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20452-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 13:01:09 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 877543438F0
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 12:36:44 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F00B343E84
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 13:01:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BDB6B305262F
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 11:32:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 143F330156E9
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 12:00:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 379703542CA;
-	Fri, 27 Mar 2026 11:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5C9390CAF;
+	Fri, 27 Mar 2026 12:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiSYMBK0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXbSjgGz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A017F374E41;
-	Fri, 27 Mar 2026 11:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD804390CA6;
+	Fri, 27 Mar 2026 12:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774611131; cv=none; b=DofKAmsfK2pYfIqvdMrhnq4ctcpg3f/BP6Q/6bxr2rVVefrYjqaEjA/lHHSZ/EyFAsnQGwrobNDb58UP+NHO5FQCbCRgl4PxYxvndeUahTYl8F0IGE96rMWnPRyG3XNrw0GDMFs9aM86+yYX0KzeulpkjtDXefgOxh0xx6K8fEE=
+	t=1774612829; cv=none; b=kZMeEnPSEvE+rbFsW1HAO09qfrenlsT2ba+lWnV6lZN8mH4afHS6BITrDVYw32enrgwHbUFda60hoYwft7kbMH/1k/LS00IsrVz4AmMGVyp/A8NVffT56PlFRRKPAIuAU8inKYQvMD4oJQBTSQc6p70fNEwmeos0ASpwmHbYoBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774611131; c=relaxed/simple;
-	bh=hl2sW+wBh2Iff5QX7aKEAM9AoJFEg75je/np73f8MCc=;
+	s=arc-20240116; t=1774612829; c=relaxed/simple;
+	bh=K6PnORCCq0ANMh6DiQ07zPkveXI0Oz/8itkk2B4Xccw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Nuy7XjKWmixvCHs8lshXAMOTCC62b+X0uejyn9cxTsYO6p3wpJp2moO4e3vTKixjbE7i710oqVr0pgnEHOAMq7jBTMjsyGXlAnjx5UQ+styu7mfu18ETQus0DvbeEWxgG5XwbUgEnI61ilerCVQ54lsNTv/RzQdugAzt/YocQ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiSYMBK0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82422C19423;
-	Fri, 27 Mar 2026 11:32:10 +0000 (UTC)
+	 Content-Type:MIME-Version; b=FWATffn1sldHChTqRTGSeRHjtffkavYgZsJPdvq7IXIg+kqMDU09VWA+AGj1CAsrYItQhMhciVS7gOcA9YnGkhLAAzpADRndIhRvevwAGF4m4E+MwFtVFLVv5UW//TKmuj1UORTZWJSRlFc88oqC5CAA1yuD+Vt/i7p8Jd4FOl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXbSjgGz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E67C2BC86;
+	Fri, 27 Mar 2026 12:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774611131;
-	bh=hl2sW+wBh2Iff5QX7aKEAM9AoJFEg75je/np73f8MCc=;
+	s=k20201202; t=1774612829;
+	bh=K6PnORCCq0ANMh6DiQ07zPkveXI0Oz/8itkk2B4Xccw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PiSYMBK0rcTRl3aWKPyGnp7uLdojNqQPXWatywdD88hHXz7NB1sTlLCbK9FzWUQgF
-	 oePXuEdZ8Ngz2eNDWYAh8cnevaH69zlnCjmzO/4cpLQCz6XkvAZw0xshZR0tKdSqWB
-	 4Tpue6PvhQWrXH5N+kgOu4YsZaHAuzL4ZyN0FJjPGZwidYx4pGVkf0vzfXQKsc+5bx
-	 WrMMGjUjTSEnXwcox/SET7aGmdI49HNpW1iTcW260OZKja5+gMmYgFsUr3U5wEOGX8
-	 TNCJwu04F9IrVgcMRt90y2FsKzwK/C1agBImvkPfhy49TEWhLiUWk3LzHm9ug0EvfI
-	 7A8epZ0a+wwsg==
-Message-ID: <70e9c23a97d94a3dad5aa7f03f5a22c0950b00bf.camel@kernel.org>
-Subject: Re: A comparison of the new nfsd iomodes (and an experimental one)
+	b=CXbSjgGzqM7wqDxBJvpQZrv4Ukjs9RsYQZQjvV/qDSJRIZivdIkheYbk0ILbfi9V2
+	 w8DJEr4WsxSeZgvWOhqk6Us/Vln34XK5omdGP1NVY/AIAioveDYuhLW2rudTfWHojS
+	 hGB4j87/niGXd7JTN6+8FnsNdVIVOMHAQE5qOMOCv0TF4RfH/UKZ39ZUYMIm0hPKTr
+	 hwAafspLqZ51Ul3bcsH1MRdTlbaPo76XpAwVcHYm7BVE1Tu+lBuUoqjf4igwPeCtaa
+	 lgH+oZmsFgqigDyZ7zZ4boDX2BQjJ4ZJOcP/sCwKQn5wyiF7fSa7YxSa0ZYnUNzzPu
+	 J5xD7UweWX24w==
+Message-ID: <884708aef3b2cf3574b4c7db6cc9f82a53a66d9d.camel@kernel.org>
+Subject: Re: [PATCH v5 1/7] NFSD: Extract revoke_one_stid() utility function
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, Jens Axboe
-	 <axboe@kernel.dk>
-Date: Fri, 27 Mar 2026 07:32:08 -0400
-In-Reply-To: <acWbrlvt_dUB9X3R@kernel.org>
-References: <4ebbd194ccfb3bcea6225d926b4c9f339e21c813.camel@kernel.org>
-	 <d453add6-ed23-4d61-af95-d80133b0e456@oracle.com>
-	 <33582a86daf135336f6bc0d5260d8de0501abadd.camel@kernel.org>
-	 <acWbrlvt_dUB9X3R@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, Chuck Lever
+	 <chuck.lever@oracle.com>
+Date: Fri, 27 Mar 2026 08:00:26 -0400
+In-Reply-To: <20260326-umount-kills-nfsv4-state-v5-1-d2ce071b3570@oracle.com>
+References: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
+	 <20260326-umount-kills-nfsv4-state-v5-1-d2ce071b3570@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,140 +142,222 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20452-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20451-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	RSPAMD_URIBL_FAIL(0.00)[oracle.com:query timed out];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,markdownpastebin.com:url]
-X-Rspamd-Queue-Id: 877543438F0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 4F00B343E84
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 2026-03-26 at 16:48 -0400, Mike Snitzer wrote:
-> On Thu, Mar 26, 2026 at 12:35:15PM -0400, Jeff Layton wrote:
-> > On Thu, 2026-03-26 at 11:30 -0400, Chuck Lever wrote:
-> > > On 3/26/26 11:23 AM, Jeff Layton wrote:
-> > > > I've been doing some benchmarking of the new nfsd iomodes, using
-> > > > different fio-based workloads.
-> > > >=20
-> > > > The results have been interesting, but one thing that stands out is
-> > > > that RWF_DONTCACHE is absolutely terrible for streaming write
-> > > > workloads. That prompted me to experiment with a new iomode that ad=
-ded
-> > > > some optimizations (DONTCACHE_LAZY).
-> > > >=20
-> > > > The results along with Claude's analysis are here:
-> > > >=20
-> > > >     https://markdownpastebin.com/?id=3D387375d00b5443b3a2e37d58a062=
-331f
-> > > >=20
-> > > > He gets a bit out over his skis on the upstream plan, but tl;dr is =
-that
-> > > > DONTCACHE_LAZY (which is DONTCACHE with some optimizations) outperf=
-orms
-> > > > the other write iomodes.
-> > >=20
-> > > The analysis of the write modes seems plausible. I'm interested to he=
-ar
-> > > what Mike and Jens have to say about that.
+On Thu, 2026-03-26 at 13:55 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Thanks for doing your testing and the summary, but I cannot help but
-> feel like your test isn't coming close to realizing the O_DIRECT
-> benefits over buffered that were covered in the past, e.g.:
-> https://www.youtube.com/watch?v=3DtpPFDu9Nuuw
+> The per-stateid revocation logic in nfsd4_revoke_states() handles
+> four stateid types in a deeply nested switch. Extract two helpers:
 >=20
-> Can Claude be made to watch a youtube video, summarize what it learned
-> and then adapt its test-plan accordingly? ;)
+> revoke_ol_stid() performs admin-revocation of an open or lock
+> stateid with st_mutex already held: marks the stateid as
+> SC_STATUS_ADMIN_REVOKED, closes POSIX locks for lock stateids,
+> and releases file access.
 >=20
-
-I'm not sure it can. It's a good q though. I'll ask it!
-
-> Your bandwidth for 1MB sequential IO of 793 MB/s for O_DIRECT and
-> 4,952 MB/s for buffered and dontcache is considerably less than the 72
-> GB/s offered in Jon's testbed.  Your testing isn't exposing the
-> bottlenecks (contention) of the MM subsystem for buffered IO... not
-> yet put my finger on _why_ that is.
-
-That may very well be, but not everyone has a box as large as the one
-you and Jon were working with.
-
-> In Jon Flynn's testing he was using a working set of 312.5% of
-> available server memory, and the single client test system was using
-> fio with multiple threads and sync IO to write to 16 different mounts
-> (one per NVMe of the NFS server) with nconnect=3D16 and RDMA.
+> revoke_one_stid() dispatches by sc_type, acquires st_mutex with
+> the appropriate lockdep class for open and lock stateids, and
+> handles delegation unhash and layout close inline.
 >=20
-
-This test was attempting to simulate a high nconnect count from
-multiple clients by using multiple fio processes. I also used the
-libnfs backend to fio so I wouldn't need to worry about tuning the
-kernel client.
-
-> Raw performance of a single NVMe in Jon's testbed was over 14 GB/s --
-> he has the ability to drive 16 NVMe in his single NFS server.  So an
-> order of magnitude more capable backend storage in Jon's NFS server.
+> No functional change. Preparation for adding export-scoped state
+> revocation which reuses revoke_one_stid().
 >=20
-
-Very true. This box only had a single SSD. I can try to find something
-with more storage though for another test.
-
-> Big concern is your testing isn't exposing MM bottlenecks of buffered
-> IO... given that, its not really providing useful results to compare
-> with O_DIRECT.
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 137 ++++++++++++++++++++++++++--------------------=
+------
+>  1 file changed, 68 insertions(+), 69 deletions(-)
 >=20
-> Putting that aside, yes DONTCACHE as-is really isn't helpful.. your
-> lazy variant seems much more useful.
->=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 07df4511ba23..eb1bd1aae8f5 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1775,6 +1775,73 @@ static struct nfs4_stid *find_one_sb_stid(struct n=
+fs4_client *clp,
+>  	return stid;
+>  }
+> =20
+> +static void revoke_ol_stid(struct nfs4_client *clp,
+> +			   struct nfs4_ol_stateid *stp)
+> +{
+> +	struct nfs4_stid *stid =3D &stp->st_stid;
+> +
+> +	lockdep_assert_held(&stp->st_mutex);
+> +	spin_lock(&clp->cl_lock);
+> +	if (stid->sc_status =3D=3D 0) {
+> +		stid->sc_status |=3D SC_STATUS_ADMIN_REVOKED;
+> +		atomic_inc(&clp->cl_admin_revoked);
+> +		spin_unlock(&clp->cl_lock);
+> +		if (stid->sc_type =3D=3D SC_TYPE_LOCK) {
+> +			struct nfs4_lockowner *lo =3D
+> +				lockowner(stp->st_stateowner);
+> +			struct nfsd_file *nf;
+> +
+> +			nf =3D find_any_file(stp->st_stid.sc_file);
+> +			if (nf) {
+> +				get_file(nf->nf_file);
+> +				filp_close(nf->nf_file, (fl_owner_t)lo);
+> +				nfsd_file_put(nf);
+> +			}
+> +		}
+> +		release_all_access(stp);
+> +	} else
+> +		spin_unlock(&clp->cl_lock);
+> +}
+> +
+> +static void revoke_one_stid(struct nfs4_client *clp, struct nfs4_stid *s=
+tid)
+> +{
+> +	struct nfs4_ol_stateid *stp;
+> +	struct nfs4_delegation *dp;
+> +
+> +	switch (stid->sc_type) {
+> +	case SC_TYPE_OPEN:
+> +		stp =3D openlockstateid(stid);
+> +		mutex_lock_nested(&stp->st_mutex, OPEN_STATEID_MUTEX);
+> +		revoke_ol_stid(clp, stp);
+> +		mutex_unlock(&stp->st_mutex);
+> +		break;
+> +	case SC_TYPE_LOCK:
+> +		stp =3D openlockstateid(stid);
+> +		mutex_lock_nested(&stp->st_mutex, LOCK_STATEID_MUTEX);
+> +		revoke_ol_stid(clp, stp);
+> +		mutex_unlock(&stp->st_mutex);
+> +		break;
+> +	case SC_TYPE_DELEG:
+> +		/*
+> +		 * Extra reference guards against concurrent FREE_STATEID.
+> +		 */
+> +		refcount_inc(&stid->sc_count);
+> +		dp =3D delegstateid(stid);
+> +		spin_lock(&state_lock);
+> +		if (!unhash_delegation_locked(dp, SC_STATUS_ADMIN_REVOKED))
+> +			dp =3D NULL;
+> +		spin_unlock(&state_lock);
+> +		if (dp)
+> +			revoke_delegation(dp);
+> +		else
+> +			nfs4_put_stid(stid);
+> +		break;
+> +	case SC_TYPE_LAYOUT:
+> +		nfsd4_close_layout(layoutstateid(stid));
+> +		break;
+> +	}
+> +}
+> +
+>  /**
+>   * nfsd4_revoke_states - revoke all nfsv4 states associated with given f=
+ilesystem
+>   * @nn:   used to identify instance of nfsd (there is one per net namesp=
+ace)
+> @@ -1805,76 +1872,8 @@ void nfsd4_revoke_states(struct nfsd_net *nn, stru=
+ct super_block *sb)
+>  			struct nfs4_stid *stid =3D find_one_sb_stid(clp, sb,
+>  								  sc_types);
+>  			if (stid) {
+> -				struct nfs4_ol_stateid *stp;
+> -				struct nfs4_delegation *dp;
+> -				struct nfs4_layout_stateid *ls;
+> -
+>  				spin_unlock(&nn->client_lock);
+> -				switch (stid->sc_type) {
+> -				case SC_TYPE_OPEN:
+> -					stp =3D openlockstateid(stid);
+> -					mutex_lock_nested(&stp->st_mutex,
+> -							  OPEN_STATEID_MUTEX);
+> -
+> -					spin_lock(&clp->cl_lock);
+> -					if (stid->sc_status =3D=3D 0) {
+> -						stid->sc_status |=3D
+> -							SC_STATUS_ADMIN_REVOKED;
+> -						atomic_inc(&clp->cl_admin_revoked);
+> -						spin_unlock(&clp->cl_lock);
+> -						release_all_access(stp);
+> -					} else
+> -						spin_unlock(&clp->cl_lock);
+> -					mutex_unlock(&stp->st_mutex);
+> -					break;
+> -				case SC_TYPE_LOCK:
+> -					stp =3D openlockstateid(stid);
+> -					mutex_lock_nested(&stp->st_mutex,
+> -							  LOCK_STATEID_MUTEX);
+> -					spin_lock(&clp->cl_lock);
+> -					if (stid->sc_status =3D=3D 0) {
+> -						struct nfs4_lockowner *lo =3D
+> -							lockowner(stp->st_stateowner);
+> -						struct nfsd_file *nf;
+> -
+> -						stid->sc_status |=3D
+> -							SC_STATUS_ADMIN_REVOKED;
+> -						atomic_inc(&clp->cl_admin_revoked);
+> -						spin_unlock(&clp->cl_lock);
+> -						nf =3D find_any_file(stp->st_stid.sc_file);
+> -						if (nf) {
+> -							get_file(nf->nf_file);
+> -							filp_close(nf->nf_file,
+> -								   (fl_owner_t)lo);
+> -							nfsd_file_put(nf);
+> -						}
+> -						release_all_access(stp);
+> -					} else
+> -						spin_unlock(&clp->cl_lock);
+> -					mutex_unlock(&stp->st_mutex);
+> -					break;
+> -				case SC_TYPE_DELEG:
+> -					/* Extra reference guards against concurrent
+> -					 * FREE_STATEID; revoke_delegation() consumes
+> -					 * it, otherwise release it directly.
+> -					 */
+> -					refcount_inc(&stid->sc_count);
+> -					dp =3D delegstateid(stid);
+> -					spin_lock(&nn->deleg_lock);
+> -					if (!unhash_delegation_locked(
+> -						    dp, SC_STATUS_ADMIN_REVOKED))
+> -						dp =3D NULL;
+> -					spin_unlock(&nn->deleg_lock);
+> -					if (dp)
+> -						revoke_delegation(dp);
+> -					else
+> -						nfs4_put_stid(stid);
+> -					break;
+> -				case SC_TYPE_LAYOUT:
+> -					ls =3D layoutstateid(stid);
+> -					nfsd4_close_layout(ls);
+> -					break;
+> -				}
+> +				revoke_one_stid(clp, stid);
+>  				nfs4_put_stid(stid);
+>  				spin_lock(&nn->client_lock);
+>  				if (clp->cl_minorversion =3D=3D 0)
 
-Right. I think that's the big takeaway from this. Ignoring claude's
-rambling about changing default iomodes in the server, RWF_DONTCACHE
-just sucks for heavy writes. There is room for improvement there.
+Nice little cleanup on its own. This could be merged ahead of the rest
+of the series.
 
-The big question I have is whether fixing RWF_DONTCACHE's writeback
-behavior would give better results than what you were seeing with
-O_DIRECT. Do you guys still have access to that test rig? I can send
-you the patch if you want to test this and see how it does.
-
-> > > One thing I'd like to hear more about is why Claude felt that disabli=
-ng
-> > > splice read was beneficial. My own benchmarking in that area has show=
-n
-> > > that splice read is always a win over not using splice.
-> > >=20
-> >=20
-> > Good catch. That turns out to be a mistake in Claude's writeup.
-> >=20
-> > The test scripts left splice reads enabled for buffered reads, and the
-> > results in the analysis reflect that. I (and it) have no idea why it
-> > would recommend disabling them, when the testing all left them enabled
-> > for buffered reads.
->=20
-> Claude had to have picked up on the mutual exclusion with splice_read
-> for both NFSD_IO_DONTCACHE and NFSD_IO_DIRECT io modes.  So
-> splice_read is implicity disabled when testing NFSD_IO_DONTCACHE
-> (which is buffered IO).
-
-
-Yeah, Claude just got confused on the writeup. The benchmarking itself
-was sound, AFAICT. Buffered reads used splice and it was disabled for
-the other modes.
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
