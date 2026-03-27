@@ -1,392 +1,313 @@
-Return-Path: <linux-nfs+bounces-20474-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20475-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cPE6E/3Kxmn5OgUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20474-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:22:53 +0100
+	id 2GeuL0DQxmkCPAUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20475-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:45:20 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86A60348F94
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:22:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 383723491CC
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 19:45:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E0307302AD23
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 18:22:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F1333302444B
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 18:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C560401A3A;
-	Fri, 27 Mar 2026 18:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942494070F4;
+	Fri, 27 Mar 2026 18:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aiedcPOe"
+	dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b="dGJbHjfK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from email.studentenwerk.mhn.de (dresden.studentenwerk.mhn.de [141.84.225.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A37402450
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 18:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FD53FBEA1
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 18:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.84.225.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774635769; cv=none; b=l6lSm/UoFA3jMb2TF+1g+gf37jNONY64t3SnrZdSPJVVyXgMtdhG0Ee5v0tFr2p5DtKMbrDMVaIxMPVMgssP9zZh9LHCc0YQrFzlZ476vczvNMvoOmkqMRggoK+yOKeLPmKYmfCbWHAstPVozBby2ixyVcgv9wX3Zqpum8ldDzs=
+	t=1774637070; cv=none; b=qgCesVmdJC2EyJ7gshi2PRCUoYwtNalNxsFMAgWJk1z1TZocKkhjRBO8lBXfgFa2GK7GKDtZ5Rv8CF/5VzddQzWVUEwCo4dwjb18fSQpOxMbr0HbLFbh2qOWZnGUXOb2Xr32EUdUtIAExPr3JVLVCYvblA0p3dXfJxJzp6ZediI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774635769; c=relaxed/simple;
-	bh=Ce+JeBdKPngkz03e9C0BLp1VEvPo2cdoJJHu0LbAVaY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EQo4zfuBd2d49U9hliizoCr/11opo2Wkeisj4VSlsJMFAJ42qo81b1nM4lo3uvfmPj9PqIjMMMl7FXBdyhKbLtkn9glVYEyLshr/3l3jssYydfOgqWtohb4hfLi32WOQAhAGRuqH+bpNas/5BuKTs6cwhvKNmivnXQDmWSx9hgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aiedcPOe; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-408778a8ec4so1496295fac.0
-        for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 11:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774635764; x=1775240564; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T7n7hKZ8FOeCaaapHn5s1aqBX5jq6R1SR85ZlaoOO7A=;
-        b=aiedcPOe2YF4iGhN1HF0Itb1a4cmgma4ge/1M6gKa9mlxRrhG3IxrsUnbxXd3mdBc5
-         WY5rSOFuaMwyuo1GlbXCmZTXTVSn/Q/faRIP8k1/R1BaTKUG/l5DkHi+4PrzJDIcUlb9
-         GKjHpQtjuO9bdvVl2jSNED6yMwviBX1nXgYkevlhyD8tr8JfmYuMcWnwWtbw5CXiXSjj
-         9dpTW7S2kZoYUP8ltCBsqEu9ln6mDm76xLQuxyGERq2oPV+IvmB8nQBEPg7CLnUqYjrY
-         IksorMUoJqK8biQvA6a4UIITNzSVhGjmNgiF5tG5CjirX8VUAZyweFQsVNhTyW4CZi8C
-         Femw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774635764; x=1775240564;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T7n7hKZ8FOeCaaapHn5s1aqBX5jq6R1SR85ZlaoOO7A=;
-        b=pnISFwvwy4c/3TE3As5oKUvNJ3b8+moKGKBIsV9upt/y5+GG3/i5LcXmBRjJCA3Ufp
-         PxRtbYIso5KnHRmUTs1jduKX771aOQ7RGZBve1lY1ap64hc3PLZvouKvwXKM95Q+fLma
-         R62Zor5HGjsTuZb4okg+T4gd966dNmrz6zvTd4eltxMax7v4Jp6o/aJ73Urvn51dmUa/
-         rhM34TfXRNlrgZ5vZ99YgKwG64ksivtZRCQDgD7KkCR9ZX4ibvowYj978MY2tSytv6V7
-         be4i7kp/pvmETcBgQ3xjL6PkiDGoSjjjGPQGAB1tAvyZuEvQkccteDw/4tgJO4yOvnXu
-         YYww==
-X-Forwarded-Encrypted: i=1; AJvYcCVCVTx7kD8AhPojge1MamNI7T28FsAwYB72PofDSBTZOGgAZHibH8mNopHXrh4Xwm7X3qR5ad92igw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB82aIspmesYZTKII3xIH3uW1/pHL955irOjhRTOHT8YLmIb8I
-	fuO6rDT/jfosOU6nQpqB4U6y+F8BWmnR+UNI3xJqwVTQKG7DKMGLBbXb6UGnamwx
-X-Gm-Gg: ATEYQzwX2o1NPA2ivjmrjthQUm5XEnPI6s6zkUDW1Mi0UD9GUkbIxJTte8Ls3/jLBDt
-	QA+IClTZu1hGdpMhH2q4XMfc8bXYK3AojByxtqRqqNUE6QrjXPEvhHx0U/1LID20I2x4f9VaLAV
-	che6Tp9gujsEOs6vRm+RWDaakFGXzPATLcnLxImWiJZ2vjg4KD+b9Y3LsE2Mo/EBAnNTmShbyrR
-	G0L1mlDzG1tPsAOznC2eLhkMJCtRaDUQqIkNq/DTWMnwBimuSnE3vV4bHWeleiXtMUq4A33f/hh
-	kOOZl6bHGb4DKhYP8Yh8d/IrGx0jbX3YfZeFKEfTqLaFN6FlLyN4W/xzTCFdyvVfVk8BUCf4A/4
-	8yQWMDYe4EcW4EKrwrvSlQGvcgNv91IPmybNfyunr/iIPHEeycUQkvIdOVFvIx/aq6R0lnLbdS4
-	DBdnc5P+yzj3eLok/dji90ImX/7PhPblmEijJ64IBtQJb+UIpb01zL27moPDaO7FmZ8pEevkp2r
-	iHcgW/VKw==
-X-Received: by 2002:a05:6870:b620:b0:40e:e0b2:e375 with SMTP id 586e51a60fabf-41cec2ca743mr1462914fac.31.1774635764042;
-        Fri, 27 Mar 2026 11:22:44 -0700 (PDT)
-Received: from localhost (c-174-160-87-152.hsd1.ca.comcast.net. [174.160.87.152])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41d049523a6sm50122fac.6.2026.03.27.11.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2026 11:22:42 -0700 (PDT)
-From: Thomas Haynes <loghyr@gmail.com>
-X-Google-Original-From: Thomas Haynes <loghy@gmail.com>
-Date: Fri, 27 Mar 2026 11:22:39 -0700
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <aglo@umich.edu>, Thomas Haynes <loghyr@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] nfs: update inode ctime after removexattr
- operation
-Message-ID: <acbJsryTMYCMlE_o@mana>
-References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
- <20260324-nfs-7-1-v2-2-d110da3c0036@kernel.org>
- <CAN-5tyFpsuE9+5ZvAASwvTYKtcN5jNpAxi8ejde90e-vpUzFKg@mail.gmail.com>
- <284ca17e74af8c4f5942b2952f2bf75490dd17c0.camel@kernel.org>
- <CAN-5tyFsEUcSUycb4JjxH5v754SefwOH=zt24KtxEC_Ow4OjMw@mail.gmail.com>
- <80b423c66dba84b46be1084307d2c66b935065bc.camel@kernel.org>
+	s=arc-20240116; t=1774637070; c=relaxed/simple;
+	bh=nhRONqpYuagmomyCQ4xfcVpx8he8Wi8qzkZO80ZB0ls=;
+	h=MIME-Version:Date:From:To:Subject:Message-ID:Content-Type; b=ZVRBaAC7NjMLga1ggDW0NS1mSkDBJAsja/gAVulrmWgcH5deB6iJIv9FO7ue3UWOIMFEHCeQTi/GxbesVOWvX5qg/1sIRFXNvfaZ2H8bvkADhG5N1nRooAQDfs7POPTqS/CJSEZjOeVcphYidPsVxiD0dzUj1FgaKfssaf1RI0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stwm.de; spf=pass smtp.mailfrom=stwm.de; dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b=dGJbHjfK; arc=none smtp.client-ip=141.84.225.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stwm.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stwm.de
+Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
+	by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4fj8Wq2lBNzRhRC
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 19:37:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
+	t=1774636647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QAaWKOCnuMpVrJqoyNAflfQPmYRYzxfta4IdUVNz628=;
+	b=dGJbHjfKGQIXmPFsvpx37rHJIUKFzzq+EyaphXC95GsveHlka0gIs5C80Q1NaBxBVVawa5
+	wUK8fJtsS1jrpZeCCMaPsEVCujm3SDA5krcAbBzWDstkLNII7Ll72PAi7URwj3LlKadyuS
+	cj5mMMXE4EcNh9NVlOUipKilbEEZS8iyY3MwKl+VCN9jwKhK/+cdDrMsc02IAfJC9T6oAM
+	MpQOnPvwzX0BTeNBuzL0Ry9eB68kT6bXr1BhEZ0rJm/czh4pRKA2s4QPOxjdGo3otV/0NL
+	lYOuRt9BVgyhZcyhGz8jTHfQ5hyeZe1Ib96ye4dcWEqEPuP+xu8J/k08DQkoCg==
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Date: Fri, 27 Mar 2026 19:37:27 +0100
+From: Wolfgang Walter <linux@stwm.de>
+To: linux-nfs@vger.kernel.org
+Subject: 6.18.19 (and probably earlier): get BUG nfsd_file (Not tainted):
+ Objects remaining on __kmem_cache_shutdown()
+Message-ID: <aa45976e7e85e06a426765c5a17865c1@stwm.de>
+X-Sender: linux@stwm.de
+Organization: =?UTF-8?Q?Studierendenwerk_M=C3=BCnchen_Oberbayern?=
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <80b423c66dba84b46be1084307d2c66b935065bc.camel@kernel.org>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	DMARC_POLICY_ALLOW(-0.50)[stwm.de,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[stwm.de:s=stwm-20170627];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[umich.edu,gmail.com,kernel.org,vger.kernel.org];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[stwm.de:+];
+	RCPT_COUNT_ONE(0.00)[1];
+	TAGGED_FROM(0.00)[bounces-20475-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20474-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[loghyr@gmail.com,linux-nfs@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linux@stwm.de,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,umich.edu:email]
-X-Rspamd-Queue-Id: 86A60348F94
+	DBL_BLOCKED_OPENRESOLVER(0.00)[stwm.de:dkim,stwm.de:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 383723491CC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 27, 2026 at 12:59:54PM -0800, Jeff Layton wrote:
-> On Fri, 2026-03-27 at 12:20 -0400, Olga Kornievskaia wrote:
-> > On Fri, Mar 27, 2026 at 11:50 AM Jeff Layton <jlayton@kernel.org> wrote:
-> > > 
-> > > On Fri, 2026-03-27 at 11:11 -0400, Olga Kornievskaia wrote:
-> > > > On Tue, Mar 24, 2026 at 1:32 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > > > 
-> > > > > xfstest generic/728 fails with delegated timestamps. The client does a
-> > > > > removexattr and then a stat to test the ctime, which doesn't change. The
-> > > > > stat() doesn't trigger a GETATTR because of the delegated timestamps, so
-> > > > > it relies on the cached ctime, which is wrong.
-> > > > > 
-> > > > > The setxattr compound has a trailing GETATTR, which ensures that its
-> > > > > ctime gets updated. Follow the same strategy with removexattr.
-> > > > 
-> > > > This approach relies on the fact that the server the serves delegated
-> > > > attributes would update change_attr on operations which might now
-> > > > necessarily happen (ie, linux server does not update change_attribute
-> > > > on writes or clone). I propose an alternative fix for the failing
-> > > > generic/728.
-> > > > 
-> > > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > > > index 7b3ca68fb4bb..ede1835a45b3 100644
-> > > > --- a/fs/nfs/nfs42proc.c
-> > > > +++ b/fs/nfs/nfs42proc.c
-> > > > @@ -1389,7 +1389,13 @@ static int _nfs42_proc_removexattr(struct inode
-> > > > *inode, const char *name)
-> > > >             &res.seq_res, 1);
-> > > >         trace_nfs4_removexattr(inode, name, ret);
-> > > >         if (!ret)
-> > > > -               nfs4_update_changeattr(inode, &res.cinfo, timestamp, 0);
-> > > > +               if (nfs_have_delegated_attributes(inode)) {
-> > > > +                       nfs_update_delegated_mtime(inode);
-> > > > +                       spin_lock(&inode->i_lock);
-> > > > +                       nfs_set_cache_invalid(inode, NFS_INO_INVALID_BLOCKS);
-> > > > +                       spin_unlock(&inode->i_lock);
-> > > > +               } else
-> > > > +                       nfs4_update_changeattr(inode, &res.cinfo, timestamp, 0);
-> > > > 
-> > > >         return ret;
-> > > >  }
-> > > > 
-> > > 
-> > > What's the advantage of doing it this way?
-> > > 
-> > > You just sent a REMOVEXATTR operation to the server that will change
-> > > the mtime there. The server has the most up-to-date version of the
-> > > mtime and ctime at that point.
-> > 
-> > In presence of delegated attributes, Is the server required to update
-> > its mtime/ctime on an operation? As I mentioned, the linux server does
-> > not update its ctime/mtime for WRITE, CLONE, COPY.
-> > 
-> > Is possible that
-> > some implementations might be different and also do not update the
-> > ctime/mtime on REMOVEXATTR?
-> > 
-> > Therefore I was suggesting that the patch
-> > relies on the fact that it would receive an updated value. Of course
-> > perhaps all implementations are done the same as the linux server and
-> > my point is moot. I didn't see anything in the spec that clarifies
-> > what the server supposed to do (and client rely on).
-> > 
-> 
-> (cc'ing Tom)
-> 
-> That is a very good point.
-> 
-> My interpretation was that delegated timestamps generally covered
-> writes, but SETATTR style operations that do anything beyond only
-> changing the mtime can't be cached.
-> 
-> We probably need some delstid spec clarification: for what operations
-> is the server required to disable timestamp updates when a write
-> delegation is outstanding?
-> 
-> In the case of nfsd, we disable timestamp updates for WRITE/COPY/CLONE
-> but not SETATTR/SETXATTR/REMOVEXATTR.
-> 
-> How does the Hammerspace anvil behave? Does it disable c/mtime updates
-> for writes when there is an outstanding timestamp delegation like we're
-> doing in nfsd? If so, does it do the same for
-> SETATTR/SETXATTR/REMOVEXATTR operations as well?
+Hello,
 
-Jeff,
+wenn rebooting our nfs-server I get almost always the following BUG:
 
-I think the right way to look at this is closer to how size is
-handled under delegation in RFC8881, rather than as a per-op rule.
+Mar 27 18:27:40 rummelplatz kernel: BUG nfsd_file (Not tainted): Objects 
+remaining on __kmem_cache_shutdown()
+Mar 27 18:27:40 rummelplatz kernel: 
+-----------------------------------------------------------------------------
+Mar 27 18:27:40 rummelplatz kernel: Object 0x000000004cc0c6e6 
+@offset=144
+Mar 27 18:27:40 rummelplatz kernel: Slab 0x00000000e17f7a52 objects=28 
+used=1 fp=0x00000000988570d2 
+flags=0x57ffffc0000200(workingset|node=1|zone=2|lastcpupid=0x1fffff)
+Mar 27 18:27:40 rummelplatz kernel: Disabling lock debugging due to 
+kernel taint
+Mar 27 18:27:40 rummelplatz kernel: ------------[ cut here ]------------
+Mar 27 18:27:40 rummelplatz kernel: WARNING: CPU: 3 PID: 1775323 at 
+mm/slub.c:1256 __slab_err+0x19/0x20
+Mar 27 18:27:40 rummelplatz kernel: Modules linked in: cpuid 
+rpcsec_gss_krb5 msr 8021q garp stp llc mrp binfmt_misc intel_rapl_msr 
+intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp 
+kvm_intel ipmi_ssif kvm snd_pcm irqbypass polyval_clmulni 
+ghash_clmulni_intel snd_timer rapl snd intel_cstate ast soundcore 
+drm_client_lib intel_uncore drm_shmem_helper vga16fb iTCO_wdt mei_me 
+vgastate pcspkr intel_pmc_bxt drm_kms_helper iTCO_vendor_support 
+acpi_power_meter mei watchdog ipmi_si i2c_algo_bit acpi_ipmi ioatdma 
+ipmi_devintf ipmi_msghandler evdev joydev button sg nfsd nfs_acl 
+chacha20poly1305 lockd aesni_intel cryptd auth_rpcgss grace nfs_localio 
+drbd drm sunrpc fuse lru_cache loop efi_pstore configfs ip_tables 
+x_tables autofs4 ext4 crc16 mbcache jbd2 efivarfs raid10 raid456 
+async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq 
+raid0 linear dm_mod raid1 md_mod hid_generic ses enclosure sd_mod usbhid 
+hid ixgbe libie_fwlog xfrm_algo dca mdio_devres of_mdio fixed_phy 
+xhci_pci ahci fwnode_mdio libahci mpt3sas
+Mar 27 18:27:40 rummelplatz kernel:  ehci_pci libphy xhci_hcd raid_class 
+libata ehci_hcd mdio_bus scsi_transport_sas usbcore ptp i2c_i801 
+i2c_smbus lpc_ich scsi_mod pps_core usb_common mdio scsi_common wmi
+Mar 27 18:27:40 rummelplatz kernel: CPU: 3 UID: 0 PID: 1775323 Comm: 
+rpc.nfsd Tainted: G    B               6.18.19-debian64.all+1.3 #1 
+PREEMPT(full)
+Mar 27 18:27:40 rummelplatz kernel: Tainted: [B]=BAD_PAGE
+Mar 27 18:27:40 rummelplatz kernel: Hardware name: Supermicro 
+X10DRi/X10DRI-T, BIOS 1.1a 10/16/2015
+Mar 27 18:27:40 rummelplatz kernel: RIP: 0010:__slab_err+0x19/0x20
+Mar 27 18:27:40 rummelplatz kernel: Code: 00 90 90 90 90 90 90 90 90 90 
+90 90 90 90 90 90 90 0f 1f 44 00 00 e8 76 ff ff ff be 01 00 00 00 bf 05 
+00 00 00 e8 47 e5 0e 00 <0f> 0b c3 cc cc cc cc 90 90 90 90 90 90 90 90 
+90 90 90 90 90 90 90
+Mar 27 18:27:40 rummelplatz kernel: RSP: 0018:ffffcd1b7ca83cb0 EFLAGS: 
+00010082
+Mar 27 18:27:40 rummelplatz kernel: RAX: 0000000000000000 RBX: 
+ffff89ac480e1fc0 RCX: 0000000000000027
+Mar 27 18:27:40 rummelplatz kernel: RDX: 0000000000000005 RSI: 
+0000000000000001 RDI: ffff89aa5fadcd80
+Mar 27 18:27:40 rummelplatz kernel: RBP: ffff89ac76c35d80 R08: 
+0000000000000000 R09: 00000000ffffdfff
+Mar 27 18:27:40 rummelplatz kernel: R10: ffffffff853559a0 R11: 
+ffffcd1b7ca83b50 R12: fffff85323756ac0
+Mar 27 18:27:40 rummelplatz kernel: R13: ffffcd1b7ca83cc8 R14: 
+ffff89aad5e5b800 R15: fffff85328203840
+Mar 27 18:27:40 rummelplatz kernel: FS:  00007fe216a77740(0000) 
+GS:ffff89aada811000(0000) knlGS:0000000000000000
+Mar 27 18:27:40 rummelplatz kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
+0000000080050033
+Mar 27 18:27:40 rummelplatz kernel: CR2: 00007f6d30aca3d8 CR3: 
+00000018eed27002 CR4: 00000000001726f0
+Mar 27 18:27:40 rummelplatz kernel: Call Trace:
+Mar 27 18:27:40 rummelplatz kernel:  <TASK>
+Mar 27 18:27:40 rummelplatz kernel:  
+__kmem_cache_shutdown.cold+0xe0/0xe5
+Mar 27 18:27:40 rummelplatz kernel:  kmem_cache_destroy+0x55/0x150
+Mar 27 18:27:40 rummelplatz kernel:  nfsd_file_cache_shutdown+0x7a/0x180 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  nfsd_destroy_serv+0x16c/0x1b0 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  nfsd_svc+0x1ee/0x320 [nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  write_threads+0xbb/0x180 [nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  ? __check_object_size+0x86/0x1f0
+Mar 27 18:27:40 rummelplatz kernel:  ? _copy_from_user+0x27/0x60
+Mar 27 18:27:40 rummelplatz kernel:  ? simple_transaction_get+0xd8/0x100
+Mar 27 18:27:40 rummelplatz kernel:  ? __pfx_write_threads+0x10/0x10 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  nfsctl_transaction_write+0x4a/0x80 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  vfs_write+0xce/0x440
+Mar 27 18:27:40 rummelplatz kernel:  ? do_sys_openat2+0x88/0xc0
+Mar 27 18:27:40 rummelplatz kernel:  ksys_write+0x6a/0xe0
+Mar 27 18:27:40 rummelplatz kernel:  do_syscall_64+0x63/0x800
+Mar 27 18:27:40 rummelplatz kernel:  ? exc_page_fault+0x7e/0x1a0
+Mar 27 18:27:40 rummelplatz kernel:  
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Mar 27 18:27:40 rummelplatz kernel: RIP: 0033:0x7fe216b72340
+Mar 27 18:27:40 rummelplatz kernel: Code: 40 00 48 8b 15 c1 aa 0d 00 f7 
+d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d a1 32 0e 00 00 74 
+17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 
+00 48 83 ec 28 48 89
+Mar 27 18:27:40 rummelplatz kernel: RSP: 002b:00007ffffd5bb0b8 EFLAGS: 
+00000202 ORIG_RAX: 0000000000000001
+Mar 27 18:27:40 rummelplatz kernel: RAX: ffffffffffffffda RBX: 
+0000000000000003 RCX: 00007fe216b72340
+Mar 27 18:27:40 rummelplatz kernel: RDX: 0000000000000002 RSI: 
+000055c4e1a64300 RDI: 0000000000000003
+Mar 27 18:27:40 rummelplatz kernel: RBP: 000055c4e1a64300 R08: 
+0000000000000000 R09: 0000000000000064
+Mar 27 18:27:40 rummelplatz kernel: R10: 00007ffffd5bae07 R11: 
+0000000000000202 R12: 0000000000000007
+Mar 27 18:27:40 rummelplatz kernel: R13: 0000000000000007 R14: 
+00007ffffd5bb2b8 R15: 000055c4e1a64020
+Mar 27 18:27:40 rummelplatz kernel:  </TASK>
+Mar 27 18:27:40 rummelplatz kernel: ---[ end trace 0000000000000000 ]---
+Mar 27 18:27:40 rummelplatz kernel: ------------[ cut here ]------------
+Mar 27 18:27:40 rummelplatz kernel: kmem_cache_destroy nfsd_file: Slab 
+cache still has objects when called from 
+nfsd_file_cache_shutdown+0x7a/0x180 [nfsd]
+Mar 27 18:27:40 rummelplatz kernel: WARNING: CPU: 3 PID: 1775323 at 
+mm/slab_common.c:531 kmem_cache_destroy+0x142/0x150
+Mar 27 18:27:40 rummelplatz kernel: Modules linked in: cpuid 
+rpcsec_gss_krb5 msr 8021q garp stp llc mrp binfmt_misc intel_rapl_msr 
+intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp 
+kvm_intel ipmi_ssif kvm snd_pcm irqbypass polyval_clmulni 
+ghash_clmulni_intel snd_timer rapl snd intel_cstate ast soundcore 
+drm_client_lib intel_uncore drm_shmem_helper vga16fb iTCO_wdt mei_me 
+vgastate pcspkr intel_pmc_bxt drm_kms_helper iTCO_vendor_support 
+acpi_power_meter mei watchdog ipmi_si i2c_algo_bit acpi_ipmi ioatdma 
+ipmi_devintf ipmi_msghandler evdev joydev button sg nfsd nfs_acl 
+chacha20poly1305 lockd aesni_intel cryptd auth_rpcgss grace nfs_localio 
+drbd drm sunrpc fuse lru_cache loop efi_pstore configfs ip_tables 
+x_tables autofs4 ext4 crc16 mbcache jbd2 efivarfs raid10 raid456 
+async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq 
+raid0 linear dm_mod raid1 md_mod hid_generic ses enclosure sd_mod usbhid 
+hid ixgbe libie_fwlog xfrm_algo dca mdio_devres of_mdio fixed_phy 
+xhci_pci ahci fwnode_mdio libahci mpt3sas
+Mar 27 18:27:40 rummelplatz kernel:  ehci_pci libphy xhci_hcd raid_class 
+libata ehci_hcd mdio_bus scsi_transport_sas usbcore ptp i2c_i801 
+i2c_smbus lpc_ich scsi_mod pps_core usb_common mdio scsi_common wmi
+Mar 27 18:27:40 rummelplatz kernel: CPU: 3 UID: 0 PID: 1775323 Comm: 
+rpc.nfsd Tainted: G    B   W           6.18.19-debian64.all+1.3 #1 
+PREEMPT(full)
+Mar 27 18:27:40 rummelplatz kernel: Tainted: [B]=BAD_PAGE, [W]=WARN
+Mar 27 18:27:40 rummelplatz kernel: Hardware name: Supermicro 
+X10DRi/X10DRI-T, BIOS 1.1a 10/16/2015
+Mar 27 18:27:40 rummelplatz kernel: RIP: 
+0010:kmem_cache_destroy+0x142/0x150
+Mar 27 18:27:40 rummelplatz kernel: Code: 00 85 ed 74 9a eb b1 e8 9c f1 
+e1 ff eb 97 48 8b 53 68 48 8b 4c 24 10 48 c7 c6 60 25 04 84 48 c7 c7 78 
+d6 4b 84 e8 2e 43 d6 ff <0f> 0b e9 16 ff ff ff c3 cc cc cc cc 66 90 90 
+90 90 90 90 90 90 90
+Mar 27 18:27:40 rummelplatz kernel: RSP: 0018:ffffcd1b7ca83d18 EFLAGS: 
+00010246
+Mar 27 18:27:40 rummelplatz kernel: RAX: 0000000000000000 RBX: 
+ffff89aad5e5b800 RCX: 0000000000000027
+Mar 27 18:27:40 rummelplatz kernel: RDX: ffff89aa5fadcd88 RSI: 
+0000000000000001 RDI: ffff89aa5fadcd80
+Mar 27 18:27:40 rummelplatz kernel: RBP: 0000000000000001 R08: 
+0000000000000000 R09: 00000000ffffdfff
+Mar 27 18:27:40 rummelplatz kernel: R10: ffffffff853559a0 R11: 
+ffffcd1b7ca83bc0 R12: ffff89aac74fa190
+Mar 27 18:27:40 rummelplatz kernel: R13: ffffcd1b7ca83dbc R14: 
+0000000000000000 R15: 0000000000000001
+Mar 27 18:27:40 rummelplatz kernel: FS:  00007fe216a77740(0000) 
+GS:ffff89aada811000(0000) knlGS:0000000000000000
+Mar 27 18:27:40 rummelplatz kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
+0000000080050033
+Mar 27 18:27:40 rummelplatz kernel: CR2: 00007f6d30aca3d8 CR3: 
+00000018eed27002 CR4: 00000000001726f0
+Mar 27 18:27:40 rummelplatz kernel: Call Trace:
+Mar 27 18:27:40 rummelplatz kernel:  <TASK>
+Mar 27 18:27:40 rummelplatz kernel:  nfsd_file_cache_shutdown+0x7a/0x180 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  nfsd_destroy_serv+0x16c/0x1b0 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  nfsd_svc+0x1ee/0x320 [nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  write_threads+0xbb/0x180 [nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  ? __check_object_size+0x86/0x1f0
+Mar 27 18:27:40 rummelplatz kernel:  ? _copy_from_user+0x27/0x60
+Mar 27 18:27:40 rummelplatz kernel:  ? simple_transaction_get+0xd8/0x100
+Mar 27 18:27:40 rummelplatz kernel:  ? __pfx_write_threads+0x10/0x10 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  nfsctl_transaction_write+0x4a/0x80 
+[nfsd]
+Mar 27 18:27:40 rummelplatz kernel:  vfs_write+0xce/0x440
+Mar 27 18:27:40 rummelplatz kernel:  ? do_sys_openat2+0x88/0xc0
+Mar 27 18:27:40 rummelplatz kernel:  ksys_write+0x6a/0xe0
+Mar 27 18:27:40 rummelplatz kernel:  do_syscall_64+0x63/0x800
+Mar 27 18:27:40 rummelplatz kernel:  ? exc_page_fault+0x7e/0x1a0
+Mar 27 18:27:40 rummelplatz kernel:  
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Mar 27 18:27:40 rummelplatz kernel: RIP: 0033:0x7fe216b72340
+Mar 27 18:27:40 rummelplatz kernel: Code: 40 00 48 8b 15 c1 aa 0d 00 f7 
+d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 80 3d a1 32 0e 00 00 74 
+17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 
+00 48 83 ec 28 48 89
+Mar 27 18:27:40 rummelplatz kernel: RSP: 002b:00007ffffd5bb0b8 EFLAGS: 
+00000202 ORIG_RAX: 0000000000000001
+Mar 27 18:27:40 rummelplatz kernel: RAX: ffffffffffffffda RBX: 
+0000000000000003 RCX: 00007fe216b72340
+Mar 27 18:27:40 rummelplatz kernel: RDX: 0000000000000002 RSI: 
+000055c4e1a64300 RDI: 0000000000000003
+Mar 27 18:27:40 rummelplatz kernel: RBP: 000055c4e1a64300 R08: 
+0000000000000000 R09: 0000000000000064
+Mar 27 18:27:40 rummelplatz kernel: R10: 00007ffffd5bae07 R11: 
+0000000000000202 R12: 0000000000000007
+Mar 27 18:27:40 rummelplatz kernel: R13: 0000000000000007 R14: 
+00007ffffd5bb2b8 R15: 000055c4e1a64020
+Mar 27 18:27:40 rummelplatz kernel:  </TASK>
+Mar 27 18:27:40 rummelplatz kernel: ---[ end trace 0000000000000000 ]---
 
-In our implementation, because we are acting as an MDS and data I/O
-goes to DSes, we already treat size as effectively delegated when
-a write layout is outstanding. The MDS does not maintain authoritative
-size locally in that case. We may refresh size/timestamps internally
-(e.g., on GETATTR by querying DSes), but we don’t treat that as
-overriding the delegated authority.
 
-For timestamps, our behavior is effectively the same model. When
-the client holds the relevant delegation, the server does not
-consider itself authoritative for ctime/mtime. If current values
-are needed, we can obtain them from the client (e.g., via CB_GETATTR),
-and the client must present the delegation stateid to demonstrate
-that authority. So the authority follows the delegation, not the
-specific operation.
+The kernel is vanilla stable 6.18.19. I built it myself.
 
-That said, I don’t think we’ve fully resolved the semantics for all
-metadata-style ops either. WRITE and SETATTR are clear in our model,
-but for things like CLONE/COPY/SETXATTR/REMOVEXATTR, we’ve likely
-been relying on assumptions rather than a fully consistent rule.
-I.e., CLONE and COPY we just pass through to the DS and we don't
-implement SETXATTR/REMOVEXATTR.
-
-So the spec question, as I see it, is not whether REMOVEXATTR (or
-any particular op) should update ctime/mtime, but whether delegated
-timestamps are meant to follow the same attribute-authority model
-as delegated size in RFC8881. If so, then we expect that the server
-should query the client via CB_GETATTR to return updated ctime/mtime
-after such operations while the delegation is outstanding.
-
-Thanks,
-Tom
-
-
-> 
-> 
-> 
-> > > It's certainly possible that the REMOVEXATTR is the only change that
-> > > occurred. With what I'm proposing, we don't even need to do a SETATTR
-> > > at all if nothing else changed. With your version, you would.
-> > > 
-> > > > > 
-> > > > > Fixes: 3e1f02123fba ("NFSv4.2: add client side XDR handling for extended attributes")
-> > > > > Reported-by: Olga Kornievskaia <aglo@umich.edu>
-> > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > ---
-> > > > >  fs/nfs/nfs42proc.c      | 18 ++++++++++++++++--
-> > > > >  fs/nfs/nfs42xdr.c       | 10 ++++++++--
-> > > > >  include/linux/nfs_xdr.h |  3 +++
-> > > > >  3 files changed, 27 insertions(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > > > > index 7b3ca68fb4bb3bee293f8621e5ed5fa596f5da3f..7e5c1172fc11c9d5a55b3621977ac83bb98f7c20 100644
-> > > > > --- a/fs/nfs/nfs42proc.c
-> > > > > +++ b/fs/nfs/nfs42proc.c
-> > > > > @@ -1372,11 +1372,15 @@ int nfs42_proc_clone(struct file *src_f, struct file *dst_f,
-> > > > >  static int _nfs42_proc_removexattr(struct inode *inode, const char *name)
-> > > > >  {
-> > > > >         struct nfs_server *server = NFS_SERVER(inode);
-> > > > > +       __u32 bitmask[NFS_BITMASK_SZ];
-> > > > >         struct nfs42_removexattrargs args = {
-> > > > >                 .fh = NFS_FH(inode),
-> > > > > +               .bitmask = bitmask,
-> > > > >                 .xattr_name = name,
-> > > > >         };
-> > > > > -       struct nfs42_removexattrres res;
-> > > > > +       struct nfs42_removexattrres res = {
-> > > > > +               .server = server,
-> > > > > +       };
-> > > > >         struct rpc_message msg = {
-> > > > >                 .rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_REMOVEXATTR],
-> > > > >                 .rpc_argp = &args,
-> > > > > @@ -1385,12 +1389,22 @@ static int _nfs42_proc_removexattr(struct inode *inode, const char *name)
-> > > > >         int ret;
-> > > > >         unsigned long timestamp = jiffies;
-> > > > > 
-> > > > > +       res.fattr = nfs_alloc_fattr();
-> > > > > +       if (!res.fattr)
-> > > > > +               return -ENOMEM;
-> > > > > +
-> > > > > +       nfs4_bitmask_set(bitmask, server->cache_consistency_bitmask,
-> > > > > +                        inode, NFS_INO_INVALID_CHANGE);
-> > > > > +
-> > > > >         ret = nfs4_call_sync(server->client, server, &msg, &args.seq_args,
-> > > > >             &res.seq_res, 1);
-> > > > >         trace_nfs4_removexattr(inode, name, ret);
-> > > > > -       if (!ret)
-> > > > > +       if (!ret) {
-> > > > >                 nfs4_update_changeattr(inode, &res.cinfo, timestamp, 0);
-> > > > > +               ret = nfs_post_op_update_inode(inode, res.fattr);
-> > > > > +       }
-> > > > > 
-> > > > > +       kfree(res.fattr);
-> > > > >         return ret;
-> > > > >  }
-> > > > > 
-> > > > > diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-> > > > > index 5c7452ce6e8ac94bd24bc3a33d4479d458a29907..ec105c62f721cfe01bfc60f5981396958084d627 100644
-> > > > > --- a/fs/nfs/nfs42xdr.c
-> > > > > +++ b/fs/nfs/nfs42xdr.c
-> > > > > @@ -263,11 +263,13 @@
-> > > > >  #define NFS4_enc_removexattr_sz                (compound_encode_hdr_maxsz + \
-> > > > >                                          encode_sequence_maxsz + \
-> > > > >                                          encode_putfh_maxsz + \
-> > > > > -                                        encode_removexattr_maxsz)
-> > > > > +                                        encode_removexattr_maxsz + \
-> > > > > +                                        encode_getattr_maxsz)
-> > > > >  #define NFS4_dec_removexattr_sz                (compound_decode_hdr_maxsz + \
-> > > > >                                          decode_sequence_maxsz + \
-> > > > >                                          decode_putfh_maxsz + \
-> > > > > -                                        decode_removexattr_maxsz)
-> > > > > +                                        decode_removexattr_maxsz + \
-> > > > > +                                        decode_getattr_maxsz)
-> > > > > 
-> > > > >  /*
-> > > > >   * These values specify the maximum amount of data that is not
-> > > > > @@ -869,6 +871,7 @@ static void nfs4_xdr_enc_removexattr(struct rpc_rqst *req,
-> > > > >         encode_sequence(xdr, &args->seq_args, &hdr);
-> > > > >         encode_putfh(xdr, args->fh, &hdr);
-> > > > >         encode_removexattr(xdr, args->xattr_name, &hdr);
-> > > > > +       encode_getfattr(xdr, args->bitmask, &hdr);
-> > > > >         encode_nops(&hdr);
-> > > > >  }
-> > > > > 
-> > > > > @@ -1818,6 +1821,9 @@ static int nfs4_xdr_dec_removexattr(struct rpc_rqst *req,
-> > > > >                 goto out;
-> > > > > 
-> > > > >         status = decode_removexattr(xdr, &res->cinfo);
-> > > > > +       if (status)
-> > > > > +               goto out;
-> > > > > +       status = decode_getfattr(xdr, res->fattr, res->server);
-> > > > >  out:
-> > > > >         return status;
-> > > > >  }
-> > > > > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> > > > > index ff1f12aa73d27b6fd874baf7019dd03195fc36e5..fcbd21b5685f46136a210c8e11c20a54d6ed9dad 100644
-> > > > > --- a/include/linux/nfs_xdr.h
-> > > > > +++ b/include/linux/nfs_xdr.h
-> > > > > @@ -1611,12 +1611,15 @@ struct nfs42_listxattrsres {
-> > > > >  struct nfs42_removexattrargs {
-> > > > >         struct nfs4_sequence_args       seq_args;
-> > > > >         struct nfs_fh                   *fh;
-> > > > > +       const u32                       *bitmask;
-> > > > >         const char                      *xattr_name;
-> > > > >  };
-> > > > > 
-> > > > >  struct nfs42_removexattrres {
-> > > > >         struct nfs4_sequence_res        seq_res;
-> > > > >         struct nfs4_change_info         cinfo;
-> > > > > +       struct nfs_fattr                *fattr;
-> > > > > +       const struct nfs_server         *server;
-> > > > >  };
-> > > > > 
-> > > > >  #endif /* CONFIG_NFS_V4_2 */
-> > > > > 
-> > > > > --
-> > > > > 2.53.0
-> > > > > 
-> > > 
-> > > --
-> > > Jeff Layton <jlayton@kernel.org>
-> 
-> -- 
-> Jeff Layton <jlayton@kernel.org>
+Regrads
+-- 
+Wolfgang Walter
+Studierendenwerk München Oberbayern
+Anstalt des öffentlichen Rechts
 
