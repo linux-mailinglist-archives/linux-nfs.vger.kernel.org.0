@@ -1,61 +1,63 @@
-Return-Path: <linux-nfs+bounces-20465-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20466-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oJeIK4moxmk4NQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20465-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:55:53 +0100
+	id ELpbDE6oxmk4NQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20466-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:54:54 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BFC33470CE
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:55:53 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF2C13470B7
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:54:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2A3B8309B5D2
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 15:50:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CDDB23032995
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 15:52:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A8B231A072;
-	Fri, 27 Mar 2026 15:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CFCB3081D6;
+	Fri, 27 Mar 2026 15:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbPyXpCr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhJ7QSVW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B6D31716B;
-	Fri, 27 Mar 2026 15:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDB626C3B0;
+	Fri, 27 Mar 2026 15:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774626653; cv=none; b=XAol+FNMrnAL7FAJlaO5+5LW8rnQkTQ1lSi49t2FyeofX/8UvCCVaMWBUvs8DF1hFobXaUie/OLAW5gttSkZ1HUDGBruPoz64lKuBMkQVtHtDCufiigY6+mwkttf2WlNY8TiD9Vvtxa78EBeX59h7syT6iApyYsS0JrWM/mezhU=
+	t=1774626738; cv=none; b=lu3l+aYz8JCuo5KowJvkmLlPEGmfBbIqEbjpWnC48uaIUf0iXUn2H2pZfpW+Q+MUVSjyvuwmhXc0Ajgm11apNKRiV2UTt0R+tUvye0SBFN3o4sVeig364PCbuj/PbzT78TvqpoF3IeeWrMShkDLbh7Z3NK1q4Ms+Oj+GEbwwvzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774626653; c=relaxed/simple;
-	bh=7yA/cNZmjKFo6T2tOmWcOncESIr4LeI9KWON6CqSpAU=;
+	s=arc-20240116; t=1774626738; c=relaxed/simple;
+	bh=xVldCLkeQ3CWQimDRfs+50lrsy5sQQTHfQkf+WsM6fg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ftz1k1m0i4JmKgGZx/26OVa+IVObD+7mz2b+l7QIQAbepV5ykM4tjM4pR+mtiEFF+1F0x/VLlGtP4A2TEUkB7Br2Fl+HTUU5yo3D1WskpOmxytZ9D74TuIR8MNKqFbNeHFLBktwUcrAtghDn3ERHcg9/eC4KlQmNQfAKDxSrRMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbPyXpCr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 313BFC19423;
-	Fri, 27 Mar 2026 15:50:52 +0000 (UTC)
+	 Content-Type:MIME-Version; b=C1ynrfbpRjJ/7vxAXabdSopTqpeC/tSLRUNtcpqaUH9ppVePfXK9Ofrto28Hr/1hZuLMpjxA9zblUHZr8FXM1887TS2yZhrm53Fb+uGEd3PC+66JfFTh7EFAND+vEk4MFUKE8iRQm/Zmj1r39LJVoCDzOYeGVNryCLyAu3CnqJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhJ7QSVW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6C29C19423;
+	Fri, 27 Mar 2026 15:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774626652;
-	bh=7yA/cNZmjKFo6T2tOmWcOncESIr4LeI9KWON6CqSpAU=;
+	s=k20201202; t=1774626737;
+	bh=xVldCLkeQ3CWQimDRfs+50lrsy5sQQTHfQkf+WsM6fg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mbPyXpCrILcYrp2WqDCGCAPgdOxX72ZPc5iD+QuGPjal9mxBoqzDFzPE7F7XKlRcT
-	 hAYcRtaWG3WcLXSDsWDwM3kBjtED2pAUTs5+JoLB4D0hCnXGT2aw+bpLI2WOAptzLc
-	 PuU3W6jQgpnlyjP4pbYPkTWw56Lpg5VmyEsoMctLimB92hhG43MJdcgquTcizaljb4
-	 YhUu9yIIvojW2aHahE5bEOSBIpRmxmks4gNB2SyKWEm3uSMwCaR/hVF3FJx7c4w9O6
-	 HQ6lw2S+yT337GDZ6FiYBTfIQ9jFlLu43PFHsXeAJxKQnFmN+jvPJ8UViqQ1DKM6k5
-	 PzE+uExJT7QYw==
-Message-ID: <284ca17e74af8c4f5942b2952f2bf75490dd17c0.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] nfs: update inode ctime after removexattr
- operation
+	b=uhJ7QSVWCH+f7PISgf8Rp+qZhVhXMh1GXBlenov4mSsZXv6JEMFVXdwtjM/5JhtLL
+	 dF8jE1NtBkQcI6pXod2odVjyyYMEXMTIqP9kButmwes652naZPFrnQopBAda0WPUiR
+	 0bQtO+D8tWVIacrU4JL4C/SJ849+h+1jkYs1jBoAbMdLXTHN82+5yCdwcF0b8V0DY+
+	 l3iN9Yemn3kugMMbQtQc/gGZHF0HmBFgqONmjT2v0Cqf3DlC4fdbUZ2bG30qlPHdEM
+	 JyaadtNOw0w8HG6ykhA3dK3ApIynoBr7NnHUagFhIx9iAl2+nRQkmRzn2iEngdwO/v
+	 adul4womjH6Xg==
+Message-ID: <c0bb07884841f1d9a7fedf1b92e7e4bca61a9d64.camel@kernel.org>
+Subject: Re: [PATCH v5 2/7] NFSD: Add NFSD_CMD_UNLOCK_IP netlink command
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 27 Mar 2026 11:50:50 -0400
-In-Reply-To: <CAN-5tyFpsuE9+5ZvAASwvTYKtcN5jNpAxi8ejde90e-vpUzFKg@mail.gmail.com>
-References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
-	 <20260324-nfs-7-1-v2-2-d110da3c0036@kernel.org>
-	 <CAN-5tyFpsuE9+5ZvAASwvTYKtcN5jNpAxi8ejde90e-vpUzFKg@mail.gmail.com>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, Chuck Lever
+	 <chuck.lever@oracle.com>
+Date: Fri, 27 Mar 2026 11:52:14 -0400
+In-Reply-To: <d22d6a1b-13c7-4b02-bf82-d1d701e912c2@app.fastmail.com>
+References: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
+	 <20260326-umount-kills-nfsv4-state-v5-2-d2ce071b3570@oracle.com>
+	 <b7cbff660e5222d3c2b9c48d6040f73132f5f312.camel@kernel.org>
+	 <d22d6a1b-13c7-4b02-bf82-d1d701e912c2@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -142,218 +144,107 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20466-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20465-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,umich.edu:email]
-X-Rspamd-Queue-Id: 2BFC33470CE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AF2C13470B7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-03-27 at 11:11 -0400, Olga Kornievskaia wrote:
-> On Tue, Mar 24, 2026 at 1:32=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
-wrote:
+On Fri, 2026-03-27 at 11:19 -0400, Chuck Lever wrote:
+>=20
+> On Fri, Mar 27, 2026, at 8:06 AM, Jeff Layton wrote:
+> > On Thu, 2026-03-26 at 13:55 -0400, Chuck Lever wrote:
+>=20
+> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > index 988a79ec4a79..e1e89d52e6de 100644
+> > > --- a/fs/nfsd/nfsctl.c
+> > > +++ b/fs/nfsd/nfsctl.c
+>=20
+> > > @@ -2200,6 +2200,44 @@ int nfsd_nl_pool_mode_get_doit(struct sk_buff =
+*skb, struct genl_info *info)
+> > >  	return err;
+> > >  }
+> > > =20
+> > > +/**
+> > > + * nfsd_nl_unlock_ip_doit - release NLM locks held by an IP address
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return: 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_unlock_ip_doit(struct sk_buff *skb, struct genl_info *in=
+fo)
+> > > +{
+> > > +	struct sockaddr *sap;
+> > > +
+> > > +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_UNLOCK_IP_ADDRESS))
+> > > +		return -EINVAL;
+> > > +	sap =3D nla_data(info->attrs[NFSD_A_UNLOCK_IP_ADDRESS]);
+> > > +	switch (sap->sa_family) {
+> > > +	case AF_INET:
+> > > +		if (nla_len(info->attrs[NFSD_A_UNLOCK_IP_ADDRESS]) <
+> > > +		    sizeof(struct sockaddr_in))
+> > > +			return -EINVAL;
+> > > +		break;
+> > > +	case AF_INET6:
+> > > +		if (nla_len(info->attrs[NFSD_A_UNLOCK_IP_ADDRESS]) <
+> > > +		    sizeof(struct sockaddr_in6))
+> > > +			return -EINVAL;
+> > > +		break;
+> > > +	default:
+> > > +		return -EAFNOSUPPORT;
+> > > +	}
+> > > +	/*
+> > > +	 * nlmsvc_unlock_all_by_ip() releases matching locks
+> > > +	 * across all network namespaces because lockd operates
+> > > +	 * a single global instance.
+> > > +	 */
+> > > +	trace_nfsd_ctl_unlock_ip(genl_info_net(info), sap,
+> > > +				 svc_addr_len(sap));
 > >=20
-> > xfstest generic/728 fails with delegated timestamps. The client does a
-> > removexattr and then a stat to test the ctime, which doesn't change. Th=
-e
-> > stat() doesn't trigger a GETATTR because of the delegated timestamps, s=
-o
-> > it relies on the cached ctime, which is wrong.
-> >=20
-> > The setxattr compound has a trailing GETATTR, which ensures that its
-> > ctime gets updated. Follow the same strategy with removexattr.
+> > All of the tracepoints get passed svc_addr_len(sap) for the length. Any
+> > reason not to just determine the length inside the tracepoint, so you
+> > don't need to calc the length unless it's enabled?
 >=20
-> This approach relies on the fact that the server the serves delegated
-> attributes would update change_attr on operations which might now
-> necessarily happen (ie, linux server does not update change_attribute
-> on writes or clone). I propose an alternative fix for the failing
-> generic/728.
->=20
-> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> index 7b3ca68fb4bb..ede1835a45b3 100644
-> --- a/fs/nfs/nfs42proc.c
-> +++ b/fs/nfs/nfs42proc.c
-> @@ -1389,7 +1389,13 @@ static int _nfs42_proc_removexattr(struct inode
-> *inode, const char *name)
->             &res.seq_res, 1);
->         trace_nfs4_removexattr(inode, name, ret);
->         if (!ret)
-> -               nfs4_update_changeattr(inode, &res.cinfo, timestamp, 0);
-> +               if (nfs_have_delegated_attributes(inode)) {
-> +                       nfs_update_delegated_mtime(inode);
-> +                       spin_lock(&inode->i_lock);
-> +                       nfs_set_cache_invalid(inode, NFS_INO_INVALID_BLOC=
-KS);
-> +                       spin_unlock(&inode->i_lock);
-> +               } else
-> +                       nfs4_update_changeattr(inode, &res.cinfo, timesta=
-mp, 0);
->=20
->         return ret;
->  }
+> Unless I'm mistaken, the trace_nfsd_ctl_unlock_ip() call site
+> expands to a static branch that skips everything, including
+> argument evaluation, when the tracepoint is disabled. The
+> svc_addr_len() call, being part of the argument list, is
+> already behind that branch.
 >=20
 
-What's the advantage of doing it this way?
+It's a minor thing, but fewer arguments to a tracepoint is nicer, IMO.
 
-You just sent a REMOVEXATTR operation to the server that will change
-the mtime there. The server has the most up-to-date version of the
-mtime and ctime at that point.
-
-It's certainly possible that the REMOVEXATTR is the only change that
-occurred. With what I'm proposing, we don't even need to do a SETATTR
-at all if nothing else changed. With your version, you would.
-
-> >=20
-> > Fixes: 3e1f02123fba ("NFSv4.2: add client side XDR handling for extende=
-d attributes")
-> > Reported-by: Olga Kornievskaia <aglo@umich.edu>
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/nfs/nfs42proc.c      | 18 ++++++++++++++++--
-> >  fs/nfs/nfs42xdr.c       | 10 ++++++++--
-> >  include/linux/nfs_xdr.h |  3 +++
-> >  3 files changed, 27 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > index 7b3ca68fb4bb3bee293f8621e5ed5fa596f5da3f..7e5c1172fc11c9d5a55b362=
-1977ac83bb98f7c20 100644
-> > --- a/fs/nfs/nfs42proc.c
-> > +++ b/fs/nfs/nfs42proc.c
-> > @@ -1372,11 +1372,15 @@ int nfs42_proc_clone(struct file *src_f, struct=
- file *dst_f,
-> >  static int _nfs42_proc_removexattr(struct inode *inode, const char *na=
-me)
-> >  {
-> >         struct nfs_server *server =3D NFS_SERVER(inode);
-> > +       __u32 bitmask[NFS_BITMASK_SZ];
-> >         struct nfs42_removexattrargs args =3D {
-> >                 .fh =3D NFS_FH(inode),
-> > +               .bitmask =3D bitmask,
-> >                 .xattr_name =3D name,
-> >         };
-> > -       struct nfs42_removexattrres res;
-> > +       struct nfs42_removexattrres res =3D {
-> > +               .server =3D server,
-> > +       };
-> >         struct rpc_message msg =3D {
-> >                 .rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_REMOVEXATT=
-R],
-> >                 .rpc_argp =3D &args,
-> > @@ -1385,12 +1389,22 @@ static int _nfs42_proc_removexattr(struct inode=
- *inode, const char *name)
-> >         int ret;
-> >         unsigned long timestamp =3D jiffies;
-> >=20
-> > +       res.fattr =3D nfs_alloc_fattr();
-> > +       if (!res.fattr)
-> > +               return -ENOMEM;
-> > +
-> > +       nfs4_bitmask_set(bitmask, server->cache_consistency_bitmask,
-> > +                        inode, NFS_INO_INVALID_CHANGE);
-> > +
-> >         ret =3D nfs4_call_sync(server->client, server, &msg, &args.seq_=
-args,
-> >             &res.seq_res, 1);
-> >         trace_nfs4_removexattr(inode, name, ret);
-> > -       if (!ret)
-> > +       if (!ret) {
-> >                 nfs4_update_changeattr(inode, &res.cinfo, timestamp, 0)=
-;
-> > +               ret =3D nfs_post_op_update_inode(inode, res.fattr);
-> > +       }
-> >=20
-> > +       kfree(res.fattr);
-> >         return ret;
-> >  }
-> >=20
-> > diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-> > index 5c7452ce6e8ac94bd24bc3a33d4479d458a29907..ec105c62f721cfe01bfc60f=
-5981396958084d627 100644
-> > --- a/fs/nfs/nfs42xdr.c
-> > +++ b/fs/nfs/nfs42xdr.c
-> > @@ -263,11 +263,13 @@
-> >  #define NFS4_enc_removexattr_sz                (compound_encode_hdr_ma=
-xsz + \
-> >                                          encode_sequence_maxsz + \
-> >                                          encode_putfh_maxsz + \
-> > -                                        encode_removexattr_maxsz)
-> > +                                        encode_removexattr_maxsz + \
-> > +                                        encode_getattr_maxsz)
-> >  #define NFS4_dec_removexattr_sz                (compound_decode_hdr_ma=
-xsz + \
-> >                                          decode_sequence_maxsz + \
-> >                                          decode_putfh_maxsz + \
-> > -                                        decode_removexattr_maxsz)
-> > +                                        decode_removexattr_maxsz + \
-> > +                                        decode_getattr_maxsz)
-> >=20
-> >  /*
-> >   * These values specify the maximum amount of data that is not
-> > @@ -869,6 +871,7 @@ static void nfs4_xdr_enc_removexattr(struct rpc_rqs=
-t *req,
-> >         encode_sequence(xdr, &args->seq_args, &hdr);
-> >         encode_putfh(xdr, args->fh, &hdr);
-> >         encode_removexattr(xdr, args->xattr_name, &hdr);
-> > +       encode_getfattr(xdr, args->bitmask, &hdr);
-> >         encode_nops(&hdr);
-> >  }
-> >=20
-> > @@ -1818,6 +1821,9 @@ static int nfs4_xdr_dec_removexattr(struct rpc_rq=
-st *req,
-> >                 goto out;
-> >=20
-> >         status =3D decode_removexattr(xdr, &res->cinfo);
-> > +       if (status)
-> > +               goto out;
-> > +       status =3D decode_getfattr(xdr, res->fattr, res->server);
-> >  out:
-> >         return status;
-> >  }
-> > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> > index ff1f12aa73d27b6fd874baf7019dd03195fc36e5..fcbd21b5685f46136a210c8=
-e11c20a54d6ed9dad 100644
-> > --- a/include/linux/nfs_xdr.h
-> > +++ b/include/linux/nfs_xdr.h
-> > @@ -1611,12 +1611,15 @@ struct nfs42_listxattrsres {
-> >  struct nfs42_removexattrargs {
-> >         struct nfs4_sequence_args       seq_args;
-> >         struct nfs_fh                   *fh;
-> > +       const u32                       *bitmask;
-> >         const char                      *xattr_name;
-> >  };
-> >=20
-> >  struct nfs42_removexattrres {
-> >         struct nfs4_sequence_res        seq_res;
-> >         struct nfs4_change_info         cinfo;
-> > +       struct nfs_fattr                *fattr;
-> > +       const struct nfs_server         *server;
-> >  };
-> >=20
-> >  #endif /* CONFIG_NFS_V4_2 */
-> >=20
-> > --
-> > 2.53.0
-> >=20
+>=20
+> > > +	return nlmsvc_unlock_all_by_ip(sap);
+> > > +}
+> > > +
+> > >  /**
+> > >   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespa=
+ce
+> > >   * @net: a freshly-created network namespace
+>=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
