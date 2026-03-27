@@ -1,147 +1,204 @@
-Return-Path: <linux-nfs+bounces-20462-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20464-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QAuLGnmfxmnrMQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20462-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:17:13 +0100
+	id IMH5OLagxmnrMQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20464-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:22:30 +0100
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAA673468CA
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:17:12 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79F95346A5A
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 16:22:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 63D58301DB82
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 15:12:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4316530263D5
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Mar 2026 15:20:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A471E30FF31;
-	Fri, 27 Mar 2026 15:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FC429AB15;
+	Fri, 27 Mar 2026 15:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SzQMzEW0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMbgLA03"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EA030F55B
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 15:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B003A1D2
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Mar 2026 15:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774624319; cv=none; b=jcTL4pOA0MYGo7YAOcTzLW291W6eagED4cprSJBGMm8dCRiFOO02/W09tAtYspoXJVekWA0BULXKsL+kRXRPW3DlUZVt0vesGnbveIgR2Cy7QBYurYrRx0T+TRqJovDibPyVD+JintVX6V/6/c1MreTwBwSCf2R9kojNEdH9D4U=
+	t=1774624808; cv=none; b=obT+iowZOVvMdyAuu2H5QYaYquYzFkCeN4D21QRtEVvjN7U1wJN5UvpnTNFR3ifqHQBjeStzFwUd1JoEK06ntJaBM+uPnT+nle2PmPA5Au2LZ1/FbpQ9ySAKpfl9PmRd3CmqUp4iT8PxkXyDF1NXN818qHCOAK/SsDtcAcWwNBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774624319; c=relaxed/simple;
-	bh=2p3fD49wJzWiu/wtzycOYIdzBl3AWM31ZAZDLSOU6SY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NgwT18hEq143ZWqQfsV8ufuoep48JMhYK2KldK6T6hScuMjMyH31a/CX+NxfdBPkSxGhEgNwOJaQbupFFs9WH36ESqE7JDMrvHd2Yod9uTX5tVEQxZQWtVsfuOcqIIvESPPLVrpylcrNly0K5xRYghPXzROTaZrvBUW0tGIAogI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SzQMzEW0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774624317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sMlbPnGV7wIwqOG5qjD7XaNTHjDBkMZBoc2Olh2FJwc=;
-	b=SzQMzEW0YZZM1D0jwjzmx5cyDgAdnVixx5VRD3BHN1i7UPfLiKmCn6X/KS5I76/+RwGUtU
-	WnsAf7j0L8/WkStXOJPiFhMiCp6hzCXDZeKd8Plkh9InAqmbkR84oGQ0t5eqJ6JbLgKM+f
-	bW91ms//952kXvbpxDkgINuhuJT4tdo=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-agmjW8F3N1aqHCDXRuDN2w-1; Fri,
- 27 Mar 2026 11:11:53 -0400
-X-MC-Unique: agmjW8F3N1aqHCDXRuDN2w-1
-X-Mimecast-MFC-AGG-ID: agmjW8F3N1aqHCDXRuDN2w_1774624312
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7776518005B3;
-	Fri, 27 Mar 2026 15:11:52 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.81.48])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BBFF330001A1;
-	Fri, 27 Mar 2026 15:11:51 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trond.myklebust@hammerspace.com,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSv4.2: fix CLONE attrs in presence of delegated attributes
-Date: Fri, 27 Mar 2026 11:11:49 -0400
-Message-ID: <20260327151149.25317-1-okorniev@redhat.com>
+	s=arc-20240116; t=1774624808; c=relaxed/simple;
+	bh=cQzWs4ZA/OPWlZYmfOQeqfTDkmkz29sDHAC95nSTYBQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=FSWqW8kHlfwHdzStJZ6KZazKLuHVHb3qDgHytRjfO6fbHdmooatrAJnthkpIh/moHASLXWoGyms6MefDTWCButWzoIvF53yPnyioZTv1UL/ApooF/PBAZfI1+UUKKpFKFsRTGd8tRnZSkts8nAvUOklew3mcEMo9CjSy4yqT0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMbgLA03; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955E1C4AF0B;
+	Fri, 27 Mar 2026 15:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774624807;
+	bh=cQzWs4ZA/OPWlZYmfOQeqfTDkmkz29sDHAC95nSTYBQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=ZMbgLA038ZRA0AZyE97XGN5bWpSmMYk9FGuXQn+l8sjaakvWRrZ1LIOi8x9Y7fHEc
+	 EuYsFZ23HSBTGMIWjbJZ9UsLSnb6dgbysnKNhRoKSz1N+C2vjHhsLKTDmFFM8WvTUw
+	 3lJMRI8Hs08H6plbVRr3I70Jo4RhiJpNF+w/Pi7UZMRyorgaENg1Hi89qZvg3AiyiZ
+	 brh3wOt2i0xR4ehSWP/Bj9MI5PK5nsji5/qlQ9qt/e7zvm1e4Xf7XIworGs1hiPRmu
+	 nA/hqt8u+HdbueuAN6m1v2gjJdJc0+vyDVCHm/hW9886eWdMJFu3IphHuUvqFTbczw
+	 BaV3v0bxjuMJQ==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 73F2CF40084;
+	Fri, 27 Mar 2026 11:20:06 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 27 Mar 2026 11:20:06 -0400
+X-ME-Sender: <xms:JqDGaTQWjCX6cLBrjSi3sEzhX3CSuWxysL61VY9O-ThnXJoacP_cFA>
+    <xme:JqDGafn_FkTofQWbRBK9qzgooJmLwSkKGfcsio6TmdyazvVv8oyB7Bewn5zLOPPRF
+    Tinfog1-IxdxrhmhziYy8GDy3JHOPOMeDR8n1I_YRMCTu6tnern-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffedtiedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehjlhgrhihtohhnse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghirdhnghhosehorhgrtghlvgdrtgho
+    mhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtph
+    htthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhomhes
+    thgrlhhpvgihrdgtohhmpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:JqDGaWTb7fU75h-EfMKjtNz-ChIrC6eMZSLT8txQYWhQUxIi-xPkYw>
+    <xmx:JqDGaXw_SkIGYoKML8KdIaZpIVe3mHiWR11332ey8VyVZWIyBJ1zig>
+    <xmx:JqDGaWDAuX89ZEaxNvOM1KZZuYTb_Jjz3_OgJ-rEfsxgKhR9VGA9-A>
+    <xmx:JqDGaTEJIRBse9fu-Pfau8_r9XE9EgkM4fpXrNsoF_f_RD9wDmV9EQ>
+    <xmx:JqDGadPEnAr54oZcLZTU4vTyx_caGUdhXPPmlxRK_MWB0WzzMGOG6pcW>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8BD4E780076; Fri, 27 Mar 2026 11:20:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-ThreadId: Aql3KRXDeodw
+Date: Fri, 27 Mar 2026 11:19:43 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <d22d6a1b-13c7-4b02-bf82-d1d701e912c2@app.fastmail.com>
+In-Reply-To: <b7cbff660e5222d3c2b9c48d6040f73132f5f312.camel@kernel.org>
+References: <20260326-umount-kills-nfsv4-state-v5-0-d2ce071b3570@oracle.com>
+ <20260326-umount-kills-nfsv4-state-v5-2-d2ce071b3570@oracle.com>
+ <b7cbff660e5222d3c2b9c48d6040f73132f5f312.camel@kernel.org>
+Subject: Re: [PATCH v5 2/7] NFSD: Add NFSD_CMD_UNLOCK_IP netlink command
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20462-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CAA673468CA
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20464-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,app.fastmail.com:mid];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 79F95346A5A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-xfstest generic/407 is failing in 2 ways. It detects that after
-doing a clone the client does not update it's mtime and it's ctime.
-CLONE always sends a GETATTR operation and then calls
-nfs_post_op_update_inode() based on the returned attributes.
-Because of the delegated attributes the client ignores updating
-the mtime. Then also, when delegated attributes are present, for
-the change_attr the server replies with the same values as what
-the client cached before and thus the generic/407 would flag that.
-Instead, make sure we invalidate the blocks attr.
 
-Fixes: e12912d94137 ("NFSv4: Add support for delegated atime and mtime attributes")
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
----
- fs/nfs/nfs42proc.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 7e5c1172fc11..f6a7cfa12225 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -1306,7 +1306,15 @@ static int _nfs42_proc_clone(struct rpc_message *msg, struct file *src_f,
- 		if (count == 0 && res.dst_fattr->valid & NFS_ATTR_FATTR_SIZE)
- 			count = nfs_size_to_loff_t(res.dst_fattr->size) - dst_offset;
- 		nfs42_copy_dest_done(dst_f, dst_offset, count, oldsize_dst);
--		status = nfs_post_op_update_inode(dst_inode, res.dst_fattr);
-+		nfs_update_delegated_mtime(dst_inode);
-+		if (!nfs_have_delegated_attributes(dst_inode))
-+			status = nfs_post_op_update_inode(dst_inode,
-+							  res.dst_fattr);
-+		else {
-+			spin_lock(&dst_inode->i_lock);
-+			nfs_set_cache_invalid(dst_inode, NFS_INO_INVALID_BLOCKS);
-+			spin_unlock(&dst_inode->i_lock);
-+		}
- 	}
- 
- 	kfree(res.dst_fattr);
+On Fri, Mar 27, 2026, at 8:06 AM, Jeff Layton wrote:
+> On Thu, 2026-03-26 at 13:55 -0400, Chuck Lever wrote:
+
+>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+>> index 988a79ec4a79..e1e89d52e6de 100644
+>> --- a/fs/nfsd/nfsctl.c
+>> +++ b/fs/nfsd/nfsctl.c
+
+>> @@ -2200,6 +2200,44 @@ int nfsd_nl_pool_mode_get_doit(struct sk_buff *skb, struct genl_info *info)
+>>  	return err;
+>>  }
+>>  
+>> +/**
+>> + * nfsd_nl_unlock_ip_doit - release NLM locks held by an IP address
+>> + * @skb: reply buffer
+>> + * @info: netlink metadata and command arguments
+>> + *
+>> + * Return: 0 on success or a negative errno.
+>> + */
+>> +int nfsd_nl_unlock_ip_doit(struct sk_buff *skb, struct genl_info *info)
+>> +{
+>> +	struct sockaddr *sap;
+>> +
+>> +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_UNLOCK_IP_ADDRESS))
+>> +		return -EINVAL;
+>> +	sap = nla_data(info->attrs[NFSD_A_UNLOCK_IP_ADDRESS]);
+>> +	switch (sap->sa_family) {
+>> +	case AF_INET:
+>> +		if (nla_len(info->attrs[NFSD_A_UNLOCK_IP_ADDRESS]) <
+>> +		    sizeof(struct sockaddr_in))
+>> +			return -EINVAL;
+>> +		break;
+>> +	case AF_INET6:
+>> +		if (nla_len(info->attrs[NFSD_A_UNLOCK_IP_ADDRESS]) <
+>> +		    sizeof(struct sockaddr_in6))
+>> +			return -EINVAL;
+>> +		break;
+>> +	default:
+>> +		return -EAFNOSUPPORT;
+>> +	}
+>> +	/*
+>> +	 * nlmsvc_unlock_all_by_ip() releases matching locks
+>> +	 * across all network namespaces because lockd operates
+>> +	 * a single global instance.
+>> +	 */
+>> +	trace_nfsd_ctl_unlock_ip(genl_info_net(info), sap,
+>> +				 svc_addr_len(sap));
+>
+> All of the tracepoints get passed svc_addr_len(sap) for the length. Any
+> reason not to just determine the length inside the tracepoint, so you
+> don't need to calc the length unless it's enabled?
+
+Unless I'm mistaken, the trace_nfsd_ctl_unlock_ip() call site
+expands to a static branch that skips everything, including
+argument evaluation, when the tracepoint is disabled. The
+svc_addr_len() call, being part of the argument list, is
+already behind that branch.
+
+
+>> +	return nlmsvc_unlock_all_by_ip(sap);
+>> +}
+>> +
+>>  /**
+>>   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+>>   * @net: a freshly-created network namespace
+
+
 -- 
-2.52.0
-
+Chuck Lever
 
