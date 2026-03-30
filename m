@@ -1,356 +1,211 @@
-Return-Path: <linux-nfs+bounces-20533-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20534-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kGvgGeWJymn09gUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20533-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 16:34:13 +0200
+	id UBQaBLqRymma+AUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20534-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 17:07:38 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E62435CEFB
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 16:34:12 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7572335D76B
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 17:07:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 971AE300723F
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 14:23:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 03B9C31AE9BB
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 14:49:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292AE3A63E3;
-	Mon, 30 Mar 2026 14:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD4A73290C9;
+	Mon, 30 Mar 2026 14:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAM5duh0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgiRnALT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DFF3A4F2F
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 14:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9913E325705;
+	Mon, 30 Mar 2026 14:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774880584; cv=none; b=ACzRbOiJ5lIV32VUlyL9pmAuCwUgjjLR3yaYE0QhDHm1B3mzJT/Mpv+dPL1GtwE+p4a3LecPZNNkShetRBOLAE4BDIo9TumDuxcuTnk0u7s4X+4rrGzODl4gR+Si7Dh8mizeQIDaEr8761YYDWEMe1uMYYqhSxPGaHLvU3VDFqc=
+	t=1774882156; cv=none; b=TaVSEcF/i5FXHUFRTvUekriCcLwIXKZjEhoFhb8qmbiGlI8UKaWz1XvxTABvIian5Ic4JJBlNBrcVYsyuLK2VzLzULxSoO2cUpiwekR9vxRaXCrpIac6mzg0Hig9LEcgE/83jdg5hnlKBLd0Rknj3rrqndazp6FEN+IhvGCrpgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774880584; c=relaxed/simple;
-	bh=X2QXEXEFSfwD5XWt9JWleVw62Lz3GGAaZBixEVmCkr8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=GC0CWtITfR29k0kOLt2M2hsFz/23B1ewiSeF8z51MC/aGw8OFeB+uaxtoJYsBIPFhGBsBwpuyKpxzXcXW2XC8001yWkQAvQ3Ntl829stW6K3O3glDzbm1UiKk3L9JZQGnd+11w9yoMN6Gsj3F6D/TReBv0kXkMWlPx8BQVFo/t0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAM5duh0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F489C2BCB3;
-	Mon, 30 Mar 2026 14:23:03 +0000 (UTC)
+	s=arc-20240116; t=1774882156; c=relaxed/simple;
+	bh=3cONE+LFIH/FbcqX/y0erjfAaQNcJqC0RRgU27mScQ8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ni9xG++T7Fm9Wzk9wUXQEoto5cVwGJJndLZfWfV0tIvVm6diXNnmb5JYJUH6RmO9OPIl5uqvauw9dJOTJDaHWWVWSn72gWTmR+/WXzUi02mnbyXDlILHqiJyK/kftGM6QqntybnedRoYNuLJ3NqEcA8Mq5Dltm/keO6zRyKKqiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgiRnALT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB2FC4CEF7;
+	Mon, 30 Mar 2026 14:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774880583;
-	bh=X2QXEXEFSfwD5XWt9JWleVw62Lz3GGAaZBixEVmCkr8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=TAM5duh0IjYqx3GqRtuVhEWl+qVkhVyI7kSa2heg6ypA+WozAnHds5Tv7pckuG3a9
-	 KwifKmDJrsYm0OJTXwrsb0kxZJBLfi5F7udP/8ycPqoNat+WxLA6s6iuC4bFnr4Y9C
-	 LJ9FarRYj01SYimgUtAgeNSBBpMrk8d3Wr7FuHyRDGowtmz8eGAGnihbI7exqAfgVl
-	 ZNWSbM5mkr4mpA0kFc45vFyhWLwgcUM9YJolC83lJfldHCYTOpgurDbem4Gu6u4T2M
-	 NzVnFOmTgGZjRWGrI+5EfTaG0wJewOA3MXjCC+pWUTVYKu4UipuptqEJc9P2piP29k
-	 jsVzN5vaslM3A==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 3A992F40074;
-	Mon, 30 Mar 2026 10:23:02 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 30 Mar 2026 10:23:02 -0400
-X-ME-Sender: <xms:RofKaS9EIgFMi90wfpVQjysssYOERs6mFNDwk29YnHfkazOiK9HESg>
-    <xme:RofKadgVvL1QH6wdPxVkkGX5fIdiVKsxNLpYlIAopHM3_RFhMqnNWdjQIZGbj4joY
-    Kmt16vEv8PW6870b6bACdo3STcn3nYmEVzxwJpF-zflKMiinL_o1yIL>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeelvdduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepuggrvhgvmhesug
-    grvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehg
-    mhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
-    dprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhorhhm
-    sheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeht
-    rhhonhgumhihsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:RofKaYe-feDAY0S0u4Q3DhLiSGNtASioub4kVhaXM3a-pU5eDBE6zg>
-    <xmx:RofKaWgzrfLoJ_XEhOzn-_QLtLGPGKt-fwsutXHLtVxY0nOYe5JhPQ>
-    <xmx:RofKabL1wz32PObeY-a0s4G6-BTkTcCwOa5rxIh2YXOSPqa4L1PyCA>
-    <xmx:RofKabFHioCJw2Vz9V4IsSY4Kq0SDyRTRbFmxAXiyJ9G81DWRB0NwQ>
-    <xmx:RofKaZ0oV0-dsthFJkwPdxw3XKnYjnyBUHBoEmr-E_XNPxXE_0WxnrI9>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E2B79780075; Mon, 30 Mar 2026 10:23:01 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1774882156;
+	bh=3cONE+LFIH/FbcqX/y0erjfAaQNcJqC0RRgU27mScQ8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=RgiRnALTx9mr4pHLizIfD10hLznOmoI56YTpqzpieXAoLQFyb0xWILrRYjTwsM+wQ
+	 IbNF5TzjWMOybaLNjiUKtYHlKHQmKffX7rhH7sudtfl947+nqJlXmjtjEJ+UuT0MJ4
+	 FTctKKBMnl+3z/0FW2zgyhue0i17phr/kwrag6Bc6C5b6hoqsl+ZDeDY6OwJTi1WLF
+	 52KPYd0GzTfjHQaTNIoF9YCsK0NAyiBCEKSLBC2Fp7hSJEjvl5sVvkXyABfU8u4VDw
+	 sEGKtFQWou4UE36KvtELP06Rjg+GpYnGyubQIGWfbKpn/K3zSx3AbSxzCpFCYQLj6v
+	 MC9rtdCKdhO4A==
+Message-ID: <aacc794e20096cf9b3bfca9ce4d2f43698742a1d.camel@kernel.org>
+Subject: Re: [PATCH v2 10/13] nfsd: add netlink upcall for the svc_export
+ cache
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,  Jakub Kicinski	
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
+ <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Date: Mon, 30 Mar 2026 10:49:12 -0400
+In-Reply-To: <30ff0483-ec38-40b3-811b-6cd66febe1b1@app.fastmail.com>
+References: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
+	 <20260325-exportd-netlink-v2-10-067df016ea95@kernel.org>
+	 <30ff0483-ec38-40b3-811b-6cd66febe1b1@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AN4VOCyftktg
-Date: Mon, 30 Mar 2026 10:22:41 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- "Donald Hunter" <donald.hunter@gmail.com>
-Cc: "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Message-Id: <30ff0483-ec38-40b3-811b-6cd66febe1b1@app.fastmail.com>
-In-Reply-To: <20260325-exportd-netlink-v2-10-067df016ea95@kernel.org>
-References: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
- <20260325-exportd-netlink-v2-10-067df016ea95@kernel.org>
-Subject: Re: [PATCH v2 10/13] nfsd: add netlink upcall for the svc_export cache
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.65 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20533-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20534-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,gmail.com];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.899];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 6E62435CEFB
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7572335D76B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Mon, 2026-03-30 at 10:22 -0400, Chuck Lever wrote:
+> >=20
+> > +  -
+> > +    name: svc-export-req
+> > +    attributes:
+> > +      -
+> > +        name: seqno
+> > +        type: u64
+> > +      -
+> > +        name: client
+> > +        type: string
+> > +      -
+> > +        name: path
+> > +        type: string
+>=20
+> Is the svc-export-req attribute set used for anything?
+>=20
+>=20
 
-On Wed, Mar 25, 2026, at 10:40 AM, Jeff Layton wrote:
-> Add netlink-based cache upcall support for the svc_export (nfsd.export)
-> cache to Documentation/netlink/specs/nfsd.yaml and regenerate the
-> resulting files.
+No, good catch.
 
-> diff --git a/Documentation/netlink/specs/nfsd.yaml 
-> b/Documentation/netlink/specs/nfsd.yaml
-> index 
-> 8ab43c8253b2e83bcc178c3f4fe8c41c2997d153..709751502f8b56bd4b68462fa15337df5e3e035e 
-> 100644
-> --- a/Documentation/netlink/specs/nfsd.yaml
-> +++ b/Documentation/netlink/specs/nfsd.yaml
-> @@ -6,7 +6,51 @@ uapi-header: linux/nfsd_netlink.h
-> 
->  doc: NFSD configuration over generic netlink.
-> 
-> +definitions:
-> +  -
-> +    type: flags
-> +    name: cache-type
-> +    entries: [svc_export]
-> +  -
-> +    type: flags
-> +    name: export-flags
-> +    doc: These flags are ordered to match the NFSEXP_* flags in 
-> include/linux/nfsd/export.h
-> +    entries:
-> +      - readonly
-> +      - insecure-port
-> +      - rootsquash
-> +      - allsquash
-> +      - async
-> +      - gathered-writes
-> +      - noreaddirplus
-> +      - security-label
-> +      - sign-fh
-> +      - nohide
-> +      - nosubtreecheck
-> +      - noauthnlm
-> +      - msnfs
-> +      - fsid
-> +      - crossmount
-> +      - noacl
-> +      - v4root
-> +      - pnfs
-> +  -
-> +    type: flags
-> +    name: xprtsec-mode
-> +    doc: These flags are ordered to match the NFSEXP_XPRTSEC_* flags 
-> in include/linux/nfsd/export.h
-> +    entries:
-> +      - none
-> +      - tls
-> +      - mtls
-> +
->  attribute-sets:
-> +  -
-> +    name: cache-notify
-> +    attributes:
-> +      -
-> +        name: cache-type
-> +        type: u32
-> +        enum: cache-type
->    -
->      name: rpc-status
->      attributes:
-> @@ -132,6 +176,103 @@ attribute-sets:
->        -
->          name: npools
->          type: u32
-> +  -
-> +    name: fslocation
-> +    attributes:
-> +      -
-> +        name: host
-> +        type: string
-> +      -
-> +        name: path
-> +        type: string
-> +  -
-> +    name: fslocations
-> +    attributes:
-> +      -
-> +        name: location
-> +        type: nest
-> +        nested-attributes: fslocation
-> +        multi-attr: true
-> +  -
-> +    name: auth-flavor
-> +    attributes:
-> +      -
-> +        name: pseudoflavor
-> +        type: u32
-> +      -
-> +        name: flags
-> +        type: u32
-> +        enum: export-flags
-> +        enum-as-flags: true
-> +  -
-> +    name: svc-export-req
-> +    attributes:
-> +      -
-> +        name: seqno
-> +        type: u64
-> +      -
-> +        name: client
-> +        type: string
-> +      -
-> +        name: path
-> +        type: string
+That's a holdover from an earlier version that had a separate attribute
+set for the up and downcalls. It's not needed in the latest version.
 
-Is the svc-export-req attribute set used for anything?
+It should be fine to remove it and regenerate the headers. The result
+builds fine without it. I've pushed a fixed patch to the 'exportd-nl'
+branch in my tree. You can fix it up or I can resend if you prefer.
 
-
-> +  -
-> +    name: svc-export
-> +    attributes:
-> +      -
-> +        name: seqno
-> +        type: u64
-> +      -
-> +        name: client
-> +        type: string
-> +      -
-> +        name: path
-> +        type: string
-> +      -
-> +        name: negative
-> +        type: flag
-> +      -
-> +        name: expiry
-> +        type: u64
-> +      -
-> +        name: anon-uid
-> +        type: u32
-> +      -
-> +        name: anon-gid
-> +        type: u32
-> +      -
-> +        name: fslocations
-> +        type: nest
-> +        nested-attributes: fslocations
-> +      -
-> +        name: uuid
-> +        type: binary
-> +      -
-> +        name: secinfo
-> +        type: nest
-> +        nested-attributes: auth-flavor
-> +        multi-attr: true
-> +      -
-> +        name: xprtsec
-> +        type: u32
-> +        enum: xprtsec-mode
-> +        multi-attr: true
-> +      -
-> +        name: flags
-> +        type: u32
-> +        enum: export-flags
-> +        enum-as-flags: true
-> +      -
-> +        name: fsid
-> +        type: s32
-> +  -
-> +    name: svc-export-reqs
-> +    attributes:
-> +      -
-> +        name: requests
-> +        type: nest
-> +        nested-attributes: svc-export
-> +        multi-attr: true
-> 
->  operations:
->    list:
-> @@ -233,3 +374,36 @@ operations:
->            attributes:
->              - mode
->              - npools
-> +    -
-> +      name: cache-notify
-> +      doc: Notification that there are cache requests that need 
-> servicing
-> +      attribute-set: cache-notify
-> +      mcgrp: exportd
-> +      event:
-> +        attributes:
-> +          - cache-type
-> +    -
-> +      name: svc-export-get-reqs
-> +      doc: Dump all pending svc_export requests
-> +      attribute-set: svc-export-reqs
-> +      flags: [admin-perm]
-> +      dump:
-> +          request:
-> +            attributes:
-> +              - requests
-> +    -
-> +      name: svc-export-set-reqs
-> +      doc: Respond to one or more svc_export requests
-> +      attribute-set: svc-export-reqs
-> +      flags: [admin-perm]
-> +      do:
-> +          request:
-> +            attributes:
-> +              - requests
-> +
-> +mcast-groups:
-> +  list:
-> +    -
-> +      name: none
-> +    -
-> +      name: exportd
-
-
--- 
-Chuck Lever
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
 
