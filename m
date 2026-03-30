@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20523-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20524-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EMDRDSN9ymlo9QUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20523-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:39:47 +0200
+	id AOgmD2N/ymnX9QUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20524-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:49:23 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CB0335C23F
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:39:47 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C543035C4CC
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:49:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 61567301A027
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9380A309FD62
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A663D5256;
-	Mon, 30 Mar 2026 13:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB273D5666;
+	Mon, 30 Mar 2026 13:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLXgyKmK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOw2GYX8"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA0C3D565B
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4403B3D566D
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774877932; cv=none; b=WZhD9dIIiYG0RiKjJNfP6ip3x2m9/PLQydT56LMPBBXdADtVBJ3gFLQ8PsloMVOD1c+VWbemU3Ky+GqwBvxij9Ly2qR/8aTVsByoLLabdScPVA0C1gme6EZuOTuko0HOPyFjmPAZ9FRp1ofCNiFcSNKHvfFOZsO0RLuXcSxjpuE=
+	t=1774877933; cv=none; b=evJc7o0Yc+K7U9jRefWe7y4Z7DihdEonFBcgkT0c8XfacFUiHSocqfy5nU99I/OKkwOv/DUuNzJwRaflsM3DXoD/KQlMOPP0og9KvwLaZgTwyTAX2G66bAtlU1vga0N/vax4XSuBkfaavR4BA90JIRm3m0UwJlWLprKnRljezsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774877932; c=relaxed/simple;
-	bh=9vonjzowFIvdkIl8fup8ovoUgrT2NpeLCEw0w5/1Unc=;
+	s=arc-20240116; t=1774877933; c=relaxed/simple;
+	bh=IF/3jCrcmMuq507/QZW0oUgVxE7lrLvleJ1dfpwUDvQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D6leYmJIGCySv9uQzyGcRwGddXpac521ZSZEV9E0RHH76wY9v8YoSHYYZDijUWzPbN5RheBRb2PADOunyHm/gjcjECEGrmKW7g6RUXwi5x+i16etTV4PRlMVi7UU8Qhr+/g1IKmC0TcSRaNMP0s8yVyjBM1Qxxb2YNOLe+LMz9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLXgyKmK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D6FC2BCB1;
-	Mon, 30 Mar 2026 13:38:50 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Ok64DrMst6F679ynN7ErkRuFuLGOhHonFVA/Fn8d4x/b4o3GtcUA12TjD5Otog8K59AItk1kIwx4/2wuxCUIq1Aei0zsCC5B6R0fA4elOQWnd4JAX9s1t5rnEbjVnUKLhhiG9IlT99si8nE+8DGxHZvHE0zh/cjdFwN4CBvudcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOw2GYX8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2830BC2BCB2;
+	Mon, 30 Mar 2026 13:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774877931;
-	bh=9vonjzowFIvdkIl8fup8ovoUgrT2NpeLCEw0w5/1Unc=;
+	s=k20201202; t=1774877933;
+	bh=IF/3jCrcmMuq507/QZW0oUgVxE7lrLvleJ1dfpwUDvQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HLXgyKmKvTTTN82jybDMpGx26iUOKjUKG7FL/y14ahiqs0pMMZqqf6yU8pMn6Of+H
-	 XWEZAt5y8bB33KqiLxGAxtoPb1k9EbMl0/60T91H3xWLWeKbqA33rDYnZXtOpJt8EK
-	 H52kXKkNK12+dAV4S96M0/e6D5RbCBj9yTMiFwW4sUQHsNXnngJb8cVe0N8gPgUn0l
-	 BmIUgmRm7fihNpjnl4V7u/gSerSHewEt1RnunO13DELWs2m395byDMu7vhVIsWO//3
-	 h9R7rHjXzQ4S2zuEjexCyozUeXXje1M0rAnvHILAzR1jndeTc+VxY4EoCYDXO6/NfP
-	 gOa1OOkFXw2Zg==
+	b=nOw2GYX8886AfW0bOjy5dU528Z9QkJb515NSJU2nBe9iWnlurxhh74Hkm9ZZTTxpF
+	 9ZEmgGWm6um4ywW5JBb9wiqxijsA8Ufcu4PKUcpew6IevJIfXtJ8ZzkBydKahryjDV
+	 9hPRRkwAefgAVPiX/oeq6n0HnhLDa7gR4LenC8ht5M/Sr6rDmtn4mEbk3T9vK27Lhc
+	 CQD12/FfmmDaJroN55TlPRfeibRoqcnFuwuYEm2zWlIUKiTsLnS796lL5pJYEDq2lS
+	 Kv/vEi/rvd8o9uIAgW8yMEKtHF6gz1gpJuZJQxTlaVo08JNtaEKMNWpWK6dDeCkFyu
+	 aelDTJKVf0z3w==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 30 Mar 2026 09:38:28 -0400
-Subject: [PATCH nfs-utils v2 08/16] exportd/mountd: add netlink support for
- the nfsd.fh cache
+Date: Mon, 30 Mar 2026 09:38:29 -0400
+Subject: [PATCH nfs-utils v2 09/16] exportd/mountd: add netlink support for
+ the auth.unix.ip cache
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260330-exportd-netlink-v2-8-cc9bd5db2408@kernel.org>
+Message-Id: <20260330-exportd-netlink-v2-9-cc9bd5db2408@kernel.org>
 References: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 In-Reply-To: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 To: Steve Dickson <steved@redhat.com>
@@ -66,31 +66,31 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10429; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=9vonjzowFIvdkIl8fup8ovoUgrT2NpeLCEw0w5/1Unc=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzfSXFSCF8W7IiaxlLRiqoPJliabmWT7epKU
- BKDYivVx+aJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp83wAKCRAADmhBGVaC
- FczZD/0Z2/tQ7mw1C33IwZeF9WYL2rju2jiGuk3oO5Q4kChuPZnbBcTujcAYk329dF8nh2YYaoI
- YUNY8v3BxydnxtLhhJHYt8ddsXMEa4LeCNa57AUoln9IUrohNPEeDlszJLNlnn71/VgUiT63hNM
- rZ6eOg4gWPIA+Pn8aQAnQVW2gN2/sVDacVHo0gQjCuXoILn/8pUizKbDvcC3wqStjpX6m15CqJq
- RM2vyWTG2daOJqMGDGWF9zIasUl12+oHJ0NWijzGhjS4YAg1WdqSjOftczGkFLwMh478G2ijzML
- 24x8EA9OVULGdSqbrG5iiTCE2GwHHK1CgAK1QQcoQbbKCz+3fv85ZUeuuPKtaptRVtVw3QKxvJs
- DEoeP43mVfmadXWMO6T/v1/Ph0qm+tAxwzi7nvst5EvggtJYt4EabfUElc9qbXEqxNgTRqeoMjN
- nTcg5TSjQyfBl5X7hxovHZKKKzTVT41TF/0veMyjzZoxFTqBYjwWlqkdhMyRorEemCQWRCZLo3g
- QysLPcN7k10VaBwfK3sZLehdDSWgmWgFfpx5YV9ejrKDMAdrpBFG4HNeOCUuhab8a1eX+z3EBiG
- q+oU75y/Us1KIFHPhjGqUxp44GNVsFyt7gmH86drbF8SfXiuoVeqNwf5s/pl1/eZSVS1fafD2dg
- TwuRvaiphhqcfFA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12483; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=IF/3jCrcmMuq507/QZW0oUgVxE7lrLvleJ1dfpwUDvQ=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzfpjVJ6uOnzsC8RJdaOBsYFljHEokJp44XF
+ KqEox06PuuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp83wAKCRAADmhBGVaC
+ FWrCEACiBxfetsN8PvjVMI4tyqIgab0jaY5uOakcu1v/9kwizt0f6zQftU8e5Nw6TENSusmOnHW
+ bCxYWLHQhkRyUzV1mdvPejSpWkO4Dn8C/ba9Z6msn26WKqTtVzUPTUkTb7mSTozqAyc/NLeI3Ba
+ MbuiTF0p7/5MfHKQK0x/k571NYYc08rxhN6AcH2karZjIaeBaizyKw2wNUPzyqAUu9dfmPhwFa5
+ jpPQbDcsxW09ZDMWeB2Bkp5zy12jb90Owuc67JMq5z8e1bqR9B/bYji+ucKsPOuRgS9HE/1Z0xh
+ GQhz24lE5CwTWbjYp+pZjfdEhx8ksyRgQc7TK7ue4w7BOazh/TSrXvTky7wLmhi/fsFLd/pVvYO
+ DW5BuhATU8+U4ajDUD+rAqEYR2TJMyMcxqVy15AgGjLVPADlW7wV/x1TB6ASIRzfd30HF5IXlyC
+ iotau3f1z+lW3j69XreKIVWrCRL+pPZNYaiZkvL2MQnOyX7wQcddz+qsp29bdXP16qF0onlKxL4
+ EU88sSf7woYU1lSiWSAzhmcIFtB9W3qJb/NICIAbVNHhxozdaySumaO8QK5HoAe8AYpE6eVoBK6
+ dYgjNNkOwXaHipKsQ5dlz5bVR/+Piq0rcpfHtrOZBNoQ2q+gXyH7Y63o3Yr69rGVBW1bdSrgBVG
+ 2ZYFv75kJ+Qxeog==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20523-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20524-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,142 +102,227 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1CB0335C23F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C543035C4CC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Refactor cache_nl_set_reqs() to take a socket parameter so it can be
-reused for multiple genl families.
+Refactor cache_nfsd_nl_open() into a generic cache_genl_open() helper
+that takes the family name, multicast group name, and output pointers
+for the command socket, notification socket, and resolved family ID.
+Convert cache_nfsd_nl_open() to use it.
 
-Rename cache_nl_process() to cache_nl_process_export() and factor out
-the notification drain and auth_reload() into a new
-cache_nfsd_nl_process() wrapper.
+Add the sunrpc genl family socket setup for handling auth.unix.ip and
+auth.unix.gid cache upcalls. The sunrpc family is resolved at startup
+and silently falls back if the kernel doesn't support it.
 
-Add the expkey (nfsd.fh) netlink cache handler, which uses the same
-nfsd genl family as svc_export. The handler resolves fsid-based
-lookups including CROSSMOUNT submount iteration and responds via
-NFSD_CMD_EXPKEY_SET_REQS.
+Add the ip_map (auth.unix.ip) netlink cache handler. For each pending
+request, the handler resolves the IP address using client_resolve()
+and responds via SUNRPC_CMD_IP_MAP_SET_REQS with the domain name or a
+negative entry.
+
+Wire the sunrpc notification socket into cache_open(), cache_set_fds(),
+and cache_process_req().
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- support/export/cache.c | 323 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 314 insertions(+), 9 deletions(-)
+ support/export/cache.c | 366 +++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 342 insertions(+), 24 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b9638141a67befb 100644
+index c350662fd97c33c40c1d59297b9638141a67befb..50c2de08c504da1a05631938ee51251d82c52377 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -1477,7 +1477,7 @@ static struct nl_msg *cache_nl_new_msg(int family, int cmd, int flags)
- 	return msg;
+@@ -48,6 +48,12 @@
+ #include "nfsd_netlink.h"
+ #endif
+ 
++#ifdef USE_SYSTEM_SUNRPC_NETLINK_H
++#include <linux/sunrpc_netlink.h>
++#else
++#include "sunrpc_netlink.h"
++#endif
++
+ #ifdef USE_BLKID
+ #include "blkid/blkid.h"
+ #endif
+@@ -1108,58 +1114,71 @@ static struct nl_sock *nl_sock_setup(void)
+ 	return sock;
  }
  
--static int cache_nl_set_reqs(struct nl_msg *msg)
-+static int cache_nl_set_reqs(struct nl_sock *sock, struct nl_msg *msg)
+-static int cache_nfsd_nl_open(void)
++static int cache_genl_open(const char *family_name, const char *mcgrp_name,
++			   struct nl_sock **cmd_sock,
++			   struct nl_sock **notify_sock, int *family_out)
  {
- 	struct nl_cb *cb;
- 	int done = 0;
-@@ -1490,14 +1490,14 @@ static int cache_nl_set_reqs(struct nl_msg *msg)
- 	nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, nl_finish_cb, &done);
- 	nl_cb_err(cb, NL_CB_CUSTOM, nl_error_cb, &done);
+ 	int grp;
  
--	ret = nl_send_auto(nfsd_nl_cmd_sock, msg);
-+	ret = nl_send_auto(sock, msg);
- 	if (ret < 0) {
- 		nl_cb_put(cb);
- 		return ret;
+-	nfsd_nl_family = 0;
++	*family_out = 0;
+ 
+-	nfsd_nl_cmd_sock = nl_sock_setup();
+-	if (!nfsd_nl_cmd_sock) {
+-		xlog(D_NETLINK, "cache_nfsd_nl_open: failed to allocate command socket");
++	*cmd_sock = nl_sock_setup();
++	if (!*cmd_sock) {
++		xlog(D_NETLINK, "%s: failed to allocate command socket",
++		     family_name);
+ 		return -ENOMEM;
  	}
  
- 	while (!done) {
--		ret = nl_recvmsgs(nfsd_nl_cmd_sock, cb);
-+		ret = nl_recvmsgs(sock, cb);
- 		if (ret < 0)
- 			break;
- 	}
-@@ -1515,9 +1515,6 @@ static void cache_nl_process_export(void)
- 	struct nl_msg *msg;
- 	int i;
- 
--	/* Drain pending notifications */
--	cache_nfsd_nl_drain();
--
- 	/* Fetch all pending requests from the kernel */
- 	if (cache_nl_get_export_reqs(&reqs, &nreqs)) {
- 		xlog(L_WARNING, "cache_nl_process_export: failed to get export requests");
-@@ -1571,7 +1568,7 @@ static void cache_nl_process_export(void)
- 		}
- 
- 		if (nfsd_nl_add_export(msg, dom, path, epp, ttl) < 0) {
--			cache_nl_set_reqs(msg);
-+			cache_nl_set_reqs(nfsd_nl_cmd_sock, msg);
- 			nlmsg_free(msg);
- 			msg = cache_nl_new_msg(nfsd_nl_family,
- 					       NFSD_CMD_SVC_EXPORT_SET_REQS, 0);
-@@ -1588,7 +1585,7 @@ static void cache_nl_process_export(void)
- 		nfs_freeaddrinfo(ai);
+-	nfsd_nl_family = genl_ctrl_resolve(nfsd_nl_cmd_sock, NFSD_FAMILY_NAME);
+-	if (nfsd_nl_family < 0) {
+-		xlog(D_NETLINK, "cache_nfsd_nl_open: nfsd netlink family not found");
++	*family_out = genl_ctrl_resolve(*cmd_sock, family_name);
++	if (*family_out < 0) {
++		xlog(D_NETLINK, "%s: netlink family not found", family_name);
+ 		goto out_free_cmd;
  	}
  
--	cache_nl_set_reqs(msg);
-+	cache_nl_set_reqs(nfsd_nl_cmd_sock, msg);
- 	nlmsg_free(msg);
+-	grp = genl_ctrl_resolve_grp(nfsd_nl_cmd_sock, NFSD_FAMILY_NAME,
+-				    NFSD_MCGRP_EXPORTD);
++	grp = genl_ctrl_resolve_grp(*cmd_sock, family_name, mcgrp_name);
+ 	if (grp < 0) {
+-		xlog(D_NETLINK, "cache_nfsd_nl_open: exportd multicast group not found");
++		xlog(D_NETLINK, "%s: %s multicast group not found",
++		     family_name, mcgrp_name);
+ 		goto out_free_cmd;
+ 	}
  
- out_free:
-@@ -1599,6 +1596,314 @@ out_free:
- 	free(reqs);
+-	nfsd_nl_notify_sock = nl_sock_setup();
+-	if (!nfsd_nl_notify_sock) {
+-		xlog(D_NETLINK, "cache_nfsd_nl_open: failed to allocate notify socket");
++	*notify_sock = nl_sock_setup();
++	if (!*notify_sock) {
++		xlog(D_NETLINK, "%s: failed to allocate notify socket",
++		     family_name);
+ 		goto out_free_cmd;
+ 	}
+ 
+-	nl_socket_disable_seq_check(nfsd_nl_notify_sock);
++	nl_socket_disable_seq_check(*notify_sock);
+ 
+-	if (nl_socket_add_membership(nfsd_nl_notify_sock, grp)) {
+-		xlog(L_WARNING, "cache_nfsd_nl_open: failed to join exportd multicast group");
++	if (nl_socket_add_membership(*notify_sock, grp)) {
++		xlog(L_WARNING, "%s: failed to join %s multicast group",
++		     family_name, mcgrp_name);
+ 		goto out_free_notify;
+ 	}
+ 
+-	nl_socket_set_nonblocking(nfsd_nl_notify_sock);
+-	xlog(D_NETLINK, "cache_nfsd_nl_open: listening for export notifications");
++	nl_socket_set_nonblocking(*notify_sock);
++	xlog(D_NETLINK, "%s: listening for %s notifications",
++	     family_name, mcgrp_name);
+ 	return 0;
+ 
+ out_free_notify:
+-	nl_socket_free(nfsd_nl_notify_sock);
+-	nfsd_nl_notify_sock = NULL;
++	nl_socket_free(*notify_sock);
++	*notify_sock = NULL;
+ out_free_cmd:
+-	nl_socket_free(nfsd_nl_cmd_sock);
+-	nfsd_nl_cmd_sock = NULL;
+-	nfsd_nl_family = 0;
++	nl_socket_free(*cmd_sock);
++	*cmd_sock = NULL;
++	*family_out = 0;
+ 	return -ENOENT;
+ }
+ 
++static int cache_nfsd_nl_open(void)
++{
++	return cache_genl_open(NFSD_FAMILY_NAME, NFSD_MCGRP_EXPORTD,
++			       &nfsd_nl_cmd_sock, &nfsd_nl_notify_sock,
++			       &nfsd_nl_family);
++}
++
+ static int nfsd_nl_notify_handler(struct nl_msg *UNUSED(msg), void *UNUSED(arg))
+ {
+ 	return NL_OK;
+@@ -1904,6 +1923,296 @@ static void cache_nfsd_nl_process(void)
+ 	cache_nl_process_expkey();
  }
  
 +/*
-+ * Netlink-based expkey (nfsd.fh) cache support.
++ * Netlink-based sunrpc cache support.
 + *
-+ * Uses the same nfsd genl family as svc_export. The kernel sends
-+ * NFSD_CMD_CACHE_NOTIFY with NFSD_CACHE_TYPE_EXPKEY to signal
-+ * pending expkey cache requests.
++ * The sunrpc genl family handles auth.unix.ip and auth.unix.gid caches.
++ * A SUNRPC_CMD_CACHE_NOTIFY on the "exportd" multicast group signals
++ * pending cache requests.
 + */
-+struct expkey_req {
-+	char	*client;
-+	int	fsidtype;
-+	char	*fsid;
-+	int	fsidlen;
++static struct nl_sock *sunrpc_nl_notify_sock;
++static struct nl_sock *sunrpc_nl_cmd_sock;
++static int sunrpc_nl_family;
++
++static int cache_sunrpc_nl_open(void)
++{
++	return cache_genl_open(SUNRPC_FAMILY_NAME, SUNRPC_MCGRP_EXPORTD,
++			       &sunrpc_nl_cmd_sock, &sunrpc_nl_notify_sock,
++			       &sunrpc_nl_family);
++}
++
++static void cache_sunrpc_nl_drain(void)
++{
++	struct nl_cb *cb;
++
++	cb = nl_cb_alloc(NL_CB_DEFAULT);
++	if (!cb)
++		return;
++
++	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, nfsd_nl_notify_handler, NULL);
++	nl_recvmsgs(sunrpc_nl_notify_sock, cb);
++	nl_cb_put(cb);
++}
++
++/*
++ * ip_map (auth.unix.ip) netlink handler
++ */
++struct ip_map_req {
++	char	*class;
++	char	*addr;
 +};
 +
-+struct get_expkey_reqs_data {
-+	struct expkey_req	*reqs;
++struct get_ip_map_reqs_data {
++	struct ip_map_req	*reqs;
 +	int			nreqs;
 +	int			maxreqs;
 +	int			err;
 +};
 +
-+static int get_expkey_reqs_cb(struct nl_msg *msg, void *arg)
++static int get_ip_map_reqs_cb(struct nl_msg *msg, void *arg)
 +{
-+	struct get_expkey_reqs_data *data = arg;
++	struct get_ip_map_reqs_data *data = arg;
 +	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
 +	struct nlattr *attr;
 +	int rem;
 +
 +	nla_for_each_attr(attr, genlmsg_attrdata(gnlh, 0),
 +			  genlmsg_attrlen(gnlh, 0), rem) {
-+		struct nlattr *tb[NFSD_A_EXPKEY_PATH + 1];
-+		struct expkey_req *req;
++		struct nlattr *tb[SUNRPC_A_IP_MAP_EXPIRY + 1];
++		struct ip_map_req *req;
 +
-+		if (nla_type(attr) != NFSD_A_EXPKEY_REQS_REQUESTS)
++		if (nla_type(attr) != SUNRPC_A_IP_MAP_REQS_REQUESTS)
 +			continue;
 +
-+		if (nla_parse_nested(tb, NFSD_A_EXPKEY_PATH, attr, NULL))
++		if (nla_parse_nested(tb, SUNRPC_A_IP_MAP_EXPIRY, attr,
++				     NULL))
 +			continue;
 +
-+		if (!tb[NFSD_A_EXPKEY_CLIENT] ||
-+		    !tb[NFSD_A_EXPKEY_FSIDTYPE] ||
-+		    !tb[NFSD_A_EXPKEY_FSID])
++		if (!tb[SUNRPC_A_IP_MAP_CLASS] ||
++		    !tb[SUNRPC_A_IP_MAP_ADDR])
 +			continue;
 +
 +		if (data->nreqs >= data->maxreqs) {
 +			int newmax = data->maxreqs ? data->maxreqs * 2 : 16;
-+			struct expkey_req *tmp;
++			struct ip_map_req *tmp;
 +
 +			tmp = realloc(data->reqs, newmax * sizeof(*tmp));
 +			if (!tmp) {
@@ -249,33 +334,29 @@ index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b963814
 +		}
 +
 +		req = &data->reqs[data->nreqs++];
-+		req->client = strdup(nla_get_string(tb[NFSD_A_EXPKEY_CLIENT]));
-+		req->fsidtype = nla_get_u8(tb[NFSD_A_EXPKEY_FSIDTYPE]);
-+		req->fsidlen = nla_len(tb[NFSD_A_EXPKEY_FSID]);
-+		req->fsid = malloc(req->fsidlen);
++		req->class = strdup(nla_get_string(tb[SUNRPC_A_IP_MAP_CLASS]));
++		req->addr = strdup(nla_get_string(tb[SUNRPC_A_IP_MAP_ADDR]));
 +
-+		if (!req->client || !req->fsid) {
++		if (!req->class || !req->addr) {
 +			data->err = -ENOMEM;
 +			return NL_STOP;
 +		}
-+		memcpy(req->fsid, nla_data(tb[NFSD_A_EXPKEY_FSID]),
-+		       req->fsidlen);
 +	}
 +
 +	return NL_OK;
 +}
 +
-+static int cache_nl_get_expkey_reqs(struct expkey_req **reqs_out,
++static int cache_nl_get_ip_map_reqs(struct ip_map_req **reqs_out,
 +				    int *nreqs_out)
 +{
-+	struct get_expkey_reqs_data data = { };
++	struct get_ip_map_reqs_data data = { };
 +	struct nl_msg *msg;
 +	struct nl_cb *cb;
 +	int done = 0;
 +	int ret;
 +
-+	msg = cache_nl_new_msg(nfsd_nl_family,
-+			       NFSD_CMD_EXPKEY_GET_REQS, NLM_F_DUMP);
++	msg = cache_nl_new_msg(sunrpc_nl_family,
++			       SUNRPC_CMD_IP_MAP_GET_REQS, NLM_F_DUMP);
 +	if (!msg)
 +		return -ENOMEM;
 +
@@ -285,11 +366,11 @@ index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b963814
 +		return -ENOMEM;
 +	}
 +
-+	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, get_expkey_reqs_cb, &data);
++	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, get_ip_map_reqs_cb, &data);
 +	nl_cb_set(cb, NL_CB_FINISH, NL_CB_CUSTOM, nl_finish_cb, &done);
 +	nl_cb_err(cb, NL_CB_CUSTOM, nl_error_cb, &done);
 +
-+	ret = nl_send_auto(nfsd_nl_cmd_sock, msg);
++	ret = nl_send_auto(sunrpc_nl_cmd_sock, msg);
 +	nlmsg_free(msg);
 +	if (ret < 0) {
 +		nl_cb_put(cb);
@@ -297,7 +378,7 @@ index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b963814
 +	}
 +
 +	while (!done) {
-+		ret = nl_recvmsgs(nfsd_nl_cmd_sock, cb);
++		ret = nl_recvmsgs(sunrpc_nl_cmd_sock, cb);
 +		if (ret < 0)
 +			break;
 +	}
@@ -307,8 +388,8 @@ index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b963814
 +	if (data.err) {
 +		int i;
 +		for (i = 0; i < data.nreqs; i++) {
-+			free(data.reqs[i].client);
-+			free(data.reqs[i].fsid);
++			free(data.reqs[i].class);
++			free(data.reqs[i].addr);
 +		}
 +		free(data.reqs);
 +		return data.err;
@@ -319,27 +400,28 @@ index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b963814
 +	return 0;
 +}
 +
-+static int nfsd_nl_add_expkey(struct nl_msg *msg, char *dom, int fsidtype,
-+			 char *fsid, int fsidlen, char *found_path)
++static int nl_add_ip_map(struct nl_msg *msg, char *class, char *addr,
++			 char *domain)
 +{
 +	struct nlattr *nest;
++	time_t now = time(0);
 +
-+	nest = nla_nest_start(msg, NFSD_A_EXPKEY_REQS_REQUESTS);
++	nest = nla_nest_start(msg, SUNRPC_A_IP_MAP_REQS_REQUESTS);
 +	if (!nest)
 +		return -1;
 +
-+	if (nla_put_string(msg, NFSD_A_EXPKEY_CLIENT, dom) < 0 ||
-+	    nla_put_u8(msg, NFSD_A_EXPKEY_FSIDTYPE, fsidtype) < 0 ||
-+	    nla_put(msg, NFSD_A_EXPKEY_FSID, fsidlen, fsid) < 0 ||
-+	    nla_put_u64(msg, NFSD_A_EXPKEY_EXPIRY, 0x7fffffff) < 0)
++	if (nla_put_string(msg, SUNRPC_A_IP_MAP_CLASS, class) < 0 ||
++	    nla_put_string(msg, SUNRPC_A_IP_MAP_ADDR, addr) < 0 ||
++	    nla_put_u64(msg, SUNRPC_A_IP_MAP_EXPIRY,
++			now + default_ttl) < 0)
 +		goto nla_failure;
 +
-+	if (found_path) {
-+		if (nla_put_string(msg, NFSD_A_EXPKEY_PATH,
-+				   found_path) < 0)
++	if (domain) {
++		if (nla_put_string(msg, SUNRPC_A_IP_MAP_DOMAIN,
++				   domain) < 0)
 +			goto nla_failure;
 +	} else {
-+		if (nla_put_flag(msg, NFSD_A_EXPKEY_NEGATIVE) < 0)
++		if (nla_put_flag(msg, SUNRPC_A_IP_MAP_NEGATIVE) < 0)
 +			goto nla_failure;
 +	}
 +
@@ -351,166 +433,147 @@ index 090ea0a6cc6da7e9c2ce255601103d2442526067..c350662fd97c33c40c1d59297b963814
 +	return -1;
 +}
 +
-+static void cache_nl_process_expkey(void)
++static void cache_nl_process_ip_map(void)
 +{
-+	struct expkey_req *reqs = NULL;
++	struct ip_map_req *reqs = NULL;
 +	int nreqs = 0;
 +	struct nl_msg *msg;
 +	int i;
 +
-+	if (cache_nl_get_expkey_reqs(&reqs, &nreqs)) {
-+		xlog(L_WARNING, "cache_nl_process_expkey: failed to get expkey requests");
++	if (cache_nl_get_ip_map_reqs(&reqs, &nreqs)) {
++		xlog(L_WARNING, "cache_nl_process_ip_map: failed to get ip_map requests");
 +		return;
 +	}
 +
 +	if (!nreqs)
 +		return;
 +
-+	xlog(D_CALL, "cache_nl_process_expkey: %d pending expkey requests", nreqs);
++	xlog(D_CALL, "cache_nl_process_ip_map: %d pending ip_map requests",
++	     nreqs);
 +
-+	msg = cache_nl_new_msg(nfsd_nl_family, NFSD_CMD_EXPKEY_SET_REQS, 0);
++	msg = cache_nl_new_msg(sunrpc_nl_family,
++			       SUNRPC_CMD_IP_MAP_SET_REQS, 0);
 +	if (!msg)
 +		goto out_free;
 +
 +	for (i = 0; i < nreqs; i++) {
-+		char *dom = reqs[i].client;
-+		int fsidtype = reqs[i].fsidtype;
-+		char *fsid = reqs[i].fsid;
-+		int fsidlen = reqs[i].fsidlen;
-+		struct parsed_fsid parsed;
-+		struct addrinfo *ai = NULL;
-+		struct exportent *found = NULL;
-+		char *found_path = NULL;
-+		nfs_export *exp;
-+		int j;
++		char *class = reqs[i].class;
++		char *ipaddr = reqs[i].addr;
++		char *client = NULL;
++		char *domain = NULL;
++		char *dom_alloc = NULL;
++		struct addrinfo *tmp = NULL;
 +
-+		if (parse_fsid(fsidtype, fsidlen, fsid, &parsed))
-+			goto do_add_expkey;
++		if (strcmp(class, "nfsd") == 0) {
++			tmp = host_pton(ipaddr);
++			if (tmp) {
++				struct addrinfo *ai;
 +
-+		if (is_ipaddr_client(dom)) {
-+			ai = lookup_client_addr(dom);
-+			if (!ai)
-+				goto do_add_expkey;
-+		}
-+
-+		for (j = 0; j < MCL_MAXTYPES; j++) {
-+			nfs_export *prev = NULL;
-+			nfs_export *next_exp;
-+			void *mnt = NULL;
-+
-+			for (exp = exportlist[j].p_head; exp;
-+			     exp = next_exp) {
-+				char *path;
-+
-+				if (exp->m_export.e_flags &
-+				    NFSEXP_CROSSMOUNT) {
-+					if (prev == exp) {
-+						path = next_mnt(&mnt,
-+							exp->m_export.e_path);
-+						if (!path) {
-+							next_exp = exp->m_next;
-+							prev = NULL;
-+							continue;
-+						}
-+						next_exp = exp;
-+					} else {
-+						prev = exp;
-+						mnt = NULL;
-+						path = exp->m_export.e_path;
-+						next_exp = exp;
-+					}
-+				} else {
-+					path = exp->m_export.e_path;
-+					next_exp = exp->m_next;
++				ai = client_resolve(tmp->ai_addr);
++				if (ai) {
++					client = client_compose(ai);
++					nfs_freeaddrinfo(ai);
 +				}
++			}
 +
-+				if (!is_ipaddr_client(dom) &&
-+				    !namelist_client_matches(exp, dom))
-+					continue;
-+
-+				switch (match_fsid(&parsed, exp, path)) {
-+				case 0:
-+					continue;
-+				case -1:
-+					continue;
++			if (use_ipaddr && client) {
++				dom_alloc = malloc(strlen(ipaddr) + 2);
++				if (dom_alloc) {
++					dom_alloc[0] = '$';
++					strcpy(dom_alloc + 1, ipaddr);
++					domain = dom_alloc;
 +				}
-+
-+				if (is_ipaddr_client(dom) &&
-+				    !ipaddr_client_matches(exp, ai))
-+					continue;
-+
-+				if (!found ||
-+				    subexport(&exp->m_export, found)) {
-+					found = &exp->m_export;
-+					free(found_path);
-+					found_path = strdup(path);
-+					if (!found_path)
-+						goto do_add_expkey;
-+				}
++			} else if (client) {
++				domain = *client ? client : "DEFAULT";
 +			}
 +		}
 +
-+do_add_expkey:
-+		if (nfsd_nl_add_expkey(msg, dom, fsidtype, fsid,
-+				       fsidlen, found_path) < 0) {
-+			cache_nl_set_reqs(nfsd_nl_cmd_sock, msg);
++		if (nl_add_ip_map(msg, class, ipaddr, domain) < 0) {
++			cache_nl_set_reqs(sunrpc_nl_cmd_sock, msg);
 +			nlmsg_free(msg);
-+			msg = cache_nl_new_msg(nfsd_nl_family,
-+					       NFSD_CMD_EXPKEY_SET_REQS, 0);
++			msg = cache_nl_new_msg(sunrpc_nl_family,
++					       SUNRPC_CMD_IP_MAP_SET_REQS, 0);
 +			if (!msg) {
-+				free(found_path);
-+				nfs_freeaddrinfo(ai);
++				free(dom_alloc);
++				free(client);
++				nfs_freeaddrinfo(tmp);
 +				goto out_free;
 +			}
-+			if (nfsd_nl_add_expkey(msg, dom, fsidtype, fsid,
-+					       fsidlen, found_path) < 0)
++			if (nl_add_ip_map(msg, class, ipaddr, domain) < 0)
 +				xlog(L_WARNING, "%s: skipping oversized "
-+				     "entry", __func__);
++				     "entry for %s", __func__, ipaddr);
 +		}
-+		if (!found)
-+			xlog(D_AUTH, "denied access to %s",
-+			     *dom == '$' ? dom + 1 : dom);
-+		free(found_path);
-+		nfs_freeaddrinfo(ai);
++
++		if (tmp && !client)
++			xlog(D_AUTH, "failed authentication for IP %s",
++			     ipaddr);
++		else if (client && !use_ipaddr)
++			xlog(D_AUTH, "successful authentication for IP %s as %s",
++			     ipaddr, *client ? client : "DEFAULT");
++		else if (client)
++			xlog(D_AUTH, "successful authentication for IP %s",
++			     ipaddr);
++
++		free(dom_alloc);
++		free(client);
++		nfs_freeaddrinfo(tmp);
 +	}
 +
-+	cache_nl_set_reqs(nfsd_nl_cmd_sock, msg);
++	cache_nl_set_reqs(sunrpc_nl_cmd_sock, msg);
 +	nlmsg_free(msg);
 +
 +out_free:
 +	for (i = 0; i < nreqs; i++) {
-+		free(reqs[i].client);
-+		free(reqs[i].fsid);
++		free(reqs[i].class);
++		free(reqs[i].addr);
 +	}
 +	free(reqs);
 +}
 +
-+static void cache_nfsd_nl_process(void)
++static void cache_sunrpc_nl_process(void)
 +{
-+	/* Drain pending nfsd notifications */
-+	cache_nfsd_nl_drain();
++	/* Drain pending sunrpc notifications */
++	cache_sunrpc_nl_drain();
 +
 +	auth_reload();
 +
-+	/* Handle any pending svc_export requests */
-+	cache_nl_process_export();
-+
-+	/* Handle any pending expkey requests */
-+	cache_nl_process_expkey();
++	/* Handle any pending ip_map requests */
++	cache_nl_process_ip_map();
 +}
 +
  static int can_reexport_via_fsidnum(struct exportent *exp, struct statfs *st)
  {
  	if (st->f_type != 0x6969 /* NFS_SUPER_MAGIC */)
-@@ -2207,7 +2512,7 @@ int cache_process_req(fd_set *readfds)
- 	if (nfsd_nl_notify_sock &&
- 	    FD_ISSET(nl_socket_get_fd(nfsd_nl_notify_sock), readfds)) {
- 		cnt++;
--		cache_nl_process_export();
-+		cache_nfsd_nl_process();
+@@ -2476,6 +2785,7 @@ void cache_open(void)
+ 		cachelist[i].f = open(path, O_RDWR);
+ 	}
+ 	cache_nfsd_nl_open();
++	cache_sunrpc_nl_open();
+ }
+ 
+ /**
+@@ -2491,6 +2801,8 @@ void cache_set_fds(fd_set *fdset)
+ 	}
+ 	if (nfsd_nl_notify_sock)
+ 		FD_SET(nl_socket_get_fd(nfsd_nl_notify_sock), fdset);
++	if (sunrpc_nl_notify_sock)
++		FD_SET(nl_socket_get_fd(sunrpc_nl_notify_sock), fdset);
+ }
+ 
+ /**
+@@ -2515,6 +2827,12 @@ int cache_process_req(fd_set *readfds)
+ 		cache_nfsd_nl_process();
  		FD_CLR(nl_socket_get_fd(nfsd_nl_notify_sock), readfds);
  	}
++	if (sunrpc_nl_notify_sock &&
++	    FD_ISSET(nl_socket_get_fd(sunrpc_nl_notify_sock), readfds)) {
++		cnt++;
++		cache_sunrpc_nl_process();
++		FD_CLR(nl_socket_get_fd(sunrpc_nl_notify_sock), readfds);
++	}
  	return cnt;
+ }
+ 
 
 -- 
 2.53.0
