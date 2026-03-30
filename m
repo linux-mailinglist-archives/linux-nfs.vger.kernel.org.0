@@ -1,138 +1,356 @@
-Return-Path: <linux-nfs+bounces-20532-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20533-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cLXGJ4CDymkW9gUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20532-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 16:06:56 +0200
+	id kGvgGeWJymn09gUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20533-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 16:34:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E77F35C91C
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 16:06:56 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E62435CEFB
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 16:34:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 88AE53031AF1
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:57:56 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 971AE300723F
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 14:23:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDD03A4530;
-	Mon, 30 Mar 2026 13:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292AE3A63E3;
+	Mon, 30 Mar 2026 14:23:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="lSYNp7Wf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAM5duh0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D023D3A6EF7;
-	Mon, 30 Mar 2026 13:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DFF3A4F2F
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 14:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774879073; cv=none; b=KS4yGh/ex8ephWK/UeLIewPIeiATS2bY+MJ6I/zw3bmyhyt5xH5TkJLmhtmUhl3kM+yUtEw9JnuLkkScYndN87t2F6FZRQ1yWU3V04pDUQagVLorpR66rJPbdJK0sA1RgLjjLPdStMLpOeJ/B10pmbDLrY8QqZfwSXpB/n0mWZg=
+	t=1774880584; cv=none; b=ACzRbOiJ5lIV32VUlyL9pmAuCwUgjjLR3yaYE0QhDHm1B3mzJT/Mpv+dPL1GtwE+p4a3LecPZNNkShetRBOLAE4BDIo9TumDuxcuTnk0u7s4X+4rrGzODl4gR+Si7Dh8mizeQIDaEr8761YYDWEMe1uMYYqhSxPGaHLvU3VDFqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774879073; c=relaxed/simple;
-	bh=pcW6LXETd4GRRYCmR8ynpqdeQSEEzpJd8b7cdKVtty8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SY0C3MfwyOtCEQPiI7597X2J+jA/BfqU/vc6Ahmr0riSzFqEHDW4ngmGgga9nLCCXeakwcNEmwqaeFOveIQjWfpaLGj66OBee/hub5i3If7Jbw7e0ZfStQx8c3j5jMjLEjgmW90zVz9St13YjznVs/HCOlbWvSZ0CAcFYyegcvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=lSYNp7Wf; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=From:Cc:To:Date:Message-ID;
-	bh=aHLXtwCMFeKjEs/VsnRh986+QoltAhaGyi5eb+m+M2o=; b=lSYNp7WftXgNZI9nAPuFMFcKqY
-	HEmA505012e9xqEKFQaNN1zovmIMMfDhNZY37xSKz2H2whDuvOmUZFmRxWz3Yaqnl/BelRXXp44rw
-	Y37GF+vBFdN1uNuw5CZTbr66zdDM08ln+E5ImeL4BcoAfP9R9v1BIE9GZHzP9ZWEWNuFwee+HjifT
-	Xpye22zs124AMG/L1f2BAIylpljBlz0jNngKSbDfSWKnSx4pR7WEfoAfIANLq+RGWwpoqALSvK5wq
-	QwAGdLAO0tdCgSWWQw5JXUdt7q4bCG8mpUq4nc5S1VfADIFpRkXiOCjGf6UJ/FNmqyfheFdUVwZu4
-	9mmWLziXMCsHMnERmzv106kqFnT+hqVLPuW/f84tnZfNDxT/oB25+Pw3ASTxShUG260kt9palsKsg
-	TN/W2lMJA++aKUig0vH7n6qlghHLahYcjmUvDxhrAIl/0/94Y9U77HhO+CgFinlTv1xR/drRKxmik
-	sB9oukHjqX3Ywk7rgEeGLZEC;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1w7D7b-000000055qd-0zuk;
-	Mon, 30 Mar 2026 13:57:39 +0000
-Message-ID: <9639cd12-5e9d-4eb4-9d9c-f5047ccad7b7@samba.org>
-Date: Mon, 30 Mar 2026 15:57:38 +0200
+	s=arc-20240116; t=1774880584; c=relaxed/simple;
+	bh=X2QXEXEFSfwD5XWt9JWleVw62Lz3GGAaZBixEVmCkr8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=GC0CWtITfR29k0kOLt2M2hsFz/23B1ewiSeF8z51MC/aGw8OFeB+uaxtoJYsBIPFhGBsBwpuyKpxzXcXW2XC8001yWkQAvQ3Ntl829stW6K3O3glDzbm1UiKk3L9JZQGnd+11w9yoMN6Gsj3F6D/TReBv0kXkMWlPx8BQVFo/t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAM5duh0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F489C2BCB3;
+	Mon, 30 Mar 2026 14:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774880583;
+	bh=X2QXEXEFSfwD5XWt9JWleVw62Lz3GGAaZBixEVmCkr8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=TAM5duh0IjYqx3GqRtuVhEWl+qVkhVyI7kSa2heg6ypA+WozAnHds5Tv7pckuG3a9
+	 KwifKmDJrsYm0OJTXwrsb0kxZJBLfi5F7udP/8ycPqoNat+WxLA6s6iuC4bFnr4Y9C
+	 LJ9FarRYj01SYimgUtAgeNSBBpMrk8d3Wr7FuHyRDGowtmz8eGAGnihbI7exqAfgVl
+	 ZNWSbM5mkr4mpA0kFc45vFyhWLwgcUM9YJolC83lJfldHCYTOpgurDbem4Gu6u4T2M
+	 NzVnFOmTgGZjRWGrI+5EfTaG0wJewOA3MXjCC+pWUTVYKu4UipuptqEJc9P2piP29k
+	 jsVzN5vaslM3A==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3A992F40074;
+	Mon, 30 Mar 2026 10:23:02 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 30 Mar 2026 10:23:02 -0400
+X-ME-Sender: <xms:RofKaS9EIgFMi90wfpVQjysssYOERs6mFNDwk29YnHfkazOiK9HESg>
+    <xme:RofKadgVvL1QH6wdPxVkkGX5fIdiVKsxNLpYlIAopHM3_RFhMqnNWdjQIZGbj4joY
+    Kmt16vEv8PW6870b6bACdo3STcn3nYmEVzxwJpF-zflKMiinL_o1yIL>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeelvdduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepuggrvhgvmhesug
+    grvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehg
+    mhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
+    dprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhorhhm
+    sheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeht
+    rhhonhgumhihsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:RofKaYe-feDAY0S0u4Q3DhLiSGNtASioub4kVhaXM3a-pU5eDBE6zg>
+    <xmx:RofKaWgzrfLoJ_XEhOzn-_QLtLGPGKt-fwsutXHLtVxY0nOYe5JhPQ>
+    <xmx:RofKabL1wz32PObeY-a0s4G6-BTkTcCwOa5rxIh2YXOSPqa4L1PyCA>
+    <xmx:RofKabFHioCJw2Vz9V4IsSY4Kq0SDyRTRbFmxAXiyJ9G81DWRB0NwQ>
+    <xmx:RofKaZ0oV0-dsthFJkwPdxw3XKnYjnyBUHBoEmr-E_XNPxXE_0WxnrI9>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E2B79780075; Mon, 30 Mar 2026 10:23:01 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/26] netfs: Keep track of folios in a segmented
- bio_vec[] chain
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>,
- Matthew Wilcox <willy@infradead.org>, Christoph Hellwig <hch@infradead.org>,
- Steve French <smfrench@gmail.com>, Namjae Jeon <linkinjeon@kernel.org>,
- Paulo Alcantara <pc@manguebit.com>, Jens Axboe <axboe@kernel.dk>,
- Leon Romanovsky <leon@kernel.org>, Steve French <sfrench@samba.org>,
- ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
- Marc Dionne <marc.dionne@auristor.com>,
- Eric Van Hensbergen <ericvh@kernel.org>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Ilya Dryomov <idryomov@gmail.com>, Trond Myklebust <trondmy@kernel.org>,
- netfs@lists.linux.dev, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <52ad0aa6-d8dd-4ba1-adf2-f79128df9d90@samba.org>
- <20260326104544.509518-1-dhowells@redhat.com>
- <1180465.1774867781@warthog.procyon.org.uk>
-Content-Language: en-US
-From: Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <1180465.1774867781@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: AN4VOCyftktg
+Date: Mon, 30 Mar 2026 10:22:41 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
+ "Donald Hunter" <donald.hunter@gmail.com>
+Cc: "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Message-Id: <30ff0483-ec38-40b3-811b-6cd66febe1b1@app.fastmail.com>
+In-Reply-To: <20260325-exportd-netlink-v2-10-067df016ea95@kernel.org>
+References: <20260325-exportd-netlink-v2-0-067df016ea95@kernel.org>
+ <20260325-exportd-netlink-v2-10-067df016ea95@kernel.org>
+Subject: Re: [PATCH v2 10/13] nfsd: add netlink upcall for the svc_export cache
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.65 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[samba.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[samba.org:s=42];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20533-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20532-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[brauner.io,infradead.org,gmail.com,kernel.org,manguebit.com,kernel.dk,samba.org,chenxiaosong.com,auristor.com,codewreck.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[25];
+	FREEMAIL_TO(0.00)[kernel.org,oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[metze@samba.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[samba.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.899];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[samba.org:dkim,samba.org:email,samba.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 3E77F35C91C
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 6E62435CEFB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Am 30.03.26 um 12:49 schrieb David Howells:
-> Stefan Metzmacher <metze@samba.org> wrote:
+
+On Wed, Mar 25, 2026, at 10:40 AM, Jeff Layton wrote:
+> Add netlink-based cache upcall support for the svc_export (nfsd.export)
+> cache to Documentation/netlink/specs/nfsd.yaml and regenerate the
+> resulting files.
+
+> diff --git a/Documentation/netlink/specs/nfsd.yaml 
+> b/Documentation/netlink/specs/nfsd.yaml
+> index 
+> 8ab43c8253b2e83bcc178c3f4fe8c41c2997d153..709751502f8b56bd4b68462fa15337df5e3e035e 
+> 100644
+> --- a/Documentation/netlink/specs/nfsd.yaml
+> +++ b/Documentation/netlink/specs/nfsd.yaml
+> @@ -6,7 +6,51 @@ uapi-header: linux/nfsd_netlink.h
 > 
->> Another possible way would be to skip this for now
->> cifs: Remove support for ITER_KVEC/BVEC/FOLIOQ from smb_extract_iter_to_rdma()
->> and I rebase my changes on top of Davids patches assuming they
->> will be stable commits (at least up to
->> cifs: Support ITER_BVECQ in smb_extract_iter_to_rdma())
+>  doc: NFSD configuration over generic netlink.
 > 
-> I could certainly split my removal patch.  I want to remove FOLIOQ support,
-> but I can leave KVEC and/or BVEC if they're still needed.
+> +definitions:
+> +  -
+> +    type: flags
+> +    name: cache-type
+> +    entries: [svc_export]
+> +  -
+> +    type: flags
+> +    name: export-flags
+> +    doc: These flags are ordered to match the NFSEXP_* flags in 
+> include/linux/nfsd/export.h
+> +    entries:
+> +      - readonly
+> +      - insecure-port
+> +      - rootsquash
+> +      - allsquash
+> +      - async
+> +      - gathered-writes
+> +      - noreaddirplus
+> +      - security-label
+> +      - sign-fh
+> +      - nohide
+> +      - nosubtreecheck
+> +      - noauthnlm
+> +      - msnfs
+> +      - fsid
+> +      - crossmount
+> +      - noacl
+> +      - v4root
+> +      - pnfs
+> +  -
+> +    type: flags
+> +    name: xprtsec-mode
+> +    doc: These flags are ordered to match the NFSEXP_XPRTSEC_* flags 
+> in include/linux/nfsd/export.h
+> +    entries:
+> +      - none
+> +      - tls
+> +      - mtls
+> +
+>  attribute-sets:
+> +  -
+> +    name: cache-notify
+> +    attributes:
+> +      -
+> +        name: cache-type
+> +        type: u32
+> +        enum: cache-type
+>    -
+>      name: rpc-status
+>      attributes:
+> @@ -132,6 +176,103 @@ attribute-sets:
+>        -
+>          name: npools
+>          type: u32
+> +  -
+> +    name: fslocation
+> +    attributes:
+> +      -
+> +        name: host
+> +        type: string
+> +      -
+> +        name: path
+> +        type: string
+> +  -
+> +    name: fslocations
+> +    attributes:
+> +      -
+> +        name: location
+> +        type: nest
+> +        nested-attributes: fslocation
+> +        multi-attr: true
+> +  -
+> +    name: auth-flavor
+> +    attributes:
+> +      -
+> +        name: pseudoflavor
+> +        type: u32
+> +      -
+> +        name: flags
+> +        type: u32
+> +        enum: export-flags
+> +        enum-as-flags: true
+> +  -
+> +    name: svc-export-req
+> +    attributes:
+> +      -
+> +        name: seqno
+> +        type: u64
+> +      -
+> +        name: client
+> +        type: string
+> +      -
+> +        name: path
+> +        type: string
 
-Yes, please keep them, I guess we can removed unused stuff at the end of the
-merge window.
+Is the svc-export-req attribute set used for anything?
 
-Any idea on how to resolve the actual conflict?
 
-Thanks!
-metze
+> +  -
+> +    name: svc-export
+> +    attributes:
+> +      -
+> +        name: seqno
+> +        type: u64
+> +      -
+> +        name: client
+> +        type: string
+> +      -
+> +        name: path
+> +        type: string
+> +      -
+> +        name: negative
+> +        type: flag
+> +      -
+> +        name: expiry
+> +        type: u64
+> +      -
+> +        name: anon-uid
+> +        type: u32
+> +      -
+> +        name: anon-gid
+> +        type: u32
+> +      -
+> +        name: fslocations
+> +        type: nest
+> +        nested-attributes: fslocations
+> +      -
+> +        name: uuid
+> +        type: binary
+> +      -
+> +        name: secinfo
+> +        type: nest
+> +        nested-attributes: auth-flavor
+> +        multi-attr: true
+> +      -
+> +        name: xprtsec
+> +        type: u32
+> +        enum: xprtsec-mode
+> +        multi-attr: true
+> +      -
+> +        name: flags
+> +        type: u32
+> +        enum: export-flags
+> +        enum-as-flags: true
+> +      -
+> +        name: fsid
+> +        type: s32
+> +  -
+> +    name: svc-export-reqs
+> +    attributes:
+> +      -
+> +        name: requests
+> +        type: nest
+> +        nested-attributes: svc-export
+> +        multi-attr: true
+> 
+>  operations:
+>    list:
+> @@ -233,3 +374,36 @@ operations:
+>            attributes:
+>              - mode
+>              - npools
+> +    -
+> +      name: cache-notify
+> +      doc: Notification that there are cache requests that need 
+> servicing
+> +      attribute-set: cache-notify
+> +      mcgrp: exportd
+> +      event:
+> +        attributes:
+> +          - cache-type
+> +    -
+> +      name: svc-export-get-reqs
+> +      doc: Dump all pending svc_export requests
+> +      attribute-set: svc-export-reqs
+> +      flags: [admin-perm]
+> +      dump:
+> +          request:
+> +            attributes:
+> +              - requests
+> +    -
+> +      name: svc-export-set-reqs
+> +      doc: Respond to one or more svc_export requests
+> +      attribute-set: svc-export-reqs
+> +      flags: [admin-perm]
+> +      do:
+> +          request:
+> +            attributes:
+> +              - requests
+> +
+> +mcast-groups:
+> +  list:
+> +    -
+> +      name: none
+> +    -
+> +      name: exportd
 
+
+-- 
+Chuck Lever
 
