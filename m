@@ -1,199 +1,147 @@
-Return-Path: <linux-nfs+bounces-20512-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20513-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCNcGiKRyWmUzQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20512-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 29 Mar 2026 22:52:50 +0200
+	id 4I9dFGFWymn27gUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20513-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 12:54:25 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C04E335416B
-	for <lists+linux-nfs@lfdr.de>; Sun, 29 Mar 2026 22:52:49 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05B75359BCB
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 12:54:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 43BD7301FD65
-	for <lists+linux-nfs@lfdr.de>; Sun, 29 Mar 2026 20:52:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F01973012BF8
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 10:50:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FDD63876A9;
-	Sun, 29 Mar 2026 20:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74731FF5E3;
+	Mon, 30 Mar 2026 10:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="isAgSAgZ";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hbk0llG7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2IJxvJW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C24379ED6
-	for <linux-nfs@vger.kernel.org>; Sun, 29 Mar 2026 20:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5122172623
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 10:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774817545; cv=none; b=rjQO2SAeOzQuiIQj1v9G5sV5ktky2H1VNOqBNnu29vxzxXp6eJnh91lRo2FwFaB2PVPX5CgZdukcg9F26j1Qvtil6UO54nAuQOkLrKpa31wD5S7ECd050b5SyiRRIvxAviUyOBNC8qi5V/7zbIvxqvGs0+8JIBMKprAf8SHkdig=
+	t=1774867803; cv=none; b=WVin2So7Kr4b3VEoKavOxcqF/Drczz4tGj/A/PrIVjmvBfLtqNPlnVQLJxB01beAgA4fyeLImJGEe00+qwBL15Dcgb+FYEIeU4grVwi2Z+gNp5VEFGZ6Hf6Fpcnsm5Ohc1wRh/0kMSCrfxapjtD2k/oeH6jvvBFDJCPW6DwNMDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774817545; c=relaxed/simple;
-	bh=7tjXHRH/KuWJgo+NqdsvzW0xA9jVYkndfHHjEV+4ezE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WHOqv+h3fNdZsOTciw+9sjrA7LKL1sbTS0iezIWWHkXCTP5tspPB1/j9kHZolq4oBgvPnEW2uMJ+7dwcxAQdS5hXCDj4OZEgKpyUEMyBm4TKKVOorw5gfi8IzR6gsNTuE1wxNYUvDlVX95Cm0Oz4nKgUpam91rcwtjTHECMnlEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=isAgSAgZ; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hbk0llG7; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1774867803; c=relaxed/simple;
+	bh=O5rjj0AsnkbLRLrZU050r9pTFp4OgaTs2V8lxweiJpQ=;
+	h=In-Reply-To:References:To:Cc:Subject:MIME-Version:Content-Type:
+	 From:Date:Message-ID; b=YeuEdJJatcypHKMQScWhvUjAr7osGvlzEf6doHGvyFfpOqNP7nA4sPIZvhR6l3NjWCUNJg+sKfrISWrTf6PgOtqsf9VWsoqVk0+97msTAf18zfQEzvRcCPYOr44C2ZROb2Ll4enHCe7pq+RYuxSpS+dBo0m473lB+7fEbEqM3kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b2IJxvJW; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774817542;
+	s=mimecast20190719; t=1774867801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kkxx8Ili6u56WY1Dpu47+7Fxo2wOOHde/Ul9c9mLo0k=;
-	b=isAgSAgZJoO9uPOazRgvohmT2dvnZ/RBt8BcjetPlc8PtRY75u0pr6rZlZKM7wWjWuuGWG
-	3krPu0vnJ1KCXv1pv5AUehCHXNQKXnwINeBdaO342Dq4ONkWyCdky7gZuZb2EFtn1vwJPC
-	G/gP6KuiXsbSsTlMycpHh6TqCTMqpBs=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-363-MdsWR3vcMu68COuhgXY_Eg-1; Sun, 29 Mar 2026 16:52:21 -0400
-X-MC-Unique: MdsWR3vcMu68COuhgXY_Eg-1
-X-Mimecast-MFC-AGG-ID: MdsWR3vcMu68COuhgXY_Eg_1774817540
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-89ce5eec0f0so32240556d6.3
-        for <linux-nfs@vger.kernel.org>; Sun, 29 Mar 2026 13:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1774817540; x=1775422340; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kkxx8Ili6u56WY1Dpu47+7Fxo2wOOHde/Ul9c9mLo0k=;
-        b=Hbk0llG7jqnLZrQuQaxqCpaEsnx6mpqS5sREjpTe5eJxL9zVCtvneQWYhAcWrYhyIu
-         uestCQepS7aribSeHNm/8pOyfB60I+PxwVraD1gstqQbNbZVAo1rvhBUrW739KTgG9mX
-         ++QtmEuDk/WE+d8TpxZHpmJ5xJ2JCw3rrOME+2dlgZOxffd9qW6ogJ9URDT1+iHsk2KU
-         tElu8+sG4thQ6rZQChbbLvon1bfqZuSW5bqKD0jYBpox8HfHCS6beD+k5nYA9Vkd9qSc
-         qOSJHgy2mnxxqLOD4ku0vy4+RuhOqvp/+vbSNj6cENU9QYDkX1Zqszu4z0jP+M6DVWh1
-         ypfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774817540; x=1775422340;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kkxx8Ili6u56WY1Dpu47+7Fxo2wOOHde/Ul9c9mLo0k=;
-        b=Zf46PaO+B6JPq3pTSSCscIPkq8Zd4tBJPUD+K6OLPguI7UKdcxQmyAgXpG6EDTuavL
-         2jhEyDqugRqj3rXcgrgt1u8bkCDKROfgVRIEw/vCmoa7A72TiGPr6X1W1+U5kr0pftWy
-         /dBkk0ROomksklnGfBkaeK15jBXsNUU9XwuuNP1EPrU6EjPtfUJE3ErAflg5OKgpYc9h
-         7nKTzePintWQkdbePG4IBVs2/17jD+GmjwVBLicLtRovDcQzIb3m6SqbQU3ly6g45sGK
-         mP8EG7u3uFMGJY0HwYuCoVZILT+57LiAI3lYm42zi+Q1qjlgm0oUIhXUdIpuOdtXiKsp
-         8t/A==
-X-Gm-Message-State: AOJu0YxJ9xBtbkcZnOn8QDXbsziOFtfY1JfpzrxvybbvMQu6cNBk7JVp
-	XdzPJA+/lM9lz1DuckHCzfi54fEAd5RIWMrMLiV488RzqWxGauKgvmYOlh94o6oSQQuYp7ovVHZ
-	fKpqoqeFPX8c7BXu61fdgLbSaBOEHe+n+PFqjIeuFoUgo8HSagw2zjFE2WAkSxQ==
-X-Gm-Gg: ATEYQzzxghfbSnVw+Ndoo24FEfmikYK50uNf7ZLg/7o6eATC/KgNqh3yIVQ1x4FlgyP
-	xCmQbYc8kAok1kjDX3Mboe2AQFtS4nV7A9OrmOx5TDQ1L9WHmQ4KLn75wknxmWDa68GS56Xtk9Y
-	00yrOU/w/v7XqAGfOyfOmN+NVc5raHWsqGrFDBCL15fa4q9cZAgY134dkVH8yiqkT8thwj1ge/t
-	R8XjM/sv+0o86hhfJsKib9nPYJL7zE8SCduO9VA3F5fdc4q1jTv3EgLJtwx9pJMjw3e3lNGEzwN
-	3UjppEVEtQkCrmXMmEirrxaJHFUkizA5LXtMqc5UuQD9a9wYw1zAyC78uOTTxKCrFPmMJOcKd6j
-	FwLLe8UWWKVozmI3Eog1H
-X-Received: by 2002:a05:6214:d81:b0:89a:e77:1f7f with SMTP id 6a1803df08f44-89ce8f0721emr142932536d6.46.1774817540541;
-        Sun, 29 Mar 2026 13:52:20 -0700 (PDT)
-X-Received: by 2002:a05:6214:d81:b0:89a:e77:1f7f with SMTP id 6a1803df08f44-89ce8f0721emr142932376d6.46.1774817540066;
-        Sun, 29 Mar 2026 13:52:20 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.240.69])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89ecb5cb530sm48498986d6.7.2026.03.29.13.52.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2026 13:52:19 -0700 (PDT)
-Message-ID: <3d888a3d-fa6e-41c0-9b28-6dbb878a0a77@redhat.com>
-Date: Sun, 29 Mar 2026 16:52:18 -0400
+	bh=lOQZbvZuSo6Y8bQBNAYlaEet3lfPqVfW+sXL8vzvXhA=;
+	b=b2IJxvJWBvsXSbyERMjuutsmuMCtHm2OQokXV1ZeHjwf1UWobMPN/6ZaAUR3DyxhUQApxg
+	+Wn6dWXGuqNQKSHhrRIHwoUL/DqfG3vN/2rf7jfQcb+4Er4Lq21vo6bQRn8VADWXI7Lrab
+	VUq5OJDT34na5rOgeWN3OnhFkmBKfRg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-426-JLNIgM7fPXu4cdrMLHIQ5w-1; Mon,
+ 30 Mar 2026 06:49:58 -0400
+X-MC-Unique: JLNIgM7fPXu4cdrMLHIQ5w-1
+X-Mimecast-MFC-AGG-ID: JLNIgM7fPXu4cdrMLHIQ5w_1774867795
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B30281944F11;
+	Mon, 30 Mar 2026 10:49:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.44.35.245])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 543211955D84;
+	Mon, 30 Mar 2026 10:49:44 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+In-Reply-To: <52ad0aa6-d8dd-4ba1-adf2-f79128df9d90@samba.org>
+References: <52ad0aa6-d8dd-4ba1-adf2-f79128df9d90@samba.org> <20260326104544.509518-1-dhowells@redhat.com>
+To: Stefan Metzmacher <metze@samba.org>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Matthew Wilcox <willy@infradead.org>,
+    Christoph Hellwig <hch@infradead.org>,
+    Steve French <smfrench@gmail.com>,
+    Namjae Jeon <linkinjeon@kernel.org>,
+    Paulo Alcantara <pc@manguebit.com>, Jens Axboe <axboe@kernel.dk>,
+    Leon Romanovsky <leon@kernel.org>, Steve French <sfrench@samba.org>,
+    ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Ilya Dryomov <idryomov@gmail.com>,
+    Trond Myklebust <trondmy@kernel.org>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/26] netfs: Keep track of folios in a segmented bio_vec[] chain
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/2] nfs-utils: signed filehandle support
-To: Benjamin Coddington <bcodding@hammerspace.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
- NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>
-References: <cover.1772638460.git.bcodding@hammerspace.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <cover.1772638460.git.bcodding@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1005366.1774861048.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+From: David Howells <dhowells@redhat.com>
+Date: Mon, 30 Mar 2026 11:49:41 +0100
+Message-ID: <1180465.1774867781@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20512-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[redhat.com,brauner.io,infradead.org,gmail.com,kernel.org,manguebit.com,kernel.dk,samba.org,chenxiaosong.com,auristor.com,codewreck.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-20513-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[redhat.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C04E335416B
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[warthog.procyon.org.uk:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,samba.org:email]
+X-Rspamd-Queue-Id: 05B75359BCB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Stefan Metzmacher <metze@samba.org> wrote:
 
+> Another possible way would be to skip this for now
+> cifs: Remove support for ITER_KVEC/BVEC/FOLIOQ from smb_extract_iter_to_=
+rdma()
+> and I rebase my changes on top of Davids patches assuming they
+> will be stable commits (at least up to
+> cifs: Support ITER_BVECQ in smb_extract_iter_to_rdma())
 
-On 3/4/26 10:40 AM, Benjamin Coddington wrote:
-> Here are two patches allowing userspace to set a secret key for kNFSD to
-> sign filehandles, and also set the option to sign filehandles for an
-> export.
-> 
-> The secret key passed to the server is the first 128 bits of a sha1 hash of
-> the contents of a file configured via the nfs.conf server section
-> "fh_key_file".  Exports that have the option "sign_fh" set will cause the
-> server to use this key to append an 8-byte siphash of the filehandle onto
-> each filehandle.
-> 
-> This version of the userspace patches correspond with the v7 of the kernel
-> changes which have been posted here:
-> https://lore.kernel.org/linux-nfs/cover.1772022373.git.bcodding@hammerspace.com
-> and are currently queued up for potentical inclusion to linux kernel v7.1.
-> 
-> Changes on v5:
-> 	- add -k,--fh-key_file= argument to "nfsdctl threads" command (Jeff Layton)
-> 	- fail if "nfsdctl threads -k" unsuported by kernel (Jeff Layton)
-> 
-> Changes on v6:
-> 	- fix a premature exit from fh-key-file hashing routine
-> 
-> Changes on v7:
-> 	- fix another corner-case for hasing fh-key-file, simplify.
-> 
-> Benjamin Coddington (2):
->    exportfs: Add support for export option sign_fh
->    nfsdctl/rpc.nfsd: Add support for passing encrypted filehandle key
-> 
->   nfs.conf                     |  1 +
->   support/include/nfs/export.h |  2 +-
->   support/include/nfslib.h     |  2 ++
->   support/nfs/Makefile.am      |  4 +--
->   support/nfs/exports.c        |  4 +++
->   support/nfs/fh_key_file.c    | 63 ++++++++++++++++++++++++++++++++++++
->   systemd/nfs.conf.man         |  1 +
->   utils/exportfs/exportfs.c    |  2 ++
->   utils/exportfs/exports.man   |  9 ++++++
->   utils/nfsd/nfssvc.h          |  1 +
->   utils/nfsdctl/nfsd_netlink.h |  1 +
->   utils/nfsdctl/nfsdctl.8      |  8 ++++-
->   utils/nfsdctl/nfsdctl.c      | 57 ++++++++++++++++++++++++++++----
->   13 files changed, 145 insertions(+), 10 deletions(-)
->   create mode 100644 support/nfs/fh_key_file.c
-> 
-> 
-> base-commit: 4706bac0345f67c50b73fd8da1c2629ed15ff79d
-Committed... (tag: nfs-utils-2-9-1-rc2)
+I could certainly split my removal patch.  I want to remove FOLIOQ support=
+,
+but I can leave KVEC and/or BVEC if they're still needed.
 
-steved.
+David
 
 
