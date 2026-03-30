@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20529-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20530-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eHejHDF9ymlo9QUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20529-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:40:01 +0200
+	id CNV0Kwl/ymmR9QUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20530-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:47:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E90235C254
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:40:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28DAE35C42E
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:47:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 66B7E3018694
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 903C430A75B3
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E973D6484;
-	Mon, 30 Mar 2026 13:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C2CB3D648B;
+	Mon, 30 Mar 2026 13:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ss6r3PZ8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5QN2/7l"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31DB3D6469
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CBF3D47BF
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774877938; cv=none; b=Mp9SHszlDTUpydskv7FuqBNF9ugobNeVcWUL4BgDQ10EGPeyAO8eWqQL3eUZNp1cgYepqw2i/9qTJqRVxxZ7bCpuzB+pL/2i4Y14P9UlBJQgU9oKLy5hTy3YURxktGITAP3ZnoWLi55979shBH0TuUDJmb1fPmHhxbM16eyw63g=
+	t=1774877940; cv=none; b=bAElDxmZPb9gpdNL+PHVBxwsohxUfpOXFmc/PvraRFip7OxTt3xC3Cf8bXxngQ562gQuLW00kBLKi3s79BrrOx/YZFdDcO5MtHR5c/CzUNRZeneF1XXlCtWdN9lsUJdgFYTUD7KyuLK4bNnblKYjDN/RzigGI+GzF6roJ6Ta5ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774877938; c=relaxed/simple;
-	bh=CqwVd/IrPNhU9GoiOqWmNiU1b1U6E48uAf+HmE2ptAY=;
+	s=arc-20240116; t=1774877940; c=relaxed/simple;
+	bh=JUiR8+K3NRLTbUxQp16eaaZvcHN4D3LqkIS17oMjuko=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lU/fnyjHiTguKOpkwBDuVMDPoApSEbnmQXwlmwDZn29ROacllUgNZBbCW0iKwynCKTwM1r2d8DURa6aUqJaLsp/bvhbqpLcW2W/cW2u6vx3d0+Cy6UkYb5eHREqbLEnV9iVhtYKvEznUCDxHw1De9qpa03Ucz7nvcPW60kb0pP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ss6r3PZ8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F8BC4CEF7;
-	Mon, 30 Mar 2026 13:38:57 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=WHxTJnXuGY9wOzkhyPxpGonMwIM4dJrQHQ1FwXmUvchd0KlnS7E4kQFZT5E8sCPqUnlQjqUZP7gUDzO2M0IoF89eEnXWcEijOFHFAfQjlLEh770tSWzEa/eoQpPB01/To3vLbkX1y0t94m0ahsrNQDpJG82l9ub/7sFihCcy024=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5QN2/7l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C16C2BCB1;
+	Mon, 30 Mar 2026 13:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774877938;
-	bh=CqwVd/IrPNhU9GoiOqWmNiU1b1U6E48uAf+HmE2ptAY=;
+	s=k20201202; t=1774877939;
+	bh=JUiR8+K3NRLTbUxQp16eaaZvcHN4D3LqkIS17oMjuko=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ss6r3PZ8/93RqoUG+xw5SYEXgjuGzWh0g7ea75dt6iXuBddpJKZQKjyTiQOrQNZv1
-	 9pw01U0flCwBUsXPk3/FEWjycB+tjKObt/2sk1yuoGsxyErQP35YTRavNYeBZB+dML
-	 zwp7Xk3dDnUOWxxUvBeRdSGOC6IBsTC0hoAnBz7E3CSyOEvY8aKA8avcKEK9lgbgqp
-	 dv0W+7ameL6VT+QO+N3H/BdBRh4ApL9jWV+PFosR/E4Uec/n4AnOB4CmeOTu3TtnuU
-	 jT5yzdOINKKCPElMwxcQO+5J7QfpqJOoDWPpuM7373QOkmsqiy/TjsjgFcqtdRkb14
-	 DgrxIo1t1wApg==
+	b=m5QN2/7lqHwPpXGup/Is37tMSkeIEjqfHyU79uR8H/Ym2iOxRotsCX5CAIDeWHWUF
+	 iVuCbu7b96Awr0+V7D3DqfvGA6enT6Kw9F1GeCQ/CNoaBMw6Y9Gsd/iKNM+tyBag1B
+	 IYllIF1apbF+Mv84xocCbrQ/tu4y1qkzNHtiUIWilZGfMebJaVTCqlDiRRJijmKxIo
+	 xRePOFejdP7dbPr2Tl9aTGFHtVfIZ4VNImao7nCkfts96Fup+SyCLRV3a/GylT5Pfe
+	 1NZEXSTYjm70yyT5+pU/Zg1Qys2G3Uq6SKAuY8vlltfwrMygw8uf1YqNffMrlsH459
+	 83mF41FwWxrCw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 30 Mar 2026 09:38:34 -0400
-Subject: [PATCH nfs-utils v2 14/16] exportfs: add netlink support for cache
- flush with /proc fallback
+Date: Mon, 30 Mar 2026 09:38:35 -0400
+Subject: [PATCH nfs-utils v2 15/16] exportfs: use netlink to probe kernel
+ support, skip export_test
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260330-exportd-netlink-v2-14-cc9bd5db2408@kernel.org>
+Message-Id: <20260330-exportd-netlink-v2-15-cc9bd5db2408@kernel.org>
 References: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 In-Reply-To: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 To: Steve Dickson <steved@redhat.com>
@@ -66,31 +66,31 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7284; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=CqwVd/IrPNhU9GoiOqWmNiU1b1U6E48uAf+HmE2ptAY=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzhTHbz+lDNmomOi6j8lNKejBYriVXL3nBWA
- ghoYNeZSU+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp84QAKCRAADmhBGVaC
- Fe6dEACH6Xgf1qNWOVlgkeJNy4bxyWTODuJbNhptzeiSR3laaUqMxVeyg0NijDX35ccriLomAR4
- umFib/KUekawBsUrAOCuj1Kz5Zi7RpHYsvnrWiei60g3wcB4FNK0dA+v/0ujm1Eu7HZjUHHhBEi
- qXMR8Pf+nNX5wgp+5LgLo470DbLQbx7VDzvctuYZpd23LhI4Jr/jD3IdUFJ8dmB6p+T66jkmmOc
- r93g/xRXtjZItDjJhkd02/LAWLiU7A9Fm6z8TaNnbLTh9kBR2k1fRg82UufVAMXySP6cnG3PEXl
- XKdfFz8kYDgynzG8itqoyM4n+owVVWGU6qj1ggHydY9eJCtDpGj/hoHv98fUcWpSwgbNn+FcnJ8
- znCESegEwpPON72PibTFzel6qonUlzZ5PCF2Cr2xvPj5aEsR9HfcV5X7pcZ7c1DqUMEoOd617Gz
- CAgFGhZwG9pP6mQkfduMf7mYlLR8a6SqzrREuOprFCaYXtTW4lVZlANlZupS1M8IHHePZ9nMeJb
- qNOaTCi+URE7Xb6QmYACfytwHCEhxaYpJTW/qNU2yGsKk1Ocf3lMw7Dl0PuOA4fha11gOxlmF7V
- G7oVShvAIaJA4JH8MSqVR9+pGaCons5InmI4kAjt5y9C0ksa8qkDryi8kZz11zdjTBOqLgOo6O+
- lZwJUXEEeic4new==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3867; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=JUiR8+K3NRLTbUxQp16eaaZvcHN4D3LqkIS17oMjuko=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzh/dTpQT1u4EO9Ek7MLifLtr1u779B2VhEs
+ tcH14X/fOOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp84QAKCRAADmhBGVaC
+ FWveD/oD7gxrOYGDREXSC5il9qBPz2tjoe8dF8a1MM8ydZP+1sIpC9h7ihAESkTDHM380V+8pHN
+ /Un9ugGWOIOHOe+uGVe4bvCNEdivKx1WELJcjbm+RSN/8p32lfMp5Pcnz/s9npxWcRqws/8IZ6O
+ XwRqwzkdkrvq9DGv20RnzAR74aD1d+tvtVdFpikCoaADfyYmwI2bVEkS7BMmIBJxJe+bjQgHCgX
+ wOawr214P17ZDMIWu4bPn4l0K1amC8U/9MjHohR9ynjZ2/fzGDGJQKU+LURBXzb23L755diZNVM
+ flKGJMYMWZw/EVPPbp12/6slFB1dFW0DaTgRDTygE5Ub70kPBuka33/z4lDkcRsJ/RyhjJvg1Bv
+ TDS1/Ibrd67t02ehKERqmYUhzA2HUlIeguahpgENLQnXNcN9yeLefptWH55G0cSbyqZwCogfsKX
+ WxUs9Dt9cWg4N3orLWvV73ig8zjWkkdmZyW22ylpMk2r/HNNGBrQvJHfVWsFzhSVf+uM+JxQwg7
+ Zt5iwSvWFrgQArtYAdb4VrrNf8oF8Kc3hyVxjlrzHmyzNkHB7Bh3kdBNfiosT/kOvFmYG/6h7Ak
+ ceDXkJZI5HgcX4X3acfJoFs6BAkNikMRyBXqt1Y00GSD+nc3+omMznRTECv1ZdTWuQ75l2ZzxzF
+ u56ExJHQexAM/TA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20529-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20530-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,84 +102,65 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5E90235C254
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 28DAE35C42E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move cache_flush() from support/nfs/cacheio.c to a new file
-support/export/cache_flush.c, which has access to libnl.
+Refactor can_test() to first try resolving the sunrpc genl family via
+netlink. If successful, the kernel supports the new netlink-based cache
+interfaces and we can skip the advisory export_test() probe -- mountd
+and exportd will validate exports at cache-fill time via check_export().
 
-The new implementation tries netlink first:
-- Sends SUNRPC_CMD_CACHE_FLUSH to flush auth.unix.ip and auth.unix.gid
-- Sends NFSD_CMD_CACHE_FLUSH to flush nfsd.fh and nfsd.export
-- Flushes sunrpc caches before nfsd caches to maintain dependency order
+can_test() now returns:
+  2 = netlink available (skip export_test)
+  1 = /proc available (keep export_test as before)
+  0 = neither available
 
-If the sunrpc genl family cannot be resolved (older kernel), falls back
-to the original /proc/net/rpc/*/flush write path.
+Update validate_export() to check this return value and skip the
+export_test() calls when netlink is available.
+
+Link exportfs against libnl3/libnl-genl-3 (already a mandatory build
+dependency for nfs-utils).
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- support/export/Makefile.am   |   2 +-
- support/export/cache_flush.c | 164 +++++++++++++++++++++++++++++++++++++++++++
- support/nfs/cacheio.c        |  49 +------------
- 3 files changed, 166 insertions(+), 49 deletions(-)
+ utils/exportfs/Makefile.am |  6 ++++--
+ utils/exportfs/exportfs.c  | 42 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 45 insertions(+), 3 deletions(-)
 
-diff --git a/support/export/Makefile.am b/support/export/Makefile.am
-index ae7ace44112b889f1c461c5473fb1bd42a42f182..33416176c41eb6eadd1880f7c7432b4ca2d8c973 100644
---- a/support/export/Makefile.am
-+++ b/support/export/Makefile.am
-@@ -12,7 +12,7 @@ EXTRA_DIST	= mount.x
- noinst_LIBRARIES = libexport.a
- libexport_a_SOURCES = client.c export.c hostname.c \
- 		      xtab.c mount_clnt.c mount_xdr.c \
--		      cache.c auth.c v4root.c fsloc.c \
-+		      cache.c cache_flush.c auth.c v4root.c fsloc.c \
- 		      v4clients.c
- libexport_a_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport \
- 		       $(LIBNL3_CFLAGS) $(LIBNLGENL3_CFLAGS)
-diff --git a/support/export/cache_flush.c b/support/export/cache_flush.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..7d7f12b212967e5b3d1a2357de07bc3ba5f0b674
---- /dev/null
-+++ b/support/export/cache_flush.c
-@@ -0,0 +1,164 @@
-+/*
-+ * support/export/cache_flush.c
-+ *
-+ * Flush knfsd caches via netlink with /proc fallback.
-+ */
-+
-+#ifdef HAVE_CONFIG_H
-+#include <config.h>
-+#endif
-+
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <time.h>
-+#include <string.h>
-+#include <inttypes.h>
-+
-+#include "nfslib.h"
-+#include "xlog.h"
-+
+diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
+index 7f8ce9faf2b469c8560f5fbee40b81e3443eab78..8db5fdae1741e1c79639bbdfd5d63f8571363e63 100644
+--- a/utils/exportfs/Makefile.am
++++ b/utils/exportfs/Makefile.am
+@@ -11,8 +11,10 @@ exportfs_LDADD = ../../support/export/libexport.a \
+ 	       	 ../../support/nfs/libnfs.la \
+ 		 ../../support/misc/libmisc.a \
+ 		 ../../support/reexport/libreexport.a \
+-		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
++		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD) \
++		 $(LIBNL3_LIBS) $(LIBNLGENL3_LIBS)
+ 
+-exportfs_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport
++exportfs_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport \
++		    $(LIBNL3_CFLAGS) $(LIBNLGENL3_CFLAGS)
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+index 54ce62c5ce9acf48f3b9d26d1309d9b195d08824..1f726746ebc5185ef00a177760fc7a7fa44126c5 100644
+--- a/utils/exportfs/exportfs.c
++++ b/utils/exportfs/exportfs.c
+@@ -40,6 +40,15 @@
+ #include "conffile.h"
+ #include "reexport.h"
+ 
 +#include <netlink/genl/genl.h>
 +#include <netlink/genl/ctrl.h>
-+#include <netlink/msg.h>
-+
-+#ifdef USE_SYSTEM_NFSD_NETLINK_H
-+#include <linux/nfsd_netlink.h>
-+#else
-+#include "nfsd_netlink.h"
-+#endif
 +
 +#ifdef USE_SYSTEM_SUNRPC_NETLINK_H
 +#include <linux/sunrpc_netlink.h>
@@ -187,189 +168,70 @@ index 0000000000000000000000000000000000000000..7d7f12b212967e5b3d1a2357de07bc3b
 +#include "sunrpc_netlink.h"
 +#endif
 +
-+static int nl_send_flush(struct nl_sock *sock, int family, int cmd)
-+{
-+	struct nl_msg *msg;
-+	int ret;
-+
-+	msg = nlmsg_alloc();
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	if (!genlmsg_put(msg, NL_AUTO_PID, NL_AUTO_SEQ, family,
-+			 0, 0, cmd, 0)) {
-+		nlmsg_free(msg);
-+		return -ENOMEM;
-+	}
-+
-+	/* No mask attribute = flush all caches in this family */
-+	ret = nl_send_auto(sock, msg);
-+	if (ret >= 0)
-+		ret = nl_wait_for_ack(sock);
-+	nlmsg_free(msg);
-+	return ret;
-+}
-+
-+static int cache_nl_flush(void)
-+{
-+	struct nl_sock *sock;
-+	int family, ret, val = 1;
-+
-+	sock = nl_socket_alloc();
-+	if (!sock)
-+		return -1;
-+
-+	if (genl_connect(sock)) {
-+		nl_socket_free(sock);
-+		return -1;
-+	}
-+
-+	setsockopt(nl_socket_get_fd(sock), SOL_NETLINK, NETLINK_EXT_ACK,
-+		   &val, sizeof(val));
-+
-+	/* Flush sunrpc caches first (dependency order) */
-+	family = genl_ctrl_resolve(sock, SUNRPC_FAMILY_NAME);
-+	if (family < 0) {
-+		xlog(D_NETLINK, "sunrpc genl family not found, "
-+		     "skipping netlink flush");
-+		nl_socket_free(sock);
-+		return -1;
-+	}
-+
-+	ret = nl_send_flush(sock, family, SUNRPC_CMD_CACHE_FLUSH);
-+	if (ret < 0) {
-+		xlog(D_NETLINK, "sunrpc cache flush failed: %d", ret);
-+		nl_socket_free(sock);
-+		return -1;
-+	}
-+
-+	/* Flush nfsd caches */
-+	family = genl_ctrl_resolve(sock, NFSD_FAMILY_NAME);
-+	if (family < 0) {
-+		xlog(D_NETLINK, "nfsd genl family not found, "
-+		     "skipping nfsd cache flush");
-+		nl_socket_free(sock);
-+		return 0;
-+	}
-+
-+	ret = nl_send_flush(sock, family, NFSD_CMD_CACHE_FLUSH);
-+	nl_socket_free(sock);
-+	if (ret < 0) {
-+		xlog(D_NETLINK, "nfsd cache flush failed: %d", ret);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static void cache_proc_flush(void)
-+{
-+	int c;
-+	char stime[32];
-+	char path[200];
-+	time_t now;
-+	/* Note: the order of these caches is important.
-+	 * They need to be flushed in dependency order. So
-+	 * a cache that references items in another cache,
-+	 * as nfsd.fh entries reference items in nfsd.export,
-+	 * must be flushed before the cache that it references.
-+	 */
-+	static char *cachelist[] = {
-+		"auth.unix.ip",
-+		"auth.unix.gid",
-+		"nfsd.fh",
-+		"nfsd.export",
-+		NULL
-+	};
-+	now = time(0);
-+
-+	/* Since v4.16-rc2-3-g3b68e6ee3cbd the timestamp written is ignored.
-+	 * It is safest always to flush caches if there is any doubt.
-+	 * For earlier kernels, writing the next second from now is
-+	 * the best we can do.
-+	 */
-+	sprintf(stime, "%" PRId64 "\n", (int64_t)now+1);
-+	for (c=0; cachelist[c]; c++) {
-+		int fd;
-+		sprintf(path, "/proc/net/rpc/%s/flush", cachelist[c]);
-+		fd = open(path, O_RDWR);
-+		if (fd >= 0) {
-+			if (write(fd, stime, strlen(stime)) != (ssize_t)strlen(stime)) {
-+				xlog_warn("Writing to '%s' failed: errno %d (%s)",
-+				path, errno, strerror(errno));
-+			}
-+			close(fd);
-+		}
-+	}
-+}
-+
-+void
-+cache_flush(void)
-+{
-+	if (cache_nl_flush() == 0) {
-+		xlog(D_NETLINK, "cache flush via netlink succeeded");
-+		return;
-+	}
-+	/* Fallback: /proc path */
-+	cache_proc_flush();
-+}
-diff --git a/support/nfs/cacheio.c b/support/nfs/cacheio.c
-index bd4da0e5ad93f963bf8090062541f34ededd1e03..95eeabbdb978cd227da9877b81e5ed2d65dedaf9 100644
---- a/support/nfs/cacheio.c
-+++ b/support/nfs/cacheio.c
-@@ -203,51 +203,4 @@ int qword_get_uint(char **bpp, unsigned int *anint)
- 	return 0;
+ static void	export_all(int verbose);
+ static void	exportfs(char *arg, char *options, int verbose);
+ static void	unexportfs(char *arg, int verbose);
+@@ -476,13 +485,34 @@ unexportfs(char *arg, int verbose)
+ 		xlog(L_ERROR, "Invalid export syntax: %s", arg);
  }
  
--/* flush the kNFSd caches.
-- * Set the flush time to the mtime of the etab state file or
-- * if force, to now.
-- * the caches to flush are:
-- *  auth.unix.ip nfsd.export nfsd.fh
-- */
--
--void
--cache_flush(void)
--{
--	int c;
--	char stime[32];
--	char path[200];
--	time_t now;
--	/* Note: the order of these caches is important.
--	 * They need to be flushed in dependancy order. So
--	 * a cache that references items in another cache,
--	 * as nfsd.fh entries reference items in nfsd.export,
--	 * must be flushed before the cache that it references.
--	 */
--	static char *cachelist[] = {
--		"auth.unix.ip",
--		"auth.unix.gid",
--		"nfsd.fh",
--		"nfsd.export",
--		NULL
--	};
--	now = time(0);
--
--	/* Since v4.16-rc2-3-g3b68e6ee3cbd the timestamp written is ignored.
--	 * It is safest always to flush caches if there is any doubt.
--	 * For earlier kernels, writing the next second from now is
--	 * the best we can do.
--	 */
--	sprintf(stime, "%" PRId64 "\n", (int64_t)now+1);
--	for (c=0; cachelist[c]; c++) {
--		int fd;
--		sprintf(path, "/proc/net/rpc/%s/flush", cachelist[c]);
--		fd = open(path, O_RDWR);
--		if (fd >= 0) {
--			if (write(fd, stime, strlen(stime)) != (ssize_t)strlen(stime)) {
--				xlog_warn("Writing to '%s' failed: errno %d (%s)",
--				path, errno, strerror(errno));
--			}
--			close(fd);
--		}
--	}
--}
-+/* cache_flush() has moved to support/export/cache.c for netlink support */
++/* Return values:
++ *   2 = netlink available (skip export_test)
++ *   1 = /proc available (keep export_test)
++ *   0 = neither available
++ */
+ static int can_test(void)
+ {
++	struct nl_sock *sock;
++	int family;
+ 	char buf[1024] = { 0 };
+ 	int fd;
+ 	int n;
+ 	size_t bufsiz = sizeof(buf);
+ 
++	/* Try netlink first: resolve sunrpc genl family */
++	sock = nl_socket_alloc();
++	if (sock) {
++		if (genl_connect(sock) == 0) {
++			family = genl_ctrl_resolve(sock, SUNRPC_FAMILY_NAME);
++			nl_socket_free(sock);
++			if (family >= 0)
++				return 2;
++		} else {
++			nl_socket_free(sock);
++		}
++	}
++
++	/* Fallback: /proc probe */
+ 	fd = open("/proc/net/rpc/auth.unix.ip/channel", O_WRONLY);
+ 	if (fd < 0)
+ 		return 0;
+@@ -522,6 +552,7 @@ validate_export(nfs_export *exp)
+ 	char *path = exportent_realpath(&exp->m_export);
+ 	struct statfs stf;
+ 	int fs_has_fsid = 0;
++	int test_result;
+ 
+ 	if (stat(path, &stb) < 0) {
+ 		xlog(L_ERROR, "Failed to stat %s: %m", path);
+@@ -532,7 +563,16 @@ validate_export(nfs_export *exp)
+ 			"Remote access will fail", path);
+ 		return;
+ 	}
+-	if (!can_test())
++
++	test_result = can_test();
++	if (!test_result)
++		return;
++
++	/*
++	 * When netlink is available, skip the export_test() probe.
++	 * mountd/exportd will validate exports at cache-fill time.
++	 */
++	if (test_result == 2)
+ 		return;
+ 
+ 	if (!statfs(path, &stf) &&
 
 -- 
 2.53.0
