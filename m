@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20527-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20528-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0LtBBS19ymlo9QUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20527-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:39:57 +0200
+	id IJqaAEqAymnX9QUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20528-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:53:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6FC635C24D
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:39:56 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E70035C5F1
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:53:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id AF3CD3013DD6
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 12F7630A4C07
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3363D47BC;
-	Mon, 30 Mar 2026 13:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044233D646A;
+	Mon, 30 Mar 2026 13:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9NYic6M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6pg3bjO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B383D413D
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CC23D6469
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774877936; cv=none; b=Yi8RLGoE+/n8PubRjvNURjFNQeVjgIOQMHHsIbvmtM9QxlsIJAFOkSGFKCjUFPDZo6Aekx7RDUH71LAU0eHUjjtSTOHdYX27aHThDsTpR4P4Nde1wwSJZZ5ZgNl0EQmgZrk49Ax3oB3DzY6lHIb/lKPUCpy37HHg8U8a4Ll2h1s=
+	t=1774877937; cv=none; b=fmy3jKepdhVQRSLyZ2zMTPlQaPg4DTow7OlwvrKta4ekLu0rYtGhadDtxDfypxnynKnN8BQRn+3FdfmaZn8H4PHWGmyuu+T8Xcb6u4OIgt/UTcREzR4bcb5Y+Fmc6JvgXa3WR61kSojVKABL5WHEIX3jT2ZkP1iO6AtM4PrSC9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774877936; c=relaxed/simple;
-	bh=I4uBVcx8FSgS4psUNqHj5/Dpd/xkvsY1z39PDwrHgT0=;
+	s=arc-20240116; t=1774877937; c=relaxed/simple;
+	bh=ouy+RW48q5t0OgorK5gFptxTj+t2id9veLWFdSUKy6E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iLctSS19AYXP3SP1WpH5zUFu1/SrNPiy0Gb7nwS7nboccakC0XsBsBBjXogDPVZYCw9T20CzH+8vIRLVLUav5vk/Fcf/SE533oD3R/WoZ1DONRNsaWcitchRi7gn55Zecj0bYypoWUhPu1CjNtbJM7cALYdKX+0y0ZM26VN9xx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9NYic6M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D49C2BCB0;
-	Mon, 30 Mar 2026 13:38:55 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=pTmPjwj+BOmLXE6VxxkoDGTN1BWR1m+dOBq7r7jjZQrJIOtTUU8F4qMLYfp/+QG+P9GjXJYK3e6iP6HthWmtOp5vU6uFw971K1jFO2E5gus6R/UXyfOVi2PcJRjEsXaMy2mf+Z1MJJwlCkSwh34KYVWkFrD99jZ9SXdds6fMoH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6pg3bjO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2793C2BCB1;
+	Mon, 30 Mar 2026 13:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774877936;
-	bh=I4uBVcx8FSgS4psUNqHj5/Dpd/xkvsY1z39PDwrHgT0=;
+	s=k20201202; t=1774877937;
+	bh=ouy+RW48q5t0OgorK5gFptxTj+t2id9veLWFdSUKy6E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=n9NYic6Me2HdU2eFBcv5TT7Sregkd0TpOgYDzrLmiDAj8kgCr0/pOJEp0WI72nVRh
-	 DZgPWc0tEYH9f9PMtVZYg4Q3JypB/utzUirWbQukvO9kU+4wyXGZGJd5eZaG4O0PUp
-	 rJrai05jxehwDKKI7fN2BDPEPPDoZisx/SDFB/EGE7cJmSwEltXgrgm5oS1G/okuAf
-	 w7mdXZfFy3IPyZO89FRE7hVdc8FmZmySZbtFcappfgvS9bdPkaCGyiIw6LqgG5R31v
-	 K1d6lr5LvLFPbURRQ7lLEuHBFExvdiMV33Nn61g20vrH1IpWW8guapgnv1AHBYhCIg
-	 nJg9UOv+3kx7w==
+	b=C6pg3bjO+kLtBnRqBN/MPBCngwYrHzzKXZmX/LbGp/shj9wLaMimqEnPcJ+dmYXFs
+	 4znXRmrcInssRGNj9HoNsnxpLSYD2Kz/F/qri3tZgYrdzW/nUAPYYrFc8U3m2x2qS6
+	 UJcn3Z+C5Gkgh/mbyYkJdxxKFdDGsNqMCNKmWsBbdVWdZcmLL6w2O3MPKb3cuFraD0
+	 /oukqWknjHIXG9Wfsb2B/Q5069/0txGprtsRxpRaFyXxWOJNfTvRvZbPnV/Ycr1jf2
+	 6LrYDyiRVHPfmCurbT+o1RL3s1KQYYrlpcuvE0c5UIcvoumQzg22eeGp4kxVw+wS23
+	 66ZBBCC5SWdWw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 30 Mar 2026 09:38:32 -0400
-Subject: [PATCH nfs-utils v2 12/16] support/export: check for pending
- requests after opening netlink sockets
+Date: Mon, 30 Mar 2026 09:38:33 -0400
+Subject: [PATCH nfs-utils v2 13/16] exportd/mountd: use cache type from
+ notifications to target scanning
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260330-exportd-netlink-v2-12-cc9bd5db2408@kernel.org>
+Message-Id: <20260330-exportd-netlink-v2-13-cc9bd5db2408@kernel.org>
 References: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 In-Reply-To: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 To: Steve Dickson <steved@redhat.com>
@@ -66,31 +66,31 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1166; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=I4uBVcx8FSgS4psUNqHj5/Dpd/xkvsY1z39PDwrHgT0=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzgWoRI6Q+VktVmd0tQI4WjO7NDrhmU7yCZ2
- JOf4hGXWi2JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp84AAKCRAADmhBGVaC
- FTgHEACEZe/h4fjv5gFhDFq/tSqUiIIZlcDnmBTpxISkL3TwGRbB0E37angl9KPP3zOnQ8JPXYl
- 9Yd2h5cGAY+4122JlNdlVwpmaE4POQ3fJsLLLm59uU5pSryAoV3ZK/CGsolUEElKpKf07fR6yDx
- PnSl3OqrUkDf1avtVxTptWa9kPMcxgN979MYX4rk74aj1LVOoLcD8gZ01mxlQKNR+0QxJkU6no2
- m4cLn5XmtM6fgZQJbNGAuNRuMJXN+34fa6Dgywnbg8A8YVQ3icb1R97MdozJP+5NfBaucUjkIgF
- 7zEtsi5x54NyddadW6Ygn0VR9o5JY4DgPYMCEzKQGCU4V9v7ewyXG8tMlQd6dqKEL7Cjqs38WL3
- ndLv7PoCUH1X6cibFtzVXoAQ+/TO/PW5rt5DsT7UKBMR0z57q9ekZgIrG1/jfnzp7zIt0AFUcv3
- t+juTK5pVRepG3/jMxrr6JWZ5fCIM6yZDUqbjl+7aXToBtUMiLdUWM6KrWy+VmfmFwIiB6is7hV
- 3vPHRZDOoSs+NATZV1xZxLoIRv4zjfQvm4kvZKbPRgnGQjnj2KhAZ509wJJPFxJ8Wiz+w7VuXJd
- CvgtYv/S58cANy4sXF0zixpGlcdYRhMj34nJtamX+yXmOZJ3Fz/k2JnKRDivvxsdl/NKPg5UXJ7
- qlm9V2DJ4XCYmLQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4914; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ouy+RW48q5t0OgorK5gFptxTj+t2id9veLWFdSUKy6E=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzgT/Znf/BX52gqo52dW1fOxZrt6gEqWYvqW
+ xh/esroZGuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp84AAKCRAADmhBGVaC
+ FeGlD/9E+LCjLqueWD5rQqqdBRsqCFvEXl72+owA444er/2zPn4kaE2pp9r/nDCdHi323o9hwkR
+ rKdov+qeNGYxaS6sARoDppDvfeUHmDkH+/FWDc7u09RSP6ufFxolZod34Ij6Cl3s8CVus5dMGdg
+ UYzpuS8rqVyOvDEqMk8v9R4X7VMWwaB+Y4vUG81MrsLAM9yBjuUeIOuXC7ZFbjijdjsiuKDum8W
+ 9l+8tLt/P75yixJVKPAlEoAHJ1LwowLLr0Fg5lywlhQtuNlNahhTwV9jdWLnyI0gCt7huupqeAw
+ 1uQq/PDKQd3XXTIzIo/COcBd7j0whnngWfSX9gezQHIZNsX0O3aBFuo/BLcXKjB1FntHyjEQ2ZA
+ uEUT5BSSmAmvmAAqUtL0ndxBn6279OZuYND++CH3zKMCaYlVKesM9ID0HQMGzVj2/Q1TO/CbCF2
+ QkHDyJDqareGkS7MT5D6BcNOmcoCB7hpKHeMCy4wMuZ6Fi5TWQxzXbrgnHEKVptiAxDZxx83UfU
+ vcz9wRroAXPWEz0e522YdTj0IJ/3gOy24wgLC8oE9e5lfmVGfyTuv5NFl8KKDnTEZLhgtgkeWTs
+ +2+ZkAwB7+6JCSEq15XsvBpnBecWln2erMlNedEJBaNxTXLLvRTiNdOuJp+relzNFQxEZ3YbAci
+ 91PgH843yca12OA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20527-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20528-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,50 +102,184 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A6FC635C24D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3E70035C5F1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-It's possible for there to be requests queued before mountd comes
-online. Always check for already-pending requests after opening netlink
-sockets.
+Parse the NFSD_A_CACHE_NOTIFY_CACHE_TYPE and
+SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE attributes from netlink multicast
+notifications to determine which specific caches have pending
+requests. Only issue GET_REQS for the caches that actually need
+servicing, avoiding unnecessary netlink round-trips.
+
+If the notification can't be parsed, fall back to scanning all caches
+for that family.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- support/export/cache.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ support/export/cache.c | 81 ++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 66 insertions(+), 15 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index 19cfbf6594b0a51d85814460f3153add89aa3a8a..4261e1861215ea53183dd8ce14890b0195d841e8 100644
+index 4261e1861215ea53183dd8ce14890b0195d841e8..5a2c5760cb5410845971ba831a9ae779d17a6d87 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -3014,8 +3014,19 @@ void cache_open(void)
- 	int i;
+@@ -1180,22 +1180,45 @@ static int cache_nfsd_nl_open(void)
+ 			       &nfsd_nl_family);
+ }
  
- 	if (cache_nfsd_nl_open() == 0) {
--		if (cache_sunrpc_nl_open() == 0)
-+		if (cache_sunrpc_nl_open() == 0) {
-+			/*
-+			 * Check for pending requests, in case any
-+			 * were queued before we opened the socket.
-+			 */
-+			auth_reload();
-+			cache_nl_process_export();
-+			cache_nl_process_expkey();
-+			cache_nl_process_ip_map();
-+			if (manage_gids)
-+				cache_nl_process_unix_gid();
- 			return;
-+		}
- 		xlog(L_NOTICE, "sunrpc netlink family unavailable, falling back to /proc");
- 		nl_socket_free(nfsd_nl_notify_sock);
- 		nfsd_nl_notify_sock = NULL;
+-static int nfsd_nl_notify_handler(struct nl_msg *UNUSED(msg), void *UNUSED(arg))
++static int nl_seq_check_handler(struct nl_msg *UNUSED(msg), void *UNUSED(arg))
+ {
+ 	return NL_OK;
+ }
+ 
+-static void cache_nfsd_nl_drain(void)
++static int nfsd_notify_handler(struct nl_msg *msg, void *arg)
+ {
++	unsigned int *cache_mask = arg;
++	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
++	struct nlattr *tb[NFSD_A_CACHE_NOTIFY_MAX + 1];
++
++	if (nla_parse(tb, NFSD_A_CACHE_NOTIFY_MAX,
++		      genlmsg_attrdata(gnlh, 0),
++		      genlmsg_attrlen(gnlh, 0), NULL) == 0 &&
++	    tb[NFSD_A_CACHE_NOTIFY_CACHE_TYPE])
++		*cache_mask |= nla_get_u32(tb[NFSD_A_CACHE_NOTIFY_CACHE_TYPE]);
++	else
++		*cache_mask = ~0U;
++
++	xlog(D_NETLINK, "nfsd_notify_handler: cache_mask=%x", *cache_mask);
++	return NL_OK;
++}
++
++static unsigned int cache_nfsd_nl_drain(void)
++{
++	unsigned int cache_mask = 0;
+ 	struct nl_cb *cb;
+ 
+ 	cb = nl_cb_alloc(NL_CB_DEFAULT);
+ 	if (!cb)
+-		return;
++		return ~0U;
+ 
+-	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, nfsd_nl_notify_handler, NULL);
++	nl_cb_set(cb, NL_CB_SEQ_CHECK, NL_CB_CUSTOM,
++		  nl_seq_check_handler, NULL);
++	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, nfsd_notify_handler,
++		  &cache_mask);
+ 	nl_recvmsgs(nfsd_nl_notify_sock, cb);
+ 	nl_cb_put(cb);
++	return cache_mask;
+ }
+ 
+ struct get_export_reqs_data {
+@@ -1552,8 +1575,6 @@ static void cache_nl_process_export(void)
+ 	if (!msg)
+ 		goto out_free;
+ 
+-	auth_reload();
+-
+ 	for (i = 0; i < nreqs; i++) {
+ 		char *dom = reqs[i].client;
+ 		char *path = reqs[i].path;
+@@ -1912,16 +1933,20 @@ out_free:
+ 
+ static void cache_nfsd_nl_process(void)
+ {
++	unsigned int cache_mask;
++
+ 	/* Drain pending nfsd notifications */
+-	cache_nfsd_nl_drain();
++	cache_mask = cache_nfsd_nl_drain();
+ 
+ 	auth_reload();
+ 
+ 	/* Handle any pending svc_export requests */
+-	cache_nl_process_export();
++	if (cache_mask & NFSD_CACHE_TYPE_SVC_EXPORT)
++		cache_nl_process_export();
+ 
+ 	/* Handle any pending expkey requests */
+-	cache_nl_process_expkey();
++	if (cache_mask & NFSD_CACHE_TYPE_EXPKEY)
++		cache_nl_process_expkey();
+ }
+ 
+ /*
+@@ -1942,17 +1967,40 @@ static int cache_sunrpc_nl_open(void)
+ 			       &sunrpc_nl_family);
+ }
+ 
+-static void cache_sunrpc_nl_drain(void)
++static int sunrpc_notify_handler(struct nl_msg *msg, void *arg)
+ {
++	unsigned int *cache_mask = arg;
++	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
++	struct nlattr *tb[SUNRPC_A_CACHE_NOTIFY_MAX + 1];
++
++	if (nla_parse(tb, SUNRPC_A_CACHE_NOTIFY_MAX,
++		      genlmsg_attrdata(gnlh, 0),
++		      genlmsg_attrlen(gnlh, 0), NULL) == 0 &&
++	    tb[SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE])
++		*cache_mask |= nla_get_u32(tb[SUNRPC_A_CACHE_NOTIFY_CACHE_TYPE]);
++	else
++		*cache_mask = ~0U;
++
++	xlog(D_NETLINK, "sunrpc_notify_handler: cache_mask=%x", *cache_mask);
++	return NL_OK;
++}
++
++static unsigned int cache_sunrpc_nl_drain(void)
++{
++	unsigned int cache_mask = 0;
+ 	struct nl_cb *cb;
+ 
+ 	cb = nl_cb_alloc(NL_CB_DEFAULT);
+ 	if (!cb)
+-		return;
++		return ~0U;
+ 
+-	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, nfsd_nl_notify_handler, NULL);
++	nl_cb_set(cb, NL_CB_SEQ_CHECK, NL_CB_CUSTOM,
++		  nl_seq_check_handler, NULL);
++	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM, sunrpc_notify_handler,
++		  &cache_mask);
+ 	nl_recvmsgs(sunrpc_nl_notify_sock, cb);
+ 	nl_cb_put(cb);
++	return cache_mask;
+ }
+ 
+ /*
+@@ -2436,16 +2484,19 @@ out_free:
+ 
+ static void cache_sunrpc_nl_process(void)
+ {
++	unsigned int cache_mask;
++
+ 	/* Drain pending sunrpc notifications */
+-	cache_sunrpc_nl_drain();
++	cache_mask = cache_sunrpc_nl_drain();
+ 
+ 	auth_reload();
+ 
+ 	/* Handle any pending ip_map requests */
+-	cache_nl_process_ip_map();
++	if (cache_mask & SUNRPC_CACHE_TYPE_IP_MAP)
++		cache_nl_process_ip_map();
+ 
+ 	/* Handle any pending unix_gid requests */
+-	if (manage_gids)
++	if (manage_gids && (cache_mask & SUNRPC_CACHE_TYPE_UNIX_GID))
+ 		cache_nl_process_unix_gid();
+ }
+ 
 
 -- 
 2.53.0
