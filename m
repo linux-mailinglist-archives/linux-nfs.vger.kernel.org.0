@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20530-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20531-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CNV0Kwl/ymmR9QUAu9opvQ
-	(envelope-from <linux-nfs+bounces-20530-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:47:53 +0200
+	id aOmqIW9/ymnX9QUAu9opvQ
+	(envelope-from <linux-nfs+bounces-20531-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:49:35 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28DAE35C42E
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 075B735C4F0
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 15:49:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 903C430A75B3
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CFF4F30A939E
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 13:39:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C2CB3D648B;
-	Mon, 30 Mar 2026 13:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57EF33D649C;
+	Mon, 30 Mar 2026 13:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5QN2/7l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGyESMpx"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CBF3D47BF
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3478E3D47BF
+	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 13:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774877940; cv=none; b=bAElDxmZPb9gpdNL+PHVBxwsohxUfpOXFmc/PvraRFip7OxTt3xC3Cf8bXxngQ562gQuLW00kBLKi3s79BrrOx/YZFdDcO5MtHR5c/CzUNRZeneF1XXlCtWdN9lsUJdgFYTUD7KyuLK4bNnblKYjDN/RzigGI+GzF6roJ6Ta5ag=
+	t=1774877941; cv=none; b=ki0UgN191xeTj0xSLQcFTJgl140UVad23IJP4z7XHIZ/huUjmPFaXsXncS3x7l7hw0zfq4MOo/vF9ZHHiHQfjbZQq5ZrFhZyi+gERlWIXKJCdpJyzZDcdE5b7cmrqpATmMVUVntXzHfQLnwYs3Vid74MpGImxOINJuaZw2Ox/cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774877940; c=relaxed/simple;
-	bh=JUiR8+K3NRLTbUxQp16eaaZvcHN4D3LqkIS17oMjuko=;
+	s=arc-20240116; t=1774877941; c=relaxed/simple;
+	bh=+aWAb97mZVh6HH7pPbEHCb51YhCysPLtJWzPNztzH5I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WHxTJnXuGY9wOzkhyPxpGonMwIM4dJrQHQ1FwXmUvchd0KlnS7E4kQFZT5E8sCPqUnlQjqUZP7gUDzO2M0IoF89eEnXWcEijOFHFAfQjlLEh770tSWzEa/eoQpPB01/To3vLbkX1y0t94m0ahsrNQDpJG82l9ub/7sFihCcy024=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5QN2/7l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C16C2BCB1;
-	Mon, 30 Mar 2026 13:38:58 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=g5cB3KoB9k8rkH0DgDTtu49uSxYq9uyWzg+rf8D7kLpbtaJYXDtXyeRepzIhXU2NWifnLmUeaJ8YqTim6Eteyn1E8SDwDkY+r+IFL3x20cOxzAucaxGqvLdXGQjLznhgjUA25RJgITcyjJ+c5rZa4Ar0PvzYqXm4dQ5kb6qh15w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGyESMpx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 233B7C4CEF7;
+	Mon, 30 Mar 2026 13:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774877939;
-	bh=JUiR8+K3NRLTbUxQp16eaaZvcHN4D3LqkIS17oMjuko=;
+	s=k20201202; t=1774877941;
+	bh=+aWAb97mZVh6HH7pPbEHCb51YhCysPLtJWzPNztzH5I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m5QN2/7lqHwPpXGup/Is37tMSkeIEjqfHyU79uR8H/Ym2iOxRotsCX5CAIDeWHWUF
-	 iVuCbu7b96Awr0+V7D3DqfvGA6enT6Kw9F1GeCQ/CNoaBMw6Y9Gsd/iKNM+tyBag1B
-	 IYllIF1apbF+Mv84xocCbrQ/tu4y1qkzNHtiUIWilZGfMebJaVTCqlDiRRJijmKxIo
-	 xRePOFejdP7dbPr2Tl9aTGFHtVfIZ4VNImao7nCkfts96Fup+SyCLRV3a/GylT5Pfe
-	 1NZEXSTYjm70yyT5+pU/Zg1Qys2G3Uq6SKAuY8vlltfwrMygw8uf1YqNffMrlsH459
-	 83mF41FwWxrCw==
+	b=jGyESMpx0YQHLSNFSkEbbukb5gf99XQ3gwrcC0pPoIoj0PbIF0aEXu0qY1I4+q19L
+	 JIoJqVLtBJIs9mt5glJY7oQ7j8R+oQarugtZFGZiBKRSxgp9KVYxmdh4UsxvJGWG7n
+	 iHmj4jYK+s6WQIJ9p+I7IkSabyoQDuDvNNTDYbxZz0g+MWS6KjdbJ2CIVqxZHpxJQY
+	 hqEra2JPL1tVXpz5kaE1g7W+5FwFE+xVLBrjH1JBsfq6DJCFFGMEPeimPRhO985ENv
+	 mrrOWQj55NUqpOz+NATr9YPliawfA7//ObshvWRKZoewiwVfrW9YZNtJ9/ZXXuLp6r
+	 ptCPVRuX9uVFQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 30 Mar 2026 09:38:35 -0400
-Subject: [PATCH nfs-utils v2 15/16] exportfs: use netlink to probe kernel
- support, skip export_test
+Date: Mon, 30 Mar 2026 09:38:36 -0400
+Subject: [PATCH nfs-utils v2 16/16] mountd/exportd/exportfs: add
+ --no-netlink option to disable netlink
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260330-exportd-netlink-v2-15-cc9bd5db2408@kernel.org>
+Message-Id: <20260330-exportd-netlink-v2-16-cc9bd5db2408@kernel.org>
 References: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 In-Reply-To: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
 To: Steve Dickson <steved@redhat.com>
@@ -66,20 +66,20 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3867; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=JUiR8+K3NRLTbUxQp16eaaZvcHN4D3LqkIS17oMjuko=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzh/dTpQT1u4EO9Ek7MLifLtr1u779B2VhEs
- tcH14X/fOOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp84QAKCRAADmhBGVaC
- FWveD/oD7gxrOYGDREXSC5il9qBPz2tjoe8dF8a1MM8ydZP+1sIpC9h7ihAESkTDHM380V+8pHN
- /Un9ugGWOIOHOe+uGVe4bvCNEdivKx1WELJcjbm+RSN/8p32lfMp5Pcnz/s9npxWcRqws/8IZ6O
- XwRqwzkdkrvq9DGv20RnzAR74aD1d+tvtVdFpikCoaADfyYmwI2bVEkS7BMmIBJxJe+bjQgHCgX
- wOawr214P17ZDMIWu4bPn4l0K1amC8U/9MjHohR9ynjZ2/fzGDGJQKU+LURBXzb23L755diZNVM
- flKGJMYMWZw/EVPPbp12/6slFB1dFW0DaTgRDTygE5Ub70kPBuka33/z4lDkcRsJ/RyhjJvg1Bv
- TDS1/Ibrd67t02ehKERqmYUhzA2HUlIeguahpgENLQnXNcN9yeLefptWH55G0cSbyqZwCogfsKX
- WxUs9Dt9cWg4N3orLWvV73ig8zjWkkdmZyW22ylpMk2r/HNNGBrQvJHfVWsFzhSVf+uM+JxQwg7
- Zt5iwSvWFrgQArtYAdb4VrrNf8oF8Kc3hyVxjlrzHmyzNkHB7Bh3kdBNfiosT/kOvFmYG/6h7Ak
- ceDXkJZI5HgcX4X3acfJoFs6BAkNikMRyBXqt1Y00GSD+nc3+omMznRTECv1ZdTWuQ75l2ZzxzF
- u56ExJHQexAM/TA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11999; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=+aWAb97mZVh6HH7pPbEHCb51YhCysPLtJWzPNztzH5I=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpynzhd8GXMk2U/QDXuNlKzIPSdivajSLFXDJpu
+ 8WNSm1X6eGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCacp84QAKCRAADmhBGVaC
+ FRFFD/9viXjrTJGXDGd1P/Lh5bF0DjVkvTwBGToZsLt14EDKASnm58htMJKP7YcN2st7QkCHZ4p
+ NSRbRVJoik5Uv+ZL8pKrM+fQGNFaceebGzLpKkJoQ6ET5enqKCl3ntMBqWNn4PJXx1ojoqJe9Fy
+ rA7mDHGKfmPF/xrAgz8LZ5DFHvBODy84DvboWORtt2vcfxd3cPXMlaMwswvnUPAdcPTynnhCHal
+ yz72r5vQGvZ2xbY2dFz3FrDa0u9xwuSXjYsR85mbQpyWoURQGrn7Xp1r9DuyN4Crv3Ese8TQFu8
+ nwQPD9ulhuZ8CwY7rZytVyR0EHsq+8YOo75R8kBoeePOUdaUAmC9BC6gLHYKV2xS1J/U97Hm9em
+ XNrQCe7h/8akBxc3tBqBOl8AbWlnZO+Zb1IlsKeBQhMTWN35TpMsmZc96IA98Lm/5C4nIng6Elr
+ j+/Mxgfr6ZqPieATq/xhOk0ha0+vnP54wplHbuKR3KeHvEiH+dfQfRezz8tLOwwd4G3f+dfCZbm
+ bi7/3+XDABvFqGoUKdgSwZs3NQbdX9fqc+ynMASZz2vat3OPIwv7c9pZ9Sdk3jdMCvd3z3ch4Z2
+ FnnmWXQWNBbJEB64Qi0AfQO8f+GU/LcqvJYZ6BdAX8Ivx0WELOX3JgSe1iiqVXnDYZDNZGnRVvW
+ Cvb4Gv1MezMu+Ow==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -90,7 +90,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20530-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20531-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -108,130 +108,382 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 28DAE35C42E
+X-Rspamd-Queue-Id: 075B735C4F0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Refactor can_test() to first try resolving the sunrpc genl family via
-netlink. If successful, the kernel supports the new netlink-based cache
-interfaces and we can skip the advisory export_test() probe -- mountd
-and exportd will validate exports at cache-fill time via check_export().
+Add a --no-netlink command-line option (short: -L) and no-netlink=
+config file setting that disables netlink support, forcing the use of
+/proc interfaces instead.
 
-can_test() now returns:
-  2 = netlink available (skip export_test)
-  1 = /proc available (keep export_test as before)
-  0 = neither available
+For mountd and exportd, the setting lives in their respective [mountd]
+and [exportd] sections of nfs.conf. exportfs will look in either stanza
+for the setting.
 
-Update validate_export() to check this return value and skip the
-export_test() calls when netlink is available.
-
-Link exportfs against libnl3/libnl-genl-3 (already a mandatory build
-dependency for nfs-utils).
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+This is useful for debugging, testing the /proc fallback path, or
+working around kernel netlink issues.
 ---
- utils/exportfs/Makefile.am |  6 ++++--
- utils/exportfs/exportfs.c  | 42 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 45 insertions(+), 3 deletions(-)
+ support/export/cache.c       |  3 ++-
+ support/export/cache_flush.c |  4 ++-
+ utils/exportd/exportd.c      | 10 ++++++--
+ utils/exportd/exportd.man    | 12 +++++++--
+ utils/exportfs/exportfs.c    | 13 +++++++++-
+ utils/exportfs/exportfs.man  | 58 ++++++++++++++++++++++++++++++++++++++------
+ utils/mountd/mountd.c        |  9 ++++++-
+ utils/mountd/mountd.man      |  9 +++++++
+ 8 files changed, 102 insertions(+), 16 deletions(-)
 
-diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
-index 7f8ce9faf2b469c8560f5fbee40b81e3443eab78..8db5fdae1741e1c79639bbdfd5d63f8571363e63 100644
---- a/utils/exportfs/Makefile.am
-+++ b/utils/exportfs/Makefile.am
-@@ -11,8 +11,10 @@ exportfs_LDADD = ../../support/export/libexport.a \
- 	       	 ../../support/nfs/libnfs.la \
- 		 ../../support/misc/libmisc.a \
- 		 ../../support/reexport/libreexport.a \
--		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
-+		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD) \
-+		 $(LIBNL3_LIBS) $(LIBNLGENL3_LIBS)
+diff --git a/support/export/cache.c b/support/export/cache.c
+index 5a2c5760cb5410845971ba831a9ae779d17a6d87..2f128d7db7bd63d86530f0c4003af58327db2c70 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -111,6 +111,7 @@ static bool path_lookup_error(int err)
  
--exportfs_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport
-+exportfs_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport \
-+		    $(LIBNL3_CFLAGS) $(LIBNLGENL3_CFLAGS)
+ extern int use_ipaddr;
+ extern int manage_gids;
++extern int no_netlink;
  
- MAINTAINERCLEANFILES = Makefile.in
+ static void auth_unix_ip(int f)
+ {
+@@ -3064,7 +3065,7 @@ void cache_open(void)
+ {
+ 	int i;
+ 
+-	if (cache_nfsd_nl_open() == 0) {
++	if (!no_netlink && cache_nfsd_nl_open() == 0) {
+ 		if (cache_sunrpc_nl_open() == 0) {
+ 			/*
+ 			 * Check for pending requests, in case any
+diff --git a/support/export/cache_flush.c b/support/export/cache_flush.c
+index 7d7f12b212967e5b3d1a2357de07bc3ba5f0b674..ed7b964f9d5372f4accba21254ee9c5f40ffd44d 100644
+--- a/support/export/cache_flush.c
++++ b/support/export/cache_flush.c
+@@ -20,6 +20,8 @@
+ #include "nfslib.h"
+ #include "xlog.h"
+ 
++extern int no_netlink;
++
+ #include <netlink/genl/genl.h>
+ #include <netlink/genl/ctrl.h>
+ #include <netlink/msg.h>
+@@ -155,7 +157,7 @@ static void cache_proc_flush(void)
+ void
+ cache_flush(void)
+ {
+-	if (cache_nl_flush() == 0) {
++	if (!no_netlink && cache_nl_flush() == 0) {
+ 		xlog(D_NETLINK, "cache flush via netlink succeeded");
+ 		return;
+ 	}
+diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
+index a2e370ac506f56d0feab306bd252c32ef58ba009..a08aaaccbc2f2ec8504c53bbf07daf1ac2be0c32 100644
+--- a/utils/exportd/exportd.c
++++ b/utils/exportd/exportd.c
+@@ -32,6 +32,7 @@ static int num_threads = 1;
+ #define MAX_THREADS 64
+ 
+ int manage_gids;
++int no_netlink;
+ int use_ipaddr = -1;
+ 
+ static struct option longopts[] =
+@@ -40,13 +41,14 @@ static struct option longopts[] =
+ 	{ "debug", 1, 0, 'd' },
+ 	{ "help", 0, 0, 'h' },
+ 	{ "manage-gids", 0, 0, 'g' },
++	{ "no-netlink", 0, 0, 'L' },
+ 	{ "num-threads", 1, 0, 't' },
+ 	{ "log-auth", 0, 0, 'l' },
+ 	{ "cache-use-ipaddr", 0, 0, 'i' },
+ 	{ "ttl", 0, 0, 'T' },
+ 	{ NULL, 0, 0, 0 }
+ };
+-static char shortopts[] = "d:fghs:t:liT:";
++static char shortopts[] = "d:fghs:t:liLT:";
+ 
+ /*
+  * Signal handlers.
+@@ -109,7 +111,7 @@ usage(const char *prog, int n)
+ 		"Usage: %s [-f|--foreground] [-h|--help] [-d kind|--debug kind]\n"
+ "	[-g|--manage-gids] [-l|--log-auth] [-i|--cache-use-ipaddr] [-T|--ttl ttl]\n"
+ "	[-s|--state-directory-path path]\n"
+-"	[-t num|--num-threads=num]\n", prog);
++"	[-t num|--num-threads=num] [-L|--no-netlink]\n", prog);
+ 	exit(n);
+ }
+ 
+@@ -124,6 +126,7 @@ read_exportd_conf(char *progname, char **argv)
+ 	xlog_set_debug(progname);
+ 
+ 	manage_gids = conf_get_bool("exportd", "manage-gids", manage_gids);
++	no_netlink = conf_get_bool("exportd", "no-netlink", no_netlink);
+ 	num_threads = conf_get_num("exportd", "threads", num_threads);
+ 	if (conf_get_bool("mountd", "cache-use-ipaddr", 0))
+ 		use_ipaddr = 2;
+@@ -171,6 +174,9 @@ main(int argc, char **argv)
+ 		case 'g':
+ 			manage_gids = 1;
+ 			break;
++		case 'L':
++			no_netlink = 1;
++			break;
+ 		case 'h':
+ 			usage(progname, 0);
+ 			break;
+diff --git a/utils/exportd/exportd.man b/utils/exportd/exportd.man
+index fae434b5f03bfb5a252f1e5c6d7fc8fc2a3f5567..d024868c6471c60f6804f427317a2627cbddb0af 100644
+--- a/utils/exportd/exportd.man
++++ b/utils/exportd/exportd.man
+@@ -106,6 +106,13 @@ the server. Note that the 'primary' group id is not affected so a
+ .B newgroup
+ command on the client will still be effective.  This function requires
+ a Linux Kernel with version at least 2.6.21.
++.TP
++.B \-L " or " \-\-no-netlink
++Disable the use of netlink for kernel communication and force the use
++of the legacy
++.I /proc/net/rpc
++interfaces instead.  This can be useful for debugging or working around
++kernel netlink issues.
+ .SH CONFIGURATION FILE
+ Many of the options that can be set on the command line can also be
+ controlled through values set in the
+@@ -120,8 +127,9 @@ Values recognized in the
+ section include 
+ .B cache\-use\-ipaddr ,
+ .BR ttl ,
+-.BR manage-gids ", and"
+-.B debug 
++.BR manage-gids ,
++.BR no\-netlink ", and"
++.B debug
+ which each have the same effect as the option with the same name.
+ .SH FILES
+ .TP 2.5i
 diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 54ce62c5ce9acf48f3b9d26d1309d9b195d08824..1f726746ebc5185ef00a177760fc7a7fa44126c5 100644
+index 1f726746ebc5185ef00a177760fc7a7fa44126c5..93f0bcd7ad56ab7fb57f7a2955687fa8ec7592b4 100644
 --- a/utils/exportfs/exportfs.c
 +++ b/utils/exportfs/exportfs.c
-@@ -40,6 +40,15 @@
- #include "conffile.h"
- #include "reexport.h"
+@@ -49,6 +49,8 @@
+ #include "sunrpc_netlink.h"
+ #endif
  
-+#include <netlink/genl/genl.h>
-+#include <netlink/genl/ctrl.h>
-+
-+#ifdef USE_SYSTEM_SUNRPC_NETLINK_H
-+#include <linux/sunrpc_netlink.h>
-+#else
-+#include "sunrpc_netlink.h"
-+#endif
++int no_netlink;
 +
  static void	export_all(int verbose);
  static void	exportfs(char *arg, char *options, int verbose);
  static void	unexportfs(char *arg, int verbose);
-@@ -476,13 +485,34 @@ unexportfs(char *arg, int verbose)
- 		xlog(L_ERROR, "Invalid export syntax: %s", arg);
- }
+@@ -109,8 +111,11 @@ read_exportfs_conf(char **argv)
+ 	xlog_set_debug("exportfs");
  
-+/* Return values:
-+ *   2 = netlink available (skip export_test)
-+ *   1 = /proc available (keep export_test)
-+ *   0 = neither available
-+ */
- static int can_test(void)
- {
-+	struct nl_sock *sock;
-+	int family;
- 	char buf[1024] = { 0 };
- 	int fd;
- 	int n;
+ 	/* NOTE: following uses "mountd" section of nfs.conf !!!! */
++	no_netlink = conf_get_bool("mountd", "no-netlink", no_netlink);
+ 	s = conf_get_str("mountd", "state-directory-path");
+ 	/* Also look in the exportd section */
++	if (!no_netlink)
++		no_netlink = conf_get_bool("exportd", "no-netlink", no_netlink);
+ 	if (s == NULL)
+ 		s = conf_get_str("exportd", "state-directory-path");
+ 	if (s && !state_setup_basedir(argv[0], s))
+@@ -145,7 +150,7 @@ main(int argc, char **argv)
+ 
+ 	nfsd_path_init();
+ 
+-	while ((c = getopt(argc, argv, "ad:fhio:ruvs")) != EOF) {
++	while ((c = getopt(argc, argv, "ad:fhiLo:ruvs")) != EOF) {
+ 		switch(c) {
+ 		case 'a':
+ 			f_all = 1;
+@@ -162,6 +167,9 @@ main(int argc, char **argv)
+ 		case 'i':
+ 			f_ignore = 1;
+ 			break;
++		case 'L':
++			no_netlink = 1;
++			break;
+ 		case 'o':
+ 			options = optarg;
+ 			break;
+@@ -500,6 +508,8 @@ static int can_test(void)
  	size_t bufsiz = sizeof(buf);
  
-+	/* Try netlink first: resolve sunrpc genl family */
-+	sock = nl_socket_alloc();
-+	if (sock) {
-+		if (genl_connect(sock) == 0) {
-+			family = genl_ctrl_resolve(sock, SUNRPC_FAMILY_NAME);
-+			nl_socket_free(sock);
-+			if (family >= 0)
-+				return 2;
-+		} else {
-+			nl_socket_free(sock);
-+		}
-+	}
-+
-+	/* Fallback: /proc probe */
+ 	/* Try netlink first: resolve sunrpc genl family */
++	if (no_netlink)
++		goto try_proc;
+ 	sock = nl_socket_alloc();
+ 	if (sock) {
+ 		if (genl_connect(sock) == 0) {
+@@ -513,6 +523,7 @@ static int can_test(void)
+ 	}
+ 
+ 	/* Fallback: /proc probe */
++try_proc:
  	fd = open("/proc/net/rpc/auth.unix.ip/channel", O_WRONLY);
  	if (fd < 0)
  		return 0;
-@@ -522,6 +552,7 @@ validate_export(nfs_export *exp)
- 	char *path = exportent_realpath(&exp->m_export);
- 	struct statfs stf;
- 	int fs_has_fsid = 0;
-+	int test_result;
+diff --git a/utils/exportfs/exportfs.man b/utils/exportfs/exportfs.man
+index af0e5571cef83d4f3de6915608b4871690a8853a..3737ee81ab275aa65e942ec1602f33a7abbfc80e 100644
+--- a/utils/exportfs/exportfs.man
++++ b/utils/exportfs/exportfs.man
+@@ -53,14 +53,41 @@ by using the
+ command.
+ .PP
+ .B exportfs
+-does not give any information to the kernel directly, but provides it
+-only to
+-.B rpc.mountd
+-through the
++does not communicate with the kernel directly.
++It writes export information to
+ .I /var/lib/nfs/etab
+-file.
++and relies on its partner programs
++.B rpc.mountd
++and
++.B nfsv4.exportd
++to manage kernel communication.
++These daemons work in one of two modes: a netlink mode and a
++.I /proc
++mode.
++.PP
++In the netlink mode, available on sufficiently recent kernels,
+ .B rpc.mountd
+-then manages kernel requests for information about exports, as needed.
++(or
++.BR nfsv4.exportd )
++communicates with the kernel via generic netlink sockets.
++The kernel sends multicast notifications when cache entries need to be
++resolved, and the daemon responds with the appropriate export
++information.
++Cache flushing (via
++.BR "exportfs \-f" )
++is also performed over netlink.
++This mode can be disabled with the
++.B \-L
++option.
++.PP
++In the
++.I /proc
++mode, used when netlink is unavailable,
++.B rpc.mountd
++manages kernel requests for information about exports
++via the
++.I /proc/net/rpc
++channel files.
+ .SH OPTIONS
+ .TP
+ .B \-d kind " or " \-\-debug kind
+@@ -123,6 +150,12 @@ options.
+ .TP
+ .B -s
+ Display the current export list suitable for /etc/exports.
++.TP
++.B -L
++Disable the use of netlink for kernel communication and force the use
++of the legacy
++.I /proc
++interfaces for cache flushing and export validation.
  
- 	if (stat(path, &stb) < 0) {
- 		xlog(L_ERROR, "Failed to stat %s: %m", path);
-@@ -532,7 +563,16 @@ validate_export(nfs_export *exp)
- 			"Remote access will fail", path);
- 		return;
- 	}
--	if (!can_test())
-+
-+	test_result = can_test();
-+	if (!test_result)
-+		return;
-+
-+	/*
-+	 * When netlink is available, skip the export_test() probe.
-+	 * mountd/exportd will validate exports at cache-fill time.
-+	 */
-+	if (test_result == 2)
- 		return;
+ .SH CONFIGURATION FILE
+ The
+@@ -142,11 +175,20 @@ When a list is given, the members should be comma-separated.
+ .B exportfs
+ will also recognize the
+ .B state-directory-path
+-value from both the 
++and
++.B no\-netlink
++values from both the
+ .B [mountd]
+ section and the
+ .B [exportd]
+-section
++section.
++When
++.B no\-netlink
++is set,
++.B exportfs
++will skip the netlink probe and use the legacy
++.I /proc
++interfaces for cache flushing and export validation
  
- 	if (!statfs(path, &stf) &&
+ .SH DISCUSSION
+ .SS Exporting Directories
+diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
+index 6e6777cd1daa0227f3ff81f826c1cbc8627b4a8a..92d8c4690efc48fcfa12d9618cac9172c4752f4f 100644
+--- a/utils/mountd/mountd.c
++++ b/utils/mountd/mountd.c
+@@ -41,6 +41,7 @@ static struct nfs_fh_len *get_rootfh(struct svc_req *, dirpath *, nfs_export **,
+ 
+ int reverse_resolve = 0;
+ int manage_gids;
++int no_netlink;
+ int apply_root_cred;
+ int use_ipaddr = -1;
+ 
+@@ -72,6 +73,7 @@ static struct option longopts[] =
+ 	{ "num-threads", 1, 0, 't' },
+ 	{ "reverse-lookup", 0, 0, 'r' },
+ 	{ "manage-gids", 0, 0, 'g' },
++	{ "no-netlink", 0, 0, 'L' },
+ 	{ "no-udp", 0, 0, 'u' },
+ 	{ "log-auth", 0, 0, 'l'},
+ 	{ "cache-use-ipaddr", 0, 0, 'i'},
+@@ -667,6 +669,7 @@ read_mountd_conf(char **argv)
+ 
+ 	xlog_set_debug("mountd");
+ 	manage_gids = conf_get_bool("mountd", "manage-gids", manage_gids);
++	no_netlink = conf_get_bool("mountd", "no-netlink", no_netlink);
+ 	descriptors = conf_get_num("mountd", "descriptors", descriptors);
+ 	port = conf_get_num("mountd", "port", port);
+ 	num_threads = conf_get_num("mountd", "threads", num_threads);
+@@ -734,6 +737,9 @@ main(int argc, char **argv)
+ 		case 'g':
+ 			manage_gids = 1;
+ 			break;
++		case 'L':
++			no_netlink = 1;
++			break;
+ 		case 'o':
+ 			descriptors = atoi(optarg);
+ 			if (descriptors <= 0) {
+@@ -951,6 +957,7 @@ usage(const char *prog, int n)
+ "	[-N version|--no-nfs-version version] [-n|--no-tcp]\n"
+ "	[-H prog |--ha-callout prog] [-r |--reverse-lookup]\n"
+ "	[-s|--state-directory-path path] [-g|--manage-gids]\n"
+-"	[-t num|--num-threads=num] [-u|--no-udp]\n", prog);
++"	[-t num|--num-threads=num] [-u|--no-udp]\n"
++"	[-L|--no-netlink]\n", prog);
+ 	exit(n);
+ }
+diff --git a/utils/mountd/mountd.man b/utils/mountd/mountd.man
+index 2fa396c3288f37b1afa247b54a6166ca4f1b5e06..8bec38db131d9f70d1e04a000133023cca955fe1 100644
+--- a/utils/mountd/mountd.man
++++ b/utils/mountd/mountd.man
+@@ -284,6 +284,14 @@ the server. Note that the 'primary' group id is not affected so a
+ command on the client will still be effective.  This function requires
+ a Linux Kernel with version at least 2.6.21.
+ 
++.TP
++.B \-L " or " \-\-no-netlink
++Disable the use of netlink for kernel communication and force the use
++of the legacy
++.I /proc/net/rpc
++interfaces instead.  This can be useful for debugging or working around
++kernel netlink issues.
++
+ .SH CONFIGURATION FILE
+ Many of the options that can be set on the command line can also be
+ controlled through values set in the
+@@ -297,6 +305,7 @@ Values recognized in the
+ .B [mountd]
+ section include
+ .BR manage-gids ,
++.BR no\-netlink ,
+ .BR cache\-use\-ipaddr ,
+ .BR descriptors ,
+ .BR port ,
 
 -- 
 2.53.0
