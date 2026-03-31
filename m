@@ -1,62 +1,61 @@
-Return-Path: <linux-nfs+bounces-20547-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20548-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KJD1JHYKzGn+NQYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20547-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 19:55:02 +0200
+	id MEseEQEGzGljNQYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20548-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 19:36:01 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E319B36F7B5
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 19:55:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF25336EF7F
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 19:36:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 14C3F30BC425
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 17:24:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9C27E3159918
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 17:27:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61C8C345CDD;
-	Tue, 31 Mar 2026 17:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E8A369234;
+	Tue, 31 Mar 2026 17:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqK0Df0/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRBagZRz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1653E316195;
-	Tue, 31 Mar 2026 17:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE853A451A;
+	Tue, 31 Mar 2026 17:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774977867; cv=none; b=EnL87xDxlLoMVzvY1QZZn61sMkXEezARmlngCPuIJUqA2nt2X2Y7/HHlaVle1AMLaurcVjZzfJkmlCOX1wQzyl6EqB1zw52XS1OIALDxfpwVsPkolq9+RyVZGvUFCzi9wFKJw6Sa78Ozqbb13jftUPTdhgKWlY+q1+j/lXPezuI=
+	t=1774978017; cv=none; b=lOE8Y3pTx98bwSPHUiHknOsP7DX7Y2rwBdtgImI6Q/sSP41qmzKSyRllax1i1EeXKwPCfSJnVMWl5qSCzO9YvrWgBTa2gWgFcZVOtwKQwc9ppmp7I6Ke1z0zzPcwjNQGQ/Re9097233rNhM4DR85gz7ZJuSKW5rGb0x82CRdJAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774977867; c=relaxed/simple;
-	bh=od98BF/BWv7PmWPX2b2wStsnZy5eTLqe1oQ9E2UQnb4=;
+	s=arc-20240116; t=1774978017; c=relaxed/simple;
+	bh=+eQcaLkEY/cpQYP25ufYNu01bV9RFma7IVxnAqNmKvc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HRONTgy89iGODdYJ8dAXtAfNuSMex5Ir9bvlr7lMvvVBj/Gj28YPUgSKXgNXysgN4R1YoLNGe0nfriJbUqyWKSuH9otiU08uowFozdHDfibiHPvTQWJAZIWKhMLMrP7c0LQElyn1kt5iuKzzrpaCI4Vy6IZ7SGhyko5dQl+zNT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqK0Df0/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B167EC19424;
-	Tue, 31 Mar 2026 17:24:25 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Ahs7XiQtO9ClFurNgSshTmFzOJpQd0G5S9ydbhIUDc2KThXd2uNAEoCOPEZ64DysfrucjpU+PU7N+K2y7B9mGjdpaYG9iuCoXYloh8kPrAFqqVmScEsMNrFZTBl3sQyKXcsL++sEsMUeOCPJJDMIPfDg0/F1OgSdQC3XCCZbEEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRBagZRz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E122DC19423;
+	Tue, 31 Mar 2026 17:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774977866;
-	bh=od98BF/BWv7PmWPX2b2wStsnZy5eTLqe1oQ9E2UQnb4=;
+	s=k20201202; t=1774978016;
+	bh=+eQcaLkEY/cpQYP25ufYNu01bV9RFma7IVxnAqNmKvc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KqK0Df0/rajdsjIohnjL1ksp4JfvZmNODUz9Y2h3sFNgrRsWmIk/fczw+8UY8Jpoq
-	 fHxmWfSCu96cQ6jOHaChlzKpif7J455iAxIGnko4oZPzHPZiCDhXqseSTig1FQavwk
-	 Ng8hF+neVHvyC7cl5cXqoia7xrAbmAb6msVgA3eLi9xHLtWIIjeKaQP74aVfvWesmo
-	 LuKzwBSUYfBzjv4t9Nn61KJSk3ntQXP3k4D4QJNV7Kyog7esF43xMnKVfc0Y1GDiV5
-	 388GsJ8r81kXn+frquxNW5r7kScwm2/PWNILJk6pq+IOy32FT/54G4MmNdoP3Oym7r
-	 fyVM3//leGKLA==
-Message-ID: <a916e82550e128c22c0e559b16f68b8cd56c8b05.camel@kernel.org>
-Subject: Re: [PATCH 2/4] exportfs: split out the ops for layout-based block
- device access
+	b=vRBagZRzKaJLxFYbLUU3SCKkN95fgqyd2o1t4UbzrOtXd01NLOF3+UDvoHbkSAMpd
+	 ZVJek4ZJDn9YresRko++IKaydscI31GG/sw2dKHLcic8mErSUAIJ8LsLIPgSRGNC9l
+	 EfTW5wXfHRt62NsoJx+mwoecoQA2IIgxmI+qDej9heK1F7PtE5dtjPiwhScrDnSFoq
+	 unsE3H42Z+uqo7D10PdXHdIuWSFHanJvKpfilJ/NilaKH2eWx7yQP6kETHzHM3FK6Z
+	 X9qE/Mk6DY9gkLB07kudzJPYIVgbRvDf8FsxA7Q9o6n0tdh03oStQF8r61Je3oVyYu
+	 B5vmQ6YL5dj4Q==
+Message-ID: <bce25daeba83f6454b0bdf49c221e76a6843f9b6.camel@kernel.org>
+Subject: Re: [PATCH 3/4] exportfs: don't pass struct iattr to ->commit_blocks
 From: Jeff Layton <jlayton@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>, 
  Amir Goldstein <amir73il@gmail.com>
 Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
  linux-nfs@vger.kernel.org, 	linux-fsdevel@vger.kernel.org
-Date: Tue, 31 Mar 2026 13:24:23 -0400
-In-Reply-To: <20260331153406.4049290-3-hch@lst.de>
+Date: Tue, 31 Mar 2026 13:26:53 -0400
+In-Reply-To: <20260331153406.4049290-4-hch@lst.de>
 References: <20260331153406.4049290-1-hch@lst.de>
-	 <20260331153406.4049290-3-hch@lst.de>
+	 <20260331153406.4049290-4-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,12 +142,12 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20547-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20548-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[lst.de,oracle.com,gmail.com];
@@ -158,346 +157,141 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-0.998];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E319B36F7B5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EF25336EF7F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On Tue, 2026-03-31 at 17:33 +0200, Christoph Hellwig wrote:
-> The support to grant layouts for direct block device access works
-> at a very different layer than the rest of exports.  Split the methods
-> for it into a separate struct, and move that into a separate header
-> to better split things out.  The pointer to the new operation vector
-> is kept in export_operations to avoid bloating the super_block.
+> The only thing ->commit_blocks really needs is the new size, with a magic
+> -1 placeholder 0 for "do not change the size" because it only ever
+> extends the size.
 >=20
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  MAINTAINERS                    |  2 +-
->  fs/nfsd/blocklayout.c          | 14 ++++++------
->  fs/nfsd/nfs4layouts.c          |  9 ++++----
->  fs/xfs/xfs_export.c            |  4 +---
->  fs/xfs/xfs_pnfs.c              | 12 ++++++++---
->  fs/xfs/xfs_pnfs.h              | 11 +++++-----
->  include/linux/exportfs.h       | 25 +++++++---------------
->  include/linux/exportfs_block.h | 39 ++++++++++++++++++++++++++++++++++
->  8 files changed, 74 insertions(+), 42 deletions(-)
->  create mode 100644 include/linux/exportfs_block.h
+>  fs/nfsd/blocklayout.c          | 12 ++----------
+>  fs/xfs/xfs_pnfs.c              | 19 ++++++++++---------
+>  include/linux/exportfs_block.h |  3 +--
+>  3 files changed, 13 insertions(+), 21 deletions(-)
 >=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c3fe46d7c4bc..b531b87a007e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9856,7 +9856,7 @@ S:	Supported
->  F:	Documentation/filesystems/nfs/exporting.rst
->  F:	fs/exportfs/
->  F:	fs/fhandle.c
-> -F:	include/linux/exportfs.h
-> +F:	include/linux/exportfs*.h
-> =20
->  FILESYSTEMS [IDMAPPED MOUNTS]
->  M:	Christian Brauner <brauner@kernel.org>
 > diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> index 5ee5735b39bb..3cc3b47361e2 100644
+> index 3cc3b47361e2..23c0e4d0ff34 100644
 > --- a/fs/nfsd/blocklayout.c
 > +++ b/fs/nfsd/blocklayout.c
-> @@ -2,7 +2,7 @@
->  /*
->   * Copyright (c) 2014-2016 Christoph Hellwig.
->   */
-> -#include <linux/exportfs.h>
-> +#include <linux/exportfs_block.h>
->  #include <linux/iomap.h>
->  #include <linux/slab.h>
->  #include <linux/pr.h>
-> @@ -32,8 +32,8 @@ nfsd4_block_map_extent(struct inode *inode, const struc=
-t svc_fh *fhp,
->  	u32 device_generation =3D 0;
+> @@ -179,7 +179,6 @@ static __be32
+>  nfsd4_block_commit_blocks(struct inode *inode, struct nfsd4_layoutcommit=
+ *lcp,
+>  		struct iomap *iomaps, int nr_iomaps)
+>  {
+> -	struct iattr iattr =3D { .ia_valid =3D 0 };
 >  	int error;
 > =20
-> -	error =3D sb->s_export_op->map_blocks(inode, offset, length, &iomap,
-> -			iomode !=3D IOMODE_READ, &device_generation);
-> +	error =3D sb->s_export_op->block_ops->map_blocks(inode, offset, length,
-> +			&iomap, iomode !=3D IOMODE_READ, &device_generation);
->  	if (error) {
->  		if (error =3D=3D -ENXIO)
->  			return nfserr_layoutunavailable;
-> @@ -199,8 +199,8 @@ nfsd4_block_commit_blocks(struct inode *inode, struct=
- nfsd4_layoutcommit *lcp,
->  		iattr.ia_size =3D lcp->lc_newsize;
->  	}
-> =20
-> -	error =3D inode->i_sb->s_export_op->commit_blocks(inode, iomaps,
-> -			nr_iomaps, &iattr);
-> +	error =3D inode->i_sb->s_export_op->block_ops->commit_blocks(inode,
-> +			iomaps, nr_iomaps, &iattr);
+>  	/*
+> @@ -191,16 +190,9 @@ nfsd4_block_commit_blocks(struct inode *inode, struc=
+t nfsd4_layoutcommit *lcp,
+>  	 * timestamp is a "may" condition, and clients that want to force a
+>  	 * specific timestamp should send a separate SETATTR in the compound.
+>  	 */
+> -	iattr.ia_valid |=3D ATTR_ATIME | ATTR_CTIME | ATTR_MTIME;
+> -	iattr.ia_atime =3D iattr.ia_ctime =3D iattr.ia_mtime =3D current_time(i=
+node);
+> -
+> -	if (lcp->lc_size_chg) {
+> -		iattr.ia_valid |=3D ATTR_SIZE;
+> -		iattr.ia_size =3D lcp->lc_newsize;
+> -	}
+> -
+>  	error =3D inode->i_sb->s_export_op->block_ops->commit_blocks(inode,
+> -			iomaps, nr_iomaps, &iattr);
+> +			iomaps, nr_iomaps,
+> +			lcp->lc_size_chg ? lcp->lc_newsize : 0);=20
 >  	kfree(iomaps);
 >  	return nfserrno(error);
 >  }
-> @@ -223,8 +223,8 @@ nfsd4_block_get_device_info_simple(struct super_block=
- *sb,
-> =20
->  	b->type =3D PNFS_BLOCK_VOLUME_SIMPLE;
->  	b->simple.sig_len =3D PNFS_BLOCK_UUID_LEN;
-> -	return sb->s_export_op->get_uuid(sb, b->simple.sig, &b->simple.sig_len,
-> -			&b->simple.offset);
-> +	return sb->s_export_op->block_ops->get_uuid(sb, b->simple.sig,
-> +			&b->simple.sig_len, &b->simple.offset);
->  }
-> =20
->  static __be32
-> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-> index ad7af8cfcf1f..c53eb67969eb 100644
-> --- a/fs/nfsd/nfs4layouts.c
-> +++ b/fs/nfsd/nfs4layouts.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2014 Christoph Hellwig.
->   */
->  #include <linux/blkdev.h>
-> +#include <linux/exportfs_block.h>
->  #include <linux/kmod.h>
->  #include <linux/file.h>
->  #include <linux/jhash.h>
-> @@ -127,6 +128,7 @@ void nfsd4_setup_layout_type(struct svc_export *exp)
->  {
->  #if defined(CONFIG_NFSD_BLOCKLAYOUT) || defined(CONFIG_NFSD_SCSILAYOUT)
->  	struct super_block *sb =3D exp->ex_path.mnt->mnt_sb;
-> +	struct exportfs_block_ops *bops =3D sb->s_export_op->block_ops;
->  #endif
-> =20
->  	if (!(exp->ex_flags & NFSEXP_PNFS))
-> @@ -136,14 +138,11 @@ void nfsd4_setup_layout_type(struct svc_export *exp=
-)
->  	exp->ex_layout_types |=3D 1 << LAYOUT_FLEX_FILES;
->  #endif
->  #ifdef CONFIG_NFSD_BLOCKLAYOUT
-> -	if (sb->s_export_op->get_uuid &&
-> -	    sb->s_export_op->map_blocks &&
-> -	    sb->s_export_op->commit_blocks)
-> +	if (bops && bops->get_uuid && bops->map_blocks && bops->commit_blocks)
->  		exp->ex_layout_types |=3D 1 << LAYOUT_BLOCK_VOLUME;
->  #endif
->  #ifdef CONFIG_NFSD_SCSILAYOUT
-> -	if (sb->s_export_op->map_blocks &&
-> -	    sb->s_export_op->commit_blocks &&
-> +	if (bops && bops->map_blocks && bops->commit_blocks &&
->  	    sb->s_bdev &&
->  	    sb->s_bdev->bd_disk->fops->pr_ops &&
->  	    sb->s_bdev->bd_disk->fops->get_unique_id)
-> diff --git a/fs/xfs/xfs_export.c b/fs/xfs/xfs_export.c
-> index e3e3c3c89840..9b2ad3786b19 100644
-> --- a/fs/xfs/xfs_export.c
-> +++ b/fs/xfs/xfs_export.c
-> @@ -244,8 +244,6 @@ const struct export_operations xfs_export_operations =
-=3D {
->  	.get_parent		=3D xfs_fs_get_parent,
->  	.commit_metadata	=3D xfs_fs_nfs_commit_metadata,
->  #ifdef CONFIG_EXPORTFS_BLOCK_OPS
-> -	.get_uuid		=3D xfs_fs_get_uuid,
-> -	.map_blocks		=3D xfs_fs_map_blocks,
-> -	.commit_blocks		=3D xfs_fs_commit_blocks,
-> +	.block_ops		=3D &xfs_export_block_ops,
->  #endif
->  };
 > diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-> index 221e55887a2a..a52978f6fb76 100644
+> index a52978f6fb76..fee782a3edbe 100644
 > --- a/fs/xfs/xfs_pnfs.c
 > +++ b/fs/xfs/xfs_pnfs.c
-> @@ -49,7 +49,7 @@ xfs_break_leased_layouts(
->   * Get a unique ID including its location so that the client can identif=
-y
->   * the exported device.
->   */
-> -int
-> +static int
->  xfs_fs_get_uuid(
->  	struct super_block	*sb,
->  	u8			*buf,
-> @@ -104,7 +104,7 @@ xfs_fs_map_update_inode(
->  /*
->   * Get a layout for the pNFS client.
->   */
-> -int
-> +static int
->  xfs_fs_map_blocks(
->  	struct inode		*inode,
->  	loff_t			offset,
-> @@ -252,7 +252,7 @@ xfs_pnfs_validate_isize(
->   * to manually flush the cache here similar to what the fsync code path =
-does
->   * for datasyncs on files that have no dirty metadata.
->   */
-> -int
-> +static int
->  xfs_fs_commit_blocks(
+> @@ -257,23 +257,22 @@ xfs_fs_commit_blocks(
 >  	struct inode		*inode,
 >  	struct iomap		*maps,
-> @@ -332,3 +332,9 @@ xfs_fs_commit_blocks(
->  	xfs_iunlock(ip, XFS_IOLOCK_EXCL);
->  	return error;
->  }
+>  	int			nr_maps,
+> -	struct iattr		*iattr)
+> +	loff_t			new_size)
+>  {
+>  	struct xfs_inode	*ip =3D XFS_I(inode);
+>  	struct xfs_mount	*mp =3D ip->i_mount;
+>  	struct xfs_trans	*tp;
+> +	struct timespec64	now;
+>  	bool			update_isize =3D false;
+>  	int			error, i;
+>  	loff_t			size;
+> =20
+> -	ASSERT(iattr->ia_valid & (ATTR_ATIME|ATTR_CTIME|ATTR_MTIME));
+> -
+>  	xfs_ilock(ip, XFS_IOLOCK_EXCL);
+> =20
+>  	size =3D i_size_read(inode);
+> -	if ((iattr->ia_valid & ATTR_SIZE) && iattr->ia_size > size) {
+> +	if (new_size > size) {
+>  		update_isize =3D true;
+> -		size =3D iattr->ia_size;
+> +		size =3D new_size;
+>  	}
+> =20
+>  	for (i =3D 0; i < nr_maps; i++) {
+> @@ -318,11 +317,13 @@ xfs_fs_commit_blocks(
+>  	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+>  	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+> =20
+> -	ASSERT(!(iattr->ia_valid & (ATTR_UID | ATTR_GID)));
+> -	setattr_copy(&nop_mnt_idmap, inode, iattr);
+> +	now =3D inode_set_ctime_current(inode);
+> +	inode_set_atime_to_ts(inode, now);
+> +	inode_set_mtime_to_ts(inode, now);
 > +
-> +struct exportfs_block_ops xfs_export_block_ops =3D {
-> +	.get_uuid		=3D xfs_fs_get_uuid,
-> +	.map_blocks		=3D xfs_fs_map_blocks,
-> +	.commit_blocks		=3D xfs_fs_commit_blocks,
-> +};
-> diff --git a/fs/xfs/xfs_pnfs.h b/fs/xfs/xfs_pnfs.h
-> index 940c6c2ad88c..9c289e98f2a6 100644
-> --- a/fs/xfs/xfs_pnfs.h
-> +++ b/fs/xfs/xfs_pnfs.h
-> @@ -2,13 +2,9 @@
->  #ifndef _XFS_PNFS_H
->  #define _XFS_PNFS_H 1
+>  	if (update_isize) {
+> -		i_size_write(inode, iattr->ia_size);
+> -		ip->i_disk_size =3D iattr->ia_size;
+> +		i_size_write(inode, new_size);
+> +		ip->i_disk_size =3D new_size;
+>  	}
 > =20
-> -#ifdef CONFIG_EXPORTFS_BLOCK_OPS
-> -int xfs_fs_get_uuid(struct super_block *sb, u8 *buf, u32 *len, u64 *offs=
-et);
-> -int xfs_fs_map_blocks(struct inode *inode, loff_t offset, u64 length,
-> -		struct iomap *iomap, bool write, u32 *device_generation);
-> -int xfs_fs_commit_blocks(struct inode *inode, struct iomap *maps, int nr=
-_maps,
-> -		struct iattr *iattr);
-> +#include <linux/exportfs_block.h>
-> =20
-> +#ifdef CONFIG_EXPORTFS_BLOCK_OPS
->  int xfs_break_leased_layouts(struct inode *inode, uint *iolock,
->  		bool *did_unlock);
->  #else
-> @@ -18,4 +14,7 @@ xfs_break_leased_layouts(struct inode *inode, uint *iol=
-ock, bool *did_unlock)
->  	return 0;
->  }
->  #endif /* CONFIG_EXPORTFS_BLOCK_OPS */
-> +
-> +extern struct exportfs_block_ops xfs_export_block_ops;
-> +
->  #endif /* _XFS_PNFS_H */
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index 8bcdba28b406..f07ce833fba3 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -6,9 +6,8 @@
->  #include <linux/path.h>
-> =20
->  struct dentry;
-> -struct iattr;
-> +struct exportfs_block_ops;
->  struct inode;
-> -struct iomap;
->  struct super_block;
->  struct vfsmount;
-> =20
-> @@ -260,19 +259,13 @@ struct handle_to_path_ctx {
->   * @commit_metadata:
->   *    @commit_metadata should commit metadata changes to stable storage.
->   *
-> - * @get_uuid:
-> - *    Get a filesystem unique signature exposed to clients.
-> - *
-> - * @map_blocks:
-> - *    Map and, if necessary, allocate blocks for a layout.
-> - *
-> - * @commit_blocks:
-> - *    Commit blocks in a layout once the client is done with them.
-> - *
->   * @flags:
->   *    Allows the filesystem to communicate to nfsd that it may want to d=
-o things
->   *    differently when dealing with it.
->   *
-> + * @block_ops:
-> + *    Operations for layout grants to block on the underlying device.
-> + *
->   * Locking rules:
->   *    get_parent is called with child->d_inode->i_rwsem down
->   *    get_name is not (which is possibly inconsistent)
-> @@ -290,12 +283,6 @@ struct export_operations {
->  	struct dentry * (*get_parent)(struct dentry *child);
->  	int (*commit_metadata)(struct inode *inode);
-> =20
-> -	int (*get_uuid)(struct super_block *sb, u8 *buf, u32 *len, u64 *offset)=
-;
-> -	int (*map_blocks)(struct inode *inode, loff_t offset,
-> -			  u64 len, struct iomap *iomap,
-> -			  bool write, u32 *device_generation);
-> -	int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
-> -			     int nr_iomaps, struct iattr *iattr);
->  	int (*permission)(struct handle_to_path_ctx *ctx, unsigned int oflags);
->  	struct file * (*open)(const struct path *path, unsigned int oflags);
->  #define	EXPORT_OP_NOWCC			(0x1) /* don't collect v3 wcc data */
-> @@ -308,6 +295,10 @@ struct export_operations {
->  #define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close=
- */
->  #define EXPORT_OP_NOLOCKS		(0x40) /* no file locking support */
->  	unsigned long	flags;
-> +
-> +#ifdef CONFIG_EXPORTFS_BLOCK_OPS
-> +	struct exportfs_block_ops *block_ops;
-> +#endif
->  };
-> =20
->  /**
+>  	xfs_trans_set_sync(tp);
 > diff --git a/include/linux/exportfs_block.h b/include/linux/exportfs_bloc=
 k.h
-> new file mode 100644
-> index 000000000000..1f52fea8e4dc
-> --- /dev/null
+> index 1f52fea8e4dc..d1dec4689b14 100644
+> --- a/include/linux/exportfs_block.h
 > +++ b/include/linux/exportfs_block.h
-> @@ -0,0 +1,39 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2014-2026 Christoph Hellwig.
-> + *
-> + * Support for exportfs-based layout grants for direct block device acce=
-ss.
-> + */
-> +#ifndef LINUX_EXPORTFS_BLOCK_H
-> +#define LINUX_EXPORTFS_BLOCK_H 1
-> +
-> +#include <linux/types.h>
-> +
-> +struct iattr;
-> +struct inode;
-> +struct iomap;
-> +struct super_block;
-> +
-> +struct exportfs_block_ops {
-> +	/*
-> +	 * Get the in-band device unique signature exposed to clients.
-> +	 */
-> +	int (*get_uuid)(struct super_block *sb, u8 *buf, u32 *len, u64 *offset)=
-;
-> +
-> +	/*
-> +	 * Map blocks for direct block access.
-> +	 * If @write is %true, also allocate the blocks for the range if needed=
-.
-> +	 */
-> +	int (*map_blocks)(struct inode *inode, loff_t offset, u64 len,
-> +			struct iomap *iomap, bool write,
-> +			u32 *device_generation);
-> +
-> +	/*
-> +	 * Commit blocks previously handed out by ->map_blocks and written to b=
-y
-> +	 * the client.
-> +	 */
-> +	int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
-> +			int nr_iomaps, struct iattr *iattr);
-> +};
-> +
-> +#endif /* LINUX_EXPORTFS_BLOCK_H */
+> @@ -9,7 +9,6 @@
+> =20
+>  #include <linux/types.h>
+> =20
+> -struct iattr;
+>  struct inode;
+>  struct iomap;
+>  struct super_block;
+> @@ -33,7 +32,7 @@ struct exportfs_block_ops {
+>  	 * the client.
+>  	 */
+>  	int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
+> -			int nr_iomaps, struct iattr *iattr);
+> +			int nr_iomaps, loff_t new_size);
+>  };
+> =20
+>  #endif /* LINUX_EXPORTFS_BLOCK_H */
 
-Meh, ok. Almost doesn't seem worthwhile, but I guess the result is a
-bit cleaner layering-wise.
+I like this one. I think you can just fold the first patch in this
+series into this one, since you're making that change moot (and the
+ia_* times don't matter much anyway).
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
