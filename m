@@ -1,199 +1,357 @@
-Return-Path: <linux-nfs+bounces-20539-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20540-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YDC5EDXKyml3AAYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20539-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 21:08:37 +0200
+	id WPw2ENO0y2kpKAYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20540-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 13:49:39 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADC963602E7
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 21:08:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB29C369175
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 13:49:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 99802303B4D2
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Mar 2026 19:04:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B35393019473
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 11:43:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B17E36894F;
-	Mon, 30 Mar 2026 19:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD75A3DC4D6;
+	Tue, 31 Mar 2026 11:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+iWDLoe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ViYUUS2S"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2E4366560
-	for <linux-nfs@vger.kernel.org>; Mon, 30 Mar 2026 19:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91763D9057;
+	Tue, 31 Mar 2026 11:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774897493; cv=none; b=U4jMd8QtDMYru7frFq7+CmgGB2QF2iS6ryd+jMRXd2K05+lp55GIiwG5mPb2nXxFD3h1/4UOKZyTFwLgKOb21DO3/U9GLkIqaEbDs/PM6qCZfs/7j7yAfiDN1NZSB06WK/M6wMpY2fHGVqny4LRjqOXK4KJp9S+AnTKG4kW1G1Q=
+	t=1774957379; cv=none; b=LLOi2aHPw2Xnak3SKt+TSpjugcjdrrISxgbGVw/4uWX/W8Kj62L5zKD3Kujw9cMGRO1e4xHDWgAqOrwm6vB005oooBwcNzP5iCqfH/T7pMnbmLgRglBj7clH29HOxEFHMHhyPAxIB9hbjSjRIp70YnjxGe608sQJbV1jdt1pn6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774897493; c=relaxed/simple;
-	bh=IyQiSsWAI16NRED382ENJpEKuHa4+ifSp2QXDZovYw8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Of0wS9gOsXq2f8xZbfV5wpjOKIIJzbtEcZ2pi/Tl8XFmpQtgJC6eujwvpHzZss6PY0C47fSD9EHs0iV35dEO9PJOHnGztl4n2D/ugbAWAJl/7a/vAi4gQ0S+0pqvf4EfObQ0S7TufLPeA4F2xLH0W64YqO2LmBBz/SX/aVLIKgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+iWDLoe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41BC8C4AF0B;
-	Mon, 30 Mar 2026 19:04:52 +0000 (UTC)
+	s=arc-20240116; t=1774957379; c=relaxed/simple;
+	bh=ULqRktDQQ7ij/DT7GS1Dvu936a/6WRayfPEwEkYtSAo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bxqPlJgXtYkADpTLJipXaM/5kpswz7CKdd1UT38VvZzkDcSQ8B3d/1fZOKd3po/gJWlY1aLZGlFOZl4h3MM4WR9WcymTzsT0wENwaG8eYTzIMzTYxr9dGfF8blEvSM08oR+O4OEqSFqd1VmH2PDmgOoJYNk3SKaJBJDgmYgmIdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ViYUUS2S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADA6C2BC9E;
+	Tue, 31 Mar 2026 11:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774897492;
-	bh=IyQiSsWAI16NRED382ENJpEKuHa4+ifSp2QXDZovYw8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=a+iWDLoeRXxqPZakXt6PxG4zo16w2dAUvp5plE4DvyPvOibdV7S94NMC8aFBma/is
-	 DRwRFvrfG2y98IEZ4C9f1t1QJ/pGWPgzehrQTfVYgRAhaLavNZipkl5Ybq2ZAhEvRW
-	 3ITwDatEBXm1MZenFz0hDBbF2Zb84JXTnEPclhVPdEIrwdJ+v0wFNyrl4NFLc1oXvy
-	 47pgEjaDn0Z2LP4luUZLbx42JPySq81bgSy0t+3MRB82f/NLiOR/yiNILc15x76xLQ
-	 Q31Mx3Pl8J7oBJIP2lNLT8A2IKaqzpdSZgsFcek4mZXq6hZMEW/PX1ttVeq24T839Y
-	 RlnO9CF0a06KQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E86ABF4008C;
-	Mon, 30 Mar 2026 15:04:50 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Mon, 30 Mar 2026 15:04:51 -0400
-X-ME-Sender: <xms:UsnKaXdYxenmMpYB7TYn6Kma_qM-IO80LS8OWsomkiCIhtKeZ_ix_w>
-    <xme:UsnKaYBoxHHybJANa8WQo502ZkIbehsUglx9dxCJ9gJYPxHMzWYlIHIB2Ep3JNaTl
-    bUkuTDI3ze1AHkU38CHhJcotAKKir050STtdsS7nVWtgCc_9edM85nR>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeeljeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpeejvefhudehleetvdejhfejvefghfelgeejvedvgfduuefffeegtdejuefhiedukeen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheptghhuhgtkhhlvghvvghrodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdduieefgeelleelheelqdefvdelkeeggedvfedqtggvlh
-    eppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthho
-    peelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghirhgvsegunhgvghdrtg
-    homhdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehsnhhithiivghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhutghkrdhlvg
-    hvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopegurghirdhnghhosehorhgrtghl
-    vgdrtghomhdprhgtphhtthhopehnvghilhgssehofihnmhgrihhlrdhnvghtpdhrtghpth
-    htohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehtohhmseht
-    rghlphgvhidrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrh
-    hnvghlrdhorhhg
-X-ME-Proxy: <xmx:UsnKae56lunAkIOxPbYHVilHFgKh_ZfHrpNjCqx_1E8gESLVZ0z6bA>
-    <xmx:UsnKac3geGwCKYV8aMNFQ4VpKFYZy75iJIuT9skONkDK-tlpOcuJfw>
-    <xmx:UsnKaRsV7E3Zpo_CIQbqe3TzjcNkbyb1LJZCmBPdfmIF6cnc9ponng>
-    <xmx:UsnKaa70ADnLjPlzWwHehPM_b3ldCGbNN1c8YunJTSkJsncnGQueAQ>
-    <xmx:UsnKaVd-q15lfgdELDmJx0RWvdm6k76b6wHB_F-FJcklbgVOf1_P38CY>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BF646780075; Mon, 30 Mar 2026 15:04:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1774957379;
+	bh=ULqRktDQQ7ij/DT7GS1Dvu936a/6WRayfPEwEkYtSAo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ViYUUS2SYQ/rxv06mWcJiIWX5IQqA62ySLX9ayQzzVaQpEr5T3ogzN70PSNDcA2kR
+	 qQKhfTWLSfxdCb3zMsKOGdKUeAEGrNaEJf9AW01+DZEuH6/XMSbzINYUPm5/3Dfrbl
+	 4fumZB9suJgJ8hZoA9G89sSA+JD2FJW3K9Etk6aXB0zQXPR3U956Cb6mHX2PZ3STns
+	 Yuff3sdSu9I9AjhuSoyX2VY47ajW371z7lm4SXYWazIuauRVMCtmPzQykUerJHwwsw
+	 q0R8vdfOp7WB4eDj51lgMAsXJA1F4cvJk4W77hQwQMdQhvT7C2DQnAxqEmZ6ZXQUHF
+	 3hfsI6vsNTEYw==
+Message-ID: <13f1fd90b75c73e8d5220dadb6eb9d9473bc96e8.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] nfs: update inode ctime after removexattr
+ operation
+From: Jeff Layton <jlayton@kernel.org>
+To: Thomas Haynes <loghyr@gmail.com>
+Cc: Olga Kornievskaia <aglo@umich.edu>, Trond Myklebust
+ <trondmy@kernel.org>,  Anna Schumaker	 <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 31 Mar 2026 07:42:56 -0400
+In-Reply-To: <acbJsryTMYCMlE_o@mana>
+References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
+	 <20260324-nfs-7-1-v2-2-d110da3c0036@kernel.org>
+	 <CAN-5tyFpsuE9+5ZvAASwvTYKtcN5jNpAxi8ejde90e-vpUzFKg@mail.gmail.com>
+	 <284ca17e74af8c4f5942b2952f2bf75490dd17c0.camel@kernel.org>
+	 <CAN-5tyFsEUcSUycb4JjxH5v754SefwOH=zt24KtxEC_Ow4OjMw@mail.gmail.com>
+	 <80b423c66dba84b46be1084307d2c66b935065bc.camel@kernel.org>
+	 <acbJsryTMYCMlE_o@mana>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: APSc37mEaDqJ
-Date: Mon, 30 Mar 2026 15:04:30 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: NeilBrown <neilb@ownmail.net>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Daire Byrne" <daire@dneg.com>,
- linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <f3e70f87-df09-4c3d-8995-ced68a028ed8@app.fastmail.com>
-In-Reply-To: <acrHmvgWjJijCo1U@kernel.org>
-References: <20260205155729.6841-1-cel@kernel.org>
- <acrHmvgWjJijCo1U@kernel.org>
-Subject: Re: [RFC PATCH 0/7] sunrpc: Reduce lock contention for NFSD TCP sockets
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com,dneg.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20539-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,app.fastmail.com:mid];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20540-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.968];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: ADC963602E7
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EB29C369175
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Fri, 2026-03-27 at 11:22 -0700, Thomas Haynes wrote:
+> On Fri, Mar 27, 2026 at 12:59:54PM -0800, Jeff Layton wrote:
+> > On Fri, 2026-03-27 at 12:20 -0400, Olga Kornievskaia wrote:
+> > > On Fri, Mar 27, 2026 at 11:50=E2=80=AFAM Jeff Layton <jlayton@kernel.=
+org> wrote:
+> > > >=20
+> > > > On Fri, 2026-03-27 at 11:11 -0400, Olga Kornievskaia wrote:
+> > > > > On Tue, Mar 24, 2026 at 1:32=E2=80=AFPM Jeff Layton <jlayton@kern=
+el.org> wrote:
+> > > > > >=20
+> > > > > > xfstest generic/728 fails with delegated timestamps. The client=
+ does a
+> > > > > > removexattr and then a stat to test the ctime, which doesn't ch=
+ange. The
+> > > > > > stat() doesn't trigger a GETATTR because of the delegated times=
+tamps, so
+> > > > > > it relies on the cached ctime, which is wrong.
+> > > > > >=20
+> > > > > > The setxattr compound has a trailing GETATTR, which ensures tha=
+t its
+> > > > > > ctime gets updated. Follow the same strategy with removexattr.
+> > > > >=20
+> > > > > This approach relies on the fact that the server the serves deleg=
+ated
+> > > > > attributes would update change_attr on operations which might now
+> > > > > necessarily happen (ie, linux server does not update change_attri=
+bute
+> > > > > on writes or clone). I propose an alternative fix for the failing
+> > > > > generic/728.
+> > > > >=20
+> > > > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> > > > > index 7b3ca68fb4bb..ede1835a45b3 100644
+> > > > > --- a/fs/nfs/nfs42proc.c
+> > > > > +++ b/fs/nfs/nfs42proc.c
+> > > > > @@ -1389,7 +1389,13 @@ static int _nfs42_proc_removexattr(struct =
+inode
+> > > > > *inode, const char *name)
+> > > > >             &res.seq_res, 1);
+> > > > >         trace_nfs4_removexattr(inode, name, ret);
+> > > > >         if (!ret)
+> > > > > -               nfs4_update_changeattr(inode, &res.cinfo, timesta=
+mp, 0);
+> > > > > +               if (nfs_have_delegated_attributes(inode)) {
+> > > > > +                       nfs_update_delegated_mtime(inode);
+> > > > > +                       spin_lock(&inode->i_lock);
+> > > > > +                       nfs_set_cache_invalid(inode, NFS_INO_INVA=
+LID_BLOCKS);
+> > > > > +                       spin_unlock(&inode->i_lock);
+> > > > > +               } else
+> > > > > +                       nfs4_update_changeattr(inode, &res.cinfo,=
+ timestamp, 0);
+> > > > >=20
+> > > > >         return ret;
+> > > > >  }
+> > > > >=20
+> > > >=20
+> > > > What's the advantage of doing it this way?
+> > > >=20
+> > > > You just sent a REMOVEXATTR operation to the server that will chang=
+e
+> > > > the mtime there. The server has the most up-to-date version of the
+> > > > mtime and ctime at that point.
+> > >=20
+> > > In presence of delegated attributes, Is the server required to update
+> > > its mtime/ctime on an operation? As I mentioned, the linux server doe=
+s
+> > > not update its ctime/mtime for WRITE, CLONE, COPY.
+> > >=20
+> > > Is possible that
+> > > some implementations might be different and also do not update the
+> > > ctime/mtime on REMOVEXATTR?
+> > >=20
+> > > Therefore I was suggesting that the patch
+> > > relies on the fact that it would receive an updated value. Of course
+> > > perhaps all implementations are done the same as the linux server and
+> > > my point is moot. I didn't see anything in the spec that clarifies
+> > > what the server supposed to do (and client rely on).
+> > >=20
+> >=20
+> > (cc'ing Tom)
+> >=20
+> > That is a very good point.
+> >=20
+> > My interpretation was that delegated timestamps generally covered
+> > writes, but SETATTR style operations that do anything beyond only
+> > changing the mtime can't be cached.
+> >=20
+> > We probably need some delstid spec clarification: for what operations
+> > is the server required to disable timestamp updates when a write
+> > delegation is outstanding?
+> >=20
+> > In the case of nfsd, we disable timestamp updates for WRITE/COPY/CLONE
+> > but not SETATTR/SETXATTR/REMOVEXATTR.
+> >=20
+> > How does the Hammerspace anvil behave? Does it disable c/mtime updates
+> > for writes when there is an outstanding timestamp delegation like we're
+> > doing in nfsd? If so, does it do the same for
+> > SETATTR/SETXATTR/REMOVEXATTR operations as well?
+>=20
+> Jeff,
+>=20
+> I think the right way to look at this is closer to how size is
+> handled under delegation in RFC8881, rather than as a per-op rule.
+>=20
+> In our implementation, because we are acting as an MDS and data I/O
+> goes to DSes, we already treat size as effectively delegated when
+> a write layout is outstanding. The MDS does not maintain authoritative
+> size locally in that case. We may refresh size/timestamps internally
+> (e.g., on GETATTR by querying DSes), but we don=E2=80=99t treat that as
+> overriding the delegated authority.
+>=20
+> For timestamps, our behavior is effectively the same model. When
+> the client holds the relevant delegation, the server does not
+> consider itself authoritative for ctime/mtime. If current values
+> are needed, we can obtain them from the client (e.g., via CB_GETATTR),
+> and the client must present the delegation stateid to demonstrate
+> that authority. So the authority follows the delegation, not the
+> specific operation.
+>=20
+> That said, I don=E2=80=99t think we=E2=80=99ve fully resolved the semanti=
+cs for all
+> metadata-style ops either. WRITE and SETATTR are clear in our model,
+> but for things like CLONE/COPY/SETXATTR/REMOVEXATTR, we=E2=80=99ve likely
+> been relying on assumptions rather than a fully consistent rule.
+> I.e., CLONE and COPY we just pass through to the DS and we don't
+> implement SETXATTR/REMOVEXATTR.
+>=20
+> So the spec question, as I see it, is not whether REMOVEXATTR (or
+> any particular op) should update ctime/mtime, but whether delegated
+> timestamps are meant to follow the same attribute-authority model
+> as delegated size in RFC8881. If so, then we expect that the server
+> should query the client via CB_GETATTR to return updated ctime/mtime
+> after such operations while the delegation is outstanding.
+>=20
 
+The dilemma we have is: because we _do_ allow local processes to stat()
+files that have an outstanding write delegation, we can never allow the
+ctime in particular to roll backward (modulo clock jumps).
 
-On Mon, Mar 30, 2026, at 2:57 PM, Mike Snitzer wrote:
-> Hi Chuck,
->
-> On Thu, Feb 05, 2026 at 10:57:22AM -0500, Chuck Lever wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->> 
->> High-throughput NFSD workloads exhibit significant lock contention on
->> TCP connections. Worker threads compete for the socket lock during
->> receives and serialize on xpt_mutex during sends, limiting scalability.
->> 
->> This series addresses both paths:
->> 
->>  - Receive: A dedicated kernel thread per TCP connection owns all
->>    sock_recvmsg() calls and queues complete RPC messages for workers
->>    via lock-free llist. This eliminates socket lock contention among
->>    workers.
->> 
->>  - Transmit: Flat combining allows one thread to send on behalf of
->>    multiple waiters. Threads enqueue requests; the mutex holder
->>    ("combiner") processes the batch, amortizing lock acquisition and
->>    enabling TCP segment coalescing via MSG_MORE.
->> 
->> Supporting changes include a workqueue affinity fix for single-LLC
->> systems, a page recycling pool for receive buffers, and explicit TCP
->> buffer sizing for high bandwidth-delay product networks.
->> 
->> Base commit: v6.19-rc8
->> 
->> ---
->> 
->> Chuck Lever (7):
->>   workqueue: Automatic affinity scope fallback for single-pod topologies
->>   sunrpc: split svc_data_ready into protocol-specific callbacks
->>   sunrpc: add per-transport page recycling pool
->>   sunrpc: add dedicated TCP receiver thread
->>   sunrpc: implement flat combining for TCP socket sends
->>   sunrpc: unify fore and backchannel server TCP send paths
->>   SUNRPC: Set explicit TCP socket buffer sizes for NFSD
->
-> Curious to know your thinking on this patchset?  Can you post v2 given
-> your note about having adapted based on Tejun's feedback here?
->
-> https://lore.kernel.org/linux-nfs/af3a034c-4829-469d-b55d-9414409ee425@app.fastmail.com/
+If we're dealing with changes that have been cached in the client and
+are being lazily flushed out, then we can't update the timestamp when
+that operation occurs. The time of the RPC to flush the changes will
+almost certainly be later than the cached timestamps on the client that
+will eventually be set, so when the client comes back we'd end up
+violating the rollback rule.
 
-The workqueue-related patch is not important for the server,
-it turns out, but I've adapted it for use on the client.
+Our only option is to freeze timestamp updates on anything that might
+represent such an operation. So far, we only do that on WRITE and COPY
+operations -- in general, operations that require an open file, since
+FMODE_NOCMTIME is attached to the file.
 
-Regarding the series you listed above:
+Some SETATTRs that only update the mtime and atime can be cached on the
+client by virtue of the fact that it's authoritative for timestamps.
+There are some exceptions though:
 
-One reviewer balked at the idea of starting a kthread per
-connection on the server. I've reworked the receive side
-to use ->read_sock instead of ->recvmsg.
+- atime-only updates can't be cached since the ctime won't change with
+a timestamp update if the mtime didn't change
 
-The flat combining changes on the send side are still good.
-One further optimization was to replace xpt_mutex with an
-llist queuing mechanism.
+- if you set the mtime to a time that is later than the time you got
+the delegation from the server, but earlier than the current time, you
+can't cache that. The ctime would be later than the mtime in that case,
+and we don't have a mechanism to handle that in a delegated timestamp
+SETATTR.
 
-A number of other improvements are in the pipeline ahead
-of or behind these two.
+I don't see how you could reasonably buffer a SETXATTR or REMOVEXATTR
+operation to be sent later. These need to be done synchronously since
+they could always fail for some reason and we don't have a mechanism at
+the syscall layer to handle a deferred error. They also only update the
+ctime and not the mtime, and we have no mechanism to do that with
+delegated timestamps.
 
+Based on that, I think the client and server both need to ignore the
+timestamp delegation on a SETXATTR or REMOVEXATTR. The server should
+update the ctime and the client needs to send a trailing GETATTR on the
+REMOVEXATTR compound in order to get it and the change attr.
 
--- 
-Chuck Lever
+Exactly what this patch does, fwiw...
+--=20
+Jeff Layton <jlayton@kernel.org>
 
