@@ -1,580 +1,421 @@
-Return-Path: <linux-nfs+bounces-20573-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20574-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SJ/+BQQ5zGn7RQYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20573-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 23:13:40 +0200
+	id eMTnEi08zGlyRgYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20574-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 23:27:09 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3814237178C
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 23:13:39 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5D4C371B65
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 23:27:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2B09C3008C0E
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 21:10:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B151330A3A63
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 21:19:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4813B3D7D70;
-	Tue, 31 Mar 2026 21:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BBFD3AA4E5;
+	Tue, 31 Mar 2026 21:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="XAWEpHn4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4emiDX1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6EA3A5437
-	for <linux-nfs@vger.kernel.org>; Tue, 31 Mar 2026 21:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774991440; cv=pass; b=CAWJydT6DFQnjpXT8o0VxCiP6rfBcHH2C6eeGDDPOC5m4fPZ17O37SjYLCYVzMxZLwcF+v9PAQxtYpNOC66LjiKcQSUtA4qs9m/9YSjZaAs261i53JgopKfTAwf1cafJ5JsPcEFlKgz1zlx5KSE+KvIBtZK90qAE8BweuqmbvZQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774991440; c=relaxed/simple;
-	bh=rbPJqRMfIklzkRQ8dl43Fy7iMdvYXHulBI7gdfcpS+o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GE/OeePZ1xUnw0jHaVwlG8KggRrbS87llVsGEqsyIwSiq9H5FLLD7MyA59VnlXtDKVgvOsnUX+tHZzUqtOSmQ/o1j8KXraEpuESzco2kLBY8KHMeXwEXkr6oh8NF0zIu7PHOgSBtYW63G6UAgcF0SurhqXBJQpXCkguZeGL0VOw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=XAWEpHn4; arc=pass smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-38bd3c6c502so50736361fa.1
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Mar 2026 14:10:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774991435; cv=none;
-        d=google.com; s=arc-20240605;
-        b=d4oGFTwT55rbjNWYBk+Yx32AxMAA/NlTn3C8PdSu3HLTLkpbxNgFQfG+KatHBkioRR
-         nNLOgmAr+VRqsmntVNfVFty6lyyIgNNEh950Oecj+bcVthbcu/NVvpX1hnA4wuWGFqMd
-         2AveRZfPnyaONJWoRBOXJ3481Yj/i6+mqHrDose9TYoYxbZwVNmX0u4dE1wlsU/vTPky
-         UVo5dj/ATn0ke7f21R1sUeGy9zDSMYopCBCpxUU2rNs93PDVK0O/VBC6SmKC0LubFUst
-         IjjSuhQYl8zyt+YvAngCaf65msZRgcnKWZxfywnwEKROLNLpXJ1E0ylXfEhhAtRvlaqh
-         wGLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=yNe82YdpH/LroaNoicg5rAzfuF+w2ppNZ6mwH2vHefE=;
-        fh=nA6LQtbJ8ZweoBErm8EXoEAcp0IKuSaOTy5V80O/0Lw=;
-        b=IoqzqcjXbN5hnnbA6CIiWNiSydPCfKhgZUz/D2GITght/tmekS3Wzjm/yRlTiHKRnv
-         n16VPKfrmk5T2QxzXI1zaEDRFLiSZPxxGf10TnavT49hofA5T7gnqM+B9BvTDlxwZBxH
-         iDsWE7clJqh4c4y6I7zXdxuadXpgrX0ATLcf1DF+EoEOjL4lfueX2cHzy/hnzCs62e8j
-         P801X/vE82O/pqwKmX9qt3uZxxfC27veYnlqeidtU2exvkgmLPofZWxPsC/sZYQDcdA6
-         1iPfbgYy93bsszfy/f1LE2bmQ3eCMZ4tKMK0bn0E60C1AALBIa4heeKbmacWK7pjC5Fn
-         9HgQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1774991435; x=1775596235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yNe82YdpH/LroaNoicg5rAzfuF+w2ppNZ6mwH2vHefE=;
-        b=XAWEpHn4bWnK/bhS+MjLucl4CDmsCBRv/f4AsBRee1cGH7ae1tw3B/thsTuq+Gcc/b
-         xvcaDHiH9xJHOxCIa2EYw96VH7pfORNYhrrMGF3u0c+RRtm1jxnX/g7XI7NQwE7owmgG
-         mdZHVtpSB7j09kEslBLeO+67x48OVrVVGuD7Gj3tIoobfAagWChr+1HYkDhqfo9qte3w
-         zPkjBjruxkAe9Ykc1zUNRg6V9SMglo/uHsVDkqVOltPkvaNu3LR3x4ocAU9ErNHcwBFi
-         XipWFJYhM8P0xTR8DzqYu13yNDVy+0L7auabuGiwAfVbWfsXd8nzEOSWTXJKiREDByYt
-         5Peg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774991435; x=1775596235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yNe82YdpH/LroaNoicg5rAzfuF+w2ppNZ6mwH2vHefE=;
-        b=brqCaWtD2i3fdKgZ/UFxFHOy+1sDu8mo4j0IMRXZToIz1tn45H0Dr9mDmgbJ4Crf5Q
-         zMW9PagCZBGEXg2btf7ZIfNlGEmmRDgRdOY326kP6vKatFXbDoeMAhmWYhV1MmHNAoyi
-         4jfrvvLe+WLIw12e0MAlS+TtRauZJ83gF+lTiPm/qUViM22wZQreCrZNJROFRkyZ5+w+
-         ZTuA+NwpMAIjnm2gcSMsx0muTPZuLjHOa7Eb7mv3aeM6zt6GsCEp/N1vmOIoLvr212Yl
-         Th+f8PIGp13zCbeBaN/+/01MUiar8uW0THSICv9EFOk+m1w4aWZn6SMd7I8UDLmZOX1u
-         uPOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVI5vMoU6GkpnDPlPvHCjC+jvNWN4T1JhXyIS0btvsRQu8HDzzTe6v5QXwjAiwtmniKtFG03KL7W1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaG04OafHk6FyEoxYqDkCIxamBU3J/+mkVgYSclh+60+B4hK2j
-	UxCFcUn8MuDsgChXQOuc/x9mSaqZSd9F2GGV71Oz8J/HkAYCoacAjIC7Tdnzvb5FbUjsDCsUeUc
-	X5xC8CoN66qjJcBpDCwXLL7k25qaXlyY=
-X-Gm-Gg: ATEYQzxOhoE+2w19kXefdFigTpNGhcGob1koyxsGDhFbhk5gc7NFgHPiv9tT3I0vtYr
-	t++hdhxcHNEwZITDHPqDXy9XrGJfTL4smJK/w67X1wrFH/oCfkgRhRZh/m87Wf7/5oELYzfRWeO
-	UAejHlfpCSeBZpAG/LIFCE3nJMTi6/fdGPennqLVWudZg8QCSBivZlphnMJC/KOZfNTTaFmF9wI
-	fvKy36NMa/ein084w8NffwgXbgNrMM5tKrCPsbHO9LTRzdmxMhaNWcIiT73/Wv/dE0/+cqYdOfu
-	yXn0rk3dWRlURNTBSivotnXHrg2chfzC055BHw==
-X-Received: by 2002:a05:651c:438e:20b0:38a:4de2:8807 with SMTP id
- 38308e7fff4ca-38cc305253bmr2084641fa.18.1774991434887; Tue, 31 Mar 2026
- 14:10:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCAB34251B;
+	Tue, 31 Mar 2026 21:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774991976; cv=none; b=Q/pqtvrKEbMzKlIOkDpHQj63rt7uzNiTIbSwpWPbca1NIJUsY64yVHSbwWekETBq6siC+jn5cnm/+yFg7d3igxk2/1maPHfds2OWgG8wPj7jzhXczaNme0rOX8BfPTsy5klk2MBrhtSNV9DikA2cp//bgjH3mwpf6NyDsuFcXpw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774991976; c=relaxed/simple;
+	bh=Cb2DcIJZUoYejrllNu+SROxefjdLjShDfRK42h8+4OQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H+XW3FqbVmM5au2/MXtrr6Zo9b9qkEqy8y+sFg7T47jozbunHsP5IFAq80A+76uy7eV/WPtJ09qOIjB0r1bwFrcCRrt4AamM4ICFCx699MCriTIIGyLEElO4OG+ejycFf0Jo+aHpJYjtQvHJEp6/uXpw/TihmEW45FaJaqBnXRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4emiDX1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED7F3C19423;
+	Tue, 31 Mar 2026 21:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774991975;
+	bh=Cb2DcIJZUoYejrllNu+SROxefjdLjShDfRK42h8+4OQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=U4emiDX1RduE5bDJSiYUxx5OoYg9WFxwEO2b3eSrBIcOvPBRr0pwP7Upt+Cn9cet6
+	 5p5EPjG1bjJBFWJ9OLY6IRAdbqIMBCyXKoyDf4vzoI7pLdXvVXA+6LdFIzQopYqxV4
+	 CLmapwvNhdQtQjjKqEUc4N5IQsTOmeTBnmr2cqMTaWXWyfGh4dNSkA3MR3sxwwP6oq
+	 fBtCMY3uYZ6K8mgEIVHHtPLE7oVj6aMqE8JFFByhlpEeI9+yzV5ZjFLr+geezXUeLn
+	 pEikzghvLGLKo557uaKCWJk233C+sVmUoeeV0q4c1TWLu/uJqa4tv15JhHB6MjRmlD
+	 avnGd5vNu5NxQ==
+Message-ID: <a23b715677db8553061da684fc047185e328121b.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] nfs: update inode ctime after removexattr
+ operation
+From: Jeff Layton <jlayton@kernel.org>
+To: Thomas Haynes <loghyr@gmail.com>
+Cc: Olga Kornievskaia <aglo@umich.edu>, Trond Myklebust
+ <trondmy@kernel.org>,  Anna Schumaker	 <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 31 Mar 2026 17:19:33 -0400
+In-Reply-To: <acwVE5ZoPPLFQCLT@mana>
+References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
+	 <20260324-nfs-7-1-v2-2-d110da3c0036@kernel.org>
+	 <CAN-5tyFpsuE9+5ZvAASwvTYKtcN5jNpAxi8ejde90e-vpUzFKg@mail.gmail.com>
+	 <284ca17e74af8c4f5942b2952f2bf75490dd17c0.camel@kernel.org>
+	 <CAN-5tyFsEUcSUycb4JjxH5v754SefwOH=zt24KtxEC_Ow4OjMw@mail.gmail.com>
+	 <80b423c66dba84b46be1084307d2c66b935065bc.camel@kernel.org>
+	 <acbJsryTMYCMlE_o@mana>
+	 <13f1fd90b75c73e8d5220dadb6eb9d9473bc96e8.camel@kernel.org>
+	 <acwVE5ZoPPLFQCLT@mana>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260324-nfs-7-1-v2-0-d110da3c0036@kernel.org>
- <20260324-nfs-7-1-v2-2-d110da3c0036@kernel.org> <CAN-5tyFpsuE9+5ZvAASwvTYKtcN5jNpAxi8ejde90e-vpUzFKg@mail.gmail.com>
- <284ca17e74af8c4f5942b2952f2bf75490dd17c0.camel@kernel.org>
- <CAN-5tyFsEUcSUycb4JjxH5v754SefwOH=zt24KtxEC_Ow4OjMw@mail.gmail.com>
- <80b423c66dba84b46be1084307d2c66b935065bc.camel@kernel.org>
- <acbJsryTMYCMlE_o@mana> <CAN-5tyFQrt7WyW4=qLodKS2-eckAetKjs15A6U1OOdGPSL58XQ@mail.gmail.com>
- <acbfV0C-fAy4nZ-i@mana> <CAN-5tyGd1ZtL-sKvT251=BZa-38nOAEYbiZq5Bk+XN_ETX0PWA@mail.gmail.com>
- <acwWuf5VMKHOfSUU@mana>
-In-Reply-To: <acwWuf5VMKHOfSUU@mana>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 31 Mar 2026 17:10:23 -0400
-X-Gm-Features: AQROBzB7E5i95K2SaGIJNSwVQ5TF9c2YQgTqzVRzP0NwVMrLIMUF6lHdjSGnK8s
-Message-ID: <CAN-5tyFyOeo92zfCPVeJxJ-BokkvjxP384mXk8rEN0YXjftK3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] nfs: update inode ctime after removexattr operation
-To: Thomas Haynes <loghyr@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[umich.edu,none];
-	R_DKIM_ALLOW(-0.20)[umich.edu:s=google-2016-06-03];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20573-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20574-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[umich.edu:+];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 3814237178C
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Rspamd-Queue-Id: B5D4C371B65
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 31, 2026 at 2:51=E2=80=AFPM Thomas Haynes <loghyr@gmail.com> wr=
-ote:
->
-> On Tue, Mar 31, 2026 at 02:17:54PM -0800, Olga Kornievskaia wrote:
-> > On Fri, Mar 27, 2026 at 4:02=E2=80=AFPM Thomas Haynes <loghyr@gmail.com=
-> wrote:
-> > >
-> > > On Fri, Mar 27, 2026 at 03:36:12PM -0800, Olga Kornievskaia wrote:
-> > > > On Fri, Mar 27, 2026 at 2:22=E2=80=AFPM Thomas Haynes <loghyr@gmail=
-.com> wrote:
-> > > > >
-> > > > > On Fri, Mar 27, 2026 at 12:59:54PM -0800, Jeff Layton wrote:
-> > > > > > On Fri, 2026-03-27 at 12:20 -0400, Olga Kornievskaia wrote:
-> > > > > > > On Fri, Mar 27, 2026 at 11:50=E2=80=AFAM Jeff Layton <jlayton=
-@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, 2026-03-27 at 11:11 -0400, Olga Kornievskaia wrote:
-> > > > > > > > > On Tue, Mar 24, 2026 at 1:32=E2=80=AFPM Jeff Layton <jlay=
-ton@kernel.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > xfstest generic/728 fails with delegated timestamps. Th=
-e client does a
-> > > > > > > > > > removexattr and then a stat to test the ctime, which do=
-esn't change. The
-> > > > > > > > > > stat() doesn't trigger a GETATTR because of the delegat=
-ed timestamps, so
-> > > > > > > > > > it relies on the cached ctime, which is wrong.
-> > > > > > > > > >
-> > > > > > > > > > The setxattr compound has a trailing GETATTR, which ens=
-ures that its
-> > > > > > > > > > ctime gets updated. Follow the same strategy with remov=
-exattr.
-> > > > > > > > >
-> > > > > > > > > This approach relies on the fact that the server the serv=
-es delegated
-> > > > > > > > > attributes would update change_attr on operations which m=
-ight now
-> > > > > > > > > necessarily happen (ie, linux server does not update chan=
-ge_attribute
-> > > > > > > > > on writes or clone). I propose an alternative fix for the=
- failing
-> > > > > > > > > generic/728.
-> > > > > > > > >
-> > > > > > > > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > > > > > > > > index 7b3ca68fb4bb..ede1835a45b3 100644
-> > > > > > > > > --- a/fs/nfs/nfs42proc.c
-> > > > > > > > > +++ b/fs/nfs/nfs42proc.c
-> > > > > > > > > @@ -1389,7 +1389,13 @@ static int _nfs42_proc_removexattr=
-(struct inode
-> > > > > > > > > *inode, const char *name)
-> > > > > > > > >             &res.seq_res, 1);
-> > > > > > > > >         trace_nfs4_removexattr(inode, name, ret);
-> > > > > > > > >         if (!ret)
-> > > > > > > > > -               nfs4_update_changeattr(inode, &res.cinfo,=
- timestamp, 0);
-> > > > > > > > > +               if (nfs_have_delegated_attributes(inode))=
- {
-> > > > > > > > > +                       nfs_update_delegated_mtime(inode)=
-;
-> > > > > > > > > +                       spin_lock(&inode->i_lock);
-> > > > > > > > > +                       nfs_set_cache_invalid(inode, NFS_=
-INO_INVALID_BLOCKS);
-> > > > > > > > > +                       spin_unlock(&inode->i_lock);
-> > > > > > > > > +               } else
-> > > > > > > > > +                       nfs4_update_changeattr(inode, &re=
-s.cinfo, timestamp, 0);
-> > > > > > > > >
-> > > > > > > > >         return ret;
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > What's the advantage of doing it this way?
-> > > > > > > >
-> > > > > > > > You just sent a REMOVEXATTR operation to the server that wi=
-ll change
-> > > > > > > > the mtime there. The server has the most up-to-date version=
- of the
-> > > > > > > > mtime and ctime at that point.
-> > > > > > >
-> > > > > > > In presence of delegated attributes, Is the server required t=
-o update
-> > > > > > > its mtime/ctime on an operation? As I mentioned, the linux se=
-rver does
-> > > > > > > not update its ctime/mtime for WRITE, CLONE, COPY.
-> > > > > > >
-> > > > > > > Is possible that
-> > > > > > > some implementations might be different and also do not updat=
-e the
-> > > > > > > ctime/mtime on REMOVEXATTR?
-> > > > > > >
-> > > > > > > Therefore I was suggesting that the patch
-> > > > > > > relies on the fact that it would receive an updated value. Of=
- course
-> > > > > > > perhaps all implementations are done the same as the linux se=
-rver and
-> > > > > > > my point is moot. I didn't see anything in the spec that clar=
-ifies
-> > > > > > > what the server supposed to do (and client rely on).
-> > > > > > >
-> > > > > >
-> > > > > > (cc'ing Tom)
-> > > > > >
-> > > > > > That is a very good point.
-> > > > > >
-> > > > > > My interpretation was that delegated timestamps generally cover=
-ed
-> > > > > > writes, but SETATTR style operations that do anything beyond on=
-ly
-> > > > > > changing the mtime can't be cached.
-> > > > > >
-> > > > > > We probably need some delstid spec clarification: for what oper=
-ations
-> > > > > > is the server required to disable timestamp updates when a writ=
+On Tue, 2026-03-31 at 11:47 -0700, Thomas Haynes wrote:
+> On Tue, Mar 31, 2026 at 07:42:56AM -0800, Jeff Layton wrote:
+> > On Fri, 2026-03-27 at 11:22 -0700, Thomas Haynes wrote:
+> > > On Fri, Mar 27, 2026 at 12:59:54PM -0800, Jeff Layton wrote:
+> > > > On Fri, 2026-03-27 at 12:20 -0400, Olga Kornievskaia wrote:
+> > > > > On Fri, Mar 27, 2026 at 11:50=E2=80=AFAM Jeff Layton <jlayton@ker=
+nel.org> wrote:
+> > > > > >=20
+> > > > > > On Fri, 2026-03-27 at 11:11 -0400, Olga Kornievskaia wrote:
+> > > > > > > On Tue, Mar 24, 2026 at 1:32=E2=80=AFPM Jeff Layton <jlayton@=
+kernel.org> wrote:
+> > > > > > > >=20
+> > > > > > > > xfstest generic/728 fails with delegated timestamps. The cl=
+ient does a
+> > > > > > > > removexattr and then a stat to test the ctime, which doesn'=
+t change. The
+> > > > > > > > stat() doesn't trigger a GETATTR because of the delegated t=
+imestamps, so
+> > > > > > > > it relies on the cached ctime, which is wrong.
+> > > > > > > >=20
+> > > > > > > > The setxattr compound has a trailing GETATTR, which ensures=
+ that its
+> > > > > > > > ctime gets updated. Follow the same strategy with removexat=
+tr.
+> > > > > > >=20
+> > > > > > > This approach relies on the fact that the server the serves d=
+elegated
+> > > > > > > attributes would update change_attr on operations which might=
+ now
+> > > > > > > necessarily happen (ie, linux server does not update change_a=
+ttribute
+> > > > > > > on writes or clone). I propose an alternative fix for the fai=
+ling
+> > > > > > > generic/728.
+> > > > > > >=20
+> > > > > > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> > > > > > > index 7b3ca68fb4bb..ede1835a45b3 100644
+> > > > > > > --- a/fs/nfs/nfs42proc.c
+> > > > > > > +++ b/fs/nfs/nfs42proc.c
+> > > > > > > @@ -1389,7 +1389,13 @@ static int _nfs42_proc_removexattr(str=
+uct inode
+> > > > > > > *inode, const char *name)
+> > > > > > >             &res.seq_res, 1);
+> > > > > > >         trace_nfs4_removexattr(inode, name, ret);
+> > > > > > >         if (!ret)
+> > > > > > > -               nfs4_update_changeattr(inode, &res.cinfo, tim=
+estamp, 0);
+> > > > > > > +               if (nfs_have_delegated_attributes(inode)) {
+> > > > > > > +                       nfs_update_delegated_mtime(inode);
+> > > > > > > +                       spin_lock(&inode->i_lock);
+> > > > > > > +                       nfs_set_cache_invalid(inode, NFS_INO_=
+INVALID_BLOCKS);
+> > > > > > > +                       spin_unlock(&inode->i_lock);
+> > > > > > > +               } else
+> > > > > > > +                       nfs4_update_changeattr(inode, &res.ci=
+nfo, timestamp, 0);
+> > > > > > >=20
+> > > > > > >         return ret;
+> > > > > > >  }
+> > > > > > >=20
+> > > > > >=20
+> > > > > > What's the advantage of doing it this way?
+> > > > > >=20
+> > > > > > You just sent a REMOVEXATTR operation to the server that will c=
+hange
+> > > > > > the mtime there. The server has the most up-to-date version of =
+the
+> > > > > > mtime and ctime at that point.
+> > > > >=20
+> > > > > In presence of delegated attributes, Is the server required to up=
+date
+> > > > > its mtime/ctime on an operation? As I mentioned, the linux server=
+ does
+> > > > > not update its ctime/mtime for WRITE, CLONE, COPY.
+> > > > >=20
+> > > > > Is possible that
+> > > > > some implementations might be different and also do not update th=
 e
-> > > > > > delegation is outstanding?
-> > > > > >
-> > > > > > In the case of nfsd, we disable timestamp updates for WRITE/COP=
-Y/CLONE
-> > > > > > but not SETATTR/SETXATTR/REMOVEXATTR.
-> > > > > >
-> > > > > > How does the Hammerspace anvil behave? Does it disable c/mtime =
-updates
-> > > > > > for writes when there is an outstanding timestamp delegation li=
-ke we're
-> > > > > > doing in nfsd? If so, does it do the same for
-> > > > > > SETATTR/SETXATTR/REMOVEXATTR operations as well?
-> > > > >
-> > > > > Jeff,
-> > > > >
-> > > > > I think the right way to look at this is closer to how size is
-> > > > > handled under delegation in RFC8881, rather than as a per-op rule=
-.
-> > > > >
-> > > > > In our implementation, because we are acting as an MDS and data I=
-/O
-> > > > > goes to DSes, we already treat size as effectively delegated when
-> > > > > a write layout is outstanding. The MDS does not maintain authorit=
-ative
-> > > > > size locally in that case. We may refresh size/timestamps interna=
-lly
-> > > > > (e.g., on GETATTR by querying DSes), but we don=E2=80=99t treat t=
-hat as
-> > > > > overriding the delegated authority.
-> > > > >
-> > > > > For timestamps, our behavior is effectively the same model. When
-> > > > > the client holds the relevant delegation, the server does not
-> > > > > consider itself authoritative for ctime/mtime. If current values
-> > > > > are needed, we can obtain them from the client (e.g., via CB_GETA=
-TTR),
-> > > > > and the client must present the delegation stateid to demonstrate
-> > > > > that authority. So the authority follows the delegation, not the
-> > > > > specific operation.
-> > > >
-> > > > What happens when the client holding the attribute delegation (it's
-> > > > the authority) is doing the query? Is it the server's responsibilit=
-y
-> > > > to query the client before replying.
-> > >
-> > > The Hammerspace server on a getattr checks to see if there is
-> > > a delegated stateid (and whether it is the client making the request
-> > > or not). If it is and the GETATTR asks for FATTR4_SIZE, FATTR4_TIME_M=
-ODIFY,
-> > > or FATTR4_TIME_METADATA, then it will send a CB_GETATTR before
-> > > responding to the client.
-> >
-> > So... while I might not be running the latest Hammerspace bits and
-> > something has changed but I do not see Hammerspace server sending a
-> > CB_GETATTR when the "client is making a getattr request with a
-> > delegated stateid".
->
-> Or the process is broken on the server side.
->
->
-> > Example is the CLONE operation with an accompanied
-> > GETATTR. The server in this case updates the change attribute and
-> > mtime and returns different from what the client had previously in the
-> > OPEN back to the client (this is what the test expect but I think
-> > that's contradictory to what is said above). (To contrast nfsd server
-> > does not update the change attribute or mtime and returns the same
-> > value and thus making xfstest fail). So if the spec mandates that
-> > before answering the GETATTR a CB_GETATTR needs to be sent then
-> > neither of the server (Hammerspace nor linux) do that. But then again
-> > I'm not sure the client is not at fault for sending a GETATTR in the
-> > CLONE compound in the first place. For instance client does not have a
-> > GETATTR in the COPY compound (and then fails to pass xfstest that
-> > checks for modifies ctime/mtime). But the solution isn't clear to is
-> > it like Jeff's REMOVEXATTR approach to add the GETATTR to the COPY
-> > compound but that then should trigger a CB_GETATTR back to the client.
-> > Again probably none of the servers do that...
-> >
-> > Another point I would like to raise is: doesn't it seem
-> > counter-intuitive to be in a situation where we have a
-> > delegation-holding client sending a GETATTR and then a server needing
-> > to do a CB_GETTATTR to the said client to fulfill the request.
-> > Delegations were supposed to reduce traffic and now we are introducing
-> > additional traffic instead. I guess I'm arguing that the client is
-> > broken to ever query for change_attr, mtime if it's holding the
-> > delegation. Yet the linux client (I could be wrong here) is written
-> > such that change_attr or mtime has to always come from the server. Say
-> > the application did a write() followed by a stat(). Client can't
-> > satisfy stat() without reaching out to the server. Yet the server is
-> > not the authority and before it can generate the reply for
-> > change_attr, mtime, it needs to callback to the client (CB_GETATTR).
-> > It seems it would have been better to never get a delegated attribute
-> > delegation in the first place?
->
-> Or the client needs to change its behaviour in this scenario? Why ask
-> as question to a source which is not the authority?
+> > > > > ctime/mtime on REMOVEXATTR?
+> > > > >=20
+> > > > > Therefore I was suggesting that the patch
+> > > > > relies on the fact that it would receive an updated value. Of cou=
+rse
+> > > > > perhaps all implementations are done the same as the linux server=
+ and
+> > > > > my point is moot. I didn't see anything in the spec that clarifie=
+s
+> > > > > what the server supposed to do (and client rely on).
+> > > > >=20
+> > > >=20
+> > > > (cc'ing Tom)
+> > > >=20
+> > > > That is a very good point.
+> > > >=20
+> > > > My interpretation was that delegated timestamps generally covered
+> > > > writes, but SETATTR style operations that do anything beyond only
+> > > > changing the mtime can't be cached.
+> > > >=20
+> > > > We probably need some delstid spec clarification: for what operatio=
+ns
+> > > > is the server required to disable timestamp updates when a write
+> > > > delegation is outstanding?
+> > > >=20
+> > > > In the case of nfsd, we disable timestamp updates for WRITE/COPY/CL=
+ONE
+> > > > but not SETATTR/SETXATTR/REMOVEXATTR.
+> > > >=20
+> > > > How does the Hammerspace anvil behave? Does it disable c/mtime upda=
+tes
+> > > > for writes when there is an outstanding timestamp delegation like w=
+e're
+> > > > doing in nfsd? If so, does it do the same for
+> > > > SETATTR/SETXATTR/REMOVEXATTR operations as well?
+> > >=20
+> > > Jeff,
+> > >=20
+> > > I think the right way to look at this is closer to how size is
+> > > handled under delegation in RFC8881, rather than as a per-op rule.
+> > >=20
+> > > In our implementation, because we are acting as an MDS and data I/O
+> > > goes to DSes, we already treat size as effectively delegated when
+> > > a write layout is outstanding. The MDS does not maintain authoritativ=
+e
+> > > size locally in that case. We may refresh size/timestamps internally
+> > > (e.g., on GETATTR by querying DSes), but we don=E2=80=99t treat that =
+as
+> > > overriding the delegated authority.
+> > >=20
+> > > For timestamps, our behavior is effectively the same model. When
+> > > the client holds the relevant delegation, the server does not
+> > > consider itself authoritative for ctime/mtime. If current values
+> > > are needed, we can obtain them from the client (e.g., via CB_GETATTR)=
+,
+> > > and the client must present the delegation stateid to demonstrate
+> > > that authority. So the authority follows the delegation, not the
+> > > specific operation.
+> > >=20
+> > > That said, I don=E2=80=99t think we=E2=80=99ve fully resolved the sem=
+antics for all
+> > > metadata-style ops either. WRITE and SETATTR are clear in our model,
+> > > but for things like CLONE/COPY/SETXATTR/REMOVEXATTR, we=E2=80=99ve li=
+kely
+> > > been relying on assumptions rather than a fully consistent rule.
+> > > I.e., CLONE and COPY we just pass through to the DS and we don't
+> > > implement SETXATTR/REMOVEXATTR.
+> > >=20
+> > > So the spec question, as I see it, is not whether REMOVEXATTR (or
+> > > any particular op) should update ctime/mtime, but whether delegated
+> > > timestamps are meant to follow the same attribute-authority model
+> > > as delegated size in RFC8881. If so, then we expect that the server
+> > > should query the client via CB_GETATTR to return updated ctime/mtime
+> > > after such operations while the delegation is outstanding.
+> > >=20
+> >=20
+> > The dilemma we have is: because we _do_ allow local processes to stat()
+> > files that have an outstanding write delegation, we can never allow the
+> > ctime in particular to roll backward (modulo clock jumps).
+>=20
+> I agree we do not want visible ctime rollback, but I do not see how
+> that can be guaranteed from delegated timestamps alone when the
+> authoritative timestamp may be generated on a different node with
+> a different clock and the object may change during the CB_GETATTR
+> window. That seems to require either monotonic clamping of exposed
+> ctime, or treating change_attr rather than ctime as the real
+> serialization signal.
+>=20
+> >=20
+> > If we're dealing with changes that have been cached in the client and
+> > are being lazily flushed out, then we can't update the timestamp when
+> > that operation occurs. The time of the RPC to flush the changes will
+> > almost certainly be later than the cached timestamps on the client that
+> > will eventually be set, so when the client comes back we'd end up
+> > violating the rollback rule.
+> >=20
+> > Our only option is to freeze timestamp updates on anything that might
+> > represent such an operation. So far, we only do that on WRITE and COPY
+> > operations -- in general, operations that require an open file, since
+> > FMODE_NOCMTIME is attached to the file.
+> >=20
+> > Some SETATTRs that only update the mtime and atime can be cached on the
+> > client by virtue of the fact that it's authoritative for timestamps.
+> > There are some exceptions though:
+> >=20
+> > - atime-only updates can't be cached since the ctime won't change with
+> > a timestamp update if the mtime didn't change
+> >=20
+> > - if you set the mtime to a time that is later than the time you got
+> > the delegation from the server, but earlier than the current time, you
+> > can't cache that. The ctime would be later than the mtime in that case,
+> > and we don't have a mechanism to handle that in a delegated timestamp
+> > SETATTR.
+> >=20
+> > I don't see how you could reasonably buffer a SETXATTR or REMOVEXATTR
+> > operation to be sent later. These need to be done synchronously since
+> > they could always fail for some reason and we don't have a mechanism at
+> > the syscall layer to handle a deferred error. They also only update the
+> > ctime and not the mtime, and we have no mechanism to do that with
+> > delegated timestamps.
+> >=20
+> > Based on that, I think the client and server both need to ignore the
+> > timestamp delegation on a SETXATTR or REMOVEXATTR. The server should
+> > update the ctime and the client needs to send a trailing GETATTR on the
+> > REMOVEXATTR compound in order to get it and the change attr.
+>=20
+> One concern I have with a per-op formulation is extensibility. If
+> delegated timestamp behavior is defined by enumerating specific
+> operations, then every new operation added to the protocol creates
+> a fresh ambiguity until the spec is updated again. It seems better
+> to define the behavior in terms of operation properties - e.g., whether
+> the operation is synchronously visible, can be deferred/cached at
+> the client, and whether it affects only ctime versus mtime/atime -
+> so future operations can be classified without reopening the base
+> rule.
+>=20
+> I.e., I can't tell if you want me to update the spec with
+> guidance per-op or you are just documenting what you did.
+>=20
+>=20
 
-well i think it's because it's not able to generate the values needed
-(ie the server is the only one that can generate the change_attr value
-and mtime is also supposed to come from the server clock too)?
+I think we probably need some guidance in the spec, and I think that
+guidance comes down to: operations that don't have a way to report a
+delayed error condition can't be buffered on the client and must
+continue to be done synchronously even if a delegation is held.
 
-> Or, I agree with your analysis...
->
-> >
-> > > While it does not do so, if the client sent in a SETATTR in the
-> > > same compound we could short circuit that. Think a sort of WCC.
-> > >
-> > > > Example, client sends a CLONE
-> > > > operation which has a GETATTR attached. (1) is the server supposed =
-to
-> > > > issue a CB_GETATTR before replying to the compound? (2) is the clie=
-nt
-> > > > not supposed to send any GETATTRs while holding an attribute
-> > > > delegation? CLONE is a modifying operation but client hasn't done a=
-ny
-> > > > actual modifications to the opened file so a CB_GETATTR would retur=
-n
-> > > > that file hasn't been modified. Is the server then not going to
-> > > > express that the file has indeed been modified when replying to
-> > > > GETATTR?
-> > >
-> > > The server could argue that the client wants to know what it thinks.
-> > > But that isn't the argeement. The server has to query those values
-> > > before sending them on.
-> > >
-> > > >
-> > > > > That said, I don=E2=80=99t think we=E2=80=99ve fully resolved the=
- semantics for all
-> > > > > metadata-style ops either. WRITE and SETATTR are clear in our mod=
-el,
-> > > > > but for things like CLONE/COPY/SETXATTR/REMOVEXATTR, we=E2=80=99v=
-e likely
-> > > > > been relying on assumptions rather than a fully consistent rule.
-> > > > > I.e., CLONE and COPY we just pass through to the DS and we don't
-> > > > > implement SETXATTR/REMOVEXATTR.
-> > > > >
-> > > > > So the spec question, as I see it, is not whether REMOVEXATTR (or
-> > > > > any particular op) should update ctime/mtime, but whether delegat=
-ed
-> > > > > timestamps are meant to follow the same attribute-authority model
-> > > > > as delegated size in RFC8881. If so, then we expect that the serv=
-er
-> > > > > should query the client via CB_GETATTR to return updated ctime/mt=
-ime
-> > > > > after such operations while the delegation is outstanding.
-> > > > >
-> > > > > Thanks,
-> > > > > Tom
-> > > > >
-> > > > >
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > > > It's certainly possible that the REMOVEXATTR is the only ch=
-ange that
-> > > > > > > > occurred. With what I'm proposing, we don't even need to do=
- a SETATTR
-> > > > > > > > at all if nothing else changed. With your version, you woul=
-d.
-> > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > Fixes: 3e1f02123fba ("NFSv4.2: add client side XDR hand=
-ling for extended attributes")
-> > > > > > > > > > Reported-by: Olga Kornievskaia <aglo@umich.edu>
-> > > > > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > > > > > ---
-> > > > > > > > > >  fs/nfs/nfs42proc.c      | 18 ++++++++++++++++--
-> > > > > > > > > >  fs/nfs/nfs42xdr.c       | 10 ++++++++--
-> > > > > > > > > >  include/linux/nfs_xdr.h |  3 +++
-> > > > > > > > > >  3 files changed, 27 insertions(+), 4 deletions(-)
-> > > > > > > > > >
-> > > > > > > > > > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > > > > > > > > > index 7b3ca68fb4bb3bee293f8621e5ed5fa596f5da3f..7e5c117=
-2fc11c9d5a55b3621977ac83bb98f7c20 100644
-> > > > > > > > > > --- a/fs/nfs/nfs42proc.c
-> > > > > > > > > > +++ b/fs/nfs/nfs42proc.c
-> > > > > > > > > > @@ -1372,11 +1372,15 @@ int nfs42_proc_clone(struct fil=
-e *src_f, struct file *dst_f,
-> > > > > > > > > >  static int _nfs42_proc_removexattr(struct inode *inode=
-, const char *name)
-> > > > > > > > > >  {
-> > > > > > > > > >         struct nfs_server *server =3D NFS_SERVER(inode)=
-;
-> > > > > > > > > > +       __u32 bitmask[NFS_BITMASK_SZ];
-> > > > > > > > > >         struct nfs42_removexattrargs args =3D {
-> > > > > > > > > >                 .fh =3D NFS_FH(inode),
-> > > > > > > > > > +               .bitmask =3D bitmask,
-> > > > > > > > > >                 .xattr_name =3D name,
-> > > > > > > > > >         };
-> > > > > > > > > > -       struct nfs42_removexattrres res;
-> > > > > > > > > > +       struct nfs42_removexattrres res =3D {
-> > > > > > > > > > +               .server =3D server,
-> > > > > > > > > > +       };
-> > > > > > > > > >         struct rpc_message msg =3D {
-> > > > > > > > > >                 .rpc_proc =3D &nfs4_procedures[NFSPROC4=
-_CLNT_REMOVEXATTR],
-> > > > > > > > > >                 .rpc_argp =3D &args,
-> > > > > > > > > > @@ -1385,12 +1389,22 @@ static int _nfs42_proc_removexa=
-ttr(struct inode *inode, const char *name)
-> > > > > > > > > >         int ret;
-> > > > > > > > > >         unsigned long timestamp =3D jiffies;
-> > > > > > > > > >
-> > > > > > > > > > +       res.fattr =3D nfs_alloc_fattr();
-> > > > > > > > > > +       if (!res.fattr)
-> > > > > > > > > > +               return -ENOMEM;
-> > > > > > > > > > +
-> > > > > > > > > > +       nfs4_bitmask_set(bitmask, server->cache_consist=
-ency_bitmask,
-> > > > > > > > > > +                        inode, NFS_INO_INVALID_CHANGE)=
-;
-> > > > > > > > > > +
-> > > > > > > > > >         ret =3D nfs4_call_sync(server->client, server, =
-&msg, &args.seq_args,
-> > > > > > > > > >             &res.seq_res, 1);
-> > > > > > > > > >         trace_nfs4_removexattr(inode, name, ret);
-> > > > > > > > > > -       if (!ret)
-> > > > > > > > > > +       if (!ret) {
-> > > > > > > > > >                 nfs4_update_changeattr(inode, &res.cinf=
-o, timestamp, 0);
-> > > > > > > > > > +               ret =3D nfs_post_op_update_inode(inode,=
- res.fattr);
-> > > > > > > > > > +       }
-> > > > > > > > > >
-> > > > > > > > > > +       kfree(res.fattr);
-> > > > > > > > > >         return ret;
-> > > > > > > > > >  }
-> > > > > > > > > >
-> > > > > > > > > > diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-> > > > > > > > > > index 5c7452ce6e8ac94bd24bc3a33d4479d458a29907..ec105c6=
-2f721cfe01bfc60f5981396958084d627 100644
-> > > > > > > > > > --- a/fs/nfs/nfs42xdr.c
-> > > > > > > > > > +++ b/fs/nfs/nfs42xdr.c
-> > > > > > > > > > @@ -263,11 +263,13 @@
-> > > > > > > > > >  #define NFS4_enc_removexattr_sz                (compou=
-nd_encode_hdr_maxsz + \
-> > > > > > > > > >                                          encode_sequenc=
-e_maxsz + \
-> > > > > > > > > >                                          encode_putfh_m=
-axsz + \
-> > > > > > > > > > -                                        encode_removex=
-attr_maxsz)
-> > > > > > > > > > +                                        encode_removex=
-attr_maxsz + \
-> > > > > > > > > > +                                        encode_getattr=
-_maxsz)
-> > > > > > > > > >  #define NFS4_dec_removexattr_sz                (compou=
-nd_decode_hdr_maxsz + \
-> > > > > > > > > >                                          decode_sequenc=
-e_maxsz + \
-> > > > > > > > > >                                          decode_putfh_m=
-axsz + \
-> > > > > > > > > > -                                        decode_removex=
-attr_maxsz)
-> > > > > > > > > > +                                        decode_removex=
-attr_maxsz + \
-> > > > > > > > > > +                                        decode_getattr=
-_maxsz)
-> > > > > > > > > >
-> > > > > > > > > >  /*
-> > > > > > > > > >   * These values specify the maximum amount of data tha=
-t is not
-> > > > > > > > > > @@ -869,6 +871,7 @@ static void nfs4_xdr_enc_removexatt=
-r(struct rpc_rqst *req,
-> > > > > > > > > >         encode_sequence(xdr, &args->seq_args, &hdr);
-> > > > > > > > > >         encode_putfh(xdr, args->fh, &hdr);
-> > > > > > > > > >         encode_removexattr(xdr, args->xattr_name, &hdr)=
-;
-> > > > > > > > > > +       encode_getfattr(xdr, args->bitmask, &hdr);
-> > > > > > > > > >         encode_nops(&hdr);
-> > > > > > > > > >  }
-> > > > > > > > > >
-> > > > > > > > > > @@ -1818,6 +1821,9 @@ static int nfs4_xdr_dec_removexat=
-tr(struct rpc_rqst *req,
-> > > > > > > > > >                 goto out;
-> > > > > > > > > >
-> > > > > > > > > >         status =3D decode_removexattr(xdr, &res->cinfo)=
-;
-> > > > > > > > > > +       if (status)
-> > > > > > > > > > +               goto out;
-> > > > > > > > > > +       status =3D decode_getfattr(xdr, res->fattr, res=
-->server);
-> > > > > > > > > >  out:
-> > > > > > > > > >         return status;
-> > > > > > > > > >  }
-> > > > > > > > > > diff --git a/include/linux/nfs_xdr.h b/include/linux/nf=
-s_xdr.h
-> > > > > > > > > > index ff1f12aa73d27b6fd874baf7019dd03195fc36e5..fcbd21b=
-5685f46136a210c8e11c20a54d6ed9dad 100644
-> > > > > > > > > > --- a/include/linux/nfs_xdr.h
-> > > > > > > > > > +++ b/include/linux/nfs_xdr.h
-> > > > > > > > > > @@ -1611,12 +1611,15 @@ struct nfs42_listxattrsres {
-> > > > > > > > > >  struct nfs42_removexattrargs {
-> > > > > > > > > >         struct nfs4_sequence_args       seq_args;
-> > > > > > > > > >         struct nfs_fh                   *fh;
-> > > > > > > > > > +       const u32                       *bitmask;
-> > > > > > > > > >         const char                      *xattr_name;
-> > > > > > > > > >  };
-> > > > > > > > > >
-> > > > > > > > > >  struct nfs42_removexattrres {
-> > > > > > > > > >         struct nfs4_sequence_res        seq_res;
-> > > > > > > > > >         struct nfs4_change_info         cinfo;
-> > > > > > > > > > +       struct nfs_fattr                *fattr;
-> > > > > > > > > > +       const struct nfs_server         *server;
-> > > > > > > > > >  };
-> > > > > > > > > >
-> > > > > > > > > >  #endif /* CONFIG_NFS_V4_2 */
-> > > > > > > > > >
-> > > > > > > > > > --
-> > > > > > > > > > 2.53.0
-> > > > > > > > > >
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > Jeff Layton <jlayton@kernel.org>
-> > > > > >
-> > > > > > --
-> > > > > > Jeff Layton <jlayton@kernel.org>
-> > > > >
+By way of example: if I do a write() on the client I can buffer that
+because userland can eventually do an fsync() to see if it succeeded.
+This is not true for syscalls like setxattr() or removexattr(), or most
+syscalls that result in a SETATTR operation (chmod(), chown(), etc).
+
+They must be done synchronously because:
+
+1/ there's no way to update only the ctime in a delegated timestamp
+update
+
+...and...
+
+2/ these syscalls can fail, so we can't return from them until we know
+the outcome.
+
+How best to phrase this guidance, I'm not sure...
+--=20
+Jeff Layton <jlayton@kernel.org>
 
