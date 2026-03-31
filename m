@@ -1,354 +1,217 @@
-Return-Path: <linux-nfs+bounces-20564-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20565-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6H+AA3grzGkmQgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20564-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 22:15:52 +0200
+	id OHK2JpU4zGlFRgYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20565-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 23:11:49 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F1E9371156
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 22:15:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 07CE83716C1
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 23:11:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F0A1F307713C
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 20:11:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9329230C4870
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Mar 2026 21:07:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F92043DA49;
-	Tue, 31 Mar 2026 20:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D45393F788C;
+	Tue, 31 Mar 2026 21:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWxqLEly"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sShxAI5y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B89E3BED6F
-	for <linux-nfs@vger.kernel.org>; Tue, 31 Mar 2026 20:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED9D3F787B;
+	Tue, 31 Mar 2026 21:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774987867; cv=none; b=Vq/Ol1cVE83aW2GnefeCJlKtbJk601TMv6hwtP1l5esQrPy0jcQhcyVSo3Jen3z/p/WppJnbFQcLxEEwWm4VkLnPaaxvJLpnAZBYpYK9JgtLkN3iSKisPLtb4r607s7NDl7XpqpOneZPvCmFmJvWrjOZh2SmVfcigyvWA3ZtKws=
+	t=1774991226; cv=none; b=lmGURCJAUaRwQhzno6/EynsF+gQjMuIa+6MPQp0JGSQZVDwEy2paGf9JEVlbOIkmKPtcA3A6pNxZVEukPmRIIcBzi/9fu5UVRAv1dDupdOSW0jmU8/HZPw9o8qs4Gf3MwjzqgCEMsJjH84bR6PJ0M1ZspqOvrn6TxbKaoBd253w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774987867; c=relaxed/simple;
-	bh=cmDfW89AuFIZ58ZQXLN2jjVZ9RGYSm6Fz3smuQD6LGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KTuEjjfMzYOwD6LbSPmvVHixioFOF5QVOqDjr9hgbpBPsoz2EJXdQe9odr+QHqhBoWAAkX5ZhlZLDcs4ZUt1Opeb4Hbx5VKqqxW6rXsN8dlSLKc/OGs3QBE9e+dhk7BiGEWkmN6JyuxERhjAk+bO/Ok+DfhlCLvR6ZrXWgARc5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWxqLEly; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A4B8C19423;
-	Tue, 31 Mar 2026 20:11:06 +0000 (UTC)
+	s=arc-20240116; t=1774991226; c=relaxed/simple;
+	bh=WzeX34AxfhhRORXcfsPGaKpCHhgigrPVQpuMx6xrHPM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Bmc6yytapb4agHvhFw6HyDd6CYb9hbWXKnlneoN3wSncXAOsTL+G04ujHOQQGMWzNBwAoCj5jruoG5NlmOZq9H+R75q2FOEgXOOqTTx1TaE7H+BN87nLAKvYEIBe6GNL98aEpRjETAdz6oMBKbh1aXH1SDIbsfi84Br5xzh8ji4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sShxAI5y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060D2C19423;
+	Tue, 31 Mar 2026 21:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774987866;
-	bh=cmDfW89AuFIZ58ZQXLN2jjVZ9RGYSm6Fz3smuQD6LGI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NWxqLElyGN4mhTcHBUHzoLA2/UBSvDWEUxle5Cr/v9VqOkGYFWIS7A1qaBG7+F+6W
-	 0xYUi9UGAmuHwAHKFbV9gC52SRoGxjRz+fuWeEUABMhFHOjJ2OHbYBkdvai3S8IOpQ
-	 FOeau1tp3iloCFSrORNS5LuClCPEfW/53vnc4crOXjP+6LTxfVJqyKR+/0UEZZzmd6
-	 MuZ6BnPEVm1em5kqrLcrOYCbWqFD01wVxrD/nyRZNAnAdPeWhb1tgWn8HMLTkoIVxa
-	 4RwsDV5aVYeoIIWZi/tqDgE7Ur4GXvqPIEFoVCAlMsQ4Q7ikGH44HWG9KTpOL6lMUc
-	 QPMtR3eXlzLqQ==
+	s=k20201202; t=1774991226;
+	bh=WzeX34AxfhhRORXcfsPGaKpCHhgigrPVQpuMx6xrHPM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=sShxAI5yzj0DQxJ4tBo8I2dRbN4pmPsNwKzbubljNQzO234Lb7p6cWyKyPVB3bjQb
+	 Quxk3X3GApj3AgI7YlIGHoxUwXzEq7XyRHy7gnpZTO37GZHMgz2+EF0sZHrKe02fc3
+	 Ie1gjYACAuvcJNA9sU5ceyOuWYIFEUoHc+1X/pfWGNpvxFnwgoVR9d7piy/vU5k+Yy
+	 E784gWzfvqq25mVuksTncTEBtL4sgvUjUImH7tofy/XmelMCZfChEzpYr/ryZDN51A
+	 j47rwbMDUrQovkUY0KKF6+Sp/NLdE/JfxOMC3VTmuUUQVcUoQKKEs+5kGIbpKP36dH
+	 yzfM5MAhWhnkA==
 From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neilb@ownmail.net>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH] exportfs: release NFSv4 state when last client is unexported
-Date: Tue, 31 Mar 2026 16:11:01 -0400
-Message-ID: <20260331201102.3002279-1-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
+Subject: [PATCH v7 0/7] Automatic NFSv4 state revocation on filesystem
+ unmount
+Date: Tue, 31 Mar 2026 17:06:54 -0400
+Message-Id: <20260331-umount-kills-nfsv4-state-v7-0-d8d2eee93f53@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG43zGkC/43OwU7EIBAG4FfZcBaFKbTsnnwP4wHo0KJdMEAbz
+ abvLqyXNSYbb/NPZr78F5IxeczkdLiQhJvPPoYahocDsbMOE1I/1kyAQc86ruh6jmso9N0vS6b
+ B5U3QXHRByjsFXDlwAhmp7x8Jnf+80i+vPzmv5g1taV67MDojNUkHO7dVTH7y4amaIy2Yiw9Tu
+ 5p9LjF9XRtuomn/KFMHRmWv9SiENkcFzzFpu+CjjWfS2mzyRoL+jiSrNIJFNnDTyYH9kfobqeN
+ 3pL5KXIFk7igdgP4l7fv+DQAgHBqNAQAA
+X-Change-ID: 20260318-umount-kills-nfsv4-state-138218f2f4e0
+To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3949;
+ i=chuck.lever@oracle.com; h=from:subject:message-id;
+ bh=WzeX34AxfhhRORXcfsPGaKpCHhgigrPVQpuMx6xrHPM=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBpzDdxl8nYpa+L74xEpJZFIH7z6FdKkeSAbtBET
+ 0MUPO5SGJqJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCacw3cQAKCRAzarMzb2Z/
+ lzmHEAC9hc5D+A11k9WBpJLePYfBgqwDzhk0Fg6zLBIQjw6hkQE6Qo9rR4HGwrte2BhMYnF8bEl
+ vPmoAeSWTHLeET6hPeiLDCpNcQBFa52KPzdJzBzPYUUn/OTKcyix9g8xlOQ/HHNtQc6oQgwRQbM
+ CRdCU1AKIr2P/Eu+297hAZHQBbz58hS+YLSAJ0Y7i4DH8AM0N3EJ07rfNMOTrKN0GsPaIDZ47WM
+ tF7C5/MqWV8Ojf7xDHef9Ha11FJ3fji9i4bpPt5zSD0UBVffROMZdxcf+SUJKRR/E/OZ/44VBrS
+ hPCASoJV2ytTG0dXaHgTLolAPPjpEsIy/SDIvvtpwrRiq/BBwElsxcdb8l5AQU+jBUBv8m2+uiq
+ kx54+tm6vPnwaJe8IrO2gIJtbOko/AdVW+ci0ml51ED/YuA6YHp1HoHiliJTyUEwjMExQ1Z1dfp
+ rEQfrfaM2oIRqMPrJnzIZpdHn1RWPKdPZUm1Ypl62Gq6+1KXSydLJDj9BSsZco8r0ikwKdi3PmY
+ ZDslWwkyxGu4uGY0d8ZO/tx6wm2UhjwtUSMtj2R+lhkeMPd/xtJKRAnTpwelWjcMNSlEWgueHNJ
+ by7XfGq+LyoZrlzlDdZTc0vqny/6Y5Q7INzh9VKug5JVkwYaOBsFCFKK1drBtCZ0g/hszf+pdfr
+ V7xLYqpnShkwdBA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20564-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[ownmail.net,kernel.org,redhat.com,oracle.com,talpey.com];
+	TAGGED_FROM(0.00)[bounces-20565-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.997];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,makefile.in:url,oracle.com:email,libnfsconf.la:url,configure.ac:url]
-X-Rspamd-Queue-Id: 5F1E9371156
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,msgid.link:url]
+X-Rspamd-Queue-Id: 07CE83716C1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
+When an NFS server exports a filesystem and clients hold NFSv4
+state (opens, locks, delegations), unmounting the underlying
+filesystem fails with EBUSY. The /proc/fs/nfsd/unlock_ip and
+/proc/fs/nfsd/unlock_fs procfs interfaces handle this, but have
+no netlink equivalents, and unlock_fs operates at whole-superblock
+granularity.
 
-When exportfs -u removes the last client for a given export path,
-NFSv4 state (opens, locks, delegations) acquired through that
-export may still hold the underlying filesystem busy, preventing
-unmount.
+This series adds three new NFSD netlink commands, each with its own
+attribute set:
 
-After removing an export entry, check whether any active exports
-remain for the same path across all client types.  If none remain,
-send NFSD_CMD_UNLOCK_EXPORT to the kernel via generic netlink,
-which revokes the associated NFSv4 state and closes cached file
-handles.
+ - NFSD_CMD_UNLOCK_IP releases NLM locks held by a client IP
+   address. Netlink equivalent of write_unlock_ip.
 
-This uses a new shared helper, nfsd_nl_cmd_str(), in
-support/nfs/nfsdnl.c that handles the netlink socket setup, message
-construction, and ACK handling for simple nfsd commands carrying
-a single string attribute.  The helper is conditionally compiled
-when libnl3 is available (gated by the existing nfsdctl configure
-option).
+ - NFSD_CMD_UNLOCK_FILESYSTEM revokes all NFS state on a
+   superblock. Netlink equivalent of write_unlock_fs.
 
-Also update the local nfsd_netlink.h copy with the
-NFSD_CMD_UNLOCK_IP, NFSD_CMD_UNLOCK_FILESYSTEM, and
-NFSD_CMD_UNLOCK_EXPORT command and attribute definitions.
+ - NFSD_CMD_UNLOCK_EXPORT revokes NFSv4 state acquired through
+   exports of a specific path, regardless of client.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+UNLOCK_FILESYSTEM and UNLOCK_EXPORT serve different intents.
+UNLOCK_FILESYSTEM means "unmounting /data, release everything
+on this superblock." UNLOCK_EXPORT means "no clients remain for
+/data/projectA, release only the state acquired through exports
+of that path." Userspace (exportfs -u) sends UNLOCK_EXPORT after
+removing the last client for a given path, enabling the underlying
+filesystem to be unmounted.
+
+The path-only design for UNLOCK_EXPORT avoids the auth_domain
+naming complexity (use_ipaddr vs hostname-based domains) by not
+requiring the caller to identify a specific client. Since this
+mechanism is to be used to enable umount, this seemed like a
+reasonable compromise.
+
 ---
- configure.ac                 |  2 ++
- support/nfs/Makefile.am      |  7 ++++
- utils/exportfs/Makefile.am   |  3 +-
- utils/exportfs/exportfs.c    | 65 ++++++++++++++++++++++++++++++++++--
- utils/exportfs/exportfs.man  | 17 ++++++++++
- utils/nfsdctl/nfsd_netlink.h | 24 +++++++++++++
- 6 files changed, 115 insertions(+), 3 deletions(-)
+Changes since v6:
+- Send the complete series (v5 was missing patches 6 and 7)
 
-diff --git a/configure.ac b/configure.ac
-index ceae6b2406a6..ee429bade661 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -262,6 +262,8 @@ AC_ARG_ENABLE(nfsdctl,
- 		PKG_CHECK_MODULES(LIBNLGENL3, libnl-genl-3.0 >= 3.1)
- 		PKG_CHECK_MODULES(LIBREADLINE, readline)
- 		AC_CHECK_HEADERS(linux/nfsd_netlink.h)
-+		AC_DEFINE([HAVE_NFSD_NETLINK], 1,
-+			  [Define to 1 if nfsd generic netlink support is available])
- 
- 		# ensure we have the MIN_THREADS attribute
- 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
-diff --git a/support/nfs/Makefile.am b/support/nfs/Makefile.am
-index 2e1577cc12df..cfb14e94328c 100644
---- a/support/nfs/Makefile.am
-+++ b/support/nfs/Makefile.am
-@@ -11,6 +11,13 @@ libnfs_la_SOURCES = exports.c rmtab.c xio.c rpcmisc.c rpcdispatch.c \
- libnfs_la_LIBADD = libnfsconf.la
- libnfs_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport
- 
-+if CONFIG_NFSDCTL
-+libnfs_la_SOURCES += nfsdnl.c
-+libnfs_la_CPPFLAGS += $(LIBNL3_CFLAGS) $(LIBNLGENL3_CFLAGS) \
-+		      -I$(top_srcdir)/utils/nfsdctl
-+libnfs_la_LIBADD += $(LIBNL3_LIBS) $(LIBNLGENL3_LIBS)
-+endif
-+
- libnfsconf_la_SOURCES = conffile.c xlog.c
- 
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
-index 7f8ce9faf2b4..57f2503b32eb 100644
---- a/utils/exportfs/Makefile.am
-+++ b/utils/exportfs/Makefile.am
-@@ -13,6 +13,7 @@ exportfs_LDADD = ../../support/export/libexport.a \
- 		 ../../support/reexport/libreexport.a \
- 		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
- 
--exportfs_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport
-+exportfs_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) -I$(top_srcdir)/support/reexport \
-+		    -I$(top_srcdir)/utils/nfsdctl
- 
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 748c38e3e966..2983d450143e 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -39,6 +39,15 @@
- #include "xlog.h"
- #include "conffile.h"
- #include "reexport.h"
-+#include "nfsdnl.h"
-+
-+#ifdef HAVE_NFSD_NETLINK
-+#ifdef USE_SYSTEM_NFSD_NETLINK_H
-+#include <linux/nfsd_netlink.h>
-+#else
-+#include "nfsd_netlink.h"
-+#endif
-+#endif
- 
- static void	export_all(int verbose);
- static void	exportfs(char *arg, char *options, int verbose);
-@@ -52,6 +61,7 @@ static void release_lockfile(void);
- 
- static const char *lockfile = EXP_LOCKFILE;
- static int _lockfd = -1;
-+static int f_unexport_all;
- 
- /*
-  * If we aren't careful, changes made by exportfs can be lost
-@@ -229,7 +239,8 @@ main(int argc, char **argv)
- 	 * don't care about what should be exported, as that
- 	 * may require DNS lookups..
- 	 */
--	if (! ( !f_export && f_all)) {
-+	f_unexport_all = !f_export && f_all;
-+	if (!f_unexport_all) {
- 		/* note: xtab_*_read does not update entries if they already exist,
- 		 * so this will not lose new options
- 		 */
-@@ -363,6 +374,26 @@ exportfs(char *arg, char *options, int verbose)
- 		xlog(L_ERROR, "Invalid export syntax: %s", arg);
- }
- 
-+/*
-+ * Check whether any active export remains for the given path across
-+ * all client types.  Returns true if at least one export still has
-+ * m_xtabent set.
-+ */
-+static int
-+path_still_exported(const char *path, size_t nlen)
-+{
-+	nfs_export *exp;
-+	int i;
-+
-+	for (i = 0; i < MCL_MAXTYPES; i++)
-+		for (exp = exportlist[i].p_head; exp; exp = exp->m_next)
-+			if (exp->m_xtabent &&
-+			    strlen(exp->m_export.e_path) == nlen &&
-+			    strncmp(path, exp->m_export.e_path, nlen) == 0)
-+				return 1;
-+	return 0;
-+}
-+
- static void
- unexportfs_parsed(char *hname, char *path, int verbose)
- {
-@@ -417,9 +448,39 @@ unexportfs_parsed(char *hname, char *path, int verbose)
- 		exp->m_mayexport = 0;
- 		success = 1;
- 	}
--	if (!success)
-+	if (!success) {
- 		xlog(L_ERROR, "Could not find '%s:%s' to unexport.", hname, path);
-+		goto out;
-+	}
- 
-+	/*
-+	 * If no exports remain for this path, ask the kernel to
-+	 * revoke any NFSv4 state and close cached file handles
-+	 * associated with exports of this path.  This enables the
-+	 * underlying filesystem to be unmounted.
-+	 *
-+	 * Skip this during "exportfs -ua" -- that is a shutdown
-+	 * operation.  Clients should wait for nfsd to restart and
-+	 * reclaim state through the grace period rather than
-+	 * receiving NFS4ERR_ADMIN_REVOKED.
-+	 */
-+#ifdef HAVE_NFSD_NETLINK
-+	if (!f_unexport_all && !path_still_exported(path, nlen)) {
-+		char pathbuf[NFS_MAXPATHLEN + 1];
-+		int ret;
-+
-+		memcpy(pathbuf, path, nlen);
-+		pathbuf[nlen] = '\0';
-+		ret = nfsd_nl_cmd_str(NFSD_CMD_UNLOCK_EXPORT,
-+				      NFSD_A_UNLOCK_EXPORT_PATH,
-+				      pathbuf);
-+		if (ret && ret != -ENOSYS)
-+			xlog(L_WARNING,
-+			     "Failed to release state for %s: %s",
-+			     pathbuf, strerror(-ret));
-+	}
-+#endif
-+out:
- 	nfs_freeaddrinfo(ai);
- }
- 
-diff --git a/utils/exportfs/exportfs.man b/utils/exportfs/exportfs.man
-index 6d417a700340..d720b30451b0 100644
---- a/utils/exportfs/exportfs.man
-+++ b/utils/exportfs/exportfs.man
-@@ -239,6 +239,23 @@ pair. This deletes the specified entry from
- .I /var/lib/nfs/etab
- and removes the corresponding kernel entry (if any).
- .PP
-+When the last client for a given export path is unexported,
-+.B exportfs
-+signals the kernel to revoke NFSv4 state (opens, locks, and
-+delegations) and release cached state for that path.
-+Without this revocation, retained state would prevent the
-+underlying filesystem from being unmounted.
-+Affected clients receive
-+.B NFS4ERR_ADMIN_REVOKED
-+errors for operations that use revoked state.
-+.PP
-+.B "exportfs \-ua"
-+does not revoke NFSv4 state, however.
-+If
-+.B nfsd
-+is then restarted, clients may reclaim state during the
-+grace period.
-+.PP
- .SS Dumping the Export Table
- Invoking
- .B exportfs
-diff --git a/utils/nfsdctl/nfsd_netlink.h b/utils/nfsdctl/nfsd_netlink.h
-index e9efbc9e63d8..78d52c210d86 100644
---- a/utils/nfsdctl/nfsd_netlink.h
-+++ b/utils/nfsdctl/nfsd_netlink.h
-@@ -80,6 +80,27 @@ enum {
- 	NFSD_A_POOL_MODE_MAX = (__NFSD_A_POOL_MODE_MAX - 1)
- };
- 
-+enum {
-+	NFSD_A_UNLOCK_IP_ADDRESS = 1,
-+
-+	__NFSD_A_UNLOCK_IP_MAX,
-+	NFSD_A_UNLOCK_IP_MAX = (__NFSD_A_UNLOCK_IP_MAX - 1)
-+};
-+
-+enum {
-+	NFSD_A_UNLOCK_FILESYSTEM_PATH = 1,
-+
-+	__NFSD_A_UNLOCK_FILESYSTEM_MAX,
-+	NFSD_A_UNLOCK_FILESYSTEM_MAX = (__NFSD_A_UNLOCK_FILESYSTEM_MAX - 1)
-+};
-+
-+enum {
-+	NFSD_A_UNLOCK_EXPORT_PATH = 1,
-+
-+	__NFSD_A_UNLOCK_EXPORT_MAX,
-+	NFSD_A_UNLOCK_EXPORT_MAX = (__NFSD_A_UNLOCK_EXPORT_MAX - 1)
-+};
-+
- enum {
- 	NFSD_CMD_RPC_STATUS_GET = 1,
- 	NFSD_CMD_THREADS_SET,
-@@ -90,6 +111,9 @@ enum {
- 	NFSD_CMD_LISTENER_GET,
- 	NFSD_CMD_POOL_MODE_SET,
- 	NFSD_CMD_POOL_MODE_GET,
-+	NFSD_CMD_UNLOCK_IP,
-+	NFSD_CMD_UNLOCK_FILESYSTEM,
-+	NFSD_CMD_UNLOCK_EXPORT,
- 
- 	__NFSD_CMD_MAX,
- 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
--- 
-2.53.0
+Changes since v5:
+- Rename state_lock => nn->deleg_lock
+
+Changes since v4:
+- 1/9 has been queued in nfsd-testing
+- Split single NFSD_CMD_UNLOCK into three separate commands
+- UNLOCK_EXPORT takes path only, no client attribute to avoid
+  auth_domain naming complexity with use_ipaddr
+
+Changes since v3:
+- All VFS changes replaced with new netlink "unlock" operation
+
+Changes since v2:
+- Replace fs_pin with an SRCU umount notifier chain in VFS
+- Merge the pending COPY cancellation patch
+- Replace xa_cmpxchg() with xa_insert()
+- Use cancel_work_sync() instead of flush_workqueue()
+- Remove rcu_barrier()
+- Correct misleading claims in kdoc comments and commit messages
+
+Changes since v1:
+- Explain why drop_client() is being renamed
+- Finish implementing revocation on umount
+- Rename pin_insert_group
+- Clarified log output and code comments
+- Hold nfsd_mutex while closing nfsd_files
+
+---
+Changes in v7:
+- EDITME: describe what is new in this series revision.
+- EDITME: use bulletpoints and terse descriptions.
+- Link to v6: https://patch.msgid.link/20260331-umount-kills-nfsv4-state-v6-0-18250f95f22a@oracle.com
+
+---
+Chuck Lever (7):
+      NFSD: Extract revoke_one_stid() utility function
+      NFSD: Add NFSD_CMD_UNLOCK_IP netlink command
+      NFSD: Add NFSD_CMD_UNLOCK_FILESYSTEM netlink command
+      NFSD: Replace idr_for_each_entry_ul in find_one_sb_stid()
+      NFSD: Track svc_export in nfs4_stid
+      NFSD: Add NFSD_CMD_UNLOCK_EXPORT netlink command
+      NFSD: Close cached file handles when revoking export state
+
+ Documentation/netlink/specs/nfsd.yaml |  61 +++++++++
+ fs/nfsd/filecache.c                   |  46 +++++++
+ fs/nfsd/filecache.h                   |   1 +
+ fs/nfsd/netlink.c                     |  36 ++++++
+ fs/nfsd/netlink.h                     |   3 +
+ fs/nfsd/nfs4layouts.c                 |   2 +
+ fs/nfsd/nfs4state.c                   | 227 +++++++++++++++++++++++-----------
+ fs/nfsd/nfsctl.c                      | 126 ++++++++++++++++++-
+ fs/nfsd/state.h                       |   6 +
+ fs/nfsd/trace.h                       |  32 ++++-
+ include/uapi/linux/nfsd_netlink.h     |  24 ++++
+ 11 files changed, 485 insertions(+), 79 deletions(-)
+---
+base-commit: da43140ef30ecaffbfe04902d2513f5aac48ec4a
+change-id: 20260318-umount-kills-nfsv4-state-138218f2f4e0
+
+Best regards,
+--  
+Chuck Lever
 
 
