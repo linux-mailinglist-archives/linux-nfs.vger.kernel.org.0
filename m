@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-20597-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20598-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oNO7DI1uzWnvdQYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20597-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 21:14:21 +0200
+	id eFoXB7RuzWnvdQYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20598-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 21:15:00 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D37A37FB64
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 21:14:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CFC637FB82
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 21:14:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1403303CE2D
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Apr 2026 19:11:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 278C43057484
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Apr 2026 19:11:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F23931A7F6;
-	Wed,  1 Apr 2026 19:11:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E3D4611D7;
+	Wed,  1 Apr 2026 19:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUnJBnGa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaZF+3PO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3987633F8C3;
-	Wed,  1 Apr 2026 19:11:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445933F0A91;
+	Wed,  1 Apr 2026 19:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775070682; cv=none; b=u4IlPW/vENbJlNCufvOOf/Da+c7Ly4XTKNQbbBsT0hLhDJS+UeO+X+2UXLdcSx4iec6SgVaXM1+7wOTAhUfu2KFV7sraeV/z9LrLiJN/XJZni2FP6G4JK5rHIH/zhVH+f9iUaBoDWKqQBma1QqKxj5SG1CFECHHpix7ONLjnBWc=
+	t=1775070684; cv=none; b=hLtC7tuvteNC1T9j525r7GbNj8mt9KCs5hjTO6atz0zt7+G12QhhgaGnEynMPyVpS67yhuX/uqpgu7eorCFrffFqtrYyvJxwvZCa9+EioPiWSzDMXe3oaMm2lOtSWcgSIBLb9I+b7k10m/lQN+NkOaUVfrSx9PJYAyAZrF6z18U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775070682; c=relaxed/simple;
-	bh=n7l9LGVOvDCd2+hzVMt9/rX50u2r86z4dGB9ckGBacs=;
+	s=arc-20240116; t=1775070684; c=relaxed/simple;
+	bh=9C3Z1W8bME79bW1D+Vp8hGXV9sfT5cPsHTKIfuAOmtA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VzWDsr4UTpSX+BTUcVSS2Ukix7AX0ZkLmfENfVHUXq1hIpJ2iu7spi0mbOYKMD7rNvQkPFhS0ZEsKDUzQ3ilALPMlG815ADAjf+yhbUfH/mLn/2pD1MYMxXmhVEhAECiITJMwRw3USFE5qFvcauIa1npsi94b+cm3ie42SKVQDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUnJBnGa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E65C2BCB0;
-	Wed,  1 Apr 2026 19:11:20 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=MRJpjb2dnYGUXldyLxCCknA370tz65NEVt3Cq23OL23Kx/hXuzhu0nd8IihgQu/Rp/v/CauTHL75XN/l1NgrOZrfOK602bJ2yT/zfTnFtlkcjuo2Y4qo2X+4wA/wL0OuXYhNYt83pvedBcnyOciUudkmG5306DsQc371IY0He0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaZF+3PO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E155C4CEF7;
+	Wed,  1 Apr 2026 19:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775070681;
-	bh=n7l9LGVOvDCd2+hzVMt9/rX50u2r86z4dGB9ckGBacs=;
+	s=k20201202; t=1775070683;
+	bh=9C3Z1W8bME79bW1D+Vp8hGXV9sfT5cPsHTKIfuAOmtA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SUnJBnGaMXzuGq2jfYs5fyq28qNIXelBnO41hoV9B/TDNXaFNLeaPBA2u3IMD422G
-	 Ef6b8Zmsw7GAGQcn7TyhEIdCdl6Jn0ONVBWJw8mFzvClmoMfSUuUTRHcZgndSQjL7j
-	 6Ix4yrbDHn/OGZLU/GQng+CtK6HHtIe1VsTa9haE1EululVtYpLj3/SzuMcZ7FCPlD
-	 JzWsYwWE4BWEDLVp6nesvMuvbK3TlxevVn1b1OItdbzsPmXSXQGwe+atQUtZdQ728k
-	 l9Fn9FKi6h6StO7mevqc6+hID5bh/R+NxiUbjVVkfjkQBRAA+yCWJx0IlRu5jmJFQO
-	 zghBTtxY4mTXQ==
+	b=kaZF+3PO1Jnu3l4mWmm3vGmowPCYCyTE2anTpbvtkdF/eQ6AgC3/b3KOyn53Cw2Pv
+	 q1+27jEyYKO1o1LQOVVbpv5uPnNpNm8EbCZbGngNwqupfZHJl5huyraJ3AuBMeeEmi
+	 93JqRKjOE+f/W0Y7s533ZrRUfiQNOCfke39SX83DU96KDxu3XLKCV7pN8tBJ+ITZDm
+	 fbMPm+goL42L0vAtfmEj59fJ2j87dugQ6vNU6jgbjjz5r28FuhO4EFq7L7ncm3EBkh
+	 5HXnQ1WUcA0A1s/jAeE2MZeSRlpCLT8qqb3tGYxE3OGoUo91S/VvALL+8HWjjK0Thw
+	 F4iqmD6gykqNA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 01 Apr 2026 15:10:59 -0400
-Subject: [PATCH 2/4] mm: add atomic flush guard for IOCB_DONTCACHE
- writeback
+Date: Wed, 01 Apr 2026 15:11:00 -0400
+Subject: [PATCH 3/4] testing: add nfsd-io-bench NFS server benchmark suite
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260401-dontcache-v1-2-1f5746fab47a@kernel.org>
+Message-Id: <20260401-dontcache-v1-3-1f5746fab47a@kernel.org>
 References: <20260401-dontcache-v1-0-1f5746fab47a@kernel.org>
 In-Reply-To: <20260401-dontcache-v1-0-1f5746fab47a@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -72,39 +71,39 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4833; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=n7l9LGVOvDCd2+hzVMt9/rX50u2r86z4dGB9ckGBacs=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpzW3T1yRFo42zG4qubsASRC7nh36KGdmLOG0+u
- SYX0QTMzu+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCac1t0wAKCRAADmhBGVaC
- FXRND/wLxlUsyChusdT+tMPyQlfIoRYVZSMnojtBnUxpk4ci5Ejisdqd31zG5v6L9d8nO2CqZ/7
- XOkPlNuHLyCnnyvsNQfUoazU5/RyJKEmCUpAlVYl1p23ZACTrxj4dFv0rLIGuUf3i1hZU79WZ2V
- RZbFm0iLhHUS4IUYslnQm8Ybyn3AY1WtsM7n8aKqzF3ojSAZScFAkuiybXbkTL9J3x64/9e0Bsl
- e1NS+ojwLWQvZSy/D/dSYz0A6HuW81amiFk0cruWpqIBHIqpIDTzYXeXdqLbymCEYQV2yYdCGPN
- L4utfged3Ib93dMnGPE1gq1hP8Xc09bDojftaQ0Wjn2zJ//axjaMpLVZb/Auo2vfxY9h8RHWYmK
- mhJM6oR3tjgTf3FnUBoOqN5PIMObMl3fb6/VOZ3MybiSyx8jFCnR77b0+G2RLsuZhIqgGXjrhye
- 2sQWYaohXVjIXg410jVNstXP8tO8z+UjNAY35AMkBuW5Od5sE5RMR1f6OCu9dGppesvkmHoDHzP
- 3PlLqZOh8CjjS0gxnwq4jp2VWqSO0fr1ciFGtVF9CNytB/iIzXXhns1IJMTP0sbquNuM17N/HRt
- EIzcNuT3AxXLENvanZOvvzU9ooef3c62RM6qckIl2xdtB4wMoDEA/CaTKcji10x5zdyijBa7iiw
- p58BsgyOdBCCZsQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=32221; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=9C3Z1W8bME79bW1D+Vp8hGXV9sfT5cPsHTKIfuAOmtA=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpzW3TGH4l5fhDtPMFILX1uxW+tFTMzas8HiGHH
+ GvfbYbO4fKJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCac1t0wAKCRAADmhBGVaC
+ FQe/EADUeoFz9/OI2umVCoEtq/aFC35uvnhS70Lt5CU5//c1+M8irfYYJW2Gjgb9WxNuI/xSxn7
+ 3heowpwf0d0XHPSjCTrpwwCDej7XHuOO/JH2H7F9lXxxmL1lS5K9b9D01i8MVePB0ya7yHIhB0t
+ JXDBvg1iOE7Xwus1hy9rQxeoDBMKD80UXqzmM2y72PvkJz5jW7XQb9s9QYlFs2M/HXfq82N28op
+ TtPCYCa6gJLgrxliZ+8ZG1pzrBsU3AwFmCrynhcuaskW4xUPmZ9PTYM9RpvJtBWYrizLsfoeb8W
+ 7HAI/AETcbFOfbT0X8wqfbt+C6Tlvdp/WJcHKbp/EZo6zP7dkBmmCPFUxm9hsRHT6A7VoyFHIne
+ EEs8QJNJyPhSMxShO9E/QhZULGqf96Ymc6MHd4dIcsIg2zTNKaEU4bxFy0JiSJ18G3XQfoKkHCZ
+ TFYHNnzy76TKJvBV9U3nq9y1kG0HJh1OXl9KLxa1JUYzoAv/sUvesQ/vP1lKCdRxj0035fK5Mod
+ +ZD4kL8d4js1FTKHgPEzPI7P+6aO5qxMKzPpGEbkP5Cj8QFgCkHieN1Fb2F1KnZXJKRcWc9DiNo
+ rtYKALaxzCYMihyd1Je1NjJ1u6vImBumdAMgxbW6T9CVNkaM8mVAiQ3QyGWhqHJ0nhXI6L3SrUn
+ yM+w8BgDVgFgoIQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20597-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20598-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -114,113 +113,1071 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8D37A37FB64
+X-Rspamd-Queue-Id: 9CFC637FB82
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When the PAGECACHE_TAG_WRITEBACK tag clears after a round of writeback
-completes, all concurrent IOCB_DONTCACHE writers see the tag clear
-simultaneously and submit proportional flushes at once — a thundering
-herd that causes p99.9 tail latency spikes.
+Add a benchmark suite for testing NFSD I/O mode performance using fio
+with the libnfs backend against an NFS server on localhost.  Tests
+buffered, dontcache, and direct I/O modes via NFSD debugfs controls.
 
-Add an AS_DONTCACHE_FLUSHING flag to the address_space and use
-test_and_set_bit() to ensure at most one IOCB_DONTCACHE writer
-flushes at a time.  Other writers that find the bit set skip their
-flush entirely.  The bit is cleared when the flush completes.
-
-Together with the existing skip-if-busy check on
-PAGECACHE_TAG_WRITEBACK (which provides temporal rate limiting by
-skipping flushes while prior writeback is still draining), this
-creates a two-level guard: the writeback tag paces flush frequency
-to match device speed, while the atomic flag prevents the thundering
-herd at tag-clear transitions.
-
-Additionally, add a dirty pressure escape hatch: when dirty pages
-exceed 75% of the dirty_ratio threshold, bypass the WRITEBACK tag
-skip and attempt to flush anyway.  Under heavy multi-writer load,
-the skip-if-busy check can cause dirty pages to accumulate (most
-writers skip because writeback is always in progress), eventually
-triggering balance_dirty_pages() throttling with severe tail latency.
-By forcing extra flushes when dirty pressure is high, dontcache
-writers help drain dirty pages before the throttle threshold is hit.
+Includes:
+ - fio job files for sequential/random read/write, multi-writer,
+   noisy-neighbor, and latency-sensitive reader workloads
+ - run-benchmarks.sh: orchestrates test matrix with mode switching
+ - parse-results.sh: extracts metrics from fio JSON output
+ - setup-server.sh: configures NFS export for testing
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/pagemap.h |  1 +
- mm/filemap.c            | 36 +++++++++++++++++++++++++++++-------
- 2 files changed, 30 insertions(+), 7 deletions(-)
+ .../testing/nfsd-io-bench/fio-jobs/lat-reader.fio  |  15 +
+ .../testing/nfsd-io-bench/fio-jobs/multi-write.fio |  14 +
+ .../nfsd-io-bench/fio-jobs/noisy-writer.fio        |  14 +
+ tools/testing/nfsd-io-bench/fio-jobs/rand-read.fio |  15 +
+ .../testing/nfsd-io-bench/fio-jobs/rand-write.fio  |  15 +
+ tools/testing/nfsd-io-bench/fio-jobs/seq-read.fio  |  14 +
+ tools/testing/nfsd-io-bench/fio-jobs/seq-write.fio |  14 +
+ .../testing/nfsd-io-bench/scripts/parse-results.sh | 238 +++++++++
+ .../nfsd-io-bench/scripts/run-benchmarks.sh        | 543 +++++++++++++++++++++
+ .../testing/nfsd-io-bench/scripts/setup-server.sh  |  94 ++++
+ 10 files changed, 976 insertions(+)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 31a848485ad9d9850d37185418349b89e6efe420..e71bf75f6c22d0da5330c17c6e525cb12d254dfe 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -210,6 +210,7 @@ enum mapping_flags {
- 	AS_WRITEBACK_MAY_DEADLOCK_ON_RECLAIM = 9,
- 	AS_KERNEL_FILE = 10,	/* mapping for a fake kernel file that shouldn't
- 				   account usage to user cgroups */
-+	AS_DONTCACHE_FLUSHING = 11, /* dontcache writeback in progress */
- 	/* Bits 16-25 are used for FOLIO_ORDER */
- 	AS_FOLIO_ORDER_BITS = 5,
- 	AS_FOLIO_ORDER_MIN = 16,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index af2024b736bef74571cc22ab7e3cde2c8e872efe..1b5577bd4eda8ad8ee182e58acd50d99f0a8f9f5 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -444,11 +444,21 @@ EXPORT_SYMBOL_GPL(filemap_flush_range);
-  * @end:	last byte offset (inclusive) for writeback
-  * @nr_written:	number of bytes just written by the caller
-  *
-- * Rate-limited writeback for IOCB_DONTCACHE writes.  Skips the flush
-- * entirely if writeback is already in progress on the mapping (skip-if-busy),
-- * and when flushing, caps nr_to_write to the number of pages just written
-- * (proportional cap).  Together these avoid writeback contention between
-- * concurrent writers and prevent I/O bursts that starve readers.
-+ * Rate-limited writeback for IOCB_DONTCACHE writes.  Uses three guards to
-+ * avoid writeback contention between concurrent writers:
-+ *
-+ *  1. Skip-if-busy: if writeback is already in progress on the mapping
-+ *     (PAGECACHE_TAG_WRITEBACK set), skip the flush — unless dirty pages
-+ *     are approaching the dirty_ratio threshold, in which case flush anyway
-+ *     to help drain before balance_dirty_pages() throttles all writers.
-+ *
-+ *  2. Atomic flush guard: use test_and_set_bit(AS_DONTCACHE_FLUSHING) so
-+ *     that at most one dontcache writer flushes at a time, preventing a
-+ *     thundering herd when the writeback tag clears and multiple writers
-+ *     try to flush simultaneously.
-+ *
-+ *  3. Proportional cap: cap nr_to_write to the number of pages just written,
-+ *     preventing any single flush from starving concurrent readers.
-  *
-  * Return: %0 on success, negative error code otherwise.
-  */
-@@ -456,13 +466,25 @@ int filemap_dontcache_writeback_range(struct address_space *mapping,
- 		loff_t start, loff_t end, ssize_t nr_written)
- {
- 	long nr;
-+	int ret;
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/lat-reader.fio b/tools/testing/nfsd-io-bench/fio-jobs/lat-reader.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..61af37e8b860bc3aa8b64e0a6e68f7eb60ae2740
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/lat-reader.fio
+@@ -0,0 +1,15 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=4k
++numjobs=16
++runtime=300
++time_based=1
++group_reporting=1
++rw=randread
++log_avg_msec=1000
++write_bw_log=latreader
++write_lat_log=latreader
 +
-+	if (mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK)) {
-+		unsigned long thresh, bg_thresh, dirty;
- 
--	if (mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK))
-+		global_dirty_limits(&bg_thresh, &thresh);
-+		dirty = global_node_page_state(NR_FILE_DIRTY);
-+		if (dirty < thresh * 3 / 4)
-+			return 0;
-+	}
++[lat_reader]
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/multi-write.fio b/tools/testing/nfsd-io-bench/fio-jobs/multi-write.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..16b792aecabbdfb4abb0c432593344352ed22ff6
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/multi-write.fio
+@@ -0,0 +1,14 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=1M
++numjobs=16
++time_based=0
++group_reporting=1
++rw=write
++log_avg_msec=1000
++write_bw_log=multiwrite
++write_lat_log=multiwrite
 +
-+	if (test_and_set_bit(AS_DONTCACHE_FLUSHING, &mapping->flags))
- 		return 0;
- 
- 	nr = (nr_written + PAGE_SIZE - 1) >> PAGE_SHIFT;
--	return filemap_writeback(mapping, start, end, WB_SYNC_NONE, &nr,
-+	ret = filemap_writeback(mapping, start, end, WB_SYNC_NONE, &nr,
- 			WB_REASON_BACKGROUND);
-+	clear_bit(AS_DONTCACHE_FLUSHING, &mapping->flags);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(filemap_dontcache_writeback_range);
- 
++[writer]
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/noisy-writer.fio b/tools/testing/nfsd-io-bench/fio-jobs/noisy-writer.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..615154a7737e84308bcf4891dd27e87aec43fea7
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/noisy-writer.fio
+@@ -0,0 +1,14 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=1M
++numjobs=16
++time_based=0
++group_reporting=1
++rw=write
++log_avg_msec=1000
++write_bw_log=noisywriter
++write_lat_log=noisywriter
++
++[bulk_writer]
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/rand-read.fio b/tools/testing/nfsd-io-bench/fio-jobs/rand-read.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..501bae7416a8ba514e4166469e60c89e48a5fc20
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/rand-read.fio
+@@ -0,0 +1,15 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=4k
++numjobs=16
++runtime=300
++time_based=1
++group_reporting=1
++rw=randread
++log_avg_msec=1000
++write_bw_log=randread
++write_lat_log=randread
++
++[randread]
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/rand-write.fio b/tools/testing/nfsd-io-bench/fio-jobs/rand-write.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..d891d04197aead906895031a9ab0ecdc86a85d58
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/rand-write.fio
+@@ -0,0 +1,15 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=64k
++numjobs=16
++runtime=300
++time_based=1
++group_reporting=1
++rw=randwrite
++log_avg_msec=1000
++write_bw_log=randwrite
++write_lat_log=randwrite
++
++[randwrite]
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/seq-read.fio b/tools/testing/nfsd-io-bench/fio-jobs/seq-read.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e24ab355026a243fac47ace8c6da7967550cf9a
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/seq-read.fio
+@@ -0,0 +1,14 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=1M
++numjobs=16
++time_based=0
++group_reporting=1
++rw=read
++log_avg_msec=1000
++write_bw_log=seqread
++write_lat_log=seqread
++
++[seqread]
+diff --git a/tools/testing/nfsd-io-bench/fio-jobs/seq-write.fio b/tools/testing/nfsd-io-bench/fio-jobs/seq-write.fio
+new file mode 100644
+index 0000000000000000000000000000000000000000..260858e345f5aaea239a7904089c5111aa350ccb
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/fio-jobs/seq-write.fio
+@@ -0,0 +1,14 @@
++[global]
++ioengine=nfs
++nfs_url=nfs://localhost/export
++direct=0
++bs=1M
++numjobs=16
++time_based=0
++group_reporting=1
++rw=write
++log_avg_msec=1000
++write_bw_log=seqwrite
++write_lat_log=seqwrite
++
++[seqwrite]
+diff --git a/tools/testing/nfsd-io-bench/scripts/parse-results.sh b/tools/testing/nfsd-io-bench/scripts/parse-results.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..0427d411db04903a5d9506751695d9452b011e6a
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/scripts/parse-results.sh
+@@ -0,0 +1,238 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# Parse fio JSON output and generate comparison tables.
++#
++# Usage: ./parse-results.sh <results-dir>
++
++set -euo pipefail
++
++if [ $# -lt 1 ]; then
++	echo "Usage: $0 <results-dir>"
++	exit 1
++fi
++
++RESULTS_DIR="$1"
++
++if ! command -v jq &>/dev/null; then
++	echo "ERROR: jq is required"
++	exit 1
++fi
++
++# Extract metrics from a single fio JSON result
++extract_metrics() {
++	local json_file=$1
++	local rw_type=$2  # read or write
++
++	if [ ! -f "$json_file" ]; then
++		echo "N/A N/A N/A N/A N/A N/A"
++		return
++	fi
++
++	jq -r --arg rw "$rw_type" '
++		.jobs[0][$rw] as $d |
++		[
++			(($d.bw // 0) / 1024 | . * 10 | round / 10),    # MB/s
++			($d.iops // 0),                                    # IOPS
++			((($d.clat_ns.mean // 0) / 1000) | . * 10 | round / 10), # avg lat us
++			(($d.clat_ns.percentile["50.000000"] // 0) / 1000), # p50 us
++			(($d.clat_ns.percentile["99.000000"] // 0) / 1000), # p99 us
++			(($d.clat_ns.percentile["99.900000"] // 0) / 1000)  # p99.9 us
++		] | @tsv
++	' "$json_file" 2>/dev/null || echo "N/A N/A N/A N/A N/A N/A"
++}
++
++# Extract server CPU from vmstat log (average sys%)
++extract_cpu() {
++	local vmstat_log=$1
++	if [ ! -f "$vmstat_log" ]; then
++		echo "N/A"
++		return
++	fi
++	# vmstat columns: us sy id wa st — skip header lines
++	awk 'NR>2 {sum+=$14; n++} END {if(n>0) printf "%.1f", sum/n; else print "N/A"}' \
++		"$vmstat_log" 2>/dev/null || echo "N/A"
++}
++
++# Extract peak dirty pages from meminfo log
++extract_peak_dirty() {
++	local meminfo_log=$1
++	if [ ! -f "$meminfo_log" ]; then
++		echo "N/A"
++		return
++	fi
++	grep "^Dirty:" "$meminfo_log" | awk '{print $2}' | sort -n | tail -1 || echo "N/A"
++}
++
++# Extract peak cached from meminfo log
++extract_peak_cached() {
++	local meminfo_log=$1
++	if [ ! -f "$meminfo_log" ]; then
++		echo "N/A"
++		return
++	fi
++	grep "^Cached:" "$meminfo_log" | awk '{print $2}' | sort -n | tail -1 || echo "N/A"
++}
++
++print_separator() {
++	printf '%*s\n' 120 '' | tr ' ' '-'
++}
++
++########################################################################
++# Deliverable 1: Single-client results
++########################################################################
++echo ""
++echo "=================================================================="
++echo "  Deliverable 1: Single-Client fio Benchmarks"
++echo "=================================================================="
++echo ""
++
++for workload in seq-write rand-write seq-read rand-read; do
++	case $workload in
++	seq-write|rand-write) rw_type="write" ;;
++	seq-read|rand-read)   rw_type="read" ;;
++	esac
++
++	echo "--- $workload ---"
++	printf "%-16s %10s %10s %10s %10s %10s %10s %10s %12s %12s\n" \
++		"Mode" "MB/s" "IOPS" "Avg(us)" "p50(us)" "p99(us)" "p99.9(us)" "Sys CPU%" "PeakDirty(kB)" "PeakCache(kB)"
++	print_separator
++
++	for mode in buffered dontcache direct; do
++		dir="${RESULTS_DIR}/${workload}/${mode}"
++		json_file=$(find "$dir" -name '*.json' -not -name 'client*' 2>/dev/null | head -1 || true)
++		if [ -z "$json_file" ]; then
++			printf "%-16s %10s\n" "$mode" "(no data)"
++			continue
++		fi
++
++		read -r mbps iops avg_lat p50 p99 p999 <<< \
++			"$(extract_metrics "$json_file" "$rw_type")"
++		cpu=$(extract_cpu "${dir}/vmstat.log")
++		dirty=$(extract_peak_dirty "${dir}/meminfo.log")
++		cached=$(extract_peak_cached "${dir}/meminfo.log")
++
++		printf "%-16s %10s %10s %10s %10s %10s %10s %10s %12s %12s\n" \
++			"$mode" "$mbps" "$iops" "$avg_lat" "$p50" "$p99" "$p999" \
++			"$cpu" "${dirty:-N/A}" "${cached:-N/A}"
++	done
++	echo ""
++done
++
++########################################################################
++# Deliverable 2: Multi-client results
++########################################################################
++echo "=================================================================="
++echo "  Deliverable 2: Noisy-Neighbor Benchmarks"
++echo "=================================================================="
++echo ""
++
++# Scenario A: Multiple writers
++echo "--- Scenario A: Multiple Writers ---"
++for mode in buffered dontcache direct; do
++	dir="${RESULTS_DIR}/multi-write/${mode}"
++	if [ ! -d "$dir" ]; then
++		continue
++	fi
++
++	echo "  Mode: $mode"
++	printf "  %-10s %10s %10s %10s %10s %10s %10s\n" \
++		"Client" "MB/s" "IOPS" "Avg(us)" "p50(us)" "p99(us)" "p99.9(us)"
++
++	total_bw=0
++	count=0
++	for json_file in "${dir}"/client*.json; do
++		[ -f "$json_file" ] || continue
++		client=$(basename "$json_file" .json)
++		read -r mbps iops avg_lat p50 p99 p999 <<< \
++			"$(extract_metrics "$json_file" "write")"
++		printf "  %-10s %10s %10s %10s %10s %10s %10s\n" \
++			"$client" "$mbps" "$iops" "$avg_lat" "$p50" "$p99" "$p999"
++		total_bw=$(echo "$total_bw + ${mbps:-0}" | bc 2>/dev/null || echo "$total_bw")
++		count=$(( count + 1 ))
++	done
++
++	cpu=$(extract_cpu "${dir}/vmstat.log")
++	dirty=$(extract_peak_dirty "${dir}/meminfo.log")
++	printf "  Aggregate BW: %s MB/s | Sys CPU: %s%% | Peak Dirty: %s kB\n" \
++		"$total_bw" "$cpu" "${dirty:-N/A}"
++	echo ""
++done
++
++# Scenario C: Noisy neighbor
++echo "--- Scenario C: Noisy Writer + Latency-Sensitive Readers ---"
++for mode in buffered dontcache direct; do
++	dir="${RESULTS_DIR}/noisy-neighbor/${mode}"
++	if [ ! -d "$dir" ]; then
++		continue
++	fi
++
++	echo "  Mode: $mode"
++	printf "  %-14s %10s %10s %10s %10s %10s %10s\n" \
++		"Job" "MB/s" "IOPS" "Avg(us)" "p50(us)" "p99(us)" "p99.9(us)"
++
++	# Writer
++	if [ -f "${dir}/noisy_writer.json" ]; then
++		read -r mbps iops avg_lat p50 p99 p999 <<< \
++			"$(extract_metrics "${dir}/noisy_writer.json" "write")"
++		printf "  %-14s %10s %10s %10s %10s %10s %10s\n" \
++			"Bulk writer" "$mbps" "$iops" "$avg_lat" "$p50" "$p99" "$p999"
++	fi
++
++	# Readers
++	for json_file in "${dir}"/reader*.json; do
++		[ -f "$json_file" ] || continue
++		reader=$(basename "$json_file" .json)
++		read -r mbps iops avg_lat p50 p99 p999 <<< \
++			"$(extract_metrics "$json_file" "read")"
++		printf "  %-14s %10s %10s %10s %10s %10s %10s\n" \
++			"$reader" "$mbps" "$iops" "$avg_lat" "$p50" "$p99" "$p999"
++	done
++
++	cpu=$(extract_cpu "${dir}/vmstat.log")
++	dirty=$(extract_peak_dirty "${dir}/meminfo.log")
++	printf "  Sys CPU: %s%% | Peak Dirty: %s kB\n" "$cpu" "${dirty:-N/A}"
++	echo ""
++done
++
++# Scenario D: Mixed-mode noisy neighbor
++echo "--- Scenario D: Mixed-Mode Noisy Writer + Readers ---"
++for dir in "${RESULTS_DIR}"/noisy-neighbor-mixed/*/; do
++	[ -d "$dir" ] || continue
++	label=$(basename "$dir")
++
++	echo "  Mode: $label"
++	printf "  %-14s %10s %10s %10s %10s %10s %10s\n" \
++		"Job" "MB/s" "IOPS" "Avg(us)" "p50(us)" "p99(us)" "p99.9(us)"
++
++	# Writer
++	if [ -f "${dir}/noisy_writer.json" ]; then
++		read -r mbps iops avg_lat p50 p99 p999 <<< \
++			"$(extract_metrics "${dir}/noisy_writer.json" "write")"
++		printf "  %-14s %10s %10s %10s %10s %10s %10s\n" \
++			"Bulk writer" "$mbps" "$iops" "$avg_lat" "$p50" "$p99" "$p999"
++	fi
++
++	# Readers
++	for json_file in "${dir}"/reader*.json; do
++		[ -f "$json_file" ] || continue
++		reader=$(basename "$json_file" .json)
++		read -r mbps iops avg_lat p50 p99 p999 <<< \
++			"$(extract_metrics "$json_file" "read")"
++		printf "  %-14s %10s %10s %10s %10s %10s %10s\n" \
++			"$reader" "$mbps" "$iops" "$avg_lat" "$p50" "$p99" "$p999"
++	done
++
++	cpu=$(extract_cpu "${dir}/vmstat.log")
++	dirty=$(extract_peak_dirty "${dir}/meminfo.log")
++	printf "  Sys CPU: %s%% | Peak Dirty: %s kB\n" "$cpu" "${dirty:-N/A}"
++	echo ""
++done
++
++echo "=================================================================="
++echo "  System Info"
++echo "=================================================================="
++if [ -f "${RESULTS_DIR}/sysinfo.txt" ]; then
++	head -6 "${RESULTS_DIR}/sysinfo.txt"
++fi
++echo ""
+diff --git a/tools/testing/nfsd-io-bench/scripts/run-benchmarks.sh b/tools/testing/nfsd-io-bench/scripts/run-benchmarks.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..4b15900cc20f762955e121ccad985f8f47cb1007
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/scripts/run-benchmarks.sh
+@@ -0,0 +1,543 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# NFS server I/O mode benchmark suite
++#
++# Runs fio with the NFS ioengine against an NFS server on localhost,
++# testing buffered, dontcache, and direct I/O modes.
++#
++# Usage: ./run-benchmarks.sh [OPTIONS]
++#
++# Options:
++#   -e EXPORT_PATH   Server export path (default: /export)
++#   -s SIZE          fio file size, should be >= 2x RAM (default: auto-detect)
++#   -r RESULTS_DIR   Where to store results (default: ./results)
++#   -n NFS_VER       NFS version: 3 or 4 (default: 3)
++#   -j FIO_JOBS_DIR  Path to fio job files (default: ../fio-jobs)
++#   -d               Dry run: print commands without executing
++#   -h               Show this help
++
++set -euo pipefail
++
++# Defaults
++EXPORT_PATH="/export"
++SIZE=""
++RESULTS_DIR="./results"
++NFS_VER=3
++SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
++FIO_JOBS_DIR="${SCRIPT_DIR}/../fio-jobs"
++DRY_RUN=0
++
++DEBUGFS_BASE="/sys/kernel/debug/nfsd"
++IO_CACHE_READ="${DEBUGFS_BASE}/io_cache_read"
++IO_CACHE_WRITE="${DEBUGFS_BASE}/io_cache_write"
++DISABLE_SPLICE="${DEBUGFS_BASE}/disable-splice-read"
++
++usage() {
++	echo "Usage: $0 [OPTIONS]"
++	echo "  -e EXPORT_PATH   Server export path (default: /export)"
++	echo "  -s SIZE          fio file size (default: 2x RAM)"
++	echo "  -r RESULTS_DIR   Results directory (default: ./results)"
++	echo "  -n NFS_VER       NFS version: 3 or 4 (default: 3)"
++	echo "  -j FIO_JOBS_DIR  Path to fio job files"
++	echo "  -d               Dry run"
++	echo "  -h               Help"
++	exit 1
++}
++
++while getopts "e:s:r:n:j:dh" opt; do
++	case $opt in
++	e) EXPORT_PATH="$OPTARG" ;;
++	s) SIZE="$OPTARG" ;;
++	r) RESULTS_DIR="$OPTARG" ;;
++	n) NFS_VER="$OPTARG" ;;
++	j) FIO_JOBS_DIR="$OPTARG" ;;
++	d) DRY_RUN=1 ;;
++	h) usage ;;
++	*) usage ;;
++	esac
++done
++
++# Auto-detect size: 2x total RAM
++if [ -z "$SIZE" ]; then
++	MEM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
++	MEM_GB=$(( MEM_KB / 1024 / 1024 ))
++	SIZE="$(( MEM_GB * 2 ))G"
++	echo "Auto-detected RAM: ${MEM_GB}G, using file size: ${SIZE}"
++fi
++
++
++log() {
++	echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
++}
++
++run_cmd() {
++	if [ "$DRY_RUN" -eq 1 ]; then
++		echo "  [DRY RUN] $*"
++	else
++		"$@"
++	fi
++}
++
++# Preflight checks
++preflight() {
++	log "=== Preflight checks ==="
++
++	if ! command -v fio &>/dev/null; then
++		echo "ERROR: fio not found in PATH"
++		exit 1
++	fi
++
++	# Check fio has nfs ioengine
++	if ! fio --enghelp=nfs &>/dev/null; then
++		echo "ERROR: fio does not have the nfs ioengine (needs libnfs)"
++		exit 1
++	fi
++
++	# Check debugfs knobs exist
++	for knob in "$IO_CACHE_READ" "$IO_CACHE_WRITE" "$DISABLE_SPLICE"; do
++		if [ ! -f "$knob" ]; then
++			echo "ERROR: $knob not found. Is the kernel new enough?"
++			exit 1
++		fi
++	done
++
++	# Check NFS server is exporting
++	if ! showmount -e localhost 2>/dev/null | grep -q "$EXPORT_PATH"; then
++		echo "WARNING: $EXPORT_PATH not in showmount output, proceeding anyway"
++	fi
++
++	# Print system info
++	echo "Kernel:     $(uname -r)"
++	echo "RAM:        $(awk '/MemTotal/ {printf "%.1f GB", $2/1024/1024}' /proc/meminfo)"
++	echo "Export:     $EXPORT_PATH"
++	echo "NFS ver:    $NFS_VER"
++	echo "File size:  $SIZE"
++	echo "Results:    $RESULTS_DIR"
++	echo ""
++}
++
++# Set server I/O mode via debugfs
++set_io_mode() {
++	local cache_write=$1
++	local cache_read=$2
++	local splice_off=$3
++
++	log "Setting io_cache_write=$cache_write io_cache_read=$cache_read disable-splice-read=$splice_off"
++	run_cmd bash -c "echo $cache_write > $IO_CACHE_WRITE"
++	run_cmd bash -c "echo $cache_read  > $IO_CACHE_READ"
++	run_cmd bash -c "echo $splice_off  > $DISABLE_SPLICE"
++}
++
++# Drop page cache on server
++drop_caches() {
++	log "Dropping page cache"
++	run_cmd bash -c "sync && echo 3 > /proc/sys/vm/drop_caches"
++	sleep 1
++}
++
++# Start background server monitoring
++start_monitors() {
++	local outdir=$1
++
++	log "Starting server monitors in $outdir"
++	run_cmd vmstat 1 > "${outdir}/vmstat.log" 2>&1 &
++	VMSTAT_PID=$!
++
++	run_cmd iostat -x 1 > "${outdir}/iostat.log" 2>&1 &
++	IOSTAT_PID=$!
++
++	# Sample /proc/meminfo every second
++	(while true; do
++		echo "=== $(date '+%s') ==="
++		cat /proc/meminfo
++		sleep 1
++	done) > "${outdir}/meminfo.log" 2>&1 &
++	MEMINFO_PID=$!
++}
++
++# Stop background monitors
++stop_monitors() {
++	log "Stopping monitors"
++	kill "$VMSTAT_PID" "$IOSTAT_PID" "$MEMINFO_PID" 2>/dev/null || true
++	wait "$VMSTAT_PID" "$IOSTAT_PID" "$MEMINFO_PID" 2>/dev/null || true
++}
++
++# Run a single fio benchmark.
++# nfs_url is set in the job files; we pass --filename and --size on
++# the command line to vary the target file and data volume per run.
++# Pass "keep" as 5th arg to preserve the test file after the run.
++run_fio() {
++	local job_file=$1
++	local outdir=$2
++	local filename=$3
++	local fio_size=${4:-$SIZE}
++	local keep=${5:-}
++
++	local job_name
++	job_name=$(basename "$job_file" .fio)
++
++	log "Running fio job: $job_name -> $outdir (file=$filename size=$fio_size)"
++	mkdir -p "$outdir"
++
++	drop_caches
++	start_monitors "$outdir"
++
++	run_cmd fio "$job_file" \
++		--output-format=json \
++		--output="${outdir}/${job_name}.json" \
++		--filename="$filename" \
++		--size="$fio_size"
++
++	stop_monitors
++
++	log "Finished: $job_name"
++
++	# Clean up test file to free disk space unless told to keep it
++	if [ "$keep" != "keep" ]; then
++		cleanup_test_files "$filename"
++	fi
++}
++
++# Remove test files from the export to free disk space
++cleanup_test_files() {
++	local filename
++	for filename in "$@"; do
++		local filepath="${EXPORT_PATH}/${filename}"
++		log "Cleaning up: $filepath"
++		run_cmd rm -f "$filepath"
++	done
++}
++
++# Ensure parent directories exist under the export for a given filename
++ensure_export_dirs() {
++	local filename
++	for filename in "$@"; do
++		local dirpath="${EXPORT_PATH}/$(dirname "$filename")"
++		if [ "$dirpath" != "${EXPORT_PATH}/." ] && [ ! -d "$dirpath" ]; then
++			log "Creating directory: $dirpath"
++			run_cmd mkdir -p "$dirpath"
++		fi
++	done
++}
++
++# Mode name from numeric value
++mode_name() {
++	case $1 in
++	0) echo "buffered" ;;
++	1) echo "dontcache" ;;
++	2) echo "direct" ;;
++	esac
++}
++
++########################################################################
++# Deliverable 1: Single-client fio benchmarks
++########################################################################
++run_deliverable1() {
++	log "=========================================="
++	log "Deliverable 1: Single-client fio benchmarks"
++	log "=========================================="
++
++	# Write test matrix:
++	# mode 0 (buffered):    splice on  (default)
++	# mode 1 (dontcache):   splice off (required)
++	# mode 2 (direct):      splice off (required)
++
++	# Sequential write
++	for wmode in 0 1 2; do
++		local mname
++		mname=$(mode_name $wmode)
++		local splice_off=0
++		[ "$wmode" -ne 0 ] && splice_off=1
++
++		drop_caches
++		set_io_mode "$wmode" 0 "$splice_off"
++		run_fio "${FIO_JOBS_DIR}/seq-write.fio" \
++			"${RESULTS_DIR}/seq-write/${mname}" \
++			"seq-write_testfile"
++	done
++
++	# Random write
++	for wmode in 0 1 2; do
++		local mname
++		mname=$(mode_name $wmode)
++		local splice_off=0
++		[ "$wmode" -ne 0 ] && splice_off=1
++
++		drop_caches
++		set_io_mode "$wmode" 0 "$splice_off"
++		run_fio "${FIO_JOBS_DIR}/rand-write.fio" \
++			"${RESULTS_DIR}/rand-write/${mname}" \
++			"rand-write_testfile"
++	done
++
++	# Sequential read — vary read mode, write stays buffered
++	# Pre-create the file for reading
++	log "Pre-creating sequential read test file"
++	set_io_mode 0 0 0
++	run_fio "${FIO_JOBS_DIR}/seq-write.fio" \
++		"${RESULTS_DIR}/seq-read/precreate" \
++		"seq-read_testfile" "$SIZE" "keep"
++
++	for rmode in 0 1 2; do
++		local mname
++		mname=$(mode_name $rmode)
++		local splice_off=0
++		[ "$rmode" -ne 0 ] && splice_off=1
++		# Keep file for subsequent modes; clean up after last
++		local keep="keep"
++		[ "$rmode" -eq 2 ] && keep=""
++
++		drop_caches
++		set_io_mode 0 "$rmode" "$splice_off"
++		run_fio "${FIO_JOBS_DIR}/seq-read.fio" \
++			"${RESULTS_DIR}/seq-read/${mname}" \
++			"seq-read_testfile" "$SIZE" "$keep"
++	done
++
++	# Random read — vary read mode, write stays buffered
++	# Pre-create the file for reading
++	log "Pre-creating random read test file"
++	set_io_mode 0 0 0
++	run_fio "${FIO_JOBS_DIR}/seq-write.fio" \
++		"${RESULTS_DIR}/rand-read/precreate" \
++		"rand-read_testfile" "$SIZE" "keep"
++
++	for rmode in 0 1 2; do
++		local mname
++		mname=$(mode_name $rmode)
++		local splice_off=0
++		[ "$rmode" -ne 0 ] && splice_off=1
++		# Keep file for subsequent modes; clean up after last
++		local keep="keep"
++		[ "$rmode" -eq 2 ] && keep=""
++
++		drop_caches
++		set_io_mode 0 "$rmode" "$splice_off"
++		run_fio "${FIO_JOBS_DIR}/rand-read.fio" \
++			"${RESULTS_DIR}/rand-read/${mname}" \
++			"rand-read_testfile" "$SIZE" "$keep"
++	done
++}
++
++########################################################################
++# Deliverable 2: Multi-client (simulated with multiple fio jobs)
++########################################################################
++run_deliverable2() {
++	log "=========================================="
++	log "Deliverable 2: Noisy-neighbor benchmarks"
++	log "=========================================="
++
++	local num_clients=4
++	local client_size
++	local mem_kb
++	mem_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
++	# Each client gets RAM/num_clients so total > RAM
++	client_size="$(( mem_kb / 1024 / num_clients ))M"
++
++	# Scenario A: Multiple writers
++	for mode in 0 1 2; do
++		local mname
++		mname=$(mode_name $mode)
++		local splice_off=0
++		[ "$mode" -ne 0 ] && splice_off=1
++		local outdir="${RESULTS_DIR}/multi-write/${mname}"
++		mkdir -p "$outdir"
++
++		set_io_mode "$mode" "$mode" "$splice_off"
++		drop_caches
++
++		# Ensure client directories exist on export
++		for i in $(seq 1 $num_clients); do
++			ensure_export_dirs "client${i}/testfile"
++		done
++
++		start_monitors "$outdir"
++
++		# Launch N parallel fio writers
++		local pids=()
++		for i in $(seq 1 $num_clients); do
++			run_cmd fio "${FIO_JOBS_DIR}/multi-write.fio" \
++				--output-format=json \
++				--output="${outdir}/client${i}.json" \
++				--filename="client${i}/testfile" \
++				--size="$client_size" &
++			pids+=($!)
++		done
++
++		# Wait for all
++		local rc=0
++		for pid in "${pids[@]}"; do
++			wait "$pid" || rc=$?
++		done
++
++		stop_monitors
++		[ $rc -ne 0 ] && log "WARNING: some fio jobs exited non-zero"
++
++		# Clean up test files
++		for i in $(seq 1 $num_clients); do
++			cleanup_test_files "client${i}/testfile"
++		done
++	done
++
++	# Scenario C: Noisy writer + latency-sensitive readers
++	for mode in 0 1 2; do
++		local mname
++		mname=$(mode_name $mode)
++		local splice_off=0
++		[ "$mode" -ne 0 ] && splice_off=1
++		local outdir="${RESULTS_DIR}/noisy-neighbor/${mname}"
++		mkdir -p "$outdir"
++
++		set_io_mode "$mode" "$mode" "$splice_off"
++		drop_caches
++
++		# Pre-create read files for latency readers
++		for i in $(seq 1 $(( num_clients - 1 ))); do
++			ensure_export_dirs "reader${i}/readfile"
++			log "Pre-creating read file for reader $i"
++			run_fio "${FIO_JOBS_DIR}/multi-write.fio" \
++				"${outdir}/precreate_reader${i}" \
++				"reader${i}/readfile" \
++				"512M" "keep"
++		done
++		drop_caches
++		ensure_export_dirs "bulk/testfile"
++		start_monitors "$outdir"
++
++		# Noisy writer
++		run_cmd fio "${FIO_JOBS_DIR}/noisy-writer.fio" \
++			--output-format=json \
++			--output="${outdir}/noisy_writer.json" \
++			--filename="bulk/testfile" \
++			--size="$SIZE" &
++		local writer_pid=$!
++
++		# Latency-sensitive readers
++		local reader_pids=()
++		for i in $(seq 1 $(( num_clients - 1 ))); do
++			run_cmd fio "${FIO_JOBS_DIR}/lat-reader.fio" \
++				--output-format=json \
++				--output="${outdir}/reader${i}.json" \
++				--filename="reader${i}/readfile" \
++				--size="512M" &
++			reader_pids+=($!)
++		done
++
++		local rc=0
++		wait "$writer_pid" || rc=$?
++		for pid in "${reader_pids[@]}"; do
++			wait "$pid" || rc=$?
++		done
++
++		stop_monitors
++		[ $rc -ne 0 ] && log "WARNING: some fio jobs exited non-zero"
++
++		# Clean up test files
++		cleanup_test_files "bulk/testfile"
++		for i in $(seq 1 $(( num_clients - 1 ))); do
++			cleanup_test_files "reader${i}/readfile"
++		done
++	done
++	# Scenario D: Mixed-mode noisy neighbor
++	# Test write/read mode combinations where the writer uses a
++	# cache-friendly mode and readers use buffered reads to benefit
++	# from warm cache.
++	local mixed_modes=(
++		# write_mode read_mode label
++		"1 0 dontcache-w_buffered-r"
++	)
++
++	for combo in "${mixed_modes[@]}"; do
++		local wmode rmode label
++		read -r wmode rmode label <<< "$combo"
++		local splice_off=0
++		[ "$wmode" -ne 0 ] && splice_off=1
++		local outdir="${RESULTS_DIR}/noisy-neighbor-mixed/${label}"
++		mkdir -p "$outdir"
++
++		set_io_mode "$wmode" "$rmode" "$splice_off"
++		drop_caches
++
++		# Pre-create read files for latency readers
++		for i in $(seq 1 $(( num_clients - 1 ))); do
++			ensure_export_dirs "reader${i}/readfile"
++			log "Pre-creating read file for reader $i"
++			run_fio "${FIO_JOBS_DIR}/multi-write.fio" \
++				"${outdir}/precreate_reader${i}" \
++				"reader${i}/readfile" \
++				"512M" "keep"
++		done
++		drop_caches
++		ensure_export_dirs "bulk/testfile"
++		start_monitors "$outdir"
++
++		# Noisy writer
++		run_cmd fio "${FIO_JOBS_DIR}/noisy-writer.fio" \
++			--output-format=json \
++			--output="${outdir}/noisy_writer.json" \
++			--filename="bulk/testfile" \
++			--size="$SIZE" &
++		local writer_pid=$!
++
++		# Latency-sensitive readers
++		local reader_pids=()
++		for i in $(seq 1 $(( num_clients - 1 ))); do
++			run_cmd fio "${FIO_JOBS_DIR}/lat-reader.fio" \
++				--output-format=json \
++				--output="${outdir}/reader${i}.json" \
++				--filename="reader${i}/readfile" \
++				--size="512M" &
++			reader_pids+=($!)
++		done
++
++		local rc=0
++		wait "$writer_pid" || rc=$?
++		for pid in "${reader_pids[@]}"; do
++			wait "$pid" || rc=$?
++		done
++
++		stop_monitors
++		[ $rc -ne 0 ] && log "WARNING: some fio jobs exited non-zero"
++
++		# Clean up test files
++		cleanup_test_files "bulk/testfile"
++		for i in $(seq 1 $(( num_clients - 1 ))); do
++			cleanup_test_files "reader${i}/readfile"
++		done
++	done
++}
++
++########################################################################
++# Main
++########################################################################
++preflight
++
++TIMESTAMP=$(date '+%Y%m%d-%H%M%S')
++RESULTS_DIR="${RESULTS_DIR}/${TIMESTAMP}"
++mkdir -p "$RESULTS_DIR"
++
++# Save system info
++{
++	echo "Timestamp: $TIMESTAMP"
++	echo "Kernel: $(uname -r)"
++	echo "Hostname: $(hostname)"
++	echo "NFS version: $NFS_VER"
++	echo "File size: $SIZE"
++	echo "Export: $EXPORT_PATH"
++	cat /proc/meminfo
++} > "${RESULTS_DIR}/sysinfo.txt"
++
++log "Results will be saved to: $RESULTS_DIR"
++
++run_deliverable1
++run_deliverable2
++
++# Reset to defaults
++set_io_mode 0 0 0
++
++log "=========================================="
++log "All benchmarks complete."
++log "Results in: $RESULTS_DIR"
++log "Run: scripts/parse-results.sh $RESULTS_DIR"
++log "=========================================="
+diff --git a/tools/testing/nfsd-io-bench/scripts/setup-server.sh b/tools/testing/nfsd-io-bench/scripts/setup-server.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..0efdd74a705e35b040dd8a64b88e91bac4fa7510
+--- /dev/null
++++ b/tools/testing/nfsd-io-bench/scripts/setup-server.sh
+@@ -0,0 +1,94 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# One-time setup script for the NFS test server.
++# Run this once before running benchmarks.
++#
++# Usage: sudo ./setup-server.sh [EXPORT_PATH]
++
++set -euo pipefail
++
++EXPORT_PATH="${1:-/export}"
++FSTYPE="ext4"
++
++log() {
++	echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
++}
++
++if [ "$(id -u)" -ne 0 ]; then
++	echo "ERROR: must run as root"
++	exit 1
++fi
++
++# Check for required tools
++for cmd in fio exportfs showmount jq; do
++	if ! command -v "$cmd" &>/dev/null; then
++		echo "WARNING: $cmd not found, attempting install"
++		dnf install -y "$cmd" 2>/dev/null || \
++		apt-get install -y "$cmd" 2>/dev/null || \
++		echo "ERROR: cannot install $cmd, please install manually"
++	fi
++done
++
++# Check fio has nfs ioengine
++if ! fio --enghelp=nfs &>/dev/null; then
++	echo "ERROR: fio nfs ioengine not available."
++	echo "You may need to install fio with libnfs support."
++	echo "Try: dnf install fio libnfs-devel  (or build fio from source with --enable-nfs)"
++	exit 1
++fi
++
++# Create export directory if needed
++if [ ! -d "$EXPORT_PATH" ]; then
++	log "Creating export directory: $EXPORT_PATH"
++	mkdir -p "$EXPORT_PATH"
++fi
++
++# Create subdirectories for multi-client tests
++for i in 1 2 3 4; do
++	mkdir -p "${EXPORT_PATH}/client${i}"
++	mkdir -p "${EXPORT_PATH}/reader${i}"
++done
++mkdir -p "${EXPORT_PATH}/bulk"
++
++# Check if already exported
++if ! exportfs -s 2>/dev/null | grep -q "$EXPORT_PATH"; then
++	log "Adding NFS export for $EXPORT_PATH"
++	if ! grep -q "$EXPORT_PATH" /etc/exports 2>/dev/null; then
++		echo "${EXPORT_PATH} 127.0.0.1/32(rw,sync,no_root_squash,no_subtree_check)" >> /etc/exports
++	fi
++	exportfs -ra
++fi
++
++# Ensure NFS server is running
++if ! systemctl is-active --quiet nfs-server 2>/dev/null; then
++	log "Starting NFS server"
++	systemctl start nfs-server
++fi
++
++# Verify export
++log "Current exports:"
++showmount -e localhost
++
++# Check debugfs knobs
++log "Checking debugfs knobs:"
++DEBUGFS_BASE="/sys/kernel/debug/nfsd"
++for knob in io_cache_read io_cache_write disable-splice-read; do
++	if [ -f "${DEBUGFS_BASE}/${knob}" ]; then
++		echo "  ${knob} = $(cat "${DEBUGFS_BASE}/${knob}")"
++	else
++		echo "  ${knob}: NOT FOUND (kernel may be too old)"
++	fi
++done
++
++# Print system summary
++echo ""
++log "=== System Summary ==="
++echo "Kernel:      $(uname -r)"
++echo "RAM:         $(awk '/MemTotal/ {printf "%.1f GB", $2/1024/1024}' /proc/meminfo)"
++echo "Export:      $EXPORT_PATH"
++echo "Filesystem:  $(df -T "$EXPORT_PATH" | awk 'NR==2 {print $2}')"
++echo "Disk:        $(df -h "$EXPORT_PATH" | awk 'NR==2 {print $2, "total,", $4, "free"}')"
++echo ""
++log "Setup complete. Run benchmarks with:"
++echo "  sudo ./scripts/run-benchmarks.sh -e $EXPORT_PATH"
 
 -- 
 2.53.0
