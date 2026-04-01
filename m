@@ -1,62 +1,101 @@
-Return-Path: <linux-nfs+bounces-20582-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20583-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6BSDAiEhzWlWaQYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20582-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 15:44:01 +0200
+	id 4HKJCuIhzWlZaQYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20583-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 15:47:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DCF037B6F1
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 15:44:00 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3014237B812
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Apr 2026 15:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AFC6D30A5592
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Apr 2026 13:08:12 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A66A2309774F
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Apr 2026 13:34:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6EF3DE427;
-	Wed,  1 Apr 2026 13:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BD50429802;
+	Wed,  1 Apr 2026 13:34:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="i2RBDZI0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUrVP3HD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from master.debian.org (master.debian.org [82.195.75.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400736D500;
-	Wed,  1 Apr 2026 13:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5794242882D
+	for <linux-nfs@vger.kernel.org>; Wed,  1 Apr 2026 13:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775048891; cv=none; b=TDBibcs8wnxuIQYb+qHOpXq/i5G8kBUZBdmXEcAHAjMpkDo4M71fSHfcD7HDszPjRCfhtIeiDSaHB7V/C8/rsfcqlWAxNH46sU9qLGV0XRqnzAC0XroggtC9faMM32Gk6KL2QPCk7tR1D1F831rGe+kg5Dab22xMWYpn+XJVbXY=
+	t=1775050468; cv=none; b=mwHFxiyK9Vt89ONIUE8QRUyrAeu945sPpWOWe4hHNtUJAnoQI8oyKikdc1Rv0+j/SNDlIcsUsjreBEDknWV3T+/7Ic7+eeSeCuhzxND/m13iww17nx8d2cUvik0Jam9AivvmXTqNNzYr8PS2hrF1W0CD404hAhV2QvDaUCokXZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775048891; c=relaxed/simple;
-	bh=VygY8rwnP9T9H1mSKfEPncnRPrYOnaytGeQvMY1NKg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpZ8wnj948Ftv2g6oLOpRb0A3Y30Sf6iHoWMIPH8wq6wfCyaYyPWAp+F4uL3t6f2PFTtGlf4oakJBDAb7DoBIBSfPss4UqUkd68iy0ZIiyTvhC+EbLMuCWGBTNElyzsJkgxPaZJHRrQ7YPS09Kbj+cTtWvaq0f3tYobk+VohHYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=master.debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=i2RBDZI0; arc=none smtp.client-ip=82.195.75.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=master.debian.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.master; h=In-Reply-To:Content-Type:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description;
-	bh=VygY8rwnP9T9H1mSKfEPncnRPrYOnaytGeQvMY1NKg8=; b=i2RBDZI0m+o/IAcGynYeDm4kT+
-	S8+86EuTKLWBFAHE6QYCDhXuB+1O+vr1vElGJ7oH3M8zBS8ixnrYxmFe1Uf2KPllRAgTHKGTA74Zs
-	+zipOqKbfPGq/+AatbhGNkYumiDaID9U9aHSvr4Dc3uMilp3sVrZCrXM7tQFwDrwByXWIT4y6ee8a
-	faoZOYGzcHhv5g51uLOUao4UYQqZBG8m9G1t6NSkpXkkmGgI1rdQCMenl0dtUl6nSS1Ji+0I4jnZE
-	6jyWHBL2YXKN0aK72K3C4dlzLgdN9hLFgAZEpb/oxG4GnHMtNRyWkXWgXzQXAjmVdq14+1dtgA9Rx
-	RaKsBjWg==;
-Received: from ukleinek by master.debian.org with local (Exim 4.96)
-	(envelope-from <ukleinek@master.debian.org>)
-	id 1w7v5P-007TLX-1X;
-	Wed, 01 Apr 2026 12:54:19 +0000
-Date: Wed, 1 Apr 2026 14:54:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
-To: Chuck Lever <cel@kernel.org>, 1128861@bugs.debian.org
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>, linux-nfs@vger.kernel.org, 
-	Olga Kornievskaia <okorniev@redhat.com>, stable@vger.kernel.org
-Subject: Re: Bug#1128861: [PATCH v2] lockd: fix TEST handling when not all
- permissions are available.
-Message-ID: <ac0U4P92l-TkQvnh@monoceros>
+	s=arc-20240116; t=1775050468; c=relaxed/simple;
+	bh=ZgUeRnpR4DATl3Sbw883f5UTNjMmFhqtg9CURPQiQXM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sNUTj08kTd3KXxxYg524lLud+OhBmgYVnm3t7WvfOVXCtKFINDex8+6oDdjVsKjBONPoaGzzhw1Emo8heu/PAj3tA7ZiBOeGlFU57lQVQodSfW43Cyj9WPRl8oarb3/GSje4V0V7efGLTXub501rjQ3n63ZI+zYiNz9s5GHB0mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUrVP3HD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA3CC4CEF7;
+	Wed,  1 Apr 2026 13:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775050468;
+	bh=ZgUeRnpR4DATl3Sbw883f5UTNjMmFhqtg9CURPQiQXM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=ZUrVP3HDWATxjX+UNJxVTmHekvvRwtN9LN+JW++iezUbDfU2aV0ukICgXJaFimRq5
+	 Nlx5ojqFkVeSksxNi12dSpW00cU81KvcWXUE98/yOpZN47p0NleQJqKzEXmUjCcSVe
+	 4LXJU8FzZLTNcIkRN5s+Orx0HFlV8nYB0I8MZFvRuZIZePVKfNpNKq5u8VP+SVqbAp
+	 AKBNkfwWme8JuQh42wC9ag/2yJQtvmsPfWb/VJxR8XhpjMKiR962AHzF8kWfKrX42y
+	 QAXhq4V13YPRv7H6Idwee2zBmtu6DIbiuIYxMy7iogcR468Eau+9BOiX/j11fMH1js
+	 ZhQRQlKR1WIrQ==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id BF8E6F4007C;
+	Wed,  1 Apr 2026 09:34:26 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 01 Apr 2026 09:34:26 -0400
+X-ME-Sender: <xms:4h7Nafyx5c5Ox6zroyRUHQ79ixV3CoGkN-oMkA58x0jwtajmLJDvvg>
+    <xme:4h7NaSEElO1zezXPWvItF_AKHkm2g7r-nP_f2Mz_pcusaSeO9-x2Dr-BeboDXACrU
+    POjGyhgvy-ZeWUsSksNFoh6xAg7Benc-tKt2IjV9FRxD80EbIDxo8X2>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdefvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgtkhcu
+    nfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    fghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutghklh
+    gvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleelleeh
+    ledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilh
+    drtghomhdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    ohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopeduuddvkeekiedusegsuh
+    hgshdruggvsghirghnrdhorhhgpdhrtghpthhtohepuhhklhgvihhnvghkseguvggsihgr
+    nhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehrvghgrhgvshhsihhonhhssehlvggvmhhhuhhishdrihhnfhhopdhrtghpthht
+    ohepthhjrdhirghmrdhtjhesphhrohhtohhnrdhmvgdprhgtphhtthhopehokhhorhhnih
+    gvvhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:4h7NaRQeQ18NF5vaHjDbeNzkQv0yRp_-B-LRxxF-kWcpXnlwZp44gw>
+    <xmx:4h7NaXWt1WZdadTLftydoIAJ7HPjw54NayHtHUxu_9jQ5SPhCRrzAQ>
+    <xmx:4h7NabQxVJQd81L_-g6JtKYWl7JW0xARWpJIg3y6kTOVQE_ps9bf6A>
+    <xmx:4h7Naf3i5eaVv-evV5UsgFmtiwUN1yx9IT0zOq0VWkZn9X-0lIJKNA>
+    <xmx:4h7NabfLKt0WHosy2lNz-Ukix0U8MGuiwdJHl-HggqmI_Tg9DYBPoNo2>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 993CA780070; Wed,  1 Apr 2026 09:34:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+Precedence: bulk
+X-Mailing-List: linux-nfs@vger.kernel.org
+List-Id: <linux-nfs.vger.kernel.org>
+List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-ThreadId: A_jyC0Lb0WUR
+Date: Wed, 01 Apr 2026 09:34:06 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+ 1128861@bugs.debian.org
+Cc: NeilBrown <neil@brown.name>, "Jeff Layton" <jlayton@kernel.org>,
+ "Thorsten Leemhuis" <regressions@leemhuis.info>, Tj <tj.iam.tj@proton.me>,
+ linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
+ stable@vger.kernel.org
+Message-Id: <856a0051-131e-4847-9b8c-2c377c375da7@app.fastmail.com>
+In-Reply-To: <ac0U4P92l-TkQvnh@monoceros>
 References: <177266540127.7472.3460090956713656639@noble.neil.brown.name>
  <6ba41798-9c69-44f5-9a4e-09336c75a4b9@leemhuis.info>
  <cf78feb7ffaee6ed478afb734d2ede149597de86.camel@kernel.org>
@@ -67,85 +106,65 @@ References: <177266540127.7472.3460090956713656639@noble.neil.brown.name>
  <177456522377.1851489.16395975485525163031@noble.neil.brown.name>
  <177187492815.425331.14320091315652332093.reportbug@nimble>
  <465012d6-c824-4d8d-b6f6-8a2d85e30154@app.fastmail.com>
-Precedence: bulk
-X-Mailing-List: linux-nfs@vger.kernel.org
-List-Id: <linux-nfs.vger.kernel.org>
-List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mjowkry23wizm7jm"
-Content-Disposition: inline
-In-Reply-To: <465012d6-c824-4d8d-b6f6-8a2d85e30154@app.fastmail.com>
-X-Spamd-Result: default: False [-3.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+ <ac0U4P92l-TkQvnh@monoceros>
+Subject: Re: Bug#1128861: [PATCH v2] lockd: fix TEST handling when not all permissions
+ are available.
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[debian.org:s=smtpauto.master];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20583-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[debian.org];
-	TAGGED_FROM(0.00)[bounces-20582-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[debian.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@debian.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.979];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 9DCF037B6F1
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 3014237B812
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---mjowkry23wizm7jm
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: Bug#1128861: [PATCH v2] lockd: fix TEST handling when not all
- permissions are available.
-MIME-Version: 1.0
+On Wed, Apr 1, 2026, at 8:54 AM, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Chuck,
+>
+> On Fri, Mar 27, 2026 at 09:56:38AM -0400, Chuck Lever wrote:
+>> I think the stable folks will insist on this fix going into
+>> upstream first. However, this version of the fix does not
+>> apply to nfsd-testing because that branch has the NLMv4
+>> xdrgen rewrite.
+>
+> This is not the first time a bug is fixed by changes that are too
+> intrusive for backport. Usually the stable maintainers can be talked to
+> accept a small targeted fix even if it's not upstream. The discussion =
+is
+> simplified by people claiming to have tested the fix and confirm it
+> helps.
 
-Hello Chuck,
+Sorry I wasn't clear. Neil and I have also been down this road before
+so I wasn't explicit about my request.
 
-On Fri, Mar 27, 2026 at 09:56:38AM -0400, Chuck Lever wrote:
-> I think the stable folks will insist on this fix going into
-> upstream first. However, this version of the fix does not
-> apply to nfsd-testing because that branch has the NLMv4
-> xdrgen rewrite.
+I'd like Neil to provide a patch for upstream against nfsd-testing.
+Once that is merged, he can present the patch from this thread to
+the stable/LTS maintainers.
 
-This is not the first time a bug is fixed by changes that are too
-intrusive for backport. Usually the stable maintainers can be talked to
-accept a small targeted fix even if it's not upstream. The discussion is
-simplified by people claiming to have tested the fix and confirm it
-helps.
 
-Best regards
-Uwe
-
---mjowkry23wizm7jm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnNFXgACgkQj4D7WH0S
-/k45NQgAquCg6aNkirXvxO8Gk61oQk0FgWK0VGoMPJ2eoPaOhTLPMkXd49pxrA7E
-R7xSAaVjHpDD5VSqla8ELxlLNvs139Zy7BumYr3k5IRt9/WFxiSQ09zoL+iYG2TY
-eSlBpiOuPSMcMPy+O26kR3yDMKU59htjmFWiLEkY9mjShyVWVRAhJwVnVuSgZKXB
-yRbVwL79yaj+kcibI0+CjSMbH47qFyZHp+NC0yu/uMs39otVoQzdmuVgNLqXLkeS
-VqxQBcmqgR5IXZQf1lDV2OEsU7bWeF5ObUJUOolgq0QGs5Ta/bU/TPeaBY233buB
-O2isMv95+ZclT598QNxC0gmZlqLqiw==
-=iwjP
------END PGP SIGNATURE-----
-
---mjowkry23wizm7jm--
+--=20
+Chuck Lever
 
