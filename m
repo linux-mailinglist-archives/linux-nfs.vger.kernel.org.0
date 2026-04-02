@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20609-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20610-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wCEVEzn9zWmfkAYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20609-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Apr 2026 07:23:05 +0200
+	id iNuJMFH+zWnJkAYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20610-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Apr 2026 07:27:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4890383F88
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Apr 2026 07:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A7B0383FC5
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Apr 2026 07:27:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DE42E303793F
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2026 05:21:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2C135304297C
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2026 05:27:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23D14318EC7;
-	Thu,  2 Apr 2026 05:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D5136213E;
+	Thu,  2 Apr 2026 05:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yr11Fpu6"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="306nTQxK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096382DC357;
-	Thu,  2 Apr 2026 05:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E713213A3F7;
+	Thu,  2 Apr 2026 05:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775107305; cv=none; b=Y/AMinGzCnDqc4kA4N7QyWWltRkctshHY74CIBvSnPmyCjsho2FX48cnJl7AyQa4ZfpiIN/VmYfPi5RXIusiieRjsDjU5idRgAJlp0C8DO893V7JqC3Vge434KRAVQA+TkLkqLxbzGEnYr4kqaRTz2mJQ8h6t11/DdeugSA8G70=
+	t=1775107662; cv=none; b=tUBbhEAGiDid0U/BvzwqCiefQyCvK4LqEPHOrZ+O0p0LzUgJpWilnjPPzy7LYSuv4+FbeVvrrfTPFE+aKN70wZfbruAhf1R3xDQs7PG1pgbbrh1q0MKgHTEOxvEEbVKjlwfTLGmo//g8cudA3b20T0qYuEOVNWSDo3wRqiN+QNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775107305; c=relaxed/simple;
-	bh=uqsYExntEu7voInGnB9t7fPXObZlfXDNPSo+6w322k8=;
+	s=arc-20240116; t=1775107662; c=relaxed/simple;
+	bh=KVzc5Y4yY/a61Dy2hPfi75/L2WCjuKSNhOVB+/7Xd9M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g/jGvG2UvSy0/hvcZizMevPxb/j407ZyO8D4XQS8seCCtgLclsOTT/UjpHyHZUE/ioqHLtijbd2CmqipVD4gDSxQEu3FsxqhwpH99nQT7XbHU5EQ5LDWsrfr6r7igBSuRU43YUnYopTMTL33a+F+j0jxfkAn33DGCNtPynQo0Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yr11Fpu6; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=GS+p42nOZYo5KbS3Rho/dy9JvgWzGYq2Gn6O+sR9YN2dH9rL81jBp/2mzhJTn2xg9WgFAREWZz+5rv+ft7KLanp+46/rekSNhaJcMfcc5bHZhMghwVsv1p5PCOa71Nz51QLgpvEr0HKqWr/az7SQwQNkvnxe0rN1KzknjBPlCcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=306nTQxK; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kCTASolh/HHAKZfZX4Vdxe/7xfbsKFH4aqSmS0b3nPo=; b=yr11Fpu6FYIB0gkBujQ/3cI/ow
-	yusMImjUDC/ox8LjAXPIaKbbc1Pvw+z/Pn77dW7GJdmFeJgXa+SwNmJcU06iqbjRwmt/XoL+IasqC
-	fx3BpLLBamutD2gd16LTG3yitc0ythc2C+ei9CDMOaWoWlkU7Iq7dSR62PRgTQqizQ73jifgEYaz4
-	JjlNUhETfHQM77crjIGx2pQtdEHTgNyXsW2PbJIHrQsnVDKSjsPaV8dUdadEZ0K3jIQphcMNXW2DB
-	vaxRh/UD0TgnOUgxRpXh1g4pjka94XYL00h/JMC32NjTzEMWxWpcJcJSe1bxnkVeVCC07fxIGqcK5
-	pl0lV7Kg==;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=+zTGBJY6hQ0zMeJQBjpowApqHyqRrKXxjo6V6st3wsk=; b=306nTQxKHjO9BgmuzmqBLF66EF
+	XXR1rQ0dxmCenfIox2XxXf+dRDdKc1Z7KezTOEOH1pHmE/6O6Zh2xcMC1GEFPWHjsBhaKWvPiJAOS
+	lyyNV3mNqLy21C8nIk+h2JwGYGwE3TRRiUdPcgzkim6RrLvWR8r74qHQN2dEtV5NHQKH80G0SDQfN
+	6WimEMBvKdCChiBBB+RKN7Zogiw7RjkFFQzezFLrRXGIEQCStmGGlR4lUKrkXx1gmVTxsm0TOgjCf
+	5/UYFUr4t6hYh7DtA4vQ+MWaEUXKtptcrhb5bvTjEE0Ul0/pzJCWNEjOkxZ1cTA2RT0oocNCeAiT7
+	7rsOiudg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8AUu-0000000GnzB-0dij;
-	Thu, 02 Apr 2026 05:21:40 +0000
-Date: Wed, 1 Apr 2026 22:21:40 -0700
+	id 1w8Aaf-0000000GoIg-1hFS;
+	Thu, 02 Apr 2026 05:27:37 +0000
+Date: Wed, 1 Apr 2026 22:27:37 -0700
 From: Christoph Hellwig <hch@infradead.org>
 To: Jeff Layton <jlayton@kernel.org>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -64,20 +64,21 @@ Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
 	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: Re: [PATCH 1/4] mm: fix IOCB_DONTCACHE write performance with
- rate-limited writeback
-Message-ID: <ac385Il8l-krKEOQ@infradead.org>
+Subject: Re: [PATCH 2/4] mm: add atomic flush guard for IOCB_DONTCACHE
+ writeback
+Message-ID: <ac3-SU7BElHJVCEL@infradead.org>
 References: <20260401-dontcache-v1-0-1f5746fab47a@kernel.org>
- <20260401-dontcache-v1-1-1f5746fab47a@kernel.org>
+ <20260401-dontcache-v1-2-1f5746fab47a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260401-dontcache-v1-1-1f5746fab47a@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260401-dontcache-v1-2-1f5746fab47a@kernel.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -88,7 +89,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20609-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20610-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -105,48 +106,32 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,infradead.org:dkim,infradead.org:mid]
-X-Rspamd-Queue-Id: C4890383F88
+X-Rspamd-Queue-Id: 3A7B0383FC5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 01, 2026 at 03:10:58PM -0400, Jeff Layton wrote:
-> IOCB_DONTCACHE calls filemap_flush_range() with nr_to_write=LONG_MAX
-> on every write, which flushes all dirty pages in the written range.
->
-> Under concurrent writers this creates severe serialization on the
-> writeback submission path, causing throughput to collapse to ~47% of
-> buffered I/O with multi-second tail latency.  Even single-client
-> sequential writes suffer: on a 512GB file with 256GB RAM, the
-> aggressive flushing triggers dirty throttling that limits throughput
-> to 575 MB/s vs 1442 MB/s with rate-limited writeback.
-
-I'm not sure the first how you think the first paragraph relate to
-the second.
-
-> Replace the filemap_flush_range() call in generic_write_sync() with a
-> new filemap_dontcache_writeback_range() that uses two rate-limiting
-> mechanisms:
+On Wed, Apr 01, 2026 at 03:10:59PM -0400, Jeff Layton wrote:
+> When the PAGECACHE_TAG_WRITEBACK tag clears after a round of writeback
+> completes, all concurrent IOCB_DONTCACHE writers see the tag clear
+> simultaneously and submit proportional flushes at once — a thundering
+> herd that causes p99.9 tail latency spikes.
 > 
->   1. Skip-if-busy: check mapping_tagged(PAGECACHE_TAG_WRITEBACK)
->      before flushing.  If writeback is already in progress on the
->      mapping, skip the flush entirely.  This eliminates writeback
->      submission contention between concurrent writers.
+> Add an AS_DONTCACHE_FLUSHING flag to the address_space and use
+> test_and_set_bit() to ensure at most one IOCB_DONTCACHE writer
+> flushes at a time.  Other writers that find the bit set skip their
+> flush entirely.  The bit is cleared when the flush completes.
 
-Makes sense.
+This sounds like a bad reimplementation of the single writeback thread
+:)
 
->   2. Proportional cap: when flushing does occur, cap nr_to_write to
->      the number of pages just written.  This prevents any single
->      write from triggering a large flush that would starve concurrent
->      readers.
+Have you considered stopping to do in-caller writeback for
+IOCB_DONTCACHE vs just leaving it to the writeback daeon?
 
-This doesn't make any sense at all.
-filemap_flush_range/filemap_writeback always caps the number of written
-pages to the range passed in.  What do you think is the change here?
-
-> +	return filemap_writeback(mapping, start, end, WB_SYNC_NONE, &nr,
-> +			WB_REASON_BACKGROUND);
-
-filemap_writeback only has 5 arguments in any tree I've looked at
-including linux-next.
+Either by totally disabling the writeback and just leaving the
+dropbehind bit, or by queuing up wb_writeback_work instances for
+the ranges, or by just increasing the pressure for the writeback
+daemon.  Note that with all schemes including the one in this patch
+we might eventually run into writeback scalability limits, which
+will require multiple writeback workers.
 
 
