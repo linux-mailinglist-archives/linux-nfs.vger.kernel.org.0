@@ -1,158 +1,149 @@
-Return-Path: <linux-nfs+bounces-20621-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20622-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4H6GH0HnzmkRrwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20621-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 00:01:37 +0200
+	id GIAeIZv5zmn7sAYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20622-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 01:19:55 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FF6A38E960
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 00:01:36 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC25438F231
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 01:19:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AA63D3007ADF
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2026 21:58:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1A6E130A1676
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Apr 2026 23:13:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3330D378833;
-	Thu,  2 Apr 2026 21:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2F53CBE6B;
+	Thu,  2 Apr 2026 23:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBJzCsq7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YnhylVOE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC8931B803;
-	Thu,  2 Apr 2026 21:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264863F8814
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Apr 2026 23:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775167107; cv=none; b=k0KTnsXAl0U1zEWJXPFqqxg/0Ps3JXPapOn3I1EGDoeKTvF9US/PyIfdG+xpLI7tvChHd36X2Tl7BxvkXQId6eqjJ0CvRUFjBPnNvmh0R8aT2gMib5ftcekYMyYcmiA1YqUefTFMScCkjx1iMYXus6GRMr0nosElGxpPdOE0UK0=
+	t=1775171564; cv=none; b=Ymh/9pLbZp41amQe3f6hL9p/PgtjeL4bmepOQe5KTNv9iqognCihxm39eDIWir4QZ8oQ2UEhMCnWuVQtjmjAnG+7hUPeyVcbgc4gKG/Q28lMxR52QIQ3kRu9/xSKFTZG4gsBBJ/xLmGMd/q48fMHu+nYkKial3uurV52li3p1iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775167107; c=relaxed/simple;
-	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DVJp2RZb27ELpuSXbKU4Hp/Y6oxtY4GVZi+hvh0cGpfFqwLi3iiECU8FkXW3LsP2E4BFa3lHd7gKiNOQi5H6gIaKO0hKHraIz2ZSgvjaY8pL8Nj3ueFJ33XzKXy8KKHzyLjplHoEp/PCfYJu8MKrJG/teYDsTZ/J1SYs3fWx0zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBJzCsq7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D96C116C6;
-	Thu,  2 Apr 2026 21:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775167106;
-	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=KBJzCsq7TNcgHpU+TWPAd3W8YuuJXdgpviR9Ow38UzYp/E+eDMYCQdUq5+04/Mnru
-	 vF8yruBgH9Kqoxj3RdUA00tDQnEgnr1qE7AXbmqG7qka9IVu/f1eZKTg86JWT+ETrn
-	 TjxI1jdECoYVYFvAydaPvhTr0DLyOkSNS0rHhfEWArmmkmeciwTpFwX+5aQHpstoUl
-	 foXfbAlUvknuR2UINHvJ3kK1f5ozCCWUSVy6PFFL3eEN4gpoDz+keSHvFP6Ep2zvPe
-	 Ej2doeiB7lotVTyVy6ov80wS5IsFWdnGSH4WR6z1XJ7lBV9TObDwXGWdYhpggyK3MT
-	 1b1VbHt8uneOw==
-Date: Thu, 2 Apr 2026 15:58:18 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Yury Norov <ynorov@nvidia.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    "Michael S. Tsirkin" <mst@redhat.com>, Theodore Ts'o <tytso@mit.edu>, 
-    Albert Ou <aou@eecs.berkeley.edu>, Alexander Duyck <alexanderduyck@fb.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Alexander Viro <viro@zeniv.linux.org.uk>, 
-    Alexandra Winter <wintera@linux.ibm.com>, 
-    Andreas Dilger <adilger.kernel@dilger.ca>, 
-    Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker <anna@kernel.org>, 
-    Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, 
-    Carlos Maiolino <cem@kernel.org>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Chao Yu <chao@kernel.org>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Christian Brauner <brauner@kernel.org>, 
-    Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    David Airlie <airlied@gmail.com>, 
-    Dominique Martinet <asmadeus@codewreck.org>, 
-    Dongsheng Yang <dongsheng.yang@linux.dev>, 
-    Eric Dumazet <edumazet@google.com>, 
-    Eric Van Hensbergen <ericvh@kernel.org>, 
-    Heiko Carstens <hca@linux.ibm.com>, 
-    Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
-    Jaegeuk Kim <jaegeuk@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-    Jani Nikula <jani.nikula@linux.intel.com>, 
-    Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>, 
-    Jens Axboe <axboe@kernel.dk>, 
-    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-    Latchesar Ionkov <lucho@ionkov.net>, Linus Walleij <linusw@kernel.org>, 
-    Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>, 
-    Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-    Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-    Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Sean Christopherson <seanjc@google.com>, Simona Vetter <simona@ffwll.ch>, 
-    Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
-    Trond Myklebust <trondmy@kernel.org>, 
-    Tvrtko Ursulin <tursulin@ursulin.net>, Vasily Gorbik <gor@linux.ibm.com>, 
-    Will Deacon <will@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
-    Zheng Gu <cengku@gmail.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-    linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-    linux-s390@vger.kernel.org, linux-block@vger.kernel.org, 
-    intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    dm-devel@lists.linux.dev, netdev@vger.kernel.org, 
-    linux-spi@vger.kernel.org, linux-ext4@vger.kernel.org, 
-    linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-    linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-    linux-crypto@vger.kernel.org, linux-mm@kvack.org, 
-    linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev, 
-    virtualization@lists.linux.dev, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 8/8] arch: use rest_of_page() macro where appropriate
-In-Reply-To: <20260304012717.201797-9-ynorov@nvidia.com>
-Message-ID: <ee15482d-22a8-9686-ba64-d216b25d8e68@kernel.org>
-References: <20260304012717.201797-1-ynorov@nvidia.com> <20260304012717.201797-9-ynorov@nvidia.com>
+	s=arc-20240116; t=1775171564; c=relaxed/simple;
+	bh=/CR+kZsH7SsqmKv+KZG+JyDwRejW2OBRZB9RFCQCieI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KCuHiiiInQskiLTneGrK/Xih7FNnqf+paQyJWZ/ZXBYe/n+TEjsi8MtV7kmF6sP58AtPmcQQrxUhOIwKtp89n8dRplV1QH9yDwWmQ346ZrE95YoJGUCq7B3GsBb4H5OFfI9Q14SLDprg8vRsY3eXT+rzfR23a9TWaoPQTm8CpfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YnhylVOE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775171562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aVU5/robEuhXH087do4D+WQLdiDM8c2d/i5mi/9qma4=;
+	b=YnhylVOES7zIhBxfVeZUp99+ac+3xrFWD6ZKwrvx7j5BPEfdusjF38dDlAh0v3h8XqQnEG
+	MkZ9gdvIJM/VbIos5KM+CdjUV1g00QvP3zqC2r9DnvvU+McaHuUqGaRMTRZZ17Hug23GUn
+	3MQhpufHbwzCnCq3rXVi8oExULIOOIo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-150-o-QrCyCaMTClaIjCXUW5Rg-1; Thu,
+ 02 Apr 2026 19:12:39 -0400
+X-MC-Unique: o-QrCyCaMTClaIjCXUW5Rg-1
+X-Mimecast-MFC-AGG-ID: o-QrCyCaMTClaIjCXUW5Rg_1775171558
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07A05180049D;
+	Thu,  2 Apr 2026 23:12:38 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.81.6])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 452AD19560A6;
+	Thu,  2 Apr 2026 23:12:37 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFS: fix RENAME attr in presence of directory delegations
+Date: Thu,  2 Apr 2026 19:12:36 -0400
+Message-ID: <20260402231236.46595-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,davemloft.net,redhat.com,mit.edu,eecs.berkeley.edu,fb.com,linux.ibm.com,zeniv.linux.org.uk,dilger.ca,lunn.ch,kernel.org,opensynergy.com,alien8.de,arm.com,linux.intel.com,gmail.com,codewreck.org,linux.dev,google.com,gondor.apana.org.au,perex.cz,kernel.dk,ionkov.net,ellerman.id.au,szeredi.hu,dabbelt.com,infradead.org,intel.com,ffwll.ch,suse.com,ursulin.net,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	TAGGED_FROM(0.00)[bounces-20621-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[86];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pjw@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20622-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs,netdev];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8FF6A38E960
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EC25438F231
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 3 Mar 2026, Yury Norov wrote:
+Since commit 6f9bda2337f8 ("NFS: Fix directory delegation
+verifier checks") xfstest generic/309 is failing because after
+the rename (mv) operation, client's mtime/ctime is the same.
+Update the delegated mtime when directory delegations are
+present in rename.
 
-> Switch arch code to using the macro. No functional changes intended.
-> 
-> Signed-off-by: Yury Norov <ynorov@nvidia.com>
+Fixes: 6f9bda2337f8 ("NFS: Fix directory delegation verifier checks")
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ fs/nfs/inode.c    | 3 ++-
+ fs/nfs/nfs4proc.c | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 3a5bba7e3c92..43a0543364b8 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -692,7 +692,8 @@ void nfs_update_delegated_atime(struct inode *inode)
+ 
+ void nfs_update_delegated_mtime_locked(struct inode *inode)
+ {
+-	if (nfs_have_delegated_mtime(inode))
++	if (nfs_have_delegated_mtime(inode) ||
++	    nfs_have_directory_delegation(inode))
+ 		nfs_update_mtime(inode);
+ }
+ 
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 768de9935ff1..dd800403a7ce 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5052,6 +5052,7 @@ static int nfs4_proc_rename_done(struct rpc_task *task, struct inode *old_dir,
+ 					res->new_fattr->time_start,
+ 					NFS_INO_INVALID_NLINK |
+ 					    NFS_INO_INVALID_DATA);
++			nfs_update_delegated_mtime(new_dir);
+ 		} else
+ 			nfs4_update_changeattr(old_dir, &res->old_cinfo,
+ 					res->old_fattr->time_start,
+-- 
+2.52.0
 
-
-- Paul
 
