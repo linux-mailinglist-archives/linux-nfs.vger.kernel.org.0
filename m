@@ -1,220 +1,232 @@
-Return-Path: <linux-nfs+bounces-20623-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20624-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OIGGOFG6z2kd0AYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20623-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 15:02:09 +0200
+	id dYI9MQy/z2kM0QYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20624-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 15:22:20 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ACAE394480
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 15:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16FBF394632
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 15:22:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 892CE30AB609
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Apr 2026 12:56:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 541E5302414D
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Apr 2026 13:22:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F4863B0AC3;
-	Fri,  3 Apr 2026 12:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC81D3A6EE7;
+	Fri,  3 Apr 2026 13:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXoZfRqR";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="XuhV1B6G"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVy+68mr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F013ACA46
-	for <linux-nfs@vger.kernel.org>; Fri,  3 Apr 2026 12:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CF53A383C
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Apr 2026 13:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775221011; cv=none; b=Z9zJFI+a4rKqRZHVI5t9wZUXaIx36TNPI0iD8AGmne2FAcAc45Oey4QN5iDZJgtjmv4mN1bch8YgpKDa+4ZsztnmGRlngJcQw6wxjV29eNM8TyCdfnSiTMIKy8vLo6J173WOl9TZjukcuZFKtgug8c6fh26y44EPms9zgQ0j+y0=
+	t=1775222536; cv=none; b=EzTy5giJ18q6UYTpz9iNVfiRS1pTUP7/Psh9szIi7W+CQ9xxTX70yAIOJVVsGTwrN9buiRiTW4JtQSoXTauNGtXqjNi7LjatwVQ+xRCuIAl18vEVI8QcUDiwy1wze3MGAQ8wn95uLrUnde5A+KMa12cEKvy8/q9PM8hxOci2JIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775221011; c=relaxed/simple;
-	bh=BBH0UPnowGXo0c/pOBVyKuoVZV2tVnA4j1dWyn8K2jo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYkLNb5KlT4+qGpcAEQD9zrIeYQZDNvQ6eLuLzr0CMvQfZ1ZiDrN2Kg/JETHJktGZWTXLKrbJPU6fYggrjFTg2q0HoaJwl7EzwW0Vph19nvybHTH3TCW5JEny0c1ZMjumeytJW55EpPJFTgWGLp1z4XgypANw1fTTc8qy9ArSng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aXoZfRqR; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=XuhV1B6G; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1775222536; c=relaxed/simple;
+	bh=/AaWgwYvN86r0rRI8n4eSgnPejnhndA34zx9ReDq53c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QJbOzC93ETbwVTpNq+2+b5no71xKKnA66WLBKnvJfkb51vUCDMRc82xpXyxhiD6shxJFJg8YVAVTeHe7FHLfcUF87eCiWc55fKCrNmXVEgsn4ja5HRIqAIlQ+4Bf8VunDkPwjaRjaLs+3iiQzt/CaaZKMFt5tZJ2OzjEzTcNJug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FVy+68mr; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775220998;
+	s=mimecast20190719; t=1775222534;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PkDbnzgFZyJLtns9wQGwwzMnLezdLmwC4PncLpVj4QA=;
-	b=aXoZfRqR3xE+zsP/eE9Vkuzty7N39NQJYLfYWd1jgRcd9DRzMBK1L1Z9zFxJ2pcONrH2wZ
-	XfSyaPY7fvALwJZpKSi/8CJkkvF6Gi45chtBreE+ohi8E3tU2HjJ6ZtfcwqkdVDdTGQrmg
-	5qNLZwa6b6h5AH2dWat5CRzBAhU50m8=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-k5VVwzhiNMSyaOI4b-aQaw-1; Fri, 03 Apr 2026 08:56:37 -0400
-X-MC-Unique: k5VVwzhiNMSyaOI4b-aQaw-1
-X-Mimecast-MFC-AGG-ID: k5VVwzhiNMSyaOI4b-aQaw_1775220997
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50b4ca7e7c2so43853231cf.3
-        for <linux-nfs@vger.kernel.org>; Fri, 03 Apr 2026 05:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1775220997; x=1775825797; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PkDbnzgFZyJLtns9wQGwwzMnLezdLmwC4PncLpVj4QA=;
-        b=XuhV1B6GHCx4vbMjEL6GMAueR8dlanmExuzo6L7GYHishB8pSG9SrJOqi8EYMRpa/y
-         +7ioUTldG4HUjNwYYxk76n/HKyRtMUsZ8Xt8uivM0SVOPoQG0fvfrRfqeY5qjB51qtgC
-         VMTvZQs2GKYJMDJEMnhJEZcSp9DHiH+/X+OVoZCTlVBwrQ+Q3AX/+eBf+AYiurYOTZWC
-         4QlSXginjDnGeJoo8UHxXu7rqMpNQya9sNOZ/ofi2LGm4jzFspxwWHM4w+bw6ctqs1I+
-         CAx5HCOhZSMkXEOtpho2vqd1ELwCUnUrnbm9z4XvEJ5/0Cdy71bpzPkH6ctFrxHQBMud
-         BoKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775220997; x=1775825797;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PkDbnzgFZyJLtns9wQGwwzMnLezdLmwC4PncLpVj4QA=;
-        b=O9WQwPjBw52ePitAYPQidNzNUD0HSJ6FcTjMrxLIRX6v52F88MIvyVoyfpq52yr50n
-         VaisZDYQBMnLxOzu/N5kpu4q0TLSefVqnrd7kMXstY0/ngVtxXncR10IkZZ14oIpFzLS
-         fl3Sh26Xk16C1ya7hbKs2HV8AaCc8bNPX/WE1IhtGlMGptjPh7DrMm+BUBges0URTBMk
-         XSboMXAHxmacv605vDoqZSET8819I5BjuXpgDz1Idw4CUDamHRmXY5gNKDuFT2o7XkYK
-         EU2tnrtE9p9zmUJJjkIcd/3ZNZgBeZBu469dEI19sIZwrHak5AHoplIkH1twEaW2Q7bi
-         D/+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWrYmqKGu4R8z6Pa8UsrCRRKhQGcPiSrrbzxn57fx7QHFecibxVL+9Vpi9dv6e1OXqXadDROUGHSug=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3CVk7u12ZEwXcYqVvjyKRIV//MaxTuIAxARp5kQ+rkn/piyMJ
-	B7w48vU+8MEH5RxcERujCa0m7vwxWWq5CVGEJt7GHLUZzjJoVs8XhuI3WCCTj5vmXm1epLRPxMp
-	3EpNqHnltvWD0IaIYOm430JqRYPuV0/zpbfAF03YDNd2hgslapTOF4B1DlRJlsw==
-X-Gm-Gg: ATEYQzzQHc25aNl5GcHxXFDPgYUxxKnrZnRRWEn+almOGdCH/eaR180XV4wFvgCruwq
-	FcyBcabJCoMxCN3Ks6EJCpiM0C4iRNVKQJRE9gQsGzRO/VylycxsCBe7TKWVrjbc6nV/a44bDeE
-	cqKLD4jc8L81wpFuZujvdGiN/voSjT9u8/apk7XocZVjZbvCVLXDSDJ07GIKANr2lIuRs7sNSm8
-	BBE44ta2MqjGYI94OKBcpzkmNZGNu8Hjmr+nS1ZXWDjnt8+d/l5p6tf574g4Ye959UvokfA3ikQ
-	q/FLaxXybM5NpMAzVwryWsVREqChR8sePLZsuxF0+pYh36n81gdwo2DD6+4avev30i8yNIh3BZV
-	qYv6vTBRE4617KnfZ1cwG
-X-Received: by 2002:a05:622a:5e10:b0:509:764:2f02 with SMTP id d75a77b69052e-50d62c6cb13mr44558681cf.45.1775220996761;
-        Fri, 03 Apr 2026 05:56:36 -0700 (PDT)
-X-Received: by 2002:a05:622a:5e10:b0:509:764:2f02 with SMTP id d75a77b69052e-50d62c6cb13mr44558271cf.45.1775220996269;
-        Fri, 03 Apr 2026 05:56:36 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.240.69])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8a5933333d0sm54220396d6.1.2026.04.03.05.56.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2026 05:56:34 -0700 (PDT)
-Message-ID: <5ba84228-2033-42f8-b1ba-dfc01eea28ad@redhat.com>
-Date: Fri, 3 Apr 2026 08:55:58 -0400
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lrV1CpJcxz8qp9Shfb/YNZUza6ooeLg9dQ6FD1p57kY=;
+	b=FVy+68mroh3c26SEuFPM9y/n5O8smNsQqK7IXxXkLyHq9mkSsubx96mHyVA3LsbY5Q2R+6
+	8dBERLyhN89mlm9n1fkT8zDLXqgEPmJenFYyYjTuKaS4L6QWiowKnrWNzE9Q6kuUDqxkd+
+	5MhY3RQzRjPSe0k6Pg9P1EV4L73xGpI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-bcBsyDh8PMymZL-s9d973A-1; Fri,
+ 03 Apr 2026 09:22:12 -0400
+X-MC-Unique: bcBsyDh8PMymZL-s9d973A-1
+X-Mimecast-MFC-AGG-ID: bcBsyDh8PMymZL-s9d973A_1775222531
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72DDB1956046;
+	Fri,  3 Apr 2026 13:22:11 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.88.38])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0BBE119560A6;
+	Fri,  3 Apr 2026 13:22:11 +0000 (UTC)
+Received: from aion.redhat.com (localhost [IPv6:::1])
+	by aion.redhat.com (Postfix) with ESMTP id A9DC6749DE8;
+	Fri, 03 Apr 2026 09:22:09 -0400 (EDT)
+From: Scott Mayhew <smayhew@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: fix file change detection in CB_GETATTR
+Date: Fri,  3 Apr 2026 09:22:09 -0400
+Message-ID: <20260403132209.1479385-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH nfs-utils v2 00/16] exportfs/exportd/mountd: allow them to
- use netlink for up/downcalls
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-References: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20260330-exportd-netlink-v2-0-cc9bd5db2408@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20624-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20623-lists,linux-nfs=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,configure.ac:url]
-X-Rspamd-Queue-Id: 1ACAE394480
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 16FBF394632
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+RFC 8881, section 10.4.3 doesn't say anything about caching the file
+size in the delegation record, nor does it say anything about comparing
+a cached file size with the size reported by the client in the
+CB_GETATTR reply for the purpose of determining if the client holds
+modified data for the file.
 
+What section 10.4.3 of RFC 8881 does say is that the server should
+compare the *current* file size with size reported by the client holding
+the delegation in the CB_GETATTR reply, and if they differ to treat it
+as a modification regardless of the change attribute retrieved via the
+CB_GETATTR.
 
-On 3/30/26 9:38 AM, Jeff Layton wrote:
-> Minor revision to rebase onto recent upstream changes. Original cover
-> letter follows:
-> 
-> This adds support for the new netlink-based upcalls and downcalls in
-> mountd, exportd and exportfs. With this, mountd is no longer reliant on
-> /proc for sunrpc cache upcalls.
-> 
-> There are also a few bugfixes and cleanups for existing code and
-> documentation too.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Committed... (tag: nfs-utils-2.9.1-rc3)
+Doing otherwise would cause the server to believe the client holding the
+delegation has a modified version of the file, even if the client
+flushed the modifications to the server prior to the CB_GETATTR.  This
+would have the added side effect of subsequent CB_GETATTRs causing
+updates to the mtime, ctime, and change attribute even if the client
+holding the delegation makes no further updates to the file.
 
-steved.
-> ---
-> Changes in v2:
-> - Consolidate UAPI header updates into one patch
-> - Rebase onto nfs-utils-2-9-1-rc2
-> - Link to v1: https://lore.kernel.org/r/20260316-exportd-netlink-v1-0-9a408a0b389d@kernel.org
-> 
-> ---
-> Jeff Layton (16):
->        nfsdctl: move *_netlink.h to support/include/
->        support/export: remove unnecessary static variables in nfsd_fh expkey lookup
->        exportfs: remove obsolete legacy mode documentation from manpage
->        support/include: update netlink headers for all cache upcalls
->        build: add libnl3 and netlink header support for exportd and mountd
->        xlog: claim D_FAC3 as D_NETLINK
->        exportd/mountd: add netlink support for svc_export cache
->        exportd/mountd: add netlink support for the nfsd.fh cache
->        exportd/mountd: add netlink support for the auth.unix.ip cache
->        exportd/mountd: add netlink support for the auth.unix.gid cache
->        mountd/exportd: only use /proc interfaces if netlink setup fails
->        support/export: check for pending requests after opening netlink sockets
->        exportd/mountd: use cache type from notifications to target scanning
->        exportfs: add netlink support for cache flush with /proc fallback
->        exportfs: use netlink to probe kernel support, skip export_test
->        mountd/exportd/exportfs: add --no-netlink option to disable netlink
-> 
->   configure.ac                                       |   33 +-
->   support/export/Makefile.am                         |    5 +-
->   support/export/cache.c                             | 1892 +++++++++++++++++---
->   support/export/cache_flush.c                       |  166 ++
->   support/include/Makefile.am                        |    7 +-
->   {utils/nfsdctl => support/include}/lockd_netlink.h |    0
->   support/include/nfsd_netlink.h                     |  240 +++
->   support/include/sunrpc_netlink.h                   |   84 +
->   support/include/xlog.h                             |    2 +-
->   support/nfs/cacheio.c                              |   49 +-
->   utils/exportd/Makefile.am                          |    2 +-
->   utils/exportd/exportd.c                            |   10 +-
->   utils/exportd/exportd.man                          |   12 +-
->   utils/exportfs/Makefile.am                         |    6 +-
->   utils/exportfs/exportfs.c                          |   55 +-
->   utils/exportfs/exportfs.man                        |   79 +-
->   utils/mountd/Makefile.am                           |    2 +-
->   utils/mountd/mountd.c                              |    9 +-
->   utils/mountd/mountd.man                            |    9 +
->   utils/nfsdctl/nfsd_netlink.h                       |   99 -
->   20 files changed, 2350 insertions(+), 411 deletions(-)
-> ---
-> base-commit: a06a3251c2eb1316f781149f8b7f9acd9d41e7fc
-> change-id: 20260316-exportd-netlink-a53bf66ae034
-> 
-> Best regards,
+Modify nfsd4_deleg_getattr_conflict() to obtain the current file size
+via vfs_getattr().  Retain the ncf_cur_fsize field, since it's a
+convenient way to return the file size back to nfsd4_encode_fattr4(),
+but don't use it for the purpose of detecting file changes.
+
+Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+Note this patch is against Chuck's nfsd-next branch.
+
+Also, I have a pynfs test that illustrates the "bad" behavior.  See
+"pynfs: add delegation test for CB_GETATTR after sync WRITE", which will
+be sent shortly.
+
+ fs/nfsd/nfs4state.c | 17 +++++++++++------
+ fs/nfsd/nfs4xdr.c   |  2 +-
+ fs/nfsd/state.h     |  2 +-
+ 3 files changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index b4d0e82b2690..2c82438918f6 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -9372,7 +9372,7 @@ static int cb_getattr_update_times(struct dentry *dentry, struct nfs4_delegation
+  * caller must put the reference.
+  */
+ __be32
+-nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
++nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct path *path,
+ 			     struct nfs4_delegation **pdp)
+ {
+ 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+@@ -9381,7 +9381,9 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
+ 	struct nfs4_delegation *dp = NULL;
+ 	struct file_lease *fl;
+ 	struct nfs4_cb_fattr *ncf;
+-	struct inode *inode = d_inode(dentry);
++	struct inode *inode = d_inode(path->dentry);
++	struct kstat stat;
++	int err;
+ 	__be32 status;
+ 
+ 	ctx = locks_inode_context(inode);
+@@ -9430,19 +9432,22 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
+ 		    !nfsd_wait_for_delegreturn(rqstp, inode))
+ 			goto out_status;
+ 	}
++	err = vfs_getattr(path, &stat, STATX_SIZE, AT_STATX_SYNC_AS_STAT);
++	if (err) {
++		status = nfserrno(err);
++		goto out_status;
++	}
+ 	if (!ncf->ncf_file_modified &&
+ 	    (ncf->ncf_initial_cinfo != ncf->ncf_cb_change ||
+-	     ncf->ncf_cur_fsize != ncf->ncf_cb_fsize))
++	     stat.size != ncf->ncf_cb_fsize))
+ 		ncf->ncf_file_modified = true;
+ 	if (ncf->ncf_file_modified) {
+-		int err;
+-
+ 		/*
+ 		 * Per section 10.4.3 of RFC 8881, the server would
+ 		 * not update the file's metadata with the client's
+ 		 * modified size
+ 		 */
+-		err = cb_getattr_update_times(dentry, dp);
++		err = cb_getattr_update_times(path->dentry, dp);
+ 		if (err) {
+ 			status = nfserrno(err);
+ 			goto out_status;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 2a0946c630e1..b380c2545f6a 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3914,7 +3914,7 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	    (attrmask[1] & (FATTR4_WORD1_TIME_ACCESS |
+ 			    FATTR4_WORD1_TIME_MODIFY |
+ 			    FATTR4_WORD1_TIME_METADATA))) {
+-		status = nfsd4_deleg_getattr_conflict(rqstp, dentry, &dp);
++		status = nfsd4_deleg_getattr_conflict(rqstp, &path, &dp);
+ 		if (status)
+ 			goto out;
+ 	}
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 9b05462da4cc..edfb3402dfd2 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -889,7 +889,7 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+ }
+ 
+ extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+-		struct dentry *dentry, struct nfs4_delegation **pdp);
++		struct path *path, struct nfs4_delegation **pdp);
+ 
+ struct nfsd4_get_dir_delegation;
+ struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
+-- 
+2.53.0
 
 
