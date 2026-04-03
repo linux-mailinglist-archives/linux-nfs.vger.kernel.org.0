@@ -1,61 +1,59 @@
-Return-Path: <linux-nfs+bounces-20631-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20632-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uGXlASzEz2lH0QYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20631-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 15:44:12 +0200
+	id qHSYNkjLz2lH0QYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20632-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 16:14:32 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A05CC394A3D
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 15:44:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3353F3950C9
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Apr 2026 16:14:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2F4A830645B6
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Apr 2026 13:43:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E9D37307E095
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Apr 2026 14:07:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56BF0364EB1;
-	Fri,  3 Apr 2026 13:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A4A63148CF;
+	Fri,  3 Apr 2026 14:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWVP4xM+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAK3VYCz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3370B296BCB
-	for <linux-nfs@vger.kernel.org>; Fri,  3 Apr 2026 13:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9243279DC2
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Apr 2026 14:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775223792; cv=none; b=pgQI+rNsdWrg9eO0+9MP2aExsDqqCIJgyxI32s2JvR7RWaeNWrYN+NM1npi0CFUFp+8Z+7mnuW/s5bL7KjIvHZvsWEci5ln7U8UqR1380CeXRnWAsdZy/0yijXKP/9hC2J2lnLkkptE3Ka3uJf2z0bfDMQtzoKdyYwryW3wOfJ4=
+	t=1775225269; cv=none; b=b4BsvhFj+5DaW3RDVVk1cOmoSnR2qd0BnrxS1RQBk50XQUqa0qWRYrX+e731YsDVdYLSVXFbmVtLoR1yHlYy9nOFObmnxhcLeXG7wDCQDgf4A1xbyVSOGuprRgnKT4HJ4m+Ad/OvNr62S0X5NJuzKF0v64TSBsbg9wo2xEhCctI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775223792; c=relaxed/simple;
-	bh=0AuDSn4hPhx6licHGpImdxJURXOcaJpfFG7hJhujffc=;
+	s=arc-20240116; t=1775225269; c=relaxed/simple;
+	bh=wH1i3nig5uCFrwQBHiYHH2s4c/dLf+DuVkh7PEy0vdg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=i/VP2BHlqY5tvf0IwsU+sFimYYTTtnIISMtBLrhBTkHLGU+3bu5oYrrhy3EvtDzpcSzk+/ITNG4Z02zi8cFt3GwsMq9X7tDoy1YnZ5s7clnIf5/VifFmnWtctHaU85BXV56tRACzY2bVnAH4lUWL+Zu5sMP9ZeNIUo5G5Wt53Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWVP4xM+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A055C4CEF7;
-	Fri,  3 Apr 2026 13:43:11 +0000 (UTC)
+	 Content-Type:MIME-Version; b=tGJAK96Ox43tqf+5MVT5Lwj7m10njmwOhMGjwXF01bwDBngR/JSWev/uI90lyRWTYOVbiZeEvkwPMvXoBOSyIVUv82vm0x12lpvHS4JB1nsa9T0p7f5hMtPadcMk7pNdWnKVgebVMX+SLtCceB1N9jsT6Z9apUn8Pr6ZEwZubxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAK3VYCz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33BFDC4CEF7;
+	Fri,  3 Apr 2026 14:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775223791;
-	bh=0AuDSn4hPhx6licHGpImdxJURXOcaJpfFG7hJhujffc=;
+	s=k20201202; t=1775225268;
+	bh=wH1i3nig5uCFrwQBHiYHH2s4c/dLf+DuVkh7PEy0vdg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WWVP4xM+DYbZBR8QTne+4Igo7KyhUOIfyIidINCqnJgrz1fLkhSKMHUQjaMHG6yml
-	 DkOdjAyhHRNv5cEdCtrwtOpzxoIt5C2w4IpiNlCcyI3W8xLAlqWMXCi09nNxUaqs5+
-	 Wjcd3QHsvITuT4D7lDeWY7g+L8ysvBzSkazTPAS3Fqh7f1bjr+x7qdwQqxQwQB/sup
-	 vzmPaGJaKtw8dZGfPBQ+/cpXeZUNOYvAMzyWJ8NCNYEFe691SahmmxGvi8F10PJtab
-	 adgE1t2iiM683nqIyEW0L5g4SNqYAwKINAYw2wduwDUqLXd2y/XIEnJKDX/v8Vp0GT
-	 JEkAiMSLINMeA==
-Message-ID: <aa2e8cf9225a2a4a49fdb7db24c0e817e1b962b1.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSv4.2: fix COPY attrs in presence of delegated
- timestamps
+	b=bAK3VYCzys63g6S0Hh/rPZg8M+Os1H7vsqElayih6N/pFx/OD1cvxC3ie/xEirIeZ
+	 NCa8GsLHCQocgJH/JVptsc9TS4sjVT1UwmDHLBCJqPi+q/6cVyja4PzBHgyy1b04K4
+	 T9e200NdZ2j6XRiUR0WjB8VoXF5ADyQ8CQaySCynQH85SuyMY6ZQSHM3WAbU2oCbBW
+	 yfNrlhsZ0uB78i1LaNmIPy3GylzTa6Lxw8p9m32rk9UN8uxa3vtkQJjC4Nv8DSKslO
+	 ezx36X16kYKeFPuttEoKvk0wWtpKCbvVor6n7YCGysFZE77xSBeWeHSxsGP6azQyv5
+	 p1ZTYN73E4c7g==
+Message-ID: <17bb7c756a76326640fdf287efb8850224a000a9.camel@kernel.org>
+Subject: Re: [PATCH 3/5] pynfs: remove erroneous test from DELEG24 and
+ DELEG25
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <aglo@umich.edu>, Olga Kornievskaia
- <okorniev@redhat.com>
-Cc: trond.myklebust@hammerspace.com, anna@kernel.org,
- linux-nfs@vger.kernel.org
-Date: Fri, 03 Apr 2026 09:43:08 -0400
-In-Reply-To: <CAN-5tyGJ5Y4h8iKq-F_AqYR0a8U8NrO2xk9hCG1AaJWJabW+-Q@mail.gmail.com>
-References: <20260327165757.28948-1-okorniev@redhat.com>
-	 <CAN-5tyGJ5Y4h8iKq-F_AqYR0a8U8NrO2xk9hCG1AaJWJabW+-Q@mail.gmail.com>
+To: Scott Mayhew <smayhew@redhat.com>, calum.mackay@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Date: Fri, 03 Apr 2026 10:07:45 -0400
+In-Reply-To: <20260403132738.1482011-4-smayhew@redhat.com>
+References: <20260403132738.1482011-1-smayhew@redhat.com>
+	 <20260403132738.1482011-4-smayhew@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -142,96 +140,88 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20631-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20632-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A05CC394A3D
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 3353F3950C9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-03-27 at 13:08 -0400, Olga Kornievskaia wrote:
-> On Fri, Mar 27, 2026 at 12:58=E2=80=AFPM Olga Kornievskaia <okorniev@redh=
-at.com> wrote:
-> >=20
-> > A similar to generic/407 test can be done with a COPY operation
-> > instead of CLONE (reflink). And it leads to same problem that ctime
-> > and mtime saved before doing a "cp" operation are the same as after.
+On Fri, 2026-04-03 at 09:27 -0400, Scott Mayhew wrote:
+> fattr4_time_deleg_modify is valid in CB_GETATTR and SETATTR.  attrs2
+> contains the attributes from a GETATTR reply, and will never contain the
+> fattr4_time_deleg_modify attribute.
 >=20
-> Some extra comments here.
->=20
-> Currently the COPY compound does not add a GETATTR after the COPY.
-> Jeff's solution to REMOVEXATTR not updating ctime was to add GETATTR
-> to the compound and then call update attributes. This could be the
-> alternative solution here instead. I'm not sure such an approach would
-> be preferred. But then there is a question of whether or not the
-> server does update its attributes on COPY.
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+> Jeff - not sure what you want to do here.  We can compare the the
+> FATTR4_TIME_DELEG_MODIFY that we sent to the server with the
+> FATTR4_TIME_MODIFY in attrs1 and/or attrs2, we just need to return
+> it (or the whole cbattrs dictionary) from _testCbGetattr().
 >=20
 
-I think that'd ultimately be more efficient, and I think the server
-should be updating the c/mtime on COPY, even if there is an outstanding
-timestamp delegation. The server is doing the COPY. The client isn't
-really involved so why should it be trying to stamp the file?
+Doh! I don't know what I was thinking there.
 
-A GETATTR is cheap and in this case, the inode will even likely be in
-cache on the server. We might as well update the attributes without
-forcing another round trip in this case, since we pretty much know that
-they will have changed.
+That should compare FATTR4_TIME_MODIFY on both sides since they're both
+GETATTR results.
 
-If the server isn't updating its attrs on COPY in this case, then it's
-probably because we're using the open file description in the
-destination stateid and it has FMODE_NOCMTIME set. We can probably fix
-this by just turning that flag off while the copy is running, and then
-reenabling it before returning.
+Nice catch!
 
-
-> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > ---
-> >  fs/nfs/nfs42proc.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >=20
-> > diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> > index f77372a78be7..ea420dc94875 100644
-> > --- a/fs/nfs/nfs42proc.c
-> > +++ b/fs/nfs/nfs42proc.c
-> > @@ -502,6 +502,12 @@ static ssize_t _nfs42_proc_copy(struct file *src,
-> >=20
-> >         nfs42_copy_dest_done(dst, pos_dst, res->write_res.count, oldsiz=
-e_dst);
-> >         nfs_invalidate_atime(src_inode);
-> > +       if (nfs_have_delegated_attributes(dst_inode)) {
-> > +               nfs_update_delegated_mtime(dst_inode);
-> > +               spin_lock(&dst_inode->i_lock);
-> > +               nfs_set_cache_invalid(dst_inode, NFS_INO_INVALID_BLOCKS=
-);
-> > +               spin_unlock(&dst_inode->i_lock);
-> > +       }
-> >         status =3D res->write_res.count;
-> >  out:
-> >         if (args->sync)
-> > --
-> > 2.52.0
-> >=20
-> >=20
+>  nfs4.1/server41tests/st_delegation.py | 6 ------
+>  1 file changed, 6 deletions(-)
+>=20
+> diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests=
+/st_delegation.py
+> index 934e558..6ed1f5d 100644
+> --- a/nfs4.1/server41tests/st_delegation.py
+> +++ b/nfs4.1/server41tests/st_delegation.py
+> @@ -400,9 +400,6 @@ def testCbGetattrNoChange(t, env):
+>          fail("Bad size: %u !=3D %u" % (attrs1[FATTR4_SIZE], attrs2[FATTR=
+4_SIZE]))
+>      if attrs1[FATTR4_CHANGE] !=3D attrs2[FATTR4_CHANGE]:
+>          fail("Bad change attribute: %u !=3D %u" % (attrs1[FATTR4_CHANGE]=
+, attrs2[FATTR4_CHANGE]))
+> -    if FATTR4_TIME_DELEG_MODIFY in attrs2:
+> -        if attrs1[FATTR4_TIME_MODIFY] !=3D attrs2[FATTR4_TIME_DELEG_MODI=
+FY]:
+> -            fail("Bad modify time: ", attrs1[FATTR4_TIME_MODIFY], " !=3D=
+ ", attrs2[FATTR4_TIME_DELEG_MODIFY])
+> =20
+>  def testCbGetattrWithChange(t, env):
+>      """Test CB_GETATTR with simulated changes to file
+> @@ -419,9 +416,6 @@ def testCbGetattrWithChange(t, env):
+>          fail("Bad size: %u !=3D 5" % attrs2[FATTR4_SIZE])
+>      if attrs1[FATTR4_CHANGE] =3D=3D attrs2[FATTR4_CHANGE]:
+>          fail("Bad change attribute: %u =3D=3D %u" % (attrs1[FATTR4_CHANG=
+E], attrs2[FATTR4_CHANGE]))
+> -    if FATTR4_TIME_DELEG_MODIFY in attrs2:
+> -        if attrs1[FATTR4_TIME_MODIFY] =3D=3D attrs2[FATTR4_TIME_DELEG_MO=
+DIFY]:
+> -            fail("Bad modify time: ", attrs1[FATTR4_TIME_MODIFY], " =3D=
+=3D ", attrs2[FATTR4_TIME_DELEG_MODIFY])
+> =20
+>  def testDelegReadAfterClose(t, env):
+>      """Test read with delegation stateid after close
 
 --=20
 Jeff Layton <jlayton@kernel.org>
