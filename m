@@ -1,204 +1,447 @@
-Return-Path: <linux-nfs+bounces-20655-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20656-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kBaAGs0p0WlsGAcAu9opvQ
-	(envelope-from <linux-nfs+bounces-20655-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 17:10:05 +0200
+	id oL1xEoUr0Wm2GAcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20656-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 17:17:25 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3AF239B83D
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 17:10:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BABD539B8D8
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 17:17:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B5F1A301F9CF
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 15:08:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A0ADE300A7DA
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 15:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916772DEA95;
-	Sat,  4 Apr 2026 15:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C27828BAB9;
+	Sat,  4 Apr 2026 15:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThJPlP3G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s77Y1FzX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAB82DB79F
-	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 15:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775315301; cv=none; b=lvm55U8977tU76u6xJqA751UQ57ygRtO2vw+oJXMatzm+fAy6eP6TJTciggltvNI8oMiGotR4pIBhfrnQJALwkvxhuLqvhn8dnUzEQMgR5iLg837foIdOTnWbAyhwcCwqzvAQsT8PGDY6sGKyvGX4c5DeNJGUXeuSpxd+GFZEOQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775315301; c=relaxed/simple;
-	bh=EC7OkasM5IygTNZ+kQsUWEqyT0X9rQNK0sXtIZkDcjo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=sP9ybltFm8OSFgVvZGsa4cOqxP8sCJOXIqKxiEcVlN51yDI/t1eR4OxaAkRDxDXAqmrwt2tuJAKpcV2v23yTP5ApMMCVl7dgpTRg3jxXMqrBQ149r2adai21NwBnwQl6ifrDj/eYl0u/PTLV3/MTVGc9ARBmIpIJBZRRIDu2KBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThJPlP3G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB6EC19425;
-	Sat,  4 Apr 2026 15:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775315301;
-	bh=EC7OkasM5IygTNZ+kQsUWEqyT0X9rQNK0sXtIZkDcjo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ThJPlP3GL+950M42ZbPhopTP8ANKLEAYfqaqpTpsKkIbUvq/0eoJwnk9HOxxRxEF4
-	 n8LwgZdlD1hs7DsfLLY1izXZDHMcgZ5Ww30NScaaqMojnhUupi2B6KT2Ayg5NDGmOi
-	 AHJWseWzwFHdc5jStTw5w5+neElyK9oPi0X8+e6/qux/eWzy3VqMrkvig3Vz7QRPPv
-	 smBEjKFYWSQ4CY58zB3Ap8qBIB8IfzU7LUk69yIytFKXD8q5RGDhs/GjVipLjx3BTq
-	 osAm9F+JwPeFTzacGg71hJqW/uz4LVOFllBNs+AkkE9kUqMOCG3hC3YjDQ21bZlOG4
-	 oCyLbbRzB2GGQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9560AF40084;
-	Sat,  4 Apr 2026 11:08:19 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 04 Apr 2026 11:08:19 -0400
-X-ME-Sender: <xms:YynRaeENzVywyfGa5otnLQe2Ora0UIxVKIYdIjnm9-xvmqSEiuUKNg>
-    <xme:YynRaaLiwYKagOH_Vdip2qJIOjKifS6uJISFneFIQ6_V6dJzAvBNwR6bjyqYk_kX8
-    5JDVjHx6mlxLOFXHu9OrbndYYk9RpXleWe2pwQJI-qRbMTRFwkzlOk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduvddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepjhhlrgihthhonheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
-    pdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpth
-    htohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehsmhgrhihh
-    vgifsehrvgguhhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomh
-    dprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:YynRadZnMqRNyhGp6fGjRNBgsq29CTNTyGLuxEt1QGNjK0bXwkAdwQ>
-    <xmx:YynRaeaX8fSl2qXBtqTvKBWpCkXnHCIIAclUhdJwGms5FKljKfqB_Q>
-    <xmx:YynRaWnfnP3pwbuCgi2AT-LBp5yXJANArabePtPeL_ohaT5fV8dSMA>
-    <xmx:YynRaZ1zB9AD39wQnqNVa1HKs45TWwOsdxQuolLgIo2vcLa-OJItTw>
-    <xmx:YynRaW2YioIsgKNtVM2xMdMs7iXlslPazBJAMtN8SsHBQUNyX3IaI8Ah>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 722B5780070; Sat,  4 Apr 2026 11:08:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7959D2459CF
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 15:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775315842; cv=pass; b=kRKPev3Q33u4TzbWdDp0hddFb6VxSzk2/2/lfLNx+GHN/gfRxX7ev4nHwlIKljZPsjjYiUqCCeqsd2TjlcSsNG6/sKtHyIsej+Io2DvzHktBcuBpjqLxUNsSyvlr0Zzu1CxWe/dxocaXfp3r/5baOqoWawMLvjrBLG8gOiED9UQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775315842; c=relaxed/simple;
+	bh=iJkUBTHI8W8Yq4GfHOouMA+FFui5r396sp7Kzj9EaR0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eEjjubUby0kM2f2+bNzlP8hxIr7eYg/faLf3WQJBkUSNVXAlsXjg0o/Dxa+zw1NqxloSP0WvMakz1Tae8q1DDkO8n0K1TXOetmK049UwIwejXCzZ9NYq0ouRKgwESmeQ0oQgs+Jj8QSclCSWDqYVKz6e6ecrh5Tl7LiiBI4inLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s77Y1FzX; arc=pass smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-60591ade110so1795627137.1
+        for <linux-nfs@vger.kernel.org>; Sat, 04 Apr 2026 08:17:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775315839; cv=none;
+        d=google.com; s=arc-20240605;
+        b=d5DI1qNwuyiNrcMc96m7Vsu07sBzKjFzHjleSBI6Pa2GZCixxlZ/tYHxNMT3GbrPZV
+         TFzKHTzmg64We0yuJiFHenW+qvaxFS3uY5qgOU1adewbzLkBB/l5sYmF6qIf9yiuPZoU
+         H9n0VIWjWP0guk4G6yFQwugTJksVX42kR28a9MuVdqYn6zHQalRSHMmAOI4vat8rtc5M
+         Lcs92/pOZYfuaQV+7vphMzfql1uX+lbp5dIaL5IZxvUzIPa4JLM+Pow1igc3jCU5fJsP
+         fUv829XH6X+I41Y9mfsQ1tD0EkN3Abf/xYl1jpHpeoa4eDhOsZbFmoEj9/emBD2w5xSP
+         W0kA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=n1MY/rgzPW8aC/hTJxOzosMzWp+WcyNGjBARHB4s6mE=;
+        fh=MKNhqDXMzujkSijNGOEGIBVk03wgYwrA377d6wpuyQw=;
+        b=YCrlOxMVeSkQFgTgOJBhVQM3ntgybBs4uWekfchyBGf4YXJGTZZoxGqzLO0vl48lXF
+         UQql2ikQFkbp4sD4D6oSMQLfImmz/8caBQy1hIqY9VlHgzafb/PCsdBolqAPXq/QGUOU
+         w+TFwe/BEEv5I7vDFDKRiZKRu9MN84vw7CW0Jw1dCSYxHBNmpxEVppDj6LRe9Q9w+ud1
+         q5Qln2pJGJkYHWsTenQjGA3WW9Iuu8kczxdvv+NkdKBy00/JhgwtK32p2YCMqtNupLBL
+         teUB85PBj7hOxQvQypaDhwKiuLGUb+ljGkIjuFFJhc/p/24A4yaIpfSGF2oy09crSzCy
+         M9Ug==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775315839; x=1775920639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n1MY/rgzPW8aC/hTJxOzosMzWp+WcyNGjBARHB4s6mE=;
+        b=s77Y1FzXFarjgMt/1UF7yVWyGwofP1rrRJZ793/XKhISR6nPYvGAzxESq2L/Q8kK74
+         NFoEm5E6kfl4AivMnU/c+5VoDIjEbUVLnJvG75KOY2Ik0pKi4lT57u7z8zVH8oyZUP3H
+         okq0yfKsa+kX7zT8e3oFWM6jv0QAWdEfmni/hRZJ5Ws1zslDKPoYEsqUKHI1Z5mZ5wPd
+         g0m/5M+VHUg0oeftYfabAqfxbrAO0D3gQPtS1sM4OJMMcWNtD2Z9TwrFf4Fea4TkN5OQ
+         Ayife0wHbUDV1iFOf7Ja0EY8S5U9DqzKM/ZzVboKjrNZMOWTv7dUw9Gc+U9JIOVAolkr
+         e3rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775315839; x=1775920639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=n1MY/rgzPW8aC/hTJxOzosMzWp+WcyNGjBARHB4s6mE=;
+        b=C0RuPq4xlja/kioMU5VGWiuOzSsDrXkWxNn89nEr0uYXPPJdF8wtpM8rftsdkFOlHN
+         kUSUog696z1IfBN57tLNtQd65AC02wqhv0dwT8V4o6c/BD/Kz/4VV2zdiGza2EgvFNeL
+         JceHSPIpUGIcIewamJQakFh7X6GAh2PtImZFkzHE0T1jihw6qnL9nbFxD0cySzpnJgFD
+         vAlOU4wexfol5OEGaaa3J3OmkIppHnpuG6hOase6kJx+/1xhLZAHTCIf2OXtEm9Tn+ef
+         gvh5d/8noCM576SWkX7kqSD7LecMbCuW5TglRxuneAeAT0PNifcxpowFComrlb9wAwE1
+         dVIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU63HHh4jSRHcQAQeiwEUB4dbAcwTEx+iAwKFiBsiheXK9hOwffR5IhfW7Mc5BlYbXBhlhOGDV3ONY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlBa2+0BYphRhAbwuv3PDXBTEq5+slFifY3O04nZeSysM0veEO
+	AfxpEq3IcXZ7eXDz9+obe/ABAuA1WUgoAdhX4godSuMyTbdQquUIEXF+1gHLV27MCcpHgUgr6Nr
+	W+S81n4rS/qBbnvsXABu/41y0CH5Q62w=
+X-Gm-Gg: AeBDietHoHDvuzxAEWzcKjQnLn4wpS3tuYBXOHnVVAOXGm/H9oWOrNq8aZ8kA775xm9
+	CuzDxFZLmc14LMpS5ANNNu/BFVPhPnpbAeG7GKyhkop5z8KdYDIkCdKQEdWpHHDZ6B8cgazkp4Z
+	CvG9NsQdPUL6nBfC9YOarjZZjLZNRjsNThApT0DIXm4wxaqbM8hCOklTgi8vYgqNbPBLKf/epgR
+	EA3gE93BSvRAD9r0KT3CNlnq7KXGAnaC2WaGFJQX2JYhPIKHQYzoxt2krSPBHWAb5hyXmCpvxTy
+	ls7qn/FYHdl6UYRbe62t/pYrQJDKQoD85VjEBod4dxI=
+X-Received: by 2002:a05:6102:6046:b0:601:f85b:efeb with SMTP id
+ ada2fe7eead31-605a4dced8bmr2528576137.9.1775315839238; Sat, 04 Apr 2026
+ 08:17:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AMVA-RgOnKPZ
-Date: Sat, 04 Apr 2026 11:07:59 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Scott Mayhew" <smayhew@redhat.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
-Cc: NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org
-Message-Id: <e03d3523-06e1-4414-b185-d349e7edbe54@app.fastmail.com>
-In-Reply-To: <20260404005405.1565136-1-smayhew@redhat.com>
-References: <20260404005405.1565136-1-smayhew@redhat.com>
-Subject: Re: [PATCH v2] nfsd: fix file change detection in CB_GETATTR
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.15 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+References: <20260328172314.45807-1-dorjoychy111@gmail.com>
+ <20260328172314.45807-2-dorjoychy111@gmail.com> <e526fbdb450a593b575355c1c9ae21f286427275.camel@kernel.org>
+ <CAFfO_h75dF2s83VNtUaNuRmto1NVVcxo7kN6eAtNtN3ME8mPiQ@mail.gmail.com> <4385168f2147efb8131d5fe4209e88d2d15a60bf.camel@kernel.org>
+In-Reply-To: <4385168f2147efb8131d5fe4209e88d2d15a60bf.camel@kernel.org>
+From: Dorjoy Chowdhury <dorjoychy111@gmail.com>
+Date: Sat, 4 Apr 2026 21:17:08 +0600
+X-Gm-Features: AQROBzCQF2-YPXzLWBuj6trmnUQAKh_7YQnhBAKjxSQrB6QucZDOdQgFzGpIDh4
+Message-ID: <CAFfO_h4dhsXji=+FjO9EikX0_oUUDkWe8tC1F7u4WqhNAjRB=g@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] openat2: new OPENAT2_REGULAR flag support
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
+	jack@suse.cz, chuck.lever@oracle.com, alex.aring@gmail.com, arnd@arndb.de, 
+	adilger@dilger.ca, mjguzik@gmail.com, smfrench@gmail.com, 
+	richard.henderson@linaro.org, mattst88@gmail.com, linmag7@gmail.com, 
+	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
+	deller@gmx.de, davem@davemloft.net, andreas@gaisler.com, idryomov@gmail.com, 
+	amarkuze@redhat.com, slava@dubeyko.com, agruenba@redhat.com, 
+	trondmy@kernel.org, anna@kernel.org, sfrench@samba.org, pc@manguebit.org, 
+	ronniesahlberg@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
+	bharathsm@microsoft.com, shuah@kernel.org, miklos@szeredi.hu, 
+	hansg@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20656-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20655-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[42];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,arndb.de,dilger.ca,linaro.org,alpha.franken.de,hansenpartnership.com,gmx.de,davemloft.net,gaisler.com,redhat.com,dubeyko.com,samba.org,manguebit.org,microsoft.com,talpey.com,szeredi.hu];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.988];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[dorjoychy111@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: B3AF239B83D
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: BABD539B8D8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
-
-On Fri, Apr 3, 2026, at 8:54 PM, Scott Mayhew wrote:
-> RFC 8881, section 10.4.3 doesn't say anything about caching the file
-> size in the delegation record, nor does it say anything about comparing
-> a cached file size with the size reported by the client in the
-> CB_GETATTR reply for the purpose of determining if the client holds
-> modified data for the file.
+On Thu, Apr 2, 2026 at 1:02=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wro=
+te:
 >
-> What section 10.4.3 of RFC 8881 does say is that the server should
-> compare the *current* file size with size reported by the client holding
-> the delegation in the CB_GETATTR reply, and if they differ to treat it
-> as a modification regardless of the change attribute retrieved via the
-> CB_GETATTR.
+> On Mon, 2026-03-30 at 21:07 +0600, Dorjoy Chowdhury wrote:
+> > On Mon, Mar 30, 2026 at 5:49=E2=80=AFPM Jeff Layton <jlayton@kernel.org=
+> wrote:
+> > >
+> > > On Sat, 2026-03-28 at 23:22 +0600, Dorjoy Chowdhury wrote:
+> > > > This flag indicates the path should be opened if it's a regular fil=
+e.
+> > > > This is useful to write secure programs that want to avoid being
+> > > > tricked into opening device nodes with special semantics while thin=
+king
+> > > > they operate on regular files. This is a requested feature from the
+> > > > uapi-group[1].
+> > > >
+> > > > A corresponding error code EFTYPE has been introduced. For example,=
+ if
+> > > > openat2 is called on path /dev/null with OPENAT2_REGULAR in the fla=
+g
+> > > > param, it will return -EFTYPE. EFTYPE is already used in BSD system=
+s
+> > > > like FreeBSD, macOS.
+> > > >
+> > > > When used in combination with O_CREAT, either the regular file is
+> > > > created, or if the path already exists, it is opened if it's a regu=
+lar
+> > > > file. Otherwise, -EFTYPE is returned.
+> > > >
+> > > > When OPENAT2_REGULAR is combined with O_DIRECTORY, -EINVAL is retur=
+ned
+> > > > as it doesn't make sense to open a path that is both a directory an=
+d a
+> > > > regular file.
+> > > >
+> > > > [1]: https://uapi-group.org/kernel-features/#ability-to-only-open-r=
+egular-files
+> > > >
+> > > > Signed-off-by: Dorjoy Chowdhury <dorjoychy111@gmail.com>
+> > > > ---
+> > > >  arch/alpha/include/uapi/asm/errno.h        |  2 ++
+> > > >  arch/alpha/include/uapi/asm/fcntl.h        |  1 +
+> > > >  arch/mips/include/uapi/asm/errno.h         |  2 ++
+> > > >  arch/parisc/include/uapi/asm/errno.h       |  2 ++
+> > > >  arch/parisc/include/uapi/asm/fcntl.h       |  1 +
+> > > >  arch/sparc/include/uapi/asm/errno.h        |  2 ++
+> > > >  arch/sparc/include/uapi/asm/fcntl.h        |  1 +
+> > > >  fs/ceph/file.c                             |  4 ++++
+> > > >  fs/fcntl.c                                 |  4 ++--
+> > > >  fs/gfs2/inode.c                            |  6 ++++++
+> > > >  fs/namei.c                                 |  4 ++++
+> > > >  fs/nfs/dir.c                               |  4 ++++
+> > > >  fs/open.c                                  |  8 +++++---
+> > > >  fs/smb/client/dir.c                        | 14 +++++++++++++-
+> > > >  include/linux/fcntl.h                      |  2 ++
+> > > >  include/uapi/asm-generic/errno.h           |  2 ++
+> > > >  include/uapi/asm-generic/fcntl.h           |  4 ++++
+> > > >  tools/arch/alpha/include/uapi/asm/errno.h  |  2 ++
+> > > >  tools/arch/mips/include/uapi/asm/errno.h   |  2 ++
+> > > >  tools/arch/parisc/include/uapi/asm/errno.h |  2 ++
+> > > >  tools/arch/sparc/include/uapi/asm/errno.h  |  2 ++
+> > > >  tools/include/uapi/asm-generic/errno.h     |  2 ++
+> > > >  22 files changed, 67 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/arch/alpha/include/uapi/asm/errno.h b/arch/alpha/inclu=
+de/uapi/asm/errno.h
+> > > > index 6791f6508632..1a99f38813c7 100644
+> > > > --- a/arch/alpha/include/uapi/asm/errno.h
+> > > > +++ b/arch/alpha/include/uapi/asm/errno.h
+> > > > @@ -127,4 +127,6 @@
+> > > >
+> > > >  #define EHWPOISON    139     /* Memory page has hardware error */
+> > > >
+> > > > +#define EFTYPE               140     /* Wrong file type for the in=
+tended operation */
+> > > > +
+> > > >  #endif
+> > > > diff --git a/arch/alpha/include/uapi/asm/fcntl.h b/arch/alpha/inclu=
+de/uapi/asm/fcntl.h
+> > > > index 50bdc8e8a271..fe488bf7c18e 100644
+> > > > --- a/arch/alpha/include/uapi/asm/fcntl.h
+> > > > +++ b/arch/alpha/include/uapi/asm/fcntl.h
+> > > > @@ -34,6 +34,7 @@
+> > > >
+> > > >  #define O_PATH               040000000
+> > > >  #define __O_TMPFILE  0100000000
+> > > > +#define OPENAT2_REGULAR      0200000000
+> > > >
+> > > >  #define F_GETLK              7
+> > > >  #define F_SETLK              8
+> > > > diff --git a/arch/mips/include/uapi/asm/errno.h b/arch/mips/include=
+/uapi/asm/errno.h
+> > > > index c01ed91b1ef4..1835a50b69ce 100644
+> > > > --- a/arch/mips/include/uapi/asm/errno.h
+> > > > +++ b/arch/mips/include/uapi/asm/errno.h
+> > > > @@ -126,6 +126,8 @@
+> > > >
+> > > >  #define EHWPOISON    168     /* Memory page has hardware error */
+> > > >
+> > > > +#define EFTYPE               169     /* Wrong file type for the in=
+tended operation */
+> > > > +
+> > > >  #define EDQUOT               1133    /* Quota exceeded */
+> > > >
+> > > >
+> > > > diff --git a/arch/parisc/include/uapi/asm/errno.h b/arch/parisc/inc=
+lude/uapi/asm/errno.h
+> > > > index 8cbc07c1903e..93194fbb0a80 100644
+> > > > --- a/arch/parisc/include/uapi/asm/errno.h
+> > > > +++ b/arch/parisc/include/uapi/asm/errno.h
+> > > > @@ -124,4 +124,6 @@
+> > > >
+> > > >  #define EHWPOISON    257     /* Memory page has hardware error */
+> > > >
+> > > > +#define EFTYPE               258     /* Wrong file type for the in=
+tended operation */
+> > > > +
+> > > >  #endif
+> > > > diff --git a/arch/parisc/include/uapi/asm/fcntl.h b/arch/parisc/inc=
+lude/uapi/asm/fcntl.h
+> > > > index 03dee816cb13..d46812f2f0f4 100644
+> > > > --- a/arch/parisc/include/uapi/asm/fcntl.h
+> > > > +++ b/arch/parisc/include/uapi/asm/fcntl.h
+> > > > @@ -19,6 +19,7 @@
+> > > >
+> > > >  #define O_PATH               020000000
+> > > >  #define __O_TMPFILE  040000000
+> > > > +#define OPENAT2_REGULAR      0100000000
+> > > >
+> > > >  #define F_GETLK64    8
+> > > >  #define F_SETLK64    9
+> > > > diff --git a/arch/sparc/include/uapi/asm/errno.h b/arch/sparc/inclu=
+de/uapi/asm/errno.h
+> > > > index 4a41e7835fd5..71940ec9130b 100644
+> > > > --- a/arch/sparc/include/uapi/asm/errno.h
+> > > > +++ b/arch/sparc/include/uapi/asm/errno.h
+> > > > @@ -117,4 +117,6 @@
+> > > >
+> > > >  #define EHWPOISON    135     /* Memory page has hardware error */
+> > > >
+> > > > +#define EFTYPE               136     /* Wrong file type for the in=
+tended operation */
+> > > > +
+> > > >  #endif
+> > > > diff --git a/arch/sparc/include/uapi/asm/fcntl.h b/arch/sparc/inclu=
+de/uapi/asm/fcntl.h
+> > > > index 67dae75e5274..bb6e9fa94bc9 100644
+> > > > --- a/arch/sparc/include/uapi/asm/fcntl.h
+> > > > +++ b/arch/sparc/include/uapi/asm/fcntl.h
+> > > > @@ -37,6 +37,7 @@
+> > > >
+> > > >  #define O_PATH               0x1000000
+> > > >  #define __O_TMPFILE  0x2000000
+> > > > +#define OPENAT2_REGULAR      0x4000000
+> > > >
+> > > >  #define F_GETOWN     5       /*  for sockets. */
+> > > >  #define F_SETOWN     6       /*  for sockets. */
+> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > > index 66bbf6d517a9..6d8d4c7765e6 100644
+> > > > --- a/fs/ceph/file.c
+> > > > +++ b/fs/ceph/file.c
+> > > > @@ -977,6 +977,10 @@ int ceph_atomic_open(struct inode *dir, struct=
+ dentry *dentry,
+> > > >                       ceph_init_inode_acls(newino, &as_ctx);
+> > > >                       file->f_mode |=3D FMODE_CREATED;
+> > > >               }
+> > > > +             if ((flags & OPENAT2_REGULAR) && !d_is_reg(dentry)) {
+> > > > +                     err =3D -EFTYPE;
+> > > > +                     goto out_req;
+> > > > +             }
+> > >
+> > > ^^^
+> > > This doesn't look quite right. Here's a larger chunk of the code:
+> > >
+> > > -------------------------8<--------------------------
+> > >         if (d_in_lookup(dentry)) {
+> > >                 dn =3D ceph_finish_lookup(req, dentry, err);
+> > >                 if (IS_ERR(dn))
+> > >                         err =3D PTR_ERR(dn);
+> > >         } else {
+> > >                 /* we were given a hashed negative dentry */
+> > >                 dn =3D NULL;
+> > >         }
+> > >         if (err)
+> > >                 goto out_req;
+> > >         if (dn || d_really_is_negative(dentry) || d_is_symlink(dentry=
+)) {
+> > >                 /* make vfs retry on splice, ENOENT, or symlink */
+> > >                 doutc(cl, "finish_no_open on dn %p\n", dn);
+> > >                 err =3D finish_no_open(file, dn);
+> > >         } else {
+> > >                 if (IS_ENCRYPTED(dir) &&
+> > >                     !fscrypt_has_permitted_context(dir, d_inode(dentr=
+y))) {
+> > >                         pr_warn_client(cl,
+> > >                                 "Inconsistent encryption context (par=
+ent %llx:%llx child %llx:%llx)\n",
+> > >                                 ceph_vinop(dir), ceph_vinop(d_inode(d=
+entry)));
+> > >                         goto out_req;
+> > >                 }
+> > >
+> > >                 doutc(cl, "finish_open on dn %p\n", dn);
+> > >                 if (req->r_op =3D=3D CEPH_MDS_OP_CREATE && req->r_rep=
+ly_info.has_create_ino) {
+> > >                         struct inode *newino =3D d_inode(dentry);
+> > >
+> > >                         cache_file_layout(dir, newino);
+> > >                         ceph_init_inode_acls(newino, &as_ctx);
+> > >                         file->f_mode |=3D FMODE_CREATED;
+> > >                 }
+> > >                 err =3D finish_open(file, dentry, ceph_open);
+> > >         }
+> > > -------------------------8<--------------------------
+> > >
+> > > It looks like this won't handle it correctly if the pathwalk terminat=
+es
+> > > on a symlink (re: d_is_symlink() case). You should either set up a te=
+st
+> > > ceph cluster on your own, or reach out to the ceph community and ask
+> > > them to test this.
+> > >
+> >
+> > Thanks for reviewing. The d_is_symlink() case seems to be calling
+> > finish_no_open so shouldn't this be okay?
+> >
 >
-> Doing otherwise would cause the server to believe the client holding the
-> delegation has a modified version of the file, even if the client
-> flushed the modifications to the server prior to the CB_GETATTR.  This
-> would have the added side effect of subsequent CB_GETATTRs causing
-> updates to the mtime, ctime, and change attribute even if the client
-> holding the delegation makes no further updates to the file.
+> My mistake -- you're correct. I keep forgetting that finish_no_open()
+> will handle this case regardless of what else happens.
 >
-> Modify nfsd4_deleg_getattr_conflict() to obtain the current file size
-> via vfs_getattr().  Retain the ncf_cur_fsize field, since it's a
-> convenient way to return the file size back to nfsd4_encode_fattr4(),
-> but don't use it for the purpose of detecting file changes.
+> > > >               err =3D finish_open(file, dentry, ceph_open);
+> > > >       }
+> > > >  out_req:
+> > > > diff --git a/fs/fcntl.c b/fs/fcntl.c
+> > > > index beab8080badf..240bb511557a 100644
+> > > > --- a/fs/fcntl.c
+> > > > +++ b/fs/fcntl.c
+> > > > @@ -1169,9 +1169,9 @@ static int __init fcntl_init(void)
+> > > >        * Exceptions: O_NONBLOCK is a two bit define on parisc; O_ND=
+ELAY
+> > > >        * is defined as O_NONBLOCK on some platforms and not on othe=
+rs.
+> > > >        */
+> > > > -     BUILD_BUG_ON(20 - 1 /* for O_RDONLY being 0 */ !=3D
+> > > > +     BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=3D
+> > > >               HWEIGHT32(
+> > > > -                     (VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY))=
+ |
+> > > > +                     (VALID_OPENAT2_FLAGS & ~(O_NONBLOCK | O_NDELA=
+Y)) |
+> > > >                       __FMODE_EXEC));
+> > > >
+> > > >       fasync_cache =3D kmem_cache_create("fasync_cache",
+> > > > diff --git a/fs/gfs2/inode.c b/fs/gfs2/inode.c
+> > > > index 8344040ecaf7..4604e2e8a9cc 100644
+> > > > --- a/fs/gfs2/inode.c
+> > > > +++ b/fs/gfs2/inode.c
+> > > > @@ -738,6 +738,12 @@ static int gfs2_create_inode(struct inode *dir=
+, struct dentry *dentry,
+> > > >       inode =3D gfs2_dir_search(dir, &dentry->d_name, !S_ISREG(mode=
+) || excl);
+> > > >       error =3D PTR_ERR(inode);
+> > > >       if (!IS_ERR(inode)) {
+> > > > +             if (file && (file->f_flags & OPENAT2_REGULAR) && !S_I=
+SREG(inode->i_mode)) {
+> > >
+> > > Isn't OPENAT2_REGULAR getting masked off in ->f_flags now?
+> > >
+> > Yes, I thought the masking off was happening after this codepath got
+> > executed. Maybe it's better anyway to pass another flags param to this
+> > function and forward the flags from the gfs2_atomic_open function and
+> > in other call sites pass 0 ? What do you think?
+> >
 >
-> Also, if we recall the delegation (because the client didn't respond to
-> the CB_GETATTR), then skip the logic that checks the nfs4_cb_fattr
-> fields.
+> Also my mistake. That happens in do_dentry_open() which happens in
+> finish_open(), so you should be OK here.
 >
-> Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index fa657badf5f8..53d8e7e7d60b 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
+Thanks for patiently reviewing this! I am planning on sending patches
+for man-pages and looking into some xfs-tests for this. But I am not
+sure if this patch series will get more reviews from others or if it
+will be picked up in the vfs branch?
 
-> @@ -9459,17 +9461,18 @@ static int cb_getattr_update_times(struct 
-> dentry *dentry, struct nfs4_delegation
->   * caller must put the reference.
->   */
->  __be32
-> -nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry 
-> *dentry,
-> -			     struct nfs4_delegation **pdp)
-> +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct path *path,
-> +			     struct kstat *stat, struct nfs4_delegation **pdp)
-
-Passing the kstat struct in saves some stack just as I suggested,
-but it is an ugly API. The nfsd4_encode_fattr4() call stack is tall,
-though -- did you happen to measure how deep it gets after this patch
-is applied?
-
-
->  {
->  	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
->  	struct nfsd_thread_local_info *ntli = rqstp->rq_private;
-> +	struct inode *inode = d_inode(path->dentry);
->  	struct file_lock_context *ctx;
->  	struct nfs4_delegation *dp = NULL;
->  	struct file_lease *fl;
->  	struct nfs4_cb_fattr *ncf;
-> -	struct inode *inode = d_inode(dentry);
->  	__be32 status;
-> +	int err;
-> 
->  	ctx = locks_inode_context(inode);
->  	if (!ctx)
-
--- 
-Chuck Lever
+Regards,
+Dorjoy
 
