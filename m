@@ -1,205 +1,181 @@
-Return-Path: <linux-nfs+bounces-20650-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20651-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0K7fLc5w0Gmo7gYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20650-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 04:00:46 +0200
+	id GAgZOp8f0WmmFgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20651-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 16:26:39 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E225399935
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 04:00:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6047F39B5D6
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 16:26:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5274C3006152
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 02:00:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 220AE300B879
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 14:26:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 013CA277C96;
-	Sat,  4 Apr 2026 02:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D7A22B5AC;
+	Sat,  4 Apr 2026 14:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWLRJ/EX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R41qWYFb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2CC3FFD
-	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 02:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775268043; cv=none; b=Plt2oCWw99QkRoMLYj43EPmc4hH1XYzAKwEOVvyw55cfSYmk94X/gazZC73nHEMq4XL47TXUvQAJq4hlWW61HT2o+BmmhaAGnqpcLiw7f7qKJ7C0ah3PtmQPT5cu/HW5Pe+m+B9kM0ICzy4SGlyQcQ832HQ97+o3qk9Uwr9Ngrc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775268043; c=relaxed/simple;
-	bh=xwE5t0LG/3F20TNNrUtGY613jux+lpvRpheRVJYPn+g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IsLEOsAzWHSM0jqRKvpub2n6SSk83G3keixDCPlwQbWtz67T6eL+Lr4DljxcFdkS3uAAey690ptEs1EfLainIME6p0ZoYBYhevlApikoM222S3rqpuCge/nye5rX6YAdSqhfp4HkWp0OFvvVMurUc928xHFpDAJp4huB6PMUfHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hWLRJ/EX; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB39761FFE
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 14:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775312797; cv=pass; b=tAlphlUQ8jh9usFwQjXAOZ+e4d0llxuwrLC89dZdRVxYPuN3llWNpRJhq1A+ZgkfjZzO7YvqA4J9VKy6n50oiTZab3aUIpQJNEmrmrU/1W7J+sxqshjzKtG7i54xsEBhmUGXC1sdinD4XoVpI9jZcYMD+v6tUds4R0S1oT0eOtk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775312797; c=relaxed/simple;
+	bh=ZQo04c2zcZrxSM/+/5TMsDiO4QN+lkGuEt+zbFcjXbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mKCrQaQ4MwJtYISjEjhfMYw2Bsm8hIUktLQJEIAlKNKzM5IxAl+YD42BbvNIdbvE219Z1HKHTN3BhN8jmzazNp9KZ+hor406ON5Vth2qwd/+Ut2EZGgFRDwObP3OQvbfddn7lVS4Q7HD4Zm7bc5VzTXHI2+Y9JCC18+c4MO+hVQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R41qWYFb; arc=pass smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-89cc71f4311so32155496d6.3
-        for <linux-nfs@vger.kernel.org>; Fri, 03 Apr 2026 19:00:42 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b982518b73fso434840866b.1
+        for <linux-nfs@vger.kernel.org>; Sat, 04 Apr 2026 07:26:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775312794; cv=none;
+        d=google.com; s=arc-20240605;
+        b=jd0ASbxTAXyyhTnpRPFlsw2ZBp5Qn6Mmk/3IlYx6F/pYhJhHdKKAq0x94rW0scvkP8
+         jwpwbxxfaccSIV9EX1UfGoqpwZ1wqCgahA2n9sOrsNLoJZGnvcrj0bi9JgqNVoR1ETkU
+         GpTAUgeqxDxf1Oui9l5ZcT58VNnWr3NEJ41tMGVTLJpRXqmO6CoQVLdvFKD2AJIsLG7m
+         Bptm794QJfxNTvXHdy5jch6RNP/Frq2HnD2FysnJPXFbyXPXzl5S1Uw1WNiqhpGdN7qm
+         SO38k0MDk42lFzWhfaQiKomNOXMVUyEjSOgaPX552KlpXZQiIf1IpbD6xtV+ZBcMn4VD
+         Y0Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=i0np0/Lcf/Gp+4mdr7ALJIhXpHV6yoiGvAcLSFXVVLY=;
+        fh=oNhd47IvoHzM7k8qVcL4GpDkC6cf430h9w4O2kbXiqs=;
+        b=Ex8/wd5u8wfJ9v5/wG9g6SgkAl44pophVAnMhK/67UMeKGxROeGVFf/kCvZvgv+VqB
+         GiB2LlR+K0LEV42HYloyGYsTT+CXS1gk+BYXZk5wEkGICRyoddR9rIxfW15DFH2d53M4
+         h9FaAp3k4ghgK3Z9pMALu4YLGfgv4s1pUjnQyOJknNXRr8+N/MEZFym8js2LCazf9h3u
+         lBj2MtrBHUgSTcsFRzcJX2wtDOpCcY8hltBMoDsYS7mpIuU9VScfr883l1Gm+3Sx8MJo
+         DrETEUbOuKnSf1iwUxomdK9jMRtK4cm1JYsMbPzTZrQn7fPncA1JcqPEoOp3TRzOshIO
+         xh3g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775268041; x=1775872841; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1775312794; x=1775917594; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nna7XikjSIt8v38EvLKlFvQXyQgfQaOAHmwwtVCsG/8=;
-        b=hWLRJ/EXn/1tAjQOg963jjsfgHXbWzeWHQTQPL7bqmcId7VWgX9EXYesozgO3/iGPY
-         ZslA9wfKXPv2YTVzfmxlM7sZLMHm6+EnYwcLflRcazi5scOIbJ2wWkh9FkAXNqwEokIh
-         4bFl+r9PkRDarA/4mavR78vnFYABDtxVkmx4fqSKwDgZAY9ngi2sjeMm6vEWzHO0dxSx
-         qJbHEu6BKYsOXmiNmBZXF5hZrXiSIaHejkzZNuXXQqbRi9bO026js3zKcPd6DYSygvNx
-         xovUJuccHspS5bC0ruwopIoVG+f4HIkqTJ0/GDAhpZGeVAe5jE/4+mUuuEzfHUJLBqa3
-         9oFQ==
+        bh=i0np0/Lcf/Gp+4mdr7ALJIhXpHV6yoiGvAcLSFXVVLY=;
+        b=R41qWYFb3wrSZ+Tnr5WF8zMsMpl3vdQqWeT6dFX6tXFUw7yAwsjwQ+yhsZUojdU/wv
+         X1GnBx0TgV+Wrbt5YiH9MidVYR88OXQYE7x06U7kYCcYvK4g/U3/5VCINlBlQblpGNQU
+         zIgnVI9+l5TXNfPuerXZbO219+riymJ6PmZ8m3+m3ca2OnR9WCJSXCpJ8DYvDgUXANWO
+         wjCdywcemJsRiuMkqqv8wQSbzS8VhuqovfEf+bShrPyQ9PYzcZMnKAOJbresfDVoeIws
+         qxpwHSC2rY9eH9x7Hnk/1zk/4usafFkB7yYUgM4cDQBGR6xERXmxL0olX2RjThJBcXRi
+         0C6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775268041; x=1775872841;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1775312794; x=1775917594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nna7XikjSIt8v38EvLKlFvQXyQgfQaOAHmwwtVCsG/8=;
-        b=pqY4Czh/YuoZSYhREOxaK6RZwuxOppqjuysqpX2vYkiCyHQv1lfHmzzffqFGraGvAt
-         bHHqLJfS8SLGPuq7AhC5eMRfo11EHKPIS4gHmZMd+tknEfCqeRl09xgAas5Jp2RbLpju
-         rtdVARUgLWsDivJo7wRPoNHPwIvMwwlXNNsIlEFalawhdzh52NLBtTMeHGkl6TSYc34n
-         0jgiAb8MxUbpUbvdxls89R92KfUNK+mlkOlq/rOiAikzM8N1OLwDkPfh0qj8gjlZV0Ug
-         YsaRObblF5TnRo9VKrtM7qBwf3drn6DRpK4223hXQZ/eKTafSwkDjOrMT6mT2XPR7Rfm
-         9erQ==
-X-Gm-Message-State: AOJu0YzjVOtH2+IeWGb2/kJuYEm3hiDXkcBjiT2JOACgJKWHi8KVweEq
-	lQ32TmqkbnNwUDBbb+L30s9PLtUsfBLJnXx6Lxq0EXn1/1zVKf8UM8/U
-X-Gm-Gg: AeBDievyp3jhpraqPmxi/Bvk421UNShOLb8Oo+p+nBrXs24Y7zR32lQOrcH4V3dThuE
-	5A7tnjnPT8FtCzjP0GBYt8MI8GKXLDIJCJit94IAJnQEYBgvQJkKIe61PkUlcmI2I4e7BrnxjLB
-	AvpFMI9u8M9mzc94zUF1CySTeJp6d4xHeYWly52JHh4noDnG3vb3hJG5XIMczrcdnsTvPW2ofUo
-	2Fqkso0BGWuXUDpD0fUupmSGcRSEsT/AM00FTiBr5gleG/7wfTGfICfVMSnu8jSXgf/ISdfPGiK
-	irOrzf2l7SknthPIWJx7wVSsqpM4fkZ/Z4BjLh+uaF4ztZwClv0CV6GE2QVIYZd0my9qB0G3ivU
-	xpNtEEFkQJjVJApetvMe1ofxfeaI1tO7nQNvfb4GZrxtD0GeemW+EBnQbYZtgOE3j1+f4mqR4cj
-	tE/1Aox983FwqK4d9HLO9wYwY6XWp+iKGfn/Re9vGErY8=
-X-Received: by 2002:ac8:7dc2:0:b0:4ee:13d0:d02b with SMTP id d75a77b69052e-50d62c8a32cmr75557921cf.50.1775268041390;
-        Fri, 03 Apr 2026 19:00:41 -0700 (PDT)
-Received: from desktop.. ([2607:fea8:d681:2400:aac2:af07:379d:ffaa])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50d4b8a8f38sm57316941cf.24.2026.04.03.19.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 19:00:40 -0700 (PDT)
-From: Tushar Sariya <tushar.sariya77@gmail.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tushar Sariya <tushar.97@hotmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/1] NFSv4.1: Apply session size limits on clone path
-Date: Fri,  3 Apr 2026 23:30:25 -0230
-Message-ID: <20260404020027.3327248-2-tushar.sariya77@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260404020027.3327248-1-tushar.sariya77@gmail.com>
-References: <20260404020027.3327248-1-tushar.sariya77@gmail.com>
+        bh=i0np0/Lcf/Gp+4mdr7ALJIhXpHV6yoiGvAcLSFXVVLY=;
+        b=YI+PA1cum8kwkBL55w39dXHy60QQGVztHjvCyLOLy6KZkH/xirAF+OzdvkzJCebHx0
+         1tlJmHAWnlOY1UheQ5HSDBdvxQOeZgYkE0meqetj/MrzOc1JI3L7E3OaV+l7x3fQNoFk
+         AnzeI1p8jN+AUSJ8m3aaJgaCyHXHZnawWi6330Okkb42piM5RZlQUJrIVJSq5KZWwxb5
+         /9f3WEgqogwaFjesHwjoSngZqbqydXamktQN6dUbGf88cdjcRRPwavb4LyPq3ZU5Quo7
+         4UhusJui9rW3Dp82Jt5BH7CnMIa7eq0E1FVLLiHdFnk3/dJs/qyGAy+DjY9fMmvSLnrh
+         +3zw==
+X-Gm-Message-State: AOJu0Ywk7AZiURgYOvPcpn5JcqPHb5XKEvkHYKVNHNL9HZRkkhZo7ZKe
+	Htdtlep/s9X3gIUjjSrFAO3ArYHbMIBq9vW5YQW5rOtyNGd7qU/mpIzrK/JW+OtVMo++zZ4Y1E5
+	z6z/P2g8Wk33BnjBlk/ij8n3AesTV7CE=
+X-Gm-Gg: AeBDietvVgXoEmNz/Xup2dhlok43lQZ2AGjEKrk0PkwOKLWP+Czjn2X2JDxWkQTwHAx
+	pxxBGZy7Y5tQL+PSjwEJvwDlP1l878f+zVQk80a+KesvzcVLqXUzPPWwxY1fLGWS63O4FKpqh3S
+	FPe1r+ezP/BGIQukWxwWHJLgjYur8lx6I/5xtVTxT8MEmPZfh7HMFQK1dM5lgTEQlqd6RlPtXVd
+	Zx/kK/wth7NZxeDB8b4hxBemDn5QWvhpVimYbanxABi19cKjPJuGHe18eGEhn0VlQ36QlJh/e2b
+	GxJy72yBzLBEYT6Jfo/tvYxwXIhKMVIoo5iOJ9zs+Iey7CJb+zsW
+X-Received: by 2002:a17:907:3f90:b0:b96:d904:9616 with SMTP id
+ a640c23a62f3a-b9c679f0458mr264217566b.40.1775312793828; Sat, 04 Apr 2026
+ 07:26:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+References: <20260404020027.3327248-1-tushar.sariya77@gmail.com>
+In-Reply-To: <20260404020027.3327248-1-tushar.sariya77@gmail.com>
+From: Tushar Sariya <tushar.sariya77@gmail.com>
+Date: Sat, 4 Apr 2026 11:56:22 -0230
+X-Gm-Features: AQROBzAV3jGn096l9BlSxLCsHVNaGssgkC5lqCcod7jLWT2LnNgGFYxCTmZ5liE
+Message-ID: <CAG-aSJ-pYZTCuCSQ_LpcvPLb5+gLZHj-z-MaoPLrNfNR+GP5xQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] NFSv4.1: Apply session size limits on clone path
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20650-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20651-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,hotmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[tusharsariya77@gmail.com,linux-nfs@vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
 	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5E225399935
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 6047F39B5D6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Tushar Sariya <tushar.97@hotmail.com>
+Superseded. Reposting as a reply to the original regression report:
 
-nfs4_clone_server() builds a child nfs_server for same-server
-automounted submounts but never calls nfs4_session_limit_rwsize()
-or nfs4_session_limit_xasize() after nfs_clone_server(). This means
-the child mount can end up with rsize/wsize values that exceed the
-negotiated session channel limits, causing NFS4ERR_REQ_TOO_BIG and
-EIO on servers that enforce tight max_request_size budgets.
+https://lore.kernel.org/all/177349021750.3039212.10211295677877269201@eldam=
+ar.lan/
 
-Top-level mounts go through nfs4_server_common_setup() which calls
-these limiters after nfs_probe_server(). Apply the same clamping on
-the clone path for consistency.
-
-Fixes: 2b092175f5e3 ("NFS: Fix inheritance of the block sizes when automounting")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tushar Sariya <tushar.97@hotmail.com>
----
- fs/nfs/internal.h   | 2 ++
- fs/nfs/nfs4client.c | 4 ++--
- fs/nfs/nfs4proc.c   | 3 +++
- 3 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 63e09dfc27a8..0338603e9674 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -253,6 +253,8 @@ extern struct nfs_client *nfs4_set_ds_client(struct nfs_server *mds_srv,
- 					     u32 minor_version);
- extern struct rpc_clnt *nfs4_find_or_create_ds_client(struct nfs_client *,
- 						struct inode *);
-+extern void nfs4_session_limit_rwsize(struct nfs_server *server);
-+extern void nfs4_session_limit_xasize(struct nfs_server *server);
- extern struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
- 			const struct sockaddr_storage *ds_addr, int ds_addrlen,
- 			int ds_proto, unsigned int ds_timeo,
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index c211639949c2..71c271a1700a 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -855,7 +855,7 @@ EXPORT_SYMBOL_GPL(nfs4_set_ds_client);
-  * Limit the mount rsize, wsize and dtsize using negotiated fore
-  * channel attributes.
-  */
--static void nfs4_session_limit_rwsize(struct nfs_server *server)
-+void nfs4_session_limit_rwsize(struct nfs_server *server)
- {
- 	struct nfs4_session *sess;
- 	u32 server_resp_sz;
-@@ -878,7 +878,7 @@ static void nfs4_session_limit_rwsize(struct nfs_server *server)
- /*
-  * Limit xattr sizes using the channel attributes.
-  */
--static void nfs4_session_limit_xasize(struct nfs_server *server)
-+void nfs4_session_limit_xasize(struct nfs_server *server)
- {
- #ifdef CONFIG_NFS_V4_2
- 	struct nfs4_session *sess;
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 91bcf67bd743..655617ffca8d 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10618,6 +10618,9 @@ static struct nfs_server *nfs4_clone_server(struct nfs_server *source,
- 	if (IS_ERR(server))
- 		return server;
- 
-+	nfs4_session_limit_rwsize(server);
-+	nfs4_session_limit_xasize(server);
-+
- 	error = nfs4_delegation_hash_alloc(server);
- 	if (error) {
- 		nfs_free_server(server);
--- 
-2.43.0
-
+On Fri, Apr 3, 2026 at 11:30=E2=80=AFPM Tushar Sariya <tushar.sariya77@gmai=
+l.com> wrote:
+>
+> From: Tushar Sariya <tushar.97@hotmail.com>
+>
+> The NFS automount clone path (nfs4_clone_server) is missing the
+> session-size clamping that top-level mounts get in
+> nfs4_server_common_setup(). This was exposed by 2b092175f5e3 which
+> changed submounts to no longer unconditionally inherit the parent's
+> already-clamped rsize/wsize. On servers that enforce tight
+> max_request_size budgets (reported on Dell EMC Isilon/OneFS), the
+> child mount ends up with raw unclamped values that exceed the session
+> channel limits, resulting in NFS4ERR_REQ_TOO_BIG and user-visible EIO.
+>
+> Note: I was unable to reproduce the exact failure locally as it appears
+> to require a server that enforces tight max_request_size budgets. The
+> fix is based on code analysis =E2=80=94 the clone path is missing the sam=
+e
+> session-limit clamping that top-level mounts apply in
+> nfs4_server_common_setup(). Tested that the kernel builds and boots
+> successfully.
+>
+> Tushar Sariya (1):
+>   NFSv4.1: Apply session size limits on clone path
+>
+>  fs/nfs/internal.h   | 2 ++
+>  fs/nfs/nfs4client.c | 4 ++--
+>  fs/nfs/nfs4proc.c   | 3 +++
+>  3 files changed, 7 insertions(+), 2 deletions(-)
+>
+> --
+> 2.43.0
+>
 
