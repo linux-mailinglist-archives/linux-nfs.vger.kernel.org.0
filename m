@@ -1,302 +1,155 @@
-Return-Path: <linux-nfs+bounces-20648-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20649-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +Kt6MX1h0GnC7AYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20648-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 02:55:25 +0200
+	id uHWrJp5x0Gmo7gYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20649-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 04:04:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EB3B399665
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 02:55:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0518039996D
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 04:04:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CD7B83008C04
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 00:55:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 694553019BBF
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 02:00:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 945B3221D89;
-	Sat,  4 Apr 2026 00:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7040277C96;
+	Sat,  4 Apr 2026 02:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JxioZUq3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r96PNvYc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4B1145355
-	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 00:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8B51F3BAC
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 02:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775264122; cv=none; b=X1WchqjGtNdVA/3vmRjeGEWAPAv6GEhlS6TPcXnAmTYIS4c+8iNiSMhmvZ0FUf/JlI/n+hVDPcszPxlHOTgJr8HltG1Oo8lMpm5PzR9BDm3m8YVz7Q5L0v1d1mGXMIxjuHXowym23deoJXn4PECrptxJt8BY3KRZKJxc5Dyh5EE=
+	t=1775268035; cv=none; b=ge6qdeH4zyufuFKcSa6IP574hc+4ylJzwlqM6csNrn+F7GbJV0CnLwKsa+o7+yzMLI6FDDfgeM+R+ZYhA3a+ZM6wKADcmTwU4UwXuVyuL6t3gTFQeiQetKtYazTOeBXZ9IqoRF2Lf+U2RbZ0p8PEepNQpcor77AOJ5MU0RZrUi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775264122; c=relaxed/simple;
-	bh=teXOa1Ke+p9edw5OqzabMvTZzrenD3ZcfSh6cTlFwX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fpTR6SzBF5jCgExfmyitaMVXnbpcQD7McT8fNkUA/edCmgOqDgIIAQdZCaMfD5myTDB7DYCzhBYHfgawO3nsauWjl2by19aEV12WUdwednEUeifBiSizzywJy2F+n+KCFAWOiRS/w1sQzPbFEG68tUJ0PivcKlo4l+jEWOuez5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JxioZUq3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775264119;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wqcgOPRcZnr7Q6ElhQQOn4OwWqU7m4Q8lT5w0wGM4SM=;
-	b=JxioZUq3TBomxlyoBPgN0+ZogN/Qr8o2K68TPjMiybsxOBiP12bjJxOelkFn87Lz6pkDKL
-	00OgA58hIBCcmxUzSgSy75M5Cm5nGrmITZOm+pYUamSB7p6eXQr4aRrhQxWSlA/gNBzY/Q
-	PZ1Kh86DPnUtbOiGwwpRWZcstzqa6RQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-676-dWrbHH7wMm-Qmp_APsON-w-1; Fri,
- 03 Apr 2026 20:55:16 -0400
-X-MC-Unique: dWrbHH7wMm-Qmp_APsON-w-1
-X-Mimecast-MFC-AGG-ID: dWrbHH7wMm-Qmp_APsON-w_1775264115
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CD831956046;
-	Sat,  4 Apr 2026 00:55:15 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.88.38])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 160121800361;
-	Sat,  4 Apr 2026 00:55:15 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id C9559749EBA; Fri, 03 Apr 2026 20:55:13 -0400 (EDT)
-Date: Fri, 3 Apr 2026 20:55:13 -0400
-From: Scott Mayhew <smayhew@redhat.com>
-To: calum.mackay@oracle.com
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] pynfs: add delegation test for CB_GETATTR after sync
- WRITE
-Message-ID: <adBhcY8lfimH_7G6@aion>
-References: <20260404003050.1560149-1-smayhew@redhat.com>
- <20260404003050.1560149-6-smayhew@redhat.com>
+	s=arc-20240116; t=1775268035; c=relaxed/simple;
+	bh=2Up/ooB1F1IW8Et3iiWgK6r3LpYS5a02mdN+3AgSDSo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dSE/ECUxB/RLhrVhiNKLDfO6MKIq1is9JitS7wuXh04btSMtX56VTweSc9x5/U1P9OY/9qm3ieZQhKcgxQzFfKvhoPqjo/ePjvyZQ/5I1TmZ5MCIMZa+22kHJNPr6WMWhlx/dO9jvCTQOlQHyHEGwwDQYOXb1oqEK5ZTWEumWGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r96PNvYc; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-506aa685d62so13589151cf.0
+        for <linux-nfs@vger.kernel.org>; Fri, 03 Apr 2026 19:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775268033; x=1775872833; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/QW+xJnpJU8nKA23Wo9lc4Fv12FM04P5h1eCRyd3g/I=;
+        b=r96PNvYc7R+Vg291BJtXjNRDArGvhYN9Ccj8rs8iYp/znmc79IBg0IitT/ipZTYs56
+         1vES8mAcDzcCw24/lD79EByxBQ59QTdEh9+n0CZy7NZ6DhQq7niMzpB6SoHOuGz6KMkL
+         XFWI14a+F9ALu2SW8RWd2TvJ0vtkOygsqG25tjAqcecnSZiwTA+xqrCDVigtB7g+RhYw
+         CTvQRwCw80IAJ43BeHX7BUiSCtWQaDhiGCT9aHlcP/Z5h+wWCl+Bz5G5Em79C6+s8R5e
+         FHJuAPEo4HpJ+hBN+l/RaBjWuGy4A4nmgzGW8IMduEfdxNqyZ5la8oP5zl5hHPk3a7bj
+         uIJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775268033; x=1775872833;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/QW+xJnpJU8nKA23Wo9lc4Fv12FM04P5h1eCRyd3g/I=;
+        b=gj/rZqbXm2nnZ2H4q2RzXvrkWdAsO2xzAXC/7lI97bHs0LSzko8cOFZ6lWgZTwsZYG
+         Icx2j2aZzBVTqKQGMkkhc4/2jsTg0Kq82tu7aap/juEEVPUnJUlcTExqUSL95OYlHAVc
+         vhiWMDqBwlybI3NJGGitiZeOy8xczQnfVD7mckGwx/J1r34vVbtEHRPyVCRNai+XsvuU
+         9c1vMyaJWoHvb6oq7wgmcWAeKdYN65aWlmbaEnJsq/fZqVGPTa2cRxOg/VizFaQUUsEq
+         Hm4XvpEecD+orMiZqSv9J1sH6L1py+L4MazyStjzjW1pvHCOrydwAD+aHahmlI731mwQ
+         vejw==
+X-Gm-Message-State: AOJu0Yz0kgHegma/z7YV9hJD7BQFnYposiCTm98TXpEN4rQhw5I4QS5S
+	dmCApsVWGKugzm25l3ISwBjCSxm5D3F0r4aX9842qfR8tZv8IXmr7ZwJ/FpTI0p6
+X-Gm-Gg: AeBDievgxI2ZSoxLVIMtq9RoaowfLByFKE70StBHVc+++nZD6zLHoiw0XsH2Eu7jHe4
+	h2G+HcxVHQ+pUVUfCeAn/12jtXA7OnuTfPaSDiKkFkN053trYXHBDl20PDiQYHCsfRYQ8F1KX0r
+	kbfc9SJQAtz58i2Lfqh7f2JFsUKlCGYuAV75MjU2k/3OQ5w9BQgJJmlQBhCv1NzY0Z7MERqESeG
+	qXfhL3IVVweayNluWVpvbPdxuy4GcHUD94aVYYX4S0qNXLNtb+ItOQ4T6qJQxMzlLhIBmyM6YEF
+	7qOqrbb0YJdtKiRDJ42C28k+3AzDQwM8HGUHwsjgiv7JL6SGpSdbCzGgkKdXXF5g1A0HG7YU9OI
+	fF4InN8CPsy8lKjjFzL3/ne3UVqGGHIQwAEfyOJKa2E/9auqCtS1YF1yl/KIYHS1GC/QZx0u2G0
+	CxfQ6IbdVX5INT3j6OWPjqShHYBSd/QgLUGEw89o5RCjI=
+X-Received: by 2002:a05:622a:41c4:b0:50b:52ee:62b6 with SMTP id d75a77b69052e-50d62ad9332mr53933351cf.38.1775268033237;
+        Fri, 03 Apr 2026 19:00:33 -0700 (PDT)
+Received: from desktop.. ([2607:fea8:d681:2400:aac2:af07:379d:ffaa])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50d4b8a8f38sm57316941cf.24.2026.04.03.19.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2026 19:00:32 -0700 (PDT)
+From: Tushar Sariya <tushar.sariya77@gmail.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tushar Sariya <tushar.97@hotmail.com>
+Subject: [PATCH 0/1] NFSv4.1: Apply session size limits on clone path
+Date: Fri,  3 Apr 2026 23:30:24 -0230
+Message-ID: <20260404020027.3327248-1-tushar.sariya77@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260404003050.1560149-6-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20648-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,hotmail.com];
+	TAGGED_FROM(0.00)[bounces-20649-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tusharsariya77@gmail.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 6EB3B399665
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0518039996D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-My bad, the subject should say [PATCH v2 5/5]...
+From: Tushar Sariya <tushar.97@hotmail.com>
 
-On Fri, 03 Apr 2026, Scott Mayhew wrote:
+The NFS automount clone path (nfs4_clone_server) is missing the
+session-size clamping that top-level mounts get in
+nfs4_server_common_setup(). This was exposed by 2b092175f5e3 which
+changed submounts to no longer unconditionally inherit the parent's
+already-clamped rsize/wsize. On servers that enforce tight
+max_request_size budgets (reported on Dell EMC Isilon/OneFS), the
+child mount ends up with raw unclamped values that exceed the session
+channel limits, resulting in NFS4ERR_REQ_TOO_BIG and user-visible EIO.
 
-> DELEG27 tests the scenario where a client has written data to the server
-> while holding a write delegation, but is not *currently* holding
-> modified data in its cache.
-> 
-> In this case, the CB_GETATTR should not trigger an mtime update (the
-> time_modify that client1 gets in the GETATTR after the WRITE should
-> match the time_modify it gets in the GETATTR in the DELEGRETURN
-> compound).
-> 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  nfs4.1/server41tests/st_delegation.py | 151 ++++++++++++++++++++++++++
->  1 file changed, 151 insertions(+)
-> 
-> diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
-> index bbf6925..6a08950 100644
-> --- a/nfs4.1/server41tests/st_delegation.py
-> +++ b/nfs4.1/server41tests/st_delegation.py
-> @@ -8,6 +8,8 @@ import nfs_ops
->  op = nfs_ops.NFS4ops()
->  import nfs4lib
->  import threading
-> +import copy
-> +import time
->  
->  def _got_deleg(deleg):
->      return (deleg.delegation_type != OPEN_DELEGATE_NONE and
-> @@ -476,3 +478,152 @@ def testDelegReadAfterClose(t, env):
->      # cleanup: return delegation
->      res = sess1.compound([op.putfh(fh), op.delegreturn(delegstateid)])
->      check(res)
-> +
-> +def testCbGetattrAfterSyncWrite(t, env):
-> +    """Test CB_GETATTR after a FILE_SYNC4 WRITE
-> +
-> +    1. Client 1 opens a file (getting a write deleg or a write attrs deleg) and
-> +       does a GETATTR
-> +    2. Client 1 does a FILE_SYNC4 WRITE.  If we got a write delegation, it
-> +       follows this up with a GETATTR.  Otherwise we got a write attrs deleg
-> +       and we construct the attrs ourself.
-> +    3. Client 2 does a GETATTR, triggering a CB_GETATTR to client 1.  Client 2
-> +       then does an OPEN, triggering a CB_RECALL to client 1.
-> +    4. Client 1 does a PUTFH|SETATTR|GETATTR|DELEGRETURN if we have a write
-> +       attrs deleg, otherwise it does a PUTFH|GETATTR|DELEGRETURN.
-> +
-> +    time_modify should only change between steps 1 and 2.  It should not change
-> +    from steps 2 thru 4.
-> +
-> +    FLAGS: deleg all
-> +    CODE: DELEG27
-> +    """
-> +    cb = threading.Event()
-> +    cbattrs = {}
-> +    def getattr_post_hook(arg, env, res):
-> +        res.obj_attributes = cbattrs
-> +        env.notify = cb.set
-> +        return res
-> +
-> +    recall = threading.Event()
-> +    def recall_pre_hook(arg, env):
-> +        recall.stateid = arg.stateid
-> +        recall.cred = env.cred.raw_cred
-> +        env.notify = recall.set
-> +    def recall_post_hook(arg, env, res):
-> +        return res
-> +
-> +    size = 5
-> +
-> +    sess1 = env.c1.new_client_session(b"%s_1" % env.testname(t))
-> +    sess1.client.cb_post_hook(OP_CB_GETATTR, getattr_post_hook)
-> +    sess1.client.cb_pre_hook(OP_CB_RECALL, recall_pre_hook)
-> +    sess1.client.cb_post_hook(OP_CB_RECALL, recall_post_hook)
-> +
-> +    res = sess1.compound([op.putrootfh(),
-> +                          op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPORTED_ATTRS,
-> +                                                          FATTR4_OPEN_ARGUMENTS]))])
-> +    check(res)
-> +    caps = res.resarray[-1].obj_attributes
-> +
-> +    openmask = (OPEN4_SHARE_ACCESS_READ  |
-> +                OPEN4_SHARE_ACCESS_WRITE |
-> +                OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG)
-> +
-> +    if caps[FATTR4_SUPPORTED_ATTRS] & (1 << FATTR4_OPEN_ARGUMENTS):
-> +        if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
-> +            openmask |= 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
-> +
-> +    fh, stateid, deleg = __create_file_with_deleg(sess1, env.testname(t), openmask)
-> +    delegtype = deleg.delegation_type
-> +    if delegtype != OPEN_DELEGATE_WRITE_ATTRS_DELEG and delegtype != OPEN_DELEGATE_WRITE:
-> +        fail("Didn't get a write delegation.")
-> +    delegstateid = deleg.write.stateid
-> +
-> +    attrs1 = do_getattrdict(sess1, fh, [FATTR4_CHANGE, FATTR4_SIZE,
-> +                                        FATTR4_TIME_ACCESS, FATTR4_TIME_MODIFY])
-> +
-> +    cbattrs[FATTR4_CHANGE] = attrs1[FATTR4_CHANGE]
-> +    cbattrs[FATTR4_SIZE] = attrs1[FATTR4_SIZE]
-> +
-> +    env.sleep(1)
-> +    res = write_file(sess1, fh, b'z' * size, 0, delegstateid)
-> +    check(res)
-> +
-> +    if delegtype == OPEN_DELEGATE_WRITE_ATTRS_DELEG:
-> +        attrs2 = copy.deepcopy(attrs1)
-> +        now = divmod(time.time_ns(), 1000000000)
-> +        attrs2[FATTR4_TIME_ACCESS] = nfstime4(*now)
-> +        attrs2[FATTR4_TIME_MODIFY] = nfstime4(*now)
-> +        cbattrs[FATTR4_TIME_DELEG_ACCESS] = nfstime4(*now)
-> +        cbattrs[FATTR4_TIME_DELEG_MODIFY] = nfstime4(*now)
-> +    else:
-> +        attrs2 = do_getattrdict(sess1, fh, [FATTR4_CHANGE, FATTR4_SIZE,
-> +                                            FATTR4_TIME_ACCESS, FATTR4_TIME_MODIFY])
-> +
-> +    # No need to bump FATTR4_CHANGE because we've already flushed our data
-> +    cbattrs[FATTR4_SIZE] = size
-> +
-> +    sess2 = env.c1.new_client_session(b"%s_2" % env.testname(t))
-> +    slot = sess2.compound_async([op.putfh(fh),
-> +                                 op.getattr(1<<FATTR4_CHANGE |
-> +                                            1<<FATTR4_SIZE |
-> +                                            1<<FATTR4_TIME_ACCESS |
-> +                                            1<<FATTR4_TIME_MODIFY)])
-> +
-> +    completed = cb.wait(2)
-> +    if not completed:
-> +        fail("CB_GETATTR not received")
-> +
-> +    res = sess2.listen(slot)
-> +    check(res)
-> +    attrs3 = res.resarray[-1].obj_attributes
-> +
-> +    claim = open_claim4(CLAIM_NULL, env.testname(t))
-> +    owner = open_owner4(0, b"owner")
-> +    how = openflag4(OPEN4_NOCREATE)
-> +    open_op = op.open(0, OPEN4_SHARE_ACCESS_WRITE,
-> +                      OPEN4_SHARE_DENY_NONE, owner, how, claim)
-> +    slot = sess2.compound_async(env.home + [open_op, op.getfh()])
-> +    completed = recall.wait(2)
-> +    if not completed:
-> +        fail("CB_RECALL not received")
-> +
-> +    env.sleep(.1)
-> +
-> +    # Note if we have a write attrs deleg we should do a setattr before the
-> +    # delegreturn (see RFC 9754, section 5)
-> +    res = sess1.compound([op.putfh(fh),
-> +                          *([op.setattr(delegstateid,
-> +                                        {FATTR4_TIME_DELEG_ACCESS: cbattrs[FATTR4_TIME_DELEG_ACCESS],
-> +                                         FATTR4_TIME_DELEG_MODIFY: cbattrs[FATTR4_TIME_DELEG_MODIFY]})]
-> +                              if delegtype == OPEN_DELEGATE_WRITE_ATTRS_DELEG else []),
-> +                          op.getattr(1<<FATTR4_CHANGE |
-> +                                     1<<FATTR4_SIZE |
-> +                                     1<<FATTR4_TIME_ACCESS |
-> +                                     1<<FATTR4_TIME_MODIFY),
-> +                          op.delegreturn(delegstateid)])
-> +    check(res)
-> +    attrs4 = res.resarray[-2].obj_attributes
-> +
-> +    res = sess2.listen(slot)
-> +    check(res, [NFS4_OK, NFS4ERR_DELAY])
-> +    if res.status == NFS4_OK:
-> +        fh2 = res.resarray[-1].object
-> +        stateid2 = res.resarray[-2].stateid
-> +    else:
-> +        fh2 = None
-> +        stateid2 = None
-> +
-> +    close_file(sess1, fh, stateid=stateid)
-> +    if fh2 is not None and stateid2 is not None:
-> +        close_file(sess2, fh2, stateid=stateid2)
-> +
-> +    #print(f"attrs1: size {attrs1[FATTR4_SIZE]} change {attrs1[FATTR4_CHANGE]} mtime {attrs1[FATTR4_TIME_MODIFY]}")
-> +    #print(f"attrs2: size {attrs2[FATTR4_SIZE]} change {attrs2[FATTR4_CHANGE]} mtime {attrs2[FATTR4_TIME_MODIFY]}")
-> +    #print(f"attrs3: size {attrs3[FATTR4_SIZE]} change {attrs3[FATTR4_CHANGE]} mtime {attrs3[FATTR4_TIME_MODIFY]}")
-> +    #print(f"attrs4: size {attrs4[FATTR4_SIZE]} change {attrs4[FATTR4_CHANGE]} mtime {attrs4[FATTR4_TIME_MODIFY]}")
-> +
-> +    if compareTimes(attrs2[FATTR4_TIME_MODIFY], attrs4[FATTR4_TIME_MODIFY]) != 0:
-> +        fail(f"mtime after write ({attrs2[FATTR4_TIME_MODIFY]}) != "
-> +             f"mtime from delegreturn ({attrs4[FATTR4_TIME_MODIFY]})")
-> -- 
-> 2.53.0
-> 
-> 
+Note: I was unable to reproduce the exact failure locally as it appears
+to require a server that enforces tight max_request_size budgets. The
+fix is based on code analysis — the clone path is missing the same
+session-limit clamping that top-level mounts apply in
+nfs4_server_common_setup(). Tested that the kernel builds and boots
+successfully.
+
+Tushar Sariya (1):
+  NFSv4.1: Apply session size limits on clone path
+
+ fs/nfs/internal.h   | 2 ++
+ fs/nfs/nfs4client.c | 4 ++--
+ fs/nfs/nfs4proc.c   | 3 +++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+--
+2.43.0
 
 
