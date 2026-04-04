@@ -1,76 +1,77 @@
-Return-Path: <linux-nfs+bounces-20646-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20647-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mN0JNdRb0GkA7AYAu9opvQ
-	(envelope-from <linux-nfs+bounces-20646-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 02:31:16 +0200
+	id GFpgHjth0GnC7AYAu9opvQ
+	(envelope-from <linux-nfs+bounces-20647-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 02:54:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F9A0399577
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 02:31:16 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E94839965C
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Apr 2026 02:54:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1F34E302D5EC
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 00:31:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7DA853008447
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Apr 2026 00:54:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE8E23C503;
-	Sat,  4 Apr 2026 00:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67821221D89;
+	Sat,  4 Apr 2026 00:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMSD3mTH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ITkoU5iJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF3C246768
-	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 00:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC532264A3
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Apr 2026 00:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775262660; cv=none; b=uc6/yFPDCvumHMZRSgCcbGpkYoHQciC5QaoTpQNmyCZQnsZSxTZ48esPeo/uQN19d5RM+M0UCEj8iaakhRjp24f5NNUPbX+7RfdeAmFXUx/quL4SucJvGCa4BY7hnf1g2MFxG6b4hoAU7100ockOjbQ8PTiTlrkihy64PQDoGZ4=
+	t=1775264053; cv=none; b=NS14Tis4bjAwF9GRVIiIR2GlDOfI2Lm6kwFENDPcw9Uxn3bZtCt8uFB733BpPFGmREdlVrfmzRsqLI3xLAuS2ZSUeijCa+i5LIeIKMybgf5sTOdLHnDQ0cf9gmj4bg8iUAPN3aENF7k+yBGu9Ar05Ik2KnQx4Pkrf+EO9UZLUhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775262660; c=relaxed/simple;
-	bh=lWs5kuRi+JfN6L88o1udakpnxS/vYsqBgsVTqZPMQB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IP356Kakd1yITze+yv6xQvYRu9eCmlPck6PdhNJWu/AVr3zrg4rA7c7n80MU+ZQxTGK6eA2jNqXbJzhaOKUkXAiURPwiUGU7A9+xjNmNCNxeU9XPhD3IVy+AjgriPui5tbNWoq+26O9UPU6dK0jMxmYQQ8vxqAHY52yBIcBqED0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WMSD3mTH; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1775264053; c=relaxed/simple;
+	bh=t4G0m5rNulaX1PWhY85Y4ednmvNYtIY3s3pNNfkwvI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oM9gQ/1AkRJJk62lN+etUy0XLF5w5Eu363fPuLonDvy3SrfVy/w21QzAW3z61trFaXyHYSMy/xqfI9TAxKiuoKPDousPKFxKVej0KoGx75xR8WIXrzF6W6fUSX72xfLdWgnAzYbjWDTkmbn/hT91x1RcvuRqMDiMhgjYSUTz5tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ITkoU5iJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775262658;
+	s=mimecast20190719; t=1775264050;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jDnGOZYE4StwahqPbHAm0OXOR/TQ+qFyVldZXO0hbVg=;
-	b=WMSD3mTHkAVp985axHkXSLOFj4E+vI90nZjQ2Kc71s55ARxsXQsUTfQ65tcBX6TBAyhQLC
-	JmbMqmnRkCAZIwtdoO1i1Ji7AzKoQmatYS46FczvDIhugqRSewlVtgld82Jo/EaFdfcHGt
-	uww9a+qhCnr0NKrpi7nQNMGgIbNM9jw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aiS3GXXCz1hy1WfO75g57/odz3A6YMwUMC7TPEIZLpg=;
+	b=ITkoU5iJcxZpXuvia9lAY7GqOO02jGdJWkeUvxm2bUQyA9vAp4e3IqcQVA5LFQc/lFiVmk
+	OyKdczr6eSbQ7CEEhgM2PuKNcIZuCC37YzEMU3Mc5UTeEG4fAorw3sIM/w9I4K7yM0qQyp
+	iMTcuWnIxEyMs0cqheeyKrAkL1BLHKg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-132-c0RczPWvMK2qewy23ZjOzw-1; Fri,
- 03 Apr 2026 20:30:54 -0400
-X-MC-Unique: c0RczPWvMK2qewy23ZjOzw-1
-X-Mimecast-MFC-AGG-ID: c0RczPWvMK2qewy23ZjOzw_1775262653
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-utFyMkbgORafQPe6TG9qwg-1; Fri,
+ 03 Apr 2026 20:54:09 -0400
+X-MC-Unique: utFyMkbgORafQPe6TG9qwg-1
+X-Mimecast-MFC-AGG-ID: utFyMkbgORafQPe6TG9qwg_1775264048
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B67301956089;
-	Sat,  4 Apr 2026 00:30:53 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C49511800561;
+	Sat,  4 Apr 2026 00:54:07 +0000 (UTC)
 Received: from aion.redhat.com (unknown [10.22.88.38])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6845F180035F;
-	Sat,  4 Apr 2026 00:30:53 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 322DC30002D2;
+	Sat,  4 Apr 2026 00:54:07 +0000 (UTC)
 Received: from aion.redhat.com (localhost [IPv6:::1])
-	by aion.redhat.com (Postfix) with ESMTP id 1F8E4749EB0;
-	Fri, 03 Apr 2026 20:30:51 -0400 (EDT)
+	by aion.redhat.com (Postfix) with ESMTP id 9658D749EB8;
+	Fri, 03 Apr 2026 20:54:05 -0400 (EDT)
 From: Scott Mayhew <smayhew@redhat.com>
-To: calum.mackay@oracle.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2] pynfs: add delegation test for CB_GETATTR after sync WRITE
-Date: Fri,  3 Apr 2026 20:30:50 -0400
-Message-ID: <20260404003050.1560149-6-smayhew@redhat.com>
-In-Reply-To: <20260404003050.1560149-1-smayhew@redhat.com>
-References: <20260404003050.1560149-1-smayhew@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v2] nfsd: fix file change detection in CB_GETATTR
+Date: Fri,  3 Apr 2026 20:54:05 -0400
+Message-ID: <20260404005405.1565136-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -78,217 +79,210 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20646-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	TAGGED_FROM(0.00)[bounces-20647-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 7F9A0399577
+X-Rspamd-Queue-Id: 7E94839965C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-DELEG27 tests the scenario where a client has written data to the server
-while holding a write delegation, but is not *currently* holding
-modified data in its cache.
+RFC 8881, section 10.4.3 doesn't say anything about caching the file
+size in the delegation record, nor does it say anything about comparing
+a cached file size with the size reported by the client in the
+CB_GETATTR reply for the purpose of determining if the client holds
+modified data for the file.
 
-In this case, the CB_GETATTR should not trigger an mtime update (the
-time_modify that client1 gets in the GETATTR after the WRITE should
-match the time_modify it gets in the GETATTR in the DELEGRETURN
-compound).
+What section 10.4.3 of RFC 8881 does say is that the server should
+compare the *current* file size with size reported by the client holding
+the delegation in the CB_GETATTR reply, and if they differ to treat it
+as a modification regardless of the change attribute retrieved via the
+CB_GETATTR.
 
+Doing otherwise would cause the server to believe the client holding the
+delegation has a modified version of the file, even if the client
+flushed the modifications to the server prior to the CB_GETATTR.  This
+would have the added side effect of subsequent CB_GETATTRs causing
+updates to the mtime, ctime, and change attribute even if the client
+holding the delegation makes no further updates to the file.
+
+Modify nfsd4_deleg_getattr_conflict() to obtain the current file size
+via vfs_getattr().  Retain the ncf_cur_fsize field, since it's a
+convenient way to return the file size back to nfsd4_encode_fattr4(),
+but don't use it for the purpose of detecting file changes.
+
+Also, if we recall the delegation (because the client didn't respond to
+the CB_GETATTR), then skip the logic that checks the nfs4_cb_fattr
+fields.
+
+Fixes: c5967721e106 ("NFSD: handle GETATTR conflict with write delegation")
 Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- nfs4.1/server41tests/st_delegation.py | 151 ++++++++++++++++++++++++++
- 1 file changed, 151 insertions(+)
+This patch is against Chuck's nfsd-testing branch.
 
-diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
-index bbf6925..6a08950 100644
---- a/nfs4.1/server41tests/st_delegation.py
-+++ b/nfs4.1/server41tests/st_delegation.py
-@@ -8,6 +8,8 @@ import nfs_ops
- op = nfs_ops.NFS4ops()
- import nfs4lib
- import threading
-+import copy
-+import time
+A pynfs test that illustrates the issue is available here (delegated
+timestamps must be disabled to make the test fail):
+https://lore.kernel.org/linux-nfs/20260404003050.1560149-6-smayhew@redhat.com/T/#u
+
+v2 changes:
+- update kerneldoc comment for nfsd4_deleg_getattr_conflict()
+- relocated declarations in nfsd4_deleg_getattr_conflict() to maintain
+  reverse-xmas tree ordering
+- pass the struct kstat from the nfsd4_fattr_args to
+  nfsd4_deleg_getattr_conflict() instead of creating another one on the
+  stack
+- only call vfs_getattr() in nfsd4_deleg_getattr_conflict() for the
+  !ncf_file_modified case (once the file has been flagged as modified,
+  it remains so until the delegation is returned or revoked, so further
+  calls to vfs_getattr() are unnecessary)
+- if we recall the delegation (because the client didn't respond to the
+  CB_GETATTR), then skip the CB_GETATTR comparison logic
+
+Chuck - to test the last part I hacked a pynfs test to force a CB_RECALL
+by not responding to the CB_GETATTR in a timely manner.  But nfsd has a
+pretty aggressive timeout for the DELEGRETURN (30ms) before it responds
+to the client that issued the GETATTR with NFS4ERR_DELAY.  On the system
+I'm testing on, it looks like it's taking just over 30ms on average:
+
+            nfsd-2971    [059] ...1.   451.007305: nfsd_cb_recall: addr=127.0.0.1:0 client 69d047c9:03b2de67 stateid 00000002:00000001
+            nfsd-2971    [059] .....   451.037306: nfsd_delegret_wakeup: xid=0x16c768b1 inode=000000000a5c53d9 (timed out)
+            nfsd-2971    [059] .....   451.037461: nfsd_deleg_return: client 69d047c9:03b2de67 stateid 00000002:00000001
+
+So I bumped the timeout to 50ms (just in my test kernel) and it appears
+to do the right thing... I'm just not sure how often it'll actually come
+in play in normal usage.
+
+ fs/nfsd/nfs4state.c | 35 ++++++++++++++++++++++++-----------
+ fs/nfsd/nfs4xdr.c   |  3 ++-
+ fs/nfsd/state.h     |  3 ++-
+ 3 files changed, 28 insertions(+), 13 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index fa657badf5f8..53d8e7e7d60b 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -9444,7 +9444,9 @@ static int cb_getattr_update_times(struct dentry *dentry, struct nfs4_delegation
+ /**
+  * nfsd4_deleg_getattr_conflict - Recall if GETATTR causes conflict
+  * @rqstp: RPC transaction context
+- * @dentry: dentry of inode to be checked for a conflict
++ * @path: used to get the inode and size of the file to be checked for a
++ * 	  conflict
++ * @stat: used to get the size of the file to be checked for a conflict
+  * @pdp: returned WRITE delegation, if one was found
+  *
+  * This function is called when there is a conflict between a write
+@@ -9459,17 +9461,18 @@ static int cb_getattr_update_times(struct dentry *dentry, struct nfs4_delegation
+  * caller must put the reference.
+  */
+ __be32
+-nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
+-			     struct nfs4_delegation **pdp)
++nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct path *path,
++			     struct kstat *stat, struct nfs4_delegation **pdp)
+ {
+ 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+ 	struct nfsd_thread_local_info *ntli = rqstp->rq_private;
++	struct inode *inode = d_inode(path->dentry);
+ 	struct file_lock_context *ctx;
+ 	struct nfs4_delegation *dp = NULL;
+ 	struct file_lease *fl;
+ 	struct nfs4_cb_fattr *ncf;
+-	struct inode *inode = d_inode(dentry);
+ 	__be32 status;
++	int err;
  
- def _got_deleg(deleg):
-     return (deleg.delegation_type != OPEN_DELEGATE_NONE and
-@@ -476,3 +478,152 @@ def testDelegReadAfterClose(t, env):
-     # cleanup: return delegation
-     res = sess1.compound([op.putfh(fh), op.delegreturn(delegstateid)])
-     check(res)
-+
-+def testCbGetattrAfterSyncWrite(t, env):
-+    """Test CB_GETATTR after a FILE_SYNC4 WRITE
-+
-+    1. Client 1 opens a file (getting a write deleg or a write attrs deleg) and
-+       does a GETATTR
-+    2. Client 1 does a FILE_SYNC4 WRITE.  If we got a write delegation, it
-+       follows this up with a GETATTR.  Otherwise we got a write attrs deleg
-+       and we construct the attrs ourself.
-+    3. Client 2 does a GETATTR, triggering a CB_GETATTR to client 1.  Client 2
-+       then does an OPEN, triggering a CB_RECALL to client 1.
-+    4. Client 1 does a PUTFH|SETATTR|GETATTR|DELEGRETURN if we have a write
-+       attrs deleg, otherwise it does a PUTFH|GETATTR|DELEGRETURN.
-+
-+    time_modify should only change between steps 1 and 2.  It should not change
-+    from steps 2 thru 4.
-+
-+    FLAGS: deleg all
-+    CODE: DELEG27
-+    """
-+    cb = threading.Event()
-+    cbattrs = {}
-+    def getattr_post_hook(arg, env, res):
-+        res.obj_attributes = cbattrs
-+        env.notify = cb.set
-+        return res
-+
-+    recall = threading.Event()
-+    def recall_pre_hook(arg, env):
-+        recall.stateid = arg.stateid
-+        recall.cred = env.cred.raw_cred
-+        env.notify = recall.set
-+    def recall_post_hook(arg, env, res):
-+        return res
-+
-+    size = 5
-+
-+    sess1 = env.c1.new_client_session(b"%s_1" % env.testname(t))
-+    sess1.client.cb_post_hook(OP_CB_GETATTR, getattr_post_hook)
-+    sess1.client.cb_pre_hook(OP_CB_RECALL, recall_pre_hook)
-+    sess1.client.cb_post_hook(OP_CB_RECALL, recall_post_hook)
-+
-+    res = sess1.compound([op.putrootfh(),
-+                          op.getattr(nfs4lib.list2bitmap([FATTR4_SUPPORTED_ATTRS,
-+                                                          FATTR4_OPEN_ARGUMENTS]))])
-+    check(res)
-+    caps = res.resarray[-1].obj_attributes
-+
-+    openmask = (OPEN4_SHARE_ACCESS_READ  |
-+                OPEN4_SHARE_ACCESS_WRITE |
-+                OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG)
-+
-+    if caps[FATTR4_SUPPORTED_ATTRS] & (1 << FATTR4_OPEN_ARGUMENTS):
-+        if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
-+            openmask |= 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
-+
-+    fh, stateid, deleg = __create_file_with_deleg(sess1, env.testname(t), openmask)
-+    delegtype = deleg.delegation_type
-+    if delegtype != OPEN_DELEGATE_WRITE_ATTRS_DELEG and delegtype != OPEN_DELEGATE_WRITE:
-+        fail("Didn't get a write delegation.")
-+    delegstateid = deleg.write.stateid
-+
-+    attrs1 = do_getattrdict(sess1, fh, [FATTR4_CHANGE, FATTR4_SIZE,
-+                                        FATTR4_TIME_ACCESS, FATTR4_TIME_MODIFY])
-+
-+    cbattrs[FATTR4_CHANGE] = attrs1[FATTR4_CHANGE]
-+    cbattrs[FATTR4_SIZE] = attrs1[FATTR4_SIZE]
-+
-+    env.sleep(1)
-+    res = write_file(sess1, fh, b'z' * size, 0, delegstateid)
-+    check(res)
-+
-+    if delegtype == OPEN_DELEGATE_WRITE_ATTRS_DELEG:
-+        attrs2 = copy.deepcopy(attrs1)
-+        now = divmod(time.time_ns(), 1000000000)
-+        attrs2[FATTR4_TIME_ACCESS] = nfstime4(*now)
-+        attrs2[FATTR4_TIME_MODIFY] = nfstime4(*now)
-+        cbattrs[FATTR4_TIME_DELEG_ACCESS] = nfstime4(*now)
-+        cbattrs[FATTR4_TIME_DELEG_MODIFY] = nfstime4(*now)
-+    else:
-+        attrs2 = do_getattrdict(sess1, fh, [FATTR4_CHANGE, FATTR4_SIZE,
-+                                            FATTR4_TIME_ACCESS, FATTR4_TIME_MODIFY])
-+
-+    # No need to bump FATTR4_CHANGE because we've already flushed our data
-+    cbattrs[FATTR4_SIZE] = size
-+
-+    sess2 = env.c1.new_client_session(b"%s_2" % env.testname(t))
-+    slot = sess2.compound_async([op.putfh(fh),
-+                                 op.getattr(1<<FATTR4_CHANGE |
-+                                            1<<FATTR4_SIZE |
-+                                            1<<FATTR4_TIME_ACCESS |
-+                                            1<<FATTR4_TIME_MODIFY)])
-+
-+    completed = cb.wait(2)
-+    if not completed:
-+        fail("CB_GETATTR not received")
-+
-+    res = sess2.listen(slot)
-+    check(res)
-+    attrs3 = res.resarray[-1].obj_attributes
-+
-+    claim = open_claim4(CLAIM_NULL, env.testname(t))
-+    owner = open_owner4(0, b"owner")
-+    how = openflag4(OPEN4_NOCREATE)
-+    open_op = op.open(0, OPEN4_SHARE_ACCESS_WRITE,
-+                      OPEN4_SHARE_DENY_NONE, owner, how, claim)
-+    slot = sess2.compound_async(env.home + [open_op, op.getfh()])
-+    completed = recall.wait(2)
-+    if not completed:
-+        fail("CB_RECALL not received")
-+
-+    env.sleep(.1)
-+
-+    # Note if we have a write attrs deleg we should do a setattr before the
-+    # delegreturn (see RFC 9754, section 5)
-+    res = sess1.compound([op.putfh(fh),
-+                          *([op.setattr(delegstateid,
-+                                        {FATTR4_TIME_DELEG_ACCESS: cbattrs[FATTR4_TIME_DELEG_ACCESS],
-+                                         FATTR4_TIME_DELEG_MODIFY: cbattrs[FATTR4_TIME_DELEG_MODIFY]})]
-+                              if delegtype == OPEN_DELEGATE_WRITE_ATTRS_DELEG else []),
-+                          op.getattr(1<<FATTR4_CHANGE |
-+                                     1<<FATTR4_SIZE |
-+                                     1<<FATTR4_TIME_ACCESS |
-+                                     1<<FATTR4_TIME_MODIFY),
-+                          op.delegreturn(delegstateid)])
-+    check(res)
-+    attrs4 = res.resarray[-2].obj_attributes
-+
-+    res = sess2.listen(slot)
-+    check(res, [NFS4_OK, NFS4ERR_DELAY])
-+    if res.status == NFS4_OK:
-+        fh2 = res.resarray[-1].object
-+        stateid2 = res.resarray[-2].stateid
-+    else:
-+        fh2 = None
-+        stateid2 = None
-+
-+    close_file(sess1, fh, stateid=stateid)
-+    if fh2 is not None and stateid2 is not None:
-+        close_file(sess2, fh2, stateid=stateid2)
-+
-+    #print(f"attrs1: size {attrs1[FATTR4_SIZE]} change {attrs1[FATTR4_CHANGE]} mtime {attrs1[FATTR4_TIME_MODIFY]}")
-+    #print(f"attrs2: size {attrs2[FATTR4_SIZE]} change {attrs2[FATTR4_CHANGE]} mtime {attrs2[FATTR4_TIME_MODIFY]}")
-+    #print(f"attrs3: size {attrs3[FATTR4_SIZE]} change {attrs3[FATTR4_CHANGE]} mtime {attrs3[FATTR4_TIME_MODIFY]}")
-+    #print(f"attrs4: size {attrs4[FATTR4_SIZE]} change {attrs4[FATTR4_CHANGE]} mtime {attrs4[FATTR4_TIME_MODIFY]}")
-+
-+    if compareTimes(attrs2[FATTR4_TIME_MODIFY], attrs4[FATTR4_TIME_MODIFY]) != 0:
-+        fail(f"mtime after write ({attrs2[FATTR4_TIME_MODIFY]}) != "
-+             f"mtime from delegreturn ({attrs4[FATTR4_TIME_MODIFY]})")
+ 	ctx = locks_inode_context(inode);
+ 	if (!ctx)
+@@ -9516,20 +9519,30 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
+ 		if (status != nfserr_jukebox ||
+ 		    !nfsd_wait_for_delegreturn(rqstp, inode))
+ 			goto out_status;
++		status = nfs_ok;
++		goto out_status;
++	}
++	if (!ncf->ncf_file_modified) {
++		if (ncf->ncf_initial_cinfo != ncf->ncf_cb_change) {
++			ncf->ncf_file_modified = true;
++		} else {
++			err = vfs_getattr(path, stat, STATX_SIZE,
++					  AT_STATX_SYNC_AS_STAT);
++			if (err) {
++				status = nfserrno(err);
++				goto out_status;
++			}
++			if (stat->size != ncf->ncf_cb_fsize)
++				ncf->ncf_file_modified = true;
++		}
+ 	}
+-	if (!ncf->ncf_file_modified &&
+-	    (ncf->ncf_initial_cinfo != ncf->ncf_cb_change ||
+-	     ncf->ncf_cur_fsize != ncf->ncf_cb_fsize))
+-		ncf->ncf_file_modified = true;
+ 	if (ncf->ncf_file_modified) {
+-		int err;
+-
+ 		/*
+ 		 * Per section 10.4.3 of RFC 8881, the server would
+ 		 * not update the file's metadata with the client's
+ 		 * modified size
+ 		 */
+-		err = cb_getattr_update_times(dentry, dp);
++		err = cb_getattr_update_times(path->dentry, dp);
+ 		if (err) {
+ 			status = nfserrno(err);
+ 			goto out_status;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 2a0946c630e1..5e09682c8135 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -3914,7 +3914,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	    (attrmask[1] & (FATTR4_WORD1_TIME_ACCESS |
+ 			    FATTR4_WORD1_TIME_MODIFY |
+ 			    FATTR4_WORD1_TIME_METADATA))) {
+-		status = nfsd4_deleg_getattr_conflict(rqstp, dentry, &dp);
++		status = nfsd4_deleg_getattr_conflict(rqstp, &path, &args.stat,
++						      &dp);
+ 		if (status)
+ 			goto out;
+ 	}
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 811c148f36fc..4fa6329c75b4 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -904,7 +904,8 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+ }
+ 
+ extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+-		struct dentry *dentry, struct nfs4_delegation **pdp);
++		struct path *path, struct kstat *stat,
++		struct nfs4_delegation **pdp);
+ 
+ struct nfsd4_get_dir_delegation;
+ struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
 -- 
 2.53.0
 
