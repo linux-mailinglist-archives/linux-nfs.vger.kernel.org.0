@@ -1,139 +1,58 @@
-Return-Path: <linux-nfs+bounces-20680-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20681-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yEEeBe3/02lypAcAu9opvQ
-	(envelope-from <linux-nfs+bounces-20680-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 20:48:13 +0200
+	id sGVANmYe1GmJrQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20681-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 22:58:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 244613A65CF
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 20:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 333923A75AC
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 22:58:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9256E301A902
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 18:48:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 69A18303AB4F
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 20:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA4518BC3B;
-	Mon,  6 Apr 2026 18:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8CBD2F5A36;
+	Mon,  6 Apr 2026 20:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZ/LWf+s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuG89PEM"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3C52848A8
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 18:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66602BE65B
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 20:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775501289; cv=none; b=bjTSWLwGZ5mTQYgCZE+1/2Yvv1uUh/trK+bc/EtTZCFn5rmIGWDnXRMOBUqfutnJ3o/cqDWwHIZMh4hrgpUTx7dnEkOn2+GnRpVU+h942Oyd5DKtB66zXjAJopsb9zr8hZdssmPNUnQ51F0HPPko5c7ZY3RWtjyNTxc54LDASm8=
+	t=1775509091; cv=none; b=puG7meHWP90CjGJL9piZWOXGYRxYbXtByUiv9sqFVB+HAI6/AAXZ+bXaoJPRxpP6a3boZZCXZW/qPHN61S7bJVZR5I0L3e10dfAKWsvDst51rjLHMyGCJAx+LaetRbUi75IqFf3WxLltXWtNrQOABSukrCCMtxhs7i6GT3/pO7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775501289; c=relaxed/simple;
-	bh=s1zHj/csgwvMDb+I5OZ8WUXrtB9wNjUZJXZFWlNis2Q=;
+	s=arc-20240116; t=1775509091; c=relaxed/simple;
+	bh=1AoFkcJWucrajjbAU1v4ZU0q4qaM4sneGhJsbq+usS0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JEfGZq9Nh/mUIRL2WccBqrKSYMwWMLDDQs6Bxq52Gm3XTnVQ7AWajWFqTn81iID370K/YeOY0EzN6+BeQgD9zwxUuQYaWNNZ09IgAUBhYp/whu4nZvZd+2Z75sx66d6PhDE+Xafo4Q8w89RKwIT3n/AzvIZtpMBGAgyzxdqklXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZ/LWf+s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DA6C4CEF7;
-	Mon,  6 Apr 2026 18:48:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=A9T87jjLvHFqNXO3HGYTbaPiu3hewH97g5LxSiNMGC1bnQ8YNXIsv8HFkqhu05eUdPvRKaQTrVte/U15dMOuVR+M6OZNmI3ZoY0czDmcVjadeQuDT2AiWaz1Y+Om4u7+f3bZ/qQFoFolQJJ2k3Ayq0omERMmRfqt4umt3/yn7Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuG89PEM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210C1C4CEF7;
+	Mon,  6 Apr 2026 20:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775501289;
-	bh=s1zHj/csgwvMDb+I5OZ8WUXrtB9wNjUZJXZFWlNis2Q=;
+	s=k20201202; t=1775509091;
+	bh=1AoFkcJWucrajjbAU1v4ZU0q4qaM4sneGhJsbq+usS0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HZ/LWf+siVHaPmmBvsM/ZxA1A+frz7pJQCvjwOuETlx8JMyoV0Syaw5MLmdL4Hfwl
-	 9NKgihaNoDG87US2icurXbLykccLaLANhqo34bNoQczv91IAOVBPQIwYkg50Xyn9ri
-	 crZmaJraqBGggbshkqtocDPAcCYL1stN9S+XyYhsI7s41cK2FZEddSaNXIakvdS94p
-	 GaQ+XrE7IMEKj9qd/U3Jw6KFyZMwUp/O3rrrVBHt/zUCwRP0GY5BSjwqxdr08zKzOD
-	 kTlzNPPx6cYx2+bQVvkU/+cevfF/PP1iniKUE28TFafpv9E7HFJLtaL+Kv/lOVElml
-	 TvunfYJTcSl7A==
-Message-ID: <ca6076eba9248c39f8b95bed66cec5d907aa0ab7.camel@kernel.org>
-Subject: Re: [PATCH v2] nfsd: fix file change detection in CB_GETATTR
-From: Jeff Layton <jlayton@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org
-Date: Mon, 06 Apr 2026 14:48:05 -0400
-In-Reply-To: <adPxsOl98imcKXeC@aion>
-References: <20260404005405.1565136-1-smayhew@redhat.com>
-	 <e03d3523-06e1-4414-b185-d349e7edbe54@app.fastmail.com>
-	 <adLellU5iadfbYdX@smayhew-thinkpadp1gen4i.remote.csb>
-	 <fb00b2d1-e7be-4567-a077-9ec26a938a5c@app.fastmail.com>
-	 <e812ca8b2caaf2cafaf94b7b5be487346fe07285.camel@kernel.org>
-	 <adPxsOl98imcKXeC@aion>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+	b=LuG89PEMqTD1/h37czopm3+KhfhDzA/iRL821TWTwtzp31rKrFT8elQK4mSmFWKKb
+	 rehh0DE7IO9cyyN2ECC0lqXVnjFvCxylr2POO8uy5PSZcrQ6+azkwM0zUZSkqxb6pK
+	 R5GtLvhPxwKi/VUkaxIqZ8IuBoVwVxYSSUwaDeeUZhm5ntFXkOoL1oBOaqtR24lNON
+	 dAky8fwrRjEqj+5LL0GWYRAn5w50arBWhzAfnDyHi1UTp5AATQfZ3tW6djgpfFnvFi
+	 /6yueLhNVq+/4qvFLd6pbPPQ7HFujvOfuvLO/nxivvj60Lx72VwPmhH7aRzw0xzUS4
+	 1TfVwtYgBY9gA==
+Message-ID: <5b6c25a9f1d8d0f8c9a1fe8f7bf83f749aeacc20.camel@kernel.org>
+Subject: Re: NFS close does not block when server is unavailable
+From: Trond Myklebust <trondmy@kernel.org>
+To: Jon Curley <jcurley@purestorage.com>
+Cc: linux-nfs@vger.kernel.org
+Date: Mon, 06 Apr 2026 16:58:10 -0400
+In-Reply-To: <CAHeb9+nedZXHXzeCQOo5tJ_kYAYC=sVrzNEtGBACmQKEis4mJA@mail.gmail.com>
+References: 
+	<CAHeb9+nedZXHXzeCQOo5tJ_kYAYC=sVrzNEtGBACmQKEis4mJA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
@@ -146,243 +65,122 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20680-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20681-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_TWO(0.00)[2];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,peak-usage.bt:url]
-X-Rspamd-Queue-Id: 244613A65CF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:email]
+X-Rspamd-Queue-Id: 333923A75AC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, 2026-04-06 at 13:47 -0400, Scott Mayhew wrote:
-> On Mon, 06 Apr 2026, Jeff Layton wrote:
+Hi Jon,
+
+On Mon, 2026-04-06 at 08:36 -0700, Jon Curley wrote:
+> Hi Trond,
 >=20
-> > On Mon, 2026-04-06 at 10:12 -0400, Chuck Lever wrote:
-> > >=20
-> > > On Sun, Apr 5, 2026, at 6:13 PM, Scott Mayhew wrote:
-> > > > On Sat, 04 Apr 2026, Chuck Lever wrote:
-> > > > > On Fri, Apr 3, 2026, at 8:54 PM, Scott Mayhew wrote:
-> > >=20
-> > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > > > index fa657badf5f8..53d8e7e7d60b 100644
-> > > > > > --- a/fs/nfsd/nfs4state.c
-> > > > > > +++ b/fs/nfsd/nfs4state.c
-> > > > >=20
-> > > > > > @@ -9459,17 +9461,18 @@ static int cb_getattr_update_times(stru=
-ct=20
-> > > > > > dentry *dentry, struct nfs4_delegation
-> > > > > >   * caller must put the reference.
-> > > > > >   */
-> > > > > >  __be32
-> > > > > > -nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct de=
-ntry=20
-> > > > > > *dentry,
-> > > > > > -			     struct nfs4_delegation **pdp)
-> > > > > > +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct pa=
-th *path,
-> > > > > > +			     struct kstat *stat, struct nfs4_delegation **pdp)
-> > > > >=20
-> > > > > Passing the kstat struct in saves some stack just as I suggested,
-> > > > > but it is an ugly API. The nfsd4_encode_fattr4() call stack is ta=
-ll,
-> > > > > though -- did you happen to measure how deep it gets after this p=
-atch
-> > > > > is applied?
-> > > > >=20
-> > > >=20
-> > > > I tried using the stack tracer:
-> > > >=20
-> > > > # echo 1 >/proc/sys/kernel/stack_tracer_enabled
-> > > > # echo vfs_getattr >/sys/kernel/debug/tracing/stack_trace_filter
-> > > > # cat /sys/kernel/debug/tracing/stack_trace
-> > > >         Depth    Size   Location    (18 entries)
-> > > >         -----    ----   --------
-> > > >   0)     1936      48   vfs_getattr+0x9/0x50
-> > > >   1)     1888     552   nfsd4_encode_fattr4+0x1b2/0x7a0 [nfsd]
-> > > >   2)     1336      80   nfsd4_encode_entry4_fattr+0xf8/0x210 [nfsd]
-> > > >   3)     1256      96   nfsd4_encode_entry4+0x10b/0x2a0 [nfsd]
-> > > >   4)     1160     144   nfsd_buffered_readdir+0x139/0x310 [nfsd]
-> > > >   5)     1016      80   nfsd_readdir+0x9f/0x180 [nfsd]
-> > > >   6)      936      80   nfsd4_encode_readdir+0xdf/0x1e0 [nfsd]
-> > > >   7)      856      80   nfsd4_encode_operation+0xcf/0x3d0 [nfsd]
-> > > >   8)      776      80   nfsd4_proc_compound+0x1d6/0x7a0 [nfsd]
-> > > >   9)      696      80   nfsd_dispatch+0xd9/0x240 [nfsd]
-> > > >  10)      616      80   svc_process_common+0x4cb/0x6b0 [sunrpc]
-> > > >  11)      536      40   svc_process+0x150/0x240 [sunrpc]
-> > > >  12)      496      72   svc_handle_xprt+0x4b0/0x5f0 [sunrpc]
-> > > >  13)      424      56   svc_recv+0x1b2/0x3a0 [sunrpc]
-> > > >  14)      368      80   nfsd+0x11c/0x3d0 [nfsd]
-> > > >  15)      288      56   kthread+0xe3/0x120
-> > > >  16)      232      40   ret_from_fork+0x1a1/0x270
-> > > >  17)      192     192   ret_from_fork_asm+0x1a/0x30
-> > > >=20
-> > > > But that's capturing a vfs_getattr() call from encoding a readdir r=
-eply,
-> > > > rather than the vfs_getattr() call I added to nfsd4_deleg_getattr_c=
-onflict().
-> > > >=20
-> > > > Here's the stack depth for nfsd4_deleg_getattr_conflict():
-> > > >=20
-> > > > # echo nfsd4_deleg_getattr_conflict=20
-> > > > > /sys/kernel/debug/tracing/stack_trace_filter
-> > > > # echo 0 >/sys/kernel/debug/tracing/stack_max_size=20
-> > > > # cat /sys/kernel/debug/tracing/stack_trace
-> > > >         Depth    Size   Location    (14 entries)
-> > > >         -----    ----   --------
-> > > >   0)     1472      48   nfsd4_deleg_getattr_conflict+0x9/0x410 [nfs=
-d]
-> > > >   1)     1424     552   nfsd4_encode_fattr4+0x191/0x7a0 [nfsd]
-> > > >   2)      872      16   nfsd4_encode_getattr+0x2c/0x40 [nfsd]
-> > > >   3)      856      80   nfsd4_encode_operation+0xcf/0x3d0 [nfsd]
-> > > >   4)      776      80   nfsd4_proc_compound+0x1d6/0x7a0 [nfsd]
-> > > >   5)      696      80   nfsd_dispatch+0xd9/0x240 [nfsd]
-> > > >   6)      616      80   svc_process_common+0x4cb/0x6b0 [sunrpc]
-> > > >   7)      536      40   svc_process+0x150/0x240 [sunrpc]
-> > > >   8)      496      72   svc_handle_xprt+0x4b0/0x5f0 [sunrpc]
-> > > >   9)      424      56   svc_recv+0x1b2/0x3a0 [sunrpc]
-> > > >  10)      368      80   nfsd+0x11c/0x3d0 [nfsd]
-> > > >  11)      288      56   kthread+0xe3/0x120
-> > > >  12)      232      40   ret_from_fork+0x1a1/0x270
-> > > >  13)      192     192   ret_from_fork_asm+0x1a/0x30
-> > > >=20
-> > > > Manually inspecting function graphs of vfs_getattr(), it looks like=
- the deepest
-> > > > function (that we can trace) is avc_lookup(), so here's a bpftrace =
-script that
-> > > > prints the stack depth from avc_lookup() via nfsd4_deleg_getattr_co=
-nflict()
-> > > > (I mostly punted to Gemini for this):
-> > > >=20
-> > > > # cat peak-usage.bt=20
-> > > > kprobe:nfsd4_deleg_getattr_conflict {
-> > > >     @in_deleg_conflict[tid] =3D 1;
-> > > > }
-> > > >=20
-> > > > kprobe:avc_lookup /@in_deleg_conflict[tid]/ {
-> > > >     $stack_size =3D (uint64)16384;=20
-> > > >     $sp =3D reg("sp");
-> > > >     $stack_base =3D $sp & ~($stack_size - 1);
-> > > >     $total_used =3D $stack_base + $stack_size - $sp;
-> > > >=20
-> > > >     if ($total_used > @max_depth_bytes) {
-> > > >         @max_depth_bytes =3D $total_used;
-> > > >         @deepest_stack =3D kstack;
-> > > >     }
-> > > > }
-> > > >=20
-> > > > kretprobe:nfsd4_deleg_getattr_conflict { delete(@in_deleg_conflict[=
-tid]); }
-> > > >=20
-> > > > And finally the result:
-> > > >=20
-> > > > # bpftrace peak-usage.bt=20
-> > > > Attached 3 probes
-> > > > ^C
-> > > >=20
-> > > > @deepest_stack:=20
-> > > >         avc_lookup+1
-> > > >         avc_has_perm_noaudit+60
-> > > >         avc_has_perm+89
-> > > >         selinux_inode_getattr+203
-> > > >         security_inode_getattr+70
-> > > >         vfs_getattr+35
-> > > >         nfsd4_deleg_getattr_conflict+958
-> > > >         nfsd4_encode_fattr4+401
-> > > >         nfsd4_encode_getattr+44
-> > > >         nfsd4_encode_operation+207
-> > > >         nfsd4_proc_compound+470
-> > > >         nfsd_dispatch+217
-> > > >         svc_process_common+1227
-> > > >         svc_process+336
-> > > >         svc_handle_xprt+1200
-> > > >         svc_recv+434
-> > > >         nfsd+284
-> > > >         kthread+227
-> > > >         ret_from_fork+417
-> > > >         ret_from_fork_asm+26
-> > > >=20
-> > > > @max_depth_bytes: 1792
-> > >=20
-> > > Since the new code only needs the file's size, perhaps you can get
-> > > away with
-> > >=20
-> > >         if (i_size_read(inode) !=3D ncf->ncf_cb_fsize)
-> > >=20
-> > > rather than
-> > >=20
-> > >         err =3D vfs_getattr(path, stat, STATX_SIZE, AT_STATX_SYNC_AS_=
-STAT);
-> > >         if (err) {
-> > >                 status =3D nfserrno(err);
-> > >                 goto out_status;
-> > >         }
-> > >         if (stat->size !=3D ncf->ncf_cb_fsize)
-> > >=20
-> > > Then there's no longer a need for a struct kstat at all. The client i=
-s
-> > > holding a delegation, so I would expect the file size to be stable.
-> > >=20
-> >=20
-> > I hate relying on the size for this, since it's not a reliable
-> > indicator of change, especially on something that has a fixed size (VM
-> > image, for instance).
+> We've recently been investigating test failures in our automation
+> linked to server failures. What we've noticed is that failures during
+> WRITE do not block close(). Close simply returns success even though
+> the writes are in a failure loop.
 >=20
-> You're right, it's not.  I dislike how the pseudocode in 10.4.3 is only
-> checking the change attribute to determine if the file has been modified
-> and then 2 paragraphs down it talks about checking the file size.
+> This is easy to reproduce using flexfiles. For example, the flexfile
+> RFC states that returning EACCES is a mechanism for fencing files. If
+> you create a server where writes always return that error, commands
+> like dd will return success while the writes are in a RESET_TO_PNFS
+> loop.
 >=20
-> At any rate, the main point of this fix is to make sure we're comparing
-> the size from the cb_getattr reply to the current size, not a cached
-> value.  For example:
+> I'm not trying to get into an O_PONIES argument here but I always
+> thought NFS close-to-open semantics meant that NFS close makes a
+> strict effort to flush writes to the server before finishing.
 >=20
-> client 1 does open(O_RDWR|O_CREATE_O_TRUNC)
-> client 1 writes some data and flushes it to the server
-> client 2 does some operation that triggers a CB_GETATTR
+> I've been digging into how the NFS client guarantees writes get
+> flushed. I noticed that nfs/file.c:nfs_file_fsync goes through a much
+> more rigorous algorithm to flush writes in the face of server
+> unavailability when compared to nfs/file.c:nfs_file_flush. The
+> redirtied_pages interlock is especially critical for ensuring
+> RESET_TO_PNFS events block the syscall from returning.
 >=20
-> At this point client 1 doesn't have any modified data, so it sends the
-> original change attribute and its current file size (which should match
-> the current file size on the server).  With the current code, the server
-> compares the size client 1 sent with the value it cached on the
-> delegation (in this case 0).  The server treats it as if the client is
-> has modified data, which it does not.  That's all this patch is aiming
-> to fix.
+> At first I thought this was intentional. But after looking at the
+> history, I found this commit:
 >=20
-> >=20
-> > In fact, I wonder if this ought to be looking at the mtime too. If the
-> > mtime that the client reported is later than the mtime the server has,
-> > then we can probably infer that there are buffered writes out there.
+> "NFS: Don't inadvertently clear writeback errors" -
+> https://github.com/torvalds/linux/commit/aded8d7b54f250af6deb72fde475291c=
+fba513d1
 >=20
-> But the spec doesn't say anything about comparing the mtime.  Plus, if
-> the client is sending the original change attribute but a different
-> mtime than what the server has, wouldn't that be a client bug?
+> That diff replaced calls to "vfs_fsync" with "nfs_wb_all" in several
+> places including nfs_file_flush. Since the diff makes no mention of
+> reducing the guarantees of nfs_file_flush & etc I'm wondering if this
+> effect was unintentional?
 >=20
-> Plus, wouldn't it sort of be crossing into delegated timestamps
-> territory if we started checking the mtime?
->=20
+> Does it make sense to modify nfs_wb_all to have a loop like
+> nfs_file_fsync does? Or introduce a new function?
 >=20
 
-Should we be looking at extending the spec? Maybe we should add a "I
-have outstanding buffered data" attribute that the client could send to
-the server in a CB_GETATTR?
+We've always had the rule that errors that are classified as "fatal" on
+the server should be reported as such through the same mechanisms as
+they would in POSIX, and that the effects should be the same. While
+"EACCES" is not technically allowed by POSIX as a response to WRITE, it
+was necessary to allow it in NFS because NFS servers do check
+permissions on I/O. Even in NFSv4, the presence of a stateid that
+passed OPEN checks does not guarantee that the client is allowed to
+write out its data to the file.
+
+Now that said, the pNFS flexfiles protocol introduces a subtlety here
+in that the client should not be considering any error that was
+returned by a data server as being fatal. Instead, it should be
+reporting the error back to the metadata server, and either failing
+over to another mirror (for the case of a READ) or returning the layout
+and asking for a new layout (for the case of a WRITE or if there are no
+more mirrors to READ from). The LAYOUTGET may then return the fatal
+error, if the metadata server is out of options for fixing the problem.
+
+So the above governs how hard mounts handle write errors.
+
+Now the difference between how fsync() and close() work is really down
+to whether or not we need to give a hard guarantee that the data is
+really on disk or not when the syscall completes.
+
+fsync() definitely needs to guarantee that data is really on storage in
+the case where it doesn't flag an error. The problem is that a system
+that relies on resends, and that doesn't block new writes from
+occurring is inherently prone to live locks. We try to handle that in
+nfs_file_fsync() by monitoring a 'redirtied_pages' counter that tells
+us how many resends occurred in the last attempt to flush, however that
+doesn't suffice to completely avoid live locks.
+
+close() does not need to guarantee that the data is on storage, because
+POSIX doesn't require it to. It's just a convenience that ensures
+close-to-open semantics can be made to work. For that reason, it just
+calls nfs_wb_all(), which does not wait for resends to finish, and thus
+avoids live locks.
+
+Now we can definitely discuss whether or not that close() behaviour is
+correct: it does not lose data (so there are no hard mount violations),
+but it also doesn't offer the same guarantees that fsync() does w.r.t.
+whether the data is on disk on exit. I just wanted to first make sure
+that we're on the same page concerning hard mount semantics.
+
 --=20
-Jeff Layton <jlayton@kernel.org>
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
