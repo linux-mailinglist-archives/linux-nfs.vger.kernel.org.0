@@ -1,333 +1,263 @@
-Return-Path: <linux-nfs+bounces-20682-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20683-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YI1xD1Uw1GmUsAcAu9opvQ
-	(envelope-from <linux-nfs+bounces-20682-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 00:14:45 +0200
+	id gGDcCzc51GkksQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20683-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 00:52:39 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 904543A7C5D
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 00:14:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FFEE3A7F5D
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 00:52:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4DB9A30179EE
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 22:14:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C9C8D305541C
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 22:50:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9662339D6F9;
-	Mon,  6 Apr 2026 22:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CAF39E6CB;
+	Mon,  6 Apr 2026 22:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UA5rl5mY"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BYSPdryp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF56C38BF69
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 22:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775513682; cv=none; b=k0POt2qRy4TpmrTwQDRyKq8ssNIZk6kjMWMlH9InpwgVjOnI8sW51bz7XTTk/9UmDHjua7imwBdP7e1++lmYa5l0CrEX2zHjgJlGIGocphNN+3VcxFeiKbGF82DOfBH0RjzRc7uRCxHlU8I4ziXYMYG3Ja+EebFvyvYQiLqt+1Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775513682; c=relaxed/simple;
-	bh=7xVc2YAE9F0BjltJC6Km3DWSm5nJEssnCL8KGyAHElY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GskmnQYM/LOhc1ab+rPhjlG1zRhvw92Dl86u9kBMrUBDZv4qihkfN6q/U3ETZKJdM2mmfCkyNKMfUyiVpBfVyQkwBNWTWBQ68bteDSs0s1MeuhrWO9uR/YfMSTx97Er1xxsa0r8DkDsBX3tm1NQE3aVWjFAiFQZtAiGItCbFynM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UA5rl5mY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775513679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=plLzqsyg3QNTPPIDciYJvQUxljnExoHuiXLIsn+JAHQ=;
-	b=UA5rl5mYFP1uOVgu/BlMGrmZCWJnpcrz+wM/ZmG3lm2Lj7et3JvcKkJsZJJ/XiHHlbbp72
-	wC33PanZFIyMIb4R34w5Wt4issY2vGir6z+PabREXA2RncxKG8U7SY1byl2jyZeqwJC5Om
-	aVqyiQLanwH9MRYgN86ZmzMaQ5f2goY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-gUI-W5zdP6mg3ayH3eXpig-1; Mon,
- 06 Apr 2026 18:14:36 -0400
-X-MC-Unique: gUI-W5zdP6mg3ayH3eXpig-1
-X-Mimecast-MFC-AGG-ID: gUI-W5zdP6mg3ayH3eXpig_1775513675
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E5191800345;
-	Mon,  6 Apr 2026 22:14:35 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.80.134])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91EFD180036E;
-	Mon,  6 Apr 2026 22:14:34 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id 5773A74BDD6; Mon, 06 Apr 2026 18:14:33 -0400 (EDT)
-Date: Mon, 6 Apr 2026 18:14:33 -0400
-From: Scott Mayhew <smayhew@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] nfsd: fix file change detection in CB_GETATTR
-Message-ID: <adQwSTW7ABXvrovQ@aion>
-References: <20260404005405.1565136-1-smayhew@redhat.com>
- <e03d3523-06e1-4414-b185-d349e7edbe54@app.fastmail.com>
- <adLellU5iadfbYdX@smayhew-thinkpadp1gen4i.remote.csb>
- <fb00b2d1-e7be-4567-a077-9ec26a938a5c@app.fastmail.com>
- <e812ca8b2caaf2cafaf94b7b5be487346fe07285.camel@kernel.org>
- <adPxsOl98imcKXeC@aion>
- <ca6076eba9248c39f8b95bed66cec5d907aa0ab7.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275602749DF
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 22:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775515830; cv=pass; b=rxUHrglL3X9w3Cb0Hr0XwKkIy0N8+QTU+lJY6TgFkF1oLHuq949gZpmByHtpCVQbg3lG8obwLR5X2mh9q3OnfLWkotKr00UPNqZfePqhD8cXznV7GcLZT1mflgaSxjn9R6OFNlfYBYCE6DL5uAXcZdBKph9cFh05xGVbOM77Uyo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775515830; c=relaxed/simple;
+	bh=XDyLpbc9ohDY7RWm/mcYbIKNlcaUGjbaFfb70lhLLII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gqB9LJjQ7YfoIANHLv8b80WMTFPJ9CBiyUK551UCn4gZqaxSgd570OuXgHNqL0barCmYynk853gP3wA9Sz4PQanp0gh4scn17tdkE3n40N/6ux/cvcw65gO4/3yjUR234XcwtFnd2HIZlvVYQ7+ofi+V9o8IcsYPbGQRom8zu9Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BYSPdryp; arc=pass smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-66e6f1d8237so853908a12.3
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Apr 2026 15:50:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775515826; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NEvXmwguhClv60tYdCtKG4SxvFNDb+BSDTnpCSEWBeb+nAAB+uP86mcIggn2MBcrT5
+         GgWkda7Dgl0WMGkpXovIgk12zVxzjIl4z2iBYZGP82C3X79Yt2+MFEuHfZOLfOMpV0SC
+         A50Z7mmxLIKRL+LaINKswvrMMjalVfm0ywwBljxD3qpjvy/eKzfJ8mDPKvChjvUF2BW8
+         DiuZMhLW6w8ef2XS0lU2Qf4JHVfJok/KWML5Vfx04GUGZyALZlqUjmZyWjOJEtcxpAiD
+         61Gnhp4+LtJtwqlojbNhJNcG53iFUNSZpj2itqfCGF1aRjEHKW0PURiZ9b1pM81aE8af
+         AuAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=XDyLpbc9ohDY7RWm/mcYbIKNlcaUGjbaFfb70lhLLII=;
+        fh=Iy2qMoYOeiVQ69/VQqoyp0jUMvV0RukjWwJd91fGT3g=;
+        b=Xt+zVN+f95GQ9FW7zSknZdnrRApffcuvT7tlP+T8YpO9tHV6E4OCu7qxG7xVxKLWvo
+         o0Pke/TKNWy77LWqisSwR31Ex4VVZR1XeR9MAUXpXULIc15iZ+hxHDINg3ocsPhmH8hB
+         hxyV1pAwylGXm1eX1Yw4nJ9X7kCZyg7AB5JtSSGPPQKRtXKqearKkvZqL7KqmdG85pfY
+         pOKuUX6+rlv+jBiHBbZN+JrQWOxdNDBsvkhImL0a5yLjI93wxqFDeEUkB7IeUWyekbP9
+         8JjgiMar9Fs5FsJlmxg7L0LJU+suOlNNK6CY1kfPiguJoYILgsw6GmdQYew3U7kT7cU/
+         IegA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1775515826; x=1776120626; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XDyLpbc9ohDY7RWm/mcYbIKNlcaUGjbaFfb70lhLLII=;
+        b=BYSPdrypomd6Cls+27YMeWmjR2m84Zh7RbdO2sH7YL4ZTd9SCB+AX8Dol/YDLYgtWs
+         9srXGFGXNkTwmH0WSGJvgu4RISuiPPx7/ehpGlg5g7VTMHcOtR+n3zrCVR79GT+0lrIy
+         4pHMsTzgdcRuDy17RSdvuAeMKJPJJjcj1Cu6k1bn+1hvaAm8SAEMpMGRjuU4CyWdxpxE
+         4KXUO/xGzjMlItiY5peSks8O8r1C3UUHhfQcsX4fesrAYCK2uBeTdmxqaj2WL0/GvL+h
+         4WuLfSDBlLCu2tK6gkQHb+LEvVGXRnoUTzLnOeys8rV/ipsp6YChO2ClL1Yy/d5PADci
+         mORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775515826; x=1776120626;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XDyLpbc9ohDY7RWm/mcYbIKNlcaUGjbaFfb70lhLLII=;
+        b=aE5QI+QosCA+lrO+K9iNdgac57/AN5kHBc9bUHc7epgi0NX1zdAmbZET+p8nSCMIoC
+         5rHdP9gUwmLYcDR/i8cAY+Yfxb0Wbd0vfev1oLmLof/fflA+UZfPtRMjJj1ZcKSkxXqe
+         wK1qAEr414vbKl8RsZLTrx8xcBYPKuzJX/rYe08nHcbwKitTpEqO3alCETnUQrPDLgPL
+         AgGli3KEA2lFhYVmFkg6685bH22pmACVYWWbdkUQT4BnwVqOJShdFn1tWnveFqrAjvOS
+         piy0PBhScXKwqRm6wLrWslHv0Sa8J7I9U+0TT9A7Y2F5lxgkZ3+SMrNWqI6kBRUR0OAD
+         9j3w==
+X-Gm-Message-State: AOJu0Yz5XEQwN+/gylyhT4E0zQsC9j1c1sjCtA6UoBwULfQ2ExQq5JpP
+	V88eNdKq/U8GCGElENQIIRiRato0jocXrKUdb2qlYVVewB5Pm1PqWx3VKdlUZjY5mPQKBZoYl0M
+	vSH1Qco4/CBZMGSAyRbdDO3ryU3RnOQ5A4kf1Bok8fQJCJ1ajrWzmMUY=
+X-Gm-Gg: AeBDieswv1nx0zb9tBSf7Ek6wd5u3uC/gXS+BnEwLbjq64OQfsg17Buz2GU9r53Ln36
+	VwUxbfdA8wGnm6ZX3/pOf1b2l4Bp+fEovsd2FEqayRho0RaWMgFoynF3/t7ePd51NyBQ4rMgvXp
+	2iTD0yNIR7EAQCDirO3NZ1tW0mIV//aQq6jDgcx8QndYJXRCHSwZ05tqNyiPVaZsc1IgKhT0wiv
+	HMvJNfoNQ7BLeCGR6Vb6xgZ3250/fMuem5D8hb7uKRXeAehc26EE6xgcapM46jzcBs0zmT6ELhD
+	H3T+JCe3pvA7EO9/5UtHPwvHjl86R5VPy5TVo8I=
+X-Received: by 2002:a05:6402:4402:b0:66e:8dfb:3417 with SMTP id
+ 4fb4d7f45d1cf-66e8dfb350fmr5081527a12.11.1775515826328; Mon, 06 Apr 2026
+ 15:50:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca6076eba9248c39f8b95bed66cec5d907aa0ab7.camel@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+References: <CAHeb9+nedZXHXzeCQOo5tJ_kYAYC=sVrzNEtGBACmQKEis4mJA@mail.gmail.com>
+ <5b6c25a9f1d8d0f8c9a1fe8f7bf83f749aeacc20.camel@kernel.org>
+In-Reply-To: <5b6c25a9f1d8d0f8c9a1fe8f7bf83f749aeacc20.camel@kernel.org>
+From: Jon Curley <jcurley@purestorage.com>
+Date: Mon, 6 Apr 2026 15:49:50 -0700
+X-Gm-Features: AQROBzD_ClLd4N7QwC9lOZVDFXSSxmX-8xanTrFLEL-U_Z-vdE2iV4PekmJyLmU
+Message-ID: <CAHeb9+=3d+yErB+a0rhW0v+n1kV348E+8veznYszXzkkbOMVJg@mail.gmail.com>
+Subject: Re: NFS close does not block when server is unavailable
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[purestorage.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[purestorage.com:s=google2022];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20682-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	TAGGED_FROM(0.00)[bounces-20683-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jcurley@purestorage.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[purestorage.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 904543A7C5D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 7FFEE3A7F5D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, 06 Apr 2026, Jeff Layton wrote:
+On Mon, Apr 6, 2026 at 1:58=E2=80=AFPM Trond Myklebust <trondmy@kernel.org>=
+ wrote:
+>
+> Hi Jon,
+>
+> On Mon, 2026-04-06 at 08:36 -0700, Jon Curley wrote:
+> > Hi Trond,
+> >
+> > We've recently been investigating test failures in our automation
+> > linked to server failures. What we've noticed is that failures during
+> > WRITE do not block close(). Close simply returns success even though
+> > the writes are in a failure loop.
+> >
+> > This is easy to reproduce using flexfiles. For example, the flexfile
+> > RFC states that returning EACCES is a mechanism for fencing files. If
+> > you create a server where writes always return that error, commands
+> > like dd will return success while the writes are in a RESET_TO_PNFS
+> > loop.
+> >
+> > I'm not trying to get into an O_PONIES argument here but I always
+> > thought NFS close-to-open semantics meant that NFS close makes a
+> > strict effort to flush writes to the server before finishing.
+> >
+> > I've been digging into how the NFS client guarantees writes get
+> > flushed. I noticed that nfs/file.c:nfs_file_fsync goes through a much
+> > more rigorous algorithm to flush writes in the face of server
+> > unavailability when compared to nfs/file.c:nfs_file_flush. The
+> > redirtied_pages interlock is especially critical for ensuring
+> > RESET_TO_PNFS events block the syscall from returning.
+> >
+> > At first I thought this was intentional. But after looking at the
+> > history, I found this commit:
+> >
+> > "NFS: Don't inadvertently clear writeback errors" -
+> > https://github.com/torvalds/linux/commit/aded8d7b54f250af6deb72fde47529=
+1cfba513d1
+> >
+> > That diff replaced calls to "vfs_fsync" with "nfs_wb_all" in several
+> > places including nfs_file_flush. Since the diff makes no mention of
+> > reducing the guarantees of nfs_file_flush & etc I'm wondering if this
+> > effect was unintentional?
+> >
+> > Does it make sense to modify nfs_wb_all to have a loop like
+> > nfs_file_fsync does? Or introduce a new function?
+> >
+>
+> We've always had the rule that errors that are classified as "fatal" on
+> the server should be reported as such through the same mechanisms as
+> they would in POSIX, and that the effects should be the same. While
+> "EACCES" is not technically allowed by POSIX as a response to WRITE, it
+> was necessary to allow it in NFS because NFS servers do check
+> permissions on I/O. Even in NFSv4, the presence of a stateid that
+> passed OPEN checks does not guarantee that the client is allowed to
+> write out its data to the file.
+>
+> Now that said, the pNFS flexfiles protocol introduces a subtlety here
+> in that the client should not be considering any error that was
+> returned by a data server as being fatal. Instead, it should be
+> reporting the error back to the metadata server, and either failing
+> over to another mirror (for the case of a READ) or returning the layout
+> and asking for a new layout (for the case of a WRITE or if there are no
+> more mirrors to READ from). The LAYOUTGET may then return the fatal
+> error, if the metadata server is out of options for fixing the problem.
+>
+> So the above governs how hard mounts handle write errors.
+>
+> Now the difference between how fsync() and close() work is really down
+> to whether or not we need to give a hard guarantee that the data is
+> really on disk or not when the syscall completes.
+>
+> fsync() definitely needs to guarantee that data is really on storage in
+> the case where it doesn't flag an error. The problem is that a system
+> that relies on resends, and that doesn't block new writes from
+> occurring is inherently prone to live locks. We try to handle that in
+> nfs_file_fsync() by monitoring a 'redirtied_pages' counter that tells
+> us how many resends occurred in the last attempt to flush, however that
+> doesn't suffice to completely avoid live locks.
+>
+> close() does not need to guarantee that the data is on storage, because
+> POSIX doesn't require it to. It's just a convenience that ensures
+> close-to-open semantics can be made to work. For that reason, it just
+> calls nfs_wb_all(), which does not wait for resends to finish, and thus
+> avoids live locks.
+>
+> Now we can definitely discuss whether or not that close() behaviour is
+> correct: it does not lose data (so there are no hard mount violations),
+> but it also doesn't offer the same guarantees that fsync() does w.r.t.
+> whether the data is on disk on exit. I just wanted to first make sure
+> that we're on the same page concerning hard mount semantics.
 
-> On Mon, 2026-04-06 at 13:47 -0400, Scott Mayhew wrote:
-> > On Mon, 06 Apr 2026, Jeff Layton wrote:
-> > 
-> > > On Mon, 2026-04-06 at 10:12 -0400, Chuck Lever wrote:
-> > > > 
-> > > > On Sun, Apr 5, 2026, at 6:13 PM, Scott Mayhew wrote:
-> > > > > On Sat, 04 Apr 2026, Chuck Lever wrote:
-> > > > > > On Fri, Apr 3, 2026, at 8:54 PM, Scott Mayhew wrote:
-> > > > 
-> > > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > > > > index fa657badf5f8..53d8e7e7d60b 100644
-> > > > > > > --- a/fs/nfsd/nfs4state.c
-> > > > > > > +++ b/fs/nfsd/nfs4state.c
-> > > > > > 
-> > > > > > > @@ -9459,17 +9461,18 @@ static int cb_getattr_update_times(struct 
-> > > > > > > dentry *dentry, struct nfs4_delegation
-> > > > > > >   * caller must put the reference.
-> > > > > > >   */
-> > > > > > >  __be32
-> > > > > > > -nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry 
-> > > > > > > *dentry,
-> > > > > > > -			     struct nfs4_delegation **pdp)
-> > > > > > > +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct path *path,
-> > > > > > > +			     struct kstat *stat, struct nfs4_delegation **pdp)
-> > > > > > 
-> > > > > > Passing the kstat struct in saves some stack just as I suggested,
-> > > > > > but it is an ugly API. The nfsd4_encode_fattr4() call stack is tall,
-> > > > > > though -- did you happen to measure how deep it gets after this patch
-> > > > > > is applied?
-> > > > > > 
-> > > > > 
-> > > > > I tried using the stack tracer:
-> > > > > 
-> > > > > # echo 1 >/proc/sys/kernel/stack_tracer_enabled
-> > > > > # echo vfs_getattr >/sys/kernel/debug/tracing/stack_trace_filter
-> > > > > # cat /sys/kernel/debug/tracing/stack_trace
-> > > > >         Depth    Size   Location    (18 entries)
-> > > > >         -----    ----   --------
-> > > > >   0)     1936      48   vfs_getattr+0x9/0x50
-> > > > >   1)     1888     552   nfsd4_encode_fattr4+0x1b2/0x7a0 [nfsd]
-> > > > >   2)     1336      80   nfsd4_encode_entry4_fattr+0xf8/0x210 [nfsd]
-> > > > >   3)     1256      96   nfsd4_encode_entry4+0x10b/0x2a0 [nfsd]
-> > > > >   4)     1160     144   nfsd_buffered_readdir+0x139/0x310 [nfsd]
-> > > > >   5)     1016      80   nfsd_readdir+0x9f/0x180 [nfsd]
-> > > > >   6)      936      80   nfsd4_encode_readdir+0xdf/0x1e0 [nfsd]
-> > > > >   7)      856      80   nfsd4_encode_operation+0xcf/0x3d0 [nfsd]
-> > > > >   8)      776      80   nfsd4_proc_compound+0x1d6/0x7a0 [nfsd]
-> > > > >   9)      696      80   nfsd_dispatch+0xd9/0x240 [nfsd]
-> > > > >  10)      616      80   svc_process_common+0x4cb/0x6b0 [sunrpc]
-> > > > >  11)      536      40   svc_process+0x150/0x240 [sunrpc]
-> > > > >  12)      496      72   svc_handle_xprt+0x4b0/0x5f0 [sunrpc]
-> > > > >  13)      424      56   svc_recv+0x1b2/0x3a0 [sunrpc]
-> > > > >  14)      368      80   nfsd+0x11c/0x3d0 [nfsd]
-> > > > >  15)      288      56   kthread+0xe3/0x120
-> > > > >  16)      232      40   ret_from_fork+0x1a1/0x270
-> > > > >  17)      192     192   ret_from_fork_asm+0x1a/0x30
-> > > > > 
-> > > > > But that's capturing a vfs_getattr() call from encoding a readdir reply,
-> > > > > rather than the vfs_getattr() call I added to nfsd4_deleg_getattr_conflict().
-> > > > > 
-> > > > > Here's the stack depth for nfsd4_deleg_getattr_conflict():
-> > > > > 
-> > > > > # echo nfsd4_deleg_getattr_conflict 
-> > > > > > /sys/kernel/debug/tracing/stack_trace_filter
-> > > > > # echo 0 >/sys/kernel/debug/tracing/stack_max_size 
-> > > > > # cat /sys/kernel/debug/tracing/stack_trace
-> > > > >         Depth    Size   Location    (14 entries)
-> > > > >         -----    ----   --------
-> > > > >   0)     1472      48   nfsd4_deleg_getattr_conflict+0x9/0x410 [nfsd]
-> > > > >   1)     1424     552   nfsd4_encode_fattr4+0x191/0x7a0 [nfsd]
-> > > > >   2)      872      16   nfsd4_encode_getattr+0x2c/0x40 [nfsd]
-> > > > >   3)      856      80   nfsd4_encode_operation+0xcf/0x3d0 [nfsd]
-> > > > >   4)      776      80   nfsd4_proc_compound+0x1d6/0x7a0 [nfsd]
-> > > > >   5)      696      80   nfsd_dispatch+0xd9/0x240 [nfsd]
-> > > > >   6)      616      80   svc_process_common+0x4cb/0x6b0 [sunrpc]
-> > > > >   7)      536      40   svc_process+0x150/0x240 [sunrpc]
-> > > > >   8)      496      72   svc_handle_xprt+0x4b0/0x5f0 [sunrpc]
-> > > > >   9)      424      56   svc_recv+0x1b2/0x3a0 [sunrpc]
-> > > > >  10)      368      80   nfsd+0x11c/0x3d0 [nfsd]
-> > > > >  11)      288      56   kthread+0xe3/0x120
-> > > > >  12)      232      40   ret_from_fork+0x1a1/0x270
-> > > > >  13)      192     192   ret_from_fork_asm+0x1a/0x30
-> > > > > 
-> > > > > Manually inspecting function graphs of vfs_getattr(), it looks like the deepest
-> > > > > function (that we can trace) is avc_lookup(), so here's a bpftrace script that
-> > > > > prints the stack depth from avc_lookup() via nfsd4_deleg_getattr_conflict()
-> > > > > (I mostly punted to Gemini for this):
-> > > > > 
-> > > > > # cat peak-usage.bt 
-> > > > > kprobe:nfsd4_deleg_getattr_conflict {
-> > > > >     @in_deleg_conflict[tid] = 1;
-> > > > > }
-> > > > > 
-> > > > > kprobe:avc_lookup /@in_deleg_conflict[tid]/ {
-> > > > >     $stack_size = (uint64)16384; 
-> > > > >     $sp = reg("sp");
-> > > > >     $stack_base = $sp & ~($stack_size - 1);
-> > > > >     $total_used = $stack_base + $stack_size - $sp;
-> > > > > 
-> > > > >     if ($total_used > @max_depth_bytes) {
-> > > > >         @max_depth_bytes = $total_used;
-> > > > >         @deepest_stack = kstack;
-> > > > >     }
-> > > > > }
-> > > > > 
-> > > > > kretprobe:nfsd4_deleg_getattr_conflict { delete(@in_deleg_conflict[tid]); }
-> > > > > 
-> > > > > And finally the result:
-> > > > > 
-> > > > > # bpftrace peak-usage.bt 
-> > > > > Attached 3 probes
-> > > > > ^C
-> > > > > 
-> > > > > @deepest_stack: 
-> > > > >         avc_lookup+1
-> > > > >         avc_has_perm_noaudit+60
-> > > > >         avc_has_perm+89
-> > > > >         selinux_inode_getattr+203
-> > > > >         security_inode_getattr+70
-> > > > >         vfs_getattr+35
-> > > > >         nfsd4_deleg_getattr_conflict+958
-> > > > >         nfsd4_encode_fattr4+401
-> > > > >         nfsd4_encode_getattr+44
-> > > > >         nfsd4_encode_operation+207
-> > > > >         nfsd4_proc_compound+470
-> > > > >         nfsd_dispatch+217
-> > > > >         svc_process_common+1227
-> > > > >         svc_process+336
-> > > > >         svc_handle_xprt+1200
-> > > > >         svc_recv+434
-> > > > >         nfsd+284
-> > > > >         kthread+227
-> > > > >         ret_from_fork+417
-> > > > >         ret_from_fork_asm+26
-> > > > > 
-> > > > > @max_depth_bytes: 1792
-> > > > 
-> > > > Since the new code only needs the file's size, perhaps you can get
-> > > > away with
-> > > > 
-> > > >         if (i_size_read(inode) != ncf->ncf_cb_fsize)
-> > > > 
-> > > > rather than
-> > > > 
-> > > >         err = vfs_getattr(path, stat, STATX_SIZE, AT_STATX_SYNC_AS_STAT);
-> > > >         if (err) {
-> > > >                 status = nfserrno(err);
-> > > >                 goto out_status;
-> > > >         }
-> > > >         if (stat->size != ncf->ncf_cb_fsize)
-> > > > 
-> > > > Then there's no longer a need for a struct kstat at all. The client is
-> > > > holding a delegation, so I would expect the file size to be stable.
-> > > > 
-> > > 
-> > > I hate relying on the size for this, since it's not a reliable
-> > > indicator of change, especially on something that has a fixed size (VM
-> > > image, for instance).
-> > 
-> > You're right, it's not.  I dislike how the pseudocode in 10.4.3 is only
-> > checking the change attribute to determine if the file has been modified
-> > and then 2 paragraphs down it talks about checking the file size.
-> > 
-> > At any rate, the main point of this fix is to make sure we're comparing
-> > the size from the cb_getattr reply to the current size, not a cached
-> > value.  For example:
-> > 
-> > client 1 does open(O_RDWR|O_CREATE_O_TRUNC)
-> > client 1 writes some data and flushes it to the server
-> > client 2 does some operation that triggers a CB_GETATTR
-> > 
-> > At this point client 1 doesn't have any modified data, so it sends the
-> > original change attribute and its current file size (which should match
-> > the current file size on the server).  With the current code, the server
-> > compares the size client 1 sent with the value it cached on the
-> > delegation (in this case 0).  The server treats it as if the client is
-> > has modified data, which it does not.  That's all this patch is aiming
-> > to fix.
-> > 
-> > > 
-> > > In fact, I wonder if this ought to be looking at the mtime too. If the
-> > > mtime that the client reported is later than the mtime the server has,
-> > > then we can probably infer that there are buffered writes out there.
-> > 
-> > But the spec doesn't say anything about comparing the mtime.  Plus, if
-> > the client is sending the original change attribute but a different
-> > mtime than what the server has, wouldn't that be a client bug?
-> > 
-> > Plus, wouldn't it sort of be crossing into delegated timestamps
-> > territory if we started checking the mtime?
-> > 
-> > 
-> 
-> Should we be looking at extending the spec? Maybe we should add a "I
-> have outstanding buffered data" attribute that the client could send to
-> the server in a CB_GETATTR?
+Right, I agree that POSIX doesn't require persistence to storage after
+close. If this were simply a matter of persistence I think I might be
+satisfied with that answer. My concern is incorrect application
+behavior & compatibility.
 
-I guess I don't understand why the client's usage of the change
-attribute doesn't already cover that.
+NFS introduces additional complications because of its distributed
+nature. Here is an example from our automated testing. The test
+involved writing to a file and then calling truncate from a single
+client:
 
-If an application calls write() but not fsync(), close(), etc, and the
-background flushers haven't kicked in yet, then the dirty pages/folios
-will be tracked on the nfs_inode and the client will send the elevated
-change attribute in the CB_GETATTR reply.
+1. Write to the file, extending it to size N. (dd write to file)
+2. Assert the file size equals N. (stat file)
+3. Truncate the file to size M. M < N (ftruncate file)
+4. Assert that the file size equals M. (stat file)
 
-What am I missing?
+This test would occasionally fail at step 4 in our automation. The
+file size will equal the written size N. We discovered that because
+the close flush did not finish the writes in step 1, the client
+reordered writeback after the setattr in step 3. This resulted in an
+application failure regardless of data persistence. Reordering
+operations to storage caused incorrect behavior. I suspect this
+violates POSIX semantics?
 
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
-
+NFS client as currently implemented seems to require strict close
+semantics to achieve correct application behavior. Other cases can be
+imagined with applications that require close-to-open semantics when
+coordinating updates among multiple clients. I already hear plenty of
+complaints that NFS with default mount settings isn't POSIX compatible
+because writes aren't visible to other clients after the write syscall
+completes. Would we start telling people that the rule is really
+fsync-close-to-open?
 
