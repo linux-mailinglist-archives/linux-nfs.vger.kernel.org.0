@@ -1,272 +1,286 @@
-Return-Path: <linux-nfs+bounces-20670-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20671-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +LupBkW802mslAcAu9opvQ
-	(envelope-from <linux-nfs+bounces-20670-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 15:59:33 +0200
+	id eBI/LIW/02n6lQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20671-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 16:13:25 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34EE53A3C07
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 15:59:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 125D73A3D0D
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 16:13:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8F5883006B52
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 13:59:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF03D300CC08
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 14:12:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CBDB31A065;
-	Mon,  6 Apr 2026 13:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA12371D0D;
+	Mon,  6 Apr 2026 14:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="fVaRsH9Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Au2m7eiz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175602DF701
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 13:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775483969; cv=pass; b=LvEWLbpa1ULw0XrGLnCI7bCyCvvXgvqaf7lehzs91cqfhm8/LgzkAt0AZXBcJ3ssRaWXmziBRrQw/dePjB2A8A6Y8G9gHLhXWaZC58xYaMc+h6PhHRdiAS59rSvH4B5hXEAQVu8C9UvikV8fOCiTb7HQo+Mrx/a7DbGDtO/FsRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775483969; c=relaxed/simple;
-	bh=QKEY1RDtotqkOor42/zoEV1lS18KOeVdHdS9AynUrYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M9aVpfm9dEmSkKGuWnFwRN5037ZVP1kPqtbmbx4IbNIaJDrLxr4SaQuiuOu/w2XULb7Wp2/roiG9fA9EYi8xtegm0NVdM8AyeXmW+068kMdgi6weIOuppO6NPKMQTItMcF2798GqjBGSpxt2BL6HE65m5z3IX0bCbQO2mONe1I0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=fVaRsH9Q; arc=pass smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-38deb82daa9so14408231fa.3
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Apr 2026 06:59:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775483965; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ctLQRHVrsqf22LWjz60K64WF7oi0acG3WjyEQWFLEF6Jcl1sWC0hTqPyVdX9WiBbzd
-         0JWPbL6yXkYF7FbR7JAGI0nHVEd/+I150/XgWgkCtq6+ppEvObPf85mVfYwTwpDyfFVm
-         LxcpAE8eiWaZekUaE3ROEb5c1IKkV7vRruevOzCxKCOyEtvsb99ck6KZK18DrJal8JUK
-         EHpuRV0zLVrPdmZCtaPPj+QEsBVZ8o3hRbqmFteguJsBpFTPC0qyLfxlo4zpXk6Yv9nw
-         Uic6A1ndoK85b6hqkDP9Bcu1WMfG//ohnCaOJ3SMGdfmNJOpU+et/pGGBHhf/URQliXf
-         AzXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=9ucIKpZSaFQIFLXgv8VhP0yNvzTDhl+y3ytAFPozx90=;
-        fh=Ttq0Egb3GYidGFv0vZS784fTvOafRIF4DXcQ1Vu1OnU=;
-        b=fEA8as5nLvUpX3A1e83PpB+yUCHXQfbKD49fIw2tRS4BkOzQREcfjAl3THq0TSaqXC
-         6LpBsARW23KygICuc6ZzRE2BK+2buRfKwZkflqTCEBbVRshYQ5HPWmX56HHMtXo3m9oM
-         9lRgsbsg81mFf5yTlUojWkZrl0eVACRhuhlI4nsWSwHJ4uEomTy21DnFqG0ymxuUBAxp
-         FkJAOrBP9L4JGpXKguGwMCNFkBNWtfGsgxMXoMlFqbLGJbDJC6ViA/LfDJ6EKpGaPf92
-         461gXGEK32JIzvbThA8nP6o/zsacMQv85FYzVir4QvYWw5d8v1nU5mLQrWQf+izUIC9j
-         Fmsg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1775483965; x=1776088765; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ucIKpZSaFQIFLXgv8VhP0yNvzTDhl+y3ytAFPozx90=;
-        b=fVaRsH9QP5hq4Gv21bbxzZOiyDApgTG6iuLdPTm7TU2IPHcAAo/aGXZMbGFr0jS+JE
-         K0SMr8yZy81rnQkD24ns2LBgX7Z0jSvtyMer3h9ewgoKY4+ck+gODVRhLuWHygSgFUPG
-         8PTe+hsz4BfIaa0uu2vqFmStv9JevdjCWLcGeH/ZfTN65bTpv3DuNipZ51rP3pP7lTtJ
-         K2zuLcb3L0YAlOy+9MTAXXLsVZytxFtUXRfYmDqdOsqnwMdMjuu5qTg3mTam4g0HFtJS
-         fY+FuG2FJPW+zmcE2SGAS6BiiXoLFa2u6o6XYNw7XQo34EgNtFh9EJp9EPaqecOhvhyr
-         K9vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775483965; x=1776088765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9ucIKpZSaFQIFLXgv8VhP0yNvzTDhl+y3ytAFPozx90=;
-        b=VIExF5hiw85Qp2fiM6crBRWNyGdNMa1JJ0ejIKYR5QlMTro8FFSw745a3xWbtjDSkm
-         1fqesF/SrFVLusnD684XZhKd3iv65ltE3mYf4yjJMHkfJyWAMbdc4KBz8ooXExtTCazY
-         CFWF6PitkzbMMZ34/ry3wExgEZ9tQinGfNuL3qhaaxl3vggMp9aNk2n2qld1Y4oylbys
-         6Bh/jcS2ONgf0lvlP5xu2ZlhfA/G/SEj43w08/cnvOeUCC1SwrZ0WAKzp87ekda7hKlt
-         kESLYcwK1pm5LoxAXxKb5Pt3mQg79ZlOGiqWzHs7tNPz43m1y+wCpmZxwDqUhiTgYTpX
-         jBcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVF3JELRMZj8yRncTtmyNLy5G2nHdE129ZiCxnP2/lXA7gGnwL8s57/2bm30lKRRkNCQdT3oWYA114=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh4pmgosl+lx9Afrrvup83lle6ICdjQ9raEVN3eUmR0z+Z9DEP
-	k++uad0ZWSZYZxLG5maWQ2ZWsoNE/aAFsbQx276mJaq2+iI5OBhCzqAhE+bXANqprBELh2urqOd
-	7ITLZL6zdNaK58ZBg8j6kjGgT+d9pr2c=
-X-Gm-Gg: AeBDietFv4+U6xfbMdbB8irJ7z3YzZ+CDdI1XH0FA76W5nJEUhS1GqgSV1c+/IYikkY
-	torwnzrvpmWYYszpKU6V+KDFO8BD17jamr4cKMtxqIM+KUqZPaEas3vnAyKH+xgdLsgtOAo86Kz
-	gjVTDA7c4+Mls4I9nq8PGS5zbFDRNEVK4Qg1dSyggtUwgamtuL1iJptVjgmOr4QnHbAufY0tVbp
-	9QDyXx4qu+1fY/mE8bi/2so3oGl/Zt5KfR3iGXpt16eXKct1lqYWZGshtrA48cbCZhxcV5bsJKf
-	72SUFH4a0FZPqWGPHYRygHM2MsgfyvAaDfFh4xRxJA==
-X-Received: by 2002:a05:651c:e1b:b0:38b:2907:dc4 with SMTP id
- 38308e7fff4ca-38d8d386e96mr27529001fa.12.1775483964941; Mon, 06 Apr 2026
- 06:59:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F3296BD2
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 14:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775484775; cv=none; b=YEFf5aqLiQJ30bZUWWbFq/WbixTMpOhHIQu0GvYqwK4a6vQ/oqGxbT+o+mW6/jG3AHUecp/ZLXgXdC7ZhUETYBO0njLavoiheLRPT/rYCKz3rmkY1BADqOEXN9ntwiCW4atOBIzYK1vE9Jh8y2zkZsvyz7gwxgfWs1WsuTvvRj8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775484775; c=relaxed/simple;
+	bh=BxoHZSGl9qiE5uSU/gpzPFFdOPwQokVy5zVbOw0oYGk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=B7XkX3q9ejUkvQHFKXRno7dn5pIzEkwWJeiF66iv4JboCd2kUpm6GaLgiAIt3tp2p4GxA8Umqnvm4x8ZjuF0ZZpOCk5ZB0YScqMPTwJSkWoDj8KnX9/H8Ar2yXmZ/5TlObfA9Yrkli0cth/O091QHInvNCOfDCBNgv2jYOKZqEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Au2m7eiz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38CE5C4CEF7;
+	Mon,  6 Apr 2026 14:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775484775;
+	bh=BxoHZSGl9qiE5uSU/gpzPFFdOPwQokVy5zVbOw0oYGk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Au2m7eizfG0oJ72p/e2bVobt3caXIxtNkrN9QjiEuWHZ2I1c8Xcx5FrzZdORToljH
+	 LSkH+KVRDvPtV8ipAHwlm70nD57Jp3qgPOtC9hQwGYRO5OUgI6RCKXh5saF8epvGCg
+	 w2kUsJYDFPo4dN8xCPdqwkjOzWZ/R+7L2k0nGMPbjqBnEhs/SsakTs24LaQcyVE/xx
+	 Z/2rLIZ5340z3xf4skSWerMZVjspy45ccBjmI0TFN0FphGjqoHSi5z8PG1uTxzSaeE
+	 GQrhWssR1vTE0IBju6ZLhcVvTknNKMAOfJ0qmNcvKBHZ3z3IMj6VrYXMC+LLIJVf2B
+	 /h05FIX038bRA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 261ADF4006E;
+	Mon,  6 Apr 2026 10:12:54 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 06 Apr 2026 10:12:54 -0400
+X-ME-Sender: <xms:Zr_TaeB2aU9IFaRUXqsy1a94q3Tkh4zfz2hOZkE-0vDRIwFiXDJFWg>
+    <xme:Zr_TaTWxw0J0MfSj2BvOoUWIIrirNdlKDhZTjUNMLjXfIX4-QZAyDCrMXx_XnqYeN
+    KJS_k-SvXqwhsshXlG0HLN5B8a3Zj1Lr0yHm4FI0hVB0-b2tYEgPXzs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddujeelfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepjhhlrgihthhonheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpth
+    htohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehsmhgrhihh
+    vgifsehrvgguhhgrthdrtghomhdprhgtphhtthhopehtohhmsehtrghlphgvhidrtghomh
+    dprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Zr_TaQXfTO-E1Kg8b3E73xhiUwFtsUsodIXL2YPhm6jGAd3OxRlxiA>
+    <xmx:Zr_TaemQnlebMvaYmn_-cvgqSjJ5UwAcX7_VGUchmz0oOzoOUQGtmg>
+    <xmx:Zr_TabCXv5HtsUs7HP9bOqlMpFpfA4z7W1iE0U6oIDFTG4rD460U2g>
+    <xmx:Zr_Tadiz04cOzPDRzCMb0W4U3mz3dltUOsazFQzYExiAQoY6oqnpzA>
+    <xmx:Zr_TaYzzmqbFfmL4ZaWMyB-irjf6LedhTIcirAt56hSYnzlUKMqJkvlt>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E815A780070; Mon,  6 Apr 2026 10:12:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260403165335.73070-1-okorniev@redhat.com> <63fbd05720af891a2f7339be78fea2460beda7a8.camel@kernel.org>
-In-Reply-To: <63fbd05720af891a2f7339be78fea2460beda7a8.camel@kernel.org>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Mon, 6 Apr 2026 09:59:12 -0400
-X-Gm-Features: AQROBzCU8M0HQ8MpGex9kxlp_B4cnJR4fKzU-UuA6QvZcM8AzGmIyPTobf07pAI
-Message-ID: <CAN-5tyE7yW=27HObj+cfHW-6HJsiGx=m6JbAcfEw+fTA2HXgsA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] nfsd: update mtime/ctime on CLONE and COPY in
- presence of delegated attributes
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com, linux-nfs@vger.kernel.org, 
-	neilb@brown.name, Dai.Ngo@oracle.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[umich.edu,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[umich.edu:s=google-2016-06-03];
+X-ThreadId: AMVA-RgOnKPZ
+Date: Mon, 06 Apr 2026 10:12:33 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Scott Mayhew" <smayhew@redhat.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
+Message-Id: <fb00b2d1-e7be-4567-a077-9ec26a938a5c@app.fastmail.com>
+In-Reply-To: <adLellU5iadfbYdX@smayhew-thinkpadp1gen4i.remote.csb>
+References: <20260404005405.1565136-1-smayhew@redhat.com>
+ <e03d3523-06e1-4414-b185-d349e7edbe54@app.fastmail.com>
+ <adLellU5iadfbYdX@smayhew-thinkpadp1gen4i.remote.csb>
+Subject: Re: [PATCH v2] nfsd: fix file change detection in CB_GETATTR
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20670-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[umich.edu:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20671-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,peak-usage.bt:url];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 34EE53A3C07
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.993];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 125D73A3D0D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 3, 2026 at 1:02=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
-te:
->
-> On Fri, 2026-04-03 at 12:53 -0400, Olga Kornievskaia wrote:
-> > When delegated attributes are given on open the file is opened with NOC=
-MTIME
-> > and modifying operations do not update mtime/ctime as to not get out-of=
--sync
-> > with the client's delegated view. However, for operations CLONE/COPY se=
-rver
-> > should update its view of mtime/ctime and reflect that in any GETATTR q=
-ueries.
-> >
-> > Fixes: e5e9b24ab8fa ("nfsd: freeze c/mtime updates with outstanding WRI=
-TE_ATTRS delegation")
-> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > ---
-> >  fs/nfsd/nfs4proc.c | 27 ++++++++++++++++++++++++++-
-> >  1 file changed, 26 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index 99b44b6ec056..66bde3732b03 100644
-> > --- a/fs/nfsd/nfs4proc.c
-> > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -1396,6 +1396,24 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct=
- nfsd4_compound_state *cstate,
-> >       goto out;
-> >  }
-> >
-> > +static bool nfsd4_clear_nocmtime(struct file *f)
-> > +{
-> > +     if ((READ_ONCE(f->f_mode) & FMODE_NOCMTIME) !=3D 0) {
-> > +             spin_lock(&f->f_lock);
-> > +             f->f_mode &=3D ~FMODE_NOCMTIME;
-> > +             spin_unlock(&f->f_lock);
-> > +             return true;
-> > +     }
-> > +     return false;
-> > +}
-> > +
-> > +static void nfsd4_restore_nocmtime(struct file *f)
-> > +{
-> > +     spin_lock(&f->f_lock);
-> > +     f->f_mode |=3D FMODE_NOCMTIME;
-> > +     spin_unlock(&f->f_lock);
-> > +}
-> > +
-> >  static __be32
-> >  nfsd4_clone(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstat=
-e,
-> >               union nfsd4_op_u *u)
-> > @@ -1403,16 +1421,19 @@ nfsd4_clone(struct svc_rqst *rqstp, struct nfsd=
-4_compound_state *cstate,
-> >       struct nfsd4_clone *clone =3D &u->clone;
-> >       struct nfsd_file *src, *dst;
-> >       __be32 status;
-> > +     bool restore_nocmtime =3D false;
-> >
-> >       status =3D nfsd4_verify_copy(rqstp, cstate, &clone->cl_src_statei=
-d, &src,
-> >                                  &clone->cl_dst_stateid, &dst);
-> >       if (status)
-> >               goto out;
-> >
-> > +     restore_nocmtime =3D nfsd4_clear_nocmtime(dst->nf_file);
-> >       status =3D nfsd4_clone_file_range(rqstp, src, clone->cl_src_pos,
-> >                       dst, clone->cl_dst_pos, clone->cl_count,
-> >                       EX_ISSYNC(cstate->current_fh.fh_export));
-> > -
-> > +     if (restore_nocmtime)
-> > +             nfsd4_restore_nocmtime(dst->nf_file);
-> >       nfsd_file_put(dst);
-> >       nfsd_file_put(src);
-> >  out:
-> > @@ -2132,6 +2153,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
-> >       struct nfsd4_copy *copy =3D &u->copy;
-> >       struct nfsd42_write_res *result;
-> >       __be32 status;
-> > +     bool restore_nocmtime =3D false;
-> >
-> >       result =3D &copy->cp_res;
-> >       nfsd_copy_write_verifier((__be32 *)&result->wr_verifier.data, nn)=
-;
-> > @@ -2157,6 +2179,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
-> >               }
-> >       }
-> >
-> > +     restore_nocmtime =3D nfsd4_clear_nocmtime(copy->nf_dst->nf_file);
-> >       memcpy(&copy->fh, &cstate->current_fh.fh_handle,
-> >               sizeof(struct knfsd_fh));
-> >       if (nfsd4_copy_is_async(copy)) {
-> > @@ -2199,6 +2222,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
-> >                                      copy->nf_dst->nf_file, true);
-> >       }
-> >  out:
-> > +     if (restore_nocmtime)
-> > +             nfsd4_restore_nocmtime(copy->nf_dst->nf_file);
-> >       trace_nfsd_copy_done(copy, status);
-> >       release_copy_files(copy);
-> >       return status;
->
-> This seems simple enough, but there is some raciness involved if other
-> calls are running concurrently with the COPY/CLONE. You might end up
-> reenabling FMODE_NOCMTIME before a second COPY/CLONE finishes.
->
-> A simpler idea might be to just do a notify_change() for ATTR_MTIME
-> after each COPY or CLONE operation done on a file with FMODE_NOCMTIME
-> set.
->
-> That should set the timestamp to something pretty close to whatever the
-> last write() would have set it to, but without having to monkey with
-> the fmode.
 
-Thanks Jeff and Chuck. I've changed the code to use the
-notify_change() but before I send out I have a question regarding
-where you think this notify_change () should take place in case of a
-copy (specifically thinking about async copy vs sync copy). The
-easiest option is to do it (regardless of sync or async) upon
-completion of the COPY compound (ie not at the end of when async copy
-completes). Or for the async copy should it happen upon (successful)
-copy completion?
 
-> --
-> Jeff Layton <jlayton@kernel.org>
+On Sun, Apr 5, 2026, at 6:13 PM, Scott Mayhew wrote:
+> On Sat, 04 Apr 2026, Chuck Lever wrote:
+>> On Fri, Apr 3, 2026, at 8:54 PM, Scott Mayhew wrote:
+
+>> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> > index fa657badf5f8..53d8e7e7d60b 100644
+>> > --- a/fs/nfsd/nfs4state.c
+>> > +++ b/fs/nfsd/nfs4state.c
+>> 
+>> > @@ -9459,17 +9461,18 @@ static int cb_getattr_update_times(struct 
+>> > dentry *dentry, struct nfs4_delegation
+>> >   * caller must put the reference.
+>> >   */
+>> >  __be32
+>> > -nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry 
+>> > *dentry,
+>> > -			     struct nfs4_delegation **pdp)
+>> > +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct path *path,
+>> > +			     struct kstat *stat, struct nfs4_delegation **pdp)
+>> 
+>> Passing the kstat struct in saves some stack just as I suggested,
+>> but it is an ugly API. The nfsd4_encode_fattr4() call stack is tall,
+>> though -- did you happen to measure how deep it gets after this patch
+>> is applied?
+>> 
 >
+> I tried using the stack tracer:
+>
+> # echo 1 >/proc/sys/kernel/stack_tracer_enabled
+> # echo vfs_getattr >/sys/kernel/debug/tracing/stack_trace_filter
+> # cat /sys/kernel/debug/tracing/stack_trace
+>         Depth    Size   Location    (18 entries)
+>         -----    ----   --------
+>   0)     1936      48   vfs_getattr+0x9/0x50
+>   1)     1888     552   nfsd4_encode_fattr4+0x1b2/0x7a0 [nfsd]
+>   2)     1336      80   nfsd4_encode_entry4_fattr+0xf8/0x210 [nfsd]
+>   3)     1256      96   nfsd4_encode_entry4+0x10b/0x2a0 [nfsd]
+>   4)     1160     144   nfsd_buffered_readdir+0x139/0x310 [nfsd]
+>   5)     1016      80   nfsd_readdir+0x9f/0x180 [nfsd]
+>   6)      936      80   nfsd4_encode_readdir+0xdf/0x1e0 [nfsd]
+>   7)      856      80   nfsd4_encode_operation+0xcf/0x3d0 [nfsd]
+>   8)      776      80   nfsd4_proc_compound+0x1d6/0x7a0 [nfsd]
+>   9)      696      80   nfsd_dispatch+0xd9/0x240 [nfsd]
+>  10)      616      80   svc_process_common+0x4cb/0x6b0 [sunrpc]
+>  11)      536      40   svc_process+0x150/0x240 [sunrpc]
+>  12)      496      72   svc_handle_xprt+0x4b0/0x5f0 [sunrpc]
+>  13)      424      56   svc_recv+0x1b2/0x3a0 [sunrpc]
+>  14)      368      80   nfsd+0x11c/0x3d0 [nfsd]
+>  15)      288      56   kthread+0xe3/0x120
+>  16)      232      40   ret_from_fork+0x1a1/0x270
+>  17)      192     192   ret_from_fork_asm+0x1a/0x30
+>
+> But that's capturing a vfs_getattr() call from encoding a readdir reply,
+> rather than the vfs_getattr() call I added to nfsd4_deleg_getattr_conflict().
+>
+> Here's the stack depth for nfsd4_deleg_getattr_conflict():
+>
+> # echo nfsd4_deleg_getattr_conflict 
+> >/sys/kernel/debug/tracing/stack_trace_filter
+> # echo 0 >/sys/kernel/debug/tracing/stack_max_size 
+> # cat /sys/kernel/debug/tracing/stack_trace
+>         Depth    Size   Location    (14 entries)
+>         -----    ----   --------
+>   0)     1472      48   nfsd4_deleg_getattr_conflict+0x9/0x410 [nfsd]
+>   1)     1424     552   nfsd4_encode_fattr4+0x191/0x7a0 [nfsd]
+>   2)      872      16   nfsd4_encode_getattr+0x2c/0x40 [nfsd]
+>   3)      856      80   nfsd4_encode_operation+0xcf/0x3d0 [nfsd]
+>   4)      776      80   nfsd4_proc_compound+0x1d6/0x7a0 [nfsd]
+>   5)      696      80   nfsd_dispatch+0xd9/0x240 [nfsd]
+>   6)      616      80   svc_process_common+0x4cb/0x6b0 [sunrpc]
+>   7)      536      40   svc_process+0x150/0x240 [sunrpc]
+>   8)      496      72   svc_handle_xprt+0x4b0/0x5f0 [sunrpc]
+>   9)      424      56   svc_recv+0x1b2/0x3a0 [sunrpc]
+>  10)      368      80   nfsd+0x11c/0x3d0 [nfsd]
+>  11)      288      56   kthread+0xe3/0x120
+>  12)      232      40   ret_from_fork+0x1a1/0x270
+>  13)      192     192   ret_from_fork_asm+0x1a/0x30
+>
+> Manually inspecting function graphs of vfs_getattr(), it looks like the deepest
+> function (that we can trace) is avc_lookup(), so here's a bpftrace script that
+> prints the stack depth from avc_lookup() via nfsd4_deleg_getattr_conflict()
+> (I mostly punted to Gemini for this):
+>
+> # cat peak-usage.bt 
+> kprobe:nfsd4_deleg_getattr_conflict {
+>     @in_deleg_conflict[tid] = 1;
+> }
+>
+> kprobe:avc_lookup /@in_deleg_conflict[tid]/ {
+>     $stack_size = (uint64)16384; 
+>     $sp = reg("sp");
+>     $stack_base = $sp & ~($stack_size - 1);
+>     $total_used = $stack_base + $stack_size - $sp;
+>
+>     if ($total_used > @max_depth_bytes) {
+>         @max_depth_bytes = $total_used;
+>         @deepest_stack = kstack;
+>     }
+> }
+>
+> kretprobe:nfsd4_deleg_getattr_conflict { delete(@in_deleg_conflict[tid]); }
+>
+> And finally the result:
+>
+> # bpftrace peak-usage.bt 
+> Attached 3 probes
+> ^C
+>
+> @deepest_stack: 
+>         avc_lookup+1
+>         avc_has_perm_noaudit+60
+>         avc_has_perm+89
+>         selinux_inode_getattr+203
+>         security_inode_getattr+70
+>         vfs_getattr+35
+>         nfsd4_deleg_getattr_conflict+958
+>         nfsd4_encode_fattr4+401
+>         nfsd4_encode_getattr+44
+>         nfsd4_encode_operation+207
+>         nfsd4_proc_compound+470
+>         nfsd_dispatch+217
+>         svc_process_common+1227
+>         svc_process+336
+>         svc_handle_xprt+1200
+>         svc_recv+434
+>         nfsd+284
+>         kthread+227
+>         ret_from_fork+417
+>         ret_from_fork_asm+26
+>
+> @max_depth_bytes: 1792
+
+Since the new code only needs the file's size, perhaps you can get
+away with
+
+        if (i_size_read(inode) != ncf->ncf_cb_fsize)
+
+rather than
+
+        err = vfs_getattr(path, stat, STATX_SIZE, AT_STATX_SYNC_AS_STAT);
+        if (err) {
+                status = nfserrno(err);
+                goto out_status;
+        }
+        if (stat->size != ncf->ncf_cb_fsize)
+
+Then there's no longer a need for a struct kstat at all. The client is
+holding a delegation, so I would expect the file size to be stable.
+
+
+-- 
+Chuck Lever
 
