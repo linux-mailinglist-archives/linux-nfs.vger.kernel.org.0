@@ -1,266 +1,144 @@
-Return-Path: <linux-nfs+bounces-20665-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20666-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CuPBNww102lJfwcAu9opvQ
-	(envelope-from <linux-nfs+bounces-20665-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 06:22:36 +0200
+	id GHmTJlNI02kAgwcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20666-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 07:44:51 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FF193A1663
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 06:22:36 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 982FB3A1A33
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Apr 2026 07:44:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E486A30053E1
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 04:22:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5F1D93003734
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Apr 2026 05:44:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B001E242D62;
-	Mon,  6 Apr 2026 04:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982833382C9;
+	Mon,  6 Apr 2026 05:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TISr/n3l"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ys78b5N4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDF120C00A
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Apr 2026 04:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775449352; cv=pass; b=j4IuNnPqUmQ5wpKr2WCrco8smJlGhDnM9mNSy5rSPGJddZvmevQf8skPJw/NcdwLwP3zNY9UA2wci7CkaNhHTaBlBXNYdYYVGjszg22CLqtCcwcZyYwopqiN1K1bnptefn1vlc7x1UQr0z4L3x99SuoIrjJ2m8HxPArel/+cuhU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775449352; c=relaxed/simple;
-	bh=1Z2+dlnI1iEBecdsH/XCSQ0KQWuVx3RbDCtT0XO2pIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=OVIneT0uY4j1zLjx9PNliPhGEA2BXrZkTWsuA3PrjwYdcKmFP3G2D8SKjraFbCWTDM93YZXWMNH5i+juaVjcGJKaYk4OFDtPgR61Nye6psrz6UXZZHL+XmQKVNjUNPPgLy//Df0EXJc1EEhriksXjeadE6J5AAzNUj7Mn5LNV84=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TISr/n3l; arc=pass smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5a3cd6f0447so2592287e87.2
-        for <linux-nfs@vger.kernel.org>; Sun, 05 Apr 2026 21:22:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775449349; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cXD0Stl86XrJpzJBp2Nb4tPpSgubd996U+RPTIEAuVGjMuTy/BRl2tk8rQvGDNrWKP
-         sucFia46OeHHODrRbkxzKh/d2SE4yVlmYHV3BDhWdILEO89x/6U0MiTFnVEZRPX71foR
-         vn2oqx251j1bPLp0WfJYdPQdlWONRB82J6t1rHdvbOeCAncJF+ocKVsx8pHR9kN9yjkw
-         1+zckdOu5nDMFUpJmPV+YE+F8tcUkV/lHH/GQt9595C53swk1XZb/hTaRy5PacPC3IyD
-         Fnj1MY3jNj9GYw4hsIea4EgK8SKzATzZCrHsDp9igzab4hCYTP66GmLcmm3Bk6g84V4s
-         GB4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=EyMlI8n0C/euCqMJ//rDGLkv5/KCTm3M4f8QrF+4zDE=;
-        fh=soBZ4z6rOOq+fMpsmYxnZXfEKbWcTG96XLkb/GGLMbA=;
-        b=LWHLslNf0Z2o4EbZTcGDLeqIoJF4lVZ6h6R0hzDNo6E5iaNDVZR8z7bT7tY/YEWNzZ
-         qKjDSwshoPvxgoKdfvsuY4F7LSRq6UmD10zHBrzswLVDVAS11WpHSc1qv6gOnJkgFs54
-         CLoVdaK3ty0G3qlH3K0cKoF7gzP+svRHqPWD+DOONNoY8R0nsDQudZw02qfvqinyTtER
-         zFcj85dm5U0qfgBuLr3rpQr8PBzyXOeFCs2dQ2SEIVLtb5TKgZ3G0d9d0KwpoJ1gKPLp
-         ngq0otL6K/6I3L3H2EGBk8A23ihajjo9xbKBUJ7OIPlv+E7Rpcg1cMkJaKMytdp0lfC2
-         J8/g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775449349; x=1776054149; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EyMlI8n0C/euCqMJ//rDGLkv5/KCTm3M4f8QrF+4zDE=;
-        b=TISr/n3ljlbMI7iBE9fU4hZ5Brsc/ASKgouSqKnjZvCYWKExM1uOsKkTou9rKH5GX+
-         ccfyYulzCPFULnHkQ08CnMN+bN5frktLjIhDYYLfJPLHgDhyjGUfFxRZquz4YErVWDJP
-         +W/u/S+06GPpyhzvE4fMSNIJDdSwpYtT+XHZY8h7cXfASwrXYBQHHh8FAQ/ssOYBO4OC
-         3dJevq0FB2J+N1gnN2rrZOb88QEnrLvpWzQfP6UCwmTbVv5Hbky0zZVIMOBLkwTpySpO
-         Ck1/9laOy4F27l6d6P49WjLuikWBYQaMkD6FtV20A7wO3FEhZlS2t7yIHSqG85XbfJth
-         UeLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775449349; x=1776054149;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EyMlI8n0C/euCqMJ//rDGLkv5/KCTm3M4f8QrF+4zDE=;
-        b=S1WbbV0Vf0gxnZMBDoPjEUrjzdO66eXIyJoGDGh6scDVMKG2fC54RHubz4kUQ6mZIt
-         pl8ccl+I7Q028g0LGv12g/hIpN062Ld7YON7eLT3gpgp8BgZOPFKKbSule30MtKrHxLg
-         D5aLIL2Rqgu+trkUIPqC+OEWORT9mXm066yG7kG2FieGUBqW7QmunfTWtHGNMxVkaZWL
-         FkvtGcKuIMesTPKbzKxvlnflY6CSwBAQ4V04SW8HiAtxeb8JPO5LcjA0HaE6PbrIJX79
-         szOsCui0QwIAh9s7TCBTEjtp9vjsIlLPwJWhy7kVtYKZK4GSJa54kLT2NTOfhyMWi9Hk
-         +IDg==
-X-Gm-Message-State: AOJu0Yw0e5BA0C6366Fovq+Xa3PqhCg69FYKVvotjMN18m6sUp0OLaH6
-	0UbCUyQC7IfayZ3Hj0tOK0NS3D2lKLp+8/+nLebiT0r1qMLE75w3VicC4fIec99VElJ9/yK1LNz
-	rYCn6TeSr/rdMMNBIamj1/cWP95U7S4jAV4+h
-X-Gm-Gg: AeBDietHQxroYioY4be5GejWAt4hbZAQebaKKAOYRY+hSV4tf3Vd+7S5+x1YCA3sMXn
-	dPG7K+WNeCk1+CO0dSjgsPpncMwZXpc4HXXHKWyyXtuceOjFhzt5GY0tUDvfrgza5uX1BVzfOhc
-	Wf51omjvazDpbV789Oj64TiCLKI7OclCi1O4DiW6fGUK+bVRazW8qQoiDuVn3W6AHyBnwRnYcJM
-	DrCy9zBK0WiZVvqO71nfg5RpiTuInPzCLWu90S+9SXXpQMVy4wZshxR8CX2HHef+koC3kKpkHpI
-	1nDK5SoQ5JbVfJG6bmJRO2kpbbYcG/f6cVeSEool
-X-Received: by 2002:a05:6512:110d:b0:5a1:2e0c:86f0 with SMTP id
- 2adb3069b0e04-5a33758f31emr2819910e87.37.1775449348803; Sun, 05 Apr 2026
- 21:22:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA7631F982;
+	Mon,  6 Apr 2026 05:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775454283; cv=none; b=BjE95XVMifvlbsOWaQHrlUTMNVd/6lprJIUjOPlA6Zw2oDylYHIecLkZyAw6FMlT7WKPTbf5tgQyf4rZ6Br3m1mgDpdMG6BXZKr8BvTFA/tMaMJ8Yj1KL04Ch8z3QmOEAm5K3pfKB2Ut2D2PC5zGzlDxdS7egctpdQnOljfag78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775454283; c=relaxed/simple;
+	bh=R0tmwk/2P398nPX2de9I5DOEX067PRYwRoQvfH/CW0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pMJILDT04nNNlHQBhGC0IFZVuSu7in55kAH//xSU0uW3rXf+SzYpb3SW6T8iykUmySnrLdZSqbNBk1rSV3V+UDrTUJE28mLQVQfy5eOqEHxJcjUZwfh5mS1dOEZ17uVelegs5zFyDXxxqeMtOnIKDzeSkURK9noA6kt+hWWuBQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ys78b5N4; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M5LxlInPJ7/UGCLgthuGl+ND/trl20UHwe3EP42gW3U=; b=ys78b5N4ODFhtd/VHJZKyPEIEZ
+	CAcNY121v6nTNVo9GQQ+SlfrgslNKsqT2ERk4mnIwvtl7Bmx2Sl1mc5SK0TrcAEJoRBVwT/klowrG
+	CFVwVrIhadbiNGNhHpGjTO8LuZ9Et76aN6pSvfxqM/eSUeFVn3llD/d7f9nUNEfykhyetHqnsVzDJ
+	AE5MFa1K1MD1h6GcM2fxQDeP7Zj+RhV5rEdRbQHk+tSBNjW66F9azNPTorQCr6BzpJg/TQRa11kd4
+	BPV3nVQuU7ybNBrZfv3NujPJp2MqsopoNsN9JOgGvx1z9vm5egOwOtaCC8gj++QdHNty6Plcdxesl
+	DPS6KcZw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w9clL-00000004ozj-0Jpu;
+	Mon, 06 Apr 2026 05:44:39 +0000
+Date: Sun, 5 Apr 2026 22:44:39 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Mike Snitzer <snitzer@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 1/4] mm: fix IOCB_DONTCACHE write performance with
+ rate-limited writeback
+Message-ID: <adNIR8atJj38IL9p@infradead.org>
+References: <20260401-dontcache-v1-0-1f5746fab47a@kernel.org>
+ <20260401-dontcache-v1-1-1f5746fab47a@kernel.org>
+ <ac385Il8l-krKEOQ@infradead.org>
+ <01dd135adf38e35492d957a35e22c4ba5c2283d1.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+Tq-RqDP_BAroLX6wVrNY1BMwC9BOZ-UorLje=TXBdEOj8hjQ@mail.gmail.com>
-In-Reply-To: <CA+Tq-RqDP_BAroLX6wVrNY1BMwC9BOZ-UorLje=TXBdEOj8hjQ@mail.gmail.com>
-From: Hiroyuki Sato <hiroysato@gmail.com>
-Date: Mon, 6 Apr 2026 13:22:17 +0900
-X-Gm-Features: AQROBzAj7VPIDU9mjxXeXlFi5QXpxkrb0Bgl7s7blngF9Ji_EFZG3B5orUGj2NU
-Message-ID: <CA+Tq-RouZ784rWHjwSz6GoJc4f5f66A2mr2-PdyFJ2bK2Y20wA@mail.gmail.com>
-Subject: Re: [Q] NFSD: COMPOUND reply tag padding not zeroed? (e.g. \xff\xff)
-To: nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01dd135adf38e35492d957a35e22c4ba5c2283d1.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20665-lists,linux-nfs=lfdr.de];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_ONE(0.00)[1];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hiroysato@gmail.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-20666-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Queue-Id: 1FF193A1663
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,infradead.org:dkim,infradead.org:mid]
+X-Rspamd-Queue-Id: 982FB3A1A33
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Helo,
+On Thu, Apr 02, 2026 at 08:28:42AM -0400, Jeff Layton wrote:
+> > On Wed, Apr 01, 2026 at 03:10:58PM -0400, Jeff Layton wrote:
+> > > IOCB_DONTCACHE calls filemap_flush_range() with nr_to_write=LONG_MAX
+> > > on every write, which flushes all dirty pages in the written range.
+> > > 
+> > > Under concurrent writers this creates severe serialization on the
+> > > writeback submission path, causing throughput to collapse to ~47% of
+> > > buffered I/O with multi-second tail latency.  Even single-client
+> > > sequential writes suffer: on a 512GB file with 256GB RAM, the
+> > > aggressive flushing triggers dirty throttling that limits throughput
+> > > to 575 MB/s vs 1442 MB/s with rate-limited writeback.
+> > 
+> > I'm not sure the first how you think the first paragraph relate to
+> > the second.
+> > 
+> 
+> The belief is that under heavy parallel write workload on the same
+> inode, the writers all end up stacking up on the mapping's xa_lock.
+> However as Ritesh points out, I should probably confirm that with perf.
 
-I can reproduce the same behavior on Linux 7.0-rc7 as well.
-(591cd656a1bf5ea94a222af5ef2ee76df029c1d2)
-The COMPOUND reply tag padding sometimes contains non-zero bytes
-(e.g. 0x69, 0xff) instead of zero, which appears to be the same
-issue as previously reported.
+But nr_to_write should not change anything.  If .range_start and
+.range_end are set in a writeback_iter() loop, writeback_iter will try to
+get and writeback every page in the range.  Setting nr_to_write in
+addition to that could only reduce the amount written if it was less than
+the size of the range, which in your patch it isn't.
 
-Would a change like the following make sense here?
-It seems to zero-fill the XDR padding explicitly for the reply tag.
+In fact we should probably have a debug check to never set both a range
+and nr_to_write as that combination doesn't make sense.
 
-With this change applied, the padding appears to be zeroed
-consistently in my testing.
-
-Best regards,
-
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 9d2349131..b33e031bf 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -6377,16 +6377,18 @@ nfs4svc_encode_compoundres(struct svc_rqst
-*rqstp, struct xdr_stream *xdr)
- {
-        struct nfsd4_compoundres *resp =3D rqstp->rq_resp;
-        __be32 *p;
-+       size_t padded_len;
-
-        /*
-         * Send buffer space for the following items is reserved
-         * at the top of nfsd4_proc_compound().
-         */
-        p =3D resp->statusp;
-+       padded_len =3D XDR_QUADLEN(resp->taglen) * XDR_UNIT;
-
-        *p++ =3D resp->cstate.status;
-        *p++ =3D htonl(resp->taglen);
--       memcpy(p, resp->tag, resp->taglen);
-+       memcpy_and_pad(p, padded_len, resp->tag, resp->taglen, 0);
-        p +=3D XDR_QUADLEN(resp->taglen);
-        *p++ =3D htonl(resp->opcnt);
-
-2026=E5=B9=B44=E6=9C=885=E6=97=A5(=E6=97=A5) 13:17 Hiroyuki Sato <hiroysato=
-@gmail.com>:
->
-> Hello,
->
-> 1. Observed behavior
->
-> * When sending a COMPOUND request with the tag "create_session" (14 bytes=
-),
->   the reply is expected to include XDR padding to a 4-byte boundary,
->   i.e. "create_session" + "\x00\x00".
-> * On 5.14.0-611.45.1.el9_7.x86_64 (AlmaLinux 9), the padding bytes
->   are sometimes observed to be non-zero (e.g. "\xff\xff").
-> * From inspection of recent upstream code, nfs4svc_encode_compoundres()
->   also appears not to explicitly zero-fill the padding.
->
-> 2. Questions
->
-> * Is this understanding correct?
-> * If so, is this a known issue or something that should be fixed?
->
-> 3. Analysis
->
-> * In nfsd4_proc_compound(), space for taglen + tag + opcnt is reserved vi=
-a:
->   xdr_reserve_space(resp->xdr, XDR_UNIT * 2 + args->taglen);
-> * In nfs4svc_encode_compoundres(), only the tag payload is copied:
->   memcpy(p, resp->tag, resp->taglen);
-> * The pointer is then advanced using: p +=3D XDR_QUADLEN(resp->taglen);
-> * but the padding bytes do not appear to be explicitly zeroed.
-> * As a result, it seems possible that uninitialized data remains in
->   the padding region, which may explain why non-zero values
->   such as \xff\xff appear on the wire.
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/f=
-s/nfsd/nfs4proc.c#n3055
->
->
-> ```C
-> /*
->  * COMPOUND call.
->  */
-> static __be32
-> nfsd4_proc_compound(struct svc_rqst *rqstp)
-> {
->     // snip
-> /* reserve space for: taglen, tag, and opcnt */
-> xdr_reserve_space(resp->xdr, XDR_UNIT * 2 + args->taglen);
-> ```
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/f=
-s/nfsd/nfs4xdr.c#n6389
->
->
-> ```C
-> bool
-> nfs4svc_encode_compoundres(struct svc_rqst *rqstp, struct xdr_stream *xdr=
-)
-> {
->     // snip
-> memcpy(p, resp->tag, resp->taglen);
-> p +=3D XDR_QUADLEN(resp->taglen);
-> ```
->
-> 4. Additional observations
->
-> * A packet capture excerpt (attached separately via gist) shows:
->   (https://gist.github.com/hiroyuki-sato/8ab30dffbbd2499e8b4741d89fd383be=
-)
-> * The issue is not deterministic: when repeatedly sending CREATE_SESSION,
->   it was observed roughly once every ~5 attempts.
-> * This was discovered while implementing an NFSv4 client in Rust.
->
-> Best regards,
->
-> --
-> Hiroyuki Sato
-
-
-
---=20
-Hiroyuki Sato
 
