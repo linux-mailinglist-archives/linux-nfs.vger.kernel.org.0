@@ -1,175 +1,117 @@
-Return-Path: <linux-nfs+bounces-20714-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20715-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0ORUGY4h1WnK1AcAu9opvQ
-	(envelope-from <linux-nfs+bounces-20714-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 17:23:58 +0200
+	id aHOUIYoo1WnB1gcAu9opvQ
+	(envelope-from <linux-nfs+bounces-20715-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 17:53:46 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE7313B0EB2
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 17:23:57 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DED5F3B15A8
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Apr 2026 17:53:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1405C302CD3C
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Apr 2026 15:21:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A63FA30E40F1
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Apr 2026 15:44:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3550736CDEC;
-	Tue,  7 Apr 2026 15:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BE93CCFDE;
+	Tue,  7 Apr 2026 15:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gsacapital.com header.i=@gsacapital.com header.b="OUSMpx5Z"
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="OBBqR/Mx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from eu-smtp-delivery-195.mimecast.com (eu-smtp-delivery-195.mimecast.com [185.58.85.195])
+Received: from smtpcmd02102.aruba.it (smtpcmd02102.aruba.it [62.149.158.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEEC36BCC0
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Apr 2026 15:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285B53CAE97
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Apr 2026 15:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775575246; cv=none; b=ikX5RsSfia+Iox8n6XtGEE89rgAxdySJyMlnjh7LuebvVVZ7X6ilYP02xgfkgKMuf+1PZ9Uqd4rVQfVDiNl6xeMKWuu2KHDNtNvacLInkXVRZyPu6y+T5WItZlbYllRd/0IA+DkG9tw+xbvgwbyXkVGl8lxUuKyLBoTjgnx/JZk=
+	t=1775576675; cv=none; b=GqGzRqlOplidwKAAtC1R4SA9ht0Zbu6jtRML3/bCKx+S6y2He8XXChtodyzkqhhsXT8aWFYLqpcetvScVzG1AGhK/wma7jcz3ZnowuovShfQTv5m+W6Xu9xuquDJTVeEs6qAKX5KW6nrkGjEfD8j/TaZPulsPNbIfOlUfyqfPzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775575246; c=relaxed/simple;
-	bh=0eL1cnf65TinsP1uE/WwsmI95PT1mCWxkfpiMdnA6ak=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=P9hlZrPRh7pSADLTlrDtaOo7h9kYfB/P6DAjA9UXocYaILZFHMGDlVpIJR4WXw3NEJkSgZlpkjj+2Gw44jlKg5XN9wJ99Qi/YpmFcS4VCfYBpmfPMv6Ya/0mnP8yF5ugkvr6vmBIg/plXLZyfteYbYlhQ6dBzCWcTH9qLvplUT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gsacapital.com; spf=pass smtp.mailfrom=gsacapital.com; dkim=pass (1024-bit key) header.d=gsacapital.com header.i=@gsacapital.com header.b=OUSMpx5Z; arc=none smtp.client-ip=185.58.85.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gsacapital.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gsacapital.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gsacapital.com;
-	s=mimecast20170115; t=1775575238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=flQeClaAL5qkomrVB4gXfsAdmOzzoZ+NQ5fJigp5WRA=;
-	b=OUSMpx5Zh9bAfvsplXVDQNnQKOJ/kZ2I1zTwGwDTKIftz193gNb9TBYftQ+F/DA48EIUE3
-	kWnjH5oRkstgFT7ld4/Uk8t4fiKbssKnM7ydopELtyLUR1jELdVs/4yQfEbgru13hB5pK5
-	iek4fet12OZXroT8vFzvmcYjuYnu0CM=
-Received: from mailrelay.gsacapital.com (185.137.2.10 [185.137.2.10]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id uk-mta-318-_Eyn6bblPgWgxYcCaUZxmg-1; Tue,
- 07 Apr 2026 16:20:37 +0100
-X-MC-Unique: _Eyn6bblPgWgxYcCaUZxmg-1
-X-Mimecast-MFC-AGG-ID: _Eyn6bblPgWgxYcCaUZxmg_1775575237
-From: Ben Roberts <ben.roberts@gsacapital.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Roberts <ben.roberts@gsacapital.com>
-Subject: [PATCH] pNFS: deadlock in pnfs_send_layoutreturn
-Date: Tue,  7 Apr 2026 16:20:35 +0100
-Message-ID: <20260407152035.4034628-1-ben.roberts@gsacapital.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1775576675; c=relaxed/simple;
+	bh=FvS1cipI4zjiETBk3hHlt7oRUaYxk+gTOM4AVOCQVD4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lWAdwtQTMLNeQ+gESEebfJIGS9kKmIMb9GacIQ//47DmbiwUPYoK4tL0memf0rG+KfDOn8O6RR9m6LziekPYnM6Wo5XEQZZyxeO7sAVy+17opu7O5AAFJBzHu7uZNztndRSvLwAhsFI3Rs5LpsApn+SdgP1JCBQ6QcYBQc6V5jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=benettiengineering.com; spf=pass smtp.mailfrom=benettiengineering.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=OBBqR/Mx; arc=none smtp.client-ip=62.149.158.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=benettiengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benettiengineering.com
+Received: from localhost.localdomain ([84.33.84.190])
+	by Aruba SMTP with ESMTPSA
+	id A8YEwTugoxFXLA8YEwnsDU; Tue, 07 Apr 2026 17:41:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1775576475; bh=FvS1cipI4zjiETBk3hHlt7oRUaYxk+gTOM4AVOCQVD4=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=OBBqR/Mx9qoSIuLdgdrJiSknnc6q2U9Jr/61sjejWc/6NIXnjKjUZEzGtwJo/mbF4
+	 +9Zq/rneJMjaLjMGUHWR/xmUEHc4IjgOUojRPP1jSciJa9E5OUOAZz0SemvQazd64L
+	 hw9O5kCT8Tx+Pzt2x3AkpBNF7YfcYZR0CSWMULIljU/XkF5zE0YfXDW0pleFwGd7nu
+	 YotNxPfaPYZ2HSPs+Vbn+L1Ygh1D4ac8R4x2O0jFhZ2XWUotlqGHIbK1icfnPWM6ci
+	 v1yxkACumEOHHUKIwTpayYeDYiNRdy2m0m4yBbCYsLCEYnL+HM+xtg/aMt3Q61m74b
+	 lPsqemApgx4BQ==
+From: Giulio Benetti <giulio.benetti@benettiengineering.com>
+To: linux-nfs@vger.kernel.org
+Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
+Subject: [PATCH] fh_key_file: fix missing string.h inclusion
+Date: Tue,  7 Apr 2026 17:41:13 +0200
+Message-ID: <20260407154113.1152555-1-giulio.benetti@benettiengineering.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 7akriI51wmC0N9VQhAzl01ykcTIZFkdSLNI5w_VavKA_1775575237
-X-Mimecast-Originator: gsacapital.com
-Content-Transfer-Encoding: quoted-printable
-content-type: text/plain; charset=UTF-8
-X-Spamd-Result: default: False [-1.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfBnob+F//YTkA9GASeIo5RjdeiwmK3l0K1PUqkH16fE/qtzurG5BpR4oOMfkoOi2fosrYCZlxExSa+T81/XVge/dFCbmqH57ilugr7q+EJFRKcyZ8NAC
+ jMhoa7DadCmIq3zvK3lu0amhlMRIIjupGruKwPn0UB7frUjGaK8A/vkdp8RaHTmAFP2pnnIrCgICL6lAfvFTp9NHyvfuW2fQVlaaHMxHdf6Ulc28HqgIA5x1
+ Pi+Cae0zV//hv8eEptLMpOp1VfX75yi+W91gtGFw3ifJ8+o+84eLBTIVNIAT5Vol
+X-Spamd-Result: default: False [-0.06 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gsacapital.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gsacapital.com:s=mimecast20170115];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[aruba.it:s=a1];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[benettiengineering.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20714-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20715-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[giulio.benetti@benettiengineering.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[aruba.it:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.roberts@gsacapital.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gsacapital.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CE7313B0EB2
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DED5F3B15A8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Apologies, resending due to improper mail client settings on earlier
-attempts.
+Add #include <string.h> to fix build failure.
 
-On a HPC cluster running 5.14.0-611.9.1.el9.x86_64, regular deadlocks were =
-seen
-within pnfs_send_layoutreturn leading to userspace processes stuck in
-uninterruptible sleep, ultimately requiring reboots to clear. This was occu=
-rring
-frequently, sometimes multiple times per day on specific hosts with heavy l=
-oad.
-Claude code was tasked with hunting down any potential deadlocks within
-pnfs_send_layoutreturn, and identified the following condition. This patch =
-has
-been running in production on top of the EL9 kernel for over three months
-without any reoccurrence of the deadlock.
-
-The pnfs_send_layoutreturn() function can deadlock when memory
-allocation fails. The issue occurs in the error path where
-pnfs_put_layout_hdr() is called, which may trigger
-pnfs_layoutreturn_before_put_layout_hdr(), potentially causing
-a recursive call back to pnfs_send_layoutreturn().
-
-Call chain that triggers the deadlock:
-1. pnfs_send_layoutreturn() - kzalloc() fails
-2. Error path calls pnfs_put_layout_hdr(lo)
-3. pnfs_put_layout_hdr() calls pnfs_layoutreturn_before_put_layout_hdr()
-4. If NFS_LAYOUT_RETURN_REQUESTED is still set, attempts another
-   layoutreturn, creating recursion/deadlock
-
-The fix ensures that NFS_LAYOUT_RETURN_REQUESTED is cleared in the
-allocation failure path before calling pnfs_put_layout_hdr(). This
-prevents pnfs_layoutreturn_before_put_layout_hdr() from attempting
-another layout return, breaking the recursion cycle.
-
-Signed-off-by: Ben Roberts <ben.roberts@gsacapital.com>
-Assisted-by: Claude:claude-sonnet-4-5
+Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
 ---
- fs/nfs/pnfs.c | 1 +
+ support/nfs/fh_key_file.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index bc13d1e69449..47bda53b2b3a 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1361,6 +1361,7 @@ pnfs_send_layoutreturn(struct pnfs_layout_hdr *lo,
- =09if (unlikely(lrp =3D=3D NULL)) {
- =09=09status =3D -ENOMEM;
- =09=09spin_lock(&ino->i_lock);
-+=09=09pnfs_clear_layoutreturn_info(lo)
- =09=09pnfs_clear_layoutreturn_waitbit(lo);
- =09=09spin_unlock(&ino->i_lock);
- =09=09put_cred(cred);
---
-2.43.0
-
-For details of how GSA uses your personal information, please see our Priva=
-cy Notice here: https://www.gsacapital.com/privacy-notice=20
-
-This email and any files transmitted with it contain confidential and propr=
-ietary information and is solely for the use of the intended recipient.
-If you are not the intended recipient please return the email to the sender=
- and delete it from your computer and you must not use, disclose, distribut=
-e, copy, print or rely on this email or its contents.
-This communication is for informational purposes only.
-It is not intended as an offer or solicitation for the purchase or sale of =
-any financial instrument or as an official confirmation of any transaction.
-Any comments or statements made herein do not necessarily reflect those of =
-GSA Capital.
-GSA Capital Partners LLP is authorised and regulated by the Financial Condu=
-ct Authority and is registered in England and Wales at Stratton House, 5 St=
-ratton Street, London W1J 8LA, number OC309261.
-GSA Capital Services Limited is registered in England and Wales at the same=
- address, number 5320529.
+diff --git a/support/nfs/fh_key_file.c b/support/nfs/fh_key_file.c
+index 5f5eafc1..81ea1500 100644
+--- a/support/nfs/fh_key_file.c
++++ b/support/nfs/fh_key_file.c
+@@ -26,6 +26,7 @@
+ #include <sys/types.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include <string.h>
+ #include <uuid/uuid.h>
+ 
+ #include "nfslib.h"
+-- 
+2.47.3
 
 
