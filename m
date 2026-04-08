@@ -1,52 +1,51 @@
-Return-Path: <linux-nfs+bounces-20780-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20781-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8Me1Moms1mmZHAgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20780-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:29:13 +0200
+	id MLMAIUyv1mkLHQgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20781-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:41:00 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEC8E3C30FD
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:29:12 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 212B83C344B
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:41:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BD8273005157
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 19:29:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A71AB301CDB2
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 19:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F226E3DA7D7;
-	Wed,  8 Apr 2026 19:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E81E37DE97;
+	Wed,  8 Apr 2026 19:40:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTzymGpX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yt3X/ZzC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBB4347BA9;
-	Wed,  8 Apr 2026 19:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09323332601;
+	Wed,  8 Apr 2026 19:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775676545; cv=none; b=tQgxHHS4qgVqUthGfg1Q5yHONNMyPNmEXEzg2ANT+YU3Z+kr6GSdIgqfhSwXw6XJdQA8ELdhp209xBiypEOR0YWmEAR+xKE+LnVQ2N+aPsvYTzxw4QrkoQuFQNY/Jgu2yKJ6z0/jOOe8yfgDu7tusHuDBq2+nAf9+SEAvKb4GbE=
+	t=1775677245; cv=none; b=uFmBZln29TMnQy9/3XvWGXOnm+TVdKz+CbewU02kztlSEssb1TkUMMQoW9uKf81pWWNhKVS2Vv65WgjTe7wvyjxFCrU9mDu6k37gxHXt7GBR4OvVCFdJnhNXyNZS2rhiZRBGbHAvoPvs4Jw5lb6wzP7EWQf5ubv3ArGCMub4qvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775676545; c=relaxed/simple;
-	bh=32yYU9DVuQ3dk7XqVeclACkldSyW2YDDoFl3km5WegU=;
+	s=arc-20240116; t=1775677245; c=relaxed/simple;
+	bh=Nhi7c0x5vjI8SEDj6T99wuxNb4wyr1cPq0OUVRaRSkY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XQfLHAmioAgX2CH7QU3yVBGwcoffREZkRn/r/v8hmFUfRdltvaNrMqAtYe+iuHFmv9PZoeBIc8uiAVY63U6n2bZFKQ27RQtrbYUamQTDlftDGi2wVw80eQqLp56JdehbScBIjMaHBN7vWooL9IUud1azV+WX3rCphnYEpISLQuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTzymGpX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6283EC19425;
-	Wed,  8 Apr 2026 19:29:03 +0000 (UTC)
+	 Content-Type:MIME-Version; b=fIEiGRhWL6Ioi/jLJeKLiHsfZ5jR8NIYTI1eFpC1BQ5//DX4MXpwUJvpaeRLo2TlG5/SivsyWnx3o12N+ico2MQ4kd+VQqp8SYp0dP50qTvPzalBMKSe8JesKLya30kv4ssiMUP3lFM1EaTkMPB/PLMaIvAO+KmP+XtaFB1+GM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yt3X/ZzC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 953DEC19421;
+	Wed,  8 Apr 2026 19:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775676545;
-	bh=32yYU9DVuQ3dk7XqVeclACkldSyW2YDDoFl3km5WegU=;
+	s=k20201202; t=1775677244;
+	bh=Nhi7c0x5vjI8SEDj6T99wuxNb4wyr1cPq0OUVRaRSkY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KTzymGpXzJlbxmxfGRITVigxYVYLVhoYu7Uz59UYQ73K13xSxEKco9s+2OEy4tVTi
-	 USGswV9+y+KKZfpaKy90IPvLmMXVx8o5+W8KEfhi5M8dWWF29I707HpKpFn73UBbT8
-	 +xRLDKOExqbwAKnmvm2QcFiPLbtA9UVDqdQ6fweF1orwn4k+f5wj1+EdFCC5w7Gb++
-	 UZORBI3nL3JjaBRn/X7R2CqCtOPXCAAySQZ3l/gaL1YG5bt9uh4TaguacF60KZvLgK
-	 dS6R2G0Zlw2W5fsB7dUejdhyZwB8VbGfqR+7GfLXUMI+4pXQfptEBWIyyz6I8bkT9Q
-	 8lSLpShzYTu0A==
-Message-ID: <fe50d913663320bfe664488ef06ef6197de9e30f.camel@kernel.org>
-Subject: Re: [PATCH 08/24] nfsd: update the fsnotify mark when setting or
- removing a dir delegation
+	b=Yt3X/ZzC0bTUOlPprrUChyMLxwSvqAm2zkpiC3dW413/PyPRjjX539KF+Nh5em6cY
+	 VRdabHh+EE9cERAD6DhjnffUF2eI85oJ3JqBlchBBSX31bRKRtPuD2IAh4pZK1yqNi
+	 1MUs145ZpFzBDSJ1z23Vjlt82efLGOyyjq/SK6XM7DGuuip7MNIsp2/n+epve0eA0j
+	 hMj2gK/QJiAjhus5eO0+JdVKdG3IrVwpXQ26Xl00AocLkSipyEM2aoLVTq1JLtiZO8
+	 sEcz/+R2W/AymJZiXGeK4/5uojXLJAh9wsJQu6Q9O8FWqgpZ+EnJ4ULfdzFoKExTYQ
+	 w6g3XZUExjf6A==
+Message-ID: <2fed798124b3c3819cc20d7aa9104a55085fbe00.camel@kernel.org>
+Subject: Re: [PATCH 13/24] nfsd: add notification handlers for dir events
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
  Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
@@ -61,11 +60,11 @@ To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
 Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Wed, 08 Apr 2026 15:29:01 -0400
-In-Reply-To: <412e143e-1e99-42a6-a959-654bde4e7038@app.fastmail.com>
+Date: Wed, 08 Apr 2026 15:40:40 -0400
+In-Reply-To: <f60c8d0f-45b6-4d4e-8944-dfd69f2cf9bf@app.fastmail.com>
 References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
-	 <20260407-dir-deleg-v1-8-aaf68c478abd@kernel.org>
-	 <412e143e-1e99-42a6-a959-654bde4e7038@app.fastmail.com>
+	 <20260407-dir-deleg-v1-13-aaf68c478abd@kernel.org>
+	 <f60c8d0f-45b6-4d4e-8944-dfd69f2cf9bf@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -154,20 +153,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20780-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20781-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -175,52 +173,186 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CEC8E3C30FD
+	RCPT_COUNT_TWELVE(0.00)[24];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 212B83C344B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 2026-04-08 at 14:24 -0400, Chuck Lever wrote:
+On Wed, 2026-04-08 at 14:34 -0400, Chuck Lever wrote:
+>=20
 > On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
-> > Add a new helper function that will update the mask on the nfsd_file's
-> > fsnotify_mark to be a union of all current directory delegations on an
-> > inode. Call that when directory delegations are added or removed.
+> > Add the necessary parts to accept a fsnotify callback for directory
+> > change event and create a CB_NOTIFY request for it. When a dir nfsd_fil=
+e
+> > is created set a handle_event callback to handle the notification.
+> >=20
+> > Use that to allocate a nfsd_notify_event object and then hand off a
+> > reference to each delegation's CB_NOTIFY. If anything fails along the
+> > way, recall any affected delegations.
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 >=20
 > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index c8fb84c38637..9a4cff08c67d 100644
+> > index b2b8c454fc0f..339c3d0bb575 100644
 > > --- a/fs/nfsd/nfs4state.c
 > > +++ b/fs/nfsd/nfs4state.c
 >=20
-> > @@ -1266,6 +1297,7 @@ static void nfs4_unlock_deleg_lease(struct=20
-> > nfs4_delegation *dp)
-> >  	WARN_ON_ONCE(!fp->fi_delegees);
-> >=20
-> >  	nfsd4_finalize_deleg_timestamps(dp, nf->nf_file);
-> > +	nfsd_fsnotify_recalc_mask(nf);
-> >  	kernel_setlease(nf->nf_file, F_UNLCK, NULL, (void **)&dp);
-> >  	put_deleg_file(fp);
+> > @@ -9796,3 +9887,118 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state=
+=20
+> > *cstate,
+> >  	put_nfs4_file(fp);
+> >  	return ERR_PTR(status);
 > >  }
+> > +
+> > +static void
+> > +nfsd4_run_cb_notify(struct nfsd4_cb_notify *ncn)
+> > +{
+> > +	struct nfs4_delegation *dp =3D container_of(ncn, struct=20
+> > nfs4_delegation, dl_cb_notify);
+> > +
+> > +	if (test_and_set_bit(NFSD4_CALLBACK_RUNNING, &ncn->ncn_cb.cb_flags))
+> > +		return;
+> > +
+> > +	if (!refcount_inc_not_zero(&dp->dl_stid.sc_count))
+> > +		clear_bit(NFSD4_CALLBACK_RUNNING, &ncn->ncn_cb.cb_flags);
+> > +	else
+> > +		nfsd4_run_cb(&ncn->ncn_cb);
+> > +}
+> > +
+> > +static struct nfsd_notify_event *
+> > +alloc_nfsd_notify_event(u32 mask, const struct qstr *q, struct dentry=
+=20
+> > *dentry)
+> > +{
+> > +	struct nfsd_notify_event *ne;
+> > +
+> > +	ne =3D kmalloc(sizeof(*ne) + q->len + 1, GFP_KERNEL);
+> > +	if (!ne)
+> > +		return NULL;
+> > +
+> > +	memcpy(&ne->ne_name, q->name, q->len);
+> > +	refcount_set(&ne->ne_ref, 1);
+> > +	ne->ne_mask =3D mask;
+> > +	ne->ne_name[q->len] =3D '\0';
+> > +	ne->ne_namelen =3D q->len;
+> > +	ne->ne_dentry =3D dget(dentry);
+> > +	return ne;
+> > +}
+> > +
+> > +static bool
+> > +should_notify_deleg(u32 mask, struct file_lease *fl)
+> > +{
+> > +	/* Only nfsd leases */
+> > +	if (fl->fl_lmops !=3D &nfsd_lease_mng_ops)
+> > +		return false;
+> > +
+> > +	/* Skip if this event wasn't ignored by the lease */
+> > +	if ((mask & FS_DELETE) && !(fl->c.flc_flags & FL_IGN_DIR_DELETE))
+> > +		return false;
+> > +	if ((mask & FS_CREATE) && !(fl->c.flc_flags & FL_IGN_DIR_CREATE))
+> > +		return false;
+> > +	if ((mask & FS_RENAME) && !(fl->c.flc_flags & FL_IGN_DIR_RENAME))
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
 >=20
-> The grant path in nfsd_get_dir_deleg() uses a different ordering
-> (setlease first, recalc_mask after).
+> For a cross-directory rename, vfs_rename calls try_break_deleg(old_dir,
+> LEASE_BREAK_DIR_DELETE, ...). A delegation with FL_IGN_DIR_DELETE
+> (subscribed to NOTIFY4_REMOVE_ENTRY) suppresses the lease break, which
+> is correct.
 >=20
-> Here, since the delegation being removed is still in flc_lease,
-> inode_lease_ignore_mask() includes its ignore flags. The mask is
-> computed as if the delegation is still present.
->=20
-> The result is that stale FS_CREATE/FS_DELETE/FS_RENAME bits remain
-> in the fsnotify mark. It might be harmless in practice since the
-> handler finds no leases and returns early, but it creates
-> unnecessary work.
->=20
-> Should nfs4_unlock_deleg_lease call nfsd_fsnotify_recalc_mask()
-> after kernel_setlease(F_UNLCK)?
+> But fsnotify delivers FS_RENAME on old_dir, not FS_DELETE. In
+> should_notify_deleg(), the check (mask & FS_RENAME) &&
+> !(fl->c.flc_flags & FL_IGN_DIR_RENAME) fails, because the delegation
+> has FL_IGN_DIR_DELETE but not FL_IGN_DIR_RENAME. No notification is
+> sent.
 >=20
 
-Good catch. Will fix.
+Actually, it delivers FS_RENAME_FROM to the old directory and
+FS_RENAME_TO to the new one in this case, AFAICT. Basically, we need to
+watch for those in addition to FS_CREATE/DELETE and treat them the same
+way. I'm looking at a fix now. I'll also see about adding a pynfs test
+to do a cross directory rename with notifications. I don't think I have
+that now.
+
+Thanks!
+
+> IIUC, a client subscribed to NOTIFY4_REMOVE_ENTRY for old_dir sees
+> neither a lease break nor a CB_NOTIFY when a child is renamed out of
+> the directory. Is that behavior correct?
+>=20
+>=20
+> > +
+> > +static void
+> > +nfsd_recall_all_dir_delegs(const struct inode *dir)
+> > +{
+> > +	struct file_lock_context *ctx =3D locks_inode_context(dir);
+> > +	struct file_lock_core *flc;
+> > +
+> > +	spin_lock(&ctx->flc_lock);
+> > +	list_for_each_entry(flc, &ctx->flc_lease, flc_list) {
+> > +		struct file_lease *fl =3D container_of(flc, struct file_lease, c);
+> > +
+> > +		if (fl->fl_lmops =3D=3D &nfsd_lease_mng_ops)
+> > +			nfsd_break_deleg_cb(fl);
+> > +	}
+> > +	spin_unlock(&ctx->flc_lock);
+> > +}
+> > +
+> > +int
+> > +nfsd_handle_dir_event(u32 mask, const struct inode *dir, const void=
+=20
+> > *data,
+> > +		      int data_type, const struct qstr *name)
+> > +{
+> > +	struct dentry *dentry =3D fsnotify_data_dentry(data, data_type);
+> > +	struct file_lock_context *ctx;
+> > +	struct file_lock_core *flc;
+> > +	struct nfsd_notify_event *evt;
+> > +
+> > +	/* Don't do anything if this is not an expected event */
+> > +	if (!(mask & (FS_CREATE|FS_DELETE|FS_RENAME)))
+> > +		return 0;
+> > +
+> > +	ctx =3D locks_inode_context(dir);
+> > +	if (!ctx || list_empty(&ctx->flc_lease))
+> > +		return 0;
+> > +
+> > +	evt =3D alloc_nfsd_notify_event(mask, name, dentry);
+> > +	if (!evt) {
+> > +		nfsd_recall_all_dir_delegs(dir);
+> > +		return 0;
+> > +	}
+> > +
+> > +	spin_lock(&ctx->flc_lock);
+> > +	list_for_each_entry(flc, &ctx->flc_lease, flc_list) {
+> > +		struct file_lease *fl =3D container_of(flc, struct file_lease, c);
+> > +		struct nfs4_delegation *dp =3D flc->flc_owner;
+> > +		struct nfsd4_cb_notify *ncn =3D &dp->dl_cb_notify;
+> > +
+> > +		if (!should_notify_deleg(mask, fl))
+> > +			continue;
+> > +
+> > +		spin_lock(&ncn->ncn_lock);
+> > +		if (ncn->ncn_evt_cnt >=3D NOTIFY4_EVENT_QUEUE_SIZE) {
+> > +			/* We're generating notifications too fast. Recall. */
+> > +			spin_unlock(&ncn->ncn_lock);
+> > +			nfsd_break_deleg_cb(fl);
+> > +			continue;
+> > +		}
+> > +		ncn->ncn_evt[ncn->ncn_evt_cnt++] =3D nfsd_notify_event_get(evt);
+> > +		spin_unlock(&ncn->ncn_lock);
+> > +
+> > +		nfsd4_run_cb_notify(ncn);
+> > +	}
+> > +	spin_unlock(&ctx->flc_lock);
+> > +	nfsd_notify_event_put(evt);
+> > +	return 0;
+> > +}
+>=20
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
