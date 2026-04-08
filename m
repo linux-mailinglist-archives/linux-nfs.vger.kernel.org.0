@@ -1,112 +1,112 @@
-Return-Path: <linux-nfs+bounces-20758-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20759-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uBaCLIFw1ml2FQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20758-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:13:05 +0200
+	id gH5gCj501mkWFggAu9opvQ
+	(envelope-from <linux-nfs+bounces-20759-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:29:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A41CB3BE072
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:13:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AB913BE327
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:29:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C6F3130BAD47
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 15:09:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BBAD53036EC1
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 15:25:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BC83D47DE;
-	Wed,  8 Apr 2026 15:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBDFD3D646D;
+	Wed,  8 Apr 2026 15:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="hmVwQX3H"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="URTLeKgJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE403B6C07
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 15:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2673D6462
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 15:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775660933; cv=pass; b=F0o7KNLGmGYttysWmh44nSOL+bHPaaHstDFxIAYtyaCMOqteSvwL0wP0Sn+qu6t2bx916x4WAeWADczjcVCr5fJeQBl59FhJmboZib3mQUSQMfmLhjiJudOHHkkIr5iLrPnFeyUiEUFFGnhyH7TXZ1HDDg00ksu29XM2mTrKK+w=
+	t=1775661905; cv=pass; b=DXzGP19UZbsfaYivZiR7D5y25afod6X5nAGB8MjMsKXr86aXmb8wvST1WDzxsd9hdmFLa8qp+3ZvESQFnwCCSziolg/bFgAsc1a2hvYenIj8PEZcc1+wAcHBJ6T97OPYHVkt+8UxX5IyPEAIdXxDQauxa9CmnSflisA0M3iTHHw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775660933; c=relaxed/simple;
-	bh=KElmK+VVxxwJGJeJaNqk5EvW/9/j/l56fz2pIYn7SeQ=;
+	s=arc-20240116; t=1775661905; c=relaxed/simple;
+	bh=LgE9puouhKgFPGBy/iIK7vehwu9BJk+fJ6X+vcdEdok=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aETfuaYk4/EdS1zZ61I1QD/zYaomWYiGzj9JVrRIIjoNb4KjSJ7bSsnWN/bPo7pTLtjTbC/5Ui34comzTu+2vj4b/f7DVsGkqytuucWmrg089hYow0B2qRmDOVuBCPWxf1phPQe3kolsiWW9WdtpeT7lgRlZyoraMxuGtOSEd70=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=hmVwQX3H; arc=pass smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=hvNdQk1nVI7c3/TrM3MlQVIu6zVTOtNZnWWmwDB4pEgVJ0d1BrlqtobkRYD+mpCsD3cA247hEEljUwYjtylUwA6dT9Mu0/jxJBQgMCvaAB16BkpZ9KeASYQQayDEonUqfm8568QA7CQh0MDH/dQBGyuyrbrPgcYSESQGHZePbBM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=URTLeKgJ; arc=pass smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-38dd9f0fdc6so11167481fa.0
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2026 08:08:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775660929; cv=none;
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5a3be187ffbso1016249e87.0
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2026 08:25:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775661903; cv=none;
         d=google.com; s=arc-20240605;
-        b=FtylDYgM50e/KpDidNZ6VMjWWMaS4MaLfOcD0RohPVUSOFa+JoiCVSWocGkyvEdh62
-         /4l1HekamYDMzdH2JEPOPFOe268AwvV6uNinCODWP61f/2iUS8dyaeMrXBmXyTjJcEqk
-         x4raYhSBo4wLmBH1VO/ANxRUyMJQ5DwNlqzhW8zcEhq8rUJ0+VsaCgUHAc+iXyaoUdmo
-         Im1HnleCTFOtXg9a0YkQ8maXm+VP3dijGLvZSfQ1cTW4harvSUJVYZtH6lzr7TTUEbhk
-         xcP/BifoMsger8tdzztWcvUKPdEQF25Ewsl3toQhZarj+a/+ABbj9KktGc0szDuM7DBy
-         L58A==
+        b=Qd9XuvU4HrjJzlw2luSOBwDgmkR30SxhKXf8U23dNyjEUXSBB5k3nPsIeCpQv5kgGj
+         bmGFW7NRHxaNrp7TuIHgTx1AOHAngK2BgBanD0PZn+fnEvkENRic/epWOD3rhnrcAmzX
+         X2aZ/Cc3SeFFPJiw4un+dQ3EuXgig+nsR+xXh6c6rbyOVBDbzlBe6ppp+t0ZfVFwWMd8
+         SugGB7LIc/zVmS186dNJQ47Bp8GOp6uIUsVJqB9K5SFnpwpwUiOKD3QMeJhgx3UjBHTw
+         RpTUtm+g9M82QLZAoVbo2Y50HjYhZOalihQzh25gL2baOk9mRA9bsPyBSFepQfF4lsMM
+         97rA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=csL7zqlm9DIsUy6yR51KykBt3Qg1ZcCEQXbyz0Vw3PA=;
-        fh=xaQBnaybrjujbEW/GUsi9rO7NpuDpWqolJa1sMAc8e0=;
-        b=WIIX1/YKEWE5hFK1F4AT1CQr+m5kc7xVusDStOuk1cSAOy/odj/7KEIfdqpTCy/6p9
-         hBHShP2tJYlbjshOyPZNyuSHcQ9LXwJKldD3ZprDIPZybDDke4doQPOjz3wJlYCHHv1/
-         2EF8Z3BbQQIFXQ68pnssEysks1sOfS0JU7J1HC/kXM33/4Q5nfxsz3/HVAicJQT/tw+8
-         eBgJK1ZoDd1/gGN4YRus8jDOfA5Dez8poC16m2SyFv+R6A0F1nU4T9rIZz5CtFDYp8S3
-         +XxZW/COpTTco9Tye5ujadRKUMnU+msUMDyTEEG7fIPi0G/JU2ScoyU7R/SWOqvJDvIT
-         JY5g==;
+        bh=MAx74boWK5DBH4jbpZ71BiY1UUSW/x74a5MdjmyMyLk=;
+        fh=vSTD0rdAp56C3IWLCiVhkbjhIpwIXG02sOt+YYSZrBI=;
+        b=E3s9qi0C0st9emhXIWJympjBsraG+2gJ4l7gmTRUvBDdTXQNNsiBxY9rCSrOZNHQyy
+         G0juGKGl0oMmfPnMAxQtjoaU0VqIS48V1KtnKx0qpD+Gs43ZVywJW0gCi5xM0RNtssl4
+         0AEAj3WfuANeQGUvJ5ekn8tCMpfcpCMFGo6kHUMnmb1IZb+qTfgtOBBp/gmw2Cqn5Kj6
+         GjaD0qfOFoFMPjsXrgEv5QKIn1VgkHfCgin7sBFcu5YCSbaVFIKxXXyO/85eEftsJhLo
+         rnDfFEwGrUTpyXPi0NKKMLyI7Ka0Dwib1NVlidA8Epo+9lWVm3AKcdJN7JD3Cr1hGEvZ
+         botQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1775660929; x=1776265729; darn=vger.kernel.org;
+        d=umich.edu; s=google-2016-06-03; t=1775661903; x=1776266703; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=csL7zqlm9DIsUy6yR51KykBt3Qg1ZcCEQXbyz0Vw3PA=;
-        b=hmVwQX3H9Wg1j5xfm7sx6FxZroAveXCkrAVJcaokvFVAS3fZcqu1IRqg5T6gWtsB+b
-         0yLIOmkDsTGi6eF6LnZmJfz0rA3ovCCkstUkMIoCmevzS5FQrNhyEP+iHwKFXJ1e+P6e
-         7viTaGNNerDV1Bbl+03EAb+5qKwSiyN1MffGU0I9/xceiqS70K7SmSyBbm7jIgZj5h7S
-         eJJJGDXrLYnCqftrSJ19stpPpGNpTGeRJpKItpcUE8tC6H0ZjjqNjjI/9uTlF1al3C4e
-         A87SJKTQhsQeQJzq4HKlAhAWP5udG3xpdKwcb87BvKe8P6UqzGVp3WWauhBiO7YJFHVj
-         HXoA==
+        bh=MAx74boWK5DBH4jbpZ71BiY1UUSW/x74a5MdjmyMyLk=;
+        b=URTLeKgJZVMuN+BB6NpS+mwku+J52y76+rEzXWPa90NNFMaSAGpBcx6IC+4KI6hno5
+         48TnKGraLCwfcZvB1WYI0vl0vYcUQHUUD6lMh3a22gX/xXfErtfuSWvpEImn+fxqvUq3
+         ynT9lWkhPmiQSHCaWocAWD2m1Z85pFBKUiQgu6kQUePtk/od0wa9SwXR83sCln45LT9f
+         L4KPmG4UYx35EWfE87TlRzFyc7HASRJQoYldrqqsTSIA6/aCcx1tXVc3J7F6ck+i9UVk
+         rj9XxJbLGZ4rZvlk8+RvkNZwhAWyVvF9Zx6V+p0YntG9Kl+zb/vZIegXclVGDiatuLpt
+         HcbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775660929; x=1776265729;
+        d=1e100.net; s=20251104; t=1775661903; x=1776266703;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=csL7zqlm9DIsUy6yR51KykBt3Qg1ZcCEQXbyz0Vw3PA=;
-        b=HpIQQAXTpgLMQ5Zdz+P2JM/88fsZAcEHI7mocCkva/aiIl53ZEi6YiEjGblywg0act
-         WWrpl+u90wzbr89fn4GjLrLS/CR7vlXW1XDBzIuBNx8XpaTgez2Ip7elPPCwhOMxHmvQ
-         kAKsp0oicvWMCYlWvc1tqrMbHJdxkDu/xIWKaTw0qeQDyL/+P2+pa67X3pu/kpOgk2Ni
-         pxx+0h73k6846H6Np8pDPs/2qcZNMaRvRbuaROhoZPfcdMQS2CiVoR9cxVwAFRgh3r4r
-         0/92qrN73Jhd8bmWc78sSrXqSXSGviQquJBpTks8pD6fkMHJBMS8dCSsOIo03AbB9UjD
-         G8Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtjgcgRFNsrn9aH3M95DDnrRxzKWqFpP3lX06L+azRD8NTCzKJpYgiyn/2cLE3LEqzz1vt6RbyTuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqrcf+F0k5xxqbJyjtvKUWIqBMyJE/ENw1jqoNCMm4MsduQOLq
-	7725hrE/8Oz5iwMh5JF5hCmDzCM+YWWmCiuddOUFpczfyQiSr2ZQxTrmyRBelOkXFaHgGK1FJxX
-	PhMVJYXkHXvDZBO68ChRouwlQokZ/wNg=
-X-Gm-Gg: AeBDietb/Vn+peW4p6pJmE8G51GcG290unByFsC5daQDOli0nnk2hkc7icFzEK/P0Fy
-	nuoMguvU2F0I8DeHd3j3MwmMJmqw6qhIIuspx7BjlEv80QS6TLQs7sW58ShQ0jj6CcQWiUsgyU2
-	C8MzUSdxycmeu8G+szL1awTkXyu314PFyNMGuDyhW4/ujvNVGTVIX9dhQCMBjmOveeq9MbsUqwv
-	w25YEZGlVL3+bWvmlQZZFUk5pIvci7xkZDKjMqdWEy3dn01vQZf/nUzJU3X+zp3G7LNACNl1sXc
-	NpfCEGC+TL4uMUHoNqY4blBfOgTgA3UBzqio5TAseQ==
-X-Received: by 2002:a05:6512:4894:b0:5a3:4c32:a960 with SMTP id
- 2adb3069b0e04-5a34c32a99cmr5980580e87.7.1775660928902; Wed, 08 Apr 2026
- 08:08:48 -0700 (PDT)
+        bh=MAx74boWK5DBH4jbpZ71BiY1UUSW/x74a5MdjmyMyLk=;
+        b=pol6uIC6WvTsLegh6CGzCxV4WAotw+O0Isynd1A98m77lbl16t99OfqdI6x6tc2QT3
+         Ko/w2ObDp/VQSvEJVK6x6c8CkpO+gqnUJez0l2iY/mEa2bjeh5I5PZFnJlBpzBfKR9mU
+         qGbGHn7+h3TdJtADlY+al3pG4IZi3d041dAmpow8YwNGxLrK0SrMeua2hcYgRvlXnTt3
+         6eOXFNHnsFkTVqR2+hzdlLyMo/u4+JlE0kqqyQvsSdl8kMWFM2ouh/mlm5swn/EVEOU6
+         wtwsOYe3KcB7LWxYIbiyi3vR88aVpdM7iD8cgBdCNPOFQnQt9JahameZ4Y5DTz4xFsRw
+         7cTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZSVr67etm5XdXu9DJqrxjSxPwkhRCCFgZZcsPNvKP1W9Wd9KrExcuCcWzEUjvXhhMK1PqcmbOqHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8ITfx6FWhHDDSmzKMEdNNp+ZVYoOZ9UXF0jVUQD7ZAKIvakeM
+	ksEDoVFIyi7CkZxaDlcYiyLKH9Sin/eL3Nhl7tSmd7bKm/aFf9M1qUwQ+iAuwAW6AonlHUwub/Z
+	B6A5a4GcMhsrMZwt/KMRiHQmRsem7voY=
+X-Gm-Gg: AeBDieuCqAwp0rpzzmqy5Krn2MG896jEniRCeDAyQ1CoJYk8k8okwFwkkZidKX09jHi
+	V6gXSoMsCKbK665zGCzdGNhwfqa6ksS+XHyuUnlj0Je2zx5QSib87TBV7OQHFw2/NlOjY5Vo50j
+	RL/m4+fdW6/9qYMJgNjdv3AGsTfr+JRi0UPUtHoj1yoVbHuRUSb5ITTaWXX2bRfvrxs/E1rFhlR
+	g615Uq1DEui9IfRXCgDhLRINbhtJj8fuV0pq4w6gsZ92Mkzup8wfLTcGfPKlcPO87bf+aCeEvYw
+	6vesbNOkSoZRPu7IkyIx5WENHygA4ZRr8U1YNDmwUg==
+X-Received: by 2002:a05:6512:10cd:b0:5a2:a70a:a9e with SMTP id
+ 2adb3069b0e04-5a2c8a95465mr10333930e87.3.1775661902380; Wed, 08 Apr 2026
+ 08:25:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260407235038.55749-1-okorniev@redhat.com> <20260407235038.55749-2-okorniev@redhat.com>
- <9a8cdd25-a3e6-4e4c-bfb3-bd8a7f90b077@app.fastmail.com>
-In-Reply-To: <9a8cdd25-a3e6-4e4c-bfb3-bd8a7f90b077@app.fastmail.com>
+References: <20260407235038.55749-1-okorniev@redhat.com> <20260407235038.55749-3-okorniev@redhat.com>
+ <c79b8e38-cc5c-436f-8145-2213dc1256c0@app.fastmail.com>
+In-Reply-To: <c79b8e38-cc5c-436f-8145-2213dc1256c0@app.fastmail.com>
 From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 8 Apr 2026 11:08:37 -0400
-X-Gm-Features: AQROBzBJg6uY5aR8PFehs-ASA0CpYqLrNoGiKho4TscLZk0Cx2q8iyXp8KTfM-M
-Message-ID: <CAN-5tyHNsZvoo+QB8Ug2Sbgq7asUUtr-RYDMM8MxuQGgfySnPw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] nfsd: update mtime/ctime on CLONE in presense of
+Date: Wed, 8 Apr 2026 11:24:50 -0400
+X-Gm-Features: AQROBzC0c2zoXAA-nTmXsG6Wd6gs0P5QouRryh6pvxb2_nMtSoeAz7XDVYfkd3k
+Message-ID: <CAN-5tyG6JFJ=e9Jkmk0TnzvszWXVneDnDaceA_AOhDtK=ScVog@mail.gmail.com>
+Subject: Re: [PATCH 2/3] nfsd: update mtime/ctime on synchronous COPY with
  delegated attributes
 To: Chuck Lever <cel@kernel.org>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Chuck Lever <chuck.lever@oracle.com>, 
@@ -117,19 +117,19 @@ Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[umich.edu,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[umich.edu:s=google-2016-06-03];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20758-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20759-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[umich.edu:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
@@ -138,82 +138,51 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: A41CB3BE072
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 8AB913BE327
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 8, 2026 at 9:53=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+On Wed, Apr 8, 2026 at 9:59=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+>
 >
 >
 > On Tue, Apr 7, 2026, at 7:50 PM, Olga Kornievskaia wrote:
-> > When delegated attributes are given on open the file is opened with NOC=
-MTIME
-> > and modifying operations do not update mtime/ctime as to not get out-of=
--sync
-> > with the client's delegated view. However, for CLONE operation, the ser=
-ver
-> > should update its view of mtime/ctime and reflect that in any GETATTR q=
-ueries.
+> > COPY should update destination file's mtime/ctime upon completion.
 > >
-> > Fixes: e5e9b24ab8fa ("nfsd: freeze c/mtime updates with outstanding
-> > WRITE_ATTRS delegation")
 > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+>
+> Should 2/3 also carry a Fixes: tag?
+
+My bad. I guess it should be the same as the first patch. But I now
+also wonder if the update should be done based on the status of
+nfsd4_do_copy? But this is where I think nfsd4_do_copy can return say
+ENOSPC but it would have modified the file as well. So I'm not clear
+if we need to special case return values?
+
 > > ---
-> >  fs/nfsd/nfs4proc.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
+> >  fs/nfsd/nfs4proc.c | 3 +++
+> >  1 file changed, 3 insertions(+)
 > >
 > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index 99b44b6ec056..fb891e35ebe9 100644
+> > index fb891e35ebe9..04d8d0d1ca7d 100644
 > > --- a/fs/nfsd/nfs4proc.c
 > > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -1396,6 +1396,17 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct
+> > @@ -2211,6 +2211,9 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
 > > nfsd4_compound_state *cstate,
-> >       goto out;
-> >  }
-> >
-> > +static void nfsd_update_cmtime_attr(struct dentry *dentry)
-> > +{
-> > +     struct iattr attr =3D {
-> > +             .ia_valid =3D ATTR_CTIME | ATTR_MTIME,
-> > +     };
-> > +
-> > +     inode_lock(d_inode(dentry));
-> > +     notify_change(&nop_mnt_idmap, dentry, &attr, NULL);
-> > +     inode_unlock(d_inode(dentry));
-> > +}
->
-> I think there is an active delegation here. Without ATTR_DELEG,
-> notify_change() calls try_break_deleg(), which will return
-> -EWOULDBLOCK, causing the setattr to be silently skipped.
-> Wouldn't it also initiate a CB_RECALL as well?
-
-Destination file is opened for write (and has a write (attribute)
-delegation) so there shouldn't be any conflicts. I don't see any
-delegation recall triggered while testing CLONE. However, looking at
-the code I now see that it does make sense to set ATTR_DELEG so that
-the code under "if (!(ia_valid & ATTR_DELEG))" is not evaluated.
-
-> > @@ -1413,6 +1424,9 @@ nfsd4_clone(struct svc_rqst *rqstp, struct
-> > nfsd4_compound_state *cstate,
-> >                       dst, clone->cl_dst_pos, clone->cl_count,
-> >                       EX_ISSYNC(cstate->current_fh.fh_export));
-> >
-> > +     if ((READ_ONCE(dst->nf_file->f_mode) & FMODE_NOCMTIME) !=3D 0)
-> > +             nfsd_update_cmtime_attr(cstate->current_fh.fh_dentry);
-> > +
-> >       nfsd_file_put(dst);
-> >       nfsd_file_put(src);
+> >       } else {
+> >               status =3D nfsd4_do_copy(copy, copy->nf_src->nf_file,
+> >                                      copy->nf_dst->nf_file, true);
+> > +             if ((READ_ONCE(copy->nf_dst->nf_file->f_mode) &
+> > +                            FMODE_NOCMTIME) !=3D 0)
+> > +                     nfsd_update_cmtime_attr(cstate->current_fh.fh_den=
+try);
+> >       }
 > >  out:
+> >       trace_nfsd_copy_done(copy, status);
+> > --
+> > 2.52.0
 >
-> Should this check whether nfsd4_clone_file_range() succeeded before
-> updating timestamps?  If the clone fails, the file content is not
-> modified, so a timestamp update would be incorrect.
-
-I thought about doing it only if (!status) but didn't know if there
-were some errors where the file was modified but an error occurred.
-Sounds like a v2 is needed when it's only done for success.
-
 > --
 > Chuck Lever
 >
