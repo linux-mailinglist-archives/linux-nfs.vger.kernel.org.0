@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-20750-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20751-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CO2JEspg1mmDEwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20750-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 16:06:02 +0200
+	id WIyQEp5f1mkfEwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20751-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 16:01:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDFC63BD652
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 16:06:01 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4660A3BD4F5
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 16:01:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4A2DF3069614
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 13:58:06 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 874FE3023461
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 14:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E06175A96;
-	Wed,  8 Apr 2026 13:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764E13CEBA5;
+	Wed,  8 Apr 2026 13:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2ifXaef"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuPWDVUS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2330B12FF69;
-	Wed,  8 Apr 2026 13:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F132F3C3E;
+	Wed,  8 Apr 2026 13:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775656685; cv=none; b=qj6kzZVR7iuNt/KEk5jLJAc3dvmYRfcvBUH6hmlILwjVGjpZw/AU6uOuPYS26JePkmWgNA9qv8OAWKgKJo2zTwVFb/0incejnHQ7N1JogSoVulLN4Wuk41fZ38AWaSfLV/0dRKZfXK8OU9sYYBSCzZg5C3twjZ3nKOq1jbfyMmw=
+	t=1775656797; cv=none; b=nkNG4LSM9HW7BWDzieU+VDuLH0wH7mUEl0Rg/FvGcABQa/PhPKkkfu/wFqGSBKh633K5QxHdgzRmJHk3FfkU8oscbWsyfL4+uzRWMk2+kB4Z0Vbm3EQlmDAqz04aeuDFKFIrczGuLQQzM0DZRokJKLYmHoeI8J8T/1POL+/H9kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775656685; c=relaxed/simple;
-	bh=YIejlBp2TBXwr3nc/sg/3pj2FsOQvZNsexfPosuFyQk=;
+	s=arc-20240116; t=1775656797; c=relaxed/simple;
+	bh=HQrRzCEnvX9i3ELOdz4flq/uEGIY1Tq8IPmcL6bboNU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VZN3Y/ySlXJ7iN45DzbbJwTuMkXUyfaApXhlqyr8mmKADOET+zlHOsvNGCP8wUp+wV4Acm4/rIX/BpxOM85aLWcU6HmKZj2KwloHNbWbDqMhMQ3Ek9JOA8A34yV1e/tZE4vMMmQWKsbym2gOPhy0cqBGRNhqnEBmHi6mPXuUiXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2ifXaef; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF3EC19421;
-	Wed,  8 Apr 2026 13:58:03 +0000 (UTC)
+	 Content-Type:MIME-Version; b=XClag5dQvN1wZoRjWS7ffh5qzNUSIKkJmOp/Wd1DrXM+DrMzf/kXd/MyuUQ3A5Kf1APEIj/YkmSjxMusxXMtClxxcIo4pDtVwgUt5qotzbni0HLRpMGq83cDT3E2VL79bVoIRM0q/WubAvwAHrU98/yKQbMckNZ/l6x/5wNs7EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuPWDVUS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCF4C19421;
+	Wed,  8 Apr 2026 13:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775656684;
-	bh=YIejlBp2TBXwr3nc/sg/3pj2FsOQvZNsexfPosuFyQk=;
+	s=k20201202; t=1775656796;
+	bh=HQrRzCEnvX9i3ELOdz4flq/uEGIY1Tq8IPmcL6bboNU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=O2ifXaef1Fq90RucKA+MtLvOmFEw5wSgDVLe9AVOIMyiL00t9UB1k0P10rDqcVhFd
-	 E/SjlPHUJ9Ai7Snwj+uh8TeLcRY0IOpJNQ+u3l2ib8DG/1Fv8kX+9cM7fNLhpW4nOj
-	 aVHgPgb5UIJTMAzSt7GZsP095utsfgjQNsdPi5g2OrGRLkWiVoCKpn3HDfDd/kUDKF
-	 yMxH/7z+v27DB+KDeK9NRk0Tk0KrWJB68ouBWBYA3T4fpsmCD3rCzXfbxkn3aySGAG
-	 j33GLGdnLfOUM6OV621Fgs9pYxR8WhOG2x18/RAsZp3L8bajbcQ9Deb5afoYgJwPe3
-	 l8T99b9q2slrw==
-Message-ID: <8bfc067a3e154e53fef12215a05449d7c2678c8f.camel@kernel.org>
-Subject: Re: [PATCH v8 1/9] NFSD: Fix infinite loop in layout state
- revocation
+	b=EuPWDVUSHLbt6oaRtp53FXQK5i1Grvedc9aFe10HN1Gfeo5xbNKslCEE7rdTK0suc
+	 tHICOLaaKZ3dn+q8kAMt4K5uH9h+23mbsVzLiN3UH1LF991AeoJSRaLxnIZ0/tce/j
+	 VjAcxeUWNlRJ++97iUpDXQty81g6eUegu5YdUcu7HD9DgRVG/982TE5QfeKgOTU4oV
+	 wlD45AUiXoGaV/hXhIKkgvguO678mo0ypSD+3maj8CiVESQQ5OTnxIwuRghAnQm3iw
+	 i4pN0IL2FIo/Ei7aQ+AtkOi5Ke1AvLUqOWInQJ5a7v2bSUOL9co8w3JHS7iQirLP4Q
+	 hk+8c6BGTzBPA==
+Message-ID: <13e27030fce8df6fcc0e3a4a7c7b07a4943d0a0e.camel@kernel.org>
+Subject: Re: [PATCH v8 2/9] NFSD: Handle layout stid in
+ nfsd4_drop_revoked_stid()
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, Chuck Lever
 	 <chuck.lever@oracle.com>
-Date: Wed, 08 Apr 2026 09:58:01 -0400
-In-Reply-To: <20260408-umount-kills-nfsv4-state-v8-1-6e02a1d03d60@oracle.com>
+Date: Wed, 08 Apr 2026 09:59:54 -0400
+In-Reply-To: <20260408-umount-kills-nfsv4-state-v8-2-6e02a1d03d60@oracle.com>
 References: <20260408-umount-kills-nfsv4-state-v8-0-6e02a1d03d60@oracle.com>
-	 <20260408-umount-kills-nfsv4-state-v8-1-6e02a1d03d60@oracle.com>
+	 <20260408-umount-kills-nfsv4-state-v8-2-6e02a1d03d60@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,12 +143,12 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20750-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20751-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -160,53 +160,64 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: BDFC63BD652
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: 4660A3BD4F5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On Wed, 2026-04-08 at 08:29 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> find_one_sb_stid() skips stids whose sc_status is non-zero, but the
-> SC_TYPE_LAYOUT case in nfsd4_revoke_states() never sets sc_status
-> before calling nfsd4_close_layout(). The retry loop therefore finds
-> the same layout stid on every iteration, hanging the revoker
-> indefinitely.
+> nfsd4_drop_revoked_stid() has no SC_TYPE_LAYOUT case, so when a
+> client sends FREE_STATEID for an admin-revoked layout stid, the
+> default branch releases cl_lock and returns without unhashing or
+> releasing the stid.  The stid remains in the IDR and on the
+> per-client list until the client is destroyed.
+>=20
+> Remove the layout stid from the per-client list and call
+> nfs4_put_stid() to drop the creation reference.  When the
+> refcount reaches zero, nfsd4_free_layout_stateid() handles the
+> remaining cleanup: cancelling the fence worker, removing from
+> the per-file list, and freeing the slab object.
 >=20
 > Fixes: 1e33e1414bec ("nfsd: allow layout state to be admin-revoked.")
-> Reported-by: Dai Ngo <dai.ngo@oracle.com>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
 >  fs/nfsd/nfs4state.c | 7 +++++++
 >  1 file changed, 7 insertions(+)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 07df4511ba23..c6cb67cf02ad 100644
+> index c6cb67cf02ad..ae5e1a20197c 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -1872,6 +1872,13 @@ void nfsd4_revoke_states(struct nfsd_net *nn, stru=
-ct super_block *sb)
->  					break;
->  				case SC_TYPE_LAYOUT:
->  					ls =3D layoutstateid(stid);
-> +					spin_lock(&clp->cl_lock);
-> +					if (stid->sc_status =3D=3D 0) {
-> +						stid->sc_status |=3D
-> +							SC_STATUS_ADMIN_REVOKED;
-> +						atomic_inc(&clp->cl_admin_revoked);
-> +					}
-> +					spin_unlock(&clp->cl_lock);
->  					nfsd4_close_layout(ls);
->  					break;
->  				}
-
-Nice catch.
+> @@ -5070,6 +5070,7 @@ static void nfsd4_drop_revoked_stid(struct nfs4_sti=
+d *s)
+>  {
+>  	struct nfs4_client *cl =3D s->sc_client;
+>  	LIST_HEAD(reaplist);
+> +	struct nfs4_layout_stateid *ls;
+>  	struct nfs4_ol_stateid *stp;
+>  	struct nfs4_delegation *dp;
+>  	bool unhashed;
+> @@ -5095,6 +5096,12 @@ static void nfsd4_drop_revoked_stid(struct nfs4_st=
+id *s)
+>  		spin_unlock(&cl->cl_lock);
+>  		nfs4_put_stid(s);
+>  		break;
+> +	case SC_TYPE_LAYOUT:
+> +		ls =3D layoutstateid(s);
+> +		list_del_init(&ls->ls_perclnt);
+> +		spin_unlock(&cl->cl_lock);
+> +		nfs4_put_stid(s);
+> +		break;
+>  	default:
+>  		spin_unlock(&cl->cl_lock);
+>  	}
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
