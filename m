@@ -1,112 +1,112 @@
-Return-Path: <linux-nfs+bounces-20759-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20760-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gH5gCj501mkWFggAu9opvQ
-	(envelope-from <linux-nfs+bounces-20759-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:29:02 +0200
+	id 6IxDM3l51mnxFggAu9opvQ
+	(envelope-from <linux-nfs+bounces-20760-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:51:21 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AB913BE327
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:29:01 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED35B3BE80A
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 17:51:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BBAD53036EC1
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 15:25:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9DEE43073108
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 15:46:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBDFD3D646D;
-	Wed,  8 Apr 2026 15:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF4C3AE1A2;
+	Wed,  8 Apr 2026 15:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="URTLeKgJ"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="rXiloC2E"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2673D6462
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 15:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551A03B0AD4
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 15:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775661905; cv=pass; b=DXzGP19UZbsfaYivZiR7D5y25afod6X5nAGB8MjMsKXr86aXmb8wvST1WDzxsd9hdmFLa8qp+3ZvESQFnwCCSziolg/bFgAsc1a2hvYenIj8PEZcc1+wAcHBJ6T97OPYHVkt+8UxX5IyPEAIdXxDQauxa9CmnSflisA0M3iTHHw=
+	t=1775663043; cv=pass; b=Zg5DyLS1kKNZk5hMXI7iFal8buLedIpzEFoQM+YQWgGLjP7tTxoSvypP8m+FWVfmEWItXFKTe/gXfs20dAEv1fklnpBh/xl09jlR9AD2YVMy5iY/jVSllPTkSMEGWq4+4Z+KRsETAC/MyOKj7Q5RPOF3IQsZkcaZApSxS9wNEqE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775661905; c=relaxed/simple;
-	bh=LgE9puouhKgFPGBy/iIK7vehwu9BJk+fJ6X+vcdEdok=;
+	s=arc-20240116; t=1775663043; c=relaxed/simple;
+	bh=thG+Hbavm2FoM+ZlAnIZ0OUGl0bmxURzgAf86pAMZ2o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hvNdQk1nVI7c3/TrM3MlQVIu6zVTOtNZnWWmwDB4pEgVJ0d1BrlqtobkRYD+mpCsD3cA247hEEljUwYjtylUwA6dT9Mu0/jxJBQgMCvaAB16BkpZ9KeASYQQayDEonUqfm8568QA7CQh0MDH/dQBGyuyrbrPgcYSESQGHZePbBM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=URTLeKgJ; arc=pass smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=Ho9gZ1f+GPbkbjyLJV03e2AKHnZYSvaxuXsJAwK7ikDPpnNTjg7HtuVETBFRjwzI+f4Lr6pfE4O3flJriSN7JlTua9JWfJmr6nav4/LbT4yQhcYq/lhZF/4QnoZX2NjXi9H8zAb3hY3Q1YX5wQuZfIf6U61v2jo0UUrh6IQgpP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=rXiloC2E; arc=pass smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5a3be187ffbso1016249e87.0
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2026 08:25:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775661903; cv=none;
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-38704f70ea3so382251fa.2
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2026 08:44:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775663039; cv=none;
         d=google.com; s=arc-20240605;
-        b=Qd9XuvU4HrjJzlw2luSOBwDgmkR30SxhKXf8U23dNyjEUXSBB5k3nPsIeCpQv5kgGj
-         bmGFW7NRHxaNrp7TuIHgTx1AOHAngK2BgBanD0PZn+fnEvkENRic/epWOD3rhnrcAmzX
-         X2aZ/Cc3SeFFPJiw4un+dQ3EuXgig+nsR+xXh6c6rbyOVBDbzlBe6ppp+t0ZfVFwWMd8
-         SugGB7LIc/zVmS186dNJQ47Bp8GOp6uIUsVJqB9K5SFnpwpwUiOKD3QMeJhgx3UjBHTw
-         RpTUtm+g9M82QLZAoVbo2Y50HjYhZOalihQzh25gL2baOk9mRA9bsPyBSFepQfF4lsMM
-         97rA==
+        b=h0U3DXszFDMPldoiQLihoTXhIEZSTew23h1hcsh5rxsb4NihhOYKj+gtpDn+xbWtcd
+         RkzCSTQgpe1GE670KiTbPzXtBXCrqdTaASoXeiJnC7nvGe7mB4u8Kg0cHPqRTQQU/znz
+         JfliDT4eZ7XHfOGMYZHDRWMb/qwQrB/yhrEXenRkOKHBqXm7yClkWsl/bvg8hECh4s/K
+         wjHBglAIwqKYOSW7DwWfU4aLWHFbcDvX88TkH1pWtKdJ72Jcyp8T0E5bBtLzpljJ8cRk
+         xSojyO0y5Jg2jZ4qLPMXsPhcCmzVdNL4rShKxA/U0vMBQMc5uLvzBJeXxTv+Nm3aI0VZ
+         q/+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=MAx74boWK5DBH4jbpZ71BiY1UUSW/x74a5MdjmyMyLk=;
-        fh=vSTD0rdAp56C3IWLCiVhkbjhIpwIXG02sOt+YYSZrBI=;
-        b=E3s9qi0C0st9emhXIWJympjBsraG+2gJ4l7gmTRUvBDdTXQNNsiBxY9rCSrOZNHQyy
-         G0juGKGl0oMmfPnMAxQtjoaU0VqIS48V1KtnKx0qpD+Gs43ZVywJW0gCi5xM0RNtssl4
-         0AEAj3WfuANeQGUvJ5ekn8tCMpfcpCMFGo6kHUMnmb1IZb+qTfgtOBBp/gmw2Cqn5Kj6
-         GjaD0qfOFoFMPjsXrgEv5QKIn1VgkHfCgin7sBFcu5YCSbaVFIKxXXyO/85eEftsJhLo
-         rnDfFEwGrUTpyXPi0NKKMLyI7Ka0Dwib1NVlidA8Epo+9lWVm3AKcdJN7JD3Cr1hGEvZ
-         botQ==;
+        bh=8R205rR9c37ax4cG1eZ+775wmPHxAxlOnfVeNJFlZEU=;
+        fh=j+1i1sobWnd+31lPit2vE8izCtOaslCkLOngD/6IWHk=;
+        b=KCXVGCjdM/1Gf30eQH7vlsKLRheo+3SyKXcPCeWTdM4rwKDxh2HaTQCNDuKEMr93GH
+         xpmh4Zwdcn4q4oNp2fYMTcEf515riWuMS3edyyq11awprOo+ecFBvaubaDsgQkZubXMQ
+         zxjP1A+rRbIHcxj1Zngy8/qwa1z6IARSPswXK+U8dPCZe0EF4ycapS83oPZ5Mcdn3YPU
+         GvE/iR0vBrfZ2xL5Qyp1P/Al8JsahKuOSsVKDMmlfEoL6YNjKsB+L72cxltQx+QPM5xs
+         O4ZU/dwZfm0Z/OTnPrhxUq2E1cNhr+BZV2OoWrbxFPcwGp2qW25zbw0SSc139W+qZ7Hz
+         +9vQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1775661903; x=1776266703; darn=vger.kernel.org;
+        d=umich.edu; s=google-2016-06-03; t=1775663039; x=1776267839; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MAx74boWK5DBH4jbpZ71BiY1UUSW/x74a5MdjmyMyLk=;
-        b=URTLeKgJZVMuN+BB6NpS+mwku+J52y76+rEzXWPa90NNFMaSAGpBcx6IC+4KI6hno5
-         48TnKGraLCwfcZvB1WYI0vl0vYcUQHUUD6lMh3a22gX/xXfErtfuSWvpEImn+fxqvUq3
-         ynT9lWkhPmiQSHCaWocAWD2m1Z85pFBKUiQgu6kQUePtk/od0wa9SwXR83sCln45LT9f
-         L4KPmG4UYx35EWfE87TlRzFyc7HASRJQoYldrqqsTSIA6/aCcx1tXVc3J7F6ck+i9UVk
-         rj9XxJbLGZ4rZvlk8+RvkNZwhAWyVvF9Zx6V+p0YntG9Kl+zb/vZIegXclVGDiatuLpt
-         HcbQ==
+        bh=8R205rR9c37ax4cG1eZ+775wmPHxAxlOnfVeNJFlZEU=;
+        b=rXiloC2EKRZdi2wIJoS0pmCTpZVciWSDStdyRjkU9nv5uHFYCgJa+HQF0GY0TmitJi
+         WrT3eMZg5/Shj+7oa3FpIouUWgFMu5slLjYH/4h5M69kyl9OfH317SisEzHOph/XWqZ2
+         9anKEomTwixDzNVtKSxw/XFd+gbiTwdkkwymXrq8Ik8xmclY/6IoWrqa1y6MjdkdmF1c
+         oajF5KsRrDsNh1o+6+H1dRXgsQqKPcGSecN2uZ0JVMURbiwcHi+Y1MNa/qK+MQcF8+vN
+         eXkaH+3YlTS/1FU5BrJ8Mg5XvdBqAlu7bkD6lQZnRMHOwuwq88ltELn8XyzxBp2K+wgd
+         sj+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775661903; x=1776266703;
+        d=1e100.net; s=20251104; t=1775663039; x=1776267839;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=MAx74boWK5DBH4jbpZ71BiY1UUSW/x74a5MdjmyMyLk=;
-        b=pol6uIC6WvTsLegh6CGzCxV4WAotw+O0Isynd1A98m77lbl16t99OfqdI6x6tc2QT3
-         Ko/w2ObDp/VQSvEJVK6x6c8CkpO+gqnUJez0l2iY/mEa2bjeh5I5PZFnJlBpzBfKR9mU
-         qGbGHn7+h3TdJtADlY+al3pG4IZi3d041dAmpow8YwNGxLrK0SrMeua2hcYgRvlXnTt3
-         6eOXFNHnsFkTVqR2+hzdlLyMo/u4+JlE0kqqyQvsSdl8kMWFM2ouh/mlm5swn/EVEOU6
-         wtwsOYe3KcB7LWxYIbiyi3vR88aVpdM7iD8cgBdCNPOFQnQt9JahameZ4Y5DTz4xFsRw
-         7cTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZSVr67etm5XdXu9DJqrxjSxPwkhRCCFgZZcsPNvKP1W9Wd9KrExcuCcWzEUjvXhhMK1PqcmbOqHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8ITfx6FWhHDDSmzKMEdNNp+ZVYoOZ9UXF0jVUQD7ZAKIvakeM
-	ksEDoVFIyi7CkZxaDlcYiyLKH9Sin/eL3Nhl7tSmd7bKm/aFf9M1qUwQ+iAuwAW6AonlHUwub/Z
-	B6A5a4GcMhsrMZwt/KMRiHQmRsem7voY=
-X-Gm-Gg: AeBDieuCqAwp0rpzzmqy5Krn2MG896jEniRCeDAyQ1CoJYk8k8okwFwkkZidKX09jHi
-	V6gXSoMsCKbK665zGCzdGNhwfqa6ksS+XHyuUnlj0Je2zx5QSib87TBV7OQHFw2/NlOjY5Vo50j
-	RL/m4+fdW6/9qYMJgNjdv3AGsTfr+JRi0UPUtHoj1yoVbHuRUSb5ITTaWXX2bRfvrxs/E1rFhlR
-	g615Uq1DEui9IfRXCgDhLRINbhtJj8fuV0pq4w6gsZ92Mkzup8wfLTcGfPKlcPO87bf+aCeEvYw
-	6vesbNOkSoZRPu7IkyIx5WENHygA4ZRr8U1YNDmwUg==
-X-Received: by 2002:a05:6512:10cd:b0:5a2:a70a:a9e with SMTP id
- 2adb3069b0e04-5a2c8a95465mr10333930e87.3.1775661902380; Wed, 08 Apr 2026
- 08:25:02 -0700 (PDT)
+        bh=8R205rR9c37ax4cG1eZ+775wmPHxAxlOnfVeNJFlZEU=;
+        b=rbQksbIAwpd40hFfNHk/+leXLMxPBIoz+tX2/s2+5UKhfooslXlYbDZHd8S1cnbtZn
+         hb6JLfZu2sssckfDF5Jo6QP6XqPhgEfqISlDNzdQjCs/dzuJKbspUJC2slQRFlZkvCk8
+         sEnWGCVG81Icf562SvXUJjm7xXoGJhP3qD7qFSDO+d1G4o2MqnEf5PiU2oCMzis3+IPI
+         s80pj7h6ijO4KlcRpXS1J1Ew/BOZIJ0b9bucECnUJOBW1zOuI0pkRq00vDo57xdGkDp2
+         jHihr1i8yWn6nNtBZz7SlezJy+glaOPRpZ0UaofYmqV5m+1FbfSMN/LJ+lS7d3Rrqa97
+         AprA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuWF6aiaEYxxGppRwuW2JUwnycvbk/2/p8YbyiYrUx/8GhqyooIBfJrdaVRRh2IRVWjjnbhu6ji04=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpuuz9SMEDPCIFDa5Dzt7T0z8D6tFO/Ye+ModF1h/l2t4Vq/SQ
+	Hjd2cGOOAuwwREMlwJy9ZFEyBYKTe2yPvIwmoDUw4UK1l+SgEqhy90ASOHEjDlIy2rPp3YXH/6n
+	W6RvvsM6UAlwKWCd+Fp8qWsiFHDZ/VFcI5Opg
+X-Gm-Gg: AeBDietlQRQLqS8hglnh8YcpcJj1OQ+IYN7//2jG6GW6oyqFKs9qHjw495/i5epdJWT
+	ffxRlfyRzo0HqX5YasoX9OcfytkSnvWQLdfurYZXKQ2d1ax0prodxtdti8UbV0ANesLCc0dRD75
+	gh5aBKisMUS1YO8YCQ0Jr/rib5NyHcWftps2h5kj/5s0PB74LTn22QSYfbTvYqfVy2TJ3WBrUiL
+	RcTabEMKZMT8dWt4aa8Mm7wNXIvSgSlIwWpbOSD7b/76OkVme+46pwb5ItnnA4mV4BgUVAUq/PM
+	NRfem411MSRUIb78krT9yBnZz15vlSF3wbTFeIygCA==
+X-Received: by 2002:a05:651c:1b06:b0:38c:d039:46c1 with SMTP id
+ 38308e7fff4ca-38d91c1a5c7mr66571131fa.18.1775663039091; Wed, 08 Apr 2026
+ 08:43:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260407235038.55749-1-okorniev@redhat.com> <20260407235038.55749-3-okorniev@redhat.com>
- <c79b8e38-cc5c-436f-8145-2213dc1256c0@app.fastmail.com>
-In-Reply-To: <c79b8e38-cc5c-436f-8145-2213dc1256c0@app.fastmail.com>
+References: <20260407235038.55749-1-okorniev@redhat.com> <20260407235038.55749-4-okorniev@redhat.com>
+ <937c9434-07b1-408a-95e1-a5db7962c504@app.fastmail.com>
+In-Reply-To: <937c9434-07b1-408a-95e1-a5db7962c504@app.fastmail.com>
 From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 8 Apr 2026 11:24:50 -0400
-X-Gm-Features: AQROBzC0c2zoXAA-nTmXsG6Wd6gs0P5QouRryh6pvxb2_nMtSoeAz7XDVYfkd3k
-Message-ID: <CAN-5tyG6JFJ=e9Jkmk0TnzvszWXVneDnDaceA_AOhDtK=ScVog@mail.gmail.com>
-Subject: Re: [PATCH 2/3] nfsd: update mtime/ctime on synchronous COPY with
+Date: Wed, 8 Apr 2026 11:43:46 -0400
+X-Gm-Features: AQROBzB50JD0Ggb3fuu6BeEZgJ87lZPTIspRvpMRg0cuxr9fjYjPrZDsTotMl34
+Message-ID: <CAN-5tyEjhiD1=K=ShJxGXfkvs+KARC_j0WZSqgHRBDm_d7Xcpw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] nfsd: update mtime/ctime on asynchronous COPY with
  delegated attributes
 To: Chuck Lever <cel@kernel.org>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Chuck Lever <chuck.lever@oracle.com>, 
@@ -117,71 +117,142 @@ Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[umich.edu,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[umich.edu:s=google-2016-06-03];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20759-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20760-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[umich.edu:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 8AB913BE327
+	DKIM_TRACE(0.00)[umich.edu:+]
+X-Rspamd-Queue-Id: ED35B3BE80A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 8, 2026 at 9:59=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
+On Wed, Apr 8, 2026 at 10:10=E2=80=AFAM Chuck Lever <cel@kernel.org> wrote:
 >
 >
 >
 > On Tue, Apr 7, 2026, at 7:50 PM, Olga Kornievskaia wrote:
-> > COPY should update destination file's mtime/ctime upon completion.
+> > Asynchronous COPY should update destination file's mtime/ctime upon
+> > completion of copy work (not COPY compound processing).
 > >
 > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
->
-> Should 2/3 also carry a Fixes: tag?
-
-My bad. I guess it should be the same as the first patch. But I now
-also wonder if the update should be done based on the status of
-nfsd4_do_copy? But this is where I think nfsd4_do_copy can return say
-ENOSPC but it would have modified the file as well. So I'm not clear
-if we need to special case return values?
-
 > > ---
-> >  fs/nfsd/nfs4proc.c | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  fs/nfsd/nfs4proc.c | 21 ++++++++++++++++++++-
+> >  fs/nfsd/xdr4.h     |  1 +
+> >  2 files changed, 21 insertions(+), 1 deletion(-)
 > >
 > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index fb891e35ebe9..04d8d0d1ca7d 100644
+> > index 04d8d0d1ca7d..d858a5b58a24 100644
 > > --- a/fs/nfsd/nfs4proc.c
 > > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -2211,6 +2211,9 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
+>
+> > @@ -2134,6 +2134,16 @@ static int nfsd4_do_async_copy(void *data)
+> >       nfsd4_send_cb_offload(copy);
+> >       atomic_dec(&copy->cp_nn->pending_async_copies);
+> > +     /* choosing to check for existence of set dentry pointer to indic=
+ate
+> > +      * that we need to update the attributes and do a dput because th=
+e
+> > +      * file flag could be cleared by a DELEGRETURN and then we'd lose
+> > +      * that copy was started with file opened with NOCMTIME and we go=
+tten
+> > +      * a reference on the dentry.
+> > +      */
+>
+> Nit: "we gotten" might instead be "we had gotten" or "we got".
+> And let's stick with "/*" on a separate line to introduce
+> comment blocks in NFSD.
+
+Will fix. Thanks.
+
+>
+> > +     if (copy->d_dst) {
+> > +             nfsd_update_cmtime_attr(copy->d_dst);
+> > +             dput(copy->d_dst);
+> > +     }
+>
+> Jeff earlier suggested that the timestamp update should happen
+> before sending CB_OFFLOAD, so that a client issuing GETATTR in
+> response to the callback sees the updated timestamps. Should
+> nfsd_update_cmtime_attr be moved above nfsd4_send_cb_offload?
+
+I'll move it up. I thought that since nfsd4_send_cb_offload just
+schedules the CB_OFFLOAD and returns, then placement of
+nfsd_update_cmtime_attr isn't so critical.
+
+> > @@ -2193,6 +2203,11 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
 > > nfsd4_compound_state *cstate,
-> >       } else {
-> >               status =3D nfsd4_do_copy(copy, copy->nf_src->nf_file,
-> >                                      copy->nf_dst->nf_file, true);
+> >               memcpy(&result->cb_stateid, &copy->cp_stateid.cs_stid,
+> >                       sizeof(result->cb_stateid));
+> >               dup_copy_fields(copy, async_copy);
 > > +             if ((READ_ONCE(copy->nf_dst->nf_file->f_mode) &
-> > +                            FMODE_NOCMTIME) !=3D 0)
-> > +                     nfsd_update_cmtime_attr(cstate->current_fh.fh_den=
-try);
-> >       }
-> >  out:
-> >       trace_nfsd_copy_done(copy, status);
-> > --
-> > 2.52.0
+> > +                            FMODE_NOCMTIME) !=3D 0) {
+> > +                     async_copy->d_dst =3D cstate->current_fh.fh_dentr=
+y;
+> > +                     dget(cstate->current_fh.fh_dentry);
+> > +             }
+> >               memcpy(async_copy->cp_cb_offload.co_referring_sessionid.d=
+ata,
+> >                      cstate->session->se_sessionid.data,
+> >                      NFS4_MAX_SESSIONID_LEN);
+>
+> The error path checks FMODE_NOCMTIME to decide whether to dput,
+> but three gotos reach out_dec_async_copy_err before the dget:
+>
+> nfsd4_copy() {
+>     ...
+>     if (atomic_inc_return(...) > sp_nrthreads)
+>         goto out_dec_async_copy_err;    /* before dget */
+>     async_copy->cp_src =3D kmalloc_obj(...);
+>     if (!async_copy->cp_src)
+>         goto out_dec_async_copy_err;    /* before dget */
+>     if (!nfs4_init_copy_state(nn, copy))
+>         goto out_dec_async_copy_err;    /* before dget */
+>     ...
+>     dget(cstate->current_fh.fh_dentry); /* dget is here */
+>     ...
+>     if (IS_ERR(async_copy->copy_task))
+>         goto out_dec_async_copy_err;    /* after dget */
+> }
+>
+> If FMODE_NOCMTIME happens to be set when one of the early gotos
+> fires, this calls dput without a matching dget, resulting in a
+> dentry refcount underflow.
+
+I will attempt to correct my error handling dput() in v2! Thanks.
+
+> Additionally, the comment in nfsd4_do_async_copy explains that
+> FMODE_NOCMTIME can be cleared by a concurrent DELEGRETURN, which
+> is why the thread checks copy->d_dst instead. The same reasoning
+> applies here: a concurrent DELEGRETURN between the dget and a
+> kthread_create failure would cause the error path to skip the
+> dput, leaking the dentry reference.
+>
+> Would it be simpler to check async_copy->d_dst here instead of
+> re-reading FMODE_NOCMTIME? That field is NULL before the dget
+> and non-NULL after, which handles both cases correctly:
+>
+>     if (async_copy->d_dst)
+>         dput(async_copy->d_dst);
+
+Will fix. Thanks.
+
+>
 >
 > --
 > Chuck Lever
