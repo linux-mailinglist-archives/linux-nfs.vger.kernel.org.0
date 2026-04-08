@@ -1,126 +1,187 @@
-Return-Path: <linux-nfs+bounces-20739-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20740-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CLuMBSVQ1mm8DQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20739-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 14:55:01 +0200
+	id ALLiBvxb1mmNEggAu9opvQ
+	(envelope-from <linux-nfs+bounces-20740-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 15:45:32 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 636323BC6EB
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 14:55:00 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B08093BD237
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 15:45:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 11A10302DF55
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 12:52:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7A18730285D8
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 13:45:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75FCC2376FD;
-	Wed,  8 Apr 2026 12:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB2B43D16EC;
+	Wed,  8 Apr 2026 13:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQmsEEzE"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2/KRW6DL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EXLGe7QT";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2/KRW6DL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EXLGe7QT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5311A19D891
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 12:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0250E3ACEF3
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 13:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775652719; cv=none; b=YopFl+o0xYWGNOTVBbVuZhtWip5q1tLL7xSYRoKmra3YZ7yzy+ueReuXd2mzWbDB7xm3rNZACBCFIVLvSS9W/H57NJnBuxbLz+lIR3aiNB9BnExdsv1gQcnt2lwdSM8FoTlUEHIhemsJiCeKqABPPLCVEhqVHlBqzjK3CvfCLZw=
+	t=1775655916; cv=none; b=lR3zfFdheXwL96xIysNADVYGjejavbaC0JH25JKzUehm3siBhTQS/hDR588QfLuSecjnj+s2U/gNzHA24AOEc2Qc/0QZFMM+nfgI1QHPhV9+D84QSMDRkKbN90UqJcwYCAPCNFRou4Ikcy4dwykg2x8QUm9FBdXVXcHfoe9imXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775652719; c=relaxed/simple;
-	bh=QmwkuW9ydFTorcUWv6jHTAPRhI9u9ldbxt4RTCx8TAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ACGr7+j6aoVWC4OzLrPfvgfnk8lN1PEyHKMthss4ntFnDMibxkM7jLCFd/hvh0WSxE/4hEQk5GfsGKRNBKVLiz3k4kUoNqHq1uzqXYuNRqx6mJvLQpr5CsRzW/q3k9wvT+PgRd3mezTGuSmj4fli56JMSPJ0ZX9/zR++05qLgIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQmsEEzE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4906DC19424;
-	Wed,  8 Apr 2026 12:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775652719;
-	bh=QmwkuW9ydFTorcUWv6jHTAPRhI9u9ldbxt4RTCx8TAI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JQmsEEzEh1hIzEx9Oiq77hChzsHvnBV7vckIpqpIfo0AXir3Jrerk5ydkN/LAJvf7
-	 ZhiMOf4q+SgfcUJbE+bEXvkul9qWeGS/G5A7V0OlCR7gZJ3dDUWzzEzpHdvxyaK4zj
-	 7Kse+yMbLtX9kVJwKtYOB8NVmLPNbxpX5FHrD4xYbOnSgsJpy4nSM2VI3deW6hR/s4
-	 +wjgv/HBG3LKQ0OTUnR++u4DbxVjbSjeiZEpZr8HNEqZke/SSU9YrQdXF3zaYf43b3
-	 RHa5oAR/HXJcg/n6TjvolgFvvt+YagBBIdAw4baezRFFQbRkoAAKZj0sAaJoZdU2Gh
-	 C/+dUIIDyy+XQ==
-From: Chuck Lever <cel@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>,
-	Scott Mayhew <smayhew@redhat.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4] nfsd: fix file change detection in CB_GETATTR
-Date: Wed,  8 Apr 2026 08:51:53 -0400
-Message-ID: <177565264307.804387.4529450531664012401.b4-ty@b4>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260407220857.1826441-1-smayhew@redhat.com>
-References: <20260407220857.1826441-1-smayhew@redhat.com>
+	s=arc-20240116; t=1775655916; c=relaxed/simple;
+	bh=96pqWyn6sg9V9CtrdwIXS4q1G7kDDB0OegRtHC3KUGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0j9NuCMtL1qyq/dKhlrVnW7Jh5uuw0OtEpd6Cbvq9OaLVSEBEzIXtzTSQQyDHIJhQ4gEPKkTVmML046bsGsjFM8w7f8tbYndqvvoqkyEpvs2jzNVTDfkeMlUAVRjzM+MlU1Mu1m5bHiOJz6z1I+/HfEO1lr561iK/qAgcEn3KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2/KRW6DL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EXLGe7QT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2/KRW6DL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EXLGe7QT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 556344E9ED;
+	Wed,  8 Apr 2026 13:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1775655912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=2/KRW6DLy38ko0+FKOgsrCg79uq/lN6y7ccGVBZ1S50/vsiStlcgoF7TM7CWN6K7NnFLcq
+	LtwNzgdPktx22ylYwoCdejd3ggHrZF+Pzb5ALuyUhCMhHShA8Le0fhniOsf+ZIIaOaD7CM
+	d4oKhxQ/Z5Ki5bnLq/jVV0eyiY9nhvA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1775655912;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=EXLGe7QTULOkdrTE+oBvw2r0u+WLTQnh+BXVz5AMbm40b7twK1HqsLJh+DNXHbD3MOi++f
+	VNFM3Yhn5SpTs/CQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1775655912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=2/KRW6DLy38ko0+FKOgsrCg79uq/lN6y7ccGVBZ1S50/vsiStlcgoF7TM7CWN6K7NnFLcq
+	LtwNzgdPktx22ylYwoCdejd3ggHrZF+Pzb5ALuyUhCMhHShA8Le0fhniOsf+ZIIaOaD7CM
+	d4oKhxQ/Z5Ki5bnLq/jVV0eyiY9nhvA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1775655912;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zQBRHkcZTGdmtgmvOuDF2/eOE0Fsx6ewiC4Or4NOYk=;
+	b=EXLGe7QTULOkdrTE+oBvw2r0u+WLTQnh+BXVz5AMbm40b7twK1HqsLJh+DNXHbD3MOi++f
+	VNFM3Yhn5SpTs/CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 490CA4A0B3;
+	Wed,  8 Apr 2026 13:45:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vDnPEehb1mn/NQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 08 Apr 2026 13:45:12 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E399CA0A7E; Wed,  8 Apr 2026 15:45:07 +0200 (CEST)
+Date: Wed, 8 Apr 2026 15:45:07 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Calum Mackay <calum.mackay@oracle.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/24] filelock: add support for ignoring deleg breaks
+ for dir change events
+Message-ID: <snnggefctfffpb3rsyhjdwmxozqdklqmweiojmxy7owettksgz@6vud2iacgeqc>
+References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
+ <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
+X-Spam-Score: -2.30
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20739-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20740-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,suse.cz:dkim,suse.cz:email,suse.com:email];
+	DMARC_NA(0.00)[suse.cz];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com,vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 636323BC6EB
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: B08093BD237
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
-
-On Tue, 07 Apr 2026 18:08:57 -0400, Scott Mayhew wrote:
-> RFC 8881, section 10.4.3 doesn't say anything about caching the file
-> size in the delegation record, nor does it say anything about comparing
-> a cached file size with the size reported by the client in the
-> CB_GETATTR reply for the purpose of determining if the client holds
-> modified data for the file.
+On Tue 07-04-26 09:21:14, Jeff Layton wrote:
+> If a NFS client requests a directory delegation with a notification
+> bitmask covering directory change events, the server shouldn't recall
+> the delegation. Instead the client will be notified of the change after
+> the fact.
 > 
-> What section 10.4.3 of RFC 8881 does say is that the server should
-> compare the *current* file size with the size reported by the client
-> holding the delegation in the CB_GETATTR reply, and if they differ to
-> treat it as a modification regardless of the change attribute retrieved
-> via the CB_GETATTR.
+> Add support for ignoring lease breaks on directory changes. Add a new
+> flags parameter to try_break_deleg() and teach __break_lease how to
+> ignore certain types of delegation break events.
 > 
-> [...]
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Applied to nfsd-testing, thanks! And, thanks for confirming
-applicability to LTS kernels. Cc: stable@ added.
+Looks good. Feel free to add:
 
-[1/1] nfsd: fix file change detection in CB_GETATTR
-      commit: 17a5b972dbf13cb2a7ef38317f971d9ccfe8471b
+Reviewed-by: Jan Kara <jack@suse.cz>
 
---
-Chuck Lever
+> @@ -222,6 +225,10 @@ struct file_lease *locks_alloc_lease(void);
+>  #define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
+>  #define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
+>  #define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
+> +#define LEASE_BREAK_DIR_CREATE		BIT(6)  // dir deleg create event
+> +#define LEASE_BREAK_DIR_DELETE		BIT(7)  // dir deleg delete event
+> +#define LEASE_BREAK_DIR_RENAME		BIT(8)  // dir deleg rename event
 
+Just curious why you've left out bit 5 here... :)
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
