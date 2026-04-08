@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-20725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QCgBCk841mlZBwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20725-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 13:13:19 +0200
+	id SOCEG9E51mlZBwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20726-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 13:19:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D6473BB201
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 13:13:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C058F3BB28A
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 13:19:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 425F73004C24
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 11:13:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 990DE300C92D
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 11:17:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86E42E8B8A;
-	Wed,  8 Apr 2026 11:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F29D38239C;
+	Wed,  8 Apr 2026 11:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJL2dIrO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xm/rFrrv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FC22BDC0F
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 11:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C23E38229D
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 11:17:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775646794; cv=none; b=JaK5fwUs8NcHmxK796kT076TPiYvXhxBCoJcFe2JmKONpB2JjAs4ohNLEw6LZewV/9w6DBSwOwsnjars7siKUd53EC73CxSPhDh8lb8cHuSfZ+S+qWtbO5QbnATntNAn1oVMKKNGdeKXdVf9uH4aFKkjF8gJH3y84KLcXkIElPg=
+	t=1775647032; cv=none; b=YNUkjg2BePGo6zh2KQj0nfZ+EZplvN00sbGvxHme5BswRM9DD2/CDhkcjN1o4Swbk988v5XwycCFS9rcUKbnpEcWHjzbsC5T4DBFxduCRQogc0Bgfaj9TamplZ7Z63WVCwMTgbwv8jboU/vxx6OEyeIgYr+RaNAn245Xp1KOcXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775646794; c=relaxed/simple;
-	bh=1/zbdWXUYI4QQfFGFnZtPpPuwQjGcI+bwqiY24kjaYA=;
+	s=arc-20240116; t=1775647032; c=relaxed/simple;
+	bh=n6p5BmM/5NItkUlCwoD8zB9dRxn+Q31wOUNddM8kvH0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m5l3iZxWBxVC8FkHs8D2ddklwXH2YSEQ8c0ZCi+1uLIxEcX0Ym76mxcXbChlmd8If2PmtBhYljXujq8LXnFPwyO/VmoaJK3fBqRafW2DXP0WZNBchHcK1w1OvK3E4f6OYgknQ4W3kg8gPmcTvQbc2/qxdVwYpKZ81WvnKOSsgVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJL2dIrO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D08AC19421;
-	Wed,  8 Apr 2026 11:13:13 +0000 (UTC)
+	 Content-Type:MIME-Version; b=E41IvBvuRLcEwbtpFZFuQi8xN7IY6NztYEAZfzaQn9/yX1LDTxSq17LJHbQo0rijuRneP49qmi38EBcIlY1v/YdxXSAyX2Zw7n6+3l32PGYb6ISVXvjh/Z3KY9HFSVvFv0r+z34tixnvYpsI4gFTJjqHyTjXp4Ra7XVpF6n6Y1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xm/rFrrv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26696C19421;
+	Wed,  8 Apr 2026 11:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775646794;
-	bh=1/zbdWXUYI4QQfFGFnZtPpPuwQjGcI+bwqiY24kjaYA=;
+	s=k20201202; t=1775647031;
+	bh=n6p5BmM/5NItkUlCwoD8zB9dRxn+Q31wOUNddM8kvH0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aJL2dIrOLIRN82DKCSFdg/cUE9lnxkOGuSeSU0UyFY4gWX3fN1q5hAMTpI7IFdvtn
-	 /WkGW+a94XV6d572p9P1WdDLYPb/21Gug7dKWzfEBl2CcGOourRuM+VSx3bl9FM2mX
-	 zExMqqv216M91amwy9jBux0Sy6I0ehpigadwIDnvQ4E5XRa8B+BOz+kjSsUrh7tIQo
-	 G+w/dlyRJZ0YgM5Kz1xSZh/cUBH/Dej62pelWtsgYWj1KcKFNRrLMBmZ0xRdxm40wP
-	 4esR8wwcP2y2NyKcE+y/LG5g1/UqHoiOhsiNuZnjr0XbdA1EqABJsHsfbip2rk/1A4
-	 qnbjmuXzhONeg==
-Message-ID: <f3e31a7630123006fed5aeca7fa383d28f06dbe2.camel@kernel.org>
+	b=Xm/rFrrvEJ/NIvLGgAHddgGhwnzJVw7qhzUa/QcJ7aQQqkEZpU5Q7sweJnvat3G5t
+	 1iZqX59onLvwoyU6rmenAs4Gn2Xa/qBarKXgFYVahbwTumbXepke7YKOJN7xH9+JyA
+	 qakVifkeknIRuv8VbCvN7dVkDREeQO3cpp9iQEvYd86odMPSgMFGQKAvVLmZa+zsbE
+	 b8vYUp9XyKern+728/bmn2XSYPRRQuWuFEHsA84LJULJCfCbYnRKKqOwEVtYTwFuh9
+	 R1iXHNqencYumG0BIANLVm75UONVVo7OV+VccEkwrLVzF3sK9o35cpT2cTzwZ+S+Nk
+	 hP+lmE4cvcjAQ==
+Message-ID: <fc8049617da1b2920144ae27ef0ec71d9deb2e5c.camel@kernel.org>
 Subject: Re: [PATCH 0/3] nfsd update mtime/ctime on CLONE/COPY with
  delegated attritutes
 From: Jeff Layton <jlayton@kernel.org>
 To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
 Cc: linux-nfs@vger.kernel.org, neilb@brown.name, Dai.Ngo@oracle.com, 
 	tom@talpey.com
-Date: Wed, 08 Apr 2026 07:13:11 -0400
+Date: Wed, 08 Apr 2026 07:17:08 -0400
 In-Reply-To: <20260407235038.55749-1-okorniev@redhat.com>
 References: <20260407235038.55749-1-okorniev@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
@@ -140,20 +140,20 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20725-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20726-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -162,8 +162,8 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8D6473BB201
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C058F3BB28A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -192,14 +192,6 @@ uggested
 hought it=20
 > was appropriate).=20
 >=20
-
-CLONE/COPY aren't defined by POSIX so I'm not sure we have clear
-guidance about the atime on the source or destination. Within Linux,
-COPY is implemented using reads and writes though, so I'd expect that
-the source file has its atime updated, and the destination gets a new
-c/time. I don't see why it'd need to read the destination file though,
-so I wouldn't expect an atime update there.
-
 > COPY was tested by modifying the linux client to send a GETATTR in the CO=
 PY compound.
 > Whether or not the client should add the GETATTR to the COPY compound is =
@@ -216,6 +208,7 @@ yet another
 >  fs/nfsd/xdr4.h     |  1 +
 >  2 files changed, 38 insertions(+), 1 deletion(-)
 
---=20
-Jeff Layton <jlayton@kernel.org>
+This all looks good to me. Thanks for fixing this up, Olga!
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
