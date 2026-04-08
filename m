@@ -1,90 +1,90 @@
-Return-Path: <linux-nfs+bounces-20762-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20763-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wBFkKSV/1mmQFwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20762-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 18:15:33 +0200
+	id CLI9CD5/1mmQFwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20763-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 18:15:58 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AA4E3BEBE5
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 18:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FB6A3BEBEC
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 18:15:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 29596301FCAF
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 16:14:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A5DCE303EEBC
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 16:14:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6636B34B1A4;
-	Wed,  8 Apr 2026 16:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBA8734CFD6;
+	Wed,  8 Apr 2026 16:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5gkwl/8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MALP3S+N"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6C634B43F
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 16:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5E934C981
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Apr 2026 16:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775664884; cv=none; b=c8EEyZwBbBiVNGBgiUtr7Mg+Lmuug+JMbZ1siJF/0BGybTsMz3siKl3y6sAEYCswIPhdr/nyFFu6sz2XaPL2iYnoSCZ8vAnXnrnFKFLtiD6B0qj8Zo2lA6L/HrHUtYOI1jk7xyLf4g2iBjd+BBfF/KP3DH1/aBdvYltcy+lMDIg=
+	t=1775664885; cv=none; b=dN8JIaXxkO1X2CJPSAKU501dGvvQqLl4h3DDM///lPay6a/2Aw/GY9LU7DeZZtYn+epTikXxRTX5/Od1L1d/eAVYOZ2gEliUxBznhjvonU7Jup5CiG869UyT9IB6bMXof9gNyTwj4vlpiZidhIkfKF4uwE99lNARP/xt0VcTTHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775664884; c=relaxed/simple;
-	bh=We0Ga4xBIv/TGdOESC7u6547XRvqcfYukXrOn3fq6Oc=;
+	s=arc-20240116; t=1775664885; c=relaxed/simple;
+	bh=HE0L2TlxZki+exNOI5hLEfBmSPglXZVfQqXoDdp0Cow=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E2m7wyThtrpxw0btOPmQ0xWwxEP8ex4EPcfSP4jYPV3gq1Lnq3IUypOHdqn4moDJYXlEhIM+ux5XKIjKTB3wn6thycF9Yd9Lme2E+lUjZ4n77Vxr4SEr7ce4omrch3hZRvzNJLWRtIxtat+c7cdWWBjUEvaQZD55X6a5s7uqwzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5gkwl/8; arc=none smtp.client-ip=209.85.210.170
+	 MIME-Version; b=YAOzdwfTon6Qkb+E9rcGx/CX3BVU1lWLar2yIovuNBdMSwumJBwfCYiMMXnGeVCe/mrS4NeJoUN4DIV57WZKXEezY5Bxra1VmOTnXF1cVjFMyEY9dcUmR4wHH1U9SGsvM0Lqg7dt4Ya8SUC/kAA4/xLtLBITPr70uBcyl06BrCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MALP3S+N; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-82735a41920so2305176b3a.2
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2026 09:14:42 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-823c56765fdso3344853b3a.1
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Apr 2026 09:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775664882; x=1776269682; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775664884; x=1776269684; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xu4kBECQDX+Dvod6HfElP5DdkVcjXtKLiG9bBHD4KiA=;
-        b=F5gkwl/8BSn2aq6ciAJjVPIsm0JpkznbaCPyw2rwJddt3GcVKLe69d62z78hif7Nce
-         Z13StFMdF5hgnCOTTZm/6ZZJyPU6f00GwYmS/xvQZ5cVrTazf0crHgU4kHp3c19KYyZV
-         ZWVwEZqd7d/YzR1i1c9S4PXqxvWpnbAVl8IYzcbQJBNWPDQCBOwjKl7rgS8p6JblbZD3
-         Wc7ktFccJoNn/tg+4vu62x4MyP3aLas3FMJmMbQYQtwqr6xqXpH8dGGCuNJpYbi8VgFy
-         WjC++StoiIw2SUQkgsAfCBokjE8abqtm/KWoGZwi0P4a+0Ct+1pCr9CLpunwrp7w44M3
-         DHbw==
+        bh=7YPjAZrC/fQAxlJwQXqKMryLnvq1TdnW5Tuxqia5KaU=;
+        b=MALP3S+NPtmhHfBLK6YKNYPEopxgDOrEcufiRqADJRHPwWDNlknSoHehTKOtQQ/qUH
+         eKLzDhAnD5O3gxfpnp5rEaHET9ibKhjKfe+QYwWWfKGtanFu8pKZgQ25yo69SDuGuTMM
+         s986dYV4FCtiYf4SpbxQ1iVoqtjUNsyOP7lSUbXSZqkK2ghXaK8FLx+B5h/L+E1OGoOF
+         jDQbcJ1gUM6+TIUBycr5sZhco6pLfm6MFTjNyIVjFWVFclzDX5GakRfbYYAl4gdJVkgZ
+         HOBA3CavKQO8a+ESE0GEKrdljA8TOZZaYIX3f6MvDwd9wN6d0cZs1+mxkD+Ew3fPyetR
+         bTVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775664882; x=1776269682;
+        d=1e100.net; s=20251104; t=1775664884; x=1776269684;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=xu4kBECQDX+Dvod6HfElP5DdkVcjXtKLiG9bBHD4KiA=;
-        b=jeYS9tzQIyQ2QOep8h0sathv2oKu3CsHUTKDQTLuuMpuGp/E3rHECa6APX65NdXFz8
-         8fBSwf6Eh7OgtCfdVltQ6SXpnnp76o5RFQyup98x4rLzDyQ+TS8gtZ8GZTuT9XNFcTqJ
-         C4npodmkVovIQTVlUw1w4jojNEBhoezEEUfzvOaz1xbhmqSkNuJACyH0RUnvXSbR5rej
-         qYJqO3SOlXGmvSIEw4cqJJLQ5/jas4ryu2DHy+I/SCftyLDQqMLPafvrLldWHJQs/eYx
-         SY12ZvC9K7seBVTHVTvOBsbFDv8bHh6T096GtlIueyKqC6VsKfWnlSEgSjp/TeOpCrED
-         FySw==
-X-Gm-Message-State: AOJu0Yw25NussjAb+NTQZHfzMuyHQr+YAv23QBmY3/SI380VBc0ff9RI
-	Y1M9ARrS0XaRsqYzHMgKawkyQYwvClaXn1Ws6dhfD89MD7ROMckDt7O5
-X-Gm-Gg: AeBDieu1hRJkDJKU81XhrZuL47193LDuKo7KyGfvKbIMmB2cyjvN1AlQ/0IF1/rG8R+
-	FyM8mU482u/sO2j5CBbzXx1dJMS+9AviPjmX5vo9EhrhokWX5RY6VfAYgJ8qBHjpdr4lBsmACtR
-	GbgwuLa40Oigr0303R8dfJqijMqduYenb6O04JhmZSzf/ocXVQApmgM3GBhVlfXcebdMrzCg4qS
-	YuCCQF/SBsvKoQUKVM7JePobBZ2pNQp6xMWeujPS3Y8dtvliLS/4ZlA95Whz9gys5TisF4lZofX
-	Xf0NK90Gmz7jz3TzaIsyDF9Wq5IyAlWWrYCYeUECnMuHOp8m4aqOYsU5Yo5t8vmtJTjcibT4muU
-	beNosV76Ib9PfSTBEOEjgUKTVncKni41BdYhOMPvph+DaiKA1WXk1QJ6vQ/rcH50pqOitlCKSMv
-	whKHnqzzBL2Wiehf8RpP6Qrdgt2ZTedz3Czn5HQagHHHs+kQQ52/TQ6Nmo+8Ji8lwvChnq0OPaV
+        bh=7YPjAZrC/fQAxlJwQXqKMryLnvq1TdnW5Tuxqia5KaU=;
+        b=RrfAw/VAjdZxTlc6ryHYda+nBGL0Q27ZmtY85BR1vz9YrN8UnsCXGFqEx7xzr8SCSr
+         c80n37xAglDWpJRi8ylE8EecKypiasbZb5hLWK+HBRy6k0qcTFhkYCCDeaj489xn3kVU
+         heiuEtg3m9JKJ2+YRD96CwlWYa2uNcPb79pA0cuUhSx8hGtKO6KZj6IKBjao224gA8Vc
+         SViryVqkxgtWcmY4i61SxaZ5GMSxtHffzw243pqBPEvp+k4V9hqCkGLCj2C8ilGuwjAX
+         TaLYQ/Nhb0NU9bgxLvFax7M6yXxm+Fh8pq+hSn9WRewI1exr8VSjBgqP20S2rsvDgVpN
+         hAcA==
+X-Gm-Message-State: AOJu0YyK4rQyop8wNJTVzBvdOim/WsirTLeYQqbeobLJ634TBCqx0vUf
+	vpSc2EwyMWeYyVROWjGlaDaMVd8ettDWnBnxQlR71taeUZEDy9chWrbj
+X-Gm-Gg: AeBDievHUifOFFr4y5aQN6lvSUzBqnAnHctE/2KkIc887iU32T1wg5i40X+4DvH3nzd
+	EeI1OdCf7i/kmof5THvdOZOYox+8ArS798LxpuCbyQaWnT6YWCEne718Etu3uTWH6TEEZKz+IxV
+	GunHriwagEF86BS/rn3CO31ZbgD5ecbp3xE7IW4v8Go4sojk6nGjCHh2c2hOp+jhs52fx+i3NUF
+	vapvJW/PIXcJkXFYxgOx1a56F1Aa4Xb3zE/HP94hQZTcPExSMEj5vL8/f0Sf0yiL44e+JOTpxev
+	zK1KrPnAEPDcaPSEd61mY7PMVCNKEyaGA999p8JHUlDXjK6NLqfvC3vSqVBlr+STvJjQgNZZsFP
+	zY0+UinWt+tMihYf2LjzhNZrAAwfCRLDYqr1u4aMnOtB8YVwMgp6F8AXTEeSn6zIr9jzAPEkOFq
+	IQS95vGyCd2D2WOqbNAsJhB34pQAprvAvm5lZie97fL3QZVYY/wbsXcE7ob1GIGz2fJzia2fclY
 	g==
-X-Received: by 2002:a05:6a00:a0b:b0:81f:852b:a925 with SMTP id d2e1a72fcca58-82d0da4594cmr21144896b3a.1.1775664881789;
-        Wed, 08 Apr 2026 09:14:41 -0700 (PDT)
+X-Received: by 2002:a05:6a00:9151:b0:82d:62ed:b01d with SMTP id d2e1a72fcca58-82d62edb767mr3429681b3a.45.1775664883837;
+        Wed, 08 Apr 2026 09:14:43 -0700 (PDT)
 Received: from sean-All-Series.. (59-115-195-252.dynamic-ip.hinet.net. [59.115.195.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9ca4efesm21916840b3a.61.2026.04.08.09.14.40
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9ca4efesm21916840b3a.61.2026.04.08.09.14.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2026 09:14:41 -0700 (PDT)
+        Wed, 08 Apr 2026 09:14:43 -0700 (PDT)
 From: Sean Chang <seanwascoding@gmail.com>
 To: trondmy@kernel.org,
 	anna@kernel.org
 Cc: linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sean Chang <seanwascoding@gmail.com>
-Subject: [PATCH v1 1/2] NFS: fix RCU safety in nfs_compare_super_address
-Date: Thu,  9 Apr 2026 00:14:27 +0800
-Message-Id: <20260408161428.155169-2-seanwascoding@gmail.com>
+Subject: [PATCH v1 2/2] NFS: use unsigned long for req field in nfs_page_class
+Date: Thu,  9 Apr 2026 00:14:28 +0800
+Message-Id: <20260408161428.155169-3-seanwascoding@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260408161428.155169-1-seanwascoding@gmail.com>
 References: <20260408161428.155169-1-seanwascoding@gmail.com>
@@ -107,7 +107,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-20762-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20763-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -124,96 +124,54 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2AA4E3BEBE5
+X-Rspamd-Queue-Id: 8FB6A3BEBEC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The cl_xprt pointer in struct rpc_clnt is marked as __rcu. Accessing
-it directly in nfs_compare_super_address() without RCU protection is
-unsafe and triggers Sparse warnings about dereferencing noderef
-expressions.
+The nfs_page_class tracepoint used a pointer for the req field. This
+caused Sparse to complain about dereferencing a pointer marked as
+__private within the trace ring buffer context.
 
-Fix this by wrapping the access with rcu_read_lock() and using
-rcu_dereference() to safely retrieve the transport pointer. This
-ensures the xprt remains valid during the comparison of network
-namespaces and addresses, preventing potential use-after-free during
-concurrent transport updates.
+Change the field type to unsigned long to store the address of the
+request without dereferencing it. Update TP_printk to use 0x%lx for
+consistent hexadecimal output, allowing for unique identification of
+requests across the trace log.
 
 Signed-off-by: Sean Chang <seanwascoding@gmail.com>
 ---
- fs/nfs/super.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ fs/nfs/nfstrace.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 7a318581f85b..071337f9ea37 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1166,43 +1166,55 @@ static int nfs_set_super(struct super_block *s, struct fs_context *fc)
- static int nfs_compare_super_address(struct nfs_server *server1,
- 				     struct nfs_server *server2)
- {
-+	struct rpc_xprt *xprt1, *xprt2;
- 	struct sockaddr *sap1, *sap2;
--	struct rpc_xprt *xprt1 = server1->client->cl_xprt;
--	struct rpc_xprt *xprt2 = server2->client->cl_xprt;
-+	int ret = 0;
-+
-+	rcu_read_lock();
-+
-+	xprt1 = rcu_dereference(server1->client->cl_xprt);
-+	xprt2 = rcu_dereference(server2->client->cl_xprt);
-+
-+	if (!xprt1 || !xprt2)
-+		goto out;
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index 9f9ce4a565ea..4150bbd99cfa 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -1496,7 +1496,7 @@ DECLARE_EVENT_CLASS(nfs_page_class,
+ 			__field(dev_t, dev)
+ 			__field(u32, fhandle)
+ 			__field(u64, fileid)
+-			__field(const struct nfs_page *__private, req)
++			__field(unsigned long, req)
+ 			__field(loff_t, offset)
+ 			__field(unsigned int, count)
+ 			__field(unsigned long, flags)
+@@ -1509,14 +1509,14 @@ DECLARE_EVENT_CLASS(nfs_page_class,
+ 			__entry->dev = inode->i_sb->s_dev;
+ 			__entry->fileid = nfsi->fileid;
+ 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
+-			__entry->req = req;
++			__entry->req = (unsigned long)req;
+ 			__entry->offset = req_offset(req);
+ 			__entry->count = req->wb_bytes;
+ 			__entry->flags = req->wb_flags;
+ 		),
  
- 	if (!net_eq(xprt1->xprt_net, xprt2->xprt_net))
--		return 0;
-+		goto out;
- 
- 	sap1 = (struct sockaddr *)&server1->nfs_client->cl_addr;
- 	sap2 = (struct sockaddr *)&server2->nfs_client->cl_addr;
- 
- 	if (sap1->sa_family != sap2->sa_family)
--		return 0;
-+		goto out;
- 
- 	switch (sap1->sa_family) {
- 	case AF_INET: {
- 		struct sockaddr_in *sin1 = (struct sockaddr_in *)sap1;
- 		struct sockaddr_in *sin2 = (struct sockaddr_in *)sap2;
- 		if (sin1->sin_addr.s_addr != sin2->sin_addr.s_addr)
--			return 0;
-+			goto out;
- 		if (sin1->sin_port != sin2->sin_port)
--			return 0;
-+			goto out;
- 		break;
- 	}
- 	case AF_INET6: {
- 		struct sockaddr_in6 *sin1 = (struct sockaddr_in6 *)sap1;
- 		struct sockaddr_in6 *sin2 = (struct sockaddr_in6 *)sap2;
- 		if (!ipv6_addr_equal(&sin1->sin6_addr, &sin2->sin6_addr))
--			return 0;
-+			goto out;
- 		if (sin1->sin6_port != sin2->sin6_port)
--			return 0;
-+			goto out;
- 		break;
- 	}
- 	default:
--		return 0;
-+		goto out;
- 	}
- 
--	return 1;
-+	ret = 1;
-+
-+out:
-+	rcu_read_unlock();
-+	return ret;
- }
- 
- static int nfs_compare_userns(const struct nfs_server *old,
+ 		TP_printk(
+-			"fileid=%02x:%02x:%llu fhandle=0x%08x req=%p offset=%lld count=%u flags=%s",
++			"fileid=%02x:%02x:%llu fhandle=0x%08x req=0x%lx offset=%lld count=%u flags=%s",
+ 			MAJOR(__entry->dev), MINOR(__entry->dev),
+ 			(unsigned long long)__entry->fileid, __entry->fhandle,
+ 			__entry->req, __entry->offset, __entry->count,
 -- 
 2.34.1
 
