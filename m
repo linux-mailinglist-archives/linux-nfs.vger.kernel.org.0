@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20734-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20735-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mOt4MO9L1ml8DQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20734-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 14:37:03 +0200
+	id 0MPrIMFM1ml8DQgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20735-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 14:40:33 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D72053BC38C
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 14:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CE7B3BC4A8
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 14:40:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1868630094CF
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 12:30:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F1F6D30FA854
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 12:30:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C44E3C6619;
-	Wed,  8 Apr 2026 12:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C9B23CB2F7;
+	Wed,  8 Apr 2026 12:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6lECJsc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDHT8w1+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318A93C73D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0D23CA4BD;
 	Wed,  8 Apr 2026 12:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775651413; cv=none; b=pJB3woBO1I7eW2NZnw33sRUP5+7kAs5XIwcrj+fZpxG5m6M7vpUBZa11PcjKhiJ/pijaHWlLsvk3jgx0Jty66beqMBVIer0Rsl/3jnlC9mLxfWBIaZpufWOJFVQCnH2xPt1s4mS2ghACXtXooe+THgREho5E0sXkPItnnCDXtt4=
+	t=1775651414; cv=none; b=kvWMAwxdQZcn+kkXEVIz4d8AJ/1CsbMsAO3E+CHA+AJa0iOLC5dyCs6NDVZaNh5BCgUE04FyOaoOifpjbNNXy4JsFo0d+cjeR8PWGpTaEB+1LfyzQv8DVl9RCfQN8CcdhB9KL2CTQJMzILHIPUVpgnt10QJBdvFTVE8cw20qLTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775651413; c=relaxed/simple;
-	bh=AftLV/+wJjVEI+i3XOqEN5cNQkDKxM+CvGQrz7ITAAo=;
+	s=arc-20240116; t=1775651414; c=relaxed/simple;
+	bh=Uhj/8f6FRa0X48xFSViYJFr18UqOly5fNpXgvimQfyQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nuMQUnxq7LefPmlvRKrNEROGur9mvw4+Gsim2Bvi8OaBKgKqe9Zl63n6yLWcvhwAVIXyptLoB8kRrPSsJv4kxsPLV2bpboHZzimWdf+QArlkN8W4MOjwkkxH4V3s38FkrwtFJ8v61kocBmBDXvHGkMq4qBgkMn260d07YRIC/QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6lECJsc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C713C19421;
-	Wed,  8 Apr 2026 12:30:12 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=p+Iclqt24kGzc1FbIAZgYoqnPE4vJYcxsMqgiMkuJBMTEHS5FSsC9DELn8YtUopDNZT7pSyyXeU1fJB5BSi6TFAfjq9UWQyMPnZgPz4eeW9lG9hMHohIe7SkmEn4u6/jWOKOd9VMEXJvKeIhvJaS/Q1UtSvHGPij5ykbwTRFQQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDHT8w1+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34959C2BCB1;
+	Wed,  8 Apr 2026 12:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1775651413;
-	bh=AftLV/+wJjVEI+i3XOqEN5cNQkDKxM+CvGQrz7ITAAo=;
+	bh=Uhj/8f6FRa0X48xFSViYJFr18UqOly5fNpXgvimQfyQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=R6lECJscGiR7LtNpBVIfIsvyxQIQlK1D10geWEO5XgC4Lllv39bJexRHGDlvsrePx
-	 w9KjlnfUdiv7HPz+j/4CuGOfr7PhEGBIB8NgU1jM7z9TP4cyFplZ/YngXso2ZR8flz
-	 vBJY8mRQ6M2BRInq2ciHbz+T/JCC+ttfbPGF+1hsH5iIfcQ6ezX1mUzl9Ngmg4c8x+
-	 kHcqJFNJCV+zbYvVF8PgXL3RNfE1BzFLiZ28eOEh/vmrm6D4vhehaNhVQzBbDObXr9
-	 TDpb/h89rpdnVnB6BliyXf1dVT+1h1FlRht/hNrlQDzZT/ZVzTQDA1lpv2W50lrNOF
-	 v7HLDBVILWvuQ==
+	b=GDHT8w1++cgYrjPGY9LxLD33wbnb1USFs+7YI9ucl2lyFZKbNczNC9K7PPlZBSj77
+	 knVz6UL1/A6yzoQ+D7FhoF7KHxu1GzOBf8GIEY0b8gGEsOlA/7j4/BbB9rNDdGdAbR
+	 tVGuFVxUwwrOHfVZz/Elw9AmBqeU6rUsALKxQZDEyAj2FLug4jA08XnwlRVWnK9oQb
+	 87f8H4zeBEskbXFgCL6Jd294kN+LftRCxDyKDIC6CClGhdbUMLr4i1X0/I/wUWD6oU
+	 CrrC62SSziumNk+1UbPNQ7FTGIaR6hdbD78RGoEHumM+0Y1ubfMBPj6ZFbCs9UrJqg
+	 9Dpf0MRwTOoUw==
 From: Chuck Lever <cel@kernel.org>
-Date: Wed, 08 Apr 2026 08:29:55 -0400
-Subject: [PATCH v8 5/9] NFSD: Add NFSD_CMD_UNLOCK_FILESYSTEM netlink
- command
+Date: Wed, 08 Apr 2026 08:29:56 -0400
+Subject: [PATCH v8 6/9] NFSD: Replace idr_for_each_entry_ul in
+ find_one_sb_stid()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260408-umount-kills-nfsv4-state-v8-5-6e02a1d03d60@oracle.com>
+Message-Id: <20260408-umount-kills-nfsv4-state-v8-6-6e02a1d03d60@oracle.com>
 References: <20260408-umount-kills-nfsv4-state-v8-0-6e02a1d03d60@oracle.com>
 In-Reply-To: <20260408-umount-kills-nfsv4-state-v8-0-6e02a1d03d60@oracle.com>
 To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
@@ -65,21 +65,21 @@ To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
 Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5689;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1172;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=PADaqiydDsD5GxnN6oVUZUmtedhYz6fcca9CKFXLQ9Q=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp1kpP0alVbG6bmewgm07i1twGuR9XRqqZfmlx0
- BZwM7P2s7GJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCadZKTwAKCRAzarMzb2Z/
- l0eOD/0bxyBiEc30jGBiJBEoQrPOP25Gyi7TUfLAvpEkdt7XiVlGF+mWy3ES7Eb6dnsPjwljy5R
- kJA+4YWEl1u1kdbwI58EgWtY1jxgRp6kFdw5WpKVexhkZCZlNwcZbPCemBrktoXaOr3FrOvRY17
- shvoqrKGvQ48j5rkDcxpRv6z+D+PeT/w39K9vnyjgwMe2k1Q27UBBsgSs3sV077P/u28EFAgM0G
- 5VGV3Bh/Tc84XBJBggVMRDZstFRlIks5DTHwHfRVr0HM77AaMzDCu/MOVAdvKq5hrv84r9kH5DV
- y07Q+IJi3OV0nAoPFAPoOp6JJx2xNbU/AgPj57+ushg2KM87W8I9M6QiPsjqZ1gCtroiMZtqI6U
- lXZr7Apn6zSxOZuPQAsqBQ7YtWrzwQUfl3YKZ/rskTvoSaFoohTguY5vnaODzqTIWD8CVy2S7NS
- bE6GHiXwy52KRLT0U7GYwqSaGT8oJ6cs7ITYYAWWeYJDJ2YeuFZySikaJ5hQaQpRDAiov6pe63A
- 0ZtfzGQ1wILiuWYFRfV23JRBD1hvvGGwK8cvZ3I0lJ0rA/ux56/b8iosDskJYKf0oqYZ134ji+G
- BvjWcV06NJgr5pvO97WpkCX7Q7QYpGER4yi319FWpk3zqiOt4CqCAuTM+74ZXTO/MzFMt//07eV
- FOi6q4PbjOqACng==
+ bh=gFq6w2SMcg/HDr83bDGzOlzwepA7RPvucQexOAGIZbA=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp1kpPitqleMEpJnz48VTLPp0DlKKfH4/uFQESM
+ DprGtTHdDeJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCadZKTwAKCRAzarMzb2Z/
+ l7NmD/91n3eq7ybNDKQyZMIrIkVIseb8QhJLHln90ik0RkQL5MGTKorG07DQaprxDEqqSVjcRHx
+ e2chZdAL0Vk6XVzmpMyPqmxAEgitjoHk4fthdnRuMgFUg2eRZ1F4MaKb1HceXS/Cht4CYr8OS0n
+ vKlHqAWFwDO8iX9og5i4c7hUXCggjfFrtxqEkzSxNPMW6fzf/YYEi3eLrV2n5Wa2/NG1xVAHPdx
+ VP0X2cVfygkEtRwRtlNRznxK5sHS5nVEc8tp18ryBwX6cS9BhzWvLw+rOeBzfafHZURkobZZeBG
+ odJm0WbILs2H1L01iHMA44IqHitFOalCvHYXNj6+4eWceqsTiSrVk4r/zOkv5UpS7IzmmuXz4BH
+ 2XCF/kUe8u8WANGkO5ro3rNiAwAUl4h1+EjgxJwiVkHx48lBCxQCg09Auee6NRk5TDkEBWXwgPz
+ /FbwsAUC8IqYiThlxY/FE1B2fr7O273/3GW9jimXqVFED5tam4fTuVS+MUnXxdxcWy+xz9w7ajw
+ +Y1wlx7r16ZOeIOunxM7rc3FXkYuAuksANQAsPXhwjbP2mgc+AfPg8ZUjZXZHqyDhU4h22cLlCn
+ eU2xHGkPH0Vp7n72rGoaLZkKdT1GGCO7rLyuofbubWQFBgdfLMlq7JBGh7Ajh+nCyFMJgGyeQjz
+ ojWuH8ICYyGpFXA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -90,7 +90,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20734-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20735-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -106,185 +106,51 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D72053BC38C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,oracle.com:mid]
+X-Rspamd-Queue-Id: 3CE7B3BC4A8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add NFSD_CMD_UNLOCK_FILESYSTEM as a dedicated netlink command for
-revoking NFS state under a filesystem path, providing a netlink
-equivalent of /proc/fs/nfsd/unlock_fs.
+Replace idr_for_each_entry_ul() with a while loop over
+idr_get_next_ul() for consistency with find_one_export_stid(),
+added in a subsequent commit.
 
-The command requires a "path" string attribute containing the
-filesystem path whose state should be released. The handler
-resolves the path to its superblock, then cancels async copies,
-releases NLM locks, and revokes NFSv4 state on that superblock.
+No change in behavior.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- Documentation/netlink/specs/nfsd.yaml | 16 ++++++++++++++
- fs/nfsd/netlink.c                     | 12 +++++++++++
- fs/nfsd/netlink.h                     |  1 +
- fs/nfsd/nfsctl.c                      | 40 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/nfsd_netlink.h     |  8 +++++++
- 5 files changed, 77 insertions(+)
+ fs/nfsd/nfs4state.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
-index 2c4883cfd50a..f3b21d4ba660 100644
---- a/Documentation/netlink/specs/nfsd.yaml
-+++ b/Documentation/netlink/specs/nfsd.yaml
-@@ -310,6 +310,13 @@ attribute-sets:
-         doc: struct sockaddr_in or struct sockaddr_in6.
-         checks:
-           min-len: 16
-+  -
-+    name: unlock-filesystem
-+    attributes:
-+      -
-+        name: path
-+        type: string
-+        doc: Filesystem path whose state should be released.
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index b095b1beaac0..1478ff741b79 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1760,17 +1760,19 @@ static struct nfs4_stid *find_one_sb_stid(struct nfs4_client *clp,
+ 					  struct super_block *sb,
+ 					  unsigned int sc_types)
+ {
+-	unsigned long id, tmp;
++	unsigned long id = 0;
+ 	struct nfs4_stid *stid;
  
- operations:
-   list:
-@@ -473,6 +480,15 @@ operations:
-         request:
-           attributes:
-             - address
-+    -
-+      name: unlock-filesystem
-+      doc: revoke NFS state under a filesystem path
-+      attribute-set: unlock-filesystem
-+      flags: [admin-perm]
-+      do:
-+        request:
-+          attributes:
-+            - path
- 
- mcast-groups:
-   list:
-diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-index 96d326095768..dae7ad560bd8 100644
---- a/fs/nfsd/netlink.c
-+++ b/fs/nfsd/netlink.c
-@@ -118,6 +118,11 @@ static const struct nla_policy nfsd_unlock_ip_nl_policy[NFSD_A_UNLOCK_IP_ADDRESS
- 	[NFSD_A_UNLOCK_IP_ADDRESS] = NLA_POLICY_MIN_LEN(16),
- };
- 
-+/* NFSD_CMD_UNLOCK_FILESYSTEM - do */
-+static const struct nla_policy nfsd_unlock_filesystem_nl_policy[NFSD_A_UNLOCK_FILESYSTEM_PATH + 1] = {
-+	[NFSD_A_UNLOCK_FILESYSTEM_PATH] = { .type = NLA_NUL_STRING, },
-+};
-+
- /* Ops table for nfsd */
- static const struct genl_split_ops nfsd_nl_ops[] = {
- 	{
-@@ -215,6 +220,13 @@ static const struct genl_split_ops nfsd_nl_ops[] = {
- 		.maxattr	= NFSD_A_UNLOCK_IP_ADDRESS,
- 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
- 	},
-+	{
-+		.cmd		= NFSD_CMD_UNLOCK_FILESYSTEM,
-+		.doit		= nfsd_nl_unlock_filesystem_doit,
-+		.policy		= nfsd_unlock_filesystem_nl_policy,
-+		.maxattr	= NFSD_A_UNLOCK_FILESYSTEM_PATH,
-+		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-+	},
- };
- 
- static const struct genl_multicast_group nfsd_nl_mcgrps[] = {
-diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-index 88edbbc68453..29bd5468d401 100644
---- a/fs/nfsd/netlink.h
-+++ b/fs/nfsd/netlink.h
-@@ -40,6 +40,7 @@ int nfsd_nl_expkey_get_reqs_dumpit(struct sk_buff *skb,
- int nfsd_nl_expkey_set_reqs_doit(struct sk_buff *skb, struct genl_info *info);
- int nfsd_nl_cache_flush_doit(struct sk_buff *skb, struct genl_info *info);
- int nfsd_nl_unlock_ip_doit(struct sk_buff *skb, struct genl_info *info);
-+int nfsd_nl_unlock_filesystem_doit(struct sk_buff *skb, struct genl_info *info);
- 
- enum {
- 	NFSD_NLGRP_NONE,
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index c5ce4af28287..c35774786374 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2317,6 +2317,46 @@ int nfsd_nl_unlock_ip_doit(struct sk_buff *skb, struct genl_info *info)
- 	return nlmsvc_unlock_all_by_ip(sap);
+ 	spin_lock(&clp->cl_lock);
+-	idr_for_each_entry_ul(&clp->cl_stateids, stid, tmp, id)
++	while ((stid = idr_get_next_ul(&clp->cl_stateids, &id)) != NULL) {
+ 		if ((stid->sc_type & sc_types) &&
+ 		    stid->sc_status == 0 &&
+ 		    stid->sc_file->fi_inode->i_sb == sb) {
+ 			refcount_inc(&stid->sc_count);
+ 			break;
+ 		}
++		id++;
++	}
+ 	spin_unlock(&clp->cl_lock);
+ 	return stid;
  }
- 
-+/**
-+ * nfsd_nl_unlock_filesystem_doit - revoke NFS state under a filesystem path
-+ * @skb: reply buffer
-+ * @info: netlink metadata and command arguments
-+ *
-+ * Return: 0 on success or a negative errno.
-+ */
-+int nfsd_nl_unlock_filesystem_doit(struct sk_buff *skb,
-+				   struct genl_info *info)
-+{
-+	struct net *net = genl_info_net(info);
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct path path;
-+	int error;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_UNLOCK_FILESYSTEM_PATH))
-+		return -EINVAL;
-+
-+	trace_nfsd_ctl_unlock_fs(net,
-+			nla_data(info->attrs[NFSD_A_UNLOCK_FILESYSTEM_PATH]));
-+	error = kern_path(
-+			nla_data(info->attrs[NFSD_A_UNLOCK_FILESYSTEM_PATH]),
-+			0, &path);
-+	if (error)
-+		return error;
-+
-+	nfsd4_cancel_copy_by_sb(net, path.dentry->d_sb);
-+	error = nlmsvc_unlock_all_by_sb(path.dentry->d_sb);
-+
-+	mutex_lock(&nfsd_mutex);
-+	if (nn->nfsd_serv)
-+		nfsd4_revoke_states(nn, path.dentry->d_sb);
-+	else
-+		error = -EINVAL;
-+	mutex_unlock(&nfsd_mutex);
-+
-+	path_put(&path);
-+	return error;
-+}
-+
- /**
-  * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
-  * @net: a freshly-created network namespace
-diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
-index 90ef1e686769..d01096c06d72 100644
---- a/include/uapi/linux/nfsd_netlink.h
-+++ b/include/uapi/linux/nfsd_netlink.h
-@@ -211,6 +211,13 @@ enum {
- 	NFSD_A_UNLOCK_IP_MAX = (__NFSD_A_UNLOCK_IP_MAX - 1)
- };
- 
-+enum {
-+	NFSD_A_UNLOCK_FILESYSTEM_PATH = 1,
-+
-+	__NFSD_A_UNLOCK_FILESYSTEM_MAX,
-+	NFSD_A_UNLOCK_FILESYSTEM_MAX = (__NFSD_A_UNLOCK_FILESYSTEM_MAX - 1)
-+};
-+
- enum {
- 	NFSD_CMD_RPC_STATUS_GET = 1,
- 	NFSD_CMD_THREADS_SET,
-@@ -228,6 +235,7 @@ enum {
- 	NFSD_CMD_EXPKEY_SET_REQS,
- 	NFSD_CMD_CACHE_FLUSH,
- 	NFSD_CMD_UNLOCK_IP,
-+	NFSD_CMD_UNLOCK_FILESYSTEM,
- 
- 	__NFSD_CMD_MAX,
- 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
 
 -- 
 2.53.0
