@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-20779-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20780-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8IRYMsWr1mmZHAgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20779-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:25:57 +0200
+	id 8Me1Moms1mmZHAgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20780-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:29:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE1C23C2F68
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:25:56 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEC8E3C30FD
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Apr 2026 21:29:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E265030046B9
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 19:25:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id BD8273005157
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Apr 2026 19:29:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 112183DA7D8;
-	Wed,  8 Apr 2026 19:25:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F226E3DA7D7;
+	Wed,  8 Apr 2026 19:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skWG/zV0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTzymGpX"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5CA3DA5CF;
-	Wed,  8 Apr 2026 19:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBB4347BA9;
+	Wed,  8 Apr 2026 19:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775676349; cv=none; b=Ybmpsc0mqnQus0BrtcpDKtPNFWzdiX+J5BWHO7tqvrLHcIj7+1sddCL3x4ELek4Df/b+kmoxrXvnKoBN82lLB0nr6Shatv0UIDzK//K97RmqEx5a45YE7NXTHrtCovU1asHaS1L2jszMD+ffcX/IevgBKS0NLSt1vWxfW5QarW0=
+	t=1775676545; cv=none; b=tQgxHHS4qgVqUthGfg1Q5yHONNMyPNmEXEzg2ANT+YU3Z+kr6GSdIgqfhSwXw6XJdQA8ELdhp209xBiypEOR0YWmEAR+xKE+LnVQ2N+aPsvYTzxw4QrkoQuFQNY/Jgu2yKJ6z0/jOOe8yfgDu7tusHuDBq2+nAf9+SEAvKb4GbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775676349; c=relaxed/simple;
-	bh=0E2JGdpL4ocEVJBBzwzeMgb7UV+DzKkON/iz58W+2Tg=;
+	s=arc-20240116; t=1775676545; c=relaxed/simple;
+	bh=32yYU9DVuQ3dk7XqVeclACkldSyW2YDDoFl3km5WegU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b8uh6JlIyfQVQ3m52tcoKckw635BNDGJXRcVAovIzIGp5fhL8h+IIwmSoJfc1xxgUg0ujOExjUI7x5GjOlji3UTgbT7qQPzUoHogHetaxXqikdnyMPAKOx/7jRxLtqbn98CKWuqQOmNksim0sCgi5guYWhfnyuAnA+aTUkS8YwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skWG/zV0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6ACC19421;
-	Wed,  8 Apr 2026 19:25:47 +0000 (UTC)
+	 Content-Type:MIME-Version; b=XQfLHAmioAgX2CH7QU3yVBGwcoffREZkRn/r/v8hmFUfRdltvaNrMqAtYe+iuHFmv9PZoeBIc8uiAVY63U6n2bZFKQ27RQtrbYUamQTDlftDGi2wVw80eQqLp56JdehbScBIjMaHBN7vWooL9IUud1azV+WX3rCphnYEpISLQuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTzymGpX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6283EC19425;
+	Wed,  8 Apr 2026 19:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775676349;
-	bh=0E2JGdpL4ocEVJBBzwzeMgb7UV+DzKkON/iz58W+2Tg=;
+	s=k20201202; t=1775676545;
+	bh=32yYU9DVuQ3dk7XqVeclACkldSyW2YDDoFl3km5WegU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=skWG/zV0lPvflp+4fDnHvXF7qWjP2s/40kD6W6JjLQyblHVs4v7ZY1EqgywQddabM
-	 cmavsUoWXerXGw+pGsdAYcc+224wyDARG/XJ8QtlmFfyR6ym5+F/QY0/zvC2PRplDZ
-	 h0Vyp1eqOuwGl7qxsGuDhZhOkqu2u4sJoM8s6u9rvK5PDNhUWma8foz17jzb7X38IP
-	 zyZQt8kXxFbv/cCvLeBXWmT3nrDpAdaLtMwp33ZsWm2dIu000yMFatZ1oBdiYUFTzY
-	 97fIfa8QBPnOvzIACukXxhC0ou1cyBbME7ULpfl/m1BazC00RBZdOe734Yxnpm12mq
-	 NYMxMwHFTCPag==
-Message-ID: <0643331dc8128ce55543cebcacc6c4ddd0c3de04.camel@kernel.org>
-Subject: Re: [PATCH 01/24] filelock: add support for ignoring deleg breaks
- for dir change events
+	b=KTzymGpXzJlbxmxfGRITVigxYVYLVhoYu7Uz59UYQ73K13xSxEKco9s+2OEy4tVTi
+	 USGswV9+y+KKZfpaKy90IPvLmMXVx8o5+W8KEfhi5M8dWWF29I707HpKpFn73UBbT8
+	 +xRLDKOExqbwAKnmvm2QcFiPLbtA9UVDqdQ6fweF1orwn4k+f5wj1+EdFCC5w7Gb++
+	 UZORBI3nL3JjaBRn/X7R2CqCtOPXCAAySQZ3l/gaL1YG5bt9uh4TaguacF60KZvLgK
+	 dS6R2G0Zlw2W5fsB7dUejdhyZwB8VbGfqR+7GfLXUMI+4pXQfptEBWIyyz6I8bkT9Q
+	 8lSLpShzYTu0A==
+Message-ID: <fe50d913663320bfe664488ef06ef6197de9e30f.camel@kernel.org>
+Subject: Re: [PATCH 08/24] nfsd: update the fsnotify mark when setting or
+ removing a dir delegation
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
  Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck
@@ -61,11 +61,11 @@ To: Chuck Lever <cel@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
 Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Wed, 08 Apr 2026 15:25:45 -0400
-In-Reply-To: <bb4fc3da-765d-4284-9282-dd04d286f671@app.fastmail.com>
+Date: Wed, 08 Apr 2026 15:29:01 -0400
+In-Reply-To: <412e143e-1e99-42a6-a959-654bde4e7038@app.fastmail.com>
 References: <20260407-dir-deleg-v1-0-aaf68c478abd@kernel.org>
-	 <20260407-dir-deleg-v1-1-aaf68c478abd@kernel.org>
-	 <bb4fc3da-765d-4284-9282-dd04d286f671@app.fastmail.com>
+	 <20260407-dir-deleg-v1-8-aaf68c478abd@kernel.org>
+	 <412e143e-1e99-42a6-a959-654bde4e7038@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -154,12 +154,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20779-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20780-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -175,69 +175,52 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CE1C23C2F68
+X-Rspamd-Queue-Id: CEC8E3C30FD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 2026-04-08 at 14:16 -0400, Chuck Lever wrote:
+On Wed, 2026-04-08 at 14:24 -0400, Chuck Lever wrote:
 > On Tue, Apr 7, 2026, at 9:21 AM, Jeff Layton wrote:
-> > If a NFS client requests a directory delegation with a notification
-> > bitmask covering directory change events, the server shouldn't recall
-> > the delegation. Instead the client will be notified of the change after
-> > the fact.
-> >=20
-> > Add support for ignoring lease breaks on directory changes. Add a new
-> > flags parameter to try_break_deleg() and teach __break_lease how to
-> > ignore certain types of delegation break events.
+> > Add a new helper function that will update the mask on the nfsd_file's
+> > fsnotify_mark to be a union of all current directory delegations on an
+> > inode. Call that when directory delegations are added or removed.
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
 >=20
-> > diff --git a/fs/locks.c b/fs/locks.c
-> > index 8e44b1f6c15a..dafa0752fdce 100644
-> > --- a/fs/locks.c
-> > +++ b/fs/locks.c
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index c8fb84c38637..9a4cff08c67d 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
 >=20
-> > @@ -1670,7 +1709,7 @@ int __break_lease(struct inode *inode, unsigned i=
-nt flags)
-> >  			locks_delete_lock_ctx(&fl->c, &dispose);
-> >  	}
+> > @@ -1266,6 +1297,7 @@ static void nfs4_unlock_deleg_lease(struct=20
+> > nfs4_delegation *dp)
+> >  	WARN_ON_ONCE(!fp->fi_delegees);
 > >=20
-> > -	if (list_empty(&ctx->flc_lease))
-> > +	if (!visible_leases_remaining(inode, flags))
-> >  		goto out;
-> >=20
-> >  	if (flags & LEASE_BREAK_NONBLOCK) {
+> >  	nfsd4_finalize_deleg_timestamps(dp, nf->nf_file);
+> > +	nfsd_fsnotify_recalc_mask(nf);
+> >  	kernel_setlease(nf->nf_file, F_UNLCK, NULL, (void **)&dp);
+> >  	put_deleg_file(fp);
+> >  }
 >=20
-> After breaking visible leases, the restart: label calls any_leases_confli=
-ct()
-> which does not filter ignored dir-delegation leases. When only ignored le=
-ases
-> remain, any_leases_conflict returns true, but visible_leases_remaining al=
-so
-> returned true (triggering the wait). The code picks the first lease (poss=
-ibly
-> ignored), computes break_time =3D 1 jiffy, blocks, then loops.           =
-                                         =20
+> The grant path in nfsd_get_dir_deleg() uses a different ordering
+> (setlease first, recalc_mask after).
 >=20
-> For example, suppose you have two directory delegations on a directory, o=
-ne
-> with FL_IGN_DIR_DELETE and one without. After the non-ignored one is brok=
-en
-> and removed, the ignored one keeps any_leases_conflict returning true. Th=
-e
-> loop spins at 1-jiffy intervals until the ignored delegation is released.=
- =20
+> Here, since the delegation being removed is still in flc_lease,
+> inode_lease_ignore_mask() includes its ignore flags. The mask is
+> computed as if the delegation is still present.
 >=20
-> Should the restart: block skip ignored leases?
+> The result is that stale FS_CREATE/FS_DELETE/FS_RENAME bits remain
+> in the fsnotify mark. It might be harmless in practice since the
+> handler finds no leases and returns early, but it creates
+> unnecessary work.
+>=20
+> Should nfs4_unlock_deleg_lease call nfsd_fsnotify_recalc_mask()
+> after kernel_setlease(F_UNLCK)?
 >=20
 
-Yep. The right fix is to switch the any_leases_conflict() call to
-visible_leases_remaining(). I'll code that up and test it.
-
-Thanks for the review!
+Good catch. Will fix.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
