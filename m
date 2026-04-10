@@ -1,92 +1,93 @@
-Return-Path: <linux-nfs+bounces-20807-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20808-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sKIiIfUK2WnnlQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20807-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 16:36:37 +0200
+	id gMy4DrQS2Wl+lggAu9opvQ
+	(envelope-from <linux-nfs+bounces-20808-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 17:09:40 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BD673D8B79
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 16:36:36 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67E373D8FBC
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 17:09:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8A089308EBAF
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 14:30:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9F5C53019057
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 15:09:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BAD3D47A0;
-	Fri, 10 Apr 2026 14:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8FED3D9023;
+	Fri, 10 Apr 2026 15:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="REGQiAUN"
+	dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="mv8FUelo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECBB30FC36
-	for <linux-nfs@vger.kernel.org>; Fri, 10 Apr 2026 14:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892A51CF8B
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Apr 2026 15:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775831444; cv=none; b=WCQiu2aoM25+H0GLyGm5GvMwP/rqfQc3bOpT0/WnwXXMGWrsKsClxn6PDCfmt5bYnnGolg0IIsOosZG/j3NNGwSctkHxa3PvnHpe25kRhAFI4M/1t2o8/LmDlzV6hwvUH51fQYkXbECfeOK3ZXBbaE8jDUrxEpdYPXQUalQPgqw=
+	t=1775833774; cv=none; b=kGk7EyJu0pYaR+2d8C2ME9IaYW2fBD4P0QjVWWK7rQa018+EEZ6F+uLdnYC4CA30qUULUcTo1PhSepJeF9cOTPKiE2IFY+d9NUSz9WjduqvHUoClWwSrCdoR0nDxt/XEIDixLoLJCiGsha0XWAQ/xv1t45Ttk0mKhfVSyBfp92I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775831444; c=relaxed/simple;
-	bh=TQeeegfY0L21N3lRHnbJ5Dm4HiBHSorSFFIp2y8ypl4=;
+	s=arc-20240116; t=1775833774; c=relaxed/simple;
+	bh=MkTiXa4ZLMwa46vHWDYneQN8G9FUNN7jl3S9y9UsRM0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qy3KjYAtUuOP1ENAgMVbR7iTGFXpyVsdTpqDKWuXLeMD9zzpwrtZikpEMS2L0b0ApDpdbZaLvYrPcR0fbLR3AdSBM7Zg5DtMWMUZ18ZAA2waC9dWII0GwQihmR+TxnBqVHx0AK16mbarko0/OJU98onEgFqOgGJLp1pDp/LW2n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=REGQiAUN; arc=none smtp.client-ip=209.85.210.52
+	 MIME-Version:Content-Type; b=mDmuEKFixa3frwix8NsY/STwHAjs1DyV1O5Rc0xqxbTEiRn3S92j7+LPJ9v9bcRujmmdBuBsuN4f70UAJbvkT0qHx2WtzKktL/rHUAx+fSz807UAMUESYlssmycmzdVCIHYKQjB6YqiROUKuCNzyXj51ubeihUob49A3DIXiWGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=mv8FUelo; arc=none smtp.client-ip=209.85.210.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7d4c12ff3d5so1859095a34.2
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Apr 2026 07:30:41 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7d1872504cbso1940703a34.0
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Apr 2026 08:09:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1775831440; x=1776436240; darn=vger.kernel.org;
+        d=hammerspace.com; s=google; t=1775833771; x=1776438571; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mDf17iELweSQBEB0PxUVBr9/blquXg+klPEZm7g/By4=;
-        b=REGQiAUNmCnvfYER6ocZ3QFDECMvr9DYAf9IAZHez4pCKVqKV/fHPxJ3CYfUZAVYaB
-         z2YsdFk4byWS/ytmrKfihrk7wbl6TUkq7cCwLz/8ewvajN+R+GbYBSjOWsRm82iw2FZc
-         AkDXArQ4yKvW3VbdTYP5o6hZJeiiJEfir1ZEkAoSP/rS5grn33ccwpaISHS6RYmGMowH
-         O2LGH+804giKjuwmavH+hK01ntIGfXjpB165YTE7ucRqYc1ax0v6pIIk8hMaGLpQnB/E
-         dNw2hw6kKTsj5hjNuE1VlsqPxoMskUiDxe6+WO5N20SgA2Sg/o4lpl1Wsqdgfz9Mgi1g
-         Io6g==
+        bh=5n0ZBmxoxfXnsx2VGqrnP+0O10rmsKiHDOB93FnsPoM=;
+        b=mv8FUelod/SmZsheQsVJgLMv6numkez5+MwJ5VPLxTfR7Z2oEs7QhWH+7TPqHp5wQc
+         uYQm0TPprI4V9YeF4htQnmCEK3GNi04Lmsr3KGc+LehBb0nwmvshGuyzzA4Fv95p9wD7
+         2eGDxi4OowPSVWHhssHLNNYPasnDOporEaNW72cxgIXPrxnvzSeU16dEWHjoD1GMMyT/
+         eI6WgfbBQAs4qWbnrO6XRb/a3w070bqjdHQ3E3HQm3svRrA58TxaihV0D/gRVZGR7m06
+         cI+YI+OIajJkUGyttcA5O90752cvzR529MvqL0pp3HhkN6lKK6o7kN8QLsSOhIehggx/
+         I7MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775831440; x=1776436240;
+        d=1e100.net; s=20251104; t=1775833771; x=1776438571;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mDf17iELweSQBEB0PxUVBr9/blquXg+klPEZm7g/By4=;
-        b=Qhk5zt7zzOx+z8wv65QcdZxTfFtUDhCRh4yG0CptWir+5FcQF1pAfNXIhFoXNvtD4g
-         Myi700q+wFOffFl8K6GtyR/NOu4w59xV8mvfMjM2HdnbRKIvSMXDzWcvWRVUHW88e4he
-         /37VfgnJc9TE6cIPUnnjlOZGKlg6Ne/vwpUC1WLZu4GW/J7XLv9BABJbwHJ7+irbeV7x
-         NOofV8/lkl72vKw2UYE8SpdlREhxLxcIekGLT1QW/PEhDXpLtwSeZrKKBnLtq1qs4rGo
-         dVzR4nD7JkhMTsuxx2zBVz0J+vXTi3WoR1YDWxlihh4zaRtHx76lnc3lunhvSDWi7+QZ
-         a/tA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAvTycQaNrbcEHhtl2gtRvYj4uMSR5i0opOGC20+4hMeaOy6AWr3TonuQjkDZL/tPNZ8/D5KLp7ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkjTWYwauYsBNn7buwBYOT9XvYLrNGuwJFFvqa2uKD1/HpZ6fM
-	Y6Mer85Nj6Ldos2qmjJJmBfXYCzof4NCBbtwiNd4usRtcUWJvNJutwYtU3eY7EKG0OI=
-X-Gm-Gg: AeBDietmOAZttQBw7Cxh2Wf/RBorIqid620Pu0D2aK7HZgP5XC7+j3MwLl0mHxbCnvm
-	hS2PWd0QyGSuczVQFJJNTyGDTKY1wcx5czONLgG1arvXcVD+42zrfwmBAv5QrWebQPzCbxO3aLh
-	BWTlxkqS7aTMpwhzEP6/6CcJATlD4KWz4bnpDFS+yRyJrIiNiVT+TA624B7DgV+cz/X1qDtSwTS
-	fOxu8WrKhcto9nbUrAgzDjsvWOm+luh3VnKezaIwGqD6lngpXhAKn0ZQJvJhR5eWQSoKVxubR/f
-	4q+Ja4Lvi1W9qWd3F3FgPYboK0MPArWNjzJqJKPM/pCNIjhjtNS/94Mv+6Kew6YVpd6Pb1L9ud1
-	7lZu8/2QO0xQR1ufEnk16ZxPSmJFjNJNcsKcmbuI/j+kR7zQN9+ABUosDO7ZtmsGKoEBOyU/6mg
-	auZpEGRMKMM3t91QDeXSTOo8jsze23RTcLrsy2SzTR/As=
-X-Received: by 2002:a05:6820:750d:b0:67c:27a7:8c4b with SMTP id 006d021491bc7-68be8bde8f8mr1122751eaf.54.1775831440290;
-        Fri, 10 Apr 2026 07:30:40 -0700 (PDT)
+        bh=5n0ZBmxoxfXnsx2VGqrnP+0O10rmsKiHDOB93FnsPoM=;
+        b=HrMOnU6F7nL2xP3bPN/zHevROwJo8li7KvxgFkyEbMRImR8v20N4LVLqebJD0kP9in
+         HjATd+GLz0X1fhWqFGXELO6M1QERpqUyi/+ioXJ8ry6e7NG3OQQ9OzGnu1VPYN+Vl0dp
+         l3HkrWI+povdrpxW2KD7Jz5ctq2VYyDOQkcfS+/0SlUdMLxFlE514xnqYnq9hW0xPdqf
+         ixRrcvvjScy7N+ONjhJv6AYoTF1BtbV/qUeJqokLybCLpgX5l7/ZEu7hkr0Kd6x/p2kA
+         zDkTTHvbE6/lcwxiv5X1Brr7pXiUx+W8ffFXg8X5mrmIFZUAA1PCBr00uyxkvRjRtEDp
+         qbPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPQ0T1ctipddRAaFjiYnPI0Ek9v8oUCfU7sAvEJAcFufUX4jfa4j6vvYMb/aWqvQyt1nG6HelkalA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsLVmWz2sc9HNI4fkmOfgF9R3Rcu1l30xfaUwUaSbO4Vt+L/MP
+	VvF6SakpH38OH6XeDbM/cTfdaGmWat3RkJ30tkBF/0tUQG5lNKE7tBMWeauXXK3UkVo=
+X-Gm-Gg: AeBDievmCpeS8zJB4SsfidvtX1SlLjVJCsO59EZ3SnsD12EvxzSZHDF1EeR+xJeOnNe
+	/YMLeCm6MnE09MHNJ4UtO1IN4CYloV5ZSE2esOCVKqy6wzTJskbbKIahrgEagwJ1jMfu1cwG0bF
+	BaSm5fyJnGykhrK3OmTZY30ATZWFMw32GDQGGLwrDJlpffmWlz+0Ir42Vpu7mg7yU9iE8PO/vXf
+	PbWJv5OvYewarIXamsuv5lyZnErtq3bGq88OyNmbSFLTbGsAncxXSWBpXctqPYjNTwhHLX4/m4M
+	Q/y3NIeGFEEvHnx7mfgmTjvWoHaZFSy/MLH+NL7noJN8K18cvi1SFi1ADmLToILtvABfgDYPOKH
+	dk5PS7fBAj8r5l3G/yqi6bXTdUeeV4VMiBENOZxGp/h7+wxG/BbAg9P6iNKScYmvAW/sj7m1O2a
+	YNfft9aBFbRz5J9VejhlEyM9dIH8u7m4jUw+OtoKWbv8Q=
+X-Received: by 2002:a05:6830:7207:b0:7dc:807:d1f3 with SMTP id 46e09a7af769-7dc1762dacdmr3033904a34.7.1775833771209;
+        Fri, 10 Apr 2026 08:09:31 -0700 (PDT)
 Received: from [192.168.254.51] ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-68bcacc9925sm1525379eaf.9.2026.04.10.07.30.39
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7dc2d18a063sm1067552a34.1.2026.04.10.08.09.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 07:30:39 -0700 (PDT)
+        Fri, 10 Apr 2026 08:09:30 -0700 (PDT)
 From: Benjamin Coddington <ben.coddington@hammerspace.com>
 X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Ben Roberts <ben.roberts@gsacapital.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pNFS: deadlock in pnfs_send_layoutreturn
-Date: Fri, 10 Apr 2026 10:30:38 -0400
+To: Sean Chang <seanwascoding@gmail.com>
+Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] NFS: fix RCU safety in nfs_compare_super_address
+Date: Fri, 10 Apr 2026 11:09:29 -0400
 X-Mailer: MailMate (2.0r6272)
-Message-ID: <B8730746-9646-4416-8417-D73B24FAB79A@hammerspace.com>
-In-Reply-To: <20260408122534.537816-1-ben.roberts@gsacapital.com>
-References: <20260408122534.537816-1-ben.roberts@gsacapital.com>
+Message-ID: <C9851FD8-FFFA-47DD-BAA7-F465F293295B@hammerspace.com>
+In-Reply-To: <20260408161428.155169-2-seanwascoding@gmail.com>
+References: <20260408161428.155169-1-seanwascoding@gmail.com>
+ <20260408161428.155169-2-seanwascoding@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -97,122 +98,147 @@ Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20808-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20807-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[gsacapital.com:email,gsacapital.com:url,hammerspace.com:dkim,hammerspace.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1BD673D8B79
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,hammerspace.com:dkim,hammerspace.com:mid]
+X-Rspamd-Queue-Id: 67E373D8FBC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Ben,
+On 8 Apr 2026, at 12:14, Sean Chang wrote:
 
-Did you reproduce and diagnose this problem on a recent upstream kernel
-version?  If not, you probably want to report the issue to your Red Hat
-support channel directly instead of sending fixes upstream because the
-maintainers will want to see patches and fixes against the upstream code.=
+> The cl_xprt pointer in struct rpc_clnt is marked as __rcu. Accessing
+> it directly in nfs_compare_super_address() without RCU protection is
+> unsafe and triggers Sparse warnings about dereferencing noderef
+> expressions.
+>
+> Fix this by wrapping the access with rcu_read_lock() and using
+> rcu_dereference() to safely retrieve the transport pointer. This
+> ensures the xprt remains valid during the comparison of network
+> namespaces and addresses, preventing potential use-after-free during
+> concurrent transport updates.
+>
+> Signed-off-by: Sean Chang <seanwascoding@gmail.com>
 
-The code in 5.14.0-611.9.1.el9 may have different behaviors.
+Fixes: 7e3fcf61abde ("nfs: don't share mounts between network namespaces"=
+)
+
+> ---
+>  fs/nfs/super.c | 32 ++++++++++++++++++++++----------
+>  1 file changed, 22 insertions(+), 10 deletions(-)
+>
+> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> index 7a318581f85b..071337f9ea37 100644
+> --- a/fs/nfs/super.c
+> +++ b/fs/nfs/super.c
+> @@ -1166,43 +1166,55 @@ static int nfs_set_super(struct super_block *s,=
+ struct fs_context *fc)
+>  static int nfs_compare_super_address(struct nfs_server *server1,
+>  				     struct nfs_server *server2)
+>  {
+> +	struct rpc_xprt *xprt1, *xprt2;
+>  	struct sockaddr *sap1, *sap2;
+> -	struct rpc_xprt *xprt1 =3D server1->client->cl_xprt;
+> -	struct rpc_xprt *xprt2 =3D server2->client->cl_xprt;
+> +	int ret =3D 0;
+> +
+> +	rcu_read_lock();
+> +
+> +	xprt1 =3D rcu_dereference(server1->client->cl_xprt);
+> +	xprt2 =3D rcu_dereference(server2->client->cl_xprt);
+> +
+> +	if (!xprt1 || !xprt2)
+> +		goto out;
+
+^^ I'm not sure that's a great test, the rpc_xprt objects are refcounted.=
+
+These might not be null but you could still race with a freeing path?
+
+However, I think you might just be safe inside the RCU section here becau=
+se
+rpc_switch_client_transport() uses synchronize_rcu() before xprt_put(old)=
+=2E
+I didn't audit all the freeing paths.
+
+>  	if (!net_eq(xprt1->xprt_net, xprt2->xprt_net))
+> -		return 0;
+> +		goto out;
+
+Probably safe to drop the RCU protection scope after this point.  No need=
+ to
+hold it over all the other checks..
 
 Ben
 
-On 8 Apr 2026, at 8:25, Ben Roberts wrote:
+>
+>  	sap1 =3D (struct sockaddr *)&server1->nfs_client->cl_addr;
+>  	sap2 =3D (struct sockaddr *)&server2->nfs_client->cl_addr;
+>
+>  	if (sap1->sa_family !=3D sap2->sa_family)
+> -		return 0;
+> +		goto out;
+>
+>  	switch (sap1->sa_family) {
+>  	case AF_INET: {
+>  		struct sockaddr_in *sin1 =3D (struct sockaddr_in *)sap1;
+>  		struct sockaddr_in *sin2 =3D (struct sockaddr_in *)sap2;
+>  		if (sin1->sin_addr.s_addr !=3D sin2->sin_addr.s_addr)
+> -			return 0;
+> +			goto out;
+>  		if (sin1->sin_port !=3D sin2->sin_port)
+> -			return 0;
+> +			goto out;
+>  		break;
+>  	}
+>  	case AF_INET6: {
+>  		struct sockaddr_in6 *sin1 =3D (struct sockaddr_in6 *)sap1;
+>  		struct sockaddr_in6 *sin2 =3D (struct sockaddr_in6 *)sap2;
+>  		if (!ipv6_addr_equal(&sin1->sin6_addr, &sin2->sin6_addr))
+> -			return 0;
+> +			goto out;
+>  		if (sin1->sin6_port !=3D sin2->sin6_port)
+> -			return 0;
+> +			goto out;
+>  		break;
+>  	}
+>  	default:
+> -		return 0;
+> +		goto out;
+>  	}
+>
+> -	return 1;
+> +	ret =3D 1;
+> +
+> +out:
+> +	rcu_read_unlock();
+> +	return ret;
+>  }
+>
+>  static int nfs_compare_userns(const struct nfs_server *old,
+> -- =
 
-> On a HPC cluster running 5.14.0-611.9.1.el9.x86_64, regular deadlocks w=
-ere
-> seen within pnfs_send_layoutreturn leading to userspace processes stuck=
- in
-> uninterruptible sleep, ultimately requiring reboots to clear. This was
-> occurring frequently, sometimes multiple times per day on specific host=
-s
-> with heavy load.  Claude code was tasked with hunting down any potentia=
-l
-> deadlocks within pnfs_send_layoutreturn, and identified the following
-> condition. This patch has been running in production on top of the EL9
-> kernel for over three months without any reoccurrence of the deadlock.
->
-> The pnfs_send_layoutreturn() function can deadlock when memory
-> allocation fails. The issue occurs in the error path where
-> pnfs_put_layout_hdr() is called, which may trigger
-> pnfs_layoutreturn_before_put_layout_hdr(), potentially causing
-> a recursive call back to pnfs_send_layoutreturn().
->
-> Call chain that triggers the deadlock:
-> 1. pnfs_send_layoutreturn() - kzalloc() fails
-> 2. Error path calls pnfs_put_layout_hdr(lo)
-> 3. pnfs_put_layout_hdr() calls pnfs_layoutreturn_before_put_layout_hdr(=
-)
-> 4. If NFS_LAYOUT_RETURN_REQUESTED is still set, attempts another
->    layoutreturn, creating recursion/deadlock
->
-> The fix ensures that NFS_LAYOUT_RETURN_REQUESTED is cleared in the
-> allocation failure path before calling pnfs_put_layout_hdr(). This
-> prevents pnfs_layoutreturn_before_put_layout_hdr() from attempting
-> another layout return, breaking the recursion cycle.
->
-> v2 fixes a syntax error introduced while composing the original mail.
->
-> Signed-off-by: Ben Roberts <ben.roberts@gsacapital.com>
-> Assisted-by: Claude:claude-sonnet-4-5
-> ---
->  fs/nfs/pnfs.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> index bc13d1e69449..47bda53b2b3a 100644
-> --- a/fs/nfs/pnfs.c
-> +++ b/fs/nfs/pnfs.c
-> @@ -1361,6 +1361,7 @@ pnfs_send_layoutreturn(struct pnfs_layout_hdr *lo=
-,
->  	if (unlikely(lrp =3D=3D NULL)) {
->  		status =3D -ENOMEM;
->  		spin_lock(&ino->i_lock);
-> +		pnfs_clear_layoutreturn_info(lo);
->  		pnfs_clear_layoutreturn_waitbit(lo);
->  		spin_unlock(&ino->i_lock);
->  		put_cred(cred);
-> --
-> 2.43.0
->
-> For details of how GSA uses your personal information, please see our P=
-rivacy Notice here: https://www.gsacapital.com/privacy-notice
->
-> This email and any files transmitted with it contain confidential and p=
-roprietary information and is solely for the use of the intended recipien=
-t.
-> If you are not the intended recipient please return the email to the se=
-nder and delete it from your computer and you must not use, disclose, dis=
-tribute, copy, print or rely on this email or its contents.
-> This communication is for informational purposes only.
-> It is not intended as an offer or solicitation for the purchase or sale=
- of any financial instrument or as an official confirmation of any transa=
-ction.
-> Any comments or statements made herein do not necessarily reflect those=
- of GSA Capital.
-> GSA Capital Partners LLP is authorised and regulated by the Financial C=
-onduct Authority and is registered in England and Wales at Stratton House=
-, 5 Stratton Street, London W1J 8LA, number OC309261.
-> GSA Capital Services Limited is registered in England and Wales at the =
-same address, number 5320529.
+> 2.34.1
 
