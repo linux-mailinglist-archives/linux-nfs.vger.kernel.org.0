@@ -1,81 +1,115 @@
-Return-Path: <linux-nfs+bounces-20803-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20804-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sMjgI6iK2GkIewgAu9opvQ
-	(envelope-from <linux-nfs+bounces-20803-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 07:29:12 +0200
+	id qLb6D6DV2GmuiwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-20804-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 12:49:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E98F23D24E1
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 07:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EDBC3D5D56
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 12:49:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9EAC230166D8
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 05:29:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 08F9230AB95A
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Apr 2026 10:42:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2DE33AD81;
-	Fri, 10 Apr 2026 05:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499AF37BE8B;
+	Fri, 10 Apr 2026 10:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hiJttg6A"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MAuboDUn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vtmoDNux";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MAuboDUn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vtmoDNux"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2081C33689E;
-	Fri, 10 Apr 2026 05:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F064B38B13E
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Apr 2026 10:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775798949; cv=none; b=ilXMNbrPG5aJ9/wyO+D5VunU31io5m6tSvCay0b8sov1AiNkgcGB99Ztop1Vq+1PLCZ+eNOOBjpYPVhdOy/G4bZumMupASMani0UKqW4WQk7VytMw9PWS3I8WzcnEjU50yzR4XyjCPwrES5TtHT6d20GdTSeuhO+kvpx/W6Tix4=
+	t=1775817712; cv=none; b=ArBINRrCj2CCm8DqEJO/t9hnOkja6SxXr7n4cW0E8SNn3Pi38VIhX4FtYgzybWnOPzKTgPAdPv/3kxbcYamZO/IZvJ/0nO9fAFM1fqPzgAT5e7mPOFbe3O/Xt+fvt36kTUNFqEtdlLJuxZKMi0Ta/Gi3nzlmxkNF1AbnIHBgI5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775798949; c=relaxed/simple;
-	bh=TJuL6fnKndOq/B2Po1dJCLMG2PxGh8VzGl4t/B/vjgU=;
+	s=arc-20240116; t=1775817712; c=relaxed/simple;
+	bh=IrtOFMDLPl/jOZwF9p26m4Sdaj7zxxfK7csJ1tcTRvU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcNIwbU8tg0FDuNxsH4tq+Q1CnEFktE+WnAf7q2B6Kqp0Dgkq4YjmKp0iBnpTSdAPk9B5XL32hAjlXwS6H1x/5xsfQpe97ytAZhs8nuqGFKpgl8BxcCLoDkr7ng5+p3QU6d9ms2q5GiVIE1ymY6IoGjR1srnlV9dR3YwYRKfUXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hiJttg6A; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775798948; x=1807334948;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TJuL6fnKndOq/B2Po1dJCLMG2PxGh8VzGl4t/B/vjgU=;
-  b=hiJttg6A4aOcisTWpn47VotINlGLrYBSmsJlxrU/QnrkGfkCQQbIfFtj
-   9q0MiCpuDEjJKJRlsr2Ru/gRuRGpEkHUQXLU4k93IuIhlOJOaO/lp4mld
-   BDZKVRR/toGpYaD0xc6vq7f2jAyICo9iw1MqHxWUHqvUDaMUZZKDHMRm+
-   dlDnoHjwkioRrTRBoH+6B0FjggZc+bwiqQ22vthljWsC43WjV7GheNvcx
-   06MaIG6+5zELqfEuA0HifuqKLOUgn/KwfKjLvi++QJTI52bd9PWgiiJ7W
-   f6eUxQ2Fd1e10wF+r7ALNFNYQM7zZwiztYvUD1W3JfqLceKTqXwgR4z6J
-   g==;
-X-CSE-ConnectionGUID: VxxHLtwETGms8f79GdqCCA==
-X-CSE-MsgGUID: ngWze85LS5KktQmjRWNHQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11754"; a="76833435"
-X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
-   d="scan'208";a="76833435"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 22:29:07 -0700
-X-CSE-ConnectionGUID: H61ElRjaSUa3uHxkwwRDXg==
-X-CSE-MsgGUID: 0qHPoffYRt2EydB3lDJd5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
-   d="scan'208";a="266960652"
-Received: from lkp-server01.sh.intel.com (HELO 6449335cace3) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 09 Apr 2026 22:29:05 -0700
-Received: from kbuild by 6449335cace3 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wB4QQ-000000003HP-2Tkw;
-	Fri, 10 Apr 2026 05:29:02 +0000
-Date: Fri, 10 Apr 2026 13:28:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ben Roberts <ben.roberts@gsacapital.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Roberts <ben.roberts@gsacapital.com>
-Subject: Re: [PATCH] pNFS: deadlock in pnfs_send_layoutreturn
-Message-ID: <202604101309.6eRanxOC-lkp@intel.com>
-References: <20260407152035.4034628-1-ben.roberts@gsacapital.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pVVG9oilFYSNMvyVvfMadXUFu0hFWrop2yRujD2ETLFe3WmHxh6zNXJHtJCpy0DCk1EKIyfvQTucjYFlayVHW/aCFXC3P/pmIBUdWZYJEGvI4ksuVMGqLMt2cD6w+a5m7MhUB76KBB4gBWW3w29/RDtRJl7KkZVUUXDfiOElFag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MAuboDUn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vtmoDNux; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MAuboDUn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vtmoDNux; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1E2A76A7EC;
+	Fri, 10 Apr 2026 10:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1775817709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yyzQ6B0JHT7gSiWrC1iUMZgxNFOYNLK1JBVUTUgNXLo=;
+	b=MAuboDUnRTvB1p5AvXQd7Ca/a5WeO79Wf5UIWAIi9ly28UBWX9cGVQrc8KS46aTdxhTfXX
+	VzyamlIBHdkDvXInTk9Zr1FgQebeP0OHyXLheSxMc5KHtRTiElNDUUpVFEVQu4IpKe8lQc
+	MM+jNJalYOIODafPdEpKHQw2erU39QA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1775817709;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yyzQ6B0JHT7gSiWrC1iUMZgxNFOYNLK1JBVUTUgNXLo=;
+	b=vtmoDNuxdf0tOsRkhG44RJJGnBE4d5EyVq5TnJAbPLxhsSB2s8OXZJc3O4Hx+q+tdEejPZ
+	6538q4HSX5cBqkDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=MAuboDUn;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=vtmoDNux
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1775817709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yyzQ6B0JHT7gSiWrC1iUMZgxNFOYNLK1JBVUTUgNXLo=;
+	b=MAuboDUnRTvB1p5AvXQd7Ca/a5WeO79Wf5UIWAIi9ly28UBWX9cGVQrc8KS46aTdxhTfXX
+	VzyamlIBHdkDvXInTk9Zr1FgQebeP0OHyXLheSxMc5KHtRTiElNDUUpVFEVQu4IpKe8lQc
+	MM+jNJalYOIODafPdEpKHQw2erU39QA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1775817709;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yyzQ6B0JHT7gSiWrC1iUMZgxNFOYNLK1JBVUTUgNXLo=;
+	b=vtmoDNuxdf0tOsRkhG44RJJGnBE4d5EyVq5TnJAbPLxhsSB2s8OXZJc3O4Hx+q+tdEejPZ
+	6538q4HSX5cBqkDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 124FA4A0B2;
+	Fri, 10 Apr 2026 10:41:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id W1JwBO3T2Gl0BwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 10 Apr 2026 10:41:49 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id CCE51A0A81; Fri, 10 Apr 2026 12:41:48 +0200 (CEST)
+Date: Fri, 10 Apr 2026 12:41:48 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 1/3] mm: kick writeback flusher instead of inline
+ flush for IOCB_DONTCACHE
+Message-ID: <quptbqj7jfparfhrxt45cassborouvwggeqkwbk3ixyt74crb6@e7ivbuu5qlox>
+References: <20260408-dontcache-v2-0-948dec1e756b@kernel.org>
+ <20260408-dontcache-v2-1-948dec1e756b@kernel.org>
+ <adc-Q1iDWHD5yxHH@infradead.org>
+ <gpcc6t5unsoepakjdffsmnmd5duuvijxwdochd753ttix75h7l@nahwzi4qfdcq>
+ <ade14lOI1CDiraar@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -84,115 +118,59 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260407152035.4034628-1-ben.roberts@gsacapital.com>
+In-Reply-To: <ade14lOI1CDiraar@infradead.org>
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Spam-Level: 
 X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TAGGED_FROM(0.00)[bounces-20803-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,suse.com:email];
+	DMARC_NA(0.00)[suse.cz];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20804-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[suse.cz:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,intel.com:mid,git-scm.com:url]
-X-Rspamd-Queue-Id: E98F23D24E1
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 8EDBC3D5D56
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Ben,
+On Thu 09-04-26 07:21:22, Christoph Hellwig wrote:
+> On Thu, Apr 09, 2026 at 09:21:36AM +0200, Jan Kara wrote:
+> > > So I think you'll want a new WB_start_dontcache bit, a new
+> > > get_nr_dontcache_pages() helper on a new node counter, etc.
+> > 
+> > But I'm not sure how you imagine this would work without restricting
+> > writeback to particular inodes. Maybe we could mark inodes which have
+> > folios with dropbehind set and make flush worker only write such inodes?
+> 
+> I'd only expedite writing by the number of pending dontcache folios.
+> It would still write the least recently dirtied inodes.
 
-kernel test robot noticed the following build errors:
+So that may result in dontcache folios staying cached for quite some time
+if DONTCACHE and normal writes are mixed. But I agree over longer time it
+might just level out so maybe that's fine.
 
-[auto build test ERROR on trondmy-nfs/linux-next]
-[also build test ERROR on linus/master v7.0-rc7 next-20260407]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Roberts/pNFS-deadlock-in-pnfs_send_layoutreturn/20260408-135718
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/20260407152035.4034628-1-ben.roberts%40gsacapital.com
-patch subject: [PATCH] pNFS: deadlock in pnfs_send_layoutreturn
-config: m68k-defconfig (https://download.01.org/0day-ci/archive/20260410/202604101309.6eRanxOC-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260410/202604101309.6eRanxOC-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604101309.6eRanxOC-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   fs/nfs/pnfs.c: In function 'pnfs_send_layoutreturn':
->> fs/nfs/pnfs.c:1364:49: error: expected ';' before 'pnfs_clear_layoutreturn_waitbit'
-    1364 |                 pnfs_clear_layoutreturn_info(lo)
-         |                                                 ^
-         |                                                 ;
-    1365 |                 pnfs_clear_layoutreturn_waitbit(lo);
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
-
-
-vim +1364 fs/nfs/pnfs.c
-
-  1345	
-  1346	static int
-  1347	pnfs_send_layoutreturn(struct pnfs_layout_hdr *lo,
-  1348			       const nfs4_stateid *stateid,
-  1349			       const struct cred **pcred,
-  1350			       enum pnfs_iomode iomode,
-  1351			       unsigned int flags)
-  1352	{
-  1353		struct inode *ino = lo->plh_inode;
-  1354		struct pnfs_layoutdriver_type *ld = NFS_SERVER(ino)->pnfs_curr_ld;
-  1355		struct nfs4_layoutreturn *lrp;
-  1356		const struct cred *cred = *pcred;
-  1357		int status = 0;
-  1358	
-  1359		*pcred = NULL;
-  1360		lrp = kzalloc_obj(*lrp, nfs_io_gfp_mask());
-  1361		if (unlikely(lrp == NULL)) {
-  1362			status = -ENOMEM;
-  1363			spin_lock(&ino->i_lock);
-> 1364			pnfs_clear_layoutreturn_info(lo)
-  1365			pnfs_clear_layoutreturn_waitbit(lo);
-  1366			spin_unlock(&ino->i_lock);
-  1367			put_cred(cred);
-  1368			pnfs_put_layout_hdr(lo);
-  1369			goto out;
-  1370		}
-  1371	
-  1372		pnfs_init_layoutreturn_args(&lrp->args, lo, stateid, iomode);
-  1373		lrp->args.ld_private = &lrp->ld_private;
-  1374		lrp->clp = NFS_SERVER(ino)->nfs_client;
-  1375		lrp->cred = cred;
-  1376		if (ld->prepare_layoutreturn)
-  1377			ld->prepare_layoutreturn(&lrp->args);
-  1378	
-  1379		status = nfs4_proc_layoutreturn(lrp, flags);
-  1380	out:
-  1381		dprintk("<-- %s status: %d\n", __func__, status);
-  1382		return status;
-  1383	}
-  1384	
-
+								Honza
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
