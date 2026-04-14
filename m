@@ -1,188 +1,343 @@
-Return-Path: <linux-nfs+bounces-20832-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20833-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8PDDMnsG3mlRmQkAu9opvQ
-	(envelope-from <linux-nfs+bounces-20832-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2026 11:18:51 +0200
+	id mKh7INgG3mlRmQkAu9opvQ
+	(envelope-from <linux-nfs+bounces-20833-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2026 11:20:24 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 406D53F7CA8
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2026 11:18:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C123F7CFF
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2026 11:20:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8207C307DA73
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2026 09:15:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1D340301A538
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Apr 2026 09:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB9E2798F8;
-	Tue, 14 Apr 2026 09:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0AFB35B631;
+	Tue, 14 Apr 2026 09:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOEi+I+l"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xKD7OtXc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6913B9D90
-	for <linux-nfs@vger.kernel.org>; Tue, 14 Apr 2026 09:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776158107; cv=pass; b=BRlYnbJMMqL/wfStV+2yY7l9bs7ikL0p8JI7LXfuDmGcLWElavZ/iBEocz7zxA1EofdLmw1bk90U1VWCraOFje2UhkZ7OxB/WK1ugdcwhvo1r2uVojmWwVtZbQmnb9HU02hBXsahakXr8v/cU+FNqI7LLYemqlhmpRTzcSHxACo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776158107; c=relaxed/simple;
-	bh=WnXOQMiCJI53iJTCn2AHE2xTy/c/D1yUEs7YV07bdJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uxZYve3nvSS0YxUN2vBJfdl6kp2VBvdTqtYYro9AOlQN6VLRk/S5z8ggDbNjZLEjWMgrVLjowirfvoBzmOmQjHE7J8FmXMpyOcTv9tVeEk5KWgaEHWLjKqdgDH4mhbX68Sdc4t3UJyXsNQCfAJ8NccF0qRSEtwVVzJJAzlNkAfI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AOEi+I+l; arc=pass smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-56d958880ecso1770309e0c.2
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Apr 2026 02:15:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776158106; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PT4dMmF9SZiesUGHrQIr9oTcI5JotJTJDSrD9R0/pt7abxCrlNDaaG5FvToS0RWkWQ
-         eu1Cl9QJ4IdxxyKpdXhkMHLp0G+easGVslXN1XY2x1FTnGEwVBeiC2DX/fl77TcufGZB
-         UfzeG6KC5KVmSjS1ANKASNHUaPf6mhYSiu2mnutA4u7EniJiooxAgatx8mE58P0+kQp1
-         tZvdxOtdEkppyQ/luYjiEkrORwCOfwXcdLrfMmnDhg11hxAq9RJ+Wqr5RMV0i+Oaaia1
-         EsieqONah+VpbooJhz5+vqo/WDl+X0PQDw39Y3rEptMlF7hbFqb3psU3/0euXXjiF3hg
-         skNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=1kdavCpS5iI7FbmLAnxwCqeBAmYPClS8ewolD7iIUp4=;
-        fh=UdvNg2Si6H37JM+/1med+pICadAMmYxdo22w+h+/ibc=;
-        b=bZeFHjxXtWSLQMKMlcBzWm/8taW0FpcGp+Et1gpE3+pawf4tcNabZo2oobXCvj7BDW
-         lBydLk1fJqyzlOkz0k14q4ywbBMQDx8kZIXSSLWLrghzm9nw+z/ABgMU/+K0Z0AsFOwV
-         6FGM15LtHU3bcX/7QpUsAwJaE8Z/ic100XIT0//Y9gGDrkgyIRap1jEHPPA1wItV32Uc
-         NtlywxOR/D7MUXT3nmAVwHwbqA79jZvmc3kpVrnj243+FsMq6q7ssBOUWln2w9JcNPaM
-         TR88eCt5aPR2yoB4Ti6aqlyjg290My+kiBqCFb3HoB+rl6y+7PMPEwYofux3m+1SU/9I
-         wgag==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776158106; x=1776762906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1kdavCpS5iI7FbmLAnxwCqeBAmYPClS8ewolD7iIUp4=;
-        b=AOEi+I+lHUs/121Zo6J32NMOtx15Py4Hu4IgOXntqDpzUCcN3AMTV5ENhHnAh1RwFT
-         yQAVKOyJYt3S9gkYR8AHLbE/sObCdlaQOdceqE3Dym7HqX1x5ENUd49NvO6BsIv6d5vo
-         AQcAepydub7WEjvsh64qHcV2gStypgOrTjBKJ4MvWONq2TaFiko07Z9ndejTQW3m5Tfa
-         p6pvl2BlNWHGjeuE9BqVJDzH0Qe63fJvam4/XP7Oj+77GzDlNHkwq1LA/kxKq+LfkCrj
-         d/rkPxr5cOUopmpX+9Ac9RnOYBvtHU2tDEY8py2vgwBEWDiGbBaVqwZkhVQKiD7MX3YE
-         9SAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776158106; x=1776762906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1kdavCpS5iI7FbmLAnxwCqeBAmYPClS8ewolD7iIUp4=;
-        b=c9maDRz/AjF69mqUJff1wVOJlVhtK0ETcNrlnBkCGpYcKK1wre7Ef+cJFxsiP/CSMC
-         25K+DjTWbj29MbpFfPix4N3wfxK5nWsXYeGzrPXbrUpFNK7oHj6Fqp76LWfWhkxOqH+M
-         fzWjEHCOc/FkrkTpA8xxL8o3p2fv7PmrUwITzGsqDB2dNjAxczx4mT27PPOE22/rIPbc
-         Drjb494P20/N53UyUnMGxwuSGP1fmclUtQYTjSCgeBhAD+Q/z/jsHyN53p7RnTprvb5Q
-         DkiCG57WCzQP/8dgK6ybFbfDOqMFzqBF7Zn3CDh4g9soFwQ/qiKsGwAy9tmEH1iiqP/k
-         QwDQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9UEg+LTg/0UnjmAXKQ75c4HRTaVPhBivNSxLvJ/4DoNgLhNYiIESdYtsjbf1BIUrdZmXLXK0IRJyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9OPyxYDffz45Q3/05AY2/G7IcfeY50cAvtgoWO/vwG4DVZlr+
-	1WAMDSlobvoO54fquJlMYUP4gdKAfPXfd3e0/T7sGpxiWRBYiahwOgqU4xj27jobiWSVQt8Efnr
-	L9+wV1GRi3/GfTYIvX8kdVYz9StSdzfs=
-X-Gm-Gg: AeBDievF1slm+P9N1BAGbE12P6SeAuKH74GC3mgUvOyjRO4h2lafPwN01JHg6gBPIr5
-	DMb6pYkFlKkkONFSzqy09yZftURMz57RLIXlqkLfM4+oqMKyGE1TngMOFfxHEl5sTzLfu8hme92
-	Yw+F6qEjGlC2f9VUQTS9Ng2oljbPqxK2JMB+zxFoCTTRCRl0t1M7iFzeyjAjVVj3KJ+5t1TeL5u
-	5s6eyfAca2InpUp2aq/ErzK5v0dBwB7ea1RnVt3dXamcK3RlbJdm/MQP8qfxQSlK2naEvOdJv1D
-	uWyx2Wk=
-X-Received: by 2002:a05:6122:6581:b0:56c:d81a:5863 with SMTP id
- 71dfb90a1353d-56f3bc914f4mr7486928e0c.8.1776158105828; Tue, 14 Apr 2026
- 02:15:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC4C3B9D90
+	for <linux-nfs@vger.kernel.org>; Tue, 14 Apr 2026 09:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776158176; cv=none; b=S3abyoijge+8dfgeuiKfF7fAsC1u/b3wZuzHKU8/wwhulD6C903dLih1e7FuK+zF+AOybcwOGTssIM4Ri87wSP0bKGB3wN1O7mzKhtvb33bCTs+BHkTfTJM1i3KJ3P98j+Qdgn9DZLcwWFgNnPWRknuex4+dGiZ+FOxcv22zxAg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776158176; c=relaxed/simple;
+	bh=TZ7tyhV0Or+wnbgLUQgLKLLZWUO2JrR236fhabcxkeg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M7tK6t47ZsvoSyr/vEDjWGfCSdR+lyWczKVvf8a1bTqS+991GxUyJPBJslxIAG/4bWtrAg3BrUgBwqi7WD9dTKHuPzRcIA8kK6tFd1AfKxQMl/qS+k5ujIVPLgxPNrTSIwQfReypFwN08j9HXS+0e7YRZHitujGJ5RT2QuIfBTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xKD7OtXc; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776158172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ubfySRhL7H2ALfoVfoAbTG+vWRfRjBu73p+puM1I0vE=;
+	b=xKD7OtXcIsrwj1A0b0Itu601MKl/5NJ+Z0FGvgmv1pfr3euBdkog0LGDvJBe4hIkNDVTku
+	mgSwNGLQjVUnIbnhuBdwF9V3qaKkp+SUraT5C3qywZ9fdaiGetCOGQPw5x4h6xn9mE+JFw
+	1PF6B8WPGUWQtCNRt1t5U+XM/AdVoLM=
+From: Ye Liu <ye.liu@linux.dev>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Chris Li <chrisl@kernel.org>,
+	Kairui Song <kasong@tencent.com>
+Cc: Ye Liu <liuye@kylinos.cn>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Youngjun Park <youngjun.park@lge.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 1/4] mm/vmstat: use node_stat_add_folio/sub_folio for folio_nr_pages operations
+Date: Tue, 14 Apr 2026 17:15:18 +0800
+Message-ID: <20260414091527.2970844-2-ye.liu@linux.dev>
+In-Reply-To: <20260414091527.2970844-1-ye.liu@linux.dev>
+References: <20260414091527.2970844-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260408161428.155169-1-seanwascoding@gmail.com>
- <20260408161428.155169-3-seanwascoding@gmail.com> <F701DA6B-3D88-4EF6-AD22-5B93B7809E6B@hammerspace.com>
-In-Reply-To: <F701DA6B-3D88-4EF6-AD22-5B93B7809E6B@hammerspace.com>
-From: Sean Chang <seanwascoding@gmail.com>
-Date: Tue, 14 Apr 2026 17:14:53 +0800
-X-Gm-Features: AQROBzCHcNdJ0JB6PqydTEvf-EYDEpcZl2Q8ACZnezKuovfdk29PgSZj1mQ5nbA
-Message-ID: <CAAb=EJWgCFvx6rz7tL3kEeEuKuv1D-nqvnzY1Ni7jjg4EUhYtA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] NFS: use unsigned long for req field in nfs_page_class
-To: Benjamin Coddington <ben.coddington@hammerspace.com>
-Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[kylinos.cn,google.com,suse.com,cmpxchg.org,nvidia.com,ziepe.ca,redhat.com,linux.alibaba.com,oracle.com,arm.com,kernel.org,linux.dev,intel.com,gmail.com,sk.com,gourry.net,huaweicloud.com,lge.com,vger.kernel.org,kvack.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_TWELVE(0.00)[40];
+	TAGGED_FROM(0.00)[bounces-20833-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20832-lists,linux-nfs=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seanwascoding@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[ye.liu@linux.dev,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.dev:+];
+	NEURAL_HAM(-0.00)[-0.971];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,hammerspace.com:email]
-X-Rspamd-Queue-Id: 406D53F7CA8
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email,linux.dev:dkim,linux.dev:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E9C123F7CFF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 10, 2026 at 11:23=E2=80=AFPM Benjamin Coddington
-<ben.coddington@hammerspace.com> wrote:
->
-> Hi Sean,
->
-> On 8 Apr 2026, at 12:14, Sean Chang wrote:
->
-> > The nfs_page_class tracepoint used a pointer for the req field. This
-> > caused Sparse to complain about dereferencing a pointer marked as
-> > __private within the trace ring buffer context.
-> >
-> > Change the field type to unsigned long to store the address of the
-> > request without dereferencing it. Update TP_printk to use 0x%lx for
-> > consistent hexadecimal output, allowing for unique identification of
-> > requests across the trace log.
->
-> Probably we don't want to bypass the %p formatting because some
-> configurations use it to obfuscate kernel pointers.
->
-> I think in this context the __private annotation is incorrect.  We deref =
-the
-> nfs_page pointer only in TP_fast_assign() which runs at the call site, an=
-d
-> the TP_printk only outputs the pointer value.
->
+From: Ye Liu <liuye@kylinos.cn>
 
-Hi Ben,
+Replace node_stat_mod_folio() calls that pass folio_nr_pages(folio) or
+-folio_nr_pages(folio) as the third argument with the more concise
+node_stat_add_folio() and node_stat_sub_folio() functions respectively.
 
-Thanks for pointing this out.
+This makes the code more readable and reduces the number of arguments
+passed to these functions.
 
-I realize that using unsigned long results in printing the raw pointer
-address, which bypasses the intended %p formatting.
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
+---
+ fs/nfs/internal.h   |  2 +-
+ fs/nfs/write.c      |  2 +-
+ mm/compaction.c     |  5 ++---
+ mm/gup.c            |  5 ++---
+ mm/khugepaged.c     | 10 ++++------
+ mm/mempolicy.c      |  5 ++---
+ mm/migrate.c        | 12 +++++-------
+ mm/page-writeback.c |  4 ++--
+ mm/swap_state.c     |  4 ++--
+ 9 files changed, 21 insertions(+), 28 deletions(-)
 
-You are right that the __private annotation is not appropriate here,
-since the req pointer is only dereferenced in TP_fast_assign() at the
-call site and only printed from the trace buffer context.
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index fc5456377160..f5c52a2d2a1f 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -858,7 +858,7 @@ static inline void nfs_folio_mark_unstable(struct folio *folio,
+ 		/* This page is really still in write-back - just that the
+ 		 * writeback is happening on the server now.
+ 		 */
+-		node_stat_mod_folio(folio, NR_WRITEBACK, nr);
++		node_stat_add_folio(folio, NR_WRITEBACK);
+ 		bdi_wb_stat_mod(inode, WB_WRITEBACK, nr);
+ 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
+ 	}
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index cc02b57de3c7..a8700824a61b 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -871,7 +871,7 @@ static void nfs_folio_clear_commit(struct folio *folio)
+ 	if (folio) {
+ 		long nr = folio_nr_pages(folio);
+ 
+-		node_stat_mod_folio(folio, NR_WRITEBACK, -nr);
++		node_stat_sub_folio(folio, NR_WRITEBACK);
+ 		bdi_wb_stat_mod(folio->mapping->host, WB_WRITEBACK, -nr);
+ 	}
+ }
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 3648ce22c807..d7ce622aeed1 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1215,9 +1215,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 
+ 		/* Successfully isolated */
+ 		lruvec_del_folio(lruvec, folio);
+-		node_stat_mod_folio(folio,
+-				NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-				folio_nr_pages(folio));
++		node_stat_add_folio(folio,
++				NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 
+ isolate_success:
+ 		list_add(&folio->lru, &cc->migratepages);
+diff --git a/mm/gup.c b/mm/gup.c
+index ad9ded39609c..2cb2efa20bff 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2304,9 +2304,8 @@ static unsigned long collect_longterm_unpinnable_folios(
+ 			continue;
+ 
+ 		list_add_tail(&folio->lru, movable_folio_list);
+-		node_stat_mod_folio(folio,
+-				    NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-				    folio_nr_pages(folio));
++		node_stat_add_folio(folio,
++				    NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 	}
+ 
+ 	return collected;
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index b8452dbdb043..f662de753305 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -502,9 +502,8 @@ void __khugepaged_exit(struct mm_struct *mm)
+ 
+ static void release_pte_folio(struct folio *folio)
+ {
+-	node_stat_mod_folio(folio,
+-			NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-			-folio_nr_pages(folio));
++	node_stat_sub_folio(folio,
++			NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 	folio_unlock(folio);
+ 	folio_putback_lru(folio);
+ }
+@@ -650,9 +649,8 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 			result = SCAN_DEL_PAGE_LRU;
+ 			goto out;
+ 		}
+-		node_stat_mod_folio(folio,
+-				NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-				folio_nr_pages(folio));
++		node_stat_add_folio(folio,
++				NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 		VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+ 		VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
+ 
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 4e4421b22b59..1c413f66b35f 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -1259,9 +1259,8 @@ static bool migrate_folio_add(struct folio *folio, struct list_head *foliolist,
+ 	if ((flags & MPOL_MF_MOVE_ALL) || !folio_maybe_mapped_shared(folio)) {
+ 		if (folio_isolate_lru(folio)) {
+ 			list_add_tail(&folio->lru, foliolist);
+-			node_stat_mod_folio(folio,
+-				NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-				folio_nr_pages(folio));
++			node_stat_add_folio(folio,
++				NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 		} else {
+ 			/*
+ 			 * Non-movable folio may reach here.  And, there may be
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 8a64291ab5b4..dc8cfee37a70 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -268,8 +268,8 @@ void putback_movable_pages(struct list_head *l)
+ 		if (unlikely(page_has_movable_ops(&folio->page))) {
+ 			putback_movable_ops_page(&folio->page);
+ 		} else {
+-			node_stat_mod_folio(folio, NR_ISOLATED_ANON +
+-					folio_is_file_lru(folio), -folio_nr_pages(folio));
++			node_stat_sub_folio(folio, NR_ISOLATED_ANON +
++					folio_is_file_lru(folio));
+ 			folio_putback_lru(folio);
+ 		}
+ 	}
+@@ -2272,9 +2272,8 @@ static int __add_folio_for_migration(struct folio *folio, int node,
+ 			return 1;
+ 	} else if (folio_isolate_lru(folio)) {
+ 		list_add_tail(&folio->lru, pagelist);
+-		node_stat_mod_folio(folio,
+-			NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-			folio_nr_pages(folio));
++		node_stat_add_folio(folio,
++			NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 		return 1;
+ 	}
+ 	return -EBUSY;
+@@ -2726,8 +2725,7 @@ int migrate_misplaced_folio_prepare(struct folio *folio,
+ 	if (!folio_isolate_lru(folio))
+ 		return -EAGAIN;
+ 
+-	node_stat_mod_folio(folio, NR_ISOLATED_ANON + folio_is_file_lru(folio),
+-			    nr_pages);
++	node_stat_add_folio(folio, NR_ISOLATED_ANON + folio_is_file_lru(folio));
+ 	return 0;
+ }
+ 
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 833f743f309f..87e9ea41313a 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2750,7 +2750,7 @@ bool folio_redirty_for_writepage(struct writeback_control *wbc,
+ 
+ 		wb = unlocked_inode_to_wb_begin(inode, &cookie);
+ 		current->nr_dirtied -= nr;
+-		node_stat_mod_folio(folio, NR_DIRTIED, -nr);
++		node_stat_sub_folio(folio, NR_DIRTIED);
+ 		wb_stat_mod(wb, WB_DIRTIED, -nr);
+ 		unlocked_inode_to_wb_end(inode, &cookie);
+ 	}
+@@ -2981,7 +2981,7 @@ bool __folio_end_writeback(struct folio *folio)
+ 
+ 	lruvec_stat_mod_folio(folio, NR_WRITEBACK, -nr);
+ 	zone_stat_mod_folio(folio, NR_ZONE_WRITE_PENDING, -nr);
+-	node_stat_mod_folio(folio, NR_WRITTEN, nr);
++	node_stat_add_folio(folio, NR_WRITTEN);
+ 
+ 	return ret;
+ }
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 1415a5c54a43..d08e923c9979 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -160,7 +160,7 @@ void __swap_cache_add_folio(struct swap_cluster_info *ci,
+ 	folio_set_swapcache(folio);
+ 	folio->swap = entry;
+ 
+-	node_stat_mod_folio(folio, NR_FILE_PAGES, nr_pages);
++	node_stat_add_folio(folio, NR_FILE_PAGES);
+ 	lruvec_stat_mod_folio(folio, NR_SWAPCACHE, nr_pages);
+ }
+ 
+@@ -265,7 +265,7 @@ void __swap_cache_del_folio(struct swap_cluster_info *ci, struct folio *folio,
+ 
+ 	folio->swap.val = 0;
+ 	folio_clear_swapcache(folio);
+-	node_stat_mod_folio(folio, NR_FILE_PAGES, -nr_pages);
++	node_stat_sub_folio(folio, NR_FILE_PAGES);
+ 	lruvec_stat_mod_folio(folio, NR_SWAPCACHE, -nr_pages);
+ 
+ 	if (!folio_swapped) {
+-- 
+2.43.0
 
-I will rework the patch to remove __private and keep the pointer type
-with %p formatting.
-
-Best Regards,
-Sean
 
