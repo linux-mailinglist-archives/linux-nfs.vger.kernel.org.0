@@ -1,156 +1,174 @@
-Return-Path: <linux-nfs+bounces-20847-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20848-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id II3kNsma32nXWQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20847-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2026 16:03:53 +0200
+	id 6KnRHqSj32miXAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20848-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2026 16:41:40 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30AC34051BF
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2026 16:03:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A16F4056D7
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2026 16:41:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ACFED300E73C
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2026 14:01:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 43CB83009FB9
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Apr 2026 14:34:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351CD3B389E;
-	Wed, 15 Apr 2026 14:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2CAE35B658;
+	Wed, 15 Apr 2026 14:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHC7OKBW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGRxvm/X"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C279935E92B
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Apr 2026 14:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7DA358367;
+	Wed, 15 Apr 2026 14:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776261670; cv=none; b=HV7sPQn5Ycxf0DqE3kXwhEdIiWSH0yzwfLHnNEHYu1qZy/EvccSffDzSeYQHGtS2KERonvu/uLlV0UfKG7da5CafFSijF1Y37J59i0/eXz0jMQZoUUoauHQ66FTIlKXie0gyqc0AVvD5Dj7tIt8fvkhIRDAVdHoVC3LpfMeSeKA=
+	t=1776263693; cv=none; b=kJZD2uY8q+ZZBXAQeoat3rK7iEy0cXCU/GAiZWV6foYb7003P+dUMEsC3j/2hs05lRfPrwA+AAkbTalQ5279foE/iRIfIWHbrJrrRRAET4x9V6NDmAleJE9TPlkWXmXUmqjVyWO7FvoSUUmLPuphYWktzvSfkjeDoz7kXn3mgwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776261670; c=relaxed/simple;
-	bh=KAfzQuapzFgy+8DBw1sffLbl39LDTDwcoFEqmUcuqbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDRFG2loRXBeOYOe8LO4aWbxB+2F+mOlcqfyz9lbBy4PbBhv533d6582qhv+aEuXLDkf9osdBtC6SrVMS8Q9lZwgUnfi4iO/BI7O+TXWnvY6qjn0wY3wLPGAa7PHrkRJ8imh6ykPSSFSuK+L31/JizCK8o/veAUoeqrNzDRsAuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fHC7OKBW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776261667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KP2uYNCXcppn7nF3Y59Ll2YQLye8a+Yfan6tJlchaIg=;
-	b=fHC7OKBW6/svNbT+HNQvurGWfW3Cr5Fbl/bMt7fBZDF4nXDaVS0cJPophh8QIrVyLff0bU
-	WDKuB/lEnPSFhDnsho0z7M+XJ50Ujn3qONb7zlaCiN3eV89wjvJVo2XOuq6itSu7l62xCG
-	+KERvaWvs8zOw46/1ECxTUNg3ZY4zYU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-467-a260Ont_PcOvYTDDNxW2EQ-1; Wed,
- 15 Apr 2026 10:01:04 -0400
-X-MC-Unique: a260Ont_PcOvYTDDNxW2EQ-1
-X-Mimecast-MFC-AGG-ID: a260Ont_PcOvYTDDNxW2EQ_1776261663
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B1A3180064A;
-	Wed, 15 Apr 2026 14:01:03 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.80.125])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0533C180047F;
-	Wed, 15 Apr 2026 14:01:01 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] NFSv4: retry GETATTR if GET_DIR_DELEGATION failed
-Date: Wed, 15 Apr 2026 10:01:00 -0400
-Message-ID: <20260415140100.52455-1-okorniev@redhat.com>
+	s=arc-20240116; t=1776263693; c=relaxed/simple;
+	bh=8B3JEnHtc26ea94Qf12pLpgUQm3OGM/HkIcKv8RtGRQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=WG6MK1waFaVathWyPHIwXPQVKksiDwDcQuDsLARPfv9D5L/vc5tHJI0hCQTMUt3f6K0ulBEjO/UQWZmt//ZP/ISSXAkxZTfAa+g0evojWa8gT4IS7qiowjg+gGgyOAezMg/nWtXMFDPK+/RZE0dE3/ChlCbadCXxpCTBolHb9Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGRxvm/X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF1EC4AF0B;
+	Wed, 15 Apr 2026 14:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776263693;
+	bh=8B3JEnHtc26ea94Qf12pLpgUQm3OGM/HkIcKv8RtGRQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=pGRxvm/XD/Fq5IK9vY3jJaw08hZd7eyEB+b5JYDHsJ4W+0cSa24g0pTts4RUDDPvM
+	 4JxIblqK06IOoUrUiJS1uKhK499v7ZAuBsfIpQshaYifb5iSb2NgKoTFU3T5StYVX+
+	 QCzvV+mIvs6DVSrvQUa1UJ53+zt3HHuJv8FiSz1g58QQnFpEbkc6Axs/4Igmvz5+OC
+	 qvycua9zJo8E0IP8aizVtxbIKwuYosdaHoxqzYIlh6xkmBqU4JX4P4O4jkHH66qcT/
+	 Smhzyl3el3oPtBH8M5fj+cCz5yn223vZnDRmm1oOJ5cx0tOkf8+OWvqrgn22vUYVos
+	 R7l/SEaLWBU7w==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 97337F4006F;
+	Wed, 15 Apr 2026 10:34:51 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 15 Apr 2026 10:34:51 -0400
+X-ME-Sender: <xms:C6LfaYd7VLfQ3ekkky0J9aTErhecBsipsXemgMNMSstmGe5XmPrqfQ>
+    <xme:C6LfaVC29sOVFFe6Hx9cqUJExJHUW09Ed44bLEjvvGkf0H_Q_Na45EUnoc7Qx3Dgs
+    400skqYN6HNxprarAS6k6uKwhLBlhoRerAexw2O7V8HDhl4tusRfuUH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeggeefgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopegrmhhirhejfehilh
+    esghhmrghilhdrtghomhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    htohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthht
+    ohephhgthheslhhsthdruggvpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrd
+    gtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhr
+    tghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomh
+X-ME-Proxy: <xmx:C6LfaTPej6W1qEA32psXtWIAu6dTfmkFfZwiffXo1foywhCDe8V4Fg>
+    <xmx:C6LfaYZ7gJoaYOoAMMsDJE-sh1r1tYJzajYNfy8rP2RVL-qymA4-7w>
+    <xmx:C6LfaZx6oZ0qBSuXcJqy93FHQW1p0L2XApjN3ZNobyuUmx6kcoqgaQ>
+    <xmx:C6LfafN9qf5sZOQJkjuvNYfbx3O78hSB5lwbwTpxEavsJ3TC-ejrmA>
+    <xmx:C6LfaQeSxPB7EcCzsSQZhh0BPhJu2vsyj1qNXq3H7Xn8F7h_5ZltEv7o>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6314A780070; Wed, 15 Apr 2026 10:34:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-ThreadId: AwBntrSeBB7R
+Date: Wed, 15 Apr 2026 07:34:31 -0700
+From: "Chuck Lever" <cel@kernel.org>
+To: "Christoph Hellwig" <hch@lst.de>, "Christian Brauner" <brauner@kernel.org>
+Cc: NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>
+Message-Id: <217438cb-63ff-41d2-8f3c-fbdb1945a670@app.fastmail.com>
+In-Reply-To: <20260415052925.GC26559@lst.de>
+References: <20260401144059.160746-1-hch@lst.de>
+ <8bef4d4e-1c0d-451d-8854-ed0cba27ee1f@app.fastmail.com>
+ <20260409-schwalben-neutralisieren-fb5a184e5049@brauner>
+ <20260410111007.GA10292@lst.de>
+ <20260414-ausbrechen-gemixt-ff09f46bdad2@brauner>
+ <20260415052925.GC26559@lst.de>
+Subject: Re: cleanup block-style layouts exports v2
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20847-lists,linux-nfs=lfdr.de];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-20848-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 30AC34051BF
+	FREEMAIL_CC(0.00)[brown.name,redhat.com,oracle.com,talpey.com,vger.kernel.org,kernel.org,gmail.com,linux-foundation.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,app.fastmail.com:mid];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 5A16F4056D7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Currently, getting a directory delegation is opportinistic and gets
-added to an existing GETATTR that's trying to retrieve some needed
-attributes. However, GET_DIRDELEGATION can fail and that currently
-causes a GETATTR to fail and an error is propagated to the user.
 
-Instead, the original GETATTR should be retried without requesting
-a directory delegation. Also, now chosing to clear asking for
-the direct delegation for this specific inode.
+On Tue, Apr 14, 2026, at 10:29 PM, Christoph Hellwig wrote:
+> On Tue, Apr 14, 2026 at 12:01:39PM +0200, Christian Brauner wrote:
+>> On Fri, Apr 10, 2026 at 01:10:07PM +0200, Christoph Hellwig wrote:
+>> > On Thu, Apr 09, 2026 at 03:26:09PM +0200, Christian Brauner wrote:
+>> > > > Christian, are you OK if I take this series through the NFSD tree?
+>> > > 
+>> > > Hm, I generally prefer infrastructure to go through the VFS tree.
+>> > > You can get a stable branch ofc.
+>> > 
+>> > Communicating this earlier would be helpful.  If we switch to a new
+>> > tree base we're going to miss this merge window.
+>> 
+>> The series was sent on April 1 so with about 2 weeks before the merge
+>> window... If your series isn't ready by -rc5 what is it doing being
+>> merged for the coming merge window is the other side of the question. So
+>> afaict, there's no hurry.
+>
+> That's a very weird generic standard.  I know a lot of subsystem don't
+> take complex core changes until a bit before the cutoff, but killing
+> 3 weeks of the merge window for everything is odd.
+>
+> Even more I'm not even why we're having that discussion - exportfs
+> has it's own maintainers, one of whom ACKed this including the whole
+> tree discussion.
 
-Fixes: 156b09482933 ("NFS: Request a directory delegation on ACCESS, CREATE, and UNLINK")
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+In this case, pNFS is the only consumer that will notice or use the
+new "infrastructure" and us NFS experts are the only ones who can test
+and review it properly. And, the likelihood of conflicts with patches
+in nfsd-testing is high (in fact we've already had at least one). It
+makes sense to me to take this series through NFSD.
 
--- v2:
-BSD server can return NFS4ERR_NOFILEHANDLE when requesting directory
-delegations on "/" that isn't exported.
----
- fs/nfs/nfs4proc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 91bcf67bd743..83c596a8cc20 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4469,6 +4469,14 @@ static int _nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 		case -ENOTSUPP:
- 		case -EOPNOTSUPP:
- 			server->caps &= ~NFS_CAP_DIR_DELEG;
-+			break;
-+		case -NFS4ERR_NOFILEHANDLE:
-+		case -NFS4ERR_INVAL:
-+		case -NFS4ERR_IO:
-+		case -NFS4ERR_DIRDELEG_UNAVAIL:
-+		case -NFS4ERR_NOTDIR:
-+			clear_bit(NFS_INO_REQ_DIR_DELEG, &(NFS_I(inode)->flags));
-+			status = -EAGAIN;
- 		}
- 	}
- 
-@@ -4490,6 +4498,7 @@ int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 		default:
- 			err = nfs4_handle_exception(server, err, &exception);
- 			break;
-+		case -EAGAIN:
- 		case -ENOTSUPP:
- 		case -EOPNOTSUPP:
- 			exception.retry = true;
 -- 
-2.52.0
-
+Chuck Lever
 
