@@ -1,199 +1,306 @@
-Return-Path: <linux-nfs+bounces-20927-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20928-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IEzzHS0o4Wl0pwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20927-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 20:19:25 +0200
+	id 4DjwMrM44WmaqgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20928-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 21:29:55 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 225CE413B05
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 20:19:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EE15414159
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 21:29:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E5852316230B
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 18:15:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4645B302BA5C
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:25:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 961E83368A7;
-	Thu, 16 Apr 2026 18:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4C43A6B80;
+	Thu, 16 Apr 2026 19:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9xUz/Hy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuvgudHs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A263368A3
-	for <linux-nfs@vger.kernel.org>; Thu, 16 Apr 2026 18:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776363311; cv=none; b=FgJbGLfhinxsqETT2bKNU9pInU+nZloXsYnn1Zt8+tO1skCD1PxlZHfUZDoFvyfqF5a4A4TimXRDjsxgxCMLs1pCCgCxk15tJ50d7wpVligcsLFpEXJWZ7kArwVjgeUEhfxPpH4WeTvL5zd65f7Lnx3UghTjdG8nZsfAHY4ppgU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776363311; c=relaxed/simple;
-	bh=6fXkfy/Fe3rFql01Mi1ZTgpjRYa4qqO8MQtbZowsYU0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bXfRxSrDWsSDBp2PxrbLPz7RRXnO/sNJacFtoT+vn4tHk3X6uCq0ahnjpyPWtLD3IZ4Q9HQYMBy7T1gdRnDblanzXYNVJDXeT04JCl51FfW1JeahOQx3MIedXiZGJTCUkbeYRqccRYi+UgUw3/tbEBwmnIEy+98TRRK8rPflknI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9xUz/Hy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3140C2BCB0;
-	Thu, 16 Apr 2026 18:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776363311;
-	bh=6fXkfy/Fe3rFql01Mi1ZTgpjRYa4qqO8MQtbZowsYU0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=F9xUz/HytP2Gn11AVgAU29DprAfwy8ORd2c9yQ8zSmJ1619OUuUUWdI1dvcFpkjIZ
-	 julZtsEASPM4a2ckEwxesJTY9fB7BtZ5qHIAC2ww7K3yEPq1KKFTlQbJh/GKTZzmvZ
-	 FjUdJu1bXBcSoEfhk29eBK15tjekdQTQeJbmJpTXaJg9LAs4sdB6vc7B6wFWV3CwDx
-	 oYq74HDsr3Ugk+OEnO/+2LydPGwUZE0A1Zh8QB6E62smcR5s5lg/uqVsZ6YNUu0BC6
-	 mE8AzI005MofU/y4uqUfwodWF/SvKChOCwqPWrA66AaSS01ohzid8uBjPengwFMHpA
-	 pqRdkRMDIXCJA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 16 Apr 2026 11:14:57 -0700
-Subject: [PATCH pynfs v2 25/25] server41tests: test within-directory
- rename-over nad_old_entry
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DE1337110
+	for <linux-nfs@vger.kernel.org>; Thu, 16 Apr 2026 19:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776367506; cv=pass; b=rrJq0+t8uCo2dV9KNFE+FmIv/+nL92quEB4nf8gZT38iyUACMHBemNrN9+XqDHIl11LIiL1LLOS/KoH6ObnmuOfqI3JMbRwvKdcguQ7BQgn7r+HSdGvYJegR2TH1C65C+S+82+XhnVvo9TRG7IjWsOV2/zzdHKbX7t7CWNV2hoA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776367506; c=relaxed/simple;
+	bh=YTWAuUgodP4x0SGZZNXpfJHoOQ/Al8dOyWsalMJbeKs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jm2CyEBc3TvhuJgA8/qFLihna9idTU2ql257CAyX/egM6uAMHgUIF56mTFFCOqEcyWyh3NCoPPBn62rSladAVHYs7qQmwFaFTY4CsEEmpXACYWAYGUbMqH7quUmiFbGL83bmHw8ohr0OrIswVzLePrfheWOvhabqt9gvHP6ENQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IuvgudHs; arc=pass smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b9d6c8871c7so1293705866b.1
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Apr 2026 12:24:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776367496; cv=none;
+        d=google.com; s=arc-20240605;
+        b=SYIVT3B6PplwA/7UpE8kI/6RxuRsNkfj94BYxNpc8bKo1xpbCNOH5pOcDduqbElckC
+         JUFePWWsOHu1bpYX9YT3NB7sD3MLSs6kD976FqhALYXhv1wN/+Wxs31q+DlRanDy0tUd
+         xknJSpCkcjiK61hQ3Aqn2KMlb9vNqq4QQ/z0D/Ej0hvzrGtFIM3hpyV2Jgcw3lj3kIhm
+         jV8QoGfd3cqw9IR7LFXuHUYRRxWDB8PD/MW+/U8h5NVszWztE/jusAmDsBv09iItuAfE
+         zWHChlDRtTC0p2OheBwmIk54sUd77r8Ra6GpRL95J0Y4+pBgdy7ByO5su088wsVB8q8k
+         Mgpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9K3ysuZXV4OKgvP6Hz+tr/FztQIKDGUmUgbaHLYQ4fs=;
+        fh=fOH6taobcQfA0k7sAOtiXglxcuuGdHccAXVKLNCjKPI=;
+        b=MAcp3kde8FMR3uOEyL6aixY5sPVtSSrModbG6tvIpst0E51U53z6g3mrC+yy28DYfZ
+         0htLH52gTagXfa3pw56RhwR+0VqWON3btTIWCzSaUhfeqYmMHADaj2yndUUArkj28nBF
+         A3Hcj5WorQHVhRuwCjEYOSQL4SZmEN3CmM8fSxpzp17rV3r51bqmU2FfaWmntKjraYNU
+         hiWJuWUCAnvPMlYLtjC0U0NVbNcefH1ifZpSTyURE8zOY2rO0LsqqTZGjMwY5i4T+h9P
+         Lwk08LdvnNkHVm8r4gGKl6XUjYIVBkTSjp+9lNjY0UfAN+SXrQSSJbUmbY7lg1rG91uv
+         2sDQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776367496; x=1776972296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9K3ysuZXV4OKgvP6Hz+tr/FztQIKDGUmUgbaHLYQ4fs=;
+        b=IuvgudHss3pf9xta9CoHzbNM/KkqwvVlbZG1ujAPlUvsEERquMRMCcNKuZB4ePTAM5
+         7NtHkTfv5kJNgOXozHtBzx6BeOftPECAFzrLC/Kx+7C6Z+aMX16BAnXG4S26OUfk3WGg
+         CWZQvHirIm8BMV/eAS7dQVd+snAopqjN+dWq8LBfZchgH0SFAJBxKZ7twV1lroXi7RqL
+         6seCdSS2mS6a+aqyWvZotzTjBpSsVqzQV/ddt5/cyYwOEsyfwdY8ZTvZnZXvtx6xF+FO
+         5LV2B5eGbqXEDNgAZKrrj0OIGOZ6Vfb9iUPXy8OI0AkX/Cx2xeQJhF/vFCWfKeI7U4O9
+         g8Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776367496; x=1776972296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9K3ysuZXV4OKgvP6Hz+tr/FztQIKDGUmUgbaHLYQ4fs=;
+        b=IrrV1RQy48vrtljMd0Rg0e5ws7fL2cCsPL/MB0jIecDxZvz6jCjQQCQcrbiyPYEDKC
+         4zBu6QsFPoW7h1uN65B1OHRkYGfWu2B1xJp9nUync4Y/bFwZIQ6D+TRnsIx0cZk6MmMG
+         WMlvxmv6DodCiGbbPuiX7lnN3DD/wp4d+upy9+NK8FT+wXCUo7uoEPUuDIDIhH6G2EJO
+         Nd2K5sFoVW4avnlpjQEHWxmuEPOeWgN+6+EUqQAAgQveEnnuus4hhI7AefzS1w4gjTXV
+         PfAI/flOo0SpAvvwuRERqiZlJmaohnEnXm8cxuuZAQQTNcotUdYxdegdJlXTLeYHVg3G
+         f7pw==
+X-Forwarded-Encrypted: i=1; AFNElJ+s0/8Z1LkWP9OZG3elECfQ5dMEUx9lfWz6KJAtIjhcCrl9MPRfQkzZMgDwXaI2fhFG3ik+xj8cIyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBPQdsXQuEIOnzK1BM4Z1vx0a8E4K7pNgaFefX7yhwLVNCPb0n
+	GliolnKLccP4H+liwRDBvv/OGfs1bRCnqLoV2+9sl9xpwkIqQuK8Lx3zmN8qPVc/xxMvv4sNQNU
+	7tnXXj64Fqe10TAZrUC8/BEPqDbbdvgQ=
+X-Gm-Gg: AeBDievdn7MsecE1MlXPyb5JCD4qrAEXtHZNzssz6uIfcxEpCs033+aafVY/O562iyI
+	YY030kVZgyfJrM4tgPM7QevVhZ8KiKF8PA5ExkHbKE+h0Kc41F5ejsMsUD+VZq4BdcPuBAhSyTF
+	6yJw/VmYDHOlXVFEQRMdq5Mo0m0paXaII4zuCR3t3IsLPQdo3nYwnuqyvkq41JoEN9hbt/FG49o
+	b/FiHB0FExN/dgsLi0tuYf+b5pqEXvvS9lcWxrqRjABdAQ0mD6/oApv/3Xqy/HWISEvKxkcxyqk
+	DV2xoqCbwiDpp+1u6hwhxM2UX+8AuSUQzcgUH0OnPcAdYUvPdk7r36ATWTul9hk=
+X-Received: by 2002:a17:907:c002:b0:b9c:34f8:b969 with SMTP id
+ a640c23a62f3a-ba3dd6a4727mr34562766b.49.1776367495571; Thu, 16 Apr 2026
+ 12:24:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260416-dir-deleg-v2-25-fad510db5941@kernel.org>
-References: <20260416-dir-deleg-v2-0-fad510db5941@kernel.org>
-In-Reply-To: <20260416-dir-deleg-v2-0-fad510db5941@kernel.org>
-To: Calum Mackay <calum.mackay@oracle.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3439; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=6fXkfy/Fe3rFql01Mi1ZTgpjRYa4qqO8MQtbZowsYU0=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4Scjk7tuEo0AMPHBAnYYzhxZKk6RAnxTBtqKw
- 6CpM6duN1GJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEnIwAKCRAADmhBGVaC
- FWpVD/0a0Lbt7CT3qiSC/GrTGgj4h8v+7Vv54akzPRvq5HiMuHqzdxaBwuY3PTYvK2rbLyhBjgD
- gnj2ww38qhfx27m7pfdAlbfiEEXP7rTdHo1/rbztrwUW4xT/JEJ0r+0YrVX6XJYRJfobLGv/0VG
- WKzb3IdyttEI6Q0XPfi0lpdBr3v7PmmFpl9CFtFGPDkAqRkRyK9PVEU9hTEzW2EfJBsKx9q7IXp
- qEaxv/QvyKSqj+d0WOFBjPG+qJE+GYvXVusRudalUy/B/XlLyegY9IX7MCVcFTYqH2f53uyirdI
- ISG7CHdsJTaGcIczn/Hn9d8fSQpVTZ8LIqakv24rCw/d9YlpHHjSe9uVHxsTmw4oDzQqqNHqoP2
- e9UfS441EDvwGYKPhES64KqZzna/aPDFMl2hSNh7QUvFFoEqgmoBqnxWPQ1bLyZcdc8PzolRjt5
- hbsLoBe3t2vwI7GKCCwYwvRTchdmk49HvD5c5/cCdzjXTgySd5lkwhJJGWB37/u3/YueLbO8IVD
- kaLYxFjXix/1JCEN/3BO+dT8uyfYS5FBx/qF4RFtfIE9MXy0a/Q+vXtI7mez6nwZBPw3I6hxSak
- /c5U2P519sumIyXd1WXvtN/W7nKSwjY0qLwvjjpCddXG0BnaadCGlFWbqdjo7DeKWKEAY2IJnos
- 2cpSzFHKDqQbPkA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+References: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org> <20260416-dir-deleg-v2-7-851426a550f6@kernel.org>
+In-Reply-To: <20260416-dir-deleg-v2-7-851426a550f6@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 16 Apr 2026 21:24:44 +0200
+X-Gm-Features: AQROBzDkNbo1A8vs3cuxkYPYXRSUZziZymY7H6-6on9ynU_2C3mPiqqxTu3HE2k
+Message-ID: <CAOQ4uxg2jHxCi77A1DGtopjZHsTNg4etdboW2GjL85N3uc_KqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 07/28] fsnotify: add FSNOTIFY_EVENT_RENAME data type
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20927-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20928-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com,vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 225CE413B05
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 1EE15414159
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Test that when a within-directory rename overwrites an existing entry,
-the server populates nrn_new_entry.nad_old_entry in the
-NOTIFY4_RENAME_ENTRY notification with the overwritten entry's info.
----
- nfs4.1/server41tests/st_dir_deleg.py | 65 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+On Thu, Apr 16, 2026 at 7:35=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Add a new fsnotify_rename_data struct and FSNOTIFY_EVENT_RENAME data
+> type that carries both the moved dentry and the inode that was
+> overwritten by the rename (if any).
+>
+> Update fsnotify_data_inode(), fsnotify_data_dentry(), and
+> fsnotify_data_sb() to handle the new type, and add a new
+> fsnotify_data_rename_target() helper for extracting the overwritten
+> target inode.
+>
+> Update fsnotify_move() to use the new data type for FS_RENAME and
+> FS_MOVED_TO events, passing the overwritten target inode through the
+> event data. FS_MOVED_FROM is unchanged since the source directory
+> doesn't need overwrite information.
+>
+> This is done so that fsnotify consumers like nfsd can atomically
+> observe the overwritten file when a rename replaces an existing entry,
+> without needing a separate FS_DELETE event.
+>
+> Assisted-by: Claude (Anthropic Claude Code)
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  include/linux/fsnotify.h         |  8 ++++++--
+>  include/linux/fsnotify_backend.h | 20 ++++++++++++++++++++
+>  2 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/nfs4.1/server41tests/st_dir_deleg.py b/nfs4.1/server41tests/st_dir_deleg.py
-index a2465efbcdbe..3a1d7ff2b659 100644
---- a/nfs4.1/server41tests/st_dir_deleg.py
-+++ b/nfs4.1/server41tests/st_dir_deleg.py
-@@ -999,3 +999,68 @@ def testDirDelegCrossRenameOver(t, env):
- 
-     if not got_add:
-         fail("Missing ADD notification for cross-dir rename-over")
-+
-+def testDirDelegRenameOver(t, env):
-+    """Verify within-directory rename-over populates nad_old_entry
-+
-+    Per RFC 8881bis Section 27.4.6, when a within-directory rename
-+    overwrites an existing entry, the overwritten entry's info is
-+    reported in nrn_new_entry.nad_old_entry.
-+
-+    FLAGS: dirdeleg all
-+    CODE: DIRDELEG22
-+    """
-+    c = env.c1
-+    cb = threading.Event()
-+    sess1, fh, deleg = _getDirDeleg(t, env,
-+                                     [NOTIFY4_RENAME_ENTRY,
-+                                      NOTIFY4_GFLAG_EXTEND], cb)
-+
-+    # Create two files in the delegated directory from sess1
-+    src_name = env.testname(t)
-+    victim_name = b"%s_victim" % env.testname(t)
-+    owner = open_owner4(0, b"owner")
-+    how = openflag4(OPEN4_CREATE, createhow4(GUARDED4, {FATTR4_SIZE:0}))
-+
-+    for name in [src_name, victim_name]:
-+        claim = open_claim4(CLAIM_NULL, name)
-+        open_op = [ op.putfh(fh), op.open(0,
-+                                          OPEN4_SHARE_ACCESS_WRITE | OPEN4_SHARE_ACCESS_WANT_NO_DELEG,
-+                                          OPEN4_SHARE_DENY_NONE, owner, how, claim), op.getfh() ]
-+        res = sess1.compound(open_op)
-+        check(res)
-+        open_stateid = res.resarray[-2].stateid
-+        file_fh = res.resarray[-1].object
-+        close_file(sess1, file_fh, stateid=open_stateid)
-+
-+    # Rename src over victim from sess2
-+    sess2 = c.new_client_session(b"%s_2" % env.testname(t))
-+    rename_op = [ op.putfh(fh), op.savefh(),
-+                  op.putfh(fh),
-+                  op.rename(src_name, victim_name) ]
-+    res = sess2.compound(rename_op)
-+    check(res)
-+
-+    completed = cb.wait(2)
-+    if completed:
-+        cb.clear()
-+        cb.wait(1)
-+
-+    delegreturn_op = [ op.putfh(fh), op.delegreturn(deleg) ]
-+    res = sess1.compound(delegreturn_op)
-+    check(res)
-+
-+    if (not completed or not cb.got_notify):
-+        fail("Didn't receive a CB_NOTIFY from the server!")
-+
-+    evt_type, evt = decode_notify_event(cb.changes[0])
-+    if evt_type != NOTIFY4_RENAME_ENTRY:
-+        fail("Expected RENAME notification, got %d" % evt_type)
-+    if evt.nrn_old_entry.nrm_old_entry.ne_file != src_name:
-+        fail("Wrong old entry name in RENAME notification")
-+    if evt.nrn_new_entry.nad_new_entry.ne_file != victim_name:
-+        fail("Wrong new entry name in RENAME notification")
-+    if len(evt.nrn_new_entry.nad_old_entry) != 1:
-+        fail("Expected nad_old_entry to contain the overwritten entry")
-+    if evt.nrn_new_entry.nad_old_entry[0].nrm_old_entry.ne_file != victim_name:
-+        fail("Wrong overwritten entry name in nad_old_entry")
+It is strange to me that the NFS protocol needs to report the overwritten
+node in the same event of the rename, but oh well, fine by me.
 
--- 
-2.53.0
+Feel free to add:
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
+Thanks,
+Amir.
+
+>
+> diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+> index 079c18bcdbde..bda798bc67bc 100644
+> --- a/include/linux/fsnotify.h
+> +++ b/include/linux/fsnotify.h
+> @@ -257,6 +257,10 @@ static inline void fsnotify_move(struct inode *old_d=
+ir, struct inode *new_dir,
+>         __u32 new_dir_mask =3D FS_MOVED_TO;
+>         __u32 rename_mask =3D FS_RENAME;
+>         const struct qstr *new_name =3D &moved->d_name;
+> +       struct fsnotify_rename_data rd =3D {
+> +               .moved =3D moved,
+> +               .target =3D target,
+> +       };
+>
+>         if (isdir) {
+>                 old_dir_mask |=3D FS_ISDIR;
+> @@ -265,12 +269,12 @@ static inline void fsnotify_move(struct inode *old_=
+dir, struct inode *new_dir,
+>         }
+>
+>         /* Event with information about both old and new parent+name */
+> -       fsnotify_name(rename_mask, moved, FSNOTIFY_EVENT_DENTRY,
+> +       fsnotify_name(rename_mask, &rd, FSNOTIFY_EVENT_RENAME,
+>                       old_dir, old_name, 0);
+>
+>         fsnotify_name(old_dir_mask, source, FSNOTIFY_EVENT_INODE,
+>                       old_dir, old_name, fs_cookie);
+> -       fsnotify_name(new_dir_mask, source, FSNOTIFY_EVENT_INODE,
+> +       fsnotify_name(new_dir_mask, &rd, FSNOTIFY_EVENT_RENAME,
+>                       new_dir, new_name, fs_cookie);
+>
+>         if (target)
+> diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_ba=
+ckend.h
+> index 66e185bd1b1b..f8c8fb7f34ae 100644
+> --- a/include/linux/fsnotify_backend.h
+> +++ b/include/linux/fsnotify_backend.h
+> @@ -311,6 +311,7 @@ enum fsnotify_data_type {
+>         FSNOTIFY_EVENT_DENTRY,
+>         FSNOTIFY_EVENT_MNT,
+>         FSNOTIFY_EVENT_ERROR,
+> +       FSNOTIFY_EVENT_RENAME,
+>  };
+>
+>  struct fs_error_report {
+> @@ -335,6 +336,11 @@ struct fsnotify_mnt {
+>         u64 mnt_id;
+>  };
+>
+> +struct fsnotify_rename_data {
+> +       struct dentry *moved;   /* the dentry that was renamed */
+> +       struct inode *target;   /* inode overwritten by rename, or NULL *=
+/
+> +};
+> +
+>  static inline struct inode *fsnotify_data_inode(const void *data, int da=
+ta_type)
+>  {
+>         switch (data_type) {
+> @@ -348,6 +354,8 @@ static inline struct inode *fsnotify_data_inode(const=
+ void *data, int data_type)
+>                 return d_inode(file_range_path(data)->dentry);
+>         case FSNOTIFY_EVENT_ERROR:
+>                 return ((struct fs_error_report *)data)->inode;
+> +       case FSNOTIFY_EVENT_RENAME:
+> +               return d_inode(((const struct fsnotify_rename_data *)data=
+)->moved);
+>         default:
+>                 return NULL;
+>         }
+> @@ -363,6 +371,8 @@ static inline struct dentry *fsnotify_data_dentry(con=
+st void *data, int data_typ
+>                 return ((const struct path *)data)->dentry;
+>         case FSNOTIFY_EVENT_FILE_RANGE:
+>                 return file_range_path(data)->dentry;
+> +       case FSNOTIFY_EVENT_RENAME:
+> +               return ((struct fsnotify_rename_data *)data)->moved;
+>         default:
+>                 return NULL;
+>         }
+> @@ -395,6 +405,8 @@ static inline struct super_block *fsnotify_data_sb(co=
+nst void *data,
+>                 return file_range_path(data)->dentry->d_sb;
+>         case FSNOTIFY_EVENT_ERROR:
+>                 return ((struct fs_error_report *) data)->sb;
+> +       case FSNOTIFY_EVENT_RENAME:
+> +               return ((const struct fsnotify_rename_data *)data)->moved=
+->d_sb;
+>         default:
+>                 return NULL;
+>         }
+> @@ -430,6 +442,14 @@ static inline struct fs_error_report *fsnotify_data_=
+error_report(
+>         }
+>  }
+>
+> +static inline struct inode *fsnotify_data_rename_target(const void *data=
+,
+> +                                                       int data_type)
+> +{
+> +       if (data_type =3D=3D FSNOTIFY_EVENT_RENAME)
+> +               return ((const struct fsnotify_rename_data *)data)->targe=
+t;
+> +       return NULL;
+> +}
+> +
+>  static inline const struct file_range *fsnotify_data_file_range(
+>                                                         const void *data,
+>                                                         int data_type)
+>
+> --
+> 2.53.0
+>
 
