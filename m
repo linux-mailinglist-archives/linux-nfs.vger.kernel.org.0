@@ -1,191 +1,307 @@
-Return-Path: <linux-nfs+bounces-20862-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20863-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iIaONR7f4GkEnAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20862-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 15:07:42 +0200
+	id 6MNbKvHj4GlhnAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20863-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 15:28:17 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 749D640E7AA
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 15:07:42 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9AAC40ED03
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 15:28:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 273A830201BE
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 13:07:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 950EF300FFA7
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 13:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C193C3BADA9;
-	Thu, 16 Apr 2026 13:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EECB83BADB8;
+	Thu, 16 Apr 2026 13:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzAs7Sbw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNITp2US"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3248D3B9DA9;
-	Thu, 16 Apr 2026 13:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70043B1B3;
+	Thu, 16 Apr 2026 13:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776344854; cv=none; b=NkAORj0caRJWVPjFOr3V+0lrWhMAKQORsRGoknS5SoaMImO39vXBEeTaX8P224P2KRbw0az/T3+HbenvEXdUW4N3hUelOC1A3Iz0E1Wxnc/YVhV4uo0Qv2UhJartsa7WIeybSHX2aSkm5X8ClnUnfLz5NbvDgOj2TwIaAuJFhjI=
+	t=1776346091; cv=none; b=juYRU6XRtTn5pWTGJtUDTr9WRmSMa7grtkSXPsMMHNHAkbJTNqlBK3ZvhIBmb5AeYvJsjf2r9bW+J6ZRFksHF49rIu9aN6Vrao4o6fB9+TP2eQkLt2EjdATk4hycztS2sBQ3VNKMt04dIYzz+FhE+0YYfPVPR1pIcLFkgKtGcWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776344854; c=relaxed/simple;
-	bh=RGR6IlEqqpx/s8nsqEXCWO4lq2ztrH/pNohj84WOIyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LGeNSTBRMIu4BIvUZ5XcYiIqRdenE2qMKPl6A333wx/4s4xQdXkMRzc4gOdEdexeCM7jJZVr2klMCLbtx6fI8tEao8Gek1/vLnM8yH1KsZJ+g064EMXUqNJlB9D2/6GLNySOHx0lr67IbXN4D4JZHQvDQvyqnwacrsrzfrgVxHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzAs7Sbw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECD9C2BCAF;
-	Thu, 16 Apr 2026 13:07:24 +0000 (UTC)
+	s=arc-20240116; t=1776346091; c=relaxed/simple;
+	bh=J12G5pzMTUvfefHA+A/ErGNi+UxZvMBPAb5e+FOj0Hk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dcB9tgmPn0FXwaWojcTe7av/GiuKSx6AmhF4aP0oHamMyK+2TSwTOzhrkBf7o2F74WvMHgqsRihJMyUiOvNyX6Pf1qlI9DsF2UYd/KAjEIpQ8to1tK6zvszr8J9Wk0HDqSCLkj9pcrhA9BOY/ADr+MtmpdQCDkxmfEDuYS123x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNITp2US; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F28C0C2BCAF;
+	Thu, 16 Apr 2026 13:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776344853;
-	bh=RGR6IlEqqpx/s8nsqEXCWO4lq2ztrH/pNohj84WOIyg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CzAs7SbwQrDdP5LCSfO/4gW/2qXtErV9fwwNpEDqonWYUo1srfmpbU06AtrtIji3D
-	 cHH74WWVXTIXnWkTV4G9RNIzrifNP5IAfcaMbTNlOf6f9tOwAeG3mCnFnx+sIJuJsC
-	 h5kiN7Iy54irw7Ux6h7Xih+CDNPVTVH6Weh6adW8TJ79X1APpf3XeOij239tt//YYL
-	 Xx8odjofMJ1HpaB5BRZ+D5twCW2zNd7gvhNeyyNx2ODWE/IR5WrGwNcZFyWSbDOHTY
-	 ega3a7GHNP8fjVeqm/ZwM1Om4G/zzRsB/Me9LxR/tyDW/UQGmnkNTNwDLg2ly0Dd+U
-	 HTA2JMtVgmXyQ==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org,
-	Dorjoy Chowdhury <dorjoychy111@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	gfs2@lists.linux.dev,
-	linux-nfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	jlayton@kernel.org,
-	chuck.lever@oracle.com,
-	alex.aring@gmail.com,
-	arnd@arndb.de,
-	adilger@dilger.ca,
-	mjguzik@gmail.com,
-	smfrench@gmail.com,
-	richard.henderson@linaro.org,
-	mattst88@gmail.com,
-	linmag7@gmail.com,
-	tsbogend@alpha.franken.de,
-	James.Bottomley@HansenPartnership.com,
-	deller@gmx.de,
-	davem@davemloft.net,
-	andreas@gaisler.com,
-	idryomov@gmail.com,
-	amarkuze@redhat.com,
-	slava@dubeyko.com,
-	agruenba@redhat.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	sfrench@samba.org,
-	pc@manguebit.org,
-	ronniesahlberg@gmail.com,
-	sprasad@microsoft.com,
-	tom@talpey.com,
-	bharathsm@microsoft.com,
-	shuah@kernel.org,
-	miklos@szeredi.hu,
-	hansg@kernel.org
-Subject: Re: [PATCH v6 0/4] OPENAT2_REGULAR flag support for openat2
-Date: Thu, 16 Apr 2026 15:07:12 +0200
-Message-ID: <20260416-abgraben-seeweg-a44ce660957f@brauner>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260328172314.45807-1-dorjoychy111@gmail.com>
+	s=k20201202; t=1776346091;
+	bh=J12G5pzMTUvfefHA+A/ErGNi+UxZvMBPAb5e+FOj0Hk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=VNITp2USm8xN92IVKtT3+Bm1/bo7k1/3Ai5Mbub5YTyQI4sLUyzogUBZUDB+Sg1Qr
+	 xOUGj6hRn+20kW6zfJViUk8cEXLUn6+v83HVLAOS64KeTf0p8UvXz1AadMfurbISg7
+	 ITwO5OCaw3lGxtGrLNH3oZiDNZyVHqC7KvnhkTn9d6GjmqaE5yUqMORfohU1MAs55p
+	 Sx+pC8m+/F85O6fxsTnVjvE2Loqs98Sak0hqle1cs81EtPWpjLCN/RQrx14DLlC3zM
+	 1YHudu8Ktsej3arbGg5n0I5zMTfo4uglwL7knPO1BM5xiGyt7odnDxP7rAEBhXwl8A
+	 Q7GAfPoJ+12QA==
+Message-ID: <9ce53137035dfca329aa5e49593154149be3ac49.camel@kernel.org>
+Subject: Re: [PATCH v6 1/4] openat2: new OPENAT2_REGULAR flag support
+From: Jeff Layton <jlayton@kernel.org>
+To: Aleksa Sarai <cyphar@cyphar.com>, Dorjoy Chowdhury
+ <dorjoychy111@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, Linus Torvalds	
+ <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, ceph-devel@vger.kernel.org,
+ gfs2@lists.linux.dev, 	linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, 	jack@suse.cz, chuck.lever@oracle.com,
+ alex.aring@gmail.com, arnd@arndb.de, 	adilger@dilger.ca, mjguzik@gmail.com,
+ smfrench@gmail.com, 	richard.henderson@linaro.org, mattst88@gmail.com,
+ linmag7@gmail.com, 	tsbogend@alpha.franken.de,
+ James.Bottomley@hansenpartnership.com, deller@gmx.de, 	davem@davemloft.net,
+ andreas@gaisler.com, idryomov@gmail.com, amarkuze@redhat.com, 
+	slava@dubeyko.com, agruenba@redhat.com, trondmy@kernel.org,
+ anna@kernel.org, 	sfrench@samba.org, pc@manguebit.org,
+ ronniesahlberg@gmail.com, 	sprasad@microsoft.com, tom@talpey.com,
+ bharathsm@microsoft.com, shuah@kernel.org, 	miklos@szeredi.hu,
+ hansg@kernel.org
+Date: Thu, 16 Apr 2026 06:28:09 -0700
+In-Reply-To: <2026-04-16-raunchy-random-curfew-guide-GmtLJR@cyphar.com>
 References: <20260328172314.45807-1-dorjoychy111@gmail.com>
+	 <20260328172314.45807-2-dorjoychy111@gmail.com>
+	 <2026-04-16-selfless-milky-wasps-shin-p6liRL@cyphar.com>
+	 <CAFfO_h5kWCYszymaY=tPAbpU=PjLFxsND+CWSYtypN4iuW+qPw@mail.gmail.com>
+	 <2026-04-16-raunchy-random-curfew-guide-GmtLJR@cyphar.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2157; i=brauner@kernel.org; h=from:subject:message-id; bh=RGR6IlEqqpx/s8nsqEXCWO4lq2ztrH/pNohj84WOIyg=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQ+uM++wXB/S+Hvp5l/rigkRrF0TPIL6P15cr/RvNQpM /QUzkjXd5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzkjjLDf4eZR2wq2503fAzq /GWqvre2dffiM/cq/G2aL5n8OqWz3J/hf+KxvnNrrPo65qRG+AmXfZid5cS+6G6OdJBWUnP8rJi rzAA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [3.84 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-20862-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[43];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20863-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[cyphar.com,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,linux-foundation.org,lists.linux.dev,zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,arndb.de,dilger.ca,linaro.org,alpha.franken.de,hansenpartnership.com,gmx.de,davemloft.net,gaisler.com,redhat.com,dubeyko.com,samba.org,manguebit.org,microsoft.com,talpey.com,szeredi.hu];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,lists.linux.dev,zeniv.linux.org.uk,suse.cz,oracle.com,gmail.com,arndb.de,dilger.ca,linaro.org,alpha.franken.de,HansenPartnership.com,gmx.de,davemloft.net,gaisler.com,redhat.com,dubeyko.com,samba.org,manguebit.org,microsoft.com,talpey.com,szeredi.hu];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[uapi-group.org:url]
-X-Rspamd-Queue-Id: 749D640E7AA
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[uapi-group.org:url,amutable.com:email,cyphar.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D9AAC40ED03
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, 28 Mar 2026 23:22:21 +0600, Dorjoy Chowdhury wrote:
-> I came upon this "Ability to only open regular files" uapi feature suggestion
-> from https://uapi-group.org/kernel-features/#ability-to-only-open-regular-files
-> and thought it would be something I could do as a first patch and get to
-> know the kernel code a bit better.
-> 
-> The following filesystems have been tested by building and booting the kernel
-> x86 bzImage in a Fedora 43 VM in QEMU. I have tested with OPENAT2_REGULAR that
-> regular files can be successfully opened and non-regular files (directory, fifo etc)
-> return -EFTYPE.
-> - btrfs
-> - NFS (loopback)
-> - SMB (loopback)
-> 
-> [...]
+On Thu, 2026-04-16 at 23:05 +1000, Aleksa Sarai wrote:
+> On 2026-04-16, Dorjoy Chowdhury <dorjoychy111@gmail.com> wrote:
+> > On Thu, Apr 16, 2026 at 5:41=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com=
+> wrote:
+> > >=20
+> > > On 2026-03-28, Dorjoy Chowdhury <dorjoychy111@gmail.com> wrote:
+> > > > This flag indicates the path should be opened if it's a regular fil=
+e.
+> > > > This is useful to write secure programs that want to avoid being
+> > > > tricked into opening device nodes with special semantics while thin=
+king
+> > > > they operate on regular files. This is a requested feature from the
+> > > > uapi-group[1].
+> > > >=20
+> > > > A corresponding error code EFTYPE has been introduced. For example,=
+ if
+> > > > openat2 is called on path /dev/null with OPENAT2_REGULAR in the fla=
+g
+> > > > param, it will return -EFTYPE. EFTYPE is already used in BSD system=
+s
+> > > > like FreeBSD, macOS.
+> > > >=20
+> > > > When used in combination with O_CREAT, either the regular file is
+> > > > created, or if the path already exists, it is opened if it's a regu=
+lar
+> > > > file. Otherwise, -EFTYPE is returned.
+> > > >=20
+> > > > When OPENAT2_REGULAR is combined with O_DIRECTORY, -EINVAL is retur=
+ned
+> > > > as it doesn't make sense to open a path that is both a directory an=
+d a
+> > > > regular file.
+> > > >=20
+> > > > [1]: https://uapi-group.org/kernel-features/#ability-to-only-open-r=
+egular-files
+> > > >=20
+> > > > Signed-off-by: Dorjoy Chowdhury <dorjoychy111@gmail.com>
+> > > > ---
+> > >=20
+> > > Aside from the nit below, feel free to take a
+> > >=20
+> > > Reviewed-by: Aleksa Sarai <aleksa@amutable.com>
+> > >=20
+> >=20
+> > Thanks for reviewing!
+> >=20
+> > > > diff --git a/fs/open.c b/fs/open.c
+> > > > index 681d405bc61e..a6f445f72181 100644
+> > > > --- a/fs/open.c
+> > > > +++ b/fs/open.c
+> > > > @@ -960,7 +960,7 @@ static int do_dentry_open(struct file *f,
+> > > >       if (f->f_mapping->a_ops && f->f_mapping->a_ops->direct_IO)
+> > > >               f->f_mode |=3D FMODE_CAN_ODIRECT;
+> > > >=20
+> > > > -     f->f_flags &=3D ~(O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC);
+> > > > +     f->f_flags &=3D ~(O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | OPE=
+NAT2_REGULAR);
+> > >=20
+> > > It's not clear to me why you dropped this, I didn't see a review
+> > > mentioning it either. (General note: Ideally the cover letter changel=
+og
+> > > would mention who suggested a change in brackets after the changelog
+> > > line so it's easier to track where a change might've come from.)
+> > >=20
+> >=20
+> > Thanks for the general note. I will keep that in mind.
+> >=20
+> > The review was from Jeff Layton in v5
+> > https://lore.kernel.org/linux-fsdevel/5fcc2a6e6d92dae0601c6b3b8faa8b2f8=
+3981afb.camel@kernel.org/
+> > " 1. OPENAT2_REGULAR leaks into f_flags - do_dentry_open() strips
+> > open-time-only flags (O_CREAT|O_EXCL|O_NOCTTY|O_TRUNC)
+> >   but does not strip OPENAT2_REGULAR. When a regular file is
+> > successfully opened via openat2() with this flag, the bit
+> >   persists in file->f_flags and will be returned by fcntl(fd, F_GETFL).=
+"
+> >=20
+> > I think it makes sense to strip off as OPENAT2_REGULAR is an open time
+> > only flag (like O_CREAT and the others already), right?
+>=20
+> Well, O_DIRECTORY isn't stripped so if we want to mirror that behaviour
+> then it shouldn't be stripped either IMHO.
+>=20
+> O_NOCTTY and O_TRUNC make sense to strip (they are not relevant to the
+> file after it was opened -- truncation only happens at open time and you
+> can always set your controlling TTY later).
+>=20
+> The story with O_CREAT and O_EXCL is a bit more complicated. They are
+> stripped but the history there is unclear -- the line was added in Linux
+> 0.98.4(!) with no mention in the release note at the time. (Linus: I
+> wonder if you remember why this was changed at the time? Sorry for the
+> trip down memory lane...)
+>=20
+> However, the existence of F_CREATED_QUERY kind of shows that these kinds
+> of checks are stuff that userspace can find handy (though FMODE_CREATED
+> is more useful than O_CREAT|O_EXCL anyway). O_EXCL is used internally
+> for stuff so it can be re-exposed, I'm just not sure it's a good
+> precedent to make a decision based on.
+>=20
+> Then again, userspace can check with fstat(2) so it's not the end of the
+> world, but I don't really see a strong reason to hide information from
+> userspace. Since the mail was from Claude (and it tends to give silly
+> nits like that) I'm not sure whether Jeff would agree with my view or
+> not.
 
-- I've added an explanation why OPENAT2_REGULAR is only needed for some
-  ->atomic_open() implementers but not others. What I don't like is that
-  we need all that custom handling in there but it's managable.
+I don't have a strong feeling either way, but it "feels" like O_REGULAR
+is not particularly useful to return in F_GETFL.
 
-- I dropped the topmost style conversions. They really don't belong
-  there and if we switch to something better we should use (1 << <nr>).
+Once the file is open, then O_REGULAR really doesn't matter anymore. We
+_know_ it's a regular file at that point or the open wouldn't have
+happened. F_GETFL is more useful for showing flags that actually affect
+how the file description works (e.g. O_DIRECT, O_ASYNC, etc.).
 
-- I split the EFTYPE errno introduction into a separate patch.
-
----
-
-Applied to the vfs-7.2.openat.regular branch of the vfs/vfs.git tree.
-Patches in the vfs-7.2.openat.regular branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: master
-
-[1/4] openat2: new OPENAT2_REGULAR flag support
-      https://git.kernel.org/vfs/vfs/c/0b649c4d70f7
-[2/4] kselftest/openat2: test for OPENAT2_REGULAR flag
-      https://git.kernel.org/vfs/vfs/c/d7dc36df8fa7
-[3/4] sparc/fcntl.h: convert O_* flag macros from hex to octal
-      (dropped)
-[4/4] mips/fcntl.h: convert O_* flag macros from hex to octal
-      (dropped)
+--=20
+Jeff Layton <jlayton@kernel.org>
 
