@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-20903-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20904-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0GAKKb8n4Wl0pwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20903-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 20:17:35 +0200
+	id 0NCMLMIn4Wl0pwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20904-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 20:17:38 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 405B8413A6B
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 20:17:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E9CB413A72
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 20:17:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C24CA30CDD07
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF36630CFBB7
 	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 18:15:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916DA2F9D85;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5805331230;
 	Thu, 16 Apr 2026 18:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lakBXmLT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8m1QLjm"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1EF330324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DDB330B0B
 	for <linux-nfs@vger.kernel.org>; Thu, 16 Apr 2026 18:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776363301; cv=none; b=uXcCTuOMq7Rxv+nbBdxFrHbAjBWuPubXM8pU7J/lNo1qnpLxN2F24W0fDyvEQxyYXrwl6i8mBG3s0g3C6nt9X5qZ+TRaitcMXsoY/M/2i7B0QeVVVWGqeb1Q3erhnoW9sjUAe4lLp4N8Uw7pO3LOSmMWWVQHECKKrZbuU862mk8=
+	t=1776363301; cv=none; b=R1B7YbrcBwjs20Aejc87xF1ea31N5NIvLawOxOmfuGD0nCF5x2BSqDLVFtY9sPmEsmxD47VpsBG9gJzqlEamhNegy3EvODcwxSzB92/Y03HJyKiUbHgmTUF+ZxlC6dKmOUY7AaBcqJZpYhQzRqvkPpwPgHd8nBlbfU7rL1DhnSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776363301; c=relaxed/simple;
-	bh=x1Z+XzT17sIzRF8aJgdNS1Kc96XEDPPtgEzQsR79HnE=;
+	bh=Ql3wcT6tk4MsOPkVBZSBJuePbHmFTHW/i0Yh5J5jM9w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TO9G5yYWjdBqdqhCIzOMKqGATjzTMO+HcUVKvkCIm3M8HKfTOgnhoaSVm+or5gh3j3q4jNLggsTCK/Ew9Nn78QG56ghtujLmkSM5638dd02vQpVOXhPb9MXuVH9Y/ie77lAHldTfMDLgXiY5+hqimeOhAHFzs1r1Cm5z7U3OJHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lakBXmLT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF9FC2BCAF;
-	Thu, 16 Apr 2026 18:15:00 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=qSCB+rZg6vZKBhOLe+5fKKqoOx5206q/9U5QgfvSp9Mcjd4/3A5zODXvbFfIeIY7OQdYkFW8gITyoTX/vO8oSQQ1KE4wMav3W2/RmsKlU7zpl9Ae+ir82RPOHILkbvJ1fzS4bH/7nFr7+R1zR/+c8djn9QFCt/GDnU5EamBEgGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8m1QLjm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 303F6C2BCB0;
+	Thu, 16 Apr 2026 18:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1776363301;
-	bh=x1Z+XzT17sIzRF8aJgdNS1Kc96XEDPPtgEzQsR79HnE=;
+	bh=Ql3wcT6tk4MsOPkVBZSBJuePbHmFTHW/i0Yh5J5jM9w=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lakBXmLT3cTkRQHgJd7cv0PA09Ae30rsIteG1ezZui45S/JAqj8++wXNXe9r/P5O8
-	 J3zTRpdjFxcN00RVoSlItpC8SmE+904kaP+Z67wQkcDn7xYWRplTeATHbn8r+bkU6B
-	 cgAofFsM8Wjhc+zDEFcEHpSf5puzYUtZn4W0Xmf36DBAKrZb4a2WGDiTsJfFVKRwTl
-	 pvxRyKHBbtkJ3581cqh4PGrcHKAlDOSPT+6+/AUS1tW3iQR99OEwPU2qCzRQ9EJYhz
-	 FK+Rjag3O+pKvr36dFHwSu/ggwxVkIULH0BzZsPvJXkL35tsfOzuieXoLt2zMj7ShD
-	 vgWlMFLhQXRxA==
+	b=P8m1QLjmLtMEnEvtRwLylxnFqVGds1d4Qkg7Za1CZUXnoh1naFoD97ISsvoo4Z6UL
+	 pW4rPrFttQnlaN/rwGw+oIqbClAmz96otAquMkTRs5IdoVXhXz5Mg21vRIUsaD7Ys7
+	 PReG6WlW0EAPKF9wFx7sdPSVVwvp1VpcRXH3dfSQsdDw7ZXZSqN43zxklTPLgARV+h
+	 xg/GQsun5ZKWx48O7CCwMQi4Z59HhOPP98rF/9gIjZxdktJneC8ERBdTkmvsb4/JFM
+	 vN1n+K7hBqzPIeX6/UNiCGF+eIK635SYChIP6W6O7fqtTiCmEYB5MocRbijDP05QP4
+	 n5h44XS/pOBqQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 16 Apr 2026 11:14:33 -0700
-Subject: [PATCH pynfs v2 01/25] nfs4.1: add proposed NOTIFY4_GFLAG_EXTEND
- flag
+Date: Thu, 16 Apr 2026 11:14:34 -0700
+Subject: [PATCH pynfs v2 02/25] nfs4.1: add a getfh() to the end of
+ create_obj() compound
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260416-dir-deleg-v2-1-fad510db5941@kernel.org>
+Message-Id: <20260416-dir-deleg-v2-2-fad510db5941@kernel.org>
 References: <20260416-dir-deleg-v2-0-fad510db5941@kernel.org>
 In-Reply-To: <20260416-dir-deleg-v2-0-fad510db5941@kernel.org>
 To: Calum Mackay <calum.mackay@oracle.com>
@@ -66,20 +66,20 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=968; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=x1Z+XzT17sIzRF8aJgdNS1Kc96XEDPPtgEzQsR79HnE=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4SceXOCOqZz7hOOo6nVzs+GxkHnBjj96C4KE5
- cJh/F1lZjeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEnHgAKCRAADmhBGVaC
- FdfvD/93WUqsIKUczOwwW/HW9yx81lhfKe/hPKvEW9vujlDRBgTw068AA4eHK0BpNoDIJk6mQDa
- sR377QEGPr5VknegL/5yUhfzt9Z58N5SCCUp5cm//Nzln82KdifxXcI5qS4ahKFPBOI4CPQwQ3D
- hK+HIC8zlPW4UaZObkp7S+7d/UJKiWYrump6w/amYZ9gRf+xijy1dySdfIYr6j9E3ekN0+81MTG
- po1RhfIMvFO2mqyUD7yMB/kEkVxuDTiQ4PlRxP2cFbtQfFjK9mWqSUxd9g64ie3ssNITW9CRxlV
- 7gZ6zZmMyVPanzjhEDiltObkgZjXQCuZGaTzIxk7+1xNYGOqVWvLJ0JssPa/4NleZW4Tb2m3c9v
- nIb2v67Czx8ItWQpBdP2PS7nV9YXqoDbsK3ZZJIDiWbGImnzyXuBagEC7+eNUGxt/JplwWhlFCD
- tpJzgEI2EFchCgIkz7qw0XuCbDLhTHihZla7Ag1DqA8VgzTBvcaGa7C7OahpcURLolP0kbrIhFX
- QDIYQVySXjyl7w9D/C2SwTcrBEL2X/ldS7D71uuri9NGrciMaepqyRvs6ai2pRXOOUhu+YrbEHf
- I44hMbqfwDgKhnZJg0RE8Hw8KlNEKtF1pFDlq82WSYn4tJzTewFrTSLHG6acox9GgGKF+Ih5vjC
- nOcujRAcRSa1tiA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1043; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Ql3wcT6tk4MsOPkVBZSBJuePbHmFTHW/i0Yh5J5jM9w=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4SceAJO9+DDEuWfhsAbCjWAf7kLwM5aZblVCC
+ puJBi++9LOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEnHgAKCRAADmhBGVaC
+ FSTIEAC4gLggwfF7Az2Tg/W9TRU5VHj3pZXjd11v5wo/MJNljdi0jg7sjE9N4lNs18oXT5UgRzJ
+ kJF2089gvg1FcaQxAkvIm0Rcner8iHJ27+1NumdWH42Q7GixGinwqdt5iiSYuT20Inn9RnWb4Te
+ ohfri4CHSelTe+VEbOjFX5sfGt1t/LWQJVIhE+XEgwgU1qqO5KXlj/Cy0Ff+SuZICet6iqTlVGN
+ VfLitwv2kHP6I98jvQDwNgIWPbCfPo45gRZhz8hHfFnB0G5FlXfpKeIuR718fZLUkLMmaZH3Hoz
+ VF4F2WCxpINYOQageyxwiayHeVjoQ/qAsHUXaAkMGDXsY4wST4pwraZ6g/Dnkz9LDvt1d4Kcp9f
+ gklBd3ySdqTqB11sJXJpUg4/U6gnCJobKErbJdrkJcQnYHx9a0FLT6bXNypNcPmZxhmR76JUu4F
+ U+8m46ockJZ2HEuefbFl5WXHf8FqHoTN74COegTxCSllFGDsQXnOoIvX0Bjm0PgGTeewgkoFaRH
+ EW3q3J2JAAEaRMmJZr6rxc6QtCkD6aFQ5t1j6tQ5KZ7iuG1DCkX9xwNy6cKGPPOm5M5WLaZ98vn
+ okHWLojbJjVldUh5mh7AAIGeoS+pAsPfxBmh8XBDER1Mk1Xf4lXuv5SEATmLyaEOiXdBa4rBA9G
+ bj9fNpwAtyM20CQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -90,7 +90,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20903-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20904-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -108,36 +108,32 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 405B8413A6B
+X-Rspamd-Queue-Id: 5E9CB413A72
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This flag has been proposed as part of RFC8881bis. This flag is used to
-negotiate extensions to the original directory delegations originally
-specified in RFC8881.
-
-In practice, the Linux nfs server requires that the client support this
-flag if it's requesting anything other than a recall-only delegation.
+A later patch will use the create_obj() function to create files, but
+some of the tests require us to know the filehandle of the created
+object. Add a GETFH operation to the end of the create_obj() compound.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- nfs4.1/xdrdef/nfs4.x | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ nfs4.1/server41tests/environment.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/nfs4.1/xdrdef/nfs4.x b/nfs4.1/xdrdef/nfs4.x
-index ee3da8aa7a34..f03eb538a298 100644
---- a/nfs4.1/xdrdef/nfs4.x
-+++ b/nfs4.1/xdrdef/nfs4.x
-@@ -3611,7 +3611,8 @@ enum notify_type4 {
-         NOTIFY4_REMOVE_ENTRY = 2,
-         NOTIFY4_ADD_ENTRY = 3,
-         NOTIFY4_RENAME_ENTRY = 4,
--        NOTIFY4_CHANGE_COOKIE_VERIFIER = 5
-+        NOTIFY4_CHANGE_COOKIE_VERIFIER = 5,
-+        NOTIFY4_GFLAG_EXTEND = 6 /* proposed in rfc8881bis */
- };
+diff --git a/nfs4.1/server41tests/environment.py b/nfs4.1/server41tests/environment.py
+index 3c77153631ae..f5b1fea4a64c 100644
+--- a/nfs4.1/server41tests/environment.py
++++ b/nfs4.1/server41tests/environment.py
+@@ -474,7 +474,7 @@ def create_obj(sess, path, kind=NF4DIR, attrs={FATTR4_MODE:0o755}):
+     # Ensure using createtype4
+     if not hasattr(kind, "type"):
+         kind = createtype4(kind)
+-    ops = use_obj(path[:-1]) + [op.create(kind, path[-1], attrs)]
++    ops = use_obj(path[:-1]) + [op.create(kind, path[-1], attrs), op.getfh()]
+     return sess.compound(ops)
  
- /* Changed entry information.  */
+ def open_create_file(sess, owner, path=None, attrs={FATTR4_MODE: 0o644},
 
 -- 
 2.53.0
