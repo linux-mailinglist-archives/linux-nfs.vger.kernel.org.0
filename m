@@ -1,273 +1,119 @@
-Return-Path: <linux-nfs+bounces-20851-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20852-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YDkrHQ9R4GkiewAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20851-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 05:01:35 +0200
+	id oPvGEJZz4GlkgwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20852-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 07:28:54 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A7F5409D25
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 05:01:33 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 921E640A610
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 07:28:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 302CF3064C27
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 03:01:32 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A6238301223A
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 05:28:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B36031EB5FD;
-	Thu, 16 Apr 2026 03:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DAD366575;
+	Thu, 16 Apr 2026 05:28:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6TiPO38X"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vhp/HOv4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652B4165F16;
-	Thu, 16 Apr 2026 03:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D5723BF9F;
+	Thu, 16 Apr 2026 05:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776308490; cv=none; b=XPvXCcofCnJ42FibgrQ4c76Kcnth1ubXyOXlYksEDqdyv97uApPDv84Ux90+B4rY0lwX0/SYGdnNRw7eki3MviuNhhW61YFOarp9paZ8KowGInEqztBneiuJDTok3Pu/uzxXuLeTtINO/cPSUA+7f8hnKcYp9HRZ+ZUYhhiJ8R8=
+	t=1776317328; cv=none; b=r8L6rP407cfMbtZLljZYoZyTytywemaulsDZIazx4t/yL6k/YGKAGGH9YZSNjVY0odKWcSkvNIGYh38G6+Zaikjmn2Q5l7VD+TXnLbiMgsoROqkFwoV25Eo10t/LV3bjicu/37usRwVgKKaGrTrgOAJGbnUPVbq0DluZQUTn8dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776308490; c=relaxed/simple;
-	bh=gwe5Z2s+8S85KFJuTDXtMD7FvQNdyIIGgKwTk1eGew4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QeQnaqE6yJSxboT7pomN/lMuJuxDLsokkWBLFKf6era+hATMWsgKFLkbwecqY/hbKgsUQJlrlvknac5WYW4wfCWJhh826MIt+ypo+Qeu5OA5suj9MMl4dS+/ovBItMWhCplIUoh2sZQFYVyGr9zMJdR3tgQ5AgZMYuQart4xHEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6TiPO38X; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=RsXLNFhwwPIAlPFcWSGThRUMhRK02UNrPv7DbSTm/VE=;
-	b=6TiPO38XmXaOwq3kEJLCF5MmJffKWLJFIMizyq7uHcq8ACXTGngdunvRBN2Nfa/Xg/HNE3eD7
-	JVgr69eMYYbTMQY3WF2OwcMmgjl+hSUpXiEkNoAk37IC65LswHebRtUiuSMdZMSaZqfk2uRf8DO
-	AJMBi+I56ANN5pZVX36R5uo=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fx2g86zCZznTWw;
-	Thu, 16 Apr 2026 10:55:00 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id 837EC4056C;
-	Thu, 16 Apr 2026 11:01:18 +0800 (CST)
-Received: from [10.174.176.240] (10.174.176.240) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 16 Apr 2026 11:01:17 +0800
-Message-ID: <163aebb3-4233-4aaa-872c-c36aa3fcb3af@huawei.com>
-Date: Thu, 16 Apr 2026 11:01:16 +0800
+	s=arc-20240116; t=1776317328; c=relaxed/simple;
+	bh=f2Bz74BP2pIsx7bwNgOtMkR7gs2kpsZ/mqcprBDxtV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=siPqngCgSzCfX4AVmM0ashh8uhjLJ+Miw/LH22cDQgPXO6x8bNYDSOoTRNCHfxV8staYu+grfF1x+jsxmgklxnXYOsuvhcC4wZkq+u/W6werpBAvM9i72cOZCZkFljDxdUL19x8YOIwexgTdnI3p0CzVuMCwC+C+Qv0/45hk9MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vhp/HOv4; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SIkOAeDqR589cIp15aYU7JLk0xPA3K6/5hi1SlVRiiA=; b=vhp/HOv4iOOhl78LtmifEWmYv+
+	gUQjzQk17apUxTKcmxwJ3nAylslHKgJrs4KwXWvzeE6FlivFkOcVpEVUgTa8cf2Uw4FDlor2WUtb5
+	yDDfXjaqZf8eh61b8kVTFLg0N1oV2HENk3Kg7DappGTvmDjgyzYXX64A236mGRTA2dtRF8f6k1xj5
+	oHdorqDH9wQkOaIb1RbgU8jv+m8URt+e5FGeF8reSz3BTk25tvtYs742DuaeSN6GdZ1kSMnBK30Vi
+	4bIbMOiIqAHVXMm9HZGA+W3nNALREq+N87miKJULDJI9QRzajx6ncHGrk/gGpg3+5+080acO1MqA4
+	VqW7LMRg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wDFHN-000000020IL-0KzZ;
+	Thu, 16 Apr 2026 05:28:41 +0000
+Date: Wed, 15 Apr 2026 22:28:41 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Pranjal Shrivastava <praan@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, trond.myklebust@hammerspace.com,
+	anna@kernel.org, davem@davemloft.net, kuba@kernel.org,
+	edumazet@google.com, pabeni@redhat.com, chuck.lever@oracle.com,
+	jlayton@kernel.org, tom@talpey.com, okorniev@redhat.com,
+	neil@brown.name, dai.ngo@oracle.com, linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 3/4] nfs: make nfs_page pin-aware
+Message-ID: <aeBziXT8zVVtfRVL@infradead.org>
+References: <20260401194501.2269200-1-praan@google.com>
+ <20260401194501.2269200-4-praan@google.com>
+ <ac341x4RXKoShXsB@infradead.org>
+ <ad6cVbDGy3alQ2uK@google.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
- lock list
-To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<chuck.lever@oracle.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yangerkun@huaweicloud.com>, <lilingfeng3@huawei.com>,
-	<zhangjian496@h-partners.com>, <yi.zhang@huawei.com>
-References: <20260226012203.3962997-1-yangerkun@huawei.com>
- <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemf100006.china.huawei.com (7.202.181.220)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad6cVbDGy3alQ2uK@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	ASN_FAIL(0.00)[74.135.232.172.asn.rspamd.com:server fail];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	TAGGED_FROM(0.00)[bounces-20851-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20852-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	ASN_FAIL(0.00)[4.211.64.104.asn.rspamd.com:server fail];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,huawei.com:dkim,huawei.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9A7F5409D25
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,infradead.org:dkim,infradead.org:mid]
+X-Rspamd-Queue-Id: 921E640A610
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Anna and Trond,
-
-Could you please help check if there are any issues with this patch, and
-if there are none, could you help merge it in?
-
-Thanks,
-Erkun.
-
-在 2026/3/9 22:09, Jeff Layton 写道:
-> On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
->> Lingfeng identified a bug and suggested two solutions, but both appear
->> to have issues.
->>
->> Generally, we cannot release flc_lock while iterating over the file lock
->> list to avoid use-after-free (UAF) problems with file locks. However,
->> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
->> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
->> may take a long time. To resolve this, NFS switches to using nfsi->rwsem
->> for the same protection, and nfs_reclaim_locks follows this approach.
->> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
->> this is inadequate since a single inode can have multiple nfs4_state
->> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
->>
->> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte range
->> lock must be atomic with the stateid update"), the functions
->> nfs4_locku_done and nfs4_lock_done also break this rule because they
->> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
->> this protection could cause many deadlocks, so instead, the call to
->> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
->> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
->> lock must be atomic with the stateid update"), it has been resolved
->> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly triggering
->> state recovery") because all slots are drained before calling
->> nfs4_do_reclaim, which prevents concurrent stateid changes along this path.
->> Also, nfs_delegation_claim_locks does not cause this concurrency either
->> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no RPC is
->> sent, so nfs4_lock_done is not called. Therefore,
->> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the first
->> time the stateid is set.
->>
->> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
->> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-lilingfeng3@huawei.com/
->> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-lilingfeng3@huawei.com/
->> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
->> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
->> ---
->>   fs/nfs/delegation.c     |  9 ++++++++-
->>   fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
->>   include/linux/nfs_xdr.h |  1 -
->>   3 files changed, 19 insertions(+), 13 deletions(-)
->>
->> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
->> index 122fb3f14ffb..9546d2195c25 100644
->> --- a/fs/nfs/delegation.c
->> +++ b/fs/nfs/delegation.c
->> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, fmode_t type)
->>   static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_stateid *stateid)
->>   {
->>   	struct inode *inode = state->inode;
->> +	struct nfs_inode *nfsi = NFS_I(inode);
->>   	struct file_lock *fl;
->>   	struct file_lock_context *flctx = locks_inode_context(inode);
->>   	struct list_head *list;
->> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->>   		goto out;
->>   
->>   	list = &flctx->flc_posix;
->> +
->> +	/* Guard against reclaim and new lock/unlock calls */
->> +	down_write(&nfsi->rwsem);
->>   	spin_lock(&flctx->flc_lock);
->>   restart:
->>   	for_each_file_lock(fl, list) {
->> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->>   			continue;
->>   		spin_unlock(&flctx->flc_lock);
->>   		status = nfs4_lock_delegation_recall(fl, state, stateid);
->> -		if (status < 0)
->> +		if (status < 0) {
->> +			up_write(&nfsi->rwsem);
->>   			goto out;
->> +		}
->>   		spin_lock(&flctx->flc_lock);
->>   	}
->>   	if (list == &flctx->flc_posix) {
->> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct nfs4_state *state, const nfs4_state
->>   		goto restart;
->>   	}
->>   	spin_unlock(&flctx->flc_lock);
->> +	up_write(&nfsi->rwsem);
->>   out:
->>   	return status;
->>   }
->> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->> index 91bcf67bd743..9d6fbca8798b 100644
->> --- a/fs/nfs/nfs4proc.c
->> +++ b/fs/nfs/nfs4proc.c
->> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
->>   	switch (task->tk_status) {
->>   		case 0:
->>   			renew_lease(calldata->server, calldata->timestamp);
->> -			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
->>   			if (nfs4_update_lock_stateid(calldata->lsp,
->>   					&calldata->res.stateid))
->>   				break;
->> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->>   	case 0:
->>   		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
->>   				data->timestamp);
->> -		if (data->arg.new_lock && !data->cancelled) {
->> -			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
->> -				goto out_restart;
->> -		}
->>   		if (data->arg.new_lock_owner != 0) {
->>   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
->>   			nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
->> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
->>   	msg.rpc_argp = &data->arg;
->>   	msg.rpc_resp = &data->res;
->>   	task_setup_data.callback_data = data;
->> -	if (recovery_type > NFS_LOCK_NEW) {
->> -		if (recovery_type == NFS_LOCK_RECLAIM)
->> -			data->arg.reclaim = NFS_LOCK_RECLAIM;
->> -	} else
->> -		data->arg.new_lock = 1;
->> +
->> +	if (recovery_type == NFS_LOCK_RECLAIM)
->> +		data->arg.reclaim = NFS_LOCK_RECLAIM;
->> +
->>   	task = rpc_run_task(&task_setup_data);
->>   	if (IS_ERR(task))
->>   		return PTR_ERR(task);
->> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
->>   	up_read(&nfsi->rwsem);
->>   	mutex_unlock(&sp->so_delegreturn_mutex);
->>   	status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
->> +	if (status)
->> +		goto out;
->> +
->> +	down_read(&nfsi->rwsem);
->> +	request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->> +	status = locks_lock_inode_wait(state->inode, request);
->> +	up_read(&nfsi->rwsem);
->>   out:
->>   	request->c.flc_flags = flags;
->>   	return status;
->> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
->> index ff1f12aa73d2..9599ad15c3ad 100644
->> --- a/include/linux/nfs_xdr.h
->> +++ b/include/linux/nfs_xdr.h
->> @@ -580,7 +580,6 @@ struct nfs_lock_args {
->>   	struct nfs_lowner	lock_owner;
->>   	unsigned char		block : 1;
->>   	unsigned char		reclaim : 1;
->> -	unsigned char		new_lock : 1;
->>   	unsigned char		new_lock_owner : 1;
->>   };
->>   
+On Tue, Apr 14, 2026 at 07:58:13PM +0000, Pranjal Shrivastava wrote:
+> > > +			req = nfs_page_create_from_page(dreq->ctx, pagevec[i], false,
+> > >  							pgbase, pos, req_len);
+> > >
+> > 
+> > A lot of this code reads pretty odd as it's overflowing the lines.
+> > 
 > 
-> Nice work!
-> 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> 
-> 
+> Ahh, my bad. For some reason even checkpatch didn't catch this, I'll fix
+> this here and everywhere else.
 
+checkpatch is unfortunately completely broken :(  It misses lots of
+important bits, but at the same time has complete incoherent and crazy
+warnings.
 
