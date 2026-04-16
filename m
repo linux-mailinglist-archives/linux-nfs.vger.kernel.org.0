@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-20881-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20882-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wACsGgMf4WlbpQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20881-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:40:19 +0200
+	id EOfUAQ4f4WlbpQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20882-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:40:30 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A59D0413039
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:40:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7524413059
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:40:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 67DE1316760B
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 17:36:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A86E93171966
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 17:36:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B9BC3AA4E8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4DE73B19AA;
 	Thu, 16 Apr 2026 17:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQ5/ne3p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANgzSFhX"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984FB3A6EF3;
-	Thu, 16 Apr 2026 17:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654DD3ACF1C;
+	Thu, 16 Apr 2026 17:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776360945; cv=none; b=NFWMEBf06djgJyzW9pVLrA+ByDSPl5to9TSUqgWC2Z/aB6e2dHc13hKZHvvUQyv1r+oAoaKNopUBvsaM2a+vm/soqGqbyO/MOvqfuljoJ8sxQa+Mn91NkWn/WDYga4MVM9PhRISEtDNA48/ob0ML8f0diAeS0Q8C2568H/F2Qic=
+	t=1776360946; cv=none; b=TxZhR4JSo92Vca7eQ0bCScpe3KPWx67h/CIM5MMlO4mZShycnmSZSKHMWcVD4gHrJ4H12ZMGsY2WwH2QRz6tts612VEDm8D+fdspNmZ0fTRO6wsN8eF5J4YrukhDjZZ4jzpoXaOcJcqdlAkeO8ik/g0KwxPmTA6nzq/kpAfxGIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776360945; c=relaxed/simple;
-	bh=eeLOOGHbagjJAiOqi14UZrlR6ke5QtiKLpwRU37IZLE=;
+	s=arc-20240116; t=1776360946; c=relaxed/simple;
+	bh=s72czDExX6Nxo4FsO43XYOw6JoIhVcsInWaSiqS9x8k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GIQGevaZeUbziRvJZZ6vc6GGegVhuIfmMSnwxBXpgVY/tozTKAort0IIJ6hGwivT9ajqh0gKUTbmO/02ydKpTqWtPxWM3T6WaQ89Szsqd5BrqG3YTw/9Z9PYuQG4iEw/ustJ+QKmXBkUEASwYWETOxDqO7eWwYNyJ0QK1uPFrjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQ5/ne3p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653A6C2BCB7;
-	Thu, 16 Apr 2026 17:35:44 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=CsVCwQwzb9s1Y1wTxXlFBhRHrFIsmZFbUnN5Cc6PRaPxhpKdUDsUy/hLBf8Om1EIvPZZ7otPJaeUfxEWyS607xQmf+9W6rQvPiuoJAgVQfuWHk/d8tOKPs6IKBXFJwqPzjg8AXB+RUCEr4iFd4xyW0wp7p1xpTH0LcLoZUos6RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANgzSFhX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39FDBC2BCC4;
+	Thu, 16 Apr 2026 17:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1776360945;
-	bh=eeLOOGHbagjJAiOqi14UZrlR6ke5QtiKLpwRU37IZLE=;
+	bh=s72czDExX6Nxo4FsO43XYOw6JoIhVcsInWaSiqS9x8k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lQ5/ne3pBeTMtJgS7971qNV6oi1figqoAecCQiOmk6gZGjXRxlc7Jo4JrPAako7IG
-	 Ei1x1uhadeNEKmDW5Ll56tc9bdTHLS0v0+TmnDQFk+8ZARiElCwixLq8O8ebAVYpRw
-	 DhyfkW98VhQoRQnLN3XOcv8NC0k+NA51MEZaRVdbRVQ0a+zwk8CK8IsKPjqG/bC2Vx
-	 GsNd1N4yrL6gdejyF2fZoVm8w1vi/Ks+77RoDuZ6pOT8pKu5mJbeUXNMfgaiLgMk6g
-	 +u+T4DhkvfFlE9Z3NiHRUG0VybSZcjFrnw/X1QNa1Dy2i2BpelDL7KiLv5g0j+pRkV
-	 kqrl/uRpiVjww==
+	b=ANgzSFhXrbVb4+xnerodzNxIwcs5AMdKVShiEOh5TXKWgO9pXAEtQe8arjp0O/qXe
+	 Fa6TPbAaZpwDV+L2FutfOi5uMbt+gh/0G+G/GGwyfd4RF4vWQNj8GBjpvJWrZuC8Fp
+	 ZhzD+MUV9Ksf1MDTiX8w3K3TjUI6lKeSio4RPudq495/poCnbz5RDC4N9U4EMv7kXI
+	 AH9MtHNm5yaCnLQLPz/X4Ty1QqsZjP51QI4+0V/+GW1FGvmrnWL++yFBHIb9/aLtVV
+	 TrjKysNSfPTkw4qmjh1ZlpX/BbBGL67ZuAZeyXHUEpKlUUwbd1bhEsscuDB+omCItL
+	 RKoHRfRJ1SbEw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 16 Apr 2026 10:35:10 -0700
-Subject: [PATCH v2 09/28] nfsd: add protocol support for CB_NOTIFY
+Date: Thu, 16 Apr 2026 10:35:11 -0700
+Subject: [PATCH v2 10/28] nfs_common: add new NOTIFY4_* flags proposed in
+ RFC8881bis
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260416-dir-deleg-v2-9-851426a550f6@kernel.org>
+Message-Id: <20260416-dir-deleg-v2-10-851426a550f6@kernel.org>
 References: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org>
 In-Reply-To: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -75,20 +76,20 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=49615; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=eeLOOGHbagjJAiOqi14UZrlR6ke5QtiKLpwRU37IZLE=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4R3jjXB/yzVuUiax6VUYt1wWJfi5HArnERMSl
- QXaMvP7zFWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEd4wAKCRAADmhBGVaC
- FVOqD/9XkEtG5CC1pZG28ZfqDx126c1bX3jKIetvF2d7m6cJzXcdZH2hvHKfSMcOaiE4E2TYaMm
- MKpGu0+SsrAJav4Lx2/LrxoUKiqfUJ6CNXJ3qJ7W961AQVhpWXDlfwWdGHOREdFEJnNJWRcgPXQ
- xRmYaINgCMGM3vR+HYF70g3zH8n7VN9HBoLFySWzSZ3oeG6zQrx6Nltcynau8p78GKO5aWbKQYE
- WFbBVScyszTaefoZ+rX9Cggxl39pb5VFqjGJg2yNxP5WsPn/IPymgzTvle3XDOQaeQeLpCSxmUO
- fumXGWx15LbKLPIjp6m1Lcuu4QOTZeBqGgpcUIQaaj7nuolj3OjrUTwZkUnW5XRLNQnufdZHTwZ
- c7M2KWgroQ9Jbe1KqD7r1QuMnna2lE4dmOSvxrMdOCpSo6QpzxjEBOpj8k03WOJ6dR3iuIhT7L+
- AhOWXYfl1tahIl7khIZJqUCS+ft5FKEsflKac35j9o/WtuTaf9jeGy+pTOXhiO+IaM/s43qdJWU
- iuEZEHVv6yvzxFpKwQ0wIXUug01JoJNVpiwujWski7v3SQWANcIyE+xTGuFehUyeWUn4T6N3W4j
- Lv2qYemcpawtMlTWusH+AFQAYR5mFk6lPYZAI0bn8UCbTptO4fMt4CwQKJIKFV3s5dPZwdJL2DQ
- ranTZK6UjL9Ct2w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4154; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=s72czDExX6Nxo4FsO43XYOw6JoIhVcsInWaSiqS9x8k=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4R3j7Hy5Wn95eisJxtj3jfs2G6WKH8cEL4LJF
+ OE+WOC+bTCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEd4wAKCRAADmhBGVaC
+ FXkyD/9lRyJEwEkZbdZj7urgA+FdDABIlP5uRnue5NOx7d+C5yBdldCq0V3tO8/MR31Fg18PNmD
+ IWTsU4MGHrY37D3Ibng/tV/fmAk34L5O/MWDd03S65e8Iey2EdV4rYqQlMdpotlAhARq5MOGr5c
+ 2WiDotb22fkBbA8rlIzFF1aGo85TuvF+V3GFqWvT2qwE79toxEO/kWDns/6YmeDm3Jdat23cwjE
+ RY9qEIf89vAX/axsn2n5zMmIChBhcKQx0foZh+/X3P9i4PA5agi85AQwBkgsh8GwqBX+EY5zrfM
+ WBwXgLIEMvsQAANDmtJAA/CJAi8us4nohyPZcd1ynm/14Fyw8SCC8bQRfvvpxPFqv9OcrlQBuMR
+ rUxMLdHAxcOUbaS3ss6jYZ6X1X08/HlLjXl5CoWFtBGvit0NdF4K85bKza0cjtw9/8/PENCJRMd
+ fUKmzpVxGeAvPC0QBwKU0oB+3TwNtcfgae2dy4vwtrTFkq58Yi2jIMOd/eIZU76JFGo0UedMeO3
+ xQyKis32S64Xg+g9jUWmhY3cM3zzSdWha+PJqwzUiXnoEQaRaMWEXE10IxhdwivVRYgHMrx13Ve
+ kVzYrcRlHvcOBy+qvgmXH8qvE1pXvl3+V80lN5MXtHlCeDbkFcJGO5nftb3AJS9d8QqkKq4v1nY
+ yQruVEWAhEAk0nQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -101,7 +102,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20881-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20882-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -118,1535 +119,124 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,seq.id:url]
-X-Rspamd-Queue-Id: A59D0413039
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B7524413059
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add the necessary bits to nfs4_1.x and remove the duplicate definitions
-from nfs4.h and the uapi nfs4 header. Regenerate the xdr files.
-
-Note that regenerating these files caused conflicts with the definitions
-of NFS4_VERIFIER_SIZE and NFS4_FHSIZE in include/uapi/linux/nfs4.h.
-These constants are defined by the RFC, and are not part of the kernel
-API. They have been removed. Userspace consumers who require those
-constants should plan to get them from more authoritative sources.
+RFC8881bis adds some new flags to GET_DIR_DELEGATION that we very much
+need to support.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- Documentation/sunrpc/xdr/nfs4_1.x    | 250 ++++++++++++++-
- fs/nfsd/nfs4xdr_gen.c                | 590 ++++++++++++++++++++++++++++++++++-
- fs/nfsd/nfs4xdr_gen.h                |  20 +-
- fs/nfsd/trace.h                      |   1 +
- include/linux/nfs4.h                 | 127 --------
- include/linux/sunrpc/xdrgen/nfs4_1.h | 280 ++++++++++++++++-
- include/uapi/linux/nfs4.h            |   2 -
- 7 files changed, 1129 insertions(+), 141 deletions(-)
+ Documentation/sunrpc/xdr/nfs4_1.x    | 16 +++++++++++++++-
+ fs/nfsd/nfs4xdr_gen.c                | 13 ++++++++++++-
+ fs/nfsd/nfs4xdr_gen.h                |  2 +-
+ include/linux/sunrpc/xdrgen/nfs4_1.h | 13 ++++++++++++-
+ 4 files changed, 40 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/sunrpc/xdr/nfs4_1.x b/Documentation/sunrpc/xdr/nfs4_1.x
-index 5b45547b2ebc..632f5b579c39 100644
+index 632f5b579c39..aa14b590b524 100644
 --- a/Documentation/sunrpc/xdr/nfs4_1.x
 +++ b/Documentation/sunrpc/xdr/nfs4_1.x
-@@ -45,19 +45,165 @@ pragma header nfs4;
- /*
-  * Basic typedefs for RFC 1832 data type definitions
-  */
--typedef hyper		int64_t;
--typedef unsigned int	uint32_t;
-+typedef int                  int32_t;
-+typedef unsigned int         uint32_t;
-+typedef hyper                int64_t;
-+typedef unsigned hyper       uint64_t;
-+
-+const NFS4_VERIFIER_SIZE        = 8;
-+const NFS4_FHSIZE               = 128;
-+
-+enum nfsstat4 {
-+ NFS4_OK                = 0,    /* everything is okay      */
-+ NFS4ERR_PERM           = 1,    /* caller not privileged   */
-+ NFS4ERR_NOENT          = 2,    /* no such file/directory  */
-+ NFS4ERR_IO             = 5,    /* hard I/O error          */
-+ NFS4ERR_NXIO           = 6,    /* no such device          */
-+ NFS4ERR_ACCESS         = 13,   /* access denied           */
-+ NFS4ERR_EXIST          = 17,   /* file already exists     */
-+ NFS4ERR_XDEV           = 18,   /* different filesystems   */
-+
-+ /*
-+  * Please do not allocate value 19; it was used in NFSv3
-+  * and we do not want a value in NFSv3 to have a different
-+  * meaning in NFSv4.x.
-+  */
-+
-+ NFS4ERR_NOTDIR         = 20,   /* should be a directory   */
-+ NFS4ERR_ISDIR          = 21,   /* should not be directory */
-+ NFS4ERR_INVAL          = 22,   /* invalid argument        */
-+ NFS4ERR_FBIG           = 27,   /* file exceeds server max */
-+ NFS4ERR_NOSPC          = 28,   /* no space on filesystem  */
-+ NFS4ERR_ROFS           = 30,   /* read-only filesystem    */
-+ NFS4ERR_MLINK          = 31,   /* too many hard links     */
-+ NFS4ERR_NAMETOOLONG    = 63,   /* name exceeds server max */
-+ NFS4ERR_NOTEMPTY       = 66,   /* directory not empty     */
-+ NFS4ERR_DQUOT          = 69,   /* hard quota limit reached*/
-+ NFS4ERR_STALE          = 70,   /* file no longer exists   */
-+ NFS4ERR_BADHANDLE      = 10001,/* Illegal filehandle      */
-+ NFS4ERR_BAD_COOKIE     = 10003,/* READDIR cookie is stale */
-+ NFS4ERR_NOTSUPP        = 10004,/* operation not supported */
-+ NFS4ERR_TOOSMALL       = 10005,/* response limit exceeded */
-+ NFS4ERR_SERVERFAULT    = 10006,/* undefined server error  */
-+ NFS4ERR_BADTYPE        = 10007,/* type invalid for CREATE */
-+ NFS4ERR_DELAY          = 10008,/* file "busy" - retry     */
-+ NFS4ERR_SAME           = 10009,/* nverify says attrs same */
-+ NFS4ERR_DENIED         = 10010,/* lock unavailable        */
-+ NFS4ERR_EXPIRED        = 10011,/* lock lease expired      */
-+ NFS4ERR_LOCKED         = 10012,/* I/O failed due to lock  */
-+ NFS4ERR_GRACE          = 10013,/* in grace period         */
-+ NFS4ERR_FHEXPIRED      = 10014,/* filehandle expired      */
-+ NFS4ERR_SHARE_DENIED   = 10015,/* share reserve denied    */
-+ NFS4ERR_WRONGSEC       = 10016,/* wrong security flavor   */
-+ NFS4ERR_CLID_INUSE     = 10017,/* clientid in use         */
-+
-+ /* NFS4ERR_RESOURCE is not a valid error in NFSv4.1 */
-+ NFS4ERR_RESOURCE       = 10018,/* resource exhaustion     */
-+
-+ NFS4ERR_MOVED          = 10019,/* filesystem relocated    */
-+ NFS4ERR_NOFILEHANDLE   = 10020,/* current FH is not set   */
-+ NFS4ERR_MINOR_VERS_MISMATCH= 10021,/* minor vers not supp */
-+ NFS4ERR_STALE_CLIENTID = 10022,/* server has rebooted     */
-+ NFS4ERR_STALE_STATEID  = 10023,/* server has rebooted     */
-+ NFS4ERR_OLD_STATEID    = 10024,/* state is out of sync    */
-+ NFS4ERR_BAD_STATEID    = 10025,/* incorrect stateid       */
-+ NFS4ERR_BAD_SEQID      = 10026,/* request is out of seq.  */
-+ NFS4ERR_NOT_SAME       = 10027,/* verify - attrs not same */
-+ NFS4ERR_LOCK_RANGE     = 10028,/* overlapping lock range  */
-+ NFS4ERR_SYMLINK        = 10029,/* should be file/directory*/
-+ NFS4ERR_RESTOREFH      = 10030,/* no saved filehandle     */
-+ NFS4ERR_LEASE_MOVED    = 10031,/* some filesystem moved   */
-+ NFS4ERR_ATTRNOTSUPP    = 10032,/* recommended attr not sup*/
-+ NFS4ERR_NO_GRACE       = 10033,/* reclaim outside of grace*/
-+ NFS4ERR_RECLAIM_BAD    = 10034,/* reclaim error at server */
-+ NFS4ERR_RECLAIM_CONFLICT= 10035,/* conflict on reclaim    */
-+ NFS4ERR_BADXDR         = 10036,/* XDR decode failed       */
-+ NFS4ERR_LOCKS_HELD     = 10037,/* file locks held at CLOSE*/
-+ NFS4ERR_OPENMODE       = 10038,/* conflict in OPEN and I/O*/
-+ NFS4ERR_BADOWNER       = 10039,/* owner translation bad   */
-+ NFS4ERR_BADCHAR        = 10040,/* utf-8 char not supported*/
-+ NFS4ERR_BADNAME        = 10041,/* name not supported      */
-+ NFS4ERR_BAD_RANGE      = 10042,/* lock range not supported*/
-+ NFS4ERR_LOCK_NOTSUPP   = 10043,/* no atomic up/downgrade  */
-+ NFS4ERR_OP_ILLEGAL     = 10044,/* undefined operation     */
-+ NFS4ERR_DEADLOCK       = 10045,/* file locking deadlock   */
-+ NFS4ERR_FILE_OPEN      = 10046,/* open file blocks op.    */
-+ NFS4ERR_ADMIN_REVOKED  = 10047,/* lockowner state revoked */
-+ NFS4ERR_CB_PATH_DOWN   = 10048,/* callback path down      */
-+
-+ /* NFSv4.1 errors start here. */
-+
-+ NFS4ERR_BADIOMODE      = 10049,
-+ NFS4ERR_BADLAYOUT      = 10050,
-+ NFS4ERR_BAD_SESSION_DIGEST = 10051,
-+ NFS4ERR_BADSESSION     = 10052,
-+ NFS4ERR_BADSLOT        = 10053,
-+ NFS4ERR_COMPLETE_ALREADY = 10054,
-+ NFS4ERR_CONN_NOT_BOUND_TO_SESSION = 10055,
-+ NFS4ERR_DELEG_ALREADY_WANTED = 10056,
-+ NFS4ERR_BACK_CHAN_BUSY = 10057,/*backchan reqs outstanding*/
-+ NFS4ERR_LAYOUTTRYLATER = 10058,
-+ NFS4ERR_LAYOUTUNAVAILABLE = 10059,
-+ NFS4ERR_NOMATCHING_LAYOUT = 10060,
-+ NFS4ERR_RECALLCONFLICT = 10061,
-+ NFS4ERR_UNKNOWN_LAYOUTTYPE = 10062,
-+ NFS4ERR_SEQ_MISORDERED = 10063,/* unexpected seq.ID in req*/
-+ NFS4ERR_SEQUENCE_POS   = 10064,/* [CB_]SEQ. op not 1st op */
-+ NFS4ERR_REQ_TOO_BIG    = 10065,/* request too big         */
-+ NFS4ERR_REP_TOO_BIG    = 10066,/* reply too big           */
-+ NFS4ERR_REP_TOO_BIG_TO_CACHE =10067,/* rep. not all cached*/
-+ NFS4ERR_RETRY_UNCACHED_REP =10068,/* retry & rep. uncached*/
-+ NFS4ERR_UNSAFE_COMPOUND =10069,/* retry/recovery too hard */
-+ NFS4ERR_TOO_MANY_OPS   = 10070,/*too many ops in [CB_]COMP*/
-+ NFS4ERR_OP_NOT_IN_SESSION =10071,/* op needs [CB_]SEQ. op */
-+ NFS4ERR_HASH_ALG_UNSUPP = 10072, /* hash alg. not supp.   */
-+                                /* Error 10073 is unused.  */
-+ NFS4ERR_CLIENTID_BUSY  = 10074,/* clientid has state      */
-+ NFS4ERR_PNFS_IO_HOLE   = 10075,/* IO to _SPARSE file hole */
-+ NFS4ERR_SEQ_FALSE_RETRY= 10076,/* Retry != original req.  */
-+ NFS4ERR_BAD_HIGH_SLOT  = 10077,/* req has bad highest_slot*/
-+ NFS4ERR_DEADSESSION    = 10078,/*new req sent to dead sess*/
-+ NFS4ERR_ENCR_ALG_UNSUPP= 10079,/* encr alg. not supp.     */
-+ NFS4ERR_PNFS_NO_LAYOUT = 10080,/* I/O without a layout    */
-+ NFS4ERR_NOT_ONLY_OP    = 10081,/* addl ops not allowed    */
-+ NFS4ERR_WRONG_CRED     = 10082,/* op done by wrong cred   */
-+ NFS4ERR_WRONG_TYPE     = 10083,/* op on wrong type object */
-+ NFS4ERR_DIRDELEG_UNAVAIL=10084,/* delegation not avail.   */
-+ NFS4ERR_REJECT_DELEG   = 10085,/* cb rejected delegation  */
-+ NFS4ERR_RETURNCONFLICT = 10086,/* layout get before return*/
-+ NFS4ERR_DELEG_REVOKED  = 10087, /* deleg./layout revoked   */
-+ NFS4ERR_PARTNER_NOTSUPP = 10088,
-+ NFS4ERR_PARTNER_NO_AUTH = 10089,
-+ NFS4ERR_UNION_NOTSUPP = 10090,
-+ NFS4ERR_OFFLOAD_DENIED = 10091,
-+ NFS4ERR_WRONG_LFS = 10092,
-+ NFS4ERR_BADLABEL = 10093,
-+ NFS4ERR_OFFLOAD_NO_REQS = 10094,
-+ NFS4ERR_NOXATTR = 10095,
-+ NFS4ERR_XATTR2BIG = 10096,
-+
-+ /* always set this to one more than the last one in the enum */
-+ NFS4ERR_FIRST_FREE = 10097
-+};
- 
- /*
-  * Basic data types
-  */
-+typedef opaque		attrlist4<>;
- typedef uint32_t	bitmap4<>;
-+typedef opaque		verifier4[NFS4_VERIFIER_SIZE];
-+typedef uint64_t        nfs_cookie4;
-+typedef opaque		nfs_fh4<NFS4_FHSIZE>;
- 
- typedef opaque		utf8string<>;
- typedef utf8string	utf8str_cis;
- typedef utf8string	utf8str_cs;
- typedef utf8string	utf8str_mixed;
- 
-+typedef utf8str_cs      component4;
-+typedef utf8str_cs      linktext4;
-+typedef component4      pathname4<>;
-+
- /*
-  * Timeval
-  */
-@@ -66,6 +212,21 @@ struct nfstime4 {
- 	uint32_t	nseconds;
+@@ -416,7 +416,21 @@ enum notify_type4 {
+         NOTIFY4_REMOVE_ENTRY = 2,
+         NOTIFY4_ADD_ENTRY = 3,
+         NOTIFY4_RENAME_ENTRY = 4,
+-        NOTIFY4_CHANGE_COOKIE_VERIFIER = 5
++        NOTIFY4_CHANGE_COOKIE_VERIFIER = 5,
++        /*
++         * Added in NFSv4.1 bis document
++         */
++        NOTIFY4_GFLAG_EXTEND = 6,
++        NOTIFY4_AUFLAG_VALID = 7,
++        NOTIFY4_AUFLAG_USER = 8,
++        NOTIFY4_AUFLAG_GROUP = 9,
++        NOTIFY4_AUFLAG_OTHER = 10,
++        NOTIFY4_CHANGE_AUTH = 11,
++        NOTIFY4_CFLAG_ORDER = 12,
++        NOTIFY4_AUFLAG_GANOW = 13,
++        NOTIFY4_AUFLAG_GALATER = 14,
++        NOTIFY4_CHANGE_GA = 15,
++        NOTIFY4_CHANGE_AMASK = 16
  };
  
-+/*
-+ * File attribute container
-+ */
-+struct fattr4 {
-+        bitmap4         attrmask;
-+        attrlist4       attr_vals;
-+};
-+
-+/*
-+ * Stateid
-+ */
-+struct stateid4 {
-+        uint32_t        seqid;
-+        opaque          other[12];
-+};
- 
- /*
-  * The following content was extracted from draft-ietf-nfsv4-delstid
-@@ -245,3 +406,88 @@ const FATTR4_ACL_TRUEFORM	= 89;
- const FATTR4_ACL_TRUEFORM_SCOPE	= 90;
- const FATTR4_POSIX_DEFAULT_ACL	= 91;
- const FATTR4_POSIX_ACCESS_ACL	= 92;
-+
-+/*
-+ * Directory notification types.
-+ */
-+enum notify_type4 {
-+        NOTIFY4_CHANGE_CHILD_ATTRS = 0,
-+        NOTIFY4_CHANGE_DIR_ATTRS = 1,
-+        NOTIFY4_REMOVE_ENTRY = 2,
-+        NOTIFY4_ADD_ENTRY = 3,
-+        NOTIFY4_RENAME_ENTRY = 4,
-+        NOTIFY4_CHANGE_COOKIE_VERIFIER = 5
-+};
-+
-+/* Changed entry information.  */
-+struct notify_entry4 {
-+        component4      ne_file;
-+        fattr4          ne_attrs;
-+};
-+
-+/* Previous entry information */
-+struct prev_entry4 {
-+        notify_entry4   pe_prev_entry;
-+        /* what READDIR returned for this entry */
-+        nfs_cookie4     pe_prev_entry_cookie;
-+};
-+
-+struct notify_remove4 {
-+        notify_entry4   nrm_old_entry;
-+        nfs_cookie4     nrm_old_entry_cookie;
-+};
-+pragma public notify_remove4;
-+
-+struct notify_add4 {
-+        /*
-+         * Information on object
-+         * possibly renamed over.
-+         */
-+        notify_remove4      nad_old_entry<1>;
-+        notify_entry4       nad_new_entry;
-+        /* what READDIR would have returned for this entry */
-+        nfs_cookie4         nad_new_entry_cookie<1>;
-+        prev_entry4         nad_prev_entry<1>;
-+        bool                nad_last_entry;
-+};
-+pragma public notify_add4;
-+
-+struct notify_attr4 {
-+        notify_entry4   na_changed_entry;
-+};
-+pragma public notify_attr4;
-+
-+struct notify_rename4 {
-+        notify_remove4  nrn_old_entry;
-+        notify_add4     nrn_new_entry;
-+};
-+pragma public notify_rename4;
-+
-+struct notify_verifier4 {
-+        verifier4       nv_old_cookieverf;
-+        verifier4       nv_new_cookieverf;
-+};
-+
-+/*
-+ * Objects of type notify_<>4 and
-+ * notify_device_<>4 are encoded in this.
-+ */
-+typedef opaque notifylist4<>;
-+
-+struct notify4 {
-+        /* composed from notify_type4 or notify_deviceid_type4 */
-+        bitmap4         notify_mask;
-+        notifylist4     notify_vals;
-+};
-+
-+struct CB_NOTIFY4args {
-+        stateid4    cna_stateid;
-+        nfs_fh4     cna_fh;
-+        notify4     cna_changes<>;
-+};
-+pragma public CB_NOTIFY4args;
-+
-+struct CB_NOTIFY4res {
-+        nfsstat4    cnr_status;
-+};
-+pragma public CB_NOTIFY4res;
+ /* Changed entry information.  */
 diff --git a/fs/nfsd/nfs4xdr_gen.c b/fs/nfsd/nfs4xdr_gen.c
-index 824497051b87..5e656d6bbb8e 100644
+index 5e656d6bbb8e..80369139ef7e 100644
 --- a/fs/nfsd/nfs4xdr_gen.c
 +++ b/fs/nfsd/nfs4xdr_gen.c
-@@ -1,16 +1,16 @@
+@@ -1,7 +1,7 @@
  // SPDX-License-Identifier: GPL-2.0
  // Generated by xdrgen. Manual edits will be lost.
  // XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x
--// XDR specification modification time: Thu Jan  8 23:12:07 2026
-+// XDR specification modification time: Wed Mar 25 11:39:22 2026
+-// XDR specification modification time: Wed Mar 25 11:39:22 2026
++// XDR specification modification time: Wed Mar 25 11:40:02 2026
  
  #include <linux/sunrpc/svc.h>
  
- #include "nfs4xdr_gen.h"
- 
- static bool __maybe_unused
--xdrgen_decode_int64_t(struct xdr_stream *xdr, int64_t *ptr)
-+xdrgen_decode_int32_t(struct xdr_stream *xdr, int32_t *ptr)
- {
--	return xdrgen_decode_hyper(xdr, ptr);
-+	return xdrgen_decode_int(xdr, ptr);
- }
- 
- static bool __maybe_unused
-@@ -19,6 +19,155 @@ xdrgen_decode_uint32_t(struct xdr_stream *xdr, uint32_t *ptr)
- 	return xdrgen_decode_unsigned_int(xdr, ptr);
- }
- 
-+static bool __maybe_unused
-+xdrgen_decode_int64_t(struct xdr_stream *xdr, int64_t *ptr)
-+{
-+	return xdrgen_decode_hyper(xdr, ptr);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_uint64_t(struct xdr_stream *xdr, uint64_t *ptr)
-+{
-+	return xdrgen_decode_unsigned_hyper(xdr, ptr);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_nfsstat4(struct xdr_stream *xdr, nfsstat4 *ptr)
-+{
-+	u32 val;
-+
-+	if (xdr_stream_decode_u32(xdr, &val) < 0)
-+		return false;
-+	/* Compiler may optimize to a range check for dense enums */
-+	switch (val) {
-+	case NFS4_OK:
-+	case NFS4ERR_PERM:
-+	case NFS4ERR_NOENT:
-+	case NFS4ERR_IO:
-+	case NFS4ERR_NXIO:
-+	case NFS4ERR_ACCESS:
-+	case NFS4ERR_EXIST:
-+	case NFS4ERR_XDEV:
-+	case NFS4ERR_NOTDIR:
-+	case NFS4ERR_ISDIR:
-+	case NFS4ERR_INVAL:
-+	case NFS4ERR_FBIG:
-+	case NFS4ERR_NOSPC:
-+	case NFS4ERR_ROFS:
-+	case NFS4ERR_MLINK:
-+	case NFS4ERR_NAMETOOLONG:
-+	case NFS4ERR_NOTEMPTY:
-+	case NFS4ERR_DQUOT:
-+	case NFS4ERR_STALE:
-+	case NFS4ERR_BADHANDLE:
-+	case NFS4ERR_BAD_COOKIE:
-+	case NFS4ERR_NOTSUPP:
-+	case NFS4ERR_TOOSMALL:
-+	case NFS4ERR_SERVERFAULT:
-+	case NFS4ERR_BADTYPE:
-+	case NFS4ERR_DELAY:
-+	case NFS4ERR_SAME:
-+	case NFS4ERR_DENIED:
-+	case NFS4ERR_EXPIRED:
-+	case NFS4ERR_LOCKED:
-+	case NFS4ERR_GRACE:
-+	case NFS4ERR_FHEXPIRED:
-+	case NFS4ERR_SHARE_DENIED:
-+	case NFS4ERR_WRONGSEC:
-+	case NFS4ERR_CLID_INUSE:
-+	case NFS4ERR_RESOURCE:
-+	case NFS4ERR_MOVED:
-+	case NFS4ERR_NOFILEHANDLE:
-+	case NFS4ERR_MINOR_VERS_MISMATCH:
-+	case NFS4ERR_STALE_CLIENTID:
-+	case NFS4ERR_STALE_STATEID:
-+	case NFS4ERR_OLD_STATEID:
-+	case NFS4ERR_BAD_STATEID:
-+	case NFS4ERR_BAD_SEQID:
-+	case NFS4ERR_NOT_SAME:
-+	case NFS4ERR_LOCK_RANGE:
-+	case NFS4ERR_SYMLINK:
-+	case NFS4ERR_RESTOREFH:
-+	case NFS4ERR_LEASE_MOVED:
-+	case NFS4ERR_ATTRNOTSUPP:
-+	case NFS4ERR_NO_GRACE:
-+	case NFS4ERR_RECLAIM_BAD:
-+	case NFS4ERR_RECLAIM_CONFLICT:
-+	case NFS4ERR_BADXDR:
-+	case NFS4ERR_LOCKS_HELD:
-+	case NFS4ERR_OPENMODE:
-+	case NFS4ERR_BADOWNER:
-+	case NFS4ERR_BADCHAR:
-+	case NFS4ERR_BADNAME:
-+	case NFS4ERR_BAD_RANGE:
-+	case NFS4ERR_LOCK_NOTSUPP:
-+	case NFS4ERR_OP_ILLEGAL:
-+	case NFS4ERR_DEADLOCK:
-+	case NFS4ERR_FILE_OPEN:
-+	case NFS4ERR_ADMIN_REVOKED:
-+	case NFS4ERR_CB_PATH_DOWN:
-+	case NFS4ERR_BADIOMODE:
-+	case NFS4ERR_BADLAYOUT:
-+	case NFS4ERR_BAD_SESSION_DIGEST:
-+	case NFS4ERR_BADSESSION:
-+	case NFS4ERR_BADSLOT:
-+	case NFS4ERR_COMPLETE_ALREADY:
-+	case NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-+	case NFS4ERR_DELEG_ALREADY_WANTED:
-+	case NFS4ERR_BACK_CHAN_BUSY:
-+	case NFS4ERR_LAYOUTTRYLATER:
-+	case NFS4ERR_LAYOUTUNAVAILABLE:
-+	case NFS4ERR_NOMATCHING_LAYOUT:
-+	case NFS4ERR_RECALLCONFLICT:
-+	case NFS4ERR_UNKNOWN_LAYOUTTYPE:
-+	case NFS4ERR_SEQ_MISORDERED:
-+	case NFS4ERR_SEQUENCE_POS:
-+	case NFS4ERR_REQ_TOO_BIG:
-+	case NFS4ERR_REP_TOO_BIG:
-+	case NFS4ERR_REP_TOO_BIG_TO_CACHE:
-+	case NFS4ERR_RETRY_UNCACHED_REP:
-+	case NFS4ERR_UNSAFE_COMPOUND:
-+	case NFS4ERR_TOO_MANY_OPS:
-+	case NFS4ERR_OP_NOT_IN_SESSION:
-+	case NFS4ERR_HASH_ALG_UNSUPP:
-+	case NFS4ERR_CLIENTID_BUSY:
-+	case NFS4ERR_PNFS_IO_HOLE:
-+	case NFS4ERR_SEQ_FALSE_RETRY:
-+	case NFS4ERR_BAD_HIGH_SLOT:
-+	case NFS4ERR_DEADSESSION:
-+	case NFS4ERR_ENCR_ALG_UNSUPP:
-+	case NFS4ERR_PNFS_NO_LAYOUT:
-+	case NFS4ERR_NOT_ONLY_OP:
-+	case NFS4ERR_WRONG_CRED:
-+	case NFS4ERR_WRONG_TYPE:
-+	case NFS4ERR_DIRDELEG_UNAVAIL:
-+	case NFS4ERR_REJECT_DELEG:
-+	case NFS4ERR_RETURNCONFLICT:
-+	case NFS4ERR_DELEG_REVOKED:
-+	case NFS4ERR_PARTNER_NOTSUPP:
-+	case NFS4ERR_PARTNER_NO_AUTH:
-+	case NFS4ERR_UNION_NOTSUPP:
-+	case NFS4ERR_OFFLOAD_DENIED:
-+	case NFS4ERR_WRONG_LFS:
-+	case NFS4ERR_BADLABEL:
-+	case NFS4ERR_OFFLOAD_NO_REQS:
-+	case NFS4ERR_NOXATTR:
-+	case NFS4ERR_XATTR2BIG:
-+	case NFS4ERR_FIRST_FREE:
-+		break;
-+	default:
-+		return false;
-+	}
-+	*ptr = val;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_attrlist4(struct xdr_stream *xdr, attrlist4 *ptr)
-+{
-+	return xdrgen_decode_opaque(xdr, ptr, 0);
-+}
-+
- static bool __maybe_unused
- xdrgen_decode_bitmap4(struct xdr_stream *xdr, bitmap4 *ptr)
- {
-@@ -30,6 +179,24 @@ xdrgen_decode_bitmap4(struct xdr_stream *xdr, bitmap4 *ptr)
- 	return true;
- }
- 
-+static bool __maybe_unused
-+xdrgen_decode_verifier4(struct xdr_stream *xdr, verifier4 *ptr)
-+{
-+	return xdr_stream_decode_opaque_fixed(xdr, ptr, NFS4_VERIFIER_SIZE) == 0;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_nfs_cookie4(struct xdr_stream *xdr, nfs_cookie4 *ptr)
-+{
-+	return xdrgen_decode_uint64_t(xdr, ptr);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_nfs_fh4(struct xdr_stream *xdr, nfs_fh4 *ptr)
-+{
-+	return xdrgen_decode_opaque(xdr, ptr, NFS4_FHSIZE);
-+}
-+
- static bool __maybe_unused
- xdrgen_decode_utf8string(struct xdr_stream *xdr, utf8string *ptr)
- {
-@@ -54,6 +221,29 @@ xdrgen_decode_utf8str_mixed(struct xdr_stream *xdr, utf8str_mixed *ptr)
- 	return xdrgen_decode_utf8string(xdr, ptr);
- }
- 
-+static bool __maybe_unused
-+xdrgen_decode_component4(struct xdr_stream *xdr, component4 *ptr)
-+{
-+	return xdrgen_decode_utf8str_cs(xdr, ptr);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_linktext4(struct xdr_stream *xdr, linktext4 *ptr)
-+{
-+	return xdrgen_decode_utf8str_cs(xdr, ptr);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_pathname4(struct xdr_stream *xdr, pathname4 *ptr)
-+{
-+	if (xdr_stream_decode_u32(xdr, &ptr->count) < 0)
-+		return false;
-+	for (u32 i = 0; i < ptr->count; i++)
-+		if (!xdrgen_decode_component4(xdr, &ptr->element[i]))
-+			return false;
-+	return true;
-+}
-+
- static bool __maybe_unused
- xdrgen_decode_nfstime4(struct xdr_stream *xdr, struct nfstime4 *ptr)
- {
-@@ -64,6 +254,26 @@ xdrgen_decode_nfstime4(struct xdr_stream *xdr, struct nfstime4 *ptr)
- 	return true;
- }
- 
-+static bool __maybe_unused
-+xdrgen_decode_fattr4(struct xdr_stream *xdr, struct fattr4 *ptr)
-+{
-+	if (!xdrgen_decode_bitmap4(xdr, &ptr->attrmask))
-+		return false;
-+	if (!xdrgen_decode_attrlist4(xdr, &ptr->attr_vals))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_stateid4(struct xdr_stream *xdr, struct stateid4 *ptr)
-+{
-+	if (!xdrgen_decode_uint32_t(xdr, &ptr->seqid))
-+		return false;
-+	if (xdr_stream_decode_opaque_fixed(xdr, ptr->other, 12) < 0)
-+		return false;
-+	return true;
-+}
-+
- static bool __maybe_unused
- xdrgen_decode_fattr4_offline(struct xdr_stream *xdr, fattr4_offline *ptr)
- {
-@@ -366,9 +576,160 @@ xdrgen_decode_fattr4_posix_access_acl(struct xdr_stream *xdr, fattr4_posix_acces
-  */
- 
- static bool __maybe_unused
--xdrgen_encode_int64_t(struct xdr_stream *xdr, const int64_t value)
-+xdrgen_decode_notify_type4(struct xdr_stream *xdr, notify_type4 *ptr)
- {
--	return xdrgen_encode_hyper(xdr, value);
-+	u32 val;
-+
-+	if (xdr_stream_decode_u32(xdr, &val) < 0)
-+		return false;
-+	/* Compiler may optimize to a range check for dense enums */
-+	switch (val) {
-+	case NOTIFY4_CHANGE_CHILD_ATTRS:
-+	case NOTIFY4_CHANGE_DIR_ATTRS:
-+	case NOTIFY4_REMOVE_ENTRY:
-+	case NOTIFY4_ADD_ENTRY:
-+	case NOTIFY4_RENAME_ENTRY:
-+	case NOTIFY4_CHANGE_COOKIE_VERIFIER:
-+		break;
-+	default:
-+		return false;
-+	}
-+	*ptr = val;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_notify_entry4(struct xdr_stream *xdr, struct notify_entry4 *ptr)
-+{
-+	if (!xdrgen_decode_component4(xdr, &ptr->ne_file))
-+		return false;
-+	if (!xdrgen_decode_fattr4(xdr, &ptr->ne_attrs))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_prev_entry4(struct xdr_stream *xdr, struct prev_entry4 *ptr)
-+{
-+	if (!xdrgen_decode_notify_entry4(xdr, &ptr->pe_prev_entry))
-+		return false;
-+	if (!xdrgen_decode_nfs_cookie4(xdr, &ptr->pe_prev_entry_cookie))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_decode_notify_remove4(struct xdr_stream *xdr, struct notify_remove4 *ptr)
-+{
-+	if (!xdrgen_decode_notify_entry4(xdr, &ptr->nrm_old_entry))
-+		return false;
-+	if (!xdrgen_decode_nfs_cookie4(xdr, &ptr->nrm_old_entry_cookie))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_decode_notify_add4(struct xdr_stream *xdr, struct notify_add4 *ptr)
-+{
-+	if (xdr_stream_decode_u32(xdr, &ptr->nad_old_entry.count) < 0)
-+		return false;
-+	if (ptr->nad_old_entry.count > 1)
-+		return false;
-+	for (u32 i = 0; i < ptr->nad_old_entry.count; i++)
-+		if (!xdrgen_decode_notify_remove4(xdr, &ptr->nad_old_entry.element[i]))
-+			return false;
-+	if (!xdrgen_decode_notify_entry4(xdr, &ptr->nad_new_entry))
-+		return false;
-+	if (xdr_stream_decode_u32(xdr, &ptr->nad_new_entry_cookie.count) < 0)
-+		return false;
-+	if (ptr->nad_new_entry_cookie.count > 1)
-+		return false;
-+	for (u32 i = 0; i < ptr->nad_new_entry_cookie.count; i++)
-+		if (!xdrgen_decode_nfs_cookie4(xdr, &ptr->nad_new_entry_cookie.element[i]))
-+			return false;
-+	if (xdr_stream_decode_u32(xdr, &ptr->nad_prev_entry.count) < 0)
-+		return false;
-+	if (ptr->nad_prev_entry.count > 1)
-+		return false;
-+	for (u32 i = 0; i < ptr->nad_prev_entry.count; i++)
-+		if (!xdrgen_decode_prev_entry4(xdr, &ptr->nad_prev_entry.element[i]))
-+			return false;
-+	if (!xdrgen_decode_bool(xdr, &ptr->nad_last_entry))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_decode_notify_attr4(struct xdr_stream *xdr, struct notify_attr4 *ptr)
-+{
-+	if (!xdrgen_decode_notify_entry4(xdr, &ptr->na_changed_entry))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_decode_notify_rename4(struct xdr_stream *xdr, struct notify_rename4 *ptr)
-+{
-+	if (!xdrgen_decode_notify_remove4(xdr, &ptr->nrn_old_entry))
-+		return false;
-+	if (!xdrgen_decode_notify_add4(xdr, &ptr->nrn_new_entry))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_notify_verifier4(struct xdr_stream *xdr, struct notify_verifier4 *ptr)
-+{
-+	if (!xdrgen_decode_verifier4(xdr, &ptr->nv_old_cookieverf))
-+		return false;
-+	if (!xdrgen_decode_verifier4(xdr, &ptr->nv_new_cookieverf))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_notifylist4(struct xdr_stream *xdr, notifylist4 *ptr)
-+{
-+	return xdrgen_decode_opaque(xdr, ptr, 0);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_decode_notify4(struct xdr_stream *xdr, struct notify4 *ptr)
-+{
-+	if (!xdrgen_decode_bitmap4(xdr, &ptr->notify_mask))
-+		return false;
-+	if (!xdrgen_decode_notifylist4(xdr, &ptr->notify_vals))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_decode_CB_NOTIFY4args(struct xdr_stream *xdr, struct CB_NOTIFY4args *ptr)
-+{
-+	if (!xdrgen_decode_stateid4(xdr, &ptr->cna_stateid))
-+		return false;
-+	if (!xdrgen_decode_nfs_fh4(xdr, &ptr->cna_fh))
-+		return false;
-+	if (xdr_stream_decode_u32(xdr, &ptr->cna_changes.count) < 0)
-+		return false;
-+	for (u32 i = 0; i < ptr->cna_changes.count; i++)
-+		if (!xdrgen_decode_notify4(xdr, &ptr->cna_changes.element[i]))
-+			return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_decode_CB_NOTIFY4res(struct xdr_stream *xdr, struct CB_NOTIFY4res *ptr)
-+{
-+	if (!xdrgen_decode_nfsstat4(xdr, &ptr->cnr_status))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_int32_t(struct xdr_stream *xdr, const int32_t value)
-+{
-+	return xdrgen_encode_int(xdr, value);
- }
- 
- static bool __maybe_unused
-@@ -377,6 +738,30 @@ xdrgen_encode_uint32_t(struct xdr_stream *xdr, const uint32_t value)
- 	return xdrgen_encode_unsigned_int(xdr, value);
- }
- 
-+static bool __maybe_unused
-+xdrgen_encode_int64_t(struct xdr_stream *xdr, const int64_t value)
-+{
-+	return xdrgen_encode_hyper(xdr, value);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_uint64_t(struct xdr_stream *xdr, const uint64_t value)
-+{
-+	return xdrgen_encode_unsigned_hyper(xdr, value);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_nfsstat4(struct xdr_stream *xdr, nfsstat4 value)
-+{
-+	return xdr_stream_encode_u32(xdr, value) == XDR_UNIT;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_attrlist4(struct xdr_stream *xdr, const attrlist4 value)
-+{
-+	return xdr_stream_encode_opaque(xdr, value.data, value.len) >= 0;
-+}
-+
- static bool __maybe_unused
- xdrgen_encode_bitmap4(struct xdr_stream *xdr, const bitmap4 value)
- {
-@@ -388,6 +773,24 @@ xdrgen_encode_bitmap4(struct xdr_stream *xdr, const bitmap4 value)
- 	return true;
- }
- 
-+static bool __maybe_unused
-+xdrgen_encode_verifier4(struct xdr_stream *xdr, const verifier4 value)
-+{
-+	return xdr_stream_encode_opaque_fixed(xdr, value, NFS4_VERIFIER_SIZE) >= 0;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_nfs_cookie4(struct xdr_stream *xdr, const nfs_cookie4 value)
-+{
-+	return xdrgen_encode_uint64_t(xdr, value);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_nfs_fh4(struct xdr_stream *xdr, const nfs_fh4 value)
-+{
-+	return xdr_stream_encode_opaque(xdr, value.data, value.len) >= 0;
-+}
-+
- static bool __maybe_unused
- xdrgen_encode_utf8string(struct xdr_stream *xdr, const utf8string value)
- {
-@@ -412,6 +815,29 @@ xdrgen_encode_utf8str_mixed(struct xdr_stream *xdr, const utf8str_mixed value)
- 	return xdrgen_encode_utf8string(xdr, value);
- }
- 
-+static bool __maybe_unused
-+xdrgen_encode_component4(struct xdr_stream *xdr, const component4 value)
-+{
-+	return xdrgen_encode_utf8str_cs(xdr, value);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_linktext4(struct xdr_stream *xdr, const linktext4 value)
-+{
-+	return xdrgen_encode_utf8str_cs(xdr, value);
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_pathname4(struct xdr_stream *xdr, const pathname4 value)
-+{
-+	if (xdr_stream_encode_u32(xdr, value.count) != XDR_UNIT)
-+		return false;
-+	for (u32 i = 0; i < value.count; i++)
-+		if (!xdrgen_encode_component4(xdr, value.element[i]))
-+			return false;
-+	return true;
-+}
-+
- static bool __maybe_unused
- xdrgen_encode_nfstime4(struct xdr_stream *xdr, const struct nfstime4 *value)
- {
-@@ -422,6 +848,26 @@ xdrgen_encode_nfstime4(struct xdr_stream *xdr, const struct nfstime4 *value)
- 	return true;
- }
- 
-+static bool __maybe_unused
-+xdrgen_encode_fattr4(struct xdr_stream *xdr, const struct fattr4 *value)
-+{
-+	if (!xdrgen_encode_bitmap4(xdr, value->attrmask))
-+		return false;
-+	if (!xdrgen_encode_attrlist4(xdr, value->attr_vals))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_stateid4(struct xdr_stream *xdr, const struct stateid4 *value)
-+{
-+	if (!xdrgen_encode_uint32_t(xdr, value->seqid))
-+		return false;
-+	if (xdr_stream_encode_opaque_fixed(xdr, value->other, 12) < 0)
-+		return false;
-+	return true;
-+}
-+
- static bool __maybe_unused
- xdrgen_encode_fattr4_offline(struct xdr_stream *xdr, const fattr4_offline value)
- {
-@@ -567,3 +1013,137 @@ xdrgen_encode_fattr4_posix_access_acl(struct xdr_stream *xdr, const fattr4_posix
- 			return false;
- 	return true;
- }
-+
-+static bool __maybe_unused
-+xdrgen_encode_notify_type4(struct xdr_stream *xdr, notify_type4 value)
-+{
-+	return xdr_stream_encode_u32(xdr, value) == XDR_UNIT;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_notify_entry4(struct xdr_stream *xdr, const struct notify_entry4 *value)
-+{
-+	if (!xdrgen_encode_component4(xdr, value->ne_file))
-+		return false;
-+	if (!xdrgen_encode_fattr4(xdr, &value->ne_attrs))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_prev_entry4(struct xdr_stream *xdr, const struct prev_entry4 *value)
-+{
-+	if (!xdrgen_encode_notify_entry4(xdr, &value->pe_prev_entry))
-+		return false;
-+	if (!xdrgen_encode_nfs_cookie4(xdr, value->pe_prev_entry_cookie))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_encode_notify_remove4(struct xdr_stream *xdr, const struct notify_remove4 *value)
-+{
-+	if (!xdrgen_encode_notify_entry4(xdr, &value->nrm_old_entry))
-+		return false;
-+	if (!xdrgen_encode_nfs_cookie4(xdr, value->nrm_old_entry_cookie))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_encode_notify_add4(struct xdr_stream *xdr, const struct notify_add4 *value)
-+{
-+	if (value->nad_old_entry.count > 1)
-+		return false;
-+	if (xdr_stream_encode_u32(xdr, value->nad_old_entry.count) != XDR_UNIT)
-+		return false;
-+	for (u32 i = 0; i < value->nad_old_entry.count; i++)
-+		if (!xdrgen_encode_notify_remove4(xdr, &value->nad_old_entry.element[i]))
-+			return false;
-+	if (!xdrgen_encode_notify_entry4(xdr, &value->nad_new_entry))
-+		return false;
-+	if (value->nad_new_entry_cookie.count > 1)
-+		return false;
-+	if (xdr_stream_encode_u32(xdr, value->nad_new_entry_cookie.count) != XDR_UNIT)
-+		return false;
-+	for (u32 i = 0; i < value->nad_new_entry_cookie.count; i++)
-+		if (!xdrgen_encode_nfs_cookie4(xdr, value->nad_new_entry_cookie.element[i]))
-+			return false;
-+	if (value->nad_prev_entry.count > 1)
-+		return false;
-+	if (xdr_stream_encode_u32(xdr, value->nad_prev_entry.count) != XDR_UNIT)
-+		return false;
-+	for (u32 i = 0; i < value->nad_prev_entry.count; i++)
-+		if (!xdrgen_encode_prev_entry4(xdr, &value->nad_prev_entry.element[i]))
-+			return false;
-+	if (!xdrgen_encode_bool(xdr, value->nad_last_entry))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_encode_notify_attr4(struct xdr_stream *xdr, const struct notify_attr4 *value)
-+{
-+	if (!xdrgen_encode_notify_entry4(xdr, &value->na_changed_entry))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_encode_notify_rename4(struct xdr_stream *xdr, const struct notify_rename4 *value)
-+{
-+	if (!xdrgen_encode_notify_remove4(xdr, &value->nrn_old_entry))
-+		return false;
-+	if (!xdrgen_encode_notify_add4(xdr, &value->nrn_new_entry))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_notify_verifier4(struct xdr_stream *xdr, const struct notify_verifier4 *value)
-+{
-+	if (!xdrgen_encode_verifier4(xdr, value->nv_old_cookieverf))
-+		return false;
-+	if (!xdrgen_encode_verifier4(xdr, value->nv_new_cookieverf))
-+		return false;
-+	return true;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_notifylist4(struct xdr_stream *xdr, const notifylist4 value)
-+{
-+	return xdr_stream_encode_opaque(xdr, value.data, value.len) >= 0;
-+}
-+
-+static bool __maybe_unused
-+xdrgen_encode_notify4(struct xdr_stream *xdr, const struct notify4 *value)
-+{
-+	if (!xdrgen_encode_bitmap4(xdr, value->notify_mask))
-+		return false;
-+	if (!xdrgen_encode_notifylist4(xdr, value->notify_vals))
-+		return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_encode_CB_NOTIFY4args(struct xdr_stream *xdr, const struct CB_NOTIFY4args *value)
-+{
-+	if (!xdrgen_encode_stateid4(xdr, &value->cna_stateid))
-+		return false;
-+	if (!xdrgen_encode_nfs_fh4(xdr, value->cna_fh))
-+		return false;
-+	if (xdr_stream_encode_u32(xdr, value->cna_changes.count) != XDR_UNIT)
-+		return false;
-+	for (u32 i = 0; i < value->cna_changes.count; i++)
-+		if (!xdrgen_encode_notify4(xdr, &value->cna_changes.element[i]))
-+			return false;
-+	return true;
-+}
-+
-+bool
-+xdrgen_encode_CB_NOTIFY4res(struct xdr_stream *xdr, const struct CB_NOTIFY4res *value)
-+{
-+	if (!xdrgen_encode_nfsstat4(xdr, value->cnr_status))
-+		return false;
-+	return true;
-+}
+@@ -590,6 +590,17 @@ xdrgen_decode_notify_type4(struct xdr_stream *xdr, notify_type4 *ptr)
+ 	case NOTIFY4_ADD_ENTRY:
+ 	case NOTIFY4_RENAME_ENTRY:
+ 	case NOTIFY4_CHANGE_COOKIE_VERIFIER:
++	case NOTIFY4_GFLAG_EXTEND:
++	case NOTIFY4_AUFLAG_VALID:
++	case NOTIFY4_AUFLAG_USER:
++	case NOTIFY4_AUFLAG_GROUP:
++	case NOTIFY4_AUFLAG_OTHER:
++	case NOTIFY4_CHANGE_AUTH:
++	case NOTIFY4_CFLAG_ORDER:
++	case NOTIFY4_AUFLAG_GANOW:
++	case NOTIFY4_AUFLAG_GALATER:
++	case NOTIFY4_CHANGE_GA:
++	case NOTIFY4_CHANGE_AMASK:
+ 		break;
+ 	default:
+ 		return false;
 diff --git a/fs/nfsd/nfs4xdr_gen.h b/fs/nfsd/nfs4xdr_gen.h
-index 1c487f1a11ab..503fe2ccba51 100644
+index 503fe2ccba51..092a1ed399c7 100644
 --- a/fs/nfsd/nfs4xdr_gen.h
 +++ b/fs/nfsd/nfs4xdr_gen.h
 @@ -1,7 +1,7 @@
  /* SPDX-License-Identifier: GPL-2.0 */
  /* Generated by xdrgen. Manual edits will be lost. */
  /* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x */
--/* XDR specification modification time: Thu Jan  8 23:12:07 2026 */
-+/* XDR specification modification time: Wed Mar 25 11:39:22 2026 */
+-/* XDR specification modification time: Wed Mar 25 11:39:22 2026 */
++/* XDR specification modification time: Wed Mar 25 11:40:02 2026 */
  
  #ifndef _LINUX_XDRGEN_NFS4_1_DECL_H
  #define _LINUX_XDRGEN_NFS4_1_DECL_H
-@@ -32,4 +32,22 @@ bool xdrgen_decode_posixaceperm4(struct xdr_stream *xdr, posixaceperm4 *ptr);
- bool xdrgen_encode_posixaceperm4(struct xdr_stream *xdr, const posixaceperm4 value);
- 
- 
-+bool xdrgen_decode_notify_remove4(struct xdr_stream *xdr, struct notify_remove4 *ptr);
-+bool xdrgen_encode_notify_remove4(struct xdr_stream *xdr, const struct notify_remove4 *value);
-+
-+bool xdrgen_decode_notify_add4(struct xdr_stream *xdr, struct notify_add4 *ptr);
-+bool xdrgen_encode_notify_add4(struct xdr_stream *xdr, const struct notify_add4 *value);
-+
-+bool xdrgen_decode_notify_attr4(struct xdr_stream *xdr, struct notify_attr4 *ptr);
-+bool xdrgen_encode_notify_attr4(struct xdr_stream *xdr, const struct notify_attr4 *value);
-+
-+bool xdrgen_decode_notify_rename4(struct xdr_stream *xdr, struct notify_rename4 *ptr);
-+bool xdrgen_encode_notify_rename4(struct xdr_stream *xdr, const struct notify_rename4 *value);
-+
-+bool xdrgen_decode_CB_NOTIFY4args(struct xdr_stream *xdr, struct CB_NOTIFY4args *ptr);
-+bool xdrgen_encode_CB_NOTIFY4args(struct xdr_stream *xdr, const struct CB_NOTIFY4args *value);
-+
-+bool xdrgen_decode_CB_NOTIFY4res(struct xdr_stream *xdr, struct CB_NOTIFY4res *ptr);
-+bool xdrgen_encode_CB_NOTIFY4res(struct xdr_stream *xdr, const struct CB_NOTIFY4res *value);
-+
- #endif /* _LINUX_XDRGEN_NFS4_1_DECL_H */
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index a13d18447324..60cacf64181c 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -1677,6 +1677,7 @@ TRACE_EVENT(nfsd_cb_setup_err,
- 		{ OP_CB_RECALL,			"CB_RECALL" },		\
- 		{ OP_CB_LAYOUTRECALL,		"CB_LAYOUTRECALL" },	\
- 		{ OP_CB_RECALL_ANY,		"CB_RECALL_ANY" },	\
-+		{ OP_CB_NOTIFY,			"CB_NOTIFY" },		\
- 		{ OP_CB_NOTIFY_LOCK,		"CB_NOTIFY_LOCK" },	\
- 		{ OP_CB_OFFLOAD,		"CB_OFFLOAD" })
- 
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index d87be1f25273..44e5e9fa12e1 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -171,133 +171,6 @@ Needs to be updated if more operations are defined in future.*/
- #define LAST_NFS42_OP	OP_REMOVEXATTR
- #define LAST_NFS4_OP	LAST_NFS42_OP
- 
--enum nfsstat4 {
--	NFS4_OK = 0,
--	NFS4ERR_PERM = 1,
--	NFS4ERR_NOENT = 2,
--	NFS4ERR_IO = 5,
--	NFS4ERR_NXIO = 6,
--	NFS4ERR_ACCESS = 13,
--	NFS4ERR_EXIST = 17,
--	NFS4ERR_XDEV = 18,
--	/* Unused/reserved 19 */
--	NFS4ERR_NOTDIR = 20,
--	NFS4ERR_ISDIR = 21,
--	NFS4ERR_INVAL = 22,
--	NFS4ERR_FBIG = 27,
--	NFS4ERR_NOSPC = 28,
--	NFS4ERR_ROFS = 30,
--	NFS4ERR_MLINK = 31,
--	NFS4ERR_NAMETOOLONG = 63,
--	NFS4ERR_NOTEMPTY = 66,
--	NFS4ERR_DQUOT = 69,
--	NFS4ERR_STALE = 70,
--	NFS4ERR_BADHANDLE = 10001,
--	NFS4ERR_BAD_COOKIE = 10003,
--	NFS4ERR_NOTSUPP = 10004,
--	NFS4ERR_TOOSMALL = 10005,
--	NFS4ERR_SERVERFAULT = 10006,
--	NFS4ERR_BADTYPE = 10007,
--	NFS4ERR_DELAY = 10008,
--	NFS4ERR_SAME = 10009,
--	NFS4ERR_DENIED = 10010,
--	NFS4ERR_EXPIRED = 10011,
--	NFS4ERR_LOCKED = 10012,
--	NFS4ERR_GRACE = 10013,
--	NFS4ERR_FHEXPIRED = 10014,
--	NFS4ERR_SHARE_DENIED = 10015,
--	NFS4ERR_WRONGSEC = 10016,
--	NFS4ERR_CLID_INUSE = 10017,
--	NFS4ERR_RESOURCE = 10018,
--	NFS4ERR_MOVED = 10019,
--	NFS4ERR_NOFILEHANDLE = 10020,
--	NFS4ERR_MINOR_VERS_MISMATCH = 10021,
--	NFS4ERR_STALE_CLIENTID = 10022,
--	NFS4ERR_STALE_STATEID = 10023,
--	NFS4ERR_OLD_STATEID = 10024,
--	NFS4ERR_BAD_STATEID = 10025,
--	NFS4ERR_BAD_SEQID = 10026,
--	NFS4ERR_NOT_SAME = 10027,
--	NFS4ERR_LOCK_RANGE = 10028,
--	NFS4ERR_SYMLINK = 10029,
--	NFS4ERR_RESTOREFH = 10030,
--	NFS4ERR_LEASE_MOVED = 10031,
--	NFS4ERR_ATTRNOTSUPP = 10032,
--	NFS4ERR_NO_GRACE = 10033,
--	NFS4ERR_RECLAIM_BAD = 10034,
--	NFS4ERR_RECLAIM_CONFLICT = 10035,
--	NFS4ERR_BADXDR = 10036,
--	NFS4ERR_LOCKS_HELD = 10037,
--	NFS4ERR_OPENMODE = 10038,
--	NFS4ERR_BADOWNER = 10039,
--	NFS4ERR_BADCHAR = 10040,
--	NFS4ERR_BADNAME = 10041,
--	NFS4ERR_BAD_RANGE = 10042,
--	NFS4ERR_LOCK_NOTSUPP = 10043,
--	NFS4ERR_OP_ILLEGAL = 10044,
--	NFS4ERR_DEADLOCK = 10045,
--	NFS4ERR_FILE_OPEN = 10046,
--	NFS4ERR_ADMIN_REVOKED = 10047,
--	NFS4ERR_CB_PATH_DOWN = 10048,
--
--	/* nfs41 */
--	NFS4ERR_BADIOMODE	= 10049,
--	NFS4ERR_BADLAYOUT	= 10050,
--	NFS4ERR_BAD_SESSION_DIGEST = 10051,
--	NFS4ERR_BADSESSION	= 10052,
--	NFS4ERR_BADSLOT		= 10053,
--	NFS4ERR_COMPLETE_ALREADY = 10054,
--	NFS4ERR_CONN_NOT_BOUND_TO_SESSION = 10055,
--	NFS4ERR_DELEG_ALREADY_WANTED = 10056,
--	NFS4ERR_BACK_CHAN_BUSY	= 10057,	/* backchan reqs outstanding */
--	NFS4ERR_LAYOUTTRYLATER	= 10058,
--	NFS4ERR_LAYOUTUNAVAILABLE = 10059,
--	NFS4ERR_NOMATCHING_LAYOUT = 10060,
--	NFS4ERR_RECALLCONFLICT	= 10061,
--	NFS4ERR_UNKNOWN_LAYOUTTYPE = 10062,
--	NFS4ERR_SEQ_MISORDERED = 10063, 	/* unexpected seq.id in req */
--	NFS4ERR_SEQUENCE_POS	= 10064,	/* [CB_]SEQ. op not 1st op */
--	NFS4ERR_REQ_TOO_BIG	= 10065,	/* request too big */
--	NFS4ERR_REP_TOO_BIG	= 10066,	/* reply too big */
--	NFS4ERR_REP_TOO_BIG_TO_CACHE = 10067,	/* rep. not all cached */
--	NFS4ERR_RETRY_UNCACHED_REP = 10068,	/* retry & rep. uncached */
--	NFS4ERR_UNSAFE_COMPOUND = 10069,	/* retry/recovery too hard */
--	NFS4ERR_TOO_MANY_OPS	= 10070,	/* too many ops in [CB_]COMP */
--	NFS4ERR_OP_NOT_IN_SESSION = 10071,	/* op needs [CB_]SEQ. op */
--	NFS4ERR_HASH_ALG_UNSUPP = 10072,	/* hash alg. not supp. */
--						/* Error 10073 is unused. */
--	NFS4ERR_CLIENTID_BUSY	= 10074,	/* clientid has state */
--	NFS4ERR_PNFS_IO_HOLE	= 10075,	/* IO to _SPARSE file hole */
--	NFS4ERR_SEQ_FALSE_RETRY	= 10076,	/* retry not original */
--	NFS4ERR_BAD_HIGH_SLOT	= 10077,	/* sequence arg bad */
--	NFS4ERR_DEADSESSION	= 10078,	/* persistent session dead */
--	NFS4ERR_ENCR_ALG_UNSUPP = 10079,	/* SSV alg mismatch */
--	NFS4ERR_PNFS_NO_LAYOUT	= 10080,	/* direct I/O with no layout */
--	NFS4ERR_NOT_ONLY_OP	= 10081,	/* bad compound */
--	NFS4ERR_WRONG_CRED	= 10082,	/* permissions:state change */
--	NFS4ERR_WRONG_TYPE	= 10083,	/* current operation mismatch */
--	NFS4ERR_DIRDELEG_UNAVAIL = 10084,	/* no directory delegation */
--	NFS4ERR_REJECT_DELEG	= 10085,	/* on callback */
--	NFS4ERR_RETURNCONFLICT	= 10086,	/* outstanding layoutreturn */
--	NFS4ERR_DELEG_REVOKED	= 10087,	/* deleg./layout revoked */
--
--	/* nfs42 */
--	NFS4ERR_PARTNER_NOTSUPP	= 10088,
--	NFS4ERR_PARTNER_NO_AUTH	= 10089,
--	NFS4ERR_UNION_NOTSUPP	= 10090,
--	NFS4ERR_OFFLOAD_DENIED	= 10091,
--	NFS4ERR_WRONG_LFS	= 10092,
--	NFS4ERR_BADLABEL	= 10093,
--	NFS4ERR_OFFLOAD_NO_REQS	= 10094,
--
--	/* xattr (RFC8276) */
--	NFS4ERR_NOXATTR		= 10095,
--	NFS4ERR_XATTR2BIG	= 10096,
--
--	/* can be used for internal errors */
--	NFS4ERR_FIRST_FREE
--};
--
- /* error codes for internal client use */
- #define NFS4ERR_RESET_TO_MDS   12001
- #define NFS4ERR_RESET_TO_PNFS  12002
 diff --git a/include/linux/sunrpc/xdrgen/nfs4_1.h b/include/linux/sunrpc/xdrgen/nfs4_1.h
-index 4ac54bdbd335..f761c3ddb4c7 100644
+index f761c3ddb4c7..537504069f24 100644
 --- a/include/linux/sunrpc/xdrgen/nfs4_1.h
 +++ b/include/linux/sunrpc/xdrgen/nfs4_1.h
 @@ -1,7 +1,7 @@
  /* SPDX-License-Identifier: GPL-2.0 */
  /* Generated by xdrgen. Manual edits will be lost. */
  /* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x */
--/* XDR specification modification time: Thu Jan  8 23:12:07 2026 */
-+/* XDR specification modification time: Wed Mar 25 11:39:22 2026 */
+-/* XDR specification modification time: Wed Mar 25 11:39:22 2026 */
++/* XDR specification modification time: Wed Mar 25 11:40:02 2026 */
  
  #ifndef _LINUX_XDRGEN_NFS4_1_DEF_H
  #define _LINUX_XDRGEN_NFS4_1_DEF_H
-@@ -9,15 +9,150 @@
- #include <linux/types.h>
- #include <linux/sunrpc/xdrgen/_defs.h>
- 
--typedef s64 int64_t;
-+typedef s32 int32_t;
- 
- typedef u32 uint32_t;
- 
-+typedef s64 int64_t;
-+
-+typedef u64 uint64_t;
-+
-+enum { NFS4_VERIFIER_SIZE = 8 };
-+
-+enum { NFS4_FHSIZE = 128 };
-+
-+enum nfsstat4 {
-+	NFS4_OK = 0,
-+	NFS4ERR_PERM = 1,
-+	NFS4ERR_NOENT = 2,
-+	NFS4ERR_IO = 5,
-+	NFS4ERR_NXIO = 6,
-+	NFS4ERR_ACCESS = 13,
-+	NFS4ERR_EXIST = 17,
-+	NFS4ERR_XDEV = 18,
-+	NFS4ERR_NOTDIR = 20,
-+	NFS4ERR_ISDIR = 21,
-+	NFS4ERR_INVAL = 22,
-+	NFS4ERR_FBIG = 27,
-+	NFS4ERR_NOSPC = 28,
-+	NFS4ERR_ROFS = 30,
-+	NFS4ERR_MLINK = 31,
-+	NFS4ERR_NAMETOOLONG = 63,
-+	NFS4ERR_NOTEMPTY = 66,
-+	NFS4ERR_DQUOT = 69,
-+	NFS4ERR_STALE = 70,
-+	NFS4ERR_BADHANDLE = 10001,
-+	NFS4ERR_BAD_COOKIE = 10003,
-+	NFS4ERR_NOTSUPP = 10004,
-+	NFS4ERR_TOOSMALL = 10005,
-+	NFS4ERR_SERVERFAULT = 10006,
-+	NFS4ERR_BADTYPE = 10007,
-+	NFS4ERR_DELAY = 10008,
-+	NFS4ERR_SAME = 10009,
-+	NFS4ERR_DENIED = 10010,
-+	NFS4ERR_EXPIRED = 10011,
-+	NFS4ERR_LOCKED = 10012,
-+	NFS4ERR_GRACE = 10013,
-+	NFS4ERR_FHEXPIRED = 10014,
-+	NFS4ERR_SHARE_DENIED = 10015,
-+	NFS4ERR_WRONGSEC = 10016,
-+	NFS4ERR_CLID_INUSE = 10017,
-+	NFS4ERR_RESOURCE = 10018,
-+	NFS4ERR_MOVED = 10019,
-+	NFS4ERR_NOFILEHANDLE = 10020,
-+	NFS4ERR_MINOR_VERS_MISMATCH = 10021,
-+	NFS4ERR_STALE_CLIENTID = 10022,
-+	NFS4ERR_STALE_STATEID = 10023,
-+	NFS4ERR_OLD_STATEID = 10024,
-+	NFS4ERR_BAD_STATEID = 10025,
-+	NFS4ERR_BAD_SEQID = 10026,
-+	NFS4ERR_NOT_SAME = 10027,
-+	NFS4ERR_LOCK_RANGE = 10028,
-+	NFS4ERR_SYMLINK = 10029,
-+	NFS4ERR_RESTOREFH = 10030,
-+	NFS4ERR_LEASE_MOVED = 10031,
-+	NFS4ERR_ATTRNOTSUPP = 10032,
-+	NFS4ERR_NO_GRACE = 10033,
-+	NFS4ERR_RECLAIM_BAD = 10034,
-+	NFS4ERR_RECLAIM_CONFLICT = 10035,
-+	NFS4ERR_BADXDR = 10036,
-+	NFS4ERR_LOCKS_HELD = 10037,
-+	NFS4ERR_OPENMODE = 10038,
-+	NFS4ERR_BADOWNER = 10039,
-+	NFS4ERR_BADCHAR = 10040,
-+	NFS4ERR_BADNAME = 10041,
-+	NFS4ERR_BAD_RANGE = 10042,
-+	NFS4ERR_LOCK_NOTSUPP = 10043,
-+	NFS4ERR_OP_ILLEGAL = 10044,
-+	NFS4ERR_DEADLOCK = 10045,
-+	NFS4ERR_FILE_OPEN = 10046,
-+	NFS4ERR_ADMIN_REVOKED = 10047,
-+	NFS4ERR_CB_PATH_DOWN = 10048,
-+	NFS4ERR_BADIOMODE = 10049,
-+	NFS4ERR_BADLAYOUT = 10050,
-+	NFS4ERR_BAD_SESSION_DIGEST = 10051,
-+	NFS4ERR_BADSESSION = 10052,
-+	NFS4ERR_BADSLOT = 10053,
-+	NFS4ERR_COMPLETE_ALREADY = 10054,
-+	NFS4ERR_CONN_NOT_BOUND_TO_SESSION = 10055,
-+	NFS4ERR_DELEG_ALREADY_WANTED = 10056,
-+	NFS4ERR_BACK_CHAN_BUSY = 10057,
-+	NFS4ERR_LAYOUTTRYLATER = 10058,
-+	NFS4ERR_LAYOUTUNAVAILABLE = 10059,
-+	NFS4ERR_NOMATCHING_LAYOUT = 10060,
-+	NFS4ERR_RECALLCONFLICT = 10061,
-+	NFS4ERR_UNKNOWN_LAYOUTTYPE = 10062,
-+	NFS4ERR_SEQ_MISORDERED = 10063,
-+	NFS4ERR_SEQUENCE_POS = 10064,
-+	NFS4ERR_REQ_TOO_BIG = 10065,
-+	NFS4ERR_REP_TOO_BIG = 10066,
-+	NFS4ERR_REP_TOO_BIG_TO_CACHE = 10067,
-+	NFS4ERR_RETRY_UNCACHED_REP = 10068,
-+	NFS4ERR_UNSAFE_COMPOUND = 10069,
-+	NFS4ERR_TOO_MANY_OPS = 10070,
-+	NFS4ERR_OP_NOT_IN_SESSION = 10071,
-+	NFS4ERR_HASH_ALG_UNSUPP = 10072,
-+	NFS4ERR_CLIENTID_BUSY = 10074,
-+	NFS4ERR_PNFS_IO_HOLE = 10075,
-+	NFS4ERR_SEQ_FALSE_RETRY = 10076,
-+	NFS4ERR_BAD_HIGH_SLOT = 10077,
-+	NFS4ERR_DEADSESSION = 10078,
-+	NFS4ERR_ENCR_ALG_UNSUPP = 10079,
-+	NFS4ERR_PNFS_NO_LAYOUT = 10080,
-+	NFS4ERR_NOT_ONLY_OP = 10081,
-+	NFS4ERR_WRONG_CRED = 10082,
-+	NFS4ERR_WRONG_TYPE = 10083,
-+	NFS4ERR_DIRDELEG_UNAVAIL = 10084,
-+	NFS4ERR_REJECT_DELEG = 10085,
-+	NFS4ERR_RETURNCONFLICT = 10086,
-+	NFS4ERR_DELEG_REVOKED = 10087,
-+	NFS4ERR_PARTNER_NOTSUPP = 10088,
-+	NFS4ERR_PARTNER_NO_AUTH = 10089,
-+	NFS4ERR_UNION_NOTSUPP = 10090,
-+	NFS4ERR_OFFLOAD_DENIED = 10091,
-+	NFS4ERR_WRONG_LFS = 10092,
-+	NFS4ERR_BADLABEL = 10093,
-+	NFS4ERR_OFFLOAD_NO_REQS = 10094,
-+	NFS4ERR_NOXATTR = 10095,
-+	NFS4ERR_XATTR2BIG = 10096,
-+	NFS4ERR_FIRST_FREE = 10097,
-+};
-+
-+typedef enum nfsstat4 nfsstat4;
-+
-+typedef opaque attrlist4;
-+
- typedef struct {
- 	u32 count;
- 	uint32_t *element;
- } bitmap4;
- 
-+typedef u8 verifier4[NFS4_VERIFIER_SIZE];
-+
-+typedef uint64_t nfs_cookie4;
-+
-+typedef opaque nfs_fh4;
-+
- typedef opaque utf8string;
- 
- typedef utf8string utf8str_cis;
-@@ -26,11 +161,30 @@ typedef utf8string utf8str_cs;
- 
- typedef utf8string utf8str_mixed;
- 
-+typedef utf8str_cs component4;
-+
-+typedef utf8str_cs linktext4;
-+
-+typedef struct {
-+	u32 count;
-+	component4 *element;
-+} pathname4;
-+
- struct nfstime4 {
- 	int64_t seconds;
- 	uint32_t nseconds;
+@@ -377,6 +377,17 @@ enum notify_type4 {
+ 	NOTIFY4_ADD_ENTRY = 3,
+ 	NOTIFY4_RENAME_ENTRY = 4,
+ 	NOTIFY4_CHANGE_COOKIE_VERIFIER = 5,
++	NOTIFY4_GFLAG_EXTEND = 6,
++	NOTIFY4_AUFLAG_VALID = 7,
++	NOTIFY4_AUFLAG_USER = 8,
++	NOTIFY4_AUFLAG_GROUP = 9,
++	NOTIFY4_AUFLAG_OTHER = 10,
++	NOTIFY4_CHANGE_AUTH = 11,
++	NOTIFY4_CFLAG_ORDER = 12,
++	NOTIFY4_AUFLAG_GANOW = 13,
++	NOTIFY4_AUFLAG_GALATER = 14,
++	NOTIFY4_CHANGE_GA = 15,
++	NOTIFY4_CHANGE_AMASK = 16,
  };
  
-+struct fattr4 {
-+	bitmap4 attrmask;
-+	attrlist4 attr_vals;
-+};
-+
-+struct stateid4 {
-+	uint32_t seqid;
-+	u8 other[12];
-+};
-+
- typedef bool fattr4_offline;
- 
- enum { FATTR4_OFFLINE = 83 };
-@@ -216,11 +370,98 @@ enum { FATTR4_POSIX_DEFAULT_ACL = 91 };
- 
- enum { FATTR4_POSIX_ACCESS_ACL = 92 };
- 
--#define NFS4_int64_t_sz                 \
--	(XDR_hyper)
-+enum notify_type4 {
-+	NOTIFY4_CHANGE_CHILD_ATTRS = 0,
-+	NOTIFY4_CHANGE_DIR_ATTRS = 1,
-+	NOTIFY4_REMOVE_ENTRY = 2,
-+	NOTIFY4_ADD_ENTRY = 3,
-+	NOTIFY4_RENAME_ENTRY = 4,
-+	NOTIFY4_CHANGE_COOKIE_VERIFIER = 5,
-+};
-+
-+typedef enum notify_type4 notify_type4;
-+
-+struct notify_entry4 {
-+	component4 ne_file;
-+	struct fattr4 ne_attrs;
-+};
-+
-+struct prev_entry4 {
-+	struct notify_entry4 pe_prev_entry;
-+	nfs_cookie4 pe_prev_entry_cookie;
-+};
-+
-+struct notify_remove4 {
-+	struct notify_entry4 nrm_old_entry;
-+	nfs_cookie4 nrm_old_entry_cookie;
-+};
-+
-+struct notify_add4 {
-+	struct {
-+		u32 count;
-+		struct notify_remove4 *element;
-+	} nad_old_entry;
-+	struct notify_entry4 nad_new_entry;
-+	struct {
-+		u32 count;
-+		nfs_cookie4 *element;
-+	} nad_new_entry_cookie;
-+	struct {
-+		u32 count;
-+		struct prev_entry4 *element;
-+	} nad_prev_entry;
-+	bool nad_last_entry;
-+};
-+
-+struct notify_attr4 {
-+	struct notify_entry4 na_changed_entry;
-+};
-+
-+struct notify_rename4 {
-+	struct notify_remove4 nrn_old_entry;
-+	struct notify_add4 nrn_new_entry;
-+};
-+
-+struct notify_verifier4 {
-+	verifier4 nv_old_cookieverf;
-+	verifier4 nv_new_cookieverf;
-+};
-+
-+typedef opaque notifylist4;
-+
-+struct notify4 {
-+	bitmap4 notify_mask;
-+	notifylist4 notify_vals;
-+};
-+
-+struct CB_NOTIFY4args {
-+	struct stateid4 cna_stateid;
-+	nfs_fh4 cna_fh;
-+	struct {
-+		u32 count;
-+		struct notify4 *element;
-+	} cna_changes;
-+};
-+
-+struct CB_NOTIFY4res {
-+	nfsstat4 cnr_status;
-+};
-+
-+#define NFS4_int32_t_sz                 \
-+	(XDR_int)
- #define NFS4_uint32_t_sz                \
- 	(XDR_unsigned_int)
-+#define NFS4_int64_t_sz                 \
-+	(XDR_hyper)
-+#define NFS4_uint64_t_sz                \
-+	(XDR_unsigned_hyper)
-+#define NFS4_nfsstat4_sz                (XDR_int)
-+#define NFS4_attrlist4_sz               (XDR_unsigned_int)
- #define NFS4_bitmap4_sz                 (XDR_unsigned_int)
-+#define NFS4_verifier4_sz               (XDR_QUADLEN(NFS4_VERIFIER_SIZE))
-+#define NFS4_nfs_cookie4_sz             \
-+	(NFS4_uint64_t_sz)
-+#define NFS4_nfs_fh4_sz                 (XDR_unsigned_int + XDR_QUADLEN(NFS4_FHSIZE))
- #define NFS4_utf8string_sz              (XDR_unsigned_int)
- #define NFS4_utf8str_cis_sz             \
- 	(NFS4_utf8string_sz)
-@@ -228,8 +469,17 @@ enum { FATTR4_POSIX_ACCESS_ACL = 92 };
- 	(NFS4_utf8string_sz)
- #define NFS4_utf8str_mixed_sz           \
- 	(NFS4_utf8string_sz)
-+#define NFS4_component4_sz              \
-+	(NFS4_utf8str_cs_sz)
-+#define NFS4_linktext4_sz               \
-+	(NFS4_utf8str_cs_sz)
-+#define NFS4_pathname4_sz               (XDR_unsigned_int)
- #define NFS4_nfstime4_sz                \
- 	(NFS4_int64_t_sz + NFS4_uint32_t_sz)
-+#define NFS4_fattr4_sz                  \
-+	(NFS4_bitmap4_sz + NFS4_attrlist4_sz)
-+#define NFS4_stateid4_sz                \
-+	(NFS4_uint32_t_sz + XDR_QUADLEN(12))
- #define NFS4_fattr4_offline_sz          \
- 	(XDR_bool)
- #define NFS4_open_arguments4_sz         \
-@@ -259,5 +509,27 @@ enum { FATTR4_POSIX_ACCESS_ACL = 92 };
- 	(NFS4_aclscope4_sz)
- #define NFS4_fattr4_posix_default_acl_sz (XDR_unsigned_int)
- #define NFS4_fattr4_posix_access_acl_sz (XDR_unsigned_int)
-+#define NFS4_notify_type4_sz            (XDR_int)
-+#define NFS4_notify_entry4_sz           \
-+	(NFS4_component4_sz + NFS4_fattr4_sz)
-+#define NFS4_prev_entry4_sz             \
-+	(NFS4_notify_entry4_sz + NFS4_nfs_cookie4_sz)
-+#define NFS4_notify_remove4_sz          \
-+	(NFS4_notify_entry4_sz + NFS4_nfs_cookie4_sz)
-+#define NFS4_notify_add4_sz             \
-+	(XDR_unsigned_int + (1 * (NFS4_notify_remove4_sz)) + NFS4_notify_entry4_sz + XDR_unsigned_int + (1 * (NFS4_nfs_cookie4_sz)) + XDR_unsigned_int + (1 * (NFS4_prev_entry4_sz)) + XDR_bool)
-+#define NFS4_notify_attr4_sz            \
-+	(NFS4_notify_entry4_sz)
-+#define NFS4_notify_rename4_sz          \
-+	(NFS4_notify_remove4_sz + NFS4_notify_add4_sz)
-+#define NFS4_notify_verifier4_sz        \
-+	(NFS4_verifier4_sz + NFS4_verifier4_sz)
-+#define NFS4_notifylist4_sz             (XDR_unsigned_int)
-+#define NFS4_notify4_sz                 \
-+	(NFS4_bitmap4_sz + NFS4_notifylist4_sz)
-+#define NFS4_CB_NOTIFY4args_sz          \
-+	(NFS4_stateid4_sz + NFS4_nfs_fh4_sz + XDR_unsigned_int)
-+#define NFS4_CB_NOTIFY4res_sz           \
-+	(NFS4_nfsstat4_sz)
- 
- #endif /* _LINUX_XDRGEN_NFS4_1_DEF_H */
-diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
-index 4273e0249fcb..289205b53a08 100644
---- a/include/uapi/linux/nfs4.h
-+++ b/include/uapi/linux/nfs4.h
-@@ -17,11 +17,9 @@
- #include <linux/types.h>
- 
- #define NFS4_BITMAP_SIZE	3
--#define NFS4_VERIFIER_SIZE	8
- #define NFS4_STATEID_SEQID_SIZE 4
- #define NFS4_STATEID_OTHER_SIZE 12
- #define NFS4_STATEID_SIZE	(NFS4_STATEID_SEQID_SIZE + NFS4_STATEID_OTHER_SIZE)
--#define NFS4_FHSIZE		128
- #define NFS4_MAXPATHLEN		PATH_MAX
- #define NFS4_MAXNAMLEN		NAME_MAX
- #define NFS4_OPAQUE_LIMIT	1024
+ typedef enum notify_type4 notify_type4;
 
 -- 
 2.53.0
