@@ -1,307 +1,253 @@
-Return-Path: <linux-nfs+bounces-20901-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20898-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKDEMskh4WnMpQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20901-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:52:09 +0200
+	id 2F6bKJMh4WnMpQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20898-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:51:15 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A98D41355F
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:52:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0C4A41351C
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 19:51:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0F12731D54AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 17:40:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CF84A31BB97C
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Apr 2026 17:40:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1F313EF661;
-	Thu, 16 Apr 2026 17:36:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9793B3EDAD8;
+	Thu, 16 Apr 2026 17:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDTwdR9r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmDTLyZS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958B13EF654;
-	Thu, 16 Apr 2026 17:36:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619903EDAB5;
+	Thu, 16 Apr 2026 17:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776360960; cv=none; b=AuOVvwXFEs7MnNBAQeky5kA8TpIzWDZ5vkhMXsNqPoxAsFLc9WtqfTMkC3nfYb3oUfKKAdk4M/cMEo7msoTQD8DMDuac3lI6GJZ79olOiJpZRh4nUarP9t+skxz2c3faCylKti23c1jlOQjbs0j5mgASPcASBvqeBjB9NE7qt40=
+	t=1776360958; cv=none; b=VRR2TxxyWZpwIYXa49J8VvI0M2xRurq7I6riDE6NFmM8l4TxRWArKgsleegMAsx/2rT6yzlU3Go8QjFWvYtGXiiSVSXsF+yUg88TaD8p0x4BBkqSmCaXXzSkbppZPA65mVWEVC2Ng9FA71GxT7JQIEQwuAl9SgTWijZobSUwijE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776360960; c=relaxed/simple;
-	bh=ljfjy/b8w/hQplBxEbpZFyap3tO+DH6nJOLLAPUxDOQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TG8EMg4Eon9OnB1XVIaiIZPP+QQ6cvuu1GjnZYsb361Y7RNsVQeAgVrnC6gQeER8kywzVNtHOIBjYok6ko3hWl307ckRq8wRF3iMPCkYe966n2SWhPfLj0QGHPbQ7+PuoCslpoyT5DfGyEnu4hp0akian+5zKNSz+I3ky+mdAco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDTwdR9r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FF1C2BCB0;
-	Thu, 16 Apr 2026 17:35:59 +0000 (UTC)
+	s=arc-20240116; t=1776360958; c=relaxed/simple;
+	bh=Y9ysc8sFsqqr4IX9UVY+V4JrzEE2rNGN16fjQyODls8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aql8b2mGO6x7gpqLKZw+bSjMQsidAY21A8nL0qmD+6kU0i1y8ZzAA0q4GushU+UErQTlQpzpo9CX+YylSRuVgxv5iHH2aNhd++J1PMWrXaoq31Nuyk+57AIkMqY92Rv4AdpSBvVlqtAyzusb/1DKw9/1UgKZtm6gdhB9zNzIjyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmDTLyZS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7A1C2BCB5;
+	Thu, 16 Apr 2026 17:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776360960;
-	bh=ljfjy/b8w/hQplBxEbpZFyap3tO+DH6nJOLLAPUxDOQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LDTwdR9rcYpC+PWYmtTySZmkJeRG5rBy1KRbtNgA6wqrZncoy0QoIy59/YIHJFUlL
-	 2S7eoYl9/9inXlHzl8+zzXXZ3F4xvcd6H0H0J2iCqr/sNtmB8Ci2pN8YbRyLe2sBCI
-	 7Lu7F7w1USJtrqNRyghKhbzq4+k/Hh5UaydGVpkFKCZqfk/lXEnXwlywdIrZDsIjQa
-	 vf530ESYqvA00pwYGuVbZLhy4USxXUJPGgMmL86l+relJEXJZ6oz91klryk17QMznJ
-	 cKEdSfdx5IrdDq9EL3tDv/6NGA/QjNNx1wLs3OF5Jpnou4Ji2aRGJLW/qAj14z+RdX
-	 AT0/v/Mf9Xt1w==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 16 Apr 2026 10:35:29 -0700
-Subject: [PATCH v2 28/28] nfsd: add support to CB_NOTIFY for dir attribute
- changes
+	s=k20201202; t=1776360958;
+	bh=Y9ysc8sFsqqr4IX9UVY+V4JrzEE2rNGN16fjQyODls8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rmDTLyZStZnpDSJEC/oGBTS8SS+DDOKhVZ2fYPHZ2HhsQ5qranL9wa9ODEqvWJjQC
+	 57WMZJpR3qJpkqyRB8+rSPpmfL+TVhhIDxQnoV/+qRJCMO7xuI6xWGOukouvlHqJ19
+	 4zgqxMVlROjI2kAuH5QGwVeuQpidJ0DZS6Vl0DFScz+AqDgicUHa46nbT3NiCApyjF
+	 0DwPaYuO454/eyW2Jzy7F3Yh8mFbPPRv0TmlhTIkMCyUWxbLk7mT0ojnM3gG4kUTDN
+	 2iAx2Xr+QwHlmi0PF36NajV65PaD5jBnSJNpDiMIOq8iutojh0JvWTL8Xy485CKOoJ
+	 sSDadsEqvePSQ==
+Message-ID: <815e42daf34d0852c8676824a7c9e8fa7aa30174.camel@kernel.org>
+Subject: Re: [PATCH 1/1] NFS: pnfs: cache data server entries for a short
+ grace period
+From: Trond Myklebust <trondmy@kernel.org>
+To: Lei Lei2 Yin <yinlei2@lenovo.com>, Anna Schumaker <anna@kernel.org>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 16 Apr 2026 10:35:57 -0700
+In-Reply-To: <PUZPR03MB5990F21107A5F9CA14EA6D1288232@PUZPR03MB5990.apcprd03.prod.outlook.com>
+References: 
+	<PUZPR03MB5990F21107A5F9CA14EA6D1288232@PUZPR03MB5990.apcprd03.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260416-dir-deleg-v2-28-851426a550f6@kernel.org>
-References: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org>
-In-Reply-To: <20260416-dir-deleg-v2-0-851426a550f6@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Amir Goldstein <amir73il@gmail.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6108; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=ljfjy/b8w/hQplBxEbpZFyap3tO+DH6nJOLLAPUxDOQ=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp4R3o2LhexlgAJoX8NHPQ6gcu2NLN9f1xovT1r
- rInPTWLFfeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeEd6AAKCRAADmhBGVaC
- FYe/D/9PtdrLY15JLTr0DUze9xwoP99KYUiS2/zWUe0U684BJLG8RpLaymBBMCHbq3udqHAXiz7
- 1YFMmfWqM2mb1VkEHSzdlSdPIzcu0W+L0PhZKtDqUuB2J61zwocSlYpbdgRCWA2RaF+4EWDlo2R
- d+xBOyZ3mTL1FeMxuZSqF33E4XatpwcVGlT5jxFA9qHmvTaS8ohxTim860A7RHV+VsKX10NDWIh
- FlKg24QwR16vcD5yACCAXY7CrH0toYCSEy9o7xDNKe+OqZ5U8RgwUuwvZtweXZE2/11sOxE0NCL
- jFZWSUATUAsefIRW4odMDNHJb0jP2oTeJ6UdKIpquRC2LVrWLZd4b4ETCFVoRdAaDQaVL9T+WlN
- hTTPSL/NvKIjaXMQM/LYpAGZ9P/QgXg4EVAQZ8iSr1D4kZnkKrjswh3vdRYGXclaevuoUphIX1e
- ziN4vy51Patf4ZB8M9fua6T8ZOZshsI//uPWW2R9s75HKc+kd/6TmPc+i9wsWchIAkbuay0keqJ
- 3hwC9u1lQ8VbSpxw0H0h9HproOAYSpb3N7OodTjGd9y8tszRMTDYIkACNKFksKpFSbj8a5fb3Zy
- wOs806UAiPX/7gD5dphPXdjHfSv+Q9dGLqntF2mRhMwGE5WeUDeYYZBfn/Adm3vzq3bqewCYZPP
- b7JQkZOjy/rFs4A==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.06 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20901-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20898-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2A98D41355F
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F0C4A41351C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-If the client requested dir attribute change notifications, send those
-alongside any set of add/remove/rename events. Note that the server will
-still recall the delegation on a SETATTR, so these are only sent for
-changes to child dirents.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++--
- fs/nfsd/nfs4xdr.c   | 61 +++++++++++++++++++++++++++++++++++++++++++++--------
- fs/nfsd/xdr4.h      |  2 ++
- 3 files changed, 77 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 32340a0669df..5eca7899c48d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3478,10 +3478,15 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	struct nfsd_notify_event *events[NOTIFY4_EVENT_QUEUE_SIZE];
- 	struct xdr_buf xdr = { .buflen = PAGE_SIZE * NOTIFY4_PAGE_ARRAY_SIZE,
- 			       .pages  = ncn->ncn_pages };
-+	int limit = NOTIFY4_EVENT_QUEUE_SIZE;
- 	struct xdr_stream stream;
- 	struct nfsd_file *nf;
--	int count, i;
- 	bool error = false;
-+	int count, i;
-+
-+	/* Save a slot for dir attr update if requested */
-+	if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS))
-+		--limit;
- 
- 	xdr_init_encode_pages(&stream, &xdr);
- 
-@@ -3495,7 +3500,7 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 	}
- 
- 	/* we can't keep up! */
--	if (count > NOTIFY4_EVENT_QUEUE_SIZE) {
-+	if (count > limit) {
- 		spin_unlock(&ncn->ncn_lock);
- 		goto out_recall;
- 	}
-@@ -3542,6 +3547,22 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- 		nfsd_notify_event_put(nne);
- 	}
- 	if (!error) {
-+		if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)) {
-+			u32 *maskp = (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-+
-+			if (maskp) {
-+				u8 *p = nfsd4_encode_dir_attr_change(&stream, dp, nf);
-+
-+				if (p) {
-+					*maskp = BIT(NOTIFY4_CHANGE_DIR_ATTRS);
-+					ncn->ncn_nf[count].notify_mask.count = 1;
-+					ncn->ncn_nf[count].notify_mask.element = maskp;
-+					ncn->ncn_nf[count].notify_vals.data = p;
-+					ncn->ncn_nf[count].notify_vals.len = (u8 *)stream.p - p;
-+					++count;
-+				}
-+			}
-+		}
- 		ncn->ncn_nf_cnt = count;
- 		nfsd_file_put(nf);
- 		return true;
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index bd1142590d2b..73f2fdf929ed 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4152,11 +4152,11 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 			  struct nfsd_file *nf, char *name, u32 namelen)
- {
- 	struct nfs4_file *fi = dp->dl_stid.sc_file;
--	struct path path =  { .mnt = nf->nf_file->f_path.mnt,
--			      .dentry = dentry };
-+	struct path path = nf->nf_file->f_path;
- 	struct nfsd4_fattr_args args = { };
- 	uint32_t *attrmask;
- 	__be32 status;
-+	bool parent;
- 	int ret;
- 
- 	/* Reserve space for attrmask */
-@@ -4168,6 +4168,9 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	ne->ne_file.len = namelen;
- 	ne->ne_attrs.attrmask.element = attrmask;
- 
-+	parent = (dentry == path.dentry);
-+	path.dentry = dentry;
-+
- 	/* FIXME: d_find_alias for inode ? */
- 	if (!path.dentry || !d_inode(path.dentry))
- 		goto noattrs;
-@@ -4183,15 +4186,20 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 
- 	args.change_attr = nfsd4_change_attribute(&args.stat);
- 
--	attrmask[0] = dp->dl_child_attrs[0];
--	attrmask[1] = dp->dl_child_attrs[1];
--	attrmask[2] = 0;
-+	if (parent) {
-+		attrmask[0] = dp->dl_dir_attrs[0];
-+		attrmask[1] = dp->dl_dir_attrs[1];
-+	} else {
-+		attrmask[0] = dp->dl_child_attrs[0];
-+		attrmask[1] = dp->dl_child_attrs[1];
- 
--	if (!setup_notify_fhandle(dentry, fi, nf, &args))
--		attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
-+		if (!setup_notify_fhandle(dentry, fi, nf, &args))
-+			attrmask[0] &= ~FATTR4_WORD0_FILEHANDLE;
- 
--	if (!(args.stat.result_mask & STATX_BTIME))
--		attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+		if (!(args.stat.result_mask & STATX_BTIME))
-+			attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+	}
-+	attrmask[2] = 0;
- 
- 	ne->ne_attrs.attrmask.count = 2;
- 	ne->ne_attrs.attr_vals.data = (u8 *)xdr->p;
-@@ -4308,6 +4316,41 @@ u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *
- 	return NULL;
- }
- 
-+/**
-+ * nfsd4_encode_dir_attr_change
-+ * @xdr: stream to which to encode the fattr4
-+ * @dp: delegation where the event occurred
-+ * @nf: nfsd_file opened on the directory
-+ *
-+ * Encode a dir attr change event.
-+ */
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
-+				 struct nfsd_file *nf)
-+{
-+	struct dentry *dentry = nf->nf_file->f_path.dentry;
-+	struct notify_attr4 na = { };
-+	struct name_snapshot n;
-+	bool ret;
-+	u8 *p = NULL;
-+
-+	if (!(dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)))
-+		return NULL;
-+
-+	take_dentry_name_snapshot(&n, dentry);
-+	ret = nfsd4_setup_notify_entry4(&na.na_changed_entry, xdr,
-+					dentry, dp, nf, (char *)n.name.name,
-+					n.name.len);
-+
-+	/* Don't bother with the event if we're not encoding attrs */
-+	if (ret && na.na_changed_entry.ne_attrs.attr_vals.len) {
-+		p = (u8 *)xdr->p;
-+		if (!xdrgen_encode_notify_attr4(xdr, &na))
-+			p = NULL;
-+	}
-+	release_dentry_name_snapshot(&n);
-+	return p;
-+}
-+
- static void svcxdr_init_encode_from_buffer(struct xdr_stream *xdr,
- 				struct xdr_buf *buf, __be32 *p, int bytes)
- {
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index d276840aca50..cf7f0df68d63 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -958,6 +958,8 @@ __be32 nfsd4_encode_fattr_to_buf(__be32 **p, int words,
- u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *nne,
- 			      struct nfs4_delegation *dd, struct nfsd_file *nf,
- 			      u32 *notify_mask);
-+u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
-+				 struct nfsd_file *nf);
- extern __be32 nfsd4_setclientid(struct svc_rqst *rqstp,
- 		struct nfsd4_compound_state *, union nfsd4_op_u *u);
- extern __be32 nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
-
--- 
-2.53.0
+T24gVGh1LCAyMDI2LTA0LTE2IGF0IDA3OjE4ICswMDAwLCBMZWkgTGVpMiBZaW4gd3JvdGU6Cj4g
+RnJvbSBjMGNlN2M5OTdmZGQzODM5NjRiNzI5YzMzOTg3NzBhOWFhYWFhMTc4IE1vbiBTZXAgMTcg
+MDA6MDA6MDAKPiAyMDAxCj4gRnJvbTogTGVpIFlpbiA8eWlubGVpMkBsZW5vdm8uY29tPgo+IERh
+dGU6IFRodSwgMTYgQXByIDIwMjYgMDY6NDI6NTAgKzAwMDAKPiBTdWJqZWN0OiBbUEFUQ0ggMS8x
+XSBORlM6IHBuZnM6IGNhY2hlIGRhdGEgc2VydmVyIGVudHJpZXMgZm9yIGEgc2hvcnQKPiBncmFj
+ZSBwZXJpb2QKPiAKPiBwTkZTIGRhdGEgc2VydmVyIGNhY2hlIGVudHJpZXMgYXJlIGN1cnJlbnRs
+eSBkZXN0cm95ZWQgYXMgc29vbiBhcyB0aGUKPiBsYXN0IHJlZmVyZW5jZSBpcyBkcm9wcGVkLiBX
+b3JrbG9hZHMgdGhhdCByZXBlYXRlZGx5IG9wZW4gYW5kIGNsb3NlCj4gdGhlCj4gc2FtZSBmaWxl
+cyBjYW4gZW5kIHVwIHRlYXJpbmcgZG93biBhbmQgcmVidWlsZGluZyB0aGUgc2FtZSBkYXRhCj4g
+c2VydmVyCj4gY2FjaGUgZW50cmllcyBvdmVyIGFuZCBvdmVyLCBldmVuIHdoZW4gdGhlIHJldXNl
+IGludGVydmFsIGlzIHZlcnkKPiBzaG9ydC4KPiAKPiBLZWVwIGEgZGF0YSBzZXJ2ZXIgY2FjaGUg
+ZW50cnkgYWxpdmUgZm9yIGEgc2hvcnQgZ3JhY2UgcGVyaW9kIGFmdGVyCj4gdGhlCj4gbGFzdCBw
+dXQgYnkgZGVmZXJyaW5nIGRlc3RydWN0aW9uIHRvIGRlbGF5ZWQgd29yay4gSWYgdGhlIHNhbWUg
+ZGF0YQo+IHNlcnZlciBpcyBsb29rZWQgdXAgYWdhaW4gYmVmb3JlIHRoZSB0aW1lb3V0IGV4cGly
+ZXMsIGNhbmNlbCB0aGUKPiBwZW5kaW5nCj4gZGVzdHJveSBhbmQgcmV1c2UgdGhlIGV4aXN0aW5n
+IGNhY2hlIGVudHJ5Lgo+IAo+IFRoaXMgYXZvaWRzIHJlcGVhdGVkIGNhY2hlIGNodXJuIGluIG9w
+ZW4vY2xvc2UtaGVhdnkgdGVzdCB3b3JrbG9hZHMKPiBhbmQKPiBoZWxwcyByZWR1Y2UgdGhlIGV4
+dHJhIHJlYWQvd3JpdGUgbGF0ZW5jeSB0aGF0IGNvbWVzIGZyb20gcmVwZWF0ZWRseQo+IHJlY3Jl
+YXRpbmcgZGF0YSBzZXJ2ZXIgc3RhdGUgb24gc2hvcnQgcmV1c2UgaW50ZXJ2YWxzLgo+IAo+IEJl
+Y2F1c2UgZGVzdHJ1Y3Rpb24gaXMgbm93IGRlZmVycmVkLCByZWFwIHNjaGVkdWxlZCBkZXN0cm95
+IHdvcmsKPiBkdXJpbmcKPiBuZXRucyB0ZWFyZG93biBiZWZvcmUgY2hlY2tpbmcgdGhhdCB0aGUg
+ZGF0YSBzZXJ2ZXIgY2FjaGUgaXMgZW1wdHkuCj4gVGhpcwo+IHByZXZlbnRzIHBlbmRpbmcgZGVz
+dHJveSB3b3JrIGZyb20gb3V0bGl2aW5nIHRoZSBuZXRucyBleGl0IHBhdGguCj4gCj4gU2lnbmVk
+LW9mZi1ieTogTGVpIFlpbiA8eWlubGVpMkBsZW5vdm8uY29tPgo+IC0tLQo+IMKgZnMvbmZzL2Ns
+aWVudC5jwqDCoCB8wqAgMSArCj4gwqBmcy9uZnMvcG5mcy5owqDCoMKgwqAgfMKgIDMgKysrCj4g
+wqBmcy9uZnMvcG5mc19uZnMuYyB8IDU3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKystLQo+IC0tCj4gwqAzIGZpbGVzIGNoYW5nZWQsIDU3IGluc2VydGlvbnMoKyks
+IDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9jbGllbnQuYyBiL2ZzL25m
+cy9jbGllbnQuYwo+IGluZGV4IGJlMDJiYjIyNzc0MS4uNjVhYjIxOWVhMjA2IDEwMDY0NAo+IC0t
+LSBhL2ZzL25mcy9jbGllbnQuYwo+ICsrKyBiL2ZzL25mcy9jbGllbnQuYwo+IEBAIC0xMjg3LDYg
+KzEyODcsNyBAQCB2b2lkIG5mc19jbGllbnRzX2V4aXQoc3RydWN0IG5ldCAqbmV0KQo+IMKgwqDC
+oMKgwqDCoMKgIFdBUk5fT05fT05DRSghbGlzdF9lbXB0eSgmbm4tPm5mc19jbGllbnRfbGlzdCkp
+Owo+IMKgwqDCoMKgwqDCoMKgIFdBUk5fT05fT05DRSghbGlzdF9lbXB0eSgmbm4tPm5mc192b2x1
+bWVfbGlzdCkpOwo+IMKgI2lmIElTX0VOQUJMRUQoQ09ORklHX05GU19WNCkKPiArwqDCoMKgwqDC
+oMKgIG5mczRfcG5mc19kc19jbGllbnRfZXhpdChuZXQpOwo+IMKgwqDCoMKgwqDCoMKgIFdBUk5f
+T05fT05DRSghbGlzdF9lbXB0eSgmbm4tPm5mczRfZGF0YV9zZXJ2ZXJfY2FjaGUpKTsKPiDCoCNl
+bmRpZiAvKiBDT05GSUdfTkZTX1Y0ICovCj4gwqB9Cj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9wbmZz
+LmggYi9mcy9uZnMvcG5mcy5oCj4gaW5kZXggZWIzOTg1OWMyMTZjLi44YzE5OGQ1Nzc0NjUgMTAw
+NjQ0Cj4gLS0tIGEvZnMvbmZzL3BuZnMuaAo+ICsrKyBiL2ZzL25mcy9wbmZzLmgKPiBAQCAtNjQs
+NyArNjQsOSBAQCBzdHJ1Y3QgbmZzNF9wbmZzX2RzIHsKPiDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qg
+bmZzX2NsaWVudMKgwqDCoMKgwqDCoCAqZHNfY2xwOwo+IMKgwqDCoMKgwqDCoMKgIHJlZmNvdW50
+X3TCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkc19jb3VudDsKPiDCoMKgwqDCoMKgwqDCoCB1
+bnNpZ25lZCBsb25nwqDCoMKgwqDCoMKgwqDCoMKgwqAgZHNfc3RhdGU7Cj4gK8KgwqDCoMKgwqDC
+oCBzdHJ1Y3QgZGVsYXllZF93b3JrwqDCoMKgwqAgZHNfZGVzdHJveV93b3JrOwo+IMKgI2RlZmlu
+ZSBORlM0RFNfQ09OTkVDVElOR8KgwqDCoMKgwqAgMMKgwqDCoMKgwqDCoCAvKiBkcyBpcyBlc3Rh
+Ymxpc2hpbmcKPiBjb25uZWN0aW9uICovCj4gKyNkZWZpbmUgTkZTNERTX0RFU1RST1lfU0NIRUTC
+oMKgIDHCoMKgwqDCoMKgwqAgLyogZGVsYXllZCBkZXN0cm95IGhhcyBiZWVuCj4gc2NoZWR1bGVk
+ICovCj4gwqB9Owo+IMKgCj4gwqBzdHJ1Y3QgcG5mc19sYXlvdXRfc2VnbWVudCB7Cj4gQEAgLTQx
+NSw2ICs0MTcsNyBAQCBpbnQgcG5mc19nZW5lcmljX2NvbW1pdF9wYWdlbGlzdChzdHJ1Y3QgaW5v
+ZGUKPiAqaW5vZGUsCj4gwqBpbnQgcG5mc19nZW5lcmljX3NjYW5fY29tbWl0X2xpc3RzKHN0cnVj
+dCBuZnNfY29tbWl0X2luZm8gKmNpbmZvLAo+IGludCBtYXgpOwo+IMKgdm9pZCBwbmZzX2dlbmVy
+aWNfd3JpdGVfY29tbWl0X2RvbmUoc3RydWN0IHJwY190YXNrICp0YXNrLCB2b2lkCj4gKmRhdGEp
+Owo+IMKgdm9pZCBuZnM0X3BuZnNfZHNfcHV0KHN0cnVjdCBuZnM0X3BuZnNfZHMgKmRzKTsKPiAr
+dm9pZCBuZnM0X3BuZnNfZHNfY2xpZW50X2V4aXQoc3RydWN0IG5ldCAqbmV0KTsKPiDCoHN0cnVj
+dCBuZnM0X3BuZnNfZHMgKm5mczRfcG5mc19kc19hZGQoY29uc3Qgc3RydWN0IG5ldCAqbmV0LAo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBsaXN0X2hlYWQgKmRzYWRkcnMsCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgZ2ZwX3QgZ2ZwX2ZsYWdzKTsKPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL3BuZnNfbmZz
+LmMgYi9mcy9uZnMvcG5mc19uZnMuYwo+IGluZGV4IDEyNjMyYTcwNmRhOC4uNzlhOTZlNTI2NGI4
+IDEwMDY0NAo+IC0tLSBhL2ZzL25mcy9wbmZzX25mcy5jCj4gKysrIGIvZnMvbmZzL3BuZnNfbmZz
+LmMKPiBAQCAtNjUzLDE4ICs2NTMsNjUgQEAgc3RhdGljIHZvaWQgZGVzdHJveV9kcyhzdHJ1Y3Qg
+bmZzNF9wbmZzX2RzICpkcykKPiDCoMKgwqDCoMKgwqDCoCBrZnJlZShkcyk7Cj4gwqB9Cj4gwqAK
+PiArc3RhdGljIHZvaWQgbmZzNF9wbmZzX2RzX2Rlc3Ryb3lfd29ya2ZuKHN0cnVjdCB3b3JrX3N0
+cnVjdCAqd29yaykKPiArewo+ICvCoMKgwqDCoMKgwqAgc3RydWN0IG5mczRfcG5mc19kcyAqZHMg
+PSBjb250YWluZXJfb2YodG9fZGVsYXllZF93b3JrKHdvcmspLAo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IG5mczRfcG5mc19kcywKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGRzX2Rlc3Ryb3lfd29yayk7Cj4gK8KgwqDCoMKgwqDCoCBzdHJ1
+Y3QgbmZzX25ldCAqbm4gPSBuZXRfZ2VuZXJpYyhkcy0+ZHNfbmV0LCBuZnNfbmV0X2lkKTsKPiAr
+wqDCoMKgwqDCoMKgIGJvb2wgZGVzdHJveSA9IGZhbHNlOwo+ICsKPiArwqDCoMKgwqDCoMKgIHNw
+aW5fbG9jaygmbm4tPm5mczRfZGF0YV9zZXJ2ZXJfbG9jayk7Cj4gK8KgwqDCoMKgwqDCoCBpZiAo
+dGVzdF9iaXQoTkZTNERTX0RFU1RST1lfU0NIRUQsICZkcy0+ZHNfc3RhdGUpICYmCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJlZmNvdW50X3JlYWQoJmRzLT5kc19jb3VudCkgPT0gMSkgewo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsZWFyX2JpdChORlM0RFNfREVTVFJPWV9TQ0hF
+RCwgJmRzLT5kc19zdGF0ZSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGlzdF9k
+ZWxfaW5pdCgmZHMtPmRzX25vZGUpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRl
+c3Ryb3kgPSB0cnVlOwo+ICvCoMKgwqDCoMKgwqAgfQo+ICvCoMKgwqDCoMKgwqAgc3Bpbl91bmxv
+Y2soJm5uLT5uZnM0X2RhdGFfc2VydmVyX2xvY2spOwo+ICsKPiArwqDCoMKgwqDCoMKgIGlmIChk
+ZXN0cm95KQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRlc3Ryb3lfZHMoZHMpOwo+
+ICt9Cj4gKwo+IMKgdm9pZCBuZnM0X3BuZnNfZHNfcHV0KHN0cnVjdCBuZnM0X3BuZnNfZHMgKmRz
+KQo+IMKgewo+IMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBuZnNfbmV0ICpubiA9IG5ldF9nZW5lcmlj
+KGRzLT5kc19uZXQsIG5mc19uZXRfaWQpOwo+IMKgCj4gwqDCoMKgwqDCoMKgwqAgaWYgKHJlZmNv
+dW50X2RlY19hbmRfbG9jaygmZHMtPmRzX2NvdW50LCAmbm4tCj4gPm5mczRfZGF0YV9zZXJ2ZXJf
+bG9jaykpIHsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsaXN0X2RlbF9pbml0KCZk
+cy0+ZHNfbm9kZSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogSG9sZCBvbmUg
+dGVtcG9yYXJ5IHJlZmVyZW5jZSBkdXJpbmcgdGhlIGRlc3Ryb3kKPiBncmFjZSB3aW5kb3cuICov
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVmY291bnRfc2V0KCZkcy0+ZHNfY291
+bnQsIDEpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNldF9iaXQoTkZTNERTX0RF
+U1RST1lfU0NIRUQsICZkcy0+ZHNfc3RhdGUpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIG1vZF9kZWxheWVkX3dvcmsoc3lzdGVtX3dxLCAmZHMtPmRzX2Rlc3Ryb3lfd29yaywgMTAK
+PiAqIEhaKTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3Bpbl91bmxvY2soJm5u
+LT5uZnM0X2RhdGFfc2VydmVyX2xvY2spOwo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGRlc3Ryb3lfZHMoZHMpOwo+IMKgwqDCoMKgwqDCoMKgIH0KPiDCoH0KPiDCoEVYUE9SVF9TWU1C
+T0xfR1BMKG5mczRfcG5mc19kc19wdXQpOwo+IMKgCj4gK3ZvaWQgbmZzNF9wbmZzX2RzX2NsaWVu
+dF9leGl0KHN0cnVjdCBuZXQgKm5ldCkKPiArewo+ICvCoMKgwqDCoMKgwqAgc3RydWN0IG5mc19u
+ZXQgKm5uID0gbmV0X2dlbmVyaWMobmV0LCBuZnNfbmV0X2lkKTsKPiArwqDCoMKgwqDCoMKgIHN0
+cnVjdCBuZnM0X3BuZnNfZHMgKmRzLCAqdG1wOwo+ICvCoMKgwqDCoMKgwqAgTElTVF9IRUFEKHJl
+YXApOwo+ICsKPiArwqDCoMKgwqDCoMKgIHNwaW5fbG9jaygmbm4tPm5mczRfZGF0YV9zZXJ2ZXJf
+bG9jayk7Cj4gK8KgwqDCoMKgwqDCoCBsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoZHMsIHRtcCwg
+Jm5uLQo+ID5uZnM0X2RhdGFfc2VydmVyX2NhY2hlLCBkc19ub2RlKSB7Cj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgaWYgKCF0ZXN0X2JpdChORlM0RFNfREVTVFJPWV9TQ0hFRCwgJmRz
+LT5kc19zdGF0ZSkgfHwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJl
+ZmNvdW50X3JlYWQoJmRzLT5kc19jb3VudCkgIT0gMSkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29udGludWU7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgY2xlYXJfYml0KE5GUzREU19ERVNUUk9ZX1NDSEVELCAmZHMtPmRzX3N0YXRlKTsK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsaXN0X21vdmUoJmRzLT5kc19ub2RlLCAm
+cmVhcCk7Cj4gK8KgwqDCoMKgwqDCoCB9Cj4gK8KgwqDCoMKgwqDCoCBzcGluX3VubG9jaygmbm4t
+Pm5mczRfZGF0YV9zZXJ2ZXJfbG9jayk7Cj4gKwo+ICvCoMKgwqDCoMKgwqAgbGlzdF9mb3JfZWFj
+aF9lbnRyeV9zYWZlKGRzLCB0bXAsICZyZWFwLCBkc19ub2RlKSB7Cj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgY2FuY2VsX2RlbGF5ZWRfd29ya19zeW5jKCZkcy0+ZHNfZGVzdHJveV93
+b3JrKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsaXN0X2RlbF9pbml0KCZkcy0+
+ZHNfbm9kZSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGVzdHJveV9kcyhkcyk7
+Cj4gK8KgwqDCoMKgwqDCoCB9Cj4gK30KPiArRVhQT1JUX1NZTUJPTF9HUEwobmZzNF9wbmZzX2Rz
+X2NsaWVudF9leGl0KTsKPiArCj4gwqAvKgo+IMKgICogQ3JlYXRlIGEgc3RyaW5nIHdpdGggYSBo
+dW1hbiByZWFkYWJsZSBhZGRyZXNzIGFuZCBwb3J0IHRvIGF2b2lkCj4gwqAgKiBjb21wbGljYXRl
+ZCBzZXR1cCBhcm91bmQgbWFueSBkcHJpbmtzLgo+IEBAIC03NDUsNiArNzkyLDcgQEAgbmZzNF9w
+bmZzX2RzX2FkZChjb25zdCBzdHJ1Y3QgbmV0ICpuZXQsIHN0cnVjdAo+IGxpc3RfaGVhZCAqZHNh
+ZGRycywgZ2ZwX3QgZ2ZwX2ZsYQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkcy0+
+ZHNfcmVtb3Rlc3RyID0gcmVtb3Rlc3RyOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCByZWZjb3VudF9zZXQoJmRzLT5kc19jb3VudCwgMSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIElOSVRfTElTVF9IRUFEKCZkcy0+ZHNfbm9kZSk7Cj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgSU5JVF9ERUxBWUVEX1dPUksoJmRzLT5kc19kZXN0cm95X3dvcmssCj4g
+bmZzNF9wbmZzX2RzX2Rlc3Ryb3lfd29ya2ZuKTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgZHMtPmRzX25ldCA9IG5ldDsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+ZHMtPmRzX2NscCA9IE5VTEw7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxpc3Rf
+YWRkKCZkcy0+ZHNfbm9kZSwgJm5uLT5uZnM0X2RhdGFfc2VydmVyX2NhY2hlKTsKPiBAQCAtNzUz
+LDggKzgwMSw5IEBAIG5mczRfcG5mc19kc19hZGQoY29uc3Qgc3RydWN0IG5ldCAqbmV0LCBzdHJ1
+Y3QKPiBsaXN0X2hlYWQgKmRzYWRkcnMsIGdmcF90IGdmcF9mbGEKPiDCoMKgwqDCoMKgwqDCoCB9
+IGVsc2Ugewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZnJlZShyZW1vdGVzdHIp
+Owo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZnJlZShkcyk7Cj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVmY291bnRfaW5jKCZ0bXBfZHMtPmRzX2NvdW50KTsKPiAt
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkcHJpbnRrKCIlcyBkYXRhIHNlcnZlciAlcyBm
+b3VuZCwgaW5jJ2VkIGRzX2NvdW50IHRvCj4gJWRcbiIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgaWYgKCF0ZXN0X2FuZF9jbGVhcl9iaXQoTkZTNERTX0RFU1RST1lfU0NIRUQsCj4g
+JnRtcF9kcy0+ZHNfc3RhdGUpKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCByZWZjb3VudF9pbmMoJnRtcF9kcy0+ZHNfY291bnQpOwo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGRwcmludGsoIiVzIGRhdGEgc2VydmVyICVzIGZvdW5kLCBkc19j
+b3VudCBub3cgJWRcbiIsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBfX2Z1bmNfXywgdG1wX2RzLT5kc19yZW1vdGVzdHIsCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWZjb3VudF9yZWFkKCZ0bXBfZHMtPmRz
+X2NvdW50KSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRzID0gdG1wX2RzOwoK
+TkFDSy4gVGhpcyBhcHByb2FjaCBpcyB0aGUgc2FtZSBhcyB3YXMgcHJlc2VudGVkIGEgZmV3IG1v
+bnRocyBhZ28gb24KdGhpcyBsaXN0LiBBcyBzdGF0ZWQgYXQgdGhlIHRpbWUsIGl0IGRvZXMgbm90
+IGFncmVlIHdpdGggdGhlCmRlc2NyaXB0aW9uIG9mIGRldmljZWlkIGJlaGF2aW91ciBpbiBSRkM4
+ODgxIHNlY3Rpb24gMTIuMi4xMC4KCklmIHlvdSB3YW50IHRvIGNhY2hlIGVudHJpZXMgb24gdGhl
+IGNsaWVudCB3aGVuIG5vdCBob2xkaW5nIGEgbGF5b3V0LAp0aGVuIHlvdSBuZWVkIHRvIHJlcXVl
+c3QgYSBkZXZpY2VpbmZvIG5vdGlmaWNhdGlvbiBzbyB0aGF0IHlvdSBjYW4KZGV0ZWN0IGNoYW5n
+ZXMuCgotLSAKVHJvbmQgTXlrbGVidXN0CkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFt
+bWVyc3BhY2UKdHJvbmRteUBrZXJuZWwub3JnLCB0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2Uu
+Y29tCg==
 
 
