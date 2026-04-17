@@ -1,169 +1,233 @@
-Return-Path: <linux-nfs+bounces-20939-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20940-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wIURA1RJ4mlh4AAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20939-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 16:53:08 +0200
+	id eJScC05W4mlg5AAAu9opvQ
+	(envelope-from <linux-nfs+bounces-20940-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 17:48:30 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD7BF41C449
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 16:53:06 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9968C41CCB8
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 17:48:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 18AFA3013A53
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 14:52:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1639E307075A
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 15:42:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8998E311C1B;
-	Fri, 17 Apr 2026 14:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B483314B7;
+	Fri, 17 Apr 2026 15:42:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7HKoZF7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRjso9wy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6641815B0EC;
-	Fri, 17 Apr 2026 14:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D402224A047
+	for <linux-nfs@vger.kernel.org>; Fri, 17 Apr 2026 15:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776437562; cv=none; b=nI9rJ2Vtv/eI6C/7jWKXVnwNpiBgvUakvM1OD1wuM3Fale1k/Nv72KaJtRfQX3d4M+pSh6SAR4Cw/Hzez93b9qpv0Rw7OV3WzUT0Ug2wV+NtpDTcjx8wWIr9m7xsrVtRnvw2dSMP2MLyoPiCPEGnZMaWepvo9e6LLJ6umvlEVVI=
+	t=1776440527; cv=none; b=J4CGxjXLDu1Z23MV7xly6aol4NagkLVhtE6N9Zbl45zm9OD46oeLhn+jszgveWhRodZpW89191DPhXpqtrWwmdP1I305q+ahkP/gdKMcfl4MA3LP2kPifbm+I3smER3/5g955pyrypmylqRXJD3Bqak4OJ7PM7722LA4ZLXNUC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776437562; c=relaxed/simple;
-	bh=lfrjWIzNAYCrM2lWTr0FWFwq1uXRS+QxBAQ0lAvMkRE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=bu0464/w7fWIY8zVcGrnKjNBX2W5ey5hgxIbNKFTexdjwbHrufGx0fAh05O1Sh1qScw6B/d5JKK5P/fzUtF+/7JpPVB0aVgvyGDljvikKJfvkVhqfGDPSjaF8uNtbWibj/y5q1vASp2Q2zA3TtPnV3p4be5iJixp1JEkOdhIHLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7HKoZF7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5F2C2BCB6;
-	Fri, 17 Apr 2026 14:52:41 +0000 (UTC)
+	s=arc-20240116; t=1776440527; c=relaxed/simple;
+	bh=Ow68/aZnZTr6/XmdE+I9grqEci7wUEFqqVnvCxilZwc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IFylWjFohHp+TRlzyU82kqSNfLH6KkT0SHx4qLS35gOBWJpG3dwKU8cYwKBW2393iaReVlOJ+WiprX8PUkER04ZoUzcFBOV5eM9QAqz2AC1F81E8Hh+7TNQdgnivS+pHBMJe8gEZ5s03ZRQTzhjv426yGgzkjCcmfs5rPVAM/7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRjso9wy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34AFCC19425;
+	Fri, 17 Apr 2026 15:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776437562;
-	bh=lfrjWIzNAYCrM2lWTr0FWFwq1uXRS+QxBAQ0lAvMkRE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=b7HKoZF7ricTXLqJpA/kjX4zgRwMxymUcf66qeUQ2rI7UM+n7qC69yp228dlzvTMi
-	 TiaFSMi+OCutykENXpNv5Y7HFCw4A8vupRw/tDcYfln5v4qeT5QNtQH8rZYoi3QF1d
-	 lvzWoCV516VFnm6ZhfoFxaXZpyfpM4YwbaGOgP6wJaXxDwoZM602xMgmMKRQXcpGvP
-	 kzjdYaE/++4T+0ISVFATwQ44yH7G5VZ58wmbWCJf0I02Yp2Q/dLKKK9Tpwt4jTkdEm
-	 qzoZFmEkPljRnFOpE+ejmzhCbypek4FLZqAFsGoLpv1G6zilzpA0YuRZudvSIHyE6o
-	 pmwaA1MQtqlsQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9398EF4006A;
-	Fri, 17 Apr 2026 10:52:40 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 17 Apr 2026 10:52:40 -0400
-X-ME-Sender: <xms:OEniaZplPH5iM5LrYLhTB_ISxzBexpLJjrFgNjTlNPz9hC5AHFYsyg>
-    <xme:OEniaWdyhhT4fGXm7jRJQor78qB36LM2Jx1eh20hTp1yW8PBYDQhKf-3BO64B53F8
-    h1Du9UK70W3mcFKyY9TRCTD-4vzGbuEPuT9_qNXAAa-Gz8RK_0khw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdehtdduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
-    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
-    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
-    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
-    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
-    hlrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopegrmhhirhejfehilh
-    esghhmrghilhdrtghomhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    htohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthht
-    ohephhgthheslhhsthdruggvpdhrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrd
-    gtohhmpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhr
-    tghpthhtohepohhkohhrnhhivghvsehrvgguhhgrthdrtghomh
-X-ME-Proxy: <xmx:OEniaeiV8HKJ2Q9OLCJixsteAOCsWBwnYVmOFV_6g8vZulgzDUWRHg>
-    <xmx:OEniaXIV_aNIdDNBBhrZdGRrGn73-yb7IC4_Y3B2AN1zmXDUqIhJRw>
-    <xmx:OEniaVmbt57WrrOg4i0SQ02RvHS5wuY5tAvSxLDCoj0Tap_KxQGdWA>
-    <xmx:OEniaXOZNUC7RzLKTTS4gBKwlK8mvMNUULMHiOMyIZGdwcUdfKs8Mw>
-    <xmx:OEniaX7Joyv9f-QmzVp2IANUXwPpp600LwDb-dCVZPYcdCOxvwUYoSCJ>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 675DC780075; Fri, 17 Apr 2026 10:52:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1776440527;
+	bh=Ow68/aZnZTr6/XmdE+I9grqEci7wUEFqqVnvCxilZwc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=oRjso9wy0fHVSGTLM0Jlsst2TsKggeMLUjT//FHmY9Ly9m/lJbOJzpi553KtwAaWk
+	 zDmRQxEZTTlWu9zQKTt/zs2fZ2OGaSX38Yd0H6Zy1yz9h/dUL1FAvtDBsfwHhLYtRc
+	 4zwCmk3/x3TynaJk50HTwgRBEBduK0usKZAwY0Rp8KsjcrBw4kbbb1DN/1LSb4Tblk
+	 9YbCOK8Qs+gR0GdzNj6PUtauIufrqJtREKcHvwUaNGQQhFtL53yfTp0C+NEWfXUrtd
+	 jaQEq77mXAleActx6LtAIBx32Ycho6Pdql6HaYe/s2nyNckLvFa0Rf6GtOxg81f/qX
+	 I0IGThpLg9ZHg==
+Message-ID: <5ee1a1d46eeb1723cef36da03c3407939f764d33.camel@kernel.org>
+Subject: Re: [PATCH pynfs v2 07/25] server41tests: test rename triggers dir
+ delegation recall
+From: Jeff Layton <jlayton@kernel.org>
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: Calum Mackay <calum.mackay@oracle.com>, Chuck Lever
+ <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
+ <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+ <anna@kernel.org>, 	linux-nfs@vger.kernel.org
+Date: Fri, 17 Apr 2026 08:42:06 -0700
+In-Reply-To: <aeGBaphClApyoGE6@smayhew-thinkpadp1gen4i.remote.csb>
+References: <20260416-dir-deleg-v2-0-fad510db5941@kernel.org>
+	 <20260416-dir-deleg-v2-7-fad510db5941@kernel.org>
+	 <aeGBaphClApyoGE6@smayhew-thinkpadp1gen4i.remote.csb>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AwBntrSeBB7R
-Date: Fri, 17 Apr 2026 07:52:20 -0700
-From: "Chuck Lever" <cel@kernel.org>
-To: "Christoph Hellwig" <hch@lst.de>, "Christian Brauner" <brauner@kernel.org>
-Cc: NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Amir Goldstein" <amir73il@gmail.com>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Message-Id: <683650ce-0585-4607-8d93-9704b179fbd3@app.fastmail.com>
-In-Reply-To: <217438cb-63ff-41d2-8f3c-fbdb1945a670@app.fastmail.com>
-References: <20260401144059.160746-1-hch@lst.de>
- <8bef4d4e-1c0d-451d-8854-ed0cba27ee1f@app.fastmail.com>
- <20260409-schwalben-neutralisieren-fb5a184e5049@brauner>
- <20260410111007.GA10292@lst.de>
- <20260414-ausbrechen-gemixt-ff09f46bdad2@brauner>
- <20260415052925.GC26559@lst.de>
- <217438cb-63ff-41d2-8f3c-fbdb1945a670@app.fastmail.com>
-Subject: Re: cleanup block-style layouts exports v2
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-20939-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[brown.name,redhat.com,oracle.com,talpey.com,vger.kernel.org,kernel.org,gmail.com,linux-foundation.org];
+	URIBL_MULTI_FAIL(0.00)[tor.lore.kernel.org:server fail];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20940-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: CD7BF41C449
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9968C41CCB8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Thu, 2026-04-16 at 20:40 -0400, Scott Mayhew wrote:
+> On Thu, 16 Apr 2026, Jeff Layton wrote:
+>=20
+> > Get a dir delegation with no notification mask, create a file, then
+> > rename it from a second client. Verify that the server issues a
+> > CB_RECALL.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  nfs4.1/server41tests/st_dir_deleg.py | 33 ++++++++++++++++++++++++++++=
++++++
+> >  1 file changed, 33 insertions(+)
+> >=20
+> > diff --git a/nfs4.1/server41tests/st_dir_deleg.py b/nfs4.1/server41test=
+s/st_dir_deleg.py
+> > index f5265e8cf0ab..d8d09cd4bf7e 100644
+> > --- a/nfs4.1/server41tests/st_dir_deleg.py
+> > +++ b/nfs4.1/server41tests/st_dir_deleg.py
+> > @@ -175,3 +175,36 @@ def testDirDelegRemoveRecall(t, env):
+> >      ops =3D [ op.putfh(fh), op.delegreturn(deleg) ]
+> >      res =3D sess1.compound(ops)
+> >      check(res)
+> > +
+> > +def testDirDelegRenameRecall(t, env):
+> > +    """Verify rename triggers dir delegation recall
+> > +
+> > +    FLAGS: dirdeleg all
+> > +    CODE: DIRDELEG4
+> > +    """
+> > +    c =3D env.c1
+> > +    recall =3D threading.Event()
+> > +    sess1, fh, deleg =3D _getDirDeleg(t, env, [], recall)
+> > +
+> > +    # Create a file from sess1
+> > +    claim =3D open_claim4(CLAIM_NULL, env.testname(t))
+> > +    owner =3D open_owner4(0, b"owner")
+> > +    how =3D openflag4(OPEN4_CREATE, createhow4(GUARDED4, {FATTR4_SIZE:=
+0}))
+> > +    open_op =3D [ op.putfh(fh), op.open(0,
+> > +                                      OPEN4_SHARE_ACCESS_WRITE | OPEN4=
+_SHARE_ACCESS_WANT_NO_DELEG,
+> > +                                      OPEN4_SHARE_DENY_NONE, owner, ho=
+w, claim) ]
+> > +    res =3D sess1.compound(open_op)
+> > +    check(res)
+>=20
+> You probably want to close this file at the end of the test so you're
+> not leaving state behind on the server.
+>=20
 
-On Wed, Apr 15, 2026, at 7:34 AM, Chuck Lever wrote:
-> On Tue, Apr 14, 2026, at 10:29 PM, Christoph Hellwig wrote:
->> On Tue, Apr 14, 2026 at 12:01:39PM +0200, Christian Brauner wrote:
->>> On Fri, Apr 10, 2026 at 01:10:07PM +0200, Christoph Hellwig wrote:
->>> > On Thu, Apr 09, 2026 at 03:26:09PM +0200, Christian Brauner wrote:
->>> > > > Christian, are you OK if I take this series through the NFSD tree?
->>> > > 
->>> > > Hm, I generally prefer infrastructure to go through the VFS tree.
->>> > > You can get a stable branch ofc.
+Definitely. I'll make a pass through all of the tests and make sure
+that there is no leftover state. I'll plan to send a v3.
 
-> In this case, pNFS is the only consumer that will notice or use the
-> new "infrastructure" and us NFS experts are the only ones who can test
-> and review it properly. And, the likelihood of conflicts with patches
-> in nfsd-testing is high (in fact we've already had at least one). It
-> makes sense to me to take this series through NFSD.
-
-I see that Jeff has posted a series that modifies the fs_notify API surface
-to support the NFSv4 CB_NOTIFY operation. That likely counts as an
-infrastructure change.
-
-To meet you halfway, Christian, you could take Christoph's series and
-Jeff's series into a "vfs.nfsd" tree and I can base my nfsd-next branch
-on that for the NFSD PR 7.2. Building the NFSD PR on that should avoid
-merge conflicts with significant changes I have planned.
-
-
--- 
-Chuck Lever
+Thanks for the review!
+>=20
+--=20
+Jeff Layton <jlayton@kernel.org>
 
