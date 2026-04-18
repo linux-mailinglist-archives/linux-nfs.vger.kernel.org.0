@@ -1,70 +1,88 @@
-Return-Path: <linux-nfs+bounces-20943-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20944-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id k8ThDveZ4mkC8AAAu9opvQ
-	(envelope-from <linux-nfs+bounces-20943-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 22:37:11 +0200
+	id rhpDAHjV42m0LAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-20944-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2026 21:03:20 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8045F41E85C
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 22:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41FAA42202D
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2026 21:03:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0BD83303A121
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Apr 2026 20:35:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 84B8E302B394
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Apr 2026 19:03:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C818B1C84AB;
-	Fri, 17 Apr 2026 20:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06832238150;
+	Sat, 18 Apr 2026 19:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aLegbY9u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXxTrVUc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB372D73B8
-	for <linux-nfs@vger.kernel.org>; Fri, 17 Apr 2026 20:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED5F30C35C
+	for <linux-nfs@vger.kernel.org>; Sat, 18 Apr 2026 19:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776458153; cv=none; b=pucyvZ28O6wEMEBWqu6qyRrQWLNK4GJ6a7xSFBidvw46s/d4C8wfd5hIwHCBBV8w9UzQjEw1gtKhYmQ8It4MymxzhJMZGR4V37YZp9P74LI4yYyOH6iUUU0rF3kiaA91nbZcBB3YAq6YGYqZSNv7J+5b6pvUWi0Y8Y/zMQZFhdw=
+	t=1776538996; cv=none; b=jGhS6ZKf5t9iMZfsnNzfjId4pmSAhA92uhCr6PkQV3LhF3wgCq84j/zGU7gs3hBe0dcHVMxtsasI7khGHzEFcTuHZ7sipTCGOz9n4sidGq/Kq9Uw/TDuYXHaQc12+w+1qdFt7+L0NK2oi5pYYoTbW0BC25FFIPgOqfXZqiPoom0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776458153; c=relaxed/simple;
-	bh=9eHtg/dUPFfVjRXUU4psQ/1x9fZ20qYpopczXhkLl/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lmDdDRelJyWj8pueyYAQRbVZobHoQh5aLXmjD3+WLoddffKo7p0VTs4PqDMqSWif+utIKdyhv1xhozAEiPUQVqzZdn1zRw7Sm8+fcbJnF+5dmhMBcxTM0e73I8Fwf4Ja1Z3e1GF46oiTCFeQYxcOK2k00mADuEgX5KOTxgUL2zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aLegbY9u; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776458151;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rUSgvD5vnP0dmHwvqyX+f+RKTTrihLRjPlW0LCrCBNI=;
-	b=aLegbY9uiPBuXA1pa8rwWR/ELVNZaT7RtpQ/1lwFOTppZZK/tcLoHbXCUxzwmMR/GlRNNb
-	0qBwhNOsknSnpir26LLcH7bO7Bs5OlusycFCHY7L/Gh51cBpQJjDaNb8QAfpeSQCxQ/ATC
-	vxhxqlQv9VdSoGOd6iJO2ZgGxJyOZJw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-58-wBEMUu4eOFCBGO3hUE3tpA-1; Fri,
- 17 Apr 2026 16:35:46 -0400
-X-MC-Unique: wBEMUu4eOFCBGO3hUE3tpA-1
-X-Mimecast-MFC-AGG-ID: wBEMUu4eOFCBGO3hUE3tpA_1776458145
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FDF819560BB;
-	Fri, 17 Apr 2026 20:35:45 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.81.224])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 71D191800357;
-	Fri, 17 Apr 2026 20:35:44 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v5 1/1] NFSv4.2: fix CLONE/COPY attrs in presence of delegated attributes
-Date: Fri, 17 Apr 2026 16:35:43 -0400
-Message-ID: <20260417203543.39757-1-okorniev@redhat.com>
+	s=arc-20240116; t=1776538996; c=relaxed/simple;
+	bh=9DYNjKpuB5qgERQlqBDiZMOIjttooIpFFAwuyegsj5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TCijOsAvNlyZithvHQUfRraFJTGLujYW3ukluFRMG0p6kVXMt1D96aAOWxTDlPQcy4KeGVZOsdHB+tw15gQ3O3XBXAof5dbbZ4ycVttjc5X/ckvoVF2kx2rSjcYtKOQ0CRjv2UzioxBnB6qW/4eBaH1i31gyT8G6MOrQhT/9jnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXxTrVUc; arc=none smtp.client-ip=74.125.82.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-2b4520f6b32so2125652eec.0
+        for <linux-nfs@vger.kernel.org>; Sat, 18 Apr 2026 12:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776538994; x=1777143794; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4+3Fqo1aUGRpUHMKskwUllOJaVwA3J8P60pHdff3Ltg=;
+        b=hXxTrVUchNakPWHzYr8v51QV2HVWPCFDfy971cGy2Fx/Y91NCgaTKMWFLJTfq7ahTf
+         IbYrb2k4U0lvkTsuITOGQwCfC8m80quOTdRM5ISaSh4izIV7ciGxmGn/fxN2ATWPhqCQ
+         b9ftD5K94zSq4YWhadrSzsPHIDf8CBbKvuJ8TuD2smgfQR4bjVK3+7HBMJVIODBsO1yb
+         k5FTcFYz/k2vJm9OXMYKmOBkTm9TRPRUm2GiRVxbR663GLGcEP8N79lWy1/CwxyUagWr
+         bl+Fu1YmW8/dYBQ5M3TN2iUYrR5IwELLyIQuYe5D29Wd7OMzk2IJ3X8z1EfaTOF93l9V
+         nzsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776538994; x=1777143794;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4+3Fqo1aUGRpUHMKskwUllOJaVwA3J8P60pHdff3Ltg=;
+        b=P8BPhh5OD+FModqZreXBTrqta8QVcPorJKG7/onEwofo/K8/m75LQxdNrAy00jcJeA
+         wVPMv0XHeVAU/Y5SSzwEzpkH9iygjYDZS29NU1m3/u5v3zFbEv3nQW005mOdgJYOU1US
+         1aHbkFiwrEd6vwHeKBt84cGimJA8uZ11CcgMRBiw3czRh0mNyi8Tj6s9RGsM2m+OXehD
+         CUpDv/bcvUve72Mt8c/tGpK9sI6ekypv9OoqyJNnymwhlNeBxAypJoJxhMAZXAphpnq1
+         bObPBCatJ2K5SHwxOpqh9eeLnFghcLlSo0HEELjvePGFs/jPRIEEDX8/AbWYpXrDNQFx
+         zZLA==
+X-Gm-Message-State: AOJu0YwRYERIcX3WEFkIWt1NsTHQK+2Fvp0ypaoz1DKLSOtfvX0CMd6w
+	vqRQZD+ivnoGEv9+C5j2AQpdS7eNdZ2yajXKsKy7F8GB0pnkSs7OyIO08rcCLw==
+X-Gm-Gg: AeBDiesqUsAKgJX7skO2i5CfstY9zbhKhi2dH6jEkZxOicPfcDU4cxfKriuSVFNrWZH
+	nO74bObr5U1Tl1A5AJl2IQl1WQbZni2gjnXEdXw6EX6o+LAkCJTq5qWDfvj1bPp/0NHYiwV4dn4
+	+H9He/drIiMnWVEwu/EuPvyofED4SFbAGHNUTFIs6nrkB4L+jBZ2/vx5Xw0tHeBMn+LnAQhMs+c
+	vC/pceVy7S5u/hrhw2fsCj0rPS/qWOMMKfFLcSN30n0l7+LkuHwHVIEBpeezscrZ/bMsdemXvsV
+	5StOKapM16D1OCHZ143xlx9YNuScUq+mklcupLT2ApV9/TgBIrxEU1LfqnWZMi9qLIoT7nKUVY3
+	Y7+joWdmHl4xTsMAHDLhStSFwr2cyacc7U/HmB9iEOGYi477z23peSMlF/W6g0TYsnN3GQ8IZXj
+	OJj+cjK5wN63IAVmGgBJ/0mhSiwSLG3e9GzddWcl/VwpcYFtEK6XZm/seGHIouffQ=
+X-Received: by 2002:a05:7301:4185:b0:2e0:1f09:d924 with SMTP id 5a478bee46e88-2e464ea9aeemr3615388eec.5.1776538993674;
+        Sat, 18 Apr 2026 12:03:13 -0700 (PDT)
+Received: from shadow (c-174-160-87-152.hsd1.ca.comcast.net. [174.160.87.152])
+        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-2e53d8b3dd9sm7254785eec.27.2026.04.18.12.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2026 12:03:13 -0700 (PDT)
+From: Tom Haynes <loghyr@gmail.com>
+To: linux-nfs@vger.kernel.org
+Cc: trondmy@kernel.org,
+	anna@kernel.org,
+	jlayton@kernel.org,
+	chuck.lever@oracle.com
+Subject: [PATCH 0/1] nfs: fix directory mtime staleness under directory delegation after local mutations
+Date: Sat, 18 Apr 2026 12:03:00 -0700
+Message-ID: <20260418190301.3661-1-loghyr@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -72,74 +90,126 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20943-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20944-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[okorniev@redhat.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FROM_NEQ_ENVFROM(0.00)[loghyr@gmail.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MIME_TRACE(0.00)[0:+];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8045F41E85C
+X-Rspamd-Queue-Id: 41FAA42202D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-xfstest generic/407 is failing in 2 ways. It detects that after
-doing a clone the client does not update it's mtime and it's ctime.
-CLONE always sends a GETATTR operation and then calls
-nfs_post_op_update_inode() based on the returned attributes.
-Because of the delegated attributes the client ignores updating
-the mtime. Then also, when delegated attributes are present, for
-the change_attr the server replies with the same values as what
-the client cached before and thus the generic/407 would flag that.
-Instead, make sure we invalidate the blocks attr.
+Hi all,
 
-By adding updating delegated attributes in nfs42_copy_dest_done()
-both COPY and CLONE would update mtime appropriately.
+A cross-parent rename(2) against a Linux NFSv4.2 server leaves the
+client's cached mtime on both parent directories stale, even though
+the server's in-memory inode mtime is updated correctly.  The bug is
+entirely on the client side in the directory-delegation + mutation
+interaction.
 
-Fixes: e12912d94137 ("NFSv4: Add support for delegated atime and mtime attributes")
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+Server instrumentation (bpftrace on vfs_getattr + xfs_trans_ichgtime)
+showed the backing XFS and knfsd path both advance mtime correctly
+through vfs_rename -> xfs_dir_rename_children -> xfs_trans_ichgtime.
+Subsequent vfs_getattr calls on the parent dirs on the server side
+return the fresh mtime.
 
---v5 change nfs_update_delegated_mtime() placement
---v4 this version removes the need for having
-"NFSv4.2: fix COPY attrs in presence of delegated timestamps"
----
- fs/nfs/nfs42proc.c | 1 +
- 1 file changed, 1 insertion(+)
+On the client:
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 7b3ca68fb4bb..6e195619a232 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -401,6 +401,7 @@ static void nfs42_copy_dest_done(struct file *file, loff_t pos, loff_t len,
- 					     NFS_INO_INVALID_MTIME |
- 					     NFS_INO_INVALID_BLOCKS);
- 	spin_unlock(&inode->i_lock);
-+	nfs_update_delegated_mtime(inode);
- }
- 
- static ssize_t _nfs42_proc_copy(struct file *src,
+ 1. The local rename path calls nfs4_update_changeattr_locked() and
+    marks NFS_INO_INVALID_NLINK | NFS_INO_INVALID_DATA on each parent.
+ 2. The next stat(2) enters __nfs_revalidate_inode() which early-exits
+    on a held directory delegation, returning the cached (stale) mtime
+    without sending a GETATTR RPC.
+
+The delegation early-exit unconditionally trusts cached attrs, but the
+rename/create/unlink paths have already flagged some attrs as stale.
+This patch keeps the early-exit for the fast path but takes the
+RPC when CHANGE/MTIME/CTIME is already marked invalid.
+
+Minimal reproducer (client):
+
+  mount -t nfs -o vers=4.2 SERVER:/export /mnt/x
+  cd /mnt/x
+  rm -rf src dst && mkdir src dst && touch src/f
+  stat -c 'src_before: %y' src
+  sleep 3
+  mv src/f dst/f
+  stat -c 'src_after:  %y' src
+
+Before: src_after == src_before (stale).
+After:  src_after advances by the sleep interval.
+
+Verification
+------------
+
+ - Loopback (client and server on the same Linux 7.0 host): test
+   passes after the patch with default directory_delegations=Y.
+ - Separate physical client (Linux 7.0 with the patch) against
+   a Linux 7.0 server: test passes with default settings.
+ - Disabling directory_delegations on the client (echo N >
+   /sys/module/nfsv4/parameters/directory_delegations) is a known
+   workaround that also makes the test pass -- which is what led to
+   the diagnosis.  The patch removes the need for the workaround.
+
+Reproduces against every NFSv4 server we tested (multiple Linux knfsd
+versions, reffs, FreeBSD NFS) which is consistent with a client-only
+bug.
+
+Test that surfaced it
+---------------------
+
+nfs-conformance op_rename_nlink case_parent_timestamps:
+https://github.com/loghyr/nfs-conformance/blob/main/op_rename_nlink.c
+
+Alternative fixes considered
+----------------------------
+
+An alternative would be to call nfs_update_delegated_mtime_locked() on
+the directory from the rename_done path, treating the client as
+authoritative for the delegated mtime (similar to what the write path
+does for files via nfs_update_mtime).  That's more invasive and only
+addresses the rename path; the __nfs_revalidate_inode fix in this
+patch is defense-in-depth for any code path that marks an attr stale
+without taking the delegation back.
+
+Happy to rework if you'd prefer the call-update-mtime shape instead,
+or if the guard should live in a helper next to
+nfs_have_directory_delegation().
+
+Thanks,
+Tom
+
+Tom Haynes (1):
+  nfs: don't skip revalidate on directory delegation when attrs flagged
+    stale
+
+ fs/nfs/inode.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
 -- 
-2.52.0
+2.53.0
 
 
