@@ -1,324 +1,221 @@
-Return-Path: <linux-nfs+bounces-20955-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20956-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CHkoFN4Y5WlCeQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-20955-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2026 20:03:10 +0200
+	id aIvqEqIk5WmXegEAu9opvQ
+	(envelope-from <linux-nfs+bounces-20956-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2026 20:53:22 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A77F3424F50
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2026 20:03:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BF1E4251E5
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2026 20:53:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 38C78300DF52
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2026 18:03:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4FD20300B06E
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Apr 2026 18:53:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89E48228CB8;
-	Sun, 19 Apr 2026 18:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 689B829D287;
+	Sun, 19 Apr 2026 18:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dngvNq8R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0f1+UAT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6577E19CCF7;
-	Sun, 19 Apr 2026 18:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425791E9B3D;
+	Sun, 19 Apr 2026 18:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776621787; cv=none; b=EOdN+f7jl7Xbu5tI0hpRGpw7w3tpBhAcDHsjqezz4FWiDYlcxjc3O3TiFltoi9+YKp6EfCbFjd+Rjs+92CsOa0cUify9oVjOAA5XP96BuSR9jftw4dedDfJq0pimf+VJszVD3SFQGzOl2HNzW8AF8PqfrjOlLFLEuUCpS6u2vs4=
+	t=1776624799; cv=none; b=DPUXODh53KPc8XdaKm8D01JfcmAwo1Mwa+4iqMG0TfccV8lDqW5TdIXnMrTcFe+qxi/qfNpHrfcNPjxlVo6agqBNDGSE1PSYEYGaPHiLXjvcYVkO4MC0r0LtbPAoq41IdoiXfqmx7EmDt24x4Z0r+mtoWl2zMc0IBqsGJkkITqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776621787; c=relaxed/simple;
-	bh=lSMKX3qjDQ+g9RMDIdTIbZnGv8ovYj5IRqlypsi1Xos=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ccSSN+Uy/ppHP/EnGB2AQR58iS6zDSZBr66sLH1tBQ1pGRUwkDs6jD13NYxlNu2gIh9D85pxPVCjySf1j4lVK5mVqbCa4PSqpFrEj0Jxv61C6YpXB+gzZ51okVKC3h7oN55AvPLCJlasMLeujCI1bQ2AhVra098YEd/OScIyc74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dngvNq8R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8378CC2BCAF;
-	Sun, 19 Apr 2026 18:03:06 +0000 (UTC)
+	s=arc-20240116; t=1776624799; c=relaxed/simple;
+	bh=5CYyBv52KXS0vL40aurpyoxMn2/84aAMqPQbKfpGtJg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MT5lkf4WXNhnO+k57NeIJO01hnaQzGGKlnJdsj+f/oSyPOmPC1DcYpqi3yIhdKauWqUL0fTUX0zR7iQd/BQpDFkdzP07PlAJTJhyG/wA8hLrlvfbmN1hnkRH8To44URThLiyYs/Mg5iuoyad4L+D0pcZUJKglNUejgsl9u6E9I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0f1+UAT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3708EC2BCAF;
+	Sun, 19 Apr 2026 18:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776621786;
-	bh=lSMKX3qjDQ+g9RMDIdTIbZnGv8ovYj5IRqlypsi1Xos=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dngvNq8Rhdv+OLBT3JMXcWOA+m5zRZfSjNhMYZMJhnLJXgMDzjnyNIwlxNyZVemFD
-	 tzLBRN8RPHQvNIdhxrUWXoBbKsyFKpBOK4sUyoGXTXPPGiCmsBUznF8WzwYrZnCwqZ
-	 OmlxLN0Mi6GcNbLez1hIOF6Av1jUGj5m8WlR9GCE2BZW1Z+IJkhLbpj8IpvaNjlGNB
-	 3pNkr3MQ3tCQ6+GkFmbBzLoMk5YYW2kWnaNVGafl5a7fAgJoUKXeiXdEd+zplXExdU
-	 cH4ffyOgvsgqCrjtWEzcKzFSFQMqEOvlKzi3IBFX9/suNpjbV3RHYgZBwUn0ot+mCJ
-	 jFZA8+enVJgAg==
+	s=k20201202; t=1776624798;
+	bh=5CYyBv52KXS0vL40aurpyoxMn2/84aAMqPQbKfpGtJg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=n0f1+UAT6twCQ3qkODZxc9mR7ch00vIU6UGo4O2PZbLTLxD9pj4iMJNHEuvHSKP2m
+	 39WuOZ9YRiD4p3JUa6xXVt5RlSVlBvK0QZYO82+fxBxGSwbH2XL5Nrp5CvdkNnQRGQ
+	 FbJD1OPxyuAydEP85vDRZMdGxmchMFw9XRAP5LRJcts79ecsLS0tMewo17LaooYirF
+	 gaWcZMixpXxXlAJzYLwHr6FN1FZLLt93QT1gXwkVv9De/otDOwXV533LlS6sX60nIT
+	 JLunxZk9JrDPAcvCLZ8Zw1yq585dU/HNvp93l23gS4dAOp/CL8dN3TETli0GN4CGcQ
+	 j7kcqNV6FluZg==
 From: Chuck Lever <cel@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] NFSD changes for the v7.1 merge window
-Date: Sun, 19 Apr 2026 14:03:05 -0400
-Message-ID: <20260419180305.2402-1-cel@kernel.org>
-X-Mailer: git-send-email 2.53.0
+Subject: [PATCH v9 0/9] Automatic NFSv4 state revocation on filesystem
+ unmount
+Date: Sun, 19 Apr 2026 14:52:58 -0400
+Message-Id: <20260419-umount-kills-nfsv4-state-v9-0-0660bd06d2b6@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIok5WkC/43QzU7EIBQF4FeZsBblp1DqyvcwLmi5tGgHDNBGM
+ +m7C+PCMU2a2XHI5cu5XFCC6CCh59MFRVhdcsGX0D2c0DBpPwJ2pmTECJOEU4WXc1h8xh9unhP
+ 2Nq0NTllnwJQrRpVltgGCyvPPCNZ9XenXt9+clv4dhly9OtHrBLiP2g9TvQrRjc4/FdPgDCk7P
+ 9apyaUc4ve14dpU7Y4y5UCwkFqbptF9p9hLiHqY4XEIZ1TbrOJGYvJAEkUybADS0p6LluwkeSN
+ xeiDJIlHFBLGdsIzpndTeK7W1kzIMADpuBd9J6k9qyNE/qSJJIExTQ7iR/7fbtu0HGZgZwCECA
+ AA=
+X-Change-ID: 20260318-umount-kills-nfsv4-state-138218f2f4e0
+To: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <dai.ngo@oracle.com>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4004;
+ i=chuck.lever@oracle.com; h=from:subject:message-id;
+ bh=5CYyBv52KXS0vL40aurpyoxMn2/84aAMqPQbKfpGtJg=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp5SSU1ojjo6uMbY1pgN47c/k1f2dMj/4ylpWv0
+ SdwxTvml1aJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaeUklAAKCRAzarMzb2Z/
+ l6JAD/4leSl5/97+nkGyvUqvc+8q/Du6qxFJBrhnLYtIFbSybf4Q//Be6NB05yJnCX3wE1EXQMO
+ Jd5SLV3xmCsFQusEs50/3fd02f8xW3glVhoAZgpEZBdADwrgGBe0mozH1Tj4/Mqr+M8bZMpPQHt
+ YIgowfXJkmKoDAmptH6cITHie33PFbal7xyySaduTNufm+6LUEO9WHHZ9FFbmQSUuZJN4WHpIpP
+ YKp7AjvnKtnzV+FZMj/kkaE23eEWgm6fpecwehPWmu8GRMM32YzNuM4DC6QXN+CQZNG+3GQe9mV
+ HlloeqTLcWn+bqbyoWdB5Rqnd89Zo6b1zWIfbMH/ialH5OJh8e0Xph+DLhdpvBQ4MnKajSAY4m+
+ 7B3YLRc7pEytB6KQjm32UDtBODVXSMfGUtybMkclp+rJU52csXbUQzbGNLwzWu2H/UbYVIbpyHe
+ yYtKxExn5/8ciK8mp4mTlr4zQjcVWYGXP1vR/ScduZOME52daojpm0u62HOpSKroyh6S41RR/0M
+ YdeVrkEgXMoZ3syMKTpUD+MWm8IBk40j32gizH5+L/zlz6fqT0u1bppOyjVwKSRjSPij+nWnV/R
+ 1DLfqOqOtjXxtYn2tDl3DeSFpbiIvkhl6+Hs/Zz7MJf2ymGGuLvEFaOLK0rLhrIE63ZeG9BxSa3
+ CipDn38wMz2+qpA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20956-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20955-lists,linux-nfs=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.998];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A77F3424F50
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9BF1E4251E5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The following changes since commit 7aaa8047eafd0bd628065b15757d9b48c5f9c07d:
+When an NFS server exports a filesystem and clients hold NFSv4
+state (opens, locks, delegations), unmounting the underlying
+filesystem fails with EBUSY. The /proc/fs/nfsd/unlock_ip and
+/proc/fs/nfsd/unlock_fs procfs interfaces handle this, but have
+no netlink equivalents, and unlock_fs operates at whole-superblock
+granularity.
 
-  Linux 7.0-rc6 (2026-03-29 15:40:00 -0700)
+This series adds three new NFSD netlink commands, each with its own
+attribute set:
 
-are available in the Git repository at:
+ - NFSD_CMD_UNLOCK_IP releases NLM locks held by a client IP
+   address. Netlink equivalent of write_unlock_ip.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-7.1
+ - NFSD_CMD_UNLOCK_FILESYSTEM revokes all NFS state on a
+   superblock. Netlink equivalent of write_unlock_fs.
 
-for you to fetch changes up to d644a698de12e996778657f65a4608299368e138:
+ - NFSD_CMD_UNLOCK_EXPORT revokes NFSv4 state acquired through
+   exports of a specific path, regardless of client.
 
-  NFSD: Docs: clean up pnfs server timeout docs (2026-04-03 09:29:32 -0400)
+UNLOCK_FILESYSTEM and UNLOCK_EXPORT serve different intents.
+UNLOCK_FILESYSTEM means "unmounting /data, release everything
+on this superblock." UNLOCK_EXPORT means "no clients remain for
+/data/projectA, release only the state acquired through exports
+of that path." Userspace (exportfs -u) sends UNLOCK_EXPORT after
+removing the last client for a given path, enabling the underlying
+filesystem to be unmounted.
 
-----------------------------------------------------------------
-NFSD 7.1 Release Notes
+The path-only design for UNLOCK_EXPORT avoids the auth_domain
+naming complexity (use_ipaddr vs hostname-based domains) by not
+requiring the caller to identify a specific client. Since this
+mechanism is to be used to enable umount, this seemed like a
+reasonable compromise.
 
-Benjamin Coddington contributed filehandle signing to defend against
-filehandle-guessing attacks. The server now appends a SipHash-2-4
-MAC to each filehandle when the new "sign_fh" export option is
-enabled. NFSD then verifies filehandles received from clients
-against the expected MAC; mismatches return NFS error STALE.
+---
+Changes since v8:
+- When revoking state, drop the export reference
 
-Chuck Lever converted the entire NLMv4 server-side XDR layer from
-hand-written C to xdrgen-generated code, spanning roughly thirty
-patches. XDR functions are generally boilerplate code and are easy
-to get wrong. The goals of this conversion are improved memory
-safety, lower maintenance burden, and groundwork for eventual Rust
-code generation for these functions.
+Changes since v7:
+- Rebase on Jeff's mountd netlink patches
+- Fix pre-existing state revocation bugs
 
-Dai Ngo improved pNFS block/SCSI layout robustness with two related
-changes. SCSI persistent reservation fencing is now tracked per
-client and per device via an xarray, to avoid both redundant preempt
-operations on devices already fenced and a potential NFSD deadlock
-when all nfsd threads are waiting for a layout return.
+Changes since v6:
+- Send the complete series (v5 was missing patches 6 and 7)
 
-The remaining patches deliver scalability and infrastructure
-improvements. Sincere thanks to all contributors, reviewers,
-testers, and bug reporters who participated in the v7.1 NFSD
-development cycle.
+Changes since v5:
+- Rename state_lock => nn->deleg_lock
 
-----------------------------------------------------------------
-Andy Shevchenko (3):
-      nfs/blocklayout: Fix compilation error (`make W=1`) in bl_write_pagelist()
-      sunrpc: Kill RPC_IFDEBUG()
-      sunrpc: Fix compilation error (`make W=1`) when dprintk() is no-op
+Changes since v4:
+- 1/9 has been queued in nfsd-testing
+- Split single NFSD_CMD_UNLOCK into three separate commands
+- UNLOCK_EXPORT takes path only, no client attribute to avoid
+  auth_domain naming complexity with use_ipaddr
 
-Benjamin Coddington (3):
-      NFSD: Add a key for signing filehandles
-      NFSD/export: Add sign_fh export option
-      NFSD: Sign filehandles
+Changes since v3:
+- All VFS changes replaced with new netlink "unlock" operation
 
-Chuck Lever (59):
-      lockd: Simplify cast_status() in svcproc.c
-      lockd: Relocate and rename nlm_drop_reply
-      lockd: Introduce nlm__int__deadlock
-      lockd: Have nlm_fopen() return errno values
-      lockd: Relocate nlmsvc_unlock API declarations
-      NFS: Use nlmclnt_shutdown_rpc_clnt() to safely shut down NLM
-      lockd: Move xdr4.h from include/linux/lockd/ to fs/lockd/
-      lockd: Move share.h from include/linux/lockd/ to fs/lockd/
-      lockd: Relocate include/linux/lockd/lockd.h
-      lockd: Remove lockd/debug.h
-      lockd: Move xdr.h from include/linux/lockd/ to fs/lockd/
-      lockd: Make linux/lockd/nlm.h an internal header
-      lockd: Move nlm4svc_set_file_lock_range()
-      lockd: Relocate svc_version definitions to XDR layer
-      Documentation: Add the RPC language description of NLM version 4
-      lockd: Use xdrgen XDR functions for the NLMv4 NULL procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 TEST procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 LOCK procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 CANCEL procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure
-      lockd: Refactor nlm4svc_callback()
-      lockd: Use xdrgen XDR functions for the NLMv4 TEST_MSG procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 LOCK_MSG procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_MSG procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_MSG procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_MSG procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 TEST_RES procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 LOCK_RES procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 CANCEL_RES procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 UNLOCK_RES procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 GRANTED_RES procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 SM_NOTIFY procedure
-      lockd: Convert server-side undefined procedures to xdrgen
-      lockd: Hoist file_lock init out of nlm4svc_decode_shareargs()
-      lockd: Prepare share helpers for xdrgen conversion
-      lockd: Use xdrgen XDR functions for the NLMv4 SHARE procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 UNSHARE procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 NM_LOCK procedure
-      lockd: Use xdrgen XDR functions for the NLMv4 FREE_ALL procedure
-      lockd: Add LOCKD_SHARE_SVID constant for DOS sharing mode
-      lockd: Remove C macros that are no longer used
-      lockd: Remove dead code from fs/lockd/xdr4.c
-      sunrpc: Add XPT flags missing from SVC_XPRT_FLAG_LIST
-      nfsd: use dynamic allocation for oversized NFSv4.0 replay cache
-      SUNRPC: Tighten bounds checking in svc_rqst_replace_page
-      SUNRPC: Allocate a separate Reply page array
-      SUNRPC: Handle NULL entries in svc_rqst_release_pages
-      svcrdma: preserve rq_next_page in svc_rdma_save_io_pages
-      SUNRPC: Track consumed rq_pages entries
-      SUNRPC: Optimize rq_respages allocation in svc_alloc_arg
-      svcrdma: Add fair queuing for Send Queue access
-      svcrdma: Clean up use of rdma->sc_pd->device in Receive paths
-      svcrdma: Clean up use of rdma->sc_pd->device
-      svcrdma: Add Write chunk WRs to the RPC's Send WR chain
-      svcrdma: Factor out WR chain linking into helper
-      SUNRPC: Add svc_rqst_page_release() helper
-      svcrdma: Use contiguous pages for RDMA Read sink buffers
-      NFSD: use per-operation statidx for callback procedures
+Changes since v2:
+- Replace fs_pin with an SRCU umount notifier chain in VFS
+- Merge the pending COPY cancellation patch
+- Replace xa_cmpxchg() with xa_insert()
+- Use cancel_work_sync() instead of flush_workqueue()
+- Remove rcu_barrier()
+- Correct misleading claims in kdoc comments and commit messages
 
-Dai Ngo (4):
-      NFSD: Track SCSI Persistent Registration Fencing per Client with xarray
-      NFSD: fix nfs4_file access extra count in nfsd4_add_rdaccess_to_wrdeleg
-      NFSD: Enforce timeout on layout recall and integrate lease manager fencing
-      NFSD: convert callback RPC program to per-net namespace
+Changes since v1:
+- Explain why drop_client() is being renamed
+- Finish implementing revocation on umount
+- Rename pin_insert_group
+- Clarified log output and code comments
+- Hold nfsd_mutex while closing nfsd_files
 
-Jeff Layton (8):
-      nfsd/sunrpc: add svc_rqst->rq_private pointer and remove rq_lease_breaker
-      nfsd/sunrpc: move rq_cachetype into struct nfsd_thread_local_info
-      nfsd: add a runtime switch for disabling delegated timestamps
-      nfsd: remove NFSD_V4_DELEG_TIMESTAMPS Kconfig option
-      sunrpc: convert queue_lock from global spinlock to per-cache-detail lock
-      sunrpc: convert queue_wait from global to per-cache-detail waitqueue
-      sunrpc: split cache_detail queue into request and reader lists
-      nfsd: convert global state_lock to per-net deleg_lock
+---
+Chuck Lever (9):
+      NFSD: Fix infinite loop in layout state revocation
+      NFSD: Handle layout stid in nfsd4_drop_revoked_stid()
+      NFSD: Extract revoke_one_stid() utility function
+      NFSD: Add NFSD_CMD_UNLOCK_IP netlink command
+      NFSD: Add NFSD_CMD_UNLOCK_FILESYSTEM netlink command
+      NFSD: Replace idr_for_each_entry_ul in find_one_sb_stid()
+      NFSD: Track svc_export in nfs4_stid
+      NFSD: Add NFSD_CMD_UNLOCK_EXPORT netlink command
+      NFSD: Close cached file handles when revoking export state
 
-Joseph Salisbury (2):
-      nfsd: fix comment typo in nfs3xdr
-      nfsd: fix comment typo in nfsxdr
+ Documentation/netlink/specs/nfsd.yaml |  61 ++++++++
+ fs/nfsd/filecache.c                   |  46 ++++++
+ fs/nfsd/filecache.h                   |   1 +
+ fs/nfsd/netlink.c                     |  36 +++++
+ fs/nfsd/netlink.h                     |   3 +
+ fs/nfsd/nfs4layouts.c                 |   2 +
+ fs/nfsd/nfs4state.c                   | 262 ++++++++++++++++++++++++----------
+ fs/nfsd/nfsctl.c                      | 126 +++++++++++++++-
+ fs/nfsd/state.h                       |   6 +
+ fs/nfsd/trace.h                       |  32 ++++-
+ include/uapi/linux/nfsd_netlink.h     |  24 ++++
+ 11 files changed, 520 insertions(+), 79 deletions(-)
+---
+base-commit: b495a392b2748dca31d2a4b404632c6f907aa136
+change-id: 20260318-umount-kills-nfsv4-state-138218f2f4e0
 
-NeilBrown (1):
-      sunrpc/cache: improve RCU safety in cache_list walking.
+Best regards,
+--  
+Chuck Lever
 
-Randy Dunlap (2):
-      SUNRPC: xdr.h: fix all kernel-doc warnings
-      NFSD: Docs: clean up pnfs server timeout docs
-
-Ryota Sakamoto (1):
-      SUNRPC: Replace KUnit tests for memcmp() with KUNIT_EXPECT_MEMEQ_MSG()
-
- .../admin-guide/nfs/pnfs-block-server.rst          |   30 +
- Documentation/admin-guide/nfs/pnfs-scsi-server.rst |   31 +
- Documentation/filesystems/locking.rst              |    2 +
- Documentation/filesystems/nfs/exporting.rst        |   85 +
- Documentation/netlink/specs/nfsd.yaml              |    6 +
- Documentation/sunrpc/xdr/nlm4.x                    |  211 +++
- fs/lockd/Makefile                                  |   30 +-
- fs/lockd/clnt4xdr.c                                |    5 +-
- fs/lockd/clntlock.c                                |    2 +-
- fs/lockd/clntproc.c                                |    2 +-
- fs/lockd/clntxdr.c                                 |    3 +-
- fs/lockd/host.c                                    |   31 +-
- {include/linux => fs}/lockd/lockd.h                |  101 +-
- fs/lockd/mon.c                                     |    2 +-
- {include/linux => fs}/lockd/nlm.h                  |    8 +-
- fs/lockd/nlm4xdr_gen.c                             |  724 ++++++++
- fs/lockd/nlm4xdr_gen.h                             |   32 +
- {include/linux => fs}/lockd/share.h                |   19 +-
- fs/lockd/svc.c                                     |   50 +-
- fs/lockd/svc4proc.c                                | 1786 ++++++++++++++------
- fs/lockd/svclock.c                                 |   21 +-
- fs/lockd/svcproc.c                                 |  126 +-
- fs/lockd/svcshare.c                                |   40 +-
- fs/lockd/svcsubs.c                                 |   32 +-
- fs/lockd/trace.h                                   |    3 +-
- fs/lockd/xdr.c                                     |    6 +-
- {include/linux => fs}/lockd/xdr.h                  |   15 +-
- fs/lockd/xdr4.c                                    |  347 ----
- fs/locks.c                                         |   26 +-
- fs/nfs/blocklayout/blocklayout.c                   |    4 +-
- fs/nfs/nfs3proc.c                                  |    1 +
- fs/nfs/proc.c                                      |    1 +
- fs/nfs/sysfs.c                                     |    4 +-
- fs/nfsd/Kconfig                                    |   12 +-
- fs/nfsd/blocklayout.c                              |  102 +-
- fs/nfsd/debugfs.c                                  |    4 +
- fs/nfsd/export.c                                   |    5 +-
- fs/nfsd/lockd.c                                    |   50 +-
- fs/nfsd/netlink.c                                  |    5 +-
- fs/nfsd/netns.h                                    |    7 +
- fs/nfsd/nfs3xdr.c                                  |    4 +-
- fs/nfsd/nfs4callback.c                             |  113 +-
- fs/nfsd/nfs4layouts.c                              |  152 +-
- fs/nfsd/nfs4proc.c                                 |    3 +-
- fs/nfsd/nfs4state.c                                |  113 +-
- fs/nfsd/nfs4xdr.c                                  |   26 +-
- fs/nfsd/nfscache.c                                 |    3 +-
- fs/nfsd/nfsctl.c                                   |   45 +-
- fs/nfsd/nfsd.h                                     |    6 +
- fs/nfsd/nfsfh.c                                    |   83 +-
- fs/nfsd/nfssvc.c                                   |   10 +-
- fs/nfsd/nfsxdr.c                                   |    2 +-
- fs/nfsd/pnfs.h                                     |    5 +-
- fs/nfsd/state.h                                    |   32 +-
- fs/nfsd/trace.h                                    |   23 +
- include/linux/filelock.h                           |    1 +
- include/linux/lockd/bind.h                         |   26 +-
- include/linux/lockd/debug.h                        |   40 -
- include/linux/lockd/xdr4.h                         |   43 -
- include/linux/sunrpc/cache.h                       |    7 +-
- include/linux/sunrpc/debug.h                       |   10 +-
- include/linux/sunrpc/sched.h                       |    3 -
- include/linux/sunrpc/svc.h                         |   82 +-
- include/linux/sunrpc/svc_rdma.h                    |   23 +-
- include/linux/sunrpc/xdr.h                         |   48 +-
- include/linux/sunrpc/xdrgen/nlm4.h                 |  233 +++
- include/trace/events/sunrpc.h                      |    4 +-
- include/uapi/linux/nfsd/export.h                   |    4 +-
- include/uapi/linux/nfsd_netlink.h                  |    1 +
- net/sunrpc/auth_gss/gss_krb5_test.c                |   93 +-
- net/sunrpc/cache.c                                 |  251 ++-
- net/sunrpc/svc.c                                   |   66 +-
- net/sunrpc/svc_xprt.c                              |   47 +-
- net/sunrpc/svcsock.c                               |    9 +-
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c            |   28 +-
- net/sunrpc/xprtrdma/svc_rdma_rw.c                  |  374 +++-
- net/sunrpc/xprtrdma/svc_rdma_sendto.c              |  194 ++-
- net/sunrpc/xprtrdma/svc_rdma_transport.c           |   33 +-
- 78 files changed, 4454 insertions(+), 1757 deletions(-)
- create mode 100644 Documentation/sunrpc/xdr/nlm4.x
- rename {include/linux => fs}/lockd/lockd.h (83%)
- rename {include/linux => fs}/lockd/nlm.h (91%)
- create mode 100644 fs/lockd/nlm4xdr_gen.c
- create mode 100644 fs/lockd/nlm4xdr_gen.h
- rename {include/linux => fs}/lockd/share.h (58%)
- rename {include/linux => fs}/lockd/xdr.h (91%)
- delete mode 100644 fs/lockd/xdr4.c
- delete mode 100644 include/linux/lockd/debug.h
- delete mode 100644 include/linux/lockd/xdr4.h
- create mode 100644 include/linux/sunrpc/xdrgen/nlm4.h
 
