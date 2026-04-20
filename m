@@ -1,58 +1,133 @@
-Return-Path: <linux-nfs+bounces-20972-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20973-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QCTqBrJp5mnBvwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-20972-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2026 20:00:18 +0200
+	id sDnGE5Fx5mlgwgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-20973-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2026 20:33:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9191243261C
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2026 20:00:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1146432E7A
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2026 20:33:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0337030F3CC2
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2026 16:15:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D627A305617F
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Apr 2026 17:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649C6220687;
-	Mon, 20 Apr 2026 16:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AD5D37AA63;
+	Mon, 20 Apr 2026 17:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ypm2zXH2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fuv4n0fB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E6F34572B
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Apr 2026 16:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C73355F43
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Apr 2026 17:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776701746; cv=none; b=AbdNhLQuvkzKALugyQs25m3BsyAlFVQD+EU1+9pmqzppdh6fkneG6h8gPwGUT/rzSextIa7AMCql+atsn0uweOOI2Y2uXG5oYIFXVaNaClcPz/vrPk87wjXpAxhgWU2b+d33jKz1JSM7m9jAwf9bsrnKBrdIiJ3ognDON7ChCOs=
+	t=1776705149; cv=none; b=FJuLHnTuy4FzfpktufdvvDl3bdhplbGKuF7rfgTqJD6Bd8pR4Y+DwvGRGByGuEbiv8x7wqTKA95OKys9B3q9SAogXxmzzCp/8cz1YRuWOGABH1vnGWgUHxRCXfKxJsLsis8Mpnux0zqQgrxrcO06oDPOpnnozsgWTzL3JZjVu6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776701746; c=relaxed/simple;
-	bh=pkNs9ufU9d5igR8vL4G2lwcpOYnB6L/BL8aGV0bgNec=;
+	s=arc-20240116; t=1776705149; c=relaxed/simple;
+	bh=AkpO8APuloeUShzvhs2Q63Lc/sMY1+65v4Kx5KiX2iI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RvvkCI0XwsA38fw5ZZirsLGTq2DCu2g1yc6XCi23Eo2XMsmjPMreRKOClfcRJGn62jWDCopua6oLulWMISOgL5yWClBlWt5SGp2+GeIE8VxMpKO4nKYLVvhX9tfSYRRfA2Dh5pl5OOV7GgLr7wMKjMatv19ykBMqEUIGn67nURs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ypm2zXH2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D26C2BCB4;
-	Mon, 20 Apr 2026 16:15:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=sDt3+o89g9P57BOnWc6yaNed0+hZv3KYgvUJOD0kZTzxXIHE33WWPyXq5VLoiaf0NUbNuVImfUJJkpTFjaGmrDY4nPPFff7vC3WVf0SlLg+XHdU3bJcPHICPhkYt5BULt4lE6Br+hWVhaH80AD35rx0X3BQ7zsHY0PH1DeKMt6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fuv4n0fB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3206EC19425;
+	Mon, 20 Apr 2026 17:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776701746;
-	bh=pkNs9ufU9d5igR8vL4G2lwcpOYnB6L/BL8aGV0bgNec=;
+	s=k20201202; t=1776705148;
+	bh=AkpO8APuloeUShzvhs2Q63Lc/sMY1+65v4Kx5KiX2iI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ypm2zXH2UFfTgUiTs6pM2kBdFlbd7Ij1vMmHE1JTaNB+n8ox69ydJ8iRcnbnnHmEx
-	 3NWfYiIA7ft8AbdCZYzoZh+wrDX+cnT2dLzGExJ7/ALOzbwWdRW6twevZfo5FQb3qB
-	 hLO3A9FSiwPXQU4vk5EMt6kk9IOw5pYG95XoejdeAz9MDoY+PsiW9Ma8/vKkSDVE3q
-	 tqdGW0lPun1DLdmwtGrkjjLKy72cwb6ZDEaD8ahTXiHpfUpIy2wRprjcDk64LryW7E
-	 tMA2KfBgD8+tNTkNKY26IhXEAaXsSpMkLstTMkIo/hRcgo+/tnve51KXnqBCgOB2Nx
-	 GxabtJdL95Z9g==
-Message-ID: <94e8705dcd4c4cee52e6c234a533fd4968ec4fb9.camel@kernel.org>
-Subject: Re: [PATCH RESEND] nfs: force drop_nlink if we have a delegation
- during REMOVE
-From: Trond Myklebust <trondmy@kernel.org>
-To: Roberto Bergantinos Corpas <rbergant@redhat.com>, anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 20 Apr 2026 12:15:44 -0400
-In-Reply-To: <20260420114331.700769-1-rbergant@redhat.com>
-References: <20260420114331.700769-1-rbergant@redhat.com>
+	b=Fuv4n0fBmh4bNTjwLwKweE3PPCgwSTZEsAJmXFzaxML0UDN7bW9+QrMxaNqVj2ATR
+	 swIBTihBPlu0YDZxDe3kUrKNgGG8Au/fZhR5jBDnZmp/pDbDI9G8GVj9045kW7GuNJ
+	 LQX2Bt35sacfNu7m2SMGXzBa2NbM8NlUbM+F27WTu+b/OMmpl1A5zY+qZ2MrZFtRtu
+	 NI5T7a89WTVjWTX8xgDXH5Ow7JI6o+wKrQPTwH7XHhTs98yafvWKXNzAZM97JtsM9s
+	 H53gZ41DnYJiXUj4OeWgzBvM70BBmDa3dqiuoFWxCBNiP+0SWZxNupsW7tVzDQaTXz
+	 1g2N+1D5ddNnA==
+Message-ID: <8551d6f2e5281d03621cbd8b7a4121a3ab4a26be.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Increase the default max_block_size to 4MB
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 20 Apr 2026 13:12:24 -0400
+In-Reply-To: <20260420153830.463215-1-cel@kernel.org>
+References: <20260420153830.463215-1-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
@@ -65,132 +140,86 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20972-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20973-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:email]
-X-Rspamd-Queue-Id: 9191243261C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D1146432E7A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, 2026-04-20 at 13:43 +0200, Roberto Bergantinos Corpas wrote:
-> commit bd4928ec799b ("NFS: Avoid changing nlink when file removes and
-> attribute updates race") avoids races on attribute cache with any
-> inflight RPC that may modify inode attributes (and gencount) during
-> i.e. REMOVE.
+On Mon, 2026-04-20 at 11:38 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> However it does not take into account that REMOVE may trigger
-> a delegation return which also advances gencount (via the attribute
-> refresh during delegation return), and in that case the gencount
-> mismatch is not due to an inflight RPC that already reflected the
-> removal.
+> Commit 8a81f16de64f ("NFSD: Add a "default" block size") introduced
+> NFSSVC_DEFBLKSIZE at 1MB, well below the 4MB NFSSVC_MAXBLKSIZE
+> ceiling, with the stated intent that a later change would raise the
+> default.
 >=20
-> If nlink is 1 and we have a delegation before REMOVE, we should force
-> the drop to ensure the VFS delivers the expected FS_DELETE_SELF
-> notification.
+> Raising the default reduces per-RPC overhead on fast networks by
+> amortizing header processing and scheduling costs across larger
+> payloads. The halving loop in nfsd_get_default_max_blksize()
+> constrains the returned value to 1/4096 of available RAM, so the
+> new 4MB default takes effect only on systems with at least 16GB of
+> RAM. Smaller machines continue to receive the same computed value
+> as before. Administrators can still override the computed value
+> through /proc/fs/nfsd/max_block_size.
 >=20
-> This fixes LTP/inotify04 failure after bd4928ec799b.
+> On systems where the new default takes effect,
+> svc_sock_setbufsize() sizes each service socket's send and receive
+> buffers as nreqs * max_mesg * 2. Quadrupling max_mesg therefore
+> quadruples the per-socket buffer reservation at a fixed thread
+> count, which operators tuning large thread pools should account
+> for.
 >=20
-> Fixes: bd4928ec799b ("NFS: Avoid changing nlink when file removes and
-> attribute updates race")
-> Reviewed-by: Olga Kornievskaia <okorniev@redhat.com>
-> Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+> Note well: Your NFS client implementation must support large read
+> and write size settings to benefit from this change.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
-> =C2=A0fs/nfs/dir.c | 11 ++++++-----
-> =C2=A01 file changed, 6 insertions(+), 5 deletions(-)
+>  fs/nfsd/nfsd.h | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 2402f57c8e7d..bc6bbf434a21 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -1937,13 +1937,13 @@ static int nfs_dentry_delete(const struct
-> dentry *dentry)
-> =C2=A0}
-> =C2=A0
-> =C2=A0/* Ensure that we revalidate inode->i_nlink */
-> -static void nfs_drop_nlink(struct inode *inode, unsigned long
-> gencount)
-> +static void nfs_drop_nlink(struct inode *inode, unsigned long
-> gencount, bool force)
-> =C2=A0{
-> =C2=A0	struct nfs_inode *nfsi =3D NFS_I(inode);
-> =C2=A0
-> =C2=A0	spin_lock(&inode->i_lock);
-> =C2=A0	/* drop the inode if we're reasonably sure this is the last
-> link */
-> -	if (inode->i_nlink > 0 && gencount =3D=3D nfsi->attr_gencount)
-> +	if (inode->i_nlink > 0 && (force || gencount =3D=3D nfsi-
-> >attr_gencount))
-> =C2=A0		drop_nlink(inode);
-> =C2=A0	nfsi->attr_gencount =3D nfs_inc_attr_generation_counter();
-> =C2=A0	nfs_set_cache_invalid(
-> @@ -1961,7 +1961,7 @@ static void nfs_dentry_iput(struct dentry
-> *dentry, struct inode *inode)
-> =C2=A0	if (dentry->d_flags & DCACHE_NFSFS_RENAMED) {
-> =C2=A0		unsigned long gencount =3D READ_ONCE(NFS_I(inode)-
-> >attr_gencount);
-> =C2=A0		nfs_complete_unlink(dentry, inode);
-> -		nfs_drop_nlink(inode, gencount);
-> +		nfs_drop_nlink(inode, gencount, false);
-> =C2=A0	}
-> =C2=A0	iput(inode);
-> =C2=A0}
-> @@ -2556,10 +2556,11 @@ static int nfs_safe_remove(struct dentry
-> *dentry)
-> =C2=A0	trace_nfs_remove_enter(dir, dentry);
-> =C2=A0	if (inode !=3D NULL) {
-> =C2=A0		unsigned long gencount =3D READ_ONCE(NFS_I(inode)-
-> >attr_gencount);
-> +		bool force_drop =3D
-> nfs_have_read_or_write_delegation(inode) && inode->i_nlink =3D=3D 1;
-> =C2=A0
-> =C2=A0		error =3D NFS_PROTO(dir)->remove(dir, dentry);
-> =C2=A0		if (error =3D=3D 0)
-> -			nfs_drop_nlink(inode, gencount);
-> +			nfs_drop_nlink(inode, gencount, force_drop);
-> =C2=A0	} else
-> =C2=A0		error =3D NFS_PROTO(dir)->remove(dir, dentry);
-> =C2=A0	if (error =3D=3D -ENOENT)
-> @@ -2852,7 +2853,7 @@ int nfs_rename(struct mnt_idmap *idmap, struct
-> inode *old_dir,
-> =C2=A0			new_dir, new_dentry, error);
-> =C2=A0	if (!error) {
-> =C2=A0		if (new_inode !=3D NULL)
-> -			nfs_drop_nlink(new_inode, new_gencount);
-> +			nfs_drop_nlink(new_inode, new_gencount,
-> false);
-> =C2=A0		/*
-> =C2=A0		 * The d_move() should be here instead of in an
-> async RPC completion
-> =C2=A0		 * handler because we need the proper locks to move
-> the dentry.=C2=A0 If
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index a01d70953358..daa63c1b161c 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -45,11 +45,10 @@ bool nfsd_support_version(int vers);
+> =20
+>  /*
+>   * Default and maximum payload size (NFS READ or WRITE), in bytes.
+> - * The default is historical, and the maximum is an implementation
+> - * limit.
+> + * The maximum is an implementation limit.
+>   */
+>  enum {
+> -	NFSSVC_DEFBLKSIZE       =3D 1 * 1024 * 1024,
+> +	NFSSVC_DEFBLKSIZE       =3D 4 * 1024 * 1024,
+>  	NFSSVC_MAXBLKSIZE       =3D RPCSVC_MAXPAYLOAD,
+>  };
+> =20
 
-The right way to go about this is to push the setting of gencount from
-nfs_safe_remove() down into the version-specific layer so that you can
-order it correctly with the delegation return and call to
-_nfs4_proc_remove().
+Makes sense, particularly with dynamic threading.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
