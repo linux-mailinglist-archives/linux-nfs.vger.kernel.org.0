@@ -1,221 +1,157 @@
-Return-Path: <linux-nfs+bounces-20991-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20992-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oKy5A/Y46GnTHAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-20991-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 04:56:54 +0200
+	id yC5ZFItw6GmvKQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-20992-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 08:54:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00F99441A6D
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 04:56:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D174E442A11
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 08:54:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1C605306B1B4
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 02:47:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3BD7F300E011
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 06:54:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1837139769E;
-	Wed, 22 Apr 2026 02:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E613A1E5201;
+	Wed, 22 Apr 2026 06:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="misWOl/Y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RpEuKhjP"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="RVbmirbK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F41D30E837
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Apr 2026 02:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C651A08A3;
+	Wed, 22 Apr 2026 06:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776826019; cv=none; b=BPwoS3DkaM8H8ROIuZSf4WkwYji117TSlJl4GgqgwJ0enAuNP+hBbp1aDSyA0GKkqIp67NfGabn5d0syhXhUNNzGmUUmeWlrJKHUjqPDoa9oEqviXPUTjK0Htg8RpaLrqCXLQ2RhEwWeAKuAdrlIb9TG85ohaOPRmVdekFFUcfA=
+	t=1776840838; cv=none; b=OqZH6oDl9Qe43T7ixqaudhU79xOZJHLvo73iAUz2pG/VokbaKzNXoF0gflcecCEHQg1brxiEDrVloOiqnY2su4H3B0rHEQbFuax8NfODzzwr706zqQZV4GcOrLh0cFYF+aEi/J6pqNTStWD8ssTZLaz7pfG51CWxD1oAAjXcJrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776826019; c=relaxed/simple;
-	bh=/wWQueEieNTrF02h0+osHu8XAVJsKpP/LMvkfNN6x1M=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=cw1+Xsb+K4SDPjh3nuwwnXQOJ4n2P3VM5NV3x3OBT2XsXUO3xOeR7Vb7hhbKstS0ZHaLNfgoElDnk4dD0kzXpV+h0ongZlxyhoMXS9BQiDHGWAJ+mBV0ze93MJOXNC6bTXdfIcN2Om5xmmCEnLH/Os2nsJeibxHOgmj7TvSZEMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=misWOl/Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RpEuKhjP; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id D9D377A005F;
-	Tue, 21 Apr 2026 22:46:42 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Tue, 21 Apr 2026 22:46:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1776826002; x=1776912402; bh=argyXE/vybjmkH8vMVjPzKMwasoZEMrtSRg
-	QilBDCT0=; b=misWOl/YIG3BxC1YlQTB3BWcVBDLcTU6IcLpNQSoM0F4hWgVDex
-	fpYPbDbPwjtA0JPnbFb/ESmDE7AZV9am4b4MZNCVjYeFkXMH6k95cgtgaaQtvQBf
-	9/kF2lK7jTrukn8YjBg2LtJFbtfzH41hzmy2YusbWCRXRm/Kp4ttu4KEXcq1ORju
-	sZsoU0iebw5S4zE4RjQVtXazaAUtVozfgMbEkJ64CUD8o8h+1xbcZgzjh7B6Aiay
-	2iBSXgjEEQ43aOqHlgFrVZihTfkmppbGDlUC4Y22X8Qw5X0sP+m7KoTLezZFwGkL
-	pXBnIweZKttM+Dzd+0ghJUBkUwtQ8IQrVmQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776826002; x=
-	1776912402; bh=argyXE/vybjmkH8vMVjPzKMwasoZEMrtSRgQilBDCT0=; b=R
-	pEuKhjPxh1GzTF27dxkzSxmAMokIr11gUxsWuUdtuOBQ1ykzNLVqiSmHdfZgoOOT
-	2TvliRbj1zRD65+dwtH48hqUlCLKg7nz8Mxm6ZxfuKVKQjnoPGgXsbeqlOUUJaeJ
-	rgmd2lQ1gIvgpkjtPVcuxPIeDM0V9SKUjpZBSRfkoKOlaZcVOEw3bT5b+6QBydfS
-	cftGzG75neD8WNAci+Zh0uN88Jrxz5/+THdpuZsAtU8B2dM2goSIKzRxK/XRicGX
-	Fe4XJzSmc8jVHzyQ7J6AVVWD0qrhQsrBuHIq0ayt5I8MjX82aNbeQCDpxT2itTT/
-	T10bTSqs8UsALSkeExCyQ==
-X-ME-Sender: <xms:kjboabcZUStYNEjA8NU_es5i_Vxa00uxcxx1FejEFzpwswa29IB10w>
-    <xme:kjboabN6PyqR1aXZ9cBdFqRVT5NcejjO7Oye043mgCkK6C5D39MfZEqP_ks4rBig5
-    r0OtgZLm6WMSWls2Rte2b3AQiOvn-c0F7DSo2W8wn0wBOlW>
-X-ME-Received: <xmr:kjboabKehoSSEmHS-N9dHFBNlyHlZpNAZCGC0ZBqR51EhXFsg6Qj8Dxz7Bqbjv9ylRlHPzZ5rTZHasQvQCRouBQt4dCOqZU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeifedutdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    ehvefggffgueefvdeuieefhfdtteeufeeuffduudeuffetveefveehhffhhfegkeenucff
-    ohhmrghinhepshihiihkrghllhgvrhdrrghpphhsphhothdrtghomhenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgssehofihnmhgr
-    ihhlrdhnvghtpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthhtohepshihiigsohhtodeitdgtfh
-    grtdekkedvvdegjedtsggsvggsvgeggeesshihiihkrghllhgvrhdrrghpphhsphhothhm
-    rghilhdrtghomhdprhgtphhtthhopehokhhorhhnihgvvhesrhgvughhrghtrdgtohhmpd
-    hrtghpthhtohepuggrihdrnhhgohesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheptghh
-    uhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepjhhlrgihthhonh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:kjboabJ7tei99S6hteXYh4mpLoRBTn_6X2Mb3RAejtQQcAERWi9yxQ>
-    <xmx:kjboaV7nQgmxFOpr0uJPHa4d0IZBPexT5dOZMzPE3nX1hFEnCS3tUw>
-    <xmx:kjboaVfXtg6ojPM9F74aKZTdn5dzBoodn6uRMqy4ivHLBNpQdOLygA>
-    <xmx:kjboaQGvowZ6Lygf5Jz9MVpgM301F-tRSwl6eLqNEG2UH5ScO6ed-Q>
-    <xmx:kjboaUznvW8f5fD9bYomNmkwaEFVcn0n9DnsnX2Bg61r52f5cvQttEKF>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 21 Apr 2026 22:46:39 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1776840838; c=relaxed/simple;
+	bh=MDAG9yzSfLlepf3l+P1VsaVExI60Oz/cyIvQz2yW4U4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VEoMVZYyS9nIj4gwuyZs7YrdgkmTuvWDglwzanBDUNElS4Hdl8/Y1F2vFPFxWv19NhorssIAeD7SlhoIZXbbd5pxENI2EskPA8rsTzZVZR/WHsUvXED6wU4He9foIpXoWDTdt6DVoaGoAe8ZzDV22cC3pCrhYGuBiyqmRss2nIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=RVbmirbK; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=/5Y9tiFsJJvdsWUPfuKYgEyvMInh6o3g8y2GR1YEEF0=;
+	b=RVbmirbKyM4ddUEQBIbG6p2S5LWLs3e4/vopEIh59rnIrkulqMZ5PLLMSjivNJknf+25lzWrJ
+	syiRJxsXDByW72mcFwwWgCPJ/vWxezY0QRI/EnMxbZru0gv7eAScKRdXw5pAiFWGSs0a/y1nDAA
+	NmsBK7dFuJ1Q/fZ39bNkfF8=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4g0qXc0gdKz1prNG;
+	Wed, 22 Apr 2026 14:47:28 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6B01E40561;
+	Wed, 22 Apr 2026 14:53:53 +0800 (CST)
+Received: from huawei.com (10.50.85.155) by kwepemk500005.china.huawei.com
+ (7.202.194.90) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 22 Apr
+ 2026 14:53:52 +0800
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<chengzhihao1@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH] NFSv4: Fix state recovery deadlock when server misses grace period
+Date: Wed, 22 Apr 2026 14:44:47 +0800
+Message-ID: <20260422064447.358447-1-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>,
- syzbot+60cfa08822470bbebe44@syzkaller.appspotmail.com
-Subject: Re: [PATCH] sunrpc: prevent out-of-bounds read in __cache_seq_start()
-In-reply-to: <20260421161126.129533-1-cel@kernel.org>
-References: <20260421161126.129533-1-cel@kernel.org>
-Date: Wed, 22 Apr 2026 12:46:36 +1000
-Message-id: <177682599675.1474915.15004300765582458400@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20991-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[huawei.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20992-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chengzhihao1@huawei.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs,60cfa08822470bbebe44];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[neil@brown.name]
-X-Rspamd-Queue-Id: 00F99441A6D
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,huawei.com:dkim,huawei.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D174E442A11
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 22 Apr 2026, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> Commit 7b546bd89975 ("sunrpc/cache: improve RCU safety in
-> cache_list walking.") changed the tail of __cache_seq_start()
-> to unconditionally store
->=20
-> 	*pos =3D ((long long)hash << 32) + 1
->=20
-> before returning, dropping a prior "hash >=3D cd->hash_size"
-> guard. When the while loop exits because every remaining
-> bucket was empty, hash equals cd->hash_size, so the stored
-> *pos is one position past the table's last valid bucket.
-> seq_read_iter() caches that index in m->index. A subsequent
-> pread(2) at the same file offset skips traverse() and hands
-> the stored index back to __cache_seq_start(), which decodes
-> hash =3D cd->hash_size and dereferences
-> cd->hash_table[cd->hash_size] -- one hlist_head past the end
-> of the kzalloc'd table.
->=20
-> KASAN reports an eight-byte slab-out-of-bounds read at the
-> tail of the 2048-byte hash_table allocation for the NFSD
-> export cache (EXPORT_HASHMAX * sizeof(struct hlist_head) =3D=3D
-> 256 * 8).
->=20
-> Reject an input hash that is out of range before touching the
-> hash table. cache_seq_next() already bounds-checks its own
-> loop; the start routine needs to be symmetric.
->=20
-> Reported-by: syzbot+60cfa08822470bbebe44@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D60cfa08822470bbebe44
-> Fixes: 7b546bd89975 ("sunrpc/cache: improve RCU safety in cache_list walkin=
-g.")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+NFS server restart causes client to enter an infinite loop during state
+recovery. The state manager gets stuck in NFS4CLNT_RECLAIM_NOGRACE processing,
+with the server repeatedly returning NFS4ERR_GRACE for each file iteration.
+This problem is reported in [1].
 
-Reviewed-by: NeilBrown <neil@brown.name>
+Trigger sequence:
+ 1. Client opens 2 files. After server reboot, client enters
+    nfs4_do_reclaim(RECLAIM_REBOOT). Server misses grace period and returns
+    NFS4ERR_NO_GRACE, causing client to set NFS4CLNT_RECLAIM_NOGRACE.
+ 2. Client enters nfs4_do_reclaim(RECLAIM_NOGRACE) to recover first file.
+    Server reboots again, open request returns NFS4ERR_BADSESSION, client
+    sets NFS4CLNT_SESSION_RESET.
+ 3. nfs4_reset_session calls nfs4_proc_create_session which fails with
+    ETIMEDOUT due to network¹ÊÕÏ, nfs4_handle_reclaim_lease_error sets
+    NFS4CLNT_LEASE_EXPIRED but does NOT set NFS4CLNT_RECLAIM_REBOOT.
+ 4. When nfs4_reclaim_lease runs, because NFS4CLNT_RECLAIM_NOGRACE is already
+    set, it skips setting NFS4CLNT_RECLAIM_REBOOT (the bug, modified by
+    commit b42353ff8d346 ("NFSv4.1: Clean up nfs4_reclaim_lease")).
+ 5. Server never receives RECLAIM_COMPLETE, so cl_flags lacks
+    NFSD4_CLIENT_RECLAIM_COMPLETE. When processing subsequent files,
+    server always returns nfserr_grace, causing infinite retry loop.
 
-Thanks for finding and fixing this.
-We could of course avoid ever storing a too-large pos but adding
-back a test for hash at the end of __cache_seq_start() but I prefer
-the approach you took as it is more robust.
+Fix it by setting NFS4CLNT_RECLAIM_REBOOT in nfs4_reclaim_lease if
+NFS4CLNT_SERVER_SCOPE_MISMATCH is not set, so that the client sends
+RECLAIM_COMPLETE to the server first, allowing subsequent nograce
+recovery to proceed.
 
-Thanks,
-NeilBrown
+Fetch a reproducer in [2].
 
+[1] https://lore.kernel.org/linux-nfs/55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com/
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=221399
 
-> ---
->  net/sunrpc/cache.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-> index 305c6e67f052..391037f15292 100644
-> --- a/net/sunrpc/cache.c
-> +++ b/net/sunrpc/cache.c
-> @@ -1352,6 +1352,9 @@ static void *__cache_seq_start(struct seq_file *m, lo=
-ff_t *pos)
->  	hash =3D n >> 32;
->  	entry =3D n & ((1LL<<32) - 1);
-> =20
-> +	if (hash >=3D cd->hash_size)
-> +		return NULL;
-> +
->  	hlist_for_each_entry_rcu(ch, &cd->hash_table[hash], cache_list)
->  		if (!entry--)
->  			return ch;
-> --=20
-> 2.53.0
->=20
->=20
+Fixes: b42353ff8d346 ("NFSv4.1: Clean up nfs4_reclaim_lease")
+Cc: stable@vger.kernel.org
+Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+Closes: https://lore.kernel.org/linux-nfs/55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com/
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ fs/nfs/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 305a772e5497..817327e73d88 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2012,7 +2012,7 @@ static int nfs4_reclaim_lease(struct nfs_client *clp)
+ 		return nfs4_handle_reclaim_lease_error(clp, status);
+ 	if (test_and_clear_bit(NFS4CLNT_SERVER_SCOPE_MISMATCH, &clp->cl_state))
+ 		nfs4_state_start_reclaim_nograce(clp);
+-	if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
++	else
+ 		set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
+ 	clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
+ 	clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
+-- 
+2.52.0
 
 
