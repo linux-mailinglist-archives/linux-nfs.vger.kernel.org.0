@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21006-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21007-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wOc8B+Ra6WndXwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21006-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:33:56 +0200
+	id 2JqwDvda6WndXwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21007-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:34:15 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CA0144BB68
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:33:55 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C80D844BBA5
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:34:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C006D31129AA
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 23:30:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7E93C3049706
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 23:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C98E93A3E66;
-	Wed, 22 Apr 2026 23:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33403A3E66;
+	Wed, 22 Apr 2026 23:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="usCmrLv+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnaHnaYi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361C346AE3;
-	Wed, 22 Apr 2026 23:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC26A33B6E3;
+	Wed, 22 Apr 2026 23:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776900636; cv=none; b=uc1QXqXP+wUQ4kZ5wDH0dxpYxZFjKkSNNwXCCra0sqEpkOIIJ2tBbpXY7Ueu2EJeeIFzv0efH7oOR9pc7DOYB9IuLSlxeVpO/0yekCylrEpnEY5e+U0yVNCKxRXTohFczeTI+i0XjKqq9PJU2lMb4DdDKWfbxpgO+9PzjUhzFHA=
+	t=1776900638; cv=none; b=d62QAdlPHIYQrf4NcXMQyi0Pk138Dy3mYWV2gbPsJVLnK8greI7ujtgmQs2/KCxm4RlRlahOUi72OlB37WbZbNMHXJ5XEGO/TEQSAxPy702ShoKwjmVro2ZD2rfDyQog82cv7Ipf/RSjGkJUf8/qLrTZQaFtVXtrsJbuw6vkjFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776900636; c=relaxed/simple;
-	bh=jXYqYekRjpF07wlPDKgx2XWDNqQtTHKbLiod79qFffg=;
+	s=arc-20240116; t=1776900638; c=relaxed/simple;
+	bh=4whuDT2NAsASpb7E7T4HhtgZB89kNBSY63z1QOF+oEY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i/Y1Ke2j78QI0TpcwGN0IMPOzqMyoih7FBLJVGfmPvH0iIlawr/AJgVhltmfwIJWrbubfiDW+8C+NUFNz3mRYjhkiG3kn09El14f2WhYFL4CiGH5k1mg83u49ej6KIp9otq8e7im6PokvgxU+/GJgh0UF80dpR72BcykivS0pwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=usCmrLv+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA2DC2BCAF;
-	Wed, 22 Apr 2026 23:30:34 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=pBnR1XvABcmLBn2KsxSMYbrB9tkQonRH4jUD9uwe+ku2r7dpFWY7TKRzNl+T5t/71sVnMRVeQc0Y6VT6YtiBN4xTj/2LCPux2cuKMeqkUIhrCnDQzFarOtZ3QrenwHJNJPltBa3BeC6fv/z3XeJUud3zx9CeLtnF1mR9bHZZWoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnaHnaYi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B45EC19425;
+	Wed, 22 Apr 2026 23:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776900636;
-	bh=jXYqYekRjpF07wlPDKgx2XWDNqQtTHKbLiod79qFffg=;
+	s=k20201202; t=1776900638;
+	bh=4whuDT2NAsASpb7E7T4HhtgZB89kNBSY63z1QOF+oEY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=usCmrLv+N705MyXz9QrB8eUi0cUHCIrvFrfNer91Gkil+ZqSe+Uv+mIqL5GktgtFe
-	 TjOetSwCQZv+swwRMS72YUTtt9dUGzzlgHD1ppcULa0xQs4RMgPyaJbjvzBZYhSnYq
-	 /wFPNefAUCoXjT2xQu7sMk8H5p6E0tyMmqLovYSHiVmrqxVxT9yZGftM7cBHo4NinI
-	 /nylz9us8rVzQ2+5u+EJ3ki6J7om5kmWngFJlndHlTasQhfiy2xaZ4ppFhoxGbQKG9
-	 AnANcz94N16eJCPW5f579E20MrlPSYW5hGmP3x2x8SrTK8kBfipy9A6ZLdvD9+Cq6D
-	 xtdDBTMwMl5Ng==
+	b=bnaHnaYi6wS+dpu4hSGk2aKp6qWM+jKNpuqCfpZRt7jst7HBdWHgzDl7X+21Z/6uf
+	 cto4ohY7BMSTPGHMk2cc3hVzoceQb0zbLF3JaCb1Sb0ndNJYFttAe0Q8eKVRidzVuh
+	 CZtKE0NvGuVe87n5/qDmH0l2r+LHLSX3OkdmM3LnrkUsaLwtINnpDvxocW1PF5ERI4
+	 aDGy/w75tRNo9KeRxkTCQq1p4MehJ9Qat1kR9j5gQ7RFVwlRK3npGvkl00FSwlq/Eq
+	 85ZHETH2V6C+Zi2OY/436EF/x+rlQ4RsrZ60NCkp3vxAH6MsmS7q7/qT105SEPEWsR
+	 3jULWrtGjAI5Q==
 From: Chuck Lever <cel@kernel.org>
-Date: Wed, 22 Apr 2026 19:30:02 -0400
-Subject: [PATCH v9 08/17] ext4: Report case sensitivity in fileattr_get
+Date: Wed, 22 Apr 2026 19:30:03 -0400
+Subject: [PATCH v9 09/17] xfs: Report case sensitivity in fileattr_get
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-case-sensitivity-v9-8-be023cc070e2@oracle.com>
+Message-Id: <20260422-case-sensitivity-v9-9-be023cc070e2@oracle.com>
 References: <20260422-case-sensitivity-v9-0-be023cc070e2@oracle.com>
 In-Reply-To: <20260422-case-sensitivity-v9-0-be023cc070e2@oracle.com>
 To: Al Viro <viro@zeniv.linux.org.uk>, 
@@ -71,39 +71,39 @@ Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
  pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com, 
  trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, 
  hansg@kernel.org, senozhatsky@chromium.org, 
- Chuck Lever <chuck.lever@oracle.com>
+ Chuck Lever <chuck.lever@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1149;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1083;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=TxMd9+19zfe1kcd7z7IWDwky99GfiXSk/tT0Rl2ZM5c=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp6VoFTp3fLxE8PITfxUL7bNrVobvHogZfU1OlZ
- pifqDEyrSWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaelaBQAKCRAzarMzb2Z/
- l5T9D/96IYMw2tXU48HaQ7/wBu/lmh6O/uthEswp4B3E8zUUOZxJEKKCesvcbZ/FPTIZrz6UIC7
- SFZNP4CtwF7mTNW0vhhKzFeM0BNnWfqxfW6TMHfeH2Qsx8RpFIupMQTFy+3vhwe7C8DtI4fdBQt
- KuYkZ8lkPr0G553naFj2d1hTsPGUmsJw5oZLcOcO578GvDJGDbuKZszGbjbOtsrI4Pp0nAdAzaN
- aJhTDHyvFq34U1NEJErK/floRT9eHqpvvjCO2lYLSmvH2Vu/B2C97+sm7As7hNg1piuL/Y3Looh
- N9J1JXeihuV4fSKG0jhE1apayyNxr5UYwqMvpBmP2psp44JYk0Ghf+72TLltpgiMXJu43PUqNs1
- 0Sx46M+sQlhOQY9PJD7VM7cwFLTL1ClWHCmeRUeiA1BAocO1DKDqISuSJRwJbNd/bFbKFK4jaWs
- DDV4ki4Urn91xwjvCDNV6cp6h3btk9OSgzm1ZMtvNIQuDunB3G9KH3Kggi2/Nc3jdvjbIOgFOPA
- VvNZxBTTcP05GaxBa2Ux0CyTCpxRtJdgcrwxDLwl44HaCsMSHJ+YVL+/d3q3pk/fkEGDVGZ79rY
- H5465ibEnCmyFesdM/qK7r057UwKAfoqbRP9cDAYiYLgajXD2D+bJatDIgwaX3+ZENYSHC0cMmz
- jRnC0nP6nYek2bg==
+ bh=DjIMkqqMWUIzhkQeoXVo4WlkiMfqV3S6x//RMb6YZuo=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp6VoFgb8ribB+nCo/33ADy8UGh/WTW9EVvYLDJ
+ ZhkLdMmkQKJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaelaBQAKCRAzarMzb2Z/
+ l/25D/9aqXIUuRxOQWtD0dWT+Q9W3mQd7Y+VY6UFS1LAtmd1vn5g34iB5NU7sM2wxTgYLOK+5/h
+ vwoPHpOVaqxvhA6GsenrcETy2xMwbv4PRm6tnvS/4sMYQB6c0PKf9dHVao8x51/6EAQjfhUPPMY
+ 414gODPEKknMS6bazcGhAiXDJYerPC6pDphIuSsR/PWJWUnOXaDDrBXVgRWxPFfcpdmLmPix+IB
+ FtSX59MZOv1IxHSU5cHLjIjSobLGSVYwk7xbu57GH5tp8TQSXvXds7I6J2Lr0gjvdVNbnUbo3Q6
+ 4xTbfvX28p3m4mKCt3F46liurf+8mcdIkheGpzRFgTcFsq7gwsXX7qR4WAHTD/tM0XN/SXBIubE
+ f5ewBjam/sAh+aN3Tr/w2Bt8HXMJOxeUt5W1UL55JgDCLAyaqXP3qDI5VcnfV7wEJe2hh1lqKI3
+ S9a2Al02PjUj5s9ZqlbrleD7oOAd1aApbGRdkd3p/o7v6kI0qUlEfVi4IiQMxfCAZxZ+F92nJ/5
+ xZtIFCiKxhvUK+GgddMEDsV37U7T7xpubEwcJ1othGDQmliP89lZI2sfdliv3YjargSsSanVWXC
+ 37e5iAy9sqxBdaj5HqhnLjaiOWTjRBt+/CeMx7uAaav5VUyva44vS/JPXv14RdHDgctXgOF/nAG
+ xFtrEcKzj1PPhlw==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21006-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21007-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	RCPT_COUNT_TWELVE(0.00)[32];
+	RCPT_COUNT_TWELVE(0.00)[33];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -114,42 +114,40 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email,suse.cz:email]
-X-Rspamd-Queue-Id: 8CA0144BB68
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
+X-Rspamd-Queue-Id: C80D844BBA5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Report ext4's case sensitivity behavior via the FS_XFLAG_CASEFOLD
-flag. ext4 always preserves case at rest.
+Upper layers such as NFSD need to query whether a filesystem is
+case-sensitive. Report case sensitivity via the FS_XFLAG_CASEFOLD
+flag in xfs_fileattr_get(). XFS always preserves case. XFS is
+case-sensitive by default, but supports ASCII case-insensitive
+lookups when formatted with the ASCIICI feature flag.
 
-Case sensitivity is a per-directory setting in ext4. If the queried
-inode is a casefolded directory, report case-insensitive; otherwise
-report case-sensitive (standard POSIX behavior).
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Acked-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/ext4/ioctl.c | 7 +++++++
+ fs/xfs/xfs_ioctl.c | 7 +++++++
  1 file changed, 7 insertions(+)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 1d0c3d4bdf47..d1d597a13eeb 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -999,6 +999,13 @@ int ext4_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
- 	if (ext4_has_feature_project(inode->i_sb))
- 		fa->fsx_projid = from_kprojid(&init_user_ns, ei->i_projid);
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index ed9b4846c05f..b3c46a7ece62 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -537,6 +537,13 @@ xfs_fileattr_get(
+ 	xfs_fill_fsxattr(ip, XFS_DATA_FORK, fa);
+ 	xfs_iunlock(ip, XFS_ILOCK_SHARED);
  
 +	/*
-+	 * Case folding is a directory attribute in ext4. Set FS_XFLAG_CASEFOLD
-+	 * for directories with the casefold attribute; all other inodes use
-+	 * standard case-sensitive semantics.
++	 * FS_XFLAG_CASEFOLD indicates case-insensitive lookups with
++	 * case preservation. This matches ASCIICI behavior: lookups
++	 * fold ASCII case while filenames remain stored verbatim.
 +	 */
-+	if (IS_CASEFOLDED(inode))
++	if (xfs_has_asciici(ip->i_mount))
 +		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
  	return 0;
  }
