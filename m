@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21005-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21006-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CKJtOM1a6WndXwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21005-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:33:33 +0200
+	id wOc8B+Ra6WndXwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21006-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:33:56 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93A2444BB10
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:33:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CA0144BB68
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:33:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E38953109E53
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 23:30:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C006D31129AA
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Apr 2026 23:30:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5919A3A1E9B;
-	Wed, 22 Apr 2026 23:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C98E93A3E66;
+	Wed, 22 Apr 2026 23:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3XdQt3G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="usCmrLv+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337B233B6E3;
-	Wed, 22 Apr 2026 23:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361C346AE3;
+	Wed, 22 Apr 2026 23:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776900634; cv=none; b=pjqTEqDF7LNwb4g14MSAi4JJtZvCvUwWog+RRDw+8fmRlBIHyb3ljVHiOKPyE1mx4Pzrq4PUnCsc2SnuhtL8t/LyI16lkwtTIL9a/EgRN0DwclMqyp4I1SxCE6qTbN9p5UfuSwQ2Cefca8KuoIDhy0KRNPsynZymAg7f75uJjTk=
+	t=1776900636; cv=none; b=uc1QXqXP+wUQ4kZ5wDH0dxpYxZFjKkSNNwXCCra0sqEpkOIIJ2tBbpXY7Ueu2EJeeIFzv0efH7oOR9pc7DOYB9IuLSlxeVpO/0yekCylrEpnEY5e+U0yVNCKxRXTohFczeTI+i0XjKqq9PJU2lMb4DdDKWfbxpgO+9PzjUhzFHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776900634; c=relaxed/simple;
-	bh=PcroO5CweiTdfrAbvYqaLqKDeO9OE61yEag4vDGPG8Y=;
+	s=arc-20240116; t=1776900636; c=relaxed/simple;
+	bh=jXYqYekRjpF07wlPDKgx2XWDNqQtTHKbLiod79qFffg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nvwe72pTSEzDxEhbxU7mfzHAV+aSOPO2laOidjX75s1SIU0xBapreOdIA9mGisP9BLRq51PN/JMKIuLGX5jzuEGX2ODrRxjrR5j+FSF1+UzdqZd2P4yiVUcjBccOBbYQZ04UwI+dm0D56OhKLn500ps8dFF94fH/MbY1xXumOIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3XdQt3G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B716FC19425;
-	Wed, 22 Apr 2026 23:30:31 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=i/Y1Ke2j78QI0TpcwGN0IMPOzqMyoih7FBLJVGfmPvH0iIlawr/AJgVhltmfwIJWrbubfiDW+8C+NUFNz3mRYjhkiG3kn09El14f2WhYFL4CiGH5k1mg83u49ej6KIp9otq8e7im6PokvgxU+/GJgh0UF80dpR72BcykivS0pwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=usCmrLv+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA2DC2BCAF;
+	Wed, 22 Apr 2026 23:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776900633;
-	bh=PcroO5CweiTdfrAbvYqaLqKDeO9OE61yEag4vDGPG8Y=;
+	s=k20201202; t=1776900636;
+	bh=jXYqYekRjpF07wlPDKgx2XWDNqQtTHKbLiod79qFffg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=a3XdQt3Gn+AWljtg1JgKHnMFskrXRQkdifjAYtRnz3vVeVZq+OzHdNBzDPQmSd07t
-	 owTjiQgraE8bS26TcX2l1URUgEGWan2h6QFEIDXf1eSMIlulMsTE2MKWfBw7Gko6Ic
-	 OUq7QWVLi7rDV4OWz/UqvEyfR4upp76XBTUI+H5MweZ8DxmUMlrp9beGuSvQLpyXGD
-	 3qAgnhkys6dz7xmsqUlGWgREOf5SLeO9PGxZhj7ySoKDpKpe9xTJ/e22Swei4MxtNZ
-	 Gu88sQMedIr/++xFZj9gfbAkfbRtp2XqRmE+LdDyXbIHReBU6eMcCgpvXUzApcZlrS
-	 NzUrMNAaeJbsw==
+	b=usCmrLv+N705MyXz9QrB8eUi0cUHCIrvFrfNer91Gkil+ZqSe+Uv+mIqL5GktgtFe
+	 TjOetSwCQZv+swwRMS72YUTtt9dUGzzlgHD1ppcULa0xQs4RMgPyaJbjvzBZYhSnYq
+	 /wFPNefAUCoXjT2xQu7sMk8H5p6E0tyMmqLovYSHiVmrqxVxT9yZGftM7cBHo4NinI
+	 /nylz9us8rVzQ2+5u+EJ3ki6J7om5kmWngFJlndHlTasQhfiy2xaZ4ppFhoxGbQKG9
+	 AnANcz94N16eJCPW5f579E20MrlPSYW5hGmP3x2x8SrTK8kBfipy9A6ZLdvD9+Cq6D
+	 xtdDBTMwMl5Ng==
 From: Chuck Lever <cel@kernel.org>
-Date: Wed, 22 Apr 2026 19:30:01 -0400
-Subject: [PATCH v9 07/17] hfsplus: Report case sensitivity in fileattr_get
+Date: Wed, 22 Apr 2026 19:30:02 -0400
+Subject: [PATCH v9 08/17] ext4: Report case sensitivity in fileattr_get
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-case-sensitivity-v9-7-be023cc070e2@oracle.com>
+Message-Id: <20260422-case-sensitivity-v9-8-be023cc070e2@oracle.com>
 References: <20260422-case-sensitivity-v9-0-be023cc070e2@oracle.com>
 In-Reply-To: <20260422-case-sensitivity-v9-0-be023cc070e2@oracle.com>
 To: Al Viro <viro@zeniv.linux.org.uk>, 
@@ -73,21 +73,21 @@ Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
  hansg@kernel.org, senozhatsky@chromium.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1527;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1149;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=DsH9Ul/eRW+1BLm1emwHx7xWw9r+GnxZnlKzlLXX6Ts=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp6VoF9zDZc9sCCBTCQGhgFXZOUxhLZqkiabRzh
- m2Dce5ZLVCJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaelaBQAKCRAzarMzb2Z/
- l7QQD/9NPdB+1IIja3d/pborFSqA2NE3c/tzM3HQaZsVQelKHPaLICOeBWaW4M1L7qVwHb+pR9C
- lDudkaTgbZ8PTRzTtCB47xQwT4WoeuaVyoHy3aAYytqPo2JYe/8ZkMib9uMNg8brK6L8qCZRlUt
- X6zWuNycOEJAkfNGyHRn0frVkzsKT5TY+rqxRP1vvLljxGysVsi7GN9wAXDYFtiE7rSH0imu+VU
- qG+9YSAwe9yiomEAoRcHwXfn3sYARNaKqVbWyNqbjyUVoICozcOvAzrYCbOc3posJTLN/JilYH+
- wWC6aLVqG9y5gMTYD4DqVhxiq/VaIUyGjMnFp8cWPd7MR+zx8YnVEXgqLkgBHTgbzOOvo8FrFHm
- Xn1vI8PQNHBT0MOTh0Xw40YO1cUG4Q3Qllu0Neo/mB6Wdaf52/z2AdCQiUsrIFVz91oTx0XLtql
- D3PYQJDJRrwNTWo7pRgxEMhVCDakfO59yt5aXSjdHPOiqW32a420yu6PRZKRkdi6s7LjaJguA/G
- YWxS8wZwyZcycHO/nagVb27/jJxJmueeeQicDaA2ynQfyh2WzcRpW5XDMbBUQU6B4QoxmJwAqIc
- Guqq0pW88+GuBS8FhBNXtr6tDk0xeIVb0qOafK6JQ2sJIlQkz/YVXo5FYrL2lAF8Zxt3aaY29bb
- BPOiedPDny3snbA==
+ bh=TxMd9+19zfe1kcd7z7IWDwky99GfiXSk/tT0Rl2ZM5c=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp6VoFTp3fLxE8PITfxUL7bNrVobvHogZfU1OlZ
+ pifqDEyrSWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaelaBQAKCRAzarMzb2Z/
+ l5T9D/96IYMw2tXU48HaQ7/wBu/lmh6O/uthEswp4B3E8zUUOZxJEKKCesvcbZ/FPTIZrz6UIC7
+ SFZNP4CtwF7mTNW0vhhKzFeM0BNnWfqxfW6TMHfeH2Qsx8RpFIupMQTFy+3vhwe7C8DtI4fdBQt
+ KuYkZ8lkPr0G553naFj2d1hTsPGUmsJw5oZLcOcO578GvDJGDbuKZszGbjbOtsrI4Pp0nAdAzaN
+ aJhTDHyvFq34U1NEJErK/floRT9eHqpvvjCO2lYLSmvH2Vu/B2C97+sm7As7hNg1piuL/Y3Looh
+ N9J1JXeihuV4fSKG0jhE1apayyNxr5UYwqMvpBmP2psp44JYk0Ghf+72TLltpgiMXJu43PUqNs1
+ 0Sx46M+sQlhOQY9PJD7VM7cwFLTL1ClWHCmeRUeiA1BAocO1DKDqISuSJRwJbNd/bFbKFK4jaWs
+ DDV4ki4Urn91xwjvCDNV6cp6h3btk9OSgzm1ZMtvNIQuDunB3G9KH3Kggi2/Nc3jdvjbIOgFOPA
+ VvNZxBTTcP05GaxBa2Ux0CyTCpxRtJdgcrwxDLwl44HaCsMSHJ+YVL+/d3q3pk/fkEGDVGZ79rY
+ H5465ibEnCmyFesdM/qK7r057UwKAfoqbRP9cDAYiYLgajXD2D+bJatDIgwaX3+ZENYSHC0cMmz
+ jRnC0nP6nYek2bg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -98,7 +98,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21005-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21006-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -115,51 +115,41 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,dubeyko.com:email,oracle.com:mid,oracle.com:email]
-X-Rspamd-Queue-Id: 93A2444BB10
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email,suse.cz:email]
+X-Rspamd-Queue-Id: 8CA0144BB68
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add case sensitivity reporting to the existing hfsplus_fileattr_get()
-function via the FS_XFLAG_CASEFOLD flag. HFS+ always preserves case
-at rest.
+Report ext4's case sensitivity behavior via the FS_XFLAG_CASEFOLD
+flag. ext4 always preserves case at rest.
 
-Case sensitivity depends on how the volume was formatted: HFSX
-volumes may be either case-sensitive or case-insensitive, indicated
-by the HFSPLUS_SB_CASEFOLD superblock flag.
+Case sensitivity is a per-directory setting in ext4. If the queried
+inode is a casefolded directory, report case-insensitive; otherwise
+report case-sensitive (standard POSIX behavior).
 
-Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Acked-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/hfsplus/inode.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/ext4/ioctl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
-index d05891ec492e..ffbb57493d7b 100644
---- a/fs/hfsplus/inode.c
-+++ b/fs/hfsplus/inode.c
-@@ -740,6 +740,7 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
-+	struct hfsplus_sb_info *sbi = HFSPLUS_SB(inode->i_sb);
- 	unsigned int flags = 0;
- 
- 	if (inode->i_flags & S_IMMUTABLE)
-@@ -751,6 +752,15 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
- 
- 	fileattr_fill_flags(fa, flags);
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index 1d0c3d4bdf47..d1d597a13eeb 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -999,6 +999,13 @@ int ext4_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+ 	if (ext4_has_feature_project(inode->i_sb))
+ 		fa->fsx_projid = from_kprojid(&init_user_ns, ei->i_projid);
  
 +	/*
-+	 * HFS+ always preserves case at rest. Standard HFS+ volumes
-+	 * are case-insensitive; HFSX volumes may be either
-+	 * case-sensitive or case-insensitive depending on how they
-+	 * were formatted. HFSPLUS_SB_CASEFOLD is set in both
-+	 * case-insensitive variants.
++	 * Case folding is a directory attribute in ext4. Set FS_XFLAG_CASEFOLD
++	 * for directories with the casefold attribute; all other inodes use
++	 * standard case-sensitive semantics.
 +	 */
-+	if (test_bit(HFSPLUS_SB_CASEFOLD, &sbi->flags))
++	if (IS_CASEFOLDED(inode))
 +		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
  	return 0;
  }
