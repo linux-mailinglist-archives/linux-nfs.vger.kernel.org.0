@@ -1,51 +1,71 @@
-Return-Path: <linux-nfs+bounces-21021-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21022-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +PyPDDOs6WlihAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21021-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 07:20:51 +0200
+	id WfuaLMSz6WkDiAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21022-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 07:53:08 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA72244D3FE
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 07:20:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1B2C44D548
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 07:53:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 60570301ECCE
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 05:20:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DA63B3020EB9
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 05:53:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8C8537D11B;
-	Thu, 23 Apr 2026 05:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44C1438B7B1;
+	Thu, 23 Apr 2026 05:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oqW5LJG9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBCB3603D8;
-	Thu, 23 Apr 2026 05:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B322868A9;
+	Thu, 23 Apr 2026 05:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776921609; cv=none; b=ZHjPCZ0sQ6QM6czVOqo4otktqu/lPwpDtvyrw/a3LQZzTkIAa6bElLuNbnAE5VU2UAyvVBEZSb1lXrrd4JK2PB7l2fA019dWIultZz+Ld9VFzPfAPanwV/kI50/zrLEgLZpy+G7bsD5SaozMUE7pmYjXHm8nmSYxRyJ6cZztSwg=
+	t=1776923578; cv=none; b=GHw09UVK1a22UzD505X24hbJzzz4Pw9CnTq1FlhPwwCLiD1ikzgFR69kIQo6VnA0tXpHF9CspV+O0hZZXVZdxyKpyhVxEfLUNnsFniQXfkuT16vY2uxzx1bf6p3ayruZEtCCG1dXPORIkMMFityZoQbEze5HBr2XNoE6GTsMXCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776921609; c=relaxed/simple;
-	bh=kt56FqSe1jfrbbuY/LnA5QGyZo9puDHHCoXrlvYsZyQ=;
+	s=arc-20240116; t=1776923578; c=relaxed/simple;
+	bh=IzCwPU5c6Gq1BGhh1bSpdiyTomucNDB4qIjOeZl0cpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByvfdgzVo3clnhIXv8uDiWxiM/pPA4G7pU+bN7sdF5zxT2pUyrj9PWs4jnFcLJtXC0dg7puVLYPGraCcz/ilpXE+KFGzZcTOa0jqH4pDrC7m5AB85x5wDT8+Pk9b9uq7/X4+hEfjlVPxf6a9wip1w1ymlP40/n1hy8wDHrcen+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 0359068B05; Thu, 23 Apr 2026 07:20:05 +0200 (CEST)
-Date: Thu, 23 Apr 2026 07:20:05 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Werner Kasselman <werner@verivus.ai>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 0/2] pnfs/blocklayout: harden GETDEVICEINFO volume
- parser
-Message-ID: <20260423052005.GA28150@lst.de>
-References: <20260421100338.1227152-1-werner@verivus.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJ4u6wPibtEhfoWDBWaiZjbnsoECYQ617yYyzpO/AoY/j/S0Ky6MYkTNyDWkY8Zv+i/4FD3j3+2jiBnB3uG4i9tDWSrfhX4ceOPbj2KYCWDSrmSjIhggDdxDlPYdNqeVhy1F5AJRJXeTiPpOG1LV7JAUj196cOwW5ttvLhw0SUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oqW5LJG9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9rvPFEC2MVsXs7hPa8zHFKo530p+I6oXYlmvjIl2f6c=; b=oqW5LJG9fBwRuI/xBRFobENbPC
+	E2uvZY4hTPcJzshqHMNSCNbAq1dXR74jh5AhK6rjwJQopAwWdBcjljK/TRLi4yKxlGuQUND23+U8U
+	w5Zkbj04KaIgmIEimRnmZGsrkmc9AMWznDHn4iFp/gJ+S7Wu9MyD79MuzxqNJa8IhFk2I4Y9/iTJ5
+	AUSWR3mcrOicr1F20MyexfpWI0aRj2+sdb+t1QJtkJxTvNn7Uub/5MGetU1EoNeTpgEUYEx53Lf4R
+	5ndHsoHJi23cbvWDVNz5n8B0GgeU76CG/iM63b2QSXHz+1hzOM3mbKOjt0jsx3G9XerWvX2ydjtku
+	rEQfaDWw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wFmze-0000000B5Fr-2IF8;
+	Thu, 23 Apr 2026 05:52:54 +0000
+Date: Wed, 22 Apr 2026 22:52:54 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Stefan Metzmacher <metze@samba.org>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-cifs@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	samba-technical@lists.samba.org, Tom Talpey <tom@talpey.com>,
+	Steve French <smfrench@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>, ceph-devel@vger.kernel.org,
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] smb: smbdirect: move fs/smb/common/smbdirect/ to
+ fs/smb/smbdirect/
+Message-ID: <aemztk8jTqgfKu4y@infradead.org>
+References: <20260419192018.3046449-1-metze@samba.org>
+ <aehrPuY60VMcYGU8@infradead.org>
+ <9cb0901c-18c5-4858-941c-3b37ee112af9@samba.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,41 +74,58 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260421100338.1227152-1-werner@verivus.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spamd-Result: default: False [-1.36 / 15.00];
+In-Reply-To: <9cb0901c-18c5-4858-941c-3b37ee112af9@samba.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21021-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21022-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[infradead.org,vger.kernel.org,lists.samba.org,talpey.com,gmail.com,linux-foundation.org,kernel.org,redhat.com,dubeyko.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	R_DKIM_NA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: AA72244D3FE
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,infradead.org:mid]
+X-Rspamd-Queue-Id: C1B2C44D548
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Apr 21, 2026 at 10:03:40AM +0000, Werner Kasselman wrote:
-> A standalone test exercising all three bug classes and the fixes is at:
->   tools/testing/pnfs-blocklayout/test-volume-parser.c
+On Wed, Apr 22, 2026 at 10:16:41AM +0200, Stefan Metzmacher wrote:
+> > Why is this not in net/smbdirect/ or driver/infiniband/ulp/smdirect?
+> 
+> Yes, I also thought about net/smbdirect.
+> 
+> As IPPROTO_SMBDIRECT or PF_SMBDIRECT will be the next step,
+> see the open discussion here:
+> https://lore.kernel.org/linux-cifs/cover.1775571957.git.metze@samba.org/
+> (I'll follow with that discussion soon)
 
-Not really, but maybe you wanted to send it out? :)
+Seems like it is the right fit then.
+
+> I was just unsure about the consequences, e.g. would
+> the maintainer/pull request flow have to change in that case?
+> Or would Steve be able to take the changes via his trees?
+> Any I also didn't want to offend anybody, so I just took
+> what Linus proposed.
+
+You might want to ask the sunrpc or ceph maintainers as they have a
+similar split.
 
 
