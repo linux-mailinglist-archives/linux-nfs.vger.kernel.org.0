@@ -1,263 +1,180 @@
-Return-Path: <linux-nfs+bounces-21017-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21018-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0C0vBUJv6WkzZgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21017-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 03:00:50 +0200
+	id SGTBN4936WkBagIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21018-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 03:36:15 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C47444BFCF
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 03:00:49 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79C7B44C215
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 03:36:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C2F76303BB13
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:00:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B8BE530067AF
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 01:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70ED822E3E9;
-	Thu, 23 Apr 2026 01:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E353A4F27;
+	Thu, 23 Apr 2026 01:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMRiJS2/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLB/V9Vx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DF42264CA
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 00:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776906001; cv=pass; b=IUUDiQ1V4RSjTFnM3sCApKsb78Z7WdFEWAUc9pdL4Ml+smrLHiTvNrKT9YVxgh03WNLW0ElNnWaYqRQzSsrrNMHrNAkmowRMjd2QAkkcLRZP0dVlYYV1bqC/wg2WWx+JmmfYxlFsb8k8phpFfWMbkIKjuaibLU2c8f1JcqXAMug=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776906001; c=relaxed/simple;
-	bh=glEATcMQjgXcIVNGcFv/jGZwSA4FOZck5uTqZXkwZrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rxrEjLPeLDxMCruRr45+Ne3qpvxUHG9G/DL7a5JEhtFF1vpAC5tObD4hCE9STq3YkZ0iTrM/Ufu/tHuLBej0FmqydsVfIGCfvSM0OOulXX6JawbGgKVlizFFe3qOLklw10MyBgyhn6qtHFbtfK2SqSPwAEzKYvuMvJFnjOCRnmU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMRiJS2/; arc=pass smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8e0a768331cso704608985a.0
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Apr 2026 17:59:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776905997; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LZQm7tEaVODuTYWIPFTBFkA4TzpYob033iA4KrDwvJNDDq2a4ZpZ8tDLBelRh7NIc9
-         bm3qUCzlqIAwyfDouu6hhYbG1qboFDAvWtUjW5eXtIbGDQCPFO1Yb+MLdP/eBQZ2/c7m
-         w7i8l9PbJchG2XKgjCdsEazccnTxRqXb7rwlmEEuFyUypV0ajLNJgG8y8Eb3hKYRGkfo
-         8PD1+xJOp3XH8Ezf7vSqt9ovnYAIjrijklj/iz0KQqzHdzjzkpFcUZdSUm2qxmJZCHkd
-         f9DRBMCObYSul1j3pGC8aADDkvZh/YT29PvdX8xf0brBD3VMjyK2qFruLXCUrQbsHFuy
-         t4cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=t/Auuo3ewU9oR2gX8cwKFh7CPK/qOcoVmyN6PErL6wA=;
-        fh=2RJG2WnwQAaDLOIym8reJVTZ8zqxnwgaZoFQLhY81Q0=;
-        b=Uxolg9JXtUoJu3BvVW24hRkp8F6yDGWobVwJ7V/rnUma9+fe1vYpuJPbwevym8o7GW
-         tTJuHeKrlA3yFvQsdYco9DIP5LbDQIzycLzy1+IB3FnjdCkWh5J1GqO8LbmHF6M5gOZT
-         4qQrG+7AdYa5xQMBVw25nDVNS3D1uCyyrI1lCKB2iFuwUzV5Oe+6E/1W2jNVnYde0tqg
-         GyE8sRRdIsKm5sqHeQ1qdEF9m+DEyMS3zyfbRPF9zg4txMYtwYMP7hV7BJuVDnEEWrc8
-         s69s4LvjHkzUVYLRKVmwaoNsdnPEqsHkyhBGYGU9IjMwz+Tuj+VmwGAvZX5BqqEysXeB
-         pPPA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776905997; x=1777510797; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t/Auuo3ewU9oR2gX8cwKFh7CPK/qOcoVmyN6PErL6wA=;
-        b=YMRiJS2/7iPeV6CGivmFNZlhKtWjZPgsedWvhWP74UAv3lHrFmEFD0Aur6BIskzh0g
-         QWBYcqG55fzdQVfvpnQ9RV5vQsjz0rWZL56X2ebc3clKJU48exG+EENE6kbVBxOFpPk+
-         5t2gNgAxnqyaIvLY5ck4yRXX+nydQgvVrTEgBY8JAQXSqA8G3K6ongzaSlOAcv5LE5uM
-         Yo7Lct+7ITiCGlvIXN81wLh8Pdlp3XWrN5vkapIFlpVoCanONo4VVCoHnyFslJtMBaWb
-         mcFu62lehj3ZRz/Tw8nwq2iDe7aP0WaWjUg+TjiMd5pr/GNJgLYryCDxWm3FILghrLh2
-         OYZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776905997; x=1777510797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=t/Auuo3ewU9oR2gX8cwKFh7CPK/qOcoVmyN6PErL6wA=;
-        b=GxdMbVTnJK9WWcPTtvIkvjWm/axeOidT8DY2x8o5uS2QY9sm2mIBC5Kv5mvZT7RTDn
-         GkDgN4rocJu9sLBt4yeetX9Z47FFXWMFOb6sknvEZ9etTSCv4ht+cFPudDXF7YG3NJPO
-         +YQ95W8tDuRm4X2zM5nQkwsJ3HPOfEN++IWrTp6b7C9cQdEfTH11/O3akd8EAwvhbkuz
-         Y2zlGUElXcBb+Eg6voKDH8bKRxRs4J50p0z+Ju0UppRyd/EteOurDEAl17VCP16XKpLD
-         6qmITu2k7FRZD5felmO61OWGM5RVyHPaErMpYl43DsKxqJHZHW9hKAzQXhoNAAHGTBot
-         e1tA==
-X-Forwarded-Encrypted: i=1; AFNElJ8i4khBafyHeaCks90faXIE9UM5FwlDnD1JkpAPtIHc8xQ+VHBfDb11MGb/KCdU75N/mX51DF/a3w0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysGoiktpe3Q+JfCs88rjRD1eo4Ooj6L7sJpFEIo9th7tH+CIbk
-	dq9txFfvX8h51W37wdWCGG+Z/EJ5BbtRAWl8+TZZ44NmCUhKu/xn5M1pJti1u9m1C+ht4HDBU0R
-	Ujwis4kz414hphBmwvzPRyNOMvUmm5kI=
-X-Gm-Gg: AeBDiesxKUyGn+ZZOuO5Smca36HshALCS6uxsZKQk9USBbM8nMa4cvHkF2Cs5DKMtbR
-	dtf4qFZZLVU07atr6nN1mScxKAzrQxbSBf2sHw7awTd4bq+7QayaLLdYdIEdeSvPijNgNFNkB0I
-	UpYm96nMoOzK9lLt55DbUEsLNj8841puzteMcAGkaAb4eVpXOrGVTXaLc96q3ChgLrliPSr5Uj/
-	5iVuD958tTfFAErtpX0D1Tl8IDL7yDXuHdxXbqnT8XK08A9J0JXH+EH0Uezm7ejo1WSTpZ9nhNX
-	s1/5L8t22pzvw8YjxW4fzW5YmtitHN0qqTET1ombgX88brdVJ2M3g4JtE1a2xDvF3TXKd+QPVTm
-	GBGdvaK8vR/Bl8dswjciMSRwFqDZ3SrSpeECXgbpaV9Hxq4a0HGk0W2QQEfQhO+UT3QxW4EMV3L
-	+32INWixcWfVOESakixK96mwBG12oxgsg7rreWZFwrZsQ=
-X-Received: by 2002:a05:6214:490a:b0:8ac:b3ba:eb0c with SMTP id
- 6a1803df08f44-8b0282f35c0mr336785626d6.2.1776905997499; Wed, 22 Apr 2026
- 17:59:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA4E1D9A54;
+	Thu, 23 Apr 2026 01:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776908170; cv=none; b=kH8qpT1Q7Gkv75g+oQFDnEoFUyJBjjEblGmmg1qPMgEzQtOXf2DLyxpKN6Oq5uiNCRtYsqwyYIinOO+v7qvnbcixJs0bKvumnDuGFHCSVtVcbkp1DxmYAoMP2bjZatVCmZ/soFXZrHy4ivqgRt8f2SVZJBn6f33D/onva9+IIdk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776908170; c=relaxed/simple;
+	bh=fisfLRUPF2gQeK8/tjab1CMLN7z38y0h7QBe3fR1FGk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=IslLa3IA2x4kekBBeAd5TWe1lf8V6phrT3vdCfJ64ocvRO+/H1xgyBNtU+RUMDJFln7KHrdZ4lJAKrEFMbZix6S+ItmCOpKQ5pf79oAdR5is9ruKtLSPjovRFj/QigbPJQAdmC9w2XdYup7wENRZgXJUJyfNfPVwxvSZekpF2DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLB/V9Vx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0EEC2BCB4;
+	Thu, 23 Apr 2026 01:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776908170;
+	bh=fisfLRUPF2gQeK8/tjab1CMLN7z38y0h7QBe3fR1FGk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=uLB/V9Vxth7g4vShFYvcL/mCTim0wfkAAkzRXOhJ3wDvANYCoRIde/8hvh+dG2QJF
+	 /jGC5YH+IR1TrhTJMzoW/ahCEIQqaIvTvOPOVyLT70ckze0ciCzKkRw9Ey6At5urbo
+	 OAy3FEXO7SjoCK+NI2hD22Uy6THb29cgHttSndmUTWS8jiMA17j06gmzCo/Nl+ikAq
+	 5rmJQKSDoXL0ZQ2hE/NnPbmXVr13Fg0WP7qJx/b11Odz6Jt4+TmF0qBMY7YVJk9X+w
+	 gqJHVlktyUP9gP84U0fdhV8hz9D1VlQczWS/xG/9G35iAySWuSucdKbee96dDB+uzs
+	 /XI/Yu8+CoQTw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 5F59AF4006A;
+	Wed, 22 Apr 2026 21:36:08 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 22 Apr 2026 21:36:08 -0400
+X-ME-Sender: <xms:iHfpaeo4VthmNtZ5zqVLjiXC2cn8tWHGEMdzLK0PkfHerQzKuwGL8w>
+    <xme:iHfpaXdLH9MSdgJtkPwHUqYJVv1n_uNz8FaJj5-5PuPzSv6NNKdKbBoPzaTwYk9Lb
+    c1xxpWMr8HwIBjxxcs-GZB4qopZ4Kv9XLZdh_pdji3Ur2a-_bOMJJc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeiheekgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epgffhgeeutdeiieevuefgvedtjeefudekvefggefguefgtefgledtteeuleelleetnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeeffedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepshgvnhhoiihhrghtshhkhiestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtoh
+    eprgguihhlghgvrhdrkhgvrhhnvghlseguihhlghgvrhdrtggrpdhrtghpthhtohepshhl
+    rghvrgesughusggvhihkohdrtghomhdprhgtphhtthhopehrohhnnhhivghsrghhlhgsvg
+    hrghesghhmrghilhdrtghomhdprhgtphhtthhopehsmhhfrhgvnhgthhesghhmrghilhdr
+    tghomhdprhgtphhtthhopegrnhhnrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsg
+    hrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggvmheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheptghhrghosehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:iHfpaR735JLTmlXf6PZaw09JvM2INK1_wFF6Sofysyc5cHAzrptIUA>
+    <xmx:iHfpaR3Ct_L9JXA3_3D08tOGJwAeJitT7nP5_Yj2u3ZipmZ8_WhTyA>
+    <xmx:iHfpacp_YaFAr7nSWwX0ZxI4Obx-0-j3X9gZ32hL5RJuIURnLf2EVg>
+    <xmx:iHfpaXVoO2mIU-wKylIYQImIQNtl2kj4f7yCmO3vyFuPWUpTFhRI7w>
+    <xmx:iHfpaRcA71LEAscdJdF6cGc-t3Q_4jPF-jb1PwNWd4SjcOeP35Uy-bpw>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2894B780070; Wed, 22 Apr 2026 21:36:08 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260422-case-sensitivity-v9-0-be023cc070e2@oracle.com> <20260422-case-sensitivity-v9-10-be023cc070e2@oracle.com>
-In-Reply-To: <20260422-case-sensitivity-v9-10-be023cc070e2@oracle.com>
-From: Steve French <smfrench@gmail.com>
-Date: Wed, 22 Apr 2026 19:59:43 -0500
-X-Gm-Features: AQROBzCtyORnfuVHnIm1n6WO0qai8y2HQyRw138-ozkefgToPmyDNAGdDckhKog
-Message-ID: <CAH2r5muvUVY8FD6ZM+ARecM8evjejB15n0Ea9Z=GGn=i5aKFNA@mail.gmail.com>
+Date: Wed, 22 Apr 2026 21:35:47 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Steve French" <smfrench@gmail.com>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net,
+ "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Sungjong Seo" <sj1557.seo@samsung.com>,
+ "Yuezhang Mo" <yuezhang.mo@sony.com>,
+ almaz.alexandrovich@paragon-software.com,
+ "Viacheslav Dubeyko" <slava@dubeyko.com>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ frank.li@vivo.com, "Theodore Tso" <tytso@mit.edu>,
+ adilger.kernel@dilger.ca, "Carlos Maiolino" <cem@kernel.org>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Jaegeuk Kim" <jaegeuk@kernel.org>,
+ "Chao Yu" <chao@kernel.org>, "Hans de Goede" <hansg@kernel.org>,
+ senozhatsky@chromium.org, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <c41111fd-2473-4fdd-8e1e-285b9e24e631@app.fastmail.com>
+In-Reply-To: 
+ <CAH2r5muvUVY8FD6ZM+ARecM8evjejB15n0Ea9Z=GGn=i5aKFNA@mail.gmail.com>
+References: <20260422-case-sensitivity-v9-0-be023cc070e2@oracle.com>
+ <20260422-case-sensitivity-v9-10-be023cc070e2@oracle.com>
+ <CAH2r5muvUVY8FD6ZM+ARecM8evjejB15n0Ea9Z=GGn=i5aKFNA@mail.gmail.com>
 Subject: Re: [PATCH v9 10/17] cifs: Implement fileattr_get for case sensitivity
-To: Chuck Lever <cel@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, 
-	linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
-	almaz.alexandrovich@paragon-software.com, slava@dubeyko.com, 
-	glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, pc@manguebit.org, 
-	ronniesahlberg@gmail.com, sprasad@microsoft.com, trondmy@kernel.org, 
-	anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, hansg@kernel.org, 
-	senozhatsky@chromium.org, Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-2.15 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21017-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21018-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[33];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,app.fastmail.com:mid];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[smfrench@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: 7C47444BFCF
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 79C7B44C215
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Acked-by: Steve French <stfrench@microsoft.com>
 
-Do you know which xfstests this would enable?  IIRC a few of them
-depend on the fs supporting fileattr_get
+On Wed, Apr 22, 2026, at 8:59 PM, Steve French wrote:
+> Acked-by: Steve French <stfrench@microsoft.com>
+>
+> Do you know which xfstests this would enable?  IIRC a few of them
+> depend on the fs supporting fileattr_get
 
-On Wed, Apr 22, 2026 at 6:34=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
->
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> Upper layers such as NFSD need a way to query whether a filesystem
-> handles filenames in a case-sensitive manner. Report CIFS/SMB case
-> handling behavior via the FS_XFLAG_CASEFOLD flag.
->
-> CIFS servers (typically Windows or Samba) are usually case-insensitive
-> but case-preserving, meaning they ignore case during lookups but store
-> filenames exactly as provided.
->
-> The implementation reports case sensitivity based on the nocase mount
-> option, which reflects whether the client expects the server to perform
-> case-insensitive comparisons. When nocase is set, the mount is reported
-> as case-insensitive.
->
-> The callback is registered in all three inode_operations structures
-> (directory, file, and symlink) to ensure consistent reporting across
-> all inode types.
->
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/smb/client/cifsfs.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
-> index 2025739f070a..9b70ffa3e01d 100644
-> --- a/fs/smb/client/cifsfs.c
-> +++ b/fs/smb/client/cifsfs.c
-> @@ -30,6 +30,7 @@
->  #include <linux/xattr.h>
->  #include <linux/mm.h>
->  #include <linux/key-type.h>
-> +#include <linux/fileattr.h>
->  #include <uapi/linux/magic.h>
->  #include <net/ipv6.h>
->  #include "cifsfs.h"
-> @@ -1199,6 +1200,22 @@ struct file_system_type smb3_fs_type =3D {
->  MODULE_ALIAS_FS("smb3");
->  MODULE_ALIAS("smb3");
->
-> +static int cifs_fileattr_get(struct dentry *dentry, struct file_kattr *f=
-a)
-> +{
-> +       struct cifs_sb_info *cifs_sb =3D CIFS_SB(dentry->d_sb);
-> +       struct cifs_tcon *tcon =3D cifs_sb_master_tcon(cifs_sb);
-> +
-> +       /*
-> +        * The nocase mount option installs case-insensitive dentry
-> +        * operations on this superblock. SMB preserves case on the
-> +        * wire and at rest, so the mount matches FS_XFLAG_CASEFOLD
-> +        * semantics: case-folded lookup, verbatim storage.
-> +        */
-> +       if (tcon->nocase)
-> +               fa->fsx_xflags |=3D FS_XFLAG_CASEFOLD;
-> +       return 0;
-> +}
-> +
->  const struct inode_operations cifs_dir_inode_ops =3D {
->         .create =3D cifs_create,
->         .atomic_open =3D cifs_atomic_open,
-> @@ -1217,6 +1234,7 @@ const struct inode_operations cifs_dir_inode_ops =
-=3D {
->         .listxattr =3D cifs_listxattr,
->         .get_acl =3D cifs_get_acl,
->         .set_acl =3D cifs_set_acl,
-> +       .fileattr_get =3D cifs_fileattr_get,
->  };
->
->  const struct inode_operations cifs_file_inode_ops =3D {
-> @@ -1227,6 +1245,7 @@ const struct inode_operations cifs_file_inode_ops =
-=3D {
->         .fiemap =3D cifs_fiemap,
->         .get_acl =3D cifs_get_acl,
->         .set_acl =3D cifs_set_acl,
-> +       .fileattr_get =3D cifs_fileattr_get,
->  };
->
->  const char *cifs_get_link(struct dentry *dentry, struct inode *inode,
-> @@ -1261,6 +1280,7 @@ const struct inode_operations cifs_symlink_inode_op=
-s =3D {
->         .setattr =3D cifs_setattr,
->         .permission =3D cifs_permission,
->         .listxattr =3D cifs_listxattr,
-> +       .fileattr_get =3D cifs_fileattr_get,
->  };
->
->  /*
->
-> --
-> 2.53.0
->
->
+Thanks for the Ack.
+
+I checked the current xfstests tree and couldn=E2=80=99t find a test tha=
+t flips
+from notrun to run on cifs just from adding ->fileattr_get. generic/556
+is the existing case-folding test, but _has_casefold_kernel_support in
+common/casefold hard-codes ext4/f2fs/tmpfs. Enabling it on cifs would
+need a new mechanism in common/casefold plus a mount-option-driven
+variant (the cifs reporting keys off nocase, not a per-inode flag), so
+that's a separate piece of work.
+
+The practical effect on the existing suite is that fsstress's getattr_f
+now returns success instead of ENOTTY on cifs, which quiets some noise
+but doesn't gate any test. To actually exercise the new FS_XFLAG_CASEFOLD
+reporting I think a new test (or a generalization of generic/556) would
+have to be written.
 
 
 --=20
-Thanks,
-
-Steve
+Chuck Lever
 
