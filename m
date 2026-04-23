@@ -1,198 +1,505 @@
-Return-Path: <linux-nfs+bounces-21044-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21045-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iDWNLW4u6mmVwQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21044-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 16:36:30 +0200
+	id kI+ROj0w6mmVwQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21045-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 16:44:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80989453C93
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 16:36:29 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E55BC453D6A
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 16:44:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A845830BC9AB
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 14:29:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A954A300DDCA
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 14:39:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E2223ED6A;
-	Thu, 23 Apr 2026 14:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6F23375D5;
+	Thu, 23 Apr 2026 14:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQJZqMbZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXFM7s7J"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60891A680E
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 14:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AE7332EA0;
+	Thu, 23 Apr 2026 14:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776954574; cv=none; b=pRryUxBmTwB6Ao+gH9JtgsGj8R4Kie9PyG7bYlRqC8/lZYH3gZ1YpEwuKIUaZMkREcfjLhJ2q6f+9XCqJjzJAolCPTYzzLceU+GtvOJ1MMh2gHO70ffvfFDxf/AqtPuNjwg/Na6t2tMM1uaZavViE+FJujOT72eAg4pEurvDP7M=
+	t=1776955162; cv=none; b=h5Tv2Tmm+q9pQp+lQfao0e8Qb+iGXfMJEL5zLHWrcRxGnrsqmD2Wm7AmsCupqEaJ0R+hVaILv6Oo2o9IaanOTviDy/Ie5XmsBehCwp/JwYSxXpD/Ay7nnvayoKoOxt2+Br5L4unABxpWfDqHmVDY/XGHERYY3nnf/mNICOzKx3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776954574; c=relaxed/simple;
-	bh=XOg8hkYym7dvyTLQ7VkpMzs+QIVwUv7RkaHJzHOfgxw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYiy6ccZLHWWEOX+pVOZZyeBzIJjP6qLgQvqljnE0iyGNygNKGSWRHQbvSX5TdbtANnD++t4HcQ8oOTi9ji7oqKCnZZp7yL8AGG27Ve06vqgmM3HxNpBi0Kj/Sx0FEM+2iBh0AxANJ7BzAy/qGPmSudolBoGLoTibsYHZi5fHiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQJZqMbZ; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-66f747175d8so3241923eaf.0
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 07:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776954572; x=1777559372; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AK3ezXGh5Qc5kw1Wwdz/Am9391J2galVCo8Om2s3yR0=;
-        b=aQJZqMbZ8ppdzRpAlno51uziW3MojXv3PzSKhBbBkGtg7kCH9Ems1lCQMWKbxud8Ny
-         wNXiBAjt5JKTKhk7IxoTVZ3h9vY0jYj3VA4YhZsbzzxp4tPpmgJFHreBjj2fwiiesHYJ
-         mExPGAdt8VkDM6mF4jRbg32LFw5ChIzzQvNPQjp/woMXhOTrIOvLdPRWbONXqeU1wO8D
-         qNf4a/fAXotmw57oYLnTt8kH/eBJbE1eLQpvXTYZrbaAtAGtyzrJSiGUopWi/6cckTKk
-         WHLghWyF9vkIpjAmRNyZ5WEpaP8IhM9TzOXfXTi5oKZgXn9KrrfAu64W5O86Aj+fOEij
-         2VMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776954572; x=1777559372;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AK3ezXGh5Qc5kw1Wwdz/Am9391J2galVCo8Om2s3yR0=;
-        b=HdTIYZMiYwd6H8R/BbgDPW0sItVDLjmyk+m6y2BUnO8Z/GGdtM506KGOLTxWb2vu+U
-         RjHWZlVjdIxB07aSE3G/HyP77tQHL1UbcwJoet716IoDBJuUSJrala/PNIl6Qx+GxwTm
-         pg3U/pDhwj6kBGojyr5YS0icZ0PtBRp8LLcKWRQPPuJh/MNj0tMcqkPYmM34XppBZr2i
-         lMv9NS8TH09V5KF03VJGEq6vNxcJoQcgNeUTxaZMHPQEMGuRyLLNYbMZY7oTBV28yZbm
-         RHLCldERbDJk8gd1cvAwlBMYl3tvu5Ut+bGlQJPKdUSs9UezLrODDUedfFFE7O3nuo5k
-         U9ng==
-X-Forwarded-Encrypted: i=1; AFNElJ8V1D/v7JPj91PtLxnd+yVSrYnjMdqVZRjvD4+CBavC+HWJsvA19ZsU8T6f3iww/uHlHs95ARvDzUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLXjhTg0i0G2GLW/7XebFq6bhTESU7RQF0sgShMHXTvSLUZWyB
-	6QTyiEGppfmpRI3VSagzI6QqUhiLpGACyZoysZCgA7N820IT1kHQDB/y
-X-Gm-Gg: AeBDiesM59r4WLlFx/MP4VXV4/Z5cGnbYoFeJwpEhkUgDgctph+lg6AKOWPPgdjfob/
-	8t7dC09lgIjRbRTP/sMlGS+h5Pgn/VB8Qm/KMMM7d75KzHO0t2XY0CeTnU9PYV0L6dVh9s46ZYZ
-	AF3c2YR3BW8HkCNdbQQPNlQosz4E+ednexHYxyMo9dVsWxIDIgHBWALYF6ZrkZyrs/A6XkmcsUz
-	mYIwRXO1jymzU8L8wN6gkEX+kS1IEHZaPYPQwobz/Y1tXYdyrYjgglwp5icz2keHbvdCuWRuPvA
-	pwRGyXMEv4K8gTup+Shrv3G2mnhetDWY3PHWzglqH9raYpN9qe/sSAJ42fFKesiNNghE4Q9Tfek
-	3/V9K7cAgnFvnXjsFnk/s1cOOSGjZeXFi9y5X/a3SMiK6O6059LuRDqx2uhD0Gzu9nzw07snr+s
-	O58fko9ZXKdTlUa3xwh0MBzVy63fgsc6ClKOfAet7c1hHSC7IA5vA=
-X-Received: by 2002:a05:6820:809:b0:694:83f2:27a7 with SMTP id 006d021491bc7-69483f23412mr10323457eaf.28.1776954571535;
-        Thu, 23 Apr 2026 07:29:31 -0700 (PDT)
-Received: from localhost ([2601:647:6701:9440:8c31:af41:6344:1d96])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-42c05ca16e2sm10176379fac.15.2026.04.23.07.29.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2026 07:29:31 -0700 (PDT)
-From: Thomas Haynes <loghyr@gmail.com>
-X-Google-Original-From: Thomas Haynes <loghy@gmail.com>
-Date: Thu, 23 Apr 2026 07:29:29 -0700
-To: Anna Schumaker <anna@kernel.org>
-Cc: Tom Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org, 
-	Trond Myklebust <trondmy@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH 1/1] nfs: don't skip revalidate on directory delegation
- when attrs flagged stale
-Message-ID: <aeosOBEN-RWr1_Ae@mana>
-References: <20260418190301.3661-1-loghyr@gmail.com>
- <20260418190301.3661-2-loghyr@gmail.com>
- <32c25063-3b89-4d00-87c5-3334327586c3@app.fastmail.com>
+	s=arc-20240116; t=1776955162; c=relaxed/simple;
+	bh=i5Uv2iIDCeJThQoP5+VSP77Y7VwvmVtcVdXHiq4f/L8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=go/t1LGiH6JW3xGQEl49+LrGdaMTwwgF2ie47h7vSW332K9ReCrzmjua+G2i5/WsnwdKC8UHEjyRy4aIK4GV2M/LARBR4w8Sa9XUMr0Jxyfp+d8qDAe3qbgHT2ewWfxIfEJPDtzmeTicbd90vdh1pjJ7Dzyn4geo7lSS/Mnnjm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXFM7s7J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AE3C2BCAF;
+	Thu, 23 Apr 2026 14:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776955161;
+	bh=i5Uv2iIDCeJThQoP5+VSP77Y7VwvmVtcVdXHiq4f/L8=;
+	h=From:Date:Subject:To:Cc:From;
+	b=CXFM7s7JlcW5yM/NGkH3eL2AiRO1y2i+PFzgK0CT9Hl4CaEvjDEXMV+mJPo203NOs
+	 Qtv+62wbeapTA49XIeYlHyP0SGOchRbFH1hvHIpk33K2NyRKoiY75iMtUvsSIMU/ym
+	 JI9vyfjeWNdJFXt4N62HZga+U6Lg7EBW2XSN+xGvSl+xwtNMBL8aUU1mEnFqQ5A9OZ
+	 CAv7AQ58TJd4tOk/xQhbxtFgXm85OQIFJFaiKIpboJsou3fabEviaOzw3ho5PLxPsc
+	 0+kNxi8Dpg8FEpdqnKAJ0z89WDEqWySm9ARimJ+bUjYH1XiTrpJFWKpKterT7mW6H5
+	 hZ1vnBxYcvvpg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Thu, 23 Apr 2026 10:39:14 -0400
+Subject: [PATCH RFC] sunrpc: hardcode pool_mode to pernode, remove other
+ modes
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32c25063-3b89-4d00-87c5-3334327586c3@app.fastmail.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260423-sunrpc-pool-mode-v1-1-b7f20e35749b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDEyNj3eLSvKKCZN2C/Pwc3dz8lFRd41SzJFMzYyODlGQTJaC2gqLUtMw
+ KsJHRSkFuzkqxtbUA89XUHmcAAAA=
+X-Change-ID: 20260423-sunrpc-pool-mode-3e6b56320dc4
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10979; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=i5Uv2iIDCeJThQoP5+VSP77Y7VwvmVtcVdXHiq4f/L8=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp6i8Ywoas5K5lCeEmLUuiqIT7iyb5YKuuUjnEf
+ gxFXwP2Y8OJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeovGAAKCRAADmhBGVaC
+ FY0LD/0chFulmep9KzdEhhhUQQBrXhvrN4KR93oAZ1AW6veSTEes4CTlKle8KH3odWb3MhoL3ip
+ ora29G8oP0L6ihY1QPW9bAgWHtE/1qw+d7rkQAMZjsRH6Cg5Dee/Txe0uGopftWYQTC3Z4pzSJD
+ 6OIVD1nS6rzck8kOYLymTe8WMlm2SCUquwLOzIcWhwMWKXGbpE7DmpGj7Zcc7v+M9c1HbizZzLE
+ WuAi8iRoSYX72jyQhXIH/DpfpQ7ia1fmD6X+u0vuxRW7tWZaDpV3UUbutO65RnqSqZLQGPYphmy
+ tnv743y5WOgGmJlv3fg37/RUJ2ZTjqZTwUthcV1f/vfcL5db3+WzPDVfhQWHglrEEL2MpcNencP
+ PIzT0bSw2/DX88g5UiPfnwo54SRRCqHyu6tlO+ErRBAOPfOGi6uqwFSDuU53yGPxcjx82JxcBBp
+ UYT8JW1iv3ufDqaU1mUrNiJsU1j6HolJSXOaT/UUSJsFbMs6vq/Wzg5EvOt10WBFvGh7kCW1uZK
+ NMe7p23eavzYs+1c56HinkdHoodsIEP1LArvtBZKm6/0CDFt3kBO4gIU8VxsasIDIkLrjm/IuZI
+ zcu2eTp2iTf2Owbn9sWqMKidcrIm6xWQXatY4VjgkM04IhgU4ufTFu2NLebZajF6SdQ5DI+qsFn
+ IPsS7WFEUvHX1mQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-21045-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21044-lists,linux-nfs=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,oracle.com];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[loghyr@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 80989453C93
+X-Rspamd-Queue-Id: E55BC453D6A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 23, 2026 at 09:37:21AM -0800, Anna Schumaker wrote:
-> Hi Tom
-> 
-> On Sat, Apr 18, 2026, at 3:03 PM, Tom Haynes wrote:
-> > On a local directory mutation (rename/create/unlink) the client marks
-> > CHANGE / MTIME / CTIME as invalid in NFS_I(dir)->cache_validity.  When
-> > a subsequent stat(2) enters __nfs_revalidate_inode() and finds a
-> > directory delegation held, the function currently early-exits and
-> > returns the cached (now stale) mtime to userspace without sending a
-> > GETATTR RPC.
-> >
-> > Keep the early-exit for the fast path, but take the RPC when CHANGE,
-> > MTIME, or CTIME are already marked invalid.  The delegation alone is
-> > not a guarantee of cached-attr freshness once the code itself has
-> > flagged the cache as stale.
-> 
-> Is this a problem only for the attributes you've flagged, or do you think
-> it would be a problem for size, nlink, or mode attributes as well? I'm asking
-> because we have NFS_INO_INVALID_ATTR which includes all of these attributes
-> which might make this a little more generic rather than carving out an
-> exception an attribute at a time.
+The SVC_POOL_AUTO/GLOBAL/PERCPU/PERNODE pool mode selection machinery
+was added when NUMA was new and the right default was unclear.  Today,
+pernode is the right choice everywhere:
 
-Hey Anna,
+- On multi-NUMA hosts, it gives one pool per node with proper thread
+  affinity and NUMA-local memory allocation.
+- On single-node hosts, pernode degenerates to exactly one pool,
+  identical to the old "global" mode -- svc_pool_for_cpu() short-
+  circuits when sv_nrpools <= 1, no CPU affinity is set, and memory
+  is allocated from the single node.
 
-Agreed on at least size (and probably atime), which means a little
-more generic would be a good thing.
+The percpu mode (one pool per CPU) created excessive pools relative to
+the number of threads most deployments run, and was only auto-selected
+in a narrow case (single node, >2 CPUs).
 
-Tom
+Remove the SVC_POOL_* enum, mode selection heuristic,
+svc_pool_map_init_percpu(), and all mode-based switch statements.
+Simplify pool map functions to always use the pernode path.
 
-> 
-> Thoughts?
-> Anna
-> 
-> >
-> > Assisted-by: Claude:claude-opus-4-7 [bpftrace] [tshark]
-> > Signed-off-by: Tom Haynes <loghyr@gmail.com>
-> > ---
-> >  fs/nfs/inode.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> > index 98a8f0de1199..936bc329f462 100644
-> > --- a/fs/nfs/inode.c
-> > +++ b/fs/nfs/inode.c
-> > @@ -1390,7 +1390,11 @@ __nfs_revalidate_inode(struct nfs_server 
-> > *server, struct inode *inode)
-> >  		status = pnfs_sync_inode(inode, false);
-> >  		if (status)
-> >  			goto out;
-> > -	} else if (nfs_have_directory_delegation(inode)) {
-> > +	} else if (nfs_have_directory_delegation(inode) &&
-> > +		   !(NFS_I(inode)->cache_validity &
-> > +		     (NFS_INO_INVALID_CHANGE |
-> > +		      NFS_INO_INVALID_MTIME  |
-> > +		      NFS_INO_INVALID_CTIME))) {
-> >  		status = 0;
-> >  		goto out;
-> >  	}
-> > -- 
-> > 2.53.0
+The module parameter and netlink interfaces are preserved for backward
+compatibility:
+- Writing "pernode" succeeds; any other value returns -EINVAL
+- Reading always returns "pernode"
+- Writing to the module parameter emits a deprecation notice
 
--- 
+Assisted-by: Claude:claude-opus-4-6
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Tom Haynes <loghyr@gmail.com>
+In hindsight, I wish I had proposed this before adding the pool-mode
+settings to the new nfsd netlink interfaces.
+
+If this is too radical as a single step, we just could switch the
+default to "pernode", add a warning and leave the interfaces alone for
+now. Or maybe do that and go ahead and remove the percpu setting?
+
+Thoughts?
+---
+ net/sunrpc/svc.c | 231 +++++++------------------------------------------------
+ 1 file changed, 29 insertions(+), 202 deletions(-)
+
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 576fa42e7abf..8ecdd95c4867 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -38,19 +38,6 @@
+ 
+ static void svc_unregister(const struct svc_serv *serv, struct net *net);
+ 
+-#define SVC_POOL_DEFAULT	SVC_POOL_GLOBAL
+-
+-/*
+- * Mode for mapping cpus to pools.
+- */
+-enum {
+-	SVC_POOL_AUTO = -1,	/* choose one of the others */
+-	SVC_POOL_GLOBAL,	/* no mapping, just a single global pool
+-				 * (legacy & UP mode) */
+-	SVC_POOL_PERCPU,	/* one pool per cpu */
+-	SVC_POOL_PERNODE	/* one pool per numa node */
+-};
+-
+ /*
+  * Structure for mapping cpus to pools and vice versa.
+  * Setup once during sunrpc initialisation.
+@@ -58,62 +45,20 @@ enum {
+ 
+ struct svc_pool_map {
+ 	int count;			/* How many svc_servs use us */
+-	int mode;			/* Note: int not enum to avoid
+-					 * warnings about "enumeration value
+-					 * not handled in switch" */
+ 	unsigned int npools;
+-	unsigned int *pool_to;		/* maps pool id to cpu or node */
+-	unsigned int *to_pool;		/* maps cpu or node to pool id */
++	unsigned int *pool_to;		/* maps pool id to node */
++	unsigned int *to_pool;		/* maps node to pool id */
+ };
+ 
+-static struct svc_pool_map svc_pool_map = {
+-	.mode = SVC_POOL_DEFAULT
+-};
++static struct svc_pool_map svc_pool_map;
+ 
+ static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count only */
+ 
+-static int
+-__param_set_pool_mode(const char *val, struct svc_pool_map *m)
+-{
+-	int err, mode;
+-
+-	mutex_lock(&svc_pool_map_mutex);
+-
+-	err = 0;
+-	if (!strncmp(val, "auto", 4))
+-		mode = SVC_POOL_AUTO;
+-	else if (!strncmp(val, "global", 6))
+-		mode = SVC_POOL_GLOBAL;
+-	else if (!strncmp(val, "percpu", 6))
+-		mode = SVC_POOL_PERCPU;
+-	else if (!strncmp(val, "pernode", 7))
+-		mode = SVC_POOL_PERNODE;
+-	else
+-		err = -EINVAL;
+-
+-	if (err)
+-		goto out;
+-
+-	if (m->count == 0)
+-		m->mode = mode;
+-	else if (mode != m->mode)
+-		err = -EBUSY;
+-out:
+-	mutex_unlock(&svc_pool_map_mutex);
+-	return err;
+-}
+-
+-static int
+-param_set_pool_mode(const char *val, const struct kernel_param *kp)
+-{
+-	struct svc_pool_map *m = kp->arg;
+-
+-	return __param_set_pool_mode(val, m);
+-}
+-
+ int sunrpc_set_pool_mode(const char *val)
+ {
+-	return __param_set_pool_mode(val, &svc_pool_map);
++	if (strncmp(val, "pernode", 7))
++		return -EINVAL;
++	return 0;
+ }
+ EXPORT_SYMBOL(sunrpc_set_pool_mode);
+ 
+@@ -122,84 +67,32 @@ EXPORT_SYMBOL(sunrpc_set_pool_mode);
+  * @buf: where to write the current pool_mode
+  * @size: size of @buf
+  *
+- * Grab the current pool_mode from the svc_pool_map and write
+- * the resulting string to @buf. Returns the number of characters
++ * Write the pool_mode string to @buf. Returns the number of characters
+  * written to @buf (a'la snprintf()).
+  */
+ int
+ sunrpc_get_pool_mode(char *buf, size_t size)
+ {
+-	struct svc_pool_map *m = &svc_pool_map;
+-
+-	switch (m->mode)
+-	{
+-	case SVC_POOL_AUTO:
+-		return snprintf(buf, size, "auto");
+-	case SVC_POOL_GLOBAL:
+-		return snprintf(buf, size, "global");
+-	case SVC_POOL_PERCPU:
+-		return snprintf(buf, size, "percpu");
+-	case SVC_POOL_PERNODE:
+-		return snprintf(buf, size, "pernode");
+-	default:
+-		return snprintf(buf, size, "%d", m->mode);
+-	}
++	return snprintf(buf, size, "pernode");
+ }
+ EXPORT_SYMBOL(sunrpc_get_pool_mode);
+ 
+ static int
+-param_get_pool_mode(char *buf, const struct kernel_param *kp)
++param_set_pool_mode(const char *val, const struct kernel_param *kp)
+ {
+-	char str[16];
+-	int len;
+-
+-	len = sunrpc_get_pool_mode(str, ARRAY_SIZE(str));
+-
+-	/* Ensure we have room for newline and NUL */
+-	len = min_t(int, len, ARRAY_SIZE(str) - 2);
+-
+-	/* tack on the newline */
+-	str[len] = '\n';
+-	str[len + 1] = '\0';
+-
+-	return sysfs_emit(buf, "%s", str);
++	pr_notice("sunrpc: the pool_mode parameter is deprecated and will be removed in a future release.\n");
++	return sunrpc_set_pool_mode(val);
+ }
+ 
+-module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
+-		  &svc_pool_map, 0644);
+-
+-/*
+- * Detect best pool mapping mode heuristically,
+- * according to the machine's topology.
+- */
+ static int
+-svc_pool_map_choose_mode(void)
++param_get_pool_mode(char *buf, const struct kernel_param *kp)
+ {
+-	unsigned int node;
+-
+-	if (nr_online_nodes > 1) {
+-		/*
+-		 * Actually have multiple NUMA nodes,
+-		 * so split pools on NUMA node boundaries
+-		 */
+-		return SVC_POOL_PERNODE;
+-	}
+-
+-	node = first_online_node;
+-	if (nr_cpus_node(node) > 2) {
+-		/*
+-		 * Non-trivial SMP, or CONFIG_NUMA on
+-		 * non-NUMA hardware, e.g. with a generic
+-		 * x86_64 kernel on Xeons.  In this case we
+-		 * want to divide the pools on cpu boundaries.
+-		 */
+-		return SVC_POOL_PERCPU;
+-	}
+-
+-	/* default: one global pool */
+-	return SVC_POOL_GLOBAL;
++	return sysfs_emit(buf, "pernode\n");
+ }
+ 
++module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
++		  NULL, 0644);
++
+ /*
+  * Allocate the to_pool[] and pool_to[] arrays.
+  * Returns 0 on success or an errno.
+@@ -224,35 +117,7 @@ svc_pool_map_alloc_arrays(struct svc_pool_map *m, unsigned int maxpools)
+ }
+ 
+ /*
+- * Initialise the pool map for SVC_POOL_PERCPU mode.
+- * Returns number of pools or <0 on error.
+- */
+-static int
+-svc_pool_map_init_percpu(struct svc_pool_map *m)
+-{
+-	unsigned int maxpools = nr_cpu_ids;
+-	unsigned int pidx = 0;
+-	unsigned int cpu;
+-	int err;
+-
+-	err = svc_pool_map_alloc_arrays(m, maxpools);
+-	if (err)
+-		return err;
+-
+-	for_each_online_cpu(cpu) {
+-		BUG_ON(pidx >= maxpools);
+-		m->to_pool[cpu] = pidx;
+-		m->pool_to[pidx] = cpu;
+-		pidx++;
+-	}
+-	/* cpus brought online later all get mapped to pool0, sorry */
+-
+-	return pidx;
+-};
+-
+-
+-/*
+- * Initialise the pool map for SVC_POOL_PERNODE mode.
++ * Initialise the pool map for one pool per NUMA node.
+  * Returns number of pools or <0 on error.
+  */
+ static int
+@@ -284,14 +149,13 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
+  * Add a reference to the global map of cpus to pools (and
+  * vice versa) if pools are in use.
+  * Initialise the map if we're the first user.
+- * Returns the number of pools. If this is '1', no reference
+- * was taken.
++ * Returns the number of pools.
+  */
+ static unsigned int
+ svc_pool_map_get(void)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+-	int npools = -1;
++	int npools;
+ 
+ 	mutex_lock(&svc_pool_map_mutex);
+ 	if (m->count++) {
+@@ -299,23 +163,9 @@ svc_pool_map_get(void)
+ 		return m->npools;
+ 	}
+ 
+-	if (m->mode == SVC_POOL_AUTO)
+-		m->mode = svc_pool_map_choose_mode();
+-
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-		npools = svc_pool_map_init_percpu(m);
+-		break;
+-	case SVC_POOL_PERNODE:
+-		npools = svc_pool_map_init_pernode(m);
+-		break;
+-	}
+-
+-	if (npools <= 0) {
+-		/* default, or memory allocation failure */
++	npools = svc_pool_map_init_pernode(m);
++	if (npools <= 0)
+ 		npools = 1;
+-		m->mode = SVC_POOL_GLOBAL;
+-	}
+ 	m->npools = npools;
+ 	mutex_unlock(&svc_pool_map_mutex);
+ 	return npools;
+@@ -346,14 +196,11 @@ static int svc_pool_map_get_node(unsigned int pidx)
+ {
+ 	const struct svc_pool_map *m = &svc_pool_map;
+ 
+-	if (m->count) {
+-		if (m->mode == SVC_POOL_PERCPU)
+-			return cpu_to_node(m->pool_to[pidx]);
+-		if (m->mode == SVC_POOL_PERNODE)
+-			return m->pool_to[pidx];
+-	}
++	if (m->count)
++		return m->pool_to[pidx];
+ 	return numa_mem_id();
+ }
++
+ /*
+  * Set the given thread's cpus_allowed mask so that it
+  * will only run on cpus in the given pool.
+@@ -372,27 +219,15 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ 	if (m->count == 0)
+ 		return;
+ 
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-	{
+-		set_cpus_allowed_ptr(task, cpumask_of(node));
+-		break;
+-	}
+-	case SVC_POOL_PERNODE:
+-	{
+-		set_cpus_allowed_ptr(task, cpumask_of_node(node));
+-		break;
+-	}
+-	}
++	set_cpus_allowed_ptr(task, cpumask_of_node(node));
+ }
+ 
+ /**
+  * svc_pool_for_cpu - Select pool to run a thread on this cpu
+  * @serv: An RPC service
+  *
+- * Use the active CPU and the svc_pool_map's mode setting to
+- * select the svc thread pool to use. Once initialized, the
+- * svc_pool_map does not change.
++ * Use the active CPU and the svc_pool_map to select the svc thread
++ * pool to use. Once initialized, the svc_pool_map does not change.
+  *
+  * Return value:
+  *   A pointer to an svc_pool
+@@ -400,20 +235,12 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+-	int cpu = raw_smp_processor_id();
+-	unsigned int pidx = 0;
++	unsigned int pidx;
+ 
+ 	if (serv->sv_nrpools <= 1)
+ 		return serv->sv_pools;
+ 
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-		pidx = m->to_pool[cpu];
+-		break;
+-	case SVC_POOL_PERNODE:
+-		pidx = m->to_pool[cpu_to_node(cpu)];
+-		break;
+-	}
++	pidx = m->to_pool[cpu_to_node(raw_smp_processor_id())];
+ 
+ 	return &serv->sv_pools[pidx % serv->sv_nrpools];
+ }
+
+---
+base-commit: 2e68039281932e6dc37718a1ea7cbb8e2cda42e6
+change-id: 20260423-sunrpc-pool-mode-3e6b56320dc4
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
