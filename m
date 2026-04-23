@@ -1,505 +1,244 @@
-Return-Path: <linux-nfs+bounces-21045-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21048-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kI+ROj0w6mmVwQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21045-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 16:44:13 +0200
+	id yJ1uA8JR6mkhxgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21048-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 19:07:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E55BC453D6A
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 16:44:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E4B1455559
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 19:07:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A954A300DDCA
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 14:39:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A9D2D30036D7
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 17:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6F23375D5;
-	Thu, 23 Apr 2026 14:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C75B34887E;
+	Thu, 23 Apr 2026 17:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXFM7s7J"
+	dkim=pass (2048-bit key) header.d=nrubsig.org header.i=@nrubsig.org header.b="PN8ns4gM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shrimp.cherry.relay.mailchannels.net (shrimp.cherry.relay.mailchannels.net [23.83.223.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AE7332EA0;
-	Thu, 23 Apr 2026 14:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776955162; cv=none; b=h5Tv2Tmm+q9pQp+lQfao0e8Qb+iGXfMJEL5zLHWrcRxGnrsqmD2Wm7AmsCupqEaJ0R+hVaILv6Oo2o9IaanOTviDy/Ie5XmsBehCwp/JwYSxXpD/Ay7nnvayoKoOxt2+Br5L4unABxpWfDqHmVDY/XGHERYY3nnf/mNICOzKx3s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776955162; c=relaxed/simple;
-	bh=i5Uv2iIDCeJThQoP5+VSP77Y7VwvmVtcVdXHiq4f/L8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=go/t1LGiH6JW3xGQEl49+LrGdaMTwwgF2ie47h7vSW332K9ReCrzmjua+G2i5/WsnwdKC8UHEjyRy4aIK4GV2M/LARBR4w8Sa9XUMr0Jxyfp+d8qDAe3qbgHT2ewWfxIfEJPDtzmeTicbd90vdh1pjJ7Dzyn4geo7lSS/Mnnjm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXFM7s7J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AE3C2BCAF;
-	Thu, 23 Apr 2026 14:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776955161;
-	bh=i5Uv2iIDCeJThQoP5+VSP77Y7VwvmVtcVdXHiq4f/L8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=CXFM7s7JlcW5yM/NGkH3eL2AiRO1y2i+PFzgK0CT9Hl4CaEvjDEXMV+mJPo203NOs
-	 Qtv+62wbeapTA49XIeYlHyP0SGOchRbFH1hvHIpk33K2NyRKoiY75iMtUvsSIMU/ym
-	 JI9vyfjeWNdJFXt4N62HZga+U6Lg7EBW2XSN+xGvSl+xwtNMBL8aUU1mEnFqQ5A9OZ
-	 CAv7AQ58TJd4tOk/xQhbxtFgXm85OQIFJFaiKIpboJsou3fabEviaOzw3ho5PLxPsc
-	 0+kNxi8Dpg8FEpdqnKAJ0z89WDEqWySm9ARimJ+bUjYH1XiTrpJFWKpKterT7mW6H5
-	 hZ1vnBxYcvvpg==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 23 Apr 2026 10:39:14 -0400
-Subject: [PATCH RFC] sunrpc: hardcode pool_mode to pernode, remove other
- modes
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2C8149C6F
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 17:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.164
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776963686; cv=pass; b=YjItRyRfL19qvvd20ZMWq8+fjsp1Pz9A9VlQEXfc6aNMIYTH22H6tTNE7V12N094WjxBxOMlnouyHWqfBys/3r97YxHYpXwj1AoPXiadV1OaeVDD3A6uNnwJKeb9ZOp93Hw20ZfS0q30/QLa49PphiDG9FIQLA2bjYW+HPAONSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776963686; c=relaxed/simple;
+	bh=oMn+kRk8o7kF+WEVlXEJQi1RFS85r1y0N0ZDaiurol8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cS3wJHGhFqznDffAugJfinR9Q83EpR1N9SBg9SWnlwn+I/kynVd4HPrsknYkI5FDNz+wNhqVb2M9RoxAxQHz4VcqJDZUfWOROFnLz3w4GYJf/N+MO4R/K3lY8KXNE1QOdsWDT9D37PJ6RexYNob8eZzBZcXNNqEocf1RapZINmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=fail smtp.mailfrom=nrubsig.org; dkim=pass (2048-bit key) header.d=nrubsig.org header.i=@nrubsig.org header.b=PN8ns4gM; arc=pass smtp.client-ip=23.83.223.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nrubsig.org
+X-Sender-Id: dreamhost|x-authsender|gisburn@nrubsig.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 57001941DBD
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 14:40:01 +0000 (UTC)
+Received: from pdx1-sub0-mail-a261.dreamhost.com (100-97-142-198.trex-nlb.outbound.svc.cluster.local [100.97.142.198])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 05E5E942610
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 14:40:01 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1776955201;
+	b=Nlw1dApfORUBh0+h3EFxlU8ql5S6cAuqV0ryy1ihRp6pvX82221L+fBZ8/yTHhm/mC8bso
+	uFrimwhOSWXIpz0Fy6TytE73SMBpzbntbNZmgUp7KwoR2qegXLtUPozFQrFGLITgaUr9kL
+	CrRp3tZQ7+Nacy0PKXjDyMD8QnZWhj4KWGMrCXdJIkrBXHAkkJ+5NFGkGyO9LDnat7wOiL
+	Zfst+r8ZLP7yhssvUEgVPt3BR+rD8G+Ozg9YNE+4i68DJqddtjMjc90rTt7xdHq6KS/nVz
+	Mlox/sXJd8PN4SopgtmTHSv4DHVAgx6P/+awZl8cYhRGRphRpioENmgegvsyuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1776955201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=CSMKb7zIELpkiDIk9dfUrRMZ9eQay4tUDcakEg7KvEw=;
+	b=P5ZoFNNjWJffneNFDAdZyM86d0k86g3kYR0wFWFl6RvxBhsu8xi8hkNVWQXRukek1HfKx7
+	zI7rtPgtbL/7ApoK3n2+lCflDd1HK3f+CzaehZZiQXS853k2DuEIaydNhcS73ma10rFbvD
+	MGqTZw//+B8O1+Zv2HgRx7iW6oGJLKbsNInMKCFS8Lw/UCnGaftXHEkMAuH6lWnJq0BAcY
+	rIjEzEIP2P/3rYrT2X/f6jorgEtgWwSzUGBlmkl3vtKJAXtTM8y/PMZzQrNttqEz3k5W87
+	iXXZfcVW8owtyv4LsY6stnlm5eeU0ZD0auJunNGIgbC08cCGaZqiRQIITuKzAQ==
+ARC-Authentication-Results: i=1;
+	rspamd-55bb47d7db-bflh6;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=roland.mainz@nrubsig.org
+X-Sender-Id: dreamhost|x-authsender|gisburn@nrubsig.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|gisburn@nrubsig.org
+X-MailChannels-Auth-Id: dreamhost
+X-Snatch-Abaft: 0fc501a71ea257f7_1776955201223_2371732217
+X-MC-Loop-Signature: 1776955201223:1959084505
+X-MC-Ingress-Time: 1776955201223
+Received: from pdx1-sub0-mail-a261.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.142.198 (trex/7.1.5);
+	Thu, 23 Apr 2026 14:40:01 +0000
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: gisburn@nrubsig.org)
+	by pdx1-sub0-mail-a261.dreamhost.com (Postfix) with ESMTPSA id 4g1dzN5rlPz106x
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 07:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nrubsig.org;
+	s=dreamhost; t=1776955200;
+	bh=CSMKb7zIELpkiDIk9dfUrRMZ9eQay4tUDcakEg7KvEw=;
+	h=From:Date:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	b=PN8ns4gMoY3mm1C7DGUzdfHUTs+tHwH1LRze362ErR7/Z08jV+JkXvDpO3uP+gHoZ
+	 ClGR2y3jWIOba62tDh1U4iUK8NBbOViKFEMz1rbER2JSi1i7R+5XMAgTc2Y6eB1u+w
+	 wCbcsjjJVMhJYCs160C7mYTBF+yWtQDgsT+oES9yk7vh+6qSCOpYNsaIKgQvwNdwEx
+	 nt8wJ8FrLGZ1mDhP9X3SHcQNzIaRUtikd4QNB3rML0UUqbocjOYThaM31x7aC//tPN
+	 hgBTU6wqAUsFNxwsqa+Q1rjXseedYnZGjRJ4gDub030ONchSG9saYXbyFThJQ0+iC8
+	 ZtQYPiZ8A53lg==
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-43fe3e22e33so4456246f8f.0
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 07:40:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+QdsWLSqi5AJmgzs+pwPDke3yiXTXTJUZfhgo8/1XppejgpzYrYfWZx4WDv9oXoHem1alXpGjuOPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUalLJ994ylGnQ+/CseK6sztds9nrxuUyZd6PL7oXeUIgrj9GA
+	Q7bC5miBkwHJf9rANPwDCdr+rFuR20oOo6f7YNuzxh8JSEZ9B/CievUYkraWXSlAAs+WfIsykTr
+	jaSJ5HsNp/dnC0KaSkspVfW/cP/T6XLA=
+X-Received: by 2002:a05:6000:2c01:b0:43d:7af0:3a8a with SMTP id
+ ffacd0b85a97d-43fe3e20a0fmr42750560f8f.46.1776955199806; Thu, 23 Apr 2026
+ 07:39:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260423-sunrpc-pool-mode-v1-1-b7f20e35749b@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDEyNj3eLSvKKCZN2C/Pwc3dz8lFRd41SzJFMzYyODlGQTJaC2gqLUtMw
- KsJHRSkFuzkqxtbUA89XUHmcAAAA=
-X-Change-ID: 20260423-sunrpc-pool-mode-3e6b56320dc4
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10979; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=i5Uv2iIDCeJThQoP5+VSP77Y7VwvmVtcVdXHiq4f/L8=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp6i8Ywoas5K5lCeEmLUuiqIT7iyb5YKuuUjnEf
- gxFXwP2Y8OJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaeovGAAKCRAADmhBGVaC
- FY0LD/0chFulmep9KzdEhhhUQQBrXhvrN4KR93oAZ1AW6veSTEes4CTlKle8KH3odWb3MhoL3ip
- ora29G8oP0L6ihY1QPW9bAgWHtE/1qw+d7rkQAMZjsRH6Cg5Dee/Txe0uGopftWYQTC3Z4pzSJD
- 6OIVD1nS6rzck8kOYLymTe8WMlm2SCUquwLOzIcWhwMWKXGbpE7DmpGj7Zcc7v+M9c1HbizZzLE
- WuAi8iRoSYX72jyQhXIH/DpfpQ7ia1fmD6X+u0vuxRW7tWZaDpV3UUbutO65RnqSqZLQGPYphmy
- tnv743y5WOgGmJlv3fg37/RUJ2ZTjqZTwUthcV1f/vfcL5db3+WzPDVfhQWHglrEEL2MpcNencP
- PIzT0bSw2/DX88g5UiPfnwo54SRRCqHyu6tlO+ErRBAOPfOGi6uqwFSDuU53yGPxcjx82JxcBBp
- UYT8JW1iv3ufDqaU1mUrNiJsU1j6HolJSXOaT/UUSJsFbMs6vq/Wzg5EvOt10WBFvGh7kCW1uZK
- NMe7p23eavzYs+1c56HinkdHoodsIEP1LArvtBZKm6/0CDFt3kBO4gIU8VxsasIDIkLrjm/IuZI
- zcu2eTp2iTf2Owbn9sWqMKidcrIm6xWQXatY4VjgkM04IhgU4ufTFu2NLebZajF6SdQ5DI+qsFn
- IPsS7WFEUvHX1mQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+References: <20260423-case-sensitivity-v10-0-c385d674a6cf@oracle.com>
+In-Reply-To: <20260423-case-sensitivity-v10-0-c385d674a6cf@oracle.com>
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Thu, 23 Apr 2026 16:39:21 +0200
+X-Gmail-Original-Message-ID: <CAKAoaQnfCVGHPx0RP8C8YkpqtPZZOU98kxKm=Nv0b1bMBWFn8w@mail.gmail.com>
+X-Gm-Features: AQROBzAEQMQBLMH8e_5RwKgwt68ChBFQWbVD9h1wV7ABf60ONeuwjPazJVpjv3Q
+Message-ID: <CAKAoaQnfCVGHPx0RP8C8YkpqtPZZOU98kxKm=Nv0b1bMBWFn8w@mail.gmail.com>
+Subject: Re: [PATCH v10 00/17] Exposing case folding behavior
+To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	R_DKIM_ALLOW(-0.20)[nrubsig.org:s=dreamhost];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21045-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-21048-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	DMARC_NA(0.00)[nrubsig.org];
+	DKIM_TRACE(0.00)[nrubsig.org:+];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[roland.mainz@nrubsig.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E55BC453D6A
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 1E4B1455559
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The SVC_POOL_AUTO/GLOBAL/PERCPU/PERNODE pool mode selection machinery
-was added when NUMA was new and the right default was unclear.  Today,
-pernode is the right choice everywhere:
+On Thu, Apr 23, 2026 at 3:12=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
+>
+> Following on from
+>
+> https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57f=
+d@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
+>
+> I'm attempting to implement enough support in the Linux VFS to
+> enable file services like NFSD and ksmbd (and user space
+> equivalents) to provide the actual status of case folding support
+> in local file systems. The default behavior for local file systems
+> not explicitly supported in this series is to reflect the usual
+> POSIX behaviors:
+>
+>   case-insensitive =3D false
+>   case-nonpreserving =3D false
+>
+> The case-insensitivity and case-nonpreserving booleans can be
+> consumed immediately by NFSD. These two attributes have been part of
+> the NFSv3 and NFSv4 protocols for decades, in order to support NFS
+> client implementations on non-POSIX systems.
+>
+> Support for user space file servers is why this series exposes case
+> folding information via a user-space API. I don't know of any other
+> category of user-space application that requires access to case
+> folding info.
+>
+> The Linux NFS community has a growing interest in supporting NFS
+> clients on Windows and MacOS platforms, where file name behavior does
+> not align with traditional POSIX semantics.
+>
+> One example of a Windows-based NFS client is [1]. This client
+> implementation explicitly requires servers to report
+> FATTR4_WORD0_CASE_INSENSITIVE =3D TRUE for proper operation, a hard
+> requirement for Windows client interoperability because Windows
+> applications expect case-insensitive behavior. When an NFS client
+> knows the server is case-insensitive, it can avoid issuing multiple
+> LOOKUP/READDIR requests to search for case variants, and applications
+> like Win32 programs work correctly without manual workarounds or
+> code changes.
+>
+> Even the Linux client can take advantage of this information. Trond
+> merged patches 4 years ago [2] that introduce support for case
+> insensitivity, in support of the Hammerspace NFS server. In
+> particular, when a client detects a case-insensitive NFS share,
+> negative dentry caching must be disabled (a lookup for "FILE.TXT"
+> failing shouldn't cache a negative entry when "file.txt" exists)
+> and directory change invalidation must clear all cached case-folded
+> file name variants.
+>
+> Hammerspace servers and several other NFS server implementations
+> operate in multi-protocol environments, where a single file service
+> instance caters to both NFS and SMB clients. In those cases, things
+> work more smoothly for everyone when the NFS client can see and adapt
+> to the case folding behavior that SMB users rely on and expect. NFSD
+> needs to support the case-insensitivity and case-nonpreserving
+> booleans properly in order to participate as a first-class citizen
+> in such environments.
+>
+> [1] https://github.com/kofemann/ms-nfs41-client
+>
+> [2] https://patchwork.kernel.org/project/linux-nfs/cover/20211217203658.4=
+39352-1-trondmy@kernel.org/
+>
+> ---
+> Changes since v9:
+> - nfs: always probe PATHCONF for case caps. Default to case-
+>   preserving when the server does not report case_preserving
+> - nfsd, ksmbd: tolerate -ENOTTY from vfs_fileattr_get() so
+>   overlayfs exports on backing filesystems without fileattr_get
+>   do not fail the RPC
+> - xfs: map FS_XFLAG_CASEFOLD inside xfs_ip2xflags() so BULKSTAT
+>   and FS_IOC_FSGETXATTR report the flag consistently
+> - vboxsf: reject a short host reply to SHFL_INFO_VOLUME before
+>   trusting volinfo.properties.case_sensitive
 
-- On multi-NUMA hosts, it gives one pool per node with proper thread
-  affinity and NUMA-local memory allocation.
-- On single-node hosts, pernode degenerates to exactly one pool,
-  identical to the old "global" mode -- svc_pool_for_cpu() short-
-  circuits when sv_nrpools <= 1, no CPU affinity is set, and memory
-  is allocated from the single node.
+Looks good to me.
+It also works with ms-nfs41-client, therefore:
+Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
 
-The percpu mode (one pool per CPU) created excessive pools relative to
-the number of threads most deployments run, and was only auto-selected
-in a narrow case (single node, >2 CPUs).
+----
 
-Remove the SVC_POOL_* enum, mode selection heuristic,
-svc_pool_map_init_percpu(), and all mode-based switch statements.
-Simplify pool map functions to always use the pernode path.
-
-The module parameter and netlink interfaces are preserved for backward
-compatibility:
-- Writing "pernode" succeeds; any other value returns -EINVAL
-- Reading always returns "pernode"
-- Writing to the module parameter emits a deprecation notice
-
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-In hindsight, I wish I had proposed this before adding the pool-mode
-settings to the new nfsd netlink interfaces.
-
-If this is too radical as a single step, we just could switch the
-default to "pernode", add a warning and leave the interfaces alone for
-now. Or maybe do that and go ahead and remove the percpu setting?
-
-Thoughts?
----
- net/sunrpc/svc.c | 231 +++++++------------------------------------------------
- 1 file changed, 29 insertions(+), 202 deletions(-)
-
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 576fa42e7abf..8ecdd95c4867 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -38,19 +38,6 @@
- 
- static void svc_unregister(const struct svc_serv *serv, struct net *net);
- 
--#define SVC_POOL_DEFAULT	SVC_POOL_GLOBAL
--
--/*
-- * Mode for mapping cpus to pools.
-- */
--enum {
--	SVC_POOL_AUTO = -1,	/* choose one of the others */
--	SVC_POOL_GLOBAL,	/* no mapping, just a single global pool
--				 * (legacy & UP mode) */
--	SVC_POOL_PERCPU,	/* one pool per cpu */
--	SVC_POOL_PERNODE	/* one pool per numa node */
--};
--
- /*
-  * Structure for mapping cpus to pools and vice versa.
-  * Setup once during sunrpc initialisation.
-@@ -58,62 +45,20 @@ enum {
- 
- struct svc_pool_map {
- 	int count;			/* How many svc_servs use us */
--	int mode;			/* Note: int not enum to avoid
--					 * warnings about "enumeration value
--					 * not handled in switch" */
- 	unsigned int npools;
--	unsigned int *pool_to;		/* maps pool id to cpu or node */
--	unsigned int *to_pool;		/* maps cpu or node to pool id */
-+	unsigned int *pool_to;		/* maps pool id to node */
-+	unsigned int *to_pool;		/* maps node to pool id */
- };
- 
--static struct svc_pool_map svc_pool_map = {
--	.mode = SVC_POOL_DEFAULT
--};
-+static struct svc_pool_map svc_pool_map;
- 
- static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count only */
- 
--static int
--__param_set_pool_mode(const char *val, struct svc_pool_map *m)
--{
--	int err, mode;
--
--	mutex_lock(&svc_pool_map_mutex);
--
--	err = 0;
--	if (!strncmp(val, "auto", 4))
--		mode = SVC_POOL_AUTO;
--	else if (!strncmp(val, "global", 6))
--		mode = SVC_POOL_GLOBAL;
--	else if (!strncmp(val, "percpu", 6))
--		mode = SVC_POOL_PERCPU;
--	else if (!strncmp(val, "pernode", 7))
--		mode = SVC_POOL_PERNODE;
--	else
--		err = -EINVAL;
--
--	if (err)
--		goto out;
--
--	if (m->count == 0)
--		m->mode = mode;
--	else if (mode != m->mode)
--		err = -EBUSY;
--out:
--	mutex_unlock(&svc_pool_map_mutex);
--	return err;
--}
--
--static int
--param_set_pool_mode(const char *val, const struct kernel_param *kp)
--{
--	struct svc_pool_map *m = kp->arg;
--
--	return __param_set_pool_mode(val, m);
--}
--
- int sunrpc_set_pool_mode(const char *val)
- {
--	return __param_set_pool_mode(val, &svc_pool_map);
-+	if (strncmp(val, "pernode", 7))
-+		return -EINVAL;
-+	return 0;
- }
- EXPORT_SYMBOL(sunrpc_set_pool_mode);
- 
-@@ -122,84 +67,32 @@ EXPORT_SYMBOL(sunrpc_set_pool_mode);
-  * @buf: where to write the current pool_mode
-  * @size: size of @buf
-  *
-- * Grab the current pool_mode from the svc_pool_map and write
-- * the resulting string to @buf. Returns the number of characters
-+ * Write the pool_mode string to @buf. Returns the number of characters
-  * written to @buf (a'la snprintf()).
-  */
- int
- sunrpc_get_pool_mode(char *buf, size_t size)
- {
--	struct svc_pool_map *m = &svc_pool_map;
--
--	switch (m->mode)
--	{
--	case SVC_POOL_AUTO:
--		return snprintf(buf, size, "auto");
--	case SVC_POOL_GLOBAL:
--		return snprintf(buf, size, "global");
--	case SVC_POOL_PERCPU:
--		return snprintf(buf, size, "percpu");
--	case SVC_POOL_PERNODE:
--		return snprintf(buf, size, "pernode");
--	default:
--		return snprintf(buf, size, "%d", m->mode);
--	}
-+	return snprintf(buf, size, "pernode");
- }
- EXPORT_SYMBOL(sunrpc_get_pool_mode);
- 
- static int
--param_get_pool_mode(char *buf, const struct kernel_param *kp)
-+param_set_pool_mode(const char *val, const struct kernel_param *kp)
- {
--	char str[16];
--	int len;
--
--	len = sunrpc_get_pool_mode(str, ARRAY_SIZE(str));
--
--	/* Ensure we have room for newline and NUL */
--	len = min_t(int, len, ARRAY_SIZE(str) - 2);
--
--	/* tack on the newline */
--	str[len] = '\n';
--	str[len + 1] = '\0';
--
--	return sysfs_emit(buf, "%s", str);
-+	pr_notice("sunrpc: the pool_mode parameter is deprecated and will be removed in a future release.\n");
-+	return sunrpc_set_pool_mode(val);
- }
- 
--module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
--		  &svc_pool_map, 0644);
--
--/*
-- * Detect best pool mapping mode heuristically,
-- * according to the machine's topology.
-- */
- static int
--svc_pool_map_choose_mode(void)
-+param_get_pool_mode(char *buf, const struct kernel_param *kp)
- {
--	unsigned int node;
--
--	if (nr_online_nodes > 1) {
--		/*
--		 * Actually have multiple NUMA nodes,
--		 * so split pools on NUMA node boundaries
--		 */
--		return SVC_POOL_PERNODE;
--	}
--
--	node = first_online_node;
--	if (nr_cpus_node(node) > 2) {
--		/*
--		 * Non-trivial SMP, or CONFIG_NUMA on
--		 * non-NUMA hardware, e.g. with a generic
--		 * x86_64 kernel on Xeons.  In this case we
--		 * want to divide the pools on cpu boundaries.
--		 */
--		return SVC_POOL_PERCPU;
--	}
--
--	/* default: one global pool */
--	return SVC_POOL_GLOBAL;
-+	return sysfs_emit(buf, "pernode\n");
- }
- 
-+module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
-+		  NULL, 0644);
-+
- /*
-  * Allocate the to_pool[] and pool_to[] arrays.
-  * Returns 0 on success or an errno.
-@@ -224,35 +117,7 @@ svc_pool_map_alloc_arrays(struct svc_pool_map *m, unsigned int maxpools)
- }
- 
- /*
-- * Initialise the pool map for SVC_POOL_PERCPU mode.
-- * Returns number of pools or <0 on error.
-- */
--static int
--svc_pool_map_init_percpu(struct svc_pool_map *m)
--{
--	unsigned int maxpools = nr_cpu_ids;
--	unsigned int pidx = 0;
--	unsigned int cpu;
--	int err;
--
--	err = svc_pool_map_alloc_arrays(m, maxpools);
--	if (err)
--		return err;
--
--	for_each_online_cpu(cpu) {
--		BUG_ON(pidx >= maxpools);
--		m->to_pool[cpu] = pidx;
--		m->pool_to[pidx] = cpu;
--		pidx++;
--	}
--	/* cpus brought online later all get mapped to pool0, sorry */
--
--	return pidx;
--};
--
--
--/*
-- * Initialise the pool map for SVC_POOL_PERNODE mode.
-+ * Initialise the pool map for one pool per NUMA node.
-  * Returns number of pools or <0 on error.
-  */
- static int
-@@ -284,14 +149,13 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
-  * Add a reference to the global map of cpus to pools (and
-  * vice versa) if pools are in use.
-  * Initialise the map if we're the first user.
-- * Returns the number of pools. If this is '1', no reference
-- * was taken.
-+ * Returns the number of pools.
-  */
- static unsigned int
- svc_pool_map_get(void)
- {
- 	struct svc_pool_map *m = &svc_pool_map;
--	int npools = -1;
-+	int npools;
- 
- 	mutex_lock(&svc_pool_map_mutex);
- 	if (m->count++) {
-@@ -299,23 +163,9 @@ svc_pool_map_get(void)
- 		return m->npools;
- 	}
- 
--	if (m->mode == SVC_POOL_AUTO)
--		m->mode = svc_pool_map_choose_mode();
--
--	switch (m->mode) {
--	case SVC_POOL_PERCPU:
--		npools = svc_pool_map_init_percpu(m);
--		break;
--	case SVC_POOL_PERNODE:
--		npools = svc_pool_map_init_pernode(m);
--		break;
--	}
--
--	if (npools <= 0) {
--		/* default, or memory allocation failure */
-+	npools = svc_pool_map_init_pernode(m);
-+	if (npools <= 0)
- 		npools = 1;
--		m->mode = SVC_POOL_GLOBAL;
--	}
- 	m->npools = npools;
- 	mutex_unlock(&svc_pool_map_mutex);
- 	return npools;
-@@ -346,14 +196,11 @@ static int svc_pool_map_get_node(unsigned int pidx)
- {
- 	const struct svc_pool_map *m = &svc_pool_map;
- 
--	if (m->count) {
--		if (m->mode == SVC_POOL_PERCPU)
--			return cpu_to_node(m->pool_to[pidx]);
--		if (m->mode == SVC_POOL_PERNODE)
--			return m->pool_to[pidx];
--	}
-+	if (m->count)
-+		return m->pool_to[pidx];
- 	return numa_mem_id();
- }
-+
- /*
-  * Set the given thread's cpus_allowed mask so that it
-  * will only run on cpus in the given pool.
-@@ -372,27 +219,15 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
- 	if (m->count == 0)
- 		return;
- 
--	switch (m->mode) {
--	case SVC_POOL_PERCPU:
--	{
--		set_cpus_allowed_ptr(task, cpumask_of(node));
--		break;
--	}
--	case SVC_POOL_PERNODE:
--	{
--		set_cpus_allowed_ptr(task, cpumask_of_node(node));
--		break;
--	}
--	}
-+	set_cpus_allowed_ptr(task, cpumask_of_node(node));
- }
- 
- /**
-  * svc_pool_for_cpu - Select pool to run a thread on this cpu
-  * @serv: An RPC service
-  *
-- * Use the active CPU and the svc_pool_map's mode setting to
-- * select the svc thread pool to use. Once initialized, the
-- * svc_pool_map does not change.
-+ * Use the active CPU and the svc_pool_map to select the svc thread
-+ * pool to use. Once initialized, the svc_pool_map does not change.
-  *
-  * Return value:
-  *   A pointer to an svc_pool
-@@ -400,20 +235,12 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
- struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
- {
- 	struct svc_pool_map *m = &svc_pool_map;
--	int cpu = raw_smp_processor_id();
--	unsigned int pidx = 0;
-+	unsigned int pidx;
- 
- 	if (serv->sv_nrpools <= 1)
- 		return serv->sv_pools;
- 
--	switch (m->mode) {
--	case SVC_POOL_PERCPU:
--		pidx = m->to_pool[cpu];
--		break;
--	case SVC_POOL_PERNODE:
--		pidx = m->to_pool[cpu_to_node(cpu)];
--		break;
--	}
-+	pidx = m->to_pool[cpu_to_node(raw_smp_processor_id())];
- 
- 	return &serv->sv_pools[pidx % serv->sv_nrpools];
- }
-
----
-base-commit: 2e68039281932e6dc37718a1ea7cbb8e2cda42e6
-change-id: 20260423-sunrpc-pool-mode-3e6b56320dc4
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Bye,
+Roland
+--=20
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /=3D=3D\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
 
