@@ -1,199 +1,181 @@
-Return-Path: <linux-nfs+bounces-21042-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21043-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0AIlNaUc6mmUuQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21042-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 15:20:37 +0200
+	id WJaZLJMi6mnKuwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21043-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 15:45:55 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E76DF452C17
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 15:20:31 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5533453391
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 15:45:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 54E73303D223
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 13:14:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9A14530406A0
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Apr 2026 13:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98EBB3F23BD;
-	Thu, 23 Apr 2026 13:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C75274B2B;
+	Thu, 23 Apr 2026 13:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4OLhQiL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxoX0D3c"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247FD3F23B2;
-	Thu, 23 Apr 2026 13:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFF626E173
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 13:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776949985; cv=none; b=C+AqvCgPwi4EZl6fQuoOgjd7ZdiKjQgAu33AtrFJMxPaZoD57XrtISu1L0R5YwZs511X4oi/V2cLsJMPI1eVM4dMvYSYpy0GPZo39CekHcZgU+HMffMRg9WLCyGLHn7V5OXEM87KTafQ0GRfk6VoAH8NGTiV7H4DhCkw98W9vhw=
+	t=1776951463; cv=none; b=AzOjR6VpOEz6vfuciflcd13ORx2FUVEscGbpEhrxUYvDCrPIAg0raRbA+OZHCPgHkx9Cgejg5KOzReRlt3Dwq5aafObVAS8iRvuF88C/ha4pEnaG4xg8XMc4jR3Ml7Vgdw0x6YEtqt7OHpRardiO6uhlbICugzflkUJrto6htqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776949985; c=relaxed/simple;
-	bh=UNo7HHcDIV7JWpD0f7CVGZkCuGE2I4nW5HuPOm8dnXs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EFoGM9q1ptcXGfOh4X/vMEoz05ayRRr/DyvTud6r2CAsxn7rxwTWaQFqhelx4hCjtXx3SBtIEbIVgGfs7CS6bNyVBr0y0QtAA8y1APHLmYfWD9TXLpuBnQEcZ6DE6gVOztHksYCHndBOndjvf8Ki/CdHC7e4EkGzKbasPZ6/UO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4OLhQiL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F73C4AF0B;
-	Thu, 23 Apr 2026 13:13:01 +0000 (UTC)
+	s=arc-20240116; t=1776951463; c=relaxed/simple;
+	bh=Wi00w6ENjFNwsu8/dJgFFPmgYZs90mEnllO5mBGsrM0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=BixnT/DutIC+sRK9SHTXOHdUp4jQfkSCWC6tFfGVT+aXB4cDlVEC+pZnhKxBt+ApX8A5DbtTiCmfd16EACkzIn9GwArMVmgkLReXUqx7Xwu6o99rOk8sQ1nqd9/Jk4jUTEkM6b9jVlomkvA63Fl+JuNAPUBTTnL64DGMxjCx+PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxoX0D3c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F26C2BCAF
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Apr 2026 13:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776949984;
-	bh=UNo7HHcDIV7JWpD0f7CVGZkCuGE2I4nW5HuPOm8dnXs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=K4OLhQiL5q2gmBR6fMg7OQc8/AgWzGgE7c8lWakCv7FgQPstzhyPNpp5NVg8rSH5t
-	 mboZro4Y4RDogKy4pwOYTTBKrM1nSl9+T/ayjwK5XjqPBicW7it5FJsOONHrR9vTxJ
-	 Em4nM8x6k2v7UjnhrFFcU6nGFe5bpzMFO9Yv2iH5Dpjv9OQ0eAYvP12zCL5VShV54s
-	 MD1CiSWkCn5D5uE2yRw158f+KjfNGR6ZDQrcaMl9StikZc7kMsAlmk6gXyZp6scNMI
-	 iFwiMOsMVpSckv3ECa8Psgpi8yqngU7TcH0G6Y1+SeQ/6d/A1XCfyYIuIAkh/plDrG
-	 RKm2aYHMHvm+A==
-From: Chuck Lever <cel@kernel.org>
-Date: Thu, 23 Apr 2026 09:12:20 -0400
-Subject: [PATCH v10 17/17] ksmbd: Report filesystem case sensitivity via
- FS_ATTRIBUTE_INFORMATION
+	s=k20201202; t=1776951463;
+	bh=Wi00w6ENjFNwsu8/dJgFFPmgYZs90mEnllO5mBGsrM0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=pxoX0D3clZWiB0ZR66n04KfuXb/qAoJQNlMfL3U/7RgwGk4dBdYwdxIxWltjs5tyB
+	 hnlVrJDQCVb588UgPPSPoUpSs8va1GE/H557BxqoBdhCAZursLBfVlhds5Hcg3c11H
+	 Os1nJ7QelDsmAWsINKlq4Ck0dSaKI0VM5OheZeeEgM+PPcT1wU04vl44FKNh8VE98Q
+	 h11gC2epT6jX84snPVpaXh4axDEWxnITx3TEivv689hvIOblOTS2aOp0zRtfMuPG1T
+	 BAuTeudet/zXVm5vAukwitdv5GZvAhG3nKCsg+ROYaIbnmwBkkdn9Wq0+Y0vqeuFCT
+	 yL/27+FWOX1LQ==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 30048F40068;
+	Thu, 23 Apr 2026 09:37:42 -0400 (EDT)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Thu, 23 Apr 2026 09:37:42 -0400
+X-ME-Sender: <xms:piDqaX2Bl0a1ksMttUMTWXRZsQFTKzhrf5SGOwUGouEeBI_wdqLvcQ>
+    <xme:piDqaQ5Eo81o__dchltCR-bC5rYmm4sC0zKmKJEQk9rjkY3Tgv3pPTw8s6_BpZZ6j
+    caSQBfj1rFSyO-NXwvrx-XdZyeWNTpaJmEIaM3POPFt4UnpOxAQJQVe>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeijedvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetnhhnrgcu
+    ufgthhhumhgrkhgvrhdfuceorghnnhgrsehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepfeeikeejieelgeettdeukeejheeghfduhfejjefgfeetffetkeeghfetveei
+    ueeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hnnhgrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejjeduvddtjeel
+    qdeffedvvdefgeejuddqrghnnhgrpeepkhgvrhhnvghlrdhorhhgsehnohifhhgvhigtrh
+    gvrghmvghrhidrtghomhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheplhhoghhhhihrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhlrg
+    ihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhrohhnughmhieskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtoh
+    hmpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:piDqaRYBsV0DXTuV_v3FuaVERBJORELd1ab2SO4878okev_5a9CSTw>
+    <xmx:piDqaZ5kQIWlW7E8a9N5-MUANgpiRGUEsG43pgY_LpMqv-NF6NX22w>
+    <xmx:piDqaUCIjpGJUeqIUqF-YZoV8x0DRdQYolPcf7f_FuXXLuV7SelPkw>
+    <xmx:piDqaffcFSdxeccDPvRrbEfYybTz91NS9jrJsMeSAuv8ZpdL3GR2jQ>
+    <xmx:piDqaTJHwoQiSpyLuGx7ohQdCG6RJVX0IAAyI37OzUHV8psV4knqdElR>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0E562B6006E; Thu, 23 Apr 2026 09:37:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: A-TK9qMDiVvw
+Date: Thu, 23 Apr 2026 09:37:21 -0400
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Tom Haynes" <loghyr@gmail.com>, linux-nfs@vger.kernel.org
+Cc: "Trond Myklebust" <trondmy@kernel.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>
+Message-Id: <32c25063-3b89-4d00-87c5-3334327586c3@app.fastmail.com>
+In-Reply-To: <20260418190301.3661-2-loghyr@gmail.com>
+References: <20260418190301.3661-1-loghyr@gmail.com>
+ <20260418190301.3661-2-loghyr@gmail.com>
+Subject: Re: [PATCH 1/1] nfs: don't skip revalidate on directory delegation when attrs
+ flagged stale
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260423-case-sensitivity-v10-17-c385d674a6cf@oracle.com>
-References: <20260423-case-sensitivity-v10-0-c385d674a6cf@oracle.com>
-In-Reply-To: <20260423-case-sensitivity-v10-0-c385d674a6cf@oracle.com>
-To: Al Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-api@vger.kernel.org, 
- linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, 
- linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
- almaz.alexandrovich@paragon-software.com, slava@dubeyko.com, 
- glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
- adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, 
- pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com, 
- trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, 
- hansg@kernel.org, senozhatsky@chromium.org, 
- Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2582;
- i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=/M15phZsxO4dYF/kfeaMD4laDtLmxamo65xsRXL/kkg=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp6hq0lrMRP/taRhAjVj2Nj34LkMZtiUQ1WGFUj
- 5GhhBTIsAWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaeoatAAKCRAzarMzb2Z/
- l7+iD/9RTr4hntMPxhl7UX1Xa9+pHwyzL17Hm9T+TA6M+p7usu+ddsGl6douosfJVOewO3FyoUV
- kUkhZBoIos+DHr5mWvcU/p0Bmt6IvhCdDIg7EkUJHbOUd+a821W9CDt9NGNwLdWnHU7rJATocLP
- 1IGEUvEUEm12ihgZPtNYLLOGf99q7H8f3fkR0RtAxSKaP3KkPkYO5IDkZJlqKdShfxbwU/l0IRD
- 3yb59efObNpfct0TPF9BY3UR/YAGA97NsvtptvyitXjtb65xeeFKZVJN7GyAGSkvQ8YFAxiYYLt
- SshlPCE3GLBxxGmAQBgkH56S67IiXI1kxMrddESmsTOExvc0rzaVvm97m9wYoLvy+dmt+12UBJ4
- WUGXgh41TFpWIt1+RYtZ/WBboC0B5IhkSou7z6IlksVYl5G8q/9fUAoQBM79v0B0bNbzWXWfq0a
- WjPFYvD3qovj8sX7CcfPXlXnNU0L40gt+MNRbNGtZjppbWixbTv77TAGbn51rxVQnTfulBLoDpF
- 4+VqzzCzM1XTKJCPYOETZ/yhXvjZZtNa5BQVaerGOMBIaCOC7yop2xyTiBOoMevYEA+qaoZzGqz
- 9+XTxfknXthMElnBLQC5JLn6zz/IHiwZx5awniQHRHH18z8MiIXnIbCjfrj92Owq7tSiKzrCsNU
- V1E030k7effzOsA==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
- fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21042-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	XM_UA_NO_VERSION(0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21043-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[32];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MAILSPIKE_FAIL(0.00)[2600:3c15:e001:75::12fc:5321:query timed out];
+	MAILSPIKE_FAIL(0.00)[172.105.105.114:server fail];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: E76DF452C17
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: A5533453391
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Tom
 
-FS_ATTRIBUTE_INFORMATION responses have always reported
-FILE_CASE_SENSITIVE_SEARCH and FILE_CASE_PRESERVED_NAMES
-unconditionally. Case-insensitive filesystems like exFAT, and
-casefolded directories on ext4 or f2fs, have no way to signal
-their actual semantics to SMB clients.
+On Sat, Apr 18, 2026, at 3:03 PM, Tom Haynes wrote:
+> On a local directory mutation (rename/create/unlink) the client marks
+> CHANGE / MTIME / CTIME as invalid in NFS_I(dir)->cache_validity.  When
+> a subsequent stat(2) enters __nfs_revalidate_inode() and finds a
+> directory delegation held, the function currently early-exits and
+> returns the cached (now stale) mtime to userspace without sending a
+> GETATTR RPC.
+>
+> Keep the early-exit for the fast path, but take the RPC when CHANGE,
+> MTIME, or CTIME are already marked invalid.  The delegation alone is
+> not a guarantee of cached-attr freshness once the code itself has
+> flagged the cache as stale.
 
-Now that filesystems expose case behavior through ->fileattr_get,
-query it via vfs_fileattr_get() and translate the FS_XFLAG_CASEFOLD
-and FS_XFLAG_CASENONPRESERVING flags into the corresponding SMB
-attributes. Filesystems without ->fileattr_get continue reporting
-default POSIX behavior (case-sensitive, case-preserving).
+Is this a problem only for the attributes you've flagged, or do you think
+it would be a problem for size, nlink, or mode attributes as well? I'm asking
+because we have NFS_INO_INVALID_ATTR which includes all of these attributes
+which might make this a little more generic rather than carving out an
+exception an attribute at a time.
 
-SMB's FS_ATTRIBUTE_INFORMATION reports per-share attributes from
-the share root, not per-file. Shares mixing casefold and
-non-casefold directories report the root directory's behavior.
+Thoughts?
+Anna
 
-Acked-by: Namjae Jeon <linkinjeon@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/smb/server/smb2pdu.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index ee32e61b6d3c..05245562bcb8 100644
---- a/fs/smb/server/smb2pdu.c
-+++ b/fs/smb/server/smb2pdu.c
-@@ -14,6 +14,7 @@
- #include <linux/falloc.h>
- #include <linux/mount.h>
- #include <linux/filelock.h>
-+#include <linux/fileattr.h>
- 
- #include "glob.h"
- #include "smbfsctl.h"
-@@ -5541,16 +5542,28 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
- 	case FS_ATTRIBUTE_INFORMATION:
- 	{
- 		FILE_SYSTEM_ATTRIBUTE_INFO *info;
-+		struct file_kattr fa = {};
- 		size_t sz;
-+		u32 attrs;
-+		int err;
- 
- 		info = (FILE_SYSTEM_ATTRIBUTE_INFO *)rsp->Buffer;
--		info->Attributes = cpu_to_le32(FILE_SUPPORTS_OBJECT_IDS |
--					       FILE_PERSISTENT_ACLS |
--					       FILE_UNICODE_ON_DISK |
--					       FILE_CASE_PRESERVED_NAMES |
--					       FILE_CASE_SENSITIVE_SEARCH |
--					       FILE_SUPPORTS_BLOCK_REFCOUNTING);
-+		attrs = FILE_SUPPORTS_OBJECT_IDS |
-+			FILE_PERSISTENT_ACLS |
-+			FILE_UNICODE_ON_DISK |
-+			FILE_SUPPORTS_BLOCK_REFCOUNTING;
- 
-+		err = vfs_fileattr_get(path.dentry, &fa);
-+		if (err && err != -ENOIOCTLCMD && err != -ENOTTY) {
-+			path_put(&path);
-+			return err;
-+		}
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASEFOLD))
-+			attrs |= FILE_CASE_SENSITIVE_SEARCH;
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASENONPRESERVING))
-+			attrs |= FILE_CASE_PRESERVED_NAMES;
-+
-+		info->Attributes = cpu_to_le32(attrs);
- 		info->Attributes |= cpu_to_le32(server_conf.share_fake_fscaps);
- 
- 		if (test_share_config_flag(work->tcon->share_conf,
-
--- 
-2.53.0
-
+>
+> Assisted-by: Claude:claude-opus-4-7 [bpftrace] [tshark]
+> Signed-off-by: Tom Haynes <loghyr@gmail.com>
+> ---
+>  fs/nfs/inode.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 98a8f0de1199..936bc329f462 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -1390,7 +1390,11 @@ __nfs_revalidate_inode(struct nfs_server 
+> *server, struct inode *inode)
+>  		status = pnfs_sync_inode(inode, false);
+>  		if (status)
+>  			goto out;
+> -	} else if (nfs_have_directory_delegation(inode)) {
+> +	} else if (nfs_have_directory_delegation(inode) &&
+> +		   !(NFS_I(inode)->cache_validity &
+> +		     (NFS_INO_INVALID_CHANGE |
+> +		      NFS_INO_INVALID_MTIME  |
+> +		      NFS_INO_INVALID_CTIME))) {
+>  		status = 0;
+>  		goto out;
+>  	}
+> -- 
+> 2.53.0
 
