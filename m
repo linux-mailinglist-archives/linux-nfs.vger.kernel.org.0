@@ -1,297 +1,388 @@
-Return-Path: <linux-nfs+bounces-21074-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21075-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yIAsNbq46mmNCwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21074-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 02:26:34 +0200
+	id SC48JeIX62n2IQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21075-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 09:12:34 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C525458929
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 02:26:34 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3259A45A940
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 09:12:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6CFFF300B1BF
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 00:26:33 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3E4E130058FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 07:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 117221A5BAE;
-	Fri, 24 Apr 2026 00:26:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78B6370D41;
+	Fri, 24 Apr 2026 07:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBSzm3X1"
+	dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b="Tnt3Fmbe";
+	dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b="ztH2gnks"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from icts-p-cavspool-1.kulnet.kuleuven.be (icts-p-cavspool-1.kulnet.kuleuven.be [134.58.240.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F6140DFA3;
-	Fri, 24 Apr 2026 00:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDA436DA0D
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 07:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.58.240.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776990391; cv=none; b=mHzgU5s7smoYfNJntRzvTbFjCzO1KSRZ/PAwuO7YGGdDlgyRzDhHe5RWzUcbsOgIQ3r2j43b7qTQ/9w3ZppeKUwEBnncpoEkHLprEhytVqXTqXxhumLDgTM1fIcgMpkVsx1UFjQdRcxpER++DYAB+yLIgZPW/bXQAFbpcxPkW3M=
+	t=1777014741; cv=none; b=c38uJYPx5Ss7ZIiL4kfnUodQx8SOlK1NPivT1stpXZNey6FVyle9WEGYuHJXZeTNPUlCnNraN17BE+V0KujYNcvVCwEx7APGh/EqL/QBJz39HwD/LN6dkTUygeYnfHeXmPNkJgiex5uu7VZLOYtbAt2lMQHgKKHt9YQDZSCgGA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776990391; c=relaxed/simple;
-	bh=Fr54Lpf556s8S882LYfydAUf8F6fqDeLQtc/HVT0mo4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KaHoCwD01CP/dllia9no3hu4ml9Ij2R96Z09B9qVqrKPeJYowxf7dYUPFYD1VulI9uJSoEwRe/s/Z9I/ZCWVelkRY+RRu26BbGBQJxD0toId+DpzBLuglxf6k4j5wERgwNnBAc0kxqyS7U7MFrXvGZAGwW5pMeQ9jSWPo2WvCiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBSzm3X1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7039C2BCAF;
-	Fri, 24 Apr 2026 00:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776990390;
-	bh=Fr54Lpf556s8S882LYfydAUf8F6fqDeLQtc/HVT0mo4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MBSzm3X1I9cMuiO0j71cM30vjvvDEJOcuSt5uR82kcIVXF3IYETuHM1Fsk39PO/As
-	 wHaP9cCgw9IMqlaH3TVMLMhFZaHzfcLfd/rpOoZde/9ud+fYOU20U9AgMkfS1RILTx
-	 kz6+0T5qtkAUijQKJo1Au1s6WAqyMFfHMF+PLvxPpwdKBT7suODyaDUKzIfT3bbfYV
-	 c8P31c9xDL92A46w8sVEltZhd1FqeHEeBW8AxZtVKR7FNZmtDE71fr4dfGnIiYSdTp
-	 KI2mhtKsRp+exNZbejxUxOvuBl7FiI9U0Gmk6qg4GJjjVXZ8bjAvQqK9HieSa7rSij
-	 N22jaKkDJ4Img==
-Message-ID: <55bfc1442ee1a80723520b714fc5f358d11c4c38.camel@kernel.org>
-Subject: Re: [PATCH RFC] sunrpc: hardcode pool_mode to pernode, remove other
- modes
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 23 Apr 2026 20:26:26 -0400
-In-Reply-To: <f61f49b8-c9c7-4a19-ba03-7f5967fcced8@app.fastmail.com>
-References: <20260423-sunrpc-pool-mode-v1-1-b7f20e35749b@kernel.org>
-	 <f61f49b8-c9c7-4a19-ba03-7f5967fcced8@app.fastmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1777014741; c=relaxed/simple;
+	bh=9BJ7qFJwCvw78rYSOp4AxcpgubWfMUVQQWvKwmc8OSA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=nmNusj4BnRX7ighL6MGOTHQzr6bh2saDVWWgJeR9GuTfW5qxJfCAyllw8NtOVQRpzmkGi5DLk0rK22bt03Zi91uaFNBVv32kfGX5VaImx3YjW3/4js+OJi0gU1WRZHplqhWEQcPX2hsy9hY8Xvh0a0a7+KmWMxt/HM+Pc1VP5cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be; spf=pass smtp.mailfrom=esat.kuleuven.be; dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b=Tnt3Fmbe; dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b=ztH2gnks; arc=none smtp.client-ip=134.58.240.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esat.kuleuven.be
+Received: from icts-p-cavuit-3.kulnet.kuleuven.be (icts-p-cavuit-3.kulnet.kuleuven.be [134.58.240.133])
+	by icts-p-cavspool-1.kulnet.kuleuven.be (Postfix) with ESMTP id 8A7485DCA
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 09:12:13 +0200 (CEST)
+X-KULeuven-Envelope-From: rik.theys@esat.kuleuven.be
+X-KULeuven-Scanned: Found to be clean
+X-KULeuven-ID: 30048200AC.A649A
+X-KULeuven-Information: Katholieke Universiteit Leuven
+Received: from icts-p-ceifnet-smtps-1.kuleuven.be (icts-p-ceifnet-smtps.service.icts.svcd [IPv6:2a02:2c40:0:51:140::23])
+	by icts-p-cavuit-3.kulnet.kuleuven.be (Postfix) with ESMTP id 30048200AC
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 09:12:04 +0200 (CEST)
+BCmilterd-Mark-Subject: no
+BCmilterd-Errors: 
+BCmilterd-Report: SA-HVU#DKIM_VALID_AU#0.00,SA-HVU#DKIM_SIGNED#0.00,SA-HVU#DKIM_VALID#0.00,SA-HVU#OURIPS#-35.00
+X-CAV-Cluster: smtps
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuleuven.be;
+	s=kuleuven-cav-1; t=1777014723;
+	bh=lrZXWZChisso77PMvhF/KLFeEW3k+0jWdx3f5GtbyaU=;
+	h=Date:From:Subject:To;
+	b=Tnt3FmbeFDw9Y1DMEBE/WFZa9y0TcIt+Ub42MMtdUGi/Ed8jA6shXHkLm10+rNAAb
+	 1PXwg9spzvX4CsVgk5iYN2bDpz0GEVW9aBLo7hYbgDERjX9k0cjQoEzqp+dAolXIp0
+	 wAzM7CWRIsjI2rtcEhrjWtw+3iC0SjWu3ewv+h4/K7SKEZww+MfPnqvAfmq4pP9oz+
+	 4uFZKCT5V9SCls/dGo+4EBaMU+fKiv1EujMtVTi/Vl4ZIXUMuFE9lX/yvAAeQLcAHx
+	 hm/LCH4/tnfZ+6C+w919GxUKqJBgvA4xAHJPfDyrgnFxDQ3yF6OwAxQFlW1ShyK0Jn
+	 6Ns77Lyp51aDw==
+Received: from hydrogen.esat.kuleuven.be (hydrogen.esat.kuleuven.be [134.58.56.153])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by icts-p-ceifnet-smtps-1.kuleuven.be (Postfix) with ESMTPS id E8D2AD4CE188B
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 09:12:03 +0200 (CEST)
+X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=esat.kuleuven.be;
+	s=esat20220324; t=1777014723;
+	bh=lrZXWZChisso77PMvhF/KLFeEW3k+0jWdx3f5GtbyaU=;
+	h=Date:From:Subject:To:From;
+	b=ztH2gnksZ48OjUXsSZY/7vO5+3k0+v/ZIIqe1N0Xl/xkN14StgOmYl/4zVzqYRPE6
+	 sN8QSB191uqJ8ggV75C3O6fqdrTSGNjbjCkkM+6n3wAGZoWMEwkkqX3oi1eawrabCA
+	 IXPyJvUZ0GHXR2dUO9QsHs9akEqwcctmgqwUbf+nsdyAtWoIuCDW9R38aw8eHftX8Y
+	 QSdOiV+o+SPsH0XmeXI0tLlEttzOLtgtPkz2J7DPpFnQUn1vxqCG7Ak7zkYl4rAWsP
+	 U5XtbKQfpVYpnoXCfXFp3ZDq2X0+KxtOACYq+QFWUehcJkY0urRSFp/B4279vsz2UY
+	 7xEX6tcv68pLg==
+Received: from [192.168.1.113] (d54C377C4.access.telenet.be [84.195.119.196])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hydrogen.esat.kuleuven.be (Postfix) with ESMTPSA id D58932000B
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 09:12:03 +0200 (CEST)
+Message-ID: <f32822c8-9910-43a1-8d7f-72df6b79a1e8@esat.kuleuven.be>
+Date: Fri, 24 Apr 2026 09:12:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 6C525458929
+User-Agent: Mozilla Thunderbird
+From: Rik Theys <Rik.Theys@esat.kuleuven.be>
+Subject: processes in D state / blocked tasks
+To: Linux Nfs <linux-nfs@vger.kernel.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 3259A45A940
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[esat.kuleuven.be,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kuleuven.be:s=kuleuven-cav-1,esat.kuleuven.be:s=esat20220324];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21074-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_ONE(0.00)[1];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21075-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DKIM_TRACE(0.00)[kuleuven.be:+,esat.kuleuven.be:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,esat.kuleuven.be:dkim,esat.kuleuven.be:mid];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Rik.Theys@esat.kuleuven.be,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	RCVD_COUNT_SEVEN(0.00)[7]
 
-On Thu, 2026-04-23 at 12:45 -0400, Chuck Lever wrote:
-> On Thu, Apr 23, 2026, at 10:39 AM, Jeff Layton wrote:
-> > The SVC_POOL_AUTO/GLOBAL/PERCPU/PERNODE pool mode selection machinery
-> > was added when NUMA was new and the right default was unclear.  Today,
-> > pernode is the right choice everywhere:
-> >=20
-> > - On multi-NUMA hosts, it gives one pool per node with proper thread
-> >   affinity and NUMA-local memory allocation.
-> > - On single-node hosts, pernode degenerates to exactly one pool,
-> >   identical to the old "global" mode -- svc_pool_for_cpu() short-
-> >   circuits when sv_nrpools <=3D 1, no CPU affinity is set, and memory
-> >   is allocated from the single node.
-> >=20
-> > The percpu mode (one pool per CPU) created excessive pools relative to
-> > the number of threads most deployments run, and was only auto-selected
-> > in a narrow case (single node, >2 CPUs).
-> >=20
-> > Remove the SVC_POOL_* enum, mode selection heuristic,
-> > svc_pool_map_init_percpu(), and all mode-based switch statements.
-> > Simplify pool map functions to always use the pernode path.
-> >=20
-> > The module parameter and netlink interfaces are preserved for backward
-> > compatibility:
-> > - Writing "pernode" succeeds; any other value returns -EINVAL
-> > - Reading always returns "pernode"
-> > - Writing to the module parameter emits a deprecation notice
-> >=20
-> > Assisted-by: Claude:claude-opus-4-6
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > In hindsight, I wish I had proposed this before adding the pool-mode
-> > settings to the new nfsd netlink interfaces.
-> >=20
-> > If this is too radical as a single step, we just could switch the
-> > default to "pernode", add a warning and leave the interfaces alone for
-> > now. Or maybe do that and go ahead and remove the percpu setting?
-> >=20
-> > Thoughts?
->=20
-> Generally, I think the end goal of making "per-node" the default
-> and only setting is correct. My comments below are about how we
-> get there.
->=20
-> The main concern is not perturbing any configuration that today
-> happens to set the module parameter.
->=20
-> The proposed patch correctly preserves the shape of the user/kernel
-> interfaces (same module parameter name and perms, same netlink command
-> and attribute, same exported symbol names and signatures). The concern
-> is that the accepted input set has narrowed from four strings to one
-> and the setters reject the legacy three with -EINVAL. For the module
-> parameter that path runs at module load, so existing modprobe.d configs
-> written any time in the last ~19 years will cause load-time parameter
-> errors. Some might categorize that as a regression.
->                                      =20
-> The commit message documents that non-"pernode" writes now return
-> -EINVAL. The historically correct approach for this kind of obsoleted
-> tuning knob is to accept-and-ignore the old values (plus the pr_notice)
-> rather than hard-fail.
->=20
-> Or, put another way, the proposed patch implements something slightly
-> different than true backwards compatibility. Userspace that previously
-> set pool_mode=3Dglobal/percpu/auto now gets -EINVAL, which technically
-> speaking is a behavioral narrowing, not "backward compatibility."
->=20
-> I might go even further and suggest that perhaps for v7.2:
->=20
-> - Change the behavior of "auto" to be per-node
+Hi,
 
-That's already the case if you're on a NUMA box. The problem is that
-the default is not "auto" but "global". We could change that (easily),
-but I'd argue that "auto" mode just devolves into "pernode" for two
-reasons:
+Since a few weeks some of our numbercrunchers are periodically logging 
+blocked tasks and the NFS client seems to (at least partially) hang. The 
+client is currently running upstream 6.18.20 on a Rocky 9 userland. The 
+server is a RHEL10 running 6.12.0-124.45.1.el10_1.x86_64.
 
-- "pernode" is functionally identical to "global" when there is only a
-single NUMA node
+Most likely the reason we are seeing this come up now is that more users 
+are starting to use the shared server and it frequently comes under high 
+memory pressure.
 
-- "percpu" mode is basically useless
+We are seeing similar issues on Rocky 8 servers running 
+4.18.0-553.117.1.el8_10.x86_64.
 
-If we want to "go slow" on this, then what I'd probably suggest is that
-we just change the default to "pernode" initially.
+On one of the Rocky 9 servers running 6.18.20, the following blocked 
+tasks are logged:
 
-Single node boxes that have this set to global today should see no real
-change (functionally identical). Boxes with multiple NUMA nodes that
-don't set it now, will start using pernode mode, but that's probably a
-good thing in most cases.
+INFO: task node:1646922 blocked for more than 122 seconds.
+      Tainted: G            E       6.18.20-1.el9.esat.x86_64 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:node            state:D stack:0     pid:1646922 tgid:1646922 
+ppid:1646730 task_flags:0x400000 flags:0x00080001
+Call Trace:
+<TASK>
+__schedule+0x282/0x600
+? select_idle_sibling+0x27/0x4c0
+? terminate_walk+0xef/0x100
+schedule+0x26/0x90
+io_schedule+0x42/0x70
+folio_wait_bit_common+0x127/0x360
+? _raw_spin_unlock_irqrestore+0x23/0x40
+? __pfx_wake_page_function+0x10/0x10
+folio_wait_writeback+0x27/0x80
+__filemap_get_folio+0x250/0x330
+nfs_write_begin+0xa1/0x3e0 [nfs]
+generic_perform_write+0x89/0x290
+? nfs_ctx_key_to_expire+0xd3/0x120 [nfs]
+nfs_file_write+0x1e7/0x2f0 [nfs]
+vfs_write+0x31f/0x430
+ksys_write+0x61/0xe0
+do_syscall_64+0x61/0x12d0
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7fbe608ff15f
+RSP: 002b:00007ffda1c8f410 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000034979e10 RCX: 00007fbe608ff15f
+RDX: 00000000000002e3 RSI: 000000002c7b5b50 RDI: 000000000000002c
+RBP: 00000000000002e3 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000010 R11: 0000000000000293 R12: 00000000000002e3
+R13: 000000002c7b5b50 R14: 00000000000002e3 R15: 00007fbe609f69e0
+</TASK>
+
+The taint seems to come from the fuse module.
+
+INFO: task libuv-worker:474227 blocked for more than 122 seconds.
+      Tainted: G            E       6.18.20-1.el9.esat.x86_64 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:libuv-worker    state:D stack:0     pid:474227 tgid:474198 
+ppid:474192 task_flags:0x400040 flags:0x00080001
+Call Trace:
+<TASK>
+__schedule+0x282/0x600
+schedule+0x26/0x90
+__wait_on_freeing_inode+0xb9/0x110
+? __pfx_var_wake_function+0x10/0x10
+? __pfx_nfs_find_actor+0x10/0x10 [nfs]
+find_inode+0xa3/0xf0
+? __pfx_nfs_find_actor+0x10/0x10 [nfs]
+ilookup5_nowait+0x74/0xa0
+? __pfx_nfs_find_actor+0x10/0x10 [nfs]
+ilookup5+0x44/0x110
+? _kstrtoull+0x3a/0x90
+? nfs_map_string_to_numeric+0x7f/0xa0 [nfsv4]
+? __pfx_nfs_find_actor+0x10/0x10 [nfs]
+? __pfx_nfs_init_locked+0x10/0x10 [nfs]
+iget5_locked+0x26/0x80
+nfs_fhget+0xe6/0x7e0 [nfs]
+_nfs4_opendata_to_nfs4_state+0x16b/0x220 [nfsv4]
+_nfs4_open_and_get_state+0xc3/0x2c0 [nfsv4]
+? __pfx_nfs_alloc_no_seqid+0x10/0x10 [nfsv4]
+? nfs4_opendata_alloc+0x26d/0x400 [nfsv4]
+_nfs4_do_open.isra.0+0x167/0x470 [nfsv4]
+? obj_cgroup_charge_account+0x9f/0x2a0
+nfs4_do_open+0xcc/0x210 [nfsv4]
+nfs4_atomic_open+0x11b/0x130 [nfsv4]
+? alloc_nfs_open_context+0x2a/0x150 [nfs]
+nfs_atomic_open+0x227/0x6a0 [nfs]
+lookup_open.isra.0+0x241/0x6d0
+? __d_lookup+0x72/0xb0
+open_last_lookups+0x1f6/0x470
+path_openat+0x83/0x270
+do_filp_open+0xbd/0x170
+? __virt_addr_valid+0xf9/0x170
+? check_heap_object+0x33/0x190
+? preempt_count_add+0x69/0xa0
+? path_get+0x11/0x30
+? _raw_spin_unlock+0x15/0x30
+? audit_alloc_name+0x12f/0x140
+? alloc_fd+0xae/0x110
+do_sys_openat2+0x71/0xd0
+__x64_sys_openat+0x52/0xa0
+do_syscall_64+0x61/0x12d0
+entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f84d0efee54
+RSP: 002b:00007f84a97bdb60 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f84a97be470 RCX: 00007f84d0efee54
+RDX: 0000000000080000 RSI: 000000001a1d3210 RDI: 00000000ffffff9c
+RBP: 000000001a1d3210 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000080000
+R13: 0000000000000019 R14: 000000001a95a4c0 R15: 000000001a95a4c0
+</TASK>
+
+The system starts to build up a lot of processes in uninterruptable 
+sleep (D). When I look at the output of
+
+ps -e -o state,pid,user,cmd,wchan | grep ^D
+
+it seems most of these blocked processes are waiting in 
+rpc_wait_bit_killable, some in folio_wait_bit_common and a few in 
+autofs_wait.
+
+# cat /proc/3806883/stack
+
+[<0>] __rpc_execute+0x148/0x2e0 [sunrpc]
+[<0>] rpc_execute+0x12b/0x150 [sunrpc]
+[<0>] rpc_run_task+0x110/0x180 [sunrpc]
+[<0>] nfs4_call_sync_sequence+0x75/0xb0 [nfsv4]
+[<0>] _nfs4_proc_access+0x108/0x1a0 [nfsv4]
+[<0>] nfs4_proc_access+0x66/0xf0 [nfsv4]
+[<0>] nfs_do_access+0xb4/0x270 [nfs]
+[<0>] nfs_permission+0x91/0x1f0 [nfs]
+[<0>] inode_permission+0xe6/0x190
+[<0>] link_path_walk+0x1f1/0x2a0
+[<0>] path_lookupat+0x6f/0x1a0
+[<0>] filename_lookup+0xdf/0x1e0
+[<0>] vfs_statx+0x65/0x150
+[<0>] vfs_fstatat+0x64/0xa0
+[<0>] __do_sys_newfstatat+0x25/0x60
+[<0>] do_syscall_64+0x61/0x12d0
+[<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+# cat /proc/2949346/stack
+
+[<0>] filemap_fault+0x4b8/0xc50
+[<0>] __do_fault+0x34/0x180
+[<0>] do_read_fault+0x129/0x220
+[<0>] do_fault+0x123/0x270
+[<0>] __handle_mm_fault+0x56f/0x6b0
+[<0>] handle_mm_fault+0xef/0x310
+[<0>] do_user_addr_fault+0x216/0x6d0
+[<0>] exc_page_fault+0x66/0x170
+[<0>] asm_exc_page_fault+0x22/0x30
+
+# cat /proc/577956/stack
+
+[<0>] autofs_mount_wait+0x46/0xf0
+[<0>] autofs_d_automount+0xd3/0x200
+[<0>] __traverse_mounts+0x9c/0x260
+[<0>] step_into+0x170/0x370
+[<0>] link_path_walk+0x139/0x2a0
+[<0>] path_openat+0x93/0x270
+[<0>] do_filp_open+0xbd/0x170
+[<0>] do_sys_openat2+0x71/0xd0
+[<0>] __x64_sys_openat+0x52/0xa0
+[<0>] do_syscall_64+0x61/0x12d0
+[<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
 
-> - Add a deprecation warning that is emitted when setting other modes,
->   but don't warn when the value is specifically the only accepted one.
->=20
+What could cause these processes to end up in this state? Is there some 
+deadlock due to memory pressure? Which information could be more useful 
+to further debug this and/or make the system recover?
 
-We probably do still want to warn in that case. Once we remove the
-option, the module load can fail, so we probably want to discourage
-people from keeping the setting.
+The server seems to be fine: there's no high load, no indications of a 
+network issue and the disks are not saturated.
 
-> Then wait a few more cycles before removal of percpu and global.
->=20
+On the Rocky 8 system the following blocked tasks are logged:
 
-That's fair. We can stage this in slowly.
+INFO: task git:4512 blocked for more than 120 seconds.
+       Not tainted 4.18.0-553.117.1.el8_10.x86_64 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:git             state:D stack:0    pid:4512  ppid:4226  
+  flags:0x80000082
+Call Trace:
+  __schedule+0x2d1/0x870
+  schedule+0x55/0xf0
+  io_schedule+0x12/0x40
+  wait_on_page_bit+0xfd/0x220
+  ? find_get_pages_range_tag+0xd2/0x350
+  ? filemap_fdatawait_keep_errors+0x50/0x50
+  wait_on_page_writeback+0x2b/0x90
+  __filemap_fdatawait_range+0x81/0xf0
+  ? memcg_slab_free_hook+0x141/0x1b0
+  filemap_write_and_wait+0x55/0x90
+  nfs_wb_all+0x1a/0x120 [nfs]
+  nfs4_file_flush+0x6f/0xa0 [nfsv4]
+  filp_close+0x31/0x70
+  put_files_struct+0x70/0xc0
+  do_exit+0x32f/0xb10
+  ? syscall_trace_enter+0x1ff/0x2d0
+  do_group_exit+0x3a/0xa0
+  __x64_sys_exit_group+0x14/0x20
+  do_syscall_64+0x5b/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x66/0xcb
+RIP: 0033:0x7fa49031a346
+Code: Unable to access opcode bytes at RIP 0x7fa49031a31c.
+RSP: 002b:00007ffe099b4f78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 00007fa4905de860 RCX: 00007fa49031a346
+RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
+RBP: 0000000000000001 R08: 00000000000000e7 R09: ffffffffffffff90
+R10: 00007ffe099b4e7f R11: 0000000000000246 R12: 00007fa4905de860
+R13: 0000000000000001 R14: 00007fa4905e7548 R15: 0000000000000000
+INFO: task git:4513 blocked for more than 120 seconds.
+       Not tainted 4.18.0-553.117.1.el8_10.x86_64 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:git             state:D stack:0    pid:4513  ppid:4226  
+  flags:0x80000082
+Call Trace:
+  __schedule+0x2d1/0x870
+  schedule+0x55/0xf0
+  io_schedule+0x12/0x40
+  wait_on_page_bit+0xfd/0x220
+  ? find_get_pages_range_tag+0xd2/0x350
+  ? filemap_fdatawait_keep_errors+0x50/0x50
+  wait_on_page_writeback+0x2b/0x90
+  __filemap_fdatawait_range+0x81/0xf0
+  ? memcg_slab_free_hook+0x141/0x1b0
+  filemap_write_and_wait+0x55/0x90
+  nfs_wb_all+0x1a/0x120 [nfs]
+  nfs4_file_flush+0x6f/0xa0 [nfsv4]
+  filp_close+0x31/0x70
+  put_files_struct+0x70/0xc0
+  do_exit+0x32f/0xb10
+  ? syscall_trace_enter+0x1ff/0x2d0
+  do_group_exit+0x3a/0xa0
+  __x64_sys_exit_group+0x14/0x20
+  do_syscall_64+0x5b/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x66/0xcb
+RIP: 0033:0x7fcc80c5d346
+Code: Unable to access opcode bytes at RIP 0x7fcc80c5d31c.
+RSP: 002b:00007ffe25bb62d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 00007fcc80f21860 RCX: 00007fcc80c5d346
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 0000000000000000 R08: 00000000000000e7 R09: ffffffffffffff90
+R10: 00007ffe25bb61df R11: 0000000000000246 R12: 00007fcc80f21860
+R13: 0000000000000001 R14: 00007fcc80f2a548 R15: 0000000000000000
 
-I'm terrible about following up with the later phases of long term
-deprecation though. Suggestions on how to make sure we don't drop the
-ball on finishing the change?
 
-> Other notes:
->=20
-> o The existing pernode path assumes every online node has both CPUs and
->   some memory. nr_online_nodes on some platforms (e.g., certain ARM64,
->   CXL) counts memoryless or CPU-less nodes; for_each_node_with_cpus()
->   vs. for_each_online_node() matters here. See
->   svc_pool_map_init_pernode().
->=20
+Regards,
 
-Good point. We should probably change that too.
+Rik
 
-> o Recommend review of some history on this topic:
->   https://lore.kernel.org/linux-nfs/f027319a-378d-4b91-a418-c45218fb7a21@=
-oracle.com/
->=20
+-- 
+Rik Theys
+System Engineer
+KU Leuven - Dept. Elektrotechniek (ESAT)
+Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
++32(0)16/32.11.07
+----------------------------------------------------------------
+<<Any errors in spelling, tact or fact are transmission errors>>
 
-Thanks. I'll read up.
---=20
-Jeff Layton <jlayton@kernel.org>
 
