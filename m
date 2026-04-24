@@ -1,177 +1,167 @@
-Return-Path: <linux-nfs+bounces-21076-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21077-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gBunNXo362kfKAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21076-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 11:27:22 +0200
+	id QMKICz9u62l2MwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21077-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 15:21:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 146F245C2BE
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 11:27:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 890A945EEAD
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 15:21:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A208A30074D3
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 09:27:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D6495300F52D
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Apr 2026 13:20:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7496338A711;
-	Fri, 24 Apr 2026 09:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1033E3CA4BF;
+	Fri, 24 Apr 2026 13:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="vUjZjkxu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3G0GFTL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0806731E85E;
-	Fri, 24 Apr 2026 09:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777022826; cv=none; b=HDqcxQSzYLF+2gChvF/009IvEYEtP97UjE0YFyjfDmdLGVotcg8/Y1YwztoTW/gc605d/hEsZCsxhG3VMNkZ69zcqerv1yF9gK2Xp/ufBNcHiZj6CkIrNpjkm1oNw+LPnsA61I2z3ufdAnHv6Xv6v3JU3L0hHlK+bP0/qfeM/uw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777022826; c=relaxed/simple;
-	bh=k1W/D9J2oKcl+3NjgtoQXcBOU+ZMEwG9lgsmMvpNWDI=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=B+QNzL6z1/yhtGfsRPILy2Npi9CC/v+90q3GP2Wsy0SjNNHUraDwlRUqGt5z1+2IB/oMoPndIFIvpdR1lN6yea6w1/BrazKZaNlIvWUD4g1/W+j4fPJggzbqFNIkBMCT2eGd7LMvjSNuBgwZ0GfWkOlQMoyfGrfXasCXhImclos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=vUjZjkxu; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1777022806;
-	bh=VmPLgv0cdrcwOfZp1gm29BiLnyAz2JvOKm96iEkgVyM=;
-	h=From:To:Cc:Subject:Date;
-	b=vUjZjkxum2h+FsDmgAsen8UjgME2j7y30zoSKF1axDLg7HmMgqCHugECKopYZm9TG
-	 rGKhiQZhP0aCOKSMC6+4k9kQbNoMXQGydWmPn3xGeme3GY1iVjQBdcifYbf5WB2tWS
-	 OibU/jdt5fzhHUT4KEr8woBfDp+U11kHqz1GLh7g=
-Received: from ubuntu2404.. ([103.244.59.3])
-	by newxmesmtplogicsvrszc50-0.qq.com (NewEsmtp) with SMTP
-	id 6AB9B806; Fri, 24 Apr 2026 17:26:43 +0800
-X-QQ-mid: xmsmtpt1777022803t5dc0fapr
-Message-ID: <tencent_BF5118C8B480E6BFEF401CC2B287682FC905@qq.com>
-X-QQ-XMAILINFO: OKOirRU4nj6hCdTuvHQwWJvFFykVAoT60TYLU13cGKIKo8T/sWPqHASWB7Nlnv
-	 oExDGYURyl11sDHbrJOQFCpLkOHivJwsWVw4nl/XbBsPyAyzQmobeLZpvo7U2+0px5jeEAXwK3PV
-	 lDY4YwgrhXA2uM1uXWmJmIW8jnvEIUUi/OAHpD4imfuUXhgZskJLPABOlfB46dLNh5I1f7z+e0NN
-	 n0X5A/H3cXsIfwZCJKvNKRX3qhsXNXFr7bRe0UnndnDCbCVSp4rQvHT55y9oZIW+bG8L/CQv8zRr
-	 Abk2TvG5wRjfoswdloqn5IsD6EQM73d1VRBFwpS9qliXs66904KMEjIU1hjatB95NdhMb4VcgEG5
-	 z/n1rE1vW9txezqISIDAJLZpK93x93NNfDgIdAKqTXoLy+DxBJtf3VSPsPwanq1ivVVGncnfGMC4
-	 EHznSYWOMhwP2bydue15RCBuT8DzziUbDaNacGISovj/ekkIRyXRuZJQwSikWR7Rs5tpS495kUdR
-	 jZy595oOtLqB7pzNXw/WM2/+3camOXl2J15LSfo9vir2PiE9Iunhouhfi/wZUsR4FmMuyyffR6x+
-	 b+OHUHOAwKesIsvZ09st9nnWkLUxYQGoaobC6kZ9GOO6NaA9F2nwYAQHTbli8rbv3cOt/vrzSoaQ
-	 ykbVJQxF6+RMw8E2DHS978V6JGWl3JwogSXxTqZce7R6VhWb6TxtPdBs8QsmsiWKeJpo4lEsnC8N
-	 gyGVbmUuAkYSWVgb8e6jzMBe2QhBrZVI3TCDg/3XHOdVkhMOVPeGnEchwNyDi76AYdT03b3DWl+d
-	 A1llRn68Tafmo0mFDcIwpuH6WN8b5M1Qe2vHnF3Tn63UBmb2uMDqNkvmBIL5Ez++s2iq2Xli6V0f
-	 Km9IMYO4oqxM4S+e7dyDO4Qa0N1X5sgrcOHENjL8FOLLZzuzW2c25pl80bWGnf/cZq8og68QNFbF
-	 aQ2IkRFFrBURtAFaf1zPohde4fzit9UV0eFcNDtiEjuupqTYAHHtpM7iy+GRqvG+FPjzATqjrb6B
-	 juheGIX64jc0muljjWTQCUABw4qSU=
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-From: Lei Yin <cybeyond@foxmail.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yinlei2@lenovo.com
-Subject: [PATCH v2] NFSv4.1/pNFS: fix LAYOUTCOMMIT retry loop on OLD_STATEID
-Date: Fri, 24 Apr 2026 09:26:41 +0000
-X-OQ-MSGID: <20260424092641.17753-1-cybeyond@foxmail.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9633B27C7
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 13:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777036856; cv=pass; b=XniezZDIoAoUb7RO2AYOEOcZex/IUDq23cGn2aRU3HlRQ3hALJsc5F/6U7C4CHpLcWr2633q5hrmzxcE25Wupvanky1MuvL/374m/2wAuqfMIegirhNlJowNZ/au/IgFS8SxEYkczao8nfD15SJL2yGbBlWc2ZRRSHwWVpvJaik=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777036856; c=relaxed/simple;
+	bh=ASS3cGIUH/I1kiBf/Dy1WJ4mFG1Z1t92cIyj895Uf5Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FwnvsuHsGMM8L/dbyMwk4QFqAOiTBqM7N1VQ4wDbJ626gzW/LAUnVZADyLi7Y3nvGgGCUh/VD5v+tefdDdpO3VtXhSHvfuwhEIWn1kld207toLZNvE36uF6G2FDEUp5fxeVblsqBHfNXuTgDPrKCAtJx9ZX7kSde0nXtrDR/2YM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3G0GFTL; arc=pass smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b886fc047d5so1404504366b.3
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Apr 2026 06:20:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777036853; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hCtPeUld5/Lh1O0TcCq2NBKDR4RzJ4s8L7OKrkPHYQKDeuSm5xC5f0A+uLZ7eU5YAq
+         akSVei+4PDfDZYBKzsA0qgmnsyC1YXQ88l+7K3ke5myYyqkzzg1Pe/Z4jQ/sBnpHUznu
+         6UnKR6Ug0rqLlGJsRLiJ/4meiyHLdI9oF4KUSGudbedQxWW3VCHjXh7BJRXA38zyXUkE
+         sZl0vlWMteqsIIVIFI9bqXFAV/wVPtaIgT1h/En9luziOJF2J+0i8c21P9tLr1OrRbd+
+         7C7U+2DYab11/ftq6ubwMAHN1dY9IGoSoNJU94SbHVBVELb4O31nuABG0c1LxkYwGf9P
+         bPsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ASS3cGIUH/I1kiBf/Dy1WJ4mFG1Z1t92cIyj895Uf5Y=;
+        fh=8oTTDw1v0ZMa59D29VzttmRjRe1/QYVXBEGMr4L18uc=;
+        b=Me1a4jd8Bxc4Rhy4I6L4xwA370XguqTaJINey5wIOAfB314l6Mb+Fhmo//1iUcHh+Q
+         Nqw7Pr4d6k036XTroLqOkF0qXhD520ugV8UIgOQhUziak/tyMUBop2f1IcYC+IT9uRfq
+         outExBqFyDhr+787wuPG7s3xYdi+AJSsTdFvvfBi6CSfSwnVdc0bAw00NZkHD2FlONf5
+         8RET20Wi0ZvHSTJgeLOAe3FwsQtDlgttGGVt5plXUhq+nihJ7Gh17r3L+npnqg46re8y
+         r9b9p5Ye8Ee6c9FZNpId5L7RlRUuKFejFfVOjzY//xJFM9pa9QjTZvZNK8QGPyzBnwL7
+         472A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777036853; x=1777641653; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ASS3cGIUH/I1kiBf/Dy1WJ4mFG1Z1t92cIyj895Uf5Y=;
+        b=G3G0GFTL8u6BieWBwXnTVyAyWJiob4JW74lnONgl+e4w4W4lKn/RmQsIK+x/VI4jf6
+         NflDdA9V7x2/E2VOhTJCyxMY2IlDLxXYpn5tWoNRP4mCQgmI76SyDsvGSy2aIe4oGum9
+         CyvKTJ8cfXbhRVNWtmQYkBX8SCACLg1Q6FzvCAFmHimbNIJPGNmFExiWQRhmRelE9p/d
+         zvMFrunzBsepClEnkPIlDR0+FrxO+PcLHFhiIpLaC4blZZErZmfQyFQy0K/Wk1Zop/87
+         Bkj52UvHHwffn+oHTSkNfRracpkSIuzoS80cM+VHPK47b3nW7MCCHWIJacyaVmgo3u9f
+         6qCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777036853; x=1777641653;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ASS3cGIUH/I1kiBf/Dy1WJ4mFG1Z1t92cIyj895Uf5Y=;
+        b=CKoZH6tiaUULNYG9bfODVoP8m8eQMfFoPi1zk8A5VNo9cdX4URXChXCNuy8cLHO0IL
+         ohjsXR7uDdjkFEMFF1pgeauCB+o1XEh0jAAsXjzhroZfN3bxyqief/JHbRXOxTAjasrj
+         UVboDtIAogW0XUS9Y/mF4f3i1KRzswV2KSF1ZvK756uqXJuigK+LJge0RVW3lt04Pc2w
+         HPnmh5vmpdQJjgisRE5QJa9yb0sCvjNQT+RkyBkQHBZDbUmQJF/cxSsfNmnsiHEN1W5I
+         PBijc/VPcwgdDKENQzEl/9CnXiElD19oHKQMkKOhx/dW+PUNjOsVOyivu80TDDBbe7KW
+         iKuw==
+X-Forwarded-Encrypted: i=1; AFNElJ/ksf/fZQO1McdkKCLdOqUJjmqHDykOcOinJjSKsYvEX1dVQxIt24+wPLsTsp6jIVUF/UoxsRK5haY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkmKxzqKbMkr2nc4es1r6C4bT88Jt+ZtC6ktjOsNffdPL2g76Q
+	10SD8LujHsFon7PZTMzV3R9aSt1TdMIlQ8wBxOvNAjEA7v1d97KBwSvv36VEaOF1//ev3zDwbpj
+	hM/4gRL+lqvSaD0tJAo5vxzZVl09zgaE=
+X-Gm-Gg: AeBDieuBZPwyNnTqBmx+vnqOP4JVC/4/wGcuuLmKCSIboCzkGu/ov0yFjdBUuD+oiFK
+	4WnMheVIQN/J06COwgFRkvv5pT8YIb3hr1VtlPXQv2gojGHLbYEdut8CUJXpIPLw60E7Y/yATk3
+	Ud/VhCFO7niVrdtphVwdEUPN0QOMDKr8zP4NIMeODWvhKrQpWwOh1tgk3MzcAawAL2U9fEvZKPT
+	0yiily2yBBa+Py1TNrd3SGLUylgkAh/t7o9m2x9j/W9myzAytl0gesk4YzV1XC+YywJJ5En+27b
+	fCcCLB7c+gRUT/ca
+X-Received: by 2002:a17:907:c1e:b0:bad:d21f:904d with SMTP id
+ a640c23a62f3a-badd21f9640mr134660466b.31.1777036851676; Fri, 24 Apr 2026
+ 06:20:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 146F245C2BE
+References: <CANT5p=oV8kcE6hXPoUVQAYGaiz+2OERoSRLAS6X+q9KJ_8w8YQ@mail.gmail.com>
+ <438478a7-c965-4a2a-9c4a-84b5f77d6dbe@samba.org>
+In-Reply-To: <438478a7-c965-4a2a-9c4a-84b5f77d6dbe@samba.org>
+From: Shyam Prasad N <nspmangalore@gmail.com>
+Date: Fri, 24 Apr 2026 18:50:40 +0530
+X-Gm-Features: AQROBzAWgiHMPutXPKosmS70CLbZfFyKsRjxdv-KyVf-hd6DFXM_DKprRPT5BlM
+Message-ID: <CANT5p=ortwT7ensa+kKoCa=wMnGETpqaQuBnhDWMSNu82KsqFg@mail.gmail.com>
+Subject: Re: "Intent" of VFS lookups
+To: Ralph Boehme <slow@samba.org>
+Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 890A945EEAD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
-	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[foxmail.com];
-	TAGGED_FROM(0.00)[bounces-21076-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21077-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[foxmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[cybeyond@foxmail.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nspmangalore@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-From: Lei Yin <yinlei2@lenovo.com>
+On Thu, Apr 23, 2026 at 11:13=E2=80=AFPM Ralph Boehme <slow@samba.org> wrot=
+e:
+>
+> On 4/23/26 7:01 PM, Shyam Prasad N wrote:
+> > Wanted to understand if this is a problem for other filesystems or if
+> > it is specific to SMB protocol?
+> > SMB2+ protocol mandate that open call specifies if the file being
+> > opened is a directory or not (regular file).
+> sure? From memory (though the logic has always kind of escaped me) if
+> you neither specify FILE_DIRECTORY_FILE nor FILE_NON_DIRECTORY_FILE the
+> server is supposed to open the object regardless of the type.
 
-Handle -NFS4ERR_OLD_STATEID in nfs4_layoutcommit_done().
+Hi Ralph,
 
-This issue was reproduced on NFSv4.2.
+That's interesting. The spec does not seem to define this. Perhaps purposel=
+y?
+Will try and prototype a change to verify.
 
-Without refreshing data->args.stateid, LAYOUTCOMMIT can keep retrying
-with the same stale stateid after OLD_STATEID, resulting in an
-unbounded retry loop.
-
-Refresh the layout stateid with nfs4_layout_refresh_old_stateid()
-and restart the RPC only after a successful refresh.
-
-Changes since v1: update refreshed stateid in inode layout header.
-
-Signed-off-by: Lei Yin <yinlei2@lenovo.com>
----
- fs/nfs/nfs4proc.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 7225b4cfa6c2..575bf45a9209 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9989,6 +9989,38 @@ nfs4_layoutcommit_done(struct rpc_task *task, void *calldata)
- 	case -NFS4ERR_GRACE:	    /* loca_recalim always false */
- 		task->tk_status = 0;
- 		break;
-+	case -NFS4ERR_OLD_STATEID: {
-+		u32 old_seqid = be32_to_cpu(data->args.stateid.seqid);
-+		struct pnfs_layout_range range = {
-+			.iomode = IOMODE_ANY,
-+			.offset = 0,
-+			.length = NFS4_MAX_UINT64,
-+		};
-+
-+		if (nfs4_layout_refresh_old_stateid(&data->args.stateid,
-+						    &range,
-+						    data->args.inode)) {
-+			struct pnfs_layout_hdr *lo;
-+
-+			spin_lock(&data->args.inode->i_lock);
-+			lo = NFS_I(data->args.inode)->layout;
-+			if (lo && pnfs_layout_is_valid(lo) &&
-+			    nfs4_stateid_match_other(&data->args.stateid,
-+						     &lo->plh_stateid))
-+				pnfs_set_layout_stateid(lo, &data->args.stateid,
-+							NULL, false);
-+			spin_unlock(&data->args.inode->i_lock);
-+
-+			dprintk("%s: refreshed OLD_STATEID inode %lu seq %u->%u\n",
-+				__func__, data->args.inode->i_ino,
-+				old_seqid,
-+				be32_to_cpu(data->args.stateid.seqid));
-+
-+			rpc_restart_call_prepare(task);
-+			return;
-+		}
-+		fallthrough;
-+	}
- 	case 0:
- 		break;
- 	default:
--- 
-2.43.0
-
+--=20
+Regards,
+Shyam
 
