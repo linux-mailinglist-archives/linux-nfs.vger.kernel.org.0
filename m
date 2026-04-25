@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21090-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21091-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AFDTJ8we7GmuUgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21090-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2026 03:54:20 +0200
+	id kHSCHhkf7GmpUgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21091-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2026 03:55:37 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 678AC464902
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2026 03:54:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02447464A17
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2026 03:55:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CB716300E59C
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2026 01:53:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7E77B302E7D1
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Apr 2026 01:53:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417F9246778;
-	Sat, 25 Apr 2026 01:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF15F2517AC;
+	Sat, 25 Apr 2026 01:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Po14uAd4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFIOSmTU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3942459E1;
-	Sat, 25 Apr 2026 01:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FFE224B05;
+	Sat, 25 Apr 2026 01:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777082019; cv=none; b=QR3Bk9WonUBnhIRoEkDUpLvaoAm+E+V/rLiK+Fgy35RrEVQUC6k0ZV2hlND8LSuaa1Kp0HJWb6YXOsXrOVYGdQLQF+uQYA0TTrYOQeviHHlUM00YHy6t6AMXNfPHzEE0eUOFh3IblwpOZtGAEkp06eVNfdz5AozRapipuiuv/mY=
+	t=1777082021; cv=none; b=M4xOu2Dxp/C/Sb1QifbqUc/eESpUbgbtQcHuaWdpUNjD+V7OzaR3Cv9aRmNmjTRItMy3apIjvrJLS1qsi2Xq8GV7i+hZbfN8Q/BGMCkGSUaECtO3FurWbK3XJ2tkSJ5usqGvE3crm5GEI7ut5DY4UZ9xh7gYcb0BTI/8ZApXbDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777082019; c=relaxed/simple;
-	bh=+3MOBq8tIY5WA12oHUqvFyZTiNAU0Ok39mLnTTLF1eI=;
+	s=arc-20240116; t=1777082021; c=relaxed/simple;
+	bh=oRDGC96aXLrYGoaLGWDMb1hUHb5uY4mVyf16uiV2qPs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XciV3lD7RrW2L3cDTvottchlGyNOPGnT7HciR7YYFsYahdVmplgUKPSac/YhQ5Bq+TClbiv4zKODgVFtqWSXqEBUujtZqfSRRRLK123z4OxkYnWzt9BFJfV+XQ6aGiPaeDJ9PL3AuVsQoqRb42dDhlH+PQ5b1h6cD0ZzrRR9saE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Po14uAd4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EBEAC2BCB5;
-	Sat, 25 Apr 2026 01:53:36 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=TWwOY/BOMickuVAWh2VrPBCmGBNfSkKnqiFdeeL2mLuSfIDQ81+0c9sZjWO7P/QwosUfRSu2dvLh3h96E/L4zGukSoMs+iBF5z3b1A1GBz+IyKjWsgzL89MoDv4cDHjItZM5RIxUiGEfFzt+3nDS7lXB+pT7e675wcGLbVG3LNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFIOSmTU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC06C2BCB6;
+	Sat, 25 Apr 2026 01:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777082018;
-	bh=+3MOBq8tIY5WA12oHUqvFyZTiNAU0Ok39mLnTTLF1eI=;
+	s=k20201202; t=1777082021;
+	bh=oRDGC96aXLrYGoaLGWDMb1hUHb5uY4mVyf16uiV2qPs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Po14uAd4s/wiiENSvxbh+ps2GZOcn/8LhI0uo4tb1F4Pe3jqlx+2rGjY1hGUSWOmJ
-	 DPnsHHME/4WGwBd2AWpQmGB063a9s25WRVbMLfW+6/XmJRQOGBiSBMUEl1L4lSzV0j
-	 kTHw5XTJYEeqJcundSzxcUDO6euEsfj35Gz/rlRueNylTA36W/XJC6YiU/RgQaty+n
-	 UEzjGbP93WLA6hM3AzX3YUfFqFB2hWEaCYznHp2KnDHX62j1M/sJpydqBOX0sbrc0m
-	 FSgFTthTkId9NpWICQmBNL5QoSGRONAJXoegF8JzRdc2aYNDiue8IKl67PiKXWdfNA
-	 Kouv+YBvFje9g==
+	b=oFIOSmTU2nhLm7K9+JpqJ9d5kWh4Uf7fpNodaD6YWmjrJ4yyGvopEvJViPasI0nmQ
+	 VK8NZq+CThLHyQdjaq79rzmS56kUemS4V1peJSEVtKktXl/6+3XAFMuYj6d0lHYph8
+	 kafByR1dboAtJWBjbq8iyRdxQyf6N19kuRjythCLSoRc4TTWOpV64mGE6F7Waeisxi
+	 G/K854a0Exs9tEfTOWqY+M1QQuz5fS/2X9hCOC4Wvm0/HJQDb4yDheDPLnoxUDY+yl
+	 LUs0NeatZhbKlgF568h5vyfnZuen2p9Mq0zwV7osGoA59hCN1Aho6GiV7cizMAaAhc
+	 xS9nLQB+Mlisw==
 From: Chuck Lever <cel@kernel.org>
-Date: Fri, 24 Apr 2026 21:53:08 -0400
-Subject: [PATCH v11 06/15] hfs: Implement fileattr_get for case sensitivity
+Date: Fri, 24 Apr 2026 21:53:09 -0400
+Subject: [PATCH v11 07/15] hfsplus: Report case sensitivity in fileattr_get
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260424-case-sensitivity-v11-6-de5619beddaf@oracle.com>
+Message-Id: <20260424-case-sensitivity-v11-7-de5619beddaf@oracle.com>
 References: <20260424-case-sensitivity-v11-0-de5619beddaf@oracle.com>
 In-Reply-To: <20260424-case-sensitivity-v11-0-de5619beddaf@oracle.com>
 To: Al Viro <viro@zeniv.linux.org.uk>, 
@@ -74,35 +74,35 @@ Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
  Chuck Lever <chuck.lever@oracle.com>, 
  Roland Mainz <roland.mainz@nrubsig.org>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2557;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1623;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=2Xqe+DnVGNfulHUCzpURt2jTiqbh233GQupN+nsg0Mc=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp7B6QMaG3Vj/9N1di+0c7HAL3Lo5gwGKNaaWO+
- rt91mDJ1IqJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaewekAAKCRAzarMzb2Z/
- l9dBEAC5tzt5UR880pQ3sCv1p0X3cyCLrZZ2G/QXN02XqQKpa93iydTN/5iY8vQ9apd8r6rm+mg
- D08EAC9Kbbvo5Ma6t90VVZVrl+oBwdHieHQ85zvzTOzxyILwi7RJuAbaQxrcUYoIRZ20jBznin0
- fSTd6M60x84fBQSFqRl9mgPcSaWAkQZDI+u59MvgO2x0Hk1hqDF4OsvOEiIfmBzdcmIlud9+onQ
- +pKfJQJ5QG6vVY4Zg+xi55R6enUwejsgok7WFDGebeq8hvuiaXiNmWL6eohIeR13AB4pOPCSw2O
- WU08njma4sjoREgYj1pxih5wDf9AxJ8TWsfimlWVi597g2CIzqOUY2gv9ZJRSnflT+8y+hYh0NS
- rjAGKJ1mQlQ48hgi0bHjMi7eNcbFd5oiasHr89sWMpdAXO8m9Bm8PnktWTG90mCD4WovUdnvwS/
- B+WGQO5lufWVI30eEkxvW7TVm/kOeB9LsFEz8XFBQQ1Z2C9rUpizVNv8AzdyT6q/uObpWEar6mJ
- Pw58Fe5T8Xee7hQjMXOZEujz8LkRoF0PSGmBt04YtWHp8TLtegR5+0apPi7/keXaR3VsGN1IpjE
- /FQXKk6yrZCFepDs6sc4ZaUs73iPXtCgtUqIwDoXy8TMFXSZdkiTb0Vk3RTKYXQ9FXVYh/3py3I
- lq7UvruzGb8GVIw==
+ bh=GH3KwkswOpLheXLhG9bp+y8vR50klKh2XxRFWosaGQw=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp7B6QNmj81GM08BqfbJycnCt6uIXkx7PkUPmCT
+ PsNKSwA0VmJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaewekAAKCRAzarMzb2Z/
+ l2PBD/wL9qDmPVh0AFBM5UbZyA8/ZailA6PaV0N5R1QyRq5wfKCOp7xkGRD6enKq24kxShCYkpL
+ tm1OBWZBPH+lIUiuy+wWPySjdk1BsT0SrppjgXbnVMHzlsTKCPI4daviYHU5EBqEMSPznjqo2pb
+ eBB/hFCjyWtk2K6VnDWu/RFxa89dniD1CgkbS4MZh2RgcGkDOBcZ325NEYCE1rg0J3g3vuiQbOF
+ Izja/7zVl2L54lEOj/h+BLYPmOXT2T/pIMvcdMNHTcNtEtoMuPfNaOz+Fz01108trrpSH/djHgO
+ HrncxA8pcsqiOM4fBOMDrCkPAEjmRQPy7fu2EWu1G/dMXUWYDE7GVJNy8BEAUXZhGDCl9HklwEA
+ o+GBAO/7/SKRipZz5PR9oj6uIHQ2ROL23qpKs9jiMqxugb1olcdRth9aEoY7Wyc5fi1Nygj28MF
+ 0ILw4CdA/2Qq6jlUyKnv1BbWQpslm3T+u4np9UbPWvahRQTpvGFBqFBjzkyxjNjT8jPjnM+kexc
+ mF5b/zImKIi/CitshFezOBSvm+MrrwSyvjeGbkmWIH6xfFXLnR6duJnJp8otkzl/s9UpStUkMa0
+ JtnhL3Pk8E2UxPjf+oR0oXrb9xVifqi9sHOCMqHCtWUnbtlNoxZkWdr8tHKpY9X5dX8K0iPNEgu
+ 5Cf62172SzTHlFQ==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 678AC464902
+X-Rspamd-Queue-Id: 02447464A17
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21090-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21091-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -118,84 +118,56 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nrubsig.org:email,oracle.com:mid,oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nrubsig.org:email,dubeyko.com:email,oracle.com:mid,oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Report HFS case sensitivity behavior via the FS_XFLAG_CASEFOLD
-flag. HFS is always case-insensitive (using Mac OS Roman case
-folding) and always preserves case at rest.
+Add case sensitivity reporting to the existing hfsplus_fileattr_get()
+function via the FS_XFLAG_CASEFOLD flag. HFS+ always preserves case
+at rest.
+
+Case sensitivity depends on how the volume was formatted: HFSX
+volumes may be either case-sensitive or case-insensitive, indicated
+by the HFSPLUS_SB_CASEFOLD superblock flag.
 
 Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
 Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/hfs/dir.c    |  1 +
- fs/hfs/hfs_fs.h |  2 ++
- fs/hfs/inode.c  | 14 ++++++++++++++
- 3 files changed, 17 insertions(+)
+ fs/hfsplus/inode.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/hfs/dir.c b/fs/hfs/dir.c
-index f5e7efe924e7..c4c6e1623f55 100644
---- a/fs/hfs/dir.c
-+++ b/fs/hfs/dir.c
-@@ -328,4 +328,5 @@ const struct inode_operations hfs_dir_inode_operations = {
- 	.rmdir		= hfs_remove,
- 	.rename		= hfs_rename,
- 	.setattr	= hfs_inode_setattr,
-+	.fileattr_get	= hfs_fileattr_get,
- };
-diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
-index ac0e83f77a0f..1b23448c9a48 100644
---- a/fs/hfs/hfs_fs.h
-+++ b/fs/hfs/hfs_fs.h
-@@ -177,6 +177,8 @@ extern int hfs_get_block(struct inode *inode, sector_t block,
- extern const struct address_space_operations hfs_aops;
- extern const struct address_space_operations hfs_btree_aops;
+diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
+index d05891ec492e..38b6eb659a79 100644
+--- a/fs/hfsplus/inode.c
++++ b/fs/hfsplus/inode.c
+@@ -740,6 +740,7 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+ {
+ 	struct inode *inode = d_inode(dentry);
+ 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
++	struct hfsplus_sb_info *sbi = HFSPLUS_SB(inode->i_sb);
+ 	unsigned int flags = 0;
  
-+struct file_kattr;
-+int hfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa);
- int hfs_write_begin(const struct kiocb *iocb, struct address_space *mapping,
- 		    loff_t pos, unsigned int len, struct folio **foliop,
- 		    void **fsdata);
-diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
-index 89b33a9d46d5..f41cc261684d 100644
---- a/fs/hfs/inode.c
-+++ b/fs/hfs/inode.c
-@@ -18,6 +18,7 @@
- #include <linux/uio.h>
- #include <linux/xattr.h>
- #include <linux/blkdev.h>
-+#include <linux/fileattr.h>
+ 	if (inode->i_flags & S_IMMUTABLE)
+@@ -751,6 +752,17 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
  
- #include "hfs_fs.h"
- #include "btree.h"
-@@ -699,6 +700,18 @@ static int hfs_file_fsync(struct file *filp, loff_t start, loff_t end,
- 	return ret;
+ 	fileattr_fill_flags(fa, flags);
+ 
++	/*
++	 * HFS+ always preserves case at rest. Standard HFS+ volumes
++	 * are case-insensitive; HFSX volumes may be either
++	 * case-sensitive or case-insensitive depending on how they
++	 * were formatted. HFSPLUS_SB_CASEFOLD is set in both
++	 * case-insensitive variants.
++	 */
++	if (test_bit(HFSPLUS_SB_CASEFOLD, &sbi->flags)) {
++		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
++		fa->flags |= FS_CASEFOLD_FL;
++	}
+ 	return 0;
  }
  
-+int hfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
-+{
-+	/*
-+	 * HFS compares filenames using Mac OS Roman case folding, so
-+	 * lookup is always case-insensitive. Names are stored on disk
-+	 * with case intact; CASENONPRESERVING stays clear.
-+	 */
-+	fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
-+	fa->flags |= FS_CASEFOLD_FL;
-+	return 0;
-+}
-+
- static const struct file_operations hfs_file_operations = {
- 	.llseek		= generic_file_llseek,
- 	.read_iter	= generic_file_read_iter,
-@@ -715,4 +728,5 @@ static const struct inode_operations hfs_file_inode_operations = {
- 	.lookup		= hfs_file_lookup,
- 	.setattr	= hfs_inode_setattr,
- 	.listxattr	= generic_listxattr,
-+	.fileattr_get	= hfs_fileattr_get,
- };
 
 -- 
 2.53.0
