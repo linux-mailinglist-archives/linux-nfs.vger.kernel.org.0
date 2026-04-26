@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21107-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21108-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eAXIGcIb7mkYqwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21107-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 16:05:54 +0200
+	id 8MDXMDod7mkpqwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21108-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 16:12:10 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC0FB46A3BE
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 16:05:53 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADEB646A425
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 16:12:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0814B3009F1C
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 14:05:52 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5F87C30015A7
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 14:12:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5313644A1;
-	Sun, 26 Apr 2026 14:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE2436492C;
+	Sun, 26 Apr 2026 14:12:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuZN3lNZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbS+owDk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16AC313E34;
-	Sun, 26 Apr 2026 14:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C2F35E93C;
+	Sun, 26 Apr 2026 14:12:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777212348; cv=none; b=MxfJoPqx4jO4sQJLLsNNoeJAoZ/SDIKpsixiRhrvWevXHd4moAG0qX5E7KIlDa85N9Qy9lf4BCxPLyNwS25a8vFmz06acwloJiT0BhOjRRDszGRQA5SbdQZ7OoLWnk1m6N98nGN8UTMHOjyNFEyH15aXrh6CjriXHSZXN115TQw=
+	t=1777212723; cv=none; b=lTjnsWBRMAyJbONgUjLWxBVBOSLXvymnwJYElOWjIR2qVHX2Kjl3KbbZyOFilOAlgXlc485IS+E/qbfRoSqPiCJw3sPvya1xG9Lu/XeMYZecuoNhv/0+FON5+W+3nlYBg9qi1UpaBNsRo7Bp8r48FreNHDHvU9zCnVFOiQ34NgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777212348; c=relaxed/simple;
-	bh=T4tAq8f3GyMyfad25bLCniXA7N6Mz1oCdcVsZpFwgJ8=;
+	s=arc-20240116; t=1777212723; c=relaxed/simple;
+	bh=IRJJiiWDnfkZo3XiMcLry7109Jt3Fee6f9sFz863eWk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FJ/XVSdDN20/qavuIu1o2wyhZP6Mx6OVzWWBCy4LtJHDNO9ERbViL7ZJrh+bW+5EgO3KkULWvtdvGfkdq8ZslqB21Tw55DhYjc0jR0V6SLQL8FpbNuMAZqMY/4vhx8EX89WlFjrZ9ce3WkYozqsRZzpEkAm0AFeAD+P5xXieVHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GuZN3lNZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FB6C2BCAF;
-	Sun, 26 Apr 2026 14:05:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=buBXHqTkAIBx175o6bWeq6TXU3f/zhPp36Hc+7xIboTD/FeS5KL6AkpolC4gvy6H/96tp1AZyRP+JwyY/rNwRws0pxPl5sTQBw6WWzzZbTzrxrm5TKDppT+rL2x9jhVT0jkXCVysT0S48Qvfeg3+EHOTyZdjEYRqgnoKnmHrTHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbS+owDk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD22C2BCAF;
+	Sun, 26 Apr 2026 14:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777212348;
-	bh=T4tAq8f3GyMyfad25bLCniXA7N6Mz1oCdcVsZpFwgJ8=;
+	s=k20201202; t=1777212723;
+	bh=IRJJiiWDnfkZo3XiMcLry7109Jt3Fee6f9sFz863eWk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GuZN3lNZME/yjE2qdULa20BWGzJC/R7ThVsMc3/fu4Nra77mXgLO8zF/akws1vuMR
-	 5SahTXISJHdXrw34jbyROxbYk2kXjFD0DgG3REtg1X/z9rFdbvC2ZI9LyV3VC8DdTm
-	 rZNPiqoj/9gDCnQKCW4ACKQsWaMmF3iW/6COSdXeZclcYHfxE0haX/Y7F8RxjWgXby
-	 YHKOBnQGknEAmkSGPRHysFUiOmCEr7sC1C+rOOr7stT0u2bqpa7hbEFwYzfx1vL4p2
-	 Wz42SCHeI5jshpWp6VH5zy8UKI2+Kh4XzYwcI5OYZsQJu6YQEOOBAOdvHWnnFFDHKZ
-	 iopiD24Wp+XyA==
-Message-ID: <2a2d77bb3caf096781b1a4a6000a1c1318d52840.camel@kernel.org>
-Subject: Re: [PATCH v3 2/4] mm: kick writeback flusher for IOCB_DONTCACHE
- with targeted dirty tracking
+	b=sbS+owDkb+Z6IQpYoYT79Ic65NymGwKhoyCQIan/oSu29or04JEu9p8piPBG2MMjx
+	 8ZqFJzx5pQjQ56T0JAjG2QuWKbTGaTyv6GxSWKvGcKjvrhYDWSFBU6KcImBFG38JKT
+	 LiDH0l0mUaePnvDMuxrGVwaRtp9igTEYCNY8kXp7zU1CmWGR4Ir0k1FnEfE9aqTEwY
+	 lrYws+O9sUW6NSs4tADsIlcV1yJd4oR0JmtinLwJVPzAuHj5S6sWWaUuYX8TBnMycn
+	 HABqFbdEjhzZukfuB1QzFmNwS63LYDeIjTPBAqDHnfTTSXsUEEFeCbPX7d5zFmwBnX
+	 W9RI3RnkIkW4w==
+Message-ID: <a1e784d7006fe5d4331d41a0638be117ac67fb21.camel@kernel.org>
+Subject: Re: [PATCH v3 3/4] testing: add nfsd-io-bench NFS server benchmark
+ suite
 From: Jeff Layton <jlayton@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
@@ -66,11 +66,11 @@ Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
  linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
 	linux-trace-kernel@vger.kernel.org
-Date: Sun, 26 Apr 2026 10:05:42 -0400
-In-Reply-To: <20260426052854.8372fb9d4c616f16a8aa0a0f@linux-foundation.org>
+Date: Sun, 26 Apr 2026 10:11:57 -0400
+In-Reply-To: <20260426053455.4c06140446976964e6fbb8ab@linux-foundation.org>
 References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
-		<20260426-dontcache-v3-2-79eb37da9547@kernel.org>
-	 <20260426052854.8372fb9d4c616f16a8aa0a0f@linux-foundation.org>
+		<20260426-dontcache-v3-3-79eb37da9547@kernel.org>
+	 <20260426053455.4c06140446976964e6fbb8ab@linux-foundation.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -154,14 +154,14 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: EC0FB46A3BE
+X-Rspamd-Queue-Id: ADEB646A425
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -171,9 +171,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com,tencent.com,linux.dev,goodmis.org,efficios.com,vger.kernel.org,kvack.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-21107-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21108-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
@@ -185,141 +185,57 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[32];
 	TO_DN_SOME(0.00)[]
 
-On Sun, 2026-04-26 at 05:28 -0700, Andrew Morton wrote:
-> Naive questions...
->=20
-> On Sun, 26 Apr 2026 07:56:08 -0400 Jeff Layton <jlayton@kernel.org> wrote=
+On Sun, 2026-04-26 at 05:34 -0700, Andrew Morton wrote:
+> On Sun, 26 Apr 2026 07:56:09 -0400 Jeff Layton <jlayton@kernel.org> wrote=
 :
 >=20
-> > The IOCB_DONTCACHE writeback path in generic_write_sync() calls
-> > filemap_flush_range() on every write, submitting writeback inline in
-> > the writer's context.  Perf lock contention profiling shows the
-> > performance problem is not lock contention but the writeback submission
-> > work itself =E2=80=94 walking the page tree and submitting I/O blocks t=
-he writer
-> > for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
-> > (dontcache).
+> > Add a benchmark suite for testing NFSD I/O mode performance using fio
+> > with the libnfs backend against an NFS server on localhost.  Tests
+> > buffered, dontcache, and direct I/O modes via NFSD debugfs controls.
+> >=20
+> > Includes:
+> >  - fio job files for sequential/random read/write, multi-writer,
+> >    noisy-neighbor, and latency-sensitive reader workloads
+> >  - run-benchmarks.sh: orchestrates test matrix with mode switching
+> >  - parse-results.sh: extracts metrics from fio JSON output
+> >  - setup-server.sh: configures NFS export for testing
+> >=20
+> > Assisted-by: Claude:claude-opus-4-6
 >=20
-> So in the current case, when generic_write_sync() returns, all that
-> memory is written back and clean&reclaimable (or freed?), yes?
+> OK, question.
 >=20
-
-No. Before returning, it submits the I/Os for the portion that it wrote
-rather than leaving it to the flusher to take care of things, but it
-doesn't wait for the I/Os to complete.
-
-> > Replace the inline filemap_flush_range() call with a flusher kick that
-> > drains dirty pages in the background.  This moves writeback submission
-> > completely off the writer's hot path.
+> >  10 files changed, 1024 insertions(+)
 >=20
-> Whereas after this change, that pagecache is probably still dirty,
-> unreclaimable, waiting for the flusher to do its thing?
+> Seems that this code was largely machine-generated.  So I assume that
+> you're in possession of the scripts/prompts/whatever which were used to
+> generate this code.
 >=20
-
-Correct, but that's sort of the case today too since DONTCACHE I/Os
-don't wait for the completion. With this change we're just deferring
-the I/O submission to the flusher thread (which should hopefully soon
-wake and take care of business). If the flusher thread can't keep up,
-then eventually balance_dirty_pages() will kick in and start slowing
-things down.
-
-> So is there potential that the system will get all gummed up with
-> dirty, to-be-written-soon pagecache?  Is there something which limits
-> this buildup?
+> (Can you please briefly describe the process which you used here?)
 >=20
 
-Today in this situation, the writers are limited by the backing device
-throughput. Once the I/O submission queues are full, then the DONTCACHE
-writers end up stacking up on those. With this change, the writers will
-be more limited by traditional VM limits in this situation.=20
+It's been a while since it generated these, but I think I just asked it
+to concoct a set of benchmarks for DONTCACHE writes when that involved
+file sizes that were larger than the machine's memory.=20
 
-In the test runs I did, the peak pagecache with DONTCACHE writes was
-higher than with the unpatched version but still considerably less than
-with normal buffered I/O. That's the cost of deferring the I/O
-submission to the flusher.
+I ended up asking it to make some changes (e.g. the mixed-mode test,
+and some of the perf stuff), but it seemed to do a reasonable job of
+creating it.
 
-One thing we could consider is going back to submitting the writes
-inline when the number of dirty pages is high. But, that could have a
-detrimental effect on performance too.
+> So how are we to maintain this?  Will other developers have to go in
+> and hack this machine-generated output by hand?  Or would it be better
+> to provide (in-tree) other developers with the means to regenerate this c=
+ode,
+> presumably using Claude?
+>=20
+> IOW, this feels a bit like shipping the .s file without giving us the .c
+> file!
 
-> > ...
-> >=20
-> > dontcache-bench results on dual-socket Xeon Gold 6138 (80 CPUs, 256 GB
-> > RAM, Samsung MZ1LB1T9HALS 1.7 TB NVMe, local XFS, io_uring, file size
-> > ~503 GB, compared to a v6.19-ish baseline):
-> >=20
-> >   Single-client sequential write (MB/s):
-> >                        baseline    patched     change
-> >   buffered              1449.8     1440.1      -0.7%
-> >   dontcache             1347.9     1461.5      +8.4%
-> >   direct                1450.0     1440.1      -0.7%
-> >=20
-> >   Single-client sequential write latency (us):
-> >                        baseline    patched     change
-> >   dontcache p50         3031.0    10551.3    +248.1%
-> >   dontcache p99        74973.2    21626.9     -71.2%
-> >   dontcache p99.9      85459.0    23199.7     -72.9%
-> >=20
-> >   Single-client random write (MB/s):
-> >                        baseline    patched     change
-> >   dontcache              284.2      295.4      +3.9%
-> >=20
-> >   Single-client random write p99.9 latency (us):
-> >                        baseline    patched     change
-> >   dontcache             2277.4      872.4     -61.7%
-> >=20
-> >   Multi-writer aggregate throughput (MB/s):
-> >                        baseline    patched     change
-> >   buffered              1619.5     1611.2      -0.5%
-> >   dontcache             1281.1     1629.4     +27.2%
-> >   direct                1545.4     1609.4      +4.1%
-> >=20
-> >   Mixed-mode noisy neighbor (dontcache writer + buffered readers):
-> >                        baseline    patched     change
-> >   writer (MB/s)         1297.6     1471.1     +13.4%
-> >   readers avg (MB/s)     855.0      462.4     -45.9%
->=20
-> These results look ambiguous.  Sometimes better, sometimes worse?
->=20
-> > nfsd-io-bench results on same hardware (XFS on NVMe, NFSv3 via fio
-> > NFS engine with libnfs, 1024 NFSD threads, pool_mode=3Dpernode,
-> > file size ~502 GB, compared to v6.19-ish baseline):
-> >=20
-> >   Single-client sequential write (MB/s):
-> >                        baseline    patched     change
-> >   buffered              4844.2     4653.4      -3.9%
-> >   dontcache             3028.3     3723.1     +22.9%
-> >   direct                 957.6      987.8      +3.2%
-> >=20
-> >   Single-client sequential write p99.9 latency (us):
-> >                        baseline    patched     change
-> >   dontcache            759169.0   175112.2     -76.9%
-> >=20
-> >   Single-client random write (MB/s):
-> >                        baseline    patched     change
-> >   dontcache              590.0     1561.0    +164.6%
-> >=20
-> >   Multi-writer aggregate throughput (MB/s):
-> >                        baseline    patched     change
-> >   buffered              9636.3     9422.9      -2.2%
-> >   dontcache             1894.9     9442.6    +398.3%
-> >   direct                 809.6      975.1     +20.4%
-> >=20
-> >   Noisy neighbor (dontcache writer + random readers):
-> >                        baseline    patched     change
-> >   writer (MB/s)         1854.5     4063.6    +119.1%
-> >   readers avg (MB/s)     131.2      101.6     -22.5%
->=20
-> Ditto but less so.
->=20
-> > The NFS results show even larger improvements than the local benchmarks=
-.
-> > Multi-writer dontcache throughput improves nearly 5x, matching buffered
-> > I/O. Dirty page footprint drops 85-95% in sequential workloads vs.
-> > buffered.
->=20
-> It sounds that you like the results, so OK ;)
-
+As I mentioned in the cover letter, I mostly included this in the
+series to demonstrate how this was tested. I'm not sure if the two
+benchmark suites are suitable for inclusion. I'm fine with leaving
+those two patches out of the merge. I found the testcases useful for
+this, but they are indeed AI slop, and I'm not sure they have long-term
+value or will be maintainable.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
