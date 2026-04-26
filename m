@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-21101-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21102-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ODSKNqH97WndpgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21101-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 13:57:21 +0200
+	id wB21MPH97WnEpgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21102-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 13:58:41 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE40469ACA
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 13:57:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AC10469B0D
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 13:58:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 809EE3007A51
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 11:56:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EF8543023E1C
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Apr 2026 11:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77C4359A91;
-	Sun, 26 Apr 2026 11:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42DA935F18E;
+	Sun, 26 Apr 2026 11:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CpQWXeX6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ooZJKXZq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34A3318ED2;
-	Sun, 26 Apr 2026 11:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3B5318ED2;
+	Sun, 26 Apr 2026 11:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777204604; cv=none; b=nhBsnEqUVXH0Ay0TPr2ArtpYLQ4yJ9ZE+VPMSX84EHP1Sei49MOi1uB2aAm/FKXVaS28LHdq5NEnqn8fCupnSQHIXjuIlq6Oe6F7FBCt52raxUWOZHRlBjkH6QK8pHV+xJ01txsApQwRZfg1iroAxZMapxici526BTEs7OQA6R0=
+	t=1777204608; cv=none; b=BqTZQLatXozPiX+3WVsO/hoUHEjW/g/O9WUg9uN0UJYqV3DOLgQbpWg0TiZM3i2ns7gduOPohNcl7z6xYlUeoKVTNQJlLdGZQrVxvvNSxOVC110UFk7EK7tIj1WoV+cOBVChqhlj9tpd9/7AQvRHXbkN0SihBa+B9YY56igQHos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777204604; c=relaxed/simple;
-	bh=lShvPUZtkzEbs9UjOJnKGezjl/aC+9FCH6gTzp0HT98=;
+	s=arc-20240116; t=1777204608; c=relaxed/simple;
+	bh=5hBl0zioJo5bmMYBsa/ayjneMPX9D/E0U5nhPvmz3Ag=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SHxJoFSe4/IZV8YRa1BeIeYZmuZNg8k1icjYLebpDFbsgj6+/Xk/ofgETKsVg/8UJ5LMbce1D9Im4BrZygl46j3DSf0ER1/dqF1HCnfCb4e2p+EE1/WLX0Zi71d7bdYz2QsvzIICEFX4Zdfr/51DpPu9xecHLEHUI4YH5v7sKGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CpQWXeX6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE65C2BCC7;
-	Sun, 26 Apr 2026 11:56:39 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=LKSWdOQx8aEF6Yfu0iGn/EpY3Bb2SVtJPzbYnfuY4T33xUlNW8EBtyAjJbNobXjZIb7+rxCsaT47ng3WLeWjktnd3ifRDb0mwaq1bxo5vvm7CvH6ae+NZPpPlTa7fsKgqOlnDO9xTVXRm9tOPdQiuwySMEnrZTFegVSTe+S0Mtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ooZJKXZq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F856C2BCAF;
+	Sun, 26 Apr 2026 11:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777204604;
-	bh=lShvPUZtkzEbs9UjOJnKGezjl/aC+9FCH6gTzp0HT98=;
+	s=k20201202; t=1777204607;
+	bh=5hBl0zioJo5bmMYBsa/ayjneMPX9D/E0U5nhPvmz3Ag=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CpQWXeX6Lr0IU6cU5AKbX7juxAPZ2vfsbItLZDeWUgH3Z4eJIwsM6Gc4nsVK841XD
-	 RyBWlxKyKlvt89D8DbRvb9wNjA7sy9BlqhoYEWEA699T1gXPxnXdWEY9HshDvScyLr
-	 /wcTEK+Eqoazk77ZQa+RFa6yhYnubfoJ9aDQ8A1CEOgvEuBg5vSqvzkTr4BIXJr/2W
-	 2EcFxwBNH/w0f2VWxqpcBbDmhGn/xXCyJ8YrAWa5106JL7z7pyPw4ht1vBqq2DDWA/
-	 H2DaxEwm7Og21ULSsJFM+aMPJ8XakxjLJdvLs6wOINSuWraZnuSRoEdxsb9uDZOCsn
-	 vZdWnb5DHBXbw==
+	b=ooZJKXZqm0RN4As5t7yp7UYg1yu3tEkFQjZEmM8nPsoeCGMVy3rDmDeNBVajbkgLf
+	 QIADhlIEZ6EfFzFvo6gMAPZHKezwp2U/rjmNbqqeJIIvhqo4H1V9CcK1oonXxlNv4P
+	 JRsyGCXXyCOosabi8sWpWNGuwS2iXNsAEkvPeyyGFWC1QBGd1kBojbIu67BdtUKzAq
+	 yesLLXGUVTgk6mi2deep1Kj3q84eWZPsY+Xo4ypp6ZRYB9zposMCp8muPo5r/PPWEX
+	 1QdLj8DBu/7gBbGWedtD8wAUzcPuChtBD60r/1mChVCWdhJBIkjpellVjR2eQFRvWH
+	 8OR/xmZVr/sLA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Sun, 26 Apr 2026 07:56:07 -0400
-Subject: [PATCH v3 1/4] mm: add NR_DONTCACHE_DIRTY node page counter
+Date: Sun, 26 Apr 2026 07:56:08 -0400
+Subject: [PATCH v3 2/4] mm: kick writeback flusher for IOCB_DONTCACHE with
+ targeted dirty tracking
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,8 +55,8 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260426-dontcache-v3-1-79eb37da9547@kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260426-dontcache-v3-2-79eb37da9547@kernel.org>
 References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
 In-Reply-To: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -80,23 +81,23 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
  linux-trace-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3971; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=lShvPUZtkzEbs9UjOJnKGezjl/aC+9FCH6gTzp0HT98=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp7f1zf9CTlq6JPeG4iiERHYH/s7/r/mpN6W0Zy
- r/eX9lzvNWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCae39cwAKCRAADmhBGVaC
- FcMUEADGRbm+5W/V/7ipFOu8wKZLLjr66aeLjuTR64OiEWQt/7Mf8tX1jqzZeYEGG7citRX3Ha6
- maC5/LmG+ZFi1yXJ6yPJydpPjVKgo1zC5iLxQSeXNs3k+zaBtKkeOTaFF+WgRUu9G/Uf2amnkhP
- 0K3mbty3oitNjI9JoLjVd/r8haA/dNB9PNIJxPfyqrwXYvVcqEyik8JUda4+9VuuRrPsKray2ie
- xwlWxU696drZ0K1I3QaevnUL+sVlWI4sAjBPvDheanRzu8uRtIliQ5Go2e2SV9AtYZn72zkm5Qg
- 28Ux5aoKw11unzRxBMixl4xS5b9V2481YKdsQApM3D8qnQkJa/if5XthtDh77SP4fyqn70x1N93
- GeeePY3fjn1XJVeyuntR4qgH/perFKxwC49yMpE4zjkW3FQZ7//kOFyJdhVCj7I0Vwntp7Gmslk
- bSNrxyaPW5Q0LFb45FcG61hDtT2ySjpw4L956modzI7heHQ+z6gAZ1MWTPvDxoJrVzXmcRMsZWV
- PZpkUcv9JUf968U/7dU8Tzqi6rAzIrJaSJ/E92quPKyck15bPAIDeEmGn5955nQ4elCIrl4/axE
- STdCKtcr1dcAg/WdZ18pY6dwBaoEQw83xXyZcoKbc00oGqqhKk/DRkkm9UU9czBD6OJ998hY8TT
- /Gc26l2XZkJL9tQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9483; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=5hBl0zioJo5bmMYBsa/ayjneMPX9D/E0U5nhPvmz3Ag=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp7f1zmVJGTA+Tu2f1JtkgZ4Wu4QF3JzIvd1NAx
+ QeDTBATFNWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCae39cwAKCRAADmhBGVaC
+ FeF3D/9yCQENYERa2fOF8sEnGIr+VfDwMDVMKgp6/vpNwbtri6dShe5ipAoG1nNJw2Ec8fYuiFg
+ Imjx0pFCtOHJuShyO4+5vUueRxuIHyxkF7MIEO+nn0GapxZzXdLryLM28vxnSvFOP5UWUcrlRVT
+ X1XJg64SsFTYWrf6TqLLZGJih2OjGZ/f8sQUYW6+piUA97X4h7ya4/FUr8MWv12fANionDuGBRQ
+ l/zALxRhRgT+Xa9GJ/cjP4oVmx3ZXXIRbDUoW5qJX5cjxx0cEi/xg0fAh3Yb6qT7iOWKAuqXoN5
+ 4dm9IXRaDvssYpbwMUHfSVKcxoiIhSGRULtO0bazlUA6uAxK8HVyzEBXB/DQkHqL2uVMT4E+63z
+ 2Tlyh0wn6NUVzaxu6D39C1BO8EZCIefUUGMI2sZHZj/UzEkTAe6hpjph3RTTvsIn3HygosnhqQP
+ eGSjsFc55/57rjQzR2EQwitPA+Bcl+P1uZnYKrUKKPlfKzqbXEbml4VfiQTynzJ95mmDSr09RVy
+ 942UbUjLOXIyjmqzjx3vNiSw138EfZYebQTmL/LKeXIRRheDBE3xi6tG1NnFIUm+gYE38ZvUAka
+ aHK2QJipOHP63BECxbbGddNccTr1e1Hx7Nw75TaIYoHQjgoTm4k/S6I9EjhwjgyyB16UO6L0Bea
+ wuMVICRdIU/Oh4g==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: EAE40469ACA
+X-Rspamd-Queue-Id: 3AC10469B0D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -104,12 +105,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21101-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21102-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,linux-foundation.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com,tencent.com,linux.dev,goodmis.org,efficios.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -125,105 +126,264 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-Add a per-node page counter that tracks the number of dirty pages with
-the dropbehind flag set (i.e., pages dirtied via RWF_DONTCACHE writes).
+The IOCB_DONTCACHE writeback path in generic_write_sync() calls
+filemap_flush_range() on every write, submitting writeback inline in
+the writer's context.  Perf lock contention profiling shows the
+performance problem is not lock contention but the writeback submission
+work itself — walking the page tree and submitting I/O blocks the writer
+for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
+(dontcache).
 
-Increment the counter alongside NR_FILE_DIRTY in folio_account_dirtied()
-when the folio has the dropbehind flag set, and decrement it in
-folio_clear_dirty_for_io(), folio_account_cleaned(), and when a
-non-DONTCACHE access clears the dropbehind flag on a dirty folio.
+Replace the inline filemap_flush_range() call with a flusher kick that
+drains dirty pages in the background.  This moves writeback submission
+completely off the writer's hot path.
 
-The counter is visible via /proc/vmstat as "nr_dontcache_dirty" and
-will be used by the writeback flusher to determine how many pages to
-write back when expediting writeback for IOCB_DONTCACHE writes, without
-flushing the entire BDI's dirty pages.
+To avoid flushing unrelated buffered dirty data, add a dedicated
+WB_start_dontcache bit and wb_check_start_dontcache() handler that uses
+the new NR_DONTCACHE_DIRTY counter to determine how many pages to write
+back.  The flusher writes back that many pages from the oldest dirty
+inodes (not restricted to dontcache-specific inodes). This helps
+preserve I/O batching while limiting the scope of expedited writeback.
+
+Like WB_start_all, the WB_start_dontcache bit coalesces multiple
+DONTCACHE writes into a single flusher wakeup without per-write
+allocations.
+
+Also add WB_REASON_DONTCACHE as a new writeback reason for tracing
+visibility, and target the correct cgroup writeback domain via
+unlocked_inode_to_wb_begin().
+
+dontcache-bench results on dual-socket Xeon Gold 6138 (80 CPUs, 256 GB
+RAM, Samsung MZ1LB1T9HALS 1.7 TB NVMe, local XFS, io_uring, file size
+~503 GB, compared to a v6.19-ish baseline):
+
+  Single-client sequential write (MB/s):
+                       baseline    patched     change
+  buffered              1449.8     1440.1      -0.7%
+  dontcache             1347.9     1461.5      +8.4%
+  direct                1450.0     1440.1      -0.7%
+
+  Single-client sequential write latency (us):
+                       baseline    patched     change
+  dontcache p50         3031.0    10551.3    +248.1%
+  dontcache p99        74973.2    21626.9     -71.2%
+  dontcache p99.9      85459.0    23199.7     -72.9%
+
+  Single-client random write (MB/s):
+                       baseline    patched     change
+  dontcache              284.2      295.4      +3.9%
+
+  Single-client random write p99.9 latency (us):
+                       baseline    patched     change
+  dontcache             2277.4      872.4     -61.7%
+
+  Multi-writer aggregate throughput (MB/s):
+                       baseline    patched     change
+  buffered              1619.5     1611.2      -0.5%
+  dontcache             1281.1     1629.4     +27.2%
+  direct                1545.4     1609.4      +4.1%
+
+  Mixed-mode noisy neighbor (dontcache writer + buffered readers):
+                       baseline    patched     change
+  writer (MB/s)         1297.6     1471.1     +13.4%
+  readers avg (MB/s)     855.0      462.4     -45.9%
+
+nfsd-io-bench results on same hardware (XFS on NVMe, NFSv3 via fio
+NFS engine with libnfs, 1024 NFSD threads, pool_mode=pernode,
+file size ~502 GB, compared to v6.19-ish baseline):
+
+  Single-client sequential write (MB/s):
+                       baseline    patched     change
+  buffered              4844.2     4653.4      -3.9%
+  dontcache             3028.3     3723.1     +22.9%
+  direct                 957.6      987.8      +3.2%
+
+  Single-client sequential write p99.9 latency (us):
+                       baseline    patched     change
+  dontcache            759169.0   175112.2     -76.9%
+
+  Single-client random write (MB/s):
+                       baseline    patched     change
+  dontcache              590.0     1561.0    +164.6%
+
+  Multi-writer aggregate throughput (MB/s):
+                       baseline    patched     change
+  buffered              9636.3     9422.9      -2.2%
+  dontcache             1894.9     9442.6    +398.3%
+  direct                 809.6      975.1     +20.4%
+
+  Noisy neighbor (dontcache writer + random readers):
+                       baseline    patched     change
+  writer (MB/s)         1854.5     4063.6    +119.1%
+  readers avg (MB/s)     131.2      101.6     -22.5%
+
+The NFS results show even larger improvements than the local benchmarks.
+Multi-writer dontcache throughput improves nearly 5x, matching buffered
+I/O. Dirty page footprint drops 85-95% in sequential workloads vs.
+buffered.
 
 Assisted-by: Claude:claude-opus-4-6
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/mmzone.h | 1 +
- mm/filemap.c           | 6 +++++-
- mm/page-writeback.c    | 7 +++++++
- mm/vmstat.c            | 1 +
- 4 files changed, 14 insertions(+), 1 deletion(-)
+ fs/fs-writeback.c                | 60 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/backing-dev-defs.h |  2 ++
+ include/linux/fs.h               |  6 ++--
+ include/trace/events/writeback.h |  3 +-
+ 4 files changed, 66 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 9adb2ad21da5..ed9cc61c7627 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -259,6 +259,7 @@ enum node_stat_item {
- 			   only modified from process context */
- 	NR_FILE_PAGES,
- 	NR_FILE_DIRTY,
-+	NR_DONTCACHE_DIRTY,
- 	NR_WRITEBACK,
- 	NR_SHMEM,		/* shmem pages (included tmpfs/GEM pages) */
- 	NR_SHMEM_THPS,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 4e636647100c..45089fde5150 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2052,8 +2052,12 @@ struct folio *__filemap_get_folio_mpol(struct address_space *mapping,
- 	if (!folio)
- 		return ERR_PTR(-ENOENT);
- 	/* not an uncached lookup, clear uncached if set */
--	if (folio_test_dropbehind(folio) && !(fgp_flags & FGP_DONTCACHE))
-+	if (folio_test_dropbehind(folio) && !(fgp_flags & FGP_DONTCACHE)) {
-+		if (folio_test_dirty(folio))
-+			lruvec_stat_mod_folio(folio, NR_DONTCACHE_DIRTY,
-+					      -folio_nr_pages(folio));
- 		folio_clear_dropbehind(folio);
-+	}
- 	return folio;
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index a65694cbfe68..377767db48f7 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -1334,6 +1334,18 @@ static void wb_start_writeback(struct bdi_writeback *wb, enum wb_reason reason)
+ 	wb_wakeup(wb);
  }
- EXPORT_SYMBOL(__filemap_get_folio_mpol);
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 88cd53d4ba09..e1df93fb3e3b 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2630,6 +2630,8 @@ static void folio_account_dirtied(struct folio *folio,
- 		wb = inode_to_wb(inode);
  
- 		lruvec_stat_mod_folio(folio, NR_FILE_DIRTY, nr);
-+		if (folio_test_dropbehind(folio))
-+			lruvec_stat_mod_folio(folio, NR_DONTCACHE_DIRTY, nr);
- 		__zone_stat_mod_folio(folio, NR_ZONE_WRITE_PENDING, nr);
- 		__node_stat_mod_folio(folio, NR_DIRTIED, nr);
- 		wb_stat_mod(wb, WB_RECLAIMABLE, nr);
-@@ -2651,6 +2653,8 @@ void folio_account_cleaned(struct folio *folio, struct bdi_writeback *wb)
- 	long nr = folio_nr_pages(folio);
++static void wb_start_dontcache_writeback(struct bdi_writeback *wb)
++{
++	if (!wb_has_dirty_io(wb))
++		return;
++
++	if (test_bit(WB_start_dontcache, &wb->state) ||
++	    test_and_set_bit(WB_start_dontcache, &wb->state))
++		return;
++
++	wb_wakeup(wb);
++}
++
+ /**
+  * wb_start_background_writeback - start background writeback
+  * @wb: bdi_writback to write from
+@@ -2373,6 +2385,28 @@ static long wb_check_start_all(struct bdi_writeback *wb)
+ 	return nr_pages;
+ }
  
- 	lruvec_stat_mod_folio(folio, NR_FILE_DIRTY, -nr);
-+	if (folio_test_dropbehind(folio))
-+		lruvec_stat_mod_folio(folio, NR_DONTCACHE_DIRTY, -nr);
- 	zone_stat_mod_folio(folio, NR_ZONE_WRITE_PENDING, -nr);
- 	wb_stat_mod(wb, WB_RECLAIMABLE, -nr);
- 	task_io_account_cancelled_write(nr * PAGE_SIZE);
-@@ -2920,6 +2924,9 @@ bool folio_clear_dirty_for_io(struct folio *folio)
- 		if (folio_test_clear_dirty(folio)) {
- 			long nr = folio_nr_pages(folio);
- 			lruvec_stat_mod_folio(folio, NR_FILE_DIRTY, -nr);
-+			if (folio_test_dropbehind(folio))
-+				lruvec_stat_mod_folio(folio,
-+						NR_DONTCACHE_DIRTY, -nr);
- 			zone_stat_mod_folio(folio, NR_ZONE_WRITE_PENDING, -nr);
- 			wb_stat_mod(wb, WB_RECLAIMABLE, -nr);
- 			ret = true;
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index f534972f517d..c3e5dfadb9a5 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1240,6 +1240,7 @@ const char * const vmstat_text[] = {
- 	[I(NR_FILE_MAPPED)]			= "nr_mapped",
- 	[I(NR_FILE_PAGES)]			= "nr_file_pages",
- 	[I(NR_FILE_DIRTY)]			= "nr_dirty",
-+	[I(NR_DONTCACHE_DIRTY)]			= "nr_dontcache_dirty",
- 	[I(NR_WRITEBACK)]			= "nr_writeback",
- 	[I(NR_SHMEM)]				= "nr_shmem",
- 	[I(NR_SHMEM_THPS)]			= "nr_shmem_hugepages",
++static long wb_check_start_dontcache(struct bdi_writeback *wb)
++{
++	long nr_pages;
++
++	if (!test_bit(WB_start_dontcache, &wb->state))
++		return 0;
++
++	nr_pages = global_node_page_state(NR_DONTCACHE_DIRTY);
++	if (nr_pages) {
++		struct wb_writeback_work work = {
++			.nr_pages	= wb_split_bdi_pages(wb, nr_pages),
++			.sync_mode	= WB_SYNC_NONE,
++			.range_cyclic	= 1,
++			.reason		= WB_REASON_DONTCACHE,
++		};
++
++		nr_pages = wb_writeback(wb, &work);
++	}
++
++	clear_bit(WB_start_dontcache, &wb->state);
++	return nr_pages;
++}
+ 
+ /*
+  * Retrieve work items and do the writeback they describe
+@@ -2394,6 +2428,11 @@ static long wb_do_writeback(struct bdi_writeback *wb)
+ 	 */
+ 	wrote += wb_check_start_all(wb);
+ 
++	/*
++	 * Check for dontcache writeback request
++	 */
++	wrote += wb_check_start_dontcache(wb);
++
+ 	/*
+ 	 * Check for periodic writeback, kupdated() style
+ 	 */
+@@ -2468,6 +2507,27 @@ void wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
+ 	rcu_read_unlock();
+ }
+ 
++/**
++ * filemap_dontcache_kick_writeback - kick flusher for IOCB_DONTCACHE writes
++ * @mapping:	address_space that was just written to
++ *
++ * Kick the writeback flusher thread to expedite writeback of dontcache
++ * dirty pages.  Uses a dedicated WB_start_dontcache bit so that only
++ * pages tracked by NR_DONTCACHE_DIRTY are written back, rather than
++ * flushing the entire BDI's dirty pages.
++ */
++void filemap_dontcache_kick_writeback(struct address_space *mapping)
++{
++	struct inode *inode = mapping->host;
++	struct bdi_writeback *wb;
++	struct wb_lock_cookie cookie = {};
++
++	wb = unlocked_inode_to_wb_begin(inode, &cookie);
++	wb_start_dontcache_writeback(wb);
++	unlocked_inode_to_wb_end(inode, &cookie);
++}
++EXPORT_SYMBOL_GPL(filemap_dontcache_kick_writeback);
++
+ /*
+  * Wakeup the flusher threads to start writeback of all currently dirty pages
+  */
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index a06b93446d10..74f8a9977f5d 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -26,6 +26,7 @@ enum wb_state {
+ 	WB_writeback_running,	/* Writeback is in progress */
+ 	WB_has_dirty_io,	/* Dirty inodes on ->b_{dirty|io|more_io} */
+ 	WB_start_all,		/* nr_pages == 0 (all) work pending */
++	WB_start_dontcache,	/* dontcache writeback pending */
+ };
+ 
+ enum wb_stat_item {
+@@ -55,6 +56,7 @@ enum wb_reason {
+ 	 */
+ 	WB_REASON_FORKER_THREAD,
+ 	WB_REASON_FOREIGN_FLUSH,
++	WB_REASON_DONTCACHE,
+ 
+ 	WB_REASON_MAX,
+ };
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 11559c513dfb..df72b42a9e9b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2624,6 +2624,7 @@ extern int __must_check file_write_and_wait_range(struct file *file,
+ 						loff_t start, loff_t end);
+ int filemap_flush_range(struct address_space *mapping, loff_t start,
+ 		loff_t end);
++void filemap_dontcache_kick_writeback(struct address_space *mapping);
+ 
+ static inline int file_write_and_wait(struct file *file)
+ {
+@@ -2657,10 +2658,7 @@ static inline ssize_t generic_write_sync(struct kiocb *iocb, ssize_t count)
+ 		if (ret)
+ 			return ret;
+ 	} else if (iocb->ki_flags & IOCB_DONTCACHE) {
+-		struct address_space *mapping = iocb->ki_filp->f_mapping;
+-
+-		filemap_flush_range(mapping, iocb->ki_pos - count,
+-				iocb->ki_pos - 1);
++		filemap_dontcache_kick_writeback(iocb->ki_filp->f_mapping);
+ 	}
+ 
+ 	return count;
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index bdac0d685a98..13ee076ccd16 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -44,7 +44,8 @@
+ 	EM( WB_REASON_PERIODIC,			"periodic")		\
+ 	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
+ 	EM( WB_REASON_FORKER_THREAD,		"forker_thread")	\
+-	EMe(WB_REASON_FOREIGN_FLUSH,		"foreign_flush")
++	EM( WB_REASON_FOREIGN_FLUSH,		"foreign_flush")	\
++	EMe(WB_REASON_DONTCACHE,		"dontcache")
+ 
+ WB_WORK_REASON
+ 
 
 -- 
 2.53.0
