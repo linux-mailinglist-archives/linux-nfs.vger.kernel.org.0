@@ -1,121 +1,79 @@
-Return-Path: <linux-nfs+bounces-21154-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21155-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qLsUD8Ti7mkdzQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21154-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:15:00 +0200
+	id GAg/CrPr7mms0gAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21155-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:53:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7C9546CFC6
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:14:59 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31B1246D199
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:53:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B7CC63039C86
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 04:09:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ADF913006B6A
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 04:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 180982749ED;
-	Mon, 27 Apr 2026 04:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D092E2850;
+	Mon, 27 Apr 2026 04:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Qj7F6Xm5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bZaVOSKj"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="gSEr4ON8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF8427A916;
-	Mon, 27 Apr 2026 04:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B428287E;
+	Mon, 27 Apr 2026 04:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777262945; cv=none; b=FZkbuqbOVa88QtLSqUJ2N+j3ug2lITAKHQuakcJZYtgyMcjSIT/J0fIztnCe/P6YAGqXpp+iYpiGtbTzZK82dK9TKZnJtrJnoOxrUgoWCNVVPmUzabofB0fliK38epGBHpSy/eeuRzBcSy/NwaLJVLdl9wBhItauGqHjFxBLrQU=
+	t=1777265572; cv=none; b=PGZkwSBGj4dQoTcSRWHKX/yc5JHFj6zKya7vTR93mbh2Yo1GcaGT4qzinoJZriqpvH2zwuuAsvbHeSGU5i+14QDbxBSt22rystk7ODvkodNZAI9p5pcUQO0IK0zEOi59VvXDGu1oDoTWk0FMAjg7wNJgZf8dLw3DTUwNkfli9cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777262945; c=relaxed/simple;
-	bh=OZQWUCnhioPXbHh6CEr0ZrXkezJBRAJa3irRrT0VBn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OpQ2ay7Ht5FOwbepBSiAxsh/PVPhSyqEnUlUMth/3IgbdLqD1CN83iNFKNQ7U97AIYc8TIJnEC5OnoQJ5Bsph7xhlbZYeODr8ltlatpZRq+Ys1jPM+nSt4hCsm81j2bkD24m3iKAlJSDMsGz9ZnhZK+eR9vz2cgmOlULLmthn7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Qj7F6Xm5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bZaVOSKj; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1919D1400046;
-	Mon, 27 Apr 2026 00:09:03 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 27 Apr 2026 00:09:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777262943;
-	 x=1777349343; bh=d0uUDizqtFn5TUR93S5pcu2hPzZI0J+S0qM13hNSWw4=; b=
-	Qj7F6Xm55Vz3afo9WAApJzy6zCpM9TLM9IwdldIdQhhJX/qNYByVECsXLu/XRj/v
-	thF1ve35Gtoz0APpDu+mKucCUzLh/ZXj0kfcqnb/YSJ6JtK4Ob2tMUPUCsyMXxwA
-	SE5YOs0AMT9mZm8IHClG8sYzbRLaEzVnoLLWQjw3K23kJZvo6aX1s2cn19eRStj1
-	HrhGxKeezdRvdh6ZD11FOtDXacdwjAvLn8sNLmYQUa1GqbUpgq4pwy7VLMNs8d5h
-	HgrDRDhfkDbG0DeJKvfQjYz/sR/Aav3Ve+Lg+TfIXTzjGkYKKgfMjKFjKtkEohKp
-	VudarelvhhNrpnOt6Fxk0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1777262943; x=1777349343; bh=d
-	0uUDizqtFn5TUR93S5pcu2hPzZI0J+S0qM13hNSWw4=; b=bZaVOSKjGXSAIodvv
-	gXr96tNhrFlYuQmCk5SYzWOmXpzCR5jpxmOekC0DKa5P5hxk5NGJBoDT/huI81JP
-	jcR3AFeil45vE0GdBbCNFY+WblMpz3+p0F7ekYaoHpLg3vNVo03fllDfFJvdkshq
-	xDC1GypmhrXXrF3oI/YfHnJI76A1ZlCgjbhsB69AWZl4fvQUHDc+2aVOyw/ka1SH
-	A/xSjkZrGJK/0/feddvX22FPWsywfsXllPZ429vi1yDHpzkQqRmADwd9d3RQHVQb
-	r4JXxb1mk77CZ8+dZ/tC9YAZG0KoAefnNu/JXZIOJnQq/rgtkkTZXPRJBENa1TU5
-	+kSKg==
-X-ME-Sender: <xms:XuHuaYcfoY0tU1Wp8-c6NwE0aqwZ2ovvnXp77EBdGPHgKbi-yA9t1Q>
-    <xme:XuHuaWiA49-tXpY7CSou5wgPQ-mRvtmshnG2NNemRDCpAx68vrHcEunlShGZGl57U
-    PXazF6xoRp5sT4hWIDe6fXOpRSpfWGz5X_UbXW3ASMY-TnU-g>
-X-ME-Received: <xmr:XuHuabK-EAPGCvWVNaqtdOZmlwaK-TJPqsCoGkFu7A56dC8OJOIRBVvUE6V8qj9ciLtrlM70U3MzSMohsFFfYgoWgZqQfKw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeikecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvfevufffkffojghfrhgggfestdekredtredttdenucfhrhhomheppfgvihhluehr
-    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    evveekffduueevhfeigefhgfdukedtleekjeeitdejudfgueekvdekffdvfedvudenucev
-    lhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprh
-    gtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtg
-    hksehsuhhsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:XuHuabHc0cpfVwD7d1KLY3irm7c-JclHJBTJDZBMulZFKzaDSIKQLA>
-    <xmx:X-HuaZ2Zr5uMfDdKacVx3is4dMzP__qgfyVxbtL4Ahlt2Yy47UuGnw>
-    <xmx:X-HuaaxOKfPlHFWrChDGsGrRqhFxNIjtrdIQuhM7kNfgTyoy8BCz5w>
-    <xmx:X-HuaQi6lGCC_64z5U8LYeO8qJXYhBRsCLWeuR3zmFxWvK7GAeWNsA>
-    <xmx:X-HuaSOuXsrzxmcVhGz-CJhMbtBe5xJqjSkriHx6a3BP1pZGTnDmyyXT>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Apr 2026 00:08:58 -0400 (EDT)
-From: NeilBrown <neilb@ownmail.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Jeremy Kerr <jk@ozlabs.org>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 19/19] nfs: use d_duplicate()
-Date: Mon, 27 Apr 2026 14:01:37 +1000
-Message-ID: <20260427040517.828226-20-neilb@ownmail.net>
-X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
-In-Reply-To: <20260427040517.828226-1-neilb@ownmail.net>
-References: <20260427040517.828226-1-neilb@ownmail.net>
-Reply-To: NeilBrown <neil@brown.name>
+	s=arc-20240116; t=1777265572; c=relaxed/simple;
+	bh=2E/gt99rDneHqZlnyr5iOm1KQLLuTNRA8XbBfN1A8wQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=I3UwlDmEMvpxPN64Eo6t8LOJz01NL8foiT2Lwc7L2EfOJuqWaiVSgzMNDubosVKnaZOEeuXNXtLOF7pMNLvOOkJYxLtTd21ZztTDseiPUlJVELADA+VMWVorVKBdpzGl3hEZp1yfWVw8WptvickdbxZXG+6WSG9ndsoCt2dMPlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=gSEr4ON8; arc=none smtp.client-ip=203.205.221.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1777265561;
+	bh=uhqX77ULMkFhfbXHWiyYYnT7BbfYIN8BHXvhFkkoPSQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=gSEr4ON8h5GXos7MGbOqHXeslJJmiLyvJaZQZlVVO1Ho5EF4FO+6LtvQbP677LosG
+	 GFVTp3WpxKusEuPWQob03gMcu4FnTgfuxy0wUuYvLe0/N9dWXCm2+Jtv+B8h8PkEU4
+	 sAi/efhaNUXXxOosnb6WpSeg2v8LScuf4d/e/Lx0=
+Received: from ubuntu2404.. ([103.244.59.3])
+	by newxmesmtplogicsvrszb43-0.qq.com (NewEsmtp) with SMTP
+	id D2698AD1; Mon, 27 Apr 2026 12:52:38 +0800
+X-QQ-mid: xmsmtpt1777265558tpn10y6ba
+Message-ID: <tencent_C198D1548F26ACCF529CC312888839694E05@qq.com>
+X-QQ-XMAILINFO: NwU6Bou9okj/r5MsqRS+QprO5G7GcgvjQtJtkGcweuwe0jtgN7ShR/kOvSVG0p
+	 jMc6hQ/xbRfJSazNkJ5EIv+UUMBXIa3M7RxbXvjX2W1mRVxTGQ/kd1nLTKVs7FsmhwBYOzcc9YQi
+	 mbhLEjOH5k5kJn4/lhhCoIirUzWOdiM+ZsjMSwj8otZN9ZMoEungtEnl/VKDZyW0ljiQsnVnh7vi
+	 ZA6JXKASNEz+OMTkXhW1i7kq0apvcjzBZ7DoNH5hX8y5VIivo2Z/jC8R3tlrWZvCpMkeSvkiKbvn
+	 Dv77kfPWwFEZ2gIHjs09gSFjGC4gL03Jh71FlF4uJPg46saD0CddsQ7M3Dxyc8/PAXEHzodSSF5V
+	 2dZ5N4VT2Xv208exEdF7ni0NfcrgM/CaPOKMix3Xjjextu3nwF+e6fE/RLImNW3s2vF12cUEp20K
+	 Pp9zIZj8+GWDp9Wvj/P9cnwmZ5QVJoqVtmxyOdSX3AcHY/veOL37TbU6wT3QvJk6wnElB4qL4x/3
+	 dmG4XIuFDcOMEvjDDxvp4YiQts7gOs9/oW0i4pHWLCrv2DmUkPXJ/rx1Zq5cksgsT5NgNPbB6GOd
+	 0MxjTU+kEUX3d/A8BAvXX1O2pmQy8/9cJAfNZ5We6Pn6NXanxipHLtN3cxZW9iAoJCeOebUh0+J0
+	 yEBjDVdSGEFAKCyZcdur0uvd/HooFZjhJPDoIvN9zHwQrPt9fZFSIdBwUFOoteW92ggH+aYNRQ9B
+	 WZYOSiwopucc/LLZEGA1aTTib7dT4C4ztJHtsEhanDD+dsQNocQ5AouqTID/vSNivmbhoDpiwvx1
+	 CMxOHLGieN2qtIJFfpq8fdqehtgplX7f9xU8wMOq7YyPUop+Wc1hHJfj1NGZkPfx+xq0bjWuWMb8
+	 fj7iqibf3yjEqgDhmeBqX0Xb5/PMMAl3Q9j/+5J2NYjmcn+VvTriuuPq1I1j6CSRup+nywdzkZlc
+	 3pXRHbjtRTzPxem0Om8vRXKWpBLEDr7g6iYVogEOSK9VF3DCfN11d9TzRObrnkaRUoH0yDFcI6Iu
+	 ArmJE+8+8hRCln9Jvc
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+From: Lei Yin <cybeyond@foxmail.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yinlei2@lenovo.com
+Subject: Question about "Not Applicable" status for [PATCH v2] NFSv4.1/pNFS: fix LAYOUTCOMMIT retry loop on OLD_STATEID
+Date: Mon, 27 Apr 2026 04:52:35 +0000
+X-OQ-MSGID: <20260427045235.32524-1-cybeyond@foxmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <tencent_BF5118C8B480E6BFEF401CC2B287682FC905@qq.com>
+References: <tencent_BF5118C8B480E6BFEF401CC2B287682FC905@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -123,84 +81,91 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D7C9546CFC6
+X-Rspamd-Queue-Id: 31B1246D199
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
+	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21154-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_FROM(0.00)[foxmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21155-lists,linux-nfs=lfdr.de];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,brown.name:replyto,brown.name:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:dkim,ownmail.net:mid]
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[cybeyond@foxmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[foxmail.com:+];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-From: NeilBrown <neil@brown.name>
+Hi,
 
-As preparation for d_alloc_parallel() being allowed without the
-directory locked, use d_duplicate() to duplicate a dentry for silly
-rename.
+Sorry for the confusion in the previous submissions. Due to an editing
+mistake, the first two versions of this patch were not sent as one
+proper series.
 
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/nfs/dir.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+My patch "[PATCH v2] NFSv4.1/pNFS: fix LAYOUTCOMMIT retry loop on
+OLD_STATEID" was marked as Not Applicable. I would like to ask for
+clarification on the reason.
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index ee4b9b1a484f..dd48dea8bc40 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -2778,11 +2778,9 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
- 			spin_unlock(&new_dentry->d_lock);
- 
- 			/* copy the target dentry's name */
--			dentry = d_alloc(new_dentry->d_parent,
--					 &new_dentry->d_name);
-+			dentry = d_duplicate(new_dentry);
- 			if (!dentry)
- 				goto out;
--
- 			/* silly-rename the existing target ... */
- 			err = nfs_sillyrename(new_dir, new_dentry);
- 			if (err)
-@@ -2847,8 +2845,10 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
- 		nfs_dentry_handle_enoent(old_dentry);
- 
- 	/* new dentry created? */
--	if (dentry)
-+	if (dentry) {
-+		d_lookup_done(dentry);
- 		dput(dentry);
-+	}
- 	return error;
- }
- EXPORT_SYMBOL_GPL(nfs_rename);
--- 
-2.50.0.107.gf914562f5916.dirty
+This patch is intended to handle the case where LAYOUTCOMMIT gets
+NFS4ERR_OLD_STATEID in nfs4_layoutcommit_done(). The change refreshes
+data->args.stateid via nfs4_layout_refresh_old_stateid(), updates the
+layout stateid in the inode layout header when appropriate, and restarts
+the RPC only after the refresh succeeds.
+
+The purpose is to avoid retrying LAYOUTCOMMIT indefinitely with the same
+stale stateid after OLD_STATEID.
+
+The issue was reproduced on NFSv4.2. The most reliable way I found to
+reproduce it is:
+
+1. Run a workload with relatively high concurrent I/O on the client.
+2. Kill the client-side I/O process with kill -9 while those I/Os are still
+  in flight.
+3. In that situation, there is roughly a 50% chance that a subsequent
+   LAYOUTCOMMIT is sent with an old stateid.
+4. Since LAYOUTCOMMIT does not handle NFS4ERR_OLD_STATEID in this path, the
+  same stale stateid may continue to be retried.
+5. This can lead to an infinite retry loop, and the affected file then
+   appears to become unresponsive.
+
+Using kill without -9 makes this problem much harder to reproduce.
+However, even without kill -9, the same issue can still occasionally be
+observed under sufficient concurrency and stress testing.
+
+So my understanding of the bug is:
+
+- kill -9 makes the stale stateid window much easier to hit;
+- ordinary concurrency/stress testing can still trigger it occasionally;
+- because LAYOUTCOMMIT does not recover from OLD_STATEID here, the RPC
+  can loop indefinitely with the stale stateid;
+- once this happens, operations on the corresponding file may stop
+  making progress.
+
+Could you please let me know whether the Not Applicable status means:
+
+1. an equivalent fix is already present in the target tree,
+2. the patch was sent against the wrong tree or branch, or
+3. there is some issue with the problem analysis or the proposed fix?
+
+If needed, I can resend the patch against the appropriate branch or adjust
+the description accordingly.
+
+Thanks,
+Lei Yin
 
 
