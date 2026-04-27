@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-21117-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21118-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GONGItjZ7mkPygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21117-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:36:56 +0200
+	id QCdcKOjZ7mkNygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21118-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:37:12 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2674746C632
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:36:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1092F46C65F
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:37:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6B3BC3009150
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 03:36:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D1C32300B133
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 03:36:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA9062E9ED6;
-	Mon, 27 Apr 2026 03:36:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B692E2E9ED6;
+	Mon, 27 Apr 2026 03:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="YHg/z9wF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CRyH2xVu"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="YEEsMiKv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gpduMCTc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79260246768;
-	Mon, 27 Apr 2026 03:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C543B246768;
+	Mon, 27 Apr 2026 03:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777261000; cv=none; b=eaxm7vBTJGMVt1PQuIrv2gv3co7D7Offmo7jV0xdl4e47inimahq1u+GAXb6Uze3fsPSWMgTbstmOCpJ+myKz5uTiErNnVdi34gxPqXXEztXTIqgNqofaus3AHdpAsaCGOGDG9utQ7lYawKBJuGmjMJpNOoTc8+TXv5TfPOwQNY=
+	t=1777261008; cv=none; b=c0uzIjm4g0lnVRV/3MSO7VQj5oR9wsmXZfXcBoKczogkEGHBPB8RbQ3v2RCi0YxLMa4i9/z2x/+v9mgZlSBkOwBv9NNeuB+wX3itgYvziY5UrolkaYcNMUQoMxF/Sn05tag3EiPkI2PTKoPpbq8J/P/Ziy7H7DqqoZEpJBOCVF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777261000; c=relaxed/simple;
-	bh=s/WJXqScoUb+XDmgBWVvSpncv6x4V4yZ9QvNOvxlLFo=;
+	s=arc-20240116; t=1777261008; c=relaxed/simple;
+	bh=CfKT9Gn4c1XhDbo0WloY/nniuKRLh4xGe4NRIk+ECX0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CIBNDfU0rqtE5NG1ChOkNcuCfe8UQGRXTdVJRVJxdnyLrqhCQMEV8YFD+mSVztgm9uwa4kN/d+j2CGSPW0Rg5pVXfS45ePRKzsQMZaCZfcuChhsA8p75j1kaFbOIQR487TWTxi5iecIW1AE6NKgIw2ryQ34vTJFHaYwObQCoFHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=YHg/z9wF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CRyH2xVu; arc=none smtp.client-ip=103.168.172.156
+	 MIME-Version; b=MCFq59MJF6/QbzseNt4Rn4ibTHAYgZstYshIncrjrRF2feoucWwLMW4tXwEv15VJvc35zWxUVXwiBYZ0SokLiBwKnwQ0OztKSfiq/YmKVVMB0zKV29ItGVjMnBsTR/TtZzHN8Y9g2jFTB1xcIXj7+l0xjaMVVBDMCD/uQOejuy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=YEEsMiKv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gpduMCTc; arc=none smtp.client-ip=103.168.172.146
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id BA2AB14000B2;
-	Sun, 26 Apr 2026 23:36:38 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Sun, 26 Apr 2026 23:36:38 -0400
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfout.phl.internal (Postfix) with ESMTP id 149D8EC01DF;
+	Sun, 26 Apr 2026 23:36:46 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Sun, 26 Apr 2026 23:36:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777260998;
-	 x=1777347398; bh=g8SM3Dg2naVtDlBlkJGj5seH51i8ZJRCDyDc8L3ShjQ=; b=
-	YHg/z9wFgfVF4NyE9bn7HxG6D92z6nrJW0khBkdWZFNH2dl/Q8PhdOlAhwiSXR+2
-	pufiD5ElNGawujmaJFkFw+AsxKg3lBneKuzcpzB6sw7I+XAgheX0SBPzHtPHGAJD
-	yCjVxud9OCp4dresbx33Z/V+e0cRoWeRZWexFLyFNKPCjIdYowFexHP42W+iDgl1
-	I8NaoiPTGTDsFxLN4Ykqb1Vbi0J88o/E8CnNC5Hj/5P2i3GESr9pLW9BNbTjVfTq
-	Q3XnoWD2aEn49qORt5Qgq3LjiMexydXAI7u5bsq1h8yl5lHxpL1eJJa5hjoTxP34
-	mnGGL5xRPjyJVo0FN4S1Sw==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777261006;
+	 x=1777347406; bh=M+q69xEVOxYDlLesgsc7OKN8RwYSBXfFhfRK/I9my0w=; b=
+	YEEsMiKvS3Wj3/mammoY+ntoFDNFb227zNn3wCuy28dHnpuk65ittE3mkGR9SQ2E
+	kWXVIcKQhaWt7OzMa/PP2Rzo7d6jj3xROM58SIipbH2SHNM3ReaRt7syifTid9MA
+	GpsrU/+OQxm6WvrP11Sda6M+J6mLBWAfNWVA9cxjeY9drP9DpYVxxcMDAHZgddAD
+	zuR6B4YCEe9xJibA33PmjFdKwN2PzgsqcTrbadH9ULI3B92HDFr3YPjfz0yy0vl+
+	bKvxPd65R5wNVk9TBPM/D/QRX66pTCw4kP1ZVXm3tkd8C1a70g103GaJJ4ruPBnx
+	25U/WcsLP1htUIUtvnaYaQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1777260998; x=1777347398; bh=g
-	8SM3Dg2naVtDlBlkJGj5seH51i8ZJRCDyDc8L3ShjQ=; b=CRyH2xVu3PczfziWi
-	ZfaVaPwoW45mI08gz/r9YnHAJKaz/fCO7Uq9xDzU2U5ucNEAWCK4I0Co9wFjGZ+h
-	P2S7NOZlxCk9X3817mnbGy2psvpSdtMyH0v1X1HV1kBYTd5E1c4TBPSfCdtJqtrg
-	tq8WRg2NfiZbgTUrpu5cxWFLe0JT74qLPSLQ/g/ZlF3ZfcBmyxNuPs5N/L3s429g
-	KiC831H/DnKEV1yXyYntU0jg5AszS7rjbjcpy4aINLLb5y6swDQrpfGuqlMWr4uB
-	tQDTjwSkv+xIxZnJ351MfR0vPYclo8Um38PIjUPrv3EobS3nk03MP4on2rcnLOG4
-	ucVDw==
-X-ME-Sender: <xms:xtnuaa52YktapynvrEgEnFQ7S5z1ZFM_1XtYT8J73GLCN-H6c2Fpag>
-    <xme:xtnuaem0mv7vjluFIKoYov8P9eqiDC086KhvICxo57jzPu5IakPHYbqyDVo_YWRtn
-    mfI6bl76AgY87dfNPbNRWRRMUuXb8-et-k6qQzc8zGlOZj-rHs>
-X-ME-Received: <xmr:xtnuaQEQ9EcaPdI26itvkwnD872HqKUMTvMbLBK-d9O8Gxns-NiqiIkPpKHgOPII9uFL_bYyQtLfr1U37KNQPlFqcxFxGtg>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1777261006; x=1777347406; bh=M
+	+q69xEVOxYDlLesgsc7OKN8RwYSBXfFhfRK/I9my0w=; b=gpduMCTci0o0c3Ogq
+	9hvHfqGUNFNJvT0PpjMDGEV90avfkyuPZdQf1fUaiTfWGspzB6lTmp5MnRs1bZXK
+	M/5dP+Mkd64PFbzwUumdW2emJm1D7ZP2YoH5o6OV642NCUiXncAf++5H4P4JImh4
+	+yLUXOEHJE/0lWQk2lkc6h8C+SDmCe8n+nw2P/8ADlHasoPadg1Udf/mq7DzuAvZ
+	rwnoa/TinajrxUUpzFboquoB2DeUs/hchr17CGNvEEalgRz00P5JOPriZQHrcKIJ
+	s3hFrLN4oth6grZ6wDUv9QTc8AcNXMBOILKzW0gSE8Lm1hEcyT25Y3Q1sU2ncf18
+	vXrfQ==
+X-ME-Sender: <xms:zdnuaXmBshVcYtFraWbbaWwOpzIMa0G-0jTMuIyTdaADzutdSguO2w>
+    <xme:zdnuaVGJn_PZ_Hu7UnUuuDw_3NMdvbUUI3BDjIS0J0Z4h2sHfv1DYm1yzbBZPXgYM
+    byJbdI9J8Z8Dzm1sdRHf1CvG0F-oB7W_-gkJONsFSj9FvaFKg>
+X-ME-Received: <xmr:zdnuaTHZIIJZIXsye7XMoKGgOr8A2puAqFWYn90AyFx2s18cuzjmjm7Vz0KLll-ISfi_tioVqCKQ4nRLbMzLkO_sRVO_EsA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeivdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
@@ -84,14 +84,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeivdcutefuodetgg
     gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdprhgtphht
     thhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtghksehsuh
     hsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:xtnuaSFSYCWPwOZojp4sjTVoU8z9E7yfG1BYEPh2rZJMLhIvUn10Lw>
-    <xmx:xtnuaY291xL-4Fi1X3oMImf1nWEsBtT3jD2IZ6FWpOP65xYtJoOYRg>
-    <xmx:xtnuaUf6PkAXn2iBZ1jDP9YGz6o7NqKf79kuPDhKGEvlFiDyGydb1Q>
-    <xmx:xtnuaaIZ19aAoaTkmVJT-2CK4IquUp4hP_6-0ErBy6hucL9JqvCVKw>
-    <xmx:xtnuaUOsvplzj9vyaU0f0S4Jdwb3pCNCrehC-QPIMkfYdulvkGlOK0fN>
+X-ME-Proxy: <xmx:zdnuaV2f6ey2WtDHAh51VRHQnkhU3pF6JPXDq8Opd683NABD2rm3QQ>
+    <xmx:zdnuadf_fLZWpj8moPFv594HUIk3Q0-nNmPjkqXn2YBN4mmCfqWHPw>
+    <xmx:zdnuafLX_ujEqd5jHz-iwRZ7j12vYk7RsKwU3i8U1vYgIRaRyisHYA>
+    <xmx:zdnuabEUlB3VyDp5dg_GFt1lIGhTKg6IfDgiHCgm3oozzkhvjwkh3w>
+    <xmx:ztnuaV5LGEHelrqonJLJyZ67nBCxm_ruWW4BZIBNLztnqxzuWjrIhrOf>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Apr 2026 23:36:33 -0400 (EDT)
+ 26 Apr 2026 23:36:40 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -110,9 +110,9 @@ Cc: linux-efi@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org,
 	linux-kernel@vger.kernel
-Subject: [PATCH v2 03/19] VFS: allow d_alloc_name() to be used with ->d_hash
-Date: Mon, 27 Apr 2026 13:29:36 +1000
-Message-ID: <20260427033527.773006-4-neilb@ownmail.net>
+Subject: [PATCH v2 04/19] VFS: use wait_var_event for waiting in d_alloc_parallel()
+Date: Mon, 27 Apr 2026 13:29:37 +1000
+Message-ID: <20260427033527.773006-5-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260427033527.773006-1-neilb@ownmail.net>
 References: <20260427033527.773006-1-neilb@ownmail.net>
@@ -124,7 +124,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 2674746C632
+X-Rspamd-Queue-Id: 1092F46C65F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -139,15 +139,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21117-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21118-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org,infradead.org];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	FREEMAIL_FROM(0.00)[ownmail.net];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
 	PRECEDENCE_BULK(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
@@ -163,63 +163,474 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 
 From: NeilBrown <neil@brown.name>
 
-efivarfs() is similar to other filesystems which use d_alloc_name(), but
-it cannot use d_alloc_name() as it has a ->d_hash function.
+d_alloc_parallel() currently requires a wait_queue_head to be passed in.
+This must have a life time which extends until the lookup is completed.
 
-The only problem with using ->d_hash if available is that it can return
-an error, but d_alloc_name() cannot.  If we document that d_alloc_name()
-cannot be used when ->d_hash returns an error, then any filesystem which
-has a safe ->d_hash can safely use d_alloc_name().
+This makes it awkward to use and particularly make it hard to use in
+lookup_one_qstr_excl() which I hope to do in the future.
 
-So enhance d_alloc_name() to check for a ->d_hash function
-and document that this is not permitted if the ->d_hash function can
-fail( which efivarfs_d_hash() cannot).
+This patch changes d_alloc_parallel() to use wake_up_var_locked() to
+wake up waiters, and wait_var_event_spinlock() to wait.  dentry->d_lock
+is used for synchronisation as it is already held and the relevant
+times.
 
-Also document locking requirements for use.
+In most cases there will be no waiters so the wake_up_var_locked()
+call is a complete waste.  To optimise this a new ->d_flags flag is
+added: DCACHE_LOCK_WAITERS.  This is set whenever any thread prepares to
+wait for the dentry, and if it isn't set when DCACHE_PAR_LOOKUP is
+cleared, no wakeup is sent.
+(The name is deliberately generic as I plan to replace DCACHE_PAR_LOOKUP
+with more generic per-dentry locking in the future).
 
-This is a step towards eventually deprecating d_alloc().
+__d_lookup_unhash() now returns a bool rather than a wq.  This is true
+if DCACHE_LOCK_WAITERS was sent and is used to decide to send the wake
+up.  It would be easier to send the wakeup immediately when clearing
+DCACHE_LOCK_WAITERS, but then the waiter could wake a bit earlier and
+then spend time spinning on ->d_lock.  I don't know if that cost is
+interesting.
+
+__d_lookup_unhash() no longer needs to re-init ->d_lru.  That was
+previously shared (in a union) with ->d_wait but ->d_wait is now gone
+so it no longer corrupts ->d_lru.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/dcache.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/filesystems/porting.rst |  7 +++
+ fs/afs/dir_silly.c                    |  4 +-
+ fs/dcache.c                           | 64 ++++++++++++---------------
+ fs/fuse/readdir.c                     |  3 +-
+ fs/namei.c                            |  6 +--
+ fs/nfs/dir.c                          |  6 +--
+ fs/nfs/unlink.c                       |  3 +-
+ fs/proc/base.c                        |  3 +-
+ fs/proc/proc_sysctl.c                 |  3 +-
+ fs/smb/client/readdir.c               |  3 +-
+ include/linux/dcache.h                | 11 +++--
+ include/linux/nfs_xdr.h               |  1 -
+ 12 files changed, 51 insertions(+), 63 deletions(-)
 
+diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
+index bfdff4608028..85c7b2007f8c 100644
+--- a/Documentation/filesystems/porting.rst
++++ b/Documentation/filesystems/porting.rst
+@@ -1385,3 +1385,10 @@ for_each_alias(dentry, inode) instead of hlist_for_each_entry; better
+ yet, see if any of the exported primitives could be used instead of
+ the entire loop.  You still need to hold ->i_lock of the inode over
+ either form of manual loop.
++
++---
++
++**mandatory**
++
++d_alloc_parallel() no longer requires a waitqueue_head.
++
+diff --git a/fs/afs/dir_silly.c b/fs/afs/dir_silly.c
+index a748fd133faf..982bb6ec15f0 100644
+--- a/fs/afs/dir_silly.c
++++ b/fs/afs/dir_silly.c
+@@ -248,13 +248,11 @@ int afs_silly_iput(struct dentry *dentry, struct inode *inode)
+ 	struct dentry *alias;
+ 	int ret;
+ 
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+-
+ 	_enter("%p{%pd},%llx", dentry, dentry, vnode->fid.vnode);
+ 
+ 	down_read(&dvnode->rmdir_lock);
+ 
+-	alias = d_alloc_parallel(dentry->d_parent, &dentry->d_name, &wq);
++	alias = d_alloc_parallel(dentry->d_parent, &dentry->d_name);
+ 	if (IS_ERR(alias)) {
+ 		up_read(&dvnode->rmdir_lock);
+ 		return 0;
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 789544525c56..d0a504fc62e5 100644
+index d0a504fc62e5..2dcefa60db32 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1945,12 +1945,31 @@ struct dentry *d_alloc_pseudo(struct super_block *sb, const struct qstr *name)
- 	return dentry;
+@@ -2268,8 +2268,7 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
+ 		return found;
+ 	}
+ 	if (d_in_lookup(dentry)) {
+-		found = d_alloc_parallel(dentry->d_parent, name,
+-					dentry->d_wait);
++		found = d_alloc_parallel(dentry->d_parent, name);
+ 		if (IS_ERR(found) || !d_in_lookup(found)) {
+ 			iput(inode);
+ 			return found;
+@@ -2279,7 +2278,7 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
+ 		if (!found) {
+ 			iput(inode);
+ 			return ERR_PTR(-ENOMEM);
+-		} 
++		}
+ 	}
+ 	res = d_splice_alias(inode, found);
+ 	if (res) {
+@@ -2657,31 +2656,24 @@ static inline unsigned start_dir_add(struct inode *dir)
  }
  
-+/**
-+ * d_alloc_name: allocate a dentry for use in a dcache-based filesystem.
-+ * @parent: dentry of the parent for the dentry
-+ * @name: name of the dentry
-+ *
-+ * d_alloc_name() allocates a dentry without any protection against
-+ * races.  It should only be used in directories that do not support
-+ * create/rename/link inode operations and so is particularly suited for
-+ * use with simple_dir_inode_operations.  The result is typically passed
-+ * to d_make_persistent().
-+ *
-+ * This must NOT be used by filesystems which provide a d_hash() function
-+ * that can return an error.
-+ */
- struct dentry *d_alloc_name(struct dentry *parent, const char *name)
+ static inline void end_dir_add(struct inode *dir, unsigned int n,
+-			       wait_queue_head_t *d_wait)
++			       bool do_wake, struct dentry *de)
  {
- 	struct qstr q;
- 
- 	q.name = name;
- 	q.hash_len = hashlen_string(parent, name);
-+	if (parent->d_flags & DCACHE_OP_HASH) {
-+		int err = parent->d_op->d_hash(parent, &q);
-+		if (WARN_ON_ONCE(err))
-+			return NULL;
-+	}
- 	return d_alloc(parent, &q);
+ 	smp_store_release(&dir->i_dir_seq, n + 2);
+ 	preempt_enable_nested();
+-	if (wq_has_sleeper(d_wait))
+-		wake_up_all(d_wait);
++	if (do_wake)
++		wake_up_var_locked(&de->d_flags, &de->d_lock);
  }
- EXPORT_SYMBOL(d_alloc_name);
+ 
+-static void d_wait_lookup(struct dentry *dentry)
++static inline bool d_must_wait(struct dentry *dentry)
+ {
+-	if (d_in_lookup(dentry)) {
+-		DECLARE_WAITQUEUE(wait, current);
+-		add_wait_queue(dentry->d_wait, &wait);
+-		do {
+-			set_current_state(TASK_UNINTERRUPTIBLE);
+-			spin_unlock(&dentry->d_lock);
+-			schedule();
+-			spin_lock(&dentry->d_lock);
+-		} while (d_in_lookup(dentry));
+-	}
++	if (!d_in_lookup(dentry))
++		return false;
++	dentry->d_flags |= DCACHE_LOCK_WAITER;
++	return true;
+ }
+ 
+ struct dentry *d_alloc_parallel(struct dentry *parent,
+-				const struct qstr *name,
+-				wait_queue_head_t *wq)
++				const struct qstr *name)
+ {
+ 	unsigned int hash = name->hash;
+ 	struct hlist_bl_head *b = in_lookup_hash(parent, hash);
+@@ -2763,7 +2755,9 @@ struct dentry *d_alloc_parallel(struct dentry *parent,
+ 		 * wait for them to finish
+ 		 */
+ 		spin_lock(&dentry->d_lock);
+-		d_wait_lookup(dentry);
++		wait_var_event_spinlock(&dentry->d_flags,
++					!d_must_wait(dentry),
++					&dentry->d_lock);
+ 		/*
+ 		 * it's not in-lookup anymore; in principle we should repeat
+ 		 * everything from dcache lookup, but it's likely to be what
+@@ -2784,7 +2778,6 @@ struct dentry *d_alloc_parallel(struct dentry *parent,
+ 		return dentry;
+ 	}
+ 	rcu_read_unlock();
+-	new->d_wait = wq;
+ 	hlist_bl_add_head(&new->d_in_lookup_hash, b);
+ 	hlist_bl_unlock(b);
+ 	return new;
+@@ -2800,29 +2793,29 @@ EXPORT_SYMBOL(d_alloc_parallel);
+  * - Retrieve and clear the waitqueue head in dentry
+  * - Return the waitqueue head
+  */
+-static wait_queue_head_t *__d_lookup_unhash(struct dentry *dentry)
++static bool __d_lookup_unhash(struct dentry *dentry)
+ {
+-	wait_queue_head_t *d_wait;
+ 	struct hlist_bl_head *b;
++	bool do_wake;
+ 
+ 	lockdep_assert_held(&dentry->d_lock);
+ 
+ 	b = in_lookup_hash(dentry->d_parent, dentry->d_name.hash);
+ 	hlist_bl_lock(b);
+-	dentry->d_flags &= ~DCACHE_PAR_LOOKUP;
+ 	__hlist_bl_del(&dentry->d_in_lookup_hash);
+-	d_wait = dentry->d_wait;
+-	dentry->d_wait = NULL;
++	do_wake = !!(dentry->d_flags & DCACHE_LOCK_WAITER);
++	dentry->d_flags &= ~(DCACHE_PAR_LOOKUP|DCACHE_LOCK_WAITER);
++
+ 	hlist_bl_unlock(b);
+ 	dentry->waiters = NULL;
+-	INIT_LIST_HEAD(&dentry->d_lru);
+-	return d_wait;
++	return do_wake;
+ }
+ 
+ void __d_lookup_unhash_wake(struct dentry *dentry)
+ {
+ 	spin_lock(&dentry->d_lock);
+-	wake_up_all(__d_lookup_unhash(dentry));
++	if (__d_lookup_unhash(dentry))
++		wake_up_var_locked(&dentry->d_flags, &dentry->d_lock);
+ 	spin_unlock(&dentry->d_lock);
+ }
+ EXPORT_SYMBOL(__d_lookup_unhash_wake);
+@@ -2832,14 +2825,15 @@ EXPORT_SYMBOL(__d_lookup_unhash_wake);
+ static inline void __d_add(struct dentry *dentry, struct inode *inode,
+ 			   const struct dentry_operations *ops)
+ {
+-	wait_queue_head_t *d_wait;
++	bool do_wake = false;
+ 	struct inode *dir = NULL;
+ 	unsigned n;
++
+ 	spin_lock(&dentry->d_lock);
+ 	if (unlikely(d_in_lookup(dentry))) {
+ 		dir = dentry->d_parent->d_inode;
+ 		n = start_dir_add(dir);
+-		d_wait = __d_lookup_unhash(dentry);
++		do_wake = __d_lookup_unhash(dentry);
+ 		__d_rehash(dentry);
+ 	} else if (d_unhashed(dentry)) {
+ 		__d_rehash(dentry);
+@@ -2849,7 +2843,7 @@ static inline void __d_add(struct dentry *dentry, struct inode *inode,
+ 	if (inode)
+ 		__d_instantiate(dentry, inode);
+ 	if (dir)
+-		end_dir_add(dir, n, d_wait);
++		end_dir_add(dir, n, do_wake, dentry);
+ 	spin_unlock(&dentry->d_lock);
+ 	if (inode)
+ 		spin_unlock(&inode->i_lock);
+@@ -2962,7 +2956,7 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
+ 		     bool exchange)
+ {
+ 	struct dentry *old_parent, *p;
+-	wait_queue_head_t *d_wait;
++	bool do_wake = false;
+ 	struct inode *dir = NULL;
+ 	unsigned n;
+ 
+@@ -2993,7 +2987,7 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
+ 	if (unlikely(d_in_lookup(target))) {
+ 		dir = target->d_parent->d_inode;
+ 		n = start_dir_add(dir);
+-		d_wait = __d_lookup_unhash(target);
++		do_wake = __d_lookup_unhash(target);
+ 	}
+ 
+ 	write_seqcount_begin(&dentry->d_seq);
+@@ -3033,7 +3027,7 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
+ 	write_seqcount_end(&dentry->d_seq);
+ 
+ 	if (dir)
+-		end_dir_add(dir, n, d_wait);
++		end_dir_add(dir, n, do_wake, target);
+ 
+ 	if (dentry->d_parent != old_parent)
+ 		spin_unlock(&dentry->d_parent->d_lock);
+diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+index db5ae8ec1030..a2361f1d9905 100644
+--- a/fs/fuse/readdir.c
++++ b/fs/fuse/readdir.c
+@@ -164,7 +164,6 @@ static int fuse_direntplus_link(struct file *file,
+ 	struct inode *dir = d_inode(parent);
+ 	struct fuse_conn *fc;
+ 	struct inode *inode;
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+ 	int epoch;
+ 
+ 	if (!o->nodeid) {
+@@ -201,7 +200,7 @@ static int fuse_direntplus_link(struct file *file,
+ 	dentry = d_lookup(parent, &name);
+ 	if (!dentry) {
+ retry:
+-		dentry = d_alloc_parallel(parent, &name, &wq);
++		dentry = d_alloc_parallel(parent, &name);
+ 		if (IS_ERR(dentry))
+ 			return PTR_ERR(dentry);
+ 	}
+diff --git a/fs/namei.c b/fs/namei.c
+index 65e60536a6d1..a6349b31fdb6 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1891,13 +1891,12 @@ static struct dentry *__lookup_slow(const struct qstr *name,
+ {
+ 	struct dentry *dentry, *old;
+ 	struct inode *inode = dir->d_inode;
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+ 
+ 	/* Don't go there if it's already dead */
+ 	if (unlikely(IS_DEADDIR(inode)))
+ 		return ERR_PTR(-ENOENT);
+ again:
+-	dentry = d_alloc_parallel(dir, name, &wq);
++	dentry = d_alloc_parallel(dir, name);
+ 	if (IS_ERR(dentry))
+ 		return dentry;
+ 	if (unlikely(!d_in_lookup(dentry))) {
+@@ -4414,7 +4413,6 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 	struct dentry *dentry;
+ 	int error, create_error = 0;
+ 	umode_t mode = op->mode;
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+ 
+ 	if (unlikely(IS_DEADDIR(dir_inode)))
+ 		return ERR_PTR(-ENOENT);
+@@ -4423,7 +4421,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 	dentry = d_lookup(dir, &nd->last);
+ 	for (;;) {
+ 		if (!dentry) {
+-			dentry = d_alloc_parallel(dir, &nd->last, &wq);
++			dentry = d_alloc_parallel(dir, &nd->last);
+ 			if (IS_ERR(dentry))
+ 				return dentry;
+ 		}
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index e9ce1883288c..9580af999d70 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -726,7 +726,6 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
+ 		unsigned long dir_verifier)
+ {
+ 	struct qstr filename = QSTR_INIT(entry->name, entry->len);
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+ 	struct dentry *dentry;
+ 	struct dentry *alias;
+ 	struct inode *inode;
+@@ -755,7 +754,7 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
+ 	dentry = d_lookup(parent, &filename);
+ again:
+ 	if (!dentry) {
+-		dentry = d_alloc_parallel(parent, &filename, &wq);
++		dentry = d_alloc_parallel(parent, &filename);
+ 		if (IS_ERR(dentry))
+ 			return;
+ 	}
+@@ -2106,7 +2105,6 @@ int nfs_atomic_open(struct inode *dir, struct dentry *dentry,
+ 		    struct file *file, unsigned open_flags,
+ 		    umode_t mode)
+ {
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+ 	struct nfs_open_context *ctx;
+ 	struct dentry *res;
+ 	struct iattr attr = { .ia_valid = ATTR_OPEN };
+@@ -2162,7 +2160,7 @@ int nfs_atomic_open(struct inode *dir, struct dentry *dentry,
+ 		d_drop(dentry);
+ 		switched = true;
+ 		dentry = d_alloc_parallel(dentry->d_parent,
+-					  &dentry->d_name, &wq);
++					  &dentry->d_name);
+ 		if (IS_ERR(dentry))
+ 			return PTR_ERR(dentry);
+ 		if (unlikely(!d_in_lookup(dentry)))
+diff --git a/fs/nfs/unlink.c b/fs/nfs/unlink.c
+index df3ca4669df6..43ea897943c0 100644
+--- a/fs/nfs/unlink.c
++++ b/fs/nfs/unlink.c
+@@ -124,7 +124,7 @@ static int nfs_call_unlink(struct dentry *dentry, struct inode *inode, struct nf
+ 	struct dentry *alias;
+ 
+ 	down_read_non_owner(&NFS_I(dir)->rmdir_sem);
+-	alias = d_alloc_parallel(dentry->d_parent, &data->args.name, &data->wq);
++	alias = d_alloc_parallel(dentry->d_parent, &data->args.name);
+ 	if (IS_ERR(alias)) {
+ 		up_read_non_owner(&NFS_I(dir)->rmdir_sem);
+ 		return 0;
+@@ -185,7 +185,6 @@ nfs_async_unlink(struct dentry *dentry, const struct qstr *name)
+ 
+ 	data->cred = get_current_cred();
+ 	data->res.dir_attr = &data->dir_attr;
+-	init_waitqueue_head(&data->wq);
+ 
+ 	status = -EBUSY;
+ 	spin_lock(&dentry->d_lock);
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index d9acfa89c894..d55a4b603188 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -2132,8 +2132,7 @@ bool proc_fill_cache(struct file *file, struct dir_context *ctx,
+ 		goto end_instantiate;
+ 
+ 	if (!child) {
+-		DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+-		child = d_alloc_parallel(dir, &qname, &wq);
++		child = d_alloc_parallel(dir, &qname);
+ 		if (IS_ERR(child))
+ 			goto end_instantiate;
+ 		if (d_in_lookup(child)) {
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 49ab74e0bfde..04a382178c65 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -692,8 +692,7 @@ static bool proc_sys_fill_cache(struct file *file,
+ 
+ 	child = d_lookup(dir, &qname);
+ 	if (!child) {
+-		DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+-		child = d_alloc_parallel(dir, &qname, &wq);
++		child = d_alloc_parallel(dir, &qname);
+ 		if (IS_ERR(child))
+ 			return false;
+ 		if (d_in_lookup(child)) {
+diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
+index be22bbc4a65a..a8995261831c 100644
+--- a/fs/smb/client/readdir.c
++++ b/fs/smb/client/readdir.c
+@@ -73,7 +73,6 @@ cifs_prime_dcache(struct dentry *parent, struct qstr *name,
+ 	struct cifs_sb_info *cifs_sb = CIFS_SB(sb);
+ 	bool posix = cifs_sb_master_tcon(cifs_sb)->posix_extensions;
+ 	bool reparse_need_reval = false;
+-	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+ 	int rc;
+ 
+ 	cifs_dbg(FYI, "%s: for %s\n", __func__, name->name);
+@@ -105,7 +104,7 @@ cifs_prime_dcache(struct dentry *parent, struct qstr *name,
+ 		    (fattr->cf_flags & CIFS_FATTR_NEED_REVAL))
+ 			return;
+ 
+-		dentry = d_alloc_parallel(parent, name, &wq);
++		dentry = d_alloc_parallel(parent, name);
+ 	}
+ 	if (IS_ERR(dentry))
+ 		return;
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index 2577c05f84ec..14b91a7d0bb6 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -116,10 +116,7 @@ struct dentry {
+ 					 * possible!
+ 					 */
+ 
+-	union {
+-		struct list_head d_lru;		/* LRU list */
+-		wait_queue_head_t *d_wait;	/* in-lookup ones only */
+-	};
++	struct list_head d_lru;		/* LRU list */
+ 	struct hlist_node d_sib;	/* child of parent list */
+ 	struct hlist_head d_children;	/* our children */
+ 	/*
+@@ -210,6 +207,9 @@ enum dentry_flags {
+ 	DCACHE_REFERENCED		= BIT(6),	/* Recently used, don't discard. */
+ 	DCACHE_DONTCACHE		= BIT(7),	/* Purge from memory on final dput() */
+ 	DCACHE_CANT_MOUNT		= BIT(8),
++	DCACHE_LOCK_WAITER		= BIT(9),	/* A thread is waiting for
++							 * PAR_LOOKUP to clear
++							 */
+ 	DCACHE_SHRINK_LIST		= BIT(10),
+ 	DCACHE_OP_WEAK_REVALIDATE	= BIT(11),
+ 	/*
+@@ -256,8 +256,7 @@ extern void d_delete(struct dentry *);
+ /* allocate/de-allocate */
+ extern struct dentry * d_alloc(struct dentry *, const struct qstr *);
+ extern struct dentry * d_alloc_anon(struct super_block *);
+-extern struct dentry * d_alloc_parallel(struct dentry *, const struct qstr *,
+-					wait_queue_head_t *);
++extern struct dentry * d_alloc_parallel(struct dentry *, const struct qstr *);
+ extern struct dentry * d_splice_alias(struct inode *, struct dentry *);
+ /* weird procfs mess; *NOT* exported */
+ extern struct dentry * d_splice_alias_ops(struct inode *, struct dentry *,
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index fcbd21b5685f..6aced49d5f00 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1743,7 +1743,6 @@ struct nfs_unlinkdata {
+ 	struct nfs_removeargs args;
+ 	struct nfs_removeres res;
+ 	struct dentry *dentry;
+-	wait_queue_head_t wq;
+ 	const struct cred *cred;
+ 	struct nfs_fattr dir_attr;
+ 	long timeout;
 -- 
 2.50.0.107.gf914562f5916.dirty
 
