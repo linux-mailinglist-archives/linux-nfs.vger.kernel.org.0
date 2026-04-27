@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21188-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21189-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8LVgF+dr72nFBAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21188-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 16:00:07 +0200
+	id 2O/sEx5r72nFBAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21189-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 15:56:46 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3521F473E8A
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 16:00:05 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D639C473D96
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 15:56:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8DFD93010805
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 13:53:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0A859301AF37
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 13:53:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EDA53D75D3;
-	Mon, 27 Apr 2026 13:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD8CE3D8108;
+	Mon, 27 Apr 2026 13:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMQWZGMu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmEZV2/x"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2243D75C9;
-	Mon, 27 Apr 2026 13:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20093CF682;
+	Mon, 27 Apr 2026 13:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777297883; cv=none; b=hh1i+4lZECSQ54K3KgxeuDbXfefi6TyMkN72xIzerAjDrfsG6B4jTQgaPNP2Rv6h9jolK9CkveAHHdtdeLEffH+WRSbJsZAzbpRW4I5+bhpRCmHmghy39urMNs/1r3z6vqzWSKTw7k6OcaTcTcgQup1TA7T42Q7zhHX0ocbaGWQ=
+	t=1777297884; cv=none; b=ACV/SJtAno7h0r7/9vpFxNiQKQeXaZMtnC2rSyIyOo+FBiQ1ZRsxR7a/BI8Z3qo5p3skN1kG6TXoPw3Dej/bsXDS4HSPHnNiD+5PM+qjZB9QfVFRyWmQP89w3axuuYFoZ5VkQ54n3mRxibvQrOtA592MOA8Qym4Fa/DgbL4goa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777297883; c=relaxed/simple;
-	bh=gOd4QtnOZY12A1Ot1uXAzdkY2kPXnXnhNWUqsatweSA=;
+	s=arc-20240116; t=1777297884; c=relaxed/simple;
+	bh=egYLvfDqeAfSxlqHCUEczvOB8wEdCBL9wIzAZOjLZco=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gLoZv2MdnuViyCdxI5NWc/6rCQ+SxCADbGGU28mj4bNKAWg/hYiN2Iek8gdcCCfOeB05pU8dSWakmHR0YTA5kS4yKml5piopUEZ64i4+b/JwnYOmWLsAiiCa78D3BwkafOiq9m28pIHBoC1nGMZM7tHKobqrsyhU47Wy2iVLbiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMQWZGMu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B18CC2BCB4;
-	Mon, 27 Apr 2026 13:51:21 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=sv4jb0i0UXw/byEetKuxf99zzoxgwKa+Z5SzjYPdacjub0aY40v5I6s9JSIS7K2qb2c4upyTN8geHytChphOC7uigN03fbq9ltqptZt/Cror9c9NByZ0yr9CBDsTkzN0MvYTsHYgIg3GyssQetzQvRqa/TvzG7L1jzOeLd9PViQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmEZV2/x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C0CC2BCB7;
+	Mon, 27 Apr 2026 13:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777297882;
-	bh=gOd4QtnOZY12A1Ot1uXAzdkY2kPXnXnhNWUqsatweSA=;
+	s=k20201202; t=1777297884;
+	bh=egYLvfDqeAfSxlqHCUEczvOB8wEdCBL9wIzAZOjLZco=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OMQWZGMuqkdv3Gh0uJCtm6puV1ziAO+fKeAhfsFASaNv7hw9Bt9K48hNmOpL817Gs
-	 V6pj/AgH/hCLMio8X3ePIZdwpcInAeMQDTZcWpjSaduyaeWNhTaYUVoRoaEH9KUaBt
-	 /gM+udehCpegsqlcpzmUfefR4E5e5cOacNcdh2l5MzPW9E7fuKNw61y4nYfHhGZ+kU
-	 /cLxtuH5WkFxfxEQIHQsz5nz2jCsJ3D+JHVV8L/zgTIcSSPcUMAfthY9appuBoCj/5
-	 cipySnvKvi5qEW6fpxDcc09+EwrT0ROJE9Dty0DpfC9JK+WnUI4YEqEbHEOw8AxBmM
-	 ecLUieYweynXA==
+	b=AmEZV2/xQAuhZkxNguNZU74qpUdF3uZ8Ffq/Mup8QQGj6tH7D/c3T53U7yQ439FYo
+	 f53GIFvz3i4jHb0aAzzFewMZNULilSysmb2E692ArX30TAUsX21AuVMEvAUaymIq0i
+	 cHZ9NWjEbJpCNsd8XKN0knHYgNDP6Qv1DIwrkbz1vDUQgMXW2tLpCJtodpPRl7ayCE
+	 xESB08uChyn+8aPISw1ujVNHO6b05xYQXEYP7USNBZxMa+ApY2B0DY7LBQHRdXytlJ
+	 bL5SdLZO1Dzr+s5QeDfJIcXfuJeUsyRGQJSWaaLBXAtQUk59TB/uOuaKaWmTUkIQie
+	 8Yt5StoUMlUQQ==
 From: Chuck Lever <cel@kernel.org>
-Date: Mon, 27 Apr 2026 09:50:55 -0400
-Subject: [PATCH 11/18] SUNRPC: Remove get_mic/verify_mic function pointers
- from enctype table
+Date: Mon, 27 Apr 2026 09:50:56 -0400
+Subject: [PATCH 12/18] SUNRPC: Remove wrap/unwrap function pointers from
+ enctype table
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260427-crypto-krb5-api-v1-11-1fc1253b64c0@oracle.com>
+Message-Id: <20260427-crypto-krb5-api-v1-12-1fc1253b64c0@oracle.com>
 References: <20260427-crypto-krb5-api-v1-0-1fc1253b64c0@oracle.com>
 In-Reply-To: <20260427-crypto-krb5-api-v1-0-1fc1253b64c0@oracle.com>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -70,42 +70,42 @@ Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
  David Howells <dhowells@redhat.com>, Simo Sorce <simo@redhat.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4091;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3727;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=HVTf5jSOxEkVGmyWHGj+15bNC17Rd0Qh3QZ2+6tLPn8=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp72nGWz7ReVKuwxYBL+PKSVeC/GOiISXKLAT1J
- 8OYjZvpSFWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCae9pxgAKCRAzarMzb2Z/
- l59eEACK6JIU6NZDa+KI63r5T8lL2qZugTf4vgsWXCnyA4me06XqLlgGKn+dkgHd5AFUlI8abyO
- T/ayn9XN3wCbRFD0GlwU+1ys7fhj1fYZV1rqKUx+0AZZ4eCIdzyb3KWr+1oHYoEOPrFLLarA+hA
- tm8wlS0p2kNENhffll7c/04qIRosRHpKblCGEorAwPWGYsslOd80SZMUJGZnnZL5Ep0N70aCZH9
- mrhfXKP6N9m1SoAvuByyf3pjWYrA6IQZ5l53m14tmh3UDmkoYw9F56hPEYCJQBN0QOOViDeY5kz
- vAyyK2A+oZMDBDHDtgRtFws35Ut2Uke5X5uXaRqeLy+1l3lPi18T8F1rI7+pi3UXFT5YZBByFTX
- JKjvgxRi3a7YYXjqsIT57RBedBto3aP6scL7wWROoxJ2qsqHrwUNBTmZNMPheb/YCELH86r4fYR
- fawkqAIS3gbsIusVxcGMsHmkbFSNWpMCP7g/b7HlsV4x7kI/y7gA9ixQhP70hL76xlPsIj+bfMA
- VvMRGizA1PgWTLmNJy4SxaXJRq1hYxP/35qgEJi6TUWsz8yHzaUzfoFhaDBHpCx9cy7rRHLyVQn
- A6jVlFFJrGOg8GcaQGy7H4wpvoP6UI5SUpiJWdAwh0rOl2B/98qgo3O2Vph3QIXwS9PwnYtfNt9
- 33FnNYQkoDtbZUQ==
+ bh=Uwl3PFwk22qkNrr0ypGYiXqldKy+foUyUwbJ9/2un/E=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp72nGOfoyY8krkOQfQRJwpzPa/2amZXBRC0NKd
+ chxNVv5ws6JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCae9pxgAKCRAzarMzb2Z/
+ l9frEAC/Tv4Q1KR1GB+Gb3BDH8p7wC7YIhES/JWlmr+bqkoTDhw6Q9GKPjEpnvsuOCEqVZfZIKt
+ MKhmHl86voBzNM5o88WEsN0KLrDX3mwlaGoLwGtE0otLTztu7pqiWLyRdoWRL2RItHwGg4FpvJ7
+ 71H+U9BKxX4RA8PiyFo78rPTFR7nPbYaxVXvad7dzNmq6NYvxxC5yVm/qcD6b9nVjRou9bQg0kX
+ Y5kfPg91CmnaRzI/4hUChZYw4PL0umyIONQmmSKIhEB8cKsljTym25jh7QJVFAqulXN0hN0MWfG
+ DvbrGHI2DkNWevYfCG3/nUFZC9noI11CNsG6+hro1W3/6AmwAx3+qF+4aMLAk5OmzlwpJiEAtx+
+ sWHHBIZXlg3iCDtC7TtevcArKboEP8IKbLcd4c0AGe3LgvNMx09yNhahU/RvMlDQ6ElNwiYgnwL
+ OG3YzHSd6rqMRgS0TGJy8kFdvJFMzvbpNRKx1tEEUMQlfARIRt1pt1QOYVGblEQLRRgsf0FkOv+
+ 1YgWH0PK2XMp/0Azqu8AzSDiUnm9q0Ri6/nR1YG7C5lvfnVt0Lpuh4EDwchKBrAH1lnImU5GN/p
+ X+3Qb/6AmI5N5b8BUwYwLTp4fMLeRrEddcqrMxOy2mq8cjfZtsPh6fmvgc2vj5y4MwHrtZn37UK
+ TrM/Te/76TmpePA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 3521F473E8A
+X-Rspamd-Queue-Id: D639C473D96
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21188-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21189-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -114,114 +114,116 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Every enctype in the table points .get_mic and .verify_mic at
-the same pair of functions. The indirection served no purpose
-after the v1 enctype support was removed. Call
-gss_krb5_get_mic_v2() and gss_krb5_verify_mic_v2() directly
-from the GSS mechanism dispatch and drop the function pointers
-from struct gss_krb5_enctype.
+Every enctype points .wrap and .unwrap at gss_krb5_wrap_v2()
+and gss_krb5_unwrap_v2(). As with get_mic/verify_mic, the
+indirection dates from when v1 enctypes had different wrap
+implementations. Call the functions directly and remove the
+pointers from struct gss_krb5_enctype.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/gss_krb5_internal.h |  4 ----
- net/sunrpc/auth_gss/gss_krb5_mech.c     | 16 ++--------------
- 2 files changed, 2 insertions(+), 18 deletions(-)
+ net/sunrpc/auth_gss/gss_krb5_internal.h |  5 -----
+ net/sunrpc/auth_gss/gss_krb5_mech.c     | 18 ++----------------
+ 2 files changed, 2 insertions(+), 21 deletions(-)
 
 diff --git a/net/sunrpc/auth_gss/gss_krb5_internal.h b/net/sunrpc/auth_gss/gss_krb5_internal.h
-index 83e969494b54..a63f8d465b63 100644
+index a63f8d465b63..92b0baed920c 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_internal.h
 +++ b/net/sunrpc/auth_gss/gss_krb5_internal.h
-@@ -44,10 +44,6 @@ struct gss_krb5_enctype {
+@@ -44,11 +44,6 @@ struct gss_krb5_enctype {
  		       struct xdr_buf *buf, struct page **pages);
  	u32 (*decrypt)(struct krb5_ctx *kctx, u32 offset, u32 len,
  		       struct xdr_buf *buf, u32 *headskip, u32 *tailskip);
--	u32 (*get_mic)(struct krb5_ctx *kctx, struct xdr_buf *text,
--		       struct xdr_netobj *token);
--	u32 (*verify_mic)(struct krb5_ctx *kctx, struct xdr_buf *message_buffer,
--			  struct xdr_netobj *read_token);
- 	u32 (*wrap)(struct krb5_ctx *kctx, int offset,
- 		    struct xdr_buf *buf, struct page **pages);
- 	u32 (*unwrap)(struct krb5_ctx *kctx, int offset, int len,
+-	u32 (*wrap)(struct krb5_ctx *kctx, int offset,
+-		    struct xdr_buf *buf, struct page **pages);
+-	u32 (*unwrap)(struct krb5_ctx *kctx, int offset, int len,
+-		      struct xdr_buf *buf, unsigned int *slack,
+-		      unsigned int *align);
+ };
+ 
+ /* krb5_ctx flags definitions */
 diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index 9a5e367fef5b..511e19e0e786 100644
+index 511e19e0e786..d027ddab132f 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -46,8 +46,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+@@ -46,9 +46,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  	  .encrypt = gss_krb5_aead_encrypt,
  	  .decrypt = gss_krb5_aead_decrypt,
  
--	  .get_mic = gss_krb5_get_mic_v2,
--	  .verify_mic = gss_krb5_verify_mic_v2,
- 	  .wrap = gss_krb5_wrap_v2,
- 	  .unwrap = gss_krb5_unwrap_v2,
- 
-@@ -75,8 +73,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+-	  .wrap = gss_krb5_wrap_v2,
+-	  .unwrap = gss_krb5_unwrap_v2,
+-
+ 	  .signalg = -1,
+ 	  .sealalg = -1,
+ 	  .keybytes = 16,
+@@ -73,9 +70,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  	  .encrypt = gss_krb5_aead_encrypt,
  	  .decrypt = gss_krb5_aead_decrypt,
  
--	  .get_mic = gss_krb5_get_mic_v2,
--	  .verify_mic = gss_krb5_verify_mic_v2,
- 	  .wrap = gss_krb5_wrap_v2,
- 	  .unwrap = gss_krb5_unwrap_v2,
- 
-@@ -114,8 +110,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+-	  .wrap = gss_krb5_wrap_v2,
+-	  .unwrap = gss_krb5_unwrap_v2,
+-
+ 	  .signalg = -1,
+ 	  .sealalg = -1,
+ 	  .keybytes = 32,
+@@ -110,8 +104,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  		.encrypt	= gss_krb5_aead_encrypt,
  		.decrypt	= gss_krb5_aead_decrypt,
  
--		.get_mic	= gss_krb5_get_mic_v2,
--		.verify_mic	= gss_krb5_verify_mic_v2,
- 		.wrap		= gss_krb5_wrap_v2,
- 		.unwrap		= gss_krb5_unwrap_v2,
+-		.wrap		= gss_krb5_wrap_v2,
+-		.unwrap		= gss_krb5_unwrap_v2,
  	},
-@@ -140,8 +134,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	/*
+ 	 * Camellia-256 with CMAC (RFC 6803)
+@@ -134,8 +126,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  		.encrypt	= gss_krb5_aead_encrypt,
  		.decrypt	= gss_krb5_aead_decrypt,
  
--		.get_mic	= gss_krb5_get_mic_v2,
--		.verify_mic	= gss_krb5_verify_mic_v2,
- 		.wrap		= gss_krb5_wrap_v2,
- 		.unwrap		= gss_krb5_unwrap_v2,
+-		.wrap		= gss_krb5_wrap_v2,
+-		.unwrap		= gss_krb5_unwrap_v2,
  	},
-@@ -169,8 +161,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ #endif
+ 
+@@ -161,8 +151,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  		.encrypt	= gss_krb5_aead_encrypt,
  		.decrypt	= gss_krb5_aead_decrypt,
  
--		.get_mic	= gss_krb5_get_mic_v2,
--		.verify_mic	= gss_krb5_verify_mic_v2,
- 		.wrap		= gss_krb5_wrap_v2,
- 		.unwrap		= gss_krb5_unwrap_v2,
+-		.wrap		= gss_krb5_wrap_v2,
+-		.unwrap		= gss_krb5_unwrap_v2,
  	},
-@@ -195,8 +185,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	/*
+ 	 * AES-256 with SHA-384 (RFC 8009)
+@@ -185,8 +173,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  		.encrypt	= gss_krb5_aead_encrypt,
  		.decrypt	= gss_krb5_aead_decrypt,
  
--		.get_mic	= gss_krb5_get_mic_v2,
--		.verify_mic	= gss_krb5_verify_mic_v2,
- 		.wrap		= gss_krb5_wrap_v2,
- 		.unwrap		= gss_krb5_unwrap_v2,
+-		.wrap		= gss_krb5_wrap_v2,
+-		.unwrap		= gss_krb5_unwrap_v2,
  	},
-@@ -601,7 +589,7 @@ static u32 gss_krb5_get_mic(struct gss_ctx *gctx, struct xdr_buf *text,
+ #endif
+ };
+@@ -631,7 +617,7 @@ static u32 gss_krb5_wrap(struct gss_ctx *gctx, int offset,
  {
- 	struct krb5_ctx *kctx = gctx->internal_ctx_id;
+ 	struct krb5_ctx	*kctx = gctx->internal_ctx_id;
  
--	return kctx->gk5e->get_mic(kctx, text, token);
-+	return gss_krb5_get_mic_v2(kctx, text, token);
+-	return kctx->gk5e->wrap(kctx, offset, buf, pages);
++	return gss_krb5_wrap_v2(kctx, offset, buf, pages);
  }
  
  /**
-@@ -623,7 +611,7 @@ static u32 gss_krb5_verify_mic(struct gss_ctx *gctx,
+@@ -653,7 +639,7 @@ static u32 gss_krb5_unwrap(struct gss_ctx *gctx, int offset,
  {
- 	struct krb5_ctx *kctx = gctx->internal_ctx_id;
+ 	struct krb5_ctx	*kctx = gctx->internal_ctx_id;
  
--	return kctx->gk5e->verify_mic(kctx, message_buffer, read_token);
-+	return gss_krb5_verify_mic_v2(kctx, message_buffer, read_token);
+-	return kctx->gk5e->unwrap(kctx, offset, len, buf,
++	return gss_krb5_unwrap_v2(kctx, offset, len, buf,
+ 				  &gctx->slack, &gctx->align);
  }
  
- /**
 
 -- 
 2.53.0
