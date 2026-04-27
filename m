@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21183-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21184-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SKKaIAJr72l3BAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21183-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 15:56:18 +0200
+	id mCBLENlr72nFBAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21184-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 15:59:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DB35473D80
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 15:56:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF3ED473E7B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 15:59:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D0AD63023D7D
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 13:52:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EA915306171B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 13:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C74753D5221;
-	Mon, 27 Apr 2026 13:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B1843D5647;
+	Mon, 27 Apr 2026 13:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdZs/37B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbgG4x7B"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25493D47DD;
-	Mon, 27 Apr 2026 13:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775B53D171A;
+	Mon, 27 Apr 2026 13:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777297874; cv=none; b=AQ5+XClPQVRSL8SDrvOLanATb89p3AQ0Lt3XGzI6/TOVAC7zKWTAuGQKlCPFkob3Tvd6SGe9uXn5We23t/9qVN4H8BQWy6IQq/fiXPhzyD9P1VPbax0M79Cx+X4jdZGJuP8OMxql1BamrWtgi2CUHKWQltCkxw5oLolOLyEkDeM=
+	t=1777297876; cv=none; b=njjJcFnDAsb+B/0bqJMBBHIEcigxre6DFByJFZnLCs0cGhCOEPUPcgVBnlcXmxSKAwvy53l0aFiEWDggmi+Ho/n78WYWdnt+7HaalJHPwNqbC6zd09EfIPb34mcrytqJ/3t0VE7VMAl1k73TbzPWNXMpkHWVeYv8KQn7lc3d158=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777297874; c=relaxed/simple;
-	bh=NTl7qTopFJStCGZUPMgCylLG1NE1rViTzBAAii1iHc4=;
+	s=arc-20240116; t=1777297876; c=relaxed/simple;
+	bh=G9r2fuimPedWQQUIMFXL1tj47Q934Qh804yIy2phhVI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pMxCXHRRGXzWhwm567wCrHTa/JxvBZSxTToRNVy7UzURM3KYt2dRHdSfRMzHbMYfbzlTqlinPwZ2PKgBxQHEhIBZunZ0sO3UyRKul350dctOQTnGzhlgLFQi7jorU9NJ1X6gSJWhnd2jWUrHX6yabxVf8jw1pO4vFlm1u1ymsZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdZs/37B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21069C2BCC4;
-	Mon, 27 Apr 2026 13:51:13 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=CopNEq2n5XEONboxdfEDihkdV3/fP/vHxKVEDL1xcYclSZJh4DbuDGCIN1s7AXFif0WyRvhY/QWbAE3tqKY5kr/ihkHVoKv/PehtIY2ayqrEbbsn7oBi9C7ZsZ3d3bxUWHBra+2eljjDLGM5IBrmc8hEEFAbsjqBwz0UUp6LDZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbgG4x7B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC0E9C2BCB4;
+	Mon, 27 Apr 2026 13:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777297874;
-	bh=NTl7qTopFJStCGZUPMgCylLG1NE1rViTzBAAii1iHc4=;
+	s=k20201202; t=1777297876;
+	bh=G9r2fuimPedWQQUIMFXL1tj47Q934Qh804yIy2phhVI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KdZs/37Bhgst73kQhmwLeECJ098BLP9RJnrBLiuwhN/pKy+nBxk7cesNDta56vYqi
-	 4P1AXYrbQ42/1bQDz4ZzSeBPJIbJO+VZdVefWAA8PGlRtepSPr937dp1yMs35qjLrG
-	 ISaPiFMCWa9IobFKRsSKDK8XRa2Q+V70icDVCfsEFT8muqsIXWdRpiGuBuaxk4Cd60
-	 YZffe85QCfdS+CiYddoAcsSNBra/AmeP9ElSLSUpfrWXmBy0Q1DTpjEQ4AkhezsqLd
-	 wwxu+J8XCocuPhWl6L7SlKboeobcBC67hdcKkvk0OE3VMgH8jZG8mVcdTNUT3yTPQL
-	 Qz6UW6LncdbNw==
+	b=mbgG4x7BvJHPA1K4c9PjunwNg5SKHffNHD7RzqVrq7L0irzRlAqrK+hHOccGOM3dM
+	 TOSjzcI/vMPbjAhiKu50T/XIojOvfHJ9Ko4GPltJvZtBWZVGu1GKec2XfE9OE4cghT
+	 Uxk7gc0I9XAmNmtYr/FZPfxTVtwYioDw3ZwgY4g4Kw8o/ZX4ViB5RAnV8qZJyFdxNt
+	 QKxZZntZ1R3U32JoEYFiiKDvCdtjtypKGP8clMBskL80yj95xzOzAUx3vZixRRwmvJ
+	 IpPQLQMrRvBs/sl28+gH1W+a8o2r+8Vhfg7r38uKWuLv7GS2pDV57j6enyHbLk/mGr
+	 5sU+InoKkYkog==
 From: Chuck Lever <cel@kernel.org>
-Date: Mon, 27 Apr 2026 09:50:50 -0400
-Subject: [PATCH 06/18] SUNRPC: Switch wrap token encryption to crypto/krb5
+Date: Mon, 27 Apr 2026 09:50:51 -0400
+Subject: [PATCH 07/18] SUNRPC: Switch wrap token decryption to crypto/krb5
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260427-crypto-krb5-api-v1-6-1fc1253b64c0@oracle.com>
+Message-Id: <20260427-crypto-krb5-api-v1-7-1fc1253b64c0@oracle.com>
 References: <20260427-crypto-krb5-api-v1-0-1fc1253b64c0@oracle.com>
 In-Reply-To: <20260427-crypto-krb5-api-v1-0-1fc1253b64c0@oracle.com>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -69,42 +69,42 @@ Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
  David Howells <dhowells@redhat.com>, Simo Sorce <simo@redhat.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7628;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4465;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=R/aMik3QQ8JCxSimmF7L2sz2beX+NWRS8XfGB0VJLi0=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp72nGC51ztGmXkAEWeEC/R7aDDt7OPi7UGiZPR
- knV4pE+iYGJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCae9pxgAKCRAzarMzb2Z/
- l+YFD/9PHECMHSn3C/nx/fwrl949zbuvuH3Eg9hemyCsKLFsSEmChpu4eIseWL6COIeRd/2AdBm
- mdNfVVpkVFTkqC0MDXRSnIESAA/cXRc5h9UoE3bmzdSCTIa3VjS8RZ3/cf/RtUaBnSowVEP3SgE
- CtLWmFCv/OJ5Cn836vqjlFdxDrE3cJRGZguv0fNlD1M4en0/Zy29atheMTjFwp6jbq///vYKcFP
- aw7rxdXT61zAXwdFwN0l4ze1tLVs5ngdX6NdIL7akIxuKZhdfRAM2nrAAltWZaUUNswViLAjkGV
- g2jvD0gsNcuINZpSkconxEZXSuX8M4qInuw1BIzBqCHw5bKOstn0td+GQJ+47ni/YX+Momhnnxl
- UMAQx0XXdz+xmncVNpEs1A+admiiYQVntYQXJZa8xWrRH8pC5C9t6v0HrQEGpSC8t28KeJB6xJv
- pfCE9Sz7T6Z/cvibPOakMWWPh1KGoXZCS06jgIP+HxTCncr5WAyljTl1Ff3CMKSvdwEBNRT6M5f
- QIurLY20LTXgfLDWttui3dLb/Z146eFr3SiLEUbYwnfnxIz3k4kcaZOENJonOVm2ZAa1YZ0DSg1
- KKoCy/QstbMxnqQsPPJ6xOXWoBEJ7koMlz214Wt5svVHMIeWACG31lCGt/VJxIyqSfjq86Q19Oq
- F7ou1l9iLDetIGw==
+ bh=tSwu4bk90pIxOExzs6XERM0X3csMpleUNaX4EUlJDJE=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp72nGFeGsxDNoLj1J549fveBSxRNrCRg+vK/bJ
+ Cb7eYWR5CKJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCae9pxgAKCRAzarMzb2Z/
+ l4iqD/0anAO759Jy2inHUdrf2ja2FKXw7g7IOPF47KqOOdOzUdGHNNilHlfz7N6ryNlV30ayMJg
+ ee0eeYS8JN0GwLyJIfiVpIgOxPgtpVphikeD+mC2EoEjY3ZmpgPtm733Xslb3dZtuo5BwyjzVB2
+ V1jxhHYhQDcPntJSUB2vXdIerPJHEzUvHWkH9tUptnHZeFpPXwIaECj+edZerTAUV8CihyZsQb0
+ BGa/Iawldr8z1vQiEaadu/1vgH32MH4P7wqsXY9Pvz5IUYZJkjFm5zw5irmGa0T+s2mGB/dq+xJ
+ Tb+RDckkONR+0JIDosNraI2cvdPfLUEV2UOpEToH+ur/kb6OaV5cQVUlamvt77NT/0jXIzEXpCY
+ cznYMQcShWYGfl+NNnhQvOvVosTRaLXVQFnJE9nXSZHL9x0hL20phXJp3e7MMyV6mneECySwk9O
+ /2qafn65UBhoED0AqetbNzw5BjcuiQ2wgnzYRfkAIRX4oUKpba4NOrwvghjHYV70JoSe3yGQF5K
+ wMybL9xSeOOVem8L/G0Rhl+QO82jr9yOgbBrPnmuXP6hDb/ra3D8AzC5sgs9H7Qsv+PuyfYhiJA
+ BfVz6cJhyr1/UloFQt1ACxH+6KEIQ2OeK3EIj2nqGdc5Cm5KF3Y6ChPJS2hdsQHfWlTfkgZ2HYg
+ 2wHwHF4Q0wGlUdA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 6DB35473D80
+X-Rspamd-Queue-Id: AF3ED473E7B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21183-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21184-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -113,123 +113,69 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Replace the per-enctype .encrypt callbacks (gss_krb5_aes_encrypt and
-krb5_etm_encrypt) with a single gss_krb5_aead_encrypt() wrapper that
-delegates to crypto_krb5_encrypt().
+Replace the per-enctype .decrypt callbacks (gss_krb5_aes_decrypt
+and krb5_etm_decrypt) with a single gss_krb5_aead_decrypt()
+wrapper that delegates to crypto_krb5_decrypt().
 
-The xdr_buf setup -- GSS header insertion, confounder space
-allocation, and token header copy -- remains unchanged. The
-difference is that the CBC-CTS encryption and HMAC computation are
-now a single AEAD operation through the crypto/krb5 library. Both
-the MtE construction (RFC 3962) and the EtM construction (RFC 8009)
-are handled transparently by the AEAD transform.
-
-The plaintext page data must be copied from the page cache pages to
-the scratch output pages before building the scatterlist, since the
-AEAD operates in-place rather than using separate input and output
-scatterlists.
+The new wrapper builds a scatterlist covering the secured
+region (confounder through checksum), passes it to the AEAD
+decrypt operation, and derives the confounder and checksum
+lengths from the data offset and length that
+crypto_krb5_decrypt() reports. The caller's token header
+verification and buffer adjustment logic is unchanged.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/gss_krb5_crypto.c   | 97 +++++++++++++++++++++++++++++++++
- net/sunrpc/auth_gss/gss_krb5_internal.h |  5 ++
- net/sunrpc/auth_gss/gss_krb5_mech.c     | 12 ++--
- 3 files changed, 108 insertions(+), 6 deletions(-)
+ net/sunrpc/auth_gss/gss_krb5_crypto.c | 53 +++++++++++++++++++++++++++++++++++
+ net/sunrpc/auth_gss/gss_krb5_mech.c   |  8 +++---
+ 2 files changed, 57 insertions(+), 4 deletions(-)
 
 diff --git a/net/sunrpc/auth_gss/gss_krb5_crypto.c b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-index 16dcf115de1e..85425d4a28c2 100644
+index 85425d4a28c2..31c2c86b873f 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-@@ -953,3 +953,100 @@ krb5_etm_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
- 		ret = GSS_S_FAILURE;
- 	return ret;
+@@ -1050,3 +1050,56 @@ gss_krb5_aead_encrypt(struct krb5_ctx *kctx, u32 offset,
+ 
+ 	return GSS_S_COMPLETE;
  }
 +
 +/**
-+ * gss_krb5_aead_encrypt - Encrypt a wrap token using crypto/krb5
++ * gss_krb5_aead_decrypt - Decrypt a wrap token using crypto/krb5
 + * @kctx: Kerberos context
 + * @offset: byte offset of the GSS token header in @buf
-+ * @buf: OUT: send buffer
-+ * @pages: plaintext payload pages (page cache data)
-+ *
-+ * The xdr_buf setup mirrors the original per-enctype encrypt
-+ * functions, but the CBC-CTS encryption and HMAC are replaced
-+ * by a single AEAD operation through the crypto/krb5 library.
++ * @len: total length of the GSS token
++ * @buf: ciphertext buffer, decrypted in-place
++ * @headskip: OUT: confounder length, in octets
++ * @tailskip: OUT: checksum length, in octets
 + *
 + * Return values:
-+ *   %GSS_S_COMPLETE: Encryption successful
-+ *   %GSS_S_FAILURE: Encryption failed
++ *   %GSS_S_COMPLETE: Decryption and integrity verification succeeded
++ *   %GSS_S_BAD_SIG: Integrity checksum did not match
++ *   %GSS_S_DEFECTIVE_TOKEN: Token is malformed or truncated
++ *   %GSS_S_FAILURE: Decryption failed
 + */
 +u32
-+gss_krb5_aead_encrypt(struct krb5_ctx *kctx, u32 offset,
-+		      struct xdr_buf *buf, struct page **pages)
++gss_krb5_aead_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
++		      struct xdr_buf *buf, u32 *headskip, u32 *tailskip)
 +{
 +	const struct krb5_enctype *krb5 = kctx->krb5e;
 +	struct crypto_aead *aead = kctx->initiate ?
-+		kctx->initiator_enc_aead : kctx->acceptor_enc_aead;
-+	unsigned int conflen = krb5->conf_len;
-+	unsigned int cksum_len = krb5->cksum_len;
-+	unsigned int sec_offset, sec_len, data_len;
++		kctx->acceptor_enc_aead : kctx->initiator_enc_aead;
++	unsigned int sec_offset, sec_len;
++	size_t data_offset, data_len;
 +	struct scatterlist sg[XDR_BUF_TO_SG_NENTS];
 +	struct scatterlist *sg_overflow = NULL;
-+	ssize_t ret;
-+	int nsg;
++	int nsg, ret;
 +
-+	/* Insert space for the confounder */
-+	if (xdr_extend_head(buf, offset + GSS_KRB5_TOK_HDR_LEN, conflen))
-+		return GSS_S_FAILURE;
-+
-+	/* Ensure a tail segment exists */
-+	if (buf->tail[0].iov_base == NULL) {
-+		buf->tail[0].iov_base = buf->head[0].iov_base
-+						+ buf->head[0].iov_len;
-+		buf->tail[0].iov_len = 0;
-+	}
-+
-+	/* Append a copy of the plaintext GSS token header (RFC 4121 Sec 4.2.4) */
-+	memcpy(buf->tail[0].iov_base + buf->tail[0].iov_len,
-+	       buf->head[0].iov_base + offset, GSS_KRB5_TOK_HDR_LEN);
-+	buf->tail[0].iov_len += GSS_KRB5_TOK_HDR_LEN;
-+	buf->len += GSS_KRB5_TOK_HDR_LEN;
-+
-+	/* Reserve space for the integrity checksum */
-+	buf->tail[0].iov_len += cksum_len;
-+	buf->len += cksum_len;
-+
-+	/*
-+	 * The AEAD operates in-place, but on the client send path the
-+	 * plaintext payload lives in page cache pages that must not be
-+	 * modified.  Copy the payload into the scratch output pages
-+	 * first.  On the server send path @pages and buf->pages are
-+	 * the same array, and no copy is needed.
-+	 *
-+	 * Both arrays share buf->page_base, so the same index and
-+	 * intra-page offset address corresponding data in each.
-+	 */
-+	if (pages != buf->pages) {
-+		unsigned int poff = buf->page_base;
-+		unsigned int plen = buf->page_len;
-+		unsigned int i = poff >> PAGE_SHIFT;
-+		unsigned int off = offset_in_page(poff);
-+
-+		while (plen) {
-+			unsigned int n = min_t(unsigned int, plen,
-+					       PAGE_SIZE - off);
-+			memcpy_page(buf->pages[i], off, pages[i], off, n);
-+			plen -= n;
-+			i++;
-+			off = 0;
-+		}
-+	}
-+
-+	/* Build scatterlist covering the secured region */
++	/* Secured region starts after the GSS token header */
 +	sec_offset = offset + GSS_KRB5_TOK_HDR_LEN;
-+	sec_len = buf->len - sec_offset;
-+	data_len = sec_len - conflen - cksum_len;
++	if (len < sec_offset)
++		return GSS_S_DEFECTIVE_TOKEN;
++	sec_len = len - sec_offset;
 +
 +	nsg = xdr_buf_to_sg_alloc(buf, sec_offset, sec_len,
 +				  sg, ARRAY_SIZE(sg),
@@ -237,88 +183,58 @@ index 16dcf115de1e..85425d4a28c2 100644
 +	if (nsg < 0)
 +		return GSS_S_FAILURE;
 +
-+	ret = crypto_krb5_encrypt(krb5, aead, sg, nsg, sec_len,
-+				  conflen, data_len, false);
++	data_offset = 0;
++	data_len = sec_len;
++	ret = crypto_krb5_decrypt(krb5, aead, sg, nsg,
++				  &data_offset, &data_len);
 +	kfree(sg_overflow);
 +	if (ret < 0)
-+		return GSS_S_FAILURE;
++		return gss_krb5_errno_to_status(ret);
 +
++	*headskip = data_offset;
++	*tailskip = sec_len - data_offset - data_len;
 +	return GSS_S_COMPLETE;
 +}
-diff --git a/net/sunrpc/auth_gss/gss_krb5_internal.h b/net/sunrpc/auth_gss/gss_krb5_internal.h
-index 33d41d972bd1..ce43e1be7577 100644
---- a/net/sunrpc/auth_gss/gss_krb5_internal.h
-+++ b/net/sunrpc/auth_gss/gss_krb5_internal.h
-@@ -186,6 +186,11 @@ u32 krb5_etm_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
- 
- u32 gss_krb5_errno_to_status(int err);
- 
-+u32 gss_krb5_aead_encrypt(struct krb5_ctx *kctx, u32 offset,
-+			  struct xdr_buf *buf, struct page **pages);
-+u32 gss_krb5_aead_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
-+			  struct xdr_buf *buf, u32 *headskip, u32 *tailskip);
-+
- #if IS_ENABLED(CONFIG_KUNIT)
- void krb5_nfold(u32 inbits, const u8 *in, u32 outbits, u8 *out);
- const struct gss_krb5_enctype *gss_krb5_lookup_enctype(u32 etype);
 diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index 35189c57fd0c..6cd7eb203350 100644
+index 6cd7eb203350..66372e152c3b 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -43,7 +43,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .aux_cipher = "cbc(aes)",
+@@ -44,7 +44,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  	  .cksum_name = "hmac(sha1)",
  	  .derive_key = krb5_derive_key_v2,
--	  .encrypt = gss_krb5_aes_encrypt,
-+	  .encrypt = gss_krb5_aead_encrypt,
- 	  .decrypt = gss_krb5_aes_decrypt,
+ 	  .encrypt = gss_krb5_aead_encrypt,
+-	  .decrypt = gss_krb5_aes_decrypt,
++	  .decrypt = gss_krb5_aead_decrypt,
  
  	  .get_mic = gss_krb5_get_mic_v2,
-@@ -72,7 +72,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .aux_cipher = "cbc(aes)",
+ 	  .verify_mic = gss_krb5_verify_mic_v2,
+@@ -73,7 +73,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  	  .cksum_name = "hmac(sha1)",
  	  .derive_key = krb5_derive_key_v2,
--	  .encrypt = gss_krb5_aes_encrypt,
-+	  .encrypt = gss_krb5_aead_encrypt,
- 	  .decrypt = gss_krb5_aes_decrypt,
+ 	  .encrypt = gss_krb5_aead_encrypt,
+-	  .decrypt = gss_krb5_aes_decrypt,
++	  .decrypt = gss_krb5_aead_decrypt,
  
  	  .get_mic = gss_krb5_get_mic_v2,
-@@ -111,7 +111,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 		.Ki_length	= BITS2OCTETS(128),
- 
- 		.derive_key	= krb5_kdf_feedback_cmac,
--		.encrypt	= gss_krb5_aes_encrypt,
-+		.encrypt	= gss_krb5_aead_encrypt,
- 		.decrypt	= gss_krb5_aes_decrypt,
- 
- 		.get_mic	= gss_krb5_get_mic_v2,
-@@ -137,7 +137,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 		.Ki_length	= BITS2OCTETS(256),
- 
- 		.derive_key	= krb5_kdf_feedback_cmac,
--		.encrypt	= gss_krb5_aes_encrypt,
-+		.encrypt	= gss_krb5_aead_encrypt,
- 		.decrypt	= gss_krb5_aes_decrypt,
- 
- 		.get_mic	= gss_krb5_get_mic_v2,
-@@ -166,7 +166,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 		.Ki_length	= BITS2OCTETS(128),
+ 	  .verify_mic = gss_krb5_verify_mic_v2,
+@@ -167,7 +167,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  
  		.derive_key	= krb5_kdf_hmac_sha2,
--		.encrypt	= krb5_etm_encrypt,
-+		.encrypt	= gss_krb5_aead_encrypt,
- 		.decrypt	= krb5_etm_decrypt,
+ 		.encrypt	= gss_krb5_aead_encrypt,
+-		.decrypt	= krb5_etm_decrypt,
++		.decrypt	= gss_krb5_aead_decrypt,
  
  		.get_mic	= gss_krb5_get_mic_v2,
-@@ -192,7 +192,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 		.Ki_length	= BITS2OCTETS(192),
+ 		.verify_mic	= gss_krb5_verify_mic_v2,
+@@ -193,7 +193,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  
  		.derive_key	= krb5_kdf_hmac_sha2,
--		.encrypt	= krb5_etm_encrypt,
-+		.encrypt	= gss_krb5_aead_encrypt,
- 		.decrypt	= krb5_etm_decrypt,
+ 		.encrypt	= gss_krb5_aead_encrypt,
+-		.decrypt	= krb5_etm_decrypt,
++		.decrypt	= gss_krb5_aead_decrypt,
  
  		.get_mic	= gss_krb5_get_mic_v2,
+ 		.verify_mic	= gss_krb5_verify_mic_v2,
 
 -- 
 2.53.0
