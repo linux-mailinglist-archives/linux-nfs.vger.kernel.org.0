@@ -1,74 +1,74 @@
-Return-Path: <linux-nfs+bounces-21137-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21138-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ID6VNPHg7mk6zQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21137-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:07:13 +0200
+	id CA6TGhnh7mk6zQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21138-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:07:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 743A346CD8C
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:07:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0955446CDD1
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:07:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2FFFC300DDEB
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 04:06:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 43E643014948
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 04:06:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27C412749ED;
-	Mon, 27 Apr 2026 04:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8AA3264C4;
+	Mon, 27 Apr 2026 04:06:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="K8nE7L4p";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SVIXD13D"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="VfuxPkre";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XZXu+OZa"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE62B258EC1;
-	Mon, 27 Apr 2026 04:06:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1EF2749ED;
+	Mon, 27 Apr 2026 04:06:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777262762; cv=none; b=p6fi63xjapz3GpxaZtrSjXkptE4qTj3cBPuzZL4CRqFH8bWeiqm99d0brHETIKJpCSJdEqTA4sjAvRImvq+6TdRWOoIRNBXjGcwCsI8DeZ3NyxF3xZkbhI3ucXodee+cPAFWNY001Cy7cscVWm8iX85UB5dIZOJ+hQ/Z+UmU4IM=
+	t=1777262770; cv=none; b=qYYxWlU/38KI3fvXR1Xp/cudjNzeQoiG2/ObXFb7+rFnHsrj9p4I9kZDltd73SHs+wOyDrD6eZFltk5Fwgj5uxT2dOqn0Qigxeyq9+8eJiFIpSsDefOu2weXinkxPrVrQAcT4VMJsHfusZVrpqt6272D7dRCRFLKUOndefT+Xbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777262762; c=relaxed/simple;
-	bh=Pki1tNYev0WXH8WJnTY1L/60frqpJhclJSGzSK1gdE0=;
+	s=arc-20240116; t=1777262770; c=relaxed/simple;
+	bh=s/WJXqScoUb+XDmgBWVvSpncv6x4V4yZ9QvNOvxlLFo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pPu3lvNOV4HT42ayG6PFiQADijNdmx0Hm/ugWrbynE/ngkNsvd+YbCW0HwtzeH95RZ1f6zt5gPxSTel53jJud56v09paA3A+oJsJpo/Y0aHHa6giQGzIp0Aj3uJqwOQUcN8jw1WmJn6ZWEmyGRgIWCn7etF0o62Cbm0jvywC8Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=K8nE7L4p; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SVIXD13D; arc=none smtp.client-ip=103.168.172.156
+	 MIME-Version; b=cxInazkNbhcay6/vFLM/7xz4j5Hh/vg9Gspoxp7Ot7WU+dY4sTBc87B3sF1CFovd9rm3nnuGuN5fzZ2NH4KWLaWzOjqWURrvthWqGf593UPRg43IpnUCXNbYfaZ8mi34FfZ2DuD7pmoR2ywi0I1ZI2Eyvbe07W+NYb9a4SoYd8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=VfuxPkre; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XZXu+OZa; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id F34FF14000CC;
-	Mon, 27 Apr 2026 00:05:59 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Mon, 27 Apr 2026 00:05:59 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4B3161400018;
+	Mon, 27 Apr 2026 00:06:08 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 27 Apr 2026 00:06:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777262759;
-	 x=1777349159; bh=7sA1Vl5jolxK70Oa0cKHhOdpSjEUXYli5D2vNFWfhhY=; b=
-	K8nE7L4pduA5y0M83Qf5dIrYU3gdYV+ygo3gUwi72byP8YkYRxgh+cxhM0elmonp
-	fR5EYWE24xEs1IPBKdEKEJQAK0XvHUHpDW7Oeol654b8FNanBA0rhWjN1U8vtOg9
-	5N+JrS8n4c30wd4l9fFlhbz7iP9wJHeZr0sfSq0quAQygr4aw69grTJGugslwRP+
-	6hUNJKLLJq5JjHVmI+7tn4GVPyiAcjZENxcffZgps02Lv3Y50XNpHR+jQDxEAc/A
-	oCr2zwDjzMoOpWudksPLuXOM+Gp1+tToCC5YmiOBPNJ11173QU/2+SRA9NkrJlEu
-	RTw5GXZgjVUaJsjSHVHQ2w==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777262768;
+	 x=1777349168; bh=g8SM3Dg2naVtDlBlkJGj5seH51i8ZJRCDyDc8L3ShjQ=; b=
+	VfuxPkre9XHX3HlrcmM02xx1B1pWS7FixmGdHSgOnlmTKlgMaUFz7oCkcmQdXwZE
+	0ePQuwhcekwpXYrYOalE0feLIeFxS56XwNst6r6GqjAz1jVyIgMb09+5wOVGR/GM
+	oT68SN34xT2u4ea9s3EzES5pfdiuqRUXvK5woV7wG3hHFTVurRC7YTivW5HiAGlZ
+	JoWxKpdLgwVfsXJhGQITP1/jCKM3Zg0TNiBDIO+2m3g8kp3BTxi0tWPAI7xam9ie
+	Quwk/SgSGdk673hfuJYNFZljTmtilxXQ0zEn7T+0B1yZcuERSAbRDH9gsMiJAMvZ
+	rmonSvgzudKO8JOAr4MjQw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1777262759; x=1777349159; bh=7
-	sA1Vl5jolxK70Oa0cKHhOdpSjEUXYli5D2vNFWfhhY=; b=SVIXD13DUYlFT5//a
-	ySoJ5mhnUm9g8t/6Mrkq9r/J49CaFtk+wxGMKcxcY+AslsqK8v2xCk5WA6vWxrCD
-	eGc43vDp3e8KB72FCI8MnmZ2mNRy5YbGthgssruPQWGk3DD1tzvffnwFUWDwtayT
-	cmsc0nKrxo515pJjRANG7ZKZcafCni0yXuxFKlaFnnBOQU7Nmji8rugdXsTWvzVh
-	Yr3EvUpMm5xa3I4Zaq2XPtyGUMo3v3u+L/tyzpDHtEYVGKpUtMBrA/qRTp4IERp+
-	hz9IsBr4v3XylCJx70Dhu16QFzModvq1auvC+geM+I4FpVaLXPhkgH8d+UTRHgPp
-	kEIPQ==
-X-ME-Sender: <xms:p-DuaSh38MoshfzZpAXbej9UOMVGMKQTcytP539YaQChCNvXbR8iOA>
-    <xme:p-DuafV10qlBaGGux97VjWoxho0LEpxP39ba5FVljB5Ss_pdhqJJZi7uJ6z9tj3by
-    x9IQHPuigxitg5RW3HlR7GPNXVaXGOJJYMpwIx_JmFGaqr4RA>
-X-ME-Received: <xmr:p-Duabv5Z1KUmNOCc9ZWg4QnFg0eP0U-4WL0uzFzYimU4ADlGxyfp1g6YkDQE3J6mxvHjJ4SFfIvWSA97WDxrEchbv1XN6k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeijecutefuodetggdotefrod
+	:x-me-sender:x-sasl-enc; s=fm2; t=1777262768; x=1777349168; bh=g
+	8SM3Dg2naVtDlBlkJGj5seH51i8ZJRCDyDc8L3ShjQ=; b=XZXu+OZaBidJ+mBjB
+	VCIKrKF8S1v5z8o2qv+iQjCY7GlrD+Ys3ePlu+wUqcSVpigv1Ng++/S+tk3aE/j4
+	2/zZCUnP08HAfgtGXhlBP/zDfQDbnVxuPq92M9zvxFndU1WCU3UL0Pk5bhphKgks
+	RF/PK3H5FMefyAVvLCNw0vgdtKYlmdyrEXzWXzsyF+cMT/QE1PjrtzIZ3J8ktqAe
+	hC2I1cIieNgMEXWSO2VuKykdVaQB8YyN6daq8fqXm8C44Ex4EK1IewPSfG98HZnl
+	fa3spEE4B9Lx3Biw8u4aKiN0RG/Jx4sfVUFV5UqF2P020KBemlvAWegt+M+fgDlv
+	z9gng==
+X-ME-Sender: <xms:sODuaSiQHs67of32EGSeEF2SWSPas8NtwsoGY0MDon2JRyihN7VIvw>
+    <xme:sODuafUa6XoJWYFCq9oLG8nsA-R2m1B9lMUmH8KFS0oxrWNLlD7ZKvgLfTDXiaVA8
+    2r22mJ3s_0hp1EtFJSfWz7_hUX6ZXfvRLvTzkEMXvJ50YM>
+X-ME-Received: <xmr:sODuabs6Ss2UEBEO3_EpKEaNKfynDnLpLB5CnlpikNDT_1K-0MwN2-dlHZxmgh_-agSLA6ZQdDm_5-yP_x63-P_IZFIYnUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeikecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefhvfevufffkffojghfrhgggfestdekredtredttdenucfhrhhomheppfgvihhluehr
@@ -84,14 +84,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeijecutefuodetgg
     hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
     rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtg
     hksehsuhhsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:p-DuaYYVTCxxeELKb-4AEFGw5YCuMmARZKTxSnhSMwwcRWeegPjA-w>
-    <xmx:p-DuaU4qJQbnNnGAxbSSXFC8w50mank_9LrtRucVEPIT0D5SvOTe1g>
-    <xmx:p-DuaQnwYsiKaOS28csA3TsJ-muH4ulv_FOlR8jmQQo1n4ykUvO9qQ>
-    <xmx:p-DuaaH801ikFjnkZBO7L2zb9lxguNc_-z3XmI28q4wbIDncvSaR9Q>
-    <xmx:p-Duabwz9RWjnmNgA2XOuzVUwlXO1YefmVXAjdwGj1rRCu_hu8riHX1C>
+X-ME-Proxy: <xmx:sODuaYbCB7E6IGfG-eIbL2pJPZ-fQdz29uUNy7qVo4DhuuNvB6DGLQ>
+    <xmx:sODuaU7Te6P-bNV3NdvK-9de31bhvE_obPHsfhBlM_UEpgHN0mmrqQ>
+    <xmx:sODuaQnlHm7FmtkHMxU4pRpz_sh99ABVHvfgoWs75Z6YpTL2ghzNvw>
+    <xmx:sODuaaFN-aP0VNHczd94x9SRIkCOkAU-wQ2PQeFWbBkIczWzVGyToQ>
+    <xmx:sODuabyExQiGKMkMY0Y1o4zHNhoT5K7bsPzB0T5b4Str6tuckJNi9LKh>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Apr 2026 00:05:55 -0400 (EDT)
+ 27 Apr 2026 00:06:03 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -109,9 +109,9 @@ Cc: linux-efi@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/19] VFS: enhance d_splice_alias() to handle in-lookup dentries
-Date: Mon, 27 Apr 2026 14:01:20 +1000
-Message-ID: <20260427040517.828226-3-neilb@ownmail.net>
+Subject: [PATCH v3 03/19] VFS: allow d_alloc_name() to be used with ->d_hash
+Date: Mon, 27 Apr 2026 14:01:21 +1000
+Message-ID: <20260427040517.828226-4-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260427040517.828226-1-neilb@ownmail.net>
 References: <20260427040517.828226-1-neilb@ownmail.net>
@@ -123,7 +123,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 743A346CD8C
+X-Rspamd-Queue-Id: 0955446CDD1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -131,14 +131,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21137-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21138-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org];
@@ -157,154 +157,68 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:dkim,ownmail.net:mid]
 
 From: NeilBrown <neil@brown.name>
 
-We currently have three interfaces for attaching existing inodes to
-normal filesystems(*).
-- d_add() requires an unhashed or in-lookup dentry and doesn't handle
-  splicing in case a directory already has dentry
-- d_instantiate() requires a hashed dentry, and also doesn't handle
-  splicing.
-- d_splice_alias() requires unhashed or in-lookup and does handle
-  splicing, and can return an alternate dentry.
+efivarfs() is similar to other filesystems which use d_alloc_name(), but
+it cannot use d_alloc_name() as it has a ->d_hash function.
 
-So there is no interface that supports both hashed and in-lookup, which
-is what ->atomic_open needs to deal with.
+The only problem with using ->d_hash if available is that it can return
+an error, but d_alloc_name() cannot.  If we document that d_alloc_name()
+cannot be used when ->d_hash returns an error, then any filesystem which
+has a safe ->d_hash can safely use d_alloc_name().
 
-Some filesystems check for in-lookup in their atomic_open and if found,
-perform a ->lookup and can subsequently use d_instantiate() if the
-dentry is still negative.  Others d_drop() the dentry so they can use
-d_splice_alias().
+So enhance d_alloc_name() to check for a ->d_hash function
+and document that this is not permitted if the ->d_hash function can
+fail( which efivarfs_d_hash() cannot).
 
-This last will cause a problem for proposed changes to locking which
-require the dentry to remain hashed while and operation proceeds on it.
+Also document locking requirements for use.
 
-There is also no interface which splices a directory (which might
-already have a dentry) to a hashed dentry.  Filesystems which need to do
-this d_drop() first.
-
-Some filesystemss (NFS) skip ->lookup processes for
-  LOOKUP_CREATE|LOOKUP_EXCL
-which includes mknod, link, symlink etc.  So these inode operations
-might get an unhashed or a hashed-negative dentry.  There is no
-interface for instantiating these so against they need to unhash first.
-
-So with this patch d_splice_alias() can handle hashed, unhashed, or
-in-lookup dentries.  This makes it suitable for ->lookup, ->atomic_open,
-and ->mkdir and others.
-
-As a side effect d_add() will also now handle hashed dentries, but
-I have plans to remove d_add() as there is no benefit having it as
-well as the others.
-
-__d_add() currently contains code that is identical to
-__d_instantiate(), so the former is changed to call the later, and both
-d_add() and d_instantiate() call __d_add().
-
-* There is also d_make_persistent() for filesystems which are
-  dcache-based and don't support mkdir, create etc, and
-  d_instantiate_new() for newly created inodes that are still locked.
+This is a step towards eventually deprecating d_alloc().
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- Documentation/filesystems/vfs.rst |  4 ++--
- fs/dcache.c                       | 31 ++++++++++++-------------------
- 2 files changed, 14 insertions(+), 21 deletions(-)
+ fs/dcache.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 7c753148af88..d8df0a84cdba 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -507,8 +507,8 @@ otherwise noted.
- 	dentry before the first mkdir returns.
- 
- 	If there is any chance this could happen, then the new inode
--	should be d_drop()ed and attached with d_splice_alias().  The
--	returned dentry (if any) should be returned by ->mkdir().
-+	should be attached with d_splice_alias().  The returned
-+	dentry (if any) should be returned by ->mkdir().
- 
- ``rmdir``
- 	called by the rmdir(2) system call.  Only required if you want
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 2c61aeea41f4..789544525c56 100644
+index 789544525c56..d0a504fc62e5 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -2068,7 +2068,6 @@ static void __d_instantiate(struct dentry *dentry, struct inode *inode)
-  * (or otherwise set) by the caller to indicate that it is now
-  * in use by the dcache.
-  */
-- 
- void d_instantiate(struct dentry *entry, struct inode * inode)
- {
- 	BUG_ON(d_really_is_positive(entry));
-@@ -2822,18 +2821,14 @@ static inline void __d_add(struct dentry *dentry, struct inode *inode,
- 		dir = dentry->d_parent->d_inode;
- 		n = start_dir_add(dir);
- 		d_wait = __d_lookup_unhash(dentry);
-+		__d_rehash(dentry);
-+	} else if (d_unhashed(dentry)) {
-+		__d_rehash(dentry);
- 	}
- 	if (unlikely(ops))
- 		d_set_d_op(dentry, ops);
--	if (inode) {
--		unsigned add_flags = d_flags_for_inode(inode);
--		hlist_add_head(&dentry->d_alias, &inode->i_dentry);
--		raw_write_seqcount_begin(&dentry->d_seq);
--		__d_set_inode_and_type(dentry, inode, add_flags);
--		raw_write_seqcount_end(&dentry->d_seq);
--		fsnotify_update_flags(dentry);
--	}
--	__d_rehash(dentry);
-+	if (inode)
-+		__d_instantiate(dentry, inode);
- 	if (dir)
- 		end_dir_add(dir, n, d_wait);
- 	spin_unlock(&dentry->d_lock);
-@@ -3133,8 +3128,6 @@ struct dentry *d_splice_alias_ops(struct inode *inode, struct dentry *dentry,
- 	if (IS_ERR(inode))
- 		return ERR_CAST(inode);
+@@ -1945,12 +1945,31 @@ struct dentry *d_alloc_pseudo(struct super_block *sb, const struct qstr *name)
+ 	return dentry;
+ }
  
--	BUG_ON(!d_unhashed(dentry));
--
- 	if (!inode)
- 		goto out;
- 
-@@ -3183,6 +3176,8 @@ struct dentry *d_splice_alias_ops(struct inode *inode, struct dentry *dentry,
-  * @inode:  the inode which may have a disconnected dentry
-  * @dentry: a negative dentry which we want to point to the inode.
-  *
-+ * @dentry must be negative and may be in-lookup or unhashed or hashed.
++/**
++ * d_alloc_name: allocate a dentry for use in a dcache-based filesystem.
++ * @parent: dentry of the parent for the dentry
++ * @name: name of the dentry
 + *
-  * If inode is a directory and has an IS_ROOT alias, then d_move that in
-  * place of the given dentry and return it, else simply d_add the inode
-  * to the dentry and return NULL.
-@@ -3190,16 +3185,14 @@ struct dentry *d_splice_alias_ops(struct inode *inode, struct dentry *dentry,
-  * If a non-IS_ROOT directory is found, the filesystem is corrupt, and
-  * we should error out: directories can't have multiple aliases.
-  *
-- * This is needed in the lookup routine of any filesystem that is exportable
-- * (via knfsd) so that we can build dcache paths to directories effectively.
-+ * This should be used to return the result of ->lookup() and to
-+ * instantiate the result of ->mkdir(), is often useful for
-+ * ->atomic_open, and may be used to instantiate other objects.
-  *
-  * If a dentry was found and moved, then it is returned.  Otherwise NULL
-- * is returned.  This matches the expected return value of ->lookup.
-+ * is returned.  This matches the expected return value of ->lookup and
-+ * ->mkdir.
-  *
-- * Cluster filesystems may call this function with a negative, hashed dentry.
-- * In that case, we know that the inode will be a regular file, and also this
-- * will only occur during atomic_open. So we need to check for the dentry
-- * being already hashed only in the final case.
-  */
- struct dentry *d_splice_alias(struct inode *inode, struct dentry *dentry)
++ * d_alloc_name() allocates a dentry without any protection against
++ * races.  It should only be used in directories that do not support
++ * create/rename/link inode operations and so is particularly suited for
++ * use with simple_dir_inode_operations.  The result is typically passed
++ * to d_make_persistent().
++ *
++ * This must NOT be used by filesystems which provide a d_hash() function
++ * that can return an error.
++ */
+ struct dentry *d_alloc_name(struct dentry *parent, const char *name)
  {
+ 	struct qstr q;
+ 
+ 	q.name = name;
+ 	q.hash_len = hashlen_string(parent, name);
++	if (parent->d_flags & DCACHE_OP_HASH) {
++		int err = parent->d_op->d_hash(parent, &q);
++		if (WARN_ON_ONCE(err))
++			return NULL;
++	}
+ 	return d_alloc(parent, &q);
+ }
+ EXPORT_SYMBOL(d_alloc_name);
 -- 
 2.50.0.107.gf914562f5916.dirty
 
