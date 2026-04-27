@@ -1,274 +1,292 @@
-Return-Path: <linux-nfs+bounces-21203-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21202-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SK8HC7z372mFMwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21203-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 01:56:44 +0200
+	id GOL1Mpn272mFMwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21202-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 01:51:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 985ED47BFDD
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 01:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F353C47BF58
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 01:51:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C27FA300AB25
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 23:55:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 320BE301327F
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 23:51:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533E237C93C;
-	Mon, 27 Apr 2026 23:55:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B0E63B6C18;
+	Mon, 27 Apr 2026 23:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcuFY12v"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="Lm1wnpTM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dKYGQ7x/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52BA3B7747
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Apr 2026 23:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AA7175A81;
+	Mon, 27 Apr 2026 23:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777334138; cv=none; b=AnvRYt4+p4PpvRD1agvXe2w2zqrJquq9AGOc2+neUJr6ImisfsDe6eGG1VQiEJYe91XraHVXxIk2bNDarzLZDM4Zlf9fOGD6FusFsJoKcX4Z/MJKTG+6qFeEE4xYhER9fHDR3lzefKLhgJn0ESmp2HPVpdm2liwOVC4XmoHfGjE=
+	t=1777333889; cv=none; b=Eds9YJjzG/5C7OnnTf1EdERLenqjYpfg4nMtXsXgwZp/N/APH+Qpp+i2XQKQ1u7GXMOBjR15HovEP1/lySY9HTxIVGyFyZ+B3D+z+o1n+QxrG6sTCAOCwBu3dpTBmB97uV3q5IAbcLb6dbPS08k0oIErN1QAu1v0csX8BoEoYs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777334138; c=relaxed/simple;
-	bh=6kXywhWGRAqfZcJnUKbUhCWuhKfcPlm4r7kE4iiYotc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-version:Content-type; b=Z73w/p0ZjEDRN0lAKcr7lE9Ocz6BXg8kKPpP8WzoiSynyhvBbfFZqjMkBEScH9cJW/u9bUoBGJVJvH+suHJp3R51FyqOYXvHC5O7z+a4yDSuhZSjncYvCeW9VlR0ZgxhzEgjw0aJX2ZOSwFi9PQI3Q8Vkklxji5G6jxsnDwmX6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LcuFY12v; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c798fc1a28cso3422621a12.3
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Apr 2026 16:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777334136; x=1777938936; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:message-id:date
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zgEWh+XI0SPB+PinHXs94gFrx3gTRtQhlrntWyMIEwk=;
-        b=LcuFY12vVWO7vqr/F2eC3lhWHJSOrNATLXKt11bZknSt/jmHAxsCa2fq2Ckhzgs7NQ
-         T8QpxY+aYZ3vCgmQb9W6CSCt2LA0PDBSio0kY8RaE7Sr6SW3O00EBhl3ZZ0J6pXuLEvR
-         swqpCtV80o4ODeBpHUah5QPL6PmX0/KH6vUG0Pep/7K4KlJNbBcSE2QlcHthpQdiYZ4w
-         0xpYVlAWQSWHB0YqA33sw6Taa2E+8uRo6+Z5cql+8zkAREGDa229fEbeIrn0V4h7d4xP
-         XhmHqtO7BENBYcmIGM7OkvSZNX6Y+jW1/Ai3jO87L3H68gl7+jpqeLKDqPpVSqLvaEfA
-         ZiwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777334136; x=1777938936;
-        h=content-transfer-encoding:mime-version:references:message-id:date
-         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zgEWh+XI0SPB+PinHXs94gFrx3gTRtQhlrntWyMIEwk=;
-        b=HN0tEoOrNQIcHSd0dvK6/GR3XA0UPxeZbHCNWaJWdys3IabxuNqGqkx/fTiu1a7O2G
-         ERmDDAnfjrAb7CIhaYxqBOvcKtpJO93X2ghCYXWmye336LwAZTtRFn0FKlVogNMIiOBV
-         zGYASMBf5UPTuxDHNq7UTmVkxcJkqmEfzBmUE08et4BSjB+YgqYXGvwPd1HJmBWQQ9k0
-         00BOXUjsoe7bQLP8R9w4yrz7qXoksqeT6x7d3T7VWHyDZWwhjvNDTLq9FvkDwD+gwBxm
-         sEvj2xn9AUPvDOpO3ZRonUXTkWBU8Rc/q3QTUBFi5lukAkXpj1+AJYnvpmmzKIlqKh8b
-         RPRg==
-X-Forwarded-Encrypted: i=1; AFNElJ9xFwF7FRc4Js2Di3gfuyDwlyQQ9DgdZShWuRLYjQisRBifB0hfOjyTNprTwMKbfzQEGd9FgqIzcOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO9sB7l7fygbqTFRwakDssZH7o6bMs+8hP1uW/eJQHF9OloxWp
-	Aw5fM3E0GuzvfF0VMIyeyBZZKBvwIE3LxIckB/Ef86A285aQalOR/Zmd
-X-Gm-Gg: AeBDievxSprvbzL4LNPPBYcXWzikvKrzV/sG0qHgrCMldQohB+gQrMN3Rk3uGJ0ykAW
-	5Ka6MZUKbxuvzt4wBwrTOoBO8ova1Yde5kyOpmZajvVusi8vXYBaXfkRGh82TBbc0SiK5KOCQIP
-	QHgMpIKkpOX6v+xAZOv35hA4sg6SSvwG6TZBO/TGlKZLdDm2Qi/alDOGmPN7buZkx6pK52CyJfv
-	TgHDWJtjOPrLxonyoQYzyuKkoIB6xEElxX5ahUHwLwgqQNxHfbpsMuwwOVz8+0JQQ0jynsQXh2/
-	qMosQTsBE6Ds90gKVj+vbLTK2jgZSdRmoIGvoC3XYYVttQS1GLBJPQkFPxZj4SI4vIIFHh5f0Zh
-	fi3MSaI3ZYY8NwtiGig2I+livLuaotMZSRkkgSK1SGpbJr8VpInWDa2nsLu9m5nXVSbZvpGmh0S
-	ZuUzi7bDv6Drs5/D6+Q0yM/DAxzI+vpdyU
-X-Received: by 2002:a17:902:76c3:b0:2ae:5eee:7a5 with SMTP id d9443c01a7336-2b97c43c746mr4936135ad.12.1777334136066;
-        Mon, 27 Apr 2026 16:55:36 -0700 (PDT)
-Received: from pve-server ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b97a96cc61sm6493415ad.0.2026.04.27.16.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2026 16:55:35 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Jeff Layton <jlayton@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew
- Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, Mike
- Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
- Hocko <mhocko@suse.com>, Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>, Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] mm: kick writeback flusher for IOCB_DONTCACHE with targeted dirty tracking
-In-Reply-To: <bb418f9a7bfcabc3070b412c745c5b6456d592b9.camel@kernel.org>
-Date: Tue, 28 Apr 2026 04:56:10 +0530
-Message-ID: <jytsrnn1.ritesh.list@gmail.com>
-References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org> <20260426-dontcache-v3-2-79eb37da9547@kernel.org> <qzo1s6a4.ritesh.list@gmail.com> <bb418f9a7bfcabc3070b412c745c5b6456d592b9.camel@kernel.org>
+	s=arc-20240116; t=1777333889; c=relaxed/simple;
+	bh=mvMicDDfuQ91yWQ6x+2NhBD7HijHVbBp+TrBG6BEalI=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=uaPRhlTm52DZ1ifiwGt9ot8YhKvzZqHN73B4ayF2WEoqkMFadZcjxJLp4zLcD5Ef5+RqITY/Ot+MBGjeWEJrIZFI8tWGSKRwQGYVNeBhdHSVnNqG1KlxLCQZajJsp4753Wh5WekVcuDVUoW9eRya0T2Zh+lCDqB+xu2TEcs61w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=Lm1wnpTM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dKYGQ7x/; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 1041D14000E7;
+	Mon, 27 Apr 2026 19:51:26 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Mon, 27 Apr 2026 19:51:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1777333886; x=1777420286; bh=RLnpXWB1C4BSlXHpUNFk6dMCri7Yu5n9eIK
+	TWnvLMwI=; b=Lm1wnpTMcTE7q5vAdvhtp8zdQelEFhi1w2e8B4y/P7tvdwz5FM5
+	+4IyK4sJBaTCLgTZO3BD8o0MpCOFfTr5muLR0IvVeTi5/nSwOilpMuILNadLSto8
+	XxdGfFakL7HXlijpcSWT5Ah9FgDqjuLdMxtWKABgh39Dpx/9TB5yiyIPMtFZNUwo
+	LsAkwHgW+mxLP5Hm/qyjhxyS5hHolETwdVsk0fM8MWmsgSgqWCeclIbddSA3Tgia
+	hL2zDu1FzgTimkpfY+TGG+CMB/lce1IWlPHvNICvwaFtLG6A+Hjs5P4K1D3UpMJE
+	RkuV0HG8SOFCrdKvZ9A+meVUXXtyHMGHliQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777333886; x=
+	1777420286; bh=RLnpXWB1C4BSlXHpUNFk6dMCri7Yu5n9eIKTWnvLMwI=; b=d
+	KYGQ7x/ahproGJ2u+JGp9LJ89xSesowTB8cc6W4j+Wlws37iLIQBlGDG0rk3h+TX
+	XTFjMA+4KTUQpYiKw0fOJvUk6QbH3V6XeIiWaTn6tZhWV6kMq7PC/xv3ovUQm1tg
+	hqsn19bc+Dygmic/Dk5XqS1cHTSQJz1l/w5diUt/y5XJwTStR1WwgMaS5cgUGgXv
+	Y1JjEFNaBpH4y5N/Wc/DrzZbhnRY51br6polDpCFErdbvhYqW8hFF2rye0Oz8GWj
+	7HA+DkXlESiRoaCVQDdWzhigUSXSPWv2eeZC8l7OZJRMOcDFEMYJxNb59/JM6Buy
+	Vk/1SQVV/u/wJ/3w1yVEA==
+X-ME-Sender: <xms:fPbvaTnCihP-mJr0aqlb_j-TAkfD6bmg2zcl2dbliB__Q5UY58wNEw>
+    <xme:fPbvaTKyoSTHZrPkbeJKTdmuK_xHfY0E13OCQPbGl8MJxs6MS3-smmaFbQIwitXBw
+    iLZVEotKgh5IuA4cQZhm5MloChdKHwEDy9ZPldjFLlOYUFaqg>
+X-ME-Received: <xmr:fPbvabRt_zqGX1B907E9JA12E35RhtkliOdl5FcNkVMkdI1hZkeFvebhefXPKKdPDN8inssPdg-mAvo3C6fEgFG_N61Jf1I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdektddtiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
+    ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
+    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprh
+    gtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtg
+    hksehsuhhsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
+X-ME-Proxy: <xmx:fPbvaYsshh5MXjM7S0dgY5w476poGR35AvRdBarqOKnXoFPZSyd2hg>
+    <xmx:fPbvaW91K-jov4HMgvUgrszUFveKO46PTZLrf-JHMH3USQngYjaHQA>
+    <xmx:fPbvaRaT_IzAZxynMKJK2l8cJvNVFcxtkt2njBgHzlL_u2Z2V08vQQ>
+    <xmx:fPbvaSoXuKyLm_m0FSdIzzZrvnkDMnqskCP4CYtPd6zNbihCyHbSgA>
+    <xmx:fvbvaUXhFFDDGrc0HkM9csP-z7fqgwaB3sZGW9OhgjRDZSLZMKN3KKfE>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 27 Apr 2026 19:51:20 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-version: 1.0
-Content-type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 985ED47BFDD
+MIME-Version: 1.0
+From: NeilBrown <neilb@ownmail.net>
+To: "Amir Goldstein" <amir73il@gmail.com>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Jeff Layton" <jlayton@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Jeremy Kerr" <jk@ozlabs.org>, "Ard Biesheuvel" <ardb@kernel.org>,
+ linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/19] VFS: Add LOOKUP_SHARED flag.
+In-reply-to:
+ <CAOQ4uxiMUKHuGwpSkD=M4Z_QLxHn7Os9vaaWqAWd36HdfDRYuQ@mail.gmail.com>
+References: <20260427040517.828226-1-neilb@ownmail.net>
+  <20260427040517.828226-8-neilb@ownmail.net>
+  <CAOQ4uxi8rqkbhK4=8N1ncfU1m6bjdHLbinSf=j3k0oVEaSa-wA@mail.gmail.com>
+  <177727962988.1474915.2841674553452335690@noble.neil.brown.name>
+  <CAOQ4uxiMUKHuGwpSkD=M4Z_QLxHn7Os9vaaWqAWd36HdfDRYuQ@mail.gmail.com>
+Date: Tue, 28 Apr 2026 09:51:15 +1000
+Message-id: <177733387513.1474915.8575818212511266099@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
+X-Rspamd-Queue-Id: F353C47BF58
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21203-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21202-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[riteshlist@gmail.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,messagingengine.com:dkim,noble.neil.brown.name:mid]
 
-Jeff Layton <jlayton@kernel.org> writes:
+On Mon, 27 Apr 2026, Amir Goldstein wrote:
+> On Mon, Apr 27, 2026 at 10:47=E2=80=AFAM NeilBrown <neilb@ownmail.net> wrot=
+e:
+> >
+> > On Mon, 27 Apr 2026, Amir Goldstein wrote:
+> > > On Mon, Apr 27, 2026 at 6:06=E2=80=AFAM NeilBrown <neilb@ownmail.net> w=
+rote:
+> > > >
+> > > > From: NeilBrown <neil@brown.name>
+> > > >
+> > > > Some ->lookup handlers will need to drop and retake the parent lock, =
+so
+> > > > they can safely use d_alloc_parallel().
+> > > >
+> > > > ->lookup can be called with the parent lock either exclusive or share=
+d.
+> > > >
+> > > > A new flag, LOOKUP_SHARED, tells ->lookup how the parent is locked.
+> > > >
+> > > > This is rather ugly, but will be gone soon after we move
+> > > > d_alloc_parallel() out of the directory lock as ->lookup() will *alwa=
+ys*
+> > > > called with a shared lock on the parent.
+> > >
+> > > Neil,
+> > >
+> > > Forgive me for being skeptical about the *always* part.
+> >
+> > Scepticism should always be encouraged.
+> >
+> > >
+> > > How long ago did we add ->iterate_shared()?
+> > >
+> > > It's true that Linus eventually got rid of ->iterate(), but we did not
+> > > get rid of the assumption that iterate_shared() might be upgraded
+> > > to exclusive lock.
+> > >
+> > > The obvious reason is that *someone* needs to do this work for
+> > > old filesystems, which are also hard to test and nobody wants to
+> > > touch them.
+> > >
+> > > I have nothing against this patch, but I think it is more realistic
+> > > to state that LOOKUP_SHARED is here to stay, so if you think it
+> > > is too ugly, maybe there is something to be done about it.
+> > > Personally, I do not see the ugliness though.
+> > >
+> > > Am I misjudging the situation of shared lookup wrt old filesystems?
+> >
+> > Yes.
+> > All filesystems must support ->lookup with a shared lock because it is
+> > already the case that with a simple lookup only a shared lock is provided.
+> > A filesystem *could* examine the lookup_flags and deduce if the lock is
+> > actually exclusive (e.g.  if LOOKUP_CREATE is set) and misbehave
+> > accordingly, but a vanishing small number of filesystems  (NFS and ....
+> > I can't think of any others) ever look at the lookup_flags and I'm
+> > certain none do anything so ... creative.
+> >
+> > So I'm certain that it is safe from the filesystem's perspective to always
+> > call with only a shared lock.  All that is needed is to change the VFS
+> > to only ever do that.  That means separating the lock for lookup from
+> > the lock for create/remove/move in directory ops, and one way to view
+> > the current patch set (the complete one, not just this initial set) is
+> > that it does exactly that.
+> >
+>=20
+> I see.
+> I will remain skeptical, because there is always *something* with some
+> special filesystems - think fuse servers (not under your control) which
+> have grown to rely on the kernel to serialize atomic_open() on the director=
+y -
+> but the level of skepticism is lower now ;)
 
->> 
->> Also should the following change be documented somewhere? Like in Man
->> page maybe? i.e.
->> Earlier RWF_DONTCACHE writes made sure that those dirty pages are
->> immediately submitted for writeback and completion would release those
->> pages. But now, in certain cases when there is a mixed buffered write in
->> the system, those dontcache dirty pages might be written back after a
->> delay (whenever the next time writeback kicks in).
->> However for RWF_DONTCACHE reads, it should not affect anything.
->> 
->
-> Looks like DONTCACHE is documented in the preadv/writev manpage. Here's
-> the current blurb about writes:
->
->     Additionally, any range dirtied by a write operation with RWF_DONT‐
->     CACHE  set  will  get kicked off for writeback.  This is similar to
->     calling  sync_file_range(2)  with  SYNC_FILE_RANGE_WRITE  to  start
->     writeback on the given range.  RWF_DONTCACHE is a hint, or best ef‐
->     fort,  where  no hard guarantees are given on the state of the page
->     cache once the operation completes.
->
-> I don't think this verbiage is invalid after this change. Kicking off
-> writeback is still just a hint, like it was before. We could mention
-> about how that I/O can compete with regular buffered I/O, but it seems
-> a bit like we're adding info that will just be confusing for users.
->
+atomic_open is different from lookup!
+atomic_open already gets an exclusive lock if LOOKUP_CREATE, otherwise a
+shared lock.  That won't change.
 
-Make sense.
+So if an atomic_open handler wants to drop and retake the directory
+lock, it can switch on LOOKUP_CREATE.  If it wants to call d_add_ci()
+from atomic_open (which is credible in the non-CREATE case) it would
+need to be careful.
+But no current users of d_add_ci() (xfs and ntfs) support atomic_open.
 
->> > dontcache-bench results on dual-socket Xeon Gold 6138 (80 CPUs, 256 GB
->> > RAM, Samsung MZ1LB1T9HALS 1.7 TB NVMe, local XFS, io_uring, file size
->> > ~503 GB, compared to a v6.19-ish baseline):
->> > 
->> 
->> Can we please also test parallel buffered writes and dontcache writes? 
->> Since this patch series definitely affects that.
->>
->> BTW - adding these numbers in the commit msg itself is much helpful.
->> 
->
-> To be clear, this only affects DONTCACHE, not normal buffered writes,
-> but I guess you're referring to the fact that DONTCACHE and buffered
-> writes can compete now.
->
-> Can you clarify specifically what you'd like me to test here? Are you
-> saying you want me to test parallel and buffered writes together at the
-> same time (i.e. make them compete?).
->
-> I should be able to do that for the local benchmarks, but nfsd's iomode
-> settings are global and that won't be possible there.
->
+This proposed practice of dropping and retaking the directory lock is a
+transitional arrangement only.
+Eventually we will get to:
 
-The reason I am thinking of this is: dontcache marked pages, gets
-evicted from page cache after they are written back. But this patch
-series can now delay that from happening when there is a parallel
-buffered writer dirtying page cache pages. Because of the reasons we
-already discussed...
+ inode_lock_shared()
+ ->lookup()
+ inode_unlock_shared()
 
-Note that, this may not be a workload which matters in the real world,
-but I was thinking, it will be good to know the impact if any, of such
-workload with this patch series (parallel buffered and dontcache
-writers).
+and that will change to simple
+
+  ->lookup()
+
+with
+
+  foo_lookup()
+  {
+     inode_lock_shared(parent)
+
+     do the lookup
+
+     inode_unlock_shared(parent)
+  }
+
+and then if "do the lookup" calls d_add_ci() or otherwise needs to drop
+the lock, the code that needs to be unlocked gets moved after the
+inode_unlock_shared() and we won't need to take the lock again.
+
+So ultimately the fs will be completely responsible for any
+directory-wide locks that it might want to take.
+
+fuse would be well advised to keep the directory exclusive locked across
+upcalls unless the server has advised that the lock isn't needed.
+
+Thanks,
+NeilBrown
 
 
->> >   Single-client sequential write (MB/s):
->> >                        baseline    patched     change
->> >   buffered              1449.8     1440.1      -0.7%
->> >   dontcache             1347.9     1461.5      +8.4%
->> >   direct                1450.0     1440.1      -0.7%
->> > 
->> >   Single-client sequential write latency (us):
->> >                        baseline    patched     change
->> >   dontcache p50         3031.0    10551.3    +248.1%
->> >   dontcache p99        74973.2    21626.9     -71.2%
->> >   dontcache p99.9      85459.0    23199.7     -72.9%
->> > 
->> >   Single-client random write (MB/s):
->> >                        baseline    patched     change
->> >   dontcache              284.2      295.4      +3.9%
->> > 
->> >   Single-client random write p99.9 latency (us):
->> >                        baseline    patched     change
->> >   dontcache             2277.4      872.4     -61.7%
->> > 
->> >   Multi-writer aggregate throughput (MB/s):
->> 
->> Can you please help describe this test scenario if possible.. In above
->> you mentioned we are writing file_size as 2x RAM_SIZE. But your
->> multi-client tests says something else..
->> 
->> local num_clients=4
->> +	mem_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
->> +	client_size="$(( mem_kb / 1024 / num_clients ))M"
->> 
+>=20
+> I mean it would suck pretty badly if locking order would be fs_type dependa=
+pt,
+> but honestly, I do not think we will be able to avoid that, so we need to
+> make sure that humans and lockdep are able to understand the different
+> scopes of vfs locking at least per filesystem type.
+>=20
+> Thanks,
+> Amir.
+>=20
 
-I guess you missed answering this. The reason why I was asking about this is....
-
->> >                        baseline    patched     change
->> >   buffered              1619.5     1611.2      -0.5%
->> >   dontcache             1281.1     1629.4     +27.2%
->> >   direct                1545.4     1609.4      +4.1%
->> > 
-
-... If we see the performace of buffered and dontcache in baseline case,
-then we don't see dontcache doing any good. Even the patched version is
-just slightly better compared to buffered case.
-
-But IIUC, dontcache should really shine in cases where we have buffered
-writers dirtying the page cache pages which can overflow the RAM size
-[1]. The reason why dontcache should show benefit there is, because we
-don't see any page cache pressure, since after writeback the pages gets
-evicted. Also earlier in the unpatched version, the I/O submission
-happens immediately in the same context.
-
-So, I guess, isn't it better to evaluate those scenarios as well with
-the patched version - since this series affects those code paths now?
-
-[1]: https://lore.kernel.org/all/20241110152906.1747545-11-axboe@kernel.dk/
-
->> 
->> Nice :)
->> Some explaination here of why 5x improvement with NFS compared to local
->> filesystems please?
->> (I am not much aware of NFS side, but a possible reasoning would help)
->> 
->
-> I suspect that it's because of the "scattered" nature of nfsd writes.
-> When the client sends a write to nfsd, we wake a nfsd thread to service
-> it. So, if there are a lot of writes operating in parallel, they all
-> get done in the context of different tasks.
->
-> My hunch is that this I/O pattern (writing to same file from a bunch of
-> different threads), particularly suffers from the DONTCACHE inline
-> write behavior. The threads all end up competing to submit jobs to the
-> queue and that causes the performance to fall off sharply.
->
-
-Thanks!
-
--ritesh
 
