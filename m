@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-21143-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21144-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id INeFKNHh7mkdzQAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21143-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:10:57 +0200
+	id 0IsROPrg7mkdzQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21144-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:07:22 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 104B846CEE2
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:10:57 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62E0246CD97
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 06:07:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6FD96300DDC3
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 04:07:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BEA0930021FD
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 04:07:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF7D367F4A;
-	Mon, 27 Apr 2026 04:07:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D704427A916;
+	Mon, 27 Apr 2026 04:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="gFsra7bG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VHvOX9fH"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="H27rvNOb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DWDgnrtG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299912877DE;
-	Mon, 27 Apr 2026 04:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDF023EAB3;
+	Mon, 27 Apr 2026 04:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777262828; cv=none; b=K9MoLvfU1emwgJOHjZ6nhfCA7WKTiR1YxKsPG1lVG+bs0GgxHqyGSTHXNy+uALoBfYtXBebymx8HHsG6yuirSMc+VIJkViXjZVNdu7dAY3QJLBenC2GsXk7Fto8eppMag8uioEDz18vx6hP8kYZebSZWZgpLWdtOYWsAlb0akk4=
+	t=1777262836; cv=none; b=cu2likyR0tg0jiyGpWdHEwXa+EY0+WPGul+gnR2OHg+K6meAccqetOvl8M0GLzC3AT6OrZOZ8We4FG4XYioS1CgW3vvUDxpe5K4MhNuyshrreenfCKz5dBjvx5FA49DUenE4ISffgqp+5snnqxiTW5LQ/SVF6IuGBHyWHGEmGNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777262828; c=relaxed/simple;
-	bh=yRP77MAWO+gIHiR84B9F5QCRIoLxg6i5LGDL4a/5i6Y=;
+	s=arc-20240116; t=1777262836; c=relaxed/simple;
+	bh=n0RBYhb1fP4ASV0zBA39c1ZPWM/TE8hrkDBaS0wQeV0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cveACFqVrStfrwJRe6S/fBbj/N7mrgH508JKNbnxqrF1WsUGUwwvEQex8WBu4OYABB16VCvsVZBqfHE7KGOVvG8JC+9WbKqK+wPdvWaQsBeOk1jZVthx/YxCZOhTjxYZuMMgYCp6RivTRBgU9aKQHrbqZtJgdabLjrm9zr4/6wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=gFsra7bG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VHvOX9fH; arc=none smtp.client-ip=103.168.172.151
+	 MIME-Version; b=HPWAWTh4catKJSqf061PW1QGhOL4eY80CgQFrkkIzvh+fc3YHrm0tgMy2KYGt6KjmUtGdFT3ooyEdRsn0dB3V0waIGisOnV/rR2tcO/k63A+b8IwV8wzeAmRL3bQST5woOjcP0jHjm0exclYzrFQFn6srzAJr8jsS1JevoR+vZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=H27rvNOb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DWDgnrtG; arc=none smtp.client-ip=103.168.172.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id 6639DEC03EF;
-	Mon, 27 Apr 2026 00:07:06 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 27 Apr 2026 00:07:06 -0400
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 7BEE2EC03EF;
+	Mon, 27 Apr 2026 00:07:14 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Mon, 27 Apr 2026 00:07:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777262826;
-	 x=1777349226; bh=zdXjCv6aJzC4DSxkackOkKHCbtNaMCphdlTQdbSEugA=; b=
-	gFsra7bGf8UMphMuVAxQbRumNM2bR54fpb1xKK6YnsEfaCaRV24mMFdXlNG/913p
-	zcRz+P+ly7tUcssyb8Mx/d3tDnKfMh/12U8q7jwIZuK0UEa30oaQruZuE57HauNC
-	UiJI9EfjfHf85zJcjydqi6Qt+rxWroqYGhCXNP0qHgKHWOOPNZXoyomcpd8S/wSw
-	z7/uqmFge1lkkTqUzq0ywuFXM+DXH4JP9YEV9wmIb2IzGWkWJ6iAR0DgVTela8FE
-	PPVwDiYEnMhe2P3Ti/vGiWeeQ65VcYSXAZfrHRPZXY1lrmeZvs0xWkivaARdl4VV
-	jhdWGBxeU4CrLNcWzwlv0Q==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777262834;
+	 x=1777349234; bh=GR1euGmhNh9kvDlUiHAfiXoej5uoUlhCzq+/NqNURu4=; b=
+	H27rvNObQ8Zyp8Ja3r/knWAtvfb0Q0LVCUftkmRqXxl/cGdfwuU9SKy6KXEchJHy
+	L6eUrhCaOywiFf9vIvvZL4CxP6efvDIbzGCLsG5OPaaeLHmzOIC5tG+uuJakfcDo
+	Kf4VoDzVfF3OSR1SW9rvM0XARsgX2ifdIu2mSFH4BmGvvlgisW5IQxtJzYyHxacE
+	QB5A+RDBU+1qrBpf50O6EesZhGn/QJ825lIUtp9YIK3+N64L6f6qSO/XMXZbndyl
+	01AGFxFCXoQMyUuhurhioTOPPdfHRtbp8k7EFfBgaYpDQcxbJrOh1lVx+OKEerxI
+	/Rk3q8W7Iw/+0dgb5gTwRA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1777262826; x=1777349226; bh=z
-	dXjCv6aJzC4DSxkackOkKHCbtNaMCphdlTQdbSEugA=; b=VHvOX9fHObbSZZud6
-	RHElDtw62QGF62utVH+AXLsBO7NQxYgcZuZZ6Ib2omPOFXu8YVdiPwN3B0tXEUQk
-	VFq2eaQH3Fml8ouh4jMz6+zy4hxfvv/SON0CUWPuE6eTLkri5KmT6N63gocftsJQ
-	ZOcZbwM7DmwY0QpyNzJaPTKvWjEDv4Mz2lWMDnxcSz7lJjLgYtnLuHQclD3vFc13
-	FAB6p55Ze6hdZoepq7mSqufHH+AkLhucC8AZkE3a/vWN6q9nbrxmniPFL3Tbktko
-	kHWzp7QjXeX14U7TBSymVaAIlHrK0xxVFHfTXSYE9ch4rDWQeLOAGaRBx/bcJ9Y4
-	YrQ8w==
-X-ME-Sender: <xms:6uDuabMc51kjUItboBnhRI9MWWoU1KNtkn6xsbsVMuD9WXk6KAzEqQ>
-    <xme:6uDuaSTUtUfqssVWHIHgctgDClSMnl06qzZI6-sDd3zLUGDRTssPqaf-1hZI_J4Gj
-    vU1TIz3TPwyQ9X0zBxWAYPlnTiLUZLPvwo7Ze5BtvzRv2MaGw>
-X-ME-Received: <xmr:6uDuab5NKWhiL3Hy3O06DfjFRlBzQtE766XBHB_1RZablPb-xXNt2gwDPbD5YOIsI7mOQ0e_NIhF6icopXWTSY96u1SAs9s>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1777262834; x=1777349234; bh=G
+	R1euGmhNh9kvDlUiHAfiXoej5uoUlhCzq+/NqNURu4=; b=DWDgnrtGnH50h2Blx
+	zAJyKUyiWcwokHQ4hrxKEUCVCvgY5iJjySZUmrpVnH3vPP+O4SZxgK6xFWUbGJPK
+	GZ9ejRJg1/iKzVcjp1xMaNWjamTSAd6VAb6loXeaJGFjhiNCj8ckn5qo765MEMbE
+	mOte97paDYoTzZnxTP77xOVSsaS9pHm7Cy0rj1pEJxxUWrBU0pmdPhdyto7JWs7W
+	rT0wAqX9IIMBka4dP1w8xFbIRh7Ho4A/C/eXWUukmSwOy+dN7vGpDDPRg7+157fs
+	un+T2D7Mbh2otpMaqaoP47zlw5nC4U62TsNbq8uMh99IzSZ7ke1ffZXrZ3KppHX5
+	f74rQ==
+X-ME-Sender: <xms:8uDuaUeDcU8zBpXVTYjMs4Ktq_ZoMAd-i-1SLCrO-v6bru-nWKO3FQ>
+    <xme:8uDuaaVRsCBZO1KThd18ibPmfZ1rHtdVGU4gpOv5P1e69CwGBbEjD0mSweIzYBADx
+    wX6owVnr85q6TaQK9dwe6gLrS8WC8ILUGWvoosQ5Masp5U6>
+X-ME-Received: <xmr:8uDuaSjAzfd6bDI_EWSoFIAYfz4T8eLk_Vbbq5nrNlojPZ7HfAisknHtFRfquE0lH9KFkTFI1IPb7qKayx_V1SVN6rCn4KA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeikecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
@@ -84,14 +84,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeikecutefuodetgg
     hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
     rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtg
     hksehsuhhsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:6uDuac2M2y3rt7ZmNULvzlh8mqGhKp82IvSQJd70HzLzUqciA0O-zg>
-    <xmx:6uDuaYm92ByPoKK4TPsDP_5Km6YLNgTwXGdYse88dvK6hkIIe56gnA>
-    <xmx:6uDuaSiig63ooLAF438nqT9qvr_vHZWnj1Dyi5m-uyaubeCmJy_Qzg>
-    <xmx:6uDuadStW17gYQj2aLCepR_jAtQjslrguPKky_WaEZ-IAapWvJ-8Aw>
-    <xmx:6uDuaeQwY_ds6H_c_o1F575aXP1RZ15exPsmVi8_PKTtUxKsCZ5CPIFD>
+X-ME-Proxy: <xmx:8uDuaUhdAPXj-OYhz0xo-SJjJYEve9x06C01qqvrnLaSYiX1nY2C4g>
+    <xmx:8uDuaXtA_DVsgm-0dBQkxo9GC20t8az6ZgE_jymLEZshnWBUyUsKwg>
+    <xmx:8uDuaSupecb0plY5bKr-szEsnTzfQuCHZXxDASM3bwSZLKzbuSyDdA>
+    <xmx:8uDuaQNFlqqgjattC1q0E3lphqLwmwTJ_xffIp0LWs8RJ4xx8L2KjQ>
+    <xmx:8uDuaXygpAp7FeDc9dfBDK0N4nEIkL_KyjKYn8LFg5J0f38Jch8wK5ww>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Apr 2026 00:07:01 -0400 (EDT)
+ 27 Apr 2026 00:07:09 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -109,9 +109,9 @@ Cc: linux-efi@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/19] VFS/xfs/ntfs: drop parent lock across d_alloc_parallel() in d_add_ci()
-Date: Mon, 27 Apr 2026 14:01:26 +1000
-Message-ID: <20260427040517.828226-9-neilb@ownmail.net>
+Subject: [PATCH v3 09/19] ovl: stop using lookup_one() in iterate_shared() handling.
+Date: Mon, 27 Apr 2026 14:01:27 +1000
+Message-ID: <20260427040517.828226-10-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260427040517.828226-1-neilb@ownmail.net>
 References: <20260427040517.828226-1-neilb@ownmail.net>
@@ -123,7 +123,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 104B846CEE2
+X-Rspamd-Queue-Id: 62E0246CD97
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -131,14 +131,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21143-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21144-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org];
@@ -157,138 +157,105 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ci_name.name:url,messagingengine.com:dkim,brown.name:replyto,brown.name:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:dkim,ownmail.net:mid]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,messagingengine.com:dkim,ownmail.net:dkim,ownmail.net:mid]
 
 From: NeilBrown <neil@brown.name>
 
-A proposed change will invert the lock ordering between
-d_alloc_parallel() and inode_lock() on the parent.
-When that happens it will not be safe to call d_alloc_parallel() while
-holding the parent lock - even shared.
+lookup_one() is expected to be removed as it does not fit well with
+proposed changes to directory locking.
+Specifically d_alloc_parallel() will be ordered outside of i_rwsem
+and as iterate_shared() is called with i_rwsem held it is not safe
+to call d_alloc_parallel().
 
-We don't need to keep the parent lock held when d_add_ci() is run - the
-VFS doesn't need it as dentry is exclusively held due to
-DCACHE_PAR_LOOKUP and the filesystem has finished its work.
+We can instead call d_alloc_noblock() and then call the ->lookup, but
+that can fail if there is a lookup attempt concurrent with the
+readdir().
 
-So drop and reclaim the lock (shared or exclusive as determined by
-LOOKUP_SHARED) to avoid future deadlock.
+ovl cannot afford for the lookup to fail as that could produce incorrect
+results, and it cannot safely drop i_rwsem temporarily and that could
+introduce races with handling of the directory cache.
+
+Instead we rely on the fact that ovl_iterate() has an exclusive lock on
+the directory, so any concurrent lookup will wait for the ovl_iterate()
+call to complete.  We allocate a separate dentry and if the lookup is
+successful, it is hashed with the result.
+
+When the concurrent lookup gets i_rwsem it mustn't do its own lookup -
+it must use the existing dentry.  This is found, if it exists, using
+try_lookup_noperm().
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/dcache.c            | 18 +++++++++++++++++-
- fs/ntfs/namei.c        |  4 +++-
- fs/xfs/xfs_iops.c      |  3 ++-
- include/linux/dcache.h |  3 ++-
- 4 files changed, 24 insertions(+), 4 deletions(-)
+ fs/overlayfs/namei.c   | 12 ++++++++++++
+ fs/overlayfs/readdir.c | 24 ++++++++++++++++++++++--
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index 569a8ddf4c0d..a2ddfe811df3 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -2294,6 +2294,7 @@ EXPORT_SYMBOL(d_obtain_root);
-  * @dentry: the negative dentry that was passed to the parent's lookup func
-  * @inode:  the inode case-insensitive lookup has found
-  * @name:   the case-exact name to be associated with the returned dentry
-+ * @bool:   %true if lookup was performed with LOOKUP_SHARED
-  *
-  * This is to avoid filling the dcache with case-insensitive names to the
-  * same inode, only the actual correct case is stored in the dcache for
-@@ -2306,7 +2307,7 @@ EXPORT_SYMBOL(d_obtain_root);
-  * the exact case, and return the spliced entry.
-  */
- struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
--			struct qstr *name)
-+			struct qstr *name, bool shared)
- {
- 	struct dentry *found, *res;
+diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+index ca899fdfaafd..69032eb2b1e2 100644
+--- a/fs/overlayfs/namei.c
++++ b/fs/overlayfs/namei.c
+@@ -1385,6 +1385,7 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
+ 	struct ovl_fs *ofs = OVL_FS(dentry->d_sb);
+ 	struct ovl_entry *poe = OVL_E(dentry->d_parent);
+ 	bool check_redirect = (ovl_redirect_follow(ofs) || ofs->numdatalayer);
++	struct dentry *alias;
+ 	int err;
+ 	struct ovl_lookup_ctx ctx = {
+ 		.dentry = dentry,
+@@ -1399,6 +1400,17 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
+ 	if (dentry->d_name.len > ofs->namelen)
+ 		return ERR_PTR(-ENAMETOOLONG);
  
-@@ -2319,6 +2320,17 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
- 		iput(inode);
- 		return found;
- 	}
 +	/*
-+	 * We are holding parent lock and so don't want to wait for a
-+	 * d_in_lookup() dentry.  We can safely drop the parent lock and
-+	 * reclaim it as we have exclusive access to dentry as it is
-+	 * d_in_lookup() (so ->d_parent is stable) and we are near the
-+	 * end ->lookup() and will shortly drop the lock anyway.
++	 * The existance of this in-lookup dentry might have forced
++	 * readdir to do the lookup with a new dentry.  If so we must
++	 * return that one.
 +	 */
-+	if (shared)
-+		inode_unlock_shared(d_inode(dentry->d_parent));
-+	else
-+		inode_unlock(d_inode(dentry->d_parent));
- 	if (d_in_lookup(dentry)) {
- 		found = d_alloc_parallel(dentry->d_parent, name);
- 		if (IS_ERR(found) || !d_in_lookup(found)) {
-@@ -2332,6 +2344,10 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
- 			return ERR_PTR(-ENOMEM);
++	alias = try_lookup_noperm(&QSTR_LEN(dentry->d_name.name,
++					    dentry->d_name.len),
++				  dentry->d_parent);
++	if (alias && !IS_ERR(alias))
++		return alias;
++
+ 	with_ovl_creds(dentry->d_sb)
+ 		err = ovl_lookup_layers(&ctx, &d);
+ 
+diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
+index 1dcc75b3a90f..e03b32491941 100644
+--- a/fs/overlayfs/readdir.c
++++ b/fs/overlayfs/readdir.c
+@@ -574,8 +574,28 @@ static int ovl_cache_update(const struct path *path, struct ovl_cache_entry *p,
  		}
  	}
-+	if (shared)
-+		inode_lock_shared(d_inode(dentry->d_parent));
-+	else
-+		inode_lock_nested(d_inode(dentry->d_parent), I_MUTEX_PARENT);
- 	res = d_splice_alias(inode, found);
- 	if (res) {
- 		d_lookup_done(found);
-diff --git a/fs/ntfs/namei.c b/fs/ntfs/namei.c
-index 10894de519c3..30dddef43300 100644
---- a/fs/ntfs/namei.c
-+++ b/fs/ntfs/namei.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/exportfs.h>
- #include <linux/iversion.h>
-+#include <linux/namei.h> // for LOOKUP_SHARED
- 
- #include "ntfs.h"
- #include "time.h"
-@@ -310,7 +311,8 @@ static struct dentry *ntfs_lookup(struct inode *dir_ino, struct dentry *dent,
- 		}
- 		nls_name.hash = full_name_hash(dent, nls_name.name, nls_name.len);
- 
--		dent = d_add_ci(dent, dent_inode, &nls_name);
-+		dent = d_add_ci(dent, dent_inode, &nls_name,
-+				!!(flags & LOOKUP_SHARED));
- 		kfree(nls_name.name);
- 		return dent;
- 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 325c2200c501..f03d832f1468 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -35,6 +35,7 @@
- #include <linux/security.h>
- #include <linux/iversion.h>
- #include <linux/fiemap.h>
-+#include <linux/namei.h> // for LOOKUP_SHARED
- 
- /*
-  * Directories have different lock order w.r.t. mmap_lock compared to regular
-@@ -369,7 +370,7 @@ xfs_vn_ci_lookup(
- 	/* else case-insensitive match... */
- 	dname.name = ci_name.name;
- 	dname.len = ci_name.len;
--	dentry = d_add_ci(dentry, VFS_I(ip), &dname);
-+	dentry = d_add_ci(dentry, VFS_I(ip), &dname, !!(flags & LOOKUP_SHARED));
- 	kfree(ci_name.name);
- 	return dentry;
- }
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 3991f9988599..662b98185337 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -263,7 +263,8 @@ struct dentry *d_duplicate(struct dentry *dentry);
- /* weird procfs mess; *NOT* exported */
- extern struct dentry * d_splice_alias_ops(struct inode *, struct dentry *,
- 					  const struct dentry_operations *);
--extern struct dentry * d_add_ci(struct dentry *, struct inode *, struct qstr *);
-+extern struct dentry * d_add_ci(struct dentry *, struct inode *, struct qstr *,
-+				bool);
- extern bool d_same_name(const struct dentry *dentry, const struct dentry *parent,
- 			const struct qstr *name);
- extern struct dentry *d_find_any_alias(struct inode *inode);
+ 	/* This checks also for xwhiteouts */
+-	this = lookup_one(mnt_idmap(path->mnt), &QSTR_LEN(p->name, p->len), dir);
+-	if (IS_ERR_OR_NULL(this) || !this->d_inode) {
++	this = d_alloc_noblock(dir, &QSTR_LEN(p->name, p->len));
++	if (this == ERR_PTR(-EWOULDBLOCK)) {
++		/*
++		 * Some other thead is looking up this name and will
++		 * block on i_rwsem before it can complete the lookup.
++		 * We will do the lookup in a new dentry and when that
++		 * lookup gets a turn it will find and return this
++		 * dentry.
++		 */
++		this = d_alloc_name(dir, p->name);
++	}
++	if (!IS_ERR(this) && !d_unhashed(this)) {
++		/* Either we got an in-lookup or we made our own unhashed */
++		struct dentry *alias = ovl_lookup(dir->d_inode, this, 0);
++
++		if (alias) {
++			d_lookup_done(this);
++			dput(this);
++			this = alias;
++		}
++	}
++	if (IS_ERR(this) || !this->d_inode) {
+ 		/* Mark a stale entry */
+ 		p->is_whiteout = true;
+ 		if (IS_ERR(this)) {
 -- 
 2.50.0.107.gf914562f5916.dirty
 
