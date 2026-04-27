@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-21132-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21133-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eC4AEzfa7mkPygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21132-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:38:31 +0200
+	id mMRGL0Da7mkPygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21133-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:38:40 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C73546C742
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:38:30 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 751F146C769
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:38:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4EE383002F72
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 03:38:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C839B300B871
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 03:38:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFAB36074F;
-	Mon, 27 Apr 2026 03:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 951EA35E92B;
+	Mon, 27 Apr 2026 03:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="r6/kzYCF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ngs6EhWZ"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="hijXe/p5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eWDh03XU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2AA35E92B;
-	Mon, 27 Apr 2026 03:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2E335F5F8;
+	Mon, 27 Apr 2026 03:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777261103; cv=none; b=Wd5WyW6WfXcVY7MBk9vZN8Mf3hjEwqB56/yFgMJdNEbDU7qPq10rs2BfW6NPF2BbBFoJisvOuyQgf5V1FbkIB6O3xLPm1Sz9TWhlMhHTyAxUj0z7MCQteNJRmPrgHDviJakvpBHbsi28ThhSNiL6trGhn/0Fdp6NTF0sKzn/ZY0=
+	t=1777261110; cv=none; b=aS1xE70X30czKoKcek2Vxk5gIRLXwvcxZp3PR6T21fd7r6NOt01cCUS8nRLYN3AU1KM/vxAe6823QYCJg0jy8pwxIqZ0habhzFX21Gf270Iokhd8Gme1PEe92H7d3HhFDi2gD8Eo/mLwubdv/3f91cwEtGqwro09ICacHI0QH2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777261103; c=relaxed/simple;
-	bh=WZ7UveSYOpovothb9tiW51mp2dtPIr+PjSBgGKNYxBk=;
+	s=arc-20240116; t=1777261110; c=relaxed/simple;
+	bh=OZQWUCnhioPXbHh6CEr0ZrXkezJBRAJa3irRrT0VBn8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZfelDsM/xlqvUAn+aEJ3SdkF4ZzNPnlVsOgd8gsL8/CJNvsjoWv4TM2RcM9NHAZqvzZ6E03iELPcMMEVI98uZekK5SQ+oRlIjnFc7SoWjB+yx9Yug2G3Wr4uIX8BprIg6T2xCvpu14r/c+sxm3o/WFXBWdA2KGGJg2SszaZu180=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=r6/kzYCF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ngs6EhWZ; arc=none smtp.client-ip=103.168.172.146
+	 MIME-Version; b=EO+hQNC0C3UfUkV9TSzPkSk68ePC0RADfOtZdwyi7NsgNiN1HJG6swvZr1ca+QGltgiiU+77zASxi7CNyJejip2GrbLtEmYXsj69MgaKIO1F7mYIhkhtkTmxTYetzzx+221CoFIpoeY9slc4QjTqFHbYdO2aHv96I3qv5ISPhEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=hijXe/p5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eWDh03XU; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id BFA70EC033E;
-	Sun, 26 Apr 2026 23:38:21 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Sun, 26 Apr 2026 23:38:21 -0400
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 9205D14000D4;
+	Sun, 26 Apr 2026 23:38:28 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Sun, 26 Apr 2026 23:38:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777261101;
-	 x=1777347501; bh=qNsDUPxIIaAA/63Z6to/nWQPQowfPrhVEFZuvx5A43o=; b=
-	r6/kzYCFAquTeO1wlwvjKxCsUOW7TMSQNtGPG6AKh+5TIpty1dMOfRoHnPowMVBY
-	6LAJ4LRW5MJ1493OfTwiRePIZtXCe+4ozcHOecAA3SIKwkeVLSHMotLxccE55y8C
-	QlDES/TEsl3lT1DhRBAHEEQv63ehnD0wYi3lE5nWCwr9Nt+qBhq4cX8VpGrei2LK
-	GEM/Ee/3szdPdqRpJAQ3foU63YchCNm2YDdA6METDQ61tG+4/C9HGuiUsSoir9mH
-	aAvlD30rL0vXFetx6uaGWsydkRtLKCfKOs24HjwaZa06teNd1CHMi93ZpjnNVJvW
-	qeu1GUOXC64DdKyj56AA6w==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777261108;
+	 x=1777347508; bh=d0uUDizqtFn5TUR93S5pcu2hPzZI0J+S0qM13hNSWw4=; b=
+	hijXe/p59lm5VAyWu4/5fOUPxLG5POT3G2UwtwwdHk2CTFvOrQathIVCy8jXGjt1
+	S8zp7cLunv7fYOGqWQ6DKXfpFB65hdktuyCJnUTIlMTyiMWktO28uxZk+GUWqDBo
+	m7l2jBdSL4Ll7YT0lJuMZTt0rm3juh2KvEX+16N1jRp4zx0QX+leMW/VF+LSlhOs
+	wYUwx6TLjPFS/5zm3WjZCuLRyMCqJD0Vu58q4mjLZrxmaj2YvuZKngnhHgRnRZfX
+	SqAIN+qRzSZCD/dT0TchjQRGeP+n8hl+fwFj1ZXzH3Z/k7P5dYqT9DDkDsbNg9wX
+	U2kEe9XauFjWOd2fZ9trfw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1777261101; x=1777347501; bh=q
-	NsDUPxIIaAA/63Z6to/nWQPQowfPrhVEFZuvx5A43o=; b=ngs6EhWZRkMODM3Mn
-	13raWoG8isivHcdEpXwKHK0vh223CHClFEwU3f/H85d/o84sT8v2/5UdbrI6HYW8
-	y4vTyjut55NSo+JNFUSspcNSpUf5dM+hZezAIezhxCLJAJVxa2J917R4CjfM5lPD
-	ct2jG8UoN5ELrk5jwNpS/UHMfSmwB5eXJ2Yg6UPVNlWMjDdsGHxMVSS3wuVw7bZp
-	V+icccTGFs3WzMNjcYmfa1MKr87cauI2Jkl6TizcXjigBU7qSq8MDGUyyiCGMG2n
-	rES4ZDapwky7qXfPbuC9Zwn6brsk0hkKZtFs4KYbtYSdKNzq1PDpxDpuM3iwXz+z
-	wLvaQ==
-X-ME-Sender: <xms:LdruaRGyBlO9sh2EVucfNPAH26-7mqppOHTIoKt7aCswyEW1542GGg>
-    <xme:LdruaRDwJmarrBUjnjEq0fcsyRro9S_NSA-zqEk58T4s1iZxIcwp5NqNpVJKZrGhf
-    eSTRf3gk4_YNR12BCVQhoB-JECIqp3ktOiTQgC4hVxUePY-UXM>
-X-ME-Received: <xmr:LdruaZxJwrWAKvGXTTE191ubFQFMvqRhvREsaTA6BDKZ5z0ySZg73Lo9wegIs9Z3wKDUl9RC9iOGeUdcNroHNUHfugxiwmA>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1777261108; x=1777347508; bh=d
+	0uUDizqtFn5TUR93S5pcu2hPzZI0J+S0qM13hNSWw4=; b=eWDh03XUzL3d9HgpS
+	OdMc6goLtXJjkBRhdI1Kc8ahZeQuS6lYVjzgyIUuROdYpSxccSFusTSOihV/1Trr
+	6Lyg3G/9snsRaL4KotmkQeb37mefyGuORUbnUZGJvFMm30knu5h8d4+bF9Vdi8md
+	MPpeH3devEjtFeUkOd9cV/RagSLyjNXWPO1PgZCsnqV0SbhsP/eod9bRY+OcRcYC
+	bvBZcwsIq/pWiOdo05KaX+C4mgN0aBARnf8n3lcB8lYuYFV2YULesddovpKFvuAR
+	K4jjIW1CMkLuY+MuKDJLMyYsTjyRmkNT2e2VMGZKNsRIN0BU7FEaPvBRdyFh4DWa
+	ulb8Q==
+X-ME-Sender: <xms:NNruaY5hUPpVa2eRP2w_W2XjQcwJR2djWtX99JHP0xc8Hcm0Lmvvrg>
+    <xme:NNruaUn2bAGiDBELNBKxzVhSAd0iZFN6ZpjBoYI3cQjJmMceIwxj_g7ZOKwdbha1c
+    nqO_FaBS_uesaQ50C7UQS3dlsJqsXllKJhz4pjwPDF-pG8tTQ>
+X-ME-Received: <xmr:NNruaeEltuYUsqUrB7a5a_JYc1ofK0dfHwq0WC8BjJndkig71f_XMQjhVAdjtP8qO8A4z5rHtxg6YxWtiUgi41dT7PzrPRs>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeivdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
@@ -84,14 +84,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeivdcutefuodetgg
     gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdprhgtphht
     thhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtghksehsuh
     hsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:LdruaSAb1LI-u2OQmK3Mll_nHTso5KzYNwYHqsWLz3crzu_-QA1Olw>
-    <xmx:LdruaSBszcCNezjAQUMkdCHn9RN0DDrh_cXxm0YZY5lM8LbL_4_3QA>
-    <xmx:Ldruad5gNnZJY-SXv_HpZowQHRpJmMzimuAWm3gvpk2oBttBF_Nzvg>
-    <xmx:Ldruae1xjZxOvK-ZVWFy4pGXwH4QK2sw2F2tB_CjXCMr2uB28hX5gQ>
-    <xmx:LdruaclT4d_9hqfPPOC3KFrN5wz3RHbR3vNG0gKFDoawvVnM_w_HZwvy>
+X-ME-Proxy: <xmx:NNruaYHiKoiSDTixFZw8GEbHCtfbk-tCsdOUAgVkjtjMJfkpEnBYAw>
+    <xmx:NNruaW12TXkyVgU9pofOL_5tE69QBDslI8rr3jOMo46UKewlpFpu0A>
+    <xmx:NNruaafx91IQ6eyPz7YtaZvA6CCWRtfI1IMhgztbWpz2vUWUClapOQ>
+    <xmx:NNruaYKtWEqctjCX6JPSEOyGVdtSh3m2iZB3lTjHtPY0aBNboB_FCQ>
+    <xmx:NNruaaPxDpBMjJRzVb561gKoKGEtBzG6G-dFuraG03PR6PrpT7NDwOiw>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Apr 2026 23:38:17 -0400 (EDT)
+ 26 Apr 2026 23:38:23 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -110,9 +110,9 @@ Cc: linux-efi@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org,
 	linux-kernel@vger.kernel
-Subject: [PATCH v2 18/19] nfs: use d_alloc_noblock() in silly-rename
-Date: Mon, 27 Apr 2026 13:29:51 +1000
-Message-ID: <20260427033527.773006-19-neilb@ownmail.net>
+Subject: [PATCH v2 19/19] nfs: use d_duplicate()
+Date: Mon, 27 Apr 2026 13:29:52 +1000
+Message-ID: <20260427033527.773006-20-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260427033527.773006-1-neilb@ownmail.net>
 References: <20260427033527.773006-1-neilb@ownmail.net>
@@ -124,7 +124,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4C73546C742
+X-Rspamd-Queue-Id: 751F146C769
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -132,14 +132,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21132-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21133-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org,infradead.org];
@@ -158,91 +158,49 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,ownmail.net:dkim,ownmail.net:mid,messagingengine.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:dkim,ownmail.net:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,brown.name:replyto,brown.name:email,messagingengine.com:dkim]
 
 From: NeilBrown <neil@brown.name>
 
-Rather than performing a normal lookup (which will be awkward with
-future locking changes) use d_alloc_noblock() to find a dentry for an
-unused name, and then open-code the rest of lookup_slow() to see if it
-is free on the server.
+As preparation for d_alloc_parallel() being allowed without the
+directory locked, use d_duplicate() to duplicate a dentry for silly
+rename.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfs/unlink.c | 51 ++++++++++++++++++++++++++++++-------------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
+ fs/nfs/dir.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/unlink.c b/fs/nfs/unlink.c
-index 43ea897943c0..1ac9bd2a63b2 100644
---- a/fs/nfs/unlink.c
-+++ b/fs/nfs/unlink.c
-@@ -445,7 +445,7 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
- 	static unsigned int sillycounter;
- 	unsigned char silly[SILLYNAME_LEN + 1];
- 	unsigned long long fileid;
--	struct dentry *sdentry;
-+	struct dentry *sdentry, *old;
- 	struct inode *inode = d_inode(dentry);
- 	struct rpc_task *task;
- 	int            error = -EBUSY;
-@@ -462,26 +462,37 @@ nfs_sillyrename(struct inode *dir, struct dentry *dentry)
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index ee4b9b1a484f..dd48dea8bc40 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2778,11 +2778,9 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+ 			spin_unlock(&new_dentry->d_lock);
  
- 	fileid = NFS_FILEID(d_inode(dentry));
- 
--	sdentry = NULL;
--	do {
-+newname:
-+	sillycounter++;
-+	scnprintf(silly, sizeof(silly),
-+		  SILLYNAME_PREFIX "%0*llx%0*x",
-+		  SILLYNAME_FILEID_LEN, fileid,
-+		  SILLYNAME_COUNTER_LEN, sillycounter);
-+
-+	dfprintk(VFS, "NFS: trying to rename %pd to %s\n", dentry, silly);
-+	sdentry = d_alloc_noblock(dentry->d_parent, &QSTR(silly));
-+	if (sdentry == ERR_PTR(-EWOULDBLOCK))
-+		/* Name currently being looked up */
-+		goto newname;
-+	/*
-+	 * N.B. Better to return EBUSY here ... it could be
-+	 * dangerous to delete the file while it's in use.
-+	 */
-+	if (IS_ERR(sdentry))
-+		goto out;
-+	if (d_is_positive(sdentry)) {
- 		dput(sdentry);
--		sillycounter++;
--		scnprintf(silly, sizeof(silly),
--			  SILLYNAME_PREFIX "%0*llx%0*x",
--			  SILLYNAME_FILEID_LEN, fileid,
--			  SILLYNAME_COUNTER_LEN, sillycounter);
+ 			/* copy the target dentry's name */
+-			dentry = d_alloc(new_dentry->d_parent,
+-					 &new_dentry->d_name);
++			dentry = d_duplicate(new_dentry);
+ 			if (!dentry)
+ 				goto out;
 -
--		dfprintk(VFS, "NFS: trying to rename %pd to %s\n",
--				dentry, silly);
--
--		sdentry = lookup_noperm(&QSTR(silly), dentry->d_parent);
--		/*
--		 * N.B. Better to return EBUSY here ... it could be
--		 * dangerous to delete the file while it's in use.
--		 */
--		if (IS_ERR(sdentry))
--			goto out;
--	} while (d_inode(sdentry) != NULL); /* need negative lookup */
-+		goto newname;
-+	}
-+	/* This name isn't known locally - check on server */
-+	old = dir->i_op->lookup(dir, sdentry, 0);
-+	d_lookup_done(sdentry);
-+	if (old || d_is_positive(sdentry)) {
-+		if (!IS_ERR(old))
-+			dput(old);
-+		dput(sdentry);
-+		goto newname;
-+	}
+ 			/* silly-rename the existing target ... */
+ 			err = nfs_sillyrename(new_dir, new_dentry);
+ 			if (err)
+@@ -2847,8 +2845,10 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+ 		nfs_dentry_handle_enoent(old_dentry);
  
- 	ihold(inode);
- 
+ 	/* new dentry created? */
+-	if (dentry)
++	if (dentry) {
++		d_lookup_done(dentry);
+ 		dput(dentry);
++	}
+ 	return error;
+ }
+ EXPORT_SYMBOL_GPL(nfs_rename);
 -- 
 2.50.0.107.gf914562f5916.dirty
 
