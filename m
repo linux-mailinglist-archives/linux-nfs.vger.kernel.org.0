@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-21115-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21116-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mNDHLrzZ7mkNygAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21115-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:36:28 +0200
+	id 8I68KMTZ7mkNygAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21116-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:36:36 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E0D246C5D6
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:36:28 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 579DF46C5F7
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 05:36:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C927E3008D04
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 03:36:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 538023005AD2
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 03:36:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FBC3246768;
-	Mon, 27 Apr 2026 03:36:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C36573019A6;
+	Mon, 27 Apr 2026 03:36:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="H0XNDIqq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QdLIigYt"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="oG6yqFJk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZoPUHH17"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12312BDC32;
-	Mon, 27 Apr 2026 03:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6532E9ED6;
+	Mon, 27 Apr 2026 03:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777260985; cv=none; b=i55FAp276BtbpvDQKZu1jdsRv7q9dapok1cVtbYd0HXPGf0Oed1Fo7pL0PmAgmSgS8aCd7S8vtR9cOw7NojqiCGYR+jGxzOs+99i66ckRxeyuDM7tIsZrWY3825WfFhHNEueIQFv/gwadD7g6C3nEvfk8/xZMrEez5uNgiW81fA=
+	t=1777260993; cv=none; b=pRpnR+J+PcEngUgt+yA+oTxMqIw+dMCaEDghLvcaI1XipswYdMYeW1ULoWPhsUwsIPWqe/1/9mpCdGdgUoZ8ghQXd37F/R2tbe+BBPibla3CHzASU3OSXka8uufRAaIZ9lfUU1Eo2XKwW0BBOW0rZ3m4/l8Zky626LDIZqfwPdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777260985; c=relaxed/simple;
-	bh=DELTMxF9kP8S3D0HUlogd9b5wHyCedqPjH1ZMIOOcJw=;
+	s=arc-20240116; t=1777260993; c=relaxed/simple;
+	bh=Pki1tNYev0WXH8WJnTY1L/60frqpJhclJSGzSK1gdE0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UJRhilZyzoWGm4cbwJBBa1TAM1UoOKl4YswqbgbD6TD31fUAT6aSmyycBT2VDK3WTM8RY0VjK3j/nvIYO5KabR6MmcUtkyytwkTswEbYgJrQWk0pK0QKJMzXmvyv8DN/I/c2WeL8IoQd6E0855GlgPwn8n/bsdc8+saZs1wCkAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=H0XNDIqq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QdLIigYt; arc=none smtp.client-ip=103.168.172.156
+	 MIME-Version; b=Q1LedP1zRn5QxZGct9FuPkvgVfyvt1uDM6kbhZrdqfUS3NHGIWMIhuJxXALf7dx6tufN6TyxiR0g0hcFWKGaarN2a1VS3KmvYjbBGp43NYdoCxmtvm8n+dF9IMCJx3FqH/+IayC/5nxzmOQlG74IixnisdYF/TCfUdfolSqpXxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=oG6yqFJk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZoPUHH17; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 070C01400057;
-	Sun, 26 Apr 2026 23:36:23 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Sun, 26 Apr 2026 23:36:23 -0400
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A0A3614000B4;
+	Sun, 26 Apr 2026 23:36:31 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Sun, 26 Apr 2026 23:36:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777260983;
-	 x=1777347383; bh=/9kQHGI58tF58bk2NGiFwIvwHRvIsc6zHHG5MNu+tic=; b=
-	H0XNDIqqGB4/yHCRRHVwzm6JUnVnT1cPW1g5ps9uBne8za9Tj6T9yqXsjtPEjKYT
-	5AkVVv8UB3MKjrCyJ1vFCAwGIAEuF7jeVYkd1YL2jEQk7Rmfmvo2GOB2D+PeI1Da
-	o7zeHWH7FqMV2A9qcryKa7dFt60ZHW1WDxjVwt6iCjSkz5KUATTawyz1R8jJGT4p
-	4U2B2CZxAA1wHvcUI4q6S+1Lb5A78fCS4YuFb64kto+dLBAsVhB8CGMprbvxYJ6z
-	eGlcxHn0tJoulVuo9Q7ZYH51fd9ulJcPuIm/nwp/edNKFNKhkSBynmvt0owYkRd7
-	2Jxn1V2hUtYalMaT/d/9Sg==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1777260991;
+	 x=1777347391; bh=7sA1Vl5jolxK70Oa0cKHhOdpSjEUXYli5D2vNFWfhhY=; b=
+	oG6yqFJkSbYwrm/NViU5R35OR1MNauwFid6GK4Sl12m2Or2QFJFhAkAispAANONT
+	L70egasY4X/on/tH73UVRj/JZgl4JdQvwBUN7pBLAMp2pSKDAmw+BAW2izIIj4kZ
+	9jBhbkJzLRgaZ9k0WKZmySUVRlL+QhtmMJj+OZNwUL9bExa5HdHVKbWd1nJ1TID9
+	nLbTmgE56KAY/DN7sf/noGJ7pJzKFkZIEABvnEWP83lme8fveF4HivYT5kKUcTdd
+	rgx9VcO5/8UtL5zn8vsBRfpHaw6tOhhQVtqlwIfwE2bnS0cDgkn8IfMskJ7MX6Uo
+	vow4zMISoZ0d0/p3DJW7iQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1777260983; x=1777347383; bh=/
-	9kQHGI58tF58bk2NGiFwIvwHRvIsc6zHHG5MNu+tic=; b=QdLIigYttmA5xqZ5i
-	HDqX8XMiOnBqoLIxE8twjwUBZ5H8PpwNcN0/thZeO2phqN5n57kiHMMvYSavY9eS
-	kLp+fuDvhWqWTxruxTZ9zZcwyHJ8R4W10zAf4eHXx/HLvF9Sjcc2x/qIfqp+tYYl
-	MvducfuoF1U66/WmuOgL4hnZCp2W4/6FT/U3bwWq8KOFzzSsBZggTRTztckacrzr
-	guWPhGYSbSPMXi0VQYE7n2AO0QRhsGbCMSw2CZ5+mxpw+NX0HDRxk751qMwCT8pR
-	w0YIJax/SbsIp3Yj2eyuBlqya5cFaTjd+6mDQm/06jLisvCHMHoug1F2DWPRsW7x
-	4u19Q==
-X-ME-Sender: <xms:ttnuadX5wgBy0IF7ZYXz1Es1cJlmrnNt9fREmmsYqNd0jnTAVfSaPg>
-    <xme:ttnuaYSWe6hIqUA0QSvsm1Pl3kCL6TVQhtdcx-ot5mpazIwMG3oar470jzzdzrtyb
-    6USmNO79CeD1gDQlTHblxqrnc25UqEYkB8Dlop0fFIFj2CY5Q>
-X-ME-Received: <xmr:ttnuaQBhSQxcaoeF4vDKOwfLlAiGrVEySQ9ikukIxOc0LoH5HkSEKwLLezF4KElZoZ0hBbUDeEPEeBLxApMJWdC1VsCuBng>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1777260991; x=1777347391; bh=7
+	sA1Vl5jolxK70Oa0cKHhOdpSjEUXYli5D2vNFWfhhY=; b=ZoPUHH17rZeqpgk2n
+	9SJqVnhE4talgG01DiQwEoJ/oqQtx+rp1L7SSUVrFUVEAurgT2qKM/Bw3veG3l4G
+	ie60+d1zPtyKbEJEv0gIrb8EqeMTQWSudiOquyyhOEHfehglnHwSsHnSmT0hqZwq
+	shkeQGpg4WWET10BHqHEG+L12k0OAJA6D4cZxRHk1U42oQ4/tUXeiENSr8nRqtl7
+	wpyHKNHriyEhdgAoUSJ5jotyvg3FlWODk8JDSD7oeIbarXJD6nErPJEpA4fKv4Ou
+	a6hvQo7XQmCVxNNeToP8eSE1gdBCtyHC4eYi5qtKlMEGtx4WySYmH72FTTbrehb2
+	v/8nw==
+X-ME-Sender: <xms:v9nuaRzUDrYGcvD9gLNtGtilWSpmkkmBaMbBF2cBtibqV98K_ecNxA>
+    <xme:v9nuab9QV8uqrdiF5muYkM4WzRHYl7WyCxRimb3g3GEWwCAig0gj6elt5SSayLnKu
+    SSPwwDtc_Ki3tg4AaeCyv-h703u_wbG6DbL8ZjrL7lrtMwP>
+X-ME-Received: <xmr:v9nuaR-ujCVWYo9YMAHTnNljbUxitzSPlrqLQ0DaC-X2mGyoLAZBO8W3qvHFmG0FDj-QJLWRWgJX8eSTN5h9dRY2aE_9-Fo>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeivdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
@@ -84,14 +84,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejjeeivdcutefuodetgg
     gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdprhgtphht
     thhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtghksehsuh
     hsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:ttnuabTojDGrXZeSzl5UbTDWiv48gjGmiUQr0KYmwYo3YbdSFyWHPA>
-    <xmx:ttnuaSTsn5oxH98-v5qH2jLI5j7xYdG_GXbZZOGlWYvFfxzNv0q2UA>
-    <xmx:ttnuaZJ6is9MnRti4LcItxafs7sLMV-9FYdqPPX4NNbOwv7f44UkBQ>
-    <xmx:ttnuaZEbZP62FskUSM4Bb0Zjl2-pfg9DN2Zxd8dwkrPtIoT5DKHGyA>
-    <xmx:t9nuaf6TR-BtAP5FKdjx1cJ06Co0MoUkbt5JmvWWntXzeImsQY9UhIm->
+X-ME-Proxy: <xmx:v9nuaeeYEmU2aitMOxkPPDMO9Lv-dynJRzC5q-wMtw7NlrlBKep90g>
+    <xmx:v9nuadvD3U-F9wvLgLRNgINa379NyRyDD3I8nzf7Wppbh49hA4Xo5g>
+    <xmx:v9nuaX29YRkcxsvRCCqOa3p4K3B4CFKN2-UtFPP4x83nwk8jx9Ssig>
+    <xmx:v9nuaaC7zk9AWKuqAHuGyJY_NsfE_LFtz0GscMvEvyykpPmcwZoHhw>
+    <xmx:v9nuaVkQn-PYA5IaV89SZkXi7B1cL7_2qz0gvvnRUJdjZaGxYPL2Qqzz>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Apr 2026 23:36:18 -0400 (EDT)
+ 26 Apr 2026 23:36:26 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Linus Torvalds <torvalds@linux-foundation.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -110,9 +110,9 @@ Cc: linux-efi@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	linux-unionfs@vger.kernel.org,
 	linux-kernel@vger.kernel
-Subject: [PATCH v2 01/19] VFS: fix various typos in documentation for start_creating start_removing etc
-Date: Mon, 27 Apr 2026 13:29:34 +1000
-Message-ID: <20260427033527.773006-2-neilb@ownmail.net>
+Subject: [PATCH v2 02/19] VFS: enhance d_splice_alias() to handle in-lookup dentries
+Date: Mon, 27 Apr 2026 13:29:35 +1000
+Message-ID: <20260427033527.773006-3-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260427033527.773006-1-neilb@ownmail.net>
 References: <20260427033527.773006-1-neilb@ownmail.net>
@@ -124,7 +124,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 1E0D246C5D6
+X-Rspamd-Queue-Id: 579DF46C5F7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -132,14 +132,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21115-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21116-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org,infradead.org];
@@ -158,167 +158,154 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:dkim,ownmail.net:mid,brown.name:replyto,brown.name:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,messagingengine.com:dkim]
 
 From: NeilBrown <neil@brown.name>
 
-Various typos fixes.
-start_creating_dentry() now documented as *creating*, not *removing* the
-entry.
-Unwanted spaces in Documentation/filesystems/porting.rst removed.
+We currently have three interfaces for attaching existing inodes to
+normal filesystems(*).
+- d_add() requires an unhashed or in-lookup dentry and doesn't handle
+  splicing in case a directory already has dentry
+- d_instantiate() requires a hashed dentry, and also doesn't handle
+  splicing.
+- d_splice_alias() requires unhashed or in-lookup and does handle
+  splicing, and can return an alternate dentry.
+
+So there is no interface that supports both hashed and in-lookup, which
+is what ->atomic_open needs to deal with.
+
+Some filesystems check for in-lookup in their atomic_open and if found,
+perform a ->lookup and can subsequently use d_instantiate() if the
+dentry is still negative.  Others d_drop() the dentry so they can use
+d_splice_alias().
+
+This last will cause a problem for proposed changes to locking which
+require the dentry to remain hashed while and operation proceeds on it.
+
+There is also no interface which splices a directory (which might
+already have a dentry) to a hashed dentry.  Filesystems which need to do
+this d_drop() first.
+
+Some filesystemss (NFS) skip ->lookup processes for
+  LOOKUP_CREATE|LOOKUP_EXCL
+which includes mknod, link, symlink etc.  So these inode operations
+might get an unhashed or a hashed-negative dentry.  There is no
+interface for instantiating these so against they need to unhash first.
+
+So with this patch d_splice_alias() can handle hashed, unhashed, or
+in-lookup dentries.  This makes it suitable for ->lookup, ->atomic_open,
+and ->mkdir and others.
+
+As a side effect d_add() will also now handle hashed dentries, but
+I have plans to remove d_add() as there is no benefit having it as
+well as the others.
+
+__d_add() currently contains code that is identical to
+__d_instantiate(), so the former is changed to call the later, and both
+d_add() and d_instantiate() call __d_add().
+
+* There is also d_make_persistent() for filesystems which are
+  dcache-based and don't support mkdir, create etc, and
+  d_instantiate_new() for newly created inodes that are still locked.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- Documentation/filesystems/porting.rst |  8 +++----
- fs/namei.c                            | 30 +++++++++++++--------------
- 2 files changed, 19 insertions(+), 19 deletions(-)
+ Documentation/filesystems/vfs.rst |  4 ++--
+ fs/dcache.c                       | 31 ++++++++++++-------------------
+ 2 files changed, 14 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index fdf074429cd3..bfdff4608028 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -1203,7 +1203,7 @@ will fail-safe.
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index 7c753148af88..d8df0a84cdba 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -507,8 +507,8 @@ otherwise noted.
+ 	dentry before the first mkdir returns.
  
- ---
+ 	If there is any chance this could happen, then the new inode
+-	should be d_drop()ed and attached with d_splice_alias().  The
+-	returned dentry (if any) should be returned by ->mkdir().
++	should be attached with d_splice_alias().  The returned
++	dentry (if any) should be returned by ->mkdir().
  
--** mandatory**
-+**mandatory**
- 
- lookup_one(), lookup_one_unlocked(), lookup_one_positive_unlocked() now
- take a qstr instead of a name and len.  These, not the "one_len"
-@@ -1212,7 +1212,7 @@ that filesysmtem, through a mount point - which will have a mnt_idmap.
- 
- ---
- 
--** mandatory**
-+**mandatory**
- 
- Functions try_lookup_one_len(), lookup_one_len(),
- lookup_one_len_unlocked() and lookup_positive_unlocked() have been
-@@ -1229,7 +1229,7 @@ already been performed such as after vfs_path_parent_lookup()
- 
- ---
- 
--** mandatory**
-+**mandatory**
- 
- d_hash_and_lookup() is no longer exported or available outside the VFS.
- Use try_lookup_noperm() instead.  This adds name validation and takes
-@@ -1371,7 +1371,7 @@ similar.
- 
- ---
- 
--** mandatory**
-+**mandatory**
- 
- lock_rename(), lock_rename_child(), unlock_rename() are no
- longer available.  Use start_renaming() or similar.
-diff --git a/fs/namei.c b/fs/namei.c
-index c7fac83c9a85..65e60536a6d1 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2942,8 +2942,8 @@ struct dentry *start_dirop(struct dentry *parent, struct qstr *name,
-  * end_dirop - signal completion of a dirop
-  * @de: the dentry which was returned by start_dirop or similar.
-  *
-- * If the de is an error, nothing happens. Otherwise any lock taken to
-- * protect the dentry is dropped and the dentry itself is release (dput()).
-+ * If the @de is an error, nothing happens. Otherwise any lock taken to
-+ * protect the dentry is dropped and the dentry itself is released (dput()).
+ ``rmdir``
+ 	called by the rmdir(2) system call.  Only required if you want
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 2c61aeea41f4..789544525c56 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -2068,7 +2068,6 @@ static void __d_instantiate(struct dentry *dentry, struct inode *inode)
+  * (or otherwise set) by the caller to indicate that it is now
+  * in use by the dcache.
   */
- void end_dirop(struct dentry *de)
+- 
+ void d_instantiate(struct dentry *entry, struct inode * inode)
  {
-@@ -3260,7 +3260,7 @@ EXPORT_SYMBOL(lookup_one_unlocked);
-  * the i_rwsem itself if necessary.  If a fatal signal is pending or
-  * delivered, it will return %-EINTR if the lock is needed.
+ 	BUG_ON(d_really_is_positive(entry));
+@@ -2822,18 +2821,14 @@ static inline void __d_add(struct dentry *dentry, struct inode *inode,
+ 		dir = dentry->d_parent->d_inode;
+ 		n = start_dir_add(dir);
+ 		d_wait = __d_lookup_unhash(dentry);
++		__d_rehash(dentry);
++	} else if (d_unhashed(dentry)) {
++		__d_rehash(dentry);
+ 	}
+ 	if (unlikely(ops))
+ 		d_set_d_op(dentry, ops);
+-	if (inode) {
+-		unsigned add_flags = d_flags_for_inode(inode);
+-		hlist_add_head(&dentry->d_alias, &inode->i_dentry);
+-		raw_write_seqcount_begin(&dentry->d_seq);
+-		__d_set_inode_and_type(dentry, inode, add_flags);
+-		raw_write_seqcount_end(&dentry->d_seq);
+-		fsnotify_update_flags(dentry);
+-	}
+-	__d_rehash(dentry);
++	if (inode)
++		__d_instantiate(dentry, inode);
+ 	if (dir)
+ 		end_dir_add(dir, n, d_wait);
+ 	spin_unlock(&dentry->d_lock);
+@@ -3133,8 +3128,6 @@ struct dentry *d_splice_alias_ops(struct inode *inode, struct dentry *dentry,
+ 	if (IS_ERR(inode))
+ 		return ERR_CAST(inode);
+ 
+-	BUG_ON(!d_unhashed(dentry));
+-
+ 	if (!inode)
+ 		goto out;
+ 
+@@ -3183,6 +3176,8 @@ struct dentry *d_splice_alias_ops(struct inode *inode, struct dentry *dentry,
+  * @inode:  the inode which may have a disconnected dentry
+  * @dentry: a negative dentry which we want to point to the inode.
   *
-- * Returns: A dentry, possibly negative, or
-+ * Returns: A positive dentry, or
-  *	   - same errors as lookup_one_unlocked() or
-  *	   - ERR_PTR(-EINTR) if a fatal signal is pending.
++ * @dentry must be negative and may be in-lookup or unhashed or hashed.
++ *
+  * If inode is a directory and has an IS_ROOT alias, then d_move that in
+  * place of the given dentry and return it, else simply d_add the inode
+  * to the dentry and return NULL.
+@@ -3190,16 +3185,14 @@ struct dentry *d_splice_alias_ops(struct inode *inode, struct dentry *dentry,
+  * If a non-IS_ROOT directory is found, the filesystem is corrupt, and
+  * we should error out: directories can't have multiple aliases.
+  *
+- * This is needed in the lookup routine of any filesystem that is exportable
+- * (via knfsd) so that we can build dcache paths to directories effectively.
++ * This should be used to return the result of ->lookup() and to
++ * instantiate the result of ->mkdir(), is often useful for
++ * ->atomic_open, and may be used to instantiate other objects.
+  *
+  * If a dentry was found and moved, then it is returned.  Otherwise NULL
+- * is returned.  This matches the expected return value of ->lookup.
++ * is returned.  This matches the expected return value of ->lookup and
++ * ->mkdir.
+  *
+- * Cluster filesystems may call this function with a negative, hashed dentry.
+- * In that case, we know that the inode will be a regular file, and also this
+- * will only occur during atomic_open. So we need to check for the dentry
+- * being already hashed only in the final case.
   */
-@@ -3382,7 +3382,7 @@ struct dentry *lookup_noperm_positive_unlocked(struct qstr *name,
- EXPORT_SYMBOL(lookup_noperm_positive_unlocked);
- 
- /**
-- * start_creating - prepare to create a given name with permission checking
-+ * start_creating - prepare to access or create a given name with permission checking
-  * @idmap:  idmap of the mount
-  * @parent: directory in which to prepare to create the name
-  * @name:   the name to be created
-@@ -3414,8 +3414,8 @@ EXPORT_SYMBOL(start_creating);
-  * @parent: directory in which to find the name
-  * @name:   the name to be removed
-  *
-- * Locks are taken and a lookup in performed prior to removing
-- * an object from a directory.  Permission checking (MAY_EXEC) is performed
-+ * Locks are taken and a lookup is performed prior to removing an object
-+ * from a directory.  Permission checking (MAY_EXEC) is performed
-  * against @idmap.
-  *
-  * If the name doesn't exist, an error is returned.
-@@ -3441,7 +3441,7 @@ EXPORT_SYMBOL(start_removing);
-  * @parent: directory in which to prepare to create the name
-  * @name:   the name to be created
-  *
-- * Locks are taken and a lookup in performed prior to creating
-+ * Locks are taken and a lookup is performed prior to creating
-  * an object in a directory.  Permission checking (MAY_EXEC) is performed
-  * against @idmap.
-  *
-@@ -3470,7 +3470,7 @@ EXPORT_SYMBOL(start_creating_killable);
-  * @parent: directory in which to find the name
-  * @name:   the name to be removed
-  *
-- * Locks are taken and a lookup in performed prior to removing
-+ * Locks are taken and a lookup is performed prior to removing
-  * an object from a directory.  Permission checking (MAY_EXEC) is performed
-  * against @idmap.
-  *
-@@ -3500,7 +3500,7 @@ EXPORT_SYMBOL(start_removing_killable);
-  * @parent: directory in which to prepare to create the name
-  * @name:   the name to be created
-  *
-- * Locks are taken and a lookup in performed prior to creating
-+ * Locks are taken and a lookup is performed prior to creating
-  * an object in a directory.
-  *
-  * If the name already exists, a positive dentry is returned.
-@@ -3523,7 +3523,7 @@ EXPORT_SYMBOL(start_creating_noperm);
-  * @parent: directory in which to find the name
-  * @name:   the name to be removed
-  *
-- * Locks are taken and a lookup in performed prior to removing
-+ * Locks are taken and a lookup is performed prior to removing
-  * an object from a directory.
-  *
-  * If the name doesn't exist, an error is returned.
-@@ -3544,11 +3544,11 @@ struct dentry *start_removing_noperm(struct dentry *parent,
- EXPORT_SYMBOL(start_removing_noperm);
- 
- /**
-- * start_creating_dentry - prepare to create a given dentry
-- * @parent: directory from which dentry should be removed
-- * @child:  the dentry to be removed
-+ * start_creating_dentry - prepare to access or create a given dentry
-+ * @parent: directory of dentry
-+ * @child:  the dentry to be prepared
-  *
-- * A lock is taken to protect the dentry again other dirops and
-+ * A lock is taken to protect the dentry against other dirops and
-  * the validity of the dentry is checked: correct parent and still hashed.
-  *
-  * If the dentry is valid and negative a reference is taken and
-@@ -3581,7 +3581,7 @@ EXPORT_SYMBOL(start_creating_dentry);
-  * @parent: directory from which dentry should be removed
-  * @child:  the dentry to be removed
-  *
-- * A lock is taken to protect the dentry again other dirops and
-+ * A lock is taken to protect the dentry against other dirops and
-  * the validity of the dentry is checked: correct parent and still hashed.
-  *
-  * If the dentry is valid and positive, a reference is taken and
+ struct dentry *d_splice_alias(struct inode *inode, struct dentry *dentry)
+ {
 -- 
 2.50.0.107.gf914562f5916.dirty
 
