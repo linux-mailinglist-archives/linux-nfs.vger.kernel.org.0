@@ -1,76 +1,76 @@
-Return-Path: <linux-nfs+bounces-21168-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21169-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aIupCFA+72le/AAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21168-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 12:45:36 +0200
+	id QB9LMi9A72kM/QAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21169-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 12:53:35 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAAEF4712CE
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 12:45:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83C2F4714BB
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 12:53:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id F036F3014FF6
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 10:44:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B08613034A1C
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Apr 2026 10:51:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E847F3B5826;
-	Mon, 27 Apr 2026 10:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E2743B892D;
+	Mon, 27 Apr 2026 10:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tbbiq4OO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6S5CIiR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C000D3B2FC9;
-	Mon, 27 Apr 2026 10:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551E63B7B9D;
+	Mon, 27 Apr 2026 10:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777286663; cv=none; b=EYcF2+u4KC7mL2Yk5BHQay+2y9Bji17lFpIokP3wwsfEVBs4aiyh12DsZktTswH2o9ZgF0coupLZVp2q0pH0SYR28lPr/pfOrRuDgOciL6uoiVsvDyL24KGkCeEVEeUmOm4xOyMzUvQpi4LS93WWR0EjOm/lvGStuI9oQuN7Yo8=
+	t=1777287076; cv=none; b=NKt3snEz8U5FNp+J0Lu0PT+ujR1Iz0Sew+4tQYsh4zzR8+l075k80ko9yuQMLP7zjasZd+8KATpxTm/37v7Gors5cOlmKC5F51CxfcRTe4kmQwsIAn3Ha7KImH48p2aGRhEwLVNnjZr+PEGEInrQhp3+RK6lLxbXy1rog7ohmW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777286663; c=relaxed/simple;
-	bh=wEZzX/A7QNfRsGWK+DI75VRDYHn1jWOu+XIau8CO8QY=;
+	s=arc-20240116; t=1777287076; c=relaxed/simple;
+	bh=4y5Hx2p1vfu1q6BX9Nc9yJRTCjDae/1D0McLv8t6YTM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LUIJi1RDxnt5TilEEX/EW9+v7eQt161nkDq9am8uN9UGDR4bWpzNsCfP+5Wue/pnYKzXLXOzAc/Hbp5fKse5WC4inMMWO8gRFWRzfDKj5LlaMtFxFKFWe94O8cc0YTVuqtaQg8bPlVRM8mxlGjhlClPu6AYLuHEgQc8E9wLgZv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tbbiq4OO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937E7C19425;
-	Mon, 27 Apr 2026 10:44:16 +0000 (UTC)
+	 Content-Type:MIME-Version; b=bcFoN2LtaLGzgvFZy83kKJWMZJVEwZekv7FCsRga1iJKSd/ToER0HHVDH1vLKu2xkrxvaOXgPYoAMXeRb3R/Ba0NrjCKJR+i+QS8lGNAUwp9PQBVJD5mUkDwAdC7YiKqwIUIEo236xJ5olcc1/HtDXXhkJEfHzhyW67UBpdvQuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6S5CIiR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2D2C19425;
+	Mon, 27 Apr 2026 10:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777286663;
-	bh=wEZzX/A7QNfRsGWK+DI75VRDYHn1jWOu+XIau8CO8QY=;
+	s=k20201202; t=1777287075;
+	bh=4y5Hx2p1vfu1q6BX9Nc9yJRTCjDae/1D0McLv8t6YTM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Tbbiq4OObSm25+yVdglw28OVx3RNX5mmLt1Lkc0QhNyLo6UrJAOBCsIlK6ojjbVnB
-	 mLTxKLIaMrCDPI/Hkkp2VsVGDEM7tU62rpllVSdXGjsXntCbuD01dOcGZkIs1JMxmP
-	 N+t/6bAI0EZxZ/PIw56ZQaRJyHbDZ+JOpGOTJMn/wfmLA/5/rQ1Bw7c8WI9qv/qsTZ
-	 rc2zl0JIdnMNni48uO4Uj9jSc2C9pYPVUrZYLHzeLTgi4f4r+0y1cDZa1mnANQ7ORb
-	 x2rvMBK8qyVJxCu2Fng6Uefb6qQYw1sYimts7xCeqAsG5P/Iw0BLXzJRRWjjzdUyYp
-	 xgsAwpyvyIYaw==
-Message-ID: <bb418f9a7bfcabc3070b412c745c5b6456d592b9.camel@kernel.org>
+	b=J6S5CIiRa1hWNaETencFFnmkhauL2uLmQ4xAcfCSHFSp4l4k/ekAF1+quBzg4NbQ2
+	 Tqyd5GRu/aEDA0asIOYFH+ircHMN78CQKpHNZNkPzYP6w60dXmWICU8wlWsF6d4u43
+	 CDXAHomkg2d4IKoKgsBp9fRERU1lej7BhnTJmKhAFIcwmX1C55NRtqx+h9/9C0D1g6
+	 5oBHHL5oGl+UfpYp62dXFp0lfLADZbXBTjncWjrpjGWbnPvmHLC/EmVaKfBv2Y8fHn
+	 ZHuUHMciTEPJ1WZhrkvOoBNey+nLDBICmObfl5Qz63DcxYAOots+b7JMkDt1z3DGoY
+	 FDtZ4m7RUwQQw==
+Message-ID: <ca981318a1d114c5d0e4f428e32f429e187d4ed2.camel@kernel.org>
 Subject: Re: [PATCH v3 2/4] mm: kick writeback flusher for IOCB_DONTCACHE
  with targeted dirty tracking
 From: Jeff Layton <jlayton@kernel.org>
-To: Ritesh Harjani <ritesh.list@gmail.com>, Alexander Viro	
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	 <jack@suse.cz>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew
- Morton	 <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka	 <vbabka@kernel.org>, Mike
- Rapoport <rppt@kernel.org>, Suren Baghdasaryan	 <surenb@google.com>, Michal
- Hocko <mhocko@suse.com>, Mike Snitzer	 <snitzer@kernel.org>, Jens Axboe
- <axboe@kernel.dk>, Christoph Hellwig	 <hch@infradead.org>, Kairui Song
- <kasong@tencent.com>, Qi Zheng	 <qi.zheng@linux.dev>, Shakeel Butt
- <shakeel.butt@linux.dev>, Barry Song	 <baohua@kernel.org>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie	 <yuanchu@google.com>, Wei Xu
- <weixugc@google.com>, Steven Rostedt	 <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Andrew Morton	
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Lorenzo
+ Stoakes <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka	 <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan	 <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Mike Snitzer	 <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, Ritesh
+ Harjani	 <ritesh.list@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Kairui Song	 <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, Shakeel
+ Butt	 <shakeel.butt@linux.dev>, Barry Song <baohua@kernel.org>, Axel
+ Rasmussen	 <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu	 <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu	 <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,  Chuck Lever <chuck.lever@oracle.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
 	linux-trace-kernel@vger.kernel.org
-Date: Mon, 27 Apr 2026 11:44:14 +0100
-In-Reply-To: <qzo1s6a4.ritesh.list@gmail.com>
+Date: Mon, 27 Apr 2026 11:51:07 +0100
+In-Reply-To: <ae55M8xBIVYZXPFN@casper.infradead.org>
 References: <20260426-dontcache-v3-0-79eb37da9547@kernel.org>
 	 <20260426-dontcache-v3-2-79eb37da9547@kernel.org>
-	 <qzo1s6a4.ritesh.list@gmail.com>
+	 <ae55M8xBIVYZXPFN@casper.infradead.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -154,7 +154,7 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: BAAEF4712CE
+X-Rspamd-Queue-Id: 83C2F4714BB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -162,15 +162,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-21169-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21168-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,linux-foundation.org,oracle.com,google.com,suse.com,kernel.dk,tencent.com,linux.dev,goodmis.org,efficios.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,linux-foundation.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com,infradead.org,tencent.com,linux.dev,goodmis.org,efficios.com,vger.kernel.org,kvack.org];
 	RCPT_COUNT_TWELVE(0.00)[32];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -183,216 +183,35 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On Mon, 2026-04-27 at 04:01 +0530, Ritesh Harjani wrote:
-> Jeff Layton <jlayton@kernel.org> writes:
->=20
-> > The IOCB_DONTCACHE writeback path in generic_write_sync() calls
-> > filemap_flush_range() on every write, submitting writeback inline in
-> > the writer's context.  Perf lock contention profiling shows the
-> > performance problem is not lock contention but the writeback submission
-> > work itself =E2=80=94 walking the page tree and submitting I/O blocks t=
-he writer
-> > for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
-> > (dontcache).
-> >=20
-> > Replace the inline filemap_flush_range() call with a flusher kick that
-> > drains dirty pages in the background.  This moves writeback submission
-> > completely off the writer's hot path.
-> >=20
-> > To avoid flushing unrelated buffered dirty data, add a dedicated
-> > WB_start_dontcache bit and wb_check_start_dontcache() handler that uses
-> > the new NR_DONTCACHE_DIRTY counter to determine how many pages to write
-> > back.  The flusher writes back that many pages from the oldest dirty
-> > inodes (not restricted to dontcache-specific inodes). This helps
-> > preserve I/O batching while limiting the scope of expedited writeback.
-> >=20
->=20
-> Yup, so, we wakeup the writeback flusher, which will write those many
-> "number" of dirty pages. Those dirty pages written by writeback, can be
-> of any type though, can be DONTCACHE or normal (non-dontcache) dirty
-> pages. IIUC, writeback doesn't distinguish between them while writing.
->=20
-
-Correct. This was the approach that Jan and HCH suggested in the
-responses to the last posting.
-
->=20
-> IMO, what we could also include in the commit msg is why is this above
-> approach taken? IIUC, that is because, by writing NR_DONTCACHE_DIRTY
-> pages, it still reduces the page cache pressure and still reduces the
-> amount of work that the reclaim has to do, even though some of those
-> pages maybe non-dontcache pages, in case if there was a parallel
-> buffered write in the system.
->=20
-
-Good suggestion. I'll add that.
-
->=20
-> Also should the following change be documented somewhere? Like in Man
-> page maybe? i.e.
-> Earlier RWF_DONTCACHE writes made sure that those dirty pages are
-> immediately submitted for writeback and completion would release those
-> pages. But now, in certain cases when there is a mixed buffered write in
-> the system, those dontcache dirty pages might be written back after a
-> delay (whenever the next time writeback kicks in).
-> However for RWF_DONTCACHE reads, it should not affect anything.
->=20
-
-Looks like DONTCACHE is documented in the preadv/writev manpage. Here's
-the current blurb about writes:
-
-    Additionally, any range dirtied by a write operation with RWF_DONT=E2=
-=80=90
-    CACHE  set  will  get kicked off for writeback.  This is similar to
-    calling  sync_file_range(2)  with  SYNC_FILE_RANGE_WRITE  to  start
-    writeback on the given range.  RWF_DONTCACHE is a hint, or best ef=E2=
-=80=90
-    fort,  where  no hard guarantees are given on the state of the page
-    cache once the operation completes.
-
-I don't think this verbiage is invalid after this change. Kicking off
-writeback is still just a hint, like it was before. We could mention
-about how that I/O can compete with regular buffered I/O, but it seems
-a bit like we're adding info that will just be confusing for users.
-
-> > Like WB_start_all, the WB_start_dontcache bit coalesces multiple
-> > DONTCACHE writes into a single flusher wakeup without per-write
-> > allocations.
-> >=20
-> > Also add WB_REASON_DONTCACHE as a new writeback reason for tracing
-> > visibility, and target the correct cgroup writeback domain via
-> > unlocked_inode_to_wb_begin().
-> >=20
-> > dontcache-bench results on dual-socket Xeon Gold 6138 (80 CPUs, 256 GB
-> > RAM, Samsung MZ1LB1T9HALS 1.7 TB NVMe, local XFS, io_uring, file size
-> > ~503 GB, compared to a v6.19-ish baseline):
-> >=20
->=20
-> Can we please also test parallel buffered writes and dontcache writes?=
-=20
-> Since this patch series definitely affects that.
->
-> BTW - adding these numbers in the commit msg itself is much helpful.
->=20
-
-To be clear, this only affects DONTCACHE, not normal buffered writes,
-but I guess you're referring to the fact that DONTCACHE and buffered
-writes can compete now.
-
-Can you clarify specifically what you'd like me to test here? Are you
-saying you want me to test parallel and buffered writes together at the
-same time (i.e. make them compete?).
-
-I should be able to do that for the local benchmarks, but nfsd's iomode
-settings are global and that won't be possible there.
-
-> >   Single-client sequential write (MB/s):
-> >                        baseline    patched     change
-> >   buffered              1449.8     1440.1      -0.7%
-> >   dontcache             1347.9     1461.5      +8.4%
-> >   direct                1450.0     1440.1      -0.7%
-> >=20
-> >   Single-client sequential write latency (us):
-> >                        baseline    patched     change
-> >   dontcache p50         3031.0    10551.3    +248.1%
-> >   dontcache p99        74973.2    21626.9     -71.2%
-> >   dontcache p99.9      85459.0    23199.7     -72.9%
-> >=20
-> >   Single-client random write (MB/s):
-> >                        baseline    patched     change
-> >   dontcache              284.2      295.4      +3.9%
-> >=20
-> >   Single-client random write p99.9 latency (us):
-> >                        baseline    patched     change
-> >   dontcache             2277.4      872.4     -61.7%
-> >=20
-> >   Multi-writer aggregate throughput (MB/s):
->=20
-> Can you please help describe this test scenario if possible.. In above
-> you mentioned we are writing file_size as 2x RAM_SIZE. But your
-> multi-client tests says something else..
->=20
-> local num_clients=3D4
-> +	mem_kb=3D$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-> +	client_size=3D"$(( mem_kb / 1024 / num_clients ))M"
->=20
-> Also the multi-writer case is spawning parallel fio jobs, and then
-> parsing and aggregating the bandwidth results instead of using fio to
-> spawn multiple parallel threads... which is ok, but a bit wierd.
-> Why not let fio do the aggregate bandwidth, and latency calculation
-> instead?
->=20
-
-That's what I get for asking Claude to roll a testsuite. I'm not that
-well-versed in fio, but that makes sense. I'll have a look at reworking
-it along those lines.
-
-> >                        baseline    patched     change
-> >   buffered              1619.5     1611.2      -0.5%
-> >   dontcache             1281.1     1629.4     +27.2%
-> >   direct                1545.4     1609.4      +4.1%
-> >=20
+On Sun, 2026-04-26 at 21:44 +0100, Matthew Wilcox wrote:
+> On Sun, Apr 26, 2026 at 07:56:08AM -0400, Jeff Layton wrote:
 > >   Mixed-mode noisy neighbor (dontcache writer + buffered readers):
 > >                        baseline    patched     change
 > >   writer (MB/s)         1297.6     1471.1     +13.4%
 > >   readers avg (MB/s)     855.0      462.4     -45.9%
-> >=20
-> > nfsd-io-bench results on same hardware (XFS on NVMe, NFSv3 via fio
-> > NFS engine with libnfs, 1024 NFSD threads, pool_mode=3Dpernode,
-> > file size ~502 GB, compared to v6.19-ish baseline):
-> >=20
-> >   Single-client sequential write (MB/s):
-> >                        baseline    patched     change
-> >   buffered              4844.2     4653.4      -3.9%
-> >   dontcache             3028.3     3723.1     +22.9%
-> >   direct                 957.6      987.8      +3.2%
-> >=20
-> >   Single-client sequential write p99.9 latency (us):
-> >                        baseline    patched     change
-> >   dontcache            759169.0   175112.2     -76.9%
-> >=20
-> >   Single-client random write (MB/s):
-> >                        baseline    patched     change
-> >   dontcache              590.0     1561.0    +164.6%
-> >=20
-> >   Multi-writer aggregate throughput (MB/s):
-> >                        baseline    patched     change
-> >   buffered              9636.3     9422.9      -2.2%
-> >   dontcache             1894.9     9442.6    +398.3%
-> >   direct                 809.6      975.1     +20.4%
-> >=20
-> >   Noisy neighbor (dontcache writer + random readers):
-> >                        baseline    patched     change
-> >   writer (MB/s)         1854.5     4063.6    +119.1%
-> >   readers avg (MB/s)     131.2      101.6     -22.5%
-> >=20
-> > The NFS results show even larger improvements than the local benchmarks=
-.
-> > Multi-writer dontcache throughput improves nearly 5x, matching buffered
-> > I/O. Dirty page footprint drops 85-95% in sequential workloads vs.
-> > buffered.
-> >=20
 >=20
-> Nice :)
-> Some explaination here of why 5x improvement with NFS compared to local
-> filesystems please?
-> (I am not much aware of NFS side, but a possible reasoning would help)
->=20
+> hm.  This wasn't what I thought of when I thought of "noisy neighbour".
+> I'd have process A doing DONTCACHE writes to file A and process B doing
+> normal buffered writes to file B.
 
-I suspect that it's because of the "scattered" nature of nfsd writes.
-When the client sends a write to nfsd, we wake a nfsd thread to service
-it. So, if there are a lot of writes operating in parallel, they all
-get done in the context of different tasks.
+Originally, I was benchmarking this via nfsd and only later did I add
+the suite for local benchmarks. With nfsd, setting the iomode affects
+all reads or writes.
 
-My hunch is that this I/O pattern (writing to same file from a bunch of
-different threads), particularly suffers from the DONTCACHE inline
-write behavior. The threads all end up competing to submit jobs to the
-queue and that causes the performance to fall off sharply.
+So initially, I had it testing them with both reads and writes set to
+the same setting, but then later I decided to play with different modes
+for reads and writes. The best performing one was buffered reads +
+dontcache writes. It's possible a mix of different modes will be better
+on a local fs.
 
-Thanks for the review!
+I can't easily do a benchmark like you're suggesting with nfsd, but it
+should be possible on a local benchmark. I'll see what I can come up
+with.
+
+Thanks,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
