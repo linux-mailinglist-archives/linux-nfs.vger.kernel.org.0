@@ -1,153 +1,329 @@
-Return-Path: <linux-nfs+bounces-21258-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21259-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YKpQLKXk8GmoagEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21258-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 18:47:33 +0200
+	id uBKmNHwJ8WnUcAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21259-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 21:24:44 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4FBE489472
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 18:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 58F6248B1C5
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 21:24:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 924013165AA0
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 16:32:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 674A430A4F0E
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 19:21:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EB36324B33;
-	Tue, 28 Apr 2026 16:32:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43FB647CC9E;
+	Tue, 28 Apr 2026 19:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Tdue3C8p"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="AjpyRrIV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A06125AA
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 16:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9022609E3
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 19:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777393968; cv=none; b=Exe5aRwXJ85fd4HdtBPmG1+MehToF57jPftQmO41klIFkIoMJUwcVb2ptkGYklmgGP82XkbkH5I2E3iLk6Gu0F9XUXM5E/hb6pl69qXxO+rVSXaWiuijEhGl3lMSji/VkfPTOCLuFQgTwzs1op+GTRC6Fivk/SEDtz1a4EUxNuw=
+	t=1777404089; cv=none; b=BP7zIpw6oyCZjGst7SDEZ7BX2CVnZJGCdLOKz4AbIfpl+pLaDp7pWShsmR4gQwRQjnoivcAk/ONFrdwoWtzfgNYqvqCK8dkNvdlCttOMxgppvjGsJzRnWqNjxLBYtLpxPyqEOKXfKqVxYAjxMFY9QFwky1NeKqR/Nu3dEsaE1io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777393968; c=relaxed/simple;
-	bh=UXi3to+PEeM0vXAZmtoShs0caavlFjs/qq6Gqzz+kdA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W2WA4OA2Dj9a4h7tplHywCheN84jPbFFUk0AvxYiJAicukR6775Gpj62o5IGlzPRycLwCA6BdFiC0yO5w8OmwdxW32tNMXESLU90tUtXtQnStYB24Os5reRnhbWTPgo/OrobJaOOFYez6ZcIiZGuJW9mhQBHElC995MgTKHCAtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Tdue3C8p; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b9c3e2cf3c0so1970917166b.1
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 09:32:46 -0700 (PDT)
+	s=arc-20240116; t=1777404089; c=relaxed/simple;
+	bh=rADsMyQZW7KYZ4YfdbvpqFxHzHaQXlVKJ1dK2uBWxRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J56P6crw9RiVjDxaYGYIpiJG06ZJG4shgQI3jb/3xpEA584opPP1QZz5+I7NV8TZl/Kz+VGATGBfZmeS7cC0Eu/ARP/+dL+ZLtYd7CcvfizdixqozsBYxp+BhCdOyzJyQrwoOYAL/rQAfs0Cr+XxDJs5nFrH2S/c7c6TiTrp9Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=AjpyRrIV; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8ef45a6d9dfso858924885a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 12:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1777393965; x=1777998765; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zdQshYQj3noQptsym9r2OjNoPP3O2vv/eFEz4ctitBQ=;
-        b=Tdue3C8pAMawzA0oCTAUCr5LmXQRZivT/5MQfbe0FFx5GSM8eLH8otmPenWpWJXB3/
-         pfdbtbJscxFXHD73pmS1z72DD0hx6/l7GKjfW0ZzJ7IlMEJdqT8zHrGEJQTIaMyuJ9Et
-         Kbo/1sB51Se7r68lcLgaD80p2V2hsoEiv/AwM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777393965; x=1777998765;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1777404085; x=1778008885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zdQshYQj3noQptsym9r2OjNoPP3O2vv/eFEz4ctitBQ=;
-        b=cYsKLxbb4je8iaHTIKlw6Duw9vkfNElNDq3pCOW11AwN21wwZugho3DP8sZxFWS+vk
-         twNB785sKLzP9ezEdYobbP2aS8HXpIhHLc4Z5fraS9Jjw9pSrfBG8z1kmjdJfKuE9yOy
-         LnXVSyuvcJNSgieJYrHB3rge3ncgSTZStYF23JLBkLtD/E3y2NkcVXOrKfPJbzommFYi
-         7+AGfNBvCzEo62iWpAQndk2IBnTCI2I6PQ8Lc1IQu2yf8XNLDZI+Xguqxhzr5C3fpjNt
-         6VH2JMJU6YOfzGpUrw/wx6g2WH/gxFcS7DJTz9obyku2waY18JTfSZA7a/zg6dKkPzSc
-         zu4Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8NyYW2vBC5OMwebxcaLKB3G5TkTXRrvpmsynnsS5DgkxD+AoHaGUzRHfwg8+vdcvQEZdQp8kLBFAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQZf/UjN+jW3XV/HABIvfsTZWNtx1BRulv+Ca7w4C2qpAzbUfa
-	rtd36VuEa90KTG8o2nd9PF9gdvd+oHVFbYnnKSApNaICtd0vx74KUe64BcxjGIb7FbkueWzt1lk
-	xwzDHcLgzEQ==
-X-Gm-Gg: AeBDievT2Yp4u8KElf4GypWv2OfXCNo0db+q+HL9v5APAGV9ObLup87VbXPyigdGjDB
-	uIafJl1GGkNGjA3QfT6kAObSh0Xt+MGVU8XADT3+W65qN2wT+yiPczmk+VIp2bAJ8Z3F2vXXnIF
-	tGJinuNdNn8tI69+zdMCQ5YqbU7/GbNMVws9Gx62+QfXrnuq9FYZkFr440VWD330EsdMeEzLTKt
-	85tZu9bPwFVtg6xspuKxcq7HByeNUuCFnZThi/9fkoiOtbf3Jl5jd1irAHewkVVlQac0GLV3EQ/
-	9HZSBT/P+bJh2rE2oOtfKC8uJImBzEA2H1NqgQsczFItoPiCxK7FFxciI9cjnpqyqe3ElCj/sDN
-	tzG1D0Dtg048lBr0SAbXnHeTQexq2xypv46qmsZsBm/2bSfKdiXnns9+2QPjaLNHPPDFKfJYzSX
-	3maQOiQTeXwdJ1J6aIOMnBg3m9inb/aWV8Qe6JP/NNyGxCwcmqSRJdQVzEgJPn2/W+p2pR0Ke/T
-	6Wj3MYJ/e0=
-X-Received: by 2002:a17:907:1b1e:b0:ba8:8c8c:1c67 with SMTP id a640c23a62f3a-bb8015eecabmr208120266b.4.1777393964957;
-        Tue, 28 Apr 2026 09:32:44 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bb808632f35sm122483366b.11.2026.04.28.09.32.41
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2026 09:32:42 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-67893fba9c3so11046702a12.2
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 09:32:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+TFvuGqrq09ccG2E0hwIx/LLkneLyozjGAHx3TozJQNy6MNOdc8oRc+F1qc0uJGvU34KAi58G+O2g=@vger.kernel.org
-X-Received: by 2002:a05:6402:4498:b0:670:e9ce:203c with SMTP id
- 4fb4d7f45d1cf-679bb05d621mr1866002a12.10.1777393961533; Tue, 28 Apr 2026
- 09:32:41 -0700 (PDT)
+        bh=7HsRQzwddKIQadLpTvf+1Rg5IrK/BcQTm8bGEwPFxUs=;
+        b=AjpyRrIV8EAauo76IpD94fxmP8PgxZwLOa9Vua4I3n8fU9kr6nSInXHyYhMHOitS9J
+         AFfF+c7bJ2Y8v9IHBC+DbmdkJtSXfT/E2RC3CyAPcKsnC3ftO5LG452FeXaNtf28VXcu
+         6KmYmqExqbUqP2zseOyAFiyHHMe3e91Nf7g2+yT+SvMzYEhKJKCZ5C/WwGAyAlDOh2t4
+         aX2nQIxENNGZNlSwkCJT6Ye99JY4D6ggW5GgSgXgk5vxpaCIPSmPg+abyK6a0o3vmlKR
+         mikf7f5DYKYQaoRp+MXwM/fnkLeP4r343YS0EF3id0lQfgNidb761CVD58pCoffy2GKQ
+         wRfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777404085; x=1778008885;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7HsRQzwddKIQadLpTvf+1Rg5IrK/BcQTm8bGEwPFxUs=;
+        b=HlCOWuWF5HsATFf+zJrkjXETX4cBUKzouuB1YzSK/lM5BqzEddFXC48wSgO20JjLNp
+         OBnNxbXB3sfLYCbDtx7gCSm3qU9A1DlVbZhRpU4yRDusnokovPdxScHaVqzSlFyr5KoZ
+         wGEHGAoj2Kl1749h4cGwTF859xCuvaYAI6DT0QcV0+jgXlUUZre805QQeR/ab0i3H8Qs
+         rwbtPL4CSUKv+1bwc6BKolI99feYBbG4k2L/PPewzAEKgBlNFoOwhyP34tAmGOYFLozs
+         JIY/o2AB1eEvdwFqK9ZconQsZ0sWfpioSqimW1TmH7DIGdC2cez2y+oLkqfD2i7/blQy
+         pkKA==
+X-Forwarded-Encrypted: i=1; AFNElJ9Cz5NL+3tQ82UwDViW/E/2wE3jHQ7YafUJ2/mi0W57PdGKn/QP8TJSWk28WWDPOM/thM8/tEchUFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk2T/MkFF/TUriTOTLmBLMtowKNLhK48nMMg1Y4ZE6zrneA90T
+	iz/bofOWWvKbtZ6HLsGAwulMAQO1gwaZZe5mM5aJD2LEi+D5knizU7kGphCSsH2i5w==
+X-Gm-Gg: AeBDies9PvQBG5ArS6nyXQMFlEXJlmqRZ5rjuOiolPa2t3ydemtjpEWacMJqRCrDHs5
+	Nv+ANV5tUggIxsRJ9KIYSarqE49BrV8tyyqMXKnJ61pfnyXz6IDfnrwg4Qgp2z9f6fA24byOB4U
+	B1aSMcEmFXfDZKFypAe2rSBQs8q/f7zBUJBECZ2sEpOgTlmkhrzT+41HKEGS/+1i3hrnxyBZM+Y
+	QTyifB1xOoXw29rYzpacqfYve/4Ku48cVtWF2kUVoggYpNTDUdyB2yt664nx/2EDgRddw1v1d5c
+	DqYd7KewJlTMECLUOr0yYcWGykepGsnNxf31yKOB8Rfyc/y7erom9wp6KMVExw/CJM5l4loHqIM
+	Pe3YvZeD8nSi1ZVXrOQSAe4lAYPBmc2VDJ4KjX0rjQ7NKZy20yc2iECE8aNkZPA10heEfl8VqYn
+	vEkXDXUTxH4D6uMRdwzQnXjMJ2dmhQl/H4+EfyVFHeUu8YJ5tDsQ5tTfmQZMuV4jw3LJted0FKh
+	atpzYc=
+X-Received: by 2002:a05:620a:4456:b0:8d6:bd01:a67a with SMTP id af79cd13be357-8f7d7e171a8mr634934685a.26.1777404084901;
+        Tue, 28 Apr 2026 12:21:24 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8f7c84b1d92sm263877485a.38.2026.04.28.12.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2026 12:21:23 -0700 (PDT)
+From: Paul Moore <paul@paul-moore.com>
+To: selinux@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Cc: stephen.smalley.work@gmail.com
+Subject: [PATCH ported/repost v2] security,fs,nfs,net: update security_inode_listsecurity() interface
+Date: Tue, 28 Apr 2026 15:21:20 -0400
+Message-ID: <20260428192119.226244-2-paul@paul-moore.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260427040517.828226-1-neilb@ownmail.net> <20260427040517.828226-5-neilb@ownmail.net>
- <20260428033738.GV3518998@ZenIV>
-In-Reply-To: <20260428033738.GV3518998@ZenIV>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 28 Apr 2026 09:32:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whXZz=-XnJdMGzM8BCwDkoqU0yDNKWyrpZSwXzchxsPUQ@mail.gmail.com>
-X-Gm-Features: AVHnY4IIvtSv2v5AokZFbGGGL2ooIu4U0QBZlzJ1iurrKn3dZQo8WV0HU53s1sE
-Message-ID: <CAHk-=whXZz=-XnJdMGzM8BCwDkoqU0yDNKWyrpZSwXzchxsPUQ@mail.gmail.com>
-Subject: Re: [PATCH v3 04/19] VFS: use wait_var_event for waiting in d_alloc_parallel()
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: E4FBE489472
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7674; i=paul@paul-moore.com; h=from:subject; bh=TIBYVxpxKKE5XNqm2t5t5Zkc1qweb5gcM/rYatRhygg=; b=owEBbQKS/ZANAwAKAeog8tqXN4lzAcsmYgBp8Qivtdaz8kIJzR5ih/0JRGEl15mQnHjbbXmKU Vd1awybi5uJAjMEAAEKAB0WIQRLQqjPB/KZ1VSXfu/qIPLalzeJcwUCafEIrwAKCRDqIPLalzeJ c39KD/0QmxerRTCNDDzPUzdXuWLg0P0l7CVvmGWX5e/vy0NKGMNoVoY0Bk7iW9cGIjR7xjQH40h oAvirMrk2niZSjVWCjT88PyzeIZxkbKM4eVBA2swvkssSdKC53MPMS/eJTpVIA17X+23Z+Vi8LM 4/neLwI3AYZgDxdGP1E0UQ0ZlWzzode+fR6qOEzWvTLMmtfn9Nd/RB/5tKxno9uC5k83lfP+SZD ptADRIgGSQsiqOUtbCjkAAOyUG4u83Xb545DVQtdYP/ULVwkAgsDxCbfvCY6CJumTCgiZSUnHTS uoAACC/zM5m/ikPD3sQCj60R0zNQPKCNs5TZ2uqEJmD1m5NoJ+8uOKRqZyTOtnBaOSKWGcrPZ/U NbfLLcN62Jcgom4ac9vtnfBZmv8LhrI3DzlHSMPmrSEyfZidxVqcXPG3Ger0sTQLVUPxGfHxp0u Ed4GeJeuN9vipb6pVf6mXueJaVp50sZWE+9CIW5InxEsW5ZohGrjsl2zLn1cpW3Iur4F/YkAQul wfffjgvcZQkcfXo6dUpCPQPyNx6/BcimCZV5tUGiYFWyn10JlaRQ0YEIJUVFaO6c522I6UpydDF n0ccg2sBWPlVrv++GSjfWp1Ss/DumQDrUBsWzkX/dqSI02nRNuA7Fk5VJ/gM/5nwDILWvHMOXAW BLtroLvFvBsoslQ==
+X-Developer-Key: i=paul@paul-moore.com; a=openpgp; fpr=7100AADFAE6E6E940D2E0AD655E45A5AE8CA7C8A
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 58F6248B1C5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=google];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21258-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[linux-foundation.org];
+	TAGGED_FROM(0.00)[bounces-21259-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[brown.name,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linux-foundation.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[torvalds@linux-foundation.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[paul-moore.com:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.org.uk:email]
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,paul-moore.com:email,paul-moore.com:dkim,paul-moore.com:mid]
 
-On Mon, 27 Apr 2026 at 20:37, Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> I definitely like the calling conventions change, so much that I'd be glad
-> to pick that one right now.
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
 
-Honestly, while a 19-patch series isn't big as these things normally
-go, when it comes to something as core and subtle as the dcache and
-filesystem integration, I'd personally be very happy to see this
-merged in small clear pieces, so I'll happily take any parts that are
-good on their own early and separately.
+Update the security_inode_listsecurity() interface to allow
+use of the xattr_list_one() helper and update the hook
+implementations.
 
-So yes, please take any cleanups in this series asap, rather than
-necessarily keeping this as a longer pending series.
+Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com
+Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+[PM: forward porting to bring this patch up to v7.1-rc1+]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+---
+ fs/nfs/nfs4proc.c             |  7 ++-----
+ fs/xattr.c                    | 11 +++++++----
+ include/linux/lsm_hook_defs.h |  4 ++--
+ include/linux/security.h      |  5 +++--
+ security/security.c           | 16 ++++++++--------
+ security/selinux/hooks.c      | 10 +++-------
+ security/smack/smack_lsm.c    | 13 ++++---------
+ 7 files changed, 29 insertions(+), 37 deletions(-)
 
-               Linus
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index a9b8d482d289..a16342056ae5 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10562,13 +10562,10 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+ 		left -= error;
+ 	}
+ 
+-	error2 = security_inode_listsecurity(d_inode(dentry), list, left);
++	error2 = security_inode_listsecurity(d_inode(dentry), &list, &left);
+ 	if (error2 < 0)
+ 		return error2;
+-	if (list) {
+-		list += error2;
+-		left -= error2;
+-	}
++	error2 = size - error - left;
+ 
+ 	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 09ecbaaa1660..0bc3b47e6936 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -510,9 +510,12 @@ vfs_listxattr(struct dentry *dentry, char *list, size_t size)
+ 	if (inode->i_op->listxattr) {
+ 		error = inode->i_op->listxattr(dentry, list, size);
+ 	} else {
+-		error = security_inode_listsecurity(inode, list, size);
+-		if (size && error > size)
+-			error = -ERANGE;
++		ssize_t remaining = size;
++
++		error = security_inode_listsecurity(inode, &list, &remaining);
++		if (error)
++			return error;
++		error = size - remaining;
+ 	}
+ 	return error;
+ }
+@@ -1540,7 +1543,7 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 	if (err)
+ 		return err;
+ 
+-	err = security_inode_listsecurity(inode, buffer, remaining_size);
++	err = security_inode_listsecurity(inode, &buffer, &remaining_size);
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index 2b8dfb35caed..65c9609ec207 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -176,8 +176,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct mnt_idmap *idmap,
+ 	 struct inode *inode, const char *name, void **buffer, bool alloc)
+ LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
+ 	 const char *name, const void *value, size_t size, int flags)
+-LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
+-	 size_t buffer_size)
++LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffer,
++	 ssize_t *remaining_size)
+ LSM_HOOK(void, LSM_RET_VOID, inode_getlsmprop, struct inode *inode,
+ 	 struct lsm_prop *prop)
+ LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 41d7367cf403..153e9043058f 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -459,7 +459,7 @@ int security_inode_getsecurity(struct mnt_idmap *idmap,
+ 			       struct inode *inode, const char *name,
+ 			       void **buffer, bool alloc);
+ int security_inode_setsecurity(struct inode *inode, const char *name, const void *value, size_t size, int flags);
+-int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size);
++int security_inode_listsecurity(struct inode *inode, char **buffer, ssize_t *remaining_size);
+ void security_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop);
+ int security_inode_copy_up(struct dentry *src, struct cred **new);
+ int security_inode_copy_up_xattr(struct dentry *src, const char *name);
+@@ -1097,7 +1097,8 @@ static inline int security_inode_setsecurity(struct inode *inode, const char *na
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
++static inline int security_inode_listsecurity(struct inode *inode,
++					char **buffer, ssize_t *remaining_size)
+ {
+ 	return 0;
+ }
+diff --git a/security/security.c b/security/security.c
+index 4e999f023651..71aea8fdf014 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2258,22 +2258,22 @@ int security_inode_setsecurity(struct inode *inode, const char *name,
+ /**
+  * security_inode_listsecurity() - List the xattr security label names
+  * @inode: inode
+- * @buffer: buffer
+- * @buffer_size: size of buffer
++ * @buffer: pointer to buffer
++ * @remaining_size: pointer to remaining size of buffer
+  *
+  * Copy the extended attribute names for the security labels associated with
+- * @inode into @buffer.  The maximum size of @buffer is specified by
+- * @buffer_size.  @buffer may be NULL to request the size of the buffer
+- * required.
++ * @inode into *(@buffer).  The remaining size of @buffer is specified by
++ * *(@remaining_size).  *(@buffer) may be NULL to request the size of the
++ * buffer required. Updates *(@buffer) and *(@remaining_size).
+  *
+- * Return: Returns number of bytes used/required on success.
++ * Return: Returns 0 on success, or -errno on failure.
+  */
+ int security_inode_listsecurity(struct inode *inode,
+-				char *buffer, size_t buffer_size)
++				char **buffer, ssize_t *remaining_size)
+ {
+ 	if (unlikely(IS_PRIVATE(inode)))
+ 		return 0;
+-	return call_int_hook(inode_listsecurity, inode, buffer, buffer_size);
++	return call_int_hook(inode_listsecurity, inode, buffer, remaining_size);
+ }
+ EXPORT_SYMBOL(security_inode_listsecurity);
+ 
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 97801966bf32..4ae736755557 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3684,16 +3684,12 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
+ 	return 0;
+ }
+ 
+-static int selinux_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
++static int selinux_inode_listsecurity(struct inode *inode, char **buffer,
++				ssize_t *remaining_size)
+ {
+-	const int len = sizeof(XATTR_NAME_SELINUX);
+-
+ 	if (!selinux_initialized())
+ 		return 0;
+-
+-	if (buffer && len <= buffer_size)
+-		memcpy(buffer, XATTR_NAME_SELINUX, len);
+-	return len;
++	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SELINUX);
+ }
+ 
+ static void selinux_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop)
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 3f9ae05039a2..ff115068c5c0 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -1665,17 +1665,12 @@ static int smack_inode_getsecurity(struct mnt_idmap *idmap,
+  * smack_inode_listsecurity - list the Smack attributes
+  * @inode: the object
+  * @buffer: where they go
+- * @buffer_size: size of buffer
++ * @remaining_size: size of buffer
+  */
+-static int smack_inode_listsecurity(struct inode *inode, char *buffer,
+-				    size_t buffer_size)
++static int smack_inode_listsecurity(struct inode *inode, char **buffer,
++				    ssize_t *remaining_size)
+ {
+-	int len = sizeof(XATTR_NAME_SMACK);
+-
+-	if (buffer != NULL && len <= buffer_size)
+-		memcpy(buffer, XATTR_NAME_SMACK, len);
+-
+-	return len;
++	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SMACK);
+ }
+ 
+ /**
+-- 
+2.54.0
+
 
