@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21232-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21233-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +L+PJvRf8GnDSQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21232-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:21:24 +0200
+	id +J1yEChg8GnDSQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21233-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:22:16 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96B8547EB6E
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:21:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A32547EBA9
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:22:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CDD273079AB5
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:12:51 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 53ADF30236EB
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6BE3B6342;
-	Tue, 28 Apr 2026 07:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E452C3D3CED;
+	Tue, 28 Apr 2026 07:11:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACmTlh6L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raxXBAJ/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A946C3A759D;
-	Tue, 28 Apr 2026 07:11:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCB63AE183;
+	Tue, 28 Apr 2026 07:11:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360313; cv=none; b=QIvHuHNZQYtQpJI0tFzgANGXTsn7GwKnkXfqBKGCC8n6DcC4mg8dbTjrCiWHQ9mUJihamlXMsn3y0klXwGQ8OeqbngRqQWD3S0UN2ZvkAfwi1AwJ00JcRprGlXICbPettCmwD6r3EYblEr5enRGtczXmitNr8LgOiyyTZIPg+OA=
+	t=1777360318; cv=none; b=Fk5LrdOOzrZf4op8LixsxFo+APwaTm0w4qDBvl3ttXlq9mxJwmNzxM/WuGkBOjZ34Ty/8oZDBrw3Td7jFW//WCwhF58N+OqBYZyFoJPFESt6fwz/sfEdYYpBJfj7lj7Amng97n4UUeArBi0RA06qe+7AmYKxhoSVwvBNAgShNkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360313; c=relaxed/simple;
-	bh=8oOOjvuXTFk3ATyKMsiMxYSTQ7+G0noB6pHdXQXznvk=;
+	s=arc-20240116; t=1777360318; c=relaxed/simple;
+	bh=EZs5JSXgff2XMAUBaSSNR38ZRXCvpIIGiMGLXDvobow=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DcR0BH4wSqD4eDc8ysTTI1XwcRxaQiy6p9BobaKcQjDt2HlR2j8DUVqZJD4s+7tK5n60W4OH6ysEQJtv5BuMR2QSNNOfofL9ze2BitIH8ScbxwNiRX0RC2aEruttZHfXfddiNXSvYg4ligVqp+5GvHmTCSs7MkGFEbOWQ3qVxvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACmTlh6L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72010C2BCAF;
-	Tue, 28 Apr 2026 07:11:49 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=T1pe+hkyr45cOkwiMpCVfuzoQ/7n1AMxhi5/vVPPse+okRryWoqGEiiaslbeGXBysR7u9cqr34VVyLCiZRSE0BQ0ygYXXxts+bod5aEZY+8rCDWh9a2SSn54w49xaUY3IfvZtom0demfRO1p39D+TKdBziQragA10cohNSKlaDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raxXBAJ/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5BBC2BCB5;
+	Tue, 28 Apr 2026 07:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777360313;
-	bh=8oOOjvuXTFk3ATyKMsiMxYSTQ7+G0noB6pHdXQXznvk=;
+	s=k20201202; t=1777360318;
+	bh=EZs5JSXgff2XMAUBaSSNR38ZRXCvpIIGiMGLXDvobow=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ACmTlh6LiLGKo3z+ywpGZindiSdLrbZHQ5U+MFmyBqVS+SyMskjY1wtRB0bTNy0Z2
-	 Nei4+G39+LV13Im+1gDGQQIIbct0U3inXdWEznL8R9mC7d55x7HD/HXOdKf0zAIWKL
-	 36H+XzNNMymCrWgAoJYoj4sNIPNPVHBTJGiz3IkDU/ho0ApfYk0tT5+mVBHZN8KPQK
-	 hGhP/pNPeJMrh0GiTWrR67grbO/XUZDwCDx8rXSSeA2ZFTT5bo8Xjini0xV9Pe8D96
-	 3l4GXNfHNBDXJxS8blEa1ALp6UXtKUWv9nztCrmP6qvmUVpvg5Lx1EHzdQQ7+//VxC
-	 F4+BUEtvzckhw==
+	b=raxXBAJ//miBst9b3cEXgjBEO2SsR1s/k5tJvxS91j4Co5bUTnhyvMcWDIUhtOxLI
+	 WfAmIizEeLCmR6tWx9ml0Aou1GI6RxLYjGuaDlQunG0evBwWO/9lfzh1a0jyCo3lpS
+	 4r9Zz2hVom9Fua3fZyuI8oHBPcvJaPoC6aSIU4kC17erRM4KMkBK2mkmDZafYV7pDK
+	 qmylg131SNQQWA9voMxTrezyfcqT4DdcQI+ZyOvOZF/B5OuZNf05e3YYqIgGLZG3F+
+	 8bVSNrDri0+4iEEzxvQY/twUA447vhXhj45GqvG1qE/WCHmadOnIcEs2YSzf2eY5Cb
+	 9bEEWk8ISpcBg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 28 Apr 2026 08:10:04 +0100
-Subject: [PATCH v3 20/28] nfsd: add helper to marshal a fattr4 from
- completed args
+Date: Tue, 28 Apr 2026 08:10:05 +0100
+Subject: [PATCH v3 21/28] nfsd: allow nfsd4_encode_fattr4_change() to work
+ with no export
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-dir-deleg-v3-20-5a0780ba9def@kernel.org>
+Message-Id: <20260428-dir-deleg-v3-21-5a0780ba9def@kernel.org>
 References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -76,23 +76,23 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3351; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=8oOOjvuXTFk3ATyKMsiMxYSTQ7+G0noB6pHdXQXznvk=;
- b=kA0DAAoBAA5oQRlWghUByyZiAGnwXVKgScw5x6+7fcbzZcpsZfBYCAcEcgu/2uBP01kua2DSy
- IkCMwQAAQoAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJp8F1SAAoJEAAOaEEZVoIVskoP/3tI
- A5TcqOHQdXGPBa81Saa/JhMZO4Iks7tr7jNaRAn/aQa/2z00gzdMhVQj3ZqpqQA/OtUBfCJp+F6
- sYYhLDucC1S7eB6jEJeqegyaCHfJZmOIVkQxULke0J1a21keE39wqTJ2NzXFmm69Owq/PTNXMBc
- JQblX3GtImewTU079TARgmJZrcG1Ezz1VjVpQBgbA3N6wR7MI8kGxBWvDjj2mXcFebUq/dhoGyH
- MjLAxtiLQOAH0Tfl+iFE7gnUs4OeSHLhQyP2EdXZN1OZh5xW5VeOWT/auVGzT1hGqJaVUstBZ8l
- JS6p+V7qWEKEDaEeiXgEBVc9i0H+zulUvYTN9J3SNy/FsKyTxWkPU0r+o0lhf0zJVaQlHdxOzA4
- fOR6XDzpIOZLFSFba2f6ohkycZJOcSnDuba/I+f7MrEsLAdee4m4bsczqACthHyS9opnhYGaVj+
- t2EVeJR+8kD1AZryw/twsLjPZArRDZ06mSbTduhBazGygeh6hTp7K+eGCcTRMTBzAH8A51+x3xC
- 654gQsNXu7RbI1IHEqH9v9Ma7GoVjZLoPlYS2nMYEWGz/ofB01BxHyYKGel4WnAqHTdgnXfmHTa
- FF1Q1lFyMOmUB7189J6MVBp5mtTjUeh0CbcZ0fJRJKdU+MuUa4i7qkclVezWQdBfAcuYN2lY5Gs
- pTneN
+X-Developer-Signature: v=1; a=openpgp-sha256; l=846; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=EZs5JSXgff2XMAUBaSSNR38ZRXCvpIIGiMGLXDvobow=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1TOUYP/lYvkXxIvVYP4JJwhZpoS1cK43W91
+ dYl+CbtxmCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdUwAKCRAADmhBGVaC
+ FYOMEACUsZ1TyUGr1mFVXjxhL9qwr+E/eroeJ4vO2eTXHhgjqT38V0c01s7FK60t0Bn9LC7TBDC
+ OiQ4ms7BelDvDsWrFi5o1z3F1FSd4kusrWqfIo61jxdxyjTDspOqoYd0iM3Z8EITb8j1P8b7Kll
+ XZwITbWESI8CXp53CKHSplWP331NB6KnBPyrL5z2iKOPZ9mg/CJPDc8QNlieJ6Fs/zNbA2Grp0T
+ xQnsiBtV7BEwbL5HYNV1/CCzLwnmRqL7uPGU87qR8JtIgnNWAKnmZ0bZGuKFYGV7PjplqK6SQBY
+ 6CbxwzKXP+N8Uf9UtiPUm5xVnjJIwaB0Oq2VDq68GYA8Y+tHVJG71N8QekPMfvtIx1W375jIqWG
+ 1fa9/aVQE3Qje7jLp32NhMedUuG2pMcALZqajIHcCIhbYsVMf0ic/9d2RQYpBHoD9NNzkptRh4Q
+ l3cmQvKp7K96Qrj+hTLZgwDHScGk+RcV6d/Kl0calUYGBq1g2PQYvpDFVxJ/yWoD27pRNIj1pu7
+ bWN9IHsMjoAFMjBiJD54aLOeHSf09biE/5M7D4TATdHrkLKrmsUAQbwS1oUntFu0hXeyf8PcC4f
+ 8DsCP8SdZn7R85tJajT1wM3YCmw7CSa+hirXVY5EtAEaKWRHAq1+/0D65hTuuaK3SFKLHd2Ob/U
+ 3AwOvfzVqpQ1kzA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: 96B8547EB6E
+X-Rspamd-Queue-Id: 4A32547EBA9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -100,12 +100,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21232-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21233-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -121,107 +121,31 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-Break the loop that encodes the actual attr_vals field into a separate
-function.
+In the context of a CB_NOTIFY callback, we may not have easy access to
+a svc_export. nfsd will not currently grant a delegation on a the V4 root
+however, so this should be safe.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 44 +++++++++++++++++++++++++-------------------
- 1 file changed, 25 insertions(+), 19 deletions(-)
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 8af1e15e1102..b9b173ec7421 100644
+index b9b173ec7421..91681aea9d7f 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3852,6 +3852,22 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_encode_ops[] = {
- #endif
- };
- 
-+static __be32
-+nfsd4_encode_attr_vals(struct xdr_stream *xdr, u32 *attrmask, struct nfsd4_fattr_args *args)
-+{
-+	DECLARE_BITMAP(attr_bitmap, ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
-+	unsigned long bit;
-+	__be32 status;
-+
-+	bitmap_from_arr32(attr_bitmap, attrmask, ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
-+	for_each_set_bit(bit, attr_bitmap, ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops)) {
-+		status = nfsd4_enc_fattr4_encode_ops[bit](xdr, args);
-+		if (status != nfs_ok)
-+			return status;
-+	}
-+	return nfs_ok;
-+}
-+
- /*
-  * Note: @fhp can be NULL; in this case, we might have to compose the filehandle
-  * ourselves.
-@@ -3862,7 +3878,6 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		    struct dentry *dentry, const u32 *bmval,
- 		    int ignore_crossmnt)
+@@ -3257,7 +3257,7 @@ static __be32 nfsd4_encode_fattr4_change(struct xdr_stream *xdr,
  {
--	DECLARE_BITMAP(attr_bitmap, ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
- 	struct nfs4_delegation *dp = NULL;
- 	struct nfsd4_fattr_args args;
- 	struct svc_fh *tempfh = NULL;
-@@ -3877,7 +3892,6 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		.mnt	= exp->ex_path.mnt,
- 		.dentry	= dentry,
- 	};
--	unsigned long bit;
+ 	const struct svc_export *exp = args->exp;
  
- 	WARN_ON_ONCE(bmval[1] & NFSD_WRITEONLY_ATTRS_WORD1);
- 	WARN_ON_ONCE(!nfsd_attrs_supported(minorversion, bmval));
-@@ -4050,27 +4064,22 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- #endif /* CONFIG_NFSD_V4_POSIX_ACLS */
+-	if (unlikely(exp->ex_flags & NFSEXP_V4ROOT)) {
++	if (exp && unlikely(exp->ex_flags & NFSEXP_V4ROOT)) {
+ 		u32 flush_time = convert_to_wallclock(exp->cd->flush_time);
  
- 	/* attrmask */
--	status = nfsd4_encode_bitmap4(xdr, attrmask[0], attrmask[1],
--				      attrmask[2]);
-+	status = nfsd4_encode_bitmap4(xdr, attrmask[0], attrmask[1], attrmask[2]);
- 	if (status)
- 		goto out;
- 
- 	/* attr_vals */
- 	attrlen_offset = xdr->buf->len;
--	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT)))
--		goto out_resource;
--	bitmap_from_arr32(attr_bitmap, attrmask,
--			  ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
--	for_each_set_bit(bit, attr_bitmap,
--			 ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops)) {
--		status = nfsd4_enc_fattr4_encode_ops[bit](xdr, &args);
--		if (status != nfs_ok)
--			goto out;
-+	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT))) {
-+		status = nfserr_resource;
-+		goto out;
- 	}
--	attrlen = cpu_to_be32(xdr->buf->len - attrlen_offset - XDR_UNIT);
--	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, XDR_UNIT);
--	status = nfs_ok;
- 
-+	status = nfsd4_encode_attr_vals(xdr, attrmask, &args);
-+	if (status == nfs_ok) {
-+		attrlen = cpu_to_be32(xdr->buf->len - attrlen_offset - XDR_UNIT);
-+		write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, XDR_UNIT);
-+	}
- out:
- #ifdef CONFIG_NFSD_V4_POSIX_ACLS
- 	if (args.dpacl)
-@@ -4093,9 +4102,6 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- out_nfserr:
- 	status = nfserrno(err);
- 	goto out;
--out_resource:
--	status = nfserr_resource;
--	goto out;
- }
- 
- static bool
+ 		if (xdr_stream_encode_u32(xdr, flush_time) != XDR_UNIT)
 
 -- 
 2.54.0
