@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21227-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21228-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8GQqAyBf8GnDSQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21227-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:17:52 +0200
+	id SP6WLCdf8GnDSQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21228-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:17:59 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F99747EA4D
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:17:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C48047EA5C
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:17:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 12C9A30FAA7C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:12:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 29E563018BF4
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:12:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545133B0ADD;
-	Tue, 28 Apr 2026 07:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1703BFE31;
+	Tue, 28 Apr 2026 07:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qdGo5Sw7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKNnP3rB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE7A3A6B6D;
-	Tue, 28 Apr 2026 07:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659A33AC0F5;
+	Tue, 28 Apr 2026 07:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360290; cv=none; b=DLBmltVl+piFyyhVce8ih7qHHwNgKl9ihgBxBZ/v4QzOy1glpOAQQtliJY9/OHJzwOJk3Kr0PpP/HqpE4B1sJIBilPyh9PnyrcfkHeynA80rbUjYfcSkn7NIu5KKPth2kA2dRzpW8ctzH6HJPBKYmoXtqT1E6W1gtvnpVWcn+xM=
+	t=1777360295; cv=none; b=e9k0PrSH3kSlVQIkBGStAX/vtfr35smJt9kjyKvrueaVeDnQ31tJ9jCH1EMG4TwM5gT91GChNOnM7fl+Fz3BlmrSe2MPKxtkTCyvLIZAPPbrqFmqgHpxHYZw6AzXGnhv7FOo/yUHHHBL+0bRokiM3+2t02c87ttFm5GHvPE4+9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360290; c=relaxed/simple;
-	bh=No/DWtPORXDhdI5WkPJdJmmnosV5Q4Pg2jWF0WLDzwk=;
+	s=arc-20240116; t=1777360295; c=relaxed/simple;
+	bh=m0C86TpkBBOMpDqujAm0G8449uKEm5DvGHdnM6gWWOs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eQLktZV17Deo4FNQVn8hcC03+8enrdJUNTrn4vu8VwHSh6mwKn3shCrT1SvzWzjf6bXMSb7gy2LkicWaSi0fd/5nij4nkgqBvWGHSN4Hnq72Vml+377WyMnaONaLIGstxWd4kL3ThcNCqVJcygUShQFweMOXUrnrrEc+PjB+StM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qdGo5Sw7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BAD6C2BCB6;
-	Tue, 28 Apr 2026 07:11:25 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=NyclQRZ2W9dvUcftNNDxlvylrbsP5T0OXKBasZNhpG2OwxUXxGIcVvDntcXh1Llh2y1PedVubi+H6IRpskAoh1yLOvWRvN5uXOOak7/9oz5jHH4TGV2jAUAaVGBIc6migdldTw0rRvy+DheCLjr5WjrlEQBSPrMidXhTtrQib5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKNnP3rB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AFCC2BCB5;
+	Tue, 28 Apr 2026 07:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777360290;
-	bh=No/DWtPORXDhdI5WkPJdJmmnosV5Q4Pg2jWF0WLDzwk=;
+	s=k20201202; t=1777360295;
+	bh=m0C86TpkBBOMpDqujAm0G8449uKEm5DvGHdnM6gWWOs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qdGo5Sw7tq0oP9sGFUJBBijSzY2hjEUuakFBW5VISGUA98dKLbWP1OmybdX6kT667
-	 AmgsqMRZJwSdtJJsbLQzjLKRKok1s1R3pFVlrxl8U3DB07D0WB1o9Aqt7HNsZ8W47y
-	 OGEJk8bpg6S3elIY+/N+vpURVAPuYFeCQb+kOBCy9WvFIXyfVVlkpkZ9XloIyNGKUZ
-	 L1LQJTSX4Sw7JS4FKdgEKNkuENp+6y9iGpdYS2M/NXNmByyaRUN1Z+jfqbP3KrgE0e
-	 dfxiJ6SCoFhm5h4BSiaFMcm2m51u2kbylvp7glBgxm0c4js+1DIQvRc3/0EDanaAeS
-	 kqkjc35em7Awg==
+	b=rKNnP3rBBkZRbHKVYz1QShJS+4IfX/xbRAtJX606Y/F8Op5EgkuDl/8K6FAnNqoed
+	 HyIN0kJCvh0zyIeA066XL17gwIRErH/gvXUPUztNBrmi5FVjiRBe0JWgJK2xMdaHXK
+	 Q77Cjcl010Qfn05RsOBMK74QQ6LcLgwpccZJf8boPdzgJTay4vKMIav9GxoVHXgRaS
+	 6XgneybIcpvtEqtVeB0wk9SlQ1cHdroVjzuLWoSD0Chfmbpznsz1mgtFyORA9hsvpV
+	 gettPxb7HX3iATfyyf9o7N5jU/gQnzaEpRSLEJfZdaacbdvKKO9jxzjgvG7jIAXZAY
+	 Tu3d+56nvBCXw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 28 Apr 2026 08:09:59 +0100
-Subject: [PATCH v3 15/28] nfsd: use RCU to protect fi_deleg_file
+Date: Tue, 28 Apr 2026 08:10:00 +0100
+Subject: [PATCH v3 16/28] nfsd: add data structures for handling CB_NOTIFY
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-dir-deleg-v3-15-5a0780ba9def@kernel.org>
+Message-Id: <20260428-dir-deleg-v3-16-5a0780ba9def@kernel.org>
 References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -75,23 +75,23 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7844; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=No/DWtPORXDhdI5WkPJdJmmnosV5Q4Pg2jWF0WLDzwk=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1RkF5WuHxwNVWZJ1MbpLK7jRjb79uOfX/1c
- khRktj08LeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdUQAKCRAADmhBGVaC
- FRn2D/9PFoBnQm1Qv/iECOPjs28AVeclsIDYZRg+40SW2liKczSE3ZhQQN1R4h4KguXp06E6rxt
- NCSUZbNjlvpMLbyWqez6vlfZd6HItIYxEzmB1RuxWPTiwtf8NhtkPMpKEjuCzo0lRFoy9z27F+t
- K5W1bGHZpsgqztw9fqmVtx+TNy+IzFLo2i/EBDiilSBueRf9ZDJtHqYhQI50qDt5pAwGE17jXJ8
- I2RbZqZl0XE5Bbe9O1CAEyMJXFlVnfxLVxxt/zu3ZSSh9c/v2j+v0anHKarj7KiVHRok0A4qMBl
- nrnMd1jWS19BX9Wsums14fRGXUXMR8i+vf6swReXEQ0OvlmuXnhJadl303tQdufKqkfRmXV4H4S
- 6DNELXxXgYwOU0XJzVTHFEXxAMpooIhQvW8z15Kxo22ay0DRRvxKaAGHT+7elCzz7Ezp/4BSLY4
- y9YTUOFoJ44MarZjTlhFse/mp2lFKvHr5o7Vl6Hm6/koyYHbCdXw7tTEEuHbOcbQDVOJuXfHtTL
- V/ndW2qruP2WvjQPkC2js59Aoea/9g/8UjzXhfx7TqW4ekU5azS7Ke7wU5BNQO7OUAbch1gU4vN
- 6aVcR8ctK+R9Apx2R4cwln/nhT+k9xYVDQjy2mDea0OFcIaJz5Havut4nznZZsKCZSMPrPjjM8y
- 6ad6ruZAytsnMqA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9059; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=m0C86TpkBBOMpDqujAm0G8449uKEm5DvGHdnM6gWWOs=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1RMYAci5ZIV6oRW5Ay2xGMRCDNdvkn//yeQ
+ M9kJbcEPSiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdUQAKCRAADmhBGVaC
+ FeVYEACMKrHkGsynkjtiUZ+K8GNgT+r5R9YjasRWmYEXSaBr/GSOgaL00MXC8q7Wm+Nxq64IhMD
+ yQYWagSyFuCrh7HrxSknKtWgX57SmrHRfLDuwt8owWESOC/N17jxYL9YkMCqtXgMfhsGhaQYDQF
+ OP9Vrv09bTOydDZL2f2XdT7aZIVROkl2vkKWkQqC3BU5hnZCb4L+MFDPIqr0p2Z/a/5brUgjk5n
+ EtOIk22stqO4l8G/s5+ryOpOdt9DCksuvA5WW/dzC87xKvxvamlLcAPQFifS9VWCCyN56lI8nAN
+ 9sgZ2YCMwumY5frXivI9D2rMKZke84aSO4sEhUnDJ0pz5WtFDRIOIAd71yWNz7L2OIdJJGFFoR5
+ WVl3LNmHmQeg7uDbneYJKCj46hE15xfM22CcrQWz153RIBAXBovJ9Dua6bd3lYMLtHRvxFm5zuS
+ AcQhiYwHSeIg+K7NF+J+W2SYvYtT8SWpwdmkeZh9w0lGorn7Mi22pBPTXVLntvv7DAu4/E90Ib+
+ qNne3MV87HISSsCJ14TaRPNvMPWMrsMI3DuNLW/0wQA0mB1HhqFazZfLkXsIBOn/AoINM191Npg
+ pTbCZyOodAptZmKb1tS5H488LiU451dp9pCSjv1CcIUpjz1Ai5APcmb5zarXgShfgk7i6/ji+H+
+ WbwgV9oBLJPIhtg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: 6F99747EA4D
+X-Rspamd-Queue-Id: 4C48047EA5C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -99,12 +99,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21227-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21228-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -123,199 +123,280 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-fi_deleg_file can be NULLed by put_deleg_file() when fi_delegees drops
-to zero during delegation teardown (e.g. DELEGRETURN). Concurrent
-accesses from workqueue callbacks -- such as CB_NOTIFY -- can
-dereference a NULL pointer if they race with this teardown.
+Add the data structures, allocation helpers, and callback operations
+needed for directory delegation CB_NOTIFY support:
 
-Annotate fi_deleg_file with __rcu and convert all accessors to use
-proper RCU primitives:
+- struct nfsd_notify_event: carries fsnotify events for CB_NOTIFY
+- struct nfsd4_cb_notify: per-delegation state for notification handling
+- Union dl_cb_fattr with dl_cb_notify in nfs4_delegation since a
+  delegation is either a regular file delegation or a directory
+  delegation, never both
 
-- rcu_assign_pointer() / RCU_INIT_POINTER() for stores
-- rcu_dereference_protected() for reads under fi_lock or where
-  fi_delegees > 0 guarantees stability
+Refactor alloc_init_deleg() into a common __alloc_init_deleg() base
+with a pluggable sc_free callback, and add alloc_init_dir_deleg() which
+allocates the page array and notify4 buffer needed for CB_NOTIFY
+encoding.
 
-This prepares for a subsequent patch that will use rcu_read_lock +
-rcu_dereference + nfsd_file_get to safely acquire a reference from
-the CB_NOTIFY callback path without holding fi_lock.
+Add skeleton nfsd4_cb_notify_ops with done/release handlers that will
+be filled in when the notification path is wired up.
 
-Assisted-by: Claude (Anthropic Claude Code)
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4layouts.c |  2 +-
- fs/nfsd/nfs4state.c   | 40 ++++++++++++++++++++++++----------------
- fs/nfsd/state.h       |  2 +-
- 3 files changed, 26 insertions(+), 18 deletions(-)
+ fs/nfsd/nfs4state.c | 118 +++++++++++++++++++++++++++++++++++++++++++++-------
+ fs/nfsd/state.h     |  46 +++++++++++++++++++-
+ 2 files changed, 148 insertions(+), 16 deletions(-)
 
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 8974e3d85d75..d32cc6b38c23 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -248,7 +248,7 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
- 			NFSPROC4_CLNT_CB_LAYOUT);
- 
- 	if (parent->sc_type == SC_TYPE_DELEG)
--		ls->ls_file = nfsd_file_get(fp->fi_deleg_file);
-+		ls->ls_file = nfsd_file_get(rcu_dereference_protected(fp->fi_deleg_file, 1));
- 	else
- 		ls->ls_file = find_any_file(fp);
- 	BUG_ON(!ls->ls_file);
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c0046fc3c1b1..ef04e26b4f30 100644
+index ef04e26b4f30..1c87fd8386a6 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -1212,7 +1212,9 @@ static void put_deleg_file(struct nfs4_file *fp)
+@@ -126,6 +126,7 @@ static void free_session(struct nfsd4_session *);
+ static const struct nfsd4_callback_ops nfsd4_cb_recall_ops;
+ static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops;
+ static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops;
++static const struct nfsd4_callback_ops nfsd4_cb_notify_ops;
  
- 	spin_lock(&fp->fi_lock);
- 	if (--fp->fi_delegees == 0) {
--		swap(nf, fp->fi_deleg_file);
-+		nf = rcu_dereference_protected(fp->fi_deleg_file,
-+					       lockdep_is_held(&fp->fi_lock));
-+		rcu_assign_pointer(fp->fi_deleg_file, NULL);
- 		swap(rnf, fp->fi_rdeleg_file);
- 	}
- 	spin_unlock(&fp->fi_lock);
-@@ -1295,7 +1297,7 @@ static void nfsd_fsnotify_recalc_mask(struct nfsd_file *nf)
- static void nfs4_unlock_deleg_lease(struct nfs4_delegation *dp)
- {
- 	struct nfs4_file *fp = dp->dl_stid.sc_file;
--	struct nfsd_file *nf = fp->fi_deleg_file;
-+	struct nfsd_file *nf = rcu_dereference_protected(fp->fi_deleg_file, 1);
+ static struct workqueue_struct *laundry_wq;
  
- 	WARN_ON_ONCE(!fp->fi_delegees);
- 
-@@ -3167,7 +3169,8 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 	/* XXX: lease time, whether it's being recalled. */
- 
- 	spin_lock(&nf->fi_lock);
--	file = nf->fi_deleg_file;
-+	file = rcu_dereference_protected(nf->fi_deleg_file,
-+					 lockdep_is_held(&nf->fi_lock));
- 	if (file) {
- 		seq_puts(s, ", ");
- 		nfs4_show_superblock(s, file);
-@@ -4949,7 +4952,7 @@ static void nfsd4_file_init(const struct svc_fh *fh, struct nfs4_file *fp)
- 	INIT_LIST_HEAD(&fp->fi_delegations);
- 	INIT_LIST_HEAD(&fp->fi_clnt_odstate);
- 	fh_copy_shallow(&fp->fi_fhandle, &fh->fh_handle);
--	fp->fi_deleg_file = NULL;
-+	RCU_INIT_POINTER(fp->fi_deleg_file, NULL);
- 	fp->fi_rdeleg_file = NULL;
- 	fp->fi_had_conflict = false;
- 	fp->fi_share_deny = 0;
-@@ -6101,7 +6104,7 @@ static struct file_lease *nfs4_alloc_init_lease(struct nfs4_delegation *dp, u32
- 	fl->c.flc_type = deleg_is_read(dp->dl_type) ? F_RDLCK : F_WRLCK;
- 	fl->c.flc_owner = (fl_owner_t)dp;
- 	fl->c.flc_pid = current->tgid;
--	fl->c.flc_file = dp->dl_stid.sc_file->fi_deleg_file->nf_file;
-+	fl->c.flc_file = rcu_dereference_protected(dp->dl_stid.sc_file->fi_deleg_file, 1)->nf_file;
- 	return fl;
+@@ -1123,29 +1124,31 @@ static void block_delegations(struct knfsd_fh *fh)
  }
  
-@@ -6109,7 +6112,7 @@ static int nfsd4_check_conflicting_opens(struct nfs4_client *clp,
- 					 struct nfs4_file *fp)
+ static struct nfs4_delegation *
+-alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
+-		 struct nfs4_clnt_odstate *odstate, u32 dl_type)
++__alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
++		   struct nfs4_clnt_odstate *odstate, u32 dl_type,
++		   void (*sc_free)(struct nfs4_stid *))
  {
- 	struct nfs4_ol_stateid *st;
--	struct file *f = fp->fi_deleg_file->nf_file;
-+	struct file *f = rcu_dereference_protected(fp->fi_deleg_file, 1)->nf_file;
- 	struct inode *ino = file_inode(f);
- 	int writes;
+ 	struct nfs4_delegation *dp;
+ 	struct nfs4_stid *stid;
+ 	long n;
  
-@@ -6186,7 +6189,7 @@ nfsd4_verify_deleg_dentry(struct nfsd4_open *open, struct nfs4_file *fp,
+-	dprintk("NFSD alloc_init_deleg\n");
++	if (delegation_blocked(&fp->fi_fhandle))
++		return NULL;
++
+ 	n = atomic_long_inc_return(&num_delegations);
+ 	if (n < 0 || n > max_delegations)
+ 		goto out_dec;
+-	if (delegation_blocked(&fp->fi_fhandle))
+-		goto out_dec;
+-	stid = nfs4_alloc_stid(clp, deleg_slab, nfs4_free_deleg);
++
++	stid = nfs4_alloc_stid(clp, deleg_slab, sc_free);
+ 	if (stid == NULL)
+ 		goto out_dec;
+-	dp = delegstateid(stid);
  
- 	exp_put(exp);
- 	dput(child);
--	if (child != file_dentry(fp->fi_deleg_file->nf_file))
-+	if (child != file_dentry(rcu_dereference_protected(fp->fi_deleg_file, 1)->nf_file))
- 		return -EAGAIN;
- 
- 	return 0;
-@@ -6292,8 +6295,9 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 		status = -EAGAIN;
- 	else if (nfsd4_verify_setuid_write(open, nf))
- 		status = -EAGAIN;
--	else if (!fp->fi_deleg_file) {
--		fp->fi_deleg_file = nf;
-+	else if (!rcu_dereference_protected(fp->fi_deleg_file,
-+					    lockdep_is_held(&fp->fi_lock))) {
-+		rcu_assign_pointer(fp->fi_deleg_file, nf);
- 		/* increment early to prevent fi_deleg_file from being
- 		 * cleared */
- 		fp->fi_delegees = 1;
-@@ -6318,7 +6322,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	if (!fl)
- 		goto out_clnt_odstate;
- 
--	status = kernel_setlease(fp->fi_deleg_file->nf_file,
-+	status = kernel_setlease(rcu_dereference_protected(fp->fi_deleg_file, 1)->nf_file,
- 				      fl->c.flc_type, &fl, NULL);
- 	if (fl)
- 		locks_free_lease(fl);
-@@ -6339,7 +6343,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	 * Now that the deleg is set, check again to ensure that nothing
- 	 * raced in and changed the mode while we weren't looking.
+ 	/*
+ 	 * delegation seqid's are never incremented.  The 4.1 special
+ 	 * meaning of seqid 0 isn't meaningful, really, but let's avoid
+-	 * 0 anyway just for consistency and use 1:
++	 * 0 anyway just for consistency and use 1.
  	 */
--	status = nfsd4_verify_setuid_write(open, fp->fi_deleg_file);
-+	status = nfsd4_verify_setuid_write(open, rcu_dereference_protected(fp->fi_deleg_file, 1));
- 	if (status)
- 		goto out_unlock;
- 
-@@ -6360,7 +6364,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 
++	dp = delegstateid(stid);
+ 	dp->dl_stid.sc_stateid.si_generation = 1;
+ 	INIT_LIST_HEAD(&dp->dl_perfile);
+ 	INIT_LIST_HEAD(&dp->dl_perclnt);
+@@ -1155,19 +1158,76 @@ alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
+ 	dp->dl_type = dl_type;
+ 	dp->dl_retries = 1;
+ 	dp->dl_recalled = false;
+-	nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_client,
+-		      &nfsd4_cb_recall_ops, NFSPROC4_CLNT_CB_RECALL);
+-	nfsd4_init_cb(&dp->dl_cb_fattr.ncf_getattr, dp->dl_stid.sc_client,
+-			&nfsd4_cb_getattr_ops, NFSPROC4_CLNT_CB_GETATTR);
+-	dp->dl_cb_fattr.ncf_file_modified = false;
+ 	get_nfs4_file(fp);
+ 	dp->dl_stid.sc_file = fp;
++	nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_client,
++		      &nfsd4_cb_recall_ops, NFSPROC4_CLNT_CB_RECALL);
  	return dp;
- out_unlock:
--	kernel_setlease(fp->fi_deleg_file->nf_file, F_UNLCK, NULL, (void **)&dp);
-+	kernel_setlease(rcu_dereference_protected(fp->fi_deleg_file, 1)->nf_file,
-+			F_UNLCK, NULL, (void **)&dp);
- out_clnt_odstate:
- 	put_clnt_odstate(dp->dl_clnt_odstate);
+ out_dec:
+ 	atomic_long_dec(&num_delegations);
+ 	return NULL;
+ }
+ 
++static struct nfs4_delegation *
++alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
++		 struct nfs4_clnt_odstate *odstate, u32 dl_type)
++{
++	struct nfs4_delegation *dp;
++
++	dp = __alloc_init_deleg(clp, fp, odstate, dl_type, nfs4_free_deleg);
++	if (!dp)
++		return NULL;
++
++	nfsd4_init_cb(&dp->dl_cb_fattr.ncf_getattr, dp->dl_stid.sc_client,
++			&nfsd4_cb_getattr_ops, NFSPROC4_CLNT_CB_GETATTR);
++	dp->dl_cb_fattr.ncf_file_modified = false;
++	return dp;
++}
++
++static void nfs4_free_dir_deleg(struct nfs4_stid *stid)
++{
++	struct nfs4_delegation	*dp = delegstateid(stid);
++	struct nfsd4_cb_notify *ncn = &dp->dl_cb_notify;
++	int i;
++
++	for (i = 0; i < ncn->ncn_evt_cnt; ++i)
++		nfsd_notify_event_put(ncn->ncn_evt[i]);
++	kfree(ncn->ncn_nf);
++	release_pages(ncn->ncn_pages, NOTIFY4_PAGE_ARRAY_SIZE);
++	nfs4_free_deleg(stid);
++}
++
++static struct nfs4_delegation *
++alloc_init_dir_deleg(struct nfs4_client *clp, struct nfs4_file *fp)
++{
++	struct nfs4_delegation *dp;
++	struct nfsd4_cb_notify *ncn;
++	int npages;
++
++	dp = __alloc_init_deleg(clp, fp, NULL, NFS4_OPEN_DELEGATE_READ, nfs4_free_dir_deleg);
++	if (!dp)
++		return NULL;
++
++	ncn = &dp->dl_cb_notify;
++
++	npages = alloc_pages_bulk(GFP_KERNEL, NOTIFY4_PAGE_ARRAY_SIZE, ncn->ncn_pages);
++	if (npages != NOTIFY4_PAGE_ARRAY_SIZE) {
++		release_pages(ncn->ncn_pages, npages);
++		nfs4_free_deleg(&dp->dl_stid);
++		return NULL;
++	}
++
++	ncn->ncn_nf = kcalloc(NOTIFY4_EVENT_QUEUE_SIZE, sizeof(*ncn->ncn_nf), GFP_KERNEL);
++	if (!ncn->ncn_nf) {
++		nfs4_put_stid(&dp->dl_stid);
++		return NULL;
++	}
++	spin_lock_init(&ncn->ncn_lock);
++	nfsd4_init_cb(&ncn->ncn_cb, dp->dl_stid.sc_client,
++			&nfsd4_cb_notify_ops, NFSPROC4_CLNT_CB_NOTIFY);
++	return dp;
++}
++
+ void
+ nfs4_put_stid(struct nfs4_stid *s)
+ {
+@@ -3389,6 +3449,30 @@ nfsd4_cb_getattr_release(struct nfsd4_callback *cb)
  	nfs4_put_stid(&dp->dl_stid);
-@@ -6517,8 +6522,9 @@ nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
- 	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->dl_stid.sc_stateid));
+ }
  
- 	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
--		struct file *f = dp->dl_stid.sc_file->fi_deleg_file->nf_file;
-+		struct file *f;
++static int
++nfsd4_cb_notify_done(struct nfsd4_callback *cb,
++				struct rpc_task *task)
++{
++	switch (task->tk_status) {
++	case -NFS4ERR_DELAY:
++		rpc_delay(task, 2 * HZ);
++		return 0;
++	default:
++		return 1;
++	}
++}
++
++static void
++nfsd4_cb_notify_release(struct nfsd4_callback *cb)
++{
++	struct nfsd4_cb_notify *ncn =
++			container_of(cb, struct nfsd4_cb_notify, ncn_cb);
++	struct nfs4_delegation *dp =
++			container_of(ncn, struct nfs4_delegation, dl_cb_notify);
++
++	nfs4_put_stid(&dp->dl_stid);
++}
++
+ static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
+ 	.done		= nfsd4_cb_recall_any_done,
+ 	.release	= nfsd4_cb_recall_any_release,
+@@ -3401,6 +3485,12 @@ static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops = {
+ 	.opcode		= OP_CB_GETATTR,
+ };
  
-+		f = rcu_dereference_protected(dp->dl_stid.sc_file->fi_deleg_file, 1)->nf_file;
- 		if (!nfsd4_add_rdaccess_to_wrdeleg(rqstp, open, fh, stp) ||
- 				!nfs4_delegation_stat(dp, currentfh, &stat)) {
- 			nfs4_put_stid(&dp->dl_stid);
-@@ -9660,8 +9666,9 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
- 	/* existing delegation? */
- 	if (nfs4_delegation_exists(clp, fp)) {
- 		status = -EAGAIN;
--	} else if (!fp->fi_deleg_file) {
--		fp->fi_deleg_file = nfsd_file_get(nf);
-+	} else if (!rcu_dereference_protected(fp->fi_deleg_file,
-+					      lockdep_is_held(&fp->fi_lock))) {
-+		rcu_assign_pointer(fp->fi_deleg_file, nfsd_file_get(nf));
- 		fp->fi_delegees = 1;
- 	} else {
- 		++fp->fi_delegees;
-@@ -9713,7 +9720,8 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
- 	}
++static const struct nfsd4_callback_ops nfsd4_cb_notify_ops = {
++	.done		= nfsd4_cb_notify_done,
++	.release	= nfsd4_cb_notify_release,
++	.opcode		= OP_CB_NOTIFY,
++};
++
+ static void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf)
+ {
+ 	struct nfs4_delegation *dp =
+@@ -9683,7 +9773,7 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
  
- 	/* Something failed. Drop the lease and clean up the stid */
--	kernel_setlease(fp->fi_deleg_file->nf_file, F_UNLCK, NULL, (void **)&dp);
-+	kernel_setlease(rcu_dereference_protected(fp->fi_deleg_file, 1)->nf_file,
-+			F_UNLCK, NULL, (void **)&dp);
- out_put_stid:
- 	nfs4_put_stid(&dp->dl_stid);
- out_delegees:
+ 	/* Try to set up the lease */
+ 	status = -ENOMEM;
+-	dp = alloc_init_deleg(clp, fp, NULL, NFS4_OPEN_DELEGATE_READ);
++	dp = alloc_init_dir_deleg(clp, fp);
+ 	if (!dp)
+ 		goto out_delegees;
+ 	if (cstate->current_fh.fh_export)
 diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 22c9a1e7d8fd..eb5946b0999e 100644
+index eb5946b0999e..500e07e47909 100644
 --- a/fs/nfsd/state.h
 +++ b/fs/nfsd/state.h
-@@ -698,7 +698,7 @@ struct nfs4_file {
- 	 */
- 	atomic_t		fi_access[2];
- 	u32			fi_share_deny;
--	struct nfsd_file	*fi_deleg_file;
-+	struct nfsd_file __rcu	*fi_deleg_file;
- 	struct nfsd_file	*fi_rdeleg_file;
- 	int			fi_delegees;
- 	struct knfsd_fh		fi_fhandle;
+@@ -197,6 +197,44 @@ struct nfs4_cb_fattr {
+ #define NOTIFY4_EVENT_QUEUE_SIZE	3
+ #define NOTIFY4_PAGE_ARRAY_SIZE		1
+ 
++struct nfsd_notify_event {
++	refcount_t	ne_ref;		// refcount
++	u32		ne_mask;	// FS_* mask from fsnotify callback
++	struct dentry	*ne_dentry;	// dentry reference to target
++	u32		ne_namelen;	// length of ne_name
++	char		ne_name[];	// name of dentry being changed
++};
++
++static inline struct nfsd_notify_event *nfsd_notify_event_get(struct nfsd_notify_event *ne)
++{
++	refcount_inc(&ne->ne_ref);
++	return ne;
++}
++
++static inline void nfsd_notify_event_put(struct nfsd_notify_event *ne)
++{
++	if (refcount_dec_and_test(&ne->ne_ref)) {
++		dput(ne->ne_dentry);
++		kfree(ne);
++	}
++}
++
++/*
++ * Represents a directory delegation. The callback is for handling CB_NOTIFYs.
++ * As notifications from fsnotify come in, allocate a new event, take the ncn_lock,
++ * and add it to the ncn_evt queue. The CB_NOTIFY prepare handler will take the
++ * lock, clean out the list and process it.
++ */
++struct nfsd4_cb_notify {
++	spinlock_t			ncn_lock;	// protects the evt queue and count
++	int				ncn_evt_cnt;	// count of events in ncn_evt
++	int				ncn_nf_cnt;	// count of valid entries in ncn_nf
++	struct nfsd_notify_event	*ncn_evt[NOTIFY4_EVENT_QUEUE_SIZE]; // list of events
++	struct page			*ncn_pages[NOTIFY4_PAGE_ARRAY_SIZE]; // for encoding
++	struct notify4			*ncn_nf;	// array of notify4's to be sent
++	struct nfsd4_callback		ncn_cb;		// notify4 callback
++};
++
+ /*
+  * Represents a delegation stateid. The nfs4_client holds references to these
+  * and they are put when it is being destroyed or when the delegation is
+@@ -233,8 +271,12 @@ struct nfs4_delegation {
+ 	bool			dl_written;
+ 	bool			dl_setattr;
+ 
+-	/* for CB_GETATTR */
+-	struct nfs4_cb_fattr    dl_cb_fattr;
++	union {
++		/* for CB_GETATTR */
++		struct nfs4_cb_fattr    dl_cb_fattr;
++		/* for CB_NOTIFY */
++		struct nfsd4_cb_notify	dl_cb_notify;
++	};
+ 
+ 	/* For delegated timestamps */
+ 	struct timespec64	dl_atime;
 
 -- 
 2.54.0
