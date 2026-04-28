@@ -1,152 +1,174 @@
-Return-Path: <linux-nfs+bounces-21243-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21244-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qIDBGjJw8Gn9TQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21243-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 10:30:42 +0200
+	id cHY5IY938GlgTwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21244-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 11:02:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9D794801E8
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 10:30:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBF41480D07
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 11:02:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 26ACC3076D4C
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 08:25:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 45550306704F
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 08:42:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5054374728;
-	Tue, 28 Apr 2026 08:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C023CFF53;
+	Tue, 28 Apr 2026 08:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slQJt4uK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813E93921ED
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 08:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777364700; cv=none; b=C+JzM1LvdLjppsP2S+tQzy5+wFAuytnB7LlyzIJmTQK53saDphyFUQUDQqHoULJtz+5Psf0rHtj6tV9CVzl/gpx9oB9a0LU9xF9AFYI9ha6AJoA5gXlGwhMZvqurBZTErUuqNsN3vIv+YuNJrlzKwWTl3ZxGk1wqT+dkfhymhVc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777364700; c=relaxed/simple;
-	bh=CQ3GaHA7NL7ewDN3CSbNEb9w0aVmEQz7PCK/5xpVBPs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=HGrMWj3zSgzw6krxidvblJISl7sGc7lIzS4ukZe+72b5XdN6LdfD14+ExW4Kq7WfP8Irqou2ygj4hYtF20Smmz7T4U/lTnTWgUVOGWnZOQR+Tu16QdQhvfoKpvnyRovj3uC+tMTQFZvtf2cLU8UXQNLBDqMGnYOMfFkFWTLgFD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374732580F2
+	for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 08:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777365738; cv=pass; b=dnuijUEfjb/qHECS7Z0Tn2A+rU9+ncGJvLSfSZWcT5f51PClmxd/J4mS0SsKxIPAseDT8jPEFvO6Ihe8HUJRa0Et68O7kMwBmQdMlku61ekeMmAMVgFvSbKsaE8Rz8llyV2v88VsnskzaCvE6CJbwtZbX/o/B4ubwOjvqqgY6ag=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777365738; c=relaxed/simple;
+	bh=r4jadazlBFvDwLcmnJGW62NBtGRbnAEUuBnmXckHh/c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=aBOWJPbUtQglgcs8YoDjii1qBjyLhI31uVVyAo+E70fyvaRKxMHv8z/HToYDhcYA3X4gktcmnlmH3+3j+j2pD3Fc+C2xLGxWsVhw2pDkBWkWfgI/PtTLD4LFMiYPEnZSPChp2Cw0UGuGyPo8OQgA0nFmm8Thlvq6md9xmFlHuO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=slQJt4uK; arc=pass smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488d2079582so131211405e9.2
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 01:24:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777364697; x=1777969497;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-670ab084a39so16865143a12.3
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 01:42:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777365735; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PZGNqm9kvJVcG0bklwGTBMYrHnxeUVGoSOhJaLvoTe/9PCoTjF53rQn2j9it7KC11G
+         ImwpD7Sgnrw0p8AspFjKk8JZsnLdqZpGpL5w6PEN0WLk2r6AYhRVxwQjH+MWb4X3T1I2
+         hnLCXsJYquXxSlxQebuG21b3p5wos6XwGxu68MG/fXM4yiPPiDDs8oAOWVVUyDg09AlS
+         BAO694EGlca6qFG/2I2BMuwo3C39mlVosKjJRrkFO58QAs6EDJ0Yo4huy81mT/yTcBeT
+         /H7VS/Kne2ODKIt6MejbYKPMOYPDSmtXszxXnKsP1Jyl41yQ4N8GmctwvjELMK1KynrS
+         di2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=r4jadazlBFvDwLcmnJGW62NBtGRbnAEUuBnmXckHh/c=;
+        fh=Kn+NjTyO3mUjkEi4WAC1QzCAopeWl7zUG4dYgNp1xd4=;
+        b=XYEuR5luIF8KNDdXhe4UsqfIITbTwVUDeuPiqH3h0IpTW9MXpcXY/D1ISHmpCI0c0u
+         EvekAlxk4fahfC+RR6nM4cqQZconkmUEIVvqiBqVBAdUGi5ygdCEZU+mibxOGeclAroJ
+         rDIyZv068Pqy0SqAYl3PiRQ47sOj1Z263H/KP5BRWmCOzGun0pMJ5MK2WGMLwauJ6mEr
+         heTyU5HfJckJl0nbu3+4GiAaucMMNLPOQBpKDn90M+0uGdABMkx+Dv8vFlB9dzgpdlUj
+         eh5+1Qfo2hn9FdPw/EQD4sEekk56H8sueO81fpRX6Vh02GlhqyeqmNyNmtWYvQ5hXSHl
+         FVEA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777365735; x=1777970535; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i/SOIwk6JFY4kiwKYICkEYlTGSV7bIkJwlX50Zyd5eU=;
-        b=C53dEVkraofd38DBC76woj5Sa5SB19dY8zA9FvwgnqzATST2XUGUznjOdYym+GFBmd
-         ggmcKnw0sdXJvZuiR3GgJQmH/Ib+AucxICtDZmsRddjLwjDLeQQP35wDjCMPOqLk9GdZ
-         w82DPSY+ADo9wyBivdxCuqnp1fuDX3FrJUfDUpdR5dDvplzFHsDaZX+ns2eWazfr2fh/
-         CntaxgVrUf8B3B1MCTWCBm7jDIBc7afPEzN04L4mql4+9a2NqjY2OBeW0Sh5qUeO8iXz
-         emWqf4mdZc4xqkVzTLzyqu0ALw34LuFW8M3pcToZpdOK+CGe+7PgQHt4h1sM+ue6JFZI
-         vbnw==
-X-Gm-Message-State: AOJu0Yw/jhrILcPNohRv+lXiqKkGBBlMwwDPbdyE053DvzsZAbmjRkMF
-	UEI8SwvvmczlVJJ/FNPIVnp0/FMqE+CE8NI3eE381jppg3nQzsr+rfY7WofhqA==
-X-Gm-Gg: AeBDiev6p2PAOMvdH/uGO9E8AzObf2YUkg4VPykGeHkWKqEUI3zZ7zHaT2ikbBcRam1
-	G5Q3nE8s73DK3os1C6btZucOyqG6Y770FnJtCpVgXpWcCo9tdmtle86A0CmEtWvXxZkvdEzrGqs
-	hg2ahLfOcOoSLYv70+WsmFwBnTYO+kT7sgP355rTeyvFVIb2lKEBpXyDgNjmUUsk2rqBQ6eluXW
-	CeFqEQD+m0eMBKDOr0pqA5ppqfm8cJU1DvaUR60UvUE34G74Dgfa6usIdF4WRucUm3bXgIG9GI3
-	i3f0U2qI1Q5uzIihh/pfrnUYYOJFlsCMwjXbDdWmKXhYv6ir1n+cxbCmfB1ZAp99ig4fACJiBv+
-	pmAwF+k7FBNCE0as2wBYB49yI1Yp1MD+mT23b7ig66ip0DQksmmRANpeXLy3VH69lbMWUIeRiEA
-	NOg0MTWOnLDc+PT8koFs/q0i88/XGI65PfOhGWEU3DhIzXSZmNanKXLyTj2zXT8ftP0XpOPBgxl
-	mJSutKhYgk1Wrn8aNLHNl5i
-X-Received: by 2002:a05:600c:3b1b:b0:48a:56de:d62a with SMTP id 5b1f17b1804b1-48a77afdb10mr32046075e9.11.1777364696692;
-        Tue, 28 Apr 2026 01:24:56 -0700 (PDT)
-Received: from vastdata-ubuntu2.vastdata.com (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a775eb91dsm13394375e9.20.2026.04.28.01.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 01:24:56 -0700 (PDT)
-From: Sagi Grimberg <sagi@grimberg.me>
-To: linux-nfs@vger.kernel.org,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH rfc] NFSv4: Keep delegation post REMOVE in case server supports preserved-unliked
-Date: Tue, 28 Apr 2026 11:24:54 +0300
-Message-ID: <20260428082454.26045-1-sagi@grimberg.me>
-X-Mailer: git-send-email 2.43.0
-Reply-To: sagi@grimberg.me
+        bh=r4jadazlBFvDwLcmnJGW62NBtGRbnAEUuBnmXckHh/c=;
+        b=slQJt4uK5AAfT8AXL8SQyo1AuUpU2Y5HQKU51U4qhYN1CWK6hLAX50SQ7fPqc96mSi
+         tTH3Sz2mfEQkn7gyr3Cy2yyYcnonF7T1zENftEwUUWe0dipJ5SxuMfk78NGKuCqJRUWK
+         IOaFp+Ysjk+lHx4/NGciQ8P0EFmPo8e2dbtfo+IAWy9AZbBcw58qjAqYDJz/h2g5gynB
+         jZRy07pODe6EQW0yDE1qd0xPIkM+rL7s+izjwbz9woDFm+ateuPaNezOL3lQPRK5abJT
+         a1wTBjZQEc+N3FvZnzjVSrD6qufswuAi3GQ8MAngALw0SXfMMMEPLcBHOntLmEt4XWPl
+         RGYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777365735; x=1777970535;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=r4jadazlBFvDwLcmnJGW62NBtGRbnAEUuBnmXckHh/c=;
+        b=O73/DqCq7aPpVIc8MTp7WMhEud25DKQ6FOP+IF37md62lLBBhMrGttOGuC28AfOaHV
+         jW3CkX2Uf/KQfw+c22oTmHY0OIjffagEY+OUJgP+2oCttK4v6jX51kQzIeXNGegb/buS
+         p7KCLBngoekfuafGMZcuHYGFqt/LVyavHvdaCePR2ZekD/UMvcJh1aInYb8Qad9xIEgs
+         St7H5a+vP8236cTqVPhN2+xgut8pbOCLXO1kyp7KUMQ6X7LUV6mHXR5QpihBvUK0VL8j
+         1tvHl4T1SCcyAV0X4Pc9mKIfI2o7GIzsvpHW6xKLvylL59P7Guczypy7d9BrVMsjV4iT
+         14ZQ==
+X-Gm-Message-State: AOJu0YyvPUkocN51PsBtkYrd8/Vn7A58UCYMsaTVQFsw8RxatD4WSYyx
+	V/7XaoLvWOo9BV7O6k7CcRUn3bDG6fd/q86MqacXtUGLpfCzj4BKbAU5Q+A/76n/T4GAfOzlOl1
+	YFbqo3VI4KQ+ji8BPtWLbZAbRl59fwMV/mt19
+X-Gm-Gg: AeBDiev1UuswWt5YeioQPZxu9Iu/hqlr/AfI9FCtUIfQ7QXccPpiNXrYjHnwRnhj7nL
+	q32VZY6O1FtbH/Om3c3nIGxMWos0aXfw5M+l/Vrzl2czxl9Ylwll8sGf8aslclDVmmErxKsncZ6
+	aC8ofz8Zty7BT9khKITU6lgnbGyv4UG7jxMEpfnImnRF0SGg+PCe8toe1bgzm9l6NJkUhoBsU7i
+	vqqCveOfy3sBFEGqEffpZiR4c6mSk7sWRU29Ruv7EWLSrmW/UJS7O/jK09oKAlVAjHzoqZsIC5C
+	BA0xFODVCN7Xs+jniaFwlfvvqMAE+FaPjL+mZZMtwwLA9JVb0A==
+X-Received: by 2002:a05:6402:2404:b0:670:4445:c326 with SMTP id
+ 4fb4d7f45d1cf-679bb056675mr897445a12.7.1777365735000; Tue, 28 Apr 2026
+ 01:42:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D9D794801E8
+References: <CAKAoaQkL_e0-5c8T1c6G7qQA_5vjf75MQffuy4J7x=AO90+ykA@mail.gmail.com>
+ <CANH4o6PPZk3UwFBO+e2pF=5Z0-sZDNEJ9kReL9ZANH=VKpbw9w@mail.gmail.com>
+In-Reply-To: <CANH4o6PPZk3UwFBO+e2pF=5Z0-sZDNEJ9kReL9ZANH=VKpbw9w@mail.gmail.com>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Tue, 28 Apr 2026 10:41:39 +0200
+X-Gm-Features: AVHnY4LlsmcbfXd9UpXgsN3rHLogk3dfBqh4_RgFy7B13kx5UwGOufZ3ueNWuSM
+Message-ID: <CA+1jF5qEAR6GYf-_gnLQH1mwt4T6wECQD-CKB+S5MCMmUiQVCw@mail.gmail.com>
+Subject: Linux script-driven idmapper, Linux idmapper for multi-site
+ idmapping? Re: [Ms-nfs41-client-devel] [Announcement] NFSv4.2/NFSv4.1
+ filesystem client Windows driver binaries for Windows 10/11+WindowsServer
+ 2019/2022/2025 for testing, 2026-04-27 ...
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, ms-nfs41-client-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: BBF41480D07
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-0.32 / 15.00];
+	LONG_SUBJ(1.84)[246];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21244-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21243-lists,linux-nfs=lfdr.de];
-	DMARC_NA(0.00)[grimberg.me];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[sagi@grimberg.me];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.949];
+	RCPT_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[aureliencouderc2002@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[grimberg.me:email,grimberg.me:replyto,grimberg.me:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	SUBJECT_HAS_QUESTION(0.00)[]
 
-If the server returns NFS4_OPEN_RESULT_PRESERVE_UNLINKED, it means that
-the file handle is kept alive for as long as the file is opened (or its
-delegation is held). Hence, we can skip re-opening the file and returning
-the delegation in this case.
+On Mon, Apr 27, 2026 at 8:46=E2=80=AFPM Martin Wege <martin.l.wege@gmail.co=
+m> wrote:
+>
+> Hello,
+>
+> Please test the binaries. The NFSv4.2/4.1 client is for Windows 10/11
+> ARM64+AMD64+x86 and Windows Server 2019+2022+2025/AMD64, but
+> Interoperability feedback with NFSv4.1/NFSv4.2 servers based on Linux
+> 6.6+ LTS and 6.19+/7.1 would be great.
+>
+> News:
+> See announcement below; New idmapper which maps any NFS user/group to
+> any Windows user/group,
 
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
----
- fs/nfs/nfs4proc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+IMO the interesting bit here is the (bash, perl, python) script-driven
+idmapper. It has much more flexibility, and covers the multi-site use
+case (one NFS client connecting to several different NFS sites with
+different account management rules), which the Linux idmapper
+currently covers very poorly.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 91bcf67bd743..129424eacf99 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4921,10 +4921,17 @@ static int nfs4_proc_remove(struct inode *dir, struct dentry *dentry)
- 	int err;
- 
- 	if (inode) {
--		if (inode->i_nlink == 1)
--			nfs4_inode_return_delegation(inode);
--		else
-+		/*
-+		 * nlink > 1 or server supports NFS_INO_PRESERVE_UNLINKED
-+		 * the inode is not going away. we're promised to keep the
-+		 * inode alive past REMOVE for as long as any client reference
-+		 * remains. So we can keep the delegation around.
-+		 */
-+		if (inode->i_nlink > 1 ||
-+		    test_bit(NFS_INO_PRESERVE_UNLINKED, &NFS_I(inode)->flags))
- 			nfs4_inode_make_writeable(inode);
-+		else
-+			nfs4_inode_return_delegation(inode);
- 	}
- 	do {
- 		err = _nfs4_proc_remove(dir, &dentry->d_name, NF4REG);
--- 
-2.43.0
+How difficult would it be to port this to Linux?
 
+Aur=C3=A9lien
+--=20
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
