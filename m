@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21217-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21218-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UDvbAspd8GnDSQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21217-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:12:10 +0200
+	id AGe6Lvhd8GnDSQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21218-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:12:56 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0850047E849
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:12:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8103C47E899
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:12:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 04BB5301DE75
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:10:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 07D953058307
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75493A963C;
-	Tue, 28 Apr 2026 07:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BF6E3AC0CB;
+	Tue, 28 Apr 2026 07:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WoZRz2pj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlRGaUb9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23F73A759D;
-	Tue, 28 Apr 2026 07:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F204964F;
+	Tue, 28 Apr 2026 07:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360242; cv=none; b=L7cSWbdWank0cWKKrNnSU/Vx1govEyzsGLegJzptE4meAH1ZAVg6jX9KDudGzfiSWeUGAY0HZS7w6DpPkOQYKBzI0aKCC7d9qNmucqK/awPcnJE4nqNLL1AyW0BDiP98GSAtoqA5W6bo+9LUlT4K2SXolZAjv3cterg9KJBqCmM=
+	t=1777360247; cv=none; b=twZufm9gFR41LAph24qziayVs+53ceR7REIZbhHApO0v1yCju38u7VpDmCEqRgTzHJaeOddZn1N0CNGh/y/zckI9upnLDBY1w27WSW/HGxGjV7tEkYAjfKdonP/Th+kELArktcZlLg69DKlg79iCzsIUxNdAUVL72HtQiGi4IJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360242; c=relaxed/simple;
-	bh=De00MlFrQJ0V85UIwGjDHrcc8+0WC3lBEWRCtuTezRI=;
+	s=arc-20240116; t=1777360247; c=relaxed/simple;
+	bh=qXmxSNyMZVfebhWWPohdwpJs8hscP/x2dW7xOYsk7FI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M64KxFKyJFoB7e3MZ9mhOgMPWG5+mPatFWzDMiKYNfiA5ervwgTtQRD4y4lT7rWmR6k16HOUKT3Q/yzcff7w8ZsDVKK6/Jb75SL230ZZw+Tnxffz/pay04cBB3mhxvbMu0E62lrp+9pdxkwzpDH27lhcL1B44GLChbas1xUAk24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WoZRz2pj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F63C2BCAF;
-	Tue, 28 Apr 2026 07:10:38 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=XRUwHNyNU+I6ZbpAJDpzHwYnO3J3O3Qq6MgKgMpC3hWThkj6wye3A2DPINcMnwYc/Qjb+0Qopya37U9tF1Ncxsi1gUTzf83635KbJnYKBkhcOIEcwMQ8QlL/p/TpFq73ap8N2W/jIELBSl5i8WcF1sS46MUt3R61niKr6aHpIhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlRGaUb9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F78C2BCB8;
+	Tue, 28 Apr 2026 07:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777360242;
-	bh=De00MlFrQJ0V85UIwGjDHrcc8+0WC3lBEWRCtuTezRI=;
+	s=k20201202; t=1777360246;
+	bh=qXmxSNyMZVfebhWWPohdwpJs8hscP/x2dW7xOYsk7FI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WoZRz2pj5RUkymf4s3+GI7GYYNQCnHcZLU5rpsiwJZMV8bknzSf3s/vPQ2EE2Y4a+
-	 ryQwZOW0B8mxfX3wn2y0yZ3wDbTNJCb/iPrji53YN2WjNg1rhL34sfhMWLpOlcAEZi
-	 Ydl+b64phXHPg7tgUGSBhC2hdCGTf22iwV9dnDJ/utSRYq5MHrNV3BkNNsBj5clG9L
-	 Tgg4ZOrQXQjekpPyh8Z0zDKJGr/61JrYvTxdgqbDmg5zdCAFmK8hzIWXAI80PmnKM+
-	 UTp3JJPloRNe1pN8WVChUkW6Q6fqOetpemsrNxVUslq5qk0uHOMgG6FKrgY7yg/+x0
-	 /0WF3sOYt5PZg==
+	b=FlRGaUb92lb2xmiWM3umFl0dFOqupPz8lkhAm5O7eiW/WXl0FuPLkk+2uAdM5GkX+
+	 rKtc/gXTNZmORhhKxnxv1Y1dBDZCULFhMOhDXwxpMdFkQuu1PotaBj9CSqB6msoo+Z
+	 crYtp7qvvFHuG/hFfhpr7zsufRRk6uNTpcs6GtuFsFPMSlsNBSqOXrhweXL8oyQM7J
+	 UBU0Zwk2KoT5kB5Y+JkhdzXIgSVJ0QtcMI5WXJm2lnXBnk8ejWH1aKMlEqcj2mSuH/
+	 nqzo8XnhROhbikckRsFy7bImhuiukoV393s2rrY4KRKCuJ+0BQPxrPd9LS/inhsWDW
+	 sxpQeuDXBoM4g==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 28 Apr 2026 08:09:49 +0100
-Subject: [PATCH v3 05/28] fsnotify: new tracepoint in fsnotify()
+Date: Tue, 28 Apr 2026 08:09:50 +0100
+Subject: [PATCH v3 06/28] fsnotify: add fsnotify_modify_mark_mask()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-dir-deleg-v3-5-5a0780ba9def@kernel.org>
+Message-Id: <20260428-dir-deleg-v3-6-5a0780ba9def@kernel.org>
 References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -75,23 +75,23 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4199; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=De00MlFrQJ0V85UIwGjDHrcc8+0WC3lBEWRCtuTezRI=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1O0YduBPP7mTpP6tn5nuPakUzLToKY/viDw
- Jt1WX3IyJeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdTgAKCRAADmhBGVaC
- FauiD/9is1l/3fTtoK7FeP3BP2+/zW7ngsi6zeqMB9851qnAn4L5e9zh6MwtMYBtB9zk8Zdm0zV
- ofxCILANC7aQmy7ONdyETZMLJ0YPYSv+t3d9LS5LJb82HTPfkkKk4FLLIdQSY5zaRYmdYLAVzLb
- 8GliVw6tfYt8qy/5N6nEoAddKAitebm7P74JnEL7kLE8vJHLAS8iN0j0+wZXWMpDjvdng2SYqT5
- vn8XNO//7ug+1lp704tU8tfF13US8EJaEbhEThhT3WZ07B4hRt3fgB3mqZr30AAEhgQP6x+6uFp
- kcKZvjLZ/OMdadaq+jqvghT1bTj75AUYzvqx7N7YhVJ33IUTlqYZRUzVNjnbvNOoTjZresy9ZjB
- Wg4Bwu0OkvXcwCPDy8/Cn4Ryj8EvZJ250Mz0KGr9vErwNlRDo9fVKjBUQ0vxK7wkp6m9u4IQC2A
- vR+R/qfGUgnaLurkOwFVo/R0VzXiPqOlpPenePf3aVOx6DdkAkqQLFbo5PEoEIpLmvxhupNr0D4
- DNEOl7t1Tn6QFqxN19CZZBzJMK198WOXx1j/OgPUUrUt7WDBtoq6M9Gf/he8SaV/2lSmeM4hh2i
- QMpnQZToDeP1y8zdk517q2n9qgfFaex83pNmpPdAotuJCJIaXDamzSaPehHzG6hVJYYn+/jDKib
- 52zKWsz381WdDqQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2430; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=qXmxSNyMZVfebhWWPohdwpJs8hscP/x2dW7xOYsk7FI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1O2z/3ZM3yxpTY2Zx/Ed5wY2NxZElbjAyvK
+ lHoenFQfFGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdTgAKCRAADmhBGVaC
+ FXOWD/9/CS7Fqv+If3CgI4XRCQ1EEw7YtkSM8QXLufT/JKhDu+whFFgdSOcJK8E9WfcPfaDjODi
+ AcvaDIGdoUuhSY/coSuZQ+eV/GRmq/hnOdS0Q3J35wGLcG60KpYuHttfRarHZXuMixorhK0LkAz
+ 3+MRiZwTyEaQy6s1Q6LC5ibIJ2hR2SAwYSTdrAh/Pe0u4uvA8GdBEWdlePjNH3Bz1PH4478KNea
+ kcFuNmUQ9Ycd/bjZPRj1b3IlZTiy4Jr3PTPNFd5vgFZCqN5EBkVsEuU8rK6DICPOBDdlYFfgel1
+ XbQAWcSYDqOWPGKrCsmQTKCGJprlsaQInFCglI60dYc6HtGhmAStMvtFHmTQoND3bF1mCCq6Eep
+ pLKvlj7qs3uFBnVXDh1ciac4OKH+d3dSOUn4O80ucwlMOok7Dg56FDJvhv8bXrcXx3c85tXQ/jU
+ JpJvxjmZ+ZCLf/uIdHvUZ1KVzHePrX1BGz1pPHX95TPdC//UI0HDM0Z/8HRXEiv7xuqytxYhtLj
+ Jc3WiK0K6HNk6JIVxmDhnyLHjZsKhoAcFeQ3kBCibY5J/GNcntWsNQI5hyVjfHuwFUJowt1tLIL
+ HwZJRtwgsMb+pmsQO/IwiQ8BfExIGRd7S7cpuP8ZDZtsp1nSSPKrRSl2KhSGmtSMnOPCUuZIdRB
+ Y8WppMwwTCeWEQg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: 0850047E849
+X-Rspamd-Queue-Id: 8103C47E899
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -99,12 +99,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21217-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21218-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -120,140 +120,74 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,suse.cz:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-Add a tracepoint so we can see exactly how this is being called.
+nfsd needs to be able to modify the mask on an existing mark when new
+directory delegations are set or unset. Add an exported function that
+allows the caller to set and clear bits in the mark->mask, and does
+the recalculation if something changed.
 
+Suggested-by: Jan Kara <jack@suse.cz>
 Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/notify/fsnotify.c            |  5 ++++
- include/trace/events/fsnotify.h | 51 +++++++++++++++++++++++++++++++++++++++++
- include/trace/misc/fsnotify.h   | 35 ++++++++++++++++++++++++++++
- 3 files changed, 91 insertions(+)
+ fs/notify/mark.c                 | 29 +++++++++++++++++++++++++++++
+ include/linux/fsnotify_backend.h |  1 +
+ 2 files changed, 30 insertions(+)
 
-diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index 9995de1710e5..5448738635f6 100644
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -14,6 +14,9 @@
- #include <linux/fsnotify_backend.h>
- #include "fsnotify.h"
+diff --git a/fs/notify/mark.c b/fs/notify/mark.c
+index c2ed5b11b0fe..b1e73c6fd382 100644
+--- a/fs/notify/mark.c
++++ b/fs/notify/mark.c
+@@ -310,6 +310,35 @@ void fsnotify_recalc_mask(struct fsnotify_mark_connector *conn)
+ 		fsnotify_conn_set_children_dentry_flags(conn);
+ }
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsnotify.h>
-+
- /*
-  * Clear all of the marks on an inode when it is being evicted from core
-  */
-@@ -504,6 +507,8 @@ int fsnotify(__u32 mask, const void *data, int data_type, struct inode *dir,
- 	int ret = 0;
- 	__u32 test_mask, marks_mask = 0;
- 
-+	trace_fsnotify(mask, data, data_type, dir, file_name, inode, cookie);
-+
- 	if (path)
- 		mnt = real_mount(path->mnt);
- 
-diff --git a/include/trace/events/fsnotify.h b/include/trace/events/fsnotify.h
-new file mode 100644
-index 000000000000..341bbd57a39b
---- /dev/null
-+++ b/include/trace/events/fsnotify.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsnotify
-+
-+#if !defined(_TRACE_FSNOTIFY_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSNOTIFY_H
-+
-+#include <linux/tracepoint.h>
-+
-+#include <trace/misc/fsnotify.h>
-+
-+TRACE_EVENT(fsnotify,
-+	TP_PROTO(__u32 mask, const void *data, int data_type,
-+		 struct inode *dir, const struct qstr *file_name,
-+		 struct inode *inode, u32 cookie),
-+
-+	TP_ARGS(mask, data, data_type, dir, file_name, inode, cookie),
-+
-+	TP_STRUCT__entry(
-+		__field(__u32, mask)
-+		__field(unsigned long, dir_ino)
-+		__field(unsigned long, ino)
-+		__field(dev_t, s_dev)
-+		__field(int, data_type)
-+		__field(u32, cookie)
-+		__string(file_name, file_name ? (const char *)file_name->name : "")
-+	),
-+
-+	TP_fast_assign(
-+		__entry->mask = mask;
-+		__entry->dir_ino = dir ? dir->i_ino : 0;
-+		__entry->ino = inode ? inode->i_ino : 0;
-+		__entry->s_dev = dir ? dir->i_sb->s_dev :
-+				 inode ? inode->i_sb->s_dev : 0;
-+		__entry->data_type = data_type;
-+		__entry->cookie = cookie;
-+		__assign_str(file_name);
-+	),
-+
-+	TP_printk("dev=%d:%d dir=%lu ino=%lu data_type=%d cookie=0x%x mask=0x%x %s name=%s",
-+		  MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
-+		  __entry->dir_ino, __entry->ino,
-+		  __entry->data_type, __entry->cookie,
-+		  __entry->mask, show_fsnotify_mask(__entry->mask),
-+		  __get_str(file_name))
-+);
-+
-+#endif /* _TRACE_FSNOTIFY_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/include/trace/misc/fsnotify.h b/include/trace/misc/fsnotify.h
-new file mode 100644
-index 000000000000..a201e1bd6d8c
---- /dev/null
-+++ b/include/trace/misc/fsnotify.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Display helpers for fsnotify events
++/**
++ * fsnotify_modify_mark_mask - set and/or clear flags in a mark's mask
++ * @mark: mark to be modified
++ * @set: bits to be set in mask
++ * @clear: bits to be cleared in mask
++ *
++ * Modify a fsnotify_mark mask as directed, and update its associated conn.
++ * The caller is expected to hold a reference to the mark.
 + */
++void fsnotify_modify_mark_mask(struct fsnotify_mark *mark, u32 set, u32 clear)
++{
++	bool recalc = false;
++	u32 mask;
 +
-+#include <linux/fsnotify_backend.h>
++	WARN_ON_ONCE(clear & set);
 +
-+#define show_fsnotify_mask(mask) \
-+	__print_flags(mask, "|", \
-+		{ FS_ACCESS,		"ACCESS" }, \
-+		{ FS_MODIFY,		"MODIFY" }, \
-+		{ FS_ATTRIB,		"ATTRIB" }, \
-+		{ FS_CLOSE_WRITE,	"CLOSE_WRITE" }, \
-+		{ FS_CLOSE_NOWRITE,	"CLOSE_NOWRITE" }, \
-+		{ FS_OPEN,		"OPEN" }, \
-+		{ FS_MOVED_FROM,	"MOVED_FROM" }, \
-+		{ FS_MOVED_TO,		"MOVED_TO" }, \
-+		{ FS_CREATE,		"CREATE" }, \
-+		{ FS_DELETE,		"DELETE" }, \
-+		{ FS_DELETE_SELF,	"DELETE_SELF" }, \
-+		{ FS_MOVE_SELF,		"MOVE_SELF" }, \
-+		{ FS_OPEN_EXEC,		"OPEN_EXEC" }, \
-+		{ FS_UNMOUNT,		"UNMOUNT" }, \
-+		{ FS_Q_OVERFLOW,	"Q_OVERFLOW" }, \
-+		{ FS_ERROR,		"ERROR" }, \
-+		{ FS_OPEN_PERM,		"OPEN_PERM" }, \
-+		{ FS_ACCESS_PERM,	"ACCESS_PERM" }, \
-+		{ FS_OPEN_EXEC_PERM,	"OPEN_EXEC_PERM" }, \
-+		{ FS_PRE_ACCESS,	"PRE_ACCESS" }, \
-+		{ FS_MNT_ATTACH,	"MNT_ATTACH" }, \
-+		{ FS_MNT_DETACH,	"MNT_DETACH" }, \
-+		{ FS_EVENT_ON_CHILD,	"EVENT_ON_CHILD" }, \
-+		{ FS_RENAME,		"RENAME" }, \
-+		{ FS_DN_MULTISHOT,	"DN_MULTISHOT" }, \
-+		{ FS_ISDIR,		"ISDIR" })
++	spin_lock(&mark->lock);
++	mask = mark->mask;
++	mark->mask |= set;
++	mark->mask &= ~clear;
++	if (mark->mask != mask)
++		recalc = true;
++	spin_unlock(&mark->lock);
++
++	if (recalc)
++		fsnotify_recalc_mask(mark->connector);
++}
++EXPORT_SYMBOL_GPL(fsnotify_modify_mark_mask);
++
+ /* Free all connectors queued for freeing once SRCU period ends */
+ static void fsnotify_connector_destroy_workfn(struct work_struct *work)
+ {
+diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
+index 95985400d3d8..66e185bd1b1b 100644
+--- a/include/linux/fsnotify_backend.h
++++ b/include/linux/fsnotify_backend.h
+@@ -917,6 +917,7 @@ extern void fsnotify_get_mark(struct fsnotify_mark *mark);
+ extern void fsnotify_put_mark(struct fsnotify_mark *mark);
+ extern void fsnotify_finish_user_wait(struct fsnotify_iter_info *iter_info);
+ extern bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info);
++extern void fsnotify_modify_mark_mask(struct fsnotify_mark *mark, u32 set, u32 clear);
+ 
+ static inline void fsnotify_init_event(struct fsnotify_event *event)
+ {
 
 -- 
 2.54.0
