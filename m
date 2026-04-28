@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-21230-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21231-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WMeUKH9f8GnDSQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21230-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:19:27 +0200
+	id kNbGCUtf8GnDSQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21231-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:18:35 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A000147EABF
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:19:26 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9436547EA93
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:18:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AD67330612F0
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:12:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BF3F830C2559
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:12:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 025463C3443;
-	Tue, 28 Apr 2026 07:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85FA23D0935;
+	Tue, 28 Apr 2026 07:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCDdEYmo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjzij2ku"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AC43AC0F5;
-	Tue, 28 Apr 2026 07:11:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2A3B5319;
+	Tue, 28 Apr 2026 07:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360304; cv=none; b=McPsfo6v5XCAoU+g1ulQGbb5vGKOlkQozn7xfF+/urniVM4UUZF43S09vdSwczitmgF8migYZAqhOYcUXin920AEkIm6CT9rbWjDUMu5Qclos249O6n/P0Cep3ALgB6MWs+8L3nAkUuzhxIqZTjXz7zdGuaRxRUa9l1it+OP8wk=
+	t=1777360309; cv=none; b=qlMaQz5zEwS4PKMzsu8yPTdiDR3mo/IeIxq38j6V0EAjtP5T2kGoEl+xO/tW9sQ3qr1/ZCPvBKhlTK7+lXqEnCzRZ+L9CiffHpG1m99dknCFSm3Cm5uUs6R1Mo5yfrh96fK/H99ah2gQLIsRHoftlKK31cn4ekGh8h7HaVW8P6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360304; c=relaxed/simple;
-	bh=PbrSbsGDzBILK48DxjomAYyp/zp1sNlXie6EEkLW5gU=;
+	s=arc-20240116; t=1777360309; c=relaxed/simple;
+	bh=vT13omJ88avBYGucyN258JCiiQFLmujH3myXqMMliO0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hkFttJzkZjB6OJc21LujDWP3RD7U9xJEyCwypgh8OTDZiqXcj3LOSQX//PolBNrm3//ty8hzM3s6Lk4UJtcqeBw2mXm2qXeQ3TSWFMHWCHzD7YV0Eb/IYew6BEDGSjd01Pw9/rvLYhIyf0h4JUou5HAL7YpFM+/2innb0dIcyS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCDdEYmo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D8CC2BCB6;
-	Tue, 28 Apr 2026 07:11:40 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=gHgwYeA79c5PvZW2EcefrbxsUXewuv9jfU+Occc2Bt6wo5n7ZPc0PmccrA9KTadWd194EEUKReAf36vrEA0+EnZiXI5h2qEDIEadt3o5xBO9NYscIUv9nY0Hv80lM27KVr1Ga9BAQ+h0Nd+QNJgxTOTXMQOCKdjkujvYDnQgmYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjzij2ku; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35FBC2BCB8;
+	Tue, 28 Apr 2026 07:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777360304;
-	bh=PbrSbsGDzBILK48DxjomAYyp/zp1sNlXie6EEkLW5gU=;
+	s=k20201202; t=1777360309;
+	bh=vT13omJ88avBYGucyN258JCiiQFLmujH3myXqMMliO0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mCDdEYmoh3j+8ogRcEtMqVt8hNrZniK/TyhuRdKAK7ravoJFjYAygJGz1n3CENdX/
-	 nRf1uN+ZoskjAqTnJLCIusUWkgzi2ik+EJsV3CGVu3JsHaHdYFacuSONjBDxYmRCrJ
-	 X2KaqjT24CvKgrKoGtWhPcof699A6ORdm/50dJW2INyfUW80FmWZou/aPY+Fv6oU/6
-	 bvlrlMiawCc9Pwr72fCN+92vGaYLkhZzv+EQw24fVK++p+ZNwYMdyzz8ytMDT7vrEx
-	 uWm7xYTDNAoeay5TT0dov8uAFFYoT9illb4KYwUQNmwscdjQgIAIIztb/XU6y+w041
-	 jNdVR96Mtmt3w==
+	b=cjzij2kuogfQieZ/URzMNhfb9lTkuFmwzsJraWgfgBHa+9sHXzIA39T0lPILwpfRi
+	 54fQpweaLs0GaH4rzrJhl1Gr5Yc0WmGAoGBUkzAoocS6E0RpIjeMSKY0yidRtKQUa0
+	 gSpLFslEeku2+0/7tVmEcsdHYnuhIC7AEmIBOt3muu0HGXMP07DNV0h+y6Mi+QkqY9
+	 oW/yTX2cDxeBKu/akRMd+NG+YcfwHLGmgfo3M00idpdYJ7f9A9UTLJJb2mdeFeboFh
+	 HhclalfSdgfg4XEfv2fIz4qLY05J6+Z9zIRbTAAU/3X/0reGkmSR+DmAD5L3/evHpS
+	 B41l1UxoAmdqA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 28 Apr 2026 08:10:02 +0100
-Subject: [PATCH v3 18/28] nfsd: add tracepoint to dir_event handler
+Date: Tue, 28 Apr 2026 08:10:03 +0100
+Subject: [PATCH v3 19/28] nfsd: apply the notify mask to the delegation
+ when requested
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-dir-deleg-v3-18-5a0780ba9def@kernel.org>
+Message-Id: <20260428-dir-deleg-v3-19-5a0780ba9def@kernel.org>
 References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -75,23 +76,23 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1983; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=PbrSbsGDzBILK48DxjomAYyp/zp1sNlXie6EEkLW5gU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1S5lm/Zy5ablNM/wbgAJGSpljpuzYaUsAcq
- 6aob0spJIyJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdUgAKCRAADmhBGVaC
- FXlvEADIjxo5rAg9wcEBnJtkn3ArC/GIL9FcB3U46u0IFp6PY79oIeNGUqGYDb0P26Tn/j0UQwz
- FCdVEdKMdC9OULR47Kw0F91nAwdG2c1QNKoFkZItnHSIk9VJUowvn+5IH1X/U5TPvfGEV2arBQF
- kY0gudx/2Co4y80RlkRY+TesSbUfiphdCKfTPzG+cpdG+VuYGE4m7DyKqeOy3GSGVb8b/feb6WU
- CjDLya8YhRKcEMuI2l9w4ADaSBZB1xsN/x86KL/dUGaYKy+E5X1HPCow0vbqFErJXGuiFNSPati
- 8N4n+D/Dz08YF3gcAT7sAX/Ket+P3S1iOzj6coPqljA3bO4xuKJcVJopyNsZOQBCyZnLhjeSMwk
- rme3Xd0DgS+7WaHARvxG7XadRqwA5aIoig39jeEqN1qXb7EgcqYOMNtHpWG3kseF1ITQcBc+HFX
- bZPXYgwe6LGnxdV+nW2B7DWSHzYqh2zhHTfusq6V/xOsP9+PamuV9uf3DcKkggEgQYVS62DCGvf
- gshEoaKbb2yqdKq+ddALaXVu/5EoXTCtTMAm4fk8wjF1cXTNw01OZOR5fOzysqZeVhsSpKqwB6/
- veSigUVmoPbaP0ibxK7HGVmO1UUSJ/i7bEfJXyryV7GUAF7FUE4RdymslBPo6pPi3PuooN7lEZg
- H80mDR+knBlOk8A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1720; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=vT13omJ88avBYGucyN258JCiiQFLmujH3myXqMMliO0=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1SGqE91Drbd+PXxtfVoL+xhtx7kUAjoI4LW
+ Uakszs2KeSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdUgAKCRAADmhBGVaC
+ FT9cD/9vvluBBLEbvU4l9jTWxcvM1HNJqSJCL3xHE4kNhyPSJ0B5fkGi6fYUsrgA2VqfoKc9o3k
+ V9hTW24/FcjDogCqQ7CJcOzU2fWpcfdsQe1HJJiZP4R5ZbLElUTybTHk69xyI6HUPC0N+1sIo/H
+ zuvNvBpxGVATKnkzWi4P4fuPGyAgeN1OGXO7vKZiWflt+YW5mIr49LTur3UA4+WPwFdgTGfHGdR
+ +0RsLP7yQDondpLwogZKv2eE2UxZ8oKONGVyit1i/EYhdFr6jUJP+QrEvFRWxAVhhfco2lnSBuU
+ qcquT2oGc7nd4+GSXRnE7Diy5ydYuXjRSqKi+YTL0TpotWo0P9FEUzJISvzSB08yRRpqb5H8Hje
+ YfjnGpDxj3/ZkpX/7XWN7VhDewC6iPVAFbOwLZ3E2owgcR+YlW70vOxClLPzPKmFVfZqyr4QyL7
+ bhtSnpgKipdPDqc+KJ0gOzDxvNejxlTTfYteefmf0VTB5KsoreDiQhVDWDTEdM5mPmcantc4T3m
+ /I4Xs1R9yROhK0No+6h295BzrhuPX2YR//PEwrlbKU3qxmFRWVyC6rD38hDzcUGrlXN14fMkauX
+ RLP8aX9cyAfxMOtno6kvexkb/WYoJrbM9Ji1Omw9hSmq1b88P2+mfzVzJtlgYAW50vze/XPEGVJ
+ OSxhPKeBS1b9lSw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: A000147EABF
+X-Rspamd-Queue-Id: 9436547EA93
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -99,12 +100,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21230-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21231-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -120,71 +121,58 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[goodmis.org:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-Add some extra visibility around the fsnotify handlers.
+If the client requests a directory delegation with notifications
+enabled, set the appropriate return mask in gddr_notification[0]. This
+will ensure the lease acquisition sets the appropriate ignore mask.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+If the client doesn't set NOTIFY4_GFLAG_EXTEND, then don't offer any
+notifications, as nfsd won't provide directory offset information, and
+"classic" notifications require them.
+
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c |  2 ++
- fs/nfsd/trace.h     | 22 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ fs/nfsd/nfs4proc.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 2b711443281e..f00aba95753c 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -9996,6 +9996,8 @@ nfsd_handle_dir_event(u32 mask, const struct inode *dir, const void *data,
- 	struct file_lock_core *flc;
- 	struct nfsd_notify_event *evt;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 2797da8cc950..01e3bf9e1839 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2506,12 +2506,18 @@ nfsd4_verify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	return status == nfserr_same ? nfs_ok : status;
+ }
  
-+	trace_nfsd_handle_dir_event(mask, dir, name);
++#define SUPPORTED_NOTIFY_MASK	(BIT(NOTIFY4_REMOVE_ENTRY) |	\
++				 BIT(NOTIFY4_ADD_ENTRY) |	\
++				 BIT(NOTIFY4_RENAME_ENTRY) |	\
++				 BIT(NOTIFY4_GFLAG_EXTEND))
 +
- 	/* Normalize cross-dir rename events to create/delete */
- 	if (mask & FS_MOVED_FROM) {
- 		mask &= ~FS_MOVED_FROM;
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 60cacf64181c..b9119ff4253a 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -12,6 +12,7 @@
- #include <linux/sunrpc/clnt.h>
- #include <linux/sunrpc/xprt.h>
- #include <trace/misc/fs.h>
-+#include <trace/misc/fsnotify.h>
- #include <trace/misc/nfs.h>
- #include <trace/misc/sunrpc.h>
+ static __be32
+ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
+ 			 struct nfsd4_compound_state *cstate,
+ 			 union nfsd4_op_u *u)
+ {
+ 	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
++	u32 requested = gdd->gdda_notification_types[0];
+ 	struct nfs4_delegation *dd;
+ 	struct nfsd_file *nf;
+ 	__be32 status;
+@@ -2520,6 +2526,12 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
+ 	if (status != nfs_ok)
+ 		return status;
  
-@@ -1377,6 +1378,27 @@ TRACE_EVENT(nfsd_file_fsnotify_handle_event,
- 			__entry->nlink, __entry->mode, __entry->mask)
- );
- 
-+TRACE_EVENT(nfsd_handle_dir_event,
-+	TP_PROTO(u32 mask, const struct inode *dir, const struct qstr *name),
-+	TP_ARGS(mask, dir, name),
-+	TP_STRUCT__entry(
-+		__field(u32, mask)
-+		__field(dev_t, s_dev)
-+		__field(ino_t, i_ino)
-+		__string_len(name, name->name, name->len)
-+	),
-+	TP_fast_assign(
-+		__entry->mask = mask;
-+		__entry->s_dev = dir->i_sb->s_dev;
-+		__entry->i_ino = dir->i_ino;
-+		__assign_str(name);
-+	),
-+	TP_printk("inode=0x%x:0x%x:0x%lx mask=%s name=%s",
-+			MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
-+			__entry->i_ino, show_fsnotify_mask(__entry->mask),
-+			__get_str(name))
-+);
++	/* No notifications if you don't set NOTIFY4_GFLAG_EXTEND! */
++	if (!(requested & BIT(NOTIFY4_GFLAG_EXTEND)))
++		requested = 0;
 +
- DECLARE_EVENT_CLASS(nfsd_file_gc_class,
- 	TP_PROTO(
- 		const struct nfsd_file *nf
++	gdd->gddr_notification[0] = requested & SUPPORTED_NOTIFY_MASK;
++
+ 	/*
+ 	 * RFC 8881, section 18.39.3 says:
+ 	 *
 
 -- 
 2.54.0
