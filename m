@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21235-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21236-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qFM9EoRg8GnDSQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21235-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:23:48 +0200
+	id 8LaAI6tg8GnDSQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21236-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:24:27 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E3BC47EC27
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:23:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A87547EC5A
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 09:24:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3094E3025DE6
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:13:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3A47930D8062
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Apr 2026 07:13:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB4553A9612;
-	Tue, 28 Apr 2026 07:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBE83C061D;
+	Tue, 28 Apr 2026 07:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASO0YgSy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTkPXJls"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67483B19CE;
-	Tue, 28 Apr 2026 07:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4183B7B68;
+	Tue, 28 Apr 2026 07:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777360328; cv=none; b=aF5UD88MDIeLkYth5owO+yan5lkWo2idWvT1a6ITG+xJJzXv96woZCT28EDfrQjASFgfB8DQXye+xWqbj4H4fJQCLyqK35yXiUpyOjiPWVB3bG8PATavdiDiu6PgYJLNpazNQNZsdTgiBbepUasJRCgqwG91nKroEWYeu0M+Crg=
+	t=1777360333; cv=none; b=q2HcZEm4F28gHOqSYqpMT8ZqqlRxY6GQi7vDBLao5maAF+8KW0URIuwADdn7se7UVsiEzd/kJRBoMDOL3iSsEBRoA8r46fQssSxh56ani3pKQYNbv1JB9hA99sOBfR5hT97mHUUhgfWSdlbmxpxQRx1qa9FeyydGFK6xbbCv3yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777360328; c=relaxed/simple;
-	bh=rXq7eUH4xSN0tI04G6bK80YWfcSKFJNz2w053/l/fqo=;
+	s=arc-20240116; t=1777360333; c=relaxed/simple;
+	bh=BmwaOojEgulUgvkQB2FtzNLN4OZvTiJYgZ4cG/A/lYs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q1vX6hWwtBi7zLahaC55FaanBnI05bq2dC5a1H3/DEBUTRpEwxKZPqJyrDORnDX7sqT0xNJPOuQKbNSBfyqK4b1NHOfaD114GAtHxAiC3OcP6TF4nMtbjohlpsvGwR1OsUvDuUoKellCwz3NV7oGvC+Sl5OwXrzSXHTDBAZH8jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASO0YgSy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD807C2BCAF;
-	Tue, 28 Apr 2026 07:12:03 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=S502tcs+/YrmOqSdgOwpOAs9ffGZRV0ZCruHg/ZKqCXk9gLDEBMhEHLYUF5xrO47s+MEz4zzxk6nz7Ca9wmnTedqomcN+bvt/+LWrT7WfWgKI6uEa3ESlHABAGnVCS/oDIuUV0B1a1dzP8Jzzu4/q0nt1+MojL3CAwDhYRCHO8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTkPXJls; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F73AC2BCB5;
+	Tue, 28 Apr 2026 07:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777360328;
-	bh=rXq7eUH4xSN0tI04G6bK80YWfcSKFJNz2w053/l/fqo=;
+	s=k20201202; t=1777360333;
+	bh=BmwaOojEgulUgvkQB2FtzNLN4OZvTiJYgZ4cG/A/lYs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ASO0YgSyJL40XBWMvfXv8z7uTwdHiuWfsxOZn5qEfLLpZbF+m1AFnUnNUve+cYcpV
-	 x9PxcQg6DwfdH57N7+k291pBexroHsogjcoG3TVXpI7KiuMhXTJPDgqRnue14O9DZE
-	 fvcNO3b6+ITnV34OAv0Mkz/CDpbichZZDd7ceNWABep0NBY3v4ZTzeic7I+KjlR6sx
-	 /e+k5RS/K4Oziwflnwwy2dpaPYNfpM0T363kHKS/y0v9TnEukyhPuuTrRrB7GMkU1y
-	 nx7lhf2oG/0g7eBlTx49SrJRLdiFbnyBoJfHwL+XNlX98NroWWERgImemK138PQmSw
-	 p1xv36CRmDitw==
+	b=YTkPXJlsEYp0fZJFhZHzkne/NWc5D2JmQ9vqfGgRgYlsaAppsJEoqlzUVbJpLJY17
+	 cxdwSxURWoRpKdXAP28jsgFq+6sjJOe2WzYD5JIgz00o440HY7stNRcyZKQoL4SgDg
+	 7h36CVAgJK1yaBtjBlLOlkl98TnJN4v2SB14u+harGRIeP/xaIUO8hqOsaefM6mrC6
+	 3r2pNEHWL3WUeplFcBzinwb9oL2gcHStNkpo0HgoULFmXerVnFHbZuhy/7Vla2q0Oe
+	 Nm6+9uuC+RGIIbt6F6h0MaA9oF/XPCtL3i4++KRnUKG9xzGBjljMqX6uIUF6bmq12a
+	 nkD4YiyAolQ/g==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 28 Apr 2026 08:10:07 +0100
-Subject: [PATCH v3 23/28] nfsd: allow encoding a filehandle into fattr4
- without a svc_fh
+Date: Tue, 28 Apr 2026 08:10:08 +0100
+Subject: [PATCH v3 24/28] nfsd: add a fi_connectable flag to struct
+ nfs4_file
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-dir-deleg-v3-23-5a0780ba9def@kernel.org>
+Message-Id: <20260428-dir-deleg-v3-24-5a0780ba9def@kernel.org>
 References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
@@ -76,23 +76,23 @@ Cc: Calum Mackay <calum.mackay@oracle.com>, linux-fsdevel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2594; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=rXq7eUH4xSN0tI04G6bK80YWfcSKFJNz2w053/l/fqo=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1TKHDE4x0NA7wLvnis546b39gYAs7fMc6R4
- meidxCSLcOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdUwAKCRAADmhBGVaC
- FfbVD/9MKOPMrwqS0Nc8GSqE5XPpHRZDPKH53MCEN0i2j3dD10Oyzy0zSr+agkWJHGjZNY6jjtt
- lyCNTfBIEpQHDIPD2p3J4z0YZBht/C/QFmlebR9PdLOHJ6vHcdsEOr96On9tYgkwaE2PGX6qwDj
- 3r6x3xcALHlsacRByvG2uqq7Y+t1Cj0272+nGLR6sgrBzPqY/rs40IbVKG3xSJVT0NI/e4lF074
- 9fH3pXCdIkTHPT/9kYNkaoaIpMOU2EyjfvMDvF2Ph9QO0AK2wnrTWhxyon+IlpasUa5grNVQkRC
- Metwb6GJlLe8mEwjkt1Dh4O6KDi6RoQAkjlJe7KBzGtiieycZqCJc7lTnNDXKsAa7NeNDpsVGKK
- exnR3PeAtfmlce7bO3oCBgoPtOitQQ+pC+mL2EilStor+7ml+vkjUbfg/zXvNctMY2xtr54n9Q/
- AZOfFFXxFRyigE2aSoX92B6Z/CrYXTiisBB31C/u3vMXZZNv105zHJFfTggKeU9dha/tXMvFx+b
- z0Vl0MPL2mkMKAlM5fCQywtd5eESPWXHXWGOboS6j32/zKl2eAHd2+/vRf1XnvAQmQZU/85EMIB
- 2al8bYCvQdYgUQBdppV3vW1XohwEf7CV1P4695vMivJph+/rKSV2aUiX9I8CTByDeoAkffvc24a
- uJwc4DGkZjWoXZg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1426; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=BmwaOojEgulUgvkQB2FtzNLN4OZvTiJYgZ4cG/A/lYs=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBp8F1UYzTvpenu/Jo12jsGOoRihwUud8xyef7OB
+ ekwcM9smHyJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCafBdVAAKCRAADmhBGVaC
+ Fe89EACItI37Mrdh+sGu3jHLt3VA1e9nWx/BkoxrXT7Bmcgqky/o1YejxGuMwXoo68cbLc2edtu
+ GWUXcN6CcCitCC8+RexodQl38h1jvxnwxnsYx7Crc3EE7CPRnRMrNtLyrXtOGkmCNG2CW3ahxx9
+ 51oKencnd4Tt+ZoVxgUzkLO0CPvPfuPWXXEgcBYw2KvdzlOJfYnJhuJXsg2G8RWGIuASKUc2dUg
+ JsdbI2Z/biGnvs7MmYDvenGjm38GlolbUQjAzXlLC7kVNwjHZIXSB8qdmWXx15wmauz97GB2B2P
+ xZklLGjTohegj9UOP4IsC/ev2Bh/AFy4KZTDB1xTuYStPwiFUt8fkvpcuvNX5XRSRZLjgTEoGrg
+ gjDHwd5x5WDsPSrFlJ/zB1o7UUyk9eHzXT6Eu+3QXNXWyGLG+4Daa3fE1+KrxpU6vC8MhA664AU
+ LMdbU3Qh3lQOnGbnmluxw5a6R1I4RGwOg4PBFyoTBzwvnNzl199HLsuCSEIXXcq+ILGIo4+tRzl
+ qlNizR4y6Sj7Y1DMT7mxqIoMd06UskL7+Py+05bdvRq2jcY30ytVFRDTTcWQxWAAcvMtlh6U9BX
+ TwfNSxzaL7PWSe/yfhMRDG4HsYRrp9S9YuTOsLmTq/AZ/ymEyC/Zsq8dEE45WXE1RjysVc8Xqx+
+ tYjjVbWUiCh6/Hg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: 4E3BC47EC27
+X-Rspamd-Queue-Id: 8A87547EC5A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -105,7 +105,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21235-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21236-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,talpey.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -124,83 +124,42 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-The current fattr4 encoder requires a svc_fh in order to encode the
-filehandle. This is not available in a CB_NOTIFY callback. Add a a new
-"fhandle" field to struct nfsd4_fattr_args and copy the filehandle into
-there from the svc_fh. CB_NOTIFY will populate it via other means.
+When encoding a filehandle for a CB_NOTIFY, there is no svc_export
+available, but the server needs to know whether to encode a connectable
+filehandle. Add a flag to the nfs4_file that tells whether the
+svc_export under which a directory delegation was acquired has subtree
+checking enabled, in which case it needs connectable filehandles.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 35 ++++++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+ fs/nfsd/nfs4state.c | 1 +
+ fs/nfsd/state.h     | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index f85581ebbd10..a9cdf7a3f8b3 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2701,7 +2701,7 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
- }
- 
- static __be32 nfsd4_encode_nfs_fh4(struct xdr_stream *xdr,
--				   struct knfsd_fh *fh_handle)
-+				   const struct knfsd_fh *fh_handle)
- {
- 	return nfsd4_encode_opaque(xdr, fh_handle->fh_raw, fh_handle->fh_size);
- }
-@@ -3144,6 +3144,7 @@ struct nfsd4_fattr_args {
- 	struct svc_fh		*fhp;
- 	struct svc_export	*exp;
- 	struct dentry		*dentry;
-+	struct knfsd_fh		fhandle;
- 	struct kstat		stat;
- 	struct kstatfs		statfs;
- 	struct nfs4_acl		*acl;
-@@ -3359,7 +3360,7 @@ static __be32 nfsd4_encode_fattr4_acl(struct xdr_stream *xdr,
- static __be32 nfsd4_encode_fattr4_filehandle(struct xdr_stream *xdr,
- 					     const struct nfsd4_fattr_args *args)
- {
--	return nfsd4_encode_nfs_fh4(xdr, &args->fhp->fh_handle);
-+	return nfsd4_encode_nfs_fh4(xdr, &args->fhandle);
- }
- 
- static __be32 nfsd4_encode_fattr4_fileid(struct xdr_stream *xdr,
-@@ -3969,19 +3970,23 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		if (err)
- 			goto out_nfserr;
- 	}
--	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
--	    !fhp) {
--		tempfh = kmalloc_obj(struct svc_fh);
--		status = nfserr_jukebox;
--		if (!tempfh)
--			goto out;
--		fh_init(tempfh, NFS4_FHSIZE);
--		status = fh_compose(tempfh, exp, dentry, NULL);
--		if (status)
--			goto out;
--		args.fhp = tempfh;
--	} else
--		args.fhp = fhp;
-+
-+	args.fhp = fhp;
-+	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID))) {
-+		if (!args.fhp) {
-+			tempfh = kmalloc_obj(struct svc_fh);
-+			status = nfserr_jukebox;
-+			if (!tempfh)
-+				goto out;
-+			fh_init(tempfh, NFS4_FHSIZE);
-+			status = fh_compose(tempfh, exp, dentry, NULL);
-+			if (status)
-+				goto out;
-+			args.fhp = tempfh;
-+		}
-+		if (args.fhp)
-+			fh_copy_shallow(&args.fhandle, &args.fhp->fh_handle);
-+	}
- 
- 	if (attrmask[0] & FATTR4_WORD0_ACL) {
- 		err = nfsd4_get_nfs4_acl(rqstp, dentry, &args.acl);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index f00aba95753c..3050980a778c 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5167,6 +5167,7 @@ static void nfsd4_file_init(const struct svc_fh *fh, struct nfs4_file *fp)
+ 	memset(fp->fi_access, 0, sizeof(fp->fi_access));
+ 	fp->fi_aliased = false;
+ 	fp->fi_inode = d_inode(fh->fh_dentry);
++	fp->fi_connectable = !(fh->fh_export->ex_flags & NFSEXP_NOSUBTREECHECK);
+ #ifdef CONFIG_NFSD_PNFS
+ 	INIT_LIST_HEAD(&fp->fi_lo_states);
+ 	atomic_set(&fp->fi_lo_recalls, 0);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 570d66fc8297..caa3f5f78dc1 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -747,6 +747,7 @@ struct nfs4_file {
+ 	int			fi_delegees;
+ 	struct knfsd_fh		fi_fhandle;
+ 	bool			fi_had_conflict;
++	bool			fi_connectable;
+ #ifdef CONFIG_NFSD_PNFS
+ 	struct list_head	fi_lo_states;
+ 	atomic_t		fi_lo_recalls;
 
 -- 
 2.54.0
