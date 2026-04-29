@@ -1,206 +1,151 @@
-Return-Path: <linux-nfs+bounces-21292-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21293-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6DgFFiFK8mnNpQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21292-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 20:12:49 +0200
+	id QJuELENy8mmJrQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21293-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 23:04:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5149498D80
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 20:12:48 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 286E949A555
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 23:04:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3384D308AB70
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 18:08:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9A0713017511
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 21:04:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0583C41C31E;
-	Wed, 29 Apr 2026 18:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD2B53A0E99;
+	Wed, 29 Apr 2026 21:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cp7aPOO+"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RBR3I+Gu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A3E41C2EB;
-	Wed, 29 Apr 2026 18:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37387388E46
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2026 21:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777486085; cv=none; b=KApq0nTEca1lTOwFZXLlcSIdpHRu9R3ZK3ADdiY5wGr31D+QwYzeaLmeEOO4JFI+ZfB6GQej/fGnUvCsngdjFMBVZWZ50+q2X3J/LDNTH9PuAjoIpi26kNYoUmU4zO6LphmkZmpsdPQRJhg2prqr1se3cBCqL8OKSIHye3SlRyQ=
+	t=1777496639; cv=none; b=GWjo0InFBBBAM4c7GH5JU9xhyncEbXwJm7BJJtyNwp3RqOHet11Wtrlok/asJXSffl5b0DQpzkTaP2s1VdrMON5foFjQKL/elMWz8TtH6cYYB8kqXjmzyBAG222g+DK9ytNL+e5Yk4ODDC+ODPkx4KvXvTBNUCQZIXMfuDDy51Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777486085; c=relaxed/simple;
-	bh=qee/kCsMg8C4eRFPxmiZaknm+clMPDWXLjgwoKgpYx8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CZU6k68QIom8f1cBvpNYfUA0ggxk3qxZxhPOYLH+Ph+B4RlPBSF+UMlcW4qd1luSjTMc9wwGrJbYVHVlDn8HEpmnh7s/cvtdSWI/OCcK++0XWlpn0pInknkk+xd+FH+wUIIisjuq4uwr3X4fFwreBEpTcu7o+MXkWtSaUKzQmjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cp7aPOO+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2BCC19425;
-	Wed, 29 Apr 2026 18:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777486085;
-	bh=qee/kCsMg8C4eRFPxmiZaknm+clMPDWXLjgwoKgpYx8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cp7aPOO+0dpAl5comMlMldcJa1APBJg4dyIBsWMJ2dtOrQbwWwziadV1HHKwrhyO2
-	 EKu4+yuEtoA6jUBez4Y0IWm7LnpjZ7KIQ0cKbWX4NFBhaQoo8h8ksY6WyypcBJIiWf
-	 YVKLHIwg3nRuxX0c7vGmZp0keEDeDDm30aZiICMEh6w5Ltf7b9eGdLSsN7GUeHd2RO
-	 KG8J5iHDbC2xwSoCytBzBwqRmnDRaD72VrktoFD4aXdoNzEgYb39fr+hiUjydoGqNK
-	 eZvAfEO7UeiBTmVpcpqsgS3jMPggCeKbV1zsEWMalElaMbD0tnnbSQkclFiQ1gT2dT
-	 +Oqta2nmBEIpg==
-From: Chuck Lever <cel@kernel.org>
-Date: Wed, 29 Apr 2026 14:07:26 -0400
-Subject: [PATCH v12 15/15] ksmbd: Report filesystem case sensitivity via
- FS_ATTRIBUTE_INFORMATION
+	s=arc-20240116; t=1777496639; c=relaxed/simple;
+	bh=tKD1kZoqphx/1IqZo+FxuGf68uivswEb8Ml+8Wv6abw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ev4T7hCDz3cmTWAkD1qJJVCeFnJpjBVg3NxvmXkGabaWjGGeinI2f7wiPdKrUCdJQfZuiFm2iEwfa634XGyWO4WJC9xa/U1lXUYFh4kdYwne1ifgZ8TUO35Zal3zsbCMM95agGXJ/thlonBnAOciNhpbcAEHvswCMJf0VWRbvm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RBR3I+Gu; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ba5b107eaa2so26899166b.3
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2026 14:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1777496636; x=1778101436; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HnqVnLYxhZQkXEJ+qyCw2Y174F/Hy99oiICnSXcEeRc=;
+        b=RBR3I+GuArZP7KSs2BQDXI8594FAL+qYBC6Sm7zxM+aCIjT72MsGjpFV2wn0x6+To1
+         4unXpsZjcFTX5Un141+0VNn4nzHLu7ZLLFJpinY7DM3SM6Ry8F3D2J7xOxOlwb1mpjTD
+         cJeihOimJdLPGrHvSlng/vXtjL6AyfRZVueiQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777496636; x=1778101436;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HnqVnLYxhZQkXEJ+qyCw2Y174F/Hy99oiICnSXcEeRc=;
+        b=IrGKXKfcJByLMVd7V83F5qsm5N79MNDWevhO2YgYMoe3TUKuZL5erlKzT9jWq5P+V8
+         WQCR/Ydr7YQB2J7nH56POT0w/nKi7Tz9JjeJ5wy+6VzgOCloByjk+w+7YeHQvfMF0eMj
+         NNzZtEN1PSXM3V6sNln0IBZwPDa0i9U3x+eD/F0oFmuU3mIuE643aKcWkNIlgj9vJD8K
+         IbLN+sCfhJd/Wx3E5dIC09K2yqJF1unu3l+pcCSttTDQtBTRKYtxk6ZaB8eKL1WBEOlw
+         L2mEHXWwQzIkzEnwl9m3/uOKi0vf5LkJnsjaClFs4vfXRTiHssw4d9z1+XRpLiEtDgTi
+         fBBQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+RZ9mFnY9zL16adTBRG1nSiBtXUJzTrV0AlUblbqyNKx9HF4JzfEYu8wiNQ9756kqiGR3RMV4voIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZCZAqi2zJTpC1T30TtEFEsx9V6h2VUoTb4P/FgFtRjeIRD6gW
+	iULvIdQRRT7ZAuGjs4tl5VebhDAOrJTo0ph3P/V4j7gWAT7E3ody8gksFQPVgOWNvNcDz98k/LG
+	DRcNpJpQ=
+X-Gm-Gg: AeBDievDYWhODNF9Z9zFacr9S6oktiR7bPtDfTyHRnQy5iuD9VTT9cfIhiz5nKYRlKo
+	rOQLFj9dYigMsjbUTVOBEWvLyP2hRZYiqOLfb1mlTh5YqCMH1bt83NHtTRtQCYdS4zNkCB4YLp1
+	3b01T3IMO8/YDh1oSqDRQmhhiF7UH19RxOINuBXWYtkKjLVTwNCYh5MxjWiAghKBdzSFMzPFPOq
+	GzFLr79ctKexo6nC90QLoOrT54ZBLug6VONNX2On1JfFZb5wYKa5kzrB9VzIW9Y62A9pp0g8+uy
+	l/GYokUs0xj6WHQhbA0E6HZJvmcATmO7aofB9A+G+1qy8CvKkxHYDoWyLXOCwYWjDGT27oTtDnc
+	q9hkePkblJTrx2nokdsKplhUSvUfma6ogFpyCiTqN2o8peq+IIdUMBJZXqky6kH7r/xYbRqi8kA
+	7FwrsRgUV/h9Vv9o4aMRjrQOAM050GKskdL+mCwbjUWAYF7U0TpaWs9fuuUpksofmBCchpB7wwC
+	N+hnANoeAI=
+X-Received: by 2002:a17:907:1b09:b0:ba7:3578:f627 with SMTP id a640c23a62f3a-bbac6eb68e4mr18438666b.37.1777496636285;
+        Wed, 29 Apr 2026 14:03:56 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bb9864fd9e5sm139631466b.62.2026.04.29.14.03.54
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2026 14:03:55 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-67893fba9c3so568529a12.2
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2026 14:03:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9Tl4mEzEYrHf2sMAnSdGUNPJ2xrId/zFoNsiwUek1hdLaD6AWsHwhXvcDWK0XY8t5XBPbFUqRplls=@vger.kernel.org
+X-Received: by 2002:a17:907:5cb:b0:bad:dfe1:6a56 with SMTP id
+ a640c23a62f3a-bbac6ac310emr20951866b.30.1777496634502; Wed, 29 Apr 2026
+ 14:03:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260429-case-sensitivity-v12-15-8057123bebe0@oracle.com>
-References: <20260429-case-sensitivity-v12-0-8057123bebe0@oracle.com>
-In-Reply-To: <20260429-case-sensitivity-v12-0-8057123bebe0@oracle.com>
-To: Al Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- linux-nfs@vger.kernel.org, linux-api@vger.kernel.org, 
- linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, 
- linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
- almaz.alexandrovich@paragon-software.com, slava@dubeyko.com, 
- glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
- adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, 
- pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com, 
- trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, 
- hansg@kernel.org, senozhatsky@chromium.org, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Roland Mainz <roland.mainz@nrubsig.org>
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2812;
- i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=3j19l6mVyr/XReBrhpdSBMPAL80WouHe9sT+TihiyQM=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp8kjdM8DNWFfItbp41H9vWWe4sjWWzOyQ+8ADF
- lrE33haaFeJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafJI3QAKCRAzarMzb2Z/
- l6qCD/49AW4062WfbZHsVpGZySPK2wkZN4kfzlroTWbJi5jHIlMQIwp5bYVt4lATNx2xi3HKgCa
- yItm/0qjXDMJPU9Fn94bdyvedMVogpUZIY/ZRViPTT9ruiASIFp9YTJaUFH3gm+q6lKMGGueSfn
- Z8EN2By/rS44QT2tQtZeRQg+zuoeN0qOLicrbGM8Ug4pCtBZ8RgpvTKfaLyrnDSp4V386qjxeSF
- m6/1X0kKy/gtY/4vezUg9HU0vMFe/Z8hWm7GM3FiUBaQtO3NkImZILcblBqflbk1iwbr7Qyj/ZN
- GolZ7i6mSX43sZPXu2qZvJcXrsjI2l1ZrjkAcd2TiNhxk01B8C29+OkVaZDoYfOFPJ7cem1CUkD
- yF4wuNlaIqyfQ7wUC2gDXnZx464eKD6yuPpBqLgQh5Shi11DAwcJh+bESsAO0t8+6/KX8qiwJ+D
- FmGWua4a6ZHifxfcGv//3z8Lqg/FuYL/G/tSGUlJR3ucsFKGHFkl58j6LSSMV6/nXs5C/WsGKGX
- BXuIrC5tVEveeTCH07Efv3p8TfnjaJqw+kQMv4dnuhYU1F4RwUb/4o3W2yBHobxSWo9aYMfSm/7
- xCr9iOFnAKJYKyohvVvXxada0v9urbMpe8ELrwuwZW6XK/aKH29m1vV2wOnVmP/IH9CA5qJVTgt
- LYV9F6XEAovyiZQ==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
- fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: E5149498D80
+References: <20260427040517.828226-1-neilb@ownmail.net> <20260427040517.828226-5-neilb@ownmail.net>
+ <20260428033738.GV3518998@ZenIV> <177737511992.1474915.1952404144121931523@noble.neil.brown.name>
+ <20260428142225.GX3518998@ZenIV> <177741881482.1474915.12527082398060370192@noble.neil.brown.name>
+ <20260429052626.GY3518998@ZenIV> <20260429170731.GZ3518998@ZenIV>
+In-Reply-To: <20260429170731.GZ3518998@ZenIV>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 29 Apr 2026 14:03:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgs8yAfaQYmeKWab7KES0jU46TvdBfQ3Q9+6+=E=vrx=w@mail.gmail.com>
+X-Gm-Features: AVHnY4JtG_9GDiz56QzrtD5BrZqKcsiFlr8t2n0kWXJmeuX800NGv4Qx6DLxhBo
+Message-ID: <CAHk-=wgs8yAfaQYmeKWab7KES0jU46TvdBfQ3Q9+6+=E=vrx=w@mail.gmail.com>
+Subject: Re: [PATCH v3 04/19] VFS: use wait_var_event for waiting in d_alloc_parallel()
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 286E949A555
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21292-lists,linux-nfs=lfdr.de];
+	URIBL_MULTI_FAIL(0.00)[tor.lore.kernel.org:server fail,linux-foundation.org:server fail,linux.org.uk:server fail,mail.gmail.com:server fail];
+	TAGGED_FROM(0.00)[bounces-21293-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com,nrubsig.org];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[linux-foundation.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[brown.name,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linux-foundation.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[torvalds@linux-foundation.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email,nrubsig.org:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,linux.org.uk:email,linux-foundation.org:dkim]
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, 29 Apr 2026 at 10:07, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> Something like patch below (on top of -rc1, completely untested).
 
-FS_ATTRIBUTE_INFORMATION responses have always reported
-FILE_CASE_SENSITIVE_SEARCH and FILE_CASE_PRESERVED_NAMES
-unconditionally. Case-insensitive filesystems like exFAT, and
-casefolded directories on ext4 or f2fs, have no way to signal
-their actual semantics to SMB clients.
+This looks like a clear improvement to me.
 
-Now that filesystems expose case behavior through ->fileattr_get,
-query it via vfs_fileattr_get() and translate the FS_XFLAG_CASEFOLD
-and FS_XFLAG_CASENONPRESERVING flags into the corresponding SMB
-attributes. Filesystems without ->fileattr_get continue reporting
-default POSIX behavior (case-sensitive, case-preserving).
+... but I obviously didn't test it either. But just looking at the
+patch I went "Make it so".
 
-SMB's FS_ATTRIBUTE_INFORMATION reports per-share attributes from
-the share root, not per-file. Shares mixing casefold and
-non-casefold directories report the root directory's behavior.
-
-Acked-by: Namjae Jeon <linkinjeon@kernel.org>
-Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/smb/server/smb2pdu.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
-
-diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index ee32e61b6d3c..cf0bc453a036 100644
---- a/fs/smb/server/smb2pdu.c
-+++ b/fs/smb/server/smb2pdu.c
-@@ -14,6 +14,7 @@
- #include <linux/falloc.h>
- #include <linux/mount.h>
- #include <linux/filelock.h>
-+#include <linux/fileattr.h>
- 
- #include "glob.h"
- #include "smbfsctl.h"
-@@ -5541,16 +5542,33 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
- 	case FS_ATTRIBUTE_INFORMATION:
- 	{
- 		FILE_SYSTEM_ATTRIBUTE_INFO *info;
-+		struct file_kattr fa = {};
- 		size_t sz;
-+		u32 attrs;
-+		int err;
- 
- 		info = (FILE_SYSTEM_ATTRIBUTE_INFO *)rsp->Buffer;
--		info->Attributes = cpu_to_le32(FILE_SUPPORTS_OBJECT_IDS |
--					       FILE_PERSISTENT_ACLS |
--					       FILE_UNICODE_ON_DISK |
--					       FILE_CASE_PRESERVED_NAMES |
--					       FILE_CASE_SENSITIVE_SEARCH |
--					       FILE_SUPPORTS_BLOCK_REFCOUNTING);
-+		attrs = FILE_SUPPORTS_OBJECT_IDS |
-+			FILE_PERSISTENT_ACLS |
-+			FILE_UNICODE_ON_DISK |
-+			FILE_SUPPORTS_BLOCK_REFCOUNTING;
- 
-+		err = vfs_fileattr_get(path.dentry, &fa);
-+		/*
-+		 * -EINVAL, -EOPNOTSUPP: ntfs-3g and other FUSE
-+		 * filesystems that lack FS_IOC_FSGETXATTR support.
-+		 */
-+		if (err && err != -ENOIOCTLCMD && err != -ENOTTY &&
-+		    err != -EINVAL && err != -EOPNOTSUPP) {
-+			path_put(&path);
-+			return err;
-+		}
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASEFOLD))
-+			attrs |= FILE_CASE_SENSITIVE_SEARCH;
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASENONPRESERVING))
-+			attrs |= FILE_CASE_PRESERVED_NAMES;
-+
-+		info->Attributes = cpu_to_le32(attrs);
- 		info->Attributes |= cpu_to_le32(server_conf.share_fake_fscaps);
- 
- 		if (test_share_config_flag(work->tcon->share_conf,
-
--- 
-2.53.0
-
+             Linus
 
