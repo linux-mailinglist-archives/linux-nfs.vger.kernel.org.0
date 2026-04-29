@@ -1,222 +1,195 @@
-Return-Path: <linux-nfs+bounces-21266-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21267-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wDusB+KQ8WmviAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21266-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 07:02:26 +0200
+	id kM6jFoeW8WkyigEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21267-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 07:26:31 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9C2948F583
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 07:02:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA98848F6C3
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 07:26:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 847E33012CCF
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 05:02:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 48500303298D
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 05:26:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13E89463;
-	Wed, 29 Apr 2026 05:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E9A388398;
+	Wed, 29 Apr 2026 05:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b="E8W7yT9F"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="CBcmEff+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A454315F
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2026 05:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777438942; cv=pass; b=Nf3PQo6Ic1Wwy1FXESD7XlE7/WsmJ86PA2XgvxQk4UM68i3XL9b9+v3CrArNtR9RBp+jvyD1uNnc8MRM9t7svAKEB7t4vzWhm5PFqcfI/nCmd3BEqlAjTsIVLnhkUnpsEhZ05g5Mr0UwGjcEuleRft8itmCtx53GdSr807tAqf8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777438942; c=relaxed/simple;
-	bh=Fy+dsR76z+szAs2ilbwSLWoevPh//rY8lx2TWPwq4Jc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=o+UsO2c2jfkPLIVylU0BUO7RmingsBCzQGRXDs6NqzsXKpF985SvXc3XE+lv75Ef+jXxX0eGszi2zs+On4HPG51T8IRfyAKK/nVDplYT5oII/XpTO2sxBBIe0Itq9YhBH1KIWRH7oBLsx2DnewA9Gh43BjrH/tZ/00ppe8FXEDs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gooddata.com; spf=pass smtp.mailfrom=gooddata.com; dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b=E8W7yT9F; arc=pass smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gooddata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gooddata.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-38a01c80c34so119281161fa.0
-        for <linux-nfs@vger.kernel.org>; Tue, 28 Apr 2026 22:02:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777438939; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FTSrUv5c2oZ3nDCPFCSecjUCw3W0aK4H2XOqpsLmjKogxHk1SAgcuVUSAr/HIguM2p
-         gFR1lFoVcBKWkzDHDKhbPxvZJE7rgZqb8OfKhcWFa0f8cbi33ktOIK5MCo6kW1w3G0yP
-         kAk7jKav6VP2+YxwK1Vas+WXH+7YiDAYB8/IL4wWwVjc1rWN6aGlQP3O2v0bcq87KsVI
-         KTV3Bt2/mLeAvSSTy51D4z5sRMV7CIRR6Puq+nrCRfypXe7G3d1CmGIdCUi6pB33lwIz
-         hg4K7LGtgD2/MWiJA4WO9hB6TEaryamRhpE1p9lxiXfUegGYHCODCNbvc5Io0IQ0ljF5
-         eqFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:dkim-signature;
-        bh=AFE3ltD1Kz0RN04a7QywuACZ5qroCXvzl9hCdk/3d6E=;
-        fh=7J9Sdove5eUmyIFLeirS0gfG6OOdoZBxxOZOZsuae+o=;
-        b=aM9abpYis9i5swe7w8lEQp+XmiVeVjnPtiUgxKtT1cIHqs+xGRTOZoC1fZDga1rpKB
-         ERh2pS5URiqfuOU7WOsKFQc/tbLb62LPavqj0yWhPyb9MxUdxa6d5quEYSCLeL4tZBop
-         d3UXNOxd+J1BXQq6T/kBiJ+vevc+8T3qbL1wDCxl4EVUZO5Zt8bPaEn4p/j22no6rCxi
-         dvykXAEx3at/9Q5sHA19YnTIRCk7CJQbI2scFhzfYhfl3VAxI5VZ6JxiVMyZ4qGDcu3T
-         505qgDR191ysFyskP8f9CWNHo6FTmHtFL/5OlFq+Gc6Hrz/9BeI+sRDBAZ6wjgsL8FCZ
-         OknA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google; t=1777438939; x=1778043739; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AFE3ltD1Kz0RN04a7QywuACZ5qroCXvzl9hCdk/3d6E=;
-        b=E8W7yT9FbyQYaaLqTXIkxMqDEhp0LJ+/o7IPEUpKPZP5lgAAluKq/IMjYyKES2Eb7+
-         MIVFwUHOMAWCftRWQEkF6lJeO9GC2684hh+I0SI3PCPmoa3QHqfveZ60RbM4+ZKiUQCp
-         VktV25WfMmIl+fhEqA9AjtqLVEogGBXAkwyHc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777438939; x=1778043739;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AFE3ltD1Kz0RN04a7QywuACZ5qroCXvzl9hCdk/3d6E=;
-        b=D3Nynn6nZdhze063hb8fcS7VEOHRqmQmJkyTCuXT9YD3arSrqL29kQwxaz+aDH3Z8B
-         bVs1vmohX4mAeKxMg7pPkZvsAPQjPYD3PUBPGLoXqbucObi+U9KdCSg/QPPfA0LuoIms
-         /1/K795hO32E5+Tx02z7tRRG3RmHYEPTM1twd9evsM/Oi7rQ2sQho5QyDnt1Kod2nKr5
-         DgD5XvRqiQkts37dEfpR2MgZ9wWfq8s3mUtZ8sPBQBFMkYg+5cqg+SZzcSchfJU886QP
-         wwakW3+lJW5IvB3+x2cyUer9i5BWUgRdtAojk2bw2o+gGUC7j2YwYdscopgbCYpGP2d1
-         DggQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/o173NCNF9iHVzYwIsw/tTAldLt2LqTXo7A4mG1utKxcwjZQf7fEo7C9dRmBYTyEBqhXJlm+Z1do8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxssS55PIRvyVQF40IH5zOdGmqkynQYCuATFttne3Jajjlvhs7j
-	y8/KYFwef4FEC3Cvxm8rrdKDaJMKGWonsRhmDbX4pOudZZK2Khy8zDAJHLSjMHhEay4CwbvF2GM
-	LXMqhwkiwtEbEZvcDVovJcMWZDbk2JXW02jmi0yDR
-X-Gm-Gg: AeBDiesCNzFfrXJCea/HbNuJZ/48p8eKlc1D3WYB0Za+GXCK/Tg9NSowi2cjkRiKZ0O
-	MFelpk4k9oRAXlNSX0uVq3IkwTFDl5B3opRycGRtv3B08x2OcbSZEm04q2L23H6A3dqGz1/xq7o
-	dgjDRvp9bL0lrAO8uINvmO5Qe2jDo+jdIiIjYdxkZWuuGhIo55KLNxgFYuxuUlolRrB6BRIiTwQ
-	gZo2+3df1+FJ/kJ0pVDL8peHMu/tsfrrNBkwQu28P6j+zgTwpeqdIwUZekoVfNZZJEYruLWRuPy
-	xzEw6JPzCjW2SqwfXu0=
-X-Received: by 2002:a05:6512:3b11:b0:5a2:b903:3b43 with SMTP id
- 2adb3069b0e04-5a74660485amr2295809e87.7.1777438939221; Tue, 28 Apr 2026
- 22:02:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC55344052;
+	Wed, 29 Apr 2026 05:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777440385; cv=none; b=fdWfFt9tJdFeSxgv/kVS0ZTFBVhknP1ugkjSwFX3MypiYDZO/VyVLlJT0SMvKm+rb3RM+cOicbgX6eJq5d4T2CXvIHRZlVZDczedpqyFUijjlEIbjGvjw0v9uGVKEJeXvQZTXDLt1HRUD1njm4aIIaM8sy5dNZo1p9ix9FXko6o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777440385; c=relaxed/simple;
+	bh=Jlx867jKI4gLtNGLTomyfHTBL5NvB7fYilqNwVBKmY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0HOmJf3tgzD4sNSYITQtblboz27H/DPwFE6/z62C4OfFVrllfjsV17ZBOlUeFiJHRlKUQaWky10yIqnCaDf52TasxJpwl+hdyToEr8jR1IypeYLU0yjOCyx3DUTLoC9sblkM6S5Mjpt3dgMA6rLMkUoI4gHRgspyMCN/Ewwmkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=CBcmEff+; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zTapJ0y6zMogdD2OWXYHRyJtC7ULtGdRwYh0eCsShS0=; b=CBcmEff+MpkXPtTX2XD9NTnG3h
+	MGqvsdvnIVS1HL4ZhxtQfcDl4DjnV+t+LXW0t9U/ZlpZsTAYoA48HDszASldSFYBZFtrUoOeVZUmA
+	AVeWDClMnjfnrkhxbIR3hrL7hk0FNpNowGmkvCxzjdb2/bu7XB5ksdSNZyRSNC/UXXfSmg2OeHpK3
+	4zhThQAdTO+G4n22zCEnzjUl1pjUSx37K9ilTF9/IkFYF+LGp5xbrE2ckC+YeMoNbQAFroEuLUTVd
+	wsU5ffu+Sru5HGDmzcWQ1tHXckrWixX16VgeBLrAloE5ZauAlm3IXG34kmSpKq6BSiYl0sO3Tfjm7
+	AKcz7L+g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wHxRK-00000005Usd-0Io6;
+	Wed, 29 Apr 2026 05:26:26 +0000
+Date: Wed, 29 Apr 2026 06:26:26 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neil@brown.name>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>, Jeremy Kerr <jk@ozlabs.org>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/19] VFS: use wait_var_event for waiting in
+ d_alloc_parallel()
+Message-ID: <20260429052626.GY3518998@ZenIV>
+References: <20260427040517.828226-1-neilb@ownmail.net>
+ <20260427040517.828226-5-neilb@ownmail.net>
+ <20260428033738.GV3518998@ZenIV>
+ <177737511992.1474915.1952404144121931523@noble.neil.brown.name>
+ <20260428142225.GX3518998@ZenIV>
+ <177741881482.1474915.12527082398060370192@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Igor Raits <igor@gooddata.com>
-Date: Wed, 29 Apr 2026 07:02:08 +0200
-X-Gm-Features: AVHnY4JpLY_MPfm1ZCuATJIZatk8cSp_s7l210KHBWS-tsS0rMjfYtshcj6Zp5I
-Message-ID: <CA+9S74hSp_tJu2Ffe2BPNC2T25gfkhgjjDkdgSsF5c2rnJq_wA@mail.gmail.com>
-Subject: REGRESSION: NFSv4: mkdir returns EEXIST after NFS4ERR_DELAY-then-success;
-To: NeilBrown <neil@brown.name>, Anna Schumaker <anna.schumaker@oracle.com>, 
-	Trond Myklebust <trondmy@kernel.org>, linux-nfs@vger.kernel.org
-Cc: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>, Jan Cipa <jan.cipa@gooddata.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: D9C2948F583
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <177741881482.1474915.12527082398060370192@noble.neil.brown.name>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Rspamd-Queue-Id: AA98848F6C3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gooddata.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[gooddata.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[zeniv.linux.org.uk,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.org.uk:s=zeniv-20220401];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21266-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21267-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,suse.cz,szeredi.hu,gmail.com,ozlabs.org,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[igor@gooddata.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gooddata.com:+];
+	FROM_NEQ_ENVFROM(0.00)[viro@zeniv.linux.org.uk,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.org.uk:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,gooddata.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
 
-Hi all,
+On Wed, Apr 29, 2026 at 09:26:54AM +1000, NeilBrown wrote:
 
-I think I've run into an NFSv4 client regression and wanted to report
-it before I forget the details. Apologies in advance if I'm
-mis-reading the code =E2=80=94 please correct me if so.
+> > More to the point, why not set DCACHE_LOCK_WAITER as soon as we grab ->d_lock
+> > there?  Then waiting becomes simply "wait until !d_in_lookup()".  Sure, we
+> > might end up setting DCACHE_LOCK_WAITER on a dentry that has just dropped
+> > DCACHE_PAR_LOOKUP - who cares?
+> > 
+> > While we are at it, do we need to drop it when we clear PAR_LOOKUP?  Because
+> > if we do not, the whole "what do we return from __d_lookup_unhash()" thing
+> > disappears - we simply pass the dentry to end_dir_add() and have it check
+> > ->d_flags & DCACHE_LOCK_WAITER to decide whether to bother with wakeup.
+> > 
+> 
+> Yes, your are right.
+> 
+> I've been thinking of this mostly in the context of locking the dentry for
+> directory ops, for which lookup is just one special case.
+> In that context the dentry can be locked and unlocked multiple time so
+> we really want to clear DCACHE_LOCK_WAITERS on each unlock.
+> 
+> However in the current code it is only used for lookup which only
+> happens once on a given dentry so we never need to clear
+> DCACHE_LOCK_WAITERS.
+> 
+> On the basis that we shouldn't add complexity until we actually need it,
+> I'll rename DCACHE_LOCK_WAITERS to DCACHE_LOOKUP_WAITERS and never clear
+> it, as you suggest.
 
-Symptom: an occasional mkdir(2) on an NFSv4 mount returns -EEXIST,
-but the directory it was supposed to create is actually present
-afterwards. It's reproducible on both NFSv4.0 and NFSv4.2 against an
-in-kernel Linux nfsd. Both client and server are running 6.19.14.
+Alternative variant (and I'm pretty sure that it will generate good code)
+would be this:
 
-Reproducer (random 16-hex names so collisions are not the cause):
+static inline void d_wait_lookup(struct dentry *dentry)
+{
+        if (likely(d_in_lookup(dentry)) {
+		dentry->d_flags |= DCACHE_LOOKUP_WAITERS;
+		wait_var_event_spinlock(&dentry->d_flags,
+					!d_in_lookup(dentry),
+					&dentry->d_lock);
+	}
+}
 
-  N=3D2000000; base=3D/var/gdc/export
-  for ((i=3D1; i<=3DN; i++)); do
-      d=3D$base/$(openssl rand -hex 8)
-      mkdir "$d" 2>/dev/null || echo "$(date +%T) failed loop=3D$i $d"
-      rmdir "$d" 2>/dev/null
-  done
+In __d_lookup_unhash(): just don't return anything and lose the parts
+related to ->d_wait (including ->d_lru initialization - same as in your
+patch, for the same reason).  Similar to your variant, except that
+DCACHE_LOOKUP_WAITERS is *not* cleared.  Or checked, for that matter -
+you only do that to find the return value.
 
-Failures cluster every ~2-3 minutes, and also reliably trigger on the
-first mkdir after a few minutes of mount idleness. Each failed mkdir
-takes about 100 ms.
+In d_alloc_parallel(): lose the 'wq' argument, along with the store
+to ->d_wait.
 
-strace shows just one syscall, so userspace isn't retrying:
+Add
+// must be in the same ->d_lock scope as __d_lookup_unhash()
+static inline void __d_wake_in_lookup_waiters(struct dentry *dentry)
+{
+	if (dentry->d_flags & DCACHE_LOOKUP_WAITERS) {
+		wake_up_var_locked(&dentry->d_flags, &dentry->d_lock);
+		dentry->d_flags &= ~DCACHE_LOOKUP_WAITERS;
+	}
+}
 
-  $ strace -ttt -e trace=3Dmkdir mkdir "$dir"
-  mkdir("/var/gdc/export/954ce422698ef4b1", 0777) =3D -1 EEXIST (File exist=
-s)
-  +++ exited with 1 +++
+and have
+void __d_lookup_unhash_wake(struct dentry *dentry)
+{
+        spin_lock(&dentry->d_lock);
+	__d_lookup_unhash(dentry);
+	__d_wake_in_lookup_waiters(dentry);
+	spin_unlock(&dentry->d_lock);
+}
 
-A packet capture for one failure (NFSv4.2; the v4.0 capture has the
-same shape):
+static inline void end_dir_add(struct inode *dir, unsigned int n,
+                               struct dentry *dentry)
+{
+	smp_store_release(&dir->i_dir_seq, n + 2);
+	preempt_enable_nested();
+	__d_wake_in_lookup_waiters(dentry);
+}
 
-  client =E2=86=92 server  CREATE name=3D...  =E2=86=92 NFS4ERR_DELAY (1000=
-8)
-  ~100 ms later
-  client =E2=86=92 server  CREATE name=3D...  =E2=86=92 NFS4_OK            =
-=E2=86=90 dir created
-  ~80 =C2=B5s later
-  client =E2=86=92 server  CREATE name=3D...  =E2=86=92 NFS4ERR_EXIST (17) =
-=E2=86=90 server is right
+with obvious adjustments in end_dir_add().  That's it.  Outside of fs/dcache.c,
+same as in the patch you've posted, modulo renaming you've suggested for new flag.
 
-Three CREATE RPCs from one mkdir(2). The server looks correct: it
-returns DELAY, then OK on the retry, then EXIST when the client asks
-again for a name that now exists. The client then surfaces that final
-EXIST to userspace even though its own previous retry already
-succeeded.
-
-While poking around in fs/nfs/nfs4proc.c I noticed nfs4_proc_mkdir()
-looks like this in current master:
-
-  do {
-      alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
-      trace_nfs4_mkdir(dir, &dentry->d_name, err);
-      if (err)
-          alias =3D ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
-                                                err, &exception));
-  } while (exception.retry);
-
-If I'm reading this right, on a successful retry (err =3D=3D 0)
-nfs4_handle_exception() is skipped, so exception.retry stays at the
-value it had after the previous DELAY iteration (which is 1). The
-loop then runs once more, sends another CREATE for the same name,
-and that one legitimately gets NFS4ERR_EXIST. Other do-while loops
-in the same file (e.g. nfs4_proc_symlink) seem to call
-nfs4_handle_exception() unconditionally, which would reset
-exception.retry to 0 on success and exit the loop.
-
-git blame points at:
-
-  dd862da61e91 ("nfs: fix incorrect handling of large-number NFS errors
-                 in nfs4_do_mkdir()")
-
-(stable backport: 062feb506caf). The change makes sense in itself =E2=80=94
-the goal of returning the int separately from the dentry is good =E2=80=94 =
-but
-the `if (err)` gate around nfs4_handle_exception() seems to be what
-introduced the retry-state issue. I might be wrong about that, though,
-so please take it with a grain of salt.
-
-Happy to provide pcaps, more traces, or test a patch if useful.
-Reproduces on demand here, so iteration should be quick.
-
-Thanks for all the work on NFS,
-Igor
+That yields the same semantics for flags as your variant does (DCACHE_LOOKUP_WAITERS
+may be present only along with DCACHE_PAR_LOOKUP), and fs/dcache.c part is more
+straightforward that way, IMO.
 
