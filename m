@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21284-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21285-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QNktHaRJ8mnOpQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21284-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 20:10:44 +0200
+	id KH7DGLdJ8mnOpQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21285-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 20:11:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35A33498C4A
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 20:10:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26413498C6A
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 20:11:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D7D74306EF1A
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 18:08:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EEE29302FA17
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 18:08:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 352ED4219FC;
-	Wed, 29 Apr 2026 18:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7D6421EF4;
+	Wed, 29 Apr 2026 18:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2vqU1+D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwkTphSZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2D64218B6;
-	Wed, 29 Apr 2026 18:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC1E34E744;
+	Wed, 29 Apr 2026 18:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777486066; cv=none; b=fowhkK3QN9jo7+ERYsgH9ChS3vXMnb5EhPjSXo0qMtSCMnfmF6R8CwvY7PkFGIvq0l2yNSNppGY8/Q/yDrdP+YmeV9lb3AnPMYRkrVf5GBS0Xc2TfqZVxIXiGNmBz4uchvXufoNE0RLdw846PPchl8Taq8JBEoz7VBpWKD/JDog=
+	t=1777486069; cv=none; b=mGa9GKfCL3ZXNyL5e2c0dv51Rgrv4U9hAw5V+BheLLbJQfZaqxkER6dUEH03yIzcU0dJM7nYLRvYvn2QrajJP8wePIw8HlcYbQniEjQfME7oztNRNrGpOJKKyt/EOZibq1s7isLyDD8xP7AfgEyaotCrN0Fu/diUDv/eKqjbo2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777486066; c=relaxed/simple;
-	bh=MCKLEZC7Qx1FnQ0cZy8w8gaJqor/Oy2yvhPP57H1cWo=;
+	s=arc-20240116; t=1777486069; c=relaxed/simple;
+	bh=29KDob7D6wjAqke0cQHbkTiX/VafLuHXAnmywDOdkA0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rUbhS2np6zHBhcg6XzKcKr15eV0JqYOSjUtseNEjDMHPTIiD7WAViz8pJfVd7AREf1G/mgMbvkcfsm7Ho3qjQgztSQCYM0K04RUflAnoE9FmG05Ky9TTxPUdB5OhmWC9gFHlEOxwzMPHk00sNhsftirhjGzoOI3cKKOF2/XUOow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2vqU1+D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80CF2C2BCF6;
-	Wed, 29 Apr 2026 18:07:43 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=OI4XsOINCHB69bg9gKOmrFRc0rCDvX17Awez+9vv+rOseyJwjr4k6D0Mka/Se553Rx4MF25TJGF8+dojLIkGW6pHTgmlv90VQ5pdfED3DaAbRDNLHyvhkbZWmQMfa0iM8/7Rajx4Z6p3FnDU3Acw5Wr52AEf0AybECBnSztHNcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwkTphSZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F309EC2BCC7;
+	Wed, 29 Apr 2026 18:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777486065;
-	bh=MCKLEZC7Qx1FnQ0cZy8w8gaJqor/Oy2yvhPP57H1cWo=;
+	s=k20201202; t=1777486068;
+	bh=29KDob7D6wjAqke0cQHbkTiX/VafLuHXAnmywDOdkA0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=c2vqU1+DIgO1ouuDvKAm9SaitSoOX/+UnmaoqiRd2TpFdxO43KFDX+GyhO0QQB+p9
-	 I1DO7IuT5fkPmJRz0mqf/qAX0FXwEFkYFPlpGQzvZICgK/9lp0JirZYrKzXi65qzU+
-	 tJXK5qmPsBqJyvoI95WxV2PWF1AGmOqdsyhU90sh2zsOQ6SUuiAOsbRmYTz7aEKURg
-	 9pYuFXOJle8/Ln8V+hJKEpnIe5PBhKdQYfKo5jAYPfv/qsPd0TBns7AQyouVSycHMu
-	 2Mvj+mK0HAGWGYd+4iRmb1EimiKagrBVCZJiXz43qFu7w8M8H7uIkKcIuW68etct2t
-	 f7NHQ9ynk1vfQ==
+	b=QwkTphSZuuJKpR7RpMeiB0Di0S7+PZoPDpqd0FtYs5HP+1/knzIVollqTZ8cW55BI
+	 WuT6KATac7Yx0AZz5YSTqjbZZ9EJYgaj2YLep++OxB5GNcozJ3iY3Jr5uTxFkxIjA2
+	 EIJT3D4GFwEbCreuwEj/+9jUojxfJi5SAMZG9d9hwFE8ZE6nc0HI3XGwc9Ehn+xZmK
+	 tkUlIbCLU1PQk+4jK7cbW1kdaBr7oYbEoFigSQZr97cGqrMs0yOuRANxlCyhYGLmTf
+	 ob2/HyYyCy35KuTrOVYnrg/16f7POTQiQBRJ52irPH6WK/yr/YQPs86RE8Z4uvWVlu
+	 YQ5P+uc7SsbEQ==
 From: Chuck Lever <cel@kernel.org>
-Date: Wed, 29 Apr 2026 14:07:18 -0400
-Subject: [PATCH v12 07/15] hfsplus: Report case sensitivity in fileattr_get
+Date: Wed, 29 Apr 2026 14:07:19 -0400
+Subject: [PATCH v12 08/15] xfs: Report case sensitivity in fileattr_get
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260429-case-sensitivity-v12-7-8057123bebe0@oracle.com>
+Message-Id: <20260429-case-sensitivity-v12-8-8057123bebe0@oracle.com>
 References: <20260429-case-sensitivity-v12-0-8057123bebe0@oracle.com>
 In-Reply-To: <20260429-case-sensitivity-v12-0-8057123bebe0@oracle.com>
 To: Al Viro <viro@zeniv.linux.org.uk>, 
@@ -74,24 +74,24 @@ Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
  Chuck Lever <chuck.lever@oracle.com>, 
  Roland Mainz <roland.mainz@nrubsig.org>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2621;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2743;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=yr1QdNRA2c3h2NX2KtSKVIgsso0huI4pF/+aMWQ1VYs=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp8kjd//ugpCe7RL1EFdZg6sAR5attDISWJ2/Tn
- /1es/HNDSKJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafJI3QAKCRAzarMzb2Z/
- l154D/9sRJhZpYvAf/Om/gyeeuNnLwAQO4y4xNSbS+uEm4PDRZFhge2kGJ+SMta5gU0M03jOjnO
- 3ZcxFkqNMtVwAy/r53i4MW8p2Onx16VAHPmElEk1k/g9nlfux7Yl6rWG1kPGaDIx0aBlqxnFQs2
- cvYj9veBZOCDu0wsRSNg8WddAJyvQqj/ZJE+eh1/k/b7kbrURHTRHN6PzuYAmZmExXiMQWdlIXe
- NKBwHjr+hLLT/1UBwzh858oV4uFb6+Qk4Fb1xTNKJG2LDc4bi7R6Z5P2VBoOnbj6wuSWZ2cjgnF
- H/TJOgzycFT4QJ9in+k2NxRdcSMJmNljc/Ut+JL25EFKxMSxOEOvvFsiBtAilV5EfJZTyA0EL0/
- 9SvMmy9vQ/I69CPIjf3HmoDgB3kvq/L68iMy4iSDqxFgedBXmo4dtAPEBzTI2SbVDeDuWcqkdnE
- BYRE3z4ZzO6sBozJX2bTBM9rmpzZcpR0Hbw33t4cPGwxOL7WFogGOGHjSYR949N1SGi/TcBz6hv
- Nm9f9fngHfqrBgyoTp6O9qSlWM7boe7iTy13sBBMxhZ6RJ6l21/Mv6a5PmOuOP7sHg/pbBhfbb0
- BwAbhYVp4MgRdNYar+AUg7hDroNpOGETgdAYbXqHhAN2YuoX2DZl+XxTHlVOqTXfUb3y2rf399N
- ZU8mxwunytdSlnQ==
+ bh=5XtPWdQD9rNyvcNieFdC0PM+y6dNjGmJfHpo+ZOq7bw=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp8kjdqEdk0DF+qfmnWHi3Vt1gR9qIy7prabuO7
+ y3XbV2QW4SJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafJI3QAKCRAzarMzb2Z/
+ l4SlD/96LAlavdzmgMVHUOE01QsUJl9DHewg8oTZ6kj7D5SwFJyVufOwx7eMhpu+2WqqW7zOB4G
+ Tui0AGnVTOSG1QYr8ICcGePPH3yXcblegpIrxTtnNvrZnbqY3WJOWXBfC81l//kp3wmiCuk9Txf
+ y4dHVS3lV4PCpICHSEVgUPVOlr09L7JeZzHg+RkrPbEpKUSISDYP1SpNt4EWT2jcrAdQbGNg2GZ
+ ksB/ke9b7Zbz4o9dupEuf+Gy5oKlT6iBQ2+eWPIGOf+MqNh7t2oETxoyf7lDqpA9LNqwgkt7t4r
+ KxWln+7KglK5JwsI9s29dy/SbJaDMmdpg+tBDqy+tNNOBBX7icTHKbJ6f6P787oSTOCTz5ob5p/
+ CgRvp6rmSD82RxQTzRY6I9ZeNaSA/rk2j6BRIooPFRr5UQ/PSPQtGZyVV7+dEuSbGiB2HPuy/E5
+ IfdhsOXlnDPECn5lo7uBwtrtR1+YlJYIbTCZO1VXKr68KBM5j/VP8JS0ks/X6IUnVxT5+CE0GCN
+ +WdTlJpNQZXXBHzxZWBlsD6QEmsdOVCo+HpWmZsQCobfyPzngM7zDa5BKVZgFzDy9ZE+CWdPfny
+ W3Lv2MGA8y3zBY6rY9toT+Qx7IcEmmvGm2dXYXoJOs5qvqsy6W96pRnTSLJhGohNl65a2FjXM77
+ 3kGKMtAht4DPLtA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 35A33498C4A
+X-Rspamd-Queue-Id: 26413498C6A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -102,7 +102,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21284-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21285-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -119,78 +119,82 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dubeyko.com:email,nrubsig.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nrubsig.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add case sensitivity reporting to the existing hfsplus_fileattr_get()
-function via the FS_XFLAG_CASEFOLD flag. HFS+ always preserves case
-at rest.
-
-Case sensitivity depends on how the volume was formatted: HFSX
-volumes may be either case-sensitive or case-insensitive, indicated
-by the HFSPLUS_SB_CASEFOLD superblock flag.
+Upper layers such as NFSD need to query whether a filesystem
+is case-sensitive. Add FS_XFLAG_CASEFOLD to xfs_ip2xflags()
+when the filesystem is formatted with the ASCIICI feature
+flag. This serves both FS_IOC_FSGETXATTR (via xfs_fill_fsxattr()
+in xfs_fileattr_get()) and XFS_IOC_BULKSTAT (which populates
+bs_xflags directly from xfs_ip2xflags()), so bulkstat consumers
+and per-inode queries see a consistent view of the filesystem's
+case-folding behavior.
 
 FS_XFLAG_CASEFOLD is read-only: FS_XFLAG_RDONLY_MASK ensures
-FS_IOC_FSSETXATTR strips it. The legacy FS_IOC_SETFLAGS path in
-hfsplus_fileattr_set() also allows FS_CASEFOLD_FL through its
-allowlist on case-insensitive volumes so that a chattr
-read-modify-write cycle does not fail with EOPNOTSUPP.
+FS_IOC_FSSETXATTR strips it, and xfs_flags2diflags() has no
+clause for CASEFOLD so the on-disk diflags are unaffected.
+The legacy FS_IOC_SETFLAGS path in xfs_fileattr_set() also
+allows FS_CASEFOLD_FL through its allowlist on ASCIICI
+filesystems so that a chattr read-modify-write cycle does
+not fail with EOPNOTSUPP.
 
-Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
+XFS always preserves case. XFS is case-sensitive by default,
+but supports ASCII case-insensitive lookups when formatted
+with the ASCIICI feature flag.
+
 Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/hfsplus/inode.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_inode_util.c |  2 ++
+ fs/xfs/xfs_ioctl.c             | 20 +++++++++++++++++---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
-index d05891ec492e..5565c14b4bf6 100644
---- a/fs/hfsplus/inode.c
-+++ b/fs/hfsplus/inode.c
-@@ -740,6 +740,7 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
-+	struct hfsplus_sb_info *sbi = HFSPLUS_SB(inode->i_sb);
- 	unsigned int flags = 0;
+diff --git a/fs/xfs/libxfs/xfs_inode_util.c b/fs/xfs/libxfs/xfs_inode_util.c
+index 551fa51befb6..82be54b6f8d3 100644
+--- a/fs/xfs/libxfs/xfs_inode_util.c
++++ b/fs/xfs/libxfs/xfs_inode_util.c
+@@ -130,6 +130,8 @@ xfs_ip2xflags(
  
- 	if (inode->i_flags & S_IMMUTABLE)
-@@ -748,6 +749,8 @@ int hfsplus_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
- 		flags |= FS_APPEND_FL;
- 	if (hip->userflags & HFSPLUS_FLG_NODUMP)
- 		flags |= FS_NODUMP_FL;
-+	if (test_bit(HFSPLUS_SB_CASEFOLD, &sbi->flags))
-+		flags |= FS_CASEFOLD_FL;
+ 	if (xfs_inode_has_attr_fork(ip))
+ 		flags |= FS_XFLAG_HASATTR;
++	if (xfs_has_asciici(ip->i_mount))
++		flags |= FS_XFLAG_CASEFOLD;
+ 	return flags;
+ }
  
- 	fileattr_fill_flags(fa, flags);
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index ed9b4846c05f..f8216f74679f 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -755,9 +755,23 @@ xfs_fileattr_set(
+ 	trace_xfs_ioctl_setattr(ip);
  
-@@ -759,13 +762,24 @@ int hfsplus_fileattr_set(struct mnt_idmap *idmap,
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
-+	struct hfsplus_sb_info *sbi = HFSPLUS_SB(inode->i_sb);
-+	unsigned int allowed = FS_IMMUTABLE_FL | FS_APPEND_FL | FS_NODUMP_FL;
- 	unsigned int new_fl = 0;
- 
- 	if (fileattr_has_fsx(fa))
- 		return -EOPNOTSUPP;
- 
-+	/*
-+	 * FS_CASEFOLD_FL reflects HFSPLUS_SB_CASEFOLD, a mount-time
-+	 * property. Accept it as a no-op so chattr's RMW round-trip
-+	 * succeeds; reject any attempt to enable it on a volume that
-+	 * was not formatted case-insensitive.
-+	 */
-+	if (test_bit(HFSPLUS_SB_CASEFOLD, &sbi->flags))
-+		allowed |= FS_CASEFOLD_FL;
+ 	if (!fa->fsx_valid) {
+-		if (fa->flags & ~(FS_IMMUTABLE_FL | FS_APPEND_FL |
+-				  FS_NOATIME_FL | FS_NODUMP_FL |
+-				  FS_SYNC_FL | FS_DAX_FL | FS_PROJINHERIT_FL))
++		unsigned int allowed = FS_IMMUTABLE_FL | FS_APPEND_FL |
++				       FS_NOATIME_FL | FS_NODUMP_FL |
++				       FS_SYNC_FL | FS_DAX_FL |
++				       FS_PROJINHERIT_FL;
 +
- 	/* don't silently ignore unsupported ext2 flags */
--	if (fa->flags & ~(FS_IMMUTABLE_FL|FS_APPEND_FL|FS_NODUMP_FL))
-+	if (fa->flags & ~allowed)
- 		return -EOPNOTSUPP;
++		/*
++		 * FS_CASEFOLD_FL reflects the ASCIICI superblock feature,
++		 * a read-only property. Accept it as a no-op so chattr's
++		 * RMW round-trip succeeds; reject any attempt to enable
++		 * it on a non-ASCIICI filesystem. xfs_flags2diflags()
++		 * has no clause for CASEFOLD, so the bit is dropped from
++		 * the on-disk diflags regardless.
++		 */
++		if (xfs_has_asciici(mp))
++			allowed |= FS_CASEFOLD_FL;
++
++		if (fa->flags & ~allowed)
+ 			return -EOPNOTSUPP;
+ 	}
  
- 	if (fa->flags & FS_IMMUTABLE_FL)
 
 -- 
 2.53.0
