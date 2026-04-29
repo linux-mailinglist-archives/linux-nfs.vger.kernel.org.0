@@ -1,83 +1,82 @@
-Return-Path: <linux-nfs+bounces-21273-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21274-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QAtoC8ga8mlyoAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21273-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 16:50:48 +0200
+	id iLKOGEAj8mlmoQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21274-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 17:26:56 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDA2B4963D3
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 16:50:43 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88535496D65
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 17:26:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4CC5330022CB
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 14:50:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 131CA3047919
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Apr 2026 15:18:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69043254B8;
-	Wed, 29 Apr 2026 14:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427E5378819;
+	Wed, 29 Apr 2026 15:18:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EL18D2lC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPSneN/B"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4343427E1DC
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2026 14:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAFB3783D4
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Apr 2026 15:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777474240; cv=none; b=HIpdTESttsC4bSb3wE3rbSFJ2MPSYbECqZb0W9rHMKGvdqdAGKrGamWhZFQX/6O7FS08IuKDoN4O5t0+YtY84Wauns4Xzw/TqL3rv+qVSYaiIOvv/24J3fFd4lfVYdnSd+QrLJyDlGhVKRwDHe6Gdr98aLSgHLf+xW67+CAwLZI=
+	t=1777475901; cv=none; b=q2efK/bBw0ZJydBVLAJ2dBhb8tNxuZYyJfhPMrdOLLL2ME4ru/pn9jcl4WhLLMP2yjqbsSzHZZFF5ct6KgWFKlfJfalNtRUIaOHfpE85issndatP+bibfqc0zlATG05vXNuxbR8/1GRNK+X2yRuahvAFSsf96NnuyKjaroJe9Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777474240; c=relaxed/simple;
-	bh=thfUlE0axhTR/XnrGpaLu6GUutQHpZ011AZmWf1HJPI=;
+	s=arc-20240116; t=1777475901; c=relaxed/simple;
+	bh=h0Koc3DMkH5zuBD2mgruwskA9s2gm0IgTT9rYzHY+Tk=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mPa+5cLNx/FAhwK/8Pc061ZHcWHrt2jBEW5lz3Pe1zPIKzKyN8zHE7vGQrwILqEZ0lJ7PHpkpV94FG+Ko5nUqGR5UfMOTjdT0i35TNje47chc4eh8RukvEfmvK9AKcCywi2/b0IsM1pAvtj3CCQjKqhVmJH1K7K4SxFJGNBBS4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EL18D2lC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FA4C19425;
-	Wed, 29 Apr 2026 14:50:39 +0000 (UTC)
+	 Subject:Content-Type; b=RcnSUTRKs13Sp2DoaByCfYERYd1tZtMiyVHeqDGNA44/+uCEoJrVPXnyyatIJyUKr3qTK6GkDo9wwM1Dz2f426N9MqHt918rzPYxcECqXslYGT2SqxlKFItfH1SR7s9fr220tzXCzUCaU6kIGhf9RUu7jv2sNqbf4m33HCouH2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPSneN/B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00A0C19425;
+	Wed, 29 Apr 2026 15:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777474239;
-	bh=thfUlE0axhTR/XnrGpaLu6GUutQHpZ011AZmWf1HJPI=;
+	s=k20201202; t=1777475901;
+	bh=h0Koc3DMkH5zuBD2mgruwskA9s2gm0IgTT9rYzHY+Tk=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=EL18D2lC5/TNS/vf9oGrmGdSZ+4/LQ+mYg5ueb0bmlDSu3hoInq+MXfPtV0x67xGj
-	 bFoN/koD35he2TRwnTokjaWdGCzWS+qT1sqbGedPGQ3jkN3U2F/zH1g0O2sre5yTx8
-	 EfX668MAN91CFcLiP0F9TtkoKc7KHP5X2GS+xCr2U4DSHaNwH1Q3hTZPjfpZamf6j9
-	 wGHJ1zsjAVNjAudxI1MU6AGaR2tUamwI6CGKjaEKEJeUdLvOfJ3boWuQXL5IqlD54O
-	 PwWyTr6NSfTkkm0nRGlb5CP9clEPN1ZEVk6BprN1UmG2NbOQqdICopWUs42g9ALJ2Z
-	 VNKPIk9LUnv4g==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C2343F40070;
-	Wed, 29 Apr 2026 10:50:38 -0400 (EDT)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-02.internal (MEProxy); Wed, 29 Apr 2026 10:50:38 -0400
-X-ME-Sender: <xms:vhryaVWgC_WqaK_UK1aWHRVcYiwN_5IzuUphssA1-LkfM5WLHIKhJA>
-    <xme:vhryaQZ26iclxCk9Q3H9wDH7OCX9h7LQeUc65mFD8dbXqV0VFTWPcSO11SEocr21g
-    BjSInEFPz-VfROUj8MoTnEEReubOJ3nPlvwc0bMHl1xk2Yp79xIESg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgeejvdcutefuodetggdotefrod
+	b=PPSneN/B+EzpzvRVOXZj1IkCpHE6iJkJDO5If2ocSunhQh93naAL6TxM5jNodGRjy
+	 H4jD/5zvnC4PrhUd9ZXhEuqyvebm5yQaTpfdizGsAJLDocwsuESF62bUdWedxESu4a
+	 Yg4kirqFE8Kg9YGgmim1Y1RyE4WtKXoVAs4Z1rfSxTwYsfAtCpTbTvIkdClOm73UtY
+	 KALp5onRpUFY7phC3jbs6M/0d004eML1UaxpHyfBJpRuPbfqYoEGw0zsUyR6T231AU
+	 fReUS/qDDDO+8ulVOrITVnXdwh5ljZlzuHtkQ7uPtLYEVDIBoo3N9yPp7KKHCrv4qp
+	 RVYURZfrjSPrA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C3CD5F40070;
+	Wed, 29 Apr 2026 11:18:19 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 29 Apr 2026 11:18:19 -0400
+X-ME-Sender: <xms:OyHyafbZGCspSuG0zoXHcr-sqlJCyIba3dEMIwgTokBbAj4qHJ-Ubw>
+    <xme:OyHyaZOlvst9wDsuWPDO-Y7ovkwslQEbZnE_386RgknaYl2g0gr8w9fUgwGRdtwkG
+    ise8HzB8v8Wn-PfVzKTFHJg746gnhA3-HQXmTZ43WGkKtu8aXryino>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgeejkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetnhhnrgcu
-    ufgthhhumhgrkhgvrhdfuceorghnnhgrsehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
-    htvghrnhepudeuveegffelvdelvdeiffehvedvvdetfeefgeefhfdvtdeufffgteevhfev
-    teelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hnnhgrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejjeduvddtjeel
-    qdeffedvvdefgeejuddqrghnnhgrpeepkhgvrhhnvghlrdhorhhgsehnohifhhgvhigtrh
-    gvrghmvghrhidrtghomhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepthhighhrrghnrdhmkhhrthgthhihrghnseguvghshidruggvpdhrtg
-    hpthhtohepkhgvnhhnvghrrdhlihhnuhiguggvvhesghhmrghilhdrtghomhdprhgtphht
-    thhopehsnhhithiivghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtrhhonhgumh
-    ihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgr
-    tghlvgdrtghomhdprhgtphhtthhopehjtghurhhlvgihsehpuhhrvghsthhorhgrghgvrd
-    gtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdroh
-    hrgh
-X-ME-Proxy: <xmx:vhryaeGWdWZlDfXD2I-e8B9Gw3RC6ggpqNupXNAxo2aLrKP771UKLA>
-    <xmx:vhryaWG0zv1MXl0Z67JS8gPj1V_qtaYTvCKEDw2AqGG_hKD6tHJPwA>
-    <xmx:vhryaZ7TMWGJb961BJS_pk9FKJMPDwL2FYVT1lzX0bkcpiCMgnufbg>
-    <xmx:vhryaTzjHMce8LMS5U3U8WrVSVEMrtbWGxzaovZ-IqaO87MMOjtpUg>
-    <xmx:vhryaQNeUUxwWcdSlC2anTQHTeVskDA9igZY5BZ50PUKKoapg43FwqVX>
-Feedback-ID: i20964851:Fastmail
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epgffhgeeutdeiieevuefgvedtjeefudekvefggefguefgtefgledtteeuleelleetnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepnhgvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopegurghvvghmsegurg
+    hvvghmlhhofhhtrdhnvghtpdhrtghpthhtohephhgvrhgsvghrthesghhonhguohhrrdgr
+    phgrnhgrrdhorhhgrdgruhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehh
+    ohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepthhrohhnughmhieskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:OyHyaWxTG0H8ndP_Ip4DU8nsxU5Io_R03CCVwfJysvMpoi_sR6CwAg>
+    <xmx:OyHyaXJk91G48Jz5vlosQ1d-ya9s2kLfLGXMtMVoFTtpkgUYpDodGw>
+    <xmx:OyHyaQ55-NIzWk5ZqXtdpYfSZAAMhEtBC4b4aTlB2n7t5WNE0QB6zw>
+    <xmx:OyHyadxteam5wOluyi3N3HvOA9F0_D-LSu48dSeRVL8UCxCDc9eSEg>
+    <xmx:OyHyaa9VS1mECn1wyDzyBRSwh25gxXSlVjEvVqyr6ERQ4gemJuAvMY90>
+Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A49BCB6006E; Wed, 29 Apr 2026 10:50:38 -0400 (EDT)
+	id 98405780075; Wed, 29 Apr 2026 11:18:19 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -85,96 +84,102 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AY8c0H4t9Dfo
-Date: Wed, 29 Apr 2026 10:50:17 -0400
-From: "Anna Schumaker" <anna@kernel.org>
-To: "Kenner de Azevedo dos Santos Miranda" <kenner.linuxdev@gmail.com>,
- "Trond Myklebust" <trondmy@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Jonathan Curley" <jcurley@purestorage.com>,
- "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Mike Snitzer" <snitzer@kernel.org>
-Message-Id: <d5df5a69-5003-40dd-b23a-c88b6fe315a4@app.fastmail.com>
-In-Reply-To: <20260428195919.29794-1-kenner.linuxdev@gmail.com>
-References: <20260428195919.29794-1-kenner.linuxdev@gmail.com>
-Subject: Re: [PATCH] nfs: flexfilelayout: fix unused-but-set variable 'err'
+X-ThreadId: A9zl7fUjdiig
+Date: Wed, 29 Apr 2026 11:17:59 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "David Howells" <dhowells@redhat.com>, "Simo Sorce" <simo@redhat.com>
+Message-Id: <0c5ff2b9-97b3-4e6d-a4ca-1e9634c38a66@app.fastmail.com>
+In-Reply-To: <dbaa192b70fa67d51ab6a4294c045100efc65980.camel@kernel.org>
+References: <20260427-crypto-krb5-api-v1-0-1fc1253b64c0@oracle.com>
+ <dbaa192b70fa67d51ab6a4294c045100efc65980.camel@kernel.org>
+Subject: Re: [PATCH 00/18] Migrate rpcsec_gss_krb5 to the crypto/krb5 library
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: EDA2B4963D3
+X-Rspamd-Queue-Id: 88535496D65
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.65 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21273-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,app.fastmail.com:mid];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21274-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 
-Hi Kenner,
 
-On Tue, Apr 28, 2026, at 3:59 PM, Kenner de Azevedo dos Santos Miranda w=
-rote:
-> The variable int err in f_layout_io_track_ds_error() is set but not=20
-> used in the code.
->
-> The warning was identified by running make w=3D1:
->
->    warning: variable =E2=80=98err=E2=80=99 set but not used
->
-> I set the (void)err to prevent the warning.
+On Wed, Apr 29, 2026, at 2:39 AM, Jeff Layton wrote:
+> On Mon, 2026-04-27 at 09:50 -0400, Chuck Lever wrote:
+>> The rpcsec_gss_krb5 module carries its own Kerberos 5 crypto imple-
+>> mentation: key derivation, CBC-CTS encryption, HMAC checksumming,
+>> and the encrypt-then-MAC construction from RFC 8009. Keeping
+>> cryptographic code inside an RPC module means it receives review
+>> only from the SUNRPC maintainers, who lack deep crypto expertise.
+>> Vulnerabilities and algorithmic errors can persist unnoticed.
+>>=20
+>> Replacing the private SunRPC Kerberos implementation eliminates
+>> this duplicated audit surface. A single implementation of Kerberos
+>> 5 key derivation and authenticated encryption is easier to verify
+>> than two independent copies. New encryption types and hardware
+>> offload added to crypto/krb5 will automatically become available
+>> to SunRPC Kerberos consumers.
+>>=20
+>> The crypto/krb5 library handles enctype differences internally, so
+>> a single encrypt function and a single decrypt function serve all
+>> enctypes, eliminating the per-enctype dispatch table that previously
+>> existed in struct gss_krb5_enctype.
+>>=20
+>> RFC 4121 Section 4.2.4 requires MIC checksums to cover the message
+>> body followed by the GSS token header. The crypto/krb5 get_mic/
+>> verify_mic API hashes optional metadata before the scatterlist
+>> data, which is the wrong order for the GSS header. The header is
+>> therefore placed at the end of the scatterlist rather than passed
+>> as the metadata parameter, and a dedicated gss_krb5_mic_build_sg()
+>> helper constructs this three-section layout (checksum area, message
+>> body, token header) with proper sg_mark_end() termination.
+>>=20
+>> This implementation was available during the Spring 2026 NFS bake-
+>> a-thon, and received testing there.
 
-Wouldn't it be better to handle the error instead of ignoring it?
+>
+> Love that diffstat. Nice work!=C2=A0
+>
+> One comment in general: Do you need to add Assisted-by: tags to any of
+> this? You can add this to the set:
+>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-Thanks,
-Anna
+Thanks, applied to nfsd-testing. An Acked-by: from one of the NFS
+client maintainers would be great too.
 
->
-> I didn`t test with hardware, i ran again the make w=3D1 and the warnin=
-g=20
-> was removed.
->
-> Signed-off-by: Kenner de Azevedo dos Santos Miranda <kenner.linuxdev@g=
-mail.com>
-> ---
->  fs/nfs/flexfilelayout/flexfilelayout.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c=20
-> b/fs/nfs/flexfilelayout/flexfilelayout.c
-> index 8b1559171fe3..d9a0fed41eac 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-> @@ -1536,6 +1536,7 @@ static void ff_layout_io_track_ds_error(struct=20
-> pnfs_layout_segment *lseg,
->  				       mirror, dss_id, offset, length, status, opnum,
->  				       nfs_io_gfp_mask());
->=20
-> +	(void)err;
->  	switch (status) {
->  	case NFS4ERR_DELAY:
->  	case NFS4ERR_GRACE:
-> --=20
-> 2.43.0
+
+--=20
+Chuck Lever
 
