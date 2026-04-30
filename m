@@ -1,163 +1,135 @@
-Return-Path: <linux-nfs+bounces-21297-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21298-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iGX+BERZ82lfzwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21297-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 15:29:40 +0200
+	id qFI5KxBb82lfzwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21298-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 15:37:20 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C95A34A373A
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 15:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 236DB4A38C6
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 15:37:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DE4F9301B918
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 13:28:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F11D0301325B
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 13:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF7B426684;
-	Thu, 30 Apr 2026 13:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="aEa5u0Aj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22142E5429;
+	Thu, 30 Apr 2026 13:32:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D440D423A8C
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 13:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6032363C55
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 13:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777555680; cv=none; b=fhK3cJUomombQ5EJSXgzlmid2CRo/rTge4SjzgPfKHwfzTTPhP2jej+5kStCamOF3GfIqUSQwpBP8G2wmerS8bioGs6xBOoCSUsSxDPYVfB+ObyVYSbkl4f40UT7kOWkI7X6vS8XpRPXayzjDzlmcA37lW4/kcTytm6FLDPu9Pw=
+	t=1777555943; cv=none; b=uKumfCPO9ptrStVIvHP85LLKNPYKZPv/dVftHu5kpQ8sz/RG72SX6u3FbMYrPfftdbDTktvLfS6JzkTYJrRX/kP0rowhDQDoxig+GNTZpftDSc82Y1UZljKayBSOCWuc1kvuPC2RTbx1I+n/5xRfX1Hbu3Uefz09j6N04WAAdPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777555680; c=relaxed/simple;
-	bh=ml+LeI3821LF4ypyRlAo2jtuuh29aSwBucmbeqR27gs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nf3RcRcQaKTE69m+NcCkXJ2ASHBGIJjJEDNRb3sdmnjrxmMVEY9+fiDn49hW98xrEHJ98f/TVWXeMPo91KafUTn6YTcXSWrkoriynGqFnWahz+uzYWOuGUf5yL6d21FfTp6UHsANYRQX/EZZVHbVald/uTv7Yl5hBpp+NZ6k/ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=aEa5u0Aj; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hammerspace.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7d4c12ff3d5so835788a34.2
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 06:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1777555677; x=1778160477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nyOMENDhhKn1drXUY5FEfpalnnqfQd9/9Hk+P1Dg6SI=;
-        b=aEa5u0AjxdVJh0i+9nvrVuZZp0YA3+RjLii2CJvAS/6SSHAYlMC74E/wmPKCXVtxVM
-         isqjpdGh6R04M4IE/B0G5FuFWxnn/svR5iT/bnhKyx5KcuUARKR5ad/PPA4ohAAAQO52
-         U6yF8E6alSCmJDMODgRuAvnwKgq/tamTyCcsPHsLcaTvrARlTwBhiLAmy1aSB9XfQGqA
-         he/mQvl8s7dNdJ+gtyWXF9s54wOFBtzZmxPllH0sm4Dax4PiFLVK44TkTd2sNOEP948A
-         KW8c8eKt/VDEfzFnSvoWeaAEQgwI8elIrTRkx5Q35SeyK+8hg68m4F8U0eoHJtojxaCv
-         dwAw==
+	s=arc-20240116; t=1777555943; c=relaxed/simple;
+	bh=iGKyFxmVhIGmQI7rScEErV6RT23oJlBjXHq0PnPa6bY=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=qD6MxX3Ogn+2F7QUaexyaqiqUbEeY2s8QOXFeRvrDtyz3B/m7rzGFSqi9UMVy40HrwzRodF+mjj+3OwXyUmhHJhc+m6I7oviyczqr4ji9SnmsujrdU3hvP5GBlx2qs9MXwE8ZunYUvEQLrJ1KrHlH35EeXncwkydee1iKHuURRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43d43e09de5so494192f8f.1
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 06:32:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777555677; x=1778160477;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=nyOMENDhhKn1drXUY5FEfpalnnqfQd9/9Hk+P1Dg6SI=;
-        b=FRh351Qr6vJm2b/rGQSYDTp6wRaWYXedhL4LjmkXU39RNRJq/YUEWPJ3RDDsT1YCMW
-         9/BVdOfBZCUU2QK9Jm7nLK+JWxB4p4ITOo1X6D1kBT8V5+sswq5J8iBr34waiE4nR/do
-         9Lyn8bdgohhh5sHtLQiuYcQOiJKZv5GRW4LJY6TfNREwqdz4/t1uhMrY5jGh5jEeV87i
-         s/jbhHiw1naXhnDtM/Cul0XPFTxke+rei6716MYDbMQFJzSZzVfiiqqrU4iEoVOeWmRh
-         /n2Bm7Z4pIC69u4uzhRBJOTjO0JUMGxfaHSC56BXUKLcxd6rYGeHKCL9u8UUPUMYevfi
-         pt+Q==
-X-Gm-Message-State: AOJu0YySehyCVmKIPRZqqI2LhsIGmFQrBLCFByEDuNiqMH9ljdwuDUoW
-	Hwr46N6X9mgFx9JceDyddrsPdB0HS3ijU2rHS0CMllSLKxFYctuUkpLA/fAdqhEQR8zRY4hMTaK
-	sRRX1
-X-Gm-Gg: AeBDiev4oyMcBqpARGQtsqry21F8BzLuZsE0EOTXaQu+HPKL4nFDtn5SX0ZQ3BCP/KL
-	9C8JKs7vhCVdO+k6CN4npH76cyWiq1uyeV+KLhoq0HT74rfrRwargziU26ndjhOw7RiNbmlPnN9
-	z1reASC/NT1CxQ8Myp92YBnLYnt/UV5qK6W9FRtcumfAzo6GyDu9Hu7AxWjJ4m8krsSafeFo83H
-	2alpW6r6buFwOWZeu3QTHb9MemR5K0odzATZ+ZDYQSx2/B/SQxGLux8l8Z2+niLfEfAZOrUGnSg
-	axUGWec1BwzzpiCIzE6Y+5IOnMUl4A/LvO6bTBwmRpkfOKHfjxduSF9AheAriyNgFhuSFQahggX
-	WIxdhhSPX2JrzTRZaH12QPmT9TqLzM932LTXV9KaPtgasNuSTBOYBfrshgJLg7OwYe9cn+Nqz+g
-	pzNv+6vLZnslobzAy01Ze1AqTwSCA/XqjT51L/NrOE2YW++4+UqPBXtOwpes/CQHCXHV4TX0Nto
-	DpFSnS81nU9d/maMVU=
-X-Received: by 2002:a05:6820:217:b0:681:b070:3dc6 with SMTP id 006d021491bc7-6967a49ff98mr1617272eaf.10.1777555677238;
-        Thu, 30 Apr 2026 06:27:57 -0700 (PDT)
-Received: from [192.168.254.51] (72-0-139-202.static.firstlight.net. [72.0.139.202])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6966b93d58csm3164874eaf.0.2026.04.30.06.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 06:27:56 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Rik Theys <Rik.Theys@esat.kuleuven.be>
-Cc: Linux Nfs <linux-nfs@vger.kernel.org>
-Subject: Re: NFS4ERR_SEQ_MISORDERED errors and NFS client very slow
-Date: Thu, 30 Apr 2026 09:27:55 -0400
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <CB5BA5C0-15AA-49D0-96B9-2017F6617903@hammerspace.com>
-In-Reply-To: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
-References: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
+        d=1e100.net; s=20251104; t=1777555939; x=1778160739;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5atyFNfbIaJMsyBQj0OFaIP0b60ej/XPel7OimlNrng=;
+        b=iTmG4+X2VwovrclGKoDT5S8EdsQ4aU8kP539AWMkE0KFIkIe88m8Skdz8vWWQDYW3F
+         1kFkLB8Tt3k4TfEhi8acKd3f1HSlsQM65oT2KNgb137H0+H1ZMeHrPnBPkPSIQWt2asw
+         WBge5JHpkRt7mX2iM7cgGpsACSJWU+GwdLRN348lg5Zf2B72Pf+m6+eU871i+fainu6D
+         1KQg5jz6RIGtPWedEsPYehmoGuYl5MF5YDLJgysYCaW9qM1QH3MytRRi6niHiqz0wJVq
+         d/WNeY6z5mQN7/Ad7W8cuyTEw0HuO++RQxifHcXz4zOoCEV54uv7Y3j7HWjZmsFNCrVN
+         ZTIA==
+X-Gm-Message-State: AOJu0YxiLUr/9j0FhwpwVnbKx6etv1YsJ6v3T64n9YEbe/UuUKvgx5tS
+	d7/2xF5JiyueB4sYNruSn/ESL/DEiF8/ud4CnHF2N2Hok1Y49q744Jjms20YMw==
+X-Gm-Gg: AeBDieuwX80s5EHRdlGfOC/S1vrf8d00hXhWU7B0I/gE05O5qLLKNu6i0/kqAuX3Iq7
+	KIYYuzdqa9nr8K+dHzIgcNhX7lrE/wjYd8wfTiXDO+50dis4IBUVAXGDT46aOAuXWBukpxeRAbw
+	9JhwKJaDviFQ7Spujaw934ghr0CK3b9Nga33ponRI8Y08nkcLbhXc7+X6MDCv743dEa2sMgK51P
+	ysRunTeOBK+Nq8YZnFjbmgSvMx2KWwq1dfWhJsQeOI6P3iMKE/1qUGCLTkUb7vNW6Gbr28i0FrB
+	6CXfHZ3K43CjfCMciCumgyDLMtdqCFy8iHirZ1p+wjSYBaf7nuJSZXyGpK3JACQQiMFjVBCUstK
+	4xRlqIr1aNU74rQhas7pRXwTEbGH4QMGU/X4h0bBN7UVTGT+BYSw5X7Xp38It2M/xWDa+IxwpdF
+	xXpjgOBI75SoYpn6NG95/55QlyeJqb2JCXA9Tc8lF9dboFjnsq0N4Z0W70D5bGiRLo2Jxw
+X-Received: by 2002:a05:6000:184d:b0:43d:7946:badc with SMTP id ffacd0b85a97d-4493ec61dfemr5389860f8f.26.1777555938944;
+        Thu, 30 Apr 2026 06:32:18 -0700 (PDT)
+Received: from [10.100.102.74] (89-138-71-216.bb.netvision.net.il. [89.138.71.216])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b7217afesm13310748f8f.23.2026.04.30.06.32.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2026 06:32:17 -0700 (PDT)
+Message-ID: <fd4aaf4e-b1b7-4ca2-bc93-955c31fab317@grimberg.me>
+Date: Thu, 30 Apr 2026 16:32:16 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: C95A34A373A
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Chuck Lever <chuck.lever@oracle.com>
+From: Sagi Grimberg <sagi@grimberg.me>
+Subject: Breakage in ktls-utils with nfs keyring?
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 236DB4A38C6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
+	SUBJECT_ENDS_QUESTION(1.00)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	RCPT_COUNT_TWO(0.00)[2];
-	TO_DN_ALL(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21297-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21298-lists,linux-nfs=lfdr.de];
+	TO_DN_ALL(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DMARC_NA(0.00)[grimberg.me];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-0.993];
 	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	R_DKIM_NA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,grimberg.me:mid]
 
-On 30 Apr 2026, at 2:53, Rik Theys wrote:
+Hey Chuck,
 
-> Hi,
->
-> We have a Rocky 8 client running Linux 7.0.2 (kernel-ml from elrepo) th=
-at is an NFS client to a RHEL10 server.
->
-> Lately we've noticed that NFS performance is very poor for certain work=
-loads (We saw the same issue on the stock EL8 kernel, 6.18.20 and now 7.0=
-=2E2). For example cloning git repositories is extremely slow.
->
-> Looking at the server side there don't seem to be any saturations of th=
-e disk or network subsystems.
->
-> I've taken a network dump between the client and server. In that dump I=
- see that the server frequently responds to requests from the client with=
- NFS4ERR_SEQ_MISORDERED (10063). What could be the cause of these mismatc=
-hes? Is this always a client issue, or can this be caused by the server?
+Upstream ktls-utils fails passing client certificate and private key 
+using the .nfs keyring.
+Bisecting leads commit facd084e43fc ("tlshd: Client-side dual 
+certificate support").
 
-This is something you shouldn't normally see and probably indicates a bug=
- or
-serious problem.  From the client side you'd only expect this if you're
-doing a lot of task signaling so that the userland processes abandon RPCs=
-=2E
+I manually apply this (probably wrong) change and keyring works:
+--
+diff --git a/src/tlshd/client.c b/src/tlshd/client.c
+index 2664ffb..a946797 100644
+--- a/src/tlshd/client.c
++++ b/src/tlshd/client.c
+@@ -327,7 +327,7 @@ tlshd_x509_retrieve_key_cb(gnutls_session_t session,
+         } else {
+                 tlshd_log_debug("%s: Selecting x509.certificate from 
+conf file", __func__);
+                 *pcert_length = tlshd_certs_len;
+-               *pcert = tlshd_certs + tlshd_pq_certs_len;
++               *pcert = tlshd_certs;
+                 *privkey = tlshd_privkey;
+         }
+         return 0;
+--
 
-A packet capture is the best way to determine if the server is mis-report=
-ing
-the sequencing problem, or if the client's sequencing is incorrect.  Give=
-n
-your description of the symptoms I'd also check to make sure your underly=
-ing
-network isn't doing something totally nuts like duplicating packets.
-
-Ben
+But, I have a feeling its not the correct change...
 
