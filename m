@@ -1,180 +1,214 @@
-Return-Path: <linux-nfs+bounces-21303-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21304-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8D3THDtn82ky2QEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21303-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 16:29:15 +0200
+	id UO4eIJto82ky2QEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21304-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 16:35:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C39C84A413C
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 16:29:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B74DF4A41A9
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 16:35:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D4CAE307213F
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 14:26:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0CD2F300D960
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 14:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E915342981A;
-	Thu, 30 Apr 2026 14:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5A536C9C2;
+	Thu, 30 Apr 2026 14:35:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b="gkXRbhKd";
-	dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b="Z45+xGS1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4hs873S"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from icts-p-cavspool-1.kulnet.kuleuven.be (icts-p-cavspool-1.kulnet.kuleuven.be [134.58.240.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A15A176FB1
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 14:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.58.240.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777559179; cv=none; b=KUiOZPhJ1kVovochq5AhcKpbEf+nQ1Lth68ju4yCsg/czwWeyJV7MSkIaDsR6BCTS9GX7YUxQDbHiLoDAxpZ7hOFcJmQx2dkVy7yh9b0VpiKpq6z2JSocjUSQhStzSl0NNqSnhVWq+PHTvtq4IlgEUP0FzSwVpXh3OrEUnIKnvM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777559179; c=relaxed/simple;
-	bh=SsGO8L8p9xhm3DBEHlABAcgA6hVDiai2T+39T5GE/5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O0wNhQc2+plQl6d7DDPSAFjORl/4xYhlOXprZ/gpCKPaqWdXQgSNiL4j89dCCb0p5Upra9oxsOS7SQHn8aLglvf09UmT7M6sRkLZBlt5FE3m26waypeXJ9rYZ9YGS9PlYQVWJN9r/EeQ620Sg6uG2XbQNdpcldXAd8SMADeR0BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be; spf=pass smtp.mailfrom=esat.kuleuven.be; dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b=gkXRbhKd; dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b=Z45+xGS1; arc=none smtp.client-ip=134.58.240.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esat.kuleuven.be
-Received: from icts-p-cavuit-2.kulnet.kuleuven.be (icts-p-cavuit-2.kulnet.kuleuven.be [IPv6:2a02:2c40:0:c0::25:131])
-	by icts-p-cavspool-1.kulnet.kuleuven.be (Postfix) with ESMTP id 69D4955B8
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 16:26:13 +0200 (CEST)
-X-KULeuven-Envelope-From: rik.theys@esat.kuleuven.be
-X-KULeuven-Scanned: Found to be clean
-X-KULeuven-ID: C672C200DD.A583F
-X-KULeuven-Information: Katholieke Universiteit Leuven
-Received: from icts-p-ceifnet-smtps-0.kuleuven.be (icts-p-ceifnet-smtps.service.icts.svcd [IPv6:2a02:2c40:0:51:132::5e])
-	by icts-p-cavuit-2.kulnet.kuleuven.be (Postfix) with ESMTP id C672C200DD;
-	Thu, 30 Apr 2026 16:26:05 +0200 (CEST)
-BCmilterd-Mark-Subject: no
-BCmilterd-Errors: 
-BCmilterd-Report: SA-HVU#DKIM_VALID_AU#0.00,SA-HVU#DKIM_SIGNED#0.00,SA-HVU#DKIM_VALID#0.00,SA-HVU#OURIPS#-35.00
-X-CAV-Cluster: smtps
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuleuven.be;
-	s=kuleuven-cav-1; t=1777559165;
-	bh=xQxx8MshufMF8zdXxV5/5urWkPm7Xm6mJeraAokzhlA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gkXRbhKdTxD8ta0aEUilEmAPhDzRbNmf9YpQPxci25KFS/NviOTO9PmZHjAld2e7/
-	 UvfWe0o0PDg+XQrxFgNDV5JSY2Jt3J4SkSp3AC3pga8y9ivLS0R/pz85LfQ3v0JAza
-	 w/3nc9+KuZ1o6VOoLes7pFY0qRtKuSS2OSDDfM6Q3duD7uglRBpM8aayOYFHE3DiaI
-	 145XH0MenFtROnIaSsTexhkv3HZYI1Bnc3+lEu4J1dlmTDnhaYXOIT+eZ9TLuUMCnu
-	 LneFRgCPZACMDAysinC9K+D7n9zTJhB/zth1i1Dh6mcq/mjnH/gTkieKUKNEr6M8jh
-	 80BcxDncBFwEw==
-Received: from hydrogen.esat.kuleuven.be (hydrogen.esat.kuleuven.be [134.58.56.153])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by icts-p-ceifnet-smtps-0.kuleuven.be (Postfix) with ESMTPS id A0B39D4CAC8F8;
-	Thu, 30 Apr 2026 16:26:05 +0200 (CEST)
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=esat.kuleuven.be;
-	s=esat20220324; t=1777559165;
-	bh=xQxx8MshufMF8zdXxV5/5urWkPm7Xm6mJeraAokzhlA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z45+xGS1A1G++pySIfp8VjnCrNj8EiITkOOKATpoDDif4asBzSWAG5GmG+5HGoRnU
-	 4Rjwcjaef6IWaPOoNCm6pberdqRwdz48HIrkhWCMmhPw5A2fNWSFqDD7DdUFmS7Fjo
-	 vXSXNlW7XqFaIJuIH64IX7gkPMU7RrZPi2U7+1R+9oLOyH1+QDI3UGcAhNfZpSOBPH
-	 DkYqcPky5kBqry8s9HHMHHK2OSGRL1JGPBxnKuDmjBv+Wz29342wdx+af4zt8O9W+A
-	 Kb8iU1KyUAQ8HT7hdWFLbwYtT0b0nm80HYHvZo+bqTX12RQ3EPQk9ytTluSKzasILE
-	 kb/GzVVwYszWQ==
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-Received: from [192.168.1.113] (d54C377C4.access.telenet.be [84.195.119.196])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hydrogen.esat.kuleuven.be (Postfix) with ESMTPSA id 84F722000B;
-	Thu, 30 Apr 2026 16:26:05 +0200 (CEST)
-Message-ID: <cf6fd710-e11b-425b-949a-d5acb509eec7@esat.kuleuven.be>
-Date: Thu, 30 Apr 2026 16:26:05 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E68842668E
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 14:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777559704; cv=pass; b=qVeGfdhMF4lpZkEf2keZ5O+q2TprXrzOWLsEYFIa65ZbKEPKKVK288h3DZc3aBxNdZ3Za8HOMpYLJGIFMZVFB7CkZD3aL+TwHQYlFwWZVWJSLLh52IXIWKpIXbTiJLAn5yiXyKD8wswkvmKxHNL3OJEJTzhpK/QgaeWlQMxjCrM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777559704; c=relaxed/simple;
+	bh=Fy8ZtNPjCW1mGJY3zPBpzN/COMHnA7ElhrQ+y3qBUvo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ROdVvZesV34d/LkLgEpo588UwSDSfwcPrAlvzIaFtARCXLfkLVUeqgmil6oD0awjAFJ2QP8lm+cVnkkGTeiMUQSUaRG0b3mgm8wMa9tN9VuOtQC+UDJm0JKZUj0j3GuEYBH4xkf+7b8dmKB/izwJ5YwA0LFRIbOaGbAHsybfN8Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j4hs873S; arc=pass smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-6501725d888so842506d50.0
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 07:35:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777559702; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IOWCAS87sZlNQ/uJW9+h7fbv4DQW5Y+WPJTEqO6iIRYswRlBUkD3/+HlSZ0mBovALf
+         tWVYe7S74QRFPsDn8/5CTc3r/2AoO/iRQmkBrtNuxvxoCuctL02PvRpJlF04nQMRXn4d
+         fuG9gG2hg3MHDdo/kos8HLxClhnBMi8TVKo0t01/FftU+KN6GLjSLeX6277xOlFFf1Fi
+         o0gkF9usovTgkBZm6631pgluVCpVUlOA5jw9gmKc/bPxL9w5S101BEBJi8n5iMs/o2CG
+         zKh/T0mf+Fw5QftoX6+Vpbx/MXpB+6yh1U0wNi49qFU/oIOwLT3HgPmg9jXiY+eLGH4D
+         0dzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=f9WLVfwxIH9uSoGVtrrlQYpWwsHIK1wdWnj9/ORawtU=;
+        fh=v+Uf6WfrUu2vXidSRGwVhqepOMjmZd2euL/20ZDCWfc=;
+        b=cwhoZ1gG5aoyLprFEN7FqcTjUvywjHAKvuYHV0l+SHPbKcAN3seUO2jHkrmyCIO0JO
+         O+zgCrzLsok1B8fLC3IbjsnICQAjf75sTqz81w0CGIlN3txV2G5F/H7z0DhVJ2qLd2jv
+         KQiqn5nJx2dbgMNpy5nGMLtBHoMIDE7qGfEm9aTCxIc22F2pAt6/+0e+IBHJcvkS1Byc
+         PxUex10aHCs9GGqZiE7Xz27XtKGn+5hmZvqAqcu2HHiaaU2wLHG8b5r1w4dxq+oY1bJ5
+         OkoGL3Ad4gpaLoO3ve3ye9L7n3MFX6nYndivrVd6N+jLDBeZwGK/bHtefcfjL62pHFq4
+         oMcg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777559702; x=1778164502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f9WLVfwxIH9uSoGVtrrlQYpWwsHIK1wdWnj9/ORawtU=;
+        b=j4hs873SUUHE7qIjJtbfQCYgMRjfvOz+i99gV5BXDwdYTZHZu51Zq3jwfHAQ43aKgk
+         ZhCrSaA6DU3lZOLZqDhsM8O+aA0FJ34Ux6fnbErN5dhwuIl6ieTvVxFfrZeWR03wgKs3
+         E5cMGBw22XnciOWr9kM80vnJFPS3kBzl204gPyYNUuiHTPFfwtpYzqRsgeV5J4l2yPSd
+         jE0bKGZJVFxg8FA52NspWgymzT6g7pM+wnBvyxtE9YvX/M1Z4uk+fQJXUrqb7mjODN4S
+         zHdcqyRUs0Wm7Ky57H/tBgMzSXPWDKuJYgWe89DnSlzf88eMn4BjwToMoIZ70msVRqx/
+         pg9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777559702; x=1778164502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=f9WLVfwxIH9uSoGVtrrlQYpWwsHIK1wdWnj9/ORawtU=;
+        b=UF75pgaBr0nrJxRBY6dXvlIlGFrPemGHVZoSVRfXoeVCiu8IauCMNb1T189OwzgbZ7
+         UE26zQyS9vST7X/3xX2qNmThS3Fa19gtq1wusW+nffb+5I1CzAgUjnj7uYAFNVYbjpNJ
+         izCMMYCeZ8EvddW7+9XaJTWU6Tn9o1+pUDsuXtbZQwvvL9WlmuazY3yXxzbqYmNUwN6s
+         ierNO2OR2J5AB3+mityayIUTKFJXled3OXoqMH+Xj/wbk0HDewWrQx9JoiGMN9NCoaiq
+         aCBxokPvRFVOsXVIDJPe74ybbmAUYr3JUpcS8MlkAzIrD0AYGYss2BglS4WTTc2Z7BH2
+         8Qvw==
+X-Forwarded-Encrypted: i=1; AFNElJ+tdIcOfFD6sLdn4wLEXbKwp3khFwxHZmuwtToeGo2aJYgZhxudL1ccZWNa3m3glg7EEXkO+iCOKlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr8EqJe+f8fR7HoN7VHrmtucAqORNl8YQ+30OmxwAxu2gee3Vn
+	Iy4ruBnG9lfoAltLMMX092Hf3y3Hh4uwYtN9pobNgXyxy8ySPClLUa5jOfBJDOaY/fH2ZQUnsDL
+	u3B3IjrnC4SQ1lpoUfgtF6tFO+bk3hTF7
+X-Gm-Gg: AeBDietuoMjZB0oz1gfBcFJ/BkDeOjo+jE2eXLvC6TaxSGR8H/ZOtZ72jLJ4BaweDZq
+	OPikeXr1Ww43Qcnf7rzF7kuchDxT9GAkKLEwWpFtqPw5d5BJenejoG/53G91WnkJwUNSHSmGndO
+	zsc+pAC6C4KtQTPlMsTCbrxRSUTwHCBwAQ5s5VH9U3jiey93H+hqEbbttu6mfUKPC58rtBqaE0U
+	z//2337SrhoVirRpA31Nv12iiF5uliwlOsthTyEf1fkUZJa78FWkXVCZlYMybVpU7PQNX9AvCQU
+	8I0ebuWUtGPVwUVO5UpHyaBWiwhUnLSUnzWjj1ia5l4kE6hTZsrPEJaZkvxZ
+X-Received: by 2002:a05:690e:2285:b0:651:c6e0:6be5 with SMTP id
+ 956f58d0204a3-65c18c71022mr1948392d50.18.1777559702090; Thu, 30 Apr 2026
+ 07:35:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NFS4ERR_SEQ_MISORDERED errors and NFS client very slow
-To: Benjamin Coddington <ben.coddington@hammerspace.com>
-Cc: Linux Nfs <linux-nfs@vger.kernel.org>
 References: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
- <CB5BA5C0-15AA-49D0-96B9-2017F6617903@hammerspace.com>
-Content-Language: en-US
-From: Rik Theys <Rik.Theys@esat.kuleuven.be>
-In-Reply-To: <CB5BA5C0-15AA-49D0-96B9-2017F6617903@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C39C84A413C
+ <CB5BA5C0-15AA-49D0-96B9-2017F6617903@hammerspace.com> <cf6fd710-e11b-425b-949a-d5acb509eec7@esat.kuleuven.be>
+In-Reply-To: <cf6fd710-e11b-425b-949a-d5acb509eec7@esat.kuleuven.be>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Thu, 30 Apr 2026 07:34:47 -0700
+X-Gm-Features: AVHnY4I8bo0Cci11esfXopKIYYwFyryqfAnYFyiI8-dg0mz7_s5elCWdTD2aJwI
+Message-ID: <CAM5tNy44_s=4thbohL=mX8rdF7gwNyqLPGKBiO9ncd-0Aw+s8g@mail.gmail.com>
+Subject: Re: NFS4ERR_SEQ_MISORDERED errors and NFS client very slow
+To: Rik Theys <Rik.Theys@esat.kuleuven.be>
+Cc: Benjamin Coddington <ben.coddington@hammerspace.com>, Linux Nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: B74DF4A41A9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[esat.kuleuven.be,none];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kuleuven.be:s=kuleuven-cav-1,esat.kuleuven.be:s=esat20220324];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21303-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	TO_DN_ALL(0.00)[];
-	DKIM_TRACE(0.00)[kuleuven.be:+,esat.kuleuven.be:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,esat.kuleuven.be:dkim,esat.kuleuven.be:mid];
 	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Rik.Theys@esat.kuleuven.be,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21304-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rickmacklem@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,kuleuven.be:email]
 
-Hi Benjamin,
-
-On 4/30/26 3:27 PM, Benjamin Coddington wrote:
-> On 30 Apr 2026, at 2:53, Rik Theys wrote:
+On Thu, Apr 30, 2026 at 7:26=E2=80=AFAM Rik Theys <Rik.Theys@esat.kuleuven.=
+be> wrote:
 >
->> Hi,
->>
->> We have a Rocky 8 client running Linux 7.0.2 (kernel-ml from elrepo) that is an NFS client to a RHEL10 server.
->>
->> Lately we've noticed that NFS performance is very poor for certain workloads (We saw the same issue on the stock EL8 kernel, 6.18.20 and now 7.0.2). For example cloning git repositories is extremely slow.
->>
->> Looking at the server side there don't seem to be any saturations of the disk or network subsystems.
->>
->> I've taken a network dump between the client and server. In that dump I see that the server frequently responds to requests from the client with NFS4ERR_SEQ_MISORDERED (10063). What could be the cause of these mismatches? Is this always a client issue, or can this be caused by the server?
-> This is something you shouldn't normally see and probably indicates a bug or
-> serious problem.  From the client side you'd only expect this if you're
-> doing a lot of task signaling so that the userland processes abandon RPCs.
+> Hi Benjamin,
+>
+> On 4/30/26 3:27 PM, Benjamin Coddington wrote:
+> > On 30 Apr 2026, at 2:53, Rik Theys wrote:
+> >
+> >> Hi,
+> >>
+> >> We have a Rocky 8 client running Linux 7.0.2 (kernel-ml from elrepo) t=
+hat is an NFS client to a RHEL10 server.
+> >>
+> >> Lately we've noticed that NFS performance is very poor for certain wor=
+kloads (We saw the same issue on the stock EL8 kernel, 6.18.20 and now 7.0.=
+2). For example cloning git repositories is extremely slow.
+> >>
+> >> Looking at the server side there don't seem to be any saturations of t=
+he disk or network subsystems.
+> >>
+> >> I've taken a network dump between the client and server. In that dump =
+I see that the server frequently responds to requests from the client with =
+NFS4ERR_SEQ_MISORDERED (10063). What could be the cause of these mismatches=
+? Is this always a client issue, or can this be caused by the server?
+> > This is something you shouldn't normally see and probably indicates a b=
+ug or
+> > serious problem.  From the client side you'd only expect this if you're
+> > doing a lot of task signaling so that the userland processes abandon RP=
+Cs.
+>
+> Would there be any indications in the logs if this is the case?
+I don't know, but I doubt it.
+Are you using either "intr" or "soft" mount options.
+If you can avoid those, it might help. ("soft" with a short timeout can be
+particularly troubling.)
 
-Would there be any indications in the logs if this is the case?
-
+rick
 
 >
-> A packet capture is the best way to determine if the server is mis-reporting
-> the sequencing problem, or if the client's sequencing is incorrect.  Given
-> your description of the symptoms I'd also check to make sure your underlying
-> network isn't doing something totally nuts like duplicating packets.
-
-My previous capture was on the client, which is where I observed the 
-NFS4ERR_SEQ_MISORDERED messages. I've now taken a capture on the server 
-and there I do see some duplicate packets, but not a large percentage. 
-Should the NFS server not notice this is a duplicate packet and ignore it?
-
-Regards,
-
-Rik
-
--- 
-Rik Theys
-System Engineer
-KU Leuven - Dept. Elektrotechniek (ESAT)
-Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
-+32(0)16/32.11.07
-----------------------------------------------------------------
-<<Any errors in spelling, tact or fact are transmission errors>>
-
+>
+> >
+> > A packet capture is the best way to determine if the server is mis-repo=
+rting
+> > the sequencing problem, or if the client's sequencing is incorrect.  Gi=
+ven
+> > your description of the symptoms I'd also check to make sure your under=
+lying
+> > network isn't doing something totally nuts like duplicating packets.
+>
+> My previous capture was on the client, which is where I observed the
+> NFS4ERR_SEQ_MISORDERED messages. I've now taken a capture on the server
+> and there I do see some duplicate packets, but not a large percentage.
+> Should the NFS server not notice this is a duplicate packet and ignore it=
+?
+>
+> Regards,
+>
+> Rik
+>
+> --
+> Rik Theys
+> System Engineer
+> KU Leuven - Dept. Elektrotechniek (ESAT)
+> Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
+> +32(0)16/32.11.07
+> ----------------------------------------------------------------
+> <<Any errors in spelling, tact or fact are transmission errors>>
+>
+>
 
