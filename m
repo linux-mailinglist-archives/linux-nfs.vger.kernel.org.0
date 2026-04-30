@@ -1,289 +1,226 @@
-Return-Path: <linux-nfs+bounces-21313-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21314-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UJyqBKiL82md4wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21313-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 19:04:40 +0200
+	id MKEhHKyR82la5AEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21314-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 19:30:20 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EEA04A62B5
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 19:04:39 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 139904A66F6
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 19:30:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1A07C3005EB2
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 17:04:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BD34C30115AA
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 17:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B70AA30AD1C;
-	Thu, 30 Apr 2026 17:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99E402C0299;
+	Thu, 30 Apr 2026 17:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b="RCRFZdv3";
-	dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b="ju9DxkRa"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="H0uRwY3o"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from icts-p-cavuit-3.kulnet.kuleuven.be (icts-p-cavuit-3.kulnet.kuleuven.be [134.58.240.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AFE298991
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 17:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.58.240.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777568675; cv=none; b=BWSfI0byneSoxxhflQu5Uml7TllPBy+NIx9A3fZzYiPefpboA3UkOZ8v7pMhSCktbiLj8PrNn3Ac7lAeIOjC5wOsXcy4ua2iT8yKBH9OH+lSq4+NOAQqgVarmBYrgzsto9h5udrOYi80BHUcA5NcT9uVWc7oUBE9Aoi5+Uu1Zpg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777568675; c=relaxed/simple;
-	bh=ziSV7FDXodfO+KKvQNyD3yleM6i6ZtQTMWsv96jMq0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AyyV2Lq7EXpsfaOQ3ZpJz1+3whKA9Fc34PRFUvMw4TJi/vpXTnJOE0xKlkHyCZxB3vmwz90LxkMsOCyObmvo4x3cuwAWrEBKly013QgNOnCieTfX9s7JOb7j0Y7ciYVR68Ibx/jh1VKRO8etBdGaplNjf5ZX2LAGUtFEeeYYEQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be; spf=pass smtp.mailfrom=esat.kuleuven.be; dkim=pass (2048-bit key) header.d=kuleuven.be header.i=@kuleuven.be header.b=RCRFZdv3; dkim=pass (2048-bit key) header.d=esat.kuleuven.be header.i=@esat.kuleuven.be header.b=ju9DxkRa; arc=none smtp.client-ip=134.58.240.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esat.kuleuven.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esat.kuleuven.be
-X-KULeuven-Envelope-From: rik.theys@esat.kuleuven.be
-X-KULeuven-Scanned: Found to be clean
-X-KULeuven-ID: 5A4FD200AB.ACEE4
-X-KULeuven-Information: Katholieke Universiteit Leuven
-Received: from icts-p-ceifnet-smtps-1.kuleuven.be (icts-p-ceifnet-smtps.service.icts.svcd [IPv6:2a02:2c40:0:51:140::23])
-	by icts-p-cavuit-3.kulnet.kuleuven.be (Postfix) with ESMTP id 5A4FD200AB;
-	Thu, 30 Apr 2026 19:04:27 +0200 (CEST)
-BCmilterd-Mark-Subject: no
-BCmilterd-Errors: 
-BCmilterd-Report: SA-HVU#DKIM_VALID#0.00,SA-HVU#DKIM_SIGNED#0.00,SA-HVU#DKIM_VALID_AU#0.00,SA-HVU#OURIPS#-35.00
-X-CAV-Cluster: smtps
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuleuven.be;
-	s=kuleuven-cav-1; t=1777568667;
-	bh=ABaUZS2hF2AOjUKIuz4GDpNLPmiVDPpOU7alPZt2blA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RCRFZdv3dzu1GI9glfULQ/F2CEAgAZXcV0XLmkuqS9yVsRZeLhIJhoaFowsYm4vVF
-	 f0QntO61b8cYVSK15gKPNWxLPYND/bJyxHVF6LrMPlfxKikv5dhZtjtxZZiS/gt58+
-	 13VYAkCt6UpBF9X+rt/FRFOmvGUlMbUTxTurnsmlYBpq8AERVOx6oi+MSN9N65eWpz
-	 mJdPUoiaB7Id9PWwtXO5xzTsyMlf1ZwHmTcR5//9Oji14G7S4yzxs2u+a10gIe8Llf
-	 lEtTsUB1IT6dcbfAScqqJTiKJo9rTprNgH+72QzGS4TvRCbLonxBcZHr3ti1K0horE
-	 7efL+jrwx/cCA==
-Received: from hydrogen.esat.kuleuven.be (hydrogen.esat.kuleuven.be [134.58.56.153])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by icts-p-ceifnet-smtps-1.kuleuven.be (Postfix) with ESMTPS id 14FFDD4CACFEB;
-	Thu, 30 Apr 2026 19:04:27 +0200 (CEST)
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=esat.kuleuven.be;
-	s=esat20220324; t=1777568667;
-	bh=ABaUZS2hF2AOjUKIuz4GDpNLPmiVDPpOU7alPZt2blA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ju9DxkRayEtKuWRtEeu2ZM0AymYoNVcV/eZO4+LdmOqqpkmuXg1xMSS3yJ193jHkT
-	 NIqwbwYJoctPyH/sMNsPQp8KnZHj3ce5LwbfAyOhAOmftIGOSMrsZGZZIR/cOuuzZR
-	 UYWWdegGV8nacuSWRO/f5Lu+xOnpIAK2iq67YINjFaOp6+L3Sy1x/IPl+Aub/wwWQ/
-	 4tYV7ymXtmvuhIpW3QNnrual+Skc3IrxkDLGL8NeHOcUzd78uYASEZdd1R607jhJkr
-	 EkhonOGgcTiSFmhFjMgwt9SOAis9agMiYYvAiGBPTyzimuDzSpfcNmT0UP9oQQSKMs
-	 0sfKTXvpibATA==
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-X-KULeuven-ESAT-Envelope-Sender: rik.theys@esat.kuleuven.be
-Received: from [192.168.1.113] (d54C377C4.access.telenet.be [84.195.119.196])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hydrogen.esat.kuleuven.be (Postfix) with ESMTPSA id EB03A2000B;
-	Thu, 30 Apr 2026 19:04:26 +0200 (CEST)
-Message-ID: <fe5d8251-f92d-4732-a19a-bf92c4ea0cb9@esat.kuleuven.be>
-Date: Thu, 30 Apr 2026 19:04:26 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CD8477E34
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 17:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777570216; cv=pass; b=YgVqhU452EpJr1WeoQVNIbUMjlHPktjxdxggEu8KXgkXrlJxma+Er2Fi6ihoe0/c9bcqDGhWoV1SOYrUD2a0Df94XSEbVBCG1c4u0kB2Hj8A20ta18SMgDce+wAmc3SdMHBPkeC78DaMoHbis1WHo/exMtfhRUh/Z6F4KysA9A8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777570216; c=relaxed/simple;
+	bh=iPVGo8wLWtiQLjKHKt6sVe+wtoN4F8hK8SJM9k5VYPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sg2U6ohxib2hu76YdimRq3ICTuiTBXB0w6CkujEKbUVD0y6m7YVzrYoUjXwqZXGtNppwP6J4w9An8yFqyi1QybU78Xc7GjhRa2BDD4Lgx2kdErVDX06E/KY2lyf3Pa8rnrCgiB5p4pgdMQYNHEOLARPEJsI0pHNO29F9mFm5VlM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=H0uRwY3o; arc=pass smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a40502e63bso1135136e87.0
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 10:30:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777570210; cv=none;
+        d=google.com; s=arc-20240605;
+        b=I5mRqXeWHQFkXfc5fNTleT2oJ7eJYPO6Pts03EhucqW41GQ1PfSw4XrTIKK8l84yxt
+         OP9Kkoads2GnoydgYUcsXlydtgIMaywcjM1OVdnSFr/igNZFEdkmxAdoKEWPQF9ONt4D
+         F7gz6ILmPbsoCrE5wAdPHR2TDJ9RdvsbOfPJqhn4tY5+XLNBXFxT8soI/AXLYPfYj/tB
+         PKDa4OW4Tu4RIqdqaajihPDjTq1EnRbwnBd76+xo0VU5JdV5rhrreF3zvVvRs4NM7S3r
+         vZqByr4gBW7rd7ad6v3Fsh4QzIfpN8yoh6qeGTL53TBLuK2eCK6Ek3YU7mYTCeed5ibg
+         dJOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=L3n/eBIDHQ8frGWM4g8Jkhi2HqNJieLzaL7nNkBHPSw=;
+        fh=EDOU3vQtlA2K0jVf+p1i9U6XmNOMBnIM2A6SBApZkr4=;
+        b=dSr2ngcX9ugKT6QY6tX/ZteREqUIqzwbsvIxt3GYJ/gmVD/LOSrhn3+Seedm2QiN5Z
+         l2Z+B1If+X4A/mxf/zSL9fOI0HH4qgr3y28Jp9O+2RVQifc0MU5KvsjSNdbGPdn1jlez
+         dXoYar1ondiYO6HQMzxUQn1XDggWDFcVLW6iM/BwdqrmloK/TKA10TtReb+zwp1xTcS1
+         U2bhCPbA9QaykboEYOCBk2r7SKb5/9hpn11iLr+6p/Jf6Q6G8UMiObvpZHTMefRR7rN5
+         iXf+rbOKbu0jpkOKGA85V4WKF1y7UGeTMC6OL5UTxnU5qq+p78FQ9xHauQsTaZS2xLR+
+         YIJA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1777570210; x=1778175010; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3n/eBIDHQ8frGWM4g8Jkhi2HqNJieLzaL7nNkBHPSw=;
+        b=H0uRwY3o2BwGHDOrjEGqubB10oD9bnVuuTk4Yzqr1NtL/vUndtTAoh7zkIsbj61ips
+         ZubyvDEzlvy4DgHLo1ZyZhq6IyOKmq3F5k/2Z5Xl5V4/kNGhtr9DK2cUkwQcH4Ly38tM
+         leDwcF8aBdWeodl4ChT0Lu85atVaCVereRyCxIrABDI0VDIkpEQOCN6+/W4GB916IFZF
+         N7WNhdToUZzqmg+HOnBWZqtKhZqR0OvGrFYDhwc7Pan5VMMWkAkwl20Rf34DJgx2Tda1
+         njed1vul3p5z+97co8JYbAo4sbSb3OibxvQnxPQetvgjy9jA+l5tWQpNVo4wohcph+Zy
+         YKYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777570210; x=1778175010;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=L3n/eBIDHQ8frGWM4g8Jkhi2HqNJieLzaL7nNkBHPSw=;
+        b=OPi/WYMQwiHE9NNGPNVqBLc7QiPZ8B/cFLnVIR5REa8lLBx8fT+5PBB6sfE9QK/k3q
+         WUS4BbbZvGrLOU9+wBZXU7ImJorxLZNIKYUHbHJF+ojkiATwlQquSF1lvrdmeJd2ZN0Z
+         5J4drh5bMRiZOfDqqbCHM5iucKLXbrcUz0mpQCGGveOOAYRUatrUvA5zDIrSrmm3Y/fw
+         U7VMtbln6iy5ceuFPTlBX9wKemtuKBChdokqcWBrNZT/iUdpRyCxTIy6yFcvqevufPUv
+         6WTZIXh1KSzIS92ztbVGnIeO+SDW/ewcmUT0tQw4nPgd2Ncblkywg6vEHJMd8Kb/hmCQ
+         EQzA==
+X-Gm-Message-State: AOJu0YygrS35t1bIb6lzRVahrcLDjvbBHvPHU1jecVbeFRW0KevALNSl
+	49zWHfLY9SKMvP8NmGP/oQtGTj+wYCMFH61hP2ERn/WIHgfFkzsgsXlFSgP5Ksr/HD74IMwrDbt
+	05Qovh+XxNSHAul0IOAz6KrCsyupxJ1Sg9A==
+X-Gm-Gg: AeBDiet4OsZ4m+OW0VoIM44yq3MiGEmsbeJdbm6rYmZ0XXfYlNcLZcOWLCEyxTV2NR3
+	LNrN2BnmvuYAYkl9XCzDaANHw9KYXgnVie2cC5TPzRvT+e+xBOP4SC8fFL1ANrJHn18yP3LqA9N
+	OuvhglsiO7riUSn2q1cZmjUbxL8/vAv9v3NdwuhpPX4mPQUkb56NMdRqWHQO+m+hUEljPVMJmVV
+	uF7l2D/BTmyyvmGAGkYcNms6cba0edsuDFAqI5r6p8r+BtkD7tOgcVd1nIv+KMLsSjlQY325Xmp
+	Sxv8m0nu9YQCCDKNOw==
+X-Received: by 2002:ac2:5333:0:b0:5a8:5276:f0db with SMTP id
+ 2adb3069b0e04-5a85276f10dmr1121797e87.15.1777570209757; Thu, 30 Apr 2026
+ 10:30:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NFS4ERR_SEQ_MISORDERED errors and NFS client very slow
-To: Rick Macklem <rick.macklem@gmail.com>
-Cc: Benjamin Coddington <ben.coddington@hammerspace.com>,
- Linux Nfs <linux-nfs@vger.kernel.org>
 References: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
- <CB5BA5C0-15AA-49D0-96B9-2017F6617903@hammerspace.com>
- <cf6fd710-e11b-425b-949a-d5acb509eec7@esat.kuleuven.be>
- <CAM5tNy6rbQE-QDGD9-YffYn0Z+MsaCNOOpHAetnBKbW7Pn0_dw@mail.gmail.com>
- <3bee225b-3a3f-47a0-a38e-ce08196595ab@esat.kuleuven.be>
- <CAM5tNy63vtAAh1DsBFgPMiXDZReUCimR8nii=WFiAUv8LsJctQ@mail.gmail.com>
-Content-Language: en-US
-From: Rik Theys <Rik.Theys@esat.kuleuven.be>
-In-Reply-To: <CAM5tNy63vtAAh1DsBFgPMiXDZReUCimR8nii=WFiAUv8LsJctQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 7EEA04A62B5
+In-Reply-To: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Thu, 30 Apr 2026 13:29:56 -0400
+X-Gm-Features: AVHnY4KZP3aR4cgGjeIHJ67ZL-MhkJ-bP_Bp0ZyL4ll8oWStwgch11IKcU_uARU
+Message-ID: <CAN-5tyGhC8q=iB_H6JaFZpwpWAqEz5NObVrzZ8m=3OzgLgJnpw@mail.gmail.com>
+Subject: Re: NFS4ERR_SEQ_MISORDERED errors and NFS client very slow
+To: Rik Theys <Rik.Theys@esat.kuleuven.be>
+Cc: Linux Nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 139904A66F6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[esat.kuleuven.be,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kuleuven.be:s=kuleuven-cav-1,esat.kuleuven.be:s=esat20220324];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[umich.edu,none];
+	R_DKIM_ALLOW(-0.20)[umich.edu:s=google-2016-06-03];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21313-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kuleuven.be:+,esat.kuleuven.be:+];
 	TO_DN_ALL(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWO(0.00)[2];
+	TAGGED_FROM(0.00)[bounces-21314-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCPT_COUNT_THREE(0.00)[3];
 	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Rik.Theys@esat.kuleuven.be,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[aglo@umich.edu,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[umich.edu:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,kuleuven.be:dkim,kuleuven.be:email,esat.kuleuven.be:dkim,esat.kuleuven.be:mid]
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-Hi,
-
-On 4/30/26 5:35 PM, Rick Macklem wrote:
-> On Thu, Apr 30, 2026 at 8:27 AM Rik Theys <Rik.Theys@esat.kuleuven.be> wrote:
->> Hi,
->>
->> On 4/30/26 5:02 PM, Rick Macklem wrote:
->>> On Thu, Apr 30, 2026 at 7:26 AM Rik Theys <Rik.Theys@esat.kuleuven.be> wrote:
->>>> Hi Benjamin,
->>>>
->>>> On 4/30/26 3:27 PM, Benjamin Coddington wrote:
->>>>> On 30 Apr 2026, at 2:53, Rik Theys wrote:
->>>>>
->>>>>> Hi,
->>>>>>
->>>>>> We have a Rocky 8 client running Linux 7.0.2 (kernel-ml from elrepo) that is an NFS client to a RHEL10 server.
->>>>>>
->>>>>> Lately we've noticed that NFS performance is very poor for certain workloads (We saw the same issue on the stock EL8 kernel, 6.18.20 and now 7.0.2). For example cloning git repositories is extremely slow.
->>>>>>
->>>>>> Looking at the server side there don't seem to be any saturations of the disk or network subsystems.
->>>>>>
->>>>>> I've taken a network dump between the client and server. In that dump I see that the server frequently responds to requests from the client with NFS4ERR_SEQ_MISORDERED (10063). What could be the cause of these mismatches? Is this always a client issue, or can this be caused by the server?
->>>>> This is something you shouldn't normally see and probably indicates a bug or
->>>>> serious problem.  From the client side you'd only expect this if you're
->>>>> doing a lot of task signaling so that the userland processes abandon RPCs.
->>>> Would there be any indications in the logs if this is the case?
->>>>
->>>>
->>>>> A packet capture is the best way to determine if the server is mis-reporting
->>>>> the sequencing problem, or if the client's sequencing is incorrect.  Given
->>>>> your description of the symptoms I'd also check to make sure your underlying
->>>>> network isn't doing something totally nuts like duplicating packets.
->>>> My previous capture was on the client, which is where I observed the
->>>> NFS4ERR_SEQ_MISORDERED messages. I've now taken a capture on the server
->>>> and there I do see some duplicate packets, but not a large percentage.
->>>> Should the NFS server not notice this is a duplicate packet and ignore it?
->>> Maybe it would be helpful if I gave you an explanation of when the server
->>> should (probably a MUST in RFC terminology) reply NFS4ERR_SEQ_MISORDERED.
->>>
->>> The first operation in most RPCs (for NFSv4.1/4.2) is SEQUENCE.
->>> If you look in SEQUENCE, when the session and slot# are the same as a
->>> previous RPC, the seq# normally increases by 1.
->>>
->>> If it is exact the same seq#, that should be a duplicate RPC (rest of RPC
->>> should be identical) and it should have been sent on a different TCP connection.
->>> This should not generate a NFS4ERR_SEQ_MISORDERED error.
->>>
->>> If the seq# is any value other than the same as or one greater than
->>> the previous RPC with same session and slot#, the server should
->>> reply NFS4ERR_SEQ_MISORDERED.
->>> --> If this happens, the server is behaving correctly, afaik.
->>>         Then, is this a client bug or a client feature?
->>>         That is more difficult to answer and maybe the Linux client
->>>         specialists can comment?
->>>         (I'd say it's probably a bug if neither "intr" nor "soft" options
->>>           are on the mount.)
->>>
->> Looking at the capture it seems that for the requests that trigger this
->> NFS4ERR_SEQ_MISORDERED, the sessionid is always the same. The slot id
->> varies (maybe these are different mounts all using the same tcp
->> connection, or concurrent I/O?). The seqid always seems to be 1, which
->> seems odd?
-> The seq# == 1 is correct if (and only if) that is the first use of that slot#.
+On Thu, Apr 30, 2026 at 2:54=E2=80=AFAM Rik Theys <Rik.Theys@esat.kuleuven.=
+be> wrote:
 >
-> The snippet you posted does not help, because it does not go from the
-> start of the capture (which probably needs to be when the mount operation
-> is done).
+> Hi,
 >
-> You have to wade through it from the beginning looking for any entry
-> that has the same session and slot#. (Sorry, I don't know a clever way
-> to do this, if the capture is large. And, no, I am not volunteering to do
-> that for you;-)
+> We have a Rocky 8 client running Linux 7.0.2 (kernel-ml from elrepo)
+> that is an NFS client to a RHEL10 server.
+>
+> Lately we've noticed that NFS performance is very poor for certain
+> workloads (We saw the same issue on the stock EL8 kernel, 6.18.20 and
+> now 7.0.2). For example cloning git repositories is extremely slow.
+>
+> Looking at the server side there don't seem to be any saturations of the
+> disk or network subsystems.
+>
+> I've taken a network dump between the client and server. In that dump I
+> see that the server frequently responds to requests from the client with
+> NFS4ERR_SEQ_MISORDERED (10063). What could be the cause of these
+> mismatches? Is this always a client issue, or can this be caused by the
+> server?
 
-Going from the beginning is not easy as the problem doesn't seem to 
-always surface immediately. It can take from a few hours to a few days 
-for it to trigger.
+This might have been fixed by mentioned patch below. This patch will
+be included in RHEL10.2 release.
 
-I went back to my original capture and applied the following tshark 
-filter to show only some fields:
+If you have the ability to change the kernel on your NFS server I
+would suggest trying some upstream version that has this patch
+included to see if the problem goes away or wait until when RHEL10.2
+comes out and test it.
 
-tshark -r kwak.pcap -T fields -E header=y -e ip.src -e ip.dst -e 
-nfs.seqid -e nfs.slotid
+commit 1cff14b7fc7f31363c39d0269563ce75c714f7ae
+Author: NeilBrown <neil@brown.name>
+Date:   Thu Oct 16 09:49:57 2025 -0400
 
- From that output I see that the seqid increments nicely with slotid=0 
-and the same seqid used in both directions (once):
+    nfsd: ensure SEQUENCE replay sends a valid reply.
 
-10.86.18.14     10.87.29.113    0x05b4f549      0
-10.87.29.113    10.86.18.14     0x05b4f54a      0
-10.86.18.14     10.87.29.113    0x05b4f54a      0
-10.87.29.113    10.86.18.14     0x05b4f54b      0
-10.86.18.14     10.87.29.113    0x05b4f54b      0
-10.87.29.113    10.86.18.14     0x05b4f54c,0x00000000   0
-10.86.18.14     10.87.29.113    0x05b4f54c      0
-10.87.29.113    10.86.18.14     0x05b4f54d      0
-10.86.18.14     10.87.29.113    0x05b4f54d      0
-10.87.29.113    10.86.18.14     0x05b4f54e      0
-10.86.18.14     10.87.29.113    0x05b4f54e      0
-10.87.29.113    10.86.18.14     0x05b4f54f      0
-10.86.18.14     10.87.29.113    0x05b4f54f      0
-10.87.29.113    10.86.18.14     0x00000001      209
-10.87.29.113    10.86.18.14     0x00000001      44
-10.87.29.113    10.86.18.14     0x00000001      39
-10.87.29.113    10.86.18.14     0x00000001      642
-10.87.29.113    10.86.18.14     0x00000001      408
-10.87.29.113    10.86.18.14     0x00000001      574
-10.87.29.113    10.86.18.14     0x00000001      397
-10.87.29.113    10.86.18.14     0x00000001      666
-10.87.29.113    10.86.18.14     0x00000001      471
-10.87.29.113    10.86.18.14     0x00000001      605
-10.87.29.113    10.86.18.14     0x00000001      82
-10.86.18.14     10.87.29.113
-10.86.18.14     10.87.29.113
-10.86.18.14     10.87.29.113
-10.86.18.14     10.87.29.113
-10.87.29.113    10.86.18.14 
-  0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000000,0x00000001 
-870,172,685,663,331,512,739,882,417,69,710,376,965,195,809,323,640,359,897,303,662,346,949,871,358,37,948,129,825,227,636,102,539,165,523,998,989,975
-10.87.29.113    10.86.18.14 
-  0x00000001,0x00000000,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001,0x00000001 
-986,286,981,827,220,918,995,188,990,742,406,1009,805,302,706,1001,115,983,723,335,393,426,413,506,58,460
-10.87.29.113    10.86.18.14 
-  0x00000001,0x00000001,0x00000001,0x00000001,0x00000001 394,326,469,496,112
-10.87.29.113    10.86.18.14     0x00000001      498
-10.87.29.113    10.86.18.14     0x00000001      118
-10.87.29.113    10.86.18.14     0x00000001      392
-10.87.29.113    10.86.18.14     0x00000001      328
+    nfsd4_enc_sequence_replay() uses nfsd4_encode_operation() to encode a
+    new SEQUENCE reply when replaying a request from the slot cache - only
+    ops after the SEQUENCE are replayed from the cache in ->sl_data.
 
-Then the seqid starts to become 0x00000001 with slotid numbers that are 
-not sequential. Maybe that's not required.
+    However it does this in nfsd4_replay_cache_entry() which is called
+    *before* nfsd4_sequence() has filled in reply fields.
 
-I've written a small python script to parse this output to see if the 
-src,dst,seqid,slotid is unique during the capture.
+    This means that in the replayed SEQUENCE reply:
+     maxslots will be whatever the client sent
+     target_maxslots will be -1 (assuming init to zero, and
+          nfsd4_encode_sequence() subtracts 1)
+     status_flags will be zero
 
-All the packets with 0x00000001 seem to exist exactly 3 times in the 
-capture with the same slotid!?
+    The incorrect maxslots value, in particular, can cause the client to
+    think the slot table has been reduced in size so it can discard its
+    knowledge of current sequence number of the later slots, though the
+    server has not discarded those slots.  When the client later wants to
+    use a later slot, it can get NFS4ERR_SEQ_MISORDERED from the server.
 
+    This patch moves the setup of the reply into a new helper function and
+    call it *before* nfsd4_replay_cache_entry() is called.  Only one of the
+    updated fields was used after this point - maxslots.  So the
+    nfsd4_sequence struct has been extended to have separate maxslots for
+    the request and the response.
 
-Regards,
+    Reported-by: Olga Kornievskaia <okorniev@redhat.com>
+    Closes: https://lore.kernel.org/linux-nfs/20251010194449.10281-1-okorni=
+ev@redhat.com/
+    Tested-by: Olga Kornievskaia <okorniev@redhat.com>
+    Signed-off-by: NeilBrown <neil@brown.name>
+    Reviewed-by: Jeff Layton <jlayton@kernel.org>
+    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-Rik
-
--- 
-Rik Theys
-System Engineer
-KU Leuven - Dept. Elektrotechniek (ESAT)
-Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
-+32(0)16/32.11.07
-----------------------------------------------------------------
-<<Any errors in spelling, tact or fact are transmission errors>>
-
+>
+> Should the client not recover?
+>
+> Regards,
+>
+> Rik
+>
+> --
+> Rik Theys
+> System Engineer
+> KU Leuven - Dept. Elektrotechniek (ESAT)
+> Kasteelpark Arenberg 10 bus 2440  - B-3001 Leuven-Heverlee
+> +32(0)16/32.11.07
+> ----------------------------------------------------------------
+> <<Any errors in spelling, tact or fact are transmission errors>>
+>
+>
 
