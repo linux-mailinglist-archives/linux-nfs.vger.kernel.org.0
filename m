@@ -1,209 +1,163 @@
-Return-Path: <linux-nfs+bounces-21296-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21297-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GB6HLuIY82llxAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21296-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 10:54:58 +0200
+	id iGX+BERZ82lfzwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21297-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 15:29:40 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B2FC49F804
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 10:54:58 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C95A34A373A
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 15:29:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A0DE93025F7A
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 08:54:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DE4F9301B918
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Apr 2026 13:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D83296BAF;
-	Thu, 30 Apr 2026 08:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF7B426684;
+	Thu, 30 Apr 2026 13:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DI4RWOBJ"
+	dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="aEa5u0Aj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF1C27B32C
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 08:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D440D423A8C
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 13:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777539271; cv=none; b=YpkWyJw9q7zRvI0GfaMJ75cgMzWQd6CcAjpIWJymlDCxFdtsI3T6yCbRtEixl3u/Z7zXCH/ZaBsySjB9GR2ViVi1bTK5nEIJ8huOLqAtnNcm/YYBEBGD66uT+Br53lRmnnY6Cs6KRUwr02ftVDzyNgSTYQHaRtrfbZqJ1JzlcK8=
+	t=1777555680; cv=none; b=fhK3cJUomombQ5EJSXgzlmid2CRo/rTge4SjzgPfKHwfzTTPhP2jej+5kStCamOF3GfIqUSQwpBP8G2wmerS8bioGs6xBOoCSUsSxDPYVfB+ObyVYSbkl4f40UT7kOWkI7X6vS8XpRPXayzjDzlmcA37lW4/kcTytm6FLDPu9Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777539271; c=relaxed/simple;
-	bh=s/mRY8DfMR8DIXpcHgLYEU8aDoZ9DdH5IyZrbIZM1HQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BiZYu6P0tYKzuHb3VafuJPnEsFvSogQEIpwt7RHvTtWFYkOkOjAJLvMU834jC9J5hj6QIb+dpft2ql5b2B4qtMqTyFK8o732E8Wa/Z699jNlcSzaGA1wVyGpizuCZXJSe9GxOEHC7Y8kvFxmfjodPJ/WALWjAsMDG8ZWaMBA1Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DI4RWOBJ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4890d945eb4so10496385e9.0
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 01:54:28 -0700 (PDT)
+	s=arc-20240116; t=1777555680; c=relaxed/simple;
+	bh=ml+LeI3821LF4ypyRlAo2jtuuh29aSwBucmbeqR27gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nf3RcRcQaKTE69m+NcCkXJ2ASHBGIJjJEDNRb3sdmnjrxmMVEY9+fiDn49hW98xrEHJ98f/TVWXeMPo91KafUTn6YTcXSWrkoriynGqFnWahz+uzYWOuGUf5yL6d21FfTp6UHsANYRQX/EZZVHbVald/uTv7Yl5hBpp+NZ6k/ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=aEa5u0Aj; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hammerspace.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7d4c12ff3d5so835788a34.2
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Apr 2026 06:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1777539267; x=1778144067; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6A9BkChX+85bq148XRWnuRUsG5zQnCEzyenyeEOtadE=;
-        b=DI4RWOBJuahh4eB++rrQhTMoTwFKxoIeuMBZUE3nCyMwGRCqkmfmL4KcxvsryNCjIM
-         +oUt7drtBWksNHP3zw7RVWp+lTs7QVw7wYfTuHwWnbz1As4nzb2RRm8+FNODv5x28awH
-         BQvJWIhe3+KDRXHYu9/IE/DUO1zB88gJJqLY+e/GqfwZPZKefybgwm5s+lIG7u7NgzbX
-         cJHyp7SAEFAXMcLVSV4AM+NP2wa8JgRQDLT848SKE0ngQPWvUbgM+Kwl5Zy0SLCj0IbR
-         077gAgIYnhC3W9nudNTA021ai1SqqJowK06JObCWkPfVOv/yZNOn5KUH85QGnyYt8BEF
-         ixdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777539267; x=1778144067;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=hammerspace.com; s=google; t=1777555677; x=1778160477; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6A9BkChX+85bq148XRWnuRUsG5zQnCEzyenyeEOtadE=;
-        b=B4GoWIjBEaDiDXtBxw+2guMAytI1/NkTDpJ9k5jwk5ulMv0wV96CrmLi/Zj9nYLprK
-         4Qfb2ZcRjb3he/NktfuZ/ngova9rGpH0pJxpXDN3Lg4mzyxe5fwBpJGezwHdUR7rOfw8
-         EkUk+1ERwYsfwdPbK+537KY1iJKNEgSLLIYq0zhgfZcYJvmzoksswmp21c62TIWb84Qc
-         /eMys5TshAIgZJw8MUgpCmMva/gIgF7RCUOerWhmSbgUO9TCmxBI23G+qJrDlAkxpA8m
-         TqRj01Y9Y9EdZCS5yMoCMU2JtCPG6xrvCIfKvivamzMCMOibgjIqDBXqq+hkxvM11Iht
-         yH9Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9IFICnSwRDAsJcUAwlgXOQ/mFLO7n2gjgpterrkvHGmg3bnR1z9MK9vztptwwGV5oluo8jurStAwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaEJZTSIz8sklkvL4rWKuJ2cfaHbQceQnxz0AOX3D3OLPkUo5M
-	Y1Dt1r1hODrZSlhNry3Idd7qhHf9sGZTKGbJBnlOMn4FhJ+pMaUvZokxkfCz6TTJ0/Q=
-X-Gm-Gg: AeBDiet0GwgCpIcZMQo8a6s2k/3UdfpL8nziwkBlrRvtGxWXvYyOw/g1yBVqbLcEqkU
-	sxYhe36DFNK/lK0yb6/1mRoe84rq/yHDq53glgKwsg3PpttS2pEzYDA7MPKbYd1D74FM7ZfnkNP
-	dFv2Q79uQ5OThUXpe8w4a86hiyjDEaahS9rjhNXzaD1sTK/ZZkuHxgSzNx10Lzm10L5Jbbdl43V
-	niOi/WfHgYwxDOPAH0cZ4B7ibijYXHrDnLvLaqByNesLTuPl1C5WqX022tq/qkhIsdfxH8dS6dk
-	TL4MXR8IAFzKskQX2ixm/dvaWwu6k2SuIwUkHp2ICbT3H9iOuAFe0rup/dpyGoUd5/2uUbmXkvU
-	Vn8gq9ha2RRnf12W8KtiwM6EiMIhA26h9GARe4H38wi3pvFeOKtIqTwGFRp3cBrMVFTDv6EZGvH
-	c3Rr2lpnBaBxHUJFkO4z5mnx0nUiY9neHbBODQBDbLONmN3F9TTMyQQg0yZrcweRBExpab
-X-Received: by 2002:a05:600c:6291:b0:48a:79d8:a8d6 with SMTP id 5b1f17b1804b1-48a85e75173mr26204975e9.7.1777539266753;
-        Thu, 30 Apr 2026 01:54:26 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7c2fb5c7sm52906795e9.5.2026.04.30.01.54.25
+        bh=nyOMENDhhKn1drXUY5FEfpalnnqfQd9/9Hk+P1Dg6SI=;
+        b=aEa5u0AjxdVJh0i+9nvrVuZZp0YA3+RjLii2CJvAS/6SSHAYlMC74E/wmPKCXVtxVM
+         isqjpdGh6R04M4IE/B0G5FuFWxnn/svR5iT/bnhKyx5KcuUARKR5ad/PPA4ohAAAQO52
+         U6yF8E6alSCmJDMODgRuAvnwKgq/tamTyCcsPHsLcaTvrARlTwBhiLAmy1aSB9XfQGqA
+         he/mQvl8s7dNdJ+gtyWXF9s54wOFBtzZmxPllH0sm4Dax4PiFLVK44TkTd2sNOEP948A
+         KW8c8eKt/VDEfzFnSvoWeaAEQgwI8elIrTRkx5Q35SeyK+8hg68m4F8U0eoHJtojxaCv
+         dwAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777555677; x=1778160477;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nyOMENDhhKn1drXUY5FEfpalnnqfQd9/9Hk+P1Dg6SI=;
+        b=FRh351Qr6vJm2b/rGQSYDTp6wRaWYXedhL4LjmkXU39RNRJq/YUEWPJ3RDDsT1YCMW
+         9/BVdOfBZCUU2QK9Jm7nLK+JWxB4p4ITOo1X6D1kBT8V5+sswq5J8iBr34waiE4nR/do
+         9Lyn8bdgohhh5sHtLQiuYcQOiJKZv5GRW4LJY6TfNREwqdz4/t1uhMrY5jGh5jEeV87i
+         s/jbhHiw1naXhnDtM/Cul0XPFTxke+rei6716MYDbMQFJzSZzVfiiqqrU4iEoVOeWmRh
+         /n2Bm7Z4pIC69u4uzhRBJOTjO0JUMGxfaHSC56BXUKLcxd6rYGeHKCL9u8UUPUMYevfi
+         pt+Q==
+X-Gm-Message-State: AOJu0YySehyCVmKIPRZqqI2LhsIGmFQrBLCFByEDuNiqMH9ljdwuDUoW
+	Hwr46N6X9mgFx9JceDyddrsPdB0HS3ijU2rHS0CMllSLKxFYctuUkpLA/fAdqhEQR8zRY4hMTaK
+	sRRX1
+X-Gm-Gg: AeBDiev4oyMcBqpARGQtsqry21F8BzLuZsE0EOTXaQu+HPKL4nFDtn5SX0ZQ3BCP/KL
+	9C8JKs7vhCVdO+k6CN4npH76cyWiq1uyeV+KLhoq0HT74rfrRwargziU26ndjhOw7RiNbmlPnN9
+	z1reASC/NT1CxQ8Myp92YBnLYnt/UV5qK6W9FRtcumfAzo6GyDu9Hu7AxWjJ4m8krsSafeFo83H
+	2alpW6r6buFwOWZeu3QTHb9MemR5K0odzATZ+ZDYQSx2/B/SQxGLux8l8Z2+niLfEfAZOrUGnSg
+	axUGWec1BwzzpiCIzE6Y+5IOnMUl4A/LvO6bTBwmRpkfOKHfjxduSF9AheAriyNgFhuSFQahggX
+	WIxdhhSPX2JrzTRZaH12QPmT9TqLzM932LTXV9KaPtgasNuSTBOYBfrshgJLg7OwYe9cn+Nqz+g
+	pzNv+6vLZnslobzAy01Ze1AqTwSCA/XqjT51L/NrOE2YW++4+UqPBXtOwpes/CQHCXHV4TX0Nto
+	DpFSnS81nU9d/maMVU=
+X-Received: by 2002:a05:6820:217:b0:681:b070:3dc6 with SMTP id 006d021491bc7-6967a49ff98mr1617272eaf.10.1777555677238;
+        Thu, 30 Apr 2026 06:27:57 -0700 (PDT)
+Received: from [192.168.254.51] (72-0-139-202.static.firstlight.net. [72.0.139.202])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6966b93d58csm3164874eaf.0.2026.04.30.06.27.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 01:54:26 -0700 (PDT)
-From: Marco Crivellari <marco.crivellari@suse.com>
-To: linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [RFC PATCH] xprtrdma: Move long delayed work on system_dfl_long_wq
-Date: Thu, 30 Apr 2026 10:54:12 +0200
-Message-ID: <20260430085412.96961-1-marco.crivellari@suse.com>
-X-Mailer: git-send-email 2.53.0
+        Thu, 30 Apr 2026 06:27:56 -0700 (PDT)
+From: Benjamin Coddington <ben.coddington@hammerspace.com>
+X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Rik Theys <Rik.Theys@esat.kuleuven.be>
+Cc: Linux Nfs <linux-nfs@vger.kernel.org>
+Subject: Re: NFS4ERR_SEQ_MISORDERED errors and NFS client very slow
+Date: Thu, 30 Apr 2026 09:27:55 -0400
+X-Mailer: MailMate (2.0r6272)
+Message-ID: <CB5BA5C0-15AA-49D0-96B9-2017F6617903@hammerspace.com>
+In-Reply-To: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
+References: <2cb85a89-f896-4504-b1cf-e4494d344ffe@esat.kuleuven.be>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4B2FC49F804
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: C95A34A373A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linutronix.de,suse.com,oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com];
-	TAGGED_FROM(0.00)[bounces-21296-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
+	RCPT_COUNT_TWO(0.00)[2];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21297-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[marco.crivellari@suse.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,suse.com:email,suse.com:dkim,suse.com:mid]
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-Currently the code enqueue work items using {queue|mod}_delayed_work(),
-using system_long_wq. This workqueue should be used when long works are
-expected, but it is a per-cpu workqueue.
+On 30 Apr 2026, at 2:53, Rik Theys wrote:
 
-This is important because queue_delayed_work() queue the work using:
+> Hi,
+>
+> We have a Rocky 8 client running Linux 7.0.2 (kernel-ml from elrepo) th=
+at is an NFS client to a RHEL10 server.
+>
+> Lately we've noticed that NFS performance is very poor for certain work=
+loads (We saw the same issue on the stock EL8 kernel, 6.18.20 and now 7.0=
+=2E2). For example cloning git repositories is extremely slow.
+>
+> Looking at the server side there don't seem to be any saturations of th=
+e disk or network subsystems.
+>
+> I've taken a network dump between the client and server. In that dump I=
+ see that the server frequently responds to requests from the client with=
+ NFS4ERR_SEQ_MISORDERED (10063). What could be the cause of these mismatc=
+hes? Is this always a client issue, or can this be caused by the server?
 
-   queue_delayed_work_on(WORK_CPU_UNBOUND, ...);
+This is something you shouldn't normally see and probably indicates a bug=
+ or
+serious problem.  From the client side you'd only expect this if you're
+doing a lot of task signaling so that the userland processes abandon RPCs=
+=2E
 
-Note that WORK_CPU_UNBOUND = NR_CPUS.
+A packet capture is the best way to determine if the server is mis-report=
+ing
+the sequencing problem, or if the client's sequencing is incorrect.  Give=
+n
+your description of the symptoms I'd also check to make sure your underly=
+ing
+network isn't doing something totally nuts like duplicating packets.
 
-This would end up calling __queue_delayed_work() that does:
-
-    if (housekeeping_enabled(HK_TYPE_TIMER)) {
-    //      [....]
-    } else {
-            if (likely(cpu == WORK_CPU_UNBOUND))
-                    add_timer_global(timer);
-            else
-                    add_timer_on(timer, cpu);
-    }
-
-So when cpu == WORK_CPU_UNBOUND the timer is global and is
-not using a specific CPU. Later, when __queue_work() is called:
-
-    if (req_cpu == WORK_CPU_UNBOUND) {
-            if (wq->flags & WQ_UNBOUND)
-                    cpu = wq_select_unbound_cpu(raw_smp_processor_id());
-            else
-                    cpu = raw_smp_processor_id();
-    }
-
-Because the wq is not unbound, it takes the CPU where the timer
-fired and enqueue the work on that CPU.
-The consequence of all of this is that the work can run anywhere,
-depending on where the timer fired.
-
-Recently, a new unbound workqueue specific for long running work has
-been added:
-
-   c116737e972e ("workqueue: Add system_dfl_long_wq for long unbound works")
-
-So change system_long_wq with system_dfl_long_wq so that the work may
-benefit from scheduler task placement.
-
-Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
----
- net/sunrpc/xprtrdma/transport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 61706df5e485..1a54993f7ffb 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -484,7 +484,8 @@ xprt_rdma_connect(struct rpc_xprt *xprt, struct rpc_task *task)
- 		xprt_reconnect_backoff(xprt, RPCRDMA_INIT_REEST_TO);
- 	}
- 	trace_xprtrdma_op_connect(r_xprt, delay);
--	queue_delayed_work(system_long_wq, &r_xprt->rx_connect_worker, delay);
-+	queue_delayed_work(system_dfl_long_wq, &r_xprt->rx_connect_worker,
-+			   delay);
- }
- 
- /**
--- 
-2.53.0
-
+Ben
 
