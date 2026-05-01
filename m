@@ -1,185 +1,232 @@
-Return-Path: <linux-nfs+bounces-21340-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21341-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4DL3MUrO9GkDFAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21340-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 18:01:14 +0200
+	id kOgPJ9DY9GmfFQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21341-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 18:46:08 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DBFD4ADDBB
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 18:01:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8AAA4AE27C
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 18:46:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B38A23007CAE
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 16:01:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 19E2B302ED5F
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 16:44:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48BD3D8917;
-	Fri,  1 May 2026 16:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45D33E5EC7;
+	Fri,  1 May 2026 16:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="CBpXWxAg"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b="t/A09e1g"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5913D8909
-	for <linux-nfs@vger.kernel.org>; Fri,  1 May 2026 16:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777651270; cv=pass; b=a+LDiEZyY2gyu2WDbR/zhuPwEOaJehd+OkTDz0A5sp5f+/D972JXq10IvtkUPQbNNP/ACpb+XY3CMBQDYXAdmYT7Z4t6OBABeiva2o0acPXhyeqavp+DelUrZ2Gxm57AGHoLGeLCDtGzZmoPLbdMhEtMv/puwUUKLr8K/vn4X9g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777651270; c=relaxed/simple;
-	bh=i7dJg+Ad/jLF4unFEZVC9YnfPvnVtLzsZxdPQEi9eo4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YRphWMZgfdDfw0I4BGnQ0X8eEDaxKWTXEEjRein7s3awSsxRB/kOqtLBBflqJKo5iKOAJOg8uKo2J9ECQyamxuSgZxXXLmg4PPbdC2DAzp/hZ1xYj9kxQUrgvsRO0ZTBzGbNoXjf+kRZXT+rvgZRHQmaWNrJUdlrFFiHW7XZuaI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=CBpXWxAg; arc=pass smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3650a4eb605so121364a91.0
-        for <linux-nfs@vger.kernel.org>; Fri, 01 May 2026 09:01:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777651268; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bJoyV4OEKmotIPKI1crCDUpgq2dIAkcJA8neT6aDYLjOlc95xeTGJKHHihk4tcMai1
-         ho0HyEtJ6n3VPt7QoEDPLFIfbR7WY2yXxlr/JjBFzpU1+xIbqCW1OeC+PjxKYaUiASJ0
-         hP/qtpPQ8DJhf0kdKe/OyEXLx9dAmZYOdmYh+o9y3sDSutPG3P7UMQ07Pi+M86p9jpBp
-         pJXcgXzW6xqJUjNkNElEshjlFGPR/SzZCAWiliXKf2Ks9ONN5AVj4yjfSfCcY34xsym7
-         ACXewaJBOpSSpVeIWjkt/Ioxi9MYgVI29OM0YsWAK4mlgN5T0BZYeQgevc7zSY2UtLYi
-         YAig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=aWEjhQ0FAeyXxMzwj0dAwfsic/KJmsxnSKQcD3Tkenc=;
-        fh=Onh1+m2r2UkXf8yzfDhc6O3Iz5p8QB0xSKNTAm1eT6Q=;
-        b=P8+2Gn24MwjhmebcEljTPXyqS60f7MqRIv/4fBF1p7EuGm4iP4swPV89Xy2rN429AM
-         Aa27BGGIlVDSzJdpDXOu5pBm1n63wGEXcKAXzjFljIuheHHhXEsGsAJFTTYI0RNymF2w
-         GFAhNjpSnA9rYjt/Zu2nbt4zprUUkeJBrBfmNJQGMlwz7OdAmEFCuP0xo6JyNpdKDq6J
-         SB5DZEYh5p/akQaIer7yBkncKJKIdFdhFmAEGCbGG+2QZXvJeyvtJb0Ov8zTEUGwULcs
-         jW6+uGmUcS95Yxu/EOYLMbO7kleXLl4hlaadITDwE0bW+zi1PfGDONnjN/l6jJQNdS2m
-         vddw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63CE3FA5E7
+	for <linux-nfs@vger.kernel.org>; Fri,  1 May 2026 16:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777653864; cv=none; b=oNTU5E3zbA8seImLKFpRCUFKaZE0SjC3o0RaqRqBWC12SwJllG/6DQ3dyWoJbwxlZWhJiRcx3rBDvPU18L51A1dRQ/AMyAEt4wq0qqwkm6j56Z/IjIG6hVHph5uRycOfvAO6RpGscedIS3exZwZZASuk9+4Sgc/PPbI6nEfaouA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777653864; c=relaxed/simple;
+	bh=BzpvNNe0Y7pWnImNb7utvKGVhDIu4ekSHRzW3u8hMCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kJn/j64XnEROQfb+g3IZk8AglDfu8vaeq25AldrkylnhUjoVk7bwV0dFndlStRkz0Su6aBd1Mu0TnzerOKCdktmAGAuZEemCEjSIwyAynfN0sd2vsq9CQ/WReVx484GVnTB3owLm0tOt68WNDhCY4A2N+QZGGBzNIgcgJlbFz+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b=t/A09e1g; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7d4c12ff3d5so2020777a34.2
+        for <linux-nfs@vger.kernel.org>; Fri, 01 May 2026 09:44:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1777651268; x=1778256068; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aWEjhQ0FAeyXxMzwj0dAwfsic/KJmsxnSKQcD3Tkenc=;
-        b=CBpXWxAgBMkmjB8Xok4tXdUjTk929M0ao0dwZZEZEC6mdNe9MdvnjuOqpXVhH0NVP8
-         MVcuN+TdNx4bHaIVDMKE2NTrh4B1QxcsMAFFACegusAQ4fwaFQEcNIXEDftiBSX7jwq3
-         q/SmkzexRfa9nDb7/V4yLE9wStgCCclIsEHddAwRHNbOp2cwwrEp7vkLqK0InWac4bAq
-         2zD4RQ/eFr/aWwBqnBxLLMBZP5q+wUfXpFJuQ84EA6yXWZPOJkY5TovrNl3CV30ma2gw
-         0uvlQevr2alGJ+x1/OliNj9p21ToXn3hJrZVf5RvBTDJg7JZDaYqlcRLmqbLNnzpO6yp
-         EHVA==
+        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1777653854; x=1778258654; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=258tSgDmQvsBwqYiudf3HzA2YcVV3/7qcjtUVSy9L94=;
+        b=t/A09e1gBKwHej8bFSSsDKaY+HbwtWehYTY6lD/aQAbC6dd7DgC01GYCseKf6U4Drp
+         Nbu7cxnKVoOHHYDRK0bMNqX38VmWz9bPLe7lXQjWZhwP8rQ+wBdaOc2TZfNjdTp+fq5n
+         J4/yDwZY6l2DpYYyZBBrSJ/aqLOZvzOcbRlBtgtIyA+Ug2IyK8NITuZt1WnAr9tHJZU2
+         2aNDB1xK/1sP9de7FFVxjaqR2bVfBbc7w3XUCpg2PuqK+E7TP8Awfn3yzKbmJMP3uTaR
+         dqBtWdMDAUQ8PtDgW0rUmoblNP27wev8sG/a2YqsNsQVbkvVAj+TjSvxxHE4pKcUrX8K
+         v6gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777651268; x=1778256068;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aWEjhQ0FAeyXxMzwj0dAwfsic/KJmsxnSKQcD3Tkenc=;
-        b=Y4MpQ9Esvt77o5Vi+nRdh/CzZEPI0ZACuBksUiYSRyZYsGS6cv4OlAFBI5O814RebE
-         DKNEJupp5GZzrOqMsswD56hcoDCVr6ILKkLOz63w0v07P3w0jSLv0/ypda+OgvBEnmQq
-         o2gEKYiWmw1ML1fOhYeeDt/wfWIclh46QA8va8XPpfVNe9Fyepp+oAMPKcFrfTTcb/Vl
-         hbzupm+o6si0jzTxHbyVU1IuyOzAaam6wMjcXCDrZzOcRCGOjHHPQVo4ImVWLe1HBh1N
-         yizkTOpNKm2Syz0WGPbYavaUK7WF4OoMSJ0v1r8TEgf92XxjSunIamGaWOTbHc3Dx4nd
-         M6Sg==
-X-Forwarded-Encrypted: i=1; AFNElJ97Hhhb+SBQwYhy3ddbzr3G1IlYsvmW3r9+He45JPCat+thTVTC3uaFcX6ggqKo0IpyEl3jhq6b/QA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC6R6YMQyQZyzdIndt9lb+45XMesoKsDAfyDybcyljsedRDdyg
-	lZd/AiiI31E0rGhslQXq/r/d0HCoLRwD5zPneSwrGTn/gDW6rTSf5xrH4zAIDmEwycTvlbkrfj8
-	CHD7N3yHA8pMdhiydZABdMFlnFcR2W31OpLpbazSH
-X-Gm-Gg: AeBDiesAbyPq0g15ZptQXri84NXiPuocEKF0Y+bEuMY1J836UfkrmxIG4xpQGCNERNX
-	+y+pL2+8SyGXnZ6m0OSjQY7TlvvPTRHZycHc426lZeAfWfn7L4Vx95addEYAV2ds2NvMGHATJQt
-	oy+ODWcU7OAUbIOGgPmR63SSUI4FC9z6VwyXM0lbAi1ShqUKUfWQOw4im/0XRkNWH27ayzoROXz
-	efcbM99dB9OmyVrsEOLtLL6P2T2kTEgAiWWjaeTDdPUd/U7uTiaV9L0+EQi4D031X9QmojLI4yu
-	zrZqIYSKwfwmEutXLg==
-X-Received: by 2002:a05:6a20:6a0a:b0:3a2:d838:bfda with SMTP id
- adf61e73a8af0-3a45fe26b94mr4353703637.46.1777651267760; Fri, 01 May 2026
- 09:01:07 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777653854; x=1778258654;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=258tSgDmQvsBwqYiudf3HzA2YcVV3/7qcjtUVSy9L94=;
+        b=EHXc7Q86IudlXrczY50/ulLGlciPtIAf1CZQ8+G/GRBncrlKcQai9/r/w8zO5EsYje
+         xS2N6J7yFucRuLBdQj6uoI10wKhgETZs4kxzMNKA8bu10ckneGz4zheA5Z8zfCgtzcdx
+         WO9tswdbM1SgXlXvlUYQGH+xt5LipO90XD1x5y9Ch97C12Oc/X029e5Q24dEL8FCA28v
+         HpO28YdahgVcEmKy86ZS97IkArWwwq0PhyH1xUveTp5QoJ41dsSfKzujIq79Du+aTxnr
+         R/2/Am5xvPqi30x8xEY8d/z3zacRg9TCw3rPrVF1TlZsCqtf89Zk0NG9YUJsSq3OZKIf
+         jCXw==
+X-Forwarded-Encrypted: i=1; AFNElJ+LczEpWX4wP53MB5gVoa6zgos0u4IJDb0879abWknDImuiX8xZV18CVQLHiXpUQvirct3AZtLFWx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyoi8hyOp5bfmxzIzWLf6V8cs5b2tHxsphIXl9mKNV1mRhdBI9z
+	JKdOs5rM78Ir2Cx7H8RQoB3ASsXs2gX6qwIBIwDLBHHiT+Xz/ikvmQqt2tjCTP2yd4A=
+X-Gm-Gg: AeBDietphxlRwLXim7HtFyDf9Q/lltZoi8thCDbgth5ziDxtNCavIeyW8WUNMqh/QfF
+	YIgojuG4MB2HxYVqz11RRL4p9eeyb/lLRbXlJlNbCc+DrMvDG6LaSHTkeLoujRQ8+582n1djP5A
+	F8UENDcHwzub7Xkg9Cfq8ZuCIXfLoJirIsdxOtrLZ2nYOYNAe6TD6orqnu/5/NLSJlB2aeAOaDq
+	RBVWjpsIzdj+ya8gxGNPcgknaBLy2t1zX6oTtXn+d9BtkoBEvcjQofQlc898hi80vtFtWWpQZb6
+	La0f/gw7GwuXywAcRfq2Y2o/tzzPQOdMYsrzvCKXL8Dnpb12cRcA16KxH0tFvg4l2KKujUmMDi6
+	kfowyVpoEqxfqh5njlIaHaY4BPhQqtury2tW/317iH6H+eTRGtkRRJbhUo4E5wejt+wd+vVQaaI
+	ywOn9ZiTOs/rYeHcI0A43/klIdU+vPX+H+XbskygHhRqDCfRszZeGBYzec0iTCLiRKnx5i/9sPp
+	MQ9UtOU+MuegqdbV3o=
+X-Received: by 2002:a05:6820:a04:b0:694:8c67:5cb6 with SMTP id 006d021491bc7-6967a5dbd54mr3873019eaf.41.1777653853660;
+        Fri, 01 May 2026 09:44:13 -0700 (PDT)
+Received: from [192.168.1.102] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-43454d8ed0dsm2836466fac.17.2026.05.01.09.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2026 09:44:13 -0700 (PDT)
+Message-ID: <ec07180c-665a-4e78-94a4-1670a8bf8efd@kernel.dk>
+Date: Fri, 1 May 2026 10:44:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
- <20260428192119.226244-2-paul@paul-moore.com> <CAHC9VhSDPg2U9UYZ7Na_A8RA-KN8OsNj5S+QwscW6X20tojhjA@mail.gmail.com>
-In-Reply-To: <CAHC9VhSDPg2U9UYZ7Na_A8RA-KN8OsNj5S+QwscW6X20tojhjA@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 1 May 2026 12:00:55 -0400
-X-Gm-Features: AVHnY4L3FM6UrambQrN7cixYHO4W-gQ46kIRQQMq31UfNN7fq0b5uZg5p-YAHAw
-Message-ID: <CAHC9VhSyDVLOQ2vr0YL1PUCdS-jh0gvwcDruW1f6t9g1WTDS7Q@mail.gmail.com>
-Subject: Re: [PATCH ported/repost v2] security,fs,nfs,net: update
- security_inode_listsecurity() interface
-To: selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Cc: stephen.smalley.work@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 1DBFD4ADDBB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] mm: kick writeback flusher for IOCB_DONTCACHE with
+ targeted dirty tracking
+To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Mike Snitzer <snitzer@kernel.org>, Ritesh Harjani <ritesh.list@gmail.com>,
+ Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-mm@kvack.org
+References: <20260501-dontcache-v4-0-5d5e6dc71cb3@kernel.org>
+ <20260501-dontcache-v4-2-5d5e6dc71cb3@kernel.org>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20260501-dontcache-v4-2-5d5e6dc71cb3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: E8AAA4AE27C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
-	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel-dk.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21340-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21341-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,infradead.org,linux-foundation.org,oracle.com,google.com,suse.com,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[paul-moore.com:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	DMARC_NA(0.00)[kernel.dk];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel-dk.20251104.gappssmtp.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[axboe@kernel.dk,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,paul-moore.com:email,paul-moore.com:dkim,paul-moore.com:url]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,kernel-dk.20251104.gappssmtp.com:dkim]
 
-On Tue, Apr 28, 2026 at 3:26=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
-ote:
-> On Tue, Apr 28, 2026 at 3:21=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
-wrote:
-> >
-> > From: Stephen Smalley <stephen.smalley.work@gmail.com>
-> >
-> > Update the security_inode_listsecurity() interface to allow
-> > use of the xattr_list_one() helper and update the hook
-> > implementations.
-> >
-> > Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.sma=
-lley.work@gmail.com
-> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > [PM: forward porting to bring this patch up to v7.1-rc1+]
-> > Signed-off-by: Paul Moore <paul@paul-moore.com>
-> > ---
-> >  fs/nfs/nfs4proc.c             |  7 ++-----
-> >  fs/xattr.c                    | 11 +++++++----
-> >  include/linux/lsm_hook_defs.h |  4 ++--
-> >  include/linux/security.h      |  5 +++--
-> >  security/security.c           | 16 ++++++++--------
-> >  security/selinux/hooks.c      | 10 +++-------
-> >  security/smack/smack_lsm.c    | 13 ++++---------
-> >  7 files changed, 29 insertions(+), 37 deletions(-)
->
-> With the security_inode_listsecurity() cleanup shipping in Linux v7.0,
-> I wanted to get this patch ready for the next merge window.  As
-> expected, some borderline non-trivial porting was needed, so I'm
-> posting the ported version in case anyone wants to review the patch
-> again.  If I don't hear anything over the next few days, I'll plan to
-> merge this into lsm/dev later this week.
+On 5/1/26 3:49 AM, Jeff Layton wrote:
+> The IOCB_DONTCACHE writeback path in generic_write_sync() calls
+> filemap_flush_range() on every write, submitting writeback inline in
+> the writer's context.  Perf lock contention profiling shows the
+> performance problem is not lock contention but the writeback submission
+> work itself — walking the page tree and submitting I/O blocks the writer
+> for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
+> (dontcache).
+> 
+> Replace the inline filemap_flush_range() call with a flusher kick that
+> drains dirty pages in the background.  This moves writeback submission
+> completely off the writer's hot path.
+> 
+> To avoid flushing unrelated buffered dirty data, add a dedicated
+> WB_start_dontcache bit and wb_check_start_dontcache() handler that uses
+> the per-wb WB_DONTCACHE_DIRTY counter to determine how many pages to
+> write back.  The flusher writes back that many pages from the oldest dirty
+> inodes (not restricted to dontcache-specific inodes). This helps
+> preserve I/O batching while limiting the scope of expedited writeback.
+> 
+> Like WB_start_all, the WB_start_dontcache bit coalesces multiple
+> DONTCACHE writes into a single flusher wakeup without per-write
+> allocations.
+> 
+> Also add WB_REASON_DONTCACHE as a new writeback reason for tracing
+> visibility, and target the correct cgroup writeback domain via
+> unlocked_inode_to_wb_begin().
+> 
+> dontcache-bench results (same host, T6F_SKL_1920GBF, 251 GiB RAM,
+> xfs on NVMe, fio io_uring):
+> 
+> Buffered and direct I/O paths are unaffected by this patchset. All
+> improvements are confined to the dontcache path:
+> 
+> Single-stream throughput (MB/s):
+>                         Before    After    Change
+>   seq-write/dontcache      298      897    +201%
+>   rand-write/dontcache     131      236     +80%
+> 
+> Tail latency improvements (seq-write/dontcache):
+>   p99:    135,266 us  ->  23,986 us   (-82%)
+>   p99.9: 8,925,479 us ->  28,443 us   (-99.7%)
+> 
+> Multi-writer (4 jobs, sequential write):
+>                                 Before    After    Change
+>   dontcache aggregate (MB/s)     2,529    4,532     +79%
+>   dontcache p99 (us)             8,553    1,002     -88%
+>   dontcache p99.9 (us)         109,314    1,057     -99%
+> 
+>   Dontcache multi-writer throughput now matches buffered (4,532 vs
+>   4,616 MB/s).
+> 
+> 32-file write (Axboe test):
+>                                 Before    After    Change
+>   dontcache aggregate (MB/s)     1,548    3,499    +126%
+>   dontcache p99 (us)            10,170      602     -94%
+>   Peak dirty pages (MB)          1,837      213     -88%
+> 
+>   Dontcache now reaches 81% of buffered throughput (was 35%).
+> 
+> Competing writers (dontcache vs buffered, separate files):
+>                                 Before    After
+>   buffered writer                  868      433 MB/s
+>   dontcache writer                 415      433 MB/s
+>   Aggregate                      1,284      866 MB/s
+> 
+>   Previously the buffered writer starved the dontcache writer 2:1.
+>   With per-bdi_writeback tracking, both writers now receive equal
+>   bandwidth. The aggregate matches the buffered-vs-buffered baseline
+>   (863 MB/s), indicating fair sharing regardless of I/O mode.
+> 
+>   The dontcache writer's p99.9 latency collapsed from 119 ms to
+>   33 ms (-73%), eliminating the severe periodic stalls seen in the
+>   baseline. Both writers now share identical latency profiles,
+>   matching the buffered-vs-buffered pattern.
+> 
+> The per-bdi_writeback dirty tracking dramatically reduces peak dirty
+> pages in dontcache workloads, with the 32-file test dropping from
+> 1.8 GB to 213 MB. Dontcache sequential write throughput triples and
+> multi-writer throughput reaches parity with buffered I/O, with tail
+> latencies collapsing by 1-2 orders of magnitude.
 
-This has now been merged into lsm/dev, thanks all.
+I like this, this is the better way to kick off the writeback.
 
-> The SELinux test suite runs clean for both local and NFS test runs.
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
---=20
-paul-moore.com
+-- 
+Jens Axboe
+
 
