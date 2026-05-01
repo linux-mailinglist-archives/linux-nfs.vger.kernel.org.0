@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21336-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21337-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oEhqDHC+9GkDEQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21336-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	id OHLBOXC+9GkDEQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21337-lists+linux-nfs=lfdr.de@vger.kernel.org>)
 	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:53:36 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81CFF4AD670
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:53:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BDEA4AD677
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:53:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 09E2E3041AA8
+	by sea.lore.kernel.org (Postfix) with ESMTP id 295AF3042247
 	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 14:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502493CEB87;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 512F43CEB90;
 	Fri,  1 May 2026 14:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDa2/pg8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQrZlQz5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD2A3CCFB0;
-	Fri,  1 May 2026 14:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADB33CD8B5;
+	Fri,  1 May 2026 14:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777647096; cv=none; b=oNygRyy0EPATEFZ5X4jmyl61PeW0sNGnQf9yaPiqs14myBKO3bH+KK3xd2bg4OQhKyZpYElGlirqyDyypYY4JdYs0hJHd/8EFhWPGC12/h0uA9OssFk8AqEv3G29wa4N4EZgp9/uZPpMr+xcSQHvz2P7Is0a7lwJGK/abA2Dp50=
+	t=1777647096; cv=none; b=EZAV+b/62dTcd+GaPq+pcBDJ3/tU2mRTEfS5tTT85LxsiHHe2Hxy1ig8uka3MpWzXPJeE06BCaS/TALj2RXMzyk9P+PM6ydTHfiBv8EW9uXPPGO691EHHO0iFTMBYlEI/2DvlheBc5tZgO4GGqudORb2VDmypG4PSgsLP+iWRxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777647096; c=relaxed/simple;
-	bh=uTVfM0ocfHbzm/p/1pxNJ122SwRDL801DcpPT5VWWkA=;
+	bh=bbS7Hvj+elJ6Hlp+4O+j+mJOOr6RrqQNSeYM+ZJAdAY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MR4rpQYwqA0NH1+zSQjhjTnCd+j/vMB4Jh3RXO5iBWb79yLVAU7dcvRVQgf/WDXrcaP7p0096F8D6Y0zEX7m/3En0vT5vh7ye//mp5yu7+kC5snN59+XiISn+aBjnNo+02cwMxqIb5iWbkV6d3rXeyzyqclanyvNos6pt3msNr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDa2/pg8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B074C4AF09;
-	Fri,  1 May 2026 14:51:33 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=ap21FN+i3wbJvw+dWaWiGRSFLRkl0yiNu8PxT/Hrfcs1nmhKxoD7D9YDDKScFr2/K8xHFX2MdEcpVsX+d02OL3qxFIcOZEgxhoV0IFeW64jMnod5lso9UFlMYJnLoM314Eq/ofeaorkv761Blk4yv28l7C1b7oKDnyvp8sqR4TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQrZlQz5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9539FC2BCB4;
+	Fri,  1 May 2026 14:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777647094;
-	bh=uTVfM0ocfHbzm/p/1pxNJ122SwRDL801DcpPT5VWWkA=;
+	s=k20201202; t=1777647095;
+	bh=bbS7Hvj+elJ6Hlp+4O+j+mJOOr6RrqQNSeYM+ZJAdAY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SDa2/pg8+4c1D7pAoHN1Vv4Hz1SrYnzeKbyBZpQiZDALKDVMwE1vCy8XJBmO2E+8b
-	 znemji3tK7t/gXY7f2XhDcYPcff3f0yXZDcQYKcyvYbRBljfpqykRUHOy6bYVYkOTL
-	 0bu3ppiDoUHtT9yaXLFwswoWlcI35fzf9iBgoNnHXBQ95emctOu5H/AaCf0MB/B+E/
-	 jXrpo4f6H/dy7CYlXRGaUhU1XJ9oekPkDNm56AtvqE2GBBPLjWIB0mzjVf1WgxiOMG
-	 UkKPoFSOHJBmKv0BKMdEsUqrfwiRxfKAAqd6CP+dQRI6tDK/xxt7iKbopbNp2dJOmu
-	 1RnPmSx7td9zw==
+	b=MQrZlQz5oH9xjNJyRcDws+4dv52mk60v30I5mNT1LcHhkH1T9qDL3oKCcRjJJ4fKX
+	 JzB319WSWosRPNq7nS+NAWmsGk2QJQO/wZcGaZcygtN9VWdVNvtPJASu0OFZrR8ksI
+	 MYT0CcD4WryIXU3o/wzCSniFs6DxjB2D+7R8Gedb0swRtKaIm/Stce4yONbE0xfL4O
+	 ovUvtNa05xodOJDIikzy0n8O6JSxaHYon/ltGiRCAIce1WRRrSI4COiMSa/bAFIPY2
+	 ryDPaEZcy1SHnaYBUss1mHC3YFUgnOfSw2JgqaPs5G+Zfb7s5sr6y3wkR7G6Jue/HM
+	 q++0c8MnZyw2A==
 From: Chuck Lever <cel@kernel.org>
-Date: Fri, 01 May 2026 10:51:09 -0400
-Subject: [PATCH 3/6] SUNRPC: Defer ip_map sub-object cleanup past RCU grace
- period
+Date: Fri, 01 May 2026 10:51:10 -0400
+Subject: [PATCH 4/6] SUNRPC: Use shared release pattern for the unix_gid
+ cache
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260501-cache-uaf-fix-v1-3-a49928bf4817@oracle.com>
+Message-Id: <20260501-cache-uaf-fix-v1-4-a49928bf4817@oracle.com>
 References: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
 In-Reply-To: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
 To: Misbah Anjum N <misanjum@linux.ibm.com>, 
@@ -70,42 +70,42 @@ To: Misbah Anjum N <misanjum@linux.ibm.com>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3103;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2898;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=sb+xxxOHmR0sxCWTQowT0Yl00Gq2aGRg+yOkr62nVJc=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9L3wdukcWshwWSO7EzcyK2oM5/K93QyrjUPOb
- Xfp/eUVPxuJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafS98AAKCRAzarMzb2Z/
- l6hvEAC5AidwWZ/9SzSuZgP8+2rI4OLcfjHaUQQDBvZdN7bG2OpriCMWAO0/N/nmmDmv2PO8khU
- FyYmbj5EEmVTZKRQ5fjDXGRQpb+EkHlxadiy1EqTuDpiwRV16rzZ9Nsmc31IM9oA0jzRKb3V80n
- 3861q6cmj2DtGZseLe9ttCQbHIx8/Nkqvuf45b0KA9v5qOZzCiyNnDy6DOTcUfu7523NxE6bIvp
- xQXC/UBbBKD5OracJHoKux0bY5Vqyu1PaT2beZmmMqXZL4M53JWgZ6sKz+eiIlGpEWeNphkop77
- yKRR2f6WRoECdFJgKCQ7Bd7UKHC1+uYQccveJ0qQqrToMQHIEsWMlid4RgWg0STTTpqs55B/77o
- 3Yyk4Etgswm+3mYXKc/3Hy2bON1HcjL9yGSw+WS9+e/GqCdy1OxreF/3d68DNFT58DCT76ghMoF
- 9G0jB/tNkvOXh8OxNonjZxFOwbnNtbvGXoma9LZ37v9yqKrgepsTd8qSYe/kWFZ6wktCYSTxHAk
- Sl4JQk5FS/LB40D4Uuct2R8LV0chtQOdsJNTE9FQ6gKKcTiL5XajVPnDN5lff7+TeR8/uM9nRMb
- LWLPKpX90UHEC3Y1yO/tkKEO/ypUu3rZZD/r+2I/RMgv5SVD6JoiAwn3D7iC8taJH1RAJGQ1BJJ
- lhWXhIfEn/Zj5xg==
+ bh=6LhmQM+mCkrBZotHwoovj5QO/zCfh6oXMp4HfVQlhB0=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9L3wnpS9Sx2etwsOFk5FodhOGOzvbtWDXfHH0
+ VqmEJfiTn+JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafS98AAKCRAzarMzb2Z/
+ lwqRD/0YHnEn1hyeqXT1SlJa4XrFOGh0UQwjgRESQRdbU0mjwaqlFtfTWkHyLm9jkeCVUflrvG/
+ JIQS6Ylf+F4me2zB3/WM3uMfGksr7o6jNor7ScUx3VibcWez638VkhA8CBpUqboXCkuJJarPGEq
+ tFBU5FXPiwAi0Pp09f8M3K28S/pt9dqxuHuDEvZbRUzMsy+twZDvDXsesam5J2n1ROc+E/fNc8k
+ FcS/sg40/As8jFgEaLACjlEgKt0piMNwPuwyvqykkZ52PxjNz6Um6niqeqGqx89wnMJz4R0R2+K
+ 45M4REhXQt1wWfGERFhByPDXHvxUiG7KFk9xILZC+bw1Lyr5/swCMeWKTLrhmms5eMM8VSYnSfd
+ Kz0vVQI5ZHhXP3kSOO9w1FOZVWC6qYPT2auqQdaDSt+HySeXUIOgL+VrmuvTq7PAylKjUGpCut+
+ aCxwXOr6AlRZyY+DwFT8nTAYZrlmy7KmU/qRgyEtmb26CtWI6CJnTbzYO7gwdzRCFrv43zAdJsN
+ CKnuQxUTrhjdYsU7W7kvLSKHlK7aYpBNdRIHe14rJ8dIVYDL0LPvgtouOiTZ0EGt9fFRJH1jkWc
+ Uj0w+05VsfBGSkVzKBai7cBLuEK5eLli4Sd5UPxK2mfhHDKMGJ95DymMEKJmFUtfJ9Makve/VKp
+ ++mRijnbbPwe3GA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 81CFF4AD670
+X-Rspamd-Queue-Id: 8BDEA4AD677
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21336-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21337-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -118,85 +118,83 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-ip_map_put() is already correct in that auth_domain_put() of
-im->m_client reaches svcauth_unix_domain_release(), which defers
-the actual kfree() of the unix_domain with call_rcu(); the ip_map
-itself is freed via kfree_rcu(). Readers in c_show() under
-cache_seq_start_rcu() therefore observe both objects until the
-next RCU grace period.
+unix_gid_put() is already correct in that put_group_info() runs
+inside its call_rcu() callback, after the RCU grace period.
+This patch is a consistency change rather than a bug fix:
+the three other cache_detail .put callbacks (svc_export,
+svc_expkey, ip_map) now use the queue_rcu_work() pattern via
+sunrpc_cache_queue_release(), and routing unix_gid through the same
+path keeps a single release mechanism for all four caches.
 
-This patch is a consistency change rather than a bug fix. The
-svc_export and svc_expkey caches were converted to the
-queue_rcu_work() pattern in commit 48db892356d6 ("NFSD: Defer
-sub-object cleanup in export put callbacks") because path_put()
-and auth_domain_put() must run in process context after the RCU
-grace period. The next patch routes unix_gid through the same
-mechanism. Sending ip_map through sunrpc_cache_queue_release()
-unifies all four cache_detail .put callbacks on a single release
-path and removes the implicit reliance on every current and
-future auth_ops .domain_release implementation deferring its own
-kfree() behind call_rcu().
-
-Replace the rcu_head field with an rcu_work, move the kfree() and
-auth_domain_put() into a new ip_map_release() taking a
-work_struct, and have ip_map_put() invoke INIT_RCU_WORK() and
-sunrpc_cache_queue_release() in place of kfree_rcu(). Switch
-ip_map_cache_destroy() to sunrpc_cache_destroy_net() so
-per-namespace teardown waits for outstanding release work
+Replace the rcu_head field with an rcu_work, rename
+unix_gid_free() to unix_gid_release() and convert it to take
+a work_struct, and have unix_gid_put() invoke INIT_RCU_WORK()
+and sunrpc_cache_queue_release() in place of call_rcu().
+Switch unix_gid_cache_destroy() to sunrpc_cache_destroy_net()
+so per-namespace teardown waits for outstanding release work
 before freeing the cache_detail.
 
 Assisted-by: Claude:claude-opus-4-7[1m]
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svcauth_unix.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ net/sunrpc/svcauth_unix.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
 diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 64a2658faddb..14688813c242 100644
+index 14688813c242..762cf03574b4 100644
 --- a/net/sunrpc/svcauth_unix.c
 +++ b/net/sunrpc/svcauth_unix.c
-@@ -103,18 +103,26 @@ struct ip_map {
- 	char			m_class[8]; /* e.g. "nfsd" */
- 	struct in6_addr		m_addr;
- 	struct unix_domain	*m_client;
--	struct rcu_head		m_rcu;
-+	struct rcu_work		m_rwork;
+@@ -420,7 +420,7 @@ struct unix_gid {
+ 	struct cache_head	h;
+ 	kuid_t			uid;
+ 	struct group_info	*gi;
+-	struct rcu_head		rcu;
++	struct rcu_work		rwork;
  };
  
-+static void ip_map_release(struct work_struct *work)
-+{
-+	struct ip_map *im = container_of(to_rcu_work(work),
-+					 struct ip_map, m_rwork);
-+
-+	if (test_bit(CACHE_VALID, &im->h.flags) &&
-+	    !test_bit(CACHE_NEGATIVE, &im->h.flags))
-+		auth_domain_put(&im->m_client->h);
-+	kfree(im);
-+}
-+
- static void ip_map_put(struct kref *kref)
+ static int unix_gid_hash(kuid_t uid)
+@@ -428,23 +428,23 @@ static int unix_gid_hash(kuid_t uid)
+ 	return hash_long(from_kuid(&init_user_ns, uid), GID_HASHBITS);
+ }
+ 
+-static void unix_gid_free(struct rcu_head *rcu)
++static void unix_gid_release(struct work_struct *work)
  {
--	struct cache_head *item = container_of(kref, struct cache_head, ref);
--	struct ip_map *im = container_of(item, struct ip_map,h);
-+	struct ip_map *im = container_of(kref, struct ip_map, h.ref);
+-	struct unix_gid *ug = container_of(rcu, struct unix_gid, rcu);
+-	struct cache_head *item = &ug->h;
++	struct unix_gid *ug = container_of(to_rcu_work(work),
++					   struct unix_gid, rwork);
  
 -	if (test_bit(CACHE_VALID, &item->flags) &&
 -	    !test_bit(CACHE_NEGATIVE, &item->flags))
--		auth_domain_put(&im->m_client->h);
--	kfree_rcu(im, m_rcu);
-+	INIT_RCU_WORK(&im->m_rwork, ip_map_release);
-+	sunrpc_cache_queue_release(&im->m_rwork);
++	if (test_bit(CACHE_VALID, &ug->h.flags) &&
++	    !test_bit(CACHE_NEGATIVE, &ug->h.flags))
+ 		put_group_info(ug->gi);
+ 	kfree(ug);
  }
  
- static inline int hash_ip6(const struct in6_addr *ip)
-@@ -1569,6 +1577,5 @@ void ip_map_cache_destroy(struct net *net)
+ static void unix_gid_put(struct kref *kref)
+ {
+-	struct cache_head *item = container_of(kref, struct cache_head, ref);
+-	struct unix_gid *ug = container_of(item, struct unix_gid, h);
++	struct unix_gid *ug = container_of(kref, struct unix_gid, h.ref);
  
- 	sn->ip_map_cache = NULL;
+-	call_rcu(&ug->rcu, unix_gid_free);
++	INIT_RCU_WORK(&ug->rwork, unix_gid_release);
++	sunrpc_cache_queue_release(&ug->rwork);
+ }
+ 
+ static int unix_gid_match(struct cache_head *corig, struct cache_head *cnew)
+@@ -899,8 +899,7 @@ void unix_gid_cache_destroy(struct net *net)
+ 
+ 	sn->unix_gid_cache = NULL;
  	cache_purge(cd);
 -	cache_unregister_net(cd, net);
 -	cache_destroy_net(cd, net);
 +	sunrpc_cache_destroy_net(cd, net);
  }
+ 
+ static struct unix_gid *unix_gid_lookup(struct cache_detail *cd, kuid_t uid)
 
 -- 
 2.53.0
