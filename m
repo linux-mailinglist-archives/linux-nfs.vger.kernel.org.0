@@ -1,97 +1,98 @@
-Return-Path: <linux-nfs+bounces-21321-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21322-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8CJLKUQA9Gn99QEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21321-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 03:22:12 +0200
+	id mD7gINME9GnR9gEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21322-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 03:41:39 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202344A999B
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 03:22:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFA924A9AA7
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 03:41:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 75795301FFBC
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 01:20:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E12EA30210FA
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 01:40:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1EF82C026C;
-	Fri,  1 May 2026 01:20:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11DC2D23B9;
+	Fri,  1 May 2026 01:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="dyd4FSvG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="keie/jMZ"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="pSOvlllf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gFbNhWrX"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324EB1DF751;
-	Fri,  1 May 2026 01:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA06D24468C;
+	Fri,  1 May 2026 01:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777598451; cv=none; b=hSwJkdpl6X9NVH0CAXlDIrcmal1axFpV/yi1uKMnl93VNrURbfO+K1mYwN8DgoLgqWziYg1GDlo2rKjSHepFL+FVXVKjIFigwY3PCOYFQkQMBmCMuCDrcQK20P+dhDJr19hFL83PXNjwJtu5QpzIiRBkgHxsW/26iaHrLG2+N2E=
+	t=1777599612; cv=none; b=oodiJ1e0omD4xSAFlX0sU+wff7BA+yaBnzE+6i6+kwEiiHBnjLWyGC12l0rlR+5xHoNQ2pa0hahuRFJFsl3XFgnsg5U9tAW4phT6o33+7dXb+XhvrpMu0qfBXkTIdA7lrCRfrmW+xga5/gcEcDsWZRC6E71OBUJwlx//ShdXR5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777598451; c=relaxed/simple;
-	bh=A+YBGMyvBl7GOzZbBTljFVysDhnPc/yNFIdskIpWvKI=;
+	s=arc-20240116; t=1777599612; c=relaxed/simple;
+	bh=GGiMXbmGGlurHTFAl0auFeuoylpMDCwAv5c592jD7j0=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ejOA/cuGd2QDVecspr6bJoMIUxau3oMJtqZHydGYis8bt1Nl1bf97iofNydUuo0Ty9jT2ev5t7wawYss3pqOA0HY1WK3vPZ4T6Dijr7ghYw8KC1eA4oiA3sq2HCKyXXlGAvMoIAZNu+N8ulblnugCG44qAiVUoAK8OP3ockAS4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=dyd4FSvG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=keie/jMZ; arc=none smtp.client-ip=202.12.124.144
+	 References:Date:Message-id; b=DQLiKyES5NUBe9k4rmzlPRI3gQH7NfVlNxUrIqXhUv96ydPgAeCFfsY9DoOKOIfn4aXhhwFPZ6c1guE24f+U4p0NvVBZQ3W+xHUorpKWLzu2kKCDEDtrAPZysDsRnqz/XqZyG8teJJP+x5zathZx6gfzpRtPJd2rfTeCP5vYNoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=pSOvlllf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gFbNhWrX; arc=none smtp.client-ip=202.12.124.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 8E6821D000ED;
-	Thu, 30 Apr 2026 21:20:47 -0400 (EDT)
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 7D1D81D000FB;
+	Thu, 30 Apr 2026 21:40:10 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Thu, 30 Apr 2026 21:20:48 -0400
+  by phl-compute-05.internal (MEProxy); Thu, 30 Apr 2026 21:40:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1777598447; x=1777684847; bh=VoUWr0usAn90IKemM6n2soxuv4K0Xy430Mx
-	TbeCzr00=; b=dyd4FSvG41docTwhTKBuK6kIGXGn1duKymbaggYG3nFk7BYby4V
-	v9UfZx26PiYzN10y2DmUHHWVwQwzB8Jm3JbcTxYUsV3DziAptUVZpYjNvaGsC/0n
-	axoy+StZwKItM74nXe2IKZOwPFGlREqEH4pigtP+Qd4NFmL255+CkccBC5qzrmwI
-	v6kKFDV2Q5EAtdmKt53IeGYnX7PJwiUbl3DhEvay03th6cI9kRxL6g++H1yHlOy6
-	cuH5MB+dFSdtRNeLg+P6ex6nqKm7RgE2O+WIl+GoOs9ii2vS2gnkdaEB3ccE3XEX
-	rZhW/di+gdI2ldDC/T195j2HZJg39PUdeJg==
+	1777599610; x=1777686010; bh=f9gKYzv9hMHa7zu4IUuMIDLKd/ShJ4tdEtH
+	REKBnBfc=; b=pSOvlllfuEsAHbvR36LlU4PwowkSAgwhQoaR3IxSfmPyvjJNNSJ
+	mFneXR2IdaqpJaiGw37MlwSd36nGPFgGLrHtHhSJJ5g9m2f54klOimmTJPqmnZJ4
+	xJ16zKFmNERglxqiT3/HJooS6HuuzuWIayIMYi4UPeHsPT0NB0SLpHpqnFraxcBn
+	LH7AX3LURKapVpnUNT6ot30ImEMlKeCjcYxsv+g5AlEI2sL5M73S6LoxwVvfpqyi
+	Imx0MVFgwYi4aBES8ueppTq9W6MKRmfITzhROxQMrDhsS0Qy6NbYJtpRF9iXUY8R
+	7WHefej9gOwYc8K24o7M4q6pjp7yJ98tZcQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777598447; x=
-	1777684847; bh=VoUWr0usAn90IKemM6n2soxuv4K0Xy430MxTbeCzr00=; b=k
-	eie/jMZvBzyEjUcDdQZRyESum91qQC5eA8ECzp7yOoKVtwJLv8nAUmqYkGbgpirs
-	4oBZsOwKVwlkQ/pULjNnCgLk/QWNbtHmhNffNdh0ClLov1zlUzcZ18dYHUiyWE/t
-	8E2TJblsNPCkwuNqVuzHN23R07hPhRT8Jj90zI9DXZRwGSDrG/Gy73CD9XyXkoa1
-	g9+wiP2GlesyyxRPD+dTIxaG06En6Tvfk0z4TLaIyL/qGFfPshCrxtZOtc59FXRr
-	ZK+OqVyVoDXHxQ+QoNBdsNsWH+oqAQzjsINs0zKe4UmP74SXF46ZczO1lyO4HdjF
-	CTFMdSJOTaLNWyXiMfpcw==
-X-ME-Sender: <xms:7v_zaQtL7FcSc6ahqLA3ImXD4T9mMlw8fcFCIZqfLBmVpyPN3sacEw>
-    <xme:7v_zaZyfrSAPfpKW2Z7xdL09dpeoWb7IaTMXGbiqBKrx6BMF38fkDVEpUfDstkidT
-    yBdRU_7KGjMqSFBNBVeAqIqG1Wq2rFbfk0lVLOrL4TiPtHZ9Ho>
-X-ME-Received: <xmr:7v_zada_GA2Pt8R8zZQQzI1WaR9cUfut6kPq61ao0FFozsg3dLwfYAmw02ogFHmmh8XxBk1lSMMDo3sOtecnUbr9-apoLLg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekkeekjecutefuodetggdotefrod
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777599610; x=
+	1777686010; bh=f9gKYzv9hMHa7zu4IUuMIDLKd/ShJ4tdEtHREKBnBfc=; b=g
+	FbNhWrXl/reqb0LVdiZOzVo//U+IzACd7HaGrCGPN8rc98gQKj4D/uepuk48c0NC
+	fwL++Rh76hcbtZwSPUcukB9a7OXmiHUYireoZQAlr3qQzJFnlXSzodyP+SUVFi54
+	VQZbSUxQPqoC6WLtl2h5QlaljC87Hhl5b/LSUFL8ykJHxzzlsXsQRN3/VNSuAsch
+	8lHLiQjAkMS/fgusV7BOWWTaCO0xGuyazwib+xXi//wGrmumpl9Nj7ms/Qtj/ZNz
+	r+uTYfoUZ/3s8a1xE2jh8Qr+IXEQHR7xnlGEGAJQtg7n9QwfKSGXylfnQ16IppQv
+	N3YOKJAG3vR79g7KkbXGw==
+X-ME-Sender: <xms:eQT0aW4IIlU-w-yTDqGc-lef6TYm7AY03q3CGll9a57tw1PH4vUA4g>
+    <xme:eQT0acM0-qkhEL0E106TIJlnUQ0AHT-G_GzIgenqkEWvPWVzD6j4gIh6f-2j5elxx
+    rO0GBGKWlt9xdZGPEFHL43hi8NDM8Tk-6vjPjR4-78bLjDUbQ>
+X-ME-Received: <xmr:eQT0aXFLqaJFomfGct3TAdBlNfXerjVzF7WiNbphIXzTknzBMJfmnHvHAB3jlGQzfT9wGdx966CRQyeDQGDetEtP9Je6cZI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekkeeltdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpegtgfgghffvvefujghffffkrhesthhqredttddtjeenucfhrhhomheppfgvihhluehr
     ohifnhcuoehnvghilhgssehofihnmhgrihhlrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    eljedtfeegueekieetudevheduveefffevudetgfetudfhgedvgfdtieeguedujeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnvghilhgsse
-    hofihnmhgrihhlrdhnvghtpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprh
-    gtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtohepjhgrtg
-    hksehsuhhsvgdrtgiipdhrtghpthhtohepjhhksehoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:7v_zaQWxcIYKUkxf7rrihLuNa950VQ8eU9j3ziPBFQhbBpASlRN8MA>
-    <xmx:7v_zaWF5g8b2hgF8xPiE-HvAn_o_xrSv-iPp8M8THpg1hnGpzlEeNA>
-    <xmx:7v_zaSCtGcvo3_OFnYmizntweaNB-bkka1HLU1o0cx6vpGDgT4LdRg>
-    <xmx:7v_zaWwpufHugoBiwdGXr77wD8K-sRTPZ_WZbeooRCLxnu1h77No2g>
-    <xmx:7__zaYcpJ2OLUpaOkYl_RpQGfjQxy6wv7g2aXrpK_mZi0b3zDqqZc-gW>
+    dvueetleekjeekveetteevtdekgeeludeifedtfeetgfdttdeljefglefgveffieenucff
+    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepnhgvihhlsgesohifnhhmrghilhdrnhgvthdpnhgspghr
+    tghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehvihhrohesii
+    gvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheplhhinhhugidquhhnihho
+    nhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnfh
+    hssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsug
+    gvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgv
+    fhhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhikhhlohhssehsii
+    gvrhgvughirdhhuhdprhgtphhtthhopehjrggtkhesshhushgvrdgtiidprhgtphhtthho
+    pehjkhesohiilhgrsghsrdhorhhg
+X-ME-Proxy: <xmx:eQT0aQRkTS9ssw5i_KvA71UfqVoVVfsCmDcmD6zqBYXKKKk3wSuhYw>
+    <xmx:eQT0afTJYBotcKCn8TL2D6WyO8j1clDO-vk1ZcixfTpbKT1u4bLGzQ>
+    <xmx:eQT0abcNPRh7Eb_VGnNEguZ7Alzn1QbeWng_9Xxqe_fBexBX2Is9EQ>
+    <xmx:eQT0abfzxI_c5DqP2taZLXiF1yQeB47uxZMN2D_LNDudHm-PX42LzQ>
+    <xmx:egT0adI8zCjViHFI5LbHLSEr1JOXAk1lzpiADYOY5pHmjYke0t1YoYGe>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 30 Apr 2026 21:20:42 -0400 (EDT)
+ 30 Apr 2026 21:40:05 -0400 (EDT)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -112,30 +113,31 @@ Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
  linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 04/19] VFS: use wait_var_event for waiting in
  d_alloc_parallel()
-In-reply-to: <177759308866.1474915.9708613530229799376@noble.neil.brown.name>
+In-reply-to: <20260501011132.GA3518998@ZenIV>
 References: <20260427040517.828226-1-neilb@ownmail.net>
   <20260427040517.828226-5-neilb@ownmail.net>
   <20260428033738.GV3518998@ZenIV>
   <177737511992.1474915.1952404144121931523@noble.neil.brown.name>
   <20260428142225.GX3518998@ZenIV>
   <177741881482.1474915.12527082398060370192@noble.neil.brown.name>
-  <20260429052626.GY3518998@ZenIV>  <>, <20260429170731.GZ3518998@ZenIV>,
- <177759308866.1474915.9708613530229799376@noble.neil.brown.name>
-Date: Fri, 01 May 2026 11:20:38 +1000
-Message-id: <177759843868.1474915.6100875324018019224@noble.neil.brown.name>
+  <20260429052626.GY3518998@ZenIV>  <20260429170731.GZ3518998@ZenIV>
+  <177759308866.1474915.9708613530229799376@noble.neil.brown.name>
+  <20260501011132.GA3518998@ZenIV>
+Date: Fri, 01 May 2026 11:39:59 +1000
+Message-id: <177759959922.1474915.14496442965390503813@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
-X-Rspamd-Queue-Id: 202344A999B
+X-Rspamd-Queue-Id: DFA924A9AA7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21321-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21322-lists,linux-nfs=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -154,67 +156,96 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,noble.neil.brown.name:mid,messagingengine.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:dkim,messagingengine.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,noble.neil.brown.name:mid]
 
-On Fri, 01 May 2026, NeilBrown wrote:
-> On Thu, 30 Apr 2026, Al Viro wrote:
-> > On Wed, Apr 29, 2026 at 06:26:26AM +0100, Al Viro wrote:
+On Fri, 01 May 2026, Al Viro wrote:
+> On Fri, May 01, 2026 at 09:51:28AM +1000, NeilBrown wrote:
+>=20
+> > I saw this comment the first time I read this email, but I didn't
+> > process it properly.  That code is wrong.
+>=20
+> One in mainline isn't - d_wait comes from target, as it ought to.
+>=20
+> > It only makes sense to=20
+> > __d_wake_in_lookup_waiters() a dentry that we know was in-lookup, and in
+> > d_move, that is target.
+> > This can only happen (I think) in nfs where nfs_lookup() skips the lookup
+> > for LOOKUP_RENAME_TARGET and leaves the dentry in-lookup.  Other threads
+> > looking up that name will then block.
+> > After the rename completes that in-lookup dentry will now be unhashed
+> > but we need to wake it up so other threads can continue (and repeat the
+> > lookup).=20
 > >=20
-> > > with obvious adjustments in end_dir_add().  That's it.  Outside of fs/d=
-cache.c,
-> > > same as in the patch you've posted, modulo renaming you've suggested fo=
-r new flag.
+> > So we need
 > >=20
-> > Something like patch below (on top of -rc1, completely untested).  I've l=
-ifted
-> > the wakeup part out of end_dir_add() into its callers - less confusing th=
-at way.
-> > Note that in __d_move() the dentry you've ended up passing to end_dir_add=
-() was
-> > *NOT* the one added - it was the one replaced with existing one spliced i=
-n its place.
+> > 		__d_wake_in_lookup_waiters(target);
+> >=20
+> > in d_move.  target, not dentry.
 >=20
-> I saw this comment the first time I read this email, but I didn't
-> process it properly.  That code is wrong.  It only makes sense to=20
-> __d_wake_in_lookup_waiters() a dentry that we know was in-lookup, and in
-> d_move, that is target.
-> This can only happen (I think) in nfs where nfs_lookup() skips the lookup
-> for LOOKUP_RENAME_TARGET and leaves the dentry in-lookup.  Other threads
-> looking up that name will then block.
-> After the rename completes that in-lookup dentry will now be unhashed
-> but we need to wake it up so other threads can continue (and repeat the
-> lookup).=20
+> Yep.
 >=20
-> So we need
+> > Thanks for flagging this,
+> >=20
+> > Also my testing has hit a problem with some sort of deadlock in the nfs
+> > server (so accessing and XFS filesystem).  They are tring to unlink a
+> > file and are waiting in d_alloc_parallel() under reconnect_path.
+> > This is running generic/467.
+> >=20
+> > So better hold off this patchset until I have that understood.
 >=20
-> 		__d_wake_in_lookup_waiters(target);
->=20
-> in d_move.  target, not dentry.
->=20
-> Thanks for flagging this,
->=20
-> Also my testing has hit a problem with some sort of deadlock in the nfs
-> server (so accessing and XFS filesystem).  They are tring to unlink a
-> file and are waiting in d_alloc_parallel() under reconnect_path.
-> This is running generic/467.
->=20
-> So better hold off this patchset until I have that understood.
+> Let's deal with d_alloc_parallel() first; it doesn't have to be tied
+> into the rest of patchset.  Does the variant I've posted + s/dentry/target/=
+ in that
+> call of __d_wake_in_lookup_waiters() trigger any problems in your testing?
 
-The two problems are actually one.
+I'll let you know.  Still building at present.
 
-__d_move() is called in d_splice_alias() with the target dentry often
-being in-lookup.  reconnect_path() does exactly this and is expected to
-find an existing dentry for a directory and to splice that dentry to the
-in-lookup dentry is has.
-So the wakeup of the wrong dentry in __d_move() is causing the deadlock
-in nfsd.
+>=20
+> If it doesn't, let's get that part out of the way - it makes sense on its o=
+wn
+> and getting it into -next (I'm sitting on a bunch of fs/dcache.c patches, a=
+nd
+> it would fit there nicely) would be a good idea.
 
-I'll resend that short series after some testing.
+OK
+
+>=20
+> FWIW, your "noblock" variant is a misnomer - it *is* a trylock analogue of
+> d_alloc_parallel(), all right, but it might very well block; on allocations,
+> if nothing else, and there's a chance of having that dput(dentry) in "would=
+block"
+> case coming right after the sucker ceased to be in-lookup and dropping the =
+sole
+> remaining reference.  Which may block on real IO, final dput() being what i=
+t is...
+
+I'm happy to rename it to d_alloc_trylock()
+
+>=20
+> And I really dislike the "drop and regain a caller-held lock" games - we'd =
+been
+> there many times and it had ended up with race galore again and again; see
+> https://lore.kernel.org/all/20250623213747.GJ1880847@ZenIV/ for one recent
+> example...
+>=20
+
+I dislike them too.  I doubt I can find solutions that either of us
+like, but they should be relatively short-lived.  Once we push the
+locking down in the the inode_operations the filesystem will be in a
+position to hold the lock only when it actually needs it (if at all).
+
+I'm confident that dropping the lock is safe.  If there was some way to
+tell the VFS that the lock has already been dropped, then we wouldn't
+need to reclaim it, but I cannot see a clean way to do that.
+
+I'm certainly open to suggestions.
 
 Thanks,
 NeilBrown
+
+
 
