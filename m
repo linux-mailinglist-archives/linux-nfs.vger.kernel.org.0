@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21333-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21334-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCsgCPW99GkDEQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21333-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:51:33 +0200
+	id SMsaDhq+9GkDEQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21334-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:52:10 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A88E24AD615
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:51:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9446E4AD642
+	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 16:52:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3CFCE3011798
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 14:51:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2F87D3026757
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 14:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 852BF3CCFAC;
-	Fri,  1 May 2026 14:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9B6C3CE494;
+	Fri,  1 May 2026 14:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ewa+g0MK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0Y3S2gG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6179C282F06;
-	Fri,  1 May 2026 14:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C043CE481;
+	Fri,  1 May 2026 14:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777647090; cv=none; b=cS5oQ8Lyta3CieRCjYHPcdq2DOOAMh4F7lU6mpJZKHy8bq5Fh8NN4RkuN6NIsVAsouc0ncZM75QlfQk5ukHPRdUdk3w/lkcnUz2+Xj4dIZMPon4BJEx/VkeT5Wz9kfPNiCknLixFlVn9//60Zc1SachK5KSM1IpFJKMsgHZNsjQ=
+	t=1777647091; cv=none; b=tUlClu7VE0B3X4ZFCwd9MoM2RdbfiHVSXthTmaY1qlfILYIv9adjVHhGlyAy6AsPqB6ONrA5R0uT0Ynq73pdXclloNdUc5pyjOJZCpUAlGAf88kugHYCEJX70VqhHJIQE+9D31a2QjUpxzEbO/LPzYv98suBP2LI9tIVMdMEsbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777647090; c=relaxed/simple;
-	bh=SNs+jOeLk7gIMEEAJYWCC2bIpE4D7lFY/byWgaXHaio=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lK6yvWuE1Iyvi17hbya2ZnhdL6f6X7SC0ER6dAAheygqFurIGJHhdrLvFYVi0a2RLTfRuJL6LcE6Thh3BjLrmO2TxW/dsmcC7bAhMavQGwHgMtfabgOyFSRAkLYRoCaitRRSHXzqFVmLiUvV34DkT2/aFCBskfb1SjESVEU6xSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ewa+g0MK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEF56C2BCB4;
-	Fri,  1 May 2026 14:51:28 +0000 (UTC)
+	s=arc-20240116; t=1777647091; c=relaxed/simple;
+	bh=UyZE3O+9MTuD6JawcvrDlgaUs2SG0Plb41/mQ0fmVC0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=plOkBxb2liZsSSeahFqvUTf7d1jN1ln4KvLDk8KF9eBefOsPt9OACJ6J1vAjrsDWykqcWMVE7iFIidoYyF44kqBmEitTdgOMElMOYLW05Nb171IQzaqF2keHP+ZCypTC+8jWQxgnm5qEj6WD2nxyWJ2D8v5S3pNLDuRc9zV4+YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0Y3S2gG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D09EC2BCC7;
+	Fri,  1 May 2026 14:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777647090;
-	bh=SNs+jOeLk7gIMEEAJYWCC2bIpE4D7lFY/byWgaXHaio=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Ewa+g0MKEpW9ixH4w+q/KbTgY8IDFIl5YcW7fat4l4TfDvh+irGlObX1LCOoCRXhK
-	 5XVd2Zf6P62kvptz77Fi8sM9kv9uhLdjCUYm61o5lkah0gZqj4E/pkeJ7sC20y0Nhi
-	 JiVUSVS1uwYYLq8EKrVMwXYWOmQLFr7V7D9/DzUhAZzu3yDMUQ/pgLwZ/r3GQoTvSt
-	 8rRitnPP48BUWSXk2jEuBWMy3BHQqSpESABJgHRKeT4ugLpk89rYZBLOZzxTv8NFMv
-	 bwpHWFdV5vkU/4BTw6qr7c/1wpsUs3cjlY0M2f7WEfflKBAGXwasNMooq1oWO1jVsl
-	 IoYct0R9amKTQ==
+	s=k20201202; t=1777647091;
+	bh=UyZE3O+9MTuD6JawcvrDlgaUs2SG0Plb41/mQ0fmVC0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=m0Y3S2gGP/IJ5IlZ3aDVy/ycqYcXYP54jUw3sUwJKDrOfjd7J8Aq9YGWwqazzjblK
+	 SKigYSNgS5+q0q0ZFDokXiaJ01iLtj+FU2NppQw8ofVZ84GQecYMP8fnVWJ7/Q5Ckt
+	 nN0UowlD8xIFE52hIs5w2HvXOeU3+Kd79hR1ikMqATNqEEfs28OhICbEofVD9EVLpp
+	 /U9nMnLTxg1S0fBOB9PH2xkHr6emoClo5jIMrzUWdRTm9ufvqbzyVwpg/dYDk+zmOo
+	 ksxe1n2pRKuJY+z9LDAC9YAogGdOo3HkQpIImwerYvQP2Exrl+WPMS/9TsUzVfK+yV
+	 R/X/AyQ0bQz6g==
 From: Chuck Lever <cel@kernel.org>
-Subject: [PATCH 0/6] SUNRPC: Address remaining cache_check_rcu() UAF in
- cache content files
-Date: Fri, 01 May 2026 10:51:06 -0400
-Message-Id: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
+Date: Fri, 01 May 2026 10:51:07 -0400
+Subject: [PATCH 1/6] SUNRPC: Move cache_initialize() declaration to
+ sunrpc-private header
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,10 +56,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANq99GkC/yWMQQrDMAwEvxJ0rkCJSwL9SulBVuTYPbjFSkIh5
- O+12+MMu3OAaUlqcOsOKLonS69cob90IJHzopjmyjDQMNLVEQpLVNw4YEgf5N4RURgncRPUz7t
- o1b/e/fFn2/xTZW2RtvBsir5wlthUDjbjqramvMB5fgFCxxI0kAAAAA==
-X-Change-ID: 20260430-cache-uaf-fix-a13000f67c37
+Message-Id: <20260501-cache-uaf-fix-v1-1-a49928bf4817@oracle.com>
+References: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
+In-Reply-To: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
 To: Misbah Anjum N <misanjum@linux.ibm.com>, 
  Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
@@ -71,42 +70,42 @@ To: Misbah Anjum N <misanjum@linux.ibm.com>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3764;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2485;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=SNs+jOeLk7gIMEEAJYWCC2bIpE4D7lFY/byWgaXHaio=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9L3gdmsF0fj1gXJLUgau6PlHPtwmaZVGhZVJr
- 7RaeL40ssGJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafS94AAKCRAzarMzb2Z/
- l0AVD/9VTfN8bZ8SF+VFYMTuSYe37Tm6Li3xK6dbsZF7cICO03jNy++pMQ64Gk0MBCMpnGrr6oi
- TuEP72N4wTgLO18bN6mQoaNJcxkC+n4loA6Bf/b9w1y37VYXomz//Hya1g9d0A1GWcnu6Ozm8ev
- 1cLWL9vSefM0cZmn7LcD0hmWZmM+V7Y/NT6bv4e5+KeVpPvsM+CJn762KuaOrSrW6ASxmMzeRnQ
- l1NPkOG9CgziJIeBevu7rACfdCdACcKeSDBi4HbJTo9FMk3ZgxovJBfgOD1K4hXmY1FEjZwwrNu
- vnazdCyxhViTpExMdfRWC59fJ8jyzCbwYCGlO/Czz9dCLFre94XNd3fBC95kPxUJIqjZy+69LQC
- 9eeHs/imu8qluVimate7KCSVV/VYDSz5QHoYd8xqqrnkkAbhdMyGaUDBEiXf/y+NPNtP0rUml5g
- mzqHalsTX0dM/8SU/YXrJo0RgWoaZxZTC0eEIroPZgvuFvRy/SCNeARrBkIvf/MwwZZIkUtQJax
- m6LfTFkplE0+zM8aQgWDDoKrTOZFwyKCFDFi+VkDxt/jQq6kWigJgUoPdgXbdLytNcsN+YtJkRQ
- X68XtkEr3Sx9tf1xQ2mWUlZnDVsyIhwHzLUEBpxFIuMS4DxBNMJVnYZJJnvQLUuCgjKv4Fi9Ib3
- XRJ3zimqzRMxS3Q==
+ bh=f19g8gb4ZDllUEQ/XuyKLXf2ZZo6fSjdCzNFYP7WVJE=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9L3w5haD4o1Scu4q1iIt+VXHRWISVGaFz6XXb
+ +jtCyfhD2KJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafS98AAKCRAzarMzb2Z/
+ lwL5D/9M+8LTwFG384Y2eqTq6x6iMV1DdLAGoJa4au0OUwOmkvPNKlIb/QGiuScR0R+cNFtIFQz
+ /2zOdPaV/dsU/rkS2I4SQY1jywdOGiathwwBuJHGedNw+MPc1lFfmfX9MLSRhgTNFehxdHhl/5l
+ 6Dohzcq0wfJzPM21W+kepfC1SvCnCS3U1Vqvq03xnGtSpUhYenHrs64kA+XGA0U6MB2XCQr9xCa
+ hbDAjj4/KFg7kNE2ptnkTzXAXWPk6AoQme641LyyDuCBEs9Zk1kGQWC/VPvDOr2e/nYOo3UTWJ6
+ xm9Sk1oAqzhIXIuB32Md8TaSE2mfd5b554H1bf2oF9gzZuqtcHOfJWYr5ElTzSLZQZTKG3Cmzz1
+ 9fvqciOVeBPnxfn4zWQIzF+6wDffAUTEPvL4e7YFeiQAHcG62WQ92xoCbDCmx7ryzmda29PmP1/
+ S425vIs5Zp49P67s+gDSdaVQs88HO23w+HZtJNQddg0OsReDw0YRGQgJdmP95G32xSjDpMaLQ34
+ l6eZuuajKmCchmazoAWs7Pkfesu9jOswGbzLGUhB8Uo8ao8Mu3cddgC5zliV8v9CEnc4a4rIGqx
+ xDbDJYXlaP62JqZey+bUxAphwmL+VzB+Tu1DoBhpTaj4kODefjd13yg+KZ24gQ6BQ7x5W0hzCG+
+ KVet6Clar2GqxvA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: A88E24AD615
+X-Rspamd-Queue-Id: 9446E4AD642
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21333-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21334-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -115,95 +114,73 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-Misbah Anjum reported a use-after-free in cache_check_rcu()
-reached through e_show() while sosreport was reading
-/proc/fs/nfsd/exports on ppc64le.  Two fixes for that report
-landed in v7.0:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-  48db892356d6 ("NFSD: Defer sub-object cleanup in export put callbacks")
-  e7fcf179b82d ("NFSD: Hold net reference for the lifetime of /proc/fs/nfs/exports fd")
+cache_initialize() was introduced by commit 8eab945c5616 ("sunrpc:
+make the cache cleaner workqueue deferrable", 2010) and placed in
+the public include/linux/sunrpc/cache.h from the start, but it
+has never been EXPORT_SYMBOL_GPL'd. The only caller, init_sunrpc()
+in net/sunrpc/sunrpc_syms.c, is built into the same module that
+defines the function, so external modules could not link against
+the symbol even if they tried. The public declaration has been a
+stale-public hygiene leak ever since.
 
-The original e_show() repro is now fixed.  However, the same
-sosreport workload still reproduces a closely related fault on
-post-v7.0 mainline (Misbah, ppc64le) and on master.20260424
-(internal report, aarch64).  In both cases the fault is in
-cache_check_rcu() reached through c_show() rather than e_show(),
-and the cache_head pointer is plain garbage:
+Relocate the declaration to net/sunrpc/sunrpc.h alongside other
+sunrpc-internal helpers and include that header from
+net/sunrpc/cache.c so the compiler enforces prototype consistency
+at the definition site. The public include/linux/sunrpc/cache.h
+now reflects the actual external API surface.
 
-  pc : cache_check_rcu+0x40 [sunrpc]
-  lr : c_show+0x60 [sunrpc]
-  ...faulting on h->flags off h = 0x0000000200000000
+No functional change.
 
-c_show() is the generic show callback used by
-/proc/net/rpc/<cd>/content for every per-net cache_detail
-(auth.unix.ip, auth.unix.gid, nfsd.fh, nfsd.export).  Two
-bugs combine in that path:
-
-1. cache_unregister_net() / cache_destroy_net() free cd and
-   cd->hash_table synchronously when the namespace exits.  The
-   /proc/net/rpc/.../content open path takes only a module
-   reference, so a fd kept open across a netns exit walks a
-   freed hash_table and returns garbage cache_head pointers.
-   This is the same hazard that e7fcf179b82d closed for the
-   /proc/fs/nfs/exports file alone.
-
-2. ip_map_put() drops auth_domain_put() before kfree_rcu(), so
-   sub-objects can be freed before the RCU grace period -- the
-   same hazard that 48db892356d6 fixed for svc_export_put() and
-   expkey_put().  unix_gid_put() does not have this bug
-   structurally (its put_group_info() runs inside the call_rcu()
-   callback) but it uses a separate idiom from the other three
-   caches.
-
-This series replaces the v1 narrow fixes with shared
-infrastructure that covers all four cache_detail .put paths
-and all three per-cache file types:
-
-Patch 1 hoists nfsd_export_wq up to the sunrpc layer as
-sunrpc_cache_wq, exposed through sunrpc_cache_queue_release()
-and sunrpc_cache_drain() so all four put callbacks share one
-workqueue and one drain primitive.
-
-Patch 2 converts ip_map_put() to the queue_rcu_work() pattern,
-moving auth_domain_put() into a deferred ip_map_release() that
-runs after the RCU grace period.
-
-Patch 3 unifies unix_gid_put() onto the same pattern for
-consistency (not a bug fix on its own).
-
-Patch 4 takes a get_net(cd->net) in content_open(), cache_open(),
-and open_flush() and drops it in the matching release helpers,
-so cache_destroy_net() cannot run while a sunrpc cache fd is
-open.
-
-Series has been compile-tested only.
-
+Assisted-by: Claude:claude-opus-4-7[1m]
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
-Chuck Lever (6):
-      SUNRPC: Move cache_initialize() declaration to sunrpc-private header
-      SUNRPC: Provide a shared workqueue for cache release callbacks
-      SUNRPC: Defer ip_map sub-object cleanup past RCU grace period
-      SUNRPC: Use shared release pattern for the unix_gid cache
-      SUNRPC: Hold cd->net for the lifetime of cache files
-      NFSD: Convert nfsd_export_shutdown() to sunrpc_cache_destroy_net()
+ include/linux/sunrpc/cache.h | 1 -
+ net/sunrpc/cache.c           | 1 +
+ net/sunrpc/sunrpc.h          | 1 +
+ 3 files changed, 2 insertions(+), 1 deletion(-)
 
- fs/nfsd/export.c             | 45 ++--------------------
- fs/nfsd/export.h             |  2 -
- fs/nfsd/nfsctl.c             |  8 +---
- include/linux/sunrpc/cache.h |  3 +-
- net/sunrpc/cache.c           | 90 ++++++++++++++++++++++++++++++++++++++++++--
- net/sunrpc/sunrpc.h          |  2 +
- net/sunrpc/sunrpc_syms.c     | 23 ++++++-----
- net/sunrpc/svcauth_unix.c    | 46 ++++++++++++----------
- 8 files changed, 135 insertions(+), 84 deletions(-)
----
-base-commit: f3a313ecd1fdab1f5da119db355363b13af6fcac
-change-id: 20260430-cache-uaf-fix-a13000f67c37
+diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
+index 2735c332ddb7..83c88dc82e69 100644
+--- a/include/linux/sunrpc/cache.h
++++ b/include/linux/sunrpc/cache.h
+@@ -237,7 +237,6 @@ extern int cache_check(struct cache_detail *detail,
+ extern void cache_flush(void);
+ extern void cache_purge(struct cache_detail *detail);
+ #define NEVER (0x7FFFFFFF)
+-extern void __init cache_initialize(void);
+ extern int cache_register_net(struct cache_detail *cd, struct net *net);
+ extern void cache_unregister_net(struct cache_detail *cd, struct net *net);
+ 
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index 391037f15292..488a14961b19 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -39,6 +39,7 @@
+ #include "netns.h"
+ #include "netlink.h"
+ #include "fail.h"
++#include "sunrpc.h"
+ 
+ #define	 RPCDBG_FACILITY RPCDBG_CACHE
+ 
+diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
+index e3c6e3b63f0b..7fa35ee8f9a4 100644
+--- a/net/sunrpc/sunrpc.h
++++ b/net/sunrpc/sunrpc.h
+@@ -41,6 +41,7 @@ struct svc_rqst;
+ int rpc_clients_notifier_register(void);
+ void rpc_clients_notifier_unregister(void);
+ void auth_domain_cleanup(void);
++void __init cache_initialize(void);
+ void svc_sock_update_bufs(struct svc_serv *serv);
+ enum svc_auth_status svc_authenticate(struct svc_rqst *rqstp);
+ #endif /* _NET_SUNRPC_SUNRPC_H */
 
-Best regards,
---  
-Chuck Lever
+-- 
+2.53.0
 
 
