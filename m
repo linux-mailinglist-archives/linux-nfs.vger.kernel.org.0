@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-21351-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21352-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EPnKF5oI9mk3RwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21351-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	id WCZIDJoI9mlORwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21352-lists+linux-nfs=lfdr.de@vger.kernel.org>)
 	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:22:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15B4C4B25D5
-	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:22:18 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 750D24B25D4
+	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:22:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7FF5F301916B
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2026 14:21:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 16E493005150
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2026 14:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CBB433B970;
-	Sat,  2 May 2026 14:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0F933B970;
+	Sat,  2 May 2026 14:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IL4KlJwn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+BAYZ1N"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FA7299929;
-	Sat,  2 May 2026 14:21:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D8433AD81;
+	Sat,  2 May 2026 14:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777731702; cv=none; b=Xg/jxsNVNst5hce5RE0CrVSMc+TsBsPo+6u4vzlD6X5Xg8b5msr9um0DCVKChhBlKvcTVheLzeGzv3Jbc0ug6JU2NMhLjnViNMio26PMtmSMp0Jh2iZeLEHgoK4izyofBz+rxnVmVwzvUf1ihemGPFOgwg34N+ljIEGys/4Wm1w=
+	t=1777731708; cv=none; b=UNMAHuhFyDeKFw8Wua3BdBvU5LpJiELYlxO0PJv8Q9H1ODpbmETMqDCbMCT13KEo7FwXMivu/saD0A73nZvr3bfA0EGhNYpzNljduxDoBjSM9bs3GNrueyfrmNiWxO3GHA5B8pkusi0Riu4ZEQd0vt06rR8ReOlHGH5//ea04Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777731702; c=relaxed/simple;
-	bh=Jr2vXTu8AWi0WLbHX7TZXwTWNGI+4Lcw2ajtKVSihdo=;
+	s=arc-20240116; t=1777731708; c=relaxed/simple;
+	bh=+3MOBq8tIY5WA12oHUqvFyZTiNAU0Ok39mLnTTLF1eI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R44VjDcEPYH1MbnlmqfuvE0qCZNQaqVZIbZXh0LCAgh7D0pVDFqyMuJvi5wHAaQbyv7i0KjpWxq/K1XN9JOlEXY+LC49qdhMzqE4sOo6B1zV485WTcKcSiTTk1wF1S0jzmz+EgUMHRcGuMpIGqJlSJUXM2Pz9SX5jVgfuHhw+Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IL4KlJwn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E1EC2BCB3;
-	Sat,  2 May 2026 14:21:36 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=V9vzimvab1NPwN7dQOHtorgZq+xUk/tIyymRa2oiXtvkq0THnYDmJioGKqDS0sB/TfvEobyig/arjrZjk8oaScKTP1kIfz4bCTCQx594ghBqFXFSwhG8EfB0Dn3s4qsYyp1YSJLpaCrkxr1lfcWk5lvz3IQg/DJjQRHxFiIMhHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+BAYZ1N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3C5C19425;
+	Sat,  2 May 2026 14:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777731701;
-	bh=Jr2vXTu8AWi0WLbHX7TZXwTWNGI+4Lcw2ajtKVSihdo=;
+	s=k20201202; t=1777731707;
+	bh=+3MOBq8tIY5WA12oHUqvFyZTiNAU0Ok39mLnTTLF1eI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IL4KlJwn2AHjnH6JLmqB8a/9HPwdh9jM7M4lM7LB8f6UCxtqoiWnoGiWDaQu0xDS7
-	 3b+ldLWhH6AoQDYKHks+/cwmG+A9KpbHL1v6HMl6AOAuKNOjhTxHzc7n8TiCBegKCD
-	 jRatixPGX7UObX+yWwXD9429kGkjWVHONbxg1+MYah98HPoUQNcWmYwIVuJwilLKCq
-	 8E9qB9+VOhFoer/nxjSeZz19a8HISsaCTH0APtyKcotnUkV1wKrPgGdaGELvQKjdso
-	 O0v7SSeyqUHHS5X117KsMF1sj38B3469o2tsU9DYmKMDfnSISpzLl4UZQMHTvu+8tG
-	 KToyxrpT4f6lw==
+	b=V+BAYZ1NA3rmiLjK52LlHGI017V2rmw4FyiFpAEuPnWNAzLV/BklFDv+0ndD/6KMy
+	 C69l8rQXa0qc232YT+0IOv5GI56arFXXf2EEW7bMFRvC3Z4GBtj8YsQ0ovUM5PBLmd
+	 JRmgC2VOpr85pPqT4Vi7J5/s2Giagkk+yQjvsAN4UvxeHheoF+y7y0vxUNa90sIbSu
+	 6nIkOqTLIfbQyISce5Kr3iDivS4uAVkQ3DeQMQ5e9h1TU1IwrDxJSqzHuRsP2TTzDC
+	 aaOYl7BVYC0NUDGM7fj/CK2TbGPQqtrxhZTzd71pHRzpqHmRafFZ1EFj1YDJKaM6As
+	 pfRbQCGoLVuxg==
 From: Chuck Lever <cel@kernel.org>
-Date: Sat, 02 May 2026 10:20:50 -0400
-Subject: [PATCH v13 05/15] ntfs3: Implement fileattr_get for case
- sensitivity
+Date: Sat, 02 May 2026 10:20:51 -0400
+Subject: [PATCH v13 06/15] hfs: Implement fileattr_get for case sensitivity
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260502-case-sensitivity-v13-5-aa853140311f@oracle.com>
+Message-Id: <20260502-case-sensitivity-v13-6-aa853140311f@oracle.com>
 References: <20260502-case-sensitivity-v13-0-aa853140311f@oracle.com>
 In-Reply-To: <20260502-case-sensitivity-v13-0-aa853140311f@oracle.com>
 To: Al Viro <viro@zeniv.linux.org.uk>, 
@@ -75,35 +74,35 @@ Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
  Chuck Lever <chuck.lever@oracle.com>, 
  Roland Mainz <roland.mainz@nrubsig.org>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3431;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2557;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=UmPMiHkroOwooAuYrGTrmJ1qLD7CrIqd1OwFLzWWmkc=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9ghQ9K/sC9LWtK6pwbsZRS8OTBcf+CS39iSk7
- Nq08hmtu0+JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafYIUAAKCRAzarMzb2Z/
- lxoFD/0bz3UIr03DhE8clH6SXUPl/ZjBHJpY/0YML8Hm999u3SXTGv22OBcRqIfFDHc98wEvZJ9
- P0JKQHwESPE5ARbuFr6qNbSvQ4I5crWuKVHugQvfYCBlZoW5M6mkb+spsJQyO5C5svtwOZFHDGF
- 8wTTKgZkfMA6fkrZ0A5YIjAhvpmfwPcnue7dCNoNHknqp1FJey/W25NX/K3BGwN2G1B416WclyT
- WALnLxgBEfKExyOEczmLkeYtM8dpC0UIdeq8pChHq8cIPVZTHcuy0uIPCul5H0Sn1TrUxA0b2qw
- 7Q7SPhx5pKMeQn/zpw7wyHGSWnKvRU06EURqhe5W349pJMNpoA/cBLB1RWiKCS1TbJPYqeLVyoC
- SlNuTD0G6WFxoc1kZY216Bbw35ZJMKlRVa5+wPxFuIJr2JupfWev9HFfBHn6H/kBpIQ7GYKDVz5
- +pGeqylvNWHHd0r1eUqvziaYJPveY4ez40J1OQGnUM60vQEH/oxQNHlBCyXPU4/fCQxqG3E1eRz
- b39WmOYUGQf8cd92747uFHrSjBHIYfviCqRnkEGPpArursdTwNrnt7OXLp1gpvTZmSNmE/WAAe+
- v5AMZ1m+CQu6GCdjkOQTVp265H/0i3OXnKN//srxKbNZ1PDnblkfKmceZwl4ZaipUMxhhYTOy/M
- YFHRYJOpCkIgkcg==
+ bh=2Xqe+DnVGNfulHUCzpURt2jTiqbh233GQupN+nsg0Mc=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9ghQ1F2LuRfI+wJoJda72084qSBTHeEbEJZrV
+ vWjO3v+igGJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafYIUAAKCRAzarMzb2Z/
+ l2b0D/4lJDck+X5c7GEdQg3CzSN/Hrj8Rb/bYN3MswvFTuVU9mxcMgaXy9foEzRaRjYdVCnqrRp
+ H09KFeqd+f1/zX3w5Hugvt0PJSmsL51Il8ss2eiqoYdeFz+8CefSE+ox7FJT/ZnMkYH7dgpzTsG
+ iY749krRyYTob3TzvpXllZuactlV5E0jPnYP1a/JR+SbLh+IbDgb6OTsCxl+PXbD8iWiu5xIjLy
+ 4oB6A0qYzTalIXpUrqb7bRAy8/Pi/mp++e9KR+sJrF7CDWKUjCAKR1j4Aj+IFVuYYb8W5RHRuLS
+ 87OTZEyLSVs60PIzw9sAneZrfWN6Prl4fc2OFFeCdJW7HBBJzDGfEpjM3JwPPFsa5PWYkeWp6yR
+ HE8jY8iUx9DnclTSzFIrG/ytxX6v7IdsKYzgC7fYmokAWx1cZIF9l8UZhPF5FgIx1HLONT4XELR
+ QhYOvHrIVzp7Kgx+gLDIUvsNTuMtuDVZT54sNBxurgR9wWrWiMLHIHJ9BxnVQGUwdYjvPOTef93
+ GDykLA/GaMm7jVp0We5fWyRyEOs7CFl/11F71jqKx3JIx4jXlo6vw+JNGqmTXUr+58CeBpnE8MQ
+ uqsb49sTWHqcS8oetmV+s8g8kQt6Z9XCfQzsBtRgzfkEqcsNdRNIlMuEGyxyiX3aGDOTGhISXcN
+ vad1rdHefQvad7Q==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 15B4C4B25D5
+X-Rspamd-Queue-Id: 750D24B25D4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21351-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21352-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -119,114 +118,84 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nrubsig.org:email,oracle.com:mid,oracle.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nrubsig.org:email,dubeyko.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Report NTFS case sensitivity behavior via the FS_XFLAG_CASEFOLD
-flag. NTFS always preserves case at rest.
+Report HFS case sensitivity behavior via the FS_XFLAG_CASEFOLD
+flag. HFS is always case-insensitive (using Mac OS Roman case
+folding) and always preserves case at rest.
 
+Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
 Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/ntfs3/file.c    | 29 +++++++++++++++++++++++++++++
- fs/ntfs3/inode.c   |  1 +
- fs/ntfs3/namei.c   |  2 ++
- fs/ntfs3/ntfs_fs.h |  1 +
- 4 files changed, 33 insertions(+)
+ fs/hfs/dir.c    |  1 +
+ fs/hfs/hfs_fs.h |  2 ++
+ fs/hfs/inode.c  | 14 ++++++++++++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
-index b041639ab406..ad9350d7fc3f 100644
---- a/fs/ntfs3/file.c
-+++ b/fs/ntfs3/file.c
-@@ -180,6 +180,34 @@ long ntfs_compat_ioctl(struct file *filp, u32 cmd, unsigned long arg)
- }
- #endif
+diff --git a/fs/hfs/dir.c b/fs/hfs/dir.c
+index f5e7efe924e7..c4c6e1623f55 100644
+--- a/fs/hfs/dir.c
++++ b/fs/hfs/dir.c
+@@ -328,4 +328,5 @@ const struct inode_operations hfs_dir_inode_operations = {
+ 	.rmdir		= hfs_remove,
+ 	.rename		= hfs_rename,
+ 	.setattr	= hfs_inode_setattr,
++	.fileattr_get	= hfs_fileattr_get,
+ };
+diff --git a/fs/hfs/hfs_fs.h b/fs/hfs/hfs_fs.h
+index ac0e83f77a0f..1b23448c9a48 100644
+--- a/fs/hfs/hfs_fs.h
++++ b/fs/hfs/hfs_fs.h
+@@ -177,6 +177,8 @@ extern int hfs_get_block(struct inode *inode, sector_t block,
+ extern const struct address_space_operations hfs_aops;
+ extern const struct address_space_operations hfs_btree_aops;
  
-+/*
-+ * ntfs_fileattr_get - inode_operations::fileattr_get
-+ */
-+int ntfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
++struct file_kattr;
++int hfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa);
+ int hfs_write_begin(const struct kiocb *iocb, struct address_space *mapping,
+ 		    loff_t pos, unsigned int len, struct folio **foliop,
+ 		    void **fsdata);
+diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
+index 89b33a9d46d5..f41cc261684d 100644
+--- a/fs/hfs/inode.c
++++ b/fs/hfs/inode.c
+@@ -18,6 +18,7 @@
+ #include <linux/uio.h>
+ #include <linux/xattr.h>
+ #include <linux/blkdev.h>
++#include <linux/fileattr.h>
+ 
+ #include "hfs_fs.h"
+ #include "btree.h"
+@@ -699,6 +700,18 @@ static int hfs_file_fsync(struct file *filp, loff_t start, loff_t end,
+ 	return ret;
+ }
+ 
++int hfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
 +{
-+	struct inode *inode = d_inode(dentry);
-+	struct ntfs_sb_info *sbi = inode->i_sb->s_fs_info;
-+
-+	/* Avoid any operation if inode is bad. */
-+	if (unlikely(is_bad_ni(ntfs_i(inode))))
-+		return -EINVAL;
-+
 +	/*
-+	 * NTFS preserves case (the default). Case sensitivity depends on
-+	 * mount options: with "nocase", NTFS is case-insensitive;
-+	 * otherwise it is case-sensitive.
++	 * HFS compares filenames using Mac OS Roman case folding, so
++	 * lookup is always case-insensitive. Names are stored on disk
++	 * with case intact; CASENONPRESERVING stays clear.
 +	 */
-+	if (sbi->options->nocase) {
-+		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
-+		fa->flags |= FS_CASEFOLD_FL;
-+	}
-+	if (inode->i_flags & S_IMMUTABLE) {
-+		fa->fsx_xflags |= FS_XFLAG_IMMUTABLE;
-+		fa->flags |= FS_IMMUTABLE_FL;
-+	}
++	fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
++	fa->flags |= FS_CASEFOLD_FL;
 +	return 0;
 +}
 +
- /*
-  * ntfs_getattr - inode_operations::getattr
-  */
-@@ -1547,6 +1575,7 @@ const struct inode_operations ntfs_file_inode_operations = {
- 	.get_acl	= ntfs_get_acl,
- 	.set_acl	= ntfs_set_acl,
- 	.fiemap		= ntfs_fiemap,
-+	.fileattr_get	= ntfs_fileattr_get,
+ static const struct file_operations hfs_file_operations = {
+ 	.llseek		= generic_file_llseek,
+ 	.read_iter	= generic_file_read_iter,
+@@ -715,4 +728,5 @@ static const struct inode_operations hfs_file_inode_operations = {
+ 	.lookup		= hfs_file_lookup,
+ 	.setattr	= hfs_inode_setattr,
+ 	.listxattr	= generic_listxattr,
++	.fileattr_get	= hfs_fileattr_get,
  };
- 
- const struct file_operations ntfs_file_operations = {
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index 42af1abe17f8..a5ff04c2efd3 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -2095,6 +2095,7 @@ const struct inode_operations ntfs_link_inode_operations = {
- 	.get_link	= ntfs_get_link,
- 	.setattr	= ntfs_setattr,
- 	.listxattr	= ntfs_listxattr,
-+	.fileattr_get	= ntfs_fileattr_get,
- };
- 
- const struct address_space_operations ntfs_aops = {
-diff --git a/fs/ntfs3/namei.c b/fs/ntfs3/namei.c
-index b2af8f695e60..eb241d7796ba 100644
---- a/fs/ntfs3/namei.c
-+++ b/fs/ntfs3/namei.c
-@@ -518,6 +518,7 @@ const struct inode_operations ntfs_dir_inode_operations = {
- 	.getattr	= ntfs_getattr,
- 	.listxattr	= ntfs_listxattr,
- 	.fiemap		= ntfs_fiemap,
-+	.fileattr_get	= ntfs_fileattr_get,
- };
- 
- const struct inode_operations ntfs_special_inode_operations = {
-@@ -526,6 +527,7 @@ const struct inode_operations ntfs_special_inode_operations = {
- 	.listxattr	= ntfs_listxattr,
- 	.get_acl	= ntfs_get_acl,
- 	.set_acl	= ntfs_set_acl,
-+	.fileattr_get	= ntfs_fileattr_get,
- };
- 
- const struct dentry_operations ntfs_dentry_ops = {
-diff --git a/fs/ntfs3/ntfs_fs.h b/fs/ntfs3/ntfs_fs.h
-index bbf3b6a1dcbe..41db22d652c4 100644
---- a/fs/ntfs3/ntfs_fs.h
-+++ b/fs/ntfs3/ntfs_fs.h
-@@ -529,6 +529,7 @@ bool dir_is_empty(struct inode *dir);
- extern const struct file_operations ntfs_dir_operations;
- 
- /* Globals from file.c */
-+int ntfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa);
- int ntfs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 		 struct kstat *stat, u32 request_mask, u32 flags);
- int ntfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
 
 -- 
 2.53.0
