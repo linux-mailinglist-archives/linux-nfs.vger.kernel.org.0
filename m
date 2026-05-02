@@ -1,283 +1,217 @@
-Return-Path: <linux-nfs+bounces-21344-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21345-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iPJkOVsV9WkEIQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21344-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 23:04:27 +0200
+	id 3XtoNbtq9WkWLAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21345-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 05:08:43 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48EA94AFA72
-	for <lists+linux-nfs@lfdr.de>; Fri, 01 May 2026 23:04:26 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DF744B0BF1
+	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 05:08:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D7B3A3015732
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 May 2026 21:03:28 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A2D393006B57
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2026 03:08:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D531423145;
-	Fri,  1 May 2026 21:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5E5C2882B7;
+	Sat,  2 May 2026 03:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="E+YIy6ao"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJqBkoC0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4365E36B046
-	for <linux-nfs@vger.kernel.org>; Fri,  1 May 2026 21:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BF11DD525
+	for <linux-nfs@vger.kernel.org>; Sat,  2 May 2026 03:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777669408; cv=none; b=GQz/MEb+So2rZ6jmVg8Pfmjq2iHogk0DBYINiE5lHzjgd+gkJEjR15i5ZnaMrosd6LlgM17fe1ZXFyMUeP3v7z/w6Qi3LGzGHbNLHdAjgF/G1uCSpnpKSGGLV91+Z22mmC+z2AAM1NszP6nQOYC2B5zKndaPeKViMCXE6sHHC5I=
+	t=1777691319; cv=none; b=rKcGO2Rt6fyOqpUB7FB08BuXuifVjSqYtwfBYHrNP6mwd5G0BA4WW7VVjSCvXZnKxNQYUglqZxZdUWiJLu+0DMfZDiF90iSuK4FS5NEf19JEki0scXS6CAF13kkSCrO9Mt9xvtu3XxesMWB9wES60WKgMw4WQ7Rir5ySWr3ZJ2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777669408; c=relaxed/simple;
-	bh=KZc/Zsl78fson1OjjF58aPvLDihNwtlt6jpLvYExU44=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Scsio3tdGWexiSXOon/g9Jd6S9ORq9m1c2e2XWukmHYZgrZLu2/a52Ng9+iZ5tU9zgDp9GEUPONaIZ2elSTiE46YZ1ucf0zcb3xkHKmZC2iunuKzKsGjTkJMCkMZHQHYlFEnt4P9mbM7QV90hNMhWM6suWqVuf8vhf44h11qDKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=E+YIy6ao; arc=none smtp.client-ip=131.169.56.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
-	by smtp-o-3.desy.de (Postfix) with ESMTP id EBB9511F92E
-	for <linux-nfs@vger.kernel.org>; Fri,  1 May 2026 22:56:14 +0200 (CEST)
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id 4E7B113F648
-	for <linux-nfs@vger.kernel.org>; Fri,  1 May 2026 22:56:07 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 4E7B113F648
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1777668967; bh=jJ5IHXzys4V7exX5ZiYZno9IH3XdJ+rc84fkzm+0b1o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E+YIy6aoyZyk1IEGFz2mdIVJIqnEQFPkpMHQXlHHevc2pokipqod9Mn9usBxuWam7
-	 I2IU7nmlh/Oc0DZWXKdjHTYvG4nYXMU+qDJNchv/CdiSgWPCyfWEd7xt6aVif7vKkz
-	 N2+faYMTV/vIdnW5TaiZw+k1H7VhV0+Lo3Jc9cRQ=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
-	by smtp-buf-2.desy.de (Postfix) with ESMTP id 43A08120043;
-	Fri,  1 May 2026 22:56:07 +0200 (CEST)
-Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [194.95.235.47])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 3A8BC40044;
-	Fri,  1 May 2026 22:56:07 +0200 (CEST)
-Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [131.169.56.82])
-	by b1722.mx.srv.dfn.de (Postfix) with ESMTP id 4A5C4160058;
-	Fri,  1 May 2026 22:56:06 +0200 (CEST)
-Received: from nairi.fritz.box (VPN0289.desy.de [131.169.254.34])
-	by smtp-intra-1.desy.de (Postfix) with ESMTP id 1402380046;
-	Fri,  1 May 2026 22:56:06 +0200 (CEST)
-From: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-To: steved@redhat.com
-Cc: linux-nfs@vger.kernel.org,
-	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-Subject: [PATCH] nfs-utils: add option to display throughput in MB/s
-Date: Fri,  1 May 2026 22:56:04 +0200
-Message-ID: <20260501205604.653238-1-tigran.mkrtchyan@desy.de>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1777691319; c=relaxed/simple;
+	bh=sFyrLC9upT0uJJdxa+5HzcrCgFXbBVeGIvPFfFdxypc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XYBXxxTcECIIGZSnz//I4+OpURMK3y6mOubqTg6QvLt+IAKbeOZBVJmCdc2FFDLaVugk54tZ3TvjrALo8+e4/mVBSF8nP9MDQJkxIdVT2oi/XtxvuFcv/ICTMgFTORG55kvvSA0PQw9XqxsGVm6n7JrfuKnxHRe78CVwVKmWoUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJqBkoC0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FCE2C2BCB4;
+	Sat,  2 May 2026 03:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777691319;
+	bh=sFyrLC9upT0uJJdxa+5HzcrCgFXbBVeGIvPFfFdxypc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=fJqBkoC0ndlpbtg+JF4MbJdw4W1RfoJ1DtFmLtR9HyX0u6RwuP8q787tziZdVIaER
+	 xjSyOk6QC4BBbV61sV1y+EnPefALBldU/6ibHEfiWCtbxdVi0Om1kPjFuKz+yJAhN7
+	 N9Oh18aDZG1uf+KyZXrhiV/tS1m66eLsOiD0P1VJCPc9fYc9clYmYQRX37yOVNfc2a
+	 92nWrnRS9/DeBkA1MWK9WzGr1or7LWL6KBoiw2h1Oeg0flJoZWmAX89Eh+hf1D2yR2
+	 rxHN+g6FmwHndsLBQwA/A/cGfejk1ERaEDrW8Rh3aX4HhJbOYhjW0mpKj6LhCKHrnU
+	 ubbFjQGZt2FvA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 09971F4006C;
+	Fri,  1 May 2026 23:08:38 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 01 May 2026 23:08:38 -0400
+X-ME-Sender: <xms:tWr1aX4L3PicQwoZYbyUe-2RLzJ8GsIstLtFYmw5Likm3siT6oiYPQ>
+    <xme:tWr1aXvsul8-9jVQ3mEvNV7Wip1h48KSrXq2eSFlz-T2pxChDEI-VTUf4n0Yah5PN
+    xjUR1W4uAwMkGea4xI__u3HBn9A-eSIfcOZg_lLqUHrVmJeskZ5ito>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeludeliecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epgffhgeeutdeiieevuefgvedtjeefudekvefggefguefgtefgledtteeuleelleetnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehsrghgihesghhrihhmsggvrhhgrdhmvgdprhgtphhtthhopehkvghrnhgvlhdqth
+    hlshdqhhgrnhgushhhrghkvgeslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthho
+    pegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehsmhgrhi
+    hhvgifsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:tWr1adHttIMD6zoUP30sRf_rxl6_UQFmErVThEth1b3C-FDwbVlm3Q>
+    <xmx:tWr1abRhWyCjjVw68B_jybBi7c1qOHh7HYZ8toNNS4bC5I1qF-mG_Q>
+    <xmx:tWr1aauZ2WCtPOfipMazocNsJaCuN0jNtrdzAV-rIj8Gk57uqfwP1w>
+    <xmx:tWr1aTJRy6df7lO6EJ0zdqEbjXnK_KyhzDmvkH0hkKuU2NXr7imNaQ>
+    <xmx:tWr1afnYX5sfkVZrISTUiV8zbqRlbZ0bgvQUiMYEJoR6h2FTLnGDERFN>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CCD52780070; Fri,  1 May 2026 23:08:37 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 48EA94AFA72
+X-ThreadId: Ak5ktnwSWV1c
+Date: Fri, 01 May 2026 23:08:15 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Scott Mayhew" <smayhew@redhat.com>
+Cc: "Sagi Grimberg" <sagi@grimberg.me>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+ kernel-tls-handshake@lists.linux.dev
+Message-Id: <7c6516be-adb9-4d0d-ba7c-fa107fd4a865@app.fastmail.com>
+In-Reply-To: <afUKzeUYPhb97DX4@aion>
+References: <fd4aaf4e-b1b7-4ca2-bc93-955c31fab317@grimberg.me>
+ <92a53963-1e4b-42eb-af81-6be9f63f9e43@app.fastmail.com>
+ <afUKzeUYPhb97DX4@aion>
+Subject: Re: Breakage in ktls-utils with nfs keyring?
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 6DF744B0BF1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-1.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[desy.de,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[desy.de:s=default];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21345-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21344-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[3];
-	DKIM_TRACE(0.00)[desy.de:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tigran.mkrtchyan@desy.de,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,app.fastmail.com:mid];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,desy.de:email,desy.de:dkim,desy.de:mid];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_SEVEN(0.00)[9]
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_SEVEN(0.00)[7]
 
-Nowadays,the network bandwidth in kB/s is quite a large number to read.
-Thus, let nfsiostat display it in MB/s if requested.
 
-Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
----
- tools/nfs-iostat/nfs-iostat.py | 53 ++++++++++++++++++++++------------
- tools/nfs-iostat/nfsiostat.man | 11 ++++---
- 2 files changed, 42 insertions(+), 22 deletions(-)
 
-diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
-index 69d24a11..af04aac5 100755
---- a/tools/nfs-iostat/nfs-iostat.py
-+++ b/tools/nfs-iostat/nfs-iostat.py
-@@ -327,7 +327,7 @@ class DeviceData:
-             print()
-             print('%d congestion waits' % congestionwaits)
- 
--    def __print_rpc_op_stats(self, op, sample_time):
-+    def __print_rpc_op_stats(self, op, sample_time, use_mb=False):
-         """Print generic stats for one RPC op
-         """
-         if op not in self.__rpc_data:
-@@ -343,9 +343,19 @@ class DeviceData:
-         if len(rpc_stats) >= 9:
-             errs = float(rpc_stats[8])
- 
-+        # scale to MB if requested
-+        if use_mb:
-+            throughput = kilobytes / 1024.0
-+            throughput_label = 'MB/s'
-+            per_op_label = 'MB/op'
-+        else:
-+            throughput = kilobytes
-+            throughput_label = 'kB/s'
-+            per_op_label = 'kB/op'
-+
-         # prevent floating point exceptions
-         if ops != 0:
--            kb_per_op = kilobytes / ops
-+            unit_per_op = throughput / ops
-             retrans_percent = (retrans * 100) / ops
-             rtt_per_op = rtt / ops
-             exe_per_op = exe / ops
-@@ -353,7 +363,7 @@ class DeviceData:
-             if len(rpc_stats) >= 9:
-                 errs_percent = (errs * 100) / ops
-         else:
--            kb_per_op = 0.0
-+            unit_per_op = 0.0
-             retrans_percent = 0.0
-             rtt_per_op = 0.0
-             exe_per_op = 0.0
-@@ -364,8 +374,8 @@ class DeviceData:
-         op += ':'
-         print(format(op.lower(), '<16s'), end='')
-         print(format('ops/s', '>8s'), end='')
--        print(format('kB/s', '>16s'), end='')
--        print(format('kB/op', '>16s'), end='')
-+        print(format(throughput_label, '>16s'), end='')
-+        print(format(per_op_label, '>16s'), end='')
-         print(format('retrans', '>16s'), end='')
-         print(format('avg RTT (ms)', '>16s'), end='')
-         print(format('avg exe (ms)', '>16s'), end='')
-@@ -375,8 +385,8 @@ class DeviceData:
-         print()
- 
-         print(format((ops / sample_time), '>24.3f'), end='')
--        print(format((kilobytes / sample_time), '>16.3f'), end='')
--        print(format(kb_per_op, '>16.3f'), end='')
-+        print(format((throughput / sample_time), '>16.3f'), end='')
-+        print(format(unit_per_op, '>16.3f'), end='')
-         retransmits = '{0:>10.0f} ({1:>3.1f}%)'.format(retrans, retrans_percent).strip()
-         print(format(retransmits, '>16'), end='')
-         print(format(rtt_per_op, '>16.3f'), end='')
-@@ -395,9 +405,11 @@ class DeviceData:
-             sample_time = 1;
-         return (sends / sample_time)
- 
--    def display_iostats(self, sample_time, which):
-+    def display_iostats(self, sample_time, options):
-         """Display NFS and RPC stats in an iostat-like way
-         """
-+        which = options.which
-+        use_mb = options.megabytes
-         sends = float(self.__rpc_data['rpcsends'])
-         if sample_time == 0:
-             sample_time = float(self.__nfs_data['age'])
-@@ -423,21 +435,21 @@ class DeviceData:
-         print()
- 
-         if which == 0:
--            self.__print_rpc_op_stats('READ', sample_time)
--            self.__print_rpc_op_stats('WRITE', sample_time)
-+            self.__print_rpc_op_stats('READ', sample_time, use_mb)
-+            self.__print_rpc_op_stats('WRITE', sample_time, use_mb)
-         elif which == 1:
--            self.__print_rpc_op_stats('GETATTR', sample_time)
--            self.__print_rpc_op_stats('ACCESS', sample_time)
-+            self.__print_rpc_op_stats('GETATTR', sample_time, use_mb)
-+            self.__print_rpc_op_stats('ACCESS', sample_time, use_mb)
-             self.__print_attr_cache_stats(sample_time)
-         elif which == 2:
--            self.__print_rpc_op_stats('LOOKUP', sample_time)
--            self.__print_rpc_op_stats('READDIR', sample_time)
-+            self.__print_rpc_op_stats('LOOKUP', sample_time, use_mb)
-+            self.__print_rpc_op_stats('READDIR', sample_time, use_mb)
-             if 'READDIRPLUS' in self.__rpc_data:
--                self.__print_rpc_op_stats('READDIRPLUS', sample_time)
-+                self.__print_rpc_op_stats('READDIRPLUS', sample_time, use_mb)
-             self.__print_dir_cache_stats(sample_time)
-         elif which == 3:
--            self.__print_rpc_op_stats('READ', sample_time)
--            self.__print_rpc_op_stats('WRITE', sample_time)
-+            self.__print_rpc_op_stats('READ', sample_time, use_mb)
-+            self.__print_rpc_op_stats('WRITE', sample_time, use_mb)
-             self.__print_page_stats(sample_time)
- 
-         sys.stdout.flush()
-@@ -500,7 +512,7 @@ def print_iostat_summary(old, new, devices, time, options):
- 
-     count = 1
-     for device in devices:
--        display_stats[device].display_iostats(time, options.which)
-+        display_stats[device].display_iostats(time, options)
- 
-         count += 1
-         if (count > options.list):
-@@ -585,6 +597,11 @@ client are listed.
-                             type="int",
-                             dest="list",
-                             help="only print stats for first LIST mount points")
-+    displaygroup.add_option('-m', '--megabytes',
-+                            action="store_true",
-+                            dest="megabytes",
-+                            default=False,
-+                            help="display throughput in megabytes per second (MB/s) instead of kilobytes per second (kB/s)")
-     parser.add_option_group(displaygroup)
- 
-     (options, args) = parser.parse_args(sys.argv)
-diff --git a/tools/nfs-iostat/nfsiostat.man b/tools/nfs-iostat/nfsiostat.man
-index 104c7ab4..4f24318d 100644
---- a/tools/nfs-iostat/nfsiostat.man
-+++ b/tools/nfs-iostat/nfsiostat.man
-@@ -56,16 +56,16 @@ This is the length of the backlog queue.
- .RE
- .RE
- .RS 8
--- \fBkB/s\fR
-+- \fBkB/s (MB/s)\fR
- .RS
--This is the number of kB written/read per second.
-+This is the number of kB (or MB) written/read per second.
- .RE
- .RE
- .RE
- .RS 8
--- \fBkB/op\fR
-+- \fBkB/op (MB/op)\fR
- .RS
--This is the number of kB written/read per each operation.
-+This is the number of kB (or MB) written/read per each operation.
- .RE
- .RE
- .RE
-@@ -122,6 +122,9 @@ shows help message and exit
- .B \-l LIST or " \-\-list=LIST 
- only print stats for first LIST mount points
- .TP
-+.B \-m or " \-\-megabytes
-+display throughput in megabytes per second
-+.TP
- .B \-p " or " \-\-page
- displays statistics related to the page cache
- .TP
--- 
-2.54.0
+On Fri, May 1, 2026, at 4:19 PM, Scott Mayhew wrote:
+> On Thu, 30 Apr 2026, Chuck Lever wrote:
+>
+>> Cc'ing the ktls-utils development list.
+>>=20
+>> On Thu, Apr 30, 2026, at 9:32 AM, Sagi Grimberg wrote:
+>> > Hey Chuck,
+>> >
+>> > Upstream ktls-utils fails passing client certificate and private ke=
+y=20
+>> > using the .nfs keyring.
+>> > Bisecting leads commit facd084e43fc ("tlshd: Client-side dual=20
+>> > certificate support").
+>> >
+>> > I manually apply this (probably wrong) change and keyring works:
+>> > --
+>> > diff --git a/src/tlshd/client.c b/src/tlshd/client.c
+>> > index 2664ffb..a946797 100644
+>> > --- a/src/tlshd/client.c
+>> > +++ b/src/tlshd/client.c
+>> > @@ -327,7 +327,7 @@ tlshd_x509_retrieve_key_cb(gnutls_session_t ses=
+sion,
+>> >  =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {
+>> >  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 tlshd_log_=
+debug("%s: Selecting x509.certificate from=20
+>> > conf file", __func__);
+>> >  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *pcert_len=
+gth =3D tlshd_certs_len;
+>> > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*pcert =3D =
+tlshd_certs + tlshd_pq_certs_len;
+>> > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*pcert =3D =
+tlshd_certs;
+>> >  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *privkey =3D=
+ tlshd_privkey;
+>> >  =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+>> >  =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;
+>> > --
+>> >
+>> > But, I have a feeling its not the correct change...
+>>=20
+>>=20
+>> Scott, can you triage this?
+>
+> So when I added the dual certificate support, I didn't touch any of the
+> keyring code.  Frankly, I'm not entirely sure what is the right way to
+> set it up and the docs are pretty much nonexistent.  As far as I can
+> tell:
+>
+> - you need to load nfs.ko first so that the .nfs keyring gets created
+>   via nfs_init_keyring()
+> - you need to restart tlshd so that it links the .nfs keyring into its
+>   session keyring (I tried loading nfs.ko at boot via modules-load.d,
+>   but tlshd still reported an error saying it couldn't find the .nfs
+>   keyring)
+> - you need to convert the cert and key to DER format
+> - you need to add the cert and key to the .nfs keyring, e.g.
+>
+>   keyctl padd user "nfs_cert" %:.nfs < smayhew-rawhide.crt.der
+>   keyctl padd user "nfs_key" %:.nfs < smayhew-rawhide.key.der
+>
+> - then you mount w/ '-o xprtsec=3Dmtls,cert_serial=3D...,privkey_seria=
+l=3D...'
+>
+> Is that somewhat accurate?  Is there a better way to do it?  It seems
+> like a lot more work than just using the config file.
 
+It is more work because keyring support for the NFS consumers is still
+aspirational/experimental.
+
+I've pushed your patch to a "fixes" branch for folks to try out. I'm not
+sure yet whether we want a 1.4.1 release with this fix, since keyring
+support for NFS is "not finished".
+
+
+> At any rate, I was able to reproduce the reported bug and the patch I
+> just sent fixes it, but I think we probably want to make dual
+> certificate support work with keyrings too.
+
+Yes, and clearly there are some questions to be answered.
+
+
+--=20
+Chuck Lever
 
