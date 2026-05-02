@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21358-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21359-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uOkoCEEJ9mlPRwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21358-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:25:05 +0200
+	id YHD6NFcJ9mlPRwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21359-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:25:27 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCC9C4B279F
-	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 320E54B27C6
+	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 16:25:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C9938303EC3B
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2026 14:22:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6F7E03028032
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2026 14:22:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BABFD33D6EE;
-	Sat,  2 May 2026 14:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B244933D6EE;
+	Sat,  2 May 2026 14:22:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7gGtwXW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNZllbqz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B8F2820AC;
-	Sat,  2 May 2026 14:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3602820AC;
+	Sat,  2 May 2026 14:22:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777731744; cv=none; b=dNxyjLEtL3XW/SdvZ+ZH6aqjVd7qoAGY5amK8MXr+1ybRfZhkUGTCxpztwABoKIRWddVDpD/yLF8EJyfoTwUlKo/rSyVFsI7egqSlHoHww9GeTWs8InAHwv04g1XSZBzxRxFfrGJBiAOiHNX5DRUZkQPBSgZ91QgNlhFLq0VpEM=
+	t=1777731750; cv=none; b=mEJeU0gNvOnXciOYtC+Xwau/6c0hgEuT3NkI1qGfnUNqdZDZ4Y1GqV2yWAyCgyn16bog5SdFogSzVzJRjbj28jWru4ARDD6fo40ZgWhoUDsJFKk6wD1mr7ptVCC2iHj/h/+1QEU1qx9as3tXu9TmBHrEzAotL8Up3GKttC71Bac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777731744; c=relaxed/simple;
-	bh=pwh6ZK7+DyUSteq+vdVu0HYuHs8P3NPOtCprGITxaEM=;
+	s=arc-20240116; t=1777731750; c=relaxed/simple;
+	bh=sdRAbA0hLtQN2RnAbozuOhOqbFqQox7bou91/njDoms=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BaseEBqzRg22I2shTjBHnqrTxni9PUMhiG4NRhYFhaxBk724usLshCll0WwOfMDxzlxHUbPDuhkpdjuGpy+Cc/v3dZWBcw59sk9Uyx6hZaK1yN+ZBmPFh7Gr1Nvl6OPIEY4QXprGPJxLzD2ejbi9nxiVvxzjHIIXEwUMTto9kU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7gGtwXW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE902C19425;
-	Sat,  2 May 2026 14:22:18 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=eqcfCMsS/OzneAQKZVPjKCrX5fBTbIA9li5g+3FqkcMfWuMpsGP0MCRR+SKbu6pQcm2LA90DYc0bIeYQIeqzk2MECblWrEE8Qr18GyBh/X9CwZQWVxuChOsGOnaSvQOZj1vLiiUiqr/48rG2SWKR1Q68YLB4pEGMR2MNaavzaM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNZllbqz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7E2C2BCC7;
+	Sat,  2 May 2026 14:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777731744;
-	bh=pwh6ZK7+DyUSteq+vdVu0HYuHs8P3NPOtCprGITxaEM=;
+	s=k20201202; t=1777731750;
+	bh=sdRAbA0hLtQN2RnAbozuOhOqbFqQox7bou91/njDoms=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=V7gGtwXWvdc054nee6dm5o/oXbrStaF3jLaTBarlmfXlJ0D0UmzSSfweiMCZWtnoN
-	 96IS/Ow1rwMyUu69nV25/xpQZg+6WHEjpEABfSQIdF8sn1DHxB/5VenGgmGPaw1KnX
-	 r02ULa1af/nSXvUERFrMCsVcx0jQcXXSVmkxRf9osCqTJh9CG0/KXE7XbTt7WiA8g3
-	 uLNXlwHxmiX9tH3fOVCRWngmI9renhE9ufP7psv5VMvEe1G55nzBuHDHTcAru5G/R+
-	 1w/SvrnRoaTK6NiOvTgjDPFFxaN1Rhk9LAB3rGimaZ8IbgJb/yTlF3k5oLJt8dcmf0
-	 HTJkPXUNlyBxg==
+	b=FNZllbqzVoBbR0NGwnoBBjRU7xSequIG890TkXVb1EEiRLncFALEZe7JrhiR3J8e/
+	 cF1wqx1GS/EqMtVt3utsN9hY6yEE8XbSgJ6sQBgyx7Uw4OuL5jhTY1G7M/du+02oSe
+	 OCWHkHLG+erjA4/ggppUs6auQIvRTknjYqzFCZOxhXqMGCi/yi39DVM+u9grnXiOF+
+	 U/sRlcZX9iNagm9qlUL7amDa8glHU99q6SPpfTMMPCTfYGanAZkwlw7ia7BOzpvn5z
+	 nqdKBMXcXDFuOVVB1gmWmLOrJOcfdBq4zv0ltqACLoA8xozbu2NmPUCkGttcEybf0v
+	 9CKsfOQHGkt5w==
 From: Chuck Lever <cel@kernel.org>
-Date: Sat, 02 May 2026 10:20:57 -0400
-Subject: [PATCH v13 12/15] isofs: Implement fileattr_get for case
- sensitivity
+Date: Sat, 02 May 2026 10:20:58 -0400
+Subject: [PATCH v13 13/15] nfsd: Report export case-folding via NFSv3
+ PATHCONF
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260502-case-sensitivity-v13-12-aa853140311f@oracle.com>
+Message-Id: <20260502-case-sensitivity-v13-13-aa853140311f@oracle.com>
 References: <20260502-case-sensitivity-v13-0-aa853140311f@oracle.com>
 In-Reply-To: <20260502-case-sensitivity-v13-0-aa853140311f@oracle.com>
 To: Al Viro <viro@zeniv.linux.org.uk>, 
@@ -75,24 +75,24 @@ Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
  Chuck Lever <chuck.lever@oracle.com>, 
  Roland Mainz <roland.mainz@nrubsig.org>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3535;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8016;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=eE/CDF09GJkNn3nT+HwwWprfQOLLBRzGLyDUxw4X/sk=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9ghRmCEuePPe//SHQ502dQGkoxCxjuAHC/hRa
- fUBXU2YYumJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafYIUQAKCRAzarMzb2Z/
- lxWnEACPaz1eUuja7jmdPVv0JQHyIuo1ugA0aXldtbzVmcSfI1X/R9iBPFT7lrP+ZPpjVDsCUYy
- bqKDSGPnPly4DFYUoAofKx1COpc7J/fxDdcV+zZyoP+sPBLVBw1seGdYmCDuFmBuVKFfcXsWDrH
- DaPQIf6NaLKNVLcTNTPccYfu3uCNwLtLFQfoL5jd46aD301fMKBspM9KnfqGRZ+sQ2wa79NImQY
- ckRcwwsqJAmOGZaq1+qNT6G/DHvEVfyYAjHivZDfMEtTbQg7HvcsOl47aJQ67WIC0Oh4k5jrip3
- peWH6RQdRzgpqQD63Ql1E1vJ7fYBVtxvmAfp+Zl7RpOI55APHqn5WaocktAW8WBJ5tDSLE2de5k
- dJUWq1y8Zjh194+280R0ZhI/v5qUNiCRZnD1WrxDMr4Fhwkb8PmHW922k/ozL7Jkn1IMxWcMcwv
- f793VW48j9v/+ZRAMdFmG5YJ49eVIPsTW8Y5VskBOEqp0sg7fAQQbSt+DtY4ELcGj3TduKS/Lg4
- M90PmHKaFbPWBlEyqxj5ALiWqw8A6/jqth90thXdYI8DuEtAWjoQVk1dwk6skwmA+Gv2lItW3Oa
- f1bFKMXN5Yh0iCnm/I/CvC2L2QR5Iqi/dFfmNT1lPk/jdfFIkTcG6c4XnZAi1ZAs/CekBIDpHq6
- iRgJpm7Ft4TL5aw==
+ bh=gPgHxk6J/l08HbE/ArroIs8LMtbWr6iWpYFW4djvm3Q=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp9ghRQxUjJJQkvR+X7w7b6YrZQNg3OE28iDeC6
+ mUj9RPXpwmJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafYIUQAKCRAzarMzb2Z/
+ lxOxEACBWOesoo4+9RI1Cg2aP3tI9x6cOs/Zj6Ez6E85J1/5y+dXj9NnJJKO4/0VgsSSqogI6CZ
+ nR35sTkyP/JvKojGnCj4qN9i1T+wSd/IYzdXH0SwgcjNhrmSys5LajScny0DTkLr8gIc91WQE+0
+ GOE9ToI1jKW4GpM2PfZISNNATU79nepS/CgRUYaUZWBHfgYSJfg2cS/0xEFZhlY9BusmyrKzN2x
+ MVmh4MLWkrD1Sq8V7hdfpwsjAholAjf7Dykk6ojNDbBhv2rsLRAOx/MSek+/mXzp38qR+Oc5nJ3
+ 12Lm0YpYoCSCB48YPf5m8Ud4grsAEliKfhTKD5QUWOMO4OrTVPMLsKtXh1OBpd7XMbIfq2ni+1G
+ vr6PWmie4yozJejru+TXS4+m21iIwI1e0asi3eA1JmGcoKnCSSaZQBSi4Wc7D8/q+WJszKb/jaX
+ clZZblUEukmqNZfev1Bx+KhwFzmfZDnJUw7Oxom+i+fOqm9BRuUqfFfExvaqid1GO7eMz4yu7wn
+ ejRVSRhhB1/5dcw6yqscukyMdOrw0oDwG0emMcmYRWRwiCf5C2eB0s/8GE+23d0bjZVQCfBkeQI
+ P7hxi+Ble1sDnSesQT8/iyvk0hw0rTkFuq6n7lKa/2/dWgGKccUiel5sR2wJae4CQKSdVTkwgL9
+ vXZg0c5a5WyhnNA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: BCC9C4B279F
+X-Rspamd-Queue-Id: 320E54B27C6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -103,7 +103,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21358-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21359-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -120,104 +120,235 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nrubsig.org:email,suse.cz:email,oracle.com:mid,oracle.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email,nrubsig.org:email]
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Upper layers such as NFSD need a way to query whether a
-filesystem handles filenames in a case-sensitive manner so
-they can provide correct semantics to remote clients. Without
-this information, NFS exports of ISO 9660 filesystems cannot
-advertise their filename case behavior.
+The hard-coded MSDOS_SUPER_MAGIC check in nfsd3_proc_pathconf()
+only recognizes FAT filesystems as case-insensitive. Modern
+filesystems like F2FS, exFAT, and CIFS support case-insensitive
+directories, but NFSv3 clients cannot discover this capability.
 
-Implement isofs_fileattr_get() to report ISO 9660 case handling
-behavior. The 'check=r' (relaxed) mount option enables
-case-insensitive lookups and is reported via FS_XFLAG_CASEFOLD.
-By default, Joliet extensions operate in relaxed mode while
-plain ISO 9660 uses strict (case-sensitive) mode.
+Query the export's actual case behavior through ->fileattr_get
+instead. This allows NFSv3 clients to correctly handle case
+sensitivity for any filesystem that implements the fileattr
+interface. Filesystems without ->fileattr_get continue to report
+the default POSIX behavior (case-sensitive, case-preserving).
 
-Plain ISO 9660 names on the medium are uppercase. When neither
-Rock Ridge nor Joliet is in effect, the default 'map=n' option
-(and 'map=a') routes lookup and readdir through
-isofs_name_translate(), which forces A-Z to a-z. The names
-visible to userspace then differ in case from the on-disc form,
-so report FS_XFLAG_CASENONPRESERVING in that configuration. Rock
-Ridge and Joliet both deliver names as authored, and 'map=o'
-emits the raw on-disc name unchanged, so those configurations
-remain case-preserving.
+This change depends on the earlier "fat: Implement fileattr_get
+for case sensitivity" patch in this series, which ensures FAT
+filesystems report their case behavior correctly via the
+fileattr interface.
 
-Casefolding is a directory property, and the in-tree consumers
-(NFSD, ksmbd) issue the query against a directory: NFSD walks
-to the parent for non-directory dentries before calling
-vfs_fileattr_get(), and ksmbd reports per-share attributes from
-the share root. Wire .fileattr_get only on
-isofs_dir_inode_operations. The CASEFOLD flag is set in both
-fa->fsx_xflags and fa->flags so FS_IOC_FSGETXATTR and
-FS_IOC_GETFLAGS agree.
+Case-folding is a per-directory property, so
+nfsd_get_case_info() queries the parent dentry for
+non-directory filehandles. Three inherent corner cases follow:
+a single-file export's parent lies outside the exported
+subtree, so the LSM hook evaluates against an unexported
+directory; a disconnected dentry from fh_verify() has
+d_parent == itself, so the file's own attributes are reported
+until the dentry connects; and a hardlinked file resolves
+through the alias the dcache currently holds, so when the
+inode is linked into both case-folded and case-sensitive
+directories the reported value tracks whichever parent is
+active. These limitations are not addressable without
+redefining the protocol attribute as per-parent rather than
+per-object.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+RFC 1813 restricts PATHCONF errors to NFS3ERR_STALE,
+NFS3ERR_BADHANDLE, and NFS3ERR_SERVERFAULT. When an LSM hook
+denies the case-folding query on the parent, NFS3ERR_STALE is
+the only correct mapping: NFS3ERR_SERVERFAULT misrepresents a
+working server as broken, and NFS3ERR_BADHANDLE implies a
+decoding failure that did not occur. A client purging the
+filehandle on receipt is the desired outcome, since the server
+has refused to read attributes through it. Substituting POSIX
+defaults instead would let the same handle report
+casefold=false now and casefold=true once policy permits,
+opening a silent name-collision window on case-insensitive
+exports.
+
 Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/isofs/dir.c   | 16 ++++++++++++++++
- fs/isofs/isofs.h |  3 +++
- 2 files changed, 19 insertions(+)
+ fs/nfsd/nfs3proc.c | 36 +++++++++++++++++++++------
+ fs/nfsd/vfs.c      | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/vfs.h      |  3 +++
+ fs/nfsd/xdr3.h     |  4 +--
+ 4 files changed, 105 insertions(+), 10 deletions(-)
 
-diff --git a/fs/isofs/dir.c b/fs/isofs/dir.c
-index 2fd9948d606e..55385a72a4ce 100644
---- a/fs/isofs/dir.c
-+++ b/fs/isofs/dir.c
-@@ -14,6 +14,7 @@
- #include <linux/gfp.h>
- #include <linux/filelock.h>
- #include "isofs.h"
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 42adc5461db0..62ebc65b8af2 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -710,23 +710,43 @@ nfsd3_proc_pathconf(struct svc_rqst *rqstp)
+ 	resp->p_name_max = 255;		/* at least */
+ 	resp->p_no_trunc = 0;
+ 	resp->p_chown_restricted = 1;
+-	resp->p_case_insensitive = 0;
+-	resp->p_case_preserving = 1;
++	resp->p_case_insensitive = false;
++	resp->p_case_preserving = true;
+ 
+ 	resp->status = fh_verify(rqstp, &argp->fh, 0, NFSD_MAY_NOP);
+ 
+ 	if (resp->status == nfs_ok) {
+ 		struct super_block *sb = argp->fh.fh_dentry->d_sb;
++		int err;
+ 
+-		/* Note that we don't care for remote fs's here */
+-		switch (sb->s_magic) {
+-		case EXT2_SUPER_MAGIC:
++		if (sb->s_magic == EXT2_SUPER_MAGIC) {
+ 			resp->p_link_max = EXT2_LINK_MAX;
+ 			resp->p_name_max = EXT2_NAME_LEN;
++		}
++
++		err = nfsd_get_case_info(argp->fh.fh_dentry,
++					 &resp->p_case_insensitive,
++					 &resp->p_case_preserving);
++		/*  
++		 * RFC 1813 lists NFS3ERR_STALE, NFS3ERR_BADHANDLE, and
++		 * NFS3ERR_SERVERFAULT as the only PATHCONF errors.
++		 */
++		switch (err) {
++		case 0:
++		case -EOPNOTSUPP:
++			/* Both arms leave the output booleans valid. */
+ 			break;
+-		case MSDOS_SUPER_MAGIC:
+-			resp->p_case_insensitive = 1;
+-			resp->p_case_preserving  = 0;
++		case -EACCES:
++		case -EPERM:
++			/*
++			 * Policy denied the query. Report STALE so the
++			 * handle is unusable without implying a server
++			 * malfunction.
++			 */
++			resp->status = nfserr_stale;
++			break;
++		default:
++			resp->status = nfserr_serverfault;
+ 			break;
+ 		}
+ 	}
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index eafdf7b7890f..4bd63d8efbf7 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -32,6 +32,7 @@
+ #include <linux/writeback.h>
+ #include <linux/security.h>
+ #include <linux/sunrpc/xdr.h>
 +#include <linux/fileattr.h>
  
- int isofs_name_translate(struct iso_directory_record *de, char *new, struct inode *inode)
- {
-@@ -267,6 +268,20 @@ static int isofs_readdir(struct file *file, struct dir_context *ctx)
- 	return result;
- }
+ #include "xdr3.h"
  
-+int isofs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
+@@ -2891,3 +2892,74 @@ nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
+ 
+ 	return err? nfserrno(err) : 0;
+ }
++
++/**
++ * nfsd_get_case_info - get case sensitivity info for a dentry
++ * @dentry: dentry to query
++ * @case_insensitive: set to true if the filesystem is case-insensitive
++ * @case_preserving: set to true if the filesystem preserves case
++ *
++ * On casefold-capable filesystems the flag lives on the directory,
++ * not on its entries, so for a non-directory @dentry the parent is
++ * queried instead. A directory (including an export root, whose
++ * parent lies outside the export) is queried as-is so its own
++ * contents' lookup behavior is reported.
++ *
++ * When the filesystem does not expose case-folding state (no
++ * ->fileattr_get, or the callback returns -EOPNOTSUPP /
++ * -ENOIOCTLCMD / -ENOTTY / -EINVAL), the outputs are filled with
++ * POSIX defaults (case-sensitive, case-preserving) on the premise
++ * that a filesystem with case-folding support wires up
++ * fileattr_get.
++ *
++ * Other errors propagate unmodified (-EACCES, -EPERM from LSM
++ * hooks; -EIO, -ESTALE, ... from the filesystem). Case-folding
++ * behavior is a property of the exported filesystem, not of the
++ * caller's credentials, so silently substituting defaults would
++ * let the same dentry report POSIX while LSM denies and report
++ * casefolding once LSM allows -- a client could race against
++ * silent name collisions on a case-insensitive export.
++ *
++ * Return: 0 with outputs filled, -EOPNOTSUPP with outputs filled
++ *         to POSIX defaults, or a negative errno with outputs
++ *         unmodified.
++ */
++int
++nfsd_get_case_info(struct dentry *dentry, bool *case_insensitive,
++		   bool *case_preserving)
 +{
-+	struct isofs_sb_info *sbi = ISOFS_SB(dentry->d_sb);
++	struct file_kattr fa = {};
++	struct dentry *cd;
++	bool put = false;
++	int err;
 +
-+	if (sbi->s_check == 'r') {
-+		fa->fsx_xflags |= FS_XFLAG_CASEFOLD;
-+		fa->flags |= FS_CASEFOLD_FL;
++	if (d_is_dir(dentry)) {
++		cd = dentry;
++	} else {
++		cd = dget_parent(dentry);
++		put = true;
 +	}
-+	if (!sbi->s_joliet_level && !sbi->s_rock &&
-+	    (sbi->s_mapping == 'n' || sbi->s_mapping == 'a'))
-+		fa->fsx_xflags |= FS_XFLAG_CASENONPRESERVING;
-+	return 0;
++	err = vfs_fileattr_get(cd, &fa);
++	if (put)
++		dput(cd);
++	switch (err) {
++	case 0:
++		*case_insensitive = fa.fsx_xflags & FS_XFLAG_CASEFOLD;
++		*case_preserving =
++			!(fa.fsx_xflags & FS_XFLAG_CASENONPRESERVING);
++		return 0;
++	case -EINVAL:
++	case -ENOTTY:
++	case -ENOIOCTLCMD:
++	case -EOPNOTSUPP:
++		/*
++		 * Filesystem does not expose case state.
++		 * Report POSIX defaults.
++		 */
++		*case_insensitive = false;
++		*case_preserving = true;
++		return -EOPNOTSUPP;
++	default:
++		return err;
++	}
 +}
-+
- const struct file_operations isofs_dir_operations =
- {
- 	.llseek = generic_file_llseek,
-@@ -281,6 +296,7 @@ const struct file_operations isofs_dir_operations =
- const struct inode_operations isofs_dir_inode_operations =
- {
- 	.lookup = isofs_lookup,
-+	.fileattr_get = isofs_fileattr_get,
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index 702a844f2106..e09ea04a51b9 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -156,6 +156,9 @@ __be32		nfsd_readdir(struct svc_rqst *, struct svc_fh *,
+ 			     loff_t *, struct readdir_cd *, nfsd_filldir_t);
+ __be32		nfsd_statfs(struct svc_rqst *, struct svc_fh *,
+ 				struct kstatfs *, int access);
++int		nfsd_get_case_info(struct dentry *dentry,
++				   bool *case_insensitive,
++				   bool *case_preserving);
+ 
+ __be32		nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
+ 				struct dentry *dentry, int acc);
+diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+index 522067b7fd75..a7c9714b0b0e 100644
+--- a/fs/nfsd/xdr3.h
++++ b/fs/nfsd/xdr3.h
+@@ -209,8 +209,8 @@ struct nfsd3_pathconfres {
+ 	__u32			p_name_max;
+ 	__u32			p_no_trunc;
+ 	__u32			p_chown_restricted;
+-	__u32			p_case_insensitive;
+-	__u32			p_case_preserving;
++	bool			p_case_insensitive;
++	bool			p_case_preserving;
  };
  
- 
-diff --git a/fs/isofs/isofs.h b/fs/isofs/isofs.h
-index 506555837533..0ec8b24a42ed 100644
---- a/fs/isofs/isofs.h
-+++ b/fs/isofs/isofs.h
-@@ -197,6 +197,9 @@ isofs_normalize_block_and_offset(struct iso_directory_record* de,
- 	}
- }
- 
-+struct file_kattr;
-+int isofs_fileattr_get(struct dentry *dentry, struct file_kattr *fa);
-+
- extern const struct inode_operations isofs_dir_inode_operations;
- extern const struct file_operations isofs_dir_operations;
- extern const struct address_space_operations isofs_symlink_aops;
+ struct nfsd3_commitres {
 
 -- 
 2.53.0
