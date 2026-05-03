@@ -1,159 +1,128 @@
-Return-Path: <linux-nfs+bounces-21364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGNTANRd9mmSUQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21364-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 22:25:56 +0200
+	id AEmhM7v59mkyawIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21365-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 09:31:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 561684B36D8
-	for <lists+linux-nfs@lfdr.de>; Sat, 02 May 2026 22:25:55 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D14E4B4BA0
+	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 09:31:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0ED74300C588
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 May 2026 20:25:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7034F3007893
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 May 2026 07:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70FEE33A9F5;
-	Sat,  2 May 2026 20:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fm+6y78x"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3800621CC4F;
+	Sun,  3 May 2026 07:31:03 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A098A34E745;
-	Sat,  2 May 2026 20:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA3C1A0728
+	for <linux-nfs@vger.kernel.org>; Sun,  3 May 2026 07:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777753553; cv=none; b=b168cl8TbsaHtBroN7Dqnq9voj3qQD42bEidgud+/NcS0znVYcF5KUcXCdX94I4CBqRa4oGsstLbSxaeTN91ipgEGa1pLSie0pxkfLfoMklESDou/45LXmw1CnfzHAzax2Y31xuBrWEPb/dZxLm8308FzzMgDpNPe35mXvb3Tw8=
+	t=1777793463; cv=none; b=O18PdOXa2KzMsf4JLmUUAcCAdHqU4q30TgWQudQ2iPfgkGmCd0SxN0/ttC5mAPCSw2LLcjULtcazdxH/3K3qhL9WfHTAoPms2vong6aC6ND4BjzucEqDto6NH77W4ftRMd4enD2VQYAdcnND/UtJ7Ot642w7poTikuhkfgOBwe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777753553; c=relaxed/simple;
-	bh=GT0yq8d3NqHK5mxHuW9g66rPPr0GkxUpyBi/tS7sVyo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pDExRrzyWVEwN3KCEPADDZGbaL+AwEYCmj8zfB9rS0Xgb2Erboui//8QgKsXeOfY8Bka6qwbsnzsdLoOGcmAk/t3d5ZhoY2vZ1vuCBQobVb2qmSQD15DI/9xf696MD0C28Dnh4fdVoDAf0UtEU1tm7Fwg/lZgA4Ye+bR5PzjGzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fm+6y78x; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 642JubRw2737788;
-	Sat, 2 May 2026 20:25:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=1ycDBLJUPnHQUXJts2En+Xb+HIXxd
-	DgfPJSjiN+CVEE=; b=fm+6y78xIq8fQWZuI42lIhXXWICNurdHM0noA9zFSojHg
-	j1/vM07VSwqDrlg3dy/nVOeTsXHYopouFRYWfH6Fy/uMXheaxQ9GPOorLQcYkifI
-	/mNkGAGHFss1f0b2RunrZfwGreW6VE/tGsNS+6xYNkv3IPwNU9owuNjI9b8406FR
-	uM11vEOmCh2grjAkvIX7jjXz79OTcVS0Q2dkt2GHmsP7FhlkjfSkidlwV1regUfR
-	EQTVHm5D+wwoX2NiGj14/XGqbrQ8O23Jyg82Lggxw6vVFQafL/dWQlxO/XQHWHZE
-	tNWc8Z15g+gqJaAIb+f3Q+9W/f56n98LCyuHOk0pg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4dw9dgrhsn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 02 May 2026 20:25:46 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 642KLEX4040265;
-	Sat, 2 May 2026 20:25:45 GMT
-Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4dw7q7jm9m-1;
-	Sat, 02 May 2026 20:25:45 +0000 (GMT)
-From: Dai Ngo <dai.ngo@oracle.com>
-To: cem@kernel.org
-Cc: linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] xfs: fix use of uninitialized imap in xfs_fs_map_blocks error path
-Date: Sat,  2 May 2026 13:25:36 -0700
-Message-ID: <20260502202542.111830-1-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1777793463; c=relaxed/simple;
+	bh=KobCtF2NoedGEbE6XbclqvTtIPCxvwIWc63HzA/1X7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l2QfUT85xNYOH4YcaPE/7KmCtXOzqmwM+VhBSFlbEP+rsMntXIezyB8c9bp7TgALQAbtbOBReXQgXMoLkiuPCN9+q4DSvWQpKflHIn8rB8NiRcH5Mt1tQTnbnHGtry8ZzdkkIUh5VLVIYU6RJrH1HlHmPVkFh0RkTOed5LgHpJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-483487335c2so31851945e9.2
+        for <linux-nfs@vger.kernel.org>; Sun, 03 May 2026 00:31:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777793460; x=1778398260;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KobCtF2NoedGEbE6XbclqvTtIPCxvwIWc63HzA/1X7s=;
+        b=EoGfjcaMzgcqVN8l+toN5H9R0fIxGXh5O5ahVciFaHZBEFs6H4TphoKvMCkBu4yCGr
+         +052TvldnoPFHW4VIwJMxgTBK7b9umhtVdHYLdKeG5PBwyfDW9Nc2pgCzcYBFkqc+NQQ
+         gUf25sY1ezvd4/DewUBpZLcfyGOr7VoQN5BZYFHdQCFsI6XeP/YfPh+gOaU5NeoWstlR
+         XKpTg+y45eg67IFmArrZTAb0f8z2qNzRNth08ucOmdSF+uzgpV54VT6Zy+FGw9ThsIiu
+         fCd8IsobKzFKyzALY2g9jB6cyCHzZNT8EXLP1mggeL/80lQBw2w6LAFSYUSAOFpb2xdA
+         yjCw==
+X-Gm-Message-State: AOJu0YydrXY0BUOShYHgsLLD/mPZYvCFFGNT4GnbRDzUp7//xCajr3Q/
+	XA8h3I8z7e8pbYKjjida2zZjAqg57zKPxNquyVmD0gzNV8yIeYyTCDa8
+X-Gm-Gg: AeBDietfMzbwQmaxEti1Ol9P1rGA7cOVZKrbD4JHaMzoikGGlFaTUaAqPQgn2UDBSiL
+	ZmULVedhjCpDPJJ2LXMVZOBV5ZHnJ5vTWgW1ck9bxkK3JIXUpAdv4rfX4wMUx4Nc9kW3LS18iHh
+	TXnN0IN639bIOOXPYZqNWS+s2uDu28tuV/dxjmI+reh3CbM1XeHVs+kbDhXpPO7tlEP6t/VXqzG
+	lQN7Wup8o0rxi36frMqrM1oukDC9oxQkcCNZvBxv1qULyZHBydBMQRmtpx63iGic8VKOLT+IHvq
+	LWWCO1jA5B3G7aBjLurB3pCKA2QtDM5/Hi2WWZsElij3ZPS9k16sA/y0QQWDAPsbCnRRK2bfC33
+	ahlDdotsBUyW4ECQL9dDQ1fi9WyEGqGbZiwAJZ6PP2lY2ycsKhTSUMW1gTXijO8ohR/1iUDDSls
+	lunEPeKiE+z+jMNMFV/rj3+wnxT8cYuF4mPiZNsozDKMyZ2DzKnW/a7Ox8Fb5G7yWx+3HOzASTa
+	Q==
+X-Received: by 2002:a05:600c:c058:b0:483:8062:b2f with SMTP id 5b1f17b1804b1-48a9886c2aemr49135115e9.6.1777793460200;
+        Sun, 03 May 2026 00:31:00 -0700 (PDT)
+Received: from [10.50.5.21] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8ebc4201sm288447095e9.15.2026.05.03.00.30.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 May 2026 00:30:59 -0700 (PDT)
+Message-ID: <44f3b3fb-8d08-4171-9f5c-ff1a643a412f@grimberg.me>
+Date: Sun, 3 May 2026 10:30:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-02_05,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
- adultscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2604200000 definitions=main-2605020206
-X-Proofpoint-GUID: wagl80WS-a0B_OWkKkItZyd96bOX_D-f
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTAyMDIwNiBTYWx0ZWRfX/jOm6YOdiidt
- PWV3ESfLxEZhHRtjLVQRRLmP3aYzSw3QUDH3uCPQfcH2jf6SxSfYIbJhuZzksMQQk8KVDnaNlhz
- WkiNPKS6Nf1SHmXm7sbMtEhv9DD4D6cTnD4PqFEpur997xxyJLmTO1SCcX87iBdHO0EyFt+SWg4
- dLP/LeAN0PXLT8Dm3k9sAUf9svLio8TUVVe92kZTrc+ZQsBUfInTOZZcgpBJTpeRt803v/f/aGg
- OMBtv8mvNtwjKYh5OomC/anA8QK4jomblkNqrP/s9TDV7iHz23+tPq5RWaHbViwyagW6ETD6Qd+
- WEzo0eS1A3YBR230P64tsxP8DqFSycUWnKkvZpfblzLoetCGcAOgQsapbuEtvZt/ZiHraCi2pvc
- lA/nNx4gG0MJw6E3iQ0Ug3tBtl8TQiCMHCytgBVZRKRLO27X9XTZp0ETdNliLowc4TC9FvgWLhj
- JM/PRn1+1nlD4JaI1Qg==
-X-Proofpoint-ORIG-GUID: wagl80WS-a0B_OWkKkItZyd96bOX_D-f
-X-Authority-Analysis: v=2.4 cv=HZckiCE8 c=1 sm=1 tr=0 ts=69f65dca cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
- a=x4eqshVgHu-cdnggieHk:22 a=yPCof4ZbAAAA:8 a=NnFJWWH6Egn-NMX9bF4A:9
-X-Rspamd-Queue-Id: 561684B36D8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tlshd: fix keyring cert retrieval
+To: Scott Mayhew <smayhew@redhat.com>, cel@kernel.org
+Cc: linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
+References: <92a53963-1e4b-42eb-af81-6be9f63f9e43@app.fastmail.com>
+ <20260501195856.1126025-1-smayhew@redhat.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20260501195856.1126025-1-smayhew@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4D14E4B4BA0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21364-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[oracle.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email,oracle.com:dkim,oracle.com:mid];
-	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21365-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DMARC_NA(0.00)[grimberg.me];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-xfs_fs_map_blocks() acquires the data map lock and then calls
-xfs_bmapi_read(). If xfs_bmapi_read() fails, the function currently
-still falls through to xfs_bmbt_to_iomap(), which consumes an
-uninitialized imap record and may return invalid data to the caller.
 
-Fix this by releasing the data map lock and returning immediately when
-xfs_bmapi_read() reports an error. This prevents xfs_bmbt_to_iomap()
-from being called with an uninitialized xfs_bmbt_irec.
 
-Fixes: 527851124d10f ("xfs: implement pNFS export operations")
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/xfs/xfs_pnfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 01/05/2026 22:58, Scott Mayhew wrote:
+> The code that gets certs from keyrings currently only gets RSA certs, so
+> we need to zero out the PQ certs length fields when a keyring is used.
+> Otherwise the retrieval callback will look in the wrong offset in the
+> tlshd_certs list.
+>
+> Reported-by: Sagi Grimberg <sagi@grimberg.me>
+> Fixes: facd084 ("tlshd: Client-side dual certificate support")
+> Fixes: 14f5349 ("tlshd: Server-side dual certificate support")
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 
-v2:
-  . drop the check for (!error). Already checked above.
-
-diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-index 221e55887a2a..f7c6dba3d21e 100644
---- a/fs/xfs/xfs_pnfs.c
-+++ b/fs/xfs/xfs_pnfs.c
-@@ -174,6 +174,10 @@ xfs_fs_map_blocks(
- 	lock_flags = xfs_ilock_data_map_shared(ip);
- 	error = xfs_bmapi_read(ip, offset_fsb, end_fsb - offset_fsb,
- 				&imap, &nimaps, bmapi_flags);
-+	if (error) {
-+		xfs_iunlock(ip, lock_flags);
-+		goto out_unlock;
-+	}
- 	seq = xfs_iomap_inode_sequence(ip, 0);
- 
- 	ASSERT(!nimaps || imap.br_startblock != DELAYSTARTBLOCK);
--- 
-2.47.3
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
