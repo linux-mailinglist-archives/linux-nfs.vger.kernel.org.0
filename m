@@ -1,70 +1,71 @@
-Return-Path: <linux-nfs+bounces-21365-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21366-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AEmhM7v59mkyawIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21365-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 09:31:07 +0200
+	id YGioNAr+9mkabAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21366-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 09:49:30 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D14E4B4BA0
-	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 09:31:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CE424B4D3D
+	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 09:49:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7034F3007893
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 May 2026 07:31:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5EBA33003629
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 May 2026 07:48:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3800621CC4F;
-	Sun,  3 May 2026 07:31:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D698B3A901C;
+	Sun,  3 May 2026 07:48:58 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA3C1A0728
-	for <linux-nfs@vger.kernel.org>; Sun,  3 May 2026 07:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3DC3A875C
+	for <linux-nfs@vger.kernel.org>; Sun,  3 May 2026 07:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777793463; cv=none; b=O18PdOXa2KzMsf4JLmUUAcCAdHqU4q30TgWQudQ2iPfgkGmCd0SxN0/ttC5mAPCSw2LLcjULtcazdxH/3K3qhL9WfHTAoPms2vong6aC6ND4BjzucEqDto6NH77W4ftRMd4enD2VQYAdcnND/UtJ7Ot642w7poTikuhkfgOBwe4=
+	t=1777794538; cv=none; b=OVcabl2Aocx7T6iae3E0Ucs4JdOeqxus3Y8mFzg045oNkYMoOScMK4pd5s7aN/npKZdW/iM8N9UWjptU2duiyHtTVZJMGv1hTwGIQCTKBA7p7D5ocoznbK5oNEEdiHPV+Ft8l94pPQlOE6Gax56nNLsr+SXo0Ff5GwehzQG3UeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777793463; c=relaxed/simple;
-	bh=KobCtF2NoedGEbE6XbclqvTtIPCxvwIWc63HzA/1X7s=;
+	s=arc-20240116; t=1777794538; c=relaxed/simple;
+	bh=PLx9Zoa8UL5sjHZD5SjE0bRUhgl/4Oe21i0xKz+x7TU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l2QfUT85xNYOH4YcaPE/7KmCtXOzqmwM+VhBSFlbEP+rsMntXIezyB8c9bp7TgALQAbtbOBReXQgXMoLkiuPCN9+q4DSvWQpKflHIn8rB8NiRcH5Mt1tQTnbnHGtry8ZzdkkIUh5VLVIYU6RJrH1HlHmPVkFh0RkTOed5LgHpJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:Content-Type; b=K0HWWk83GKCy6lMHQkPmnlxMJ+6OT0gTOWCtcugh48eKFO4Oonutmta5I1IIX+mQUVAEBLqyvfRiygMY8SJBON0prj1MjpvPQRzSbnn4eiKL1+2Kr1G4lIsxuvPZkJLlcH+thcCD5pQnueVQprxKvpMhgIqzNSz+aZqLSTPbSaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-483487335c2so31851945e9.2
-        for <linux-nfs@vger.kernel.org>; Sun, 03 May 2026 00:31:01 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-44a14580111so1713970f8f.0
+        for <linux-nfs@vger.kernel.org>; Sun, 03 May 2026 00:48:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777793460; x=1778398260;
+        d=1e100.net; s=20251104; t=1777794536; x=1778399336;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KobCtF2NoedGEbE6XbclqvTtIPCxvwIWc63HzA/1X7s=;
-        b=EoGfjcaMzgcqVN8l+toN5H9R0fIxGXh5O5ahVciFaHZBEFs6H4TphoKvMCkBu4yCGr
-         +052TvldnoPFHW4VIwJMxgTBK7b9umhtVdHYLdKeG5PBwyfDW9Nc2pgCzcYBFkqc+NQQ
-         gUf25sY1ezvd4/DewUBpZLcfyGOr7VoQN5BZYFHdQCFsI6XeP/YfPh+gOaU5NeoWstlR
-         XKpTg+y45eg67IFmArrZTAb0f8z2qNzRNth08ucOmdSF+uzgpV54VT6Zy+FGw9ThsIiu
-         fCd8IsobKzFKyzALY2g9jB6cyCHzZNT8EXLP1mggeL/80lQBw2w6LAFSYUSAOFpb2xdA
-         yjCw==
-X-Gm-Message-State: AOJu0YydrXY0BUOShYHgsLLD/mPZYvCFFGNT4GnbRDzUp7//xCajr3Q/
-	XA8h3I8z7e8pbYKjjida2zZjAqg57zKPxNquyVmD0gzNV8yIeYyTCDa8
-X-Gm-Gg: AeBDietfMzbwQmaxEti1Ol9P1rGA7cOVZKrbD4JHaMzoikGGlFaTUaAqPQgn2UDBSiL
-	ZmULVedhjCpDPJJ2LXMVZOBV5ZHnJ5vTWgW1ck9bxkK3JIXUpAdv4rfX4wMUx4Nc9kW3LS18iHh
-	TXnN0IN639bIOOXPYZqNWS+s2uDu28tuV/dxjmI+reh3CbM1XeHVs+kbDhXpPO7tlEP6t/VXqzG
-	lQN7Wup8o0rxi36frMqrM1oukDC9oxQkcCNZvBxv1qULyZHBydBMQRmtpx63iGic8VKOLT+IHvq
-	LWWCO1jA5B3G7aBjLurB3pCKA2QtDM5/Hi2WWZsElij3ZPS9k16sA/y0QQWDAPsbCnRRK2bfC33
-	ahlDdotsBUyW4ECQL9dDQ1fi9WyEGqGbZiwAJZ6PP2lY2ycsKhTSUMW1gTXijO8ohR/1iUDDSls
-	lunEPeKiE+z+jMNMFV/rj3+wnxT8cYuF4mPiZNsozDKMyZ2DzKnW/a7Ox8Fb5G7yWx+3HOzASTa
-	Q==
-X-Received: by 2002:a05:600c:c058:b0:483:8062:b2f with SMTP id 5b1f17b1804b1-48a9886c2aemr49135115e9.6.1777793460200;
-        Sun, 03 May 2026 00:31:00 -0700 (PDT)
+        bh=ZPHUcGdbv7Ch7jGJFK5JqglmPmO4Ck3el5ikbMNjxkY=;
+        b=TdnViq9aaX7dV2DNlXRD4Yx3P+7nPmwqRVgWxw3SZEYwkZjse9QjmRbZkZoj/s9eGp
+         jowNss9ejKGJRyJ7a0RJbyLGqYHbzsGK1Ock8gFajyFdHshopKlMCJZDdDvp4QUbqCVg
+         /4Qxjg+J1wd88eXMUmSTaQk5khFPPd4mBa+ZD4BvmxN9zzod9rISPaC/2zzW/lOcr+rK
+         l9IzVR9U+/zHxQ0OR709ifWILQ6VqX1KgLUVzyT+gzoIWuC1qF/FlxU9tznwcTxmUd/F
+         LvZwozPGYEOs2BXloYikeuCOllNK7kxbaxC2E0Hx0gvcHjx2m+2/caOEgnmekgZ3ZMrT
+         SKcQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+yIzxYH4tijrIIv+ufirpd0E3Ca/CYv8GpvMlKEe5xG7jEiitcaA/SM9R/I+LgrapI+0Sft/oPBp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyacceYAUArPJlMpq+p8ZWZrh6oVZ88YByUtwyLJOXN8vFGj2y9
+	28fs8tmk41Ru6UhEeaS2fvk5RgxoV7xy8yZ1jnp6RgIun2stXiiGpqoL
+X-Gm-Gg: AeBDieumdaTl/prtuVJsXQ2kiNg8jBP6RuC2r2WjmPDoKS5P9yP/k/6fc9Tvz5hrNrR
+	RlTXFR4QmB62acaM7r0dtic0ZybFqJ7JGGbUfrqmn7fI0yi75gjWW9F7iybhul1BKg8A8FGaEo+
+	7VMl2NJfcsEvD+nvDEVCmhp7w732Dm7TkIGx0tMcW0ZI0Cijdg4Fe6mSLThfdvLM/3iEjsXOie4
+	sFFoYIBqPmIMZZrXKnKNU6yOXagEuvGyixiCOXohCvWEEkOIgLN3Afum/Uo9+aPrpYOzZr2q/7w
+	rFwsvm0/TZl4m2qGOxAsxk3BCh/v2hdW1Y81j1BNBSBIesCv2cyOXn2yoiWAb4j0BXAAfALnPFN
+	WxNbz5EC9mqpPaQ3DBhM7kQZGJgcxSiZDGiTNLs7MuX2LTrrf0SzgFH2Y1jtWoiSF8JDzTDZHlO
+	r2G6Mnr72w/D2dRUEBB5ILzqRo+DxCcXr91ly3xklQy8Q4oTPULt/B1hD55CMupJ81R3DnS4ZfJ
+	g==
+X-Received: by 2002:a5d:5c89:0:b0:446:96b1:f53 with SMTP id ffacd0b85a97d-44bb5b4d38cmr8855673f8f.26.1777794535829;
+        Sun, 03 May 2026 00:48:55 -0700 (PDT)
 Received: from [10.50.5.21] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8ebc4201sm288447095e9.15.2026.05.03.00.30.58
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a8ea7cf5dsm17093705f8f.1.2026.05.03.00.48.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 May 2026 00:30:59 -0700 (PDT)
-Message-ID: <44f3b3fb-8d08-4171-9f5c-ff1a643a412f@grimberg.me>
-Date: Sun, 3 May 2026 10:30:57 +0300
+        Sun, 03 May 2026 00:48:55 -0700 (PDT)
+Message-ID: <e55cd958-6d86-4c6b-abc6-5be83fc53b0b@grimberg.me>
+Date: Sun, 3 May 2026 10:48:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -72,57 +73,140 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tlshd: fix keyring cert retrieval
-To: Scott Mayhew <smayhew@redhat.com>, cel@kernel.org
-Cc: linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
-References: <92a53963-1e4b-42eb-af81-6be9f63f9e43@app.fastmail.com>
- <20260501195856.1126025-1-smayhew@redhat.com>
+Subject: Re: Breakage in ktls-utils with nfs keyring?
+To: Chuck Lever <cel@kernel.org>, Scott Mayhew <smayhew@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ kernel-tls-handshake@lists.linux.dev
+References: <fd4aaf4e-b1b7-4ca2-bc93-955c31fab317@grimberg.me>
+ <92a53963-1e4b-42eb-af81-6be9f63f9e43@app.fastmail.com>
+ <afUKzeUYPhb97DX4@aion>
+ <7c6516be-adb9-4d0d-ba7c-fa107fd4a865@app.fastmail.com>
 Content-Language: en-US
 From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20260501195856.1126025-1-smayhew@redhat.com>
+In-Reply-To: <7c6516be-adb9-4d0d-ba7c-fa107fd4a865@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4D14E4B4BA0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 3CE424B4D3D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-0.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-21365-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[grimberg.me];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21366-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[grimberg.me];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	MID_RHS_MATCH_FROM(0.00)[];
 	R_DKIM_NA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,grimberg.me:mid]
 
 
 
-On 01/05/2026 22:58, Scott Mayhew wrote:
-> The code that gets certs from keyrings currently only gets RSA certs, so
-> we need to zero out the PQ certs length fields when a keyring is used.
-> Otherwise the retrieval callback will look in the wrong offset in the
-> tlshd_certs list.
+On 02/05/2026 6:08, Chuck Lever wrote:
 >
-> Reported-by: Sagi Grimberg <sagi@grimberg.me>
-> Fixes: facd084 ("tlshd: Client-side dual certificate support")
-> Fixes: 14f5349 ("tlshd: Server-side dual certificate support")
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> On Fri, May 1, 2026, at 4:19 PM, Scott Mayhew wrote:
+>> On Thu, 30 Apr 2026, Chuck Lever wrote:
+>>
+>>> Cc'ing the ktls-utils development list.
+>>>
+>>> On Thu, Apr 30, 2026, at 9:32 AM, Sagi Grimberg wrote:
+>>>> Hey Chuck,
+>>>>
+>>>> Upstream ktls-utils fails passing client certificate and private key
+>>>> using the .nfs keyring.
+>>>> Bisecting leads commit facd084e43fc ("tlshd: Client-side dual
+>>>> certificate support").
+>>>>
+>>>> I manually apply this (probably wrong) change and keyring works:
+>>>> --
+>>>> diff --git a/src/tlshd/client.c b/src/tlshd/client.c
+>>>> index 2664ffb..a946797 100644
+>>>> --- a/src/tlshd/client.c
+>>>> +++ b/src/tlshd/client.c
+>>>> @@ -327,7 +327,7 @@ tlshd_x509_retrieve_key_cb(gnutls_session_t session,
+>>>>           } else {
+>>>>                   tlshd_log_debug("%s: Selecting x509.certificate from
+>>>> conf file", __func__);
+>>>>                   *pcert_length = tlshd_certs_len;
+>>>> -               *pcert = tlshd_certs + tlshd_pq_certs_len;
+>>>> +               *pcert = tlshd_certs;
+>>>>                   *privkey = tlshd_privkey;
+>>>>           }
+>>>>           return 0;
+>>>> --
+>>>>
+>>>> But, I have a feeling its not the correct change...
+>>>
+>>> Scott, can you triage this?
+>> So when I added the dual certificate support, I didn't touch any of the
+>> keyring code.  Frankly, I'm not entirely sure what is the right way to
+>> set it up and the docs are pretty much nonexistent.  As far as I can
+>> tell:
+>>
+>> - you need to load nfs.ko first so that the .nfs keyring gets created
+>>    via nfs_init_keyring()
+>> - you need to restart tlshd so that it links the .nfs keyring into its
+>>    session keyring (I tried loading nfs.ko at boot via modules-load.d,
+>>    but tlshd still reported an error saying it couldn't find the .nfs
+>>    keyring)
+>> - you need to convert the cert and key to DER format
+>> - you need to add the cert and key to the .nfs keyring, e.g.
+>>
+>>    keyctl padd user "nfs_cert" %:.nfs < smayhew-rawhide.crt.der
+>>    keyctl padd user "nfs_key" %:.nfs < smayhew-rawhide.key.der
+>>
+>> - then you mount w/ '-o xprtsec=mtls,cert_serial=...,privkey_serial=...'
+>>
+>> Is that somewhat accurate?
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+It is.
+
+>>    Is there a better way to do it?
+
+Have a script/automation SW.
+
+>>   It seems
+>> like a lot more work than just using the config file.
+
+Well in some cases, storing credentials on a persistent file is not a 
+viable option.
+For nvme there is a userspace utility that helps with this to some extent.
+
+> It is more work because keyring support for the NFS consumers is still
+> aspirational/experimental.
+
+Can you elaborate? I think people expect to be able to pass certs/keys to
+tlshd the .nfs keyring. Also I expected it to work (as it used to).
+
+>
+> I've pushed your patch to a "fixes" branch for folks to try out. I'm not
+> sure yet whether we want a 1.4.1 release with this fix, since keyring
+> support for NFS is "not finished".
+
+I understand that there are features that are not supported via the
+keyring interface. But I think that users expect things that used to work to
+continue working. My personal opinion is that releasing this fix is 
+appropriate
+given that this is a regression.
+
+Is keyring support for NFS marked as "experimental" or "not finished" 
+anywhere?
+[I should register to kernel-tls-handshake mailing list]
 
