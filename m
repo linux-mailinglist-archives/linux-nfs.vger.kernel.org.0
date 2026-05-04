@@ -1,291 +1,224 @@
-Return-Path: <linux-nfs+bounces-21372-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21373-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aBz5HR+y92mrlAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21372-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 22:37:51 +0200
+	id UJ0LG0lA+Gm7rwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21373-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 04 May 2026 08:44:25 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 066C94B7571
-	for <lists+linux-nfs@lfdr.de>; Sun, 03 May 2026 22:37:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C54D54B8FAA
+	for <lists+linux-nfs@lfdr.de>; Mon, 04 May 2026 08:44:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7FC473007652
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 May 2026 20:37:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6DCA73004C6D
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 May 2026 06:44:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9953A6F16;
-	Sun,  3 May 2026 20:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F994299929;
+	Mon,  4 May 2026 06:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZU8Vy3S"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D457A3A6B90
-	for <linux-nfs@vger.kernel.org>; Sun,  3 May 2026 20:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09A127380A
+	for <linux-nfs@vger.kernel.org>; Mon,  4 May 2026 06:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777840664; cv=none; b=q6hXmpuPlGNj7qP03gIZPnEl7P05EXturqrLpGN0C4pIw3Rxqtds//pGCmCM4YvFxZWV5MUuYUa6iwkd5ImK1HDbggvZBi845ddJW2foMkH6NJG50VJCUifd8Fk+iybKDkiGbKDtVg7ywkRWfoTfQfmJWDpI+C9JmCBei1Laj6U=
+	t=1777877063; cv=none; b=bqsdF9vGtV3wFiSzErMZ3BAJ/UZrO9bmWN1wrN94w0S2CkVabb4Y1ECjgavv5XEZUETlTz0xv6pABhKQJXpu9G0/j5XMY8hhFoOCLShGR3i5fO3ulyHI0F93TWEE2y7xZdz7IE1huDvD70aOE5rJ+l2pG4ls3NqLKuT1w4uUHxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777840664; c=relaxed/simple;
-	bh=Z5b86b4L+PAinJD3BxZUrtC9W5L6diq78KjWtWbTvvk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HeXixx/6TJ+5aYo6+HvcbOhsRtUZNwdTqh7lbFfNmvtsA/wHeLP3iWYf8/2K6FYGoOfv1zTtuNxS2sJihhMf7/kcbmQa/TENKZVjCNQ6IbJkOxunvC7DRhVtvSjovwUFHMJIMczwphJFR1LJjRYFZpKkrU67anO816Luu337D1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488a14c31eeso24505005e9.0
-        for <linux-nfs@vger.kernel.org>; Sun, 03 May 2026 13:37:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777840661; x=1778445461;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MBhoBNigO182+FyYzF6s+pQ5AVkS34awtZUk4Xg9sYs=;
-        b=TXcs7S+6Pkb1pYVSleQu9Rcr0TZrXpC66GiVtCqW50O4GUsMCDRad36zqqjbXXLukr
-         d/tXRqEGfO5tD3pHdSrxUrVfL8CCZk/g2G8DfWjFXoDvJBr4j0mjxfARFeG29HJzvNin
-         Ixk6x/oF+BqMB9VoVU4GVO1RRXX+igwA/X4btSsm068vitOB5pCW3Ru97I6mh/sKZkfr
-         XQkV/3ZGVtKg1sAe81oeEHUFiFe3MX4yyfEzlSIsmmVFqJXBHxAUSXXK6qMbBskL0cFT
-         zx4oxZI1dPu87pmxH7sPd1yLxRhab+F5M3LS0BHRQVMHBnNs2fezyfGj+CbWA5ophd4R
-         gWxQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9RAYlHJ3cdAkSAuUb2xAtuB5UTGyTxoKKOAvAqhBOgT0zrcpXskN09Na10SeqkOwq2zOQzMncnrZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsQP73/Gv322ROvVndL9nRDBwON67w08Xdr4qIgveZ5KQ9FwyC
-	/KsSp2cQOEuHtp759TmOmqD2PwuqBGtbwB9sIPxoHYLryKOsh9XAXUuP
-X-Gm-Gg: AeBDiet50ALAPEadl1zzDAC49WD7Mw3H3T8yoV33PzOwu9nX3F1TpZHRiPGJCEPcWQy
-	z9Dn4QNy2vdw4loaWWNKq0DhYl+6MStWzwLZosGtCX3/aPtrvjUEu9nhgTPSPvQleX+ccl1hACm
-	RDfOmHrZnXSZ4EyJTW8vnbC4BOYkvHWsAs+FP4aNc4X2Pj+wnduUWwZBQ6LSRXhz+HHm6/rcZbv
-	Q66ZbE6SsUBoeb5EZbWytZXUoUdfqbI52Nvsv3/+hdcFQsbaO3SauXIM0Nx1jH7NVp8ouxT6VFK
-	MHUQX57+DGqq4Q2eUNiXxy86TZBMAQr/5UUUG/bHknSRlA58+Cr0CdYOkbzPpmJ9xIkUMvkV38x
-	2d5URLROsFgvKXp4AoH4UrRl0y5oztfan86v61IZmhNKBpXyYHYohiURM07Cj89r+5V+heBHxpc
-	PjnYR4CbPTg9Un4uJUVMiz90vlaNvlEXDpuVQCxXqsTsgxz0B4hyDfwmjNubRS9opqpcFY
-X-Received: by 2002:a05:600c:a590:b0:48d:5e7:a5b4 with SMTP id 5b1f17b1804b1-48d05e7afb7mr23347075e9.23.1777840661043;
-        Sun, 03 May 2026 13:37:41 -0700 (PDT)
-Received: from [10.100.102.74] (89-138-71-216.bb.netvision.net.il. [89.138.71.216])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a81ed6bafsm485050665e9.2.2026.05.03.13.37.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 May 2026 13:37:40 -0700 (PDT)
-Message-ID: <2330c9c6-de7e-4cac-b991-3ffcfdc23858@grimberg.me>
-Date: Sun, 3 May 2026 23:37:39 +0300
+	s=arc-20240116; t=1777877063; c=relaxed/simple;
+	bh=iyQM35uKFrYPapU8XemEhAdRK6pQ3eo63yVB3VnVlC8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sFPgcmLbQJ0ordYKAIpGC4y2Mew4XRw4Pt+DK4dmdYjkCRgRrSX2F+tjYSK3i20FNY+KDaj6DWkX129gRt5bPtXbbIDWZQcWcGk5F6vZxyjGXOTWJyS8W6bHduitmdwM5ZNGygd7xWXkyEiUSa5JYUs8b/aoTUtm0Qo2O4eR0Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZU8Vy3S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 889DBC2BCB8
+	for <linux-nfs@vger.kernel.org>; Mon,  4 May 2026 06:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777877062;
+	bh=iyQM35uKFrYPapU8XemEhAdRK6pQ3eo63yVB3VnVlC8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=XZU8Vy3SAu+WaeHLwdUzODpa57VyOmZlCK7OSeOE7cIyx03maTmde1wEttAup/KU6
+	 nUmjIk7b4tn/MKJfu4IMFthWJovsC+WhhQPNpepfwc40SkTj4xzwxHXuAXp+DD8dTY
+	 Q1kgqizZ0rlqO4kofT81A94r7mlqQqj5dMifXvmG2OYgL3lH7yGce2XuJ4fkbJl7uC
+	 /ohV+q1TkPRPmm1S3mnphRWInGY+ZOH4URxNF0PtPR61ay9FAxPY7fFq26EAniTjAw
+	 FbN1fC4rZYlGRUNznPwJtS9CP2+1tATnc6rqpHF7Q/DHRQyxY9DPMLFxHO2l8N+jj5
+	 KZ7E3s0GiHaEw==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 781D9F4007B;
+	Mon,  4 May 2026 02:44:21 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Mon, 04 May 2026 02:44:21 -0400
+X-ME-Sender: <xms:RUD4aRq73pxse0miJjsJ7Cn9xKjV-CDwdDFB_wn9WM0SsvHkCzXyhA>
+    <xme:RUD4aefZdcptsimZM-Hz6QEGzdlBWEb4d75zZFISLap9HK7Gk_lwl5rpeKuXLmOS9
+    3UyHEYZz4wwaRiraB0bbDqkuRYcgP_uSW4Gq0XUhbpQhBs8GolxQFxS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdelkeduhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    ephfffkefffedtgfehieevkeduuefhvdejvdefvdeuuddvgeelkeegtefgudfhfeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehsrghgihesghhrihhmsggvrhhgrdhmvgdprhgtphhtthhopehkvghrnhgvlhdqth
+    hlshdqhhgrnhgushhhrghkvgeslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthho
+    pegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehsmhgrhi
+    hhvgifsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:RUD4aS1ZW89jkXozVdmKjz010OEgJ2dnsKLtFN8VdXHiIW8tok8fDw>
+    <xmx:RUD4aeC_e5uTU8GrqloZtUyG4uX_HvQcKKmvkWrjeiaxDc8gOMC0pQ>
+    <xmx:RUD4aWc6zdreHjXJpgwTKIykxgTFfYyLEbw0fxDnVzC4EYC4vRRtoQ>
+    <xmx:RUD4aT6pP6yekVdrdLf5BLOZDjJJ5Xj_b7-INNn4_LOeAT6UZvVCLA>
+    <xmx:RUD4aRUeFJuIuXxR5Em7wS38k8J8lN6OCEyx9YUD3H__v_S7RNcWIo-T>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 58366780070; Mon,  4 May 2026 02:44:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Breakage in ktls-utils with nfs keyring?
-To: Chuck Lever <cel@kernel.org>, Scott Mayhew <smayhew@redhat.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+X-ThreadId: Ak5ktnwSWV1c
+Date: Mon, 04 May 2026 08:44:01 +0200
+From: "Chuck Lever" <cel@kernel.org>
+To: "Sagi Grimberg" <sagi@grimberg.me>, "Scott Mayhew" <smayhew@redhat.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
  kernel-tls-handshake@lists.linux.dev
+Message-Id: <ce60fc54-5082-44a4-99ae-dccbbb25eb88@app.fastmail.com>
+In-Reply-To: <2330c9c6-de7e-4cac-b991-3ffcfdc23858@grimberg.me>
 References: <fd4aaf4e-b1b7-4ca2-bc93-955c31fab317@grimberg.me>
  <92a53963-1e4b-42eb-af81-6be9f63f9e43@app.fastmail.com>
  <afUKzeUYPhb97DX4@aion>
  <7c6516be-adb9-4d0d-ba7c-fa107fd4a865@app.fastmail.com>
  <e55cd958-6d86-4c6b-abc6-5be83fc53b0b@grimberg.me>
  <98a865cb-94e3-4f57-8b9e-0634c43098b9@app.fastmail.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <98a865cb-94e3-4f57-8b9e-0634c43098b9@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 066C94B7571
+ <2330c9c6-de7e-4cac-b991-3ffcfdc23858@grimberg.me>
+Subject: Re: Breakage in ktls-utils with nfs keyring?
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: C54D54B8FAA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.46 / 15.00];
+X-Spamd-Result: default: False [-1.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	SUBJECT_ENDS_QUESTION(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21372-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[grimberg.me];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	XM_UA_NO_VERSION(0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-21373-lists,linux-nfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,app.fastmail.com:mid];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,grimberg.me:mid]
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_SEVEN(0.00)[7]
 
 
 
-On 03/05/2026 22:11, Chuck Lever wrote:
->
-> On Sun, May 3, 2026, at 9:48 AM, Sagi Grimberg wrote:
->> On 02/05/2026 6:08, Chuck Lever wrote:
->>> On Fri, May 1, 2026, at 4:19 PM, Scott Mayhew wrote:
->>>> On Thu, 30 Apr 2026, Chuck Lever wrote:
->>>>
->>>>> Cc'ing the ktls-utils development list.
->>>>>
->>>>> On Thu, Apr 30, 2026, at 9:32 AM, Sagi Grimberg wrote:
->>>>>> Hey Chuck,
->>>>>>
->>>>>> Upstream ktls-utils fails passing client certificate and private key
->>>>>> using the .nfs keyring.
->>>>>> Bisecting leads commit facd084e43fc ("tlshd: Client-side dual
->>>>>> certificate support").
->>>>>>
->>>>>> I manually apply this (probably wrong) change and keyring works:
->>>>>> --
->>>>>> diff --git a/src/tlshd/client.c b/src/tlshd/client.c
->>>>>> index 2664ffb..a946797 100644
->>>>>> --- a/src/tlshd/client.c
->>>>>> +++ b/src/tlshd/client.c
->>>>>> @@ -327,7 +327,7 @@ tlshd_x509_retrieve_key_cb(gnutls_session_t session,
->>>>>>            } else {
->>>>>>                    tlshd_log_debug("%s: Selecting x509.certificate from
->>>>>> conf file", __func__);
->>>>>>                    *pcert_length = tlshd_certs_len;
->>>>>> -               *pcert = tlshd_certs + tlshd_pq_certs_len;
->>>>>> +               *pcert = tlshd_certs;
->>>>>>                    *privkey = tlshd_privkey;
->>>>>>            }
->>>>>>            return 0;
->>>>>> --
->>>>>>
->>>>>> But, I have a feeling its not the correct change...
->>>>> Scott, can you triage this?
->>>> So when I added the dual certificate support, I didn't touch any of the
->>>> keyring code.  Frankly, I'm not entirely sure what is the right way to
->>>> set it up and the docs are pretty much nonexistent.  As far as I can
->>>> tell:
->>>>
->>>> - you need to load nfs.ko first so that the .nfs keyring gets created
->>>>     via nfs_init_keyring()
->>>> - you need to restart tlshd so that it links the .nfs keyring into its
->>>>     session keyring (I tried loading nfs.ko at boot via modules-load.d,
->>>>     but tlshd still reported an error saying it couldn't find the .nfs
->>>>     keyring)
->>>> - you need to convert the cert and key to DER format
->>>> - you need to add the cert and key to the .nfs keyring, e.g.
->>>>
->>>>     keyctl padd user "nfs_cert" %:.nfs < smayhew-rawhide.crt.der
->>>>     keyctl padd user "nfs_key" %:.nfs < smayhew-rawhide.key.der
->>>>
->>>> - then you mount w/ '-o xprtsec=mtls,cert_serial=...,privkey_serial=...'
->>>>
->>>> Is that somewhat accurate?
->> It is.
+On Sun, May 3, 2026, at 10:37 PM, Sagi Grimberg wrote:
+> On 03/05/2026 22:11, Chuck Lever wrote:
 >>
->>>>     Is there a better way to do it?
->> Have a script/automation SW.
-> Our intention is to have mount.nfs pick up some of this work.
+>> On Sun, May 3, 2026, at 9:48 AM, Sagi Grimberg wrote:
+>>> On 02/05/2026 6:08, Chuck Lever wrote:
+>>>> On Fri, May 1, 2026, at 4:19 PM, Scott Mayhew wrote:
+>>>>> On Thu, 30 Apr 2026, Chuck Lever wrote:
 
-That would be a nice addition.
-
-> We need a solution that can pick up a different certificate for each
-> network namespace, for instance. And we want to enable certificate
-> storage in the system's TPM someday.
+>>>>>    It seems
+>>>>> like a lot more work than just using the config file.
+>>> Well in some cases, storing credentials on a persistent file is not a
+>>> viable option.
+>>> For nvme there is a userspace utility that helps with this to some extent.
+>> This is because handling an NVMe PSK in the keyring is a first-class,
+>> supported mechanism. Handling the x.509 certificate this way hasn't
+>> really been thought through.
 >
-> And this needs to be made reliable relative to module load order.
+> What makes NVMe PSK more "supported" than x.509?
 
-I support everything you said.
+Hannes contributed NVMe PSK in the beginning. IIUC PSK was the first
+authentication mode available for the NVMe/TCP protocol. I'm not sure
+we can say that x.509 is supported for our NVMe/TCP implementation,
+though that is something that should be made to work someday.
 
->>>>    It seems
->>>> like a lot more work than just using the config file.
->> Well in some cases, storing credentials on a persistent file is not a
->> viable option.
->> For nvme there is a userspace utility that helps with this to some extent.
-> This is because handling an NVMe PSK in the keyring is a first-class,
-> supported mechanism. Handling the x.509 certificate this way hasn't
-> really been thought through.
+Likewise for NFS and x.509 -- that was the easier authentication
+mode to implement for RPC-with-TLS. Eventually we want to support
+both.
 
-What makes NVMe PSK more "supported" than x.509? Both rely on userspace
-to create keys using a keyring (either a well-known keyring, or some 
-user created keyring)
-and pass it to the kernel as parameters (either comma-separate-string to 
-/dev/nvme-fabrics
-or as a comma-separated-string to mount.nfs). These are not different IMO.
+It's simply a matter of development resources and priorities, there
+is really no spec reason it cannot be done.
 
-Unlike NFS, the NVMe spec defines standard identities (host and 
-subsystem qualified names) and
-shared secret format as well as naming conventions. Hence nvme-cli 
-provides a nice interface that
-does not force the user to open and read the specification. nvme-cli TLS 
-helpers primary purpose
-is not really to save the user adding a key to a keyring and adding it 
-as a parameter to the driver
-connection string, that is just a nice by-product afaik.
 
+> The way I see it, use of a keyring most likely mean users rely on some
+> automation software to populate it anyways.
+
+Sure, but that software does not exist right now for NFS.
+
+And with containery deployments, everyone likes to write their own
+special scripts. Hard to say what exactly the nfs-utils-provided
+pieces will need to implement.
+
+
+>> You are also building tlshd from scratch rather than using a distro-
+>> packaged version of it. That's rare enough, but it also means you can
+>> apply the patch that fixes the issue and build it yourself.
 >
->>> It is more work because keyring support for the NFS consumers is still
->>> aspirational/experimental.
->> Can you elaborate? I think people expect to be able to pass certs/keys to
->> tlshd the .nfs keyring. Also I expected it to work (as it used to).
-> The "cert_serial" and "privkey_serial" mount options are not documented
-> at all in nfs(5).
+> This breakage was brought to my attention by a user working on
+> Ubuntu24.04 ktls-utils (1.3.0). It'd be better if we'd caught it sooner...
 
-I thought this was an oversight?
+Full CI is something that is still in the works.
 
->   They are intended to be a way for the mount.nfs command
-> to pass key serial numbers to the kernel NFS client, not as an
-> administrative interface. Because, yuck.
 
-I agree this can be made nicer with passing a key identity perhaps (although
-it can create also some annoyance with how flexible key identities can be).
-In NVMe both options are supported.
-
-The way I see it, use of a keyring most likely mean users rely on some
-automation software to populate it anyways.
-
-> This doesn't mean we don't want to support using a keyring for x.509
-> certificates on NFS mounts. It means the capability isn't finished yet.
-
-I understand. But it does exist and I know of multiple users of it.
-
->>> I've pushed your patch to a "fixes" branch for folks to try out. I'm not
->>> sure yet whether we want a 1.4.1 release with this fix, since keyring
->>> support for NFS is "not finished".
->> I understand that there are features that are not supported via the
->> keyring interface. But I think that users expect things that used to work to
->> continue working. My personal opinion is that releasing this fix is
->> appropriate
->> given that this is a regression.
-> You are the first user I know of for this capability.
-
-The first that you know :)
-Definitely not the only one.
-
-> Yes, technically it's a regression, but it's not really a feature that
-> is supposed to be ready for users at this stage.
+>> I'm open to considering a dot-release, but you haven't convinced me yet.
 >
-> You are also building tlshd from scratch rather than using a distro-
-> packaged version of it. That's rare enough, but it also means you can
-> apply the patch that fixes the issue and build it yourself.
+> Ultimately it's your call Chuck. But IMO we shouldn't hold out a fix
+> for this until we are happy with a nicer mount.nfs interface.
 
-This breakage was brought to my attention by a user working on
-Ubuntu24.04 ktls-utils (1.3.0). It'd be better if we'd caught it sooner...
+I have to stop you there: That's completely not what I'm saying. No
+one is holding back a fix -- it will be merged into the main branch
+in a few days.
 
-> I'm open to considering a dot-release, but you haven't convinced me yet.
+The question is whether this issue merits fresh upstream releases. As
+I said, the capability isn't advertised, so at this time anyone who is
+using this capability is doing so at their own risk. Whoever told you
+this was a production-ready feature of the NFS client was mistaken. Can
+you provide a key serial number on the mount command line? Yes. Is it
+something that is tested and is the interface unchanging for all time?
+No.
 
-Ultimately it's your call Chuck. But IMO we shouldn't hold out a fix
-for this until we are happy with a nicer mount.nfs interface.
+It wasn't clear that 1.3.0 was the problem. 1.4.0 was released just
+last week, so that's where my attention was focused.
 
->> Is keyring support for NFS marked as "experimental" or "not finished"
->> anywhere?
-> Where would we add such a marking? nfs(5) doesn't document either of
-> those mount options.
+What you are asking for, then, is a 1.3.0 dot release for this fix. I
+still don't feel there is a strong requirement for that, given that
+distributions apply fixes to packages all the time. But I haven't made
+a final call on that.
 
-Yea, I agree.
 
-> Patches and architecture are welcome. As I said, we want this to work
-> eventually.
+> Anyways, would be happy to contribute to this (don't know anything
+> about the pq stuff though)...
 
- From my perspective (up until this conversation at least) it used to work.
-I was not aware of any dissatisfaction with the interface.
+Patches are absolutely welcome: post to kernel-tls-handshake, or
+open PRs on github.
 
-Anyways, would be happy to contribute to this (don't know anything
-about the pq stuff though)...
+
+-- 
+Chuck Lever
 
