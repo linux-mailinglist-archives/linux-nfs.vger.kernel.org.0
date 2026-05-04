@@ -1,172 +1,155 @@
-Return-Path: <linux-nfs+bounces-21377-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21378-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wMnhFhFa+GlStQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21377-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 04 May 2026 10:34:25 +0200
+	id YOlPIOF0+Gk9vgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21378-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 04 May 2026 12:28:49 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8FCF4BA47C
-	for <lists+linux-nfs@lfdr.de>; Mon, 04 May 2026 10:34:24 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EE3A4BBB7B
+	for <lists+linux-nfs@lfdr.de>; Mon, 04 May 2026 12:28:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EC6D830041F4
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 May 2026 08:34:23 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CEB49300441D
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 May 2026 10:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75F033FE0F;
-	Mon,  4 May 2026 08:34:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A03863921FA;
+	Mon,  4 May 2026 10:28:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V3c+ECGM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxVBggCC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B61033F5B9
-	for <linux-nfs@vger.kernel.org>; Mon,  4 May 2026 08:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777883662; cv=pass; b=pOgRPh1uC2HkSgkkj7+t37YZCe8v4i5Fo/a1lWBB35aN2M+BdqIh+WgBEyTrBrpNGdr1moFVNAQzXBV05UkvlIhBttQ4nALqmXCWejze+7aPJCNfYs4ZlmJOamFhL3pf3V+MLcPDt53uG6Mz4P7nB2QGCdtGjbu1kUUgut0jY1c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777883662; c=relaxed/simple;
-	bh=bTExqUWesGWj14rqmgcSagqu9B67yS2fYcp6s+nvHLY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ijx6RLP2eb6bRCvW9XGFcJbVMnj00sOjvF5f0mhBaY3RdeiEUYxbMiFzKqSXjnSi2ApaT28zyw2uSTfQqDLjnFfAJ2wauY6U6fBK3ZpW+EJH90RdkUjUfhpw4Y9/ubz4/L8OJnm0CoAQCu8WTp8P/NXCoS6DmCZxSLAHpI1qux8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V3c+ECGM; arc=pass smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5a8738c178dso305822e87.1
-        for <linux-nfs@vger.kernel.org>; Mon, 04 May 2026 01:34:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777883660; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hBj6QEBROzC9/mhAJKNt8GwKwZJi4R5ilCRVJgxZ/x6PHVwpEfT6AxKNsJ6x/xvKZj
-         OMKxRxZcmJ2FD6XDTrvG/mvayMh8C4uU+jqLMc5BvCN7UrY8jjXI9vPQyU14zF+NWzBh
-         zwHQbBIgj2P+Nc0VfFPlzJNKG+brjWawq/QNniF6G78pc0SeV9Bm6LBiLX/cbLOOj1Bj
-         U3xUapp3mq/+DAoqF7VyDErFV2ERxwCA2bIWEWXsEW19V28Wyd1ft+qOOLo85ENizyD2
-         opPANGJbWYCKv/1lMn29oZikzYcc8N92kW06sq+QZgjf9vcEooR2W8MgNUPk2iBVpRlL
-         GVKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=bTExqUWesGWj14rqmgcSagqu9B67yS2fYcp6s+nvHLY=;
-        fh=Er5PErZExkm+siDec/tBG9VSlp+QoF3ZJXW9fOVL9ew=;
-        b=MInMgwlP3J9Qj42QM+lMSTblDSQhPVNCgZNKOZpgDp4C8ZyxsJ7xx5+oAS9Tumvksr
-         p2g4ZoCYiGZNQVsBS6yEbnfHiyEGheJ1LCO1YqapqKxuVOCakbUF4wNUpcbgu/NR3aFr
-         THC1i0y+tRhtLFiAcOQ5+YkgrT0DJaYlc7GdrAMXu/OZl3iqCfLLVoAoS5tnk0isUOLJ
-         BnSuEWKtbXoT+pSp3oWI5ENR4ulvEmV8yaeUhbpie7Jnvr48G5b73H08ql0XYWqpLehH
-         L71av+6hqpxwhLHc9cn6WdoxAnqQyw87NrO4p7SIYl3V4/6onKxcZcyLa6S7iIvoDFKr
-         9ptg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1777883660; x=1778488460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bTExqUWesGWj14rqmgcSagqu9B67yS2fYcp6s+nvHLY=;
-        b=V3c+ECGMNeNws7cpRZL7mGxuMxzpqUICgNa68nwlge+e5OpJlw++ZUWQwxjEITCT1S
-         rege2EqldZOc6voAjo+6QSEVweay7NPemKA9Ewhbyxn10RuIqYgy1iBgJvds1nFHHu4Z
-         MM4mjMbYXEhi41C69hjpO4/jHWT4XHp/4rgI+jpF/cjyyIvFIhwsgQqWpREyhbbkA0Il
-         9Gi6yx1UVvXQlD/Al/Srhd4lKMrOTtk0ynHo8QwKhDffKCCMDcVYUIzxl1kSKeB3QlIL
-         iZZZpWWVx08KDN+zAb8GVDsmCkCsATrXEd3kYeX/paBtAUcUOeDtZgyC4ScKygem0aKY
-         dthw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777883660; x=1778488460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bTExqUWesGWj14rqmgcSagqu9B67yS2fYcp6s+nvHLY=;
-        b=pUkFzyK7ZMYJ4mAyexLJgKbR5eBtKMkatEG7QhkvbgcmY9UPEtw+z6z+bdkOl+J/sG
-         RUiCEuFJKy49Zw7QRMyvxiWV5guuKj+4lLywpxHe8CeOPFlq3n0Bdftm7/lxVrnoY6QH
-         tYs34DEPw/pXCGDVRXOXOO3lvbCHO1o4gT+W33W97SQpMHwvx0VqrGPZbQxhcGCmeqjJ
-         jeYpAauEq6uUgmj7N4pswfSkiyCiyKMhsPqct8U02K/n9OEY8w747krW9Yvr7YSgjoM+
-         IrkTvlsLBkKW2n0XavkBEM/HoTuAkyD20VeLo4W4uO2z4rg8b51pRs8SSap9ySy0EWM9
-         nFvg==
-X-Forwarded-Encrypted: i=1; AFNElJ+0SJuSg+Y/CazcyuHsnRuH0fZADU5heVxW1y6zd9bUm30TgceZNbY46ESaP1fiP4GnDTbbPLxKwO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFuqSBNzDr7g+rrtk9X62lmNrLFXE/t2Ot1dqYYSthZG8hFRqh
-	0wQJ0QzcyNXKJ81+liT19qXv/9fkaJTu/aYcQcDTbq2i6tXBiFL1rKOUGAK+pzWA0RMpM0fVbVo
-	0ZopAkNO16NOSp9OhVl8H8nwF7eQ6KQysT1iTJUQAjw==
-X-Gm-Gg: AeBDietrgspsXdA8yGTXGnhLOofDEB5L9aQDi6RQaIs0rag5UaKw/VKyV6AqoQZrgCM
-	rXVnPb8/UqlxkiC4//VGnnmoleG5IBDti3ZglP4+rKS8OzZZd91TNt4gwBwEsAo4NV17cmbTFwb
-	HCYIgT/R7+EZ8mSly5TE6NPMhpx0Lkp9DClerx3RSNKaw7G4XuwvNDFkjwtB1WAxLtpAA9svj/A
-	qWxeXnTLEgPswH2Yu5SMuVH1N3imY0qlrHaYpfkwD30cF+kjTySB6wwVcPaQgvG3r0Hjq2Nl9Wj
-	ym4o8ijd5GIoox04KcrI0zyWB2hxw/FCaKQJTf9oLvzd1iULpks=
-X-Received: by 2002:a05:6512:220c:b0:5a8:73c3:f27b with SMTP id
- 2adb3069b0e04-5a873c3f374mr608834e87.15.1777883659699; Mon, 04 May 2026
- 01:34:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E18238C423;
+	Mon,  4 May 2026 10:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777890523; cv=none; b=p99ETSpdR0z5pg7ksK4kO9g5e0KLd3oB70DXPOeet3HODAQWdakep2Up4xME+J0W42VC1nKUBavVsD2klM12YWW++i+/OkWJw8Ap9dDRPnXT6oSvbE/92KiqvOAfSxivHyTBoHGxgvq7vpHKOut/efhryX4rT1JbxWBqK3NxzDs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777890523; c=relaxed/simple;
+	bh=xoDnCBn4Jdqrut/JrWmmyw0jL/Nw+l0VBLZOEKZTgoc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YBXk/TyIPq+ijp+pMlTqOJcXNaCo9drR2dQ44LEq+9qKxJ9I1HvsXmG17xh9Q9WngcmJFHPfPS8IfEAHdHUM6pA1P1HWyuwgz9ruyXYWcJ6Gwdnqt9WVgw9TbKQeCgadYuDok0NRjRLnQz4/u9NsMskg9GZIn/OfggGU3Z70D3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxVBggCC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881CCC2BCB8;
+	Mon,  4 May 2026 10:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777890523;
+	bh=xoDnCBn4Jdqrut/JrWmmyw0jL/Nw+l0VBLZOEKZTgoc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=NxVBggCCXX4ntHXBsU06Uy3y5uM/bSgXAMjG/ZaBxWFQm1oortYGtuOnY868vNUF6
+	 Pdr+IC8jxF7k5bf2EvnyupKaKQwrA18rKSkyUoNhnGHuLVkaq4gAiPIDIKeKDa8bB+
+	 7RCDEzxtFh33KzAVxWRSsuLgxF5ap92Sxy9wLUDh4LKZJ49XlKXZOA90fKNQ8vHsO0
+	 k3AYUuCeQ6LtS2cu+h3Gfjg2zdXr3rqRSJaOWRZjXsLAy4IoKtezcBC2VhQtI7iDgX
+	 rHLRaFhzviKUTvzpqriMihfzYD2+aHCLVGvcC0cvsnt5DEQ6HRrw4gsKoz0XLjGo67
+	 rHD67Fi0k8JMQ==
+From: Chuck Lever <cel@kernel.org>
+Subject: [PATCH 0/2] Fix a few memory bugs in RPC-with-TLS
+Date: Mon, 04 May 2026 06:28:17 -0400
+Message-Id: <20260504-sunrpc-tls-clnt-pin-v1-0-197f359c6072@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260430085412.96961-1-marco.crivellari@suse.com>
- <8d1eff7b-3712-4039-87d6-028a4118e210@app.fastmail.com> <afNguCraI6AvmZrR@localhost.localdomain>
- <1e220a70-4318-49de-aaac-332c0a1cfab4@app.fastmail.com> <afNvZKtiQPLbi-3F@localhost.localdomain>
- <4edf7abf-8f48-4433-98f0-2ed2d97a32f5@app.fastmail.com>
-In-Reply-To: <4edf7abf-8f48-4433-98f0-2ed2d97a32f5@app.fastmail.com>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Mon, 4 May 2026 10:34:07 +0200
-X-Gm-Features: AVHnY4J16ygGjVvEIBbe2vlcSe4Mr-lVUzQBWrZHQB6R7WSpDdVqMuTZa6g545w
-Message-ID: <CAAofZF4HSbzEAvHj9--TP7QuogE03GXAhY=qecU4BnXBebemZA@mail.gmail.com>
-Subject: Re: [RFC PATCH] xprtrdma: Move long delayed work on system_dfl_long_wq
-To: Chuck Lever <cel@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, netdev@vger.kernel.org, Tejun Heo <tj@kernel.org>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal Hocko <mhocko@suse.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: E8FCF4BA47C
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMF0+GkC/yWM0Q6CMAxFf4X02UYgwoy/YnzYugI1pJJ1GBPCv
+ zv08dzcczYwTsIGt2qDxG8xeWmB5lQBTV5HRomFoa3bvu7qC9qqaSHMsyHNmnERRWqod1fnOh8
+ ZirkkHuTzq94ff7Y1PJnykToewRtjSF5pOibi+ayDRcxsWXSEff8CDVp2YJoAAAA=
+X-Change-ID: 20260504-sunrpc-tls-clnt-pin-c1c678775ade
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Michael Nemanov <michael.nemanov@vastdata.com>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1556;
+ i=chuck.lever@oracle.com; h=from:subject:message-id;
+ bh=xoDnCBn4Jdqrut/JrWmmyw0jL/Nw+l0VBLZOEKZTgoc=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp+HTH23ae+Vk+Ck3z4on8qTHVu8d1uKQln3/Q9
+ DvSP1BdvweJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafh0xwAKCRAzarMzb2Z/
+ lyNID/9RKhJOgL+ZJ5ewSUAJ79xVDGNZGCOx3g2NJiDUebNCdI5YhcgLzsoKzRvKKpXE79SsQFn
+ dx2icLp7+7DuEm5iD24D79+Hz4AuomWDgg2h5R0luPVNzOE6Ok3OStmknx9LN2SVhplo3+FjwfF
+ 33E/Cs04HGnaRktxXzknOmoQxhfQvtVhTLUxYF8asEV6Ln1I26CzMf6Tdny7wH6yReg+HpGOLdB
+ c4L72o+95larmbEyS52rh/UOmRD2vLjnzvr43spzA6m6x7Jy9QhCpohMC+jB5VH0aJ7GCGEzaQQ
+ xQN0eaLrFjdtVcy8laELze7aU8qu3f6FG+hho6yOX7qy+/bS1Eawy1ZEUtM4sTw9oWbdkGDsO0j
+ 24dlquXdO52uROOzy2reTXYSdNvSaFJyhxo3LRzAWwJMeFC9CJALDKGi2Qt4vXKBjnSuX+s3HBw
+ LqQBB7bM+VWsqA8VvoZhjT9Qygc6hQ+U92djnIW8HxzWH3QrE42GNyiEpLGCmMtcoAta5Eu1Y/g
+ seZosPB5lA6KgjH4KBQhSruEBGcnOZdO0CG/H0UTahbJ7ai3k1BrYQ9PAXhUnpIud+YAGtXFxZr
+ G7YuaBk5Kf7kY7wGfjqK5Q1WPpJUBdg42HlEag4PaEQt06/86YkIBU0BZ88cEyrCJ5sLYuZZFwS
+ pYPCD7cwgy/m4Gw==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+X-Rspamd-Queue-Id: 7EE3A4BBB7B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21377-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21378-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com,linutronix.de,suse.com,oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[marco.crivellari@suse.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.com:+];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 
-On Thu, Apr 30, 2026 at 5:09=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
-> [...]
-> The light dawns (for me). That's what I'd like to see in the commit messa=
-ge.
->
-> I don't have any technical objections to the code change.
+xs_tcp_tls_setup_socket() leaks the lower rpc_clnt when a signal
+interrupts its TASK_KILLABLE wait for XPRT_LOCKED: the killed-wait
+path jumps to out_unlock without calling rpc_shutdown_client(), so
+the clnt and its xprt leak. Patch 1 calls rpc_shutdown_client()
+before joining out_unlock.
 
-Hello Chuck,
+Patch 2 fixes a use-after-free Michael Nemanov hit on an mTLS mount
+whose client certificate the server rejected. Nothing pins the upper
+rpc_clnt across the delayed connect_worker, so a fatal handshake
+failure can let the mount caller free the clnt before
+xs_tcp_tls_setup_socket() runs; the worker then dereferences freed
+memory. A new rpc_hold_client() helper takes a reference for TLS
+transports only and drops it on the worker's exit path.
 
-Thanks for all your feedback.
-I will improve the commit log with your suggestion and then send v2.
+Compile-tested only.
 
-Thanks.
+Recent related threads:
 
---=20
+[1] https://lore.kernel.org/linux-nfs/20260309112041.1336519-1-bsdhenrymartin@gmail.com/T/#u
 
-Marco Crivellari
+[2] https://lore.kernel.org/linux-nfs/a57879782d2d383e2d1af292fe2b9005a43ea06c.1773263233.git.bcodding@hammerspace.com/T/#u
 
-SUSE Labs
+---
+Chuck Lever (2):
+      SUNRPC: release lower rpc_clnt if killed waiting for XPRT_LOCKED
+      SUNRPC: pin upper rpc_clnt across the TLS connect_worker
+
+ include/linux/sunrpc/clnt.h |  1 +
+ net/sunrpc/clnt.c           | 19 +++++++++++++++++--
+ net/sunrpc/xprtsock.c       | 16 ++++++++++++++--
+ 3 files changed, 32 insertions(+), 4 deletions(-)
+---
+base-commit: 22ca5f8e836e43f49c9b622f60e7ee48012a81c3
+change-id: 20260504-sunrpc-tls-clnt-pin-c1c678775ade
+
+Best regards,
+--  
+Chuck Lever <chuck.lever@oracle.com>
+
 
