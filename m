@@ -1,221 +1,174 @@
-Return-Path: <linux-nfs+bounces-21390-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21391-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KNdHBOjO+WlHEQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21390-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 05 May 2026 13:05:12 +0200
+	id uAVkLsD8+WleFwMAu9opvQ
+	(envelope-from <linux-nfs+bounces-21391-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 05 May 2026 16:20:48 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C1DA4CC24A
-	for <lists+linux-nfs@lfdr.de>; Tue, 05 May 2026 13:05:11 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31E034CF47C
+	for <lists+linux-nfs@lfdr.de>; Tue, 05 May 2026 16:20:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 70F8D3020A5F
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 May 2026 10:53:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BC31B300B3E6
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 May 2026 14:20:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A23C5381AF2;
-	Tue,  5 May 2026 10:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8vHvdRa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACF13426EC5;
+	Tue,  5 May 2026 14:20:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA3837F8A9;
-	Tue,  5 May 2026 10:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF452F0661
+	for <linux-nfs@vger.kernel.org>; Tue,  5 May 2026 14:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777978419; cv=none; b=FpukNLTZYnLiA83T+kGvWMidPRgWERpU2aqWzkliWbmjNSUQRhpZHjWDM8OaAJnoCOBAcbmVlQ9aN5wyEMnUOXYYlElqg3/D9i13skF2mN2q/ddbmC6X2BGkVAspOE7IKEcd+yzr2owC7VtAEsE6zxU2DnryJ0bigy/4wZ8ez0E=
+	t=1777990844; cv=none; b=ldIhs1Xu3CaDU4by0CBSKOaOPSr3pUUSPRWSD78ansLzwdcv2nmbectqxshV8bFAAY9dWrLsbjrqm0yGZZ78dvub23RwmZLroZHUkFcI29227Sh5dDKqaa0BjvHo/O3lVG6dpuZuwDgMHsSD9ArHgdozZcPZMFOxZ/50aixEoUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777978419; c=relaxed/simple;
-	bh=KnbhoE0I3ur7S4TEiFuzxCqvEtZyRA7GqwIvsBNPZNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bIaRY2RwJAqDFlmZ0LIVOA1mP6QYsUsoQdQVgRvQ04QZkEZMGSDiqMG2C0LKw6rsGmqmLaEUiAHv/4d3jmfD+UzqzAO1tpUdqSqQokrO79rqe0tQrZ4lAGczSce0ox+nqueOjZcJ/InJ5MQyPuFlDA8nIACGosFUQYt1XZjPAjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8vHvdRa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D83EC2BCB4;
-	Tue,  5 May 2026 10:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777978419;
-	bh=KnbhoE0I3ur7S4TEiFuzxCqvEtZyRA7GqwIvsBNPZNY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s8vHvdRak07XxK44RE8ppW82HVQsCQKcP+fKBxBOr1EsyVdnhK6GSs8k/Y0PxWtZY
-	 F6lTsJPDCSvxl0nmZM6yCrSDgCFf5+/peU9RzxB8JF1FBqYHPTwoeOCqfWWYrkeiNA
-	 y0enlnuqWncFo4TSbyMuXIWGhU9LpujvxWIqVhvx+V3rse4PrcK/sO6Cx0Ai6Lu1a3
-	 /lpewou5wRo7loNYjLa/sNUUQ15qX35aUjAg0LX9Utr5ujemSKuAG7SzMGLzkbopAr
-	 Y7AaYQOLdKQzkdlzmjQKWvgCJ1PdVwMdp0xp9B7Mci3gYOzgjT3/y7XJIOhUQLA90H
-	 wqQwSnlNBigOw==
-Message-ID: <8d3fbb91-65c4-4d15-ac38-3e6372eb0ffa@kernel.org>
-Date: Tue, 5 May 2026 12:53:32 +0200
+	s=arc-20240116; t=1777990844; c=relaxed/simple;
+	bh=/d0OBpGYVZpBV3j21ey/rUXXIkrSE+TxnRQFxYXpTuQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=N2pe2+OIgCvziajwE5KoG4ExRFXRomSbt70y+x3DZQiMjw/m/eQmbR7HvsLb5D0IdxvsWAhfnpOjfP2R08XsZjMUZIrniGAQ5OO2X3hKlm8Iw16KPR1QuEdG2CXrMK4tr9YNQOZdYvOpy0B7N6YTMbbKnjrWmgWNaYf5TShRjG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so84233675e9.2
+        for <linux-nfs@vger.kernel.org>; Tue, 05 May 2026 07:20:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777990841; x=1778595641;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b/Kk/WufcsnomHjx1AOXJoM5210I/9LDXcnNDou3dFw=;
+        b=fj1Xt8wnu7GLdT3p9XRIYEOsTJaE4LKKHPpf1syEwvxP4HO3raQVkwe/qetP0EuB4+
+         ADid2Xp3aPyybhR0tpKKIkV1AqtymgZRLZoQRTXhezvPG5O9KsMGqc+eDZk5WGKyD8tN
+         N+JFC3lTfbZVc4WtHwRhJ/KUg+utKktxGwLkdUKfzPZCYk6ynxBaqPLZAA9tkoH3ukbN
+         Oz3Bfw1p/XHk3vMMmWo5VLfnWnOXWyLPoO1O3ex11T7fze5f4Ww/Vh+D6IYdftHIDW9y
+         IkI5e5wvsdsUmVhrQlnipbnPBpuTdyMoK7nFfL4a3SafRB99H9hRkibpdejUpEtg/K+f
+         Pc1g==
+X-Forwarded-Encrypted: i=1; AFNElJ++BLbF0lX7Ky42RYfv7j2DJdQtSHqW1SiUdL9qUgUzGE5AnPx02gLtlDfmdYtUmhH3C5mpxMoCGmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2OEZK01pP5UG8ldBjP7k32BKrxY64oEc0i7HdwyFuIduUHU0i
+	fhKDTFC2eudfED5lerbIll7HavglmiA7FyE1rv3vppi+q6I6NQhqi3J5MT9JrQ==
+X-Gm-Gg: AeBDiev3EtAem7Wttmv5TZ7+YykuF/A4g52aii0DMu9GvGljaOU+KSR/SIqaR/A1Dmi
+	B+IGO3+q4PvPGHCCdkozWn20gYjuvnQeGUAU4Rou+aC9JyJZ3GX+kD1ekwoeZlZPDz7yJAsjeOX
+	GYRh0QZ0AiBH/SFtI+olvSUk/D9+5nzbOGl/APUZTt2O4FaprFV3WajL4GRwgqFJqKLP2s8yMou
+	Jg/kphG62akjDlngsukpv3lMRRiLmSKMgkx/wK61tY8XBOku7vzUTJHzUr9tt2ZqT3hmApczo+8
+	GEdxEyI2Dc/aGEjj3E0M/6+0b3PzphkCWUarT+u2GW7qnt8WZs2l/Siz4YEOAqFQYxfwSLXip5I
+	HVqbSblJafpYj8kBZhIFbkKhRGArfTd5m/d+22+ZPwqlVFSWJeOI9XepIHXLEs4iJTNai0RYlFL
+	SZiqw8TD3r38FO5kRS9+IiAFGaZnSjqhr1RAzrQQLvtJdXGkI9s0Ue1DP3TculY/2W3yOpGR/7J
+	ghKNd1ISzlByVRWdNA7Skqh
+X-Received: by 2002:a05:600c:8590:b0:487:5c0:671f with SMTP id 5b1f17b1804b1-48a986381b8mr183901525e9.9.1777990841037;
+        Tue, 05 May 2026 07:20:41 -0700 (PDT)
+Received: from vastdata-ubuntu2.vastdata.com (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8eb69698sm633834915e9.1.2026.05.05.07.20.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2026 07:20:40 -0700 (PDT)
+From: Sagi Grimberg <sagi@grimberg.me>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	Steve Dickson <steved@redhat.com>
+Subject: [PATCH] nfs.man: Document mtls mount parameters cert_serial and privkey_serial
+Date: Tue,  5 May 2026 17:20:38 +0300
+Message-ID: <20260505142038.52921-1-sagi@grimberg.me>
+X-Mailer: git-send-email 2.43.0
+Reply-To: sagi@grimberg.me
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] SUNRPC: Address remaining cache_check_rcu() UAF in
- cache content files
-To: Calum Mackay <calum.mackay@oracle.com>,
- Misbah Anjum N <misanjum@linux.ibm.com>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Yang Erkun <yangerkun@huawei.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
- alexandr.alexandrov@oracle.com
-References: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
- <daa6461b-d8d6-42ad-adac-ac0df58c3b6e@oracle.com>
-From: Chuck Lever <cel@kernel.org>
-Content-Language: en-US
-Organization: kernel.org
-In-Reply-To: <daa6461b-d8d6-42ad-adac-ac0df58c3b6e@oracle.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 8C1DA4CC24A
+X-Rspamd-Queue-Id: 31E034CF47C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21390-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	HAS_ORG_HEADER(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21391-lists,linux-nfs=lfdr.de];
+	DMARC_NA(0.00)[grimberg.me];
+	RCPT_COUNT_THREE(0.00)[3];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	HAS_REPLYTO(0.00)[sagi@grimberg.me];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.905];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	R_DKIM_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On 5/5/26 12:49 PM, Calum Mackay wrote:
-> On 01/05/2026 3:51 pm, Chuck Lever wrote:
->> Misbah Anjum reported a use-after-free in cache_check_rcu()
->> reached through e_show() while sosreport was reading
->> /proc/fs/nfsd/exports on ppc64le.  Two fixes for that report
->> landed in v7.0:
->>
->>    48db892356d6 ("NFSD: Defer sub-object cleanup in export put
->> callbacks")
->>    e7fcf179b82d ("NFSD: Hold net reference for the lifetime of /proc/
->> fs/nfs/exports fd")
->>
->> The original e_show() repro is now fixed.  However, the same
->> sosreport workload still reproduces a closely related fault on
->> post-v7.0 mainline (Misbah, ppc64le) and on master.20260424
->> (internal report, aarch64).  In both cases the fault is in
->> cache_check_rcu() reached through c_show() rather than e_show(),
->> and the cache_head pointer is plain garbage:
->>
->>    pc : cache_check_rcu+0x40 [sunrpc]
->>    lr : c_show+0x60 [sunrpc]
->>    ...faulting on h->flags off h = 0x0000000200000000
->>
->> c_show() is the generic show callback used by
->> /proc/net/rpc/<cd>/content for every per-net cache_detail
->> (auth.unix.ip, auth.unix.gid, nfsd.fh, nfsd.export).  Two
->> bugs combine in that path:
->>
->> 1. cache_unregister_net() / cache_destroy_net() free cd and
->>     cd->hash_table synchronously when the namespace exits.  The
->>     /proc/net/rpc/.../content open path takes only a module
->>     reference, so a fd kept open across a netns exit walks a
->>     freed hash_table and returns garbage cache_head pointers.
->>     This is the same hazard that e7fcf179b82d closed for the
->>     /proc/fs/nfs/exports file alone.
->>
->> 2. ip_map_put() drops auth_domain_put() before kfree_rcu(), so
->>     sub-objects can be freed before the RCU grace period -- the
->>     same hazard that 48db892356d6 fixed for svc_export_put() and
->>     expkey_put().  unix_gid_put() does not have this bug
->>     structurally (its put_group_info() runs inside the call_rcu()
->>     callback) but it uses a separate idiom from the other three
->>     caches.
->>
->> This series replaces the v1 narrow fixes with shared
->> infrastructure that covers all four cache_detail .put paths
->> and all three per-cache file types:
->>
->> Patch 1 hoists nfsd_export_wq up to the sunrpc layer as
->> sunrpc_cache_wq, exposed through sunrpc_cache_queue_release()
->> and sunrpc_cache_drain() so all four put callbacks share one
->> workqueue and one drain primitive.
->>
->> Patch 2 converts ip_map_put() to the queue_rcu_work() pattern,
->> moving auth_domain_put() into a deferred ip_map_release() that
->> runs after the RCU grace period.
->>
->> Patch 3 unifies unix_gid_put() onto the same pattern for
->> consistency (not a bug fix on its own).
->>
->> Patch 4 takes a get_net(cd->net) in content_open(), cache_open(),
->> and open_flush() and drops it in the matching release helpers,
->> so cache_destroy_net() cannot run while a sunrpc cache fd is
->> open.
->>
->> Series has been compile-tested only.
->>
->> ---
->> Chuck Lever (6):
->>        SUNRPC: Move cache_initialize() declaration to sunrpc-private
->> header
->>        SUNRPC: Provide a shared workqueue for cache release callbacks
->>        SUNRPC: Defer ip_map sub-object cleanup past RCU grace period
->>        SUNRPC: Use shared release pattern for the unix_gid cache
->>        SUNRPC: Hold cd->net for the lifetime of cache files
->>        NFSD: Convert nfsd_export_shutdown() to sunrpc_cache_destroy_net()
->>
->>   fs/nfsd/export.c             | 45 ++--------------------
->>   fs/nfsd/export.h             |  2 -
->>   fs/nfsd/nfsctl.c             |  8 +---
->>   include/linux/sunrpc/cache.h |  3 +-
->>   net/sunrpc/cache.c           | 90 ++++++++++++++++++++++++++++++++++
->> ++++++++--
->>   net/sunrpc/sunrpc.h          |  2 +
->>   net/sunrpc/sunrpc_syms.c     | 23 ++++++-----
->>   net/sunrpc/svcauth_unix.c    | 46 ++++++++++++----------
->>   8 files changed, 135 insertions(+), 84 deletions(-)
->> ---
->> base-commit: f3a313ecd1fdab1f5da119db355363b13af6fcac
->> change-id: 20260430-cache-uaf-fix-a13000f67c37
->>
->> Best regards,
->> -- 
->> Chuck Lever
->>
->>
-> 
-> Looks good Chuck, thanks very much.
-> 
-> With these patches, testing shows no crashes, sosreport no longer hangs,
-> no seq_file errors.
-> 
-> Tested-by: Alexandr Alexandrov <alexandr.alexandrov@oracle.com>
-> 
-> cheers,
-> c.
-> 
+Two new mount params for x.509 certificate and private key pair used
+for mTLS authentication. These have been added a while ago, document
+them officially.
 
-Excellent; pushed with Jeff's R-b and Alexandr's T-b.
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ utils/mount/nfs.man | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-
+diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+index 9a46157998b5..2cea501c9e03 100644
+--- a/utils/mount/nfs.man
++++ b/utils/mount/nfs.man
+@@ -624,6 +624,32 @@ the default behavior depends on the kernel version,
+ but is usually equivalent to
+ .BR "xprtsec=none" .
+ .TP 1.5i
++.BI cert_serial= serial
++Specifies the serial number of a key stored in a Linux key Keyring.
++The key payload contains a DER-encoded client X.509 certificate used for RPC-with-TLS mutual
++authentication
++.RB ( xprtsec=mtls ).
++The TLS handshake daemon
++.RB ( tlshd (8))
++reads the key payload from this serial when performing the X.509
++client handshake.
++.I serial
++is a decimal integer. This key must be visible to the TLS handshake daemon.
++.TP 1.5i
++.BI privkey_serial= serial
++Specifies the serial number of a key stored in a Linux key Keyring.
++The key payload contains a DER-encoded client private key that matches the
++certificate selected by
++.BR cert_serial
++and used as well for RPC-with-TLS mutual authentication
++.RB ( xprtsec=mtls ).
++The TLS handshake daemon
++.RB ( tlshd (8))
++reads the key payload from this serial when performing the X.509
++client handshake.
++.I serial
++is a decimal integer. This key must be visible to the TLS handshake daemon.
++.TP 1.5i
+ .BI noalignwrite
+ This option disables the default behavior of extending buffered write operations
+ to full page boundaries.
+@@ -1973,7 +1999,9 @@ CONFIG_NFS_V4, CONFIG_NFS_V4_1, and CONFIG_NFS_V4_2.
+ .BR rpc.idmapd (8),
+ .BR rpc.gssd (8),
+ .BR rpc.svcgssd (8),
+-.BR kerberos (1)
++.BR kerberos (1),
++.BR tlshd (8),
++.BR tlshd.conf (5)
+ .sp
+ RFC 768 for the UDP specification.
+ .br
 -- 
-Chuck Lever
+2.43.0
+
 
