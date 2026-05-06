@@ -1,330 +1,288 @@
-Return-Path: <linux-nfs+bounces-21402-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21403-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OOZRA72Y+mmQQAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21402-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 03:26:21 +0200
+	id mE22MWrZ+ml8TQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-21403-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 08:02:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6385F4D53E2
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 03:26:19 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBD184D66E4
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 08:02:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 92DC0300610D
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 01:26:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9D8A730028DB
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 06:02:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD8A204F93;
-	Wed,  6 May 2026 01:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8481E7C18;
+	Wed,  6 May 2026 06:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="a9xrrWdf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDT0TrSp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A856258EF9;
-	Wed,  6 May 2026 01:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AA313AD1C
+	for <linux-nfs@vger.kernel.org>; Wed,  6 May 2026 06:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778030775; cv=none; b=rXPuZLTn9ZNfPwwFg6dorApwPqKpnk0DSFi4/jX/97x3gPvOEkJsdoGZhfgmBH5MIVLpoS+UzcCLjcSEMMJxjG1qK9Qm9PDbFYHK267k9nLJGUwTpLd0Jgfofqa50xA8KU89GMdbAbrmgwwu976XMosJ34Ri0OUw1UA+GnVxmhA=
+	t=1778047333; cv=none; b=s4oQ5joZ2m9Iy/lIvLvBnl3XWsWrkggj+qj31Ad+gUJobrdcQI7bWaL9wyPuTF5cxD5DvS3q3C+NYwNrHmyee+YeI1ffmeEmN+yyXVHbE+TsFKd2/GSA/zsjmIrUqCBUPNTUvv5nGbHLA3lT80uhOVFcwU0Q8R4DdxuIL23DvEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778030775; c=relaxed/simple;
-	bh=UXrpFKHe7lnjvS8JoAHg/nNoNEHBsG4UHUQEI8iUASQ=;
-	h=Subject:From:To:CC:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Oa1cnch9Hgx1Kis4en6VGPTE4ntWSNa4HsMw6ic095XivljJGKptG0Wc36/KMcTRmdinqIEFoQqOfPPuew6/9LRL5hsUbq1YPEulwaecxr4gg6Fx7TXk24zB5slwTI+CPv6YUJ20J8kIeHUmGL8LF4XBfbjhmoYtgN4kyeOxeSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=a9xrrWdf; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=POTGXArHR5M/LjD8hFT7EQstd+SBLd1GjV5kgEsflU4=;
-	b=a9xrrWdfEzGBcPzCu//aLCH9zUiUuSnhTyaOj5aU+tqdc4oLyzbJ/a0ZK5N+IiXZmeB4gcvtc
-	jalL+MAO+47wL8dTXqVESBJf8FWcuuXDLA1JL8ujyeW4F3RZsm3nw+vURol/vsFDvVnYJbkLMJz
-	Ywa57dNptM5QbZpRxKU/61M=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4g9HZY517xzRhrc;
-	Wed,  6 May 2026 09:18:29 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 03BA140571;
-	Wed,  6 May 2026 09:26:02 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 6 May 2026 09:26:01 +0800
-Subject: Re: [PATCH] NFSv4: Fix state recovery deadlock when server misses
- grace period
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-To: Trond Myklebust <trondmy@kernel.org>, <anna@kernel.org>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yangerkun@huawei.com>, Li Lingfeng <lilingfeng3@huawei.com>
-References: <20260422064447.358447-1-chengzhihao1@huawei.com>
- <e8c5a503-e8b4-11ef-68fb-a0195ce07b07@huawei.com>
- <ac3165e050f4fa9ca4dfd102f7ec1c5e554db693.camel@kernel.org>
- <863ecd04-01be-114e-f625-47b6a918a546@huawei.com>
-Message-ID: <c6dd0b1e-ace8-0d50-91f6-f8669d7b41b7@huawei.com>
-Date: Wed, 6 May 2026 09:25:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1778047333; c=relaxed/simple;
+	bh=QtLVs3zBzk46qx2LaVlm+gUg28FUB++0gks4zqQaLGA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=h+ntmcI5tbe+hrkxFYzg0pURd5C0OlG+rWavvQiaBODICdsW/mBa8Huy0cCmIpyXCJK6QDs8uwWqrP0E3vC4M87zUkkwZqVMdakaKiL+L+Y+/F9xr3oJ75cpe7HaC+11UN53TZdTm4s52kowNHWAC6+P/igLGJDScc50fUaC6KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDT0TrSp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B83C2BCB8;
+	Wed,  6 May 2026 06:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778047333;
+	bh=QtLVs3zBzk46qx2LaVlm+gUg28FUB++0gks4zqQaLGA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=HDT0TrSpXpqhaLM8TOBeXV7lS+LBEqCbgq65ACmvpMCdivmQ4eMYZYxYEqiojboBL
+	 MLQVbLHqRrm/KmTME6KuIMXOZClDjR5nbmwH1KvAagNzaNsHnxTTIMqtdw4IWLbrMv
+	 4G/+KP/xG2/+DSWBpXEnm3UxYjhXQ02NVtF2xfRb6RH5tcBL2EJw5DzIZnNuPXYv1m
+	 zrOHrO3YjGZ98t1nwzC/qsbdTY9G65vG3Oxls1qTz0Dx5KT6Mn+qUwkpXbZiWqFetM
+	 xw8Sv2ZUBq5NhyS3MRbrTV+XQiRVOmRr4NuhW4sNirzO9EnVWh1K7P+g3UdXT5RDMn
+	 UKtfRUnYm8pag==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id EFBD2F40079;
+	Wed,  6 May 2026 02:02:11 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Wed, 06 May 2026 02:02:11 -0400
+X-ME-Sender: <xms:Y9n6aXEjTLgRYGS1bbSw3BBacyG4L0Ax7i5B5LA8BOkAlyqpAHfKkQ>
+    <xme:Y9n6afJw_WUDIlJutxAN_D7of2Xl__SK9BhAuzEYw3JXD87fiEmmz0mtI-FyUvbxs
+    RahHOkOropzGEYoI7lMGcCEgze4tgkderVcFkErqcC0la3ts42O0rE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdefkedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
+    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
+    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
+    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
+    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
+    hilhdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepsggvnhdrtghougguihhnghhtohhnsehhrghmmhgvrhhsphgrtggvrdgtohhmpd
+    hrtghpthhtohepjhhonhgrthhhrghnrdhflhihnhhnsehhrghmmhgvrhhsphgrtggvrdgt
+    ohhmpdhrtghpthhtohepshhnihhtiigvrheshhgrmhhmvghrshhprggtvgdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Y9n6aYvY5UxVnvmK-Y8kvlJ43LQQNFJVfau_gRfqxDB8UoR5FgDuBg>
+    <xmx:Y9n6aTQjrkHL3cfKTffVCIEfbx_-tr5iiLS7WDP5zEILxvv5RExWmg>
+    <xmx:Y9n6aePq9qPkhO7P90M4uENzeZQveoD9VSheID_iYCq-oS4oHSfD7Q>
+    <xmx:Y9n6aYZCBFlxOerCLqtQ5F6-3q4L_GTDu4gBlTERLm89qJeGI9WFzQ>
+    <xmx:Y9n6aYzKB8paO6DyfRZgPV9UFQc0dcKIHSwLCPDLl8QFCKqhmYpd3QPp>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CEB8A780070; Wed,  6 May 2026 02:02:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <863ecd04-01be-114e-f625-47b6a918a546@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemk500005.china.huawei.com (7.202.194.90)
-X-Rspamd-Queue-Id: 6385F4D53E2
+X-ThreadId: Az3pGS3ONw8o
+Date: Wed, 06 May 2026 08:01:50 +0200
+From: "Chuck Lever" <cel@kernel.org>
+To: "Mike Snitzer" <snitzer@hammerspace.com>
+Cc: linux-nfs@vger.kernel.org, ben.coddington@hammerspace.com,
+ jonathan.flynn@hammerspace.com
+Message-Id: <0010c891-174d-468a-be80-f53fa60ac5c7@app.fastmail.com>
+In-Reply-To: <20260505215535.68412-2-snitzer@kernel.org>
+References: <20260505215535.68412-1-snitzer@kernel.org>
+ <20260505215535.68412-2-snitzer@kernel.org>
+Subject: Re: [RFC PATCH 1/2] svcrdma: bound per-xprt sc_send_ctxts cache and apply
+ backpressure on _get
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: CBD184D66E4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21402-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-21403-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,app.fastmail.com:mid];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[chengzhihao1@huawei.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,huawei.com:dkim,huawei.com:mid,ietf.org:url]
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 
-在 2026/4/23 17:05, Zhihao Cheng 写道:
-> 在 2026/4/22 20:38, Trond Myklebust 写道:
->> On Wed, 2026-04-22 at 14:55 +0800, Zhihao Cheng wrote:
->>> 在 2026/4/22 14:44, Zhihao Cheng 写道:
->>> Add lilingfeng3@huawei.com
->>>> NFS server restart causes client to enter an infinite loop during
->>>> state
->>>> recovery. The state manager gets stuck in NFS4CLNT_RECLAIM_NOGRACE
->>>> processing,
->>>> with the server repeatedly returning NFS4ERR_GRACE for each file
->>>> iteration.
->>>> This problem is reported in [1].
->>>>
->>>> Trigger sequence:
->>>>    1. Client opens 2 files. After server reboot, client enters
->>>>       nfs4_do_reclaim(RECLAIM_REBOOT). Server misses grace period
->>>> and returns
->>>>       NFS4ERR_NO_GRACE, causing client to set
->>>> NFS4CLNT_RECLAIM_NOGRACE.
->>>>    2. Client enters nfs4_do_reclaim(RECLAIM_NOGRACE) to recover
->>>> first file.
->>>>       Server reboots again, open request returns NFS4ERR_BADSESSION,
->>>> client
->>>>       sets NFS4CLNT_SESSION_RESET.
->>>>    3. nfs4_reset_session calls nfs4_proc_create_session which fails
->>>> with
->>>>       ETIMEDOUT due to network¹ÊÕÏ, nfs4_handle_reclaim_lease_error
->>>> sets
->>>>       NFS4CLNT_LEASE_EXPIRED but does NOT set
->>>> NFS4CLNT_RECLAIM_REBOOT.
->>>>    4. When nfs4_reclaim_lease runs, because NFS4CLNT_RECLAIM_NOGRACE
->>>> is already
->>>>       set, it skips setting NFS4CLNT_RECLAIM_REBOOT (the bug,
->>>> modified by
->>>>       commit b42353ff8d346 ("NFSv4.1: Clean up
->>>> nfs4_reclaim_lease")).
->>>>    5. Server never receives RECLAIM_COMPLETE, so cl_flags lacks
->>>>       NFSD4_CLIENT_RECLAIM_COMPLETE. When processing subsequent
->>>> files,
->>>>       server always returns nfserr_grace, causing infinite retry
->>>> loop.
->>>>
->>>> Fix it by setting NFS4CLNT_RECLAIM_REBOOT in nfs4_reclaim_lease if
->>>> NFS4CLNT_SERVER_SCOPE_MISMATCH is not set, so that the client sends
->>>> RECLAIM_COMPLETE to the server first, allowing subsequent nograce
->>>> recovery to proceed.
->>>>
->>>> Fetch a reproducer in [2].
->>>>
->>>> [1]
->>>> https://lore.kernel.org/linux-nfs/55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com/ 
->>>>
->>>> [2] https://bugzilla.kernel.org/show_bug.cgi?id=221399
->>>>
->>>> Fixes: b42353ff8d346 ("NFSv4.1: Clean up nfs4_reclaim_lease")
->>>> Cc: stable@vger.kernel.org
->>>> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
->>>> Closes:
->>>> https://lore.kernel.org/linux-nfs/55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com/ 
->>>>
->>>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
->>>> ---
->>>>    fs/nfs/nfs4state.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
->>>> index 305a772e5497..817327e73d88 100644
->>>> --- a/fs/nfs/nfs4state.c
->>>> +++ b/fs/nfs/nfs4state.c
->>>> @@ -2012,7 +2012,7 @@ static int nfs4_reclaim_lease(struct
->>>> nfs_client *clp)
->>>>            return nfs4_handle_reclaim_lease_error(clp,
->>>> status);
->>>>        if (test_and_clear_bit(NFS4CLNT_SERVER_SCOPE_MISMATCH,
->>>> &clp->cl_state))
->>>>            nfs4_state_start_reclaim_nograce(clp);
->>>> -    if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
->>>> +    else
->>>>            set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
->>>>        clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
->>>>        clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
->>>>
->>>
->> This will cause the client to try to do reboot recovery in a situation
->> where it isn't allowed to do so by the spec. We should never be setting
->> NFS4CLNT_RECLAIM_REBOOT if NFS4CLNT_RECLAIM_NOGRACE is already set.
-> Hi Trond, the client can only do reclaim reboot during the grace 
-> period(after server reboot), according to [1], any reclaim type messages 
-> should be rejected by server for NOGRACE state, am I understanding right?
-> [1] https://datatracker.ietf.org/doc/html/rfc5661#section-8.4.2.1
->>
->> One solution would be to just immediately call
->> nfs4_state_end_reclaim_reboot() if NFS4CLNT_RECLAIM_NOGRACE is set.
->>
-friendly ping
-> I tried with your suggestion, and the problem still happens:
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 5044bb4c870f..5b6cb3f7ff2e 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -2014,6 +2014,8 @@ static int nfs4_reclaim_lease(struct nfs_client *clp)
->                  nfs4_state_start_reclaim_nograce(clp);
->          if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
->                  set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
-> +       else
-> +               nfs4_state_end_reclaim_reboot(clp);
->          clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
->          clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
->          return 0;
-> 
-> The nfs4_state_end_reclaim_reboot sends RECLAIM_COMPLETE only if the clp 
-> has NFS4CLNT_RECLAIM_REBOOT flag, but it does not.
-> 
-> The root cause is that the client has identified an incorrect server 
-> status after the server's second reboot(since step 2). I think the 
-> client should do reclaim reboot every time the server restarts, so we 
-> should let client know the server reboots again, can we take following 
-> methods?
-> 1. Clear NFS4CLNT_RECLAIM_NOGRACE flag if client knows that the server 
-> restart while doing nfs4_do_reclaim(NFS4CLNT_RECLAIM_NOGRACE). Client 
-> could identify the server state by NFS4ERR_BADSESSION retcode:
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 5044bb4c870f..3f73dc3919a2 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -1875,6 +1875,9 @@ static int nfs4_do_reclaim(struct nfs_client *clp, 
-> const struct nfs4_state_recov
->                           clp->cl_hostname, lost_locks);
->                   set_bit(ops->owner_flag_bit, &sp->so_flags);
->                   nfs4_put_state_owner(sp);
-> +                if (ops == clp->cl_mvops->nograce_recovery_ops &&
-> +                    status == -NFS4ERR_BADSESSION)
-> +                    clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
->                   status = nfs4_recovery_handle_error(clp, status);
->                   nfs4_free_state_owners(&freeme);
->                   return (status != 0) ? status : -EAGAIN;
-> 
-> 2. Client knows the server restarts by error code 
-> NFS4ERR_STALE_CLIENTID(nfs4_proc_create_session -> 
-> nfs4_handle_reclaim_lease_error), but nfs4_reset_session won't retry if 
-> the error code is ETIMEDOUT(eg. network failure in step 3), we should 
-> let client retry nfs4_reset_session if network failure.
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 5044bb4c870f..62fd57e602d6 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -2459,6 +2459,8 @@ static int nfs4_reset_session(struct nfs_client *clp)
->       if (status) {
->           dprintk("%s: session reset failed with status %d for server 
-> %s!\n",
->               __func__, status, clp->cl_hostname);
-> +        if (status == -ETIMEDOUT)
-> +            goto out;
->           status = nfs4_handle_reclaim_lease_error(clp, status);
->           goto out;
->       }
-> @@ -2552,6 +2554,8 @@ static void nfs4_state_manager(struct nfs_client 
-> *clp)
->           if (test_and_clear_bit(NFS4CLNT_SESSION_RESET, &clp->cl_state)) {
->               section = "reset session";
->               status = nfs4_reset_session(clp);
-> +            if (status == -ETIMEDOUT)
-> +                continue;
->               if (test_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state))
->                   continue;
->               if (status < 0)
-> 3. Conditionaly set NFS4CLNT_RECLAIM_REBOOT in nfs4_reclaim_lease, if 
-> the client has ever been recovered failed by 
-> nfs4_do_reclaim(NFS4CLNT_RECLAIM_NOGRACE)->BAD_SESSION, mark clp with 
-> NFS4CLNT_RECLAIM_REBOOT.
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 5044bb4c870f..82eb650cc135 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -1875,6 +1875,9 @@ static int nfs4_do_reclaim(struct nfs_client *clp, 
-> const struct nfs4_state_recov
->                           clp->cl_hostname, lost_locks);
->                   set_bit(ops->owner_flag_bit, &sp->so_flags);
->                   nfs4_put_state_owner(sp);
-> +                if (ops == clp->cl_mvops->nograce_recovery_ops &&
-> +                    status == -NFS4ERR_BADSESSION)
-> +                    __set_bit(NFS_CS_NOGRACE_REBOOT, &clp->cl_flags);
->                   status = nfs4_recovery_handle_error(clp, status);
->                   nfs4_free_state_owners(&freeme);
->                   return (status != 0) ? status : -EAGAIN;
-> @@ -2012,7 +2015,7 @@ static int nfs4_reclaim_lease(struct nfs_client *clp)
->           return nfs4_handle_reclaim_lease_error(clp, status);
->       if (test_and_clear_bit(NFS4CLNT_SERVER_SCOPE_MISMATCH, 
-> &clp->cl_state))
->           nfs4_state_start_reclaim_nograce(clp);
-> -    if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
-> +    if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state) || 
-> test_bit(NFS_CS_NOGRACE_REBOOT, &clp->cl_flags))
->           set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
->       clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
->       clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
-> @@ -2624,6 +2627,7 @@ static void nfs4_state_manager(struct nfs_client 
-> *clp)
->                   continue;
->               if (status < 0)
->                   goto out_error;
-> +            clear_bit(NFS_CS_NOGRACE_REBOOT, &clp->cl_flags);
->               clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
->           }
-> 
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index 4daee27fa5eb..8d36a727513c 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -51,6 +51,7 @@ struct nfs_client {
->   #define NFS_CS_REUSEPORT    8        /* - reuse src port on reconnect */
->   #define NFS_CS_PNFS        9        /* - Server used for pnfs */
->   #define NFS_CS_NETUNREACH_FATAL    10        /* - ENETUNREACH errors 
-> are fatal */
-> +#define NFS_CS_NOGRACE_REBOOT    11        /* - Server reboot during 
-> nograce recovery */
->       struct sockaddr_storage    cl_addr;    /* server identifier */
->       size_t            cl_addrlen;
->       char *            cl_hostname;    /* hostname of server */
-> 
-> .
 
+
+On Tue, May 5, 2026, at 11:55 PM, Mike Snitzer wrote:
+> From: Benjamin Coddington <ben.coddington@hammerspace.com>
+>
+> Under sustained heavy load over RDMA, kNFSD servers can pin tens of
+> gigabytes of memory in per-xprt svc_rdma_send_ctxt caches, never
+> released until the connection terminates.  A customer site reported
+> OOM kills under heavy NFS READ workloads with ~2.3M cached
+> send_ctxts visible via slab tracing (two stacks in
+> svc_rdma_send_ctxt_alloc, each kmalloc-4k, ~9.5 GB outstanding --
+> the same ctxt population double-counted across the sc_pages and
+> sc_xprt_buf allocations).  Aggregated across the customer's ~218
+> long-lived xprts that worked out to roughly 80 GB pinned, freed only
+> by knfsd restart.
+>
+> Root cause is an unbounded cache, not a per-op leak.
+> svc_rdma_send_ctxt_get() pulls from rdma->sc_send_ctxts (an llist) or,
+> on empty, allocates fresh.  svc_rdma_send_ctxt_release() always
+> llist_add()s the ctxt back -- regardless of how many ctxts are
+> already on the list.  The only kfree() site is
+> svc_rdma_send_ctxts_destroy() at xprt teardown.  The list has no
+> shrinker, no cap, no aging: it can only grow.
+>
+> Two effects compound to drive the high-water mark well above the
+> configured RPC slot count:
+>
+>  1. _put runs through a workqueue.  svc_rdma_send_ctxt_put() does
+>     INIT_WORK(...) ; queue_work(svcrdma_wq, ...) and returns.  The
+>     actual _release (which puts the ctxt back on the llist) runs
+>     later on svcrdma_wq.  Between wc_send -> _put and _put_async ->
+>     _release, the ctxt is "in transit" -- off the list, off the SQ,
+>     not yet reusable.
+>
+>  2. During that gap, a concurrent _get sees an empty llist and calls
+>     _alloc to mint a fresh ctxt.  When the in-transit one eventually
+>     lands on the llist, the cache has grown by one.  Under HCA-driven
+>     completion rates with even small workqueue dispatch lag, this
+>     happens constantly.  The cache settles not at the steady-state
+>     in-flight count but at the all-time peak of (in-flight +
+>     workqueue-pending), and never shrinks.
+>
+> Fix: track sc_send_ctxts_depth as the count of *live* ctxts on the
+> xprt (incremented in svc_rdma_send_ctxt_alloc, decremented in
+> svc_rdma_send_ctxt_destroy).  Apply the cap in two places:
+>
+>   - svc_rdma_send_ctxt_get(): when the llist is empty and depth has
+>     reached sc_max_requests, return NULL instead of allocating.  The
+>     caller drops the connection; the client reconnects with a fresh
+>     xprt that starts at depth zero.  This is the backpressure point
+>     that prevents in-test memory growth -- it stops new allocations
+>     regardless of where in the pipeline existing ctxts are stuck.
+>
+>   - svc_rdma_send_ctxt_release(): if depth has overshot the cap (race
+>     between concurrent _get callers, or transient burst), free the
+>     ctxt instead of returning it to the llist.  This keeps depth
+>     convergent.
+>
+> The cap is sc_max_requests because:
+>  - It is the configured number of credit slots per xprt -- the client
+>    can have at most this many RPCs outstanding on the transport.
+>  - Each RPC reply uses one send_ctxt at a time; concurrent in-flight
+>    ctxts therefore cannot legitimately exceed sc_max_requests in
+>    steady state.
+>  - Workqueue lag can momentarily push (in-flight + queued) above
+>    sc_max_requests, but those ctxts are exactly what the cap should
+>    shed -- they are not steady-state working set, just lag-inflation.
+>
+> The reuse semantics of the cache are intentional and unchanged: ctxts
+> keep their first SGE DMA-mapped across cycles, so the steady-state
+> hot path stays alloc-free.  Only the *excess* ctxts are freed.
+>
+> A simple-CID tracepoint, svcrdma_send_ctxt_capped, fires once per
+> freed-by-cap ctxt, so operators can confirm the cap is doing real
+> work on a given workload.
+>
+> == Verification on the test rig ==
+>
+> Diagnostic tool: svcrdma-wq-lag.bt (will be provided in reply to
+> this patch) -- per-5s rates of wc_send (queue inflow), _put_async
+> (workqueue dispatch), _get (demand), and the new tracepoint.
+>
+> Negative case (cap on on-llist depth alone, with the atomic
+> incremented in _release and decremented in _get), sustained NFS
+> READ load:
+>   wc_send ~432K/s, release ~342K/s
+>   -> ~90K/s of ctxts pinned as queued sc_work items
+>   -> ~2.7M pinned after 30s; matches the slab measurement
+>   -> svcrdma_send_ctxt_capped fires 0 times during the test, then
+>      floods (~3.25M events) on test stop as the workqueue catches up
+>
+>   The cap is structurally blind to ctxts pinned in workqueue items
+>   because depth only counts what's currently on the llist; during
+>   sustained load almost nothing makes it onto the llist before the
+>   next _get takes it back off.  Inflation accumulates as queued
+>   sc_work items, invisible to the cap, until load stops.
+>
+> Post-patch (depth tracked at alloc/destroy + _get backpressure),
+> same workload, 5 minutes:
+>   wc_send and release rates match within 1% (~410K/s each)
+>   No accumulation; no flood at test stop
+>   svcrdma_send_ctxt_capped fires ~13 times total (rare overshoot
+>   recovery)
+>   Throughput slightly higher than the negative case (cache no longer
+>   bloats the slab/page allocator into reclaim)
+>
+> The persistent wc_send/release gap in the negative case was itself
+> a consequence of the unbounded growth: cache bloat -> slab pressure
+> -> reclaim activity -> workqueue starvation -> larger gap.  Once
+> the cap breaks that spiral, the workqueue runs at full capacity and
+> the rates equalize.
+>
+> Operators can confirm the cap is doing real work via:
+>    cd /sys/kernel/tracing
+>    echo 1 > events/rpcrdma/svcrdma_send_ctxt_capped/enable
+>    cat trace_pipe
+>
+> If a workload genuinely needs more than sc_max_requests concurrent
+> in-flight Sends, raise it via the sunrpc.svcrdma_max_requests sysctl
+> rather than removing the cap.
+
+The current svcrdma design assumes that the workqueue always keeps up
+with the transport's Reply transmission rate. For the send_ctxt cache
+to reach 2.3M ctxts, the workqueue itself must be running orders of
+magnitude slower than wc_send.
+
+The "in transit" gap between wc_send -> _put and _put_async ->
+_release is structurally one workqueue dispatch; under normal
+scheduling, microseconds. The verification numbers show a sustained
+90K/s deficit (432K wc_send/s vs 342K release/s) that accumulates
+linearly. That deficit is the actual pathology here...
+
+So I'm wondering: Why does svcrdma_wq lag at steady state? _put_async
+is small work -- ib_dma_unmap_page_list plus an llist_add. On a busy
+box it should easily outpace wc_send, not trail it by ~21%.
+
+The cover letter posits a spiral: cache bloat -> slab pressure ->
+reclaim -> workqueue starvation -> more bloat. That makes the eventual
+collapse plausible, but it does not establish what initiates the
+spiral. If the workqueue keeps up at low cache size and only loses
+ground after slab/reclaim kicks in, the early-load gap should be
+small and growing. If the gap is fixed at 21% from second zero,
+something structural is throttling the workqueue independent of slab
+state.
+
+Under sustained workqueue lag the cap fires not because the working
+set exceeds sc_max_requests but because the workqueue backlog does.
+Capping at sc_max_requests then translates "workqueue is slow" into
+"drop the connection." That bounds memory but substitutes one failure
+mode for another, and it punishes the client for what is essentially
+a server-side scheduling problem. Not to mention the risks inherent
+in repeated spurious connection loss.
+
+I have a couple of patches that replace the use of svcrdma_wq, and
+could alleviate the spiral issue. Would you be interested in trying
+them with your reproducer?
+
+
+-- 
+Chuck Lever
 
