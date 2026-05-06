@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21411-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21412-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GLebHNNd+2n2aAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21411-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 17:27:15 +0200
+	id cBIOJA1e+2kuaQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-21412-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 17:28:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B86694DD2FF
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 17:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFD0C4DD33E
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 17:28:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EAAFF3003E8B
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 15:27:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 66422303C012
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 15:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7697147DFA5;
-	Wed,  6 May 2026 15:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E357B48C405;
+	Wed,  6 May 2026 15:27:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTVDRWNI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIvinFcB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532FF47CC80;
-	Wed,  6 May 2026 15:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE51448AE3C;
+	Wed,  6 May 2026 15:27:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778081232; cv=none; b=DN/J6sQo3AMBLIZK6UWwULRnlfvDog8PeRljo5PjwCgHyyKRj18AS2xs9nAImAb9hm5oLHOncSggbiZsGuMwsGI0OsHO9FH8cH1OcmUZ3qHjkUYnpUBVp+KZW9PkIXDlOfb+ckUdfpxg//+d65K+hgP++1nYsFhTbpP+rXxmA3Y=
+	t=1778081235; cv=none; b=anaN1vDernzaDVmQ7hz1dkFECX7c5AH8v/ZTsAYTPesiIxWd/SfcO85CchdVxKT0+0xny5vAuhd41th9uynMEMVo+NVVmwLbAS5jFBBa2QTRmTRPLmq0dM9ryVnZICIXxcfbndRTvpbFRmxFv3GtLlvmiOOIGyEFggm0A/PLcaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778081232; c=relaxed/simple;
-	bh=qWMgOTaGHoSPGjDfpz75zlbDR1En4PdFFZBci8/4Sc4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Iscpel7ysP08nuzhy9Fs9SoO9P61Pfol4gmfkiFlAF5Go28XyM5uKRI8AA2c9q7/WqtGzznpwBqXHkCZEWlD6/aqOmtNTS5Jt2SqLmlcwwmJd8EAk5iiO0DSF/wvzDY2zLDF+T9HG3dKTanQW0x3/8Gz08c+Wq6cY6JC+uEOKdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTVDRWNI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D89C2C2BCB0;
-	Wed,  6 May 2026 15:27:08 +0000 (UTC)
+	s=arc-20240116; t=1778081235; c=relaxed/simple;
+	bh=YMv12MKCUotljeEmq3yy6FYGBu6y57Tjb4/tOO0yhho=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kmZt5JUUti9NcjjPDZcofHPV0fmrFMCFEztZofLuvndB6QPgNQWbAMzgTE9HDbGctWoeT0vP/2/KNIAWwad0JNNK/FAUXZAiuqExfNmjLPVRfipyK/d95Iu9Vu9EDDrg5LZyjxvH33dIt6Qx/fNwziUbXvJ5QW8n+ob5vUyFqfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIvinFcB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80151C2BCC7;
+	Wed,  6 May 2026 15:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778081231;
-	bh=qWMgOTaGHoSPGjDfpz75zlbDR1En4PdFFZBci8/4Sc4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ZTVDRWNIbl45cjumiWRH5llCv/yGkjVD+lhaF9XV9c+IMg+6X1aIBZsPI45KgTbU0
-	 KBG79UOkPOKFe93vKK+BqEecLxyDFmxUdyRS45pqlyiUf1eS/J4rV8AZYiYx7zh87f
-	 FLN9meslQgLZMuEE72ndOLtRwdUh3sIjSCqEsrl/8PljR6BcaiHyEjkvdSH+x60jiB
-	 QQvrW6x60OQrTxs/B2gohyOHHO1YFOrhg0m2BZee+Qq6mhrXq/2BLpzXf3FVLRiex1
-	 D/+Cpa/kJ8TQixzLWA6z2tMXDd/aNYWKQpDTCVncHt4/YfW6FTJ7caBJyeYNbh+8Zf
-	 37IcPhsBok24A==
+	s=k20201202; t=1778081235;
+	bh=YMv12MKCUotljeEmq3yy6FYGBu6y57Tjb4/tOO0yhho=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=DIvinFcBeSNhNeVUM5Q1IJJZnJsGM83+2cwkoto6M4DWpygqaG7P+tcxlE/J8Kqws
+	 EoYaPjVMRnU80AdoyJl8EjprvKI8smFtR+p0h87I4onqVFpEujycMOHWutep1ky5cf
+	 uJEF1+VOY9XsF3/KJb08qAcfZe7Bs7hTcAqrKqLFlbRTvOQ+T8jgQiVpydo7IjnI/U
+	 N8ULYudnIDF4SbWbFDPIjYGA+SitguKcrEX9hIXlz3EQ/LRBxOUyAx7dvXKtjO1WMv
+	 ImPpiXK6NP569E8zQ0MMg+IYPBQXGXhQd9WGuQORN7xe+vmBO4qxX0n7odIOiXeIF/
+	 Ob2FBDKe9BSpA==
 From: Chuck Lever <cel@kernel.org>
-Subject: [PATCH 0/2] svcrdma: Reduce svcrdma_wq contention on the Send
- completion path
-Date: Wed, 06 May 2026 11:26:49 -0400
-Message-Id: <20260506-svcrdma-next-v1-0-915fce8c4fbb@oracle.com>
+Date: Wed, 06 May 2026 11:26:50 -0400
+Subject: [PATCH 1/2] svcrdma: Release write chunk resources without
+ re-queuing
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,34 +56,33 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALld+2kC/yWMSw7CMAwFr1J5TURIIahcBbHIx2mNwKA4VJWq3
- p0ElvP0ZlYQzIQCl26FjDMJvbjCYddBmByPqChWBqON1Sdtlcwhx6dTjEtRBs+9NcehH3SCqrw
- zJlp+uevtz/LxdwylNdrDO0Hls+MwtSngY89JoioohXiEbfsCN1/3epMAAAA=
-X-Change-ID: 20260506-svcrdma-next-2e736249390f
+Message-Id: <20260506-svcrdma-next-v1-1-915fce8c4fbb@oracle.com>
+References: <20260506-svcrdma-next-v1-0-915fce8c4fbb@oracle.com>
+In-Reply-To: <20260506-svcrdma-next-v1-0-915fce8c4fbb@oracle.com>
 To: Mike Snitzer <snitzer@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
  NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2530;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2636;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=qWMgOTaGHoSPGjDfpz75zlbDR1En4PdFFZBci8/4Sc4=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp+13BZWcuJYUbZxFBs+HOtgieBQyA6RSctnhuF
- wCcUju+jh+JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaftdwQAKCRAzarMzb2Z/
- lybdD/sEN+85k7CiYM0CvAI1qU4bMHlpclYvpNBIqAu8oQguYvfYA5EXawcPMCw4/aVAkeOpU8z
- lWueYP3gXoxWpKKf9E58TUojva5pvRS058aql00OPT7QVSvNCB1Yo1KxD8eThXbM8/ixXkDWWa+
- 1Nq4jWacqujEnObH3YryU9b980fKO2gNfCwu8gDRNk1VIOJkaIzVeGFZtNllre3BfEQc3Hri27U
- jA6D5qVxJXv/EoZeBV8jo/tvHD/WTTLCVIW2khxwVMvvr/AEcGJqk9sxaq9XkBBJFBIIbnVLBaM
- IBgR2YKVxY716pncjt/oNwr3Xb4i4WA5Fvx5jvvW+Z+np+iDBgoZcKa7DyRBABeyk4EeULceqIH
- exTo9i+ZMOe0e3udZpJQz47oZWEWxbiiJkOFH/wjqsQ++Ex3pRUzlGLNO1ZymfJ4XlJfCsBOJ7G
- ZL2ZR3Eti/+VZfry0iW4yvzKJW18qUBBQSHY7SUY8vPE8/61lxaNjOH7VZUAH08xfms+VRCBDNm
- LcsHBgu0NZfCqOlEcQrAg1/VKn5npfQE3mpknAfYoajC5dHlwWJ6/+n3bzS4FAA7pg7kO50WWRh
- PGscBFOJLVG+8FXy2B1SVcXHqX+xCYj7i4FWlsZZsIK1XG2mR9bDAThIi3wko7p06IrY9ovCPRX
- 77YgY0JN73szHvw==
+ bh=ECmb6MeKMmCqyRPIiBLqjVVBP5PeF5lYeMllSdmUVnY=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp+13MdEhz3kXlVp+l3lsVgZvRr4Y2dS0PgbQoO
+ ZdcPGYoLZ+JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaftdzAAKCRAzarMzb2Z/
+ l2MkD/9upE8dZUy+eH9hPZZx/VOBjsqW3LH+hUzJmSQv9K2x2Q3r23ZExhpsuCBT8tWUPdLm+Dn
+ YOfG89VJOOwdq6EhSMNjCO/jTU8niRXljqD+sHJvZ3KeqZu3wneJnfcFaAu9t1ggwPjWFWKIjDG
+ vQqSVOzjyLNZ/g1y5jdj1G7/f6j+derp5dBF1M92Hs3bquuT0T45kXRItGnG9eKiIfktFj2AtrR
+ rbGmNW8u4TICJiSNyx8z+NUomVL9SbNj8KV1hhdjbMdAUTYQk8Ka3fpP0AOEiKOoIRSiDhGUtS9
+ DV4hjoAZIYvluCTOtbkgqN2U3TX7FUAfP6UfFt1reydjg1EB0/y0mLuuMxJsE9yKqyF7C6nQ7fT
+ gU/CYGWjupk+PlqOdM2PE1KBfj1VelKoYthuyPATAZwhUSJQeeaxx9n/QAPaHkxoX+X1NzBZmSZ
+ 4Jwbskp8FX+OtUGmXwivmNeZAozhM07zU8zfiGWjW1iadMnt+HSc1yrbTCJcSkaSObD6q0v+49W
+ YSsdiZ0WnWuxIXCmx33WsiYDCbHDgvMsnv31sjIuHzivTGz23IKlq5CW/H7nBFgn3Se4hYCzYms
+ oyN3xxaXK3twnkCLqxlal9VHbRZWSIuO7iOUbMwgeXRRMEB9nLrOmINbNWJ3GAXVVViitFAVsqe
+ EtfTZO7ZEpL5nzA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: B86694DD2FF
+X-Rspamd-Queue-Id: BFD0C4DD33E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -94,7 +93,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21411-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21412-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -110,61 +109,83 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 
-Profiling an 8KB NFSv3 read/write workload over RDMA shows about
-4% of total CPU spent on the svcrdma_wq unbound workqueue pool
-spinlock. Each Send completion queues work on svcrdma_wq to
-release the send_ctxt, and that work item queues another item
-for each write_info chunk it owns. Every queue_work step contends
-on the same pool lock.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-The first patch removes the inner re-queue.
-svc_rdma_write_info_free already runs on svcrdma_wq from its
-caller, so the extra work item only adds another spinlock
-acquisition with no parallelism to gain. Inlining the chunk
-release recovers roughly 1% of CPU cycles. Mike, your workload
-might see relief from just this patch alone.
+Each RDMA Send completion triggers a cascade of work items on the
+svcrdma_wq unbound workqueue:
 
-The second patch retires svcrdma_wq. Send completion handlers
-append the send_ctxt to a per-transport lock-free list, and the
-nfsd thread drains the list in xpo_release_ctxt between RPCs.
-DMA unmap and page release move out of the completion context.
-That matters when an IOMMU runs in strict mode, where each unmap
-synchronously invalidates the IOTLB; the nfsd thread absorbs that
-latency where it is harmless and batches teardown across all
-completions that accumulated during the prior RPC.
+  ib_cq_poll_work (on ib_comp_wq, per-CPU)
+    -> svc_rdma_send_ctxt_put -> queue_work    [work item 1]
+      -> svc_rdma_write_info_free -> queue_work [work item 2]
 
-A self-enqueue covers the trailing edge of a burst. When a Send
-completion finds sc_send_release_list previously empty on an idle
-connection, it sets XPT_DATA and enqueues the transport. The nfsd
-thread enters svc_rdma_recvfrom, finds nothing to receive, and
-returns; svc_xprt_release then runs xpo_release_ctxt and drains
-the list. Without that wakeup, a Send completion arriving after
-the last xpo_release_ctxt would leave the send_ctxt's DMA mappings
-and reply pages pinned until the next RPC, send-context exhaustion,
-or transport close.
+Every transition through queue_work contends on the unbound
+pool's spinlock. Profiling an 8KB NFSv3 read/write workload
+over RDMA shows about 4% of total CPU cycles spent on this
+lock, with the cascading re-queue of write_info release
+contributing roughly 1%.
 
-Patches were rebased today, but have not been recently tested.
+The initial queue_work in svc_rdma_send_ctxt_put is needed to
+move release work off the CQ completion context (which runs on
+a per-CPU bound workqueue). However, once executing on
+svcrdma_wq, there is no need to re-queue for each write_info
+structure. svc_rdma_reply_chunk_release already calls
+svc_rdma_cc_release inline from the same svcrdma_wq context,
+and svc_rdma_recv_ctxt_put does the same from nfsd thread
+context.
 
+Release write chunk resources inline in
+svc_rdma_write_info_free, removing the intermediate
+svc_rdma_write_info_free_async work item and the wi_work
+field from struct svc_rdma_write_info.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
-Chuck Lever (2):
-      svcrdma: Release write chunk resources without re-queuing
-      svcrdma: Defer send context release to xpo_release_ctxt
+ include/linux/sunrpc/svc_rdma.h   |  1 -
+ net/sunrpc/xprtrdma/svc_rdma_rw.c | 13 ++-----------
+ 2 files changed, 2 insertions(+), 12 deletions(-)
 
- include/linux/sunrpc/svc_rdma.h          |  6 +--
- net/sunrpc/xprtrdma/svc_rdma.c           | 18 +------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  9 ++++
- net/sunrpc/xprtrdma/svc_rdma_rw.c        | 13 +----
- net/sunrpc/xprtrdma/svc_rdma_sendto.c    | 91 +++++++++++++++++++++++---------
- net/sunrpc/xprtrdma/svc_rdma_transport.c |  3 +-
- 6 files changed, 84 insertions(+), 56 deletions(-)
----
-base-commit: d1c29a34fe35c1eb9331cab0537c7bb583692187
-change-id: 20260506-svcrdma-next-2e736249390f
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index df6e08aaad57..14eb9d52742e 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -230,7 +230,6 @@ struct svc_rdma_write_info {
+ 	unsigned int		wi_next_off;
+ 
+ 	struct svc_rdma_chunk_ctxt	wi_cc;
+-	struct work_struct	wi_work;
+ };
+ 
+ struct svc_rdma_send_ctxt {
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index 402e2ceca4ff..cca8ec973de4 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -236,19 +236,10 @@ svc_rdma_write_info_alloc(struct svcxprt_rdma *rdma,
+ 	return info;
+ }
+ 
+-static void svc_rdma_write_info_free_async(struct work_struct *work)
+-{
+-	struct svc_rdma_write_info *info;
+-
+-	info = container_of(work, struct svc_rdma_write_info, wi_work);
+-	svc_rdma_cc_release(info->wi_rdma, &info->wi_cc, DMA_TO_DEVICE);
+-	kfree(info);
+-}
+-
+ static void svc_rdma_write_info_free(struct svc_rdma_write_info *info)
+ {
+-	INIT_WORK(&info->wi_work, svc_rdma_write_info_free_async);
+-	queue_work(svcrdma_wq, &info->wi_work);
++	svc_rdma_cc_release(info->wi_rdma, &info->wi_cc, DMA_TO_DEVICE);
++	kfree(info);
+ }
+ 
+ /**
 
-Best regards,
---  
-Chuck Lever <chuck.lever@oracle.com>
+-- 
+2.53.0
 
 
