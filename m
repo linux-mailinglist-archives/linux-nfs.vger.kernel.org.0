@@ -1,279 +1,330 @@
-Return-Path: <linux-nfs+bounces-21401-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21402-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sBzkNbRp+mlbOwMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21401-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 00:05:40 +0200
+	id OOZRA72Y+mmQQAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-21402-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 03:26:21 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508584D42FC
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 00:05:40 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6385F4D53E2
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 03:26:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2905E30157C2
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 May 2026 22:05:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 92DC0300610D
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 01:26:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B021FC110;
-	Tue,  5 May 2026 22:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD8A204F93;
+	Wed,  6 May 2026 01:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Huef4BUJ"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="a9xrrWdf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE92815FA81
-	for <linux-nfs@vger.kernel.org>; Tue,  5 May 2026 22:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A856258EF9;
+	Wed,  6 May 2026 01:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778018736; cv=none; b=gbb0srxQ5D5YtyQ5ufgYbyrXjdrYyzO5Ub8f9JGqoLRL47/J+CEa+Db3Dp/AjhIPB58x0xg2eb+OXp19BQJ/yJIuyP3lKVmI1xpG9bCNuf4Ut416aBt7wpqY6tpBSj2JLNVTooI6Q/V/WsBfHLM8dxMZbACCnuvkyt0doMv6+Uk=
+	t=1778030775; cv=none; b=rXPuZLTn9ZNfPwwFg6dorApwPqKpnk0DSFi4/jX/97x3gPvOEkJsdoGZhfgmBH5MIVLpoS+UzcCLjcSEMMJxjG1qK9Qm9PDbFYHK267k9nLJGUwTpLd0Jgfofqa50xA8KU89GMdbAbrmgwwu976XMosJ34Ri0OUw1UA+GnVxmhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778018736; c=relaxed/simple;
-	bh=keILwDPQkW55NHL2F5+RiZ0D8yyOVYyoXLejxcl3tac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eeFuOOVLEhOdBOkPXU1YMY718lKz9Vv4GSLRmk9tl2NqU24Ck1QN07NC47ErMR0K+fqVeRGQtK1i1HLKebEI+8/iRt+fsX/wPv/etAndRQNbu20TBZZv8XxaHWdYB4FHR7Vq4YFxy/yP0lakmHFrH3gWewwpfCSv5NYc0zok6bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Huef4BUJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA3BC2BCB4;
-	Tue,  5 May 2026 22:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778018736;
-	bh=keILwDPQkW55NHL2F5+RiZ0D8yyOVYyoXLejxcl3tac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Huef4BUJv4Sgje5Vx7RcnYu1tL29dkIdHbjDhoCms7nxq7Iv0VgFPvWeEZRU0V26h
-	 by/H9dMzrObz7Ps02xf8tkFMIgR+Dw0xzW/T9ASuvlg6g6QD1AVFO9aj4Ad7Z6Vs+M
-	 0GJoix6x1nG19RlpBs/E/aDf/g6xRgkE45jhrl0H+8yit4hUwnryE9tN9TC8b0Jn9s
-	 +v/AQEnThXjcL85f0L9RAQnps+V+UmMQh2RrnW+MwDFh8Dcb47Zg+RDBVrFnEiCL6c
-	 Ooq+23ub6MJwsVuAZBC8VC6jc476h2Ba55XT8KJbFc1ORcob+MR2hj6abpvBRXqIh8
-	 iqk1YmLdexgiw==
-Date: Tue, 5 May 2026 18:05:34 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
-Cc: ben.coddington@hammerspace.com, jonathan.flynn@hammerspace.com
-Subject: Re: [RFC PATCH 0/2] svcrdma: avoid OOM due to unbounded
- sc_send_ctxts cache
-Message-ID: <afpprmApzykJFPci@kernel.org>
-References: <20260505215535.68412-1-snitzer@kernel.org>
+	s=arc-20240116; t=1778030775; c=relaxed/simple;
+	bh=UXrpFKHe7lnjvS8JoAHg/nNoNEHBsG4UHUQEI8iUASQ=;
+	h=Subject:From:To:CC:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Oa1cnch9Hgx1Kis4en6VGPTE4ntWSNa4HsMw6ic095XivljJGKptG0Wc36/KMcTRmdinqIEFoQqOfPPuew6/9LRL5hsUbq1YPEulwaecxr4gg6Fx7TXk24zB5slwTI+CPv6YUJ20J8kIeHUmGL8LF4XBfbjhmoYtgN4kyeOxeSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=a9xrrWdf; arc=none smtp.client-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=POTGXArHR5M/LjD8hFT7EQstd+SBLd1GjV5kgEsflU4=;
+	b=a9xrrWdfEzGBcPzCu//aLCH9zUiUuSnhTyaOj5aU+tqdc4oLyzbJ/a0ZK5N+IiXZmeB4gcvtc
+	jalL+MAO+47wL8dTXqVESBJf8FWcuuXDLA1JL8ujyeW4F3RZsm3nw+vURol/vsFDvVnYJbkLMJz
+	Ywa57dNptM5QbZpRxKU/61M=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4g9HZY517xzRhrc;
+	Wed,  6 May 2026 09:18:29 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id 03BA140571;
+	Wed,  6 May 2026 09:26:02 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 6 May 2026 09:26:01 +0800
+Subject: Re: [PATCH] NFSv4: Fix state recovery deadlock when server misses
+ grace period
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: Trond Myklebust <trondmy@kernel.org>, <anna@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yangerkun@huawei.com>, Li Lingfeng <lilingfeng3@huawei.com>
+References: <20260422064447.358447-1-chengzhihao1@huawei.com>
+ <e8c5a503-e8b4-11ef-68fb-a0195ce07b07@huawei.com>
+ <ac3165e050f4fa9ca4dfd102f7ec1c5e554db693.camel@kernel.org>
+ <863ecd04-01be-114e-f625-47b6a918a546@huawei.com>
+Message-ID: <c6dd0b1e-ace8-0d50-91f6-f8669d7b41b7@huawei.com>
+Date: Wed, 6 May 2026 09:25:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260505215535.68412-1-snitzer@kernel.org>
-X-Rspamd-Queue-Id: 508584D42FC
+In-Reply-To: <863ecd04-01be-114e-f625-47b6a918a546@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
+X-Rspamd-Queue-Id: 6385F4D53E2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21401-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_FROM(0.00)[bounces-21402-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[chengzhihao1@huawei.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[svcrdma-wq-lag.bt:url,claude.md:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,huawei.com:dkim,huawei.com:mid,ietf.org:url]
 
-On Tue, May 05, 2026 at 05:55:33PM -0400, Mike Snitzer wrote:
-> Hi,
+在 2026/4/23 17:05, Zhihao Cheng 写道:
+> 在 2026/4/22 20:38, Trond Myklebust 写道:
+>> On Wed, 2026-04-22 at 14:55 +0800, Zhihao Cheng wrote:
+>>> 在 2026/4/22 14:44, Zhihao Cheng 写道:
+>>> Add lilingfeng3@huawei.com
+>>>> NFS server restart causes client to enter an infinite loop during
+>>>> state
+>>>> recovery. The state manager gets stuck in NFS4CLNT_RECLAIM_NOGRACE
+>>>> processing,
+>>>> with the server repeatedly returning NFS4ERR_GRACE for each file
+>>>> iteration.
+>>>> This problem is reported in [1].
+>>>>
+>>>> Trigger sequence:
+>>>>    1. Client opens 2 files. After server reboot, client enters
+>>>>       nfs4_do_reclaim(RECLAIM_REBOOT). Server misses grace period
+>>>> and returns
+>>>>       NFS4ERR_NO_GRACE, causing client to set
+>>>> NFS4CLNT_RECLAIM_NOGRACE.
+>>>>    2. Client enters nfs4_do_reclaim(RECLAIM_NOGRACE) to recover
+>>>> first file.
+>>>>       Server reboots again, open request returns NFS4ERR_BADSESSION,
+>>>> client
+>>>>       sets NFS4CLNT_SESSION_RESET.
+>>>>    3. nfs4_reset_session calls nfs4_proc_create_session which fails
+>>>> with
+>>>>       ETIMEDOUT due to network¹ÊÕÏ, nfs4_handle_reclaim_lease_error
+>>>> sets
+>>>>       NFS4CLNT_LEASE_EXPIRED but does NOT set
+>>>> NFS4CLNT_RECLAIM_REBOOT.
+>>>>    4. When nfs4_reclaim_lease runs, because NFS4CLNT_RECLAIM_NOGRACE
+>>>> is already
+>>>>       set, it skips setting NFS4CLNT_RECLAIM_REBOOT (the bug,
+>>>> modified by
+>>>>       commit b42353ff8d346 ("NFSv4.1: Clean up
+>>>> nfs4_reclaim_lease")).
+>>>>    5. Server never receives RECLAIM_COMPLETE, so cl_flags lacks
+>>>>       NFSD4_CLIENT_RECLAIM_COMPLETE. When processing subsequent
+>>>> files,
+>>>>       server always returns nfserr_grace, causing infinite retry
+>>>> loop.
+>>>>
+>>>> Fix it by setting NFS4CLNT_RECLAIM_REBOOT in nfs4_reclaim_lease if
+>>>> NFS4CLNT_SERVER_SCOPE_MISMATCH is not set, so that the client sends
+>>>> RECLAIM_COMPLETE to the server first, allowing subsequent nograce
+>>>> recovery to proceed.
+>>>>
+>>>> Fetch a reproducer in [2].
+>>>>
+>>>> [1]
+>>>> https://lore.kernel.org/linux-nfs/55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com/ 
+>>>>
+>>>> [2] https://bugzilla.kernel.org/show_bug.cgi?id=221399
+>>>>
+>>>> Fixes: b42353ff8d346 ("NFSv4.1: Clean up nfs4_reclaim_lease")
+>>>> Cc: stable@vger.kernel.org
+>>>> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+>>>> Closes:
+>>>> https://lore.kernel.org/linux-nfs/55da00d4-a656-4ed2-ae57-7f881297a1b2@huawei.com/ 
+>>>>
+>>>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+>>>> ---
+>>>>    fs/nfs/nfs4state.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+>>>> index 305a772e5497..817327e73d88 100644
+>>>> --- a/fs/nfs/nfs4state.c
+>>>> +++ b/fs/nfs/nfs4state.c
+>>>> @@ -2012,7 +2012,7 @@ static int nfs4_reclaim_lease(struct
+>>>> nfs_client *clp)
+>>>>            return nfs4_handle_reclaim_lease_error(clp,
+>>>> status);
+>>>>        if (test_and_clear_bit(NFS4CLNT_SERVER_SCOPE_MISMATCH,
+>>>> &clp->cl_state))
+>>>>            nfs4_state_start_reclaim_nograce(clp);
+>>>> -    if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
+>>>> +    else
+>>>>            set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
+>>>>        clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
+>>>>        clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
+>>>>
+>>>
+>> This will cause the client to try to do reboot recovery in a situation
+>> where it isn't allowed to do so by the spec. We should never be setting
+>> NFS4CLNT_RECLAIM_REBOOT if NFS4CLNT_RECLAIM_NOGRACE is already set.
+> Hi Trond, the client can only do reclaim reboot during the grace 
+> period(after server reboot), according to [1], any reclaim type messages 
+> should be rejected by server for NOGRACE state, am I understanding right?
+> [1] https://datatracker.ietf.org/doc/html/rfc5661#section-8.4.2.1
+>>
+>> One solution would be to just immediately call
+>> nfs4_state_end_reclaim_reboot() if NFS4CLNT_RECLAIM_NOGRACE is set.
+>>
+friendly ping
+> I tried with your suggestion, and the problem still happens:
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 5044bb4c870f..5b6cb3f7ff2e 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -2014,6 +2014,8 @@ static int nfs4_reclaim_lease(struct nfs_client *clp)
+>                  nfs4_state_start_reclaim_nograce(clp);
+>          if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
+>                  set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
+> +       else
+> +               nfs4_state_end_reclaim_reboot(clp);
+>          clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
+>          clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
+>          return 0;
 > 
-> I drew the short-straw by having to take a hand-off from Ben on work
-> he started with Claude yesterday in response to a really crazy OOM
-> situation that hits like a freight train at one large customer's
-> install that currently has 121 NFS clients and 9 NFS servers, all
-> connected with RDMA networking.  Working with Jon Flynn, to bound the
-> problem a bit more we later scaled the testing down to 15 clients
-> reading from 1 server using 16K O_DIRECT reads.
+> The nfs4_state_end_reclaim_reboot sends RECLAIM_COMPLETE only if the clp 
+> has NFS4CLNT_RECLAIM_REBOOT flag, but it does not.
 > 
-> So I imported Ben's CLAUDE.md that he handed off and carried on, with
-> patch 1/2 we're able to avoid OOM killing the NFS servers (each with
-> 128GB) -- with the 16K test workload memory use would grow from ~12GB
-> to exhaustion (128GB) within ~10 seconds of starting the test.
+> The root cause is that the client has identified an incorrect server 
+> status after the server's second reboot(since step 2). I think the 
+> client should do reclaim reboot every time the server restarts, so we 
+> should let client know the server reboots again, can we take following 
+> methods?
+> 1. Clear NFS4CLNT_RECLAIM_NOGRACE flag if client knows that the server 
+> restart while doing nfs4_do_reclaim(NFS4CLNT_RECLAIM_NOGRACE). Client 
+> could identify the server state by NFS4ERR_BADSESSION retcode:
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 5044bb4c870f..3f73dc3919a2 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1875,6 +1875,9 @@ static int nfs4_do_reclaim(struct nfs_client *clp, 
+> const struct nfs4_state_recov
+>                           clp->cl_hostname, lost_locks);
+>                   set_bit(ops->owner_flag_bit, &sp->so_flags);
+>                   nfs4_put_state_owner(sp);
+> +                if (ops == clp->cl_mvops->nograce_recovery_ops &&
+> +                    status == -NFS4ERR_BADSESSION)
+> +                    clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
+>                   status = nfs4_recovery_handle_error(clp, status);
+>                   nfs4_free_state_owners(&freeme);
+>                   return (status != 0) ? status : -EAGAIN;
 > 
-> The 2nd patch in this series provides a diagnostic svcrdma-wq-lag.bt
-> bpf script that Claude suggested -- I just dropped it in
-> Documentation/filesystems/nfs/ but it isn't intended to go upstream.
+> 2. Client knows the server restarts by error code 
+> NFS4ERR_STALE_CLIENTID(nfs4_proc_create_session -> 
+> nfs4_handle_reclaim_lease_error), but nfs4_reset_session won't retry if 
+> the error code is ETIMEDOUT(eg. network failure in step 3), we should 
+> let client retry nfs4_reset_session if network failure.
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 5044bb4c870f..62fd57e602d6 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -2459,6 +2459,8 @@ static int nfs4_reset_session(struct nfs_client *clp)
+>       if (status) {
+>           dprintk("%s: session reset failed with status %d for server 
+> %s!\n",
+>               __func__, status, clp->cl_hostname);
+> +        if (status == -ETIMEDOUT)
+> +            goto out;
+>           status = nfs4_handle_reclaim_lease_error(clp, status);
+>           goto out;
+>       }
+> @@ -2552,6 +2554,8 @@ static void nfs4_state_manager(struct nfs_client 
+> *clp)
+>           if (test_and_clear_bit(NFS4CLNT_SESSION_RESET, &clp->cl_state)) {
+>               section = "reset session";
+>               status = nfs4_reset_session(clp);
+> +            if (status == -ETIMEDOUT)
+> +                continue;
+>               if (test_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state))
+>                   continue;
+>               if (status < 0)
+> 3. Conditionaly set NFS4CLNT_RECLAIM_REBOOT in nfs4_reclaim_lease, if 
+> the client has ever been recovered failed by 
+> nfs4_do_reclaim(NFS4CLNT_RECLAIM_NOGRACE)->BAD_SESSION, mark clp with 
+> NFS4CLNT_RECLAIM_REBOOT.
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 5044bb4c870f..82eb650cc135 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1875,6 +1875,9 @@ static int nfs4_do_reclaim(struct nfs_client *clp, 
+> const struct nfs4_state_recov
+>                           clp->cl_hostname, lost_locks);
+>                   set_bit(ops->owner_flag_bit, &sp->so_flags);
+>                   nfs4_put_state_owner(sp);
+> +                if (ops == clp->cl_mvops->nograce_recovery_ops &&
+> +                    status == -NFS4ERR_BADSESSION)
+> +                    __set_bit(NFS_CS_NOGRACE_REBOOT, &clp->cl_flags);
+>                   status = nfs4_recovery_handle_error(clp, status);
+>                   nfs4_free_state_owners(&freeme);
+>                   return (status != 0) ? status : -EAGAIN;
+> @@ -2012,7 +2015,7 @@ static int nfs4_reclaim_lease(struct nfs_client *clp)
+>           return nfs4_handle_reclaim_lease_error(clp, status);
+>       if (test_and_clear_bit(NFS4CLNT_SERVER_SCOPE_MISMATCH, 
+> &clp->cl_state))
+>           nfs4_state_start_reclaim_nograce(clp);
+> -    if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state))
+> +    if (!test_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state) || 
+> test_bit(NFS_CS_NOGRACE_REBOOT, &clp->cl_flags))
+>           set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
+>       clear_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state);
+>       clear_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state);
+> @@ -2624,6 +2627,7 @@ static void nfs4_state_manager(struct nfs_client 
+> *clp)
+>                   continue;
+>               if (status < 0)
+>                   goto out_error;
+> +            clear_bit(NFS_CS_NOGRACE_REBOOT, &clp->cl_flags);
+>               clear_bit(NFS4CLNT_RECLAIM_NOGRACE, &clp->cl_state);
+>           }
+> 
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index 4daee27fa5eb..8d36a727513c 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -51,6 +51,7 @@ struct nfs_client {
+>   #define NFS_CS_REUSEPORT    8        /* - reuse src port on reconnect */
+>   #define NFS_CS_PNFS        9        /* - Server used for pnfs */
+>   #define NFS_CS_NETUNREACH_FATAL    10        /* - ENETUNREACH errors 
+> are fatal */
+> +#define NFS_CS_NOGRACE_REBOOT    11        /* - Server reboot during 
+> nograce recovery */
+>       struct sockaddr_storage    cl_addr;    /* server identifier */
+>       size_t            cl_addrlen;
+>       char *            cl_hostname;    /* hostname of server */
+> 
+> .
 
-Here is svcrdma-wq-lag.bt output before we capped in _get (short run
-because otherwise we'd have hit OOM, but shows the flood of
-sc_send_ctxts that only become visible once the test was killed at
-17:45:36):
-
-# ./svcrdma-wq-lag.bt
-Attaching 7 probes...
-svcrdma_wq lag diagnostic. Per-5s rates.
-Watch for @wc_send_rate >> @release_rate during the test
-(workqueue backed up -> ctxts pinned in queue items ->
- Ben's cap can't see them).
-Ctrl-C to exit.
-
-
-17:45:06  wc_send=0        release=0        get=0        capped=0
-
-17:45:11  wc_send=1984617  release=1571458  get=1916504  capped=0         queue/release ratio=1
-
-17:45:16  wc_send=2176680  release=1698697  get=2097454  capped=0         queue/release ratio=1
-
-17:45:21  wc_send=2181507  release=1716810  get=2105847  capped=0         queue/release ratio=1
-
-17:45:26  wc_send=2178462  release=1728112  get=2104069  capped=726       queue/release ratio=1
-
-17:45:31  wc_send=2158883  release=1714519  get=2092136  capped=205       queue/release ratio=1
-
-17:45:36  wc_send=1029461  release=1585039  get=996644   capped=757304    queue/release ratio=0
-
-17:45:41  wc_send=0        release=3092605  get=0        capped=1492238   queue/release ratio=0
-
-17:45:46  wc_send=0        release=1000663  get=0        capped=1000764   queue/release ratio=0
-
-17:45:51  wc_send=0        release=0        get=0        capped=0
-^C
-
-
-And here is svcrdma-wq-lag.bt output with patch 1/2 applied (full 5
-minute run):
-
-18:13:21  wc_send=1151440  release=1148610  get=1150980  capped=0         queue/release ratio=1
-
-18:13:26  wc_send=2125499  release=2149303  get=2107227  capped=0         queue/release ratio=0
-
-18:13:31  wc_send=1780821  release=1792233  get=1759546  capped=0         queue/release ratio=0
-
-18:13:36  wc_send=3893061  release=2118765  get=2081403  capped=1         queue/release ratio=1
-
-18:13:41  wc_send=1837599  release=1883821  get=1815453  capped=0         queue/release ratio=0
-
-18:13:46  wc_send=1813727  release=1822876  get=1794087  capped=0         queue/release ratio=0
-
-18:13:51  wc_send=1491464  release=1529370  get=1476924  capped=0         queue/release ratio=0
-
-18:13:56  wc_send=1930254  release=1955278  get=1910046  capped=0         queue/release ratio=0
-
-18:14:01  wc_send=1916374  release=1944863  get=1894205  capped=0         queue/release ratio=0
-
-18:14:11  wc_send=4089684  release=4107873  get=4041449  capped=0         queue/release ratio=0
-
-18:14:16  wc_send=1740066  release=1789864  get=5765163  capped=0         queue/release ratio=0
-
-18:14:21  wc_send=3655551  release=1936245  get=1894173  capped=0         queue/release ratio=1
-
-18:14:26  wc_send=1652813  release=3613434  get=1637738  capped=0         queue/release ratio=0
-
-18:14:31  wc_send=1873398  release=1903780  get=1855887  capped=0         queue/release ratio=0
-
-18:14:36  wc_send=1947061  release=1971983  get=1920987  capped=0         queue/release ratio=0
-
-18:14:41  wc_send=1624716  release=1630181  get=1608404  capped=1         queue/release ratio=0
-
-18:14:46  wc_send=1709804  release=1752711  get=1693828  capped=0         queue/release ratio=0
-
-18:14:51  wc_send=1939672  release=1970791  get=3615177  capped=0         queue/release ratio=0
-
-18:14:56  wc_send=1884914  release=3875602  get=1862209  capped=0         queue/release ratio=0
-
-18:15:01  wc_send=2019244  release=2044366  get=1993761  capped=0         queue/release ratio=0
-
-18:15:06  wc_send=2065910  release=2099472  get=2046106  capped=0         queue/release ratio=0
-
-18:15:11  wc_send=1914899  release=1933756  get=1893723  capped=2         queue/release ratio=0
-
-18:15:16  wc_send=1895244  release=1916124  get=1874634  capped=0         queue/release ratio=0
-
-18:15:21  wc_send=2000953  release=2036536  get=3853528  capped=2         queue/release ratio=0
-
-18:15:26  wc_send=3971332  release=1984930  get=5805016  capped=0         queue/release ratio=2
-
-18:15:31  wc_send=1842215  release=1876278  get=1827305  capped=0         queue/release ratio=0
-
-18:15:36  wc_send=1712031  release=1745388  get=1698252  capped=0         queue/release ratio=0
-
-18:15:41  wc_send=1457677  release=1477376  get=1446707  capped=0         queue/release ratio=0
-
-18:15:46  wc_send=1522972  release=1562257  get=1510851  capped=0         queue/release ratio=0
-
-18:15:51  wc_send=2126919  release=2126524  get=2100919  capped=0         queue/release ratio=1
-
-18:15:56  wc_send=1795205  release=1853495  get=1782554  capped=0         queue/release ratio=0
-
-18:16:01  wc_send=1872737  release=1892789  get=1852457  capped=1         queue/release ratio=0
-
-18:16:06  wc_send=1956552  release=1978503  get=1936808  capped=0         queue/release ratio=0
-
-18:16:11  wc_send=1971408  release=2008768  get=1946069  capped=0         queue/release ratio=0
-
-18:16:16  wc_send=1906940  release=1928668  get=1891132  capped=0         queue/release ratio=0
-
-18:16:21  wc_send=2019228  release=2059320  get=1993856  capped=0         queue/release ratio=0
-
-18:16:26  wc_send=2024263  release=2039861  get=2004786  capped=0         queue/release ratio=0
-
-18:16:31  wc_send=1959046  release=1986165  get=1936975  capped=0         queue/release ratio=0
-
-18:16:36  wc_send=3426760  release=3483327  get=1456324  capped=0         queue/release ratio=0
-
-18:16:41  wc_send=2066845  release=2078503  get=2042898  capped=0         queue/release ratio=0
-
-18:16:46  wc_send=1834131  release=1878182  get=1818034  capped=1         queue/release ratio=0
-
-18:16:51  wc_send=1804133  release=1817222  get=1787677  capped=1         queue/release ratio=0
-
-18:16:56  wc_send=1443325  release=1469384  get=1429495  capped=0         queue/release ratio=0
-
-18:17:01  wc_send=1437236  release=1480771  get=1425373  capped=1         queue/release ratio=0
-
-18:17:06  wc_send=3342896  release=1925346  get=1885982  capped=0         queue/release ratio=1
-
-18:17:11  wc_send=2035328  release=2063539  get=2011609  capped=1         queue/release ratio=0
-
-18:17:16  wc_send=1923583  release=1930805  get=1904366  capped=0         queue/release ratio=0
-
-18:17:21  wc_send=1918902  release=1958907  get=1899028  capped=0         queue/release ratio=0
-
-18:17:26  wc_send=1912808  release=1942152  get=1895315  capped=0         queue/release ratio=0
-
-18:17:31  wc_send=2067295  release=2090789  get=2045747  capped=0         queue/release ratio=0
-
-18:17:36  wc_send=1893866  release=1917954  get=3924985  capped=0         queue/release ratio=0
-
-18:17:41  wc_send=1914595  release=1922461  get=1895841  capped=0         queue/release ratio=0
-
-18:17:46  wc_send=1833010  release=1884469  get=1816313  capped=0         queue/release ratio=0
-
-18:17:51  wc_send=1853085  release=3756671  get=3652976  capped=1         queue/release ratio=0
-
-18:17:56  wc_send=1814888  release=1845390  get=1797898  capped=0         queue/release ratio=0
-
-18:18:01  wc_send=1875252  release=3752430  get=1856752  capped=0         queue/release ratio=0
-
-18:18:06  wc_send=1929648  release=1955900  get=1913162  capped=0         queue/release ratio=0
-
-18:18:11  wc_send=1878956  release=1907828  get=1862308  capped=0         queue/release ratio=0
-
-18:18:16  wc_send=1839023  release=1862031  get=1823009  capped=0         queue/release ratio=0
-
-18:18:21  wc_send=77       release=77       get=77       capped=0         queue/release ratio=1
-
-18:18:26  wc_send=0        release=0        get=0        capped=0
-
-18:18:31  wc_send=0        release=0        get=0        capped=0
-^C
 
