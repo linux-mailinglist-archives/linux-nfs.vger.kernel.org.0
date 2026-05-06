@@ -1,420 +1,270 @@
-Return-Path: <linux-nfs+bounces-21408-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21409-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6HDdKGQb+2mtWgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21408-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 12:43:48 +0200
+	id uMdcI0Mn+2kQXAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-21409-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 13:34:27 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3AF4D96F6
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 12:43:48 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CF7E4D9BC7
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 13:34:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 193BD300A134
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 10:43:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2435230095E1
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 11:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74211242D72;
-	Wed,  6 May 2026 10:43:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CB3542DFE0;
+	Wed,  6 May 2026 11:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uUno8sSZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I/nJMp1g";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uUno8sSZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I/nJMp1g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8wBESc7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9CC3F23AD
-	for <linux-nfs@vger.kernel.org>; Wed,  6 May 2026 10:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7637D438FEE
+	for <linux-nfs@vger.kernel.org>; Wed,  6 May 2026 11:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778064226; cv=none; b=MctwtsQD4IOkFhQ5fJ5n8ftLGBvbEiaxXNfi0HXcb42Zz1WSA2DHJYEp/sEM9cwqD7IIdPPufdG5KVouERXoMInGh821bJTym93dL/RTP7pF7LzD8c8Fe+hpXqygaMGM5/WfI/WrL1VZqEAUWj721MmSMncEt7o+wPqMx8RJKe0=
+	t=1778067261; cv=none; b=tAQsY1gItr8WlN1XjKuJ4IYuSl9LXXlirr5XDO/VtHQ8rTOrnaGTxGrORDccZmCaankZ1w0F7RmyXrQTZn+IHAPA7/LxIqfxhoJyihYjNb1XPCDz5qAUhsBgSjTjwQzhkS53PwyOqO39KvFCUdhElb6BNQrBX5BWw87Nno4IbDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778064226; c=relaxed/simple;
-	bh=x79tElgG/HQY8d0sEhjwdDb1d4y/GUIKL1wHtqruqq4=;
+	s=arc-20240116; t=1778067261; c=relaxed/simple;
+	bh=IBZxUt25QyRMx3vB3c/efu/nEpizSafL7Il9mWbqYDA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MnyJngek5exdbXbawBLpTyDhAilOZThvmllrSKmId520OfebKFW4m/rm0bUsTuD/YkY1WM3a6f4Cfo2ZWDZ4hQgiWiJ/SesvdR3pZmIpNCCEpKoqrZ751p9jrWZVEb25mJt4i95+MP7UJRwLM6Mbn1ZbAX8tT6+Ph765irEPImo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uUno8sSZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I/nJMp1g; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uUno8sSZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I/nJMp1g; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 915256BC44;
-	Wed,  6 May 2026 10:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1778064222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KKJJpKo4selPgwo4u799sd/7fHc43w/Qqia5bTZ5JMs=;
-	b=uUno8sSZwIpQbbKuT+Tn7b/O5N5bNyYny+2bMvjIX6zVv/42mcjR2UYMIGvd3SO/eaFE1H
-	WWXI7+vBtlqejaCFS8ps8lC90puyicZ2Zs8X5jrwIy25FeGV02rqxd8ywtnNZ0uaLE1zDM
-	Q1lVLz4etWtyXWcF8Qxy5ov+4V7iyQc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1778064222;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KKJJpKo4selPgwo4u799sd/7fHc43w/Qqia5bTZ5JMs=;
-	b=I/nJMp1g4XU8KNu25pVJlQSo2ySwu5a9X+yT6JssYpfQlbpODY8P3DdLglkXEAwAyfI97T
-	V3YUrDF3rSFSQNBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1778064222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KKJJpKo4selPgwo4u799sd/7fHc43w/Qqia5bTZ5JMs=;
-	b=uUno8sSZwIpQbbKuT+Tn7b/O5N5bNyYny+2bMvjIX6zVv/42mcjR2UYMIGvd3SO/eaFE1H
-	WWXI7+vBtlqejaCFS8ps8lC90puyicZ2Zs8X5jrwIy25FeGV02rqxd8ywtnNZ0uaLE1zDM
-	Q1lVLz4etWtyXWcF8Qxy5ov+4V7iyQc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1778064222;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KKJJpKo4selPgwo4u799sd/7fHc43w/Qqia5bTZ5JMs=;
-	b=I/nJMp1g4XU8KNu25pVJlQSo2ySwu5a9X+yT6JssYpfQlbpODY8P3DdLglkXEAwAyfI97T
-	V3YUrDF3rSFSQNBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 73C28593A3;
-	Wed,  6 May 2026 10:43:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iL/GG14b+2kQSAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 06 May 2026 10:43:42 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id C8142A0790; Wed, 06 May 2026 12:43:41 +0200 (CEST)
-Date: Wed, 6 May 2026 12:43:41 +0200
-From: Jan Kara <jack@suse.cz>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Ritesh Harjani <ritesh.list@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCH v6 2/2] mm: kick writeback flusher for IOCB_DONTCACHE
- with targeted dirty tracking
-Message-ID: <yz5zorwpe5vunerb6wn4jv7sdumrkfe2jcvo6cnknk465kn4wa@g6fw43s7qb4a>
-References: <20260505-dontcache-v6-0-66463805dd6a@kernel.org>
- <20260505-dontcache-v6-2-66463805dd6a@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrGkaHugJTIUBlWzfUomuKt+Gtk9kUMcQkfOwvA/l7/u85i0nAo9syRq+UocVwaekrHb+MXOp+Sxq7rPBavwWOU31x52MmY/V2gVTYQI/CmyNqEL10fAMWCAX5fgsBZZs+G0sUi5epEU3iMn+AgxtPVV5uHGte6QYQPj45ru4zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8wBESc7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B33C2BCB8;
+	Wed,  6 May 2026 11:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778067261;
+	bh=IBZxUt25QyRMx3vB3c/efu/nEpizSafL7Il9mWbqYDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8wBESc7Url1vPRKJA7wLkq5M55484Hiaf/v3HUVh2F9JxTgZM8dB2gzc/KDak7GE
+	 9BCvDoC+4OoDkFZXUEgxo48IeUcga8dPegbApGKg1zwDmLevOvP9LuQ9yQwSvIhQL1
+	 U3e20KSj0p7Vd6Hk/BwyGylqeiow5xNMsEoAf2CIKyGoVcQdIV2ZLmaJhbOkQruFdi
+	 xs7V4rO2UorPL7euVF10VXwDkN/p3/P6lz91a4Ie4a5gx278MCFwpdcc+lc8IlyTXu
+	 RiDW4vXSEumer7pfS/qAw1/gEHCAsYnmr6kWlSi/Te83iBzZVmS3UpWBOEsgKS3At0
+	 vOnnuqSkPOX4A==
+Date: Wed, 6 May 2026 07:34:20 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>
+Cc: Mike Snitzer <snitzer@hammerspace.com>, linux-nfs@vger.kernel.org,
+	ben.coddington@hammerspace.com, jonathan.flynn@hammerspace.com
+Subject: Re: [RFC PATCH 1/2] svcrdma: bound per-xprt sc_send_ctxts cache and
+ apply backpressure on _get
+Message-ID: <afsnPPujM016BExw@kernel.org>
+References: <20260505215535.68412-1-snitzer@kernel.org>
+ <20260505215535.68412-2-snitzer@kernel.org>
+ <0010c891-174d-468a-be80-f53fa60ac5c7@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260505-dontcache-v6-2-66463805dd6a@kernel.org>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.30
-X-Rspamd-Queue-Id: 1D3AF4D96F6
+In-Reply-To: <0010c891-174d-468a-be80-f53fa60ac5c7@app.fastmail.com>
+X-Rspamd-Queue-Id: 8CF7E4D9BC7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21408-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,suse.com:email];
-	DMARC_NA(0.00)[suse.cz];
+	TAGGED_FROM(0.00)[bounces-21409-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,linux-foundation.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com,vger.kernel.org,kvack.org];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-On Tue 05-05-26 20:59:49, Jeff Layton wrote:
-> The IOCB_DONTCACHE writeback path in generic_write_sync() calls
-> filemap_flush_range() on every write, submitting writeback inline in
-> the writer's context.  Perf lock contention profiling shows the
-> performance problem is not lock contention but the writeback submission
-> work itself — walking the page tree and submitting I/O blocks the writer
-> for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
-> (dontcache).
+On Wed, May 06, 2026 at 08:01:50AM +0200, Chuck Lever wrote:
 > 
-> Replace the inline filemap_flush_range() call with a flusher kick that
-> drains dirty pages in the background.  This moves writeback submission
-> completely off the writer's hot path.
 > 
-> To avoid flushing unrelated buffered dirty data, add a dedicated
-> WB_start_dontcache bit and wb_check_start_dontcache() handler that uses
-> the per-wb WB_DONTCACHE_DIRTY counter to determine how many pages to
-> write back.  The flusher writes back that many pages from the oldest dirty
-> inodes (not restricted to dontcache-specific inodes). This helps
-> preserve I/O batching while limiting the scope of expedited writeback.
+> On Tue, May 5, 2026, at 11:55 PM, Mike Snitzer wrote:
+> > From: Benjamin Coddington <ben.coddington@hammerspace.com>
+> >
+> > Under sustained heavy load over RDMA, kNFSD servers can pin tens of
+> > gigabytes of memory in per-xprt svc_rdma_send_ctxt caches, never
+> > released until the connection terminates.  A customer site reported
+> > OOM kills under heavy NFS READ workloads with ~2.3M cached
+> > send_ctxts visible via slab tracing (two stacks in
+> > svc_rdma_send_ctxt_alloc, each kmalloc-4k, ~9.5 GB outstanding --
+> > the same ctxt population double-counted across the sc_pages and
+> > sc_xprt_buf allocations).  Aggregated across the customer's ~218
+> > long-lived xprts that worked out to roughly 80 GB pinned, freed only
+> > by knfsd restart.
+> >
+> > Root cause is an unbounded cache, not a per-op leak.
+> > svc_rdma_send_ctxt_get() pulls from rdma->sc_send_ctxts (an llist) or,
+> > on empty, allocates fresh.  svc_rdma_send_ctxt_release() always
+> > llist_add()s the ctxt back -- regardless of how many ctxts are
+> > already on the list.  The only kfree() site is
+> > svc_rdma_send_ctxts_destroy() at xprt teardown.  The list has no
+> > shrinker, no cap, no aging: it can only grow.
+> >
+> > Two effects compound to drive the high-water mark well above the
+> > configured RPC slot count:
+> >
+> >  1. _put runs through a workqueue.  svc_rdma_send_ctxt_put() does
+> >     INIT_WORK(...) ; queue_work(svcrdma_wq, ...) and returns.  The
+> >     actual _release (which puts the ctxt back on the llist) runs
+> >     later on svcrdma_wq.  Between wc_send -> _put and _put_async ->
+> >     _release, the ctxt is "in transit" -- off the list, off the SQ,
+> >     not yet reusable.
+> >
+> >  2. During that gap, a concurrent _get sees an empty llist and calls
+> >     _alloc to mint a fresh ctxt.  When the in-transit one eventually
+> >     lands on the llist, the cache has grown by one.  Under HCA-driven
+> >     completion rates with even small workqueue dispatch lag, this
+> >     happens constantly.  The cache settles not at the steady-state
+> >     in-flight count but at the all-time peak of (in-flight +
+> >     workqueue-pending), and never shrinks.
+> >
+> > Fix: track sc_send_ctxts_depth as the count of *live* ctxts on the
+> > xprt (incremented in svc_rdma_send_ctxt_alloc, decremented in
+> > svc_rdma_send_ctxt_destroy).  Apply the cap in two places:
+> >
+> >   - svc_rdma_send_ctxt_get(): when the llist is empty and depth has
+> >     reached sc_max_requests, return NULL instead of allocating.  The
+> >     caller drops the connection; the client reconnects with a fresh
+> >     xprt that starts at depth zero.  This is the backpressure point
+> >     that prevents in-test memory growth -- it stops new allocations
+> >     regardless of where in the pipeline existing ctxts are stuck.
+> >
+> >   - svc_rdma_send_ctxt_release(): if depth has overshot the cap (race
+> >     between concurrent _get callers, or transient burst), free the
+> >     ctxt instead of returning it to the llist.  This keeps depth
+> >     convergent.
+> >
+> > The cap is sc_max_requests because:
+> >  - It is the configured number of credit slots per xprt -- the client
+> >    can have at most this many RPCs outstanding on the transport.
+> >  - Each RPC reply uses one send_ctxt at a time; concurrent in-flight
+> >    ctxts therefore cannot legitimately exceed sc_max_requests in
+> >    steady state.
+> >  - Workqueue lag can momentarily push (in-flight + queued) above
+> >    sc_max_requests, but those ctxts are exactly what the cap should
+> >    shed -- they are not steady-state working set, just lag-inflation.
+> >
+> > The reuse semantics of the cache are intentional and unchanged: ctxts
+> > keep their first SGE DMA-mapped across cycles, so the steady-state
+> > hot path stays alloc-free.  Only the *excess* ctxts are freed.
+> >
+> > A simple-CID tracepoint, svcrdma_send_ctxt_capped, fires once per
+> > freed-by-cap ctxt, so operators can confirm the cap is doing real
+> > work on a given workload.
+> >
+> > == Verification on the test rig ==
+> >
+> > Diagnostic tool: svcrdma-wq-lag.bt (will be provided in reply to
+> > this patch) -- per-5s rates of wc_send (queue inflow), _put_async
+> > (workqueue dispatch), _get (demand), and the new tracepoint.
+> >
+> > Negative case (cap on on-llist depth alone, with the atomic
+> > incremented in _release and decremented in _get), sustained NFS
+> > READ load:
+> >   wc_send ~432K/s, release ~342K/s
+> >   -> ~90K/s of ctxts pinned as queued sc_work items
+> >   -> ~2.7M pinned after 30s; matches the slab measurement
+> >   -> svcrdma_send_ctxt_capped fires 0 times during the test, then
+> >      floods (~3.25M events) on test stop as the workqueue catches up
+> >
+> >   The cap is structurally blind to ctxts pinned in workqueue items
+> >   because depth only counts what's currently on the llist; during
+> >   sustained load almost nothing makes it onto the llist before the
+> >   next _get takes it back off.  Inflation accumulates as queued
+> >   sc_work items, invisible to the cap, until load stops.
+> >
+> > Post-patch (depth tracked at alloc/destroy + _get backpressure),
+> > same workload, 5 minutes:
+> >   wc_send and release rates match within 1% (~410K/s each)
+> >   No accumulation; no flood at test stop
+> >   svcrdma_send_ctxt_capped fires ~13 times total (rare overshoot
+> >   recovery)
+> >   Throughput slightly higher than the negative case (cache no longer
+> >   bloats the slab/page allocator into reclaim)
+> >
+> > The persistent wc_send/release gap in the negative case was itself
+> > a consequence of the unbounded growth: cache bloat -> slab pressure
+> > -> reclaim activity -> workqueue starvation -> larger gap.  Once
+> > the cap breaks that spiral, the workqueue runs at full capacity and
+> > the rates equalize.
+> >
+> > Operators can confirm the cap is doing real work via:
+> >    cd /sys/kernel/tracing
+> >    echo 1 > events/rpcrdma/svcrdma_send_ctxt_capped/enable
+> >    cat trace_pipe
+> >
+> > If a workload genuinely needs more than sc_max_requests concurrent
+> > in-flight Sends, raise it via the sunrpc.svcrdma_max_requests sysctl
+> > rather than removing the cap.
 > 
-> Like WB_start_all, the WB_start_dontcache bit coalesces multiple
-> DONTCACHE writes into a single flusher wakeup without per-write
-> allocations.  Use test_and_clear_bit to atomically consume the kick
-> request before reading the dirty counter and starting writeback, so that
-> concurrent DONTCACHE writes during writeback can re-set the bit and
-> schedule a follow-up flusher run.
+> The current svcrdma design assumes that the workqueue always keeps up
+> with the transport's Reply transmission rate. For the send_ctxt cache
+> to reach 2.3M ctxts, the workqueue itself must be running orders of
+> magnitude slower than wc_send.
 > 
-> Read the dirty counter with wb_stat_sum() (aggregating per-CPU batches)
-> rather than wb_stat() (which reads only the global counter) to ensure
-> small writes below the percpu batch threshold are visible to the flusher.
+> The "in transit" gap between wc_send -> _put and _put_async ->
+> _release is structurally one workqueue dispatch; under normal
+> scheduling, microseconds. The verification numbers show a sustained
+> 90K/s deficit (432K wc_send/s vs 342K release/s) that accumulates
+> linearly. That deficit is the actual pathology here...
 > 
-> In filemap_dontcache_kick_writeback(), set the WB_start_dontcache bit
-> inside the unlocked_inode_to_wb_begin/end section for correct cgroup
-> writeback domain targeting, but defer the wb_wakeup() call until after
-> the section ends, since wb_wakeup() uses spin_unlock_irq() which would
-> unconditionally re-enable interrupts while the i_pages xa_lock may still
-> be held under irqsave during a cgroup writeback switch.
+> So I'm wondering: Why does svcrdma_wq lag at steady state? _put_async
+> is small work -- ib_dma_unmap_page_list plus an llist_add. On a busy
+> box it should easily outpace wc_send, not trail it by ~21%.
 > 
-> Also add WB_REASON_DONTCACHE as a new writeback reason for tracing
-> visibility.
+> The cover letter posits a spiral: cache bloat -> slab pressure ->
+> reclaim -> workqueue starvation -> more bloat. That makes the eventual
+> collapse plausible, but it does not establish what initiates the
+> spiral. If the workqueue keeps up at low cache size and only loses
+> ground after slab/reclaim kicks in, the early-load gap should be
+> small and growing. If the gap is fixed at 21% from second zero,
+> something structural is throttling the workqueue independent of slab
+> state.
 > 
-> dontcache-bench results (same host, T6F_SKL_1920GBF, 251 GiB RAM,
-> xfs on NVMe, fio io_uring):
-> 
-> Buffered and direct I/O paths are unaffected by this patchset. All
-> improvements are confined to the dontcache path:
-> 
-> Single-stream throughput (MB/s):
->                         Before    After    Change
->   seq-write/dontcache      298      897    +201%
->   rand-write/dontcache     131      236     +80%
-> 
-> Tail latency improvements (seq-write/dontcache):
->   p99:    135,266 us  ->  23,986 us   (-82%)
->   p99.9: 8,925,479 us ->  28,443 us   (-99.7%)
-> 
-> Multi-writer (4 jobs, sequential write):
->                                 Before    After    Change
->   dontcache aggregate (MB/s)     2,529    4,532     +79%
->   dontcache p99 (us)             8,553    1,002     -88%
->   dontcache p99.9 (us)         109,314    1,057     -99%
-> 
->   Dontcache multi-writer throughput now matches buffered (4,532 vs
->   4,616 MB/s).
-> 
-> 32-file write (Axboe test):
->                                 Before    After    Change
->   dontcache aggregate (MB/s)     1,548    3,499    +126%
->   dontcache p99 (us)            10,170      602     -94%
->   Peak dirty pages (MB)          1,837      213     -88%
-> 
->   Dontcache now reaches 81% of buffered throughput (was 35%).
-> 
-> Competing writers (dontcache vs buffered, separate files):
->                                 Before    After
->   buffered writer                  868      433 MB/s
->   dontcache writer                 415      433 MB/s
->   Aggregate                      1,284      866 MB/s
-> 
->   Previously the buffered writer starved the dontcache writer 2:1.
->   With per-bdi_writeback tracking, both writers now receive equal
->   bandwidth. The aggregate matches the buffered-vs-buffered baseline
->   (863 MB/s), indicating fair sharing regardless of I/O mode.
-> 
->   The dontcache writer's p99.9 latency collapsed from 119 ms to
->   33 ms (-73%), eliminating the severe periodic stalls seen in the
->   baseline. Both writers now share identical latency profiles,
->   matching the buffered-vs-buffered pattern.
-> 
-> The per-bdi_writeback dirty tracking dramatically reduces peak dirty
-> pages in dontcache workloads, with the 32-file test dropping from
-> 1.8 GB to 213 MB. Dontcache sequential write throughput triples and
-> multi-writer throughput reaches parity with buffered I/O, with tail
-> latencies collapsing by 1-2 orders of magnitude.
-> 
-> Assisted-by: Claude:claude-opus-4-6
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> Under sustained workqueue lag the cap fires not because the working
+> set exceeds sc_max_requests but because the workqueue backlog does.
+> Capping at sc_max_requests then translates "workqueue is slow" into
+> "drop the connection." That bounds memory but substitutes one failure
+> mode for another, and it punishes the client for what is essentially
+> a server-side scheduling problem. Not to mention the risks inherent
+> in repeated spurious connection loss.
 
-Looks good. Feel free to add:
+Thanks for all that context.  Yes the imposed connection loss isn't
+ideal when the cap hits but in practice its relatively rare even with
+the more extreme small (16K) workload.  If larger IO size used the
+workqueue is able to keep up.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+> I have a couple of patches that replace the use of svcrdma_wq, and
+> could alleviate the spiral issue. Would you be interested in trying
+> them with your reproducer?
 
-								Honza
+Yes, please share and we'll do our best to get time on the system.
 
-> ---
->  fs/fs-writeback.c                | 59 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/backing-dev-defs.h |  2 ++
->  include/linux/fs.h               |  6 ++--
->  include/trace/events/writeback.h |  3 +-
->  4 files changed, 65 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index a65694cbfe68..faf15cf84c68 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -2373,6 +2373,27 @@ static long wb_check_start_all(struct bdi_writeback *wb)
->  	return nr_pages;
->  }
->  
-> +static long wb_check_start_dontcache(struct bdi_writeback *wb)
-> +{
-> +	long nr_pages;
-> +
-> +	if (!test_and_clear_bit(WB_start_dontcache, &wb->state))
-> +		return 0;
-> +
-> +	nr_pages = wb_stat_sum(wb, WB_DONTCACHE_DIRTY);
-> +	if (nr_pages) {
-> +		struct wb_writeback_work work = {
-> +			.nr_pages	= nr_pages,
-> +			.sync_mode	= WB_SYNC_NONE,
-> +			.range_cyclic	= 1,
-> +			.reason		= WB_REASON_DONTCACHE,
-> +		};
-> +
-> +		nr_pages = wb_writeback(wb, &work);
-> +	}
-> +
-> +	return nr_pages;
-> +}
->  
->  /*
->   * Retrieve work items and do the writeback they describe
-> @@ -2394,6 +2415,11 @@ static long wb_do_writeback(struct bdi_writeback *wb)
->  	 */
->  	wrote += wb_check_start_all(wb);
->  
-> +	/*
-> +	 * Check for dontcache writeback request
-> +	 */
-> +	wrote += wb_check_start_dontcache(wb);
-> +
->  	/*
->  	 * Check for periodic writeback, kupdated() style
->  	 */
-> @@ -2468,6 +2494,39 @@ void wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
->  	rcu_read_unlock();
->  }
->  
-> +/**
-> + * filemap_dontcache_kick_writeback - kick flusher for IOCB_DONTCACHE writes
-> + * @mapping:	address_space that was just written to
-> + *
-> + * Kick the writeback flusher thread to expedite writeback of dontcache dirty
-> + * pages. Queue writeback for the inode's wb for as many pages as there are
-> + * dontcache pages, but don't restrict writeback to dontcache pages only.
-> + *
-> + * This significantly improves performance over either writing all wb's pages
-> + * or writing only dontcache pages.  Although it doesn't guarantee quick
-> + * writeback and reclaim of dontcache pages, it keeps the amount of dirty pages
-> + * in check. Over longer term dontcache pages get written and reclaimed by
-> + * background writeback even with this rough heuristic.
-> + */
-> +void filemap_dontcache_kick_writeback(struct address_space *mapping)
-> +{
-> +	struct inode *inode = mapping->host;
-> +	struct bdi_writeback *wb;
-> +	struct wb_lock_cookie cookie = {};
-> +	bool need_wakeup = false;
-> +
-> +	wb = unlocked_inode_to_wb_begin(inode, &cookie);
-> +	if (wb_has_dirty_io(wb) &&
-> +	    !test_bit(WB_start_dontcache, &wb->state) &&
-> +	    !test_and_set_bit(WB_start_dontcache, &wb->state))
-> +		need_wakeup = true;
-> +	unlocked_inode_to_wb_end(inode, &cookie);
-> +
-> +	if (need_wakeup)
-> +		wb_wakeup(wb);
-> +}
-> +EXPORT_SYMBOL_GPL(filemap_dontcache_kick_writeback);
-> +
->  /*
->   * Wakeup the flusher threads to start writeback of all currently dirty pages
->   */
-> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-> index cb660dd37286..4f1084937315 100644
-> --- a/include/linux/backing-dev-defs.h
-> +++ b/include/linux/backing-dev-defs.h
-> @@ -26,6 +26,7 @@ enum wb_state {
->  	WB_writeback_running,	/* Writeback is in progress */
->  	WB_has_dirty_io,	/* Dirty inodes on ->b_{dirty|io|more_io} */
->  	WB_start_all,		/* nr_pages == 0 (all) work pending */
-> +	WB_start_dontcache,	/* dontcache writeback pending */
->  };
->  
->  enum wb_stat_item {
-> @@ -56,6 +57,7 @@ enum wb_reason {
->  	 */
->  	WB_REASON_FORKER_THREAD,
->  	WB_REASON_FOREIGN_FLUSH,
-> +	WB_REASON_DONTCACHE,
->  
->  	WB_REASON_MAX,
->  };
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 11559c513dfb..df72b42a9e9b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2624,6 +2624,7 @@ extern int __must_check file_write_and_wait_range(struct file *file,
->  						loff_t start, loff_t end);
->  int filemap_flush_range(struct address_space *mapping, loff_t start,
->  		loff_t end);
-> +void filemap_dontcache_kick_writeback(struct address_space *mapping);
->  
->  static inline int file_write_and_wait(struct file *file)
->  {
-> @@ -2657,10 +2658,7 @@ static inline ssize_t generic_write_sync(struct kiocb *iocb, ssize_t count)
->  		if (ret)
->  			return ret;
->  	} else if (iocb->ki_flags & IOCB_DONTCACHE) {
-> -		struct address_space *mapping = iocb->ki_filp->f_mapping;
-> -
-> -		filemap_flush_range(mapping, iocb->ki_pos - count,
-> -				iocb->ki_pos - 1);
-> +		filemap_dontcache_kick_writeback(iocb->ki_filp->f_mapping);
->  	}
->  
->  	return count;
-> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-> index bdac0d685a98..13ee076ccd16 100644
-> --- a/include/trace/events/writeback.h
-> +++ b/include/trace/events/writeback.h
-> @@ -44,7 +44,8 @@
->  	EM( WB_REASON_PERIODIC,			"periodic")		\
->  	EM( WB_REASON_FS_FREE_SPACE,		"fs_free_space")	\
->  	EM( WB_REASON_FORKER_THREAD,		"forker_thread")	\
-> -	EMe(WB_REASON_FOREIGN_FLUSH,		"foreign_flush")
-> +	EM( WB_REASON_FOREIGN_FLUSH,		"foreign_flush")	\
-> +	EMe(WB_REASON_DONTCACHE,		"dontcache")
->  
->  WB_WORK_REASON
->  
-> 
-> -- 
-> 2.54.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+We have some constraints at the moment that confine us to only making
+module changes (otherwise, if core kernel changes needed, it'd trigger
+a much more involved general kernel update that'd require coordination
+with the admins due to netboot infra).
+
+Thanks,
+Mike
 
