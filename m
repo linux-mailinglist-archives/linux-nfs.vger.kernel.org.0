@@ -1,288 +1,294 @@
-Return-Path: <linux-nfs+bounces-21403-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21404-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mE22MWrZ+ml8TQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21403-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 08:02:18 +0200
+	id CF3PNKHb+mkSTgMAu9opvQ
+	(envelope-from <linux-nfs+bounces-21404-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 08:11:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBD184D66E4
-	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 08:02:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DB404D677A
+	for <lists+linux-nfs@lfdr.de>; Wed, 06 May 2026 08:11:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9D8A730028DB
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 06:02:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 06DE5301EC65
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 May 2026 06:11:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8481E7C18;
-	Wed,  6 May 2026 06:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6733306B0A;
+	Wed,  6 May 2026 06:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDT0TrSp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGL0A+Zd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AA313AD1C
-	for <linux-nfs@vger.kernel.org>; Wed,  6 May 2026 06:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E08517A2FC;
+	Wed,  6 May 2026 06:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778047333; cv=none; b=s4oQ5joZ2m9Iy/lIvLvBnl3XWsWrkggj+qj31Ad+gUJobrdcQI7bWaL9wyPuTF5cxD5DvS3q3C+NYwNrHmyee+YeI1ffmeEmN+yyXVHbE+TsFKd2/GSA/zsjmIrUqCBUPNTUvv5nGbHLA3lT80uhOVFcwU0Q8R4DdxuIL23DvEc=
+	t=1778047900; cv=none; b=Wi7n0dfZ8meJqmvVvugffsxS62mXbt6yeqWYfeALbZ7Fh7QVsOXd2R9zf10DbXliiYEkrk1Pj38kPa8hFKr06g2P0umNp933d45cYw3AVc9VCXqmaTMac3ataNiRcA+DCxRNMhE/gcmC8ZiMYnHO5WJABJpx8b5PR7SjMS1A57c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778047333; c=relaxed/simple;
-	bh=QtLVs3zBzk46qx2LaVlm+gUg28FUB++0gks4zqQaLGA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=h+ntmcI5tbe+hrkxFYzg0pURd5C0OlG+rWavvQiaBODICdsW/mBa8Huy0cCmIpyXCJK6QDs8uwWqrP0E3vC4M87zUkkwZqVMdakaKiL+L+Y+/F9xr3oJ75cpe7HaC+11UN53TZdTm4s52kowNHWAC6+P/igLGJDScc50fUaC6KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDT0TrSp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B83C2BCB8;
-	Wed,  6 May 2026 06:02:12 +0000 (UTC)
+	s=arc-20240116; t=1778047900; c=relaxed/simple;
+	bh=D3OucNZZnd3lVVGurhT1KSeuP2zmZt8RbgVk9MVPtuo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ddqS4DXL4LBVD3r1uizoGDQi+xeC6r2n+4tIVdi3lvyRZ6Y69/mv/ZHZWc7DJENSrzRIWOyUzHIkLML/5B2bFIZk+MM6eTDCVDohw0/co6hzAFlZskVatq2G1ekwL8MOd0mFJF6v/u407A6+xqk0KOSw+7QSZTdcx+l6BWTtpwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGL0A+Zd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF25C2BCB8;
+	Wed,  6 May 2026 06:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778047333;
-	bh=QtLVs3zBzk46qx2LaVlm+gUg28FUB++0gks4zqQaLGA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=HDT0TrSpXpqhaLM8TOBeXV7lS+LBEqCbgq65ACmvpMCdivmQ4eMYZYxYEqiojboBL
-	 MLQVbLHqRrm/KmTME6KuIMXOZClDjR5nbmwH1KvAagNzaNsHnxTTIMqtdw4IWLbrMv
-	 4G/+KP/xG2/+DSWBpXEnm3UxYjhXQ02NVtF2xfRb6RH5tcBL2EJw5DzIZnNuPXYv1m
-	 zrOHrO3YjGZ98t1nwzC/qsbdTY9G65vG3Oxls1qTz0Dx5KT6Mn+qUwkpXbZiWqFetM
-	 xw8Sv2ZUBq5NhyS3MRbrTV+XQiRVOmRr4NuhW4sNirzO9EnVWh1K7P+g3UdXT5RDMn
-	 UKtfRUnYm8pag==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id EFBD2F40079;
-	Wed,  6 May 2026 02:02:11 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 06 May 2026 02:02:11 -0400
-X-ME-Sender: <xms:Y9n6aXEjTLgRYGS1bbSw3BBacyG4L0Ax7i5B5LA8BOkAlyqpAHfKkQ>
-    <xme:Y9n6afJw_WUDIlJutxAN_D7of2Xl__SK9BhAuzEYw3JXD87fiEmmz0mtI-FyUvbxs
-    RahHOkOropzGEYoI7lMGcCEgze4tgkderVcFkErqcC0la3ts42O0rE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdefkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefhffekffeftdfgheeiveekudeuhfdvjedvfedvueduvdegleekgeetgfduhfefleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepsggvnhdrtghougguihhnghhtohhnsehhrghmmhgvrhhsphgrtggvrdgtohhmpd
-    hrtghpthhtohepjhhonhgrthhhrghnrdhflhihnhhnsehhrghmmhgvrhhsphgrtggvrdgt
-    ohhmpdhrtghpthhtohepshhnihhtiigvrheshhgrmhhmvghrshhprggtvgdrtghomhdprh
-    gtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Y9n6aYvY5UxVnvmK-Y8kvlJ43LQQNFJVfau_gRfqxDB8UoR5FgDuBg>
-    <xmx:Y9n6aTQjrkHL3cfKTffVCIEfbx_-tr5iiLS7WDP5zEILxvv5RExWmg>
-    <xmx:Y9n6aePq9qPkhO7P90M4uENzeZQveoD9VSheID_iYCq-oS4oHSfD7Q>
-    <xmx:Y9n6aYZCBFlxOerCLqtQ5F6-3q4L_GTDu4gBlTERLm89qJeGI9WFzQ>
-    <xmx:Y9n6aYzKB8paO6DyfRZgPV9UFQc0dcKIHSwLCPDLl8QFCKqhmYpd3QPp>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CEB8A780070; Wed,  6 May 2026 02:02:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1778047900;
+	bh=D3OucNZZnd3lVVGurhT1KSeuP2zmZt8RbgVk9MVPtuo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=iGL0A+Zd1cdlEKkVwDkysI1zCOSsteoUVdhqOcnexCQIM9ftneApO5TMB5pz95K/d
+	 mmhe7uID6EI+abKBOGOSm95ZpSUWr44iLrUIV69Yh04o47B0SCu2SubKZbe8r8qHBm
+	 AXi/M9LdRH4QZOMLBlr12ClofkYPQ4Wlc/rBIR+o4yedt2JUltHmSbI3FsBsWfvEeJ
+	 GJmHYX9jZIG8BrfkTR0EMnAGwa8TND0CJ7V5BVJHl901gFfqdSZJwe+QVyKpYYRR8a
+	 q+gqlNHhy3o5mSqwxW0kwvkguUAAYpS0pAiXT8ZmErq7SfAkZ4jcy22k0cfIn5/1Gs
+	 V9Yv993b+flLg==
+Message-ID: <9e48229614786e0c2e92bb6a2dd3269868f160d0.camel@kernel.org>
+Subject: Re: [DISCUSSION] Preventing ENOSPC/EDQUOT writeback errors on
+ network filesystems
+From: Jeff Layton <jlayton@kernel.org>
+To: Piyush Sachdeva <s.piyush1024@gmail.com>, linux-fsdevel@vger.kernel.org,
+ 	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ netfs@lists.linux.dev
+Cc: sprasad@microsoft.com, linux-kernel@vger.kernel.org, sfrench@samba.org
+Date: Wed, 06 May 2026 08:11:35 +0200
+In-Reply-To: <m21pfqgzbq.fsf@gmail.com>
+References: <m21pfqgzbq.fsf@gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Az3pGS3ONw8o
-Date: Wed, 06 May 2026 08:01:50 +0200
-From: "Chuck Lever" <cel@kernel.org>
-To: "Mike Snitzer" <snitzer@hammerspace.com>
-Cc: linux-nfs@vger.kernel.org, ben.coddington@hammerspace.com,
- jonathan.flynn@hammerspace.com
-Message-Id: <0010c891-174d-468a-be80-f53fa60ac5c7@app.fastmail.com>
-In-Reply-To: <20260505215535.68412-2-snitzer@kernel.org>
-References: <20260505215535.68412-1-snitzer@kernel.org>
- <20260505215535.68412-2-snitzer@kernel.org>
-Subject: Re: [RFC PATCH 1/2] svcrdma: bound per-xprt sc_send_ctxts cache and apply
- backpressure on _get
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CBD184D66E4
+X-Rspamd-Queue-Id: 3DB404D677A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-21403-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,app.fastmail.com:mid];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-21404-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org,lists.linux.dev];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ietf.org:url]
 
+On Tue, 2026-05-05 at 11:41 +0530, Piyush Sachdeva wrote:
+> Hi,
+> There have been plenty of discussions on how to handle writeback errors f=
+or
+> network filesystems, but most have focused on error reporting after the f=
+act.
+> I'd like to start a discussion around preventing writeback errors specifi=
+cally
+> ENOSPC and EDQUOT, before they cause silent data loss.
+>=20
+> The problem:
+> With buffered writes on network filesystems (cifs, nfs, etc.), the write(=
+)
+> syscall copies data into the page cache and returns success immediately. =
+The
+> actual upload to the server happens later during writeback. If the server=
+ is
+> out of space at that point, the write fails with ENOSPC. The netfs/writeb=
+ack
+> layer records this error via mapping_set_error(), but critically the foli=
+o's
+> writeback flag is cleared and the page is now clean. Under memory pressur=
+e, the
+> VM can reclaim these clean pages, permanently losing data that the applic=
+ation
+> believes was successfully written. Meanwhile, i_size has already been upd=
+ated
+> to reflect the new file size. So stat() shows a file size inclusive of th=
+e data
+> that was never persisted. Another inconsistency here is that total free s=
+pace
+> hasn't been modified for the file system on the server, leading to incorr=
+ect
+> values in statfs() output from the client's pov (assuming statfs() calls =
+go
+> to the server).
+> To illustrate with real-world scenarios:
+>=20
+> - A user or application can keep issuing writes to an fd well beyond the
+>   available space, since buffered writes return success as soon as data i=
+s
+>   copied to the page cache. A significant amount of data, exceeding the
+>   available quota can accumulate before fsync() is called, at which point
+>   critical data loss is nearly certain.
+>=20
+> - A malicious user can exploit this to keep resources pinned and memory
+>   oversubscribed, impacting other applications.
+>=20
+> The error is technically observable: fsync() will return it, and close()
+> surfaces it through the flush callback. But in practice, many application=
+s
+> check neither, and the POSIX "just call fsync()" answer isn't satisfying =
+for
+> users who lose data silently.
+>=20
 
+Yet, it is the only real answer we have.
 
-On Tue, May 5, 2026, at 11:55 PM, Mike Snitzer wrote:
-> From: Benjamin Coddington <ben.coddington@hammerspace.com>
->
-> Under sustained heavy load over RDMA, kNFSD servers can pin tens of
-> gigabytes of memory in per-xprt svc_rdma_send_ctxt caches, never
-> released until the connection terminates.  A customer site reported
-> OOM kills under heavy NFS READ workloads with ~2.3M cached
-> send_ctxts visible via slab tracing (two stacks in
-> svc_rdma_send_ctxt_alloc, each kmalloc-4k, ~9.5 GB outstanding --
-> the same ctxt population double-counted across the sc_pages and
-> sc_xprt_buf allocations).  Aggregated across the customer's ~218
-> long-lived xprts that worked out to roughly 80 GB pinned, freed only
-> by knfsd restart.
->
-> Root cause is an unbounded cache, not a per-op leak.
-> svc_rdma_send_ctxt_get() pulls from rdma->sc_send_ctxts (an llist) or,
-> on empty, allocates fresh.  svc_rdma_send_ctxt_release() always
-> llist_add()s the ctxt back -- regardless of how many ctxts are
-> already on the list.  The only kfree() site is
-> svc_rdma_send_ctxts_destroy() at xprt teardown.  The list has no
-> shrinker, no cap, no aging: it can only grow.
->
-> Two effects compound to drive the high-water mark well above the
-> configured RPC slot count:
->
->  1. _put runs through a workqueue.  svc_rdma_send_ctxt_put() does
->     INIT_WORK(...) ; queue_work(svcrdma_wq, ...) and returns.  The
->     actual _release (which puts the ctxt back on the llist) runs
->     later on svcrdma_wq.  Between wc_send -> _put and _put_async ->
->     _release, the ctxt is "in transit" -- off the list, off the SQ,
->     not yet reusable.
->
->  2. During that gap, a concurrent _get sees an empty llist and calls
->     _alloc to mint a fresh ctxt.  When the in-transit one eventually
->     lands on the llist, the cache has grown by one.  Under HCA-driven
->     completion rates with even small workqueue dispatch lag, this
->     happens constantly.  The cache settles not at the steady-state
->     in-flight count but at the all-time peak of (in-flight +
->     workqueue-pending), and never shrinks.
->
-> Fix: track sc_send_ctxts_depth as the count of *live* ctxts on the
-> xprt (incremented in svc_rdma_send_ctxt_alloc, decremented in
-> svc_rdma_send_ctxt_destroy).  Apply the cap in two places:
->
->   - svc_rdma_send_ctxt_get(): when the llist is empty and depth has
->     reached sc_max_requests, return NULL instead of allocating.  The
->     caller drops the connection; the client reconnects with a fresh
->     xprt that starts at depth zero.  This is the backpressure point
->     that prevents in-test memory growth -- it stops new allocations
->     regardless of where in the pipeline existing ctxts are stuck.
->
->   - svc_rdma_send_ctxt_release(): if depth has overshot the cap (race
->     between concurrent _get callers, or transient burst), free the
->     ctxt instead of returning it to the llist.  This keeps depth
->     convergent.
->
-> The cap is sc_max_requests because:
->  - It is the configured number of credit slots per xprt -- the client
->    can have at most this many RPCs outstanding on the transport.
->  - Each RPC reply uses one send_ctxt at a time; concurrent in-flight
->    ctxts therefore cannot legitimately exceed sc_max_requests in
->    steady state.
->  - Workqueue lag can momentarily push (in-flight + queued) above
->    sc_max_requests, but those ctxts are exactly what the cap should
->    shed -- they are not steady-state working set, just lag-inflation.
->
-> The reuse semantics of the cache are intentional and unchanged: ctxts
-> keep their first SGE DMA-mapped across cycles, so the steady-state
-> hot path stays alloc-free.  Only the *excess* ctxts are freed.
->
-> A simple-CID tracepoint, svcrdma_send_ctxt_capped, fires once per
-> freed-by-cap ctxt, so operators can confirm the cap is doing real
-> work on a given workload.
->
-> == Verification on the test rig ==
->
-> Diagnostic tool: svcrdma-wq-lag.bt (will be provided in reply to
-> this patch) -- per-5s rates of wc_send (queue inflow), _put_async
-> (workqueue dispatch), _get (demand), and the new tracepoint.
->
-> Negative case (cap on on-llist depth alone, with the atomic
-> incremented in _release and decremented in _get), sustained NFS
-> READ load:
->   wc_send ~432K/s, release ~342K/s
->   -> ~90K/s of ctxts pinned as queued sc_work items
->   -> ~2.7M pinned after 30s; matches the slab measurement
->   -> svcrdma_send_ctxt_capped fires 0 times during the test, then
->      floods (~3.25M events) on test stop as the workqueue catches up
->
->   The cap is structurally blind to ctxts pinned in workqueue items
->   because depth only counts what's currently on the llist; during
->   sustained load almost nothing makes it onto the llist before the
->   next _get takes it back off.  Inflation accumulates as queued
->   sc_work items, invisible to the cap, until load stops.
->
-> Post-patch (depth tracked at alloc/destroy + _get backpressure),
-> same workload, 5 minutes:
->   wc_send and release rates match within 1% (~410K/s each)
->   No accumulation; no flood at test stop
->   svcrdma_send_ctxt_capped fires ~13 times total (rare overshoot
->   recovery)
->   Throughput slightly higher than the negative case (cache no longer
->   bloats the slab/page allocator into reclaim)
->
-> The persistent wc_send/release gap in the negative case was itself
-> a consequence of the unbounded growth: cache bloat -> slab pressure
-> -> reclaim activity -> workqueue starvation -> larger gap.  Once
-> the cap breaks that spiral, the workqueue runs at full capacity and
-> the rates equalize.
->
-> Operators can confirm the cap is doing real work via:
->    cd /sys/kernel/tracing
->    echo 1 > events/rpcrdma/svcrdma_send_ctxt_capped/enable
->    cat trace_pipe
->
-> If a workload genuinely needs more than sc_max_requests concurrent
-> in-flight Sends, raise it via the sunrpc.svcrdma_max_requests sysctl
-> rather than removing the cap.
+This is just a fundamental issue with buffered writes and delayed
+writeback. Either you flush the data to stable storage now, or you have
+to do it later. If you do it later, then it can still fail for all
+sorts of reasons.
 
-The current svcrdma design assumes that the workqueue always keeps up
-with the transport's Reply transmission rate. For the send_ctxt cache
-to reach 2.3M ctxts, the workqueue itself must be running orders of
-magnitude slower than wc_send.
+> Local filesystems largely avoid this because they can check available spa=
+ce
+> synchronously in write_begin() and fail the write() syscall directly. Net=
+work
+> filesystems can't do this cheaply =E2=80=94 a round-trip per write to che=
+ck server
+> space would negate the benefits of buffered I/O.
+>=20
+> Through recent development, netfs is becoming a central layer for network
+> filesystem I/O. It already has retry logic for transient failures (EAGAIN=
+,
+> ECONNABORTED), but ENOSPC/EDQUOT remain hard failures. This affects every
+> network filesystem using buffered writes.
+>=20
+> I am curious to know if NFS has a solution to this and what the approach =
+is
+> towards this specific problem by NFS community?
+>=20
+> This problem is worth solving for all network filesystems. I have a few
+> thoughts on approaches, combining cached statfs() output with
+> fallocate()-style pre-allocation on the write path:
+>=20
+> 1. Pre-allocate space on the server before writing to the page cache,
+>    analogous to fallocate() on the write path. This guarantees server-sid=
+e
+>    space for page cache data.
+>=20
+> 2. Since per-write fallocate() calls require a server round-trip, effecti=
+vely
+>    negating the benefit of buffered I/O. Use cached statfs() output to ga=
+te
+>    when pre-allocation is triggered. For example, once free space drops b=
+elow
+>    20% of total space, enable fallocate() on the write path. Otherwise, l=
+et
+>    writes proceed as normal.
+>=20
+> 3. Handle refresh and synchronization of the cached statfs() data separat=
+ely
+>    to avoid staleness.
+>=20
+> I'd appreciate feedback from the community on viable approaches.
 
-The "in transit" gap between wc_send -> _put and _put_async ->
-_release is structurally one workqueue dispatch; under normal
-scheduling, microseconds. The verification numbers show a sustained
-90K/s deficit (432K wc_send/s vs 342K release/s) that accumulates
-linearly. That deficit is the actual pathology here...
+NFSv4.2 does have an ALLOCATE operation:
 
-So I'm wondering: Why does svcrdma_wq lag at steady state? _put_async
-is small work -- ib_dma_unmap_page_list plus an llist_add. On a busy
-box it should easily outpace wc_send, not trail it by ~21%.
+    https://datatracker.ietf.org/doc/html/rfc7862#section-15.1
 
-The cover letter posits a spiral: cache bloat -> slab pressure ->
-reclaim -> workqueue starvation -> more bloat. That makes the eventual
-collapse plausible, but it does not establish what initiates the
-spiral. If the workqueue keeps up at low cache size and only loses
-ground after slab/reclaim kicks in, the early-load gap should be
-small and growing. If the gap is fixed at 21% from second zero,
-something structural is throttling the workqueue independent of slab
-state.
+...and such an operation could (in principle) precede WRITE in a
+compound, but that doesn't really help you. By the time we're issuing
+RPCs to the server, the client application has already finished its
+writes and moved on.
 
-Under sustained workqueue lag the cap fires not because the working
-set exceeds sc_max_requests but because the workqueue backlog does.
-Capping at sc_max_requests then translates "workqueue is slow" into
-"drop the connection." That bounds memory but substitutes one failure
-mode for another, and it punishes the client for what is essentially
-a server-side scheduling problem. Not to mention the risks inherent
-in repeated spurious connection loss.
-
-I have a couple of patches that replace the use of svcrdma_wq, and
-could alleviate the spiral issue. Would you be interested in trying
-them with your reproducer?
-
-
--- 
-Chuck Lever
+For applications that want to avoid ENOSPC/EDQUOT, the best thing they
+could do is call fallocate() themselves to ensure that the space
+exists. With a sufficiently recent NFS client and server, that should
+DTRT.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
