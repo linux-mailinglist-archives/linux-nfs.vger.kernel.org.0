@@ -1,179 +1,372 @@
-Return-Path: <linux-nfs+bounces-21416-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21417-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gMLWLHTp+2nEHwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21416-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 03:23:00 +0200
+	id uEXLIqJV/GlOOAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21417-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 11:04:34 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56B294E1ECB
-	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 03:23:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CDF94E57C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 11:04:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5F99A302E7E1
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2026 01:22:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F0F71309D8D0
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2026 08:53:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E83C26ED3D;
-	Thu,  7 May 2026 01:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F7DE3A7825;
+	Thu,  7 May 2026 08:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=supcon.com header.i=@supcon.com header.b="HUyDNyOf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CU6EGzvZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.supcon.com (mail.supcon.com [218.75.124.151])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 055D026B755;
-	Thu,  7 May 2026 01:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.75.124.151
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F7134BA5A;
+	Thu,  7 May 2026 08:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778116950; cv=none; b=nJwx/UqmvpUndydEn04Wha7veE2CMmpsLDM9W7M1FOjfYAR12LGWtbjWrzDWL+YUlCzqWS9fXGnfHvt9EOUzJwgB4bJxGMpcUdGSiokC/Xo1+scMHllUq6U8PYdieWpYTylz9IoFi+oh4hqVu1fCH/Rh66LUodjFoqxr36P5fts=
+	t=1778144000; cv=none; b=pRbSYBZKe3FYozeg9GoLZr/DClcjaRJ9fcUO7Bw1/HjlwfT6XZGx88DhmbUEz8IweOeftzWuvMQWZf8A9bvWzyya96Sjwczuhj1QKcdDKpnhpaFNHL1j0uCX9T2LMD7DpAQgwfXnqolXL+YuAYZs2ztaHY5wNKvmaDxBoEeqxIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778116950; c=relaxed/simple;
-	bh=yk9p/4Mh0EDjhjLUPKPCAH197Je1GAeojVSWMQ4bFxU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:Content-Type:MIME-Version:
-	 Message-ID; b=SMKPJ2zc2KMTJf0Vll3xFTVThMjHSgupTbu5CccJX+bcvOaIB8a74Uerg7S9qwjqdFwZ3TICvqqhRMqtNGMf2z4Ld/Eg5EdsaNGDg4fsOVDZa52ZoaDqlnSocxxGL76f8n3lDxZQhpU/acUVVyoPeNjBQw18m2XbuZpEUpke45Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcon.com; spf=pass smtp.mailfrom=supcon.com; dkim=pass (1024-bit key) header.d=supcon.com header.i=@supcon.com header.b=HUyDNyOf; arc=none smtp.client-ip=218.75.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=supcon.com
-Received: from maildata.cn (unknown [10.32.1.145])
-	by mail.supcon.com (MailData Gateway V2.8.8) with SMTP id 3E844760057;
-	Thu,  7 May 2026 09:22:24 +0800 (CST)
-Received: from supcon.com (unknown [10.32.1.229])
-	by mdau02 (MailData Audit V3.4.6) with ESMTP id 2E8B1217ED72F;
-	Thu,  7 May 2026 09:22:21 +0800 (CST)
-XMD-OLD-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=supcon.com; s=dkim; h=Received:Date:From:To:Cc:Subject:
-	In-Reply-To:References:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID; bh=sI8dFnxTrfEJBTPDJ+dQtC5wVfaTBEcbKTs1
-	bsQPor0=; b=VrW231Qe7FvxY7kiIlutSasDpcQ5oRtjWVsqFskxgAfwV1M/8e8K
-	W9KggfN5wWJqIvwa44tHFx55gKLNu6akQGat1W5XnjPTasKLx5XJ+iHH8Eq4PPy9
-	rHHv7te9GsyofJqwXb2rfJEHvE/Z2WQvfD82/Rpxh4c3jaLauWIfl34=
-Received: from guolingxing$supcon.com ( [10.30.28.7] ) by ajax-webmail-app1
- (Coremail) ; Thu, 7 May 2026 09:22:20 +0800 (GMT+08:00)
-Date: Thu, 7 May 2026 09:22:20 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-X-MD-FileKey: 6cbb582174f2b0e8913ff763e3840074[#]6d00fcf34c22a5239358616006e12ff5
-X-MD-Sfrom: guolingxing@supcon.com
-X-MD-SrcIP: 10.32.1.145
-From: =?UTF-8?B?6YOt546y5YW0?= <guolingxing@supcon.com>
-To: "Lionel Cons" <lionelcons1972@gmail.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: Re: [BUG] NFSv4.1 client hang in nfs4_drain_slot_tbl under
- concurrent workload against Windows NFS server
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
- 20250609(354f7833) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-27421bd6-c70e-4259-88e7-36dce31e831d-supcon.com
-In-Reply-To: <19b5fe04.1a5ac.19dffea136b.Coremail.guolingxing@supcon.com>
-Content-Transfer-Encoding: base64
-X-CM-CTRLDATA: q8gsEmZvb3Rlcl90eHQ9MzI2NDoxMA==
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1778144000; c=relaxed/simple;
+	bh=XcNpvf8ER8suPl0PboARI8FL/Si1/YxxqlJXeJpP4xI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rMlfotm9spTahAANFzsYwrj0//xSC01WFlOEy6msiqsE2XpBkJLUH6iLOE4+YoXXySX2CjPSvXR2cor+uZSOYJQ4sq49q91ks/JvzFVzkrVd2xzCKu9it9s7q4Mn5R9lB8ps1D3lx/ZiCNQ/jV5tlsewKnq6AOo/VBtMKdQpG5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CU6EGzvZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E80C2BCC4;
+	Thu,  7 May 2026 08:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778143999;
+	bh=XcNpvf8ER8suPl0PboARI8FL/Si1/YxxqlJXeJpP4xI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=CU6EGzvZN/KN2TjH89B3OHAklbvZ82928RJiyxTaNrgGogfvx9D0tFIJSdemDYwrc
+	 WPGcJjMgfK1Xrrr1k1p3glXAH5bGcwdmvd/cLgV1J0HVSb+d41EGIPr6tlurstAV1r
+	 Dgib1Zq/LFDPr1ErZvHv83MRKO8XTYD3GZoXfEF6Sb3h1Fx9Ou1DVtxGw/TuRSeO1u
+	 K7Z3dZDi9Snpv4l5kzK1zU9rUoxegU4JyloimUftNKCZTYa1fx4bXIgTiuH+DMAABv
+	 E3uMHXMt2GhhmedWeflV3k5F207/FXpk0JqwmHstEARTyBttZEoVXR6js9H/EdT5ZM
+	 6lHZVgvGhrjEQ==
+From: Chuck Lever <cel@kernel.org>
+Subject: [PATCH v14 00/15] Exposing case folding behavior
+Date: Thu, 07 May 2026 04:52:53 -0400
+Message-Id: <20260507-case-sensitivity-v14-0-e62cc8200435@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <66cea4e7.1a5d5.19e00075416.Coremail.guolingxing@supcon.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:5QEgCgAH9zdM6ftpOvvKAQ--.5427W
-X-CM-SenderInfo: xjxrzxpqj0x0nj6v31xfrqhudrp/1tbiAQETBmn6BvmMZwACsQ
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=supcon.com; s=default;
-	t=1778116945; bh=yk9p/4Mh0EDjhjLUPKPCAH197Je1GAeojVSWMQ4bFxU=;
-	h=Date:From:To:Cc:Subject:Content-Type:Message-ID;
-	b=HUyDNyOfsHFDg+H4MohfKB6gGuOxPFTRGN7PJoVRCh0vy6iGRQyF4AcIhXyJlRF+I
-	 IMGnXyFuIKfFKmtY5XrK/6ulOKTiUULdRs92y6eylaBM+c6oq1brfoefQnk9tisg7v
-	 qFAmipgvY18l84qN+OQLJ+SdLHjuTZ2Q9uD23MWQ=
-X-Rspamd-Queue-Id: 56B294E1ECB
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOZS/GkC/33QzW7DIAwH8FepOI8MQ8jHTnuPaQcwZmVqkwkyt
+ KrKuw+6wzI12sEHW/ZPf7iyRDFQYk+HK4uUQwrzVBpoHw4Mj2Z6Ix5cGTApZCdaKTmaRDzRlMI
+ SclguXKP1HgcPWg+snH1E8uHrZr68/vTp074TLtWpG7YSNpoJj3WUfXosxftGNlX388nVtWNIy
+ xwvt2x5rNw/KfLIBbckpEIUvSD5PEeDJ2pwPrMaI4PYEmqHAFEMVIN2Xd+aDv29AVuj3TOgGI5
+ 0B6Ml58yOIbfGuGfIYgxC9yCVpfKoe0P9GlrsfQeoYhgzaAWtUAB/c6zr+g28NqwC+wEAAA==
+X-Change-ID: 20260422-case-sensitivity-5cbffc8f1558
+To: Al Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, linux-api@vger.kernel.org, 
+ linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, 
+ linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
+ almaz.alexandrovich@paragon-software.com, slava@dubeyko.com, 
+ glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
+ adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, 
+ pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com, 
+ trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, 
+ hansg@kernel.org, senozhatsky@chromium.org, 
+ Chuck Lever <chuck.lever@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+ Roland Mainz <roland.mainz@nrubsig.org>, 
+ Steve French <stfrench@microsoft.com>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10818;
+ i=chuck.lever@oracle.com; h=from:subject:message-id;
+ bh=XcNpvf8ER8suPl0PboARI8FL/Si1/YxxqlJXeJpP4xI=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBp/FLsATrYD1pJJZ6vKuokL5pUMO9DEtG2y7dmS
+ 88d9W8LlsSJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCafxS7AAKCRAzarMzb2Z/
+ l7BxD/kBuAO9bwBnCL12tn2Su2GLeSG/PJCKgkSaV0UHkOG/EpgfEEzoPkG+r5FuRc4saeu0nWs
+ pef6bW90IAp/CyCHpFOvEOp9eLG4zAT4p9ZKENtWSh1dSLaREpacsO2f28TnWklLwJnmMboX8Ac
+ Oyt8RA8pjO+fUSEGSMDkrGZhgoVn+64QKWNjNOtPU7goLu69elA/6NqDszSDjIvA1AFMPdI3HGq
+ 7mG1wNSHZhMDhFdyETa7xRpOoKd422jpyD3RNmU0g41VipnrMbW6ewEJNoerfSK4YljoWyp/0YW
+ xt7MgdwDJKbRNOxeJIO0oI/oqykI84S7bMo8rD7Ps6rU5loCIX0xoUIWn8lNONDV8BQizJRkk12
+ 2LVl4RMeY5tPtRHFj3YDeoonZfZjtVgf9cOdqEk0n0X6pa1mb1Y2dOYb/nWmEYZ+vLCRC91eo7B
+ EHoJqP+LOsldUVgB19vjum5pv9XLciXnz+D/X1umK7KqyKeTy7GSQ8IFKOE0oq8KM09Bxm1TKlx
+ Bz/IPrbfFq2NzWl+tjXQ4TDxIs795F/fR2IiVo6d+3LDQyMiboUbHG3s/LhbYmktaloJ9b9k3o3
+ zhPS8BfFw0E2z+10ScdQ6pmJgGWYFsu66Gsjw+picw/M5ifjzoFxhlBq1RhpW2iVrmPwAlM9g/U
+ AM4s1M45hZsWK9A==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+X-Rspamd-Queue-Id: 2CDF94E57C4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.56 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[supcon.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-21417-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21416-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[supcon.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com,nrubsig.org];
+	RCPT_COUNT_TWELVE(0.00)[35];
 	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[supcon.com:+];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[guolingxing@supcon.com,linux-nfs@vger.kernel.org];
-	HAS_X_PRIO_THREE(0.00)[3];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_THREE(0.00)[3];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-SGkgTGlvbmVsLAoKVGhhbmtzIGZvciB5b3VyIHJlc3BvbnNlLgoKSGVyZSBhcmUgdGhlIGRldGFp
-bHMgeW91IHJlcXVlc3RlZDoKCjEuIFdpbmRvd3MgU2VydmVyIHZlcnNpb246Ck1pY3Jvc29mdCBX
-aW5kb3dzIFNlcnZlciAyMDIyClZlcnNpb24gMTAuMC4yMDM0OC41ODcKCjIuIFVzZXIgYWNjb3Vu
-dHM6Ck5vIG1hcHBpbmcgbWVjaGFuaXNtIGlzIGNvbmZpZ3VyZWQuCk5vIEFELCBMREFQLCBvciBw
-YXNzd2QgbWFwcGluZyBpcyB1c2VkLgoKVW5tYXBwZWQgdXNlcnMgYXJlIGhhbmRsZWQgYnkgdGhl
-IGRlZmF1bHQgIkV2ZXJ5b25lIiBhY2NvdW50LgoKMy4gQXV0aGVudGljYXRpb246CnNlYz1zeXMg
-KEFVVEhfU1lTKSwgYXMgcmVwb3J0ZWQgYnkgbmZzc3RhdCAtbQoKNC4gQ1BVIGFyY2hpdGVjdHVy
-ZToKLSBMaW51eCBjbGllbnRzOiB4ODZfNjQKLSBXaW5kb3dzIHNlcnZlcjogeDg2XzY0ICg2NC1i
-aXQgT1MpCgo1LiBNZW1vcnk6CkVhY2ggTGludXggY2xpZW50IFZNIGhhcyAxNkdCIFJBTQoKLS0t
-CgpBZGRpdGlvbmFsIG9ic2VydmF0aW9ucyBmcm9tIHR3byBpbmRlcGVuZGVudCBjbGllbnRzOgoK
-Q2xpZW50IEE6CmFnZTogNDk4MDYxCmxlYXNlX3RpbWU6IDEyMApsZWFzZV9leHBpcmVkOiA0OTc5
-NDEKCkNsaWVudCBCOgphZ2U6IDY5NTk4CmxlYXNlX3RpbWU6IDEyMApsZWFzZV9leHBpcmVkOiA2
-OTQ3OAoKSW4gYm90aCBjYXNlcywgbGVhc2VfZXhwaXJlZCBpcyBhcHByb3hpbWF0ZWx5IGVxdWFs
-IHRvIChhZ2UgLSBsZWFzZV90aW1lKSwKd2hpY2ggc3VnZ2VzdHMgdGhhdCB0aGUgbGVhc2UgZXhw
-aXJlZCBzaG9ydGx5IGFmdGVyIG1vdW50IGFuZCBoYXMgbm90CmJlZW4gc3VjY2Vzc2Z1bGx5IHJl
-bmV3ZWQgc2luY2UuCgpBdCB0aGUgc2FtZSB0aW1lOgoKLSBCb3RoIGNsaWVudHMgaGFuZyBzaW11
-bHRhbmVvdXNseSB1bmRlciBjb25jdXJyZW50IHdvcmtsb2FkCi0gQ2xpZW50cyBhcmUgc3R1Y2sg
-aW4gbmZzNF9kcmFpbl9zbG90X3RibAotIE5vIE5GUyBSUEMgdHJhZmZpYyBpcyBvYnNlcnZlZCBh
-dCBoYW5nIHRpbWUgKG9ubHkgVENQIEFDSykKLSBuZnNzdGF0IHNob3dzIHJldHJhbnM9MAotIE9u
-IHRoZSBXaW5kb3dzIHNlcnZlciBzaWRlLCB0aGUgTkZTIHNlc3Npb24gc3RhdGUgaXMgcmVwb3J0
-ZWQgYXMgIkluaXRpYWxpemVkIgoKV2UgYXJlIGN1cnJlbnRseSB0cmFjaW5nIHRoZSBSUEMgbGlm
-ZWN5Y2xlIHRvIGlkZW50aWZ5IHdoaWNoIFJQQyBkb2VzIG5vdCBjb21wbGV0ZS4KClBsZWFzZSBs
-ZXQgdXMga25vdyBpZiBmdXJ0aGVyIGluZm9ybWF0aW9uIHdvdWxkIGJlIGhlbHBmdWwuCgpUaGFu
-a3MuCgoKPiAtLS0tLeWOn+Wni+mCruS7ti0tLS0tCj4g5Y+R5Lu25Lq6OiDpg63njrLlhbQgPGd1
-b2xpbmd4aW5nQHN1cGNvbi5jb20+Cj4g5Y+R6YCB5pe26Ze0OjIwMjYtMDUtMDcgMDg6NTA6MjMg
-KOaYn+acn+WbmykKPiDmlLbku7bkuro6ICJMaW9uZWwgQ29ucyIgPGxpb25lbGNvbnMxOTcyQGdt
-YWlsLmNvbT4KPiDmioTpgIE6IGxpbnV4LW5mc0B2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmcKPiDkuLvpopg6IFJlOiBSZTogW0JVR10gTkZTdjQuMSBjbGllbnQg
-aGFuZyBpbiBuZnM0X2RyYWluX3Nsb3RfdGJsIHVuZGVyIGNvbmN1cnJlbnQgd29ya2xvYWQgYWdh
-aW5zdCBXaW5kb3dzIE5GUyBzZXJ2ZXIKPiAKPiBIaSBMaW9uZWwsCj4gCj4gVGhhbmtzIGZvciB5
-b3VyIHJlc3BvbnNlLgo+IAo+IEhlcmUgYXJlIHRoZSBkZXRhaWxzOgo+IAo+IDEuIFdpbmRvd3Mg
-U2VydmVyIHZlcnNpb246Cj4gTWljcm9zb2Z0IFdpbmRvd3MgU2VydmVyIDIwMjIKPiBWZXJzaW9u
-IDEwLjAuMjAzNDguNTg3Cj4gCj4gMi4gVXNlciBhY2NvdW50czoKPiBObyBtYXBwaW5nIG1lY2hh
-bmlzbSBpcyBjb25maWd1cmVkLgo+IE5vIEFELCBMREFQLCBvciBwYXNzd2QgbWFwcGluZyBpcyB1
-c2VkLgo+IAo+IFVubWFwcGVkIHVzZXJzIGFyZSBoYW5kbGVkIGJ5IHRoZSBkZWZhdWx0ICJFdmVy
-eW9uZSIgYWNjb3VudC4KPiAKPiAzLiBBdXRoZW50aWNhdGlvbjoKPiBzZWM9c3lzIChBVVRIX1NZ
-UyksIGFzIHJlcG9ydGVkIGJ5IG5mc3N0YXQgLW0KPiAKPiA0LiBDUFUgYXJjaGl0ZWN0dXJlOgo+
-IC0gTGludXggY2xpZW50czogeDg2XzY0Cj4gLSBXaW5kb3dzIHNlcnZlcjogeDg2XzY0ICg2NC1i
-aXQgT1MpCj4gCj4gNS4gTWVtb3J5Ogo+IEVhY2ggTGludXggY2xpZW50IFZNIGhhcyAxNkdCIFJB
-TQo+IAo+IFRoYW5rcy4KPiAKPiAKPiA+IC0tLS0t5Y6f5aeL6YKu5Lu2LS0tLS0KPiA+IOWPkeS7
-tuS6ujogIkxpb25lbCBDb25zIiA8bGlvbmVsY29uczE5NzJAZ21haWwuY29tPgo+ID4g5Y+R6YCB
-5pe26Ze0OjIwMjYtMDUtMDYgMjE6Mjg6MzMgKOaYn+acn+S4iSkKPiA+IOaUtuS7tuS6ujog6YOt
-546y5YW0IDxndW9saW5neGluZ0BzdXBjb24uY29tPiwgbGludXgtbmZzQHZnZXIua2VybmVsLm9y
-ZywgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+ID4g5Li76aKYOiBSZTogW0JVR10gTkZT
-djQuMSBjbGllbnQgaGFuZyBpbiBuZnM0X2RyYWluX3Nsb3RfdGJsIHVuZGVyIGNvbmN1cnJlbnQg
-d29ya2xvYWQgYWdhaW5zdCBXaW5kb3dzIE5GUyBzZXJ2ZXIKPiA+IAo+ID4gT24gV2VkLCA2IE1h
-eSAyMDI2IGF0IDA5OjQ5LCDpg63njrLlhbQgPGd1b2xpbmd4aW5nQHN1cGNvbi5jb20+IHdyb3Rl
-Ogo+ID4gPgo+ID4gPiBIaSwKPiA+ID4KPiA+ID4KPiA+ID4gV2UgZW5jb3VudGVyZWQgYSByZXBy
-b2R1Y2libGUgTkZTdjQuMSBjbGllbnQgaGFuZyBpc3N1ZSB1bmRlciBjb25jdXJyZW50IHdvcmts
-b2FkLgo+ID4gPgo+ID4gPgo+ID4gPiBFbnZpcm9ubWVudDoKPiA+ID4gLSBUd28gaW5kZXBlbmRl
-bnQgTGludXggY2xpZW50cyAoVk1zKQo+ID4gPiAtIEJvdGggbW91bnQgdGhlIHNhbWUgV2luZG93
-cyBORlMgc2VydmVyIChORlN2NC4xKQo+ID4gPiAtIEtlcm5lbCB2ZXJzaW9uOiA2LjEuNzgKPiA+
-ID4gLSBNb3VudCBvcHRpb25zOiB2ZXJzPTQuMSxzb2Z0LHByb3RvPXRjcCx0aW1lbz02MCxyZXRy
-YW5zPTEwCj4gPiAKPiA+IFdoaWNoIHZlcnNpb24gb2YgV2luZG93c1NlcnZlciBkbyB5b3UgdXNl
-LCBlLmcgd2hhdCBkb2VzIHRoZSAidmVyIgo+ID4gY29tbWFuZCBpbiBjbWQuZXhlIG91dHB1dD8g
-SG93IGRpZCB5b3Ugc2V0IHVwIHRoZSB1c2VyIGFjY291bnRzLCBhbmQKPiA+IHdoaWNoIGF1dGhl
-bnRpY2F0aW9uIChBVVRIX1NZUywgR1NTLCAuLi4pIGRvIHlvdSB1c2U/Cj4gPiBXaGljaCBDUFUg
-YXJjaGl0ZWN0dXJlIGRvIHlvdSB1c2U/IEhvdyBtdWNoIG1lbW9yeSBkbyB5b3UgaGF2ZSBvbiB0
-aGUKPiA+IExpbnV4IE5GUyBjbGllbnQ/Cj4gPiAKPiA+IExpb25lbAo+IAo+IAo+IAo+IAo+IAoN
-Cg0KDQoNCg0K
+Christian, let's lock this one in. I will post subsequent changes
+as delta patches.
+
+Following on from:
+
+https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57fd@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
+
+I'm attempting to implement enough support in the Linux VFS to
+enable file services like NFSD and ksmbd (and user space
+equivalents) to provide the actual status of case folding support
+in local file systems. The default behavior for local file systems
+not explicitly supported in this series is to reflect the usual
+POSIX behaviors:
+
+  case-insensitive = false
+  case-nonpreserving = false
+
+The case-insensitivity and case-nonpreserving booleans can be
+consumed immediately by NFSD. These two attributes have been part of
+the NFSv3 and NFSv4 protocols for decades, in order to support NFS
+client implementations on non-POSIX systems.
+
+Support for user space file servers is why this series exposes case
+folding information via a user-space API. I don't know of any other
+category of user-space application that requires access to case
+folding info.
+
+The Linux NFS community has a growing interest in supporting NFS
+clients on Windows and MacOS platforms, where file name behavior does
+not align with traditional POSIX semantics.
+
+One example of a Windows-based NFS client is [1]. This client
+implementation explicitly requires servers to report
+FATTR4_WORD0_CASE_INSENSITIVE = TRUE for proper operation, a hard
+requirement for Windows client interoperability because Windows
+applications expect case-insensitive behavior. When an NFS client
+knows the server is case-insensitive, it can avoid issuing multiple
+LOOKUP/READDIR requests to search for case variants, and applications
+like Win32 programs work correctly without manual workarounds or
+code changes.
+
+Even the Linux client can take advantage of this information. Trond
+merged patches 4 years ago [2] that introduce support for case
+insensitivity, in support of the Hammerspace NFS server. In
+particular, when a client detects a case-insensitive NFS share,
+negative dentry caching must be disabled (a lookup for "FILE.TXT"
+failing shouldn't cache a negative entry when "file.txt" exists)
+and directory change invalidation must clear all cached case-folded
+file name variants.
+
+Hammerspace servers and several other NFS server implementations
+operate in multi-protocol environments, where a single file service
+instance caters to both NFS and SMB clients. In those cases, things
+work more smoothly for everyone when the NFS client can see and adapt
+to the case folding behavior that SMB users rely on and expect. NFSD
+needs to support the case-insensitivity and case-nonpreserving
+booleans properly in order to participate as a first-class citizen
+in such environments.
+
+[1] https://github.com/kofemann/ms-nfs41-client
+
+[2] https://patchwork.kernel.org/project/linux-nfs/cover/20211217203658.439352-1-trondmy@kernel.org/
+
+---
+Changes since v13:
+- Address findings from sashiko (gemini-3.1):
+  - ntfs3: Drop fileattr_get from symlink and special inode ops
+  - nfsd: Probe nfsd_get_case_info() under kernel creds to avoid
+    spurious NFS4ERR_ACCESS from per-client MAC policy
+
+Changes since v12:
+- Address findings from sashiko (gemini-3.1):
+  - cifs: Restrict case-handling flags to directories per UAPI
+  - nfs: Clear case caps before PATHCONF so a failed reply
+    does not retain stale bits from the prior probe
+  - nfsd: Document the parent-resolution corner cases of
+    nfsd_get_case_info() (single-file exports, disconnected
+    dentries, hardlinks) in the v3 and v4 commit messages
+
+Changes since v11:
+- isofs: Wire .fileattr_get only on directory inodes, since
+  NFSD and ksmbd query casefolding on directories (Jan Kara)
+- xfs, hfsplus: Drop the FS_CASEFOLD_FL fileattr_get mask;
+  admit the bit through fileattr_set's allowlist instead
+- Address findings from sashiko(gemini-3) and gpt-5.5:
+  - cifs: Wire .fileattr_get on cifs_namespace_inode_operations
+    so DFS referral / automount directories report case handling
+  - fat, ntfs3: Fill FS_IMMUTABLE_FL in fileattr_get
+  - hfsplus: Hide FS_CASEFOLD_FL from the legacy flags view so
+    chattr round-trips do not hit the setflags whitelist
+  - nfs: Clear NFS_CAP_CASE_INSENSITIVE and
+    NFS_CAP_CASE_NONPRESERVING before re-OR'ing in the v3 and
+    v4 probe paths so re-probe / TSM does not retain stale caps
+  - nfsd: Switch nfsd_get_case_info() to errno return so
+    v3 PATHCONF and v4 GETATTR can apply version-appropriate
+    policy on failure
+  - nfsd: Use dget_parent() in v4 case-attr probe to keep
+    the parent dentry referenced across the query
+  - isofs: Report FS_XFLAG_CASENONPRESERVING for map=n/map=a
+
+Changes since v10:
+- cifs: Source case-handling flags from the server's cached
+  FS_ATTRIBUTE_INFORMATION reply instead of the nocase mount
+  option, with a nocase fallback when the reply is absent
+- Address findings from sashiko(gemini-3) and gpt-5.5:
+  - nfs: Skip pathconf case bits on NFSv4 (set via FATTR4_CASE_*
+    instead)
+  - xfs: Hide FS_CASEFOLD_FL from the legacy flags view so
+    chattr round-trips do not hit the setflags whitelist
+  - ext4, f2fs: Drop redundant fileattr_get patches; the
+    FS_CASEFOLD_FL translation in fileattr_fill_flags() already
+    reports FS_XFLAG_CASEFOLD for casefolded directories
+  - nfsd: Report FATTR4_HOMOGENEOUS = FALSE when the exported
+    filesystem has a Unicode encoding, since per-directory
+    casefold makes the fs-scoped case attributes inhomogeneous
+  - nfsd: Document in nfsd_get_case_info() why -ENOIOCTLCMD and
+    -ENOTTY are swallowed while other errors propagate
+  - fat: Honor vfat 'check=strict' when reporting FS_XFLAG_CASEFOLD
+  - Set FS_CASEFOLD_FL so FS_IOC_GETFLAGS reflects case-insensitive
+    mount
+  - isofs: Register fileattr_get on regular file and symlink inodes,
+    not just directories
+  - nfsd: Query NFSv4 FATTR4_CASE_* from the parent directory for
+    non-directory objects, since casefold lives on the directory
+
+Changes since v9:
+- nfs: always probe PATHCONF for case caps. Default to case-
+  preserving when the server does not report case_preserving
+- nfsd, ksmbd: tolerate -ENOTTY from vfs_fileattr_get() so
+  overlayfs exports on backing filesystems without fileattr_get
+  do not fail the RPC
+- xfs: map FS_XFLAG_CASEFOLD inside xfs_ip2xflags() so BULKSTAT
+  and FS_IOC_FSGETXATTR report the flag consistently
+- vboxsf: reject a short host reply to SHFL_INFO_VOLUME before
+  trusting volinfo.properties.case_sensitive
+
+Changes since v8:
+- Rebase on v7.0-rc1
+
+Changes since v7:
+- Split file_attr initialization changes into a separate patch
+
+Changes since v6:
+- Remove the memset from vfs_fileattr_get
+
+Changes since v5:
+- Finish the conversion to FS_XFLAGs
+- NFSv4 GETATTR now clears the attr mask bit if nfsd_get_case_info()
+  fails
+
+Changes since v4:
+- Observe the MSDOS "nocase" mount option
+- Define new FS_XFLAGs for the user API
+
+Changes since v3:
+- Change fa->case_preserving to fa_case_nonpreserving
+- VFAT is case preserving
+- Make new fields available to user space
+
+Changes since v2:
+- Remove unicode labels
+- Replace vfs_get_case_info
+- Add support for several more local file system implementations
+- Add support for in-kernel SMB server
+
+Changes since RFC:
+- Use file_getattr instead of statx
+- Postpone exposing Unicode version until later
+- Support NTFS and ext4 in addition to FAT
+- Support NFSv4 fattr4 in addition to NFSv3 PATHCONF
+
+---
+Chuck Lever (15):
+      fs: Move file_kattr initialization to callers
+      fs: Add case sensitivity flags to file_kattr
+      fat: Implement fileattr_get for case sensitivity
+      exfat: Implement fileattr_get for case sensitivity
+      ntfs3: Implement fileattr_get for case sensitivity
+      hfs: Implement fileattr_get for case sensitivity
+      hfsplus: Report case sensitivity in fileattr_get
+      xfs: Report case sensitivity in fileattr_get
+      cifs: Implement fileattr_get for case sensitivity
+      nfs: Implement fileattr_get for case sensitivity
+      vboxsf: Implement fileattr_get for case sensitivity
+      isofs: Implement fileattr_get for case sensitivity
+      nfsd: Report export case-folding via NFSv3 PATHCONF
+      nfsd: Implement NFSv4 FATTR4_CASE_INSENSITIVE and FATTR4_CASE_PRESERVING
+      ksmbd: Report filesystem case sensitivity via FS_ATTRIBUTE_INFORMATION
+
+ fs/exfat/exfat_fs.h            |  2 +
+ fs/exfat/file.c                | 18 ++++++++-
+ fs/exfat/namei.c               |  1 +
+ fs/fat/fat.h                   |  3 ++
+ fs/fat/file.c                  | 36 +++++++++++++++++
+ fs/fat/namei_msdos.c           |  1 +
+ fs/fat/namei_vfat.c            |  1 +
+ fs/file_attr.c                 | 16 ++++----
+ fs/hfs/dir.c                   |  1 +
+ fs/hfs/hfs_fs.h                |  2 +
+ fs/hfs/inode.c                 | 14 +++++++
+ fs/hfsplus/inode.c             | 16 +++++++-
+ fs/isofs/dir.c                 | 16 ++++++++
+ fs/isofs/isofs.h               |  3 ++
+ fs/nfs/client.c                | 21 +++++++---
+ fs/nfs/inode.c                 | 15 +++++++
+ fs/nfs/internal.h              |  3 ++
+ fs/nfs/namespace.c             |  2 +
+ fs/nfs/nfs3proc.c              |  2 +
+ fs/nfs/nfs3xdr.c               |  7 +++-
+ fs/nfs/nfs4proc.c              | 10 +++--
+ fs/nfs/proc.c                  |  3 ++
+ fs/nfs/symlink.c               |  3 ++
+ fs/nfsd/nfs3proc.c             | 36 +++++++++++++----
+ fs/nfsd/nfs4xdr.c              | 52 +++++++++++++++++++++++--
+ fs/nfsd/vfs.c                  | 88 ++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/vfs.h                  |  3 ++
+ fs/nfsd/xdr3.h                 |  4 +-
+ fs/ntfs3/file.c                | 29 ++++++++++++++
+ fs/ntfs3/namei.c               |  1 +
+ fs/ntfs3/ntfs_fs.h             |  1 +
+ fs/smb/client/cifsfs.c         | 53 +++++++++++++++++++++++++
+ fs/smb/client/cifsfs.h         |  3 ++
+ fs/smb/client/namespace.c      |  1 +
+ fs/smb/server/smb2pdu.c        | 30 +++++++++++---
+ fs/vboxsf/dir.c                |  1 +
+ fs/vboxsf/file.c               |  6 ++-
+ fs/vboxsf/super.c              |  7 ++++
+ fs/vboxsf/utils.c              | 30 ++++++++++++++
+ fs/vboxsf/vfsmod.h             |  6 +++
+ fs/xfs/libxfs/xfs_inode_util.c |  2 +
+ fs/xfs/xfs_ioctl.c             | 22 +++++++++--
+ include/linux/fileattr.h       |  3 +-
+ include/linux/nfs_fs_sb.h      |  2 +-
+ include/linux/nfs_xdr.h        |  2 +
+ include/uapi/linux/fs.h        |  7 ++++
+ 46 files changed, 536 insertions(+), 49 deletions(-)
+---
+base-commit: 6596a02b207886e9e00bb0161c7fd59fea53c081
+change-id: 20260422-case-sensitivity-5cbffc8f1558
+
+Best regards,
+--  
+Chuck Lever <chuck.lever@oracle.com>
+
 
