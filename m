@@ -1,215 +1,153 @@
-Return-Path: <linux-nfs+bounces-21438-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21439-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8Hh5GBu8/GnSTAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21438-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 18:21:47 +0200
+	id 8GKfNXj8/GmxVwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21439-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 22:56:24 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D62B84EC1EC
-	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 18:21:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C8514EF062
+	for <lists+linux-nfs@lfdr.de>; Thu, 07 May 2026 22:56:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1A0930799DD
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2026 16:13:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E89B93041A2A
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 May 2026 20:46:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4ABB3F7A98;
-	Thu,  7 May 2026 16:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6913B2DF134;
+	Thu,  7 May 2026 20:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrvD8sfY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3rXATF6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13612DA775
-	for <linux-nfs@vger.kernel.org>; Thu,  7 May 2026 16:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4412C2DB780;
+	Thu,  7 May 2026 20:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778170397; cv=none; b=lFO9BBraLIc+NtBeZWh5wLZArq2ZcZWcFT4/0Uut4LYQwb9BUV9PhKUSvLVUUwNm4yX1Ify7cE1owflrNMAQZ/6bxD/sIj9bVNw9B9Kz9E2r57VwnK+P8tMBr18vS4MmYBnlmqEAXzuxfS8p3IauPtrNhpU3pvGjYGOaavI9CzA=
+	t=1778186817; cv=none; b=Dfg9PIiwE4TxeOAvasH98hqlMCFwkuDplK/5FDUYcmsLaBJwtjcKljORG1IgLnYb73e5nYkUag/KRjm4M8Urd2uu6ngqFTAEMd8jBwqZ8q7yGbtHUVzE3/iTqtsynfiZaY/VVZwjE1DB+kyu7CNT+Hnryt1rs80xPuQ2DSj2bjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778170397; c=relaxed/simple;
-	bh=PuLUE747uu/IIcMnfH62AU0ZjTeTwo+w0XIMvnAzyr0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=MvSTs4kj0tV8PrMT6x40fwZ4PLqG55QNaink2gQ0vBxbTPee3V5QNhHSoosU3DMy96Z6pJzzJM3RlDreNnfq9eeASMnymlpE7VM23G3aYAlj4BOL6WMyC3teGb2WwstKmQyD3dBWBBkmiF4FIthGtZ4RoSuNbox4Uv0+vvZgifo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrvD8sfY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8B6FC2BCB8;
-	Thu,  7 May 2026 16:13:16 +0000 (UTC)
+	s=arc-20240116; t=1778186817; c=relaxed/simple;
+	bh=hb9//lof+vspQk+jPB4w0ydgX5sjYskjWWnapGZP7Uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kfkdbo+DNVldFJTOmRPHFa6erhyrHy3SzVJKa98BoLjvt9hH+t16fwDH08+DMSbcqoD93GJqZCzR9Zygl0rub6i4q3CYwQI9hnVIRAxyWVK7/AbEWFgtq/qAHvdQ8FV9K8pQ4p18QbDW0VfFphlOaZMJv0qh1QrQ91nlAs4E2qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3rXATF6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F6FC2BCB2;
+	Thu,  7 May 2026 20:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778170397;
-	bh=PuLUE747uu/IIcMnfH62AU0ZjTeTwo+w0XIMvnAzyr0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=HrvD8sfYP7OKKqnHpvmPeXcr9VILL7X0KLlgehFsP+2TWbbPtSnsZQM+hgpk+HdJF
-	 YWWnkuwyDU4gyXz25f2vYxnSBm4nzZzhcc2mX5nZftTEUv39Mc/wyrTewj72u2Qw8b
-	 VNYWjXI0BnnkhJY2qWqyfrQ59kStKIe/p4RCRNIupNENIKphpNBC4T9wC8/cPRh94y
-	 eP07uAyHKQy+ABLMiBIMB6mH0XVosD5MqdoqEX7yKAUQoHQs7HKtuEdTbO+8b6vAfT
-	 8CCNCUQAJoKgdhnEPOiQhyG9bpeWtyIUroOAscDgjl7jFvx9EeTAqihDORoC0sTtxb
-	 fJk7DeK/Qp0Mw==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 22899F40069;
-	Thu,  7 May 2026 12:13:16 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 07 May 2026 12:13:16 -0400
-X-ME-Sender: <xms:HLr8af2HgcoJybgixy7KUCibXZBGGe94hczhsC9Dvpmb8exrmphPkw>
-    <xme:HLr8aY4IHzjFXjyOGkeSw4v0Iw0TL8WWyEBO4mARujtRXK_RPBwhK9RbZSC5XXCVK
-    B5vJBHRhJVN1eKQQ8FciiXgC84Ks08xGOkV62NwAARzTOmIixLRpe4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdejledvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepudekpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepuggrvhgvmhesug
-    grvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgv
-    rdgtohhmpdhrtghpthhtohephigrnhhgvghrkhhunheshhhurgifvghirdgtohhmpdhrtg
-    hpthhtoheprghnnhgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhohhrmhhssehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhrohhn
-    ughmhieskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:HLr8acBrK6cE-0sLPicXq_fVwksxmklZc1MFmqcHOdulsC-xnaR6DQ>
-    <xmx:HLr8aScgAqHzMz9UyH0ymGa1-DxWLQhqpfUQrG5vF6e9sHOJCX5_ng>
-    <xmx:HLr8aUJxtfCvQVB-zcURkslwXDzLf5uBWtldayW2x2cnXaz9ovllnQ>
-    <xmx:HLr8aauOgDt8tfUOikE-3mlyORDN45j0Im2IDhBTacoUHRMZjpR0xA>
-    <xmx:HLr8aWa-cborerkNJfEEOl_uXwSj6HcOzA8HD6C_id_0ohxPr8jVOLmG>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E524C780077; Thu,  7 May 2026 12:13:15 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1778186816;
+	bh=hb9//lof+vspQk+jPB4w0ydgX5sjYskjWWnapGZP7Uo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M3rXATF6tSIZ0R3y96S7EGmpjMStlHVIePdEiiwKDd1l6RWmHvQeTBwqyQ/o24OAV
+	 VNwM8+b+Ejzl4hvt+z387GxeRrQ82pQsG5QJCfafl1bb3Owj+F75RocvqCbK9nSXka
+	 G7G6cLU+KGw6Dja00uHoGTJcGEhM5kr+TjlOmpf4SP0gOxb3sa9O03CgExhGCja4U/
+	 PCljhKtRA7Q/fTnq4kmRTJ+vAwdvP5vnntNzmQCMKN8eF/HFpfY8bPekYCDrgFzvYy
+	 ZPikTG60GnFifuGLrIhwRZvjAnNbjEH69Y269+f2A4V7B9nJydKmWp/0HQ1f/vOF18
+	 iZzg+aRhOfyTw==
+Date: Thu, 7 May 2026 16:46:55 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Chuck Lever <cel@kernel.org>,
+	Jonathan Flynn <jonathan.flynn@hammerspace.com>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+	Chuck Lever <chuck.lever@oracle.com>,
+	ben.coddington@hammerspace.com
+Subject: Re: [PATCH 1/2] svcrdma: Release write chunk resources without
+ re-queuing
+Message-ID: <afz6PwRlpJFzoIQE@kernel.org>
+References: <20260506-svcrdma-next-v1-0-915fce8c4fbb@oracle.com>
+ <20260506-svcrdma-next-v1-1-915fce8c4fbb@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AxcNF55tVgJk
-Date: Thu, 07 May 2026 18:12:55 +0200
-From: "Chuck Lever" <cel@kernel.org>
-To: yangerkun <yangerkun@huawei.com>,
- "Misbah Anjum N" <misanjum@linux.ibm.com>,
- "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <76a10e49-54a6-4813-8b58-b7cd0820fdc6@app.fastmail.com>
-In-Reply-To: <c45779f6-fe6c-4037-bb1c-01cfbbaa8aac@huawei.com>
-References: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
- <c45779f6-fe6c-4037-bb1c-01cfbbaa8aac@huawei.com>
-Subject: Re: [PATCH 0/6] SUNRPC: Address remaining cache_check_rcu() UAF in cache
- content files
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: D62B84EC1EC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260506-svcrdma-next-v1-1-915fce8c4fbb@oracle.com>
+X-Rspamd-Queue-Id: 5C8514EF062
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-21438-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-21439-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-Hello Erkun -
+On Wed, May 06, 2026 at 11:26:50AM -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> Each RDMA Send completion triggers a cascade of work items on the
+> svcrdma_wq unbound workqueue:
+> 
+>   ib_cq_poll_work (on ib_comp_wq, per-CPU)
+>     -> svc_rdma_send_ctxt_put -> queue_work    [work item 1]
+>       -> svc_rdma_write_info_free -> queue_work [work item 2]
+> 
+> Every transition through queue_work contends on the unbound
+> pool's spinlock. Profiling an 8KB NFSv3 read/write workload
+> over RDMA shows about 4% of total CPU cycles spent on this
+> lock, with the cascading re-queue of write_info release
+> contributing roughly 1%.
+> 
+> The initial queue_work in svc_rdma_send_ctxt_put is needed to
+> move release work off the CQ completion context (which runs on
+> a per-CPU bound workqueue). However, once executing on
+> svcrdma_wq, there is no need to re-queue for each write_info
+> structure. svc_rdma_reply_chunk_release already calls
+> svc_rdma_cc_release inline from the same svcrdma_wq context,
+> and svc_rdma_recv_ctxt_put does the same from nfsd thread
+> context.
+> 
+> Release write chunk resources inline in
+> svc_rdma_write_info_free, removing the intermediate
+> svc_rdma_write_info_free_async work item and the wi_work
+> field from struct svc_rdma_write_info.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-On Thu, May 7, 2026, at 11:09 AM, yangerkun wrote:
-> Hi,
->
-> =E5=9C=A8 2026/5/1 22:51, Chuck Lever =E5=86=99=E9=81=93:
->> Misbah Anjum reported a use-after-free in cache_check_rcu()
->> reached through e_show() while sosreport was reading
->> /proc/fs/nfsd/exports on ppc64le.  Two fixes for that report
->> landed in v7.0:
->>=20
->>    48db892356d6 ("NFSD: Defer sub-object cleanup in export put callba=
-cks")
->>    e7fcf179b82d ("NFSD: Hold net reference for the lifetime of /proc/=
-fs/nfs/exports fd")
->
-> Back to the problem fixed by this patches, I'm a little confused why
-> this UAF can be trigged.
->
-> Before this patches, svc_export_put show as follow:
->
->   368 static void svc_export_put(struct kref *ref)
->   369 {
->   370         struct svc_export *exp =3D container_of(ref, struct=20
-> svc_export, h.ref);
->   371
->   372         path_put(&exp->ex_path);
->   373         auth_domain_put(exp->ex_client);
->   374         call_rcu(&exp->ex_rcu, svc_export_release);
->   375 }
->
-> The auth_domain_put function releases ->name using call_rcu, and
-> path_put may release the dentry also via call_rcu. All of this seems to
-> prevent e_show from causing a UAF. Could you point out which line in
-> d_path triggers the issue?
+You were correct: this patch alone eliminates the OOM (we tested with
+both 16K and then 4K read IO from 121 clients to 8 NFS servers, no
+measurable memory growth while testing).
 
-The dentry, the mount, and the auth_domain ->name buffer all
-end up RCU-freed (dentry_free() and delayed_free_vfsmnt in
-fs/, svcauth_unix_domain_release_rcu() in svcauth_unix.c).
-The eventual kfree isn't the problem.
+Feel free to add:
 
-The problem is the synchronous teardown inside path_put(),
-which runs before svc_export_put() ever reaches its own
-call_rcu():
+Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+Tested-by: Jonathan Flynn <jonathan.flynn@hammerspace.com>
 
-  path_put(&exp->ex_path)
-    -> dput(dentry)
-       -> __dentry_kill()              [if last ref]
-          -> __d_drop()                /* unhashes */
-          -> dentry_unlink_inode()     /* d_inode =3D NULL */
-          -> d_op->d_release() if set
-          -> drops parent d_lockref    /* may cascade up */
-          -> dentry_free()             /* call_rcu deferred */
-    -> mntput(mnt)                     /* deferred via task_work */
+Thanks!
+Mike
 
-The dentry pointer itself is RCU-safe, so prepend_path()'s walk
-of d_parent and d_name doesn't read freed memory.  But by the
-time the reader gets there, __d_clear_type_and_inode() has
-already stored NULL into d_inode, __d_drop() has broken the
-hash linkage, and the parent's d_lockref has been decremented
--- which can in turn fire __dentry_kill() on the parent, and
-on up the tree.  An e_show() that's still inside its cache RCU
-read section walks into that half-dismantled state through
-seq_path(), and that's the NULL deref Misbah reported.
-
-The earlier fix (2530766492ec, "nfsd: fix UAF when access
-ex_uuid or ex_stats") moved the kfree of ex_uuid and ex_stats
-into svc_export_release() so those are RCU-safe now.
-path_put() and auth_domain_put() couldn't go in there because
-both may sleep, and call_rcu callbacks run in softirq context.
-This series uses queue_rcu_work() instead: it defers past the
-grace period AND runs the callback in process context, so the
-sleeping puts move into the deferred path and the window
-closes.
-
-
---=20
-Chuck Lever
+ps.
+So you are aware, couldn't test your 2nd patch at the customer site
+because the baseline kernel there is based on 6.12-stable but your
+2nd patch builds on your 7.1 svcrdma changes. I think your 2nd patch
+is ideal though, and will be able to pull it in to test in future, but
+won't have the ability to test at this customer's scale until we can
+role that newer kernel out there... might take a couple months.
 
