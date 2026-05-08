@@ -1,142 +1,166 @@
-Return-Path: <linux-nfs+bounces-21446-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21447-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gOlRDX7u/WlJkwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21446-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 08 May 2026 16:09:02 +0200
+	id iI3TETpE/mlFogAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21447-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 08 May 2026 22:14:50 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CF164F7920
-	for <lists+linux-nfs@lfdr.de>; Fri, 08 May 2026 16:09:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1F0B4FB63E
+	for <lists+linux-nfs@lfdr.de>; Fri, 08 May 2026 22:14:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3927E300DE3D
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 May 2026 14:08:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 55D4B3011797
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 May 2026 20:14:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C153806C2;
-	Fri,  8 May 2026 14:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B84B3EC2E1;
+	Fri,  8 May 2026 20:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="LNVc8Hi2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uztWB7rt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAA9378D70
-	for <linux-nfs@vger.kernel.org>; Fri,  8 May 2026 14:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EAD3E4C61;
+	Fri,  8 May 2026 20:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778249338; cv=none; b=VV/xYicqVThBhLkCq+kkTh9SN2Vg62OOxtdHeFgW9+sd6lXbKB0EYlqtJdYDah3vpJeFQcXiwKe9EE7/qyRkHIjRhJHaibGLrUlub5CQ2Z2KaGqg9CmCsgpma1jfEB10sG2EkLLmdMT4jr3/jO7ix8G2WRByJfpzPO8mPuUN2T8=
+	t=1778271285; cv=none; b=XxKl1lPif/I9tgi6fHQ1ue58m0MYTb08L3eWhnvr+qGCQaY7X6CF0BLDpstos5KBZagP7RcwmkLBL4Qu0V82MD4RfgxZxxaUai/S63iZkKQaM6n4F9faaukssLBLpVq1UFXJJwmZlOnstTsySdPcCgnxb0ISUJ9nzSKDTyXP4qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778249338; c=relaxed/simple;
-	bh=0dDILeb1jV4b/mcVF6T7QMAR3gacmf1Vgnw281L/ETQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tywMgJ60SBhxFCq8d2ZV3RxaOwRz6BpnLowRJZDNCaDDxYcS4FZIWUcjbt6d0SR7DQxahLK8ls3CW+dK1Ell5TXAf4zI9UPJ2IRQR4eGAs0b72cZY2sa19ODwOXK1xl8VU9ntl4Kw3zmh5dlvLkLWGS9SV90qcvInnNDQYLbnqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=LNVc8Hi2; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hammerspace.com
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-47cbd444fd0so1240695b6e.2
-        for <linux-nfs@vger.kernel.org>; Fri, 08 May 2026 07:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1778249336; x=1778854136; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0dDILeb1jV4b/mcVF6T7QMAR3gacmf1Vgnw281L/ETQ=;
-        b=LNVc8Hi2JydiQjWwf29ZQY1XdHkOm+qlyPlWU/PU56/c8WoOz6wxZ+xm6iUaQdoaWt
-         N8Exa2j+SERWJXpoQdrlWOQ5MJuwIrxDprxHBYykJRQssu9VEmpWbySLRZnMzOB2fqME
-         kehheasqfi5CZPDdidD5pRgGopA4yyUwC9pNc67IVqOBc4tKDIbviJ61s5aw9CtKs5Qq
-         e08rQucxU6B/IBgrARfPomFcRXYMVFf3hUOCOLANa9gBoWqOLay6ID/qNMindr4fhMAX
-         V9Pue+VtErJQ41xtwnrj9Bvso4MhdWwwrLgLwnEtaAlHkqH2lBH2Ich0+rEsTY4GoWjh
-         DlRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778249336; x=1778854136;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0dDILeb1jV4b/mcVF6T7QMAR3gacmf1Vgnw281L/ETQ=;
-        b=PX4BCqe9Gc6D3XZxsDpBeoDEtwnP8imAXBp7mAHGR1glCbwhMXAuE/r0n0rhgEoG4H
-         3d/+EOzN0lKH7BJ8UH/+k4cckgnKbBUkLqQaPdmtTH9bjlrigmsoi10sB3pA6CcCNCbq
-         dNN7FGc3j3JypZJxuRnlsnxeJaUauSDkhw1btfNF2CRcfL3VqTpencWiD58R+UaEF67M
-         z1sY7H6sSlc+EGBPMifaaQIX01RzZk0VokjH5FQ8LpM85RmSbKdqgisvhNEtH4yUftox
-         E71nUlDKr2V3VFtYlquMOAr8e+Hg7IHlgCBD3zl1NdFJ4sgx/vHFPtlBJ0uZD3mNXWBR
-         K+Jg==
-X-Gm-Message-State: AOJu0YxWL+KL0HJQUl2sflZtSJj8s3iyFPud7YFcAsP4hgR3dasAoqOR
-	rWzugTN/DJst4kVXxJtEyP6Fbltjs8I9LcWKPHHTcQhHB7YrXi0w+a8ArtZz8YhrL1hRUELfq4e
-	48fFI
-X-Gm-Gg: AeBDietFFTTBpx7QOyiiASfs5Gu3COdNrB+YJLjnMexkEVFhe/lxYstKOFzFIAmH6/0
-	HOaB+hCwfcCIzoPac54hY1BrwPlGFPUvxtMML9ctAAzDwbUqUDFMASSvDlC9UDzRYVK/4ncEcdo
-	1+K+dREaHdEBms3n5rNmHwbF/ihypJsiEhpGcDvO/ZZ1MBNm+YWmqFsWEWFaogQa+vkBOsEuj+E
-	9bho5p75mjvuJm+OtRFsvIBO03YQWzuQcTdH8ugTvg6tVYKjN3z+XAkyIp+ewmgfUjoKqZEhefx
-	INmqoMoefwn2q1VtzZfR8CSH6u8gvzo6AcMaeejufjYtzd4QzZ8is/JcDjwg6Q3kXrQ5jtbQ7b2
-	EpuxmwxyZUAom6DEE36Wc02QBOrvZRq5OWOGsdHfTBsDW8AAtqT+hGNLbQt7li9J2XeU3E8YgFt
-	w8reAXppbQqiMNihoCowyVlMrbGHn4R9gB1DFFJJTiYNc=
-X-Received: by 2002:a05:6808:23d1:b0:47b:ccf2:91e1 with SMTP id 5614622812f47-48042264010mr7602460b6e.21.1778249335839;
-        Fri, 08 May 2026 07:08:55 -0700 (PDT)
-Received: from [192.168.254.51] ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-48061e6eb84sm3416573b6e.0.2026.05.08.07.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2026 07:08:54 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: liezhi.yang@windriver.com, steved@redhat.com
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [nfs-utils PATCH] fh_key_file.c: Fix build error with musl
-Date: Fri, 08 May 2026 10:08:52 -0400
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <CD3EAA3F-F758-4CAF-A692-065CA82917AC@hammerspace.com>
-In-Reply-To: <20260508135732.524301-1-liezhi.yang@windriver.com>
-References: <20260508135732.524301-1-liezhi.yang@windriver.com>
+	s=arc-20240116; t=1778271285; c=relaxed/simple;
+	bh=oL96w9GxoS7e+L0xMasx8uNMIKOmIhN5Py5nS5kyQkU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sV1+0q75wQevdxzrzDD4acUuP6vScjcqMNml1SUZQt51cw3rBJqRjUsN9FvfWsVUvdAR+Z3NIDPzqLTPa+cimNV0MZQTpPgGTS8vrSg/P/wv/E+ly37Hy0GzfGu08DaLlmCgD2yZSSACzAn6kM2O6rjqZL1U+uTNfJpIysJaqPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uztWB7rt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB127C2BCB0;
+	Fri,  8 May 2026 20:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778271284;
+	bh=oL96w9GxoS7e+L0xMasx8uNMIKOmIhN5Py5nS5kyQkU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uztWB7rtjI4hFkb4+BvZnrU0h4XD2F+x3aL1dfORldtIzvx37Evvu0z13UiwoMT/5
+	 upXd9mqVuEgeUwPxO0HGsXvmGisQfCZbQ6CMeLgwsoGOrf+Tvs31jEQLdzSno3V7+1
+	 MZEnV5iqcS/WqfvzEO68M01Vel3ebSxiaTe4daELNs2+ZmsVEABluzdvxiWo6JzMjF
+	 kpIpc4VyHGT8jTf6Fk+7uJJMP3xAsWJMBYJaloVKNB8mHaiGArf87JjSiIV5u8O0Zx
+	 SMEhhsNugbzGZpYGBuD9SXYVucJHJuWkmZmcXirUCvVtDYb17mH5YgUhwJ+T7HeR92
+	 4EE5oIcAVOZBw==
+Message-ID: <0267f73f-b4e5-4318-85de-808699f77d95@kernel.org>
+Date: Fri, 8 May 2026 16:14:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 0CF164F7920
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] svcrdma: Release write chunk resources without
+ re-queuing
+To: Mike Snitzer <snitzer@kernel.org>,
+ Jonathan Flynn <jonathan.flynn@hammerspace.com>
+Cc: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+ ben.coddington@hammerspace.com
+References: <20260506-svcrdma-next-v1-0-915fce8c4fbb@oracle.com>
+ <20260506-svcrdma-next-v1-1-915fce8c4fbb@oracle.com>
+ <afz6PwRlpJFzoIQE@kernel.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <afz6PwRlpJFzoIQE@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D1F0B4FB63E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	TO_DN_NONE(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21446-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
+	TAGGED_FROM(0.00)[bounces-21447-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:mid,hammerspace.com:dkim]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,hammerspace.com:email]
 X-Rspamd-Action: no action
 
-On 8 May 2026, at 9:57, liezhi.yang@windriver.com wrote:
+On 5/7/26 4:46 PM, Mike Snitzer wrote:
+> On Wed, May 06, 2026 at 11:26:50AM -0400, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> Each RDMA Send completion triggers a cascade of work items on the
+>> svcrdma_wq unbound workqueue:
+>>
+>>   ib_cq_poll_work (on ib_comp_wq, per-CPU)
+>>     -> svc_rdma_send_ctxt_put -> queue_work    [work item 1]
+>>       -> svc_rdma_write_info_free -> queue_work [work item 2]
+>>
+>> Every transition through queue_work contends on the unbound
+>> pool's spinlock. Profiling an 8KB NFSv3 read/write workload
+>> over RDMA shows about 4% of total CPU cycles spent on this
+>> lock, with the cascading re-queue of write_info release
+>> contributing roughly 1%.
+>>
+>> The initial queue_work in svc_rdma_send_ctxt_put is needed to
+>> move release work off the CQ completion context (which runs on
+>> a per-CPU bound workqueue). However, once executing on
+>> svcrdma_wq, there is no need to re-queue for each write_info
+>> structure. svc_rdma_reply_chunk_release already calls
+>> svc_rdma_cc_release inline from the same svcrdma_wq context,
+>> and svc_rdma_recv_ctxt_put does the same from nfsd thread
+>> context.
+>>
+>> Release write chunk resources inline in
+>> svc_rdma_write_info_free, removing the intermediate
+>> svc_rdma_write_info_free_async work item and the wi_work
+>> field from struct svc_rdma_write_info.
+>>
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> 
+> You were correct: this patch alone eliminates the OOM (we tested with
+> both 16K and then 4K read IO from 121 clients to 8 NFS servers, no
+> measurable memory growth while testing).
 
-> From: Robert Yang <liezhi.yang@windriver.com>
->
-> Fixed:
-> error: implicit declaration of function 'strerror'
+Excellent news! Thanks to you both for testing.
 
-Giulio sent a patch for this already:
-https://lore.kernel.org/linux-nfs/20260408173535.3992116-1-giulio.benetti=
-@benettiengineering.com/
 
-Steve D - did you pick that one up yet?
+> Feel free to add:
+> 
+> Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+> Tested-by: Jonathan Flynn <jonathan.flynn@hammerspace.com>
+> 
+> Thanks!
+> Mike
+> 
+> ps.
+> So you are aware, couldn't test your 2nd patch at the customer site
+> because the baseline kernel there is based on 6.12-stable but your
+> 2nd patch builds on your 7.1 svcrdma changes. I think your 2nd patch
+> is ideal though, and will be able to pull it in to test in future, but
+> won't have the ability to test at this customer's scale until we can
+> role that newer kernel out there... might take a couple months.
 
-Ben
+Understood.
+
+
+-- 
+Chuck Lever
 
