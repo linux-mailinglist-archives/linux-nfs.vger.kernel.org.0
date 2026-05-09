@@ -1,471 +1,257 @@
-Return-Path: <linux-nfs+bounces-21451-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21452-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id PrDXBVUB/2mW1AAAu9opvQ
-	(envelope-from <linux-nfs+bounces-21451-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 09 May 2026 11:41:41 +0200
+	id YPRhNUMK/2mv1QAAu9opvQ
+	(envelope-from <linux-nfs+bounces-21452-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 09 May 2026 12:19:47 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A6594FF045
-	for <lists+linux-nfs@lfdr.de>; Sat, 09 May 2026 11:41:36 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE7D4FF31C
+	for <lists+linux-nfs@lfdr.de>; Sat, 09 May 2026 12:19:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D923630069A7
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 May 2026 09:41:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D56DB3006447
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 May 2026 10:19:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCD439A05D;
-	Sat,  9 May 2026 09:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE61E366567;
+	Sat,  9 May 2026 10:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Fs2HHj1i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgQ8l6Q5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B5A3845A9;
-	Sat,  9 May 2026 09:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99A426F2B9;
+	Sat,  9 May 2026 10:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778319690; cv=none; b=rdwFTu7kIMrloitZ8i+chPjEhGB2QEzxdWFWHF6Rd3xOOer2zFeQ3aUj446yBQelaIKuokXoAEyv0MQkBeVrY8X73VI85q13umbRZ8zEfgeSYFnIVb8I/ajVmSnXBE7b5OEJAP7SYg3/TM2y63VSdMmhlDIvNOHk2k/ge9qqsZ4=
+	t=1778321985; cv=none; b=AtZ+Odn4Hpp3pNftyk/3dXXlY+3OpcosmtZH15Q7iJRqce1VpFzsziA3uIuf+eBkkxO79iAsBeenBEuDbP9K2tuubqJ90NMqybFLFPiuB1cfhgmTmBcg/3b6yf7DjQJ1Df2Sbyh9WxBvq8H2A9QDOdRE3UwC0jcyBgVn4n6rYYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778319690; c=relaxed/simple;
-	bh=oLpg47DSe9US8IX5roqIcuUzQM4CfiqXPvK6CvOwUBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Scxgg8KWGbVFaj/fXimxLm+6GaUJkRfSVXECRi5ebu2jtBR3naCGnLRbtvXd8T+GbfKcqkVo7bNah1nMGCAm4Xs7vKcFo9KQyynsGWu5W0j+kpZeexDQyTaiGhqz7YWYnNMfRRfCxKzhVgd33XG7pYqSjPa8LFxlg+zLKa9dYGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Fs2HHj1i; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=tMT5B6mrg7SMy3LvephoG51biiHh3rgEicSBYASx8d0=;
-	b=Fs2HHj1imE5n726zGGh6xeghlqL5c3iyzLPDeQnyJF8rVgqo8EYpyWsRcyJ+/g+eFFRuoAzK0
-	D2BsuVOrSDJ8kZDOpPcsw83V26ntOFbXF7l6xfDmHIfE0Z8HutPWlms7IdyQYds5ViP9p6yTrbP
-	/yUcD+klXvnaS6Pzqq61LDM=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gCLRG4kdDznTc7;
-	Sat,  9 May 2026 17:34:18 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id B01834055B;
-	Sat,  9 May 2026 17:41:23 +0800 (CST)
-Received: from [10.174.176.240] (10.174.176.240) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Sat, 9 May 2026 17:41:22 +0800
-Message-ID: <4ee398d0-d2ec-45b2-8214-6e35520fca2d@huawei.com>
-Date: Sat, 9 May 2026 17:41:21 +0800
+	s=arc-20240116; t=1778321985; c=relaxed/simple;
+	bh=5/Lh2DOlxoyMERzAlFtWE/g8RwDjiTeHdspXWqs4RP8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lhEDtkkvjuTS8ZgP9KJ5YxuUpyU0tihcN57qwyNrVg0618alCi8kvOqEeqer46n0LcgsI5BArPSl6UcrZ0NWhIfTXKhP24utPYPqrFwMgdIQAqAHg38hDBzAqjzY4EhWaJP3nyhObX9PCWxks1Jmpa4OcdsCGdPDT5ac8ZQ6zAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgQ8l6Q5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F2EC2BCB4;
+	Sat,  9 May 2026 10:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778321985;
+	bh=5/Lh2DOlxoyMERzAlFtWE/g8RwDjiTeHdspXWqs4RP8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=MgQ8l6Q5BGS6CYCsHSFa47YdvcQfjVhzVuaPUa0LmHo0YSDKtZxGbgjH6PTcA6965
+	 cCW2wRSaUJ9sneDvJxLl/BYPCS+YngyI6tRheTJUywbsSJRmCn9t495Z3n2YVgj1CC
+	 9LT7uxxsEsOg+Glm7xSpaMVl/JlM0CKKD703grzDvpkVrQvRoLPYJw9qBVZA4OWPwK
+	 WcsuWQVU7dR/MK5U+248iYU7EYkA28Yw/QY2e4aGUfG5tskj0JVQeQFs1sxu+w4aXQ
+	 tVXf08AK5ob3Nq9NB1Rkf879kqjm/6hRrywcbrM01iErOYbPYBNSfdOSEhF4XSkdEw
+	 uOth1A+N37uRA==
+Message-ID: <b9cd01ceb25b526931b376654077db5d8b9e0822.camel@kernel.org>
+Subject: Re: [PATCH v6 2/2] mm: kick writeback flusher for IOCB_DONTCACHE
+ with targeted dirty tracking
+From: Jeff Layton <jlayton@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, "Matthew Wilcox (Oracle)"	
+ <willy@infradead.org>, David Hildenbrand <david@kernel.org>, Lorenzo
+ Stoakes	 <ljs@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka	 <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan	 <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Mike Snitzer	 <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, Ritesh
+ Harjani	 <ritesh.list@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Date: Sat, 09 May 2026 06:19:40 -0400
+In-Reply-To: <20260508172014.8265ddc0220ff7e4d54674ff@linux-foundation.org>
+References: <20260505-dontcache-v6-0-66463805dd6a@kernel.org>
+		<20260505-dontcache-v6-2-66463805dd6a@kernel.org>
+	 <20260508172014.8265ddc0220ff7e4d54674ff@linux-foundation.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] SUNRPC: Address remaining cache_check_rcu() UAF in
- cache content files
-To: Chuck Lever <cel@kernel.org>, Misbah Anjum N <misanjum@linux.ibm.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
-	<tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
-	<anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, <yi.zhang@huawei.com>,
-	Zhihao Cheng <chengzhihao1@huawei.com>, Li Lingfeng <lilingfeng3@huawei.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, Chuck Lever <chuck.lever@oracle.com>
-References: <20260501-cache-uaf-fix-v1-0-a49928bf4817@oracle.com>
- <c45779f6-fe6c-4037-bb1c-01cfbbaa8aac@huawei.com>
- <76a10e49-54a6-4813-8b58-b7cd0820fdc6@app.fastmail.com>
- <4bb9ed6b-1a64-406a-9239-b0560ca963cc@huawei.com>
- <05f93fc4-59d7-4735-bc7d-a00d1497687a@huawei.com>
- <10019b42-4589-4f9f-8d5b-d8197db1ce3c@huawei.com>
- <39819ad4-3105-4802-b5e2-79e131b25984@huawei.com>
- <f4caa4fa-f15f-4c95-8318-d4ec216e6090@app.fastmail.com>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <f4caa4fa-f15f-4c95-8318-d4ec216e6090@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemf100006.china.huawei.com (7.202.181.220)
-X-Rspamd-Queue-Id: 9A6594FF045
+X-Rspamd-Queue-Id: 7DE7D4FF31C
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	TAGGED_FROM(0.00)[bounces-21451-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21452-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com,vger.kernel.org,kvack.org];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sashiko.dev:url]
 X-Rspamd-Action: no action
 
-Hi Chuck!
+On Fri, 2026-05-08 at 17:20 -0700, Andrew Morton wrote:
+> On Tue, 05 May 2026 20:59:49 +0200 Jeff Layton <jlayton@kernel.org> wrote=
+:
+>=20
+> > The IOCB_DONTCACHE writeback path in generic_write_sync() calls
+> > filemap_flush_range() on every write, submitting writeback inline in
+> > the writer's context.  Perf lock contention profiling shows the
+> > performance problem is not lock contention but the writeback submission
+> > work itself =E2=80=94 walking the page tree and submitting I/O blocks t=
+he writer
+> > for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
+> > (dontcache).
+> >=20
+> > Replace the inline filemap_flush_range() call with a flusher kick that
+> > drains dirty pages in the background.  This moves writeback submission
+> > completely off the writer's hot path.
+> >=20
+> > ...
+> >=20
+> >                         Before    After    Change
+> >   seq-write/dontcache      298      897    +201%
+> >   rand-write/dontcache     131      236     +80%
+> >=20
+> > Tail latency improvements (seq-write/dontcache):
+> >   p99:    135,266 us  ->  23,986 us   (-82%)
+> >   p99.9: 8,925,479 us ->  28,443 us   (-99.7%)
+> >=20
+> > Multi-writer (4 jobs, sequential write):
+> >                                 Before    After    Change
+> >   dontcache aggregate (MB/s)     2,529    4,532     +79%
+> >   dontcache p99 (us)             8,553    1,002     -88%
+> >   dontcache p99.9 (us)         109,314    1,057     -99%
+> >=20
+> > 32-file write (Axboe test):
+> >                                 Before    After    Change
+> >   dontcache aggregate (MB/s)     1,548    3,499    +126%
+> >   dontcache p99 (us)            10,170      602     -94%
+> >   Peak dirty pages (MB)          1,837      213     -88%
+> >=20
+> >   Dontcache now reaches 81% of buffered throughput (was 35%).
+> >=20
+> > Competing writers (dontcache vs buffered, separate files):
+> >                                 Before    After
+> >   buffered writer                  868      433 MB/s
+> >   dontcache writer                 415      433 MB/s
+> >   Aggregate                      1,284      866 MB/s
+> >=20
+> > ...
+> >=20
+> >   The dontcache writer's p99.9 latency collapsed from 119 ms to
+> >   33 ms (-73%), eliminating the severe periodic stalls seen in the
+> >   baseline. Both writers now share identical latency profiles,
+> >   matching the buffered-vs-buffered pattern.
+> >=20
+> > The per-bdi_writeback dirty tracking dramatically reduces peak dirty
+> > pages in dontcache workloads, with the 32-file test dropping from
+> > 1.8 GB to 213 MB. Dontcache sequential write throughput triples and
+> > multi-writer throughput reaches parity with buffered I/O, with tail
+> > latencies collapsing by 1-2 orders of magnitude.
+>=20
+> Geeze, is that the best you can do ;)
+>=20
+> Sashiko seems to have found more stuff:
+> 	https://sashiko.dev/#/patchset/20260505-dontcache-v6-0-66463805dd6a@kern=
+el.org
 
-在 2026/5/9 4:47, Chuck Lever 写道:
-> Hi Erkun -
-> 
-> On Fri, May 8, 2026, at 9:00 AM, yangerkun wrote:
->> 在 2026/5/8 16:16, yangerkun 写道:
->>>
->>>
->>> 在 2026/5/8 11:08, yangerkun 写道:
->>> After reviewing these two commits:
->>>
->>> e7fcf179b82d NFSD: Hold net reference for the lifetime of /proc/fs/nfs/
->>> exports fd
->>> 48db892356d6 NFSD: Defer sub-object cleanup in export put callbacks
->>>
->>> I believe that the issue described in commit e7fcf179b82d might be the
->>> root cause of the null pointer dereferences mentioned in [1].
-> 
-> That's where I landed too. e7fcf179b82d closed the specific
-> oops Misbah hit on /proc/fs/nfs/exports. The matching patch
+I saw those after I sent the last set and have been working on
+addressing them. I've also found a couple more via dueling Gemini and
+Claude reviews.
 
-Yeah!
+I'll have a v7 posting coming early next week.
 
-> in this series is 5/6 ("SUNRPC: Hold cd->net for the lifetime
-> of cache files"), which extends the same get_net()/put_net()
-> guard to the sunrpc cache files at
-> 
->   /proc/net/rpc/<cache>/{content,channel,flush} .
-> 
-> Those open helpers had the same hole; sosreport just hit the
-> nfsd-specific file first because it reads /proc/fs/nfsd/exports.
-
-
-Hmm... /proc/net is always a symlink to /proc/self/net. After opening 
-/proc/net/rpc/<cache>/content and attempting to read it, the 
-proc_reg_read function calls use_pde before pde_read. This sequence can 
-prevent a race condition because nfsd_export_shutdown leads to 
-cache_unregister_net, which calls remove_cache_proc_entries, then 
-proc_remove, and eventually proc_entry_rundown. The proc_entry_rundown 
-function waits until unuse_pde is called in proc_reg_read. Therefore, 
-I'm not sure if forgetting to call get_net when opening 
-/proc/net/rpc/<cache>/content is the root cause of the null pointer in 
-c_show. I've tried to find any other possible root causes but have been 
-unsuccessful. Sorry....
-
-
-> 
-> Patch 5/6's changelog pins down the deref site you asked
-> about: cache_check_rcu() faults reading h->flags off a
-> garbage cache_head returned by __cache_seq_start() walking a
-> cd->hash_table that cache_destroy_net() already freed. Not a
-> dentry deref. The dentry-teardown path is a separate failure
-> mode that 48db892356d6 closed for the export and expkey caches.
-> 
-> 
->>> To prevent the
->>> issue described in commit 69d803c40ede, should we consider reverting
->>> commit 48db892356d6 first?
-> 
-> Not for this series. Patches 3/6 and 4/6 don't add any new
-> path_put deferral; their commit messages call them out as
-> consistency changes, not bug fixes. ip_map holds only an
-> auth_domain reference and unix_gid holds only a group_info,
-> so neither cache reaches mntput from the deferred release.
-> The exportfs-r-then-umount sequence isn't touched by this
-> series.
-> 
-> The svc_export and svc_expkey path_put deferral lives in
-> 48db892356d6, which is already in v7.0. If the umount window
-> from 69d803c40ede is still reachable through that commit,
-> that's a regression in 48db892356d6 and worth a separate
-> thread.
-
-Yeah! Totally agree!
-
-> 
-> 
->> Locally, I wrote a stable regression test case. I also reverted to
->> commit 9189d23b835cec646ba5010db35d1557a77c5857 (which is before commits
->> 2862eee078a4 "SUNRPC: make sure cache entry active before cache_show"
->> and be8f982c369c "nfsd: make sure exp active before svc_export_show").
->> Even then, a panic can still be triggered without any actual export path...
-> 
-> That fits 5/6's failure mode. Without an export no svc_export
-> or svc_expkey entry is populated, but rpc.mountd reads
-> auth.unix.ip/content and auth.unix.gid/content directly,
-> and on a pre-5/6 tree the open helpers in cache.c hold no
-> reference on cd->net. cache_destroy_net() at namespace exit
-> then races a reader still inside cache_seq_start_rcu(), and
-> the reader walks a freed cd->hash_table.
-> 
-> Could you share the reproducer and the panic stack trace?
-> If the fault is in cache_check_rcu() through one of the
-> sunrpc cache files, that confirms 5/6 is the right fix, and
-> I'll happily carry your Tested-by on it.
-
-The shell(Created will AI assist):
-
-#!/bin/bash
-#
-# Test for e7fcf179b82d ("NFSD: Hold net reference for ...")
-#
-# Reproduces the scenario described in the commit:
-#   1. Process opens /proc/fs/nfsd/exports in netns A
-#   2. Process leaves A (joins B), emptying A
-#   3. ip netns del A triggers nfsd_export_shutdown → cache_detail freed
-#   4. Process reads from still-open fd → UAF on UNFIXED kernel
-#
-# On current kernel (with e7fcf179b82d applied):
-#   get_net in exports_net_open prevents netns A from being destroyed
-#   → read succeeds safely (test output: "SUCCESS")
-#
-# On kernel WITHOUT e7fcf179b82d:
-#   No get_net → A destroyed → read triggers UAF:
-#     - KASAN: use-after-free, or
-#     - NULL deref, or
-#     - slab corruption (ASCII strings like "cap_type", "libz.so.")
-#
-# Usage: sudo ./test_nfsd_exports_uaf.sh
-
-set -e -u
-
-NS_A="nfsd_test_A_$$"
-NS_B="nfsd_test_B_$$"
-SYNC="/tmp/nfsd_uaf_sync_$$"
-GO="/tmp/nfsd_uaf_go_$$"
-REPRO="/tmp/uaf_repro_$$"
-
-cleanup() {
-     set +e
-     kill $REPRO_PID 2>/dev/null || true
-     wait $REPRO_PID 2>/dev/null || true
-     ip netns del "$NS_B" 2>/dev/null || true
-     ip netns del "$NS_A" 2>/dev/null || true
-     rm -f "$REPRO" "$SYNC" "$GO"
-}
-trap cleanup EXIT
-
-echo "=== Reproduce e7fcf179b82d scenario ==="
-
-# --- Setup ---
-echo "[setup] creating netns A and B..."
-ip netns add "$NS_A"
-ip netns add "$NS_B"
-
-echo "[setup] loading nfsd..."
-modprobe nfsd || true
-
-echo "[setup] compiling repro..."
-gcc -o "$REPRO" /tmp/uaf_repro.c 2>/dev/null || \
-     gcc -o "$REPRO" -x c - <<'SRCEOF' 2>/dev/null
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sched.h>
-#include <signal.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-static volatile sig_atomic_t go_flag = 0;
-static void handler(int sig) { go_flag = 1; }
-int main(int argc, char *argv[]) {
-     const char *netns_b = argv[1], *sync_f = argv[2], *go_f = argv[3];
-     int fd, nsfd; ssize_t n; char buf[4096];
-     fd = open("/proc/fs/nfs/exports", O_RDONLY);
-     if (fd < 0) { perror("open exports debug"); return 1; }
-     fprintf(stderr, "[repro] opened exports (fd=%d) in netns A\n", fd);
-     nsfd = open(netns_b, O_RDONLY);
-     if (nsfd < 0) { perror("open B"); return 1; }
-     if (setns(nsfd, CLONE_NEWNET) < 0) { perror("setns"); return 1; }
-     close(nsfd);
-     fprintf(stderr, "[repro] moved to B; A has no processes\n");
-     close(open(sync_f, O_CREAT | O_WRONLY, 0666));
-     signal(SIGCONT, handler);
-     while (!go_flag) { struct stat st; if (stat(go_f, &st) == 0) break; 
-pause(); }
-     fprintf(stderr, "[repro] reading exports fd...\n");
-     lseek(fd, 0, SEEK_SET);
-     sleep(1);
-     n = read(fd, buf, sizeof(buf)-1);
-     if (n < 0) { perror("read"); close(fd); return 1; }
-     buf[n] = '\0';
-     fprintf(stderr, "[repro] SUCCESS: read %zd bytes (no UAF)\n", n);
-     close(fd);
-     return 0;
-}
-SRCEOF
-
-# --- Run repro inside A ---
-rm -f "$SYNC" "$GO"
-echo "[test] starting repro inside netns A..."
-ip netns exec "$NS_A" "$REPRO" /var/run/netns/"$NS_B" "$SYNC" "$GO" &
-REPRO_PID=$!
-
-# --- Wait for repro to move to B ---
-echo "[test] waiting for repro to signal that A is empty..."
-for i in $(seq 1 30); do
-     if [ -f "$SYNC" ]; then break; fi
-     if ! kill -0 $REPRO_PID 2>/dev/null; then
-         echo "[FAIL] repro exited prematurely"
-         wait $REPRO_PID || true
-         exit 1
-     fi
-     sleep 0.2
-done
-
-if [ ! -f "$SYNC" ]; then
-     echo "[FAIL] timeout waiting for repro"
-     exit 1
-fi
-echo "[test] repro moved to B"
-
-# --- Destroy netns A ---
-echo "[test] destroying netns A (ip netns del $NS_A)..."
-set +e
-ip netns del "$NS_A" 2>&1
-RC=$?
-set -e
-
-if [ $RC -eq 0 ]; then
-     echo "[test] 'ip netns del $NS_A' returned success"
-else
-     echo "[test] 'ip netns del $NS_A' returned $RC"
-fi
-
-# --- Signal repro to read from the exports fd ---
-echo "[test] signaling repro to read from exports fd..."
-touch "$GO"
-kill -CONT $REPRO_PID 2>/dev/null || true
-
-# --- Wait for repro and check result ---
-set +e
-wait $REPRO_PID
-RC=$?
-set -e
-
-if [ $RC -eq 0 ]; then
-     echo ""
-     echo "=== TEST PASSED: no UAF detected (kernel has e7fcf179b82d 
-fix) ==="
-     echo "   get_net() holds netns A alive while the fd is open."
-else
-     echo ""
-     echo "=== TEST FAILED with exit code $RC ==="
-     echo "   Possible UAF or other error."
-     echo "   If running on a kernel WITHOUT e7fcf179b82d, this crash is 
-EXPECTED."
-fi
-exit $RC
-
-
-Panic show as follow with commit:
-
-commit 9189d23b835cec646ba5010db35d1557a77c5857 (HEAD -> master)
-Author: Chuck Lever <chuck.lever@oracle.com>
-Date:   Thu Oct 17 09:36:31 2024 -0400
-
-     lockd: Remove unneeded initialization of file_lock::c.flc_flags
-
-
-localhost login: [   39.462598][  T579] 
-================================================================== 
-  
-  
-     [202/363]
-[   39.463541][  T579] BUG: KASAN: slab-use-after-free in 
-cache_seq_next_rcu+0xa4/0x180 [sunrpc]
-[   39.464551][  T579] Read of size 4 at addr ffff00000fbe8408 by task 
-uaf_repro_563/579
-[   39.465291][  T579]
-[   39.465513][  T579] CPU: 1 UID: 0 PID: 579 Comm: uaf_repro_563 Not 
-tainted 6.12.0-rc7+ #17
-[   39.466349][  T579] Hardware name: linux,dummy-virt (DT)
-[   39.466897][  T579] Call trace:
-[   39.467224][  T579]  dump_backtrace+0xa4/0x140
-[   39.467742][  T579]  show_stack+0x20/0x38
-[   39.468156][  T579]  dump_stack_lvl+0x80/0xf8
-[   39.468694][  T579]  print_report+0xfc/0x5c8
-[   39.469237][  T579]  kasan_report+0x78/0xc8
-[   39.469676][  T579]  __asan_load4+0x9c/0xc0
-[   39.470115][  T579]  cache_seq_next_rcu+0xa4/0x180 [sunrpc]
-[   39.470842][  T579]  seq_read_iter+0x4a0/0x6c0
-[   39.471355][  T579]  seq_read+0x194/0x218
-[   39.471770][  T579]  proc_reg_read+0x110/0x198
-[   39.472235][  T579]  vfs_read+0x150/0x490
-[   39.472656][  T579]  ksys_read+0xd4/0x198
-[   39.473070][  T579]  __arm64_sys_read+0x4c/0x68
-[   39.473537][  T579]  invoke_syscall+0x64/0x188
-[   39.473992][  T579]  el0_svc_common.constprop.1+0xd8/0x158
-[   39.474558][  T579]  do_el0_svc+0x38/0x50
-[   39.474981][  T579]  el0_svc+0x34/0xc0
-[   39.475422][  T579]  el0t_64_sync_handler+0xa0/0xc8
-[   39.475933][  T579]  el0t_64_sync+0x188/0x190
-[   39.476385][  T579]
-[   39.476618][  T579] Allocated by task 566:
-[   39.477087][  T579]  kasan_save_stack+0x2c/0x58
-[   39.477561][  T579]  kasan_save_track+0x20/0x40
-[   39.478030][  T579]  kasan_save_alloc_info+0x40/0x58
-[   39.478539][  T579]  __kasan_kmalloc+0xa0/0xb8
-[   39.478997][  T579]  __kmalloc_node_track_caller_noprof+0x194/0x370
-[   39.479646][  T579]  kmemdup_noprof+0x34/0x68
-[   39.480094][  T579]  cache_create_net+0x30/0x108 [sunrpc]
-[   39.480800][  T579]  nfsd_export_init+0x78/0x188 [nfsd]
-[   39.481505][  T579]  nfsd_net_init+0x50/0x1e8 [nfsd]
-[   39.482136][  T579]  ops_init+0xcc/0x210
-[   39.482615][  T579]  register_pernet_operations+0x218/0x348
-[   39.483180][  T579]  register_pernet_subsys+0x38/0x60
-[   39.483698][  T579]  0xffffb6c9bf5b90c0
-[   39.484096][  T579]  do_one_initcall+0xa8/0x3c8
-[   39.484563][  T579]  do_init_module+0x100/0x378
-[   39.485070][  T579]  load_module+0x2d78/0x2e80
-[   39.485532][  T579]  init_module_from_file+0xec/0x148
-[   39.486044][  T579]  __arm64_sys_finit_module+0x394/0x618
-[   39.486604][  T579]  invoke_syscall+0x64/0x188
-[   39.487065][  T579]  el0_svc_common.constprop.1+0xd8/0x158
-[   39.487629][  T579]  do_el0_svc+0x38/0x50
-[   39.488044][  T579]  el0_svc+0x34/0xc0
-[   39.488437][  T579]  el0t_64_sync_handler+0xa0/0xc8
-[   39.488939][  T579]  el0t_64_sync+0x188/0x190
-[   39.489398][  T579]
-[   39.489635][  T579] Freed by task 53:
-[   39.490013][  T579]  kasan_save_stack+0x2c/0x58
-[   39.490479][  T579]  kasan_save_track+0x20/0x40
-[   39.490948][  T579]  kasan_save_free_info+0x4c/0x78
-[   39.491449][  T579]  __kasan_slab_free+0x50/0x70
-[   39.491924][  T579]  kfree+0x160/0x310
-[   39.492312][  T579]  cache_destroy_net+0x34/0x50 [sunrpc]
-[   39.493015][  T579]  nfsd_export_shutdown+0xc0/0x150 [nfsd]
-[   39.493711][  T579]  nfsd_net_exit+0x68/0x88 [nfsd]
-[   39.494338][  T579]  ops_exit_list.isra.13+0x64/0xc0
-[   39.494856][  T579]  cleanup_net+0x508/0x788
-[   39.495300][  T579]  process_scheduled_works+0x3d8/0x7e8
-[   39.495895][  T579]  worker_thread+0x29c/0x630
-[   39.496364][  T579]  kthread+0x170/0x188
-[   39.496773][  T579]  ret_from_fork+0x10/0x20
-[   39.497217][  T579]
-[   39.497453][  T579] The buggy address belongs to the object at 
-ffff00000fbe8400
-
-I have try to replace
-fd = open("/proc/fs/nfs/exports", O_RDONLY);
-with
-fd = open("/proc/fs/nfs/exports", O_RDONLY);
-
-No c_show UAF trigger...
-
-
-> 
-> 
-
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
 
