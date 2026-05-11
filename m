@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21457-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21458-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0JhQANXEAWqSjgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21457-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 14:00:21 +0200
+	id 2MidAgHFAWqSjgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21458-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 14:01:05 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4805850D3F1
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 14:00:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 521CC50D409
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 14:01:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1BF1E30053DA
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 11:58:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4C82D30459C9
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 11:58:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C16B37754C;
-	Mon, 11 May 2026 11:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FBD37881F;
+	Mon, 11 May 2026 11:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcDbZEb2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6GMfdxP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63508370D7C;
-	Mon, 11 May 2026 11:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8C4377555;
+	Mon, 11 May 2026 11:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778500723; cv=none; b=f8OgH0hMbTTH2rgpIW5JxKFz241DYRv/VCQ5vnXmv7m/PPFk+XPRGT0sFNFSdHyLpDmGivoi4wYUedNobEMLy9r9rrL4yooi1b1BYiW1flkaOttqOjOkxNkfMHSUCLK+4G5XY5/fO4LQ99g5rJegf0VH6OE8mm02ul0cftSm0ZQ=
+	t=1778500725; cv=none; b=Qu4Dc6dtYNcxXcM4F478KbGV1O7sQ5hi4fn9GJ2UfkGloSCO7Oa4EyS8J+d98nbq3CgETgqWu7Qrw/mBoNw+0MoLA14AAvFVG6yo0ETM1YfBqsLVdoiJ4efVx+OO7KgBpyQZ8+t9SMHbJLIUCzQo/cbX3x/EpV7yFWCkF1ElUMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778500723; c=relaxed/simple;
-	bh=vzbSctaA6rDHZ0Wddj3/2akgAPlm5EoTM+A96NJEf+I=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HhBbBp+1F9nnu17NvljGuXCrU2a+tKacbQQd62199QDfpCpDtUUpCjm88TOzVXdH3qMyvokYAYiZAonUF9qX1foJvuB8Y8QGbCl7MTf/v7vXd/yY98L0WAbaFGGQErw8UgTyAzv+o6cZrNauASC6taMulRXL2aWBV1ImyHx43BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcDbZEb2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 409DCC2BCB0;
-	Mon, 11 May 2026 11:58:41 +0000 (UTC)
+	s=arc-20240116; t=1778500725; c=relaxed/simple;
+	bh=6R6WN7QnLwKTUc2bC5H1Z4sYb5q8DLb1p7kKZ09YbHE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=u7d/0YuWdYyzcnU9JkrN+KHDq88WNpUMC7q/5ohVk1ATevowUb0iwyLiaE5bJ6dV6orBfNOFHJD7xA7CkWUV+G6OmUiVwCNMHGWOQ5PmjJtzCOc69Hr9cbj2KTn6Ey9oLrSGSdMZ6gRXvVTPGYIW2njV4GZioqaoQ0mruGNc3Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6GMfdxP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45600C2BCC9;
+	Mon, 11 May 2026 11:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778500723;
-	bh=vzbSctaA6rDHZ0Wddj3/2akgAPlm5EoTM+A96NJEf+I=;
-	h=From:Subject:Date:To:Cc:From;
-	b=BcDbZEb2314PR0jE6xKZa8a7PwI8Sj64t/sUXhQtUxdx/8F4KucT1wTtx1OXD/KYo
-	 clvEB1Z2+9We80sSiwNPlN0E3S9fneZys1Y+vtTn96QSHGMfBxiRtpmJq+OQub2lF9
-	 grKKyeXEJRVPMBJyEEv9l6c6mWourhcVOadOfK/hcD1Oq3M9i1poKGHuwKU0kW5jQu
-	 FxGucI91mimy440r4oNCrM9zgJVyIAbdg37FNbCCJFJAYych3ZJ2nRFe2nxsh7aA22
-	 XCmmqv13a7pGycgvUOLREiB+iiYqXeZgTS9QMAo2eYWuEG78FM3bwcsYk97XlC7www
-	 1SbU9xGF/t+3g==
+	s=k20201202; t=1778500725;
+	bh=6R6WN7QnLwKTUc2bC5H1Z4sYb5q8DLb1p7kKZ09YbHE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=J6GMfdxPoBnkQmf6f0ysMCxxkecaXuPL1FRe/aiVrCN5gHGBTjTiKh68s35ujlkI8
+	 IFTxsjnaWspo9Crp/8/onQdUc29YJ2cC1leVMEWUgg3iQRFbS6BqXBTf1pzQyXb9zu
+	 1TJEDr4uHdSm14vLZestczhSe5bI4gk+bYeDiTamxaxcmFD3ufe5Z0FH+mkvP0pqP6
+	 +vKQ3Y9nqcJnXu6arPhEV2ZkErOz4AoeUxVv3yWaD0La0dBQLh3jxX6MZzTF7JDKt/
+	 2TawDzCykxEPxi7s7cha/9G+B1ZJS03E+KNokDphYSkYciRuJio2XseexZ7yolfQtJ
+	 0dsyFjuCFieog==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v7 0/3] mm: improve write performance with RWF_DONTCACHE
-Date: Mon, 11 May 2026 07:58:26 -0400
-Message-Id: <20260511-dontcache-v7-0-2848ddce8090@kernel.org>
+Date: Mon, 11 May 2026 07:58:27 -0400
+Subject: [PATCH v7 1/3] mm: preserve PG_dropbehind flag during folio split
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,12 +55,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23Qy07EMAwF0F8ZZU1QXnZaVvwHYpGHM41ALUpHF
- WjUf8czGzIqyxv5XFu5ipVapVW8nK6i0VbXuswc/NNJpCnMZ5I1cxZGGVROaZmX+ZJCmkjCoDW
- V7CkUK3j+q1Gp3/eut3fOU10vS/u5V2/69vpfy6alkrqAd1hCdD68flCb6fN5aWdxq9lMT4eeG
- qajGzIlTR4wHqjtqMGeWqZ+pGh9DiM4f6Duj8LjwY4pZCDMyesU7YFCT11PganTyhIMkVcft2J
- PoafIFNGhHRTkjI/ftO/7L5G6tbDKAQAA
-X-Change-ID: 20260401-dontcache-5811efd7eaf3
+Message-Id: <20260511-dontcache-v7-1-2848ddce8090@kernel.org>
+References: <20260511-dontcache-v7-0-2848ddce8090@kernel.org>
+In-Reply-To: <20260511-dontcache-v7-0-2848ddce8090@kernel.org>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, 
  Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
@@ -76,23 +73,23 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3839; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=vzbSctaA6rDHZ0Wddj3/2akgAPlm5EoTM+A96NJEf+I=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqAcRpYaCPni00FFvtxSVSnnmM/vy+6GNFafFcn
- CWVlf9dxH+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCagHEaQAKCRAADmhBGVaC
- FQqhD/40SlOmg1H8CUFB1b8oL5Qk5tCaRTKWcDOv5SEo7KZsR3xzUhkGO33w454UNXg2fQYXIri
- ulXqUf1WuS4/ONecC4Bsf+e7+nMGXriBWYxpwn54azH3jbir0rLR6q9oTPVGH41l8lDw1KgbbSr
- AKsK7ifiGLEHZWosRMUQz0jsdAv0JRWocf1Vwcp3xnwYARHXnlAid5vLojTqWmQPXrLASStTI3c
- LhoJU1TThSCHqNOefg6rMsTUy8S0uHQLuRx5Zq9WKnDNXqSn8gzCIQh+yH/fkeovMygWRRVy4hB
- HKLGXKrOjqs3WFHexoU1PF3I+BiOh6orFB4RGYFjsVdJCkl2/ATCVCGYBX6VSnVlhcHJHjcf5Aw
- zrPeB0fzg4vtOYRzYmR21SAghIfAbbIZ8B8wCBKIr0g0QMeojFP3/hwy1G8ERHlxr1DF5Zax/Hl
- bVtg+9lM6Wk2Hot+aLOll8CJczXm7KU5WBcL8YtprH0iC33G3R9EHj0JbbXTI7NCp9GAJqyNJr8
- eUKzUxpZshuymphkO90a1Ti13tNWQ7Qu/I6dwc7MkdQKL6F4xfwLPl5m+9GE0oXFreT5U1Oh8vv
- bAWDnj8o7CJio4O3qS0Ahf08LIFpQr4+2wAQJ4PMiU43vdYPuZtJIMf+ok6z4U1DFvZyZbqybIN
- 11sjAss4sqWxSLQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1084; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=6R6WN7QnLwKTUc2bC5H1Z4sYb5q8DLb1p7kKZ09YbHE=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqAcRw/d2G69PENt9dpII3eX7moPHrfcJfJVKpz
+ U2jJnpt2f+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCagHEcAAKCRAADmhBGVaC
+ FSjED/9B+1yQ1WSrNNdIhOxP4U+WPleq5eEldlJUXnR4U9UuQ/YPgnW30Hq1QkSq5ty0m8y/KE4
+ AEYuxkB8dn2QqREbvLR8O7Loa4ODbWwRbjyX3f5XwYhpKUvCcnHvOU024VkKdYL8Pvr5gcLv9UC
+ b6mg0hgxPVyVLGawrZZ5g8X1zeiuOXcqLt1sGzX7IuUP2R+DnXGx7nw81hYT/HEP8AexYoFNEOr
+ sIgKtTqr6iFoMCfFjTuTxHqdDCUXuAWBzV1ie8uvQuQbOrthLwlL6TEUXee/qh+6tduhiOBqw//
+ 7t7m4rkTuh9jXRhQeJi6vzWJeAr+q7jdkguKYL1yndnzZxiLFeHlZMRog8bqFBG3UFfWSWR/vXP
+ a10nr0XN7wpWsqyYIAF61tPIoODLz6N+3TMIt4Tr5X8sEFWLTKXzxyM8DecOhtmfIK5oB3CkVtm
+ gDXuKXhYHwWmybz+d5fZEiZ7lUEMZswt/pcFGR1Y30S3UEuSrPsKom3Ddki1Ljf4+qAnv+1m8OY
+ Vm80xMmiAGz50Pecc46IEeqOMTJras52eY6RFSRyD9TMsZs2xh4gcWZPTiI+UrSbLEvOZdyXki/
+ VGlyMDvbI/Teu3yd5oE/IAJQQ1Z0EFRT1WJbkdlCPRZ9GWDZEZrXF6OaNgaCNhVq/NqXKPh7P3N
+ aewMDqixNIZwhpg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Rspamd-Queue-Id: 4805850D3F1
+X-Rspamd-Queue-Id: 521CC50D409
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -104,7 +101,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21457-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21458-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,linux-foundation.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -113,7 +110,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -124,87 +121,36 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-This patch series is intended to improve write performance with
-RWF_DONTCACHE. This version fixes additional stat accounting issues
-found during review: integer promotion on 32-bit, cgroup writeback
-domain migration, folio split flag preservation, and a UAF that could
-occur in filemap_dontcache_kick_writeback().
+__split_folio_to_order() copies page flags from the original folio to
+newly created sub-folios using an explicit allowlist, but PG_dropbehind
+is not included. When a large folio with PG_dropbehind set is split,
+only the head sub-folio retains the flag; all tail sub-folios silently
+lose it and will not be reclaimed eagerly after writeback completes.
 
-Because there are substantive changes in this set, I've dropped the
-R-b's. Please resend them if you're OK with this version.
+Add PG_dropbehind to the flag copy mask so that the drop-behind hint
+is preserved across folio splits.
 
-Christian, please consider these for v7.2.
-
-Thanks,
-
+Fixes: a323281cdfec ("mm: add PG_dropbehind folio flag")
+Assisted-by: Claude:claude-opus-4-6
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v7:
-- Fix integer promotion bug on 32-bit: store folio_nr_pages() in signed
-  long before negating, matching existing patterns in page-writeback.c
-- Transfer WB_DONTCACHE_DIRTY in inode_do_switch_wbs() alongside
-  WB_RECLAIMABLE so the stat migrates with the inode on cgroup wb switch
-- Preserve PG_dropbehind in __split_folio_to_order() so tail folios
-  retain the flag and are properly accounted when cleaned
-- Take reference to wb around unlocked_inode_to_wb_end() to avoid UAF
-- Link to v6: https://lore.kernel.org/r/20260505-dontcache-v6-0-66463805dd6a@kernel.org
+ mm/huge_memory.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v6:
-- Use atomic folio_test_clear_dropbehind() in __filemap_get_folio_mpol()
-  to prevent double-decrement of WB_DONTCACHE_DIRTY by concurrent readers
-- Add mapping_can_writeback() guard before decrementing WB_DONTCACHE_DIRTY
-  in __filemap_get_folio_mpol() to match the increment path
-- Use wb_stat_sum() instead of wb_stat() in wb_check_start_dontcache() so
-  small writes below the percpu batch threshold are visible to the flusher
-- Use test_and_clear_bit for WB_start_dontcache before starting writeback
-  to prevent lost wakeups from concurrent DONTCACHE writers
-- Move wb_wakeup() outside the unlocked_inode_to_wb_begin/end section in
-  filemap_dontcache_kick_writeback() to avoid spin_unlock_irq() re-enabling
-  interrupts while the i_pages xa_lock is held during cgroup writeback switch
-- Drop Reviewed-by tags due to substantive changes
-- Link to v5: https://lore.kernel.org/r/20260504-dontcache-v5-0-4103e58bb377@kernel.org
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 970e077019b7..e01917b14d1a 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3642,6 +3642,7 @@ static void __split_folio_to_order(struct folio *folio, int old_order,
+ 				 (1L << PG_arch_3) |
+ #endif
+ 				 (1L << PG_dirty) |
++				 (1L << PG_dropbehind) |
+ 				 LRU_GEN_MASK | LRU_REFS_MASK));
+ 
+ 		if (handle_hwpoison &&
 
-Changes in v5:
-- Flesh out comment over filemap_dontcache_kick_writeback()
-- Drop testcases from posting
-- Link to v4: https://lore.kernel.org/r/20260501-dontcache-v4-0-5d5e6dc71cb3@kernel.org
-
-Changes in v4:
-- Track DONTCACHE dirty pages per bdi_writeback
-- New benchmark for competing buffered and dontcache writers
-- New benchmark replicating Jens' original 32 concurrent writer test
-- Link to v3: https://lore.kernel.org/r/20260426-dontcache-v3-0-79eb37da9547@kernel.org
-
-Changes in v3:
-- Track dirty DONTCACHE pages in the VM
-- Have flusher write back a proportional number of pages after DONTCACHE write
-- Link to v2: https://lore.kernel.org/r/20260408-dontcache-v2-0-948dec1e756b@kernel.org
-
-Changes in v2:
-- kick flusher thread instead of initiating writeback inline
-- add mechanism to run 'perf lock' around the testcases
-- Link to v1: https://lore.kernel.org/r/20260401-dontcache-v1-0-1f5746fab47a@kernel.org
-
----
-Jeff Layton (3):
-      mm: preserve PG_dropbehind flag during folio split
-      mm: track DONTCACHE dirty pages per bdi_writeback
-      mm: kick writeback flusher for IOCB_DONTCACHE with targeted dirty tracking
-
- fs/fs-writeback.c                | 67 ++++++++++++++++++++++++++++++++++++++++
- include/linux/backing-dev-defs.h |  3 ++
- include/linux/fs.h               |  6 ++--
- include/trace/events/writeback.h |  3 +-
- mm/filemap.c                     | 15 +++++++--
- mm/huge_memory.c                 |  1 +
- mm/page-writeback.c              |  6 ++++
- 7 files changed, 94 insertions(+), 7 deletions(-)
----
-base-commit: 7e2326f4275c11652e1fdaae11de06159fef1d90
-change-id: 20260401-dontcache-5811efd7eaf3
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.54.0
 
 
