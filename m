@@ -1,343 +1,268 @@
-Return-Path: <linux-nfs+bounces-21469-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21470-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SHCcKG7kAWoEmAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21469-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 16:15:10 +0200
+	id 6MYuJ0bmAWqKmAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21470-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 16:23:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4281B50FDE0
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 16:15:10 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3931510099
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 16:23:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 29A6F300A384
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 14:06:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AE453300FCF1
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 May 2026 14:08:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D863FB075;
-	Mon, 11 May 2026 14:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7787B3FB07B;
+	Mon, 11 May 2026 14:08:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mywdzTL+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JTiZjcnU";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nxUJ51QH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34B63FB069;
-	Mon, 11 May 2026 14:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778508409; cv=none; b=kYE/gTMrycbG4gZOODmJoQxUMtrtWutNaieXPKYHhbAj7PEwGcrZ7OU7lDNtmg2g1RtK1CMfPpkq43IB2TB/W+nMBuo2zx2qJNW+LA51jmv1KSwfnhd5DtsJ2oLy3vhxKDSc8o0UpJ978bwXSKS8iqQk1dHUQLT/JedFOViVSTE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778508409; c=relaxed/simple;
-	bh=6h69zeVI2LyhrFnt9fHZYf3Cs3ft+CqnX6W7eig9MNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aMXXNEK3CcGGKsHgiY/C2i2A0yGgr73X6O1Uz11HQadyGp4cgdaik5xRdLFb+fSeCknyn1PlspIXg0Pzj5az6w7+UN//pImDBMCDMWkpUiEjnjnRqjhNF1pb1TlK2cSlb1QqZAkYIU8WyUcei9eiyEn4M/75HE/G/AwCYja/Qk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mywdzTL+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF516C2BCB0;
-	Mon, 11 May 2026 14:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778508409;
-	bh=6h69zeVI2LyhrFnt9fHZYf3Cs3ft+CqnX6W7eig9MNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mywdzTL+czEm1AXzppL/6JUl+x83xTrdygiPs/M+z9hINXlDLPZZ4AcF2VZA0E3Vx
-	 rrcuIcrHpmEAAzUsUKnM/etzJVsgvyiLPB535ikFVhEXB5mujnyhPu3CibxoyPcBb3
-	 2+sK7mEC5xj+NphtYHuPvjyDO+4hUzaivrU2L6v/G2MgOON4t9bukA9QJFpIstO47l
-	 t0xQYE/wdXmIMSYGFl/I5palFSsjZYEbD696ru6RyGXqysvb2Fbfm3S6XUsFwoFFp3
-	 LIt/Uo/5w+BIb8ULYoC1ZESjljjB6xKOHuZ/pHBlammO7rbsrIXMdYBafwZM0y2MMS
-	 H+EwHjsvDcEGA==
-Date: Mon, 11 May 2026 16:06:42 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Ritesh Harjani <ritesh.list@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCH v7 3/3] mm: kick writeback flusher for IOCB_DONTCACHE
- with targeted dirty tracking
-Message-ID: <20260511-caravan-behaupten-0402c454c22d@brauner>
-References: <20260511-dontcache-v7-0-2848ddce8090@kernel.org>
- <20260511-dontcache-v7-3-2848ddce8090@kernel.org>
- <20260511-zusieht-amputation-efe8b5058cb7@brauner>
- <7c0880ee25b13f64f71319203fcd7105f54e5ad0.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEEB3E63B8;
+	Mon, 11 May 2026 14:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778508537; cv=fail; b=If742UCg1GUxfL8VWimD+UidHTWvYIJsSXftkLmeQR0mnW09sgZBM6fzPRWDRdAluYR58li9hFz0xhhTlOAxahEJpATCJfzVsmVFTYCgqrFlCeDRzUs4sRm5GgY/Hij31fQwOvVMaV6wTE0i/KSN60JWvTbqAv77yAqEdFWMUng=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778508537; c=relaxed/simple;
+	bh=blT6uVbi9NMS4Qze0nqZcoAXIJziLqcOzPxhOwPI5EA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dBq+LaaivIikITZOsJUNmO5yoCdRUT81z0Q8jT57pps9oJ7+KKdwoq8VIdkH2mx0TsbyyD4JwCtXezC2QViWIzrm6wFlNREeaIOHBcErprAeEpr1OfpEh48H8qYXHudMGRzWlYHQRNgYCScftlQTuY0LH4LfliA6TWdt6mZYdjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JTiZjcnU; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=nxUJ51QH; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64BCWNeb2281820;
+	Mon, 11 May 2026 14:07:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=YuyIRMIapXPMowHDVqA3paHY7Zs9Ksk85WX3AmTiJqU=; b=
+	JTiZjcnU8K8cFMKxRqrtk/AvYOZHWQl+3wOOhHtK0sjiZlo3IovLzIisDfowhXWD
+	VqKM+6ufmu4VZ7w3itMmcBITHG5NqxzNdD7XCd8U68jXxPVIORuF6Dq30Da1P2sL
+	TGvi8LETcC1hyVjQNIbQzXF7QcFhkPaIrnSc6MfmCFPNB9WdEmQ2o4h4TYjsMblv
+	FtxCMJlnXbglh0ymB0cEGO84gQk2qotn3a4JGlAxRW6fOCPfVuu+4O8rqTgwHA86
+	l8EoaNTLjHtX0KZHblglxkY43JZ1IC01rTDcVCu1ceW989akLjHTRG7kU4dzkqGS
+	djE6aXbBkux4gJ/SF6MS3Q==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4e1vt72r9w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 May 2026 14:07:55 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 64BE6S5G010375;
+	Mon, 11 May 2026 14:07:54 GMT
+Received: from bl0pr03cu003.outbound.protection.outlook.com (mail-eastusazon11012041.outbound.protection.outlook.com [52.101.53.41])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4e1uckhf27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 May 2026 14:07:54 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gKl8zBMb67tEcMIm01IgCqH1xx7/hBpleH5MBPOWa72K5ATATOEg/lUgM2NEkJZHHBmldrac7azEcxW1vmluQUxlflEvsWh2/zX3MM8U7c/1IMy6ptVwDLt4aFUmnO/3JjPztChnQAaK7rMwd+HoKn2crb15T1y5a8Lu2AHaLmLuBpSQJVd8OMgBz1+1p/xowzt495C91E57Qm3NnB47vyP6p5G5zT7QdQRliEBORc4y2II2jcWWEDIAFVi6gt4y1CAmif+BQ2bg8IGXLTd996Zx9iFLXbxPhhV5nmclbXkFHaLdVxTbLxUNk/T7EengrZ1G+rZFirtiAcZPlaxozg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YuyIRMIapXPMowHDVqA3paHY7Zs9Ksk85WX3AmTiJqU=;
+ b=apRrYjp8gr6xpTUogwDcqnRtGBasnyP6WcFxpq0u25eUZQlF6QksNhUplwvGOSMPQVWwVD2Pfp+6qrcsIoNTbP9E8aO6ZDQkot0c4Y1J8r6jL+81BI6AnQPvok/j8ShtuwKeNiyWg/lzsrqINTMcS8wCoQNbjgdsSdZAJNBtJ5bT22p7+9TKvCDgOYxKT3cJ2INh95okRp5XiZuFwLkjbquBSb4HWnyJgSC+JI6hvGgoVBWd0iKIHj1zVjnFB/AW+2HxUFmUlsyzcMPP9MrTK17KEw6LlR1PRQwJfRNK3Yz/II31/PHq1rHmCn//MbgSrIi+zvW6aQmKnj1kaACo6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YuyIRMIapXPMowHDVqA3paHY7Zs9Ksk85WX3AmTiJqU=;
+ b=nxUJ51QHFSlIs17Q/ynwj7dgn+LcK6eeZkwyu48qiR9KlT/WIw3PHKcbuPrsY6bGOCkIHsuQOF6jV80Mc75rtCjL3jhlY2BWToKRoGJqLOWlTKyLyc2qbMQWfBzz+ICC1dbFRtQsWOmK3tAVlaRumrxcLdMb7pViHx0i1jWCJnM=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH8PR10MB6291.namprd10.prod.outlook.com (2603:10b6:510:1c2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Mon, 11 May
+ 2026 14:07:47 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::4083:91ab:47a4:f244]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::4083:91ab:47a4:f244%3]) with mapi id 15.20.9891.021; Mon, 11 May 2026
+ 14:07:47 +0000
+Message-ID: <705e1769-6a5e-440d-bf50-5e5feec2b88d@oracle.com>
+Date: Mon, 11 May 2026 10:07:44 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 00/15] Exposing case folding behavior
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp,
+        linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com,
+        almaz.alexandrovich@paragon-software.com, slava@dubeyko.com,
+        glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu,
+        adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org,
+        pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com,
+        trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org,
+        chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Roland Mainz <roland.mainz@nrubsig.org>,
+        Steve French <stfrench@microsoft.com>
+References: <20260507-case-sensitivity-v14-0-e62cc8200435@oracle.com>
+ <20260511-wertverlust-vorbringen-070f016f3bd4@brauner>
+From: Chuck Lever <chuck.lever@oracle.com>
+Content-Language: en-US
+In-Reply-To: <20260511-wertverlust-vorbringen-070f016f3bd4@brauner>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH5P223CA0022.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:610:1f3::12) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7c0880ee25b13f64f71319203fcd7105f54e5ad0.camel@kernel.org>
-X-Rspamd-Queue-Id: 4281B50FDE0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH8PR10MB6291:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0cad1066-d5ef-4c2b-4265-08deaf66ae00
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	fdV2o7+WZ/5/4ov6h1nxS+qfLOno2qTLJzt+GZQF//ZgE4dm0GuEqdP8/x7nay3QrcCzRjyV/5ofW4keFfLpWJTxWx/lII0tIsz4CfrtSLO+T3jhKW+DBk9Xz5lWGa6gTxtooZ4hXPPn+AzHEMs83wbu+W60U/ksBQ6dcR3+0rfjjEOZXH/1owYaOHB7XJixD0FFoZj/OKNULvrwA8/vrtGr5QUIrrF2HmjvlmcdKjxiNcVAxTKi8cAeJNlrawANRlekioROSvEQ8p3AW3/J36UsR+Xhj+j1iuJKh8Yu5hZSiW7X+/kFG0DuNkVqp0+fb/D00QsCq7MaPcL/kVR62pbdGmXF1VMmRwW2npjGtZ+VBMk1JFGukhw8GppuxeuP0ecb8JzdHQfvpPAe1DGsEgoJDXbdxnokK5Ip8n6rAi8thmchquXLm3ldD5JIuGRSFj+z0Z+uUo8wt4Sywzi/9QHQTuTBfW3cjcBD0XFFQ+MbssgkOERp+islUeiZg1NnZp3D3DKrZXeAF8eLZdtbIbDsJjC/rNyrrL+YvlU7APGW3Tss2L2eQyWkIQSaQoX4gztVwyVYH0pQxv9oWgROlQY5JTqTeUbFL/NKQnItJG5ZmsHnIpo4W6PiQ0IZYxu4MCxE/a4TbU+xcvZfCZVOKA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SU9ob3lDVGhodFRpNnAxUjBTYWFPMTMxWGZ4UytCamJFV2RwNUFLUTBXM1JL?=
+ =?utf-8?B?RjBBbU5PaytFTmJIM2lBVjM2ZWRxcGIzRWpSZVBYSmJLSFVGNXU4YURIeHpj?=
+ =?utf-8?B?ZGlIanJCWm00LzNMTlVCUWZWNks2Wm5Nd1JXYXNTamtVeVlzMk9IaWxyVnJn?=
+ =?utf-8?B?b04xWUJwYnQyU3hFY0pzQWMyb0RUWHFuQWJHN0dCYUdSOTFJSDFKTVpORHlv?=
+ =?utf-8?B?WktLRFZhak51TWRQOE9OSml1d0FQalhoODJMTjQ1dUVyb2orL0grWXVRSmxo?=
+ =?utf-8?B?eFk1enkyRzVJOVcvWFlwRTdXQU50NWFKaDlLNFQzcGFka3R3OTdOTkhZdXVm?=
+ =?utf-8?B?Ym41Sm9ZTFlZSHpodmlwK2psWEZLcnRHVzlvbHJuV3pMS1FTcnQ0SGxZeGFC?=
+ =?utf-8?B?amZPMFgwM3N4Sk1lcHdZWktFRForWS8vZEpYdG42UktmVm42MzB4K2l3ajk5?=
+ =?utf-8?B?VHpXQ0NRODltSE5CKyt6dEFXZDB4WHlxcWJZUy9rRWVtRVZmUHlTL20wWjI0?=
+ =?utf-8?B?aE8rL0pCY2ZpeEt6UjJqMVZGb1VtZWxoOXU4L0RNdTZ4ZVdSNGcrTTV2aFZ6?=
+ =?utf-8?B?NURYZzBVUzZCOUJxSzRGcU9Ba3oxRWcwU091UC9YRlhlMDdXU1FPTk1FVEJ2?=
+ =?utf-8?B?SEpUWWtnNExDZ1hHTmo0NzBxRldQQXZqcWdWKzJyUUJlYkRUa1RGMk1nbW55?=
+ =?utf-8?B?YlNpMytuelo5OTVHYktYL2hjRlpMeUJvbXdlZ2MvZVBpN2dHWWxnZnhwMWdt?=
+ =?utf-8?B?bEFMRVViSW5iWitQV2c1Y0FTZ0xVUVJJN3RTVVBRZUdlY3czcENFUVlRdVJ2?=
+ =?utf-8?B?bWYxeEcySEladEtYN0RaNXVJeVdkbTlGOXpuWXlPNU8xVmNHenQwbHkyWllV?=
+ =?utf-8?B?cG44QUpReGJPUXIyNDZxRGpORzlxRE45SUttd0p0cmZmRlVqaG9Jb2Q1M0tJ?=
+ =?utf-8?B?L2czSjBVNGM5TTlvMGRwRVN6RDI1QkQvbCs2czQ4YVdaRVdwUDhlL0lCeVNJ?=
+ =?utf-8?B?aSthQ0pkZ09uVEd3VGVTS0ZWNXpaZmhKUDlJQjlsdlJxVlo3dEhDRGtaVVlE?=
+ =?utf-8?B?dE4zNE1TYUVLMWZNcXVRZGl2d2swNEQrMWpXa2JVbWx2NTZncE4ySXZmUTZn?=
+ =?utf-8?B?NVdySk0yRHY1T3lKUEcvQUM3QTY0KzJZemdwVWl2OTNWUjBVbzBQYnZHYW9a?=
+ =?utf-8?B?bHFyMFpwSXFreW1nNjNvMkNyL0dnQVh1d1o3RFh2Lzc5RDRaZ2hlakg4NUVu?=
+ =?utf-8?B?UzdqWk9zUFFVcmkyb3RqYlBjVzZDTVJsRk50V1hmWk15TTZxNlM4bGNTVTZU?=
+ =?utf-8?B?QWoxVE1taTJaNDJaRHMydGx4N3hKYmZLdVZFV1E0NnFrOTlOemlmWjY0NmUw?=
+ =?utf-8?B?NE5wa28yZ0lnUDB1dlpzSVp3YjMzZmxiSjVOcnZSeVZ4N1FBYUZ1cWkyZXd1?=
+ =?utf-8?B?ZHJNdjhSSTlPVFNjNDFXVTNkLytvOXNDTXVSN3ZlY1JUMGVzaVNvTHZyOGRD?=
+ =?utf-8?B?TU5mN3h5N2RpREFPQnFJNGhiT2xrNldUNS9RMG1VMDJEaEFtaStXQnBia0l6?=
+ =?utf-8?B?VDM3ZE4yQi8vdWN0bmM5S0pwam9yYTBxL1YyNjRCRGxnYnVQcWo3cGVIVXVC?=
+ =?utf-8?B?Q1RFTlBDcmFzUG15UDBXd25nSm9lTWpjZFpUSXBEdjRCa1I5MGwvaFpTNXVM?=
+ =?utf-8?B?MllNeE9BT2hCWW9RSU5DNHBWeDlySmdDODNOUjhXL2xoRDNydmgzS1lJZndX?=
+ =?utf-8?B?OFRMem1rVDBVNzU0cnIyN2hHMmkyYVY4TXJhZm85eGpKQURzQ1JYS1FtNU1H?=
+ =?utf-8?B?R2hmb2pXZ3MydkRORWdqVVovTzlKUWNMdHBSMHRwQ2xvM3RsRmM3V01MQ2M1?=
+ =?utf-8?B?WVdPOXQxVnhyRnlVMVZuSHllVVVrZUlUZWtNSW1BWnRxT0o0ejRKLzlJV20r?=
+ =?utf-8?B?ajNJWW01b09PVFNKa2JtTlVJV2ZrQTlTRDlZSTNyQlFLaHdSUUZJdTVHYnM5?=
+ =?utf-8?B?VklwcVJaVGRjTCtnUnZHY0JMTXcwUXZ5bk1EYTlEU3JXZ3NvT2N4SUZKMEhz?=
+ =?utf-8?B?U1VXbGsrVVN0U2dlUEZIM2ZBS0sxWWxQK0pJVlcwM0ZoR3B3dXV6N3NaUldI?=
+ =?utf-8?B?cFpKUFgxaXVuZW5KdHZqSlNNOXZ6RDNvUkhGb3VPMDVzb080TVgxSnkyam05?=
+ =?utf-8?B?dzQvTzRrTjlGTFcvQ2paWGFFRFJvWlcwbWxQMGtGeXJXTks3SVU5azVsRTlQ?=
+ =?utf-8?B?N3hxeXhBRS8xRjYvaWNMRFZOeVRJY2FzbHNLQitsQzRScnZodHZWTjlXTXY0?=
+ =?utf-8?B?Y20wendKS00vOFFWL2tISm1RRXMvYXZlNGhGdzdwczNkZVlzbU1CQT09?=
+X-Exchange-RoutingPolicyChecked:
+	P7QmQw6QrkNSWn6JIkKgHZJJhteKymCfySbYUIDTdDwDFfDbcaLqHSEuFjjj7rwW44uZelzx62rXC8FXkptrQq0jgcNtNKku8Za6h5R4Q/GZoInSZ8mMnOh6cl7VfkB29GBVrEFuiPb2prerttxHUl69jMMCRP21/iAQbRw6h4bI4EaqfevOXgjJ6wSr7ElFJinPPzpiVG8s4fWiqmy0vvLrwWGEpxOruKqVF4iafOGAfmcxysvKypTUx/TtAJBIXvE5kUSOx3p+xLOrklWd93WYFp3E0V2xgM6Bqa2mIU6xrMeruaZrqNFcrrgyE2IiM5BHCDA8BAmj7Z5dYRE3aw==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	120auTdq4zBhKLksz8u5RRF7jwy7vrVhpAykTIXkSdlwGuBrf8uGqkaCXvXLkiFm1DMTvp1YzyocXy9ABKKerJj3yZTUH0JTBUmZJ0tZat1/Y7/JEUKW5n7oAjb+3dIkuZ8KO77ksMklZgqAhb2taebh+Ti0onXPpZo5bnCuAXAy//hmx3GipxgjHHRW109ZqnHRGapNwtOtatBQbjxaSsX//5IMjPpVAPSJwSIooBYd9Srmy5mwmfOTzT5WCX/dBM/yopA6Too0RLB2elJy3z6W4YeD77F5xcbU7ns28DDvSAZkSwL/tr0fmCSQvNhr4n4dOiVhLXOpzHHywKimWcsH3udjzm/spili6cuh0Dccnt4dD1ZKtDKE032oseZFYq+PbdyQWvcIEhuwNck5pqRvYQqj2qjBTcNi7YIiJHHs2T1HKvJTb2yWHyDyvTKYns0QlSYhzb92+eeTr7I7vQmWpYo56DiJQ4DeCetNVvygtg+TRkE71PKvp56rdoZWjYI9tKaw8OeBqLAGdx3G6qq0upnVbPE6ElHifk94c7CKPoQvqWpPt5KCLWcd8r705J3vphZOx0SoSRJM9BrAeiK5MwxXRBAaQszOkcY0B+U=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cad1066-d5ef-4c2b-4265-08deaf66ae00
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2026 14:07:47.6157
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: chMuKaa5PZJFOgL8QRcdIfW2zLWjYOShHZ2Tdrt5pWeUAZ+ZX98guglKQD5HyY+2WMX6RfKlLIvD5fokuqRd5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6291
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-11_04,2026-05-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0
+ suspectscore=0 spamscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=829
+ malwarescore=0 phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2604200000 definitions=main-2605110156
+X-Proofpoint-ORIG-GUID: TPTZTgU-Rku1ydfCNCTZwiapULCQCEBj
+X-Proofpoint-GUID: TPTZTgU-Rku1ydfCNCTZwiapULCQCEBj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTExMDE1NiBTYWx0ZWRfX/do4bWghuwCj
+ u0ucPyDw/uxVQTL4E5+faFq47FolEwqKX9gtowcReD9N2JX5k4z9GK9fZwaCFRJxTo0UBtub/xq
+ MGbAt7yrxz0RiJE1GMWY4jTqn4Qd1SD/xJ4VsFqxajBE5g+O8WZOftp6ZQ89C1X3O4b/NDG10XQ
+ MLLQJu7OCIOYir1WJCbL5kr7gHxFUl1YwHL0DpVd35oHg3ZGTFqVwu+wNrz/u0EmydVC/66GzBS
+ iidcAIH8TC4ftBvFs8pSVro/1GH2UhOTmQaKlPitGBoAlVprf9GHW8rmU5kZc0x/aaaSudbFWPH
+ pF7c4ddw+tahXz/zfhL3a8F4M16D8tlCRhcKAMDgQ/puFDZ1e5vgknUgyvPw1C699EvAVvX+F87
+ loIdCIHKpqzra7AjtcoBgBlmT+B96dAeuu7oGEbib5hEUdWuYDlndeRZfCKLeoOTuSVMYYM/2nL
+ v8PCm6QtWpHWO0P+1QLrC2TcUe2Rb5AkSublndog=
+X-Authority-Analysis: v=2.4 cv=FcQHAp+6 c=1 sm=1 tr=0 ts=6a01e2bb b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=NGcC8JguVDcA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=jiCTI4zE5U7BLdzWsZGv:22 a=EIcjfB9IiI4px24ztqRk:22 a=VwQbUJbxAAAA:8
+ a=uKxZZzPa33Sla97EJX4A:9 a=QEXdDO2ut3YA:10 a=5yU3S35YU4bGjq-dph-N:22 cc=ntf
+ awl=host:12299
+X-Rspamd-Queue-Id: A3931510099
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.84 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21469-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	TAGGED_FROM(0.00)[bounces-21470-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,suse.cz,infradead.org,linux-foundation.org,kernel.org,oracle.com,google.com,suse.com,kernel.dk,gmail.com,vger.kernel.org,kvack.org];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,nrubsig.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:mid,oracle.com:dkim,oracle.onmicrosoft.com:dkim];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[chuck.lever@oracle.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[9]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 09:53:21AM -0400, Jeff Layton wrote:
-> On Mon, 2026-05-11 at 15:24 +0200, Christian Brauner wrote:
-> > On Mon, May 11, 2026 at 07:58:29AM -0400, Jeff Layton wrote:
-> > > The IOCB_DONTCACHE writeback path in generic_write_sync() calls
-> > > filemap_flush_range() on every write, submitting writeback inline in
-> > > the writer's context.  Perf lock contention profiling shows the
-> > > performance problem is not lock contention but the writeback submission
-> > > work itself — walking the page tree and submitting I/O blocks the writer
-> > > for milliseconds, inflating p99.9 latency from 23ms (buffered) to 93ms
-> > > (dontcache).
-> > > 
-> > > Replace the inline filemap_flush_range() call with a flusher kick that
-> > > drains dirty pages in the background.  This moves writeback submission
-> > > completely off the writer's hot path.
-> > > 
-> > > To avoid flushing unrelated buffered dirty data, add a dedicated
-> > > WB_start_dontcache bit and wb_check_start_dontcache() handler that uses
-> > > the per-wb WB_DONTCACHE_DIRTY counter to determine how many pages to
-> > > write back.  The flusher writes back that many pages from the oldest dirty
-> > > inodes (not restricted to dontcache-specific inodes). This helps
-> > > preserve I/O batching while limiting the scope of expedited writeback.
-> > > 
-> > > Like WB_start_all, the WB_start_dontcache bit coalesces multiple
-> > > DONTCACHE writes into a single flusher wakeup without per-write
-> > > allocations.  Use test_and_clear_bit to atomically consume the kick
-> > > request before reading the dirty counter and starting writeback, so that
-> > > concurrent DONTCACHE writes during writeback can re-set the bit and
-> > > schedule a follow-up flusher run.
-> > > 
-> > > Read the dirty counter with wb_stat_sum() (aggregating per-CPU batches)
-> > > rather than wb_stat() (which reads only the global counter) to ensure
-> > > small writes below the percpu batch threshold are visible to the flusher.
-> > > 
-> > > In filemap_dontcache_kick_writeback(), set the WB_start_dontcache bit
-> > > inside the unlocked_inode_to_wb_begin/end section for correct cgroup
-> > > writeback domain targeting, but defer the wb_wakeup() call until after
-> > > the section ends, since wb_wakeup() uses spin_unlock_irq() which would
-> > > unconditionally re-enable interrupts while the i_pages xa_lock may still
-> > > be held under irqsave during a cgroup writeback switch. Pin the wb with
-> > > wb_get() inside the RCU critical section before calling wb_wakeup()
-> > > outside it, since cgroup bdi_writeback structures are RCU-freed and the
-> > > wb pointer could become invalid after unlocked_inode_to_wb_end() drops
-> > > the RCU read lock.
-> > > 
-> > > Also add WB_REASON_DONTCACHE as a new writeback reason for tracing
-> > > visibility.
-> > > 
-> > > dontcache-bench results (same host, T6F_SKL_1920GBF, 251 GiB RAM,
-> > > xfs on NVMe, fio io_uring):
-> > > 
-> > > Buffered and direct I/O paths are unaffected by this patchset. All
-> > > improvements are confined to the dontcache path:
-> > > 
-> > > Single-stream throughput (MB/s):
-> > >                         Before    After    Change
-> > >   seq-write/dontcache      298      897    +201%
-> > >   rand-write/dontcache     131      236     +80%
-> > > 
-> > > Tail latency improvements (seq-write/dontcache):
-> > >   p99:    135,266 us  ->  23,986 us   (-82%)
-> > >   p99.9: 8,925,479 us ->  28,443 us   (-99.7%)
-> > > 
-> > > Multi-writer (4 jobs, sequential write):
-> > >                                 Before    After    Change
-> > >   dontcache aggregate (MB/s)     2,529    4,532     +79%
-> > >   dontcache p99 (us)             8,553    1,002     -88%
-> > >   dontcache p99.9 (us)         109,314    1,057     -99%
-> > > 
-> > >   Dontcache multi-writer throughput now matches buffered (4,532 vs
-> > >   4,616 MB/s).
-> > > 
-> > > 32-file write (Axboe test):
-> > >                                 Before    After    Change
-> > >   dontcache aggregate (MB/s)     1,548    3,499    +126%
-> > >   dontcache p99 (us)            10,170      602     -94%
-> > >   Peak dirty pages (MB)          1,837      213     -88%
-> > > 
-> > >   Dontcache now reaches 81% of buffered throughput (was 35%).
-> > > 
-> > > Competing writers (dontcache vs buffered, separate files):
-> > >                                 Before    After
-> > >   buffered writer                  868      433 MB/s
-> > >   dontcache writer                 415      433 MB/s
-> > >   Aggregate                      1,284      866 MB/s
-> > > 
-> > >   Previously the buffered writer starved the dontcache writer 2:1.
-> > >   With per-bdi_writeback tracking, both writers now receive equal
-> > >   bandwidth. The aggregate matches the buffered-vs-buffered baseline
-> > >   (863 MB/s), indicating fair sharing regardless of I/O mode.
-> > > 
-> > >   The dontcache writer's p99.9 latency collapsed from 119 ms to
-> > >   33 ms (-73%), eliminating the severe periodic stalls seen in the
-> > >   baseline. Both writers now share identical latency profiles,
-> > >   matching the buffered-vs-buffered pattern.
-> > > 
-> > > The per-bdi_writeback dirty tracking dramatically reduces peak dirty
-> > > pages in dontcache workloads, with the 32-file test dropping from
-> > > 1.8 GB to 213 MB. Dontcache sequential write throughput triples and
-> > > multi-writer throughput reaches parity with buffered I/O, with tail
-> > > latencies collapsing by 1-2 orders of magnitude.
-> > > 
-> > > Assisted-by: Claude:claude-opus-4-6
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > >  fs/fs-writeback.c                | 63 ++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/backing-dev-defs.h |  2 ++
-> > >  include/linux/fs.h               |  6 ++--
-> > >  include/trace/events/writeback.h |  3 +-
-> > >  4 files changed, 69 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> > > index 32ecc745f5f7..77d53df97cc3 100644
-> > > --- a/fs/fs-writeback.c
-> > > +++ b/fs/fs-writeback.c
-> > > @@ -2377,6 +2377,27 @@ static long wb_check_start_all(struct bdi_writeback *wb)
-> > >  	return nr_pages;
-> > >  }
-> > >  
-> > > +static long wb_check_start_dontcache(struct bdi_writeback *wb)
-> > > +{
-> > > +	long nr_pages;
-> > > +
-> > > +	if (!test_and_clear_bit(WB_start_dontcache, &wb->state))
-> > > +		return 0;
-> > > +
-> > > +	nr_pages = wb_stat_sum(wb, WB_DONTCACHE_DIRTY);
-> > > +	if (nr_pages) {
-> > > +		struct wb_writeback_work work = {
-> > > +			.nr_pages	= nr_pages,
-> > > +			.sync_mode	= WB_SYNC_NONE,
-> > > +			.range_cyclic	= 1,
-> > > +			.reason		= WB_REASON_DONTCACHE,
-> > > +		};
-> > > +
-> > > +		nr_pages = wb_writeback(wb, &work);
-> > > +	}
-> > > +
-> > > +	return nr_pages;
-> > > +}
-> > >  
-> > >  /*
-> > >   * Retrieve work items and do the writeback they describe
-> > > @@ -2398,6 +2419,11 @@ static long wb_do_writeback(struct bdi_writeback *wb)
-> > >  	 */
-> > >  	wrote += wb_check_start_all(wb);
-> > >  
-> > > +	/*
-> > > +	 * Check for dontcache writeback request
-> > > +	 */
-> > > +	wrote += wb_check_start_dontcache(wb);
-> > > +
-> > >  	/*
-> > >  	 * Check for periodic writeback, kupdated() style
-> > >  	 */
-> > > @@ -2472,6 +2498,43 @@ void wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
-> > >  	rcu_read_unlock();
-> > >  }
-> > >  
-> > > +/**
-> > > + * filemap_dontcache_kick_writeback - kick flusher for IOCB_DONTCACHE writes
-> > > + * @mapping:	address_space that was just written to
-> > > + *
-> > > + * Kick the writeback flusher thread to expedite writeback of dontcache dirty
-> > > + * pages. Queue writeback for the inode's wb for as many pages as there are
-> > > + * dontcache pages, but don't restrict writeback to dontcache pages only.
-> > > + *
-> > > + * This significantly improves performance over either writing all wb's pages
-> > > + * or writing only dontcache pages.  Although it doesn't guarantee quick
-> > > + * writeback and reclaim of dontcache pages, it keeps the amount of dirty pages
-> > > + * in check. Over longer term dontcache pages get written and reclaimed by
-> > > + * background writeback even with this rough heuristic.
-> > > + */
-> > > +void filemap_dontcache_kick_writeback(struct address_space *mapping)
-> > > +{
-> > > +	struct inode *inode = mapping->host;
-> > > +	struct bdi_writeback *wb;
-> > > +	struct wb_lock_cookie cookie = {};
-> > > +	bool need_wakeup = false;
-> > > +
-> > > +	wb = unlocked_inode_to_wb_begin(inode, &cookie);
-> > > +	if (wb_has_dirty_io(wb) &&
-> > > +	    !test_bit(WB_start_dontcache, &wb->state) &&
-> > > +	    !test_and_set_bit(WB_start_dontcache, &wb->state)) {
-> > 
-> > Doesn't test_and_set_bit() return the old value? IOW, if it sees that
-> > WB_start_dontcache was already set it'll return true? So you can remove
-> > the test_bit() call, right?
-> > 
+On 5/11/26 10:02 AM, Christian Brauner wrote:
+> On Thu, 07 May 2026 04:52:53 -0400, Chuck Lever wrote:
+>> Christian, let's lock this one in. I will post subsequent changes
+>> as delta patches.
+>>
+>> Following on from:
+>>
+>> https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57fd@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
+>>
+>> [...]
 > 
-> Yes.
-> 
-> > > +		wb_get(wb);
-> > > +		need_wakeup = true;
-> > > +	}
-> > 
-> > Actually, I think you can rewrite this function quite a bit:
-> > 
-> > 
-> > > +	unlocked_inode_to_wb_end(inode, &cookie);
-> > > +
-> > > +	if (need_wakeup) {
-> > > +		wb_wakeup(wb);
-> > > +		wb_put(wb);
-> > > +	}
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(filemap_dontcache_kick_writeback);
-> > 
-> > void filemap_dontcache_kick_writeback(struct address_space *mapping)
-> > {
-> > 	struct inode *inode = mapping->host;
-> > 	struct bdi_writeback *wb;
-> > 	struct wb_lock_cookie cookie = {};
-> > 
-> > 	wb = unlocked_inode_to_wb_begin(inode, &cookie);
-> > 	if (wb_has_dirty_io(wb) && !test_and_set_bit(WB_start_dontcache, &wb->state))
-> > 		wb_get(wb);
-> > 	else
-> > 		wb = NULL;
-> > 	unlocked_inode_to_wb_end(inode, &cookie);
-> > 
-> > 	if (wb) {
-> > 		wb_wakeup(wb);
-> > 		wb_put(wb);
-> > 	}
-> > }
-> > 
-> > No?
-> > 
-> 
-> That does look much cleaner. Do you want to just make that change or
-> would you rather I resend?
+> Applied to the vfs-7.2.exportfs branch of the vfs/vfs.git tree.
+> Patches in the vfs-7.2.exportfs branch should appear in linux-next soon.
 
-I'll just fold it. I already have 1157 mails. I don't need more. :D
+Not vfs-7.2-casefold ?
+
+Fwiw, I was intending to rebase nfsd-next on the vfs integration branch,
+which should have both vfs-7.2-casefold and vfs-7.2.exportfs merged in,
+along with Jeff's series that implements the infrastructure to support
+directory delegation properly. LMK if that's crazy talk.
+
+
+-- 
+Chuck Lever
 
