@@ -1,194 +1,226 @@
-Return-Path: <linux-nfs+bounces-21539-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21540-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cEmKNJNkA2oq5gEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21539-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 19:34:11 +0200
+	id ENvyJrtxA2q55wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21540-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D27F525E0F
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 19:34:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AD07527A81
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9173E3061DC7
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 17:34:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D50F432EED76
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E81D3DC842;
-	Tue, 12 May 2026 17:34:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA9B336A378;
+	Tue, 12 May 2026 18:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sW0wx3cC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTwT34pY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5B13DB981;
-	Tue, 12 May 2026 17:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D5934405B
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778607243; cv=none; b=AU+l+KVkvfdwpumGL6KitNSzhTWNmstOkBIFciMF2eSC63+iKeIPy2hrT5uciFFK1mow/72tEFC/O1kltO8th4HrKvJ45MVJb1DxNm4ZZBtBH0OQpXRSeH828RZwCgoEo1Ap3bmw5mHiyvGPGfb8+M98vwr5w9tsCevjMwUNKO8=
+	t=1778609640; cv=none; b=RVN1yD4S9SO0/mQRbx9q3EOpgGyIMJ4i2yBsGt3xS6V6kW6muJwBaicdptH3UktUh0hGINQHoK5clfqHpnX0EOOVsgoSWgfpwvUshCws2FHqlMG+h7qlFDFo2fTvtZZvCpOV1r2fC0Clc5Ll40E4n/IyI5Vx9RWMEvtrGWji3DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778607243; c=relaxed/simple;
-	bh=HnTuowV/zAfKrL882doM8WrRpjMTPGixHMDj03Q6Fuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zv9sSz05WFsSgpz8YC/1xBs714vvhfZgKQgshmCqFmGcY/1w18NqL5Bz7abMh9S+2VP0SIAkrT6QZcsGvcLaHIRdV9FgXfP+8O2FGomRdrBJRMQjDKM9+izvdQWVGA7QIkKhP8X2THeisA6bOd97XUSz8vZ+UCABPawPhv0Pm2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sW0wx3cC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 420DEC2BCB0;
-	Tue, 12 May 2026 17:34:03 +0000 (UTC)
+	s=arc-20240116; t=1778609640; c=relaxed/simple;
+	bh=Stp72zT2qaW1Ui4IweP5nrAhysoLuoPEAKTz1CJrR7w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LhKPqRqdmEjZvP1ImXf2Pja+s4pI6U6mBvLzAsdg9bzUpiZfFMg8gVyx32U67dqhA77zh+ddJCgwIEb/p3fjYUiArGG5jpYd4sNIDECsu7kXg5uMJh39W0zSamZMpClNOK0lq9H/aIcwoRvgsaTXiuz4537jyHIPmlCVuvY77aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTwT34pY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D056C2BCC7;
+	Tue, 12 May 2026 18:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778607243;
-	bh=HnTuowV/zAfKrL882doM8WrRpjMTPGixHMDj03Q6Fuk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sW0wx3cCH98l+L/p3TWCR2eU4OcLwONpG0OR5Nkl/U57p8j8jJl2jUZ0bu+7Kaech
-	 1n5IB0Jg6msWSty5v0YaqyBDV2+SqoJ5b7l95JNkJypygoDkM1pY4O7Th+Qn0bJJuq
-	 OzWoNWz6NX37Z9/SmcixgRLFuu88CGTCpFGpWzhDe/PEcG33zhxjNWv0Wh4DRMGZMC
-	 ZLs6bm2Oedqbeoawy8748AxxY93JNi4EwbR34hEQPfQTGDSLBn3esj9MPmQqYifamR
-	 gTWGrwZx1mlXjWSnhOg/28pK7meBwgVtFQAlP1YQ/CRlWnTLta6nvc/0cJ/M1Fq+OJ
-	 Cjd2xp3axcyTA==
-Date: Tue, 12 May 2026 10:34:02 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfs: fix overlapping extents returned for pNFS
- LAYOUTGET
-Message-ID: <20260512173402.GO9555@frogsfrogsfrogs>
-References: <20260512172238.2495085-1-dai.ngo@oracle.com>
+	s=k20201202; t=1778609640;
+	bh=Stp72zT2qaW1Ui4IweP5nrAhysoLuoPEAKTz1CJrR7w=;
+	h=From:Subject:Date:To:Cc:From;
+	b=gTwT34pYfanIVQjxFs/kfkrSP+8/3MuN/59ABQ7jZxNcrJT/La5k1ZyWatqMY/pQA
+	 IYmqKtdt6VDztUsbeFuGzsxCE7O1Y1Bzd/hWyI23lBkfc+DNBG0S1JcALPsgVWrXXU
+	 GML89I37FSWXiNNtvf6KgRhbRfCZ3HCTN32aKmM7S5oda+kbV7YK7KrcZAYB/IP80X
+	 NbT3YRJ1/wPy8gpE5b1NCHDcCMxCDI4ipejCvZ7Wpax6ylmQxeUqyZ3t3GIfLrONnh
+	 MvntJtmq0TDdew1Y4mnWu9lmYAizDOx+pqJCXhaU1kaJw91h7SPRHjdIFV7XPtEKOn
+	 51VrfL3HMM/Ew==
+From: Chuck Lever <cel@kernel.org>
+Subject: [PATCH 00/38] lockd: Convert NLMv3 server-side procedures to
+ xdrgen
+Date: Tue, 12 May 2026 14:13:35 -0400
+Message-Id: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260512172238.2495085-1-dai.ngo@oracle.com>
-X-Rspamd-Queue-Id: 4D27F525E0F
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMSw7CMAwFr1J5TUQbSihcBbHIx0mNikFxQZWq3
+ p0ElvP0ZlYQzIQCl2aFjB8SenKBbteAHy0nVBQKg261aXt9Ujw9erWEnJDV4ehi581gzm6AYrw
+ yRlp+tevtz/J2d/RzTdSHs4LKZct+rJPHac9RgppRZuIE2/YFDCSKXpIAAAA=
+X-Change-ID: 20260427-nlm4-xdrgen-35bf1c6869b8
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
+ Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: b4 0.16-dev-da966
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5685;
+ i=chuck.lever@oracle.com; h=from:subject:message-id;
+ bh=Stp72zT2qaW1Ui4IweP5nrAhysoLuoPEAKTz1CJrR7w=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23aEyeksK6iP/0Zu/a9VzjKLOFAeAzxzXu36
+ O4ZteZqo3OJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt2gAKCRAzarMzb2Z/
+ l2zyD/9iznQ6+WNjCelES1bvB0Xa8qctKmYnnJr4jZVZMzVihPO3702LZWHZblELXU79YrqcuD7
+ 0EAZkaU7mvg+NLySJmgQ29y27ekHqFHWkqkwNRx0ibzgYh4CV64Ir0buhd5x3yo2Pufxf9Bnt+l
+ bu+n2+7WhsKYpOo52HvHFSbWa4f7Kome/au6qwhDeOD8R1ekHHp6VLBuI5FnvgeuR9g5FNXKBeV
+ 79NFV+KLj6VZkbr95ztdIKeMTXsvZxeHDL7eM/kfjSJjLlJ2595paNtRZyJxavuAbqLxGvg1vT0
+ XwUxN9lVG2Z7xrNoHVks396W62RBi5TZaFS91wM1wfsJZ6qVbHMYyT4imNXGJM7pAilAgJtheaG
+ aXCmaNKk88qkc/LhDMl/dCfooESqxSYG9pNsWwU9//sxVe91dhkNPcnwlSBy6BxdjZrb45jl6xj
+ OVj2UNgmGVgu8VO4pPRqIY0DNnw6WIXFsVDtsY+ueOHRYxn+ZuzDHm8xVXCivCI5adE+BSWQtzo
+ 4d05ngXHobiTcz8jNtaD9I/454ZvB+DvU+majAlBBeEUfy5WAQAlUFNkZLUaZbCaNClCs+2oxS7
+ ryBjIl9FMHBZEXEG+fcHFF/KkDcmkjo510PEe0Jbpthof+eqYXtwW6v0l7N9n0MaeCrHI1kILYv
+ NYg9wencfaxYWhw==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+X-Rspamd-Queue-Id: 1AD07527A81
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-21540-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21539-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Tue, May 12, 2026 at 10:21:53AM -0700, Dai Ngo wrote:
-> xfs_fs_map_blocks() currently passes XFS_BMAPI_ENTIRE to xfs_bmapi_read(),
-> which causes the bmap code to expand the mapping to cover the entire
-> extent rather than the requested range.
+This series finishes the xdrgen migration of lockd's server-side
+stack. The companion NLMv4 work landed earlier; here the
+remaining hand-written XDR in fs/lockd/xdr.c is retired in
+favour of code generated from a new
+Documentation/sunrpc/xdr/nlm3.x.
 
-Nitpicking: _ENTIRE causes bmapi_read to return the whole extent instead
-of trimming it down to the requested range.
+XDR helpers now do wire-format conversion only. NLMv3's
+32-bit range limit on TEST conflict-holder byte ranges is
+clamped at the proc function rather than inside loff_t_to_s32()
+in the encoder. The HP-UX zero-length cookie rewrite that
+svcxdr_decode_cookie() has carried since the original kernel
+import is dropped on the server side; the generated decoder
+reproduces the cookie verbatim, and neither NLM_TEST reply
+matching nor CANCEL_MSG depends on the substitution.
 
-> A single LAYOUTGET request from the client can cause the server to
-> issue multiple calls to xfs_fs_map_blocks() for different offsets
-> within the same extent. Because the use of XFS_BMAPI_ENTIRE flag,
-> these calls can produce overlapping mappings.
-> 
-> As a result, the LAYOUTGET reply sent to the NFS client may contain
-> overlapping extents. This creates ambiguity in extent selection for a
-> given file range, which can lead to incorrect device selection,
-> inconsistent handling of datastate, and ultimately data corruption or
-> protocol violations on the client side.
-> 
-> Problem discovered with xfstest generic/075 test using NFSv4.2 mount
-> with SCSI layout.
+A wrapper struct bridges each generated argument type with
+lockd's legacy lockd_lock/lockd_cookie/lockd_res internals.
+Each handler reaches xdrgen-decoded fields through argp->xdrgen
+and the legacy layout through a wrapper member that the handler
+populates explicitly, typically in nlm3svc_lookup_file(). The
+core lockd helpers and the async callback path operate on the
+legacy types unchanged, which is what keeps the conversion
+incremental.
 
-Might be helpful to provide an example of the request vs. the
-overlapping layouts.  IIRC the client asks for a layout for the first
-32 fsblocks of the file.  On the first call to xfs_fs_map_blocks, block
-0 is a single unwritten mapping, so that gets returned.
+.pc_argzero is cleared for every converted procedure: the
+generated decoders fill the substructure they own, so the
+dispatch layer's zero-memset is no longer needed. The
+trade-off is that any wrapper field a handler reads must be
+initialized explicitly. lock members are populated by
+nlm3svc_lookup_file(), or on the GRANTED path by the new
+nlm_lock_to_lockd_lock() helper.
 
-Meanwhile, another thread fallocates block 2 and gets lucky in that an
-adjacent block is free, so the first mapping in the file is now 2
-unwritten fsblocks starting at 0.  This can happen because we don't hold
-i_rwsem (or the ILOCK) between calls to ->map_blocks.
+Five NLMv4 fixes at the head of the series and three cleanup
+patches at the tail bracket the conversion. The six lockd_
+struct renames between them are split out so that each
+conversion patch reads as a single concern.
 
-Returning to the first thread, it calls xfs_fs_map_blocks again to map
-block 1.  However, the mapping's been changed, so we now return the
-entire 2-fsblock  mapping.  What gets sent to the client is
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-{.offset = 0, .length = 4096, .addr = X, .dev = Y},
-{.offset = 0, .length = 8192, .addr = X, .dev = Y},
+---
+Chuck Lever (38):
+      lockd: Stop warning on nlm__int__drop_reply in !V4 cast_status
+      lockd: Correct kernel-doc status descriptions for NLMv4 GRANTED
+      lockd: Drop locks_init_lock() from nlm4_lock_to_lockd_lock()
+      lockd: Translate nlm__int__deadlock in __nlm4svc_proc_lock_msg()
+      lockd: Do not monitor when looking up the LOCK_MSG callback host
+      Documentation: Add the RPC language description of NLM version 3
+      lockd: Rename struct nlm_cookie to lockd_cookie
+      lockd: Rename struct nlm_lock to lockd_lock
+      lockd: Rename struct nlm_args to lockd_args
+      lockd: Rename struct nlm_res to lockd_res
+      lockd: Rename struct nlm_reboot to lockd_reboot
+      lockd: Rename struct nlm_share to lockd_share
+      lockd: Use xdrgen XDR functions for the NLMv3 NULL procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 TEST procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 LOCK procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 CANCEL procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 UNLOCK procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 GRANTED procedure
+      lockd: Refactor nlmsvc_callback()
+      lockd: Use xdrgen XDR functions for the NLMv3 TEST_MSG procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 LOCK_MSG procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 CANCEL_MSG procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 UNLOCK_MSG procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 GRANTED_MSG procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 TEST_RES procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 LOCK_RES procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 CANCEL_RES procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 UNLOCK_RES procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 GRANTED_RES procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 SM_NOTIFY procedure
+      lockd: Convert NLMv3 server-side undefined procedures to xdrgen
+      lockd: Use xdrgen XDR functions for the NLMv3 SHARE procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 UNSHARE procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 NM_LOCK procedure
+      lockd: Use xdrgen XDR functions for the NLMv3 FREE_ALL procedure
+      lockd: Remove C macros that are no longer used
+      lockd: Remove dead code from fs/lockd/xdr.c
+      lockd: Unify cast_status
 
-and the client rejects that as overlapping.  Right?
+ Documentation/sunrpc/xdr/nlm3.x    |  168 ++++
+ fs/lockd/Makefile                  |   19 +-
+ fs/lockd/clnt4xdr.c                |   42 +-
+ fs/lockd/clntlock.c                |    2 +-
+ fs/lockd/clntproc.c                |   14 +-
+ fs/lockd/clntxdr.c                 |   44 +-
+ fs/lockd/host.c                    |    4 +-
+ fs/lockd/lockd.h                   |   57 +-
+ fs/lockd/mon.c                     |    2 +-
+ fs/lockd/nlm3xdr_gen.c             |  714 ++++++++++++++
+ fs/lockd/nlm3xdr_gen.h             |   32 +
+ fs/lockd/share.h                   |    4 +-
+ fs/lockd/svc4proc.c                |   69 +-
+ fs/lockd/svclock.c                 |   38 +-
+ fs/lockd/svcproc.c                 | 1844 ++++++++++++++++++++++++------------
+ fs/lockd/svcshare.c                |    8 +-
+ fs/lockd/svcsubs.c                 |    2 +-
+ fs/lockd/svcxdr.h                  |  142 ---
+ fs/lockd/trace.h                   |   16 +-
+ fs/lockd/xdr.c                     |  354 -------
+ fs/lockd/xdr.h                     |   39 +-
+ include/linux/sunrpc/xdrgen/nlm3.h |  210 ++++
+ 22 files changed, 2538 insertions(+), 1286 deletions(-)
+---
+base-commit: b26490baad0b7318d763b5ad6e5ca2addb20b314
+change-id: 20260427-nlm4-xdrgen-35bf1c6869b8
 
-> Fix this by replacing the XFS_BMAPI_ENTIRE flag with '0' so that
-> xfs_bmapi_read() returns only the mapping for the requested range.
-> 
-> Also drop the check for (!error) since it was checked after call to
-> xfs_bmapi_read().
+Best regards,
+--  
+Chuck Lever <chuck.lever@oracle.com>
 
-Cc: <stable@vger.kernel.org> # v6.19
-
-> Fixes: cc6c40e09d7b1 ("NFSD/blocklayout: Support multiple extents per LAYOUTGET").
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  fs/xfs/xfs_pnfs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> - This patch is based on top of the patch:
->   xfs: fix use of uninitialized imap in xfs_fs_map_blocks error path
-> 
-> diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-> index f7c6dba3d21e..697bf3e4ad7e 100644
-> --- a/fs/xfs/xfs_pnfs.c
-> +++ b/fs/xfs/xfs_pnfs.c
-> @@ -118,7 +118,7 @@ xfs_fs_map_blocks(
->  	struct xfs_bmbt_irec	imap;
->  	xfs_fileoff_t		offset_fsb, end_fsb;
->  	loff_t			limit;
-> -	int			bmapi_flags = XFS_BMAPI_ENTIRE;
-> +	int			bmapi_flags;
-
-Why not just replace the argument to xfs_bmapi_read with a constant
-zero?
-
---D
-
->  	int			nimaps = 1;
->  	uint			lock_flags;
->  	int			error = 0;
-> @@ -172,6 +172,7 @@ xfs_fs_map_blocks(
->  	offset_fsb = XFS_B_TO_FSBT(mp, offset);
->  
->  	lock_flags = xfs_ilock_data_map_shared(ip);
-> +	bmapi_flags = 0;	/* return map for requested range only */
->  	error = xfs_bmapi_read(ip, offset_fsb, end_fsb - offset_fsb,
->  				&imap, &nimaps, bmapi_flags);
->  	if (error) {
-> @@ -182,8 +183,7 @@ xfs_fs_map_blocks(
->  
->  	ASSERT(!nimaps || imap.br_startblock != DELAYSTARTBLOCK);
->  
-> -	if (!error && write &&
-> -	    (!nimaps || imap.br_startblock == HOLESTARTBLOCK)) {
-> +	if (write && (!nimaps || imap.br_startblock == HOLESTARTBLOCK)) {
->  		if (offset + length > XFS_ISIZE(ip))
->  			end_fsb = xfs_iomap_eof_align_last_fsb(ip, end_fsb);
->  		else if (nimaps && imap.br_startblock == HOLESTARTBLOCK)
-> -- 
-> 2.47.3
-> 
-> 
 
