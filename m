@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21487-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21488-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8MQGMEDBAmovwQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21487-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:57:20 +0200
+	id uA4wLPbDAmp7wQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21488-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 08:08:54 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C40651A878
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:57:19 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44BBC51AB1A
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 08:08:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0B12030BBB2A
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 05:44:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DFC4930DB68C
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 05:45:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE6123F54BD;
-	Tue, 12 May 2026 05:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548963FFADC;
+	Tue, 12 May 2026 05:37:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zOhBM88a"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U3yVR38y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E1B3FE669;
-	Tue, 12 May 2026 05:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E603CCFB4;
+	Tue, 12 May 2026 05:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778564266; cv=none; b=P/Fet2lSxwR5c0f8lIyjwHtpyJpu1hf8ZoM3VmcpIa7jtnbk8MwjS4t0wEkfLtVR78WDe4z1GbmwCwhCyNWsFibROvV53/5MbvZAJEggtCmPxrlx/rEMNYLUF93bGyFKYNPzeBxKkibt1COb/Fvw3sTetRMEBsYGhYGyefv6s+Q=
+	t=1778564273; cv=none; b=Fr91zZsH0yMH2Npt8TlV73Q5oyz03BApkxxAhABfkdiNkHXBQ1GI4N8ut0Cr13qda3BkbZHhi3j+WnplYTW8rpK5c4grFZnHAB4HUsPLBIjiy5kFya4y2QRbYuAD5zoeouHBGJuGdBXi7XB8xy3gOIB9C36xfp0Gj12GaczWofI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778564266; c=relaxed/simple;
-	bh=zdIGJe7Kb5ghymw/ENcOFkEKCHRYXJK+Gf3ipQvVw+o=;
+	s=arc-20240116; t=1778564273; c=relaxed/simple;
+	bh=iJWBkxz94I8jemuCCPO8Xh81TqMilafig5tuQB3ST4M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kx9KTZSyOsCQco9w5fYzfkERz6cZukmniAAMvtYsK4vjEK0qgFwtohIgvzkfcNnFJJmD02rVP1FZEXSBUZ4Op0hKGOzNSSlUQA1JygCXrdC7isYbbamRZxJWWelcE9v/If1ydzBJ3wegZ9CoD4GuAGQhr5V79dRGWUbPiXsFm9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=zOhBM88a; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=tC023LhIiINdVhvkBh2drU4ATjQNnxapkhxpSVU7r1nLswNz4PHW6EcJOln2j/q1rcrEuGCZPrknQ2LBXJovyGv9CcLIbbCjzQzvMGULdbYgw1heBcmUHRGggrWl1S8STkNDh5mH9V5IlLoPzc5GBAX/fdhbcSy7N4Gm4xHMW+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U3yVR38y; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=Ev7MltnomSEjjmIrAClD1smxf1HDQkp+MmOA2POEN6A=; b=zOhBM88aoj3+RmnJTzDvDvX5oq
-	9MzT6jc6jjaEccKxyQYyttFDbnopfvJYVRTvD8rnrI3Ljs3ORV4RDMFYqZF0hzK1GyoLlju8YU49c
-	dnoc07+jiOkMGYudxEb756NG3xXZ2I4+ryFlzH/OCqMIE6PWkPy8ypBzQ2eo/PcP0REfgJB0rK+Ht
-	Q1mnJjTvGTg1lgE6PiC2A4TxfqdYU4PRtOUemJ2/oREQHvCceIpP6h2RCBmZUElPNeD0lluN0F4ym
-	3kmCUQ2sDP38uOsiipbmNekSLq9daxjQS9H420VZrcOfYp1xO+fG6rF3yDlpNsMTGI63uZXnHkWuD
-	7UfSxpEg==;
+	bh=eRHWR+K+rwN4V/M9eakcsPNW+L+2qccDSG2y2mqtyrE=; b=U3yVR38y20oSPNvU/6cEBkABNB
+	wdZkG15EogD5OQ4H+wpPaAyqYsbYjSVEBbzMXdavthfcH44BYKxDetZp1Lul2LwEeaTPGkQNIWAhz
+	NBcdFUD8ehpNAhIdSczIhrprRMY3jf02fFJabXW6s/JHKLCHMGKbVvbMxBBFnhWoS9n8rORJ4iRzQ
+	+lsR26GKXcZJifHIZ6NvbOeReOe6U8/+9c25F4A2drxqL2IENmV6QvGTi9fd1EeJxfsFO6iHzd7SV
+	eBRSw4EY0CkD4sBuF7Z07bLDqQbpHYiIU1Do/2mfGJNgXA7NSS2spLMbPIbCcXddV1mzgteZfAkFy
+	zL77KOgw==;
 Received: from 2a02-8389-2341-5b80-decc-1a96-daaa-a2cc.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:decc:1a96:daaa:a2cc] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMfoE-0000000FfQG-1Tlu;
-	Tue, 12 May 2026 05:37:34 +0000
+	id 1wMfoL-0000000FfRP-2kNh;
+	Tue, 12 May 2026 05:37:42 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Chris Li <chrisl@kernel.org>,
@@ -78,9 +78,9 @@ Cc: Christian Brauner <brauner@kernel.org>,
 	linux-f2fs-devel@lists.sourceforge.net,
 	linux-nfs@vger.kernel.org,
 	linux-cifs@vger.kernel.org
-Subject: [PATCH 08/12] swap,iomap: simplify iomap_swapfile_iter
-Date: Tue, 12 May 2026 07:35:24 +0200
-Message-ID: <20260512053625.2950900-9-hch@lst.de>
+Subject: [PATCH 09/12] swap: push down setting sis->bdev into ->swap_activate
+Date: Tue, 12 May 2026 07:35:25 +0200
+Message-ID: <20260512053625.2950900-10-hch@lst.de>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260512053625.2950900-1-hch@lst.de>
 References: <20260512053625.2950900-1-hch@lst.de>
@@ -92,20 +92,20 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Rspamd-Queue-Id: 1C40651A878
+X-Rspamd-Queue-Id: 44BBC51AB1A
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.44 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21487-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21488-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -121,175 +121,296 @@ X-Spamd-Result: default: False [1.44 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:email,lst.de:mid,infradead.org:dkim]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:email,lst.de:mid]
 X-Rspamd-Action: no action
 
-add_swap_extent already coalesces multiple extents, no need to duplicate
-that in the caller.
+Only the file operation method knows what block device we'll swap
+to.  So move down setting sis->bdev and the special blockdev flag
+into ->swap_activate.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/iomap/swapfile.c | 104 +++++++++++++-------------------------------
- 1 file changed, 31 insertions(+), 73 deletions(-)
+ block/fops.c         |  9 ++++++++-
+ fs/btrfs/inode.c     |  7 ++++---
+ fs/f2fs/data.c       |  3 ++-
+ fs/iomap/swapfile.c  |  7 ++-----
+ fs/nfs/file.c        |  2 +-
+ fs/smb/client/file.c |  2 +-
+ fs/xfs/xfs_file.c    |  6 ------
+ include/linux/swap.h |  4 ++--
+ mm/page_io.c         |  3 +--
+ mm/swapfile.c        | 38 ++++++++++++--------------------------
+ 10 files changed, 33 insertions(+), 48 deletions(-)
 
+diff --git a/block/fops.c b/block/fops.c
+index 067e46299666..da09ce3f072f 100644
+--- a/block/fops.c
++++ b/block/fops.c
+@@ -951,9 +951,16 @@ static int blkdev_mmap_prepare(struct vm_area_desc *desc)
+ 
+ static int blkdev_swap_activate(struct file *file, struct swap_info_struct *sis)
+ {
++	struct block_device *bdev = I_BDEV(file->f_mapping->host);
+ 	loff_t isize = i_size_read(bdev_file_inode(file));
+ 
+-	return add_swap_extent(sis, div_u64(isize, PAGE_SIZE), 0);
++	/*
++	 * The swap code performs arbitrary overwrites, which are not supported
++	 * on zones with sequential write constraints.
++	 */
++	if (bdev_is_zoned(bdev))
++		return -EINVAL;
++	return add_swap_extent(sis, div_u64(isize, PAGE_SIZE), bdev, 0);
+ }
+ 
+ const struct file_operations def_blk_fops = {
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index ee0a7947706a..84003c520530 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -10201,6 +10201,7 @@ static void btrfs_free_swapfile_pins(struct inode *inode)
+ }
+ 
+ struct btrfs_swap_info {
++	struct btrfs_device *device;
+ 	u64 start;
+ 	u64 block_start;
+ 	u64 block_len;
+@@ -10214,7 +10215,8 @@ static int btrfs_add_swap_extent(struct swap_info_struct *sis,
+ 	first_ppage = PAGE_ALIGN(bsi->block_start) >> PAGE_SHIFT;
+ 	next_ppage = PAGE_ALIGN_DOWN(bsi->block_start + bsi->block_len) >> PAGE_SHIFT;
+ 
+-	return add_swap_extent(sis, next_ppage - first_ppage, first_ppage);
++	return add_swap_extent(sis, next_ppage - first_ppage, bsi->device->bdev,
++			first_ppage);
+ }
+ 
+ void btrfs_swap_deactivate(struct file *file)
+@@ -10503,6 +10505,7 @@ int btrfs_swap_activate(struct file *file, struct swap_info_struct *sis)
+ 			bsi.start = key.offset;
+ 			bsi.block_start = physical_block_start;
+ 			bsi.block_len = len;
++			bsi.device = device;
+ 		}
+ 
+ 		if (fatal_signal_pending(current)) {
+@@ -10533,8 +10536,6 @@ int btrfs_swap_activate(struct file *file, struct swap_info_struct *sis)
+ 	up_write(&BTRFS_I(inode)->i_mmap_lock);
+ 	btrfs_free_backref_share_ctx(backref_ctx);
+ 	btrfs_free_path(path);
+-	if (!ret && device)
+-		sis->bdev = device->bdev;
+ 	return ret;
+ }
+ #endif
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 8bcf630df557..8d116ff517c9 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -4326,7 +4326,8 @@ static int check_swap_activate(struct swap_info_struct *sis,
+ 		/*
+ 		 * We found a PAGE_SIZE-length, PAGE_SIZE-aligned run of blocks
+ 		 */
+-		ret = add_swap_extent(sis, nr_pblocks, pblock);
++		ret = add_swap_extent(sis, nr_pblocks, inode->i_sb->s_bdev,
++				pblock);
+ 		if (ret < 0)
+ 			goto out;
+ 		cur_lblock += nr_pblocks;
 diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
-index cf354fdfb7c3..a4e0ca462cc4 100644
+index a4e0ca462cc4..862b4c02a8bd 100644
 --- a/fs/iomap/swapfile.c
 +++ b/fs/iomap/swapfile.c
-@@ -6,57 +6,32 @@
- #include <linux/iomap.h>
- #include <linux/swap.h>
+@@ -50,10 +50,6 @@ static int iomap_swapfile_iter(struct iomap_iter *iter, struct file *file,
+ 	if (iomap->flags & IOMAP_F_SHARED)
+ 		return iomap_swapfile_fail(file, "has shared extents");
  
--/* Swapfile activation */
+-	/* Only one bdev per swap file. */
+-	if (iomap->bdev != sis->bdev)
+-		return iomap_swapfile_fail(file, "outside the main device");
 -
--struct iomap_swapfile_info {
--	struct iomap iomap;		/* accumulated iomap */
--	struct swap_info_struct *sis;
--	unsigned long nr_pages;		/* number of pages collected */
--	struct file *file;
--};
--
--/*
-- * Collect physical extents for this swap file.  Physical extents reported to
-- * the swap code must be trimmed to align to a page boundary.  The logical
-- * offset within the file is irrelevant since the swapfile code maps logical
-- * page numbers of the swap device to the physical page-aligned extents.
-- */
--static int iomap_swapfile_add_extent(struct iomap_swapfile_info *isi)
--{
--	struct iomap *iomap = &isi->iomap;
--	uint64_t first_ppage;
--	uint64_t next_ppage;
--
+ 	/*
+ 	 * Round the start up and the end down so that the physical extent
+ 	 * aligns to a page boundary.
+@@ -61,7 +57,8 @@ static int iomap_swapfile_iter(struct iomap_iter *iter, struct file *file,
+ 	first_ppage = ALIGN(iomap->addr, PAGE_SIZE) >> PAGE_SHIFT;
+ 	next_ppage = ALIGN_DOWN(iomap->addr + iomap->length, PAGE_SIZE) >>
+ 			PAGE_SHIFT;
+-	error = add_swap_extent(sis, next_ppage - first_ppage, first_ppage);
++	error = add_swap_extent(sis, next_ppage - first_ppage, iomap->bdev,
++			first_ppage);
+ 	if (error)
+ 		return error;
+ 	return iomap_iter_advance_full(iter);
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 2bc55d9d71e1..10ab2a923835 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -588,7 +588,7 @@ int nfs_swap_activate(struct file *file, struct swap_info_struct *sis)
+ 	ret = rpc_clnt_swap_activate(clnt);
+ 	if (ret)
+ 		return ret;
+-	ret = add_swap_extent(sis, sis->max, 0);
++	ret = add_swap_extent(sis, sis->max, NULL, 0);
+ 	if (ret < 0) {
+ 		rpc_clnt_swap_deactivate(clnt);
+ 		return ret;
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 84459f87907e..e1bbc65ce7f3 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -3327,7 +3327,7 @@ int cifs_swap_activate(struct file *swap_file, struct swap_info_struct *sis)
+ 	 */
+ 
+ 	sis->flags |= SWP_FS_OPS;
+-	return add_swap_extent(sis, sis->max, 0);
++	return add_swap_extent(sis, sis->max, NULL, 0);
+ }
+ 
+ void cifs_swap_deactivate(struct file *file)
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 41f7e19bd31f..74128ebf7161 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -2116,12 +2116,6 @@ xfs_file_swap_activate(
+ 	 */
+ 	xfs_inodegc_flush(ip->i_mount);
+ 
 -	/*
--	 * Round the start up and the end down so that the physical
--	 * extent aligns to a page boundary.
+-	 * Direct the swap code to the correct block device when this file
+-	 * sits on the RT device.
 -	 */
--	first_ppage = ALIGN(iomap->addr, PAGE_SIZE) >> PAGE_SHIFT;
--	next_ppage = ALIGN_DOWN(iomap->addr + iomap->length, PAGE_SIZE) >>
--			PAGE_SHIFT;
--	return add_swap_extent(isi->sis, next_ppage - first_ppage, first_ppage);
--}
+-	sis->bdev = xfs_inode_buftarg(ip)->bt_bdev;
 -
--static int iomap_swapfile_fail(struct iomap_swapfile_info *isi, const char *str)
-+static int iomap_swapfile_fail(struct file *file, const char *str)
- {
- 	char *buf, *p = ERR_PTR(-ENOMEM);
+ 	return iomap_swap_activate(file, sis, &xfs_read_iomap_ops);
+ }
  
- 	buf = kmalloc(PATH_MAX, GFP_KERNEL);
- 	if (buf)
--		p = file_path(isi->file, buf, PATH_MAX);
-+		p = file_path(file, buf, PATH_MAX);
- 	pr_err("swapon: file %s %s\n", IS_ERR(p) ? "<unknown>" : p, str);
- 	kfree(buf);
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 657779485ae4..b1cbb67ddd8e 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -404,7 +404,7 @@ extern void __meminit kswapd_stop(int nid);
+ #ifdef CONFIG_SWAP
+ 
+ int add_swap_extent(struct swap_info_struct *sis, unsigned long nr_pages,
+-		sector_t start_block);
++		struct block_device *bdev, sector_t start_block);
+ int generic_swap_activate(struct file *swap_file, struct swap_info_struct *sis);
+ 
+ static inline unsigned long total_swapcache_pages(void)
+@@ -528,7 +528,7 @@ static inline bool folio_free_swap(struct folio *folio)
+ 
+ static inline int add_swap_extent(struct swap_info_struct *sis,
+ 		unsigned long start_page, unsigned long nr_pages,
+-		sector_t start_block)
++		struct block_device *bdev, sector_t start_block)
+ {
  	return -EINVAL;
  }
- 
- /*
-- * Accumulate iomaps for this swap file.  We have to accumulate iomaps because
-- * swap only cares about contiguous page-aligned physical extents and makes no
-- * distinction between written and unwritten extents.
-+ * Report physical extents for this swap file.  Physical extents reported to the
-+ * swap code must be trimmed to align to a page boundary.  The logical offset
-+ * within the file is irrelevant since the swapfile code maps logical page
-+ * numbers of the swap device to the physical page-aligned extents.
-  */
--static int iomap_swapfile_iter(struct iomap_iter *iter,
--		struct iomap *iomap, struct iomap_swapfile_info *isi)
-+static int iomap_swapfile_iter(struct iomap_iter *iter, struct file *file,
-+		struct swap_info_struct *sis)
- {
-+	struct iomap *iomap = &iter->iomap;
-+	uint64_t first_ppage;
-+	uint64_t next_ppage;
-+	int error;
-+
- 	switch (iomap->type) {
- 	case IOMAP_MAPPED:
- 	case IOMAP_UNWRITTEN:
-@@ -64,35 +39,31 @@ static int iomap_swapfile_iter(struct iomap_iter *iter,
- 		break;
- 	case IOMAP_INLINE:
- 		/* No inline data. */
--		return iomap_swapfile_fail(isi, "is inline");
-+		return iomap_swapfile_fail(file, "is inline");
- 	default:
--		return iomap_swapfile_fail(isi, "has unallocated extents");
-+		return iomap_swapfile_fail(file, "has unallocated extents");
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 3e1c12649448..2ab8994ed1c2 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -132,7 +132,7 @@ int generic_swap_activate(struct file *swap_file, struct swap_info_struct *sis)
+ 		/*
+ 		 * We found a PAGE_SIZE-length, PAGE_SIZE-aligned run of blocks
+ 		 */
+-		ret = add_swap_extent(sis, 1,
++		ret = add_swap_extent(sis, 1, inode->i_sb->s_bdev,
+ 				first_block >> (PAGE_SHIFT - blkbits));
+ 		if (ret < 0)
+ 			return ret;
+@@ -141,7 +141,6 @@ int generic_swap_activate(struct file *swap_file, struct swap_info_struct *sis)
+ 		continue;
  	}
- 
- 	/* No uncommitted metadata or shared blocks. */
- 	if (iomap->flags & IOMAP_F_DIRTY)
--		return iomap_swapfile_fail(isi, "is not committed");
-+		return iomap_swapfile_fail(file, "is not committed");
- 	if (iomap->flags & IOMAP_F_SHARED)
--		return iomap_swapfile_fail(isi, "has shared extents");
-+		return iomap_swapfile_fail(file, "has shared extents");
- 
- 	/* Only one bdev per swap file. */
--	if (iomap->bdev != isi->sis->bdev)
--		return iomap_swapfile_fail(isi, "outside the main device");
+ 	return 0;
 -
--	if (isi->iomap.length == 0) {
--		/* No accumulated extent, so just store it. */
--		memcpy(&isi->iomap, iomap, sizeof(isi->iomap));
--	} else if (isi->iomap.addr + isi->iomap.length == iomap->addr) {
--		/* Append this to the accumulated extent. */
--		isi->iomap.length += iomap->length;
--	} else {
--		/* Otherwise, add the retained iomap and store this one. */
--		int error = iomap_swapfile_add_extent(isi);
--		if (error)
--			return error;
--		memcpy(&isi->iomap, iomap, sizeof(isi->iomap));
--	}
-+	if (iomap->bdev != sis->bdev)
-+		return iomap_swapfile_fail(file, "outside the main device");
+ bad_bmap:
+ 	pr_err("swapon: swapfile has holes\n");
+ 	return -EINVAL;
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index fbf11c8c5c69..2c9d2af736c4 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -2707,7 +2707,7 @@ static void destroy_swap_extents(struct swap_info_struct *sis,
+  */
+ int
+ add_swap_extent(struct swap_info_struct *sis, unsigned long nr_pages,
+-		sector_t start_block)
++		struct block_device *bdev, sector_t start_block)
+ {
+ 	struct rb_node **link = &sis->swap_extent_root.rb_node, *parent = NULL;
+ 	struct swap_extent *se;
+@@ -2718,6 +2718,12 @@ add_swap_extent(struct swap_info_struct *sis, unsigned long nr_pages,
+ 		return 0;
+ 	nr_pages = min(nr_pages, sis->max - sis->pages);
  
-+	/*
-+	 * Round the start up and the end down so that the physical extent
-+	 * aligns to a page boundary.
-+	 */
-+	first_ppage = ALIGN(iomap->addr, PAGE_SIZE) >> PAGE_SHIFT;
-+	next_ppage = ALIGN_DOWN(iomap->addr + iomap->length, PAGE_SIZE) >>
-+			PAGE_SHIFT;
-+	error = add_swap_extent(sis, next_ppage - first_ppage, first_ppage);
-+	if (error)
-+		return error;
- 	return iomap_iter_advance_full(iter);
++	/* Only one bdev per swap file for now. */
++	if (!sis->bdev)
++		sis->bdev = bdev;
++	else if (bdev != sis->bdev)
++		return -EINVAL;
++
+ 	/*
+ 	 * place the new node at the right most since the
+ 	 * function is called in ascending page order.
+@@ -2793,6 +2799,8 @@ static int setup_swap_extents(struct swap_info_struct *sis,
+ 	sis->flags |= SWP_ACTIVATED;
+ 	if (sis->flags & SWP_FS_OPS)
+ 		error = sio_pool_init();
++	else if (WARN_ON_ONCE(!sis->bdev))
++		error = -EINVAL;
+ 	if (error)
+ 		destroy_swap_extents(sis, swap_file);
+ 	return error;
+@@ -3224,26 +3232,6 @@ static struct swap_info_struct *alloc_swap_info(void)
+ 	return p;
  }
  
-@@ -110,10 +81,6 @@ int iomap_swap_activate(struct file *file, struct swap_info_struct *sis,
- 		.len	= ALIGN_DOWN(i_size_read(inode), PAGE_SIZE),
- 		.flags	= IOMAP_REPORT,
- 	};
--	struct iomap_swapfile_info isi = {
--		.sis = sis,
--		.file = file,
--	};
- 	int ret;
- 
- 	/*
-@@ -125,16 +92,7 @@ int iomap_swap_activate(struct file *file, struct swap_info_struct *sis,
- 		return ret;
- 
- 	while ((ret = iomap_iter(&iter, ops)) > 0)
--		iter.status = iomap_swapfile_iter(&iter, &iter.iomap, &isi);
--	if (ret < 0)
--		return ret;
--
--	if (isi.iomap.length) {
--		ret = iomap_swapfile_add_extent(&isi);
--		if (ret)
--			return ret;
+-static int claim_swapfile(struct swap_info_struct *si, struct inode *inode)
+-{
+-	if (S_ISBLK(inode->i_mode)) {
+-		si->bdev = I_BDEV(inode);
+-		/*
+-		 * Zoned block devices contain zones that have a sequential
+-		 * write only restriction.  Hence zoned block devices are not
+-		 * suitable for swapping.  Disallow them here.
+-		 */
+-		if (bdev_is_zoned(si->bdev))
+-			return -EINVAL;
+-		si->flags |= SWP_BLKDEV;
+-	} else if (S_ISREG(inode->i_mode)) {
+-		si->bdev = inode->i_sb->s_bdev;
 -	}
 -
 -	return 0;
-+		iter.status = iomap_swapfile_iter(&iter, file, sis);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(iomap_swap_activate);
+-}
+-
+-
+ /*
+  * Find out how many pages are allowed for a single swap device. There
+  * are two limiting factors:
+@@ -3500,16 +3488,14 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 	dentry = swap_file->f_path.dentry;
+ 	inode = mapping->host;
+ 
+-	error = claim_swapfile(si, inode);
+-	if (unlikely(error))
+-		goto bad_swap;
+-
+ 	inode_lock(inode);
+ 	if (d_unlinked(dentry) || cant_mount(dentry)) {
+ 		error = -ENOENT;
+ 		goto bad_swap_unlock_inode;
+ 	}
+-	if (!S_ISBLK(inode->i_mode) && !S_ISREG(inode->i_mode)) {
++	if (S_ISBLK(inode->i_mode)) {
++		si->flags |= SWP_BLKDEV;
++	} else if (!S_ISREG(inode->i_mode)) {
+ 		error = -EINVAL;
+ 		goto bad_swap_unlock_inode;
+ 	}
 -- 
 2.53.0
 
