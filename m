@@ -1,187 +1,150 @@
-Return-Path: <linux-nfs+bounces-21513-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21514-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CB0nNps3A2p31wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21513-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:22:19 +0200
+	id 2Mp9KhEuA2qd1QEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21514-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 15:41:37 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D7B25224F5
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3577F521726
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 15:41:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 82FD63557BD3
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 13:23:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F5F13393A43
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 13:25:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CED3E1720;
-	Tue, 12 May 2026 13:19:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52A9E3A05D8;
+	Tue, 12 May 2026 13:23:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkRjBjP3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZY/26yb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CA237DAD7
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 13:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778591941; cv=pass; b=k4AdxC6sO0NBF/ozXwl3MqPvDUyaB18HvatUcTIdri+es/nLZj70n/OinVTV+MqCOg5pzmv1UjxZCcAzPLBgvgT5zMw18DJuisrmKFnj1EJJHCc6o6ocshCq2D01JO13TCuMJ7Htn7ZfyeblU88Raz/ubxAO7QolDOZZE+gxG5c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778591941; c=relaxed/simple;
-	bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=dl3hvrZfzW6PqO86F6/6T59WTIOKLyS7x4YbvkNRRukAdypbkIuaus6fM6/LHpwG5iJ+i1FOHRtoXihipUzn1vKazCHiqE2ObIHDRi3JYEWJ8zwhgs3jIvgra05b1bKWQ6AYRnexghQOUP7EleOgytTJvSwqgzCWPBRXtwkPs9o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkRjBjP3; arc=pass smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7e36bb16a92so2067357a34.2
-        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 06:18:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778591939; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CH+u72e1SEGZTsExvGCcCdqc6pBj+eeXDQc9cqavteW2MuHQYJWdMaRMYlZUQcD+/i
-         xLdxYJaCaI32D4hnXP/WgnQ35nm06AiX7W57+kIgt0HHNj2QnDyu3zSrIEMUmWMwzkZS
-         dl52sNAW8LkgA3qXoDy6nSKGYQ5VRrG7FStUYMcJsf7FW3OUuU8rQ3twb9jXWZidixNG
-         7NK1LkgS+hemmWGdStR4FkXlcH475kFDo17T6Fz4Z3Lazv/5euq36YIVyv04iPJ3aQTd
-         6tTSbOVxI/+CLJzjWZtV7d20SUXYhLX3wWlOT/QWsxMXkfL2Fi+WNSvhdW8QI9pWx8zM
-         YNOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
-        fh=MzBoCUgZTosw1TMwZ6rD7xUaRcA3oruvJ+IB5AFPiog=;
-        b=j5BLs4P9/YETPzdF+RUQiuI38uq2YIYZ7LNwKtFZRObB3mg5skap+0aiOnT//Puyks
-         dr0c9ONz0DIT59eRoVT7RuuVJ9j/g3xqwHo1LEas4jvTQdO8bj4JASTNdrBNlj1a1pB8
-         SnmjwzQmDvWiTbjLdAx5pf9xqVsEdNtu3HOJEqA3P4GlZL0LrdjTeUnIZ9VETdtzv2Cu
-         JiHlB/csFUnUA24rSlRii1Hh9lUFeX9PJ9HgdEl4HeEG2ibgBOhCGGiylX89YJ0jJHl9
-         JjhpgDHX3uOBz26Jdzcr42Qdg5i+VclEkI+iAPFpC/cp6FJ97p8IuITo/IjXNMNSb2oT
-         Ztpg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778591939; x=1779196739; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
-        b=FkRjBjP3qQD6vEPtt/efH3V8RpFETmM+AwgHZFQvqsR9BqU19Oa0kCjkjJnXtCowbg
-         uTcxX87VJGYupjkaBW/P0ktkZLO4nZE6jMF+jZudqnOL7QsJ9+KyMej+rit29SAVXsGv
-         +hVUFZVTE9HdhloctUVimbPXp2jhTqwwqyJhEhsD6k/7pbzzQdNGE5kaRvBkDkegNrXm
-         UN5KK3qxXxd79IAAAXmiu39MtYfpcVxBjWXbM7+U75D31JPF91eNhJu0UmAIWgZK9Uhz
-         Tmy+S/PHQSpiLArLwi/qAwBfUkAkweLVKUsglSf+W1Sd+R3hX+q6EI/vfbFW5Al7efKb
-         35BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778591939; x=1779196739;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
-        b=pY4USnQtcQZS1ic/D6YW4VHdo5GdCzgtVK+kXkJSkH45Hm92IzPniV8CwJN1zS87tz
-         HXlRAKCoVvnGYBSu2oZFVReGmTH7uPp5SALNbEYf4jZPsmNeREvCtXaB6VB+nzUjF+Mr
-         WO8VD2LUZbu5Y59FHYnZ9X06YonHHBYZplORr/e5zib2TleIDaA1Ul+65/LB2Vu1PxwD
-         S1DDwFhRtUF6bTMaBuD9ujYhI2Pu+ITX4uKNZTTNo0JzTjrVVCIXFnHydDn+vEh9HLQ9
-         F1Lm1nQIYZSt4vyA0V7KEBr66/Tp7UJMLEAqSgoP2cJ5gR0EoBz2kUxGl/Ps3+M0SHVK
-         5XIA==
-X-Forwarded-Encrypted: i=1; AFNElJ8kcmNc/8E9aupAS22a9xSNYanvpu/2AuMna2sa8+Ve3kx4d/xT5+pD9wmHtLLf85n0iogaYH2XFaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDWE1Q4ypxWTmUcL2nhb4lpgiP0Wi2HyFJ95wiztUD9RyNb0+W
-	ePv/Qxz5VmpjGoEqew5QX+sU0Heh0tylZvPBWACMXpTUdnXr1gF2og0MPKDHg8zJf3IUgQVimwK
-	Ipmpib4eeds5PPqwiR6QjZKn4T8OBJGmRyQ==
-X-Gm-Gg: Acq92OFBZ+mOUlMxgRVyvLpDv0hIRiB29JcsUfs7VriL9itjGheblenr4ZhjEQXvGrX
-	31b1P/x1XrbFV8Fr6r0yFPeyx6QvopxdyATZuq8rBgMkF3kAiZBGlJ/QS8ClKpJlyiNgJ/qIYr1
-	C+Z3i/XzlKfK+Mt3GIdKnLCPd1A6UW769HP0L+oJRK0dZWk4fU19aU5OpE7HnE+68wr1iWJUEgo
-	8ZLlFnfv6pe49G/iULICwogSodIWmjafEYsYqorz90oXT5wmfR1dZ/iuuALnCgnPLt/wdcI/muf
-	E3LOY6s=
-X-Received: by 2002:a05:6830:378a:b0:7dc:e37b:b5d3 with SMTP id
- 46e09a7af769-7e1deecda2fmr17165119a34.7.1778591938923; Tue, 12 May 2026
- 06:18:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286E63A05CA
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 13:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778592193; cv=none; b=KGKeC9pgE9+fpjNgsuYE2wjlgWef60CE1qD+TsNBQfT3AvqqtdqrqwsszQsu/uNnYAlBy5xVzL1M/6n8Minqs0K9AIK7H7RCb43jDr3U8PT3HVjzwiFhhMwo7LnEJYBAalLCgh7K6+En/TH61wQZglBZ7NOgMLv5FhKBDBM2XXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778592193; c=relaxed/simple;
+	bh=PI+uCwI5dxmyTse/0RTKGa7rkbWq5Ij/LDGtGlJlOPE=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Kqj/fZSDfcCBT9aZHZw9cmyM52TKkU6kHq5sDw3zKW1CgfbmMgoNP+ObfKKjAwvVE076vuvGFU0NYnv239WHI+81mxnK+uWf1zK6QxE+h5crBNygwcz7qaicNcBCMSJmULvsbUTRt4fYlh90KQVBrdr4zV/Kn6laNgnOUvEknbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZY/26yb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC84CC2BCF5
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 13:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778592192;
+	bh=PI+uCwI5dxmyTse/0RTKGa7rkbWq5Ij/LDGtGlJlOPE=;
+	h=Date:From:To:In-Reply-To:References:Subject:From;
+	b=rZY/26ybxfL9yg5+AykQFjkG3zXiXu6Quumwjl9d/L0J5wzr1uTYGNOtcJuzlLpF1
+	 ZXUPcxbp7YgrpEb/BZMKRzHT2kKNSjkqPYEErHVCIeB8Z5KZNqgp7HTTD6PquYOIZe
+	 KM0s29EqT87iw82ihhOrVJTPA9cdWu52ZAbfESYJRwSDX7B0BCkaSGZjYwsQbkc5Bw
+	 +cq9P/Llm/Q7RmvAAuMSKFJDGKQM+xQrzx1obGSksxfkYpqAlo+nWejygH9Yl/uuih
+	 lPfEk4OFdyO6QDls9taNdFfEiG6R392vNsX6ltOS1gdpZRPmgINF64IAg8j6RvISwe
+	 gj9RrcmMEWMmA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E647AF4007A;
+	Tue, 12 May 2026 09:23:11 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 12 May 2026 09:23:11 -0400
+X-ME-Sender: <xms:vykDaqG25KqX9G2H6GLBIH82uf2RiBBsF0aYRsf7BrPTfs3R1Z2acA>
+    <xme:vykDamI8cRVx8CUTScZ4HOuJu6l8tEOstqBglI5OohTRB2WkqIltKJWwUg5YvA2VA
+    8Ff9D6PNuttUUaHAFSUL5SvzvILecs8LJr-v42vzdaJjwBCFtHfGMQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduvdduleduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvffkjghfufgtgfesthejredtredttdenucfhrhhomhepfdevhhhutghk
+    ucfnvghvvghrfdcuoegtvghlsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnh
+    epheehjeelgeffffeihfduudevudeghfehheefhffgueeluedufeetjeduhfdukeelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghhuhgtkh
+    hlvghvvghrodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieefgeelleel
+    heelqdefvdelkeeggedvfedqtggvlheppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrih
+    hlrdgtohhmpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehlihhonhgvlhgtohhnshduleejvdesghhmrghilhdrtghomhdprhgtphhtthhope
+    hlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:vykDagwIvkkY-ZZzFUkXV9-7E86g1fz8yu8fEAa-mmKRy3UgaZPhhA>
+    <xmx:vykDaiN-DhyTVPHXXeLNQDS8dVDq7ZeY5AANB7PRBdiCZ-oHX5xD0w>
+    <xmx:vykDap6kiYPKWhiNnN3GlMAJM_rmeL695CUqvpCPLHKdoAsw8LrCeA>
+    <xmx:vykDarP2wA4E8ZM0qvhF_O4sqxf56WiXBQ1eccKihZrxrraeQt_SKA>
+    <xmx:vykDavmOZih-diaaa1D7aD8d4q_MWyDHDU6rs3dBC8G2xDbTGCDfLrWZ>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C8BE9780075; Tue, 12 May 2026 09:23:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0UdOR8mVr=8pwNP95FnOsOk1w1A2=DcayKk3YnDfS+PzUA@mail.gmail.com>
- <5acaa8e7-0691-4cbd-b501-c26831a7be81@app.fastmail.com> <CAM5tNy7GG0awNYYJWv0968e5CMoUstr0GcrNwuNKP4x3Yrp3JQ@mail.gmail.com>
-In-Reply-To: <CAM5tNy7GG0awNYYJWv0968e5CMoUstr0GcrNwuNKP4x3Yrp3JQ@mail.gmail.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Tue, 12 May 2026 15:18:00 +0200
-X-Gm-Features: AVHnY4J4-ZNCmEFD4f9QkUevBdi0g7HXLL98QKC94zDZH-Up3R_AKybze21AMy0
-Message-ID: <CALXu0UckL3YYXVLz5Qn0shoZ+TU8uOxRy2FCpL5mAhLniinJyg@mail.gmail.com>
-Subject: Increase FreeBSD NFSv4 nfsd buffer size? Re: Increase default NFSv4
- server size "max_block_size" to 4MB
-To: Rick Macklem <rick.macklem@gmail.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, freebsd-hackers@freebsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 3D7B25224F5
+X-ThreadId: ALV4ADXmNQfR
+Date: Tue, 12 May 2026 09:22:41 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Lionel Cons" <lionelcons1972@gmail.com>,
+ linux-nfs <linux-nfs@vger.kernel.org>
+Message-Id: <e44aa868-5ec8-4c35-b5bc-5066487a28be@app.fastmail.com>
+In-Reply-To: 
+ <CAPJSo4XdpOu_yNGpbMMQ0hAO+mdOy2-TsEke_vHGm60k6jp2Bw@mail.gmail.com>
+References: 
+ <CAPJSo4XdpOu_yNGpbMMQ0hAO+mdOy2-TsEke_vHGm60k6jp2Bw@mail.gmail.com>
+Subject: Re: Suggestions to drastically reduce Linux nfsd I/O latency on BTRFS?
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3577F521726
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [-1.15 / 15.00];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21513-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org,freebsd.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cedricblancher@gmail.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21514-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	SUBJECT_HAS_QUESTION(0.00)[]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-On Tue, 17 Mar 2026 at 00:35, Rick Macklem <rick.macklem@gmail.com> wrote:
->
-> On Mon, Mar 16, 2026 at 5:41=E2=80=AFAM Chuck Lever <cel@kernel.org> wrot=
-e:
-> >
-> >
-> > On Mon, Mar 16, 2026, at 3:51 AM, Cedric Blancher wrote:
-> > > As debated a while ago, can the default NFSv4 server size for
-> > > "max_block_size" be increased to 4MB, please?
-> >
-> > There is an administrative setting to raise this limit for
-> > recent versions of the kernel. Can you report your experience
-> > when you raise the limit? Hiccups, performance issues, etc? I
-> > would kind of like this exercise to be data-driven.
-> >
-> > What is still unknown to me is which NFS client implementations
-> > can support 4MB or 8MB. Without client support, an increase in
-> > the default in NFSD doesn't mean anything. Rick, Anna, Roland?
-> Although it has not seen much testing, it is possible to do a > 1Mbyte NF=
-Sv4
-> mount in FreeBSD.
-> For a 2Mbyte mount, (the only size > 1Mbyte I've tried) the settings woul=
-d be..
-> In /boot/loader.conf
-> kern.maxphys=3D2097152
-> vfs.maxbcachebuf=3D2097152
->
-> and in /etc/sysctl.conf
-> kern.ipc.maxsockbuf=3D9455616
->
-> Then a mount will use 2Mbytes if the server supports it.
 
-How can I verify that the FreeBSD NFSv4 nfsd now uses 2M for NFS buffers?
+On Tue, May 12, 2026, at 5:47 AM, Lionel Cons wrote:
+> Are there suggestions on how to reduce Linux nfsd I/O latency on
+> BTRFS?
 
-Ced
---=20
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+For us mere humans, the first step is you need to root-cause
+your issue. But consider using an LLM to help you with this
+process.
+
+Example questions to guide your analysis:
+ - What particular NFS operations are taking too long?
+ - How full is your exported file system?
+ - What backing storage is in use, and what mount options?
+ - What transport (TCP? RDMA?)
+ - How much server CPU is available when the it appears slow?
+ - If you are using NFSv4, are there other clients that emit
+   conflicting OPENs and LOCKs?
+
+Then, can you post some metrics?
+
+
+-- 
+Chuck Lever
 
