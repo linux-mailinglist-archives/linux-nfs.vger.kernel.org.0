@@ -1,182 +1,155 @@
-Return-Path: <linux-nfs+bounces-21520-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21521-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oLsuOUlIA2pU2wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21520-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 17:33:29 +0200
+	id xxNNEKxVA2qQ4wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21521-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:30:36 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6E86523B46
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 17:33:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A48B524B45
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:30:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AAF263020282
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 14:53:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1C474303FA86
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:12:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88013351C1E;
-	Tue, 12 May 2026 14:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CDAD3C4163;
+	Tue, 12 May 2026 16:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvR+Ov4U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSo+SVnz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA9F25393B
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 14:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778597594; cv=pass; b=NZoGyt8Pne1d4CPRdexzZ++IyQL0f1mJF06/zBDAgHRHUYjBEZx30Qms6lk712OnXOkao46TPN9Uu32/1cYXqgCxvHpU/jlNzEAZCG5t5Ry58qcN2HTCJ4r8gEElxuzKSc46iRoyF/W6Pr3nta76l+AylCaHvmus7AiEWikbZl4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778597594; c=relaxed/simple;
-	bh=jgtpwFi84cNuoVnLUljwGuqxomTVQp9ophGRsGCXtQA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Y4Dn3LC8uFMbG5+DmqBWIOSpoAIncj7GIhj0kdpQOiC/E5eprQqJFxZFZ8+/r2JOmFNkPiUPwvbV4RJsUn5U0oTa32hKHW3VUOuZevMEyhkh23k0kIFKxdNzuc+F0ucqr2vVrDEdNOxriQNQlkANRrWArFIpVb5KJ5vWYZqQb0g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FvR+Ov4U; arc=pass smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ba7a1cc0380so1006979366b.2
-        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 07:53:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778597591; cv=none;
-        d=google.com; s=arc-20240605;
-        b=NVBtTg5mm0Rd+/1GFLkmongPir7uoP5VqZVpeKY1t21BhWCk2LgPekZSunvB5/47D0
-         Gfe6Ay+preoqxWl5Dz3wc3wJJr1RMlVdY6KnP4boe0lnXnCv8r2roIhF4JyXO8ZRkW47
-         BOjil6KwvHPFf8xQSIw3u5Eu9wr3r8iYHpDutghgxGD4/Vjjq2jfRij356MqmAqjjwyg
-         gImo4w5lU0iovsyxd5H4dJeINXe81zK6ai5MBSmypNbPAeywBruGyJhw1FlgAHhzQgxt
-         nb8ArQVWDIIcOBLjIfPG5jbQBzsIvqN/yVIj4WYVwSnSB8lLRnJZIlfzM+idEuPPfQuO
-         R56w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :dkim-signature;
-        bh=uGGIQQ3tibxgLl77CAzbWKZ0+3Uj5OHlsxKzoh8hPI0=;
-        fh=A6VhHI7NKHnmfjjs9vgKiwsl8TnYIjA9XaJXQoRXXsA=;
-        b=Ta6EdOpdUo5RoEUQAQOnbRnrhCAsZIxL1QWvYnBOHV6Dy2ZOnZUVoOL/Xn7+a56H2t
-         /CYBjtOIEYXsPChVCMb9RjsYhwvstldNc27dWV61iyxVYMeiOsu3qFmtS3BNXRIDC6OE
-         vnrNsBUOSHbzl6GdbjRRnmBULdsQBMSAZog/Przn2PIkdOyKk8TNNAfdE8I2kXzhrnWd
-         uvtIWGV4LY8W0hTg14OUqd2Rdw8/UA6qVomu1M1VX7rV3ij4E3G0bnJeJV8nDSs4NC/j
-         YVaSmMkv7mdzDeNIZARSmd+l0GOnTooTaUy0QAy1JSIV+TaOkPvXv0w4+yLTQd7mrzx7
-         rHTg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778597591; x=1779202391; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uGGIQQ3tibxgLl77CAzbWKZ0+3Uj5OHlsxKzoh8hPI0=;
-        b=FvR+Ov4UNA4J0gRZEyzFDH/lxHK+6KWjrml7+A92A7FM/qHSQqIiiUpIlo/GVJ+RyF
-         j9SKkAruPXcJhHBP2gh6bBfukaY/s0kq2MKidefRrA7/LaQTwoTRsCGj0Yl68p2hVXDi
-         lfs9ucOrJX7CZsS5QZdC8hv2q8ZA4kpNqLmm16x1d6BJdcVab2GVqjRr0BP7zemH1ay0
-         3xP6MlUIQdh99/Dfc3WSX0q/a7M0dzd36dKR7djteCN5q9qCtPjDRzltHFS8Ay11o3kp
-         5es4keBcTigB5jHXVL0o/q8f6Xtu1G6OzVYb+F7PCv/j7X6mpOV73R4/uIkdtf2dampB
-         jNTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778597591; x=1779202391;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uGGIQQ3tibxgLl77CAzbWKZ0+3Uj5OHlsxKzoh8hPI0=;
-        b=WI5sloJrGp/vbs9G2nbMRPFHx0FXHAd2zY6V51R1xlU9okswNLX7CDDKfFC7t6M3F+
-         25eJccsv18DhhyApd5dkjIBKjkuLkbZTvyE7L1IQVwTHoYdoOrghjpk2SVYmWsCvIuqE
-         ZqZ/De/eD85Z9JI5LnuRnhTPJcNnB6h78f6UI12/Z9qhE9ekUYwjaHpYTGrgXSNtZJ/W
-         yZ8ozMKyx2/l7wblpzXLxwoOldOP4x0LnhUgFMIB9w2bH6sQb9XosaekyAdvTajQoDV3
-         B/tuNTiAPfC66qB10S0whiw+s1/Jv7bGzYn6u933fyNEEXzm+ub2gk0eXHaXl9tBAsvj
-         p7sg==
-X-Gm-Message-State: AOJu0YyZ/ru8rxLiOGIu26LyqPWrEdj4jc1x642ial66+n3TnDZi1lwO
-	Hqv/Wkx8G4ON5MxgYYF6yMlhyHQ+vMT5erR0S+6hgsbisThaoOFslW8roP8tDLpWU7WLgSbtJ4i
-	UGFfdT6nxx5HDNlxqtsS8BN0TTmUYolsfzaFph2g=
-X-Gm-Gg: Acq92OHs81eRtMOC8EyhBIKKtd/ARluhkIum8cZMBH24tKc/s5UsiWm+xxAeQD41dq3
-	hI1FXjKGdWbomwwe2Gk4hTndpoYDYgSnZHoBi7YpAlzfV5RyH3DvFPZY8CDsyc+IH0y7n3GhzxN
-	SQZGzYyM7vuKfK8y+lrgGkJrifn6yCPk6uINTYe7xjRJPSfyPWTTbrjbJRg8vNZQ5JtbY6Dm/qC
-	DW14K+wHBGHKnfgtX31zL8J+3UqVzwDY7PIrmOtT5ByEqtROB7oJITj0IQZkLsGsL5Et6sVMR/i
-	am6a9mQ=
-X-Received: by 2002:a17:907:60cc:b0:bca:2757:d93 with SMTP id
- a640c23a62f3a-bd28f8a4842mr207316366b.36.1778597590900; Tue, 12 May 2026
- 07:53:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7323C3C98B5;
+	Tue, 12 May 2026 16:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778602377; cv=none; b=LPrBMr/a2Yzl/YQWD4yAcOo2KOIRDK04CguRH2+FyYlxPiJ/7hd0c8eYut/BtWnoehBVOybAirD/tBTPDKOC0wAEJPM4i99wandxOZa1AgKnx5whEPSHiFSXsf/93ok4016tgSv82vXDHp9zwgX8SfgetJnpPhtyKpz/INukg7Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778602377; c=relaxed/simple;
+	bh=WZuJNG4sAbNnb7qhDzdMYy4rzXjxDjXnI5ZzLQR+0YI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q1U7ISEbofa1uenRpTFP7zcFNJeD7KSf93BHod/ccJZvb4EKOyqCnjfTagOrbLgiaZZYtVl3igySxeGhcs/fI3kWh/2DzCAHdCgCoy1N5kGFuS8hYRM4IhbIYeSpGWWax/8b1S1j5ubEuFF9Wd8uz5OtM2p0AYz8W/Kz0690smQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSo+SVnz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FCBC2BCB0;
+	Tue, 12 May 2026 16:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778602376;
+	bh=WZuJNG4sAbNnb7qhDzdMYy4rzXjxDjXnI5ZzLQR+0YI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=WSo+SVnzjHZjGwrPkMA+qBzRAenvW+wDFNgBE222k9ZxbbacKkXisqRf/OsjWmgk3
+	 91Rc7aUJo15HSN+OQkqBqmc6TgP+SGj4lmdsTiSRJmfJPZOSzRHpgbirCniUp4SGos
+	 ssRSNVbClH2sS6h0zs5lljyn3WBzs9UwRp41bK11sotzYhgX/vG7WfclKpgxA8CwX6
+	 RVvZUDbVeXqoW5DGM0WI7ifwphVAiNFQfhvD4uZO8ONQxC2B1pdvb1z9dM0hntT6Li
+	 5fPE+2DSC7CP7SEqgdeqtdsUqiBFbnVZSHFJYGX7xdOpuKnjdXLaVlaD5lTNxiOdDI
+	 zBK9iMeosi/Pg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/4] nfs: remove the fileid field from struct nfs_inode
+Date: Tue, 12 May 2026 12:12:41 -0400
+Message-Id: <20260512-nfsino-v1-0-284720522f4c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPJSo4XdpOu_yNGpbMMQ0hAO+mdOy2-TsEke_vHGm60k6jp2Bw@mail.gmail.com>
- <e44aa868-5ec8-4c35-b5bc-5066487a28be@app.fastmail.com>
-In-Reply-To: <e44aa868-5ec8-4c35-b5bc-5066487a28be@app.fastmail.com>
-From: Lionel Cons <lionelcons1972@gmail.com>
-Date: Tue, 12 May 2026 16:52:34 +0200
-X-Gm-Features: AVHnY4Ke7LhZqpnn6OcEqeqEYDI8oI2qM_TF6wgyIHitoik_XT9moadTwwGWSsU
-Message-ID: <CAPJSo4UFrWbuC1hKNg8oxnJtSZAE=xEVv5T_UfuSOP1uZgeQEA@mail.gmail.com>
-Subject: Re: Suggestions to drastically reduce Linux nfsd I/O latency on BTRFS?
-To: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: E6E86523B46
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDU0Mj3by04sy8fF3DNMtEi+REozTj1BQloOKCotS0zAqwQdGxtbUAkDd
+ y8lgAAAA=
+X-Change-ID: 20260512-nfsino-1f9a8ca2f3ed
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1804; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=WZuJNG4sAbNnb7qhDzdMYy4rzXjxDjXnI5ZzLQR+0YI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqA1GCw938TFXNR/pLhPB/pxtAh2CDRxoTyMjb5
+ ojVkMeWhZqJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCagNRggAKCRAADmhBGVaC
+ FReTEAC66J2no++XHfJVdEIvu3gFqKV74c8nIzAw79+lUVpT2TVrU4uLxteLAZjh828QzjwoEE+
+ YxOKZ3H62JZJUFy804mCsP1T69B26VYgvLV+0kgm4F1IATbikCXLbaW7J/hyUG4Nn1bnZijHQYJ
+ 2i8nXDf44K1dX5J6rUyf/bxoVpX4eWwG1k0jLRx1AkNvC+xrbKMGZefU7RLklUVySqqlIU5gMEm
+ QI2SowvFFUHAeV5gYGMBsZcD60BCovgfShCjEQk87rdfqLjGpSnUOPHAZFDOdPcF90QA87wH0PV
+ hzvRCS49+8HGfmthUpkFVZQpdQnA4KUHG2th41aEuVcczPElD73J69kBeAAFYTYNrWCbP4ETheY
+ +EbF5VpLYltkoBKgic8lc9lJTbTiVUwoOJEGvkk7ZDDi/DTZx1QRKgTKz+464FxdQ6Y8a1pbCxH
+ zLRYpzwQF+xMiRJWzWJJdj9sUfd5USijrUkdJMOQPe9jE2ogBdCJsjKHKqIJiRgkGB7G2B4S43I
+ f5EuKQSok5tPLCTQW1FN9fYnTedhPZv3/sh6a7XKjGdEtj84rooEJW69y1amJbj6AzXWl6Mu87p
+ e5EYeGRqREqA5fy1OkxySLDKldhgW3iTCzbwBmApvUy4yTpZaUDvQUSHAVMQJ+fSWHRca+4VHkK
+ cxnzkznlX8tpQFQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Rspamd-Queue-Id: 6A48B524B45
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21521-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_ALL(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21520-lists,linux-nfs=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_ONE(0.00)[1];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lionelcons1972@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Tue, 12 May 2026 at 15:23, Chuck Lever <cel@kernel.org> wrote:
->
->
-> On Tue, May 12, 2026, at 5:47 AM, Lionel Cons wrote:
-> > Are there suggestions on how to reduce Linux nfsd I/O latency on
-> > BTRFS?
->
-> For us mere humans, the first step is you need to root-cause
-> your issue. But consider using an LLM to help you with this
-> process.
->
-> Example questions to guide your analysis:
->  - What particular NFS operations are taking too long?
+v7.1-rc1 contains patches to make inode->i_ino to be a u64. With this
+change, there is no need to keep a separate "fileid" field in struct
+nfs_inode.
 
-Read, Write, issued to serve single-file disk images with bhyve and qemu
+This patchset eliminiates that field, and the inode number hashing
+machinery that is no longer needed. This shaves 8 bytes off of each
+nfs_inode.
 
->  - How full is your exported file system?
+Trond/Anna: please consider this for v7.2.
 
-9% full, 2 PiB total size
+Assisted-by: Claude:claude-opus-4-6
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (4):
+      nfs: store the full NFS fileid in inode->i_ino
+      nfs: remove nfs_compat_user_ino64() and deprecate enable_ino64
+      nfs: replace NFS_FILEID() and nfsi->fileid with inode->i_ino
+      nfs: remove fileid field from struct nfs_inode
 
->  - What backing storage is in use, and what mount options?
+ Documentation/admin-guide/kernel-parameters.txt |  7 --
+ fs/nfs/dir.c                                    |  4 +-
+ fs/nfs/export.c                                 |  6 +-
+ fs/nfs/filelayout/filelayout.c                  |  4 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c          |  6 +-
+ fs/nfs/inode.c                                  | 87 +++++++++----------------
+ fs/nfs/nfs4proc.c                               |  4 +-
+ fs/nfs/nfs4trace.h                              | 79 ++++++++++------------
+ fs/nfs/nfstrace.h                               | 84 ++++++++++++------------
+ fs/nfs/pagelist.c                               |  2 +-
+ fs/nfs/pnfs.c                                   |  2 +-
+ fs/nfs/unlink.c                                 |  2 +-
+ fs/nfs/write.c                                  |  2 +-
+ include/linux/nfs_fs.h                          | 25 -------
+ 14 files changed, 123 insertions(+), 191 deletions(-)
+---
+base-commit: 5d6919055dec134de3c40167a490f33c74c12581
+change-id: 20260512-nfsino-1f9a8ca2f3ed
 
-Very, very big hardware RAID0 with battery-backed ram cache, shows up
-as one single SCSI disk
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
->  - What transport (TCP? RDMA?)
-
-TCP6
-
->  - How much server CPU is available when the it appears slow?
-
-64 CPU cores, 512GB RAM
-
->  - If you are using NFSv4, are there other clients that emit
->    conflicting OPENs and LOCKs?
-
-No, just read and write are slower, compared to doing the same setup
-with something like ISCSI.
-
-Lionel
 
