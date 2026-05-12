@@ -1,287 +1,187 @@
-Return-Path: <linux-nfs+bounces-21512-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21513-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EA5ODBMiA2r10gEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21512-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 14:50:27 +0200
+	id CB0nNps3A2p31wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21513-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:22:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 841E35206EA
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 14:50:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D7B25224F5
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:22:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47F1F31496CB
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 12:44:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 82FD63557BD3
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 13:23:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5135E3911AA;
-	Tue, 12 May 2026 12:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CED3E1720;
+	Tue, 12 May 2026 13:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="t4jNkOJT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkRjBjP3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C704390617
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 12:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778589389; cv=none; b=ravN7FTp++iuudRz5s1NdcJeI1CIsqstK7JWR2j9V2h/mhUk4JWpTp7bPFqQPv2H/ApszDxrSH4tTXqHE3DL201pvExCy2ZpfGogBAkNTX5SzwkDAn/NYyo+s68/PkcSdzdZSgktQxy1egKjVNT2Burgyoc8L9MBOXedzQgIyBw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778589389; c=relaxed/simple;
-	bh=/Yp7bcnpJtCMNSyK1nlTSmp61TbMvG0wLqpOVmk4WyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=I6gNUxY1/hsfji3AjMB5tOEHzgDYwqfM2g8gG3DVnb9GLsTugQ5pIMmAZaW7S8zRGvxLLlRV/yPiyRFnTSmAxwlzorWHKDgfUxyX/ijD8r5I9AqJTD4fWK9CT9bXEhlj+5KFub6G64Qy6NIPBT1nxLq83I4D6C4UVJ5JXnCTpCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=t4jNkOJT; arc=none smtp.client-ip=113.46.200.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=4QL9GvonmrGEdxwl/phufvuCuJoq8lcKFz3trUkaD+o=;
-	b=t4jNkOJT35kKGH4WFj9GVeyndVSFgMz/TwcQQwaNOU7Ad6fIFFgpLTL6tKdJzswxKHSpsARZm
-	Cn5ARQtja/l0JA1fN4cEk/PRkCtfKi77SU0D+cQPpYZZZBmTiHgm6FnDsFIdiyDNxzIjxl+5tLU
-	b+yz/8aom+ysXnwZfE2SOQ0=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gFG8p1bkxzLlSk;
-	Tue, 12 May 2026 20:28:26 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4F584402AB;
-	Tue, 12 May 2026 20:36:02 +0800 (CST)
-Received: from [10.174.176.240] (10.174.176.240) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Tue, 12 May 2026 20:36:01 +0800
-Message-ID: <34c46a7c-14e7-4966-bec3-060e26ca08d7@huawei.com>
-Date: Tue, 12 May 2026 20:36:00 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CA237DAD7
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 13:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778591941; cv=pass; b=k4AdxC6sO0NBF/ozXwl3MqPvDUyaB18HvatUcTIdri+es/nLZj70n/OinVTV+MqCOg5pzmv1UjxZCcAzPLBgvgT5zMw18DJuisrmKFnj1EJJHCc6o6ocshCq2D01JO13TCuMJ7Htn7ZfyeblU88Raz/ubxAO7QolDOZZE+gxG5c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778591941; c=relaxed/simple;
+	bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=dl3hvrZfzW6PqO86F6/6T59WTIOKLyS7x4YbvkNRRukAdypbkIuaus6fM6/LHpwG5iJ+i1FOHRtoXihipUzn1vKazCHiqE2ObIHDRi3JYEWJ8zwhgs3jIvgra05b1bKWQ6AYRnexghQOUP7EleOgytTJvSwqgzCWPBRXtwkPs9o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkRjBjP3; arc=pass smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7e36bb16a92so2067357a34.2
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 06:18:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778591939; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CH+u72e1SEGZTsExvGCcCdqc6pBj+eeXDQc9cqavteW2MuHQYJWdMaRMYlZUQcD+/i
+         xLdxYJaCaI32D4hnXP/WgnQ35nm06AiX7W57+kIgt0HHNj2QnDyu3zSrIEMUmWMwzkZS
+         dl52sNAW8LkgA3qXoDy6nSKGYQ5VRrG7FStUYMcJsf7FW3OUuU8rQ3twb9jXWZidixNG
+         7NK1LkgS+hemmWGdStR4FkXlcH475kFDo17T6Fz4Z3Lazv/5euq36YIVyv04iPJ3aQTd
+         6tTSbOVxI/+CLJzjWZtV7d20SUXYhLX3wWlOT/QWsxMXkfL2Fi+WNSvhdW8QI9pWx8zM
+         YNOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
+        fh=MzBoCUgZTosw1TMwZ6rD7xUaRcA3oruvJ+IB5AFPiog=;
+        b=j5BLs4P9/YETPzdF+RUQiuI38uq2YIYZ7LNwKtFZRObB3mg5skap+0aiOnT//Puyks
+         dr0c9ONz0DIT59eRoVT7RuuVJ9j/g3xqwHo1LEas4jvTQdO8bj4JASTNdrBNlj1a1pB8
+         SnmjwzQmDvWiTbjLdAx5pf9xqVsEdNtu3HOJEqA3P4GlZL0LrdjTeUnIZ9VETdtzv2Cu
+         JiHlB/csFUnUA24rSlRii1Hh9lUFeX9PJ9HgdEl4HeEG2ibgBOhCGGiylX89YJ0jJHl9
+         JjhpgDHX3uOBz26Jdzcr42Qdg5i+VclEkI+iAPFpC/cp6FJ97p8IuITo/IjXNMNSb2oT
+         Ztpg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778591939; x=1779196739; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
+        b=FkRjBjP3qQD6vEPtt/efH3V8RpFETmM+AwgHZFQvqsR9BqU19Oa0kCjkjJnXtCowbg
+         uTcxX87VJGYupjkaBW/P0ktkZLO4nZE6jMF+jZudqnOL7QsJ9+KyMej+rit29SAVXsGv
+         +hVUFZVTE9HdhloctUVimbPXp2jhTqwwqyJhEhsD6k/7pbzzQdNGE5kaRvBkDkegNrXm
+         UN5KK3qxXxd79IAAAXmiu39MtYfpcVxBjWXbM7+U75D31JPF91eNhJu0UmAIWgZK9Uhz
+         Tmy+S/PHQSpiLArLwi/qAwBfUkAkweLVKUsglSf+W1Sd+R3hX+q6EI/vfbFW5Al7efKb
+         35BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778591939; x=1779196739;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4IeInsZ/n2uK48CMRJM5tqogXIZ/5tgK9rWfJ3UdsMo=;
+        b=pY4USnQtcQZS1ic/D6YW4VHdo5GdCzgtVK+kXkJSkH45Hm92IzPniV8CwJN1zS87tz
+         HXlRAKCoVvnGYBSu2oZFVReGmTH7uPp5SALNbEYf4jZPsmNeREvCtXaB6VB+nzUjF+Mr
+         WO8VD2LUZbu5Y59FHYnZ9X06YonHHBYZplORr/e5zib2TleIDaA1Ul+65/LB2Vu1PxwD
+         S1DDwFhRtUF6bTMaBuD9ujYhI2Pu+ITX4uKNZTTNo0JzTjrVVCIXFnHydDn+vEh9HLQ9
+         F1Lm1nQIYZSt4vyA0V7KEBr66/Tp7UJMLEAqSgoP2cJ5gR0EoBz2kUxGl/Ps3+M0SHVK
+         5XIA==
+X-Forwarded-Encrypted: i=1; AFNElJ8kcmNc/8E9aupAS22a9xSNYanvpu/2AuMna2sa8+Ve3kx4d/xT5+pD9wmHtLLf85n0iogaYH2XFaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDWE1Q4ypxWTmUcL2nhb4lpgiP0Wi2HyFJ95wiztUD9RyNb0+W
+	ePv/Qxz5VmpjGoEqew5QX+sU0Heh0tylZvPBWACMXpTUdnXr1gF2og0MPKDHg8zJf3IUgQVimwK
+	Ipmpib4eeds5PPqwiR6QjZKn4T8OBJGmRyQ==
+X-Gm-Gg: Acq92OFBZ+mOUlMxgRVyvLpDv0hIRiB29JcsUfs7VriL9itjGheblenr4ZhjEQXvGrX
+	31b1P/x1XrbFV8Fr6r0yFPeyx6QvopxdyATZuq8rBgMkF3kAiZBGlJ/QS8ClKpJlyiNgJ/qIYr1
+	C+Z3i/XzlKfK+Mt3GIdKnLCPd1A6UW769HP0L+oJRK0dZWk4fU19aU5OpE7HnE+68wr1iWJUEgo
+	8ZLlFnfv6pe49G/iULICwogSodIWmjafEYsYqorz90oXT5wmfR1dZ/iuuALnCgnPLt/wdcI/muf
+	E3LOY6s=
+X-Received: by 2002:a05:6830:378a:b0:7dc:e37b:b5d3 with SMTP id
+ 46e09a7af769-7e1deecda2fmr17165119a34.7.1778591938923; Tue, 12 May 2026
+ 06:18:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "NFSD: Defer sub-object cleanup in export put
- callbacks"
-To: Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huaweicloud.com>,
-	<chuck.lever@oracle.com>, <misanjum@linux.ibm.com>, <neil@brown.name>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>
-CC: <linux-nfs@vger.kernel.org>, <yi.zhang@huawei.com>,
-	<chengzhihao1@huawei.com>, <lilingfeng3@huawei.com>
-References: <20260512023322.2828939-1-yangerkun@huawei.com>
- <a6c66164d75e6cfa530892b9f5f25ab9d677a9fa.camel@kernel.org>
- <5701706a-6a54-4bcb-a2ce-83eac3d4b715@huaweicloud.com>
- <da2da3a188b1823bad89e876001a5281351d8eb7.camel@kernel.org>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <da2da3a188b1823bad89e876001a5281351d8eb7.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemf100006.china.huawei.com (7.202.181.220)
-X-Rspamd-Queue-Id: 841E35206EA
+References: <CALXu0UdOR8mVr=8pwNP95FnOsOk1w1A2=DcayKk3YnDfS+PzUA@mail.gmail.com>
+ <5acaa8e7-0691-4cbd-b501-c26831a7be81@app.fastmail.com> <CAM5tNy7GG0awNYYJWv0968e5CMoUstr0GcrNwuNKP4x3Yrp3JQ@mail.gmail.com>
+In-Reply-To: <CAM5tNy7GG0awNYYJWv0968e5CMoUstr0GcrNwuNKP4x3Yrp3JQ@mail.gmail.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Tue, 12 May 2026 15:18:00 +0200
+X-Gm-Features: AVHnY4J4-ZNCmEFD4f9QkUevBdi0g7HXLL98QKC94zDZH-Up3R_AKybze21AMy0
+Message-ID: <CALXu0UckL3YYXVLz5Qn0shoZ+TU8uOxRy2FCpL5mAhLniinJyg@mail.gmail.com>
+Subject: Increase FreeBSD NFSv4 nfsd buffer size? Re: Increase default NFSv4
+ server size "max_block_size" to 4MB
+To: Rick Macklem <rick.macklem@gmail.com>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, freebsd-hackers@freebsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 3D7B25224F5
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-21512-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
+	TAGGED_FROM(0.00)[bounces-21513-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org,freebsd.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cedricblancher@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,huawei.com:mid,huawei.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	SUBJECT_HAS_QUESTION(0.00)[]
 X-Rspamd-Action: no action
 
+On Tue, 17 Mar 2026 at 00:35, Rick Macklem <rick.macklem@gmail.com> wrote:
+>
+> On Mon, Mar 16, 2026 at 5:41=E2=80=AFAM Chuck Lever <cel@kernel.org> wrot=
+e:
+> >
+> >
+> > On Mon, Mar 16, 2026, at 3:51 AM, Cedric Blancher wrote:
+> > > As debated a while ago, can the default NFSv4 server size for
+> > > "max_block_size" be increased to 4MB, please?
+> >
+> > There is an administrative setting to raise this limit for
+> > recent versions of the kernel. Can you report your experience
+> > when you raise the limit? Hiccups, performance issues, etc? I
+> > would kind of like this exercise to be data-driven.
+> >
+> > What is still unknown to me is which NFS client implementations
+> > can support 4MB or 8MB. Without client support, an increase in
+> > the default in NFSD doesn't mean anything. Rick, Anna, Roland?
+> Although it has not seen much testing, it is possible to do a > 1Mbyte NF=
+Sv4
+> mount in FreeBSD.
+> For a 2Mbyte mount, (the only size > 1Mbyte I've tried) the settings woul=
+d be..
+> In /boot/loader.conf
+> kern.maxphys=3D2097152
+> vfs.maxbcachebuf=3D2097152
+>
+> and in /etc/sysctl.conf
+> kern.ipc.maxsockbuf=3D9455616
+>
+> Then a mount will use 2Mbytes if the server supports it.
 
+How can I verify that the FreeBSD NFSv4 nfsd now uses 2M for NFS buffers?
 
-在 2026/5/12 20:30, Jeff Layton 写道:
-> On Tue, 2026-05-12 at 20:19 +0800, yangerkun wrote:
->> Hi Jeff,
->>
->> 在 2026/5/12 19:25, Jeff Layton 写道:
->>> On Tue, 2026-05-12 at 10:33 +0800, Yang Erkun wrote:
->>>> This reverts commit 48db892356d6cb80f6942885545de4a6dd8d2a29.
->>>>
->>>> Commit 48db892356d6 ("NFSD: Defer sub-object cleanup in export put
->>>> callbacks") describes an issue where calling svc_export_put, path_put,
->>>> and auth_domain_put directly can cause use-after-free (UAF) errors when
->>>> accessing ex_path or ex_client->name. However, after discussion in [1],
->>>> it is clear that commit e7fcf179b82d ("NFSD: Hold net reference for the
->>>> lifetime of /proc/fs/nfs/exports fd") actually resolves this problem.
->>>>
->>>> Additionally, commit 48db892356d6 ("NFSD: Defer sub-object cleanup in
->>>> export put callbacks") introduces a regression that was already fixed by
->>>> commit 69d803c40ede ("nfsd: Revert "nfsd: release svc_expkey/svc_export
->>>> with rcu_work""). Therefore, reverting commit 48db892356d6 ("NFSD: Defer
->>>> sub-object cleanup in export put callbacks") is necessary to fix this
->>>> regression.
->>>>
->>>> Link: https://lore.kernel.org/all/10019b42-4589-4f9f-8d5b-d8197db1ce3c@huawei.com/ [1]
->>>> Fixes: 48db892356d6 ("NFSD: Defer sub-object cleanup in export put callbacks")
->>>> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
->>>> ---
->>>>    fs/nfsd/export.c | 63 +++++++-----------------------------------------
->>>>    fs/nfsd/export.h |  7 ++----
->>>>    fs/nfsd/nfsctl.c |  8 +-----
->>>>    3 files changed, 12 insertions(+), 66 deletions(-)
->>>>
->>>
->>> The LLMs don't seem to agree that this is safe:
->>>
->>> commit (not yet applied)
->>> Author: Yang Erkun <yangerkun@huawei.com>
->>>
->>> Revert "NFSD: Defer sub-object cleanup in export put callbacks"
->>>
->>> This reverts commit 48db892356d6. The commit message states that
->>> e7fcf179b82d resolves the underlying UAF and that the reverted
->>> commit re-introduces an umount regression fixed by 69d803c40ede.
->>>
->>> Link: https://lore.kernel.org/all/10019b42-4589-4f9f-8d5b-d8197db1ce3c@huawei.com/
->>>
->>>> This reverts commit 48db892356d6cb80f6942885545de4a6dd8d2a29.
->>>>
->>>> Commit 48db892356d6 ("NFSD: Defer sub-object cleanup in export put
->>>> callbacks") describes an issue where calling svc_export_put, path_put,
->>>> and auth_domain_put directly can cause use-after-free (UAF) errors when
->>>> accessing ex_path or ex_client->name. However, after discussion in [1],
->>>> it is clear that commit e7fcf179b82d ("NFSD: Hold net reference for the
->>>> lifetime of /proc/fs/nfs/exports fd") actually resolves this problem.
->>>
->>> Is this accurate?  Commit e7fcf179b82d holds a net reference for the
->>> lifetime of the /proc/fs/nfs/exports file descriptor.  This prevents
->>> nfsd_net_exit() from calling nfsd_export_shutdown() while the exports
->>> fd is open, keeping the cache_detail alive.
->>
->> Yes.
->>
->>>
->>> But the UAF described in 48db892356d6 is a different problem.
->>> cache_clean() periodically removes expired entries from the hash table
->>> via sunrpc_begin_cache_remove_entry() and drops their reference via
->>> cache_put().  If that was the last reference, svc_export_put() runs
->>> and frees sub-objects.
->>
->> Yes.
->>
->>>
->>> Meanwhile, c_show() and e_show() iterate cache entries under
->>> rcu_read_lock() without holding a reference.  Specifically, c_show()
->>> unconditionally calls cd->cache_show():
->>>
->>> net/sunrpc/cache.c:c_show():
->>> 	if (cache_check_rcu(cd, cp, NULL))
->>> 		seq_puts(m, "# ");
->>> 	else if (cache_is_expired(cd, cp))
->>> 		seq_puts(m, "# ");
->>> 	return cd->cache_show(m, cd, cp);
->>>
->>> svc_export_show() then accesses both exp->ex_path via seq_path()
->>> and exp->ex_client->name via seq_escape().  expkey_show() similarly
->>> accesses ek->ek_client->name and ek->ek_path.
->>
->> Yes.
->>
->>>
->>> Commit e7fcf179b82d does not prevent cache_clean() from removing
->>> individual entries concurrently with these RCU readers.  It seems
->>
->> Yes.
->>
->>> like the claim in this commit message may be conflating two different
->>> problems.
->>
->> True, the msg describe here seems confused. That should change to:
->>
->> Commit 48db892356d6 ("NFSD: Defer sub-object cleanup in export put
->> callbacks") describes an issue where calling svc_export_put, path_put,
->> and auth_domain_put directly can cause use-after-free (UAF) errors when
->> accessing ex_path or ex_client->name. But after discussion in [1], it
->> seems cannot happen and either will introduce a gression that was
->> already fixed by commit 69d803c40ede ("nfsd: Revert "nfsd: release
->> svc_expkey/svc_export with rcu_work""). Therefore, reverting commit
->> 48db892356d6 ("NFSD: Defer sub-object cleanup in export put callbacks")
->> is necessary to fix this regression.
->>
->>
->>>
->>>> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
->>>> index 665153f1720e..0baa58d1dbfc 100644
->>>> --- a/fs/nfsd/export.c
->>>> +++ b/fs/nfsd/export.c
->>>
->>> [ ... ]
->>>
->>>> -static void expkey_release(struct work_struct *work)
->>>> +static void expkey_put(struct kref *ref)
->>>>    {
->>>> -	struct svc_expkey *key = container_of(to_rcu_work(work),
->>>> -					      struct svc_expkey, ek_rwork);
->>>> +	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
->>>>    	if (test_bit(CACHE_VALID, &key->h.flags) &&
->>>>    	    !test_bit(CACHE_NEGATIVE, &key->h.flags))
->>>>    		path_put(&key->ek_path);
->>>>    	auth_domain_put(key->ek_client);
->>>> -	kfree(key);
->>>> -}
->>>> -
->>>> -static void expkey_put(struct kref *ref)
->>>> -{
->>>> -	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
->>>> -
->>>> -	INIT_RCU_WORK(&key->ek_rwork, expkey_release);
->>>> -	queue_rcu_work(nfsd_export_wq, &key->ek_rwork);
->>>> +	kfree_rcu(key, ek_rcu);
->>>>    }
->>>
->>> With this change, path_put() and auth_domain_put() run immediately
->>> when the last reference is dropped, before the RCU grace period.
->>> kfree_rcu() only defers the kfree of the svc_expkey struct itself.
->>>
->>> If cache_clean() drops the last reference concurrently with an RCU
->>> reader in c_show() -> expkey_show(), the reader can access
->>> ek->ek_client->name after auth_domain_put() has freed the
->>> auth_domain, and can call seq_path(&ek->ek_path) after path_put()
->>> has freed the underlying dentry/mnt.  The rcu_read_lock() held by the
->>> reader prevents kfree_rcu() from freeing the struct, but does not
->>> prevent the direct path_put()/auth_domain_put() calls.
->>
->> Yes. It won't prevent the direct path_put/auth_domain_put calls.
->>
->>>
->>> Does this re-introduce the UAF that 48db892356d6 was fixing?
->>
->> No, something like release of dentry/mnt ek->ek_client->name all
->> protected will call_rcu(call_rcu(&dentry->d_rcu, __d_free) in
->> dentry_free, call_rcu(&mnt->mnt_rcu, delayed_free_vfsmnt) in
->> cleanup_mnt, call_rcu(&dom->rcu_head, svcauth_gss_domain_release_rcu) in
->> svcauth_gss_domain_release, call_rcu(&dom->rcu_head,
->> svcauth_unix_domain_release_rcu) in svcauth_unix_domain_release), so
->> rcu_read_lock/rcu_read_unlock for c_show/e_show can protect this trigger
->> UAF.
->>
-> 
-> Got it. Thanks for the explanation. In that case, I'm fine with
-> reverting this patch.
-> 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-
-Thanks a lot for your review!
-
-> 
-
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
