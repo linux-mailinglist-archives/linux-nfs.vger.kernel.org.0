@@ -1,128 +1,115 @@
-Return-Path: <linux-nfs+bounces-21498-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21499-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YHRIGmDWAmpXyAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21498-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:27:28 +0200
+	id QG1kAlfWAmpXyAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21499-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:27:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA55B51BCFB
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:27:27 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A146C51BCEC
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:27:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 76D4F304C884
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:20:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0C9A530817CA
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:21:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91AA47D932;
-	Tue, 12 May 2026 07:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soJoZRoM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987563FF88D;
+	Tue, 12 May 2026 07:20:33 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48547CC91;
-	Tue, 12 May 2026 07:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B6B379C5E;
+	Tue, 12 May 2026 07:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778570412; cv=none; b=p4V1VU4fVi7fAyUMaZiLHPGE9mdNOnI8bONJA16DtfT5jAJ6T4FSwaiIYgPgNukQArF12RAyxyej6bfZZentB03aOwFs85ob4ZG1+AlWMrcNbl/0UNtrl907KaGMstIGxPspmz+8n82EW+/Zt+DBJBUTELfubMp6BGKvG+HQmTk=
+	t=1778570432; cv=none; b=W0wNDpy7IWhlgxGAl4BUKSY5jP4NfI48FBVAdHdkk4sczHPWtiVdaM0ChFdyBG557c1+ZRa4Hy3v+5Zv8ypSjVEvGyu6IN5M+WHIiRPBjEiHfQRKYjcdmjeZu9oWiwjoXutb3IvUuAkD2wUC3c6/j+wX9bnJOdlAgHDFFH7vkmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778570412; c=relaxed/simple;
-	bh=gFxSwQ2vwNGN7Wy+a57I0BqMT4+uCuIw9JWDuf1wsoY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QbbTBFszi98X66wd3atleZW2H2RmTzj/MGXS99zHvZzi4HP6NMyMgPd83S8ROem1EcTb7Ok9WDjFAhyNsuX+43QmEwlnru3y60jYHt2uMKqB3j9deW5HaYiCV+vp3RLhI+e7o4JldlQ25DMdnoMJqudonZkFzNuJVhTvlsy/uCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soJoZRoM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06282C2BCB0;
-	Tue, 12 May 2026 07:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778570412;
-	bh=gFxSwQ2vwNGN7Wy+a57I0BqMT4+uCuIw9JWDuf1wsoY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=soJoZRoMxJtn9BFF3dpQwvk0xi820TNJfptJMtJX/cP/qNW+teYamRrcMVyhtuIf2
-	 iR30YL5xnlEO3jTCx2tpM77XOC5OsxBpMB1POJFpEuFKTdBQGIEvxGGPmqeJ32yTYY
-	 UA2xlPqKw+9LfjJN4MQdMcexmE51BlA+EqPHlH5f+sN6l+N2Pb4HNurNsKuKugTIio
-	 ole6921MHwRdIF7HBTc7tpfjCL6KBtD6BTBQ1Q6GwaBCiWuHWUGJB5v8Me5Q8cQ3NI
-	 Tq43OhBP9tdm5zD08MqoxYDF0J0eeB07AIqRJJSRbCGW+bEl8POIDqcxOUAfOS/yGy
-	 b9paE8zlD9+yw==
-Message-ID: <f157c318-790d-4931-bcc2-7b3c95c8c2b0@kernel.org>
-Date: Tue, 12 May 2026 16:20:05 +0900
+	s=arc-20240116; t=1778570432; c=relaxed/simple;
+	bh=WO5TyXSQt3jZoSF/CLHx8igk7yg6Gis1Q53sIKXHzJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=chrVct6NfREA0uQhR96K1D1wXwv6zcux6n7XQfglxQdmPnHv+L8tvutOMjgeukIF1QHO73BP+U9tZT+S1ihOPADkTcZcqLXXh/xPP+H5ybClbbrLIwNAMTus9VdzAngf4K/J5a97I0NgSqWbES9Mr88xXD1tWuhvM0dTBv4+ONk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id EB1E668B05; Tue, 12 May 2026 09:20:22 +0200 (CEST)
+Date: Tue, 12 May 2026 09:20:22 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, David Sterba <dsterba@suse.com>,
+	Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Hyunchul Lee <hyc.lee@gmail.com>, Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, linux-block@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org
+Subject: Re: [PATCH 01/12] swap: remove the maxpages variable in sys_swapon
+Message-ID: <20260512072022.GA32622@lst.de>
+References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-2-hch@lst.de> <03dddf72-8755-4ebf-ba79-456377f0f25d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/12] swap,block: move the block device swapon code into
- block/fops.c
-To: Christoph Hellwig <hch@lst.de>, Andrew Morton
- <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>
-Cc: Christian Brauner <brauner@kernel.org>,
- "Darrick J . Wong" <djwong@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- David Sterba <dsterba@suse.com>, Theodore Ts'o <tytso@mit.edu>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Namjae Jeon <linkinjeon@kernel.org>, Hyunchul Lee <hyc.lee@gmail.com>,
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
- Carlos Maiolino <cem@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>,
- linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-block@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org
-References: <20260512053625.2950900-1-hch@lst.de>
- <20260512053625.2950900-7-hch@lst.de>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20260512053625.2950900-7-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: BA55B51BCFB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03dddf72-8755-4ebf-ba79-456377f0f25d@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Rspamd-Queue-Id: A146C51BCEC
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21498-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21499-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
-	RCPT_COUNT_TWELVE(0.00)[29];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlemoal@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	FREEMAIL_CC(0.00)[lst.de,linux-foundation.org,kernel.org,tencent.com,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:email]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.985];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:mid]
 X-Rspamd-Action: no action
 
-On 5/12/26 14:35, Christoph Hellwig wrote:
-> Make use of the abstractions we have.  This is a preparation for
-> moving more special casing down into block/.
+On Tue, May 12, 2026 at 04:08:35PM +0900, Damien Le Moal wrote:
+> On 5/12/26 14:35, Christoph Hellwig wrote:
+> > Always use si->max which is updated setup_swap_extents instead of copying
+> > into and out of maxpages.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Checking mm/swapfile.c, I see s->max being set only in swapon(). Is this a typo
+> or am I misunderstanding this sentence ?
 
-Looks OK to me.
+It is updated by the file system methods or the generic implementation
+called by setup_swap_extents currently.  So the above is a bit imprecise.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+The next patch then removes this confusing update.
 
--- 
-Damien Le Moal
-Western Digital Research
 
