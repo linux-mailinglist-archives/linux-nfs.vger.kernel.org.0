@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21569-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21570-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yBmhE/1xA2q55wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21569-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:31:25 +0200
+	id CJ+hJTVuA2pS5wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21570-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:15:17 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B281B527B1C
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:31:24 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79CDC527232
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:15:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0CD5D330823E
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 814793067DF3
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E625534405B;
-	Tue, 12 May 2026 18:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB5AE37FF6F;
+	Tue, 12 May 2026 18:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+mRypNj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAnU2zuV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F5A343D9D
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FF6343D9D
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778609665; cv=none; b=DeViRBZL/P875pz0iECWz6Jy1CwARUYCwaM7qIuis4HKQDCiW0/Gt4obHzKZ5fD40YClWW6ZkHayuyuaGk+JtsVhJvPojHD7to8J4S+d+i8tCtL4IVlNmN5MlVFvHsHdSMDVOEv91HyhVQ5fFtdJuc4wRaHmZQgoeZ/k3I8bsJM=
+	t=1778609666; cv=none; b=j7FrJSOgjrgvwnpPs13KGz3dkPkQk+hkHrS4T6VzyNp2ikrXNUzJ0kMcdUPd23az3VkSbZvAsGFkQ8PWkVgNRgNQecXGcRsVwXo2mxDkeAnftNYfQNAP8a8M3MEWA1BsBtSoG4iwQPDjn40TkyVNpsaSWmfR701mkPU3c/n3gkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778609665; c=relaxed/simple;
-	bh=2zS2DJBb2GyUbCN00QUgXKSM3mLh45DzN46pqEicdOg=;
+	s=arc-20240116; t=1778609666; c=relaxed/simple;
+	bh=RNF9HlArEQCy9d+he5pqWrnpeOIzvNarWsVgJK6eGm8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WOJByv/fpQAI49sanML8sxlucc4nByIjSWQPr/dBcoAaOlniCCOY5DAvitxjKb40NPp8kS2l1KxCItcSV+aX94NI2yMwvAe2s4oaEyimnRtVSkS5piy8M6wFwpudxsxLqSTdb5S240bZh1gUYBKSsh4Uok7nT3nZ5dQCSmyGAQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+mRypNj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E094C2BCC7;
-	Tue, 12 May 2026 18:14:24 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=nh8ty9FIVtGs/wXtoe4/t6TlL7Tblt0wyugv9pbKUwTF4PlWguQ+ffbgQvQbpNmWpg2kYEcRnEdksxqirCSG4ABa2yducIXuGUZ/a20UnxunEjPsHgUCOA3kyOSdHr5ibU6Y8WeZLCXZcZnnHN9YyTBbOY7Ugyp2cFLiH4WSBVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAnU2zuV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF238C2BCB0;
+	Tue, 12 May 2026 18:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778609665;
-	bh=2zS2DJBb2GyUbCN00QUgXKSM3mLh45DzN46pqEicdOg=;
+	s=k20201202; t=1778609666;
+	bh=RNF9HlArEQCy9d+he5pqWrnpeOIzvNarWsVgJK6eGm8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=e+mRypNjYRJAaFjpU7C2TTujCkpNzdW66AKuE2a5Qh7dUI1VzYR0zEHZmGaRsw1Fs
-	 Aa8CJ55AAeGv+cvJSmsT+G8Wvtaos63uFdd0td5NVe0LoYPrp6vFdEvltbtQ/JGN+k
-	 k0Lk375qtk2ragnly/o51MG3fbzWLxT+Fivmv2rb8MpTA+LpLv+LHhp1KfXbrbhw/s
-	 fv5OkU+3HSOJ5jafRlnF+/9bW6XZhD6Ivk+53E5hvBgGydGZ/SiLYg4mmecgTsZq8h
-	 XwftfDMqWcbBe7oND6sTFHTdEBU7kjTbWyP7ZhOs7wKDEK8UFFy8jBpT/w9PQ/BmMb
-	 lvDcftTSLeuzw==
+	b=sAnU2zuVO4HKkBxLIaQ7PRztEkehzOsXrwDyGWJdjVwSIOhLRnsmT9pGnWhiLoApS
+	 Y3lwvpT81ncUY2Xq7Q+GopQC2FrRG2SifrW7BapsK5xpvcvO5Xt8bftsn5erelqnnI
+	 V+tQsxSSRTQzSkZIBkeIc8Bc+Ylds4mlaLueeTjqCkIUW+CM7rVH5nGdIl2uwsjFqC
+	 SlMZBMU4DuNhHaNpPlmEQLw+djG455gAlYRyx7rt4ILp9UcSE/0cfpmkVDDKfHNvZP
+	 +x9rDdLV1WAYP244kXoWGcnFPYhRFUqBvZDZBarSH9pefDuTUD6VviSi4NzdmyLRLi
+	 Dapx9p8IMbDNQ==
 From: Chuck Lever <cel@kernel.org>
-Date: Tue, 12 May 2026 14:14:04 -0400
-Subject: [PATCH 29/38] lockd: Use xdrgen XDR functions for the NLMv3
- GRANTED_RES procedure
+Date: Tue, 12 May 2026 14:14:05 -0400
+Subject: [PATCH 30/38] lockd: Use xdrgen XDR functions for the NLMv3
+ SM_NOTIFY procedure
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260512-nlm4-xdrgen-v1-29-19d99b2634b4@oracle.com>
+Message-Id: <20260512-nlm4-xdrgen-v1-30-19d99b2634b4@oracle.com>
 References: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 In-Reply-To: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -65,34 +65,34 @@ To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3450;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4876;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=UcSbVA6rXPYb4ISaLvwwF9XpynNmYINtVJUmxRW3tdk=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23msT8+VtLlMBqHYGiNWE3JDhkVFHJTCSd8j
- SSWMbctJySJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt5gAKCRAzarMzb2Z/
- lxS2D/9XQRk28NI6C3xBwp6QsxpwSrbUFn/FK2HralA2GJ8wMItQNW30oFHVNqZ9GMgQ/JmYjUc
- IXaW3KWrGVdFGMw7TPddk6tCG/nvKb4X6/jn4MZSyFLZbKgi1vyIIFQYnNxm5Ucso+NQt/j4Uf0
- onTrRJV7DtTcgB0TjnS3k0azlNh123UOLgDWO6awWajGn0gW/B4khzbIFq50Xpa0cwU8w7p6kgt
- 5Rz+rm8YJcSy9NMQv8BIBOcJhFDwjaX4/UvVYKnDu8llH0LxrVH4Cpug3bvou3C+PHC3cfJKTJc
- sxMokv4k+Ry4g2G5K0PeJcjADOvArAFxDqUkN8FZM/7ULtev6gbfejg360ep8aH0iaC3EmLuwMt
- R1mIAFMJDDqkJFWITCcvmFl3G563dA1XPQhHVrZfowDOjQx8amMbaJ+O/dDtIWEjC8DUyGCA1tV
- 7wg4ljTDt3sj6PnF0wvDRtg3J9gLnE44aBwtJkED3SOSi1X2RHDRQZdnJxlcthHqCFrVQ5+kHF+
- YKW1HCefrhI5yWUr/gg9osPz0RnjnPU+UBvQmdF/1rDxN4mMOVTHojma5FEEKLNTbYU0UQtiKbZ
- YUYjdjABQ1VRV/Ey8gbDTg0r5a7gQHgLGzxKFD1xZeS36Khj/LLJX95NcftcUUKvPkLEhIwEU/W
- wPwx0NVeXoF4fZw==
+ bh=4Qff39bteNlJK0/jwjcqyAi2jN1rOB8fJ51G+rxq5kY=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23mANZkwtpIJMjP3nMC9FtW7L16Q9HzAdN9X
+ AEgTNvyqC2JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt5gAKCRAzarMzb2Z/
+ l5z2D/42qiWBPbr2hTgqhIzjszkVBsmoQTo+PxXYZ97APjSrRdZOcg63m2wSKOmnrVC0nGcuTaC
+ G09IzSqU316sfEPRLnPzVih1kxcYsR0OwKYegT5qedb3JxzwqXQLmuFv5/pt4ZoR+bKhZ9CFnc5
+ 00Q6CO++wMah+u2cOPQH+VHfOaPmqMCA115utRzxxbuNN0pMMWAKVEGIrplToJ4k2M4tVDem3Nw
+ VFSPSK/9nCC3J1lqrqWDaf2C+rMpArp3WyaI/PPJyffi+2PID2kr45/f/jtJE8LRZjX3Xpu7gCG
+ l3i3pZe4ruymT/OWg68jGsIZIFr1C/m5GVASKHAJ2hViu4fvMOt95geEtDVJ25S0wBjF9EanF+r
+ N/+am3gX89eEo6XJ4jE/gXoALZTihbOUt7wkkvlNtA5nHpMkXHTVBigljklbgrmydXbGUJ/j7tU
+ hexPjyoA4opl4rSjhHmpZN4MZ30Z7Vie90jV1EuE+RzMBKMQ5OmU2MyrdsH518LEhbcCVb2zh0G
+ C3uZ7EYVZU+Ccf7TPtybB6TsIn3yugsFXUbMDXFge3M4mKPUnaKyTkGw5NgogqNyHTo1HoEfSP+
+ 2fy9QUB4tqNzJg9WQzKyq1h1CnLJkyBgoN5kP5b4tIYdeOVTQDdR8NLq3zW1m/IKgc98ePVt/OO
+ qWHasi5aprleCMA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: B281B527B1C
+X-Rspamd-Queue-Id: 79CDC527232
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21569-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21570-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -103,72 +103,98 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email,oracle.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Continue the xdrgen migration by converting NLMv3 GRANTED_RES,
-the callback that a remote NLM uses to return async GRANTED
-results to this lockd.  The procedure now uses
-nlm_svc_decode_nlm_res and nlm_svc_encode_void, generated
-from the NLM version 3 protocol specification.
+Continue the xdrgen migration by converting NLMv3 SM_NOTIFY,
+a private callback from statd to notify lockd when a remote
+host has rebooted.  The procedure now uses
+nlm_svc_decode_nlm_notifyargs and nlm_svc_encode_void,
+generated from the NLM version 3 protocol specification.
+
+A new struct nlm_notifyargs_wrapper bridges between the
+xdrgen-generated nlm_notifyargs and the lockd_reboot
+structure expected by nlm_host_rebooted().  The wrapper
+contains both the xdrgen-decoded arguments and a reboot
+field for the existing API.
 
 Setting pc_argzero to zero is safe because the generated
-decoder fills the argp->xdrgen subfields before the procedure
-runs, so the zeroing memset performed by the dispatch layer
-is no longer needed.
+decoder fills argp->xdrgen before the procedure runs, so
+the zeroing memset performed by the dispatch layer is no
+longer needed.
 
-Setting pc_xdrressize to XDR_void reflects that GRANTED_RES, as
-a callback, returns no data; the previous value of St
-over-reserved a status word in the reply buffer.
+Setting pc_xdrressize to XDR_void reflects that SM_NOTIFY
+returns no data; the previous value of St over-reserved a
+status word in the reply buffer.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svcproc.c | 60 +++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 34 insertions(+), 26 deletions(-)
+ fs/lockd/svcproc.c | 86 ++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 55 insertions(+), 31 deletions(-)
 
 diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index f17d3f8d85ec..a2ac747e96ce 100644
+index a2ac747e96ce..e0328dc89deb 100644
 --- a/fs/lockd/svcproc.c
 +++ b/fs/lockd/svcproc.c
-@@ -61,6 +61,7 @@ static_assert(offsetof(struct nlm_lockargs_wrapper, xdrgen) == 0);
+@@ -80,6 +80,13 @@ struct nlm_unlockargs_wrapper {
  
- struct nlm_res_wrapper {
- 	struct nlm_res			xdrgen;
-+	struct lockd_cookie		cookie;
- };
+ static_assert(offsetof(struct nlm_unlockargs_wrapper, xdrgen) == 0);
  
- static_assert(offsetof(struct nlm_res_wrapper, xdrgen) == 0);
-@@ -997,6 +998,30 @@ static __be32 nlmsvc_proc_granted_msg(struct svc_rqst *rqstp)
- 			       __nlmsvc_proc_granted_msg);
++struct nlm_notifyargs_wrapper {
++	struct nlm_notifyargs		xdrgen;
++	struct lockd_reboot		reboot;
++};
++
++static_assert(offsetof(struct nlm_notifyargs_wrapper, xdrgen) == 0);
++
+ static __be32
+ nlm_netobj_to_cookie(struct lockd_cookie *cookie, netobj *object)
+ {
+@@ -1022,6 +1029,44 @@ static __be32 nlmsvc_proc_granted_res(struct svc_rqst *rqstp)
+ 	return rpc_success;
  }
  
 +/**
-+ * nlmsvc_proc_granted_res - GRANTED_RES: Lock Granted result
++ * nlmsvc_proc_sm_notify - SM_NOTIFY: Peer has rebooted
 + * @rqstp: RPC transaction context
 + *
 + * Returns:
 + *   %rpc_success:		RPC executed successfully.
++ *   %rpc_system_err:		RPC execution failed.
++ *
++ * The SM_NOTIFY procedure is a private callback from Linux statd and is
++ * not part of the official NLM protocol.
 + *
 + * RPC synopsis:
-+ *   void NLMPROC_GRANTED_RES(nlm_res) = 15;
++ *   void NLM_SM_NOTIFY(nlm_notifyargs) = 16;
 + */
-+static __be32 nlmsvc_proc_granted_res(struct svc_rqst *rqstp)
++static __be32 nlmsvc_proc_sm_notify(struct svc_rqst *rqstp)
 +{
-+	struct nlm_res_wrapper *argp = rqstp->rq_argp;
++	struct nlm_notifyargs_wrapper *argp = rqstp->rq_argp;
++	struct lockd_reboot *reboot = &argp->reboot;
 +
-+	if (!nlmsvc_ops)
-+		return rpc_success;
++	if (!nlm_privileged_requester(rqstp)) {
++		char buf[RPC_MAX_ADDRBUFLEN];
 +
-+	if (nlm_netobj_to_cookie(&argp->cookie, &argp->xdrgen.cookie))
-+		return rpc_success;
-+	nlmsvc_grant_reply(&argp->cookie, argp->xdrgen.stat.stat);
++		pr_warn("lockd: rejected NSM callback from %s\n",
++			svc_print_addr(rqstp, buf, sizeof(buf)));
++		return rpc_system_err;
++	}
++
++	reboot->len = argp->xdrgen.notify.name.len;
++	reboot->mon = (char *)argp->xdrgen.notify.name.data;
++	reboot->state = argp->xdrgen.notify.state;
++	memcpy(&reboot->priv.data, argp->xdrgen.private,
++	       sizeof(reboot->priv.data));
++
++	nlm_host_rebooted(SVC_NET(rqstp), reboot);
 +
 +	return rpc_success;
 +}
@@ -176,55 +202,71 @@ index f17d3f8d85ec..a2ac747e96ce 100644
  /*
   * SHARE: create a DOS share or alter existing share.
   */
-@@ -1125,23 +1150,6 @@ nlmsvc_proc_sm_notify(struct svc_rqst *rqstp)
+@@ -1129,27 +1174,6 @@ nlmsvc_proc_free_all(struct svc_rqst *rqstp)
  	return rpc_success;
  }
  
 -/*
-- * client sent a GRANTED_RES, let's remove the associated block
+- * SM_NOTIFY: private callback from statd (not part of official NLM proto)
 - */
 -static __be32
--nlmsvc_proc_granted_res(struct svc_rqst *rqstp)
+-nlmsvc_proc_sm_notify(struct svc_rqst *rqstp)
 -{
--	struct lockd_res *argp = rqstp->rq_argp;
+-	struct lockd_reboot *argp = rqstp->rq_argp;
 -
--	if (!nlmsvc_ops)
--		return rpc_success;
+-	dprintk("lockd: SM_NOTIFY     called\n");
 -
--	dprintk("lockd: GRANTED_RES   called\n");
+-	if (!nlm_privileged_requester(rqstp)) {
+-		char buf[RPC_MAX_ADDRBUFLEN];
+-		printk(KERN_WARNING "lockd: rejected NSM callback from %s\n",
+-				svc_print_addr(rqstp, buf, sizeof(buf)));
+-		return rpc_system_err;
+-	}
 -
--	nlmsvc_grant_reply(&argp->cookie, argp->status);
+-	nlm_host_rebooted(SVC_NET(rqstp), argp);
 -	return rpc_success;
 -}
 -
  static __be32
  nlmsvc_proc_unused(struct svc_rqst *rqstp)
  {
-@@ -1310,15 +1318,15 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+@@ -1328,15 +1352,15 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
  		.pc_xdrressize	= XDR_void,
- 		.pc_name	= "UNLOCK_RES",
+ 		.pc_name	= "GRANTED_RES",
  	},
--	[NLMPROC_GRANTED_RES] = {
--		.pc_func = nlmsvc_proc_granted_res,
--		.pc_decode = nlmsvc_decode_res,
+-	[NLMPROC_NSM_NOTIFY] = {
+-		.pc_func = nlmsvc_proc_sm_notify,
+-		.pc_decode = nlmsvc_decode_reboot,
 -		.pc_encode = nlmsvc_encode_void,
--		.pc_argsize = sizeof(struct lockd_res),
--		.pc_argzero = sizeof(struct lockd_res),
+-		.pc_argsize = sizeof(struct lockd_reboot),
+-		.pc_argzero = sizeof(struct lockd_reboot),
 -		.pc_ressize = sizeof(struct nlm_void),
 -		.pc_xdrressize = St,
--		.pc_name = "GRANTED_RES",
-+	[NLM_GRANTED_RES] = {
-+		.pc_func	= nlmsvc_proc_granted_res,
-+		.pc_decode	= nlm_svc_decode_nlm_res,
+-		.pc_name = "SM_NOTIFY",
++	[NLM_SM_NOTIFY] = {
++		.pc_func	= nlmsvc_proc_sm_notify,
++		.pc_decode	= nlm_svc_decode_nlm_notifyargs,
 +		.pc_encode	= nlm_svc_encode_void,
-+		.pc_argsize	= sizeof(struct nlm_res_wrapper),
++		.pc_argsize	= sizeof(struct nlm_notifyargs_wrapper),
 +		.pc_argzero	= 0,
 +		.pc_ressize	= 0,
 +		.pc_xdrressize	= XDR_void,
-+		.pc_name	= "GRANTED_RES",
++		.pc_name	= "SM_NOTIFY",
  	},
- 	[NLMPROC_NSM_NOTIFY] = {
- 		.pc_func = nlmsvc_proc_sm_notify,
+ 	[17] = {
+ 		.pc_func = nlmsvc_proc_unused,
+@@ -1418,10 +1442,10 @@ union nlmsvc_xdrstore {
+ 	struct nlm_lockargs_wrapper	lockargs;
+ 	struct nlm_cancargs_wrapper	cancargs;
+ 	struct nlm_unlockargs_wrapper	unlockargs;
++	struct nlm_notifyargs_wrapper	notifyargs;
+ 	struct nlm_testres_wrapper	testres;
+ 	struct nlm_res_wrapper		res;
+ 	struct lockd_args		args;
+-	struct lockd_reboot		reboot;
+ };
+ 
+ /*
 
 -- 
 2.54.0
