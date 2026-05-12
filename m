@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21548-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21549-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sLqmNM1xA2q55wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21548-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:37 +0200
+	id +DN9H89xA2q55wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21549-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:39 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77315527AB5
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 201FB527ABC
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9C2B032F5F0E
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1DF5F310001C
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D77E374187;
-	Tue, 12 May 2026 18:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A26D36B043;
+	Tue, 12 May 2026 18:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNkc23ld"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjjKwdnv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3B3373BF4
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5612434E744
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778609647; cv=none; b=m1e+oat3grTtl8K6lFf5lA4RqMrvMJzhsYWI3MQ6a1FE+KFUaRFcE7DLBJF8YySJmYZ0wcerzn9xYZvbRIqfUXKCOtCurgb5eTg5qAtaJ/h7qyq1dNg95hFn6gszKlp0QyZ3IwbHXzUOS98EV01bpk7Tjp8zl+cPHuVfPJgwduY=
+	t=1778609648; cv=none; b=rz3+0jrQLjsGi24AgKfeaHnd4zGnIxCCskpUKob+wafmHmnfCHU14AfnVZZafyCLiAkJwI62zSd/0F43cqrILA/7+ntWWbRXdT5FP21/dJXQQNKZb8RcimebR6QD3ZcNVJLp2VFMzUOjlfik9vDeqEQXUFTgqEvBsrYN+0sqTMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778609647; c=relaxed/simple;
-	bh=987jDKqm96JOE3qDKIGFJ7iBKp81SomQNHkQz12wLd8=;
+	s=arc-20240116; t=1778609648; c=relaxed/simple;
+	bh=ITbUiXRb98FTLShz/fCDkV8yVAUXrOiWqT4nhFMyExQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X24q98XokBmsB8g6mJm68FoUedzXUl3/iOuLLSLBnFRqsblrk8gzK14MVLfxHLZFtweE8gUOlMmLlzWvMuH/KqD77gr/PFZoOyh68rDc97YSU/8m0b36tua/ylbx0uV3UaiORPWIYJ42yMcyhyR346yix7Tx5UYg7t6jxM+5vV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNkc23ld; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD2EC4AF0C;
-	Tue, 12 May 2026 18:14:06 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=eqFdUewMRjTWZAUlkagrdXPvYmRCIzE5uZD8CZ5uD54k/7X8OSfGzEspTZdVMnW25m1ubIjBjh7C1tb9Q0VvF0kvRTseQ9WdKKZzybN4TJq5vrY3bnZjUNFP5rABr2kGRYAxB5Fn8sfvQuShJ3FcVc3IqbmFWjvgOm9UKz9hlQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjjKwdnv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F864C2BCB0;
+	Tue, 12 May 2026 18:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778609647;
-	bh=987jDKqm96JOE3qDKIGFJ7iBKp81SomQNHkQz12wLd8=;
+	s=k20201202; t=1778609648;
+	bh=ITbUiXRb98FTLShz/fCDkV8yVAUXrOiWqT4nhFMyExQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rNkc23ld8ZwWRB/p5GHUxpGVHjTaeEOkUTTXvlW6Sf6+WlYF+LkTUmPGchlZ4hr0k
-	 XFQbHMLsbfGMeO3Uth00rgrE+svxTkvSILFWi2PpTYoQi/h1hP+Xvuyyq5GzfJayl+
-	 h1v5fv9kqBKIYHdOP3rkIS7BgDRJXTH4pnqZ4fnSNpv4DGSmZcAW4IxzlQrr+bV7J6
-	 gJ2jQPIyZfrU3OKkYFB3w62r3QF7q0e49PW/WITXrY+tAXoMtWD/4EDxD78mSH34Zd
-	 cqQt1ZEnxTBgg3me6VxeZWxPsiJYNhf8SsF5PA1G4LEYUVGbiyiTNWvrSLygmFm2+I
-	 krVqjs/9rLzmw==
+	b=hjjKwdnvaeCLYBsxuAuY26r6cRWRx/5qm29j8dFBfvUKyDdRN04g3Ln5tGRaXFngo
+	 YGK5WTw20dqP5IizkO1HR1iJ4q/lbCgOCQKY1C41TOyAQjYtJuXqtKwFYNXg+aR2A1
+	 H2CqBgu5hDAK8MCHfRufY4I8DLi9MvetJLS7OVv1AJinw7TXCYo3xDidcZr/N47x33
+	 3r+quFp2RxH+U4Ijyu1a+YTHSDmipAT+Qmm7LS2se+pI9YghZsjN2OGyaJDBujXWBx
+	 RSPbnrVsXxnK6knr91LUNMqdwdbJ/wqknFFUeixVQpYiT84RhFS/vTdQLx2F3H7emc
+	 FVdslpbFaPlCw==
 From: Chuck Lever <cel@kernel.org>
-Date: Tue, 12 May 2026 14:13:43 -0400
-Subject: [PATCH 08/38] lockd: Rename struct nlm_lock to lockd_lock
+Date: Tue, 12 May 2026 14:13:44 -0400
+Subject: [PATCH 09/38] lockd: Rename struct nlm_args to lockd_args
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260512-nlm4-xdrgen-v1-8-19d99b2634b4@oracle.com>
+Message-Id: <20260512-nlm4-xdrgen-v1-9-19d99b2634b4@oracle.com>
 References: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 In-Reply-To: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -64,24 +64,24 @@ To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=21922;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17934;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=coI3ZaRz2M6kxBIkqRSP4QMoOgKUJRQbg5xtt34O/WU=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23kGOSPCxM/hxFgAmn9r1DxHU5wbO7yT2NYI
- KLOtPenixGJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt5AAKCRAzarMzb2Z/
- l4n7D/0Q7fAUcfe/Ip1H4Ok4K3AO4gIkEcgNb+3eB+1B7LxKS6nGcfrzpASaloFuqgOYCYggKp+
- ztvquEqpvVovyszi4qiZSOQBOujTI5wB24xr1+tyxuq4FvtQvGfFxbO9pR2L/L3V2hh/tccp9F7
- EpbRI5tKFdtxcWg9Ke9VQS/Q0+fGW0Kvo9fze5qi8l9ykbfW7LDWiNhIuCUdsLUIEVkvMurXixi
- uNYMgOEHDLNyFmzhxry/RR/6+1spVhSrj3bbuoAsGCtTG8QyusXJik5cYD2zMBJUcfrOZKg7uou
- jl9cQni/hD93+Tz++t+DKseFChMz4auqd/r5Or1VuNKOpq7a+mtBbAre+JdoMcBJbCNe7SmM1vA
- 6jpCCK+dNbnCM4TprCO3WzwkRLgOnxcB7k/VLxyk/m+5+RNLO2xxRAg6AtzIkTRPUNEgkctRf5l
- yb1AauIPECC9cBpDcHgoIkv44MWuXb7dRGWIt4ERRlLwUtrxDGo/+bRWTeDLU2jiw9f1jShb630
- BffdgB30rqcv9aGYCQK4izKCt9xiJaj2/DaoXyWzMPp7R4h1EYn6hDrAl882H6IF5PCbAgolVSG
- w3Mg/9Rc4KaME5vxFEYHhrM29P3MpDT0zPLpai2z4LJmsNSdVrfPw6IJHl74cpyzOtpuShjWUjL
- QnGu//DcDFjMcgA==
+ bh=YPTdJEQ/cS2o2tddvS6hrOaql+3VpUcyQiYTVwtIRyI=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23kQHDTqQ8xkJxsmME5HMiWIkX6ozrCNfjX4
+ UOV+vqUG1yJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt5AAKCRAzarMzb2Z/
+ lzOfD/4kK8RnqgodxRF1I4zLak6d0pzreqIcTfwRRxpXFB6lAXc3Ldn7MBtBMmPKIjtOaxx7XFI
+ tCkRIbu1Ey9A+xFq2WgBvuLZ3YJivHJ+xO7KUBma1CRe5EOjMyfg5j+MXRJIE+3J99M0jZx6ImQ
+ vP90NLz+LOmztzZ1c30Dee5tIOTC3Q/RMxk5LCvJ/+nOoWzXFj0pTLMOsrvbEWikW5GObh2lnL0
+ 4qPMQ7KiHsRxeRPmekXHFvelrAdv1D2wimDu7eIVf1XYrr5BVmjqPcnxtJGFqOdhYTroCM7E056
+ MWOVhKIEHx0Pg6kG6S61myLZM6m+tWA4CsLr35aiwp5wkkCxTkx219rtiFRGZ8tQ2P+ZjFhggH3
+ Dq0YzAnWTXX7BMR861PTwJ/ajZv9Oa9Y5xwbZ1fUQyhUIKnxv2VGcryBYba+H5FJvcPTwLKSkGj
+ 4E9aui3RPnsC/zexF4NblM4RSOdmsL2aUY215m5sRMfWhLzuoqcKTPCwXffzAgvRGk7wAjnRpen
+ KELpVGCThLW/ELS+bnpw9vnBeCTLZenI3DShzQzX8+kDclz/4yi/k1lhAWsycl/I+G8f0r3FOD9
+ w6/W3BHTzBdKZxJkxSNEhUIKZDgrqEnnsVKikOZjIQbSHs4R1mmlc1F8xZeovkyfhjkUEcYue+4
+ ZlOLdZRN77P5eIw==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 77315527AB5
+X-Rspamd-Queue-Id: 201FB527ABC
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -91,7 +91,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21548-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21549-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -112,594 +112,478 @@ X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-A subsequent patch will convert fs/lockd/svcproc.c to use
-machine-generated XDR encoding and decoding functions in a
-manner similar to fs/lockd/svc4proc.c. Machine-generated
-types derived from the NLM specification will conflict with
-the internal types of the same name.
+As part of the effort to enable lockd's server-side XDR functions to
+be generated from the NLM protocol specification (using xdrgen), the
+internal type names must be changed to avoid conflicts with the
+machine-generated type names.
 
-Rename the internal struct nlm_lock type to lockd_lock to
-avoid such naming conflicts.
+Rename struct nlm_args to struct lockd_args to avoid conflicts with
+the NLMv3 XDR type definitions that will be introduced when
+svcproc.c is converted to use xdrgen.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/clnt4xdr.c | 16 ++++++++--------
- fs/lockd/clntlock.c |  2 +-
- fs/lockd/clntproc.c |  2 +-
- fs/lockd/clntxdr.c  | 16 ++++++++--------
- fs/lockd/lockd.h    | 16 ++++++++--------
- fs/lockd/svc4proc.c | 30 +++++++++++++++---------------
- fs/lockd/svclock.c  | 22 +++++++++++-----------
- fs/lockd/svcproc.c  |  2 +-
- fs/lockd/svcsubs.c  |  2 +-
- fs/lockd/trace.h    |  4 ++--
- fs/lockd/xdr.c      |  8 ++++----
- fs/lockd/xdr.h      |  6 +++---
- 12 files changed, 63 insertions(+), 63 deletions(-)
+ fs/lockd/clnt4xdr.c |  8 +++---
+ fs/lockd/clntproc.c |  4 +--
+ fs/lockd/clntxdr.c  |  8 +++---
+ fs/lockd/lockd.h    |  2 +-
+ fs/lockd/svcproc.c  | 80 ++++++++++++++++++++++++++---------------------------
+ fs/lockd/xdr.c      | 12 ++++----
+ fs/lockd/xdr.h      |  2 +-
+ 7 files changed, 58 insertions(+), 58 deletions(-)
 
 diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
-index 6d881f9702a9..8973711264cb 100644
+index 8973711264cb..d0b08a12fe45 100644
 --- a/fs/lockd/clnt4xdr.c
 +++ b/fs/lockd/clnt4xdr.c
-@@ -63,7 +63,7 @@ static s64 loff_t_to_s64(loff_t offset)
- 	return res;
- }
- 
--static void nlm4_compute_offsets(const struct nlm_lock *lock,
-+static void nlm4_compute_offsets(const struct lockd_lock *lock,
- 				 u64 *l_offset, u64 *l_len)
- {
- 	const struct file_lock *fl = &lock->fl;
-@@ -240,7 +240,7 @@ static int decode_nlm4_stat(struct xdr_stream *xdr, __be32 *stat)
- static void encode_nlm4_holder(struct xdr_stream *xdr,
- 			       const struct nlm_res *result)
- {
--	const struct nlm_lock *lock = &result->lock;
-+	const struct lockd_lock *lock = &result->lock;
- 	u64 l_offset, l_len;
- 	__be32 *p;
- 
-@@ -256,7 +256,7 @@ static void encode_nlm4_holder(struct xdr_stream *xdr,
- 
- static int decode_nlm4_holder(struct xdr_stream *xdr, struct nlm_res *result)
- {
--	struct nlm_lock *lock = &result->lock;
-+	struct lockd_lock *lock = &result->lock;
- 	struct file_lock *fl = &lock->fl;
- 	u64 l_offset, l_len;
- 	u32 exclusive;
-@@ -317,7 +317,7 @@ static void encode_caller_name(struct xdr_stream *xdr, const char *name)
-  *	};
-  */
- static void encode_nlm4_lock(struct xdr_stream *xdr,
--			     const struct nlm_lock *lock)
-+			     const struct lockd_lock *lock)
- {
- 	u64 l_offset, l_len;
- 	__be32 *p;
-@@ -355,7 +355,7 @@ static void nlm4_xdr_enc_testargs(struct rpc_rqst *req,
+@@ -354,7 +354,7 @@ static void nlm4_xdr_enc_testargs(struct rpc_rqst *req,
+ 				  struct xdr_stream *xdr,
  				  const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_bool(xdr, lock->fl.c.flc_type == F_WRLCK);
-@@ -377,7 +377,7 @@ static void nlm4_xdr_enc_lockargs(struct rpc_rqst *req,
+@@ -376,7 +376,7 @@ static void nlm4_xdr_enc_lockargs(struct rpc_rqst *req,
+ 				  struct xdr_stream *xdr,
  				  const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_bool(xdr, args->block);
-@@ -400,7 +400,7 @@ static void nlm4_xdr_enc_cancargs(struct rpc_rqst *req,
+@@ -399,7 +399,7 @@ static void nlm4_xdr_enc_cancargs(struct rpc_rqst *req,
+ 				  struct xdr_stream *xdr,
  				  const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_bool(xdr, args->block);
-@@ -419,7 +419,7 @@ static void nlm4_xdr_enc_unlockargs(struct rpc_rqst *req,
+@@ -418,7 +418,7 @@ static void nlm4_xdr_enc_unlockargs(struct rpc_rqst *req,
+ 				    struct xdr_stream *xdr,
  				    const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_nlm4_lock(xdr, lock);
-diff --git a/fs/lockd/clntlock.c b/fs/lockd/clntlock.c
-index 8fa30c42c92a..f797cc99f94d 100644
---- a/fs/lockd/clntlock.c
-+++ b/fs/lockd/clntlock.c
-@@ -158,7 +158,7 @@ int nlmclnt_wait(struct nlm_wait *block, struct nlm_rqst *req, long timeout)
- /*
-  * The server lockd has called us back to tell us the lock was granted
-  */
--__be32 nlmclnt_grant(const struct sockaddr *addr, const struct nlm_lock *lock)
-+__be32 nlmclnt_grant(const struct sockaddr *addr, const struct lockd_lock *lock)
- {
- 	const struct file_lock *fl = &lock->fl;
- 	const struct nfs_fh *fh = &lock->fh;
 diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
-index 50cfab2f31c7..1aa6597ae0b7 100644
+index 1aa6597ae0b7..abdf2a51caf2 100644
 --- a/fs/lockd/clntproc.c
 +++ b/fs/lockd/clntproc.c
-@@ -129,7 +129,7 @@ static struct nlm_lockowner *nlmclnt_find_lockowner(struct nlm_host *host, fl_ow
+@@ -128,7 +128,7 @@ static struct nlm_lockowner *nlmclnt_find_lockowner(struct nlm_host *host, fl_ow
+  */
  static void nlmclnt_setlockargs(struct nlm_rqst *req, struct file_lock *fl)
  {
- 	struct nlm_args	*argp = &req->a_args;
--	struct nlm_lock	*lock = &argp->lock;
-+	struct lockd_lock *lock = &argp->lock;
+-	struct nlm_args	*argp = &req->a_args;
++	struct lockd_args *argp = &req->a_args;
+ 	struct lockd_lock *lock = &argp->lock;
  	char *nodename = req->a_host->h_rpcclnt->cl_nodename;
  
- 	nlmclnt_next_cookie(&argp->cookie);
+@@ -266,7 +266,7 @@ nlmclnt_call(const struct cred *cred, struct nlm_rqst *req, u32 proc)
+ {
+ 	struct nlm_host	*host = req->a_host;
+ 	struct rpc_clnt	*clnt;
+-	struct nlm_args	*argp = &req->a_args;
++	struct lockd_args *argp = &req->a_args;
+ 	struct nlm_res	*resp = &req->a_res;
+ 	struct rpc_message msg = {
+ 		.rpc_argp	= argp,
 diff --git a/fs/lockd/clntxdr.c b/fs/lockd/clntxdr.c
-index 2a4d28847254..efa45f12960d 100644
+index efa45f12960d..444a34bc799a 100644
 --- a/fs/lockd/clntxdr.c
 +++ b/fs/lockd/clntxdr.c
-@@ -60,7 +60,7 @@ static s32 loff_t_to_s32(loff_t offset)
- 	return res;
- }
- 
--static void nlm_compute_offsets(const struct nlm_lock *lock,
-+static void nlm_compute_offsets(const struct lockd_lock *lock,
- 				u32 *l_offset, u32 *l_len)
- {
- 	const struct file_lock *fl = &lock->fl;
-@@ -236,7 +236,7 @@ static int decode_nlm_stat(struct xdr_stream *xdr,
- static void encode_nlm_holder(struct xdr_stream *xdr,
- 			      const struct nlm_res *result)
- {
--	const struct nlm_lock *lock = &result->lock;
-+	const struct lockd_lock *lock = &result->lock;
- 	u32 l_offset, l_len;
- 	__be32 *p;
- 
-@@ -252,7 +252,7 @@ static void encode_nlm_holder(struct xdr_stream *xdr,
- 
- static int decode_nlm_holder(struct xdr_stream *xdr, struct nlm_res *result)
- {
--	struct nlm_lock *lock = &result->lock;
-+	struct lockd_lock *lock = &result->lock;
- 	struct file_lock *fl = &lock->fl;
- 	u32 exclusive, l_offset, l_len;
- 	int error;
-@@ -319,7 +319,7 @@ static void encode_caller_name(struct xdr_stream *xdr, const char *name)
-  *	};
-  */
- static void encode_nlm_lock(struct xdr_stream *xdr,
--			    const struct nlm_lock *lock)
-+			    const struct lockd_lock *lock)
- {
- 	u32 l_offset, l_len;
- 	__be32 *p;
-@@ -356,7 +356,7 @@ static void nlm_xdr_enc_testargs(struct rpc_rqst *req,
+@@ -355,7 +355,7 @@ static void nlm_xdr_enc_testargs(struct rpc_rqst *req,
+ 				 struct xdr_stream *xdr,
  				 const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_bool(xdr, lock->fl.c.flc_type == F_WRLCK);
-@@ -378,7 +378,7 @@ static void nlm_xdr_enc_lockargs(struct rpc_rqst *req,
+@@ -377,7 +377,7 @@ static void nlm_xdr_enc_lockargs(struct rpc_rqst *req,
+ 				 struct xdr_stream *xdr,
  				 const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_bool(xdr, args->block);
-@@ -401,7 +401,7 @@ static void nlm_xdr_enc_cancargs(struct rpc_rqst *req,
+@@ -400,7 +400,7 @@ static void nlm_xdr_enc_cancargs(struct rpc_rqst *req,
+ 				 struct xdr_stream *xdr,
  				 const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_bool(xdr, args->block);
-@@ -420,7 +420,7 @@ static void nlm_xdr_enc_unlockargs(struct rpc_rqst *req,
+@@ -419,7 +419,7 @@ static void nlm_xdr_enc_unlockargs(struct rpc_rqst *req,
+ 				   struct xdr_stream *xdr,
  				   const void *data)
  {
- 	const struct nlm_args *args = data;
--	const struct nlm_lock *lock = &args->lock;
-+	const struct lockd_lock *lock = &args->lock;
+-	const struct nlm_args *args = data;
++	const struct lockd_args *args = data;
+ 	const struct lockd_lock *lock = &args->lock;
  
  	encode_cookie(xdr, &args->cookie);
- 	encode_nlm_lock(xdr, lock);
 diff --git a/fs/lockd/lockd.h b/fs/lockd/lockd.h
-index 119818568507..032790834c7e 100644
+index 032790834c7e..a97676639d3e 100644
 --- a/fs/lockd/lockd.h
 +++ b/fs/lockd/lockd.h
-@@ -253,7 +253,7 @@ void		  nlmclnt_queue_block(struct nlm_wait *block);
- __be32		  nlmclnt_dequeue_block(struct nlm_wait *block);
- int		  nlmclnt_wait(struct nlm_wait *block, struct nlm_rqst *req, long timeout);
- __be32		  nlmclnt_grant(const struct sockaddr *addr,
--				const struct nlm_lock *lock);
-+				const struct lockd_lock *lock);
- void		  nlmclnt_recovery(struct nlm_host *);
- int		  nlmclnt_reclaim(struct nlm_host *, struct file_lock *,
- 				  struct nlm_rqst *);
-@@ -313,13 +313,13 @@ typedef int	  (*nlm_host_match_fn_t)(void *cur, struct nlm_host *ref);
-  */
- int		  lock_to_openmode(struct file_lock *);
- __be32		  nlmsvc_lock(struct svc_rqst *, struct nlm_file *,
--			      struct nlm_host *, struct nlm_lock *, int,
-+			      struct nlm_host *, struct lockd_lock *, int,
- 			      struct lockd_cookie *, int);
--__be32		  nlmsvc_unlock(struct net *net, struct nlm_file *, struct nlm_lock *);
-+__be32		  nlmsvc_unlock(struct net *net, struct nlm_file *, struct lockd_lock *);
- __be32		  nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *file,
--			struct nlm_host *host, struct nlm_lock *lock,
--			struct nlm_lock *conflock);
--__be32		  nlmsvc_cancel_blocked(struct net *net, struct nlm_file *, struct nlm_lock *);
-+			struct nlm_host *host, struct lockd_lock *lock,
-+			struct lockd_lock *conflock);
-+__be32		  nlmsvc_cancel_blocked(struct net *net, struct nlm_file *, struct lockd_lock *);
- void		  nlmsvc_retry_blocked(struct svc_rqst *rqstp);
- void		  nlmsvc_traverse_blocks(struct nlm_host *, struct nlm_file *,
- 					nlm_host_match_fn_t match);
-@@ -332,10 +332,10 @@ int		  nlmsvc_dispatch(struct svc_rqst *rqstp);
-  * File handling for the server personality
-  */
- __be32		  nlm_lookup_file(struct svc_rqst *, struct nlm_file **,
--				  struct nlm_lock *, int);
-+				  struct lockd_lock *, int);
- void		  nlm_release_file(struct nlm_file *);
- void		  nlmsvc_put_lockowner(struct nlm_lockowner *);
--void		  nlmsvc_release_lockowner(struct nlm_lock *);
-+void		  nlmsvc_release_lockowner(struct lockd_lock *);
- void		  nlmsvc_mark_resources(struct net *);
- void		  nlmsvc_free_host_resources(struct nlm_host *);
- void		  nlmsvc_invalidate_all(void);
-diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 249ef49f1bcd..f7067fae6c86 100644
---- a/fs/lockd/svc4proc.c
-+++ b/fs/lockd/svc4proc.c
-@@ -26,13 +26,13 @@
- #include "nlm4xdr_gen.h"
- 
- /*
-- * Wrapper structures combine xdrgen types with legacy nlm_lock.
-+ * Wrapper structures combine xdrgen types with legacy lockd_lock.
-  * The xdrgen field must be first so the structure can be cast
-  * to its XDR type for the RPC dispatch layer.
-  */
- struct nlm4_testargs_wrapper {
- 	struct nlm4_testargs		xdrgen;
--	struct nlm_lock			lock;
-+	struct lockd_lock		lock;
- };
- 
- static_assert(offsetof(struct nlm4_testargs_wrapper, xdrgen) == 0);
-@@ -40,21 +40,21 @@ static_assert(offsetof(struct nlm4_testargs_wrapper, xdrgen) == 0);
- struct nlm4_lockargs_wrapper {
- 	struct nlm4_lockargs		xdrgen;
- 	struct lockd_cookie		cookie;
--	struct nlm_lock			lock;
-+	struct lockd_lock		lock;
- };
- 
- static_assert(offsetof(struct nlm4_lockargs_wrapper, xdrgen) == 0);
- 
- struct nlm4_cancargs_wrapper {
- 	struct nlm4_cancargs		xdrgen;
--	struct nlm_lock			lock;
-+	struct lockd_lock		lock;
- };
- 
- static_assert(offsetof(struct nlm4_cancargs_wrapper, xdrgen) == 0);
- 
- struct nlm4_unlockargs_wrapper {
- 	struct nlm4_unlockargs		xdrgen;
--	struct nlm_lock			lock;
-+	struct lockd_lock		lock;
- };
- 
- static_assert(offsetof(struct nlm4_unlockargs_wrapper, xdrgen) == 0);
-@@ -74,12 +74,12 @@ static_assert(offsetof(struct nlm4_notify_wrapper, xdrgen) == 0);
- 
- struct nlm4_testres_wrapper {
- 	struct nlm4_testres		xdrgen;
--	struct nlm_lock			lock;
-+	struct lockd_lock		lock;
- };
- 
- struct nlm4_shareargs_wrapper {
- 	struct nlm4_shareargs		xdrgen;
--	struct nlm_lock			lock;
-+	struct lockd_lock		lock;
- };
- 
- static_assert(offsetof(struct nlm4_shareargs_wrapper, xdrgen) == 0);
-@@ -110,7 +110,7 @@ nlm4_netobj_to_cookie(struct lockd_cookie *cookie, netobj *object)
- }
- 
- static __be32
--nlm4_lock_to_nlm_lock(struct nlm_lock *lock, struct nlm4_lock *alock)
-+nlm4_lock_to_lockd_lock(struct lockd_lock *lock, struct nlm4_lock *alock)
- {
- 	if (alock->fh.len > NFS_MAXFHSIZE)
- 		return nlm_lck_denied;
-@@ -142,7 +142,7 @@ nlm4svc_lookup_host(struct svc_rqst *rqstp, string caller, bool monitored)
- 
- static __be32
- nlm4svc_lookup_file(struct svc_rqst *rqstp, struct nlm_host *host,
--		    struct nlm_lock *lock, struct nlm_file **filp,
-+		    struct lockd_lock *lock, struct nlm_file **filp,
- 		    struct nlm4_lock *xdr_lock, unsigned char type)
- {
- 	bool is_test = (rqstp->rq_proc == NLMPROC4_TEST ||
-@@ -269,7 +269,7 @@ static __be32 nlm4svc_proc_test(struct svc_rqst *rqstp)
- 	nlmsvc_release_lockowner(&argp->lock);
- 
- 	if (resp->xdrgen.stat.stat == nlm_lck_denied) {
--		struct nlm_lock *conf = &resp->lock;
-+		struct lockd_lock *conf = &resp->lock;
- 		struct nlm4_holder *holder = &resp->xdrgen.stat.u.holder;
- 
- 		holder->exclusive = (conf->fl.c.flc_type != F_RDLCK);
-@@ -527,8 +527,8 @@ nlm4svc_proc_granted(struct svc_rqst *rqstp)
- 
- 	resp->xdrgen.cookie = argp->xdrgen.cookie;
- 
--	resp->xdrgen.stat.stat = nlm4_lock_to_nlm_lock(&argp->lock,
--						       &argp->xdrgen.alock);
-+	resp->xdrgen.stat.stat = nlm4_lock_to_lockd_lock(&argp->lock,
-+							 &argp->xdrgen.alock);
- 	if (resp->xdrgen.stat.stat)
- 		goto out;
- 
-@@ -842,7 +842,7 @@ __nlm4svc_proc_granted_msg(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	if (nlm4_netobj_to_cookie(&resp->cookie, &argp->xdrgen.cookie))
- 		goto out;
- 
--	if (nlm4_lock_to_nlm_lock(&argp->lock, &argp->xdrgen.alock))
-+	if (nlm4_lock_to_lockd_lock(&argp->lock, &argp->xdrgen.alock))
- 		goto out;
- 
- 	resp->status = nlmclnt_grant(svc_addr(rqstp), &argp->lock);
-@@ -982,7 +982,7 @@ static __be32 nlm4svc_proc_share(struct svc_rqst *rqstp)
- {
- 	struct nlm4_shareargs_wrapper *argp = rqstp->rq_argp;
- 	struct nlm4_shareres_wrapper *resp = rqstp->rq_resp;
--	struct nlm_lock	*lock = &argp->lock;
-+	struct lockd_lock *lock = &argp->lock;
- 	struct nlm_host	*host = NULL;
- 	struct nlm_file	*file = NULL;
- 	struct nlm4_lock xdr_lock = {
-@@ -1050,7 +1050,7 @@ static __be32 nlm4svc_proc_unshare(struct svc_rqst *rqstp)
- {
- 	struct nlm4_shareargs_wrapper *argp = rqstp->rq_argp;
- 	struct nlm4_shareres_wrapper *resp = rqstp->rq_resp;
--	struct nlm_lock	*lock = &argp->lock;
-+	struct lockd_lock *lock = &argp->lock;
- 	struct nlm4_lock xdr_lock = {
- 		.fh		= argp->xdrgen.share.fh,
- 		.oh		= argp->xdrgen.share.oh,
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 7fb03042ebee..e48d31f14a65 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -37,7 +37,7 @@ static void nlmsvc_release_block(struct nlm_block *block);
- static void	nlmsvc_insert_block(struct nlm_block *block, unsigned long);
- static void	nlmsvc_remove_block(struct nlm_block *block);
- 
--static int nlmsvc_setgrantargs(struct nlm_rqst *call, struct nlm_lock *lock);
-+static int nlmsvc_setgrantargs(struct nlm_rqst *call, struct lockd_lock *lock);
- static void nlmsvc_freegrantargs(struct nlm_rqst *call);
- static const struct rpc_call_ops nlmsvc_grant_ops;
- 
-@@ -142,7 +142,7 @@ nlmsvc_remove_block(struct nlm_block *block)
-  * Find a block for a given lock
-  */
- static struct nlm_block *
--nlmsvc_lookup_block(struct nlm_file *file, struct nlm_lock *lock)
-+nlmsvc_lookup_block(struct nlm_file *file, struct lockd_lock *lock)
- {
- 	struct nlm_block	*block;
- 	struct file_lock	*fl;
-@@ -221,7 +221,7 @@ nlmsvc_find_block(struct lockd_cookie *cookie)
-  */
- static struct nlm_block *
- nlmsvc_create_block(struct svc_rqst *rqstp, struct nlm_host *host,
--		    struct nlm_file *file, struct nlm_lock *lock,
-+		    struct nlm_file *file, struct lockd_lock *lock,
- 		    struct lockd_cookie *cookie)
- {
- 	struct nlm_block	*block;
-@@ -399,7 +399,7 @@ static struct nlm_lockowner *nlmsvc_find_lockowner(struct nlm_host *host, pid_t
- }
- 
- void
--nlmsvc_release_lockowner(struct nlm_lock *lock)
-+nlmsvc_release_lockowner(struct lockd_lock *lock)
- {
- 	if (lock->fl.c.flc_owner)
- 		nlmsvc_put_lockowner(lock->fl.c.flc_owner);
-@@ -415,7 +415,7 @@ void nlmsvc_locks_init_private(struct file_lock *fl, struct nlm_host *host,
-  * Initialize arguments for GRANTED call. The nlm_rqst structure
-  * has been cleared already.
-  */
--static int nlmsvc_setgrantargs(struct nlm_rqst *call, struct nlm_lock *lock)
-+static int nlmsvc_setgrantargs(struct nlm_rqst *call, struct lockd_lock *lock)
- {
- 	locks_copy_lock(&call->a_args.lock.fl, &lock->fl);
- 	memcpy(&call->a_args.lock.fh, &lock->fh, sizeof(call->a_args.lock.fh));
-@@ -476,7 +476,7 @@ nlmsvc_defer_lock_rqst(struct svc_rqst *rqstp, struct nlm_block *block)
-  */
- __be32
- nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
--	    struct nlm_host *host, struct nlm_lock *lock, int wait,
-+	    struct nlm_host *host, struct lockd_lock *lock, int wait,
- 	    struct lockd_cookie *cookie, int reclaim)
- {
- 	struct inode		*inode __maybe_unused = nlmsvc_file_inode(file);
-@@ -609,8 +609,8 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
-  */
- __be32
- nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *file,
--		struct nlm_host *host, struct nlm_lock *lock,
--		struct nlm_lock *conflock)
-+		struct nlm_host *host, struct lockd_lock *lock,
-+		struct lockd_lock *conflock)
- {
- 	int			error;
- 	__be32			ret;
-@@ -669,7 +669,7 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *file,
-  * must be removed.
-  */
- __be32
--nlmsvc_unlock(struct net *net, struct nlm_file *file, struct nlm_lock *lock)
-+nlmsvc_unlock(struct net *net, struct nlm_file *file, struct lockd_lock *lock)
- {
- 	int	error = 0;
- 
-@@ -707,7 +707,7 @@ nlmsvc_unlock(struct net *net, struct nlm_file *file, struct nlm_lock *lock)
-  * The calling procedure must check whether the file can be closed.
-  */
- __be32
--nlmsvc_cancel_blocked(struct net *net, struct nlm_file *file, struct nlm_lock *lock)
-+nlmsvc_cancel_blocked(struct net *net, struct nlm_file *file, struct lockd_lock *lock)
- {
- 	struct nlm_block	*block;
- 	int status = 0;
-@@ -848,7 +848,7 @@ static void
- nlmsvc_grant_blocked(struct nlm_block *block)
- {
- 	struct nlm_file		*file = block->b_file;
--	struct nlm_lock		*lock = &block->b_call->a_args.lock;
-+	struct lockd_lock	*lock = &block->b_call->a_args.lock;
- 	int			mode;
- 	int			error;
- 	loff_t			fl_start, fl_end;
+@@ -171,7 +171,7 @@ struct nlm_rqst {
+ 	refcount_t		a_count;
+ 	unsigned int		a_flags;	/* initial RPC task flags */
+ 	struct nlm_host *	a_host;		/* host handle */
+-	struct nlm_args		a_args;		/* arguments */
++	struct lockd_args	a_args;		/* arguments */
+ 	struct nlm_res		a_res;		/* result */
+ 	struct nlm_block *	a_block;
+ 	unsigned int		a_retries;	/* Retry count */
 diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index 110e186802b6..2e1dbd4e1df9 100644
+index 2e1dbd4e1df9..8a49b864f6ee 100644
 --- a/fs/lockd/svcproc.c
 +++ b/fs/lockd/svcproc.c
-@@ -67,7 +67,7 @@ nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
+@@ -62,7 +62,7 @@ static inline __be32 cast_status(__be32 status)
+  * Obtain client and file from arguments
+  */
+ static __be32
+-nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
++nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct lockd_args *argp,
+ 			struct nlm_host **hostp, struct nlm_file **filp)
  {
  	struct nlm_host		*host = NULL;
- 	struct nlm_file		*file = NULL;
--	struct nlm_lock		*lock = &argp->lock;
-+	struct lockd_lock	*lock = &argp->lock;
- 	bool			is_test = (rqstp->rq_proc == NLMPROC_TEST ||
- 					   rqstp->rq_proc == NLMPROC_TEST_MSG);
- 	int			mode;
-diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
-index 9da9d6e0b42e..e24bacea7e03 100644
---- a/fs/lockd/svcsubs.c
-+++ b/fs/lockd/svcsubs.c
-@@ -132,7 +132,7 @@ static __be32 nlm_do_fopen(struct svc_rqst *rqstp,
-  */
- __be32
- nlm_lookup_file(struct svc_rqst *rqstp, struct nlm_file **result,
--		struct nlm_lock *lock, int mode)
-+		struct lockd_lock *lock, int mode)
+@@ -136,7 +136,7 @@ nlmsvc_proc_null(struct svc_rqst *rqstp)
+ static __be32
+ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
  {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_host	*host;
  	struct nlm_file	*file;
- 	unsigned int	hash;
-diff --git a/fs/lockd/trace.h b/fs/lockd/trace.h
-index 7214d7e96a42..aa858d9d406d 100644
---- a/fs/lockd/trace.h
-+++ b/fs/lockd/trace.h
-@@ -48,7 +48,7 @@ NLM_STATUS_LIST
+ 	__be32 rc = rpc_success;
+@@ -173,7 +173,7 @@ nlmsvc_proc_test(struct svc_rqst *rqstp)
+ static __be32
+ __nlmsvc_proc_lock(struct svc_rqst *rqstp, struct nlm_res *resp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_host	*host;
+ 	struct nlm_file	*file;
+ 	__be32 rc = rpc_success;
+@@ -211,7 +211,7 @@ nlmsvc_proc_lock(struct svc_rqst *rqstp)
+ static __be32
+ __nlmsvc_proc_cancel(struct svc_rqst *rqstp, struct nlm_res *resp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_host	*host;
+ 	struct nlm_file	*file;
+ 	struct net *net = SVC_NET(rqstp);
+@@ -253,7 +253,7 @@ nlmsvc_proc_cancel(struct svc_rqst *rqstp)
+ static __be32
+ __nlmsvc_proc_unlock(struct svc_rqst *rqstp, struct nlm_res *resp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_host	*host;
+ 	struct nlm_file	*file;
+ 	struct net *net = SVC_NET(rqstp);
+@@ -296,7 +296,7 @@ nlmsvc_proc_unlock(struct svc_rqst *rqstp)
+ static __be32
+ __nlmsvc_proc_granted(struct svc_rqst *rqstp, struct nlm_res *resp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
  
- DECLARE_EVENT_CLASS(nlmclnt_lock_event,
- 		TP_PROTO(
--			const struct nlm_lock *lock,
-+			const struct lockd_lock *lock,
- 			const struct sockaddr *addr,
- 			unsigned int addrlen,
- 			__be32 status
-@@ -87,7 +87,7 @@ DECLARE_EVENT_CLASS(nlmclnt_lock_event,
- #define DEFINE_NLMCLNT_EVENT(name)				\
- 	DEFINE_EVENT(nlmclnt_lock_event, name,			\
- 			TP_PROTO(				\
--				const struct nlm_lock *lock,	\
-+				const struct lockd_lock *lock,	\
- 				const struct sockaddr *addr,	\
- 				unsigned int addrlen,		\
- 				__be32	status			\
+ 	resp->cookie = argp->cookie;
+ 
+@@ -345,7 +345,7 @@ static const struct rpc_call_ops nlmsvc_callback_ops = {
+ static __be32 nlmsvc_callback(struct svc_rqst *rqstp, u32 proc,
+ 		__be32 (*func)(struct svc_rqst *, struct nlm_res *))
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_host	*host;
+ 	struct nlm_rqst	*call;
+ 	__be32 stat;
+@@ -411,7 +411,7 @@ nlmsvc_proc_granted_msg(struct svc_rqst *rqstp)
+ static __be32
+ nlmsvc_proc_share(struct svc_rqst *rqstp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_res *resp = rqstp->rq_resp;
+ 	struct nlm_host	*host;
+ 	struct nlm_file	*file;
+@@ -449,7 +449,7 @@ nlmsvc_proc_share(struct svc_rqst *rqstp)
+ static __be32
+ nlmsvc_proc_unshare(struct svc_rqst *rqstp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_res *resp = rqstp->rq_resp;
+ 	struct nlm_host	*host;
+ 	struct nlm_file	*file;
+@@ -486,7 +486,7 @@ nlmsvc_proc_unshare(struct svc_rqst *rqstp)
+ static __be32
+ nlmsvc_proc_nm_lock(struct svc_rqst *rqstp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 
+ 	dprintk("lockd: NM_LOCK       called\n");
+ 
+@@ -500,7 +500,7 @@ nlmsvc_proc_nm_lock(struct svc_rqst *rqstp)
+ static __be32
+ nlmsvc_proc_free_all(struct svc_rqst *rqstp)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct nlm_host	*host;
+ 
+ 	/* Obtain client */
+@@ -582,8 +582,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_test,
+ 		.pc_decode = nlmsvc_decode_testargs,
+ 		.pc_encode = nlmsvc_encode_testres,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St+2+No+Rg,
+ 		.pc_name = "TEST",
+@@ -592,8 +592,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_lock,
+ 		.pc_decode = nlmsvc_decode_lockargs,
+ 		.pc_encode = nlmsvc_encode_res,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St,
+ 		.pc_name = "LOCK",
+@@ -602,8 +602,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_cancel,
+ 		.pc_decode = nlmsvc_decode_cancargs,
+ 		.pc_encode = nlmsvc_encode_res,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St,
+ 		.pc_name = "CANCEL",
+@@ -612,8 +612,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_unlock,
+ 		.pc_decode = nlmsvc_decode_unlockargs,
+ 		.pc_encode = nlmsvc_encode_res,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St,
+ 		.pc_name = "UNLOCK",
+@@ -622,8 +622,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_granted,
+ 		.pc_decode = nlmsvc_decode_testargs,
+ 		.pc_encode = nlmsvc_encode_res,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St,
+ 		.pc_name = "GRANTED",
+@@ -632,8 +632,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_test_msg,
+ 		.pc_decode = nlmsvc_decode_testargs,
+ 		.pc_encode = nlmsvc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_void),
+ 		.pc_xdrressize = St,
+ 		.pc_name = "TEST_MSG",
+@@ -642,8 +642,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_lock_msg,
+ 		.pc_decode = nlmsvc_decode_lockargs,
+ 		.pc_encode = nlmsvc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_void),
+ 		.pc_xdrressize = St,
+ 		.pc_name = "LOCK_MSG",
+@@ -652,8 +652,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_cancel_msg,
+ 		.pc_decode = nlmsvc_decode_cancargs,
+ 		.pc_encode = nlmsvc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_void),
+ 		.pc_xdrressize = St,
+ 		.pc_name = "CANCEL_MSG",
+@@ -662,8 +662,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_unlock_msg,
+ 		.pc_decode = nlmsvc_decode_unlockargs,
+ 		.pc_encode = nlmsvc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_void),
+ 		.pc_xdrressize = St,
+ 		.pc_name = "UNLOCK_MSG",
+@@ -672,8 +672,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_granted_msg,
+ 		.pc_decode = nlmsvc_decode_testargs,
+ 		.pc_encode = nlmsvc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_void),
+ 		.pc_xdrressize = St,
+ 		.pc_name = "GRANTED_MSG",
+@@ -772,8 +772,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_share,
+ 		.pc_decode = nlmsvc_decode_shareargs,
+ 		.pc_encode = nlmsvc_encode_shareres,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St+1,
+ 		.pc_name = "SHARE",
+@@ -782,8 +782,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_unshare,
+ 		.pc_decode = nlmsvc_decode_shareargs,
+ 		.pc_encode = nlmsvc_encode_shareres,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St+1,
+ 		.pc_name = "UNSHARE",
+@@ -792,8 +792,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_nm_lock,
+ 		.pc_decode = nlmsvc_decode_lockargs,
+ 		.pc_encode = nlmsvc_encode_res,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_res),
+ 		.pc_xdrressize = Ck+St,
+ 		.pc_name = "NM_LOCK",
+@@ -802,8 +802,8 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+ 		.pc_func = nlmsvc_proc_free_all,
+ 		.pc_decode = nlmsvc_decode_notify,
+ 		.pc_encode = nlmsvc_encode_void,
+-		.pc_argsize = sizeof(struct nlm_args),
+-		.pc_argzero = sizeof(struct nlm_args),
++		.pc_argsize = sizeof(struct lockd_args),
++		.pc_argzero = sizeof(struct lockd_args),
+ 		.pc_ressize = sizeof(struct nlm_void),
+ 		.pc_xdrressize = 0,
+ 		.pc_name = "FREE_ALL",
+@@ -814,7 +814,7 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
+  * Storage requirements for XDR arguments and results
+  */
+ union nlmsvc_xdrstore {
+-	struct nlm_args			args;
++	struct lockd_args		args;
+ 	struct nlm_res			res;
+ 	struct nlm_reboot		reboot;
+ };
 diff --git a/fs/lockd/xdr.c b/fs/lockd/xdr.c
-index dfca8b8dab73..55868222984a 100644
+index 55868222984a..0130cdea5642 100644
 --- a/fs/lockd/xdr.c
 +++ b/fs/lockd/xdr.c
-@@ -69,7 +69,7 @@ svcxdr_decode_fhandle(struct xdr_stream *xdr, struct nfs_fh *fh)
- }
- 
- static bool
--svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
-+svcxdr_decode_lock(struct xdr_stream *xdr, struct lockd_lock *lock)
+@@ -154,7 +154,7 @@ nlmsvc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ bool
+ nlmsvc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
  {
- 	struct file_lock *fl = &lock->fl;
- 	s32 start, len, end;
-@@ -101,7 +101,7 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
- }
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	u32 exclusive;
  
- static bool
--svcxdr_encode_holder(struct xdr_stream *xdr, const struct nlm_lock *lock)
-+svcxdr_encode_holder(struct xdr_stream *xdr, const struct lockd_lock *lock)
+ 	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
+@@ -172,7 +172,7 @@ nlmsvc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ bool
+ nlmsvc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
  {
- 	const struct file_lock *fl = &lock->fl;
- 	s32 start, len;
-@@ -271,7 +271,7 @@ bool
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	u32 exclusive;
+ 
+ 	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
+@@ -197,7 +197,7 @@ nlmsvc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ bool
+ nlmsvc_decode_cancargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	u32 exclusive;
+ 
+ 	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
+@@ -217,7 +217,7 @@ nlmsvc_decode_cancargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ bool
+ nlmsvc_decode_unlockargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ {
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 
+ 	if (!svcxdr_decode_cookie(xdr, &argp->cookie))
+ 		return false;
+@@ -270,7 +270,7 @@ nlmsvc_decode_reboot(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ bool
  nlmsvc_decode_shareargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
  {
- 	struct nlm_args *argp = rqstp->rq_argp;
--	struct nlm_lock	*lock = &argp->lock;
-+	struct lockd_lock *lock = &argp->lock;
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct lockd_lock *lock = &argp->lock;
  
  	memset(lock, 0, sizeof(*lock));
- 	locks_init_lock(&lock->fl);
-@@ -298,7 +298,7 @@ bool
+@@ -297,7 +297,7 @@ nlmsvc_decode_shareargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ bool
  nlmsvc_decode_notify(struct svc_rqst *rqstp, struct xdr_stream *xdr)
  {
- 	struct nlm_args *argp = rqstp->rq_argp;
--	struct nlm_lock	*lock = &argp->lock;
-+	struct lockd_lock *lock = &argp->lock;
+-	struct nlm_args *argp = rqstp->rq_argp;
++	struct lockd_args *argp = rqstp->rq_argp;
+ 	struct lockd_lock *lock = &argp->lock;
  
  	if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
- 		return false;
 diff --git a/fs/lockd/xdr.h b/fs/lockd/xdr.h
-index c7e0518862d7..805027d9b0fe 100644
+index 805027d9b0fe..ffdcad0f8680 100644
 --- a/fs/lockd/xdr.h
 +++ b/fs/lockd/xdr.h
-@@ -32,7 +32,7 @@ struct svc_rqst;
- #define	nlm_lck_denied_grace_period	cpu_to_be32(NLM_LCK_DENIED_GRACE_PERIOD)
- 
- /* Lock info passed via NLM */
--struct nlm_lock {
-+struct lockd_lock {
- 	char *			caller;
- 	unsigned int		len; 	/* length of "caller" */
- 	struct nfs_fh		fh;
-@@ -59,7 +59,7 @@ struct lockd_cookie {
-  */
- struct nlm_args {
- 	struct lockd_cookie	cookie;
--	struct nlm_lock		lock;
-+	struct lockd_lock	lock;
- 	u32			block;
- 	u32			reclaim;
- 	u32			state;
-@@ -74,7 +74,7 @@ struct nlm_args {
- struct nlm_res {
- 	struct lockd_cookie	cookie;
- 	__be32			status;
--	struct nlm_lock		lock;
-+	struct lockd_lock	lock;
- };
- 
+@@ -57,7 +57,7 @@ struct lockd_cookie {
  /*
+  * Generic lockd arguments for all but sm_notify
+  */
+-struct nlm_args {
++struct lockd_args {
+ 	struct lockd_cookie	cookie;
+ 	struct lockd_lock	lock;
+ 	u32			block;
 
 -- 
 2.54.0
