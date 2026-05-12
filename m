@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-21496-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21497-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oVrMHFvUAmpLyAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21496-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:18:51 +0200
+	id kFydL3bUAmpLyAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21497-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:19:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9515251BAC2
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:18:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BB3551BAE6
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:19:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 444DD305BEB1
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:17:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 990F2301B4FD
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD34336F8EB;
-	Tue, 12 May 2026 07:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D3436F8E9;
+	Tue, 12 May 2026 07:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIrRBVhM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzpOZbhS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF383672AA;
-	Tue, 12 May 2026 07:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8526A357CE3;
+	Tue, 12 May 2026 07:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778570231; cv=none; b=cXN34lT5QMNiVO9eVo9kdgOSRLkKjH24rjAGAujp/bg+hrQw9RfE9i5uLKGAqaauEE00saQN9dN07wnnV/RVK/Ef7kHLZyL/8VpovuT6gZBtn2oMjF5Et7gQdpxpUysZiUIQgB6zUIODTa/eTUv2U/QO3RV9Z0A4w7vr2JZ8M04=
+	t=1778570345; cv=none; b=jeMvLtA0HJl7xuVpwlndgobQQL5w5udT/Sy+2oQqGVWA6U5myytTyLLxj2iv34OwSeQc2jvaBs+J5bNGMguFM01C4vGd2cAjoroQztE152xYbQ2SynJaSGgCjJjuQwlA8NMxaybQTpGms6QpIjcBniZeHQmPimevrj3vtspjX6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778570231; c=relaxed/simple;
-	bh=98mFo7pkXXhyp9+X2ioMv1DmZPs1w2tyrej7VobxKEk=;
+	s=arc-20240116; t=1778570345; c=relaxed/simple;
+	bh=d5SXioBPZwBUI6+SvSlauBL+rdn+SyAPRvBRa2uxfM8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ha/i7zdGB6FtKgcJ1zBEyjKhuLsojwdfoqpcJzeNzULp9yVt2fZjfw8HlqRiex3H1WbX1Dz7mI2fv2h38oXqyg2VglYk3K2TdDCR+rZhfQLNGlLKImtCxH1MYEvUkGnMW97OgVbClA2eWVfaEmIKlMxr4N+VE+PN83IRmrVdDNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIrRBVhM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB1EC2BCB0;
-	Tue, 12 May 2026 07:17:06 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=EjcTnj7n2IN+tK5pcq3/ofEcka4ZEY889LEA0Ozo8KW8Kh+UOawZiorJFAQjUgSpnTvGxH1CCTJt55J4q9c99CkdU7Ovbp4C9qnziyEEGudRvFzEmji7QkMlwPvWEwIfnC0heqY0jNY3LPgYxzDPUy3T0I8qFBNaJDPd4EWsqBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzpOZbhS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9397DC2BCB0;
+	Tue, 12 May 2026 07:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778570230;
-	bh=98mFo7pkXXhyp9+X2ioMv1DmZPs1w2tyrej7VobxKEk=;
+	s=k20201202; t=1778570344;
+	bh=d5SXioBPZwBUI6+SvSlauBL+rdn+SyAPRvBRa2uxfM8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iIrRBVhMsfcFd8c2S3m3a8T0kcFhIOtgvw+B1wc4Z+F9AGHqa2Q4wJLfDihSwuvKA
-	 9EHcoUhMUamvE0OG5XYIdztmYfey90VXjjTFqwg3o2L6rXQ9SkypKXMe5MeYQjKCPU
-	 tsvV+fBHpWRp4j166nAtQPNhdKJVpvb+lAwRMS+df1+5x7pjtjuYvfzhnW29hq2GtH
-	 8o1S+/mUmIon2yUaU3SJRUwZKHtx6T6N+tJJ2t2uoihJJtq2Ym+RSFldlpzI/doRk8
-	 3JxjxZkF5Srvye0Gf8WDLX0nDvfUzScbFHdd73uZu3gax6MKiiqMjCYtozBL3MMONV
-	 pmRlkBWUhk5hA==
-Message-ID: <44a01a39-c902-4c54-a7a6-07bc1f4d5f06@kernel.org>
-Date: Tue, 12 May 2026 16:17:04 +0900
+	b=rzpOZbhShhQy53uHWdXI2cpciYpCJ920LLOVTxryHf9v8OKxdXcXv9PcbtWsHhvyX
+	 AYph9XZFDOqDQwZsiKpkaAi5Tj4jgjyto4NZ8GZ1d1lrpRbMH6BEl1FmQDWqHh9aKt
+	 wR9hASUhwEfR/x7muZ/iQU+ZY4Unac7EpcjljUYFspFcTRdnBtE6xUk0dzsWRcdpwK
+	 N2xzyLJkDls7Vy9tVuzq9XXM2918R97/uSORI1dlwtkQ+yKrj8aK6cWW6NBweJ5PnN
+	 m3/udQQng+yYpR0EBFqLsp20DKAl82altPlAL8TvQYjfsAOHgqXK+IqxQKVepy1L7g
+	 Pst3cIKtZvjWQ==
+Message-ID: <48752f6c-39ad-4409-9d41-646922a668cc@kernel.org>
+Date: Tue, 12 May 2026 16:18:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/12] swap: restrict to regular files or block devices
+Subject: Re: [PATCH 05/12] swap: cleanup setup_swap_extents
 To: Christoph Hellwig <hch@lst.de>, Andrew Morton
  <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
  Kairui Song <kasong@tencent.com>
@@ -71,14 +71,14 @@ Cc: Christian Brauner <brauner@kernel.org>,
  linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
  linux-cifs@vger.kernel.org
 References: <20260512053625.2950900-1-hch@lst.de>
- <20260512053625.2950900-5-hch@lst.de>
+ <20260512053625.2950900-6-hch@lst.de>
 Content-Language: en-US
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20260512053625.2950900-5-hch@lst.de>
+In-Reply-To: <20260512053625.2950900-6-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9515251BAC2
+X-Rspamd-Queue-Id: 2BB3551BAE6
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21496-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21497-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	HAS_ORG_HEADER(0.00)[];
@@ -112,14 +112,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 X-Rspamd-Action: no action
 
 On 5/12/26 14:35, Christoph Hellwig wrote:
-> Various swap code assumes it runs either on a block device or on a
-> regular file.  Make this restriction explicit using checks right
-> after opening the file.
+> Reflow setup_swap_extents so that the flag checking is not conditional on
+> a swap_activate method.  This is currently a no-op because the swapoff
+> code still checks the presence of a swap_deactivate method, but it
+> simplifies adding a new check, and also makes the SWP_ACTIVATED flag
+> more consistent.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Looks OK to me.
 
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
 -- 
 Damien Le Moal
