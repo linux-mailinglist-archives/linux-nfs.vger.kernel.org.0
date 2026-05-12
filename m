@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-21504-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21505-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aGv2A3fYAmpXyAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21504-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:36:23 +0200
+	id SE2kObvYAmpXyAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21505-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:37:31 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7980451BF35
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4356251BF96
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 09:37:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F20FA3021994
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:36:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5B489301B156
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 07:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC0047DFBC;
-	Tue, 12 May 2026 07:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5FB3672AE;
+	Tue, 12 May 2026 07:37:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DwiA25kb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6zwxl4K"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996C2379C28;
-	Tue, 12 May 2026 07:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6048F1A6838;
+	Tue, 12 May 2026 07:37:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778571372; cv=none; b=HdNrbMRJcX5c2Xc8BmQ+FtLtyF9DBQZ2Fs24nOBs1KdXqx9X6uEvp7VFzEe5oHy+6thQva9KO/Dk4NQET0qgJstiV2pvWSvIFrP20qdlv2wzcZKdnMcC9H5x2ZNHZ7LkcVOEQLBuzbW/AvUCI7yOIvsNttcWNpbvdvUzmfM82GA=
+	t=1778571423; cv=none; b=bZIs9nHlcpn6q9yfV/j2Kv9ylSRg2Rb/aj3srYaTm2suIvnInEn6uq+54Ya7BLX8MtmpL4r/7oeK+anEcxlqelrljUBzH+yfUE5BJG54qExRUsdoAJLWDTpelbfNf/WPlxogFvkqpzMUCt5criyoBmozpwbtKi2Csn4xDovOHIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778571372; c=relaxed/simple;
-	bh=xfvW1wpEEpdnJkpRrdMoCWaP4d2q5LDk8OL7iCWt7D8=;
+	s=arc-20240116; t=1778571423; c=relaxed/simple;
+	bh=bzanpAxEPPJIoNF8P3OMFoiwVgRrhSjMj0dl8KCwj2c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W1vqb8k3cN5ZmH3rx8nG4iRbcH7R8q41Q6xYYR89rDj7TEjXhpjjFBMzOq+kLEhDy5iQDHEmebdjCFd4A8MvgWmghujg9/GuJLzg9upmbYDDjSWI8kPnsZ13/AfeutC0RIYRd+kjSxzRU/nmBVE+ITrotx7CT5PEnvzMzymjzsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DwiA25kb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB31C2BCB0;
-	Tue, 12 May 2026 07:36:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=KtjsjWLgCP6G4sG8vI0vfCMvumswQEqRlbfV4EJmMCwANuSlmBsd8bTRo9ceR3EoSEMdgRccS66fyz2xphrMzPMqQPa1H/nVoq5z/l+c6nCiakLqSneOC2+8BZUAaPE6HlpV4jKEoiAm3euImFAiYvNSOsSSZ31ONME758neVQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6zwxl4K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8939CC2BCB0;
+	Tue, 12 May 2026 07:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778571372;
-	bh=xfvW1wpEEpdnJkpRrdMoCWaP4d2q5LDk8OL7iCWt7D8=;
+	s=k20201202; t=1778571423;
+	bh=bzanpAxEPPJIoNF8P3OMFoiwVgRrhSjMj0dl8KCwj2c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DwiA25kbq/Td3a9MvR3WH58od1Vae6OW7xTi9Au6t+Zxak+ySYwcyXatBRk/nSr+C
-	 XiF1aj5t8J/zauFcxSSUJ4UMlZliBxyUBhEOn4t4A0EasYiB9DFsanXEeNirLMMncf
-	 /tYXyyBXROFd6YoiJbNa/pMDtPmAKbffUNntnCRP6f59o/WOMTGj5H/hCXhkFoD2s2
-	 Gw32M5q4A/mv9h6b32INXyOm2qVf1in/c/G3Mjf1sRDBup+Qe7hjxeBcAsBOS1xK9T
-	 QuVhHaZJQauyufFxTordqNNUGfqZO/Is1q930JMRcuGAk8Ge+3gpSB7gtvX7VpFoci
-	 iJpVyB+/LUR3Q==
-Message-ID: <5eb5cfd6-5062-40b7-ac4f-ef8f13e0a145@kernel.org>
-Date: Tue, 12 May 2026 16:36:06 +0900
+	b=k6zwxl4KfffulQWkSQ/v1DaJteq+3tZVRQwppay1B0fSQw+n/Up8vr10OmjPy01oZ
+	 S9RbJ2oBP2l1fSUFTx2f2rjJdBSErkAnfKc3t1TUv+Mu3oSLC1iyL/GU/gfjeqQ/nw
+	 7lqxmqLEbpmy0GIolmLaSccs+DOcojFy8BT23/XpKOM0EX5Apejzh34zCu8A/q5iOx
+	 6FMe55PI21UUcouy3PLDDTJmU2cygCtArcW5fCFdj4DYZEjPbpGPfE2WnH/lo8MMDP
+	 Sy1+6j5/OR8RfSxsobzgeZEWhoXRA36sq61Xw/fBIWWXBSV/z2L3QPA1yFLoLjn0wr
+	 cU6GrRMFxCkHQ==
+Message-ID: <f2ef2baa-0527-4905-aa4b-b88ab38a51d7@kernel.org>
+Date: Tue, 12 May 2026 16:36:56 +0900
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/12] swap: add a swap_activate_fs_ops helper
+Subject: Re: [PATCH 11/12] swap: move struct swap_extent to swapfile.c
 To: Christoph Hellwig <hch@lst.de>, Andrew Morton
  <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
  Kairui Song <kasong@tencent.com>
@@ -71,14 +71,14 @@ Cc: Christian Brauner <brauner@kernel.org>,
  linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
  linux-cifs@vger.kernel.org
 References: <20260512053625.2950900-1-hch@lst.de>
- <20260512053625.2950900-11-hch@lst.de>
+ <20260512053625.2950900-12-hch@lst.de>
 Content-Language: en-US
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20260512053625.2950900-11-hch@lst.de>
+In-Reply-To: <20260512053625.2950900-12-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7980451BF35
+X-Rspamd-Queue-Id: 4356251BF96
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21504-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21505-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	HAS_ORG_HEADER(0.00)[];
@@ -108,13 +108,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:email]
 X-Rspamd-Action: no action
 
 On 5/12/26 14:35, Christoph Hellwig wrote:
-> Add a helper abstracting away the low-level details of enabling
-> fs_ops-based swapping.  This prepares for taking swap_info_struct
-> private.
+> struct swap_extent is only used inside of mm/swapfile.c, so move it
+> there.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
