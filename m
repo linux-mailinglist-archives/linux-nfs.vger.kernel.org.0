@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21541-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21542-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WD8dD75xA2q55wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21541-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:22 +0200
+	id mP2UFgNwA2p15wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21542-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:22:59 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9EFE527A88
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:30:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A85527748
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:22:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 939A532F0637
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A2958311205B
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775A734E744;
-	Tue, 12 May 2026 18:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F67936C9C2;
+	Tue, 12 May 2026 18:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBYPr1/F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4NIIxR9"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5390236B043
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C53136A378
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778609641; cv=none; b=Vx5iJA92tivu6DqJhGfcbhtCcTwSEhhqwE9uJuGP0R8VDBXj+6xAq27WurWXCFHa2XwwPdUA6xCPZCsAi1JJY8IIgM8LgIHr1ySQXk7JzRmFTPvBc+Gf/FL3j5mV32EG6mE6QihFm9IgXV5ZJCpJrLVJGlRpT2fOREyPxcuwXWs=
+	t=1778609642; cv=none; b=WwcqWZUySlFOkaPGsacEgH1zheDAuYeGZyK38PNe9ilnE3/gdk1og9OvyKBajuTylrmEGACFntgLHcqhvlAUwCIZ4twVmsHAVDAKKk+QN8vkhIm7hM4MG2kW/jKqIlh62ezjGBWXwQ3c1xHFCfKmY9oE3YkXUUQrqQtDqPZXZnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778609641; c=relaxed/simple;
-	bh=R2+oHWRZ/4D8W57D/BcCa+FvL4+JYRieOJDjrvEpoBg=;
+	s=arc-20240116; t=1778609642; c=relaxed/simple;
+	bh=RdmRUEp0SaROgLSAvFDDr2PDqgNVZLzPjPgJ2c40GTk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qRrOLKMMJoAiy54ZEEBneBOOqx5aPoLbtqd7y0qH3s3VYDws/2UIq7LAzBdgtB/yQ5dvLNPpiXqHm5sajD6evxb8WJBSSOIGG0qWkth1YiDtibRYr8s+MAoHR22IxahPhvrz+th+1sXb9OcfYH+glh38CddrVOL+gw1tEols1GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBYPr1/F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909BFC2BCFA;
-	Tue, 12 May 2026 18:14:00 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=eQwidKPClsJU31BlZsG+HuWYA27v/XP6F1CGcp9ZWiWCt5fgAm6n7d1bO0QK95JEj/UUPPnKkNZPEtpZHLqHVze95xGjmc99/uzZywvUHgduHsizjFKIRP9NVO5MyxvarBk7Jd0ERcWjPtxa1RifJ2nyc6/Rih0LmloJnCrQ1Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4NIIxR9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D828C2BCB0;
+	Tue, 12 May 2026 18:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778609641;
-	bh=R2+oHWRZ/4D8W57D/BcCa+FvL4+JYRieOJDjrvEpoBg=;
+	s=k20201202; t=1778609642;
+	bh=RdmRUEp0SaROgLSAvFDDr2PDqgNVZLzPjPgJ2c40GTk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RBYPr1/FeQ2WNP+6/wY/yNUsDmwsAV6s68J7587xF9ybdoUUe4WepbJq+UqUCw5ZF
-	 IebXAZp/Bdum0f+2ozCSngQaXDX/2G0bqatycrnYcTtLCtZSSHo/x4n3Y0f0lGr9RV
-	 LxGPqyuuF6A+Wj/dsMeSZdNp5HHEvQ4MA9Pt01upNwwDuBjNExwGPp7nPOudKhJjFo
-	 SDt8vIlRXmhcdTZ0Jz8LQEJssYbFd2IbQmAOY6l50e4KBKDRKAhIwX6gYVX+KsHtUj
-	 Bt/Skb0HgU4aCcQZZkQ/GqtYkmjIaKjyPV8wSK/0Mg1yhazqm4qxN9LhFC1B115xEH
-	 diMzAjS9huMjA==
+	b=g4NIIxR94bVxTEAYbiYWxcOyUBXDmOiQ1MWrbrp/sWLA1kIBkEJvNCi7cnHTF+wqd
+	 G/4eWePn/f3/CiWxwWun7CxOl+NCGleh12rTubAFptWmjXe4moUOYbOsCd5RXsS3CR
+	 eEaQcLlKVjMUoUJM6X8k+4ZAgguUfDRTdrlwrDHh5XxxXIqlNs9LdzmhJdIG7YmJfX
+	 EJoLAEKapclsRNisDdkg1h6y3iVBu5TV0G8dLkdYANgq54qtrOiY5p4jHXDpacufG3
+	 brLRf95y2rOMp5TaTl2DLWH2worTz/yyC4i71FL3/H2Met7EDyn9BSKbZPbZ+3PXkz
+	 rfpou3MchpcOQ==
 From: Chuck Lever <cel@kernel.org>
-Date: Tue, 12 May 2026 14:13:36 -0400
-Subject: [PATCH 01/38] lockd: Stop warning on nlm__int__drop_reply in !V4
- cast_status
+Date: Tue, 12 May 2026 14:13:37 -0400
+Subject: [PATCH 02/38] lockd: Correct kernel-doc status descriptions for
+ NLMv4 GRANTED
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260512-nlm4-xdrgen-v1-1-19d99b2634b4@oracle.com>
+Message-Id: <20260512-nlm4-xdrgen-v1-2-19d99b2634b4@oracle.com>
 References: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 In-Reply-To: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -65,91 +65,96 @@ To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1477;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1945;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=SjBmTgAqft3LXVNwZu2/+QFiRWe1el8+7FDYnarGMHI=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23jq2qrz71aRJmJotd5lyFxAI+MWk8+T+/bJ
- zxzwvBJiv+JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt4wAKCRAzarMzb2Z/
- lysLEACkzX5c03azRNIcwHQbe8O4diCANSHyqPLZK+uJlFlKiLARAYnWijup1NccZIBc6sEqK73
- n2lUPHd64QXHpIeLUPmdnY4saq7x7d/ZiJ+MuQGJy/Qa2Gl6yBnbgXapJADplkR6pl6A6uVJwva
- iYe8HzTOMYsomPBss25U94uVyVZZbLfoHhZXCC9P6L2wrS/rximR3bpV9WCXwYxYtcUbRrTRwxu
- wXCCN6vYaBrlPZkUQ4snBvoNzgUIwNa92nOfulM6kEnp3eMWvIqFG4SBA3zEsvLxczbhSLAS0O6
- ynTAblvVWeSOmQP8arjGwToTR7hbMXTxKKMoRac1e2NUcJh9tOwzT7Z3uT4TFXuoF5InU5pJJIp
- b3XmqitANEV4viFucntkYLof2VttE9ZJTW3S0ag6gXmWbRoff3/ZhKYIOY2qH+vgQW6wWfYalNa
- tj8Btll13uBCFNq7X2GoMGPC0yuI8R8ph8hSVWH5t6lQhkbznDwku9n0ZFtVL03pD2ZwgQk+fVM
- Jb47acg2HoSsO56gwKf2eV13NbPTlGhR5dJFYbG81/oF6qRNjqV3ayVSMsoA7B2OBYFtgiKk/rf
- oPyVRdp+b0LPavunEFLyFnaIxLFitF/XBD14z6ru0jCFoOO8H+Wpf15j9+pAd7Rs82QZzhTraxP
- qDRLpfyQDL2U2nA==
+ bh=rUPsx85q/MXDiKJypH36J2N6z0C7wkduFW5UXIoKzNw=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23jOIapApsKYtLrR1cNjLf1MAY0FZHhLe3zO
+ L+NJLs62kGJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt4wAKCRAzarMzb2Z/
+ l6d1EACzTdBOQmrE+/3NxXFEsKZovM13z0CEJiHQj1VAtex0bE8dPDi2nTMk9az7mwhtALsgvBr
+ o7UyuL8Lzbn74eeoz12XxPGbvON3+jxJrPtwH6IvTUNvd7jlmVtCZBAAI0e9h+4NtwOPd6Ua4xK
+ Mkyh4+v53MaSN7J7sP0Bu9PnrhwerH586LGaL5liVnAxNoyIfvINRcdRMOXvmE11CLqNI/tY9yj
+ Tse+LE0Jyd868KehkY9xM0G9tlBCcOCYlvOwp38J+F2iNge54ezxpw8jcfvv0bI4D8N13ndgdBd
+ x0DflenYkgJmoBPUt+SPGBlK67vjKXVT0YLdyn+IvfNYrtQMfYcK/NE0QfELlt00edIyKP3k3wo
+ 3lEAbumYvX5ubB6kTFR68cEG92Q81RzUytKIvfjU43QsaWnb3ef7rJYM9KeyzvGcL5iUGzUYGp5
+ SRisnbSXYWc5zpIHVrYybDa9iKLpkY+4NKzJwwY3roYZzaH723//tx03v8CQLrKWH7sEbJxaCCF
+ cIi5vZoBbS98dGYJ5vFBxZWS7/mON+B77D9yG7HoOa930m4eJ5p4w0EYglTVkZO23/c/ow35wDk
+ ZEoTA+40kG6OLFcLzK1/wl8ocHbwNV0xEgSkT+/n55WyveqSonAWbt+xtvEcoGt+xS/UdRfPB36
+ BxTlsmPCGMFKZhg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: D9EFE527A88
+X-Rspamd-Queue-Id: 05A85527748
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-21542-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21541-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	SUBJECT_HAS_EXCLAIM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,oracle.com:mid]
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-cast_status folds internal lock-daemon sentinels into NLMv1/v3
-wire status codes.  The !CONFIG_LOCKD_V4 variant warns when an
-unrecognized status falls into the internal-sentinel range,
-gated by be32_to_cpu(status) >= 30000.
+NLM_GRANTED is a server-to-client callback; the local node
+responds in the role of the client. The kernel-doc for
+nlm4svc_proc_granted attributes NLM4_DENIED and
+NLM4_DENIED_GRACE_PERIOD to "the server", but per the Open
+Group XNFS specification the responder for this procedure is
+the client host, and NLM4_DENIED_GRACE_PERIOD identifies the
+client's own grace period after a reboot, not the server's.
 
-nlm__int__drop_reply is defined as cpu_to_be32(30000), so it
-sits at the lower edge of that range and trips pr_warn_once
-("lockd: unhandled internal status %u").  The status is
-returned unchanged so the reply is still dropped, but every
-dropped reply on a !CONFIG_LOCKD_V4 build emits a spurious
-warning.
+Rewrite the descriptions to match the spec: NLM4_DENIED
+reflects the generic internal-resource-constraint failure, and
+NLM4_DENIED_GRACE_PERIOD attributes the grace period to the
+client host that received the callback.
 
-Compare against nlm__int__drop_reply directly so the warning
-still catches the genuinely unexpected sentinels deadlock,
-stale_fh, and failed (30001 through 30003) but excludes the
-legitimate dropped-reply marker.
-
-Fixes: d343fce148a4 ("[PATCH] knfsd: Allow lockd to drop replies as appropriate")
+Fixes: 7a9f7c8f934e ("lockd: Use xdrgen XDR functions for the NLMv4 GRANTED procedure")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svcproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/lockd/svc4proc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index c0a3487719e2..110e186802b6 100644
---- a/fs/lockd/svcproc.c
-+++ b/fs/lockd/svcproc.c
-@@ -49,7 +49,7 @@ static inline __be32 cast_status(__be32 status)
- 		status = nlm_lck_denied_nolocks;
- 		break;
- 	default:
--		if (be32_to_cpu(status) >= 30000)
-+		if (be32_to_cpu(status) > be32_to_cpu(nlm__int__drop_reply))
- 			pr_warn_once("lockd: unhandled internal status %u\n",
- 				     be32_to_cpu(status));
- 		break;
+diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+index 41cab858de57..fc9ed4abb7ca 100644
+--- a/fs/lockd/svc4proc.c
++++ b/fs/lockd/svc4proc.c
+@@ -513,12 +513,12 @@ nlm4svc_proc_unlock(struct svc_rqst *rqstp)
+  *   nlm4_res NLMPROC4_GRANTED(nlm4_testargs) = 5;
+  *
+  * Permissible procedure status codes:
+- *   %NLM4_GRANTED:		The requested lock was granted.
+- *   %NLM4_DENIED:		The server could not allocate the resources
+- *				needed to process the request.
+- *   %NLM4_DENIED_GRACE_PERIOD:	The server has recently restarted and is
+- *				re-establishing existing locks, and is not
+- *				yet ready to accept normal service requests.
++ *   %NLM4_GRANTED:		The granted lock was accepted.
++ *   %NLM4_DENIED:		The procedure failed, possibly due to
++ *				internal resource constraints.
++ *   %NLM4_DENIED_GRACE_PERIOD:	The client host recently restarted and
++ *				its NLM is re-establishing existing locks,
++ *				so it is not yet ready to accept callbacks.
+  */
+ static __be32
+ nlm4svc_proc_granted(struct svc_rqst *rqstp)
 
 -- 
 2.54.0
