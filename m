@@ -1,183 +1,182 @@
-Return-Path: <linux-nfs+bounces-21519-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21520-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0KO7G1o5A2qh1wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21519-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:29:46 +0200
+	id oLsuOUlIA2pU2wEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21520-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 17:33:29 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4CF55227E0
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 16:29:45 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E86523B46
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 17:33:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A8E373161709
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 14:21:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AAF263020282
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 14:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3F9B3B1037;
-	Tue, 12 May 2026 14:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88013351C1E;
+	Tue, 12 May 2026 14:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="t81N7W/N";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1ZnWSPCT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MetrSyzq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sOo4epfI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvR+Ov4U"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1D23AFB17
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 14:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778595606; cv=none; b=hO5x3LseuVPzaYyZcZmCRvwnKBFcsYkEBKQpZVG1nFXTG+nSk+cfUW3krAPbLzHn3kQ39pt+FmKq+r7YPYi3mwLcj9Bt+kjxpIPQi4dXTINIKrBuQwBpsHyj+pANjYrlj/yymYUJnkor7Hhfwi2XzpetASizNoeOhF+GK3wmqN8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778595606; c=relaxed/simple;
-	bh=vqr1rgjf6u/HCJT7JLU1CD3nThlktkS40ND0tlqkrMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BVVwIeABp9IhutiPCwaXt9MSKB/aVD6l/aXyMIJZ6x6UkgMKitPybUpLXb2YZDj4PP8heSdkSIetF0+2tLSTTYyGD7VdsMWprZ17vJm/e1UOJ2c0NY8aY7iRQA+c9Qd2IrlQABbuO3P8bUtoUElkKqiOTHWMa0XVG8tcX6hmRrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=t81N7W/N; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1ZnWSPCT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MetrSyzq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sOo4epfI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B75F775BB5;
-	Tue, 12 May 2026 14:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778595603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3EP1faBGLN+no503thLo6n9CBiSdMnrRO0eLXY2Tv7I=;
-	b=t81N7W/Nv8v0rvD1jUc+ze0GLTAUr0+ebiCY8NRvyVD072ReKjkvloxx4U7OkdRoEQ0zGK
-	Uc1ZQoWjOazikndFHR4w84zAYGpdIYqD2+eV4s+n1TqFD38nflnVI+RTZcChEX0At55gfC
-	drLcL8V43UizQAqY91hs8iAHs+42vQE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778595603;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3EP1faBGLN+no503thLo6n9CBiSdMnrRO0eLXY2Tv7I=;
-	b=1ZnWSPCTE0ulbttJ5D5p1MT6QIrRfxF+4EzTeliV+7nqcWGcE93xfXPHMDBdnKLG6O+ysa
-	OgeIRotsLjQzS7Dg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MetrSyzq;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sOo4epfI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778595602; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3EP1faBGLN+no503thLo6n9CBiSdMnrRO0eLXY2Tv7I=;
-	b=MetrSyzqzRmF15ALI99x0FOfYG+LVv5NSyeKSsp1fmVsUQXBlW9EZpI6M5rWr2BlMe4NqM
-	XV3Ubxo8H+0dPDEzfCCeuasu2JDdIi1kXn46oumn1eRCuL0kaUEk9mAwHLd+iD0XHpWU4m
-	91I+1jdBGn8ji5W9GYx7LHTsH8Lt3Jg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778595602;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3EP1faBGLN+no503thLo6n9CBiSdMnrRO0eLXY2Tv7I=;
-	b=sOo4epfI7bN0V03WcMMc0+0wvwYdvLRapy8n5DXXujoyRA6nGGMcyk1otyobCC0j3AD1f2
-	gYwqBRX7+8vmctCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A3313593A9;
-	Tue, 12 May 2026 14:20:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cFX6JBE3A2rMCgAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 12 May 2026 14:20:01 +0000
-Message-ID: <816ac704-4f46-4f00-8e84-aed892d93187@suse.de>
-Date: Tue, 12 May 2026 16:19:56 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA9F25393B
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 14:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778597594; cv=pass; b=NZoGyt8Pne1d4CPRdexzZ++IyQL0f1mJF06/zBDAgHRHUYjBEZx30Qms6lk712OnXOkao46TPN9Uu32/1cYXqgCxvHpU/jlNzEAZCG5t5Ry58qcN2HTCJ4r8gEElxuzKSc46iRoyF/W6Pr3nta76l+AylCaHvmus7AiEWikbZl4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778597594; c=relaxed/simple;
+	bh=jgtpwFi84cNuoVnLUljwGuqxomTVQp9ophGRsGCXtQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Y4Dn3LC8uFMbG5+DmqBWIOSpoAIncj7GIhj0kdpQOiC/E5eprQqJFxZFZ8+/r2JOmFNkPiUPwvbV4RJsUn5U0oTa32hKHW3VUOuZevMEyhkh23k0kIFKxdNzuc+F0ucqr2vVrDEdNOxriQNQlkANRrWArFIpVb5KJ5vWYZqQb0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FvR+Ov4U; arc=pass smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ba7a1cc0380so1006979366b.2
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 07:53:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778597591; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NVBtTg5mm0Rd+/1GFLkmongPir7uoP5VqZVpeKY1t21BhWCk2LgPekZSunvB5/47D0
+         Gfe6Ay+preoqxWl5Dz3wc3wJJr1RMlVdY6KnP4boe0lnXnCv8r2roIhF4JyXO8ZRkW47
+         BOjil6KwvHPFf8xQSIw3u5Eu9wr3r8iYHpDutghgxGD4/Vjjq2jfRij356MqmAqjjwyg
+         gImo4w5lU0iovsyxd5H4dJeINXe81zK6ai5MBSmypNbPAeywBruGyJhw1FlgAHhzQgxt
+         nb8ArQVWDIIcOBLjIfPG5jbQBzsIvqN/yVIj4WYVwSnSB8lLRnJZIlfzM+idEuPPfQuO
+         R56w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=uGGIQQ3tibxgLl77CAzbWKZ0+3Uj5OHlsxKzoh8hPI0=;
+        fh=A6VhHI7NKHnmfjjs9vgKiwsl8TnYIjA9XaJXQoRXXsA=;
+        b=Ta6EdOpdUo5RoEUQAQOnbRnrhCAsZIxL1QWvYnBOHV6Dy2ZOnZUVoOL/Xn7+a56H2t
+         /CYBjtOIEYXsPChVCMb9RjsYhwvstldNc27dWV61iyxVYMeiOsu3qFmtS3BNXRIDC6OE
+         vnrNsBUOSHbzl6GdbjRRnmBULdsQBMSAZog/Przn2PIkdOyKk8TNNAfdE8I2kXzhrnWd
+         uvtIWGV4LY8W0hTg14OUqd2Rdw8/UA6qVomu1M1VX7rV3ij4E3G0bnJeJV8nDSs4NC/j
+         YVaSmMkv7mdzDeNIZARSmd+l0GOnTooTaUy0QAy1JSIV+TaOkPvXv0w4+yLTQd7mrzx7
+         rHTg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778597591; x=1779202391; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uGGIQQ3tibxgLl77CAzbWKZ0+3Uj5OHlsxKzoh8hPI0=;
+        b=FvR+Ov4UNA4J0gRZEyzFDH/lxHK+6KWjrml7+A92A7FM/qHSQqIiiUpIlo/GVJ+RyF
+         j9SKkAruPXcJhHBP2gh6bBfukaY/s0kq2MKidefRrA7/LaQTwoTRsCGj0Yl68p2hVXDi
+         lfs9ucOrJX7CZsS5QZdC8hv2q8ZA4kpNqLmm16x1d6BJdcVab2GVqjRr0BP7zemH1ay0
+         3xP6MlUIQdh99/Dfc3WSX0q/a7M0dzd36dKR7djteCN5q9qCtPjDRzltHFS8Ay11o3kp
+         5es4keBcTigB5jHXVL0o/q8f6Xtu1G6OzVYb+F7PCv/j7X6mpOV73R4/uIkdtf2dampB
+         jNTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778597591; x=1779202391;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uGGIQQ3tibxgLl77CAzbWKZ0+3Uj5OHlsxKzoh8hPI0=;
+        b=WI5sloJrGp/vbs9G2nbMRPFHx0FXHAd2zY6V51R1xlU9okswNLX7CDDKfFC7t6M3F+
+         25eJccsv18DhhyApd5dkjIBKjkuLkbZTvyE7L1IQVwTHoYdoOrghjpk2SVYmWsCvIuqE
+         ZqZ/De/eD85Z9JI5LnuRnhTPJcNnB6h78f6UI12/Z9qhE9ekUYwjaHpYTGrgXSNtZJ/W
+         yZ8ozMKyx2/l7wblpzXLxwoOldOP4x0LnhUgFMIB9w2bH6sQb9XosaekyAdvTajQoDV3
+         B/tuNTiAPfC66qB10S0whiw+s1/Jv7bGzYn6u933fyNEEXzm+ub2gk0eXHaXl9tBAsvj
+         p7sg==
+X-Gm-Message-State: AOJu0YyZ/ru8rxLiOGIu26LyqPWrEdj4jc1x642ial66+n3TnDZi1lwO
+	Hqv/Wkx8G4ON5MxgYYF6yMlhyHQ+vMT5erR0S+6hgsbisThaoOFslW8roP8tDLpWU7WLgSbtJ4i
+	UGFfdT6nxx5HDNlxqtsS8BN0TTmUYolsfzaFph2g=
+X-Gm-Gg: Acq92OHs81eRtMOC8EyhBIKKtd/ARluhkIum8cZMBH24tKc/s5UsiWm+xxAeQD41dq3
+	hI1FXjKGdWbomwwe2Gk4hTndpoYDYgSnZHoBi7YpAlzfV5RyH3DvFPZY8CDsyc+IH0y7n3GhzxN
+	SQZGzYyM7vuKfK8y+lrgGkJrifn6yCPk6uINTYe7xjRJPSfyPWTTbrjbJRg8vNZQ5JtbY6Dm/qC
+	DW14K+wHBGHKnfgtX31zL8J+3UqVzwDY7PIrmOtT5ByEqtROB7oJITj0IQZkLsGsL5Et6sVMR/i
+	am6a9mQ=
+X-Received: by 2002:a17:907:60cc:b0:bca:2757:d93 with SMTP id
+ a640c23a62f3a-bd28f8a4842mr207316366b.36.1778597590900; Tue, 12 May 2026
+ 07:53:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/12] swap: remove the maxpages variable in sys_swapon
-To: Christoph Hellwig <hch@lst.de>, Andrew Morton
- <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>
-Cc: Christian Brauner <brauner@kernel.org>,
- "Darrick J . Wong" <djwong@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- David Sterba <dsterba@suse.com>, Theodore Ts'o <tytso@mit.edu>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Namjae Jeon <linkinjeon@kernel.org>, Hyunchul Lee <hyc.lee@gmail.com>,
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
- Carlos Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
- Naohiro Aota <naohiro.aota@wdc.com>, linux-xfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, linux-block@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org
-References: <20260512053625.2950900-1-hch@lst.de>
- <20260512053625.2950900-2-hch@lst.de>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20260512053625.2950900-2-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Rspamd-Queue-Id: E4CF55227E0
+References: <CAPJSo4XdpOu_yNGpbMMQ0hAO+mdOy2-TsEke_vHGm60k6jp2Bw@mail.gmail.com>
+ <e44aa868-5ec8-4c35-b5bc-5066487a28be@app.fastmail.com>
+In-Reply-To: <e44aa868-5ec8-4c35-b5bc-5066487a28be@app.fastmail.com>
+From: Lionel Cons <lionelcons1972@gmail.com>
+Date: Tue, 12 May 2026 16:52:34 +0200
+X-Gm-Features: AVHnY4Ke7LhZqpnn6OcEqeqEYDI8oI2qM_TF6wgyIHitoik_XT9moadTwwGWSsU
+Message-ID: <CAPJSo4UFrWbuC1hKNg8oxnJtSZAE=xEVv5T_UfuSOP1uZgeQEA@mail.gmail.com>
+Subject: Re: Suggestions to drastically reduce Linux nfsd I/O latency on BTRFS?
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: E6E86523B46
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
-	TAGGED_FROM(0.00)[bounces-21519-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21520-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hare@suse.de,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_ONE(0.00)[1];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lionelcons1972@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim,lst.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-On 5/12/26 07:35, Christoph Hellwig wrote:
-> Always use si->max which is updated setup_swap_extents instead of copying
-> into and out of maxpages.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   mm/swapfile.c | 27 +++++++++++----------------
->   1 file changed, 11 insertions(+), 16 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
+On Tue, 12 May 2026 at 15:23, Chuck Lever <cel@kernel.org> wrote:
+>
+>
+> On Tue, May 12, 2026, at 5:47 AM, Lionel Cons wrote:
+> > Are there suggestions on how to reduce Linux nfsd I/O latency on
+> > BTRFS?
+>
+> For us mere humans, the first step is you need to root-cause
+> your issue. But consider using an LLM to help you with this
+> process.
+>
+> Example questions to guide your analysis:
+>  - What particular NFS operations are taking too long?
 
-Cheers,
+Read, Write, issued to serve single-file disk images with bhyve and qemu
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+>  - How full is your exported file system?
+
+9% full, 2 PiB total size
+
+>  - What backing storage is in use, and what mount options?
+
+Very, very big hardware RAID0 with battery-backed ram cache, shows up
+as one single SCSI disk
+
+>  - What transport (TCP? RDMA?)
+
+TCP6
+
+>  - How much server CPU is available when the it appears slow?
+
+64 CPU cores, 512GB RAM
+
+>  - If you are using NFSv4, are there other clients that emit
+>    conflicting OPENs and LOCKs?
+
+No, just read and write are slower, compared to doing the same setup
+with something like ISCSI.
+
+Lionel
 
