@@ -1,60 +1,61 @@
-Return-Path: <linux-nfs+bounces-21508-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21509-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oPZ7Lv0GA2pmzwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21508-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 12:54:53 +0200
+	id IF9vL7UOA2pI0AEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21509-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 13:27:49 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5342351EE7A
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 12:54:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3689751F53C
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 13:27:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 02BDC302BBC2
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 10:52:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 49486303CA73
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 11:25:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C4AE38398F;
-	Tue, 12 May 2026 10:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21204D2EC3;
+	Tue, 12 May 2026 11:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkCWhi6r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2eWRUBy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3C92FC876;
-	Tue, 12 May 2026 10:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C97D492199
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 11:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778583145; cv=none; b=utbL+Cop6esSfO1DRy3MqHfUhMIjDTjnZotwDztLT4OK8zL7jZnImDvar3Duai4kqQAcwW0IUS8T0wKgSK6pVWEmZ25k1cibcB98DMji92b+qJmjb/94/B6xomBDBjqyRJaLAnNmi2VkCW0Xae++IAoVlSvhzFur3oCad/UsxQI=
+	t=1778585107; cv=none; b=QP/XDg/D9Bcfgws3qcBomZVya+RBiJr3FDEKnYQFidJZouiVhBhjhJtqsJGl7s4kb5nk8B+zEVwjol+zo6nYzl7QrIjasYaQLPUZRMxVey0j4oLMy/TOMJJfZr7qfFmrS0wl9kUrwWtIRYpDEkxln+qVlw+3lhFkDe3w2WNeBMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778583145; c=relaxed/simple;
-	bh=9YmcCQWcDj0Qhz9RU/y+leTVOjqcIXD3z5X+d+DLeeM=;
+	s=arc-20240116; t=1778585107; c=relaxed/simple;
+	bh=D497IKok0GrkFTKdOr6OX0NTExNJ+QVCTVOP1UgJ5Io=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gQnFiEx2hEtkojrMAHyp+vqJ/+x2Sg/67kyVQDFOJ5Dec2/P0GjdHQcPTIRCh3VpK8ePnEgstts8BCdSbsZlqUFMHPVwgbucreSyJB34OlqA2nYxbsCeXdK6dzNi8YV31ieTkQoU4MRrElqbweQFIIODDUtWxuiNE36ILMUaflk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkCWhi6r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DDC1C2BCB0;
-	Tue, 12 May 2026 10:52:25 +0000 (UTC)
+	 Content-Type:MIME-Version; b=WlqfPfiqD1md2CmtXEZwZLzBc7ywhqa8B3iMzpmGFI0GgZpn18Gw2OecmhERIlV2SD6lIQrQTLiGQc3Mos4vKjF9GueMQ+CoQ6VlTC9Rlw95oXWzRT/VawSEwq96WeQY+GhuViXtCY5oEPO1BrqqL2jXdVh2Xwt+5nv9v4azThc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2eWRUBy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC831C2BCB0;
+	Tue, 12 May 2026 11:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778583145;
-	bh=9YmcCQWcDj0Qhz9RU/y+leTVOjqcIXD3z5X+d+DLeeM=;
+	s=k20201202; t=1778585106;
+	bh=D497IKok0GrkFTKdOr6OX0NTExNJ+QVCTVOP1UgJ5Io=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jkCWhi6rvHCTwonMdEStFlBxA/etdnQ8ewulRILC+ShYUIyQZmZNXWqbAZ4LMhqB5
-	 60PtIQ/D7sIGGMvWJgVCSjnCSLuQRLR81Bl2jvSJsv7IDDuXUqRCxp+JH9Ul2sTYTF
-	 22ihwLQw7jAEHvmh9UWf5TVQU6OgSxapB0+E0hafWYhuVmGpPqWraIASx1+/6KsZFu
-	 EMpEJBxyDHPXHkYyxGIr/ImsPf7VQ0GmsuQJE1OKAmlbYKnj+/TJ3YYYT69qQX4N82
-	 fT0xckNEqj61LvBYREUzH/r+ToHBfSRYWkPpe2+0b2CUFc+QdLSva7u24xETCAae3f
-	 2s3JcNmzTHo/Q==
-Message-ID: <a278be1fa50f3c52af869233ce34d3139c33b653.camel@kernel.org>
-Subject: Re: try_break_deleg() and atomic_open()
+	b=p2eWRUBycUcaj3cpAEribbvwh6I2rM0FR66WGPaAvApyM2uQ+D54LIxc4JZsxvJa2
+	 M8FYLaHgIANKj9g/1PGv4JRoVOT1zrGms6A+8jKE0gacV9Bzx8r4FDbZ+1azNOig7F
+	 XswW89kd5Cw8Wsq5G7AL+1aFoapU1aWlDp86+wJhUg9hrnTuMyZTDcIbFJlwKGxZXS
+	 pOKHqX5FbhPvXIUmnttsSJR6ahFJEPnNRQozUIkA/Dpsm7EBEqE7cu0H29w9+NQJfj
+	 MCpAkqv/N+7v1rWhIaz+wi5prChzFYDT82eq3Dfw0aMk1bIpJzvK7sVaDKgufNgfXV
+	 BwmILvB0Q/bmA==
+Message-ID: <a6c66164d75e6cfa530892b9f5f25ab9d677a9fa.camel@kernel.org>
+Subject: Re: [PATCH] Revert "NFSD: Defer sub-object cleanup in export put
+ callbacks"
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Tue, 12 May 2026 06:52:22 -0400
-In-Reply-To: <177855793113.2788210.10945921479429705266@noble.neil.brown.name>
-References: 
-	<177853810078.2788210.11836979435758859096@noble.neil.brown.name>
-	  <72c8e1e9c9212aeb8a0cb9f5321dd576685a4f7e.camel@kernel.org>
-	 <177855793113.2788210.10945921479429705266@noble.neil.brown.name>
+To: Yang Erkun <yangerkun@huawei.com>, chuck.lever@oracle.com, 
+	misanjum@linux.ibm.com, neil@brown.name, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, 	tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ 	lilingfeng3@huawei.com, yangerkun@huaweicloud.com
+Date: Tue, 12 May 2026 07:25:02 -0400
+In-Reply-To: <20260512023322.2828939-1-yangerkun@huawei.com>
+References: <20260512023322.2828939-1-yangerkun@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,25 +139,25 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 5342351EE7A
+X-Rspamd-Queue-Id: 3689751F53C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21508-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21509-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -165,117 +166,165 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,huawei.com:email]
 X-Rspamd-Action: no action
 
-On Tue, 2026-05-12 at 13:52 +1000, NeilBrown wrote:
-> On Tue, 12 May 2026, Jeff Layton wrote:
-> > On Tue, 2026-05-12 at 08:21 +1000, NeilBrown wrote:
-> > > Hi Jeff,
-> > >  quick question (I hope).
-> > > Should atomic_open() call try_break_deleg() on the directory
-> > > when a create is pending?
-> > >=20
-> > > This seems a bit iffy because the VFS doesn't necessarily know if a
-> > > create will happen before it calls ->atomic_open, so it cannot know
-> > > if it needs to break the deleg or not.
-> >=20
-> > Agreed, so I'm thinking no to doing that in generic code.
-> >=20
-> > > So maybe the individual ->atomic_open functions should do it?
-> > >=20
-> >=20
-> > I think that's probably what has to happen:
-> >=20
-> > atomic_open() is there to handle the non-trivial open cases (mostly
-> > network and clustered filesystems). Those, in general, also require
-> > non-trivial delegation/lease handling. I think we sort of need to leave
-> > it to the underlying fs in those cases since the kernel doesn't have
-> > enough info to do it.
+On Tue, 2026-05-12 at 10:33 +0800, Yang Erkun wrote:
+> This reverts commit 48db892356d6cb80f6942885545de4a6dd8d2a29.
 >=20
-> I had a look and could only find gfs2/nolocks and NFSv4 as filesystems
-> which support leases on directories and use ->atomic_open.
+> Commit 48db892356d6 ("NFSD: Defer sub-object cleanup in export put
+> callbacks") describes an issue where calling svc_export_put, path_put,
+> and auth_domain_put directly can cause use-after-free (UAF) errors when
+> accessing ex_path or ex_client->name. However, after discussion in [1],
+> it is clear that commit e7fcf179b82d ("NFSD: Hold net reference for the
+> lifetime of /proc/fs/nfs/exports fd") actually resolves this problem.
 >=20
-
-Maybe also smb/client? Ceph also supports clustered leases, but the
-kernel client never got support for it.
-=20
-> I wonder if gfs2/nolocks should not advertise ->atomic_open.  The
-> implication of nolocks is (I assume) that there is only the one active
-> client, and in that case no special handling is needed for exclusive
-> create.
+> Additionally, commit 48db892356d6 ("NFSD: Defer sub-object cleanup in
+> export put callbacks") introduces a regression that was already fixed by
+> commit 69d803c40ede ("nfsd: Revert "nfsd: release svc_expkey/svc_export
+> with rcu_work""). Therefore, reverting commit 48db892356d6 ("NFSD: Defer
+> sub-object cleanup in export put callbacks") is necessary to fix this
+> regression.
+>=20
+> Link: https://lore.kernel.org/all/10019b42-4589-4f9f-8d5b-d8197db1ce3c@hu=
+awei.com/ [1]
+> Fixes: 48db892356d6 ("NFSD: Defer sub-object cleanup in export put callba=
+cks")
+> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+> ---
+>  fs/nfsd/export.c | 63 +++++++-----------------------------------------
+>  fs/nfsd/export.h |  7 ++----
+>  fs/nfsd/nfsctl.c |  8 +-----
+>  3 files changed, 12 insertions(+), 66 deletions(-)
 >=20
 
-Yeah, I don't see the point of GFS2's ->atomic_open in the case of a
-single-client filesystem.
+The LLMs don't seem to agree that this is safe:
 
-> NFSv4 uses delegations to provide leases.  So the ->atomic_open
-> handler does have work to do to cancel any lease while keeping the
-> delegation.
-> We would need to either allow ->atomic_open to return the deleg_inode
-> somehow, or have ->atomic_open drop the parent lock so that it can
-> safely wait.
->=20
-> Or we could just ignore the issue until I manage to land my changed to
-> push locking down into the filesystem, and then locking/waiting becomes
-> much easier.
->=20
+commit (not yet applied)
+Author: Yang Erkun <yangerkun@huawei.com>
 
-To make sure I understand the scenario: the NFS client has a directory
-delegation on the parent directory and an application has taken out a
-lease on that directory. We now want to issue an open(..., O_CREAT) on
-a file in that directory for which we don't yet have a dentry?
+Revert "NFSD: Defer sub-object cleanup in export put callbacks"
 
-FWIW, the current NFSv4 client code won't hand out leases on a
-directory, as struct nfs_dir_operations doesn't set the ->setlease
-operation, so this situation shouldn't arise. Ditto for CIFS.
+This reverts commit 48db892356d6. The commit message states that
+e7fcf179b82d resolves the underlying UAF and that the reverted
+commit re-introduces an umount regression fixed by 69d803c40ede.
 
-But, let's pretend that it's possible: Ideally we'd just leave it up to
-the server to recall the deleg if a create happens, but most servers
-won't revoke the deleg of the client making the change. So I think if
-we ever did want to support this, then the NFSv4 client would need to
-revoke the (local application's) lease on its own.
+Link: https://lore.kernel.org/all/10019b42-4589-4f9f-8d5b-d8197db1ce3c@huaw=
+ei.com/
 
->=20
-> >=20
-> > > I'm looking at dentry_create() which calls atomic_open() is quite a
-> > > different way to how lookup_open() calls it.  I'd like to change
-> > > nfsd4 so it calls something a lot more like lookup_open() and in
-> > > looking at what I would need to change, delegated_inode stood out.
-> > >=20
-> >=20
-> > Understood. I wish that were a bit less klunky, but I don't see a great
-> > way to make it so.
->=20
-> We could check for a lease and if one is present then do the lookup
-> separately from ->atomic_open.  If that finds a match then no create is
-> needed.  If it doesn't then there is justification to break the lease
-> before calling ->atomic_open.
->=20
-> This means that when there is a lease on an NFS directory, other apps
-> have to do a LOOKUP for uncached names before sending a creating OPEN.
-> Maybe that is an acceptable cost.
->=20
-> Should an O_CREAT open *always* break a directory lease, even if the
-> name happens to exist?
-> I note that man/man2const/F_GETLEASE.2const in man-pages.git doesn't
-> mention directories.
->=20
+> This reverts commit 48db892356d6cb80f6942885545de4a6dd8d2a29.
+>
+> Commit 48db892356d6 ("NFSD: Defer sub-object cleanup in export put
+> callbacks") describes an issue where calling svc_export_put, path_put,
+> and auth_domain_put directly can cause use-after-free (UAF) errors when
+> accessing ex_path or ex_client->name. However, after discussion in [1],
+> it is clear that commit e7fcf179b82d ("NFSD: Hold net reference for the
+> lifetime of /proc/fs/nfs/exports fd") actually resolves this problem.
 
-There is a coming update to the manpage, but it may not have trickled
-out to the distros yet. My thinking at this point is that this would
-have to be handled inside of the NFS (or CIFS) client.
+Is this accurate?  Commit e7fcf179b82d holds a net reference for the
+lifetime of the /proc/fs/nfs/exports file descriptor.  This prevents
+nfsd_net_exit() from calling nfsd_export_shutdown() while the exports
+fd is open, keeping the cache_detail alive.
 
-Now though I'm wondering if the NFSv4 client-side lease implementation
-is actually broken:
+But the UAF described in 48db892356d6 is a different problem.
+cache_clean() periodically removes expired entries from the hash table
+via sunrpc_begin_cache_remove_entry() and drops their reference via
+cache_put().  If that was the last reference, svc_export_put() runs
+and frees sub-objects.
 
-Suppose an application takes out a read lease on a fd1 for a file and
-then another application on the same client opens fd2 on the file for
-write. I don't think a lease break will happen today since the activity
-comes from the same client.
+Meanwhile, c_show() and e_show() iterate cache entries under
+rcu_read_lock() without holding a reference.  Specifically, c_show()
+unconditionally calls cd->cache_show():
 
-OTOH, maybe it does work since the v4 client does set a local lease on
-the file? I think we'll need to test this to see how that works.
+net/sunrpc/cache.c:c_show():
+	if (cache_check_rcu(cd, cp, NULL))
+		seq_puts(m, "# ");
+	else if (cache_is_expired(cd, cp))
+		seq_puts(m, "# ");
+	return cd->cache_show(m, cd, cp);
+
+svc_export_show() then accesses both exp->ex_path via seq_path()
+and exp->ex_client->name via seq_escape().  expkey_show() similarly
+accesses ek->ek_client->name and ek->ek_path.
+
+Commit e7fcf179b82d does not prevent cache_clean() from removing
+individual entries concurrently with these RCU readers.  It seems
+like the claim in this commit message may be conflating two different
+problems.
+
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index 665153f1720e..0baa58d1dbfc 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+
+[ ... ]
+
+> -static void expkey_release(struct work_struct *work)
+> +static void expkey_put(struct kref *ref)
+>  {
+> -	struct svc_expkey *key =3D container_of(to_rcu_work(work),
+> -					      struct svc_expkey, ek_rwork);
+> +	struct svc_expkey *key =3D container_of(ref, struct svc_expkey, h.ref);
+>  	if (test_bit(CACHE_VALID, &key->h.flags) &&
+>  	    !test_bit(CACHE_NEGATIVE, &key->h.flags))
+>  		path_put(&key->ek_path);
+>  	auth_domain_put(key->ek_client);
+> -	kfree(key);
+> -}
+> -
+> -static void expkey_put(struct kref *ref)
+> -{
+> -	struct svc_expkey *key =3D container_of(ref, struct svc_expkey, h.ref);
+> -
+> -	INIT_RCU_WORK(&key->ek_rwork, expkey_release);
+> -	queue_rcu_work(nfsd_export_wq, &key->ek_rwork);
+> +	kfree_rcu(key, ek_rcu);
+>  }
+
+With this change, path_put() and auth_domain_put() run immediately
+when the last reference is dropped, before the RCU grace period.
+kfree_rcu() only defers the kfree of the svc_expkey struct itself.
+
+If cache_clean() drops the last reference concurrently with an RCU
+reader in c_show() -> expkey_show(), the reader can access
+ek->ek_client->name after auth_domain_put() has freed the
+auth_domain, and can call seq_path(&ek->ek_path) after path_put()
+has freed the underlying dentry/mnt.  The rcu_read_lock() held by the
+reader prevents kfree_rcu() from freeing the struct, but does not
+prevent the direct path_put()/auth_domain_put() calls.
+
+Does this re-introduce the UAF that 48db892356d6 was fixing?
+
+> -static void svc_export_release(struct work_struct *work)
+> +static void svc_export_release(struct rcu_head *rcu_head)
+>  {
+> -	struct svc_export *exp =3D container_of(to_rcu_work(work),
+> -					      struct svc_export, ex_rwork);
+> +	struct svc_export *exp =3D container_of(rcu_head, struct svc_export,
+> +			ex_rcu);
+>
+> -	path_put(&exp->ex_path);
+> -	auth_domain_put(exp->ex_client);
+>  	nfsd4_fslocs_free(&exp->ex_fslocs);
+>  	export_stats_destroy(exp->ex_stats);
+>  	kfree(exp->ex_stats);
+> @@ -382,8 +369,9 @@ static void svc_export_put(struct kref *ref)
+>  {
+>  	struct svc_export *exp =3D container_of(ref, struct svc_export, h.ref);
+>
+> -	INIT_RCU_WORK(&exp->ex_rwork, svc_export_release);
+> -	queue_rcu_work(nfsd_export_wq, &exp->ex_rwork);
+> +	path_put(&exp->ex_path);
+> +	auth_domain_put(exp->ex_client);
+> +	call_rcu(&exp->ex_rcu, svc_export_release);
+>  }
+
+Same concern here.  With path_put() and auth_domain_put() called
+directly in svc_export_put() before call_rcu(), a concurrent RCU
+reader in e_show() -> svc_export_show() or c_show() ->
+svc_export_show() could dereference freed sub-objects through
+seq_path(&exp->ex_path) or exp->ex_client->name.
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
