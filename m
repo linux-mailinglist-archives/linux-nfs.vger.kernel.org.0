@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-21558-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21559-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wAAqBvBvA2qI5wEAu9opvQ
-	(envelope-from <linux-nfs+bounces-21558-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:22:40 +0200
+	id KCupMBpuA2rF5gEAu9opvQ
+	(envelope-from <linux-nfs+bounces-21559-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:14:50 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59E28527714
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:22:39 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 896C95271E5
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 20:14:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0F5A231599E8
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4718C3038898
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 May 2026 18:14:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FB5336C9C2;
-	Tue, 12 May 2026 18:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3279F36CDE0;
+	Tue, 12 May 2026 18:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkBUtyZP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i12gCRJ6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D05A375F65
-	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1005336F900
+	for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 18:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778609656; cv=none; b=EvZoX3hYTrlF+MZzyaT4y6t2Qas+j2MwsU6LGzCMAEna1YGavcBsohlEvc6Dapk4ZvX3osNg7ic04bVBmzAFCO6mO5GxeuyLL3tGSBu2flBj4DMB376R1bqmp/bnrwOYJ2pxP4KGlnepHHbAW7gXTpGiWwS7O4WXsD6szxxuoFM=
+	t=1778609657; cv=none; b=IRgEPC5hD2OS7o3jnDW7xXrwOoK8TjlwzpLTwc4RncCiWtO1kpqOD/sGYardkNiifQkTAMIZhlfgGYeInHQZgF19PWlfSwfEasiRsmuAp7eA/Xv8SzVvg3ruk4ZhRdOCiIRYAQ+s3DB+BcsBoSX4OrP90CAjHyQcIru9v2ZupEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778609656; c=relaxed/simple;
-	bh=J+BjJKIxECmZPjCaaild9UjG6TNN5KkwY7gKIfuQ1aw=;
+	s=arc-20240116; t=1778609657; c=relaxed/simple;
+	bh=yx/4ZUvKGxUaCj+HkXVu3Ahm9Tw3dSisrmPi3sSnQ1A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VjSynWnvbBgRlJZJ06BhBQK6FqZNeqqa7wpDIy2mn5vD22nnW/x8Iy93Hu1pwyq51UebCnX0kj46lQJWcSDfmTwoBecKHOBuiDg5W4Fs97/EAE+5ZOI3Gv6TjUTNJzXFz+vIOlxt8Xb9GA6nOQdH2nNhBPX89pmh3Ge6uE2/q68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkBUtyZP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E714C2BCF5;
-	Tue, 12 May 2026 18:14:15 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=XqJtDVRp4w+FUaH21bJj+FTllhy6uIiobnvvyKmPr8oBt4R6Sx9AIcYgcqhYqgxdJ6kiOmJgd8Iq6dwB7NHrh8CNyHdOyf4LlJQ+BObRo2w9N22ScMImhkpLaut3n9BCreWkkyQNHZIIL7bVDsG54HriWZW1LvPtFKasstJ+mOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i12gCRJ6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7B6C2BCFB;
+	Tue, 12 May 2026 18:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778609656;
-	bh=J+BjJKIxECmZPjCaaild9UjG6TNN5KkwY7gKIfuQ1aw=;
+	s=k20201202; t=1778609657;
+	bh=yx/4ZUvKGxUaCj+HkXVu3Ahm9Tw3dSisrmPi3sSnQ1A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lkBUtyZPHT3cPOZ/n+0FN++tmBjePBZFsodmEAeiBx2gzE9i+qnQAHLnKGHSxVNss
-	 GqsC8Q5IWP16z2sohnN94R86zBhdHAs5nrsrUCzzyMiid1KQwKKxy+nIllft2Ci1sS
-	 3dQ5h5AmwNruEZ1UHrI2cBVYNCRCBbnA9n7/Hjb0vcvxOw0LgE/1MwTTAkvkBTTB8O
-	 /VRwYEo22pP7MPuqvncpa1AVzrrj4gOse1ds3UUH/IULTum4ZSIkYAk60VXAd6FWef
-	 X+aLWczTPrONkqqkKc/CPGLDygalczDqsuPpewUNrfC9Sh6Td+3LP4vJt03decJYdn
-	 GjmqJWX+hbG4A==
+	b=i12gCRJ6ZMxays/eP4ITN5wSvHjV/7kXqL7m0DB2GXOhpktorAlkq6/cqEsKKH/XB
+	 zl6j7CouX7l3J1bPs3w84jsfS3qHhLAZLS2LEiuZK6lnYqE9ifbniSOmsh1m/T/5x5
+	 AL9Dk4tOhnq1tH7HqjBPJSP5SjRt+r13HASo4fMyFzwI3kAQOQVyftsHhSjIafyIEu
+	 vZQXmE1dBaxJGIXvewC0K2udmAf+c90dSsSAH2oKv+LGyDtsHj0VTsSNCqAwekH8p6
+	 QH+D2uE+JHz14+Z1v+7QnOI+iQeBC2KHfsERuSjI99l49i8suhRezZfN6ioATvEuh4
+	 Kdn3HaY2Q8NPA==
 From: Chuck Lever <cel@kernel.org>
-Date: Tue, 12 May 2026 14:13:53 -0400
-Subject: [PATCH 18/38] lockd: Use xdrgen XDR functions for the NLMv3
- GRANTED procedure
+Date: Tue, 12 May 2026 14:13:54 -0400
+Subject: [PATCH 19/38] lockd: Refactor nlmsvc_callback()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260512-nlm4-xdrgen-v1-18-19d99b2634b4@oracle.com>
+Message-Id: <20260512-nlm4-xdrgen-v1-19-19d99b2634b4@oracle.com>
 References: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 In-Reply-To: <20260512-nlm4-xdrgen-v1-0-19d99b2634b4@oracle.com>
 To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -65,34 +64,34 @@ To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6045;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4339;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=NxL3V2QjLTGwpYB4EYnC5R2HiyHGVmt7KDZZ80ifzEs=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23ltclWi6OeaTw1CBPU57q8q9PU7zZO8MeO4
- Qzgk6Lc/gWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt5QAKCRAzarMzb2Z/
- lytnD/wPrsALFmlnpOcDYkxaYUycPSXQmulNsYcsOaVaxXzQA/JK7t97+S/9gXby1ftDtha9Wuv
- oi9VmxXyJPp9wePOp3PfT9GfX9G1UmWgiCbAuxIQwBcg5ZdhG6vSLQhPKPZmgSgUE+7Nxohsm3s
- MYf1r+rxmvV7Yc8/UMSgmbICn4gfgz7GzTcIIpzQ62HQh/KpJynabTWOBkyQB+gTo2YV+IFuFP7
- T8HS4jHxfsiM9ympHtYNuT4zn+Frw6O1Olin7xGbSumPsGiFnheQuAueTs7/TSTpYWOG3qsiIyD
- XHxbZZA2RcxLDVzGp8ZicUHW8LIQZ8BvF7/ba20mNniZGrQ5dyzYk9SUT3mNM5Z4w5bKmiXEjHX
- KEu8/XPG08PqpC+yVbY5J2rnkA+vArsfdwoUaIr6s8Di0T21dXR9/ZUoN/1yd9nCh4kVBqXQyyS
- elTAoE5OIB9nR0W5UNujTHHF31EWxXj+WvHRoc4cTw3XPv0fmr1UREWut8/tz5R/lt3HmT4c0sY
- niVk8ZM0eLB2+3KET/Wb3vkdL9XxAgIv/j7rY0QIRc0SWvF4QAMJ8NtTZsi7qU9Ued9voSJAlLX
- 3mIrnJsCA7n95S1W+3UP3o0Ew+T3kKIoPWiSjCJg0jVdQwwJfl53qUop/NQ2M1Z5EN+6bz8fc9G
- WANXd4ogMpivsog==
+ bh=kQwviLDkgqXpHhb5MMkb4Eu6uB0e7Haz1cc9NI4WiKk=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqA23laV+I/wRUsQxIaeYQlzo1Swf3UXtZWwbxa
+ tUuDxhLu26JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCagNt5QAKCRAzarMzb2Z/
+ l+YUEAC2ludpmyTgj4U/22tl+jXuEvmLR951r0GnBKVw8cmu6WbPxwsrgvhLafFHvKXnq6qVijB
+ cM52nV0xNz/DTj4WSPhQHvJg6xGRc/RzrxIEnbJMZuGGmI4YtWfUqPZy9ySwn1BA5f728gCmB6k
+ opAYELXMOiVVMw1MMwAJJnntxPS755k/4wypu9FbyjDTNkUAVWA3gr4kzNHK8cwp0aq39sM39kp
+ C2kbvyv9JD18rGa13G/5PR2qpyByg/8N+LqRKKUbujilLmAUvifsqKwxC/dTG48aSpR316ELo6G
+ SrGsMFY+Jl1tDVSHriVWCgUhbO6nl8PmkrrOkIoNs9Ikve3PK7GANxrjq2Q9ulHqDxZoBDsVdE+
+ MuazGPdfuUMlgsA+l2t8Li/RbBdBlSFcf63r5AF7F0KVTzBi8n0NrxKOBgyIy6GwFGVk/NG7bs0
+ ukGFhK65gnIQa2wMKU3Z4zlFRXzkqd8OSFrsKs/yiezouu6qiHTDVpnPxCahD57RsJs0DMZWR2I
+ JjjTFqJAwGYt1iOLWCeeZOB5CrYWzX6fCf2A/5O7ouF3GFoS4DvObLXe62yzmGkh+enLooy1tVD
+ y/5IxrjNVTytoqGaB8IkfyM9UHC79RKU5W4G4+ohLttkGm1pxKg2rPVva97yX1BeavdJ76BcQSR
+ 1Ml0s/PJv0Wrw9A==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-X-Rspamd-Queue-Id: 59E28527714
+X-Rspamd-Queue-Id: 896C95271E5
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21558-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21559-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -103,179 +102,148 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,oracle.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The NLM GRANTED procedure allows servers to notify clients when
-a previously blocked lock request has been granted, completing
-the asynchronous lock request flow. This patch converts the NLMv3
-GRANTED procedure to use xdrgen-generated XDR functions.
+The xdrgen-based XDR conversion requires each RPC procedure to
+extract its own arguments, since xdrgen generates distinct
+argument structures for each procedure rather than using a
+single shared type.
 
-The conversion replaces the legacy decoder with the xdrgen
-functions nlm_svc_decode_nlm_testargs and nlm_svc_encode_nlm_res
-generated from the NLM version 3 protocol specification. The
-procedure handler accesses xdrgen types through a wrapper structure
-that bridges between generated code and the legacy lockd_lock
-representation still used by the core lockd logic.
-
-A new helper function nlm_lock_to_lockd_lock() converts an xdrgen
-nlm_lock into the legacy lockd_lock format. The helper complements
-the existing nlm3svc_lookup_host() and nlm3svc_lookup_file()
-functions used throughout this series.
-
-Setting pc_argzero to zero is safe because the generated decoder
-fills the argp->xdrgen subfields before the procedure runs, so the
-zeroing memset performed by the dispatch layer is not needed. The
-helper populates each field of the wrapper's lock member that any
-downstream consumer reads: fh, oh, svid, and the file_lock byte
-range. Because pc_argzero no longer scrubs the rq_argp slot, the
-shared nlmclnt_lock_event tracepoint class is updated to source
-its byte-range fields from lock->fl.fl_start and lock->fl.fl_end,
-which both the client and server populate unconditionally; the old
-lock_start and lock_len fields are no longer required by the trace.
+Move the host lookup logic from nlmsvc_callback() into each
+of the five MSG procedure handlers (TEST_MSG, LOCK_MSG,
+CANCEL_MSG, UNLOCK_MSG, and GRANTED_MSG). Each handler now
+performs its own host lookup from rqstp->rq_argp and passes
+the resulting host pointer to nlmsvc_callback(). This
+establishes the per-procedure argument-handling pattern that
+the subsequent xdrgen conversion patches require.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/lockd/svcproc.c | 65 +++++++++++++++++++++++++++++++++++++++++++++---------
- fs/lockd/trace.h   | 12 +++++-----
- 2 files changed, 61 insertions(+), 16 deletions(-)
+ fs/lockd/svcproc.c | 72 ++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 18 deletions(-)
 
 diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index ccc6a633df7b..264212e44ec5 100644
+index 264212e44ec5..2e6afb9a19b9 100644
 --- a/fs/lockd/svcproc.c
 +++ b/fs/lockd/svcproc.c
-@@ -89,6 +89,20 @@ nlm_netobj_to_cookie(struct lockd_cookie *cookie, netobj *object)
- 	return nlm_granted;
- }
- 
+@@ -781,20 +781,13 @@ static const struct rpc_call_ops nlmsvc_callback_ops = {
+  * because we send the callback before the reply proper. I hope this
+  * doesn't break any clients.
+  */
+-static __be32 nlmsvc_callback(struct svc_rqst *rqstp, u32 proc,
 +static __be32
-+nlm_lock_to_lockd_lock(struct lockd_lock *lock, struct nlm_lock *alock)
-+{
-+	if (alock->fh.len != NLM3_FHSIZE)
-+		return nlm_lck_denied;
-+	lock->fh.size = alock->fh.len;
-+	memcpy(lock->fh.data, alock->fh.data, alock->fh.len);
-+	lock->oh.len = alock->oh.len;
-+	lock->oh.data = alock->oh.data;
-+	lock->svid = alock->uppid;
-+	lockd_set_file_lock_range3(&lock->fl, alock->l_offset, alock->l_len);
-+	return nlm_granted;
-+}
-+
- static struct nlm_host *
- nlm3svc_lookup_host(struct svc_rqst *rqstp, string caller, bool monitored)
++nlmsvc_callback(struct svc_rqst *rqstp, struct nlm_host *host, u32 proc,
+ 		__be32 (*func)(struct svc_rqst *, struct lockd_res *))
  {
-@@ -700,10 +714,41 @@ __nlmsvc_proc_granted(struct svc_rqst *rqstp, struct lockd_res *resp)
- 	return rpc_success;
+-	struct lockd_args *argp = rqstp->rq_argp;
+-	struct nlm_host	*host;
+ 	struct nlm_rqst	*call;
+ 	__be32 stat;
+ 
+-	host = nlmsvc_lookup_host(rqstp,
+-				  argp->lock.caller,
+-				  argp->lock.len);
+-	if (host == NULL)
+-		return rpc_system_err;
+-
+ 	call = nlm_alloc_call(host);
+ 	nlmsvc_release_host(host);
+ 	if (call == NULL)
+@@ -814,34 +807,77 @@ static __be32 nlmsvc_callback(struct svc_rqst *rqstp, u32 proc,
+ 
+ static __be32 nlmsvc_proc_test_msg(struct svc_rqst *rqstp)
+ {
++	struct lockd_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
++
+ 	dprintk("lockd: TEST_MSG      called\n");
+-	return nlmsvc_callback(rqstp, NLMPROC_TEST_RES, __nlmsvc_proc_test);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlmsvc_callback(rqstp, host, NLMPROC_TEST_RES,
++			       __nlmsvc_proc_test);
  }
  
-+/**
-+ * nlmsvc_proc_granted - GRANTED: Blocked lock has been granted
-+ * @rqstp: RPC transaction context
-+ *
-+ * Returns:
-+ *   %rpc_success:		RPC executed successfully.
-+ *
-+ * RPC synopsis:
-+ *   nlm_res NLM_GRANTED(nlm_testargs) = 5;
-+ *
-+ * Permissible procedure status codes:
-+ *   %LCK_GRANTED:		The granted lock was accepted.
-+ *   %LCK_DENIED:		The procedure failed, possibly due to
-+ *				internal resource constraints.
-+ *   %LCK_DENIED_GRACE_PERIOD:	The client host recently restarted and
-+ *				its NLM is re-establishing existing locks,
-+ *				so it is not yet ready to accept callbacks.
-+ */
- static __be32
- nlmsvc_proc_granted(struct svc_rqst *rqstp)
+ static __be32 nlmsvc_proc_lock_msg(struct svc_rqst *rqstp)
  {
--	return __nlmsvc_proc_granted(rqstp, rqstp->rq_resp);
-+	struct nlm_testargs_wrapper *argp = rqstp->rq_argp;
-+	struct nlm_res_wrapper *resp = rqstp->rq_resp;
++	struct lockd_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
 +
-+	resp->xdrgen.cookie = argp->xdrgen.cookie;
+ 	dprintk("lockd: LOCK_MSG      called\n");
+-	return nlmsvc_callback(rqstp, NLMPROC_LOCK_RES, __nlmsvc_proc_lock);
 +
-+	resp->xdrgen.stat.stat = nlm_lock_to_lockd_lock(&argp->lock,
-+							&argp->xdrgen.alock);
-+	if (resp->xdrgen.stat.stat)
-+		goto out;
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
 +
-+	resp->xdrgen.stat.stat = nlmclnt_grant(svc_addr(rqstp), &argp->lock);
++	return nlmsvc_callback(rqstp, host, NLMPROC_LOCK_RES,
++			       __nlmsvc_proc_lock);
+ }
+ 
+ static __be32 nlmsvc_proc_cancel_msg(struct svc_rqst *rqstp)
+ {
++	struct lockd_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
 +
-+out:
-+	return rpc_success;
+ 	dprintk("lockd: CANCEL_MSG    called\n");
+-	return nlmsvc_callback(rqstp, NLMPROC_CANCEL_RES, __nlmsvc_proc_cancel);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlmsvc_callback(rqstp, host, NLMPROC_CANCEL_RES,
++			       __nlmsvc_proc_cancel);
+ }
+ 
+-static __be32
+-nlmsvc_proc_unlock_msg(struct svc_rqst *rqstp)
++static __be32 nlmsvc_proc_unlock_msg(struct svc_rqst *rqstp)
+ {
++	struct lockd_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
++
+ 	dprintk("lockd: UNLOCK_MSG    called\n");
+-	return nlmsvc_callback(rqstp, NLMPROC_UNLOCK_RES, __nlmsvc_proc_unlock);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlmsvc_callback(rqstp, host, NLMPROC_UNLOCK_RES,
++			       __nlmsvc_proc_unlock);
+ }
+ 
+-static __be32
+-nlmsvc_proc_granted_msg(struct svc_rqst *rqstp)
++static __be32 nlmsvc_proc_granted_msg(struct svc_rqst *rqstp)
+ {
++	struct lockd_args *argp = rqstp->rq_argp;
++	struct nlm_host	*host;
++
+ 	dprintk("lockd: GRANTED_MSG   called\n");
+-	return nlmsvc_callback(rqstp, NLMPROC_GRANTED_RES, __nlmsvc_proc_granted);
++
++	host = nlmsvc_lookup_host(rqstp, argp->lock.caller, argp->lock.len);
++	if (!host)
++		return rpc_system_err;
++
++	return nlmsvc_callback(rqstp, host, NLMPROC_GRANTED_RES,
++			       __nlmsvc_proc_granted);
  }
  
  /*
-@@ -1012,15 +1057,15 @@ static const struct svc_procedure nlmsvc_procedures[24] = {
- 		.pc_xdrressize	= NLM3_nlm_res_sz,
- 		.pc_name	= "UNLOCK",
- 	},
--	[NLMPROC_GRANTED] = {
--		.pc_func = nlmsvc_proc_granted,
--		.pc_decode = nlmsvc_decode_testargs,
--		.pc_encode = nlmsvc_encode_res,
--		.pc_argsize = sizeof(struct lockd_args),
--		.pc_argzero = sizeof(struct lockd_args),
--		.pc_ressize = sizeof(struct lockd_res),
--		.pc_xdrressize = Ck+St,
--		.pc_name = "GRANTED",
-+	[NLM_GRANTED] = {
-+		.pc_func	= nlmsvc_proc_granted,
-+		.pc_decode	= nlm_svc_decode_nlm_testargs,
-+		.pc_encode	= nlm_svc_encode_nlm_res,
-+		.pc_argsize	= sizeof(struct nlm_testargs_wrapper),
-+		.pc_argzero	= 0,
-+		.pc_ressize	= sizeof(struct nlm_res_wrapper),
-+		.pc_xdrressize	= NLM3_nlm_res_sz,
-+		.pc_name	= "GRANTED",
- 	},
- 	[NLMPROC_TEST_MSG] = {
- 		.pc_func = nlmsvc_proc_test_msg,
-diff --git a/fs/lockd/trace.h b/fs/lockd/trace.h
-index aa858d9d406d..a11d04e8c835 100644
---- a/fs/lockd/trace.h
-+++ b/fs/lockd/trace.h
-@@ -61,8 +61,8 @@ DECLARE_EVENT_CLASS(nlmclnt_lock_event,
- 			__field(u32, svid)
- 			__field(u32, fh)
- 			__field(unsigned long, status)
--			__field(u64, start)
--			__field(u64, len)
-+			__field(loff_t, start)
-+			__field(loff_t, end)
- 			__sockaddr(addr, addrlen)
- 		),
- 
-@@ -70,16 +70,16 @@ DECLARE_EVENT_CLASS(nlmclnt_lock_event,
- 			__entry->oh = ~crc32_le(0xffffffff, lock->oh.data, lock->oh.len);
- 			__entry->svid = lock->svid;
- 			__entry->fh = nfs_fhandle_hash(&lock->fh);
--			__entry->start = lock->lock_start;
--			__entry->len = lock->lock_len;
-+			__entry->start = lock->fl.fl_start;
-+			__entry->end = lock->fl.fl_end;
- 			__entry->status = be32_to_cpu(status);
- 			__assign_sockaddr(addr, addr, addrlen);
- 		),
- 
- 		TP_printk(
--			"addr=%pISpc oh=0x%08x svid=0x%08x fh=0x%08x start=%llu len=%llu status=%s",
-+			"addr=%pISpc oh=0x%08x svid=0x%08x fh=0x%08x start=%lld end=%lld status=%s",
- 			__get_sockaddr(addr), __entry->oh, __entry->svid,
--			__entry->fh, __entry->start, __entry->len,
-+			__entry->fh, __entry->start, __entry->end,
- 			show_nlm_status(__entry->status)
- 		)
- );
 
 -- 
 2.54.0
