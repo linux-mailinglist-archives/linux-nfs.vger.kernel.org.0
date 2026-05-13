@@ -1,132 +1,143 @@
-Return-Path: <linux-nfs+bounces-21589-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21590-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CLBlMqUgBGrbEgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21589-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 08:56:37 +0200
+	id WH8uOyIhBGpyEAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21590-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 08:58:42 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 786E552E519
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 08:56:37 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6923E52E591
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 08:58:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ECA9E3059015
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 06:56:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5DB57306CB05
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 06:58:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AD6B3D5652;
-	Wed, 13 May 2026 06:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED8418E025;
+	Wed, 13 May 2026 06:58:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC4B3D5643;
-	Wed, 13 May 2026 06:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2AA368D63
+	for <linux-nfs@vger.kernel.org>; Wed, 13 May 2026 06:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778655380; cv=none; b=K2ZJM9Fm7XUvpFwzEPMq9TYVpCsbfbCSoKvpYCb72XWHWr8iv1Gj0bzr/tIIxRt6JqtUiJqp3hzVkmapEKU7M7AG6lfxWkQDBWj2LkmiZ1sB0Sd2YswI6cgeClEUr3btMjUTEes6IAbsIPGqu7tEHc1+7EEJEkUbREBs263QKlk=
+	t=1778655510; cv=none; b=pm1a6zxwKG6F3RgYmQsA9Stc/BJRd4PixSFGkeqsFzhxvyoc7oa9S3RyMLTpYrFiw8cwS5irfXPokkiZYTvbnIAi835kbd52rtrk0ZyJUjO+6khwBUWM/TNBne9Zo4byBqwz4wNSnT854oduY3KI+g2wJjVvAhSdERBbmgNpjlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778655380; c=relaxed/simple;
-	bh=P5caj/MRFse/CJvpKQWbUktTehkszC/Sgk5XdsZppJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JR0t3yQWUn/VTFKmG5V9VbdRk0ITuX43SNWH2kCNj1lz6unC9gr+olpbghacdvt+wgIkxWHuQkiQrohPtd3+oF+fPZAPlMXQkuoEsmwrLGPLcQZh51bXj07VttyWV8m+LCSQtlEClgjqxMOiZs7ZbsD4K4L4by39jyHiZNEnXP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 82B0768B05; Wed, 13 May 2026 08:56:08 +0200 (CEST)
-Date: Wed, 13 May 2026 08:56:08 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, David Sterba <dsterba@suse.com>,
-	Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
+	s=arc-20240116; t=1778655510; c=relaxed/simple;
+	bh=fIC6gi1IerqgavZtYwZK/t1ufNSDT6dEAuQs4QvrB/U=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=dgNO5xoTukZSiYdF47cv4sFNiRlckgbwttB92yoScQKS865okua8W7UPVgPJ1u4AcXROVvGGGw/KK2a8fI3pgxuvJ5yZxNz3CBJrDxR2qqN3YyBIQMTUnaFzSXeiauySC0R5lqc/el7KL4xlM7k8YtCJP7J1KJJuhLmiTHrLEnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43d75312379so4795408f8f.1
+        for <linux-nfs@vger.kernel.org>; Tue, 12 May 2026 23:58:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778655507; x=1779260307;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MZ9M0kS10J2rAHSiOo6d72SfAHsFYWmmZEUF8F/qQTI=;
+        b=EGtoC/VxB8V1jcuX1zzvkgdYX8hrk4Dz4k6jhte7TSDv7GLVtOxRPvFdsxdcTrao8z
+         u1RIUrZqBC52XsnWtG2f/9+G4JGWENRpej1S9/5p2ys77J7w8MJxt9mh38Ltwskv/omH
+         u9G/jT7kIpQpr9JG/RB1thHltfTGQkkgbhGIG6OPC7DnATtRVHjvvnjLADW6q2D9/6Q5
+         yUoHiDD23/mjmucR/reHwih6ZZIQ9nba8wDSBNrFKPSaAf4Ku5s9ER1B884lFJfxq0Hk
+         sYjB3EznxfDDHCH+/KxJsUVE1q+Za/02HedBlABIMsRiLGV9CHtnrzB/5sgAixMXRgAb
+         /jVQ==
+X-Gm-Message-State: AOJu0YyjafOeNR5asPmcOTm5Q9l+lzsY7C3HbyQt4AlRV1mDR2UtCGw1
+	JrknI37YuNWv8ooxAgpoB2RtregD4Q2pB5ziuyP8YIE0jPr+8Tl+v+K62KXvdA==
+X-Gm-Gg: Acq92OHQsYHPeZgm8D7nkPY3XM9p/KTakqHG7XN+Vs0VyduC2f37f0wQiL4eQH8LeF5
+	uizbXlraVEZsHSpCxrewVLDXdUc01RvesgKZEtR5u5UbMp2IyidkHIHSBso65kCe8FgVuEnjbt5
+	dR7thNiUMSuQPxVIs16cP1g5AT6IvVzz+gRowqFYLA3bRaYhq3LkTU8wZtPpLdhSzrS9wrFoXbj
+	0bI6HWaZfCG/YB4vOwM/pDAli0hZVhjyR3kFF6+O+VGlp8wkG0ZN6v+tlRkkyryolKX833iCPHn
+	jGUpI+M3UEdWPwzJmW5C8Rk2jMzoRm6My81FXY1s/peagzdbPWF4tOqTxiJ/m3kssQYk70lzW4/
+	jD9PNRT/nTT6z+NbmDMjUQ+m/glXveDA02w9m5jQeCiDDmuuU7dRFdJC0IYh/HXdGM2jWtAHhfG
+	LXFsN7MmtrSdqe26rxYNkQfeTgvFRMXMDMIl7kXgupB7xxgexIETleNNVJ1wx5PJ+8dEA+rsi8k
+	UcFtObuKdxdww==
+X-Received: by 2002:a05:6000:2085:b0:457:5a1e:801e with SMTP id ffacd0b85a97d-45c440bc162mr3520752f8f.5.1778655507224;
+        Tue, 12 May 2026 23:58:27 -0700 (PDT)
+Received: from vastdata-ubuntu2.vastdata.com (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-454917d57aesm38632030f8f.26.2026.05.12.23.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2026 23:58:26 -0700 (PDT)
+From: Sagi Grimberg <sagi@grimberg.me>
+To: linux-nfs@vger.kernel.org,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna@kernel.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Hyunchul Lee <hyc.lee@gmail.com>, Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, linux-block@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org
-Subject: Re: [PATCH 08/12] swap,iomap: simplify iomap_swapfile_iter
-Message-ID: <20260513065608.GA2250@lst.de>
-References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-9-hch@lst.de> <20260512170204.GI9555@frogsfrogsfrogs>
+	Olga Kornievskaia <aglo@umich.edu>
+Subject: [PATCH resend] pNFS/filelayout: fix cheking if a layout is striped
+Date: Wed, 13 May 2026 09:58:24 +0300
+Message-ID: <20260513065824.204117-1-sagi@grimberg.me>
+X-Mailer: git-send-email 2.43.0
+Reply-To: sagi@grimberg.me
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260512170204.GI9555@frogsfrogsfrogs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Rspamd-Queue-Id: 786E552E519
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 6923E52E591
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.14 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21589-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FREEMAIL_CC(0.00)[lst.de,linux-foundation.org,kernel.org,tencent.com,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.967];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21590-lists,linux-nfs=lfdr.de];
+	DMARC_NA(0.00)[grimberg.me];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_REPLYTO(0.00)[sagi@grimberg.me];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.975];
+	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	R_DKIM_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,grimberg.me:email,grimberg.me:mid,grimberg.me:replyto]
 X-Rspamd-Action: no action
 
-On Tue, May 12, 2026 at 10:02:04AM -0700, Darrick J. Wong wrote:
-> OH.  Now I remember why -- it's to handle contiguous mixed mappings
-> better.
-> 
-> Let's say that you have a 1k fsblock filesystem and 4k base pages.  You
-> fallocate an 8G swap file and then mkswap it.  The first mapping is a 1k
-> written mapping at offset 0 for the swap header, followed by an 8388607k
-> unwritten mapping at offset 3k.
-> 
-> The PAGE_SIZE rounding code in iomap_swapfile_add_extent will round the
-> end of that first mapping down to zero and ignore it.  The second
-> mapping will be treated as if it were a 8388604k mapping starting at
-> offset 4096.  Now the page counts are wrong and the swapon fails.
+A layout can still be striped with num_fh = 1 as it is perfectly possible
+that both MDS and DSs can handle the same filehandle. Hence check according
+to stripe_count > 1, which is the correct check to begin with.
 
-Do we care about this use case?  I guess you did as you implemented
-his, but still?
+We should not be called with flseg->dsaddr = NULL, but if for some reason
+we do, return our best guess with is flseg->num_fh > 1.
 
-> 
-> A more generic solution to this would be to change add_swap_extent to
-> take sector_t addr and length values and use them to construct a bitmap
-> representing contiguous physical space on the bdev, accounting of course
-> for PAGE_SIZE alignment.  Except for the swap header page, every other
-> contiguously set page-aligned region in the bitmap gets added to the
-> swap extent map.
+Fixes: a6b9d2fa0024 ("pNFS/filelayout: Fix coalescing test for single DS")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ fs/nfs/filelayout/filelayout.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You don't even need a bitmap, just do basically the same checks as
-the iomap code when moving to a new swap extent after moving to use
-the sector_t.  And it really should anyway, as the current abuse of
-sector_t to store a disk offset in PAGE_SIZE units is pretty gross.
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index 90a11afa5d05..c28b3d5bfa8c 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -778,6 +778,8 @@ filelayout_alloc_lseg(struct pnfs_layout_hdr *layoutid,
+ static bool
+ filelayout_lseg_is_striped(const struct nfs4_filelayout_segment *flseg)
+ {
++	if (flseg->dsaddr)
++		return flseg->dsaddr->stripe_count > 1;
+ 	return flseg->num_fh > 1;
+ }
+ 
+-- 
+2.43.0
 
 
