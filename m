@@ -1,266 +1,330 @@
-Return-Path: <linux-nfs+bounces-21599-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21600-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GdqAHSR+BGqKKwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21599-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 15:35:32 +0200
+	id ABNZAtB+BGpoKgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21600-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 15:38:24 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC14753425E
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 15:35:31 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7562F534302
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 15:38:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B92AF33B4B92
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 13:15:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 01FB9316530C
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 13:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B4E49690B;
-	Wed, 13 May 2026 13:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAED24657DB;
+	Wed, 13 May 2026 13:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WP2Pe2L6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F7lwkKH+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422C54968E6
-	for <linux-nfs@vger.kernel.org>; Wed, 13 May 2026 13:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54A044CACB
+	for <linux-nfs@vger.kernel.org>; Wed, 13 May 2026 13:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778677877; cv=none; b=V2NBuwjZi6BORHptr4e4US60Oe78fUqOl0yKXulb31t+Q4LP5a/QVjUdNSgSG8FAkxcONY6nX+sT5RE2kNYN1W2e0XkLsC0uE13gkRbkNcPf0jAXZpEVkmGYvY9rv7ZPlGCe7CV6HdROsfuGG06BYcG87fgsO0f7Mgm/PYolrgM=
+	t=1778678410; cv=none; b=MgLHpazUQRn9zS6PTQAj5EV6+mGyzRI2JvrID900dtw/xeFDn0jSqXDDDBM7ryrNEdMVXGe8YtFc0pxah8v2nAYAPmGk5onQq7WiFWk10PttuO1Gasxy/9bLrHcI+mLY1/Ju/0aFDMOoWJjIW7xKEEJO8sGI803ty+h1QIrX3og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778677877; c=relaxed/simple;
-	bh=6FWAOdMRCGXRhuY+RZ6so9OqbtSfnT1i9cx1+5lpsns=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aiCs9tQZHPsX6QgVdjvCJEgZnHGFg4R+27GTlfMvqFoUXeintQbSBI3F/ilQHVr0kRw02h06kGVeAdK9RbQB8De1kqU9YuKAFcX/RSl0cLxCmoDA+AENQ943ITqQMfkBj7rN4TGod/jfIVlx9TNoLRvh3zmMmv8jwPzTbSE/C5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WP2Pe2L6; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8353fd1cb5fso3319449b3a.0
-        for <linux-nfs@vger.kernel.org>; Wed, 13 May 2026 06:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778677874; x=1779282674; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wsFk6Og0o1PC9DlqH7Rg3d6wr5WjV/2ny+ljIhyfStU=;
-        b=WP2Pe2L6oXwYZAIqerHUY2jAuvBDziO4BcAF9i3Pb+emXcqwkTFABpVZOMH3Ko/pno
-         CzJayj5iwz5yhwYAdJuOZNaG8eGb0p6NyEr0ucleIkaFGgXft3rVGOE/dfxa4KmLxFWl
-         w6F/jdjKBOenI1XJBRtTe9K8mcEkd2H1/7l6uC2N2JiN/9vQRlBW3XASZPDFQTQ0MK6z
-         Aoal/rmw8eZOb6jm7+OgVV/dg196Y9SfClipaL96R/wJpIZTMVDpjPt4WwTvWjFz2oXj
-         D+2CFKWiAbzblOB6nBb4EmE/tfY81VDM36T90zllVXUpn0hJ8tycl89xIksTN+CuS3Hp
-         t2VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778677874; x=1779282674;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wsFk6Og0o1PC9DlqH7Rg3d6wr5WjV/2ny+ljIhyfStU=;
-        b=TbvZIh1GErYMmuMDmt1ih72IiqA1NtyPSkhlSjWKEnNX4NBpOP08b98IRt1SIqLd5X
-         z76fhLRR3n5lMmtBr4yojbJLpJQ/WJe/uaG0dsFe+qLfILqzlhhNe+jM8gCiqe3EEkUN
-         jlBlilNYYYnYtnGQnluY95eXJgm2bY1mXHByPkenUgH6O4AYyoVth8PO6+bltcWnSCZb
-         hVbAjtBPuneThzumULjwrfN/q23T4GYj4pd73KWADnhercuDKpL9XVdClba7csM60xs3
-         crf1+Bt8PNhsgHIzA2VjzwrOs6Bv7eL4GUja95j30exGELNzgEi0wCCid7Ra0I10ag7B
-         M2dQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8C3IV62rwW+bAsRM356dtNNok8CCNUs4lEcRthPkYsttQHw8KnOfHkXF3z3lYLAOMLvuGHCHHSA/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytf0lz6rT1QNDCc86+DfAB3AnI6+5PmJNaWCUV+vMV+TexXd5z
-	HNtbY9fHigzYjYffMh05rO+HNbkTNZqtLahu5B5frW/Jyg31XLnYUWSh
-X-Gm-Gg: Acq92OF4IK4pwdsjLTnaWFxu6Af2/O3szP4Ww8ssHO1nh0yu+hlLsBOtR5Jh1fouJkK
-	d0HZ1ZBsrNheP+XOx3xtLsmXNsyFgLWHHon6KMcRfaTKN5DnGpj+QHoiPvdKvdlv+PpxdVGvyYN
-	8nrnGeXxBdKaKIqlFsdWOuTsFfCJnC/4CXhuHCh9TQhO8KBseA13OJjN1A86BmAHfHpZk5hH8Ez
-	15hB0mF5H090pyhc8HwrisoKd8LsM8C7XZMJ3L9OKeLfbHt1GxOdkLX8CNwiaF6+OrFuUPAspOR
-	xcHEcCMKiVZIktf1LHzjkdcZux7Ai+iOZ75YlMw1rVWJOD613vDW2W9w0TIjne93GY2/P15w0tQ
-	E5BK9OmfNN1ptqDvwRnUYfFZdZXxbbIJriiuRX4ioG/TXwBRA0pnGJjJePp87rqd9JqlP4y/LT6
-	79UCvVTLFdxjCma8v8mUih/A+f+1xp1oZbbPbEG9A=
-X-Received: by 2002:a05:6a00:3692:b0:82f:7cb7:63c7 with SMTP id d2e1a72fcca58-83ee8321af5mr6868969b3a.11.1778677874347;
-        Wed, 13 May 2026 06:11:14 -0700 (PDT)
-Received: from localhost ([49.207.149.142])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-839659487afsm26237472b3a.18.2026.05.13.06.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 06:11:13 -0700 (PDT)
-From: Piyush Sachdeva <s.piyush1024@gmail.com>
-To: Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- netfs@lists.linux.dev
-Cc: sprasad@microsoft.com, linux-kernel@vger.kernel.org, sfrench@samba.org
-Subject: Re: [DISCUSSION] Preventing ENOSPC/EDQUOT writeback errors on
- network filesystems
-In-Reply-To: <9e48229614786e0c2e92bb6a2dd3269868f160d0.camel@kernel.org>
-References: <m21pfqgzbq.fsf@gmail.com>
- <9e48229614786e0c2e92bb6a2dd3269868f160d0.camel@kernel.org>
-Date: Wed, 13 May 2026 18:41:10 +0530
-Message-ID: <m2zf23e9ox.fsf@gmail.com>
+	s=arc-20240116; t=1778678410; c=relaxed/simple;
+	bh=he20jCBItdAi7E+0diWHuidn6L23e0cxHIyJ0phgnZ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ho43EWLt/cDvCN6T+fKmMVNDdeIglRZcxWDtXDnuMaDq8kKCTalHFKbGtlj3esNd5+pqqCcwYB9oGLcmhaN2nCfi6P8XnvWm5f0P0m1j60CGJ2JMgkjC2vuNyL0NwX+NLGuSITDwwJTppyoSQSli/0RgJ/W43gw6Sq+dJMAO9U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F7lwkKH+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778678408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7e+RePIXwU2tdCBLsjCHUglkSNb1qg+qcTxNdoP5iig=;
+	b=F7lwkKH+bUJKRoW96wzG9l2riWEkOBeDBIMal+ZY21eolyzQc8jGMzuLQ/f/HjEJQxXW6w
+	h0YZ3Hg0tEpmJ2USuEkeK+pGVMJTPCYYikmOIJibnu9J4BEF0Lq1YNib67GehSHWCcIt09
+	zgkPacJT6rvfY9iSa0CS4nznScppQEs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-478-tE7tuVdHMlOyuRZ8rHXC1Q-1; Wed,
+ 13 May 2026 09:20:04 -0400
+X-MC-Unique: tE7tuVdHMlOyuRZ8rHXC1Q-1
+X-Mimecast-MFC-AGG-ID: tE7tuVdHMlOyuRZ8rHXC1Q_1778678402
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E908195608D;
+	Wed, 13 May 2026 13:20:02 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.44.48.83])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F375919560A2;
+	Wed, 13 May 2026 13:19:56 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Hyunwoo Kim <imv4bel@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jeffrey Altman <jaltman@auristor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH net v2 2/4] crypto/krb5, rxrpc: Fix lack of pre-decrypt/pre-verify length checks
+Date: Wed, 13 May 2026 14:19:38 +0100
+Message-ID: <20260513131941.1439155-3-dhowells@redhat.com>
+In-Reply-To: <20260513131941.1439155-1-dhowells@redhat.com>
+References: <20260513131941.1439155-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: CC14753425E
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Rspamd-Queue-Id: 7562F534302
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_CC(0.00)[redhat.com,gmail.com,auristor.com,kernel.org,davemloft.net,google.com,lists.infradead.org,vger.kernel.org,gondor.apana.org.au,oracle.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-21599-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21600-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[spiyush1024@gmail.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Jeff Layton <jlayton@kernel.org> writes:
+Change the krb5 crypto library to provide facilities to precheck the length
+of the message about to be decrypted or verified.
 
-> On Tue, 2026-05-05 at 11:41 +0530, Piyush Sachdeva wrote:
->> Hi,
->> There have been plenty of discussions on how to handle writeback errors =
-for
->> network filesystems, but most have focused on error reporting after the =
-fact.
->> I'd like to start a discussion around preventing writeback errors specif=
-ically
->> ENOSPC and EDQUOT, before they cause silent data loss.
->>=20
->> The problem:
->> With buffered writes on network filesystems (cifs, nfs, etc.), the write=
-()
->> syscall copies data into the page cache and returns success immediately.=
- The
->> actual upload to the server happens later during writeback. If the serve=
-r is
->> out of space at that point, the write fails with ENOSPC. The netfs/write=
-back
->> layer records this error via mapping_set_error(), but critically the fol=
-io's
->> writeback flag is cleared and the page is now clean. Under memory pressu=
-re, the
->> VM can reclaim these clean pages, permanently losing data that the appli=
-cation
->> believes was successfully written. Meanwhile, i_size has already been up=
-dated
->> to reflect the new file size. So stat() shows a file size inclusive of t=
-he data
->> that was never persisted. Another inconsistency here is that total free =
-space
->> hasn't been modified for the file system on the server, leading to incor=
-rect
->> values in statfs() output from the client's pov (assuming statfs() calls=
- go
->> to the server).
->> To illustrate with real-world scenarios:
->>=20
->> - A user or application can keep issuing writes to an fd well beyond the
->>   available space, since buffered writes return success as soon as data =
-is
->>   copied to the page cache. A significant amount of data, exceeding the
->>   available quota can accumulate before fsync() is called, at which point
->>   critical data loss is nearly certain.
->>=20
->> - A malicious user can exploit this to keep resources pinned and memory
->>   oversubscribed, impacting other applications.
->>=20
->> The error is technically observable: fsync() will return it, and close()
->> surfaces it through the flush callback. But in practice, many applicatio=
-ns
->> check neither, and the POSIX "just call fsync()" answer isn't satisfying=
- for
->> users who lose data silently.
->>=20
->
-> Yet, it is the only real answer we have.
->
-> This is just a fundamental issue with buffered writes and delayed
-> writeback. Either you flush the data to stable storage now, or you have
-> to do it later. If you do it later, then it can still fail for all
-> sorts of reasons.
->
->> Local filesystems largely avoid this because they can check available sp=
-ace
->> synchronously in write_begin() and fail the write() syscall directly. Ne=
-twork
->> filesystems can't do this cheaply =E2=80=94 a round-trip per write to ch=
-eck server
->> space would negate the benefits of buffered I/O.
->>=20
->> Through recent development, netfs is becoming a central layer for network
->> filesystem I/O. It already has retry logic for transient failures (EAGAI=
-N,
->> ECONNABORTED), but ENOSPC/EDQUOT remain hard failures. This affects every
->> network filesystem using buffered writes.
->>=20
->> I am curious to know if NFS has a solution to this and what the approach=
- is
->> towards this specific problem by NFS community?
->>=20
->> This problem is worth solving for all network filesystems. I have a few
->> thoughts on approaches, combining cached statfs() output with
->> fallocate()-style pre-allocation on the write path:
->>=20
->> 1. Pre-allocate space on the server before writing to the page cache,
->>    analogous to fallocate() on the write path. This guarantees server-si=
-de
->>    space for page cache data.
->>=20
->> 2. Since per-write fallocate() calls require a server round-trip, effect=
-ively
->>    negating the benefit of buffered I/O. Use cached statfs() output to g=
-ate
->>    when pre-allocation is triggered. For example, once free space drops =
-below
->>    20% of total space, enable fallocate() on the write path. Otherwise, =
-let
->>    writes proceed as normal.
->>=20
->> 3. Handle refresh and synchronization of the cached statfs() data separa=
-tely
->>    to avoid staleness.
->>=20
->> I'd appreciate feedback from the community on viable approaches.
->
-> NFSv4.2 does have an ALLOCATE operation:
->
->     https://datatracker.ietf.org/doc/html/rfc7862#section-15.1
->
-> ...and such an operation could (in principle) precede WRITE in a
-> compound, but that doesn't really help you. By the time we're issuing
-> RPCs to the server, the client application has already finished its
-> writes and moved on.
->
-> For applications that want to avoid ENOSPC/EDQUOT, the best thing they
-> could do is call fallocate() themselves to ensure that the space
-> exists. With a sufficiently recent NFS client and server, that should
-> DTRT.
+Fix AF_RXRPC to make use of this to validate DATA packets secured with
+RxGK.
 
-Hey Jeff,
-Thanks for your email and for sharing the NFS spec. I noticed that the
-ALLOCATE operation ends up checking for space during write-back as well,
-and the initial concern of loosing data still remain. But if we do the
-operation before writing to the page-cache, it would be a performance
-issue.
+Fixes: 9d1d2b59341f ("rxrpc: rxgk: Implement the yfs-rxgk security class (GSSAPI)")
+Closes: https://sashiko.dev/#/patchset/20260511160753.607296-1-dhowells%40redhat.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jeffrey Altman <jaltman@auristor.com>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Simon Horman <horms@kernel.org>
+cc: Chuck Lever <chuck.lever@oracle.com>
+cc: netdev@vger.kernel.org
+cc: linux-afs@lists.infradead.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-crypto@vger.kernel.org
+cc: stable@vger.kernel.org
+---
+ Documentation/crypto/krb5.rst | 17 ++++++++---
+ crypto/krb5/krb5_api.c        | 54 +++++++++++++++++++++++++++++++----
+ include/crypto/krb5.h         |  9 ++++--
+ include/trace/events/rxrpc.h  |  1 +
+ net/rxrpc/rxgk.c              | 11 +++++--
+ 5 files changed, 77 insertions(+), 15 deletions(-)
 
-I will try a few experiments and then post my findings here.=20
+diff --git a/Documentation/crypto/krb5.rst b/Documentation/crypto/krb5.rst
+index beffa0133446..f62e07ac6811 100644
+--- a/Documentation/crypto/krb5.rst
++++ b/Documentation/crypto/krb5.rst
+@@ -158,13 +158,22 @@ returned.
+ When a message has been received, the location and size of the data with the
+ message can be determined by calling::
+ 
+-	void crypto_krb5_where_is_the_data(const struct krb5_enctype *krb5,
+-					   enum krb5_crypto_mode mode,
+-					   size_t *_offset, size_t *_len);
++	int crypto_krb5_where_is_the_data(const struct krb5_enctype *krb5,
++					  enum krb5_crypto_mode mode,
++					  size_t *_offset, size_t *_len);
+ 
+ The caller provides the offset and length of the message to the function, which
+ then alters those values to indicate the region containing the data (plus any
+-padding).  It is up to the caller to determine how much padding there is.
++padding).  It is up to the caller to determine how much padding there is.  The
++function returns an error if the length is too small or if the mode is
++unsupported.  An additional function::
++
++	int crypto_krb5_check_data_len(const struct krb5_enctype *krb5,
++				       enum krb5_crypto_mode mode,
++				       size_t len, size_t min_content);
++
++is provided to just do a basic check that the decrypted/verified message would
++have a sufficient minimum payload.
+ 
+ Preparation Functions
+ ---------------------
+diff --git a/crypto/krb5/krb5_api.c b/crypto/krb5/krb5_api.c
+index 23026d4206c8..c7ea40f900a7 100644
+--- a/crypto/krb5/krb5_api.c
++++ b/crypto/krb5/krb5_api.c
+@@ -134,27 +134,69 @@ EXPORT_SYMBOL(crypto_krb5_how_much_data);
+  * Find the offset and size of the data in a secure message so that this
+  * information can be used in the metadata buffer which will get added to the
+  * digest by crypto_krb5_verify_mic().
++ *
++ * Return: 0 if successful, -EBADMSG if the message is too short or -EINVAL if
++ * the mode is unsupported.
+  */
+-void crypto_krb5_where_is_the_data(const struct krb5_enctype *krb5,
+-				   enum krb5_crypto_mode mode,
+-				   size_t *_offset, size_t *_len)
++int crypto_krb5_where_is_the_data(const struct krb5_enctype *krb5,
++				  enum krb5_crypto_mode mode,
++				  size_t *_offset, size_t *_len)
+ {
+ 	switch (mode) {
+ 	case KRB5_CHECKSUM_MODE:
++		if (*_len < krb5->cksum_len)
++			return -EBADMSG;
+ 		*_offset += krb5->cksum_len;
+ 		*_len -= krb5->cksum_len;
+-		return;
++		return 0;
+ 	case KRB5_ENCRYPT_MODE:
++		if (*_len < krb5->conf_len + krb5->cksum_len)
++			return -EBADMSG;
+ 		*_offset += krb5->conf_len;
+ 		*_len -= krb5->conf_len + krb5->cksum_len;
+-		return;
++		return 0;
+ 	default:
+ 		WARN_ON_ONCE(1);
+-		return;
++		return -EINVAL;
+ 	}
+ }
+ EXPORT_SYMBOL(crypto_krb5_where_is_the_data);
+ 
++/**
++ * crypto_krb5_check_data_len - Check a message is big enough
++ * @krb5: The encoding to use.
++ * @mode: Mode of operation.
++ * @len: The length of the secure blob.
++ * @min_content: Minimum length of the content inside the blob.
++ *
++ * Check that a message is large enough to hold whatever bits the encryption
++ * type wants to glue on (nonce, checksum) plus a minimum amount of content.
++ *
++ * Return: 0 if successful, -EBADMSG if the message is too short or -EINVAL if
++ * the mode is unsupported.
++ */
++int crypto_krb5_check_data_len(const struct krb5_enctype *krb5,
++			       enum krb5_crypto_mode mode,
++			       size_t len, size_t min_content)
++{
++	switch (mode) {
++	case KRB5_CHECKSUM_MODE:
++		if (len < krb5->cksum_len ||
++		    len - krb5->cksum_len < min_content)
++			return -EBADMSG;
++		return 0;
++	case KRB5_ENCRYPT_MODE:
++		if (len < krb5->conf_len + krb5->cksum_len ||
++		    len - (krb5->conf_len + krb5->cksum_len) < min_content)
++			return -EBADMSG;
++		return 0;
++	default:
++		WARN_ON_ONCE(1);
++		return -EINVAL;
++	}
++}
++EXPORT_SYMBOL(crypto_krb5_check_data_len);
++
+ /*
+  * Prepare the encryption with derived key data.
+  */
+diff --git a/include/crypto/krb5.h b/include/crypto/krb5.h
+index 71dd38f59be1..aac3ecf88467 100644
+--- a/include/crypto/krb5.h
++++ b/include/crypto/krb5.h
+@@ -121,9 +121,12 @@ size_t crypto_krb5_how_much_buffer(const struct krb5_enctype *krb5,
+ size_t crypto_krb5_how_much_data(const struct krb5_enctype *krb5,
+ 				 enum krb5_crypto_mode mode,
+ 				 size_t *_buffer_size, size_t *_offset);
+-void crypto_krb5_where_is_the_data(const struct krb5_enctype *krb5,
+-				   enum krb5_crypto_mode mode,
+-				   size_t *_offset, size_t *_len);
++int crypto_krb5_where_is_the_data(const struct krb5_enctype *krb5,
++				  enum krb5_crypto_mode mode,
++				  size_t *_offset, size_t *_len);
++int crypto_krb5_check_data_len(const struct krb5_enctype *krb5,
++			       enum krb5_crypto_mode mode,
++			       size_t len, size_t min_content);
+ struct crypto_aead *crypto_krb5_prepare_encryption(const struct krb5_enctype *krb5,
+ 						   const struct krb5_buffer *TK,
+ 						   u32 usage, gfp_t gfp);
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index 573f2df3a2c9..704a10de6670 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -71,6 +71,7 @@
+ 	EM(rxkad_abort_resp_unknown_tkt,	"rxkad-resp-unknown-tkt") \
+ 	EM(rxkad_abort_resp_version,		"rxkad-resp-version")	\
+ 	/* RxGK security errors */					\
++	EM(rxgk_abort_1_short_header,		"rxgk1-short-hdr")	\
+ 	EM(rxgk_abort_1_verify_mic_eproto,	"rxgk1-vfy-mic-eproto")	\
+ 	EM(rxgk_abort_2_decrypt_eproto,		"rxgk2-dec-eproto")	\
+ 	EM(rxgk_abort_2_short_data,		"rxgk2-short-data")	\
+diff --git a/net/rxrpc/rxgk.c b/net/rxrpc/rxgk.c
+index 0d5e654da918..41180263e527 100644
+--- a/net/rxrpc/rxgk.c
++++ b/net/rxrpc/rxgk.c
+@@ -480,8 +480,10 @@ static int rxgk_verify_packet_integrity(struct rxrpc_call *call,
+ 
+ 	_enter("");
+ 
+-	crypto_krb5_where_is_the_data(gk->krb5, KRB5_CHECKSUM_MODE,
+-				      &data_offset, &data_len);
++	if (crypto_krb5_where_is_the_data(gk->krb5, KRB5_CHECKSUM_MODE,
++					  &data_offset, &data_len) < 0)
++		return rxrpc_abort_eproto(call, skb, RXKADSEALEDINCON,
++					  rxgk_abort_1_short_header);
+ 
+ 	hdr = kzalloc_obj(*hdr, GFP_NOFS);
+ 	if (!hdr)
+@@ -529,6 +531,11 @@ static int rxgk_verify_packet_encrypted(struct rxrpc_call *call,
+ 
+ 	_enter("");
+ 
++	if (crypto_krb5_check_data_len(gk->krb5, KRB5_ENCRYPT_MODE,
++				       len, sizeof(*hdr)) < 0)
++		return rxrpc_abort_eproto(call, skb, RXKADSEALEDINCON,
++					  rxgk_abort_2_short_header);
++
+ 	ret = rxgk_decrypt_skb(gk->krb5, gk->rx_enc, skb, &offset, &len, &ac);
+ 	if (ret < 0) {
+ 		if (ret != -ENOMEM)
 
---
-Regards,
-Piyush
 
