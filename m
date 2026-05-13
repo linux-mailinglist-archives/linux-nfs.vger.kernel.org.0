@@ -1,142 +1,266 @@
-Return-Path: <linux-nfs+bounces-21598-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21599-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GEUmCXxEBGqqGQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21598-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 11:29:32 +0200
+	id GdqAHSR+BGqKKwIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21599-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 15:35:32 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADE5A530A2A
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 11:29:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC14753425E
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 15:35:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8066A3095D72
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 09:29:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B92AF33B4B92
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 May 2026 13:15:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81A223E8C7D;
-	Wed, 13 May 2026 09:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B4E49690B;
+	Wed, 13 May 2026 13:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WP2Pe2L6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29893019DC;
-	Wed, 13 May 2026 09:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422C54968E6
+	for <linux-nfs@vger.kernel.org>; Wed, 13 May 2026 13:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778664552; cv=none; b=KHMyT+MT5Okzujq2YqdGGBXcA1Rb3v+RxahCt3XYgj1JlBqGKkshYp7bidt+swBAYGcZSV59N23xCBvoadRNnjLKUBWb1mOjQRMVj+E9K4XNVytJNCAhCd7AJrSo+Z6L4FxxETnU4LLF9qsLJQh3Laqiq8CY0qBKZnCsi+NsuW4=
+	t=1778677877; cv=none; b=V2NBuwjZi6BORHptr4e4US60Oe78fUqOl0yKXulb31t+Q4LP5a/QVjUdNSgSG8FAkxcONY6nX+sT5RE2kNYN1W2e0XkLsC0uE13gkRbkNcPf0jAXZpEVkmGYvY9rv7ZPlGCe7CV6HdROsfuGG06BYcG87fgsO0f7Mgm/PYolrgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778664552; c=relaxed/simple;
-	bh=iZdO5tfrEC0OdlmnndPXB576cc8IXVl/EBWV1fGg2nM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pU6QY5oupo0qTVD8bClC+pn6gXMEiD3/BtRt5D1C0AhzM8PyQM+TZiIhUcmugoDnQJ2ZfL4pPztV/WB4/sg7vYc4rXEji9s1CMUg/ZCSPoti6iQfaHeFyfWnFtsbNLxjMLIBAzEFUaXuGQqqL0qOL8jl542gFjcJzCrckn4TK+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2e923c044eae11f1aa26b74ffac11d73-20260513
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:962183df-769f-4fc9-ae5d-57349e4edb99,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:e7bac3a,CLOUDID:74ee4adb473dd5d5ef253debbc8e454a,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|898,TC:nil,Content:0|15|50,EDM:5
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 2e923c044eae11f1aa26b74ffac11d73-20260513
-X-User: zenghongling@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zenghongling@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1572052449; Wed, 13 May 2026 17:29:03 +0800
-From: Hongling Zeng <zenghongling@kylinos.cn>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	bcodding@redhat.com
-Cc: linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhongling0719@126.com,
-	Hongling Zeng <zenghongling@kylinos.cn>
-Subject: [PATCH] sunrpc: Fix error handling in rpc_sysfs_xprt_switch_add_xprt_store()
-Date: Wed, 13 May 2026 17:28:59 +0800
-Message-Id: <20260513092859.175466-1-zenghongling@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1778677877; c=relaxed/simple;
+	bh=6FWAOdMRCGXRhuY+RZ6so9OqbtSfnT1i9cx1+5lpsns=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aiCs9tQZHPsX6QgVdjvCJEgZnHGFg4R+27GTlfMvqFoUXeintQbSBI3F/ilQHVr0kRw02h06kGVeAdK9RbQB8De1kqU9YuKAFcX/RSl0cLxCmoDA+AENQ943ITqQMfkBj7rN4TGod/jfIVlx9TNoLRvh3zmMmv8jwPzTbSE/C5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WP2Pe2L6; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8353fd1cb5fso3319449b3a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 13 May 2026 06:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778677874; x=1779282674; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wsFk6Og0o1PC9DlqH7Rg3d6wr5WjV/2ny+ljIhyfStU=;
+        b=WP2Pe2L6oXwYZAIqerHUY2jAuvBDziO4BcAF9i3Pb+emXcqwkTFABpVZOMH3Ko/pno
+         CzJayj5iwz5yhwYAdJuOZNaG8eGb0p6NyEr0ucleIkaFGgXft3rVGOE/dfxa4KmLxFWl
+         w6F/jdjKBOenI1XJBRtTe9K8mcEkd2H1/7l6uC2N2JiN/9vQRlBW3XASZPDFQTQ0MK6z
+         Aoal/rmw8eZOb6jm7+OgVV/dg196Y9SfClipaL96R/wJpIZTMVDpjPt4WwTvWjFz2oXj
+         D+2CFKWiAbzblOB6nBb4EmE/tfY81VDM36T90zllVXUpn0hJ8tycl89xIksTN+CuS3Hp
+         t2VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778677874; x=1779282674;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wsFk6Og0o1PC9DlqH7Rg3d6wr5WjV/2ny+ljIhyfStU=;
+        b=TbvZIh1GErYMmuMDmt1ih72IiqA1NtyPSkhlSjWKEnNX4NBpOP08b98IRt1SIqLd5X
+         z76fhLRR3n5lMmtBr4yojbJLpJQ/WJe/uaG0dsFe+qLfILqzlhhNe+jM8gCiqe3EEkUN
+         jlBlilNYYYnYtnGQnluY95eXJgm2bY1mXHByPkenUgH6O4AYyoVth8PO6+bltcWnSCZb
+         hVbAjtBPuneThzumULjwrfN/q23T4GYj4pd73KWADnhercuDKpL9XVdClba7csM60xs3
+         crf1+Bt8PNhsgHIzA2VjzwrOs6Bv7eL4GUja95j30exGELNzgEi0wCCid7Ra0I10ag7B
+         M2dQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8C3IV62rwW+bAsRM356dtNNok8CCNUs4lEcRthPkYsttQHw8KnOfHkXF3z3lYLAOMLvuGHCHHSA/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yytf0lz6rT1QNDCc86+DfAB3AnI6+5PmJNaWCUV+vMV+TexXd5z
+	HNtbY9fHigzYjYffMh05rO+HNbkTNZqtLahu5B5frW/Jyg31XLnYUWSh
+X-Gm-Gg: Acq92OF4IK4pwdsjLTnaWFxu6Af2/O3szP4Ww8ssHO1nh0yu+hlLsBOtR5Jh1fouJkK
+	d0HZ1ZBsrNheP+XOx3xtLsmXNsyFgLWHHon6KMcRfaTKN5DnGpj+QHoiPvdKvdlv+PpxdVGvyYN
+	8nrnGeXxBdKaKIqlFsdWOuTsFfCJnC/4CXhuHCh9TQhO8KBseA13OJjN1A86BmAHfHpZk5hH8Ez
+	15hB0mF5H090pyhc8HwrisoKd8LsM8C7XZMJ3L9OKeLfbHt1GxOdkLX8CNwiaF6+OrFuUPAspOR
+	xcHEcCMKiVZIktf1LHzjkdcZux7Ai+iOZ75YlMw1rVWJOD613vDW2W9w0TIjne93GY2/P15w0tQ
+	E5BK9OmfNN1ptqDvwRnUYfFZdZXxbbIJriiuRX4ioG/TXwBRA0pnGJjJePp87rqd9JqlP4y/LT6
+	79UCvVTLFdxjCma8v8mUih/A+f+1xp1oZbbPbEG9A=
+X-Received: by 2002:a05:6a00:3692:b0:82f:7cb7:63c7 with SMTP id d2e1a72fcca58-83ee8321af5mr6868969b3a.11.1778677874347;
+        Wed, 13 May 2026 06:11:14 -0700 (PDT)
+Received: from localhost ([49.207.149.142])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-839659487afsm26237472b3a.18.2026.05.13.06.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 06:11:13 -0700 (PDT)
+From: Piyush Sachdeva <s.piyush1024@gmail.com>
+To: Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ netfs@lists.linux.dev
+Cc: sprasad@microsoft.com, linux-kernel@vger.kernel.org, sfrench@samba.org
+Subject: Re: [DISCUSSION] Preventing ENOSPC/EDQUOT writeback errors on
+ network filesystems
+In-Reply-To: <9e48229614786e0c2e92bb6a2dd3269868f160d0.camel@kernel.org>
+References: <m21pfqgzbq.fsf@gmail.com>
+ <9e48229614786e0c2e92bb6a2dd3269868f160d0.camel@kernel.org>
+Date: Wed, 13 May 2026 18:41:10 +0530
+Message-ID: <m2zf23e9ox.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: ADE5A530A2A
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: CC14753425E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21598-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[kylinos.cn];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,126.com,kylinos.cn];
-	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21599-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.988];
+	FROM_NEQ_ENVFROM(0.00)[spiyush1024@gmail.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email,kylinos.cn:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-xprt_create_transport() never returns NULL, only valid pointers or
-error pointers. Using IS_ERR_OR_NULL() is incorrect, and PTR_ERR(NULL)
-would return 0, which indicates EOF in a sysfs store function.
+Jeff Layton <jlayton@kernel.org> writes:
 
-Fix this by using IS_ERR() instead of IS_ERR_OR_NULL().
+> On Tue, 2026-05-05 at 11:41 +0530, Piyush Sachdeva wrote:
+>> Hi,
+>> There have been plenty of discussions on how to handle writeback errors =
+for
+>> network filesystems, but most have focused on error reporting after the =
+fact.
+>> I'd like to start a discussion around preventing writeback errors specif=
+ically
+>> ENOSPC and EDQUOT, before they cause silent data loss.
+>>=20
+>> The problem:
+>> With buffered writes on network filesystems (cifs, nfs, etc.), the write=
+()
+>> syscall copies data into the page cache and returns success immediately.=
+ The
+>> actual upload to the server happens later during writeback. If the serve=
+r is
+>> out of space at that point, the write fails with ENOSPC. The netfs/write=
+back
+>> layer records this error via mapping_set_error(), but critically the fol=
+io's
+>> writeback flag is cleared and the page is now clean. Under memory pressu=
+re, the
+>> VM can reclaim these clean pages, permanently losing data that the appli=
+cation
+>> believes was successfully written. Meanwhile, i_size has already been up=
+dated
+>> to reflect the new file size. So stat() shows a file size inclusive of t=
+he data
+>> that was never persisted. Another inconsistency here is that total free =
+space
+>> hasn't been modified for the file system on the server, leading to incor=
+rect
+>> values in statfs() output from the client's pov (assuming statfs() calls=
+ go
+>> to the server).
+>> To illustrate with real-world scenarios:
+>>=20
+>> - A user or application can keep issuing writes to an fd well beyond the
+>>   available space, since buffered writes return success as soon as data =
+is
+>>   copied to the page cache. A significant amount of data, exceeding the
+>>   available quota can accumulate before fsync() is called, at which point
+>>   critical data loss is nearly certain.
+>>=20
+>> - A malicious user can exploit this to keep resources pinned and memory
+>>   oversubscribed, impacting other applications.
+>>=20
+>> The error is technically observable: fsync() will return it, and close()
+>> surfaces it through the flush callback. But in practice, many applicatio=
+ns
+>> check neither, and the POSIX "just call fsync()" answer isn't satisfying=
+ for
+>> users who lose data silently.
+>>=20
+>
+> Yet, it is the only real answer we have.
+>
+> This is just a fundamental issue with buffered writes and delayed
+> writeback. Either you flush the data to stable storage now, or you have
+> to do it later. If you do it later, then it can still fail for all
+> sorts of reasons.
+>
+>> Local filesystems largely avoid this because they can check available sp=
+ace
+>> synchronously in write_begin() and fail the write() syscall directly. Ne=
+twork
+>> filesystems can't do this cheaply =E2=80=94 a round-trip per write to ch=
+eck server
+>> space would negate the benefits of buffered I/O.
+>>=20
+>> Through recent development, netfs is becoming a central layer for network
+>> filesystem I/O. It already has retry logic for transient failures (EAGAI=
+N,
+>> ECONNABORTED), but ENOSPC/EDQUOT remain hard failures. This affects every
+>> network filesystem using buffered writes.
+>>=20
+>> I am curious to know if NFS has a solution to this and what the approach=
+ is
+>> towards this specific problem by NFS community?
+>>=20
+>> This problem is worth solving for all network filesystems. I have a few
+>> thoughts on approaches, combining cached statfs() output with
+>> fallocate()-style pre-allocation on the write path:
+>>=20
+>> 1. Pre-allocate space on the server before writing to the page cache,
+>>    analogous to fallocate() on the write path. This guarantees server-si=
+de
+>>    space for page cache data.
+>>=20
+>> 2. Since per-write fallocate() calls require a server round-trip, effect=
+ively
+>>    negating the benefit of buffered I/O. Use cached statfs() output to g=
+ate
+>>    when pre-allocation is triggered. For example, once free space drops =
+below
+>>    20% of total space, enable fallocate() on the write path. Otherwise, =
+let
+>>    writes proceed as normal.
+>>=20
+>> 3. Handle refresh and synchronization of the cached statfs() data separa=
+tely
+>>    to avoid staleness.
+>>=20
+>> I'd appreciate feedback from the community on viable approaches.
+>
+> NFSv4.2 does have an ALLOCATE operation:
+>
+>     https://datatracker.ietf.org/doc/html/rfc7862#section-15.1
+>
+> ...and such an operation could (in principle) precede WRITE in a
+> compound, but that doesn't really help you. By the time we're issuing
+> RPCs to the server, the client application has already finished its
+> writes and moved on.
+>
+> For applications that want to avoid ENOSPC/EDQUOT, the best thing they
+> could do is call fallocate() themselves to ensure that the space
+> exists. With a sufficiently recent NFS client and server, that should
+> DTRT.
 
-Fixes: df210d9b0951 ("sunrpc: Add a sysfs file for adding a new xprt")
-Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
----
- net/sunrpc/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hey Jeff,
+Thanks for your email and for sharing the NFS spec. I noticed that the
+ALLOCATE operation ends up checking for space during write-back as well,
+and the initial concern of loosing data still remain. But if we do the
+operation before writing to the page-cache, it would be a performance
+issue.
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index a90480f80154..49686bf740e6 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -348,7 +348,7 @@ static ssize_t rpc_sysfs_xprt_switch_add_xprt_store(struct kobject *kobj,
- 	xprt_create_args.reconnect_timeout = xprt->max_reconnect_timeout;
- 
- 	new = xprt_create_transport(&xprt_create_args);
--	if (IS_ERR_OR_NULL(new)) {
-+	if (IS_ERR(new)) {
- 		count = PTR_ERR(new);
- 		goto out_put_xprt;
- 	}
--- 
-2.25.1
+I will try a few experiments and then post my findings here.=20
 
+--
+Regards,
+Piyush
 
