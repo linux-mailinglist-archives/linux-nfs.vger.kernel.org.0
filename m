@@ -1,168 +1,144 @@
-Return-Path: <linux-nfs+bounces-21638-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21639-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UGBDAktfB2pa0QIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21638-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 20:00:43 +0200
+	id WJ1sG5KSB2pU9AIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21639-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:39:30 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AABE8555C6A
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 20:00:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0C8F5583F9
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:39:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5B02A324CFE1
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 17:28:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CFFD1301739C
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 21:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 763993DBD5A;
-	Fri, 15 May 2026 17:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB1C2620DE;
+	Fri, 15 May 2026 21:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4S5BGfG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqYXqz6j"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CE43DB633;
-	Fri, 15 May 2026 17:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5513909B7;
+	Fri, 15 May 2026 21:39:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778866111; cv=none; b=SJJSIduqsV9jzFPfDWULgn+Z+kP/jhpVJP3sWX6ZU2aA2LiRiB9/hiR22Q0e40pQiPhlOoHImpReR8xMuSt9xTlxxwNzNvcm8qtNLRyZEY+o0kk9dF6PPy0a1GbG4DIN2G+kqj8/fju7jVzzpjnVOjHHMme37wGk7lDJyAyPebU=
+	t=1778881165; cv=none; b=s61gM42UH+WLvBkAL/oNUkEqIvuyPpftZpUtz2TTXkiWNX7QAYgz3ixO9ZNpvTmMm+8B7+VQykfMf+KZ5iwwWMlR0a3QUVUmLZCduE+MpyIv5oyF+ldZdQxQ+FH9i0YIPkeQkw4lN4tPkPw5n2/L7I0g3W78b56vN9y0eX2Sbzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778866111; c=relaxed/simple;
-	bh=PvUD325b83v1aoZjyXLETyi/+y+Vj2YZBqPuYxgSsog=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hq8Vx5zhnpA+cpjeMx2rrYhd5Z4+cEgJZ5xl+S+fGBV+QXA6cQRCze+Aa6nskwiRrksb4Ri2nW2amGFDtqbOJyyIQBNtdcHjajzOr9tJo5SBrNHs4gFZ1hnbaa05qxGfnONyW/cPeULJeaOOak4KeUIBk3TUbxYq3jSmjjk/3Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4S5BGfG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B301C2BCB3;
-	Fri, 15 May 2026 17:28:25 +0000 (UTC)
+	s=arc-20240116; t=1778881165; c=relaxed/simple;
+	bh=wwcDdCeF4pm4mGrrWBsOTYshZ5RcMGSW49jkfYnyQ9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HduDaZ4M02upWn/OUNm1lhR9KJHFTkTVdSph9Bfv4OAYvXCOObNfQElvr+y6WP0E/Ala0QJBPCBz2j+U0fkZAt0sRC1HNFU6xM28GiSbCSqUR8Kq6b16Dqn6Evl/KMevnlFppkROrLwF6itzpVnsFBIJPgtqJbEsWCPxT5f8tY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqYXqz6j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F8CC2BCB3;
+	Fri, 15 May 2026 21:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778866111;
-	bh=PvUD325b83v1aoZjyXLETyi/+y+Vj2YZBqPuYxgSsog=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o4S5BGfGV7mF3EIDJqFVfk94MakVX0AwugNb0q3/oGoth3vtcR7pWTRYVgx3d0yP9
-	 5M4Frvkz0unHa+uXgYucqPkKEqQI6I4clyT74STQYalT2HH9rB2URJssdCGbGfkIaK
-	 1bUvTduab+MPdMMd1ledWI9GjvhlmIHyqf/c8/c6z87ie+pFMQH0RlGMHAwTEhccV9
-	 0Cgw0KXczy8aSYYR4Fov/HbjEfaOF0eGw+cnxPlaUrCRFtkTX7+Y6LBf8DKDjlJWNy
-	 fns+LrexF1eJQ9Ua8H0R6QpTQh0xxHhPApx1OYVEdElP4mGrE5XH+IVjYwEdDYV51k
-	 b72j2nuombsxg==
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Calum Mackay <calum.mackay@oracle.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 00/28] vfs/nfsd: add support for CB_NOTIFY callbacks in directory delegations
-Date: Fri, 15 May 2026 19:26:19 +0200
-Message-ID: <20260515-weltschmerz-folgen-68ca0db1ef84@brauner>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
-References: <20260428-dir-deleg-v3-0-5a0780ba9def@kernel.org>
+	s=k20201202; t=1778881165;
+	bh=wwcDdCeF4pm4mGrrWBsOTYshZ5RcMGSW49jkfYnyQ9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nqYXqz6jQ97LTHCcKUC+GkRBqJdFdAoB55MmpQUJH43qB5SI4FW6+UbsawI250Z/S
+	 eKctgmddqw9Y8CYa9Wbb8sSAfzRcyEMJDCYUFgFPg+swcHhRCCCmH8xi1DXmUfNfQ9
+	 +1Zpsj4J/rqse/lr1bK+0Yobwrh9dzWOwsrFIRpaw7ZOa+OSZQVlctlDZtrA/37/Sa
+	 F85BCUWXdgthYq3b/eNrE133U+4VMw8wwNxTaelce4T0ZwxRe81NOkIwjXimLxH0HQ
+	 EYtDbvfCePsnU7CbY4QvIusjKqn/feESI0bMZ4BEfRduLRCaAGwnpZcKNSPANllE2A
+	 DnxZYAtLqA2ZQ==
+Date: Sat, 16 May 2026 07:39:14 +1000
+From: Dave Chinner <dgc@kernel.org>
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>, cem@kernel.org,
+	linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] xfs: fix overlapping extents returned for pNFS
+ LAYOUTGET
+Message-ID: <ageSguSyf2kBY33a@dread>
+References: <20260512172238.2495085-1-dai.ngo@oracle.com>
+ <agQhzg-0aeISwOGW@infradead.org>
+ <961eb355-2f52-47a0-9399-e050a4e535a2@oracle.com>
+ <06d9b1ae-e46f-459c-bcb4-1a5ca4ded4b0@oracle.com>
+ <20260514002513.GQ9555@frogsfrogsfrogs>
+ <26365a46-bdac-4e8a-a951-de904c3e5606@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2210; i=brauner@kernel.org; h=from:subject:message-id; bh=PvUD325b83v1aoZjyXLETyi/+y+Vj2YZBqPuYxgSsog=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSxh2/rvV30XP8k/4WyL9XyVztMAzhc1rn5ab7aEnxde XXB46XaHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABOZ9Z+R4f2SI19eTWPu+PQo ++pV5uNMG5PynwtxFX4OPTf/HlOkjw3D/wJ3sxAx1bfnbLikdqjf57MInRG8OC0kZl2e+rRD2aH M3AA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AABE8555C6A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26365a46-bdac-4e8a-a951-de904c3e5606@oracle.com>
+X-Rspamd-Queue-Id: E0C8F5583F9
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.84 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21638-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21639-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	URIBL_MULTI_FAIL(0.00)[tor.lore.kernel.org:server fail];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.964];
+	RCPT_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,gmail.com,goodmis.org,efficios.com,lwn.net,linuxfoundation.org,brown.name,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dgc@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Tue, 28 Apr 2026 08:09:44 +0100, Jeff Layton wrote:
-> Re-posting the set per Christian's request. The only difference in this
-> version is a small error handling fix in alloc_init_dir_deleg(). The old
-> version could crash since release_pages() can't handle an array with
-> NULL pointers in it.
+On Thu, May 14, 2026 at 10:19:14AM -0700, Dai Ngo wrote:
+> On 5/13/26 5:25 PM, Darrick J. Wong wrote:
+> > On Wed, May 13, 2026 at 10:28:31AM -0700, Dai Ngo wrote:
+> > > IMHO, I think we still should fix xfs_fs_map_blocks() to avoid any overhead
+> > > and complication in ext_tree_insert having to handle overlapping extents.
+> > I don't know enough about the nfs blocklayout code to say for sure, but
+> > it seems like you want to upsert the mapping returned by
+> > xfs_fs_map_blocks into the "ext_tree" right?
 > 
-> ---------------------------------8<------------------------------------
-> 
-> [...]
+> This is currently done on the NFS client side by ext_tree_insert(). The
+> question I have is should we enhance the server side by passing '0' to
+> xfs_fs_map_blocks() so the client does not have to do the work of
+> handling the overlap extents.
 
-@Chuck, @Jeff, I've only merged the vfs specific changes into a stable branch.
-You can pull it I won't touch it again. You can pull the nfsd work in in
-whatever form you like. Same procedure I use with io_uring et al.
+I think you've all missed the optimal solution to the problem. 
 
-Let me know if that work for you.
+The problem is not the use of XFS_BMAPI_ENTIRE on the first mapping
+call, it's the use of it on the -second- after the first call didn't
+return a range that mapped the -entire- request range.
 
----
+Hence the second and subsequent calls need range trimming so that
+they don't overlap with the first range that was returned.
 
-Applied to the vfs-7.2.directory.delegations branch of the vfs/vfs.git tree.
-Patches in the vfs-7.2.directory.delegations branch should appear in linux-next soon.
+IOWs, we keep the use XFS_BMAPI_ENTIRE for the first mapping call
+so we retain the optimisation that minimises the number of pNFS
+client mapping calls needed, but if it needs to make a second call
+we drop the ENTIRE flag and append extents trimmed to the range
+being asked for (which doesn't include the first extent already
+returned).
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+That was we get large extents reported most of the time, and in the
+corner cases where we have a race like this one or an extent
+boundary lies in the middle of the requested range, we will get
+correct, non-overlapping behaviour.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Best of both worlds, yes?
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-7.2.directory.delegations
-
-[01/28] filelock: pass current blocking lease to trace_break_lease_block() rather than "new_fl"
-        https://git.kernel.org/vfs/vfs/c/89330d3a60f7
-[02/28] filelock: add support for ignoring deleg breaks for dir change events
-        https://git.kernel.org/vfs/vfs/c/24cbf43337f4
-[03/28] filelock: add a tracepoint to start of break_lease()
-        https://git.kernel.org/vfs/vfs/c/e39026a86b48
-[04/28] filelock: add an inode_lease_ignore_mask helper
-        https://git.kernel.org/vfs/vfs/c/95825fdcc0b0
-[05/28] fsnotify: new tracepoint in fsnotify()
-        https://git.kernel.org/vfs/vfs/c/ad4489dcd08d
-[06/28] fsnotify: add fsnotify_modify_mark_mask()
-        https://git.kernel.org/vfs/vfs/c/12ffbb117b64
-[07/28] fsnotify: add FSNOTIFY_EVENT_RENAME data type
-        https://git.kernel.org/vfs/vfs/c/010043003c0c
+-Dave.
+-- 
+Dave Chinner
+dgc@kernel.org
 
