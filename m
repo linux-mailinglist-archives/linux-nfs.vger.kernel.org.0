@@ -1,72 +1,72 @@
-Return-Path: <linux-nfs+bounces-21641-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21642-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GNsxA/+WB2r/9wIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21641-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:58:23 +0200
+	id uLXPOjKXB2r/9wIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21642-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:59:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C56D5587E1
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:58:21 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43600558820
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E772D3019130
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 21:58:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6024B3013D46
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 21:59:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7F6E3EDE47;
-	Fri, 15 May 2026 21:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC843EEAED;
+	Fri, 15 May 2026 21:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrySnH00"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlxAZ0IA"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8487B390CB2
-	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 21:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84953EE1F7
+	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 21:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778882298; cv=none; b=O+P6CDyKQZHQKhzXAA0HsftsCqr++Q8AkDRSVsDO4VNXsAJvrtJvLcDP3kxs/4cVaqAZ3JHyoy6dYlb0mrlb8Q+S/Zih9v4MYG4NBqY53Il0w+xr6D6lzOTVpvDjkz2n/YTqXHGxSGMc74n+0Rs0l7Of7tG5EpI++Xfzos2yN7Y=
+	t=1778882348; cv=none; b=XDOdrKgvggdbZQMBvdDk+r54bDWSmptwJpxnq2bePrZZTDQVBvLyT6hdsuS2kEYIlynfTuTHRsz2U+Tq7DEluNkzJfo7kM9PbFtKkZPkGrRV+8FzFwLZn8pXq7/1eQywH72qbdR1dtO+LFfuvHIj7LcJy3PX0ln0KyMOYjcpAps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778882298; c=relaxed/simple;
-	bh=/mHSzbEHbunn4Gv+x6uYZkpcvkpdkTON/QAE5a6at5M=;
+	s=arc-20240116; t=1778882348; c=relaxed/simple;
+	bh=Tefq8HvM4P5E2wSS3fwKg/uRUohzy18j3qB5eF3vc+I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L3Y86Kn/wy+q8nW0hZCz1ilVGhNlX06O98OnjYma2FrhQoQtpQnOPgNCy+XC2ngXsrxhKEvxasq7YORQ7gRbmvEpEuRXZ68vets7egI5H3T8Zkkt2TY3Tl4eYXV6Tq+eKAPfFAEUQIryM1b6x1PMxhpt1x+NHOMhhV1+frVkgUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrySnH00; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3424AC2BCF5
-	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 21:58:18 +0000 (UTC)
+	 To:Cc:Content-Type; b=nQjGvKUon5ThnQDfQFjwvtROO7h1CH8tGvylQ0+smNMuHtF4JpCB+99MqATDROOLe/l+6eqhLh0feI7fZDBR2q7Vc4ZGACmikf1s6ss+tKW2LIR0SJecO/Z3KwPRAZptixNt567uPp0oNoTz2Gcv2oXBJ3GpKSPZvoc0KiZive0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlxAZ0IA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A657C2BD04
+	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 21:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778882298;
-	bh=/mHSzbEHbunn4Gv+x6uYZkpcvkpdkTON/QAE5a6at5M=;
+	s=k20201202; t=1778882348;
+	bh=Tefq8HvM4P5E2wSS3fwKg/uRUohzy18j3qB5eF3vc+I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YrySnH00B0W1qq5Wp87dlgYi2suFfNd57N2Uuth/vkCX1DrZ3IvFyxISLW0xoIF69
-	 hRjENHlGB/3ONaZlglJOc4ukuB0ctST7O4dj+rUVrdlnm1YanBPd1V+Bn1UhoHLW4E
-	 JXQ/kS1/ER7ObuNKR8I2hcUCtTBptWdMJXaZCExsraRoFD2Gyjk7NySzzJmUpzQ5cR
-	 j5a0wZY7iA7GqaZgUjtc+Taku3bBD9oUOyoWapVjk+PBcCyiTk7K5qE2vYSk/R3eiH
-	 nSUWFrQFAEnpEsEBNYMpxB2+u1QHKALgTRITtHr4Lpl3a/9KiTwUTCsF3mm9EJCbKa
-	 NZO40x8BvCEDg==
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-65c364b893aso670516d50.0
-        for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 14:58:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9ofq8EwYCvUtzGQNAXgU/ZIrsl34kqh8duNrYXuPerre1P5oGhel7Vwj8U/FSbY9cWc94eSvHZ/BU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmGVF6sz6/N39sCjPFMTf/0WiarJOFkybEoou8RugAHCtVf0uF
-	mYSubijt5XsWrz8rwgORrmj9Fgz4fOPWz73lgiSHux9mc6zXqyX6Ud9VoMf+SwaxBpQy5c6030V
-	lDHQVQ1bJkL62C9RdTY+J1dJfNfaQ60vk0qnJqTsAlQ==
-X-Received: by 2002:a05:690e:1517:b0:65d:f308:b503 with SMTP id
- 956f58d0204a3-65e22650c4amr5634144d50.1.1778882297534; Fri, 15 May 2026
- 14:58:17 -0700 (PDT)
+	b=mlxAZ0IAIzSCHzLngeDmNQ4J6co9JfMfAyyTD56EEM12uxEwPF+d70rIFEgbXNu+t
+	 nmFWRYoP8nH71/SzDNTwckMpq9wyB25aRToRPAIigrb7jE/X+huxz3wV5weJQEh3lf
+	 ZsxLaxQxb/gZTw7PSxPLrOv75lNNcS2p2VvYZC9t6B4LYinmg6kLafUf0DfUj6eBpq
+	 kZXCFWY/C9/weqMV5t5f0tzNqll4Mc26mgKMjPP/M9Z9q4x7BWVbGRpdIXWiR96TOE
+	 0nKaYS+uAe3dGdJ5WvMJ67+DHS+m1Sv1+QgNDDJhKoqmJOrx70mm+Pc9QAldu7MgQe
+	 B0cPfkZiG0HUw==
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-65c305f381eso847949d50.3
+        for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 14:59:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9xuXma4kEJiCeN3jXcdE6MN/v+y1gXl20wEVmkWjISd4i30R0bamOvP1Bv0YOXNEScPOYhkBIU+xs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF5sGiYfAyaZGz1HWiXZhSFS9bN9sowcMbjDaOo7mXuC5Eo4dX
+	xEDKWXt/AxkuvCD/TaMbB7ep1qN59boZSSPQBnLslyiCfQLY11JekdW25md4Qqyg1Zj6gl9Bkl/
+	A5+vz/Jkz5DQR5tvvnCQSxl1JRhnHdQfoV8ItZeD/zA==
+X-Received: by 2002:a05:690e:4188:b0:65c:477a:2ad7 with SMTP id
+ 956f58d0204a3-65e22733998mr4980962d50.25.1778882347862; Fri, 15 May 2026
+ 14:59:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-13-hch@lst.de>
-In-Reply-To: <20260512053625.2950900-13-hch@lst.de>
+References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-12-hch@lst.de>
+In-Reply-To: <20260512053625.2950900-12-hch@lst.de>
 From: Chris Li <chrisl@kernel.org>
-Date: Fri, 15 May 2026 14:58:06 -0700
-X-Gmail-Original-Message-ID: <CACePvbXhMm0nzXdTqbF5j57AC_7qOH-hMZ5pB6z0cZFfAixH5Q@mail.gmail.com>
-X-Gm-Features: AVHnY4L_tQU_kPqgc-BeGp-d2068VNSoZvM02GkthxouKCr7BEGYMQdDLNaKcrQ
-Message-ID: <CACePvbXhMm0nzXdTqbF5j57AC_7qOH-hMZ5pB6z0cZFfAixH5Q@mail.gmail.com>
-Subject: Re: [PATCH 12/12] swap: move swap_info_struct to mm/swap.h
+Date: Fri, 15 May 2026 14:58:56 -0700
+X-Gmail-Original-Message-ID: <CACePvbWMpfBo0zSFmMGLh7uxrpL2ugHCmD9xp=FC4aXiv9GYmQ@mail.gmail.com>
+X-Gm-Features: AVHnY4JjyLNu3psg3JDksoA1h3sEopdVsiktUSZMp2g3bBnm0ZZ5mBGkhXfViRA
+Message-ID: <CACePvbWMpfBo0zSFmMGLh7uxrpL2ugHCmD9xp=FC4aXiv9GYmQ@mail.gmail.com>
+Subject: Re: [PATCH 11/12] swap: move struct swap_extent to swapfile.c
 To: Christoph Hellwig <hch@lst.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Kairui Song <kasong@tencent.com>, 
 	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
@@ -81,18 +81,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Kairui Song <kasong@tencent.com>,
 	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 7C56D5587E1
+X-Rspamd-Queue-Id: 43600558820
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21641-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21642-lists,linux-nfs=lfdr.de];
 	FREEMAIL_CC(0.00)[linux-foundation.org,tencent.com,kernel.org,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -109,15 +109,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:email]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,lst.de:email]
 X-Rspamd-Action: no action
 
 On Mon, May 11, 2026 at 10:38=E2=80=AFPM Christoph Hellwig <hch@lst.de> wro=
 te:
 >
-> swap_info_struct is now internal to the MM subsystem, so remove it from
-> the public header.
+> struct swap_extent is only used inside of mm/swapfile.c, so move it
+> there.
 >
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
