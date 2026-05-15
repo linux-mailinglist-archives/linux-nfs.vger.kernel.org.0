@@ -1,72 +1,72 @@
-Return-Path: <linux-nfs+bounces-21649-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21650-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wDK2EC6dB2oD+wIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21649-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:24:46 +0200
+	id wFcLKHeeB2oD+wIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21650-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:30:15 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4D02558D1C
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:24:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C1A3558DF9
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:30:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6AFB130078A7
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 22:24:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 93A5A300A52C
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 22:30:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1033F44F3;
-	Fri, 15 May 2026 22:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED983F5BE9;
+	Fri, 15 May 2026 22:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I75LpWDr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1BmAcRS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3D53EEACF
-	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 22:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD8A3F44D8
+	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 22:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778883869; cv=none; b=V694Vv6+PzvT6XAWmMLzdvIQakFUIglFl5A0uGCbIEgPM8T4HNjQPKz6FTyc1wmSL1ABXilmEiuTH8jtNsS2woSO9cmZ37a9rlr0rfA3VIBkM4fNx7fQL/qoIpVvM3l4ZOyI2Xmlz+4c9MajJXu3tF0eljMd9MRoEwoU0zqr6JA=
+	t=1778884209; cv=none; b=p/g/tT13MfdqbumK9EzMr3NTUHg5sflGfgSx4SVI3QzzGtTxQTiNZgtg6OsRyts4JYEsw69SDlBLmvjZWrUSU05NEUEa4+g/1xvrybcHUKwkwyeBBeSYOB4b0x4n/hNJx711l2tOybIYypnzvPom4KGc9qDQCnrysE6D2PXmMfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778883869; c=relaxed/simple;
-	bh=CQjBHE398jfmQc9Nk7uTNv+8vscqO8uzAxJfVr6TjOw=;
+	s=arc-20240116; t=1778884209; c=relaxed/simple;
+	bh=ReQtRGN6YCVCM+VLe1SVEp6J++lmzI2ST6cnJuKfsNY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LCs/aEzTqKX4X8//82s0X0vMctfP+Zwj4r0Uuwyk1puWothmYxrz1JiHmf34rEddmzoblF0nok8fa0WvkXO8vSTbBWPZexptdINpuvRCMxO7r7J4+3WA0gEetfxrUX10hvki5sQcS3WgWAcT9dwdyq8/vqFtGJpFjFHnTymLBTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I75LpWDr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D002EC4AF0D
-	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 22:24:28 +0000 (UTC)
+	 To:Cc:Content-Type; b=mvlHGU9FujJwUr6tsxTd6zftaHSPjsCUimEPDZBL7Im1tMc06LdMd4+6lkbbcSR8gXFqS2jVmRfJbaj5JmTS+W6hEfyFPdaPg61EgJsE4xDbKaOTMJOLkvFFsQLgoCpyZinaIYCJqbdEBPGTwPI3xxIhY03hLC10w3yhBDwZa7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1BmAcRS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C86DFC2BCB7
+	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 22:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778883868;
-	bh=CQjBHE398jfmQc9Nk7uTNv+8vscqO8uzAxJfVr6TjOw=;
+	s=k20201202; t=1778884208;
+	bh=ReQtRGN6YCVCM+VLe1SVEp6J++lmzI2ST6cnJuKfsNY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=I75LpWDrE4HspM1Nom8QNNiBxvvPPC1Z/wA25yBCJ/4enl3WTmrgj8AZMjhk2O/xG
-	 yshsfHF9WvD9zWHVLpX9AeHo3Ri3ddj1aGewMbBUU8ZueR0ecjlr9Q0zOirV60mTuL
-	 Blg8dz0+peaFU83cqwIw+GtehBIoilyr1JVfpLfi/1DhIwPgar4tiP57UNiR2Z6RXb
-	 jJG0DtJ2+JgFoQLnfeXEZOoydPFpzXHXPWSjEyaxuisnvQztS1Uw/mSHrNECrgkznS
-	 jVFyqqaY/Np9buMNHRC3bZWYDATHC2YK2s+ERM+sBFNsc5fqz/AcPMBEuFWjFE7Hyy
-	 AhPRursx/3ldg==
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-651bf695701so681289d50.2
-        for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 15:24:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9W9l5Nip3V9UDORfu6knDEBGocwCs7qeY3jymsWYmybGT2UVJkezHQXS39aldYQFnTzdQvo4CRvxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHBaY7m6zh+PUjAG6wP41IARwd33sJZYLv6W5L1KGXAV/5yUZE
-	FVA/4V9kjxczJsRU+UZPP5rmrFtl9R/CgHa3uBUpTCzApRgN+hfPaZYVzPvasedGvgxPRaXQeH1
-	tkw1F5M+NT6f9etvYNP9Z6H3bjcggo49YkWa72k0MWw==
-X-Received: by 2002:a05:690c:c504:b0:7b8:926e:3ef4 with SMTP id
- 00721157ae682-7c9599a3c98mr72668207b3.17.1778883868040; Fri, 15 May 2026
- 15:24:28 -0700 (PDT)
+	b=l1BmAcRSlMtkGR8AS0UI7PMBSsVdeQ+vAfkS1phC7SdTdRHX+BGs4MAQg6DgBmiXA
+	 d+XKcoVCgyus/I8MJO2S5377iU9wMxI4ndzUMSOH3X0aA5wcic6o9RuVDF3YmW+Cyd
+	 Rsm0oXBAm3I4KOJJf2LhQe4ro/ZXtPTXTgkhYGdTF1JpalHy6mrdtRIOikrONxR6gi
+	 khlgGqooS0g8AnPRBVazaVmq7yYCJ19qdANfoofjF9OShgb9otGvgrG9SRWnjQPRsF
+	 l52n9H+vH0yBViDvJWLpYnNjBc23ogiZTPw0OfmtteiSRyxOR0C1GXSFcVk7sCYfIz
+	 GNPD2LtwC5Ozg==
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-656d749109cso450370d50.3
+        for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 15:30:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8Hftqoo+Hq2SOSfVeFl8zdOIOqrdduz9Qnzzv9GrlqHOduBImnWc1HahuVdi19ukn+6PBbydltnnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeCLd9AgBfnqOPbP0NmL5O61O3jjWuF2HTlWRzaGzJPmwHLr6O
+	wLhE2jrYQ0quwh9aC7nfCJLmHpYcAyYH7XN6kH1YihS5MRGZAehyeQAoBKNiW3vNGnQZfXpKGrY
+	nRioc4iSA1UsZKhDVD9S4ciGWbH3TS/V1azPUW7X3Uw==
+X-Received: by 2002:a05:690e:480f:b0:64e:597a:f5c2 with SMTP id
+ 956f58d0204a3-65e2289a39cmr4822587d50.65.1778884208163; Fri, 15 May 2026
+ 15:30:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-4-hch@lst.de>
-In-Reply-To: <20260512053625.2950900-4-hch@lst.de>
+References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-3-hch@lst.de>
+In-Reply-To: <20260512053625.2950900-3-hch@lst.de>
 From: Chris Li <chrisl@kernel.org>
-Date: Fri, 15 May 2026 15:24:16 -0700
-X-Gmail-Original-Message-ID: <CACePvbVmxUVVZLd=hUnzjRLtt3hBWRxemR_YQZCVSYYNadiAUw@mail.gmail.com>
-X-Gm-Features: AVHnY4K8odfW_w5Sv5zxMaAGvoOSmdsLHmORiA0lm6BrpYzORI9rYZ53g2APvuQ
-Message-ID: <CACePvbVmxUVVZLd=hUnzjRLtt3hBWRxemR_YQZCVSYYNadiAUw@mail.gmail.com>
-Subject: Re: [PATCH 03/12] swap,fs: move swapfile operations to struct file_operations
+Date: Fri, 15 May 2026 15:29:57 -0700
+X-Gmail-Original-Message-ID: <CACePvbUPQ=tO5feC=2-8XdBV1PgzoX+EwASU__jNiuzcGsPMPA@mail.gmail.com>
+X-Gm-Features: AVHnY4KVT3GwVUdlKXUpf18PwWGpkgh1B7IPlKLHiB6TxVcw3NQNEM73-FjKVDw
+Message-ID: <CACePvbUPQ=tO5feC=2-8XdBV1PgzoX+EwASU__jNiuzcGsPMPA@mail.gmail.com>
+Subject: Re: [PATCH 02/12] swap: move boilerplate code into the core swap code
 To: Christoph Hellwig <hch@lst.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Kairui Song <kasong@tencent.com>, 
 	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
@@ -81,18 +81,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Kairui Song <kasong@tencent.com>,
 	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: B4D02558D1C
+X-Rspamd-Queue-Id: 4C1A3558DF9
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21649-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21650-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -111,29 +111,23 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:email,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 10:37=E2=80=AFPM Christoph Hellwig <hch@lst.de> wro=
+On Mon, May 11, 2026 at 10:36=E2=80=AFPM Christoph Hellwig <hch@lst.de> wro=
 te:
 >
-> The swap operations have nothing to do with the address_space, which is
-> used for pagecache operations.  Move them to struct file_operations
-> instead.  This will allow moving the block device special cases into
-> block/fops.c subsequently.
+> Make the core swap code calculate sis->pages, nr_extents and the span,
+> re-set sis->max based on it and don't require passing the current offset
+> into the swap file to swap_add_extent as all that can trivially be
+> calculated internally.  Also truncate the spans based on the available
+> information.
 >
-> Pass struct file first to ->swap_activate as file operations typically
-> get the file or iocb as first argument and use swap_activate instead of
-> swapfile_activate in all names to be consistent.
->
-> Note that while the trivial iomap wrappers are moved to a new file when
-> applicable to keep them local to the file operation instances, complex
-> implementation are kept in their existing place.  It might be worth to
-> move them in follow-on patches if the maintainers desire so.
+> All this removes a lot of boilerplate code in the callers.
 >
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-That makes sense to me. I ack for the core swap part of the code.
+Very nice cleanup.
 
 Acked-by: Chris Li <chrisl@kernel.org>
 
