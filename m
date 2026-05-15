@@ -1,144 +1,134 @@
-Return-Path: <linux-nfs+bounces-21639-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21640-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJ1sG5KSB2pU9AIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21639-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:39:30 +0200
+	id sIZFFZOWB2qj9wIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21640-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:56:35 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0C8F5583F9
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:39:29 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7855F5587D0
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 23:56:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CFFD1301739C
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 21:39:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7B3AF30421DB
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 21:40:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB1C2620DE;
-	Fri, 15 May 2026 21:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9A03EEAD3;
+	Fri, 15 May 2026 21:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqYXqz6j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3+DAMfE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5513909B7;
-	Fri, 15 May 2026 21:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380DF3EDE77
+	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 21:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778881165; cv=none; b=s61gM42UH+WLvBkAL/oNUkEqIvuyPpftZpUtz2TTXkiWNX7QAYgz3ixO9ZNpvTmMm+8B7+VQykfMf+KZ5iwwWMlR0a3QUVUmLZCduE+MpyIv5oyF+ldZdQxQ+FH9i0YIPkeQkw4lN4tPkPw5n2/L7I0g3W78b56vN9y0eX2Sbzg=
+	t=1778881221; cv=none; b=lkucXeGxsOnq8sMXvgNPgRjYF1RkbLeg6xu84kkrFf0rMsLOqprlEVO/NOE4jWEsJcdx0OU1H1FngYS/lrGKgQrX9Bx8NU0tmfKbrntFuYZeK9mhoaPSIYQpnGhBeCdzVaIA8NZo4HAJ08gYrXtxZqnkvtOPexxtTZEC3kXQdjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778881165; c=relaxed/simple;
-	bh=wwcDdCeF4pm4mGrrWBsOTYshZ5RcMGSW49jkfYnyQ9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HduDaZ4M02upWn/OUNm1lhR9KJHFTkTVdSph9Bfv4OAYvXCOObNfQElvr+y6WP0E/Ala0QJBPCBz2j+U0fkZAt0sRC1HNFU6xM28GiSbCSqUR8Kq6b16Dqn6Evl/KMevnlFppkROrLwF6itzpVnsFBIJPgtqJbEsWCPxT5f8tY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqYXqz6j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F8CC2BCB3;
-	Fri, 15 May 2026 21:39:22 +0000 (UTC)
+	s=arc-20240116; t=1778881221; c=relaxed/simple;
+	bh=yn5Ug5k2IASPmOnTWh5/NWKfju83Ji8V+BAWrGXvmqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KBokfFVRnEddi1loMQR8QpI2VKcFL9gaLamMgH4Jv2WsKThZ1Hripnc7pUQ1/OtSCcnQ+JfgYhHD1r4W5qk+AnyExiXyBwx8bCdMh5YQBpCw8MSNZQFxhoam5iNI4FVjDUoKmlcf/2AzN9sF+rXJIL6rqFVeYI3ACkU3/i3raes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3+DAMfE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE0DC2BCFA
+	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 21:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778881165;
-	bh=wwcDdCeF4pm4mGrrWBsOTYshZ5RcMGSW49jkfYnyQ9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nqYXqz6jQ97LTHCcKUC+GkRBqJdFdAoB55MmpQUJH43qB5SI4FW6+UbsawI250Z/S
-	 eKctgmddqw9Y8CYa9Wbb8sSAfzRcyEMJDCYUFgFPg+swcHhRCCCmH8xi1DXmUfNfQ9
-	 +1Zpsj4J/rqse/lr1bK+0Yobwrh9dzWOwsrFIRpaw7ZOa+OSZQVlctlDZtrA/37/Sa
-	 F85BCUWXdgthYq3b/eNrE133U+4VMw8wwNxTaelce4T0ZwxRe81NOkIwjXimLxH0HQ
-	 EYtDbvfCePsnU7CbY4QvIusjKqn/feESI0bMZ4BEfRduLRCaAGwnpZcKNSPANllE2A
-	 DnxZYAtLqA2ZQ==
-Date: Sat, 16 May 2026 07:39:14 +1000
-From: Dave Chinner <dgc@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>, cem@kernel.org,
-	linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfs: fix overlapping extents returned for pNFS
- LAYOUTGET
-Message-ID: <ageSguSyf2kBY33a@dread>
-References: <20260512172238.2495085-1-dai.ngo@oracle.com>
- <agQhzg-0aeISwOGW@infradead.org>
- <961eb355-2f52-47a0-9399-e050a4e535a2@oracle.com>
- <06d9b1ae-e46f-459c-bcb4-1a5ca4ded4b0@oracle.com>
- <20260514002513.GQ9555@frogsfrogsfrogs>
- <26365a46-bdac-4e8a-a951-de904c3e5606@oracle.com>
+	s=k20201202; t=1778881220;
+	bh=yn5Ug5k2IASPmOnTWh5/NWKfju83Ji8V+BAWrGXvmqg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=d3+DAMfESZJkisVvHKKrjt0gii6H7nYuEwvudROpBZnSc+iV0LyluLPNfM2vJVOUH
+	 tAuR2YoS18X6YDqToo6siVV+uoO0xGC2vIDrXh1aU8LanvWje3f3zpqLKldceV4mt0
+	 JuW/GkJRMD/ClkcVcVvjhB2Axlcd9Zwx+Iyh2QdZz0w0+SNOJqRY/j0K4/zumDC4L3
+	 BIqqOSARo6PLEPoy9C+Kl6x/IPtvJgJzDVFm0Lg6NocAwcBBQT2pc6T4qHesGHBymk
+	 IRD4eeACwuUK5PJ84QjNOS7fdqqCZf/oFfOdb2Htjb1BetQEs9qnMzHMWbEporg6mi
+	 2OuWmiVdYpuxg==
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-65c5361142fso663677d50.0
+        for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 14:40:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9hgi/U8j2Y9Ij7Dguj2fBPDneH3aTf9NKWKiITbk1j9QJ3pkGLKzdwIr0yQEpmZPUyx/9xm4QVsxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw8RuXRdlpN5R7mTZg/lBdF8gLWrI9IHV3aRItZhf/YMmYWYvy
+	bP/RJnzeZ47lBndakk3rA8LLPyyGo8kNadZHu9TcIo4QFwLS85wU98Fbf2QLyYxoEVjUD8UQ5T1
+	UgR8f4YEw87fRUIOnBgtqLRT3ey8QUTzGlU8I7nC10A==
+X-Received: by 2002:a53:accf:0:20b0:651:d6a2:f766 with SMTP id
+ 956f58d0204a3-65e227bae88mr5109450d50.35.1778881220197; Fri, 15 May 2026
+ 14:40:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26365a46-bdac-4e8a-a951-de904c3e5606@oracle.com>
-X-Rspamd-Queue-Id: E0C8F5583F9
+References: <20260512053625.2950900-1-hch@lst.de>
+In-Reply-To: <20260512053625.2950900-1-hch@lst.de>
+From: Chris Li <chrisl@kernel.org>
+Date: Fri, 15 May 2026 14:40:09 -0700
+X-Gmail-Original-Message-ID: <CACePvbUj0-fAd-gjRjxFXYz22hGQaT9upFL85KUqD=W=SWX+0Q@mail.gmail.com>
+X-Gm-Features: AVHnY4IVYDXe6JpHvzKEq9XldjgLC8IpryDPCEhie3HNTVfz3whVFC9mf8Ia0bI
+Message-ID: <CACePvbUj0-fAd-gjRjxFXYz22hGQaT9upFL85KUqD=W=SWX+0Q@mail.gmail.com>
+Subject: Re: improve the swap_activate interface
+To: Christoph Hellwig <hch@lst.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kairui Song <kasong@tencent.com>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	David Sterba <dsterba@suse.com>, "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Namjae Jeon <linkinjeon@kernel.org>, Hyunchul Lee <hyc.lee@gmail.com>, 
+	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, Carlos Maiolino <cem@kernel.org>, 
+	Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, linux-xfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 7855F5587D0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21639-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	URIBL_MULTI_FAIL(0.00)[tor.lore.kernel.org:server fail];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21640-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[linux-foundation.org,tencent.com,kernel.org,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dgc@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chrisl@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid,lst.de:email]
 X-Rspamd-Action: no action
 
-On Thu, May 14, 2026 at 10:19:14AM -0700, Dai Ngo wrote:
-> On 5/13/26 5:25 PM, Darrick J. Wong wrote:
-> > On Wed, May 13, 2026 at 10:28:31AM -0700, Dai Ngo wrote:
-> > > IMHO, I think we still should fix xfs_fs_map_blocks() to avoid any overhead
-> > > and complication in ext_tree_insert having to handle overlapping extents.
-> > I don't know enough about the nfs blocklayout code to say for sure, but
-> > it seems like you want to upsert the mapping returned by
-> > xfs_fs_map_blocks into the "ext_tree" right?
-> 
-> This is currently done on the NFS client side by ext_tree_insert(). The
-> question I have is should we enhance the server side by passing '0' to
-> xfs_fs_map_blocks() so the client does not have to do the work of
-> handling the overlap extents.
+On Mon, May 11, 2026 at 10:36=E2=80=AFPM Christoph Hellwig <hch@lst.de> wro=
+te:
+>
+> Hi all,
+>
+> Darrick recently posted iomap support for fuse-iomap, which was trivial
+> but a bit ugly, which triggered me into looking how this could be done
+> in a cleaner way.  The result of that is this fairly big series that
+> reworks how the MM code calls into the file system to activate swap
+> files to make it much cleaner and easier to use.
 
-I think you've all missed the optimal solution to the problem. 
+My first impression it looks very promising. I will need more time to
+take a closer look.
 
-The problem is not the use of XFS_BMAPI_ENTIRE on the first mapping
-call, it's the use of it on the -second- after the first call didn't
-return a range that mapped the -entire- request range.
+BTW, I just tried it, this series conflicts with Kairui's swap table
+phase IV series. Might need to coordinate the merge order with Kairui.
 
-Hence the second and subsequent calls need range trimming so that
-they don't overlap with the first range that was returned.
-
-IOWs, we keep the use XFS_BMAPI_ENTIRE for the first mapping call
-so we retain the optimisation that minimises the number of pNFS
-client mapping calls needed, but if it needs to make a second call
-we drop the ENTIRE flag and append extents trimmed to the range
-being asked for (which doesn't include the first extent already
-returned).
-
-That was we get large extents reported most of the time, and in the
-corner cases where we have a race like this one or an extent
-boundary lies in the middle of the requested range, we will get
-correct, non-overlapping behaviour.
-
-Best of both worlds, yes?
-
--Dave.
--- 
-Dave Chinner
-dgc@kernel.org
+Chris
 
