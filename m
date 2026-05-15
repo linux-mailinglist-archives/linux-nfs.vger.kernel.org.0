@@ -1,133 +1,114 @@
-Return-Path: <linux-nfs+bounces-21644-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21645-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IMvuAv+aB2r/9wIAu9opvQ
-	(envelope-from <linux-nfs+bounces-21644-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:15:27 +0200
+	id cI+oNK+bB2oD+wIAu9opvQ
+	(envelope-from <linux-nfs+bounces-21645-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:18:23 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74B27558AA1
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:15:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 447F3558B75
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 00:18:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BAA39306A191
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 22:12:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A48F930888DB
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 May 2026 22:14:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3757E3F58E9;
-	Fri, 15 May 2026 22:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E10F3F164F;
+	Fri, 15 May 2026 22:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tv+IRzby"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGr9NPnh"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1354A3F44FA
-	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 22:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AAD3EB801;
+	Fri, 15 May 2026 22:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778883163; cv=none; b=Qszynbpc9HwpLoryZldDLmyKDG3dBBH61h2uHuU/bVNMzcsuUvpFaBuP7isH18VrnhiLZhR7a2xt/WXdZTnJ60TNPAqpp8ZQsQY6FPnj33juPZheudy6CWffV/GpHjPhM9qNYClz/BRs2xo/XhTbPNr2nqBhLvTCdNjeme6NTck=
+	t=1778883241; cv=none; b=V4M98zoKzjwZIHufgasbDYUe+u+TR0xSxTcGf/05zFY58MmNQFH0jXUTwYuI+rcPUfpHfkAmAcdwRirALY/5c5c/xWw6y9Alo8mHJeHJwU9aWzDDS82SNQ5PNandeX+o2HdZ7JFuytle8Rum/VfJBOwLdCB/A96QiyFpZm8ARkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778883163; c=relaxed/simple;
-	bh=Xo9RN/YaHlAbWe60yDn3HcJADUDb6frVOkoaJStZf5s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p0F6lHTTWHEQwwLLRKv5mnObmtRCx0pOWnE04GeouCMDc7JJ63IQjh4H3WP3rGe1MA3fn4YjYARkJR5s8uh8yRSUNXG+dEo0+srtnTz9ZW9F91rmsInBBoqTZ4VPZGkno3Qy7lU4IgvCAaqnbFVCpkxMJTxYljdcAxB5c+yv724=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tv+IRzby; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA3D3C2BCFC
-	for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 22:12:42 +0000 (UTC)
+	s=arc-20240116; t=1778883241; c=relaxed/simple;
+	bh=/eeLGz2iot39XwJYc4BQauKoJW6OZKpHj3T2Uc2J8nk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=drE4IMGzsc4tlBU6Ez0TBixW4KNgDPkSK6rTx7DFLuQ5tSjVQthgYVs+v8N1Wq6ao9W/RfjemPCK3J8TtabXwO+EBo//5slBIn53rMO9W9qci7VCeW6hhadj0137hhpP8du3hZ09X+GMHPIgSlh6Grt1xSzk60erm1C4yM/8rJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGr9NPnh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C4C6C2BCB7;
+	Fri, 15 May 2026 22:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778883162;
-	bh=Xo9RN/YaHlAbWe60yDn3HcJADUDb6frVOkoaJStZf5s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tv+IRzby0Wc1y1AfRAfBW3nKPJfKGSdDUKMAC83W6JZ/dYSjgCeuFvnvRb+k2fDWh
-	 xbo5tF45ctQN2+lUP3uiBUSdgPOAi+Wx+0tkvg+4pJup5eskAOQTJlwp6phqJcshLI
-	 zwma6B6kmV2AJ2QU39YgSPGY+7u3MZcxTeE3mLdPCH/vhNyTGPwjMe4zxLH36reM8B
-	 Aer/b8HC7tlHs6JLUSTc8CC6m60eU8oVJuXGFC3sjcHNI2tTjQrIJ4E+efJOd+l39W
-	 8dpKuDtdYrLdKdfWZ3TWstbmXaMPftJx2DJhHT9Ud2qtgOsF/sPz15MPQ/jP7lSeCE
-	 kkkwEGkOg5Eqg==
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-6530287803cso648768d50.1
-        for <linux-nfs@vger.kernel.org>; Fri, 15 May 2026 15:12:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8CYLI99+tZPFISnn+HsKaZoqCiD6gHE4F/XR+eneBadwhUTbT84YMpnvGjKLfHcN4K432luC0WsBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjGRp/QbCSIx9H2Wb5WZuS8wfVcLnL7BvgUTvq0/F6z5CaDmKn
-	gUZhjUktcVmyutupXeCZQrWpp3NtlI5YDMxTbYNH1bDj37NJlhxTDGtZ+zyLuyg1A4yxGZDF6gi
-	/GD6WDEb7ZHmIGPzUtm1NcKGWJKEE/275FppsvIag+g==
-X-Received: by 2002:a05:690e:14c4:b0:64e:f106:60ea with SMTP id
- 956f58d0204a3-65e22807f82mr6158139d50.44.1778883162092; Fri, 15 May 2026
- 15:12:42 -0700 (PDT)
+	s=k20201202; t=1778883241;
+	bh=/eeLGz2iot39XwJYc4BQauKoJW6OZKpHj3T2Uc2J8nk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=nGr9NPnhvPr+JTJMuCiNrt0UM2MLnlCRr9Q5/l+wcE07VkkbhvQGK/oZ6/wQdzvMt
+	 L3b35IhXwnUKTmMYE1QjIdAV+kL/fMSm+6furyBI0ll3B48ayT7JNZZ07VUiT6gpl8
+	 m5bilXGc+cSrGYe1UWWnkTin58X5k1WbsnwTLohEDkDNiwvP4u9x8fBZeE2ZZ/exkZ
+	 ipYVl/g45U3dtaT4yKoIoQJJ8AShUh7ISYD1jG/M5NGUtKeTJ/hYCHyOX8TRiojGhn
+	 tKvzb6PlG+L9X0TdZvVdLdTtpyRvOjOgO32LjPBgqrO1YgBHx6uGC2wYl7steE/rc3
+	 jDnP3X7+89QiQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0A7E3930A12;
+	Fri, 15 May 2026 22:14:15 +0000 (UTC)
+Subject: Re: [GIT PULL] NFSD fixes for v7.1-rc
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260515141426.357776-1-cel@kernel.org>
+References: <20260515141426.357776-1-cel@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20260515141426.357776-1-cel@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-7.1-1
+X-PR-Tracked-Commit-Id: 4f8ef58c10bfe5f86a643c7c8331b37e69e3dae1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 56ec2b646de6349c8c8c05c8df17b4d8998c467a
+Message-Id: <177888325441.173168.4275722633916915407.pr-tracker-bot@kernel.org>
+Date: Fri, 15 May 2026 22:14:14 +0000
+To: Chuck Lever <cel@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260512053625.2950900-1-hch@lst.de> <20260512053625.2950900-10-hch@lst.de>
-In-Reply-To: <20260512053625.2950900-10-hch@lst.de>
-From: Chris Li <chrisl@kernel.org>
-Date: Fri, 15 May 2026 15:12:31 -0700
-X-Gmail-Original-Message-ID: <CACePvbVPV55SgPmivqMX+bP8H7FKcSAbWCwAe5icgZjZV9vUNA@mail.gmail.com>
-X-Gm-Features: AVHnY4LtC3KSyPNEsLh1ud1t2IOob9XfSBaYZO4ouG71LQM8qOS5lvZuuzrl4N0
-Message-ID: <CACePvbVPV55SgPmivqMX+bP8H7FKcSAbWCwAe5icgZjZV9vUNA@mail.gmail.com>
-Subject: Re: [PATCH 09/12] swap: push down setting sis->bdev into ->swap_activate
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Kairui Song <kasong@tencent.com>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	David Sterba <dsterba@suse.com>, "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Hyunchul Lee <hyc.lee@gmail.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, Carlos Maiolino <cem@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, linux-xfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 74B27558AA1
+X-Rspamd-Queue-Id: 447F3558B75
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21644-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21645-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,tencent.com,kernel.org,kernel.dk,suse.com,mit.edu,gmail.com,samba.org,manguebit.org,wdc.com,vger.kernel.org,kvack.org,lists.sourceforge.net];
-	RCPT_COUNT_TWELVE(0.00)[29];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NO_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[chrisl@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[pr-tracker-bot@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:email,mail.gmail.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 10:37=E2=80=AFPM Christoph Hellwig <hch@lst.de> wro=
-te:
->
-> Only the file operation method knows what block device we'll swap
-> to.  So move down setting sis->bdev and the special blockdev flag
-> into ->swap_activate.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+The pull request you sent on Fri, 15 May 2026 10:14:26 -0400:
 
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-7.1-1
 
-The core swap part of the code looks fine to me, I did not look much
-deeper into the fs side.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/56ec2b646de6349c8c8c05c8df17b4d8998c467a
 
-Ack-by: Chris Li <chrisl@kernel.org>
+Thank you!
 
-Chris
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
