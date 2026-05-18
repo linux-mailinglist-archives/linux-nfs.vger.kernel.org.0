@@ -1,144 +1,177 @@
-Return-Path: <linux-nfs+bounces-21656-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21657-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4PqyMLWDCGrntAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-21656-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 16:48:21 +0200
+	id WKuwMpxmCmq60wQAu9opvQ
+	(envelope-from <linux-nfs+bounces-21657-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 May 2026 03:08:44 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBC3D55C2AF
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 16:48:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7A4C564AB9
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 May 2026 03:08:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id EB2303004437
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 May 2026 14:48:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 943533008E2A
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 May 2026 01:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB6803D5674;
-	Sat, 16 May 2026 14:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1ACAEACD;
+	Mon, 18 May 2026 01:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmCMUw2w"
+	dkim=pass (1024-bit key) header.d=supcon.com header.i=@supcon.com header.b="PctnXuO4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.supcon.com (mail.supcon.com [218.75.124.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A0027587D;
-	Sat, 16 May 2026 14:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1C61F63D9;
+	Mon, 18 May 2026 01:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.75.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778942893; cv=none; b=UvQCdoxRZoJ8iINDGz4FumH1YLMYkHYudXfUo9DXjHp/IWV9vUKZyWy0Je8iE6g1Q8bWJSPuZxOltN8evOOyAAnlXqKPilz8qca+NRDFEpOmvEnqLV4Ylv6AMS3ZN8OdscsNM0CDcmb8dIy0iUkKQ4VmnYhEwTg13WTQ9BOT9PI=
+	t=1779066514; cv=none; b=MRCTtvt6v9RunwOfomYrQUvZX+t4RCYwtfwPsBCa5T7Qtch3twSegYk/3TWjsbXDpQ0ggYK2h0pCpV+ft9rFl/f9m0j4WTZBW4duREe7v2nb7U1U0PHNClzfeCGsf9z/084nr85+cw9kX4sE/zQmIiIj9yQkyOFSq58Q3frDbLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778942893; c=relaxed/simple;
-	bh=7VKUyExfAKl6AIwgWrTe81uA918+1Nlb2thIYy7wew0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MCPtszt6DrWtzpegljzdk8FOFytfh6YibCosjb0mcwBRAsQgcdNu6oAzMrw+vOL9U3jxLUrzylWE5q8hnc4T7PhrC8S0vgJEJ6SzT4YCpmSQAfUrJydjtlJSwqVoDoJ09p5JlQ5ydEnsSyvrxL0wEGhgeE5kC/jHvOho3BkYiU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmCMUw2w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C461BC19425;
-	Sat, 16 May 2026 14:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778942893;
-	bh=7VKUyExfAKl6AIwgWrTe81uA918+1Nlb2thIYy7wew0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kmCMUw2wAu2HkSbRkoupAhLOXnjqM12FHAs2KElCaFrONYwgYk2vYb0j7YYOpHeCa
-	 N+S2jUgpYKJ6ztqopeRqYBV9zRykHAXXqdYnkQEC6acv4C0j/wwgtHGNGHQVNlWKvN
-	 dPsrPSddnFN0sDy04Zfk9ZyMhQpx3QPvmPmEInI7qq/tbj7NBnbeUQ4/s6ZEmawm4u
-	 EiP+KaZ9XpyVG6szke+fZ2+PJe+tz4U1TVDkuW3BkrdGo/VHSXd7KErOcnAP/SQG7B
-	 6lVhvYT3oJdGI/p7u6rXpzGQxf4SOtQ3g8uWA2EcFb2DAjjFgp9dRz8pFoxZyaD2KW
-	 pi+DBfaRE95TA==
-Message-ID: <bd45e387-cc11-4d19-8bd6-58a0251d7714@kernel.org>
-Date: Sat, 16 May 2026 10:48:09 -0400
+	s=arc-20240116; t=1779066514; c=relaxed/simple;
+	bh=EOUOUnxlzVhmysZAO6d9pqr+8NuNXLo6gD3gP74R+0M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:Content-Type:MIME-Version:
+	 Message-ID; b=jhwWmXKogQJpBNC+OjLdMjzMaUC8vxtZfKD02hp+xqPqsa3q4GDDUs2nrFO/nqKxtLx3SzUE4NdlkhB8lsv3avGtZUFD+HBxcrR65ndq+ty+79lRjhDOpTlq1IN7QX5SsWj0CZSWrl9f9zwD+OQCp2iq1LSdMWay7l4cQ5wfqnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcon.com; spf=pass smtp.mailfrom=supcon.com; dkim=pass (1024-bit key) header.d=supcon.com header.i=@supcon.com header.b=PctnXuO4; arc=none smtp.client-ip=218.75.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=supcon.com
+Received: from maildata.cn (unknown [10.32.1.145])
+	by mail.supcon.com (MailData Gateway V2.8.8) with SMTP id C7044512F25;
+	Mon, 18 May 2026 09:06:19 +0800 (CST)
+Received: from supcon.com (unknown [10.32.1.229])
+	by mdau02 (MailData Audit V3.4.6) with ESMTP id 0FB3520387E04;
+	Mon, 18 May 2026 09:06:17 +0800 (CST)
+XMD-OLD-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=supcon.com; s=dkim; h=Received:Date:From:To:Cc:Subject:
+	In-Reply-To:References:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID; bh=o132uNfc8BoI1o/Cqeo6XxRSH9CY+XZpOZ++
+	BeKGiic=; b=Ow3i2VPWz7Y4MG3dP0pYzh0wR7BdhX02kaZh0LaZo5PL+btiFgsM
+	FkL+lEUTSOTv0kqqyjJAFvS6v8D6yhFfFW9t3uu65SGem9jmab8FFvrdHVmv9d7m
+	r6sXcVNvsyzkbVDKWMEn2eQIZ8OwfLBxkTHtZc3ty87wEaNCArAMeX0=
+Received: from guolingxing$supcon.com ( [10.30.28.7] ) by ajax-webmail-app1
+ (Coremail) ; Mon, 18 May 2026 09:06:15 +0800 (GMT+08:00)
+Date: Mon, 18 May 2026 09:06:15 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+X-MD-FileKey: 8aa7461a9a49f3f2afe31b71ad6bf9e2[#]6c46187e5fc6a78a333f104c81a1d084
+X-MD-Sfrom: guolingxing@supcon.com
+X-MD-SrcIP: 10.32.1.145
+From: =?UTF-8?B?6YOt546y5YW0?= <guolingxing@supcon.com>
+To: "Rick Macklem" <rick.macklem@gmail.com>
+Cc: "Lionel Cons" <lionelcons1972@gmail.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: Re: [BUG] NFSv4.1 client hang in nfs4_drain_slot_tbl under
+ concurrent workload against Windows NFS server
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
+ 20250609(354f7833) Copyright (c) 2002-2026 www.mailtech.cn
+ mispb-27421bd6-c70e-4259-88e7-36dce31e831d-supcon.com
+In-Reply-To: <CAM5tNy4A-a4q-t_z7v_sHFW0VeyPLu_yEJ4RQ4DxXVAF-5kROg@mail.gmail.com>
+Content-Transfer-Encoding: base64
+X-CM-CTRLDATA: Vp7Fh2Zvb3Rlcl90eHQ9Mjk4ODoxMA==
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/15] Exposing case folding behavior
-To: Cedric Blancher <cedric.blancher@gmail.com>,
- Christian Brauner <brauner@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-api@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org, sj1557.seo@samsung.com,
- yuezhang.mo@sony.com, almaz.alexandrovich@paragon-software.com,
- slava@dubeyko.com, glaubitz@physik.fu-berlin.de, frank.li@vivo.com,
- tytso@mit.edu, adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org,
- pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com,
- trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org,
- hansg@kernel.org, senozhatsky@chromium.org,
- "Darrick J. Wong" <djwong@kernel.org>,
- Roland Mainz <roland.mainz@nrubsig.org>,
- Steve French <stfrench@microsoft.com>
-References: <20260507-case-sensitivity-v14-0-e62cc8200435@oracle.com>
- <20260511-wertverlust-vorbringen-070f016f3bd4@brauner>
- <CALXu0UdsurG-ayuYViqs0HXOfgyDw8gpNC+f=5y59cuuSPUbBA@mail.gmail.com>
-From: Chuck Lever <cel@kernel.org>
-Content-Language: en-US
-Organization: kernel.org
-In-Reply-To: <CALXu0UdsurG-ayuYViqs0HXOfgyDw8gpNC+f=5y59cuuSPUbBA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: DBC3D55C2AF
+Message-ID: <552f72d1.1c692.19e389e8ea4.Coremail.guolingxing@supcon.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:5QEgCgBnVTYHZgpqEdwdAg--.6541W
+X-CM-SenderInfo: xjxrzxpqj0x0nj6v31xfrqhudrp/1tbiAQEKBmoIh3sWBgACsA
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=supcon.com; s=default;
+	t=1779066381; bh=EOUOUnxlzVhmysZAO6d9pqr+8NuNXLo6gD3gP74R+0M=;
+	h=Date:From:To:Cc:Subject:Content-Type:Message-ID;
+	b=PctnXuO4PBo6NK+xY5kGqjrXzJhj6AI8CLSQZymjFHHxuGbx1wVApVJQkpLAZI+Vd
+	 DW0OJ2nltRsPx90VLFWD4KFy29inUb3zUTyOzeqwbOjuMuK9b5vuRvvOj0IzMvVczD
+	 vXFBivo/jJz5CRHZJniHoqqWsw7eotKkLVPbMZ0o=
+X-Rspamd-Queue-Id: D7A4C564AB9
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.56 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[supcon.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21656-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	FREEMAIL_CC(0.00)[oracle.com,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,nrubsig.org];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21657-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DMARC_NA(0.00)[supcon.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	HAS_X_PRIO_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[supcon.com:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[guolingxing@supcon.com,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	RCPT_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,supcon.com:email,supcon.com:mid,supcon.com:dkim]
 X-Rspamd-Action: no action
 
-On 5/16/26 2:43 AM, Cedric Blancher wrote:
-> On Mon, 11 May 2026 at 16:11, Christian Brauner <brauner@kernel.org> wrote:
->>
->> On Thu, 07 May 2026 04:52:53 -0400, Chuck Lever wrote:
->>> Christian, let's lock this one in. I will post subsequent changes
->>> as delta patches.
->>>
->>> Following on from:
->>>
->>> https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57fd@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
->>>
->>> [...]
->>
->> Applied to the vfs-7.2.exportfs branch of the vfs/vfs.git tree.
->> Patches in the vfs-7.2.exportfs branch should appear in linux-next soon.
-> 
-> @Chuck Lever Thank you!
-> 
-> Does that mean the support for case-insensitive filesystems will work
-> with Linux 7.2?
-
-I don't want to make claims with 100% certainty, but we expect this
-series to get merged into 7.2. It's early days, so there are likely to
-be bugs -- there is so much subtle behavior under the covers.
-
-
--- 
-Chuck Lever
+IEhpIFJpY2ssIGhpIExpb25lbAoKQmVsb3cgYXJlIHRoZSBlbnZpcm9ubWVudCBkZXRhaWxzLgoK
+U2VydmVyOgogIFdpbmRvd3MgU2VydmVyIDIwMjIKICBWZXJzaW9uIDEwLjAuMjAzNDguNTg3CgpV
+c2VyL2FjY291bnQgc2V0dXA6CiAgTm8gdXNlciBtYXBwaW5nIGlzIGNvbmZpZ3VyZWQuCiAgTm8g
+QUQsIExEQVAsIG9yIHBhc3N3ZC1iYXNlZCBtYXBwaW5nIGlzIHVzZWQuCiAgVW5tYXBwZWQgdXNl
+cnMgYXJlIGhhbmRsZWQgYnkgdGhlIGRlZmF1bHQgIkV2ZXJ5b25lIiBhY2NvdW50LgoKQXV0aGVu
+dGljYXRpb246CiAgc2VjPXN5cyAoQVVUSF9TWVMpLCBhcyByZXBvcnRlZCBieSBuZnNzdGF0IC1t
+CgpBcmNoaXRlY3R1cmU6CiAgTGludXggY2xpZW50czogeDg2XzY0CiAgV2luZG93cyBzZXJ2ZXI6
+IHg4Nl82NAoKTWVtb3J5OgogIEVhY2ggTGludXggY2xpZW50IFZNIGhhcyAxNiBHQiBSQU0KCldl
+IGFsc28gb2JzZXJ2ZWQgdGhlIGZvbGxvd2luZyBvbiB0d28gaW5kZXBlbmRlbnQgY2xpZW50czoK
+CkNsaWVudCBBOgogIGFnZTogNDk4MDYxCiAgbGVhc2VfdGltZTogMTIwCiAgbGVhc2VfZXhwaXJl
+ZDogNDk3OTQxCgpDbGllbnQgQjoKICBhZ2U6IDY5NTk4CiAgbGVhc2VfdGltZTogMTIwCiAgbGVh
+c2VfZXhwaXJlZDogNjk0NzgKCkluIGJvdGggY2FzZXMsIGxlYXNlX2V4cGlyZWQgaXMgYXBwcm94
+aW1hdGVseSBlcXVhbCB0bwphZ2UgLSBsZWFzZV90aW1lLCB3aGljaCBzdWdnZXN0cyB0aGF0IHRo
+ZSBsZWFzZSBleHBpcmVkCnNob3J0bHkgYWZ0ZXIgbW91bnQgYW5kIHdhcyBub3QgcmVuZXdlZCBh
+ZnRlcndhcmQuCgpBdCBoYW5nIHRpbWU6CgotIGJvdGggY2xpZW50cyBoYW5nIHVuZGVyIGNvbmN1
+cnJlbnQgd29ya2xvYWQKLSBib3RoIGNsaWVudHMgYXJlIGJsb2NrZWQgaW4gbmZzNF9kcmFpbl9z
+bG90X3RibAotIG5vIE5GUyBSUEMgdHJhZmZpYyBpcyBvYnNlcnZlZCwgb25seSBUQ1AgQUNLcwot
+IG5mc3N0YXQgcmVwb3J0cyByZXRyYW5zPTAKLSBvbiB0aGUgV2luZG93cyBzZXJ2ZXIgc2lkZSwg
+dGhlIHNlc3Npb24gc3RhdGUgaXMgcmVwb3J0ZWQKICBhcyAiSW5pdGlhbGl6ZWQiCgpXZSBhcmUg
+dHJhY2luZyB0aGUgUlBDIGxpZmVjeWNsZSB0byBpZGVudGlmeSB3aGljaCBSUEMgZG9lcwpub3Qg
+Y29tcGxldGUuCgpSZWdhcmRpbmcgdGhlICJzb2Z0IiBtb3VudCBvcHRpb246IHVuZGVyc3Rvb2Qu
+IFdlIHdpbGwgcmV0ZXN0CndpdGggYSBoYXJkIG1vdW50IGFzIHdlbGwuCgpPbmUgcXVlc3Rpb24g
+aXMgd2hldGhlciB0aGUgb2JzZXJ2ZWQgYmVoYXZpb3IgaXMgZXhwZWN0ZWQuCkV2ZW4gaWYgYSBz
+b2Z0IG1vdW50IGNvbnRyaWJ1dGVzIHRvIHRoZSBwcm9ibGVtLCBpcyBpdCBleHBlY3RlZAp0aGF0
+IGEgc2luZ2xlIFJQQyB0aW1lb3V0IGNhbiBsZWF2ZSB0aGUgY2xpZW50IGluIGEgc3RhdGUgd2l0
+aApubyBmb3J3YXJkIHByb2dyZXNzLCBibG9ja2VkIGluIG5mczRfZHJhaW5fc2xvdF90YmwsIGFu
+ZCB3aXRoCmxlYXNlIHJlbmV3YWwgbm8gbG9uZ2VyIG9jY3VycmluZz8gT3Igd291bGQgdGhhdCBt
+b3JlIGxpa2VseQppbmRpY2F0ZSBhIGNsaWVudC1zaWRlIHJlY292ZXJ5IGJ1Zz8KCgpUaGFua3Ms
+Ckd1byBMaW5neGluZwoKCj4gLS0tLS3ljp/lp4vpgq7ku7YtLS0tLQo+IOWPkeS7tuS6ujogIlJp
+Y2sgTWFja2xlbSIgPHJpY2subWFja2xlbUBnbWFpbC5jb20+Cj4g5Y+R6YCB5pe26Ze0OjIwMjYt
+MDUtMTYgMjI6MjM6NTEgKOaYn+acn+WFrSkKPiDmlLbku7bkuro6ICJMaW9uZWwgQ29ucyIgPGxp
+b25lbGNvbnMxOTcyQGdtYWlsLmNvbT4KPiDmioTpgIE6IOmDreeOsuWFtCA8Z3VvbGluZ3hpbmdA
+c3VwY29uLmNvbT4sIGxpbnV4LW5mc0B2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmcKPiDkuLvpopg6IFJlOiBbQlVHXSBORlN2NC4xIGNsaWVudCBoYW5nIGluIG5m
+czRfZHJhaW5fc2xvdF90YmwgdW5kZXIgY29uY3VycmVudCB3b3JrbG9hZCBhZ2FpbnN0IFdpbmRv
+d3MgTkZTIHNlcnZlcgo+IAo+IE9uIFdlZCwgTWF5IDYsIDIwMjYgYXQgNjozMuKAr0FNIExpb25l
+bCBDb25zIDxsaW9uZWxjb25zMTk3MkBnbWFpbC5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIFdlZCwg
+NiBNYXkgMjAyNiBhdCAwOTo0OSwg6YOt546y5YW0IDxndW9saW5neGluZ0BzdXBjb24uY29tPiB3
+cm90ZToKPiA+ID4KPiA+ID4gSGksCj4gPiA+Cj4gPiA+Cj4gPiA+IFdlIGVuY291bnRlcmVkIGEg
+cmVwcm9kdWNpYmxlIE5GU3Y0LjEgY2xpZW50IGhhbmcgaXNzdWUgdW5kZXIgY29uY3VycmVudCB3
+b3JrbG9hZC4KPiA+ID4KPiA+ID4KPiA+ID4gRW52aXJvbm1lbnQ6Cj4gPiA+IC0gVHdvIGluZGVw
+ZW5kZW50IExpbnV4IGNsaWVudHMgKFZNcykKPiA+ID4gLSBCb3RoIG1vdW50IHRoZSBzYW1lIFdp
+bmRvd3MgTkZTIHNlcnZlciAoTkZTdjQuMSkKPiA+ID4gLSBLZXJuZWwgdmVyc2lvbjogNi4xLjc4
+Cj4gPiA+IC0gTW91bnQgb3B0aW9uczogdmVycz00LjEsc29mdCxwcm90bz10Y3AsdGltZW89NjAs
+cmV0cmFucz0xMAo+IEp1c3QgZnlpLCAic29mdCIgbW91bnRzIGFyZSBvZnRlbiBnb2luZyB0byBi
+ZSB0cm91Ymxlc29tZSBmb3IgTkZTdjQuMS4KPiAoV2hlbmV2ZXIgYW4gUlBDIHRpbWVzIG91dCBh
+bmQgZG9lc24ndCB3YWl0IGZvciBhIHJlcGx5IGZyb20gdGhlIHNlcnZlciwKPiBpdCB3aWxsIGxl
+YXZlIGEgc2Vzc2lvbiBzbG90IG1lc3NlZCB1cC4pCj4gCj4gcmljawo+IAo+ID4KPiA+IFdoaWNo
+IHZlcnNpb24gb2YgV2luZG93c1NlcnZlciBkbyB5b3UgdXNlLCBlLmcgd2hhdCBkb2VzIHRoZSAi
+dmVyIgo+ID4gY29tbWFuZCBpbiBjbWQuZXhlIG91dHB1dD8gSG93IGRpZCB5b3Ugc2V0IHVwIHRo
+ZSB1c2VyIGFjY291bnRzLCBhbmQKPiA+IHdoaWNoIGF1dGhlbnRpY2F0aW9uIChBVVRIX1NZUywg
+R1NTLCAuLi4pIGRvIHlvdSB1c2U/Cj4gPiBXaGljaCBDUFUgYXJjaGl0ZWN0dXJlIGRvIHlvdSB1
+c2U/IEhvdyBtdWNoIG1lbW9yeSBkbyB5b3UgaGF2ZSBvbiB0aGUKPiA+IExpbnV4IE5GUyBjbGll
+bnQ/Cj4gPgo+ID4gTGlvbmVsCj4gPgoNCg0KDQoNCg0K
 
