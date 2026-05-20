@@ -1,177 +1,140 @@
-Return-Path: <linux-nfs+bounces-21720-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21721-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 3fwQNZIADWporwUAu9opvQ
-	(envelope-from <linux-nfs+bounces-21720-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 02:30:10 +0200
+	id CLUCMcQBDWrorwUAu9opvQ
+	(envelope-from <linux-nfs+bounces-21721-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 02:35:16 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EF9058644E
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 02:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4837C5864C4
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 02:35:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 08F4C3023076
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 00:30:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4781A3022F43
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 00:35:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB80D1D435F;
-	Wed, 20 May 2026 00:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3E971DF254;
+	Wed, 20 May 2026 00:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1KszHlb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tq8sJrEU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F4514A8B
-	for <linux-nfs@vger.kernel.org>; Wed, 20 May 2026 00:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1572222301;
+	Wed, 20 May 2026 00:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779237007; cv=none; b=cICRZ0C/FWWSi+CzU1tfGXHtQKOW8YeaPUSD7xqyhVLuZX+YDuAPbdOdftBGczc/GPzyXNkHGoHE45yK9obHplaF5vXSsoE++uaZEHpkGOxN1Aci3Ps7v4v/lI1z/bGVoaSXb/PrFy5gc5/pV6NqH5OmvhOIVYBwRCRdNFCYWtE=
+	t=1779237312; cv=none; b=GTeT/L/8DGNHkzBZUQ8lPmWz/L7hhWzupPYf0IU2q1Z1GWfr0TApFs/s1ghUHAyGqUGgpHBSXdKxk+T7jifmeZDcVSZVV2drXwLW+7VKXSNWaGmst0Oe7v4kB6DGxlozi7DRmrxTE5hKfj3OcHeZ0M3nvlnXpr1hQxpoqT6NmvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779237007; c=relaxed/simple;
-	bh=QfHEk4SH/oVxP2Sgw2J5T1jsfmlxADI+rwem5ZKoPao=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=MeJQvYBBu+i8BC+cq0l3Vkj3euWU8FQ4SIlFVtoyG512RzuaHEKzEp5z3La3iZyqWj+EnbwffpXGqLI0HWyYSFWCwG6yhXFpgu9HkBiAiz/+4+TNWxD+3Zc1txihC4D6H39J0HYqfvGHW9x6UQ2uiMu8SdaQnRUCMv4h+28rKYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1KszHlb; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D541F00893;
-	Wed, 20 May 2026 00:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779237006;
-	bh=kXr3aZpt0lqtneW6ycclYVc3wxNPXhKuZjSbOIURMPw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=n1KszHlbyJCvRRNucV1tJir+6lp0hsuac6dlrXZV4sSes9Zr0pp0ecGFD37wFWyoy
-	 ho9dOc3m2Lswqf+h38pcmtyE0Gwm8JBSdjLSfhhSHWJVG3x3n22Ok2/H1siYKTZRRB
-	 BdlZyCFCWF45AscllWRXRaiQ2d3CmkFUCbqjH6pf1tjXREqHMBX4AySPqpL2e+SVtW
-	 mz/G/OTkNBjoluLHUETSJ3P7ro4iupEvkLU1A1oYywUgZ/i3tpXf+7t5aZlnr9nQDB
-	 LMMEMF1uOWbvtzkdYU+WEIL7qZ+ALVHwiL1vPXvD+C+9KDJsaEguZDsihmKtwHLUWf
-	 /vAvv9kWjPacA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id CF1F2F40068;
-	Tue, 19 May 2026 20:30:04 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Tue, 19 May 2026 20:30:04 -0400
-X-ME-Sender: <xms:jAANappNMZtEMLXP-7IJ8iPd_uy2kcZOu5pbZtYQ9YOyU9bqNUBV2Q>
-    <xme:jAANamc6PVFAT1liBLAdrVkvtWD-PPg99ypf60IqBnbzvc6RH3vFueo67nh-K3aqn
-    gU1wZlTOTnhx6jl5evys3wXMD2H_Up_KmcI92e8ezpdocFjT8ngmOh0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeefudelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfvehhuhgt
-    khcunfgvvhgvrhdfuceotggvlheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefghfeguedtieeiveeugfevtdejfedukeevgfeggfeugfetgfeltdetueelleelteen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhutg
-    hklhgvvhgvrhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeifeegleel
-    leehledqfedvleekgeegvdefqdgtvghlpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrg
-    hilhdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepsggvnhdrtghougguihhnghhtohhnsehhrghmmhgvrhhsphgrtggvrdgtohhmpd
-    hrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgv
-    ihhlsgesshhushgvrdguvgdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkh
-    gvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:jAANaqRirEYKT9v-7fkU5PC6bkyKxh8RRpOyhuJjLoJtKqO5uuy7Og>
-    <xmx:jAANatllVfhZSllnWpDgApnQaAqap6_YHBN0ZmXwcft95NFp8V061w>
-    <xmx:jAANaiSJKjUKJKedbYA8PxWNgy3eXUpwpvROGueU_TRzB3YOi69u3g>
-    <xmx:jAANajMKGc5QM_WK6qy9uOJt969qv9sL6bXXtglsjSkh087e9m9jPQ>
-    <xmx:jAANajU9wmi-vGhYnGDVq9PyFSi9rOYb-lotif80LM-sR-T47qHe-kAK>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A8092780075; Tue, 19 May 2026 20:30:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1779237312; c=relaxed/simple;
+	bh=gBBmIGIvvDcvzP/nykn4MU2HxGEz/zm2dRswjzzjfTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZ79GM3/xBxqsnQsEEEzQQxpoYsGjUPSNPjhVh10Ye8G9S9EyxnioyQ2Jxv2OjMWjnpXefnuxVxRLX9PWZUr0i/83vX5uBFuBpMYyP4Fv/DhdzFhnGXHAvs7nRlY3I0Fwr+F97OZ2r0NWPFQjfdyFvQHnnGYbwIIgrXhoSawzmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Tq8sJrEU; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64JJcMko1518944;
+	Wed, 20 May 2026 00:35:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=gBBmIGIvvDcvzP/nykn4MU2HxGEz/
+	zm2dRswjzzjfTc=; b=Tq8sJrEUbO7bv9vxT62GnWsV+Kj95p2vdQhKIXStOb52Q
+	U/Km2tKrV3YwOh2yqWwqL6q4uTjU8h53Pfayhrc56G/l8kZ84Y4iUoc0yIJeyDj0
+	KQ3VRgt1zY6vbQOGd/5eOk2Q2/BEb2oMl8Zl+e5ii5ctsNozAite2QVD9weIKHGy
+	AXwmVvR6oen1V+CjVIaJdDpbdReLRUphGdmSPblJmLlelPzL1kPdj0juO9f4Wd7L
+	yoT5jLhlLa//k1QSo6skzIGcETpOidCB62zvTyNEZ4i8wWOsuLhbKfSJXohLyK9r
+	6B31VWyz4wIb1TjpkhwHI825N/xUpp/NYg1h+7gqg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4e6h2cp28m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 May 2026 00:35:08 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 64K0OsSw006236;
+	Wed, 20 May 2026 00:35:07 GMT
+Received: from labops-common-sca-01.us.oracle.com (labops-common-sca-01.us.oracle.com [10.132.26.161])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 4e84ecyhhb-1;
+	Wed, 20 May 2026 00:35:07 +0000 (GMT)
+From: Dai Ngo <dai.ngo@oracle.com>
+To: cem@kernel.org
+Cc: linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH 0/2] xfs: correct pNFS layout mappings
+Date: Tue, 19 May 2026 17:32:57 -0700
+Message-ID: <20260520003503.2399326-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 19 May 2026 20:29:41 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Benjamin Coddington" <ben.coddington@hammerspace.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neilb@suse.de>,
- linux-nfs@vger.kernel.org
-Message-Id: <1a5c70d8-e7f4-4671-a29a-023be7c107fc@app.fastmail.com>
-In-Reply-To: <AED22AED-E97D-40E3-9839-BF8307EF8B65@hammerspace.com>
-References: <D33770A1-9098-4F1A-93EF-590E6C0B7638@hammerspace.com>
- <473e337b-fabc-4884-a6c4-0f04b6874d0b@app.fastmail.com>
- <3AB7EB6A-B207-4B91-A695-66C4704D0E31@hammerspace.com>
- <4c5dbb98-0209-4572-8eac-1578536bbd78@app.fastmail.com>
- <AED22AED-E97D-40E3-9839-BF8307EF8B65@hammerspace.com>
-Subject: Re: [RFC] knfsd: per-client fair scheduling to prevent single-client
- starvation
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.15 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-19_06,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxlogscore=616 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2605130000 definitions=main-2605200002
+X-Proofpoint-ORIG-GUID: 8SCuozDJZWavvrd8KbW4aO2vyY2lGVz9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDAwMyBTYWx0ZWRfXwnUBZsbEL3se
+ fgQDZ+ZKY/ElipXFXsZBvn/QlkwV3gZIemApvGZEYfD9pwYTmUmfnVTlvC9QGq7uG+tH/ohdXZI
+ qgC3bfDjKYjXt7njOftYMqe7QiYXaLH6ngDxOg3JWSvuh18gjWCtTW/driFQIyvPyRS3uKhaYkC
+ dyJL7BA1zvM2Mdgv4D9jSQoj+comvIwg7l51f/mDDVBqZGWC5nV3mD1Mt3kNIq1JdiQ2N9D3fsA
+ Q5KEtC/Ykv9sXOlWcHY5+bKLfssj+JyWVdTCHe4XVrv7tbg5hDVhvEMcdvNNxb+2Nzr5JwliEA5
+ xGpVLANDdQGeqxtzi1+Mm5dGFObVs9bq0G8d0h9qzCa5Mxr7jFt6CE/2EUNe91WeGH1z+n7GRat
+ flDBoM8VvjmmyDTZd7FUSwUOL9WUebMYzWiHSrrsbGOFZb/+UqrgiJ0VWuGbEIyj0El2NuaxAab
+ F7VclO94KrgG0p7CJZQ9WxiIIjCLZFqwS3Kv9eU0=
+X-Authority-Analysis: v=2.4 cv=Ws4b99fv c=1 sm=1 tr=0 ts=6a0d01bc b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=EIcjfB9IiI4px24ztqRk:22 a=NoKN66te_Ye6Xul4tnkA:9 a=5yU3S35YU4bGjq-dph-N:22
+ a=Bho9c0fBagfJEIQBS7DQ:22 cc=ntf awl=host:13839
+X-Proofpoint-GUID: 8SCuozDJZWavvrd8KbW4aO2vyY2lGVz9
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-21720-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21721-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dai.ngo@oracle.com,linux-nfs@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 4EF9058644E
+X-Rspamd-Queue-Id: 4837C5864C4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+This patch series fixes pNFS layout mapping issues exposed by running
+xfstests generic/075 against an NFSv4.2 block layout export. The first
+change stops xfs_fs_map_blocks() from propagating an uninitialized
+mapping record after xfs_bmapi_read() fails.
 
+The second change removes the XFS_BMAPI_ENTIRE flag so each request
+only returns the range the client asked for, eliminating overlapping
+in LAYOUTGET replies.
 
-On Tue, May 19, 2026, at 6:02 PM, Benjamin Coddington wrote:
-> On 19 May 2026, at 14:44, Chuck Lever wrote:
->
->> On Tue, May 19, 2026, at 5:08 PM, Benjamin Coddington wrote:
->>> Just to be clear - the issue I'm exploring isn't the same as when al=
-l the
->>> kNFSD threads are slow due to their workload.  This is very much a
->>> multi-client dynamic where one client (or a group of automated client
->>> instances) are able to easily starve another simply because they cre=
-ate the
->>> most connections.
->>>
->>> That's different from the other problem that we've discussed a bunch=
- at
->>> bakeathon and on the list previously.
->>>
->>> This is not so much a deadlock issue as it is an issue
->>> of per-client fairness.  I think this problem is in a different clas=
-s.
->>
->> Does dynamic svc thread creation have any impact?
->
-> I haven't tested it - I think it would just pin to max-threads for the
-> workload in question.
+Dai Ngo (2):
 
-If the aggregate workload consumes all the threads, then that doesn=E2=80=
-=99t
-sound like xprt scheduling is the bottleneck. But I should look at
-numbers instead of speculating.
+xfs: fix use of uninitialized imap in xfs_fs_map_blocks error path
+xfs: fix overlapping extents returned for pNFS LAYOUTGET
 
-Are you seeing connection loss in these scenarios?
-
-
-> I'm probably not understanding you here, because for the problem I'm
-> interested in fair would look like prioritizing each client's request
-> queue equally, no matter how many xprts each client has.
-
-Then for NFSv4.1 and later, NFSD might schedule work on the session, and
-manage each session=E2=80=99s workload by raising and lowering the numbe=
-r of slots
-in its slot table.
-
-
---=20
-Chuck Lever
+fs/xfs/xfs_pnfs.c | 11 +++++++----
+1 file changed, 7 insertions(+), 4 deletions(-)
 
