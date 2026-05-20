@@ -1,161 +1,102 @@
-Return-Path: <linux-nfs+bounces-21725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MNLPD/duDWp9xQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-21725-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 10:21:11 +0200
+	id CIrLKflwDWroxQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-21726-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 10:29:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEE9A5899F9
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 10:21:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4118F589C61
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 10:29:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CB6D73109E8D
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 08:14:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EEAEF30BE63A
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 May 2026 08:21:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5373A3A9615;
-	Wed, 20 May 2026 08:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED47533A032;
+	Wed, 20 May 2026 08:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d6xMt7Ar"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.75.44.102])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7A63A6B85;
-	Wed, 20 May 2026 08:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.75.44.102
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F1B36E494;
+	Wed, 20 May 2026 08:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779264837; cv=none; b=bibP1exkV6mZxtIdn3zkPxU3v4rV9ykme6RvgTfkgIgB415/X1wB4AxufpHyWfg3ecibLQ+UCshHM84krYYu5a2CzMn761TN0bRPIf1n3kAsdbadZswIWjfKVQ4kORltUBVM7qwqukvEZA4jf2QPr1SDU0q+uTRqBnXhntp20Og=
+	t=1779265286; cv=none; b=s5XAj5nBogbfNVBFLfdvU/q6AIzh+wUAI4acXCn4ZOZudrN+EOyJdxhvqsN3N7RBITgD9t2VoXXOQ+uuI8iXm72zvL46Dx/f3zq8um77wKWaiWzMglQcfbH2LlcZ5h36rkRbEYux+st+4LBjzd97wStCuWDCb1qUIGtKqnpHwhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779264837; c=relaxed/simple;
-	bh=mCej5s/Yy1VjGo+6rc5dQHYPIEQkYEXhZE8zsMN8jts=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oSun+71SBqF55qaLthC+/zVLHJdm5uWJ7lEBy9s1yFv9TrS4obEX2UNDK2K6lCJBU4gFDZ+9v/tj1mwB5vJBXj3v1bt4zVO0ympdZif/NveHIqH0w1FqH5BsYpJzpiRiOMrCu2Aq0MRY4liNZc0BnaliYM2PKQWaBZFtzdJWuLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lzu.edu.cn; spf=pass smtp.mailfrom=lzu.edu.cn; arc=none smtp.client-ip=13.75.44.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lzu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lzu.edu.cn
-Received: from enjou-Legion-Y7000P-2019 (unknown [172.23.56.36])
-	by app1 (Coremail) with SMTP id ygmowACHqMItbQ1qwY4YAA--.980S3;
-	Wed, 20 May 2026 16:13:37 +0800 (CST)
-From: Ren Wei <n05ec@lzu.edu.cn>
-To: linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: trondmy@kernel.org,
-	anna@kernel.org,
-	chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	yuantan098@gmail.com,
-	yifanwucs@gmail.com,
-	tomapufckgml@gmail.com,
-	bird@lzu.edu.cn,
-	rakukuip@gmail.com,
-	n05ec@lzu.edu.cn
-Subject: [PATCH 1/1] sunrpc: clear rq_procinfo in svc_release_rqst to prevent double-free
-Date: Wed, 20 May 2026 16:13:28 +0800
-Message-ID: <8c4cfe3656a817a64da9cf62e42282a1f308b9dd.1779253342.git.rakukuip@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1779253342.git.rakukuip@gmail.com>
-References: <cover.1779253342.git.rakukuip@gmail.com>
+	s=arc-20240116; t=1779265286; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TRreZr+f/OEFvVTvlXYR0uTb4PdB4SmS4CS0kFW6UoVMgmB3mkdQSDPPRHK0Md2L5Cbbva8YfH/B8mHlq7jgVabr/k4DBjZRbPHqM0tNZu8L1WvJzzgXw3kUKOgh+BUnZZco/sDB6q7sniJwSsxnSOJTBQYwxJejqwQGkCROzMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d6xMt7Ar; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=d6xMt7Ar3bVeIFU1LQHajKgBQb
+	/GrKL+pUL1JpLsu/msjhbKj2fE6c7QusEdXpIPT5tL2wbtg+SmqqVXjXtXUXKTd6qB6wyTodHvY7i
+	kqyU75xDudct5JgqxL9RNQnNV4g/4VA9Kridt4bRw6xOxX0KDUz6vygeiufO4GFDsxTqwTB7Pr++l
+	iO+6mfuvwBmOYlBKYri+du0Zqz6WgeOPNX6jD22x8CThPA6w0ZMl7Dd7/zlC3HECMSKQiVUoJG4iq
+	V0UIUvndAsqflv3Xq+iV7xUd8BGghLP9qcdu0qUgINvD7hO2XItiiMXw4dsr/lnjp6g/RGWIxT6ja
+	z/anjqmg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wPcBA-00000003wZ2-06Bg;
+	Wed, 20 May 2026 08:21:24 +0000
+Date: Wed, 20 May 2026 01:21:23 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs: fix use of uninitialized imap in
+ xfs_fs_map_blocks error path
+Message-ID: <ag1vAySwz518n56h@infradead.org>
+References: <20260520003503.2399326-1-dai.ngo@oracle.com>
+ <20260520003503.2399326-2-dai.ngo@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:ygmowACHqMItbQ1qwY4YAA--.980S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF45tw1kJF4ruFy7Wr4Durg_yoW8AF4UpF
-	WSyw47JrykKF1DZwn0yFyrZr48CFsYgr17GrZFya1fZ3W3XryUAryF9FWv9w4DAFWrWa1j
-	vr1qvF4ayrs8Z3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBY1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
-	n4kS14v26r1q6r43MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6c
-	x26r48MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: zqqvvuo6o23hxhgxhubq/1tbiAQENCWoNUPACIQAAsg
-X-Spamd-Result: default: False [-0.96 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260520003503.2399326-2-dai.ngo@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	R_DKIM_NA(0.00)[];
-	DMARC_NA(0.00)[lzu.edu.cn];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[n05ec@lzu.edu.cn,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	TAGGED_FROM(0.00)[bounces-21726-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TO_DN_NONE(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,oracle.com,brown.name,redhat.com,talpey.com,gmail.com,lzu.edu.cn];
-	TAGGED_FROM(0.00)[bounces-21725-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: AEE9A5899F9
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 4118F589C61
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Luxiao Xu <rakukuip@gmail.com>
+Looks good:
 
-The svc_release_rqst() function unconditionally calls
-rqstp->rq_procinfo->pc_release. However, svc_process_common()
-does not clear rq_procinfo when a worker thread starts processing
-a new request.
-
-If a previous RPC selected a procedure with a non-idempotent
-release hook, and the subsequent RPC takes an early error path
-before a new rq_procinfo is installed (e.g., due to an oversized
-RPC fragment, bad auth, or unknown program), the stale release
-hook will run against reused state from the earlier RPC. This
-leads to a double-free or use-after-free vulnerability.
-
-Fix this by setting rqstp->rq_procinfo to NULL immediately after
-executing the release hook in svc_release_rqst(), ensuring that
-stale procedure hooks cannot be re-triggered on early errors.
-
-Fixes: d9adbb6e10bf ("sunrpc: delay pc_release callback until after the reply is sent")
-Cc: stable@kernel.org
-Reported-by: Yuan Tan <yuantan098@gmail.com>
-Reported-by: Yifan Wu <yifanwucs@gmail.com>
-Reported-by: Juefei Pu <tomapufckgml@gmail.com>
-Reported-by: Xin Liu <bird@lzu.edu.cn>
-Signed-off-by: Luxiao Xu <rakukuip@gmail.com>
-Signed-off-by: Ren Wei <n05ec@lzu.edu.cn>
----
- net/sunrpc/svc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index d8ccb8e4b5c2..0332f05e7061 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1572,8 +1572,10 @@ static void svc_release_rqst(struct svc_rqst *rqstp)
- {
- 	const struct svc_procedure *procp = rqstp->rq_procinfo;
- 
--	if (procp && procp->pc_release)
-+	if (procp && procp->pc_release) {
- 		procp->pc_release(rqstp);
-+		rqstp->rq_procinfo = NULL;
-+	}
- }
- 
- /**
--- 
-2.43.0
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
