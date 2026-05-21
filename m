@@ -1,162 +1,202 @@
-Return-Path: <linux-nfs+bounces-21753-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21754-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IF8XFLTxDmohDgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21753-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2026 13:51:16 +0200
+	id 2E2mOFf0DmqmDQYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21754-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2026 14:02:31 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70BBC5A441D
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2026 13:51:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97DE75A46ED
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2026 14:02:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 01656301A4CF
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2026 11:50:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 35E893009B1A
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 May 2026 11:56:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CD423BB694;
-	Thu, 21 May 2026 11:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 114EC36A350;
+	Thu, 21 May 2026 11:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3yrh3F/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UeKkJez3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E98185B48;
-	Thu, 21 May 2026 11:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084CD28C5CB
+	for <linux-nfs@vger.kernel.org>; Thu, 21 May 2026 11:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779364234; cv=none; b=DwPR6oleHuar8Xb1atU7CysV3RqOHofzar1pFoQryKFIR9FxbQ9UeDDlwsuOB637vZrO8A9XEvg9jbf2AJ/cNMjJmpyAeGaN8jRl7x6HVxJ9SIf3miEI09xcy/cdwQw+/+VPfP+Hv807/W3brEUoXLdPAFA9pocb5tb4Mb0Y9oI=
+	t=1779364578; cv=none; b=HPFH2zpL/PGA2R6gL/Ins836DUEWSOy2qjkIi+0SrXCe9xQCkQGD0n+QsZh4OE+yuN2vmgr3DNcLs22B6nZhRUHc8IHKmzUI95VKMv2Jqw9yo9b1j6EDZX1bQVItm9sXYSSvvZz7LI9IQgy6KLN1a2Nv4UqyK2IQGPpgBu+Cmy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779364234; c=relaxed/simple;
-	bh=facGVCTUMDEg00YKi2YmJUcYpjK0EKDA4eYv/HuPK4Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UbMoV+SK/WOzo7lhv/0MnBtLR+BFIz50jzd3OUC5/fq0eyy0sbCf/m1DgwGOvKOzjbYM7Y5uSRh18Orxqpjo4IwPyzYw+vSqqpytDX6oO/BLVGs9O55vXB0nI3QxADUoPQRvjly5iQOly68yTcQ9nP78wUKuHlJVj5V1+ikH7/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3yrh3F/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB2BA1F000E9;
-	Thu, 21 May 2026 11:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779364232;
-	bh=rpJg9z8XYC9Rv1o9F7++APvg4k8Ih6Ibox5ZV3MF+ZY=;
-	h=From:Date:Subject:To:Cc;
-	b=T3yrh3F/eRoGB+gw1Bg3woc0AGnbL3CvDvWykJoNyqSjPN/SzMZxwzzwHEHXadLOa
-	 v71dXHwx6dSlGmQqTewA7yAJVTPPeo8/NKVgPA6rQCILn7k4OORlwyncSwX85Hn+sS
-	 2hvYTfTkgxuwHGSdwhjVuAxzg6SkStCDdtqA34ZsEwxb9exwCCQxsyEbZQe1LTzu9K
-	 KCpep41dTW3bYImvpgi+Dpyj+lipS8HVTCydc+w5wXkpxpdIF7ZF4HmFVfTL17g55T
-	 SaatLtE/H8FWp6ps2tyUradZNQwrkrfdSa6YuBdktL05F32i2tFMr1uLGzRet5nlB8
-	 iNq9KekkPjDCA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 21 May 2026 07:50:21 -0400
-Subject: [PATCH] nfsd: fix dead ACL conflict guard in nfsd4_create
+	s=arc-20240116; t=1779364578; c=relaxed/simple;
+	bh=7csXHxeHsDUgkLUwGgZgHc7oqSb6L/F8S4VX7J9syoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tq39J7BgHEajP2gv3daWG8gwYzre4AH6aDjfxCOl3GpVHC9nldsAyfiAd9zn4KdAiopj5ztSXrPS+TL/+V62rv7tmvCVB4F4Mb4sA8p7dsrZ+Yh4fvW0APfNpRsKosGEPwy69geT0t8RWQMKKpyOE3dDsDpYXMCGGVb4AR+DGG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UeKkJez3; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779364577; x=1810900577;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7csXHxeHsDUgkLUwGgZgHc7oqSb6L/F8S4VX7J9syoA=;
+  b=UeKkJez3dGzZKJ/GMWWgP9zbebDFKlr6x0Z+J7gcSTUMHDCs8DZ0uuxP
+   +t5fIOGAJrXqN4G/NUtcz0FeNPoGZ3fTWWE+RK2j8xMihLxXW+bnTArHG
+   npBmxxnGJzpVDI+XYjAAUWUx/eUnI2JOHMzP7HhTIZuiykgjMH1WtzW1p
+   sK9qL557UbDHcuhMuEHkaYDWr0uS90CIupN4e2as/GCf7xImyHgHBjQda
+   lKZw7UEgtuWQnJXOrgsn+B0g9u9RX47Buvcxi0y3MUCcm/H3gPWtFjUHC
+   kJ+wOEQrDw4/+Cr+L8TtrJpPWq7nkw8OPdhMl9SWP8lvi+vHaEuOEwV5M
+   Q==;
+X-CSE-ConnectionGUID: RGSqgYT4RWu5nOC63ldhUQ==
+X-CSE-MsgGUID: ip0yvIwUTNC/cf9VcEPJPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="90855032"
+X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
+   d="scan'208";a="90855032"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 04:56:17 -0700
+X-CSE-ConnectionGUID: inzHdNzLQnWERzAIy1Iu9g==
+X-CSE-MsgGUID: 1UT2VgUhTIm7pvkwTH5grA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
+   d="scan'208";a="234170961"
+Received: from lkp-server01.sh.intel.com (HELO fdb68b0ce653) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 21 May 2026 04:56:15 -0700
+Received: from kbuild by fdb68b0ce653 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wQ20a-000000000EH-308d;
+	Thu, 21 May 2026 11:56:12 +0000
+Date: Thu, 21 May 2026 19:56:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chuck Lever <cel@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH] xprtrdma: Decouple RPC completion from Send completion
+Message-ID: <202605211923.fDxJ0j7x-lkp@intel.com>
+References: <20260520175016.29480-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260521-nfsd4_create_acl_posix_acl_overwrite_leak-v1-1-850fc0a7157e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2N3QqDMAxGX0VyvUJW1P28ypCStXELk1aS4QTx3
- Ve8O+dcfN8GxipscG82UF7EpOQq51MD8U35xU5SdfDoe+w8ujxaakNUpi8HilOYi8l6UFlYfyq
- 1T0wfR9g/0627XLGNUPdm5VHW4+sx7PsfOGtf53sAAAA=
-X-Change-ID: 20260520-nfsd4_create_acl_posix_acl_overwrite_leak-a06bd957804c
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Rick Macklem <rmacklem@uoguelph.ca>
-Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1779; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=facGVCTUMDEg00YKi2YmJUcYpjK0EKDA4eYv/HuPK4Y=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqDvGCnTMByhmsXasIU3f+k7o6iSOxD+9W02RIh
- X++hjnjvLSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCag7xggAKCRAADmhBGVaC
- FQWPD/9tKVZqBgy7pMTx0zH/LfVmseBoieCFwRcj3oBljFChuON3GxE82NHM70CR4RWCmAafz+k
- Wp1tC3WXc3tWQ+Pq8C0oemh2iRPV7za02dlwN5oqBZNATe4kwtv/6CqmCYS45q5rzESF1ce3M5I
- hmY1rw9r+RXr83dmDttOIVM8srgHDpQfvqzV609FsqJSKITnrtwSrwHALEUR7+b2o3KAajFADYS
- HkhTpEVKw+4ywK6uPTXDS6k87YgugcGsAMygnAWKCWvR7Y8pFenssdhVQBN3XLLgN0nDwSgy1FI
- Silb3n3rgFsvaa+HmgTAr8yhsLW+lhKyO3VO/3AyO96GP+tySW43jMNoKVRB2AXsVVILpTpxZEQ
- HjRSU+kI8Gdsn/FdlSc9pWqgEY2Yt3NxnJhExtSrREr+aBkvT95wReBR051t6AtkRLCB51mWBiv
- gDBnQOVUTY1VIiLjHwmXZM4Ung9pEJKhsXBA4Fo3xmppwL1OeFoXWOolsVWmjCoM/oATWZQuAoQ
- qu+r3Q9NdzsXxCxXXFjtV5CJffyasIp8WAMajYGyQNrvNUFxsDs/dFa4MElUdlk058k79WaxZRL
- YWiiPaTyBDZ8cthZg9wkg3v+M+NuSCNPl0snyJx7jFpMm19PDhwjHb7oXJCXp1DUHdkCa/ttUuH
- e11Bu2lzPyudrPg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260520175016.29480-1-cel@kernel.org>
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21753-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21754-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RSPAMD_URIBL_FAIL(0.00)[intel.com:server fail,git-scm.com:query timed out];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RSPAMD_EMAILBL_FAIL(0.00)[lkp.intel.com:query timed out];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 70BBC5A441D
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:mid,intel.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,git-scm.com:url,01.org:url]
+X-Rspamd-Queue-Id: 97DE75A46ED
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-nfsd4_create() steals create->cr_dpacl/cr_pacl into the local
-nfsd_attrs via the designated initializer, then immediately sets the
-source pointers to NULL. The subsequent conflict guard tests the
-already-nilled source fields, making it permanently dead code:
+Hi Chuck,
 
-    if (create->cr_acl) {
-        if (create->cr_dpacl || create->cr_pacl)  /* always false */
+kernel test robot noticed the following build errors:
 
-When a client encodes both FATTR4_WORD0_ACL and
-FATTR4_WORD2_POSIX_{DEFAULT,ACCESS}_ACL in the same CREATE fattr
-bitmap, nfsd4_acl_to_attr() overwrites attrs.na_pacl/na_dpacl without
-releasing the originals, leaking two posix_acl slab objects per
-request. Repeated requests cause unbounded slab exhaustion.
+[auto build test ERROR on trondmy-nfs/linux-next]
+[also build test ERROR on linus/master v7.1-rc4 next-20260520]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Fix by checking attrs.na_dpacl/na_pacl (the stolen values) instead of
-the nilled create->cr_dpacl/cr_pacl, matching the correct pattern
-already used in nfsd4_setattr().
+url:    https://github.com/intel-lab-lkp/linux/commits/Chuck-Lever/xprtrdma-Decouple-RPC-completion-from-Send-completion/20260521-025653
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20260520175016.29480-1-cel%40kernel.org
+patch subject: [PATCH] xprtrdma: Decouple RPC completion from Send completion
+config: riscv-randconfig-r112-20260521 (https://download.01.org/0day-ci/archive/20260521/202605211923.fDxJ0j7x-lkp@intel.com/config)
+compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 5bac06718f502014fade905512f1d26d578a18f3)
+sparse: v0.6.5-rc1
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260521/202605211923.fDxJ0j7x-lkp@intel.com/reproduce)
 
-Reported-by: Chris Mason <clm@meta.com>
-Assisted-by: kres:claude-opus-4-6
-Fixes: d2ca50606f5f ("NFSD: Add support for POSIX draft ACLs for file creation")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605211923.fDxJ0j7x-lkp@intel.com/
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 85e94c30285a..fa995cb34b16 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -837,7 +837,7 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		goto out_aftermask;
- 
- 	if (create->cr_acl) {
--		if (create->cr_dpacl || create->cr_pacl) {
-+		if (attrs.na_dpacl || attrs.na_pacl) {
- 			status = nfserr_inval;
- 			goto out_aftermask;
- 		}
+All errors (new ones prefixed by >>):
 
----
-base-commit: de5bbd421a35ab18ed71f442aee49c956d6dafb1
-change-id: 20260520-nfsd4_create_acl_posix_acl_overwrite_leak-a06bd957804c
+>> net/sunrpc/xprtrdma/rpc_rdma.c:491:20: error: no member named 'bc_pa_lock' in 'struct rpc_xprt'
+     491 |                 spin_lock(&xprt->bc_pa_lock);
+         |                            ~~~~  ^
+>> net/sunrpc/xprtrdma/rpc_rdma.c:492:24: error: no member named 'rq_bc_pa_list' in 'struct rpc_rqst'
+     492 |                 list_add_tail(&rqst->rq_bc_pa_list, &xprt->bc_pa_list);
+         |                                ~~~~  ^
+>> net/sunrpc/xprtrdma/rpc_rdma.c:492:46: error: no member named 'bc_pa_list' in 'struct rpc_xprt'
+     492 |                 list_add_tail(&rqst->rq_bc_pa_list, &xprt->bc_pa_list);
+         |                                                      ~~~~  ^
+   net/sunrpc/xprtrdma/rpc_rdma.c:493:22: error: no member named 'bc_pa_lock' in 'struct rpc_xprt'
+     493 |                 spin_unlock(&xprt->bc_pa_lock);
+         |                              ~~~~  ^
+   4 errors generated.
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
 
+vim +491 net/sunrpc/xprtrdma/rpc_rdma.c
+
+   469	
+   470	/* rl_kref has two owners while a Send is outstanding: the rpc_rqst
+   471	 * owner and the sendctx. Replies complete the RPC but do not drop
+   472	 * either reference. The req returns to rb_send_bufs only after
+   473	 * xprt_rdma_free_slot() or xprt_rdma_bc_free_rqst() has dropped the
+   474	 * RPC-layer reference and rpcrdma_sendctx_unmap() has dropped the
+   475	 * Send-side reference.
+   476	 *
+   477	 * Any req held by an rpc_rqst has rl_kref >= 1. Hand-off sites
+   478	 * reinitialize rl_kref before assigning a recycled req to a new owner;
+   479	 * rpcrdma_prepare_send_sges() then takes the Send-side reference.
+   480	 */
+   481	static void rpcrdma_req_release(struct kref *kref)
+   482	{
+   483		struct rpcrdma_req *req =
+   484			container_of(kref, struct rpcrdma_req, rl_kref);
+   485		struct rpc_rqst *rqst = &req->rl_slot;
+   486		struct rpc_xprt *xprt = rqst->rq_xprt;
+   487		struct rpcrdma_xprt *r_xprt =
+   488			container_of(xprt, struct rpcrdma_xprt, rx_xprt);
+   489	
+   490		if (bc_prealloc(rqst)) {
+ > 491			spin_lock(&xprt->bc_pa_lock);
+ > 492			list_add_tail(&rqst->rq_bc_pa_list, &xprt->bc_pa_list);
+   493			spin_unlock(&xprt->bc_pa_lock);
+   494			return;
+   495		}
+   496	
+   497		/* Re-arm rl_kref before the hand-off so the next owner of
+   498		 * this slot sees a positive refcount.
+   499		 */
+   500		kref_init(&req->rl_kref);
+   501		if (!xprt_wake_up_backlog(xprt, rqst)) {
+   502			memset(rqst, 0, sizeof(*rqst));
+   503			rpcrdma_buffer_put(&r_xprt->rx_buf, req);
+   504		}
+   505	}
+   506	
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
