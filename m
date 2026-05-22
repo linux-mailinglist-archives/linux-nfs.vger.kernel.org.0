@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-21830-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21831-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KIs1F9+zEGrRcgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21830-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 21:51:59 +0200
+	id MO0rNIWyEGpWcgYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21831-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 21:46:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB6BF5B9ACC
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 21:51:58 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48A315B995F
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 21:46:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2BC7E301A70F
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 19:43:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C3D8A3047407
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 19:43:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B662A37F753;
-	Fri, 22 May 2026 19:43:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA31388895;
+	Fri, 22 May 2026 19:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QveQukr6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqM8bLJ6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757BF385D84;
-	Fri, 22 May 2026 19:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06F437EFE4;
+	Fri, 22 May 2026 19:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779478985; cv=none; b=m98aZ43G0kyywGR/t6fmfDC+x0XoUCwI5wrjGSf4kmgeWG9dlXBGa8fzCDnhfNP28nssqYUZjoCZYskhRFaqNdAIHgf+3Lg4iK15XFjFMN67BkGi3FnnfLMqwryFmyHqVhNZhfWvHmxL88kx2u8It741gytHIZqYRu1r9aD36m4=
+	t=1779478987; cv=none; b=tA2mlY1JWYffmBSrw62ncijRSEbyVcxmY2nZp0Jd/ZDtAIkNGoEu/v+T3l3i34izg1FAMCVvrbH9seweftN2ITEeN7RNsdWYvbRWSMpBVZ2BBMZerUGO0BkaajI/qprrkRRRcqMXg9thOqZZeczFq4f3Q44x43+POotO7hjHPUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779478985; c=relaxed/simple;
-	bh=JWk/qJly9oa5aSU4/ANb1Pj0gnrjFN99OCHUHA/X9VU=;
+	s=arc-20240116; t=1779478987; c=relaxed/simple;
+	bh=ObaqPlpMBYi+3KqTXL6Uij26L0eMDEbY8kbhU/u7/vw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iITJfO8tkb5JZ/l+W3fLUOOuQBgjdDkUi2zXBEgJa38/8smnE0V6zwRw1IJO4iOfR7Vlq7uPx5I8hV6SXE8wzlzymZzI2IG+KnKtgSbfLCg7lJc/RmhsUXeE1oChHWR8anUHzXQemHR3A4NqvvButvutx6onVTHcbi0c3djkBA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QveQukr6; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 734521F00A3F;
-	Fri, 22 May 2026 19:42:57 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=urM4xKqE3lHPeNodzQ46vhNqyuVmdK3nwT4zq/PVs1ebguaGd9L5HlBkqIGm9TxgCXnk6ujG8EeJR529WIQpLqwYBYTsGf7Jt2k3pvU74SqWJtfGHgFLOISUhLKXYQzBvnk1IBvJFxd4/1p/YsDgJJ/ZtUQIKyKKR9V4ihbce4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqM8bLJ6; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630901F00A3E;
+	Fri, 22 May 2026 19:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779478979;
-	bh=MK6ljeFsXZ3jOZigE4+tZvoHGJwTrFzkGpt7U+sHsGM=;
+	s=k20260515; t=1779478981;
+	bh=P7GJcWlAnn9onaeiQvrINQHRw0BOo7qTCfQLKMtXhO0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=QveQukr6082kVrlNgl9kJKz//MxUWwGV5SlhrTCRP7A/Wb3tnorS4lscSFyBYx0MX
-	 urw7ZOWfhQo0RD84YEtVLcB7xUw6YDpZVTG+MiLjuS99YPMultuIimKvqizKguUIAO
-	 1vewX/qA8CkxKP0Z0Ef4xbFEVOWSPAyINBlzvPsm8Y3/Jb1fFgx5YW/2Nz6psuPM95
-	 L9dkX8a1PwwbSS+xR8jYLZex6RYvVqR/+U2qEolv8PX8XptgXjJ8fUaIUHv/7PTVsf
-	 wa8dUl5IEP5UZz23cL9Ul6r6cgjdEVUw7PCvZuAV6s7m0/0yaZr0ev8ZZSt6gTZB1D
-	 kIZf0Ji7zN6cA==
+	b=IqM8bLJ6GaoVNaFf6EF0q7rrJpqm5+GOCXESxA0nSgbESHWwSce4ffynpzR/EBgAR
+	 DG9O62FqqEpjxQKVU49UIfx9rzyVfRTDVjkGuF2M2WR5iD9VOpXt+jGFV6kjyUQOjX
+	 TPIP5f8ZmpRXcX6oy0lOpBRWoHxMfXi97wJLWudSbBi1hgFmf4spKdU8saf4NXilK3
+	 5sg0b2Ryg5v/9AbHLqsMqCPGLWucfiqz5YbezRN6zfewHAyS8a1vfSE0DQJ7q1edc2
+	 +odZFZxIp9kYx+d/Uwc4WpWbrUEariRdrWTqtNUPnkt+elfKiKw1h1ZRWoKlAeEy3M
+	 8QvKFIp4n7wZw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 22 May 2026 15:42:20 -0400
-Subject: [PATCH v5 15/21] nfsd: send basic file attributes in CB_NOTIFY
+Date: Fri, 22 May 2026 15:42:21 -0400
+Subject: [PATCH v5 16/21] nfsd: allow encoding a filehandle into fattr4
+ without a svc_fh
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260522-dir-deleg-v5-15-542cddfad576@kernel.org>
+Message-Id: <20260522-dir-deleg-v5-16-542cddfad576@kernel.org>
 References: <20260522-dir-deleg-v5-0-542cddfad576@kernel.org>
 In-Reply-To: <20260522-dir-deleg-v5-0-542cddfad576@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -71,20 +72,20 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2682; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=JWk/qJly9oa5aSU4/ANb1Pj0gnrjFN99OCHUHA/X9VU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqELGhd7m8pA5apBNOYZq8RdPE8niFKXspMO0sO
- 9ive802MQmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahCxoQAKCRAADmhBGVaC
- FQoGEACbe4pqKKHeYRjhNWVqNClI0adVAm9B5FhedGGdfepFOG8qoiwDwcRBpdjZ0n5U3BmqRSC
- fFDNsSn6HDQ6I2FyhtPw6XWdUO9dR2XcZF0NDU8UgZF5FjMVjXaMj5FWvZaIDyfoIapfzY7ypwb
- iSZLQrKKwnv80EktPZkHLmWTjW3yCTJvi9/NVNcr0EdUaYcIIxMsNxm6jbxAU8JJPGBD37RFtiB
- hco4Na4TWfHvwcgvJR6VjEiIagtvPtCa/LUIbT2+qJXTDEGFWDUhfnuBgxoM786NN2LFUkSvTwz
- kvuD3fEV7FDvZovB5+NRqnbgozgMHh/l19anhHXYJYMDhLOQLIfI2jHLryr+dBgow9dMpSUzI+p
- iI+hi/5LJurOxzuX2+HPcP8OmdDWyTvfNg7b8AsPC1Z47FA8rh+Kd5iIWgxAP/ysXxkZ8vHEL/u
- gsnbgsSyCT4qFrWZgxM0OMqwY1eqxaKzNKE4A0AfpSkkJXKNkbAUD+veUQZbH4vn047jEwmODXc
- diegWqpc1guLpP6krVmatj1TfdIVVFDjI8tGHORiujPwdMNNHSwTNGJ5An1Ch2YOYHtfEpyznqM
- f9S6OH2T5AayLxE5jiLgknjDO3W4yxWraZeuZ1FWmZWDpsVi3sR6Ix0DcyfHCqHC7Js0bVL+6sE
- tmOlpMLoFgDVYdQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2608; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ObaqPlpMBYi+3KqTXL6Uij26L0eMDEbY8kbhU/u7/vw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqELGh0PJVPRr+WErxp1Yvr/esjfC155ws3p2Q9
+ FJxxhxBlR+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahCxoQAKCRAADmhBGVaC
+ FQ05EAC5a52Inkaw3RbneoQbdgxnYUvWSXENEwkCzh/GB7zq+0ssPNnH7SGsPsnhK84uAk/K9LM
+ HskSZ+tp9lHoYHGNP4LSvfp6/TlubUVO43jIsQNFrID65mLch3UzueQJywRHzCdolClAWzW+YBT
+ Ui6EFtpKX2XzXYyd6VFJ4WEQ1NVUpoed3BToWuXNW6UwBZpqoIxdbFBIWpikEFOsKJl3Wuo/mxp
+ oKMShbRBrpW2d+FjCTipbdfhUu920QcdIGM/1drRJj50v2NOlK6WYiU+h+UMimVhicOfla1rKwo
+ jh0UpBxhows6l2OD1zgv9zman+VozpTFnnMbS2dLbJpr6UTAwls0aUqTA8G24KRKgjd/0wx/GJz
+ pGAV22t/MZTZO0h6zOnLlV7aZFPRq9/KZ1nJuyWGIJ+f23jQJvP19PM24NaADdKwyjOfcZYJsA9
+ Xm3dsHZ88PsSlwqNLktk9ir3kgWzZbBWKWF9+x4za+SLsPIKWlLPPoYusDzlEPamltmp0pksv0t
+ dKXdfE35WW0a+N747ZPEhlfmkBZNWpId25B3PAp1sVBnF5otNaa+iUpUsgJHGtUM5xdUR+qCcXQ
+ zbDjJaY/8t+udxCC5n6Whs4frJqgfPVuJMMF+6mn6QDOMYhw55zPCLlMw5SWGfOZDrQLaD5FHYh
+ 3vnM3LGhjsPCTCA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -92,11 +93,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21830-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21831-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -113,89 +114,90 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: BB6BF5B9ACC
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 48A315B995F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In addition to the filename, send attributes about the inode in a
-CB_NOTIFY event. This patch just adds a the basic inode information that
-can be acquired via GETATTR.
+The current fattr4 encoder requires a svc_fh in order to encode the
+filehandle. This is not available in a CB_NOTIFY callback. Add a a new
+"fhandle" field to struct nfsd4_fattr_args and copy the filehandle into
+there from the svc_fh. CB_NOTIFY will populate it via other means.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ fs/nfsd/nfs4xdr.c | 36 +++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 1fc4ce2357c0..61c555446f63 100644
+index 61c555446f63..33b6cd492e56 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -4178,12 +4178,21 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	goto out;
+@@ -2702,7 +2702,7 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
  }
  
-+#define CB_NOTIFY_STATX_REQUEST_MASK (STATX_BASIC_STATS   | \
-+				      STATX_BTIME	  | \
-+				      STATX_CHANGE_COOKIE)
-+
- static bool
- nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 			  struct dentry *dentry, struct nfs4_delegation *dp,
- 			  struct nfsd_file *nf, char *name, u32 namelen)
+ static __be32 nfsd4_encode_nfs_fh4(struct xdr_stream *xdr,
+-				   struct knfsd_fh *fh_handle)
++				   const struct knfsd_fh *fh_handle)
  {
-+	struct path path =  { .mnt = nf->nf_file->f_path.mnt,
-+			      .dentry = dentry };
-+	struct nfsd4_fattr_args args = { };
- 	uint32_t *attrmask;
-+	__be32 status;
-+	int ret;
+ 	return nfsd4_encode_opaque(xdr, fh_handle->fh_raw, fh_handle->fh_size);
+ }
+@@ -3145,6 +3145,7 @@ struct nfsd4_fattr_args {
+ 	struct svc_fh		*fhp;
+ 	struct svc_export	*exp;
+ 	struct dentry		*dentry;
++	struct knfsd_fh		fhandle;
+ 	struct kstat		stat;
+ 	struct kstatfs		statfs;
+ 	struct nfs4_acl		*acl;
+@@ -3389,7 +3390,7 @@ static __be32 nfsd4_encode_fattr4_homogeneous(struct xdr_stream *xdr,
+ static __be32 nfsd4_encode_fattr4_filehandle(struct xdr_stream *xdr,
+ 					     const struct nfsd4_fattr_args *args)
+ {
+-	return nfsd4_encode_nfs_fh4(xdr, &args->fhp->fh_handle);
++	return nfsd4_encode_nfs_fh4(xdr, &args->fhandle);
+ }
  
- 	/* Reserve space for attrmask */
- 	attrmask = xdr_reserve_space(xdr, 3 * sizeof(uint32_t));
-@@ -4194,6 +4203,41 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	ne->ne_file.len = namelen;
- 	ne->ne_attrs.attrmask.element = attrmask;
- 
-+	/* FIXME: d_find_alias for inode ? */
-+	if (!path.dentry || !d_inode(path.dentry))
-+		goto noattrs;
+ static __be32 nfsd4_encode_fattr4_fileid(struct xdr_stream *xdr,
+@@ -4002,19 +4003,24 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		if (err)
+ 			goto out_nfserr;
+ 	}
+-	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
+-	    !fhp) {
+-		tempfh = kmalloc_obj(struct svc_fh);
+-		status = nfserr_jukebox;
+-		if (!tempfh)
+-			goto out;
+-		fh_init(tempfh, NFS4_FHSIZE);
+-		status = fh_compose(tempfh, exp, dentry, NULL);
+-		if (status)
+-			goto out;
+-		args.fhp = tempfh;
+-	} else
+-		args.fhp = fhp;
 +
-+	/*
-+	 * It is possible that the client was granted a delegation when a file
-+	 * was created. Note that we don't issue a CB_GETATTR here since stale
-+	 * attributes are presumably ok.
-+	 */
-+	ret = vfs_getattr(&path, &args.stat, CB_NOTIFY_STATX_REQUEST_MASK, AT_STATX_SYNC_AS_STAT);
-+	if (ret)
-+		goto noattrs;
++	args.fhp = fhp;
++	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID))) {
++		if (!args.fhp) {
++			tempfh = kmalloc_obj(struct svc_fh);
++			status = nfserr_jukebox;
++			if (!tempfh)
++				goto out;
++			fh_init(tempfh, NFS4_FHSIZE);
++			status = fh_compose(tempfh, exp, dentry, NULL);
++			if (status)
++				goto out;
++			args.fhp = tempfh;
++		}
++		if (args.fhp)
++			fh_copy_shallow(&args.fhandle, &args.fhp->fh_handle);
++	}
 +
-+	args.change_attr = nfsd4_change_attribute(&args.stat);
-+
-+	attrmask[0] = FATTR4_WORD0_TYPE | FATTR4_WORD0_CHANGE |
-+		      FATTR4_WORD0_SIZE | FATTR4_WORD0_FILEID;
-+	attrmask[1] = FATTR4_WORD1_MODE | FATTR4_WORD1_NUMLINKS | FATTR4_WORD1_RAWDEV |
-+		      FATTR4_WORD1_SPACE_USED | FATTR4_WORD1_TIME_ACCESS |
-+		      FATTR4_WORD1_TIME_METADATA | FATTR4_WORD1_TIME_MODIFY;
-+	attrmask[2] = 0;
-+
-+	if (args.stat.result_mask & STATX_BTIME)
-+		attrmask[1] |= FATTR4_WORD1_TIME_CREATE;
-+
-+	ne->ne_attrs.attrmask.count = 2;
-+	ne->ne_attrs.attr_vals.data = (u8 *)xdr->p;
-+
-+	status = nfsd4_encode_attr_vals(xdr, attrmask, &args);
-+	if (status != nfs_ok)
-+		goto noattrs;
-+
-+	ne->ne_attrs.attr_vals.len = (u8 *)xdr->p - ne->ne_attrs.attr_vals.data;
-+	return true;
-+noattrs:
- 	attrmask[0] = 0;
- 	attrmask[1] = 0;
- 	attrmask[2] = 0;
+ 	if (attrmask[0] & (FATTR4_WORD0_CASE_INSENSITIVE |
+ 			   FATTR4_WORD0_CASE_PRESERVING)) {
+ 		/*
 
 -- 
 2.54.0
