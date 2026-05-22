@@ -1,176 +1,160 @@
-Return-Path: <linux-nfs+bounces-21807-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21808-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yCPgJK11EGoZXgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21807-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 17:26:37 +0200
+	id uBB/A1ZsEGqgXAYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21808-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 16:46:46 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D6725B6DCB
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 17:26:36 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E8FC5B66CC
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 16:46:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 299BC3071B63
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 14:31:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A6FB5306EDEB
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 May 2026 14:36:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C369D43CECD;
-	Fri, 22 May 2026 14:31:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A8646AEF1;
+	Fri, 22 May 2026 14:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzO7d6Sj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9679C4218A5;
-	Fri, 22 May 2026 14:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5001E7660;
+	Fri, 22 May 2026 14:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779460288; cv=none; b=ERXvPSw0IA02/FEPDtyfqBrW91qLPoWcmz6jR8deruajexlLm59rOCvpOSFiGDQIlmMITkEBYljm9DR6c9SUqAQEuFEZu3OVG7A9cwsJavOn4z8WBIsJfiY08S5JmxfGL8cHLcCmBydFIElLldsWdMo3j29lnqwOUcPFj6L8Tmg=
+	t=1779460584; cv=none; b=rMNe0HYYQ+tFXfdYn5NRrlx+MPdtmX+LkAn68NrVzE3FGx0JUeSXGe2x572BKr5OGPhTFSYWoXfHmqmlMYGKGxGg0Zbe5UFdSXc9cfq1Owoz6qj080p+uvFQ66+avM0MRsbiVZJYydr+XMhWngirhOoWoWIYjyB/xnj8h9IQHCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779460288; c=relaxed/simple;
-	bh=HuCwUi/7uO46kT1qwJq0hEJtdMEHa0AgvWi1UReZ1Po=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rVOFJSvr3SmvIcyvAAqM0hTMBxB6aueAXByzokM6HO5Ud1W/vNSNMqgPXB04B7pyu8Ea8vmjaOrHQMUBnUUE66tW4p9Uz4LaKDtWxVur/fyoY4uewLL6f8Wh6u/Oepx0NC44MlkRY2mfMJCsAGuKOrpbbcJkIE3E1KJFn/e3SJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 0AB021407E6;
-	Fri, 22 May 2026 14:31:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 65B5220027;
-	Fri, 22 May 2026 14:31:08 +0000 (UTC)
-Date: Fri, 22 May 2026 10:31:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Alexander Aring <alex.aring@gmail.com>, Amir
- Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Calum
- Mackay <calum.mackay@oracle.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v4 11/21] nfsd: add tracepoint to dir_event handler
-Message-ID: <20260522103131.080908fc@gandalf.local.home>
-In-Reply-To: <20260522-dir-deleg-v4-11-2acb883ac6bc@kernel.org>
-References: <20260522-dir-deleg-v4-0-2acb883ac6bc@kernel.org>
-	<20260522-dir-deleg-v4-11-2acb883ac6bc@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779460584; c=relaxed/simple;
+	bh=g1G87csibOq77QWng42gvAAEG2piFsFsVpPpKjBmZkY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MKwE/cy0t01m6+nsWxJgli7rCk0KtU2MZ5qzVDajbjbJcFjfjKxrM//6chlQ2Xqumq0QZtv4vkHZsz7IOOwEqIkFZtrPsPIGGVH7n93bdF2NhqcaCfZ4hVY/OuqYkIGldgTUg3Lys5XQQVxUavlPwS/zSMlfKV34iYErpOjRYCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzO7d6Sj; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C711F000E9;
+	Fri, 22 May 2026 14:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779460583;
+	bh=va3SMbT7g0yBng6cNfy8yh2k1pddQd7COFqKpgaOkc0=;
+	h=From:Date:Subject:To:Cc;
+	b=QzO7d6Sj2fx3rnatqv+c06kUE6ci25Ukt1CBSAto6SFIXb/o2lUB5QfXtQUbvLzMT
+	 avgzxd5WtI4eF2rq+LTw+dCzjuTeyqcJTFVdov4rSCGMv5c2VIk3LnMVja0YR0dbaq
+	 2HpJ0pH88DwAGzG6k8TDmdZ8VNP9HR7BQXzBGc3FaPGxxaH9NZxOQ6e/zDGCSKziB1
+	 lFEW2bFMcrhnVVoRyVx5WU3zj74SVX7S78YQsWxqQifNAjzBRx5p64i797ZMgwDf4Y
+	 Xauw0QQnqL4Dc9R7c/XHjHcvlgQ6MJpwkAQiZ0Ff3on+JCC8CqCQA4nPEjXCZWnduX
+	 phpTPeboxsm1Q==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Fri, 22 May 2026 10:36:14 -0400
+Subject: [PATCH] nfsd: avoid leaking pre-allocated openowner on unconfirmed
+ retry race
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: oc4per67rmyow4fptwqcwqmbnptpbm8x
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/j7aqctpg9NW2tR4A8PFF+/r4vzAO23pU=
-X-HE-Tag: 1779460268-493531
-X-HE-Meta: U2FsdGVkX1980suR8vYXPXd8kAHBWSTcK55rwb76Mgvgewo0jZMr8NP2QwbyW/W9cHeMv1c3bAMVgZH9FNJFf1qT7n/hNIM0Fsx/AgtJeiyk3wsXkwfKuyuf2+SArmvHmoIrTL+K9anGCXeKfvDPUr+iJyfnUtthWNttkPoVg2OHRGD2qp58vPH0KRBb51QuL6zxibUvVybbnzOurXe82g1UySpoiEKbh5KTNeQ9K0A4qE4JDrKLIbl72oigNfZoCQv32gOafSfy9CPAM8jZb2ZCbPxUPsn0w4mFK4cj0PT+cov1eIiEwhUGG6OES/HX+6UxuZGT5Kz0C9WrJvM01Z+A9SonK8xdytCljhRP+bRFsbJYMLmwdnyv9MbY1j5iXjynnBQpnCzZrzzgTJimTw==
-X-Spamd-Result: default: False [0.14 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260522-find_or_alloc_open_stateowner_unconfirmed_refcount_leak-v1-1-a66645e1e006@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2NUQrCMBAFr1LybaFJsVKvIrKE9FUX425J0iqU3
+ t3g5zAws5uMxMjm2uwmYePMKhXsqTHh6eWBlqfKxnVu6M7OtTPLRJrIx6iBdIFQLr5AP4JEqwS
+ VmdMbEyXMQVcpFOFf7The+n6A9bAwtb5Uzd//+XY/jh+ZtHl+iQAAAA==
+X-Change-ID: 20260522-find_or_alloc_open_stateowner_unconfirmed_refcount_leak-997336e1ae1e
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Chris Mason <clm@meta.com>, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1740; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=g1G87csibOq77QWng42gvAAEG2piFsFsVpPpKjBmZkY=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqEGnhS6OnhPERuomFQ1Axhdk5o6M+FlcK8Kka3
+ fZWGvoNOPGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahBp4QAKCRAADmhBGVaC
+ FfLmD/9AXEOSj/ZAMnPWaGQwpiPTiv4z7TdRV+ePvkKZ65+lbVc7BpdS4dlUQtOHFa9wlMw2A8o
+ J/eAqZZdFcx+JRvXF0TvG8ZHxs8NE2NhJyhXXfqnrVEsHEe3uVh38P6EtBzJ6pbJ559IYeUP4iF
+ wYJJhnmmLes09K8teTKZwu4caccRxJN1cjRAKkSim4u1huDNLFk6Z5epvEQZHOE2+6sKpPgno3P
+ 4c/WlQVy4Dw7g/zkwS3JVtEhmB7sXI0yWxoVKrD/iOr3avBBfZj6Sx2iJCZEQKTKsKYVkKisgWO
+ NwSXs6+dKTphXJVNqoZ4i1g9abf7Y0Yq/ZJ6oJpZp5QBxclWSR0h0piGyNxLqX/tMgjTTpwXRXS
+ idJt49vFKk9DQkFniFyoFtuoJj12+QJfUh/3//akKGv86djnjW2V5EY83VzgqDp8CndqbzsVZ9/
+ DZg2S4MTa+FIGjPb4rcGIzoqxkHoOUCQigGnaIuu6QGJVqO1EkUIAiY5mMBUfJ1AHYNXDN+j3i9
+ 2iMuemnOaHI7Eoi+0P3f1wtBdxBlMM7rJ5Eqd7zgJ1SUCpd1MTtm808VOsBI8Vj55VActjViX8R
+ K4VGLFpjJ07ZK1EwIFX4oB5LL0G0R5ie33iz6TRZkmedkCnFLFZCmGgnznRkX8TVT20wDw8Tlt5
+ r7X6ZbxUgrTRb6Q==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[goodmis.org : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-21807-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21808-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[oracle.com,brown.name,redhat.com,talpey.com,kernel.org,gmail.com,suse.cz,zeniv.linux.org.uk,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rostedt@goodmis.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.971];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	R_DKIM_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,gandalf.local.home:mid]
-X-Rspamd-Queue-Id: 9D6725B6DCB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 9E8FC5B66CC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 22 May 2026 08:29:00 -0400
-Jeff Layton <jlayton@kernel.org> wrote:
+When find_or_alloc_open_stateowner() encounters an unconfirmed owner, it
+calls release_openowner() and sets oo = NULL. Control then falls through
+past the `if (oo)` guard — which would have freed any pre-allocated
+`new` — and unconditionally executes `new = alloc_stateowner(...)`. If
+`new` was already allocated on a prior iteration, the pointer is
+silently overwritten and the previous allocation (slab object + owner
+name buffer) is leaked.
 
-> Add some extra visibility around the fsnotify handlers.
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/nfs4state.c |  2 ++
->  fs/nfsd/trace.h     | 22 ++++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 3afde2e91efe..8d73203297e5 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -10032,6 +10032,8 @@ nfsd_handle_dir_event(u32 mask, const struct inode *dir, const void *data,
->  	struct file_lock_core *flc;
->  	struct nfsd_notify_event *evt;
->  
-> +	trace_nfsd_handle_dir_event(mask, dir, name);
-> +
->  	/* Normalize cross-dir rename events to create/delete */
->  	if (mask & FS_MOVED_FROM) {
->  		mask &= ~FS_MOVED_FROM;
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index ebf5677c4e73..e8e121a52e82 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -12,6 +12,7 @@
->  #include <linux/sunrpc/clnt.h>
->  #include <linux/sunrpc/xprt.h>
->  #include <trace/misc/fs.h>
-> +#include <trace/misc/fsnotify.h>
->  #include <trace/misc/nfs.h>
->  #include <trace/misc/sunrpc.h>
->  
-> @@ -1377,6 +1378,27 @@ TRACE_EVENT(nfsd_file_fsnotify_handle_event,
->  			__entry->nlink, __entry->mode, __entry->mask)
->  );
->  
-> +TRACE_EVENT(nfsd_handle_dir_event,
-> +	TP_PROTO(u32 mask, const struct inode *dir, const struct qstr *name),
-> +	TP_ARGS(mask, dir, name),
-> +	TP_STRUCT__entry(
-> +		__field(u32, mask)
-> +		__field(dev_t, s_dev)
-> +		__field(ino_t, i_ino)
-> +		__string_len(name, name->name, name->len)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->mask = mask;
-> +		__entry->s_dev = dir->i_sb->s_dev;
-> +		__entry->i_ino = dir->i_ino;
-> +		__assign_str(name);
-> +	),
-> +	TP_printk("inode=0x%x:0x%x:0x%lx mask=%s name=%s",
-> +			MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
-> +			__entry->i_ino, show_fsnotify_mask(__entry->mask),
+This requires a race: two NFSv4.0 OPEN threads with the same owner
+string, where a concurrent thread inserts a new unconfirmed owner into
+the hash between retry iterations. The window is narrow but repeatable
+under adversarial conditions.
 
-Hmm, I don't have the show_fsnotify_mask() function in my repos and don't
-see it defined in the patch series (I scanned lore).
+Fix by adding `goto retry` after `oo = NULL` so the already-allocated
+`new` is reused on the next iteration rather than overwritten.
 
-Have a link to the patch or repo that creates it?
+Fixes: 23df17788c62 ("nfsd: perform all find_openstateowner_str calls in the one place.")
+Reported-by: Chris Mason <clm@meta.com>
+Assisted-by: kres:claude-opus-4-6
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- Steve
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 2cf021b202a6..a42f34842d77 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5276,6 +5276,7 @@ find_or_alloc_open_stateowner(unsigned int strhashval, struct nfsd4_open *open,
+ 		/* Replace unconfirmed owners without checking for replay. */
+ 		release_openowner(oo);
+ 		oo = NULL;
++		goto retry;
+ 	}
+ 	if (oo) {
+ 		if (new)
 
+---
+base-commit: 33e9ab952a864ae00bce7e47c3e9add1c4b3d3a3
+change-id: 20260522-find_or_alloc_open_stateowner_unconfirmed_refcount_leak-997336e1ae1e
 
-> +			__get_str(name))
-> +);
-> +
->  DECLARE_EVENT_CLASS(nfsd_file_gc_class,
->  	TP_PROTO(
->  		const struct nfsd_file *nf
-> 
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
