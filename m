@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21876-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21877-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AHqvF+3pEWqbrwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21876-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:54:53 +0200
+	id KEBLC0fqEWqbrwYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21877-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:56:23 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D32CA5C01E8
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:54:52 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 812A65C0283
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:56:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2F0153012CDE
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:54:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EC8E2301C58C
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:54:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1AEF30CD81;
-	Sat, 23 May 2026 17:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F9732573F;
+	Sat, 23 May 2026 17:54:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="entiYHeQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGH8ECXZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812EB2BB1D;
-	Sat, 23 May 2026 17:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031B52BB1D;
+	Sat, 23 May 2026 17:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779558888; cv=none; b=mIKbWpTgzXl4tp08HLppYIZVtN1Q3x54uY62MWBJXfk0iEkseFonWsqO6v8FT1GWieysvUe3+S6FyPkPwFU6vqfDbX1vOyhD/hqgDqWiMRxK3Fkc1qn20kBE0Cr+zSr9LIxcEgHO0OpZZnB7FKPfb2XktCT+YLktDRNo0l5onPs=
+	t=1779558896; cv=none; b=HGocYCCnP1uwqDFzGq35kKVHixvqHrPmyflKgQpLPcH927sF7Vf69+bbIG8WDFC7idwpkgAZZJaeXCxYm2DIxFW5X5/CZcaCxpWCLm19jLW4UkKh/cgHv5hsXc1nnkbX4psx7HRcBH3Qyfr8Md1m0qghncxy2OIK+mZUNq/WhMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779558888; c=relaxed/simple;
-	bh=r0cd8m/9lPWo3zUY7DznvxrgWtjRfjZqyn47CNuIbBw=;
+	s=arc-20240116; t=1779558896; c=relaxed/simple;
+	bh=zjzC6WZgyCQNvgmUsQfpb6/kcemhlapPaIznXJ6qDpY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ch3OuzPUGE9j1flY1QkNYodUsLVd51skmmb99kAQ2ZaCPbJEQK9pM7Hp99SRzMLyZ/3UQnJ8PRwjqAwVOOgc6kjGs6np7SfXqtg6/VIVLKuR/x/TJ7Ir6aPX0drzR1bY59Q/5M7Zpr8xfVOjra8q8GIv49pkJzGGvICyITE4FFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=entiYHeQ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644EE1F00A3A;
-	Sat, 23 May 2026 17:54:40 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=kYRWohvpnpnD3UW/Hb8/VQ6vrbjEbxT9SQGUULr3Nh2TqRp9oeTMUB05B173dageRqe5kTweqRBUbRb6fNCp/6Ekyi2/dnTCnPkLUCrliZ+1GNOqGndQa/52t3k8OGEBkvPaUXwYGg5hPozhg4T63ZU1xE6ZO0dyzhjh6mFspfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGH8ECXZ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93D61F000E9;
+	Sat, 23 May 2026 17:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779558887;
-	bh=xNqONibNib/HURDSoCRdl8F/ugaDRVHwkYT5A3d+6K0=;
+	s=k20260515; t=1779558894;
+	bh=7bBokGp6YKVtCQZrud5e4II/4wZ3rZBymvn2I3mXFbw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=entiYHeQKdJpCq2RAkO9V3DfpsOkdAweTN9otxUQ+O8vgrrn4uoBnmky9dnsr9Fbx
-	 m4wuzqZzR5kX+E9pPoVCmlFVpTAW11ZEZACAYWQV4RjU+r1ZFA22q8b2P5ph0C7YXK
-	 1DXqT1uS77S65UKLbwRFPf6L/4TWqrNbTww9gtbYR5ZfBcfDx1tVRapQXmJMHH+5Qk
-	 n8XIwq073N7B/vc1ZNlgL3xUnvihMimNGqIBpzEqFqEavTPULAoZuVZjF7WDOvBjeD
-	 PUHEN8u42mw/tjliBBXnMPRf2hgPurks8kLmsMdUGiyYXv57Cm7/XiWGt/T2OaWkqZ
-	 RFoyBRXH51pfw==
+	b=bGH8ECXZQWVB8xYKDY/34dL7P/Mpormzto6UFwYqmQQ8V7u/iWPHMQTPBkPItAfkE
+	 JYt1o4Cf3CN+cxfmAzr35RKANhG/cmjfmksUsM7WzHVSpgYMHN3Gf0ZuFv44EHsQkG
+	 5c6hR6iM1fBLLGWl1087vym9DDLVALaOOffnORm0ZfnH5ybe1PyWRRQEeu90AKgoDB
+	 Jw2dFEijdb+pzOPHlcGU7KJWjzyYOiV43iwFqaQc4PwA8Zbp5ATunapeAj83YgVs7z
+	 H3BqQnMH2LDOG2MvAZHZvX6Ua6wiohmfMIA9nYPkFYfAuWtOIlr24mdMezTmn2Hvz9
+	 pETrQg4iAiu/A==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Sat, 23 May 2026 20:54:13 +0300
-Subject: [PATCH 01/17] quota: allocate dquot_hash with kmalloc()
+Date: Sat, 23 May 2026 20:54:14 +0300
+Subject: [PATCH 02/17] proc: replace __get_free_page() with kmalloc()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260523-b4-fs-v1-1-275e36a83f0e@kernel.org>
+Message-Id: <20260523-b4-fs-v1-2-275e36a83f0e@kernel.org>
 References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 In-Reply-To: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 To: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
@@ -84,12 +84,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21876-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21877-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -105,69 +105,101 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: D32CA5C01E8
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 812A65C0283
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-dquot_init() allocates a single page for dquot_hash with
-__get_free_pages().
+A few functions in fs/proc/base.c use __get_free_page() to allocate a
+temporary buffer.
 
 kmalloc() is a better API for such use and it also provides better
 scalability and more debugging possibilities.
 
-Replace use of __get_free_pages() with kmalloc() and get rid of the order
-variable that remained 0 for more than 20 years.
+Replace use of __get_free_page() with kmalloc().
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- fs/quota/dquot.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ fs/proc/base.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 64cf42721496..9850de3955d3 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -3022,7 +3022,7 @@ static const struct ctl_table fs_dqstats_table[] = {
- static int __init dquot_init(void)
- {
- 	int i, ret;
--	unsigned long nr_hash, order;
-+	unsigned long nr_hash;
- 	struct shrinker *dqcache_shrinker;
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index d9acfa89c894..e129dc509b79 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -261,7 +261,7 @@ static ssize_t get_mm_proctitle(struct mm_struct *mm, char __user *buf,
+ 	if (pos >= PAGE_SIZE)
+ 		return 0;
  
- 	printk(KERN_NOTICE "VFS: Disk quotas %s\n", __DQUOT_VERSION__);
-@@ -3035,8 +3035,7 @@ static int __init dquot_init(void)
- 				SLAB_PANIC),
- 			NULL);
+-	page = (char *)__get_free_page(GFP_KERNEL);
++	page = kmalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (!page)
+ 		return -ENOMEM;
  
--	order = 0;
--	dquot_hash = (struct hlist_head *)__get_free_pages(GFP_KERNEL, order);
-+	dquot_hash = kmalloc(PAGE_SIZE, GFP_KERNEL);
- 	if (!dquot_hash)
- 		panic("Cannot create dquot hash table");
+@@ -284,7 +284,7 @@ static ssize_t get_mm_proctitle(struct mm_struct *mm, char __user *buf,
+ 			ret = len;
+ 		}
+ 	}
+-	free_page((unsigned long)page);
++	kfree(page);
+ 	return ret;
+ }
  
-@@ -3046,7 +3045,7 @@ static int __init dquot_init(void)
- 		panic("Cannot create dquot stat counters");
+@@ -347,7 +347,7 @@ static ssize_t get_mm_cmdline(struct mm_struct *mm, char __user *buf,
+ 	if (count > arg_end - pos)
+ 		count = arg_end - pos;
  
- 	/* Find power-of-two hlist_heads which can fit into allocation */
--	nr_hash = (1UL << order) * PAGE_SIZE / sizeof(struct hlist_head);
-+	nr_hash = PAGE_SIZE / sizeof(struct hlist_head);
- 	dq_hash_bits = ilog2(nr_hash);
+-	page = (char *)__get_free_page(GFP_KERNEL);
++	page = kmalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (!page)
+ 		return -ENOMEM;
  
- 	nr_hash = 1UL << dq_hash_bits;
-@@ -3054,8 +3053,8 @@ static int __init dquot_init(void)
- 	for (i = 0; i < nr_hash; i++)
- 		INIT_HLIST_HEAD(dquot_hash + i);
+@@ -371,7 +371,7 @@ static ssize_t get_mm_cmdline(struct mm_struct *mm, char __user *buf,
+ 		count -= got;
+ 	}
  
--	pr_info("VFS: Dquot-cache hash table entries: %ld (order %ld,"
--		" %ld bytes)\n", nr_hash, order, (PAGE_SIZE << order));
-+	pr_info("VFS: Dquot-cache hash table entries: %ld (%ld bytes)\n",
-+		nr_hash, PAGE_SIZE);
+-	free_page((unsigned long)page);
++	kfree(page);
+ 	return len;
+ }
  
- 	dqcache_shrinker = shrinker_alloc(0, "dquota-cache");
- 	if (!dqcache_shrinker)
+@@ -908,7 +908,7 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 	if (!mm)
+ 		return 0;
+ 
+-	page = (char *)__get_free_page(GFP_KERNEL);
++	page = kmalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (!page)
+ 		return -ENOMEM;
+ 
+@@ -949,7 +949,7 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 
+ 	mmput(mm);
+ free:
+-	free_page((unsigned long) page);
++	kfree(page);
+ 	return copied;
+ }
+ 
+@@ -1016,7 +1016,7 @@ static ssize_t environ_read(struct file *file, char __user *buf,
+ 	if (!mm || !mm->env_end)
+ 		return 0;
+ 
+-	page = (char *)__get_free_page(GFP_KERNEL);
++	page = kmalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (!page)
+ 		return -ENOMEM;
+ 
+@@ -1062,7 +1062,7 @@ static ssize_t environ_read(struct file *file, char __user *buf,
+ 	mmput(mm);
+ 
+ free:
+-	free_page((unsigned long) page);
++	kfree(page);
+ 	return ret;
+ }
+ 
 
 -- 
 2.53.0
