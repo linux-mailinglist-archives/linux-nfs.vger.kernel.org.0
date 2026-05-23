@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-21891-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21892-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AKuHBBbsEWqzrwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21891-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 20:04:06 +0200
+	id uLAtKD3sEWqzrwYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21892-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 20:04:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76D855C048C
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 20:04:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01D4A5C049B
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 20:04:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C92593083944
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:56:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A16E83085E72
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC9D936BCCC;
-	Sat, 23 May 2026 17:56:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F173351C1E;
+	Sat, 23 May 2026 17:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBZAZdcE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7xL6A+P"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF8036A374;
-	Sat, 23 May 2026 17:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A07E2BB1D;
+	Sat, 23 May 2026 17:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779559000; cv=none; b=dlyBXmzE6JBsbDGhViCynL8EJkWag+l2e09U/7Jzh92uBIujq0OiafK7zNNiY6bBRLOu7+7Zwx7ILuiMKsajjOnOb+avcF8IcsjrWQROfaFopdQ4kMcLy/J+lRWbQDudcY4c39lqVJjsq/Rr/U+Skpd/DkJcRWtO0sGHh2aeRqs=
+	t=1779559008; cv=none; b=HJ5KFQoUPkuZ/aNnpraIIc7zZZ+PxJOQl+QeApBuXkeofvj5wMZVgDX1atTMVGwQ2LxAu/xJhqILOkP62opqMB1Gc8DbTznXi1bJeW+xkYo4kO7azEATHcDKQ0CdfPCWblC1YYuqeTKSPiZFZ6Jxro5/GFR2K8fJvVls2jlFTwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779559000; c=relaxed/simple;
-	bh=XU20uLrOwUf9z96AonyK2eJYbZ7IIPLDPk49CorEEY4=;
+	s=arc-20240116; t=1779559008; c=relaxed/simple;
+	bh=ctfgg59w3W9Ve9cILqgBzW84u/gnz1aQjpp1bYMsf+M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MBarusJs5RL80YZEdZp3IqX0NDtqffPA/WSXGJHdrcEiRHMh12MgyGdntESAzOW51pujwoyQD+okXk8HaWJCAm6fHDILJfzGD4RPpYkjMib6je92ZAMEU6P4aRGzsftS8E49ZHOZYC9xb6Qsw4TisK1sBsMoGZmsmbpnotwZsLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBZAZdcE; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30DC1F000E9;
-	Sat, 23 May 2026 17:56:32 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=KzhLlHQHV7uLf91Le/IRxCRl8XieuUGsFGjPlLgGKko6r78Z+ihN+ICFnBI5WTQHJOBlIYcjAHaLz01mez0xwTBu3ROFEwOGTViqPK/QWN+XdZPESZrfG+E4qqCwe78i00+ZKTwY/9SCjrTyCS2eox+WsR+zWdl948+gXzVfR/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7xL6A+P; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 251481F00A3A;
+	Sat, 23 May 2026 17:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779558999;
-	bh=ukrRzZydclNePROfQDTuyRdGagizkwrv8BiO6E2x4AA=;
+	s=k20260515; t=1779559007;
+	bh=4ZPGEhDpFGQ4u9PuMAl3Sd2ga9kaV9qTLPAdSB24HI8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=BBZAZdcEVz/p/msk+v6WT2AsRtCoFYBx3Z0qlKQpUVbqTTbkufOrda1SFIO7l1SpK
-	 0+apuNi1AgkI0nv8JogTKz8wOv4b5mpvv9u/xDPzwAED3kA3JFSABvqXVcMQHbe+lH
-	 VfZAKI61R0AS0GYB6HHcfVezMPaXJquvTDImNyT6NiTXW+RaW6vpy7tY0D+UKyAawh
-	 jCVkOl/9QaWWRWLTIeXzvccQTZ8YykJTCul62f93TjwBE+wLiNuNiL1GEnrH4p3nuK
-	 9ErpfHG5KC/WNMAH6vNpsC3L+3apRTMtE61nyfp/IroAR1bZ/zd+pANUHOaQfbyAvV
-	 D/d7xN/FwOJkQ==
+	b=m7xL6A+PruyXrPWvmsAoypMnFQsfwqCPeKuQPez0FgnKXSO06Un5FB8QHqDpQb4H3
+	 8QknBb1CUFzuPKF4giiNNpeUdLdIIIsPnz1Ln2weva2frsm2ejuVEJ0bFmsRwjAxNu
+	 i/DzE4LeSWzHIfmW+ns99umidgSpMcOIIIYllFd6PYxpQLLXwQ4XMKHOu1/fIaLcCt
+	 zhdM2i/e3b8Ke1xmeXKtbBVQbZpbUhT64iUOlh5+FfVjeiu90PmDJCNxVosZZxEitS
+	 O561RMw4EqfbRr+CldkljoL1KHUYKOwku2ScXQEPToGxFFI4OwACtEaaJ5nvb9VOZi
+	 6JI2zyrKgrbMg==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Sat, 23 May 2026 20:54:28 +0300
-Subject: [PATCH 16/17] binfmt_misc: replace __get_free_page() with
- kmalloc()
+Date: Sat, 23 May 2026 20:54:29 +0300
+Subject: [PATCH 17/17] bfs: replace get_zeroed_page() with kzalloc()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260523-b4-fs-v1-16-275e36a83f0e@kernel.org>
+Message-Id: <20260523-b4-fs-v1-17-275e36a83f0e@kernel.org>
 References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 In-Reply-To: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 To: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
@@ -85,12 +84,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21891-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21892-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -106,44 +105,44 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 76D855C048C
+X-Rspamd-Queue-Id: 01D4A5C049B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-bm_entry_read() allocates temporary buffer using __get_free_page().
+bfs_dump_imap() allocates temporary buffer with get_zeroed_page().
 
 kmalloc() is a better API for such use and it also provides better
 scalability and more debugging possibilities.
 
-Replace use of __get_free_page() with kmalloc().
+Replace use of get_zeroed_page() with kzalloc().
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- fs/binfmt_misc.c | 4 ++--
+ fs/bfs/inode.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index b3d8fd70e8b1..84349fcb93f1 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -704,7 +704,7 @@ bm_entry_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 	ssize_t res;
- 	char *page;
+diff --git a/fs/bfs/inode.c b/fs/bfs/inode.c
+index 19e49c8cf750..0d7b95371271 100644
+--- a/fs/bfs/inode.c
++++ b/fs/bfs/inode.c
+@@ -311,7 +311,7 @@ void bfs_dump_imap(const char *prefix, struct super_block *s)
+ {
+ #ifdef DEBUG
+ 	int i;
+-	char *tmpbuf = (char *)get_zeroed_page(GFP_KERNEL);
++	char *tmpbuf = kzalloc(PAGE_SIZE, GFP_KERNEL);
  
--	page = (char *) __get_free_page(GFP_KERNEL);
-+	page = kmalloc(PAGE_SIZE, GFP_KERNEL);
- 	if (!page)
- 		return -ENOMEM;
- 
-@@ -712,7 +712,7 @@ bm_entry_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 
- 	res = simple_read_from_buffer(buf, nbytes, ppos, page, strlen(page));
- 
--	free_page((unsigned long) page);
-+	kfree(page);
- 	return res;
+ 	if (!tmpbuf)
+ 		return;
+@@ -323,7 +323,7 @@ void bfs_dump_imap(const char *prefix, struct super_block *s)
+ 			strcat(tmpbuf, "0");
+ 	}
+ 	printf("%s: lasti=%08lx <%s>\n", prefix, BFS_SB(s)->si_lasti, tmpbuf);
+-	free_page((unsigned long)tmpbuf);
++	kfree(tmpbuf);
+ #endif
  }
  
 
