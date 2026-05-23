@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21880-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21881-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QCsOJwrqEWqbrwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21880-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:55:22 +0200
+	id oIdXAyTqEWqbrwYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21881-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:55:48 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BF545C020C
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:55:22 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE5AF5C0257
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:55:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DAADA3004D1F
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:55:21 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CD38E300BC70
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:55:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85093191CA;
-	Sat, 23 May 2026 17:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CEB2348875;
+	Sat, 23 May 2026 17:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATnUMplv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSKIMgV4"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960932BB1D;
-	Sat, 23 May 2026 17:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2C3330662;
+	Sat, 23 May 2026 17:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779558918; cv=none; b=D5Yk0u2ixDcwBAQvavekfbdCFPwVAeeEVKRCgVVR46Nc539eMWY1fMdLF6PTf/Kcg8468KVzP1DOTabDtC5Mi5kQcyYmVGOH/EcX8G8KNJK3cLBmOY0tp5bhZ3AmWU7nV2l6MoJW2sKL102bw/lQHNcxtZOHudWesX8ceMuEQfE=
+	t=1779558926; cv=none; b=KDxI1eNSN50GySDPuTcX9Dcaa49P1W4hCV5ZNKESG60yiFYjBp/73Fe3F+DUJ/683zchH+XO4WWUu/txVKZf43fXl62doZxz59mXjNURzzKuAIJATamce7nVrS0hzlVJaHkjOJGFMonYlINbXRNp128oLkQvE7c7uMJkWj6T/mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779558918; c=relaxed/simple;
-	bh=FrSccbbs0hyrfruPAQEdMfu5TavFD0FZc2PEdgCxv1o=;
+	s=arc-20240116; t=1779558926; c=relaxed/simple;
+	bh=MMjGYQ83G7dlBEgngWbzjzg8jJEgk+XNn0ECKJj3GxU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=itaqZc5Hm+YH5oPgEUxe3N0PNYg910DPWHS39iuupv/xz5vK6qCLh/RTLykTH4uMY8KcyVsSn9yh8Ho+REhIiyN74J6+8aRvkXipOqfo7+iJgEGDG+8FdZaPkU8Ol/dyhp0gudiVCQTj5iZyXd4yXs3COl39fos/lOdcK7+ft5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATnUMplv; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 587A61F00A3A;
-	Sat, 23 May 2026 17:55:10 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=BmlU1XNTAEdELMC4OCIGbPn2NgM2cIiOLY6JIqGMLKRfuIJKtxaxM1iph9zBgkRuOj1i/bGJdRL0L+akYNk4nubsImqK9oAuRi1s6u2T5oLOplhcwGrlEJaeqM0kVg0Aq3H1vZZ7jr4oZ/z6qqkRlv59KyWMNh0rp95gUNczmCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSKIMgV4; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9901F000E9;
+	Sat, 23 May 2026 17:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779558917;
-	bh=iuTtZ9uTCrL2gUy5rhFYUqVCvakrQG2oy3wSLfhPcVk=;
+	s=k20260515; t=1779558924;
+	bh=KmuweU/KpiHBgBQmq/LYn9YmIagqoe1ON60urAlAxBY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ATnUMplvANtFqXnPMMG7NSH8t5x5kTr2rh2BxFK2/mVjIEx0Csre+Yxnx89gvCEvB
-	 uHhDVFvMFOGe5KELFWAxCXbgCTVrBKUMFRuF0LRLv78XqrCqluzw3rTHXpk0yXii4K
-	 fDJU8jmq2k/g/NjGNa5JSW+CPvvN53gcwu2ld51g061LrLeCS7I3OlrWU8/r17dOxF
-	 bJ5qv7tKsbMQ1Om/1fVqqTAJpam8n6zNmdQ1U/w3peqvRTGFGpN7qetPQI+JDlr74U
-	 +IrL/dYO28YRNMgTFDRp3h8h0WxOISk9xbTS2rZ8iV2rThE32PwWKlR2cNbCHn6/tO
-	 lPASwzWfCy/xA==
+	b=lSKIMgV425Pk6eUE5rd09QAtj32QltS3Ct51p6+09BGTmdEQiN5fqWWbJ245sUP40
+	 fD+9vsAUhHfZiBF7kZk4yyCoKjlty4W70KXoxE+Ngbl0YdsNhSPh3mXM7spbkSdT9q
+	 FW4lT+b8U7o+ks/hQF/nJzYdKq1MUjcxvvmOuC/5iwz6Q0NcqfULhL2m2G2Q11S6J9
+	 o0NVR6VLe5fABPC3cen+hZVxg0f3wxU+YECMqnVyK+B+MhAGByBix7x+POvJzfsX4C
+	 4YbA4pwrEQu1kMJT2ze16r1ZZ7qSXRvF8GvvHRFRVrT1Q4+E7RfGIzP+/4fdoFv+I5
+	 DZtpEIhLt/Y5Q==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Sat, 23 May 2026 20:54:17 +0300
-Subject: [PATCH 05/17] NFS: replace __get_free_page() with kmalloc() in
- nfs_show_devname()
+Date: Sat, 23 May 2026 20:54:18 +0300
+Subject: [PATCH 06/17] NFS: remove unused page and page2 in
+ nfs4_replace_transport()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260523-b4-fs-v1-5-275e36a83f0e@kernel.org>
+Message-Id: <20260523-b4-fs-v1-6-275e36a83f0e@kernel.org>
 References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 In-Reply-To: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 To: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
@@ -85,12 +85,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21880-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21881-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -106,46 +106,72 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 7BF545C020C
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: EE5AF5C0257
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-nfs_show_devname() allocates a tmemporary buffer __get_free_page().
+Temporary buffers page and page2 allocated by nfs4_replace_transport() and
+passed to nfs4_try_replacing_one_location() are never used.
 
-kmalloc() is a better API for such use and it also provides better
-scalability and more debugging possibilities.
-
-Replace use of __get_free_page() with kmalloc().
+Remove them and the code that allocates and frees memory for these buffers.
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- fs/nfs/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4namespace.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 4cd420b14ce3..8f8a03a68d3d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -623,7 +623,7 @@ static void show_implementation_id(struct seq_file *m, struct nfs_server *nfss)
- 
- int nfs_show_devname(struct seq_file *m, struct dentry *root)
+diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
+index 14f72baf3b30..2a03f02bba7c 100644
+--- a/fs/nfs/nfs4namespace.c
++++ b/fs/nfs/nfs4namespace.c
+@@ -481,7 +481,6 @@ int nfs4_submount(struct fs_context *fc, struct nfs_server *server)
+  * Returns zero on success, or a negative errno value.
+  */
+ static int nfs4_try_replacing_one_location(struct nfs_server *server,
+-		char *page, char *page2,
+ 		const struct nfs4_fs_location *location)
  {
--	char *page = (char *) __get_free_page(GFP_KERNEL);
-+	char *page = kmalloc(PAGE_SIZE, GFP_KERNEL);
- 	char *devname, *dummy;
- 	int err = 0;
- 	if (!page)
-@@ -633,7 +633,7 @@ int nfs_show_devname(struct seq_file *m, struct dentry *root)
- 		err = PTR_ERR(devname);
- 	else
- 		seq_escape(m, devname, " \t\n\\");
+ 	struct net *net = rpc_net_ns(server->client);
+@@ -541,21 +540,12 @@ static int nfs4_try_replacing_one_location(struct nfs_server *server,
+ int nfs4_replace_transport(struct nfs_server *server,
+ 			   const struct nfs4_fs_locations *locations)
+ {
+-	char *page = NULL, *page2 = NULL;
+ 	int loc, error;
+ 
+ 	error = -ENOENT;
+ 	if (locations == NULL || locations->nlocations <= 0)
+ 		goto out;
+ 
+-	error = -ENOMEM;
+-	page = (char *) __get_free_page(GFP_USER);
+-	if (!page)
+-		goto out;
+-	page2 = (char *) __get_free_page(GFP_USER);
+-	if (!page2)
+-		goto out;
+-
+ 	for (loc = 0; loc < locations->nlocations; loc++) {
+ 		const struct nfs4_fs_location *location =
+ 						&locations->locations[loc];
+@@ -564,14 +554,11 @@ int nfs4_replace_transport(struct nfs_server *server,
+ 		    location->rootpath.ncomponents == 0)
+ 			continue;
+ 
+-		error = nfs4_try_replacing_one_location(server, page,
+-							page2, location);
++		error = nfs4_try_replacing_one_location(server, location);
+ 		if (error == 0)
+ 			break;
+ 	}
+ 
+ out:
 -	free_page((unsigned long)page);
-+	kfree(page);
- 	return err;
+-	free_page((unsigned long)page2);
+ 	return error;
  }
- EXPORT_SYMBOL_GPL(nfs_show_devname);
 
 -- 
 2.53.0
