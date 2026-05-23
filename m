@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21875-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21876-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MLapJObpEWqbrwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21875-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:54:46 +0200
+	id AHqvF+3pEWqbrwYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21876-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:54:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9ADD5C01DF
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:54:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D32CA5C01E8
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:54:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7AD07301724E
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:54:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2F0153012CDE
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:54:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CD9330662;
-	Sat, 23 May 2026 17:54:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1AEF30CD81;
+	Sat, 23 May 2026 17:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3/zQq+P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="entiYHeQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAF62C15B0;
-	Sat, 23 May 2026 17:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812EB2BB1D;
+	Sat, 23 May 2026 17:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779558881; cv=none; b=HtrvsO3Dxh5LA0w2elt2jud6x/bwAxEuCCfuZSYSXTZyiVxiciMjXC1eZF17yjaHYy12/zkWy0uk4n6Hj6kcEXt5hgLsomerMVGdS8dzTR6Waaa/itrKZyrG5ySIkbQhesb1sEy9mEydrfhyYlDkm6G8k9NQ+64QLtM7T3HSnkE=
+	t=1779558888; cv=none; b=mIKbWpTgzXl4tp08HLppYIZVtN1Q3x54uY62MWBJXfk0iEkseFonWsqO6v8FT1GWieysvUe3+S6FyPkPwFU6vqfDbX1vOyhD/hqgDqWiMRxK3Fkc1qn20kBE0Cr+zSr9LIxcEgHO0OpZZnB7FKPfb2XktCT+YLktDRNo0l5onPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779558881; c=relaxed/simple;
-	bh=6YKw0+ePnyTC6oQSj2mRm9VaB8KlhBNJFxPcPZ9ZjVs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SkSN0GdSNTQ94ygWNjI01jUOVFjMeOBX4OyZoG3R0Iij/pOjlcVMPC2a154K6zHrGrSU1vFVTgYvgAt9VhO0MJP4/pIoA4mJhW7SnYL8EVMnqdiEXLHrAC2G/KT6087FavYTO8MzPpCMHCsDCtjhCI3Ipp+YjF8i8pX5tL9ZhGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3/zQq+P; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF19F1F000E9;
-	Sat, 23 May 2026 17:54:32 +0000 (UTC)
+	s=arc-20240116; t=1779558888; c=relaxed/simple;
+	bh=r0cd8m/9lPWo3zUY7DznvxrgWtjRfjZqyn47CNuIbBw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ch3OuzPUGE9j1flY1QkNYodUsLVd51skmmb99kAQ2ZaCPbJEQK9pM7Hp99SRzMLyZ/3UQnJ8PRwjqAwVOOgc6kjGs6np7SfXqtg6/VIVLKuR/x/TJ7Ir6aPX0drzR1bY59Q/5M7Zpr8xfVOjra8q8GIv49pkJzGGvICyITE4FFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=entiYHeQ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644EE1F00A3A;
+	Sat, 23 May 2026 17:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779558879;
-	bh=GvzInyki8MnmX5WWa5of2Y0DpS84K4dK1p7AUcMNwXw=;
-	h=From:Subject:Date:To:Cc;
-	b=j3/zQq+PxlG0iZSuFKwgwWYoAsK0CHz5cRp6E32xLvTDfBsCGugqN+ZUucB2u3maM
-	 N/47G+WnhhEqHtkDEU8M1wLF1+2yXGj4atHqd+Kz8vYI5MMcd1e2SjcjGgTs3C/PPr
-	 LNEBfAG6q9WPM8n0ozT5EO+bUdc2Yuja3cB80mDrmrZVSPTkbZZ5Ihx9d90deaNR7S
-	 mZ0UqQsRFOZ9T/rtGsYIPziVm9ozSwmVad9D3l0e8qctz4vx7CktQ0xz7qRHVIXmxD
-	 XmQnFQch2girJp1oe+UvE8X7jDGD54eiVSox604H8ebdWW+Ut3Qct0j+NhUgEhKIIG
-	 QxKtUrZZ+JFJA==
+	s=k20260515; t=1779558887;
+	bh=xNqONibNib/HURDSoCRdl8F/ugaDRVHwkYT5A3d+6K0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=entiYHeQKdJpCq2RAkO9V3DfpsOkdAweTN9otxUQ+O8vgrrn4uoBnmky9dnsr9Fbx
+	 m4wuzqZzR5kX+E9pPoVCmlFVpTAW11ZEZACAYWQV4RjU+r1ZFA22q8b2P5ph0C7YXK
+	 1DXqT1uS77S65UKLbwRFPf6L/4TWqrNbTww9gtbYR5ZfBcfDx1tVRapQXmJMHH+5Qk
+	 n8XIwq073N7B/vc1ZNlgL3xUnvihMimNGqIBpzEqFqEavTPULAoZuVZjF7WDOvBjeD
+	 PUHEN8u42mw/tjliBBXnMPRf2hgPurks8kLmsMdUGiyYXv57Cm7/XiWGt/T2OaWkqZ
+	 RFoyBRXH51pfw==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Subject: [PATCH 00/17] fs: replace __get_free_pages() call with kmalloc()
-Date: Sat, 23 May 2026 20:54:12 +0300
-Message-Id: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
+Date: Sat, 23 May 2026 20:54:13 +0300
+Subject: [PATCH 01/17] quota: allocate dquot_hash with kmalloc()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,10 +55,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMTpEWoC/yWMQQ7CIBBFr9LM2omUAiZexbhgcLDjAg1TjUnTu
- xd0+X7e+ysoV2GF87BC5Y+oPEuD8TBAmmO5M8qtMVhjg/HWIjnMip59Opk8jSE4aO6rcpbv7+d
- y/bO+6cFp6XE3KCoj1VjS3CdyRymywLbt2e6JaoMAAAA=
-X-Change-ID: 20260522-b4-fs-5e5c70f31664
+Message-Id: <20260523-b4-fs-v1-1-275e36a83f0e@kernel.org>
+References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
+In-Reply-To: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 To: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
  Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
  Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
@@ -85,12 +84,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21875-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21876-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -99,74 +98,78 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-0.998];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[rppt@kernel.org,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: D9ADD5C01DF
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: D32CA5C01E8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This is a (small) part of larger work of replacing page allocator calls
-with kmalloc.
+dquot_init() allocates a single page for dquot_hash with
+__get_free_pages().
 
-Also in git:
-https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git gfp-to-kmalloc/fs
+kmalloc() is a better API for such use and it also provides better
+scalability and more debugging possibilities.
+
+Replace use of __get_free_pages() with kmalloc() and get rid of the order
+variable that remained 0 for more than 20 years.
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
-Mike Rapoport (Microsoft) (17):
-      quota: allocate dquot_hash with kmalloc()
-      proc: replace __get_free_page() with kmalloc()
-      ocfs2/dlm: replace __get_free_page() with kmalloc()
-      nilfs2: replace get_zeroed_page() with kzalloc()
-      NFS: replace __get_free_page() with kmalloc() in nfs_show_devname()
-      NFS: remove unused page and page2 in nfs4_replace_transport()
-      NFSD: replace __get_free_page() with kmalloc() in nfsd_buffered_readdir()
-      libfs: simple_transaction_get(): replace get_zeroed_page() with kzalloc()
-      jfs: replace __get_free_page() with kmalloc()
-      jbd2: replace __get_free_pages() with kmalloc()
-      isofs: replace __get_free_page() with kmalloc()
-      fuse: replace __get_free_page() with kmalloc()
-      fs/select: replace __get_free_page() with kmalloc()
-      fs/namespace: use __getname() to allocate mntpath buffer
-      configfs: replace __get_free_pages() with kzalloc()
-      binfmt_misc: replace __get_free_page() with kmalloc()
-      bfs: replace get_zeroed_page() with kzalloc()
+ fs/quota/dquot.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
- fs/bfs/inode.c             |  4 ++--
- fs/binfmt_misc.c           |  4 ++--
- fs/configfs/file.c         |  7 +++----
- fs/fuse/ioctl.c            |  5 +++--
- fs/isofs/dir.c             |  5 +++--
- fs/jbd2/journal.c          |  7 ++-----
- fs/jfs/jfs_dtree.c         | 16 ++++++++--------
- fs/libfs.c                 |  6 +++---
- fs/namespace.c             |  4 ++--
- fs/nfs/nfs4namespace.c     | 15 +--------------
- fs/nfs/super.c             |  4 ++--
- fs/nfsd/vfs.c              |  4 ++--
- fs/nilfs2/ioctl.c          |  4 ++--
- fs/ocfs2/dlm/dlmdebug.c    | 24 +++++++++---------------
- fs/ocfs2/dlm/dlmdomain.c   |  8 +++++---
- fs/ocfs2/dlm/dlmmaster.c   |  5 ++---
- fs/ocfs2/dlm/dlmrecovery.c |  4 ++--
- fs/proc/base.c             | 16 ++++++++--------
- fs/quota/dquot.c           | 11 +++++------
- fs/select.c                |  4 ++--
- 20 files changed, 68 insertions(+), 89 deletions(-)
----
-base-commit: 5d6919055dec134de3c40167a490f33c74c12581
-change-id: 20260522-b4-fs-5e5c70f31664
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 64cf42721496..9850de3955d3 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -3022,7 +3022,7 @@ static const struct ctl_table fs_dqstats_table[] = {
+ static int __init dquot_init(void)
+ {
+ 	int i, ret;
+-	unsigned long nr_hash, order;
++	unsigned long nr_hash;
+ 	struct shrinker *dqcache_shrinker;
+ 
+ 	printk(KERN_NOTICE "VFS: Disk quotas %s\n", __DQUOT_VERSION__);
+@@ -3035,8 +3035,7 @@ static int __init dquot_init(void)
+ 				SLAB_PANIC),
+ 			NULL);
+ 
+-	order = 0;
+-	dquot_hash = (struct hlist_head *)__get_free_pages(GFP_KERNEL, order);
++	dquot_hash = kmalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (!dquot_hash)
+ 		panic("Cannot create dquot hash table");
+ 
+@@ -3046,7 +3045,7 @@ static int __init dquot_init(void)
+ 		panic("Cannot create dquot stat counters");
+ 
+ 	/* Find power-of-two hlist_heads which can fit into allocation */
+-	nr_hash = (1UL << order) * PAGE_SIZE / sizeof(struct hlist_head);
++	nr_hash = PAGE_SIZE / sizeof(struct hlist_head);
+ 	dq_hash_bits = ilog2(nr_hash);
+ 
+ 	nr_hash = 1UL << dq_hash_bits;
+@@ -3054,8 +3053,8 @@ static int __init dquot_init(void)
+ 	for (i = 0; i < nr_hash; i++)
+ 		INIT_HLIST_HEAD(dquot_hash + i);
+ 
+-	pr_info("VFS: Dquot-cache hash table entries: %ld (order %ld,"
+-		" %ld bytes)\n", nr_hash, order, (PAGE_SIZE << order));
++	pr_info("VFS: Dquot-cache hash table entries: %ld (%ld bytes)\n",
++		nr_hash, PAGE_SIZE);
+ 
+ 	dqcache_shrinker = shrinker_alloc(0, "dquota-cache");
+ 	if (!dqcache_shrinker)
 
-Best regards,
---  
-Sincerely yours,
-Mike.
+-- 
+2.53.0
 
 
