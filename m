@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-21881-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21882-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oIdXAyTqEWqbrwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21881-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:55:48 +0200
+	id cB8QC2jqEWqbrwYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21882-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:56:56 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE5AF5C0257
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:55:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D80D25C02D5
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 19:56:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CD38E300BC70
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:55:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2AE3A3030F42
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 17:55:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CEB2348875;
-	Sat, 23 May 2026 17:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE29C34D394;
+	Sat, 23 May 2026 17:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSKIMgV4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHmgC1IK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2C3330662;
-	Sat, 23 May 2026 17:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B9A33F588;
+	Sat, 23 May 2026 17:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779558926; cv=none; b=KDxI1eNSN50GySDPuTcX9Dcaa49P1W4hCV5ZNKESG60yiFYjBp/73Fe3F+DUJ/683zchH+XO4WWUu/txVKZf43fXl62doZxz59mXjNURzzKuAIJATamce7nVrS0hzlVJaHkjOJGFMonYlINbXRNp128oLkQvE7c7uMJkWj6T/mQ=
+	t=1779558933; cv=none; b=h8nyNguUacX3J+nfil7W6FiENPoMkcQz5SrGjN8YnruJUt20CsGuvW3VGMHGLUhEcPuKs8NJ7x8SMWCYo1o2TCxFd6I5lhQ65jITEYs5VKJJXVUU70k5QQ4DFEdiUyHvSuz9f5vBp3SAtEUj7p+caPwxMIMwdlYu6SYwsb0dPA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779558926; c=relaxed/simple;
-	bh=MMjGYQ83G7dlBEgngWbzjzg8jJEgk+XNn0ECKJj3GxU=;
+	s=arc-20240116; t=1779558933; c=relaxed/simple;
+	bh=R3TwlcGQ9Xmi8vrOdCdmDCY7yPMZ24GcwIIOd+RcbTk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BmlU1XNTAEdELMC4OCIGbPn2NgM2cIiOLY6JIqGMLKRfuIJKtxaxM1iph9zBgkRuOj1i/bGJdRL0L+akYNk4nubsImqK9oAuRi1s6u2T5oLOplhcwGrlEJaeqM0kVg0Aq3H1vZZ7jr4oZ/z6qqkRlv59KyWMNh0rp95gUNczmCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSKIMgV4; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9901F000E9;
-	Sat, 23 May 2026 17:55:17 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Xqv7weA4wTGoweo6aANvuqlrV9BhpoQknEEyKrfamhwack0fE8mtHrpBEj9Mb/IjOGxaSkdTVQxEHM5KC753o9YzoJ8Q9MLO5kaFmEqPzP1ixkEnJog+SCkOXMgvUhSJEi6PnDvEmrEgn5JXoC/y37aDxjOP0SvqhA92tOCrMP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHmgC1IK; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B621F00A3A;
+	Sat, 23 May 2026 17:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779558924;
-	bh=KmuweU/KpiHBgBQmq/LYn9YmIagqoe1ON60urAlAxBY=;
+	s=k20260515; t=1779558932;
+	bh=CZp/X5zLgPC9r1L7fUvb/ePIYWMAGoK4GAELkUrcd6A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=lSKIMgV425Pk6eUE5rd09QAtj32QltS3Ct51p6+09BGTmdEQiN5fqWWbJ245sUP40
-	 fD+9vsAUhHfZiBF7kZk4yyCoKjlty4W70KXoxE+Ngbl0YdsNhSPh3mXM7spbkSdT9q
-	 FW4lT+b8U7o+ks/hQF/nJzYdKq1MUjcxvvmOuC/5iwz6Q0NcqfULhL2m2G2Q11S6J9
-	 o0NVR6VLe5fABPC3cen+hZVxg0f3wxU+YECMqnVyK+B+MhAGByBix7x+POvJzfsX4C
-	 4YbA4pwrEQu1kMJT2ze16r1ZZ7qSXRvF8GvvHRFRVrT1Q4+E7RfGIzP+/4fdoFv+I5
-	 DZtpEIhLt/Y5Q==
+	b=XHmgC1IKsMvTM0+2evr64HcGx16lMmVQxeLsbzqY++DoYRk4cRBp7HalnPlBMftcC
+	 SxgU0WB5nl4VEdUeM5DqdHgEmCtWE8ZmMoisQWZNGjx3UxyMH6kKnLIvIknCvqG78W
+	 9DPcb0sWiVFHr4pXHDqNUdCcMRGeXhGZjXpcsRTFz3ktZ6U/o33frEVAMUboeAO80b
+	 9PFdW5yU5Zt7qNf8QvoeVI82N62fOcPNRbE8s6REYzOHoqb2rMh7xwyEZKzOLHD1en
+	 wFbmxmiRtlOWQQbHfw+BASgeYU4qs4yBf1qbPCNlkrIdRKKwbaAfuq5qUKC9ar0XYi
+	 QbnnugkUrUatg==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Sat, 23 May 2026 20:54:18 +0300
-Subject: [PATCH 06/17] NFS: remove unused page and page2 in
- nfs4_replace_transport()
+Date: Sat, 23 May 2026 20:54:19 +0300
+Subject: [PATCH 07/17] NFSD: replace __get_free_page() with kmalloc() in
+ nfsd_buffered_readdir()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260523-b4-fs-v1-6-275e36a83f0e@kernel.org>
+Message-Id: <20260523-b4-fs-v1-7-275e36a83f0e@kernel.org>
 References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 In-Reply-To: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
 To: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
@@ -85,12 +85,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21881-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21882-lists,linux-nfs=lfdr.de];
 	FREEMAIL_TO(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -106,72 +106,46 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: EE5AF5C0257
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: D80D25C02D5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Temporary buffers page and page2 allocated by nfs4_replace_transport() and
-passed to nfs4_try_replacing_one_location() are never used.
+nfsd_buffered_readdir() allocates a staging buffer with __get_free_page().
 
-Remove them and the code that allocates and frees memory for these buffers.
+kmalloc() is a better API for such use and it also provides better
+scalability and more debugging possibilities.
+
+Replace use of __get_free_page() with kmalloc().
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- fs/nfs/nfs4namespace.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ fs/nfsd/vfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index 14f72baf3b30..2a03f02bba7c 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -481,7 +481,6 @@ int nfs4_submount(struct fs_context *fc, struct nfs_server *server)
-  * Returns zero on success, or a negative errno value.
-  */
- static int nfs4_try_replacing_one_location(struct nfs_server *server,
--		char *page, char *page2,
- 		const struct nfs4_fs_location *location)
- {
- 	struct net *net = rpc_net_ns(server->client);
-@@ -541,21 +540,12 @@ static int nfs4_try_replacing_one_location(struct nfs_server *server,
- int nfs4_replace_transport(struct nfs_server *server,
- 			   const struct nfs4_fs_locations *locations)
- {
--	char *page = NULL, *page2 = NULL;
- 	int loc, error;
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index eafdf7b7890f..c99e54b23cd9 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -2407,7 +2407,7 @@ static __be32 nfsd_buffered_readdir(struct file *file, struct svc_fh *fhp,
+ 	loff_t offset;
+ 	struct readdir_data buf = {
+ 		.ctx.actor = nfsd_buffered_filldir,
+-		.dirent = (void *)__get_free_page(GFP_KERNEL)
++		.dirent = kmalloc(PAGE_SIZE, GFP_KERNEL)
+ 	};
  
- 	error = -ENOENT;
- 	if (locations == NULL || locations->nlocations <= 0)
- 		goto out;
- 
--	error = -ENOMEM;
--	page = (char *) __get_free_page(GFP_USER);
--	if (!page)
--		goto out;
--	page2 = (char *) __get_free_page(GFP_USER);
--	if (!page2)
--		goto out;
--
- 	for (loc = 0; loc < locations->nlocations; loc++) {
- 		const struct nfs4_fs_location *location =
- 						&locations->locations[loc];
-@@ -564,14 +554,11 @@ int nfs4_replace_transport(struct nfs_server *server,
- 		    location->rootpath.ncomponents == 0)
- 			continue;
- 
--		error = nfs4_try_replacing_one_location(server, page,
--							page2, location);
-+		error = nfs4_try_replacing_one_location(server, location);
- 		if (error == 0)
- 			break;
+ 	if (!buf.dirent)
+@@ -2458,7 +2458,7 @@ static __be32 nfsd_buffered_readdir(struct file *file, struct svc_fh *fhp,
+ 		offset = vfs_llseek(file, 0, SEEK_CUR);
  	}
  
- out:
--	free_page((unsigned long)page);
--	free_page((unsigned long)page2);
- 	return error;
- }
+-	free_page((unsigned long)(buf.dirent));
++	kfree((buf.dirent));
+ 
+ 	if (host_err)
+ 		return nfserrno(host_err);
 
 -- 
 2.53.0
