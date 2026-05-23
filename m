@@ -1,62 +1,63 @@
-Return-Path: <linux-nfs+bounces-21856-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21857-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aFJtHgmKEWoJnQYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21856-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 13:05:45 +0200
+	id 6PnVKR+LEWpqnQYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21857-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 13:10:23 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C92315BEA23
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 13:05:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12E345BEA4C
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 13:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 66BD030131D0
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 11:05:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 47FA6301652C
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 11:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72AC334E75D;
-	Sat, 23 May 2026 11:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C11EB357D0B;
+	Sat, 23 May 2026 11:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yj04OXDR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDN4vGhO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CA42F1FDE;
-	Sat, 23 May 2026 11:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B129919E839;
+	Sat, 23 May 2026 11:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779534342; cv=none; b=j9CXL7qbRB6vB+DlVCxbz7ALs7e6OJV4BsnKOE9chZnOGGgj01CF1+YD9ZoGaqEGnFN9kHF0iwVzLGkRyzIOAUEnrL0qPETkyOrucrg6UE8sdvvVOpVYB8ul9hOJi8xC851QNYuZQOKnUPW2scSe0LoJ90Wnhm/06sL/JUv3vfU=
+	t=1779534620; cv=none; b=TkIL2GxlrMeBTos0QDlo6bMgGmafm1Q5/GIfviTOOvJI/JBlWJogtrWsSaigJJqBPVKBrX6qVzsTDYQIQgs4TxPi/wwwwLwipZ70B8eSQxMOID8vfvx/vrIUayDoCv1YU55Voms7d6t8zimWNZCZL5ktrGGrw6KBCgp1Uqw183o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779534342; c=relaxed/simple;
-	bh=5hIbtimAoeueDk68q+7boRHwpe0V0Mhhcqs71r4MUlI=;
+	s=arc-20240116; t=1779534620; c=relaxed/simple;
+	bh=j7p2Hr2ZpFaWMyGnVzhRIAyfeSxci2vr8E2R1PAvaik=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mt9gReerD4PdxIYJAsHHdVEsBb3zHMfjdmflBm/KV9Fc1GvCCRkqvmmwnwg3mnVGuSv1MrIjfi4D3X6QCUeHSQP3sLh8fe26Lz0VCQk3ncKwgAvbSPJgC98TzZ0nk5GBdixSGkgucShswEfGfbNhAWcduDrbu63Vl1LKpOrKkSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yj04OXDR; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68381F000E9;
-	Sat, 23 May 2026 11:05:39 +0000 (UTC)
+	 Content-Type:MIME-Version; b=m91UwoOQZlzwW4Que/ahKpOM9EayoJVvR+YYUx82ybVZeO9QELRxp0bzgLullF9oJCPdontRPTHToab4R8nNrSl9myV4fT2QHbyzCn9JyhShKxHk4DEqkwg+ObPTIrA6vc89iDCyqfkj1Qrgh1679zypU8bHxjkukQ73QVD0Xr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDN4vGhO; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA861F000E9;
+	Sat, 23 May 2026 11:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779534340;
-	bh=DHcPsLxl4tklqx/HrPQUMI4h8lhyyZSQ2vjQ3j8IezA=;
+	s=k20260515; t=1779534619;
+	bh=LAn5/rSg38hc53gW2EUGtGsJLHmmYPjsDrEhurL4oco=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Yj04OXDRzVCOCz/aioL8499w0FQ0hhzf3uDwT/9SlQM10chPGw7u68ODmbbzLO7Tu
-	 soVDLtP3wzzExdNDNwNJ8F27LnKMf3cJzv2OoleMKQwuMZeZZ9r/ljgc3Ic06ZUQlf
-	 sFQTCvNtAd8Mqix7UQjBwQvN2zA+QrS5gQHAwdYJzpAvDYvdREURk45pNTsVDck+Si
-	 d89j5AipRYVtCzTVNVfq7UJYTfa9Zy6z3nWLuOU1CsQ4CxBFv8xULPMFI/i4z20uQH
-	 ff+FBBBXcTxGqiSJsHSlBd2kMTUwAXfnGgnyCUDv9HKASKpYAGJWn9Rw9h08nkvcdM
-	 XRbcxVtW5NwDw==
-Message-ID: <bdf9ef246acd34862588e525c0e9a5fe47f37955.camel@kernel.org>
-Subject: Re: [PATCH] lockd: pin next file across nlm_inspect_file lock-drop
+	b=UDN4vGhOtE76+AVhr2HIPQDDSkz0NvvwtxvwtCiZTnAQXEYPqrkfHVW1CBCmEladV
+	 LYWHImgnmMtm0lIDU3GdtrbQTM9UUtY8TdBX02wabi0xtLrLSxWxSonBSktAPK5hQ8
+	 IrhJbhU63dfZCAgbw/PAaq5/W2Ffb+parbM89c6sCx/SI/xwr1OskqYZ7uRe3AkHwk
+	 jYBoXqskKCW2ATtjhNYsDMAse94FNepS/Vt2rppfynXdVW0xU5/qnGVbbe9N6UZF2P
+	 WT5K2DRqAJkgCTxQyy0l+uX4p9l7B7ka1XmvkAMmqeVQdIjHvV4zosPQgrMhxQoZIl
+	 loxD3fO0OfJJg==
+Message-ID: <4d035995bef0f035eae2b613ed09f02f9920d18a.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: restart ssc_expire_umount walk after dropping
+ nfsd_ssc_lock
 From: Jeff Layton <jlayton@kernel.org>
-To: Michael Bommarito <michael.bommarito@gmail.com>, Trond Myklebust
-	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
-	 <chuck.lever@oracle.com>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Date: Sat, 23 May 2026 07:05:37 -0400
-In-Reply-To: <20260523014203.2462827-1-michael.bommarito@gmail.com>
-References: <20260523014203.2462827-1-michael.bommarito@gmail.com>
+To: Michael Bommarito <michael.bommarito@gmail.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Sat, 23 May 2026 07:10:16 -0400
+In-Reply-To: <CAJJ9bXxc1C2coYCkxWYSk-ojq=XatuA_rje3NCA-s3e=NHhbpQ@mail.gmail.com>
+References: <20260523014107.2460863-1-michael.bommarito@gmail.com>
+	 <8793ba93d173b82bd210a223a91664ee245b66dd.camel@kernel.org>
+	 <CAJJ9bXxc1C2coYCkxWYSk-ojq=XatuA_rje3NCA-s3e=NHhbpQ@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -144,15 +145,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21856-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21857-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,oracle.com];
+	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -165,167 +166,30 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url]
-X-Rspamd-Queue-Id: C92315BEA23
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 12E345BEA4C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-05-22 at 21:42 -0400, Michael Bommarito wrote:
-> nlm_traverse_files() walks each nlm_files[] hash bucket with
-> hlist_for_each_entry_safe(file, next, ...). For each matching file
-> it bumps f_count, drops nlm_file_mutex to run nlm_inspect_file()
-> (which may sleep walking blocks, shares, and the inode lock list),
-> then reacquires the mutex and decrements f_count before continuing
-> to the saved next.
+On Sat, 2026-05-23 at 07:02 -0400, Michael Bommarito wrote:
+> On Sat, May 23, 2026 at 6:55=E2=80=AFAM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> > Comment is a bit confusing, given that you replaced
+> > list_for_each_entry_safe() with list_for_each_entry().
 >=20
-> The f_count bump pins the current file across the lock-drop, but
-> nothing pins next. Any nlmsvc thread that holds the last reference
-> on the file at next will, during that window, call
-> nlm_release_file() -> nlm_delete_file() under nlm_file_mutex,
-> hlist_del() it from the bucket, and kfree() it. When
-> nlm_traverse_files() reacquires the mutex and the macro reads the
-> next entry's f_list.next on the following iteration, the read lands
-> in the freed slab.
+> Sorry, that's left over from an earlier patch attempt that introduced
+> a different issue.  How would this comment look?
 >=20
-> A naive restart-on-action variant would deadlock-spin against an
-> nlm_release_file holder: nlm_inspect_file() does not always drain
-> the file (it can return 1 with an RPC still holding f_count above
-> the cleanup threshold), and the outer predicate is_failover_file()
-> matches static attributes of the file, so a restart can keep
-> re-finding the same un-cleanable file until the external RPC ref
-> drops.
->=20
-> Pin the neighbour explicitly instead. Walk the bucket with two
-> locally-pinned cursors at a time: file (current, pinned by the
-> prior iteration's next bump) and next (one ahead). Drop file's pin
-> at the end of each iteration, then advance to next, which is still
-> alive because we hold its f_count above zero across the unlock.
-> This bounds the walk at O(N) per bucket and never observes a freed
-> neighbour. Factor the f_count/list/share/lock cleanup into a
-> helper so the no-match path also drops a stale empty file rather
-> than leaving it in the table.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 01df9c5e918a ("LOCKD: Fix a deadlock in nlm_traverse_files()")
-> Assisted-by: Claude:claude-opus-4-7
-> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
-> ---
->  fs/lockd/svcsubs.c | 61 +++++++++++++++++++++++++++++++---------------
->  1 file changed, 42 insertions(+), 19 deletions(-)
->=20
-> Reproduced under UML + KASAN with a loopback NFSv3 mount, 768
-> concurrent POSIX fcntl(F_SETLKW) holders, and parallel writes to
-> /proc/fs/nfsd/unlock_filesystem forcing nlmsvc_unlock_all_by_sb()
-> to walk the table while clients churn locks.
->=20
-> Stock kernel:
->=20
->   BUG: KASAN: slab-use-after-free in nlm_traverse_files+0x71d/0x9d0
->   Read of size 8 at addr 0000000070314800 by task nlm-init-...
->=20
->   Allocated by: nlm_lookup_file via nlm4svc_proc_lock
->   Freed by:     another nlm_traverse_files instance freeing a
->                 file whose f_count dropped to zero during the
->                 nlm_inspect_file() unlock window
->=20
-> Patched UML kernel ran the same harness silently.
->=20
-> Pin-next was chosen over restart-on-action because the latter can
-> livelock when nlm_inspect_file() returns 1 with an RPC reference
-> still holding the file above the cleanup threshold and the outer
-> is_failover_file() predicate matching static attributes.
->=20
->=20
-> diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
-> index dd0214dcb6950..2bfa32207f10c 100644
-> --- a/fs/lockd/svcsubs.c
-> +++ b/fs/lockd/svcsubs.c
-> @@ -295,36 +295,59 @@ static void nlm_close_files(struct nlm_file *file)
->  /*
->   * Loop over all files in the file table.
->   */
-> +static void nlm_file_release(struct nlm_file *file)
-> +{
-> +	if (list_empty(&file->f_blocks) && !file->f_locks
-> +	    && !file->f_shares && !file->f_count) {
-> +		hlist_del(&file->f_list);
-> +		nlm_close_files(file);
-> +		kfree(file);
-> +	}
-> +}
-> +
->  static int
->  nlm_traverse_files(void *data, nlm_host_match_fn_t match,
->  		int (*is_failover_file)(void *data, struct nlm_file *file))
->  {
-> -	struct hlist_node *next;
-> -	struct nlm_file	*file;
-> +	struct nlm_file *file, *next;
->  	int i, ret =3D 0;
-> =20
->  	mutex_lock(&nlm_file_mutex);
->  	for (i =3D 0; i < FILE_NRHASH; i++) {
-> -		hlist_for_each_entry_safe(file, next, &nlm_files[i], f_list) {
-> -			if (is_failover_file && !is_failover_file(data, file))
-> -				continue;
-> +		file =3D hlist_entry_safe(nlm_files[i].first,
-> +					struct nlm_file, f_list);
-> +		if (file)
->  			file->f_count++;
-> -			mutex_unlock(&nlm_file_mutex);
-> -
-> -			/* Traverse locks, blocks and shares of this file
-> -			 * and update file->f_locks count */
-> -			if (nlm_inspect_file(data, file, match))
-> -				ret =3D 1;
-> +		while (file) {
-> +			/*
-> +			 * Pin the next neighbour before we drop the mutex
-> +			 * for nlm_inspect_file(); a concurrent
-> +			 * nlm_release_file() under the same mutex would
-> +			 * otherwise be free to unlink and kfree it during
-> +			 * the unlock window, leaving us to dereference a
-> +			 * freed slab when we walked to next afterwards.
-> +			 */
-> +			next =3D hlist_entry_safe(file->f_list.next,
-> +						struct nlm_file, f_list);
-> +			if (next)
-> +				next->f_count++;
-> +
-> +			if (!is_failover_file || is_failover_file(data, file)) {
-> +				mutex_unlock(&nlm_file_mutex);
-> +
-> +				/*
-> +				 * Traverse locks, blocks and shares of this
-> +				 * file and update file->f_locks count.
-> +				 */
-> +				if (nlm_inspect_file(data, file, match))
-> +					ret =3D 1;
-> +
-> +				mutex_lock(&nlm_file_mutex);
-> +			}
-> =20
-> -			mutex_lock(&nlm_file_mutex);
->  			file->f_count--;
-> -			/* No more references to this file. Let go of it. */
-> -			if (list_empty(&file->f_blocks) && !file->f_locks
-> -			 && !file->f_shares && !file->f_count) {
-> -				hlist_del(&file->f_list);
-> -				nlm_close_files(file);
-> -				kfree(file);
-> -			}
-> +			nlm_file_release(file);
-> +			file =3D next;
->  		}
->  	}
->  	mutex_unlock(&nlm_file_mutex);
+> Concurrent nfsd4_ssc_cancel_dul() can free an item while spinlock is
+> dropped for mntput() above, so restart the walk from the head so no
+> stale pointer is followed.
 
-Sashiko seems to think there is a regression here. See:
 
-https://sashiko.dev/#/patchset/20260523014203.2462827-1-michael.bommarito@g=
-mail.com?part=3D1
+Sure, looks good. FWIW, the "restart the loop after dropping the lock"
+pattern is pretty common across the kernel, but it is good to lay out
+the rationale in a comment.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
