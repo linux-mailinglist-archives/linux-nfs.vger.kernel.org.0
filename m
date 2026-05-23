@@ -1,146 +1,155 @@
-Return-Path: <linux-nfs+bounces-21871-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21872-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +EB3Mb7TEWrvqwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21871-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:20:14 +0200
+	id wC+oCF3bEWq0rQYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21872-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:52:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4733A5BFC6D
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:20:13 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89FEE5BFE4E
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4D34F3035807
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 16:17:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8BDBB300E5F9
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 16:52:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C625C3242D9;
-	Sat, 23 May 2026 16:17:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADC1C31195B;
+	Sat, 23 May 2026 16:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zt3lXbsH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuhqxF+c"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A952311968;
-	Sat, 23 May 2026 16:17:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB63221FB6
+	for <linux-nfs@vger.kernel.org>; Sat, 23 May 2026 16:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779553065; cv=none; b=eQBIgNaZvroxfwZzpSVejyJi+9kyvAnPmWoD6vyaD18LxjCyFKSE7gmtDnikkK0EWhDitU6JsXC3TrZThTrd+eBs8AfcS/LK7cjXv+XRzqSCeTXH1FKCMs8D+e+NupzB+chb08WBSkjv2D4lb/PHYSiEBRWUQhIl7TJcC1jUzGw=
+	t=1779555161; cv=none; b=mX+xxoA2jzb9s0Hqa6owMYPRjYZYy/80opUvYp6kfi6IYlKbWRssQ6g4B9en+vJ/OsZ662fIl8Bb8f/4QJPCdo1K6nthGNcjJNHyb/wd8iPNdS5fBX1GaO3OXqNyy5gKiIM6ajNkEj18gfD+G6k26Zf5ifo3xExEHV7frP5I3U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779553065; c=relaxed/simple;
-	bh=X4x/AvCaoMxutTY6MD1BKDmSKvURH2w1AeSQB5QH6EQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AfRS1w8Kx8xlTDaWU3FBuxUlBapDedQzqnV0CmbXaKYHuyisI/Sov/RuzBUFjYLPN/ZS2S2M3ybONe7ptDDjOhuJ8lm0B1hClVX59me/7tMeoUggXeI46aWcQr7NxSYQmTMtEQ6LJiGUdFuPqyiI3IGS9fQYXEx49ChTcinrB6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zt3lXbsH; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEDA1F00A3C;
-	Sat, 23 May 2026 16:17:43 +0000 (UTC)
+	s=arc-20240116; t=1779555161; c=relaxed/simple;
+	bh=tNixGLk/kHI+rRk29OiHg7VCLfhrEZEjsKn/9rXhn9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uexZSceYQKP8PIH+EHRmtNRfBknBEMNRPgGnInsAYWRb+Y9g5LacRYicW5Ueyj86jTj2Gg2X1rDabfGrxfkEknu4EqnzvrFtcnaaZrhPu4yv5qWu+7s0f7G7ofkvKMfCRD448elT0Z/89YCEsWb1rpPs+BMzWbIH4pOOM2f6cZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuhqxF+c; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8312B1F000E9;
+	Sat, 23 May 2026 16:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779553064;
-	bh=sxess6041C7VID601A6ElDmI3D6gxpgyrdXxL4Gizk8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Zt3lXbsHkR4fuPNM04dgjQvcqoTpH9A/aDEfwux8d5DwMhUNHbo27aHSXDY7L9Ore
-	 xvjfoeuVf5qB7WrNioZlCMAl23pKji0q9wA+mPT57UeMcvaX6HeZvwDgaU5zcQ3pzX
-	 nb32BisoK3JQmhADY8+12FCRHbEEEbdrl9NU1kQdILJa38BfL+LufQTzZAd4TG2yBB
-	 HuLpBH71Bvhes6jxfvSJquPQXnBY9MvQl2zcC5rJ/dgZbe7ufTlKuOay7QqR7Vfm1E
-	 S9OHuRzvvkcS5j3yK66MhErdZ/d0Uru5jPUcVv/4Wr46YkjXUFp3q0v0tljz0N0Bw7
-	 nRwg+ZWb/MwlA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Sat, 23 May 2026 12:17:37 -0400
-Subject: [PATCH 4/4] nfsd: fix ino_t format specifier in
- nfsd_handle_dir_event tracepoint
+	s=k20260515; t=1779555160;
+	bh=0jP8nTyRtg0rkBk4SpSIH5+VkUx1g4zqZ9hM0xx+gw8=;
+	h=From:To:Cc:Subject:Date;
+	b=NuhqxF+cRNpIsqZg7ahb+osq/uCyEekk1HytHLBLt0yJ9nb6xhua5W/3g7VcUNE1K
+	 bInZEH9XrkNkJx/z/bmxewCRM3hRIIZYH/hXG5XWGPoLrv74U18BzReZ/fb/BR34Px
+	 zu0CmYHHbyaOVPLxDBSxnTmoxRnuFD7dqWXPtwBchzIkXvwVozdr+E4npnB9qEF6pO
+	 75u0fSqP2FsQxtmgGJxI2zdW9rxuxiIurhNmwiECK/BWaxfJD9QlimMSotxHk0h1hy
+	 D+fAaDAvmdWkO75OxechN3ZsAZ7Yssar0i6eGF7eIWfV4twEzY1fBayu4DsUfE7bmw
+	 yvVSDPYJKe+YQ==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Chris Mason <clm@meta.com>
+Subject: [PATCH] SUNRPC: Reject short RFC 4121 MIC tokens in gss_krb5_verify_mic_v2
+Date: Sat, 23 May 2026 12:52:37 -0400
+Message-ID: <20260523165237.510204-1-cel@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260523-dir-deleg-fixes-v1-4-142c884f85ce@kernel.org>
-References: <20260523-dir-deleg-fixes-v1-0-142c884f85ce@kernel.org>
-In-Reply-To: <20260523-dir-deleg-fixes-v1-0-142c884f85ce@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=984; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=X4x/AvCaoMxutTY6MD1BKDmSKvURH2w1AeSQB5QH6EQ=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqEdMj/vsy5EVxJNkdE5X6F/kRFBvpw7Ng8DKq7
- RaLE4BClwiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahHTIwAKCRAADmhBGVaC
- FZoeD/9Fsm6r6QJAyZOe6TZnbmKYlVWNRi8SKiIkMtb+iYDGsT3FRdJIspnp0IRQVSJFlrepv7i
- BcFlzrDB0qT5ikyiBaL7YL/amToPDPS7f8OadLfjkZis7Pce0wOq2yI41EsvmvdFj2w5miCUszg
- io7xXHaZpsCj3+1YA45o2hlvVqgg/47YyQWSDtdcfaVPRo51wHNKNN+6xZ39HVmFWiL7aSD4oVu
- 3hEJo88dXZX7g+H/empZfm2+WqFZ/Dil2cBDKAK7qyysjMSnhzziPgOnlwAjmf2loBYvDLIllkI
- aj64ZRa+8HTxGx1NzFGylors0+pND162mYUdjOlMGk9+sC6kA79GN6MzPDs7gbRCceUHzhl/LAw
- rLtWe7cXGRkRg6gHUuYIZlf6pqy2pm1YgWmz8yxCdPv4A8XGa7W3qX/xQ6P6DfxE+OfUgHkJiRx
- 9ZzzcCpT1rkLFKw95bqSjJo4Fgyqpo1siyDD+3QDWz29/WYlBN374OyEYjNLEAjVWuYtLf9ql4P
- JLPjhaQX4P9MCxCXJOedRAo+Lfcl/kCEDhE4652aqjZZkZ8JDRqThKHU2P/8BvjV+cQzxJJZ4dF
- qSJjbwGl3YY00C1pGy+BYby+5xQK5KG0MP2NrbQxNYfGp3QalcYa5HUNeCRgvY7oD+t4LhFGuBX
- qcEwwfYJ7zo4kVQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21871-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21872-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 4733A5BFC6D
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mic.data:url]
+X-Rspamd-Queue-Id: 89FEE5BFE4E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-inode->i_ino is now a u64. Use the same size for the tracepoint.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+gss_krb5_verify_mic_v2() reads the token ID at ptr[0..1], the flags
+byte at ptr[2], and padding at ptr[3..7], then passes
+ptr + GSS_KRB5_TOK_HDR_LEN and cksum_len to gss_krb5_mic_build_sg().
+None of these accesses check read_token->len first.
+
+The minimum safe token size is GSS_KRB5_TOK_HDR_LEN (16) plus
+ctx->krb5e->cksum_len (12-24, depending on the enctype).  All callers
+accept shorter tokens from the wire:
+
+ - gss_unwrap_resp_integ() enforces only an upper bound
+   (offset + len <= rcv_buf->len) before allocating
+   mic.data = kmalloc(len) and passing it to gss_verify_mic().
+   A malicious NFS server can therefore supply a short checksum
+   opaque, producing a small slab allocation that the Kerberos MIC
+   verifier reads past.
+
+ - gss_validate() enforces only len <= RPC_MAX_AUTH_SIZE (400)
+   before passing the wire-supplied length to
+   gss_validate_seqno_mic(), which constructs a mic xdr_netobj
+   and calls gss_verify_mic().
+
+ - svcauth_gss_verify_header() enforces only
+   checksum.len >= XDR_UNIT (4 bytes) before dispatching to
+   gss_verify_mic().
+
+ - svcauth_gss_unwrap_integ() checks only that the checksum fits
+   in gsd->gsd_scratch.
+
+Add a length guard at the top of gss_krb5_verify_mic_v2(), before any
+ptr[] access or scatterlist construction.  Well-formed MIC tokens from
+gss_krb5_get_mic_v2() already have exactly GSS_KRB5_TOK_HDR_LEN +
+cksum_len bytes, so valid traffic is unaffected.
+
+Reported-by: Chris Mason <clm@meta.com>
+Fixes: de9c17eb4a91 ("gss_krb5: add support for new token formats in rfc4121")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sunrpc/auth_gss/gss_krb5_unseal.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 3d0f0bd30d90..1d5d11f914f2 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -1384,7 +1384,7 @@ TRACE_EVENT(nfsd_handle_dir_event,
- 	TP_STRUCT__entry(
- 		__field(u32, mask)
- 		__field(dev_t, s_dev)
--		__field(ino_t, i_ino)
-+		__field(ino_t, u64)
- 		__string_len(name, name ? name->name : NULL,
- 				   name ? name->len : 0)
- 	),
-@@ -1394,7 +1394,7 @@ TRACE_EVENT(nfsd_handle_dir_event,
- 		__entry->i_ino = dir ? dir->i_ino : 0;
- 		__assign_str(name);
- 	),
--	TP_printk("inode=0x%x:0x%x:0x%lx mask=%s name=%s",
-+	TP_printk("inode=0x%x:0x%x:0x%llx mask=%s name=%s",
- 			MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
- 			__entry->i_ino, show_fsnotify_mask(__entry->mask),
- 			__get_str(name))
-
+diff --git a/net/sunrpc/auth_gss/gss_krb5_unseal.c b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+index b5fb70419faa..4d12d49434c2 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_unseal.c
++++ b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+@@ -89,6 +89,9 @@ gss_krb5_verify_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *message_buffer,
+ 
+ 	dprintk("RPC:       %s\n", __func__);
+ 
++	if (read_token->len < GSS_KRB5_TOK_HDR_LEN + cksum_len)
++		return GSS_S_DEFECTIVE_TOKEN;
++
+ 	memcpy(&be16_ptr, (char *) ptr, 2);
+ 	if (be16_to_cpu(be16_ptr) != KG2_TOK_MIC)
+ 		return GSS_S_DEFECTIVE_TOKEN;
 -- 
 2.54.0
 
