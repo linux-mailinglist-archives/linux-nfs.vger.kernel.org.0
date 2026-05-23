@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-21867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21868-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eGAzFynTEWrvqwYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21867-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:17:45 +0200
+	id uIZqHz/TEWrvqwYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21868-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:18:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACB3B5BFC2F
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:17:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C05E5BFC47
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 18:18:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4CCB33014654
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 16:17:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9EE173014290
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 May 2026 16:17:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5362C235E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2513318ED2;
 	Sat, 23 May 2026 16:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DfWQM52A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBeY+Xvr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D34221FB6;
-	Sat, 23 May 2026 16:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23D622A4EE;
+	Sat, 23 May 2026 16:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779553062; cv=none; b=JOlneQYt1ziiKgqSc2GZWFDhmkc+4/x7wpFoCaPq8CJg+EoL05QcxtXDKy9NKF4jaoNqQmcgYOWnkAYl5qWWpt2/+dQScRvGfMpY8po3M7a99NbHkx8DBz27Y+1M28cLrIynAiBZRoIzXwi9U2x7Lu1sAPHCudKd9toGoOJXf5w=
+	t=1779553062; cv=none; b=N9Fg6cQoQ0g5WJEOKnVsE9TSd3ZFR0+7Ep4tUM1efwRy61n24ZAuH/WOIVW9EFUfD/sGqua+th5dfy17Uh5swpWk/zCoRXRT/URKN9PJxwonIahNZ1ZcBmsKL2KnV6XoP8Tc8+N2rZRTlrrguEhcV9HAFIcS/b3KFKwmfQLQF80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779553062; c=relaxed/simple;
-	bh=NWZu26HG+LtrMwiaLZ+diFv1o6LuzDt1ia43NoHxK/w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FXWS+EwESOnMgxHIfBT/eoUZPzYuUBodyIFa3wu/efUOysg68SWUg/0bRD+s6al9Wuo/JY6e7gt6F7adHIBfPNiuFeHKY/KaD0pcFHWK7CS3NWpi8Z6q2b9KD3N21I30AnfdSeDJaCjUI4Z/0ipVj/Iu33ECxhK408ggEQDwZDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DfWQM52A; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1029A1F000E9;
-	Sat, 23 May 2026 16:17:39 +0000 (UTC)
+	bh=x1fAb7qeTFbcK02DygPDSguOWqiqmcaEiZa0YrbM1FE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uqzMX3waDKua1/xN/0VIOCHQqcLIcGPngd5Lhlqfuzawx22LVrmlFMlW2I8pcotayz3nb9IBFBbWtW6NVB2vMRe4J8mNFw5NitVNZmfxQBs9zojnbYEcWUvtglWQPvOh5zfNuyHEng2+5pPi08qvq5TxTfs35mbZbJoUQurb7zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBeY+Xvr; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04EFA1F00A3C;
+	Sat, 23 May 2026 16:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779553060;
-	bh=mC2QtNjKdyEsGVmvf3eGva20w5Iy4Zdph0R4VALrXdI=;
-	h=From:Subject:Date:To:Cc;
-	b=DfWQM52AwCItEDBhWH7x7ab8vwwmySrXXqodpyxoiN8//LQk/x8Wo/MCfmqWAcHU+
-	 a/MpCw85XPPl9MaCRmNPAFlsYxhnQAy/vTtaI0wPTVxvyGePnhSBsyHlwOX6Dzs5Y4
-	 93lJCLyrd3jnlkFm6wFCJcpagEA8u1onrzoNA14iRzycMb9OtTr0FRcM6rEEHix57I
-	 aSq59cfsUzpaEdqNSRc6bEz381+x3sqyFG8nsxkckN9+HoQ3m9qNHLKe6r2p3PP4q6
-	 lAbDXP+8l7K3agruG7EEepXCNsjfKDX9Z46FKXuy/mvtI0kbSWO1BUdu/R2qfDUDGh
-	 37v5GMYMuO1nA==
+	s=k20260515; t=1779553061;
+	bh=zZTLvdfyZfQnACyeuJT0lpOyJDhgRcx9Fe66L5RJbY8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=OBeY+XvrhOJYaUhkNeBmIHLWDd+cSwtN6ZS0VLPQZCAaNY3xaL1eaZ0ed/XnbXEI5
+	 HQYWhyWeAdKJ6ew8cpKWGIaMg/MManr1uVKV0LaCc07WxsGxYZLPhNXA3EMJ6snGDG
+	 0nYF3YfCwopktUjduHRNM26QTzKghP3qPlHHQMXHAAC5av8KlHKHV9jNfBK01uWPmN
+	 iGWdQdPu/+OMZpIlPQhQlLnefFEzWmmIUU1/R2eMs9e0v5hYLP3klKWJucrYvKhvKG
+	 Pm3nEShHj5RIcKI6+okSwx4xfoAqZcF93TDvx6Duq42JK+VlvoVgxOgnqyZAn9AzHJ
+	 CEFJ24x3PSNkw==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 0/4] nfsd: follow-on fixes for directory delegations
-Date: Sat, 23 May 2026 12:17:33 -0400
-Message-Id: <20260523-dir-deleg-fixes-v1-0-142c884f85ce@kernel.org>
+Date: Sat, 23 May 2026 12:17:34 -0400
+Subject: [PATCH 1/4] nfsd: check for FILEID_INVALID in setup_notify_fhandle
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,41 +55,40 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3L0QpAQBBG4VfRXJtaw27yKnKB/TEltFtS2ne3u
- fw6nZcigiJSV7wUcGvU88ioyoLmbTxWsPpsEiPOWKnZa2CPHSsv+iByI8b6dhE7wVG+roA/5Kk
- fUvoAJrW0oWEAAAA=
-X-Change-ID: 20260523-dir-deleg-fixes-4205d8f25be6
+Message-Id: <20260523-dir-deleg-fixes-v1-1-142c884f85ce@kernel.org>
+References: <20260523-dir-deleg-fixes-v1-0-142c884f85ce@kernel.org>
+In-Reply-To: <20260523-dir-deleg-fixes-v1-0-142c884f85ce@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=835; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=NWZu26HG+LtrMwiaLZ+diFv1o6LuzDt1ia43NoHxK/w=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqEdMiDdM5aCNBxB4FbJhGMqf6MfRahhWY351KH
- OX0nUbGYNWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahHTIgAKCRAADmhBGVaC
- FVZaEAC/Pv89+ACMkyDTekhvdGSXIT3DbSRokc9STdeOl5j24S7F83IYZGEBD1Tw/qqWVRkC55s
- oVxkrowfuUWR1Xy4UHz1YIgaZ3BokWaFsTBjK7GILIVA6PsWvUFzEjTNlnLeUPvoKMq2QXC/X5M
- ilgF+jRLTZh1lOXgi8G42AtKJkoUOfWze7XdvFO41ZJM0XvEJmvwkTGRgxk+9/bwZcRuItUZgTz
- yL++t6101P6wsn4H/cMKWdyC4oDsuMqRN7t+c8H0MYurQ80b5B2mUGolNygpfDT1k4jOM9Mdqlk
- vuf1oumDnRYM076/JgfzaC5jzkMwl8hQbfa8dhu7Q9+PaOX7Wi23ZFBXFNS/k5d2HBJN0YUozOL
- 9wk/ZySPv8VUYp4/BGHzGtIkkBbOqmi8UskV3x/dksaEUVjx/M19EuAL8ixfVtZDxaprD+XPxFu
- ecRSzyCYEhQtvrECuXG+0Gqa9ceve85t9JoZX/eYQ7qMOcN/vHsQHFzb8My8KSXi4MH6BII1Z4u
- iDFjajaFoxZBPvSPVKVYnQ85OsKaWIKnpB/jN57lT7zxnw0wLuEvxcfvamSSNGXhzvb2hAqhLJS
- bMtuBRvChMXiJ5TrkpGAXBVR4hi/pd8Y2xgSjeuwkm/jIvM5WlnELaWquQQJYJA03nldhgeqTCH
- K4Qr0FW+bWGgOtA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1084; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=x1fAb7qeTFbcK02DygPDSguOWqiqmcaEiZa0YrbM1FE=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqEdMiT1mfRWREbCBvqDOdSAm4D4x1q4JWqa85z
+ HGMCtj+yA2JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahHTIgAKCRAADmhBGVaC
+ FW9gEACp5aiZtgjKdn6Hwmk8Zv67DVQqa+4ED8M6VNy9cbAM7ggPTBd7ywcbuZlatWxs3JgQouQ
+ tdp/Zipx00jgLlt4DZ19a8kbx/EgkrNpwHHHtsxnXRtKJws182paLxMaIntww5sDq1b+JSFYC3w
+ xJzYzdtWK5pnUDslxOaBNXkVlaHPZXRFeDjw12cQNZkmK3dF+uEiAztBonSkbhqUTulrfa6IIy5
+ X80jG6saz944F6udUdumwKDtxqj2qAVMq39fDDIJUFaALvvfsByx9Vb1vyh1tA5Q7dIxwlVsF04
+ 7rqterqsQbmvVeqn9OlslrD71P3nBz1hj0lPXwoxCFdT3B3EQJjm4eVbla+iWiq1Bu9KPtlwuM8
+ dwUcS2mku3AtrTBpCHLE3wBM5pMxl6PGJFC3weZJIIHpH4Wyc87KXIFQ36Wtu2ohoPP55i94adG
+ Pfsr/ZcO574+6Bl5L3l5nPOD9HXk9w9PLK7PrMQQjc4QTjTpyvAgkR4lUmhIVQuOZXJf1Z/xrQW
+ PAm8alM0x12HT9hbTxGvrrvSvDtJavcmxmqePqt8Jo67htOmbTT94wxC6qxRK/z2Kf/oMnSicNQ
+ qbyl/301jvIv4tvgat40hYgrnuRtDpVM6gXqkZn75cYOL8pt2g+6zJFu1jt/auVMQ4LOyGBy+07
+ LsOdfjIax8vaahw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21867-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21868-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -101,38 +100,46 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: ACB3B5BFC2F
+X-Rspamd-Queue-Id: 1C05E5BFC47
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Just a few small fixes for problems that Sashiko noticed flagged during
-review. None are super-critical but it'd be good to have them fixed
-before the feature ships.
+exportfs_encode_inode_fh() can return FILEID_INVALID (255) when the
+buffer is too small. Since this is a positive value, the existing
+check (fileid_type < 0) won't catch it. If this happens, maxsize will
+have been updated to the required (larger) size, and fhp->fh_size
+could overflow the fh_raw buffer, leading to an out-of-bounds read
+when the filehandle is later encoded onto the wire.
+
+Add a check for FILEID_INVALID alongside the existing negative return
+check.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (4):
-      nfsd: check for FILEID_INVALID in setup_notify_fhandle
-      nfsd: use empty string for directory name in NOTIFY4_CHANGE_DIR_ATTRS
-      nfsd: check delegation status in nfsd4_cb_notify_done
-      nfsd: fix ino_t format specifier in nfsd_handle_dir_event tracepoint
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- fs/nfsd/nfs4state.c | 3 +++
- fs/nfsd/nfs4xdr.c   | 9 +++------
- fs/nfsd/trace.h     | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
----
-base-commit: 479723a81683c7a5bdaff48ec6968fad3ac1ae24
-change-id: 20260523-dir-deleg-fixes-4205d8f25be6
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 2143fb6d5e3f..2f8d26601581 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4209,7 +4209,7 @@ setup_notify_fhandle(struct dentry *dentry, struct nfs4_file *fi,
+ 	}
+ 
+ 	fileid_type = exportfs_encode_inode_fh(inode, fid, &maxsize, parent, flags);
+-	if (fileid_type < 0)
++	if (fileid_type < 0 || fileid_type == FILEID_INVALID)
+ 		return false;
+ 
+ 	fhp->fh_fileid_type = fileid_type;
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.54.0
 
 
