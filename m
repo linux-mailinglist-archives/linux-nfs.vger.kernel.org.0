@@ -1,48 +1,49 @@
-Return-Path: <linux-nfs+bounces-21894-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21895-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8H7cMR5OEmqjxgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-21894-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	id 7JW5NB5OEmq3xgYAu9opvQ
+	(envelope-from <linux-nfs+bounces-21895-lists+linux-nfs=lfdr.de@vger.kernel.org>)
 	for <lists+linux-nfs@lfdr.de>; Sun, 24 May 2026 03:02:22 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4513C5C0FF9
-	for <lists+linux-nfs@lfdr.de>; Sun, 24 May 2026 03:02:19 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 825105C0FFA
+	for <lists+linux-nfs@lfdr.de>; Sun, 24 May 2026 03:02:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 56B8A300DDE0
+	by tor.lore.kernel.org (Postfix) with ESMTP id E2721300D621
 	for <lists+linux-nfs@lfdr.de>; Sun, 24 May 2026 01:02:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C37418FDBD;
-	Sun, 24 May 2026 01:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8079A1E1DF0;
+	Sun, 24 May 2026 01:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1HWQHy4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANi4klcc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810E170818
-	for <linux-nfs@vger.kernel.org>; Sun, 24 May 2026 01:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B97F2E413
+	for <linux-nfs@vger.kernel.org>; Sun, 24 May 2026 01:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779584537; cv=none; b=Pwcy5m8JDeXZHPg8Xq+lKTrnBGsjIBrpxYGHzMBRd/BJnBvKbwa33auk32aYCctKcWmIUJVzaPpSROybp+eU0QM1AyGRlUnjxd4gXZ5thLZm02WLlRVuypGvAtokgzFIJoO7yPXh8i6mWeYwchwE5GbPvEUurTiE7qdT8YTBIk0=
+	t=1779584538; cv=none; b=qNmejJL4vtdLwfr+ov0hq0BfR1Vmbme6HU+PqXObzBvs4VbUHkV2DAOUuOIWLQIhc1ssN/jpekf3yymTVT8y5ESU5nxyVd8lIA9sWyNl/zx5ur3G8jHRXjjnQd67uhdZmgh/r8nezPt1KLlF1AQDXoxu2MLWLHjz1sD9ZYxzDf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779584537; c=relaxed/simple;
-	bh=zA2S/u4vsbOJZkWgdlQA+koUihbdp+1stVmHFUOlgoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gr6CDIADpiWX4qdzE6PhgJdXc5HL5XN6nniAlr+rkI+4gPBxK7PUwTanP5eLF8Cef0JQGlN6v3+BHaCj+nlrAA3Euxlc5gfz1cZR2fMWMZBK7ExLUGFJ6xFdsGkQe2gfIey0aJQ2cwW2013UCnVjDMQf5Lo7jKB0JWhro7aEDKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1HWQHy4; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A68E1F000E9;
-	Sun, 24 May 2026 01:02:15 +0000 (UTC)
+	s=arc-20240116; t=1779584538; c=relaxed/simple;
+	bh=FDja62qw8bkI4CPImoD/etC1XjkiEcyv8eEKKEYaMg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Elg2eSZ76k7frIEbdojpqu4Y+ZDVypsUZQ/Ur/I4t71XEXHmP63IJCYeMGsK7rRcOAlZy8jGxQFnspKjx6KUK6TpYjrxTWOCM+41JnDFTx1swTISVNtXYYEmoZIrgOFGeFYaA/qmNhwvaOZXS7Wp9HMq7YNxeXBV4YfCPzE5REo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANi4klcc; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF1A1F00A3C;
+	Sun, 24 May 2026 01:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779584536;
-	bh=5xCycKQbqjNeUvfUyLOIo2ZAmBrMXv6wcL4kjHiQPdk=;
-	h=From:To:Cc:Subject:Date;
-	b=a1HWQHy4b7L1XGMcPY2LVZjdR16cePcIvRCl7vDmn7h3qWIPJFKJz3GND+/0vy9pA
-	 CVCNEFXoywyqHi3xks3CsBKi0yR21sG4A7fKTZTegy9zBQHYHMdtig46Yn+xRVSLp4
-	 gWJ1LaiiVyWyxTisZiRVGZz/RW8hq3+SCWnvW/OpR8IFefd0O06REng2bbVCTKCuYE
-	 hpujgtmqw9tsJiZkfz2ZxwpC4XdITAiUtjQagQ0YL1ZFwm+666Q+MtRgx9jg0HTv4G
-	 nENmbXYdClRuL2MXOHoCr70nqF8gAJeEkasH2g6DgeOuIegELxXXFXH1UjBha83gdd
-	 YIdAH7Mj7r1Eg==
+	s=k20260515; t=1779584537;
+	bh=SXz6vGnO0sovCOMh8rPvoswISDScH1ca7oeC2gQdrPo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ANi4klcc8BKUUGIGZ3tM08GSANOHsMpKeZdZY+nAk358B285zZ7JGgk99VhmGAX60
+	 jxPcrceWGGT1aPplycccGTKcRvkkQqngTL5fVCQuX5sQ2XAdB4G/wBYbmQ8TJJ9uwZ
+	 dWs0onUdFL7XorFeTmvOpzQEUb59QK9ijOZUKY32vsIT8P4Gs2dDuKSUXStlTzBcv1
+	 3VpERxqeASGI9HLOettzZutkzPk4bdVgEyHUSSHn47ac2rhhWiQc5AzbFPJ+rxJ732
+	 qRBwpj/ZY7Dz4EQrUm6HO5BYqmDhcmg9iTgDBx5JlMnLEIUJmnlFJoxgmi4u3c6obm
+	 +yyBsVfAgM3Ag==
 From: Chuck Lever <cel@kernel.org>
 To: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna@kernel.org>,
@@ -52,11 +53,13 @@ To: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 0/4] sunrpc: close length validation gaps in krb5p unwrap
-Date: Sat, 23 May 2026 21:02:09 -0400
-Message-ID: <20260524010213.557424-1-cel@kernel.org>
+	Chris Mason <clm@meta.com>
+Subject: [PATCH 1/4] SUNRPC: svcauth_gss: enforce krb5 token minimum length
+Date: Sat, 23 May 2026 21:02:10 -0400
+Message-ID: <20260524010213.557424-2-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260524010213.557424-1-cel@kernel.org>
+References: <20260524010213.557424-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -69,13 +72,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21894-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21895-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -89,54 +92,68 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:email]
-X-Rspamd-Queue-Id: 4513C5C0FF9
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oracle.com:email,meta.com:email]
+X-Rspamd-Queue-Id: 825105C0FFA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Chris Mason <clm@meta.com>
 
-Neither svcauth_gss_unwrap_priv() nor gss_unwrap_resp_priv()
-enforces a minimum on the wire-supplied opaque length before
-forwarding it to the krb5 unwrap core.  An authenticated krb5p
-peer -- NFS client or server -- can send a token shorter than the
-16-byte RFC 4121 header and reach gss_krb5_unwrap_v2() with a
-length that drives pre-decrypt out-of-bounds reads, a
-divide-by-zero in _rotate_left(), and a post-decrypt unsigned
-underflow in the movelen computation that feeds a multi-gigabyte
-memmove.
+svcauth_gss_unwrap_priv() validates only an upper bound on the
+wire-supplied opaque length before handing the buffer to
+gss_unwrap():
 
-The fixes are layered so that neither the caller boundary nor
-the unwrap core depends on the other for safety.  The caller-side
-floor checks (patches 1, 2) are sufficient to close the attack,
-but gss_krb5_unwrap_v2() must also be self-defending because it
-is reachable through gss_unwrap() from any future caller that
-might not enforce the same floor.  The xdr_buf_trim() clamp
-(patch 3) is independent of krb5 -- it corrects a generic
-invariant violation that gss_krb5_unwrap_v2() happens to be the
-only current trigger for, but that any caller could hit if
-buf->len and the component iov_lens get out of sync.
+    if (len > xdr_stream_remaining(xdr))
+            goto unwrap_failed;
+    offset = xdr_stream_pos(xdr);
+    ...
+    maj_stat = gss_unwrap(ctx, offset, offset + len, buf);
 
-The client side (patch 2) has an additional u32 integer-overflow
-bypass that the server side does not: the original
-`offset + opaque_len > rcv_buf->len` wraps when opaque_len is
-near UINT_MAX, accepting a huge token length that re-enters the
-same underflow chain.  The replacement splits the check into
-separate offset and length guards that are safe in u32 arithmetic.
+The wire value `len` flows unchanged as the upper bound into the
+krb5 unwrap path, so a len in [0, 16] passes this check and is
+handed to gss_unwrap(). For a krb5 v2 context that lands in
+gss_krb5_unwrap_v2(), which reads the 16-byte RFC 4121 token
+header fields at ptr+4 and ptr+6 and then calls rotate_left()
+before any integrity check. With a sub-header length the header
+reads run past the token, and _rotate_left()'s `shift %= buf->len`
+path can divide by zero when buf->len has been driven to zero by
+the truncated token. A header-only token (len == 16) is equally
+invalid: with a non-zero RRC field and the opaque blob ending at
+the XDR buffer boundary, rotate_left() builds a zero-length
+subbuffer, reaching the same division.
 
-Chris Mason (4):
-  SUNRPC: svcauth_gss: enforce krb5 token minimum length
-  SUNRPC: harden gss_unwrap_resp_priv length checks
-  SUNRPC: xdr_buf_trim: clamp buf->len to avoid underflow
-  SUNRPC: harden gss_krb5_unwrap_v2 against short tokens
+Reject the token at the server entry point before it reaches the
+krb5 unwrap core. A valid sealed RFC 4121 token must contain
+the 16-byte header plus at least some encrypted payload.
 
- net/sunrpc/auth_gss/auth_gss.c      |  6 +++++-
- net/sunrpc/auth_gss/gss_krb5_wrap.c | 11 +++++++++--
- net/sunrpc/auth_gss/svcauth_gss.c   |  2 ++
- net/sunrpc/xdr.c                    |  2 +-
- 4 files changed, 17 insertions(+), 4 deletions(-)
+Fix by adding a minimum-length check immediately after the
+existing upper-bound check:
 
+    if (len <= GSS_KRB5_TOK_HDR_LEN)
+            goto unwrap_failed;
+
+Fixes: 7c9fdcfb1b64 ("[PATCH] knfsd: svcrpc: gss: server-side implementation of rpcsec_gss privacy")
+Assisted-by: kres (claude-opus-4-7)
+Signed-off-by: Chris Mason <clm@meta.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/auth_gss/svcauth_gss.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index d14209031e18..8e8aceb31270 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -949,6 +949,8 @@ svcauth_gss_unwrap_priv(struct svc_rqst *rqstp, u32 seq, struct gss_ctx *ctx)
+ 	}
+ 	if (len > xdr_stream_remaining(xdr))
+ 		goto unwrap_failed;
++	if (len <= GSS_KRB5_TOK_HDR_LEN)
++		goto unwrap_failed;
+ 	offset = xdr_stream_pos(xdr);
+ 
+ 	saved_len = buf->len;
 -- 
 2.54.0
 
