@@ -1,95 +1,95 @@
-Return-Path: <linux-nfs+bounces-21925-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21926-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sE2BFwt2FGokNgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21925-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 18:17:15 +0200
+	id MM3BDkR2FGokNgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21926-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 18:18:12 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1E9F5CCAE3
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 18:17:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A27885CCB35
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 18:18:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5486B300899B
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 16:17:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 13A6A3006510
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 16:17:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E605E3F410B;
-	Mon, 25 May 2026 16:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5C63F20E4;
+	Mon, 25 May 2026 16:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0Hfg4OMV";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TA5BDXsx";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KZmdsyIb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gLGhTS17"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NnTuw9Qf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9yAYd8D0";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NnTuw9Qf";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9yAYd8D0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB673ECBFE
-	for <linux-nfs@vger.kernel.org>; Mon, 25 May 2026 16:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E653AD52D
+	for <linux-nfs@vger.kernel.org>; Mon, 25 May 2026 16:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779725829; cv=none; b=ECKeJx73m1Z13Tsip3vsrRjXb+iCO2u1xoPBGTgsum1jQbXGE8k6HqBrqof7YMGI1k5plSHro1K0bZGnPZM4Vdb8zYcUXzTnLoPBnNf/MlnMkMZfdQK4kWl+vaKMdtQ/Nqtdf4IkaHyfW97lhBx+8PKQp3YVbTMHQvG0l/mxyJo=
+	t=1779725867; cv=none; b=pc89AM8UtLgfymdxgQ1HflnorK+ZVKn93a/M8TQLieqdf+hfyQfriB0nh1UvGTpNYSh0oExDUkVht7u2kXw6CfG2lNGfa6nrBD0FaAholstdJj8TEuf3iVyOniD6jxo15vIIA4SDKJR41YpBrHNJBU4z1xIxOqJ5bc5tFh8RDos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779725829; c=relaxed/simple;
-	bh=uuQtE1UNvuOk6XjdcxlL9xkRLqBbZIfBFgmyTHnmAgk=;
+	s=arc-20240116; t=1779725867; c=relaxed/simple;
+	bh=oMyVHJUpSpeQgkkhRO5IRWXWHc0rrJ5CAF/yLvmozYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e3lT/EEbo30A9AZ2oE/j+Ssnezbb9IC5HYARETIoyl4V53yg+N5WhjCCx6Z7p5umbU/li8PMRzFRsIgEt84kQRQ0I142iyWcbfdcYOTJW9+TIh1mbIOqHJlLsnDksSeqy4yTUyU8qJzD67priCw8jj4fOBlzU+oWh9ClOvGJ/uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0Hfg4OMV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TA5BDXsx; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KZmdsyIb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gLGhTS17; arc=none smtp.client-ip=195.135.223.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjcvyTaJnJKm8P2E9rfOMOLfGidtdTgPHYIyOsqLBxh4HSlJuwhSWFxcWyhBLA3UoQkaqWZD80qX/s9UiYU/vzAQCV0vsA70XjLcW+bNrsynpPLDsf5om9fkXIUeBNgrIK2BkVmqJHgaAs2cUI9dPeo1AGegCNohasn+obYfnJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NnTuw9Qf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9yAYd8D0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NnTuw9Qf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9yAYd8D0; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E60E67348;
-	Mon, 25 May 2026 16:17:05 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BE9D06B9D6;
+	Mon, 25 May 2026 16:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1779725826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1779725864; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KOqps2oswWC8BW2SBX1fhbQKL5egyliEPxPGdscg6ck=;
-	b=0Hfg4OMVKiSiBQRJ0uXGtZ8Y2OWRXaeQiytwwLq/6j+xg3BIXhWCytD16vaK/ReUZN/NPL
-	wTnrzYeH1IzgsLoBVI9X1BWRsL/wSZ1JqDbuMcaYTzAvC2hPneYfUoMZhYoWC16zjNTEwt
-	xc2g2M2ArcMfdxzR1sP9fIsQFcoLI7s=
+	bh=LiOhrDB5Siu3BTzKB3ll2nZPIejX17ixL8z+kYTNnLc=;
+	b=NnTuw9QfP7qRtu2Fcp2vHUcRpfCDPlfel0Odrx2m+0NDQPjck4mgVNMbs4uoYUGxzZoO0v
+	5V1kkbw+CDrwdCjYTS8Fo1NSl84SIozibO6xqnzX29Rpc4y9FeVI7ssusljL01vgsGrBK+
+	aP58bM5ofqnG+wnRmVQOK/6ypGlJUWw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1779725826;
+	s=susede2_ed25519; t=1779725864;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KOqps2oswWC8BW2SBX1fhbQKL5egyliEPxPGdscg6ck=;
-	b=TA5BDXsxnNOSpg7RYa0vh6dt4KKlarsqZlQ0apRfPWvWV3o6Ue9PynGK1BkRq5WOQXx4Xo
-	pSUPkHkhVCFmbCCw==
-Authentication-Results: smtp-out2.suse.de;
+	bh=LiOhrDB5Siu3BTzKB3ll2nZPIejX17ixL8z+kYTNnLc=;
+	b=9yAYd8D0/oNcJBhN5rQ5AnAGQq7z/4JSzQDJidYmuem9vnfeYzSvD7oWP7sni9eRMOLXwp
+	EIxPW5DxVLeI+5Cg==
+Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1779725825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1779725864; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KOqps2oswWC8BW2SBX1fhbQKL5egyliEPxPGdscg6ck=;
-	b=KZmdsyIbb7noi77UxqpJdYPIHUjs7CUvNMlTRqKv115xDDibEonWbBVtvQVV4YkJtvFrC4
-	z7Lz26jmfDAdCWhRJwJ1k8Ri0rR84dk1fSkgSO7kvN0NeADynsPDw7dh649BfG8yV0PPaH
-	lCnBK5xO9SgvpQR/Oy4GYVRCiDhLMhw=
+	bh=LiOhrDB5Siu3BTzKB3ll2nZPIejX17ixL8z+kYTNnLc=;
+	b=NnTuw9QfP7qRtu2Fcp2vHUcRpfCDPlfel0Odrx2m+0NDQPjck4mgVNMbs4uoYUGxzZoO0v
+	5V1kkbw+CDrwdCjYTS8Fo1NSl84SIozibO6xqnzX29Rpc4y9FeVI7ssusljL01vgsGrBK+
+	aP58bM5ofqnG+wnRmVQOK/6ypGlJUWw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1779725825;
+	s=susede2_ed25519; t=1779725864;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KOqps2oswWC8BW2SBX1fhbQKL5egyliEPxPGdscg6ck=;
-	b=gLGhTS17boEqI8NdUfnjerwDCcLadne4B0nRBdAScThhuAk/POWYmSCZfGFAYNcsmqOPYv
-	GicgUS4PiC6xT2Dg==
+	bh=LiOhrDB5Siu3BTzKB3ll2nZPIejX17ixL8z+kYTNnLc=;
+	b=9yAYd8D0/oNcJBhN5rQ5AnAGQq7z/4JSzQDJidYmuem9vnfeYzSvD7oWP7sni9eRMOLXwp
+	EIxPW5DxVLeI+5Cg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F37959D24;
-	Mon, 25 May 2026 16:17:05 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B08C659D25;
+	Mon, 25 May 2026 16:17:44 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0A1tDwF2FGqxHgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 25 May 2026 16:17:05 +0000
+	id fbEXKyh2FGpqHwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 25 May 2026 16:17:44 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id D5E1FA08D7; Mon, 25 May 2026 18:17:04 +0200 (CEST)
-Date: Mon, 25 May 2026 18:17:04 +0200
+	id 6D2D7A08D7; Mon, 25 May 2026 18:17:44 +0200 (CEST)
+Date: Mon, 25 May 2026 18:17:44 +0200
 From: Jan Kara <jack@suse.cz>
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Cc: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
@@ -105,10 +105,10 @@ Cc: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
 	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
 	ocfs2-devel@lists.linux.dev, linux-nilfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	jfs-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 10/17] jbd2: replace __get_free_pages() with kmalloc()
-Message-ID: <2omm5gmnv2khshoxkrag5rusd3qzrsqyjgsef2syxgryrtg6vq@ao7oabqwebgo>
+Subject: Re: [PATCH 11/17] isofs: replace __get_free_page() with kmalloc()
+Message-ID: <wxxq23pmklhklkmp6a6i4wfrzb4sn2wnvqlmmfeefbpbj4pmj6@y2k3f56igj3u>
 References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
- <20260523-b4-fs-v1-10-275e36a83f0e@kernel.org>
+ <20260523-b4-fs-v1-11-275e36a83f0e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -117,7 +117,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260523-b4-fs-v1-10-275e36a83f0e@kernel.org>
+In-Reply-To: <20260523-b4-fs-v1-11-275e36a83f0e@kernel.org>
 X-Spam-Score: -2.30
 X-Spam-Level: 
 X-Spam-Flag: NO
@@ -126,13 +126,13 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21925-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,suse.cz:dkim];
+	TAGGED_FROM(0.00)[bounces-21926-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
 	DMARC_NA(0.00)[suse.cz];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -148,62 +148,60 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: F1E9F5CCAE3
+X-Rspamd-Queue-Id: A27885CCB35
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat 23-05-26 20:54:22, Mike Rapoport (Microsoft) wrote:
-> jbd2_alloc() falls back from kmem_cache_alloc() to __get_free_pages() for
-> allocations larger than PAGE_SIZE.
-> But kmalloc() can handle such cases with essentially the same fallback.
+On Sat 23-05-26 20:54:23, Mike Rapoport (Microsoft) wrote:
+> isofs_readdir() allocates a temporary buffer with __get_free_page().
 > 
-> Replace use of __get_free_pages() with kmalloc() and simplify
-> jbd2_free() as both kmem_cache_alloc() and kmalloc() allocations can be
-> freed with kfree().
+> kmalloc() is a better API for such use and it also provides better
+> scalability and more debugging possibilities.
+> 
+> Replace use of __get_free_page() with kmalloc().
 > 
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-I'll just note that we allocate here fs block size large buffer so the same
-kind of allocator as we use for folios would be even better. But that's a
-different cleanup I guess.
+Thanks. Added to my tree.
 
 								Honza
 
 > ---
->  fs/jbd2/journal.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+>  fs/isofs/dir.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 4f397fcdb13c..1137b471e490 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -2784,7 +2784,7 @@ void *jbd2_alloc(size_t size, gfp_t flags)
->  	if (size < PAGE_SIZE)
->  		ptr = kmem_cache_alloc(get_slab(size), flags);
->  	else
-> -		ptr = (void *)__get_free_pages(flags, get_order(size));
-> +		ptr = kmalloc(size, flags);
+> diff --git a/fs/isofs/dir.c b/fs/isofs/dir.c
+> index 2fd9948d606e..6d220eab531e 100644
+> --- a/fs/isofs/dir.c
+> +++ b/fs/isofs/dir.c
+> @@ -13,6 +13,7 @@
+>   */
+>  #include <linux/gfp.h>
+>  #include <linux/filelock.h>
+> +#include <linux/slab.h>
+>  #include "isofs.h"
 >  
->  	/* Check alignment; SLUB has gotten this wrong in the past,
->  	 * and this can lead to user data corruption! */
-> @@ -2795,10 +2795,7 @@ void *jbd2_alloc(size_t size, gfp_t flags)
+>  int isofs_name_translate(struct iso_directory_record *de, char *new, struct inode *inode)
+> @@ -255,7 +256,7 @@ static int isofs_readdir(struct file *file, struct dir_context *ctx)
+>  	struct iso_directory_record *tmpde;
+>  	struct inode *inode = file_inode(file);
 >  
->  void jbd2_free(void *ptr, size_t size)
->  {
-> -	if (size < PAGE_SIZE)
-> -		kmem_cache_free(get_slab(size), ptr);
-> -	else
-> -		free_pages((unsigned long)ptr, get_order(size));
-> +	kfree(ptr);
->  };
+> -	tmpname = (char *)__get_free_page(GFP_KERNEL);
+> +	tmpname = kmalloc(PAGE_SIZE, GFP_KERNEL);
+>  	if (tmpname == NULL)
+>  		return -ENOMEM;
 >  
->  /*
+> @@ -263,7 +264,7 @@ static int isofs_readdir(struct file *file, struct dir_context *ctx)
+>  
+>  	result = do_isofs_readdir(inode, file, ctx, tmpname, tmpde);
+>  
+> -	free_page((unsigned long) tmpname);
+> +	kfree(tmpname);
+>  	return result;
+>  }
+>  
 > 
 > -- 
 > 2.53.0
