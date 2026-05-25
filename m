@@ -1,216 +1,209 @@
-Return-Path: <linux-nfs+bounces-21929-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21930-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sJ9KEF93FGokNgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21929-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 18:22:55 +0200
+	id 8J1dLQGCFGqnNwcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21930-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 19:08:17 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D52245CCC9E
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 18:22:54 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 508965CD269
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 19:08:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1A18630054C3
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 16:22:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DE3003017271
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 May 2026 17:07:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 238C13F411B;
-	Mon, 25 May 2026 16:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FA303F7A95;
+	Mon, 25 May 2026 17:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CROIlxN3";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1pampqlv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n/kIQAQb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Yxxr3rsI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dhioHvSU";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="B4IY6GkQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC4E3F167C
-	for <linux-nfs@vger.kernel.org>; Mon, 25 May 2026 16:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6223845DA
+	for <linux-nfs@vger.kernel.org>; Mon, 25 May 2026 17:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779726172; cv=none; b=FUA9sCcRocMKUyDAbtAOM9pXYrIRX2GGvYSGA9Kx2Uj00O48PaTEnfad/vaJcSFeNzf+Uy6c8Nh02isIMi3GBEHsqAB/XcOkV9/q4kvk2mR8+jWFbdA4IpIHrqy4wkhgMAZSqPA3FZ2LrZda5GkjHdbIwJoKtDKFsqV+EXW98IE=
+	t=1779728865; cv=none; b=GL7fZxJg51GAWz4+bSs+bFbeAimMQbETVEhyE1rl4H2ZUdro4Mu+eN0FjKRr1GNK3bYfyhZk/OMYNL8Dc4KhmFXl6xF3Sm9Zqg+wpRCLx2nP/dmr8Ki2mZH1wyg/yP7PO7VGx85APdgPVM9aW7/UuHiIwI7bEQSuSZMCjzul/eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779726172; c=relaxed/simple;
-	bh=joylWBpc+npP1kt2/jT00dsTQm3Kjy8To61Ke+Kze3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tw2ECSZk2rgAvQa3VjgxtF8m4JogR6BiMcjvnmcYOKzcyQOJ6ruMA5dt1wc0sZyP8q+6J8z8cGse8pcNEQJKIRVU3s02qFaMVc72bh9inwLSz9qyJCqqlCkBQ9L2NX7WeB2jjuuJLpLsu0KssDRpdMRycfeGWKNCNlhvXNC3/uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CROIlxN3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1pampqlv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n/kIQAQb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Yxxr3rsI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D6DBF759A8;
-	Mon, 25 May 2026 16:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1779726169; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1779728865; c=relaxed/simple;
+	bh=EGS2JGmyeWkbOCbREIX2qtEvE51ujoNsVgCL48xBWXI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hbRa0gVdbhRfAi5Izx75Pj2MOEsVKRvQ0gdkkOjsg15tuq886IzWzoM5ZQt8Njci+BAk9rZkgVvMwZAx30juGRw769CIdCV5paPjQoyvQpiNvFallHHYDJrIXLx91cWxwAFsJgS4rrsg0Ssrz7CQla0cKf1541HlCS536JvAEeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dhioHvSU; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=B4IY6GkQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779728861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=y0Rj6kZ0NZp1iUbs/A+rai1k6L44nNzXx4GMbHIbDpA=;
-	b=CROIlxN3F0ObxWV/Iu/DxbyYO8fY1G/KsbUQjVbUZ7jNjGxq/axpM7Z6Hcrtp0J5kV95Os
-	s69vQZu0pt0DWi79fEOAdoCyhdBxJrCrAru4VLMg0W8zEW/VGD6sRRpF41f3LIIGCX+b2A
-	ELy2pw2Vs565hQN3S+A9+ISHXhrD26w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1779726169;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0Rj6kZ0NZp1iUbs/A+rai1k6L44nNzXx4GMbHIbDpA=;
-	b=1pampqlvhhCCMiFlEH4DgYdzfRSqFspW6orJv0PlK7a01gd8kl9Y1TDHGUZtqq7nL38yIC
-	sqboCRZsUszSljBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1779726167; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0Rj6kZ0NZp1iUbs/A+rai1k6L44nNzXx4GMbHIbDpA=;
-	b=n/kIQAQbetBxxKWKB6ItGTA0HFXd4tac5/pOy5zzMmzts1tG/O6nlR6NxXk+nKchzZBjKk
-	DMcMEzICYp0yyTtMb6X2ILX9D2jmehiUtkPCcd5+gsU4SgHzQz8y569zfIGMaZG+gu4DEK
-	xTg9i/K/4IVCEWmy5UnZ72gXoIt+XHI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1779726167;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0Rj6kZ0NZp1iUbs/A+rai1k6L44nNzXx4GMbHIbDpA=;
-	b=Yxxr3rsICOcg2IPAVwcgOH6KiMXLNJ6HUNyaDsFuA+/t13Z8MXxQPya+c8hsgablBldfKt
-	dmDltR06SSFbbyCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C977559D2A;
-	Mon, 25 May 2026 16:22:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id z8orMVZ3FGpbJAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 25 May 2026 16:22:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DCB17A08D7; Mon, 25 May 2026 18:22:45 +0200 (CEST)
-Date: Mon, 25 May 2026 18:22:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
-	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Dave Kleikamp <shaggy@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Breno Leitao <leitao@debian.org>, Kees Cook <kees@kernel.org>, 
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, linux-nilfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	jfs-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 15/17] configfs: replace __get_free_pages() with kzalloc()
-Message-ID: <cnxlypiisnshulqluro2maw5vjnmmkbnvbkflfld3cv6j4m2zl@z3kwuj5nxx2u>
+	bh=QQ8f0KL2cvJbeqS1wq3el83kZ9Z8vH79ZAL6r1+vgks=;
+	b=dhioHvSUW0LXwpL2ye6gY9aEtrH575Eode9Y3bZkyFDeYpbbTkYBTB9MM0JZkKtl1AeGiF
+	GoG47VJHDsbLzrDndbsVcyDWtVD5D/9ES7k8HW9uIoQQ0Csb5CtsMlQ7xRiKMN1+vUvum+
+	IwbtAkSnwz5Aia90ZNw4ZnOg9+/OCig=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-67-HOqu8SUWMGuK3RXW0rVYuw-1; Mon, 25 May 2026 13:07:40 -0400
+X-MC-Unique: HOqu8SUWMGuK3RXW0rVYuw-1
+X-Mimecast-MFC-AGG-ID: HOqu8SUWMGuK3RXW0rVYuw_1779728859
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-7cb345d0591so64575327b3.2
+        for <linux-nfs@vger.kernel.org>; Mon, 25 May 2026 10:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1779728859; x=1780333659; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QQ8f0KL2cvJbeqS1wq3el83kZ9Z8vH79ZAL6r1+vgks=;
+        b=B4IY6GkQoeA6mxx8zFvjIHv1rw5Br7ObA6BH4M64VQ4WU6Hqk1GAUiuxBN81Ysi8fR
+         ZwDRoKuZnH2y3aD88NE7jRHEBpMqrXc8vy5r5h3UTA+HgtWjx4fq5ehhF5VbbP+7movw
+         CLTuGQqyAkdTSdUBZyjv7Emf0tHIBhS00MOl7s7WeYGyoWn2jsXYdpP66s0MrFJJG4ea
+         3IivF1Xp8tUen58bukrpcQRp3jpeOEkaWT7Hw7p7lyR6GpmYkqVAJNcuLG/MJacz00Y6
+         tRDq2BUx5w3dsFFV76OzIuQ2jHxDC7lL0r/GBonXJnS4WDQun1sK6026uV0PscSu56e+
+         ohsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779728859; x=1780333659;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QQ8f0KL2cvJbeqS1wq3el83kZ9Z8vH79ZAL6r1+vgks=;
+        b=cgm0cMUP5WkDREmSdqA/IDZtPAg+jeBo0yDg68hv4EvXFfc0+0BmlEbRtKvWt8hApx
+         2/dZd+bLiN0Oxk5ktBIHq/zm+Xpzr8OTXkZ/s+sX/5BYM02IcJVYpxUnGwY9sjXnQCEs
+         OVQPJ7gDufGr5bpd8tMrkNYM8E/xngaS2Z8f6J79Xwv4nG6j/NvbV6aI1ZlYEEN7eqnw
+         ww5fEXf84TRrLZowEJg9EuSnGrAKE5RE+nr4iDxY2i6603weCGiv9RUIVmaS6KCG2mlj
+         qmlJYegzPhk30X4SV4u86enHNXi/Idsihtp6Rda3qeN+Cuk8zx8I5bV//pOOPJHx3f6i
+         FlMg==
+X-Forwarded-Encrypted: i=1; AFNElJ8PzX/Kw7M0ajeW+oIikOx2ZRXSyKpc5NE57JXrVq5crww537HK6RpbGtk9cGb+ChreAlxut0Wva4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwDtj6OVa27NCRxhSQqa+uFdHiZdW1DpCLk450/2l36iuEY0fb
+	RCtXDyjE0ewRMpK45lxOEgm+K6Y655vRXCUSnk0CA3XoP7x7vunUASr4cHM61YeQyFY+ogl2WHY
+	QYUQIu32uWXEiE9lniYyqTZJSAkClpD+HbTiwUsLZfIdM8m3GVsHRu96MvkhAmw==
+X-Gm-Gg: Acq92OEaglAzlQbDd9WIVwCzwcCkNsD1/ubkRKuboryVWkvHh94wAC0iFHBCFmykFN6
+	YlEDEIUeAHSaBOxy6wOJSciZlSY7OTXOZOZsSlfFdghPv5zwRcA84R2plYZKtSU3bG5Y/wDcnim
+	psIPvEX7Kb7wG0h+9tCdIJ08Kf1BrIZuCXEnDODG7tKQyM0VwN7ON54o/ILc/L55kZi+mnv9NSs
+	pmWbYK+WNDDc3m7U+oaz1OkeKHkfv0ryGMD3IRtUaxA4GGyUjPB4XnvzIzUdVketa7gou7CbQIe
+	bu5oVapvei11CkUDXPv3RGrbamOysCfcIfixDMEzrBm4F1NEbT5HaILf67vH9ogWh/q+JRr46qX
+	791oCfySndNmg8w8e7i00PRLgAE1BUpkPyZGafNorW/eGrjgMWTS0
+X-Received: by 2002:a05:690c:3708:b0:7bf:9648:8c5c with SMTP id 00721157ae682-7d3345da2e5mr155237577b3.18.1779728859424;
+        Mon, 25 May 2026 10:07:39 -0700 (PDT)
+X-Received: by 2002:a05:690c:3708:b0:7bf:9648:8c5c with SMTP id 00721157ae682-7d3345da2e5mr155237227b3.18.1779728858828;
+        Mon, 25 May 2026 10:07:38 -0700 (PDT)
+Received: from li-4c4c4544-0032-4210-804c-c3c04f423534.ibm.com ([2600:1700:6476:1430::29])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7d389813ea8sm48480087b3.4.2026.05.25.10.07.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2026 10:07:38 -0700 (PDT)
+Message-ID: <1bb537f6dc36b00788b613fb8f71579478418457.camel@redhat.com>
+Subject: Re: [PATCH 04/17] nilfs2: replace get_zeroed_page() with kzalloc()
+From: Viacheslav Dubeyko <vdubeyko@redhat.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Jan Kara <jack@suse.com>,
+  Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, Joseph Qi
+ <joseph.qi@linux.alibaba.com>,  Ryusuke Konishi
+ <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, Trond
+ Myklebust	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck
+ Lever	 <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown	 <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Alexander Viro	
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	 <jack@suse.cz>, Dave Kleikamp <shaggy@kernel.org>, Theodore Ts'o
+ <tytso@mit.edu>,  Miklos Szeredi <miklos@szeredi.hu>, Andreas Hindborg
+ <a.hindborg@kernel.org>, Breno Leitao <leitao@debian.org>,  Kees Cook
+ <kees@kernel.org>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	ocfs2-devel@lists.linux.dev, linux-nilfs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
+	linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Date: Mon, 25 May 2026 10:07:34 -0700
+In-Reply-To: <20260523-b4-fs-v1-4-275e36a83f0e@kernel.org>
 References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
- <20260523-b4-fs-v1-15-275e36a83f0e@kernel.org>
+	 <20260523-b4-fs-v1-4-275e36a83f0e@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.0 (3.60.0-1.fc44app2) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260523-b4-fs-v1-15-275e36a83f0e@kernel.org>
-X-Spam-Score: -2.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21929-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
-	DMARC_NA(0.00)[suse.cz];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	FREEMAIL_CC(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org,vger.kernel.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21930-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_TO(0.00)[kernel.org,suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: D52245CCC9E
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vdubeyko@redhat.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,dubeyko.com:email]
+X-Rspamd-Queue-Id: 508965CD269
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat 23-05-26 20:54:27, Mike Rapoport (Microsoft) wrote:
-> configfs allocates staging buffers __get_free_pages().
-> 
-> kmalloc() is a better API for such use and it also provides better
+On Sat, 2026-05-23 at 20:54 +0300, Mike Rapoport (Microsoft) wrote:
+> nilfs_ioctl_wrap_copy() allocates a temporary buffer with
+> get_zeroed_page().
+>=20
+> kzalloc() is a better API for such use and it also provides better
 > scalability and more debugging possibilities.
-> 
-> Replace use of __get_free_pages() with kzalloc().
-> 
+>=20
+> Replace use of get_zeroed_page() with kzalloc().
+>=20
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
 > ---
->  fs/configfs/file.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/configfs/file.c b/fs/configfs/file.c
-> index ef8c3cd10cc6..a48cece775a3 100644
-> --- a/fs/configfs/file.c
-> +++ b/fs/configfs/file.c
-> @@ -59,7 +59,7 @@ static int fill_read_buffer(struct file *file, struct configfs_buffer *buffer)
->  	ssize_t count = -ENOENT;
->  
->  	if (!buffer->page)
-> -		buffer->page = (char *) get_zeroed_page(GFP_KERNEL);
-> +		buffer->page = kzalloc(PAGE_SIZE, GFP_KERNEL);
->  	if (!buffer->page)
+>  fs/nilfs2/ioctl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
+> index e0a606643e87..b73f2c5d10f0 100644
+> --- a/fs/nilfs2/ioctl.c
+> +++ b/fs/nilfs2/ioctl.c
+> @@ -69,7 +69,7 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs *nilf=
+s,
+>  	if (argv->v_index > ~(__u64)0 - argv->v_nmembs)
+>  		return -EINVAL;
+> =20
+> -	buf =3D (void *)get_zeroed_page(GFP_NOFS);
+> +	buf =3D kzalloc(PAGE_SIZE, GFP_NOFS);
+>  	if (unlikely(!buf))
 >  		return -ENOMEM;
->  
-> @@ -184,7 +184,7 @@ static int fill_write_buffer(struct configfs_buffer *buffer,
->  	int copied;
->  
->  	if (!buffer->page)
-> -		buffer->page = (char *)__get_free_pages(GFP_KERNEL, 0);
-> +		buffer->page = kmalloc(PAGE_SIZE, GFP_KERNEL);
->  	if (!buffer->page)
->  		return -ENOMEM;
->  
-> @@ -381,8 +381,7 @@ static int configfs_release(struct inode *inode, struct file *filp)
->  	struct configfs_buffer *buffer = filp->private_data;
->  
->  	module_put(buffer->owner);
-> -	if (buffer->page)
-> -		free_page((unsigned long)buffer->page);
-> +	kfree(buffer->page);
->  	mutex_destroy(&buffer->mutex);
->  	kfree(buffer);
->  	return 0;
-> 
-> -- 
-> 2.53.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>  	maxmembs =3D PAGE_SIZE / argv->v_size;
+> @@ -107,7 +107,7 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs *ni=
+lfs,
+>  	}
+>  	argv->v_nmembs =3D total;
+> =20
+> -	free_pages((unsigned long)buf, 0);
+> +	kfree(buf);
+>  	return ret;
+>  }
+> =20
+
+Makes sense to me.
+
+Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
+
+Thanks,
+Slava.
+
 
