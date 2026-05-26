@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-21967-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21968-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IG1bK86sFWrgXgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21967-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:23:10 +0200
+	id cDY+G9WsFWrgXgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21968-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:23:17 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 537135D7648
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:23:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A2E35D7657
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:23:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AC03E3042E55
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 14:14:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CFD4A30439A8
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 14:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54773FD13B;
-	Tue, 26 May 2026 14:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E7F3FE658;
+	Tue, 26 May 2026 14:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/cLW7Qh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuSS4DxT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51023B9935;
-	Tue, 26 May 2026 14:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9026B764;
+	Tue, 26 May 2026 14:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779804851; cv=none; b=W22tBAk3kCKVOjv3ht011PwQBxA/jw7P06K7BfJgC2ohYT0nt5COEU1pmc7xHRVF44Amx/SqROEVgvdxP6GPjB0WPIRxQkSK/uEWrz/nUTja/NKDEARETQn0oZ8uE0zMkhcyG3iw3PxuuSYzKGrdLDnzTSr+pcuEycHqteV2V1Y=
+	t=1779804853; cv=none; b=cskZ27nIz3teQjzasFLIoirPW8g2JgIIr7o1Q/NLIma+jZhfNWAGH2MeUvb6dGj3o8vj8hrT7KBLkROGRxMDQK62q2IhRDJgYhRO81PIR5PuLpzuC4AI2S/FN7+Nu7LQl5nKsbZ7PAY2fvQ250tfYf23vDCfRFR6oOL0JualFhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779804851; c=relaxed/simple;
-	bh=XWTefVIn7GASisAnJeS9nBFWwYBW/22XnkQB1XyYkVI=;
+	s=arc-20240116; t=1779804853; c=relaxed/simple;
+	bh=KldJSQF1uBd0uJ3F4QuGABqdfhQJVzKaqV+/RP1m99M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BWM/xSI4se2l5GAlA75a7K6TWTAzjn39qg0/NjPAU6Rzq/TMrrO1ADPO8QvIApHTev7x4jIddvuovVffjtcMqv8Z9wCCzx1KlL9zIgSellgm3QZJSE4OhHdnivLEsVn2hdoGnO+gUrAcqJFj4jaSSgiju6jgpR+9Kc/dU4ZQO9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/cLW7Qh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 462EA1F00A3A;
+	 MIME-Version; b=IWaozEnfkF2reali2DtGbw7LS3uRr1Bv5/T4dsa8h4pzlBNQph1viR+Q89QAPOuRa7lMIR1S7DGDghRusUq7Y2pNDST0+G+PQMIxQbVLg0F4PFpm5A8dpx6PQ6ju301BBjpFm0S77Du4dWSVdPw86WPeJugj4wqMEX/i9Hk2RGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuSS4DxT; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87B41F00A3D;
 	Tue, 26 May 2026 14:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779804850;
-	bh=3qFxGfNI+DFzjVRcQB858Php3hAsReJ35Zc57upwwU8=;
+	s=k20260515; t=1779804851;
+	bh=+zKPrlMw7MaFsz1lTbBnDZ7ykcGCdI5d3+VLas0hAWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=W/cLW7QhkS1i6BmTdus7xAxEAR0qoJST+VgdDxhDJvBtDVsP/MjfS492LAZVkGAzG
-	 GxoWrHzO2LWDfAcS6XnHvujWfaM06hfeXN/9W4GyvTwKt4CIQFCJx0OVdRjf9ki6A9
-	 tP32ovfp0PHayNi8AQ1IS4Ec8YZFwn06FmwC+ak16KSLHR3wuo2KJG9AuPI8spDXHV
-	 zPGrJtGSLGSQ6RmOwJlMdhMK2xhBBBNEIRq7ZG/D+I2Hi3NrU0ozPmMun+iU1a6xE+
-	 WF/X3PkRza0oYNtQRSuzupSsiyya616oNDC4FA7BCM16wRIp6S0WWhtfTsdOcZjl+v
-	 4VfLlb82uoH9A==
+	b=WuSS4DxTKQYzZ6S3UHYmYkhdmc7Zm4W/cyHSGvNVgeDzXYjpGFzruKAqXO4dWZ+Hq
+	 BPB1MHrzL1MhhtoSWZGDuYf+wYWyAC7h0W6gGwg5KfislLzP536Xqqz0iElHtq56KN
+	 OKrS/EjwpgwP4CDvXwxlLa5MVza10i93dqPYekkHySWxSp0fYm8yc/OZT2FNtmQ1zN
+	 K0LEWujqO222pIZ5shcwKhZsL6NOB63WmbbGAiliwCFg3h3tbxtt3QeB4KJ19JvJ/p
+	 WHMos+4TMKjFJS6IA9zYH9jjBWVXRbcl86SnauR49se8QQ49H7XhyJK8ht3w3O8d+k
+	 aJm1giAgxcF2Q==
 From: Chuck Lever <cel@kernel.org>
 To: Anna Schumaker <anna@kernel.org>
 Cc: <linux-rdma@vger.kernel.org>,
 	<linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 1/5] xprtrdma: Use sendctx DMA state for Send signaling
-Date: Tue, 26 May 2026 10:14:01 -0400
-Message-ID: <20260526141405.39877-2-cel@kernel.org>
+Subject: [PATCH v3 2/5] xprtrdma: Decouple req recycling from RPC completion
+Date: Tue, 26 May 2026 10:14:02 -0400
+Message-ID: <20260526141405.39877-3-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260526141405.39877-1-cel@kernel.org>
 References: <20260526141405.39877-1-cel@kernel.org>
@@ -77,7 +77,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21967-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21968-lists,linux-nfs=lfdr.de];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	PRECEDENCE_BULK(0.00)[];
@@ -89,86 +89,424 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:email]
-X-Rspamd-Queue-Id: 537135D7648
+X-Rspamd-Queue-Id: 0A2E35D7657
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Send signaling matters only when the prepared Send has page
-mappings to unmap. Today that test is expressed indirectly with
-rl_kref, because the Send-side reference is taken only for Sends
-with mapped SGEs.
+rl_kref formerly served two distinct lifetimes through a single
+refcount: it gated when a Reply could wake its RPC task, and it
+gated when an rpcrdma_req could return to its free pool. The
+marshal path took the Send-side reference only when SGEs needed
+DMA-unmap (sc_unmap_count > 0), which made a Send carrying only
+pre-registered buffers an exception: the Reply handler dropped
+rl_kref from 1 to 0 and freed the req while the HCA might still
+be DMA-reading from its send buffer.
 
-Split the SGE DMA unmap loop into its own helper and use
-sc_unmap_count directly for the signaling decision. This keeps the
-current behavior but removes one dependency on the old rl_kref
-semantics before the request lifetime rules are changed.
+Give rl_kref a narrower job. The RPC layer takes one reference
+when slot allocation hands a req out. rpcrdma_prepare_send_sges()
+takes a Send-side reference unconditionally after WR preparation
+succeeds. xprt_rdma_free_slot() and xprt_rdma_bc_free_rqst() drop
+the RPC-layer reference; rpcrdma_sendctx_unmap() drops the
+Send-side reference. The req returns to its free pool only after
+both owners have signed off.
 
+The existing kref_init(&req->rl_kref) call in
+rpcrdma_prepare_send_sges() is removed. Initialization moves to
+the slot-allocation paths (xprt_rdma_alloc_slot and
+rpcrdma_bc_rqst_get), and the release callback re-arms rl_kref
+before the req returns to a free pool. A re-init in the marshal
+path would discard the RPC-layer reference that already exists
+on entry.
+
+Three invariants follow:
+
+  - Any rpcrdma_req held by an rpc_rqst has rl_kref >= 1.
+    xprt_rdma_alloc_slot(), rpcrdma_bc_rqst_get(), and the
+    backlog-wake branch in xprt_rdma_alloc_slot() each kref_init
+    rl_kref before publishing the req. Without this invariant,
+    an RPC task that aborts between slot allocation and marshal
+    (gss_refresh failure or signal during call_connect, for
+    example) would drive xprt_release() ->
+    xprt_rdma_free_slot() -> kref_put against a refcount of
+    zero, saturating refcount_t and stranding the slot.
+
+  - The Send-side reference is taken only after WR prep
+    succeeds. A mapping failure in rpcrdma_prepare_send_sges()
+    runs rpcrdma_sendctx_cancel(), which DMA-unmaps the sendctx
+    and clears sc_req without touching rl_kref. The sendctx
+    ring walks in rpcrdma_sendctx_put_locked() and
+    rpcrdma_sendctxs_destroy() skip entries with sc_req == NULL,
+    so a burst of -EIO marshal failures cannot hold reqs off
+    rb_send_bufs.
+
+  - The release callback re-arms rl_kref so the next consumer
+    enters with the invariant satisfied.
+
+Replies now complete the RPC directly. rpcrdma_reply_handler()
+calls rpcrdma_complete_rqst() in place of kref_put on the
+non-LocalInv branch. The LocalInv branch already completes the
+RPC from frwr_unmap_async() and is unaffected.
+
+Because Send-side references can now outlive RPC completion,
+connection teardown drains sendctx entries whose unsignaled
+Sends never had a later signaled completion to walk the ring.
+rpcrdma_sendctxs_destroy() walks the active range and runs
+rpcrdma_sendctx_unmap() on each entry with a non-NULL sc_req
+before the request buffers are reset, and is moved ahead of
+rpcrdma_reqs_reset() in rpcrdma_xprt_disconnect() so the reqs
+are still in their pre-reset state when the Send-side refs are
+released.
+
+The drain creates a teardown-ordering hazard on the backchannel
+path. With the new lifetime, releasing a bc_prealloc req from
+rpcrdma_req_release() re-adds it to bc_pa_list. The disconnect
+in xprt_rdma_destroy() runs after xprt_destroy_backchannel() has
+already emptied bc_pa_list, so the drained reqs would otherwise
+leak. xprt_rdma_destroy() now runs xprt_rdma_bc_destroy(xprt, 0)
+a second time after the disconnect to reclaim them.
+
+Fixes: 0ab115237025 ("xprtrdma: Wake RPCs directly in rpcrdma_wc_send path")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/frwr_ops.c |  2 +-
- net/sunrpc/xprtrdma/rpc_rdma.c | 22 +++++++++++++---------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ net/sunrpc/xprtrdma/backchannel.c |  5 ++-
+ net/sunrpc/xprtrdma/rpc_rdma.c    | 47 +++++++++++---------------
+ net/sunrpc/xprtrdma/transport.c   | 55 ++++++++++++++++++++++++++++---
+ net/sunrpc/xprtrdma/verbs.c       | 29 +++++++++++++---
+ net/sunrpc/xprtrdma/xprt_rdma.h   |  2 +-
+ 5 files changed, 97 insertions(+), 41 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index 7f79a0a2601e..e5c71cf705a3 100644
---- a/net/sunrpc/xprtrdma/frwr_ops.c
-+++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -474,7 +474,7 @@ int frwr_send(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 		++num_wrs;
- 	}
+diff --git a/net/sunrpc/xprtrdma/backchannel.c b/net/sunrpc/xprtrdma/backchannel.c
+index 2f0f9618dd05..e5b3463da25f 100644
+--- a/net/sunrpc/xprtrdma/backchannel.c
++++ b/net/sunrpc/xprtrdma/backchannel.c
+@@ -159,9 +159,7 @@ void xprt_rdma_bc_free_rqst(struct rpc_rqst *rqst)
+ 	rpcrdma_rep_put(&r_xprt->rx_buf, rep);
+ 	req->rl_reply = NULL;
  
--	if ((kref_read(&req->rl_kref) > 1) || num_wrs > ep->re_send_count) {
-+	if (req->rl_sendctx->sc_unmap_count || num_wrs > ep->re_send_count) {
- 		send_wr->send_flags |= IB_SEND_SIGNALED;
- 		ep->re_send_count = min_t(unsigned int, ep->re_send_batch,
- 					  num_wrs - ep->re_send_count);
+-	spin_lock(&xprt->bc_pa_lock);
+-	list_add_tail(&rqst->rq_bc_pa_list, &xprt->bc_pa_list);
+-	spin_unlock(&xprt->bc_pa_lock);
++	rpcrdma_req_put(req);
+ 	xprt_put(xprt);
+ }
+ 
+@@ -203,6 +201,7 @@ static struct rpc_rqst *rpcrdma_bc_rqst_get(struct rpcrdma_xprt *r_xprt)
+ 	rqst->rq_xprt = xprt;
+ 	__set_bit(RPC_BC_PA_IN_USE, &rqst->rq_bc_pa_state);
+ 	xdr_buf_init(&rqst->rq_snd_buf, rdmab_data(req->rl_sendbuf), size);
++	kref_init(&req->rl_kref);
+ 	return rqst;
+ }
+ 
 diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 0e0f21974710..16b9987858d6 100644
+index 16b9987858d6..69380f9dfa49 100644
 --- a/net/sunrpc/xprtrdma/rpc_rdma.c
 +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -477,19 +477,11 @@ static void rpcrdma_sendctx_done(struct kref *kref)
- 	rep->rr_rxprt->rx_stats.reply_waits_for_send++;
+@@ -467,16 +467,6 @@ static int rpcrdma_encode_reply_chunk(struct rpcrdma_xprt *r_xprt,
+ 	return 0;
  }
  
--/**
-- * rpcrdma_sendctx_unmap - DMA-unmap Send buffer
-- * @sc: sendctx containing SGEs to unmap
-- *
-- */
--void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
-+static void rpcrdma_sendctx_dma_unmap(struct rpcrdma_sendctx *sc)
+-static void rpcrdma_sendctx_done(struct kref *kref)
+-{
+-	struct rpcrdma_req *req =
+-		container_of(kref, struct rpcrdma_req, rl_kref);
+-	struct rpcrdma_rep *rep = req->rl_reply;
+-
+-	rpcrdma_complete_rqst(rep);
+-	rep->rr_rxprt->rx_stats.reply_waits_for_send++;
+-}
+-
+ static void rpcrdma_sendctx_dma_unmap(struct rpcrdma_sendctx *sc)
  {
  	struct rpcrdma_regbuf *rb = sc->sc_req->rl_sendbuf;
- 	struct ib_sge *sge;
- 
--	if (!sc->sc_unmap_count)
--		return;
--
- 	/* The first two SGEs contain the transport header and
- 	 * the inline buffer. These are always left mapped so
- 	 * they can be cheaply re-used.
-@@ -498,7 +490,19 @@ void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
- 	     ++sge, --sc->sc_unmap_count)
- 		ib_dma_unmap_page(rdmab_device(rb), sge->addr, sge->length,
- 				  DMA_TO_DEVICE);
-+}
- 
-+/**
-+ * rpcrdma_sendctx_unmap - DMA-unmap Send buffer
-+ * @sc: sendctx containing SGEs to unmap
-+ *
-+ */
-+void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
-+{
-+	if (!sc->sc_unmap_count)
-+		return;
-+
-+	rpcrdma_sendctx_dma_unmap(sc);
- 	kref_put(&sc->sc_req->rl_kref, rpcrdma_sendctx_done);
+@@ -493,17 +483,26 @@ static void rpcrdma_sendctx_dma_unmap(struct rpcrdma_sendctx *sc)
  }
  
+ /**
+- * rpcrdma_sendctx_unmap - DMA-unmap Send buffer
++ * rpcrdma_sendctx_unmap - DMA-unmap Send buffer and release Send owner
+  * @sc: sendctx containing SGEs to unmap
+  *
+  */
+ void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
+ {
+-	if (!sc->sc_unmap_count)
+-		return;
++	struct rpcrdma_req *req = sc->sc_req;
+ 
+ 	rpcrdma_sendctx_dma_unmap(sc);
+-	kref_put(&sc->sc_req->rl_kref, rpcrdma_sendctx_done);
++	sc->sc_req = NULL;
++	rpcrdma_req_put(req);
++}
++
++/* No Send was posted. Release DMA mappings prepared for this
++ * sendctx, but leave the request reference count alone.
++ */
++static void rpcrdma_sendctx_cancel(struct rpcrdma_sendctx *sc)
++{
++	rpcrdma_sendctx_dma_unmap(sc);
++	sc->sc_req = NULL;
+ }
+ 
+ /* Prepare an SGE for the RPC-over-RDMA transport header.
+@@ -695,8 +694,6 @@ static bool rpcrdma_prepare_noch_mapped(struct rpcrdma_xprt *r_xprt,
+ 					      tail->iov_len))
+ 			return false;
+ 
+-	if (req->rl_sendctx->sc_unmap_count)
+-		kref_get(&req->rl_kref);
+ 	return true;
+ }
+ 
+@@ -726,7 +723,6 @@ static bool rpcrdma_prepare_readch(struct rpcrdma_xprt *r_xprt,
+ 		len -= len & 3;
+ 		if (!rpcrdma_prepare_tail_iov(req, xdr, page_base, len))
+ 			return false;
+-		kref_get(&req->rl_kref);
+ 	}
+ 
+ 	return true;
+@@ -755,7 +751,6 @@ inline int rpcrdma_prepare_send_sges(struct rpcrdma_xprt *r_xprt,
+ 		goto out_nosc;
+ 	req->rl_sendctx->sc_unmap_count = 0;
+ 	req->rl_sendctx->sc_req = req;
+-	kref_init(&req->rl_kref);
+ 	req->rl_wr.wr_cqe = &req->rl_sendctx->sc_cqe;
+ 	req->rl_wr.sg_list = req->rl_sendctx->sc_sges;
+ 	req->rl_wr.num_sge = 0;
+@@ -783,10 +778,14 @@ inline int rpcrdma_prepare_send_sges(struct rpcrdma_xprt *r_xprt,
+ 		goto out_unmap;
+ 	}
+ 
++	/* The Send-side owner releases this reference when the
++	 * Send has completed.
++	 */
++	kref_get(&req->rl_kref);
+ 	return 0;
+ 
+ out_unmap:
+-	rpcrdma_sendctx_unmap(req->rl_sendctx);
++	rpcrdma_sendctx_cancel(req->rl_sendctx);
+ out_nosc:
+ 	trace_xprtrdma_prepsend_failed(&req->rl_slot, ret);
+ 	return ret;
+@@ -1364,14 +1363,6 @@ void rpcrdma_complete_rqst(struct rpcrdma_rep *rep)
+ 	goto out;
+ }
+ 
+-static void rpcrdma_reply_done(struct kref *kref)
+-{
+-	struct rpcrdma_req *req =
+-		container_of(kref, struct rpcrdma_req, rl_kref);
+-
+-	rpcrdma_complete_rqst(req->rl_reply);
+-}
+-
+ /**
+  * rpcrdma_reply_handler - Process received RPC/RDMA messages
+  * @rep: Incoming rpcrdma_rep object to process
+@@ -1443,7 +1434,7 @@ void rpcrdma_reply_handler(struct rpcrdma_rep *rep)
+ 		frwr_unmap_async(r_xprt, req);
+ 		/* LocalInv completion will complete the RPC */
+ 	else
+-		kref_put(&req->rl_kref, rpcrdma_reply_done);
++		rpcrdma_complete_rqst(rep);
+ 
+ out_post:
+ 	rpcrdma_post_recvs(r_xprt,
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 61706df5e485..5569f17fdd9b 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -279,6 +279,13 @@ xprt_rdma_destroy(struct rpc_xprt *xprt)
+ 	cancel_delayed_work_sync(&r_xprt->rx_connect_worker);
+ 
+ 	rpcrdma_xprt_disconnect(r_xprt);
++
++	/* The disconnect's sendctx drain can return bc_prealloc reqs
++	 * to bc_pa_list after xprt_destroy_backchannel() emptied it.
++	 */
++#if defined(CONFIG_SUNRPC_BACKCHANNEL)
++	xprt_rdma_bc_destroy(xprt, 0);
++#endif
+ 	rpcrdma_buffer_destroy(&r_xprt->rx_buf);
+ 
+ 	xprt_rdma_free_addresses(xprt);
+@@ -487,6 +494,45 @@ xprt_rdma_connect(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	queue_delayed_work(system_long_wq, &r_xprt->rx_connect_worker, delay);
+ }
+ 
++/* rl_kref has two owners while a Send is outstanding: the rpc_rqst
++ * owner and the sendctx. Replies complete the RPC but do not drop
++ * either reference. The req returns to its free pool only after
++ * xprt_rdma_free_slot() or xprt_rdma_bc_free_rqst() has dropped the
++ * RPC-layer reference and rpcrdma_sendctx_unmap() has dropped the
++ * Send-side reference.
++ */
++static void rpcrdma_req_release(struct kref *kref)
++{
++	struct rpcrdma_req *req =
++		container_of(kref, struct rpcrdma_req, rl_kref);
++	struct rpc_rqst *rqst = &req->rl_slot;
++	struct rpc_xprt *xprt = rqst->rq_xprt;
++	struct rpcrdma_xprt *r_xprt;
++
++	kref_init(&req->rl_kref);
++
++#if defined(CONFIG_SUNRPC_BACKCHANNEL)
++	if (bc_prealloc(rqst)) {
++		spin_lock(&xprt->bc_pa_lock);
++		list_add_tail(&rqst->rq_bc_pa_list, &xprt->bc_pa_list);
++		spin_unlock(&xprt->bc_pa_lock);
++		return;
++	}
++#endif
++
++	if (xprt_wake_up_backlog(xprt, rqst))
++		return;
++
++	r_xprt = rpcx_to_rdmax(xprt);
++	memset(rqst, 0, sizeof(*rqst));
++	rpcrdma_buffer_put(&r_xprt->rx_buf, req);
++}
++
++void rpcrdma_req_put(struct rpcrdma_req *req)
++{
++	kref_put(&req->rl_kref, rpcrdma_req_release);
++}
++
+ /**
+  * xprt_rdma_alloc_slot - allocate an rpc_rqst
+  * @xprt: controlling RPC transport
+@@ -505,6 +551,7 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	req = rpcrdma_buffer_get(&r_xprt->rx_buf);
+ 	if (!req)
+ 		goto out_sleep;
++	kref_init(&req->rl_kref);
+ 	task->tk_rqstp = &req->rl_slot;
+ 	task->tk_status = 0;
+ 	return;
+@@ -520,6 +567,7 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	if (req) {
+ 		struct rpc_rqst *rqst = &req->rl_slot;
+ 
++		kref_init(&req->rl_kref);
+ 		if (!xprt_wake_up_backlog(xprt, rqst)) {
+ 			memset(rqst, 0, sizeof(*rqst));
+ 			rpcrdma_buffer_put(&r_xprt->rx_buf, req);
+@@ -540,10 +588,7 @@ xprt_rdma_free_slot(struct rpc_xprt *xprt, struct rpc_rqst *rqst)
+ 		container_of(xprt, struct rpcrdma_xprt, rx_xprt);
+ 
+ 	rpcrdma_reply_put(&r_xprt->rx_buf, rpcr_to_rdmar(rqst));
+-	if (!xprt_wake_up_backlog(xprt, rqst)) {
+-		memset(rqst, 0, sizeof(*rqst));
+-		rpcrdma_buffer_put(&r_xprt->rx_buf, rpcr_to_rdmar(rqst));
+-	}
++	rpcrdma_req_put(rpcr_to_rdmar(rqst));
+ }
+ 
+ static bool rpcrdma_check_regbuf(struct rpcrdma_xprt *r_xprt,
+@@ -716,7 +761,7 @@ void xprt_rdma_print_stats(struct rpc_xprt *xprt, struct seq_file *seq)
+ 		   r_xprt->rx_stats.mrs_allocated,
+ 		   r_xprt->rx_stats.local_inv_needed,
+ 		   r_xprt->rx_stats.empty_sendctx_q,
+-		   r_xprt->rx_stats.reply_waits_for_send);
++		   0LU); /* was reply_waits_for_send; column preserved */
+ }
+ 
+ static int
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index aecf9c0a153f..97b8b2376602 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -65,6 +65,8 @@
+ 
+ static int rpcrdma_sendctxs_create(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_sendctxs_destroy(struct rpcrdma_xprt *r_xprt);
++static unsigned long rpcrdma_sendctx_next(struct rpcrdma_buffer *buf,
++					  unsigned long item);
+ static void rpcrdma_sendctx_put_locked(struct rpcrdma_xprt *r_xprt,
+ 				       struct rpcrdma_sendctx *sc);
+ static int rpcrdma_reqs_setup(struct rpcrdma_xprt *r_xprt);
+@@ -571,9 +573,9 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
+ 
+ 	rpcrdma_xprt_drain(r_xprt);
+ 	rpcrdma_reps_unmap(r_xprt);
++	rpcrdma_sendctxs_destroy(r_xprt);
+ 	rpcrdma_reqs_reset(r_xprt);
+ 	rpcrdma_mrs_destroy(r_xprt);
+-	rpcrdma_sendctxs_destroy(r_xprt);
+ 
+ 	if (rpcrdma_ep_put(ep))
+ 		rdma_destroy_id(id);
+@@ -605,6 +607,20 @@ static void rpcrdma_sendctxs_destroy(struct rpcrdma_xprt *r_xprt)
+ 
+ 	if (!buf->rb_sc_ctxs)
+ 		return;
++
++	/* The QP is drained, but the final unsignaled Sends might not
++	 * have been walked by a signaled Send completion. Release those
++	 * Send owners before request buffers are reset.
++	 */
++	for (i = rpcrdma_sendctx_next(buf, buf->rb_sc_tail);
++	     i != rpcrdma_sendctx_next(buf, buf->rb_sc_head);
++	     i = rpcrdma_sendctx_next(buf, i)) {
++		struct rpcrdma_sendctx *sc = buf->rb_sc_ctxs[i];
++
++		if (sc && sc->sc_req)
++			rpcrdma_sendctx_unmap(sc);
++	}
++
+ 	for (i = 0; i <= buf->rb_sc_last; i++)
+ 		kfree(buf->rb_sc_ctxs[i]);
+ 	kfree(buf->rb_sc_ctxs);
+@@ -739,15 +755,20 @@ static void rpcrdma_sendctx_put_locked(struct rpcrdma_xprt *r_xprt,
+ 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
+ 	unsigned long next_tail;
+ 
+-	/* Unmap SGEs of previously completed but unsignaled
+-	 * Sends by walking up the queue until @sc is found.
++	/* Release previously completed but unsignaled Sends by walking
++	 * up the queue until @sc is found. Entries left behind by a
++	 * failed rpcrdma_prepare_send_sges() have sc_req cleared.
+ 	 */
+ 	next_tail = buf->rb_sc_tail;
+ 	do {
++		struct rpcrdma_sendctx *cur;
++
+ 		next_tail = rpcrdma_sendctx_next(buf, next_tail);
+ 
+ 		/* ORDER: item must be accessed _before_ tail is updated */
+-		rpcrdma_sendctx_unmap(buf->rb_sc_ctxs[next_tail]);
++		cur = buf->rb_sc_ctxs[next_tail];
++		if (cur->sc_req)
++			rpcrdma_sendctx_unmap(cur);
+ 
+ 	} while (buf->rb_sc_ctxs[next_tail] != sc);
+ 
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index f53a77472724..f879d9b9f57e 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -427,7 +427,6 @@ struct rpcrdma_stats {
+ 	/* accessed when receiving a reply */
+ 	unsigned long long	total_rdma_reply;
+ 	unsigned long long	fixup_copy_count;
+-	unsigned long		reply_waits_for_send;
+ 	unsigned long		local_inv_needed;
+ 	unsigned long		nomsg_call_count;
+ 	unsigned long		bcall_count;
+@@ -505,6 +504,7 @@ void rpcrdma_buffer_put(struct rpcrdma_buffer *buffers,
+ 			struct rpcrdma_req *req);
+ void rpcrdma_rep_put(struct rpcrdma_buffer *buf, struct rpcrdma_rep *rep);
+ void rpcrdma_reply_put(struct rpcrdma_buffer *buffers, struct rpcrdma_req *req);
++void rpcrdma_req_put(struct rpcrdma_req *req);
+ 
+ bool rpcrdma_regbuf_realloc(struct rpcrdma_regbuf *rb, size_t size,
+ 			    gfp_t flags);
 -- 
 2.54.0
 
