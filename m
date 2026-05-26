@@ -1,221 +1,186 @@
-Return-Path: <linux-nfs+bounces-21953-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21954-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YHt6DqCHFWpXWQcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21953-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:44:32 +0200
+	id GOe2K2+MFWrUWQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21954-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 14:05:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF99A5D5131
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:44:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17E0C5D5446
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 14:05:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9BBDA300E2AB
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:44:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2BFA530078DD
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE523E7BA2;
-	Tue, 26 May 2026 11:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D8C2DECBA;
+	Tue, 26 May 2026 11:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="SAIkV8iJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CY/iQIK1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bc9zM/u2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-c4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D38E3EB816;
-	Tue, 26 May 2026 11:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183403F7AAC
+	for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 11:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779795866; cv=none; b=eyjg+m8UYEcPo6JMRz0NbkNbp63kN6gb+VmajVblZtnLbwafjW6+agLQ3MdaV9joifQB/SUt/TpI0kGexSoLu0Vzqu0BUIHZBpTZuGez/4+lJJZvDcp4HTd7h8oyktXCGSnHiX0VNLQBpTFfrw01zPa6BQGIBqMuvI4woPMO/ak=
+	t=1779796595; cv=none; b=FWhaKPWAypzSjaiFTP8gKtEoUup+kkEmltKXPEbYBWeuwbFWsQg7L/M08GtpHUi7AgwAlTRXkqfqqqix24UviVjLNlaI7vxNkPaleEHayiZ0spnDZybCAabbIfst+yfH6cPPt3aa7J006AvzqNboHH3IFW4588e5suUDPYGIdjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779795866; c=relaxed/simple;
-	bh=1iRe1G8DjxLaImPPjJmAD3R7bqT5pa789eOi5ndJX1s=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=lDerXmp5OA4x+zpXCmRa1zuphKClTdXEg2LMhETm16HzqfvA0jyZK/ZZKrRtNbOkFocVCB4DzpHrdjr4UhmM1CeQQCCXCWF2jvf1gJlLOI5oCnIiOBdJOE7ARndjaNihuGUqfQDaC1MJKSX7rQwaRlaWP1k48vTyYeDlp7/3bzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=SAIkV8iJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CY/iQIK1; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id BF25E7A0108;
-	Tue, 26 May 2026 07:44:16 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Tue, 26 May 2026 07:44:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
-	1779795856; x=1779882256; bh=tcilqjZAp2FqtP4X290wqUxa3RN0M3eMK0G
-	UJ4lRsBE=; b=SAIkV8iJ5PFNn//AWiNv+wVode/60RZVZEH9C9Y3SpJvd3nir12
-	u5/5JzCk/FX/aiuLfTr7p32n1tOsToIqAm3KHxOOSn/d3fP8cXGJ04XogpYlXJxk
-	3bv16wj1W7e3zp3x6JO9IaorBruWPLuiyrNwJ/E+2kKIj/UvwBULOdDdyJuWw7g0
-	BIFixXM3YbSzay9UE8TZTDVOvWb2i9nWMb6t8MJpTv56mbm3AQcIi3YPYffcSqqU
-	mzyu+XbhyKsHHFFbldiWiFb1cPRSk5dzQv/4RVAnAWwo/5K6vLoLIoY/SI/xK8sb
-	xYxp2xgnxbwmVYs0/0DRm83M4EeyVAZBndQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779795856; x=
-	1779882256; bh=tcilqjZAp2FqtP4X290wqUxa3RN0M3eMK0GUJ4lRsBE=; b=C
-	Y/iQIK1DF9hLRpJF1CXMakICNqYCNl/+xgNafxVG+vOrLln+JYW/8O1WiR7Fm1PX
-	CF7HUIYrLLjffB4ZmoOp++R8NZjgDDQ1pOrP3iAPmtxZUPCd2Inh4Ct7Xl5C2PHh
-	YO4LR5J9eZQA8DkWK4u5b+SHqeneiYxMFK9MiXTgN22FTg08Fu0J+qLKJ1AT4zR2
-	Tv+v7mBaBrTBs0KqnYzyFc5J3wD02ghEzzBvuCrQMSdHMYIQzAHG3Z6TAeVho+sm
-	TSAqbrFwB/XCR3FC1dygIK6u/UXX57nSb1BJESbANH0cul0LkG5M7OTu85pDXDqq
-	x//cd+ahqHslQXOOQ7/8w==
-X-ME-Sender: <xms:kIcVamTlp057amikPDFaSG5GQfVyffM2ljxj5LP2eO9JZfvU8lWyrg>
-    <xme:kIcVaj-UNkiewwBNL1fExav-eqsy6AYDO6MO39AZjOq9Wt-MztjaYuiHuNBtMLPXX
-    V9g9gJI3RGIOfDByP6K-pwuh1ukCLsXakQ3uKYgYZfQiJqu>
-X-ME-Received: <xmr:kIcVavZ6_J0jlLoUZ3ZPrIrxv1lE4h9dFru_9agyOdN98R4UJoRbEZGLaegW724Ow9vvaq09dx3C-X8W3UuzC0Rx9Dp4qeg>
-X-ME-Proxy-Cause: dmFkZTEOOGnILsczrflTug94+56Ue0zmPkVjHIBoZ3PmJ5AYmfs6UNKlU84wdvlTZmhFMQ
-    WQ+rorvHuZdEdXGPkKgoIZL+DK9Hapy/DsVCj87yQOwJT9t4TV0GHJWRO/R9ZhMTNw0BJN
-    +U+SfigzHp7FbNfjd+D67y6OSv3+4OkTrn1Mt8eSs3geVGv/X1FnGx72v4tTaKs2Zl1/Gy
-    QnqM5zYLiba/jTPqGwJkedY7uluEOqdPcWx8yMy0OIRD0/Y0ZLbS4T4KvLkip1SfMzbN/Y
-    bN4JXn/WejlXSRF5CsYdGj0D/MZyUFgE0LLdw2WfhBDDtSLa0ZCxE6y/dmy/2vQ/UrrvGa
-    NHeFFwlMUArkBbc6KOeV0FXu4zyEm1+VlxBspmA5NdhdestpftgfbDK0jLLJ+FwwjLH4PV
-    NmvQnwC8DLbJv7Tmp0GdV5ruxEsDjcgv3IAawtZ+ojGN1MPPE2HttL1urUu8CutB3whoAZ
-    rcKQlgLqHc1BuOP9tyCeh60orWWRqBOrxQjGi7Uemj0ciKf6fFHSYyfqrNGfUT9VciaeLK
-    VyKayClb4nfBTk8luSIxZfvcepNpb7b5ta9iSjdEnFckx/UdFy3BuqR46STiR6E0u6UF94
-    yWpMdtFfV4h23DBcRlgeMNGRP8v4G7w6VBcQ0aeOhvt6nTCJwaTIbv5sY2XA
-X-ME-Proxy: <xmx:kIcVasrkOSz8REZMIbGDhmlN_D5yPnhsCvXB8PzOsuF0B_IcxnNE7w>
-    <xmx:kIcVarQpuuVEt05DV2gqDswfgJgLjA2atLOvhl-w97JQRrUXxzZ_iQ>
-    <xmx:kIcVaopMkJKSyIvEGbz07OVtssa8N8D4XE5r_TCHonKl7klfUjMvkw>
-    <xmx:kIcVat2tNxf2C30r1a6EZO7HZHlyFU1oie_-o3DbWTLXW-cpkQHSQA>
-    <xmx:kIcVahlR0wh5FpnCIAXAV3gAbMl_RJ9lUhD3i4Zf_kt-q-MDNvKBrKBa>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 26 May 2026 07:44:13 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1779796595; c=relaxed/simple;
+	bh=eQ/HwIQrQTeXS73nqmldT+C8ufmpbc2K90nVCqukLUg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hOOmp+pLjAOA10S8yYr1dN9+s+8G17KPDynrVPK2YSRRFwZ+z76Sg6TaZmY8lPD46ZPXMs61TRgMOBi64wWV/QlsCLr6ubqeq2OPKBrIvYdvn1bRWkfkVrFriWEd2mfb5ZNZkfOG9Ld2+/McLu2K69a+blfFFthJoV7f69iCJEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bc9zM/u2; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 585A61F000E9;
+	Tue, 26 May 2026 11:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779796585;
+	bh=DDjZdfVI38kvgzbmQMkh+A+K2ZcTzlEEjV1EeGHWIIQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=bc9zM/u20uRAFq5b/UyoThAHjCL3SMeebFJnXxTKIisvd2XcMRY2vYLhA0ejjEOUl
+	 jOX243JtxaskAfIV9WhElDNTrxOsAVtAm8a1/3KUigWDh8GikhnoQW0tR5emJyNw6Z
+	 AAwJZOAieM4+0EG18rIb2y4nfqJfF71OMA9HnHqkFUcEOlE52mZLectm2A0VN8f0cK
+	 o/uNIyHAHOTeDpcdc+NE72YKPdmu9GNByBKAsmgA18/vs3lpnV58keUr75bpXG1zFF
+	 YLIQMGiEw7QUpxztVVYneSUJPZuN52Y5eHdXlmJzACVWncbZVfV5SR7Cb1i2EapMGS
+	 Ugz6R4zdK2guA==
+Message-ID: <022276b7a4d1fbf19dd36424cc8f91368553278e.camel@kernel.org>
+Subject: Re: [PATCH 02/] nfsd: fix minor issues with atomic_create() use in
+ dentry_create()
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>, Chuck Lever <cel@kernel.org>
+Cc: Benjamin Coddington <bcodding@hammerspace.com>, linux-nfs@vger.kernel.org
+Date: Tue, 26 May 2026 07:56:23 -0400
+In-Reply-To: <20260526053004.4014491-1-neilb@ownmail.net>
+References: <20260526053004.4014491-1-neilb@ownmail.net>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jori Koolstra" <jkoolstra@xs4all.nl>
-Cc: "Mateusz Guzik" <mjguzik@gmail.com>,
- "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Benjamin Coddington" <bcodding@redhat.com>, linux-nfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Subject:
- Re: [PATCH] VFS: fix possible failure to unlock in nfsd4_create_file()
-In-reply-to: <ahVXG28wpqDwZpFT@lt-jori.localdomain>
-References: <177969022571.3379282.16448744624428323496@noble.neil.brown.name>
-  <36bvv2anew3cegsd374uzwdgue2txpgnzo2357ye5pldqi4by6@lafavyjgevqo>
-  <ahVXG28wpqDwZpFT@lt-jori.localdomain>
-Date: Tue, 26 May 2026 21:44:11 +1000
-Message-id: <177979585120.3379282.15888962273037831904@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm3,messagingengine.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,zeniv.linux.org.uk,suse.cz,oracle.com,redhat.com,vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21953-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[xs4all.nl];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21954-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	HAS_REPLYTO(0.00)[neil@brown.name]
-X-Rspamd-Queue-Id: CF99A5D5131
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 17E0C5D5446
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 26 May 2026, Jori Koolstra wrote:
-> On Tue, May 26, 2026 at 09:13:28AM +0200, Mateusz Guzik wrote:
-> > On Mon, May 25, 2026 at 04:23:45PM +1000, NeilBrown wrote:
-> > >=20
-> > > atomic_create() in fs/namei.c drops the reference to the dentry
-> > > when it returns an error.
-> > > This behaviour was imported into dentry_create() so that it
-> > > will drop the reference if an error is returned from atomic_create(),
-> > > though not if vfs_create() returns an error (in the case where
-> > > ->atomic_create is not supported).
-> > >=20
-> > > The caller - nfsd4_create_file() - is made aware of this by checking
-> > > path->dentry, which will either be a counted reference to a dentry, or
-> > > an error pointer.
-> > >=20
-> > > However the change to use start_creating()/end_creating() (which landed
-> > > shortly before the dentry_create() change landed, though was likely
-> > > developed around the same time) means that nfsd4_create_file() *needs* a
-> > > valid dentry so that it can unlock the parent.
-> > >=20
-> > > The net result is that if NFSD exports a filesystem which uses
-> > > ->atomic_create, and if a call to ->atomic_create returns an error, then
-> > > nfsd4_create_file() will pass an error pointer to end_creating()
-> > > and the parent will not be unlocked.
-> > >=20
-> > > Fix this by changing dentry_create() to make sure path->dentry is always
-> > > a valid dentry, never an error-pointer.  The actual error is already
-> > > returned a different way.
-> > >=20
-> > [..]
-> > > +		/* atomic_open will dput(dentry) on error */
-> > > +		dget(orig_dentry);
-> > >  		dentry =3D atomic_open(path, dentry, file, flags, mode);
-> > >  		error =3D PTR_ERR_OR_ZERO(dentry);
-> > > =20
-> > > +		if (IS_ERR(dentry))
-> > > +			/* keep the original */
-> > > +			dentry =3D orig_dentry;
-> > > +		else
-> > > +			/* Drop the extra reference */
-> > > +			dput(orig_dentry);
-> > > +
-> >=20
-> > atomic_open() is a static func with only 2 callers. perhaps it would be
-> > better to change its semantics instead?
-> >=20
-> > I'm asking because the vfs layer is very slow single-threaded and this
-> > here just adds even more slowdown due to avoidable 2 rmw atomics.
-> >=20
-> > Granted the affected routine is only used by overlayfs and nfs, but even
-> > then this should not be necessary.
+On Tue, 2026-05-26 at 15:27 +1000, NeilBrown wrote:
+>     https://sashiko.dev/#/patchset/177969022571.3379282.16448744624428323=
+496@noble.neil.brown.name?part=3D1
 >=20
-> I only notice Neil's patch now. I found this same bug and submitted a
-> patch on the same day :) [1]. I think it is awkward that atomic_open()
-> dputs the dentry on failure, so that is the approach I chose. But
-> perhaps there are good reasons for it, although vfs_create() does not do
-> this for instance.
+>  reported a couple of edge-case problems with the use of atomic_open()
+>  in dentry_create(), called from nfsd4_create_file.
 >=20
-> There are also some other things going on, including a stale docstring,
-> perhaps I should have separated that out.
+>  These patches attempt to address those issues.
 >=20
-> [1]: https://lore.kernel.org/linux-fsdevel/20260525101544.195832-1-jkoolstr=
-a@xs4all.nl/T/#u
+> NeilBrown
 >=20
+>=20
+>  [PATCH 1/2] nfsd: fix possible fh_compose of wrong dentry in
+>  [PATCH 2/2] nfsd: ensure nfsd_file_to_acquire() does not use a
 
-I would rather no big changes to atomic_open just now.  I'm about to
-post patches to rearrange lookup_open.  I'll include you and would value
-your review.
+For both:
 
-Thanks,
-NeilBrown
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
