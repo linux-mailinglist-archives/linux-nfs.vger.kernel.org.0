@@ -1,51 +1,52 @@
-Return-Path: <linux-nfs+bounces-21980-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21981-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sBWcG8fJFWpEbgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21980-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 18:26:47 +0200
+	id GEGvFY7TFWrRcgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21981-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 19:08:30 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E02345D9A86
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 18:26:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEE3F5DA5AB
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 19:08:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F15F13000713
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:25:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 074BB3042249
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02A93B5821;
-	Tue, 26 May 2026 16:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAA7D3C5832;
+	Tue, 26 May 2026 16:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iruf0jDL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jb5CKRdF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD293B38B8;
-	Tue, 26 May 2026 16:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EF538CFE7;
+	Tue, 26 May 2026 16:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779812698; cv=none; b=JYGxy/AWGEVFghfFL512tfQ+5KpsjrVuf/r51/6hv1e60L69WwHANdzogAqDxx2yRAAgVnzQruyUdP1/hCKojrTgjhdJ5aZXxPeMQifWtz5LY8S7JTsUIKfNERRnJ0tmJ6m/1mHiWjdc91inLIfDOKRtfZIf/7OCyXTGl/MVG3U=
+	t=1779813545; cv=none; b=rVU/5R6glPkkb5l7Hweyad0/x4u74r+JXy2ER4SIT2rILFCz4i2v9UNnP+CdMLHWydXQKLLvL8ZHURi0rPKUVIfsI1Rzq20kPU8r/YRJVn5kfKMUWTde8SIQngYwgDKECKgSEx+2EFHWL0sZsWwOt7g2S9vJJkG/Ey4TSTa+Rpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779812698; c=relaxed/simple;
-	bh=Qs+drLTdfHANV4ibP3h9QqGu1P/ASE9VyuPSa4GpKj4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hQHhQn+UwQKc5AqNAeJtbf8Pd9+YaEIy51/j283JRtEKx52ruf2umz78glEpCZxTIKDgw6azcxwWb1wI1zDvzltcMSIiubeQ0CjdSxP0y4fX9sAgUuJLlWlGXZK7s9OAUwavDnJoAsGGD1jixC4i2mYuNUfhQn8CZ922IdYuoBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iruf0jDL; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EEDE1F00A3A;
-	Tue, 26 May 2026 16:24:56 +0000 (UTC)
+	s=arc-20240116; t=1779813545; c=relaxed/simple;
+	bh=sfItHrXMrp/IfU6OGFso7zpsqYfru7gMH1hXlM+p6D4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SKQNoWzUAguQzSTBzVuj6GkmvQv892SW0+twthv0o0gFdzzquVypUR7G0KOx1ch3QNi/wKdhLr4KT2/f53S+MXRNmZ8PrBVHHSs6tMPHaXtVYF9utVD0Ls13h2A30kweEb3v8QVXqStRlsjXJFhpUDm/EcF8H/EoxUOYaAlno+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jb5CKRdF; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30F81F000E9;
+	Tue, 26 May 2026 16:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779812697;
-	bh=9nCFAQCP2BZx8jA4KvO/3irz3CKK5yscEAn46NjEwuM=;
-	h=From:Date:Subject:To:Cc;
-	b=Iruf0jDLSfod3uSNG/6HVFQKyOVIIobMIJuUJ+3ow+SQJ7TmIeocZSt2IqwOANJtY
-	 RjgpkrQBV8XK8eBQtG29s0u8kb28fUyMd1HOshJXIfnArDQsIErN0HyAvKUEGvKhm+
-	 dz/9amNXR/RavYWWz+8m802Lnex50Jpu9VGPLa8vR0h4qJi3dWAWln6aYVhNyqq8e3
-	 LP+ZIdg+42F0CQW3AapmFSpIKXv65rXVGUzNBC3+rzKFjTUqZ9fpq75evlC3fUFoL0
-	 oPwPLJVoX6P0vRZ7svOW5sU0M56TAs+xff7g3Ebm21/qcJ88MJJwovth8DMD5S0Ci6
-	 wTPsAUmy8E61g==
+	s=k20260515; t=1779813544;
+	bh=K8S8VoI0VPRUKv7R5iSevFOc3PL1XpPbcZEnMURVdck=;
+	h=From:Subject:Date:To:Cc;
+	b=Jb5CKRdFgOz4P5KPV4hUyIGW6Oc/PPlE3mpWa7ma9ScpWG77IiLBwmcfHUBNua6iJ
+	 pPugjxcrDPywFjUAfHmVf4YjQgii49WICsGOnnpXeT0khwB/+tZRJ2vmqeZvTqRvIK
+	 z2tZDnMMdRJ0dNYUWyFXeiw3WAxeeVnbvGxFZpl7gAVsM/DRJboeriQ/QBngbFs5Hs
+	 eJHWG+B3fzob12koQ1PVYsVpfEOe/hjXPBgqhEDGD4Xo3TYaB7wPF406bHaUL6JpvD
+	 Hy9nfs63xJaKP64FdZhz0xSAenohPKwDRxWtJyS+elzF/vA2TizgoUYDl4ecmtky84
+	 0RDPzwG6cqFZA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 26 May 2026 12:24:48 -0400
-Subject: [PATCH v2] nfsd: don't free session slots that are still in use
+Subject: [PATCH 0/2] nfsd: callback channel fixes
+Date: Tue, 26 May 2026 12:38:44 -0400
+Message-Id: <20260526-cb_recall_any_callback_running_stuck-v1-0-310011a028f3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,43 +55,41 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-nfsd4_sequence_shrink_uaf_on_loaded_slot-v2-1-74a89db0639e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/53NQQ6DIBRF0a0YxqUBilY76j4aQ1A+SjTQ8tW0M
- ey91CV0eN/gnZ0gRAdIbsVOImwOXfA5xKkg/aj9ANSZ3EQwUbFSVNRbNFIhvFbwPSgco/OTWrV
- Vwas5aANG4RwWyptaXjpgvNY9yXfPCNa9D+rR5h4dLiF+Dnnjv/UPZOOU05JJXemrNU0n7xNED
- /M5xIG0KaUvZ/zq/eEAAAA=
-X-Change-ID: 20260526-nfsd4_sequence_shrink_uaf_on_loaded_slot-19843be018ac
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2N0QrCMAwAf2Xk2UJs2Sz+ikjpsmyGjSipE2Xs3
+ 62+3b3cbVDYhAucmw2MX1LkrlWOhwbolnViJ0N18Og7bH3nqE/GlJclZf2kH/SZ5mSrquiUynO
+ l2Z3GEDFiCOgj1NTDeJT3f3O57vsXuLNz+HYAAAA=
+X-Change-ID: 20260526-cb_recall_any_callback_running_stuck-7f3808033028
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Mike Snitzer <snitzer@kernel.org>
+ Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3701; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=Qs+drLTdfHANV4ibP3h9QqGu1P/ASE9VyuPSa4GpKj4=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqFclUvdJqeTeJyyIkON4/089f1hw4vrIKFytEf
- ocQh17WRxuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahXJVAAKCRAADmhBGVaC
- Fa4VD/0U/p4O6KnPnrPLOb5m7K7iO0l1wLZoLAqABCs+9IVRmjD/zNcxIg8sanCrokg3NhrG3t1
- nNjG87Ip8G3dMcneu2aOFlBcbx6ZXzfDeVPMns6hwMVKScukU0jl5kBIrU79hOlW6k1fDlAlGiV
- O5DiFwtF5Iw/9v8wTM3Wq21uUsD4uvhPa/YOcFwb91zQrpYIG2JdTEeDUbE6HYgNsNzJAVGDCZY
- mE7WeYAYBtgEhk2q2Uq75mnlP6ImmKDDqpnWER6ejYbEMAgONbNrcaAU4dLjHHiBpHEsgVHoPq7
- COk56m2qYTbCz4oSMZYQF4ZmjeVK1STqJumUqVL9ChSAqnB00+gRHjpIJFz36bgoBBPtyCW6I22
- mbpbMEhQtikzhQplx2MJo1Zo9zp0S0RG6+k/2k/Cc85j7grGSl9xDPhlDC/R7Xk0WpskJp/BVbK
- xSd3D7gT5ffyT7dDdHMeXVw8a7kwyb21o3X4tUs8rC+u7lR8CKRpoGpn8UYeK8H1B6+O6PX/22Q
- 7PzKU5rYLV3Toy+WpMim7ytb8SM1O1w9Z2t/2Dx7uO6Yy54SwiMAJEowKBaoBN+vdftLR6wggs0
- vktQAxCq87EvYknDnYhSohVrtaCeLIkTZHukvm5MbVxK3Wsbb5PunHK0SVBbKR6oB1WyM/Tjhi+
- tjRp+ZZzwZPCvTg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=585; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=sfItHrXMrp/IfU6OGFso7zpsqYfru7gMH1hXlM+p6D4=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqFcyjdX7uy7NTwpBMy0YY+QW2kXwM9k3RQWs3M
+ 9EKeezxlkeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahXMowAKCRAADmhBGVaC
+ FVzqEAC5G5W287RQb8s6u9ygAHZ0oiYjYOVmVTVRDOXV6kK/t26O1hKxpcyuOg2gN8iDDxmNJLS
+ wZ6xHacsyE1agjqHUlvESsBRemvAnR6Ol7gIkfWodCjPc2ZOUFQBShkv2nconQasOfy2sWxpU7q
+ U7hWAO2GXB0eo40bxqjwplExn5RJ57cYTkK2Y8/DDb4htqlyFPcRM7Nz9JC2GjkiDX4mfGMomDK
+ T1UWi5wus07Y6/kGHswv+FoFktZvFYwuWuEXD+Arc9AIm487SXQFYPaqOR88yZ3TmPu22FNP5kT
+ 6l22ysoUeNS8OaWwCS4eL7sAySt0EgrgKR8ja8ekvvMy2LEiHqUO4uFe1LPWqFVsJJZzFJ+3Ue9
+ Grj/R+xF60qgn6AL3Uocmrwp2CirYDcmLJNxjX4VXaCjYwUbb+WyiaCDmQLW4prD1ufmlEky0R0
+ EzgveL3UWpiiP9O5bVHIFcQc5YiZr1LBR//xSsRxsmaru97NUg0Poi6Y7AxbQTHWQhpl+hYq7o8
+ m1f5VEjBB9+tRwWbY3MBPqsNKuEsiM5ivjoPbhwBXfAitk+GbYjAc1K+7YU36n3scyj5l7Ly6ff
+ sYdR93FJtxU0KQP6YptRv1QI5ZpJwGXCwbMgyo/PQu2G439pxkxVQwalg+jmz3kubViWOvK74oe
+ tPsiXMezJyS9OFQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21980-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21981-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,102 +101,30 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: E02345D9A86
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: AEE3F5DA5AB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-nfsd4_sequence() can free the very slot it is currently processing.
-When the session shrinker has reduced se_target_maxslots below
-se_fchannel.maxreqs, the shrink path checks three conditions before
-calling free_session_slots():
+Some fixes for the callback channel machinery. These problems were
+mostly found via agentic scans.
 
-  1. se_target_maxslots < maxreqs  (shrink was advertised)
-  2. slot->sl_generation == se_slot_gen  (slot is up-to-date)
-  3. seq->maxslots <= se_target_maxslots  (client acknowledges)
-
-However, seq->slotid is never checked against se_target_maxslots.
-A client using a slot in the range [se_target_maxslots, maxreqs) can
-satisfy all three conditions: its slot has the current generation
-(set by a prior SEQUENCE), and it sends sa_highest_slotid <=
-se_target_maxslots to acknowledge the reduction.
-
-free_session_slots() then kfrees every slot at index >=
-se_target_maxslots, including the caller's own slot. The function
-continues to write sl_seqid, sl_flags, sl_generation, and stores the
-dangling pointer in cstate->slot. Later, nfsd4_store_cache_entry()
-copies up to maxresp_cached bytes of the compound reply into the freed
-sl_data[] array, corrupting whatever slab object now occupies that
-address.
-
-Additionally, a concurrent thread processing SEQUENCE on a different
-high-numbered slot can have its slot freed out from under it.
-NFSD4_SLOT_INUSE is set under nn->client_lock before the lock is
-released, so any concurrent thread past SEQUENCE will have its slot
-marked. However, free_session_slots() does not check NFSD4_SLOT_INUSE
-before freeing.
-
-Fix both problems by:
- 1. Checking that the current request's slotid is below the shrink
-    boundary.
- 2. Scanning slots in the to-be-freed range for NFSD4_SLOT_INUSE and
-    deferring the shrink if any are active.
-
-Fixes: 8fb77d12c76e ("nfsd: add support for freeing unused session-DRC slots")
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Assisted-by: Claude:claude-opus-4-6
 ---
-Changes in v2:
-- Skip doing the shrink if any potential victims have NFSD4_SLOT_INUSE set
-- Link to v1: https://lore.kernel.org/r/20260526-nfsd4_sequence_shrink_uaf_on_loaded_slot-v1-1-504a6a7fd9b4@kernel.org
----
- fs/nfsd/nfs4state.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+Jeff Layton (2):
+      nfsd: defer setting NFSD4_CALLBACK_RUNNING in deleg_reaper
+      nfsd: clear CALLBACK_RUNNING on failed delegation recall queue
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d5cbf626ab9b..496a86d4d8a2 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4769,6 +4769,19 @@ static void nfsd4_construct_sequence_response(struct nfsd4_session *session,
- 		seq->status_flags |= SEQ4_STATUS_ADMIN_STATE_REVOKED;
- }
- 
-+static bool nfsd4_slots_inuse(struct nfsd4_session *ses, int from)
-+{
-+	int i;
-+
-+	for (i = from; i < ses->se_fchannel.maxreqs; i++) {
-+		struct nfsd4_slot *slot = xa_load(&ses->se_slots, i);
-+
-+		if (slot->sl_flags & NFSD4_SLOT_INUSE)
-+			return true;
-+	}
-+	return false;
-+}
-+
- __be32
- nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		union nfsd4_op_u *u)
-@@ -4848,7 +4861,9 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 
- 	if (session->se_target_maxslots < session->se_fchannel.maxreqs &&
- 	    slot->sl_generation == session->se_slot_gen &&
--	    seq->maxslots <= session->se_target_maxslots)
-+	    seq->maxslots <= session->se_target_maxslots &&
-+	    seq->slotid < session->se_target_maxslots &&
-+	    !nfsd4_slots_inuse(session, session->se_target_maxslots))
- 		/* Client acknowledged our reduce maxreqs */
- 		free_session_slots(session, session->se_target_maxslots);
- 
-
+ fs/nfsd/nfs4state.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 ---
 base-commit: 97bac3c7a039675d7ae71fbdf3a7c39e840339b6
-change-id: 20260526-nfsd4_sequence_shrink_uaf_on_loaded_slot-19843be018ac
+change-id: 20260526-cb_recall_any_callback_running_stuck-7f3808033028
 
 Best regards,
 -- 
