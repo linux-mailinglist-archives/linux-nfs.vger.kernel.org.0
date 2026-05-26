@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-21969-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21970-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UAdwOMaqFWpuXgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21969-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:14:30 +0200
+	id IApKO46sFWoZXwcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21970-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:22:06 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67CFD5D73D2
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:14:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8229E5D7607
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 16:22:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 230B63013EDC
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 14:14:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DFB6D3046D67
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 14:14:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DEB93FE660;
-	Tue, 26 May 2026 14:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086743FF1A1;
+	Tue, 26 May 2026 14:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5rtFL1Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwyyBDa1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268A43FE357;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73C73FE377;
 	Tue, 26 May 2026 14:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779804853; cv=none; b=EuH0xEJe4E5yMyTJd9E7rgqA64AOXLfhu9k7UZcPcgG1zmMx2ws9K5Z4k39W5DjIKtiX8ht5RBu2XMgDGuZD4rj4RKWT5sxELR/EJkVTI/jVcq+JLzRl4V0n+SaSWfwSAKTz+dyw3P0RqlNVMwgoPnKdfxzbV1uQdttlO+UfGHs=
+	t=1779804853; cv=none; b=Nhz+KkEtQmhXRgL3Hk3nfVY1pI7tGtTCAeyQIkpci0rAFKFC5wIZ5GZiWLCm/57Y8PqGt5K+6LnELQLswoncn2in5vdvD5WRDA1gH+QJaKOUx64QoNQnzXbQRPs1b8BcZu0SN3OJUkude1oklAlBsAInnB8qmb5D5OoVXJfUhkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779804853; c=relaxed/simple;
-	bh=7mkquXFd/dd4EOdIJ5PnAu7GZA16S+ZjbZQ7lTghWaM=;
+	bh=IV7nuttzZXIhY+W38QqbvWvXZO39R3M5kSwMdCidel8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NdjMzl5Plu6KJKUUWMX1eDxzFkNAgGu8D+1h8bjYimsJRAwHXZ6ExHNiSOa2YvUA3rPvOZPum1knuLmp8BlfF47aInAs1c1sxx/lyFjEfeqfufv3p8oyS/lN/CFAdgRDD+MCSFczI2vk27bJPH1NRfD0Ng8397tB4VPuU1EeSRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5rtFL1Y; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 895B41F00A3C;
-	Tue, 26 May 2026 14:14:11 +0000 (UTC)
+	 MIME-Version; b=qT/6NkuNpxv3vqd+yCPyUJA0Flj/4lrnvo/Za9MRFp5jm5ZdvV8qbjghVofpPRZIQc+rav9ESbf994+apWVcen9r4bRgO0dU33cwVsqwGAQnbspZAdOp38MuQOcLQBMDbzwij+CJ3VBaw8v/2cT5yYTwKVR2j9gZVaz/bDpoomU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwyyBDa1; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296691F000E9;
+	Tue, 26 May 2026 14:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779804851;
-	bh=LXxk4hWKGM9djPc2N7eE7IWZCzTCa9JDU/sCbqIRC7I=;
+	s=k20260515; t=1779804852;
+	bh=Am3DWXR8uqhXYxeA9vZk67rwWUUEEQb67gNSXHX+kGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=m5rtFL1YohIS/UPtkW85+Xl/sHf8ZaqofdOAQuWABFVi+GZd/z/fbKYUFVUPn9et/
-	 8wPAFvX3YGMwB9YEQ2+XXBRQw7wfCy3NunsHct7pGlXvHJ4KOaXgD3hBU+gA0XLBAz
-	 x98FnwEx7xZk59yO5DMLWFih/HzjZl0wisy1QQdjFO+PkP09Nom0ORwfDk22m8SXHt
-	 Dtzks4vUSJYiK0ons8RgOR/7E6rK7DpDE14/gC7B4T/+/0ug0Ktump8Y98dCZ+ImSD
-	 XnFfaoAcXQoYyZSsQOL00z5PCi2W0ugQ6yjXsQTZTaAC+rVL1FI53ZSvGtFGrvst3z
-	 VLjyPVr9mcD3A==
+	b=bwyyBDa1movU7VNirqmSDFTZfnJAwqWLEqlCqaQGQnfDfKr3QJKJRog5BUzTBzSgo
+	 00DRXRh0fqvquEULb6D4Dnvq6fOLBNKGDxNlgh87sO9RTv2j7O586ot4bt2ZVRbhTP
+	 xCmOMtot+Zf3nPXSDPGNjS9T+QhmcVm1fiFiHjNsDuqU/2m2t0QQF/+hMAenlJyFp8
+	 2biV2r3JAdnE7y60ihncPULAnNT5wmAz9rsCaHjaHRhFimzrr5bxTe/ZmPSZ0UGcoa
+	 E+ruRu9r7B0+XyBpHC5UQd/utwwHT5biSrVDUd5YvAZMSX8VZnFm2+K63IEVbXzlB2
+	 LEzGiQbLknb4w==
 From: Chuck Lever <cel@kernel.org>
 To: Anna Schumaker <anna@kernel.org>
 Cc: <linux-rdma@vger.kernel.org>,
 	<linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 3/5] xprtrdma: Add request-pool slack for delayed recycling
-Date: Tue, 26 May 2026 10:14:03 -0400
-Message-ID: <20260526141405.39877-4-cel@kernel.org>
+Subject: [PATCH v3 4/5] xprtrdma: Clear receive-side ownership pointers on release
+Date: Tue, 26 May 2026 10:14:04 -0400
+Message-ID: <20260526141405.39877-5-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260526141405.39877-1-cel@kernel.org>
 References: <20260526141405.39877-1-cel@kernel.org>
@@ -67,116 +67,130 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-21969-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21970-lists,linux-nfs=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 67CFD5D73D2
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:email]
+X-Rspamd-Queue-Id: 8229E5D7607
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-After the previous patch gates req recycling on Send completion,
-a completed RPC's rpcrdma_req can remain pinned by the sendctx
-ring until the next signaled Send completion releases it. The
-transmitted-RPC ceiling is unchanged: xprt_request_get_cong()
-gates Sends against xprt->cwnd, the RPC/RDMA credit window fed
-by server-granted credits and capped at re_max_requests. The
-req pool, however, must exceed max_reqs by enough that this
-recycle delay does not stall a slot allocation that the credit
-window would admit.
+Three small ownership-state cleanups land the transport in a
+state that lets future reviewers reason about each pointer
+locally rather than tracing the whole reply path:
 
-The headroom is bounded. frwr_open() sets re_send_batch to
-re_max_requests >> 3 -- one in every eight Sends is signaled --
-so at most re_send_batch unsignaled Sends can be outstanding
-before the next signaled completion releases them. That equals
-max_reqs / 8 reqs in the worst case, with a one-slot floor for
-small max_reqs values where the right-shift rounds to zero.
+rpcrdma_rep_put() clears rep->rr_rqst before the rep enters
+rb_free_reps so that no rep on the free list still carries a
+stale rqst pointer.  rpcrdma_reply_handler() and
+rpcrdma_unpin_rqst() are the only sites that set rr_rqst;
+rpcrdma_reply_handler() hands the rep through
+rpcrdma_rep_put(), and rpcrdma_unpin_rqst() NULLs rr_rqst
+directly because its error path abandons the rep for
+teardown cleanup rather than returning it to rb_free_reps.
 
-The sendctx ring and the hardware Send Queue are not enlarged
-to match. Both are sized in rpcrdma_sendctxs_create() and
-frwr_query_device() for re_max_requests in-flight Sends, which
-is the ceiling the credit window enforces. The pool slack does
-not raise that ceiling -- it only lets allocation keep pace
-with the credit window during the brief interval in which
-earlier reqs are pinned waiting for the next signaled
-completion. At any moment, at most re_send_batch sendctxes are
-held by unswept unsignaled Sends, leaving the rest of the ring
-available for newly admitted Sends.
+rpcrdma_reply_put() NULLs req->rl_reply before calling
+rpcrdma_rep_put().  The previous order placed the rep on
+rb_free_reps while req->rl_reply still pointed at it; the
+window was harmless because xprt_rdma_free_slot() holds the
+req exclusively across the pair, but closing it makes the
+invariant 'rep on rb_free_reps implies no req references it'
+strictly checkable.
 
-Allocate max_reqs + DIV_ROUND_UP(max_reqs, 8) request objects
-and name the slack calculation at the allocation site so the
-1/8 bound stays tied to the Send-signaling batch size.
+rpcrdma_sendctx_unmap() and rpcrdma_sendctx_cancel() clear
+req->rl_sendctx after dropping the sendctx pointer in the
+sendctx ring.  Without this, req->rl_sendctx survives across
+Send completion and points at a sendctx that may already have
+been reassigned by rpcrdma_sendctx_get_locked() to a different
+req.  No caller dereferences the stale pointer today --
+rpcrdma_prepare_send_sges() overwrites it before the next
+Send -- but a NULL is a more honest representation of 'the
+Send is no longer outstanding' and lets the assertion patch
+that follows trip on any future regression.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/verbs.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/rpc_rdma.c |  4 ++++
+ net/sunrpc/xprtrdma/verbs.c    | 12 ++++++++++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 97b8b2376602..98bd965787e6 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1080,6 +1080,22 @@ static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf)
- 	spin_unlock(&buf->rb_lock);
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index 69380f9dfa49..f4b4abefc4e0 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -493,6 +493,7 @@ void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
+ 
+ 	rpcrdma_sendctx_dma_unmap(sc);
+ 	sc->sc_req = NULL;
++	req->rl_sendctx = NULL;
+ 	rpcrdma_req_put(req);
  }
  
-+static unsigned int rpcrdma_req_pool_slack(unsigned int max_reqs)
-+{
-+	/* The sendctx ring can hold up to one Send-signaling batch
-+	 * (re_send_batch, set by frwr_open() to re_max_requests >> 3)
-+	 * of unfinished Sends. Each pins its req until a signaled Send
-+	 * completion releases the sendctx. Size the pool above max_reqs
-+	 * by that batch so the recycle delay does not stall a slot
-+	 * allocation that the RPC/RDMA credit window would admit.
-+	 *
-+	 * Round up: re_max_requests >> 3 is zero when max_reqs < 8, but
-+	 * a single unsignaled Send is still enough to pin one req. One
-+	 * slack slot covers that case.
-+	 */
-+	return DIV_ROUND_UP(max_reqs, 8);
-+}
-+
- /**
-  * rpcrdma_buffer_create - Create initial set of req/rep objects
-  * @r_xprt: transport instance to (re)initialize
-@@ -1089,6 +1105,7 @@ static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf)
- int rpcrdma_buffer_create(struct rpcrdma_xprt *r_xprt)
+@@ -501,8 +502,11 @@ void rpcrdma_sendctx_unmap(struct rpcrdma_sendctx *sc)
+  */
+ static void rpcrdma_sendctx_cancel(struct rpcrdma_sendctx *sc)
  {
- 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
-+	unsigned int max_reqs;
- 	int i, rc;
++	struct rpcrdma_req *req = sc->sc_req;
++
+ 	rpcrdma_sendctx_dma_unmap(sc);
+ 	sc->sc_req = NULL;
++	req->rl_sendctx = NULL;
+ }
  
- 	buf->rb_bc_srv_max_requests = 0;
-@@ -1102,7 +1119,9 @@ int rpcrdma_buffer_create(struct rpcrdma_xprt *r_xprt)
- 	INIT_LIST_HEAD(&buf->rb_all_reps);
+ /* Prepare an SGE for the RPC-over-RDMA transport header.
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 98bd965787e6..60cbc14c5299 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1043,9 +1043,15 @@ static struct rpcrdma_rep *rpcrdma_rep_get_locked(struct rpcrdma_buffer *buf)
+  * @buf: buffer pool
+  * @rep: rep to release
+  *
++ * The rep's transient association with an rpc_rqst, established
++ * by rpcrdma_reply_handler() and torn down here, must not survive
++ * onto rb_free_reps: rpcrdma_post_recvs() pulls reps from the free
++ * list to re-post them, and a non-NULL rr_rqst on a free-listed rep
++ * would imply the rep is still referenced by a req.
+  */
+ void rpcrdma_rep_put(struct rpcrdma_buffer *buf, struct rpcrdma_rep *rep)
+ {
++	rep->rr_rqst = NULL;
+ 	llist_add(&rep->rr_node, &buf->rb_free_reps);
+ }
  
- 	rc = -ENOMEM;
--	for (i = 0; i < r_xprt->rx_xprt.max_reqs; i++) {
-+	max_reqs = r_xprt->rx_xprt.max_reqs;
-+	max_reqs += rpcrdma_req_pool_slack(max_reqs);
-+	for (i = 0; i < max_reqs; i++) {
- 		struct rpcrdma_req *req;
+@@ -1247,9 +1253,11 @@ rpcrdma_mr_get(struct rpcrdma_xprt *r_xprt)
+  */
+ void rpcrdma_reply_put(struct rpcrdma_buffer *buffers, struct rpcrdma_req *req)
+ {
+-	if (req->rl_reply) {
+-		rpcrdma_rep_put(buffers, req->rl_reply);
++	struct rpcrdma_rep *rep = req->rl_reply;
++
++	if (rep) {
+ 		req->rl_reply = NULL;
++		rpcrdma_rep_put(buffers, rep);
+ 	}
+ }
  
- 		req = rpcrdma_req_create(r_xprt,
 -- 
 2.54.0
 
