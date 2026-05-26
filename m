@@ -1,165 +1,132 @@
-Return-Path: <linux-nfs+bounces-21987-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21988-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id COFzFhr2FWqzfwcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21987-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 21:35:54 +0200
+	id 8GFJMqn4FWpxgQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21988-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 21:46:49 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58C2E5DC099
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 21:35:53 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 712BD5DC1B2
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 21:46:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 455F03004C98
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 19:35:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 38968302A7DA
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 19:46:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42AB3AA4E4;
-	Tue, 26 May 2026 19:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D79F113AD1C;
+	Tue, 26 May 2026 19:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJcpLhVU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIZFRH2Q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E9A3A7F67;
-	Tue, 26 May 2026 19:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFED2030A;
+	Tue, 26 May 2026 19:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779824117; cv=none; b=sfSAAZnXNthSxjrUYFou7gY8F4TMJ+7xYPOqwe5qgKxbUHHX5Ia0/GcBEtaU52VNRBhiWObzXIvOfbX+bJmmvykhV7ov/mbbpnu8/PNW63C0W9Mo1OuyKgL5Pvui96ra7vcIcO7uYe2cEAdrP9ZLMF6uywDRqN5PKs+LLuIUUWY=
+	t=1779824805; cv=none; b=PPoDbKVzQJ+5yxJTFyKs8RUYmAFcKha1MA0qqFDzjxt1STTjBwHi35d19t9nhY+8Pi+RSJA0f9I/lY9y00Vr+aG1BdHXS7V1FJnIeerIqCCME9l098tk5eBQbZxuMOOJ6vmZdG+UfgJ1YVihegYIXZ0IaxyaEpHnpKDb2guuKpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779824117; c=relaxed/simple;
-	bh=oJCAD767lEvcJtdX4QL2EZdPgEKpMJ0fVRHYf871C2Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P4LPzLk7Q8MWuNAONxL1oajBdqUuKakz9czskAjJY94vuYv9ZYN64t8Q8en6Ok/IAxn4nd7aZ/Ux5gPSv9GbtDMXDjwqJcZukashU1N90gKf6CFxyPbZS6gGyr2Q3CZFoKqSCWFr0NUomJIK09cud1uQoAwIEOTc+9MuDpi0mKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJcpLhVU; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 933811F00A3A;
-	Tue, 26 May 2026 19:35:15 +0000 (UTC)
+	s=arc-20240116; t=1779824805; c=relaxed/simple;
+	bh=GYuSZxbwc47rCjuBVhyi3AsWfTWnRH48TN4A1UjDw8g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iv0iZwITqI1R4l+yMm16tcY5BXiA1+KlSZs3YuXGeDKzWZCuvahEg3VAfeGkw/TSKgGnGCsjce6/IzOuCQv2QXBSr6eWGNOAR42DDncYPuXJau9DshfEPfRKNz9k6evfszsyAz+cJ4qqoqbbQEHgRepDMCOyuwoYQORM870Ouqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIZFRH2Q; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F23BD1F000E9;
+	Tue, 26 May 2026 19:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779824116;
-	bh=Zj8aAjGKG5w7thnd+pEEQUtdzXDGrVfJLbeOlsjh3/s=;
-	h=From:Date:Subject:To:Cc;
-	b=AJcpLhVUG3tEoEe7Rz5JWbJTEScuaZARHtqgFkKCHEzyDJNTrMiIbuROtBbVcigz+
-	 ZNVLIFy1NSzZ1BXYB5sZeS+abcaGqfneq1kMza5aTdyirhRwSPG5vHmQUykgCHsX0V
-	 jOOcL2PfOiFXf4yrBBPDdqrGNWrbLqTGRMU9iBQqEz/ZMAp10uNI/4J+XJSFVzH2gM
-	 jR7F5tU9Ue+6li/vR0mIkqlERrAHXiawJmzfiDJvb5roTIez6dkbuxHnVkQqGktFZI
-	 yxqmcrC4ImID+TlbYwKn3wFwr03lAKBy9S3tktEdKCQgdyBTo8YXBade5b2QHIqi7/
-	 uPvvsCYdj8Z8g==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 26 May 2026 15:35:06 -0400
-Subject: [PATCH] SUNRPC: always drain cache_cleaner before destroying a
- cache_detail
+	s=k20260515; t=1779824804;
+	bh=nvPqcgp99rGR290IbOGwIooVUWWcSGWbqEpEv+gGOPI=;
+	h=From:To:Cc:Subject:Date;
+	b=hIZFRH2Q3a1Xeh6fq87U85mtrAIBc94P+Ap2ct+n18aL/qRwrcmARo9ONBOlEX8ka
+	 FeAxt2KBsiLq2DJSz1nK/vqbUO7HipF5ukWcUE9lI+H4qt2oIKfWidxaD4t9QNpLeC
+	 iRF7+O+8Lfpp8SADbdEhtMPGJKNg/kDGjVgrd7HuevPhQIFEtXaRkLbUpYmvM2eeFa
+	 nG0pUyeT3fPeb2NRrLR7vMXoSW99O7mv3aMip2HjPHtXX6VTLXAiqvfJ+JX8LR59cU
+	 f4AvqsEqaYqniyZliUCpg4yfoIuN+aIFmAstG7Ow2Oy0W6BUHo5TDpu7U1ut6xwbW/
+	 d+4DktBxCOlDQ==
+From: Chuck Lever <cel@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <linux-nfs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Subject: [GIT PULL] More NFSD fixes for 7.1-rc
+Date: Tue, 26 May 2026 15:46:42 -0400
+Message-ID: <20260526194642.108872-1-cel@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-cache_cleaner_vs_destroy_no_sync-v1-1-a707a6fcfd32@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3N0QrCMAxA0V8ZebawVlaYvyISSpq5gKSSyHCM/
- bvFx/Ny7wHOJuxwGw4w3sSlaUe8DEBr0ScHqd2QxpTHKeVAhVZGenFRNtwcK/vH2o7a0HelEK9
- pnpccK08EPfM2XuT7X9wf5/kDxE364HIAAAA=
-X-Change-ID: 20260526-cache_cleaner_vs_destroy_no_sync-13299f61de5c
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1915; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=oJCAD767lEvcJtdX4QL2EZdPgEKpMJ0fVRHYf871C2Q=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqFfXux3TIcvKtYcsE40LUOikpvlH7qO/7bjGOT
- gyw5ZE/ImuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahX17gAKCRAADmhBGVaC
- FX1sEACbct2archT4ThbbbEPn7yhOacquQ/3iEbH7FMCCFJbDsdaKliVfnMknGKc3qOJDbUZvDT
- QyvjOA1awzYcyIawwDA4BHjAka9lvGrPHgBwR96pqrTgx0zDd0LHNymHu+mcl41WonLUcuEWIdA
- vQgteHtgGL6t5aI2F5gGEbvYSkxfbrYkdyBsMb1kleW/fhtuYJMU/DT+sFRB9tGHOv4wyz3H2lN
- rtAhosDMYyXUejjCiM+nztWnE78ozjZqIuphDAw54bsbhwNdrxOxCBthrIW/A3xo2uRVkeL2Gg9
- mYx3KzQ9ODq2gTzvRLChhGd+fbRlh/Nj+yhlpngRWYKvlGuTGC7qqSXtZIAFbcKsZTBVA0ZbeG5
- SoyqWQ7xJKsaY4Qilsuo0+J6p5J0VUFwrlbxnlSjVwQjJGa+0EJQwuNQIDghWWBFDFzcZb2iF2I
- vJQy/UScRPh0nBO+AEobkjJxDvJsGWb8cx/gpBZ2DWv8c6I+Kh5ZByYbwwbmch4/yTBHf7j/4GR
- aMfauPrCzJ7Zj2LuLunBF7o9V/3SMpmVdj2qC0AdYiJ38kSIe/t2ySKcV4Ap0PsNXEwZ9qjyY6G
- iLYIlV8RPhguKXLySNkqPvRSfAP++LGgIt7w3Lmcmb0PvnFF1v2zgb+MXyG6GMCT1bf3irUP7AZ
- OBLgYrwf7gOUW0g==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21987-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21988-lists,linux-nfs=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 58C2E5DC099
+	TAGGED_RCPT(0.00)[linux-nfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 712BD5DC1B2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-sunrpc_destroy_cache_detail() only cancels the global cache_cleaner
-delayed_work when cache_list is empty.  During per-netns teardown
-cache_list is never empty because init_net's caches remain registered,
-so the cancel never fires.  After unlink, the caller proceeds to
-cache_destroy_net() which kfrees the cache_detail while cache_clean()
-may still hold a dangling pointer to it.  The result is a
-use-after-free: cache_dequeue() takes cd->queue_lock on freed memory,
-and cache_put() dereferences cd->cache_put as a function pointer from
-freed slab.
+The following changes since commit 4f8ef58c10bfe5f86a643c7c8331b37e69e3dae1:
 
-Drop the list_empty guard so that cancel_delayed_work_sync() always
-runs, ensuring any in-flight cache_clean() completes before the
-cache_detail is freed.  Re-arm the cleaner afterwards if other caches
-are still registered.
+  NFSD: Fix infinite loop in layout state revocation (2026-05-10 12:41:08 -0400)
 
-Fixes: 820f9442e711 ("SUNRPC: split cache creation and PipeFS registration")
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- net/sunrpc/cache.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+are available in the Git repository at:
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 391037f15292..1bc04109d213 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -430,10 +430,9 @@ void sunrpc_destroy_cache_detail(struct cache_detail *cd)
- 	list_del_init(&cd->others);
- 	spin_unlock(&cd->hash_lock);
- 	spin_unlock(&cache_list_lock);
--	if (list_empty(&cache_list)) {
--		/* module must be being unloaded so its safe to kill the worker */
--		cancel_delayed_work_sync(&cache_cleaner);
--	}
-+	cancel_delayed_work_sync(&cache_cleaner);
-+	if (!list_empty(&cache_list))
-+		queue_delayed_work(system_power_efficient_wq, &cache_cleaner, 0);
- }
- EXPORT_SYMBOL_GPL(sunrpc_destroy_cache_detail);
- 
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-7.1-2
 
----
-base-commit: 97bac3c7a039675d7ae71fbdf3a7c39e840339b6
-change-id: 20260526-cache_cleaner_vs_destroy_no_sync-13299f61de5c
+for you to fetch changes up to 0b474240327cebeff08ad429e8ed3cfc6c8ee816:
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+  lockd: fix TEST handling when not all permissions are available. (2026-05-21 17:08:47 -0400)
 
+----------------------------------------------------------------
+nfsd-7.1 fixes:
+
+Issues reported with v7.1-rc:
+- Tighten bounds checking for sunrpc cache hash tables
+- Don't report key material in the ftrace log
+
+Issues that need expedient stable backports:
+- Fix lockd's implementation of the NLM TEST procedure
+
+----------------------------------------------------------------
+Chuck Lever (2):
+      sunrpc: prevent out-of-bounds read in __cache_seq_start()
+      NFSD: Report whether fh_key was actually updated
+
+NeilBrown (1):
+      lockd: fix TEST handling when not all permissions are available.
+
+ fs/lockd/lockd.h    |  2 +-
+ fs/lockd/svc4proc.c |  9 +++++++--
+ fs/lockd/svclock.c  |  4 +---
+ fs/lockd/svcproc.c  | 15 ++++++++++++---
+ fs/lockd/svcsubs.c  | 31 +++++++++++++++++++++----------
+ fs/nfsd/nfsctl.c    | 18 ++++++++++++++----
+ fs/nfsd/trace.h     | 16 +++++++---------
+ net/sunrpc/cache.c  |  3 +++
+ 8 files changed, 66 insertions(+), 32 deletions(-)
 
