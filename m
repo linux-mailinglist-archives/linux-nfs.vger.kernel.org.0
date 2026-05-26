@@ -1,330 +1,247 @@
-Return-Path: <linux-nfs+bounces-21940-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21941-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EADSJ+tdFWp7UgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21940-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 10:46:35 +0200
+	id SOw0KJphFWoiUwcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21941-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:02:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B0EC5D29DF
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 10:46:34 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA7595D2E7F
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:02:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 505FC3025F55
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 08:46:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9165F300D740
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 09:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 936F9313534;
-	Tue, 26 May 2026 08:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D11B2ECD3A;
+	Tue, 26 May 2026 09:01:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="efVzBKvE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GiPct5I3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F335C383339
-	for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 08:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779785188; cv=pass; b=maO7xehDyzlIZv+0yMNWoN++Zh4I10M1rbGdaO02MdaR0IBwVee8GHZ9VhvEsOenIYaaiUTLDx4pUMOGXhdia4an2gvyIo9d1gzBv0B4zdOuWcVvRdNyjB+6GzOYJb7G0CSOX9IM/FIyOBm3MUigrZKmBOkyc1ZbDWqAmiXzpIg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779785188; c=relaxed/simple;
-	bh=8JGHjZH0+0acLPNgzx+ZiGs+JxwKHEBLP+ZtC2egg9o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W3+QmwFd3c/AhKOPCixrJ0wHSTxTq2IPts7fNWWZw9VLeZ1V+VH+sdk1DjG1g3MCySfuMLdv798PTz5jzaHs3eJb3qSYlf9cd3HgnPYvUNvJizxbqHITAhDW9D+6Qvjlx21R1AX8KAtEayLtu/VxBAHFHGdNX0TnX6dwPUUd5Y4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=efVzBKvE; arc=pass smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-516d15ed2bcso41415831cf.0
-        for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 01:46:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779785184; cv=none;
-        d=google.com; s=arc-20240605;
-        b=T6l+HaQGWgGdECjG6ZP+2S9OrT6w5uGboR4C3k5fiObRa5h6bdfhzioM2fpRi0E4Y/
-         KCbMTSnLLflUNX6c2AqcuQVIBSiCJ+c1mhDphAZsb3PEywFNfzKDYQmaj7z9BsebVR4a
-         BEqjyhmTo9u396efA40ktmA77QzWoch8ogESYto+lJICw0F+POErg0FRYNK3tL9tQU3B
-         nNk4/tfTN4u+ladSydq61vYDVkxCPqmWuu7UPBietz+wxznWtNQ9cFkkXguhhwSzL0Pm
-         XGHKp4DqxFrnG5WXgR1tOBmopHeB+BTSgYxESfLj0xtpsBRZNK3YgjovaNYnknX1/jDV
-         Lrog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=+Sm7AdbBwz89HswDM1U3a+4O4uaDOPsFPs5dz3aFbf8=;
-        fh=+3N2ErwPDwIq8G+P2WUrgHEbmZ5Ugg/tyfCPKfSNv4U=;
-        b=Hcbu07wNnfVo8kDUmkCwSKF6BrDdrSvHzLZ5UCPpNE+GukLFpl9K1ZPw1NwUkCQtGa
-         qHByGzlTDo9Qa98HhW7zvLDVCEIdgpVDcEO180pI3768L6ZM4aXoWWqYX+7WNjCMUa1U
-         rXFn3IwmScdFXkrulup/YvksfD5FGvIlL8oZYbNOJ5vTFl7xPju5pKTztIFPs4SiBCeW
-         zbic1QNIivQv4IEJt8MViyxyAABOVPZF6GXn6DwyqZY9KHgO52l0MjkRSshp0J4WRfzK
-         +AAQXa4S70WCoEse1MvyJP+FtBb8ZLOb6JltalZ/0oYGJNNDTKSI+fCemvMeqyVErUgu
-         mIqQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1779785184; x=1780389984; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Sm7AdbBwz89HswDM1U3a+4O4uaDOPsFPs5dz3aFbf8=;
-        b=efVzBKvELuWfFlN+EUuEFDI6Y2s+IGuhCglblV/LB5cYkO+oW+SROlbSOCLDUxj+2Y
-         vBiCZEZMOBBBGtodDkHk1jkrUeJ3qh+KyvPZ/cgZENdUoYwvxuRGvGIVM0jPQqR4KUWF
-         1B9ovKjvtRAulWKBFtV0ubyZnp/uBw1d/nt5c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779785184; x=1780389984;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Sm7AdbBwz89HswDM1U3a+4O4uaDOPsFPs5dz3aFbf8=;
-        b=H9jNZX/FyJsfoRqFMfGt95rashsuk2B7Dqs77PIE6Ba37tzDB3sbvrEgxo8iOkrKoc
-         nSUgQB8uH/tYDrLsNMFNptbsQgmWlEFMtkjp8SdOoNctKtYKGd52hWRQzv4YopDaGROO
-         e7tdkr4YF5Swz8ypD5/TxKGbVd+ayzqx/dB7hDBIW6Zinl03uEiqkCjrNdcn/WYEVdcl
-         oJGccn6aeKibVQtWNXM6Q9BRodKOxxUqPI/dBxjjh5TLsOCnOELFrPAC+0lC09Hid+oW
-         A4IscCLQp48VRa6Ek2dOQX6ClcE4hafa1IN0Btlg5NWSstqFV5FeHQjohy0mBqCynWiR
-         zNmA==
-X-Forwarded-Encrypted: i=1; AFNElJ9yrv0XQokpAFg8VlhEqx29mINIUr7ISjtrwvyqoVX1L6v2H2Lhhi/Y6Weei9Y9/qPKW6Q//w2qGM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPVpMhHWetX6uSACug/LQ+NVCH/A/pK9h9ELW0uMhz4DQ+fdh8
-	4FxkpFrMwY+XnwgsQvYc5mO3JcREyWbWXfJyUQUWDRVsPmPtfP8J6yFkjzxAxSEG3XDDx5g4cQG
-	UENXiv7cVEUcZ1ExKn7IIxxIR47wL9mCBv12xWVuA4RRlJN0JWnE7RVAKZQ==
-X-Gm-Gg: Acq92OHDR/uWgduR/3LjYMYNRuoRtqZp6+ncnan3II9aYyT8HcLUAWn3pW16cuYjVHS
-	4iMYs3eTvyNI86WLniJhUbKEV9ZlKP5PoEg7pklzVkhkqJrs/5K/+CTIJBuszI8qOWLFnIsIf+7
-	y9lYxKM134bWEa+YkmCWVJERCDe5UHgyvOmyCDrmjY1U/h0nSfZYV23/X+DnOKs/VcjOFsEMDwr
-	PQt0SN6UcqQo7WMzl3xXTKZ80AoCsbvM0sKO2j/zm7MLtyp3HQKlkhl/s2RMsplJO7lMbNmDZm/
-	OK3oM7zH8KzJg4ra1a7Mz8eyRUmTO+ePeFOe7r6vTycQtuq6sPt8As6im6e6
-X-Received: by 2002:a05:622a:1a96:b0:516:3183:c20f with SMTP id
- d75a77b69052e-516d5864945mr188188911cf.20.1779785183718; Tue, 26 May 2026
- 01:46:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E687175A76;
+	Tue, 26 May 2026 09:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779786066; cv=none; b=piHMSBkO9lRNb/oX3fl7PJaqpzkHnLhYaQvD2ziynxbE/22WLt/Sz59m3SxZx2i/T9wRcVXZ7+cldQZsw+W7QxgZ/7rl3X0xFcj05/yz6nqIttSqipCch6jjkU2H6wlaTI8E95QkwkphcpphdpZO/+wqCmPX2hBevA2KkPLFLGU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779786066; c=relaxed/simple;
+	bh=TJ3N58ATgLYg81u/fkCKyj4q6Ieu6uXB5m2US3IhzKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+BsNrXN3y8gXMqs8KmyBa1bD4wff+tqvuRw6lxlrNxBeKWDT5bpgVCubMOqffv1nlTgZZ+On0nCbhpLMa3LY7ybjhuAoF2xS9OhAbc/nditdoxEbHvc0y1zf6fN4aAKHUYiDA2bI6LQmpGbAfpp7jhlPZ913G+HduvHOeWiqYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GiPct5I3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285D81F000E9;
+	Tue, 26 May 2026 09:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779786064;
+	bh=wnrCbM2Qnlfg9PJg0zChR9cS1O62PROxyneyrD/ESZc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=GiPct5I3RIyKVnUeY4SIiCrdnUqsOgS6mDU9YSBJjHDd0gYwXI7rEld8XueXGIXhn
+	 4VMIsiVV2x0xXRM+qlbp8J3K6njuhdYcF9IEpNRbQR5MAI0ZlYW3O878Rhrv1Kyr/Y
+	 HK0dpDUzeYEvaGeOszozJUh7pm2LkN07u38CNlv7c+x+aKcYrCbxPF9bQ4mzd4g/Sj
+	 Pq4YX7HRGJU+s0ogTWQtOaYeav00GrrtEnqGs1OmV1Shn2PnIK5mzFdBaih/eHYD+n
+	 3ATVI0Kp776yWfk86RVYhy8Ar47qbqvpSE3ShiaDY+VAUwFW4LiNMzIG3znk70SwDP
+	 Xn7irCtUvdfKg==
+Date: Tue, 26 May 2026 11:01:00 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Calum Mackay <calum.mackay@oracle.com>
+Cc: linux-fsdevel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>, 
+	linux-mm@kvack.org, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, 
+	Chuck Lever <cel@kernel.org>
+Subject: Re: [PATCH 1/3] tmpfs: simplify constructing "security.foo" xattr
+ names
+Message-ID: <20260526-ablief-demut-wehen-aef8446ef5c9@brauner>
+References: <177945382308.2991556.1256192774754909984.b4-ty@b4>
+ <5386153f-9112-4971-98fc-de90d7aae2c6@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <177945382308.2991556.1256192774754909984.b4-ty@b4> <5386153f-9112-4971-98fc-de90d7aae2c6@oracle.com>
+Content-Type: multipart/mixed; boundary="dyu27gpxlrmawx5e"
+Content-Disposition: inline
 In-Reply-To: <5386153f-9112-4971-98fc-de90d7aae2c6@oracle.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 26 May 2026 10:46:12 +0200
-X-Gm-Features: AVHnY4IqbMVtwyrUXhgBbVSdtrrlrZmTIKsKCBn7O4rzlywtF9IJtI5xqfn6ILQ
-Message-ID: <CAJfpegu3PawBxwOPEO-+at-B9zRTJOzY+z4qeV7xOwOQb3Fr7w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] tmpfs: simplify constructing "security.foo" xattr names
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Calum Mackay <calum.mackay@oracle.com>, Christian Brauner <brauner@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>, linux-mm@kvack.org, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Chuck Lever <cel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[szeredi.hu,quarantine];
-	R_DKIM_ALLOW(-0.20)[szeredi.hu:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [2.34 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-diff];
 	HAS_LIST_UNSUB(-0.01)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[miklos@szeredi.hu,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21940-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[szeredi.hu:+]
-X-Rspamd-Queue-Id: 1B0EC5D29DF
+	TAGGED_FROM(0.00)[bounces-21941-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.995];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
+	HAS_ATTACHMENT(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Rspamd-Queue-Id: AA7595D2E7F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-[Cc: Greg KH]
 
-On Mon, 25 May 2026 at 05:59, Calum Mackay <calum.mackay@oracle.com> wrote:
->
+--dyu27gpxlrmawx5e
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+On Mon, May 25, 2026 at 04:59:02AM +0100, Calum Mackay wrote:
 > hi Christian, Miklos,
->
+> 
 > https://lore.kernel.org/all/177945382308.2991556.1256192774754909984.b4-ty@b4/
->
+> 
 > > Date: Fri, 22 May 2026 14:43:43 +0200> On Tue, 19 May 2026 10:13:21 +0200, Miklos Szeredi wrote:
-> >> tmpfs: simplify constructing "security.foo" xattr names
-> >
+> > > tmpfs: simplify constructing "security.foo" xattr names
+> > 
 > > Thanks, this looks great!
-> >
+> > 
 > > ---
-> >
+> > 
 > > Applied to the vfs-7.2.misc branch of the vfs/vfs.git tree.
 > > Patches in the vfs-7.2.misc branch should appear in linux-next soon.
-> >
+> > 
 > > Please report any outstanding bugs that were missed during review in a
 > > new review to the original patch series allowing us to drop it.
-> >
+> > 
 > > It's encouraged to provide Acked-bys and Reviewed-bys even though the
 > > patch has now been applied. If possible patch trailers will be updated.
-> >
+> > 
 > > Note that commit hashes shown below are subject to change due to rebase,
 > > trailer updates or similar. If in doubt, please check the listed branch.
-> >
+> > 
 > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
 > > branch: vfs-7.2.misc
-> >
+> > 
 > > [1/3] tmpfs: simplify constructing "security.foo" xattr names
 > >       https://git.kernel.org/vfs/vfs/c/aba5853b137b
 > > [2/3] simple_xattr: change interface to pass struct simple_xattrs **
 > >       https://git.kernel.org/vfs/vfs/c/1cd9d2387c05
 > > [3/3] simpe_xattr: use per-sb cache
 > >       https://git.kernel.org/vfs/vfs/c/12e9e3cd03b5
->
->
-> I have been doing some testing of Chuck's nfsd-testing tree, which
-> includes some vfs changes.
->
-> The test systems are reliably crashing, in what looks like it might
-> possibly be something related to these three patches.
+> 
+> 
+> I have been doing some testing of Chuck's nfsd-testing tree, which includes
+> some vfs changes.
+> 
+> The test systems are reliably crashing, in what looks like it might possibly
+> be something related to these three patches.
 
-Calum, thanks for the report.
+The appended patch should fix it.
 
-Relevant part of call trace is:
+--dyu27gpxlrmawx5e
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment;
+	filename="0001-kernfs-link-kn-to-its-parent-before-the-LSM-init-hoo.patch"
 
-kernfs_new_node
-  __kernfs_new_node
-    security_kernfs_init_security
-      selinux_kernfs_init_security
-        kernfs_xattr_set
-          kernfs_root
+From 6358bc199a5be450bd11dd7607918dcad4030b86 Mon Sep 17 00:00:00 2001
+From: Christian Brauner <brauner@kernel.org>
+Date: Tue, 26 May 2026 10:57:06 +0200
+Subject: [PATCH] kernfs: link kn to its parent before the LSM init hook
 
-Since __parent is assigned after security_kernfs_init_security() gets
-called, kernfs_root() will return NULL.
+After commit 12e9e3cd03b5 ("simpe_xattr: use per-sb cache"),
+kernfs_xattr_set() and kernfs_xattr_get() compute the cache via
+kernfs_root(kn) before any other check.  kernfs_root(kn) walks
+kn->__parent first and falls back to kn->dir.root, both of which are
+NULL on a freshly kmem_cache_zalloc()'d kn. kn->__parent was being set
+in kernfs_new_node() after __kernfs_new_node() returned, and kn->dir.root
+is set even later by kernfs_create_dir_ns() / kernfs_create_empty_dir().
 
-Greg, any idea about dealing with this?
+The LSM kernfs_init_security hook is invoked from inside
+__kernfs_new_node(), before either field has been initialized.
+selinux_kernfs_init_security() ends with kernfs_xattr_set(kn,
+XATTR_NAME_SELINUX, ...).  kernfs_root(kn) then returns NULL, and
+&((struct kernfs_root *)NULL)->xa_cache evaluates to
+offsetof(struct kernfs_root, xa_cache) which faults:
 
-Thanks,
-Miklos
+  BUG: kernel NULL pointer dereference, address: 00000000000000e0
+  RIP: 0010:simple_xattr_set+0x27/0x8b0
+  Call Trace:
+   kernfs_xattr_set+0x63/0xb0
+   selinux_kernfs_init_security+0x13b/0x270
+   security_kernfs_init_security+0x36/0xc0
+   __kernfs_new_node+0x182/0x290
+   kernfs_new_node+0x80/0xc0
+   kernfs_create_dir_ns+0x2b/0xa0
+   cgroup_create+0x116/0x380
+   cgroup_mkdir+0x7c/0x1a0
+
+Reproduces deterministically at PID 1 (systemd) on an SELinux-enabled
+distro. The first cgroup mkdir under /sys/fs/cgroup with a labelled
+parent panics the kernel.
+
+The LSM hook's contract is that the kn_dir argument is the parent of
+the new kn, so kn->__parent should already point at kn_dir when the
+hook runs.  Move kernfs_get(parent) and rcu_assign_pointer of
+kn->__parent from kernfs_new_node() into __kernfs_new_node() right
+before the security hook, and unwind the parent reference on the
+err_out4 path.  kernfs_root(kn) then takes its parent branch during
+the hook and returns parent->dir.root, which is the correct root.
+
+This also closes the same-shape latent bug in kernfs_xattr_get() (which
+today is hidden only by kernfs_iattrs_noalloc() returning NULL on a
+fresh kn).
+
+Fixes: 12e9e3cd03b5 ("simpe_xattr: use per-sb cache")
+Reported-by: Calum Mackay <calum.mackay@oracle.com>
+Closes: https://lore.kernel.org/all/5386153f-9112-4971-98fc-de90d7aae2c6@oracle.com/
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+---
+ fs/kernfs/dir.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 8ba2f2f3da9e..6d47b8469642 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -698,6 +698,9 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+ 	}
+ 
+ 	if (parent) {
++		kernfs_get(parent);
++		rcu_assign_pointer(kn->__parent, parent);
++
+ 		ret = security_kernfs_init_security(parent, kn);
+ 		if (ret)
+ 			goto err_out4;
+@@ -706,6 +709,8 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+ 	return kn;
+ 
+  err_out4:
++	RCU_INIT_POINTER(kn->__parent, NULL);
++	kernfs_put(parent);
+ 	if (kn->iattr) {
+ 		simple_xattrs_free(&root->xa_cache, &kn->iattr->xattrs, NULL);
+ 		kmem_cache_free(kernfs_iattrs_cache, kn->iattr);
+@@ -742,10 +747,6 @@ struct kernfs_node *kernfs_new_node(struct kernfs_node *parent,
+ 
+ 	kn = __kernfs_new_node(kernfs_root(parent), parent,
+ 			       name, mode, uid, gid, flags);
+-	if (kn) {
+-		kernfs_get(parent);
+-		rcu_assign_pointer(kn->__parent, parent);
+-	}
+ 	return kn;
+ }
+ 
+-- 
+2.47.3
 
 
->
-> I reverted the three patches, and the crashes stopped.
->
->
-> best wishes,
-> calum.
->
->
->
-> [    9.215122] BUG: kernel NULL pointer dereference, address:
-> 00000000000000e0
-> [    9.218829] #PF: supervisor read access in kernel mode
-> [    9.221484] #PF: error_code(0x0000) - not-present page
-> [    9.224201] PGD 0 P4D 0
-> [    9.225557] Oops: Oops: 0000 [#1] SMP NOPTI
-> [    9.227773] CPU: 0 UID: 0 PID: 1 Comm: systemd Not tainted
-> 7.1.0-rc4.master.20260524.el10.rc1.x86_64 #1 PREEMPT(lazy)
-> [    9.233281] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.6.4 02/27/2023
-> [    9.237483] RIP: 0010:simple_xattr_set+0x27/0x8b0
-> [    9.239951] Code: 90 90 90 0f 1f 40 d6 0f 1f 44 00 00 55 48 89 e5 41
-> 57 41 56 49 89 d6 41 55 49 89 f5 4c 89 c6 41 54 53 48 83 e4 f0 48 83 ec
-> 40 <4c> 8b 27 44 89 4c 24 3c 4c 89 6c 24 20 48 89 54 24 28 4d 85 e4 0f
-> [    9.249572] RSP: 0018:ffffd1334001fa20 EFLAGS: 00010282
-> [    9.252362] RAX: ffff89974107e460 RBX: ffffffff856b2f80 RCX:
-> ffff899758b0ef60
-> [    9.256059] RDX: ffffffff856b2f80 RSI: 000000000000001e RDI:
-> 00000000000000e0
-> [    9.259712] RBP: ffffd1334001fa90 R08: 000000000000001e R09:
-> 0000000000000001
-> [    9.263416] R10: ffff89974107e460 R11: 0030733a745f7075 R12:
-> 000000000000001e
-> [    9.267138] R13: ffff89974107e498 R14: ffffffff856b2f80 R15:
-> ffff8997443c5440
-> [    9.270772] FS:  00007fc098c74500(0000) GS:ffff899ae8a58000(0000)
-> knlGS:0000000000000000
-> [    9.274906] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    9.277976] CR2: 00000000000000e0 CR3: 00000001013d1000 CR4:
-> 00000000003506f0
-> [    9.281668] Call Trace:
-> [    9.282985]  <TASK>
-> [    9.284145]  ? srso_return_thunk+0x5/0x5f
-> [    9.286188]  ? srso_return_thunk+0x5/0x5f
-> [    9.288277]  ? ktime_get_real_ts64+0xce/0x140
-> [    9.290614]  ? srso_return_thunk+0x5/0x5f
-> [    9.292776]  kernfs_xattr_set+0x63/0xb0
-> [    9.294829]  selinux_kernfs_init_security+0x13b/0x270
-> [    9.297496]  security_kernfs_init_security+0x36/0xc0
-> [    9.300105]  __kernfs_new_node+0x182/0x290
-> [    9.302421]  ? srso_return_thunk+0x5/0x5f
-> [    9.304597]  ? srso_return_thunk+0x5/0x5f
-> [    9.306645]  ? pcpu_alloc_noprof+0x481/0x990
-> [    9.308854]  kernfs_new_node+0x80/0xc0
-> [    9.310876]  kernfs_create_dir_ns+0x2b/0xa0
-> [    9.313103]  cgroup_create+0x116/0x380
-> [    9.315123]  cgroup_mkdir+0x7c/0x1a0
-> [    9.317051]  kernfs_iop_mkdir+0x75/0xf0
-> [    9.319014]  vfs_mkdir+0xc2/0x240
-> [    9.320809]  filename_mkdirat+0x1cc/0x220
-> [    9.322932]  __x64_sys_mkdir+0x2f/0x50
-> [    9.324938]  do_syscall_64+0xe8/0x5e0
-> [    9.326895]  ? srso_return_thunk+0x5/0x5f
-> [    9.329104]  ? count_memcg_events+0xdf/0x190
-> [    9.331392]  ? srso_return_thunk+0x5/0x5f
-> [    9.333556]  ? handle_mm_fault+0x24a/0x350
-> [    9.335741]  ? srso_return_thunk+0x5/0x5f
-> [    9.337894]  ? do_user_addr_fault+0x221/0x680
-> [    9.340194]  ? srso_return_thunk+0x5/0x5f
-> [    9.342653]  ? arch_exit_to_user_mode_prepare.isra.0+0x9/0xe0
-> [    9.345955]  ? srso_return_thunk+0x5/0x5f
-> [    9.348377]  ? srso_return_thunk+0x5/0x5f
-> [    9.350793]  ? do_syscall_64+0x9d/0x5e0
-> [    9.353123]  ? srso_return_thunk+0x5/0x5f
-> [    9.355707]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [    9.358689] RIP: 0033:0x7fc09832076b
-> [    9.360891] Code: 0f 1e fa 48 89 f2 b9 00 01 00 00 48 89 fe bf 9c ff
-> ff ff e9 a7 ca ff ff 0f 1f 80 00 00 00 00 f3 0f 1e fa b8 53 00 00 00 0f
-> 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 71 56 0d 00 f7 d8
-> [    9.371018] RSP: 002b:00007ffd34f0af28 EFLAGS: 00000246 ORIG_RAX:
-> 0000000000000053
-> [    9.375220] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
-> 00007fc09832076b
-> [    9.379178] RDX: 0000000000000000 RSI: 00000000000001ed RDI:
-> 00005609edb55790
-> [    9.383159] RBP: 00007ffd34f0af60 R08: 0000000000000000 R09:
-> 0000000000000000
-> [    9.387102] R10: 0000000000000000 R11: 0000000000000246 R12:
-> 00005609edaeea70
-> [    9.391136] R13: 0000000000001fad R14: 00007fc098754472 R15:
-> 00005609edb481d0
-> [    9.395140]  </TASK>
-> [    9.396605] Modules linked in: vsock_loopback
-> vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock
-> vmw_vmci xfs nvme_tcp nvme_fabrics nvme_core nvme_keyring nvme_auth
-> sd_mod ata_generic pata_acpi ata_piix virtio_net net_failover failover
-> libata virtio_scsi serio_raw btrfs libblake2b zstd_compress raid6_pq xor
-> sunrpc dm_mirror dm_region_hash dm_log be2iscsi bnx2i cnic uio cxgb4i
-> cxgb4 tls cxgb3i cxgb3 mdio libcxgbi libcxgb qla4xxx iscsi_tcp
-> libiscsi_tcp libiscsi scsi_transport_iscsi iscsi_ibft iscsi_boot_sysfs
-> dm_multipath dm_mod qemu_fw_cfg virtio_pci virtio_pci_legacy_dev
-> virtio_pci_modern_dev
-> [    9.424581] CR2: 00000000000000e0
-> [    9.426635] ---[ end trace 0000000000000000 ]---
-> [    9.429400] RIP: 0010:simple_xattr_set+0x27/0x8b0
-> [    9.432229] Code: 90 90 90 0f 1f 40 d6 0f 1f 44 00 00 55 48 89 e5 41
-> 57 41 56 49 89 d6 41 55 49 89 f5 4c 89 c6 41 54 53 48 83 e4 f0 48 83 ec
-> 40 <4c> 8b 27 44 89 4c 24 3c 4c 89 6c 24 20 48 89 54 24 28 4d 85 e4 0f
-> [    9.442394] RSP: 0018:ffffd1334001fa20 EFLAGS: 00010282
-> [    9.445458] RAX: ffff89974107e460 RBX: ffffffff856b2f80 RCX:
-> ffff899758b0ef60
-> [    9.449465] RDX: ffffffff856b2f80 RSI: 000000000000001e RDI:
-> 00000000000000e0
-> [    9.453436] RBP: ffffd1334001fa90 R08: 000000000000001e R09:
-> 0000000000000001
-> [    9.457506] R10: ffff89974107e460 R11: 0030733a745f7075 R12:
-> 000000000000001e
-> [    9.461589] R13: ffff89974107e498 R14: ffffffff856b2f80 R15:
-> ffff8997443c5440
-> [    9.465681] FS:  00007fc098c74500(0000) GS:ffff899ae8a58000(0000)
-> knlGS:0000000000000000
-> [    9.470290] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    9.473702] CR2: 00000000000000e0 CR3: 00000001013d1000 CR4:
-> 00000000003506f0
-> [    9.477743] Kernel panic - not syncing: Fatal exception
-> [    9.481889] Kernel Offset: 0x2a00000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [    9.487771] ---[ end Kernel panic - not syncing: Fatal exception ]---
->
+--dyu27gpxlrmawx5e--
 
