@@ -1,157 +1,211 @@
-Return-Path: <linux-nfs+bounces-21946-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21947-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qPudJ096FWp8VgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21946-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 12:47:43 +0200
+	id 6Jk+MM6FFWpXWQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21947-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:36:46 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC8695D45D6
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 12:47:42 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 428245D4F8E
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:36:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 11E8E302A04E
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 10:46:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 418393025F65
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:36:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 914CF31ED93;
-	Tue, 26 May 2026 10:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26AD735E95E;
+	Tue, 26 May 2026 11:36:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSiM6mSP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElAsA4df"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E10E2D8399
-	for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 10:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5353D9033
+	for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 11:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779792362; cv=none; b=QCosX2EMPd4sCrrqy456TQR5+dBIjwdSyL23SMJUNhHZqJZE8EXuSA6rcNgObSsjD3Rrai5xMsDY88mRRQbCXKIJlFbX5NJSfZVs9/fPfeSDOvA7tDo6orvh0wd8YrzKIEpze3if1AufJcUIwL4CoynKS726m12v0dQrjfw/71U=
+	t=1779795404; cv=none; b=ICj3K0hji52hZSR4RdU8/sWVjCdcqTFWoCw5S2SgFX1b8T0axd7njOBvXYZZzXMe2/JKUZ7hQqxMeV9E4t5tt05wF4+oCow+Q9kv6Y4xVs6BLOX7FNhw8E/1KMFQoxf8aPKrvfIP6GrZoL+8lXbJyzhpcTE7ERW8VK1zShpXEaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779792362; c=relaxed/simple;
-	bh=/j6jIf6tfQTExqkuosO5rEGQfFVHOjNEPx751S0PfyQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oytqYwZ5rzu2XMN2JEEJZz684og/l8cdXuLXUT7gg5UGUJJ9qD1JYVskILc5yosLajaFO4WhEjJ34lAHbTNriGX4T9p5ZzoAONuXh7bIeIk0U6E28Mz7bnhpymSYr09yScbAVCjdup5yemREKK9GJRvmkRrJSa7NOlGWbG5wQc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oSiM6mSP; arc=none smtp.client-ip=209.85.216.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-367c2a39fcfso4779798a91.3
-        for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 03:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779792361; x=1780397161; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nacu7PMt2c+Y+omPIW4rycmeu94Ha5NCEkYzpWfn5Vg=;
-        b=oSiM6mSPVd3Z8TB8voKaeQemhO2+EoEVmVJ7/eXqq5HphrwxBS1Ip67H2pPUqzdd5n
-         KlwZrjBou2Ein41YWsHHyYBPwEUlUcH5pf5i6R+FZSYnpwngp75RE7gQxlLCeIZ5RZu3
-         U/EscxF2FO7KspAQG/8zhy6KHn4IlEd4DbAw4RN0DAaHUtla738NXjIbCYaLLXggV7+e
-         4b54QT/kzloOriGWo6bNvdXHvkGfKrDip8sJgE49yAeYQiC/1fpMbfcKMbpkocBOiNBe
-         SmX9RvyjxzXSvzvUB7SeyYkb6jpBvwWBR38sZbHioRvNikTgBY0dkWgD2zWkz4lr/WGW
-         rq5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779792361; x=1780397161;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nacu7PMt2c+Y+omPIW4rycmeu94Ha5NCEkYzpWfn5Vg=;
-        b=coHovl2Z0qX4vtFrTrppaF5F54/M6Lk2YIcFXZnvcKN83WvLXxlB3+6CA9kojK2Egb
-         xFYyUeWd+mMbNbzrOh9fP2P4G9A6g+FLmWcVFD82tfSguphKGcgbuYz3UwmVq5kE6k0z
-         eupo6T+JZq9ZtPzGFJw+SnPOBh8Yvg3fQWfdioltSZKmZydVbhtL7btV2nQzWptpWgZA
-         oc4TjRhTYBKywD1EyMKWxlnK+VeIl1KRjpfgAIVH8a3B7deGZ8E5jTaanH/3K7G+MVkO
-         m9DLDKcG24P0Aq5607LKIi+G8nQ1uVPpp4lutF0nykF3LvMRLSn29xRh086+2gSV3/AN
-         5/YA==
-X-Gm-Message-State: AOJu0YwqE66Iwd4nRVWFEaA5kxnc3nQR4MSTcO87HpBaj+NffYovfERz
-	rdHo1u0oWohTXCC0SRlYkxJeDXv4uWmymhH1Tk65RIuiWRPLgaCjlAwM
-X-Gm-Gg: Acq92OHlpEZK2QK//X3rHfrWQqj66GYwyBonfngA0uUe72cUpqMboqnzMkJLjr1GSud
-	9xBSm9xa3LS0jaYqeGDpWjI9KK0CxiIt6nWGWLXFxt2ynPqz40hgntqtDcOCp7JdSeyC2JUoAa8
-	xRD8g/ttKv091XIGyxL5uL7Q59lnAJ6xhgJMrmvBtWpvQXY0EkQYEhMq8CwJdwIlonqd9TiRl8d
-	2eYX/xtroHP64j+TOf6Ymv8mb5aknLm1XqWQUjQspeWt6DsE52sIRjdT8VTdT3lXGJ6mEtRWLcl
-	jq24w4IQWjncP3G50lmwXxTEVFGFWdb65TjOnB5/dNPz3GwBP8eLlA9k5Ts/cpmrdCGHFJQDuUL
-	5TrSz3kLJ5KTNOGhtsTDKVE/1EdNLC2d9p4O74qBVbvlp1TEvFZky60UysQcazaLGzUQihDAEcD
-	B+noVbNLSFrlgotgIgMMbOdDy233bkXAiRxxn5vRHsKihH5JRBn87LCAPEii9S
-X-Received: by 2002:a17:90a:e70c:b0:365:f8fc:3846 with SMTP id 98e67ed59e1d1-36a67627cf0mr18027701a91.22.1779792360690;
-        Tue, 26 May 2026 03:46:00 -0700 (PDT)
-Received: from KIPREYXIAO-MC2.tencent.com ([43.132.141.25])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36ac1fe6df3sm6660727a91.2.2026.05.26.03.45.58
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 26 May 2026 03:45:59 -0700 (PDT)
-From: Zhenghang Xiao <kipreyyy@gmail.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	Zhenghang Xiao <kipreyyy@gmail.com>
-Subject: [PATCH nfsd] nfsd: set SC_STATUS_FREED in nfsd4_drop_revoked_stid for delegations
-Date: Tue, 26 May 2026 18:45:54 +0800
-Message-ID: <20260526104554.46262-1-kipreyyy@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1779795404; c=relaxed/simple;
+	bh=JbXG2gb6CtdBnGmsYN/Xf+ADn2yIUqrA+3/DGmIp7WY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=K6hzVx6kTZeS2HVOBqY40qPOgkTnemg6drQO4JW94zz75GZ65UqYKmx5dvKoaJ0kTuN4vUUaBSl7z5R2AXENi8QUdPWuURu5h6qqVFGJooEyPcjRejkQs9RHwlGjYIc2icAN6ImFaat8Cq+0czfFgX5+ilAa3MqrEyM8klPqURM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElAsA4df; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DEE01F000E9;
+	Tue, 26 May 2026 11:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779795402;
+	bh=Qsn/jj6lSSy8MJHap0gNoW6gxlUN4ijT8tLJZu4gW+I=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ElAsA4dfUD2Z4n7z7MhxM1M0fCkRezrOGnweTnM5688HptWPXFZ6u0YIjnoJUt121
+	 EuBD8/M0C+MUTjxSLJeyxiuDx1RzsYY1UB0hWBAxFIwoNan+nxfG4kL2HD83Y9f994
+	 RklPdfJ2B8NJiQme/uMxmwTOCo5D1OAdFf5kVcDFhEUVpGot3i0UntGsC8oCddPjFl
+	 7wGhvOq9vfVx9YjrcOLi8AOobUoHRw9PyxjuycRcchb4h3adhVfj1g8lS6ymw/r2N3
+	 huswpTqi9rNVrLXUX1MiZL6rQ7T0A5MfZBtGE15Sq2JjxTbP0MlcMt4vWOg//BboXw
+	 4vs15SKORiloA==
+Message-ID: <b830d59259c6de2fb011ae5d586caaacbaf05844.camel@kernel.org>
+Subject: Re: [PATCH nfsd] nfsd: set SC_STATUS_FREED in
+ nfsd4_drop_revoked_stid for delegations
+From: Jeff Layton <jlayton@kernel.org>
+To: Zhenghang Xiao <kipreyyy@gmail.com>, chuck.lever@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Date: Tue, 26 May 2026 07:36:40 -0400
+In-Reply-To: <20260526104554.46262-1-kipreyyy@gmail.com>
+References: <20260526104554.46262-1-kipreyyy@gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-21946-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21947-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,oracle.com];
+	RCPT_COUNT_THREE(0.00)[3];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kipreyyy@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: EC8695D45D6
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 428245D4F8E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-nfsd4_drop_revoked_stid() handles FREE_STATEID for admin-revoked
-delegations but does not set SC_STATUS_FREED before releasing cl_lock.
-revoke_delegation() uses this flag to detect whether FREE_STATEID has
-already processed the delegation — without it, the freed delegation is
-added to cl_revoked via list_add(), producing a use-after-free when
-cl_revoked is later traversed in __release_client().
+On Tue, 2026-05-26 at 18:45 +0800, Zhenghang Xiao wrote:
+> nfsd4_drop_revoked_stid() handles FREE_STATEID for admin-revoked
+> delegations but does not set SC_STATUS_FREED before releasing cl_lock.
+> revoke_delegation() uses this flag to detect whether FREE_STATEID has
+> already processed the delegation =E2=80=94 without it, the freed delegati=
+on is
+> added to cl_revoked via list_add(), producing a use-after-free when
+> cl_revoked is later traversed in __release_client().
+>=20
+> The SC_STATUS_REVOKED path in nfsd4_free_stateid() (line 7590) already
+> sets SC_STATUS_FREED correctly. Apply the same pattern to the
+> SC_STATUS_ADMIN_REVOKED path in nfsd4_drop_revoked_stid().
+>=20
+> Fixes: 8be12e0cf211 ("nfsd: convert global state_lock to per-net deleg_lo=
+ck")
+> Signed-off-by: Zhenghang Xiao <kipreyyy@gmail.com>
+> ---
+>  fs/nfsd/nfs4state.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 6837b63d9864..e1ef88bc9793 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5071,6 +5071,7 @@ static void nfsd4_drop_revoked_stid(struct nfs4_sti=
+d *s)
+>  	case SC_TYPE_DELEG:
+>  		dp =3D delegstateid(s);
+>  		list_del_init(&dp->dl_recall_lru);
+> +		s->sc_status |=3D SC_STATUS_FREED;
+>  		spin_unlock(&cl->cl_lock);
+>  		nfs4_put_stid(s);
+>  		break;
 
-The SC_STATUS_REVOKED path in nfsd4_free_stateid() (line 7590) already
-sets SC_STATUS_FREED correctly. Apply the same pattern to the
-SC_STATUS_ADMIN_REVOKED path in nfsd4_drop_revoked_stid().
+The Fixes tag doesn't look right. I think it should be:
 
-Fixes: 8be12e0cf211 ("nfsd: convert global state_lock to per-net deleg_lock")
-Signed-off-by: Zhenghang Xiao <kipreyyy@gmail.com>
----
- fs/nfsd/nfs4state.c | 1 +
- 1 file changed, 1 insertion(+)
+    Fixes: 8dd91e8d31fe ("nfsd: fix race between laundromat and free_statei=
+d")
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 6837b63d9864..e1ef88bc9793 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5071,6 +5071,7 @@ static void nfsd4_drop_revoked_stid(struct nfs4_stid *s)
- 	case SC_TYPE_DELEG:
- 		dp = delegstateid(s);
- 		list_del_init(&dp->dl_recall_lru);
-+		s->sc_status |= SC_STATUS_FREED;
- 		spin_unlock(&cl->cl_lock);
- 		nfs4_put_stid(s);
- 		break;
--- 
-2.50.1 (Apple Git-155)
+The patch looks OK though.
 
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
