@@ -1,224 +1,209 @@
-Return-Path: <linux-nfs+bounces-21951-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21952-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8CRjHvaHFWpXWQcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21951-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:45:58 +0200
+	id 0H2MFmeHFWpXWQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21952-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:43:35 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6D1B5D5177
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:45:57 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BB685D5113
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 13:43:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0BD473037F6E
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:38:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 212843007235
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 May 2026 11:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E823E5A04;
-	Tue, 26 May 2026 11:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D56733E170B;
+	Tue, 26 May 2026 11:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPrQWuk7"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="d5QG5IPf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BPNnm0N6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-c8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2113E5A18
-	for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 11:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E31E3E6392;
+	Tue, 26 May 2026 11:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779795476; cv=none; b=egi8xNlkICFMhkcO/565u80FiUrXJVd5mV2hUCrk8DZ2EiV0/LHXUGmzb0qpb66k/71UWmrEqcoj8WdniYcHwRsCIeHkdxmEWc0mx9ngUxHtr4wc0F+iLTlwACVOvqYhFwel7ozwn0DiJtBzSZOaUseg6ALhHJsNLhFDqr1eIvo=
+	t=1779795758; cv=none; b=fq9rBX0i5s3zp+bpxD57RkxmtFiWXWyNlSykTQ2DsgE2RsZexbjCHZ0mdkGWz0gYQk8OACt595hDR9Ubc7UDuNky3mqNi+ITXyJv9TkFNpDLHMFabzVONvjBTRnGtT02XPiXg1jknC+roq2Q4ILcndb25Q6awaiedTIUjyPM7Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779795476; c=relaxed/simple;
-	bh=SwXzV8tK9BQ8QjgrG6CC7I98NvDSuaRSrOJYRNh4rFA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L0lNWqVPR1Dgyt6n57KSbyk6Mdom/aTdAEJrArRYPR94AmPVgS/8cC1xllfSelIibO0+W/hXrAgFkLkhjuTPpE5V3cGa0X9qy3qIxYHUTnUfTiXeX4UuidysmpuYciqwPEUSoqaVWi6wC9jVTTON8naNiFTCgH1eyQ0ZNdgCOOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cPrQWuk7; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a858881ad2so13069994e87.3
-        for <linux-nfs@vger.kernel.org>; Tue, 26 May 2026 04:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779795462; x=1780400262; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FLeHkQsXAybNTL4Q4w5mxgSBDAtaR04/XoGzkQTY4uA=;
-        b=cPrQWuk7sFJUVnkI4J/4xCExY/hk6221tlhx/fRQOGzXvYnbD8jjnmtRYkFbnZ/roK
-         waeGXT5OZRhbCqSw5xnlFc0eASPxHOX7h50ogsv+uFqNtnKvGUUExbfF1La+W7rLN8ww
-         Ldf1hFmkvdbphZQXxbd+1PFRGn37BZFi7x0doEwCnb+cJTP3EYWo/XgCk0/516EVhi36
-         al3XS5e55xVWGBm4EdvarjPTK7n49WFmqJpg6ExdgNoeeQlySQkrNgXcQ/7MiCLZRjvb
-         2TuEtQLcFmq6Tu9cGnsBBS55uskggQ3xq6pnvuIofrvHhlQTTN0BXOt++oBwCvRTzEQ5
-         xxGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779795462; x=1780400262;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FLeHkQsXAybNTL4Q4w5mxgSBDAtaR04/XoGzkQTY4uA=;
-        b=a7p0rd1Ug6VtsssE7yOYggM4HW5pnVeNQlTi5SMXl/5m5pI5ll6wEKQXoE6PQO4hKO
-         ZZ4zdqsh7Sg7O7q9qYyZ7a+zl1nxcgNzg8huj7cPHuuKbXjfW6HrcsS/4niiVRkk37AG
-         h2tc+VCIAbnoSUJzzOhTHfyiAP9z2H1HAlLE2McqbajP4jl84eG+gWk5LBNVaPL+cybw
-         jjKE/gF2NmmzFNVvxs07LtmJ0NlGuY8Uf2EXQHTKSTcNR24U7HmTpGD1zf1rBCII7FLE
-         //5UGoD5TJrFBDL91KeEDWYYSjZnVDaxL3k1l0QDEQOepvV65k+jE66kUP9BwzOyYp72
-         apog==
-X-Forwarded-Encrypted: i=1; AFNElJ8dQzAldLl4xXHno5NnfsnuFxS/Hk5BsL/TPcfbTyQbcyhz34C7xmJ31c2jQDA2kzv3IP97K3YVSFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy7Vm5bh3nGJuwjrbzeUwbssWh7oXzdQIXtZ8sqndGSHUo0CmN
-	gJzWBkJJ68JgV1Ia5kwtJDvVSs5YNvrjTSjeNg0XYtYka28v/M3pEmd3
-X-Gm-Gg: Acq92OG2BOlMehAtdi0jqvyFUZiuIjH/qTU4xpsjmZcg7ZIurLfhKgiF4m8gAz+XWPR
-	KJ3hfxXNFaIHnvZnF5tPXr9F8WkvVzQPMpQeETu2SU3GTjHY7wJYjKd9TLJKjLeOdUNqGAICivS
-	hAIe6e4gvaBgNq8LCEPyw+nhlCCYNKG2LKkk83EVJWRWkUPjGtRs1n1TBPTuuc8FWh2H3Cg0E2V
-	9gzn9L6NYgJVJ73QLh25uYZxMYKchTzRWhzGTEmc4MZsj2HSSpCqrhqRpouLhH69mjzLQih2CBV
-	PrVz63wglGrhZL4f1vqxMzrrrvHYdCqfeCC5SaDPqsT9yMKSugVbYP+oxIevRBKS3Qj2lddDhGR
-	EmM4tI8JXKFc6PWwoyY14udPlMCav4sXhcucvKoA/wuiUY1OudH5Gr3BAeawtwFgssY3grmWWz0
-	Ik4lLX+ReuuUc3cJLF/ddSZkb1TDRWUw7razCjW3pIsrMXNKMj+d6cLktA+zQK4LYT0rk6
-X-Received: by 2002:a05:6512:3b21:b0:5a4:1a2:1d39 with SMTP id 2adb3069b0e04-5aa323143camr4952108e87.6.1779795461414;
-        Tue, 26 May 2026 04:37:41 -0700 (PDT)
-Received: from [127.0.1.1] (h-62-63-197-109.NA.cust.bahnhof.se. [62.63.197.109])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa46330d9asm376332e87.59.2026.05.26.04.37.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 04:37:41 -0700 (PDT)
-From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
-Date: Tue, 26 May 2026 13:37:04 +0200
-Subject: [PATCH RFC 3/3] mm: use non-temporal stores for demotion
+	s=arc-20240116; t=1779795758; c=relaxed/simple;
+	bh=SQZKVDWD1KdqpDeH030yQ/YBIkFX3jvk9Yn2AZ4pwG8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=npL+x33UH/v14fISjPzYcBtwc5F4JBN0p8TRqUAnWRzGZsrtXUezh6j7eqsreznsYdQCHzOBhljNj/8ckOvo/nFUelXCEN6U52mPx5LH5EcuesUmwQtbYO4rDWCk4wy3q99UEQ1clG1JdgTdZDiSqlvQu9OdiSuFFXfrLWyTVRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=d5QG5IPf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BPNnm0N6; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id A78041D000EE;
+	Tue, 26 May 2026 07:42:26 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Tue, 26 May 2026 07:42:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1779795746; x=1779882146; bh=61i4wIC4Tn5iEmlHns5NVSjEXBu1i37B6tm
+	sjHpNh0A=; b=d5QG5IPfM1gH/un9kCSsYVkveVXDWaHQnnbuEQdDtRN59I1qMk1
+	I9WQMQ6J6Xp4TvbUj2g614nK3XB4GgMH/B1cj+SvMEqV/t6w5LnS0zvvpA6hSa8Q
+	XI6VSBoQ5KrWO84LGj1GI3ZbgiEdJFy8NkkTFf7IxirQwEeu6LqdkxRJLdbB50Ng
+	pUHIomsARc/jhM9z/MrJ8bCTfSWDFfKKWZqeh+Z4G1Ie7LmZnKZHCACQ2Or+6o5Z
+	iBav0xvcCRjvZq2C6mK9KtvcEqWcMvECGWbRA+K07mJx4D1q9i20N1wIumAiNurQ
+	D235A0+mDiNtAlIOWhg0YZVy3pcAlDJrJ6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779795746; x=
+	1779882146; bh=61i4wIC4Tn5iEmlHns5NVSjEXBu1i37B6tmsjHpNh0A=; b=B
+	PNnm0N6Oz259omGQKh3jJHUSXX6IvcoxzB5s9BN/cGgXPV+B0OfAV8FQQMiphRD9
+	bJ70k+aVV02pQ/dUMzkNznxv5anb6PqfG66d39WxAHiWdMhiakGjiFxZJzGtBcAP
+	qLULTFR/GtY6dQWVrs9eJ6OrmDvSmfLLmkwHbs0WZ71OidEjOWmUo/9hh+gxs6s+
+	f51T/MzbXYp4PK47BX1sG5d/tdOOvnwu35LBIKrmkWREOm9O4GIYwWz4P3tqXcWr
+	x2FG/RiZzrwegSmWC1/UoYphe58BfggMHltTcdR/sz/9z+CMNiIWSU1f0H5X+dPF
+	ah2DA2fOSLyH7bts3KWWQ==
+X-ME-Sender: <xms:IocVak5_5J5mA4nRnGbTfFa45pNSqZq4XQ2yK6hQyUAi5y6saHDX6Q>
+    <xme:IocVaicvXmkGNjW5NP7HrzilR7aBT3PZIYHHcjRwS5v8V6uOZTpQWvylfYkAZdTDr
+    zeHSXFhYN9dApUDtz64RcoBWLOSs0rZdIWQI8YtU1nVOwFagw>
+X-ME-Received: <xmr:IocVan5WETl1LgsBgs0NffID5KQBV5HCbWphCMKRsZLVNiq_vS9qJD_AP4iPYolktMAd0xzXjP5mzzQCxOw5WcBcmwW1E24>
+X-ME-Proxy-Cause: dmFkZTE4UPrZN2LNi+9rTN/RWq4bh6Pz6wdzUFG46Q3sYKoVYe91zrqN1s1aUS/CYaH8UU
+    vu6g96UwE8fz3eoE2/JFVW3LackT+AGlwtWcVD3mp+Dk21XzAtskx4ZBoax+iGOI0TINiJ
+    ko4YdrqElIFwT+0P4OMpyyenj90gIFbEpNcN0NFH938ODmaQgySwvCND4SMOsfcrMAUJjH
+    2eXOltxZLA00XoH9TLJa+i0Ws6P0IfxM9KMezL1P0bv2i7ZLZ02sNHv2oVgVaVmSWs6Dij
+    4+lKHI+ImZMdCKxvD+fnJMdgEYySlhDrGZZ7ZnkO+uaNAkLm0PPo1jj4gS6i7uMoXfFSMF
+    fj46g6GLQf99TbIf5Ad4WBNlIGINLs5Vjj6+CdbJ2db129wpay+++bAWideeS0pUC/eBmR
+    z2KyUzt/NrllmLIGxRuLGxy6tVvcxPyj2WORpGXghK7n0JBZNNN6eQux5YrCn/CNyFRdJh
+    ByqUEJOE6Hd2uVxRvkAjaQaFp9UQiBHrOqz4bnNgbaLJiyBeLiPaaxB5cY9Ql8bUBe7Var
+    /gUYu8gFMZjC8C9XhsWusHbNsb75Dc30LIiOP9Y3MVGXHEh4HowxgH54K7rzfRo5xLWcW4
+    LgCJF4OHOXHoPHoWSrF6bv34IMW6DVpioLE1nUxDgKJRZWthWTpNMxjx9mEQ
+X-ME-Proxy: <xmx:IocVav8ItBCJC1V1KcLZbfEAqKaU6Yx6q6Kze1wapVcWMGO-UZ9itA>
+    <xmx:IocVapHG7qVx9UOS2qcfKCM2Syt8H4cTIXU1EE9WcD9e20NG_Gz5NQ>
+    <xmx:IocVakVJv9Eiq3f_75dJW_sA6bscOvCiBFOeW0hCw6GGC94CoRRw7Q>
+    <xmx:IocVal-Zoh_dsQiNhqrzuTOsUjeaYTzqkWHHbZ_rhHtrKk4Lil4lHg>
+    <xmx:IocVarJ8K-RG_eJypLuZ1h0YzyTCfxkvcZBFnO_OtyieJsGVaOQ-46ul>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 26 May 2026 07:42:23 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-rfc-nt-demote-v1-3-eb9c9422daef@zptcorp.com>
-References: <20260526-rfc-nt-demote-v1-0-eb9c9422daef@zptcorp.com>
-In-Reply-To: <20260526-rfc-nt-demote-v1-0-eb9c9422daef@zptcorp.com>
-To: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@kernel.org>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>
-Cc: David Rientjes <rientjes@google.com>, 
- Davidlohr Bueso <dave@stgolabs.net>, Fan Ni <nifan.cxl@gmail.com>, 
- Frank van der Linden <fvdl@google.com>, Jonathan Cameron <jic23@kernel.org>, 
- Raghavendra K T <rkodsara@amd.com>, 
- "Rao, Bharata Bhasker" <bharata@amd.com>, SeongJae Park <sj@kernel.org>, 
- Wei Xu <weixugc@google.com>, Xuezheng Chu <xuezhengchu@huawei.com>, 
- Yiannis Nikolakopoulos <yiannis@zptcorp.com>, dimitrios@palyvos.net, 
- Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, 
- Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>, 
- Alirad Malek <alirad.malek@zptcorp.com>
-X-Mailer: b4 0.15.2
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+From: NeilBrown <neilb@ownmail.net>
+To: "Mateusz Guzik" <mjguzik@gmail.com>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Benjamin Coddington" <bcodding@redhat.com>, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+Subject:
+ Re: [PATCH] VFS: fix possible failure to unlock in nfsd4_create_file()
+In-reply-to: <36bvv2anew3cegsd374uzwdgue2txpgnzo2357ye5pldqi4by6@lafavyjgevqo>
+References: <177969022571.3379282.16448744624428323496@noble.neil.brown.name>
+  <36bvv2anew3cegsd374uzwdgue2txpgnzo2357ye5pldqi4by6@lafavyjgevqo>
+Date: Tue, 26 May 2026 21:42:20 +1000
+Message-id: <177979574027.3379282.15340720667866455874@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm3,messagingengine.com:s=fm3];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21951-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21952-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,linux-foundation.org,oracle.com,google.com,suse.com,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,goodmis.org,efficios.com,cmpxchg.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[google.com,stgolabs.net,gmail.com,kernel.org,amd.com,huawei.com,zptcorp.com,palyvos.net,arm.com,vger.kernel.org,kvack.org];
-	RCPT_COUNT_TWELVE(0.00)[48];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yiannisnikolakop@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.998];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: D6D1B5D5177
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	HAS_REPLYTO(0.00)[neil@brown.name]
+X-Rspamd-Queue-Id: 5BB685D5113
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Alirad Malek <alirad.malek@zptcorp.com>
+On Tue, 26 May 2026, Mateusz Guzik wrote:
+> On Mon, May 25, 2026 at 04:23:45PM +1000, NeilBrown wrote:
+> > 
+> > atomic_create() in fs/namei.c drops the reference to the dentry
+> > when it returns an error.
+> > This behaviour was imported into dentry_create() so that it
+> > will drop the reference if an error is returned from atomic_create(),
+> > though not if vfs_create() returns an error (in the case where
+> > ->atomic_create is not supported).
+> > 
+> > The caller - nfsd4_create_file() - is made aware of this by checking
+> > path->dentry, which will either be a counted reference to a dentry, or
+> > an error pointer.
+> > 
+> > However the change to use start_creating()/end_creating() (which landed
+> > shortly before the dentry_create() change landed, though was likely
+> > developed around the same time) means that nfsd4_create_file() *needs* a
+> > valid dentry so that it can unlock the parent.
+> > 
+> > The net result is that if NFSD exports a filesystem which uses
+> > ->atomic_create, and if a call to ->atomic_create returns an error, then
+> > nfsd4_create_file() will pass an error pointer to end_creating()
+> > and the parent will not be unlocked.
+> > 
+> > Fix this by changing dentry_create() to make sure path->dentry is always
+> > a valid dentry, never an error-pointer.  The actual error is already
+> > returned a different way.
+> > 
+> [..]
+> > +		/* atomic_open will dput(dentry) on error */
+> > +		dget(orig_dentry);
+> >  		dentry = atomic_open(path, dentry, file, flags, mode);
+> >  		error = PTR_ERR_OR_ZERO(dentry);
+> >  
+> > +		if (IS_ERR(dentry))
+> > +			/* keep the original */
+> > +			dentry = orig_dentry;
+> > +		else
+> > +			/* Drop the extra reference */
+> > +			dput(orig_dentry);
+> > +
+> 
+> atomic_open() is a static func with only 2 callers. perhaps it would be
+> better to change its semantics instead?
+> 
+> I'm asking because the vfs layer is very slow single-threaded and this
+> here just adds even more slowdown due to avoidable 2 rmw atomics.
+> 
+> Granted the affected routine is only used by overlayfs and nfs, but even
+> then this should not be necessary.
+> 
 
-Memory demoted to a lower tier is assumed to be cold and most likely out of
-the CPU's last level cache. Additionally, in certain demotion targets (e.g.
-CXL devices with compressed memory) the bandwidth can be negatively
-impacted by the eviction patterns of the last level cache when standard
-memcpy is used. When the feature is enabled, use the
-MIGRATE_ASYNC_NON_TEMPORAL_STORES flag in demotions to trigger the folio
-copy path using non-temporal stores.
+My plan is to get rid of dentry_create() completely so I don't think
+there is any point trying to optimise it.
 
-Signed-off-by: Alirad Malek <alirad.malek@zptcorp.com>
-Co-developed-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
-Signed-off-by: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
----
- mm/Kconfig   | 8 ++++++++
- mm/migrate.c | 9 ++++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+I have patches to modify lookup_open() to give it a cleaner interface,
+then to call that from nfsd (after similar code clean up in nfsd).
+I hope to have these patches ready to patch soon.  I'll include you on
+the cc: list.
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index ebd8ea353687..4b7a75b57f6e 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -645,6 +645,14 @@ config MIGRATION
- 	  pages as migration can relocate pages to satisfy a huge page
- 	  allocation instead of reclaiming.
- 
-+config DEMOTION_WITH_NON_TEMPORAL_STORES
-+	bool "Use non-temporal stores for demotion"
-+	default n
-+	depends on MIGRATION
-+	help
-+	  Enable non-temporal stores when migrating pages due to demotion.
-+	  If disabled, demotion uses regular migration copy paths.
-+
- config DEVICE_MIGRATION
- 	def_bool MIGRATION && ZONE_DEVICE
- 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index ff6cf50e7b0b..368d40dc8772 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -862,7 +862,10 @@ static int __migrate_folio(struct address_space *mapping, struct folio *dst,
- 	if (folio_ref_count(src) != expected_count)
- 		return -EAGAIN;
- 
--	rc = folio_mc_copy(dst, src);
-+	if (mode == MIGRATE_ASYNC_NON_TEMPORAL_STORES)
-+		rc = folio_mc_copy_nt(dst, src);
-+	else
-+		rc = folio_mc_copy(dst, src);
- 	if (unlikely(rc))
- 		return rc;
- 
-@@ -2081,6 +2084,10 @@ int migrate_pages(struct list_head *from, new_folio_t get_new_folio,
- 	LIST_HEAD(split_folios);
- 	struct migrate_pages_stats stats;
- 
-+	if (IS_ENABLED(CONFIG_DEMOTION_WITH_NON_TEMPORAL_STORES) &&
-+		reason == MR_DEMOTION && mode == MIGRATE_ASYNC)
-+		mode = MIGRATE_ASYNC_NON_TEMPORAL_STORES;
-+
- 	trace_mm_migrate_pages_start(mode, reason);
- 
- 	memset(&stats, 0, sizeof(stats));
-
--- 
-2.43.0
-
+Thanks,
+NeilBrown
 
