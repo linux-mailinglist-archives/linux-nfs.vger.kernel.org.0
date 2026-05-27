@@ -1,142 +1,119 @@
-Return-Path: <linux-nfs+bounces-21997-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-21998-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sHNABfRPFmqxkgcAu9opvQ
-	(envelope-from <linux-nfs+bounces-21997-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 03:59:16 +0200
+	id MIclIyubFmq1ngcAu9opvQ
+	(envelope-from <linux-nfs+bounces-21998-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 09:20:11 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B21775DE70D
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 03:59:15 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468655E05CD
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 09:20:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 527793037BB5
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 01:59:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4CD623006946
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 07:18:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3A0346ACC;
-	Wed, 27 May 2026 01:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B07C53B7B7A;
+	Wed, 27 May 2026 07:18:31 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608812E1F02;
-	Wed, 27 May 2026 01:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78464280A56;
+	Wed, 27 May 2026 07:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779847147; cv=none; b=kTY+0YUzLpvX90mq/UefGp9p2+rVl2GRMIogBar53aLIO6wP8JvgATuN7hhZerUwf9IPhU/hhsWrY/6JHvi0hi/cD61Q0q5N+BO5pTU3O6ONZjTCZog4wTcIGDLpURR+5hNjQEMGHZFgVdFzB0U3h006Hx6kURYKuVNulPUKNpE=
+	t=1779866311; cv=none; b=q7IU9fTT+e7rJi3cGUfhl39BsVMODljdnxDD23gDlSE/IQ+yz/K8nJwQWvJPz13LVLcxlqlOTPiJhQewEDYQZQ+uIT+H7sRG9e3nmPIvsR1ZYbjoj17uJGg/H6mXySNM5GPOrwl5WxZAp04BZ/9eDDbmV2riN/qbmmxj4gf0hm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779847147; c=relaxed/simple;
-	bh=iZdO5tfrEC0OdlmnndPXB576cc8IXVl/EBWV1fGg2nM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P4FRvk+BuQvgRTrLhin068rt3XQxoIq9HQ6BuIAfle2u95M1ERA0HAtFtQPvFplfTEz9lgdAyOvVjZ8uYjVCrh5HCBS058tq4KhfR/lpZrmO/6w3sCxcU7CPQowwwrZkLJYqnsU+aA565aUZxBwg/eMOkLE7XyGmNS4naBjUOFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: a139f6f4596f11f1aa26b74ffac11d73-20260527
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:7dc124e5-65a4-4075-91ed-138f80733f7d,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:e7bac3a,CLOUDID:263d9dbfcdbe7f337e09f227b7d10024,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:
-	0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: a139f6f4596f11f1aa26b74ffac11d73-20260527
-X-User: zenghongling@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zenghongling@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 489762033; Wed, 27 May 2026 09:59:00 +0800
-From: Hongling Zeng <zenghongling@kylinos.cn>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	bcodding@redhat.com
-Cc: linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhongling0719@126.com,
-	Hongling Zeng <zenghongling@kylinos.cn>
-Subject: [PATCH] sunrpc: Fix error handling in rpc_sysfs_xprt_switch_add_xprt_store()
-Date: Wed, 27 May 2026 09:58:55 +0800
-Message-Id: <20260527015855.483921-1-zenghongling@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1779866311; c=relaxed/simple;
+	bh=axyWWVV7cCi1HwzLCJypw/4N02YCRqRXU1DFbd/Hw+Y=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AOXCLtkN88cfiZ6V1JSftf5Kgj3mWSQNSFRnx7SmeC8ynjCZxZWxtL6gEHyb7Qu1P0DeB4HY+G5KdcxvXmGAH2/34Ca0wqmuZXmXjm0SWjqvol+wGlA7kgyh0j2/wLhxZvNiqox4cKdTmRtmcYwOIlRxQQAWipuF19KIztSLs2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 8295768C4E; Wed, 27 May 2026 09:18:17 +0200 (CEST)
+Date: Wed, 27 May 2026 09:18:16 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: revisiting alloc_pages_bulks semantics?
+Message-ID: <20260527071816.GA17632@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.04 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spamd-Result: default: False [-0.36 / 15.00];
+	SUBJECT_ENDS_QUESTION(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21997-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[kylinos.cn];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21998-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,126.com,kylinos.cn];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.997];
+	MID_RHS_MATCH_FROM(0.00)[];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.988];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,kylinos.cn:mid,kylinos.cn:email]
-X-Rspamd-Queue-Id: B21775DE70D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lst.de:mid]
+X-Rspamd-Queue-Id: 468655E05CD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-xprt_create_transport() never returns NULL, only valid pointers or
-error pointers. Using IS_ERR_OR_NULL() is incorrect, and PTR_ERR(NULL)
-would return 0, which indicates EOF in a sysfs store function.
+Hi all,
 
-Fix this by using IS_ERR() instead of IS_ERR_OR_NULL().
+I've been looking into using alloc_pages_bulks in a few places lately,
+and have run into issues with the API.  Here is my suggestions for how
+to make this more useful, although only some of them are something
+I'd feel comfortable to do myself:
 
-Fixes: df210d9b0951 ("sunrpc: Add a sysfs file for adding a new xprt")
-Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
----
- net/sunrpc/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+1) early fail semantics
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index a90480f80154..49686bf740e6 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -348,7 +348,7 @@ static ssize_t rpc_sysfs_xprt_switch_add_xprt_store(struct kobject *kobj,
- 	xprt_create_args.reconnect_timeout = xprt->max_reconnect_timeout;
- 
- 	new = xprt_create_transport(&xprt_create_args);
--	if (IS_ERR_OR_NULL(new)) {
-+	if (IS_ERR(new)) {
- 		count = PTR_ERR(new);
- 		goto out_put_xprt;
- 	}
--- 
-2.25.1
+alloc_pages_bulks can do partial allocations for some reasons, and
+users usually have a fallback by either looping and calling it again
+or falling back to single page allocations.  This sucks!  Why can't
+we get our usual try as hard as you can semantics, requiring
+GFP_NORETRY or similar to relax it?
 
+2) pre-zeroed page array 
+
+There is one single user (svc_fill_pages in sunrpc) that relies on it.
+For everyone else it creates extra burden and is very error prone
+(speaking from experience).
+
+3) page instead of folio
+
+We're allocating folios, so we should have a folio API.
+
+4) > order 0 support
+
+The bulk allocator is limited to order 0 which limits it's usefulness
+these days.  It would be really helpful to do bulk allocations for
+the pagecache or bounce buffering.
 
