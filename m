@@ -1,184 +1,165 @@
-Return-Path: <linux-nfs+bounces-22010-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22009-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oLhdEpUHF2qn1gcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22010-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:02:45 +0200
+	id CBOaMWcHF2qn1gcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22009-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:01:59 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F13A5E67AF
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:02:44 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B9A75E6783
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:01:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9CCD33045391
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 14:53:54 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E15033004685
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 14:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2148B36D51E;
-	Wed, 27 May 2026 14:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5AA2EB874;
+	Wed, 27 May 2026 14:53:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNGa8LlA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQSJVr+y";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="IJMoaL+g"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E057F3D47DE;
-	Wed, 27 May 2026 14:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730CF2F2917
+	for <linux-nfs@vger.kernel.org>; Wed, 27 May 2026 14:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779893634; cv=none; b=O/b4knatriwHoPtK4XVUGJ4vPwo1JGm4fS5Z6xRB1ECXolMQx7z6/hkbeSt3+3VRPvRbMeCmVZ27v7b5LzDSthTgilvTAh/vc7nPuXoZUNH+5wLo/vX87HSz0GHTgwVttqGdsQUtYGYfX8dLnPXKyT1HV9EaZ7/kSz9TtDuHN4s=
+	t=1779893626; cv=none; b=E/lbRd+EnmqXprf/vk2+yH8obXMvdqg91WvLIEdyZyhgYXSUSmPxNxvXz4dWRwFrhkAveEWNVQd8mRYzVR6aMZ49ay6WrjJzNz+WgOJGwuOlHpQRO1X3Fvb56bXaX8ykXkTOWZmzfRHNM4XoZBlS1j82SSxLLftmGLJrTxs23ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779893634; c=relaxed/simple;
-	bh=98MLjyvYrhzrQH4J5hiKb/zyKhZ8SpjtwX37jFESLtw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nXeqT4wEd9+Q2gRKdG9Cy33WQeahHBV20h0QLZFwvU5sp4BIG152RgzM6sEqKkNi+05Sy4rhdupE/K/583Sh3jJLpf5e8m+9NwaomkUietj4PqV8eOjAWKfEfOlwPB+u10oCH9iJDDsGbN5bethJHmh4tHMUZv7wzkY6H0tGEIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNGa8LlA; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7041F000E9;
-	Wed, 27 May 2026 14:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779893632;
-	bh=K2biNe7K+sWTnvQi5qsAYG5rVab2yt64WQhl+v7RAs4=;
-	h=From:Date:Subject:To:Cc;
-	b=dNGa8LlAcNL/O+ZAc8aVh0Uo9ca5dRMaN/s1sQtTdRPb2XcVGbxsBWO1fYts5UEvZ
-	 nLi0JhBjmD80dqE3lveZ8jWFmRomhIij9p0z+tUeDES/BmA/jiiyKF0QJ5jOmYinAz
-	 bnZHg8dU40PxG6S00TCc8odWkkBJkpB4//NRu4e7iXmUuNHXnDy8kbbYFUh9272T8z
-	 FyuPlOOyWCXyJnCU1lLG7lPPxKEbadLprFZaft4EbBsaNIottIMsj5MAU0i/R+i2I2
-	 E5yiHh17As5StRZbxlgQWiUNNJ8+3SYGzrHoNp6w5Yvi7LIIePpjLhKQ6GeH556voW
-	 rQ5EbpJNDuIjA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 27 May 2026 10:53:37 -0400
-Subject: [PATCH] nfsd: block non-SAVEFH ops after FOREIGN PUTFH to prevent
- NULL deref
+	s=arc-20240116; t=1779893626; c=relaxed/simple;
+	bh=G4CreATvYqb0tfCFZzU+3Qm52cJP1PVX6S/GffXjVmk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wzqkuwqa+x2/cl88u+7odpro0j709lnqYaLigvbLBghwxiASBU3h1deD0LY8Oe9RsIU4hD8UoJ/B99/OzaE+PpIIEWS/cm4Y7rs+yhMjZuDhyl9vy0nUjcTHTr0k8tx7ARlG81vIYwWUsu69MxcOcsj1cFANSNLQcy8+WqdQ4ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SQSJVr+y; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=IJMoaL+g; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779893624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EsJjy7Q/gwSyvXGZ5WOnSHSpWfUQY0FmfznK2gk4+O0=;
+	b=SQSJVr+yxGQcQ2eA1Y9NKCJuy89pNjwJygen0o9ezfosIKfy4UuduVJYtIOrGIFXqDf1OQ
+	EtYFqwRYw4wLOaR4aEwBV7tTFGE3Fn8PR7UibG0IE5wzrihBdfwp6j9pb1tgAY1MgLmM96
+	uRrxw2FHplbugj5lvZ58xAXhGdZx+BY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-562-NBkcz3qeNqOJE0DL3laDWQ-1; Wed, 27 May 2026 10:53:42 -0400
+X-MC-Unique: NBkcz3qeNqOJE0DL3laDWQ-1
+X-Mimecast-MFC-AGG-ID: NBkcz3qeNqOJE0DL3laDWQ_1779893622
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-514b673c8f1so103990421cf.3
+        for <linux-nfs@vger.kernel.org>; Wed, 27 May 2026 07:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1779893622; x=1780498422; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EsJjy7Q/gwSyvXGZ5WOnSHSpWfUQY0FmfznK2gk4+O0=;
+        b=IJMoaL+gC2/IopHkkArw5EjRvEDmJarlHs7UgugcHLD7bkEpKJrZZv5noXlEHy2z0e
+         1/yyUFVR73/6IRXA6O6rz5pPUK5/3Dw8cxbGavDC9jOtpN1TfNfQ+2nEFfXk0HZP6B9P
+         uO1Tfescyw19r0Qv8i66Y/QdNBFCm+ZdATtpUU/rAYXC5WGmgHRE4J3AvWAxWWDiytpk
+         uo3EE1wcEkAv2MrMPo/lA+5b89rjZJisMUUbpgstGkKTYR/gS3g+uMH1uOC0TLAeOCZz
+         cDXIae1qto4CCBWtT+Cr+agFWUyN7H9QpmFbrkXbtYZ6EiCQtMH8HaYiVFmRivVet0sx
+         qimw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779893622; x=1780498422;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EsJjy7Q/gwSyvXGZ5WOnSHSpWfUQY0FmfznK2gk4+O0=;
+        b=dLG0NX+3701h8yND+G7NOOSt4F/MaVlk2RTwD3I4H33ERT4ViMfv7ppjqmyInoZ+2Z
+         Nn+wpwtiPE4HOx04FZPz8wUMW2FlmPIKcysE9Nu2k2hIcKkazynC6LyyNbp+2QjJ8pQy
+         MhaGCKShScU/QmF6EY4xYFC3xsLjUpR9qE6DPU03zdbL6OamxWREFoQdyfzC3So59gyy
+         eVuRV6j2FW7gJIYW/Q9nj74hQYz4foeuel80Q+7nzNFKPoIvJP9L/AiY+fDKCG4WjVyy
+         DWr3z3WkVSJBeLNYCqN4YKLsBenQlHOGTQZYvUX0l12MbJLO0zcHaVO/g345I+WZRGzR
+         lA8Q==
+X-Gm-Message-State: AOJu0Ywp8ECp13RAk1TTm4F1Y3QZzHGEN7WIwcVC1uNPXftOwsh2jqOB
+	Eszr+br9qXcwLGuLgx85ES+nRtyp6JP8Id46lClhbcvOH4WFTQsVpCkpR4/PNU+DRhr/YCzyrSb
+	g/bKr0VbefzF+pYg7P/exazBsGS70vUV9uQjs/GVwuOOLQtCurz7Wx8WU1WH6CQ==
+X-Gm-Gg: Acq92OG6jvUVkRI2uCjBAKGxM3taboWwVd3cai/JlL5B+dvKUdlq3Ko0K5ctvTrKfna
+	KqiC5HwCp8tBmEXTDn0JtxNHxqKun+Bcsk1/fNItwWzlFrK+UfoVlmVP9QfAQQ7W2Z35Sj2XeY/
+	PDTwK3afUbJ2KEZKyL2zin7NbuI+qk0XO5FrbtdgRQlXMsZi9jRrxvjNl89Z86dz1feuepqODaz
+	g1BSSf/vPhLY4oXPw+aoCnXBrBfpuyDhEuvfMT1YFgnmXTcoEZYmm+PwsCXixXoginL0NJLteb2
+	qYrL243PHw05EHBbYyZaVUg2WXW4gO4Gjdg/NIQzfpX1vtAeA/MDX2Mkukow8CwN1GrMKcN7uRu
+	MET7Bk1VeLbFBqi8RiqAS0Q==
+X-Received: by 2002:ac8:58c9:0:b0:50e:5f71:62c3 with SMTP id d75a77b69052e-516d460cf1cmr289029551cf.42.1779893622242;
+        Wed, 27 May 2026 07:53:42 -0700 (PDT)
+X-Received: by 2002:ac8:58c9:0:b0:50e:5f71:62c3 with SMTP id d75a77b69052e-516d460cf1cmr289029281cf.42.1779893621791;
+        Wed, 27 May 2026 07:53:41 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.241.172])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51706b081c7sm44895261cf.28.2026.05.27.07.53.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2026 07:53:41 -0700 (PDT)
+Message-ID: <b810304f-0e42-4ca3-8746-7d8323e35e70@redhat.com>
+Date: Wed, 27 May 2026 10:53:40 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] rpcbind: fix a few memory leaks
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <20260521234720.818996-1-smayhew@redhat.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20260521234720.818996-1-smayhew@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260527-putfh_foreign_fh_null_deref_consumers-v1-1-1b8a5aa28c59@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2N0QqDMAxFf0XyvELtcI79yhhFa6oBl0qyjoH47
- 4a9ncOBe3dQFEKFR7OD4JeUCpu0lwbSMvCMjiZzCD7cfBd6t9VPXmIugjRzNOS6rnFCwRxTYa1
- vFHX+fh1S34acuhFsa7NMv//P83UcJ1YRc/R3AAAA
-X-Change-ID: 20260527-putfh_foreign_fh_null_deref_consumers-083ac712fc5b
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Calum Mackay <calum.mackay@oracle.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2823; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=98MLjyvYrhzrQH4J5hiKb/zyKhZ8SpjtwX37jFESLtw=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqFwV7CnjvpNzYHJu0CTvduIdn0V0p1aQzQWuqh
- YfrJIGIC22JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahcFewAKCRAADmhBGVaC
- FYhsD/0Z6a1teyZ+wsk4BurCfUEE4u/JAnp18E9HmH1KtKD+GltDfgs4NnSi2RPhl4Kl95R/975
- 03JsvPqSQXREkuwF66I8l4TPuWdacm3lMXnuzKcdySTEMcgvReDnRDW0BQ06947dx4zax1/ERJ4
- V4VYgwv9ZfucZE3tRZZkaGAlipLx9wYdAXW0/jlOFLKOyuS+vxGLZds0dO2E2nwkaA7G+SO5x06
- FljH9Xx1dVwGwBe/XWtWCeqPQvOYTjO71w1iILQ85I+gfVOIP4AhdFJyBIzAPaKX7RXcvAzlRPx
- 1DRBmMjUCOZfTpt/Is/bK4shknLn4sTOspiC0ZsUAvQBLQK+wnFFp7D00jA/d50rjkyPfUx1xk7
- eUEGX8btRKJcfrEaveOhu+TW+EY5eB3OghfdLNzYaxeJmEFx8ctYqVfN/TD/bD3EtTeImYA3KPp
- u4XxbOy4qbVl0VheICrIyhvIuoCDMyn/VxZVf042SYhncrH6h6DRcZVJ3TUEIEawSPy6Qb4c5qK
- 7WCFk6T6EVwMg3h0IZt9tszmMroiCLQNlDop/qOV5xs53nBBpJG24qaHuRr+o6steVF+Z941I9x
- P5OHohLVvgKgQRdmlhWYvPYLo8a7p3N/xhT7ZVIyuZPKdAU58QUICjEbXom+wP8h087aM/pi1rC
- PhpfwQcCv+GfOcA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22010-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22009-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 9F13A5E67AF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 9B9A75E6783
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When CONFIG_NFSD_V4_2_INTER_SSC is enabled, nfsd4_putfh() can return
-success with fh_dentry and fh_export both NULL if fh_verify() returns
-nfserr_stale and putfh->no_verify is true. The NFSD4_FH_FOREIGN flag
-is set, but the compound dispatch loop only uses this flag to bypass
-the nfserr_nofilehandle check -- it does not prevent subsequent ops
-from running with a NULL fh_dentry.
 
-A remote client can exploit this by crafting a COMPOUND that includes
-an inter-SSC COPY (which causes check_if_stalefh_allowed() to set
-no_verify=true on the saved PUTFH) with an additional op inserted
-between the source PUTFH and SAVEFH. For example, SETATTR calls
-fh_want_write() which dereferences fh_export->ex_path.mnt without
-calling fh_verify() first, causing a NULL pointer dereference in the
-nfsd kthread.
 
-Fix this by gating the dispatch loop: when NFSD4_FH_FOREIGN is set
-and fh_dentry is NULL, only OP_SAVEFH (needed for the inter-SSC flow)
-and ops with ALLOWED_WITHOUT_FH (which don't need a resolved
-filehandle) may proceed. All other ops receive nfserr_stale, per
-RFC 7862 Section 15.2.3 which specifies that foreign filehandle
-validation is deferred to the consuming operation and NFS4ERR_STALE
-returned at that point.
+On 5/21/26 7:47 PM, Scott Mayhew wrote:
+> Fix a handful of leaks reported by valgrind.
+> 
+> Scott Mayhew (3):
+>    rpcbind: fix memory leak in init_transport()
+>    rpcbind: fix memory leaks in network_init()
+>    rpcbind: fix memory leak in read_warmstart()
+> 
+>   src/rpcbind.c   | 4 ++++
+>   src/util.c      | 3 +++
+>   src/warmstart.c | 3 +++
+>   3 files changed, 10 insertions(+)
+> 
+Committed...(tag: rpcbind-1_2_9-rc1)'
 
-Fixes: 3ad685d73ed8 ("NFSD: allow inter server COPY to have a STALE source server fh")
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4proc.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 34f2921e4ef8..00cd8dd460fc 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -3138,9 +3138,22 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 				op->status = nfsd4_open_omfg(rqstp, cstate, op);
- 			goto encode_op;
- 		}
--		if (!current_fh->fh_dentry &&
--				!HAS_FH_FLAG(current_fh, NFSD4_FH_FOREIGN)) {
--			if (!(op->opdesc->op_flags & ALLOWED_WITHOUT_FH)) {
-+		if (!current_fh->fh_dentry) {
-+			if (HAS_FH_FLAG(current_fh, NFSD4_FH_FOREIGN)) {
-+				/*
-+				 * FOREIGN fh from inter-SSC PUTFH: only
-+				 * SAVEFH may proceed with a NULL fh_dentry.
-+				 * Per RFC 7862 S15.2.3, validation of a
-+				 * foreign fh is deferred to the operation
-+				 * that consumes it, and NFS4ERR_STALE is
-+				 * returned at that point.
-+				 */
-+				if (op->opnum != OP_SAVEFH &&
-+				    !(op->opdesc->op_flags & ALLOWED_WITHOUT_FH)) {
-+					op->status = nfserr_stale;
-+					goto encode_op;
-+				}
-+			} else if (!(op->opdesc->op_flags & ALLOWED_WITHOUT_FH)) {
- 				op->status = nfserr_nofilehandle;
- 				goto encode_op;
- 			}
-
----
-base-commit: b69fc3eaa867d0caa904634ea7a1b4569411b163
-change-id: 20260527-putfh_foreign_fh_null_deref_consumers-083ac712fc5b
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+steved.
 
 
