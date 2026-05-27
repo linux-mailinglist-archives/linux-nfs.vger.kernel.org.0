@@ -1,214 +1,192 @@
-Return-Path: <linux-nfs+bounces-22020-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22021-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GOjoNC8WF2px3wcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22020-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 18:05:03 +0200
+	id uPsGIskcF2rw5AcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22021-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 18:33:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5681C5E76DF
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 18:05:02 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22D7B5E7CEC
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 18:33:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8C74F309715F
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 16:02:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DB6FB305B987
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 16:30:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E91B391E7F;
-	Wed, 27 May 2026 16:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1126343637E;
+	Wed, 27 May 2026 16:30:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6AweTLN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6JF0cbf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB9B3803D9
-	for <linux-nfs@vger.kernel.org>; Wed, 27 May 2026 16:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779897760; cv=pass; b=tfeRfOm0rZRNKC2KOYOCaySJ3920FPCnJbI2/qyHGHKfYgGuJ2wyurAtCIb0xG8ncWPDZCA79PzyLX8Hd21+Lbdtgfqp22Ig4DiWSBVuAt+2jtb7NbCfhZ6BisozzhPsYPhR7UwI0rHW7B/u4ZQkrNP4cin9eXWieZCLkxgBc/I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779897760; c=relaxed/simple;
-	bh=AHt0+86vpId0YnypIvt+8kocwI6bTxlsvlDW/zwRB5c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eENRfpbxWwNoJCHDfaPR+UBkCO/xhpiKas5984ZRm7WoinmynBBGMVuRe/7qTAg+VhwK/1j7HtNZfbR3JhZFgrgGEo6HqCyJZwY+SJ7opaEGfttGsc1zI4tXENPhuroR9geb/X+YLtszHQLOOgfux2/n5r8QIAaEEjIK5GaRtgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6AweTLN; arc=pass smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D83C3ED131
+	for <linux-nfs@vger.kernel.org>; Wed, 27 May 2026 16:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779899457; cv=none; b=SgfCCdeY4H1KTQ3vJ/VD5a6G2f5CMVhb7lvsG57NylhFbjGbXjMCWKlUoYBXQWusFO7fuEQgCTwVqmZkHyazfszEnTvp5b1PlyMQowB4iib5ofEIspHZdR74AuS8mQaPGzGoPxqaOep0Yidq20VyDTvdM9taefA7FRnmEt9E8WE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779899457; c=relaxed/simple;
+	bh=fq1RxNL89gaa1wj5IiD/KH3yhOhugHwkF3eND9ymod0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXvCHSmNs99fNOpJH19GuFSp8Tgw6QSK45Hs9zMjAwMToyWbNI9uQAYPmAypiSCar+CHxy1M036Vm1KjxQldmEWDA2j1Kt3KAFDfTrz5WS3uasq3CNLd+vbNhNbygWPY62CqCNZZlSRlbCjwMqlG9gHdzJPw7SneR3SlFoxfs1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6JF0cbf; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aa4a628ab0so1083572e87.2
-        for <linux-nfs@vger.kernel.org>; Wed, 27 May 2026 09:02:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779897756; cv=none;
-        d=google.com; s=arc-20240605;
-        b=dYAWe33JKRSruIm40j53/j0grUqHAPv4KavcgSZO3ZA0R0BkQ8T/5naSEUNEjgezJd
-         DXwLz1rS3WOixSJLuG1mBvOgJdvatv9lguiHQ2m555Mq6c4UyyzKi7HuSwrf1lRtPxCk
-         cnRZf7ZzP/cJxzZdOy8Y3c2vk5AZq6zdyO4zT/wNbARNofSvkT2kez065jplpaULHsFy
-         w76gq/N0oKqGSZs3wm34Ieo5QqtyJoRRo7w+GgHnt3wwuWpAKiPl6f9CU7+PKL/x33PH
-         Fwmfkyooc6KT67p9eoK8tNFFNj7ZPkC4+e6TkgUVwLAXlZ43P+hDsYsfShIr2NpiOdgH
-         rqwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=z2Cy0T5Ytizh+1Br6nvrDriJnRVK9iMYXygh/HS+xaY=;
-        fh=8Doo2omZE+6wT77pQipoVjk4tjHDtUaRbFOwpA/lCYc=;
-        b=e30qco+haTw7bnT3U7aAu4ipeWaFmvZYB4CZfkuF5Ekabvq24ASh8vSsLvMv9eLFnA
-         zcpmla6d5oWwbEQ7UHtMVypZ08RPQtlLfP4YqthwoG3rCw1wpD09I4sfbh16Js18AC28
-         ictweZiZTPyuEdYChY0hMPDvb2M+hZRbX+5W30EFFUJOgqiw5CQpA7+19aTu5DMpVhka
-         alMQXjY8aRbtoi93Dkcfq6JtApJ75hdlkWvLGHG6P7iWqTG5kMVvjrAl5qI3Ri9kRznc
-         qTC6JhBR9F2CC51Kkf/PaFgBW+Vk7LxjfYwPvWmiX/th/Dzrlo7tP2vEUlpP0hhhUtr5
-         nzEA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-43b6f782cfaso2474555fac.3
+        for <linux-nfs@vger.kernel.org>; Wed, 27 May 2026 09:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779897756; x=1780502556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z2Cy0T5Ytizh+1Br6nvrDriJnRVK9iMYXygh/HS+xaY=;
-        b=L6AweTLNHy/Z0BzaB6cRHkDYdErwcaMUEx8sJqTCu6h0qBQaMI0UE7aPhCgR72qWxR
-         SZBJ7t2RaoXpz4Fldpeu3WtNvtR9fGkYodPHOCr6ktBnEdknHAi631onR1oC5MFvlZy2
-         moajP1VpZItzXpnNDN9Vh/8h3PzgP5amoobLKOr4RvS6L4yacQa55e2mV8a00urNt5nn
-         HTjaq768EtXo9tfUIVpinlcto7s/5nLIsy4HiNkmZN86ifJim24oHWq+N95dQY3ntf3J
-         Z5ZtSXPJv5DKW3uIy9zRs41yXQqczJ0rvHLa8rUvUrd3+qC9SeiuGsQYj4VxNAhx6cpR
-         KzGA==
+        d=gmail.com; s=20251104; t=1779899453; x=1780504253; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QvE27vjOj0oBAYN3EfYXrsSdY9/XabQfXIQ55p1R04c=;
+        b=G6JF0cbfLAGNpAknp56cYrx8d0yZ0W6+2ZRrgm2h1fhS1bEDXypNccnMEGEJBMmhAh
+         /dlomDt9uU+14rdzPII/HcD78q54TvbJbxCN/hycNjwcwrzt5jaK19YNvZ6eSH3L9vXE
+         z7pdzkcJ27tf65tyMWHqs/Rwu3XFbHdZ08y+NpxER1To+QbYmrh36vdXJVOkhMfUEadF
+         fslmken6+zNwvMbtkWfBULBVX35BJUDiituT+1wQS6dHIEX34Ny2FMat2emQo9/Etje9
+         vjABI8ymkfG2jyyNNoNfeX2yYoHJOlCeISSWNF2UUCu6ptWcTew15Wg5a5NA8ZiWd8v+
+         HPxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779897756; x=1780502556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=z2Cy0T5Ytizh+1Br6nvrDriJnRVK9iMYXygh/HS+xaY=;
-        b=G99CrNwvB/r8nUhi3cCBEQPASjwT5Llpg5SM7I5AHVYUMrHSjqt1V+0QwO/4aHOsdq
-         d2UGig1I7HIHywKI+d3bLsQUxGpISNhRcaAhENSZI7pRDuFCXYKe3zpm77KupDd11LJK
-         br9rkwlGZ4xuyQ+bFNsxrrmtVeZB7uCdspHthYVirHFPPASvugChVNiYsQV8lm3B89yL
-         ZgK+XacFOkjmvuOJtSJBzri+SmVCBYxJyzikEYYpg6KNSCae/82ITrUV7uj+U0NhD7rU
-         6DxrbMBAmC+IyO7LxvZ19qyQ4zBWqw91Y0YBrKS/K1Jfloo9eaWh9cuqO3WaShOgy5ZO
-         NLsg==
-X-Forwarded-Encrypted: i=1; AFNElJ+jNW0HQJe0BhJlHnnZBCPT0U1i8cmJEbWu/1+pT7T9E6+43UCxO92xmf2Aa14suMDDTJEC/dZfF5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYQMIU6XRveCrF4kyeXVM0uVFaLYx7vvfL71PocuRR7YFmM2ui
-	KPddo/Dy4CuiFsxxV8+LD6JeCSSJg31CNqCzDQgbu1b67eKKgBjX9AdyFtAD5DB3ni48Y9TCrVP
-	VzKBuALqc9vaspHWBHdsYh+JbYJDibgs=
-X-Gm-Gg: Acq92OEsHJmdXfmE7hZ6JZDrq3tN5G1zO/WuFbsXNeFwOVcfklp2KbxugT48sLsGWoI
-	34ZnDi1H9qSYXIgjNGzgYZjnifHqWpMEqerKTWJ+Z4yVFLdjqzLtXWwseKF2T/XoYDAxR7fgJF4
-	4LcLekWEnDgUG0kwe/CFvR+di06uqZNDFcNihZEXwnttRwcJFl3JpyCxHBnN/ZADQiyGvoG6ATr
-	BT/68nF6FLDWOSfrH20FpfIM1yhyh6JEENXSVl6W3vaVjRsb+857BV2R7vS8lCwog+7lEePZXSD
-	DSTxtk+P
-X-Received: by 2002:a05:6512:1082:b0:5a8:96cf:c8c4 with SMTP id
- 2adb3069b0e04-5aa3232a140mr8148267e87.15.1779897755653; Wed, 27 May 2026
- 09:02:35 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1779899453; x=1780504253;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QvE27vjOj0oBAYN3EfYXrsSdY9/XabQfXIQ55p1R04c=;
+        b=PpzgbBD8GLhsSw8JU/eEvlkZEHX2F5+zDsR3+MB2TKComBSZ1vTQ+CfbFdXCWE+RWe
+         xhDwFnVYNBKFfnyl/Trji/2CySpHdXhwjHKTnx3I8c7lK+wOyCs0uOGGHefGOe2Z8vB5
+         L12HJpiW3Ntoe8AmnKypMcgTWZAeu+5VWrgWAV8nO2HOKWCnpHl93iiW6f8LnX9xbza2
+         Ti0TOU0GKor9bY8HmcIh4aXp6VwygkcZt+tQfW/mNtJztmgT05JcQD/OClS2QtkLwo5r
+         96E7in57ewg2IVyTYfx1o09763l3OmsUGJvb+ciNk+HQSVwzrgRnlh+aRBjsLr8WzoHm
+         kPSA==
+X-Forwarded-Encrypted: i=1; AFNElJ/XY17Tacq6EI4IvYQG3Re2T3nlBI0SoOZXX5Ba6TJLADdW1735CKS4k4sv3wuuj3X3yuFoc1eijkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUyelAbeKOjafA8RE0uXffQ8Pt6W4ZI/+fT4JczlDPCsWZi4eg
+	qIpj1Luipd/D+vZKzk/Af/JappUrDJx2RNEGmkcu3H3Q3DXZoXn3zWAE
+X-Gm-Gg: Acq92OE5wQnHAGHnyBgUaUTG4vpfxClxN6ksrnAXjJIKebpJ3TVBy+FJYWSUAu+OVo3
+	5mlk9lVjLcvXFSFkZImKFwZzwZCkPGBV60SUsaKJAbe4KEMWarSnL7FH0j1DIhu+ty9cCfqfR+L
+	79qKsDNrvTb+uHygD3kS7bN9BM5HfDf2vK4rBM8T+wblaWEodMcGBdev/D/i2un1M0GkFKeMLAr
+	YKUyRRTnWfdbQb9acyhsPwG9ddbdT3E/frXDhtyGoFBPHzeBmIMHraRPWMLESKbPLEbAje1C/WC
+	Aemze1t5KUqarsX61jrcBv0ko6ywZja8EfwMx+slFaxnWtXAjcCg4SPE8rh5VvLNq0gWNTNfqio
+	RAGQOmpLz5twRTA64cp13WwlX0zhoaPwQkmNtM4K1vb0REf9AenVnv8y1FCTa1lPdaxpm76RJCd
+	3pw0k9WbVefL26ZC/nTlz+TbJjOBasI95G3gEovIzej9ez4UE++msreiqkWdsAjqz8MY8VH4F3d
+	r3J1rL6T3YXETR/ZNfcC6eEo3v0XcPuazr7whQY858=
+X-Received: by 2002:a05:6820:4c08:b0:69d:521d:a4fc with SMTP id 006d021491bc7-69d7ead810amr12080874eaf.8.1779899453213;
+        Wed, 27 May 2026 09:30:53 -0700 (PDT)
+Received: from server0.tail6e7dd.ts.net (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cc812e0413sm188819356d6.31.2026.05.27.09.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2026 09:30:52 -0700 (PDT)
+From: Michael Bommarito <michael.bommarito@gmail.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Tom Haynes <Thomas.Haynes@primarydata.com>,
+	Peng Tao <tao.peng@primarydata.com>,
+	Kees Cook <kees@kernel.org>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2 0/2] NFSv4/pNFS: fix client kernel panic from malformed GETDEVICEINFO
+Date: Wed, 27 May 2026 12:30:34 -0400
+Message-ID: <20260527163036.1524927-1-michael.bommarito@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org> <20260523-b4-fs-v1-4-275e36a83f0e@kernel.org>
- <1bb537f6dc36b00788b613fb8f71579478418457.camel@redhat.com>
-In-Reply-To: <1bb537f6dc36b00788b613fb8f71579478418457.camel@redhat.com>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Thu, 28 May 2026 01:02:19 +0900
-X-Gm-Features: AVHnY4KetSSI45sZ2YEgAEZTRsUQAA2DaTD5AcJyh7fDYB4FmiHhDhxOxGAj9DM
-Message-ID: <CAKFNMokr_mk8xhMQ7u8RGRd1XPQSSd_uVKXR=-ui5Zjk8AhfTw@mail.gmail.com>
-Subject: Re: [PATCH 04/17] nilfs2: replace get_zeroed_page() with kzalloc()
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Viacheslav Dubeyko <vdubeyko@redhat.com>, Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>, 
-	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Dave Kleikamp <shaggy@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Breno Leitao <leitao@debian.org>, Kees Cook <kees@kernel.org>, 
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
-	linux-nilfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	jfs-discussion@lists.sourceforge.net, linux-ext4@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22020-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	FREEMAIL_CC(0.00)[redhat.com,suse.com,fasheh.com,evilplan.org,linux.alibaba.com,dubeyko.com,kernel.org,oracle.com,brown.name,talpey.com,zeniv.linux.org.uk,suse.cz,mit.edu,szeredi.hu,debian.org,gmail.com,vger.kernel.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[konishiryusuke@gmail.com,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-22021-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[michaelbommarito@gmail.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid,dubeyko.com:email]
-X-Rspamd-Queue-Id: 5681C5E76DF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 22D7B5E7CEC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 26, 2026 at 2:07=E2=80=AFAM Viacheslav Dubeyko wrote:
->
-> On Sat, 2026-05-23 at 20:54 +0300, Mike Rapoport (Microsoft) wrote:
-> > nilfs_ioctl_wrap_copy() allocates a temporary buffer with
-> > get_zeroed_page().
-> >
-> > kzalloc() is a better API for such use and it also provides better
-> > scalability and more debugging possibilities.
-> >
-> > Replace use of get_zeroed_page() with kzalloc().
-> >
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  fs/nilfs2/ioctl.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
-> > index e0a606643e87..b73f2c5d10f0 100644
-> > --- a/fs/nilfs2/ioctl.c
-> > +++ b/fs/nilfs2/ioctl.c
-> > @@ -69,7 +69,7 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs *ni=
-lfs,
-> >       if (argv->v_index > ~(__u64)0 - argv->v_nmembs)
-> >               return -EINVAL;
-> >
-> > -     buf =3D (void *)get_zeroed_page(GFP_NOFS);
-> > +     buf =3D kzalloc(PAGE_SIZE, GFP_NOFS);
-> >       if (unlikely(!buf))
-> >               return -ENOMEM;
-> >       maxmembs =3D PAGE_SIZE / argv->v_size;
-> > @@ -107,7 +107,7 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs *=
-nilfs,
-> >       }
-> >       argv->v_nmembs =3D total;
-> >
-> > -     free_pages((unsigned long)buf, 0);
-> > +     kfree(buf);
-> >       return ret;
-> >  }
-> >
->
-> Makes sense to me.
->
-> Reviewed-by: Viacheslav Dubeyko <slava@dubeyko.com>
->
-> Thanks,
-> Slava.
+A malicious or compromised NFSv4.1+ pNFS metadata server can panic any
+pNFS-flexfile client by returning a GETDEVICEINFO body with a
+multipath-DS count of >= 3 and exactly one valid (netid, uaddr) pair.
+The unbounded inner loop in nfs4_ff_alloc_deviceid_node() (and the
+parallel site in nfs4_fl_alloc_deviceid_node() for the legacy file
+layout) keeps iterating after the first netaddr is decoded, consuming
+the trailing version_count / version / minor words of the body as
+opaque netid + uaddr pairs.  Both come out as zero-length strings;
+xdr_stream_decode_string_dup() sets *str = NULL and returns 0; the
+caller in nfs4_decode_mp_ds_addr() only checks "< 0" and immediately
+calls strrchr(NULL, '.').
 
-Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+A QEMU/KASAN reproducer is described in the second patch.  The
+shortest crashing GETDEVICEINFO body is 56 bytes, the panic is 5/5
+deterministic at multipath_count = 10, and it fires before any
+user-level read can complete on the first pNFS file the client
+touches.
 
-This conversion looks reasonable and won't affect the behavior of the
-ioctls that use the modified function.
+Patch 1 closes the NULL dereference itself by changing the two
+xdr_stream_decode_string_dup() return-value checks in
+nfs4_decode_mp_ds_addr() from "< 0" to "<= 0".  Patch 2 promotes
+NFS4_PNFS_MAX_MULTI_CNT to include/linux/nfs4.h so flexfile and the
+legacy file layout can share it, bounds the inner mp_count loop in
+both drivers against that cap, and breaks the loop on the first NULL
+return from nfs4_decode_mp_ds_addr() so a hostile server cannot drive
+the decoder past a single malformed entry.  Either patch alone closes
+the panic; both together close the latent unbounded-decode class.
 
-Thanks,
-Ryusuke Konishi
+The unbound on mp_count predates the flexfile driver: the same loop
+exists in the legacy file layout since 35124a0994fc ("Cleanup XDR
+parsing for LAYOUTGET, GETDEVICEINFO", 2011) and was carried into
+flexfile by d67ae825a59d ("pnfs/flexfiles: Add the FlexFile Layout
+Driver", 2014).  The NULL-deref site was introduced by 6b7f3cf96364
+("nfs41: pull decode_ds_addr from file layout to generic pnfs") when
+the netaddr decode was unified.  Stable backporting wanted for all
+three.
+
+Changes in v2:
+- Carry the stripe_index provenance comment from filelayout.h to the
+  new NFS4_PNFS_MAX_MULTI_CNT location in include/linux/nfs4.h, as
+  Anna requested.
+
+Cc: stable@vger.kernel.org
+
+Michael Bommarito (2):
+  NFSv4/pNFS: reject zero-length r_addr in nfs4_decode_mp_ds_addr
+  NFSv4/flexfile,filelayout: bound multipath DS count in GETDEVICEINFO
+
+ fs/nfs/filelayout/filelayout.h            |  2 +-
+ fs/nfs/filelayout/filelayoutdev.c         |  7 +++++--
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 10 ++++++++--
+ fs/nfs/pnfs_nfs.c                         |  4 ++--
+ include/linux/nfs4.h                      |  5 +++++
+ 5 files changed, 21 insertions(+), 7 deletions(-)
+
+
+base-commit: 0a0e44d91ce037ac5371b0d8dfbbfc5f693b27c7
+--
+2.53.0
+
 
