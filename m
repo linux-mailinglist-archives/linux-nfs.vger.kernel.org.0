@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-22017-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22018-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GCOhLZ0LF2pB2AcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22017-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:19:57 +0200
+	id KF+hIpYMF2oR2gcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22018-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:24:06 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B82C5E6C16
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:19:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFEEB5E6D06
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 17:24:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6559F3041C65
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 15:19:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 230B3302B3B9
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 May 2026 15:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E437540757E;
-	Wed, 27 May 2026 15:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD8E3783B0;
+	Wed, 27 May 2026 15:20:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhrIxO9V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2A3RCU+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E66373BFE;
-	Wed, 27 May 2026 15:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDED3EE1DD;
+	Wed, 27 May 2026 15:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779895182; cv=none; b=N1rmowJSsowUgnMIeX58cB3cw3d8WdJforT3l1p+4eyMyRZdFaGI+CzlC27JtJgtj6/zgmF/hH+1D+TetDROUsDCQXtxFKppBcwnDqG9ooXErZPKVsaM9kV44iN/ylZO/LKxYSOGbZbJsaNLXQ+BNIvQS+/7lTo2G9r7xBJDkHI=
+	t=1779895203; cv=none; b=Wth6gvC33uDdnF3GhNaBMGSpqy29HiND/+MFcf7O3JUqyCFW846ilPzfSk3mLcxjP/cF9jpMs38Ij7Qj5bZsNUWiZmM1/n3DlQEKyZu5+4mHl4xQ+hqB/VA02B1dmOsBcio0UwCTPrKbWyx7H5SpsMGH4SUEnenZBaBlfGmhsCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779895182; c=relaxed/simple;
-	bh=YfwgCrGqwd3Lfl9k+TAbBWdq9lMkZuIyfR3L52I044I=;
+	s=arc-20240116; t=1779895203; c=relaxed/simple;
+	bh=hYecvyfRrezkLa4t2+80NwKEumG5oOhUXVJYxt/SHRo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZoaLIiFk0LGz2E/Hksgx0jIP0ZE8zyPo7ibO/lM4bRKc3yqKy6vATxjJA9jlwnLTOvQWqn/MJoVRQG1SMwilEUSH1BOJxknJOX6Wuc19+Iw8vF9RIBy+IriH6FnCJCwnljMPAA9++uEoWfjxpsDUvQfxi9Tkeash7LRezArvLiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhrIxO9V; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6895E1F000E9;
-	Wed, 27 May 2026 15:19:40 +0000 (UTC)
+	 Content-Type:MIME-Version; b=AQgK6IeigrNXZapQf+bDOKbuaLn5pMv0v8XRvxCiN6rC9TzZS4QRn/bPtB2s8cfUcjcYCuIa1x22JXkDKnXuud9S1d6AACU8n5ZCThEoCUMCLqcodTLO5EYTN8P7nLEfXNok31a+prJMImkQZP5BU/wFD7P1Tx+PiE1/RpJl+ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2A3RCU+; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48ACD1F000E9;
+	Wed, 27 May 2026 15:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779895181;
-	bh=V307M4KrH+ThGXWVUWFQ9OgCTKyUsg4DNbGKlVQXGG8=;
+	s=k20260515; t=1779895202;
+	bh=C1TnMaxlD9w4quSPJUdsEFhxSc/xkf2fPPBYXY5T6/Q=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=XhrIxO9VCg53VWuwpdwbfSucHPHKII7320qbZG+0gxlGLDxaQdO9pZf1TpWpOJnFZ
-	 nWQlvU8RiTOx8oeqhAWGV0tVZBqWNd8q2iIo9fMqoLMqro8sSsl5srAVt28dfAekHH
-	 lCqgbdzxiiKF8ipy313J04zQ+H8RwyApLYjrDbTXdovmoux9gHCdz1Ii4gNJ261qzx
-	 /Gr7+jrKTAGyA4R2TzleCboKv0rKmur6uNMat8lWILAdje3ZNmDs8C/3AOellGuPla
-	 Rx8LF4njBGYwCOSZcQ8ZJBCSWk30TsJ6fvO9Xhki8DhvtVKet4uogz+cbgLVGZxkjV
-	 JSzUqmyNu99sQ==
-Message-ID: <5dbf09b251da464100ec828c5623aaf064698b96.camel@kernel.org>
-Subject: Re: [PATCH 0/5] Fix resource lifecycle bugs in svcrdma transport
- setup and teardown
+	b=a2A3RCU+z3k6YbP98HfYAD5h9E3u/6C6e77Lql4sPFtfzA2QcX6IZczSwSG7KLUsB
+	 wpUv4HLADXfE68wnUHI5nqQMeGMYTGzfA0N1FoII2PrmQJVJI70u4f8p95SAEWU9Ft
+	 qUh8OchX/UZ7oVhSa4X2/6T/R3P+BL/FzC4ID429w8k8BXRISA04q2icykG64rCgxQ
+	 Hi6V/by6mfgbMa0bAilpoyNwMo94c936vEIV5e30SN2kvZmz6UMQiqzp3zkO1jTUGV
+	 ixNoz/y9mETxkKVV5evSLztJ1ZXgROyyLi1e6GjTylBi3B5E77ehbTUYXurv37CoF7
+	 qgWBVPMTcEhNw==
+Message-ID: <e770cd7628d87611fc924d396e75feff342f4a5b.camel@kernel.org>
+Subject: Re: [PATCH 0/6] svcrdma: harden parsed chunk list against malformed
+ wire values
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, Chris Mason
-	 <clm@meta.com>, Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 27 May 2026 11:19:38 -0400
-In-Reply-To: <20260527-rdma-follow-on-v1-0-1b09bd87b6cd@oracle.com>
-References: <20260527-rdma-follow-on-v1-0-1b09bd87b6cd@oracle.com>
+Cc: linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org, Chuck Lever
+	 <chuck.lever@oracle.com>, Chris Mason <clm@meta.com>
+Date: Wed, 27 May 2026 11:19:59 -0400
+In-Reply-To: <20260526-rpc-kernel-bugs-v1-0-e251306ccca9@oracle.com>
+References: <20260526-rpc-kernel-bugs-v1-0-e251306ccca9@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -142,85 +142,87 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22017-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22018-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 5B82C5E6C16
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: CFEEB5E6D06
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 2026-05-27 at 11:00 -0400, Chuck Lever wrote:
-> Several resource lifecycle bugs lurk in svcrdma's transport
-> creation, acceptance, and teardown paths. This series addresses
-> those bugs. Two design choices span the series:
+On Tue, 2026-05-26 at 09:35 -0400, Chuck Lever wrote:
+> The RPC/RDMA transport stores wire-supplied chunk positions, lengths,
+> and segment counts verbatim in the parsed chunk list.  Consumer
+> functions compute gap lengths and sub-range offsets from these values
+> using unsigned subtraction.  A malicious or buggy peer can supply
+> values that cause these subtractions to underflow, exposing slab
+> memory to the Reply channel or driving oversized allocations.
 >=20
-> The first is the rn_done sentinel. rpcrdma_rn_register() assigns
-> rn->rn_done only after xa_alloc() and kref_get() have both
-> succeeded, making rn_done =3D=3D NULL a natural "never registered"
-> marker. Adding an early-return guard in rpcrdma_rn_unregister()
-> turns it into an idempotent operation -- callers no longer need to
-> track whether registration completed before calling unregister.
-> The accept error path, the reordered free path, and any future
-> partially-constructed transport that reaches svc_rdma_free() all
-> rely on this single mechanism rather than separate boolean flags.
+> The fix proceeds in two layers.  Consumer functions in svc_rdma_rw.c
+> gain bounds checks against the saved inline body length before each
+> unsigned subtraction, closing the immediate underflow paths.  The
+> Read list decoder in svc_rdma_recvfrom.c gains a segment-length cap
+> against the receive context's page budget, and the existing page-
+> overrun guard in svc_rdma_build_read_segment() is corrected to
+> release the rw context it has already acquired.  These consumer-side
+> fixes are backportable independently.
 >=20
-> The second is routing error-path teardown through svc_xprt_put()
-> instead of inline cleanup. The accept error path previously did
-> manual ib_destroy_qp / rdma_destroy_id / rpcrdma_rn_unregister
-> sequences and then leaked the svcxprt_rdma; the listener create
-> path called kfree() directly, bypassing svc_xprt_free()'s net
-> namespace release. Both now drop the kref_init() birth reference
-> via svc_xprt_put(), which dispatches svc_rdma_free() where the
-> existing NULL/IS_ERR guards (plus the new rn_done sentinel) handle
-> partially-constructed state. A consequence is that svc_xprt_free()
-> drops a module reference, but each caller's failure path also puts
-> one, so a compensating __module_get() is taken before the
-> svc_xprt_put().
+> pcl_for_each_segment() uses an inclusive upper bound that underflows
+> when ch_segcount is zero, turning a zero-segment Write or Reply
+> chunk into an unbounded memory walk.  The macro is changed to a
+> half-open bound that naturally produces an empty iteration for
+> ch_segcount =3D=3D 0.  The decoder then also rejects zero-segment chunks
+> at the wire boundary, and reorders pcl_alloc_write() so that only
+> fully-populated chunks appear on the list.  The macro fix remains as
+> defense in depth and is safe to backport to trees without the decoder
+> change.
+>=20
+> A consolidation pass validates Read chunk positions and overlap
+> invariants once, immediately after decoding, so that future PCL
+> consumers inherit the guarantee without replicating per-site checks.
 >=20
 > ---
-> Chris Mason (1):
->       svcrdma: Fix unmatched rn_unregister on failed accept
+> Chris Mason (3):
+>       svcrdma: Fix offset arithmetic in read_chunk_range
+>       svcrdma: fix pcl_for_each_segment for empty chunks
+>       svcrdma: reject Write/Reply chunks with segcount 0
 >=20
-> Chuck Lever (4):
->       svcrdma: Reorder rpcrdma_rn_unregister before rdma_destroy_id
->       svcrdma: Use svc_xprt_put to free listener on create failure
->       svcrdma: Reject connection when transport allocation fails
->       svcrdma: Clear sc_cm_id when ADDR_CHANGE replacement fails
+> Chuck Lever (3):
+>       svcrdma: validate Read chunk positions before reconstruction
+>       svcrdma: reject oversized Read segments at decode time
+>       svcrdma: Validate Read chunk positions at decode time
 >=20
->  net/sunrpc/xprtrdma/ib_client.c          | 24 ++++++++++-
->  net/sunrpc/xprtrdma/svc_rdma_transport.c | 69 +++++++++++++++++++++++---=
-------
->  2 files changed, 74 insertions(+), 19 deletions(-)
+>  include/linux/sunrpc/svc_rdma_pcl.h     |  4 ++-
+>  net/sunrpc/xprtrdma/svc_rdma_pcl.c      | 63 +++++++++++++++++++++++++++=
++++---
+>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 14 ++++++--
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c       | 52 ++++++++++++++++++++-------
+>  4 files changed, 113 insertions(+), 20 deletions(-)
 > ---
-> base-commit: b69fc3eaa867d0caa904634ea7a1b4569411b163
-> change-id: 20260527-rdma-follow-on-be5cd1243aeb
+> base-commit: 887d478bb2115cec0be8caae58bad4d4b3109b1a
+> change-id: 20260524-rpc-kernel-bugs-fb537a0615ec
 >=20
 > Best regards,
 > -- =20
 > Chuck Lever <chuck.lever@oracle.com>
-
-I don't feel confident in my own abilities to review svcrdma patches,
-so.
 
 Acked-by: Jeff Layton <jlayton@kernel.org>
 
