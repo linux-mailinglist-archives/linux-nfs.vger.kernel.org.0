@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-22052-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22053-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EAEoK/G6GGrbmggAu9opvQ
-	(envelope-from <linux-nfs+bounces-22052-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:17 +0200
+	id YEdxCvy6GGoOmwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22053-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:28 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B68095FAB0F
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BB0C5FAB31
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 237B731ADF19
+	by sea.lore.kernel.org (Postfix) with ESMTP id A988731B54BC
 	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA84367297;
-	Thu, 28 May 2026 21:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3288E367B62;
+	Thu, 28 May 2026 21:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoVLVc4E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhoayxJY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10AF3655C4;
-	Thu, 28 May 2026 21:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAF73644A4;
+	Thu, 28 May 2026 21:55:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780005332; cv=none; b=YE0OOsd+SMGsEmiH38BndA6slEyj5F28qrZCkeeiPpETk7xOG+HbMoBbhSij7x51DE2jV9PLcqlGgCheeCIFCOWhIq+XQYtdzMBMr8n1cjrOY1ZAR/3TpT8r+/wO5UIjlGrNkQJG0MDUqtlZFgUbAXR7en1v8sMf/x8RxbjzsyE=
+	t=1780005333; cv=none; b=TpjlUy0njWRa9TzQsW8xwi5fYTLdXRTifusxRI+1RgVZrWYgpfHhS1AyWZIo4SYb8OLCmMqxyttY45IeDA2ou10AV4e2+KCdTy66Nv48HNepW+uPwZSaB8BsssDRE6d3jarG/4Y+ZBYpi5cs7hz/RKsTLINPwrYhjddvObzBn8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780005332; c=relaxed/simple;
-	bh=+1egxb1h4y2B2aNDpEQu+OZaOf0TQfGCXOYKnLxQ5lU=;
+	s=arc-20240116; t=1780005333; c=relaxed/simple;
+	bh=bPsFkrpRs6hSWic3IFxHIrBk5YaT5H9qSNCV2LZkyhs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WV4b7YT8v207bVrT2XOLFG4dR5jaSmMgXdUpoewUWZSutYBAM0DSM61KulR5rWG9rP0veKxNPF/ZyAsRrow2YjNppXEAXwy6QlWqRPB/L29IemoP/+Ss7Hpp0n+vI3lpCV/AySNuhqVgRQXc9NoZkbr+6bpj3sYHWmry38bHXYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoVLVc4E; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753AF1F00ACA;
-	Thu, 28 May 2026 21:55:27 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=EvoAmdM2lm8Zj+ASmaIDlo3epwCujkuZmcj+P75CJHU9ZrBvBJ4zgDnkKL4QRRUuuAcKyXcUhe/W/0EUppBhxMgo8Ky6EKyFJQmcktPyBKhpCOZzS3G2zCh8mt192MkT3DoLWpk3UpJgWYZ8zOD+PTWS9+GU70hZSfZ1az9Jhvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhoayxJY; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35111F00A3C;
+	Thu, 28 May 2026 21:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780005328;
-	bh=J/z8Oz1VKieRRTsML+iXe4muZfZGdxmLjJ0FZi/X4wc=;
+	s=k20260515; t=1780005330;
+	bh=lPROnSbjSsIPlcTzwf+m0DG24gbchZyKCSA4wNPEkEU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=DoVLVc4EnDRqTU1RJe7XrjR/aEiDbzy71BC/pJlAHzonK5B0+aBE/aokd4ccDsjR3
-	 ZMkD/flx+5DmTy7obNt3kT0FGfjdZnzwzC7u1gvPv/+/KNWwYKb0MYebBXIS0husnR
-	 hCfz+y0kvfLS9XKcDHFbNdrmyDLHtipQHC7cqdUcRzxwlRVT7XfBJ8U9hJXYbK8q9a
-	 s1+0F5N+Ai4PAjoSJfUW/KDS9Wp79GETKAIhD74jcdPb6TMuGyyy9mnZMSbn0D+g1x
-	 tL8oninox0aSwU9TIspSx+Mex1OZG5ZPeWdIy1+C+VvX4m72/z0D2x2KdLyq3boHQH
-	 7mPry8Eq5KwMg==
+	b=XhoayxJYWvjNzFDj1RrPUMhTIN3i6kF0kneyF9a0xUaQisE4/hQpcWY1uHg4rPOmu
+	 sBrh06/Ho2TK7rfXimNWfm+lTzoaa+Z/GPHSlguOhAq4tiE9lIk4x7ianIY7eft+72
+	 hYX73iTnprPPHU68rEY3+nt0dnmSLrb5ttZhTMA+hKnlHJdRRVV2hNRnqgo3/L8deK
+	 NqR6L4QLmlEfwcQ3xn/5ocYUFULu9MQS44Cw/ljXXE55FkGiJ/RCqG2RzoTvOrGO/L
+	 d9OwCosqJZ1+iCLiWjIYtzQlyNvTb9mQYudLW2MqoaekmtknEGEczjtYo3E24uoNAe
+	 Bn1vgY9UFUURg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 28 May 2026 17:55:13 -0400
-Subject: [PATCH 02/10] nfsd: drain callbacks and clear cl_cb_session
+Date: Thu, 28 May 2026 17:55:14 -0400
+Subject: [PATCH 03/10] nfsd: serialize nfsd4_end_grace() with atomic
+ test-and-set
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260528-nfsd-fixes-v1-2-e78708eff77d@kernel.org>
+Message-Id: <20260528-nfsd-fixes-v1-3-e78708eff77d@kernel.org>
 References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
 In-Reply-To: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -68,39 +69,39 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5832; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=9ZUym2wgilGmSwTI4ZQgv6cu3Cq2Hj2EPxdd/eLxtLQ=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqGLnKm7OkdNAxVZlJQoYqRbptggne280lxckVQ
- sjczEGHsl+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahi5ygAKCRAADmhBGVaC
- FXkxD/wPTHJYpCfR4XF/8j6hpJkn/3FdisO3EkmMMn4twCXomfe5BIpj/PoHnOU4P7cCuxIeyca
- xiSKhzOE/QActMBcdqnVhaMXe9ENfOwoZAGaHSYO4QcPU8vVv7bTYf5jgY+Fs7WtkkL56mt4uKg
- 3YtA/9gMNAgkZlVPsTDodrumqJgHjvDzW7Uzki0K0S2Jfp75FewJOc8oUzF6m+qjge7FNorLIEs
- 5Eq/tQbNp1fSGUmus6lkt004VDBEbegKyiMsUGei4sD9EvLXiW6izOVYLa2oclcpJZU7vFPV7kP
- 5u8G8YI5G1EfloWN4O0EEzjauwFSGnWTQJCM/TFAUmv02Wjy7wzcJvpDMSh8mdCBDXz2SJQa8UT
- g3RE+IPESc/KxLMULRIieCjogSDvETkZR5jQLjY5D+KSPaQrTXHV2PJsFwJpfsyGT2zbCQA5pjq
- HgqhuG/iZKR6Gt4rsF+ASYvwX1w8vVrXaakk0tPu1KaKFpMBKxzoOdiNYmPhuGj3zdP6yGE4Afd
- YZ7pYg2wy80UvUyktYhyjVUz6BW83wU/3F9+SobvpTmOW5uL5XObM397i/8rgD6140Yg1PAEhr6
- HCz9Symbbrd6ae2seDbticCh401uqA2+gi24is2rGITrphTZYnzRRs4sdiyYlZ3ASSygMMCrMjd
- TAQgpXy97MSKq9g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3295; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=30FTxhGBSIxdJftpkF72BilKDBsAuHh6QS6iR1DtDR0=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqGLnKT1M8rClrrM6loRWP9OpKfa0KdwujZm9uO
+ xMqS/z4JSSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahi5ygAKCRAADmhBGVaC
+ FXTsD/9zgCjyhXFwqBjdcc/athv9WS3QVicB5KZD19rlPQtugNM7PjB85DdKmIzGaHFBaZJB6J/
+ Jr2S0TUk43SqZJ+6Np9I/oTivI6pNfyp7s90m+bvzNdGjslCy3OlzNyo/VbOfgEfA/NqQD9Ht8U
+ 99I8KlJcfI0l1tgfPZyFsFBzukUL5xtww3LfnRyfkDz4y7kVwTruVaui6QvCpPEIwy1jFrPp8m2
+ 0Ydq+LjW/S0dPKXeB9BUdqeXGoGfdAngCiqi4SeLDjvEDRut2wlfxzEJL97k5MOHvtbdTMZUOSn
+ Kd74dO9+GcJ5gqvOsFKAYhkujbUoHSwTvegxgeVRGbJA22jyu21rGoIYNAZpDNDfo4aqpOyGn4K
+ 5RjruGjPrBCb4tHZIVqih7uyqLKV2qa3aqEvnshQkFMzqE72yuhGuKZ/oZ7BxftfdV7bwVrKfQh
+ +jbzuUow1jWKmzx1+280QcUUmzEJJXnBqGOCeB38KhYU0B2LBuLRovsbsmoOptejMZ/gu7DPxvV
+ 5f+R8Lk43TlvNI3B4aUbcLPi7A4OibY2tqIG2Loq2028GFZnx81xtdEfbHjSB32Luwe3pBphBLX
+ KSJ8TbQitLA1+TDb+R60jki58gV9olDwb2o5yQagtc+PdwvElF4qUpiqUxqQXt2hMab15MtmvN4
+ FuATUYISpzcSEbw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22052-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22053-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -110,143 +111,94 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B68095FAB0F
+X-Rspamd-Queue-Id: 0BB0C5FAB31
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chris Mason <clm@meta.com>
 
-After a DESTROY_SESSION the per-session teardown path can free a
-session while rpciod still holds an inflight callback rpc_task that
-dereferences clp->cl_cb_session.  nfsd4_probe_callback_sync() flushes
-cl_callback_wq, but once nfsd4_run_cb_work() has called
-rpc_call_async() the rpc_task lives on rpciod; flushing the workqueue
-does not wait for it.  After the flush returns,
-nfsd4_destroy_session() proceeds through nfsd4_put_session_locked()
-and free_session() kfree()s the slab while rpciod's
-nfsd4_cb_sequence_done(), grab_slot(), and nfsd41_cb_release_slot()
-are still dereferencing cb->cb_clp->cl_cb_session.
+nfsd4_end_grace() guards its drain path with a plain bool:
 
-    destroy path                       rpciod
-    ------------                       ------
-    unhash_session(ses)
-    nfsd4_probe_callback_sync(clp)
-      flush_workqueue(cl_callback_wq)
-      /* returns; rpc_task still live */
-    nfsd4_put_session_locked(ses)
-    free_session(ses) -> kfree(ses)
-                                       nfsd4_cb_sequence_done()
-                                         reads cb_clp->cl_cb_session
-                                         /* freed slab */
+    if (nn->grace_ended)
+            return;
+    nn->grace_ended = true;
 
-A second window exists in nfsd4_process_cb_update().  When
-__nfsd4_find_backchannel() returns NULL because unhash_session() has
-already removed the destroyed session from cl_sessions,
-setup_callback_client() takes the v4.1 early return
+The read and the write are independent, and nothing in struct
+nfsd_net serializes them.  At least two contexts can reach this
+code with no lock held:
 
-    if (!conn->cb_xprt || !ses)
-            return -EINVAL;
+    laundromat path
+      laundry_wq kworker
+        nfs4_laundromat()
+          nfsd4_end_grace()
 
-so clp->cl_cb_session = ses never fires and the field retains a
-pointer to the about-to-be-freed session.  Symmetrically, if a later
-probe finds a different session's backchannel conn and that
-setup_callback_client() call fails, the error tail must still scrub
-any previously published cl_cb_session.
+    RECLAIM_COMPLETE path
+      nfsd compound kthread
+        nfsd4_reclaim_complete()
+          inc_reclaim_complete()
+            nfsd4_end_grace()
 
-Fix by mirroring the two-stage drain that nfsd4_shutdown_callback()
-already performs: call nfsd41_cb_inflight_wait_complete() in
-nfsd4_probe_callback_sync() after flush_workqueue() so rpciod-side
-nfsd41_cb_inflight_end() decrements are observed before the caller
-releases the final session reference.  The two direct callers,
-nfsd4_destroy_session() and nfsd4_init_conn() (itself invoked from
-nfsd4_create_session() and nfsd4_bind_conn_to_session()), run in
-sleepable process context and tolerate the wait_var_event() sleep:
+Both callers can observe grace_ended == false on different CPUs,
+both store true, and both proceed into nfsd4_record_grace_done(),
+which invokes the active client_tracking_ops->grace_done callback.
+For tracking ops that drain reclaim_str_hashtbl (legacy_tracking_ops
+via nfsd4_recdir_purge_old, and the cld v1+ ops via
+nfsd4_cld_grace_done), grace_done calls nfs4_release_reclaim(),
+which walks every bucket of reclaim_str_hashtbl with no lock and
+calls nfs4_remove_reclaim_record() (list_del + kfree) on each
+entry.  Two concurrent walkers corrupt the list and double-free
+every nfs4_client_reclaim.  A concurrent nfsd4_find_reclaim_client()
+iterating the same bucket reads through freed memory.
 
-    nfsd4_destroy_session() (fs/nfsd/nfs4state.c):
-      unhash_session(ses);
-      spin_unlock(&nn->client_lock);   /* spinlock dropped */
-      nfsd4_probe_callback_sync(ses->se_client);
+A third call site exists in nfs4_state_start_net() on the
+skip_grace startup path, but it runs under nfsd_mutex before any
+client has connected and before the laundromat's first delayed
+work fires, so it cannot race with the two callers above.
 
-    nfsd4_init_conn() (fs/nfsd/nfs4state.c):
-      acquires no locks in its body; calls nfsd4_hash_conn(),
-      nfsd4_register_conn(), then nfsd4_probe_callback_sync() --
-      entirely in sleepable process context.
+Fix by replacing the read/write pair with try_cmpxchg() so exactly
+one caller transitions grace_ended from false to true and proceeds
+into the drain; the loser returns immediately.  bool supports
+1-byte cmpxchg on all supported architectures, and no lock
+ordering changes are needed.
 
-Also clear clp->cl_cb_session unconditionally on the
-nfsd4_process_cb_update() error return so every
-setup_callback_client() failure -- whether c is NULL or points at a
-different session whose probe failed -- leaves the field NULL rather
-than pointing at a session that may subsequently be freed.
-
-Fixes: dcbeaa68dbbd ("nfsd4: allow backchannel recovery")
+Fixes: 362063a595be ("nfsd: keep a tally of RECLAIM_COMPLETE operations when using nfsdcld")
 Assisted-by: kres:claude-opus-4-7
 Signed-off-by: Chris Mason <clm@meta.com>
 ---
- fs/nfsd/nfs4callback.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4state.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 1964a213f80e..1cf6b6100357 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1205,9 +1205,8 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 	} else {
- 		if (!conn->cb_xprt || !ses)
- 			return -EINVAL;
--		clp->cl_cb_session = ses;
- 		args.bc_xprt = conn->cb_xprt;
--		args.prognumber = clp->cl_cb_session->se_cb_prog;
-+		args.prognumber = ses->se_cb_prog;
- 		args.protocol = conn->cb_xprt->xpt_class->xcl_ident |
- 				XPRT_TRANSPORT_BC;
- 		args.authflavor = ses->se_cb_sec.flavor;
-@@ -1225,8 +1224,10 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 		return -ENOMEM;
- 	}
- 
--	if (clp->cl_minorversion != 0)
-+	if (clp->cl_minorversion != 0) {
- 		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
-+		clp->cl_cb_session = ses;
-+	}
- 	clp->cl_cb_client = client;
- 	clp->cl_cb_cred = cred;
- 	rcu_read_lock();
-@@ -1299,6 +1300,7 @@ void nfsd4_probe_callback_sync(struct nfs4_client *clp)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index f4d12dbcf97b..dc4ac541436f 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -7022,12 +7022,23 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ static void
+ nfsd4_end_grace(struct nfsd_net *nn)
  {
- 	nfsd4_probe_callback(clp);
- 	flush_workqueue(clp->cl_callback_wq);
-+	nfsd41_cb_inflight_wait_complete(clp);
- }
- 
- void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *conn)
-@@ -1679,7 +1681,17 @@ static struct nfsd4_conn * __nfsd4_find_backchannel(struct nfs4_client *clp)
-  * Note there isn't a lot of locking in this code; instead we depend on
-  * the fact that it is run from clp->cl_callback_wq, which won't run two
-  * work items at once.  So, for example, clp->cl_callback_wq handles all
-- * access of cl_cb_client and all calls to rpc_create or rpc_shutdown_client.
-+ * access of cl_cb_client and cl_cb_session, and all calls to rpc_create
-+ * or rpc_shutdown_client.
-+ *
-+ * rpciod-side readers of cl_cb_session (encode_cb_sequence4args(),
-+ * nfsd4_cb_sequence_done(), the cb-slot helpers, and the cb_sequence
-+ * tracepoints) run outside cl_callback_wq.  The
-+ * nfsd41_cb_inflight_wait_complete() drain in nfsd4_probe_callback_sync()
-+ * waits until cl_cb_inflight reaches zero before the caller proceeds with
-+ * session teardown; any rpc_task that reads cl_cb_session must hold an
-+ * inflight pin (via nfsd41_cb_inflight_begin) for this fence to be
-+ * effective.
-  */
- static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- {
-@@ -1731,6 +1743,7 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- 		nfsd4_mark_cb_down(clp);
- 		if (c)
- 			svc_xprt_put(c->cn_xprt);
-+		clp->cl_cb_session = NULL;
+-	/* do nothing if grace period already ended */
+-	if (nn->grace_ended)
++	bool expected = false;
++
++	/*
++	 * nfsd4_end_grace() can be entered concurrently from the
++	 * laundromat workqueue and from an nfsd compound thread
++	 * handling RECLAIM_COMPLETE.  Without serialization, both
++	 * callers can observe grace_ended==false and proceed into
++	 * nfsd4_record_grace_done().  For tracking ops whose
++	 * grace_done drains reclaim_str_hashtbl, that results in
++	 * list corruption and a double free of every
++	 * nfs4_client_reclaim entry.  Use an atomic test-and-set so
++	 * exactly one caller proceeds.
++	 */
++	if (!try_cmpxchg(&nn->grace_ended, &expected, true))
  		return;
- 	}
- }
+ 
+ 	trace_nfsd_grace_complete(nn);
+-	nn->grace_ended = true;
+ 	/*
+ 	 * If the server goes down again right now, an NFSv4
+ 	 * client will still be allowed to reclaim after it comes back up,
 
 -- 
 2.54.0
