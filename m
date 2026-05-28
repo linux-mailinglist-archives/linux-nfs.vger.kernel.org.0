@@ -1,227 +1,221 @@
-Return-Path: <linux-nfs+bounces-22061-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22062-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +ENEMJW7GGoumwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22061-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:03:01 +0200
+	id sGKNCjW+GGoumwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22062-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:14:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76D265FAB8E
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:03:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 780955FAD7C
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:14:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B350A300F5C2
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 22:03:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E0A50309E970
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 22:11:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10653359A68;
-	Thu, 28 May 2026 22:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7213E314A98;
+	Thu, 28 May 2026 22:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7gEfFJ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k54iZCOI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F369C309F1D;
-	Thu, 28 May 2026 22:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780005777; cv=none; b=l4XKP3ce8jw0Bv0cou+87veg3HwdP6ch2drPQaKnlos1U/zFIP5pibJPw3NDiHAOFRxOnGI+pmdxo7M7Ztt2OiZQbLrVmZvFV6nGKC9ZtNv+1GZY9rNYBeYXQ2Jmq/cBxLMVLv5WYxYtWLAFlRKh53MB3vSNTPj1La2orTDpvhk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780005777; c=relaxed/simple;
-	bh=0CjVr62wcKzRhwquxDhRYkOblZCChHJY4RdSADyUxvo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bMFLakHsvYrZ9PfgTDojbX3C+4El/KyUYCRSOVqt3uVwrFv31abcI1zPdZqk7qdf21DtfV1zDemoZNFK/3/Q59to2xJk2M2UrTJ/PYtvDggOW7pT9KBKbLMXGu2V0CaTF/kLNDTNt9YejsDgSuqkGFf92a8dsmlH39zeE3Vz2as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7gEfFJ4; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CFA91F000E9;
-	Thu, 28 May 2026 22:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780005776;
-	bh=ukMX4DWb1a7BYZjlygXSotTtorAuWRWPUnXA9+/FlVQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=j7gEfFJ42lJ/VP96UJu3Pe69YOJXI8BGUDFwuSlpJDTqClQLmqeS7JcHHwADg7JCH
-	 2KGkjEyojL5UfNw5UuVkAeOegCKunYhEIK+mA9ciWnClqA7dw+viqNBs6fbP4cW1ug
-	 g22mipc6iQ04bh6dmgkBQCIPj2buPY8jFHwVDZPXWII+JufMdZrnpUK21s2xCXICDp
-	 PRLKuM0nmJbhQBa0d1K47Vnzd+r5BgoCWwY7XufjgK55Jm0ZnGfl/Bk5AywoZZLUvy
-	 CtiXgU8pfVbd0sJyP7s8JQJIflV55b4prpmnArUCWX+HpJXY4LiCGNxCDG56YAblNG
-	 /k3fAj4tjwGTA==
-Message-ID: <984d1a00b9e5dc222f9bc6f3c162808ad89a5a8a.camel@kernel.org>
-Subject: Re: [PATCH 0/6] Harden server-side RPCSEC GSS decode and
- backchannel teardown
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, NeilBrown <neil@brown.name>, Olga Kornievskaia
- <okorniev@redhat.com>,  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, Simo Sorce
-	 <simo@redhat.com>, Chuck Lever <chuck.lever@oracle.com>, Chris Mason
-	 <clm@meta.com>
-Date: Thu, 28 May 2026 18:02:54 -0400
-In-Reply-To: <20260528-tier2-v1-0-d026a1415e0b@oracle.com>
-References: <20260528-tier2-v1-0-d026a1415e0b@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005B1367297
+	for <linux-nfs@vger.kernel.org>; Thu, 28 May 2026 22:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780006311; cv=pass; b=mIU/1p6ULG9Rolb7x9T8P7LkvHKbrSsgMwL3eKdte/kns6Dg0sMmqhPvx91ztTbi+SZNEl0IUA8mIoJchjVR4ub11qmHeDzaiFYgIIFVPkJzUsxMXJrJxXoxHdO3TFUEXviHHvs82/kI7b4/m1bQCahnBjXXxbEn6Hrq7E/6urw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780006311; c=relaxed/simple;
+	bh=Waq/q4WAgK2b1by/Ix28SSG66qgLx5KHlzodzTitIEk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jww+LcWWz0nh4vijElUbTbQZePK3/LJbQ607caTZDwVI++uSuiOL3NbH2VBg8CFmdVJnvVmUapblNoQlX0t1QwL0OwhfC0mcYUT4xYROciCltM/dPJNSb0b8bNxwXG1PoVCQGBi2bpN2sW/2KEgWh23m4uvobhcUhDZt8KVt5yM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k54iZCOI; arc=pass smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-68b2229b48eso1755285a12.2
+        for <linux-nfs@vger.kernel.org>; Thu, 28 May 2026 15:11:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780006308; cv=none;
+        d=google.com; s=arc-20240605;
+        b=glGzK0VB5CP04b4MJgV2DhtxZLxKz8JqAv9CPbSUi/+ceAMgX3Lw3OKZPJhC6Vtfg/
+         7KpfuSDowg6kowawm6kM7oDe97lo+NsEdm1fDYoLmCk3rZ3te0EVqBElbzOrtxVNmOfE
+         SqVnkYWVd44skYu1xwS7IqdOmFMDmNGCkYlf/2slVPx5T1sD2S/P7mBNKXuUHUjeRe2s
+         ZVpzUxHqTBv1Jd6g72OwXfXKJGvz10KMgaQ485Ld2LqKdxZpzQRj5kwpaUzAPcvIhhSY
+         k6DcEO2Q6FD3/cajspRKUy1fC+r6BFS8uycLyvHzZvHIC92vv+2Uv7bwmHEY37yYDnzW
+         Kg1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=y64b9TPU+pG6hfyReL5O787YeVg5CpxfvXEJQobDNBM=;
+        fh=I4Yni95N5DvWxDiFvUVchrQjkXPP1UYgO/JhK/tX8GM=;
+        b=J2wPP6xtNoIJH3Rf82xEDa9Lg6WuZw3BAvQms47ukVVENMv0QWoaesIHZ2EL3PTbr0
+         ERfjuOynuP2eP71VsRa+GPHvTXU1ipkp8gjgNkJUp/anKXcAE5M6wVAw0qXa26W520AD
+         pMBVMirYMNerfnzmLbFrr2MuhMNaJE8MRp1FHpCtD5g+1hsWM3ks7mvkowQV1DOVNjkR
+         aXDCzJ6xxKFZ0LpVBoW/vCcQMVJ2uI8Tg07rQrs5NvY5iRY24TBFwURxlrkak3SfjuRR
+         +H/AwRf8TmDAQzxsbUbeJ1u3FNLforUeS87vKpp1kMynw7GKp891CMZMbmfVvTNmbx+m
+         1jrw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780006308; x=1780611108; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y64b9TPU+pG6hfyReL5O787YeVg5CpxfvXEJQobDNBM=;
+        b=k54iZCOI+dlbYH2OyHFSbxg/ItUudVT0R2uNXNnTIujRIxTs97nX6I04qt1HS4Gxvq
+         3xwp9VXTiXQyFxeaToTDa4/B/v+KsJR+hBBqKYK4LQBzMmO8fq0W0iED6SsLD7UsIO5x
+         HgFGvYTrPupvglcaozXpsOIkzz70TudPWCkyXexDY5buPPVKp3lYhtDtsaedqoMhHM8t
+         xdgi+u5N4G1pXLlQWk04uyhnF8P8lN2lKHyv488E2Y6lDd3VW2GGL2bH4IliMazOzmd6
+         Zl+Dc8m85dkpZT7NFxQZXeFHEj/n6z7tqKJ2YJMNxzmVUCr8Q9sW7znLAUN+bZBoyYaP
+         U+Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780006308; x=1780611108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=y64b9TPU+pG6hfyReL5O787YeVg5CpxfvXEJQobDNBM=;
+        b=pP3BUYWmyaFrrDw5blT3O8QZIi5VgBcz/3lRBTZUHvdWZ9V/IZfettLLz8H3aedJmp
+         e4UAH1SuzC4DOzUW7/peXU/eFapOyldAcBschVcFMXiD9DJlzE42cZ3EuOU2nnvi7BsY
+         z+b0cLC8XN/2XSKTMhV6DMelnsy1QkWu8h/rjjHOe8Yu71o11WGmCzPCGsgsnM1tULZC
+         Ge8hh4EF9ax1qSY7qnj79A3Ww3XdMJmtI2e4v2/NlGJi5RrKkIzD+mGAPkgMzPpgwW/e
+         Wy5h2CelZaoIHcfb+fGKvJci7Vyj/TXdUHgaINX9svBovl6AVtcZsxxKQ9Dk6kM9IJBS
+         t0uA==
+X-Forwarded-Encrypted: i=1; AFNElJ9Y3bk/lSGyCRqIl64w0CI3y815RHhqKLPXe8Flgee4ucGOmhlvPlmlcmSyIQ+PRTiRfK8vWJmbuZc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz660WesPECb//wS7Wr6MaGXlepBgy8ll/zCnIGH6rRRz3aKrrZ
+	1VE9ZlAkZaJelzcBlpAJo6iwJ+5Hv51jqRz2a4ykOQMMnMP92qLqyFlQ8V9qP7Wt1dDJt5oYddZ
+	PJNDFn6A/dFUBlqhvO+xFL3c+KsdLsA==
+X-Gm-Gg: Acq92OGkBjkmRmyDxIo4HwFp0fvTziIbQg+jM2P5OsUetsyXA9Xmtkh3s5vYK6ojxTO
+	is5/qGJTepkfpIlJw2QtUoHKn9V2qxr02mwaS45wBAE/eNbdF+aKBRSgHLFY2V5vRNFJ8ZwvOev
+	sSCdOnOBUUw97SH7GrRzJKJD6JEP+VTRlZQZ0WRQidQ1nuwVSGKvupSCA1D0rNwl0Q9NOEtZrEH
+	OlOqnWwrU635Poh4Ks0uZqzyp5FfyMsCKUqhbPK+tY25JKCGtNTmViqp41ibXLOD2fklbNz5DAO
+	1+pMAQZd89rakpeNOEQDCeJvcMaUARcA2nfw/ZNp8lEhjQo3OA==
+X-Received: by 2002:a05:6402:40c5:b0:683:e394:cc0c with SMTP id
+ 4fb4d7f45d1cf-68c11067377mr33691a12.4.1780006308002; Thu, 28 May 2026
+ 15:11:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org> <20260528-nfsd-fixes-v1-9-e78708eff77d@kernel.org>
+In-Reply-To: <20260528-nfsd-fixes-v1-9-e78708eff77d@kernel.org>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Thu, 28 May 2026 15:11:35 -0700
+X-Gm-Features: AVHnY4Lbwdzqwlt08lzqkvusST2UOxk56g2nR4DTwa0MUqGV4xq3-56ZUni36Vs
+Message-ID: <CAM5tNy7sSXFUWFVkKEYVt9nLPOCT_-+7KfgZeoZ2UCv_eLMvrQ@mail.gmail.com>
+Subject: Re: [PATCH 09/10] nfsd: cap decoded POSIX ACL count to bound sort cost
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	"J. Bruce Fields" <bfields@fieldses.org>, Scott Mayhew <smayhew@redhat.com>, 
+	Trond Myklebust <Trond.Myklebust@netapp.com>, Andreas Gruenbacher <agruen@suse.de>, 
+	Mike Snitzer <snitzer@kernel.org>, Rick Macklem <rmacklem@uoguelph.ca>, Chris Mason <clm@meta.com>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22061-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22062-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rickmacklem@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 76D265FAB8E
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid,uoguelph.ca:email,meta.com:email]
+X-Rspamd-Queue-Id: 780955FAD7C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 2026-05-28 at 15:32 -0400, Chuck Lever wrote:
-> Address findings from an audit of how the server-side RPCSEC GSS
-> accept path handles partially decoded and stale credential state.
-> The common defect class: gss_svc_data and the rpc_gss_wire_cred it
-> embeds (svcdata->clcred) are allocated with non-zeroing kmalloc and
-> reused across requests, so an early decode failure leaves this
-> request's partial writes mixed with the previous request's residue
-> for a later consumer to trust.
->=20
-> The two gssx option-array decoder patches carry a hard ordering
-> dependency. The error-path fix must come first: it wires
-> free_svc_cred() into free_creds: and converts the out_free_groups:
-> teardown to the refcount-aware put_group_info(). Only once that
-> refcount-aware free path exists does rejecting a duplicate CREDS_VALUE
-> option actually release the single installed group_info instead of
-> leaking it. Reviewed out of order, the duplicate-rejection patch looks
-> incomplete.
->=20
-> The backchannel patch stands apart from the GSS decode work: a genuine
-> race and use-after-free in callback-service teardown. It closes the
-> producer side -- clearing xprt->bc_serv under bc_pa_lock -- before the
-> callback threads stop, then drains any request that raced in before
-> svc_destroy() frees the service.
->=20
-> ---
-> Chris Mason (4):
->       SUNRPC: fix gssx_dec_option_array error path bugs
->       SUNRPC: reject duplicate CREDS_VALUE options
->       SUNRPC: Guard svcauth_gss_release() dispatch on rq_auth_stat
->       SUNRPC: Zero rpc_gss_wire_cred at svcauth_gss_decode_credbody() ent=
-ry
->=20
-> Chuck Lever (2):
->       SUNRPC: Reject krb5 v2 wrap tokens with oversized ec field
->       SUNRPC: close backchannel before destroying callback service
->=20
->  fs/nfs/callback.c                   |  4 +++-
->  include/linux/sunrpc/bc_xprt.h      |  5 +++++
->  net/sunrpc/auth_gss/gss_krb5_wrap.c |  2 ++
->  net/sunrpc/auth_gss/gss_rpc_xdr.c   | 15 ++++++++++++---
->  net/sunrpc/auth_gss/svcauth_gss.c   |  5 +++++
->  net/sunrpc/backchannel_rqst.c       | 38 ++++++++++++++++++++++++++++++-=
-------
->  6 files changed, 58 insertions(+), 11 deletions(-)
-> ---
-> base-commit: 4d4d6605de5f91a40335729b6a7cc15e83b280f3
-> change-id: 20260528-tier2-d0dedb949b3d
->=20
-> Best regards,
-> -- =20
-> Chuck Lever <chuck.lever@oracle.com>
+On Thu, May 28, 2026 at 2:56=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> CAUTION: This email originated from outside of the University of Guelph. =
+Do not click links or open attachments unless you recognize the sender and =
+know the content is safe. If you are unsure, forward the message to ITHelp@=
+uoguelph.ca for review.
+>
+>
+> From: Chris Mason <clm@meta.com>
+>
+> nfsd4_decode_posixacl() reads a u32 entry count off the wire and passes
+> it straight to posix_acl_alloc() and sort_pacl_range(). The latter is
+> an O(n^2) bubble sort, so a client-chosen count drives unbounded CPU in
+> the server's compound processing path.
+>
+>     nfsd4_decode_posixacl()
+>       xdr_stream_decode_u32(&count)       /* uncapped u32 */
+>       posix_acl_alloc(count, GFP_KERNEL)
+>       sort_pacl_range(*acl, 0, count - 1) /* O(n^2) bubble sort */
+>
+> The encoder side in the same file already rejects ACLs whose a_count
+> exceeds NFS_ACL_MAX_ENTRIES, but the decoder introduced in commit
+> 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft ACLs")
+> omitted the symmetric check.
+My recollection is that Chuck didn't like this limit. He argued that it was
+specific to the NFSv3 ACL protocol and that the limit on the size of a NFSv=
+4
+RPC message was sufficient.  I, personally, think that 1024 is a reasonable
+limit for # of ACEs, but Chuck can jump in here if he doesn't agree.
+(Note that, if user/groups are configured as "#s in the string", a lot of A=
+CEs
+fits in a 4Mbyte RPC message and the server file system will also set a lim=
+it
+although, as you note, that happens after the sort.)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+The good news w.r.t. the sort is that they are normally already sorted,
+so the bubble sort is normally just a single pass, I think?
+
+rick
+
+>
+> Fix by rejecting a wire count greater than NFS_ACL_MAX_ENTRIES with
+> nfserr_resource, before any allocation, so the sort is bounded by
+> NFS_ACL_MAX_ENTRIES^2 comparisons.
+>
+> Fixes: 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft ACLs=
+")
+> Assisted-by: kres:claude-opus-4-7
+> Signed-off-by: Chris Mason <clm@meta.com>
+> ---
+>  fs/nfsd/nfs4xdr.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index c6c50c376b23..5469c6c207ba 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -448,6 +448,8 @@ nfsd4_decode_posixacl(struct nfsd4_compoundargs *argp=
+, struct posix_acl **acl)
+>
+>         if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
+>                 return nfserr_bad_xdr;
+> +       if (count > NFS_ACL_MAX_ENTRIES)
+> +               return nfserr_resource;
+>
+>         *acl =3D posix_acl_alloc(count, GFP_KERNEL);
+>         if (*acl =3D=3D NULL)
+>
+> --
+> 2.54.0
+>
 
