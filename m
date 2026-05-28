@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-22046-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22047-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CH1hAHmYGGqklQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22046-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:33:13 +0200
+	id yNh9LIaYGGqklQgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22047-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:33:26 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 658355F726A
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:33:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6305E5F7297
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:33:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B34F0303FB48
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 19:32:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 95F803047059
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 19:32:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1212348C66;
-	Thu, 28 May 2026 19:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F9B351C0B;
+	Thu, 28 May 2026 19:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEYRDmWk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhcUv9GO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B597340410;
-	Thu, 28 May 2026 19:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E4A3396F4;
+	Thu, 28 May 2026 19:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779996749; cv=none; b=Ugsm2cKtOthzVyljQo3er0Bmm7NqfNAFAeFfZcdNwFRN25Qjax/gLReTiuG8e1Bcj5YUcGkc6oy0QmSNJiihCctc/wECR5J3kfKj0qx1FUvS4p3YHqnL8vVQiKIB1OBElYXQM6ySx/PoQNQR61xz6X88BXrAFGpkNu96sYcEuTQ=
+	t=1779996750; cv=none; b=srdD8f+u/VwGGqN/KtGs4sri+N3zxVkvFX9DnTLdqOlRKrHcHTnb/YO1fKNGnw3tojsKbLaZEthNSUR2Eu8einxYHDfJB96DEx7EtYIa/dCWWAAe99gweUoPO3P8SYmgPsfufON6HNDjb8corbUNanryyKZ1rfBtjZLFZyXlt3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779996749; c=relaxed/simple;
-	bh=qfp8SOZC3Rlcm9DOre/hORJUYeHVfTDb2XSv1KdLe8A=;
+	s=arc-20240116; t=1779996750; c=relaxed/simple;
+	bh=HK8n9Fyp5AdWlODbW4pWD3+rSBTPmFMsRFd2zkNjP+Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e4G+a4SI8UDJVTMnrJ/flGW7npURkPHnaq563LoLxy8DiATF0s/z8xcePsu3ky6gKQqi2uCgxWSSQZFpkOqE4IExQgkd7dNEDlU7qTRZ3tk/je3bO6kMY2HzFt50aAvQqyZ+l7QWZhQFdpJcdE6x0EOAiSGWhSybwmDvIo2cciQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEYRDmWk; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9C21F000E9;
-	Thu, 28 May 2026 19:32:27 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=mHMiqlMUTuKYdWyMuTzggCgZWrIJaRqSUIBo3UHdiAtDvjD2S1Cbr5sxyqVFGZiA8w/sb3SDvNCCkvYKtZ7HTjM/cWAnTF40/XQpsOG/XOxCphNpBj3R9Fte1jUqoK4O8t1Fu88mpTkV0f1BOQHjyc3Yh4yR1/qUrGkh9AGVRZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhcUv9GO; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922751F00A3D;
+	Thu, 28 May 2026 19:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779996748;
-	bh=3vHwyYV/7YcxLddTEjbH1UHTQ5i5JELK6+v/H6bubtw=;
+	s=k20260515; t=1779996749;
+	bh=/cqRwLseA3GojhPJggnXmaP3dzOWmCdeNBLscr756Zs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MEYRDmWktnA1ZMEgl0Hm5M53fWP6mxl97WY3AcnhmIdpAC9IGpJjqASE9OOLDJZJ+
-	 kyjhyEcxBbrbUq4fj5m4/s+BJJ5zh/9TPeqJic+EumKVjvU6k6y5BH2IjgKSgVZDIv
-	 mj7zhMRatfpOdW7mcXyd6ZhhMtkwKKtOxCu01Kyn+gcEwJytxwFTuI+2U8l6tio/No
-	 qTjQXvorgGyP8Y2ftaiIpOiwqgYwer4qMbXOwR8vs1pNsFXgvlOiCScRG+s72fzbP/
-	 jJw9d1JdD9qKlQkowrY9DhYGZ4fLkz6dXo4l8mP9turXIbeH4dIXhrre3yXbWyg8FO
-	 BSZ2McLTc/i0A==
+	b=lhcUv9GO5XSCWrkpjbj50ukwT7IaWszF4gbvxOITqbC+jILoT11hkAQAHlVA7909z
+	 7lOzI13v3x13P9f3zNg9BKBUUkYPGtPc2YQSflBapSxo5ZepMTqAYxxnvkpxKptgbU
+	 r9xv3KQqn4O0YZiw2dNY17M9fFcMeY2DvdhpmdgNB+as1aXThQpbSpPA6sPLlfFRlR
+	 aZtcu4RrDKCsZji0h9jrwFKbWkIIDBITocEMBdly0gJs9i7QSf2D01Gw/aM6GtAuaY
+	 NvlkifiyK07AEQXLEP9kvEB8qqnlk7wImmSLUeW+fGA3cM1FUo1UK5lNjKLYzLGivC
+	 j/OHixAEYLCOg==
 From: Chuck Lever <cel@kernel.org>
-Date: Thu, 28 May 2026 15:32:10 -0400
-Subject: [PATCH 3/6] SUNRPC: reject duplicate CREDS_VALUE options
+Date: Thu, 28 May 2026 15:32:11 -0400
+Subject: [PATCH 4/6] SUNRPC: Guard svcauth_gss_release() dispatch on
+ rq_auth_stat
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260528-tier2-v1-3-d026a1415e0b@oracle.com>
+Message-Id: <20260528-tier2-v1-4-d026a1415e0b@oracle.com>
 References: <20260528-tier2-v1-0-d026a1415e0b@oracle.com>
 In-Reply-To: <20260528-tier2-v1-0-d026a1415e0b@oracle.com>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -66,21 +67,21 @@ Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
  Simo Sorce <simo@redhat.com>, Chris Mason <clm@meta.com>, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2484;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1930;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=tCQPJI2a6RtuHkgB9lLYd6+bbAJ7t7+75Q5kSmHne9w=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqGJhHu/3Szef3VXs1ShGZZfdH/nJz6b2AaG+GV
- 6iyjZh4Pj2JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCahiYRwAKCRAzarMzb2Z/
- lxXrD/9obANzLKnxB84KevFR3QHW6rNgH5SYIz2rS1VMkuMDM3PKkJIMegrrBklHgzl5LiqrMbF
- RAv4CcXcbpNb/jyFN4pTipFQElHu77yBL1A9bK5h9FG8bG0fi49Oh1zEAP6UNcpRMzsdUOAqZtv
- MvzZ7Hx7Dcz+IbcGFR0A/MZ+NxiOMUz1o6likuOMnUY3MV5mqsVr247VdS+lkDLhvhHZaMaAJ4W
- RqNdw+qnKxdkqRY97Z+wc1u24HXJptxUnhkB/zQw18myMQ5BBwFywQS7q8d+Nt70An15oGYM31B
- klL/NrCR5tE4w1dym9k5NIhvGCRLyEC+TsP/VKIjOzvj/8Bq9JEUKYTGR0sYZcqXWOywF4cV+4W
- lJK08Mvb8uPqJH91mlFkfj9i7r6Sbtqp4Ebm0J9CDYapIR0eTHaVtlQbG63Qhromf8QvssgSOQ0
- FDlqdUgYg34X+EsseEMIlq7tj7+nzGigMchlwftNmUVtdtpfBXpIM16mBLp+w21070smm81Uw6T
- 5cGZC90ravVz3BcVAQZ1erJtHixgNIj9D9L8+uInO720P/4zryqhfQ0qd1oJPxY2aQIOsri9lQp
- /J/GRebXPhqkb7LdDuZwd9dOCpMZvPZOX8/CyBgeVpSB8v4Tmv3JJ5gOjN39eAslqSofW+oyYZ1
- IUhsY3E1YaAVVyg==
+ bh=A2zwvrG4rGnYhdSB+2VUMtkZmXTLjk9/W9hf34amaM0=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqGJhIfLU/ypknOdLOCu2/YYTCseftYbLCl0hJ5
+ k+gu9Sx6l2JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCahiYSAAKCRAzarMzb2Z/
+ lwS7EACLjNTdS3PQpgbgO0BljeSwjd9pw8dFARh+Rio8dwozhmCFEegWKDJdiWbPUdoGVW1jlBC
+ PVaaJlZKDMNv4HxNx3weeFlVPlYywYFPkdokrUIR6+nAa0poFdqN8P3LpW11o9WgGpW+kond5/I
+ eKk9JXPvg8TMeMNzCsjiEwx1Z/OTU0wU54gT4YFnEK56JoKzFZ+h4RWV3xe4DbVXMkBRyMETsYN
+ WKazAZ58MsBPHvFYiEeOpBgV7d3ZQnSCU3FPX+TVlleaPy5pc4lbc4ybTbwawWchCWoMRajROhK
+ tpK2dYtZr+TT1Ml4eKuKYq2WYMMrvyrQG+hf06OyBWMNJ+WWMKkyT6zDRNUa/esxIHgBtD0lgwH
+ ImPlOzeJ2qe3I8hQMy/cbYx5DcHa7dZrE5ZSahZ4nkFiSrFDh0F7mu3Ji7oHuJaV6ShTvW38EsO
+ fs5GyYTO/BatWhAetBsupZkqaoNm+d/MGOra69QCiASLpawp9i9Rps0s8x+o3S31NzTXADcj5sa
+ npgXNANcDjh5gY35aigPlpBuyqifrvn/sio4fhu+zOd3lThLmmE7OOVusWzfZU2l9QnuZRLcv0t
+ cYy/xf1UmE6z3YMw7qm2qi+Jjs3CV9Mg+JN9sx6HOxU+cr7KTlSD8Yq+TYOtFm/OcsAu0aGmh2H
+ gXm6VQR0pIcFIRQ==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -105,77 +106,58 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22046-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22047-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+]
-X-Rspamd-Queue-Id: 658355F726A
+X-Rspamd-Queue-Id: 6305E5F7297
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chris Mason <clm@meta.com>
 
-gssx_dec_option_array() walks the wire-supplied option array and, for
-every entry whose name matches CREDS_VALUE, calls
-gssx_dec_linux_creds() on the same struct svc_cred. That helper
-unconditionally installs a fresh groups_alloc() result into
-creds->cr_group_info without releasing whatever pointer was already
-there:
+svcauth_gss_release() reads gc_proc and switches on gc_svc before
+consulting rq_auth_stat.  On the SVC_DENIED path after a failed
+svcauth_gss_accept(), those fields may hold stale values from a
+prior request or uninitialized slab residue: svcauth_gss_accept()
+allocates gss_svc_data with non-zeroing kmalloc and clears only
+gsd_databody_offset and rsci per request, not clcred.
 
-    for (i = 0; i < count; i++) {
-        ... decode name ...
-        if (length == sizeof(CREDS_VALUE) &&
-            memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
-            err = gssx_dec_linux_creds(xdr, creds);
-            ...
-        }
-    }
+Because RPC_GSS_PROC_DATA is zero, a zeroed or stale-zero gc_proc
+passes the existing guard and falls through into the gc_svc switch,
+which can dispatch to svcauth_gss_wrap_integ() or
+svcauth_gss_wrap_priv().  Both wrap helpers call
+svcauth_gss_prepare_to_wrap() before any rsci->mechctx dereference,
+and that helper already returns early when rq_auth_stat is not
+rpc_auth_ok, so the downstream NULL dereference is blocked.  The
+dispatch itself remains structurally wrong: it reads scalars that
+the caller has no contract to have initialized after a failed
+authentication.
 
-A reply that carries two CREDS_VALUE entries therefore overwrites
-cr_group_info on the second iteration and orphans the group_info
-allocated by the first call. The earlier free_creds path only
-releases the last cr_group_info via free_svc_cred(), so the first
-allocation's refcount stays at one and its kvmalloc-backed storage
-is leaked. No in-tree caller of gssp_accept_sec_context_upcall()
-expects more than one CREDS_VALUE per reply.
+Mirror the existing rq_auth_stat gate in
+svcauth_gss_prepare_to_wrap() one frame up, so
+svcauth_gss_release() skips the clcred dispatch entirely when
+authentication has not succeeded.  The cleanup tail that releases
+rq_client, rq_gssclient, cr_group_info, and rsci still runs.
 
-Fix by tracking whether a CREDS_VALUE option has already been
-decoded and returning -EINVAL on any subsequent match, so the
-free_creds path releases the single group_info that was installed.
-
-Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
-Assisted-by: kres (claude-opus-4-7)
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Chris Mason <clm@meta.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/gss_rpc_xdr.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/sunrpc/auth_gss/svcauth_gss.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-index f2b8f919adea..0549edae1ebe 100644
---- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
-+++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-@@ -231,6 +231,7 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
- 				 struct gssx_option_array *oa)
- {
- 	struct svc_cred *creds;
-+	bool creds_decoded = false;
- 	u32 count, i;
- 	__be32 *p;
- 	int err;
-@@ -281,9 +282,14 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
- 		if (length == sizeof(CREDS_VALUE) &&
- 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
- 			/* We have creds here. parse them */
-+			if (creds_decoded) {
-+				err = -EINVAL;
-+				goto free_creds;
-+			}
- 			err = gssx_dec_linux_creds(xdr, creds);
- 			if (err)
- 				goto free_creds;
-+			creds_decoded = true;
- 			oa->data[0].value.len = 1; /* presence */
- 		} else {
- 			/* consume uninteresting buffer */
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 8e8aceb31270..4eb537410cb5 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1944,6 +1944,8 @@ svcauth_gss_release(struct svc_rqst *rqstp)
+ 
+ 	if (!gsd)
+ 		goto out;
++	if (rqstp->rq_auth_stat != rpc_auth_ok)
++		goto out;
+ 	gc = &gsd->clcred;
+ 	if (gc->gc_proc != RPC_GSS_PROC_DATA)
+ 		goto out;
 
 -- 
 2.54.0
