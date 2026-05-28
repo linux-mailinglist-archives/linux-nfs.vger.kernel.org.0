@@ -1,53 +1,52 @@
-Return-Path: <linux-nfs+bounces-22053-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22054-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YEdxCvy6GGoOmwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22053-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:28 +0200
+	id kFEUGQS7GGoOmwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22054-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:36 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BB0C5FAB31
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77D8B5FAB3A
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 00:00:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A988731B54BC
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:55:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 14D1F31B94B0
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 May 2026 21:55:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3288E367B62;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E30B367B7C;
 	Thu, 28 May 2026 21:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhoayxJY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcvsohaE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAF73644A4;
-	Thu, 28 May 2026 21:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB8B36493E;
+	Thu, 28 May 2026 21:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780005333; cv=none; b=TpjlUy0njWRa9TzQsW8xwi5fYTLdXRTifusxRI+1RgVZrWYgpfHhS1AyWZIo4SYb8OLCmMqxyttY45IeDA2ou10AV4e2+KCdTy66Nv48HNepW+uPwZSaB8BsssDRE6d3jarG/4Y+ZBYpi5cs7hz/RKsTLINPwrYhjddvObzBn8Y=
+	t=1780005333; cv=none; b=PUlohuCmxDFSnbfx2UGJWXih0JoVcMr/vlrTLGOKdz4ZGZVZ4iimopus5pLSY0ACSJK3SNbK0dtZIT3sZOKrZ+ElHXM7f/vb1VFNmRsy9M6vGCQ/PkxIPIdtdLiLma3RTbmcY10lGRHam6toM47eUuQbZzZNzKQaMKXLxeBfdR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780005333; c=relaxed/simple;
-	bh=bPsFkrpRs6hSWic3IFxHIrBk5YaT5H9qSNCV2LZkyhs=;
+	bh=NTxvBikEtOWE6eoBgtuqv2QDtEqrRU/9xyko/1B/ClQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EvoAmdM2lm8Zj+ASmaIDlo3epwCujkuZmcj+P75CJHU9ZrBvBJ4zgDnkKL4QRRUuuAcKyXcUhe/W/0EUppBhxMgo8Ky6EKyFJQmcktPyBKhpCOZzS3G2zCh8mt192MkT3DoLWpk3UpJgWYZ8zOD+PTWS9+GU70hZSfZ1az9Jhvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhoayxJY; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35111F00A3C;
-	Thu, 28 May 2026 21:55:28 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=g0LIgHcGYuctHWsLwLGsaNecrNjjpuieji+cVLbaWe3ZneZCYAs6M71w9MfDDFlxWJMsoTkh3OadJx1KIPyBj2raMRUfmmwWTdNot8owdKOHkmX7f8aoikm5UyjJ8kvl4XWmCet+7fDeDDOBYPxRyBxWRq5zwj3TwpkZ8+s3SEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcvsohaE; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4641F00A3A;
+	Thu, 28 May 2026 21:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780005330;
-	bh=lPROnSbjSsIPlcTzwf+m0DG24gbchZyKCSA4wNPEkEU=;
+	s=k20260515; t=1780005331;
+	bh=dE1rjKPKQe+XjshW5SwZJ20tfVteIu00jKY4gIg77rk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=XhoayxJYWvjNzFDj1RrPUMhTIN3i6kF0kneyF9a0xUaQisE4/hQpcWY1uHg4rPOmu
-	 sBrh06/Ho2TK7rfXimNWfm+lTzoaa+Z/GPHSlguOhAq4tiE9lIk4x7ianIY7eft+72
-	 hYX73iTnprPPHU68rEY3+nt0dnmSLrb5ttZhTMA+hKnlHJdRRVV2hNRnqgo3/L8deK
-	 NqR6L4QLmlEfwcQ3xn/5ocYUFULu9MQS44Cw/ljXXE55FkGiJ/RCqG2RzoTvOrGO/L
-	 d9OwCosqJZ1+iCLiWjIYtzQlyNvTb9mQYudLW2MqoaekmtknEGEczjtYo3E24uoNAe
-	 Bn1vgY9UFUURg==
+	b=dcvsohaE9Xx/Oc+57UYR7kUrkEEcaHmBV8mz0zh+EYcvEIVaCpl+D1/E5xQFgO+GD
+	 LsMH+LbKeSqfS53WtrVPPxmFFSvEke+TXqQFRgJXCvlavuX+fGT0zgLr2HEUmOWJbv
+	 fRI+gSbYfPj6a8dzyg/3I1EqU7ysl1Y8pJM1KHrZeQvbCBpcnywY/mDhw3q/EO64SI
+	 bhHGYTyN6Kz4ctYgT9bFvB79DmdToErSmWFiCflWCBXzH8zuwU5d5BOt8S9FntrGmW
+	 fPWLf27WxYUeNgH+pUELkCqT61S3/FNdT0hsZH4H2/3u2ozV6BXpvxgx2rBRy+ijkO
+	 ZLpwaWazoAuUA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 28 May 2026 17:55:14 -0400
-Subject: [PATCH 03/10] nfsd: serialize nfsd4_end_grace() with atomic
- test-and-set
+Date: Thu, 28 May 2026 17:55:15 -0400
+Subject: [PATCH 04/10] nfsd: dedup nfs4_client_to_reclaim inserts
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260528-nfsd-fixes-v1-3-e78708eff77d@kernel.org>
+Message-Id: <20260528-nfsd-fixes-v1-4-e78708eff77d@kernel.org>
 References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
 In-Reply-To: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -69,20 +68,20 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3295; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=30FTxhGBSIxdJftpkF72BilKDBsAuHh6QS6iR1DtDR0=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqGLnKT1M8rClrrM6loRWP9OpKfa0KdwujZm9uO
- xMqS/z4JSSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahi5ygAKCRAADmhBGVaC
- FXTsD/9zgCjyhXFwqBjdcc/athv9WS3QVicB5KZD19rlPQtugNM7PjB85DdKmIzGaHFBaZJB6J/
- Jr2S0TUk43SqZJ+6Np9I/oTivI6pNfyp7s90m+bvzNdGjslCy3OlzNyo/VbOfgEfA/NqQD9Ht8U
- 99I8KlJcfI0l1tgfPZyFsFBzukUL5xtww3LfnRyfkDz4y7kVwTruVaui6QvCpPEIwy1jFrPp8m2
- 0Ydq+LjW/S0dPKXeB9BUdqeXGoGfdAngCiqi4SeLDjvEDRut2wlfxzEJL97k5MOHvtbdTMZUOSn
- Kd74dO9+GcJ5gqvOsFKAYhkujbUoHSwTvegxgeVRGbJA22jyu21rGoIYNAZpDNDfo4aqpOyGn4K
- 5RjruGjPrBCb4tHZIVqih7uyqLKV2qa3aqEvnshQkFMzqE72yuhGuKZ/oZ7BxftfdV7bwVrKfQh
- +jbzuUow1jWKmzx1+280QcUUmzEJJXnBqGOCeB38KhYU0B2LBuLRovsbsmoOptejMZ/gu7DPxvV
- 5f+R8Lk43TlvNI3B4aUbcLPi7A4OibY2tqIG2Loq2028GFZnx81xtdEfbHjSB32Luwe3pBphBLX
- KSJ8TbQitLA1+TDb+R60jki58gV9olDwb2o5yQagtc+PdwvElF4qUpiqUxqQXt2hMab15MtmvN4
- FuATUYISpzcSEbw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5436; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=SoCWNwxU7epGWy7WggaAHHHC1Dyj0mj3LwA/2kXoKzk=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqGLnKXEL4+gmztbEaIk9X1hLy1jUTVqOFqIsfx
+ eL+C2sgG+OJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahi5ygAKCRAADmhBGVaC
+ FSrOD/9TDFAeKF1CCHcgEU2Z3+fjfRAdcIkYwTA1B1zFMOWGs2s0g8uDvSPef9hoyEWBotCO3rw
+ KvGSeTgC0JP38u+wJy44oJzR1A0awHgS3coCN3Yg2g6mz5Q2huvPOe1w26lFAjvPo386YUnbYi5
+ 2775Y8o6aIbKKqnNuMtAFjdOP5ii6NOvktRIwyaA7GShj8zQfMvjEuNfCHw9fVCdBab4rg0E88x
+ Ane/UHLXqanJI/K+5TZbZzRLSEUq9EryV6X6JK/uLP1NG3RiIxgs7TGH4KL1qlDJlOAP8ykrO28
+ PGUu5R+BrPQO4/FciisC1XtCb/OprdJwm0JVoCI7JbF7fcRYTPWuUWEtV/JOPc4i1mQyH9dWIqj
+ 45cv87n4ZVNid/LpqKCWHMgoOKuhuhnEyKPgzYaCGhoQrrshjfiNnnxYmh1sp9m7t78ghsTPXGI
+ yGi9huwUXk/w1cgApnyFwlBAUXSs3L1OUUsCB+8lbG5HEKUBv8baPvHwhxxlSMLvjlqk2akorRQ
+ OpLuyrSR4oicjcmhjLKvQh6EDPPKiKxu3NnYLZhNUVf4FEfG2yZrRBu5UpXHzwL3JsCYai3tG3g
+ 7g5QgrljZlnyjGSv8Y7Y1R3tsFKTAZIUU1ThGouXJD1n0rvPAHt5I4dZgUpmi9DnXGKCPUcmK5G
+ VyFS6gEHGCX/8AQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -94,7 +93,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22053-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22054-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -111,94 +110,147 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 0BB0C5FAB31
+X-Rspamd-Queue-Id: 77D8B5FAB3A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Chris Mason <clm@meta.com>
 
-nfsd4_end_grace() guards its drain path with a plain bool:
+nfs4_client_to_reclaim() unconditionally allocates a new
+nfs4_client_reclaim, prepends it to reclaim_str_hashtbl[], and bumps
+reclaim_str_hashtbl_size with no check for an existing entry for the
+same client name.  After a reboot with a populated recovery directory
+that inflates the counter by one for every client that reclaims:
 
-    if (nn->grace_ended)
-            return;
-    nn->grace_ended = true;
+    boot:    load_recdir()
+               nfs4_client_to_reclaim(name)   /* entry #1, size++ */
 
-The read and the write are independent, and nothing in struct
-nfsd_net serializes them.  At least two contexts can reach this
-code with no lock held:
+    grace:   RECLAIM_COMPLETE
+               __nfsd4_create_reclaim_record_grace()
+                 nfs4_client_to_reclaim(name) /* entry #2, size++ */
 
-    laundromat path
-      laundry_wq kworker
-        nfs4_laundromat()
-          nfsd4_end_grace()
+inc_reclaim_complete() ends the grace period early only when
 
-    RECLAIM_COMPLETE path
-      nfsd compound kthread
-        nfsd4_reclaim_complete()
-          inc_reclaim_complete()
-            nfsd4_end_grace()
+    atomic_inc_return(&nn->nr_reclaim_complete) ==
+        nn->reclaim_str_hashtbl_size
 
-Both callers can observe grace_ended == false on different CPUs,
-both store true, and both proceed into nfsd4_record_grace_done(),
-which invokes the active client_tracking_ops->grace_done callback.
-For tracking ops that drain reclaim_str_hashtbl (legacy_tracking_ops
-via nfsd4_recdir_purge_old, and the cld v1+ ops via
-nfsd4_cld_grace_done), grace_done calls nfs4_release_reclaim(),
-which walks every bucket of reclaim_str_hashtbl with no lock and
-calls nfs4_remove_reclaim_record() (list_del + kfree) on each
-entry.  Two concurrent walkers corrupt the list and double-free
-every nfs4_client_reclaim.  A concurrent nfsd4_find_reclaim_client()
-iterating the same bucket reads through freed memory.
+With reclaim_str_hashtbl_size at 2N and nr_reclaim_complete capped at
+N, the equality never holds and the fast end-of-grace path is dead.
+The grace period always runs out the full 90-second laundromat timer,
+and the shadow entry left in the hash table carries a dangling cr_clp
+for any reader that walks it.
 
-A third call site exists in nfs4_state_start_net() on the
-skip_grace startup path, but it runs under nfsd_mutex before any
-client has connected and before the laundromat's first delayed
-work fires, so it cannot race with the two callers above.
+Fix nfs4_client_to_reclaim() to compute strhashval first, look the
+name up with nfsd4_find_reclaim_client(), and on a hit fold the new
+princhash into the existing record (if it lacks one) and return that
+record without allocating or touching reclaim_str_hashtbl_size.  On
+kmemdup() failure during the fold-in, return NULL so
+__cld_pipe_inprogress_downcall() surfaces -EFAULT to nfsdcld, matching
+the miss-path contract.
 
-Fix by replacing the read/write pair with try_cmpxchg() so exactly
-one caller transitions grace_ended from false to true and proceeds
-into the drain; the loser returns immediately.  bool supports
-1-byte cmpxchg on all supported architectures, and no lock
-ordering changes are needed.
+Because the fold-in writes cr_princhash.data and cr_princhash.len on
+a record that is already linked into reclaim_str_hashtbl[], pair the
+two stores with smp_store_release() on .len after WRITE_ONCE() on
+.data, and have nfsd4_cld_check_v2() read .len with smp_load_acquire()
+before READ_ONCE() on .data, so a concurrent principal-hash check
+cannot observe a torn (data, len) pair.
 
 Fixes: 362063a595be ("nfsd: keep a tally of RECLAIM_COMPLETE operations when using nfsdcld")
 Assisted-by: kres:claude-opus-4-7
 Signed-off-by: Chris Mason <clm@meta.com>
 ---
- fs/nfsd/nfs4state.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ fs/nfsd/nfs4recover.c | 16 +++++++++++++---
+ fs/nfsd/nfs4state.c   | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 3 deletions(-)
 
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index 6ea25a52d2f4..f7905aa9fdce 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -1215,6 +1215,7 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
+ 	struct cld_net *cn = nn->cld_net;
+ #endif
+ 	struct nfs4_client_reclaim *crp;
++	unsigned int princhashlen;
+ 	char *principal = NULL;
+ 
+ 	/* did we already find that this client is stable? */
+@@ -1249,8 +1250,17 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
+ #endif
+ 	return -ENOENT;
+ found:
+-	if (crp->cr_princhash.len) {
++	/*
++	 * nfs4_client_to_reclaim() may fold a princhash into an
++	 * already-listed reclaim record concurrently with this read.
++	 * Pair with the smp_store_release() on cr_princhash.len there:
++	 * if we observe a non-zero len we must also observe the
++	 * matching .data pointer.
++	 */
++	princhashlen = smp_load_acquire(&crp->cr_princhash.len);
++	if (princhashlen) {
+ 		u8 digest[SHA256_DIGEST_SIZE];
++		u8 *pdata;
+ 
+ 		if (clp->cl_cred.cr_raw_principal)
+ 			principal = clp->cl_cred.cr_raw_principal;
+@@ -1259,8 +1269,8 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
+ 		if (principal == NULL)
+ 			return -ENOENT;
+ 		sha256(principal, strlen(principal), digest);
+-		if (memcmp(crp->cr_princhash.data, digest,
+-				crp->cr_princhash.len))
++		pdata = READ_ONCE(crp->cr_princhash.data);
++		if (memcmp(pdata, digest, princhashlen))
+ 			return -ENOENT;
+ 	}
+ 	crp->cr_clp = clp;
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index f4d12dbcf97b..dc4ac541436f 100644
+index dc4ac541436f..3709d0ebcd99 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -7022,12 +7022,23 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- static void
- nfsd4_end_grace(struct nfsd_net *nn)
- {
--	/* do nothing if grace period already ended */
--	if (nn->grace_ended)
-+	bool expected = false;
-+
-+	/*
-+	 * nfsd4_end_grace() can be entered concurrently from the
-+	 * laundromat workqueue and from an nfsd compound thread
-+	 * handling RECLAIM_COMPLETE.  Without serialization, both
-+	 * callers can observe grace_ended==false and proceed into
-+	 * nfsd4_record_grace_done().  For tracking ops whose
-+	 * grace_done drains reclaim_str_hashtbl, that results in
-+	 * list corruption and a double free of every
-+	 * nfs4_client_reclaim entry.  Use an atomic test-and-set so
-+	 * exactly one caller proceeds.
-+	 */
-+	if (!try_cmpxchg(&nn->grace_ended, &expected, true))
- 		return;
+@@ -9289,6 +9289,41 @@ nfs4_client_to_reclaim(struct xdr_netobj name, struct xdr_netobj princhash,
+ 	unsigned int strhashval;
+ 	struct nfs4_client_reclaim *crp;
  
- 	trace_nfsd_grace_complete(nn);
--	nn->grace_ended = true;
- 	/*
- 	 * If the server goes down again right now, an NFSv4
- 	 * client will still be allowed to reclaim after it comes back up,
++	/*
++	 * A reclaim record for this client name may already exist (for
++	 * example, populated at boot from the recovery directory before
++	 * an in-grace RECLAIM_COMPLETE or an nfsdcld downcall delivers
++	 * the same name). Dedup here so reclaim_str_hashtbl_size stays
++	 * equal to the number of distinct client names; inc_reclaim_complete
++	 * relies on that equality to end the grace period via the fast path.
++	 */
++	crp = nfsd4_find_reclaim_client(name, nn);
++	if (crp) {
++		if (princhash.len && crp->cr_princhash.len == 0) {
++			void *pdata = kmemdup(princhash.data, princhash.len,
++					      GFP_KERNEL);
++			if (pdata) {
++				/*
++				 * crp is already linked into reclaim_str_hashtbl[]
++				 * and may be examined concurrently by
++				 * nfsd4_cld_check_v2(). Publish .data before .len
++				 * with release semantics so any reader that
++				 * observes a non-zero len via the paired
++				 * smp_load_acquire() also observes the new
++				 * data pointer.
++				 */
++				WRITE_ONCE(crp->cr_princhash.data, pdata);
++				smp_store_release(&crp->cr_princhash.len,
++						  princhash.len);
++			} else {
++				dprintk("%s: failed to allocate memory for princhash.data!\n",
++					__func__);
++				return NULL;
++			}
++		}
++		return crp;
++	}
++
+ 	name.data = kmemdup(name.data, name.len, GFP_KERNEL);
+ 	if (!name.data) {
+ 		dprintk("%s: failed to allocate memory for name.data!\n",
 
 -- 
 2.54.0
