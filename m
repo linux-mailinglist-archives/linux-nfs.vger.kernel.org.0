@@ -1,378 +1,229 @@
-Return-Path: <linux-nfs+bounces-22074-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22075-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yGmAOcS0GWoRyggAu9opvQ
-	(envelope-from <linux-nfs+bounces-22074-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:46:12 +0200
+	id iAlDA+O3GWpWyggAu9opvQ
+	(envelope-from <linux-nfs+bounces-22075-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:59:31 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBF80604FDC
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:46:11 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B94A460532D
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:59:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9FA44306D6CF
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 15:33:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B82453019103
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 15:38:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF547345CCD;
-	Fri, 29 May 2026 15:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02F82DA757;
+	Fri, 29 May 2026 15:38:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdAaZnuT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfWQPv8X"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C1936605D
-	for <linux-nfs@vger.kernel.org>; Fri, 29 May 2026 15:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780068450; cv=pass; b=JpweL9bgBzL9CBhY7kaHeJtp653IgLP35r+soIzC1pjQvbjBw1CBe0miSVgV6RqQqV019ARZ3T+9INg2FkOaTmXH/unIaJzfULOlFduvMi4tNuABA4QgVJGyhTzTswDa35zdOx5jl5hfFhAQ+y7qDnE0vrPVfMvi1SJKcpc28Vc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780068450; c=relaxed/simple;
-	bh=Y1a50Dy5jiidDIQOsgg4GsnT2e4ZiqduOc2PV47s8Hw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jAfwGNbxaL2fq27Rma+s6kPbZmAPc3yOemUIZYlMFHqU4jI77UNrYI1H5iCvS8QXQ3o/X5WKwkt5Znfah8RecRUo8GMSM/TDRpDrXSRtLAyG1yMQIFK/fjcq0ykCPV7JaPi698hPccA3Gp62Z0ja/suIEyHAsgg5UDhKSIrmY0s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XdAaZnuT; arc=pass smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-67fd8befac7so7725738a12.2
-        for <linux-nfs@vger.kernel.org>; Fri, 29 May 2026 08:27:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780068447; cv=none;
-        d=google.com; s=arc-20240605;
-        b=YYFqJhVWoEQmzv+r8ToDNvm0YsN2iDxGZ41TEjqmvC66k0e+gM5qCrEDLIpjFPQYN6
-         yQVAMnvlK2rLyRE1Gy6dXv62YpszTwJHB5sx7I3tqAcUozeoLVa0B50vgYs7CUMQ7qSz
-         GohkyVfBgJ8njd+rUtCyIn65CMbf2MT3UCUbnl5A0nT+DLxq3psDlSc87gznJlkFRbd6
-         6e/9TxS+1bKm3qp3bGP4Y7sdKOyhgnetl1MjdYqPGe+j67LeNit8sLMmApbKL5+S56Mj
-         j42b7MGYGZCWwmxThjfplRIrmz8UkhN4KxyOmN0Lx5dLYzzdpw/HztVPEIRYaZHGLbTn
-         lw8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=weGTEa3dm14WyHwIwBnRGA0Fr3xXQ6nmWDzCkKRT0Vw=;
-        fh=K/m7F0EnrBV/pe6rDa1gXBf/qg9MzONYXLTTkwBWgII=;
-        b=TVqmJALrQ97rRlsB01p57l30CmpJpxtbNmzzgydH7ZP4e4FdFPbbU8+yL+Fn1Unljb
-         NHddrlEDV0Cba0QpJaw14sVFnIefys8PW7mMb1f2lXVJqBXtIFn8M3LVZpZOs7MuCMMB
-         GG/d3DK73Xs6X9JQdJs85h5hBACaI0iva1R6weCorSPQAiSKhmOJgKH0L+1hewlI3L2A
-         fOaUwdfwzN1YOtiO/N3MtQzIOH/a1Is6kbI38+KPydWI5C+bNG8DgDSTNOt9M/UO5Tgs
-         GKgcZmfxBk/JhTIStMLJyz62c4Lx+7R7KHm4YbZ76PtfwOJCn4m7aziCczDYBaYDaU60
-         xOhQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780068447; x=1780673247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=weGTEa3dm14WyHwIwBnRGA0Fr3xXQ6nmWDzCkKRT0Vw=;
-        b=XdAaZnuT3F8Bb6AsM9e+k4tYcbJolc2qj10R14e5MwYRuBGN55ONCLJv0NhKBVBpBZ
-         UrLH6lsv0xs5FgqQOIAXz6/6pz2RKnxsPOGvPa18n7LoAOL0VQFXNFXHaeBJxGslmpzb
-         lp/R9hX5I9d4dbWN3k4cIhl8S1B4iaaYIyRAEgiGBaniZBLaC8CaFGqPYIrVur1A7ZUG
-         Y7W6DzpPlG9pXPmC8Ng5lWBvg6jnDr9kzIVq5Ysiv6YSZ7qDjdBhwEYB+ajBRGsPoEnh
-         HSVGvqRbDhd/sHbSPccB3TPlVxLu5S6y/9DA5s20Tv0szWka/B7Qcz7QOcAr2k9YgXkr
-         1ULA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780068447; x=1780673247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=weGTEa3dm14WyHwIwBnRGA0Fr3xXQ6nmWDzCkKRT0Vw=;
-        b=isa2eNBjCm4SatvYYCmkTRLot/cjg1oMtkFfO06JlncQChlkKZEw1UZ8OFGZVOUiHo
-         e9Oq9Ai/IvionKNHSJy3z5Ei6S+dvCKK9R1QUpmae+4G7kSF6RuUgdCrXNp7CTjcqAjZ
-         aPpl2lh2u+EqAEyuRHqffRLZemjCj6r1SjTeGYOVx64aT+1+WFXVXznCwgqgpU17Db+I
-         IItlLwxtEX7SZ3SLhcYCJXibJpVWVxqZdsLrW4paylA4RmyRWieJLJcpLc77rn/Nzx/o
-         tlou2gva6rBm8xCrVcAewZdU832RJMwNIICs/3+fVlk9guEBVcLRXJ0ectXUL01Vo9ke
-         /NTw==
-X-Forwarded-Encrypted: i=1; AFNElJ8N2uwlupKltT3e4KvCAj/B5OOllWSuMQYZI4Mn01m0LpkO0PmQJJH9lfxi9klL/qIQJAcSHVjJCQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+anj097GunCBcTkLe9VAcN1H2gX8RCeXOl2Ib6I9eef8c6tLa
-	gCaBzd+/lqzf8mxepxQ+UqTwUYTHntH0H96hImT9Aie9av4jj94Jjyc/Fv0kyqjZ+C/97VJR+fy
-	y8Xg4ZB8RItKnarJGEtZ2Zh5zD2GW/g==
-X-Gm-Gg: Acq92OFgizGX0B1UPVbAIga2SGytJXknzxXJ8PZvDO6kiC/2/yy4LBdQBdpfCGLrax5
-	FlAmEM3WgBDVv0iEGYIlCJr2DCkj1uOwEgvhjf2Evy8b8n1qOzcirnpFsTGmAaMZenK+nopEQbO
-	889ylnOsMKJ3OzQT3PjvnTy3u8g5oc07a7fr6OC5vcJ74YrI5lrFickqkktk+gHShmwt6/kgbH/
-	rQG0Gj+QR6f7F45iWVQyJoM8cs/nN37c+K3jDALaLep+F6Ow/6fdgG4SPSScjs+uZ8Gi8Kjddle
-	933I8PVlOhSFBw/12jUEh71vESzjNQyeb4s/2orC9KJ5AjPoOA==
-X-Received: by 2002:a17:907:846:b0:be9:3565:f43 with SMTP id
- a640c23a62f3a-be9ccd785afmr217705666b.27.1780068447054; Fri, 29 May 2026
- 08:27:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CE91F78E6;
+	Fri, 29 May 2026 15:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780069129; cv=none; b=B5qO8DSPIFJY2iOjlNYkdVmar86TzRpRcL+zpJ3t2U2/ruyH1P9b8Df7yy3cAiL7QGIgRKUeUhZTvzAoMuBq03Jea1TNrts/dmOGwV0QyIbje7oQBZdT/Rf71XMJRkqoPKVRRp0zG/in5sslVS7mlsgVs7mzzHcg8gIgcfF4OLk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780069129; c=relaxed/simple;
+	bh=KN+GAexbyrGTUIvmY+CguTOLdPCenmvdLgdODDA6OaE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=JJnIIggsuIEA2soJxqgj9FQkX7sf3rW1C8goEL4iDoEeCBdS4n6WrTM2qRYEIWGy8fhr0luKixvC3VPdZ/uH9l9Qe1GftrfZJCwfU0xN4CT64PwjVfzv82qMLmPmW7B+VHeoocIkKPmx21kNGpzenMoGW+V3VVbQRT/BPvjpgvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfWQPv8X; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DA4E1F00899;
+	Fri, 29 May 2026 15:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780069127;
+	bh=YQxivC3VLuJYe1KtueSHTthFDRVDFjvlReXHzf2VXtY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=QfWQPv8XBC0G1jqbQQr/gEZk4FdYISGFJ6BGegoqEHudQLcAwyPeHn9WUToEavq0k
+	 /5gHW/86TqTlU3fMRuNWizK472kFeqpvtNz7Trn00Lr3SRkq1ad2gpBCuQqM4aFTHX
+	 iLh/z64HD1SSvDLyGgGvJtv/llb0q5sC7B+YdIGulS74Tf8nNT7h+9QkU6rniKBOKN
+	 4PLFehvHlTQBriLrMJsijDMSgxb0E8PW4/rikuL8nBfV3uaWghWRFjGd1ZSTmVnH9u
+	 8rXkwMBHNRQ3I6JgqO4fNO4LerRuvp/Fnx6G6/gVJsMHThEHI/fMC+ZEWqelKvYrpR
+	 HUklgB6deIwng==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7D552F4007B;
+	Fri, 29 May 2026 11:38:46 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 29 May 2026 11:38:46 -0400
+X-ME-Sender: <xms:BrMZarvSXqLxCUNApbqkNiBfPfI01SThgblTP8TlomzLi6UAoH-wFg>
+    <xme:BrMZanSPpp2QZGzITVpNTANEEoCgOeoPgvEbHtHJAmG32sQvKPXIjlfG4Beu575l0
+    9LjFPcKMKUUXW97nQKqp12QlrJ0bvQcUghp8K6urCmMbk0PZG6XTME>
+X-ME-Proxy-Cause: dmFkZTGKrHhpVNOK44pXFMqz7xY5Kna3BNQWQX8J/AZjIUUCvRMGKODf4JeI27+HP36Rkx
+    rbKvaz3P5gGzTFORkUq3Ga4SmEEJ14z6tBVWXtwxOd5sCfRE59kRkx1MXtvt6zEyUA3j98
+    493ty1yVsbotSH8ORpOO5pQ0i9U7nFFpcHDeJGTr5cVjGf20Af8cHoGBUTBU+sROU9bmPr
+    rziqQP9WJNqXzR5ViNw7s/uDerSl85kM76L6VybksBJuRQ2jnMUrn4AlM2Ri7sff7n43AK
+    yvWtUFkgtJkwsCg6pS1ZLnHTIeeU7mIQnz73ypHdI1PpQOcp/KakxP5/9wcbuQiCQzHmN9
+    I1eC+2mkRsWX2MRvwPdusuH9h7LQ7cGGeYD7LCuPe6zb51bRe4BiCydOxl76RdtQk7dm+s
+    XKxHNvWtr4/nusjwPsxdSkZmkwrM6ItoHajCtN+jozxW1OjakPR1oVlcxOT0gNDh6/BlYd
+    QPrkrOK8TlOoPUtzrrx0M9slhfn7kHsgASqGH8mSPHGgohhMgYE67wKwaFjH2MNChnp3mV
+    2Idd84bUF8uEs1l84ectapOdKcFjNxgnk/BT1iG0gnwO5carakiQS3L/QsFOdfJzV8rGjN
+    L9IofuZL8NDvV7EhLVcbR9reRWQCHDkR7n9/lDgxZi7AQs9WbQxCOzvVXRRQ
+X-ME-Proxy: <xmx:BrMZapFPHrX4-92kDBZ5i9AZoj5EKNiwscJ1mkcegl3SJKg8DH3e_Q>
+    <xmx:BrMZatQrOwXKF_snmemtra35NWQ9GU0MlPctDUErMNJACGzpPno7Xw>
+    <xmx:BrMZanOUrNaVmB1B7MXgUMXi0RVW91tL5C8-G1AfQjnPFKsW22BXIg>
+    <xmx:BrMZain3wWmZi1Vara4A-WWPEgqeSspbNi5WJd78YXw-UleHDinWgg>
+    <xmx:BrMZahbiAgruyDAOCdpynjJSF97KLtqoMrL5lR0JlrMUhaWH2OET-A8b>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5300D7800CC; Fri, 29 May 2026 11:38:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1779995818.git.bcodding@hammerspace.com>
- <64a9c99c387432399b4c4d9ce6dd4836b0170c15.1779995818.git.bcodding@hammerspace.com>
- <461703b49f85216f6f6b18656e290287b0f701a0.camel@kernel.org>
-In-Reply-To: <461703b49f85216f6f6b18656e290287b0f701a0.camel@kernel.org>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Fri, 29 May 2026 08:27:15 -0700
-X-Gm-Features: AVHnY4JJ2Jx0qyGMW7_YpB0amW1WzlkTvnRwUxpvp3jss5OmQicDzipzkEOpySQ
-Message-ID: <CAM5tNy54_NMkaj-x8Z_0TenMutrm0N=KvMKBER2+3Gou7DO7iQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] nfs: return a write delegation when a SETATTR drops
- our write access
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Benjamin Coddington <ben.coddington@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+X-ThreadId: A3vJJvDMHKQR
+Date: Fri, 29 May 2026 11:38:26 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>,
+ "Scott Mayhew" <smayhew@redhat.com>,
+ "Trond Myklebust" <Trond.Myklebust@netapp.com>,
+ "Andreas Gruenbacher" <agruen@suse.de>, "Mike Snitzer" <snitzer@kernel.org>,
+ "Rick Macklem" <rmacklem@uoguelph.ca>
+Cc: "Chris Mason" <clm@meta.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <c087f4c4-c17e-474e-a869-14077996beb6@app.fastmail.com>
+In-Reply-To: <20260528-nfsd-fixes-v1-3-e78708eff77d@kernel.org>
+References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
+ <20260528-nfsd-fixes-v1-3-e78708eff77d@kernel.org>
+Subject: Re: [PATCH 03/10] nfsd: serialize nfsd4_end_grace() with atomic test-and-set
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22075-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,meta.com:email];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22074-lists,linux-nfs=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rickmacklem@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email,mail.gmail.com:mid,uoguelph.ca:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: EBF80604FDC
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: B94A460532D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, May 29, 2026 at 7:06=E2=80=AFAM Trond Myklebust <trondmy@kernel.org=
-> wrote:
->
-> CAUTION: This email originated from outside of the University of Guelph. =
-Do not click links or open attachments unless you recognize the sender and =
-know the content is safe. If you are unsure, forward the message to ITHelp@=
-uoguelph.ca for review.
->
->
-> On Thu, 2026-05-28 at 15:22 -0400, Benjamin Coddington wrote:
-> > A client holding an OPEN_DELEGATE_WRITE delegation can satisfy a
-> > later
-> > open(O_WRONLY) from the cached delegation (can_open_delegated())
-> > without
-> > sending an OPEN to the server. That cached "open for write" assertion
-> > is
-> > only valid while the delegation holder still has write access. A
-> > SETATTR
-> > that changes mode, owner, or group can revoke that access -- after
-> > which an
-> > open served from the delegation would bypass an access check the
-> > server
-> > would now fail, and, against a server that recalls the delegation on
-> > such a
-> > change, the SETATTR draws a CB_RECALL/NFS4ERR_DELAY/DELEGRETURN/retry
-> > round
-> > trip.
-> >
-> > Before issuing such a SETATTR, check whether the proposed
-> > mode/owner/group
-> > would remove write access for the delegation's owning credential,
-> > judged by
-> > the resulting POSIX mode bits. If so, return the delegation first:
-> > the
-> > return is synchronous and flushes modified data, so the SETATTR
-> > proceeds on
-> > an open or special stateid and the next open revalidates access with
-> > the
-> > server. Permission changes that keep the holder's write access leave
-> > the
-> > delegation in place.
-> >
-> > Only the mode bits and the holder's fsuid/fsgid are consulted. An
-> > NFSv4 ACL
-> > cannot be evaluated by the client, a privileged caller may retain
-> > access the
-> > bits deny, and supplementary group membership is not checked, so the
-> > test is
-> > necessarily approximate -- but an inexact answer costs at most an
-> > unnecessary delegation return or a fall back to the server's recall,
-> > never
-> > incorrect access.
-> >
-> > RFC 8881 Section 10.4.4 permits a client to return a delegation
-> > voluntarily,
-> > performing the same pre-return state updates (data flush, pending
-> > truncation, CLOSE/OPEN/LOCK) it would on a recall. Commit
-> > c01d36457dcc
-> > ("NFSv4: Don't return the delegation when not needed by NFSv4.x
-> > (x>0)")
-> > stopped returning write delegations on SETATTR for NFSv4.1+, since
-> > the
-> > server can identify the delegation holder from the SEQUENCE clientid
-> > and
-> > need not recall. That holds for changes that do not affect the
-> > holder's
-> > access; restore a return only for the narrow case where the holder's
-> > own
-> > write access is removed.
->
-> Hmmm... I'd argue that while recalling the delegation in this case is
-> mandatory for NFSv4.0, that is certainly not true for NFSv4.1.
->
-> Furthermore, I'd argue that if the holder of a write delegation is just
-> changing the mode, then that should never result in a delegation recall
-> for a well written NFSv4.1 server. The reason is this does not impact
-> the client's ability to cache data, metadata or lock state. It only
-> impacts its ability to rely on previously cached access data when
-> handling new opens.
-I'm not sure I completely agree with this statement. The case I would
-be concerned about is delayed writes sitting in the client.
 
-Maybe an NFSv4.1/4.2 server should always allow writes from a
-client that holds a write delegation for the file, but I don't think that
-is spelled out in RFC8881 (I'm never sure, given that monstrous
-document) and I'll admit that the FreeBSD server
-does not do that. The FreeBSD server currently does always allow the
-owner of the file to do writes, but does not do the same w.r.t. write
-delegation held by the client. (I'll think about adding that override,
-because it does seem reasonable.)
 
-What does the Linux knfsd currently do w.r.t. allowing writes
-from a client that holds a write delegation?
+On Thu, May 28, 2026, at 5:55 PM, Jeff Layton wrote:
+> From: Chris Mason <clm@meta.com>
+>
+> nfsd4_end_grace() guards its drain path with a plain bool:
+>
+>     if (nn->grace_ended)
+>             return;
+>     nn->grace_ended = true;
+>
+> The read and the write are independent, and nothing in struct
+> nfsd_net serializes them.  At least two contexts can reach this
+> code with no lock held:
+>
+>     laundromat path
+>       laundry_wq kworker
+>         nfs4_laundromat()
+>           nfsd4_end_grace()
+>
+>     RECLAIM_COMPLETE path
+>       nfsd compound kthread
+>         nfsd4_reclaim_complete()
+>           inc_reclaim_complete()
+>             nfsd4_end_grace()
+>
+> Both callers can observe grace_ended == false on different CPUs,
+> both store true, and both proceed into nfsd4_record_grace_done(),
+> which invokes the active client_tracking_ops->grace_done callback.
+> For tracking ops that drain reclaim_str_hashtbl (legacy_tracking_ops
+> via nfsd4_recdir_purge_old, and the cld v1+ ops via
+> nfsd4_cld_grace_done), grace_done calls nfs4_release_reclaim(),
+> which walks every bucket of reclaim_str_hashtbl with no lock and
+> calls nfs4_remove_reclaim_record() (list_del + kfree) on each
+> entry.  Two concurrent walkers corrupt the list and double-free
+> every nfs4_client_reclaim.  A concurrent nfsd4_find_reclaim_client()
+> iterating the same bucket reads through freed memory.
+>
+> A third call site exists in nfs4_state_start_net() on the
+> skip_grace startup path, but it runs under nfsd_mutex before any
+> client has connected and before the laundromat's first delayed
+> work fires, so it cannot race with the two callers above.
+>
+> Fix by replacing the read/write pair with try_cmpxchg() so exactly
+> one caller transitions grace_ended from false to true and proceeds
+> into the drain; the loser returns immediately.  bool supports
+> 1-byte cmpxchg on all supported architectures, and no lock
+> ordering changes are needed.
+>
+> Fixes: 362063a595be ("nfsd: keep a tally of RECLAIM_COMPLETE operations 
+> when using nfsdcld")
+> Assisted-by: kres:claude-opus-4-7
+> Signed-off-by: Chris Mason <clm@meta.com>
+> ---
+>  fs/nfsd/nfs4state.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index f4d12dbcf97b..dc4ac541436f 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -7022,12 +7022,23 @@ nfsd4_renew(struct svc_rqst *rqstp, struct 
+> nfsd4_compound_state *cstate,
+>  static void
+>  nfsd4_end_grace(struct nfsd_net *nn)
+>  {
+> -	/* do nothing if grace period already ended */
+> -	if (nn->grace_ended)
+> +	bool expected = false;
+> +
+> +	/*
+> +	 * nfsd4_end_grace() can be entered concurrently from the
+> +	 * laundromat workqueue and from an nfsd compound thread
+> +	 * handling RECLAIM_COMPLETE.  Without serialization, both
+> +	 * callers can observe grace_ended==false and proceed into
+> +	 * nfsd4_record_grace_done().  For tracking ops whose
+> +	 * grace_done drains reclaim_str_hashtbl, that results in
+> +	 * list corruption and a double free of every
+> +	 * nfs4_client_reclaim entry.  Use an atomic test-and-set so
+> +	 * exactly one caller proceeds.
+> +	 */
+> +	if (!try_cmpxchg(&nn->grace_ended, &expected, true))
+>  		return;
+> 
+>  	trace_nfsd_grace_complete(nn);
+> -	nn->grace_ended = true;
+>  	/*
+>  	 * If the server goes down again right now, an NFSv4
+>  	 * client will still be allowed to reclaim after it comes back up,
+>
+> -- 
+> 2.54.0
 
-Certainly setting mode bits won't be a problem and clearing
-owner mode bits isn't a problem for the FreeBSD server.
+Seems like the usual idiom for something like this is an atomic
+bit op. Perhaps try_cmpxchg on a boolean variable is not going
+to behave as you expect on every hardware platform.
 
->
-> One can argue whether or not it's needed for a uid or gid change by
-> said holder of the delegation, but there too I'd say the right
-> behaviour is to err on the side of not recalling.
-I might argue that whether or not clearing mode bits requires a
-delegation recall should be left up to the server.
-
-> The exception might be if this is an attribute delegation, and the
-> result will be that the cred attached to the delegation will no longer
-> be able to issue a SETATTR to update the atime/mtime on delegation
-> return.
-Lost me. What's an attribute delegation?
-
-rick
->
-> So yes to pre-emptive invalidation of the access cache, but I'm very
-> sceptical to actually pre-emptively returning the delegation or even
-> the layouts.
->
-> >
-> > Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
-> > ---
-> >  fs/nfs/nfs4proc.c | 66 ++++++++++++++++++++++++++++++++++++++++++++-
-> > --
-> >  1 file changed, 62 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index a9b8d482d289..e4b7322bf75c 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -4506,7 +4506,55 @@ int nfs4_proc_getattr(struct nfs_server
-> > *server, struct nfs_fh *fhandle,
-> >       return err;
-> >  }
-> >
-> > -/*
-> > +/*
-> > + * Would applying @sattr (which changes mode, owner, and/or group)
-> > remove the
-> > + * write access of a held write delegation's owning credential, as
-> > judged by
-> > + * the resulting file mode bits?
-> > + *
-> > + * Such a change makes the delegation's cached "open for write"
-> > assertion
-> > + * stale: a later open(O_WRONLY) could be served from the delegation
-> > without
-> > + * the server getting a chance to deny it.  Only the mode bits and
-> > the
-> > + * holder's fsuid/fsgid are consulted; an NFSv4 ACL (which the
-> > client cannot
-> > + * evaluate locally), a privileged caller, or supplementary group
-> > membership
-> > + * may make the answer imprecise, but the cost is at most an
-> > unnecessary
-> > + * delegation return or a fall back to the server's recall -- never
-> > incorrect
-> > + * access.
-> > + */
-> > +static bool nfs4_setattr_removes_write(struct inode *inode, struct
-> > iattr *sattr)
-> > +{
-> > +     struct nfs_delegation *delegation;
-> > +     const struct cred *cred;
-> > +     umode_t mode =3D inode->i_mode;
-> > +     kuid_t uid =3D inode->i_uid;
-> > +     kgid_t gid =3D inode->i_gid;
-> > +     bool ret =3D false;
-> > +
-> > +     delegation =3D nfs4_get_valid_delegation(inode);
-> > +     if (!delegation)
-> > +             return false;
-> > +     if (!(delegation->type & FMODE_WRITE))
-> > +             goto out;
-> > +     cred =3D delegation->cred;
-> > +
-> > +     if (sattr->ia_valid & ATTR_MODE)
-> > +             mode =3D sattr->ia_mode;
-> > +     if (sattr->ia_valid & ATTR_UID)
-> > +             uid =3D sattr->ia_uid;
-> > +     if (sattr->ia_valid & ATTR_GID)
-> > +             gid =3D sattr->ia_gid;
-> > +
-> > +     if (uid_eq(uid, cred->fsuid))
-> > +             ret =3D !(mode & S_IWUSR);
-> > +     else if (gid_eq(gid, cred->fsgid))
-> > +             ret =3D !(mode & S_IWGRP);
-> > +     else
-> > +             ret =3D !(mode & S_IWOTH);
-> > +out:
-> > +     nfs_put_delegation(delegation);
-> > +     return ret;
-> > +}
-> > +
-> > +/*
-> >   * The file is not closed if it is opened due to the a request to
-> > change
-> >   * the size of the file. The open call will not be needed once the
-> >   * VFS layer lookup-intents are implemented.
-> > @@ -4555,9 +4603,19 @@ nfs4_proc_setattr(struct dentry *dentry,
-> > struct nfs_fattr *fattr,
-> >                       cred =3D ctx->cred;
-> >       }
-> >
-> > -     /* Return any delegations if we're going to change ACLs */
-> > -     if ((sattr->ia_valid & (ATTR_MODE|ATTR_UID|ATTR_GID)) !=3D 0)
-> > -             nfs4_inode_make_writeable(inode);
-> > +     /*
-> > +      * A change to mode, owner, or group that removes the write
-> > +      * delegation holder's own write access makes the
-> > delegation's cached
-> > +      * "open for write" stale; return it so a later open()
-> > revalidates
-> > +      * access with the server.  A change that keeps write access
-> > leaves
-> > +      * the delegation in place.
-> > +      */
-> > +     if (sattr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)) {
-> > +             if (nfs4_setattr_removes_write(inode, sattr))
-> > +                     nfs4_inode_return_delegation(inode);
-> > +             else
-> > +                     nfs4_inode_make_writeable(inode);
-> > +     }
-> >
-> >       status =3D nfs4_do_setattr(inode, cred, fattr, sattr, ctx,
-> > NULL);
-> >       if (status =3D=3D 0) {
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trondmy@kernel.org, trond.myklebust@hammerspace.com
->
+-- 
+Chuck Lever
 
