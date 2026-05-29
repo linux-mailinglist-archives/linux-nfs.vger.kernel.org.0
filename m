@@ -1,295 +1,378 @@
-Return-Path: <linux-nfs+bounces-22073-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22074-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0JCdJEK4GWpByggAu9opvQ
-	(envelope-from <linux-nfs+bounces-22073-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 18:01:06 +0200
+	id yGmAOcS0GWoRyggAu9opvQ
+	(envelope-from <linux-nfs+bounces-22074-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:46:12 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1285760539C
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 18:01:06 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBF80604FDC
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:46:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3307C329FC3F
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 15:14:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9FA44306D6CF
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 15:33:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351CC3469F6;
-	Fri, 29 May 2026 15:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF547345CCD;
+	Fri, 29 May 2026 15:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYUPZlpI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdAaZnuT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ACE1632DD
-	for <linux-nfs@vger.kernel.org>; Fri, 29 May 2026 15:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780067644; cv=none; b=BFl8i+cBwD7U+LWqhLkVvbltorxKoQKnjo8r6kSUt9gfCzQCSNEQ1u2KG5OwEP7O0petRIMJnUGJlobUGlXGntWy8IJ0ITfbsck8hxz81bOzKE6+liLJXvBT75HjrLwbxTKf1QZ7SqFlo94skxSFRNcJpjNH/KC8U1Gak+MoX4I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780067644; c=relaxed/simple;
-	bh=xm3uzLzTHIsWlWGVZMC/Zn5GOJss95FZWF9qcJkjaTU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Lhu4iZGu89FF6Vrf29FsG8BfmLbyZG9YVC4bKGGmDAdJsA2+hLgeLWayd1nxCtW9Cyny4aw8GSz2txVcCZ3yqRL9+ks1rnp8MqPALlSyxBlU4Hq/32547LSKao50TmdmDlnGw56br0iDaPpAIXIFFAfAb5k3cjMGgaKtLqZEqEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYUPZlpI; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85211F00899;
-	Fri, 29 May 2026 15:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780067642;
-	bh=rmbInpTHoxWcyeN2jF2ydLe+bj6fIz3X6ZMFNZ36dhc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=hYUPZlpI6M6sTo92OGFpWGckeGTzxyHUKlRMk2Mca4GMvyTGWor9kJieL+AZ1M2f3
-	 +lRXQF5Wo1PFBR7T3P/Ez8G5Rm+NxHjjma6hB6zJ5YmCVfFIVzia0HsmiALxQfjy24
-	 TfldRPH3A0CnGHfjtODsZjVmP5tGpVJik8meum6qUhr7C+nKBvHtvYLLroiqDxyg2o
-	 GQ215Q+qqxUIVvIZGUN4NJtXBVYRAizSf7cQrlABI5+jVDuDG1Upx3VlcF2tIwvSEw
-	 zQ1fJN2FXmOvq5Z/P/MnKMwEW18nYukv0dj/IiNG7q/llwv6d0pn0Klgf2h7JQcXzG
-	 gMCJZNgkfi9TA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id D62DFF40069;
-	Fri, 29 May 2026 11:14:00 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 29 May 2026 11:14:00 -0400
-X-ME-Sender: <xms:OK0Zai_Sn02pFDdu-wH58O-DEnrXOyfWw6o86QSfC0SgaZxhrDGBXw>
-    <xme:OK0ZatiLxQR_V03-Wvbi0UeUTO33IT_O5nFVZE_6kmuFySaNUISZ26zcCU_hssuIQ
-    MjuAsibSIWS9nVcPprkoJb6yJmnHjE06fNJhqhar8HKglVS8OtCu_gU>
-X-ME-Proxy-Cause: dmFkZTGIhbG8ytRH55ulyof1/yvjyVF1ypclBuxBUZsiY3ZfghhWlx2E0j6B81EakZ4tHr
-    bInhlt4fUpo7lqab5vCQ0wJE12pnaInpJSAjlsz9XEjWltVvleZPgYhaTShmTlGRHVNEDa
-    UgxTcl/W3mHl/Xi+cuIF43dPQQtHISdDex+sVQYQbova0wirb5wdm1qg76VGdWoo204zhO
-    ExV3cmZgfqtOJid5iCCpEn+xlTcgYqfBI+D51h0yybSGzD+TEHCNW/tYFelHFLOLV8g0yR
-    de/qvxH8qsHUwRt65pkWEj4iTf/1iC1WO+tmnHii+Kd5dWgOR5zn436ghgKnuJwevRsHFB
-    6jUbB/6Dcqw7dCdwYlBd/TY8H1N6mIPY4KAXeD+qcgVGEGPQUZO+hlO7O0BI5XvfUBu9Fz
-    PnkSzT9foABG/GQGCO3q0ZTSKOrN13eJrMUAXJtu+vlZcMBwwU8MTC/I3clC9slr3tyynP
-    Zu/gs/o+wwy78KuxbROLu0h/25ZPvsnB4ZmprmojpAtaE72fJBSOI2/o0HHjFwj2yf4840
-    DupcCdgoifNo7Lrey1DN9z1DwbxYMILUhIpVoqtEOsQXYEsWVMVHBNAVeukCY6aDHVeryV
-    k/sbou3/R5Q87yVXwHowEKij1J8lIHH3x49yD8xjf2ReBjJuDBGwlsm0XRAw
-X-ME-Proxy: <xmx:OK0Zam73tceBnINR68qQ6RWxYuW5NBpOP5TYmo8H_xmFG8cr6P07FQ>
-    <xmx:OK0ZavVRlh2RUhsKYjIX1vl0uKp0jWo36OnaJKsognsoci90kRMb9g>
-    <xmx:OK0ZamgIqj7khYqsc9aY0h3w-Nzo30UMRlPkcAGqhGODFhfE4KGOsA>
-    <xmx:OK0Zand3fZXXbaYTJhWi0Ur_V5aR5LernVB7v1XhcfpOGwIabPt7sQ>
-    <xmx:OK0Zat03WBSADPfJe5-IOW26iYY7OX73Et3qZAOzJdGgIWZUpcDAVRoG>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id ABA547800B3; Fri, 29 May 2026 11:14:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C1936605D
+	for <linux-nfs@vger.kernel.org>; Fri, 29 May 2026 15:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780068450; cv=pass; b=JpweL9bgBzL9CBhY7kaHeJtp653IgLP35r+soIzC1pjQvbjBw1CBe0miSVgV6RqQqV019ARZ3T+9INg2FkOaTmXH/unIaJzfULOlFduvMi4tNuABA4QgVJGyhTzTswDa35zdOx5jl5hfFhAQ+y7qDnE0vrPVfMvi1SJKcpc28Vc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780068450; c=relaxed/simple;
+	bh=Y1a50Dy5jiidDIQOsgg4GsnT2e4ZiqduOc2PV47s8Hw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jAfwGNbxaL2fq27Rma+s6kPbZmAPc3yOemUIZYlMFHqU4jI77UNrYI1H5iCvS8QXQ3o/X5WKwkt5Znfah8RecRUo8GMSM/TDRpDrXSRtLAyG1yMQIFK/fjcq0ykCPV7JaPi698hPccA3Gp62Z0ja/suIEyHAsgg5UDhKSIrmY0s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XdAaZnuT; arc=pass smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-67fd8befac7so7725738a12.2
+        for <linux-nfs@vger.kernel.org>; Fri, 29 May 2026 08:27:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780068447; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YYFqJhVWoEQmzv+r8ToDNvm0YsN2iDxGZ41TEjqmvC66k0e+gM5qCrEDLIpjFPQYN6
+         yQVAMnvlK2rLyRE1Gy6dXv62YpszTwJHB5sx7I3tqAcUozeoLVa0B50vgYs7CUMQ7qSz
+         GohkyVfBgJ8njd+rUtCyIn65CMbf2MT3UCUbnl5A0nT+DLxq3psDlSc87gznJlkFRbd6
+         6e/9TxS+1bKm3qp3bGP4Y7sdKOyhgnetl1MjdYqPGe+j67LeNit8sLMmApbKL5+S56Mj
+         j42b7MGYGZCWwmxThjfplRIrmz8UkhN4KxyOmN0Lx5dLYzzdpw/HztVPEIRYaZHGLbTn
+         lw8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=weGTEa3dm14WyHwIwBnRGA0Fr3xXQ6nmWDzCkKRT0Vw=;
+        fh=K/m7F0EnrBV/pe6rDa1gXBf/qg9MzONYXLTTkwBWgII=;
+        b=TVqmJALrQ97rRlsB01p57l30CmpJpxtbNmzzgydH7ZP4e4FdFPbbU8+yL+Fn1Unljb
+         NHddrlEDV0Cba0QpJaw14sVFnIefys8PW7mMb1f2lXVJqBXtIFn8M3LVZpZOs7MuCMMB
+         GG/d3DK73Xs6X9JQdJs85h5hBACaI0iva1R6weCorSPQAiSKhmOJgKH0L+1hewlI3L2A
+         fOaUwdfwzN1YOtiO/N3MtQzIOH/a1Is6kbI38+KPydWI5C+bNG8DgDSTNOt9M/UO5Tgs
+         GKgcZmfxBk/JhTIStMLJyz62c4Lx+7R7KHm4YbZ76PtfwOJCn4m7aziCczDYBaYDaU60
+         xOhQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780068447; x=1780673247; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=weGTEa3dm14WyHwIwBnRGA0Fr3xXQ6nmWDzCkKRT0Vw=;
+        b=XdAaZnuT3F8Bb6AsM9e+k4tYcbJolc2qj10R14e5MwYRuBGN55ONCLJv0NhKBVBpBZ
+         UrLH6lsv0xs5FgqQOIAXz6/6pz2RKnxsPOGvPa18n7LoAOL0VQFXNFXHaeBJxGslmpzb
+         lp/R9hX5I9d4dbWN3k4cIhl8S1B4iaaYIyRAEgiGBaniZBLaC8CaFGqPYIrVur1A7ZUG
+         Y7W6DzpPlG9pXPmC8Ng5lWBvg6jnDr9kzIVq5Ysiv6YSZ7qDjdBhwEYB+ajBRGsPoEnh
+         HSVGvqRbDhd/sHbSPccB3TPlVxLu5S6y/9DA5s20Tv0szWka/B7Qcz7QOcAr2k9YgXkr
+         1ULA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780068447; x=1780673247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=weGTEa3dm14WyHwIwBnRGA0Fr3xXQ6nmWDzCkKRT0Vw=;
+        b=isa2eNBjCm4SatvYYCmkTRLot/cjg1oMtkFfO06JlncQChlkKZEw1UZ8OFGZVOUiHo
+         e9Oq9Ai/IvionKNHSJy3z5Ei6S+dvCKK9R1QUpmae+4G7kSF6RuUgdCrXNp7CTjcqAjZ
+         aPpl2lh2u+EqAEyuRHqffRLZemjCj6r1SjTeGYOVx64aT+1+WFXVXznCwgqgpU17Db+I
+         IItlLwxtEX7SZ3SLhcYCJXibJpVWVxqZdsLrW4paylA4RmyRWieJLJcpLc77rn/Nzx/o
+         tlou2gva6rBm8xCrVcAewZdU832RJMwNIICs/3+fVlk9guEBVcLRXJ0ectXUL01Vo9ke
+         /NTw==
+X-Forwarded-Encrypted: i=1; AFNElJ8N2uwlupKltT3e4KvCAj/B5OOllWSuMQYZI4Mn01m0LpkO0PmQJJH9lfxi9klL/qIQJAcSHVjJCQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+anj097GunCBcTkLe9VAcN1H2gX8RCeXOl2Ib6I9eef8c6tLa
+	gCaBzd+/lqzf8mxepxQ+UqTwUYTHntH0H96hImT9Aie9av4jj94Jjyc/Fv0kyqjZ+C/97VJR+fy
+	y8Xg4ZB8RItKnarJGEtZ2Zh5zD2GW/g==
+X-Gm-Gg: Acq92OFgizGX0B1UPVbAIga2SGytJXknzxXJ8PZvDO6kiC/2/yy4LBdQBdpfCGLrax5
+	FlAmEM3WgBDVv0iEGYIlCJr2DCkj1uOwEgvhjf2Evy8b8n1qOzcirnpFsTGmAaMZenK+nopEQbO
+	889ylnOsMKJ3OzQT3PjvnTy3u8g5oc07a7fr6OC5vcJ74YrI5lrFickqkktk+gHShmwt6/kgbH/
+	rQG0Gj+QR6f7F45iWVQyJoM8cs/nN37c+K3jDALaLep+F6Ow/6fdgG4SPSScjs+uZ8Gi8Kjddle
+	933I8PVlOhSFBw/12jUEh71vESzjNQyeb4s/2orC9KJ5AjPoOA==
+X-Received: by 2002:a17:907:846:b0:be9:3565:f43 with SMTP id
+ a640c23a62f3a-be9ccd785afmr217705666b.27.1780068447054; Fri, 29 May 2026
+ 08:27:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AOq5sQ_Qug2N
-Date: Fri, 29 May 2026 11:13:40 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>,
- "Scott Mayhew" <smayhew@redhat.com>,
- "Trond Myklebust" <Trond.Myklebust@netapp.com>,
- "Andreas Gruenbacher" <agruen@suse.de>, "Mike Snitzer" <snitzer@kernel.org>,
- "Rick Macklem" <rmacklem@uoguelph.ca>
-Cc: "Chris Mason" <clm@meta.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <fc8740de-d9bd-4686-a30e-e0a6c1b7f351@app.fastmail.com>
-In-Reply-To: <20260528-nfsd-fixes-v1-2-e78708eff77d@kernel.org>
-References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
- <20260528-nfsd-fixes-v1-2-e78708eff77d@kernel.org>
-Subject: Re: [PATCH 02/10] nfsd: drain callbacks and clear cl_cb_session
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.15 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+References: <cover.1779995818.git.bcodding@hammerspace.com>
+ <64a9c99c387432399b4c4d9ce6dd4836b0170c15.1779995818.git.bcodding@hammerspace.com>
+ <461703b49f85216f6f6b18656e290287b0f701a0.camel@kernel.org>
+In-Reply-To: <461703b49f85216f6f6b18656e290287b0f701a0.camel@kernel.org>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Fri, 29 May 2026 08:27:15 -0700
+X-Gm-Features: AVHnY4JJ2Jx0qyGMW7_YpB0amW1WzlkTvnRwUxpvp3jss5OmQicDzipzkEOpySQ
+Message-ID: <CAM5tNy54_NMkaj-x8Z_0TenMutrm0N=KvMKBER2+3Gou7DO7iQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] nfs: return a write delegation when a SETATTR drops
+ our write access
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: Benjamin Coddington <ben.coddington@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22073-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,meta.com:email];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22074-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 1285760539C
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rickmacklem@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:email,mail.gmail.com:mid,uoguelph.ca:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: EBF80604FDC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Fri, May 29, 2026 at 7:06=E2=80=AFAM Trond Myklebust <trondmy@kernel.org=
+> wrote:
+>
+> CAUTION: This email originated from outside of the University of Guelph. =
+Do not click links or open attachments unless you recognize the sender and =
+know the content is safe. If you are unsure, forward the message to ITHelp@=
+uoguelph.ca for review.
+>
+>
+> On Thu, 2026-05-28 at 15:22 -0400, Benjamin Coddington wrote:
+> > A client holding an OPEN_DELEGATE_WRITE delegation can satisfy a
+> > later
+> > open(O_WRONLY) from the cached delegation (can_open_delegated())
+> > without
+> > sending an OPEN to the server. That cached "open for write" assertion
+> > is
+> > only valid while the delegation holder still has write access. A
+> > SETATTR
+> > that changes mode, owner, or group can revoke that access -- after
+> > which an
+> > open served from the delegation would bypass an access check the
+> > server
+> > would now fail, and, against a server that recalls the delegation on
+> > such a
+> > change, the SETATTR draws a CB_RECALL/NFS4ERR_DELAY/DELEGRETURN/retry
+> > round
+> > trip.
+> >
+> > Before issuing such a SETATTR, check whether the proposed
+> > mode/owner/group
+> > would remove write access for the delegation's owning credential,
+> > judged by
+> > the resulting POSIX mode bits. If so, return the delegation first:
+> > the
+> > return is synchronous and flushes modified data, so the SETATTR
+> > proceeds on
+> > an open or special stateid and the next open revalidates access with
+> > the
+> > server. Permission changes that keep the holder's write access leave
+> > the
+> > delegation in place.
+> >
+> > Only the mode bits and the holder's fsuid/fsgid are consulted. An
+> > NFSv4 ACL
+> > cannot be evaluated by the client, a privileged caller may retain
+> > access the
+> > bits deny, and supplementary group membership is not checked, so the
+> > test is
+> > necessarily approximate -- but an inexact answer costs at most an
+> > unnecessary delegation return or a fall back to the server's recall,
+> > never
+> > incorrect access.
+> >
+> > RFC 8881 Section 10.4.4 permits a client to return a delegation
+> > voluntarily,
+> > performing the same pre-return state updates (data flush, pending
+> > truncation, CLOSE/OPEN/LOCK) it would on a recall. Commit
+> > c01d36457dcc
+> > ("NFSv4: Don't return the delegation when not needed by NFSv4.x
+> > (x>0)")
+> > stopped returning write delegations on SETATTR for NFSv4.1+, since
+> > the
+> > server can identify the delegation holder from the SEQUENCE clientid
+> > and
+> > need not recall. That holds for changes that do not affect the
+> > holder's
+> > access; restore a return only for the narrow case where the holder's
+> > own
+> > write access is removed.
+>
+> Hmmm... I'd argue that while recalling the delegation in this case is
+> mandatory for NFSv4.0, that is certainly not true for NFSv4.1.
+>
+> Furthermore, I'd argue that if the holder of a write delegation is just
+> changing the mode, then that should never result in a delegation recall
+> for a well written NFSv4.1 server. The reason is this does not impact
+> the client's ability to cache data, metadata or lock state. It only
+> impacts its ability to rely on previously cached access data when
+> handling new opens.
+I'm not sure I completely agree with this statement. The case I would
+be concerned about is delayed writes sitting in the client.
 
+Maybe an NFSv4.1/4.2 server should always allow writes from a
+client that holds a write delegation for the file, but I don't think that
+is spelled out in RFC8881 (I'm never sure, given that monstrous
+document) and I'll admit that the FreeBSD server
+does not do that. The FreeBSD server currently does always allow the
+owner of the file to do writes, but does not do the same w.r.t. write
+delegation held by the client. (I'll think about adding that override,
+because it does seem reasonable.)
 
-On Thu, May 28, 2026, at 5:55 PM, Jeff Layton wrote:
-> From: Chris Mason <clm@meta.com>
->
-> After a DESTROY_SESSION the per-session teardown path can free a
-> session while rpciod still holds an inflight callback rpc_task that
-> dereferences clp->cl_cb_session.  nfsd4_probe_callback_sync() flushes
-> cl_callback_wq, but once nfsd4_run_cb_work() has called
-> rpc_call_async() the rpc_task lives on rpciod; flushing the workqueue
-> does not wait for it.  After the flush returns,
-> nfsd4_destroy_session() proceeds through nfsd4_put_session_locked()
-> and free_session() kfree()s the slab while rpciod's
-> nfsd4_cb_sequence_done(), grab_slot(), and nfsd41_cb_release_slot()
-> are still dereferencing cb->cb_clp->cl_cb_session.
->
->     destroy path                       rpciod
->     ------------                       ------
->     unhash_session(ses)
->     nfsd4_probe_callback_sync(clp)
->       flush_workqueue(cl_callback_wq)
->       /* returns; rpc_task still live */
->     nfsd4_put_session_locked(ses)
->     free_session(ses) -> kfree(ses)
->                                        nfsd4_cb_sequence_done()
->                                          reads cb_clp->cl_cb_session
->                                          /* freed slab */
->
-> A second window exists in nfsd4_process_cb_update().  When
-> __nfsd4_find_backchannel() returns NULL because unhash_session() has
-> already removed the destroyed session from cl_sessions,
-> setup_callback_client() takes the v4.1 early return
->
->     if (!conn->cb_xprt || !ses)
->             return -EINVAL;
->
-> so clp->cl_cb_session = ses never fires and the field retains a
-> pointer to the about-to-be-freed session.  Symmetrically, if a later
-> probe finds a different session's backchannel conn and that
-> setup_callback_client() call fails, the error tail must still scrub
-> any previously published cl_cb_session.
->
-> Fix by mirroring the two-stage drain that nfsd4_shutdown_callback()
-> already performs: call nfsd41_cb_inflight_wait_complete() in
-> nfsd4_probe_callback_sync() after flush_workqueue() so rpciod-side
-> nfsd41_cb_inflight_end() decrements are observed before the caller
-> releases the final session reference.  The two direct callers,
-> nfsd4_destroy_session() and nfsd4_init_conn() (itself invoked from
-> nfsd4_create_session() and nfsd4_bind_conn_to_session()), run in
-> sleepable process context and tolerate the wait_var_event() sleep:
->
->     nfsd4_destroy_session() (fs/nfsd/nfs4state.c):
->       unhash_session(ses);
->       spin_unlock(&nn->client_lock);   /* spinlock dropped */
->       nfsd4_probe_callback_sync(ses->se_client);
->
->     nfsd4_init_conn() (fs/nfsd/nfs4state.c):
->       acquires no locks in its body; calls nfsd4_hash_conn(),
->       nfsd4_register_conn(), then nfsd4_probe_callback_sync() --
->       entirely in sleepable process context.
->
-> Also clear clp->cl_cb_session unconditionally on the
-> nfsd4_process_cb_update() error return so every
-> setup_callback_client() failure -- whether c is NULL or points at a
-> different session whose probe failed -- leaves the field NULL rather
-> than pointing at a session that may subsequently be freed.
->
-> Fixes: dcbeaa68dbbd ("nfsd4: allow backchannel recovery")
-> Assisted-by: kres:claude-opus-4-7
-> Signed-off-by: Chris Mason <clm@meta.com>
-> ---
->  fs/nfsd/nfs4callback.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 1964a213f80e..1cf6b6100357 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -1205,9 +1205,8 @@ static int setup_callback_client(struct 
-> nfs4_client *clp, struct nfs4_cb_conn *c
->  	} else {
->  		if (!conn->cb_xprt || !ses)
->  			return -EINVAL;
-> -		clp->cl_cb_session = ses;
->  		args.bc_xprt = conn->cb_xprt;
-> -		args.prognumber = clp->cl_cb_session->se_cb_prog;
-> +		args.prognumber = ses->se_cb_prog;
->  		args.protocol = conn->cb_xprt->xpt_class->xcl_ident |
->  				XPRT_TRANSPORT_BC;
->  		args.authflavor = ses->se_cb_sec.flavor;
-> @@ -1225,8 +1224,10 @@ static int setup_callback_client(struct 
-> nfs4_client *clp, struct nfs4_cb_conn *c
->  		return -ENOMEM;
->  	}
-> 
-> -	if (clp->cl_minorversion != 0)
-> +	if (clp->cl_minorversion != 0) {
->  		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
-> +		clp->cl_cb_session = ses;
-> +	}
->  	clp->cl_cb_client = client;
->  	clp->cl_cb_cred = cred;
->  	rcu_read_lock();
-> @@ -1299,6 +1300,7 @@ void nfsd4_probe_callback_sync(struct nfs4_client *clp)
->  {
->  	nfsd4_probe_callback(clp);
->  	flush_workqueue(clp->cl_callback_wq);
-> +	nfsd41_cb_inflight_wait_complete(clp);
->  }
-> 
->  void nfsd4_change_callback(struct nfs4_client *clp, struct 
-> nfs4_cb_conn *conn)
-> @@ -1679,7 +1681,17 @@ static struct nfsd4_conn * 
-> __nfsd4_find_backchannel(struct nfs4_client *clp)
->   * Note there isn't a lot of locking in this code; instead we depend on
->   * the fact that it is run from clp->cl_callback_wq, which won't run 
-> two
->   * work items at once.  So, for example, clp->cl_callback_wq handles 
-> all
-> - * access of cl_cb_client and all calls to rpc_create or 
-> rpc_shutdown_client.
-> + * access of cl_cb_client and cl_cb_session, and all calls to 
-> rpc_create
-> + * or rpc_shutdown_client.
-> + *
-> + * rpciod-side readers of cl_cb_session (encode_cb_sequence4args(),
-> + * nfsd4_cb_sequence_done(), the cb-slot helpers, and the cb_sequence
-> + * tracepoints) run outside cl_callback_wq.  The
-> + * nfsd41_cb_inflight_wait_complete() drain in 
-> nfsd4_probe_callback_sync()
-> + * waits until cl_cb_inflight reaches zero before the caller proceeds 
-> with
-> + * session teardown; any rpc_task that reads cl_cb_session must hold an
-> + * inflight pin (via nfsd41_cb_inflight_begin) for this fence to be
-> + * effective.
->   */
->  static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
->  {
-> @@ -1731,6 +1743,7 @@ static void nfsd4_process_cb_update(struct 
-> nfsd4_callback *cb)
->  		nfsd4_mark_cb_down(clp);
->  		if (c)
->  			svc_xprt_put(c->cn_xprt);
-> +		clp->cl_cb_session = NULL;
->  		return;
->  	}
->  }
->
-> -- 
-> 2.54.0
+What does the Linux knfsd currently do w.r.t. allowing writes
+from a client that holds a write delegation?
 
-Several NFSD callback done handlers retry indefinitely on
-NFS4ERR_DELAY via rpc_delay(), so a client that keeps
-replying DELAY leaves this per-client counter nonzero and
-blocks the foreground CREATE/BIND/DESTROY_SESSION request
-even though the callback no longer references the session
-being torn down.
+Certainly setting mode bits won't be a problem and clearing
+owner mode bits isn't a problem for the FreeBSD server.
 
-Although partly due to the way callbacks are structured
-currently, this patch potentially introduces a client-
-controlled DoS vector.
+>
+> One can argue whether or not it's needed for a uid or gid change by
+> said holder of the delegation, but there too I'd say the right
+> behaviour is to err on the side of not recalling.
+I might argue that whether or not clearing mode bits requires a
+delegation recall should be left up to the server.
 
+> The exception might be if this is an attribute delegation, and the
+> result will be that the cred attached to the delegation will no longer
+> be able to issue a SETATTR to update the atime/mtime on delegation
+> return.
+Lost me. What's an attribute delegation?
 
--- 
-Chuck Lever
+rick
+>
+> So yes to pre-emptive invalidation of the access cache, but I'm very
+> sceptical to actually pre-emptively returning the delegation or even
+> the layouts.
+>
+> >
+> > Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
+> > ---
+> >  fs/nfs/nfs4proc.c | 66 ++++++++++++++++++++++++++++++++++++++++++++-
+> > --
+> >  1 file changed, 62 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index a9b8d482d289..e4b7322bf75c 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -4506,7 +4506,55 @@ int nfs4_proc_getattr(struct nfs_server
+> > *server, struct nfs_fh *fhandle,
+> >       return err;
+> >  }
+> >
+> > -/*
+> > +/*
+> > + * Would applying @sattr (which changes mode, owner, and/or group)
+> > remove the
+> > + * write access of a held write delegation's owning credential, as
+> > judged by
+> > + * the resulting file mode bits?
+> > + *
+> > + * Such a change makes the delegation's cached "open for write"
+> > assertion
+> > + * stale: a later open(O_WRONLY) could be served from the delegation
+> > without
+> > + * the server getting a chance to deny it.  Only the mode bits and
+> > the
+> > + * holder's fsuid/fsgid are consulted; an NFSv4 ACL (which the
+> > client cannot
+> > + * evaluate locally), a privileged caller, or supplementary group
+> > membership
+> > + * may make the answer imprecise, but the cost is at most an
+> > unnecessary
+> > + * delegation return or a fall back to the server's recall -- never
+> > incorrect
+> > + * access.
+> > + */
+> > +static bool nfs4_setattr_removes_write(struct inode *inode, struct
+> > iattr *sattr)
+> > +{
+> > +     struct nfs_delegation *delegation;
+> > +     const struct cred *cred;
+> > +     umode_t mode =3D inode->i_mode;
+> > +     kuid_t uid =3D inode->i_uid;
+> > +     kgid_t gid =3D inode->i_gid;
+> > +     bool ret =3D false;
+> > +
+> > +     delegation =3D nfs4_get_valid_delegation(inode);
+> > +     if (!delegation)
+> > +             return false;
+> > +     if (!(delegation->type & FMODE_WRITE))
+> > +             goto out;
+> > +     cred =3D delegation->cred;
+> > +
+> > +     if (sattr->ia_valid & ATTR_MODE)
+> > +             mode =3D sattr->ia_mode;
+> > +     if (sattr->ia_valid & ATTR_UID)
+> > +             uid =3D sattr->ia_uid;
+> > +     if (sattr->ia_valid & ATTR_GID)
+> > +             gid =3D sattr->ia_gid;
+> > +
+> > +     if (uid_eq(uid, cred->fsuid))
+> > +             ret =3D !(mode & S_IWUSR);
+> > +     else if (gid_eq(gid, cred->fsgid))
+> > +             ret =3D !(mode & S_IWGRP);
+> > +     else
+> > +             ret =3D !(mode & S_IWOTH);
+> > +out:
+> > +     nfs_put_delegation(delegation);
+> > +     return ret;
+> > +}
+> > +
+> > +/*
+> >   * The file is not closed if it is opened due to the a request to
+> > change
+> >   * the size of the file. The open call will not be needed once the
+> >   * VFS layer lookup-intents are implemented.
+> > @@ -4555,9 +4603,19 @@ nfs4_proc_setattr(struct dentry *dentry,
+> > struct nfs_fattr *fattr,
+> >                       cred =3D ctx->cred;
+> >       }
+> >
+> > -     /* Return any delegations if we're going to change ACLs */
+> > -     if ((sattr->ia_valid & (ATTR_MODE|ATTR_UID|ATTR_GID)) !=3D 0)
+> > -             nfs4_inode_make_writeable(inode);
+> > +     /*
+> > +      * A change to mode, owner, or group that removes the write
+> > +      * delegation holder's own write access makes the
+> > delegation's cached
+> > +      * "open for write" stale; return it so a later open()
+> > revalidates
+> > +      * access with the server.  A change that keeps write access
+> > leaves
+> > +      * the delegation in place.
+> > +      */
+> > +     if (sattr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)) {
+> > +             if (nfs4_setattr_removes_write(inode, sattr))
+> > +                     nfs4_inode_return_delegation(inode);
+> > +             else
+> > +                     nfs4_inode_make_writeable(inode);
+> > +     }
+> >
+> >       status =3D nfs4_do_setattr(inode, cred, fattr, sattr, ctx,
+> > NULL);
+> >       if (status =3D=3D 0) {
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trondmy@kernel.org, trond.myklebust@hammerspace.com
+>
 
