@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-22067-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22068-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6EgUGtJvGWqNwggAu9opvQ
-	(envelope-from <linux-nfs+bounces-22067-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:52:02 +0200
+	id UCY/J91wGWqNwggAu9opvQ
+	(envelope-from <linux-nfs+bounces-22068-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:56:29 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6432760124A
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:52:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2CEE6012E0
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:56:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0277630343A4
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 10:48:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 068923014975
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 10:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9965A38D419;
-	Fri, 29 May 2026 10:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE7D35E1A7;
+	Fri, 29 May 2026 10:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bO8pLHmu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLEWmpuE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CDB368D73;
-	Fri, 29 May 2026 10:48:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD44368947;
+	Fri, 29 May 2026 10:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780051737; cv=none; b=dI6It/hAPdQJlJMYrHyvLrgZcLem3cQYc5LQAWDqR7MjmwbEnferlORBZHOH3IsoDWTCD9gvLyE6/ViA8Bjdqfv1T8RGgzkcONbQtqdufrhuSO8Lhpk/b3NLiKn9sT4BYctlYQEk7sTNub4O74kJ6BSZX0XHuJrNQuP8vg73tDw=
+	t=1780051816; cv=none; b=JnGzJIqLvmZeq0ytvbMALOk/DK1ddrh5zuVUUBW+etTinfJDx1Zcbr4eW6XrcP/wt21J9uC2DTrM4wNbUyPeLxzJHtbAQCTIXlCZD1jRcewBxp/lQTohxJdgK1nUqegpMDKyVvZuVHGjEMG6hRpMAmxYYru+BMWnzprZYaDvzeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780051737; c=relaxed/simple;
-	bh=RmkBqZlu4zNY+YYMrfb1783b9PAuugPUjj0Fe6IQndg=;
+	s=arc-20240116; t=1780051816; c=relaxed/simple;
+	bh=oydMaShHW+157kTMCsctKLIX2Lo2y3/Yo+IDnBiAYdk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bFJGwOzYS55QEjE2YayVzbUjjwtSc4ulhKj/1t3v+GixfqW0Slm2vyD/S+/amcyeyUjqMh4yP3BOZS8J0Om3fbAmBPjHi3F5Lq/FTvC80oB8SQhiK8Aihcme/taj5Ljc5sSbFj3Rd4DR9uBKKmeNVrwx7jXXHLOKWVIrNaJnnGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bO8pLHmu; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F3F1F00893;
-	Fri, 29 May 2026 10:48:54 +0000 (UTC)
+	 Content-Type:MIME-Version; b=cyS8Jl9ntdH+WRy5B9gx2Opip8TN5Pb6d1VRBgz3FzN8m6DUoheERoQVys85fXorcZYxJMesQrVmdusdW/X8iRmQEoj19kjlwXqoMexuCrSVjFs9OfqFZ4HFzHkF1xsoHLVz5c0GvODw+thT1X+liWnILmSDgqBb1XOOHaOX/7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLEWmpuE; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AEB81F00893;
+	Fri, 29 May 2026 10:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780051735;
-	bh=sjLcQVpA4qQvyyNA9Tp3iQXS/SqZ9LXAb9ArX5f6/MY=;
+	s=k20260515; t=1780051815;
+	bh=aAiNvaoeqZQYBn5EfcRfOx3AjCO8tTT0P6ei3lp7gKo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=bO8pLHmusFzI+LKJ2EiyiNavEkaLXqTZLOkPE6Kc2aHOdY3aCr3EHKuCE8lnhQSxd
-	 6xL+dKOgj4epOsGMI+sigsJSPleraPe+k8oqDTgRqlZrim8n3r+AMPHtVOy60XZHHq
-	 LniCy7MCa9TbdhW2IoQ6KueCwHs7Gm+ZTcUJyDY5Wu8kfGx2I/NJuU3riXo6sBA6Xs
-	 HNHWcUXsANSiIIzc/MCuLDeRbqlODxao5uNYxJIW01X5OzLhD7Y9MIfoka9ZZjQT1i
-	 8WZitP64lqrxE0PsUYKp2GYN9jxwxxGlgCvP8nkrtoe1v+s9hDiONTjxs7o8igdil8
-	 VkQx/aHpy16tg==
-Message-ID: <4a35675f5627c2e1e3464cb893ff6e619e41e74b.camel@kernel.org>
+	b=aLEWmpuEJ80WTSFi07WG+9uutDkog09jR2Eua+FVFS8C11QXqbodMm8Vv3coM+4XB
+	 8E5wNxZVaugqbjiK0iRAa+uZT+Sig1dOE6ifRkZojxsQPty+m9WAOHRKUkIPrOpCNR
+	 8qT/LliJeNnTQLaAychCWtYQknM31SAOexvMlldAZRTMxFwnR5garkn90LVSLjQiqx
+	 QohCpR6+F0ObYJJ6grcIEaaYfRwOwdpoysLD4tJTxx38uE4LhzeoRTKW1GsjYKM6jk
+	 ITSmkr23s98Q8hi2tpQXEFSnQMgpGDbHtpidPqjrWBh6uHu93wOOK5CKi9SwrRIBaZ
+	 xOV3y8anANWvw==
+Message-ID: <f6b874a758e8337b875c18217347491ecc248617.camel@kernel.org>
 Subject: Re: [PATCH 09/10] nfsd: cap decoded POSIX ACL count to bound sort
  cost
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, Rick Macklem <rick.macklem@gmail.com>
+To: Cedric Blancher <cedric.blancher@gmail.com>
 Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>, Scott
@@ -56,13 +56,11 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
  Andreas Gruenbacher <agruen@suse.de>, Mike Snitzer <snitzer@kernel.org>,
  Rick Macklem <rmacklem@uoguelph.ca>, Chris Mason <clm@meta.com>, 
 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 29 May 2026 06:48:52 -0400
-In-Reply-To: <71e5e6b6-f2d6-48ca-bc66-32064a2e0798@app.fastmail.com>
+Date: Fri, 29 May 2026 06:50:11 -0400
+In-Reply-To: <CALXu0Ud0WUrpGE-2JNNid7UUCA9N5m4zCakc7oEreF6UcAQKRQ@mail.gmail.com>
 References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
 	 <20260528-nfsd-fixes-v1-9-e78708eff77d@kernel.org>
-	 <CAM5tNy7sSXFUWFVkKEYVt9nLPOCT_-+7KfgZeoZ2UCv_eLMvrQ@mail.gmail.com>
-	 <bffd1333-a65e-40d9-9553-7de4401a55bd@app.fastmail.com>
-	 <71e5e6b6-f2d6-48ca-bc66-32064a2e0798@app.fastmail.com>
+	 <CALXu0Ud0WUrpGE-2JNNid7UUCA9N5m4zCakc7oEreF6UcAQKRQ@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -151,19 +149,20 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22067-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-22068-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -171,118 +170,77 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 6432760124A
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,meta.com:email]
+X-Rspamd-Queue-Id: F2CEE6012E0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 2026-05-28 at 20:07 -0400, Chuck Lever wrote:
+On Fri, 2026-05-29 at 09:34 +0200, Cedric Blancher wrote:
+> What about (finally) getting rid of the bubble sort?
 >=20
-> On Thu, May 28, 2026, at 7:11 PM, Chuck Lever wrote:
-> > On Thu, May 28, 2026, at 6:11 PM, Rick Macklem wrote:
-> > > On Thu, May 28, 2026 at 2:56=E2=80=AFPM Jeff Layton <jlayton@kernel.o=
-rg> wrote:
-> > > >=20
-> > > > CAUTION: This email originated from outside of the University of Gu=
-elph. Do not click links or open attachments unless you recognize the sende=
-r and know the content is safe. If you are unsure, forward the message to I=
-THelp@uoguelph.ca for review.
-> > > >=20
-> > > >=20
-> > > > From: Chris Mason <clm@meta.com>
-> > > >=20
-> > > > nfsd4_decode_posixacl() reads a u32 entry count off the wire and pa=
-sses
-> > > > it straight to posix_acl_alloc() and sort_pacl_range(). The latter =
-is
-> > > > an O(n^2) bubble sort, so a client-chosen count drives unbounded CP=
-U in
-> > > > the server's compound processing path.
-> > > >=20
-> > > >     nfsd4_decode_posixacl()
-> > > >       xdr_stream_decode_u32(&count)       /* uncapped u32 */
-> > > >       posix_acl_alloc(count, GFP_KERNEL)
-> > > >       sort_pacl_range(*acl, 0, count - 1) /* O(n^2) bubble sort */
-> > > >=20
-> > > > The encoder side in the same file already rejects ACLs whose a_coun=
-t
-> > > > exceeds NFS_ACL_MAX_ENTRIES, but the decoder introduced in commit
-> > > > 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft ACLs"=
-)
-> > > > omitted the symmetric check.
-> > > My recollection is that Chuck didn't like this limit. He argued that =
-it was
-> > > specific to the NFSv3 ACL protocol and that the limit on the size of =
-a NFSv4
-> > > RPC message was sufficient.  I, personally, think that 1024 is a reas=
-onable
-> > > limit for # of ACEs, but Chuck can jump in here if he doesn't agree.
-> >=20
-> > The NFSACL protocol limits the number of ACEs in an ACL to NFS_ACL_MAX_=
-ENTRIES
-> > (1024). It=E2=80=99s a limit that is defined in the protocol itself.
-> >=20
-> > The NFSv4 protocol sets no similar limit. In particular, NFS_ACL_MAX_EN=
-TRIES
-> > is not a constant defined or used by the NFSv4.x family of protocols II=
-RC.
-> >=20
-> > Using NFS_ACL_MAX_ENTRIES to cap the number of ACEs in NFSv4 ACLs is a
-> > convenience, but it adds technical debt (slight though it may be).
-> >=20
-> > So=E2=80=A6 We can define an implementation limit for NFSv4 ACL support=
- in NFSD.
-> > But it shouldn=E2=80=99t be called NFS_ACL_MAX_ENTRIES, IMHO. For clari=
-ty of
-> > documentation, pick a number (could be 1024) and state in a comment tha=
-t
-> > it is an NFSD implementation constraint, not a protocol limit. Name the
-> > constant something like NFSD4_MAX_yada to make it clear it is an
-> > implementation limit, not a protocol limit.
->=20
-> A different take on this might be that we want to ensure that ACLs set
-> via the NFSv4 POSIX ACL extension can always be retrieved via NFSACL.
-> In that case, capping the ACE count at the same number makes sense.
-> As long as the reason for this is clearly mentioned.
+> Ced
 >=20
 
-First, I'll note that the encoder already has this limit in place:
+It's certainly not clear to me that it's necessary (is it?). I'm not
+opposed to removing it, but I'd rather not make a behavioral change
+like this in the context of this patchset.
 
-static __be32
-nfsd4_encode_posixacl(struct xdr_stream *xdr, struct svc_rqst *rqstp,
-                      struct posix_acl *acl)
-{
-[...]
-        if (acl->a_count > NFS_ACL_MAX_ENTRIES)
-                return nfserr_resource;
-[...]
-}
+Maybe you could propose a patch to remove it?
 
-...so if you set an ACL that is longer than NFS_ACL_MAX_ENTRIES you
-already can't retrieve it with NFSv4. Given that, I went with the above
-suggestion, and added a comment to the patch. Seem ok?
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index c6c50c376b23..eaf71c65d665 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -448,6 +448,14 @@ nfsd4_decode_posixacl(struct nfsd4_compoundargs *argp,=
- struct posix_acl **acl)
-=20
-        if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
-                return nfserr_bad_xdr;
-+       /*
-+        * RFC8881 doesn't define a max number of ACE's, but the NFSACL spe=
-c
-+        * does. For NFSv4, cap the number of entries to the v3 limit, as w=
-e
-+        * want to ensure that ACLs set via NFSv4 POSIX ACL extensions are
-+        * retrievable via NFSv3.
-+        */
-+       if (count > NFS_ACL_MAX_ENTRIES)
-+               return nfserr_resource;
-=20
-        *acl =3D posix_acl_alloc(count, GFP_KERNEL);
-        if (*acl =3D=3D NULL)
+> On Fri, 29 May 2026 at 00:02, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > From: Chris Mason <clm@meta.com>
+> >=20
+> > nfsd4_decode_posixacl() reads a u32 entry count off the wire and passes
+> > it straight to posix_acl_alloc() and sort_pacl_range(). The latter is
+> > an O(n^2) bubble sort, so a client-chosen count drives unbounded CPU in
+> > the server's compound processing path.
+> >=20
+> >     nfsd4_decode_posixacl()
+> >       xdr_stream_decode_u32(&count)       /* uncapped u32 */
+> >       posix_acl_alloc(count, GFP_KERNEL)
+> >       sort_pacl_range(*acl, 0, count - 1) /* O(n^2) bubble sort */
+> >=20
+> > The encoder side in the same file already rejects ACLs whose a_count
+> > exceeds NFS_ACL_MAX_ENTRIES, but the decoder introduced in commit
+> > 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft ACLs")
+> > omitted the symmetric check.
+> >=20
+> > Fix by rejecting a wire count greater than NFS_ACL_MAX_ENTRIES with
+> > nfserr_resource, before any allocation, so the sort is bounded by
+> > NFS_ACL_MAX_ENTRIES^2 comparisons.
+> >=20
+> > Fixes: 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft AC=
+Ls")
+> > Assisted-by: kres:claude-opus-4-7
+> > Signed-off-by: Chris Mason <clm@meta.com>
+> > ---
+> >  fs/nfsd/nfs4xdr.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index c6c50c376b23..5469c6c207ba 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -448,6 +448,8 @@ nfsd4_decode_posixacl(struct nfsd4_compoundargs *ar=
+gp, struct posix_acl **acl)
+> >=20
+> >         if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
+> >                 return nfserr_bad_xdr;
+> > +       if (count > NFS_ACL_MAX_ENTRIES)
+> > +               return nfserr_resource;
+> >=20
+> >         *acl =3D posix_acl_alloc(count, GFP_KERNEL);
+> >         if (*acl =3D=3D NULL)
+> >=20
+> > --
+> > 2.54.0
+> >=20
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
