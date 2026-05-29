@@ -1,66 +1,65 @@
-Return-Path: <linux-nfs+bounces-22068-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22069-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UCY/J91wGWqNwggAu9opvQ
-	(envelope-from <linux-nfs+bounces-22068-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:56:29 +0200
+	id EAUJN9NwGWqNwggAu9opvQ
+	(envelope-from <linux-nfs+bounces-22069-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:56:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2CEE6012E0
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:56:28 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 804F16012D2
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 12:56:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 068923014975
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 10:50:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2D6B9300F770
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 10:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE7D35E1A7;
-	Fri, 29 May 2026 10:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 497E1352000;
+	Fri, 29 May 2026 10:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLEWmpuE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyrG8ozA"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD44368947;
-	Fri, 29 May 2026 10:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D83533B949;
+	Fri, 29 May 2026 10:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780051816; cv=none; b=JnGzJIqLvmZeq0ytvbMALOk/DK1ddrh5zuVUUBW+etTinfJDx1Zcbr4eW6XrcP/wt21J9uC2DTrM4wNbUyPeLxzJHtbAQCTIXlCZD1jRcewBxp/lQTohxJdgK1nUqegpMDKyVvZuVHGjEMG6hRpMAmxYYru+BMWnzprZYaDvzeQ=
+	t=1780052177; cv=none; b=iQ6cTw1cErrzxVbQvKuPk3wDTeD8O7WM8jWNHv7YIFcWPy0aHqED1bKlkAkeXRQfVl+7AIwuotdZusbd58wp3tQlscCB2MrQ5B+KQNoh9y33iLTX7qRD55lJg/c76z9oUHceCAeqfkxJpFCBfglRFpNwHckCWMEMj/x3Kr3h0VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780051816; c=relaxed/simple;
-	bh=oydMaShHW+157kTMCsctKLIX2Lo2y3/Yo+IDnBiAYdk=;
+	s=arc-20240116; t=1780052177; c=relaxed/simple;
+	bh=33tgGbgLB/Ov+OO6L4zjepZ/bxOCr2ujzyr1C+W4rJA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cyS8Jl9ntdH+WRy5B9gx2Opip8TN5Pb6d1VRBgz3FzN8m6DUoheERoQVys85fXorcZYxJMesQrVmdusdW/X8iRmQEoj19kjlwXqoMexuCrSVjFs9OfqFZ4HFzHkF1xsoHLVz5c0GvODw+thT1X+liWnILmSDgqBb1XOOHaOX/7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLEWmpuE; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AEB81F00893;
-	Fri, 29 May 2026 10:50:13 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ZSWjVKBPzIGkfXf4mDhgZLePJtZ8k8lvJPlSiVjq+3j0qlYn7w9HEovRM5U5EyQWbGTU5PZtiEljjpp74k2B6JAGxM/OP01W9L3OyLSAfbkRsjNhT4YXflbV/fi6d8bLi5ixgmfoKEJp/zN6X/lh1vKFE1B3swBQsyZ4QRmKC3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyrG8ozA; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 666A41F00893;
+	Fri, 29 May 2026 10:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780051815;
-	bh=aAiNvaoeqZQYBn5EfcRfOx3AjCO8tTT0P6ei3lp7gKo=;
+	s=k20260515; t=1780052175;
+	bh=c+7sJlyfb+nJGtFaYas/d9YH6MnbfQCuYKJMIzvj8CY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=aLEWmpuEJ80WTSFi07WG+9uutDkog09jR2Eua+FVFS8C11QXqbodMm8Vv3coM+4XB
-	 8E5wNxZVaugqbjiK0iRAa+uZT+Sig1dOE6ifRkZojxsQPty+m9WAOHRKUkIPrOpCNR
-	 8qT/LliJeNnTQLaAychCWtYQknM31SAOexvMlldAZRTMxFwnR5garkn90LVSLjQiqx
-	 QohCpR6+F0ObYJJ6grcIEaaYfRwOwdpoysLD4tJTxx38uE4LhzeoRTKW1GsjYKM6jk
-	 ITSmkr23s98Q8hi2tpQXEFSnQMgpGDbHtpidPqjrWBh6uHu93wOOK5CKi9SwrRIBaZ
-	 xOV3y8anANWvw==
-Message-ID: <f6b874a758e8337b875c18217347491ecc248617.camel@kernel.org>
-Subject: Re: [PATCH 09/10] nfsd: cap decoded POSIX ACL count to bound sort
- cost
+	b=MyrG8ozA3xhEPtxebRMUni2uKR0/BA/M13WI8EztXpc3LIrsjmkCyyttrv/spnvki
+	 OQVHUbmSJ277Dd3KJQIKhaOFuLj5n1kWCzQYMkmk/LvPYkKzhb5KnUeyf9ucpaw1Iv
+	 PQWdmLk49Lz46xLeD99icUzcc262F87wXkDmxd0PPO5dV1PsMRfw80KBbtAAPfiFAw
+	 uDb/0eW4c02xEEnBL9L5m9nv8Lg/ZeqkKv8U/xyyu43ndD1aYk6LPLHsjo0GGohgdI
+	 AfR7rNV+k98jQbVAHYodGe62kyUtXx2fAgfPsoJMRZzYXY289mLJg8as3xg48LqtOD
+	 Ndhvzz3LqgJyg==
+Message-ID: <e13b7b601f0cefda78cf96458e6af6e466cfb5f2.camel@kernel.org>
+Subject: Re: [PATCH 06/10] NFSD: Enable return of an updated stable_how to
+ NFS clients
 From: Jeff Layton <jlayton@kernel.org>
-To: Cedric Blancher <cedric.blancher@gmail.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>, Scott
  Mayhew <smayhew@redhat.com>, Trond Myklebust	 <Trond.Myklebust@netapp.com>,
  Andreas Gruenbacher <agruen@suse.de>, Mike Snitzer <snitzer@kernel.org>,
- Rick Macklem <rmacklem@uoguelph.ca>, Chris Mason <clm@meta.com>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 29 May 2026 06:50:11 -0400
-In-Reply-To: <CALXu0Ud0WUrpGE-2JNNid7UUCA9N5m4zCakc7oEreF6UcAQKRQ@mail.gmail.com>
+ Rick Macklem <rmacklem@uoguelph.ca>
+Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 29 May 2026 06:56:12 -0400
+In-Reply-To: <20260528-nfsd-fixes-v1-6-e78708eff77d@kernel.org>
 References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
-	 <20260528-nfsd-fixes-v1-9-e78708eff77d@kernel.org>
-	 <CALXu0Ud0WUrpGE-2JNNid7UUCA9N5m4zCakc7oEreF6UcAQKRQ@mail.gmail.com>
+	 <20260528-nfsd-fixes-v1-6-e78708eff77d@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -144,103 +143,218 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22068-lists,linux-nfs=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22069-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,meta.com:email]
-X-Rspamd-Queue-Id: F2CEE6012E0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,oracle.com:email]
+X-Rspamd-Queue-Id: 804F16012D2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-05-29 at 09:34 +0200, Cedric Blancher wrote:
-> What about (finally) getting rid of the bubble sort?
+On Thu, 2026-05-28 at 17:55 -0400, Jeff Layton wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Ced
+> In a subsequent patch, nfsd_vfs_write() will promote an UNSTABLE
+> WRITE to be a FILE_SYNC WRITE. This indicates that the client does
+> not need a subsequent COMMIT operation, saving a round trip and
+> allowing the client to dispense with cached dirty data as soon as
+> it receives the server's WRITE response.
 >=20
-
-It's certainly not clear to me that it's necessary (is it?). I'm not
-opposed to removing it, but I'd rather not make a behavioral change
-like this in the context of this patchset.
-
-Maybe you could propose a patch to remove it?
-
-
-> On Fri, 29 May 2026 at 00:02, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > From: Chris Mason <clm@meta.com>
-> >=20
-> > nfsd4_decode_posixacl() reads a u32 entry count off the wire and passes
-> > it straight to posix_acl_alloc() and sort_pacl_range(). The latter is
-> > an O(n^2) bubble sort, so a client-chosen count drives unbounded CPU in
-> > the server's compound processing path.
-> >=20
-> >     nfsd4_decode_posixacl()
-> >       xdr_stream_decode_u32(&count)       /* uncapped u32 */
-> >       posix_acl_alloc(count, GFP_KERNEL)
-> >       sort_pacl_range(*acl, 0, count - 1) /* O(n^2) bubble sort */
-> >=20
-> > The encoder side in the same file already rejects ACLs whose a_count
-> > exceeds NFS_ACL_MAX_ENTRIES, but the decoder introduced in commit
-> > 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft ACLs")
-> > omitted the symmetric check.
-> >=20
-> > Fix by rejecting a wire count greater than NFS_ACL_MAX_ENTRIES with
-> > nfserr_resource, before any allocation, so the sort is bounded by
-> > NFS_ACL_MAX_ENTRIES^2 comparisons.
-> >=20
-> > Fixes: 5fc51dfc2eb1 ("NFSD: Add support for XDR decoding POSIX draft AC=
-Ls")
-> > Assisted-by: kres:claude-opus-4-7
-> > Signed-off-by: Chris Mason <clm@meta.com>
-> > ---
-> >  fs/nfsd/nfs4xdr.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > index c6c50c376b23..5469c6c207ba 100644
-> > --- a/fs/nfsd/nfs4xdr.c
-> > +++ b/fs/nfsd/nfs4xdr.c
-> > @@ -448,6 +448,8 @@ nfsd4_decode_posixacl(struct nfsd4_compoundargs *ar=
-gp, struct posix_acl **acl)
-> >=20
-> >         if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
-> >                 return nfserr_bad_xdr;
-> > +       if (count > NFS_ACL_MAX_ENTRIES)
-> > +               return nfserr_resource;
-> >=20
-> >         *acl =3D posix_acl_alloc(count, GFP_KERNEL);
-> >         if (*acl =3D=3D NULL)
-> >=20
-> > --
-> > 2.54.0
-> >=20
-> >=20
+> This patch refactors nfsd_vfs_write() to return a possibly modified
+> stable_how value to its callers. No behavior change is expected.
 >=20
+> Reviewed-by: NeilBrown <neil@brown.name>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Fixes: 3f3503adb332 ("NFSD: Use vfs_iocb_iter_write()")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs3proc.c |  2 +-
+>  fs/nfsd/nfs4proc.c |  2 +-
+>  fs/nfsd/nfsproc.c  |  3 ++-
+>  fs/nfsd/vfs.c      | 11 ++++++-----
+>  fs/nfsd/vfs.h      |  6 ++++--
+>  fs/nfsd/xdr3.h     |  2 +-
+>  6 files changed, 15 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index aeda7a802bdf..dd5ac59e87d6 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -236,7 +236,7 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
+>  	resp->committed =3D argp->stable;
+>  	resp->status =3D nfsd_write(rqstp, &resp->fh, argp->offset,
+>  				  &argp->payload, &cnt,
+> -				  resp->committed, resp->verf);
+> +				  &resp->committed, resp->verf);
+>  	resp->count =3D cnt;
+>  	resp->status =3D nfsd3_map_status(resp->status);
+>  	return rpc_success;
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 5f2b9bfc3a84..ac03f9d89288 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1355,7 +1355,7 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_co=
+mpound_state *cstate,
+>  	write->wr_how_written =3D write->wr_stable_how;
+>  	status =3D nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
+>  				write->wr_offset, &write->wr_payload,
+> -				&cnt, write->wr_how_written,
+> +				&cnt, &write->wr_how_written,
+>  				(__be32 *)write->wr_verifier.data);
+>  	nfsd_file_put(nf);
+> =20
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 8873033d1e82..d0a7316f00a5 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -251,6 +251,7 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+>  	struct nfsd_writeargs *argp =3D rqstp->rq_argp;
+>  	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+>  	unsigned long cnt =3D argp->len;
+> +	u32 committed =3D NFS_DATA_SYNC;
+> =20
+>  	dprintk("nfsd: WRITE    %s %u bytes at %d\n",
+>  		SVCFH_fmt(&argp->fh),
+> @@ -258,7 +259,7 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+> =20
+>  	fh_copy(&resp->fh, &argp->fh);
+>  	resp->status =3D nfsd_write(rqstp, &resp->fh, argp->offset,
+> -				  &argp->payload, &cnt, NFS_DATA_SYNC, NULL);
+> +				  &argp->payload, &cnt, &committed, NULL);
+>  	if (resp->status =3D=3D nfs_ok)
+>  		resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+>  	else if (resp->status =3D=3D nfserr_jukebox)
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 1e89c7ff9493..7f07292d1569 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1414,7 +1414,7 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+>   * @offset: Byte offset of start
+>   * @payload: xdr_buf containing the write payload
+>   * @cnt: IN: number of bytes to write, OUT: number of bytes actually wri=
+tten
+> - * @stable: An NFS stable_how value
+> + * @stable_how: IN: Client's requested stable_how, OUT: Actual stable_ho=
+w
+>   * @verf: NFS WRITE verifier
+>   *
+>   * Upon return, caller must invoke fh_put on @fhp.
+> @@ -1426,11 +1426,12 @@ __be32
+>  nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	       struct nfsd_file *nf, loff_t offset,
+>  	       const struct xdr_buf *payload, unsigned long *cnt,
+> -	       int stable, __be32 *verf)
+> +	       u32 *stable_how, __be32 *verf)
+>  {
+>  	struct nfsd_net		*nn =3D net_generic(SVC_NET(rqstp), nfsd_net_id);
+>  	struct file		*file =3D nf->nf_file;
+>  	struct super_block	*sb =3D file_inode(file)->i_sb;
+> +	u32			stable =3D *stable_how;
+>  	struct kiocb		kiocb;
+>  	struct svc_export	*exp;
+>  	struct iov_iter		iter;
+> @@ -1609,7 +1610,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>   * @offset: Byte offset of start
+>   * @payload: xdr_buf containing the write payload
+>   * @cnt: IN: number of bytes to write, OUT: number of bytes actually wri=
+tten
+> - * @stable: An NFS stable_how value
+> + * @stable_how: IN: Client's requested stable_how, OUT: Actual stable_ho=
+w
+>   * @verf: NFS WRITE verifier
+>   *
+>   * Upon return, caller must invoke fh_put on @fhp.
+> @@ -1619,7 +1620,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>   */
+>  __be32
+>  nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+> -	   const struct xdr_buf *payload, unsigned long *cnt, int stable,
+> +	   const struct xdr_buf *payload, unsigned long *cnt, u32 *stable_how,
+>  	   __be32 *verf)
+>  {
+>  	struct nfsd_file *nf;
+> @@ -1632,7 +1633,7 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *f=
+hp, loff_t offset,
+>  		goto out;
+> =20
+>  	err =3D nfsd_vfs_write(rqstp, fhp, nf, offset, payload, cnt,
+> -			     stable, verf);
+> +			     stable_how, verf);
+>  	nfsd_file_put(nf);
+>  out:
+>  	trace_nfsd_write_done(rqstp, fhp, offset, *cnt);
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index e09ea04a51b9..36cd9f6edd8b 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -132,11 +132,13 @@ __be32		nfsd_read(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+>  				u32 *eof);
+>  __be32		nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  				loff_t offset, const struct xdr_buf *payload,
+> -				unsigned long *cnt, int stable, __be32 *verf);
+> +				unsigned long *cnt, u32 *stable_how,
+> +				__be32 *verf);
+>  __be32		nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  				struct nfsd_file *nf, loff_t offset,
+>  				const struct xdr_buf *payload,
+> -				unsigned long *cnt, int stable, __be32 *verf);
+> +				unsigned long *cnt, u32 *stable_how,
+> +				__be32 *verf);
+>  __be32		nfsd_readlink(struct svc_rqst *, struct svc_fh *,
+>  				char *, int *);
+>  __be32		nfsd_symlink(struct svc_rqst *, struct svc_fh *,
+> diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
+> index a7c9714b0b0e..1ff7b11c397c 100644
+> --- a/fs/nfsd/xdr3.h
+> +++ b/fs/nfsd/xdr3.h
+> @@ -152,7 +152,7 @@ struct nfsd3_writeres {
+>  	__be32			status;
+>  	struct svc_fh		fh;
+>  	unsigned long		count;
+> -	int			committed;
+> +	u32			committed;
+>  	__be32			verf[2];
+>  };
+> =20
 
+After looking at this more closely and talking it over with Chuck,
+self-NAK on this patch. It's not clear to me that it's safe to
+downgrade a SYNC write to an UNSTABLE one.
+
+FWIW, the spec does seem to require it in this case: RFC 1813 section
+3.3.7 says the server MUST set committed to UNSTABLE if it didn't
+commit to stable storage, which it clearly didn't do in this case.
+
+The problem is that it's not clear to me that the clients would be
+prepared to issue a COMMIT in those cases. Since this only affects
+(insane) people using the "async" export option, I think we can safely
+just drop this one.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
