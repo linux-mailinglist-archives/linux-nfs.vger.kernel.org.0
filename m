@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-22082-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22083-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eIYCLDfKGWqNzAgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22082-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 19:17:43 +0200
+	id wL0TD93SGWodzQgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22083-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 19:54:37 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D071606466
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 19:17:42 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90DC0606E36
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 19:54:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5F93E31BE410
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:01:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BA1E53251540
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 May 2026 17:03:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E58436CE14;
-	Fri, 29 May 2026 17:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 299233769E2;
+	Fri, 29 May 2026 17:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmyBQMZt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwSrX919"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2402E36F411;
-	Fri, 29 May 2026 17:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99952375F87;
+	Fri, 29 May 2026 17:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780074077; cv=none; b=AwOnlQP8drFyU/f41NQ1tiZyanC+G/45M3hm/G2lRHExtdn8JEGU80bbbIGBlePFfDK6aTSpHNr0Y/UVE2N0Ej83iKpiQRVlddzGL1JoHvVG2M++pMaHTT30RPiTiX0ilVdHueJzXNYmjF0xFnNgF20zBaXY7P+OmdEtL+zhd28=
+	t=1780074179; cv=none; b=pL99ADfxl56t/HEyhoFCXMq409xgfseAq7ELX1cfTmmQT5c7MIJxDFyVMt6ufjjXwzluhZ2Vq4GztpE0KoruVo4ghrIgprhzJu+r3wBwxAnpdND0T3A4yQq/VsHAp+hetHqHRgG6J7uDslOkTGJzGUsDgp69O65ilS+gCj02+M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780074077; c=relaxed/simple;
-	bh=QAFH1kouv1ojfA2g89TIsBO779qgYlFXODZiFlcAN8c=;
+	s=arc-20240116; t=1780074179; c=relaxed/simple;
+	bh=ZahAwlZka8N7ccizV2LILK9praVIj6iXtpcb4t0XfNA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hxHQMmj5fPZpKPmNz4yeM9pflDfcH79Yh9PUSlBK8bfpMT7gzhWM5cVQbU79sjo0Yc0y522KQ5idEkMcKVkJEXwnR54C7hqFfQu3bF0srMlWzXpxWLQKBUwwjMu1yYF1UfEsTds4tZ+JTsSZUgQWf+CdcqCRaA2cSFGg8eBA4VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmyBQMZt; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CFCA1F00898;
-	Fri, 29 May 2026 17:01:14 +0000 (UTC)
+	 Content-Type:MIME-Version; b=S3MlfOtTuljcrX6ex6LY8ZWjmLPVZNovfDiJVZxcqGW0qgJS1wgSUmMCzVdkLl6EDqImNeNndn7KjBrOX4KFjgOoCRjOUE1HG1fz5mORc37IEbGPub23CV19xpSg4U4PRiGZajpwuDZTZRJva5iwf9t0F3uTFmUCd59ke4cBS9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwSrX919; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E401F00893;
+	Fri, 29 May 2026 17:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780074075;
-	bh=leWBTF7pRLKSj1/hOsHP7ZuZLZtAnjfac7no2GVNIt4=;
+	s=k20260515; t=1780074177;
+	bh=V4AqBYyxvCsHsRn+O7A8zGV8iZdZW9auVshSQf7BkBI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=AmyBQMZt8/biYcsBC6ZUUhj1HeZSPNjWbMNrBVg10pTE1CPzVBjs3R34l/Dh9L0JC
-	 NPHvXgnteLBvfPTgr+LYzCjv1ejgPk+pPNtGZiD5vCUqPNcGkDuKTCysWVw5ZwofHo
-	 OE2u/r11xX0xxZSdmCYSLGWUTwagjLMsDGz2OuVHCaqKdPoHjalbu6v22VEGAHxK3a
-	 H9Bt5MhwHSbJX8qB1A65Nvgz2RSEUcaMPKbWl3bSKLhxf19bhI9yjNFyv3xK3EuFcO
-	 R73iHF4lzXpwnW1OyWi8IDHAWH8gjw5z7/DJ6a22hkLMoC4xDanCe2+sZ5onck9ZzF
-	 ZDBJKW76Z1Hqg==
-Message-ID: <1ab23163ff7e1b7f01326ef9f222dad25ad6a863.camel@kernel.org>
-Subject: Re: [PATCH 08/10] nfsd: fix partial-write detection in
- nfsd_direct_write
+	b=XwSrX919BO5R/dADW4xkjwFQL+U6z005nf0hIWo1DgBQaaz+r6dp5rE1y9aIRHQr7
+	 hEY/tt2D6jwRDNFi++5xO8BLkKWlLSOCWAX1ZouLrAB8m4Q+5GSy+GHXlhrVLzCw4X
+	 IPBWk21xxsg4RGYz3LY/akreb2mR34OWbzRj7gVYw+sfuATJtH65z3fBYL/qQl2nUw
+	 ONAjMouJfkvbrApqyb9xFFlGjQ+Qxym1wMwr7g7htLRjUdJQ+lPLC+hFc5tyMsHbxY
+	 Arzu6VZQ0ybxwcBIvmXKfbPO881xqZ18StNYBj+hZfdFsfOe++BVTwyHnVdG1YA/yT
+	 jnt2TxkRfGf7A==
+Message-ID: <a1363f45dec225d8ba59fc2ae50b206ebdd5996f.camel@kernel.org>
+Subject: Re: [PATCH 03/10] nfsd: serialize nfsd4_end_grace() with atomic
+ test-and-set
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
  NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
@@ -56,11 +56,13 @@ To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
  Snitzer	 <snitzer@kernel.org>, Rick Macklem <rmacklem@uoguelph.ca>
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Date: Fri, 29 May 2026 13:01:12 -0400
-In-Reply-To: <5ef47df4-c9f4-4b7a-a493-71be1a95ee90@app.fastmail.com>
+Date: Fri, 29 May 2026 13:02:54 -0400
+In-Reply-To: <b51daabc-fb34-4cf2-a5e9-2c0e59e1d5c0@kernel.org>
 References: <20260528-nfsd-fixes-v1-0-e78708eff77d@kernel.org>
-	 <20260528-nfsd-fixes-v1-8-e78708eff77d@kernel.org>
-	 <5ef47df4-c9f4-4b7a-a493-71be1a95ee90@app.fastmail.com>
+	 <20260528-nfsd-fixes-v1-3-e78708eff77d@kernel.org>
+	 <c087f4c4-c17e-474e-a869-14077996beb6@app.fastmail.com>
+	 <fdbe9d990b0bd14ba0f76f4a989c08a218678c43.camel@kernel.org>
+	 <b51daabc-fb34-4cf2-a5e9-2c0e59e1d5c0@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -147,20 +149,20 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22082-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22083-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -169,94 +171,126 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email]
-X-Rspamd-Queue-Id: 1D071606466
+	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 90DC0606E36
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 2026-05-29 at 12:57 -0400, Chuck Lever wrote:
->=20
-> On Thu, May 28, 2026, at 5:55 PM, Jeff Layton wrote:
-> > From: Chris Mason <clm@meta.com>
-> >=20
-> > nfsd_direct_write() walks a list of write segments and, after each
-> > vfs_iocb_iter_write(), tries to detect a short write so the loop can
-> > stop before placing the next segment at a wrong file offset:
-> >=20
-> >     host_err =3D vfs_iocb_iter_write(file, kiocb, &segments[i].iter);
-> >     if (host_err < 0)
-> >             return host_err;
-> >     *cnt +=3D host_err;
-> >     if (host_err < segments[i].iter.count)
-> >             break;	/* partial write */
-> >=20
-> > vfs_iocb_iter_write() runs the iter through ->write_iter(), which
-> > advances the iter by the number of bytes written. By the time the
-> > check runs, segments[i].iter.count is the residual, not the original
-> > request length:
-> >=20
-> >     before write_iter: iter.count =3D=3D original_len
-> >     after  write_iter: iter.count =3D=3D original_len - host_err
-> >=20
-> > The condition then reduces to host_err < original_len - host_err, so
-> > the break fires only when less than half of the segment was written.
-> > Any short write completing between 50% and 99% of the segment slips
-> > through; the loop advances to the next segment with kiocb->ki_pos
-> > only bumped by the short amount, writing the next segment's payload
-> > at the wrong offset and over-reporting *cnt to the NFS client.
-> >=20
-> > Snapshot the segment's byte count before the write and compare
-> > host_err against that snapshot so any short write breaks the loop.
-> >=20
-> > Fixes: 06c5c97293e3 ("NFSD: Implement NFSD_IO_DIRECT for NFS WRITE")
-> > Assisted-by: kres:claude-opus-4-7
-> > Signed-off-by: Chris Mason <clm@meta.com>
-> > ---
-> >  fs/nfsd/vfs.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > index 980217f755b7..619f252af4d1 100644
-> > --- a/fs/nfsd/vfs.c
-> > +++ b/fs/nfsd/vfs.c
-> > @@ -1380,6 +1380,7 @@ nfsd_direct_write(struct svc_rqst *rqstp, struct=
+On Fri, 2026-05-29 at 12:05 -0400, Chuck Lever wrote:
+> On 5/29/26 11:57 AM, Jeff Layton wrote:
+> > On Fri, 2026-05-29 at 11:38 -0400, Chuck Lever wrote:
+> > >=20
+> > > On Thu, May 28, 2026, at 5:55 PM, Jeff Layton wrote:
+> > > > From: Chris Mason <clm@meta.com>
+> > > >=20
+> > > > nfsd4_end_grace() guards its drain path with a plain bool:
+> > > >=20
+> > > >     if (nn->grace_ended)
+> > > >             return;
+> > > >     nn->grace_ended =3D true;
+> > > >=20
+> > > > The read and the write are independent, and nothing in struct
+> > > > nfsd_net serializes them.  At least two contexts can reach this
+> > > > code with no lock held:
+> > > >=20
+> > > >     laundromat path
+> > > >       laundry_wq kworker
+> > > >         nfs4_laundromat()
+> > > >           nfsd4_end_grace()
+> > > >=20
+> > > >     RECLAIM_COMPLETE path
+> > > >       nfsd compound kthread
+> > > >         nfsd4_reclaim_complete()
+> > > >           inc_reclaim_complete()
+> > > >             nfsd4_end_grace()
+> > > >=20
+> > > > Both callers can observe grace_ended =3D=3D false on different CPUs=
+,
+> > > > both store true, and both proceed into nfsd4_record_grace_done(),
+> > > > which invokes the active client_tracking_ops->grace_done callback.
+> > > > For tracking ops that drain reclaim_str_hashtbl (legacy_tracking_op=
+s
+> > > > via nfsd4_recdir_purge_old, and the cld v1+ ops via
+> > > > nfsd4_cld_grace_done), grace_done calls nfs4_release_reclaim(),
+> > > > which walks every bucket of reclaim_str_hashtbl with no lock and
+> > > > calls nfs4_remove_reclaim_record() (list_del + kfree) on each
+> > > > entry.  Two concurrent walkers corrupt the list and double-free
+> > > > every nfs4_client_reclaim.  A concurrent nfsd4_find_reclaim_client(=
+)
+> > > > iterating the same bucket reads through freed memory.
+> > > >=20
+> > > > A third call site exists in nfs4_state_start_net() on the
+> > > > skip_grace startup path, but it runs under nfsd_mutex before any
+> > > > client has connected and before the laundromat's first delayed
+> > > > work fires, so it cannot race with the two callers above.
+> > > >=20
+> > > > Fix by replacing the read/write pair with try_cmpxchg() so exactly
+> > > > one caller transitions grace_ended from false to true and proceeds
+> > > > into the drain; the loser returns immediately.  bool supports
+> > > > 1-byte cmpxchg on all supported architectures, and no lock
+> > > > ordering changes are needed.
+> > > >=20
+> > > > Fixes: 362063a595be ("nfsd: keep a tally of RECLAIM_COMPLETE operat=
+ions=20
+> > > > when using nfsdcld")
+> > > > Assisted-by: kres:claude-opus-4-7
+> > > > Signed-off-by: Chris Mason <clm@meta.com>
+> > > > ---
+> > > >  fs/nfsd/nfs4state.c | 17 ++++++++++++++---
+> > > >  1 file changed, 14 insertions(+), 3 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > index f4d12dbcf97b..dc4ac541436f 100644
+> > > > --- a/fs/nfsd/nfs4state.c
+> > > > +++ b/fs/nfsd/nfs4state.c
+> > > > @@ -7022,12 +7022,23 @@ nfsd4_renew(struct svc_rqst *rqstp, struct=
 =20
-> > svc_fh *fhp,
-> >  	struct file *file =3D nf->nf_file;
-> >  	unsigned int nsegs, i;
-> >  	ssize_t host_err;
-> > +	size_t expected;
+> > > > nfsd4_compound_state *cstate,
+> > > >  static void
+> > > >  nfsd4_end_grace(struct nfsd_net *nn)
+> > > >  {
+> > > > -	/* do nothing if grace period already ended */
+> > > > -	if (nn->grace_ended)
+> > > > +	bool expected =3D false;
+> > > > +
+> > > > +	/*
+> > > > +	 * nfsd4_end_grace() can be entered concurrently from the
+> > > > +	 * laundromat workqueue and from an nfsd compound thread
+> > > > +	 * handling RECLAIM_COMPLETE.  Without serialization, both
+> > > > +	 * callers can observe grace_ended=3D=3Dfalse and proceed into
+> > > > +	 * nfsd4_record_grace_done().  For tracking ops whose
+> > > > +	 * grace_done drains reclaim_str_hashtbl, that results in
+> > > > +	 * list corruption and a double free of every
+> > > > +	 * nfs4_client_reclaim entry.  Use an atomic test-and-set so
+> > > > +	 * exactly one caller proceeds.
+> > > > +	 */
+> > > > +	if (!try_cmpxchg(&nn->grace_ended, &expected, true))
+> > > >  		return;
+> > > >=20
+> > > >  	trace_nfsd_grace_complete(nn);
+> > > > -	nn->grace_ended =3D true;
+> > > >  	/*
+> > > >  	 * If the server goes down again right now, an NFSv4
+> > > >  	 * client will still be allowed to reclaim after it comes back up=
+,
+> > > >=20
+> > > > --=20
+> > > > 2.54.0
+> > >=20
+> > > Seems like the usual idiom for something like this is an atomic
+> > > bit op. Perhaps try_cmpxchg on a boolean variable is not going
+> > > to behave as you expect on every hardware platform.
 > >=20
-> >  	nsegs =3D nfsd_write_dio_iters_init(nf, rqstp->rq_bvec, nvecs,
-> >  					  kiocb, *cnt, segments);
-> > @@ -1401,11 +1402,13 @@ nfsd_direct_write(struct svc_rqst *rqstp,=20
-> > struct svc_fh *fhp,
-> >  				kiocb->ki_flags |=3D IOCB_DONTCACHE;
-> >  		}
-> >=20
-> > +		expected =3D iov_iter_count(&segments[i].iter);
-> > +
-> >  		host_err =3D vfs_iocb_iter_write(file, kiocb, &segments[i].iter);
-> >  		if (host_err < 0)
-> >  			return host_err;
-> >  		*cnt +=3D host_err;
-> > -		if (host_err < segments[i].iter.count)
-> > +		if (host_err < (ssize_t)expected)
-> >  			break;	/* partial write */
-> >  	}
-> >=20
-> >=20
-> > --=20
-> > 2.54.0
+> > We just need a single flag here though. try_cmpxchg() had better work
+> > the same way on every platform or a lot of stuff is FUBAR. Where
+> > wouldn't it?
 >=20
-> How many filesystems can return a short write in this case?
-> My impression was that only the NFS client can do that.
+> Codex suggests on Hexagon, cmpxchg grabs more than just that boolean.
 >=20
 
-No idea right offhand, but NFS is exportable. Since
-vfs_iocb_iter_write() is allowed to return a short write, I think we
-have to deal with that properly here.
-
+Ok, I'm convinced. What I think I'll do is add a new flags unsigned
+long to struct nfsd_net and we can convert most of the bools in that
+struct to use it instead.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
