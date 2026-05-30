@@ -1,60 +1,61 @@
-Return-Path: <linux-nfs+bounces-22115-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22116-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SI7xGY5aG2oiBgkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22115-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 23:45:50 +0200
+	id sGqXFpZaG2oiBgkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22116-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 23:45:58 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C314C6137BC
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 23:45:49 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B61496137C4
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 23:45:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CC19230107FB
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 21:45:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5E7653010C00
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 21:45:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC85271A94;
-	Sat, 30 May 2026 21:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CD232F8EA5;
+	Sat, 30 May 2026 21:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj7kfkxy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvmV+TG2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C7F1DDC28
-	for <linux-nfs@vger.kernel.org>; Sat, 30 May 2026 21:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5DF2BEFF6
+	for <linux-nfs@vger.kernel.org>; Sat, 30 May 2026 21:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780177547; cv=none; b=EVo1AtozvAwhUvJFQuWggr5oqKftbD20uHazWM+kMhczV2ybVdLLXd1AQ1lniDWdaJi2uYFsO1cprRDDiwZgAd1ovnpDltB+wQE7gFnkqcOC5ZdtOay062YeTDInXkRFM+SRRJuyqcKnh5kXknj3xfHXIlbkwsCc/dpY77krsE4=
+	t=1780177555; cv=none; b=ELUcv//R7XDcx2iaqhd9FJQ5qDGpBxkp+50kCbU6YOiacrOYpPwku8WtcYpk1J/WuKtK/er55hjsU0pIF0xLTWDN9/rIIrbhF+51SYHs8wyR/ywCCNoApW0pib7wMgwDnSfpNGDaY8dyLLLxpktM8tjn5es6TAji9S2pi8QPnus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780177547; c=relaxed/simple;
-	bh=+IST2qTnTxd305BsPKG/SzTFkT8pwqvTeKS2SAl0n/4=;
+	s=arc-20240116; t=1780177555; c=relaxed/simple;
+	bh=AoCjSG3JpCOHTthgL8sqiGlYbxqmydTouQ0TpamIq8M=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=doPMdrEYes8egY5gT0Ju5VmpYkdlcxFRClzCvdJ03tf5YCwDJ/AU8cfhhJlJwjNCeB9MP7ONPm+is7kYZPctXIdTiKP7+MoLec8E0LYi8fV8l+QBy0yYgFynhP/tBm/8cQxPxuxV24a05fGgXvk4lwP4ZRxWkdetkT2el+74Z5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj7kfkxy; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365321F00893;
-	Sat, 30 May 2026 21:45:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=KtGxjf30v90tFKgtE4ZxGZEKOXmejoS2oKQzAoMD5YDcfW/vjMJ4aWo2JKAbhcE0iUUGkMDFSncVKqdrMuLw5qXNUYXfgcwjDhnNJtZbzphHNtHCEx7s48uYAZoOUxRJ4BfB3R/cHVGPbZSt5lWyWhI7S3E1TslHpgnxfMB3Vs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvmV+TG2; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC15F1F00893;
+	Sat, 30 May 2026 21:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780177545;
-	bh=arWJSYSf0o11KQ8dcwQ/qHX0XOpj+MOUiOgAtFFnztE=;
+	s=k20260515; t=1780177554;
+	bh=PgGKeCBm1/p0g5J5gBym1MJIBHVS0qb9UoVaQd3tUmY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=dj7kfkxy6wHeaL9W8D3+BAtpkd6s3j9RHGBRsoQm+05PC/C93qNPdRA5dLEcL49dt
-	 C+LTE/cKbg63xdR2gK624hmJZ6TNNtKWCYnTBFDmOKpktswFpkm7D80k6hDzpwnZNG
-	 lSO71ruAyMqRylSkT1p3X5XbrJslFrho5o9X/rXQGE/LJPfjrsFAhfpTPgKrdL02qU
-	 gI/2ZoRlyp/HXw4XKQMsLXRkEFnawNPIcc4Y6dkGwi9Zc7bb77SGOpXRf3xNwZ2Wz5
-	 WzPCDTssZx5nHpZ3cApqzgMGz6kym9iHegXZilifeDvzada/+AmPZNfs1zZRkprx2e
-	 EkSo1p/WFAGTg==
-Message-ID: <0b0a969d8c8dd4769faf8ea2f0589e5af5a9a0a3.camel@kernel.org>
-Subject: Re: [PATCH 2/2] SUNRPC: Check svc pool percpu counter allocation
+	b=nvmV+TG29I5XeEZwu2EmRtZPigLo3LtsxG5t3Sfb4p0+cQosJ458wJLTLPtgf8Nqx
+	 F4Z9AXMcwPW9URMkmN0aH8Jr4QUo2WsZvxzSuvPyTlq9QikfEgFGeH+90qcPyPR9LR
+	 Xg0v6hBVIhXKLyFy284ZZvpCf1c65EhZf+dpVNSxvswtJYD/jRPsVsZnVU3CSTVhsJ
+	 niyn6Rte8WBoq4yTFGIRq2Abnw2PodiLRbYZCNXwvgSaRT2NhCbie+mlAs3XXD/sVu
+	 QPWAYwjKkVLCRBSl/QPTSz0geRpAUJI6UShEeIPSyQgOBsbXQtzi2uJJbUXI5n9fbd
+	 DjKZ4JT3geyXA==
+Message-ID: <6af9dffa68943c3bc7b92e833a7a1deb42f1f430.camel@kernel.org>
+Subject: Re: [PATCH 1/2] sunrpc: init gssp_lock before publishing proc entry
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Sat, 30 May 2026 17:45:42 -0400
-In-Reply-To: <20260530-tier2-local-v1-2-fc294d34848a@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Chris Mason <clm@meta.com>, Chuck Lever
+	 <chuck.lever@oracle.com>
+Date: Sat, 30 May 2026 17:45:53 -0400
+In-Reply-To: <20260530-tier2-local-v1-1-fc294d34848a@oracle.com>
 References: <20260530-tier2-local-v1-0-fc294d34848a@oracle.com>
-	 <20260530-tier2-local-v1-2-fc294d34848a@oracle.com>
+	 <20260530-tier2-local-v1-1-fc294d34848a@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,12 +142,12 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22115-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22116-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -158,127 +159,132 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
-X-Rspamd-Queue-Id: C314C6137BC
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,meta.com:email]
+X-Rspamd-Queue-Id: B61496137C4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On Sat, 2026-05-30 at 16:21 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+> From: Chris Mason <clm@meta.com>
 >=20
-> __svc_create() initializes three per-pool percpu_counter stats and
-> ignores every return value. On SMP, percpu_counter_init() fails when
-> __alloc_percpu_gfp() cannot satisfy the allocation, leaving the failed
-> counter with fbc->counters =3D=3D NULL and its embedded raw_spinlock_t,
-> list_head, and count never initialized. __svc_create() returns the
-> half-constructed svc_serv to nfsd, lockd, or the NFS callback service
-> anyway.
+> create_use_gss_proxy_proc_entry() publishes /proc/net/rpc/use-gss-proxy
+> via proc_create_data() before init_gssp_clnt() runs mutex_init() on
+> sn->gssp_lock.  Once the dentry is linked under proc_subdir_lock it is
+> immediately reachable from userspace, so a write that lands in the
+> window drives set_gssp_clnt() into mutex_lock() on a zero-initialized
+> struct mutex.
 >=20
-> Once that service is live, the hot-path increments in
-> svc_xprt_enqueue(), svc_handle_xprt(), and
-> svc_pool_wake_idle_thread() reach a counter whose backing pointer is
-> NULL. The pointer is a per-cpu offset, so the access does not fault:
-> it resolves to offset zero of the current CPU's per-cpu area and
-> silently corrupts whatever variable lives there. A
-> /proc/fs/nfsd/pool_stats read walks the same NULL per-cpu storage and
-> returns garbage, and on CONFIG_DEBUG_SPINLOCK or lockdep it splats on
-> the never-initialized lock.
+>     create_use_gss_proxy_proc_entry(net)
+>       proc_create_data("use-gss-proxy", ...)   /* dentry live */
+>       init_gssp_clnt(sn)
+>         mutex_init(&sn->gssp_lock)             /* too late */
 >=20
-> Creating the broken service requires a percpu allocation failure during
-> RPC server startup, so it is reachable only by a local administrator
-> under memory pressure or fault injection; a remote peer cannot induce
-> the bad state on its own.
+>     write_gssp()
+>       set_gssp_clnt(net)
+>         mutex_lock(&sn->gssp_lock)             /* uninitialized */
+>         gssp_rpc_create(...)
+>         sn->gssp_clnt =3D clnt
+>         mutex_unlock(&sn->gssp_lock)
 >=20
-> Initialize the three adjacent pool counters with one checked
-> percpu_counter_init_many() call and fail __svc_create() when the
-> allocation fails, unwinding the counters for pools already set up. Use
-> the matching percpu_counter_destroy_many() at teardown so the single
-> per-cpu allocation is freed exactly once.
+> The window spans only the two statements between proc_create_data()
+> returning and init_gssp_clnt(), so a writer reaches it only if the
+> registering thread is preempted there while another task is already
+> opening the freshly published file.  register_pernet_subsys() runs in
+> preemptible context under pernet_ops_rwsem, so that preemption is
+> possible, and the window widens on auth_rpcgss module load, when the
+> proc entry is created for every live net namespace whose tasks are
+> already running.  A writer that wins the race locks a zero-filled
+> struct mutex.  On CONFIG_DEBUG_MUTEXES the missing magic value trips a
+> "lock used without init" splat; on a production kernel the fast path
+> acquires the lock via CMPXCHG(owner, 0, current).  In the latter case
+> a second writer that arrives before init_gssp_clnt() re-zeroes owner
+> can enter set_gssp_clnt() concurrently, shut down the first writer's
+> clnt while it is still in use, and leak the loser's clnt.
 >=20
-> Fixes: ccf08bed6e7a ("SUNRPC: Replace pool stats with per-CPU variables")
+> Fix by initializing sn->gssp_lock in sunrpc_init_net() so its lifetime
+> matches the sunrpc_net it lives in.  sn->gssp_clnt is already NULL from
+> the kzalloc that backs net_generic storage, so the lazy helper is no
+> longer needed; drop init_gssp_clnt(), its prototype, and the call from
+> create_use_gss_proxy_proc_entry().  sunrpc.ko is a build-time
+> dependency of auth_rpcgss.ko, so sunrpc_init_net() has always run on
+> every netns before any auth_gss pernet init can publish the proc
+> entry.
+>=20
+> Fixes: 030d794bf498 ("SUNRPC: Use gssproxy upcall for server RPCGSS authe=
+ntication.")
+> Assisted-by: kres:claude-opus-4-7
+> Signed-off-by: Chris Mason <clm@meta.com>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  net/sunrpc/svc.c | 32 ++++++++++++++++++++++++++------
->  1 file changed, 26 insertions(+), 6 deletions(-)
+>  net/sunrpc/auth_gss/gss_rpc_upcall.c | 6 ------
+>  net/sunrpc/auth_gss/gss_rpc_upcall.h | 1 -
+>  net/sunrpc/auth_gss/svcauth_gss.c    | 1 -
+>  net/sunrpc/sunrpc_syms.c             | 1 +
+>  4 files changed, 1 insertion(+), 8 deletions(-)
 >=20
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index ae9ec4bf34f7..aeb6e631848c 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -476,6 +476,22 @@ __svc_init_bc(struct svc_serv *serv)
->  }
->  #endif
-> =20
-> +enum {
-> +	SVC_POOL_COUNTERS =3D 3,
-> +};
-> +
-> +static int svc_pool_init_counters(struct svc_pool *pool)
-> +{
-> +	return percpu_counter_init_many(&pool->sp_messages_arrived, 0,
-> +					GFP_KERNEL, SVC_POOL_COUNTERS);
-> +}
->=20
->=20
-
-Switching to this looks like a good thing, but it means that the
-svc_pool struct fields now have some strict ordering requirements. The
-percpu_counters all need to be snuggled up together.
-
-That deserves a comment to that effect in the struct svc_pool, so that
-we don't inadvertently break it later.
-
-> +
-> +static void svc_pool_destroy_counters(struct svc_pool *pool)
-> +{
-> +	percpu_counter_destroy_many(&pool->sp_messages_arrived,
-> +				    SVC_POOL_COUNTERS);
-> +}
-> +
->  /*
->   * Create an RPC service
->   */
-> @@ -540,12 +556,18 @@ __svc_create(struct svc_program *prog, int nprogs, =
-struct svc_stat *stats,
->  		INIT_LIST_HEAD(&pool->sp_all_threads);
->  		init_llist_head(&pool->sp_idle_threads);
-> =20
-> -		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
-> -		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
-> -		percpu_counter_init(&pool->sp_threads_woken, 0, GFP_KERNEL);
-> +		if (svc_pool_init_counters(pool))
-> +			goto out_err;
->  	}
-> =20
->  	return serv;
-> +
-> +out_err:
-> +	while (i--)
-> +		svc_pool_destroy_counters(&serv->sv_pools[i]);
-> +	kfree(serv->sv_pools);
-> +	kfree(serv);
-> +	return NULL;
+> diff --git a/net/sunrpc/auth_gss/gss_rpc_upcall.c b/net/sunrpc/auth_gss/g=
+ss_rpc_upcall.c
+> index 0fa4778620d9..b7f70b1adb18 100644
+> --- a/net/sunrpc/auth_gss/gss_rpc_upcall.c
+> +++ b/net/sunrpc/auth_gss/gss_rpc_upcall.c
+> @@ -121,12 +121,6 @@ static int gssp_rpc_create(struct net *net, struct r=
+pc_clnt **_clnt)
+>  	return result;
 >  }
 > =20
->  /**
-> @@ -624,9 +646,7 @@ svc_destroy(struct svc_serv **servp)
->  	for (i =3D 0; i < serv->sv_nrpools; i++) {
->  		struct svc_pool *pool =3D &serv->sv_pools[i];
+> -void init_gssp_clnt(struct sunrpc_net *sn)
+> -{
+> -	mutex_init(&sn->gssp_lock);
+> -	sn->gssp_clnt =3D NULL;
+> -}
+> -
+>  int set_gssp_clnt(struct net *net)
+>  {
+>  	struct sunrpc_net *sn =3D net_generic(net, sunrpc_net_id);
+> diff --git a/net/sunrpc/auth_gss/gss_rpc_upcall.h b/net/sunrpc/auth_gss/g=
+ss_rpc_upcall.h
+> index 31e96344167e..b3c2b2b90798 100644
+> --- a/net/sunrpc/auth_gss/gss_rpc_upcall.h
+> +++ b/net/sunrpc/auth_gss/gss_rpc_upcall.h
+> @@ -29,7 +29,6 @@ int gssp_accept_sec_context_upcall(struct net *net,
+>  				struct gssp_upcall_data *data);
+>  void gssp_free_upcall_data(struct gssp_upcall_data *data);
 > =20
-> -		percpu_counter_destroy(&pool->sp_messages_arrived);
-> -		percpu_counter_destroy(&pool->sp_sockets_queued);
-> -		percpu_counter_destroy(&pool->sp_threads_woken);
-> +		svc_pool_destroy_counters(pool);
->  	}
->  	kfree(serv->sv_pools);
->  	kfree(serv);
-
-Patch itself looks fine though.
+> -void init_gssp_clnt(struct sunrpc_net *);
+>  int set_gssp_clnt(struct net *);
+>  void clear_gssp_clnt(struct sunrpc_net *);
+> =20
+> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svca=
+uth_gss.c
+> index 8e8aceb31270..f112f5814f7e 100644
+> --- a/net/sunrpc/auth_gss/svcauth_gss.c
+> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
+> @@ -1468,7 +1468,6 @@ static int create_use_gss_proxy_proc_entry(struct n=
+et *net)
+>  			      &use_gss_proxy_proc_ops, net);
+>  	if (!*p)
+>  		return -ENOMEM;
+> -	init_gssp_clnt(sn);
+>  	return 0;
+>  }
+> =20
+> diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
+> index ab88ce46afb5..1a3884a0376a 100644
+> --- a/net/sunrpc/sunrpc_syms.c
+> +++ b/net/sunrpc/sunrpc_syms.c
+> @@ -57,6 +57,7 @@ static __net_init int sunrpc_init_net(struct net *net)
+>  	INIT_LIST_HEAD(&sn->all_clients);
+>  	spin_lock_init(&sn->rpc_client_lock);
+>  	spin_lock_init(&sn->rpcb_clnt_lock);
+> +	mutex_init(&sn->gssp_lock);
+>  	return 0;
+> =20
+>  err_pipefs:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
