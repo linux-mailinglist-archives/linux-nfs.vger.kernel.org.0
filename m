@@ -1,213 +1,212 @@
-Return-Path: <linux-nfs+bounces-22110-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22111-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SO4QJ0NHG2qwAgkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22110-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 22:23:31 +0200
+	id VxzHC4JRG2oEBAkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22111-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 23:07:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC36761334C
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 22:23:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7461C6136C3
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 23:07:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3BE5130226B6
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 20:21:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B036D3008762
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 May 2026 21:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD2A2594B9;
-	Sat, 30 May 2026 20:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0FC272E6D;
+	Sat, 30 May 2026 21:06:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0aFIdPO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I9ibBPXA";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="uEaNOmny"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A87622A80D
-	for <linux-nfs@vger.kernel.org>; Sat, 30 May 2026 20:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5C61FBC8E
+	for <linux-nfs@vger.kernel.org>; Sat, 30 May 2026 21:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780172482; cv=none; b=pW5z4q/DTyhSpSU4JrtBNDyvmvSTlBpJLyB6DIof7Hga7kd3kYdZ7leeqpZhsWUdbHql06o3i1fGkdsrv5GL0Lbvvs32VJRb1rXuGiGkFfeJBzDUtekvS04tZG5EBuO66xTystdGPQY6aKQiOlxjorxLgz8eC95pyISfP+E17uU=
+	t=1780175199; cv=none; b=GsESNlm8GAki8JEBmXRsnYLWLz1+nMCgWVG6cC8Ny+mfuavBH3wnKagTRr2IhklY9ysdq27jo1KRdKfFz2FiHb9CTtfzTUG3Get5/GmH7/tBKuCBK3fEw5dmbnY3aTqf4NfJji7Mwq9SGNUGGxSB1fhWL10jLb7OdLobyIiHvYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780172482; c=relaxed/simple;
-	bh=vxiS7Tvv/j0/4KVeIxBIaEycvR+dMtfdOORKZ9cdPk4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UGqTvC1ongJSVwzQptZu0sHX333CzZi0MAL/Au/ozwbZOPY4P7fqI+KusshRjE/0yjUJO2RVUAzLMhu3ksnGH3kZXekD2VxbvEv70pVQv4s4PVcw60aetH5/+j95h4Zo4AV7Ti5rGPWZe3haQG3lTkNuAkjg5ZBqyXgM0ERtT8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0aFIdPO; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C59011F00898;
-	Sat, 30 May 2026 20:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780172481;
-	bh=1IJmPrhdOCJhNj3w/IxQ7xTcuOfs2fvHIQYAB6iiO0U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=f0aFIdPOiKvIh1qmWBo9innzFdfSkIminevvDlsaCV+zOLaOMJc93yfSsKwOfzSX2
-	 zGlywlfTXqr1v6PI1CoGM8LsSNsfGOLJSxhQBrC/1YisgbFjUzPEF7My8ewQ8kpz5o
-	 68T4O1RN4x5x3zAgtTGWMvpCbDwy2YfsVfv7MP2lTDfTlWOa+D1ezDRZcuAhn7TNWO
-	 Ix2GeSz5uZV5Bz24NNtNzzGN+VdvQ8jOYEHFiYV8x1JppgK1SnhbvK1UMGH/8hMsUt
-	 hVaHtz+CsMEpqGy36+M/uoYhXmazw3DDvctUt6/RX4yHJ9KQPm3UzVSGEZVFWHe1/v
-	 uRA/nJb8GQ57g==
-From: Chuck Lever <cel@kernel.org>
-Date: Sat, 30 May 2026 16:21:08 -0400
-Subject: [PATCH 2/2] SUNRPC: Check svc pool percpu counter allocation
+	s=arc-20240116; t=1780175199; c=relaxed/simple;
+	bh=fSWSFRZsYtlzsMNq0SAuX2u9uXHbl9mKKo6tEGJCyck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UvpR9LOe7Q38Gs7YU+c7sQZW6LxwNAfojqbYovxSIe380b0ce0UMo4nJ/rUDRKwWE8kxk4PvW22xJBZVyJa0M9B4qgfGHPGjrg/vpliNb8uMZRwXQVOBKWuwmDIFUrhl1Z/Uab/8lMapgE2WRl7q72fn7KrOfbpp7M3hWeY4sb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I9ibBPXA; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=uEaNOmny; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780175196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kUzrkD94ya+2Y8cl3w1n1ViHc3DtV48m7X0DobAryL8=;
+	b=I9ibBPXAw8YHjbG/AfpFGyTOWj/fyfGY8aS+3UC30vhzwyHrGdMZrYBM2V/OZ4E2TZ3fex
+	OUBhQgxsK2k9JSqzNl7gAQyRQqrsBemtgvyXeqWJFps063CHerWgBFYeOgCEX6TzEoofB5
+	fhJFvJvk+kN0RBh7/OZAh4I6olmYcno=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-303-pGMRo93pOAu3oMcr65qhsQ-1; Sat, 30 May 2026 17:06:34 -0400
+X-MC-Unique: pGMRo93pOAu3oMcr65qhsQ-1
+X-Mimecast-MFC-AGG-ID: pGMRo93pOAu3oMcr65qhsQ_1780175194
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-516d4a9e852so45626891cf.0
+        for <linux-nfs@vger.kernel.org>; Sat, 30 May 2026 14:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1780175193; x=1780779993; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kUzrkD94ya+2Y8cl3w1n1ViHc3DtV48m7X0DobAryL8=;
+        b=uEaNOmny+MFSloh9clM94j1L5iLTmo/no/jbJ15vN7z3+nRs9WpPFTSdgfFa/XHQ0L
+         0loZztWISZ4bT+v0uQDyExjjrD+WGFsTDRhCENMq5HPJTl59YLPuC/i8TUE2eBOdFUoi
+         N2PZf7obN5XyKfRpfovi2nFqovB+egDB/3voxVOMQO7WqScf4EHVrHp3IiBLN2DXm9Bb
+         mmmLXbsiWYCzjZQhGasGc7tsMgVOgnONt6mXll4n3+dyOXhjJv/57ulbIIWx9YZo6yrM
+         /DjBt+A0C/DGo9gWHZRyDMjOOne7UFXoTYzwX/k83/BAKjLTwFxBPjsz+W4hmUhUSVJa
+         5yKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780175193; x=1780779993;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kUzrkD94ya+2Y8cl3w1n1ViHc3DtV48m7X0DobAryL8=;
+        b=nTTEI86iGQLDp2ImKKksu4r877roi00NGGZzNkOW+qOUOTjQUyF8B6LjzGqBw+1CsD
+         dWGXaVze8z/rJRbV0bfi/4zMD8qAuElvychTjEjy1iGidwbCn+fN6FPTZF+XrJhJUOwo
+         MIrANayW4CBDgvCAlGaebncEIUMNvOAAA0H6Lpe4GAbrfJAyuyAqqnG4FS+tAW1zwi2z
+         NM3BTBTLRsKtDxhbcTsz6TOLM7IJ0nESn1o2mIA6i3RCdRY7Lr16FoUAscgUa7MEy9Zx
+         RW5be+XhzGOBo8Ws6/xTXegjsQXldspZd0LRW8aVGb+K2y8rO925OqFttWXekIaypyRa
+         BrIQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9KRKK5FThjf4U2jFiSS9a49Nbh1rBNmRia/9QjDy+1kCND5YUBGQAepclKFYMd13F09G9RpMkn56w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtNiBmMt6AzDRtug/OBL/TyXENt5/okczJeWlcCyUMEnPbjNVB
+	v68iy3vfXh7ECbwH/+QdPVZL2HWvTKrJjQSAN/BY0Mdi6gSujwI0HhDQuquW+05dU3v0muarbk9
+	DWPI0kxuzcWf0MLvia931RT/ZOc5GH4Yj5vblRGgsVmr6tiL1at3bmPEl0slt/A==
+X-Gm-Gg: Acq92OGnuKMVS0pgZTIUF0GPfFY1zVDdUu+nUiYx1wontZN5IP0LxtVmUyOsPM9Xwtm
+	+3+AHX5Cw2iHNsArnJ9exQFIb/USVnGvzgUHVQWBcY44Z2AWVRxLB8F6PLrO8kHDbx5oHruWKWU
+	AUThsxv8aag2KIZIy+f/d1W6Yq5Gpqy44V0i+WNgi7TbaGrIyX4zj3OQ9+fa4RZLNJB9LCOLSMn
+	c8v8EbgoXeVYOKEmm5QRGiH/6yVw8VBKm6rL2L1mGXjN54zUXSGqOSGDXsqoEaUKzorf4tM/7mu
+	iDMqoFNqGC79Gp6jpmCQGfyTuIFGC1MT5Jq7Qj3cCIBzjuiL0LspbaNO7vcgnM0uHKCBiTaxDOL
+	QvPvZ5ypPhUGa3xnHlACrc33H3hBdXqvy
+X-Received: by 2002:a05:622a:858a:b0:516:da7e:e0ac with SMTP id d75a77b69052e-5173a655127mr58122681cf.23.1780175193673;
+        Sat, 30 May 2026 14:06:33 -0700 (PDT)
+X-Received: by 2002:a05:622a:858a:b0:516:da7e:e0ac with SMTP id d75a77b69052e-5173a655127mr58122361cf.23.1780175193313;
+        Sat, 30 May 2026 14:06:33 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.241.172])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51741b4cee4sm17453811cf.12.2026.05.30.14.06.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 May 2026 14:06:31 -0700 (PDT)
+Message-ID: <ed6af330-1efc-492f-a545-b5203e55b2b9@redhat.com>
+Date: Sat, 30 May 2026 17:06:30 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] support: mark unused arguments in netlink handlers with
+ UNUSED()
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+References: <20260525-fixes-v1-1-b4247bf20c91@kernel.org>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20260525-fixes-v1-1-b4247bf20c91@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260530-tier2-local-v1-2-fc294d34848a@oracle.com>
-References: <20260530-tier2-local-v1-0-fc294d34848a@oracle.com>
-In-Reply-To: <20260530-tier2-local-v1-0-fc294d34848a@oracle.com>
-To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3428;
- i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=39hdxInLW+G9zk3BS4VgmlNW1RvrZrO2x5QW6LQgxrg=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqG0a+rWIpaNvQZREHrPQiPg2Fw7lbb0X1DK+vQ
- ikgv2zHnl6JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCahtGvgAKCRAzarMzb2Z/
- l66ZD/4/oXoodU7N3wPy7dOhZ3csVW6JrCqrSuevCn0gAVEEjnP7mN2qAzaP3xIqAobEtJnMn0i
- apU8NqX1lSw+40UB7hf9jQvYu2idPBbVeNqk/e1nmGZXrxgNyzcCtVO+GD0Rtr6Geb9T00LpAdd
- A9tAZ/OmhygVjmEpQIKnwbVYQLLvLyGBhRvGS0ZmEV8Q/dGc2HVCM0bmvket7crFVpM52mj/VLp
- tAWjMuNlmxNzdEEPGTIpbBNIid9jLcRYdLBeFXsdulKDe3VQpVavzitkp+YVkWxg04sOUE/Cw19
- fLheNHWztLAzw8VtUBs14QNdAePsNUfm7vRmF+eXkkqB+z0AyIPxKQoK8+SMZu3S1n1m+PhCKyc
- Yx2E4JvFYRda5oiI8RowU0sCSRtI8Vdtr+VosoVdmbKtyj/IphFcVGoX0AJxo0dFzrgTkVNHJwp
- AXfU9PtWtGlxd1p1sjBUD+jV10RWP7yQXoDpVVcLlhMWK30AtdjmqiX7wnzHJFxJN/T1+n9+5sB
- V5se+YWMdJqqY+KLFmZYVyEiQUm07zqVh9577+P75Y1mogZqdzZuoP9dNUbpC+DKIAFFeHRNk4T
- 6ZZsU5+bxAgkgT9/EwJyjqvXW3L7kMV16AUeg6x1EczOBA2N1CVX8Gw/zxrT2Kk09YNs0QmFzrS
- cYrAfG6W2M3sowA==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
- fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22110-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22111-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:mid,oracle.com:email]
-X-Rspamd-Queue-Id: EC36761334C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 7461C6136C3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
 
-__svc_create() initializes three per-pool percpu_counter stats and
-ignores every return value. On SMP, percpu_counter_init() fails when
-__alloc_percpu_gfp() cannot satisfy the allocation, leaving the failed
-counter with fbc->counters == NULL and its embedded raw_spinlock_t,
-list_head, and count never initialized. __svc_create() returns the
-half-constructed svc_serv to nfsd, lockd, or the NFS callback service
-anyway.
 
-Once that service is live, the hot-path increments in
-svc_xprt_enqueue(), svc_handle_xprt(), and
-svc_pool_wake_idle_thread() reach a counter whose backing pointer is
-NULL. The pointer is a per-cpu offset, so the access does not fault:
-it resolves to offset zero of the current CPU's per-cpu area and
-silently corrupts whatever variable lives there. A
-/proc/fs/nfsd/pool_stats read walks the same NULL per-cpu storage and
-returns garbage, and on CONFIG_DEBUG_SPINLOCK or lockdep it splats on
-the never-initialized lock.
+On 5/25/26 8:34 AM, Jeff Layton wrote:
+> Use the project's UNUSED() macro from nfslib.h to suppress
+> -Wunused-parameter warnings on the error_handler, finish_handler,
+> and ack_handler callback parameters that are required by the
+> libnl callback signatures but not referenced in the function bodies.
+> 
+> Fixes: 3ddc8e81240f ("exportfs: release NFSv4 state when last client is unexported")
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Committed... (tag: nfs-utils-2-9-2-rc4)
 
-Creating the broken service requires a percpu allocation failure during
-RPC server startup, so it is reachable only by a local administrator
-under memory pressure or fault injection; a remote peer cannot induce
-the bad state on its own.
-
-Initialize the three adjacent pool counters with one checked
-percpu_counter_init_many() call and fail __svc_create() when the
-allocation fails, unwinding the counters for pools already set up. Use
-the matching percpu_counter_destroy_many() at teardown so the single
-per-cpu allocation is freed exactly once.
-
-Fixes: ccf08bed6e7a ("SUNRPC: Replace pool stats with per-CPU variables")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/svc.c | 32 ++++++++++++++++++++++++++------
- 1 file changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index ae9ec4bf34f7..aeb6e631848c 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -476,6 +476,22 @@ __svc_init_bc(struct svc_serv *serv)
- }
- #endif
- 
-+enum {
-+	SVC_POOL_COUNTERS = 3,
-+};
-+
-+static int svc_pool_init_counters(struct svc_pool *pool)
-+{
-+	return percpu_counter_init_many(&pool->sp_messages_arrived, 0,
-+					GFP_KERNEL, SVC_POOL_COUNTERS);
-+}
-+
-+static void svc_pool_destroy_counters(struct svc_pool *pool)
-+{
-+	percpu_counter_destroy_many(&pool->sp_messages_arrived,
-+				    SVC_POOL_COUNTERS);
-+}
-+
- /*
-  * Create an RPC service
-  */
-@@ -540,12 +556,18 @@ __svc_create(struct svc_program *prog, int nprogs, struct svc_stat *stats,
- 		INIT_LIST_HEAD(&pool->sp_all_threads);
- 		init_llist_head(&pool->sp_idle_threads);
- 
--		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
--		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
--		percpu_counter_init(&pool->sp_threads_woken, 0, GFP_KERNEL);
-+		if (svc_pool_init_counters(pool))
-+			goto out_err;
- 	}
- 
- 	return serv;
-+
-+out_err:
-+	while (i--)
-+		svc_pool_destroy_counters(&serv->sv_pools[i]);
-+	kfree(serv->sv_pools);
-+	kfree(serv);
-+	return NULL;
- }
- 
- /**
-@@ -624,9 +646,7 @@ svc_destroy(struct svc_serv **servp)
- 	for (i = 0; i < serv->sv_nrpools; i++) {
- 		struct svc_pool *pool = &serv->sv_pools[i];
- 
--		percpu_counter_destroy(&pool->sp_messages_arrived);
--		percpu_counter_destroy(&pool->sp_sockets_queued);
--		percpu_counter_destroy(&pool->sp_threads_woken);
-+		svc_pool_destroy_counters(pool);
- 	}
- 	kfree(serv->sv_pools);
- 	kfree(serv);
-
--- 
-2.54.0
+steved
+> ---
+> Just some fixes for some new warnings I saw crop up recently.
+> ---
+>   support/nfs/nfsdnl.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/support/nfs/nfsdnl.c b/support/nfs/nfsdnl.c
+> index ece0b57afd4b..ded035b90b1f 100644
+> --- a/support/nfs/nfsdnl.c
+> +++ b/support/nfs/nfsdnl.c
+> @@ -16,6 +16,7 @@
+>   #include <netlink/msg.h>
+>   #include <netlink/attr.h>
+>   
+> +#include "nfslib.h"
+>   #include "xlog.h"
+>   #include "nfsdnl.h"
+>   
+> @@ -27,7 +28,7 @@
+>   
+>   #define NFSDNL_BUFSIZE	(4096)
+>   
+> -static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err,
+> +static int error_handler(struct sockaddr_nl *UNUSED(nla), struct nlmsgerr *err,
+>   			 void *arg)
+>   {
+>   	int *ret = arg;
+> @@ -35,14 +36,14 @@ static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err,
+>   	return NL_STOP;
+>   }
+>   
+> -static int finish_handler(struct nl_msg *msg, void *arg)
+> +static int finish_handler(struct nl_msg *UNUSED(msg), void *arg)
+>   {
+>   	int *ret = arg;
+>   	*ret = 0;
+>   	return NL_SKIP;
+>   }
+>   
+> -static int ack_handler(struct nl_msg *msg __attribute__((unused)),
+> +static int ack_handler(struct nl_msg *UNUSED(msg),
+>   		       void *arg)
+>   {
+>   	int *ret = arg;
+> 
+> ---
+> base-commit: a806c9d65662ecf5d40c00d60a514e13ada8d76e
+> change-id: 20260525-fixes-2d98ed62dfae
+> 
+> Best regards,
 
 
