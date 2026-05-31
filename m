@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-22130-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22131-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UOUoKTAlHGr9KAkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22130-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 May 2026 14:10:24 +0200
+	id UHYZOWIlHGr9KAkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22131-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 May 2026 14:11:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EC4D615FCB
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 May 2026 14:10:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 659BF615FDA
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 May 2026 14:11:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B1A153031127
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 May 2026 12:07:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BB6083043FAE
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 May 2026 12:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18561387364;
-	Sun, 31 May 2026 12:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7308D3876C6;
+	Sun, 31 May 2026 12:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7PN48cR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5qw0ytC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE73B3876BB;
-	Sun, 31 May 2026 12:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5460F38838A;
+	Sun, 31 May 2026 12:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780229233; cv=none; b=EQ4bR7n/XDzu/t5pRdc7xLsCUQONw2W/J+URhSC1T5O5uhP1YdI370wfqwGngJMMx6DEarHb3FFCVu9W/RGzX1b6DNh67rwXOULulyKcypTvoKHKM7gcO1a37x5kRiDVjuhhG+DoLVudGDY8rl4rFac/qrQPj4oI5Nal5DRGoJw=
+	t=1780229234; cv=none; b=tZcM+81m1eVqTRcApS9KCguhFDyjTnVnocd3ynB9604FH+G+LEu6rL4Pq9o+jRhv2dvqK4xNI25yXur6HyndzxDbjabLdfz9BdzGcjVjVfvRXn12EXUmxbIyHLa/35aNBfj8IpVFFmouOUk0wdJ9f+TaH0c5TkqAJg9XhaNCMSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780229233; c=relaxed/simple;
-	bh=/I9bxMCfFdOH1dP4+9zNv55LZwzdl+pNMwwbwLA2LBo=;
+	s=arc-20240116; t=1780229234; c=relaxed/simple;
+	bh=1vfWi9y3a7gGGmAoW4IQEoCTMgYGcpuY/jSiFCrofK0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZAjO6GZopp2qB46YkKalMcpTGXU66xLzuYs4HPDYC59cA3sstBNcldyQ9+QVtOIQDDgHtbXSCVXPmeZNy8iwRYNIP2vctyTSNYgPTztEUxRAdZf/iO0Q2d9AElgRJvib8sUroJA0BA7LsZz8ZL/l4WfUYuQ73PIXxBpDv6ERCwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7PN48cR; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFAA1F00899;
-	Sun, 31 May 2026 12:07:10 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=tLUFeFwvY6ESXvqfSsfj+JPPyBXUeJqVVZESCPPWA5UNIegauzyAFmbfBp67xbFqmKJjXr2f0UZGtoy7jELyxDU2GDzaYviAyTXT4e5BPoG10Keh7IhlBo10ff7+AZDkvDOAAVqra3KZhVY7IRoCY0SipklPYDhQYIwi7cYWgFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5qw0ytC; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0A21F00898;
+	Sun, 31 May 2026 12:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780229231;
-	bh=l+psfsetjirdLnxmYGWA5Z9djwl1K/0Xqmz2IAvhk70=;
+	s=k20260515; t=1780229233;
+	bh=1xc+zaGDrjFNlfES7FXlGY0hjKA4MQ66aFt0cOyujuI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Y7PN48cR68QxerMInpIl4i4z5SbcmLTKa+Z6A/j5eq8a0ByOsFnSzroiB1yARBdRi
-	 ZpEn7WO45F480sWo4Si8FDaIeGqFNv/8LiuMeAtvznTfwKAu328BYgdfZ5wnsxSoGS
-	 Nz4Ji5t24qrmO6S+mSqNqMoQ55D1AfvCaDGu+qGvogE/ZKjT20HcIttTvWRwQEILuw
-	 6b2ap+qZZUXeKOiRX4HKnuUL/EgCWhgq7n1VDOpsexd5JJq5vGm1fA+UZdAKI1x8TU
-	 Gd+P5omP3ON4+0SL0vg1FUSq59s7uKHvZANsopqZfLQR0gBahCx/LL/mknIIkW7sWP
-	 aQCHw4p/sMKWw==
+	b=O5qw0ytCKkTTC417y9H0xN7mXhOnzB+aeijE5sHaS5/ZkBIQF0tAtb63lU2IBzwT1
+	 aVRjt2T+Ygh3thPAgHYq0mS7mc5Lu1t9groNjR5lJQFbwrCf+cffWMVI8jbC6iG2yU
+	 dGHJjIUcHBD4U+qyC1q1OgRVYb207VrtZvrU3hZEmsQ3OJx87GzU1n6VifyzFsGdsr
+	 gtlz9D1VlxThX32PSGXhnloJoSLgas5Xu7B/yVJdLeeqIXSKejVw/Js0bVjzV8OQMu
+	 Thrva7jvBT1E0gr8ZwwaYYXQ0tXZbS2doPTKlHWU3wjIZRk1H8mDn+UymNfzQ966Yt
+	 kk7LN8eTCgtIg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Sun, 31 May 2026 08:06:59 -0400
-Subject: [PATCH 2/6] nfsd: release path refs on follow_down() error
+Date: Sun, 31 May 2026 08:07:00 -0400
+Subject: [PATCH 3/6] nfsd: fix nfsd_file leak on inter-server COPY setup
+ failure
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260531-nfsd-testing-v1-2-7bfa481b0540@kernel.org>
+Message-Id: <20260531-nfsd-testing-v1-3-7bfa481b0540@kernel.org>
 References: <20260531-nfsd-testing-v1-0-7bfa481b0540@kernel.org>
 In-Reply-To: <20260531-nfsd-testing-v1-0-7bfa481b0540@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -66,39 +67,39 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1874; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=1TY1jt6D0q/SS9QkSVMe2NiA77tvkl4xIAcyTR9UWJk=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqHCRqhPRa0v7OQwEoQLHqS2bExcSEeWQ4SqKxk
- AIvnqJtvVSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahwkagAKCRAADmhBGVaC
- FcE4D/0cDH0wSdF3TYWXF5gLEcZiqlCLDiMf8JlizVrbe2ERn0nIJD3G6t7r+WB1Pu05mEUmPWr
- 4pt8/40dy8p7fT9lMT3XNooEmQzKheJni0bgfrcs0ZhFukwF4WKKgYlmBlvkX5JOXBkK7AfXSc8
- CE37ujKLEqvylIy2exD0POLloEo2njbWKpJIXAKiGMWkVPWgl6yD4J1MjCafWnQtgUg8JxR3Rdp
- 9f3w1KYCWqvO6g1A961VzVcD5MHU0hp/KJ+1l3inlmF1ZSz8RACMBraT8WBjhxhQsrBg5oQ2Ten
- U6vop6JA36q3KVHL9sTTqBluJXHvm9fSK2nZ8q4xkiev6M1xFvc/yal8U+8C0CLlom9r6N9GBCQ
- przbBtYjjwwbMNVDl4kQh9xAbZA6vN0Vla0agjhyVgu+6i72gZCdAyqebTp8KvHVIl0lGx99MIn
- awirtCgXfZUzxiZ+76Pktf6BejE/XKmsLJVrAkRABBtRbx9BGX4mC8YpPRJiEVz40Rw0+B0u/RX
- 5eKAzC5pC0qrQGTpUkhjytC2qH9dV1mmbl3MzmNLyrYCIqHvosYSvH5ExE/btn8yFnDFZe2ytHW
- st/trX1sBvkZLxM/e9mlZf4Lg7B6LlcsvppwlWbjjE5M0mrHnl7YwKJ4zMA9SXpQ461AwSARRl1
- JTCyhEQT4Wqw41Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1376; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=1vfWi9y3a7gGGmAoW4IQEoCTMgYGcpuY/jSiFCrofK0=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqHCRrcUnYo3uNx6MJt1u2PqJQzdTdMr+5hy9q0
+ 1/GoiMjJN+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCahwkawAKCRAADmhBGVaC
+ FQnLD/kBS2iJkVP64AVpHwuZNtEG3toLukRoSsYS4MWpY6dP0z6xKD7LBPqAdKjD9EEZdB0apUA
+ CLkSzBdgqFtf77fwRR4zMP+jqNAgXlRt24C1CZbW5Pr2NV20A5qRTG97jx1vge1N/BcweyJgo3Q
+ dq+A4FD02HiEfEbKtgIpfz1s+Atvh7D0TZmk2i0c/71ivJwQKLFx/ycbO3M+s1PC8/hUdlceAR/
+ PYoHV3nY9N0taEaeKetBerPAjQoS8O9O8olb+VfIV2y1xZT8A+YDYx0juEH8vTirBtN1dSFrZId
+ UZAevmOwdvu14iFAfS8YK+FdXscQG2wh9n5DWAbNbcpQuANvjTPOJvKZv9PvUryLfTiA/2sS5Es
+ 3A/Ewm+99xMB1mdltsnkBrWwyvVZhGyYdMuB04yJtqz6LFcQdehJylMPkhSmu+ocCsf7wgzJG1J
+ Ifnc8Fejs0lJqi9LIEvSCTKWZqdpL5NbPu2qnoWUDY8W/JDQm0tYhq0r0pmUotZf6B51kdqRhGL
+ ae564r042DWC5TuOSxw9l975oefc2EERx4Kte5KK22nJvE8O9+PhZMp1UMUxQcvM/ax73H4VfnU
+ U4tNyCdkh9VOju8CMf7DTmPqZazbrXqOYjDhn+BLhioZCR8I5vMrtQKvISr3IQsl7Fpv43cf+aF
+ WyEDfx7+puccSvQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22130-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22131-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -107,60 +108,52 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,meta.com:email]
-X-Rspamd-Queue-Id: 0EC4D615FCB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 659BF615FDA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chris Mason <clm@meta.com>
+When nfsd4_setup_inter_ssc() fails, nfsd4_copy() returns
+nfserr_offload_denied directly, bypassing the out: label where
+release_copy_files() would drop the nf_dst reference taken by
+nfs4_preprocess_stateid_op(). Each failed inter-server COPY
+leaks one nfsd_file, pinning file/inode/dentry/vfsmount.
 
-nfsd_cross_mnt() initializes a local struct path with mntget() and
-dget() before calling follow_down(). On a negative return the error
-arm jumps to out without releasing those references:
+Fix by setting status and jumping to out: instead of returning
+directly.
 
-    err = follow_down(&path, follow_flags);
-    if (err < 0)
-            goto out;
-
-follow_down() never drops the caller's entry-time refs on any error
-sub-case; for example a pre-cross d_manage() failure leaves path
-untouched, so the mntget()/dget() taken on entry survive the call.
-
-Every other early-exit arm in nfsd_cross_mnt() (other-namespace
-return, IS_ERR(exp2), and the success tail after the swap) already
-calls path_put(&path); the err < 0 arm is the lone omission. The
-leak inflates mnt_count and d_count on each failed cross-mount,
-blocking umount and pinning dentries against the shrinker, and is
-reachable by any authenticated NFS client through nfsd_lookup_dentry
-or the NFSv4 READDIR encode path.
-
-Fix by calling path_put(&path) before the goto out in the err < 0
-arm so the entry-time refs are released on all follow_down() error
-returns.
-
-Fixes: cc53ce53c869 ("Add a dentry op to allow processes to be held during pathwalk transit")
+Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
 Assisted-by: kres:claude-opus-4-7
-Signed-off-by: Chris Mason <clm@meta.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/vfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 62b56d73432a..95ce15440492 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -137,8 +137,10 @@ nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry **dpp,
- 		follow_flags = LOOKUP_AUTOMOUNT;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 9473aeb53f72..017474cd63b5 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2159,16 +2159,14 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		}
+ 		status = nfsd4_setup_inter_ssc(rqstp, cstate, copy);
+ 		if (status) {
+-			trace_nfsd_copy_done(copy, status);
+-			return nfserr_offload_denied;
++			status = nfserr_offload_denied;
++			goto out;
+ 		}
+ 	} else {
+ 		trace_nfsd_copy_intra(copy);
+ 		status = nfsd4_setup_intra_ssc(rqstp, cstate, copy);
+-		if (status) {
+-			trace_nfsd_copy_done(copy, status);
+-			return status;
+-		}
++		if (status)
++			goto out;
+ 	}
  
- 	err = follow_down(&path, follow_flags);
--	if (err < 0)
-+	if (err < 0) {
-+		path_put(&path);
- 		goto out;
-+	}
- 	if (path.mnt == exp->ex_path.mnt && path.dentry == dentry &&
- 	    nfsd_mountpoint(dentry, exp) == 2) {
- 		/* This is only a mountpoint in some other namespace */
+ 	memcpy(&copy->fh, &cstate->current_fh.fh_handle,
 
 -- 
 2.54.0
