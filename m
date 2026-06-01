@@ -1,88 +1,91 @@
-Return-Path: <linux-nfs+bounces-22140-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22141-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MPIFFEQuHWqcWAkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22140-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:01:24 +0200
+	id WG2BBHkuHWo4WAkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22141-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:02:17 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E04F61A8D8
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:01:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2713B61A931
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:02:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 52D273001FD1
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2026 07:01:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D6983300BC7E
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2026 07:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB5B349CFA;
-	Mon,  1 Jun 2026 07:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE233803FD;
+	Mon,  1 Jun 2026 07:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="VnggBfyR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lRQyc7QF"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="mpV3vsr9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jgMapY9E"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DA638331B;
-	Mon,  1 Jun 2026 07:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B94382398;
+	Mon,  1 Jun 2026 07:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780297260; cv=none; b=XVEWEiYQGdWvjeZyImJRocFayZcjruQe2NvPhPWhOYeR4D2dLX+4fhL1VpbHCQAW20yyFRaF+QPTVjskm6DFUtF5b2pLxUvAVKUKEn09++qS5r9ocGP6eaE2FPazV185tD0NE70cLwioQglEY4Ry1oXbzauYXDsdWJzFc2w6+vg=
+	t=1780297265; cv=none; b=M+PFAgLRysByvebR5kuYkZzLj6LDXP6OLNzVy2VLhy5lqP71wjIPLRpnnyiBVbj+JUtnzs1S7sABviGgEGLIa+uX3ho39S9weLu5tRkADRXfKsvYU2TnMCqcBTi06M3hQdBUyiS/lt6cv+92xQxvk7UchpUpvyyv5rTonOn4eWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780297260; c=relaxed/simple;
-	bh=HtEGur30ONjX0XCzmTkk9oiyMEz7flz5TOH5Gyb6Pq0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tL22Azi+1vun24VXhwKIehNyqgra/lXZmD8WvkiqsJL8MvNxKi+QBGt0DdcdAnN6g+lLu+XgCWvnoOBJZiAigzqfFKdd2Byl5P0+ge5/4oxM984nqKmSF9zxl3aok/nn5fl7O9ylr/xE70e7vEO8GqXfN2D1i3Qf45ogrHfLvgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=VnggBfyR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lRQyc7QF; arc=none smtp.client-ip=103.168.172.150
+	s=arc-20240116; t=1780297265; c=relaxed/simple;
+	bh=LbsB2lvc1nD44qvfGVHcePkqVb8kouuRhI3vAUFOSNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lTD7eCwo+Mj3iGgKO3q7m4BLkdhRPD1Q/06KJtr2p9BwHBZ6idLqdbeTG1aQ3HUes/mKHGkBx9MjemJhhqB1nZOBYcoVlMv+GJ5BL5y9k9w5RdCAXnVJEtXAzFucG2bjjYbLxGyUp+kesubxEc4TzuJ8YlVHVyi/eqw4eggnrPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=mpV3vsr9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jgMapY9E; arc=none smtp.client-ip=103.168.172.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id CCCA2EC0204;
-	Mon,  1 Jun 2026 03:00:57 -0400 (EDT)
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 4CF9AEC020D;
+	Mon,  1 Jun 2026 03:01:03 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 01 Jun 2026 03:00:57 -0400
+  by phl-compute-09.internal (MEProxy); Mon, 01 Jun 2026 03:01:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:reply-to:subject
-	:subject:to:to; s=fm1; t=1780297257; x=1780383657; bh=9tZKCZ8wfP
-	tQr3TpBjD57HRuQH1aHs7PpqT888yE79s=; b=VnggBfyRnGRV1+MNIp3+8rLlx8
-	NaNURLoCwLMJKpuKhnHaurdZQLg/A9s/cZzhfGJ15VFyp/kzdiq2o5lzS2b8XpnW
-	HuPcnmGBnNzSRfpNVRmplsv2FZRJECkK3su8l9NvmOEahbdwmCuh+4yTYID3bIk5
-	A6UO+mgn6g+8ggrwqVhNy29AX3PBVaMSXyYkCH33lwHyFiuo+7XIasNFghFHzcs4
-	mvfMLop1/doqaGFoOl7BG1TNCiB1Rhkv0enXfOWozRALckKvoVO+hmZ7kPpadHUl
-	33kVqEDfFYlv+HEXn7dGVgrI/GG95pUfjO5d/1rxGiax3ZkTgakrYed2KbhA==
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1780297263;
+	 x=1780383663; bh=d/FDq/9JNI/+52vVLZxN2P5bcEEjohRAH25zlmccJQI=; b=
+	mpV3vsr95c9ZUqL/7SAa2VSl35ldWxYQQF8eUhVdMmBxbQpi7j0+KKs6fdX152Sa
+	nJOXRStBqYaU2qTgIW9/JI4lC4nPbfi/9Jy2VhWpSj6+1h7d0tCS0lCE51pYFk88
+	eoNxJEeraghpwQU+1eRAh7Eg/sB5fq2e5Y4gGXgbYL92rl8/QYOOqRqy5vu+0y6S
+	qI3IrrcyF5kBWzEkEGr5PcKWYlr7AKAT00/tw/uQ60cREHnIG6rXUuAB9iJlp0pK
+	AcV7uB2YY2KyxAwnUqR5tJsBdCpKaSdWQR1JCwHy1zne28Y49bAYzjKuBmS+6Bni
+	vvZwFtisl3t+UhKscnjzFQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1780297257; x=1780383657; bh=9tZKCZ8wfPtQr3TpBjD57HRuQH1a
-	Hs7PpqT888yE79s=; b=lRQyc7QFXxKJwxS99E8EPJjkgA22LXi5+sranKdAWv1t
-	HJQw4l7xTJQN5kOOi9moAmabT/RnmKHmD6cPJUQelhGMEyM/8Mpy5R6se5kv/RKc
-	6/VfKz9hciLLNoqjcJYLtONuU4oSCBOYi459nJIh7Rz+oJYlzx0lRPyGC1nchlou
-	sSrsV6Ve0uuiKypOXGwWV/H+hbsM8CK0ImBe9AoqHihNiIMP/rpVJBkm4ZgoWIqD
-	68FVsqQnTnqvUJ6qghMK745ebHS9wXQiTKG0Re8+OEVkTJWB9wvXptHDR9Awu0RR
-	+cu+aEn78DM+odI4nEDEP3VXVunngyi5iL1zVgFUnA==
-X-ME-Sender: <xms:KC4datifj3Nxq9XmN8prymT6hBgZZXY_AVyQuWiSd7hLnS2S-ukduw>
-    <xme:KC4daqMvVav6gKCN4P9L7_5C2gZlOEtBCpnqvawHMj1N4xU-KkbZcsU1_fIdKBhqH
-    jQPgR6InlZUU6l23YpQZVF3lLvwHIMReueq-HOiRzNLsWrn4A>
-X-ME-Received: <xmr:KC4daop80En2a5SNBWMBNT5fUnw4E8t2Q8oSaT3FCwfjmNRXZFi9xXBRrUEbxm_Io6lnZ89erbWTiWb1_2BFmVKeqF0DKGE>
-X-ME-Proxy-Cause: dmFkZTGPlWyPr3JACsgWTzAlk0Do0GkMs63pD9gwNiu57SIDqFmwP8uqLy8lfN2N4bUknm
-    NT4+ENlMpG1YeprdXON67irsEdiNKDjIecvaMvdPQCGF8W63txovNSmCT3WW3J3SRod2Xf
-    KYG7VtXGXwDzOHyVNrY1ubibNIGwvxCRXTa2NXNj1VClqjZYs3Oam9LWwFtXboEzRZYOfe
-    Hk9dYqkDdCf82KemBUTGrU1QXXxQXM45CCJv1MiO+upMqK8ciuXHBQVDKPmcgOZA2JYbdT
-    CbEA+uf5zeT5z7rCeW9MRii/odNegrup6Ri4o75R4SkMeltVpNCjkOmKU8eCGEPLLMtHSK
-    7VDXQQIMBrAg8T989nyrCYXfSUtLChvArvOUBt1JEqxjrGvdIDLLCVG20SNsIVwaJomI/d
-    fkcaxvkV99f2uZIr/eD1+fgYfSRx8ATKakGEzNsy9x7ji/8ZvPBGBrtRCP+uv4RkbMfFwR
-    4MrzcXbnyqslPoy7qOmOX5Q8Mw+wnHZjLeRxYgbg6VpCIJL3jgTavCFrwWd5nAPyzSdcax
-    0YtESnRw9aZLvFlZXnKDYecU29sVgA8znsCBPMaQEuaNl0r98gZvFpiiiotVRwCdjDyNpI
-    sXhAYSY7bKNaP3o2rMhGj9FPBHlQf0LpbybF0n2IG9jS8GA9SutT0pw2wfrQ
-X-ME-Proxy: <xmx:KC4das6IWZsxxFS7-49DN_GPKPc8o6HuyRPIQ1zCIbnEMDWTV5oJ_g>
-    <xmx:KC4damiXPk8lNY_tHTd74IV0Bws8afSKoVdiYm0ajqWfur4Kft-t_A>
-    <xmx:KC4dai66crSevVyTb6aSsADvfs69xRlPyPxmmCGL389L91oBjzUeqA>
-    <xmx:KC4darG0UT5AYcPzub1zoxEjG62ZmQzzdkGmUzckuz-dyTRWkVxNfw>
-    <xmx:KS4dainBDkKjmXyMZ5JiLrAgW3OL88WIE2RD2WYig7qkcnzFrMgcTV2R>
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1780297263; x=1780383663; bh=d
+	/FDq/9JNI/+52vVLZxN2P5bcEEjohRAH25zlmccJQI=; b=jgMapY9EKkrPpp9mZ
+	jVux9IenM854cZALn2rRN4DffTkJ8plBumniSvQnq6Q/+v+UO/XMXSZ08xkKtXtC
+	07Uidq5fbCMC1A1q7+8Rnl63gVSHauTyti0/DRHZsAOqK9maaSD0dPQs/Qpx7iaP
+	WnnxUIomZ2hKEU+qH4Vh/Xed3mSZvXr8zUUP6xfv5jV8+cS3hummG3g3SUTTVDoe
+	w7j+08ocFiuuEbfo+xec5A05O9WGR0xMCQLuJgzf6LtK67nSUym1R2fNKAFzKT+J
+	9K5eZ0+6Bb7O8FJ0j3FUPme95JKc4CnP/T/Q8MKCHRLzXTF2BZCZt9mw/DCkKql1
+	OmwBw==
+X-ME-Sender: <xms:Li4dagECFVSWmv2_i3NInceBUzn8jrquO7iaCaghWY_wwi_ylAz2Uw>
+    <xme:Li4dahjRHCblhx8mQESQkm5l5ls_2yPgm6p7V7cjW2Aq-ZSTFpZfVxZ5eVTkamIE1
+    6omHixQVR1PvLbZoYuYJ5OlmCu4X-xcjKNgZFxruKHEnBqs1g>
+X-ME-Received: <xmr:Li4daltZuzm0ibuUzgr8lkQC0LC_C0I2w045WIrWsiq3CoZQt5KeX4BeeR3n1-DA7m7GTAmcQ9umv_gSFNYhYz_sU-Zvv-g>
+X-ME-Proxy-Cause: dmFkZTFNn2voCuMJwaZn4mQi+8OwFwP8MbOGesQswPxVACwdUxRDwWa/f62FrT4OS5+etX
+    lpbG0CyNEC5ZEzEebDdmEkKKuwA8JYmTcJZDLGOjQuIsuC+VlGFN4cDtTpsp4TJxEBMQJN
+    5UaE10g4X93jUBy1AA+vqprc2pKvYMKhkYGmTUuEeZluqnZwRRSGljv9KpJxnsuimm38u7
+    Jp9HDBymSY6zDSdT1QCsnlup35Rls5SW6aC9Hwu2QHQS3M6fNepFkcCA+NA6zsxp9+rhtV
+    lYy3c44qrxynOl4BJrfimD+Q/JXYY7JxRkwisEy5dkxg8tlTtB+eaV0PCk5+Kq5N3tTrqx
+    upHbvQpPdJzHzpQXhOjRn+bZw9YeyQ0yQAdEs5NLBNDE1m5QurmVMGsqeDMEHke9wOzZqi
+    SJYByftMsHSzr1hP8HaWdutXUOwPTtfiO0cjLtoUj0ht8QRBdfNMxaBCIH761xDyrMay06
+    OErpzSWPSsa3pkLyYioTJFNUCwbSrVIvnObxN6eNFqsM5Ch4Y0gXfbynPbqSxIyIg+b2sB
+    cLN3adSeLD4xXe5s78zPHkHNTXWLuO91BT7IVIM2vrX4kQQgyyxn14kDudWvHFrMF07fBz
+    Q21MVXT4OSEPl53qBUHLGUg3sKw91tA9DtwEBHESzlPinjo4LbNYlyl9PGgg
+X-ME-Proxy: <xmx:Li4dastTaZM1cws0PGrKhd1vTH16q_fnAMFEg6hWCOy2qEzTEj3ShQ>
+    <xmx:Li4daiFTk6VKlvGtJ63OcrvgtojG3AgDQ-bpsBFXrkmHCZJRG4iqiA>
+    <xmx:Li4davPduhMLy4fuKk5IpzRnK5jTUUpfGDQ-TxN-wDYtp74qRv0x2w>
+    <xmx:Li4dapLtx2-bSWhIE5FQeuW1ArRpg2rhks2lRgQj0U5XAtMQ5uP46w>
+    <xmx:Ly4dauo0YrhgIAf1q0UA_S1DWiMJ3ZnN4DmWOGeOgqGqNCcIF3N7yfmX>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 1 Jun 2026 03:00:53 -0400 (EDT)
+ 1 Jun 2026 03:00:59 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -94,10 +97,12 @@ Cc: Jan Kara <jack@suse.cz>,
 	"Jori Koolstra" <jkoolstra@xs4all.nl>,
 	Benjamin Coddington <ben.coddington@hammerspace.com>,
 	"Mateusz Guzik" <mjguzik@gmail.com>
-Subject: [PATCH/RFC 00/18] VFS/nfsd: replace dentry_create()
-Date: Mon,  1 Jun 2026 16:37:48 +1000
-Message-ID: <20260601070042.249432-1-neilb@ownmail.net>
+Subject: [PATCH 01/18] VFS: move mnt_want_write() and locking into lookup_open()
+Date: Mon,  1 Jun 2026 16:37:49 +1000
+Message-ID: <20260601070042.249432-2-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
+In-Reply-To: <20260601070042.249432-1-neilb@ownmail.net>
+References: <20260601070042.249432-1-neilb@ownmail.net>
 Reply-To: NeilBrown <neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -111,7 +116,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -122,7 +127,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22140-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22141-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -136,66 +141,184 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: 6E04F61A8D8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim,ownmail.net:mid,ownmail.net:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 2713B61A931
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-My recent proposal for inverting the order between inode_lock() on a
-parent dir and d_alloc_parallel()[1] missed that fact that atomic_open()
-has two callers, and would have resulted in easy deadlocks from nfsd
-when re-exporting and NFS filesystem.
+From: NeilBrown <neil@brown.name>
 
-I think the best way to fix this is to provide a richer interface for
-nfsd to use, which includes all the locking as well as inode_operations
-calls.  This allows the nfsd behaviour to share more code with the
-system-call behaviour.
+The mnt_want_write() call and the parent inode locking in
+open_last_lookups() are only needed for lookup_open().  So we can move
+them and all the got_write handling into lookup_open().
 
-This series refactors code between lookup_open() and
-open_last_lookups(), and uses the new lookup_open() to provide
-vfs_lookup_open().  It then rearranges the code in nfsd so that it can
-easily use vfs_lookup_open() instead of dentry_create().  Finally
-dentry_create() is removed.
+Note that we need to also check create_error when determining whether to
+unlock shared or not, as O_CREAT can be cleared.
 
-This series is based on a merge of nfsd-testing, vfs-next/work.dcache,
-and vfs/vfs.fixes (though I can't see my "Fix possible failure to
-unlock.."[2] patch in there yet).  So I probably will need to resubmit
-after a bunch of that has hit mainline - though a few of the patches
-could easily be cherry-picked now.
+The fsnotify calls come too as they must be in the locked region.
 
-This will conflict with the O_CREAT|O_DIRECTORY work so obviously we'll need to
-work out how to order them once we both have enough positive review.
+Also use the existing dir_inode uniformly for dir->d_inode.
 
-All these patches are in github/neilbrown/linux in branch pdirops.
-You can also preview the other stuff I need this for in pdirops-next.
+This is a step towards exporting an better "open/create" interface to nfsd.
 
-Please review if you have time.
+Signed-off-by: NeilBrown <neil@brown.name>
+---
+ fs/namei.c | 77 +++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 41 insertions(+), 36 deletions(-)
 
-Thanks,
-NeilBrown
+diff --git a/fs/namei.c b/fs/namei.c
+index c57a3609dfa1..998fde251fcf 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -4404,7 +4404,7 @@ static struct dentry *atomic_open(const struct path *path, struct dentry *dentry
+  */
+ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 				  const struct open_flags *op,
+-				  bool got_write, struct delegated_inode *delegated_inode)
++				  struct delegated_inode *delegated_inode)
+ {
+ 	struct mnt_idmap *idmap;
+ 	struct dentry *dir = nd->path.dentry;
+@@ -4413,9 +4413,25 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 	struct dentry *dentry;
+ 	int error, create_error = 0;
+ 	umode_t mode = op->mode;
++	bool got_write = false;
+ 
+-	if (unlikely(IS_DEADDIR(dir_inode)))
+-		return ERR_PTR(-ENOENT);
++	if (open_flag & (O_CREAT | O_TRUNC | O_WRONLY | O_RDWR)) {
++		got_write = !mnt_want_write(nd->path.mnt);
++		/*
++		 * do _not_ fail yet - we might not need that or fail with
++		 * a different error; let lookup_open() decide; we'll be
++		 * dropping this one anyway.
++		 */
++	}
++	if (open_flag & O_CREAT)
++		inode_lock(dir_inode);
++	else
++		inode_lock_shared(dir_inode);
++
++	if (unlikely(IS_DEADDIR(dir_inode))) {
++		dentry = ERR_PTR(-ENOENT);
++		goto out;
++	}
+ 
+ 	file->f_mode &= ~FMODE_CREATED;
+ 	dentry = d_lookup(dir, &nd->last);
+@@ -4423,7 +4439,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 		if (!dentry) {
+ 			dentry = d_alloc_parallel(dir, &nd->last);
+ 			if (IS_ERR(dentry))
+-				return dentry;
++				goto out;
+ 		}
+ 		if (d_in_lookup(dentry))
+ 			break;
+@@ -4439,7 +4455,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 	}
+ 	if (dentry->d_inode) {
+ 		/* Cached positive dentry: will open in f_op->open */
+-		return dentry;
++		goto out;
+ 	}
+ 
+ 	if (open_flag & O_CREAT)
+@@ -4460,7 +4476,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 	if (open_flag & O_CREAT) {
+ 		if (open_flag & O_EXCL)
+ 			open_flag &= ~O_TRUNC;
+-		mode = vfs_prepare_mode(idmap, dir->d_inode, mode, mode, mode);
++		mode = vfs_prepare_mode(idmap, dir_inode, mode, mode, mode);
+ 		if (likely(got_write))
+ 			create_error = may_o_create(idmap, &nd->path,
+ 						    dentry, mode);
+@@ -4475,7 +4491,7 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 		dentry = atomic_open(&nd->path, dentry, file, open_flag, mode);
+ 		if (unlikely(create_error) && dentry == ERR_PTR(-ENOENT))
+ 			dentry = ERR_PTR(create_error);
+-		return dentry;
++		goto out;
+ 	}
+ 
+ 	if (d_in_lookup(dentry)) {
+@@ -4515,11 +4531,27 @@ static struct dentry *lookup_open(struct nameidata *nd, struct file *file,
+ 		error = create_error;
+ 		goto out_dput;
+ 	}
++out:
++	if (!IS_ERR(dentry)) {
++		if (file->f_mode & FMODE_CREATED)
++			fsnotify_create(dir_inode, dentry);
++		if (file->f_mode & FMODE_OPENED)
++			fsnotify_open(file);
++	}
++	if ((open_flag & O_CREAT) || create_error)
++		inode_unlock(dir_inode);
++	else
++		inode_unlock_shared(dir_inode);
++
++	if (got_write)
++		mnt_drop_write(nd->path.mnt);
++
+ 	return dentry;
+ 
+ out_dput:
+ 	dput(dentry);
+-	return ERR_PTR(error);
++	dentry = ERR_PTR(error);
++	goto out;
+ }
+ 
+ static inline bool trailing_slashes(struct nameidata *nd)
+@@ -4562,9 +4594,7 @@ static const char *open_last_lookups(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
+ 	struct delegated_inode delegated_inode = { };
+-	struct dentry *dir = nd->path.dentry;
+ 	int open_flag = op->open_flag;
+-	bool got_write = false;
+ 	struct dentry *dentry;
+ 	const char *res;
+ 
+@@ -4594,32 +4624,7 @@ static const char *open_last_lookups(struct nameidata *nd,
+ 		}
+ 	}
+ retry:
+-	if (open_flag & (O_CREAT | O_TRUNC | O_WRONLY | O_RDWR)) {
+-		got_write = !mnt_want_write(nd->path.mnt);
+-		/*
+-		 * do _not_ fail yet - we might not need that or fail with
+-		 * a different error; let lookup_open() decide; we'll be
+-		 * dropping this one anyway.
+-		 */
+-	}
+-	if (open_flag & O_CREAT)
+-		inode_lock(dir->d_inode);
+-	else
+-		inode_lock_shared(dir->d_inode);
+-	dentry = lookup_open(nd, file, op, got_write, &delegated_inode);
+-	if (!IS_ERR(dentry)) {
+-		if (file->f_mode & FMODE_CREATED)
+-			fsnotify_create(dir->d_inode, dentry);
+-		if (file->f_mode & FMODE_OPENED)
+-			fsnotify_open(file);
+-	}
+-	if (open_flag & O_CREAT)
+-		inode_unlock(dir->d_inode);
+-	else
+-		inode_unlock_shared(dir->d_inode);
+-
+-	if (got_write)
+-		mnt_drop_write(nd->path.mnt);
++	dentry = lookup_open(nd, file, op, &delegated_inode);
+ 
+ 	if (IS_ERR(dentry)) {
+ 		if (is_delegated(&delegated_inode)) {
+-- 
+2.50.0.107.gf914562f5916.dirty
 
-
-[1] https://lore.kernel.org/all/20260312214330.3885211-1-neilb@ownmail.net/
-[2] https://lore.kernel.org/all/177969022571.3379282.16448744624428323496@noble.neil.brown.name/
-
- [PATCH 01/18] VFS: move mnt_want_write() and locking into
- [PATCH 02/18] VFS: move delegated_inode retry loop into lookup_open()
- [PATCH 03/18] VFS: replace nameidata and open_flag args to
- [PATCH 04/18] VFS: add vfs_lookup_open()
- [PATCH 05/18] VFS: dentry_create: always set FMODE_CREATE when file
- [PATCH 06/18] nfsd: replace fh_fill_both_attrs() with
- [PATCH 07/18] nfsd: move fh_want_write() after preamble in
- [PATCH 08/18] nfsd: move more nfs-specific code into preamble of
- [PATCH 09/18] nfsd: remove subtlety from nfsd4_create_file()
- [PATCH 10/18] nfsd: in nfsd4_create_file() let VFS report if file was
- [PATCH 11/18] nfsd: nfsd4_create_file(): remove NFSD_MAY_CREATE
- [PATCH 12/18] nfsd: reduce range of directory lock in
- [PATCH 13/18] nfsd: open-code nfsd4_vfs_create() into
- [PATCH 14/18] nfsd: move some code out of the d_really_is_negative()
- [PATCH 15/18] nfsd: reduce want-write range in nfsd4_create_file(
- [PATCH 16/18] nfsd: switch nfsd4_create_file() to use
- [PATCH 17/18] nfsd: use vfs_lookup_open() for non-creating open
- [PATCH 18/18] VFS: remove dentry_create()
 
