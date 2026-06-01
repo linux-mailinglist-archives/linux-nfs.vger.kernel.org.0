@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-22157-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22158-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGM6GZQvHWo4WAkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22157-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:07:00 +0200
+	id 4NEbMgEvHWo4WAkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22158-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:04:33 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2084361AABB
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:07:00 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5FC161AA07
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 09:04:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 706D330241AC
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2026 07:02:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 890243010DE3
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2026 07:02:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4895E3806CD;
-	Mon,  1 Jun 2026 07:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8840D347BBD;
+	Mon,  1 Jun 2026 07:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="SZfahXIH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WXQGn3XC"
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="jTQEYteY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ArFi2Rfe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25E8331209;
-	Mon,  1 Jun 2026 07:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E932038331B;
+	Mon,  1 Jun 2026 07:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780297349; cv=none; b=r0udnExRXO7nQlzU16lGJYu/kRJVPt6CAkHU/6116jNfKZn8KNTYrH8AURKAF4DMoZxxow/BY3/vKWTxR6BYBsNFzFSrhGHS9jDvcjKM52upJjjRn3t+/7ky0BkEv1B4rXpKD8PscXs3mVOjUji/71/4nzcfdOWD1BjsGDN2NWc=
+	t=1780297355; cv=none; b=dzgcLa5C1EXy4tpWHJUic+K+81r438SfsZN3X6ezgbS+2sJUTYY/r9sTMWVmiWMmVcFWw7MrvSjPMNbg7y+al+eyyV8e8eGvr4RZvwt3f8J7+WdaIjqFE7WxABpAUebOfRmhiR39Yj1VOJLQTPhx+Lx4B8+B1W8mIa3SE9vvSe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780297349; c=relaxed/simple;
-	bh=J0qaZrviEfWk8UyAgK5B2x9JogQu/0LntevatrbLS2k=;
+	s=arc-20240116; t=1780297355; c=relaxed/simple;
+	bh=qXPKTLOiajVNkVAz4u4ZxJgDwHPvgwG/lj1R8p12sd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bF0/Q9ra2wh4Tmnz9cUwv5dQuwIYj5S425X33EnrRno4sPs9KlEYQjz+sK3maUpzfHXoAx9nBTb6kq0Ck9YDmPd5XQnexeKZBPYqpr3tyDppjF7wjVOwp5uD+VnV7NodiB41RC1qnK3uwRvDLOWJn7HjrfpGs89ui1R2MhqAXu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=SZfahXIH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WXQGn3XC; arc=none smtp.client-ip=103.168.172.150
+	 MIME-Version; b=WNn5wLlD6Yn7IrdtJUMHTgAIG3A3AZYtdBfWwt6oWPZNenvyWRBsD4XSB0+W6FUp7s2gexJUxQa6Qv807STfZ6EmDPnrGWnwuNt8d6LUry1cpBORL1bBO82v8fBmiGrGVQoS3ZPq7Ti2zkWfSkodVO3y0q4PMl1ZUVdid3lve+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=jTQEYteY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ArFi2Rfe; arc=none smtp.client-ip=103.168.172.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 35A6DEC0064;
-	Mon,  1 Jun 2026 03:02:27 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Mon, 01 Jun 2026 03:02:27 -0400
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 49FCF14000BA;
+	Mon,  1 Jun 2026 03:02:32 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Mon, 01 Jun 2026 03:02:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1780297347;
-	 x=1780383747; bh=4OSaLRuk/4AreJ7MjcmtJCk16PGJs0JerRMSkkSL+b0=; b=
-	SZfahXIHv7NEUfPUvTAbQ+M11/yiwKRPtxdm3n4ZGwBV04589tAPvTAjSFTd2bOS
-	hmrj/CNOUh5lHZeTk1YFbz4gzwtLoi8DEOB65JZ3lrm3jqbn3PMYGVll8dKkXEMG
-	FfPaxuuctidlshPzeXbUdXAgzVSCcCnP7g1xBNQg1Pz5Ekw7wCgHGZeBXwSOOW1w
-	JnyvG5OgHmD+KPbB9dyLGGbE0OxtwXPZ1OoaX9VW4h+ht78xFBYEyD87vTgDXos1
-	AuY9TStbM/YxhS0tgGxQUsgv6SORyKM34x+YNXNpewvim7+ZV+ALB/CgWuyBh+Oo
-	StXQ1QBrwUe/VG5Wi/DdTQ==
+	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1780297352;
+	 x=1780383752; bh=j3Apj8Sfk/i+RbaL+sg11Nf5puhOledUPmX0cPdnz1s=; b=
+	jTQEYteYXEW3GjzjEJ187AqNRA/iIds9AF0SMm/wjgJngvrx/9c/NE/Tgq5j/BdO
+	Q92iVMbgOtncR0fq4kOxtnqSeCRCYjShZYy6s3hmk1CZgkuwy/BELYKdtT6mxGyT
+	rlXl1gkb+/Ys+FeS0cFl/D5naouRs/wDb8T3WS5ftlysJAry4Z3FHGAfPbC0K5/Z
+	PnFyzhVWmjmfA79m3MXN7DZ+mLqtgb0p6JUssukZMqzepTknUCvlQ7OQOp56cxvJ
+	nbQFNefcWTnBEhQ1iH2oOLPxwK3Y4IQS/RaqX9EOUlGSFb6k5GLK2V2yNWEzHCvu
+	RkcSBE6fBkUK7mAaiUM+cA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1780297347; x=1780383747; bh=4
-	OSaLRuk/4AreJ7MjcmtJCk16PGJs0JerRMSkkSL+b0=; b=WXQGn3XCmc7Qqrepm
-	d5jUAqbnj4h7ra4XXpVF2qJQS0jryHWx3ZHijaUQbcMPl5E+9jLW309aBh1+xP2d
-	tFsKaIUdkI+lBPaYwG5wuRViy3hC7IS3eKt+96VloN2QmvXcgwEl0OUxoFwnHpfI
-	cBKbdIPCtp7x4WL3kOOJy2i23HEc8ym0vL9cNp08VL71wPBaOZgEBOVhNKX35bn/
-	buIsiaksYRiAjYqeIHwTHI1CRir/KXO2/bA/v8yIgYw1aM9cPCzXZNJ7S3i468Zv
-	2igbbjxBxm672mnLHlO1XO5zzaV4v9XBKXUao8RKeAsNq8iReqhOOfGLepZ6PL2/
-	S/tcg==
-X-ME-Sender: <xms:gi4datBevjqZuiXYisKKmy98FzGERfeSjHoPdE5NVHjzLJKx-j3D4g>
-    <xme:gi4dajtPb5ZROM7uco-XX2kJH6T_fzhTFM83Z9NRgSIMk5R3AyY4bUygFlpeiwLXU
-    WUZRRVwLHxxcDr5WlxNXyq-rWUEAKx-G5EwKnr9k4FfA73U>
-X-ME-Received: <xmr:gi4dakKAcsweDbzj74sFdH3s9Mxaq8kGMgyAJTdoXUQdB68rhI8KhtBT2JbmAJocQdSy_0juTTZ9TW0EaFS6huzGX45zkk4>
-X-ME-Proxy-Cause: dmFkZTFNn2voCuMJwaZn4mQi+8OwFwP8MbOGesQswPxVACwdUxRDwWa/f62FrT4OS5+etX
-    lpbG0CyNEC5ZEzEebDdmEkKKuwA8JYmTcJZDLGOjQuIsuC+VlGFN4cDtTpsp4TJxEBMQJN
-    5UaE10g4X93jUBy1AA+vqprc2pKvYMKhkYGmTUuEeZluqnZwRRSGljv9KpJxnsuimm38u7
-    Jp9HDBymSY6zDSdT1QCsnlup35Rls5SW6aC9Hwu2QHQS3M6fNepFkcCA+NA6zsxp9+rhtV
-    lYy3c44qrxynOl4BJrfimD+Q/JXYY7JxRkwisEy5dkxg8tlTtB+eaV0PCk5+Kq5N3tTrAT
-    A45ivwt2mnmfOdngQKmqLMdD16DR6JSSfdrg+GXgSgje7LCwJtgmdHGDZEWOlY1T1a85Sv
-    R1RChIEDGeWE2wjaCIgXj5pZYi56Bw988l8/19SAC+KpgfXTz0EbCZRhRDQBKxyH0O/RH6
-    +pILyJvRGDgFaysnv/KhdGxjLI5Fu4yGegkwd0kYmIZt2doRvkrU+rZyhRORCqnFbBlu0C
-    9KWxfcgTaJUAdXOXF96m9XkduL2kpA5qaoH+nr9fsKyOx4ggMELLrllC7oPgEUvD7mw5oy
-    AyOkPtmrW+XZrzXheoZacfkyz0tApkwClnEfUPEpzOqT5LPYl6hk5BKeEnwA
-X-ME-Proxy: <xmx:gy4daiZuTMeTvL_5WASrc9cpc_8mdzAgnC8FlpLpIxa8SmQXu1jJ3g>
-    <xmx:gy4dauBN1_wHm5lKpYhLIvhOAsXX4LLku5S7Q8PKgGhF1UDbgwE5oA>
-    <xmx:gy4dakY7CBnTRjFIktV8z8K3f-Dz5Mbia-bj2O6UNEGZRGQXedsIwA>
-    <xmx:gy4dauk7FTZagxgDWlpfB8Ta4oKxQ4r7E_EHyUgxOTwrRZQ--lJZtA>
-    <xmx:gy4damFpDnvbiKjy5ixwrFnKnbAR-vL__7b0oZ20gEBeW6zWf-47k4N4>
+	:x-me-sender:x-sasl-enc; s=fm1; t=1780297352; x=1780383752; bh=j
+	3Apj8Sfk/i+RbaL+sg11Nf5puhOledUPmX0cPdnz1s=; b=ArFi2Rfej111KRdMX
+	OSFWQuv/22GFvrLPgma/fWQwERgrcqj+8Nr5DcpiyZnMGrJBrR+H86Mq6Lm7kbyf
+	ymowFfOMMcEPmWZeBSjczCrjXVtOQJnL5N34qSL4YO9WVp3/kq17TlMgyXiF5+h7
+	dCXgW1VK6NRsn5cVHQcFbsrRbnoQoga4nHFRttQ4+8uNsCu/Ra0QWH4LNr4iu2e4
+	x6VugHuWUR04BYMgU6qFCTzd9B4t9VwerJEZG/k0Lk9HcEcDhDwkaGtgqRUVqJVs
+	J2ACref3m6jm8NG2Z+NpUzZiMgPBMHF81SZNhmNcu0JTLNy1b8lDDzboLY3nfd9D
+	lWltg==
+X-ME-Sender: <xms:iC4dagRfTcEK_9DuQs3-oW7tW5YFkM59Lf5VLx3XCezlptEOkrmurg>
+    <xme:iC4dal8dcaMTAzYYKUYzsBKp2w1QGlGJJ_yWJ1TrUGTU1KC5dnqtiZCvt7b2eYP5z
+    _o7_MUY9XWViOY0wArAaHfrYXl-JNZlcBxfuBXZThDqEtE>
+X-ME-Received: <xmr:iC4dapadmzbaMcHmF7zxSY0gcUiSy0vliKmOmeywnM9srn6GJOD3LF-4DmahZjrMVvJbC2FhFfH3EWndP1iljEvn0K2I7ko>
+X-ME-Proxy-Cause: dmFkZTGEUF1VHtABeBM7h+17oE/azWPgDSHyGC8OacUBc8I0E+XbqLSj+rrDsb9HrUfyZZ
+    G6ZHqOdosDmCYx7KOvJKRY6oHzbE59WqHKYOTYiKZoODiXdtZjSNfE4t3zU3BVv1TdBrOK
+    yp05iYSG/9ga5NcpcHfqQnXeKceNEpKORaIrxPQDkit9Zq1d3nGs2tKCBOurA0wNDXh8/H
+    iqVbi0f/RhUnKplD+0vjT6h7ov8Fu53dx425whnbRtKHnwWuRPKwNq8qXesY8wcZUUcEk2
+    ELQpwZQJeAYwLK9BvUBQSHxQVyu3tegeBqXUOiGwgqqJRvPGQdWR/ORYH5rNTVm+27fJYn
+    g2xxwtsMwVgOY8PoRbJRjFpXj3FhejT9Z6aVCU2zP7DbNtM199sbQCOsbpsSHR3vqw5jin
+    qDvMqVXMDc4d3lQUTRzq+MwKwIkBSw/ceB5YOsMgHdFOa+7W565/Bsek1BGHXCRKBuoYJq
+    Mz/vhpB99k2nHvJDAxdixu2laOFxz81gaKR120SxA4YNFGh54jibdejRmvykOCsp/pz3Xl
+    5S7KivpysSAjJcuHvzlkcckofsbmEIiVbUm6zYWTRzRg8QzAucgoJYzwLrH7R0dZ8Hrndd
+    lPK7ZkB1L+E+Sxi6/LhzNq310peKBAX7PrMqU/m6/MHy60mOqiHQsjOq2PiA
+X-ME-Proxy: <xmx:iC4daupil8yJEvvqBNa4gaBOeTIKGAV35S6IyQwL8CjsqPa3lwA5CA>
+    <xmx:iC4dalSdWTL5tDIWibUUXuriDjvEmBia9gaBAXSGBgo01KT90e_2iQ>
+    <xmx:iC4daqpH1svwNyw-SVZjIYiRdpV8FXhW8V2tc2W1Ot-maLgVwhcvaQ>
+    <xmx:iC4dan1aIpskuri3VfXGVQ6MAQtAQ8WviEcAq4ohGtrVr5QiHk-3rg>
+    <xmx:iC4danWBeZiF_IQLXFRdwD-m5_RPajPiUTl_GpGqB8Z_TPOm_-QMRuDW>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 1 Jun 2026 03:02:23 -0400 (EDT)
+ 1 Jun 2026 03:02:29 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -97,9 +97,9 @@ Cc: Jan Kara <jack@suse.cz>,
 	"Jori Koolstra" <jkoolstra@xs4all.nl>,
 	Benjamin Coddington <ben.coddington@hammerspace.com>,
 	"Mateusz Guzik" <mjguzik@gmail.com>
-Subject: [PATCH 17/18] nfsd: use vfs_lookup_open() for non-creating open requests too.
-Date: Mon,  1 Jun 2026 16:38:05 +1000
-Message-ID: <20260601070042.249432-18-neilb@ownmail.net>
+Subject: [PATCH 18/18] VFS: remove dentry_create()
+Date: Mon,  1 Jun 2026 16:38:06 +1000
+Message-ID: <20260601070042.249432-19-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260601070042.249432-1-neilb@ownmail.net>
 References: <20260601070042.249432-1-neilb@ownmail.net>
@@ -116,7 +116,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -127,7 +127,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22157-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22158-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -141,206 +141,128 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,ownmail.net:mid,ownmail.net:dkim]
-X-Rspamd-Queue-Id: 2084361AABB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,ownmail.net:mid,ownmail.net:dkim]
+X-Rspamd-Queue-Id: C5FC161AA07
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: NeilBrown <neil@brown.name>
 
-Now that we use vfs_lookup_open() for creating open requests, we can use
-for non-creating too as vfs_lookup_open() is already able to do that.
-
-This means that when exporting NFS, the lookup and open can be combined
-using ->atomic_open.
-
-The resulting simplification allows fh_fill_pre_attrs() to be moved into
-nfsd4_open_file() (renamed from nfsd4_create_file()) so it is closer to
-fh_full_post_attrs and fh_fill_post_noop calls.
-
-As ->op_create_mode isn't defined when op_create is zero, we need a
-local create_mode which is -1 (illegal value) when op_create is zero.
+dentry_create() is no longer used and can be removed.
+vfs_lookup_open() is a better interface.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4proc.c | 97 +++++++++++++++++++++++-----------------------
- 1 file changed, 48 insertions(+), 49 deletions(-)
+ fs/namei.c         | 80 ----------------------------------------------
+ include/linux/fs.h |  2 --
+ 2 files changed, 82 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 61ecd4123817..19a2d3446ae3 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -201,30 +201,30 @@ static inline bool nfsd4_create_is_exclusive(int createmode)
- 		createmode == NFS4_CREATE_EXCLUSIVE4_1;
+diff --git a/fs/namei.c b/fs/namei.c
+index e4f3c0d00c8c..0ccf04056292 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -5067,86 +5067,6 @@ inline struct dentry *start_creating_user_path(
  }
+ EXPORT_SYMBOL(start_creating_user_path);
  
--
- /*
-- * Implement NFSv4's unchecked, guarded, and exclusive create
-- * semantics for regular files. Open state for this new file is
-- * subsequently fabricated in nfsd4_process_open2().
+-/**
+- * dentry_create - Create and open a file
+- * @path: path to create
+- * @flags: O\_ flags
+- * @mode: mode bits for new file
+- * @cred: credentials to use
 - *
-+ * Implement NFSv4's open semantics for regular files.
-+ * Both create (unchecked, guarded, and exclusive) and non-create.
-+ * Open state for this new file is subsequently fabricated in
-+ * nfsd4_process_open2().
-  * Upon return, caller must release @fhp and @resfhp.
-  */
- static __be32
--nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
--		  struct svc_fh *resfhp, struct nfsd4_open *open)
-+nfsd4_open_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		struct svc_fh *resfhp, struct nfsd4_open *open)
- {
- 	struct iattr *iap = &open->op_iattr;
- 	struct nfsd_attrs attrs = {
- 		.na_iattr	= iap,
- 		.na_seclabel	= &open->op_label,
- 	};
--	int oflags = O_CREAT | O_LARGEFILE;
-+	int oflags = O_LARGEFILE;
- 	struct dentry *child = ERR_PTR(-EINVAL);
- 	struct path parent = {
- 		.mnt = fhp->fh_export->ex_path.mnt,
- 		.dentry = fhp->fh_dentry,
- 	};
- 	__u32 v_mtime, v_atime;
-+	int createmode = -1;
- 	__be32 status;
- 
- 	if (isdotent(open->op_fname, open->op_fnamelen))
-@@ -236,6 +236,10 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (status != nfs_ok)
- 		return status;
- 
-+	status = fh_fill_pre_attrs(fhp);
-+	if (status)
-+		return status;
-+
- 	if (!IS_POSIXACL(d_inode(parent.dentry)))
- 		iap->ia_mode &= ~current_umask();
- 
-@@ -258,13 +262,18 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		open->op_pacl = NULL;
- 	}
- 
-+	if (open->op_create) {
-+		createmode = open->op_createmode;
-+		oflags |= O_CREAT;
-+	}
-+
- 	/* A newly created file already has a file size of zero. */
- 	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size == 0))
- 		iap->ia_valid &= ~ATTR_SIZE;
- 
- 	v_mtime = 0;
- 	v_atime = 0;
--	if (nfsd4_create_is_exclusive(open->op_createmode)) {
-+	if (nfsd4_create_is_exclusive(createmode)) {
- 		u32 *verifier = (u32 *)open->op_verf.data;
- 
- 		/*
-@@ -288,7 +297,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	/* Only ask the fs to provide exclusive-create if we aren't using
- 	 * the NFS verifier to do it outselves.
- 	 */
--	if (open->op_createmode == NFS4_CREATE_GUARDED)
-+	if (createmode == NFS4_CREATE_GUARDED)
- 		oflags |= O_EXCL;
- 
- 	switch (open->op_share_access & NFS4_SHARE_ACCESS_BOTH) {
-@@ -321,14 +330,14 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		goto out;
- 
- 	if (!open->op_created &&
--	    nfsd4_create_is_exclusive(open->op_createmode) &&
-+	    nfsd4_create_is_exclusive(createmode) &&
- 	    inode_get_mtime_sec(d_inode(child)) == v_mtime &&
- 	    inode_get_atime_sec(d_inode(child)) == v_atime &&
- 	    d_inode(child)->i_size == 0)
- 		open->op_created = true;
- 
- 	if (!open->op_created &&
--	    open->op_createmode == NFS4_CREATE_UNCHECKED) {
-+	    createmode == NFS4_CREATE_UNCHECKED) {
- 		/* NFSv4 protocol requires change attributes
- 		 * even though no change happened.
- 		 */
-@@ -429,45 +438,35 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, stru
- 	fh_init(*resfh, NFS4_FHSIZE);
- 	open->op_truncate = false;
- 
--	status = fh_fill_pre_attrs(current_fh);
--	if (status)
--		goto out;
--	if (open->op_create) {
--		/* FIXME: check session persistence and pnfs flags.
--		 * The nfsv4.1 spec requires the following semantics:
--		 *
--		 * Persistent   | pNFS   | Server REQUIRED | Client Allowed
--		 * Reply Cache  | server |                 |
--		 * -------------+--------+-----------------+--------------------
--		 * no           | no     | EXCLUSIVE4_1    | EXCLUSIVE4_1
--		 *              |        |                 | (SHOULD)
--		 *              |        | and EXCLUSIVE4  | or EXCLUSIVE4
--		 *              |        |                 | (SHOULD NOT)
--		 * no           | yes    | EXCLUSIVE4_1    | EXCLUSIVE4_1
--		 * yes          | no     | GUARDED4        | GUARDED4
--		 * yes          | yes    | GUARDED4        | GUARDED4
--		 */
-+	/* FIXME: check session persistence and pnfs flags.
-+	 * The nfsv4.1 spec requires the following semantics:
-+	 *
-+	 * Persistent   | pNFS   | Server REQUIRED | Client Allowed
-+	 * Reply Cache  | server |                 |
-+	 * -------------+--------+-----------------+--------------------
-+	 * no           | no     | EXCLUSIVE4_1    | EXCLUSIVE4_1
-+	 *              |        |                 | (SHOULD)
-+	 *              |        | and EXCLUSIVE4  | or EXCLUSIVE4
-+	 *              |        |                 | (SHOULD NOT)
-+	 * no           | yes    | EXCLUSIVE4_1    | EXCLUSIVE4_1
-+	 * yes          | no     | GUARDED4        | GUARDED4
-+	 * yes          | yes    | GUARDED4        | GUARDED4
-+	 */
- 
--		current->fs->umask = open->op_umask;
--		status = nfsd4_create_file(rqstp, current_fh, *resfh, open);
--		current->fs->umask = 0;
-+	current->fs->umask = open->op_umask;
-+	status = nfsd4_open_file(rqstp, current_fh, *resfh, open);
-+	current->fs->umask = 0;
-+
-+	/*
-+	 * Following rfc 3530 14.2.16, and rfc 5661 18.16.4
-+	 * use the returned bitmask to indicate which attributes
-+	 * we used to store the verifier:
-+	 */
-+	if (open->op_create && status == 0 &&
-+	    nfsd4_create_is_exclusive(open->op_createmode))
-+		open->op_bmval[1] |= (FATTR4_WORD1_TIME_ACCESS |
-+				      FATTR4_WORD1_TIME_MODIFY);
- 
--		/*
--		 * Following rfc 3530 14.2.16, and rfc 5661 18.16.4
--		 * use the returned bitmask to indicate which attributes
--		 * we used to store the verifier:
--		 */
--		if (nfsd4_create_is_exclusive(open->op_createmode) && status == 0)
--			open->op_bmval[1] |= (FATTR4_WORD1_TIME_ACCESS |
--						FATTR4_WORD1_TIME_MODIFY);
+- * Caller must hold the parent directory's lock, and have prepared
+- * a negative dentry, placed in @path->dentry, for the new file.
+- *
+- * Caller sets @path->mnt to the vfsmount of the filesystem where
+- * the new file is to be created. The parent directory and the
+- * negative dentry must reside on the same filesystem instance.
+- *
+- * On success, returns a ``struct file *``. Otherwise an ERR_PTR
+- * is returned.
+- */
+-struct file *dentry_create(struct path *path, int flags, umode_t mode,
+-			   const struct cred *cred)
+-{
+-	struct file *file __free(fput) = NULL;
+-	struct dentry *dentry = path->dentry;
+-	struct dentry *orig_dentry = dentry;
+-	struct dentry *dir = dentry->d_parent;
+-	struct inode *dir_inode = d_inode(dir);
+-	struct mnt_idmap *idmap;
+-	int error, create_error;
+-
+-	file = alloc_empty_file(flags, cred);
+-	if (IS_ERR(file))
+-		return file;
+-
+-	idmap = mnt_idmap(path->mnt);
+-
+-	if (dir_inode->i_op->atomic_open) {
+-		path->dentry = dir;
+-		mode = vfs_prepare_mode(idmap, dir_inode, mode, S_IALLUGO, S_IFREG);
+-
+-		create_error = may_o_create(idmap, path, dentry, mode);
+-		if (create_error)
+-			flags &= ~O_CREAT;
+-
+-		/* atomic_open will dput(dentry) on error */
+-		dget(orig_dentry);
+-		dentry = atomic_open(path, dentry, file, flags, mode);
+-		error = PTR_ERR_OR_ZERO(dentry);
+-
+-		if (IS_ERR(dentry))
+-			/* keep the original */
+-			dentry = orig_dentry;
+-		else
+-			/* Drop the extra reference */
+-			dput(orig_dentry);
+-
+-		if (unlikely(create_error) && error == -ENOENT)
+-			error = create_error;
+-
+-		if (!error) {
+-			if (file->f_mode & FMODE_CREATED)
+-				fsnotify_create(dir->d_inode, dentry);
+-			if (file->f_mode & FMODE_OPENED)
+-				fsnotify_open(file);
+-		}
+-
+-		path->dentry = dentry;
+-
 -	} else {
--		status = nfsd_lookup(rqstp, current_fh,
--				     open->op_fname, open->op_fnamelen, *resfh);
--		/* NFSv4 protocol requires change attributes even though
--		 * no change happened.
--		 */
--		fh_fill_post_noop(current_fh);
+-		error = vfs_create(mnt_idmap(path->mnt), path->dentry, mode, NULL);
+-		if (!error)
+-			error = vfs_open(path, file);
+-		if (!error)
+-			file->f_mode |= FMODE_CREATED;
 -	}
- 	if (status)
- 		goto out;
- 	status = nfsd_check_obj_isreg(*resfh, cstate->minorversion);
+-	if (unlikely(error))
+-		return ERR_PTR(error);
+-
+-	return no_free_ptr(file);
+-}
+-EXPORT_SYMBOL(dentry_create);
+-
+ /**
+  * vfs_mknod - create device node or file
+  * @idmap:		idmap of the mount the inode was found from
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 11559c513dfb..8785302b0ae7 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2472,8 +2472,6 @@ struct file *dentry_open(const struct path *path, int flags,
+ 			 const struct cred *creds);
+ struct file *dentry_open_nonotify(const struct path *path, int flags,
+ 				  const struct cred *cred);
+-struct file *dentry_create(struct path *path, int flags, umode_t mode,
+-			   const struct cred *cred);
+ const struct path *backing_file_user_path(const struct file *f);
+ 
+ #ifdef CONFIG_SECURITY
 -- 
 2.50.0.107.gf914562f5916.dirty
 
