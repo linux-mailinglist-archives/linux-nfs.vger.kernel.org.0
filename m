@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-22185-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22186-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KGI5FAvSHWpMfAkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22185-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 20:40:11 +0200
+	id yLiIMpLQHWqjewkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22186-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 20:33:54 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A3A362422F
-	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 20:40:10 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A6866240A3
+	for <lists+linux-nfs@lfdr.de>; Mon, 01 Jun 2026 20:33:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1A9E0300A65F
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2026 18:19:16 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D6D57301589F
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Jun 2026 18:33:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6423E5A3A;
-	Mon,  1 Jun 2026 18:18:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BD643ED3DA;
+	Mon,  1 Jun 2026 18:33:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqHNTUMC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCixlqTl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C9A3E8C5B;
-	Mon,  1 Jun 2026 18:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868EF254B18;
+	Mon,  1 Jun 2026 18:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780337912; cv=none; b=ZkZSv3vk2NRyYu9lQGyUpV0tfQGfAsbv51IQWLo/OtMlnyhSZzh8AN5RUKfsgtUOPoRFhge/9gTWyZb4cqjeE7Pfgq43TJxy0v5GdMcDOnWGU6hV139PL4AxAx+9uRU6o7UkMozvc9pHsRBNsPiqXCEcvn0scCisC7vv3MnWGTw=
+	t=1780338832; cv=none; b=gpt09QR6bOu5MwEZ4+DW+VkOrL/QRP5awl6zqjelQDRqu9gI6RLXovfcRwWHm+bSQK4ivQ/fYcrPjwYVSyr2E9qzmHxafu/TbKb7u4qsH0nWw3Cw2wSc7sn8RNBtLP1qnz8eN9pxbaPP02UgpKbw16EqPyW4GYWU0jvR1Ub+R8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780337912; c=relaxed/simple;
-	bh=igjGvAEbwrBpqKIMhvgNHpbWMYqtTtcOJI7Oo7UaT1E=;
+	s=arc-20240116; t=1780338832; c=relaxed/simple;
+	bh=eE0zLV9Q63RSz0KIdGOc8TltVCWPibPXM31aUxvlpGk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OlPLmZBpmR5Zc50rtCwZL4b6Uqz3K4Td/NmX1YuWqtprV5Y/rASbMnlcQQ1HCqpL9mg4+ylpAhVcVvCsyIJWTvtRnWXPTDuGGnHI4cuwgk/YjEc0coG21ZTUnNP1asWwaF1NMiKbpU/WkVSFO5wSh9R+cl6YVduTxq/UYhVjNFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqHNTUMC; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834211F00898;
-	Mon,  1 Jun 2026 18:18:28 +0000 (UTC)
+	 Content-Type:MIME-Version; b=X0d4mI0SxhRDymube+dUqwuB6x6ruI4eduXaycKxCl22GgnpadOShPfAEoCYeWegtrTBERkwQIsFlkS4Kb8kE+xq4Efc7x05h14DSgmYnEPDYtqVufH3yBemhCHsjA4vDk0iXnE50JNvZZX09NQzNG6y1dOrbxlIYct/1whX9l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCixlqTl; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5101F00893;
+	Mon,  1 Jun 2026 18:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780337909;
-	bh=igjGvAEbwrBpqKIMhvgNHpbWMYqtTtcOJI7Oo7UaT1E=;
+	s=k20260515; t=1780338831;
+	bh=R+bxq57iU5XSqjwhPa1pQEUPeSJZpZ0aQJjhjET9bas=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=GqHNTUMC4EqYdJRlGI/rEaVV1jFvX6sQVZxvZj+O3yrWuEhjN1TTjK+MkoYinI9nA
-	 xZasquJJtCRS0FEbkni0zdCdplXDWu45QoT38or8deANg3qjSkZ6NHoAcSNXgtXihO
-	 dCB8dtEVyY0AeOsmZK9kvrgYuEC+JEPESflNUYGRV/K7gAs9cJqXx2nl4mlZ/fPHae
-	 WP6k2GrXvmEnfqh9czXCqErjf4BErde+BxZdTZJ4X2bfqpslFS8DFH5WblFHlgk4tA
-	 ggAkNahMJwpQFaqoVNy0FIJ62bxuEy/BAzqtegBbbVwSfwTgOeQKmTSW67tgu71imw
-	 2W6Ts7p18HbJg==
-Message-ID: <6794fda04cf84a908b4715ad0456764e4ad18a3e.camel@kernel.org>
+	b=nCixlqTlplRWL+EjtRFDy/srMB5xGolVlckwv+Gu9bPd0lBVo4AxfBV/noDCWWndC
+	 +DK2lbvgwzE7ssr9IZSeS5ZsP9Ab1mx7uAZEgisSbAaDY/CauVidtyJ209pND3iRML
+	 05vsHt/MlbCN5cjsgmcclnl34fyEpYWQdxPwS7U3hCkAR8dtAXcvZmx83pfZlSLhTs
+	 dZZbyhVYK2BDnG/u78KZFOrHhLM77ixi/808wvowXBR6Gbun2n+fbfMXAh37nUnA1/
+	 qzEHw7Nz4MLif5KNyXx+X04Hf2hSqNr+DQj5sJQHBYqhH5NiY8BXTjYEiICNgcw6vc
+	 Yn9qTBHmne8Uw==
+Message-ID: <51c047425b6e19f6bfe3067a2fe59676eb00380b.camel@kernel.org>
 Subject: Re: [PATCH 8/8] nfsd: hold net namespace reference in nfsd_file
 From: Jeff Layton <jlayton@kernel.org>
 To: Al Viro <viro@zeniv.linux.org.uk>
@@ -56,7 +56,7 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
  <snitzer@kernel.org>, Chris Mason <clm@meta.com>,
  linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org, Trond Myklebust
  <trond.myklebust@hammerspace.com>
-Date: Mon, 01 Jun 2026 14:18:27 -0400
+Date: Mon, 01 Jun 2026 14:33:48 -0400
 In-Reply-To: <20260601175034.GI2636677@ZenIV>
 References: <20260601-nfsd-testing-v1-0-d0f61e536df8@kernel.org>
 	 <20260601-nfsd-testing-v1-8-d0f61e536df8@kernel.org>
@@ -147,12 +147,12 @@ MIME-Version: 1.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22185-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22186-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -163,28 +163,51 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 3A3A362422F
+X-Rspamd-Queue-Id: 6A6866240A3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On Mon, 2026-06-01 at 18:50 +0100, Al Viro wrote:
+> On Mon, Jun 01, 2026 at 01:31:11PM -0400, Jeff Layton wrote:
+> > Take a net-namespace reference in nfsd_file_alloc() (get_net) and
+> > release it in nfsd_file_free() (put_net), so that nf_net is always
+> > valid for files that the GC or shrinker has isolated from the hash
+> > table and LRU -- which __nfsd_file_cache_purge() cannot see.
+> >=20
+> > Without this, nf_net can dangle for in-flight files whose net namespace
+> > is torn down concurrently, causing a use-after-free when
+> > nfsd_file_dispose_list_delayed() calls net_generic(nf->nf_net, ...).
+> >=20
+> > Because nfsd_file_free() now calls put_net(nf->nf_net), the old
+> > nfsd_file_put_local() pattern of returning nf->nf_net after
+> > nfsd_file_put() is unsafe -- put_net() could theoretically drop the
+> > last net namespace reference, leaving the returned pointer stale.
+> > Fix this by moving the nfsd_net_put() call into nfsd_file_put_local()
+> > itself, before the nfsd_file_put() that may trigger nfsd_file_free().
+> > The function now returns void and the caller no longer needs to handle
+> > the net reference.
+>=20
 > That means that each nfsd_file_alloc()/nfsd_file_free() is now touching
-> the same cacheline on kernels with netns enabled.=C2=A0 Scalability impli=
-cations
+> the same cacheline on kernels with netns enabled.  Scalability implicatio=
+ns
 > might be interesting...
 
-That's a very good point.
+That's definitely a valid concern. I looked at a couple of alternatives
+but they turned out to be pretty nasty.
 
-There are some alternatives. Let me play around with them and see if I
-can find something better.
+One thing we can do is only take a net reference for GC'ed files, since
+we don't need a reference for the others. That would cut down some of
+the get/put_net activity, but it's still likely to be substantial. I'll
+plan to implement that for v2.
 
-Thanks for the review,
+I'll keep thinking about other ways to do this, but I think we're stuck
+taking net references for at least some of these for now.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
