@@ -1,275 +1,189 @@
-Return-Path: <linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22205-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id LcMNHS38HmofbwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 17:52:13 +0200
+	id SCFRCbAAH2oQcwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22205-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 18:11:28 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0B7F62FFC2
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 17:52:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6303063016F
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 18:11:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZQSj2Oh5;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=CojUq1mV;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22205-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22205-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 233013056372
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 15:47:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3426F3007E08
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 16:00:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 290873F0A99;
-	Tue,  2 Jun 2026 15:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B70123F39C7;
+	Tue,  2 Jun 2026 16:00:11 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D36366046;
-	Tue,  2 Jun 2026 15:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F653F23B5
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jun 2026 16:00:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780415265; cv=none; b=M7kfw1vyXIvXieQvIL8YUoxANm44vE/3ssjKSGwgrFcPsjmFpWT010vGjRcNOsFT4NCeReow7pEqAl0Ws15kIAVVnYxMsXZZkN2xDnFfVoiV0YPCH6qzVPM2uODNEq45zaq/s1C74/onzParP+WFWOUXiIrzeG+fYF3YvpOglVY=
+	t=1780416011; cv=none; b=A7+nqn5Ud4TevHKoT1XXVWAhgAtryWrivGC/ub/9/M5FGhL0uPROFNaRC7i2BA4vGnawUZaTISyymXeUpCyEgfv9V4mxs8PxAQUaNxQUiDMl/R6SwTMrRR6J1u3HMMrJx797QcO4bWLPsaogY+4Lw4hj1DvnlpkGOyPcLbVbgW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780415265; c=relaxed/simple;
-	bh=hi12WezZwD1WzYU1hlhwt5AiplPaczFeXs61kDWRjHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ng/PT+/COvrFXeQJGmAnWBVC29YDt9JLfrkf7IWctA67vuPaVA3UfLm7OUnkdMtZ6+dQ/qWaia0qYl1tHhs7sqAmBCCdyVBZwaH48uy34dq+cpAPET0vr11FoubQKGN4+zWdIyrrUtPeWpsoLpajtzg/hWwGH6Nsz+8bkz6XGek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQSj2Oh5; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704951F00893;
-	Tue,  2 Jun 2026 15:47:43 +0000 (UTC)
+	s=arc-20240116; t=1780416011; c=relaxed/simple;
+	bh=57rMn/0EZ3x6IXyJimA+fwdGVCPxwuCpwKe+xk5jTic=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sI7wZSwz8hCG4UnGTYuGI5K9RSwCN5euzH7Le9FsOnLK9WS02lRCYmUgCZTsncEZX9yPOL1ourSDugrE752CQQzVQKV7brzR5ufqwQ1Apudmwk8s/SuFu80VM2+4kBRkGPQ0w4sMdvNSTJpmuTDle8SyhYh4RJHbNIejcXsAtig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CojUq1mV; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B481F00899;
+	Tue,  2 Jun 2026 16:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780415263;
-	bh=wLutiSegTJHA+jOz/grm9866m5nuAjpYHl81oTHKovM=;
-	h=From:To:Cc:Subject:Date;
-	b=ZQSj2Oh5tKjNbhIIGe99RwvQlsqwNkefrPnoo5XygIkfKYK48wxoy33nXLklLeAIW
-	 UjGofUmSx6GSxATbGem0cK3dmcUhmoQiO9Xr0ZloUgpEU3jFCGYnSBaQEQzI00cSGT
-	 ZvNaAWTGVYuJgpkbcRF9b5AekMr4YLY2S2qBYx3cSvvDeokEg+coAq6jMhR3Cy8GPO
-	 M1SgWZP8LE7d9+yaU03bXzQN26BV5EpcJjNrhzA4ahHZcACEVoh+bNSoEjoItF38Cy
-	 vUlThpwtXAbsrzU6CvsEyFTjqSGFMR+reBNle3Kmir8Ko8eRh9mHYWYBKcJxqVwhal
-	 yiGh3U04OiM3Q==
-From: Chuck Lever <cel@kernel.org>
-To: linux-nfs@vger.kernel.org
-Cc: keyrings@vger.kernel.org,
-	kernel-tls-handshake@lists.linux.dev,
-	netdev@vger.kernel.org,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Hannes Reinecke <hare@suse.de>,
-	David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>
-Subject: [RFC] NFS: named client identities for mTLS mounts and a per-namespace .nfs keyring
-Date: Tue,  2 Jun 2026 11:47:37 -0400
-Message-ID: <20260602154740.49861-1-cel@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	s=k20260515; t=1780416010;
+	bh=BEHR8ze24SyZJBrL1pA7nVPYf7sE8uNT00yc/6Gx19o=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=CojUq1mVGUp6wqJ2ttixTPGTOYnWhWMNoM+huAKdaP5KXgSSRV/HOnQsrKa0r0ubz
+	 g/2fqYzzlKyWbjbezvGSOBuU7/lxahMrHEVMNYJsXbQRAqwj/Z+DIfypXt048ajcZG
+	 qnQPXwjm8X8cwlvY2UinsG6WYYEyyJ783c5U8f0tzwRiAOdu446yy3dMNcdx/QssZE
+	 iOIRi/V/zZThP2XgMz/I6c6M4yJA+U9mUaBVVEcpf7xunhWTAmYMNf0GM1HD9z+DrH
+	 qSGRxBkJZ/BlhOtl9pkpNNB+qdn/SXKUuDOEl0KcKqih2510Z1gGie3PJUVVkQLYsA
+	 YIBJXkU195TFQ==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 22AB9F4007A;
+	Tue,  2 Jun 2026 12:00:09 -0400 (EDT)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Tue, 02 Jun 2026 12:00:09 -0400
+X-ME-Sender: <xms:Cf4eah_qjOjVGbuwT-rEA174_Q3PuLWOt4GGI8MGdr_lWh61QwKd4A>
+    <xme:Cf4eaghdejCN7yO_W_ZRNUkPSvgGOT_b69PUk5Hc5TTcKAHgU5UNL5HeTEx7BpZrM
+    zTlMKBFJpEzRTnIg1PcyyZLLkE1KpgqzRovdZwwMfm5dkOWYU1bPgs>
+X-ME-Proxy-Cause: dmFkZTFaGV8MzM3OJKc+HfmPXv6Se7zjc5Ynp8Pd6ghhePPJRXILF2eVF1nSaX1FFXfMxi
+    1R/IF74U5ktSjYatvoG9d9aYv+ygG7uGnGxSQqMWGdoA/XTf3DFUz6CfNZK4d3zrjixBLa
+    9R5xzpbs1btp30XZPGwXMXS3xgAcGNY+FleezIlX5OWk8fsw1wMSJxdMUEkktp9TkzqNJ8
+    mxcPQYhBaQhxHqn0LAOIOjuNUDqv3vlAY66xMzWJuCBboBnu5rC9onQhE0pV1fkn5Dh8U2
+    46E0f2QevnkkwE+yzm+zyzucdHmIaG9K9RgPMcXOlFgMa2F6MvSJID6pYUhdkwTB3qpDG1
+    oAazJMUlTaaVKl8sxG7uHHlIvoSX5oMv2EW2GndySbUlyD934Tu1jcEjZH5NBJWkIKZGS/
+    wHNACIzzhtZlTGJc5wtrIY2b6FwAW+yhzwwvqCFdc69yU+ArdXwml3w0m0MEjawpq8jYgE
+    9Or6jlOUyxlswpCvv+SztXm/EjsErguJ71q1vocKK979uprbTzTyD6lS+Ae3zHW9RN3/RZ
+    sjuVW8VpjHDwIcqMNcx8+8pE/fEg1JO8dg5GXduJrEiMBuo3VFXGXe9uTLmy3K3Zz6IR7h
+    3TC46Ji+hXjHaw/D0VoojPnwV5h7uJNxz2kO1TZ6WCg8Melgw9lOoUbYFmBw
+X-ME-Proxy: <xmx:Cf4eavf683o93XKwkU9zSST1WBWw-6xmZ08gYsVKJHGoqSgol716rw>
+    <xmx:Cf4eahiPkchKnHCwgspAUNjXLrBj0VLtVklYiPXe--dKo7VHI7GNoA>
+    <xmx:Cf4eaqIfn6BrCf0ME0rILzcS4ye82f2rBEF2NlHQNrdQTXuEvi7OIA>
+    <xmx:Cf4eauHCyEgxqXb1WG6JEYpbO-FPdtyOabt0DCxDsMbxhUpo_1j8xQ>
+    <xmx:Cf4eag283uQ7pCv8RNK_uF5sjkZqK8v3AlNW2HgrVVqNeel9fnukgUiz>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F1A14B6006F; Tue,  2 Jun 2026 12:00:08 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AA_jvV1aNDqJ
+Date: Tue, 02 Jun 2026 11:59:47 -0400
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Hongling Zeng" <zenghongling@kylinos.cn>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Trond Myklebust" <trondmy@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, zhongling0719@126.com,
+ stable@vger.kernel.org
+Message-Id: <c3dc789b-c8c0-43e6-ae8d-615c932f4fa1@app.fastmail.com>
+In-Reply-To: <20260602083205.183807-1-zenghongling@kylinos.cn>
+References: <20260602083205.183807-1-zenghongling@kylinos.cn>
+Subject: Re: [PATCH] sunrpc: fix uninitialized xprt_create_args structure
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22204-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:hare@suse.de,m:dhowells@redhat.com,m:jarkko@kernel.org,m:sagi@grimberg.me,s:lists@lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-22205-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:zhongling0719@126.com,m:stable@vger.kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,126.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,kylinos.cn:email];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D0B7F62FFC2
+X-Rspamd-Queue-Id: 6303063016F
 
-Today, exactly one x.509 certificate and private key pair can be
-used at a time for all NFS mounts. The location of that pair is
-set in /etc/tlshd/config.
+Hi Hongling,
 
-We currently have an awkward experimental mechanism for specifying
-an alternative x.509 certificate and private key for an xprtsec=mtls
-NFS mount, but it needs to be completed so it can be documented and
-advertised for use.
+Thanks for the patch!
 
-I asked Claude to write a rough draft of a design document that
-outlines what needs to be done to finish the work. I would like
-input on the kernel-side mechanism in particular for the
-per-network-namespace keyring and the way userspace reaches it.
+On Tue, Jun 2, 2026, at 4:32 AM, Hongling Zeng wrote:
+> The xprt_create_args structure is allocated on the stack without
+> initialization in rpc_sysfs_xprt_switch_add_xprt_store(). While some
+> fields are manually populated, critical fields like srcaddr, bc_xps,
+> and flags contain uninitialized stack garbage.
+>
+> This can lead to:
+> 1. Kernel panic when xs_setup_xprt() dereferences garbage srcaddr
+> 2. Information leak if srcaddr points to sensitive stack data
+> 3. Unpredictable behavior if flags has random bits set
 
+I took a look through the transport setup function to see what they
+do when these fields are set to NULL, and it looks like thy do their
+best to choose a default value which might be different than the
+values set to the original transport that we are trying to clone.
 
-Problem
-=======
+Can we instead set the missing fields in the xprt_create_args based
+on how the main xprt is configured?
 
-NFS mutual-TLS mounts (xprtsec=mtls) need the client to present an
-x.509 certificate and prove possession of its private key. The
-handshake runs in userspace in tlshd; the kernel hands tlshd the
-credentials by keyring serial number over the handshake genetlink
-upcall.
+Thanks,
+Anna
 
-The only front end today is two undocumented integer mount options:
-
-    mount -o xprtsec=mtls,cert_serial=723847,privkey_serial=723848 \
-          server:/export /mnt
-
-The administrator must load the cert and key into the keyring out of
-band, discover the integer serials, and paste them onto the command
-line. Serials are opaque, non-reproducible across boots, and easy to
-transpose. There is also no isolation: nfs_tls_key_verify() does a
-global key_lookup() on the serial, and the .nfs keyring created in
-fs/nfs/inode.c is module-global and never referenced again -- any tlshd
-that learns a serial can read the key.
-
-This RFC proposes a named, per-mount client-identity interface backed
-by a provisioning CLI, and fixes the keyring to isolate credentials per
-network namespace. The kernel handshake ABI (integer serials over
-genetlink) does not change.
-
-
-The cross-subsystem ask: a per-netns .nfs keyring
-=================================================
-
-Network namespace is the correct isolation domain. tlshd is bound to a
-network namespace, not a user namespace: it services sockets passed up
-from the kernel over the per-netns handshake genetlink socket, and one
-tlshd runs per network namespace that needs TLS-protected mounts.
-
-  - Replace the dead module-global .nfs keyring with one keyring per
-    network namespace, held in struct nfs_net (fs/nfs/netns.h) and
-    allocated at nfs_net_init(). The keys subsystem otherwise
-    namespaces on user_namespace, so this is a kernel-held object
-    referenced from nfs_net (like today's global keyring, but one per
-    netns). The DNS resolver's per-netns key scoping (net->key_domain,
-    request_key_net()) is precedent that netns-scoped key handling is
-    acceptable.
-
-  - tlshd attaches at handshake time, not at launch. This matters: the
-    keyring may be empty or freshly created when tlshd starts, so
-    linking it by name at startup is the wrong model. Instead NFS sets
-    ta_keyring to the netns .nfs keyring serial in
-    xs_tls_handshake_sync(), the kernel sends it as
-    HANDSHAKE_A_ACCEPT_KEYRING, and tlshd links that serial into its
-    session keyring per handshake -- the path tlshd already implements.
-    Linking grants tlshd possession of the keyring and, through it, of
-    the possessor-scoped cert and privkey keys.
-
-  - Credential keys are created possessor-readable only (no
-    KEY_USR_READ). That is what makes isolation enforceable rather
-    than advisory: a key provisioned in namespace A is absent from B's
-    keyring and unreadable by B's tlshd even if its serial leaks.
-
-Open question, and where I most want input: userspace -- the
-provisioning CLI and mount.nfs -- needs to name the kernel-held netns
-keyring in order to add and search keys. Candidates, modeled on
-KEYCTL_GET_PERSISTENT (security/keys/persistent.c):
-
-  (a) a new keyctl command that links the caller's netns .nfs keyring
-      into a destination keyring and returns its serial;
-  (b) an NFS-specific request_key key type the module instantiates to
-      point at the netns keyring;
-  (c) a per-netns serial exported via procfs or netlink.
-
-The per-netns keyring decision itself I consider settled; the retrieval
-primitive is the open one. There is also a user_namespace accounting
-nuance: keys added by userspace are quota-charged against a key_user
-keyed by user_namespace even though the keyring lives in nfs_net. I
-would like the keyrings folks to confirm the quota and ownership
-interaction is sane when the user_ns and net_ns boundaries do not
-coincide.
-
-
-Userspace front end
-===================
-
-With the keyring in place the front end is straightforward and follows
-the nvme-cli / cifscreds pattern.
-
-A new nfs-utils tool -- working name nfstlskey, fitting the nfsidmap /
-nfsconf family -- manages x.509 client identities:
-
-    nfstlskey add  <identity> --cert cert.pem --key key.pem
-    nfstlskey list
-    nfstlskey remove <identity>
-
-The add subcommand reads the PEM cert and key, converts each to DER,
-and creates two "user" keys on the netns .nfs keyring ("user" because
-tlshd consumes raw DER via keyctl_read_alloc()), with possessor-only
-read. Description convention:
-
-    nfs:x509:<identity>:cert
-    nfs:x509:<identity>:privkey
-
-The mount command names the identity:
-
-    mount -o xprtsec=mtls,tls_identity=<identity> server:/export /mnt
-
-mount.nfs runs in the caller's namespace, searches the .nfs keyring for
-the two descriptions, and passes the existing cert_serial= and
-privkey_serial= options to the kernel. tls_identity= is purely a
-userspace convenience that resolves a name to the serials the kernel
-already accepts; the raw serial options remain as a documented escape
-hatch. Both get documented in nfs(5), with a new nfstlskey(8) page.
-
-tlshd changes are minimal: confirm the per-handshake link of the passed
-keyring happens before the cert and privkey serials are read, and
-retire the now-unnecessary .nfs entry in the keyrings= startup path.
-
-
-Future work: mTLS-protected NFSROOT
-===================================
-
-NFSROOT mounts run in the kernel at boot, in the initial network
-namespace, before any userspace mount.nfs, nfstlskey, or possibly tlshd
-exists. mTLS for NFSROOT therefore cannot rely on userspace
-provisioning: the kernel must obtain the client cert and key itself --
-the leading candidate is extracting key material from a TPM -- and
-place it on the initial-netns .nfs keyring before the handshake, with a
-tlshd available early (initramfs). The kernel-owned per-netns keyring
-chosen here is a prerequisite: a userspace-created keyring could not be
-populated at NFSROOT time. Out of scope for the initial work, but the
-design must not foreclose it, and the same TPM-resident-key path would
-inform an eventual PKCS#11/TPM identity-naming scheme.
-
-
-Alternatives considered
-=======================
-
-  - request-key upcall keyed by server name (the nfsidmap model): most
-    NFS-native and needs no mount option, but makes selection automatic
-    rather than per-mount explicit. Worth revisiting if per-server
-    auto-selection is ever wanted.
-
-  - File paths in the mount options (strongSwan / wpa_supplicant model):
-    forces mount.nfs to read key files and load the keyring on every
-    mount and offers no reusable provisioned identity.
-
-  - Document the raw serials only: does nothing for namespacing.
-
-
-Comments welcome, particularly on the keyring retrieval primitive and
-whether network namespace is the binding you would expect.
-
---
-Chuck Lever
+>
+> The fix is to zero-initialize the structure to ensure all unused
+> fields are NULL/0, preventing the transport setup code from acting
+> on garbage data.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+> ---
+>  net/sunrpc/sysfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+> index a90480f80154..0a99d0f1eb4c 100644
+> --- a/net/sunrpc/sysfs.c
+> +++ b/net/sunrpc/sysfs.c
+> @@ -333,6 +333,7 @@ static ssize_t 
+> rpc_sysfs_xprt_switch_add_xprt_store(struct kobject *kobj,
+>  	if (!xprt_switch)
+>  		return 0;
+> 
+> +	memset(&xprt_create_args, 0, sizeof(xprt_create_args));
+>  	xprt = rpc_xprt_switch_get_main_xprt(xprt_switch);
+>  	if (!xprt)
+>  		goto out;
+> -- 
+> 2.25.1
 
