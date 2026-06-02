@@ -1,245 +1,275 @@
-Return-Path: <linux-nfs+bounces-22203-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id I3KXHaH7Hmq3bgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22203-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 17:49:53 +0200
+	id LcMNHS38HmofbwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 17:52:13 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F0EB62FF66
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 17:49:52 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0B7F62FFC2
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 17:52:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b=lR5MSXYV;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22203-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22203-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZQSj2Oh5;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22204-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4235B300230E
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 15:46:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 233013056372
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 15:47:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CD7D3EFFC0;
-	Tue,  2 Jun 2026 15:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 290873F0A99;
+	Tue,  2 Jun 2026 15:47:45 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F06A3EFD35
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Jun 2026 15:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D36366046;
+	Tue,  2 Jun 2026 15:47:43 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780415179; cv=none; b=hNpcrnfH8+gp+QiDB5Bl8XTp28HIlmhbEylNM/e2W06sA78GHDRR6qQ8EkYh2/3knAAoXSwVW9b7An2H7yGqqvakP7JM4p7N4QotQNJ4MdQJJ1EHvuA96eamdCq/zAaGZvBGE6KLTRMhHjAah08F00yWxmziNcD+5ee4aFwOFP0=
+	t=1780415265; cv=none; b=M7kfw1vyXIvXieQvIL8YUoxANm44vE/3ssjKSGwgrFcPsjmFpWT010vGjRcNOsFT4NCeReow7pEqAl0Ws15kIAVVnYxMsXZZkN2xDnFfVoiV0YPCH6qzVPM2uODNEq45zaq/s1C74/onzParP+WFWOUXiIrzeG+fYF3YvpOglVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780415179; c=relaxed/simple;
-	bh=azbKkP2cXT+o67IGfSWHV4WbY5Pgzr6lgvaE9O9S+xc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oKrUCKvlgp7QWjhL4dxC2vD6Sv6JNUh3fUNUWTsWzlIlITBXdUGh0YoZNe1J03mcWEE98Qn2FftA33L9rvlNSLeLSqrouqJzevfzPs/JjHeDe15mpWGgj6tVmkS8ouv67OzAW515E0SN62HW25EYJQZMm4iUyaAWTByoxSkzZEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=lR5MSXYV; arc=none smtp.client-ip=209.85.210.43
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7e6cfdc8382so943188a34.2
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Jun 2026 08:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1780415177; x=1781019977; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hs/PYZIUqC0oanJYU795yk/0BFXAa7NT7iolrJU5AuI=;
-        b=lR5MSXYVKwkoUFAyAMPSeMyWxHof3/OS6wAIJQZ1R6mEFjpi16mBYu4GlJJOgzBi8K
-         KnPawE8d7QAqRH54CcdEkHYf0n0+IxYQdN12iPtg+KJcAII5C7LZ+2Nl18/i7G22VEO0
-         4u/iMqjk8ai/0rKfxoSwpdyfZRRtGW44dHdW9ffWOwSojxzB0lwQQnMKOFPXRWVCSG4L
-         7VSBPGeduM+KrrpdTdBEwkLxr4ftKGq2QG5EoUd2wvKBcTXQ8wJ77jQk93YtpSCcDPs6
-         T+pOFFGKUKWyWn+dnQ41KBt0AUAS/GBFABYAqNjqDI8Ut14zQUSLG+aVnSdKlorTo4OF
-         vFsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780415177; x=1781019977;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Hs/PYZIUqC0oanJYU795yk/0BFXAa7NT7iolrJU5AuI=;
-        b=LAcq7jwyRRTRaF/JJkXSVY59Os4y4CNp4TG9yo+Wtpn+eG9O+LDVsXv57ghb7PfnG0
-         YOUdniLo8W9Q3QEtgfBsZQTdVFuEo+CWYs9TGrZH/+BMU/794e9rETNhRrPVNipoasvo
-         tIFQrgQBEohte8LAj//EIfgwDXSDcO39n6gE/zeKUwW1tirMv3GCUqiWo6EXAMFFdfqI
-         YCjgW74Z3u1EppwkLUUdl9Bd+HTiZLEBtKIOWa32/aU44X+7UEFuhTbsvJ34MSzgoi+6
-         bL+dTuIVbr/VqJERPkp6XqotcGQUHTP5NOo10680LFywKPxnwpdgfv2Mi8YSAPq2EqIz
-         alRQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8Dm7B5z07qaWNU+FUx8SCKYqRCd1kRcXZwCtjGrp8vyT9m/o/tQWp1uLRYcPS/7CH+p53dD9aRtwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOPqgIsEV4QgqUKF2xTP2mBnJOkwM1LUrO600viw9cT1w2T4vm
-	VpmOL7ZZRJTYF3R/fRS6UiH7aZbb+w/+uEqRONaBUmUx5smicFCdWZ0+Mk8r5UPUEvvVtUMoU9r
-	HMIj/
-X-Gm-Gg: Acq92OFw7YdAV6+bnJZ5rgEiWwlbPIlulbHWWRheC/a98o79+4EAO1tke56Q6i1hYyW
-	DmYA2QRYZI3HIE9yrbmdhCvNBhTlMVK1Co4xuFUbqKJ7gkuF2urEUPT31CGL0wIQaVP1xM2wgQT
-	eWrY1IQ1eBPmCpRHoguq88nOcRphYxfk6nE1DLvpcBZhAWRXwNCloTcT+Y4A03RWYxH0GUk4pNw
-	dUFqR0dYXdnalKhw2BM4UJInXoHEfPsTd7QuQ8T+FPAMJ4xbG8J7kSJhqgLiGwAiyBJbqmMxcr/
-	+FocLe3SNs5Fd2nSZ+k0x882DrrmU5uK+CUE/+zWwN/uCCXpkXGcTbMPpH6lrBsPFlW+uirycbz
-	RaTQf/g7ZJuuvhSwnCcRVADjiKf9TFFly+tLXdOeYaTqH7lWSSOV4BqQnojbaXagWI3X1XAojsl
-	YVaxY3lp9mdHvv7K3I1fIsJJBMLWobh9aWVYb0iDvJxXIJy7mCeWSBEg==
-X-Received: by 2002:a05:6830:1b7c:b0:7e6:cee5:1bbf with SMTP id 46e09a7af769-7e6cee5245cmr2682045a34.12.1780415177153;
-        Tue, 02 Jun 2026 08:46:17 -0700 (PDT)
-Received: from [192.168.254.51] ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e6e04fd1ecsm585395a34.2.2026.06.02.08.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 08:46:16 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: Benjamin Coddington <ben.coddington@hammerspace.com>,
- Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>,
- linux-nfs@vger.kernel.org
-Subject: Re: [RFC] knfsd: per-client fair scheduling to prevent single-client
- starvation
-Date: Tue, 02 Jun 2026 11:46:14 -0400
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <E903163B-6A5B-47C6-BC91-3894BB9EAD08@hammerspace.com>
-In-Reply-To: <1a5c70d8-e7f4-4671-a29a-023be7c107fc@app.fastmail.com>
-References: <D33770A1-9098-4F1A-93EF-590E6C0B7638@hammerspace.com>
- <473e337b-fabc-4884-a6c4-0f04b6874d0b@app.fastmail.com>
- <3AB7EB6A-B207-4B91-A695-66C4704D0E31@hammerspace.com>
- <4c5dbb98-0209-4572-8eac-1578536bbd78@app.fastmail.com>
- <AED22AED-E97D-40E3-9839-BF8307EF8B65@hammerspace.com>
- <1a5c70d8-e7f4-4671-a29a-023be7c107fc@app.fastmail.com>
+	s=arc-20240116; t=1780415265; c=relaxed/simple;
+	bh=hi12WezZwD1WzYU1hlhwt5AiplPaczFeXs61kDWRjHA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ng/PT+/COvrFXeQJGmAnWBVC29YDt9JLfrkf7IWctA67vuPaVA3UfLm7OUnkdMtZ6+dQ/qWaia0qYl1tHhs7sqAmBCCdyVBZwaH48uy34dq+cpAPET0vr11FoubQKGN4+zWdIyrrUtPeWpsoLpajtzg/hWwGH6Nsz+8bkz6XGek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQSj2Oh5; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704951F00893;
+	Tue,  2 Jun 2026 15:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780415263;
+	bh=wLutiSegTJHA+jOz/grm9866m5nuAjpYHl81oTHKovM=;
+	h=From:To:Cc:Subject:Date;
+	b=ZQSj2Oh5tKjNbhIIGe99RwvQlsqwNkefrPnoo5XygIkfKYK48wxoy33nXLklLeAIW
+	 UjGofUmSx6GSxATbGem0cK3dmcUhmoQiO9Xr0ZloUgpEU3jFCGYnSBaQEQzI00cSGT
+	 ZvNaAWTGVYuJgpkbcRF9b5AekMr4YLY2S2qBYx3cSvvDeokEg+coAq6jMhR3Cy8GPO
+	 M1SgWZP8LE7d9+yaU03bXzQN26BV5EpcJjNrhzA4ahHZcACEVoh+bNSoEjoItF38Cy
+	 vUlThpwtXAbsrzU6CvsEyFTjqSGFMR+reBNle3Kmir8Ko8eRh9mHYWYBKcJxqVwhal
+	 yiGh3U04OiM3Q==
+From: Chuck Lever <cel@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: keyrings@vger.kernel.org,
+	kernel-tls-handshake@lists.linux.dev,
+	netdev@vger.kernel.org,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Hannes Reinecke <hare@suse.de>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>
+Subject: [RFC] NFS: named client identities for mTLS mounts and a per-namespace .nfs keyring
+Date: Tue,  2 Jun 2026 11:47:37 -0400
+Message-ID: <20260602154740.49861-1-cel@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22203-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:ben.coddington@hammerspace.com,m:jlayton@kernel.org,m:neilb@suse.de,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22204-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:hare@suse.de,m:dhowells@redhat.com,m:jarkko@kernel.org,m:sagi@grimberg.me,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7F0EB62FF66
+X-Rspamd-Queue-Id: D0B7F62FFC2
 
-On 19 May 2026, at 20:29, Chuck Lever wrote:
+Today, exactly one x.509 certificate and private key pair can be
+used at a time for all NFS mounts. The location of that pair is
+set in /etc/tlshd/config.
 
-> On Tue, May 19, 2026, at 6:02 PM, Benjamin Coddington wrote:
->> On 19 May 2026, at 14:44, Chuck Lever wrote:
->>
->>> On Tue, May 19, 2026, at 5:08 PM, Benjamin Coddington wrote:
->>>> Just to be clear - the issue I'm exploring isn't the same as when all the
->>>> kNFSD threads are slow due to their workload.  This is very much a
->>>> multi-client dynamic where one client (or a group of automated client
->>>> instances) are able to easily starve another simply because they create the
->>>> most connections.
->>>>
->>>> That's different from the other problem that we've discussed a bunch at
->>>> bakeathon and on the list previously.
->>>>
->>>> This is not so much a deadlock issue as it is an issue
->>>> of per-client fairness.  I think this problem is in a different class.
->>>
->>> Does dynamic svc thread creation have any impact?
->>
->> I haven't tested it - I think it would just pin to max-threads for the
->> workload in question.
->
-> If the aggregate workload consumes all the threads, then that doesn’t
-> sound like xprt scheduling is the bottleneck. But I should look at
-> numbers instead of speculating.
+We currently have an awkward experimental mechanism for specifying
+an alternative x.509 certificate and private key for an xprtsec=mtls
+NFS mount, but it needs to be completed so it can be documented and
+advertised for use.
 
-Chuck,
+I asked Claude to write a rough draft of a design document that
+outlines what needs to be done to finish the work. I would like
+input on the kernel-side mechanism in particular for the
+per-network-namespace keyring and the way userspace reaches it.
 
-Here are the numbers I promised. Short version: under saturation a client's
-share of nfsd service tracks its transport count, not its identity -- a
-one-connection client gets ~1/(K+1) of the pool when another client drives K
-connections.
 
-Method
+Problem
+=======
 
-To measure the dispatch path in isolation I used a small debug patch to nfsd:
-a request bearing a "magic" filehandle is answered after a fixed,
-caller-specified delay, at the top of fh_verify() before any export/dentry
-work -- so the thread is held for a known time D and does zero filesystem
-work. With T nfsd threads that fixes the pool ceiling at ~T/D ops/s and makes
-nfsd thread-time the only contended resource: no I/O, no caching, no backing
-filesystem, just inbound request scheduling.
+NFS mutual-TLS mounts (xprtsec=mtls) need the client to present an
+x.509 certificate and prove possession of its private key. The
+handshake runs in userspace in tlshd; the kernel hands tlshd the
+credentials by keyring serial number over the handshake genetlink
+upcall.
 
-A userspace load client (single host, loopback) then runs two clients at
-once, both offering more than the server can serve:
-  - greedy:      K connections
-  - interactive: 1 connection
-The v3 probe is GETATTR; the v4.1 probe is COMPOUND{SEQUENCE, PUTFH}, with
-the greedy client's K connections bound to one session via
-BIND_CONN_TO_SESSION. The magic fh carries D in both cases.
+The only front end today is two undocumented integer mount options:
 
-Findings
+    mount -o xprtsec=mtls,cert_serial=723847,privkey_serial=723848 \
+          server:/export /mnt
 
-1. Share tracks connection count. NFSv3, 8 nfsd threads, D=10ms, greedy
-   connections K swept, interactive fixed at 1:
+The administrator must load the cert and key into the keyring out of
+band, discover the integer serials, and paste them onto the command
+line. Serials are opaque, non-reproducible across boots, and easy to
+transpose. There is also no isolation: nfs_tls_key_verify() does a
+global key_lookup() on the serial, and the .nfs keyring created in
+fs/nfs/inode.c is module-global and never referenced again -- any tlshd
+that learns a serial can read the key.
 
-     K    interactive ops/s   intr share   greedy share
-     1         240.6            50.4%         49.6%
-     2         216.0            33.8%         66.2%
-     4         129.4            20.1%         79.9%
-     8          72.2            11.2%         88.8%
-    16          38.0             5.9%         94.1%
+This RFC proposes a named, per-mount client-identity interface backed
+by a provisioning CLI, and fixes the keyring to isolate credentials per
+network namespace. The kernel handshake ABI (integer serials over
+genetlink) does not change.
 
-   interactive is ~1/(K+1), greedy ~K/(K+1). Total stays pinned at the ~648
-   ops/s pool ceiling throughout, and every op completes in bounded time --
-   nothing is stuck.
 
-2. The interactive client is actively harmed, not just out-numbered. Alone it
-   sustains 229 ops/s; with the K=16 greedy client present it gets 38 (6x
-   less) and its median latency rises from 16ms to 105ms.
+The cross-subsystem ask: a per-netns .nfs keyring
+=================================================
 
-3. Same result for v4.1. With 8 greedy connections bound to a single session,
-   the split is 89% / 11%, identical to v3. The session is a clear client
-   identity, but the dispatch path ignores it -- the unfairness is in sunrpc,
-   below the version.
+Network namespace is the correct isolation domain. tlshd is bound to a
+network namespace, not a user namespace: it services sockets passed up
+from the kernel over the per-netns handshake genetlink socket, and one
+tlshd runs per network namespace that needs TLS-protected mounts.
 
-4. It is structural, not a small-pool artifact. Sweeping the thread count,
-   the ratio is unchanged while only the absolute ceiling moves:
+  - Replace the dead module-global .nfs keyring with one keyring per
+    network namespace, held in struct nfs_net (fs/nfs/netns.h) and
+    allocated at nfs_net_init(). The keys subsystem otherwise
+    namespaces on user_namespace, so this is a kernel-held object
+    referenced from nfs_net (like today's global keyring, but one per
+    netns). The DNS resolver's per-netns key scoping (net->key_domain,
+    request_key_net()) is precedent that netns-scoped key handling is
+    acceptable.
 
-     K    share@T=4   share@T=8   share@T=16
-     1      50.0%       50.7%       50.5%
-     4      20.1%       20.0%       20.2%
-    16       5.9%        5.9%        5.9%
+  - tlshd attaches at handshake time, not at launch. This matters: the
+    keyring may be empty or freshly created when tlshd starts, so
+    linking it by name at startup is the wrong model. Instead NFS sets
+    ta_keyring to the netns .nfs keyring serial in
+    xs_tls_handshake_sync(), the kernel sends it as
+    HANDSHAKE_A_ACCEPT_KEYRING, and tlshd links that serial into its
+    session keyring per handshake -- the path tlshd already implements.
+    Linking grants tlshd possession of the keyring and, through it, of
+    the possessor-scoped cert and privkey keys.
 
-   (K=16 total throughput: 321 / 649 / 1299 ops/s at T = 4 / 8 / 16.)
+  - Credential keys are created possessor-readable only (no
+    KEY_USR_READ). That is what makes isolation enforceable rather
+    than advisory: a key provisioned in namespace A is absent from B's
+    keyring and unreadable by B's tlshd even if its serial leaks.
 
-On your earlier point -- "if the aggregate workload consumes all the threads,
-that doesn't sound like xprt scheduling is the bottleneck": the pool is
-saturated here, that's the precondition. The finding is that the saturated
-capacity is divided per-transport, so each client's share is set by how many
-sockets it opened. Saturation is the setup; the per-xprt split is the problem.
+Open question, and where I most want input: userspace -- the
+provisioning CLI and mount.nfs -- needs to name the kernel-held netns
+keyring in order to add and search keys. Candidates, modeled on
+KEYCTL_GET_PERSISTENT (security/keys/persistent.c):
 
-I kept this to the pure scheduling case -- fixed delay, no filesystem work --
-on purpose, because it's the most conservative: a real workload with heavier
-ops only saturates the pool sooner and hits the same split at lower connection
-counts. pool_stats agrees, with threads-woken collapsing once the pool
-saturates.
+  (a) a new keyctl command that links the caller's netns .nfs keyring
+      into a destination keyring and returns its serial;
+  (b) an NFS-specific request_key key type the module instantiates to
+      point at the netns keyring;
+  (c) a per-netns serial exported via procfs or netlink.
 
-The harness (synthetic clients plus the debug latency patch) is standalone;
-happy to share it or run other configurations -- different fairness units,
-per-connection caps, and so on.
+The per-netns keyring decision itself I consider settled; the retrieval
+primitive is the open one. There is also a user_namespace accounting
+nuance: keys added by userspace are quota-charged against a key_user
+keyed by user_namespace even though the keyring lives in nfs_net. I
+would like the keyrings folks to confirm the quota and ownership
+interaction is sane when the user_ns and net_ns boundaries do not
+coincide.
 
-Ben
+
+Userspace front end
+===================
+
+With the keyring in place the front end is straightforward and follows
+the nvme-cli / cifscreds pattern.
+
+A new nfs-utils tool -- working name nfstlskey, fitting the nfsidmap /
+nfsconf family -- manages x.509 client identities:
+
+    nfstlskey add  <identity> --cert cert.pem --key key.pem
+    nfstlskey list
+    nfstlskey remove <identity>
+
+The add subcommand reads the PEM cert and key, converts each to DER,
+and creates two "user" keys on the netns .nfs keyring ("user" because
+tlshd consumes raw DER via keyctl_read_alloc()), with possessor-only
+read. Description convention:
+
+    nfs:x509:<identity>:cert
+    nfs:x509:<identity>:privkey
+
+The mount command names the identity:
+
+    mount -o xprtsec=mtls,tls_identity=<identity> server:/export /mnt
+
+mount.nfs runs in the caller's namespace, searches the .nfs keyring for
+the two descriptions, and passes the existing cert_serial= and
+privkey_serial= options to the kernel. tls_identity= is purely a
+userspace convenience that resolves a name to the serials the kernel
+already accepts; the raw serial options remain as a documented escape
+hatch. Both get documented in nfs(5), with a new nfstlskey(8) page.
+
+tlshd changes are minimal: confirm the per-handshake link of the passed
+keyring happens before the cert and privkey serials are read, and
+retire the now-unnecessary .nfs entry in the keyrings= startup path.
+
+
+Future work: mTLS-protected NFSROOT
+===================================
+
+NFSROOT mounts run in the kernel at boot, in the initial network
+namespace, before any userspace mount.nfs, nfstlskey, or possibly tlshd
+exists. mTLS for NFSROOT therefore cannot rely on userspace
+provisioning: the kernel must obtain the client cert and key itself --
+the leading candidate is extracting key material from a TPM -- and
+place it on the initial-netns .nfs keyring before the handshake, with a
+tlshd available early (initramfs). The kernel-owned per-netns keyring
+chosen here is a prerequisite: a userspace-created keyring could not be
+populated at NFSROOT time. Out of scope for the initial work, but the
+design must not foreclose it, and the same TPM-resident-key path would
+inform an eventual PKCS#11/TPM identity-naming scheme.
+
+
+Alternatives considered
+=======================
+
+  - request-key upcall keyed by server name (the nfsidmap model): most
+    NFS-native and needs no mount option, but makes selection automatic
+    rather than per-mount explicit. Worth revisiting if per-server
+    auto-selection is ever wanted.
+
+  - File paths in the mount options (strongSwan / wpa_supplicant model):
+    forces mount.nfs to read key files and load the keyring on every
+    mount and offers no reusable provisioned identity.
+
+  - Document the raw serials only: does nothing for namespacing.
+
+
+Comments welcome, particularly on the keyring retrieval primitive and
+whether network namespace is the binding you would expect.
+
+--
+Chuck Lever
 
