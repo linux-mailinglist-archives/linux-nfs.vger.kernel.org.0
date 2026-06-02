@@ -1,78 +1,79 @@
-Return-Path: <linux-nfs+bounces-22196-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22197-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4FG5N2mgHmobGwAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22196-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 11:20:41 +0200
+	id OF6oGyWhHmquDAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22197-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 11:23:49 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDBC662B539
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 11:20:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2538262B63B
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 11:23:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 383BF3010656
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 09:20:41 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0E57130240A1
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 09:22:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C00B37CD42;
-	Tue,  2 Jun 2026 09:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B11F63CCA02;
+	Tue,  2 Jun 2026 09:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOZY3BQd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LbFO37gP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4FE1F2380;
-	Tue,  2 Jun 2026 09:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF013CDBC0;
+	Tue,  2 Jun 2026 09:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780392037; cv=none; b=rH6OjB7qacdLN2rGhZeLi59ekrIDr+NOg8yIv0kK8X934NPsi8XNDIn54PVCq4Iu8NWskbN91HkkA8aOGvkxDD8oUqPpkv3bzdoJsjzpX2+LnHFVsXmaTsOXJCo8Tb+vfmiVI7gsbE6Cpxdh4Ub7mCD5nrcmkX2FZ0tED6L1Ug0=
+	t=1780392133; cv=none; b=JuG/vWgp1/y4pmAqm+iXNHaZn+neKZT9b4jhIoo8djEvLrSqNT+XMwPRqj3KwciE3XP1LARXs8sRKvE7Aw/02JTm/j4XSVwqaNaHmtP5B0xQGmn4lBMnb5EEI7vglmW1/jyW0b8mBuvUXXuMs8x/cl3jt2moXtY32Hr9Vikmsu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780392037; c=relaxed/simple;
-	bh=6BQsHpGsUXg2fWEevShYArT8/T1HQSJKUOOi9RFcaco=;
+	s=arc-20240116; t=1780392133; c=relaxed/simple;
+	bh=qx9Oyz913PcMyr3DRCcFWEjLHUEyxDQo5cOmQloCccg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D2sP/+hyb9r0Dju4J03hA3/p6pXvbaphO8RoT6NSgYSztxHRYmHsbmQw4+q4VETCh6aTmb6C/24i6OWBYJd6b6yaaTsfXkR8fX2Pe7VbCC1QmGpbgNpzwP7cG86ZoJyY19zMqXVlj+XTQCMoOWyPSdKRiG6e48KGzjopl/t/zHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOZY3BQd; arc=none smtp.client-ip=192.198.163.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4GxKcz0uzbOUmzxB8ojqWonB6E5OTA2PoF4+U3qKfbiP7ZsmcPqAF2YxKS3Tl0l7bdXw9Yn1jlRN0EsgJVrFgKKoYV7qs5O4Za6GuuW3nIZg2T4XcFFCjUS8aLivFEvSd0Qxb9I4LuSIWZHUwqOKZScCtgYwKD9w/iIUxowetE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LbFO37gP; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780392036; x=1811928036;
+  t=1780392132; x=1811928132;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=6BQsHpGsUXg2fWEevShYArT8/T1HQSJKUOOi9RFcaco=;
-  b=JOZY3BQdS3kMTkEkbHPL+PhTPdPomq/6CjVt1jCKqsn4ClRndtq0QRtl
-   v95wZnSa9JrycFwlOMWdG6/m59ooG+p8+AIKL7RIzL9fpuaSYsWWRlGOT
-   vbdL+LW1yKUADxRu+s5a+XkDYS5BeUiybEQRmOX48hV4mg+aGT2sBI6yV
-   ALnIeGw2r+dhbWPh/oKu/i0kARWGeDbMj8O8BweP4Qrt7O88cNLXHMd2E
-   uxLN3vj3yOL2llmaTyKrBxRc3RzQD/+ZrJ62tfS8kOdGk/PhA97lyFT41
-   GWT+wEXeSf30SZurV1GEJCY9vTJKYjcHJyTl6eFeN7/kjetZ55vqLNQRr
-   g==;
-X-CSE-ConnectionGUID: 0zu+gchYTp2BE+eQpk9Luw==
-X-CSE-MsgGUID: PHRFtguVRByrI0Zwq88vWw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="81298075"
+  bh=qx9Oyz913PcMyr3DRCcFWEjLHUEyxDQo5cOmQloCccg=;
+  b=LbFO37gPZtpEIBpRoMN5RwwLulYWOSEGXShacFCKfeYh8ohbWJyVRpc4
+   Ko7vfb+5NSUmPQmRBISimrX0RYwZzh1mM14WJRAp5r0zYkb695T8+X3vJ
+   D9TzSGQRZon4CYheKURZhJ7t1W7hWctPZcSIixldtC2T3E5US1q5xmCKs
+   YLoEYnl2tgBReC6kaWeG5dih+2a0iDOMHSe6vKJF4B0th19jcG8ofg/2r
+   i09lY0VhR9TabnknHOG3c/oQKTbb9SLH3YS3orNfy/NRQsdqNqmmpZH+4
+   G/bWSd0pFa3KFx0bAIYdOb6+qamToLv8pJ4EP/F+FfT/i14f+tCpFuC+Y
+   Q==;
+X-CSE-ConnectionGUID: fnJgRrf9SomqyMin/LHf8Q==
+X-CSE-MsgGUID: ipooZghzQIeT8N7ZT9JXQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="103833897"
 X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="81298075"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 02:20:35 -0700
-X-CSE-ConnectionGUID: O7CD12lDRu+OSzqR/16fAw==
-X-CSE-MsgGUID: LeqUzhbQREKqhxz6sCXoyA==
+   d="scan'208";a="103833897"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 02:22:11 -0700
+X-CSE-ConnectionGUID: 6MlgT1ArRse4ecPJiJxjWQ==
+X-CSE-MsgGUID: dpH2w+yIR4iKpkksHiG1RQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="240848911"
+   d="scan'208";a="281963145"
 Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 02:20:26 -0700
-Date: Tue, 2 Jun 2026 12:20:24 +0300
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 02:22:01 -0700
+Date: Tue, 2 Jun 2026 12:21:58 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: mkalderon@marvell.com, Jason Gunthorpe <jgg@ziepe.ca>,
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	mkalderon@marvell.com, Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>, zyjzyj2000@gmail.com,
 	sagi@grimberg.me, mgurtovoy@nvidia.com, haris.iqbal@ionos.com,
-	jinpu.wang@ionos.com, bvanassche@acm.org, kbusch@kernel.org,
+	jinpu.wang@ionos.com, kbusch@kernel.org,
 	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
 	kch@nvidia.com, smfrench@gmail.com, linkinjeon@kernel.org,
-	metze@samba.org, tom@talpey.com, trondmy@kernel.org,
-	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
-	neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
+	metze@samba.org, tom@talpey.com, chuck.lever@oracle.com,
+	jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, trondmy@kernel.org, anna@kernel.org,
 	achender@kernel.org, davem@davemloft.net, edumazet@google.com,
 	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
 	kees@kernel.org, ebadger@purestorage.com,
@@ -81,10 +82,11 @@ Cc: mkalderon@marvell.com, Jason Gunthorpe <jgg@ziepe.ca>,
 	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
 	linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
 	rds-devel@oss.oracle.com, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH net-next v5] RDMA: Change capability fields in
+Subject: Re: [PATCH rdma-next v6] RDMA: Change capability fields in
  ib_device_attr from int to u32
-Message-ID: <ah6gWPQP56RO6_ho@ashevche-desk.local>
-References: <20260601091505.1763912-1-ernis@linux.microsoft.com>
+Message-ID: <ah6gtquGDMvEXjcb@ashevche-desk.local>
+References: <20260601092534.1764560-1-ernis@linux.microsoft.com>
+ <5d3cac2b-4011-49c5-a142-55c85d38e90f@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -93,10 +95,10 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260601091505.1763912-1-ernis@linux.microsoft.com>
+In-Reply-To: <5d3cac2b-4011-49c5-a142-55c85d38e90f@acm.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: CDBC662B539
+X-Rspamd-Queue-Id: 2538262B63B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -106,8 +108,8 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22196-lists,linux-nfs=lfdr.de];
-	FREEMAIL_CC(0.00)[marvell.com,ziepe.ca,kernel.org,gmail.com,grimberg.me,nvidia.com,ionos.com,acm.org,kernel.dk,lst.de,samba.org,talpey.com,oracle.com,brown.name,redhat.com,davemloft.net,google.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
+	TAGGED_FROM(0.00)[bounces-22197-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.microsoft.com,marvell.com,ziepe.ca,kernel.org,gmail.com,grimberg.me,nvidia.com,ionos.com,kernel.dk,lst.de,samba.org,talpey.com,oracle.com,brown.name,redhat.com,davemloft.net,google.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -123,35 +125,22 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_FIVE(0.00)[5];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,intel.com:dkim]
 X-Rspamd-Action: no action
 
-On Mon, Jun 01, 2026 at 02:14:44AM -0700, Erni Sri Satya Vennela wrote:
-> The capability counter fields in struct ib_device_attr are declared
-> as signed int, but these values are inherently non-negative. Drivers
-> maintain their cached caps as u32 and assign them directly into these
-> int fields; if a cap exceeds INT_MAX the implicit narrowing yields a
-> negative value visible to the IB core.
-> 
-> Change the signed int capability fields to u32 to match the
-> underlying nature of the data. Also update consumers across the IB
-> core, ULPs, NVMe-oF target, RDS, and NFS/RDMA so the new u32 values
-> are not forced back through signed int or u8 via min()/min_t() or
-> narrowing local variables.
+On Mon, Jun 01, 2026 at 08:51:40AM -0700, Bart Van Assche wrote:
+> On 6/1/26 2:25 AM, Erni Sri Satya Vennela wrote:
 
 ...
 
->  	attr->max_qp_rd_atom =
-> -	    min(1 << (fls(qattr->max_qp_resp_rd_atomic_resc) - 1),
-> -		attr->max_qp_init_rd_atom);
-> +	    min_t(u32, 1 << (fls(qattr->max_qp_resp_rd_atomic_resc) - 1),
-> +		  attr->max_qp_init_rd_atom);
+> > -	sdev->srq_size = min(srpt_srq_size, sdev->device->attrs.max_srq_wr);
+> > +	sdev->srq_size = min_t(u32, srpt_srq_size, sdev->device->attrs.max_srq_wr);
+> 
+> min_t() shouldn't be used if there is an alternative available. For the
+> SRP drivers, please make sure that both arguments of min() are unsigned
+> instead of using min_t().
 
-Just no. min_t() usage has to be very well justified. It's a beast which may
-stub one in the back. As Linus said in most of the cases one wants clamp()
-rather than min().
-
-Please, redo this and similar pieces.
+Ah, I just answered in similar way against v5. I also mentioned clamp() there.
 
 -- 
 With Best Regards,
