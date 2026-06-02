@@ -1,78 +1,81 @@
-Return-Path: <linux-nfs+bounces-22199-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22200-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OBKKMGu6HmrZJgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22199-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 13:11:39 +0200
+	id +G0VDIS6HmrZJgAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22200-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 13:12:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CF3462D2D6
-	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 13:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B185162D2E4
+	for <lists+linux-nfs@lfdr.de>; Tue, 02 Jun 2026 13:12:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2DF90301C5B4
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 11:04:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5FFC83071CA7
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jun 2026 11:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB7473955FB;
-	Tue,  2 Jun 2026 11:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B28A397E91;
+	Tue,  2 Jun 2026 11:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="uKNnPqcZ"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Ea4DL2V7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013071.outbound.protection.outlook.com [52.101.83.71])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011015.outbound.protection.outlook.com [52.101.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471EA37754D;
-	Tue,  2 Jun 2026 11:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6D53955FB;
+	Tue,  2 Jun 2026 11:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780398287; cv=fail; b=tM8vTR6pmqOwKRAqdZ6CsZU/mWNsOOEusbnDSnQ8sMyZ9G/7IvH1QxfoFDLJKoKZwxvgNiGn9wJFyDWhVplRHb4bGOz+JXMdLoJLveuxyi0NL3ytVuNVe+MfEocwXXaD7dOdappXHSMsjrNRZKoSPXq6BfkUaXGSmWzc//IG51A=
+	t=1780398291; cv=fail; b=bD66SbeM0m3ZIHrK9l1JbQchL6Ic4N4WcJT7rc05jADq+vi31G9uCTYKiWSw+m60S4/YHw8hbPHkQegm6CwCYnNeDPJoIIHUqyh7BaaQhPCfaLCwmm5iIwWtr0bAN/r9VDdKelJ1/UPoVEU9M1XGs5G+P3GWQKKZRREhqTyQ9Rs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780398287; c=relaxed/simple;
-	bh=KKbsQ9Iku3jGrpz/uP+APbOOzbHtM1GxHuGx2unuCQo=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ljphItG6vur7FQnJxRZzCw3szHZTMFuNNZPC/n599evEvGsJ5stBz0k8c+cnHfHf13ZvX3eEELWLX/F2+/RGCKdPSelQlE5h/uqgKNtWOuqQBChF+J3rlYa1xMXrERBmWcBkizDdBVXdvWI8J5xdZ26z5SWcDcnH3BUwxdOZvYc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=uKNnPqcZ; arc=fail smtp.client-ip=52.101.83.71
+	s=arc-20240116; t=1780398291; c=relaxed/simple;
+	bh=3SaOOkLHsotaZ59op/597eTKC3ZCy59GlZvhwB14CXY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NDvryK5XW4fWpCcUPoOenSMqSDBwD6EHAEt8G9QugPzdfRhxtsoxdolbLcVORoTR1sq7BS3q2DDQ3ek26owwEXbcVDkW5jt3CVG/yNWSsw6KZR3VjN6iCW4FylPIijyNaJTnroURtw+a4lfSH3bJWp+X6YIrLI1Dq2Q07vFvMgA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Ea4DL2V7; arc=fail smtp.client-ip=52.101.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CxWHIHuW8ZQY8QmFOrlHSaUn9NCMZ8wGvZbJsVu0jGOQBF7EAfT0XKJgCfAGyrOumM/1bTMaqbIMo86S4Twq0yfb2ibnrHp2dbXYipZTbHPEaVxjL+W/NngtViNMYtaBHY2bAiKEMK/YOYhcEp5S/AnZdpDAkkWONWQw05HyvLujhBV9Odg/c9+97Ph9wjEVZQHd7CdHzwgm46XYsPpRXJIlZ4tRJREVZJ5n/OYjHmATrcj+7qMT1eZ+ttjO4o59nGOGRwMFoTmNkFiO/4NM49SCh7sVdiKKU/Jnv1btWT0IhSdT0GEI6FEaKoHmGqubL9L5V6AQ0Wv9e4g18VfBwA==
+ b=RLd4p7IvX/ugxkINYMz6+6ekh4C2weloTWWAPqqKg2EfTiAErdCsFP7fEpPFZq5XHSrU8y3YJy5AqMvQFcI9Wl45mfwjfxBxT2bJFvhdEYZuvlROvSyEyU319wwipTmI2VuFK0JQeCLbnIpYtlkEP8/i5soQYHl/efdQjtuiJhdlEWlZPrxWH2i1WLoVGLhEVum/2s1aHpkoREfSWj4NZOL32f4Db3krbcQgX3BZjEbXW3fx3jvwUoxI9/+8vPZonWaLulCzC2ZB+GIXFsg5D83bcgWEUO+xOWWlKZ7o0sniuwcOeJPyq9mkbMDmVyp8npawaIA2pevDu7E35opHzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NbbeboqiW8sdzFfRqcIK+SzN0z5m/7XdMh4fl45degE=;
- b=JEEG1kHLlohIU5G8QSES7CPgcTAD0FDQql8ktO3goLLG9BFuUVQhD/LVZRmJVRtqcQWXsNMMmvP740IIK93sXty9/INhYY9mROJcbk1hAdPLmozSaQdWZ3ch7yTsQrsCV8aOfPctpLDbQESD3Q+B7g9ImlNUX0NLWXORtg92C3S3qy5vDlEcPspKRpU6duxiKbPmvMEYXYNKib2HPZZVh1SpZ8uMqeX/yqsMkPlymtBRcaIx4MySjO3JyIcV+lIOLyl+nZ74+DVy0BKjkexogD0ctfT4PN8Krw2AvBHVj0xQJNkxi9Uk8R7eJVVWxBHtcW0hC4nQ6HGab0jrTlZ4xA==
+ bh=1SkM6PMSJyb59KtUP6qAeixpjiOiIBqPeTrrlnb+7FM=;
+ b=LLtqS2t5IV+QvpU1Uz3XMUOs6YMz3SICY3mHCg84iyUONwU7D1UIUMqDmXLM0mxhIVpZnM8Yyz+Rm6VjsfXbjD2Z6ytrJsHb3LR03NS83F94RinRkaTrY68xG/wzZjodpXWUkPFmUUkvj/mdNNZ60+Al7IcwWucJi67ESN/LES1emw/0O7ZbajrE/7LBPw+aFgQH5EZawp/5LqnxjnY0EG930FmKvR1HCAtGh2tNf5yZblPE+9XiUdOt9TXHC9t68UlIGX7hUfVa0th2ikwtbgo7d48+2LKYIMQq1x3bJ5Pd6KxnHbadY6Vdx1G+2IfpWuFMCFwqWxbcwqa4i6szDg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NbbeboqiW8sdzFfRqcIK+SzN0z5m/7XdMh4fl45degE=;
- b=uKNnPqcZ9fvgg8xM1DZ9Sq1egNbyClYejLfGEM7YfSbOz96PfLd8F8qgnFWk6gIFRt3vkmZztubdip+zoXYQ512MNm4WdmJ2cnwRaS9XYhN3aKYXh7rngtp5VM4rrmgiwLtK4DOxpT5LfuVujCfnRZkjPPrb9Xzw2sETS/9jhj1QKoemxm/DJPMe4nh3UTWQCyTCe//dICVlkauwLukoFYmwuywFNrNQZ27zg/j9Ov3waz0BiqO3hIAVBXIEvbWFi4wHU+KLWijNdzsJ49vwNl92o6+CAzTpXt9Z3+yr5jUYLpleuJm3tJyeIDqjUeR/L7Zwmol9jREJ6CsAejO9sg==
+ bh=1SkM6PMSJyb59KtUP6qAeixpjiOiIBqPeTrrlnb+7FM=;
+ b=Ea4DL2V7j+uv4euBJzgf4/UijpN8KnbD89t9chj+N9KE6GT26irhxYRqELmPybqrjXzHmqIA6l6emJORIhuXq8VEAt9mcPbWKGJZEknMSV17ykaAy5t9Xg3NEqSd/UVARM8CfjT8MlX2IKXBcKP2h5ogD2IcVf91QhRlO0r5YOre4QZcS2VaMtanmWnF81+qvxpBzQbvkYOdG2xa6qL84EdWSJokUfBMKIqn/umcTyuegWYhAbPSNAyTtxe8arqApaISRHkiVx8HdGGoBZbx6MmiHVp9tQVPUaEjP2pBiWdWliwFvtNowQEpjYirZ3JHqe91hLzf+WiU5YEphlmqpQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from DB7PR04MB4428.eurprd04.prod.outlook.com (2603:10a6:5:35::11) by
  AS4PR04MB9508.eurprd04.prod.outlook.com (2603:10a6:20b:4cb::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Tue, 2 Jun 2026
- 11:04:39 +0000
+ 11:04:46 +0000
 Received: from DB7PR04MB4428.eurprd04.prod.outlook.com
  ([fe80::2c47:ed15:8f49:9185]) by DB7PR04MB4428.eurprd04.prod.outlook.com
  ([fe80::2c47:ed15:8f49:9185%3]) with mapi id 15.21.0071.014; Tue, 2 Jun 2026
- 11:04:39 +0000
+ 11:04:46 +0000
 From: xiaoning.wang@oss.nxp.com
 To: trondmy@kernel.org,
 	anna@kernel.org,
 	dros@primarydata.com
 Cc: linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] WARNING dump caused by PG_UPTODATE in nfs_free_request()
-Date: Tue,  2 Jun 2026 19:04:37 +0800
-Message-Id: <20260602110438.3489554-1-xiaoning.wang@oss.nxp.com>
+Subject: [PATCH 1/1] nfs: keep PG_UPTODATE clear after read errors in page groups
+Date: Tue,  2 Jun 2026 19:04:38 +0800
+Message-Id: <20260602110438.3489554-2-xiaoning.wang@oss.nxp.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260602110438.3489554-1-xiaoning.wang@oss.nxp.com>
+References: <20260602110438.3489554-1-xiaoning.wang@oss.nxp.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0008.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::14) To DB7PR04MB4428.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SI2PR01CA0017.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::19) To DB7PR04MB4428.eurprd04.prod.outlook.com
  (2603:10a6:5:35::11)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -82,60 +85,59 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DB7PR04MB4428:EE_|AS4PR04MB9508:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76cfdcbc-c72f-4532-fada-08dec096bc02
+X-MS-Office365-Filtering-Correlation-Id: fad07aee-5ab7-4477-4f8d-08dec096c1c1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|19092799006|1800799024|376014|18002099003|11063799006|6133799003|56012099006;
+	BCL:0;ARA:13230040|366016|19092799006|1800799024|376014|18002099003|22082099003|11063799006|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	fKazghlFDJQBkpDZfjzEdm4IZo6D4GH0IoSJ5/EuhhuHCAlW55dR7ZEaSoMH3d/RmYYKgzwu8bpIeoqljWf3QT1/T1voDflRIoywghP3ucCLfUjYm5iQ5tEln/No7BZCEguSrCa/S7Ib2yxlffCbWtHw4wUoWcINk79xYRI6M0AgCmUbKi9RPsAONR2AwH6HrBlD+PXceX/Z6oMzZKG9j6i4ZSgYOnhSdP5n/Ks5f+ABaqOmmoT/O1el1NOh3Ll/EPyrt/DtD/ucRpQKY2bXv1yw6ZovpJEmjg5jeAg6ao6bjRRUPOT70YnFnqJfqBprDaXOyUPN7IYbVpwO1f7/mniGiz92cJ7j1mCIDtGn86goLYYKGupVA+wiOW3E3pdNT0zj3lQtsr+eTdDj5tT8OiV5wBxImgUJhczigqo+Z+yGo4k4EzZqisSe6GhMvxjjHv1yTDY70aaxWrtO8rEt7NZlZ0SGvOab4IjgwOhztA8YqLWNvVi0BNrm9me/bTOR2tEv1GFWxtm2EJh0QcJo5leg66vq+1O+/AA6jCK/JerOFWEiUSiEWkfDNjaSbjw7VrQGz3ndte/OlN4yOhArP9QwpenoPzgTrDoES8URI3l46+o3Az52AbkzqgJC6SZZtOHrUL/XNzbSNy/Jf+xcgFUF+w3iMrXVvCPdQ9cu37RdbOLNZTDueWOnvFypupLW
+	TJTPCV0XO0zETAHQZSaEJRNNK7Pn/9595fJgbxIhPCrXJwHScPCI34U3M+3o4eS9HKJAmP3ViOyAYX46ladDuE9f8NN4l8eGxf8TtHdArEJwlrMZIXwmb/2ko/1a0NfSaHBYzYTL53KdtEesy9NW/4gysYzWgvSXdhhFUMwEGP0c9bloQ1q+hL707zviJOq+een6ZX0mlsoIWnYPRZhP8ixf7oWjJIkVovUJeg+RFt1CDMeyjvL0eSW2NngQcKGtatTj5hjgFuwTieeD0gCY3qz0ZPZJgk2fP99UWUi5AzDKp1m1jUYMJZWRib4M4EmMjTNbc4FGDgHaltmQXH2ju63vfmkodQ/NvPmYyqzFDQRxjEEg4F41zS9Z+fs7/9I7upKuwuTNoUMzOIEkEVhi7kOTtsD6u4PZ7FeZgGARqUEOl2JtQANbwNANLjWHzTBP0fK+JiHmcG2mzQIzLtYchwqmSX1e6sEATyJ+2OfBGZ/HROXxcG47xe3/dncTcplKdn1A+67dLzhEhA4PuLyvTvEocBF3tFG8/DwNZzoA9OBoQvjOR3gDbdXpJmI4i30bNILTffH1iXseufh91mwf9rp66hgcF/dptlxMWfOFf0KpVwnIeVXP500uZtj23jMusnfo8f24omfiCo4O+bU7PzyZZpFkKCCGRrCLz4PZqyQ6Ox9Q/7k11VhSqDaNkEdK
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4428.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(376014)(18002099003)(11063799006)(6133799003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4428.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(376014)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MJaopvkCqcMEeMi3i1rnCGC6P10qOGs7fOy7x0KlFU53APq4jC9llhggJaGU?=
- =?us-ascii?Q?NpY+qqQA+CgTxCiG+e7OT9ykxzCZgotSYG8skcwXwE5SjE5WqQon5IplYe/q?=
- =?us-ascii?Q?uAkZBf059HrOMt2m8bwUZMYma0+87BaPXLuuDZWY83G3z0F9txmpHoBT9k/9?=
- =?us-ascii?Q?gDVE7dzTKPqQcxCFfKHu8XSO2gdapZDq0sMkaX0b8qkFQ1GLitOGkgokYl0Y?=
- =?us-ascii?Q?AUUxY09AqeGQXTcDu8e+9XYF6ISFGErDpYdFwJGJgkdFHUc0ca83j5jAx02O?=
- =?us-ascii?Q?gUT9nxnNmX4GqTYXMSiDuxPWnI0YhUa3gT7GmY4NC2/gfPllSYK8vWNaXcvS?=
- =?us-ascii?Q?nMLet7D5eN5hnuUCbn141auu0l+MN/Reosbd+8G06mAPPc7Wf8ihGPpqM+uF?=
- =?us-ascii?Q?waoR/C5JDVFQio9SQCpw829ncR0mBwCFi1qPM/cheoDAJpXL19P3s0XjEp0r?=
- =?us-ascii?Q?aoCn8u4Q1cK2+w9HUppyZh3D5YypniKS1fsWzf+xJwRP6tp+0uWRPKEBk/3X?=
- =?us-ascii?Q?dwyBLgLE2NsSrZXOAG8W8XWEYyf6mE3gw81lvTnOHmtY8vQwRlnsZ2OvnDg4?=
- =?us-ascii?Q?JHqsXzBdGqlJxJRMEYE9vec1QeRHLAjoNgDC5WyuGkw0ZSPpgdENHq2QYpg3?=
- =?us-ascii?Q?y/BRwPGLq7DB6351Ei6rjTaNiqylK4M2uLDB9RQdoRFaB4MlIqVBXSTbEBa4?=
- =?us-ascii?Q?qMQTy0O8nyDCN2reNYOWTJj9oyYvWyas57DNV9y05OT/ABBVU30iDH0l4tYd?=
- =?us-ascii?Q?EFWDX54VwnYmyapKDp4hcyLCfmPO116ryE+b7I725yxq5x85bRXX4mOnXHTY?=
- =?us-ascii?Q?AnFXAbsXxSfMzEJVqGW/eaVo9ohqLNJiPc9t2CjiHQnJahQ7kxuXkgrfUTTg?=
- =?us-ascii?Q?c2HRMitjRGwxxQfdMnoMNVQkrMfr465SI/vvPREX9a/tz3jbPguTEf1WWn55?=
- =?us-ascii?Q?wbNVDNOvrhUYCYByGSNHG/gSDMlOgRml/91QjM8F2iJof+iQIn+rdIQROn1i?=
- =?us-ascii?Q?zmH5tVOx5Z6Q74A4VGJmaF+gza3+RKh5VwG5PYAvVyvvWkxF4y8Y1y+K6PzR?=
- =?us-ascii?Q?NoYZumYoy5VcP8YC9LIBA17rWoslUZ5BKIeScrJDCU9e8JlL10h7adetUYZp?=
- =?us-ascii?Q?Rf6fBo64v6EsRtSYLSRCgB8MAQ4l6s+qKOSzEWZyWWFYnTvNSL6MPe2RRFu4?=
- =?us-ascii?Q?ple49EakBBHZj76LYYxiXkN2EueqH8KPJNrIdU1LVvXg0tpENpagXksrATSC?=
- =?us-ascii?Q?fnhcXWn1bdGtWxj4Ga455gmfUrOUBPgtuQZUoyJVMGjXpBjc6DpYUWI6ccL7?=
- =?us-ascii?Q?qOCJye3aH7EBo4HVb9qQ3EiUonbLj0MgPnQ5SL69LBR6hCr59gHdIaICK3Te?=
- =?us-ascii?Q?3+nTA4JAonjhLSXlJ6lMwOttKCCraf6G1q9yhDxjsDbmrVEXDQ5iYidNNCvC?=
- =?us-ascii?Q?XYY8JAbQZWZdv6BdxnYdoKFPmEgoq1RQg9SjJJ9CxE3MOmgr8t03VfwZbQd8?=
- =?us-ascii?Q?TBNPetI2Kx7m9JhfGZoH7OSlzaJXTBqWbrNFncNMEWJ96thcC3sCt2IaAYXJ?=
- =?us-ascii?Q?aKOhvLf08T0XVLQhuom+LKIKITm8F3mZ8CHkz7tcnCXgaCQ3n+6HqvWvgUJJ?=
- =?us-ascii?Q?pE9O1f8OZHn37djqjasPVCiVejUmHkL45AJx73HmVcRakSu9g6D/WSUwXD4d?=
- =?us-ascii?Q?i9mS21II66XRQpOoplicVq1rFIW5jmeU0gqaW2i0c7c2TbvQT3e76nzFcyiw?=
- =?us-ascii?Q?J7KiFfQEsLGWWlhuaYWTqeYudONO5qdE5LAsvhDuDxjckXaM6yEj/Jpwztrp?=
-X-MS-Exchange-AntiSpam-MessageData-1: /DJ01BJJ+jzupg==
+	=?us-ascii?Q?695OKXJfOB1K1DCEMYJP8gtXYdzQyv0c06Q3xawr5AHRExTKo/05UexhGsIS?=
+ =?us-ascii?Q?SmnuyIYht/NusBhpnxPUvXEBqG5eyRy8WDPL00I/Ddjp2h0FCMMplGLX69Ac?=
+ =?us-ascii?Q?RD4OjqJUOhU3tN5Y0Ln+guH9YqfITZnVQw16d2/smZyQjeYSpIGtzLTjzWlN?=
+ =?us-ascii?Q?khSMhujcKID3wdLSWmyO2dm1+zKoYjIkLKLJGunSQfbsoeoC3/+2DHfhKfXW?=
+ =?us-ascii?Q?lafEoQMiVTW+3jwLFqP2Rr90NyIerkUnMNF4oohMhokMF/anLAnIL2RipKc6?=
+ =?us-ascii?Q?x+JAXl7HicYcBuQiVK8TPxBpYrsHKJ63ZBYp+TxYgAJveZ76yS02nglDOk1Q?=
+ =?us-ascii?Q?CWGZdXQ3extTIkeJySkZol1KurYLDHQlGX6eZN/JZ72MZxhfnINedgIhyvpa?=
+ =?us-ascii?Q?1XaRzLx7SG7IrlY28thqT8VJ9rx33Dus8T17EMTNZUTm1rwQSnpo2DJ1/KcB?=
+ =?us-ascii?Q?O3M5MJNAqPaemZcl3ZXfT/T8PhDNyc4YHYYlpPoORoL8oA8hvjUQCNEq6m7f?=
+ =?us-ascii?Q?ivOQkdTEHpfRqSaR7KOl+Dy77MQo6tkwFZ7jsL9o7aIAwTU2BYFx5HySTkl0?=
+ =?us-ascii?Q?bckF0YKAcU6T56uYNju3QC5HDifTpvTAEhLsz3LUIPFRh8UE8yjUnfljcu0q?=
+ =?us-ascii?Q?YIO6EiPjjaROZskAP6DBGK65zZJAWULNiJNwwrmnoeJduaj3MfHu1fqFudvc?=
+ =?us-ascii?Q?/Qj1elemWVRWHe6b9Ra9cLtoJAY++MWEhJXDZuIjPp/T5THLGNPvNq3V8GbI?=
+ =?us-ascii?Q?fcy5YTLLEzJCclWriuS6Z9KH5yN3Mg+/cOPuzRI3Y8dumt3u3k8Z2kDin+v9?=
+ =?us-ascii?Q?pGgKEK77qJZMEXzgFzd7kJcMIfDHyTm/fZ5QJs+Q4LoVDs88OcyWtp2n9+73?=
+ =?us-ascii?Q?Jw+BDuFyQSBDTAl4hw0e4tm/w369RrRgU90IAaAJXsiiFoSAeMuRZiArxhrR?=
+ =?us-ascii?Q?4WmJNvTS8A4OOg6uQ3L7Ny8y1dVRJt7KDNiYQ3mEEuO24ibPYlXtB4/2QkXA?=
+ =?us-ascii?Q?9uNPiAlJ8QD9CaOdpCtoy1jIXOGFZBGgm+sd3kMbDCQcQlrT4S6tJkPNYL7W?=
+ =?us-ascii?Q?mFkrjAJzYGtWPrev8PVJ6dsA3A1kzzuuMzLBX0HVdijGf6SX0u47k7HXeCG2?=
+ =?us-ascii?Q?BQBX/0IuCxL6fFG6BstEO7C1hBLsTcveDy9ES/bUF84FyFUOpyQnASkfN9Nv?=
+ =?us-ascii?Q?GONvCtaFBvu2UjVkEpAYliG02D5NzQoZJRw+p+mkSWPI7o4rl/d7veG2dwJT?=
+ =?us-ascii?Q?6hQnoEfkNLGeGrZOuImJ2Ogq1zW5etUs2/akZg7C2X8gy7zMV1M3a6ahu+xe?=
+ =?us-ascii?Q?qt6uTYQVuqBpC5kTvfbkxMkzyUs8ugWXNnl8V8TnFYuJtKlnGPcq4vHgsjUz?=
+ =?us-ascii?Q?HnwAYlZSNA/jRRFp5AQklawRYoIYmOBitp2yRBqwJuTEgM2j8WhPTNKUbgxi?=
+ =?us-ascii?Q?6/S9Q+W/5bFjdasG7gt3SsOrfesIF1xYR362+JodonRGZyQ3i0E0kgaZWa8L?=
+ =?us-ascii?Q?n+47sBtK1HF7zEEel6+bv0Wf+qr6GitJd/YWRiXcGPS1yJYNy1+EOCrD3cTl?=
+ =?us-ascii?Q?kzMGQfz8mJEA4mmYkwHIGRSuTC0lkGVPTcXzBgzlqVdw70WT5CRqoZ7tSuCR?=
+ =?us-ascii?Q?eLEmWJDHC5W1F7eWN7GePEa7yvxMtixbnXQy8MwWj7M40UFoGyxM/ET+RtJK?=
+ =?us-ascii?Q?2y3x2ZX7HHkB2GegcXy8BPZYr1TiAZYpg7oT3i63q56dwQ8d4s/hJl4rYSAx?=
+ =?us-ascii?Q?dM163dxam7Ald/D/cBs7F47a4TF+xTu4MgjBECKmtfn6ee9QD1vb?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76cfdcbc-c72f-4532-fada-08dec096bc02
+X-MS-Exchange-CrossTenant-Network-Message-Id: fad07aee-5ab7-4477-4f8d-08dec096c1c1
 X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4428.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 11:04:39.2636
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 11:04:46.4773
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SGpYbvfwSA5pHRm487Am8UsTmCCBfCyCYungbDlq3804OLlTDlekPXWoJsel+4T5r0W49hyqWJwiGSuIc92HSr4jvCYSz+FLjnvqUQ/ZZLw3yzMrs6U5MO+kwrJKLVE+
+X-MS-Exchange-CrossTenant-UserPrincipalName: 55toO8tOKfMpN8/MlRiYtwrYpj8Vo0Rzwbw56Xn9BrFsUtFvr9+mjWGfD9qCY5vMAde/OQ2fii+pLeKwad2fCCMFKbeo5aCcy+t1wj/WUIc83P9NJBEgJh5U7OY8rzgd
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9508
-X-Rspamd-Queue-Id: 2CF3462D2D6
+X-Rspamd-Queue-Id: B185162D2E4
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.94 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -148,7 +150,7 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22199-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22200-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
@@ -161,83 +163,93 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_NONE(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oss.nxp.com:mid,nxp.com:email,NXP1.onmicrosoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.nxp.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nxp.com:email,NXP1.onmicrosoft.com:dkim]
 X-Rspamd-Action: no action
 
 From: Clark Wang <xiaoning.wang@nxp.com>
 
-Hi,
+When a read request is split into multiple subrequests, earlier
+completions may advance PG_UPTODATE state for the page group once
+their bytes fall within hdr->good_bytes. If a later subrequest in
+the same group then completes with NFS_IOHDR_ERROR, the read path
+needs to clear any accumulated PG_UPTODATE state and keep later
+completions from rebuilding it.
 
-I noticed this issue occasionally occurring in the recent daily test based
-on 6.18.
+Otherwise, a subsequent successful subrequest can re-enter
+nfs_page_group_set_uptodate(), restore the page-group sync state,
+and leave stale PG_UPTODATE behind for nfs_page_group_destroy()
+to trip over in nfs_free_request().
 
-[ 1829.562634] WARNING: CPU: 2 PID: 4406 at /usr/src/kernel/fs/nfs/pagelist.c:587 nfs_free_request+0x1e0/0x240
-[ 1829.572381] Modules linked in: wave5 snd_soc_fsl_asoc_card mali_kbase snd_soc_imx_card [...]
-[ 1829.601384] CPU: 2 UID: 0 PID: 4406 Comm: kworker/u16:13 Tainted: G           O        6.18.20-2.0.0-g3f60d773760c #1 PREEMPT 
-[ 1829.612750] Tainted: [O]=OOT_MODULE
-[ 1829.616225] Hardware name: NXP i.MX952 EVK board (DT)
-[ 1829.621262] Workqueue: nfsiod rpc_async_release
-[ 1829.625785] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 1829.632734] pc : nfs_free_request+0x1e0/0x240
-[ 1829.637077] lr : nfs_page_group_destroy+0x78/0x108
-[ 1829.641853] sp : ffff8000812cbc70
-[ 1829.645154] x29: ffff8000812cbc70 x28: 0000000000000000 x27: 0000000000000000
-[ 1829.652278] x26: 0000000000000000 x25: 0000000000000000 x24: ffff0000801e9205
-[ 1829.659402] x23: ffff000087486900 x22: ffff000081c11e10 x21: ffff000086898e00
-[ 1829.666526] x20: ffff000086898e00 x19: ffff000086898e00 x18: ffff0001b75db780
-[ 1829.673650] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000042
-[ 1829.680774] x14: 000000012a874ebe x13: 0000000046000000 x12: 0000000000000000
-[ 1829.687898] x11: ffff00009bcbd800 x10: ffff0000ab133998 x9 : 0000000000000000
-[ 1829.695022] x8 : ffff00009bcbd9e8 x7 : 0000000000000000 x6 : 0000000000000001
-[ 1829.702146] x5 : 0000000000000000 x4 : 0000000000000080 x3s : 0000000000000005
-[ 1829.709270] x2 : 0000000000000244 x1 : 0000000000000204 x0 : 0000000000000204
-[ 1829.716395] Call trace:
-[ 1829.718831]  nfs_free_request+0x1e0/0x240 (P)
-[ 1829.723180]  nfs_page_group_destroy+0x78/0x108
-[ 1829.727617]  nfs_page_group_destroy+0xe8/0x108
-[ 1829.732046]  nfs_release_request+0x68/0x98
-[ 1829.736137]  nfs_readpage_release.isra.0+0x5c/0x70
-[ 1829.740921]  nfs_read_completion+0xbc/0x13c
-[ 1829.745089]  nfs_pgio_release+0x18/0x24
-[ 1829.748911]  rpc_free_task+0x34/0x68
-[ 1829.752482]  rpc_async_release+0x2c/0x48
-[ 1829.756399]  process_one_work+0x150/0x290
-[ 1829.760403]  worker_thread+0x180/0x2f4
-[ 1829.764139]  kthread+0x12c/0x204
-[ 1829.767363]  ret_from_fork+0x10/0x20
-[ 1829.770934] ---[ end trace 0000000000000000 ]---
+Add a sticky page-group read-failed flag. Once any subrequest in
+the group is known to be bad, mark the group failed, clear any
+accumulated PG_UPTODATE state, and refuse further PG_UPTODATE
+synchronization for the rest of the completion walk.
 
-This WARN dump can be reliably reproduced on my side by using rsize=1024
-during NFS mount and disconnecting the connection while reading data from
-NFS.
-
-I found when a folio is split into multiple subrequests, the PG_UPTODATE flag
-is set each time a subrequest data read succeeds. As earlier subrequests
-succeed, this bit accumulates progressively; however, if a later subrequest
-fails, all previously accumulated bits must be invalidated.
-The problem arises because the error path of nfs_read_completion() does not
-properly clear these stale bits, leading to a WARN when the page group is
-destroyed.
-
-The logic causing this issue appears to have existed since
-"67d0338edd71 ('nfs: page group syncing in read path')", which is a very old
-patch. No one seemed to have reported this issue before. I'm not sure if
-this was intentionally designed that way? (Sorry, I don't know much about
-NFS; Just study some code to try fixing this issue.)
-
-Hope to discuss this with everyone. Thanks!
-
-The fix I proposed clears the previously set flag when an error occurs,
-ensuring that subsequent processing within the same folio will not set the
-flag again.
-
-Clark Wang (1):
-  nfs: keep PG_UPTODATE clear after read errors in page groups
-
+Fixes: 67d0338edd71 ("nfs: page group syncing in read path")
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+---
  fs/nfs/read.c            | 25 ++++++++++++++++++++++++-
  include/linux/nfs_page.h |  1 +
  2 files changed, 25 insertions(+), 1 deletion(-)
 
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index e1fe78d7b8d0..2b70bd2b934b 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -132,10 +132,32 @@ static void nfs_readpage_release(struct nfs_page *req, int error)
+ 
+ static void nfs_page_group_set_uptodate(struct nfs_page *req)
+ {
+-	if (nfs_page_group_sync_on_bit(req, PG_UPTODATE))
++	bool uptodate = false;
++
++	nfs_page_group_lock(req);
++	if (!test_bit(PG_READ_FAILED, &req->wb_head->wb_flags) &&
++	    nfs_page_group_sync_on_bit_locked(req, PG_UPTODATE))
++		uptodate = true;
++	nfs_page_group_unlock(req);
++
++	if (uptodate)
+ 		folio_mark_uptodate(nfs_page_to_folio(req));
+ }
+ 
++static void nfs_page_group_mark_read_failed(struct nfs_page *req)
++{
++	struct nfs_page *tmp;
++
++	nfs_page_group_lock(req);
++	set_bit(PG_READ_FAILED, &req->wb_head->wb_flags);
++	tmp = req;
++	do {
++		clear_bit(PG_UPTODATE, &tmp->wb_flags);
++		tmp = tmp->wb_this_page;
++	} while (tmp != req);
++	nfs_page_group_unlock(req);
++}
++
+ static void nfs_read_completion(struct nfs_pgio_header *hdr)
+ {
+ 	unsigned long bytes = 0;
+@@ -172,6 +194,7 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
+ 			if (bytes <= hdr->good_bytes)
+ 				nfs_page_group_set_uptodate(req);
+ 			else {
++				nfs_page_group_mark_read_failed(req);
+ 				error = hdr->error;
+ 				xchg(&nfs_req_openctx(req)->error, error);
+ 			}
+diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
+index afe1d8f09d89..4b9a35dbc062 100644
+--- a/include/linux/nfs_page.h
++++ b/include/linux/nfs_page.h
+@@ -33,6 +33,7 @@ enum {
+ 	PG_TEARDOWN,		/* page group sync for destroy */
+ 	PG_UNLOCKPAGE,		/* page group sync bit in read path */
+ 	PG_UPTODATE,		/* page group sync bit in read path */
++	PG_READ_FAILED,		/* page group saw a read error */
+ 	PG_WB_END,		/* page group sync bit in write path */
+ 	PG_REMOVE,		/* page group sync bit in write path */
+ 	PG_CONTENDED1,		/* Is someone waiting for a lock? */
 -- 
 2.34.1
 
