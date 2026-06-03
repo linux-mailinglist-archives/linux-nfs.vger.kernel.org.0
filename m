@@ -1,91 +1,80 @@
-Return-Path: <linux-nfs+bounces-22229-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22230-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3ZdHKMS8H2rmpAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22229-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:33:56 +0200
+	id sLgQIOvmH2pqsAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22230-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 10:33:47 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F099F6344D3
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1B46635BD3
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 10:33:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=Mq4kZ+Uv;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22229-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22229-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=google.com;
+	dkim=pass header.d=intel.com header.s=Intel header.b=mcGXbX8m;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22230-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22230-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BDD483018769
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 05:33:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E64063022630
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 08:19:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2529825487C;
-	Wed,  3 Jun 2026 05:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67106407CC0;
+	Wed,  3 Jun 2026 08:19:29 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83A33126DA
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 05:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDBC23D7F0
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 08:19:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780464834; cv=none; b=JBIqHd1tLDzhUnSsoZdYjH17sFqAeWe54d4G4V9g7nHxAC7A9unND9FwjL6+dBTRSsj61LgDcqP8/Sb+m9hEpDNJZtZLMg+8GQWZ3tWN5gfvrX/PlYbcj7UxXZnLui/PgDZDxbvKTrMgGkqVUw+eoigQ7EAlU2xSKX6WFIwtOhw=
+	t=1780474769; cv=none; b=mRAlFSjXIsaQBOGtrAiItO4z3bsSwwk9RXS/kJT07GeCRkDCipJWXYhH/7J2VDp0ztkli1e77QwTpydMOYhmJ1yEXFkPRLmlcfMd6awUN0eVi2lGEDLdukmkmVxqdUva6kVJIpz2Nqtf+EMVHwaxsjzqjWzqBZfF8EhkX6faE5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780464834; c=relaxed/simple;
-	bh=sCUzPV9KTkFmhoJbqvS1MO+q4dB7AqJu4UxrdXNLjO4=;
+	s=arc-20240116; t=1780474769; c=relaxed/simple;
+	bh=eR1KK9z9Afjg8V/D/SIP3xh+zLxBKi2Mag78w0KCiV4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uhh78VU7jGA4rzQePmkHR/mhLj56BqLzc27br4+Ojtuk8nuzAc1+F8bAjwGpUwUFNzLgdjP9igz/VVk55bxTxGzG8ewWHrlTV7qCMIOMYoi42Isf3bjTsqpMX5lXUsZAMBJmVvV+jNSHfj8E87mo5GfvldJ74GbQ1zh0EXxXl1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mq4kZ+Uv; arc=none smtp.client-ip=209.85.214.169
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2bf22c18ad3so46845ad.0
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Jun 2026 22:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780464832; x=1781069632; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mVY3kbzSTSbY8HqoGi5UsE1UhNwJeV6E6So4ExjoX4M=;
-        b=Mq4kZ+Uv0Bw+HR3eLMsHKjndKtazmvyCVRMQic7o+IW2fqsn3qgKltbRCibCOfnvMD
-         Fz//ry3hmoN2q6b9a6rmKdf4r+PDhB3Zlh0Kf5XXOLvBpYhwTxjzxM0efIRLk59pDpEB
-         GhiHFdadq7tDdF0ASV4ux3qwB98AB0KT3P19f16A2W5d1iX7sXvAX/ziw9HllL5hyZ8V
-         aAJK/9nZlDBrczlmB/1J2O0Yz68IAoYS7axCJsOtlAU5BOQXG1Zrim8jyAP+rVzLoWKE
-         x2VZ4RXjXZeo3rO/e+k93PwpwLVkZXGu+nuuDKm/ULkAP+XEnhlwuPPwMyvHB1rVrKNU
-         NyrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780464832; x=1781069632;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mVY3kbzSTSbY8HqoGi5UsE1UhNwJeV6E6So4ExjoX4M=;
-        b=ZcmNvfIEbdmmb6iaSFw8OGPNmiGvhv3Qjz/IqJiwcejc23LKHQQ43pb4UPt3QvEKZx
-         6PQ4mMrjkMSB+yqQQvAWhYIWOsTaAd0td4+IpP6bjmShLix0pdAntumsksHqe3zQpFox
-         eCGkuuOzTJEBunogmR6NydREmTT80cJUR7CE1Ydr/QI0+b5VKMN1N5Ox0RJG9wt4bVBK
-         Bfo9JGUcJobkXTs2uqvw1JU+I4IiqtzDf1KzmBQ2vTGd/y5dcsI1uIXHsIbRJvX7341r
-         GZVP69LhfkNvmQ01Q0pkzHKRSMWW8DFtI6uq3VxkK1fmYyzMNX5tbiyVGG9YpYVBF2FC
-         IrZQ==
-X-Gm-Message-State: AOJu0Yy8JvCuUF3mzLWH2/2a1VO5fjj5PFfc+8A2A+c+wic2C+epq86c
-	eu0h+HW0usGsOCuiBwA0YLeBcyqPIE1g/Ox6Gl+SDtHyovbyYf747Zh4rQSwH56qCltgkFvReeG
-	JX/47oQ==
-X-Gm-Gg: Acq92OEV5NBmtqX/wbU7QGoxeNI6XDV9TZTbca1kh+/qkX4fsp+wsI8yvnbDEcmM1Ss
-	5qeJO8NqThEu7FPc+8d/CyxSQHa7ADjxm2d3vUrdjMRUtbfLYiHI5c5nFYluSBF8Lbd9z+V3lGt
-	Mnwh6SnnPamnMup9uPowWyOJVeVDNuvoAwxAFzKwDdJOM51iyYK7b6iLyUNG9qMaASYPC6vhjl2
-	0vGUUW/VN+4743IisSMq1kMMBqL4QfG9gkvTzmyCiVf6lzzCDZz1E8guZE/TseNPr0NE9X2UMxB
-	HmVKT05Pg1Y+EYUhblHj9EArVHBrXJVzZgf5evr0P/vKFlP0Kh1rOQbk/A4UBTGCw/vyCnsdNbe
-	Zt4/nYIZywzViYFlNGJNDsBZU4y63L/iscrXaUxevtol9/+X6LhSL/2p3FoNaaZGrvGnAvGTg+e
-	bMQRVzJah+YtY3kc6g9AeWC8b3khHcMXzzpQ/xRcmA8Hnepd5PaTnmEjzem1ylJYTu4cEUhO5Rq
-	AY5Un/Kbg==
-X-Received: by 2002:a17:902:ef43:b0:2bd:6dad:3df9 with SMTP id d9443c01a7336-2c16fb58110mr488775ad.23.1780464831745;
-        Tue, 02 Jun 2026 22:33:51 -0700 (PDT)
-Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8428221c3e4sm1704780b3a.5.2026.06.02.22.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 22:33:50 -0700 (PDT)
-Date: Wed, 3 Jun 2026 05:33:45 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shivaji Kant <shivajikant@google.com>
-Subject: Re: [PATCH v1 0/7] nfs: Modernize Direct I/O path
-Message-ID: <ah-8udk7G6DT0T2s@google.com>
-References: <20260603053033.3300318-1-praan@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WbvXnDSwEnYLeeNHpTeluM4lIcfVzsiloaOLDrys4SGY+63YYTot6RW4wDNFLR+MF8E0im9eU9mQISz5u8xFe75+/y5mSGvYTnxRbvy6BZfDIrn3BfzQQcxBmcWh5XamByxpRzbT8V0bKnZK9Jxfyr8IaHMWza1yUhv9nmJ6XK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcGXbX8m; arc=none smtp.client-ip=192.198.163.14
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780474767; x=1812010767;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eR1KK9z9Afjg8V/D/SIP3xh+zLxBKi2Mag78w0KCiV4=;
+  b=mcGXbX8m2ukPQLllzlTTlyrITOmAMHaMivRIgq88vobtuFnb7zYRidtE
+   9VLJl5LCMLJiVw4J5nkox1hY5xEH4eKEahdvHWO6u4T9A8r35Ftk7b1oh
+   pmSql10dHr2i/mI4RDNz/zxtqxZbQ3svm8mIsZoXTuqhlElGogVurg9BK
+   Q6BmUJZMSjQbErK0uKjFdypzqHVQCQxdYNjA/beczbZLISWohwt+F4qEJ
+   zWxtaPXbg0euIAxjYdPAJ4xM0NUEIuMfl7PnKn/kZ8TsuRrYM1c/4W7xf
+   ex5HCH/9fvnLh156pfrEK+28IfKqvvd15R92o8HOrNVMuoaTUq1XNH/Gq
+   A==;
+X-CSE-ConnectionGUID: 7qaVIjiYRo2AXjJre0Qhhw==
+X-CSE-MsgGUID: 1mQrDzXUSSqzXHk6XnHxeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="81305385"
+X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
+   d="scan'208";a="81305385"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 01:19:26 -0700
+X-CSE-ConnectionGUID: 9e1mPLtLTTq2e0nWMbYv6A==
+X-CSE-MsgGUID: EPSYGF7EQTW9tybiJMCFrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
+   d="scan'208";a="243104952"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa006.jf.intel.com with ESMTP; 03 Jun 2026 01:19:24 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id C1C5395; Wed, 03 Jun 2026 10:19:23 +0200 (CEST)
+Date: Wed, 3 Jun 2026 10:19:23 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Subject: Re: [PATCH v2 1/2] nfsd: Replace open-coded conversion of bytes to
+ hex
+Message-ID: <ah_jizDKdRuVrniB@black.igk.intel.com>
+References: <20250804224701.2278773-1-ebiggers@kernel.org>
+ <20250804224701.2278773-2-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -94,53 +83,63 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260603053033.3300318-1-praan@google.com>
+In-Reply-To: <20250804224701.2278773-2-ebiggers@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[google.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22229-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22230-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:hch@infradead.org,m:shivajikant@google.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[praan@google.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:ebiggers@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[andriy.shevchenko@intel.com,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[praan@google.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:from_mime,intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,black.igk.intel.com:mid,cksum.data:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: F099F6344D3
+X-Rspamd-Queue-Id: D1B46635BD3
 
-On Wed, Jun 03, 2026 at 05:30:26AM +0000, Pranjal Shrivastava wrote:
-> Modernize the NFS Direct I/O path as a preparatory step to enable PCI
-> Peer-to-Peer DMA (P2PDMA) support. Following feedback on the initial
-> RFC [1], the modernization and architectural changes are split into
-> this standalone series.
-> 
+On Mon, Aug 04, 2025 at 10:46:59PM +0000, Eric Biggers wrote:
+> Since the Linux kernel's sprintf() has conversion to hex built-in via
+> "%*phN", delete md5_to_hex() and just use that.  Also add an explicit
+> array bound to the dname parameter of nfs4_make_rec_clidname() to make
+> its size clear.  No functional change.
 
-My bad, I missed appending the link for the RFC. Here's the link:
+...
 
-[1] https://lore.kernel.org/all/20260401194501.2269200-1-praan@google.com/
+> +	sprintf(dname, "%*phN", 16, cksum.data);
 
-Thanks,
-Praan
+FWIW, since the length is static no need to use stack for that:
+
+	sprintf(dname, "%16phN", cksum.data);
+
+will be better.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
