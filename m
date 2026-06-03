@@ -1,72 +1,72 @@
-Return-Path: <linux-nfs+bounces-22225-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22226-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Cc6fM2u8H2rbpAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22225-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:32:27 +0200
+	id mH5kMIe8H2repAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22226-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:32:55 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 509146344AF
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 399206344BA
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:32:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=cleFaQCO;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22225-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22225-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=google.com header.s=20251104 header.b=of6S7SSD;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22226-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22226-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A623030E14DB
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 05:31:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2106230EC12D
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 05:31:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 374D337C0EC;
-	Wed,  3 Jun 2026 05:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A8137CD2B;
+	Wed,  3 Jun 2026 05:30:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E275737B3E1
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 05:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1EC37EFED
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 05:30:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780464647; cv=none; b=Rj3GxXMSwf6xDQildfMt1p0CddAIGfl0hNJvDmneXSopK1193UjbH7V1hq1EM2Ohlgy40Dh91T01NjyEO7hGFKDY0J1bdBTH5rPz3Iby2bjVVyuTXqmzCJM/SJFVy+txZftkyhwFHrosiTSoKrxcTaKfEvP5WStwEw4g9B6mX7I=
+	t=1780464649; cv=none; b=Zp9D4X+pD/4jXzQondhZWzFbV/cbP6iyJGNaH/jA5cdH8p7tMRzwyImEmeYNAj8dYCGLncP1vYo4+D/0MymI9ezwnvlvz8gcR9oQtTvC3D84bhicJVOJiAploaG/T+mMOKUQX2mzVxXmdo2ZedH2gFroM8oTb8DaSab+ytgUWmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780464647; c=relaxed/simple;
-	bh=JUzn0Tl54v/LajHr6WA3u6ilMr7KtTSGf8HuMCerDVc=;
+	s=arc-20240116; t=1780464649; c=relaxed/simple;
+	bh=F7Z5I+pyKFwDybP/t3Ww4dr8KAfYZlgIyokwfDtnetA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T3vN8JkTSOtub38pluCIgfRgmy6xnxkwGVsyf1UEcC4/TGJ35PWcA7Efwg8J4z3stGb3xU94+Tf4AStsfoXzKIUZi1LeSwXX0WhshOawuce2E32PrD9x3uHfsuF939N+ws57T4Cn6WsdnE8QnBFG0qe4vMswPbMDov5EkE/UIj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--praan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cleFaQCO; arc=none smtp.client-ip=209.85.216.74
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-36b982ec338so5970101a91.0
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Jun 2026 22:30:45 -0700 (PDT)
+	 To:Cc:Content-Type; b=TZmWdSaY/PiyWbIg+rWqugiCZHhA1XWWbmhpS5mnXZgUz9tEc3BACMa8AyA3awmwxw+BpEQ7xkxOfasSSp+wr0oEyzoJZHOpFyqMbX8J/RSOg+OwZo6uvnpSXsiaXtisR5K6Cka3xUzLLyuMREGGIoSlfqN4iOS/SGK+EFoUZPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--praan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=of6S7SSD; arc=none smtp.client-ip=209.85.210.201
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-842446a3851so1718748b3a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 02 Jun 2026 22:30:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780464645; x=1781069445; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780464647; x=1781069447; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aceiKrGtkOAldA+lS+bg3KAJPMkEMywV7kdTVFchn4Q=;
-        b=cleFaQCOtbo0g4Il5kiIdUW1HScihfeObuQIne+xm1QU5A28KJU+kFAi7PXQ1uL4hj
-         AI5kzl2ufvmBQI0255LYavFE5ezJcJ31RtKBcwLQtAwfodJKW0tA2hoMdb3Vdu0xSfXK
-         WfC/jvE05SyQfvo+aESka65inIrRTnBBSCkbciVnetMRd9I4uPF+2VyHO6osUCNhCh/f
-         BLjZRKYdL69Omhj80Qhwh9LQTr2yFxg52lbqs3MLTSwpGJixtmuJ2y4BERkg29Z331ZO
-         CLNmTRcdeLkbQeEXtlMtTpwyiJ6GkPYQ6MvEu5cHhm25Mi6haw9MhvQe5ezll6xMtwkd
-         J1LA==
+        bh=GUQHqwTSDbwIIIprX7FqQUC2KcYc7JrnlEpTv2eo5IY=;
+        b=of6S7SSDZJfBv6njSe0sisqVcAKXUILLVBTVo9RXY1KfLLt3JYRnICx/8FimlwFRfa
+         XbkdfDxC6Q0DNSqRBRfrdRw6He0TOgJd06kciSKGhmBAtj54GxErv32DWB2jQqrrvVdB
+         SF/bJqlEBj4J5gxgvNwLD0Wxm7eabRFB/Ad3zER8xpIIQxdrb8lGj5Y2pYJa/cys4Bg3
+         uFhxkK1DJYziVOCbSyEQs30Py4hLq3fwetc9rkbtElY1sIiWleSbx85oICuq9sI2Z/gt
+         vxHqZhdJZL5qgn9G75kCwctqh2p5PnhTYxNbLYZWbqYDlvGQOopKb5gR0J1QhyioOwn8
+         iBFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780464645; x=1781069445;
+        d=1e100.net; s=20251104; t=1780464647; x=1781069447;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aceiKrGtkOAldA+lS+bg3KAJPMkEMywV7kdTVFchn4Q=;
-        b=s8JJAg5SR2jWhRLzgJaxCKoovpXtXmeA5uNEA1f7LxK32yhU8DYyX0P++ZY/A9oDRM
-         8OS+HHLS3SRFQtnYI2oM+4JtxYztlZVEkiM3LDywogJ4sY5QG0HMGq2UQj4kYJKMLyKw
-         R3NGJRBo0ZOVGwVh90Dvxx3M6mNcd62rFSuGn1pctcBtuY/FmURbZAFA3xBes8w/28oi
-         SXvHHj5zY2D58LE0unrF1WiPlanEKfou1MPk//XelSSY7yh5kfEtGvLip2KPLpzCSyf4
-         tXnM3nNdu2yH3MqVtYyl7N1kiqyIdVj0biqi1TvvmGS5Ob3d3D3GPXYEwyed21CvweZL
-         LMjg==
-X-Gm-Message-State: AOJu0Ywvyqn8L5stXtcFIr+CqjGAON1516AvHKvROD+sEw1/upqWvHU+
-	MfhxcPMU0DJSyVMs+CWcq5iBBvyFvpGJEKGQMG0Kz2kyyjjz4iRwHWf7U2akUV71yEl3iR6ylnj
-	c3EhKY/jAQca9/89v79w3prjK6BdH4T5pSU53Gue7udwXkgAehYl9t8UvucoQDQhNMMhfJyXXnB
-	olcNGHVhZCb2r5V2+f19VPzpDGTrv5tKP5F9k=
-X-Received: from pjff14.prod.google.com ([2002:a17:90b:562e:b0:365:eb99:afdb])
- (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1642:b0:36b:bb66:fbd0
- with SMTP id 98e67ed59e1d1-36e30742d00mr1848636a91.4.1780464644804; Tue, 02
- Jun 2026 22:30:44 -0700 (PDT)
-Date: Wed,  3 Jun 2026 05:30:30 +0000
+        bh=GUQHqwTSDbwIIIprX7FqQUC2KcYc7JrnlEpTv2eo5IY=;
+        b=BBPhId4esjL7iW445nVLbJjrIWkBjdX5EcAdiKb2E78X1w6zjWRLjnjEqryGvKo6BR
+         yRnMOukHDU21DjqSdtOXw8KIZsBFhgeURma9zEL/13RNGSel6OU9v1KGEr9IYhD73Jl0
+         dWog9FQJCkYBYTp9VxWUH8DXzUo3zASwE5N0YzVTxH7rCEg60kGpjCkvrNQKIvC0OLx2
+         ln4NkzCov1g/r4E0Vul98hFK4sUNZxQoFhlZkybETa5BrA5yrxxEZPnntBbDHx/NM+bX
+         UpiVTHQBdZVsBjuZGhbJZWkxgHuL1qrhRSpvbHkaANbUTmmgfm+M4geqcK+Je+rCuZQs
+         2ZKQ==
+X-Gm-Message-State: AOJu0Yxx7G3wM/bA0ZEM7Xbs8XuTvlmB7nlCL9OgCjLacFVqMRWHkbIr
+	kAmJ8yVTzdTZo6qYEpjtjjNcsWESROPgA7lSB5a1um81zrMP4Zi3bv8v85rMXl6zuUi1H/17y3y
+	kuLWnbJ/P5eG9FxMnFR8PPWGqWYshxMmhx21cq4dAWFyxW3HAOPOdlbvAMV6j+CFO5bfyXV1Fbl
+	NSRzgQaWQTe76u2HHFx7HDgrvUSQKFBQUwQA4=
+X-Received: from pfbfj21.prod.google.com ([2002:a05:6a00:3a15:b0:842:2abf:9656])
+ (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:887:b0:842:3d8d:bab5
+ with SMTP id d2e1a72fcca58-84284fbd413mr1961332b3a.37.1780464646850; Tue, 02
+ Jun 2026 22:30:46 -0700 (PDT)
+Date: Wed,  3 Jun 2026 05:30:31 +0000
 In-Reply-To: <20260603053033.3300318-1-praan@google.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -76,8 +76,8 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260603053033.3300318-1-praan@google.com>
 X-Mailer: git-send-email 2.54.0.1013.g208068f2d8-goog
-Message-ID: <20260603053033.3300318-5-praan@google.com>
-Subject: [PATCH v1 4/7] nfs: migrate direct I/O to iov_iter_extract_pages
+Message-ID: <20260603053033.3300318-6-praan@google.com>
+Subject: [PATCH v1 5/7] nfs: introduce nfs_direct_extract_pages helper
 From: Pranjal Shrivastava <praan@google.com>
 To: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Christoph Hellwig <hch@lst.de>, 
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22225-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22226-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[praan@google.com,linux-nfs@vger.kernel.org];
@@ -116,106 +116,209 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 509146344AF
+X-Rspamd-Queue-Id: 399206344BA
 
-Migrate the NFS Direct I/O path away from the legacy
-iov_iter_get_pages_alloc2() API to the modern iov_iter_extract_pages API.
-The transition aligns NFS with the modern VFS extraction model and serves
-as a preparatory step for supporting requirements such as page pinning
-via GUP for DMA.
+Introduce nfs_direct_extract_pages() in direct.c to centralize page
+extraction and request creation for the Direct I/O path. The helper
+manages extraction from the iters and builds a list of nfs_page requests
 
-The migration fixes a bug in the Direct I/O loop where pages were being
-unpinned immediately after request creation. With the new extraction
-model, pins are held until the I/O is complete. Manual release in the
-loop is correspondingly updated to only clean up failed pages.
+Refactor nfs_direct_read_schedule_iovec() and
+nfs_direct_write_schedule_iovec() to utilize the new helper, unifying
+the extraction logic on both paths.
 
 Signed-off-by: Pranjal Shrivastava <praan@google.com>
 ---
- fs/nfs/direct.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ fs/nfs/direct.c | 122 +++++++++++++++++++++++-------------------------
+ 1 file changed, 59 insertions(+), 63 deletions(-)
 
 diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 2691eeaaeb8c..b6aaa5f80241 100644
+index b6aaa5f80241..59002c150f23 100644
 --- a/fs/nfs/direct.c
 +++ b/fs/nfs/direct.c
-@@ -354,16 +354,17 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+@@ -178,6 +178,50 @@ static void nfs_direct_release_pages(struct page **pages, unsigned int npages,
+ 	}
+ }
+ 
++static ssize_t nfs_direct_extract_pages(struct nfs_direct_req *dreq,
++					 struct iov_iter *iter,
++					 size_t size, loff_t *pos,
++					 struct list_head *list)
++{
++	bool pinned = iov_iter_extract_will_pin(iter);
++	struct page **pagevec = NULL;
++	ssize_t result, bytes = 0;
++	unsigned int npages, i;
++	size_t pgbase;
++
++	result = iov_iter_extract_pages(iter, &pagevec, size, ~0U, 0, &pgbase);
++	if (result <= 0)
++		return result;
++
++	npages = (result + pgbase + PAGE_SIZE - 1) >> PAGE_SHIFT;
++	for (i = 0; i < npages; i++) {
++		struct nfs_page *req;
++		unsigned int req_len = min_t(size_t, result - bytes, PAGE_SIZE - pgbase);
++
++		req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
++						pinned, pgbase, *pos,
++						req_len);
++		if (IS_ERR(req)) {
++			if (!bytes)
++				bytes = PTR_ERR(req);
++			break;
++		}
++
++		list_add_tail(&req->wb_list, list);
++		pgbase = 0;
++		bytes += req_len;
++		*pos += req_len;
++	}
++
++	if (i < npages) {
++		iov_iter_revert(iter, result - bytes);
++		nfs_direct_release_pages(pagevec + i, npages - i, pinned);
++	}
++
++	kvfree(pagevec);
++	return bytes;
++}
++
+ void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinfo,
+ 			      struct nfs_direct_req *dreq)
+ {
+@@ -346,6 +390,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	ssize_t result = -EINVAL;
+ 	size_t requested_bytes = 0;
+ 	size_t rsize = max_t(size_t, NFS_SERVER(inode)->rsize, PAGE_SIZE);
++	LIST_HEAD(nfs_page_list);
+ 
+ 	nfs_pageio_init_read(&desc, dreq->inode, false,
+ 			     &nfs_direct_read_completion_ops);
+@@ -354,43 +399,22 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
  	inode_dio_begin(inode);
  
  	while (iov_iter_count(iter)) {
--		struct page **pagevec;
-+		struct page **pagevec = NULL;
- 		size_t bytes;
- 		size_t pgbase;
- 		unsigned npages, i;
-+		bool pinned = iov_iter_extract_will_pin(iter);
+-		struct page **pagevec = NULL;
+-		size_t bytes;
+-		size_t pgbase;
+-		unsigned npages, i;
+-		bool pinned = iov_iter_extract_will_pin(iter);
+-
+-		result = iov_iter_extract_pages(iter, &pagevec,
+-						rsize, ~0U, 0, &pgbase);
++		result = nfs_direct_extract_pages(dreq, iter, rsize, &pos, &nfs_page_list);
+ 		if (result < 0)
+ 			break;
  
--		result = iov_iter_get_pages_alloc2(iter, &pagevec,
--						  rsize, &pgbase);
-+		result = iov_iter_extract_pages(iter, &pagevec,
-+						rsize, ~0U, 0, &pgbase);
- 		if (result < 0)
- 			break;
--	
+-		bytes = result;
+-		npages = (result + pgbase + PAGE_SIZE - 1) / PAGE_SIZE;
+-		for (i = 0; i < npages; i++) {
+-			struct nfs_page *req;
+-			unsigned int req_len = min_t(size_t, bytes, PAGE_SIZE - pgbase);
+-			/* XXX do we need to do the eof zeroing found in async_filler? */
+-			req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
+-							pinned, pgbase, pos,
+-							req_len);
+-			if (IS_ERR(req)) {
+-				result = PTR_ERR(req);
+-				break;
+-			}
++		requested_bytes += result;
++		while (!list_empty(&nfs_page_list)) {
++			struct nfs_page *req = nfs_list_entry(nfs_page_list.next);
 +
- 		bytes = result;
- 		npages = (result + pgbase + PAGE_SIZE - 1) / PAGE_SIZE;
- 		for (i = 0; i < npages; i++) {
-@@ -371,7 +372,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 			unsigned int req_len = min_t(size_t, bytes, PAGE_SIZE - pgbase);
- 			/* XXX do we need to do the eof zeroing found in async_filler? */
- 			req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
--							false, pgbase, pos,
-+							pinned, pgbase, pos,
- 							req_len);
- 			if (IS_ERR(req)) {
- 				result = PTR_ERR(req);
-@@ -387,7 +388,8 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 			requested_bytes += req_len;
- 			pos += req_len;
++			nfs_list_remove_request(req);
+ 			if (!nfs_pageio_add_request(&desc, req)) {
+ 				result = desc.pg_error;
+ 				nfs_release_request(req);
++				nfs_release_request_list(&nfs_page_list);
+ 				break;
+ 			}
+-			pgbase = 0;
+-			bytes -= req_len;
+-			requested_bytes += req_len;
+-			pos += req_len;
  		}
--		nfs_direct_release_pages(pagevec, npages, false);
-+		if (i < npages)
-+			nfs_direct_release_pages(pagevec + i, npages - i, pinned);
- 		kvfree(pagevec);
+-		if (i < npages)
+-			nfs_direct_release_pages(pagevec + i, npages - i, pinned);
+-		kvfree(pagevec);
  		if (result < 0)
  			break;
-@@ -883,13 +885,14 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	}
+@@ -873,6 +897,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	ssize_t result = 0;
+ 	size_t requested_bytes = 0;
+ 	size_t wsize = max_t(size_t, NFS_SERVER(inode)->wsize, PAGE_SIZE);
++	LIST_HEAD(nfs_page_list);
+ 	bool defer = false;
+ 
+ 	trace_nfs_direct_write_schedule_iovec(dreq);
+@@ -885,42 +910,15 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
  
  	NFS_I(inode)->write_io += iov_iter_count(iter);
  	while (iov_iter_count(iter)) {
--		struct page **pagevec;
-+		struct page **pagevec = NULL;
- 		size_t bytes;
- 		size_t pgbase;
- 		unsigned npages, i;
-+		bool pinned = iov_iter_extract_will_pin(iter);
- 
--		result = iov_iter_get_pages_alloc2(iter, &pagevec,
--						  wsize, &pgbase);
-+		result = iov_iter_extract_pages(iter, &pagevec,
-+						wsize, ~0U, 0, &pgbase);
+-		struct page **pagevec = NULL;
+-		size_t bytes;
+-		size_t pgbase;
+-		unsigned npages, i;
+-		bool pinned = iov_iter_extract_will_pin(iter);
+-
+-		result = iov_iter_extract_pages(iter, &pagevec,
+-						wsize, ~0U, 0, &pgbase);
++		result = nfs_direct_extract_pages(dreq, iter, wsize, &pos, &nfs_page_list);
  		if (result < 0)
  			break;
  
-@@ -900,7 +903,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 			unsigned int req_len = min_t(size_t, bytes, PAGE_SIZE - pgbase);
+-		bytes = result;
+-		npages = (result + pgbase + PAGE_SIZE - 1) / PAGE_SIZE;
+-		for (i = 0; i < npages; i++) {
+-			struct nfs_page *req;
+-			unsigned int req_len = min_t(size_t, bytes, PAGE_SIZE - pgbase);
+-
+-			req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
+-							pinned, pgbase, pos,
+-							req_len);
+-			if (IS_ERR(req)) {
+-				result = PTR_ERR(req);
+-				break;
+-			}
+-
+-			if (desc.pg_error < 0) {
+-				nfs_free_request(req);
+-				result = desc.pg_error;
+-				break;
+-			}
+-
+-			pgbase = 0;
+-			bytes -= req_len;
+-			requested_bytes += req_len;
+-			pos += req_len;
++		requested_bytes += result;
++		while (!list_empty(&nfs_page_list)) {
++			struct nfs_page *req = nfs_list_entry(nfs_page_list.next);
  
- 			req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
--							false, pgbase, pos,
-+							pinned, pgbase, pos,
- 							req_len);
- 			if (IS_ERR(req)) {
- 				result = PTR_ERR(req);
-@@ -944,7 +947,8 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
++			nfs_list_remove_request(req);
+ 			if (defer) {
+ 				nfs_mark_request_commit(req, NULL, &cinfo, 0);
+ 				continue;
+@@ -934,6 +932,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 			if (desc.pg_error < 0 && desc.pg_error != -EAGAIN) {
+ 				result = desc.pg_error;
+ 				nfs_unlock_and_release_request(req);
++				nfs_release_request_list(&nfs_page_list);
+ 				break;
+ 			}
+ 
+@@ -947,9 +946,6 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
  			desc.pg_error = 0;
  			defer = true;
  		}
--		nfs_direct_release_pages(pagevec, npages, false);
-+		if (i < npages)
-+			nfs_direct_release_pages(pagevec + i, npages - i, pinned);
- 		kvfree(pagevec);
+-		if (i < npages)
+-			nfs_direct_release_pages(pagevec + i, npages - i, pinned);
+-		kvfree(pagevec);
  		if (result < 0)
  			break;
+ 	}
 -- 
 2.54.0.1013.g208068f2d8-goog
 
