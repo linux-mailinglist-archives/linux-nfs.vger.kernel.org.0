@@ -1,171 +1,218 @@
-Return-Path: <linux-nfs+bounces-22234-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22235-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id JFupCW47IGrYywAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22234-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 16:34:22 +0200
+	id zFpvIAtIIGpQ0AAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22235-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 17:28:11 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BC80638A31
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 16:34:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B3696392DF
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 17:28:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=BNv5tWRT;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22234-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22234-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=hammerspace.com header.s=google header.b=Iw+zEvIf;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22235-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22235-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 20EDB3004D3F
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 14:30:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7BF2330DBCF8
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 15:09:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 652D444E04C;
-	Wed,  3 Jun 2026 14:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395ED38AC8D;
+	Wed,  3 Jun 2026 15:09:48 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5531748124B
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 14:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F57399354
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 15:09:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780496865; cv=none; b=PNx9bsMldIiQ4B+lTDo4BoqOYgvj7AFj+OMcexO8rI/an1QqxggklnFD6vGdaQF+kPfZ0ld5vXMTuTBJYThuwghUscDv5AQILAthdPOHdHdlSJpCw4N1f0cYt8U90CMkP1NK/q/+e99kg/OXYRC6gTfd/HgAQ4JcWtFi6+POru0=
+	t=1780499388; cv=none; b=atcpZLAI3QgEkpXKrlvyXdK38Yxfd31U/Xk2vw8bSYBOQN00n2jw0YNWZjVIAOBf+h07EfKsDbzUwsB/aD2J6oGIbR5dMPEWqNutZjrEh0huaG66spNAB7nJMqiUzOqDrq7M4bRafhOmbTcrDkhdN7CCUr36xhZxJQdYgFtSSlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780496865; c=relaxed/simple;
-	bh=4yf/iDMHPPuwrHwZQBzjb/RozjRScuFF+dadggoTuos=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=c6AnfwBVdp/e4ilPhotuA3bPCb7YQzVZVBzsQJGBH04uaczOxmdzsnjgIxuP1J7DOJkW/fYivZ6q+8XDbxf1j3+4bbXzMJrp07JQyvPjuzQpLNaJMVO6Sa6OEaWlDMiRp4yPmeDzpU/X3qIoPNGvngysxuXoGmS4rHGpz/DrQk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNv5tWRT; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C647F1F00893;
-	Wed,  3 Jun 2026 14:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780496864;
-	bh=X9k0ZKde1df7umdEWko/fUWiCcJY9ed+xctbWrHAaFo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=BNv5tWRT6G16v9/nyr69m2WlCOtC97YeqGC7vjsByMD4NbtH9D9/sdYlehkqqVR+j
-	 jSct4vYBm4DcaI1aC4JRsL+XIzVWQSJYNiRbFTiOESfm0gLLIDR3w8GDaScGN6sHs/
-	 uVVGAhmvn/DewO8xv0XrbFjIlsnJbToA1hM2t7nU3qk719GmAosjv+ttdg4KYm7R0a
-	 BbzzF1G9o7guCaGcuJkr2cONgB2TeFEO1ZiRhLyOsncjibruBaIqPwcAMJriC+SV6U
-	 DNSgWqU2gR7OL0ZSctd60Mv54ks5cWeuxC3tMeWKwTf0J1VoFxFsPxMScNgBxWIZ9n
-	 mCVbWZ9g+853g==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id BEF40F40078;
-	Wed,  3 Jun 2026 10:27:42 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 03 Jun 2026 10:27:42 -0400
-X-ME-Sender: <xms:3jkgakDK-qZ4h80Vxz-7eU5-iE6gdV01JmBpUK89M7for8FBqj-5cg>
-    <xme:3jkgahVxDDnEr0DNBvlkNPRXx8k6Kq5W1s4gF99tE1w5snucZBoYGDxs6e5-w2bYo
-    UfCkkz0sVMO32Q6g4LJdeDxPZ6V9eYreJbEPofD1T3oLkyNKvd_o952>
-X-ME-Proxy-Cause: dmFkZTE2lsB7YPrQcTSGDnyrTSvE10E4Y/lR8bdFvpgWTUm3xnZeZ3OUISWZUFpfRcVIZS
-    Ws5zdg/jHRTAE12CA3Bmg3xS1S+Rr1s7xgavj041oC51E+Ve5kkPuSIGSO/aExVeTHoy96
-    Sg/prauf2YLewYXHUpkt8uoTFbfwl6dn4UvP/tO3U7kX5fkYez07Lpz78glnR4sI9WNLKO
-    ARvyuldb+lg7yP2qYVeCeCvy22hTeFVqp/UW9CRthN6I0Cq4/N+4OA3tAMI0eQC/UbWKij
-    EOQ3zqaevaiYOqheJfqlu5Cpw1bChBPlxWGPXVF3KdWN4THuzaz4YdiC5joOgXcLthB3Rh
-    iZcC+Tc7a46UocMF/TENtt3tWhZj8LYqFRYeojIFHEo1ZpACjftNHJDsHRS7jpazJ1DLo9
-    rIGEVmvYdyS/vQyh/3Mvbd4fpncdf9dZ+4sppca8mCIj8v5rCRyqKNOHPb0J7aJrACnVzW
-    LncpFJpLpkHod5bloWS9J1/JwL0Op+nnJ2yz+Twtu0yVKrs9CkTzmR2n/C6Y63PO0WsNpu
-    S6l5FIG/f2jEz2zKHSmDPiN5d99+oX0sBCasYr9hCFPZJXE/p8GWBe7DVC5Py0ibWbKITg
-    NwLWB8F/UcIijeLN2E5EJzXyDydBPXnKGdjbBQ8UruzoRhvCfbrNh0LlDeBg
-X-ME-Proxy: <xmx:3jkgaknjotcVbrh0-YNqI39lZqkeqZAHZkCe90paaujyZrTuVBQMuQ>
-    <xmx:3jkgalaZiDAV3Y7buUh8Oa1IhHnJJhG-J2UZ_46anwF9j4b4GP9WnQ>
-    <xmx:3jkgah4kv5mldtIbdJdG4zI427u43W8pnp0jFGJgetl4gSXGVJBYvQ>
-    <xmx:3jkganAmfKt6EClsm6nsV97ghSnQNeiJ7u_I6ZLmBaEX9E_xKR0UEQ>
-    <xmx:3jkgan8LPufZ-dQ3vB1F_dnhpjIM1cJmWywu9PJgG_9pku7ggXmPeIg->
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9BE0E780070; Wed,  3 Jun 2026 10:27:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1780499388; c=relaxed/simple;
+	bh=2PxKA5LecMMhbsKrTH/C+pdpgOQ8LY8gTofFm+cN49c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FU1sWyqdmTJwilzPdUHQKy1Keu/dChov0oStJnKUzRPauPgRSsBtrmTpw2ENmQYQd/whO0mFRGtrnZXI3rd5KBEMJFdk6GgcLouhIeONJMu2854Hg9DKFPFYfwO3H6gETVNtoWA0+UhBt0yCZR4+b/EWcFTNI+mhP9iRqHD2YMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Iw+zEvIf; arc=none smtp.client-ip=209.85.160.41
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-43b7e186a0cso3915606fac.0
+        for <linux-nfs@vger.kernel.org>; Wed, 03 Jun 2026 08:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hammerspace.com; s=google; t=1780499385; x=1781104185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tMPgs6f1YKa0Md4obtYmNfwn1FChqETfWiF+VgB8h50=;
+        b=Iw+zEvIf2+3zaHiWNua+BLwQsAfJOXqcrti6g3nUZSf8GZ89zLuy7Q0ueDBdrCPPfh
+         ABF6C/P0wKYidbseLQ4W+NRZKYDDcnG2w/o5LpNAuBwtr3OGQQFWtZxzn0SVfwvYwZCM
+         qMFQ/3aTYqkUqQAr0d5vyM0292lqb6V2p/f64tKLR3TBERfwjesz9zg6jjpb9oZ5inyF
+         RhtFcXLWUDJK7Wz69Fd5NZL6ZSg9QaWECIaNzncWlEHJVi5xcLJXAQlS6jdLYPgl+FYI
+         Hsr8cCMY698b9C9iS8gpM0atBasl9EUJP4BuiMRlOf8l1oGD4Tsr2Np756MWdU2HosnS
+         JrZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780499385; x=1781104185;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tMPgs6f1YKa0Md4obtYmNfwn1FChqETfWiF+VgB8h50=;
+        b=jv5G3xinztzMRi32Dkj1fTCygQHBDgFFBT/Q2dKRIlAva0WEmzqTAlsYbiHDLd6Gos
+         MfQxZTOLOB7D+8nMo+8Jc1PFSLVrTTCMs8lHsJ726hGbd+ZOJGD8KfQ97mawIA6bocgv
+         WY+XOIynIGOoA/9SsMWOIa5s5ErFI0CU79k6h06LH9egB6dnv/raEwyodGsoh8Tcnyqm
+         guRmQ5MUCrrNubTVeEUk9KYWeYpRhnzzC/+RLzuNeOye8k3ZfR1oQXVrB2XPE/gP4lzh
+         RenTaOhCOXWHdm613rpcFbwZ0TiuC6b6lIC0DZWxJ0zzB6tb79FkZfKJkXemloPbHmWx
+         IqSQ==
+X-Gm-Message-State: AOJu0YyrerdBsPEh6eMIMfw5Gcehgb2NKokO8LQGA8RREnrPSCcIfz5S
+	+FVgh40C16DlwSKPA6qfoI9iuRItL/C0SNbfJTo0fhtJZn8MNYe9eR/9YUHIHkLuwJAVYfg9Oa7
+	t7Aum
+X-Gm-Gg: Acq92OGal10oHgXNGjGCsY7f7m2BXy/7GX7wkzoSFeUQhr8em1vt+aiCPyf2UIkqfsz
+	CJgb7W4+Rmu8YwR5ND9kmty7zDLv6HZMVjQoOt4VxwQ+CHldYtgHJvuBmnGXkjBTF/XQzk9vw/y
+	Ghvnf8Pk5OtDaiPtB/RczBdZvpG+84AciPIU4yicT7rn6Q61A/+W3bNlaKiMYHryBYFDj1mhW1F
+	5i/x1M6W59AroZ2yKINirvlVT08RUJDGuK5+qYO+ULIQWc6uDDlM/G81VtLPt32JICoOS2IHLqs
+	BL+eUulg2PsKzYfAU2jnErx9JQxBPLD5bsV04H7ia0QHS15xnwvyroIeI4NNz9nxzkD7DtF3F/N
+	LI1uiPA+GWSH8+CXm70SI1uQTX90AJ1F5rtRUMz0iQ1AoUXc64qP4u7Z+t5ZasP6gWsXDP9PWs3
+	9TNb0VhFBtikEnpIAGjcKk5Xj3wEb4OJV9Y1WuorhmALxqGgtSvkU/OFfYDLw+di3rtsXwOg==
+X-Received: by 2002:a05:6870:8e0c:b0:42c:1a2f:bd15 with SMTP id 586e51a60fabf-440dba0f995mr2485819fac.32.1780499385216;
+        Wed, 03 Jun 2026 08:09:45 -0700 (PDT)
+Received: from bcodding.csb.hammerspace.com ([66.97.168.37])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-440d84c0ce2sm2917634fac.16.2026.06.03.08.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2026 08:09:44 -0700 (PDT)
+From: Benjamin Coddington <ben.coddington@hammerspace.com>
+X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neilb@ownmail.net>
+Cc: linux-nfs@vger.kernel.org,
+	Daire Byrne <daire@brahma.io>
+Subject: [PATCH RFC 0/4] nfsd: per-client fair-queue dispatch
+Date: Wed,  3 Jun 2026 11:09:38 -0400
+Message-ID: <cover.1780498019.git.bcodding@hammerspace.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AAPZyXKTxCYB
-Date: Wed, 03 Jun 2026 07:27:22 -0700
-From: "Chuck Lever" <cel@kernel.org>
-To: "Hannes Reinecke" <hare@suse.de>, linux-nfs@vger.kernel.org
-Cc: keyrings@vger.kernel.org, kernel-tls-handshake@lists.linux.dev,
- netdev@vger.kernel.org, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Christoph Hellwig" <hch@lst.de>,
- "David Howells" <dhowells@redhat.com>, "Jarkko Sakkinen" <jarkko@kernel.org>,
- "Sagi Grimberg" <sagi@grimberg.me>
-Message-Id: <b38b0983-7a63-4e77-a549-2d8859752cb9@app.fastmail.com>
-In-Reply-To: <bb9a872a-d4aa-467a-b4c9-7bca174a6bbc@suse.de>
-References: <20260602154740.49861-1-cel@kernel.org>
- <bb9a872a-d4aa-467a-b4c9-7bca174a6bbc@suse.de>
-Subject: Re: [RFC] NFS: named client identities for mTLS mounts and a per-namespace
- .nfs keyring
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-22234-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:hare@suse.de,m:linux-nfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:dhowells@redhat.com,m:jarkko@kernel.org,m:sagi@grimberg.me,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,app.fastmail.com:mid];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:jlayton@kernel.org,m:neilb@ownmail.net,m:linux-nfs@vger.kernel.org,m:daire@brahma.io,s:lists@lfdr.de];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,ownmail.net];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22235-lists,linux-nfs=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0BC80638A31
+X-Rspamd-Queue-Id: 8B3696392DF
+
+knfsd dispatches ready transports from a single per-pool FIFO, so a
+client's share of nfsd service scales with the number of connections it
+holds rather than being shared per client.  A client that opens many
+connections (nconnect, or a farm of data movers) starves other clients
+on the same server purely by out-numbering them in sockets.
+
+I measured this with a load generator that pins each request to a fixed
+service time and does no filesystem work, so that nfsd thread-time is the
+only scarce resource (8 threads, 10ms/op, ~648 ops/s pool ceiling).  A
+greedy client opens K connections alongside one single-connection
+interactive client.
+
+NFSv3, dispatch as it is today:
+
+  greedy K   greedy share   interactive ops/s
+     1           50%              241
+     4           80%              129
+     8           89%               72
+    16           94%               38
+
+The interactive client's share tracks 1/(K+1) and its throughput falls
+roughly 6x while it does nothing different.  NFSv4.1 behaves identically
+(89% greedy at K=8) even when the greedy connections are bound to a
+single session, because the dispatch decision is below the NFS version.
+
+The same NFSv4.1 workload with fair queueing enabled:
+
+  greedy K   greedy share   interactive ops/s
+     8           72%              182
+    16           73%              177
+    32           70%              193
+
+The greedy client's share no longer climbs with its connection count and
+the interactive client recovers (72 -> 182 ops/s at K=8).  Aggregate
+throughput is unchanged: the T/D pool ceiling is the same with fair
+queueing on and off.  The split does not reach 50/50 because a single
+interactive connection is bounded by its request window and by XPT_BUSY
+serialising one transport; with a deeper window it reaches ~59/41.
+
+The approach:
+
+  - sunrpc grows an opaque per-transport fairness key (patch 1), with a
+    default derived from the source address (the source port is excluded
+    so a client's several connections share one key), and an opt-in
+    per-pool scheduler that buckets ready transports by that key and
+    dispatches round-robin across keys (patch 2).  When it is disabled,
+    which is the default, the existing lockless FIFO path is unchanged.
+
+  - nfsd gains a "fairq" module parameter to turn it on (patch 3) and
+    stamps the NFSv4.1 clientid as the key when a connection binds to a
+    session (patch 4), so all of a client's connections share one key.
+    NFSv3 uses the source-address default.
+
+This is an RFC; a few questions for the list:
+
+  - Unit of fairness: clientid (used here) or session?  Earlier
+    discussion leaned toward exploring per-session.
+
+  - Mechanism: a fixed bucket hash under a per-pool spinlock taken only
+    on the opt-in path, versus a lockless or per-flow structure.
+
+  - Would a per-client in-flight cap be preferable to proportional fair
+    queueing?
+
+The measurement used a debug-only filehandle-latency hook that is not
+part of this series.
+
+Benjamin Coddington (4):
+  sunrpc: add a per-transport fairness key to svc_xprt
+  sunrpc: dispatch ready transports fairly per client
+  nfsd: add a fairq module parameter
+  nfsd: key NFSv4.1 connections by clientid for fair queueing
+
+ fs/nfsd/nfs4state.c             |  17 +++
+ fs/nfsd/nfssvc.c                |  19 +++
+ include/linux/sunrpc/svc.h      |   5 +
+ include/linux/sunrpc/svc_xprt.h |  46 ++++++-
+ net/sunrpc/svc.c                |   2 +
+ net/sunrpc/svc_xprt.c           | 216 +++++++++++++++++++++++++++++++-
+ 6 files changed, 302 insertions(+), 3 deletions(-)
 
 
-On Tue, Jun 2, 2026, at 6:39 PM, Hannes Reinecke wrote:
-> I am all for making keyrings namespace-aware. Logically I _think_ they
-> should be tagged per user-namespace, as this really is about the 
-> filesystem (and as such would warrant to be tagged per mount ns).
-> Tagging it per net-namespace is not a great fit (well, for me, at 
-> least), as also block devices might require keys to present the
-> bdev (eg nvme authentication)
-
-My understanding of the proposal is that there is one keyring on the
-system for .nfs and the keys in it are visible only in the namespace
-where they were created.
-
-Therefore the consumer (say, NFS, or NFSD) is running in a particular
-network namespace. It will create keys on the one .nfs keyring, but
-only the tlshd in that same network namespace will have access to
-those keys.
-
-
-> I might be okay to have it tagged per net-namespace, though, as all
-> current users are in some shape or form being network related.
-> But I'm not sure if that stays that way, so I am worried if we're
-> not restricting ourselves to much by that choice.
-> As really, the question is: what is the driving the namespace selection?
-> Is it the _requesting_ layer, ie the layer issuing the mount() call?
-> Or is it the _providing_ layer, ie the layer providing the 
-> devices/interfaces where the mount() call is operating on?
-> If it's the former, then we need to tag is as
-> net-namespace. If it's the latter, then we need to tag it as a
-> user-namespace / mount-ns.
-
-tlshd is a network layer service, so it doesn't make sense to bind
-it to a user or mount namespace, IMHO.
-
-
+base-commit: e7ca66ba17f1b5e4ecbb29b9c3c4a31aa062bed0
 -- 
-Chuck Lever
+2.53.0
+
 
