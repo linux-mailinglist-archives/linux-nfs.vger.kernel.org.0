@@ -1,72 +1,72 @@
-Return-Path: <linux-nfs+bounces-22227-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22228-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9MU5NZm8H2rfpAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22227-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:33:13 +0200
+	id qHdcGbK8H2rjpAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22228-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:33:38 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FE3F6344C1
-	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D70EA6344C9
+	for <lists+linux-nfs@lfdr.de>; Wed, 03 Jun 2026 07:33:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=Nu9hwOro;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22227-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22227-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=google.com header.s=20251104 header.b=cNwqxutk;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22228-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22228-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 145D030F43D4
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 05:31:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 16BCB30FE7A9
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 05:31:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD19A37F735;
-	Wed,  3 Jun 2026 05:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1D537CD50;
+	Wed,  3 Jun 2026 05:30:53 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371E937F8BC
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 05:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654D737CD2C
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 05:30:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780464651; cv=none; b=KhHpHl73b2xiCO8P9MKvxl+hExp4+ozTmx9lcM3ts7HBIZY2dOT8F9qm6TlK/mou/CTW745ZvBCo9SsDLXzb5342l0t123ASOenUu8sjLmN89n3p9moQ/vfQZKPTuihsbBfy6j5ICE1r0goNx1HYmyoJ93AWcbTwGvQ+FBSN4AY=
+	t=1780464653; cv=none; b=Aqf6+piE1D8ibj7oCATu/x7RWulagj3EXf5E4+ZET+ywr0wwz/yQCF+XGfmTLSIsuX22dj4vNhtsbu6ridG9SyWmSGjYVc6xh6kwJIQQkmgyWQ3LqYUrfYlC7L0kvvRcWGWSshBD0vFevJrriAEeSjyQf4aIfadOag/gBvlGVdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780464651; c=relaxed/simple;
-	bh=3uJU8vtiz8KIhmPO16VbFFhKJTkeUhYQ78W5xGMY6PQ=;
+	s=arc-20240116; t=1780464653; c=relaxed/simple;
+	bh=tot9ZqSWBGLET6Y1NhxRj5tdJGhWtAUdv0XhxLmkMKI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UYUr7UIb8Oz+BJGWlVts3XENVOZBVjNcm3UbIAce0AyS1PMIove+2wex8MofzB+nDWnLVLhjZDOqFeY/9cRd/9qcCqG4vRE0GATHkqOP3jb+SI3TBD2E+eRwaAGTn26Np092xfTG43vyNwz4w5ADw2qMZMSg7oxfmP1Q1ODkPQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--praan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nu9hwOro; arc=none smtp.client-ip=209.85.210.201
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-8421ffff8a3so5336332b3a.2
-        for <linux-nfs@vger.kernel.org>; Tue, 02 Jun 2026 22:30:50 -0700 (PDT)
+	 To:Cc:Content-Type; b=Ud1t8h9Kn3Zv+m/371C+pvbPfp6eDa5ydDWeo9gYhtDwuKCtLf5YM1ZtOoxT+wUx93FO7sInirLKZWuOgocbpdQW7VgcylniOukf3tNdOrmXjCNMCrXgJCq/fJaUv4AXgrkCg3UR3gIXPruYZ43QUxTejm6QGduL1Qk/OcCS240=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--praan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cNwqxutk; arc=none smtp.client-ip=209.85.210.202
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-8422875c676so277807b3a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 02 Jun 2026 22:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780464649; x=1781069449; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780464652; x=1781069452; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x6Uqa0WEXeSiOVPV/6N5if1ansZWBVyiMj0eE4epAYA=;
-        b=Nu9hwOroBub1aPj9ZoSa/tnIhRnhbYBbMEAn5PUeSCrZor7S4RjQz5FqvVBoaW53bJ
-         I7R5loPvjzbngFMGtdwGDeSfW8Zqj4vA3l+rGUlVcGRtfOMOWQkM+K9Hr53dN9vWr/F0
-         oW8StZAjPqOpG2WPzQcwhxCX2Q5nhfbrg4Sr4+0DTUq8sJEzKThlxtFQPx8v7IKR5JOB
-         TGWZ1YbBeStqzVh8BjLj/UhO4mljDXzFCSzBCrmcxiBPVUySTv2G/e8pk+BIWC1mmP6M
-         Htt1elhR5Axi0aFGRhFmh+Pueyn5AlPgW/FgmJDqnVrpwtHYoNtypIBpYhdNLDq7t2FO
-         nmBQ==
+        bh=niRreLs/kA/7tR4N81wD/w0wwhdK/GuCLzmPNYHZL+U=;
+        b=cNwqxutkmTXrsPbQoKtE0mwhwwvhQtvk8BysYQrhXUr3zJIHhvKUpnsjjeLCaMhr6F
+         Yr46dEg72uE4Lg/c0IlABWCgHgbADJhj4MK4oFXC2CTaB5Nbt59ip2nIBIhB13FNIWY6
+         j/7eriti9ivIl68jJ6WkHEkfQ7tBsDhOnha/BOsCqIW6ja+Dv/m6QEkceUgN/MxpNr+b
+         1FQePH/fCoAR6LaZ06b2VaATpTXGaoltv9DSRRAqffLaE1cgIeBucydm0s0B0gtx8eZ7
+         OwzGOJrRNaHdsTixfqzSDPwn6ikEcpcW7oOlb2Zn3MMnNuq6705SEuoDO/PgPQAd7o2d
+         X/Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780464649; x=1781069449;
+        d=1e100.net; s=20251104; t=1780464652; x=1781069452;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x6Uqa0WEXeSiOVPV/6N5if1ansZWBVyiMj0eE4epAYA=;
-        b=GaDzKgB1yyS98mENfhFmXzm9AIIoRsIiOBkwYZg2cXLjxzt68dCt/upXXJY5YNfoCj
-         Y90mewXQZoczZ7Ocxu3cg8NjZutZQ3F8xvoou/mZQ5qHMw63fm3sSmjrqpW7n4lZgdWK
-         wFmxNtvqiL/kg8j8LHu6fLcOMBWPkSmoD1k45mFudDh94OMblpgT9HRi/s2FTcwdWiMI
-         4QNHn0vL6LSZf5vgDPCagtb9Mty0t9qk2s38SecvXk/F9nuZPySy35J+077L30k3RmdH
-         6N9NaAuT3KAqV5jMcz2QjSbBOVQQst4LVBm2yn9a83vugLHxcmOYY7qSatIWfyeGilN/
-         ws2w==
-X-Gm-Message-State: AOJu0YwDrQ79fsevSsaTMqulFmiaSJzYprG1Snuss75dn9+GdeinLNYn
-	7LMlR0tI94YGhQS6xbhvHAd6zSX4CRQIDPexfk9aiJh/vPHrgM1IzctayaK3L8Q3SuIwO3ID0Fa
-	VAaKY4H6CJnaQzize9eTtTiBSeCIasfM5tQDum6nJSwG80ENwpJT/ITgayKg+NSpxxxxViGBYZd
-	4LrX8ckMADa+ksgFUBE7vE/8BjGxCy/+ajAQ8=
-X-Received: from pgmh4.prod.google.com ([2002:a63:5744:0:b0:c82:73de:68e2])
- (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c786:b0:3b4:cd6:891
- with SMTP id adf61e73a8af0-3b49766e89dmr2274598637.20.1780464649190; Tue, 02
- Jun 2026 22:30:49 -0700 (PDT)
-Date: Wed,  3 Jun 2026 05:30:32 +0000
+        bh=niRreLs/kA/7tR4N81wD/w0wwhdK/GuCLzmPNYHZL+U=;
+        b=YlQrMUnz8emWv/AuY/oZYPMN2ASGyiybStO1I/jjySZ2nGZu+hK2VZs+fKLXz1PS1j
+         4cFss7ypp29LsagX5VdXUA7trxN4a6x9dtS7PpixrIa4mNlG0p/S/AXF/Ca8BXQxh/oR
+         Ov/Q0pT/H8UQthU0aDtdOGlddHPKOzqx8GePuMaepo9qWQ8zqdX4Y9BoJPb/xsGMGJmX
+         g7z2Yy3UiWvgrtU2rIAh3zYzkUYJhaBg/8D4umLfr5ceSTpmneyU5Aequ0UeGONiAfdN
+         AapR7mfYpZoIKtzRUt7BTQLAYP//tZQ5ixv3owgPqNOw3YHHXd1svXcpwGLoE6w51+4R
+         LTNg==
+X-Gm-Message-State: AOJu0YyHmIauIjhW8qS5afHad4erlKU13V8orKOhBJRoxFs1oPBSWDgI
+	bqwEfCNIn0Y32JVtTvAoau1FqxA6TGW2B9O8Ks6qcyfAx9RekMm+7G0RQEIakb8P370NtZOl769
+	HpA3igGbW6MKEJZ4BDOJFReMiRALzQfmsxBf6vBk8RD8xUqj6h5JSFMcVcWMyqhBjuxjUcKw8us
+	2gnPvhZHTMLkPuftKFra/bC/PnkS7ThgpR+qI=
+X-Received: from pfbfx13.prod.google.com ([2002:a05:6a00:820d:b0:82c:90c5:5e0d])
+ (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:438c:b0:842:614b:50dc
+ with SMTP id d2e1a72fcca58-842859e0fb5mr1398765b3a.13.1780464651185; Tue, 02
+ Jun 2026 22:30:51 -0700 (PDT)
+Date: Wed,  3 Jun 2026 05:30:33 +0000
 In-Reply-To: <20260603053033.3300318-1-praan@google.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -76,8 +76,8 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260603053033.3300318-1-praan@google.com>
 X-Mailer: git-send-email 2.54.0.1013.g208068f2d8-goog
-Message-ID: <20260603053033.3300318-7-praan@google.com>
-Subject: [PATCH v1 6/7] nfs: Optimize direct I/O to use folios for requests
+Message-ID: <20260603053033.3300318-8-praan@google.com>
+Subject: [PATCH v1 7/7] nfs: Cleanup the nfs_page_create_from_page helper
 From: Pranjal Shrivastava <praan@google.com>
 To: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Christoph Hellwig <hch@lst.de>, 
@@ -91,17 +91,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22227-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22228-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[praan@google.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:hch@infradead.org,m:shivajikant@google.com,m:praan@google.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:hch@infradead.org,m:shivajikant@google.com,m:praan@google.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -116,78 +116,81 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3FE3F6344C1
+X-Rspamd-Queue-Id: D70EA6344C9
 
-Optimize nfs_direct_extract_pages() to group contiguous pages from the
-same folio into single nfs_page structures. This effectively migrates
-NFS Direct I/O from being page-based to being folio-based.
-
-Reduce the number of nfs_page allocations and subsequent iterations
-by utilizing nfs_page_create_from_folio() to create aggregated
-requests.
+Remove the nfs_page_create_from_page() helper and its public export.
+Following the migration of the Direct I/O path to folios, this
+function no longer has any callers in the NFS client.
 
 Signed-off-by: Pranjal Shrivastava <praan@google.com>
 ---
- fs/nfs/direct.c | 36 +++++++++++++++++++++++++++++-------
- 1 file changed, 29 insertions(+), 7 deletions(-)
+ fs/nfs/pagelist.c        | 35 -----------------------------------
+ include/linux/nfs_page.h |  6 ------
+ 2 files changed, 41 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 59002c150f23..93e1af9ec36b 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -194,23 +194,45 @@ static ssize_t nfs_direct_extract_pages(struct nfs_direct_req *dreq,
- 		return result;
- 
- 	npages = (result + pgbase + PAGE_SIZE - 1) >> PAGE_SHIFT;
--	for (i = 0; i < npages; i++) {
-+	for (i = 0; i < npages; ) {
-+		unsigned int chunk_len, folio_offset;
-+		unsigned int nr_to_add = 1;
- 		struct nfs_page *req;
--		unsigned int req_len = min_t(size_t, result - bytes, PAGE_SIZE - pgbase);
-+		struct folio *folio;
- 
--		req = nfs_page_create_from_page(dreq->ctx, pagevec[i],
--						pinned, pgbase, *pos,
--						req_len);
-+		folio = page_folio(pagevec[i]);
-+		folio_offset = (folio_page_idx(folio, pagevec[i]) << PAGE_SHIFT) + pgbase;
-+		chunk_len = min_t(size_t, result - bytes, PAGE_SIZE - pgbase);
-+
-+		while (i + nr_to_add < npages) {
-+			struct page *next_page = pagevec[i + nr_to_add];
-+			struct page *prev_page = pagevec[i + nr_to_add - 1];
-+
-+			if (page_folio(next_page) != folio ||
-+			    next_page != prev_page + 1)
-+				break;
-+
-+			chunk_len += min_t(size_t, result - bytes - chunk_len, PAGE_SIZE);
-+			nr_to_add++;
-+		}
-+
-+		req = nfs_page_create_from_folio(dreq->ctx, folio,
-+						  pinned, folio_offset,
-+						  chunk_len);
- 		if (IS_ERR(req)) {
- 			if (!bytes)
- 				bytes = PTR_ERR(req);
- 			break;
- 		}
- 
-+		req->wb_index = *pos >> PAGE_SHIFT;
-+		req->wb_offset = *pos;
-+
- 		list_add_tail(&req->wb_list, list);
- 		pgbase = 0;
--		bytes += req_len;
--		*pos += req_len;
-+		bytes += chunk_len;
-+		*pos += chunk_len;
-+		i += nr_to_add;
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 74ae91151f83..be8e4ef998ac 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -427,41 +427,6 @@ static void nfs_page_assign_page(struct nfs_page *req, struct page *page, bool p
  	}
+ }
  
- 	if (i < npages) {
+-/**
+- * nfs_page_create_from_page - Create an NFS read/write request.
+- * @ctx: open context to use
+- * @page: page to write
+- * @pgbase: starting offset within the page for the write
+- * @offset: file offset for the write
+- * @count: number of bytes to read/write
+- *
+- * The page must be locked by the caller. This makes sure we never
+- * create two different requests for the same page.
+- * User should ensure it is safe to sleep in this function.
+- */
+-struct nfs_page *nfs_page_create_from_page(struct nfs_open_context *ctx,
+-					   struct page *page,
+-					   bool pinned,
+-					   unsigned int pgbase, loff_t offset,
+-					   unsigned int count)
+-{
+-	struct nfs_lock_context *l_ctx = nfs_get_lock_context(ctx);
+-	struct nfs_page *ret;
+-
+-	if (IS_ERR(l_ctx))
+-		return ERR_CAST(l_ctx);
+-	ret = nfs_page_create(l_ctx, pgbase, offset >> PAGE_SHIFT,
+-			      offset_in_page(offset), count);
+-	if (!IS_ERR(ret)) {
+-		nfs_page_assign_page(ret, page, pinned);
+-		if (pinned)
+-			ret->wb_nr_pinned = 1;
+-		nfs_page_group_init(ret, NULL);
+-	}
+-	nfs_put_lock_context(l_ctx);
+-	return ret;
+-}
+-
+ /**
+  * nfs_page_create_from_folio - Create an NFS read/write request.
+  * @ctx: open context to use
+diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
+index 14eb5de64d2f..2a3e066cbeb9 100644
+--- a/include/linux/nfs_page.h
++++ b/include/linux/nfs_page.h
+@@ -124,12 +124,6 @@ struct nfs_pageio_descriptor {
+ /* arbitrarily selected limit to number of mirrors */
+ #define NFS_PAGEIO_DESCRIPTOR_MIRROR_MAX 16
+ 
+-extern struct nfs_page *nfs_page_create_from_page(struct nfs_open_context *ctx,
+-						  struct page *page,
+-						  bool pinned,
+-						  unsigned int pgbase,
+-						  loff_t offset,
+-						  unsigned int count);
+ extern struct nfs_page *nfs_page_create_from_folio(struct nfs_open_context *ctx,
+ 						   struct folio *folio,
+ 						   bool pinned,
 -- 
 2.54.0.1013.g208068f2d8-goog
 
