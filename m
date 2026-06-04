@@ -1,200 +1,212 @@
-Return-Path: <linux-nfs+bounces-22272-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22273-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +EjAF8iOIWp4IwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22272-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 16:42:16 +0200
+	id 7rYcNf2OIWqIIwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22273-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 16:43:09 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C943E640FB3
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 16:42:14 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC0BF640FD3
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 16:43:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b="C/FbaxZp";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22272-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22272-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=Dfo0DrQt;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22273-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22273-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DAE2830015BF
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 14:25:21 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AD6603012855
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 14:26:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 954843AFAE6;
-	Thu,  4 Jun 2026 14:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D27D47CC78;
+	Thu,  4 Jun 2026 14:26:06 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276FB220687
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2026 14:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD14442EEAD
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2026 14:26:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780583120; cv=none; b=MxqgH6lVQClEhzKscPbgvfZ24P61tLx6dzd0uhwno/gz/rLzG7U0aOeh/eRFEtHBZdtdhBJ3seYO7aFDRqpZlIYKVCLCJT0gPgXltldjveeklW5rrDW9XXMxio36kIVRxUoU6rKyELKmEWeEGRcjzd9yySM97l5XCm9HZezwqGo=
+	t=1780583166; cv=none; b=RfzTxlocXk4uuNsW4Ijx2rAMmSsW7HnphN/w+m7+O3FRN7dm/PUe7KUE9Iif9AQssFHgV5fvdeWDNljmYKD+77JlVm78i0SrXjX9Kngwk0lhTNszwf9WOUQZ4w4M51D0GXnSPICj4lJxc5s6Zq7tEVB31GQHmKTr/rV5nLXElXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780583120; c=relaxed/simple;
-	bh=XWUtl2sdGrcnRgWEK7+zZMMoHF3MWBAaT+zNZJUwoEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZBr33N8w4L5bDb4iDWILqMF4aeS12bD/EO3Q77OzFgNEBPv2zIgNPCxZKLQf52Jcrt29Ode/Ptt99rp9uq2AqNpOKxVhJb1sHtllCYZIx3Fn9mX/Qro/pJXLeOt6UPur+Dg40L7kBYd0xtJFM51cW6+7WioHK2qfjgLw2eYMbJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=C/FbaxZp; arc=none smtp.client-ip=209.85.161.45
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-69d7aa0ac18so584602eaf.0
-        for <linux-nfs@vger.kernel.org>; Thu, 04 Jun 2026 07:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1780583118; x=1781187918; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jrACnl3ZPmuFy+9DmO2mrW5wMH8uk5d7e6f8vA6JPMU=;
-        b=C/FbaxZpUXR8G/q5r0zTmWEPCVaciwJu/Yv1aKf+S5GkhHQj6RVeGmAeebj3guOf5B
-         YmdTf6fXLCuKmAf+mvi+AO67WftMjmbVItQrB7jOKcFBCkCCP6kzHG6jNa5XSPziU/YC
-         AfsaSb8tlDLDRi2LCAik3IDXqwUsv5ydnyRDwIjHHesGi4thsyZVqhBf27W1O7jPwfhb
-         yMQn0WmEH2+2uPq2ZPykycZY4TvEEdlnPYCdE4T3A+K/+y0U9P7Ev/hn4AbE78kF3Ruj
-         ZHWc89HXmQsNLvUeykAXyo+CbV260TEFheat5ZHTpKW985/+u6okqusYIpMaV0IGi/kW
-         XchA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780583118; x=1781187918;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jrACnl3ZPmuFy+9DmO2mrW5wMH8uk5d7e6f8vA6JPMU=;
-        b=ZUlr+O/pjP057bRMQIlPFwVwOJozd8uWNFcHIb8nxreUBj6MJj3iycezdPzx9CDYhq
-         O9bRe1a16oSmI8Wwg61F7JUpoGJrn1OYpqVpLV2eubMSvud6zO8h40CGaZ62z82aLHuK
-         hf1AW1LXF14GzB+T+HWQLQkr7JtkwBknvRbtDWaIRw4DmBU3QPXmCVadKpHML73EM3ld
-         +Y7NMZHmXHA4BUNlAh52akBfz3LJsG6Lrh6lW31khNvWVokcFiIAi/LjEj4QRPzCg8F3
-         dXnu96jE4VvX1OGrBZDFrpzPwLVcEs15s0LIUPO6HkdUwZ/7WmHtMmHEbWMLmOe69COu
-         IjAA==
-X-Forwarded-Encrypted: i=1; AFNElJ9MB/dTDHrxBGGTRmfEqQY3/b8aPBAp/0cD2x9O9CVaLXIEh7i7lgc9ZFcMHsdcc63kuiaWg7PriwU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEpAJO8e4uZJVs4gs/2HXL8Bwq8F9z2Kej9zQbZM8ppbSZ3qG6
-	Xv7lEeLeTsEPuANGAMZjly5OOmfBUXgAvXf/onGb0wf9noA7tXNlbL+NSIqmDzW5c3U=
-X-Gm-Gg: Acq92OEsud9bsHcTpNtqJAdFAeA4QtVkMtidc7YBmmc05FMv83LfXTJj08SMBPIs5YY
-	N8ceIa0b15aEI9e6ymk7bc5Y2uROZoDQo9Af/oDhYgmPa63QwGSYhfQ7hBgadu+cmVbexUFqOA2
-	3n55o+oMxcd6mChovAihT6j4UfNGnRkfDNMa30C9Ov0rVjfRS/mNi/qFI5GvsUQgwyHUs+dCPlx
-	toBtcjgfCt52s/YhXFAhNMQt+uorUjOtUVOBFwh4IvriNAi5tPKyLxThFL+BgcahAcNGb66EROu
-	wG4+PqueqV9TwM0ytRLjQjjEnSfLSk1GCgfxDSgvnJjyFol3MXm8xEbwxIaXMmmxblAgCF1ZHu1
-	q/ZZqoAdrmn4idAZOxAGCyRsEyWd7lVGUBP8gaiXUHJphBLRRcJLRXaKekvGkFxuRc59x+iozit
-	X6w3KoLdnzzYKa8HeHAvV1FGuV5KAeqabWXC+8ia2SkT0owG8xCHO3ug==
-X-Received: by 2002:a05:6820:5459:b0:69d:cfb6:4f4a with SMTP id 006d021491bc7-69e47e90abdmr3702597eaf.15.1780583117955;
-        Thu, 04 Jun 2026 07:25:17 -0700 (PDT)
-Received: from [192.168.254.51] ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-440d84c0ce2sm5730392fac.16.2026.06.04.07.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 07:25:17 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: NeilBrown <neil@brown.name>
-Cc: Benjamin Coddington <ben.coddington@hammerspace.com>,
- Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org, Daire Byrne <daire@brahma.io>
-Subject: Re: [PATCH RFC 0/4] nfsd: per-client fair-queue dispatch
-Date: Thu, 04 Jun 2026 10:25:16 -0400
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <9733CABE-73D0-460E-A710-DA9215E2FC17@hammerspace.com>
-In-Reply-To: <178052714769.2082204.16375565668618050718@noble.neil.brown.name>
-References: <cover.1780498019.git.bcodding@hammerspace.com>
- <178052714769.2082204.16375565668618050718@noble.neil.brown.name>
+	s=arc-20240116; t=1780583166; c=relaxed/simple;
+	bh=Twt+eDHBoEludCqGvDcVV+Ad8p7sVgzFKO5UzAtXH44=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=jafIWsBqYr7BW221wjGbRn60KNGks13cVNdAHduzH8vzQrx7uaVqpKMz0yZIE1afraXsVHIPXaRyQJP0CbFsgsfer4RoDO3vXfkdN1P+c8WHR7IOOpb5h6R3uNBH4dg94JQJ1eIrQuPJeiMdDN2qafwlBlsXyXFUu53TrGntIRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dfo0DrQt; arc=none smtp.client-ip=170.10.133.124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780583164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WtAwq+kBbu0Jre6SowbAzwYpDgzV/li3NBaF67YwMAg=;
+	b=Dfo0DrQtp1n6c8Zv/AEkr76uu887JNul49k9mQ9cWAo6JjZ06bUDqG0MSNKn79jNv51Gij
+	SOP6XbPPnYDPP6vNhPgJERtOAuQvvAuYyAu0VFus0MnhHhzNYkFF5d1JlcD/pgYyc/OlkL
+	kI8/ZrkHMRfL+NjwsvefJHEJhj44Bc4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-154-010EzjtuPq6sAk9ZnnOTDQ-1; Thu,
+ 04 Jun 2026 10:26:00 -0400
+X-MC-Unique: 010EzjtuPq6sAk9ZnnOTDQ-1
+X-Mimecast-MFC-AGG-ID: 010EzjtuPq6sAk9ZnnOTDQ_1780583158
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2813A1956094;
+	Thu,  4 Jun 2026 14:25:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.44.50.14])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3B2130001A1;
+	Thu,  4 Jun 2026 14:25:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ahPodavlA-gt44FO@infradead.org>
+References: <ahPodavlA-gt44FO@infradead.org> <20260518222959.488126-1-dhowells@redhat.com> <20260518222959.488126-6-dhowells@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Matthew Wilcox <willy@infradead.org>,
+    Paulo Alcantara <pc@manguebit.org>, Jens Axboe <axboe@kernel.dk>,
+    Leon Romanovsky <leon@kernel.org>, Steve French <sfrench@samba.org>,
+    ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Ilya Dryomov <idryomov@gmail.com>,
+    Trond Myklebust <trondmy@kernel.org>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    linux-block@vger.kernel.org
+Subject: Re: [PATCH v2 05/21] Add a function to kmap one page of a multipage bio_vec
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <127137.1780583146.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 04 Jun 2026 15:25:46 +0100
+Message-ID: <127138.1780583146@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22272-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:ben.coddington@hammerspace.com,m:cel@kernel.org,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:daire@brahma.io,s:lists@lfdr.de];
+	FREEMAIL_CC(0.00)[redhat.com,brauner.io,infradead.org,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-22273-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:hch@infradead.org,m:dhowells@redhat.com,m:christian@brauner.io,m:willy@infradead.org,m:pc@manguebit.org,m:axboe@kernel.dk,m:leon@kernel.org,m:sfrench@samba.org,m:chenxiaosong@chenxiaosong.com,m:marc.dionne@auristor.com,m:ericvh@kernel.org,m:asmadeus@codewreck.org,m:idryomov@gmail.com,m:trondmy@kernel.org,m:netfs@lists.linux.dev,m:linux-afs@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:v9fs@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-block@vger.kernel.org,s:lists@lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	FORGED_SENDER(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,hammerspace.com:mid,hammerspace.com:from_mime,hammerspace.com:dkim]
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,warthog.procyon.org.uk:mid,vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C943E640FB3
+X-Rspamd-Queue-Id: CC0BF640FD3
 
-On 3 Jun 2026, at 18:52, NeilBrown wrote:
+Christoph Hellwig <hch@infradead.org> wrote:
 
-> On Thu, 04 Jun 2026, Benjamin Coddington wrote:
+> > +static inline void *kmap_local_bvec(struct bio_vec *bvec, size_t offs=
+et)
+> =
 
->>   - Mechanism: a fixed bucket hash under a per-pool spinlock taken only
->>     on the opt-in path, versus a lockless or per-flow structure.
->
-> I'm not keen on the hash bucket approach, though I can't clearly say
-> why.
+> The name is rather confusing for something that does not map the entire
+> bvec, and is an anagram of the existing bvec_kmap_local.  So please
+> rename it to bvec_kmap_partial or something.
 
-I don't like the hash collisions.  Maybe that's your unspoken reason.
-Unlucky client means I still get random hand-wavy reports.
+Sure...  But it then differs in pattern from the various kmap_local_*() th=
+at
+we have.
 
-> I'm also not keen on the opt-in design.  I don't like asking the admin to
-> tune performance.  We should always provide optimal performance.
->
-> I imagine creating an object which represents a client - using IP
-> address or possibly v4 client id.  These may well be located using a
-> hash table (rhashtable?), but that is peripheral to the design.
-> Each xprt has an associated client which can be changed at any time
-> (nfsd could change to a v4.1-client).
->
-> Each client has a lwq of xprts and is part of an lwq of clients.
->
-> To enqueue an xprt, we grab the client, enqueue to that, then if
-> necessary enqueue the client.
->
-> To dequeue next, we dequeue the first client, dequeue the first xprt,
-> then optionally enqueue the client again.
+> > +{
+> > +	offset +=3D bvec->bv_offset;
+> > +
+> > +	return kmap_local_page(bvec->bv_page + offset / PAGE_SIZE) + offset =
+% PAGE_SIZE;
+> =
 
-ah - cool.  I think this is a much better design, the enqueue is lockless
-and no bucket sharing.
+> ...  Also this can use shits and byte masking to be a tad more efficient=
+ and
+> matching the rest of the bvec code.
 
-> So this would be slightly more work than the current (2 dequeues instead
-> of 1) but I think that might be acceptable.
->
-> clients would be refcounted by xprts and probably rcu-freed.
+PAGE_SIZE is a constant power-of-2, so it shouldn't make a difference if t=
+he
+compiler is doing its job properly, but okay.
 
-This is the hard part - the xprt holding ref to client, moving from v3 style
-(by ip addr) to v4.1 (by clientid) on session bind means repointing the xprt
-to a different client object, which can race if the xprt is enqueued.
+One thought: I could just give bvec_kmap_local() an offset parameter and u=
+se
+that instead.
 
-I suppose it's a one-time event for each v4.1 xprt, so could just create
-another XPRT_ flag for it..
+> Users of this would be interesting
 
-I'll see what I can come up with.
+It's used four times in patch 10 ("afs: Use a bvecq to hold dir content ra=
+ther
+than folioq").  I could merge this patch (patch 5) into one of the other
+patches, it's just been more convenient for it not be in a later patch whe=
+n
+flipping backwards and forwards to cut down on recompiling.
 
->
->>
->>   - Would a per-client in-flight cap be preferable to proportional fair
->>     queueing?
->
-> A per-client cap would only be ok if the admin didn't have to tune it.
-> So the client would need to get some sort of feed-back from the server
-> so that it knows when it is pushing too hard.  If we were still using
-> UDP we could possibly use packet-loss for that feed-back, but we aren't
-> and don't want to.
-> With v4.1 we can of course use the slot based flow control and I think
-> we should if we can agree on a good design.  With v3 I don't think there
-> is any way to get the needed feed-back
+> and why you're not simply using a bvec_iter at page granularity, which i=
+s
+> what other block kmap code does.
 
-I need to fairly queue v3 and v4.1 clients at the same time... :/
+Because for the most part I don't want to do linear iteration.  There are =
+a
+number of cases:
 
-Appreciate your look at this.
+ (*) Read-link and follow-link: For symlinks, there will only be a single
+     block and it will fit within PAGE_SIZE.
 
-Ben
+ (*) Readdir and dir checking: I iterate over the directory contents using
+     iov_iter and iterate_bvecq(), though I could also use bvec_iter insid=
+e a
+     loop to step through the bvecq chain.
+
+ (*) Lookup: Follows the hash chain in the directory rather than searching
+     linearly.
+
+ (*) Editing of local directory copy: Doesn't do linear iteration, but rat=
+her
+     does random access of blocks in the directory.  (This is to avoid hav=
+ing
+     to reload the dir from the server when doing mkdir, rename, etc.)
+
+Note that directories are 2K, not PAGE_SIZE, and, when editing, I may need=
+ to
+modify more than one block in a directory operation and they may share a p=
+age
+(which may be part of a higher order page).  Can we drop 32-bit arches yet=
+ -
+or, at least, highem support?
+
+David
+
 
