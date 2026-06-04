@@ -1,62 +1,60 @@
-Return-Path: <linux-nfs+bounces-22296-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22297-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ClPjBwH9IWpfRQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22296-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 00:32:33 +0200
+	id 9VUWBtsAImryRQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22297-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 00:48:59 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DEA7643CE7
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 00:32:32 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA2F5643DCE
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 00:48:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Q8s7wByU;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22296-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22296-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GTfkEQ5V;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22297-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22297-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C1E8C30302A3
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 22:27:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6BED1301C672
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 22:48:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73A7F284B25;
-	Thu,  4 Jun 2026 22:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF513009E1;
+	Thu,  4 Jun 2026 22:48:42 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A833BBFDC
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2026 22:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B637A259C9C
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2026 22:48:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780612040; cv=none; b=cc4MhZCPvw1I2cxqdOV5Nadqpdprqn/P0sgbmnmJWj6lvpTZUSkakfN799/ZjDm9k2TuhFQ185m8gqIILY7kxvCKHxKEaueTAYpDbv/K2nuYr9zbKEuEXZeNFA67IO1K+LgXqXOD54QWhy0bDeKRR5w/ww9gT3motvM8y9zkIjs=
+	t=1780613322; cv=none; b=qhq5CT+W95XI1+j3AEY9cWbnDXKqZ6SRW0aviCjm5wZwLmD1myLLt1WM6RCzQhR1Lk5oJdTZfdrfSmUPPT1rD4kNi0IcTQ/N/mPCOGKDYvuT4WrD9iAEW2e2tXAgbi8S976XxAxCBX4OecHAy07R84YNy1oau86igYE/AYtfeoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780612040; c=relaxed/simple;
-	bh=GK9JdW/gJEIOyxx4E204ZRw0MwikCU/pQZHDrRceR7w=;
+	s=arc-20240116; t=1780613322; c=relaxed/simple;
+	bh=DABJmGNC1upCX23eiVpIw3j/LJ/AC4iFQAuw1ih0K5s=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N85D+hquBbCypVkUm3mq1QguFu+Uy1Yk3h2piWypOfu8lWbfAm3D97eC63h1rkw4DoN39C2w9Ln+Va2fAYSpMu0wLukkgQmA/fB/DvoBSwqce6jwH5nwZD9+mmqQQO97/qj28STHYb5Q/nKxeCpdqtwDxdcL91X5CluzC5jaTtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8s7wByU; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C321F00898;
-	Thu,  4 Jun 2026 22:27:18 +0000 (UTC)
+	 Content-Type:MIME-Version; b=O1fXhHXjUuPBSIKDHlLHXRV59M2nhtb3mbV9m016ijlnKFQ/69BwwBeZB1Cy7jO5VMeALV7xniNMBrFhU86v+BAYDfJc18u5pwdGENyiL9xjRSSe3n8Nx+flfdyNx8LZUWF6Vnps8dDsEZNuBC3iv/iTNfj6oRex4NCsvAX/h4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTfkEQ5V; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDAA31F00893;
+	Thu,  4 Jun 2026 22:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780612038;
-	bh=ei93JaXFw4vwFlFWh2aWRYF21yNzBCfp7SxfJVEKubU=;
+	s=k20260515; t=1780613321;
+	bh=SXRTV1qiWoSKeU8IjcYoHL/n73a/GI6WPOytOFKsYCs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Q8s7wByUJW5Jko4HTHGqE4oGT9phzc36w0MNsC+Gc/rFHITqrU5rmvBeLlsNHYbUe
-	 Ko+8pnSElijGLxpxRFD2e/8zkmMQzg3bGqQ/fgszO2t/Qp98S29B+fxqrPrAfSRjEQ
-	 2OHt+GpE5auUoEIee5NpP/nVWeVwyZACt2GBV71ZnnXbZjM+SMPJRNrlGOOoXjNDPQ
-	 CABY1vS91vXNVPfu6+FTiAAaJsyxIxn94r25OOkPaf7nnKYLCKkMiENWfA4NJtVMGe
-	 ZxxdNP929Je8DEIPF4DtlJmtCdI+rMNGa8l/GbIn4yINBpYxRomuAI3E7Muy00brCw
-	 xUeXuUl6ItjFA==
-Message-ID: <929f6172207b3d13f641c6b6b7ba8d819273f300.camel@kernel.org>
+	b=GTfkEQ5VPoPRyCnAnsSpX8CBOoJq4ShSA99MANRGMtDqPkr3h+ZXaXMa0t7S+wygb
+	 XIa67EB8yzh+eGVJjdy8M4Rce2tUW0itQu4i5RuBHHU4iHSxM+axerr5138MXzFPUQ
+	 TP9XLEtF5Eas0LNxQiQrc7NQmI4wD3oAGd9BTHFOZyX32qoJ7JyetNyGvfncMqJxXm
+	 EGYj6VLeDZiKn36Vgk8w6zikYsTkVyXZ31Uj7/Bye0oFsBvdZ22ft6XjBdum3DVdI3
+	 MDw9YZn7O44FMMYfm7+BrCpRaqbqWFgis3QldHUx9LaxFJ9oHpvZx6thPSeGEMEwZO
+	 BsUOD73OjyesA==
+Message-ID: <d2950dab8efe3302e4d8c3a1212b6b65fb4cafc8.camel@kernel.org>
 Subject: Re: [PATCH RFC 0/4] nfsd: per-client fair-queue dispatch
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Benjamin Coddington
-	 <ben.coddington@hammerspace.com>
-Cc: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org, Daire Byrne
-	 <daire@brahma.io>
-Date: Thu, 04 Jun 2026 18:27:16 -0400
-In-Reply-To: <178052714769.2082204.16375565668618050718@noble.neil.brown.name>
+To: Benjamin Coddington <ben.coddington@hammerspace.com>, Chuck Lever
+	 <cel@kernel.org>, NeilBrown <neilb@ownmail.net>
+Cc: linux-nfs@vger.kernel.org, Daire Byrne <daire@brahma.io>
+Date: Thu, 04 Jun 2026 18:48:39 -0400
+In-Reply-To: <cover.1780498019.git.bcodding@hammerspace.com>
 References: <cover.1780498019.git.bcodding@hammerspace.com>
-	 <178052714769.2082204.16375565668618050718@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -144,23 +142,24 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:ben.coddington@hammerspace.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:daire@brahma.io,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:ben.coddington@hammerspace.com,m:cel@kernel.org,m:neilb@ownmail.net,m:linux-nfs@vger.kernel.org,m:daire@brahma.io,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22297-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22296-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[hammerspace.com,kernel.org,ownmail.net];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -169,121 +168,101 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8DEA7643CE7
+X-Rspamd-Queue-Id: AA2F5643DCE
 
-On Thu, 2026-06-04 at 08:52 +1000, NeilBrown wrote:
-> On Thu, 04 Jun 2026, Benjamin Coddington wrote:
-> > knfsd dispatches ready transports from a single per-pool FIFO, so a
-> > client's share of nfsd service scales with the number of connections it
-> > holds rather than being shared per client.  A client that opens many
-> > connections (nconnect, or a farm of data movers) starves other clients
-> > on the same server purely by out-numbering them in sockets.
-> >=20
-> > I measured this with a load generator that pins each request to a fixed
-> > service time and does no filesystem work, so that nfsd thread-time is t=
-he
-> > only scarce resource (8 threads, 10ms/op, ~648 ops/s pool ceiling).  A
-> > greedy client opens K connections alongside one single-connection
-> > interactive client.
-> >=20
-> > NFSv3, dispatch as it is today:
-> >=20
-> >   greedy K   greedy share   interactive ops/s
-> >      1           50%              241
-> >      4           80%              129
-> >      8           89%               72
-> >     16           94%               38
-> >=20
-> > The interactive client's share tracks 1/(K+1) and its throughput falls
-> > roughly 6x while it does nothing different.  NFSv4.1 behaves identicall=
-y
-> > (89% greedy at K=3D8) even when the greedy connections are bound to a
-> > single session, because the dispatch decision is below the NFS version.
-> >=20
-> > The same NFSv4.1 workload with fair queueing enabled:
-> >=20
-> >   greedy K   greedy share   interactive ops/s
-> >      8           72%              182
-> >     16           73%              177
-> >     32           70%              193
-> >=20
-> > The greedy client's share no longer climbs with its connection count an=
-d
-> > the interactive client recovers (72 -> 182 ops/s at K=3D8).  Aggregate
-> > throughput is unchanged: the T/D pool ceiling is the same with fair
-> > queueing on and off.  The split does not reach 50/50 because a single
-> > interactive connection is bounded by its request window and by XPT_BUSY
-> > serialising one transport; with a deeper window it reaches ~59/41.
-> >=20
-> > The approach:
-> >=20
-> >   - sunrpc grows an opaque per-transport fairness key (patch 1), with a
-> >     default derived from the source address (the source port is exclude=
-d
-> >     so a client's several connections share one key), and an opt-in
-> >     per-pool scheduler that buckets ready transports by that key and
-> >     dispatches round-robin across keys (patch 2).  When it is disabled,
-> >     which is the default, the existing lockless FIFO path is unchanged.
-> >=20
-> >   - nfsd gains a "fairq" module parameter to turn it on (patch 3) and
-> >     stamps the NFSv4.1 clientid as the key when a connection binds to a
-> >     session (patch 4), so all of a client's connections share one key.
-> >     NFSv3 uses the source-address default.
-> >=20
-> > This is an RFC; a few questions for the list:
-> >=20
-> >   - Unit of fairness: clientid (used here) or session?  Earlier
-> >     discussion leaned toward exploring per-session.
-> >=20
-> >   - Mechanism: a fixed bucket hash under a per-pool spinlock taken only
-> >     on the opt-in path, versus a lockless or per-flow structure.
+On Wed, 2026-06-03 at 11:09 -0400, Benjamin Coddington wrote:
+> knfsd dispatches ready transports from a single per-pool FIFO, so a
+> client's share of nfsd service scales with the number of connections it
+> holds rather than being shared per client.  A client that opens many
+> connections (nconnect, or a farm of data movers) starves other clients
+> on the same server purely by out-numbering them in sockets.
 >=20
-> I'm not keen on the hash bucket approach, though I can't clearly say
-> why.
-> I'm also not keen on the opt-in design.  I don't like asking the admin to
-> tune performance.  We should always provide optimal performance.
+> I measured this with a load generator that pins each request to a fixed
+> service time and does no filesystem work, so that nfsd thread-time is the
+> only scarce resource (8 threads, 10ms/op, ~648 ops/s pool ceiling).  A
+> greedy client opens K connections alongside one single-connection
+> interactive client.
 >=20
-> I imagine creating an object which represents a client - using IP
-> address or possibly v4 client id.  These may well be located using a
-> hash table (rhashtable?), but that is peripheral to the design.
-> Each xprt has an associated client which can be changed at any time
-> (nfsd could change to a v4.1-client).
+> NFSv3, dispatch as it is today:
 >=20
-> Each client has a lwq of xprts and is part of an lwq of clients.
+>   greedy K   greedy share   interactive ops/s
+>      1           50%              241
+>      4           80%              129
+>      8           89%               72
+>     16           94%               38
 >=20
-> To enqueue an xprt, we grab the client, enqueue to that, then if
-> necessary enqueue the client.
+> The interactive client's share tracks 1/(K+1) and its throughput falls
+> roughly 6x while it does nothing different.  NFSv4.1 behaves identically
+> (89% greedy at K=3D8) even when the greedy connections are bound to a
+> single session, because the dispatch decision is below the NFS version.
 >=20
-> To dequeue next, we dequeue the first client, dequeue the first xprt,
-> then optionally enqueue the client again.
+> The same NFSv4.1 workload with fair queueing enabled:
 >=20
-> So this would be slightly more work than the current (2 dequeues instead
-> of 1) but I think that might be acceptable.
->=20
-> clients would be refcounted by xprts and probably rcu-freed.
->=20
-> >=20
-> >   - Would a per-client in-flight cap be preferable to proportional fair
-> >     queueing?
->=20
-> A per-client cap would only be ok if the admin didn't have to tune it.
-> So the client would need to get some sort of feed-back from the server
-> so that it knows when it is pushing too hard.  If we were still using
-> UDP we could possibly use packet-loss for that feed-back, but we aren't
-> and don't want to.
-> With v4.1 we can of course use the slot based flow control and I think
-> we should if we can agree on a good design.  With v3 I don't think there
-> is any way to get the needed feed-back
+>   greedy K   greedy share   interactive ops/s
+>      8           72%              182
+>     16           73%              177
+>     32           70%              193
 >=20
 
-Shrink the TCP window to 0 for a bit on the connection(s)? That's the
-typical way to slow down a spammy client on a TCP socket. It's a bit
-coarse grained but typically the best we can do with v3. IDK, could we
-do something with the ECN flag?
+These seem like pretty clear improvements.
+
+> The greedy client's share no longer climbs with its connection count and
+> the interactive client recovers (72 -> 182 ops/s at K=3D8).  Aggregate
+> throughput is unchanged: the T/D pool ceiling is the same with fair
+> queueing on and off.  The split does not reach 50/50 because a single
+> interactive connection is bounded by its request window and by XPT_BUSY
+> serialising one transport; with a deeper window it reaches ~59/41.
+>=20
+> The approach:
+>=20
+>   - sunrpc grows an opaque per-transport fairness key (patch 1), with a
+>     default derived from the source address (the source port is excluded
+>     so a client's several connections share one key), and an opt-in
+>     per-pool scheduler that buckets ready transports by that key and
+>     dispatches round-robin across keys (patch 2).  When it is disabled,
+>     which is the default, the existing lockless FIFO path is unchanged.
+>=20
+
+That makes sense: you can make the IP address the key by default, and
+then nfsd can override that later with the sessionid or whatever.
+
+>   - nfsd gains a "fairq" module parameter to turn it on (patch 3) and
+>     stamps the NFSv4.1 clientid as the key when a connection binds to a
+>     session (patch 4), so all of a client's connections share one key.
+>     NFSv3 uses the source-address default.
+>=20
+
+Like Chuck, I greatly prefer no tunables, but while experimenting with
+this, it may be helpful to add some under debugfs. The goal at the end
+should be "no tunables" though.
+
+> This is an RFC; a few questions for the list:
+>=20
+>   - Unit of fairness: clientid (used here) or session?  Earlier
+>     discussion leaned toward exploring per-session.
+>=20
+
+I don't think we know. Per-session sounds like the right thing, but I'd
+leave room for experimentation here. For v4.0, you might want to do
+this by clientid. For v3, I think using the IP address without port
+like you have is probably as good as can be done.
+
+>   - Mechanism: a fixed bucket hash under a per-pool spinlock taken only
+>     on the opt-in path, versus a lockless or per-flow structure.
+>=20
+
+I don't have a real preference here. Whatever performs best, most
+likely. This will be in a hot path.
+
+>   - Would a per-client in-flight cap be preferable to proportional fair
+>     queueing?
+>=20
+
+I think probably not, but this too might require some experimentation.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
