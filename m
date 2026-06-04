@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-22283-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22284-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RXw8BISzIWrgLgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22283-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 19:19:00 +0200
+	id JGzrEIqzIWrkLgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22284-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 19:19:06 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 107D4642440
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 19:18:59 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46994642443
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 19:19:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MHDNrh1Y;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22283-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22283-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ov6I12f3;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22284-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22284-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7B11E308A643
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 17:07:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9E9A0308B83C
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 17:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76422495525;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1DB495537;
 	Thu,  4 Jun 2026 17:06:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FD0293458;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D176A494A0F;
 	Thu,  4 Jun 2026 17:06:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780592809; cv=none; b=hs6TAmujidxCsPt1GcwbzQY/1nkLbGogcPtZSiUjYaS+odu7qRMAchAB4V4PomB2Sfj9wmusi4Unf8N8MqhuwqBelqQraGM935GRnO1ZEjGO2/ItfVfv/KvKHWZSsHTKlf8bWaTsH0bSxDWakUx7vAQEFl6Yd7m8rcPrejIMOz0=
+	t=1780592809; cv=none; b=eevFHx7OZQgaRuM1J/grEwDFZmu3E94wBq/1mmHzHU2vs4XG1ChxY0SOFmJ77VgsCpQ52Ih421eJ32XPDHm1PEgBU99CXsvNAFQ/M3T/PLjklXCq5EZUV+rhanajsFH+wYMKJN61FoDNGeJulSMAkztJBvwP7Agn4kPv4khnIG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780592809; c=relaxed/simple;
-	bh=Yh883bbx8dnSWDHX9FdCCk1DY2g77xtt9mjzexvRstA=;
+	bh=gl5u9T/WLsv9NTBax558oFwZ21E9wEI7/d37tIqkhUE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K8NI6LCUSbcC7HI7dZQPhE2UO12zBpwuCm4xNq5bc0TeOawjO0jGyy6tFwBkoAH1bUuSuwjNMx4uvhAizffssSOf959NHVo1IS964HUZ+Xm1KQyqfbxqkXghRP3XV3/5FAjm9YF66SAygMSqwwGAxac1mV5fTnmf7daj4jAawPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHDNrh1Y; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 396E71F0089A;
+	 In-Reply-To:To:Cc; b=mBVqZPI7/uimeEeqQB/wvYTh7y1b3sKyP26FA6Eee6ryjWjeV8Xx2uFiMXD/57ooYKAC51QM6pKMxCWtIGex7qvmqgsqC8z7zw64YQavX7cTKWgeUbCFo4NjWBPMHSTIRf9qfV51fFBqY6UEix6A2+SZwzHm8WTvjWKJ3KCZ0S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ov6I12f3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832501F0089B;
 	Thu,  4 Jun 2026 17:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1780592807;
-	bh=2MpghPDtNc8oABDwb/bukMe+i7dgYlblH2ENr1Xi35w=;
+	bh=6Q+6ltYCCo2mDT/WucqCnba4SUIQ8Iu39pG0SvFlirY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MHDNrh1Y2BhqQEierKdWhSCcRPf0e7407mOM5mhKDLZ6dnJayADLPwS3KMemhp+Dt
-	 /ApRjcsCfqXINOILYvETHVgrFpKArDc7mR4viqud7jpYS3k7R1CBOGjmdoEsXSMKDg
-	 RLUbFDpw4y8/rC1znANGkKgKsOBu/XFeOsLJH7XzPPGB2bO7c6N00oorXmMZFjTIXb
-	 kGcGfQBR2QsUR1ClD3ODclV95vKvDy3YZnSg8b0Aii5QM4BAFSS4khlYYq2nYoo3FS
-	 ALZ3hSBGPhOFRikfc4haBom8vQNTwyqcZ2LgY0QIU/xuQQQtexQHAXOZuE9DXJYOfl
-	 vuiiAfwjEtsmg==
+	b=ov6I12f3LQZKnWLTVy5xfL+FIPgAdCv0SdlVGaRjMs+A/jK7xzSYVMnElTR8ZB2jZ
+	 D6VVpaMuWhC8ORa2rIVNIUNPeuienneYqByTFIenlu2Sq4K0LBuiarsrYgFw0R/Owd
+	 pw6hXyuDcq6wMDVjeHvYeUOsp/46ynqwxsTWKekPz1HT0wtIQ8bGXKgVyHAP8KB3/6
+	 5kXxEOOOdwn8dmCXLtVxLliZlNNwb+z9MvKIAQMxXS1y2kNDxeatzLYzM+p+NPOYzI
+	 Q0l1RCayq9ffL0WfBulO1G/rFxVDslGsFzPOjt2TA7JjoAbIMmuqFgML9+8mLid90u
+	 rV7F9rFKlLTmA==
 From: Chuck Lever <cel@kernel.org>
-Date: Thu, 04 Jun 2026 13:06:34 -0400
-Subject: [PATCH 2/8] xprtrdma: Initialize re_id before removal registration
+Date: Thu, 04 Jun 2026 13:06:35 -0400
+Subject: [PATCH 3/8] xprtrdma: Check frwr_wp_create() during connect
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,51 +57,51 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260604-xprtrdma-refcount-v1-2-f74553f461e9@oracle.com>
+Message-Id: <20260604-xprtrdma-refcount-v1-3-f74553f461e9@oracle.com>
 References: <20260604-xprtrdma-refcount-v1-0-f74553f461e9@oracle.com>
 In-Reply-To: <20260604-xprtrdma-refcount-v1-0-f74553f461e9@oracle.com>
 To: Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
- Chris Mason <clm@meta.com>, Chuck Lever <chuck.lever@oracle.com>
+ Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1938;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1958;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=ItAPdfPdd1psSL7DmfB5k2TG7Q3etnRZnChiz6zYWsQ=;
- b=kA0DAAoBM2qzM29mf5cByyZiAGohsKWgqyi2smm8AGsROqsfwgM29zHXS8YDt1dRFgxtd58Kq
- IkCMwQAAQoAHRYhBCiy5bASht8kPPI+/jNqszNvZn+XBQJqIbClAAoJEDNqszNvZn+XTsAP/3BT
- XFjJiS/LXsQlhwEi3RyvSdLtflYuI0nOl0JzdIgPdt8nzXaxHs9JvxjsF1qqVhs7buhctQ1Nncl
- di3hWaYVxApYqJ+zi/CbuFXW+HQIrHZIVcZZA7gmt7unWRyGbCn2WN9V6JVOmKTJfFUTYonP19m
- Y5BQcYzzKsSMZ2JB0IFZrwZvpKcdInNeqvdfU7Tnye/vI//vGmh5RG8+UabB2nWyTx7AzYBkDUi
- EsGk3MBPtShwRFkfYSKmbB98+2Z/Z6RwgUlD5hzFeV5DRG6W6CXFMNE7ts7xIlZvxhEa7PnP/Nh
- 0k+XWxO1zae35jSY3EL91gdEO8PPxBc7NuRBpbIIQrfKfwPwgdaBbQX0z/+OU8xQ444NnrR6Tah
- crKvtEyLJMltZzEMsp7zT3djoZ4qpbKj6NujHypw3ouuObBr9pxVT13yMklLemgatACr3J0ngzw
- K/769BEJ/3+xVbEjUrWlRNUPjeavwsIHJaLQ23D4sztx3mT9qCgCa7f9e2m5tcEcA/VOGfzB0WE
- 8bgzM550UFk9tcZEC1Zac7G6fgNIvr3kQ9NdYZnCA31/SvTUxdHMwrwDuHamdn4LBmjq/8vq0nn
- KL2xRZXAyXGL/xzVdNQ1j0tVX/nnIMMLbVdyMbVwZuZrblAuw3B523EHUWDn5AtqJtSYT7+Y1il
- 5PGL9
+ bh=cmYagXODy/yqCft5L24NlmwNLE3KSuDltPN21XJngD8=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIbCm2N5tJFkWM56VjQjuilO0jCY7YvN+0rQyj
+ RUZYHU9y2yJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiGwpgAKCRAzarMzb2Z/
+ l5CZEACneNamZeYhF0hds66EDFP1sRqXIysYcGLa9iKf6U6cvGptGZlTClcmVpJtYzbDVd+6ono
+ ax+TcsSuqscaX5zOnV34fkuOT3KaBp4AZHJiPgzRtE+/maBPvbbLS9mfuLFRaQZemxdCo+PEcI+
+ Zo0LvUGb+JLgYpFP92zW0geskpGPON1PTugpHu4JCCL50U+3W6/3Im8hMhCf4SGIsbKcm5Y/18k
+ 6es96OAXKR7ZYNhwqnrH8Pgj2WbSkJSfnzPSPh7xnC2LjNjiYiYjDj+rGJDHW9vhKkDVZqniIuZ
+ tho3ci8QNe7NC3+wCP9+lTDYRxlIJTFknWOFDeTrGk4hYJFa5K2+IIOt4tvb1eOXXodIwTb+I3h
+ yJ8esK9PE9gqtjzvEm3DKeFpJgusTT4YIwwdRUNkTdSAxvnLoBvRdYvPQWK8+B7Ny2e5L9/qLFS
+ a6OsYVaiI8Oqds/Su8JGUbfTf+NdSi6PLPHp0JHp8mlK3Krde1UFQahhvBHCuiyMAn9FOGqZC+2
+ BoHZB/M3dmWbUx/S2Ytw0gpNLLIaLCXAOZB9eHLQ5kj4Remnf1f/OHvCPL6fyJrjiPwnAHxRAZl
+ Kelh1ZMDMumJUuT8m67UObnNguKDGSJeohUOi2OUhlR9yOJ91AouWjWblS6nFRGxKGSb3pbcQPE
+ LEk2pFpQqrbS1Pg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-22284-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:clm@meta.com,m:chuck.lever@oracle.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:chuck.lever@oracle.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22283-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -109,60 +109,63 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,meta.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 107D4642440
+X-Rspamd-Queue-Id: 46994642443
 
-From: Chris Mason <clm@meta.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-rpcrdma_create_id() registers ep->re_rn with the rpcrdma ib_client
-before returning the new rdma_cm_id to rpcrdma_ep_create(). However
-rpcrdma_ep_create() currently stores that pointer in ep->re_id only
-after rpcrdma_create_id() returns.
+frwr_wp_create() creates the singleton Memory Region used to encode
+padding for Write chunks whose payload length is not XDR-aligned. Its
+failure paths return a negative errno and leave ep->re_write_pad_mr set
+to NULL.
 
-A local administrator can race an NFS/RDMA mount against RDMA device
-removal. If rpcrdma_remove_one() observes the just-registered
-notification before rpcrdma_ep_create() assigns ep->re_id,
-rpcrdma_ep_removal_done() calls trace_xprtrdma_device_removal(NULL).
-The tracepoint dereferences id->device->name and copies
-id->route.addr.dst_addr, so the callback can crash the kernel with a
-NULL pointer dereference.
+rpcrdma_xprt_connect() currently ignores that return value. If
+frwr_wp_create() fails after the rest of the connection setup succeeds,
+xprt_rdma_connect_worker() treats the connection attempt as successful
+and sets XPRT_CONNECTED. A later NFS/RDMA read with a non-4-byte-aligned
+receive page length reaches rpcrdma_encode_write_list(), passes the NULL
+write-pad MR to encode_rdma_segment(), and dereferences it.
 
-Store the rdma_cm_id in ep->re_id immediately before publishing
-ep->re_rn. The existing error path still destroys the id directly if
-registration fails; ep is then freed by the caller without using
-ep->re_id. Remove the later duplicate assignment in rpcrdma_ep_create().
+This is locally triggerable on an NFS/RDMA client after a connect or
+reconnect hits a local MR allocation, DMA-map, MR-map, or post-send
+failure; a remote peer alone cannot force the local MR setup failure.
 
-Fixes: 3f4eb9ff9234 ("xprtrdma: Handle device removal outside of the CM event handler")
-Assisted-by: kres:openai-gpt-5
-Signed-off-by: Chris Mason <clm@meta.com>
+Check the return value and fail the connect as -ENOTCONN, matching the
+adjacent setup failures. This keeps XPRT_CONNECTED clear and lets the
+normal reconnect path retry.
+
+Fixes: 21037b8c2258 ("xprtrdma: Provide a buffer to pad Write chunks of unaligned length")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/verbs.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 354d5c0eb04f..ea78f82ec4d3 100644
+index ea78f82ec4d3..04b4b0b40a3b 100644
 --- a/net/sunrpc/xprtrdma/verbs.c
 +++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -334,6 +334,7 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
- 	if (rc)
+@@ -549,7 +549,17 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
  		goto out;
- 
-+	ep->re_id = id;
- 	rc = rpcrdma_rn_register(id->device, &ep->re_rn, rpcrdma_ep_removal_done);
- 	if (rc)
- 		goto out;
-@@ -406,7 +407,6 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
  	}
- 	__module_get(THIS_MODULE);
- 	device = id->device;
--	ep->re_id = id;
- 	reinit_completion(&ep->re_done);
+ 	rpcrdma_mrs_create(r_xprt);
+-	frwr_wp_create(r_xprt);
++
++	/*
++	 * rpcrdma_encode_write_list() dereferences the write-pad
++	 * MR with no NULL check, so fail the connect rather than
++	 * publish a transport whose write-pad MR is NULL.
++	 */
++	rc = frwr_wp_create(r_xprt);
++	if (rc) {
++		rc = -ENOTCONN;
++		goto out;
++	}
  
- 	ep->re_max_requests = r_xprt->rx_xprt.max_reqs;
+ out:
+ 	trace_xprtrdma_connect(r_xprt, rc);
 
 -- 
 2.54.0
