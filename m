@@ -1,179 +1,334 @@
-Return-Path: <linux-nfs+bounces-22276-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22277-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id VkWwDx2SIWqMJAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22276-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 16:56:29 +0200
+	id WJIGOsmWIWrpJQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22277-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 17:16:25 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D082964124F
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 16:56:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3947F64152B
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 17:16:25 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=infradead.org header.s=casper.20170209 header.b=niy8gQ+G;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22276-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22276-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=infradead.org;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dUPeiX8d;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22277-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22277-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 936D8312CF27
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 14:46:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5D7AF3050932
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 14:54:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB432D7DE9;
-	Thu,  4 Jun 2026 14:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2100C2F7F1A;
+	Thu,  4 Jun 2026 14:54:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D09A2EA732;
-	Thu,  4 Jun 2026 14:46:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68A91F1534
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2026 14:54:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780584403; cv=none; b=nYCgH+12EcwSHr53FlXnGbFBYs/M5z4cU8SEGFH8l4bvlzfGjKf1Qxui73hyqfhCDmYmg8rO7jE3rIi2Omt/WTjOnARItL7LwVTwFzoVnwU8FGBmUnhcZr3Crm1YqPnJNyzeJ9bQcS7wWHlGB0D/mZ02g659AaTRdYv0YZbMb3M=
+	t=1780584879; cv=none; b=NVimv/tN5n3YCqYYnlRBmMZz88VvD49/R/E3n4yoeaIy41jhowb7MLY3SM3kH2DUbkZ1ByMfhANkJyka8n1ah/dkQ3aD7v27aOxz/h3A7xC/OIqzYopuiHI3r4iT2LA2eB56HTXzXUQwbQFz7JlWGg2Fuxu40opXXU2j/6ij69U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780584403; c=relaxed/simple;
-	bh=kUWiuBPrxX5exwSfkCtfd/7XL6RB7gxIWFebCVnPH+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CDtUT33FqSpfxCRlqFR1WRslNubLxUu7ci2cXZKqm9UaA3L6VfGIkdXH2J3uQ43Itk8yvR/kIHeaZyWWPztXzqYre2QdZ/+ORf7nct7Y0iEjSFzhQbuAz1gDY4F8YVbBJ/+fuzkPFEjnb7mRVIzAnyaQcv41e4m7Ow7VEA15bIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=niy8gQ+G; arc=none smtp.client-ip=90.155.50.34
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=V97EjziPWX7/aWg2UdD5uDnb3HG95TQLDqrOqOVej0g=; b=niy8gQ+GsklXMudI64cl6QUE5W
-	PusadtssOexwTK1gOY6YfSiIZk8qPfZMLZqZKDbr2D9LPzlERlOwh09zygRqx6HxjXCXGcJdtAmMZ
-	POnFqCq8OdkcmIyEb3PuLPIJ/nK6lenV0stesjXWfqY6rKtaoE3LSDfNLS78swMmacO3n535Gxceq
-	wKrVGtNXL+RjdTXGduiuwW/Q4ykv06GRzswmQ0A/KbL0BfZHRne1PUTDKZ+lC8lW4UKqno0rOScRt
-	IfLWtpjB3ixeK+TFnCGQOcwvyFIDtsJICOpf/lUWnYXrasc19dnYxhzIBgS838XtY6oODL/hZp1Im
-	/tbghusA==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV9Kt-000000064Qn-0gwN;
-	Thu, 04 Jun 2026 14:46:19 +0000
-Date: Thu, 4 Jun 2026 15:46:19 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Theodore Tso <tytso@mit.edu>
-Cc: Mike Rapoport <rppt@kernel.org>, Jan Kara <jack@suse.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Breno Leitao <leitao@debian.org>, Kees Cook <kees@kernel.org>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	ocfs2-devel@lists.linux.dev, linux-nilfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
-	linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 10/17] jbd2: replace __get_free_pages() with kmalloc()
-Message-ID: <aiGPu2XwaM31fvl9@casper.infradead.org>
-References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
- <20260523-b4-fs-v1-10-275e36a83f0e@kernel.org>
- <yfzx3jgzwesernofl7mzixa2mhjfii5v3o7yapghtmozixrpfu@6bsh7iixyiov>
- <aiEX4UTxEnBTjVKo@kernel.org>
- <ximvn6jwgtam665a4droqkp73o55kwvd5uukyidwjesmysobth@oe7rigpsjfkz>
+	s=arc-20240116; t=1780584879; c=relaxed/simple;
+	bh=pChFf9bd9+cvWF4uhcHiMUT/4AI9qZFmoLdMDVxAf+M=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mzU2KoC1JZnzyF9zm5DJ91I3UPIf70cr1bLM80IxKm8hj+COmXVt9CM124NG5NLaDZjP+vYV2dbfIJ3spShXFDchH/5DEpUBbovP77LCU5z5IHq1GBryZZrTeH6POEEWm25zF09CRTbMak/xuCOLSdvZjibtWf6F8FGSiI09/Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUPeiX8d; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C5D1F00893;
+	Thu,  4 Jun 2026 14:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780584877;
+	bh=R+ys7EdBdeJjFtotHvUHF5nHt4nPWzW5+iW67wEY9tw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=dUPeiX8d6hJqNRQe/DCKMxyYmln7LRIOjRfWS28z5BwjtNCs4enZpW8wFKIWiTeBT
+	 65JsQO3NpGugU4mTaJpuvZ9z5UPUsWy5JO4HNLYlLDJeNpCzGEy5UPiWNKU2kt3TxY
+	 1Zy78B8fHzCCa7Uv1cWAPg/2Py2kjS4IgwEYjHUb+MT1mkQtCkJ/vP+CBOv8/UhZqQ
+	 JOxYtCWtrCMz7FzilN9OgOB9qiheaj8gf7XnUIkvztFhMRprYUoeV6WXtY6rz88isO
+	 t5Ry18x0epYKj2tVqdOn7ikDfqUH+eDPJtyqyiBmXUSS+bvdyjIZ0TIRY5LSUybdef
+	 l4SeOllUlNJjg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 56C67F4006E;
+	Thu,  4 Jun 2026 10:54:36 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Thu, 04 Jun 2026 10:54:36 -0400
+X-ME-Sender: <xms:rJEhasd2xUFQ5uXl4VFWg9O4RNvut1jLK373SrbyABD8KpdGy52dbA>
+    <xme:rJEhapAwzVbW6B-rYwq75eWmKkLUOuefR3g0bRISjo6oplqk8TVQiJu3ZXx3BnMPu
+    Z2n5ZCkbV5KAFJhPMUvfEFSvj1BbY4EYZJ57A3KDADNpGOIfesNQWMz>
+X-ME-Proxy-Cause: dmFkZTEN5P5kBmcJydlMXlXWNF8iqnshhMiVS0DQXcft2AOzHBxMtZ3Bp1seoa508pJUaS
+    iADeT5RXuG/jd/ygbQpQoNPvCLu0sdVVqg3zYVLJy5QbHmO5Lp6yAkzgI7qyZMN+gDDJ1K
+    +g1tdNwD9DN2qlXGrUdS4YCnOvii70Y318UQAymPhpUubp8ix6Cj0SrG51yYr+UC2ZaXDC
+    sPT1REpyv2Ivtc1kkaoSnQpvNFFEy2HjxVbTT6PshjdOYUBDZewo2EZWComsC9yIbvspEN
+    /b1E8FMeUUNhDQXsSB447uJxMSXa8Mk93K+pMRbxTTa6mvA/au1QhSfoQjf7LDUe3f/RT1
+    mD19b/1ZXiMGKY8uLT7ohe27VT4YLMPNn/iQrG0xHxPkypb14BiWM8byRp/W4/K10VPKcm
+    OVDT2AwfWcfrGGMjg0O8iJRo/VP9pUj/sHxBSRxJAa+H5BQnvwfLMrcxUmNfMiPhXnYj0O
+    q3tdZnpp1AmgL34qtKFThk+M/qdHeL+uWFs78pg9F3SOFZR0JDSK3lIUVhpCl7Jgy1N6l6
+    jUqrIRiEV+FrAk+23uxD2WHHp3AhkSqLoAkxIJv15wXk2EQgW/PP42AY/UE/Kt8/WXrBOu
+    8+hIoD2ElDqYe/G3oVZ0tt9MDaDxIlJCAflX6I/C0uniZrxTmPXZ75cI71Lw
+X-ME-Proxy: <xmx:rJEhanA1ZFaOlDNXIpbCfg6NOsenB7S7S8QiBn6UT7l3-qCD5USGUg>
+    <xmx:rJEhavCKjrlp6lzvmYOwiYA3kBS-gtQq1riL28gIKLf1vqOYhP_tAQ>
+    <xmx:rJEhaiqF2nziJ_OKKL4XQhUGBlmrfF7Vln0xK9K20EzAQN9TE1UixQ>
+    <xmx:rJEhapnIYq9SMDf_vf4mCJT3s_xAK578qc328x-Ukn1C9sIRN0r4-w>
+    <xmx:rJEhaiwnjl6_pmyfhNFteguMmUzFMbWvInb2rS881teRn0Je3LArVv7R>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 30D6E780070; Thu,  4 Jun 2026 10:54:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ximvn6jwgtam665a4droqkp73o55kwvd5uukyidwjesmysobth@oe7rigpsjfkz>
+X-ThreadId: AJGgz9MML8is
+Date: Thu, 04 Jun 2026 07:54:16 -0700
+From: "Chuck Lever" <cel@kernel.org>
+To: "Benjamin Coddington" <ben.coddington@hammerspace.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ "Daire Byrne" <daire@dneg.com>, NeilBrown <neil@brown.name>
+Message-Id: <89ec5776-1a61-4713-b331-bb4edb9f5b0a@app.fastmail.com>
+In-Reply-To: 
+ <CAPt2mGPwabhiSCJ-2U1MMnEcMqDNiXG_4LLbN0s1VOGY9oscXA@mail.gmail.com>
+References: <cover.1780498019.git.bcodding@hammerspace.com>
+ <178052714769.2082204.16375565668618050718@noble.neil.brown.name>
+ <CAPt2mGPwabhiSCJ-2U1MMnEcMqDNiXG_4LLbN0s1VOGY9oscXA@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/4] nfsd: per-client fair-queue dispatch
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22276-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:tytso@mit.edu,m:rppt@kernel.org,m:jack@suse.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:konishi.ryusuke@gmail.com,m:slava@dubeyko.com,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:shaggy@kernel.org,m:miklos@szeredi.hu,m:a.hindborg@kernel.org,m:leitao@debian.org,m:kees@kernel.org,m:aivazian.tigran@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:ocfs2-devel@lists.linux.dev,m:linux-nilfs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jfs-discussion@lists.sourceforge.net,m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:konishiryusuke@gmail.com,m:aivaziantigran@gmail.com,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	FORGED_SENDER(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,szeredi.hu,debian.org,vger.kernel.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
+	FORGED_RECIPIENTS(0.00)[m:ben.coddington@hammerspace.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:daire@dneg.com,m:neil@brown.name,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22277-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,casper.infradead.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,infradead.org:from_mime,infradead.org:dkim]
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D082964124F
+X-Rspamd-Queue-Id: 3947F64152B
 
-I'm hoping you'll take my "Remove special jbd2 slabs" patch instead of
-this one, but answering here anyway ...
 
-On Thu, Jun 04, 2026 at 10:05:52AM -0400, Theodore Tso wrote:
-> On Thu, Jun 04, 2026 at 09:14:57AM +0300, Mike Rapoport wrote:
-> > There's no memory overhead when order == 1.
-> > As for the CPU overhead, the difference for the fast path allocations is
-> > not measurable and for the slow path it is anyway determined by the amount
-> > of reclaim involved rather than by what allocator is used.
-> 
-> Thanks for confirming!
-> 
-> > Larger allocations (> PAGE_SIZE * 2) go straight to the page allocator.
 
-That is a detail subject to change.  I have some ideas ...
+On Thu, Jun 4, 2026, at 5:11 AM, Daire Byrne wrote:
+> I'm quite interested in this functionality - like I said we already
+> set svc_rpc_per_connection_limit as a way to limit the damage greedy
+> clients can do to wider service delivery (especially interactive
+> desktops).
+>
+> Another thing we do is use the fq qdisc to limit the outbound
+> bandwidth (maxrate) per stream (client/nconnect).
+>
+> And finally, we use some qdisc prio stuff to try and "prefer" things
+> like workstations over the batch render farm (differentiated by
+> subnet). We also mostly use NFSv3 (for a few different reasons).
+>
+> I guess anything that can give us better control over these kinds of
+> "QOS" scenarios we'll happily take.
+>
+> So for example preferring a subnet of workstations over a subnet of
+> batch render farm would be nice.
+>
+> Daire
+>
+>
+> On Wed, 3 Jun 2026 at 23:52, NeilBrown <neilb@ownmail.net> wrote:
+>>
+>> On Thu, 04 Jun 2026, Benjamin Coddington wrote:
+>> > knfsd dispatches ready transports from a single per-pool FIFO, so a
+>> > client's share of nfsd service scales with the number of connections it
+>> > holds rather than being shared per client.  A client that opens many
+>> > connections (nconnect, or a farm of data movers) starves other clients
+>> > on the same server purely by out-numbering them in sockets.
+>> >
+>> > I measured this with a load generator that pins each request to a fixed
+>> > service time and does no filesystem work, so that nfsd thread-time is the
+>> > only scarce resource (8 threads, 10ms/op, ~648 ops/s pool ceiling).  A
+>> > greedy client opens K connections alongside one single-connection
+>> > interactive client.
+>> >
+>> > NFSv3, dispatch as it is today:
+>> >
+>> >   greedy K   greedy share   interactive ops/s
+>> >      1           50%              241
+>> >      4           80%              129
+>> >      8           89%               72
+>> >     16           94%               38
+>> >
+>> > The interactive client's share tracks 1/(K+1) and its throughput falls
+>> > roughly 6x while it does nothing different.  NFSv4.1 behaves identically
+>> > (89% greedy at K=8) even when the greedy connections are bound to a
+>> > single session, because the dispatch decision is below the NFS version.
+>> >
+>> > The same NFSv4.1 workload with fair queueing enabled:
+>> >
+>> >   greedy K   greedy share   interactive ops/s
+>> >      8           72%              182
+>> >     16           73%              177
+>> >     32           70%              193
+>> >
+>> > The greedy client's share no longer climbs with its connection count and
+>> > the interactive client recovers (72 -> 182 ops/s at K=8).  Aggregate
+>> > throughput is unchanged: the T/D pool ceiling is the same with fair
+>> > queueing on and off.  The split does not reach 50/50 because a single
+>> > interactive connection is bounded by its request window and by XPT_BUSY
+>> > serialising one transport; with a deeper window it reaches ~59/41.
+>> >
+>> > The approach:
+>> >
+>> >   - sunrpc grows an opaque per-transport fairness key (patch 1), with a
+>> >     default derived from the source address (the source port is excluded
+>> >     so a client's several connections share one key), and an opt-in
+>> >     per-pool scheduler that buckets ready transports by that key and
+>> >     dispatches round-robin across keys (patch 2).  When it is disabled,
+>> >     which is the default, the existing lockless FIFO path is unchanged.
+>> >
+>> >   - nfsd gains a "fairq" module parameter to turn it on (patch 3) and
+>> >     stamps the NFSv4.1 clientid as the key when a connection binds to a
+>> >     session (patch 4), so all of a client's connections share one key.
+>> >     NFSv3 uses the source-address default.
+>> >
+>> > This is an RFC; a few questions for the list:
+>> >
+>> >   - Unit of fairness: clientid (used here) or session?  Earlier
+>> >     discussion leaned toward exploring per-session.
+>> >
+>> >   - Mechanism: a fixed bucket hash under a per-pool spinlock taken only
+>> >     on the opt-in path, versus a lockless or per-flow structure.
+>>
+>> I'm not keen on the hash bucket approach, though I can't clearly say
+>> why.
+>> I'm also not keen on the opt-in design.  I don't like asking the admin to
+>> tune performance.  We should always provide optimal performance.
+>>
+>> I imagine creating an object which represents a client - using IP
+>> address or possibly v4 client id.  These may well be located using a
+>> hash table (rhashtable?), but that is peripheral to the design.
+>> Each xprt has an associated client which can be changed at any time
+>> (nfsd could change to a v4.1-client).
+>>
+>> Each client has a lwq of xprts and is part of an lwq of clients.
+>>
+>> To enqueue an xprt, we grab the client, enqueue to that, then if
+>> necessary enqueue the client.
+>>
+>> To dequeue next, we dequeue the first client, dequeue the first xprt,
+>> then optionally enqueue the client again.
+>>
+>> So this would be slightly more work than the current (2 dequeues instead
+>> of 1) but I think that might be acceptable.
+>>
+>> clients would be refcounted by xprts and probably rcu-freed.
+>>
+>> >
+>> >   - Would a per-client in-flight cap be preferable to proportional fair
+>> >     queueing?
+>>
+>> A per-client cap would only be ok if the admin didn't have to tune it.
+>> So the client would need to get some sort of feed-back from the server
+>> so that it knows when it is pushing too hard.  If we were still using
+>> UDP we could possibly use packet-loss for that feed-back, but we aren't
+>> and don't want to.
+>> With v4.1 we can of course use the slot based flow control and I think
+>> we should if we can agree on a good design.  With v3 I don't think there
+>> is any way to get the needed feed-back
+>>
+>> Thanks,
+>> NeilBrown
+>>
+>>
+>> >
+>> > The measurement used a debug-only filehandle-latency hook that is not
+>> > part of this series.
 
-What users are guaranteed is that kmalloc returns physically contiguous
-memory.  And that if it's a power-of-two that it's naturally aligned.
+[ Daire, we're generally a "bottom post" list. My comments below
+are in response to your notes quoted at the top as well as Neil's
+and Ben's quoted inline ]
 
-> Another question: Today, we can either use kmalloc() (or
-> __get_free_pages, previously) or vmalloc().  Is there a way a file
-> system can say, "give me physically contiguous pages if possible, but
-> if it's too hard --- with some TBD to specify what 'too hard' means or
-> can be specified --- fall back to a vmalloc-style approach, with the
-> page table / TLB overhead that this might imply"?
-> 
-> I suppose we could do it with kmalloc() with some flags which to
-> prevent forced reclaim / compaction, and if that fails, then fall back
-> to vmalloc().  Is there a better way?
+First some general responses to the shape of Ben's patches.
 
-I think we'd like to avoid doing that.  A lot of code has various
-workarounds for deficiencies in the memory allocator (some of which have
-been fixed and thus the workarounds only complicate matters).  If the
-memory allocator(s) aren't providing what you need (be it performance
-under load, fragmentation avoidance or whatever), it's best to get that
-fixed rather than having fallback paths.
+- Thanks for giving us something to start kicking around!
 
-There have been people who have suggested "What if folios could be
-physically discontiguous", and sometimes I've hhumoured them, but the
-simplifications enabled by requiring folios to be contiguous are quite
-immense.
+- I'm not a fan of adding administrative controls, and these days, a
+  module parameter is outdated and way too global. I'd like to see
+  that removed until we have a clear need (use cases) for tuning
 
-We've been trying to move in the direction of exposing more high-level
-APIs so people can say "I want to allocate 10MB of memory but it doesn't
-need to be contiguous" and have the allocator either fail the whole
-thing up front or make efforts to ensure that you get the whole 10MB.
-It's a lot more efficient than calling get_free_page() 2500 times
-and possibly having reclaim run a dozen different times.
+- Having to rely on client identity is going to be difficult to get
+  right. The scope of the identity, for example, is never going to
+  cover all the use cases that we want. For example, fairness-by-
+  client-address means all clients behind a NAT get reduced to a
+  single fairness unit.
 
-(anyone else try to create a brd that's actually larger than system ram?
-;-)
+- The observability you proposed for measuring your solution is
+  worth some attention. We should consider making it a part of
+  the patch series rather than something that was useful only
+  while it was being developed.
+
+- Probably the largest challenge will be including NFSv3, NFSv4.0,
+  and LOCALIO, none of which have the concept of a "session".
+
+After some thought, IMO the problem as initially stated has some
+areas that are going to be challenging and delay a real solution.
+
+Instead, we could look at the problem as "preventing starvation of
+any one connection" rather than the more difficult goal of "ensuring
+complete scheduling fairness". This changes the problem class
+fundamentally.
+
+Strictly speaking, nothing in Ben's data is starved today: the FIFO
+transport queue guarantees every backlogged transport one receive
+per cycle, and every op gets completed. What degrades is the floor:
+the latency and throughput a lightly loaded connection can count on.
+It degrades linearly with the aggressor's connection count: with K+1
+backlogged transports and pool service rate T/D, the interactive
+connection waits ~(K+1) * D/T between services, which is unbounded
+as K grows.
+
+The reframed goal is precise: make the service floor of any one
+connection independent of how many connections and slots everyone
+else holds. That is a much weaker contract than proportional
+fairness, but the best part is it dissolves the hardest challenges.
+
+Equal shares require knowing who "everyone" is; a floor does not.
+No client identity, no clientid-vs-session-vs-address debate, no
+NAT collapse, no client-object lifetime, no per-pool share
+fragmentation. And IMO it is what both Ben and Daire actually
+asked for: Ben wrote "I would prefer the 'interactive' clients
+be prioritized, but I don't control their nconnect." And Daire
+described something similar above.
+
+Looking at prior art, networking has solved exactly this reframed
+problem (and Daire alludes to that above): fq_codel's success
+comes less from its fair queueing than from its sparse-flow
+optimization; that is, flows with nothing in flight jump the queue
+and heavy flows share what remains.
+
+TLDR; this reframe turns "schedule fairly" into "let request-
+response traffic overtake streams," and NFSD already appears to
+track the bit of state needed to tell them apart.
+
+
+-- 
+Chuck Lever
 
