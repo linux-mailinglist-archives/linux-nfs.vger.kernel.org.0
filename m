@@ -1,253 +1,179 @@
-Return-Path: <linux-nfs+bounces-22261-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22262-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id OCPcEXC0IGrI6wAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22261-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 01:10:40 +0200
+	id b5ROF/YXIWpr/AAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22262-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 08:15:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E69A863BC54
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 01:10:39 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59B1D63D30B
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 08:15:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm1 header.b=F0K3OqSO;
-	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="C n5S+Xq";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22261-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22261-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ownmail.net;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=YZdzENTk;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22262-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22262-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 85BA630546F8
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jun 2026 23:08:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7709F3014279
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 06:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B84B323D7CE;
-	Wed,  3 Jun 2026 23:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9CC3D6CA4;
+	Thu,  4 Jun 2026 06:15:11 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B66340404
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jun 2026 23:08:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1E93D6664;
+	Thu,  4 Jun 2026 06:15:09 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780528085; cv=none; b=GI8Z1jdfWuHGMchK6095Xt3i4Ed9ENbFtgyQSI1utzGwtXkcqmY+UO/tTPipsNO0VrDyTqMDw2lLf6oV/H9ZP5YTSfTAfGPYnxiENmhIbqmNk5fgrHZh+VSvnCV+qzSuN3rGyDKz1yLavQEumBaiEzgZIi3DGq1vrAoG6yy1LCo=
+	t=1780553711; cv=none; b=YwpXpRyac0zMKTITkcSG77j+ivcxA+XdcmJM6vh80QbElxM1ys/n/OL38V0JQNIphAyAYpIoCVFDrTm3kxyrRhb2/jMFghlVIHWqTOEv4dsxbF8I0TCBLVsRPzxkafNHF6dkq5XaiEo3dsVJ9UVC8Vz1w3icQmXrzvNislspcyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780528085; c=relaxed/simple;
-	bh=YM6iHiPPHGMQ7S4ZsgJB32oMmsYtuRNEF2wndbbsB9I=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=RmlM1hzt/wTqQVMui2Lbyi9fpArSAjmX2AA0gJDo+1pwCi2yWVTDK8tYKR8cC2m7JaSbZzWFXmn96BodcazyW5Q2xpv5f5P4GBNDFMPDhqgOMihcLWB67PM85tSnXs6u1Q3IIYU7wYSVL90EeVB6C6jH/PqXmB96DGF3lOJj454=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=F0K3OqSO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Cn5S+XqQ; arc=none smtp.client-ip=202.12.124.152
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 991BE7A015E;
-	Wed,  3 Jun 2026 19:08:03 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Wed, 03 Jun 2026 19:08:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1780528083; x=1780614483; bh=fh+/2Kwo0+QhVU6hQvUgUfj1se1Kvselu4L
-	KwKnuhbM=; b=F0K3OqSOjHYe3Py99C71PTJHr6VExhiCgw9dzSRBNFpWWm1kX8G
-	R/0U5ZV/of0+2fcTvKtCsduoo2ndfgUQftT7JXDj+54NgQTVY//Mhpg6Oqk6cvyF
-	cN3grQdwS7UKGddsdSCuPT95Vl7zQCPWchabpiMX03w1OtKPKVUVabd/dhxzFQ5+
-	mLUEGaElNVizqHEh8rgzcX0gkoc6IlamOiTf7SQuWFTKhJ2vzrUa9Gns46F4rYC8
-	Vrw+vkNRrDIQqo+BLm3pAob8ISc9ql8YUz+cMgCgCK5Se9JoJ59TLela6YnClktr
-	dK9qv9XeQo1U/DzZfVMwCE+P/K727xU9e4g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780528083; x=
-	1780614483; bh=fh+/2Kwo0+QhVU6hQvUgUfj1se1Kvselu4LKwKnuhbM=; b=C
-	n5S+XqQWLIWsSl6NQtnJ/UcvJKDZ7nbjxcRDDJV13ZqUPDZ9iwE6NZp3YT6fMiLD
-	8Mv5p6Lied+jMYbBm2Fr2x7R1chptW/rLE6ZvewLm4zvSMxlbJisJ1Uu7XVLGM/s
-	1LjjD34l/jLZ/oWKXbbZH2waV7qR818F1FgFMjSYKRhhmbAnA5Gfv6xNDIoxnejc
-	aAyevJbvRUbdVwn5nWBZB3s/W0veVRgiInWO+tXYEZaldnSkeF9IFVhkZ/BLiWLj
-	OAtfc/EmZ47+atW4Hi0mNRkke+k/hwP+1GAe1lvRHKZAP6ywLQTyWuH279F9DYlI
-	d9hR9eBVdp/LhG55RLbrA==
-X-ME-Sender: <xms:07Mgam2zfbgcRuqEq29VsliUORLz3J0JMkqPNdJ6xnE98fGd3CY9zg>
-    <xme:07MgagEUZM4pJtQwmqv7Rm3kHrL0vbnLQVUOam37eRVOC5gkzwEthDNZknArAHwne
-    P703gAXZFxGU2bk9Ww3xqGwhUsA1HU2jouWZqJW7NtGcLA>
-X-ME-Received: <xmr:07Mgaj54a4eqMlh-SRYZNG6mbLQ2f3GXhX5C7ZXnr5DPyw0TO1BAFDI73TgMamK3qAvenIeKI1hk4P5T_zd33wVmoqdrCEE>
-X-ME-Proxy-Cause: dmFkZTFREoGfoZcKUETwjfnLD/H5PLA8Pe8lQMHhB4kHwtZX3pdyZs4Tc0WKMl4ZQfQwDf
-    pHGLlX91juLLLqx+SmVS95ITQpg+9p0QOrGsLe06Q2p2+AWyehdDPTJexldrjuk5ML0t0p
-    /vI3PLRtutlf0fFq1d2QjLoKILZetIIoHZkyGJ7xNPLpcJP7nA2jztS+1bSx+ziTnrfN+a
-    3mWE06XIxR79CK0mkJ8Xufu4MtRGSuFnJY3vMU+RKIqd6bY7Q2OXjBuwMhlzcs61ZvMnZK
-    SPUsuNrvZ3lT8AGW+R5Mm0oGgA9Db0cK4eGP6FWnomh/Ayc4CePBWxMJpzVKHyNZAkeQnn
-    iOVeYi749v/mU3r+UWayPnaQGSc+BNBWR/S/E8GBwS0qKrdYLLWyw2HBC+AmO6uiuhEuDs
-    Wsnafxt0ngz/on+3TB6R3QXzQZNBFy+cHH51ZXehuldKnVcmjgE28bxgnBeoJDiJwfAuof
-    ltdPSymQ2Dohk+qyx5diBtWSIGQl0+4NurHh1fqDp0blHiZOlECR2otqbFQoy0TXvx36Jl
-    CFmCQSrXYUXo5BOq44vWv3b/6ZnDAG9ba1dpDiNCpZkpyiZcwpgyslCdymoIxaejOBlqOE
-    B/E0puo2PB2N6eGHDsbRcgZEdtlo2Yb3H1isfb4d9bZSDbUWsDy7se/00cJg
-X-ME-Proxy: <xmx:07Mgamv0Ea01RkWWwSub2IJP2gj8THaXA5M-wP7Nh80_fZyeblla7g>
-    <xmx:07Mgak5pIpyw-GucpEslhktQKQlqlvQ0H7dT_Qdw5SNwv_jmFATu3g>
-    <xmx:07MgahU4wWtiLCHwYzZRtEJObDhnj8yJzunF7kXoiVyCBhXRANUD8g>
-    <xmx:07Mgam_S7urpyrf_hs16RXEWE3FBj2S3uaMxHlccEg_89OahShp2wQ>
-    <xmx:07Mgai3VtUl7KyRwSqbNLXv63RMLVCw6zJqeORZWmqSB-JgWPbOjLYAl>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Jun 2026 19:08:01 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1780553711; c=relaxed/simple;
+	bh=atVSAfHhDYBovprcHMCjWAChHvgsN9Zly/q2GkqZTdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HsSXpO8srZ6x0paQBdomoVZac5qJ6y8fWyb9dHJTenYOQFkVehtDnMX04uyoKLwHGpT2uJJrwW3hzPQrhqDUbDALnitmkVsRlkUQ9BaRzSk8foi4mvbjn3oorBLKxDi0zuYB0BArUChRHx43RBAzMJPbdQ4NG6cB3SlU9PwucbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZdzENTk; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6611F00893;
+	Thu,  4 Jun 2026 06:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780553709;
+	bh=maKYg38a30VxIX8QCcSBujTuAdCuRyvh3rWBPMbaTa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YZdzENTkOazs5XSTumSTfKjNe97Bx1gIjbWPEe0rEOYizlJ+PG3Skn0hS26Ux74Jl
+	 AXCvUF5ahoFRq9So4PlOjS3IWyCIq5NTGNUoudm5MMRDdJhNBKN1LdgBDErw0LtVFd
+	 jzKhcofKN8uPI1V71amXjFQlau+IKLTXzAiqIsn/g+sTxSoMC/LouWT+HEHb+idjuI
+	 8F/5ZnoIZWEz4pT/Oim/JLh5w98h2ycR5nXmcdy58o4NERbYl1r+Hpa7rpblTquRvP
+	 owmPxKztmOlhAuoaO/iNyxsWnpCrb8pm0xA6MdS2Qr/cnlFMvHA1Yq1Qntrgg1OIwG
+	 JJVS4xnu2W56g==
+Date: Thu, 4 Jun 2026 09:14:57 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Theodore Tso <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Breno Leitao <leitao@debian.org>, Kees Cook <kees@kernel.org>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	ocfs2-devel@lists.linux.dev, linux-nilfs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
+	linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 10/17] jbd2: replace __get_free_pages() with kmalloc()
+Message-ID: <aiEX4UTxEnBTjVKo@kernel.org>
+References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
+ <20260523-b4-fs-v1-10-275e36a83f0e@kernel.org>
+ <yfzx3jgzwesernofl7mzixa2mhjfii5v3o7yapghtmozixrpfu@6bsh7iixyiov>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Chuck Lever" <cel@kernel.org>
-Cc: "Benjamin Coddington" <ben.coddington@hammerspace.com>,
- "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [RFC] knfsd: per-client fair scheduling to prevent single-client
- starvation
-In-reply-to: <561e9ac6-348f-4d6d-b896-38dbe5ede3bc@app.fastmail.com>
-References: <D33770A1-9098-4F1A-93EF-590E6C0B7638@hammerspace.com>
-  <473e337b-fabc-4884-a6c4-0f04b6874d0b@app.fastmail.com>
-  <3AB7EB6A-B207-4B91-A695-66C4704D0E31@hammerspace.com>
-  <4c5dbb98-0209-4572-8eac-1578536bbd78@app.fastmail.com>
-  <AED22AED-E97D-40E3-9839-BF8307EF8B65@hammerspace.com>
-  <1a5c70d8-e7f4-4671-a29a-023be7c107fc@app.fastmail.com>
-  <178044079821.2082204.6117918610145832039@noble.neil.brown.name>
-  <561e9ac6-348f-4d6d-b896-38dbe5ede3bc@app.fastmail.com>
-Date: Thu, 04 Jun 2026 09:07:59 +1000
-Message-id: <178052807961.2082204.13323491503071931242@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yfzx3jgzwesernofl7mzixa2mhjfii5v3o7yapghtmozixrpfu@6bsh7iixyiov>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22261-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:ben.coddington@hammerspace.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22262-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:tytso@mit.edu,m:jack@suse.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:konishi.ryusuke@gmail.com,m:slava@dubeyko.com,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:shaggy@kernel.org,m:miklos@szeredi.hu,m:a.hindborg@kernel.org,m:leitao@debian.org,m:kees@kernel.org,m:aivazian.tigran@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:ocfs2-devel@lists.linux.dev,m:linux-nilfs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jfs-discussion@lists.sourceforge.net,m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:konishiryusuke@gmail.com,m:aivaziantigran@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[rppt@kernel.org,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	FREEMAIL_CC(0.00)[suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,kernel.org,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,szeredi.hu,debian.org,vger.kernel.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
 	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	RCVD_COUNT_FIVE(0.00)[6];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[rppt@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,brown.name:replyto,messagingengine.com:dkim,ownmail.net:from_mime,ownmail.net:dkim,noble.neil.brown.name:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E69A863BC54
+X-Rspamd-Queue-Id: 59B1D63D30B
 
-On Wed, 03 Jun 2026, Chuck Lever wrote:
->=20
-> On Tue, Jun 2, 2026, at 3:53 PM, NeilBrown wrote:
-> > On Wed, 20 May 2026, Chuck Lever wrote:
-> >>=20
-> >> On Tue, May 19, 2026, at 6:02 PM, Benjamin Coddington wrote:
-> >> > On 19 May 2026, at 14:44, Chuck Lever wrote:
-> >> >
-> >> >> On Tue, May 19, 2026, at 5:08 PM, Benjamin Coddington wrote:
-> >> >>> Just to be clear - the issue I'm exploring isn't the same as when al=
-l the
-> >> >>> kNFSD threads are slow due to their workload.  This is very much a
-> >> >>> multi-client dynamic where one client (or a group of automated client
-> >> >>> instances) are able to easily starve another simply because they cre=
-ate the
-> >> >>> most connections.
-> >> >>>
-> >> >>> That's different from the other problem that we've discussed a bunch=
- at
-> >> >>> bakeathon and on the list previously.
-> >> >>>
-> >> >>> This is not so much a deadlock issue as it is an issue
-> >> >>> of per-client fairness.  I think this problem is in a different clas=
-s.
-> >> >>
-> >> >> Does dynamic svc thread creation have any impact?
-> >> >
-> >> > I haven't tested it - I think it would just pin to max-threads for the
-> >> > workload in question.
-> >>=20
-> >> If the aggregate workload consumes all the threads, then that doesn=E2=
-=80=99t
-> >> sound like xprt scheduling is the bottleneck. But I should look at
-> >> numbers instead of speculating.
-> >>=20
-> >> Are you seeing connection loss in these scenarios?
-> >>=20
-> >>=20
-> >> > I'm probably not understanding you here, because for the problem I'm
-> >> > interested in fair would look like prioritizing each client's request
-> >> > queue equally, no matter how many xprts each client has.
-> >>=20
-> >> Then for NFSv4.1 and later, NFSD might schedule work on the session, and
-> >> manage each session=E2=80=99s workload by raising and lowering the numbe=
-r of slots
-> >> in its slot table.
-> >
-> > I agree that managing slot numbers is likely to be a good approach.
-> > It doesn't make much sense to allocate to any client more slots than the
-> > maximum number of threads - does it?
-> >
-> > We already have code to reduce slots numbers based on memory pressure.
-> > We could extend that to reduce based on demand compared to number of
-> > threads.
-> >
-> > e.g. let every client have a least one unused slot until the total slots
-> > across all clients reaches the maximum number of threads.  Then apply
-> > pressure evenly like we do for memory shortage.
->=20
-> Sensible!
->=20
-> But these days the number of threads isn=E2=80=99t fixed. As load goes up t=
-he
-> number of threads increases.
+Hi Ted,
 
-Yes, but there is still an upper limit.  That is what I was thinking of.
+On Wed, Jun 03, 2026 at 09:50:15AM -0400, Theodore Tso wrote:
+> On Sat, May 23, 2026 at 08:54:22PM +0300, Mike Rapoport (Microsoft) wrote:
+> > jbd2_alloc() falls back from kmem_cache_alloc() to __get_free_pages() for
+> > allocations larger than PAGE_SIZE.
+> > But kmalloc() can handle such cases with essentially the same fallback.
+> > 
+> > Replace use of __get_free_pages() with kmalloc() and simplify
+> > jbd2_free() as both kmem_cache_alloc() and kmalloc() allocations can be
+> > freed with kfree().
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> 
+> So historically __get_free_pages() was more efficient than kmalloc
+> since previously the kmalloc overhead meant that a single 4k
+> allocation would take two pages instead of one.  I'm guessing that has
+> since changed?
 
-But in practice the upper limit might be less than the configured upper
-limit if allocating a new server fails (hmm...  I wonder if it can
-fail...  it should probably use GFP_RETRY_MAYFAIL or maybe even
-GFP_NORETRY when adding extra threads).
-To be able to compare the number of slots to the number of threads we
-would need to track an effective-maximum which is probably the largest
-maximum seen.
+Today there's no memory overhead for kmalloc(PAGE_SIZE). Cache refill takes
+more pages of course, but they will be handed over to the next
+kmalloc(PAGE_SIZE).
+ 
+> Can you explain to someone who hasn't been tracking the changes in
+> kmalloc over time:
+> 
+>   * How does the efficiency of kmalloc compare to __get_free_page when
+>     order == 1?  What is the overhead in terms of memory overhead?
+>     I'm a bit less concerned about CPU overhead, but it would be good
+>     to know that?
 
-Hmmm..  should we add a shrinker to stop nfsd threads when memory is
-tight?
+There's no memory overhead when order == 1.
+As for the CPU overhead, the difference for the fast path allocations is
+not measurable and for the slow path it is anyway determined by the amount
+of reclaim involved rather than by what allocator is used.
+ 
+>   * What does kmalloc() do when a size > PAGE_SIZE is passed?  Will it
+>     return contiguous memory, or return an error or worse, BUG?  And
+>     same question as above; what is the overhead of kmalloc() when
+>     size is 2*PAGE_SIZE?  8*PAGE_SIZE?
 
-Thanks,
-NeilBrown
+For size >= PAGE_SIZE kmalloc() always returns contiguous page aligned
+memory.
 
+Larger allocations (> PAGE_SIZE * 2) go straight to the page allocator. 
 
->=20
->=20
-> > Idle clients will get pushed back to 1 slot, active client will tend
-> > towards a "fair" share based on how comparatively busy they are.
-> >
-> > This wouldn't help for v3 of course but I don't think we need these
-> > advanced features for v3.
->=20
-> Ben=E2=80=99s employer might disagree with that :-)
->=20
-> I think NFSD might also need to consider LOCALIO workloads.
->=20
-> --=20
-> Chuck Lever
->=20
+> Thanks,
+> 
+> 						- Ted
 
+-- 
+Sincerely yours,
+Mike.
 
