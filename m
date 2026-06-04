@@ -1,160 +1,177 @@
-Return-Path: <linux-nfs+bounces-22280-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22281-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id U7gqEtStIWqKLAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22280-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 18:54:44 +0200
+	id RqntNWaxIWqFLQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22281-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 19:09:58 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 958AB64218B
-	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 18:54:43 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39C1364234B
+	for <lists+linux-nfs@lfdr.de>; Thu, 04 Jun 2026 19:09:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=DURHXXdp;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22280-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22280-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dkum1JGv;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22281-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22281-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AEC9C305F706
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 16:43:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DFD53300F5F2
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jun 2026 17:06:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D0B47CC85;
-	Thu,  4 Jun 2026 16:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DD6E495504;
+	Thu,  4 Jun 2026 17:06:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC653B2FFB
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Jun 2026 16:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB11495516;
+	Thu,  4 Jun 2026 17:06:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780591408; cv=none; b=XvqQ5glWYGB+107BBKSCc6uUSi2PoHr4RaitjuiM4Vqawn+H8UhtPiy+dKe+EoSZyFrIEqsUz8iDsXy83BIL8eJIZr6OZLHDWK3Q5NgloSYZi79AavJ3ebTdtiPIxMacXKznHA6EEV+7RcxsBHOWJxrgPni1Tw1FKl3xU5PqrQI=
+	t=1780592809; cv=none; b=Vsygk7irYesxZz06NyobZGTCbuTh8Ba73oLH+tLlYgcliLjl8C1UG9+PEnBSd2VCwXGJGd+2X7SnJF9YKSZpyVdocHgfvLxFE7k/yoyKGEvGwIww1xINVnx2arSSPHz/VP+XoJzu/u6F7zGmPJesuN1Ste1QvcCEIjRg4JpaQmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780591408; c=relaxed/simple;
-	bh=mA3PSmWcJV7UiBTiHUuROASAODwhm5CExH5rToO3McI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=PRpCI7ntKXrI7szpiIJ65kQukE8Tv/KCWPUpdFt3SkCu9nNU/RKmdEJNojICEREwLs0N60LgyZmmudt7kLJgjrftDwP3uM1iulsq3MAULTINzEpIwOjwesWSD9qau/VL2W+tMxSAzNbbE8eXYY4Z7ov8Q5g5ZdRW3MGSy7HckgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DURHXXdp; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82DC21F00898;
-	Thu,  4 Jun 2026 16:43:27 +0000 (UTC)
+	s=arc-20240116; t=1780592809; c=relaxed/simple;
+	bh=y602FwVPDfFkTbomTE/nL90MVbJZjga0nDcvGmHbT5Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XCR0Hm7ofjscLQLuy4CMbG1y/eBbcORAMlFJGWH54yX7hTcC3S5zC/11IJsaRPr36qEg/6CEDIq2pXiUHMSzxYFliR7L9CrY3VNlz+wqBt91EeWIN8ZZ/k36hVx++nlJkc/BrYPT/sdO5l3XrW8ap7pFKXVU+tZeUlpE1/BdVAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkum1JGv; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9FE1F00893;
+	Thu,  4 Jun 2026 17:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780591407;
-	bh=BX7DZPwVDBgRPk+DaaqDp+7naFIF6ookioeh0sc2YqI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=DURHXXdphaQjOypB78muWBhQJwpFRwkiIvlMxFFXqe/87hiVlZAyJY+ZXekTdx6nS
-	 lHjUHvj0PTNYDR4ZuMCN+gUVSDEU0MpQrZ9LXhObLVZj2MbVbKRF/yGxo2hliqQsIg
-	 Znm6FND30IdwD/CFvIjY1oMbtZSQMHYXNAKLqxcHAR02ZZeVO9DECBITl5PgtKsMni
-	 vb8n6DaY1q0Tcqjv4iNdk8gy3LLaJZPNfIoYY/fipyPZgIO4e/sApUFw1Zeq2WMuon
-	 929uClaaaLQ7wavskk80HVGp8zOi9YO5h9XJYl6y5sGGzuvGhCAkRV0UMVjIxgtr9K
-	 VojzTWRaHdXeA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id B6273F4007D;
-	Thu,  4 Jun 2026 12:43:26 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 04 Jun 2026 12:43:26 -0400
-X-ME-Sender: <xms:Lqshaq98MGKDqjtvftgHYMAzKkl1fmizoCZFpj7wQyOLn7WZK6BGSg>
-    <xme:Lqshalgkje2RfgMej40ov2fQfjiQZaRfKGSbRorKhmv9cPKhpTKwrqjTnTBKDAGk0
-    R1n_xDMkV6AlPWgEecMAyx4yosCCNGf75r3V6ARnmTxOPOdSDYCdjo>
-X-ME-Proxy-Cause: dmFkZTGm3M+YFZ7mCR3BmAI21nXFlDtnbywOCnieRT5/BQPRHwYjQY4B5dtHayPOI1VFk8
-    OAqY3y1+YmXK7Zg85hnxHxwnaWDcXpg5Z+DDGLHbs31cELlASEQRqmvzLohuvLsPua6nfA
-    Ygbym/uzk4ZbswkzYMLmDx1CZGrb9rtdAamwCs597YhJMNnBtTsFeuaqYwhvImk61XfeQD
-    M12HhqwUrt4OrlSLjHnPOm5HTjdjJUAtnh10sWwyhhDIYXfN/KTLSPVm+u+GeHDk6CrgSU
-    dzBjVyPY/qfk2bzTQ5M3LanDmfGdJkRBYRoxTVQ5sUl+JKuFDjqWKQJMgqjUv+Gso3GOQO
-    MuQsM4h1SfHFh6sB+9E3K6BlRRvJ7r98/arxrkwnby9mH0CVIpU/zlLSwee9FJe1O6IdZT
-    JaWTzak3zGzlQx+N5pwavB3j4+eVjgzYyKca1af7C89DAvQOoWdifrpPf/0C+SAcCis3fp
-    fA/a5lvWWqYgiGyD4das6meq7jOgm0ggy+rbfIsM/YKdDGBLjDsUhJ+aPGrRkCBYpYMFnH
-    aN3731y6/ZOEFxpxaVsnaYUFTxbpZNHY5fgWzg8g1HGVr0WCKcQeayIqOgEUB+colarmnh
-    zP0vf43Bjb0plMnjaxEz/uZ4VPBhJUWD48wckPXQWCEbvsOzu3ySc0mJDrwA
-X-ME-Proxy: <xmx:LqshapjlfcJ2E0vi10bsbfUeSm9nvxqBIbxzKS1DEQYmEKM8qAw-Kw>
-    <xmx:Lqshavh7oul6rgETyWoMwJEzongzji_f2B9VBhfX-vmC4KvrRfNniA>
-    <xmx:LqshapJVRQOiHgIavAvo-BnWORhPzZyPobjVR5zR0-bZsmu9CmI0xA>
-    <xmx:LqshauH0-jHOAaZKIHwEOEs8QpGYkzrGVwY-qq1z417wzAR6JfPyuA>
-    <xmx:LqshatSxgfPtTVyI-vpFez6BurcxQqYLYlP6h8eMXvZ-w7LuVDyi2L4v>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 93FDF780070; Thu,  4 Jun 2026 12:43:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1780592806;
+	bh=lHODA2CZkaiM/pf0VZyBPbSXTZCn1FBJwG05WiKa7Xg=;
+	h=From:Subject:Date:To:Cc;
+	b=dkum1JGvjDw99rae+eFomodgg3Fr0F3kIJVancZIbKjXk78AqlNkMGDmdj6TYnlCd
+	 JMgRtxtlPhM4avXrKK71Z347FZB3uSh/lls33m5WIHOarpoUlOmEM1h+zR8Um/dFxa
+	 JE77jj4sB7lPGK8FHFfpyGmOPyzlBMNMUW2YuPL6ouUJqIhPmpLV6FtSfOBGdgez4g
+	 3ToS/2AzpEgdplN7slNjhgrLGkGYHyQzrsdBDHlZuhwHm1xsPfREG9F2zmx1NKYHMq
+	 bSLXhc5iwDJM6lBXIKbJSQ3TYiFHgkIJd8u73AEeN1FrJOREikvq6EQ38RjKQqjfvw
+	 SkoQUeHukcEzw==
+From: Chuck Lever <cel@kernel.org>
+Subject: [PATCH 0/8] Harden xprtrdma connect and reply handling
+Date: Thu, 04 Jun 2026 13:06:32 -0400
+Message-Id: <20260604-xprtrdma-refcount-v1-0-f74553f461e9@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AJGgz9MML8is
-Date: Thu, 04 Jun 2026 09:43:06 -0700
-From: "Chuck Lever" <cel@kernel.org>
-To: "Benjamin Coddington" <ben.coddington@hammerspace.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
- "Daire Byrne" <daire@dneg.com>, NeilBrown <neil@brown.name>
-Message-Id: <66c34ced-abb4-4615-88ea-c048d704f582@app.fastmail.com>
-In-Reply-To: <C13BCFC6-BEFA-427E-8431-DDAC6076C1B3@hammerspace.com>
-References: <cover.1780498019.git.bcodding@hammerspace.com>
- <178052714769.2082204.16375565668618050718@noble.neil.brown.name>
- <CAPt2mGPwabhiSCJ-2U1MMnEcMqDNiXG_4LLbN0s1VOGY9oscXA@mail.gmail.com>
- <89ec5776-1a61-4713-b331-bb4edb9f5b0a@app.fastmail.com>
- <C13BCFC6-BEFA-427E-8431-DDAC6076C1B3@hammerspace.com>
-Subject: Re: [PATCH RFC 0/4] nfsd: per-client fair-queue dispatch
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMTQrDIBBGrxJmXcGaVEqvUrrQcZIYiMpoQiDk7
+ tV2+b6fd0Im9pTh1Z3AtPvsY6hwv3WAswkTCe8qg5JKSy0HcSQu7FYjmEaMWyjCKfPEXj907wa
+ ov1Qbf/yc78+f82YXwtJEbWFNJmHZBJxblIjHyGtFguv6Amok9EKTAAAA
+X-Change-ID: 20260604-xprtrdma-refcount-d2a8c36563d4
+To: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ Chris Mason <clm@meta.com>, Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: b4 0.16-dev-da966
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2669;
+ i=chuck.lever@oracle.com; h=from:subject:message-id;
+ bh=y602FwVPDfFkTbomTE/nL90MVbJZjga0nDcvGmHbT5Y=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIbCdii6ZYD/E0+8MaFV0zT4HA6QDwED6XDhpH
+ RkQ3oC7R9uJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiGwnQAKCRAzarMzb2Z/
+ l8qAEACCrBVEW7nndrOL3ZETzCneT/5PImO4ztD+XUITaiyzK9oW6WxoAFjNsAxK4zFNVuT8kJp
+ rLEdixaccVdZOLOeohc+JXP11IhZ4h1B8sJXoQ2uLGxrv4LmmmxTUYA07UXxlv+Dhh3qYANsg0p
+ izTMNFZDAZOzTPXE4LXrc/k3eeA6wEyRYctmnnEz5DuDBFJD2qXNMGHR+ct1kSUvXXgJNPK1Epa
+ afurtUA9sYd6Og6CWB4BkRmz/0bExuApRNvtq8bA+3UTdqCnioDsHtssB0j2DiXA/qxE1CvxucJ
+ tPY09UNeDcZMYM+4bozFL4LXg4YwqnM5Jp09B/sxlaZkovbWIwoq95I+9BYWv/tcO/Ktvqn7SEQ
+ PEOBBrcEDQXosxBQQWy10seoa0DVFY2QhgCU4hCGpZc92LV7REqSJiYHbpFTtHxIUBfxmzPS4bc
+ z2YC7zD8wouUDDThjRMTBRsiJrfP4rgK7uazOhE6XzhnY3d9a43kdmyPH5sjdEYRbkRiGb/JYmi
+ 2rFRfm60h6Nrih82EsV/Rt9mH8BFYdeXnu9MW8+CG3bSkWjQbBwxeSMeS4rIIct2VGWw8PnVlot
+ xjDV5a4tlFBj66W+mUaFBN8Q06PCds3budyQpfZxDXB2kWq5yUw8GAl744LUiSvlaEP1jlUbVQQ
+ PEBG+RV0D6IFkDw==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:clm@meta.com,m:chuck.lever@oracle.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22281-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:ben.coddington@hammerspace.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:daire@dneg.com,m:neil@brown.name,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22280-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 958AB64218B
+X-Rspamd-Queue-Id: 39C1364234B
 
+This series is the result of an LLM-assisted review of the xprtrdma
+code base, addressing eight defects in the xprtrdma connect and
+reply-handling paths.
 
-On Thu, Jun 4, 2026, at 9:08 AM, Benjamin Coddington wrote:
-> That turns the one open parameter into "how many RPCs is an interactive
-> cycle" (N).  I'd rather not make it an admin knob either:
->
->   - a generous fixed default - over-provisioning costs almost nothing, since
->     a sustained stream never idles to collect it, and under-provisioning just
->     lets the tail of an unusually large command fall back to bulk;
->   - measure it - track per-connection burst size between idle gaps;
->   - borrow the v4.1 slot count as a per-connection hint (v3 would need a
->     fallback).
+A design thread runs through the reply- and send-path fixes: in this
+transport, WR-associated resources are reclaimed only by
+completions. Each Receive completion consumes one posted Receive, so
+every exit from rpcrdma_reply_handler() must either transfer
+ownership of the rep or recycle it and post a replacement; exits
+that do neither leak the rep and let a misbehaving peer drain the
+Receive queue (patches 5 and 7). On the send side, a sendctx slot is
+reclaimed only when a Send completion sweeps past it, so a
+preparation failure that posts no Send WR has to rewind the ring
+head explicitly instead of waiting for a completion that will never
+arrive (patch 8).
 
-If we can get away with a single mechanism rather than an additional
-fallback, that will keep things "no more complicated than necessary"
-and easier to test.
+One ordering constraint: the credit clamp moves ahead of every
+branch that can reach the repost tail (patch 6) before the
+malformed-reply exits are rerouted through that tail (patch 7). The
+rerouted exits refill against rb_credits, the most recently accepted
+credit grant, and the earlier clamp guarantees that value is bounded
+by re_max_requests rather than taken raw from the wire.
 
-> Does a burst-sized allowance fit how you were picturing the sparse tier, or
-> were you thinking the single-RPC jump was enough and the rest should just
-> share bulk?  That's the main fork I see.
+Receive buffer sizing follows from state that outlives the
+receive threshold is renegotiated on every connect, so a surviving
+rep's receive buffer can be smaller than the new connection
+requires. The series resizes undersized buffers at repost time
+rather than freeing all reps at disconnect, which would reintroduce
+the allocation churn that commit 0e13dd9ea8be removed (patch 4).
 
-It's a good open question. Why not prototype a burst-sized allowance and
-then we can examine the behavior using your test harness to see how much
-of a difference it makes.
+This series applied on top of 7.1-rc4 plus
+https://lore.kernel.org/linux-nfs/20260526141405.39877-3-cel@kernel.org/
 
+---
+Chris Mason (3):
+      xprtrdma: Fix ep kref imbalance on ADDR_CHANGE
+      xprtrdma: Initialize re_id before removal registration
+      xprtrdma: Fix bcall rep leak and unbounded peek
 
--- 
-Chuck Lever
+Chuck Lever (5):
+      xprtrdma: Check frwr_wp_create() during connect
+      xprtrdma: Resize reply buffers before reposting receives
+      xprtrdma: Sanitize the reply credit grant after parsing
+      xprtrdma: Repost Receive buffers for malformed replies
+      xprtrdma: Return sendctx slot after Send preparation failure
+
+ net/sunrpc/xprtrdma/rpc_rdma.c  | 29 ++++++++----
+ net/sunrpc/xprtrdma/verbs.c     | 99 ++++++++++++++++++++++++++++++++++++-----
+ net/sunrpc/xprtrdma/xprt_rdma.h |  2 +
+ 3 files changed, 111 insertions(+), 19 deletions(-)
+---
+base-commit: ed42a6289b2164998fc29370789dcff40ed50159
+change-id: 20260604-xprtrdma-refcount-d2a8c36563d4
+
+Best regards,
+--  
+Chuck Lever <chuck.lever@oracle.com>
+
 
