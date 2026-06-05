@@ -1,55 +1,54 @@
-Return-Path: <linux-nfs+bounces-22307-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22308-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id VXS1OKoJI2qrgwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22307-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:38:50 +0200
+	id wDEoD04KI2rWgwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22308-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:41:34 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A269164A3D4
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:38:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE92E64A441
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:41:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WubdgHpX;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22307-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22307-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=IGlgUUsp;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22308-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22308-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C56EA303EA64
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 17:34:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9E1A9304149D
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 17:34:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55119386C1C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CCC38F658;
 	Fri,  5 Jun 2026 17:34:52 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4992ECEB9;
-	Fri,  5 Jun 2026 17:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCDE22173D;
+	Fri,  5 Jun 2026 17:34:50 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780680892; cv=none; b=Pr5RMxwtILABC5QluVTkW3JcRY1sj2ztMADE4604f3KCLXjO4tSxGV6yaMmNXuFJkzGaIkHZnv1V8DcwNHP212bfd5i6z4AVIhWn6n8lwpKhC1LA1P23nh5+IZuO0R294U6m806rWC19KorVx1Dq6Waxr6oDxuMDSQdfEuIGsPc=
+	t=1780680892; cv=none; b=tIFTfjVtRFZAErtzDbi3ljbEqQDrKpI0+q/HiBcj7zsr4yBDy31m+YNQZ8SL8fYuskufBzFuNMUH04SIqcO5GomZ7wNTtvA21kcazZ53iesJtDqUHHEBLFo+W45TviXtzk50mnu9YpBMAe6O6EnEdU4CR2/4PkJwGtmc57V5dEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780680892; c=relaxed/simple;
-	bh=AOY7jew2s0vv83qulKa7jUQDx/LLrW5jw2CNNhrGoIE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rbGrNSeUumsn4kMlOx241xwNaoogh/eqwYG3YX85ZXAO4N3T/ogc9Zii16t5GlFvXWz1WVkxWjUBghRd++/Vj8yUkMVDoDzNcxWG6QCKTOJxt1bY/bUMkZi/SoMN7PdOdOP0ppc4UbYanI1Dk7bhI36/kAy4mixx15XGGb7O4U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WubdgHpX; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056A71F00893;
-	Fri,  5 Jun 2026 17:34:48 +0000 (UTC)
+	bh=fNpIS/lFvSh+3wzoQvGJJ+wp+0atIwin0LGBxADHr1M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NKT3XZ196d69NqXU23Yw7l7h7HJRkkmoeaikyZkR7RlgfMFqc/kmA+hiq5Y1bxhRYCTw6BRIt3sHZ1l0diT6JS7Du5A7N7Ts9C6z0HTb7A/L7xHPRKl0dPUDqRTwYsS2B+oZrkCZG20lsHdDEodi4p8TWOAlqVaVYomuv3gOxF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGlgUUsp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC81E1F00898;
+	Fri,  5 Jun 2026 17:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780680889;
-	bh=dFe/Z+3EtDNNukIoQsxiCqihyu44aA+wIuaTVhBapcA=;
-	h=From:Subject:Date:To:Cc;
-	b=WubdgHpXl/wPnCcnUfQOSk+VwOuZHDE7rROnKC/7mWMKpWORDH56JQ/aww/R+tj2w
-	 QUqrN8XqmiTlc8PhnFYtAC8BJKzdxus4OUDBg+1gE4LdtShF+HEG3TvtDDjeJfD+Pq
-	 UcH+Beagz7bV4XlCbGZcKFt8vw/4zi0NG0KbzmGrtg++HjwXcuQRbH+FhuV+mBDDag
-	 Xpl/8Ibg7a96jedeSMiE/dvF6ClTqbEp/JLHp2yhZkEnrSKPNLR42VZ65QTtNDwbJ9
-	 u2vSIEeT6IIbGoazPk2TTOs7Rxe8eDDL4xHauB10D70lnfOkewZrAQUPaPoAEYnwjW
-	 A5Pvs4UDwg57A==
+	s=k20260515; t=1780680890;
+	bh=l0e2I4tkaafPAjonkJxsN6/NkvKVwejZuO/gjLANoso=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=IGlgUUspO0HkcQCR8RpKHrm5IDBTU7rc9jWEa7i8gQQiwKbg/gFfwCGe4WnbX08FK
+	 o3nkOGL1L+Y11p8WD9tvn0yKzE+FJ9Pw5hMoN2v5452HrHU6V07mgbiT/YN2jGRNJt
+	 4ubwWEPu9F7PUfVFhmonLdbhC8pbP6hN/2zbRgHNP3L6SSxHcGfbKnlB9RhAs83V+h
+	 THZ4GF7oBEMjegqPYeEJZZXZgZ2HvAoIZutd6nP0tyiNyGwoqBRmZ1N6v1FNtoftw6
+	 3NxS8xrRc9KTEFL8ZJTnb9YXVJybd0+w2agQynmqwTo9aL9GIFkPXS8rYe6a8DmT2H
+	 gssu1hloaby4w==
 From: Chuck Lever <cel@kernel.org>
-Subject: [PATCH 0/9] Deliver TLS session tags to upper-layer consumers
- (NFSD)
-Date: Fri, 05 Jun 2026 13:34:34 -0400
-Message-Id: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
+Date: Fri, 05 Jun 2026 13:34:35 -0400
+Subject: [PATCH 1/9] handshake: Require admin permission for DONE command
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,10 +57,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMywrCMBBFf6XM2sE0pqL+irjIY5KOlCiZKELpv
- 5vo8lzOPSsIFSaBy7BCoTcLP3KDcTeAn21OhBwag1b6qKZRY10EhaR7WG0SPAeljJ5Oh2gMtNu
- zUOTPL3m9/Vle7k6+9k43nBVCV2z2c588LfscJWAlqZwTbNsXoMZd95cAAAA=
-X-Change-ID: 20260512-tls-session-tags-9d0042583f44
+Message-Id: <20260605-tls-session-tags-v1-1-47bd1d94d552@oracle.com>
+References: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
+In-Reply-To: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
 To: Donald Hunter <donald.hunter@gmail.com>, 
  Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
@@ -80,21 +78,21 @@ Cc: kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
  linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4609;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2122;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=AOY7jew2s0vv83qulKa7jUQDx/LLrW5jw2CNNhrGoIE=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIwivHy/0foophi6P8xjfFkcgLXLw4wr9vH8ii
- IScrp0uNZ6JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiMIrwAKCRAzarMzb2Z/
- l4RaD/42OQWIPmEYtGo7JJufQ6n/cYRM3z1qCs67r5J4TXL0G+XCz6H5RPAEIMYaK/Gm+uOu/wa
- DrnW7oWUCSdIJts8574Yi+eeRDAtQMCJJaFcuarPEjRe1UvYZIPQQuc0UrVJelLAdYhwo805Pn+
- fmtcLn0wWprXuE7pISGV5bl7HGIBMfinskspDkfLusTBrWuPwBTjz7Sr0QAO3y82ags5q2iYj1i
- NOOGlGN32nPfOlS6pMagMHCIXhQ+XzNoHkV2CeXsrDJOMzsdJR2TY2ef7OVjiW2AI/8Fm5kmxag
- q77YIdm+/lWqvD0AKsu2luwkdLYddr4wq/i/nTx4fQH3JmsGrY8Meoah6VWooIdeRENwXjuKc7l
- xwc7VryGekDxOt3/JiTPa2XlTxeNiEejv3RCwB3y7sRBAM3lv5abRHxnMDx1ejbsGu8UGKqCTXJ
- +dXU/CIOF900EOs/5NOUBgmPwiw86ZqyUPgYL/RfJfeOYTResAo4Es8u5IIKPV6E+qP0O+41QNf
- vdPNw2jan9c8QpnvKP6GIMk6WBTSsCZWKDMz0yWZ9wouzUGidgT6dbID0ki8f5b9bjzmjGjLTrO
- cr8gHOl4w+9p1kf1etnmKWelnr28ovwhYnaQybTb1Wmy7Zj+wIlaXPqVun45p1DIYjrmPpAwvdi
- qu5QgtQw5m25PjA==
+ bh=DNAMIdDfV+uLF7PeWYf87UtTJOGIrmRsnmjy9i973y8=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIwi4Az2KTdoVCyPvGZ4ycXQh/Il93XVV9ycmF
+ jvrHR5hMRKJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiMIuAAKCRAzarMzb2Z/
+ l/O+D/wOb3gZ0A1U3RE3xEbfWf2GRVFyXrkpcW9z3P0lQgdbZq4G+ZNuu3V/vekhR89gUSRq6+D
+ XFobOpJJO0I70xO9wv3Sqto0S8kl3PnyEHVjYa07G8LjHaAPHGiYHoqP3WKOrXPoUeywnXIz+fZ
+ Ths6SLB1lwVgRBLM3wj7qDwq5qSS8qu/6W/E1LO1NJDCT6JoKMssFjqDRWpc7mAVyN+bJk7TAEt
+ OjkX+eDaDYUgbQUyOIlbe9tKgF9GSJfpDppY4Q/Sh2uxyEuByjCNzN1f0Sp3N8Vo18uGx3ljUhi
+ oINRYZ4JbRBBDsl71tfdbeE52pX73GVugi8txVqWPNcIkVG1ZFevCWII0fDuPX2H44rnbTkIeCe
+ bXYpf7hi8o6DWP3Bpgt8QJKEoAq71u9/b7PdHMiVkHrFgRJp6vZAAAlTDqZ+UlPUH0Miqgjb4Mo
+ W8xAQdEUTP+tLyPLhHcLuVBrSLrmcwcseceO95hLqiNeYKd5hklAdvjLD12Li+XQ1IQvKWVJE/J
+ lU9FxFNtKlUw8XttBExjVK+0CPOhPCkJXPdNpz4xxPsM6I4q/ZkwxMpZKDYxYX9Z1A+Nj27hORo
+ XcLn4iajMiQDF/2kkR1KRANMx9iXx0BBCM9tGWGe9XLSbNwcf1R7o1H76sSaBWBpZXpgFazkxbk
+ thKgTu21rljSEIg==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Rspamd-Action: no action
@@ -103,7 +101,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -117,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22307-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22308-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -127,101 +125,66 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,oracle.com:mid,oracle.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:mid,oracle.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A269164A3D4
+X-Rspamd-Queue-Id: AE92E64A441
 
-NFSD and similar upper-layer services want access-control decisions
-based on TLS peer-certificate characteristics, but in-kernel x.509
-parsing would duplicate work mature userspace libraries already do.
-This series gives tlshd a way to evaluate certificates against
-admin-defined policy and report matching policies back to the kernel
-as opaque string tags. The handshake layer plumbs the tags through to
-the upper-layer consumer's completion callback; intersection against
-per-resource tag sets stays the consumer's problem.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Four architectural choices shape the series, only one of which is
-visible in any single patch.
+ACCEPT and DONE are the two downcalls of the handshake genl
+family, both intended for use by the trusted handshake agent
+(tlshd). ACCEPT already requires GENL_ADMIN_PERM; DONE has
+no privilege check at all.
 
-The tagging vocabulary is opaque to the kernel. tlshd decides what
-each tag means; the handshake layer and its consumers only test
-membership. This keeps x.509 out of the kernel and lets policy evolve
-at userspace speed. Any future attribute the kernel wants to gate on
-must be expressed as a tag rather than as a new netlink field per
-attribute.
+The fd-lookup in handshake_nl_done_doit() only confirms that
+some pending handshake request exists for the supplied sockfd;
+it does not authenticate the sender. An unprivileged process
+that guesses or observes a valid sockfd can therefore submit
+a DONE with HANDSHAKE_A_DONE_STATUS == 0, leaving the kernel
+consumer to proceed as if the handshake succeeded. A non-zero
+status on a forged DONE tears down a legitimate in-flight
+handshake before tlshd can report its real result.
 
-DONE gains a privilege check (patch 1) as a prerequisite, not as
-cleanup. Without it, an unprivileged process guessing a sockfd could
-submit a forged DONE and effectively grant or deny tag membership
-for a real handshake. Once tags carry authorization weight, that
-pre-existing gap becomes load-bearing. The fix predates tags in
-principle and carries a Fixes: tag, but it sits at the head of this
-series so the rest of the work has a trustworthy foundation.
+A subsequent patch teaches the DONE handler to carry session
+tags consumed for access control. That work makes closing the
+existing gap a prerequisite, but the gap itself predates tags.
 
-HANDSHAKE_MAX_SESSIONTAGS is advertised on every ACCEPT reply as
-HANDSHAKE_A_ACCEPT_MAX_TAGS (patch 6), so tlshd can size its
-DONE-side tag list against the kernel's runtime limit rather than
-guessing from header constants. If a daemon overruns anyway, the
-DONE handler truncates and logs one pr_warn_once rather than
-returning -E2BIG: tearing down a handshake the operator almost
-certainly wants to keep is a worse outcome than dropping a few
-tags. The truncation path is defense-in-depth for a buggy or
-stale agent, not the primary signal.
-
-The tagset helper (patch 3) is split out as a generic library so
-NFSD export tagging (patches 8 and 9) can use it without further
-churn in net/handshake/.
-
+Fixes: 3b3009ea8abb ("net/handshake: Create a NETLINK service for handling handshake requests")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
-Chuck Lever (9):
-      handshake: Require admin permission for DONE command
-      handshake: Add tags to "done" downcall
-      lib: Add a "tagset" data structure
-      handshake: Pick up session tags passed during the DONE downcall
-      handshake: Add a kunit test for the completion gate
-      handshake: advertise the session-tag cap to user space
-      SUNRPC: Copy the TLS session tags when they are available
-      NFSD: Implement export tagging
-      NFSD: Add allow_tags to the netlink export interface
+ Documentation/netlink/specs/handshake.yaml | 1 +
+ net/handshake/genl.c                       | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
- Documentation/core-api/index.rst           |   1 +
- Documentation/core-api/tagset.rst          | 225 +++++++++++++++++++++++++++++
- Documentation/netlink/specs/handshake.yaml |  16 ++
- Documentation/netlink/specs/nfsd.yaml      |  10 ++
- Documentation/networking/tls-handshake.rst |  63 +++++++-
- drivers/nvme/host/tcp.c                    |   3 +-
- drivers/nvme/target/tcp.c                  |   3 +-
- fs/nfsd/export.c                           | 141 +++++++++++++++++-
- fs/nfsd/export.h                           |  11 ++
- fs/nfsd/netlink.c                          |   4 +-
- fs/nfsd/netlink.h                          |   3 +-
- fs/nfsd/trace.h                            |  19 +++
- include/linux/sunrpc/svc_xprt.h            |   2 +
- include/linux/tagset.h                     | 187 ++++++++++++++++++++++++
- include/net/handshake.h                    |  30 +++-
- include/uapi/linux/handshake.h             |   4 +
- include/uapi/linux/nfsd_netlink.h          |   1 +
- lib/Makefile                               |   1 +
- lib/tagset.c                               | 174 ++++++++++++++++++++++
- net/handshake/genl.c                       |   7 +-
- net/handshake/handshake-test.c             |  72 +++++++++
- net/handshake/handshake.h                  |   6 +
- net/handshake/netlink.c                    | 109 +++++++++++++-
- net/handshake/request.c                    |  68 ++++++++-
- net/handshake/tlshd.c                      |  10 +-
- net/sunrpc/svc_xprt.c                      |  11 +-
- net/sunrpc/svcauth_unix.c                  |  12 ++
- net/sunrpc/svcsock.c                       |  38 ++++-
- net/sunrpc/xprtsock.c                      |   5 +-
- 29 files changed, 1205 insertions(+), 31 deletions(-)
----
-base-commit: 4d4d6605de5f91a40335729b6a7cc15e83b280f3
-change-id: 20260512-tls-session-tags-9d0042583f44
+diff --git a/Documentation/netlink/specs/handshake.yaml b/Documentation/netlink/specs/handshake.yaml
+index 95c3fade7a8d..24f5a0ac5920 100644
+--- a/Documentation/netlink/specs/handshake.yaml
++++ b/Documentation/netlink/specs/handshake.yaml
+@@ -117,6 +117,7 @@ operations:
+       name: done
+       doc: Handler reports handshake completion
+       attribute-set: done
++      flags: [admin-perm]
+       do:
+         request:
+           attributes:
+diff --git a/net/handshake/genl.c b/net/handshake/genl.c
+index 870612609491..791c45671cd6 100644
+--- a/net/handshake/genl.c
++++ b/net/handshake/genl.c
+@@ -37,7 +37,7 @@ static const struct genl_split_ops handshake_nl_ops[] = {
+ 		.doit		= handshake_nl_done_doit,
+ 		.policy		= handshake_done_nl_policy,
+ 		.maxattr	= HANDSHAKE_A_DONE_REMOTE_AUTH,
+-		.flags		= GENL_CMD_CAP_DO,
++		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ };
+ 
 
-Best regards,
---  
-Chuck Lever <chuck.lever@oracle.com>
+-- 
+2.54.0
 
 
