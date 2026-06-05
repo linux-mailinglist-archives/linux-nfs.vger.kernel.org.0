@@ -1,144 +1,166 @@
-Return-Path: <linux-nfs+bounces-22320-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22321-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uQVHBZs3I2p9kwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22320-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 22:54:51 +0200
+	id /pq+KtJAI2rumAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22321-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 23:34:10 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D03564B39B
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 22:54:50 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BEA664B6C9
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 23:34:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=infradead.org header.s=casper.20170209 header.b=UZ1qkrzd;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22320-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22320-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=infradead.org;
+	dkim=none;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22321-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22321-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8BCAA30226B8
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 20:54:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D22EA3026E48
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 21:33:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD091346766;
-	Fri,  5 Jun 2026 20:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC04D3C1974;
+	Fri,  5 Jun 2026 21:33:06 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FD0399350;
-	Fri,  5 Jun 2026 20:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A58A38C41B
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Jun 2026 21:33:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780692884; cv=none; b=mEShW/No5mQo8HIX+45SbW5GZ/uhAtIJzrSuoz4x9ixXBs5b4Nl6yLU6wrL8hAAEsgkFLPjYlAcFkbxTQfmDyLRgCl7fpgX0LwmiYPhjWE9SX1BduxpfJDEQmkimJKs2wJnvNwvs+dBvpABzNlRu3OYsVCH/D6PYK/41mZK0vLc=
+	t=1780695186; cv=none; b=cZMvbCpx0JpSDDzIXDPq3TeVxj2Nk7Jxl8RXD4F0xaBlVVhQgLKrvLwndkvG2xLxE6oB670voJESpBD+xjX4/+57Doe6uPhrXImSR5oBmSjPsXse9pIhghvFV6ey+ffopZLQu7sYV8CcfSkSG3EAvX164xhB0HZf7i7Q8t/GytQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780692884; c=relaxed/simple;
-	bh=REFUUJ8WiDUOgpm5NHfNfrpQLNUOkx1fl/MSn7byJEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uwmYYr7tykCdyNR54g4Zbn3gvszwJOc3LYfWaIhJacZGT3equiAOWOC3FaHZNZpUEaVtMLs4+h+8iZlcAy2kInDvxNxYzjsnlZzjd46VdZtJCxnW2mbqAF0pTrqdyqwOKi4BPNAA3c0XAPtJaqcuIOyiIOfYDHxhqxWEfnWhV14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UZ1qkrzd; arc=none smtp.client-ip=90.155.50.34
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SslXJgntqwAF+9YvM5v4vsv0Li+nQ5gtHKqQFx2cM1A=; b=UZ1qkrzdC51ngjCGktqDZVzAX2
-	yCgvXyiXhpjykmca6pMQJXHGguhKJPRzJ364f1c/mnaeEzzSaowVSzfQ94vYrYzqhXNSxrryIa7zs
-	16S0wmjlm0Aav5EmuHod9r5x0B5GizEKl/JaFwQi7Yd9GVDHC/GtRGuRKh4qVD/pHkFohjKOlqKOi
-	+4SSsD36n9k4YNzD0qmKnIRjHbIIGur6bX5XGX4B6X2hsRANAvdnWhOgjY/5n0HVxYE5Gz2/OnQTW
-	dGv8AEBr8EA83RLg0MtKLN6+OOUF/iGsdtsg+RQZJS6GF0Ayzg8CHHjS87XB58oAAQrXChIH8HZo7
-	gSGo2feA==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVbYd-00000008a7T-0bWz;
-	Fri, 05 Jun 2026 20:54:23 +0000
-Date: Fri, 5 Jun 2026 21:54:23 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Theodore Tso <tytso@mit.edu>, Mike Rapoport <rppt@kernel.org>,
-	Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
-	Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Breno Leitao <leitao@debian.org>, Kees Cook <kees@kernel.org>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	ocfs2-devel@lists.linux.dev, linux-nilfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
-	linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 10/17] jbd2: replace __get_free_pages() with kmalloc()
-Message-ID: <aiM3f08bsBM8gD8y@casper.infradead.org>
-References: <20260523-b4-fs-v1-0-275e36a83f0e@kernel.org>
- <20260523-b4-fs-v1-10-275e36a83f0e@kernel.org>
- <yfzx3jgzwesernofl7mzixa2mhjfii5v3o7yapghtmozixrpfu@6bsh7iixyiov>
- <aiEX4UTxEnBTjVKo@kernel.org>
- <ximvn6jwgtam665a4droqkp73o55kwvd5uukyidwjesmysobth@oe7rigpsjfkz>
- <20260605093332.7b067876@pumpkin>
+	s=arc-20240116; t=1780695186; c=relaxed/simple;
+	bh=yB8i6L7KoJ6YeQ5x5SkEb3TWEe2vEfLFo8gyBr/eSF0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sqVfxUI+tFDaa6P9rIZ5J3M4s1r1M1XHioOgWCfjPh1M1gqVGAcsCnGmZDsh5LvhvPcnViRTeEA6TK3gMyFYHOyLPJ5MVVMi4pIXcEg/SUDtXQyLIFC/SF8GnpA74usamaPcD3gx3FgwMfmfDSIo9aDCOSFNULGeZS33oVpM7eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.46
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-490be29c1c5so28781505e9.2
+        for <linux-nfs@vger.kernel.org>; Fri, 05 Jun 2026 14:33:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780695184; x=1781299984;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yB8i6L7KoJ6YeQ5x5SkEb3TWEe2vEfLFo8gyBr/eSF0=;
+        b=CoQIt/OgwhMFWj4oAyLQ87H+ZnJrtnow/A89EBodYt+w3O4VxfHm2hg3IN7xEMq27X
+         8ZX/xhgWc0iu+dpQk03Jqkan2amEc79PSGWE1BhQ3fdJEDjdQO0wnSPkqyqJTc2Ep2J8
+         9TVHq4Ne0o4gZj/fCB2VuJs8RyljX/zlVfuE6PIeAHIqoesn86Zeh6HtG1orxUIOfXkO
+         jSjFdjHR9HysIvB87tNYMRJJbZP/LCWXkpYz6UsWdQS2OgdFfNeC5338Tt7YuvUfay08
+         8GmhxxQ8owXlDBuBhiQvyOvPzvqOASeseq2zLJZovDB/oAaHbxdIgsKJ+yB6+/aJiMef
+         RTlg==
+X-Forwarded-Encrypted: i=1; AFNElJ/RguPP+JFHL23V7DMrPQjy8Ms7K7darIFWP4QhmlImYFKcHtwaCqqK9nfIqvzd6DW9r5nL2c9B2Lw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzeo8DNNKNzH1wlVtQE34yJbNJE9T8ZwU4vNga2ESq3KsGnAatI
+	g3rs8vDa5zFmUCYiJlElcF/3qAfcP3SL2kzRIb1zy4bJfG7dwyy4BZz2
+X-Gm-Gg: Acq92OFDIWrW2zpFEF6WK5G+YLmkccFuoIp3KiXIS7BCtbVKVaRFSZRy1OskofA5clv
+	dYExYEI19UjYKcIRzu4oRStBkYIPVga8dPqtxTEbZ40jOVe+YomzT3MDKaaAVczTh6cSWNWubGU
+	21QovTTh90+7NoXFm27GvJH4TvmAzMoESf9NuFhB7myFnMAcamcklV0pGdaUkq9vTJEMFnIdef4
+	q1OjeXnsu6LivwLJBtKiDvSJ7En8ccBKXrXREqpIMvjYYNDjKApdlmZMKuDOcs4rTBhC77cT6s+
+	aMbxK9BgIdNoTPmvV/kh5xQKXHAPFtBjPwgPkEbgAb0BVMO7YROAHIimXRgbu0iVdogzSPWf4ij
+	Dao9rjJuMyMaXf0VerZrLjpLGhSzWeZyVdvxbo9VIml1b6CK2sRTtPTivsceTfLnzWUhK/Q6X8u
+	q6xSbAERMKDNnQVKt+V/b1JIq//PctVlErh26B2+1hwjLBTgSh2X4cm2YUG4tg10I=
+X-Received: by 2002:a05:600c:8183:b0:488:a882:c7 with SMTP id 5b1f17b1804b1-490c25c6625mr78070045e9.25.1780695183438;
+        Fri, 05 Jun 2026 14:33:03 -0700 (PDT)
+Received: from [10.100.102.74] (89-138-67-1.bb.netvision.net.il. [89.138.67.1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490c2d52e5esm48030115e9.2.2026.06.05.14.33.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2026 14:33:01 -0700 (PDT)
+Message-ID: <ab767baf-aa94-4ff7-81fb-c19804a7883d@grimberg.me>
+Date: Sat, 6 Jun 2026 00:32:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260605093332.7b067876@pumpkin>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] NFS: named client identities for mTLS mounts and a
+ per-namespace .nfs keyring
+To: Chuck Lever <cel@kernel.org>, Hannes Reinecke <hare@suse.de>,
+ linux-nfs@vger.kernel.org
+Cc: keyrings@vger.kernel.org, kernel-tls-handshake@lists.linux.dev,
+ netdev@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>
+References: <20260602154740.49861-1-cel@kernel.org>
+ <bb9a872a-d4aa-467a-b4c9-7bca174a6bbc@suse.de>
+ <b38b0983-7a63-4e77-a549-2d8859752cb9@app.fastmail.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <b38b0983-7a63-4e77-a549-2d8859752cb9@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:david.laight.linux@gmail.com,m:tytso@mit.edu,m:rppt@kernel.org,m:jack@suse.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:konishi.ryusuke@gmail.com,m:slava@dubeyko.com,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:shaggy@kernel.org,m:miklos@szeredi.hu,m:a.hindborg@kernel.org,m:leitao@debian.org,m:kees@kernel.org,m:aivazian.tigran@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:ocfs2-devel@lists.linux.dev,m:linux-nilfs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jfs-discussion@lists.sourceforge.net,m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:davidlaightlinux@gmail.com,m:konishiryusuke@gmail.com,m:aivaziantigran@gmail.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-22320-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	FORGED_SENDER(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[mit.edu,kernel.org,suse.com,fasheh.com,evilplan.org,linux.alibaba.com,gmail.com,dubeyko.com,oracle.com,brown.name,redhat.com,talpey.com,zeniv.linux.org.uk,suse.cz,szeredi.hu,debian.org,vger.kernel.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	TAGGED_FROM(0.00)[bounces-22321-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[grimberg.me];
+	FORGED_SENDER(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:hare@suse.de,m:linux-nfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:hch@lst.de,m:dhowells@redhat.com,m:jarkko@kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sagi@grimberg.me,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	R_DKIM_NA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5D03564B39B
+X-Rspamd-Queue-Id: 0BEA664B6C9
 
-On Fri, Jun 05, 2026 at 09:33:32AM +0100, David Laight wrote:
-> On Thu, 4 Jun 2026 10:05:52 -0400
-> "Theodore Tso" <tytso@mit.edu> wrote:
-> 
-> ...
-> > I suppose we could do it with kmalloc() with some flags which to
-> > prevent forced reclaim / compaction, and if that fails, then fall back
-> > to vmalloc().  Is there a better way?
-> 
-> There is already kvalloc().
-> I'm not sure how hard that tries to get kmalloc() to succeed.
 
-Please don't try to help.
+
+On 03/06/2026 17:27, Chuck Lever wrote:
+> On Tue, Jun 2, 2026, at 6:39 PM, Hannes Reinecke wrote:
+>> I am all for making keyrings namespace-aware. Logically I _think_ they
+>> should be tagged per user-namespace, as this really is about the
+>> filesystem (and as such would warrant to be tagged per mount ns).
+>> Tagging it per net-namespace is not a great fit (well, for me, at
+>> least), as also block devices might require keys to present the
+>> bdev (eg nvme authentication)
+> My understanding of the proposal is that there is one keyring on the
+> system for .nfs and the keys in it are visible only in the namespace
+> where they were created.
+>
+> Therefore the consumer (say, NFS, or NFSD) is running in a particular
+> network namespace. It will create keys on the one .nfs keyring, but
+> only the tlshd in that same network namespace will have access to
+> those keys.
+
+Can tlshd run in multiple network namesapces today?
+
+>
+>
+>> I might be okay to have it tagged per net-namespace, though, as all
+>> current users are in some shape or form being network related.
+>> But I'm not sure if that stays that way, so I am worried if we're
+>> not restricting ourselves to much by that choice.
+>> As really, the question is: what is the driving the namespace selection?
+>> Is it the _requesting_ layer, ie the layer issuing the mount() call?
+>> Or is it the _providing_ layer, ie the layer providing the
+>> devices/interfaces where the mount() call is operating on?
+>> If it's the former, then we need to tag is as
+>> net-namespace. If it's the latter, then we need to tag it as a
+>> user-namespace / mount-ns.
+> tlshd is a network layer service, so it doesn't make sense to bind
+> it to a user or mount namespace, IMHO.
+
+I agree with network namespace isolation.
+
 
