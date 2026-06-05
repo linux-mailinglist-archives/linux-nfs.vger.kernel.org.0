@@ -1,93 +1,92 @@
-Return-Path: <linux-nfs+bounces-22303-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22304-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4ARiOgTEImqidQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22303-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 14:41:40 +0200
+	id 6wVcDxXgImq2egEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22304-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 16:41:25 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02AAA64841A
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 14:41:40 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A69A648ECF
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 16:41:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b=kztQ87zR;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22303-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22303-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Sya4zRwk;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22304-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22304-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 36306301F983
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 12:29:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 009C930BC292
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 14:32:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC5F91CEAC2;
-	Fri,  5 Jun 2026 12:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 776C62D8DC2;
+	Fri,  5 Jun 2026 14:32:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44268318EE2
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Jun 2026 12:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802131DA62E
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Jun 2026 14:32:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780662585; cv=none; b=UGCw+VVwxn6RylNywSXXdokWIdhqQNwm3Fw2jlPK3dMv69Y9WrNLwn8qt+G+iXsRyFhfnXjf5fMWY4AoA35X4btdCyLgV7sMUlCdaI/COcXidRPf+yuTCWyFXpdUa0Ma5CGED7MxBUECKlpP8dlnlRMTVsif+ElFUt4HXauX+Pg=
+	t=1780669940; cv=none; b=lstemwVRvHHeeeFSpM7DX/f39T0laoQqU0bf5bI03gj5k9LJFdD9dhZd7RtLS2Bk+sEjED8QjK2I+43Q54SUsL165XCr+YP5Jtw/bXvao5dv80lqJJJ89HWye5QC0r6ohZgCcusEVoOr4ohaYKUi7TdYME59KOdJ7TPaAIyMjgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780662585; c=relaxed/simple;
-	bh=64O7JTUJU2f5BXNSYc12DPUbUZRAd8d9+bNKTyvJ8Ig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ue0kDV3FhiXS+K7Ee+owh18vOs0vRHWlwTQsw4x9CiJbUyN9azom38jrSHF+s4e6rktOx/DMrShZaACGixtz7dobYI1r1r8xlWxHo6clF/jDb73tXzfaCDZSZ+7PWg7ISgkbaeLgZZhqNjvnlTIhrZ5L02wuNln65d8UkFoiND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=kztQ87zR; arc=none smtp.client-ip=209.85.167.175
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-48611d28204so737085b6e.3
-        for <linux-nfs@vger.kernel.org>; Fri, 05 Jun 2026 05:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1780662583; x=1781267383; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=88bDpIU2JtI4JhHvzemDkWMxWUW6z+PC6LJPuSb0Fuc=;
-        b=kztQ87zR2T5bX+xvqsdjJUqUhLda0wSqmQHd4+vb//VuoN4WXTFKc2GEDZuWI6Xc0f
-         JOhq5eACGak0PkPRfLOI4xDIQpUXzRzrJCXX+uW+5RmzEBZbfnmQWeKNRbJdvy/N5llb
-         7eZj7n0ZMPd7JEsbnud2Y+/Z9lgJSh7ENz0pWNO+1jVpDDFtiAnN0pFGirxlu8K2dEOz
-         I0et2O3mqDeg46vFwnCHqTl0xqD77hjefLGF1GaXSRtasnbC7sMg91ThM7jFrN+ky/LF
-         bB5ywfCDx1/vs1m3z+SEthTnsQiIr8AMTxnUvGp3BswurhFPyUV1Rol6WTYi+nwSxIuv
-         4AvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780662583; x=1781267383;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=88bDpIU2JtI4JhHvzemDkWMxWUW6z+PC6LJPuSb0Fuc=;
-        b=mTwFQ8p4Q+izfswrR8upB6AdcZ7MAdsAY3IbO1/zqX4WdsWXOeC9gGhv5wmHUW9HMs
-         E0OrjBKAXnk4Lke8OhGkB2gv53yp5jzL3IeXrL+sFlf0wST48mcr1fQ6IpDKuE+i95IZ
-         Z86wQNvwf8ahtXznkYtvEugdY3bZKRLQTf7CdSVsf9tqppniPRGuzCFkRp1/ss43mHD3
-         OJIMf+e4guUFXEq7z147Iev/m9oK7OQqHqXi8MwhMSZCHtgsIWS+PJn8/p44EZKhBO2U
-         e0rAkgfU8YriXKf61YVfUKUwmTFjJYs4IqndswzeF4DZEHF1XKxZ/GPCMSpuwEnLd6ST
-         XRvQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8Km+ECQOCjMkjqSR3RDaG7N6T36xh/U/EVaupioKnUuwqN60pJOPu0zDHAFvnTF7TgUW00f56v7h0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDDNRopWNgjXIAWVKQ8JOvE97BLp6WHpshfvK5ua1o788OeJfx
-	OyZMVeBvJHTEmy5MK5IcFwdO/xRrMwXNuwdspdEsZdmKMvBNSxCfRu+3IP7Wzr10B1A=
-X-Gm-Gg: Acq92OFBnbwIFqcZRNgXdzbHOPO3PZo8+hTb1tFCfKYC8x2kmKe4E0el6cEW/uNT0rW
-	IV37lboy1cNb044JAEFbT166/wBJX08Fo9rMfF3A4tT33ctuzzdS/rbiPdjb1A/eptv8IVr43Xv
-	7vfAXFBmRkC7CEatKfJfJ0L1v+U3JGYXNqOK1tLR3YtrPhiafGefO1zKGCKo26LXrNO4WhbgSBc
-	f9Z13fb4aUYzqDbx5dKRJuqNHuDzHpe2wssnF42LzEVWYcCyGh5sV0TgfFUp7YEX26vQncHMXdQ
-	rH2NbJYsUKFd0Ha4t6iKd+g+8LC5xio9T5j7cletawnpSW15Ll1OvoA9+XsdPtIphLZEEQ7K5x2
-	ZMSd3y7fkkz4qcqcwwnH6XkLNXNeVgDMw4aa3L+PQPl0Zj9ribP+lqtPnlVQ0Nfh11VuX2pZsK4
-	4JsvmvmdvJv0WV88wv1MPgv9T0raxQvaJkCmeDeomzMPrTZQJ4g96/Fg==
-X-Received: by 2002:a05:6808:2e4e:b0:485:7c5a:63b5 with SMTP id 5614622812f47-4868db2da00mr1724106b6e.4.1780662582950;
-        Fri, 05 Jun 2026 05:29:42 -0700 (PDT)
-Received: from [192.168.254.51] ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4865b7ad946sm6576308b6e.8.2026.06.05.05.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2026 05:29:42 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: NeilBrown <neil@brown.name>
-Cc: Benjamin Coddington <ben.coddington@hammerspace.com>,
- Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org
-Subject: Re: [RFC] knfsd: per-client fair scheduling to prevent single-client
- starvation
-Date: Fri, 05 Jun 2026 08:29:40 -0400
-X-Mailer: MailMate (2.0r6272)
-Message-ID: <83C74302-2A2B-48B6-B0F0-D5E8CB487BBC@hammerspace.com>
-In-Reply-To: <178060780940.3392745.3574880233025675236@noble.neil.brown.name>
+	s=arc-20240116; t=1780669940; c=relaxed/simple;
+	bh=2Ns+CiPrznH6P9iS+A2/n8agYz1n19MOBVuSKXaliM8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pUppVVtHgVVrq/7b1idSx9441w4hmYQ3HiSx1zkgcOd67NNIvz1rGY88IzLFkjdT4XZQL4+IW5VXhZ6wcbc2rxw+o4YvUi82Vv+9kgzZL20edRUtG4PVrYFvTaRf2ovfJXamIeCOu83gw02KQVQOjvkfuLdVYJ42CDZ2htRhPsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sya4zRwk; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9D411F00893;
+	Fri,  5 Jun 2026 14:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780669939;
+	bh=F54BAFf3ksDGcR/ZTZE9IUI6VUBYdSZ5PkOxo1F4bAk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=Sya4zRwkNZM8ltL3w2aUH8Ci97PpalYo0HsfyAYUibvF2PBENdpr3kClpkm7vAnM7
+	 qfoO0kb+HEnteEnPcMar00gbWwjDeZczo/JZv+qN6Ko72KMRtAqUPRTd1YueCQotvk
+	 WBBR0DDghB8wnOyKs5Q9n4Zup3VS31qmIGXEg9WFcz5vQuO4hAES0yjFh8OOcXaF55
+	 52H5BNVqCR7bIh2gHrJgGJeOM67qAY1yzLjyVKHn4+LC9M3tXPjLrS3Li9HljGjCdT
+	 d+mjCgSPB7pzb7wfZI1eugddwCoULgLvFhAz3aKNl+AwQBECn6LeE4wafybDf2C9aO
+	 VBweWDW7hFBpQ==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 123F5F4006F;
+	Fri,  5 Jun 2026 10:32:18 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Fri, 05 Jun 2026 10:32:18 -0400
+X-ME-Sender: <xms:8d0iatwEw2C8E_MbEXafM07rThCGoJVIxhlvgbV9k3gwV1vZKUtgfA>
+    <xme:8d0iaoGNxYcnkR66nnlUxu6rsyK7GKRxWTQjOtwHroAMlIkAH2GRuSUVwhMfXDetW
+    XQoMctRD_Qdbxc45NXjzKyz6cLQKYG9gUbzP3vKjX_tpAmnSfYmGQw>
+X-ME-Proxy-Cause: dmFkZTGttdxm5H0Y2lHRB9cAwy6Ftsdp9TpTqUpC5+Ic5UkdGSEOwnAQFKfUNQ5aDktWaN
+    TTD4Em0FqU6AJ/Lf57YxpN6A08fwfKClj01MWd+DL1pCdn7I0zjpNE0tuC16DBK3y220F+
+    UboPVA39JcnC8CZa89GOO2H/AvuOQqLpwDzqS6YaN18CHiwo5Lwadd2hyjBONNZaOXeSvM
+    RR9NxaKpFhnrr0zKhFi8aDbC8EiAm9uRcvsNmip3lGJnBg9fGWLk0s0CliOTbGsQsrTp9n
+    WRlY1yDh8jel5ACyplSXg3rI02Gs+zTGOYdE7C6KalxTjl32Zcr0UAewfOE4eOnA7WhEMs
+    k7cWN7JidduRGJBJAny7i2nXEHf5jN1ISneyF2YFONP1oxCMAz6DcZ9kT3w2q4onIIOPIF
+    IkVdVisIYS6x2Gz92bykKoLiYsngX4FFDmcYHmLYZe4gNZDSliljMoFVCW82STVX9N0uaq
+    bBiZib5WMxnsCQlubFA0+46Wbv7Kr0XwCtGFZIQ/DVJrkTlWB1vS2YbuXOk1gwurhxpKEM
+    c4oHiui2sLB53eKkrnG6X4GdfVrQyHgHNFQK6+JNYi9saY0d6++uiFoL/nvQmvHny1fO3A
+    Eos5uDfnerGkfgODkHwChagxQAvZ8E5dIAT9Xu+xThVQcBwNGZSCngxkgnOA
+X-ME-Proxy: <xmx:8t0iasZCIqq_-pUR32INBx5gmz77Ll55hoBWg_a2apGhwcWdNFDybw>
+    <xmx:8t0ialNgPFQbqFe8q444M6JAk-_kKunMPW_25PsuY8DRPuq3duzNkQ>
+    <xmx:8t0iahbLBJCqbH6Gf3xyS5dKIkDa0CXkoGi95tM0xMcgVASI1XvVsQ>
+    <xmx:8t0iaj2KXjtqSl2bTWODIlcUiPmsXEnEH1eWCH4uPaJ9qZjJgW4qZg>
+    <xmx:8t0iane9mhV_p6kHveZgSxwmlN_1wD-4ExCPeNwRXSNap53zV58gtzrY>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E4011780070; Fri,  5 Jun 2026 10:32:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+Precedence: bulk
+X-Mailing-List: linux-nfs@vger.kernel.org
+List-Id: <linux-nfs.vger.kernel.org>
+List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-ThreadId: ABrU-SqmuE1V
+Date: Fri, 05 Jun 2026 07:31:56 -0700
+From: "Chuck Lever" <cel@kernel.org>
+To: "Benjamin Coddington" <ben.coddington@hammerspace.com>,
+ NeilBrown <neil@brown.name>
+Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Message-Id: <a6225380-8520-4789-a64d-b8b94310dd67@app.fastmail.com>
+In-Reply-To: <83C74302-2A2B-48B6-B0F0-D5E8CB487BBC@hammerspace.com>
 References: <D33770A1-9098-4F1A-93EF-590E6C0B7638@hammerspace.com>
  <473e337b-fabc-4884-a6c4-0f04b6874d0b@app.fastmail.com>
  <3AB7EB6A-B207-4B91-A695-66C4704D0E31@hammerspace.com>
@@ -98,81 +97,57 @@ References: <D33770A1-9098-4F1A-93EF-590E6C0B7638@hammerspace.com>
  <561e9ac6-348f-4d6d-b896-38dbe5ede3bc@app.fastmail.com>
  <20555E8B-0E49-4328-8B31-0F73C3D286FE@hammerspace.com>
  <178060780940.3392745.3574880233025675236@noble.neil.brown.name>
-Precedence: bulk
-X-Mailing-List: linux-nfs@vger.kernel.org
-List-Id: <linux-nfs.vger.kernel.org>
-List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ <83C74302-2A2B-48B6-B0F0-D5E8CB487BBC@hammerspace.com>
+Subject: Re: [RFC] knfsd: per-client fair scheduling to prevent single-client
+ starvation
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22303-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:ben.coddington@hammerspace.com,m:cel@kernel.org,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
+	XM_UA_NO_VERSION(0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22304-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:ben.coddington@hammerspace.com,m:neil@brown.name,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hammerspace.com:mid,hammerspace.com:from_mime,hammerspace.com:dkim]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 02AAA64841A
+X-Rspamd-Queue-Id: 8A69A648ECF
 
-On 4 Jun 2026, at 17:16, NeilBrown wrote:
 
-> On Wed, 03 Jun 2026, Benjamin Coddington wrote:
->> On 2 Jun 2026, at 23:44, Chuck Lever wrote:
->>
->>> On Tue, Jun 2, 2026, at 3:53 PM, NeilBrown wrote:
->>
->>>> Idle clients will get pushed back to 1 slot, active client will tend
->>>> towards a "fair" share based on how comparatively busy they are.
->>>>
->>>> This wouldn't help for v3 of course but I don't think we need these
->>>> advanced features for v3.
->>>
->>> Ben’s employer might disagree with that :-)
->>
->> Yes - v3 is pretty important to us here.
->
-> Can you remind me why v3 is important for you?  Is it the lower
-> state-management overhead, or something else?
+On Fri, Jun 5, 2026, at 5:29 AM, Benjamin Coddington wrote:
+> Also, because knfsd doesn't have different resource pools for each version
+> we're going to want to continue to balance the pool for all versions
+> exported.
 
-Flexfiles uses v3 in its data plane, and..
+At a higher altitude, I am treating this issue as a partial DoS surface,
+so it does indeed have to be addressed for all NFS versions to eliminate
+that surface.
 
-> Is there some way would could improve the v4 implementation or protocol
-> to make it comparable to v3 for your use case?
 
-I don't think so - the stateless nature of v3 gives it distinct advantages
-(and disadvantages) over v4 for some use cases.  That property can't be
-added to v4.
-
-Also, because knfsd doesn't have different resource pools for each version
-we're going to want to continue to balance the pool for all versions
-exported.
-
-Ben
+-- 
+Chuck Lever
 
