@@ -1,359 +1,220 @@
-Return-Path: <linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22317-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3ocRF+cKI2r/gwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:44:07 +0200
+	id G0FGLEEZI2qbiQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22317-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 20:45:21 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA1164A483
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:44:06 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16C7464AB88
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 20:45:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Y81iZ0nn;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=JrSM6SA8;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22317-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22317-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E106E3063812
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 17:35:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 06BB6306FDB0
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 18:43:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B93423AB5B7;
-	Fri,  5 Jun 2026 17:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43CE3E16B9;
+	Fri,  5 Jun 2026 18:43:33 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B6539A06B;
-	Fri,  5 Jun 2026 17:34:57 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780680901; cv=none; b=tqKRpY46+ixV9C51wFSMZEJ1KcCRPcezEKvN/3UFAPO0TjMVvsn31z/203PdTZgjFpF1kDhUj1bhVS9kP46tcANyFaMKWTqWH13Fmb+JDrm+BYAnJhOmBtjKuIoAgnkGwrHCjp6HWo2/qeOB403UJz2uX16OJIUF8WsvFkjpk9s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780680901; c=relaxed/simple;
-	bh=Ows39zTI9n7wAPEQiw6Xs3MR4cdzRkAjhnHBxY84dn8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ctw1DegS/xKuJl1Rb6d0hMhmkJhRyN+/kvcyeQQviylMpE126buqfvz5Mh2UP911obvRSby1XR1pkO3aKoNUlLsmcTVmufxPx2Y1OfZZtZJUpXrzE2KzatLoPtp1evwTGBZMB02DykkU+znX3v9qPpqumUfw875A0WqcCeikBtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y81iZ0nn; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA331F0089D;
-	Fri,  5 Jun 2026 17:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780680897;
-	bh=GdAp+BOi7Bw5Wcr+RoPktPL/Tov2J8OBkbGvYCENpiM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Y81iZ0nn9VUhH8TWtV8RhxanmGmZ10cPFgUdxRsQ3UuGNxCyP9s9UMniTjZGEs4D/
-	 RLM5GxecIR281agf9qynX6k/B4J4eOw/dwAJSEoDzDTHxsIeIBQHrnf3vurcI+O33r
-	 bEMQ5j62lq7wGAnSE745j79jYTwS+RRcqh4XnJn0S64uclZhcn0tq/uHA6/5Puiso3
-	 mP1hLiaSfLzxMqqQVII4yQAae88Gcxq3P6cZLnTWkIWdDYnJsHMgUw+XIcBoN1YqRe
-	 f9A/IX+iBkEBcFfsZxyc+d8jw0MWXrmDjW4Q4il+VS4qoq9XPR1aNAnv902X7v9BK7
-	 nIT8pVoY82Maw==
-From: Chuck Lever <cel@kernel.org>
-Date: Fri, 05 Jun 2026 13:34:43 -0400
-Subject: [PATCH 9/9] NFSD: Add allow_tags to the netlink export interface
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598D8377543
+	for <linux-nfs@vger.kernel.org>; Fri,  5 Jun 2026 18:43:32 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780685013; cv=pass; b=E6huREBtZOWIhFtcUWaBA4hp8UXz3iiwBzjonLT9ZqcMtrlb7uW0RxtZfUedK4/ZZ0Q79PyAaARrcPMcw1HaGHeO3gAlkhMpaUXWAdOo/Vjg1J/ehEUZ9Kf6Tln9Jr0t90jVaznpVwfBKOwzVU/HTPNG0rbAe2elkZQ3Sz6lk9Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780685013; c=relaxed/simple;
+	bh=7Izk8KSCvltnRVCbkgaZl/gyziqwHLW8SWrq+qO9kdc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=FDJvnsgPT/VtOOgwdYe1Y6CHhGpDlYyaFnGkLL0E1X2K2HeKP7qwL8kwfo1a4dZ3tWloQm/dZFGmif0Sb7Q6x6rBH4+F1Jhb+KrqR66oh9I33vaLhf52chp9JUmhGH8lsiSPKCaCafhPmePE56Hamp15S1t1yZ9Iz9e2AIbN/KA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrSM6SA8; arc=pass smtp.client-ip=209.85.208.42
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-68d233bf083so3181325a12.1
+        for <linux-nfs@vger.kernel.org>; Fri, 05 Jun 2026 11:43:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780685011; cv=none;
+        d=google.com; s=arc-20240605;
+        b=fp+IRNrFDD5IE+94yA4jRZjYsxrzPHNL5SathaW7KBTE9D3gDxoqopD9O+vGncu5P0
+         gQZRsqedXnjqoNiVSbLY/4TwJa9Y19vSm0kyrohzgrbrAhx3rjTldFGyhqNPVW37C+lY
+         9a2LB/QHeVG9psXZO/RBLr0TqFlBOCaVyJtGxsGyrchMOaYInqP0aRWRYCkeyKEsykXz
+         yZLIZHEJpXR+MYo6Whe4GUL+D/bpypUSo5NHPD81z6BDW+ihXQLnjPs42gcHeQbCsmaE
+         UfTk83n21SZpwyE6FN3O+1pUMYhJTqYC2dytYN/+8wKfAVcKyq0x64W/3ZGanY/HoSDW
+         o1Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=7Izk8KSCvltnRVCbkgaZl/gyziqwHLW8SWrq+qO9kdc=;
+        fh=A3pMOUK00huGibGCZBFsLekFLVbB5hHGKjUNNKwO+5E=;
+        b=Kc1B/5JJf+E8xeGmv0bFfOlfYuM4LAw6+747C1mFxNn35omfi9BI+C5/ziyXrZKYgU
+         0ywtszZD8Qpb6ri3WtEgEVspN0uiirBLr/vrXBKRuS8eamnebvw/yNFjmDlPoVpG6oEW
+         995GrslYEKNn58dVhsik5eD70BtfNVUlcHFjaq+zuadmv+v1Z9VuhS5Vcxr0doVK/uwM
+         5i5chlVLQSk70PZu/St7TbvHubwcgS3Ne/GiK7Q3TXngHgZHFP66bZAtYkvqUE6BRMdj
+         BGv4x1ezWgwGz9Phvxa8v66iRwLGmuPYnJZPuq2x8g5gtBQgsAN18j1zBpj71Q9D046i
+         n3ew==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780685011; x=1781289811; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Izk8KSCvltnRVCbkgaZl/gyziqwHLW8SWrq+qO9kdc=;
+        b=JrSM6SA8XsBWeR4AOTND8xju9ytgNAZoeRGAwXreHIZ+pM4Aug8UoQYdBXEITgSWAA
+         qyfnoe0khnDcKTydv1KOP4FhLA7Glyw8YR5v7hLiQ3ewNqCaxLcvKw9/VhWxFDl3qIE7
+         CHZiZHngWiJI0iliI8TH38JCucViHWsmBdA8A50FYwbvJei6xVYTgjCGz7Mi/yE2Hbwr
+         UJwMaYLyB1LDW/erqE65azMfQrdwUs+mxdn+INmpL+9rHgoTeM744aNSq6fvtnllYwDr
+         3skvOhMPBjvfkiS+LOHZ/dHun8d+eUFem47ki7W8SGLjWljz/ICOvMB6au444d2Ajwqf
+         Mfhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780685011; x=1781289811;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Izk8KSCvltnRVCbkgaZl/gyziqwHLW8SWrq+qO9kdc=;
+        b=L3UirUllsJB1+w3/5syF0Xdzeui6oprvyi9fFxq/2cOdpMykY2oSg5vo+7uMFLNUhq
+         Iug+6CsgcvJRj+rVRsx/aJ07DEFZyMJiiEAwtzfBmBQ+DtEjiR9sCojGkOnyDnAHeCQt
+         sNek1fyLNeXr1C7USST2P/Cig1/5redW9p9vq6fM8VRi7zYgh94g7FwsTSW8rNf253LD
+         YmtZLyq5v1CcCwXNxrAm0feudMn+WEJACrm/p/935Jf6ZSUlt6nW1rV9ZUDZFwfH/GYz
+         WNociP0W6ujpx1dngxJ/s4uez6CdssMV3nAwUgJYrVxwLlVytaHNOxdpn6uFXxFARF3m
+         T8mQ==
+X-Gm-Message-State: AOJu0Yzgnwp9Br9dmnJzXjgH01E+YQH5BiPhmJQWzJA2uhAHKLYKWX29
+	LnPGT5iJIXm+6gwuPHGnaa5ZEnRTqXzo9ijLn0GdJCiYfAbAq9I68mGdkXQ6a5Gg6ifSpUqMhP6
+	buI582BpMP7Y0fRImWytbrIIzSVwogKMy5cj0jCM=
+X-Gm-Gg: Acq92OG6E+LvgmWj10tCx/A+zHaH5lxoV+yCeIuH0N16/uDlnTG5riCCAXFcyNVGlLc
+	b37pkReRQB4biA9O7aI9bD+XQsvcVFqmVAtHN8ke/JjJ08MfSO4C351J06aIRJJ2bHah8bEh5DD
+	2+3/uVQKodSHZmBdb8DJnNt5UFyKn3s75TPjJouU/DTK3oNBaEWyNfXHQNbXuA3H8YCGR34d3qN
+	xje1C4h93fFhK74Y6x0WyivMxieeZdZ96x7bGGVTZ/r1krQbzKgvnJkipU77nEXBiyLZMlSVR24
+	B4P+kuwCTfA/ul+eVA==
+X-Received: by 2002:a05:6402:4515:b0:67d:a63a:deb2 with SMTP id
+ 4fb4d7f45d1cf-68fa4c088efmr2416062a12.5.1780685010680; Fri, 05 Jun 2026
+ 11:43:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-tls-session-tags-v1-9-47bd1d94d552@oracle.com>
-References: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
-In-Reply-To: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
-To: Donald Hunter <donald.hunter@gmail.com>, 
- Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Sabrina Dubroca <sd@queasysnail.net>, Keith Busch <kbusch@kernel.org>, 
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
- Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>
-Cc: kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org, 
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org, 
- Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8031;
- i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=tLFpkkm/QOrTFF11jxLqkjXfpcq+yXBPGCWn24fWr1g=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIwi440EJq0B9b65Z9WgUj8Gibd8eTyplP+COc
- TmFQCjXnGWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiMIuAAKCRAzarMzb2Z/
- lzpND/9vWqMhbLSNjgXvdrKtIk0jAC8XIQGGqwaWCvSV3UhtfFdefN6f4yqojRytq4SedfLgcPy
- neZ/tA+gSdmlHdWx4V6a7JQP5kBY+lbAwXAL226Z4xzgAPP1Wr7o+RsbLc6wGfhIpVWeaXbOkXc
- Z/pIp5fxoGZA0Jfn3DXsVOY2hSJb+Gf45VMjBhCu1DtyoKrT9DRHALGQ9LULXIhn3BPtLHM1qyF
- BYRfce9GcaTaGdDr9bWgvINgQmeXZ5hH24pInpsZR6P8tsBD1DmS18NwxdMzEfpBJQSI9xbI7G3
- CydN55SuleclaD6nIYd5p1WNFYcAj9aM70PLSavwMIlo8TG086xF3S8QLF8/5GLisW+aLUNBykM
- iNkwYnpuiBnIYlfE4LdUYWfsVqzkCIyOSy9nd1JtG+QStmgXKmGuZvdatkBifaYoacI3DndDSHE
- YwQ1OheOdD+/kzZihRt/MY9x8tqbZx02+I2YdWjencI2m0N2+K+9WziYpSTLtPGA61K7u2zCWxm
- VXT5cMNAZG4EyXOQpw6sMSollVttnhPgwxiUMfqC96KL/8sNoPjEgYYtQrAcKPzJoSEkgamaN3U
- igLEIMxrgDPAWYbqczuUFJdb9+O/UlVaQj2qTuAAKAi1dj2dDM8oxWi1559ZknbF8NUSKpS4BoF
- xQ46UDlF71lhhEA==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
- fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Fri, 5 Jun 2026 20:43:00 +0200
+X-Gm-Features: AVVi8CdVskqs-5xfHq9iFVDSHo1FE-V__YWZ6tFvlyXfoBnYNGPjrp7pGLYfE6c
+Message-ID: <CAAvCNcDDFWyZezvE3yBB+5sWpYqDrYFk5k46ekS+ij-5Ajp44w@mail.gmail.com>
+Subject: I/O read and write *latency*, why is it so much higher on NFSv4.2,
+ compared to P9 and iSCSI?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:donald.hunter@gmail.com,m:kuba@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:pabeni@redhat.com,m:horms@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:akpm@linux-foundation.org,m:john.fastabend@gmail.com,m:sd@queasysnail.net,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:sagi@grimberg.me,m:kch@nvidia.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-nfs@vger.kernel.org,m:chuck.lever@oracle.com,m:donaldhunter@gmail.com,m:johnfastabend@gmail.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,davemloft.net,google.com,redhat.com,lwn.net,linuxfoundation.org,linux-foundation.org,queasysnail.net,kernel.dk,lst.de,grimberg.me,nvidia.com,brown.name,oracle.com,talpey.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_ALL(0.00)[];
+	RCPT_COUNT_ONE(0.00)[1];
+	TAGGED_FROM(0.00)[bounces-22317-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[danfshelton@gmail.com,linux-nfs@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22316-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[danfshelton@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email,vger.kernel.org:from_smtp]
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,iitbombay.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: ABA1164A483
+X-Rspamd-Queue-Id: 16C7464AB88
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Except from the freebsd hackers mailing list:
 
-The legacy exportfs cache path accepts an allow_tags clause that
-restricts an export to mTLS sessions carrying at least one matching
-session tag. The netlink-based svc_export interface had no such
-attribute, so administrators configuring exports via netlink could
-not request tag enforcement: nfsd_nl_parse_one_export() always
-left ex_allow_tags empty, and check_xprtsec_policy() then granted
-any authenticated peer.
+On Tue, 19 May 2026 at 00:39, Bakul Shah <bakul@iitbombay.org> wrote:
+>
+> On May 18, 2026, at 2:26=E2=80=AFPM, Dan Shelton <dan.f.shelton@gmail.com=
+> wrote:
+> >
+> > On Fri, 20 Feb 2026 at 01:21, Bakul Shah <bakul@iitbombay.org> wrote:
+> >>
+> >> On Feb 19, 2026, at 11:45=E2=80=AFAM, Dan Shelton <dan.f.shelton@gmail=
+.com> wrote:
+> >>>
+> >>> On Wed, 18 Feb 2026 at 22:45, Dan Shelton <dan.f.shelton@gmail.com> w=
+rote:
+> >>>>
+> >>>> Hello,
+> >>>>
+> >>>> Has anyone tried a BHYVE with a disk as file on a NFSv4.2 mount?
+> >>
+> >> Yes. [I tried this on a 15.0-RELEASE-p3 host, nfsv4.2 mounting
+> >> a filesystem from a 15.0-STABLE machine]
+> >
+> > How about the performance? Is it better than iSCSI?
+>
+> I don't know about iSCSI but comparing with p9fs:
+>
+> Test1:
+> dd bs=3D1m count=3D4000 > /dev/null < large-file
+>
+> nfsV3:
+> 32.3
+> 46.3
+> 51.3
+>
+> nfsV4:
+> 129.1
+> 59.9
+> 48.8
+>
+> p9fs:
+> 17.7
+> 17.5
+> 17.6
+>
+> Test2:
+> find /usr/src/ > /dev/null
+>
+> nfsV3:
+> 60.0
+> 39.0
+> 30.9
+>
+> nfsV4:
+> 54.0
+> 17.9
+> 35.8
+>
+> p9fs:
+> 6.9
+> 6.5
+> 6.6
+>
+>
+> So slower in all cases. In addition the variability in nfs numbers is con=
+cerning!
+>
+> p9fs doesn't cache but nfs does, so anything cached is served much faster=
+.
 
-Extend the svc-export attribute set with allow-tags and parse it
-in nfsd_nl_parse_one_export(). Apply the same xprtsec=mtls
-consistency check as svc_export_parse() so the netlink path
-refuses contradictory security policy rather than silently exposing
-a tagged export to plaintext or anonymous-TLS peers.
+How is the situation on Linux? How is read/write *latency* NFSv4.2
+compared to iSCSI and P9FS?
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- Documentation/netlink/specs/nfsd.yaml | 10 ++++++
- fs/nfsd/export.c                      | 68 +++++++++++++++++++++++++++++++++--
- fs/nfsd/netlink.c                     |  4 ++-
- fs/nfsd/netlink.h                     |  3 +-
- include/uapi/linux/nfsd_netlink.h     |  1 +
- 5 files changed, 82 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
-index 8f36fadd68f7..5cbdc1dab7e3 100644
---- a/Documentation/netlink/specs/nfsd.yaml
-+++ b/Documentation/netlink/specs/nfsd.yaml
-@@ -7,6 +7,10 @@ uapi-header: linux/nfsd_netlink.h
- doc: NFSD configuration over generic netlink.
- 
- definitions:
-+  -
-+    name: handshake-session-tag-max-len
-+    type: const
-+    header: uapi/linux/handshake.h
-   -
-     type: flags
-     name: cache-type
-@@ -253,6 +257,12 @@ attribute-sets:
-       -
-         name: fsid
-         type: s32
-+      -
-+        name: allow-tags
-+        type: string
-+        checks:
-+          max-len: handshake-session-tag-max-len
-+        multi-attr: true
-   -
-     name: svc-export-reqs
-     attributes:
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index a2aaa3cd6c52..25802de2de40 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -831,6 +831,7 @@ static struct svc_export *svc_export_update(struct svc_export *new,
- static struct svc_export *svc_export_lookup(struct svc_export *);
- static int check_export(const struct path *path, int *flags,
- 			unsigned char *uuid);
-+static int check_allow_tags(const struct svc_export *exp);
- 
- /**
-  * nfsd_nl_parse_one_export - parse one svc_export entry from a netlink message
-@@ -845,14 +846,14 @@ static int check_export(const struct path *path, int *flags,
- static int nfsd_nl_parse_one_export(struct cache_detail *cd,
- 				    struct nlattr *attr)
- {
--	struct nlattr *tb[NFSD_A_SVC_EXPORT_FSID + 1];
-+	struct nlattr *tb[NFSD_A_SVC_EXPORT_ALLOW_TAGS + 1];
- 	struct auth_domain *dom = NULL;
- 	struct svc_export exp = {}, *expp;
- 	struct nlattr *secinfo_attr;
- 	struct timespec64 boot;
- 	int err, rem;
- 
--	err = nla_parse_nested(tb, NFSD_A_SVC_EXPORT_FSID, attr,
-+	err = nla_parse_nested(tb, NFSD_A_SVC_EXPORT_ALLOW_TAGS, attr,
- 			       nfsd_svc_export_nl_policy, NULL);
- 	if (err)
- 		return err;
-@@ -993,6 +994,68 @@ static int nfsd_nl_parse_one_export(struct cache_detail *cd,
- 			}
- 		}
- 
-+		/* allow-tags (multi-attr string) */
-+		if (tb[NFSD_A_SVC_EXPORT_ALLOW_TAGS]) {
-+			struct nlattr *tag_attr;
-+			unsigned int count = 0;
-+
-+			/*
-+			 * The NLA_STRING policy does not guarantee a
-+			 * terminating NUL, so each tag is copied with
-+			 * the length-aware nla_strdup(). Embedded NUL
-+			 * bytes are rejected here because the policy
-+			 * cannot express that check; a tag containing
-+			 * one could never match a handshake-supplied
-+			 * tag, which net/handshake rejects the same
-+			 * way.
-+			 */
-+			nla_for_each_nested_type(tag_attr,
-+						 NFSD_A_SVC_EXPORT_ALLOW_TAGS,
-+						 attr, rem) {
-+				const char *src = nla_data(tag_attr);
-+				size_t srclen = nla_len(tag_attr);
-+
-+				if (srclen > 0 && src[srclen - 1] == '\0')
-+					srclen--;
-+				if (srclen == 0 ||
-+				    memchr(src, '\0', srclen)) {
-+					err = -EINVAL;
-+					goto out_uuid;
-+				}
-+				count++;
-+			}
-+			if (count > NFSD_MAX_ALLOW_TAGS) {
-+				err = -EINVAL;
-+				goto out_uuid;
-+			}
-+			if (!tagset_alloc(&exp.ex_allow_tags, count,
-+					  GFP_KERNEL)) {
-+				err = -ENOMEM;
-+				goto out_uuid;
-+			}
-+			nla_for_each_nested_type(tag_attr,
-+						 NFSD_A_SVC_EXPORT_ALLOW_TAGS,
-+						 attr, rem) {
-+				char *tag;
-+
-+				tag = nla_strdup(tag_attr, GFP_KERNEL);
-+				if (!tag) {
-+					err = -ENOMEM;
-+					goto out_uuid;
-+				}
-+				if (!tagset_add(&exp.ex_allow_tags, tag)) {
-+					kfree(tag);
-+					err = -ENOMEM;
-+					goto out_uuid;
-+				}
-+			}
-+			tagset_finalize(&exp.ex_allow_tags);
-+		}
-+
-+		err = check_allow_tags(&exp);
-+		if (err)
-+			goto out_uuid;
-+
- 		err = check_export(&exp.ex_path, &exp.ex_flags,
- 				   exp.ex_uuid);
- 		if (err)
-@@ -1026,6 +1089,7 @@ static int nfsd_nl_parse_one_export(struct cache_detail *cd,
- 	}
- 
- out_uuid:
-+	tagset_destroy(&exp.ex_allow_tags);
- 	kfree(exp.ex_uuid);
- out_fslocs:
- 	nfsd4_fslocs_free(&exp.ex_fslocs);
-diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-index fbee3676d253..4db094b1021f 100644
---- a/fs/nfsd/netlink.c
-+++ b/fs/nfsd/netlink.c
-@@ -10,6 +10,7 @@
- #include "netlink.h"
- 
- #include <uapi/linux/nfsd_netlink.h>
-+#include <uapi/linux/handshake.h>
- 
- /* Common nested types */
- const struct nla_policy nfsd_auth_flavor_nl_policy[NFSD_A_AUTH_FLAVOR_FLAGS + 1] = {
-@@ -41,7 +42,7 @@ const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1] = {
- 	[NFSD_A_SOCK_TRANSPORT_NAME] = { .type = NLA_NUL_STRING, },
- };
- 
--const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_FSID + 1] = {
-+const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_ALLOW_TAGS + 1] = {
- 	[NFSD_A_SVC_EXPORT_SEQNO] = { .type = NLA_U64, },
- 	[NFSD_A_SVC_EXPORT_CLIENT] = { .type = NLA_NUL_STRING, },
- 	[NFSD_A_SVC_EXPORT_PATH] = { .type = NLA_NUL_STRING, },
-@@ -55,6 +56,7 @@ const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_FSID + 1] =
- 	[NFSD_A_SVC_EXPORT_XPRTSEC] = NLA_POLICY_MASK(NLA_U32, 0x7),
- 	[NFSD_A_SVC_EXPORT_FLAGS] = NLA_POLICY_MASK(NLA_U32, 0x3ffff),
- 	[NFSD_A_SVC_EXPORT_FSID] = { .type = NLA_S32, },
-+	[NFSD_A_SVC_EXPORT_ALLOW_TAGS] = { .type = NLA_STRING, .len = HANDSHAKE_SESSION_TAG_MAX_LEN, },
- };
- 
- const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1] = {
-diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-index af41aa0d4a65..133e99a0a3fc 100644
---- a/fs/nfsd/netlink.h
-+++ b/fs/nfsd/netlink.h
-@@ -11,6 +11,7 @@
- #include <net/genetlink.h>
- 
- #include <uapi/linux/nfsd_netlink.h>
-+#include <uapi/linux/handshake.h>
- 
- /* Common nested types */
- extern const struct nla_policy nfsd_auth_flavor_nl_policy[NFSD_A_AUTH_FLAVOR_FLAGS + 1];
-@@ -18,7 +19,7 @@ extern const struct nla_policy nfsd_expkey_nl_policy[NFSD_A_EXPKEY_PATH + 1];
- extern const struct nla_policy nfsd_fslocation_nl_policy[NFSD_A_FSLOCATION_PATH + 1];
- extern const struct nla_policy nfsd_fslocations_nl_policy[NFSD_A_FSLOCATIONS_LOCATION + 1];
- extern const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1];
--extern const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_FSID + 1];
-+extern const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_ALLOW_TAGS + 1];
- extern const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1];
- 
- int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
-diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
-index f5b75d5caba9..23a42c26ede0 100644
---- a/include/uapi/linux/nfsd_netlink.h
-+++ b/include/uapi/linux/nfsd_netlink.h
-@@ -165,6 +165,7 @@ enum {
- 	NFSD_A_SVC_EXPORT_XPRTSEC,
- 	NFSD_A_SVC_EXPORT_FLAGS,
- 	NFSD_A_SVC_EXPORT_FSID,
-+	NFSD_A_SVC_EXPORT_ALLOW_TAGS,
- 
- 	__NFSD_A_SVC_EXPORT_MAX,
- 	NFSD_A_SVC_EXPORT_MAX = (__NFSD_A_SVC_EXPORT_MAX - 1)
-
--- 
-2.54.0
-
+Dan
+--=20
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
