@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-22315-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zO7WOB4KI2rFgwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22315-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:40:46 +0200
+	id 3ocRF+cKI2r/gwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:44:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DA4F64A426
-	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:40:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABA1164A483
+	for <lists+linux-nfs@lfdr.de>; Fri, 05 Jun 2026 19:44:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LkO2tZUl;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22315-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22315-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Y81iZ0nn;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22316-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1AEB23081C0F
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 17:35:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E106E3063812
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jun 2026 17:35:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5BC43A9611;
-	Fri,  5 Jun 2026 17:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B93423AB5B7;
+	Fri,  5 Jun 2026 17:35:01 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093D63955C2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B6539A06B;
 	Fri,  5 Jun 2026 17:34:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780680900; cv=none; b=RFg2RkQm5rtdAEM2iSJNd9tsXxJ/XUNjHkjUw0pjqRL5a5Yhq8lGw0ON1HxcH2Jb5TnFtqso+L2JA1ffahbI2WL3DyTQeMrt+OR5aIgosEC5SmZwfQ0AuZW2vBcYfEkQBN0dVX2s4l/2TP7El2vSucmcwzaFw1iNV3/QqZny0zI=
+	t=1780680901; cv=none; b=tqKRpY46+ixV9C51wFSMZEJ1KcCRPcezEKvN/3UFAPO0TjMVvsn31z/203PdTZgjFpF1kDhUj1bhVS9kP46tcANyFaMKWTqWH13Fmb+JDrm+BYAnJhOmBtjKuIoAgnkGwrHCjp6HWo2/qeOB403UJz2uX16OJIUF8WsvFkjpk9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780680900; c=relaxed/simple;
-	bh=HglIQ44p1JzkW1OqmDE1lRj49/YnGPGkbvZzp5Eibe4=;
+	s=arc-20240116; t=1780680901; c=relaxed/simple;
+	bh=Ows39zTI9n7wAPEQiw6Xs3MR4cdzRkAjhnHBxY84dn8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EPQaPYddJrAFesh4h5QHouk2HU4qzwE8/oEreB7l1CK2PaBGGIMZiu20ONAUrb6YO97ilT2XIe9UZjX2ZIJkqG3T137JJ+9VPKx/zYBBPQdcxHgm2zceG8EYgSDpIeqgrQbVgGtMAdqG3EmJvx9eHUKtPdb1d/s7hbp5mH3RoyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkO2tZUl; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12A541F008A3;
-	Fri,  5 Jun 2026 17:34:56 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Ctw1DegS/xKuJl1Rb6d0hMhmkJhRyN+/kvcyeQQviylMpE126buqfvz5Mh2UP911obvRSby1XR1pkO3aKoNUlLsmcTVmufxPx2Y1OfZZtZJUpXrzE2KzatLoPtp1evwTGBZMB02DykkU+znX3v9qPpqumUfw875A0WqcCeikBtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y81iZ0nn; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA331F0089D;
+	Fri,  5 Jun 2026 17:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780680896;
-	bh=oZKcraY4fYn3iL2WHNgFlTxWUm2e+tse+u94FQr20p0=;
+	s=k20260515; t=1780680897;
+	bh=GdAp+BOi7Bw5Wcr+RoPktPL/Tov2J8OBkbGvYCENpiM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=LkO2tZUlT3zq3SjHqemsziwAl5v+69o+TMgQZZnw/TXLIEKZ2Wy5NMM3I3/bGrhWs
-	 /oxBEq+b1elB2rFgPZk708R3YgabQ7xbQ69n4fZOERmrFwlGrqSJ4471s49CDCgMFL
-	 6wuOtH0i5Jt1iftK9vzrl/yWfHw8Kgdo/kZTmXOmVzCYGJtI2dDYwV7T35ycfUYoeO
-	 A9NlRAq65KGZq85UgoKzZP1h+BPE+OL71MgVFk+gg72n5kEn6gI6z8O9edPeXjSFU1
-	 wA1FxJ1iSkfN0ZojiJNhG+iYsy+nDhWh8JsZIGncpUj9HZGXV5MqYRYZtDdpmmYCsr
-	 THIOjfhq0T4sQ==
+	b=Y81iZ0nn9VUhH8TWtV8RhxanmGmZ10cPFgUdxRsQ3UuGNxCyP9s9UMniTjZGEs4D/
+	 RLM5GxecIR281agf9qynX6k/B4J4eOw/dwAJSEoDzDTHxsIeIBQHrnf3vurcI+O33r
+	 bEMQ5j62lq7wGAnSE745j79jYTwS+RRcqh4XnJn0S64uclZhcn0tq/uHA6/5Puiso3
+	 mP1hLiaSfLzxMqqQVII4yQAae88Gcxq3P6cZLnTWkIWdDYnJsHMgUw+XIcBoN1YqRe
+	 f9A/IX+iBkEBcFfsZxyc+d8jw0MWXrmDjW4Q4il+VS4qoq9XPR1aNAnv902X7v9BK7
+	 nIT8pVoY82Maw==
 From: Chuck Lever <cel@kernel.org>
-Date: Fri, 05 Jun 2026 13:34:42 -0400
-Subject: [PATCH 8/9] NFSD: Implement export tagging
+Date: Fri, 05 Jun 2026 13:34:43 -0400
+Subject: [PATCH 9/9] NFSD: Add allow_tags to the netlink export interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-tls-session-tags-v1-8-47bd1d94d552@oracle.com>
+Message-Id: <20260605-tls-session-tags-v1-9-47bd1d94d552@oracle.com>
 References: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
 In-Reply-To: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
 To: Donald Hunter <donald.hunter@gmail.com>, 
@@ -78,21 +78,21 @@ Cc: kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
  linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8660;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8031;
  i=chuck.lever@oracle.com; h=from:subject:message-id;
- bh=Z75fXKsUCBZJlp5fCL7NzCAaYRegS68EyPjbIYJwBig=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIwi4OvmlCP7Vn3va2SYgyCbWSYdaDK3VvGP+K
- lv6OPkRVZ2JAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiMIuAAKCRAzarMzb2Z/
- lwZhEACb0EOdUZ6XEuzudfS4S0GxC56MqZ+6GUAeOElrZlj5iXW+3QU/bRewGyEWYfDdSj0wI6Q
- C0N/iHLG2UCQUr9IdOyldlUWSpqIk+Xn7AndVus80SH+hntOH/9giBChz+TjzTgzLR2J5hu7dRW
- bhLzkB1SiyYsIwGS8prfgaXBfIM7jWjfutQODmzj+ZdhF3i3iSDMf5DijEoS4dFcs+nZcM0h+hM
- KppfMtM5QlrNmSSIcMEs9SGM7NnnuDH+k3farNgpEb2JY/IR3tMifghByHdpg5UBYlplyu1/CBd
- Yb6raSXkkXOhSxSeVGVYqrkBOpQCuuRo2nPoQG1TDoC0YQPS+FWp4PZH/W5RpA8afwq36C83Oiv
- w9M81h9n4EJCmkrcNygcr8BblYab1k5SfICxzs/C0S3qpLpRmCq9ZT1HrCQOHLkOT96RIl6e8GX
- lIPBTP2XSA+vqIbR9zw6IXhI958QakZaTK7bycjacgmxGC2avsvra9amNNpV0Er8ufZD/bXihcv
- Lq+fNZRDT6PxfQC0JcOyZQOVv1NgIl9yoKj3GPsPFLUs+jqb7uvII3RDJ5m58H/X7+yvhXPU25p
- di7bEaufLTnI1sDUUI9Wv71dZLrU48cmZvq/bZu5qL32/Z1nO+I4huMb9J+1vG1rCoQYOTLa0uF
- ve7Ttq+Tcwd8Hiw==
+ bh=tLFpkkm/QOrTFF11jxLqkjXfpcq+yXBPGCWn24fWr1g=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqIwi440EJq0B9b65Z9WgUj8Gibd8eTyplP+COc
+ TmFQCjXnGWJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaiMIuAAKCRAzarMzb2Z/
+ lzpND/9vWqMhbLSNjgXvdrKtIk0jAC8XIQGGqwaWCvSV3UhtfFdefN6f4yqojRytq4SedfLgcPy
+ neZ/tA+gSdmlHdWx4V6a7JQP5kBY+lbAwXAL226Z4xzgAPP1Wr7o+RsbLc6wGfhIpVWeaXbOkXc
+ Z/pIp5fxoGZA0Jfn3DXsVOY2hSJb+Gf45VMjBhCu1DtyoKrT9DRHALGQ9LULXIhn3BPtLHM1qyF
+ BYRfce9GcaTaGdDr9bWgvINgQmeXZ5hH24pInpsZR6P8tsBD1DmS18NwxdMzEfpBJQSI9xbI7G3
+ CydN55SuleclaD6nIYd5p1WNFYcAj9aM70PLSavwMIlo8TG086xF3S8QLF8/5GLisW+aLUNBykM
+ iNkwYnpuiBnIYlfE4LdUYWfsVqzkCIyOSy9nd1JtG+QStmgXKmGuZvdatkBifaYoacI3DndDSHE
+ YwQ1OheOdD+/kzZihRt/MY9x8tqbZx02+I2YdWjencI2m0N2+K+9WziYpSTLtPGA61K7u2zCWxm
+ VXT5cMNAZG4EyXOQpw6sMSollVttnhPgwxiUMfqC96KL/8sNoPjEgYYtQrAcKPzJoSEkgamaN3U
+ igLEIMxrgDPAWYbqczuUFJdb9+O/UlVaQj2qTuAAKAi1dj2dDM8oxWi1559ZknbF8NUSKpS4BoF
+ xQ46UDlF71lhhEA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Rspamd-Action: no action
@@ -101,7 +101,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22315-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22316-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -125,280 +125,233 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,oracle.com:mid,oracle.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:mid,oracle.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7DA4F64A426
+X-Rspamd-Queue-Id: ABA1164A483
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Today NFSD treats TLS client peer identity as a boolean: either a
-peer is identified (authenticated) or it is not. Some deployments
-need finer authorization than that. A single certificate may
-authenticate several distinct actors, and an administrator may
-wish to grant different levels of access to different peers
-presenting the same certificate.
+The legacy exportfs cache path accepts an allow_tags clause that
+restricts an export to mTLS sessions carrying at least one matching
+session tag. The netlink-based svc_export interface had no such
+attribute, so administrators configuring exports via netlink could
+not request tag enforcement: nfsd_nl_parse_one_export() always
+left ex_allow_tags empty, and check_xprtsec_policy() then granted
+any authenticated peer.
 
-Once a TLS handshake completes, tlshd hands the kernel a list of
-tags associated with the session. For exports with an allow_tags
-list configured, NFSD tests the handshake tags against that list
-and grants access only when the session carries at least one
-matching tag. Exports with no allow_tags list continue to grant
-access to any authenticated peer, preserving existing behavior.
-
-Tags accompany only mTLS sessions, so allow_tags is meaningful
-only when xprtsec resolves to mtls alone. svc_export_parse()
-rejects an allow_tags list paired with any other xprtsec mode,
-making the administrator state the combination explicitly rather
-than allowing a default xprtsec setting to silently expose the
-export to plaintext or anonymous-TLS peers.
-
-Tags are parsed from exportfs during cache fill and freed when
-the export cache entry is released. Tagset ownership transfers
-to the cache entry on update so memory is managed correctly
-across the cache lifecycle.
+Extend the svc-export attribute set with allow-tags and parse it
+in nfsd_nl_parse_one_export(). Apply the same xprtsec=mtls
+consistency check as svc_export_parse() so the netlink path
+refuses contradictory security policy rather than silently exposing
+a tagged export to plaintext or anonymous-TLS peers.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/export.c        | 73 +++++++++++++++++++++++++++++++++++++++++++++++--
- fs/nfsd/export.h        | 11 ++++++++
- fs/nfsd/trace.h         | 19 +++++++++++++
- include/net/handshake.h |  4 +++
- 4 files changed, 105 insertions(+), 2 deletions(-)
+ Documentation/netlink/specs/nfsd.yaml | 10 ++++++
+ fs/nfsd/export.c                      | 68 +++++++++++++++++++++++++++++++++--
+ fs/nfsd/netlink.c                     |  4 ++-
+ fs/nfsd/netlink.h                     |  3 +-
+ include/uapi/linux/nfsd_netlink.h     |  1 +
+ 5 files changed, 82 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
+index 8f36fadd68f7..5cbdc1dab7e3 100644
+--- a/Documentation/netlink/specs/nfsd.yaml
++++ b/Documentation/netlink/specs/nfsd.yaml
+@@ -7,6 +7,10 @@ uapi-header: linux/nfsd_netlink.h
+ doc: NFSD configuration over generic netlink.
+ 
+ definitions:
++  -
++    name: handshake-session-tag-max-len
++    type: const
++    header: uapi/linux/handshake.h
+   -
+     type: flags
+     name: cache-type
+@@ -253,6 +257,12 @@ attribute-sets:
+       -
+         name: fsid
+         type: s32
++      -
++        name: allow-tags
++        type: string
++        checks:
++          max-len: handshake-session-tag-max-len
++        multi-attr: true
+   -
+     name: svc-export-reqs
+     attributes:
 diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index a47c90f40422..a2aaa3cd6c52 100644
+index a2aaa3cd6c52..25802de2de40 100644
 --- a/fs/nfsd/export.c
 +++ b/fs/nfsd/export.c
-@@ -18,6 +18,7 @@
- #include <linux/exportfs.h>
- #include <linux/sunrpc/svc_xprt.h>
- #include <net/genetlink.h>
-+#include <net/handshake.h>
- #include <uapi/linux/nfsd_netlink.h>
+@@ -831,6 +831,7 @@ static struct svc_export *svc_export_update(struct svc_export *new,
+ static struct svc_export *svc_export_lookup(struct svc_export *);
+ static int check_export(const struct path *path, int *flags,
+ 			unsigned char *uuid);
++static int check_allow_tags(const struct svc_export *exp);
  
- #include "nfsd.h"
-@@ -627,6 +628,7 @@ static void svc_export_release(struct rcu_head *rcu_head)
- 	struct svc_export *exp = container_of(rcu_head, struct svc_export,
- 			ex_rcu);
- 
-+	tagset_destroy(&exp->ex_allow_tags);
- 	nfsd4_fslocs_free(&exp->ex_fslocs);
- 	export_stats_destroy(exp->ex_stats);
- 	kfree(exp->ex_stats);
-@@ -1285,6 +1287,55 @@ static int xprtsec_parse(char **mesg, char *buf, struct svc_export *exp)
- 	return 0;
- }
- 
-+static int tags_parse(char **mesg, char *buf, struct tagset *tags)
-+{
-+	unsigned int i, listsize;
-+	int err;
-+
-+	/* more than one allow_tags */
-+	if (tags->ts_finalized)
-+		return -EINVAL;
-+
-+	err = get_uint(mesg, &listsize);
-+	if (err)
-+		return -EINVAL;
-+	if (listsize == 0 || listsize > NFSD_MAX_ALLOW_TAGS)
-+		return -EINVAL;
-+	if (!tagset_alloc(tags, listsize, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	for (i = 0; i < listsize; i++) {
-+		int len;
-+
-+		len = qword_get(mesg, buf, PAGE_SIZE);
-+		if (len <= 0 || len > HANDSHAKE_SESSION_TAG_MAX_LEN)
-+			return -EINVAL;
-+		if (strlen(buf) != len)
-+			return -EINVAL;
-+		if (!tagset_add_dup(tags, buf, GFP_KERNEL))
-+			return -ENOMEM;
-+	}
-+	tagset_finalize(tags);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Session tags are issued only with an mTLS handshake, so an
-+ * allow_tags list is meaningful only when xprtsec resolves to
-+ * mtls alone. Reject combinations that would otherwise let
-+ * plaintext or anonymous-TLS peers reach the export without
-+ * ever consulting the tag list. Every producer of a svc_export
-+ * must apply this check after it has resolved both fields.
-+ */
-+static int check_allow_tags(const struct svc_export *exp)
-+{
-+	if (!tagset_is_empty(&exp->ex_allow_tags) &&
-+	    exp->ex_xprtsec_modes != NFSEXP_XPRTSEC_MTLS)
-+		return -EINVAL;
-+	return 0;
-+}
-+
- static inline int
- nfsd_uuid_parse(char **mesg, char *buf, unsigned char **puuid)
+ /**
+  * nfsd_nl_parse_one_export - parse one svc_export entry from a netlink message
+@@ -845,14 +846,14 @@ static int check_export(const struct path *path, int *flags,
+ static int nfsd_nl_parse_one_export(struct cache_detail *cd,
+ 				    struct nlattr *attr)
  {
-@@ -1346,6 +1397,7 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
- 	exp.cd = cd;
- 	exp.ex_devid_map = NULL;
- 	exp.ex_xprtsec_modes = NFSEXP_XPRTSEC_ALL;
-+	tagset_init(&exp.ex_allow_tags);
+-	struct nlattr *tb[NFSD_A_SVC_EXPORT_FSID + 1];
++	struct nlattr *tb[NFSD_A_SVC_EXPORT_ALLOW_TAGS + 1];
+ 	struct auth_domain *dom = NULL;
+ 	struct svc_export exp = {}, *expp;
+ 	struct nlattr *secinfo_attr;
+ 	struct timespec64 boot;
+ 	int err, rem;
  
- 	/* expiry */
- 	err = get_expiry(&mesg, &exp.h.expiry_time);
-@@ -1389,6 +1441,8 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
- 				err = secinfo_parse(&mesg, buf, &exp);
- 			else if (strcmp(buf, "xprtsec") == 0)
- 				err = xprtsec_parse(&mesg, buf, &exp);
-+			else if (strcmp(buf, "allow_tags") == 0)
-+				err = tags_parse(&mesg, buf, &exp.ex_allow_tags);
- 			else
- 				/* quietly ignore unknown words and anything
- 				 * following. Newer user-space can try to set
-@@ -1399,6 +1453,10 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
- 				goto out4;
+-	err = nla_parse_nested(tb, NFSD_A_SVC_EXPORT_FSID, attr,
++	err = nla_parse_nested(tb, NFSD_A_SVC_EXPORT_ALLOW_TAGS, attr,
+ 			       nfsd_svc_export_nl_policy, NULL);
+ 	if (err)
+ 		return err;
+@@ -993,6 +994,68 @@ static int nfsd_nl_parse_one_export(struct cache_detail *cd,
+ 			}
  		}
  
++		/* allow-tags (multi-attr string) */
++		if (tb[NFSD_A_SVC_EXPORT_ALLOW_TAGS]) {
++			struct nlattr *tag_attr;
++			unsigned int count = 0;
++
++			/*
++			 * The NLA_STRING policy does not guarantee a
++			 * terminating NUL, so each tag is copied with
++			 * the length-aware nla_strdup(). Embedded NUL
++			 * bytes are rejected here because the policy
++			 * cannot express that check; a tag containing
++			 * one could never match a handshake-supplied
++			 * tag, which net/handshake rejects the same
++			 * way.
++			 */
++			nla_for_each_nested_type(tag_attr,
++						 NFSD_A_SVC_EXPORT_ALLOW_TAGS,
++						 attr, rem) {
++				const char *src = nla_data(tag_attr);
++				size_t srclen = nla_len(tag_attr);
++
++				if (srclen > 0 && src[srclen - 1] == '\0')
++					srclen--;
++				if (srclen == 0 ||
++				    memchr(src, '\0', srclen)) {
++					err = -EINVAL;
++					goto out_uuid;
++				}
++				count++;
++			}
++			if (count > NFSD_MAX_ALLOW_TAGS) {
++				err = -EINVAL;
++				goto out_uuid;
++			}
++			if (!tagset_alloc(&exp.ex_allow_tags, count,
++					  GFP_KERNEL)) {
++				err = -ENOMEM;
++				goto out_uuid;
++			}
++			nla_for_each_nested_type(tag_attr,
++						 NFSD_A_SVC_EXPORT_ALLOW_TAGS,
++						 attr, rem) {
++				char *tag;
++
++				tag = nla_strdup(tag_attr, GFP_KERNEL);
++				if (!tag) {
++					err = -ENOMEM;
++					goto out_uuid;
++				}
++				if (!tagset_add(&exp.ex_allow_tags, tag)) {
++					kfree(tag);
++					err = -ENOMEM;
++					goto out_uuid;
++				}
++			}
++			tagset_finalize(&exp.ex_allow_tags);
++		}
++
 +		err = check_allow_tags(&exp);
 +		if (err)
-+			goto out4;
++			goto out_uuid;
 +
- 		err = check_export(&exp.ex_path, &exp.ex_flags, exp.ex_uuid);
+ 		err = check_export(&exp.ex_path, &exp.ex_flags,
+ 				   exp.ex_uuid);
  		if (err)
- 			goto out4;
-@@ -1441,6 +1499,7 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
- 	} else
- 		err = -ENOMEM;
- out4:
+@@ -1026,6 +1089,7 @@ static int nfsd_nl_parse_one_export(struct cache_detail *cd,
+ 	}
+ 
+ out_uuid:
 +	tagset_destroy(&exp.ex_allow_tags);
- 	nfsd4_fslocs_free(&exp.ex_fslocs);
  	kfree(exp.ex_uuid);
- out3:
-@@ -1568,6 +1627,8 @@ static void export_update(struct cache_head *cnew, struct cache_head *citem)
- 		new->ex_flavors[i] = item->ex_flavors[i];
- 	}
- 	new->ex_xprtsec_modes = item->ex_xprtsec_modes;
-+	new->ex_allow_tags = item->ex_allow_tags;
-+	tagset_init(&item->ex_allow_tags);
- }
+ out_fslocs:
+ 	nfsd4_fslocs_free(&exp.ex_fslocs);
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index fbee3676d253..4db094b1021f 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -10,6 +10,7 @@
+ #include "netlink.h"
  
- static struct cache_head *svc_export_alloc(void)
-@@ -1588,6 +1649,8 @@ static struct cache_head *svc_export_alloc(void)
- 		return NULL;
- 	}
- 
-+	tagset_init(&i->ex_allow_tags);
-+
- 	return &i->h;
- }
- 
-@@ -1815,8 +1878,14 @@ __be32 check_xprtsec_policy(struct svc_export *exp, struct svc_rqst *rqstp)
- 	}
- 	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_MTLS) {
- 		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
--		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
--			return nfs_ok;
-+		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags)) {
-+			if (tagset_is_empty(&exp->ex_allow_tags))
-+				return nfs_ok;
-+			if (tagset_intersection(&xprt->xpt_handshake_tags,
-+						&exp->ex_allow_tags))
-+				return nfs_ok;
-+			trace_nfsd_export_tags_denied(exp);
-+		}
- 	}
- 	return nfserr_wrongsec;
- }
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index d2b09cd76145..c315cb4f0538 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -7,6 +7,7 @@
- 
- #include <linux/sunrpc/cache.h>
- #include <linux/percpu_counter.h>
-+#include <linux/tagset.h>
- #include <uapi/linux/nfsd/export.h>
- #include <linux/nfs4.h>
- 
-@@ -47,6 +48,15 @@ struct exp_flavor_info {
- 	u32	flags;
- };
- 
-+/*
-+ * Cap on the number of tags in an export's allow_tags list. This
-+ * is an export policy limit, independent of the per-handshake cap
-+ * on session tags (HANDSHAKE_MAX_SESSIONTAGS). It bounds the cost
-+ * of the tagset_intersection() that check_xprtsec_policy() runs
-+ * per request against a tagged export.
-+ */
-+#define NFSD_MAX_ALLOW_TAGS	64
-+
- /* Per-export stats */
- enum {
- 	EXP_STATS_FH_STALE,
-@@ -78,6 +88,7 @@ struct svc_export {
- 	struct rcu_head		ex_rcu;
- 	unsigned long		ex_xprtsec_modes;
- 	struct export_stats	*ex_stats;
-+	struct tagset		ex_allow_tags;
- };
- 
- /* an "export key" (expkey) maps a filehandlefragement to an
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index d01496aa3cf8..a426da9efebf 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -467,6 +467,25 @@ TRACE_EVENT(nfsd_export_update,
- 	)
- );
- 
-+TRACE_EVENT(nfsd_export_tags_denied,
-+	TP_PROTO(
-+		const struct svc_export *exp
-+	),
-+	TP_ARGS(exp),
-+	TP_STRUCT__entry(
-+		__string(path, exp->ex_path.dentry->d_name.name)
-+		__string(auth_domain, exp->ex_client->name)
-+	),
-+	TP_fast_assign(
-+		__assign_str(path);
-+		__assign_str(auth_domain);
-+	),
-+	TP_printk("path=%s domain=%s",
-+		__get_str(path),
-+		__get_str(auth_domain)
-+	)
-+);
-+
- DECLARE_EVENT_CLASS(nfsd_io_class,
- 	TP_PROTO(struct svc_rqst *rqstp,
- 		 struct svc_fh	*fhp,
-diff --git a/include/net/handshake.h b/include/net/handshake.h
-index fa43b108c2a8..d7411dbf5253 100644
---- a/include/net/handshake.h
-+++ b/include/net/handshake.h
-@@ -11,10 +11,14 @@
- #define _NET_HANDSHAKE_H
- 
- #include <linux/tagset.h>
+ #include <uapi/linux/nfsd_netlink.h>
 +#include <uapi/linux/handshake.h>
  
- /*
-  * Per-handshake cap on session tags. Bounds the cost of
-  * tagset_intersection() in consumer authorization checks.
-+ * The per-tag byte limit is HANDSHAKE_SESSION_TAG_MAX_LEN,
-+ * generated from Documentation/netlink/specs/handshake.yaml
-+ * and enforced by the netlink policy at the kernel boundary.
-  */
- #define HANDSHAKE_MAX_SESSIONTAGS	64
+ /* Common nested types */
+ const struct nla_policy nfsd_auth_flavor_nl_policy[NFSD_A_AUTH_FLAVOR_FLAGS + 1] = {
+@@ -41,7 +42,7 @@ const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1] = {
+ 	[NFSD_A_SOCK_TRANSPORT_NAME] = { .type = NLA_NUL_STRING, },
+ };
  
+-const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_FSID + 1] = {
++const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_ALLOW_TAGS + 1] = {
+ 	[NFSD_A_SVC_EXPORT_SEQNO] = { .type = NLA_U64, },
+ 	[NFSD_A_SVC_EXPORT_CLIENT] = { .type = NLA_NUL_STRING, },
+ 	[NFSD_A_SVC_EXPORT_PATH] = { .type = NLA_NUL_STRING, },
+@@ -55,6 +56,7 @@ const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_FSID + 1] =
+ 	[NFSD_A_SVC_EXPORT_XPRTSEC] = NLA_POLICY_MASK(NLA_U32, 0x7),
+ 	[NFSD_A_SVC_EXPORT_FLAGS] = NLA_POLICY_MASK(NLA_U32, 0x3ffff),
+ 	[NFSD_A_SVC_EXPORT_FSID] = { .type = NLA_S32, },
++	[NFSD_A_SVC_EXPORT_ALLOW_TAGS] = { .type = NLA_STRING, .len = HANDSHAKE_SESSION_TAG_MAX_LEN, },
+ };
+ 
+ const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1] = {
+diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+index af41aa0d4a65..133e99a0a3fc 100644
+--- a/fs/nfsd/netlink.h
++++ b/fs/nfsd/netlink.h
+@@ -11,6 +11,7 @@
+ #include <net/genetlink.h>
+ 
+ #include <uapi/linux/nfsd_netlink.h>
++#include <uapi/linux/handshake.h>
+ 
+ /* Common nested types */
+ extern const struct nla_policy nfsd_auth_flavor_nl_policy[NFSD_A_AUTH_FLAVOR_FLAGS + 1];
+@@ -18,7 +19,7 @@ extern const struct nla_policy nfsd_expkey_nl_policy[NFSD_A_EXPKEY_PATH + 1];
+ extern const struct nla_policy nfsd_fslocation_nl_policy[NFSD_A_FSLOCATION_PATH + 1];
+ extern const struct nla_policy nfsd_fslocations_nl_policy[NFSD_A_FSLOCATIONS_LOCATION + 1];
+ extern const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1];
+-extern const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_FSID + 1];
++extern const struct nla_policy nfsd_svc_export_nl_policy[NFSD_A_SVC_EXPORT_ALLOW_TAGS + 1];
+ extern const struct nla_policy nfsd_version_nl_policy[NFSD_A_VERSION_ENABLED + 1];
+ 
+ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
+index f5b75d5caba9..23a42c26ede0 100644
+--- a/include/uapi/linux/nfsd_netlink.h
++++ b/include/uapi/linux/nfsd_netlink.h
+@@ -165,6 +165,7 @@ enum {
+ 	NFSD_A_SVC_EXPORT_XPRTSEC,
+ 	NFSD_A_SVC_EXPORT_FLAGS,
+ 	NFSD_A_SVC_EXPORT_FSID,
++	NFSD_A_SVC_EXPORT_ALLOW_TAGS,
+ 
+ 	__NFSD_A_SVC_EXPORT_MAX,
+ 	NFSD_A_SVC_EXPORT_MAX = (__NFSD_A_SVC_EXPORT_MAX - 1)
 
 -- 
 2.54.0
