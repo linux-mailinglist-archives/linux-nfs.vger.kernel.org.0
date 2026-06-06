@@ -1,158 +1,140 @@
-Return-Path: <linux-nfs+bounces-22328-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22329-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id V8WGA7CaI2qLvwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22328-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 05:57:36 +0200
+	id +Rv+MNzCI2pJxwEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22329-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 08:49:00 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DE7964C513
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 05:57:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 225CC64CBC4
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 08:49:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ndv1yhbZ;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22328-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22328-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=VnPfXI+A;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22329-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22329-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4297C300C837
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jun 2026 03:57:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AEE3330238FE
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jun 2026 06:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B211A2C0F69;
-	Sat,  6 Jun 2026 03:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9804630CD9E;
+	Sat,  6 Jun 2026 06:48:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873AE27453;
-	Sat,  6 Jun 2026 03:57:25 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A9ED2594BD;
+	Sat,  6 Jun 2026 06:48:29 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780718246; cv=none; b=ElbC2uPbG4EpG2Elf8SjIaLGzfz7er3Wxl/lB83itTvk2KtfFfDME3253cu0YSiA4rtpQMlY1JWuvuTnAFms3LMlSKSrnAjpH4ST2Kur1Xt4wWly0vJ52W65Et9gNLjeccfTIa3pgcoO5J29SmR3hCGRCt6tv2SYNXy+hkUgxok=
+	t=1780728510; cv=none; b=n0Q43jo87ufIV0iII2dx7LUA7PZfzRVkyzoIWOA9hRZ4dhRcS8cpGCyF8tJ2EQ1WcJqtQ3ZXsNGPEnyTcWZ1y5PJlizX4GB7GkLqM+96+jP37YFcnsI7R66aSIGp5gklnWh/jStOyRWtE2Dx+Ps1nwf2ZHiih47uLlNTeS6D07k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780718246; c=relaxed/simple;
-	bh=OAqwiumuW17VoV1AxYGi7mnejumgfnZxCLiartOLD/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l265Vrlmz9OuAKZpILTmLa5AJaZU8l8GHVu/yHjHwF2X5HNObBv6IOvGvnzMlbqwELK/VIw/fq9f9l+zQPVtoCIOc8YjTCdFRiKJRfYQPFYC//iEjNkyePf5sexWGxokQTiB3MHxDO608P/8Yqd+3VOGuJ8ySnhQ0VV5oeNvzVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ndv1yhbZ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEFD01F00893;
-	Sat,  6 Jun 2026 03:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780718245;
-	bh=DyAJxWMcfaVwU7Ubjr6avFpvSuPyA7t3dbZlo6hIvEE=;
-	h=From:To:Cc:Subject:Date;
-	b=Ndv1yhbZtMuwy4HFdvMYKO5o7j8AYzRbLplB2wdNYY6i6lhy6aszAwImtpkjIhzNJ
-	 3ZLTfimfzdeEEF1hfYv3yueoHfUWWAqGrVwwl97vzfsbu9TBUNKH14VhaBweY3Sdez
-	 D9RoSLjxuH3e7uVS/7Bt5vhYQRgi6dDAqqZENAcOvmr629z4Ki7eqHPbgDC1nx9eKG
-	 9256/0MXg3qQ+d1r/BMb7Nt3qBFcAItVt5BvoidwcS6vlBbCBqQni481pmPMaU45ZA
-	 R2QxpB8wo8P3QNg5lxp7OtJnjEK//2zmag+/QM/Pd5nhoLB3rocPYPLB8p7WtQ/S7/
-	 Mis74PT4/Sebw==
-From: Chuck Lever <cel@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jonathan Flynn <jonathan.flynn@hammerspace.com>
-Subject: [PATCH] svcrdma: Cap Read sink allocations at PAGE_ALLOC_COSTLY_ORDER
-Date: Fri,  5 Jun 2026 23:57:22 -0400
-Message-ID: <20260606035722.83175-1-cel@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1780728510; c=relaxed/simple;
+	bh=uWBF/03PegbY9gCca2HvFGcjZrl5rkZsU+ZUnbs1z2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qzGM1z01AEZ5vfxJtdIM3TAUjkheAUBAXswZlthibGABGKLUHap8ZLbTRi7JTTwBfd0ZDdeU3cW3G2eiBlSzEoNF5G9CSR+HGOTGoMsmUhxtyKmvoXUkZ2ZmRk04zXPmM7XwKef/8zF3bPsdjTAs3chN+PaOTRUlNTrvVYv20P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VnPfXI+A; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 54C0A20B7168; Fri,  5 Jun 2026 23:48:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 54C0A20B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1780728487;
+	bh=PR7ToRx/wDiY6sKscwtk/u6K/FY/uYmFS3+FmKRDjGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VnPfXI+AMVTVkk0EGJPknGbql7WNCzWglOIFL/abCzxvwh0Q3KKxUeuTKhRlBDBwp
+	 gk6osILlOGWTvevQgXFBCnAcRBkkWc5Z2YRIgFQukDls4mwp3OZ/tMX0q3Yt+qxVMA
+	 icqhyJzx21rETrOrooUA3ZxzI5FFMZefPCWP8+PY=
+Date: Fri, 5 Jun 2026 23:48:07 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: mkalderon@marvell.com, Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>, zyjzyj2000@gmail.com,
+	sagi@grimberg.me, mgurtovoy@nvidia.com, haris.iqbal@ionos.com,
+	jinpu.wang@ionos.com, kbusch@kernel.org,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	kch@nvidia.com, smfrench@gmail.com, linkinjeon@kernel.org,
+	metze@samba.org, tom@talpey.com, chuck.lever@oracle.com,
+	jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, trondmy@kernel.org, anna@kernel.org,
+	achender@kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	kees@kernel.org, andriy.shevchenko@linux.intel.com,
+	ebadger@purestorage.com, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH rdma-next v6] RDMA: Change capability fields in
+ ib_device_attr from int to u32
+Message-ID: <aiPCpyVN7IYbQgyA@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260601092534.1764560-1-ernis@linux.microsoft.com>
+ <5d3cac2b-4011-49c5-a142-55c85d38e90f@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d3cac2b-4011-49c5-a142-55c85d38e90f@acm.org>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:bvanassche@acm.org,m:mkalderon@marvell.com,m:jgg@ziepe.ca,m:leon@kernel.org,m:zyjzyj2000@gmail.com,m:sagi@grimberg.me,m:mgurtovoy@nvidia.com,m:haris.iqbal@ionos.com,m:jinpu.wang@ionos.com,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:kch@nvidia.com,m:smfrench@gmail.com,m:linkinjeon@kernel.org,m:metze@samba.org,m:tom@talpey.com,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:trondmy@kernel.org,m:anna@kernel.org,m:achender@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:kees@kernel.org,m:andriy.shevchenko@linux.intel.com,m:ebadger@purestorage.com,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:target-devel@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:samba-technical@lists.samba.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:rds-devel@oss.oracle.com,m:jgg@nvidia.com,s:
+ lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22329-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22328-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[ernis@linux.microsoft.com,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:snitzer@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:chuck.lever@oracle.com,m:jonathan.flynn@hammerspace.com,s:lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[43];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[marvell.com,ziepe.ca,kernel.org,gmail.com,grimberg.me,nvidia.com,ionos.com,kernel.dk,lst.de,samba.org,talpey.com,oracle.com,brown.name,redhat.com,davemloft.net,google.com,linux.intel.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3DE7964C513
+X-Rspamd-Queue-Id: 225CC64CBC4
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, Jun 01, 2026 at 08:51:40AM -0700, Bart Van Assche wrote:
+ > -	ch->rq_size = min(MAX_SRPT_RQ_SIZE, sdev->device->attrs.max_qp_wr);
+> > +	ch->rq_size = min_t(u32, MAX_SRPT_RQ_SIZE, sdev->device->attrs.max_qp_wr);
+> >   	spin_lock_init(&ch->spinlock);
+> >   	ch->state = CH_CONNECTING;
+> >   	INIT_LIST_HEAD(&ch->cmd_wait_list);
+> > @@ -3225,7 +3225,7 @@ static int srpt_add_one(struct ib_device *device)
+> >   	sdev->lkey = sdev->pd->local_dma_lkey;
+> > -	sdev->srq_size = min(srpt_srq_size, sdev->device->attrs.max_srq_wr);
+> > +	sdev->srq_size = min_t(u32, srpt_srq_size, sdev->device->attrs.max_srq_wr);
+> >   	srpt_use_srq(sdev, sdev->port[0].port_attrib.use_srq);
+> 
+> min_t() shouldn't be used if there is an alternative available. For the
+> SRP drivers, please make sure that both arguments of min() are unsigned
+> instead of using min_t().
 
-Jonathan Flynn reports that commit 18755b8c2f24 ("svcrdma: Use
-contiguous pages for RDMA Read sink buffers") regresses NFS/RDMA
-WRITE throughput from 73.9 GiB/s to 30.3 GiB/s on a 128-core
-single-NUMA-node server driving dual 400Gb/s links with 640 nfsd
-threads. In the regressed configuration, server CPU utilization
-rises from 8.5% to 76%, and 73% of all server CPU cycles are spent
-in native_queued_spin_lock_slowpath.
+Thankyou for your suggestion, Bart.
+I'll update this in the next version.
 
-The contended lock is zone->lock. The page allocator serves
-allocations only up to PAGE_ALLOC_COSTLY_ORDER (3) from its per-CPU
-page lists; SVC_RDMA_CONTIG_MAX_ORDER is 4, so every contiguous
-sink buffer allocation falls through to rmqueue_buddy() and
-acquires the zone lock. The workload above issues roughly half a
-million order-4 allocations per second, all serialized on the
-single zone lock of the one NUMA node. Replacing the GFP mask with
-GFP_NOWAIT did not change the profile because direct reclaim never
-ran: the cycles are spent acquiring the lock, not reclaiming
-memory.
+- Vennela
 
-Cap the allocation order at PAGE_ALLOC_COSTLY_ORDER so contiguous
-sink buffer allocations remain eligible for the per-CPU page
-lists, where zone lock acquisition is amortized across pcp batch
-refills. An order-3 chunk still replaces eight per-page bvecs with
-one.
-
-Reported-by: Jonathan Flynn <jonathan.flynn@hammerspace.com>
-Fixes: 18755b8c2f24 ("svcrdma: Use contiguous pages for RDMA Read sink buffers")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index efde26cac961..4546e594f2d7 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -746,11 +746,12 @@ int svc_rdma_prepare_reply_chunk(struct svcxprt_rdma *rdma,
- }
- 
- /*
-- * Cap contiguous RDMA Read sink allocations at order-4. Higher orders risk
-- * allocation failure under GFP_NOWAIT, which would negate the benefit of
-- * the contiguous fast path.
-+ * Cap contiguous RDMA Read sink allocations at PAGE_ALLOC_COSTLY_ORDER.
-+ * The page allocator serves allocations at or below that order from
-+ * its per-CPU page lists; above it, every allocation acquires the
-+ * zone lock, which serializes all nfsd threads.
-  */
--#define SVC_RDMA_CONTIG_MAX_ORDER	4
-+#define SVC_RDMA_CONTIG_MAX_ORDER	PAGE_ALLOC_COSTLY_ORDER
- 
- /**
-  * svc_rdma_alloc_read_pages - Allocate physically contiguous pages
--- 
-2.54.0
-
+> Thanks,
+> 
+> Bart.
 
