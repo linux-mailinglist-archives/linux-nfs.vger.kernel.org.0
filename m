@@ -1,257 +1,266 @@
-Return-Path: <linux-nfs+bounces-22338-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22339-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id YqKXASQyJGoU4AEAu9opvQ
-	(envelope-from <linux-nfs+bounces-22338-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 16:43:48 +0200
+	id huCmL4paJGpy5gEAu9opvQ
+	(envelope-from <linux-nfs+bounces-22339-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 19:36:10 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB48264DBCD
-	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 16:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 11D4A64DF86
+	for <lists+linux-nfs@lfdr.de>; Sat, 06 Jun 2026 19:36:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=i29Dzy3m;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22338-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22338-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=hammerspace.com header.s=google header.b=TMOTRTXF;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22339-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22339-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2C12A300A24E
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jun 2026 14:43:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B3AE030046AF
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jun 2026 17:36:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEBC2346E40;
-	Sat,  6 Jun 2026 14:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186092E7388;
+	Sat,  6 Jun 2026 17:35:59 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF92F4071C3;
-	Sat,  6 Jun 2026 14:43:41 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780757022; cv=none; b=JC4fWbg/ubeaSVzWTHl5yoGzvCDTBM0Hf21g+2/51uj/S8wD8v5zM2CPfo9BNiVLoawXZ9xHu4abRvds7fL3E40HhXaoKHR/dkMwiiNzXmh23a4/Hqw0kQZ8a58IMubq3pb16Z5ZKG7SPUDCdc1vZkx2zLZG71i4Ple8GgvH5aw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780757022; c=relaxed/simple;
-	bh=a+OdDYPpATQec036hI/xaSLFO74hocIsV5vnu7E04iI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=onGQ0Fvx1CiPsBwZBAfLyjbwf0N+p/9Z8m9z6tEEZQK85C3VwU00k9s4dqS1xuwqhFEYOayHeOkLjESuVvifOomK9wEV4bwcYnqR9AwFxQ+B53Y5SA4zQixipnunprtwsiTsGIRzLctS1oMVO25hD3Empj0utluQsYy0GGlkALk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i29Dzy3m; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B7D1F00898;
-	Sat,  6 Jun 2026 14:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780757021;
-	bh=j9/rxncOVJQdf3WrC5LokDwMbFsp3+6id0NaDbR7R/o=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=i29Dzy3malyvnIMdK68wtOB7VLALHV54K8KO4StF522VMnfYf0tMmN+Y4uVY+gNeX
-	 /o88Jud8gJ3gipAndDDv/3sNBv0gPVyR0h4N1ApnDAoANUUBM8krGI6moSzlnPbzyh
-	 q7cW54OBIfpBjmRajEyOx9r/FlVrnKuFMalhoB+OOuB7rf/P/DwiD4ARa2dwlSneq3
-	 5OgaLn6ndEm0Q5ZoZc3d5N+JAtKT87S+taFY5Mg0SLuL5XRe/algVvH2dqFtvj9moV
-	 SZpxjXN8v3NQ/9oiqatYB89vKgT484eH9yaybko3oTtc0NDq/sogLeoAqYqf3ZgVCT
-	 i47S6c2cDM34w==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 27FD6F40080;
-	Sat,  6 Jun 2026 10:43:40 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 06 Jun 2026 10:43:40 -0400
-X-ME-Sender: <xms:HDIkatGvC0CdAHf4PwO56HYwiW-1IIKuXN4t4L86pHz2NKBS69UIUQ>
-    <xme:HDIkatJ1KvMK2DpSVCHmN6paHnd3AsMUEShk2Kc1jDYjkqhmMvCaopCPtD5f0Sy0r
-    gFoOa0XI3JbZxM_OzbMYrAP-yqOewq3V1LvrcN4Aj0tfLntGhfNL0s>
-X-ME-Proxy-Cause: dmFkZTEUeB0sMSCB1BLAAfntTLokbcu3We/mJtkfQ3Bhx0+gg34v+F1FZmEmD6OrAdv0jY
-    L0ZhnvdXsLckDDVeoCkmavi3Qiu4cRgLVny27TXjhaePcLZ7Qwi6awa0lqlf23y9NIctya
-    zKY2gguliLTdmYNqKG5iLkZjE7U4YqBfvCzgM/OMm8CG2VOJfUleRmiXKjQxAmX4IowXkb
-    AD8YFZoDcbSHrMQYvt6OIQj5eHxauxVdmFmC/dhLchIZ1EeStLZ1QUtdeKPOAmOLRZDH72
-    RvyAAzplNZXzsH24wz4IoHiR4vg8OCdGU3d+ENB4BQk6SBE6ojkulwZiWEdKPkYAR8IxCe
-    VWbTYJjVZYVoi/sBg7yPVKXIajigS+oKlphTRa6HpxbIj94r0ADWOx2w95japhq5SCvGL+
-    1/FpbJyRS/oDNJcUvPhQZgnvKRqq2kAhbVA+vgFLWeBSTpRr1vFASZ3g4M0Rur001XT03w
-    9RmGSpbaYuszI5N+38BqCYHTjjF32p8mKmNl257juV1S7ikiFj846jGd9RxWbJukq2YxQ8
-    rv1kyUfg87QwX0LFyvGJSIeF+RLPT01/TSkNywdokuo5wdJ2id+YSZWS2Hlq+6J/G2sQJ0
-    2nTP6NFUga4foclm8d4I9ABOXW7/h0Gd7zkWFx67x0Qx4GGwDPqTLrf1cZ/w
-X-ME-Proxy: <xmx:HDIkamCz9usGZU82EEi5v3f6WWkZw5KfDzjQC4wVKhNg5zGdHuHVLw>
-    <xmx:HDIkapupYwn2q-PXbfIkm-edfTte8JioYg1OS6gnWEFIL15jUzgG1g>
-    <xmx:HDIkajtaYkwtk0dTxHBgvs-5GaXRGiKe-h3RqkOcvT1Uq0Y390S02g>
-    <xmx:HDIkalrAeHhkZ1lobnWz-33t246a4yQkcQ-uK9NJxtXvV3Ct0pu89Q>
-    <xmx:HDIkanOs7QurCSA_QROVWtEm3xNUq3D5o8CaIzmcPITHUKWcxVZ4BShA>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E0E11780070; Sat,  6 Jun 2026 10:43:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84E32E7360
+	for <linux-nfs@vger.kernel.org>; Sat,  6 Jun 2026 17:35:55 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780767359; cv=pass; b=M0BgSq+t/OpInEEmaxibSVioap1ifU/HQBv0q5Q2Gmv7UZpw3SwR4PhC3ocxKb0SnrNesRiZ3ILyecg28q8uAFYUHS8bmw80uZsqsCzt0ZRyEiEIy0IqRAIknuIfDVxtmWwwtVWYx5xAt0H/5WaiXdZCdabYhdgQ7mIhgYaCNlw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780767359; c=relaxed/simple;
+	bh=kaIOlM2dR399VfkohKkulIGjRFRv1YLOvYZvYkxuEv4=;
+	h=From:References:In-Reply-To:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HVQuDT4JpZ0Mn5d3WzfWy3L0ElpERBNCW2XahoZ1hUja1PyrQ3c8FACANoYt9AADfBi5/7mKNbhRq9923hVIvQTnD/x0Cvxzney3GBuyw62a2zrl/QD6i/EekyX/8eFDw2nH6rTnKzs4dd7kXdhLQg6obMRWi+1b5NXkMss00gY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=TMOTRTXF; arc=pass smtp.client-ip=209.85.128.50
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490b8a97b11so32479265e9.0
+        for <linux-nfs@vger.kernel.org>; Sat, 06 Jun 2026 10:35:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780767354; cv=none;
+        d=google.com; s=arc-20240605;
+        b=TGjXpOsPZZK0oOZJ0+SV7XZ6iVdSZoVMYecP6yeB45wt5O9bHIU6sP+6L4TFwJ4b6k
+         Olq3T2kuyADbAdL6pdtQN6JE5pmQmBoEQjyPxk6rNQTAaQtYjLJX7djV3pH+JJSEq745
+         8AYJzXXy23KiOKuyqvKFjrxnujZooOMO7gv9oOT8OsSLsMkJq7XIlBpQ9tIolkDNlx1l
+         FaO3CSnHlTpKWHHV2lUnryxx7766ZPU2bx0neIH0iSeZKDrIcz1lLkMUpxXfOdyb8cvu
+         tCG8+/FOaJV/+yowm6jpA2Fh6jFMBw22tgmCQfzDgE+SN5HCjK1tkVqGCEx8esgCaDdT
+         v29Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
+         :references:from:dkim-signature;
+        bh=Hppu2DGhG4EZwt2QnaFLsyyEt3kmcDDCj2adKDQrCl4=;
+        fh=zclRT0AL/VU5GNEzXpWBMxRZa9n+H0QFGVGjNlhFdfI=;
+        b=D9VwCwWsm7yj/WK6rYAF5jmS59+fScP4k2KfLvm/8aVwFS89cJl/L5VN3XT+D3b62S
+         bygI4sdlg/Jq+KzF48OiO2FMSyefH8sbb0pKKnv9BP130KBNTwQGfcXdypv//kj+Ts34
+         guEyresGmMg54xFZKdKyPZatu02TC5F6XrdLqrrmenv67E+PK9puyZqasxvKRZeP7eb2
+         FKc1zW7YSAUjfULzaq0nQ+MT+D9NULtvikW5tgVjly3a0ueAhMx/cb/gRJ+5am9/JJU5
+         um2omI6yLzMLUuXgVrM7vx/SWG0Eoulc6Qh8tbiLYWylKD67/7a594vgva//Lq1snzu2
+         ZsCg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hammerspace.com; s=google; t=1780767354; x=1781372154; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
+         :references:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hppu2DGhG4EZwt2QnaFLsyyEt3kmcDDCj2adKDQrCl4=;
+        b=TMOTRTXFD/GN1jg5cEc55ASv/xygFpFonwc7TEeuAnBgHV3VtNeRTnVtzD2UTN6vli
+         oZA7U5IxuhVmIN/QpASUBZRwsyGu8bVGwti0B7cMRoCNn2TKbblNkE+lOuTefwLcM1Uf
+         TfaGALGyQwLS7STQbmB1Zys8ajSV29qeVAJwXn6qcFt//lylEnXcdWrQq/b81fFy6tam
+         1TBX0qCLvmiYMzFFl4fNM5luaBFYckyYFUr7ZP1D0SVc4Uwfx32kUei4W/ZCOrCb3NZ0
+         Ri/p4bz6ICkwWwmxTRDTCzun5/7l6XKAJ2BXvk+Jj9hEfxt6MYfEHY5DKS8NQ4Vw8avP
+         8TTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780767354; x=1781372154;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
+         :references:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hppu2DGhG4EZwt2QnaFLsyyEt3kmcDDCj2adKDQrCl4=;
+        b=eXCptTJHttWBdUGZ+om9h5iyIN7qNzSjTSenW4uiHUToZ7TqfFOhrGldPJs6Y/LPhR
+         UNsRxDj5f9yqfu6RlsQNK5wTqa+4Zifr6WXa4AFfEgxDbMSpoW5Fl6ALefO5RRzfwpCh
+         VxcEpOEntMHJzWEvZlYHcPq7kzpr+0QsOIFNb8ialoagCsV0fA42QtBAvmK6gu90oBSH
+         05db9qE5wPx97lSQbsBUMJYEd2+CZMuJNpiqPTEYbJu7x4VlFdb1Ri0XqxpXREikECMS
+         RiN/sWmnVPRi9DYYZRESKlUa6aI7vC3xFJ5f6y2g53G1g762P7WmNHoWQUFEiBfysE0D
+         n77g==
+X-Gm-Message-State: AOJu0Yx+HcFyv0B072pwjqcwJ/KMN5kTidGTU/ofMjJyzVGECmftdl4i
+	PkgKEed6Yon9FGzP0pO5MyCdW8yTjvTc4F7HXOtXJQd0UL65LPur/+5BWCWgokpSBWTCrN0oh8n
+	ciqiIYUoMoK6WLk6yDs8L5Xbiij4L2owuYW6pfh/BuQ==
+X-Gm-Gg: Acq92OFys/TlSkBUxTSQqnGIWoP8cVMUcncTUkHN+xlEdhj+FOqKDLlnT1s2FwYvSjJ
+	v/NfEEyTjQXB2P2jE5jArQ5AMQXLwLdNIlOBuTZs8p7kVrIcHQRsu9VAtunnSC0tcvl8YYHktD5
+	NHvw0irDWchmA6kq8HWrOQ3VW2203JK9FcbFI27IghOIMelXK/KbKyVxV7g8mIeOIPPFDUZU66a
+	3Tvw1Flb0at38bAxqYM9Cic9pmohJM7GnaGUg3mTseKuqmOwU6sj/Q+Fu/2fCZ459xSaCoP6FPi
+	XdqjK8ji3hmj1jdW
+X-Received: by 2002:a05:600c:4fc6:b0:490:b432:6f1e with SMTP id
+ 5b1f17b1804b1-490c2614bf9mr144449255e9.33.1780767353362; Sat, 06 Jun 2026
+ 10:35:53 -0700 (PDT)
+From: Jonathan Flynn <jonathan.flynn@hammerspace.com>
+References: <20260606035722.83175-1-cel@kernel.org>
+In-Reply-To: <20260606035722.83175-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Awlu_ohcY-4Z
-Date: Sat, 06 Jun 2026 07:43:17 -0700
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Donald Hunter" <donald.hunter@gmail.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Shuah Khan" <skhan@linuxfoundation.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Sabrina Dubroca" <sd@queasysnail.net>, "Keith Busch" <kbusch@kernel.org>,
- "Jens Axboe" <axboe@kernel.dk>, "Christoph Hellwig" <hch@lst.de>,
- "Sagi Grimberg" <sagi@grimberg.me>, "Chaitanya Kulkarni" <kch@nvidia.com>,
- NeilBrown <neil@brown.name>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>
-Cc: kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <ca63fcf5-8d3d-4ee5-ac62-fd0af937cf87@app.fastmail.com>
-In-Reply-To: <cbb8bf9325d5877d8e736b42f2ffde01dc7e2739.camel@kernel.org>
-References: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
- <cbb8bf9325d5877d8e736b42f2ffde01dc7e2739.camel@kernel.org>
-Subject: Re: [PATCH 0/9] Deliver TLS session tags to upper-layer consumers (NFSD)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQMa29E4u4Im5YIb7ViXmqyooY1UybO1/K8Q
+Date: Sat, 6 Jun 2026 11:35:51 -0600
+X-Gm-Features: AVVi8Cez9uncDsFw8DZPkODWXV4aG8-aKGtQeYnLtb6-RB7MYGS0NV-SQUjhB-Q
+Message-ID: <65a2cdb132b0c28e69a29955e3bd37e7@mail.gmail.com>
+Subject: RE: [PATCH] svcrdma: Cap Read sink allocations at PAGE_ALLOC_COSTLY_ORDER
+To: Chuck Lever <cel@kernel.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.65 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22338-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,davemloft.net,google.com,redhat.com,lwn.net,linuxfoundation.org,linux-foundation.org,queasysnail.net,kernel.dk,lst.de,grimberg.me,nvidia.com,brown.name,oracle.com,talpey.com];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:donald.hunter@gmail.com,m:kuba@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:pabeni@redhat.com,m:horms@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:akpm@linux-foundation.org,m:john.fastabend@gmail.com,m:sd@queasysnail.net,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:sagi@grimberg.me,m:kch@nvidia.com,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-nfs@vger.kernel.org,m:chuck.lever@oracle.com,m:donaldhunter@gmail.com,m:johnfastabend@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,app.fastmail.com:mid];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:snitzer@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:chuck.lever@oracle.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER(0.00)[jonathan.flynn@hammerspace.com,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22339-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jonathan.flynn@hammerspace.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,oracle.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EB48264DBCD
+X-Rspamd-Queue-Id: 11D4A64DF86
 
+I tested the PAGE_ALLOC_COSTLY_ORDER change on the same setup.
+Unfortunately, it did not improve the regression. Throughput was slightly
+worse than the previous GFP_NOWAIT test, measuring 25.4 GiB/s.
 
+Current results are:
+Original regressed build: ~30.3 GiB/s
+GFP_NOWAIT build: ~31.0 GiB/s
+PAGE_ALLOC_COSTLY_ORDER: 25.4 GiB/s
+Commit reverted: ~73.9 GiB/s
 
-On Sat, Jun 6, 2026, at 6:26 AM, Jeff Layton wrote:
-> On Fri, 2026-06-05 at 13:34 -0400, Chuck Lever wrote:
->> NFSD and similar upper-layer services want access-control decisions
->> based on TLS peer-certificate characteristics, but in-kernel x.509
->> parsing would duplicate work mature userspace libraries already do.
->> This series gives tlshd a way to evaluate certificates against
->> admin-defined policy and report matching policies back to the kernel
->> as opaque string tags. The handshake layer plumbs the tags through to
->> the upper-layer consumer's completion callback; intersection against
->> per-resource tag sets stays the consumer's problem.
->> 
->> Four architectural choices shape the series, only one of which is
->> visible in any single patch.
->> 
->> The tagging vocabulary is opaque to the kernel. tlshd decides what
->> each tag means; the handshake layer and its consumers only test
->> membership. This keeps x.509 out of the kernel and lets policy evolve
->> at userspace speed. Any future attribute the kernel wants to gate on
->> must be expressed as a tag rather than as a new netlink field per
->> attribute.
->> 
->> DONE gains a privilege check (patch 1) as a prerequisite, not as
->> cleanup. Without it, an unprivileged process guessing a sockfd could
->> submit a forged DONE and effectively grant or deny tag membership
->> for a real handshake. Once tags carry authorization weight, that
->> pre-existing gap becomes load-bearing. The fix predates tags in
->> principle and carries a Fixes: tag, but it sits at the head of this
->> series so the rest of the work has a trustworthy foundation.
->> 
->> HANDSHAKE_MAX_SESSIONTAGS is advertised on every ACCEPT reply as
->> HANDSHAKE_A_ACCEPT_MAX_TAGS (patch 6), so tlshd can size its
->> DONE-side tag list against the kernel's runtime limit rather than
->> guessing from header constants. If a daemon overruns anyway, the
->> DONE handler truncates and logs one pr_warn_once rather than
->> returning -E2BIG: tearing down a handshake the operator almost
->> certainly wants to keep is a worse outcome than dropping a few
->> tags. The truncation path is defense-in-depth for a buggy or
->> stale agent, not the primary signal.
->> 
->> The tagset helper (patch 3) is split out as a generic library so
->> NFSD export tagging (patches 8 and 9) can use it without further
->> churn in net/handshake/.
->> 
->> ---
->> Chuck Lever (9):
->>       handshake: Require admin permission for DONE command
->>       handshake: Add tags to "done" downcall
->>       lib: Add a "tagset" data structure
->>       handshake: Pick up session tags passed during the DONE downcall
->>       handshake: Add a kunit test for the completion gate
->>       handshake: advertise the session-tag cap to user space
->>       SUNRPC: Copy the TLS session tags when they are available
->>       NFSD: Implement export tagging
->>       NFSD: Add allow_tags to the netlink export interface
->> 
->>  Documentation/core-api/index.rst           |   1 +
->>  Documentation/core-api/tagset.rst          | 225 +++++++++++++++++++++++++++++
->>  Documentation/netlink/specs/handshake.yaml |  16 ++
->>  Documentation/netlink/specs/nfsd.yaml      |  10 ++
->>  Documentation/networking/tls-handshake.rst |  63 +++++++-
->>  drivers/nvme/host/tcp.c                    |   3 +-
->>  drivers/nvme/target/tcp.c                  |   3 +-
->>  fs/nfsd/export.c                           | 141 +++++++++++++++++-
->>  fs/nfsd/export.h                           |  11 ++
->>  fs/nfsd/netlink.c                          |   4 +-
->>  fs/nfsd/netlink.h                          |   3 +-
->>  fs/nfsd/trace.h                            |  19 +++
->>  include/linux/sunrpc/svc_xprt.h            |   2 +
->>  include/linux/tagset.h                     | 187 ++++++++++++++++++++++++
->>  include/net/handshake.h                    |  30 +++-
->>  include/uapi/linux/handshake.h             |   4 +
->>  include/uapi/linux/nfsd_netlink.h          |   1 +
->>  lib/Makefile                               |   1 +
->>  lib/tagset.c                               | 174 ++++++++++++++++++++++
->>  net/handshake/genl.c                       |   7 +-
->>  net/handshake/handshake-test.c             |  72 +++++++++
->>  net/handshake/handshake.h                  |   6 +
->>  net/handshake/netlink.c                    | 109 +++++++++++++-
->>  net/handshake/request.c                    |  68 ++++++++-
->>  net/handshake/tlshd.c                      |  10 +-
->>  net/sunrpc/svc_xprt.c                      |  11 +-
->>  net/sunrpc/svcauth_unix.c                  |  12 ++
->>  net/sunrpc/svcsock.c                       |  38 ++++-
->>  net/sunrpc/xprtsock.c                      |   5 +-
->>  29 files changed, 1205 insertions(+), 31 deletions(-)
->> ---
->> base-commit: 4d4d6605de5f91a40335729b6a7cc15e83b280f3
->> change-id: 20260512-tls-session-tags-9d0042583f44
->> 
->> Best regards,
->> --  
->> Chuck Lever <chuck.lever@oracle.com>
+I added the results to the shared bundle. (including flamegraph)
+
+The GFP_NOWAIT and the Original Commit flamegraphs are nearly identical.
+The dominant stack being:
+svc_recv()
+-> svc_rdma_build_read_segment_contig()
+-> alloc_pages_noprof()
+-> get_page_from_freelist()
+-> rmqueue_buddy()
+
+The PAGE_ALLOC_COSTLY_ORDER flamegraph is different. Time spent under
+alloc_pages_noprof() is reduced, but the reduction does not translate into
+improved throughput.
+
+The following percentages were observed:
+                                                   Original     GFP_NOWAIT
+COSTLY_ORDER
+svc_recv()                                 76.09%      75.99%
+78.44%
+alloc_pages_noprof()             58.07%      57.99%               40.29%
+folios_put_refs()                        7.15%        7.19%
+16.06%
+svc_rdma_read_complete()    7.18%        7.21%               16.08%
+
+In other words, the PAGE_ALLOC_COSTLY_ORDER change reduces time spent in
+the allocation path, but a larger fraction of CPU time then appears under
+svc_rdma_read_complete() and folios_put_refs(), while overall throughput
+decreases further.
+
+-Jon
+
+> -----Original Message-----
+> From: Chuck Lever <cel@kernel.org>
+> Sent: Friday, June 5, 2026 9:57 PM
+> To: Mike Snitzer <snitzer@kernel.org>
+> Cc: linux-nfs@vger.kernel.org; linux-rdma@vger.kernel.org; Chuck Lever
+> <chuck.lever@oracle.com>; Jonathan Flynn
+> <jonathan.flynn@hammerspace.com>
+> Subject: [PATCH] svcrdma: Cap Read sink allocations at
+> PAGE_ALLOC_COSTLY_ORDER
 >
-> I was wanting to review this, but I can't seem to get it to apply
-> cleanly to any known tree. What tree is this based on?
-
-commit 4d4d6605de5f91a40335729b6a7cc15e83b280f3 (cel/nfsd-testing)
-Author:     Chuck Lever <chuck.lever@oracle.com>
-AuthorDate: Thu Sep 5 15:25:37 2024 -0400
-Commit:     Chuck Lever <chuck.lever@oracle.com>
-CommitDate: Thu May 28 11:34:51 2026 -0400
-
-That's some old shit.
-
-I will rebase it before posting it again.
-
-
--- 
-Chuck Lever
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> Jonathan Flynn reports that commit 18755b8c2f24 ("svcrdma: Use
+contiguous
+> pages for RDMA Read sink buffers") regresses NFS/RDMA WRITE throughput
+> from 73.9 GiB/s to 30.3 GiB/s on a 128-core single-NUMA-node server
+driving
+> dual 400Gb/s links with 640 nfsd threads. In the regressed
+configuration,
+> server CPU utilization rises from 8.5% to 76%, and 73% of all server CPU
+cycles
+> are spent in native_queued_spin_lock_slowpath.
+>
+> The contended lock is zone->lock. The page allocator serves allocations
+only
+> up to PAGE_ALLOC_COSTLY_ORDER (3) from its per-CPU page lists;
+> SVC_RDMA_CONTIG_MAX_ORDER is 4, so every contiguous sink buffer
+> allocation falls through to rmqueue_buddy() and acquires the zone lock.
+The
+> workload above issues roughly half a million order-4 allocations per
+second,
+> all serialized on the single zone lock of the one NUMA node. Replacing
+the
+> GFP mask with GFP_NOWAIT did not change the profile because direct
+> reclaim never
+> ran: the cycles are spent acquiring the lock, not reclaiming memory.
+>
+> Cap the allocation order at PAGE_ALLOC_COSTLY_ORDER so contiguous sink
+> buffer allocations remain eligible for the per-CPU page lists, where
+zone lock
+> acquisition is amortized across pcp batch refills. An order-3 chunk
+still
+> replaces eight per-page bvecs with one.
+>
+> Reported-by: Jonathan Flynn <jonathan.flynn@hammerspace.com>
+> Fixes: 18755b8c2f24 ("svcrdma: Use contiguous pages for RDMA Read sink
+> buffers")
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> index efde26cac961..4546e594f2d7 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+> @@ -746,11 +746,12 @@ int svc_rdma_prepare_reply_chunk(struct
+> svcxprt_rdma *rdma,  }
+>
+>  /*
+> - * Cap contiguous RDMA Read sink allocations at order-4. Higher orders
+risk
+> - * allocation failure under GFP_NOWAIT, which would negate the benefit
+of
+> - * the contiguous fast path.
+> + * Cap contiguous RDMA Read sink allocations at
+> PAGE_ALLOC_COSTLY_ORDER.
+> + * The page allocator serves allocations at or below that order from
+> + * its per-CPU page lists; above it, every allocation acquires the
+> + * zone lock, which serializes all nfsd threads.
+>   */
+> -#define SVC_RDMA_CONTIG_MAX_ORDER	4
+> +#define SVC_RDMA_CONTIG_MAX_ORDER	PAGE_ALLOC_COSTLY_ORDER
+>
+>  /**
+>   * svc_rdma_alloc_read_pages - Allocate physically contiguous pages
+> --
+> 2.54.0
 
