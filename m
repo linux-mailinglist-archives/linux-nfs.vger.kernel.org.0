@@ -1,185 +1,181 @@
-Return-Path: <linux-nfs+bounces-22341-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22342-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id usw7O/viJGo/BAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-22341-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 05:18:19 +0200
+	id FRsNB3seJWrMDgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-22342-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 09:32:11 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBAB464EBC1
-	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 05:18:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 667B664F043
+	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 09:32:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dTcwXdOf;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22341-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22341-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=JeSeoNzw;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22342-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22342-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D8DFD3007298
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jun 2026 03:18:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1E5043013AB5
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jun 2026 07:32:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03B528CF4A;
-	Sun,  7 Jun 2026 03:18:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901FD282F26;
+	Sun,  7 Jun 2026 07:32:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F54D2AF00;
-	Sun,  7 Jun 2026 03:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A60A302753
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Jun 2026 07:32:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780802294; cv=none; b=SnfVRJh4GWJjS/HHkVRa7Eok7M+tPnoJSUyJpuMYD3TActnnnsBV5tY9QqJ8/WD6vPFq/ZC+szpzqku+rnEDldE1q6eq0v7A9dPOZBGvTrq69GojOtmaH3eoOBxr1Po+vQDAVNUgzEr4PRIzU8qmsZsdq13KksZ7yhSlA2nlULw=
+	t=1780817527; cv=none; b=gY7CsIo4b5Khze3DC0kVMGVMeQ707kjG/zTA/G/9HgJYJ4wJ0Ddzlg9x1yijY/pJEY+nUGQ67xWA8uch7dVF6kHUMiku6fi3RMc0zHwaxgiBxNFG/ZHZ3WPQIRMtXWgfi5JXB/ZkdTCqgHhr2aV8+aSwH0E+3PoEAirhinDn9QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780802294; c=relaxed/simple;
-	bh=dfwSTvbnHGvgpLt+wnY+kAtzl81S678G2gZZxGXuO7k=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qSTdeL7pf5vQvOJLHubKTxfdQW36v+yNpBkF3KGzX0LrqeoUlrw76U2jb0a2p4wSIoItszxZlcvvuxO/Vtu4CdoZM9wI0/ZY6P+xNkRrerfadnnlbGCeAr9zXQTg78AXKOzts1yOgF1BwGd7di2ThQuB77XYLwuha1mKEfoJKe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTcwXdOf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0406C1F00898;
-	Sun,  7 Jun 2026 03:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780802293;
-	bh=e+a3rt7IXpJQxeDsqJ3KaC9poX4kF/j5ljYl2cP8JA4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=dTcwXdOfQK/50WEYdu7SjQq8tlIDigumKc7YeIs0j5G1keJgMKbTPfSnJ9kUvy13F
-	 hD5vL37DuoA/xnwSTtgsMSMQ7heyFvHn1G7JlgNNydO+abB3rSNj4jXFqwgumLaRaW
-	 FzjdpTRy4tRKY7tuCrLhfAaJVFW/uuMr5Ur2Vs0sH99F/QHzdP3VtpQN4wAJzGwjRK
-	 /pk4QWP6K598J9L7kAziGhEUbuU5fGp2PwX0IIerRWCDqCD1gN4+MgIWsse7xZShyL
-	 6asKXsjpL62NvRoCcWNgFS/DZfyQlhUN1fB0anT1wRmipJ7MREnD7F1QuG5yeBoXtn
-	 YHUN46K8sw/4g==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 0B1B0F40083;
-	Sat,  6 Jun 2026 23:18:12 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Sat, 06 Jun 2026 23:18:12 -0400
-X-ME-Sender: <xms:8-Ikat5UJpX9AYNxqDkSmY611eIrg95bDeHclVuqp7UAwVQayH4ClQ>
-    <xme:8-IkaltqyI31lri_nCeeTYqo5v6QDwrMn_feJKKgMxZO3YalFblAEhJNRH53Kcgap
-    T25Vbl8LVp_673me4DxzLIQxIO9dbrVHjeyhA16jxfxTz86wCMjelOB>
-X-ME-Proxy-Cause: dmFkZTGKPM1P5gY7wUdk9yZXrGE9fVFIMiG2HI6QMkwz6YchHHjaahLa9IkWjDTGHJk0D/
-    pZX03WBGUJfS49s9w8yQX6J6uIhRjJ1lmP3DheNMvJ8LOF/P+ah8xuulnYtdO/qdZ6/q9L
-    Byr3rLElgspOeJFuAWm7+o1A02xoqI8rKSWQ1BnyINH2Eod+abkwLZ9zBpQQN6VkNUv62r
-    p9TzG1wIqRW361bI4t3dAz+0/GNZCFf5G9AadUVwrTjHKTTluaBvl0SvY9N+PId3JRdEpW
-    wviZqYem67fX+0uzABEBk/bnXk8IiREFGxyR2GD3abdX7lB9NMDGoxjrDYpE588Uh8FMFr
-    Ef5Dc7+K7I5tI3uazeBPpCi+MoKSuT14PkFRUpPmHPpKkZWe8n3vx1QrKAykbEvyAwCk40
-    //Ekhj7wmWBiPmOa7uLQs4fYDgbyKNsdweApIquXS0Dt0tmynr1SM4MwZNKVZsx/a7MPeI
-    UqIgZqCJLcMhXJ/vIEJ9w04DzKOVf7b3PLuqvLZgUw4C46rTvQFpLlvzKxiIjtZ6OWoZVA
-    tn20ZOpLF0Lqk/lYtb5ZvsBXWotCZB43Z5dqoqJadFJ8E5FHrst4WGr1ZzjsAXJ9LPzet9
-    rx5BeNF361lO5m8DqlkEK6dmf89AgU/hBC67wUu3d9XcyWgPF+svhNK6JBUw
-X-ME-Proxy: <xmx:8-IkajGd8fAY_Wq6uiX-PTy0GElLsubugHBn0IDJ2G-jyclAmRL7Vw>
-    <xmx:8-IkapRNQhXkTxSr1Ul_jGuLNnhTX4Ki-TIeIhPNPohgv9gwuvci2Q>
-    <xmx:8-IkagtIl9Ejf4kwm1ROrP9WVyXwlkMF4kuShzGEU2hw1dsV5bfF6g>
-    <xmx:8-IkahLQuBP3_tjYxI8bbt0aSl7erjY2727HzkMiOf2cULf0hnO9Hg>
-    <xmx:9OIkalke_CUefLlq0pYEHYbnzqqBHqB6F0Z80U7y7ogfqzrocJAm2ERU>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DBBB8780070; Sat,  6 Jun 2026 23:18:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1780817527; c=relaxed/simple;
+	bh=X5iwO1FACE+1+2xU8oc4DOo/3EV26eWzaAKzM8GlpEU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NuznCVJEP9IA1U+ZvNodLQ5waFZnLMFciW7aLzxVSCoAZb9etkkRsqFmczPhrYIWIae7u/lbDDxlQWGwd4gNKg43l/4NADZAz8iXlLKDO0Qes/9sIMwKPhcGNNqSekbQOe4xS8YZ+Pf9QBN0JNz0tEuXDNeCdlBQL4s68rCyg6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JeSeoNzw; arc=none smtp.client-ip=209.85.221.44
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-45eecb8bf67so2393305f8f.2
+        for <linux-nfs@vger.kernel.org>; Sun, 07 Jun 2026 00:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780817524; x=1781422324; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DGsP3mPndPhYcXEi6EgFHfHqDO/gbUdhLXTqxEZxCZg=;
+        b=JeSeoNzwJH5dwinLL9rqqjEirJlPeXDYaaX3feCcHFOXrYUT0oW4zTEN4GZMcSOSxY
+         U2DruBakXr3XDS5VjO6ReL2aVA9q2vNuEJodZI8AqOcO+DwccaJCSs4C/GgUzdnKn+ZL
+         Udnv6TbvdKZ7GtIvKGCYaZ0S5ckaOezQahhxPH52UAGGxSxN7f7IrqfqPx5BSbJ7TVy4
+         tvvRo7A0I8/DZEfFEpxw0Fj8OTzul/S5PPpe9jJcB1f54jhAVmvr1cRbhOx+teFbu0jX
+         b2ZC3KIgOKeIgrgjjCf26hZ4ydpsQbkzJtdFU22ckj0CurdtjRlJqOa3/8lkHeffucdR
+         MqZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780817524; x=1781422324;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DGsP3mPndPhYcXEi6EgFHfHqDO/gbUdhLXTqxEZxCZg=;
+        b=dSZTmbsukEx9MDRdcjkCkM6By80gsTm8W42339OAmq0LK0mrQ3JbvOJyPrBvoTiIc2
+         Tk5LLHo1jf6ZtIrMbnQLojEXccvVKiB4BG44cxf3b3FnV/Nmvsee8FWY6cfW8B2kWQZH
+         DuW5TI1YWgx7MRMKo8Guvg/yffYWdmwABp2EDF9oToaPrx75YNreSfwPaAkEEakMFRWr
+         cGvY4hBEMqAQaniSBMQd1O380PEi2wCW/CP4xzeIKbowPPCjOCrSoQluVB1zwzpgumrS
+         P5gibrHdiNQDMuSZ4NgAy0EA1JFIfV3k0DXPQT6Owkedez9TAnNpN+3cnKcftk0j7I7K
+         ANVg==
+X-Forwarded-Encrypted: i=1; AFNElJ9/UcR02aAXrR5zr9289Yl9KDKOEPYMtLu6626Si4nFktSFpS0+dJcNFs0ABoDvjRM4wecnwNmZeXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGv2gZboh4+8+q3F2DTPKAk+dopi6TTRXq+ANWLp2MoYcY3yv9
+	YC7dv9+MsNdlsHtHmg5kb/Wy2taKm5UAV8tj/I7vDwjTM4ETjDDpFkel
+X-Gm-Gg: Acq92OEN1YXJ66LtCg/uWRdEbahtYVh/KzEBuvxXGhuwS6spVSkUsWzUBL6zajhkaza
+	G79SzBWhuJO2N//Brf/lSuKcSo37/kx3KQ+jklWQU21+V8pFQK/Ptm2FLlnWQYVo59EfzkS8xAA
+	SE6hnthHuPHPdGnmnoo2u55f5nSwghZd9FLIObXkuicOP517hLRyxSs5UFfvgh58KPAjyB0VTzs
+	7nCSsFhz+iLB6kcuKDmqlESww0jeQrM4QxwEITVN0mvM+iTiaSdN+gdQ3p9VjHVlCO1FZi4P93R
+	iEkHMrl66OHTe69IMKHbnz7AgeW2vctWdaNJu/vuUNlCERFzTQG40FoCGPpyLQ2PqTmKOqAvAgL
+	ZLvj76fQPOSmiW9lcH1WI00/bOPbbmnNFGfuqk8mp0U5Cu8t+zMeMZlcGnENDfZJbI7Jc7DSV5E
+	ZIKxaaJHCgNc+m2eR89dVRmq7GQ9Yc8mLc376cDhnZV34F/M7c/LSo
+X-Received: by 2002:adf:e30e:0:b0:460:1233:ecf2 with SMTP id ffacd0b85a97d-46030609798mr12570199f8f.30.1780817524257;
+        Sun, 07 Jun 2026 00:32:04 -0700 (PDT)
+Received: from puck (234.243.199.146.dyn.plus.net. [146.199.243.234])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351d40sm40459372f8f.26.2026.06.07.00.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 00:32:02 -0700 (PDT)
+From: Dylan Yudaken <dyudaken@gmail.com>
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Cc: axboe@kernel.dk,
+	io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dylan Yudaken <dyudaken@gmail.com>
+Subject: [PATCH v2 0/2] nfs: support FMODE_NOWAIT on O_DIRECT reads
+Date: Sun,  7 Jun 2026 08:31:53 +0100
+Message-ID: <20260607073155.105314-1-dyudaken@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A0Y1o-4h3gmR
-Date: Sat, 06 Jun 2026 23:17:51 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jonathan Flynn" <jonathan.flynn@hammerspace.com>,
- "Mike Snitzer" <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <096a2b91-7a19-48da-a06a-dc60e7150956@app.fastmail.com>
-In-Reply-To: <65a2cdb132b0c28e69a29955e3bd37e7@mail.gmail.com>
-References: <20260606035722.83175-1-cel@kernel.org>
- <65a2cdb132b0c28e69a29955e3bd37e7@mail.gmail.com>
-Subject: Re: [PATCH] svcrdma: Cap Read sink allocations at PAGE_ALLOC_COSTLY_ORDER
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:jonathan.flynn@hammerspace.com,m:snitzer@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:chuck.lever@oracle.com,s:lists@lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.dk,vger.kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22342-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22341-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,app.fastmail.com:mid];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:axboe@kernel.dk,m:io-uring@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dyudaken@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[dyudaken@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dyudaken@gmail.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CBAB464EBC1
+X-Rspamd-Queue-Id: 667B664F043
+
+I had noticed that io_uring always punts O_DIRECT NFS reads to a background thread
+since the file does not advertise FMODE_NOWAIT.
+
+I am not very familiar with the NFS codebase, but looking around suggests a simple change
+to nfs_start_io_direct is all that is required to properly support this functionality.
+On the request issue side, it seems everything in NFS is actually run in the background
+(post this lock change), and the completion codepaths all look to have no similar locking
+semantics.
+
+I have restricted this to read-only files initially, as the code paths are simpler.
+  
+I unfortunately do not have the means to test the performance improvement, since even
+without this change my local network is the bottleneck here.
+However I do suspect that there are people that would want this fix ([1]).
+Applying a similar patch on that GitHub issue did give performance gains.
+
+To convince myself this works at all I did trace io_uring events through with and
+without the patch.
+Using a test app ([2]) to issue O_DIRECT io_uring reads calls io_uring_queue_async_work
+without this patch, while with it the call is skipped and the completion is queued into
+io_uring directly from nfs_direct_read_completion.
+
+Patch 1 here adds an unused nfs_start_io_direct_nowait which patch 2 uses in order to safely
+advertise FMODE_NOWAIT.
+
+v2: Suggestions from Sashiko:
+* Handle file flags changing
+* Do not use mapping_empty anymore as it was apparently racy
+  
+[1]: https://github.com/axboe/liburing/issues/1499
+[2]: https://github.com/DylanZA/liburing/commit/264c06f1939dfd6b6bc4c967ada5960c4f4f2db3
+
+Dylan Yudaken (2):
+  nfs: add nowait version of nfs_start_io_direct
+  nfs: expose FMODE_NOWAIT for read-only files
+
+ fs/nfs/direct.c   | 12 ++++++++++--
+ fs/nfs/file.c     | 16 +++++++++++++++-
+ fs/nfs/internal.h |  1 +
+ fs/nfs/io.c       | 41 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 67 insertions(+), 3 deletions(-)
 
 
-
-On Sat, Jun 6, 2026, at 1:35 PM, Jonathan Flynn wrote:
-> I tested the PAGE_ALLOC_COSTLY_ORDER change on the same setup.
-> Unfortunately, it did not improve the regression. Throughput was slightly
-> worse than the previous GFP_NOWAIT test, measuring 25.4 GiB/s.
->
-> Current results are:
-> Original regressed build: ~30.3 GiB/s
-> GFP_NOWAIT build: ~31.0 GiB/s
-> PAGE_ALLOC_COSTLY_ORDER: 25.4 GiB/s
-> Commit reverted: ~73.9 GiB/s
->
-> I added the results to the shared bundle. (including flamegraph)
->
-> The GFP_NOWAIT and the Original Commit flamegraphs are nearly identical.
-> The dominant stack being:
-> svc_recv()
-> -> svc_rdma_build_read_segment_contig()
-> -> alloc_pages_noprof()
-> -> get_page_from_freelist()
-> -> rmqueue_buddy()
->
-> The PAGE_ALLOC_COSTLY_ORDER flamegraph is different. Time spent under
-> alloc_pages_noprof() is reduced, but the reduction does not translate into
-> improved throughput.
->
-> The following percentages were observed:
->                                                    Original     GFP_NOWAIT
-> COSTLY_ORDER
-> svc_recv()                                 76.09%      75.99%
-> 78.44%
-> alloc_pages_noprof()             58.07%      57.99%               40.29%
-> folios_put_refs()                        7.15%        7.19%
-> 16.06%
-> svc_rdma_read_complete()    7.18%        7.21%               16.08%
->
-> In other words, the PAGE_ALLOC_COSTLY_ORDER change reduces time spent in
-> the allocation path, but a larger fraction of CPU time then appears under
-> svc_rdma_read_complete() and folios_put_refs(), while overall throughput
-> decreases further.
-
-The two failed fixes demonstrate that the current folio allocator is
-not up to the task -- the problem appears to be on the release side,
-where the individual pages have to be merged back into an order-4
-compound page. I don't yet see a straightforward way to make it work.
-
-Since we're right up against v7.1-rc7, I've added a patch to nfsd-next
-to revert 18755b8c2f24 -- it will get pulled back into 7.1.y as soon as
-the v7.2 merge window closes in three weeks.
-
-
+base-commit: a2be31abc3fac6a20f662f6118815b9c40c371c9
 -- 
-Chuck Lever
+2.50.1
+
 
