@@ -1,214 +1,232 @@
-Return-Path: <linux-nfs+bounces-22345-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22346-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EnnLAZyAJWo3IwIAu9opvQ
-	(envelope-from <linux-nfs+bounces-22345-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 16:30:52 +0200
+	id kID/N1G0JWroKgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-22346-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 20:11:29 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FBC4650C2D
-	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 16:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B237F651352
+	for <lists+linux-nfs@lfdr.de>; Sun, 07 Jun 2026 20:11:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=rikHmvum;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22345-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22345-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=hammerspace.com header.s=google header.b="WXnG1/ja";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22346-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22346-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D6C4F3011861
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jun 2026 14:30:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9502B30071FB
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jun 2026 18:11:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA153AB284;
-	Sun,  7 Jun 2026 14:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5E6A2868B5;
+	Sun,  7 Jun 2026 18:11:21 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2F12192F4
-	for <linux-nfs@vger.kernel.org>; Sun,  7 Jun 2026 14:30:32 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780842634; cv=none; b=Mq/eAXi2pEn2gI2C+cXNPYApdh6Je7bNNTn2kWYpPqytnR1Hi2JfnIv0RYRGkGoOBgsqp/u7Uu+YyfsCTf1Dq0yaFqD/hok8Tir7ZXRq6PS5HIy5NLpMgQBL4NGRmbUviHu6HjjeV+aSggifCz6ankLLRu1ztXEjMQlJrPirlBg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780842634; c=relaxed/simple;
-	bh=jhKvuf87blY8UcM6bWSk2/kwYyj366hQ+mQPv4mEaIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kGnVHd6egZkg3LUkqheGWWpibTHbbfz1/oZLXnvvR9D5CDTqSxgaP6tLeJkVVsaW/+kZ/RnV76qZRhKifUUZZO8BsrohrpSkGhYDj6ImgBCqScXJZwFByyAg1lVXZHeTOOApQIMxe/yQc8nbLlqHWun9T+L5LTGN1ifk6t6ARjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rikHmvum; arc=none smtp.client-ip=74.125.82.169
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-307263ad0cbso4372051eec.0
-        for <linux-nfs@vger.kernel.org>; Sun, 07 Jun 2026 07:30:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98319313539
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Jun 2026 18:11:19 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780855881; cv=pass; b=mM9po0oHUAvpqBPaEl0PBDunsE+IXENT8btVBbnZB4fw27XKvIqSeiTCGrxYusvGmJaKglVDKA9eKZoxNiBsjYMIR4TXKm3eQuznFhAqOZ4y2nKlsZN1zymHg95y3vWtYy0dr7GMbuvqMYyhhlLgHy00cMpEphN+rvKVo1brYVE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780855881; c=relaxed/simple;
+	bh=NsCwZGmg5H7s42g9hbQh/NsDLVrnqm9r9v4MIl+ABNQ=;
+	h=From:References:In-Reply-To:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=unLwtMZTeioOfTJd/4Y2+UEvyVEOIQ2PSmQ/P9a5qPi+tv5rlMaDzBdQbZjCW2Wz9RShLt7yFGvRBiU0WxZ00xnXvuJxwu7txX0CZJkJg7qtMRwS9QYfea5pN6jEL8BERZrIUud6syVCFla4qTv77fPeVqfCi4j+S9HycTtICuU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=WXnG1/ja; arc=pass smtp.client-ip=209.85.221.50
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-45eeea039ebso1807692f8f.1
+        for <linux-nfs@vger.kernel.org>; Sun, 07 Jun 2026 11:11:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780855878; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ThUB9tkd29MizrfYq31CTKGiFnpC4qcX5C3XbMXeggD8NHRBRu/6nMRPoRm/IqMUT1
+         UEuvKCJoFBAycQDF8TkV4b+uRiyp/UCUVZ45R+em6Ucywxr7XWjU4/qXX3WPB0tNdXER
+         W/V+rU9hIx0idK7zl3qE71rAPxBSnNF4MtS2BUTWW/0+3KAL9m5/OiR7Yme4POhmHYBI
+         qC28I7x+f8pnKnRIcweLo4JSOn//hdI7wT+EbAfqQVARXyYfPj9FBz/sPW7hpKX1dnsZ
+         UoAxZI4cgyFHK597KyXUwAZt3KJxIQdr0MUneuf/kDXzEpKdaUyxCnCBiUj2W/ep0sPY
+         /+Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
+         :references:from:dkim-signature;
+        bh=V2dxyk081x1MpYrLgdjAI7OK69gzCevFIsf/WudvfOk=;
+        fh=zclRT0AL/VU5GNEzXpWBMxRZa9n+H0QFGVGjNlhFdfI=;
+        b=ej8CK2xoDf9WF8mGa7OSUWvVh0j38lESMY6wF9H8darE+VhWwReMNIldLjJclyPIOg
+         8D9xFrKhSo4b0z2DbPCxkV7ZXa7nIDWj+svc/UNqMnZgXrn1eJsNTkyZHHsDLmtkwCKA
+         7Q0vuI+in/GyR0N13H6T85K/lMNrFc60n2lkO/wiOV6KYBkdSN/CRZWqb/XubAXpAXGn
+         QJpcigu92YIhCmWOI7SHxDMCWr5DZe2Lvo3UB3r8c0izsE+jIZnkiyPvS3tBt8d8fC1D
+         TUJZblERXMsA4UmTititNn9BOi5aw5MUy7TQoUuKsUG83oxmKqwfWseiD527oWqOGnNy
+         lJOg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780842632; x=1781447432; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xC257ewUKfDYJVMQsrZJfk16s5TkiUCPUiK/6hLTZKs=;
-        b=rikHmvum5Y+4ZSgjcfLqzcYCovQIqvd9WyjbGJmPB40N3AT6JJDKl+siTZP7nIoXGQ
-         5bzE2rAxZV6XPbprYhyO4p5xxNdkoCx1uQrjnepDyHCcWDRt+g6H+b7H67ibcNkBKA5f
-         /VNxICbf5ZvEzNEmxM47xBMNEzI3wvGKAPt8mYSA8t1DhsHStwEIa3Pi+WjFzUxRI7CK
-         jOSBCuFjJf2CY9BgjSx+EHWPB6PioBt/0EYU77HiaPGvH3qlGlZ2FV4RPg9+L8C5DEXM
-         fuWGsOZDrul1ipSGY77M0Yj729JbkW4i1z+Ier12OsnvsfBgMtw49xW/J10boe1Dz5xA
-         C2Cw==
+        d=hammerspace.com; s=google; t=1780855878; x=1781460678; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
+         :references:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=V2dxyk081x1MpYrLgdjAI7OK69gzCevFIsf/WudvfOk=;
+        b=WXnG1/jaSTaU+zTuFmMe80BqoDJr8Y3t9yYV3iWofBOyfhHZ9Am4WQZ6J39hasUiER
+         /NLO1Qhfh3/df2zlXYLjqiw3KjYn8Vu1haK345fHFQ/wxRajWUacVkvr30w2+WeYKVD2
+         sm9NpMajUCoRZM0E3AyMK+U8sCUFi16RUbhOHl9SagdVRKMubWYgssftpkaXGensekGK
+         Xg6r3SlBWbBzkz2eqgImj4AVsuN+ZY9+Km4uWBtACpcnx9rUZ5KK3h5yT4bI41EOZmEy
+         5GzQxcuSNYUv1oU0AaJjM6Zl0KYDTcwIcbHG8CuAyMG+A0VQATnqCZQm88xi1JZTWTNd
+         04Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780842632; x=1781447432;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1780855878; x=1781460678;
+        h=cc:to:subject:message-id:date:thread-index:mime-version:in-reply-to
+         :references:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xC257ewUKfDYJVMQsrZJfk16s5TkiUCPUiK/6hLTZKs=;
-        b=U5tDjlxPvVXJUSeU4569pU1BtIHp33ZWRmLDQKbYipOjaVxNSLuwZiUERS7sRi1h7l
-         +k1UWwkhuW55zlLUP8Z2QD6FOeHHJFMh6DRnuoC7xTvOBvy9xph39x8vOBzvR30hRbNJ
-         NwEFo4rrnXGDIs3wBic7pZlkbF5LW0Dse00LJqPj0l+FLh688tHvO6bRzezazE7lF+uR
-         x6KNhp9z6iyy6nxwvmBWqsHRSDQuJCU/xB47N5fkPGAZ9dxRU5Vy89/SmKzg+zHdLty3
-         RO/GFmNKzOW7O2jbfEe3iWD00saKgKnZkDNIJYrdMRyU1ALJ0JVW6RNmyq4d89SA+n1v
-         Hs3Q==
-X-Gm-Message-State: AOJu0YzyP1C/w9m2xkdNIFsg9Qp1/zpfQC8W4egZfmk1TZwl9/p33WlC
-	7ZEIYZq6OEKh3HIG/cQ1HxllL5TxFfMWZIRdA2dDeA28WPyyAfNGfWProPvnJnkoRLGI+g==
-X-Gm-Gg: Acq92OHetnqiGAILCgewkjdzZsvTCJi7Mnq5vh62r0CfLUIC2+Q8JkAlirt4GH1odZ5
-	MfEgJ0LZJFXSte2UzgWRjZMaQHfZSMKcjrvW27GRAovHoLHETJXazkB8c85pZsZP7uOAJMdLT9p
-	mGconHYveXe/19O5aJ3DOuNWo6e90Rzk1uS11hLbNLKEgjjaFCfryh/vfuH//VCmW0UgnmaZRbF
-	O3UUDkACMb9NfZEwauQyZsL7k5k5Lfscrt0vF3389KFiGyo1KX1FC1fJ76uBCkK9UYFBRWXR2gF
-	Ytv4m4cZRyFTBHIdhvti0MgRU7j14bEMIK+pwE5qorEhUu2BFrisz6dIz3R1tfgIFRn6X9ykq4G
-	8OlhUpoLnR4PiZdi+afBkoDi9V4ynxB3HvSFLGt2j2zfOAhNdsjb3eSWEQM2Ap7xmRHCH9Xy6WC
-	Yx4k/vxr6NtUWB82mzbiMzAcVKDxxhnkHTKBm2K9ELtnwDi1vwUNoErndIhp5GqPKFmmFwtWvya
-	lq2wNM=
-X-Received: by 2002:a05:7300:7313:b0:2be:7fc2:fc38 with SMTP id 5a478bee46e88-3077ae89f68mr6415323eec.5.1780842631458;
-        Sun, 07 Jun 2026 07:30:31 -0700 (PDT)
-Received: from fx.tailc0aff1.ts.net ([206.206.192.132])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074db5610esm13877187eec.4.2026.06.07.07.30.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 07:30:30 -0700 (PDT)
-From: Weiming Shi <bestswngs@gmail.com>
-To: linux-nfs@vger.kernel.org,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Weiming Shi <bestswngs@gmail.com>,
-	Xiang Mei <xmei5@asu.edu>
-Subject: [PATCH] SUNRPC: check rpc_sockaddr2uaddr() return value in rpcb_register_inet4/6
-Date: Sun,  7 Jun 2026 07:06:46 -0700
-Message-ID: <20260607140645.2198574-2-bestswngs@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=V2dxyk081x1MpYrLgdjAI7OK69gzCevFIsf/WudvfOk=;
+        b=FprGf1dmNf/hIjDEo3QmS+qBv44RMktxPG5F2g9DgPOkLEuWUL1MKUklqWYlGwMoBZ
+         PfZs7j6tYcWJHPgTIRI6/buzIgMuj3lcijE3nsRK0UcgkyMgKHRe++5JADmuQSXdy00z
+         I9104tNGshTGxKjQ0VGhtOy7yFaCscugdWLCFDulLQzfTKjWSrwurkInlTTEBjUSKW6e
+         UkrI043jaUjZNCF/NanNarCMx31JLpkZoyPYE4IS/EGlyL27Nl3FlhmA/Oga3ytwVV90
+         +aGDb6pi25mgGAY6kK/qCfmosCuZW1inzjT0ZAe/y4K7bowpr4jzytchPnvRsLJmP77r
+         6X8g==
+X-Gm-Message-State: AOJu0YxVAifnbuivE+pkq19kXahaEgviOFWsfQTqSYwItZQN2PWKJwlp
+	eFhCr0wLcGMjXPPCGfpB7wciM5HpffK0QsN6HVFcYXW/q6ER8winqazA9G7liw84kUSMQA05/n0
+	ZxeGeIbWB/aKHb1pvD1BGLUZrNE18EMiT6F3JcEGHmy3oT35QRZgf
+X-Gm-Gg: Acq92OHgU3gHD5wqw08NNxgPhew26QtLVwx7d1HOEg5VNXESa30qyV62yltdP86jjhn
+	33uckAn5ArQNim5L2q0/2ILxRF2LyMFJNk+UwDN+nYXaFGhEPa6kfzjC/AC9tc9n338YR6Lmuaj
+	V1P3Iq76D1EOai5vCFqkm2Xcy7iszcRVI2xTLrqrU4ffffWg46M86kFfQBw5vdgwvgrQZLCWS0d
+	np8qGOGosEZJiLUYty88mq4bZnNNqMelUklAP9XAE7REtUdLbgUSJH8PuQOXoeR/co0SSRDs/AL
+	EqWfroosRyYy3c4tT1TtLW9/jRc=
+X-Received: by 2002:a05:6000:18a5:b0:460:1967:abed with SMTP id
+ ffacd0b85a97d-4603063c55dmr18750198f8f.39.1780855877749; Sun, 07 Jun 2026
+ 11:11:17 -0700 (PDT)
+From: Jonathan Flynn <jonathan.flynn@hammerspace.com>
+References: <20260606035722.83175-1-cel@kernel.org> <65a2cdb132b0c28e69a29955e3bd37e7@mail.gmail.com>
+ <096a2b91-7a19-48da-a06a-dc60e7150956@app.fastmail.com>
+In-Reply-To: <096a2b91-7a19-48da-a06a-dc60e7150956@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQMa29E4u4Im5YIb7ViXmqyooY1UyQL8EEwvAkqTvJezjWPcAA==
+Date: Sun, 7 Jun 2026 12:11:15 -0600
+X-Gm-Features: AVVi8Cdu0VGe4NEPfyxatTz0Fl-QTK-ZRK4b4WC-NSjqjAgiAL9y3iGuEEgGWKc
+Message-ID: <511ac3ff2c4bd019aa2670b2dd1bb0c8@mail.gmail.com>
+Subject: RE: [PATCH] svcrdma: Cap Read sink allocations at PAGE_ALLOC_COSTLY_ORDER
+To: Chuck Lever <cel@kernel.org>, Mike Snitzer <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[oracle.com,kernel.org,brown.name,redhat.com,talpey.com,vger.kernel.org,gmail.com,asu.edu];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-22345-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bestswngs@gmail.com,m:xmei5@asu.edu,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[bestswngs@gmail.com,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bestswngs@gmail.com,linux-nfs@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER(0.00)[jonathan.flynn@hammerspace.com,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:snitzer@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:chuck.lever@oracle.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22346-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jonathan.flynn@hammerspace.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,asu.edu:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mail.gmail.com:mid,oracle.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4FBC4650C2D
+X-Rspamd-Queue-Id: B237F651352
 
-rpcb_register_inet4() and rpcb_register_inet6() store the result of
-rpc_sockaddr2uaddr() into map->r_addr without checking it for NULL.
-rpc_sockaddr2uaddr() returns NULL when its final kstrdup() fails, and
-the unchecked NULL is then carried into the synchronous RPCBPROC_SET
-encode path: rpcb_register_call() -> rpc_call_sync() ->
-rpcb_enc_getaddr() -> encode_rpcb_string(), whose first statement is
-strlen(string), dereferencing NULL and oopsing the kernel.
+> -----Original Message-----
+> From: Chuck Lever <cel@kernel.org>
+> Sent: Saturday, June 6, 2026 9:18 PM
+> To: Jonathan Flynn <jonathan.flynn@hammerspace.com>; Mike Snitzer
+> <snitzer@kernel.org>
+> Cc: linux-nfs@vger.kernel.org; linux-rdma@vger.kernel.org; Chuck Lever
+> <chuck.lever@oracle.com>
+> Subject: Re: [PATCH] svcrdma: Cap Read sink allocations at
+> PAGE_ALLOC_COSTLY_ORDER
+>
+>
+>
+> On Sat, Jun 6, 2026, at 1:35 PM, Jonathan Flynn wrote:
+> > I tested the PAGE_ALLOC_COSTLY_ORDER change on the same setup.
+> > Unfortunately, it did not improve the regression. Throughput was
+> > slightly worse than the previous GFP_NOWAIT test, measuring 25.4
+GiB/s.
+> >
+> > Current results are:
+> > Original regressed build: ~30.3 GiB/s
+> > GFP_NOWAIT build: ~31.0 GiB/s
+> > PAGE_ALLOC_COSTLY_ORDER: 25.4 GiB/s
+> > Commit reverted: ~73.9 GiB/s
+> >
+> > I added the results to the shared bundle. (including flamegraph)
+> >
+> > The GFP_NOWAIT and the Original Commit flamegraphs are nearly
+> identical.
+> > The dominant stack being:
+> > svc_recv()
+> > -> svc_rdma_build_read_segment_contig()
+> > -> alloc_pages_noprof()
+> > -> get_page_from_freelist()
+> > -> rmqueue_buddy()
+> >
+> > The PAGE_ALLOC_COSTLY_ORDER flamegraph is different. Time spent under
+> > alloc_pages_noprof() is reduced, but the reduction does not translate
+> > into improved throughput.
+> >
+> > The following percentages were observed:
+> >                                                    Original
+GFP_NOWAIT
+> > COSTLY_ORDER
+> > svc_recv()                                 76.09%      75.99%
+> > 78.44%
+> > alloc_pages_noprof()             58.07%      57.99%
+40.29%
+> > folios_put_refs()                        7.15%        7.19%
+> > 16.06%
+> > svc_rdma_read_complete()    7.18%        7.21%               16.08%
+> >
+> > In other words, the PAGE_ALLOC_COSTLY_ORDER change reduces time
+> spent
+> > in the allocation path, but a larger fraction of CPU time then appears
+> > under
+> > svc_rdma_read_complete() and folios_put_refs(), while overall
+> > throughput decreases further.
+>
+> The two failed fixes demonstrate that the current folio allocator is not
+up to
+> the task -- the problem appears to be on the release side, where the
+> individual pages have to be merged back into an order-4 compound page. I
+> don't yet see a straightforward way to make it work.
+>
+> Since we're right up against v7.1-rc7, I've added a patch to nfsd-next
+to revert
+> 18755b8c2f24 -- it will get pulled back into 7.1.y as soon as the v7.2
+merge
+> window closes in three weeks.
+>
+>
+> --
+> Chuck Lever
 
-The crash reproduces under failslab on v6.12; with KASAN the NULL
-dereference surfaces as a fault on the shadow of address zero:
 
- Oops: general protection fault, probably for non-canonical address
-       0xdffffc0000000000 [#1] PREEMPT SMP KASAN
- RIP: 0010:strlen (lib/string.c:409)
- Call Trace:
-  encode_rpcb_string (net/sunrpc/rpcb_clnt.c:890)
-  rpcb_enc_getaddr (net/sunrpc/rpcb_clnt.c:910)
-  rpcauth_wrap_req_encode (net/sunrpc/auth.c:745)
-  call_encode (net/sunrpc/clnt.c:1966)
-  __rpc_execute (net/sunrpc/sched.c:952)
-  rpc_run_task (net/sunrpc/clnt.c:1243)
-  rpc_call_sync (net/sunrpc/clnt.c:1272)
-  rpcb_v4_register (net/sunrpc/rpcb_clnt.c:500)
-  svc_generic_rpcbind_set
-  nfsd_rpcbind_set
-  svc_register
-  svc_setup_socket
-  svc_addsock
-  write_ports
-  nfsctl_transaction_write
-  vfs_write
+This sounds good.
 
-The crash is reachable when an in-kernel RPC service (nfsd, lockd,
-nfs-callback) registers with the local rpcbind under enough memory
-pressure for the small GFP_KERNEL kstrdup() in rpc_sockaddr2uaddr() to
-fail. The asynchronous getport path already handles this exact failure
-mode by returning -ENOMEM; only the two register helpers omit the check.
+Thank you for taking the time to investigate it and for working through
+the test results with us.
 
-Mirror that handling: bail out with -ENOMEM when rpc_sockaddr2uaddr()
-returns NULL, before the address is fed into the encoder.
+If you continue exploring this area in the future and still see promise in
+the contiguous allocation approach, I'd be happy to help test additional
+changes as time permits.
 
-Fixes: d77385f23830 ("SUNRPC: Fix rpc_sockaddr2uaddr")
-Reported-by: Xiang Mei <xmei5@asu.edu>
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Weiming Shi <bestswngs@gmail.com>
----
- net/sunrpc/rpcb_clnt.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
-index 6aa372188c86..4c0b7fefee4e 100644
---- a/net/sunrpc/rpcb_clnt.c
-+++ b/net/sunrpc/rpcb_clnt.c
-@@ -490,6 +490,8 @@ static int rpcb_register_inet4(struct sunrpc_net *sn,
- 	int result;
- 
- 	map->r_addr = rpc_sockaddr2uaddr(sap, GFP_KERNEL);
-+	if (!map->r_addr)
-+		return -ENOMEM;
- 
- 	msg->rpc_proc = &rpcb_procedures4[RPCBPROC_UNSET];
- 	if (port != 0) {
-@@ -516,6 +518,8 @@ static int rpcb_register_inet6(struct sunrpc_net *sn,
- 	int result;
- 
- 	map->r_addr = rpc_sockaddr2uaddr(sap, GFP_KERNEL);
-+	if (!map->r_addr)
-+		return -ENOMEM;
- 
- 	msg->rpc_proc = &rpcb_procedures4[RPCBPROC_UNSET];
- 	if (port != 0) {
--- 
-2.43.0
-
+-Jon
 
