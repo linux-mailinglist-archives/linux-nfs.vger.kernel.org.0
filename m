@@ -1,65 +1,65 @@
-Return-Path: <linux-nfs+bounces-22371-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22372-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id HYXLOeTkJmpBmgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-22371-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 08 Jun 2026 17:51:00 +0200
+	id fpQvCvTkJmpHmgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-22372-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 08 Jun 2026 17:51:16 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC963658584
-	for <lists+linux-nfs@lfdr.de>; Mon, 08 Jun 2026 17:50:59 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 013A1658596
+	for <lists+linux-nfs@lfdr.de>; Mon, 08 Jun 2026 17:51:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=HGUgH1xS;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22371-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22371-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=EVBp0lKR;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22372-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22372-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 762F03063496
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jun 2026 15:25:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C640232CB466
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jun 2026 15:25:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED30407CD9;
-	Mon,  8 Jun 2026 14:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70E44408035;
+	Mon,  8 Jun 2026 14:58:03 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE304BC00F
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Jun 2026 14:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A69C4A340B
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Jun 2026 14:57:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780930674; cv=none; b=A+rEFlcX6wYDIfHpURpgYQisPVRHOhQWpyo6MmlUmuwMmAz16u92577UHXiUF+dLRvrp+VlX4d9Y/XmQbp/sN7iYfwVlvEdNtuzGWqBdR+tHNXuB4ykiOjeO2uImBzBnlIL78b2w2EKW7irPHNd9DlnHCgWG8omH6cAulWnUEXw=
+	t=1780930683; cv=none; b=bz2ySjQ1FqJidiv6f7spTRkmmv7S7yWcC31Vv64kMjuxIljTV79kkLEh2KoBRTyFbCCTXaHh1Y4e3kjmz2+q3KwaAyxArPA6SSCCG4e1lgxnhsghZLkJg9QAyiKRuIe+0sT9MGJT3sA4VOMZ2CsUVsI9QuoAIuNes9qOI+sLqIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780930674; c=relaxed/simple;
-	bh=cjJNffIha+PwqPaKI1opJkQpu7n2ZDMd7gGUtzCzekA=;
+	s=arc-20240116; t=1780930683; c=relaxed/simple;
+	bh=bwBanNfSNsMTX/vRcxGfGZnrBW8jMtLUm4wrRhxJ10g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uRZ9+H0eLE7zz8fgA+OooSq/w3IfGijK6/F3jzoG9lqrqms6AqfOfZ5Pm//SWB/VY8nxmMfT3XJt7WOyL/FwsUhypeDQgjXFhXSm/o299XMT0EB8jE42rX0alQuGV0FN8opPTggY++UkWIgSEuTP2G5m0hiHNdFAjXqrjSTeEDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HGUgH1xS; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=LLi8Wr4yauzeR7S+4Og9F/FlKspCq6dv+lDumbAoZ9BrrKltNw6kFL2k9m4NNfFbfR6I/HdaSQwcw5lOpWgvjnglLNyOxT1NcFmGaH4Uhn+Y5Eo/Kyk6Ib5AhXRfXkWrfllq9Bi+bnw3r7kqIqAGjSKs3jDXO/k6LjGdLgy7TzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EVBp0lKR; arc=none smtp.client-ip=170.10.129.124
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780930661;
+	s=mimecast20190719; t=1780930669;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nmIXKYZPaEoy+v0EUgnQEN1+1FR/WvjVVNeVAn9uPnk=;
-	b=HGUgH1xS7k6R/XKED/IUnKajig3XnngRAeWjgTHZ6jsi3Zc8JWBg5IkBWdm5EYYT8ShZbG
-	a6JALnhDt+RRsPwh5Xx42b79N1JpBdEsHVx2dhgBunJNuWo41qGaX14FoOF5vqRLvIGbeX
-	XaUVI3P3EXAXAM+B+kXJQw5iVhuWQk4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=V6J+UkGP43uUoUVJ8yoJ6tN7aQvqskLe/EDUX+Vd4Sk=;
+	b=EVBp0lKRPT8/fGmqwBXPtnutFiumsG4yV0oWBV88TIzheIw83AhLisn5YdAI30jZaaY88Z
+	5/XueFGwAs8frUph0hWz0ynjQ4kGthByl60oN37j+7riVcZ6AdHfAOrOC8zHuFTswOfmFl
+	7UH9lHzkbRVQZkPsYWsZ248jeCIA2nU=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-i6wbm1NLM9-IMd-rrbx9Dg-1; Mon,
- 08 Jun 2026 10:57:35 -0400
-X-MC-Unique: i6wbm1NLM9-IMd-rrbx9Dg-1
-X-Mimecast-MFC-AGG-ID: i6wbm1NLM9-IMd-rrbx9Dg_1780930653
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-29-dgSMtIWTOVO0Qc8pU6mIew-1; Mon,
+ 08 Jun 2026 10:57:44 -0400
+X-MC-Unique: dgSMtIWTOVO0Qc8pU6mIew-1
+X-Mimecast-MFC-AGG-ID: dgSMtIWTOVO0Qc8pU6mIew_1780930660
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 34ED219560B9;
-	Mon,  8 Jun 2026 14:57:33 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A549C180061E;
+	Mon,  8 Jun 2026 14:57:40 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.32.43])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48FC61800347;
-	Mon,  8 Jun 2026 14:57:27 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BB0AA3008B35;
+	Mon,  8 Jun 2026 14:57:34 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -84,9 +84,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 20/22] netfs: Check for too much data being read
-Date: Mon,  8 Jun 2026 15:54:28 +0100
-Message-ID: <20260608145432.681865-21-dhowells@redhat.com>
+Subject: [PATCH v3 21/22] netfs: Limit the minimum trigger for progress reporting
+Date: Mon,  8 Jun 2026 15:54:29 +0100
+Message-ID: <20260608145432.681865-22-dhowells@redhat.com>
 In-Reply-To: <20260608145432.681865-1-dhowells@redhat.com>
 References: <20260608145432.681865-1-dhowells@redhat.com>
 Precedence: bulk
@@ -96,7 +96,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -104,13 +104,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[23];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-22371-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22372-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
@@ -128,54 +128,59 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.dev:email,manguebit.org:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[manguebit.org:email,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.dev:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EC963658584
+X-Rspamd-Queue-Id: 013A1658596
 
-Put in a check in read subreq termination to detect more data being read
-for a subrequest than was requested.
+For really big read RPC ops that span multiple folios, netfslib allows the
+filesystem to give progress notifications to wake up the collector thread
+to do a collection of folios that have now been fetched, even if the RPC is
+still ongoing, thereby allowing the application to make progress.
+
+The trigger for this is that at least one folio has been downloaded since
+the clean point.  If, however, the folios are small, this means the
+collector thread is constantly being woken up - which has a negative
+performance impact on the system.
+
+Set a minimum trigger of 256KiB or the size of the folio at the front of
+the queue, whichever is larger.
+
+Also, fix the base to be the stream collection point, not the point at
+which the collector has cleaned up to (which is currently 0 until something
+has been collected).
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Paulo Alcantara <pc@manguebit.org>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/read_collect.c      | 8 ++++++++
- include/trace/events/netfs.h | 1 +
- 2 files changed, 9 insertions(+)
+ fs/netfs/read_collect.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 977b69ac8725..fc62eaef6107 100644
+index fc62eaef6107..fccc6c2d891e 100644
 --- a/fs/netfs/read_collect.c
 +++ b/fs/netfs/read_collect.c
-@@ -542,6 +542,14 @@ void netfs_read_subreq_terminated(struct netfs_io_subrequest *subreq)
- 		break;
- 	}
+@@ -491,15 +491,15 @@ void netfs_read_collection_worker(struct work_struct *work)
+ void netfs_read_subreq_progress(struct netfs_io_subrequest *subreq)
+ {
+ 	struct netfs_io_request *rreq = subreq->rreq;
+-	struct netfs_io_stream *stream = &rreq->io_streams[0];
+-	size_t fsize = PAGE_SIZE << rreq->front_folio_order;
++	struct netfs_io_stream *stream = &rreq->io_streams[subreq->stream_nr];
++	size_t fsize = umax(PAGE_SIZE << rreq->front_folio_order, 256 * 1024);
  
-+	if (subreq->transferred > subreq->len) {
-+		subreq->transferred = 0;
-+		__set_bit(NETFS_SREQ_FAILED, &subreq->flags);
-+		__clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
-+		trace_netfs_sreq(subreq, netfs_sreq_trace_too_much);
-+		subreq->error = -EIO;
-+	}
-+
- 	/* Deal with retry requests, short reads and errors.  If we retry
- 	 * but don't make progress, we abandon the attempt.
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_progress);
+ 
+ 	/* If we are at the head of the queue, wake up the collector,
+ 	 * getting a ref to it if we were the ones to do so.
  	 */
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index 59f330003d02..cc29582f6245 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -134,6 +134,7 @@
- 	EM(netfs_sreq_trace_submit,		"SUBMT")	\
- 	EM(netfs_sreq_trace_superfluous,	"SPRFL")	\
- 	EM(netfs_sreq_trace_terminated,		"TERM ")	\
-+	EM(netfs_sreq_trace_too_much,		"!TOOM")	\
- 	EM(netfs_sreq_trace_wait_for,		"_WAIT")	\
- 	EM(netfs_sreq_trace_write,		"WRITE")	\
- 	EM(netfs_sreq_trace_write_skip,		"SKIP ")	\
+-	if (subreq->start + subreq->transferred > rreq->cleaned_to + fsize &&
++	if (subreq->start + subreq->transferred >= stream->collected_to + fsize &&
+ 	    (rreq->origin == NETFS_READAHEAD ||
+ 	     rreq->origin == NETFS_READPAGE ||
+ 	     rreq->origin == NETFS_READ_FOR_WRITE) &&
 
 
