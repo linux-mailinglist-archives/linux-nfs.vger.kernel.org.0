@@ -1,54 +1,55 @@
-Return-Path: <linux-nfs+bounces-22422-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22423-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DWIiJ8lTKGr9CAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22422-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 19:56:25 +0200
+	id UsuhIP9VKGqGCQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22423-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 20:05:51 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ADD16631C0
-	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 19:56:25 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8490B6632B1
+	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 20:05:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ed5qqzTk;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22422-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22422-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=DNqt93nH;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22423-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22423-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0A95531655B0
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jun 2026 17:50:19 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 69F9E30A2B58
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jun 2026 17:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 895AD331EAA;
-	Tue,  9 Jun 2026 17:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22BC331ED3;
+	Tue,  9 Jun 2026 17:48:19 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6ED4F7998;
-	Tue,  9 Jun 2026 17:48:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95895331EB3;
+	Tue,  9 Jun 2026 17:48:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781027297; cv=none; b=AX6t7LcXczmStqtRN7DTAZ0P97p0dUPpz2WVWH4HgYYdwCo5u6QxD8mRd/nm4hUgozGl2IwwGtJYkgIU7cgL2zvRRLAwHaYT2ORcF7Ku+AvWT4VmhnQavF2qe5UdBOiIhGPjHwosjWMoePk8Jt2GbKLVKB/sKO7kAcjgTv8zEok=
+	t=1781027299; cv=none; b=AnVYKFqDUQBaukWXQbkJ0UgMwHNsTk352n5l/9zwQI/wQs3r5qS6N2Yq52/7KUwVJEFMSa2mfz422JZ3QocS6pSKrNfqXuAqY1G++IEUyjmoBJHCkFolQ7YRl0oE/zo7MrgEpl8JcIfAv0B9tbAH6f6qceOy5VEybmtKZj0R9zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781027297; c=relaxed/simple;
-	bh=837ntEQAfNm8vgCsD7lCToH/PeBWJVyRMgHmiH3X4lM=;
+	s=arc-20240116; t=1781027299; c=relaxed/simple;
+	bh=vg4fY9NMrqXQTacxiPcA7z5kpGDoM2e/qZRwpMvCNoE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=skd6ZlzTCCpEELr1jbeOT87Dn0CYuJik9jz+bLdj5GFANNA89a7BNj9K4xtHIyFkkiktKfYOqswsfNgSst5m3dz4wcJfnNJ43MyKRHuvHyEYqx+Oo3ce8GtF+m7j1ggjWvUBjaH8mU7Fzbgn6e/23cGF4TaCY/DkipR2U6HlQYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ed5qqzTk; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C4F1F00893;
-	Tue,  9 Jun 2026 17:48:14 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=lPCTYIm95eyt4qyuTBweFmA04KlgM3NqtKuqi8CczAm/fNrrzTX6PBAgj2VfAHYnUoXIdbCjE/K8LUxj2J0S+eeT/RRtJYRtscXR3i7F/aXHicojlmMv9DAPcHhxMFapGluJ5lqMHXb7RRSJUABX9r0L8onhDioiaKAdNCAISvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNqt93nH; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A8B1F00898;
+	Tue,  9 Jun 2026 17:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781027296;
-	bh=z2MG07CGdbK8RrBt2Dmld4oo4PTUdCYx+6jkKRUpyus=;
+	s=k20260515; t=1781027298;
+	bh=ry/cRm7P9iL5R89y7+BRhtURJNdG3ZaptPbdfKvXO8c=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=ed5qqzTkxufcJ1ADfIyxzxrXXDJQny9qKUfHOqayoQk3uGtAOo7I+rBKkvP21Vq/o
-	 LL5gnmlqKUjY6UYBrbrvXAyJumWvo8JTlYZt9lwWnRZvKT3C+NHw8ubvmSrpjl92Q9
-	 oJ2O5a2NURt052m5c8heHCSDErgGBncmSF5O0LleFO7oILmnYfRGl/PAk9b8SZt4MK
-	 wQEDK/0kHoLmuK996kIhQb/mXS4QmIE9KmJilm/C+jHoPY1e2kdARKhkv3XmvY08D6
-	 RJkL6FgqflMokcggnkeBnpKWuSD6OgevDpr34R0NEx8bLow671T5zgMLVAZnK4XzsR
-	 e3fXfylxj5J9Q==
+	b=DNqt93nHkU9N59JF41phnPzRjoYYq3Ka6XKuyAnH19SFdcwaYoLcLCYv9LKXiorjT
+	 Bt+qLRZjcZyO3thzIwWcYXq8w+HkOGrqrMT6ThICDvmd0tLodmas72GvFrALqoIvms
+	 Lw0YVBFzF5hGk3P0pwSr1RuSKvP65c+k4BEJuC/GjbqbLndZVejJC7vAMnZ2DwtnYF
+	 WQUeEeDNWsh+a4uKGHqPPTS3KZRsj/Zarf7PH25SsdF04pe5a89062nrGoi6zSbAvV
+	 2RdESEV1RrGxX8iQP1G14G5Fd/Z6hQV6FIrYc0QFI39TuO2QbgW7vCl6t9TfHoK072
+	 mghA5X9W2bZVA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 09 Jun 2026 13:47:36 -0400
-Subject: [PATCH 15/19] nfsd: reject reclaim LOCK after RECLAIM_COMPLETE
+Date: Tue, 09 Jun 2026 13:47:37 -0400
+Subject: [PATCH 16/19] nfsd: validate sockaddr length per family in
+ listener_set
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-nfsd-testing-v1-15-e83acead2ae8@kernel.org>
+Message-Id: <20260609-nfsd-testing-v1-16-e83acead2ae8@kernel.org>
 References: <20260609-nfsd-testing-v1-0-e83acead2ae8@kernel.org>
 In-Reply-To: <20260609-nfsd-testing-v1-0-e83acead2ae8@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -75,20 +76,20 @@ To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1341; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=837ntEQAfNm8vgCsD7lCToH/PeBWJVyRMgHmiH3X4lM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKFG8DWvynzKWOTPC9eUtMYP3ufwu6C+uTicXD
- WYJwut/DXaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaihRvAAKCRAADmhBGVaC
- FaMYD/4wUfRmlnO0ClfBqvSXJH/giZDYnMhJ6I4OQtz3vu84GWIHYDi+p+x0vI3x7sbkPkpU3ql
- a0MR75h8lLbm3LiDgNu92w1cIdCxlalOsc2mI4/oy9oc3BGa9iS5zfvJjF28fzQNe2tVVGJHHb0
- x8oWUuGPfsz98MSMB8IT4RWhM5WSJ4l8+0W9py3saOSRoL2ORa62t2OvFWtVNnSP8LtvSPHm0iU
- E83Qiyy4M0D6kqN5v3NXCLuDJ00MSOKLqKUanmyavHweToA+7F+1LI8claqk4mqgAfzzymMdeyt
- HTOKoSMa1yu/cI6RwbOJnkXD5QIJxrmBfi0c/mv2IIAgO5Z5sMsvEKplZ5T/wOqUCy/zFHQBBZQ
- XG1O04Gi5Oa3Uwis7B/kGhgVHB/fQM9FRf6QDDLnfVLk49A5rCBNS2hSDt6opVPBDXbK8l/e4Ii
- ButzWb51UnRu5hhAshSJSHkkpstr3+CrMECTBBtAge2wRiDzY2DlNa+qyBvR3PUJNUsIpsI23/Z
- N1IHCNsAT8tA0DBYIp2qZ2OJIAHWfK0C4TtXm26/lz/YLTm88oV5HaTFD07o+Uvjn3+kWuzfJ9E
- PXbLqUl9WuqaUpNQ04T5M07J2CAotM9rw/CRFZ9G05xHH9dGqpGchFyhBu89siekHpbvRZdaZU7
- cCGajoJi1dvTt3A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3261; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=vg4fY9NMrqXQTacxiPcA7z5kpGDoM2e/qZRwpMvCNoE=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKFG9FEpsKpWuu3HelMWnFM4EkrSMAUbGUvMK2
+ s+KYl49I/iJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaihRvQAKCRAADmhBGVaC
+ FQUgEACEtGp0vD3cmEsXfs45VMN2HVjUXUR6bfjkXXBoauhxfnNcYgGPDk0m1HEVxjpPq7jRWzw
+ Duai8ZaNWbF2H5y0K+11AfyMrZyX+H4gkVE0yhos+sAuk/UJ4h7jrPMIgQK9L60D6ZsmXRFV1aH
+ ISh4expqdjmUzL4tiEOuTQO/gWq49FR7Yv+Zy8QtZ6lr4TSMhSz8K4ysqRI8ih9UWpEFvzHmF90
+ 15Vfmo5+xg7soYoTt7IfdYV4gOHLvBbK29undxxBTHRX1EXoEo4y8E5g5sUJZ/3amzih4vd8+6V
+ Kd0v6ORU7g2o2XK79Odl63u56FjUDMJrfxaA48KbejCReXO6bWjk3jYbqrFAJs5B0tLu+pXJZ+A
+ KznXAPWgyvPMo1qJdU0YgUGS4v8IUYlj1DLhs2GsydmNlNAL9qYMj6lTtvhDhrZma7wUzT9Padq
+ Q+8yzCk85Dg1zmbjw9n5yqbvC59soIGAzWoCWxYEfag6pVvaNn0Qg6veyZcPmbidWHpile/5ttp
+ yw8i8JtdvHlZvinQ1Og0AXnRF6hNTk97ktsDytS3uHqKkYWHMSvWLOxlNCCxJ9LN1opgfP0gIQV
+ orHGGMABEPPP7CNT7VOfQuf1V/FyJrKTI3+2aBj5zzdeKjTM6ibMVY/p4TUfavJzQ+/8VYF7kpU
+ caL05BbsBerbxLw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -97,7 +98,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -112,7 +113,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22422-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22423-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -123,44 +124,106 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4ADD16631C0
+X-Rspamd-Queue-Id: 8490B6632B1
 
-nfsd4_lock() only checks the namespace-wide grace flag when deciding
-whether to accept a reclaim LOCK. It does not check the per-client
-NFSD4_CLIENT_RECLAIM_COMPLETE bit. A NFSv4.1+ client that has
-already sent RECLAIM_COMPLETE can submit lk_reclaim=1 while grace is
-still active (e.g. lockd holds the grace list open), and the server
-accepts it instead of returning NFS4ERR_NO_GRACE as required by
-RFC 8881 section 8.4.2.1.
+nfsd_sock_nl_policy declares NFSD_A_SOCK_ADDR as bare NLA_BINARY
+with no minimum length. A CAP_NET_ADMIN caller can send a 16-byte
+NFSD_A_SOCK_ADDR with sa_family=AF_INET6, causing a 12-byte OOB
+read across three consumers (rpc_cmp_addr_port, svc_find_listener,
+kernel_bind).
 
-The OPEN path already has the correct two-tier guard via
-nfs4_check_open_reclaim(). Add the equivalent check to the LOCK path.
+Tighten the policy to NLA_POLICY_MIN_LEN(16) and add per-family
+length validation in both nlmsg_for_each_attr_type loops.
 
-Fixes: 3b3e7b72239a ("nfsd: reject reclaim request when client has already sent RECLAIM_COMPLETE")
+Fixes: 16a471177496 ("NFSD: add listener-{set,get} netlink command")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/netlink/specs/nfsd.yaml |  4 ++++
+ fs/nfsd/netlink.c                     |  2 +-
+ fs/nfsd/nfsctl.c                      | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index fddef6f8db7c..7d96bffd2fd5 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -8552,6 +8552,9 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfserr_no_grace;
- 	if (!locks_in_grace(net) && lock->lk_reclaim)
- 		goto out;
-+	if (lock->lk_reclaim &&
-+	    test_bit(NFSD4_CLIENT_RECLAIM_COMPLETE, &cstate->clp->cl_flags))
-+		goto out;
+diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
+index 8f36fadd68f7..9677ba19ffcd 100644
+--- a/Documentation/netlink/specs/nfsd.yaml
++++ b/Documentation/netlink/specs/nfsd.yaml
+@@ -156,6 +156,10 @@ attribute-sets:
+       -
+         name: addr
+         type: binary
++        # 16 == sizeof(struct sockaddr_in); AF_INET6 callers
++        # validate the full sockaddr_in6 length in nfsctl.c.
++        checks:
++          min-len: 16
+       -
+         name: transport-name
+         type: string
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index fbee3676d253..6570960034f1 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -37,7 +37,7 @@ const struct nla_policy nfsd_fslocations_nl_policy[NFSD_A_FSLOCATIONS_LOCATION +
+ };
  
- 	if (lock->lk_reclaim)
- 		flags |= FL_RECLAIM;
+ const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1] = {
+-	[NFSD_A_SOCK_ADDR] = { .type = NLA_BINARY, },
++	[NFSD_A_SOCK_ADDR] = NLA_POLICY_MIN_LEN(16),
+ 	[NFSD_A_SOCK_TRANSPORT_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index ab10692ee937..f3b3154b16c5 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2016,6 +2016,21 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 		xcl_name = nla_data(tb[NFSD_A_SOCK_TRANSPORT_NAME]);
+ 		sa = nla_data(tb[NFSD_A_SOCK_ADDR]);
+ 
++		switch (sa->sa_family) {
++		case AF_INET:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in))
++				continue;
++			break;
++		case AF_INET6:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in6))
++				continue;
++			break;
++		default:
++			continue;
++		}
++
+ 		/* Put back any matching sockets */
+ 		list_for_each_entry_safe(xprt, tmp, &permsocks, xpt_list) {
+ 			/* This shouldn't be possible */
+@@ -2077,6 +2092,21 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 		xcl_name = nla_data(tb[NFSD_A_SOCK_TRANSPORT_NAME]);
+ 		sa = nla_data(tb[NFSD_A_SOCK_ADDR]);
+ 
++		switch (sa->sa_family) {
++		case AF_INET:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in))
++				continue;
++			break;
++		case AF_INET6:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in6))
++				continue;
++			break;
++		default:
++			continue;
++		}
++
+ 		xprt = svc_find_listener(serv, xcl_name, net, sa);
+ 		if (xprt) {
+ 			if (delete)
 
 -- 
 2.54.0
