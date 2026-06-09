@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22413-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22414-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XWKIO7pTKGr6CAMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22413-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 19:56:11 +0200
+	id KuDZK/9TKGoJCQMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22414-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 19:57:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5143A6631BC
-	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 19:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 11A266631DC
+	for <lists+linux-nfs@lfdr.de>; Tue, 09 Jun 2026 19:57:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fRmXNNzb;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22413-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22413-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=InQax+4c;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22414-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22414-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 68DE23053E95
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jun 2026 17:48:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 15C65306EF37
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jun 2026 17:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74BFF4DBD86;
-	Tue,  9 Jun 2026 17:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8362C4DC523;
+	Tue,  9 Jun 2026 17:48:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0C54DBD78;
-	Tue,  9 Jun 2026 17:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC504DBD99;
+	Tue,  9 Jun 2026 17:47:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781027278; cv=none; b=K5owJAZ37oZy8tfNFnuuMh9GMitv0RUjqRgBrCtp9r15+yCmvtbADT824LrXKbIq3Fr7+kYXi7JNxncThutN5tmLP4vvqlZZZzrEfhFja5b/rYJv2yT5bsLA1eLq4Nipv4+bPfCMsIO/u69EuEOs4qqvzlvcOa78edFKW1TrfvM=
+	t=1781027280; cv=none; b=Q9wnGMvFt6hVh2bjDjGUCxiuLLpUo6DUL436lKIasJS4h+tg8EMhKLa9vh7d7jppibpW7uoApqAhT/VQhfBqYtDSHATY83xgo2pjZHd9Sr1A/nV07UUS71XB+HmL23ifiIotdVyHxci+hoeW3vHr9ypNO7g3sXRjC3Q8B9Ula/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781027278; c=relaxed/simple;
-	bh=UcyniYrgdklKohwqOSjznlAOhFMrpAAaEdmtNCcgQzo=;
+	s=arc-20240116; t=1781027280; c=relaxed/simple;
+	bh=xFqxutJ+f4FpSKjLP0lMdRDlzdB3jsc0hGiwqEaTyOI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O3pcN5DsUVv4V7d8QmWzhXXohHkhUxChks5wJOLpnn+V0G4NN1RVnHurEodpbxXGNvdn4mBGPywgOouA1lIRx9Z368dQjYTs5UCCO8OpA99JpPRGuRAIkgc1Y+PsWyIILEtgRE1mFTZg6m5RxkP/B9JDX3ljmQwcaVHXowErddc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRmXNNzb; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A7571F00898;
-	Tue,  9 Jun 2026 17:47:55 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=RAcVsh0jGQ31XPfQTH9nDRlgQMXAFoyOmN+z3k7R1S8iMf1EfYvuzERDqFTaywauY/YswoIfsce+OxtzK3DKobxh28WM71csVKiEe+4W7tCMqLr/DNNMW8gYGKM9T9YBDsiKG+5tsfsQlr3qWDfsWQ63NqJub4U5InTxIy5730U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InQax+4c; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A8781F0089C;
+	Tue,  9 Jun 2026 17:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781027277;
-	bh=oDiaR3AX5VPl8hUvSaDYt8zboOCbbg8Ha08a196qhP0=;
+	s=k20260515; t=1781027279;
+	bh=zokuPcGiysTqXDq3BMFb2Qckz2PASHlXgLW22BFrL3U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=fRmXNNzb7CBob9rEQ2I1fSzL7HBH9dAnyI6v32O2Zjgbyi+6k9FFojcVbLvacqAWa
-	 Nr6jD1eolTe+vldqH2Nv/DBzPRuMjGyP+UImmoPjRFAFvQHjeJSY7ngskQzk3e8LPG
-	 ekx+SDhUMirnrH7iqDHnzH2bkLRrVM16TtIVcfXh2ivHt3LdxMvtmpWkWiBUJPAszv
-	 2P210aSjLiLjGM7v6uoZh3yfQg5Vy2oQL04E8SPjoiC9lyv8Fkm8ISSgjcvLjCnu57
-	 eMrhGT/v+SxcHDnbxgnSMnQaJKWdXAElqSqB6Nkqrksp66LwtBjnseY+eR8SDkwJK7
-	 UKa1hZMckCyrg==
+	b=InQax+4cADS8HfWU+JQA7N5OrGluFfLZYM8eJN2H73ZPC7u9IHU+f1OV0+JDOP1/M
+	 Sm33IOVzcEpS3Em86Kdc+L5MGHmCRZ5F7cRcUlkqAcMFueb/w3jGLQnoTrL/lIU4PY
+	 ygwPSwCwOcw3FKC0PiBpUO2gOjCpV3/e0uqq4kJbNUy5OJA5XpyWeyjGxPP+i/0FT+
+	 2ArGUtkvaNsnJ0+f1pGIGon+GAkkKYCvmLBf9gRC6XkULGiisKmDUjd/DjR7aKsrIE
+	 xNNHhatCAPimoPTnoHU8LiM9pONkfs0zZPjq+y1KCXZWdqWGoCO2zo/WxbFvPaX9Dw
+	 AYOgE0A0ySaxQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 09 Jun 2026 13:47:27 -0400
-Subject: [PATCH 06/19] nfsd: check nfsd4_acl_to_attr() return value in
- nfsd4_create()
+Date: Tue, 09 Jun 2026 13:47:28 -0400
+Subject: [PATCH 07/19] nfsd: add filehandle match check to
+ nfsd4_delegreturn()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-nfsd-testing-v1-6-e83acead2ae8@kernel.org>
+Message-Id: <20260609-nfsd-testing-v1-7-e83acead2ae8@kernel.org>
 References: <20260609-nfsd-testing-v1-0-e83acead2ae8@kernel.org>
 In-Reply-To: <20260609-nfsd-testing-v1-0-e83acead2ae8@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -76,20 +76,20 @@ To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1072; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=UcyniYrgdklKohwqOSjznlAOhFMrpAAaEdmtNCcgQzo=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKFG6fTqxIuedofe151qw7Hw/6SskvBgrvZBPr
- Vm/dmgFPa+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaihRugAKCRAADmhBGVaC
- Ffu4D/wJ/puvzYwLsNEvMqG9Xt3aOqyV9aFaJldl2gMzlfgionKsWG6HK9ii4Kfh1t14b0vvtjp
- fjAowxeEL8SnOO4krF9+f7J5oL72tbOUfBmex1szVU5LvDTieQwFbS3jHtDymwTUZdQezfPjTSk
- /EEfSIgM9egS+5GDDtPEZdDC89yDfy3nPGTQBz87JL0KA7Cw3H2ZWUHq0lL15T3O/x4hGG7XtKF
- E/cluOwqfpiC5o5igeJ2x9uU+wNDWB51NZ/lnzuOrhjwA6A3rqypilY3zJ2oefhODKCCNx141HX
- tG+7icrCdffV+gDkQAhsta2BJLibwR+jF2MR8PNPFRPB988TDSH9rw53/6mIwXyULbFLxB9cwCR
- ACLLKdanpjzWKbpxE7wx8TfIS5UEsKQyn0MQwVwfpeFMITpZseaSsZXlX5otnLP8nTEY0+wS0NQ
- eCtgNQ8N/uuokolou2OtvnbeVI9bknZoT8cx0VIzrXya18jjge5bbvPn0PCM2sYUsre+1KMwO1O
- b2Qq/Nt6guffaFhlgzyrR4WeA2pg8OFmUCLXw3PacU7Gu5L9cxsoIZVAUmROgPhWIfxO7S3Jk7W
- /+Ao321W8RkfxHRWxbUJjuzWxPGIwxhOkDxBNxagI6xI3eCXGstzLLLVY2Evl/GP9IWQX0121re
- SiDyD5gEBaVxXfw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1056; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=xFqxutJ+f4FpSKjLP0lMdRDlzdB3jsc0hGiwqEaTyOI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKFG7lV0p9X5WLeF329VeHtJRWnbRtjBo+9U6C
+ xaaXWyYsXOJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaihRuwAKCRAADmhBGVaC
+ FQ44EAC/SNEO9iPYjMEkAKMMD6NCZv26mdjmz4UzFHlTyezKcoECf2yJkOetcApnKAyIRdR7Qhr
+ oWr7Cm3abInHuaUthcwEm6kSRMBuvjfxIADSBu57HIDLtUScJOeQc9+kZXTbCaysvAhXo6tBkv7
+ c/KPNH81rTmYY1KU0xY9fkqJ1HmopmZi19yP1FJ2RpOa009ONH8ABfIabr0Qv+KXhD8Cb9v120c
+ s/BqFpzQJNHve8nvF+QLxoll35jnMyea1ZsStjFcoWtLPICjfB72a3nZphpXiVbm7IJzm4dssLi
+ FtAtnl3D9p0bzOM5lWO+XQ7kaghoWBD8AzYwFSwGZ+mvJdHJ7rFjx/xhu3KvLfpLGqAJPqwRnrc
+ G4bGwhAI2ge6cqmcUtYurGf8L1Y2hUYy3DHsyepqRH5c3jQ4Fb5G8CIo9dOqTXHYLyzIWGvVNxA
+ Yd9hIvYryhIThznvcXg+jA3qhOWTcqYlPHnrb6FP5h4D9i/G0jhDYle+lzqKUqZ/9C9uotVchPU
+ DbuQ/DM9dZRAQ1E/sDcV/XQg0pjrdTMpVj6S9fdihJ4noEcUyRTdX3ie0k5Pb9BQR1O7o6duVGC
+ AyqCbNGMjHsi/wOnzKQGYjIlkqpGOI886XwBIxQ8iem6u5X62U51uk1TW89dieGkirqutIHttmk
+ TVBCP9RJeRx/eTA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -113,7 +113,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22413-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22414-lists,linux-nfs=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -126,38 +126,40 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5143A6631BC
+X-Rspamd-Queue-Id: 11A266631DC
 
-nfsd4_create() stores the return value of nfsd4_acl_to_attr() in
-status, but the switch(create->cr_type) block unconditionally
-overwrites it in every branch. ACL translation errors are silently
-discarded, and the CREATE proceeds without the requested ACL.
+nfsd4_delegreturn() is the only stateful NFSv4 operation that does
+not call nfs4_check_fh() to verify the delegation's file matches
+cstate->current_fh. A client can DELEGRETURN with a mismatched
+filehandle, destroying the correct delegation but waking the wrong
+inode's waiters.
 
-Add an early exit check after nfsd4_acl_to_attr(), matching the
-pattern already used in nfsd4_setattr().
+Add the missing nfs4_check_fh() call after the generation check.
 
-Fixes: 4c10614c7b47 ("NFSD: move setting of ACLs into nfsd_setattr()")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfsd/nfs4state.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 0c37d7c6d28c..69fee481581d 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -855,6 +855,8 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		}
- 		status = nfsd4_acl_to_attr(create->cr_type, create->cr_acl,
- 								&attrs);
-+		if (status != nfs_ok)
-+			goto out_aftermask;
- 	}
- 	current->fs->umask = create->cr_umask;
- 	switch (create->cr_type) {
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c88637406773..19aab4c52548 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -8079,6 +8079,10 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (status)
+ 		goto put_stateid;
+ 
++	status = nfs4_check_fh(&cstate->current_fh, &dp->dl_stid);
++	if (status)
++		goto put_stateid;
++
+ 	trace_nfsd_deleg_return(stateid);
+ 	destroy_delegation(dp);
+ 	smp_mb__after_atomic();
 
 -- 
 2.54.0
