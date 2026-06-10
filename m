@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-22436-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22437-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +qINKaNxKWr4WwMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22436-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 16:16:03 +0200
+	id ljU0Fi92KWrKXAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22437-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 16:35:27 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F9CC66A27A
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 16:16:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CECE66A435
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 16:35:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LuaMemb5;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22436-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22436-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cBahSpXs;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22437-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22437-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 469E031BCCED
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 14:08:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EA2FB32F8A1A
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 14:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B833F7AAD;
-	Wed, 10 Jun 2026 14:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26AEF3BB122;
+	Wed, 10 Jun 2026 14:28:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A5540B37A
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Jun 2026 14:08:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCB633D4F8;
+	Wed, 10 Jun 2026 14:28:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781100507; cv=none; b=L8aM1sf+lNs0LTlrLo0H/oS0ToVB/8MTIZqbQJurE9KN7KolI12CGZqvlfVc1Hz+JtCXH51REB01RCc72hX53XUO/XY92YqP5nArCH2OKAU8elvml8arG4ctYlx2HL492F4esIkOmrc0jgCu15jQW0g6QFmD1HEy6G7nFYjYzLI=
+	t=1781101715; cv=none; b=XHsTJ0XJk62m+B++fzV7sQMoua/n0NSw6+iY2QbrcfbN+b9LBkHnIgzcvCiBWInDQhFo/mhmpaTTX9f40waBK/T9kIQjjlo8GcfTa/4LRcZMJWXPXRKclbRYDrNzMOmkNd6qGoDF2RHEXJdXnOkLf1ZKhP/CixfZ7jwQNqBQdyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781100507; c=relaxed/simple;
-	bh=9toiMLDA5d+fprtpuBfAahdQb6LfLIb9bccSR8YA4xE=;
+	s=arc-20240116; t=1781101715; c=relaxed/simple;
+	bh=+bmwZAtHHEshgOQRjN5qxE4tw/GFszAT5/dc2pPV7X4=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=GA8pqRmaT9cTwWmaOHsljIBhvvL19muUSiHIyTIzXkhvGJM1aQOoJCysSCwVPGlZKH2ClZdGs3Z8010ZPK9yC7nT0/zto2/cHBRbS05IiBhCf0tNnPtnIvfWCS3qYXnoWKcXqxWzIelWqS7rxhL4JZedREmO2JslPZRMw98/q3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuaMemb5; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C561F00899;
-	Wed, 10 Jun 2026 14:08:25 +0000 (UTC)
+	 Subject:Content-Type; b=BW1ajHpeEI61t7AUCi6q2znLCIMF6KiMA4Z4tfSd3G+QjZV8vnNPgxIo8XdusA0q9wBv48y9wgsiD4KW0UGsr/8Ipx2+AMM1XnCJJBJhNArvn8+QuYAV2QKy6huVvj5BVY7TPBxI/1ulaPGNnWCIGtqoqgQrnkUeMT09L57+oFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBahSpXs; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6111F00898;
+	Wed, 10 Jun 2026 14:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781100506;
-	bh=wlJepTMXxVGdUPwubiend17nN3n03yoXyODcG74aaUI=;
+	s=k20260515; t=1781101713;
+	bh=usz09gXUhRAO92R6pHZAh8vlZ5c7zZWYbZMrAGM/zYA=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=LuaMemb52P/VkJuWuu0AXmK8iDG7ZxGmNooW0F085l7nrb93976AnjrZexoOUKLpA
-	 ynaDHGV2fJvDUvJmEZTJm/vkuR2h0109soy5AFcCygd5FvlSwziDQ9xjh8/Bbkp9/o
-	 Fpv7rCN38bkCyFvvPu6dA5KIW2x/7z9DqT5MuB93t5Ji7OdZv9ZFCSBs0iWotlIPgp
-	 Pk5Dg/Qm66g2tMEu9bZcpBNcV+QnGibGUeCxM0Q77JqILrWPbk+z00dwTibUlEEveB
-	 abPvFCmTVsIftrmapLwHt6CdFlV8EGXNPDnsyrm0dMqSe1yL2hEcm0/8QcoYYGHH/1
-	 YPPvFxJ/4gJiQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id CF91BF40076;
-	Wed, 10 Jun 2026 10:08:24 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 10 Jun 2026 10:08:24 -0400
-X-ME-Sender: <xms:2G8pait6N9gU0AatSPT1lIOuX3Gjror0nt3Px7RmQzrNZhsyH-jL5w>
-    <xme:2G8paiR6lKzpK7bsQluRBaedcBgT3mS-rkDMqUjBM6802bOT3Ddb2nF2kVGumX1eu
-    udDO1oh2kkguxvkrySvNtfvn62JdptN99YJSvrZ_u7tjLLyRiAVIeU>
-X-ME-Proxy-Cause: dmFkZTGKTTPl9q19VuDJCVgUBF1IhaND5ruh5rp6Algr1bM5QYhq9by4/DIwWsRW2bq1Qn
-    9fQucwKmEtZtaEZ7jywE3N9VQSBHR2khAG8Yv/46riOkN7YlxaCDl6arO3UJ85YSXk2bEt
-    a5eFyojjsMsC19KtSDVfyRH5dgZ4khKHC3OlHhV+MixRRWerswcpaWyeW2IJuRYJjfOe4r
-    l3b+R1cZJ8jn38+DL1eUOIbpxs4OCHswxXHLEPjaXC8MXCp738JHMTtZWSQckUk6MHm7EP
-    vreQCfS2f+j3mUVX2kDVUu54DMo7lKBSyDGYD1YDbFte2qhpRLGOxt0+KwpMZ4MS43JIYF
-    G0UwxMcUF8fjSGL5q91cq39GPrJko5UOnuFoAo8XUmn01LPWBcVqHMeUEGkJQw5OamYWJK
-    Hp0mCBKC+Wo4LrBdQ+dnsH04i2bSB7pk1V6Hq7vpNr1E6F5u7qQyheU9gsePQop1tK+/iY
-    eqogvKP5zn/8b+eHjX4qQ6VHbqjPqqoI4OPFzNup+c0y/0G0T60Jj+k9WsNTHEyWpIuGl5
-    HeTQ88G7Kfsz3Jgs4pSjxehcKybw6fZVf7gMOACHIaTnK4Zf4mMw3X6e3Xl2bUIJfvJRQx
-    8Z5bOmEqUyvZyRG1e45PyzcOBlAHix3C9/Ay16EtOzsH+wK31mcTA2ybU1LQ
-X-ME-Proxy: <xmx:2G8pavLHE8WSHKW-WQCTkSeAGC_kY9ePspcs__okdcDCs4-QQiKP2g>
-    <xmx:2G8paus0OaQ8TjkoDp9Rv_G_6SCGyAnrUcUQoaJIEAuyEYfwPt0BSA>
-    <xmx:2G8pantGhbJyaUSiv5OqdGPTvCg6MWxVdc1G3-sZZlf3IYs-oxQD_A>
-    <xmx:2G8patV3xmUrAhtBOkpSv6C8IxYouhueT9U-4nL4TUni-sFM54dayg>
-    <xmx:2G8paoV0siuEmlhW3IWj8AaNl-5tvNVKLNyWjk6sqcJvf9j5D9jMLUn5>
-Feedback-ID: ifa6e4810:Fastmail
+	b=cBahSpXs+rj+EGmSTxpFTUCH8GDXFZCSj4IZSZ/gCSFI73GFQ7SGh9/+6WRIbFUZs
+	 6BE9hAU4zELw1P7OGX5s3lDw0HmUFnKgiIJCEPdVaBlwG+Go8cC9svNjeuDSMAQ2Lp
+	 MADs5BUjctJCHIDvyjjhPIXHHXPk8RKiKAMicLUStNmnz5Eoq9l7QbWeKmPEprS3jc
+	 4pCD9Q2sYeD6Cw1eq9h4pDldHsbcsm/rfX2QaM3CBmiegeqJZZARz9DvKR1uUdV2/E
+	 1NsOY3NUgCr96zj/8L9WqnHX4L4B+Eq41X0jpRqO9L0cVH8MF+ddeLe5GdXFVPXhD4
+	 xAsPG9TzeKNCg==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 68381F40097;
+	Wed, 10 Jun 2026 10:28:32 -0400 (EDT)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Wed, 10 Jun 2026 10:28:32 -0400
+X-ME-Sender: <xms:kHQpaoAXPlsGYf7BA0x6NXH9wFMjKkfePfpWauGCNT7b4pUsG_GXeg>
+    <xme:kHQpalXVGyjIKAjCueY5GEOkMeoPfCBok9DEQqIRmSY0rE4VekZJJS9M9J_6iuVeh
+    Zx5Mnswt7Ei7sBZ8TvWxW2ypO5i9P-1lbG-fsWgJE5vsNStTogsbJ1H>
+X-ME-Proxy-Cause: dmFkZTFug49oVC+lYOXXANZTytnInRE9GA76nwoLHANdW1h4FSdQOMVIi2Dymb/z1aE5No
+    xZKQIbjnzTYfq7ejRHdCJF1jIUuB9IlOof13D10/4NF0R9QciAC0asuUdWaJjK131BpGn3
+    i5hm55tRIiyCZrr8R0ZeikhrVD5KwusATQgwuOPAUwtxiPtDZmvcVKm1rDgwYn76oZhUNh
+    qg5JwsFejSx41++L/9ehtHuJQD2uA3Cm/XhJ8XBAPpagAgytpUMmGr6r/48tyXkq+A3PCA
+    MNCvHFNMTbbP6GqTQFQSQTQkK4sh7+SGWp9bV7ca0yDDaYrZ/8Uvj45ugsCoX1v1IaEpVU
+    SobUmEuTZj0qtx6DleyDOjNnsXea8OlWtt7cCva6LacDDgbBA//YiZq3mXW2y6mR0j8mvI
+    hlX8iV3D4Yayabg1tLXhwRuvANRpsqJf0U1CR2/5n3s8xVK+spzL9uP8k49GATLCSnv9Ow
+    yLLVPoWhdHBCEsruCPk/TfNeGAL7dswDyWd4jXg7ErIN27+1OP9tf3vIJ6N6Cg94SbRx4Z
+    yRuJEIl4GGJDqSeEPpIotC3NdWRTTv42HNQvHbJvMH6K+ji8wAE5hI8BngVNOb+Mo6H2jI
+    SmQQLSOKxKwfhLAxKQPML3JvCs4kzJZCSbVc7/bq3V+6MPTEi1knp7C1eQOA
+X-ME-Proxy: <xmx:kHQpaji7R4ldspZ8pkiH02PWa6TN_cdMXuNnA2ZPuZHmTlcRU38D6g>
+    <xmx:kHQpajEI1D2_AWeSTHKDwLqrr2M4G3zNNeqYu2NL7l-Zzae5_y5rpA>
+    <xmx:kHQpatta7Tntfodk21szWht8uHbz1Y6aTE7cM2Jx0fMwqQ6IjkI91w>
+    <xmx:kHQpasfolm4qs7Jppr9FP7Qcyp6F3lDd8w-mpr-5G5WaBmQr4azAhg>
+    <xmx:kHQparlPmGjgobJpBteMuKD6iXYolGxTa3kn5NiNGnIkEFNYxYyyavmq>
+Feedback-ID: i20964851:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A4923780070; Wed, 10 Jun 2026 10:08:24 -0400 (EDT)
+	id 408D4B60070; Wed, 10 Jun 2026 10:28:32 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,112 +79,172 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AurzjksMev5R
-Date: Wed, 10 Jun 2026 10:08:04 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- "Christian Brauner" <brauner@kernel.org>,
- "Benjamin Coddington" <bcodding@redhat.com>,
- "Donald Hunter" <donald.hunter@gmail.com>,
- "Lorenzo Bianconi" <lorenzo@kernel.org>, "Qi Zheng" <qi.zheng@linux.dev>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Muchun Song" <muchun.song@linux.dev>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Message-Id: <e2c27654-4344-46cd-8bab-dfe0af6e0db0@app.fastmail.com>
-In-Reply-To: <20260609-nfsd-testing-v1-1-e83acead2ae8@kernel.org>
-References: <20260609-nfsd-testing-v1-0-e83acead2ae8@kernel.org>
- <20260609-nfsd-testing-v1-1-e83acead2ae8@kernel.org>
-Subject: Re: [PATCH 01/19] nfs/localio: fix nfsd_file ref leak on nfs_local_doio() init
- failure
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-ThreadId: A7DWBoyFEMmk
+Date: Wed, 10 Jun 2026 10:28:10 -0400
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Thorsten Leemhuis" <regressions@leemhuis.info>,
+ "Trond Myklebust" <trondmy@kernel.org>, NeilBrown <neil@brown.name>,
+ "Igor Raits" <igor.raits@gmail.com>
+Cc: =?UTF-8?Q?Jan_=C4=8C=C3=ADpa?= <jan.cipa@gooddata.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org,
+ "Linux kernel regressions list" <regressions@lists.linux.dev>
+Message-Id: <fa68fbe1-466e-4fa3-8245-8eb61243b409@app.fastmail.com>
+In-Reply-To: <5cbf8431-e3c4-41d9-afcd-fb121dc12395@leemhuis.info>
+References: <177745671692.1474915.5018486129724109553@noble.neil.brown.name>
+ <20260429104938.1776671-1-igor.raits@gmail.com>
+ <971ecb6c-2687-429f-af86-fc980c2d04f9@leemhuis.info>
+ <5cbf8431-e3c4-41d9-afcd-fb121dc12395@leemhuis.info>
+Subject: Re: [PATCH] NFSv4: clear exception state on successful mkdir retry
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.65 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	HAS_LIST_UNSUB(-0.01)[];
 	XM_UA_NO_VERSION(0.01)[];
+	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:brauner@kernel.org,m:bcodding@redhat.com,m:donald.hunter@gmail.com,m:lorenzo@kernel.org,m:qi.zheng@linux.dev,m:akpm@linux-foundation.org,m:muchun.song@linux.dev,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:netdev@vger.kernel.org,m:donaldhunter@gmail.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,app.fastmail.com:mid];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FREEMAIL_TO(0.00)[kernel.org,oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,gmail.com,linux.dev,linux-foundation.org];
+	TAGGED_FROM(0.00)[bounces-22437-lists,linux-nfs=lfdr.de];
+	FREEMAIL_TO(0.00)[leemhuis.info,kernel.org,brown.name,gmail.com];
+	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:regressions@leemhuis.info,m:trondmy@kernel.org,m:neil@brown.name,m:igor.raits@gmail.com,m:jan.cipa@gooddata.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:regressions@lists.linux.dev,m:igorraits@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22436-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,linux-nfs.org:url,gooddata.com:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4F9CC66A27A
+X-Rspamd-Queue-Id: 9CECE66A435
 
+Hi Thorsten,
 
-On Tue, Jun 9, 2026, at 1:47 PM, Jeff Layton wrote:
-> Two early return paths in nfs_local_doio() fail to release the localio
-> (nfsd_file) reference passed in by the caller:
+On Tue, Jun 9, 2026, at 6:05 AM, Thorsten Leemhuis wrote:
+> On 5/13/26 09:18, Thorsten Leemhuis wrote:
+>> [top-posting to facilitate processing]
+>>=20
+>> @NFSv4 maintainers, just wondering, did this patch maybe fall through
+>> the cracks? It fixes a regression, that's why it's on my radar. Or was
+>> there some progress and I missed it?
+
+The patch is in my linux-next branch here: https://git.linux-nfs.org/?p=3D=
+anna/linux-nfs.git;a=3Dcommit;h=3D238e9b51aa29f48b6243212a3b75c8e48d6b96=
+fd
+
+It'll be included when the merge window opens this weekend.
+
+Anna
+
 >
-> - When hdr->args.count is zero, the function returns 0 without calling
->   nfs_local_file_put().
+> Still no progress afaics. Feels like I'm missing something obvious or
+> like I'm totally of track.
 >
-> - When nfs_local_iocb_init() fails (e.g. -ENOMEM from allocation or
->   -EOPNOTSUPP if the file lacks read_iter/write_iter), the function
->   returns the error without releasing localio or completing the hdr
->   lifecycle.
+> Igor, Neil, is that the case? Or are you also waiting for the fix to
+> make progress?
 >
-> A leaked nfsd_file pins the associated net namespace reference,
-> blocking network namespace teardown, and holds a reference on the
-> exported filesystem, preventing unmount.
+> Ciao, Thorsten
 >
-> Fix the zero-count path by adding the missing nfs_local_file_put()
-> call. Fix the iocb init failure path by jumping to a new cleanup label
-> that releases localio, sets hdr->task.tk_status, and calls
-> nfs_local_hdr_release() -- matching the existing error handling pattern
-> for the post-iocb error path.
->
-> Fixes: e77c464c31b3 ("nfs/nfsd: add "local io" support")
-
-I don't seem to have commit e77c464c31b3 in my tree. Should this be
-
-  Fixes: 70ba381e1a43 ("nfs: add LOCALIO support")
-
-?
-
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfs/localio.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-
-This updates only a client-side source file. Should it go through
-Anna/Trond's trees? Or were you thinking that, since the leak
-impacts only NFS server behavior, I should take it?
-
-
--- 
-Chuck Lever
+>> On 4/29/26 12:49, Igor Raits wrote:
+>>> After a server returns NFS4ERR_DELAY for an NFSv4 CREATE issued by
+>>> mkdir(2), the client correctly waits and retries.  When the retry
+>>> succeeds, however, mkdir(2) can still surface -EEXIST to userspace
+>>> even though the directory was just created on the server.
+>>>
+>>> Reproducer (random 16-hex names so collisions are not the cause)
+>>> against an in-kernel Linux nfsd; reproduces under both NFSv4.0 and
+>>> NFSv4.2:
+>>>
+>>>   N=3D2000000; base=3D/var/gdc/export
+>>>   for ((i=3D1; i<=3DN; i++)); do
+>>>       d=3D$base/$(openssl rand -hex 8)
+>>>       mkdir "$d" 2>/dev/null || echo "$(date +%T) failed loop=3D$i $=
+d"
+>>>       rmdir "$d" 2>/dev/null
+>>>   done
+>>>
+>>> Failures cluster at the cadence at which the server-side auth/export
+>>> cache refresh path causes nfsd to return NFS4ERR_DELAY for CREATE.
+>>>
+>>> A wire trace of one failure (the three CREATE RPCs all come from a
+>>> single mkdir(2), generated by the do-while in nfs4_proc_mkdir()):
+>>>
+>>>   client -> server  CREATE name=3D...  -> NFS4ERR_DELAY
+>>>   ~100 ms later
+>>>   client -> server  CREATE name=3D...  -> NFS4_OK         (dir creat=
+ed)
+>>>   ~80 us later
+>>>   client -> server  CREATE name=3D...  -> NFS4ERR_EXIST   (correct)
+>>>
+>>> Since commit dd862da61e91 ("nfs: fix incorrect handling of large-num=
+ber
+>>> NFS errors in nfs4_do_mkdir()"), nfs4_handle_exception() is called o=
+nly
+>>> when _nfs4_proc_mkdir() returned an error.  That gate breaks retry-s=
+tate
+>>> hygiene: nfs4_do_handle_exception() resets exception.{delay,recoveri=
+ng,
+>>> retry} to 0 on entry, so calling it on success is what previously
+>>> cleared the retry flag set by the preceding NFS4ERR_DELAY iteration.
+>>> With the gate in place, exception.retry stays at 1 after the success=
+ful
+>>> retry, the loop runs once more, and the resulting CREATE for an
+>>> already-created name yields NFS4ERR_EXIST -> -EEXIST to userspace.
+>>>
+>>> Drop the conditional and call nfs4_handle_exception() unconditionall=
+y,
+>>> matching every other do-while in fs/nfs/nfs4proc.c (nfs4_proc_symlin=
+k(),
+>>> nfs4_proc_link(), etc.).  The dentry/status separation introduced by
+>>> that commit is preserved.
+>>>
+>>> Fixes: dd862da61e91 ("nfs: fix incorrect handling of large-number NF=
+S errors in nfs4_do_mkdir()")
+>>> Reported-and-tested-by: Jan =C4=8C=C3=ADpa <jan.cipa@gooddata.com>
+>>> Closes: https://lore.kernel.org/linux-nfs/CA+9S74hSp_tJu2Ffe2BPNC2T2=
+5gfkhgjjDkdgSsF5c2rnJq_wA@mail.gmail.com/
+>>> Reviewed-by: NeilBrown <neil@brown.name>
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Igor Raits <igor.raits@gmail.com>
+>>> ---
+>>>  fs/nfs/nfs4proc.c | 5 ++---
+>>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>> index a0885ae55abc..ffd14141ea1d 100644
+>>> --- a/fs/nfs/nfs4proc.c
+>>> +++ b/fs/nfs/nfs4proc.c
+>>> @@ -5393,10 +5393,9 @@ static struct dentry *nfs4_proc_mkdir(struct =
+inode *dir, struct dentry *dentry,
+>>>  	do {
+>>>  		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
+>>>  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+>>> +		err =3D nfs4_handle_exception(NFS_SERVER(dir), err, &exception);
+>>>  		if (err)
+>>> -			alias =3D ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
+>>> -							      err,
+>>> -							      &exception));
+>>> +			alias =3D ERR_PTR(err);
+>>>  	} while (exception.retry);
+>>>  	nfs4_label_release_security(label);
+>>> =20
+>>
 
