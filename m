@@ -1,228 +1,242 @@
-Return-Path: <linux-nfs+bounces-22441-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22442-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id cq2JCk+TKWq0ZwMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22441-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 18:39:43 +0200
+	id q3GdDFSSKWpeZwMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22442-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 18:35:32 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76CAE66B91E
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 18:39:42 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B59B66B878
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 18:35:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=leemhuis.info header.s=key2 header.b=f7zf+0ga;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22441-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22441-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=none;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ENCmGRrS;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22442-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22442-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6E3D430D3901
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 16:12:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B9516301C5B7
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 16:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44E8442DFEF;
-	Wed, 10 Jun 2026 16:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12503331200;
+	Wed, 10 Jun 2026 16:21:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5237409E0F;
-	Wed, 10 Jun 2026 16:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F1332D7F8;
+	Wed, 10 Jun 2026 16:21:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781107945; cv=none; b=I7KoTwenidMLo96aHGB2OKj2+BMrCKyPHphgz2jmcxIAuaCF1W9o/J5KSZEKCAeUp3E46RAC0vs8rLjfwXg1fc8imTviRnTXGdtTlr4qYjlLPVvjPig9ZD/np8VbVm4stSN48nIvVqQ+JCYMrVZUvl2+EgzsztmUuxtsxVlu0To=
+	t=1781108503; cv=none; b=WqGIMnmuPNM1+nIeDyHNyjefxYZJyqe1K8ReAy20gOjLftMXHzsJuqFhEeXjinmAgHvVKP3ED7jOV5MfMuXciY5abJ7sl3ptS/qt2GfKY7KhvzyHTLqUqhIU1hWztIgpZQYJOYI2zdwyOWQT/OIRGbwexsmppKMVF6X8BzaIDGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781107945; c=relaxed/simple;
-	bh=N2Vp3+NXkkwYGSeyZCVnIKlKNyk2cVjtZANmuIr7ATU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mw7QNYGYOvF26JuL0iCCdtXstFGRm+Iaw9Za8bxhQKOurJCu4pMAMLVaCyTLCDb4/PqQQPVJqXGRZErMeO5r8Ab3yigB1N8ygx6cU7M82GU9Fot/CwVQt8Px9EVZ0++eKfHV/ZN0ICI01Y3KpegfkNdJNKGvqvdHtXRTuBr0kXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=f7zf+0ga; arc=none smtp.client-ip=194.59.206.189
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gb9lc2DqRz4KZQ;
-	Wed, 10 Jun 2026 18:12:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1781107932;
-	bh=N2Vp3+NXkkwYGSeyZCVnIKlKNyk2cVjtZANmuIr7ATU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f7zf+0gau605TEMXVnszT5wNaUhLb/9Am3A7QwUssOgQhyVzOP+yX5LonAn8CHn2h
-	 pjmQVN6DcBtgQJKqhJihUIwzP7iPFhVdcTM8E8VumZvDhLP6XsvL79VNe+aOFR7tPE
-	 qqlpBs/RJxff+dcLigXkJuuMMJ+sqTmt+iqZPfDdfxug0H1og9k1Gcv6f7t2l/yb02
-	 9pu6A9LBYIZzOO/eZ9L+rH/2JFE+CXGo56OktJF4FbVixqXXwEs4icjvT/eLdWGQob
-	 RGya8uPhle85LeIk35Js9AICDEUQp72zAZyuOFQg1Zql5TFneRuOsTNp63+NRtCrfu
-	 gyUg8/m9XJAWg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gb9lc1XXHz7xM6;
-	Wed, 10 Jun 2026 18:12:12 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gb9lb3yj0z8svF;
-	Wed, 10 Jun 2026 18:12:11 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 349E660363;
-	Wed, 10 Jun 2026 18:12:10 +0200 (CEST)
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5492f53d-600f-4de9-ba98-1f82a4880bf1@leemhuis.info>
-Date: Wed, 10 Jun 2026 18:12:08 +0200
+	s=arc-20240116; t=1781108503; c=relaxed/simple;
+	bh=m7RzMS/LYIRdrwtdx0vECWdXt2hMHSTSJDwePOGTa40=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aeqAQaykk4RSVSS3uW64G46yYQiCpjY1Wp41avp0y+OvmPjWciNzgnm7ueyA/I5Pq/bRpCe4UB6ExSVq3XRU3nzLiTOv7Iw+Aa1PejPBMebVS0c0fgRk3qiYvxSVPhSNg5iaDEnVahAUphcmmlkPl4dokmAfw8kB7zOsHzgMkl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENCmGRrS; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A441F00893;
+	Wed, 10 Jun 2026 16:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781108502;
+	bh=QFh9yLpYB7m7DWVNWQMDTKcQs88/IWnaWOnjJp/KVIc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ENCmGRrS8oprP0kCFGK1heZeUJ5e9qUcqX2MKgtEWJ2JiDyHJIh8Y0YynKSHksP2a
+	 KK3nLpDPGXggmOTJFbm5myyEUpavtsq3ulhDKriTYb7ZSv1xGkNQX/6lxBG6K6DO7p
+	 iguHxOzk4NAKC3LGidY3pDDcbayJtyha5e14LgbQPx65IwKHzSgs5A07CuqnwT8Uu5
+	 he/o3fyEiS2HYri8Ps7cBaeZJC8199uWJefJWMIFxZxx8rAPVfPhbu5R5ociC4Xhxt
+	 6OBkEJeY4Xrcreu1yvvDgeq13ICESHXODowJR2wmZq2vbdbXowP5ffvNJBZEk7+bic
+	 P5z2ycYdHLYyA==
+Message-ID: <e9e15b646bf18a18da6b30e4aee528f07f5e5d1a.camel@kernel.org>
+Subject: Re: [PATCH 01/19] nfs/localio: fix nfsd_file ref leak on
+ nfs_local_doio() init failure
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Christian Brauner <brauner@kernel.org>,  Benjamin
+ Coddington	 <bcodding@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Andrew Morton	 <akpm@linux-foundation.org>, Muchun Song
+ <muchun.song@linux.dev>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org
+Date: Wed, 10 Jun 2026 12:21:38 -0400
+In-Reply-To: <e2c27654-4344-46cd-8bab-dfe0af6e0db0@app.fastmail.com>
+References: <20260609-nfsd-testing-v1-0-e83acead2ae8@kernel.org>
+	 <20260609-nfsd-testing-v1-1-e83acead2ae8@kernel.org>
+	 <e2c27654-4344-46cd-8bab-dfe0af6e0db0@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] NFSv4: clear exception state on successful mkdir retry
-To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
- NeilBrown <neil@brown.name>, Igor Raits <igor.raits@gmail.com>
-Cc: =?UTF-8?B?SmFuIMSMw61wYQ==?= <jan.cipa@gooddata.com>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <177745671692.1474915.5018486129724109553@noble.neil.brown.name>
- <20260429104938.1776671-1-igor.raits@gmail.com>
- <971ecb6c-2687-429f-af86-fc980c2d04f9@leemhuis.info>
- <5cbf8431-e3c4-41d9-afcd-fb121dc12395@leemhuis.info>
- <fa68fbe1-466e-4fa3-8245-8eb61243b409@app.fastmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fa68fbe1-466e-4fa3-8245-8eb61243b409@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <178110793057.3660475.9284108534434954215@mxe9fb.netcup.net>
-X-NC-CID: KamAnLYGUEdl9CtO3ghd1LrSXt6ggQZ6fk1YhWZonMwh555PCmA=
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[leemhuis.info:s=key2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:brauner@kernel.org,m:bcodding@redhat.com,m:donald.hunter@gmail.com,m:lorenzo@kernel.org,m:qi.zheng@linux.dev,m:akpm@linux-foundation.org,m:muchun.song@linux.dev,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:netdev@vger.kernel.org,m:donaldhunter@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22441-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:trondmy@kernel.org,m:neil@brown.name,m:igor.raits@gmail.com,m:jan.cipa@gooddata.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:regressions@lists.linux.dev,m:igorraits@gmail.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nfs.org:url,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,brown.name:email,gooddata.com:email,leemhuis.info:dkim,leemhuis.info:mid,leemhuis.info:from_mime];
-	FREEMAIL_TO(0.00)[kernel.org,brown.name,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[leemhuis.info];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[regressions@leemhuis.info,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[leemhuis.info:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[regressions@leemhuis.info,linux-nfs@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FREEMAIL_TO(0.00)[kernel.org,oracle.com,brown.name,redhat.com,talpey.com,davemloft.net,google.com,gmail.com,linux.dev,linux-foundation.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22442-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 76CAE66B91E
+X-Rspamd-Queue-Id: 1B59B66B878
 
-On 6/10/26 16:28, Anna Schumaker wrote:
-> On Tue, Jun 9, 2026, at 6:05 AM, Thorsten Leemhuis wrote:
->> On 5/13/26 09:18, Thorsten Leemhuis wrote:
->>> [top-posting to facilitate processing]
->>> 
->>> @NFSv4 maintainers, just wondering, did this patch maybe fall
->>> through the cracks? It fixes a regression, that's why it's on my
->>> radar. Or was there some progress and I missed it?
-> 
-> The patch is in my linux-next branch here: https://git.linux-
-> nfs.org/?p=anna/linux-
-> nfs.git;a=commit;h=238e9b51aa29f48b6243212a3b75c8e48d6b96fd
-> 
-> It'll be included when the merge window opens this weekend.
+On Wed, 2026-06-10 at 10:08 -0400, Chuck Lever wrote:
+> On Tue, Jun 9, 2026, at 1:47 PM, Jeff Layton wrote:
+> > Two early return paths in nfs_local_doio() fail to release the localio
+> > (nfsd_file) reference passed in by the caller:
+> >=20
+> > - When hdr->args.count is zero, the function returns 0 without calling
+> >   nfs_local_file_put().
+> >=20
+> > - When nfs_local_iocb_init() fails (e.g. -ENOMEM from allocation or
+> >   -EOPNOTSUPP if the file lacks read_iter/write_iter), the function
+> >   returns the error without releasing localio or completing the hdr
+> >   lifecycle.
+> >=20
+> > A leaked nfsd_file pins the associated net namespace reference,
+> > blocking network namespace teardown, and holds a reference on the
+> > exported filesystem, preventing unmount.
+> >=20
+> > Fix the zero-count path by adding the missing nfs_local_file_put()
+> > call. Fix the iocb init failure path by jumping to a new cleanup label
+> > that releases localio, sets hdr->task.tk_status, and calls
+> > nfs_local_hdr_release() -- matching the existing error handling pattern
+> > for the post-iocb error path.
+> >=20
+> > Fixes: e77c464c31b3 ("nfs/nfsd: add "local io" support")
+>=20
+> I don't seem to have commit e77c464c31b3 in my tree. Should this be
+>=20
+>   Fixes: 70ba381e1a43 ("nfs: add LOCALIO support")
+>=20
+> ?
+>=20
 
-Great, thx Anna. Was a bit confused why I could not see in -next 90
-minutes ago (that where I checked yesterday before prodding, too), but
-it turned up there in the new -next release that was published a few
-minutes ago. :-D
+Yeah, that introduced the first of the leaks, I think. I need to write
+a "vet these Fixes: tags" skill for an LLM.
 
-Ciao, Thorsten
+> > Assisted-by: Claude:claude-opus-4-8
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/nfs/localio.c | 16 +++++++++++++---
+> >  1 file changed, 13 insertions(+), 3 deletions(-)
+>=20
+> This updates only a client-side source file. Should it go through
+> Anna/Trond's trees? Or were you thinking that, since the leak
+> impacts only NFS server behavior, I should take it?
+>=20
 
->> Still no progress afaics. Feels like I'm missing something obvious
->> or like I'm totally of track.
->> 
->> Igor, Neil, is that the case? Or are you also waiting for the fix
->> to make progress?
->> 
->> Ciao, Thorsten
->> 
->>> On 4/29/26 12:49, Igor Raits wrote:
->>>> After a server returns NFS4ERR_DELAY for an NFSv4 CREATE
->>>> issued by mkdir(2), the client correctly waits and retries.
->>>> When the retry succeeds, however, mkdir(2) can still surface -
->>>> EEXIST to userspace even though the directory was just created
->>>> on the server.
->>>> 
->>>> Reproducer (random 16-hex names so collisions are not the
->>>> cause) against an in-kernel Linux nfsd; reproduces under both
->>>> NFSv4.0 and NFSv4.2:
->>>> 
->>>> N=2000000; base=/var/gdc/export for ((i=1; i<=N; i++)); do 
->>>> d=$base/$(openssl rand -hex 8) mkdir "$d" 2>/dev/null || echo
->>>> "$(date +%T) failed loop=$i $d" rmdir "$d" 2>/dev/null done
->>>> 
->>>> Failures cluster at the cadence at which the server-side auth/
->>>> export cache refresh path causes nfsd to return NFS4ERR_DELAY
->>>> for CREATE.
->>>> 
->>>> A wire trace of one failure (the three CREATE RPCs all come
->>>> from a single mkdir(2), generated by the do-while in
->>>> nfs4_proc_mkdir()):
->>>> 
->>>> client -> server  CREATE name=...  -> NFS4ERR_DELAY ~100 ms
->>>> later client -> server  CREATE name=...  -> NFS4_OK
->>>> (dir created) ~80 us later client -> server  CREATE name=...  -
->>>> > NFS4ERR_EXIST   (correct)
->>>> 
->>>> Since commit dd862da61e91 ("nfs: fix incorrect handling of
->>>> large-number NFS errors in nfs4_do_mkdir()"),
->>>> nfs4_handle_exception() is called only when _nfs4_proc_mkdir()
->>>> returned an error.  That gate breaks retry-state hygiene:
->>>> nfs4_do_handle_exception() resets exception.{delay,recovering, 
->>>> retry} to 0 on entry, so calling it on success is what
->>>> previously cleared the retry flag set by the preceding
->>>> NFS4ERR_DELAY iteration. With the gate in place,
->>>> exception.retry stays at 1 after the successful retry, the
->>>> loop runs once more, and the resulting CREATE for an already-
->>>> created name yields NFS4ERR_EXIST -> -EEXIST to userspace.
->>>> 
->>>> Drop the conditional and call nfs4_handle_exception()
->>>> unconditionally, matching every other do-while in fs/nfs/
->>>> nfs4proc.c (nfs4_proc_symlink(), nfs4_proc_link(), etc.).  The
->>>> dentry/status separation introduced by that commit is
->>>> preserved.
->>>> 
->>>> Fixes: dd862da61e91 ("nfs: fix incorrect handling of large-
->>>> number NFS errors in nfs4_do_mkdir()") Reported-and-tested-by:
->>>> Jan Čípa <jan.cipa@gooddata.com> Closes: https://
->>>> lore.kernel.org/linux-nfs/
->>>> CA+9S74hSp_tJu2Ffe2BPNC2T25gfkhgjjDkdgSsF5c2rnJq_wA@mail.gmail.com/
->>>>  Reviewed-by: NeilBrown <neil@brown.name> Cc:
->>>> stable@vger.kernel.org Signed-off-by: Igor Raits
->>>> <igor.raits@gmail.com> --- fs/nfs/nfs4proc.c | 5 ++--- 1 file
->>>> changed, 2 insertions(+), 3 deletions(-)
->>>> 
->>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c index
->>>> a0885ae55abc..ffd14141ea1d 100644 --- a/fs/nfs/nfs4proc.c +++
->>>> b/fs/nfs/nfs4proc.c @@ -5393,10 +5393,9 @@ static struct
->>>> dentry *nfs4_proc_mkdir(struct inode *dir, struct dentry
->>>> *dentry, do { alias = _nfs4_proc_mkdir(dir, dentry, sattr,
->>>> label, &err); trace_nfs4_mkdir(dir, &dentry->d_name, err); +
->>>> err = nfs4_handle_exception(NFS_SERVER(dir), err, &exception); 
->>>> if (err) -			alias =
->>>> ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir), -
->>>> err, -							      &exception)); +			alias = ERR_PTR(err); }
->>>> while (exception.retry); nfs4_label_release_security(label);
->>>> 
->>> 
-
+Oh, good point. I asked Claude to give me a list of nfsd bugs and it
+included this one. I'm fine if Anna or Trond want to take this one.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
