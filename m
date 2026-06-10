@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-22444-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22445-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mi4XGRquKWqsbwMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22444-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 20:34:02 +0200
+	id I5x5E1KvKWrgbwMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22445-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 20:39:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADC7966C494
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 20:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D2EB66C506
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 20:39:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=G1XTJpw9;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22444-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22444-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EpKeMTrZ;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22445-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22445-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 96138316DDCF
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 18:33:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 861F5319A3E8
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 18:38:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FD4334CFDD;
-	Wed, 10 Jun 2026 18:33:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B82834DCE3;
+	Wed, 10 Jun 2026 18:38:18 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C291230BDB;
-	Wed, 10 Jun 2026 18:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA22A3451A9;
+	Wed, 10 Jun 2026 18:38:16 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781116387; cv=none; b=U09gYcM/v1N5yERhP9nGuH8ZcWedmLalVqPPFP11eMPSG5O4wc4kX8ZiR0odBYGrXZVO2FVDr9GdR0zw8RpXRuzs24ZaHMwBqzb7IMgrb1Zw+ZSrHX2mprwBJtsqPUtKE+UGgT+3seM4NDAlb450pNas6+JftukFDB8pA+4KNoc=
+	t=1781116698; cv=none; b=oIUNZlHhIolEL59ehBRfvISFrzF2rQ0LYWezZZsdNYCDR+Qw7gPcE/5ZlEx1Yb8//S217pGJ2OBDhTZmdoHfJMtLqcM54IZiwK2au6r9FmBLRi/MFLFLTm0W2Rpqvwqf/9SF2Sj1E4zrjlcWRLZ0je7BPHgFmQ6/nu1hvkTwaLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781116387; c=relaxed/simple;
-	bh=WGtDYobVJVceOlW6rMyUtd+aWP25xlDjpFGnn2Y/9Lg=;
+	s=arc-20240116; t=1781116698; c=relaxed/simple;
+	bh=36GEsLr22JWzy6UItHetE4r0XT7zIwiYyi4cprpi4kQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AYUxI2d0nOY3soIvKU0SDG8Y7N/8xH+Q94SNkKHmMjdTHpyPeExuly2o21lzaW2MzB59OwVu/0hl4cJqJQs+IBx8E3GPNnbt5I3/bU1wd54AXzkAjCvn7iDku912DkrBvpfm/9OukHmZ1i5v3x8Y3qkGAPH9PLXVAOK/8IOZ8UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1XTJpw9; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609AE1F00893;
-	Wed, 10 Jun 2026 18:33:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=mihPiEmstyyrtc73Jqxql3JnKpaNv7ESK396ZniaUiAsTrGnAJQKUTGmTNXZjTAKtdA89t8V6Uq6IbJuoMaS0vmmEiScwA+jF1nVNwyFze0bEC57FJh9JAHxMD5BJbZJWZi7A8wrDvRmyeVoks4fGWKES6BH3FYv+5f/RtSXx1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpKeMTrZ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56531F00893;
+	Wed, 10 Jun 2026 18:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781116386;
-	bh=LYepIqdbm0RJxsVFc8ijsTol97ngpqStCbbcR9V8DBg=;
+	s=k20260515; t=1781116696;
+	bh=cYAzGg0Iw+m2rFge1U3Ha8RubnhRgwWjsdXSSLFLy6o=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=G1XTJpw9b8LYv1GMhcF1SkkN5Dn5eJbcA5Pd5LcXTcLd/e//GMAfIqBbnUh0Y146I
-	 YuT52fJxC291whPQL8SCETFT6XiqtdhPy0viX1WEWlVukz/KYpUW2t03pTkzzBvhZY
-	 6QwqWxJUG3MJEWZxFbS5GiPhpIbFy8u2y+izOyGTR8Fj4+aFN9OfMzXbMj4s+rl3nP
-	 RPw7at+e4JX3TGiGXtycji8qRZc4a/wEGH0C+F/5vE8K22nUTp6YEOln87GU4iwr4r
-	 qCLdsI+mSj7m4anjUlOHjqYizNRupEvgFRr1+jIFUVO/B9mLmh/dr+25X44s0T0s+n
-	 KlkpIQ0dbqx5g==
-Message-ID: <943d41eb654e6b56906b956cea59efd0d0f39717.camel@kernel.org>
+	b=EpKeMTrZ9ivkbCSRArkwZ7FXoKvLtLOtCUrZZmSw+OxCrVbrd0zL6NL3bC3ldm6qe
+	 MGhQ+y4dRwDQUe806Y/qNVGmwxnFQ/O8vkmt3txbF3FpIoh5SSIP5qL22oq6900A5i
+	 C+BDWqguDk3vaFCsy61W1xC7s11NN9AIiYt/U+rwdlGKktrzFj1ZktqPuzDWojIe2c
+	 sQj43XoWuhwgxBVAzAezAKk4LmfYEhs0yB2K9h0lEekqQOPBmNDG1wYaoCJIzYOWwT
+	 RhiaSkt9ntb9v5t8edPDbHJYHXqKrGjRznLJljFT1waELKjrTF4kUlRBGgAKnDitvj
+	 Pz7JPihh6e9Ig==
+Message-ID: <3f347e690dce92781fee0ea4787d8feb19517cc8.camel@kernel.org>
 Subject: Re: [PATCH v5 10/21] nfsd: add notification handlers for dir events
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
@@ -60,11 +60,11 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Alexander Aring
  Brauner	 <brauner@kernel.org>, Calum Mackay <calum.mackay@oracle.com>, 
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-nfs@vger.kernel.org
-Date: Wed, 10 Jun 2026 14:33:02 -0400
-In-Reply-To: <344ed039-86ce-4125-8476-2e5d22e40fdc@app.fastmail.com>
+Date: Wed, 10 Jun 2026 14:38:13 -0400
+In-Reply-To: <efdade0b-38f2-4e5e-b6dc-567d9eea97a9@app.fastmail.com>
 References: <20260522-dir-deleg-v5-0-542cddfad576@kernel.org>
 	 <20260522-dir-deleg-v5-10-542cddfad576@kernel.org>
-	 <344ed039-86ce-4125-8476-2e5d22e40fdc@app.fastmail.com>
+	 <efdade0b-38f2-4e5e-b6dc-567d9eea97a9@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -160,7 +160,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22444-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22445-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:rostedt@goodmis.org,m:alex.aring@gmail.com,m:amir73il@gmail.com,m:jack@suse.cz,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:calum.mackay@oracle.com,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:alexaring@gmail.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -182,454 +182,18 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,cna_fh.data:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: ADC7966C494
+X-Rspamd-Queue-Id: 9D2EB66C506
 
-On Mon, 2026-06-08 at 16:40 -0400, Chuck Lever wrote:
+On Mon, 2026-06-08 at 16:52 -0400, Chuck Lever wrote:
 >=20
 > On Fri, May 22, 2026, at 3:42 PM, Jeff Layton wrote:
 > > Add the necessary parts to accept a fsnotify callback for directory
 > > change event and create a CB_NOTIFY request for it. When a dir nfsd_fil=
 e
 > > is created set a handle_event callback to handle the notification.
-> >=20
-> > Use that to allocate a nfsd_notify_event object and then hand off a
-> > reference to each delegation's CB_NOTIFY. If anything fails along the
-> > way, recall any affected delegations.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 >=20
-> There are some significant-looking sashiko review findings which I did
-> not follow up on.
->=20
-
-I plan to go over Sashiko's findings after I go through your responses.
-
->=20
-> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index ea3e7deb06fa..1964a213f80e 100644
-> > --- a/fs/nfsd/nfs4callback.c
-> > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -870,21 +870,30 @@ static void nfs4_xdr_enc_cb_notify(struct=20
-> > rpc_rqst *req,
-> >  				   const void *data)
-> >  {
-> >  	const struct nfsd4_callback *cb =3D data;
-> > +	struct nfsd4_cb_notify *ncn =3D container_of(cb, struct=20
-> > nfsd4_cb_notify, ncn_cb);
-> > +	struct nfs4_delegation *dp =3D container_of(ncn, struct=20
-> > nfs4_delegation, dl_cb_notify);
-> >  	struct nfs4_cb_compound_hdr hdr =3D {
-> >  		.ident =3D 0,
-> >  		.minorversion =3D cb->cb_clp->cl_minorversion,
-> >  	};
-> > -	struct CB_NOTIFY4args args =3D { };
-> > +	struct CB_NOTIFY4args args;
-> > +	__be32 *p;
-> >=20
-> >  	WARN_ON_ONCE(hdr.minorversion =3D=3D 0);
-> >=20
-> >  	encode_cb_compound4args(xdr, &hdr);
-> >  	encode_cb_sequence4args(xdr, cb, &hdr);
-> >=20
-> > -	/*
-> > -	 * FIXME: get stateid and fh from delegation. Inline the cna_changes
-> > -	 * buffer, and zero it.
-> > -	 */
-> > +	p =3D xdr_reserve_space(xdr, 4);
-> > +	*p =3D cpu_to_be32(OP_CB_NOTIFY);
-> > +
-> > +	args.cna_stateid.seqid =3D dp->dl_stid.sc_stateid.si_generation;
-> > +	memcpy(&args.cna_stateid.other, &dp->dl_stid.sc_stateid.si_opaque,
-> > +	       ARRAY_SIZE(args.cna_stateid.other));
-> > +	args.cna_fh.len =3D dp->dl_stid.sc_file->fi_fhandle.fh_size;
-> > +	args.cna_fh.data =3D dp->dl_stid.sc_file->fi_fhandle.fh_raw;
-> > +	args.cna_changes.count =3D ncn->ncn_nf_cnt;
-> > +	args.cna_changes.element =3D ncn->ncn_nf;
-> >  	WARN_ON_ONCE(!xdrgen_encode_CB_NOTIFY4args(xdr, &args));
-> >=20
-> >  	hdr.nops++;
->=20
-> I want to avoid the need to use xdrgen to encode the CB_NOTIFY arguments.
-> How about this:
->=20
-> +       struct nfsd4_cb_notify *ncn =3D container_of(cb, struct nfsd4_cb_=
-notify, ncn_cb);
-> +       struct nfs4_delegation *dp =3D container_of(ncn, struct nfs4_dele=
-gation, dl_cb_notify);
->=20
->    ...
->=20
-> +       encode_stateid4(xdr, &dp->dl_stid.sc_stateid);
-> +       encode_nfs_fh4(xdr, &dp->dl_stid.sc_file->fi_fhandle);
-> +       xdr_stream_encode_u32(xdr, ncn->ncn_nf_cnt);
-> +       for (u32 i =3D 0; i < ncn->ncn_nf_cnt; i++)
-> +               (void)xdrgen_encode_notify4(xdr, &ncn->ncn_nf[i]);
->=20
-> And then add a "pragma public notify4;" in nfs4_1.x .
->=20
-
-For those following along, Chuck and I had a private discussion and I
-think we're going to keep this calling xdrgen_encode_CB_NOTIFY4args()
-for now. I am dropping the WARN_ON_ONCE though.
-
->=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index b0652c755b3b..20477144475b 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
->=20
-> > @@ -3461,19 +3462,131 @@ nfsd4_cb_getattr_release(struct nfsd4_callback=
- *cb)
-> >  	nfs4_put_stid(&dp->dl_stid);
-> >  }
-> >=20
-> > +static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
-> > +{
-> > +	bool queued;
-> > +
-> > +	if (test_and_set_bit(NFSD4_CALLBACK_RUNNING, &dp->dl_recall.cb_flags)=
-)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * We're assuming the state code never drops its reference
-> > +	 * without first removing the lease.  Since we're in this lease
-> > +	 * callback (and since the lease code is serialized by the
-> > +	 * flc_lock) we know the server hasn't removed the lease yet, and
-> > +	 * we know it's safe to take a reference.
-> > +	 */
-> > +	refcount_inc(&dp->dl_stid.sc_count);
-> > +	queued =3D nfsd4_run_cb(&dp->dl_recall);
-> > +	WARN_ON_ONCE(!queued);
-> > +	if (!queued)
-> > +		refcount_dec(&dp->dl_stid.sc_count);
-> > +}
-> > +
-> > +static bool
-> > +nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
-> > +{
-> > +	struct nfsd4_cb_notify *ncn =3D container_of(cb, struct=20
-> > nfsd4_cb_notify, ncn_cb);
-> > +	struct nfs4_delegation *dp =3D container_of(ncn, struct=20
-> > nfs4_delegation, dl_cb_notify);
-> > +	struct nfsd_notify_event *events[NOTIFY4_EVENT_QUEUE_SIZE];
-> > +	struct xdr_buf xdr =3D { .buflen =3D PAGE_SIZE * NOTIFY4_PAGE_ARRAY_S=
-IZE,
-> > +			       .pages  =3D ncn->ncn_pages };
-> > +	struct xdr_stream stream;
-> > +	struct nfsd_file *nf;
-> > +	int count, i;
-> > +	bool error =3D false;
-> > +
-> > +	xdr_init_encode_pages(&stream, &xdr);
-> > +
-> > +	spin_lock(&ncn->ncn_lock);
-> > +	count =3D ncn->ncn_evt_cnt;
-> > +
-> > +	/* spurious queueing? */
-> > +	if (count =3D=3D 0) {
-> > +		spin_unlock(&ncn->ncn_lock);
-> > +		return false;
-> > +	}
-> > +
-> > +	/* we can't keep up! */
-> > +	if (count > NOTIFY4_EVENT_QUEUE_SIZE) {
-> > +		spin_unlock(&ncn->ncn_lock);
-> > +		goto out_recall;
-> > +	}
-> > +
-> > +	memcpy(events, ncn->ncn_evt, sizeof(*events) * count);
-> > +	ncn->ncn_evt_cnt =3D 0;
-> > +	spin_unlock(&ncn->ncn_lock);
-> > +
-> > +	rcu_read_lock();
-> > +	nf =3D=20
-> > nfsd_file_get(rcu_dereference(dp->dl_stid.sc_file->fi_deleg_file));
-> > +	rcu_read_unlock();
-> > +	if (!nf) {
-> > +		for (i =3D 0; i < count; ++i)
-> > +			nfsd_notify_event_put(events[i]);
-> > +		goto out_recall;
-> > +	}
-> > +
-> > +	for (i =3D 0; i < count; ++i) {
-> > +		struct nfsd_notify_event *nne =3D events[i];
-> > +
-> > +		if (!error) {
-> > +			u32 *maskp =3D (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-> > +			u8 *p;
-> > +
-> > +			if (!maskp) {
-> > +				error =3D true;
-> > +				goto put_event;
-> > +			}
-> > +
-> > +			p =3D nfsd4_encode_notify_event(&stream, nne, dp, nf, maskp);
-> > +			if (!p) {
-> > +				pr_notice("Could not generate CB_NOTIFY from fsnotify mask 0x%x\n"=
-,
-> > +					  nne->ne_mask);
-> > +				error =3D true;
-> > +				goto put_event;
-> > +			}
-> > +
-> > +			ncn->ncn_nf[i].notify_mask.count =3D 1;
-> > +			ncn->ncn_nf[i].notify_mask.element =3D maskp;
-> > +			ncn->ncn_nf[i].notify_vals.data =3D p;
-> > +			ncn->ncn_nf[i].notify_vals.len =3D (u8 *)stream.p - p;
-> > +		}
-> > +put_event:
-> > +		nfsd_notify_event_put(nne);
-> > +	}
-> > +	if (!error) {
-> > +		ncn->ncn_nf_cnt =3D count;
-> > +		nfsd_file_put(nf);
-> > +		return true;
-> > +	}
-> > +	nfsd_file_put(nf);
-> > +out_recall:
-> > +	nfsd_break_one_deleg(dp);
-> > +	return false;
-> > +}
-> > +
-> >  static int
-> >  nfsd4_cb_notify_done(struct nfsd4_callback *cb,
-> >  				struct rpc_task *task)
-> >  {
-> > +	struct nfsd4_cb_notify *ncn =3D container_of(cb, struct=20
-> > nfsd4_cb_notify, ncn_cb);
-> > +	struct nfs4_delegation *dp =3D container_of(ncn, struct=20
-> > nfs4_delegation, dl_cb_notify);
-> > +
-> >  	switch (task->tk_status) {
-> >  	case -NFS4ERR_DELAY:
-> >  		rpc_delay(task, 2 * HZ);
-> >  		return 0;
-> >  	default:
-> > +		/* For any other hard error, recall the deleg */
-> > +		nfsd_break_one_deleg(dp);
-> > +		fallthrough;
-> > +	case 0:
-> >  		return 1;
-> >  	}
-> >  }
-> >=20
-> > +static void nfsd4_run_cb_notify(struct nfsd4_cb_notify *ncn);
-> > +
-> >  static void
-> >  nfsd4_cb_notify_release(struct nfsd4_callback *cb)
-> >  {
-> > @@ -3482,6 +3595,9 @@ nfsd4_cb_notify_release(struct nfsd4_callback *cb=
-)
-> >  	struct nfs4_delegation *dp =3D
-> >  			container_of(ncn, struct nfs4_delegation, dl_cb_notify);
-> >=20
-> > +	/* Drain events that arrived while this callback was in flight */
-> > +	if (ncn->ncn_evt_cnt > 0)
-> > +		nfsd4_run_cb_notify(ncn);
->=20
-> The above check needs to be serialized with modification of
-> ncn_evt_cnt:
->
-> +       bool pending;
-> =20
-> +       /* Drain events that arrived while this callback was in flight */
-> +       spin_lock(&ncn->ncn_lock);
-> +       pending =3D ncn->ncn_evt_cnt > 0;
-> +       spin_unlock(&ncn->ncn_lock);
-> +       if (pending)
-> +               nfsd4_run_cb_notify(ncn);
->=20
-
-I need to ponder this. Does this matter?
-
-NFSD4_CALLBACK_RUNNING is now clear, which should be observed by
-another task queueing a new event. READ_ONCE() seems like it should be
-sufficient here. I'll run it by Claude.
-
-
->=20
-> >  	nfs4_put_stid(&dp->dl_stid);
-> >  }
-> >=20
->=20
-> > @@ -9858,3 +9954,133 @@ void nfsd_update_cmtime_attr(struct file *f,=
-=20
-> > unsigned int flags)
-> >  				      MINOR(inode->i_sb->s_dev),
-> >  				      inode->i_ino, ret);
-> >  }
-> > +
-> > +static void
-> > +nfsd4_run_cb_notify(struct nfsd4_cb_notify *ncn)
-> > +{
-> > +	struct nfs4_delegation *dp =3D container_of(ncn, struct=20
-> > nfs4_delegation, dl_cb_notify);
-> > +
-> > +	if (test_and_set_bit(NFSD4_CALLBACK_RUNNING, &ncn->ncn_cb.cb_flags))
-> > +		return;
-> > +
-> > +	if (!refcount_inc_not_zero(&dp->dl_stid.sc_count))
-> > +		clear_bit(NFSD4_CALLBACK_RUNNING, &ncn->ncn_cb.cb_flags);
-> > +	else
-> > +		nfsd4_run_cb(&ncn->ncn_cb);
-> > +}
-> > +
-> > +static struct nfsd_notify_event *
-> > +alloc_nfsd_notify_event(u32 mask, const struct qstr *q, struct dentry=
-=20
-> > *dentry,
-> > +			struct inode *target)
-> > +{
-> > +	struct nfsd_notify_event *ne;
-> > +
-> > +	ne =3D kmalloc(sizeof(*ne) + q->len + 1, GFP_NOFS);
-> > +	if (!ne)
-> > +		return NULL;
-> > +
-> > +	memcpy(&ne->ne_name, q->name, q->len);
-> > +	refcount_set(&ne->ne_ref, 1);
-> > +	ne->ne_mask =3D mask;
-> > +	ne->ne_name[q->len] =3D '\0';
-> > +	ne->ne_namelen =3D q->len;
-> > +	ne->ne_dentry =3D dget(dentry);
-> > +	ne->ne_target =3D target;
-> > +	if (ne->ne_target)
-> > +		ihold(ne->ne_target);
-> > +	return ne;
-> > +}
-> > +
-> > +static bool
-> > +should_notify_deleg(u32 mask, struct file_lease *fl)
-> > +{
-> > +	/* Don't notify the client generating the event */
-> > +	if (nfsd_breaker_owns_lease(fl))
-> > +		return false;
-> > +
-> > +	/* Skip if this event wasn't ignored by the lease */
-> > +	if ((mask & FS_DELETE) && !(fl->c.flc_flags & FL_IGN_DIR_DELETE))
-> > +		return false;
-> > +	if ((mask & FS_CREATE) && !(fl->c.flc_flags & FL_IGN_DIR_CREATE))
-> > +		return false;
-> > +	if ((mask & FS_RENAME) && !(fl->c.flc_flags & FL_IGN_DIR_RENAME))
-> > +		return false;
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +static void
-> > +nfsd_recall_all_dir_delegs(const struct inode *dir)
-> > +{
-> > +	struct file_lock_context *ctx =3D locks_inode_context(dir);
-> > +	struct file_lock_core *flc;
-> > +
-> > +	spin_lock(&ctx->flc_lock);
-> > +	list_for_each_entry(flc, &ctx->flc_lease, flc_list) {
-> > +		struct file_lease *fl =3D container_of(flc, struct file_lease, c);
-> > +
-> > +		if (fl->fl_lmops =3D=3D &nfsd_lease_mng_ops)
-> > +			nfsd_break_deleg_cb(fl);
-> > +	}
-> > +	spin_unlock(&ctx->flc_lock);
-> > +}
-> > +
-> > +int
-> > +nfsd_handle_dir_event(u32 mask, const struct inode *dir, const void=
-=20
-> > *data,
-> > +		      int data_type, const struct qstr *name)
-> > +{
-> > +	struct dentry *dentry =3D fsnotify_data_dentry(data, data_type);
-> > +	struct inode *target =3D fsnotify_data_rename_target(data, data_type)=
-;
-> > +	struct file_lock_context *ctx;
-> > +	struct file_lock_core *flc;
-> > +	struct nfsd_notify_event *evt;
-> > +
-> > +	/* Normalize cross-dir rename events to create/delete */
-> > +	if (mask & FS_MOVED_FROM) {
-> > +		mask &=3D ~FS_MOVED_FROM;
-> > +		mask |=3D FS_DELETE;
-> > +	}
-> > +	if (mask & FS_MOVED_TO) {
-> > +		mask &=3D ~FS_MOVED_TO;
-> > +		mask |=3D FS_CREATE;
-> > +	}
-> > +
->=20
-> I inserted an extra check here for rename notifications:
->=20
-> +       /*
-> +        * FS_RENAME fires on the source directory even for a cross-dir
-> +        * rename, where the moved entry now lives under a different
-> +        * parent. NOTIFY4_RENAME_ENTRY describes an in-place rename, so
-> +        * reporting it here would advertise a name absent from this
-> +        * directory.
-> +        */
-> +       if ((mask & FS_RENAME) && dentry && d_inode(dentry->d_parent) !=
-=3D dir)
-> +               mask &=3D ~FS_RENAME;
->=20
-
-Thanks. I'll add that in.
-
->=20
-> > +	/* Don't do anything if this is not an expected event */
-> > +	if (!(mask & (FS_CREATE|FS_DELETE|FS_RENAME)))
-> > +		return 0;
-> > +
-> > +	ctx =3D locks_inode_context(dir);
-> > +	if (!ctx || list_empty(&ctx->flc_lease))
-> > +		return 0;
-> > +
-> > +	evt =3D alloc_nfsd_notify_event(mask, name, dentry, target);
-> > +	if (!evt) {
-> > +		nfsd_recall_all_dir_delegs(dir);
-> > +		return 0;
-> > +	}
-> > +
-> > +	spin_lock(&ctx->flc_lock);
-> > +	list_for_each_entry(flc, &ctx->flc_lease, flc_list) {
-> > +		struct file_lease *fl =3D container_of(flc, struct file_lease, c);
-> > +		struct nfs4_delegation *dp =3D flc->flc_owner;
-> > +		struct nfsd4_cb_notify *ncn =3D &dp->dl_cb_notify;
-> > +
->=20
-> I added:
->=20
-> +               if (fl->fl_lmops !=3D &nfsd_lease_mng_ops)
-> +                       continue;
->=20
-> Otherwise the loop treats every lease on the inode as an nfsd delegation
-> unconditionally.
->=20
-
-This is not necessary. should_notify_deleg() calls
-nfsd_breaker_owns_lease(), which already checks this before doing
-anything else.
-
->=20
-> > +		if (!should_notify_deleg(mask, fl))
-> > +			continue;
-> > +
-> > +		spin_lock(&ncn->ncn_lock);
-> > +		if (ncn->ncn_evt_cnt >=3D NOTIFY4_EVENT_QUEUE_SIZE) {
-> > +			/* We're generating notifications too fast. Recall. */
-> > +			spin_unlock(&ncn->ncn_lock);
-> > +			nfsd_break_deleg_cb(fl);
-> > +			continue;
-> > +		}
-> > +		ncn->ncn_evt[ncn->ncn_evt_cnt++] =3D nfsd_notify_event_get(evt);
-> > +		spin_unlock(&ncn->ncn_lock);
-> > +
-> > +		nfsd4_run_cb_notify(ncn);
-> > +	}
-> > +	spin_unlock(&ctx->flc_lock);
-> > +	nfsd_notify_event_put(evt);
-> > +	return 0;
-> > +}
 > > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
 > > index e17488a911f7..31df04675713 100644
 > > --- a/fs/nfsd/nfs4xdr.c
@@ -681,20 +245,6 @@ anything else.
 > > notify_mask will also
 > > + * be set on success.
 > > + */
->=20
-> Nit: Let's use the usual kdoc style to describe the return value.
->=20
-
-Ok, will fix.
-
-> + * Encode @nne into @xdr. The matching bit in @notify_mask is set on
-> + * success.
-> + *
-> + * Return: pointer to the start of the encoded event, or NULL if the
-> + * event could not be encoded.
-> + */
->=20
->=20
 > > +u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct=20
 > > nfsd_notify_event *nne,
 > > +			      struct nfs4_delegation *dp, struct nfsd_file *nf,
@@ -758,6 +308,44 @@ Ok, will fix.
 dr,
 > > +					       nne->ne_dentry, dp, nf, (char *)n.name.name,
 > > +					       n.name.len);
+>=20
+> Now once I got all of the previous edits in place, all three LLM
+> reviewers identified an issue here that might require a significant
+> rewrite. This is why I stopped the minor editing here and decided
+> it was time for you to consider restructuring (or not). I haven't
+> looked at patches 11-21.
+>=20
+>   I think the new name here has a time-of-use problem.
+>  =20
+>   nrn_old_entry uses nne->ne_name, which alloc_nfsd_notify_event() copied
+>   when fsnotify delivered the rename.  nrn_new_entry instead reads the
+>   live dentry via take_dentry_name_snapshot() at callback-prepare time,
+>   which can run long after the event was queued.
+>=20
+>   CB_NOTIFY is asynchronous: nfsd_handle_dir_event() queues the event on
+>   ncn_evt[] and nothing holds ne_dentry stable until the work runs.
+>   d_move() reuses the same dentry and rewrites d_name in place, so a
+>   second rename of the entry before the queued callback encodes leaves
+>   the dget'd ne_dentry carrying the later name.  An A->B event then
+>   encodes as A->C, and a client holding the directory delegation applies
+>   the wrong old->new mapping to its cache.  The old name is immune
+>   because it was snapshotted up front; only the new name is read late.
+>=20
+>   The new name is available at notification time -- fsnotify_move() passe=
+s
+>   &moved->d_name as new_name, and ne_dentry is that moved dentry -- so
+>   alloc_nfsd_notify_event() can snapshot it alongside the old name.
+>=20
+> What I haven't assessed is whether the suggested restructuring is
+> now vulnerable to misbehavior during memory exhaustion.
+>=20
+
+That sounds legit. We probably need to snapshot the name sooner, when
+we create the event. I'll spin something up. As far as memory
+exhaustion goes: if that happens we'll just recall the delegation.
+That's always the remedy when there are problems here.
+
+>=20
 > > +
 > > +		/* If a file was overwritten, report it in nad_old_entry */
 > > +		if (ret && nne->ne_target) {
@@ -782,20 +370,12 @@ dr,
 > > +	return p;
 > > +out_err:
 > > +	pr_warn("nfsd: unable to marshal notify_rename4 to xdr stream\n");
->=20
-> Nit: The warning needs to match the semantics of nfsd4_encode_notify_even=
-t().
-> How about:
->=20
-> +       pr_warn("nfsd: unable to marshal notify event to xdr stream\n");
->=20
-
-Sounds good.
-
->=20
 > > +	return NULL;
 > > +}
 > > +
+> >  static void svcxdr_init_encode_from_buffer(struct xdr_stream *xdr,
+> >  				struct xdr_buf *buf, __be32 *p, int bytes)
+> >  {
 >=20
 
 --=20
