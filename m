@@ -1,230 +1,317 @@
-Return-Path: <linux-nfs+bounces-22433-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22434-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id R0CSJTFrKWowWgMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22433-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 15:48:33 +0200
+	id QkVIIABtKWqmWgMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22434-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 15:56:16 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09885669ECB
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 15:48:33 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B1EA669FFD
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 15:56:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=BVOSb6H3;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22433-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22433-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OW7jEMp7;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22434-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22434-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D379030A6F06
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 13:44:30 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AB0CB304F4FB
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jun 2026 13:49:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D558340BCB2;
-	Wed, 10 Jun 2026 13:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CBAD3E314E;
+	Wed, 10 Jun 2026 13:49:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41A940B387
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Jun 2026 13:44:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEF2312826;
+	Wed, 10 Jun 2026 13:49:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781099069; cv=none; b=Rdn5rpqa70UEVk9LPJyV+A3RcT0Kky4Zqg0kEGXFt/RI9Yj/YFRNy4+RoDLVewywPJhV/gPtE1AJ30fFqVFZAwR+CGpq3nxFdg9UC7bAeGqH7bsMD3UnVPrTbHruWAc+tHj513S4bZJ21O52fww6NYe6uwMPHF8sRYI1Iw8mOlM=
+	t=1781099363; cv=none; b=nZMM4uLyZ1YHvfv9H7TjrdFaublG56Ryw8pIYSf2IvL3WI8VzvK6j94xTlWnXa/ALHgp+nTjzWfHm2cCoS+lLHR/851XWYk96/ovdthRAEmx0RinXIFVjBnQJOII3bsUFsLL3Qj3XA/hfDZtq4RmNJVGQF2jMjSAhNvCMUG9h8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781099069; c=relaxed/simple;
-	bh=HFdCixDVC26nIkym/DDw5BbdDTYYCZ75EgliOFovO8g=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=JucBRZmsTMGewh9YT1fWt1HbCneQsPT4B0Umm87qWYkPqyu4dsmv7U5r+AcSOizPg3DnJD2QBM15liZiuYnI3VRXlvVmrOZsVvqZI//wcDYBGftO03ncrlx6myaqqdhuCqdG+n91trETlzucuroTQxtCqrMu+MbKipnrSpQqEjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVOSb6H3; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A2F1F00898;
-	Wed, 10 Jun 2026 13:44:27 +0000 (UTC)
+	s=arc-20240116; t=1781099363; c=relaxed/simple;
+	bh=kFiGDFr5RB/gATze20hBVw74cIAqG8HWvXTF4/7JrqQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UFu2NgnbuXBq6lRbxjvUYQaX385j7NChTokzdWPgEIglzSfCHdw/aUBw5dCHQ5K6q0j7oP+3QqoCWB/bL3XdQUVSVBtRA4ri2qj0xoYHV/HWQ0Cce9xtCYxV5/rH7BQdEJG3fcAN2MyG+G3jgHYncvq6dNTqVRhu55olOOeqaow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OW7jEMp7; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F18311F00893;
+	Wed, 10 Jun 2026 13:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781099068;
-	bh=wPPDhxKh3hPc6l1/pq4WkUoyCmQ73QpGV3SN3sLOFRo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=BVOSb6H3xr1dTTnA6IyJcvki9vKqeErst4XNJQblTnHZck+W55a5bkHy06PA/rFnk
-	 BzeNsmCCR+ATshWPpMmlo2gztxWdn55c8KGJyJOGAH4FKWyZTviqHmrGgZfmrtO47J
-	 rAYWUhy+/L5fGIUYkxwrOtkIaFAqCO1c103WVtdawY8TzxjEdd1oWbOaKCvfv0eKz1
-	 LO/D5npkfeUSOdkHl5SZB836NW+DDVt2nxfzA4ZVvQuNv36qwmdAt693elYcL2lmTu
-	 NbZanSLLCgP0sc96gpZhb4QHrCWGpxKNj47fqYPXftu/RAxXtR4qr+sW7xcN2c1lIh
-	 1TtZIIf6YqTIg==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E2E81F40077;
-	Wed, 10 Jun 2026 09:44:26 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 10 Jun 2026 09:44:26 -0400
-X-ME-Sender: <xms:Omopaszll95i-3fJFd6CskCrToGzY4ZK5vyfiFZgBFxT5A37wj_iKQ>
-    <xme:OmoparHzwNrSu-NHoBGiw2xAHot2S5IZPLxAX7cvsUO4E8cgFFtcUK-uvezsl8z7a
-    qA4ZDPYhIc04TVClC9TyDxb9zuKDfHsd92yRUJ_GAkdehaZSGnbrEU>
-X-ME-Proxy-Cause: dmFkZTFo6lJcIYlhfzO/M7VQ/JnV1u4EHs5xq3VlZnBCfR540veWQVuwQPexuiS4eLQ9He
-    2632OciM8xFfTwlrrqsfBrJFYSd43AdzjUtlKEJQ7ztos01/QDK8f0NKCFDLtiH6/PI8Xe
-    Rh2ta8+yx4RJ4qjkPUZJSjLMMGk67Y/x5VondMjwqe2J5HUezBrRZBfgby9HaDQa7uw9XA
-    0ZO+vPRgUARmUBEwHVMK6OUZuHsQgeTPM7dNVId1LklSaSvhzscZLscEOlrBX68uUL7Uh4
-    muMOzMveIndhSACewxMIyLTuWF4kgSGQA1trSBckDEF95S7IOLs0WvEff0ifWxq3h8dABF
-    jXli4WNoMJObTrcXcZhT0yNEAGez015qGKZV3dDKd1g4fY1WCNfiR8az0cNsMcYG9r/f94
-    RmJR6z8dJkqd2jYr+DvoCTuxD7PEMyJYsJSrBb9mIimXygUailkO9U7B6uHpBQY9n01Q97
-    tKgpWLnVyvG97FcfHsXmTxL9sFLQFjuwEszrMy9he8qsdkIRErVenWi6bLoMWDswWmbGoo
-    Ga+BkuaRorJ9sCj5WwOXAM3d4Q2TAaVa03KR3AWtXT98T3fz7h5B9Yzn+Ln2hbF/31V4D/
-    6ygODKDG7YLbZ4wsWnGwkCvkMWUYOwu/ABIzt0CbYHI1lEj00Aa+97pJGzRA
-X-ME-Proxy: <xmx:Omopajb9Q_c5ELOPrPCO6ibbO_KC0kOAKkNXt8CMSh5PlPS741hyyQ>
-    <xmx:Omopaig0QQ3SWZ50PrMxg56iDMdHDDDh0_hGEPmNDcVjFvzwdG3V7Q>
-    <xmx:OmopajyDVfnPWFVoqrteEXQ0si-20fOP1_OVPianFEFhUzhQ45fXcA>
-    <xmx:Omopat4HlpRERPyyuchP9miI8KLrPxVqOjV1SbaSnUREM4u7j1P-3w>
-    <xmx:Omopas17tC3U4tMRF30GWJtmyX6viVpeXC8T8icfy2hd8u-bp3QpqJGk>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B460F780070; Wed, 10 Jun 2026 09:44:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1781099361;
+	bh=P3XAwJ48/nUsXtOdnSazDW5BGO3gYiQky7/NCmEkI5s=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=OW7jEMp7uyaD2UR2jInuViFO6uOUaDdo88kQhANU9HUdnMT3phwlH8F5am4skRKeQ
+	 TT0BNloNiNPzORDWqTxiJqgs8Jx2ZcSztnjTzj+0GNxeAaLabRTOzDhywIahiKoJtX
+	 xqXjX7l4Khdvl8h8tjCmxklrCrLjJq4pLn8NT7i/ur898D+DgSX8Jmz/QCYt9wGLIP
+	 YC+ugkp4U0wf+mQucFxW/KeZNDKyBQQ/u9bwEzrgHNTg/9DAZRm2n/PC7EgQDIesHy
+	 Wr9m58tcxKmFjB+6gJUUVNAW4AY9LN5/KgbufFGYIutlbCujnmHwjc1mIx2ef/qveA
+	 aRB6HAeOPuS+w==
+Message-ID: <dd5836b365946641824dbde5b6edc5395271617d.camel@kernel.org>
+Subject: Re: [PATCH v5 05/21] nfsd: update the fsnotify mark when setting or
+ removing a dir delegation
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,  Jonathan Corbet	
+ <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alexander Aring
+ <alex.aring@gmail.com>,  Amir Goldstein <amir73il@gmail.com>, Jan Kara
+ <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,  Christian
+ Brauner	 <brauner@kernel.org>, Calum Mackay <calum.mackay@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Date: Wed, 10 Jun 2026 09:49:17 -0400
+In-Reply-To: <e0e995e9-8272-44f6-b2e0-9e61ed0eef3b@app.fastmail.com>
+References: <20260522-dir-deleg-v5-0-542cddfad576@kernel.org>
+	 <20260522-dir-deleg-v5-5-542cddfad576@kernel.org>
+	 <e0e995e9-8272-44f6-b2e0-9e61ed0eef3b@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AL3hV2aBoURB
-Date: Wed, 10 Jun 2026 09:44:05 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Hannes Reinecke" <hare@suse.de>,
- "Donald Hunter" <donald.hunter@gmail.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Shuah Khan" <skhan@linuxfoundation.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Sabrina Dubroca" <sd@queasysnail.net>, "Keith Busch" <kbusch@kernel.org>,
- "Jens Axboe" <axboe@kernel.dk>, "Christoph Hellwig" <hch@lst.de>,
- "Sagi Grimberg" <sagi@grimberg.me>, "Chaitanya Kulkarni" <kch@nvidia.com>,
- "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>
-Cc: kernel-tls-handshake@lists.linux.dev, netdev@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Message-Id: <98b7f6ef-3c1d-4af0-86d0-cad6d1f29b1c@app.fastmail.com>
-In-Reply-To: <d14fff89-3c7b-40ea-9380-e8c37499916e@suse.de>
-References: <20260605-tls-session-tags-v1-0-47bd1d94d552@oracle.com>
- <20260605-tls-session-tags-v1-3-47bd1d94d552@oracle.com>
- <922040b0-f87e-484d-9f7b-78098024ad04@suse.de>
- <2dc23995-3ff9-4714-ac6c-d70255b15687@app.fastmail.com>
- <d14fff89-3c7b-40ea-9380-e8c37499916e@suse.de>
-Subject: Re: [PATCH 3/9] lib: Add a "tagset" data structure
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.65 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hare@suse.de,m:donald.hunter@gmail.com,m:kuba@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:pabeni@redhat.com,m:horms@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:akpm@linux-foundation.org,m:john.fastabend@gmail.com,m:sd@queasysnail.net,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:sagi@grimberg.me,m:kch@nvidia.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:kernel-tls-handshake@lists.linux.dev,m:netdev@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-nfs@vger.kernel.org,m:chuck.lever@oracle.com,m:donaldhunter@gmail.com,m:johnfastabend@gmail.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,app.fastmail.com:mid,oracle.com:email];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	FREEMAIL_TO(0.00)[suse.de,gmail.com,kernel.org,davemloft.net,google.com,redhat.com,lwn.net,linuxfoundation.org,linux-foundation.org,queasysnail.net,kernel.dk,lst.de,grimberg.me,nvidia.com,brown.name,oracle.com,talpey.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22434-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:rostedt@goodmis.org,m:alex.aring@gmail.com,m:amir73il@gmail.com,m:jack@suse.cz,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:calum.mackay@oracle.com,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:alexaring@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22433-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[goodmis.org,gmail.com,suse.cz,zeniv.linux.org.uk,kernel.org,oracle.com,vger.kernel.org];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,suse.cz:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 09885669ECB
+X-Rspamd-Queue-Id: 1B1EA669FFD
 
+On Mon, 2026-06-08 at 12:38 -0400, Chuck Lever wrote:
+>=20
+> On Fri, May 22, 2026, at 3:42 PM, Jeff Layton wrote:
+> > Add a new helper function that will update the mask on the nfsd_file's
+> > fsnotify_mark to be a union of all current directory delegations on an
+> > inode. Call that when directory delegations are added or removed.
+>=20
+> This commit message repeats what the diff below says. Can it instead
+> explain why this change is necessary?
+>=20
 
+The idea is that as new delegations are added or removed, the mask of
+events that nfsd requires from the VFS layer can change, since clients
+can request notifications of different events. I'll add that to the
+changelog.=20
 
-On Wed, Jun 10, 2026, at 3:06 AM, Hannes Reinecke wrote:
-> On 6/9/26 15:35, Chuck Lever wrote:
->> 
->> On Tue, Jun 9, 2026, at 2:45 AM, Hannes Reinecke wrote:
->>> On 6/5/26 19:34, Chuck Lever wrote:
->>>> From: Chuck Lever <chuck.lever@oracle.com>
->>>>
->>>> Access control mechanisms sometimes need to match metadata tags
->>>> between a session and a resource. A tagset provides efficient
->>>> membership testing and set intersection operations for this purpose.
->>>>
->>>> The implementation uses a sorted array of string pointers. Unlike
->>>> hash tables, sorted arrays support efficient intersection without
->>>> needing to iterate one set and probe the other. Unlike rbtrees,
->>>> they require no per-element node allocation, minimizing memory
->>>> overhead for small sets typical of resource tagging.
->>>>
->>> [ .. ]
->>>
->>>
->>> Isn't this overcomplicating matters?
->>> In the end, this a list of strings.
->>> Wouldn't a simple rbtree holding the strings be sufficient?
->>> (And quicker to lookup :-)
->> 
->> This isn't overcomplicating matters.
->> 
->> Consider that a TLS session might have several, even dozens of
->> tags. An NFSD export might also have a dozen or more tags.
->> 
->> We need a mechanism that will compute the intersection of those
->> two sets efficiently -- that is not a simple lookup. Keeping a
->> set of tags in a list or in an r-b tree would require MxN look
->> up operations to compute that intersection.
->> 
-> It sure would. But we're dealing with a comparative small number
-> of entries (later patches cap it to 64), so runtime really is of
-> no concern.
+>=20
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/nfsd/nfs4state.c | 34 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >=20
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index 2a34ba457b74..efbc99f0a965 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -1246,6 +1246,38 @@ static void=20
+> > nfsd4_finalize_deleg_timestamps(struct nfs4_delegation *dp, struct f
+> >  	nfsd_update_cmtime_attr(f, ATTR_ATIME);
+> >  }
+> >=20
+> > +static void nfsd_fsnotify_recalc_mask(struct nfsd_file *nf)
+>=20
+> Since nfsd_fsnotify_recalc_mask() takes a single struct nfsd_file
+> as an argument, should this function reside in fs/nfsd/filecache.c
+> instead? The question might reflect my misunderstanding of the
+> new function's purpose.
+>=20
 
-I'm going to push back on that. Let's compare the proposed
-tagset implementation with a putative r-b tree-based one.
+The only caller is in this file, so by keeping it here we can make it
+static. I can change that if you'd prefer it be in filecache.c.
 
-On a big NFS server, mount operations happen frequently. With 5
-tags on a session (say) and 5 allow-tags on an export, that is
-25 lookups, each O(log(5)) (for r-b tree).
+>=20
+> > +{
+> > +	struct inode *inode =3D file_inode(nf->nf_file);
+> > +	u32 lease_mask, set =3D 0, clear =3D 0;
+> > +	struct fsnotify_mark *mark;
+> > +
+> > +	/* This is only needed when adding or removing dir delegs */
+> > +	if (!S_ISDIR(inode->i_mode) || !nf->nf_mark)
+> > +		return;
+> > +
+> > +	/* Set up notifications for any ignored delegation events */
+> > +	lease_mask =3D inode_lease_ignore_mask(inode);
+> > +	mark =3D &nf->nf_mark->nfm_mark;
+> > +
+> > +	if (lease_mask & FL_IGN_DIR_CREATE)
+> > +		set |=3D FS_CREATE | FS_MOVED_TO;
+> > +	else
+> > +		clear |=3D FS_CREATE | FS_MOVED_TO;
+> > +
+> > +	if (lease_mask & FL_IGN_DIR_DELETE)
+> > +		set |=3D FS_DELETE | FS_MOVED_FROM;
+> > +	else
+> > +		clear |=3D FS_DELETE | FS_MOVED_FROM;
+> > +
+> > +	if (lease_mask & FL_IGN_DIR_RENAME)
+> > +		set |=3D FS_RENAME;
+> > +	else
+> > +		clear |=3D FS_RENAME;
+> > +
+> > +	fsnotify_modify_mark_mask(mark, set, clear);
+> > +}
+> > +
+> >  static void nfs4_unlock_deleg_lease(struct nfs4_delegation *dp)
+> >  {
+> >  	struct nfs4_file *fp =3D dp->dl_stid.sc_file;
+> > @@ -1255,6 +1287,7 @@ static void nfs4_unlock_deleg_lease(struct=20
+> > nfs4_delegation *dp)
+> >=20
+> >  	nfsd4_finalize_deleg_timestamps(dp, nf->nf_file);
+> >  	kernel_setlease(nf->nf_file, F_UNLCK, NULL, (void **)&dp);
+> > +	nfsd_fsnotify_recalc_mask(nf);
+> >  	put_deleg_file(fp);
+> >  }
+> >=20
+>=20
+> I added the following edit to this patch>
+>=20
+> @@ -9597,8 +9629,7 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp=
+, struct dentry *dentry,
+>   * @nf: nfsd_file opened on the directory
+>   *
+>   * Given a GET_DIR_DELEGATION request @gdd, attempt to acquire a delegat=
+ion
+> - * on the directory to which @nf refers. Note that this does not set up =
+any
+> - * sort of async notifications for the delegation.
+> + * on the directory to which @nf refers.
+>   */
+>  struct nfs4_delegation *
+>  nfsd_get_dir_deleg
+>=20
+> The patch makes the above kerneldoc note ("does not set up any sort of as=
+ync
+> notifications") logically obsolete.
+>=20
 
-With the current tagset implementation, it is O(5 + 5).
+Thanks. I folded that change into this patch.
 
-If both the session and export tags are using the maximum number
-of tags, an "intersection" turns into 4000+ lookups, each
-O(log(64)). With the current tagset implementation, it's only
-O(64 + 64).
+>=20
+> > @@ -9682,6 +9715,7 @@ nfsd_get_dir_deleg(struct nfsd4_compound_state *c=
+state,
+> >=20
+> >  	if (!status) {
+> >  		put_nfs4_file(fp);
+> > +		nfsd_fsnotify_recalc_mask(nf);
+> >  		return dp;
+> >  	}
+> >=20
+> >=20
+> > --=20
+> > 2.54.0
 
-The performance of one "intersection" operation goes south
-quickly with the number of tags when conventional data types are
-used.
-
-And these are all memory fetches, so not all that fast. r-b trees
-are notoriously non-optimal in terms of memory access efficiency,
-though not as bad as a linked list.
-
-
-> But let me see if I can come up with an alternative implementation
-> using rb trees.
-
-I'm skeptical that an r-b tree implementation will be much simpler.
-It will definitely be more costly in terms of CPU and memory
-accesses.
-
-For the time being, note that TLS session tags have no support
-for PSK -- there are no data items inside the shared keys on
-which to match a tag. We might find something else to match on,
-though, who knows?
-
-
--- 
-Chuck Lever
+--=20
+Jeff Layton <jlayton@kernel.org>
 
