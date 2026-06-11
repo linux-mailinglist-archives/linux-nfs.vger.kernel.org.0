@@ -1,228 +1,222 @@
-Return-Path: <linux-nfs+bounces-22461-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22462-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id R/rYFhOmKmp2uQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22461-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 14:12:03 +0200
+	id AAerAgGqKmqIugMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22462-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 14:28:49 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A13D5671B3F
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 14:12:02 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DF48671D4B
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 14:28:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=web.de header.s=s29768273 header.b=JoUVAXE4;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22461-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22461-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=web.de;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZvYEvc9d;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22462-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22462-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 547F4303C3E2
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 12:11:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7672E3040C53
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 12:28:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B20423EDE70;
-	Thu, 11 Jun 2026 12:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6493EFD22;
+	Thu, 11 Jun 2026 12:28:46 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EC13451A7;
-	Thu, 11 Jun 2026 12:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96923B6BEB;
+	Thu, 11 Jun 2026 12:28:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781179897; cv=none; b=oLd10ZSOxPqDgVQlWy/+YlD4KKLxXqDScQR4JcvxXOQW6WoiUqrReIT794pRraHSZfnwxFPs+yWNWXWpQtqvUht10/3Nw8wABsS0NSk8vd/QSrf+LtZ6tsg+h6nUvhZUaoknn/G0uCeK0/RUqSv+4HpfnK4h8Wf4VTQgfNy+BnM=
+	t=1781180926; cv=none; b=pBXZfxj6fQU0TX4ZeIFLoh/Ib0VQSXBo/TfbgrkUgUH3uUuzhi1PM7qcnR46x33MfEjJUUq4lbpQVdginvsux22UtMyE6LZMLF9qUEb4gJNEXwiZklLiXRzw4VARBgvGw4PXmD0JeJHuI7E4PPs+5yHygA+MHfPxuZG2UyLKIX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781179897; c=relaxed/simple;
-	bh=UsvIk87YbUmFLXJpIId2/1EZRWwg5mf+3emrouP6qp4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=eK+PzneX0+RslVJltaiTK+HsZvPTLvU77DtL0vPB8uDqLebq+IK7z8022fGwlzl15S29jOGf7BOK6qZqg1VaqSWfMq2CSYL0AoJA9n3dLtDWrtIqxETT3pCetq+8ddiazbuUYG7rSy2yFN0ZRJI4M0CXuMrFy6fPLib5RGFIrlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=JoUVAXE4; arc=none smtp.client-ip=212.227.15.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1781179880; x=1781784680; i=markus.elfring@web.de;
-	bh=3OJSC1FaNwSVH7MXuxTfNwS3reE9nkqC3Q9Ob9vFgr8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=JoUVAXE4UEgJcbz3A67y8ISvqTvnGjUBXhMqk3Fdhd0408bjoVDFWCJMyFjVWGpK
-	 RmU5na3VVGN12USHRjOATvP82uCGnXu51jfeR4cKBz01Lm4stq9ezVcp+azo4MVJX
-	 Se2d4PMhBG1m1P7FSY2b95EjBgzprne0n9NteOiaicZ8Vw+CmXGLo9aRDQHm1j3o3
-	 pSVFiFAw70ZVP1nGV9IBZ2gDDsX/1jz2RsJDjlmYpS6AegveUf6RavVkLuNdJ//uu
-	 ZLybWeyYl/lvN1UENHaO3Yd4VLt5ZyZ8UjUacc5dw0/rxTljDF5ke7J0JVf5IHq+z
-	 oPq6zQ0tcle2Ng+O+w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from client.hidden.invalid by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Melaj-1x84rt1GDd-00hkM6; Thu, 11
- Jun 2026 14:11:20 +0200
-Message-ID: <099ee379-df64-41d1-8f4d-6d47d0e2fad2@web.de>
-Date: Thu, 11 Jun 2026 14:11:17 +0200
+	s=arc-20240116; t=1781180926; c=relaxed/simple;
+	bh=hmQbIKVqbp2uhRZxX1UDuT+gDmMf6dPeX+6RdqcJ6yY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KhJ1e67t6iagI8dUwP3Od8D09f9Bl2P280c87sRhuTt9SQupKM7mdusZPoy2w5X9OhE7dhdsl4vK5NWBWNICnhxQ/Z7vEuPRE0+wyaKu814NV5JIb9AaUfbMlnjzFMGOWpbpGOsltq9T2zJpysFznQjMPDR0YAd+Bb8QBMCuaJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvYEvc9d; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4B41F00893;
+	Thu, 11 Jun 2026 12:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781180925;
+	bh=Gy+nxxjsNg5AG72/sFFGmQbp/IlskHGdzxXJo6gDx+s=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ZvYEvc9dBQ51D/LDwj3zbC24JP68YH4vqSQXrM7Fg08X50msKd+IGep2a7Mql3+3D
+	 OFHlpkaeFS5/GBYvkebzCbj9JgMRgSdXxkjzwaVir3rHlyfmOgio0SeZh4JohujuNy
+	 k/ciBKTSUKJZYLajGWkTLdhih+FX11zZRJTSB3OxrY25Qzi+0giHk2If5d9A+I6cp4
+	 oDW8B29KyjbScxWM0M4V3KLMlmQ9z/gXqN8NmFEQW2AnJuur9zpt4Bh57pfzsd9q3l
+	 C8QNmEo/7XcRlT4UEvQSxiJRefHKfeAigMjRtYdJKnKf6DQWc0oyRe7rIBgNZ9RH42
+	 HKlzj5WImgRYg==
+Message-ID: <4b9b168d564665b79ca6948d739f409df360c2b0.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Use common error handling code in
+ svc_export_alloc()
+From: Jeff Layton <jlayton@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>, linux-nfs@vger.kernel.org, Chuck
+ Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>, Neil Brown
+ <neil@brown.name>,  Olga Kornievskaia <okorniev@redhat.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+Date: Thu, 11 Jun 2026 08:28:43 -0400
+In-Reply-To: <099ee379-df64-41d1-8f4d-6d47d0e2fad2@web.de>
+References: <099ee379-df64-41d1-8f4d-6d47d0e2fad2@web.de>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB, de-DE
-To: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Tom Talpey <tom@talpey.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] nfsd: Use common error handling code in svc_export_alloc()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aYoNDnYIWOamoRCSSGXuQdQtlqdeZ7UI54uzEn6yyEEGuDH9QNu
- nuzeA8TF9NDq2Ow1ZqNUFIfse0CCZh8CXfJRm/9+WWnMqNkeq08qg/OUXcd0wmc+td0k8/a
- BJVBTZbunEH1ibgmTb8PqnGrz8sQWzCb4fnC4IRfckwZQFwg2TFI/GZGbaI+Newy70jSzLI
- 8w4H3Jewm1RGpiUK8gTjQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:hrz//4aCx6k=;5m2qD662v4FI8RhyjrV6S0qrvBE
- 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
- tB1TSA==
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[web.de,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[web.de:s=s29768273];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22461-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22462-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[web.de,vger.kernel.org,oracle.com,brown.name,redhat.com,talpey.com];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[Markus.Elfring@web.de,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:chuck.lever@oracle.com,m:Dai.Ngo@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:tom@talpey.com,m:linux-kernel@vger.kernel.org,m:kernel-janitors@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:Markus.Elfring@web.de,m:linux-nfs@vger.kernel.org,m:chuck.lever@oracle.com,m:Dai.Ngo@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,m:tom@talpey.com,m:linux-kernel@vger.kernel.org,m:kernel-janitors@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[web.de:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Markus.Elfring@web.de,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_FROM(0.00)[web.de]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A13D5671B3F
+X-Rspamd-Queue-Id: 6DF48671D4B
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 11 Jun 2026 14:03:48 +0200
+On Thu, 2026-06-11 at 14:11 +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 11 Jun 2026 14:03:48 +0200
+>=20
+> Use an additional label so that a bit of exception handling can be better
+> reused at the end of an if branch.
+>=20
+> This issue was detected by using the Coccinelle software.
+>=20
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  fs/nfsd/export.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index eb020054f9a3..bb106733f3ec 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -1589,13 +1589,12 @@ static struct cache_head *svc_export_alloc(void)
+>  		return NULL;
+> =20
+>  	i->ex_stats =3D kmalloc_obj(*(i->ex_stats));
+> -	if (!i->ex_stats) {
+> -		kfree(i);
+> -		return NULL;
+> -	}
+> +	if (!i->ex_stats)
+> +		goto free_export;
+> =20
+>  	if (export_stats_init(i->ex_stats)) {
+>  		kfree(i->ex_stats);
+> +free_export:
+>  		kfree(i);
+>  		return NULL;
+>  	}
 
-Use an additional label so that a bit of exception handling can be better
-reused at the end of an if branch.
+I'm not a fan of this patch. I mean, it's legal and all, but sticking a
+goto label in the middle of a if block makes for messy-looking and hard
+to reason about code.
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- fs/nfsd/export.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index eb020054f9a3..bb106733f3ec 100644
-=2D-- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1589,13 +1589,12 @@ static struct cache_head *svc_export_alloc(void)
- 		return NULL;
-=20
- 	i->ex_stats =3D kmalloc_obj(*(i->ex_stats));
--	if (!i->ex_stats) {
--		kfree(i);
--		return NULL;
--	}
-+	if (!i->ex_stats)
-+		goto free_export;
-=20
- 	if (export_stats_init(i->ex_stats)) {
- 		kfree(i->ex_stats);
-+free_export:
- 		kfree(i);
- 		return NULL;
- 	}
-=2D-=20
-2.54.0
-
+--=20
+Jeff Layton <jlayton@kernel.org>
 
