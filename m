@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22513-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22514-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rEENELcUK2pU2QMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22513-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:04:07 +0200
+	id qfoXHMUUK2pW2QMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22514-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:04:21 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5C66674ECD
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:04:06 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B9BF674ED4
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:04:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=i9pUnwLO;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22513-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22513-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kuA+02bY;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22514-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22514-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B3813305B084
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:02:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EB7E6306CF92
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:02:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375AC3A9622;
-	Thu, 11 Jun 2026 20:01:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB403A48E9;
+	Thu, 11 Jun 2026 20:01:28 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5863A7F47;
-	Thu, 11 Jun 2026 20:01:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAD43A875F;
+	Thu, 11 Jun 2026 20:01:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781208087; cv=none; b=VZYfO8w6ABaC+x2476kFVH3fHiBQWthUScOQmSaX19JK0UpZ5tWYx21duD7T2kOL6F+GXpXc66739p4hlJwM1kp3R+BKiiiNiOAGi/lZQpQFvTZU9Nzxbq+wEs26i2rVJ+Gv1iqVswShZzAEIrUaDsRs1qERbUSpa+nwxEK27qo=
+	t=1781208088; cv=none; b=obI4vbofs0GQ4P5zpf5988FT1dHiVGF0ke6aRW6KJJTqXoLc1EdNVtNoAHwlqgtmWMQSRQAoszSJosotD6cPgYmQutna/8CjC/ltVaJCxxvWmEdmlQoDbfJ+IuczBDKcdrlKix7SKkV4Q+57cAxkkdiWAhQw7ZdBnt9kU8OlWJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781208087; c=relaxed/simple;
-	bh=YBqZWnvNS9uriMTrTmA/sTnLcvDhtHboQIRiMr+9iPk=;
+	s=arc-20240116; t=1781208088; c=relaxed/simple;
+	bh=HjdcV2o8ncJG3aQMZRNiAtDXRSSo4VAEwbbEo7SDSMI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KwxX/K3q43A53ib2t6zM91S2t8mPLdsBUYs5sMFEmgb5l5w1OFSJfigvveNZA72SLYOo8FqZ2ZMOPpvqgnOvVj4juur25CCZeSeYVRzic5Q4JteQOGFPe6rkjmEpZdxeJra0m1IETkT0LpzqyK3WizvJ/5qRBFVDHCKqqtGVhck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9pUnwLO; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6C01F00A3E;
-	Thu, 11 Jun 2026 20:01:24 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=iZbwm5M2XgZOtgc4H2VULcyWM/WlbZf2rjZgYgbNdh4xyYFOXYdoNC4Z29FgzbF2S2w5IxrMBn0eFSuvX8FqAYckkc0IJPEXLYCy/tf71WDFBJTCfYSLjGTho29AwhjnCuQdyLbAq+zgTEoEDXuHF8mkrRRK0AnzWdkxWyUPw5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kuA+02bY; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2151F00A3D;
+	Thu, 11 Jun 2026 20:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781208085;
-	bh=5xEvz/sZONYaVq46iVZ68/Vo8Vo3q+jbHPP3dR1d4Go=;
+	s=k20260515; t=1781208086;
+	bh=6debSdEaXxrI+zgXvMpC3Fp4bAhHn2+KFSNNHUmoMHI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=i9pUnwLOAc1l1CiDcQUH7VRg+hxZEc99i6yhu93WL6qEbsbTocox4F9ub5lTVDLoq
-	 Zg2Hg60qSzKnid9/15e+YOOAdLIaDu3UmCerJxi1LFvLl6ma/HGXGjgr7e7mTFEVRq
-	 KBOB9PiYeDG6E4A6ZhZ5As5s/a1OvyMoQRIWJwIf3KB8rEay9GgQYvXzoBRj8iu+wu
-	 Uo9Ox99ddosvAOZnQsPIpkoBq216A3qI2z0v3Q7Mv4XbtiPvlN7JD4Wh3mNq6kfkJM
-	 PdRADTHwaX8SXE/4hMfZ48HI+ezxOGEB5zF7rVfZfwqecW5NXOh/WRHRxpgLqFIRx7
-	 fpDEzh9S8lZuA==
+	b=kuA+02bYuSEN5pSNiE2O6qRasijJAFLpMl9J50MKAMpNVIgKzd6B9DpL9WX6XCaP8
+	 FY9opNG78lquXl6xlInz1HSg1MxqQvDzyE9RZAGd5kFXiMLNy/bot8xATaL8L3mwMB
+	 Nry8PQJW9qo1/fDZRPgGGlum23R1qPVxheS7v/0u7OblNlqQ8B6Nt9kxFgcmQmjBBp
+	 sKqqiAktvdispwNthdrJ+A1vWZfIGOGD5Q9/b9+1dHLPD0JgTkrVlXDnAAe9Wbn6vc
+	 nnYkW0IKbu5GEw8YpUpuw0kz60e/ya5jI8A7Nkqw7CtnG+B2kzG84BIWwiimqWBN7G
+	 0yjMeQZmU2IHg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jun 2026 16:01:02 -0400
-Subject: [PATCH v2 19/21] nfsd: restore rq_status_counter to even on all
- nfsd_dispatch() exit paths
+Date: Thu, 11 Jun 2026 16:01:03 -0400
+Subject: [PATCH v2 20/21] nfsd: reset thread skip index when advancing
+ pools in rpc_status dumpit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-nfsd-testing-v2-19-5b90e276f2d9@kernel.org>
+Message-Id: <20260611-nfsd-testing-v2-20-5b90e276f2d9@kernel.org>
 References: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
 In-Reply-To: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -67,20 +67,20 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3388; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=YBqZWnvNS9uriMTrTmA/sTnLcvDhtHboQIRiMr+9iPk=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxQAPnwqX3ZY4DE/EAt9zHLYPSWxRMFzWYSGs
- aA6CYu+3eGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisUAAAKCRAADmhBGVaC
- FaVvEAC2fkMIGVadQUh/qz8rDQn6mOxvzz9vvrQ2Lq5zhAxyu1v5RkAJjVLgIpWyz8/XGbO9+Gi
- wG/YGb+MrWwXhYnwtZsOCQfqS4nVGL/fwYTTU+x171Ni5jnL7UK857rOP3MqB1QSWPoqkNr2dhA
- FLO+f13LT36ni9f8MZ406+Ou/XI//waBhQR0GYEzAaivAMSPCtcTLg+V/QleiE2oEDKcpHwhi7k
- Bc9SEMLcynnsB2lB0sWxsst5aDRS350b+MMRSYw+ESd0jp4xfZLvPXMAw4zWX2/PMcNjAeYEaFc
- K7mil7yatsRIEuaVk4S4RzzsjKJVemn9ZYzvBuf9+drsPeerQfIBjrcdsfFfsjd7Xe4+5qHS6zV
- 5PQxvgJbbLekzo/dpIpB0N5hhCrrFK+IUo8Xw8RWBJ4qgzmcpdDR1Y8rtNoQBe6etclMNNYwKjS
- FCDN/kXQVFjBl+bwtzfCWlAeUvcekMSuTXmr3qf+6sy2Yft0dVS5xzbsuFYmZIIYaYkQ9vYc0g+
- eh5AJqp9+/nWiXik18NyOTvvj66yAwDzbe59dGnUk4TskGuaVR6KRCcokTSrsl0vDtQR3t8ZNp1
- gf0yCImPCUgyEyOP6lcG1cilTt9jr/jBU8CmYkfUYGX35/pltnilbaAcs6XSqhxz86x5Y6nAFUb
- mhLHflN6MHSjJDQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2084; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=HjdcV2o8ncJG3aQMZRNiAtDXRSSo4VAEwbbEo7SDSMI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxQBjOn8XRRNJmd+dEPmbrKLRhziQGET1QP+f
+ GnsKJgecvWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisUAQAKCRAADmhBGVaC
+ FVUXD/4tWMbmztr+AuhtQgQvTjLGNk0bEHO+jg5KgxTBCSBzl1Nd2/anC47gQb0IgO+BafMn2BQ
+ N6hU+R4zCYYocDkiOHvY4BOhIVWoZqEXPTQlWWBvfFb9haV4798HE/kLNiuvgk9aULZqsmCXz+q
+ isr4LPloTQoX38fqii6PKXz+QEiyzSlE0z+MTeG/cao3LYfkzzLfha6NA0zPCOj5V6zLqnScZzx
+ zJffiThjR0Pj+6E3qA/871ZXx0qWj4NVfS6LSzG8VCfdMtpBc87prZ2K0gGVAIFR73iejceQUuE
+ MaJVe7OfXxA4PbO5X805r7AUtXm6kPIoCSx2/7FM3t17H42bJjhnGPcOeuJQJ4wEe/LZT6uw8KL
+ tHT4CcwJzvlRD5PutniFUHwLdfS1ukOhFRLJP0NL3J0XAwM2QDjI0y1EmAsbvTL5l/UPn17nluL
+ zoPWEEu9E97ZkTkXSZNnu+cPdSvjkWJwn9zSzJSPKcN3k8u+ztyFYt0HorUn8AB+NygXU2BFFfI
+ gkdYqz0T39zXvQmdinJSpR8cn89avUkHc7MTDhKWrssbZrJHWVRMFhO/wYqh+/Nzfx6UPJW6Q7Y
+ x1eOxxP4LYTQhUDZAyXTnskLyofOCJuQ8tEXm5YYQ5bsL1H9FKa2TJ3W8k2rxhgro1boznCA2Xb
+ ha71Q5WcK025VfA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -88,13 +88,13 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22513-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22514-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -113,96 +113,66 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D5C66674ECD
+X-Rspamd-Queue-Id: 0B9BF674ED4
 
-nfsd_dispatch() sets rq_status_counter to an odd value once a request has
-been decoded, and back to an even value once it has been fully processed,
-forming a seq-lock like protocol with the lockless reader in
-nfsd_nl_rpc_status_get_dumpit().
+When a netlink dump of rpc_status fills the reply buffer, the iterator
+saves the pool index in cb->args[0] and the thread index within that pool
+in cb->args[1], so the next invocation can resume where it left off.
 
-Only the fully successful path restored the counter to even. The cache-hit
-(RC_REPLY), drop (RC_DROPIT / RQ_DROPME) and encode-error paths all return
-after the odd-valued store without ever bringing the counter back to even.
-Once one of those paths is taken, rq_status_counter is left odd: the next
-request's decode ORs in 1 (still odd) and only a subsequent successful
-encode restores even. While stuck odd, the dumpit reader treats the rqstp
-fields as stable and its retry check compares against the same unchanging
-odd value, so it never detects concurrent mutation. This exposes actively
-mutating fields (e.g. args->ops / args->opcnt during compound decode and
-release) to the lockless reader, which can read past the end of the
-8-element inline ops array.
+On resume the thread skip count was applied to every pool, not just the
+pool the dump was suspended in. Once the resumed pool was exhausted and the
+loop advanced to the next pool, the first cb->args[1] threads of that pool
+(and of every pool after it) were still skipped, silently omitting their
+rpc_status entries from the dump.
 
-Add a helper that advances the counter to the next even value and call it
-on every return path that follows the odd-valued store. The decode-error
-path is left untouched as it is reached before the counter is set odd.
+Apply the saved thread index only to the pool matching cb->args[0], and
+start every subsequent pool from thread 0.
 
 Fixes: bd9d6a3efa97 ("NFSD: add rpc_status netlink support")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfssvc.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ fs/nfsd/nfsctl.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index b8e8d80e984c..a8ea4dbfa56b 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -966,6 +966,20 @@ nfsd(void *vrqstp)
- 	return 0;
- }
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 720b481bb7ad..a5e328b14e45 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1527,10 +1527,20 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
  
-+/*
-+ * Set rq_status_counter back to an even value, indicating that the rqstp
-+ * fields are no longer meaningful to a lockless reader. This pairs with the
-+ * odd-valued store made once the request has been decoded, and must run on
-+ * every return path that follows it so that the seq-lock like protocol used
-+ * by nfsd_nl_rpc_status_get_dumpit() is not left permanently odd. The store
-+ * also advances the counter so a concurrent reader detects the transition.
-+ */
-+static void nfsd_status_counter_set_idle(struct svc_rqst *rqstp)
-+{
-+	smp_store_release(&rqstp->rq_status_counter,
-+			  (rqstp->rq_status_counter | 1) + 1);
-+}
+ 	for (i = 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+ 		struct svc_rqst *rqstp;
++		long thread_skip = 0;
+ 
+ 		if (i < cb->args[0]) /* already consumed */
+ 			continue;
+ 
++		/*
++		 * The saved thread index only applies to the pool the dump
++		 * was resumed in. Subsequent pools must start from thread 0,
++		 * otherwise their first cb->args[1] threads are silently
++		 * skipped.
++		 */
++		if (i == cb->args[0])
++			thread_skip = cb->args[1];
 +
- /**
-  * nfsd_dispatch - Process an NFS or NFSACL or LOCALIO Request
-  * @rqstp: incoming request
-@@ -1028,14 +1042,9 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
- 	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
- 		goto out_encode_err;
+ 		rqstp_index = 0;
+ 		list_for_each_entry_rcu(rqstp,
+ 				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
+@@ -1538,7 +1548,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+ 			struct nfsd_genl_rqstp genl_rqstp = {};
+ 			unsigned int status_counter;
  
--	/*
--	 * Release rq_status_counter setting it to an even value after the rpc
--	 * request has been properly processed.
--	 */
--	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter + 1);
--
- 	nfsd_cache_update(rqstp, rp, ntli->ntli_cachetype, nfs_reply);
- out_cached_reply:
-+	nfsd_status_counter_set_idle(rqstp);
- 	return 1;
- 
- out_decode_err:
-@@ -1046,12 +1055,14 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
- out_update_drop:
- 	nfsd_cache_update(rqstp, rp, RC_NOCACHE, NULL);
- out_dropit:
-+	nfsd_status_counter_set_idle(rqstp);
- 	return 0;
- 
- out_encode_err:
- 	trace_nfsd_cant_encode_err(rqstp);
- 	nfsd_cache_update(rqstp, rp, RC_NOCACHE, NULL);
- 	*statp = rpc_system_err;
-+	nfsd_status_counter_set_idle(rqstp);
- 	return 1;
- }
- 
+-			if (rqstp_index++ < cb->args[1]) /* already consumed */
++			if (rqstp_index++ < thread_skip) /* already consumed */
+ 				continue;
+ 			/*
+ 			 * Acquire rq_status_counter before parsing the rqst
 
 -- 
 2.54.0
