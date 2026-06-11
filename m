@@ -1,201 +1,171 @@
-Return-Path: <linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22517-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /cjvDuIdK2qp2wMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:43:14 +0200
+	id DNPuEl8iK2qO3AMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22517-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 23:02:23 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EC966753FD
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:43:13 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A3EF6755AD
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 23:02:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OTZ9HjbJ;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=hammerspace.com header.s=google header.b=JitdQ1M0;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22517-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22517-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A9D963195D19
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:39:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2BCF7312A83E
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 21:02:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269124418DF;
-	Thu, 11 Jun 2026 20:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 483483624C5;
+	Thu, 11 Jun 2026 21:02:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7E4FC0A;
-	Thu, 11 Jun 2026 20:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0CC36403B
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2026 21:02:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781210350; cv=none; b=ACQ8nQb6I8QsR/3A1qSlzhDBH3MT5rJUE45Kuz+SK6Rj36v2M8PwwLs624vAV2axEEQPBkVOHQJSvaOIhIZQcORmQeH1xNYTVYhPeFKCyfVfk3Nv0MyLG1hvDISNGvGP0d3YZN47uk2Da4Lu+wcqz3YM6IXGaqaEPFHCW1gt03Q=
+	t=1781211740; cv=none; b=OT0DR4grhxAuHz9YvkOrfXKX3OuILziAVAP0o/2Pwb3CbYisOxUEXIa0L6Mi15ke6t9A0YovG7DQyKRBrxKkf/RrAgGJUY7jOexAnknO1HQlFSGBGwOtBScEJl/XQSva7XkurrN7alWh8SWcA/xA1jhViQY1B2mPja8BrU7s6mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781210350; c=relaxed/simple;
-	bh=BLRS1QfNPqSzaWd9ltdq7mD7QRgzKYfRVz8Ya6pJEPE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mSdxJAbzMFxJW2WitZISAsWXg2JdCBHpSWxlAr5X38AR0x/ZvcDH0Kjj9k098u7nv7oyO0+QF/JYgB+LZM5z5RkF9mkIxAymofkAfMAe1qY0HyWwa3bqTVzBP6gU8G3cxPbRilTuv9t0mHc+wlblnQ2cz2rqssr9inW9qU5V3WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTZ9HjbJ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366D61F000E9;
-	Thu, 11 Jun 2026 20:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781210347;
-	bh=L1D9xPLmGDmv13FugeRYYEoTnEeiIXht+joTvUzMY7g=;
-	h=From:Date:Subject:To:Cc;
-	b=OTZ9HjbJ3R8ViokuTRA97cvk+QrdGdXAID3ETOUsp7k7+HLbtOQPklWDAmrQBCioC
-	 aKSwdu0awyEuHh/n0zQrPy3SL9eLlJFKzrh4bbToA2nybJsBJDQ2niQj5nsuKThyOC
-	 emH32A8UXy5eg5IG5mrKbUjxBL99K8YvR6UXW7rgmZRyU0mz87O1PlgDNREWx0P3TH
-	 pGPQlW9NoH39zB91WzbjJ3FxYie4GQZJoZDnriFWeaLumJKBpKqO6H+70FxodUIWfB
-	 zHBES3mMTfcaVxWqd1y/rIMzz7OmZBSX7rXOsg2aVfLG0WedpDiBbxZ0IuSpOXuoJ4
-	 G52/S0hS3JWmA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jun 2026 16:38:56 -0400
-Subject: [PATCH] nfs/localio: fix nfsd_file ref leak on nfs_local_doio()
- init failure
+	s=arc-20240116; t=1781211740; c=relaxed/simple;
+	bh=C/XF1KBCPyp1iLX3144J1P57MzJBp2tT4lK8bU2T56k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qe3UhABNzEPNvN7rozDmW13wHC1iFnZACkVEwW0YMidFYCLeVPB9js91bchP0PYNhgF3ZHNqekska3ddeyaMyCfe0w84Lx3M+5KoAdnjml5eoG+IjyDlLiSOrNC4LxnnjMQzn93T2WPRgGtYXUQOhwgxI5qvGs7uixWrepDvE6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=fail smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=JitdQ1M0; arc=none smtp.client-ip=209.85.161.52
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-69e66e11386so174342eaf.3
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2026 14:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hammerspace.com; s=google; t=1781211737; x=1781816537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QMG6xmnDztSkSy7FDl0NP1E2iEDHgthTwtXRGrFHebA=;
+        b=JitdQ1M0VfDbEQYatCUfvCmZB4Bcg4Jnub4GteNSr3xelGHb23eF2gceD2s2lw7DOP
+         pELNEPClS7/h37+GlK1MmhDAJg2PZW8axWc37ZyipxeG7y3EzNrK4XblblVEZW/tpSbi
+         6DGa25B2EGMi3OXY3HqMzcGkWI2XuIjkntNWoX6WGbCxSbpErzEaplxuDc7PADEpUCXC
+         YmDpcTqqJSztcv74yla/5UFiGC2NGmmxzr1m58xzXed+swvTDv3vZnFgL9N3MM8AC2oy
+         pLjNjivFiclqhRITtnrQnX6XgCk6jYz4EbKnqjw7attQbGhEATYY+woK95DJNx1fE7Vc
+         r5cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781211737; x=1781816537;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QMG6xmnDztSkSy7FDl0NP1E2iEDHgthTwtXRGrFHebA=;
+        b=Dpn7NMrFhzfb968iGDlmQJwSIwcv6HsLhFr+6yXXL6ZzGKTVtIwAdid+d1lwJ7ZcJe
+         /js9VUUyr6f9frW1TPc1PXWdr7U2peBRADFFK/Lty8b5QvCcExpPAoUdqjaU1wWrnoYn
+         VUW89NSTZLbSpsdifZAeDhA36Lo0zbcLsz4VHeArjodjvkQn+yy1ob7Vx9aSypJI9YLQ
+         RHemeBTDC2G00xJNXTQM1Rkqc8jx+WWESVtGkBLD8C+L21rLb0Y3YyJU8Pj4vKVMZzJl
+         w14Dvga78Xa22pc08TiE82ssFMacC3OIAIfHP7C2xYf/UwFIntamzMcQkbzz+AdJV/h8
+         UsRQ==
+X-Gm-Message-State: AOJu0YxHEpazXzKUjiD1wdJoEh3oU5bMLXK32m+fidI1kmWZExE3zYIn
+	JWe8h3zrHhPp0CnKVvAc3dvtb8SB+D42Qa/BsKc7N7ReAI1VXnTB1EfBQZ9Itp46qsI=
+X-Gm-Gg: Acq92OHXQ5RfQ9uQP7u9fW+wDcTTIsgRGu7zb1LvZarIFOH1f63xX5uqVCJOlG9kOtx
+	YbkDhyN3Rh4Hk/cLSfdrSjUHxWzuVxkp98/bBO6riWrmaa/dusnSeE7rBEBph0Yt5nFVVu0bJ37
+	MamISpIRg8ZQ8H6Y5VQdizLd+Hk5iMslD2COm0tNN25J3JEZq/v+Le5b7F51NI1QZu2SetYpp9C
+	8NWmzv2NNDfoIB5bV+acxs4jbhirhycxe42leW2DgJlWeHWBZOxwpcegjtOoYYd5ygh91auM+Ui
+	dkMyE49htt505dVBbIRLQ/MbUJFKfxIk8h5gLBm23IceZHv6aGShSO5BqZmt0X8VPWDlqrelubM
+	yuVoe3caDwud9A4LzWc+zhsqCs/ftQR+sC4z+TX/xszRIKZMNSGrLiKMpPBMDUnDeYOyYP6E5OW
+	wojUaOF0B+0qR+aOTedcAVZ/AVUwJd0OjEg4FGugjK39RCEh+ZnWCMWcDeXtw=
+X-Received: by 2002:a05:6820:178f:b0:69e:2cb4:2ed8 with SMTP id 006d021491bc7-69ecaeddf06mr3297754eaf.26.1781211737357;
+        Thu, 11 Jun 2026 14:02:17 -0700 (PDT)
+Received: from bcodding.csb.hammerspace.com ([66.97.168.37])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69ed859454esm460370eaf.15.2026.06.11.14.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 14:02:17 -0700 (PDT)
+From: Benjamin Coddington <ben.coddington@hammerspace.com>
+X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: include MAY_WRITE in open permission mask for O_TRUNC
+Date: Thu, 11 Jun 2026 17:02:15 -0400
+Message-ID: <47bbb0cddcc9a767aed56ff0cbae5135a2eefb13.1781211392.git.bcodding@hammerspace.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-nfs-localio-v1-1-b42b2587b6c5@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqAIBBA0avErBMcFwN1lWhhOtaAaChEIN49a
- fkW/zeoXIQrrFODwo9UyWkA5wncZdPJSvwwGG1IE6JKoaqYnY2SFbL3C2HQBzGM4i4c5P1v297
- 7BzIlwa9dAAAA
-X-Change-ID: 20260611-nfs-localio-1edd961f0b6e
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Jeff Layton <jeff.layton@primarydata.com>, 
- Lance Shelton <lance.shelton@hammerspace.com>, 
- Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2394; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=BLRS1QfNPqSzaWd9ltdq7mD7QRgzKYfRVz8Ya6pJEPE=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxzks7ntxmn+eK8COMHqgwul2RRnS3C9nc6mP
- Xg02W7p1H+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisc5AAKCRAADmhBGVaC
- FR5rEACa5OQuOxu6ax8Bmod/Qt9DTu/E4q+NHDap/Fu57cCamosyfhlybXjqXiQ88hbBFWHKpsU
- IrSz+eAPV6Fb/1eSQ4NOqNsEfpK7Z+7IRxeY4+dA3i4VrmVrQX9/Xr5kaPEtUHP7ZAu1ubgrWiP
- nbHS6S4oM0s4xOYZOzZR3A2UtUmKGC6IoMBlDfu7jp5NB0friFhufXGP3LDTvBapWifT16XMXx7
- vMQCYnPjZyfZuen46JjGH+RufBoCP0TiJswj81FvI0sZTDpR57H3LSVXxlw6RthDNXH8Vxn/k8q
- w2lCevFyzJV/Bm7InOTnQ8Uye/6Ness0dYPBfXxcqTpR+/KYKPMnhnhFrQwwZLv5NXe8jhaEvao
- TlrEc8hD5obfQ+JROFDFtDk2kMaTOXgM9+FZknM9LxG/HxviH9d35q7CMaYNqQw8tRtRajzDoP0
- 5+lDnDYP2lTOYMFiqvuuGDqtgzgpzmKajsGqgFp1L9NHk0Mx0+S58/6oAWPr+vbPibx4wHBgKN6
- EfQbI9NHzoyzDJA80yW9tYQOSWbWmPzJHX0RVsMKvik4UicYQ3xmSG+PYXKgPIp+8RGcTCquPeX
- nuHm9wgNIZW9HUGQhlFkzotm+yKZQCLqSY1xxi3HWzUAPsP2IjfJaNQmOy1Zttrt0eNBW4Y/I/J
- 6Z9ufPcr4Nm8gJQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-22517-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22516-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:jeff.layton@primarydata.com,m:lance.shelton@hammerspace.com,m:snitzer@kernel.org,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DKIM_TRACE(0.00)[hammerspace.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,hammerspace.com:dkim,hammerspace.com:email,hammerspace.com:mid,hammerspace.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7EC966753FD
+X-Rspamd-Queue-Id: 2A3EF6755AD
 
-Two early return paths in nfs_local_doio() fail to release the localio
-(nfsd_file) reference passed in by the caller:
+POSIX requires write permission to truncate a file, so an open() that
+specifies O_TRUNC must be authorized for write access regardless of the
+O_ACCMODE access mode.
 
-- When hdr->args.count is zero, the function returns 0 without calling
-  nfs_local_file_put().
+nfs_open_permission_mask() builds the access mask passed to
+nfs_may_open(), which is the local authorization gate for OPENs the
+client serves itself from a cached write delegation via the
+can_open_delegated() path in nfs4_try_open_cached().  The mask is
+derived from O_ACCMODE alone, so an open(O_RDONLY | O_TRUNC) against a
+file the caller cannot write requests only MAY_READ and passes the
+local check.  The OPEN is then satisfied locally and the truncation is
+issued to the server as a SETATTR(size=0) over the delegation stateid,
+which the server accepts under standard write-delegation semantics.
+POSIX requires that this open fail with EACCES.
 
-- When nfs_local_iocb_init() fails (e.g. -ENOMEM from allocation or
-  -EOPNOTSUPP if the file lacks read_iter/write_iter), the function
-  returns the error without releasing localio or completing the hdr
-  lifecycle.
+Include MAY_WRITE in the mask whenever O_TRUNC is set so the local
+check matches the access the server would have enforced.
 
-A leaked nfsd_file pins the associated net namespace reference,
-blocking network namespace teardown, and holds a reference on the
-exported filesystem, preventing unmount.
-
-Fix the zero-count path by adding the missing nfs_local_file_put()
-call. Fix the iocb init failure path by jumping to a new cleanup label
-that releases localio, sets hdr->task.tk_status, and calls
-nfs_local_hdr_release() -- matching the existing error handling pattern
-for the post-iocb error path.
-
-Fixes: e77c464c31b3 ("nfs/nfsd: add "local io" support")
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Suggested-by: Trond Myklebust <trondmy@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
 ---
-I had originally sent this as part of a pile of nfsd patches, but Chuck
-pointed out that this was client side.
----
- fs/nfs/localio.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ fs/nfs/dir.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index e55c5977fcc3..63cf6e2cc745 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -970,12 +970,16 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
- 	struct nfs_local_kiocb *iocb;
- 	int status = 0;
- 
--	if (!hdr->args.count)
-+	if (!hdr->args.count) {
-+		nfs_local_file_put(localio);
- 		return 0;
-+	}
- 
- 	iocb = nfs_local_iocb_init(hdr, localio);
--	if (IS_ERR(iocb))
--		return PTR_ERR(iocb);
-+	if (IS_ERR(iocb)) {
-+		status = PTR_ERR(iocb);
-+		goto out_put_localio;
-+	}
- 
- 	switch (hdr->rw_mode) {
- 	case FMODE_READ:
-@@ -996,6 +1000,12 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
- 		nfs_local_hdr_release(hdr, call_ops);
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index e9ce1883288c..cb7ddaefdfb2 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -3344,6 +3344,8 @@ static int nfs_open_permission_mask(int openflags)
+ 			mask |= MAY_READ;
+ 		if ((openflags & O_ACCMODE) != O_RDONLY)
+ 			mask |= MAY_WRITE;
++		if (openflags & O_TRUNC)
++			mask |= MAY_WRITE;
  	}
- 	return status;
-+
-+out_put_localio:
-+	nfs_local_file_put(localio);
-+	hdr->task.tk_status = status;
-+	nfs_local_hdr_release(hdr, call_ops);
-+	return status;
- }
  
- static void
+ 	return mask;
 
----
-base-commit: ec039126b7fac4e3af35ebccaa7c6f9b6875ba81
-change-id: 20260611-nfs-localio-1edd961f0b6e
-
-Best regards,
+base-commit: 979c294509f9248fe1e7c358d582fb37dd5ca12d
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.53.0
 
 
