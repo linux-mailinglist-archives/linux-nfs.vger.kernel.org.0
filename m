@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22502-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22503-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZjnNHYEUK2pC2QMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22502-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:03:13 +0200
+	id aV5XNbQUK2pT2QMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22503-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:04:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0E26674EA3
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:03:11 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468DB674EC8
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:04:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=URcSr7Ov;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22502-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22502-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=RNVBkOm5;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22503-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22503-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BAC6730338BD
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:01:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 83A0B31740FF
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:01:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D537839281B;
-	Thu, 11 Jun 2026 20:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53A83932EA;
+	Thu, 11 Jun 2026 20:01:16 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7EC391842;
-	Thu, 11 Jun 2026 20:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE3374A05;
+	Thu, 11 Jun 2026 20:01:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781208075; cv=none; b=oI47nd/Ec2pcCD33OI7gjSxD0gruX4hOGSpwWGqwxRGVkFQKkr343IicJIVyFuYCHxfzV7GOjjsF1Rsw8Ax3zpTi8dbJWfKm7U8M3/TKxEIu2YdslB/j6HsPdI9D1IMlQJfoAjOCvGuMeTugpYOyW1lHuuFXi2ySBLpqd6VN6KA=
+	t=1781208076; cv=none; b=Zvha9N3jadlP0s23523c2A1EA/TJiOzHJ+ZsifINt6QFwe86L68UJJ7kNdcnH7W4X0NZDE6SiGwUdMSzu36IaJXL5i4jc3AGSuqnJoYZC8KWWitPTmwz12SX4+F6ErugCZdNW2HTV8EiCcnWVSXPnOOcL2ApSC1z0NqHU2OdfSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781208075; c=relaxed/simple;
-	bh=KVrLhX9lsnQb1vW4B3vqrncGKobnyg/dgPHZxa0IyTk=;
+	s=arc-20240116; t=1781208076; c=relaxed/simple;
+	bh=FIsmlgIjkpteAPJhVKKHAjd95/iwb4iZSOjkZwgqzRQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H3dp35Z9a4wcKG6bUk5d0+CWfHYjA3q706Q103OupbzlP7I/fXhrWB4hiBSeEKqZD4LH2xcp8JO8pUyY4REL2c0DlZp40AfZBW9MY2c+7hX0NoKcJVG8Vb+oqQ3qqbvv75VwBemZOPy0486SN2oxnI7JJKo8vNUyH4DF6d6M4w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URcSr7Ov; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EBB1F000E9;
-	Thu, 11 Jun 2026 20:01:13 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=haOlx8X9gvpMA+dchB2/A1f+qse5xf/V3l+Z1dVaiBoRoTzV0iAe6OokV399vBykG1l70SB1HYeT1SSvdgxNwKoF/FyCJpzu3oYVxgSu0E4kNVERJvpSCmpZ2eG6UvvNavsp+eO9wLffgl8PWb4brhPEZhDv5PY55TbDeXeG0As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNVBkOm5; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46C41F00A3A;
+	Thu, 11 Jun 2026 20:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781208074;
-	bh=VGQgLYYOesAWY4AaR21R8wLs+Xwa63VsdpGz6sz3/hs=;
+	s=k20260515; t=1781208075;
+	bh=fc7tna7IOIRFEaG5wY6UE/IusmPFmDcTxG+DmFVpXeE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=URcSr7Ov0mEtXhKyMmUFAvjFJR5DhY7Csyx6C6HOQm7ZCrK7Hsdo+CUMe2Dh7ZxvP
-	 YzkfqjxKXVPVREllKykzQHQ5cWcOgLclGsmS8lOAHnSZOLaUiA/XeGM0M02YG2Xn+H
-	 he32kjq20M+S/xL9IKP5UdWEgG/2WmQqR3SDt/i/satxJMJtuvAqTr/NJNmJMwLe9x
-	 gJioOxfef2IpI7bkm5U8kcYtbVx8mebAEi1T6EviX1UvEc+lgwD83gV0a8itY0jl8o
-	 6lIrOLMZUMATXeWPW+XchlqwukZlZE/BZhcY5bnOpQ1515Fp0QHW3N9bpTBoDBc1ok
-	 3jiac8TZ1a2kw==
+	b=RNVBkOm5cO+3RieMaxQ1ErzW0RvBGi68NBdcxzwv/dyHo29M7zFu11AsIcwDvusCF
+	 m1jZvnHuz0seEgSpyMhpu1FCw3ZKCUm6eT6rZrvTOS7LSjc4o3RPaQm5iT57ZhMrkC
+	 1YLb0cj75msku44C6iPv1HGjUBjSKkg/vvxt8pQMbtjMdJNLIF9l3vT1pqR93I/0eq
+	 esKNZWI5gNJuqDg1LERM7NeGhgNIki+lwgOZFtdGZQ9IbDh+WzCpheODncWG6eRg4s
+	 3gh8k3k5KeJd7wf6tsH0Pgc+CpmMZG5H3iQe2T1ESNEUy2ddulngTAcEookIF6D5r8
+	 PCbD8xEKROiqw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jun 2026 16:00:51 -0400
-Subject: [PATCH v2 08/21] nfsd: remove premature NFS4_OO_CONFIRMED in
- CLAIM_PREVIOUS path
+Date: Thu, 11 Jun 2026 16:00:52 -0400
+Subject: [PATCH v2 09/21] nfsd: fix version mismatch loops in
+ nfsd_acl_init_request()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-nfsd-testing-v2-8-5b90e276f2d9@kernel.org>
+Message-Id: <20260611-nfsd-testing-v2-9-5b90e276f2d9@kernel.org>
 References: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
 In-Reply-To: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -67,20 +67,20 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1050; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=KVrLhX9lsnQb1vW4B3vqrncGKobnyg/dgPHZxa0IyTk=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxP+ijHh3wMXBwdRhhmNb14rDf5Mw5AEJPITM
- Fr6R4QfsKuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisT/gAKCRAADmhBGVaC
- FdK4D/wNLWtsFiiqsMKyaeHO6eWnjEkVTwCozJZbLEB0KwI1Vv3P1THBELBKC+Jj2t8//gEC1EL
- kAnsb4eb2rTZ7O41z99UUamujTaaXRy3lK0i7E/7qYdun2tl0QeusVzsPTA8wvzNsHYqoN1pAYp
- SZ8JbjognOoybPwwVtGSo2djYr7tdIweLkTu2SCvRZKGyHoxiEUj328wJyeMR9IhMAwq4K4XwO5
- IkiN6P4Qwi+h9avmLfUN0nG4CmgcddBDoFkEgi0+vJAoH1X4mfFkuhWgiINFqDlPbHTvQh9+OPC
- JhpO3mQkCJPht94ygtVaFzW6XAs1aqBApSCdD6ilUIBj4VvFObq1SgG7jmXPSfMsdwoBycB9TcN
- 1vHOrn734wLpzaOLnVsvL+LAM9U+BHJYLmuS3opRXb2zS0gnF0OrzXfkCHZq49Ph3/i2fWlqvso
- LeDvSNH4hvA2s7/hlaPIC/C9S+EhhPc6RiI/Hf9iQMvTsxxoE9VBoucXHAck/zkWCT9S9Z9jlJz
- uV2D+KZ5QoXU8uheGXDXc1bsLNj2sxE3jt8ZJZUOxY6X1+mbAaSegKT3WMCWjZGgPnasaDzrF2C
- o36hleurxJA7T2YHd8cZn5sYiC7Srttr5ZCQTJeGlQ5Q2/7wV0xyKAb1YvsB78T9W55qEbcMY6A
- cgf328qITpsYFfw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1505; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=FIsmlgIjkpteAPJhVKKHAjd95/iwb4iZSOjkZwgqzRQ=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxP+lmFR3OKsFmRYIKX5XgaTu3fj4Pjy9qv1y
+ ix6R7CYt6KJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisT/gAKCRAADmhBGVaC
+ FV0gEAC5i+So2Unar7uF4D5Yb5QPP1Jrw7D6YEDZzMukmseasIifJTcKqYxyyfT4rFAoxDOxK20
+ YMUbDLioda1jEUECUProTnWf9Y3+HE4tEE+7TbavVwvCKL8Fhn+Ut1k7ar5icw/QezyJ4Wj9ijs
+ KxzlOjWxV3HmX66I1Tr0A+TnP/GcbodtavO6Cq1qVZeILNXL9Xkx6einUc85FDG9X6E40Ht2O9t
+ rDi/pQvjRD/o+HPee1Gwh+lfznh5nofF1AXEJcoaR2vHaLJ0aCFppN3wM+Qw5cthOuUQm6fVWwO
+ ixg8yNuFzGuXqFSu58fEDokO9mq0H99T8VsNGLDdAZ53li2rpT+jFbBeYhjlMaRhnjbaEls2HMO
+ QXuMpLl8EOVZ7jF7og4ZGJDfqTGhfj9qqTJ6e0kwKPvXPVpDBgX8QOmUPxLhFN/kzXhqo9k9dJI
+ qa/9ZQzyq/Y4HNKkRns6pRUFDPsriuSi58cREg20wzPS1ZIkjgRNcMrVzy92UUDzrLghfm/UYB4
+ jU7sH2j6hnB8AVcS4UFAXf1aWihedCIYYitvrRvcHRsIf6o99Swk69IK2lyFT60B9r+zsVZv8Lr
+ wfOWyZGSDNVbBd45kxnN+u+yy5GlSH3YECF54i9hr3Xe5AKKMYKLXcE3iFGaPDMlppZIT3RAKiS
+ 2O7dFPE7pIe9+fA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -88,13 +88,13 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22502-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22503-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -113,39 +113,49 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E0E26674EA3
+X-Rspamd-Queue-Id: 468DB674EC8
 
-nfsd4_open() sets NFS4_OO_CONFIRMED on the openowner before calling
-do_open_fhandle(), which can fail. If it fails, the openowner stays
-permanently confirmed despite the OPEN failing. The correct
-success-path setter already exists in init_open_stateid().
+The loops that compute the supported version range for PROG_MISMATCH
+test nfsd_support_acl_version(rqstp->rq_vers) instead of
+nfsd_support_acl_version(i), so every iteration fails and the
+function returns rpc_prog_unavail instead of rpc_prog_mismatch.
 
-Remove the premature setter. NFSv4.1+ is unaffected as sessions
-always confirm at creation time.
+Replace rqstp->rq_vers with the loop variable i, matching the
+pattern used by the sibling nfsd_init_request() function.
 
-Fixes: a525825df152 ("[PATCH] nfsd4: handle replays of failed open reclaims")
+Fixes: e333f3bbefe3 ("nfsd: Allow containers to set supported nfs versions")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/nfsd/nfssvc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 69fee481581d..4fe46996c8ed 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -643,7 +643,6 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		status = nfs4_check_open_reclaim(cstate->clp);
- 		if (status)
- 			goto out;
--		open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
- 		reclaim = true;
- 		fallthrough;
- 	case NFS4_OPEN_CLAIM_FH:
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 0d3838dd59c1..b8e8d80e984c 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -821,7 +821,7 @@ nfsd_acl_init_request(struct svc_rqst *rqstp,
+ 
+ 	ret->mismatch.lovers = NFSD_ACL_NRVERS;
+ 	for (i = NFSD_ACL_MINVERS; i < NFSD_ACL_NRVERS; i++) {
+-		if (nfsd_support_acl_version(rqstp->rq_vers) &&
++		if (nfsd_support_acl_version(i) &&
+ 		    nfsd_vers(nn, i, NFSD_TEST)) {
+ 			ret->mismatch.lovers = i;
+ 			break;
+@@ -831,7 +831,7 @@ nfsd_acl_init_request(struct svc_rqst *rqstp,
+ 		return rpc_prog_unavail;
+ 	ret->mismatch.hivers = NFSD_ACL_MINVERS;
+ 	for (i = NFSD_ACL_NRVERS - 1; i >= NFSD_ACL_MINVERS; i--) {
+-		if (nfsd_support_acl_version(rqstp->rq_vers) &&
++		if (nfsd_support_acl_version(i) &&
+ 		    nfsd_vers(nn, i, NFSD_TEST)) {
+ 			ret->mismatch.hivers = i;
+ 			break;
 
 -- 
 2.54.0
