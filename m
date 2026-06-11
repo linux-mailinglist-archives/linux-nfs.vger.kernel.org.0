@@ -1,55 +1,54 @@
-Return-Path: <linux-nfs+bounces-22515-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id F8tjAJAVK2qC2QMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22515-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:07:44 +0200
+	id /cjvDuIdK2qp2wMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:43:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A128674F4A
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:07:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EC966753FD
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:43:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AfZHgF1b;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22515-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22515-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OTZ9HjbJ;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22516-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3A17B31C81CC
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:03:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A9D963195D19
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A4E63AB28C;
-	Thu, 11 Jun 2026 20:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269124418DF;
+	Thu, 11 Jun 2026 20:39:10 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D3A3A9D94;
-	Thu, 11 Jun 2026 20:01:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7E4FC0A;
+	Thu, 11 Jun 2026 20:39:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781208089; cv=none; b=qVE2KbR41LXehLllB/aygpIhlzdeFu84J97S1OvxH2dvYxMpIj1Kg66dSiEX9WzLFlfUGD2ol598df2B6YkYQSwlcd1kH33fIZZvyI5MwVxIc6N0O3KH8tHWlc5wMbdKgufY/ey0vVlaKuI9qJzhOctAxwJelZaH4fIRmJMKQDA=
+	t=1781210350; cv=none; b=ACQ8nQb6I8QsR/3A1qSlzhDBH3MT5rJUE45Kuz+SK6Rj36v2M8PwwLs624vAV2axEEQPBkVOHQJSvaOIhIZQcORmQeH1xNYTVYhPeFKCyfVfk3Nv0MyLG1hvDISNGvGP0d3YZN47uk2Da4Lu+wcqz3YM6IXGaqaEPFHCW1gt03Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781208089; c=relaxed/simple;
-	bh=MKfgDq13ke8Wu2qHntxm/D7MHBjxMwEbDJ6JyeIvFik=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UWKeBc2Bjd2JiLo85wlV/HwkPB7giSkwTwiYQUPinpFhgwdiSLsSylbh0+hd2s23bmyYiMzeKCZMR/VBzhFKoDTnFxtwUsGjPDhseeeMqJBlgzgbc31GELJB/vSdZgsST7vpdZiPr4pnbJn0O+zdI1jPudhGywAtV2zsIVvuCIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfZHgF1b; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 108231F000E9;
-	Thu, 11 Jun 2026 20:01:26 +0000 (UTC)
+	s=arc-20240116; t=1781210350; c=relaxed/simple;
+	bh=BLRS1QfNPqSzaWd9ltdq7mD7QRgzKYfRVz8Ya6pJEPE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mSdxJAbzMFxJW2WitZISAsWXg2JdCBHpSWxlAr5X38AR0x/ZvcDH0Kjj9k098u7nv7oyO0+QF/JYgB+LZM5z5RkF9mkIxAymofkAfMAe1qY0HyWwa3bqTVzBP6gU8G3cxPbRilTuv9t0mHc+wlblnQ2cz2rqssr9inW9qU5V3WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTZ9HjbJ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366D61F000E9;
+	Thu, 11 Jun 2026 20:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781208087;
-	bh=hz5ss9K8T9aK1nbeqNXGQtgZu3c6/r7hz/vXN5W/mOM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=AfZHgF1bHdYaPkCt6BXG+bq+sFQD5shdIucO3wA4N43cmpb1+Se2mdzN8EGZBBjIO
-	 cGoJIXfeGRAmWLCrdAiRclZryTyuVzmshsHNkBqCFNiKbW/OMNHD/zaiztYRsIKI6/
-	 T7OlXGdpoQgmFGc1tCAf6YN1hRyhps/m5qCnjBinWQj4sVweqEy6x5K5XpJPyVbet/
-	 VOgFBDQnPle66afrtclSckGooqyTJ+dGXK0g+QSQWHAoiQ6tjKr/uqCvTwmCMX7h56
-	 NyWHEuvsyurW7VnAlLLDuOzTI8c05c+bKu4ndvHXux5WA5QS8FatD5S+4WSe+mDEm+
-	 1KSmigYXBsVzA==
+	s=k20260515; t=1781210347;
+	bh=L1D9xPLmGDmv13FugeRYYEoTnEeiIXht+joTvUzMY7g=;
+	h=From:Date:Subject:To:Cc;
+	b=OTZ9HjbJ3R8ViokuTRA97cvk+QrdGdXAID3ETOUsp7k7+HLbtOQPklWDAmrQBCioC
+	 aKSwdu0awyEuHh/n0zQrPy3SL9eLlJFKzrh4bbToA2nybJsBJDQ2niQj5nsuKThyOC
+	 emH32A8UXy5eg5IG5mrKbUjxBL99K8YvR6UXW7rgmZRyU0mz87O1PlgDNREWx0P3TH
+	 pGPQlW9NoH39zB91WzbjJ3FxYie4GQZJoZDnriFWeaLumJKBpKqO6H+70FxodUIWfB
+	 zHBES3mMTfcaVxWqd1y/rIMzz7OmZBSX7rXOsg2aVfLG0WedpDiBbxZ0IuSpOXuoJ4
+	 G52/S0hS3JWmA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jun 2026 16:01:04 -0400
-Subject: [PATCH v2 21/21] nfsd: drop the stateid, not the stateowner, on
- seqid_op replay retry
+Date: Thu, 11 Jun 2026 16:38:56 -0400
+Subject: [PATCH] nfs/localio: fix nfsd_file ref leak on nfs_local_doio()
+ init failure
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,29 +57,32 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-nfsd-testing-v2-21-5b90e276f2d9@kernel.org>
-References: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
-In-Reply-To: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
+Message-Id: <20260611-nfs-localio-v1-1-b42b2587b6c5@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqAIBBA0avErBMcFwN1lWhhOtaAaChEIN49a
+ fkW/zeoXIQrrFODwo9UyWkA5wncZdPJSvwwGG1IE6JKoaqYnY2SFbL3C2HQBzGM4i4c5P1v297
+ 7BzIlwa9dAAAA
+X-Change-ID: 20260611-nfs-localio-1edd961f0b6e
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Jeff Layton <jeff.layton@primarydata.com>, 
+ Lance Shelton <lance.shelton@hammerspace.com>, 
+ Mike Snitzer <snitzer@kernel.org>
+Cc: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1812; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=MKfgDq13ke8Wu2qHntxm/D7MHBjxMwEbDJ6JyeIvFik=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxQBZySnf/qbvn2NYWNlT7PgmNONv9KyBGlkC
- /npapdmuHSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisUAQAKCRAADmhBGVaC
- Fd/CD/9hNEANf93lZwH1EES46mVdUA3BGEM0xmeiZsWmbMMX5rrPB0GaeMi5mVjY/2Yd3zoqqS0
- rnvae/GaTUaW01avrg2lb4x2FuNUBzSFB3aO8EHzY/Y6oGeEOoutKIM+CFdeRKVu+KsIcbhqwPV
- tSEWd/LwQ1XFGM5AHGmd78xQJ3wO8zLLeKXw1+Y18qHsboFuIvv/EX/bSMd++ahS2UAbeYjsziN
- 7ixHYpTs4qAgT6eSN5A9ZYXsii0NQusNFwDt4zEF/JNDP2PreET8c5rfYt5iamxNNjUMe0MIc70
- GWRgUKmx3VUgq8moJdn2qDnoGaljPWU8el4iOjeeFEBWpgwfjfNWgMdZ60D+lbXrgoXnLWmYtg7
- MEFNQt1B3hcti0nNxzlHNmhdeTXJAv/R3jhQCQriCmVPvzvKQjEAaXkJaHOjczZPW1iEVsHbFm7
- bJxZkDfkobTJLThHOHULB0JsfF8TJANbcIIzTOCB+0+wFotLgdpBlp00bcH9slfoC+xKydVIUMt
- adSFJeAErNXN2P2n+1gGrpFRCvCmdhhZt/wBdgfHUt8FtH+4kGRAkOj9VgbvsHzQXUhLszppor1
- 8PMof34tQ4Z2MQthzXBBrpx9lAFvULB1S/UINMCkB8asa+yGZwkrFT5m+cM30DvAhiQcpTrBeyY
- 7yTUvJbg84JWeeA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2394; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=BLRS1QfNPqSzaWd9ltdq7mD7QRgzKYfRVz8Ya6pJEPE=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxzks7ntxmn+eK8COMHqgwul2RRnS3C9nc6mP
+ Xg02W7p1H+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisc5AAKCRAADmhBGVaC
+ FR5rEACa5OQuOxu6ax8Bmod/Qt9DTu/E4q+NHDap/Fu57cCamosyfhlybXjqXiQ88hbBFWHKpsU
+ IrSz+eAPV6Fb/1eSQ4NOqNsEfpK7Z+7IRxeY4+dA3i4VrmVrQX9/Xr5kaPEtUHP7ZAu1ubgrWiP
+ nbHS6S4oM0s4xOYZOzZR3A2UtUmKGC6IoMBlDfu7jp5NB0friFhufXGP3LDTvBapWifT16XMXx7
+ vMQCYnPjZyfZuen46JjGH+RufBoCP0TiJswj81FvI0sZTDpR57H3LSVXxlw6RthDNXH8Vxn/k8q
+ w2lCevFyzJV/Bm7InOTnQ8Uye/6Ness0dYPBfXxcqTpR+/KYKPMnhnhFrQwwZLv5NXe8jhaEvao
+ TlrEc8hD5obfQ+JROFDFtDk2kMaTOXgM9+FZknM9LxG/HxviH9d35q7CMaYNqQw8tRtRajzDoP0
+ 5+lDnDYP2lTOYMFiqvuuGDqtgzgpzmKajsGqgFp1L9NHk0Mx0+S58/6oAWPr+vbPibx4wHBgKN6
+ EfQbI9NHzoyzDJA80yW9tYQOSWbWmPzJHX0RVsMKvik4UicYQ3xmSG+PYXKgPIp+8RGcTCquPeX
+ nuHm9wgNIZW9HUGQhlFkzotm+yKZQCLqSY1xxi3HWzUAPsP2IjfJaNQmOy1Zttrt0eNBW4Y/I/J
+ 6Z9ufPcr4Nm8gJQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -88,14 +90,14 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22515-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22516-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:jeff.layton@primarydata.com,m:lance.shelton@hammerspace.com,m:snitzer@kernel.org,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
@@ -113,53 +115,87 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7A128674F4A
+X-Rspamd-Queue-Id: 7EC966753FD
 
-In nfs4_preprocess_seqid_op() the stateid is obtained from
-nfsd4_lookup_stateid(), which holds a reference on the nfs4_stid
-(sc_count) but takes no reference on the stateowner. openlockstateid()
-merely casts that stid and likewise takes no reference.
+Two early return paths in nfs_local_doio() fail to release the localio
+(nfsd_file) reference passed in by the caller:
 
-When nfsd4_cstate_assign_replay() returns -EAGAIN (the replay owner is
-being torn down, RP_UNHASHED) it has not taken a stateowner reference on
-that path. The error handling nevertheless called
-nfs4_put_stateowner(stp->st_stateowner), dropping an so_count reference
-the function never acquired -- risking a stateowner refcount underflow and
-use-after-free -- while leaking the sc_count reference held on the stid.
-The leaked stid reference can also stall a concurrent
-nfsd4_close_open_stateid() waiting for sc_count to drop.
+- When hdr->args.count is zero, the function returns 0 without calling
+  nfs_local_file_put().
 
-Drop the reference actually held -- the stid -- before retrying. The
-stateowner stays alive through the reference held by the stid. This mirrors
-the open path in nfsd4_process_open2(), where the put balances a reference
-that path explicitly holds on the stateowner.
+- When nfs_local_iocb_init() fails (e.g. -ENOMEM from allocation or
+  -EOPNOTSUPP if the file lacks read_iter/write_iter), the function
+  returns the error without releasing localio or completing the hdr
+  lifecycle.
 
-Fixes: eec762080008 ("nfsd: replace rp_mutex to avoid deadlock in move_to_close_lru()")
+A leaked nfsd_file pins the associated net namespace reference,
+blocking network namespace teardown, and holds a reference on the
+exported filesystem, preventing unmount.
+
+Fix the zero-count path by adding the missing nfs_local_file_put()
+call. Fix the iocb init failure path by jumping to a new cleanup label
+that releases localio, sets hdr->task.tk_status, and calls
+nfs_local_hdr_release() -- matching the existing error handling pattern
+for the post-iocb error path.
+
+Fixes: e77c464c31b3 ("nfs/nfsd: add "local io" support")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I had originally sent this as part of a pile of nfsd patches, but Chuck
+pointed out that this was client side.
+---
+ fs/nfs/localio.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a0c97bff3cff..bef0ec9be459 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7876,7 +7876,7 @@ nfs4_preprocess_seqid_op(struct nfsd4_compound_state *cstate, u32 seqid,
- 		return status;
- 	stp = openlockstateid(s);
- 	if (nfsd4_cstate_assign_replay(cstate, stp->st_stateowner) == -EAGAIN) {
--		nfs4_put_stateowner(stp->st_stateowner);
-+		nfs4_put_stid(&stp->st_stid);
- 		goto retry;
- 	}
+diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+index e55c5977fcc3..63cf6e2cc745 100644
+--- a/fs/nfs/localio.c
++++ b/fs/nfs/localio.c
+@@ -970,12 +970,16 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
+ 	struct nfs_local_kiocb *iocb;
+ 	int status = 0;
  
+-	if (!hdr->args.count)
++	if (!hdr->args.count) {
++		nfs_local_file_put(localio);
+ 		return 0;
++	}
+ 
+ 	iocb = nfs_local_iocb_init(hdr, localio);
+-	if (IS_ERR(iocb))
+-		return PTR_ERR(iocb);
++	if (IS_ERR(iocb)) {
++		status = PTR_ERR(iocb);
++		goto out_put_localio;
++	}
+ 
+ 	switch (hdr->rw_mode) {
+ 	case FMODE_READ:
+@@ -996,6 +1000,12 @@ int nfs_local_doio(struct nfs_client *clp, struct nfsd_file *localio,
+ 		nfs_local_hdr_release(hdr, call_ops);
+ 	}
+ 	return status;
++
++out_put_localio:
++	nfs_local_file_put(localio);
++	hdr->task.tk_status = status;
++	nfs_local_hdr_release(hdr, call_ops);
++	return status;
+ }
+ 
+ static void
 
+---
+base-commit: ec039126b7fac4e3af35ebccaa7c6f9b6875ba81
+change-id: 20260611-nfs-localio-1edd961f0b6e
+
+Best regards,
 -- 
-2.54.0
+Jeff Layton <jlayton@kernel.org>
 
 
