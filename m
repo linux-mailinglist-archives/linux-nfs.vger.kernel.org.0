@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22450-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22451-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id dtApCIMWKmo0igMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22450-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 03:59:31 +0200
+	id RTMbEoUWKmo1igMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22451-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 03:59:33 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC6CF66DBB1
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 03:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE82266DBB6
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 03:59:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LMjlR638;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22450-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22450-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nEvUjLK0;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22451-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22451-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E64B130BC946
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 01:59:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BE68030C28F8
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 01:59:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C356118787A;
-	Thu, 11 Jun 2026 01:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3A218787A;
+	Thu, 11 Jun 2026 01:59:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA74AFC0A
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2026 01:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818A317A2EA
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2026 01:59:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781143162; cv=none; b=RhhUwDwrJuLRsVrUn3M0PEb4Fa6yeHuE7qXdB6qQUCD8rmX5sVhpq1Cdp8mIA/f0+FPn8YYuwX6GAdc2jkPgl7Q2Mohnben8aG7PAwDk87o7NEVAV5KZy6V2KIwLyVuhrSBeDnUIK3UelhriPkqYQab+zaX8aT1mA/hQqkIsmuE=
+	t=1781143163; cv=none; b=i2kTkROK7Hgx9HV0DSxPLbfCo3ZQz+JwVo5vWGnH34zXqhtNzfTF2MayrVIP0BcUSsLgzf7rEIhMrzj3iRhlrwTkT49C5gdReu7FrHelVVQEifh6WpFiATC3G4WLHXN8vVCOAOU+89I+ghgqQuqZA+mrRnj/Dl70EpRTN+ePrek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781143162; c=relaxed/simple;
-	bh=hl30GM5W0UudN2edmbVcf0OInusvq2r2Ivaa/gB47FY=;
+	s=arc-20240116; t=1781143163; c=relaxed/simple;
+	bh=zpFMW3RfdSY3FiGJxZieqquYzz0ssw9o+wPeg41YmBE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hx5cG6R3z3uSi6/NIH6YPjYnAuZamAjZ4LfZknsrfG3kjPgCY/ONJtFInLOGJV/KZaC58ELLZXnC3jAqdt7ooAdZ9nP1i0OcuPE4hxaWhGM42OUQEBO9a/barn75okxlgWmWaOgmesAT9u4ppiAkKoaNhWOJfEgDEJ8sIkWILE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMjlR638; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDCA51F0089A;
-	Thu, 11 Jun 2026 01:59:20 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=CgycAx8cvSBaEXPKc/a/J+WjarUcO1ajjM4kxW/5IcYDyb1LLhSeqShr7bklfvsCrCCQaP2be3E0I6lxfqkO5GEod+RaYRM97KNDCxevOpy0jmCBxiCL01wswORCm7OppeeAk+jgS+I+fQ1n1h1KQDsXCWvctOM3tpw5jDjrqYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEvUjLK0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDBC51F00899;
+	Thu, 11 Jun 2026 01:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781143161;
-	bh=LXpxZhSUWGtCSUKQMdmDzUyMxCiN6gE11lxGXTDzFwg=;
+	s=k20260515; t=1781143162;
+	bh=XkqXHrQe/AHSmFOPjS3ccx1Mv0rf6ic8QtPTv8NTuo8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=LMjlR638bFWhZ57iDnxSMcj7vIbCavTRR5RG4PD/Xk1j96wUV08IucZPmmOXzDI77
-	 r3/JNFRmqYZuIcO4nZvRRi9r6M5uxaG4VZudkJNzjkGx3jc50E8jQ8vVdUtuxOUJJw
-	 orKt1/4FeBv5UoWUtJg9ZOZfiyuflwFtQsqF6A98aQMAKPKzQu8TJI57i1vQ/Cr4ve
-	 Uk2FNSHauPZ/6qh0ugqWdQluNYCwTQ6XLc3EGD9ELQVVK1z/I5pOdf0o1IitEaJxt3
-	 8nB8EFrduisOOwnzuksOOkANDb7KT/fgojSW1uKcqLSDge/deC8+2aDKbJhiURCEt/
-	 Gw7tCvpXwyJZg==
+	b=nEvUjLK0BbsFd40ufnQiUieI2ZEiyEteRE6nakCehHv/SLl0RN+DW2Hh66I4UX1Uo
+	 EZO7IrfHdymg3k0n+0akC+I6KL1uZTUmpM6aDN44Ko0CfnurV/8Mrcultej/dcIDUi
+	 J+guRc0rvlicBsOXHd7hxBsxUFBDoERLas4mFo6HsrsRsZ2RTomgxWKkp3VSifvTYp
+	 9xcrM8dxFy8fBpJrrEXrIfenO1NfvEnjRahS+EZh8iQWMJ1ZloT3VTAyQAC+ZU8j+6
+	 lmwbUJhUi8ZgiGuu1CROrcHqqSe3OUF2Y7wxjEyt2uuV/S0PdqNqhvILFd7tRpl0Wb
+	 1r/QcilO7Jy5g==
 From: Chuck Lever <cel@kernel.org>
-Date: Wed, 10 Jun 2026 21:58:55 -0400
-Subject: [PATCH 3/5] NFSD: Clean up documenting comment for
- reduce_session_slots()
+Date: Wed, 10 Jun 2026 21:58:56 -0400
+Subject: [PATCH 4/5] NFSD: Document and rename the NFSv4.1 session slot
+ shrinker callbacks
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260610-nfsd-slot-growth-clamp-v1-3-7b966700df0b@kernel.org>
+Message-Id: <20260610-nfsd-slot-growth-clamp-v1-4-7b966700df0b@kernel.org>
 References: <20260610-nfsd-slot-growth-clamp-v1-0-7b966700df0b@kernel.org>
 In-Reply-To: <20260610-nfsd-slot-growth-clamp-v1-0-7b966700df0b@kernel.org>
 To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -68,20 +68,20 @@ Cc: Benjamin Coddington <bcodding@hammerspace.com>,
  Jonathan Flynn <jonathan.flynn@hammerspace.com>, linux-nfs@vger.kernel.org, 
  Chuck Lever <chuck.lever@oracle.com>
 X-Mailer: b4 0.16-dev-da966
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1315; i=cel@kernel.org;
- h=from:subject:message-id; bh=hl30GM5W0UudN2edmbVcf0OInusvq2r2Ivaa/gB47FY=;
- b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqKhZ1zS6umA2wIS+3sUlBTYBUSDebe14IYhuw9
- rIDh4vzHQeJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaioWdQAKCRAzarMzb2Z/
- l/MmD/9nqhm9gfqCQb/1Zx7peEiWzbVdu2hOwlUqIdGuGY2rMBmzMKBTKW1BZ0ygDJU/jwKHeTM
- hYFBik4MzFL+UzJet74Cu+qsZ+k8YQa9gkQZuGvhm24rcYYTGkKlpy/lovmrLoLBwDhmPMV7Ir4
- tQg2wm5iHtN4x3Hxli4tfD8IKLSMMiKE5Q4CPArD/R4pulpJm4twgXbzRvJVe2LkXH2u39GTnZA
- dLQdTiHzqJMhVr8kzyv4nzT0WVFA3iMmo0Y8sNv13tiw22VVAdC5kNnt+8rJKK3Ep1MNyzBbA1y
- jEh1eb9H/xclZLGYbarHzZP4XCf40/0rgBXq1/7tQF3yxABt8x/eJaTd2nCsoahr+4IqInRgidi
- cIDuuQ2eW+/ywOCq2lpThlmtPgjMTykZduXwr4xEI9qW22HnrVVytYk9GFEp2tRjcVuiUUKpQ2U
- MOu771Eixqg/mwcGD7oR8e0IrPklVs8hMnKY0TzcdeF80tTMjTdmA7S9/PFR/rnI6i8nfBBVR3i
- eTuhulMcmF/H/Gn0f8XLSNmAUMeETSW3PZj7YQ2F9+nIxjaSXuZ6Ye6RdkZoQ4Bp4l1JhrrrHzq
- rHQZmVbS0COmEXp+4bPxJYSvQIjKn+/14p7fdM4PsUXr1OJlUuhYM9T3ONtQNDT4ECButyZyzFL
- VZfsFZeY/8gNgJQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2911; i=cel@kernel.org;
+ h=from:subject:message-id; bh=zpFMW3RfdSY3FiGJxZieqquYzz0ssw9o+wPeg41YmBE=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqKhZ2B0tfzO+L+LuXIYpOxfCUVMuHBKkM7dtTa
+ Jp6rodAZAeJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCaioWdgAKCRAzarMzb2Z/
+ l1CkD/0TLMqIWcKYmtqFCyERa9RxhcQv+MHyJidwhhdXsbW5GzNf/SFHXISA/vfGommGENSOnS7
+ xNXjVN62fyTMLANghIv2aq9qFA8EUT8x4AGSvQPKVrlL2zzD1PSRsTqhcraEh3ye7iMvGqVtpnP
+ 4+jjv+juHUA2HTg3mS8QxeYS2+JPpH6PHZwZ5FlthlDCJ2L3V6Zi9IEZm0K/Kb2VQ+k7MdJOzEQ
+ rSGeBMsVufVwj1KEOi2LrvW/AM5fXEgSLz+Ttp6zIcfI/hlFgsrdSqRveTLy8PavpLqnN7qk6yZ
+ n1Xu2FN5toYKDCbZvSGElTEHxGhxlqphMa6qsfjYD9CRXtDTNRReTWsw4KjWz2y4qAem2p7b9Nc
+ p1PTX1vIJHHtC+m32a828+SXRN/rUIQLAsewdGbVDOKcyLLaOLwl0WEJRDd446fwD8dwpDns9tl
+ uynPScL0DVaQkQhXa6E+khOscyIhj6hE/9ssNkaCtPOQ1OXGgY73sjRIS/jtyADeLIllE7I+G3j
+ LjQo86u62LikkU+Qro79YJhwDpYUI5zSV3Ljy1L9yl4nh6ii7FI6Zohv3sIGMqkAcznDxy0Pg24
+ HDXARCtmFTxYsE7N3mwXa1vsNTzU9nBRiIKYcg8THeXvt/qXHlbqgpfIwZSCuY1fZh5OQ13iPNv
+ o0Iites35DvqH9w==
 X-Developer-Key: i=cel@kernel.org; a=openpgp;
  fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Rspamd-Action: no action
@@ -95,7 +95,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22450-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22451-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -117,44 +117,89 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AC6CF66DBB1
+X-Rspamd-Queue-Id: AE82266DBB6
 
-Fix typos. The usual convention is to not use kdoc-style for
-internal (static) functions.
+Clean up: To prevent their reuse by generic code, rename the NFSv4.1
+session slot shrinker's callback functions to make it clear they are
+for use only by the shrinker.
+
+Though they are static, callbacks are invoked from outside nfsd.ko,
+so they need appropriate kdoc comments that document their API
+contracts.
 
 Signed-off-by: Chuck Lever <cel@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ fs/nfsd/nfs4state.c | 36 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index f2c92e7eee6a..9735e9a59f0e 100644
+index 9735e9a59f0e..7ce8462e3697 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -1986,20 +1986,13 @@ free_session_slots(struct nfsd4_session *ses, int from)
- 	}
+@@ -2196,22 +2196,50 @@ static void free_session(struct nfsd4_session *ses)
+ 	__free_session(ses);
  }
  
--/**
-- * reduce_session_slots - reduce the target max-slots of a session if possible
-- * @ses:  The session to affect
-- * @dec:  how much to decrease the target by
-- *
-+/*
-  * This interface can be used by a shrinker to reduce the target max-slots
-  * for a session so that some slots can eventually be freed.
-  * It uses spin_trylock() as it may be called in a context where another
-  * spinlock is held that has a dependency on client_lock.  As shrinkers are
-- * best-effort, skiping a session is client_lock is already held has no
-- * great coast
-- *
-- * Return value:
-- *   The number of slots that the target was reduced by.
-+ * best-effort, skipping a session with the client_lock already held has no
-+ * great cost.
-  */
- static int
- reduce_session_slots(struct nfsd4_session *ses, int dec)
++/**
++ * nfsd_slot_shrinker_count - report reclaimable DRC slots
++ * @s: shrinker descriptor (unused)
++ * @sc: shrink control (unused)
++ *
++ * Return: a positive count of reclaimable slots, or SHRINK_EMPTY when
++ * there is nothing to reclaim.
++ */
+ static unsigned long
+-nfsd_slot_count(struct shrinker *s, struct shrink_control *sc)
++nfsd_slot_shrinker_count(struct shrinker *s, struct shrink_control *sc)
+ {
+ 	int cnt = atomic_read(&nfsd_total_target_slots) -
+ 		  atomic_read(&nfsd_total_sessions);
+ 
++	/*
++	 * To prevent deadlock, one slot of each session (slot 0) is
++	 * not reclaimable while the session is active. Thus the
++	 * number of sessions is subtracted from the total number of
++	 * target slots.
++	 */
+ 	return cnt > 0 ? cnt : SHRINK_EMPTY;
+ }
+ 
++/**
++ * nfsd_slot_shrinker_scan - reclaim DRC slots under memory pressure
++ * @s: shrinker descriptor (unused)
++ * @sc: shrink control; @sc->nr_to_scan bounds the sessions visited,
++ *      @sc->nr_scanned reports how many were visited
++ *
++ * Return: the number of session slots NFSD will release.
++ */
+ static unsigned long
+-nfsd_slot_scan(struct shrinker *s, struct shrink_control *sc)
++nfsd_slot_shrinker_scan(struct shrinker *s, struct shrink_control *sc)
+ {
+ 	struct nfsd4_session *ses;
+ 	unsigned long scanned = 0;
+ 	unsigned long freed = 0;
+ 
++	/*
++	 * Each visited session releases at most one slot. After
++	 * nr_to_scan sessions have been visited, the list head is
++	 * rotated past the last visited session so the next scan
++	 * resumes from there.
++	 */
+ 	spin_lock(&nfsd_session_list_lock);
+ 	list_for_each_entry(ses, &nfsd_session_list, se_all_sessions) {
+ 		freed += reduce_session_slots(ses, 1);
+@@ -9120,8 +9148,8 @@ nfs4_state_start(void)
+ 		rhltable_destroy(&nfs4_file_rhltable);
+ 		return -ENOMEM;
+ 	}
+-	nfsd_slot_shrinker->count_objects = nfsd_slot_count;
+-	nfsd_slot_shrinker->scan_objects = nfsd_slot_scan;
++	nfsd_slot_shrinker->count_objects = nfsd_slot_shrinker_count;
++	nfsd_slot_shrinker->scan_objects = nfsd_slot_shrinker_scan;
+ 	shrinker_register(nfsd_slot_shrinker);
+ 
+ 	set_max_delegations();
 
 -- 
 2.54.0
