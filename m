@@ -1,64 +1,59 @@
-Return-Path: <linux-nfs+bounces-22459-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22460-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id dYIbDyqhKmr7twMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22459-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 13:51:06 +0200
+	id jugpHMyiKmp5uAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22460-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 13:58:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FC63671886
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 13:51:05 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D927967193E
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 13:58:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="oAnsl/PU";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22459-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22459-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Os5wsBEs;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22460-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22460-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 995D532F08EC
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 11:50:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E95BC30237D1
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 11:57:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F3D3AE1A3;
-	Thu, 11 Jun 2026 11:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B64D53CB2D4;
+	Thu, 11 Jun 2026 11:57:51 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C195E3C199A
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2026 11:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C0E3BE651
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jun 2026 11:57:50 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781178621; cv=none; b=WDpmwvdTxg4Er43TTuAEDDXabIxYPCbnbhMJjp6Rt/3x2pWdjp56drgZjdAPhJODIWJbBo2W2D9gePUf4Qi7Z/yG/HHjBc8vWpjpKDF4FBdb9LJaED0fVtRQf2W0YcPW5in9+z3nBLzPS4rwrry2eaKXul8jGUQcJ58+lGctK/o=
+	t=1781179071; cv=none; b=Jfi1LcXZzu0R5zqUlWhz7BRM+k4uy/jSLueWkAFYq+SSvSPZJiUMahKg+wJvOuqFOohMarEaELHV2qEVHFychIbEoGizoHXZTlE3N303zPg2JeBE9P8IAZhmjpi/aB3ipG8qd5k3sD2vFG2uTv85EsV/PlIR/eDWjYaG0q0LTBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781178621; c=relaxed/simple;
-	bh=KdiRKnXBNWyicNwzTRPINzw5R3hZISta6iIssMHKHlE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XpM6PtaE2cwfoh1x8kAmo8Ie+2T0jYeqmvNWPh5IFbUcqdvLlAdQWQvPSn4QspVy5CycdyZXSMc3oA5XEeGOtSPuvxaKiAY9mWQgghBlcCiYvPlbL4xTzD5SVRoZ9Yx73JNV1sXa2v3713ySVUMRcPQqr+6MoZnp83KfrMb23+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAnsl/PU; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA981F00893;
-	Thu, 11 Jun 2026 11:50:18 +0000 (UTC)
+	s=arc-20240116; t=1781179071; c=relaxed/simple;
+	bh=Y1E7ID+eycoe4B4jd5uDM6YB3B8IPjs17Z2PUJ4SNQs=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TnVHAyYMa7oaziiQQHPnTy70ofD3hxDgnlEu1gowmHmOYEVFU/YxvGq/t03FzkLreYPgh+tTYiCXUwhBbBj3oYyhgxF3/psjVKoRfcFQMOIfDWwjtWsHNZZHXnchUcJrnMRwUJOlUl+SZEdESoKdwBP9Tivhl2cFUaZnQkp6Pzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Os5wsBEs; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA0F1F00893;
+	Thu, 11 Jun 2026 11:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781178619;
-	bh=Xz4NBBdMIykLqMMY62uNxbbVYk2/AMcRRmpcROyuBb4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=oAnsl/PUIiowjyWLguYEFiIWiC16u8VaTfW3YYsGCp6Z/6XJIfp/qijh0HGI9f4JA
-	 qMDL4UYUgXDj4zwZeG6q3QO8Wbwk+jV5LWTWOa9RQvizDxTWfjpnP976Q8GFdSUxWC
-	 G4fDeJpebP4vmajB4G4eaYf0NlDOklPKIor11fhjNQwMjnuSG7dx/kjy/p/O2lgVum
-	 L/Pzjg9YdN5gU1KlTqpZO1Gw+uksCGEEkqC63tZhphKf4akZjNY0NlmUQzJt46SEYu
-	 1r5mXdp0mbrywZKu5D2UsEmELxrZ1xNbROgBQ0DgKKdyannbmx71OQRXeHdrnSmVsv
-	 lWJz/t/Ol7LuQ==
-Message-ID: <084128a7dcd3e10edfc5ce0bef77a39ea7f5b260.camel@kernel.org>
-Subject: Re: [PATCH 0/5] RFC: Stop NFSv4.1 slot-growth heuristic from
- rewarding busy clients
+	s=k20260515; t=1781179070;
+	bh=zYz5vs8165Zb4fRyfPC6VLPQ2naJNOXNXvQKbXhubAk=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=Os5wsBEsyMXJVxD/UWR8CrT37KoAVP4KFqQ+Er8Zpyw6+um4ui75gFBbHPHTOLKXp
+	 vvNJNJVklZAm69YpaVmRF7Ep04C5U9JAHpAbmuhkkobeZW3lGf+TvLnpgKxFZHiPq2
+	 tE6AdUzHnMeZ/ROMf5j/ULpEvEBiyA2VzLNnUDv5h7ZRPjTEYL/7VDSGvqgEJj2CA3
+	 UQ+bjJqL6AyVuQH85k2XSGdwPVtzyRbuVzQwHZTOia5dYfzG5BMSuE4ZChBxPbbTMR
+	 qh5CW8g5qZanr9ZhQi0ozP3Cjnh5SYMEkQ7qM0HiGPZ9X4no4POY+YTBvL70GT+X5P
+	 EEPEdhH7rfi5Q==
+Message-ID: <53dc8d7fbbd24a8035c7bac072d53cfe4514a2c7.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: reject out-of-range nseconds in NFSv3 nfstime3
+ decode
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: Benjamin Coddington <bcodding@hammerspace.com>, Jonathan Flynn
-	 <jonathan.flynn@hammerspace.com>, linux-nfs@vger.kernel.org, Chuck Lever
-	 <chuck.lever@oracle.com>
-Date: Thu, 11 Jun 2026 07:50:16 -0400
-In-Reply-To: <20260610-nfsd-slot-growth-clamp-v1-0-7b966700df0b@kernel.org>
-References: <20260610-nfsd-slot-growth-clamp-v1-0-7b966700df0b@kernel.org>
+To: robbieko <robbieko@synology.com>, linux-nfs@vger.kernel.org
+Date: Thu, 11 Jun 2026 07:57:48 -0400
+In-Reply-To: <20260611040946.3507020-1-robbieko@synology.com>
+References: <20260611040946.3507020-1-robbieko@synology.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -147,110 +142,86 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22459-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:bcodding@hammerspace.com,m:jonathan.flynn@hammerspace.com,m:linux-nfs@vger.kernel.org,m:chuck.lever@oracle.com,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:robbieko@synology.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22460-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8FC63671886
+X-Rspamd-Queue-Id: D927967193E
 
-On Wed, 2026-06-10 at 21:58 -0400, Chuck Lever wrote:
-> This series grew out of Ben Coddington's fair-queueing RFC and the
-> discussion it prompted with Neil Brown: a single busy NFSv4.1 client,
-> opening many connections against a large slot table, can keep enough
-> requests in flight to monopolize the nfsd thread pool and starve its
-> peers [1]. Where fair queueing itself belongs is still being worked
-> out. One change, though, holds no matter which design wins -- the
-> server should not actively widen the gap, and today it does.
+On Thu, 2026-06-11 at 12:09 +0800, robbieko wrote:
+> From: Robbie Ko <robbieko@synology.com>
 >=20
-> nfsd4_sequence() grows a session's slot table by 20% every time the
-> client reaches its highest slot, so it hands the client already
-> keeping the most threads busy a still larger table; one session can
-> climb toward 2048 slots on a server with far fewer threads to run
-> them. This series caps that growth where added slots stop buying
-> concurrency, and leaves the dynamic-slot machinery otherwise intact.
+> The NFSv3 nfstime3 decoder svcxdr_decode_nfstime3() accepts the 32-bit
+> nseconds field from the wire without validating its range. RFC 1813
+> does not constrain the value, but a tv_nsec >=3D NSEC_PER_SEC is not a
+> valid timespec64. The NFSv4 decoder nfsd4_decode_nfstime4() already
+> rejects such values with NFS4ERR_INVAL; NFSv3 had no equivalent check.
 >=20
-> Two design points are worth checking against the diffs.
+> A malicious or buggy client can therefore send a SETATTR carrying an
+> out-of-range nseconds (up to 4294967295). The value flows through
+> nfsd_setattr() -> notify_change() -> timestamp_truncate(), which does
+> not clamp tv_nsec to < NSEC_PER_SEC when the filesystem supports
+> nanosecond granularity (s_time_gran =3D=3D 1). The inode atime/mtime
+> setters store it verbatim (only ctime is normalized via
+> inode_set_ctime_to_ts()).
 >=20
-> The cap is per session, not per namespace, and deliberately so. A
-> budget shared across a namespace's sessions breaks at the floor:
-> every active session permanently holds slot 0, which the shrinker
-> never reclaims, so once the session count alone reaches the thread
-> ceiling those floors exhaust a shared budget and pin the one busy
-> client small while the pool sits idle. Making that floor explicit is
-> a self-contained accounting cleanup -- nfsd_total_target_slots gains
-> the full-target meaning its name implies, and the never-reclaim-slot-0
-> correction moves to the one place that reads it, the shrinker's count
-> callback. Since a session cannot use another's slots, capping each
-> independently against the ceiling is the natural choice.
+> The un-normalized value then corrupts on-disk metadata: ext4's
+> ext4_encode_extra_time() shifts tv_nsec left by EXT4_EPOCH_BITS, which
+> overflows the 32-bit extra field and clobbers the seconds-epoch bits,
+> so the stored seconds (year) are wrong on read-back. XFS with bigtime
+> mis-stores the timestamp for the same reason. This is silent, with no
+> WARN_ON anywhere in the path to catch it.
 >=20
-> The ceiling is a sunrpc-owned quantity. Maximum sustainable
-> concurrency is a property of svc_serv and svc_pool, so
-> svc_serv_maxthreads() lives in sunrpc, and nfsd_nrthreads()'s
-> open-coded sum is converted to it rather than nfsd carrying a second
-> copy. It sums each pool's configured maximum, not the running thread
-> count: nfsd sizes its pool dynamically, and gating on the live count
-> would deny a client resuming from idle the slots it needs before the
-> pool scales back up.
+> Validate the decoded nseconds in svcxdr_decode_nfstime3() and fail the
+> XDR decode if it is out of range, mirroring the NFSv4 behavior.
 >=20
-> This removes a perverse incentive; it is not slot admission control.
-> A client still sizes its sessions at CREATE_SESSION, and per-client
-> fairness against thread starvation belongs in the dispatch layer,
-> where the larger discussion continues.
->=20
-> [1] https://lore.kernel.org/linux-nfs/cover.1780498019.git.bcodding@hamme=
-rspace.com/
->=20
+> Signed-off-by: Robbie Ko <robbieko@synology.com>
 > ---
-> Chuck Lever (5):
->       SUNRPC: Add svc_serv_maxthreads() to report the thread ceiling
->       NFSD: Count slot 0 in nfsd_total_target_slots
->       NFSD: Clean up documenting comment for reduce_session_slots()
->       NFSD: Document and rename the NFSv4.1 session slot shrinker callbac=
-ks
->       NFSD: Bound on-demand DRC slot growth by the thread ceiling
+>  fs/nfsd/nfs3xdr.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
->  fs/nfsd/nfs4state.c        | 115 +++++++++++++++++++++++++++++++--------=
-------
->  fs/nfsd/nfssvc.c           |  12 +++--
->  include/linux/sunrpc/svc.h |   1 +
->  net/sunrpc/svc.c           |  23 +++++++++
->  4 files changed, 113 insertions(+), 38 deletions(-)
-> ---
-> base-commit: 4549871118cf616eecdd2d939f78e3b9e1dddc48
-> change-id: 20260610-nfsd-slot-growth-clamp-ca03e338678c
->=20
-> Best regards,
-> -- =20
-> Chuck Lever <cel@kernel.org>
+> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+> index 2ff9a991a8fb..59e82ce03c20 100644
+> --- a/fs/nfsd/nfs3xdr.c
+> +++ b/fs/nfsd/nfs3xdr.c
+> @@ -64,6 +64,8 @@ svcxdr_decode_nfstime3(struct xdr_stream *xdr, struct t=
+imespec64 *timep)
+>  		return false;
+>  	timep->tv_sec =3D be32_to_cpup(p++);
+>  	timep->tv_nsec =3D be32_to_cpup(p);
+> +	if (timep->tv_nsec >=3D (u32)1000000000)
+> +		return false;
+> =20
+>  	return true;
+>  }
 
-This makes a lot of sense. It'd be nice to clean up or comment the nit
-Neil pointed out with the ternary assignment, but otherwise you can
-add:
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Conceptually this looks fine, but it should use the named constant
+(NSEC_PER_SEC). Also, does v2 have a similar issue?
+--=20
+Jeff Layton <jlayton@kernel.org>
 
