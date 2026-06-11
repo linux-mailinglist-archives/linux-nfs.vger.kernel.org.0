@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22498-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22499-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id V1rgHz0UK2oz2QMAu9opvQ
-	(envelope-from <linux-nfs+bounces-22498-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:02:05 +0200
+	id URq8EmgUK2o+2QMAu9opvQ
+	(envelope-from <linux-nfs+bounces-22499-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:02:48 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F703674E7B
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:02:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED7E5674E9F
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 22:02:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hNBKR+lB;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22498-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22498-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Iw52Asxw;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22499-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22499-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2DE693026C92
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:01:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AC2AE3158AF8
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jun 2026 20:01:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D392838A72F;
-	Thu, 11 Jun 2026 20:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB88538CFEF;
+	Thu, 11 Jun 2026 20:01:12 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33F53876CD;
-	Thu, 11 Jun 2026 20:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6209389E05;
+	Thu, 11 Jun 2026 20:01:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781208071; cv=none; b=hhtmn/XFJ+RHv5Rdkend2zNptlHE+AK43p5F49XYK8gZhwxcNmpGXeAyyxuNEmNTrzsSJ/iBFFtwOvRA0RLBnlw2NBW8boBqeoKXTOAPJu4BOSYVOAMs4IWZR70e6PE1N6kPsQpenw2gyE5Zt45rPBEcrSME/KnFpY8QozUl0T8=
+	t=1781208072; cv=none; b=csjx8Dbfa+q4EReRZR68aGjDT/QFnG+ztD6sINVH8dTZ1lMkWOmX6MDwJHcrrX/QOog4IyYCRTMBUaYnujPLcGzz2nT5PwV356nAGC3Zw3YT66pzw+oK7AwZ3ahZa7QW1fRKBkQcrg7yrC0exGmouQk611IYMbx6tWccg0CHQ54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781208071; c=relaxed/simple;
-	bh=Y3Refx3U+1MwPJc+L4cH/cuc329E0HvcikHFuid8Gu4=;
+	s=arc-20240116; t=1781208072; c=relaxed/simple;
+	bh=UcyniYrgdklKohwqOSjznlAOhFMrpAAaEdmtNCcgQzo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dcqz3hHKdD2Yyl05vPU6TDeHq4bRNP6+/Cv4Gw+GT88I7oNTFg8TgDfoasXNl0w1+ovH7ObhuqS53c46Qo4/Lx2T8jOC9laJeN6LhxwrCUrqxifMrH9kNjhFGDX6KXGQ7EmlnPtqZhwJtr8zt6e9MdA8/fR8ufUfPhtkm/VmhQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNBKR+lB; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6F331F00A3D;
-	Thu, 11 Jun 2026 20:01:09 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=LF4EhaATMOSkyaUb30Fza89RXMNi5pZiYIRQW4RPTrawUQPcyfmkLzl8klRyafL8x9G3dCMsICfwjiCW9dKm2V0IIcJQYTLqyokBNcWZ178tzmQnZP1h0+Yuljr8VgddkVI5Gvn+n2Nm5r4e27H0etFF41zvS09Mc/aSTJBRFi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iw52Asxw; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D99A51F00A3F;
+	Thu, 11 Jun 2026 20:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781208070;
-	bh=EIvDc9e32Avr/1wmv5aA/9WeNHs1QKKqt2zypgSG0Ts=;
+	s=k20260515; t=1781208071;
+	bh=oDiaR3AX5VPl8hUvSaDYt8zboOCbbg8Ha08a196qhP0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=hNBKR+lBHFuiZ8f981vVg8BLx7Ltlieo5RZ2XAL80POGUGGmne6f3l+VMZTCPpK3/
-	 BIwmK+xVT2JAejudh71TmzpMMqJUu8YAAcOqAO9YQRv2Ta8b4vuwWADHN/mfvPJ9kJ
-	 JVT3V9RusuR0KaDsNyc7PABJVbW3Bt1TB3ANs4EiOU389Gc2HDczqyZ24VcRUkvfMi
-	 f9dsg2fkawP4zewzj+ZMpN3gZFtDm7s6TYLxHtRTCGDS8nbOEHski06HYpgehLW+oI
-	 N3345eGTNoego369MLR32cGF0sPQiGltLYhB/WQT3cgtEyDQ9ZLFTywfPoRcUawcSk
-	 lK6vlZearZKuw==
+	b=Iw52AsxwPXXXy8Ui8qXXO+A9/Gk6B5r1ufZyE6nA9jZvMN3mUjZ/3AV4mOkwnQ1Yr
+	 nbUKlwawgRGbPqrA4oh0+utWHCEEuo06e/bTZxcJXm/gm0IUfpcsLoJ65RpOrSxixp
+	 rA6x0BWsD2SFQt3YNzyiX3kdaciIeSCf9cQcr6nEPu/QCE/RoW3HNVfz39Iol+j3TF
+	 ocMg7qx8BNKn9oHiRKeuQ7IAMuNdygll1aGjMiYKFFyec2+IAdrpmuv2Nrb9nAITqg
+	 5T43XsuotTjvldB7Twu1nnjxCevO2fH8v3Aw1ixXMKPnhDBsDP3rvu+2RWfI+IE3ZH
+	 qemkgm4viF59g==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jun 2026 16:00:47 -0400
-Subject: [PATCH v2 04/21] sunrpc: defer rq_argp and rq_resp free until
- after RCU grace period
+Date: Thu, 11 Jun 2026 16:00:48 -0400
+Subject: [PATCH v2 05/21] nfsd: check nfsd4_acl_to_attr() return value in
+ nfsd4_create()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,8 +57,8 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260611-nfsd-testing-v2-4-5b90e276f2d9@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260611-nfsd-testing-v2-5-5b90e276f2d9@kernel.org>
 References: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
 In-Reply-To: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -67,20 +67,20 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1846; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=Y3Refx3U+1MwPJc+L4cH/cuc329E0HvcikHFuid8Gu4=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxP9MT1/bJzxeiEqCIMa53QQDcfC4ZrhUZNsi
- HEPzmYdCS6JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisT/QAKCRAADmhBGVaC
- Fe5DD/42Yp/MeTrR73d38q/CmPeiIrtpC8z+YGkKPbxb9OXLtSC1xcjDUepvtv54SfrDsd/Hz+D
- GX+eTl1Aef/6XIb4tdyjgjG2ok7gZIArVi3XvREr+xKV1smB2PxT+vk5kDiJJfxewVwE0CxOg4Z
- nMJ7H6vYbAvdnxKXuKWUTQ7n/wEsmc3tOFe2LEe0TRqTtJ58jGV4SA3YeN18m4OXXLMLulEwXWO
- BPW7RGGM9MQa/w8tofj+IrcBI+/BzB1Ls6qKT/Juz/quEk4D0p7GD44v8odsT0A3CO6n3DtlRop
- mmFKmwY3GtVSk5Jr/eLUOb1R1SW8qvUDPdvBdyvWU0WY+FT9UqJ1SHy22gkDcggnD8W8e+/IyFC
- MWWwPaOEi5M1VTAvvHf20MRA4AwHF06wx+CJU6+HwsOIxZbHcJF5f7+/GvVNvB9SohuPGmILqsv
- w9xWT823tWhhi2hxvyNK5NHQKpsOF6CX92sSiBuEAoqLu6FOPfiw4CO/nIdYEySKxYy7b0HY7k+
- Z7WTi1YH8hEw+EyK+c+4NotlFx4Kh4PpdXERG/Y3uKVJKO006xXJJKO9SN18Ooj/Oc3KPmjHPwM
- LJE1YCjvgy2bujyZMceFTS2nJ91rLd0duYgaOm59wJIcX00QyNAZ4VBWidwBnuVuXmPIkCMmDJp
- nHd3FNs4yRlNJgw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1072; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=UcyniYrgdklKohwqOSjznlAOhFMrpAAaEdmtNCcgQzo=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqKxP9BUAz7Ka6aVXfSFIEhstMKL2XSiFfItMyC
+ oRH0/VokwGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaisT/QAKCRAADmhBGVaC
+ FfKeD/9hvOUixcq3TOZKpL253HTM15l4dAOGyaxsnfZhu8b73MnB7GJH0BUG95BEMTAbqQb/W6C
+ QTz1kjBSmA1x0aSCpwx0Z1YiLxoawlh3XC/Pv9fYLs7rOcQyfPHhlK5JbIGbr+kTsLRrrWgrnrk
+ 5zzUqYTZ0R/xClXy8JPexcofu9puTapMK1zmcXPrm3+GIdYbobbjHAURxEf20cXW9rUfQ1OyYhy
+ zUdSfCSivOi4T1ZOMTgEqFuNd/oEBVreHiA1yw5gxZl1v/2s13uK4DXgSv/t8Ufs2IeRwr2VxHO
+ uNFBWx/JFaTaSBMidEKUSNc1jgWB7q/mQjkExVtsu8J4jYfRrgb4MxuX7nEizdFNGQfoJ6ASOEo
+ Tt79QvngRP8sgUqJVf7KIeJOB3zwO1rcZ3G8B0tkTrNQZv90w8gntOhujeGFBMEJg2X4FDYu2av
+ sN/LcvIWxJMHlmn17mqFlJGylh7QGm4YUMr5hwczCl4gE/AdjnRpfw9n0gKMsYdzjX90mpZ0Jk1
+ 72cnxX9T3YQqCRmjp3v3VHb9JeYTYIqC+KaIM6peNYi8os9eOQgcheuYxKB5+ExT3OVSOX/ka0o
+ r5aFk/IU/cBoOR48tSdIzFVnrHfzuldhAkxvdyyePRkfQ/m4rtczrN5jjBtA9jVIY7vs//g8dji
+ bFyQ7RtD7psHBjA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -88,13 +88,13 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22498-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22499-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -113,64 +113,40 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6F703674E7B
+X-Rspamd-Queue-Id: ED7E5674E9F
 
-svc_rqst_free() frees rqstp->rq_argp and rqstp->rq_resp synchronously
-via kfree(), but defers the rqstp struct free via kfree_rcu().  After
-svc_exit_thread() calls list_del_rcu() and svc_rqst_free(), there is
-a window where RCU readers that started before list_del_rcu() can still
-traverse the thread list and find the rqstp.  These readers (e.g.
-nfsd_nl_rpc_status_get_dumpit()) dereference rqstp->rq_argp, which has
-already been freed — a use-after-free.
+nfsd4_create() stores the return value of nfsd4_acl_to_attr() in
+status, but the switch(create->cr_type) block unconditionally
+overwrites it in every branch. ACL translation errors are silently
+discarded, and the CREATE proceeds without the requested ACL.
 
-Fix this by moving the kfree of rq_argp and rq_resp into an explicit
-call_rcu() callback alongside the struct free.  Resources not accessed
-by RCU readers (bvec, buffer pages, scratch folio, auth_data) remain
-synchronously freed.
+Add an early exit check after nfsd4_acl_to_attr(), matching the
+pattern already used in nfsd4_setattr().
 
-Fixes: 812443865c5f ("sunrpc: add a rcu_head to svc_rqst and use kfree_rcu to free it")
+Fixes: 4c10614c7b47 ("NFSD: move setting of ACLs into nfsd_setattr()")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/svc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/nfsd/nfs4proc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 86d39610cf0a..dd80a2eaaa74 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -716,6 +716,15 @@ svc_release_buffer(struct svc_rqst *rqstp)
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 0c37d7c6d28c..69fee481581d 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -855,6 +855,8 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		}
+ 		status = nfsd4_acl_to_attr(create->cr_type, create->cr_acl,
+ 								&attrs);
++		if (status != nfs_ok)
++			goto out_aftermask;
  	}
- }
- 
-+static void svc_rqst_free_rcu(struct rcu_head *head)
-+{
-+	struct svc_rqst *rqstp = container_of(head, struct svc_rqst, rq_rcu_head);
-+
-+	kfree(rqstp->rq_resp);
-+	kfree(rqstp->rq_argp);
-+	kfree(rqstp);
-+}
-+
- static void
- svc_rqst_free(struct svc_rqst *rqstp)
- {
-@@ -724,10 +733,8 @@ svc_rqst_free(struct svc_rqst *rqstp)
- 	svc_release_buffer(rqstp);
- 	if (rqstp->rq_scratch_folio)
- 		folio_put(rqstp->rq_scratch_folio);
--	kfree(rqstp->rq_resp);
--	kfree(rqstp->rq_argp);
- 	kfree(rqstp->rq_auth_data);
--	kfree_rcu(rqstp, rq_rcu_head);
-+	call_rcu(&rqstp->rq_rcu_head, svc_rqst_free_rcu);
- }
- 
- static struct svc_rqst *
+ 	current->fs->umask = create->cr_umask;
+ 	switch (create->cr_type) {
 
 -- 
 2.54.0
