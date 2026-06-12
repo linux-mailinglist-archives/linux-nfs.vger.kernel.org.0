@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-22528-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22529-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id j0S3OpZLLGroOwQAu9opvQ
-	(envelope-from <linux-nfs+bounces-22528-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 20:10:30 +0200
+	id J7l8DMRLLGrzOwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-22529-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 20:11:16 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 638EB67B8D3
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 20:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C57D567B8EA
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 20:11:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=M70YIS7V;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22528-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22528-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZzvCtgqA;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22529-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22529-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B4D5631661BA
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 18:06:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AA68330B32DD
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 18:09:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76BD037BE72;
-	Fri, 12 Jun 2026 18:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76E4837BE87;
+	Fri, 12 Jun 2026 18:09:06 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59F636AB4B;
-	Fri, 12 Jun 2026 18:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AAB37B012
+	for <linux-nfs@vger.kernel.org>; Fri, 12 Jun 2026 18:09:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781287609; cv=none; b=qt3gy/97U6nRIkg2+XzJxe6LgKvz2LAGWtEx9edxFxJc9R2JxemTlOY52TUM/H2pDYXsGANX4szfWhsTc0YevJI1XH9T+5FJEHTf3e0vISCXbPbvN/dNkyG/jZh6ht7UqmmZkrzcXb+/Bmf5ZTY5gsd3pzn2ZSDBmh8QXDduZJc=
+	t=1781287746; cv=none; b=ndyiDZyaUNLRj/STOB7+cxvJ3y6AciiWr5VOWtoEevWn3sY3oK2saRK9O/Sjz6zgSCkgI56pumS/jK8qwvz/4x5tKYG1nA+oWjaE0tAdBwHCdXVSoTYgU5Q4Y9l/Xb2xT03zhz2RaDH9Ncd7gLVBPmoNxsxPhKwOQFhoitUt5jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781287609; c=relaxed/simple;
-	bh=FQmoC/THZFYDinoISuSgMGxtC4zsYy3pSr7P1Tttr7M=;
+	s=arc-20240116; t=1781287746; c=relaxed/simple;
+	bh=XdFHiaYZarqAKmkJa+iYPf/j0N0krP2g2DDOH6NN7Ps=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=urzQT1y04coo6k9UzTZWAKwDyXm8W+cwVScr827n78Cbu/1Lwo8sdk2crsrKgJTumCDdItiqVvN2I6LEH9QJlX/vPd/v/G2Cq4F83aEMJ80ZyKw5A7sQiohLAWdZNXImIZ0nESHlgQXMqCXtoYgej7ywtzjRhjJQD7oS6VBXZp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M70YIS7V; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194E51F00A3A;
-	Fri, 12 Jun 2026 18:06:47 +0000 (UTC)
+	 Subject:Content-Type; b=bqSt7AlP9LMDrqLnRAsdSTcF6+ZMSZHCeMDynoNAffL2m7c4aSNzq4JCObg58B7yG9sOoB2iZMa8HHekyojnMkZn4czojbJLJ8+mwjStYiOy5aGcU9wvmwdnmRXlpArGhPRujwwwYbDAQVf+s9Fh6yW5LQnGXzmzG//5GdqvX3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzvCtgqA; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C4E1F000E9;
+	Fri, 12 Jun 2026 18:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781287607;
-	bh=rmY1XRorY8tm5XzOd9JYKm0uRq7CNXbvzLRe3jdbwDg=;
+	s=k20260515; t=1781287745;
+	bh=zvTL2w1yOSiSnSotjK2o1/0Kkp/uJrKD7/9wya/Zpzw=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=M70YIS7VJLEA2qltrMAK6gS5r16XEa6J89SNWFScureuKzVBwW+xAFVcufGQsWEoR
-	 UH4lUVHP7kuJ/qb+15euCKAWktJYL47xvA0Ec26fDdlUxf+gZwcwP4hKq6iwgVAYDj
-	 mbPH25KaOTmgpfJViJF+CrHX2sBnrkdNWgG0SQ/8t6SZ1X6Xn+pBwpicijMnbMpqjt
-	 Kh7jIikUkWaRknb/lOqPDVNKv9zgRVJu6L1wQTPAFoefPwUibscNSmHesGdZv9LgHv
-	 G/PWDsIzcgORzwvatSnze5Wuc3W4z7fO+TkGVDeysq6/etN6xZKZRqDRy1ACmEWaRf
-	 wUrNadjDXwj9A==
+	b=ZzvCtgqAbzBY+ouZlRzFOTfn4ei0rcj3oJ1jhfacHBB+CE835OXU9wE6Ns4JUdLDs
+	 Ju1LwhrjdNGczdq+dBPGYt2rqlTpsE7FxYs7zDAAl8kqXwZE2EILCNEm/y2iqH9CV6
+	 gNzrph5iyCHrov9fhCypKKKkA36LF241H6ZEgcSAahy9C6MJfqK8E4YdQtt0okDvBV
+	 afsGGxfDLXtF5t/Pm1dE43YR3IheRZ4jnhu5hPielErRv/2GgIXxru30KCdG/MX/GA
+	 luTQpKP+p8Z4dfORWfKYl6GAZSuz26IauUxPcoQ5l8h9i0SdwW240jO/DsaUafC/2Q
+	 lGZ0emO7nlBVg==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 4F23CF4007F;
-	Fri, 12 Jun 2026 14:06:46 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id BBE0CF4006B;
+	Fri, 12 Jun 2026 14:09:03 -0400 (EDT)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 12 Jun 2026 14:06:46 -0400
-X-ME-Sender: <xms:tkosaj6gSC-O3u79246MTJURyyIYFZRU6WsCSf_XlMoj_SqrFNWbYw>
-    <xme:tkosajvCmrqtinfxXQv2YfmxpNAvTYltiq6BFYoCh9f2vZ24amKwG6ScId2McoGhP
-    OviEFvI9EBIfHaXz-KRCz6-ExwTRcM29lE5RA6D_baS_wWlqkeWrcg>
-X-ME-Proxy-Cause: dmFkZTGuG3AeyMng7EVTxNkDhwUN31636ADY31p/mQRJyX7o4zQekp8lH6WwjTx6lDnD+Z
-    MTqLXMQnpZPmVLmnk4AdaHwpfT7LtZGmY5W3+f982Fe+z/7EQ8/5yRXiEzf8MCC0e+q1i5
-    K8+aoFiKyIlnhk6ps34RLwmyopZmJuXaUH3gnyqrrtWnJTSRyyv+yZX35eZoYsFu4b6Q7F
-    85MEHNo2v/w1VvHKPGIVPH9xgMOAsPi97JL44NTpYsLe0QG6azo/OKZzVfcaGla0kMy/Ia
-    TfpY6z7maAU/nNyC71NfiHdvCkxOB9TK9rMuIMgxDpLg+LzkIh6l8s26eJHt31JfFNTNPZ
-    1r2IZZRFTH8vKNk7rcDAqDFSyJRRXCNTDr3fvxdm5otCWTavIfuJw6CkbmzwpsvcZWLpfr
-    gE/FD++SPZ9McuWpPyf+bvS83g4C94bxuTdhOu266V+muxKjt63z0XEJnf3hpFyDcJAWhX
-    wK4XYADOJ+Y6DjKh1FKG0IflMAsKjjcBYkaCUAVr8g1NanSLkolwTtIWLhVRST0yq/JxZu
-    gcye2PYG4wBh5XEkY8rkCVjWbJTcnwrM+yeu6/o1L/+ZpldlUfMU1bPFItriWxzfN/YyaK
-    YCje6jUMNwTdg8IIqMl8iLeLaKuJ/+FNsfDsxFRaOJtb+r5mmJ45fG6S2C7g
-X-ME-Proxy: <xmx:tkosanReRxK15jxEayC-y3bbcNemtYhuEuN9NflfQP6i6P1RtGCi9Q>
-    <xmx:tkosatpGAQ_8M271MY5C_LhHWF6h3NEmBbTML8VbQlwPgf3VOTSqNQ>
-    <xmx:tkosalZPdxlDog9OKLtWgrIKqs_V_dRYf3u1ix0f0z6BVdGEeWRTtg>
-    <xmx:tkosaoRaX5yQjJL2nCh9aK59uP8ZiQQhGlOuzG3GMaH-fbWy6sFWsA>
-    <xmx:tkosajcJsDKWk2pa6AYwbx8wB-YyxFKumoQEblIponfYRta-F_34Qgmv>
+  by phl-compute-10.internal (MEProxy); Fri, 12 Jun 2026 14:09:03 -0400
+X-ME-Sender: <xms:P0ssajM7xwxr9lfeeUnAzPpAslmcmO96l2J2fsQMyFpembZ5HcYKvw>
+    <xme:P0ssaozalhhPDSg3qxhNfCf0g2hu2y97QzmoJX0qmXiMDtkOdaTXk7T3xteV5n9k2
+    XEbdajrKMcFDVtlQlfyHxuJcHgISxZg78SUovOLN-HtpsMqkQpxbgM>
+X-ME-Proxy-Cause: dmFkZTEQVELxuIX5+6rKVVQ926Wl5DU2GmSvdAPFG/0Ke+QSAVWRvCR1IXSq1KOzPMNRMb
+    VFMkRhugKoRNkb6sMdPc5nqoFzXrGDRQoGJmktwH0eB8gaE4e6Jaaxh7gf4JGEpNwHfq2v
+    Ge4thWzB9KFn20yURN++icHqDtZ+TRmFIB991ERKcNJd4BQvyW+SDZZ85qmnq/kGRCjqY8
+    Z336i0BsnjMb27pibMWFB11HQaO/h4mPZYvLWTGgM+NJz955s0GywV6O2KBwnGEUzAOCx3
+    fZzxSN6LgHJfp/tCw7y1PEFhPgBlTnZoFFeYFC/UwigEyQFq/Xd3ZcxZEmvDpGKcdn2Zjw
+    4OXmsbOa0ZPvp8iNCmn40/gDLJigkZC0gJRKLGdFnoeulDTkjtkRI+WFJeHa4sdCySk3rf
+    f4hPCbHGbp9E30wbH6ny/uLVo82qHh8m/NF3Q18q04gTiRlahWXw9FjY495Hgg7aqxPPRL
+    fhx6TZKlt9hduP7DhU6SZP91P9xPFWcdA4MAQagYpTHsPOx2NDR+GW7ez6UsySrT8VSr60
+    Wlh0oYychgOjCOd4nuUo5uX9i5E5DVdYMDy66Kh1MeNVkkQacmV6O3sJJWT5dp9UnXGZP4
+    Ghq9yMTvUxWds+SuTAE47uBdegaF9VewcXWRH5n2M1Az095plC8GlhNiPFIA
+X-ME-Proxy: <xmx:P0ssaiELV2n7UuMpc_RkZJVK7EDNV-3GXMCgVM7gaqEmNmocrfLP4w>
+    <xmx:P0ssaoM6TWs4A8abNfoL9TaFmP2vCy-E9WshNj7V9m7UE5ophikqOQ>
+    <xmx:P0ssakvkg9DXkdOiLo-ZCzR-W5HgcRVsgsbrnFRsiNYk4b7tjHwX6A>
+    <xmx:P0ssatXkaqKvdEwQwqVcizlNQX8o_uJo72orEajN2cGR1Q3tVb4lDA>
+    <xmx:P0ssarSziuSJJ4YFGRSn3K1wxYMQlmO4zmlwEEu2FtjwHbzcfgxoLyz5>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 29E53780070; Fri, 12 Jun 2026 14:06:46 -0400 (EDT)
+	id 91C83780070; Fri, 12 Jun 2026 14:09:03 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,8 +79,8 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AUcBOYW56SA3
-Date: Fri, 12 Jun 2026 14:06:24 -0400
+X-ThreadId: AcMjPYD26Dvc
+Date: Fri, 12 Jun 2026 14:08:42 -0400
 From: "Chuck Lever" <cel@kernel.org>
 To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
@@ -94,11 +94,12 @@ Cc: "Steven Rostedt" <rostedt@goodmis.org>,
  "Christian Brauner" <brauner@kernel.org>,
  "Calum Mackay" <calum.mackay@oracle.com>, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Message-Id: <dfa17ce6-5ecb-46c5-b5ca-fe1149605a17@app.fastmail.com>
-In-Reply-To: <20260611-dir-deleg-v6-16-4c45080e5f3f@kernel.org>
+Message-Id: <bb6e580b-5deb-4731-afda-07c23e572b4e@app.fastmail.com>
+In-Reply-To: <20260611-dir-deleg-v6-17-4c45080e5f3f@kernel.org>
 References: <20260611-dir-deleg-v6-0-4c45080e5f3f@kernel.org>
- <20260611-dir-deleg-v6-16-4c45080e5f3f@kernel.org>
-Subject: Re: [PATCH v6 16/20] nfsd: add a fi_connectable flag to struct nfs4_file
+ <20260611-dir-deleg-v6-17-4c45080e5f3f@kernel.org>
+Subject: Re: [PATCH v6 17/20] nfsd: add the filehandle to returned attributes in
+ CB_NOTIFY
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -114,14 +115,14 @@ X-Spamd-Result: default: False [-3.65 / 15.00];
 	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22528-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22529-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:rostedt@goodmis.org,m:alex.aring@gmail.com,m:amir73il@gmail.com,m:jack@suse.cz,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:calum.mackay@oracle.com,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:alexaring@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,app.fastmail.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,app.fastmail.com:mid,vger.kernel.org:from_smtp];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -137,63 +138,101 @@ X-Spamd-Result: default: False [-3.65 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 638EB67B8D3
+X-Rspamd-Queue-Id: C57D567B8EA
 
 
 
 On Thu, Jun 11, 2026, at 1:50 PM, Jeff Layton wrote:
-> When encoding a filehandle for a CB_NOTIFY, there is no svc_export
-> available, but the server needs to know whether to encode a connectable
-> filehandle. Add a flag to the nfs4_file that tells whether the
-> svc_export under which a directory delegation was acquired has subtree
-> checking enabled, in which case it needs connectable filehandles.
+> nfsd's usual fh_compose routine requires a svc_export and fills out a
+> svc_fh. In the context of a CB_NOTIFY there is no such export to
+> consult.
+>
+> Add a new routine that composes a filehandle with only a parent
+> filehandle and nfs4_file. Use that to fill out the fhandle field in the
+> nfsd4_fattr_args.
 >
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->  fs/nfsd/nfs4state.c | 1 +
->  fs/nfsd/state.h     | 1 +
->  2 files changed, 2 insertions(+)
+>  fs/nfsd/nfs4xdr.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
 >
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 513cbc1a583f..aa99783ce901 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5231,6 +5231,7 @@ static void nfsd4_file_init(const struct svc_fh 
-> *fh, struct nfs4_file *fp)
->  	memset(fp->fi_access, 0, sizeof(fp->fi_access));
->  	fp->fi_aliased = false;
->  	fp->fi_inode = d_inode(fh->fh_dentry);
-> +	fp->fi_connectable = !(fh->fh_export->ex_flags & 
-> NFSEXP_NOSUBTREECHECK);
->  #ifdef CONFIG_NFSD_PNFS
->  	INIT_LIST_HEAD(&fp->fi_lo_states);
->  	atomic_set(&fp->fi_lo_recalls, 0);
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index f8457e0f2b57..d912e3d04dd7 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -761,6 +761,7 @@ struct nfs4_file {
->  	int			fi_delegees;
->  	struct knfsd_fh		fi_fhandle;
->  	bool			fi_had_conflict;
-> +	bool			fi_connectable;
->  #ifdef CONFIG_NFSD_PNFS
->  	struct list_head	fi_lo_states;
->  	atomic_t		fi_lo_recalls;
->
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 7b19248b1503..15ccd54ffdb6 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -4197,6 +4197,39 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, 
+> struct xdr_stream *xdr,
+>  	goto out;
+>  }
+> 
+> +static bool
+> +setup_notify_fhandle(struct dentry *dentry, struct nfs4_file *fi,
+> +		     struct nfsd_file *nf, struct nfsd4_fattr_args *args)
+> +{
+> +	int fileid_type, fsid_len, maxsize, flags = 0;
+> +	struct knfsd_fh *fhp = &args->fhandle;
+> +	struct inode *inode = d_inode(dentry);
+> +	struct inode *parent = NULL;
+> +	struct fid *fid;
+> +
+> +	fsid_len = key_len(fi->fi_fhandle.fh_fsid_type);
+> +	fhp->fh_size = 4 + fsid_len;
+> +
+> +	/* Copy first 4 bytes + fsid */
+> +	memcpy(&fhp->fh_raw, &fi->fi_fhandle.fh_raw, fhp->fh_size);
+> +
+> +	fid = (struct fid *)(fh_fsid(fhp) + fsid_len/4);
+> +	maxsize = (NFS4_FHSIZE - fhp->fh_size)/4;
+> +
+> +	if (fi->fi_connectable && !S_ISDIR(inode->i_mode)) {
+> +		parent = d_inode(nf->nf_file->f_path.dentry);
+> +		flags = EXPORT_FH_CONNECTABLE;
+> +	}
+> +
+> +	fileid_type = exportfs_encode_inode_fh(inode, fid, &maxsize, parent, 
+> flags);
+> +	if (fileid_type < 0 || fileid_type == FILEID_INVALID)
+> +		return false;
+> +
+> +	fhp->fh_fileid_type = fileid_type;
+> +	fhp->fh_size += maxsize * 4;
+> +	return true;
+> +}
+> +
+>  #define CB_NOTIFY_STATX_REQUEST_MASK (STATX_BASIC_STATS   | \
+>  				      STATX_BTIME	  | \
+>  				      STATX_CHANGE_COOKIE)
+> @@ -4206,6 +4239,7 @@ nfsd4_setup_notify_entry4(struct notify_entry4 
+> *ne, struct xdr_stream *xdr,
+>  			  struct dentry *dentry, struct nfs4_delegation *dp,
+>  			  struct nfsd_file *nf, char *name, u32 namelen)
+>  {
+> +	struct nfs4_file *fi = dp->dl_stid.sc_file;
+>  	struct path path =  { .mnt = nf->nf_file->f_path.mnt,
+>  			      .dentry = dentry };
+>  	struct nfsd4_fattr_args args = { };
+> @@ -4244,6 +4278,9 @@ nfsd4_setup_notify_entry4(struct notify_entry4 
+> *ne, struct xdr_stream *xdr,
+>  		      FATTR4_WORD1_TIME_METADATA | FATTR4_WORD1_TIME_MODIFY;
+>  	attrmask[2] = 0;
+> 
+> +	if (setup_notify_fhandle(dentry, fi, nf, &args))
+> +		attrmask[0] |= FATTR4_WORD0_FILEHANDLE;
+> +
+>  	if (args.stat.result_mask & STATX_BTIME)
+>  		attrmask[1] |= FATTR4_WORD1_TIME_CREATE;
+> 
 
-When two clients use exports of the same directory root that
-differ only in subtree_check/no_subtree_check, the root filehandle
-is the same and nfsd4_file_hash_insert() can reuse the same
-nfs4_file. This makes fi_connectable depend on whichever export
-first initialized the shared object, so a later directory
-delegation acquired under the other export can encode CB_NOTIFY
-child filehandles with the wrong connectability.
+Codex flagged setup_notify_fhandle() for constructing a child FILEHANDLE
+attribute without calling fh_append_mac(): for exports with sign_fh,
+fh_compose() appends a MAC, and nfsd_set_fh_dentry() rejects every
+non-root signed-export handle whose MAC is absent or mismatched, so a
+client using the CB_NOTIFY filehandle gets a stale/bad handle. It
+recommends signing the constructed handle or suppressing the attribute
+when the export requires signed filehandles.
 
-Therefore, the delegation's sc_export is the per-export state to
-derive connectability from, and the export is already available
-via dp->dl_stid.sc_export.
-
+A client that does not receive the FH falls back to a LOOKUP, so
+suppression degrades gracefully.
 
 -- 
 Chuck Lever
