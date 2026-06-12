@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-22525-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22526-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1vitLUBHLGr+OgQAu9opvQ
-	(envelope-from <linux-nfs+bounces-22525-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 19:52:00 +0200
+	id SOf7Oa1ILGo7OwQAu9opvQ
+	(envelope-from <linux-nfs+bounces-22526-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 19:58:05 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32CD967B748
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 19:52:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 533FD67B79B
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 19:58:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=S4odbrLc;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22525-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22525-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=P9sCRa1d;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22526-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22526-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2B26D304B561
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 17:51:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0518A311A7C1
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Jun 2026 17:57:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D821B375AD0;
-	Fri, 12 Jun 2026 17:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BBE837416F;
+	Fri, 12 Jun 2026 17:57:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C4F3655F9
-	for <linux-nfs@vger.kernel.org>; Fri, 12 Jun 2026 17:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE2E36C592;
+	Fri, 12 Jun 2026 17:57:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781286706; cv=none; b=myrumLONcCdUC7nuvNVJWXoo0Yz7HlbjwrDu8tMUPJPVVE6uiWTYm2mzveDC0JP6JOYSrhqDOkf3i1CVlfZIwpIlQicMES+e4zDqq9ctTz9dghG13roUZJCU+8cBzU9ZhhF74p7qwJmU6y/PI35F7Qk3lOoQ7BOAfzRAb8lFzIo=
+	t=1781287069; cv=none; b=BaoIg1A8f5rDyW7/ilavYILLGrJsFwvJlM2PK8X1NC9qG9ISrQHe6kL/ekH/x+iG9UDSndr4LDA+BqjDwvIhAFkY0jl3jr6KQRr8c2F53z0zFoFWjH8hzTDmU0iqzmLlIwGRyZn7tgD6UPAOVzDFvwaUTpxsQujDCSaOP/Xu6YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781286706; c=relaxed/simple;
-	bh=56Ivha6xKFQ4VCMPv3kiCPG/CApgmuASriV7K82gRoc=;
+	s=arc-20240116; t=1781287069; c=relaxed/simple;
+	bh=qrUU/I/MhpwU2lCjSSmWYQDGD/pC3gZqQF1rOtHSFsU=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=VouEv6sEUevigMd9PSkb4FR4LnzFV2Ib7SwSnKO8/a9OXai6XB5ZioUk8xvIbFw3kJ6tEehlHN/XfYU6Z7kyC6GhbkG2IwwQPF0v/g4+Gh8CdVT6TB8uRM5b93dGTUGMGQo+UDPmr2Fx4wxjofR1YVvMABMkr2MQFoggJrA33y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4odbrLc; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E531F00A3D;
-	Fri, 12 Jun 2026 17:51:43 +0000 (UTC)
+	 Subject:Content-Type; b=W18Z+NdVxpGKsW1Jntx53NMastlDvBYsBT4JcFFsKCneGVrrl3YwViP27hbd1imAPq2K/0wKDZNtyR4o2NepiIwDqWrkzH3T7NTyYv3k39bWoLM2LpwtOI+VKKwza0/k3tloyRBksYsLkxqjdyE1zD/77dkagK/2Rqm+rFChVho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9sCRa1d; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB741F00A3E;
+	Fri, 12 Jun 2026 17:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781286704;
-	bh=Q/9iUeEM2UpFf/86WWBloKEZXHGVhwttRlCQuzlZ5Ok=;
+	s=k20260515; t=1781287068;
+	bh=qKnmY94ujBnVl8xEP0bE4WWiBkQvevQ2ZRGhSM+2r0U=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=S4odbrLc26oeLyRs7t74pRqXzocdSCAEoQ+wSC+pmj9N5IcClemxvOavBqS5CtocE
-	 ftOrbCnHK7fjGvobylmvUR3RcXKqvQLwTRt4uaijIXqtJcJ/KsIxlbOUARIhlJZwd+
-	 VaL4UiMEjDYriNC1RtiN0JhRCJwMF9XWEwgTxJ1d43KLyhd6bR9bkVUAZuaxXGiwVe
-	 KdHoIefzJaP5Ee4OyN4SqV2iTyVqtUou5z1Jmfc08sLZKIMjwZxZ/mVCQr1EsYK4aQ
-	 wVHnWfJztPTIAVTVZ0kmmUwZ8RA31WvfmX3CIjSOSvdyNg77MiYxRj9tT147jm23O8
-	 cP0R3DP8rq8uA==
+	b=P9sCRa1dD8D0yEYkqhJC9YwX8RCtzV20dR3LeW1St+Kejq9w5u3NBPLWH+8Dtuv7N
+	 q6VovVUncCYVsoPsrYF5IC2NsREg0TECYBj8TjsUOm1w39+lNBqVtYybbLFWPSsoZE
+	 hBy8Le5T5uYZcAn6/Ukhtv5ci/HI3Nd1Mpk2NTbx4fMP+H0VLvjGF74TckoIGFCDRR
+	 R1pHxDzA/nlTybwGcgzQ7bJ4aMIdoGtOXAedJQNOhdW7cCznWWKkZC/uG1wW/pYCbH
+	 X+yLP2DPpeP9IBBolmRrgqtPHHvBiziFN9LlR5UZmQ8/G3/Xl7wkcbk2nbL/Mnm82t
+	 MVyTtcSyeSLXQ==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E13FAF40074;
-	Fri, 12 Jun 2026 13:51:42 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 98EC6F40068;
+	Fri, 12 Jun 2026 13:57:46 -0400 (EDT)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Fri, 12 Jun 2026 13:51:42 -0400
-X-ME-Sender: <xms:LkcsampZbsE8djkJP2h1lwByf5GRs5c5juQxy9hlbTvmn09BKLH0ww>
-    <xme:LkcsavchmLWpJUWzn4J6KM0LiyDhcSp1YyVOO_vErcVGLivDMmGenEdA03EpfawBX
-    PtSj47QEN_UdBEdOdStMo2q_IIEziaC86BpY_RFHLBN2E4Yg3AoqeaT>
-X-ME-Proxy-Cause: dmFkZTF4dxDvwsonL4JVAx5hoEMaw5DXSAzJLG/s/8RSaT1MGvkn04K97aWX0zvht5wokp
-    z9DCWcc53ckBYUC2uxjOuSYa+pU60G0XVTbpKUTdKv4SihmvRFSYQXEMYtW9bApE7ZPLz+
-    dM7WFpB3WK0pS6i0tbbXIcgY8XOpMqlVDCeLNkPuewnClEAQk+vPMZ5I/MwXomyWpZRJLP
-    VhjUE5/ilpqL7X8i8hUqr9qP1YYPhqg0x3KrNI0Xfdrk+GlC8alkLnxIrdE5cf0ZHldEKy
-    VzOjxveHtaZEnhuzzWAKfscRWh1DwnNNnCpqrtN0XNtTdjRRA0sh0g8wdNf6YfXdmZPGS1
-    hug16szM/AkJxZMOBDUAj8MY/E9qPIMwTi+B6nFCKbdHV3KDZ6zPigw/dfXMlCqh73rAvU
-    /JXXFJ8kfItFbC9W3Fgca8jRID2uKrauAvQipiR4MMuVwR46tZgPqw+892t01bQ4Vs8SCS
-    0rEcY3xxfav0hff+8+mc5VmfvcYDssitkouwCYkwvhZC9logumym81mBSlwojDGfvvf/dP
-    nm8Xh7o5I9hITyug2AL3mWwekU9k2nT+GCKJeiTkfdIumU4SnYj+Xrd/wOOiQqvQEMtT1Z
-    UCllrYESWacOLfwVwlcLumxIJE/FTE+HuJuCcIUn1ULAg43O3qXtAKr3yvMQ
-X-ME-Proxy: <xmx:LkcsasAI6_F4hiBcJCcwAIREijRUOVK7-SwhMnRIJ65zcRSN-EzKow>
-    <xmx:LkcsajYRwThhZbjOi21_D3u79Hfpbtmt5_bMd8xlXyDk8fjTtqDfnw>
-    <xmx:LkcsaoIgv4Rf9SvvBvrxe75quivKdU2uPNPlC8ONoYrNBTaqCk-w1g>
-    <xmx:LkcsakDycMw7M9e7uTjERKgMyxvDEknPeqlTAEmG8DLFhhiCY9KdDg>
-    <xmx:LkcsakOM0GFZ2Th_rPl6IHbrhECv0iwe5M2aZMQ6Nd44l25sWGzPReL6>
+  by phl-compute-10.internal (MEProxy); Fri, 12 Jun 2026 13:57:46 -0400
+X-ME-Sender: <xms:mkgsaoBrqJCVxAfelLY6WlfBBcakASHPJO_5TKXAWj35k8G-_hi0MQ>
+    <xme:mkgsalWZ2d2jzdldJLU1Hi59IKlNmURTURWq1v8zgkPWxas2FQ1dqSs2xzWN9zoIb
+    P6rt57uEjUWqZf1-U9I-UwGi_fEFvPWZim6BzupAk44fwhUWoUPOcSe>
+X-ME-Proxy-Cause: dmFkZTFjhsR4D7eKIbH5F7KG4gFCzzMXBG+6vWiNR8RCCciXzIdB0iYrNrtbPAAw3gED1O
+    ki4/jGbxobZu0jlK+o9n0hLjRt53QEVNvSl6NOd5GeRbSZQ6SpvUnpFVJ+D1/0ZITLg1My
+    qD8Ufs/dZKoELWqiS1JWDcWVrk6vkyGOBVTngQwHVMGnNjr2yTX12mw+hCAmMVSVFJtuV6
+    bMPYkZgszBkoVGxvqE8Z07VX4HvVyFTEwIJsMN31UvXy2mzI19ikRnPz2zqh2jtLiECqhg
+    ZA+x9RPDastAOTAXj5wJhdSZAbw/wBp/uJBImNj8ugXRihM7V4OE3+KdPirA3R6hsFxTqA
+    jSr8O6LNVSPVPHo0VpqP6LaISjfwsvLcUIZOrSUWiJw7B7GIE9b+gBNyuRtztS5+gfTFzE
+    84ArQIj/5ua/lpyAr9mKBwz7NSXgUSAL2og545qH42SQi2PjdfbVklGoqtInrLEzksnbxu
+    IqD6xmo3LbQqvlcK7xYgcQqDWRUTh2LiWPsKvulthZKu8HCbq46stuaIxCm43fhNnLERcy
+    C15+BWPGG7ZHw5NJbgYvzKFNg+mRAzeECiVwyBpSbcOjcA1SAOqmZ1dTnJDlmwvlxYmN6H
+    LpJBvoeOt0ca2dyg7Q8yjkfB1LFcv8kEDzJon3xrqVg9bhwZgwchCPc00irw
+X-ME-Proxy: <xmx:mkgsama3n1BjTPHMGH_DspEnQmL6WFBZAtEJQ39mhbkOmqeY4ganCQ>
+    <xmx:mkgsauSRoNU9A1l7q2SKgGabryNpsg8axOUehdQ2V4PUS48cnft-zQ>
+    <xmx:mkgsapg-7aGHr0E12Pc1Oey6d2VE88NSRvG689UvRio5bHOy4Cu_RQ>
+    <xmx:mkgsap6FY3gvnkRsuIKSxZowVBnbhSZyXt6SppLIPbVb3-ww0K-Wng>
+    <xmx:mkgsakm_J-ejhsk4Z839oT8sBxgchmlG56cxssUs8jLf54JjtjvObVR8>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B4E2B780070; Fri, 12 Jun 2026 13:51:42 -0400 (EDT)
+	id 7408F780070; Fri, 12 Jun 2026 13:57:46 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,8 +79,8 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AYZVHXguuuu-
-Date: Fri, 12 Jun 2026 13:51:22 -0400
+X-ThreadId: AqANW_W8EHC7
+Date: Fri, 12 Jun 2026 13:57:26 -0400
 From: "Chuck Lever" <cel@kernel.org>
 To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
@@ -94,11 +94,12 @@ Cc: "Steven Rostedt" <rostedt@goodmis.org>,
  "Christian Brauner" <brauner@kernel.org>,
  "Calum Mackay" <calum.mackay@oracle.com>, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org
-Message-Id: <b94c3e40-0520-4e83-9b4f-53a9325cecfe@app.fastmail.com>
-In-Reply-To: <20260611-dir-deleg-v6-10-4c45080e5f3f@kernel.org>
+Message-Id: <b43a8d34-52b9-418c-8df0-76bd1c3553cd@app.fastmail.com>
+In-Reply-To: <20260611-dir-deleg-v6-11-4c45080e5f3f@kernel.org>
 References: <20260611-dir-deleg-v6-0-4c45080e5f3f@kernel.org>
- <20260611-dir-deleg-v6-10-4c45080e5f3f@kernel.org>
-Subject: Re: [PATCH v6 10/20] nfsd: add notification handlers for dir events
+ <20260611-dir-deleg-v6-11-4c45080e5f3f@kernel.org>
+Subject: Re: [PATCH v6 11/20] nfsd: apply the notify mask to the delegation when
+ requested
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -108,20 +109,20 @@ X-Spamd-Result: default: False [-3.65 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22525-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22526-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:rostedt@goodmis.org,m:alex.aring@gmail.com,m:amir73il@gmail.com,m:jack@suse.cz,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:calum.mackay@oracle.com,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:alexaring@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,app.fastmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,cna_fh.data:url];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,app.fastmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -133,148 +134,97 @@ X-Spamd-Result: default: False [-3.65 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 32CD967B748
+X-Rspamd-Queue-Id: 533FD67B79B
+
 
 
 On Thu, Jun 11, 2026, at 1:50 PM, Jeff Layton wrote:
-> Add the necessary parts to accept a fsnotify callback for directory
-> change event and create a CB_NOTIFY request for it. When a dir nfsd_file
-> is created set a handle_event callback to handle the notification.
+> If the client requests a directory delegation with notifications
+> enabled, set the appropriate return mask in gddr_notification[0]. This
+> will ensure the lease acquisition sets the appropriate ignore mask.
 >
-> Use that to allocate a nfsd_notify_event object and then hand off a
-> reference to each delegation's CB_NOTIFY. If anything fails along the
-> way, recall any affected delegations.
+> If the client doesn't set NOTIFY4_GFLAG_EXTEND, then don't offer any
+> notifications, as nfsd won't provide directory offset information, and
+> "classic" notifications require them.
 >
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
-
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index ca4dd2f969eb..59378751d596 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-
-> @@ -904,13 +908,45 @@ static void nfs4_xdr_enc_cb_notify(struct rpc_rqst *req,
->  	encode_cb_sequence4args(xdr, cb, &hdr);
+>  fs/nfsd/nfs4proc.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 0c37d7c6d28c..29f7339dc220 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -2530,12 +2530,18 @@ nfsd4_verify(struct svc_rqst *rqstp, struct 
+> nfsd4_compound_state *cstate,
+>  	return status == nfserr_same ? nfs_ok : status;
+>  }
 > 
+> +#define SUPPORTED_NOTIFY_MASK	(BIT(NOTIFY4_REMOVE_ENTRY) |	\
+> +				 BIT(NOTIFY4_ADD_ENTRY) |	\
+> +				 BIT(NOTIFY4_RENAME_ENTRY) |	\
+> +				 BIT(NOTIFY4_GFLAG_EXTEND))
+> +
+>  static __be32
+>  nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
+>  			 struct nfsd4_compound_state *cstate,
+>  			 union nfsd4_op_u *u)
+>  {
+>  	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
+> +	u32 requested = gdd->gdda_notification_types[0];
+>  	struct nfs4_delegation *dd;
+>  	struct nfsd_file *nf;
+>  	__be32 status;
+> @@ -2544,6 +2550,12 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
+>  	if (status != nfs_ok)
+>  		return status;
+> 
+> +	/* No notifications if you don't set NOTIFY4_GFLAG_EXTEND! */
+> +	if (!(requested & BIT(NOTIFY4_GFLAG_EXTEND)))
+> +		requested = 0;
+> +
+> +	gdd->gddr_notification[0] = requested & SUPPORTED_NOTIFY_MASK;
+> +
 >  	/*
-> -	 * FIXME: get stateid and fh from delegation. Inline the cna_changes
-> -	 * buffer, and zero it.
-> +	 * nfsd4_cb_notify_prepare() sized the payload against a single page,
-> +	 * but did not account for the compound, sequence, stateid, and
-> +	 * filehandle encoded here. If the variable-length encode overflows the
-> +	 * backchannel send buffer, roll back to before the operation so that a
-> +	 * truncated CB_NOTIFY is never placed on the wire.
->  	 */
-> -	xdrgen_encode_CB_NOTIFY4args(xdr, &args);
-> +	start = xdr_stream_pos(xdr);
-> +
-> +	p = xdr_reserve_space(xdr, 4);
-> +	if (!p)
-> +		goto out_err;
-> +	*p = cpu_to_be32(OP_CB_NOTIFY);
+>  	 * RFC 8881, section 18.39.3 says:
+>  	 *
+>
 
-Please use xdr_stream_encode_u32 for this purpose.
+When a client requests NOTIFY4_GFLAG_EXTEND | NOTIFY4_CFLAG_ORDER
+plus ADD/REMOVE/RENAME, the assignment still grants the content
+notification bits because it only requires GFLAG_EXTEND. The rest
+of NFSD's CB_NOTIFY encoder does not store that order-aware request
+and emits zero/absent cookie and previous-entry information, which
+is only safe for order-unaware clients.
 
+An order-aware client can then keep an ordered directory cache from
+unusable notifications instead of having the delegation recalled.
 
-> +
-> +	args.cna_stateid.seqid = dp->dl_stid.sc_stateid.si_generation;
-> +	memcpy(&args.cna_stateid.other, &dp->dl_stid.sc_stateid.si_opaque,
-> +	       ARRAY_SIZE(args.cna_stateid.other));
-> +	args.cna_fh.len = dp->dl_stid.sc_file->fi_fhandle.fh_size;
-> +	args.cna_fh.data = dp->dl_stid.sc_file->fi_fhandle.fh_raw;
-> +	args.cna_changes.count = ncn->ncn_nf_cnt;
-> +	args.cna_changes.element = ncn->ncn_nf;
-> +	if (!xdrgen_encode_CB_NOTIFY4args(xdr, &args))
-> +		goto out_err;
-> 
->  	hdr.nops++;
->  	encode_cb_nops(&hdr);
-> +	return;
-> +
-> +out_err:
-> +	/*
-> +	 * Drop the CB_NOTIFY op and emit a valid CB_SEQUENCE-only compound so
-> +	 * the client still advances its slot. Flag the failure so the done
-> +	 * handler recalls the delegation and the missed notification is not
-> +	 * silently lost. The flag is written here in the transmit path and read
-> +	 * in the done handler; the two are serialized phases of the same
-> +	 * rpc_task, so no additional barrier is needed.
-> +	 */
-> +	ncn->ncn_encode_err = true;
+The bis draft requires order info for order-aware clients, or recall:
 
-This flag is zeroed only once, at allocation time in alloc_init_dir_deleg().
-It is never cleared in nfsd4_cb_notify_prepare().
+   - 27.4.5 (REMOVE): "If the client is order-aware, the server will send
+     the cookie value as part of this."
+   - 16.2.13: order-aware == NOTIFY4_CFLAG_ORDER set OR NOTIFY4_GFLAG_EXTEND
+     reset.
+   - 16.2.11.3: "If the client is concerned with entry order and these
+     notifications ... cannot be sent for any other reason, then the
+     delegation is recalled."
 
-Since nfsd4_cb_notify_release() can requeue the callback (via
-nfsd4_run_cb_notify) when events arrive while a callback is in flight,
-->prepare may encode cleanly and return true, but nfsd4_cb_notify_done()
-still observes the stale ncn_encode_err == true and calls
-nfsd_break_one_deleg() -- discarding a good notification and recalling
-the delegation unnecessarily.
+This patch's own first rule (drop everything when GFLAG_EXTEND is
+reset) is exactly the order-aware -> no-notifications principle
+for legacy RFC8881 clients. It misses the parallel case:
+GFLAG_EXTEND set PLUS CFLAG_ORDER set is also order-aware.
 
+This finding is latent when this patch is first applied, but the
+NFSD's negotiation is incorrect for any future order-aware client.
 
-> +	xdr_truncate_encode(xdr, start);
-> +	encode_cb_nops(&hdr);
->  }
-> 
->  static int nfs4_xdr_dec_cb_notify(struct rpc_rqst *rqstp,
-
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 0a15d7f3b543..513cbc1a583f 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-
-> @@ -3471,19 +3472,146 @@ nfsd4_cb_getattr_release(struct nfsd4_callback *cb)
->  	nfs4_put_stid(&dp->dl_stid);
->  }
-> 
-> +static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
-> +{
-> +	bool queued;
-> +
-> +	if (test_and_set_bit(NFSD4_CALLBACK_RUNNING, &dp->dl_recall.cb_flags))
-> +		return;
-> +
-> +	/*
-> +	 * We're assuming the state code never drops its reference
-> +	 * without first removing the lease.  Since we're in this lease
-> +	 * callback (and since the lease code is serialized by the
-> +	 * flc_lock) we know the server hasn't removed the lease yet, and
-> +	 * we know it's safe to take a reference.
-> +	 */
-> +	refcount_inc(&dp->dl_stid.sc_count);
-> +	queued = nfsd4_run_cb(&dp->dl_recall);
-> +	WARN_ON_ONCE(!queued);
-> +	if (!queued) {
-> +		refcount_dec(&dp->dl_stid.sc_count);
-> +		clear_bit(NFSD4_CALLBACK_RUNNING, &dp->dl_recall.cb_flags);
-> +	}
-> +}
-
-nfsd_break_one_deleg() does an unconditional
-refcount_inc(&dp->dl_stid.sc_count), and its comment justifies this
-with "the lease code is serialized by the flc_lock." That invariant
-holds when called from nfsd_break_deleg_cb() under flc_lock, but
-nfsd4_cb_notify_prepare() runs on a workqueue WITHOUT flc_lock. Its
-out_recall: path calls nfsd_break_one_deleg(dp)
-directly. The delegation can be concurrently destroyed with sc_count
-already at zero, making this an inc-from-zero.
-
-The dispatch path nfsd4_run_cb_notify already does this correctly with
-refcount_inc_not_zero. The out_recall path needs the same guard (skip
-the recall / bail if the refcount is already zero).
-
-I notice that the last unapplied patch ("nfsd: add
-support to CB_NOTIFY for dir attribute changes") rewrites the guard
-"if (count > NOTIFY4_EVENT_QUEUE_SIZE)" into "if (count > limit)" with
-limit = NOTIFY4_EVENT_QUEUE_SIZE - 1 when NOTIFY4_CHANGE_DIR_ATTRS is
-requested. That turns the previously-dead overflow branch into a live,
-routine path to out_recall, which adds another normal-operation route
-into this unlocked recall.
+I don't see this issue addressed by a subsequent patch in this
+series.
 
 
 -- 
