@@ -1,66 +1,55 @@
-Return-Path: <linux-nfs+bounces-22543-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22545-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id JEWgOPy9LWpBjQQAu9opvQ
-	(envelope-from <linux-nfs+bounces-22543-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jun 2026 22:30:52 +0200
+	id hZ0RIdTWLWp0lAQAu9opvQ
+	(envelope-from <linux-nfs+bounces-22545-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jun 2026 00:16:52 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47A1367FA2D
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jun 2026 22:30:52 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B9AB67FE77
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jun 2026 00:16:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZfrdcjaY;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22543-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22543-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=IB0J+5zH;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22545-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22545-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1F45B301CCC9
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jun 2026 20:30:51 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 828DF30015BF
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Jun 2026 22:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CCE3385A1;
-	Sat, 13 Jun 2026 20:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97856315D21;
+	Sat, 13 Jun 2026 22:16:47 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA522EEE88;
-	Sat, 13 Jun 2026 20:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2EE257845
+	for <linux-nfs@vger.kernel.org>; Sat, 13 Jun 2026 22:16:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781382650; cv=none; b=f9kWWaBn8vuJWIXCUknBYDNf/YknVtTPjQb+nbXkyfOLjbE4j6/zU6fW4L2F7M5WmIVYs5JvFpm58V70Fs5e3JBWX8yUWjksuqYyuZUJ1TGB6URgFxyPQyy6Ucwpw2IaCJvXbAl3X/IsTCBB/3nkTXveWZbaV/hMpqJXoAd2iPg=
+	t=1781389007; cv=none; b=KOYRte2WNq39JWECIWBp+LUm9h2Ylqm5nG0Ky2tE+HV890qyBuJ6y/6rLZE83aMUxDNQvm7cnhs5I1cCGJ+gNweenkzzmAsMfA+JbbXK3jWOFXFl8l/42XQSbKiQn88T/quCTRuA1E0i6h1eCNGE+sB5SYA8m6z3frHDlZ4dz9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781382650; c=relaxed/simple;
-	bh=7KbKwxY+/052b+hFF6tlApC8vKJqva4fKTXyOSFCs3o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kUzTw0tegb2VXeqDc4TaP7bT2V043aNI5Bc4Gyqg4tDnF8WD/nZ5C0q8eHEL5qDsblJNMXTh2oe9FZ1MEZemYRk+yE08PDuCmvidjmJlo2WYRqsOfYClLrrx5DDArfuUCXgLP2IS7oQ+nxx5UYUR4JBH4Lj6zCBMYp7qSYX9qYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfrdcjaY; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC1391F000E9;
-	Sat, 13 Jun 2026 20:30:47 +0000 (UTC)
+	s=arc-20240116; t=1781389007; c=relaxed/simple;
+	bh=dSZVqqZK+wzjQqLxHShwg64UsD5cGG3X5gZ2D/WdOKk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vlv3VHkJB0QwfIeUMEO+vXAOj4anxKrBouO0WBUp17GE6Q5A7rgc+UpwI/oQinr/OL24sfbOTV9rPQpXmeAwnoOL+uGhc4GYhfbPClIQU/lkJROJ/3RKBEuvj+4OAN69et1hZZ+S4pyW+mNx/kkssB2AipdQUiwq7L1m49Il6M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IB0J+5zH; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAF81F000E9;
+	Sat, 13 Jun 2026 22:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781382648;
-	bh=jsfoxDsfIMS0kvXx65KA4nfGwUIHSfmU4mRtxVOU7d8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZfrdcjaY4ZCsyhY7MCMssDKLcAOdLhIL3Hoze9dSr9DwZJe5SeqEudT5NiCvlSvTm
-	 X31JGf8pL76PAQIKLlrO7LJu4odqCWzMyHSXlevaT3vmtWlzx0PaAA3UqWZG56+mKX
-	 hHgUDsf9SdnxqE5jmJ0fTVvY9NIO3ePqnobs+1Rh/SNCoa0YGzuSkeVWoSi6AHtT68
-	 EMQ7PU5BFDJLYkz398XCgXN7KBTlBhr/cFp4JwKxj+qSmuTFaAYP9ot5QFb8t/jgSo
-	 GWA+5ONhougT0Pv6Si+pnVjiOIIZEnR30pIGO+Pnk3r9PaqMkAh6Su1XoUGCZ5fL0T
-	 ZhZSpJxmB9rxg==
+	s=k20260515; t=1781389006;
+	bh=0+fLI91pa/Xv3FD1+RFHBdOmEDeulJXtr3rw3jCfjvU=;
+	h=From:Subject:Date:To:Cc;
+	b=IB0J+5zHNaROe2nUKJIMcgj5G+c4Mf5SU1bnfEL5f9mWC4BUb00ImbvHEeMErfFBC
+	 ynrFvU4K1UmjqopaTSBJ/gi8xXpwiwXIQLT0QA1+kBnT0AOA4lDE+goo+8K/ki0Flh
+	 TelUF6UFotmGqKIlsk/qy3nQJAiQ+13Nxxrad77DSCiZu/QfsmTw4uHpzOqlCKfPHm
+	 8tQEZJEAfvFb0NnPUmcY56kPi6px0NYb32oXYjPWfxNvVzJdUGuTkBrw95WaAG2ntv
+	 DssFBAdUHUikTzRQ/22pSK7T7OXyuWuSHXCHE73yFC3Qk65s/CS35LnAxd62/gbF3D
+	 H4DgXHcESA1fg==
 From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chris Mason <clm@meta.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/21] nfsd: more bugfixes
-Date: Sat, 13 Jun 2026 16:30:45 -0400
-Message-ID: <178138249723.1181088.2364860878285776489.b4-ty@b4>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
-References: <20260611-nfsd-testing-v2-0-5b90e276f2d9@kernel.org>
+Subject: [PATCH 0/3] Fix NFSD post-shutdown use-after-free in the
+ unlock_filesystem paths
+Date: Sat, 13 Jun 2026 18:16:31 -0400
+Message-Id: <20260613-unlock-filesystem-uaf-v1-0-462b9bec8c84@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -68,29 +57,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ6CMBBFr0Jm7USokQavYlwMZQqjWEinNRrC3
+ QVdvp//3gLKUVjhUiwQ+SUqU9igOhTgBgo9o3QbgylNXdbVCXMYJ/dALyPrRxM/MZPHpiF7ttY
+ Rk4HNnSN7ef+619ufNbd3dmmP7Y+WlLGNFNywT47HY/DaYWJNEnpY1y/cTSv0nAAAAA==
+X-Change-ID: 20260613-unlock-filesystem-uaf-99a7577caea2
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Musaab Khan <musaab.khan@protonmail.com>, linux-nfs@vger.kernel.org, 
+ Chuck Lever <cel@kernel.org>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2300; i=cel@kernel.org;
+ h=from:subject:message-id; bh=dSZVqqZK+wzjQqLxHShwg64UsD5cGG3X5gZ2D/WdOKk=;
+ b=owEBbQKS/ZANAwAKATNqszNvZn+XAcsmYgBqLdbEgMzxwztgqp05hGDEeVGbvbc+WoZJuSkBd
+ 1PNosZjbmOJAjMEAAEKAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCai3WxAAKCRAzarMzb2Z/
+ lxYTD/48T248W5RdNWjdPuXpFqghQotZXLmxo2RkedwM7LzIhzp+MV7U/r85V9JUyl2qOkrCHrN
+ pstTkiHe1aXfM9DiSFh5bIyLk+BelJGQxJYAJvkoKyphvX284guJiJvMMU/DrqZfYQbQjhM4X18
+ E50MztWMGr+zaZztUnBMx8LpT03oDCtQ5801fyoRjpOVZetfOFRskB8rQKcA0WGh/XDvvAEyrC+
+ 14KdsBLWR23b81U67MtrtihH1NKoqziXRpcJmT5SZqPX/KJvdW3ZFv3s4J5gNejJqyX/8hoqx37
+ kt39nH+pYucxGNCEDLMkJb/qPKtDg41NnsxIYn4+QfRDCovxja+/6TmoEpDUIanN04uB+bQZ21m
+ R6CuhmsyOSfMq32vN0b/yEsIqYwiTJaVuiOPhU5hob5506cLhZ07QYThcNY3A+DFzsdclS75L95
+ LxR2BlZ0ppAnQm/ZFxDeKIQdY47NndNsakzCzoicrTHzOBg17KGhniQP3TblqLN4wDfhLdUDJ+z
+ olAzfvH0UvEJ2N3C5YdhSPsfjZHnoFXqJ3rgyrwmEwQ7vnZV6aFUk3Tv1bpo9Gnl89HmTdykkd3
+ Dhw0cnyNYth8mwNfBN6xuqzO9uPzsBQCmOPLkfeeo4hULEaB4XbsCosqXT26jlNIGP9iUudFsUy
+ eyMHqeg0GY8rKcQ==
+X-Developer-Key: i=cel@kernel.org; a=openpgp;
+ fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22545-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:jlayton@kernel.org,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:musaab.khan@protonmail.com,m:linux-nfs@vger.kernel.org,m:cel@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22543-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[protonmail.com,vger.kernel.org,kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -98,68 +113,62 @@ X-Spamd-Result: default: False [-4.66 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 47A1367FA2D
+X-Rspamd-Queue-Id: 7B9AB67FE77
 
-On Thu, 11 Jun 2026 16:00:43 -0400, Jeff Layton wrote:
-> This version is addresses review comments from Sashiko. There wasn't
-> much in the way of regressions in v1, but it did notice a number of
-> nearby problems that should also be fixed.
-> 
-> This adds 3 patches to fix those. I also dropped the localio patch from
-> the series since that should probably go through the NFS client tree.
-> I'll send it separately.
-> 
-> [...]
+Musaab Khan reported that a local administrator holding CAP_SYS_ADMIN
+can trigger a use-after-free in nfsd by writing a filesystem path to
+/proc/fs/nfsd/unlock_filesystem after the server has been stopped.
 
-Dropped 08/21 - rejected in v1
-Dropped 15/21 - will be replaced
-Folded  20/21 into 03/21 to avoid a bisect hazard
+write_unlock_fs() calls nfsd4_cancel_copy_by_sb() before it takes
+nfsd_mutex and before it confirms that nn->nfsd_serv is set. Once nfsd
+has shut down, nfs4_state_destroy_net() has freed nn->conf_id_hashtbl
+but left the pointer intact, so the cancel helper walks freed slab
+memory as an array of struct list_head and then dereferences a
+bogus nfs4_client when it takes clp->async_lock. KASAN reports a
+slab-use-after-free read in nfsd4_cancel_copy_by_sb().
 
-Applied to nfsd-testing, thanks!
+nfsd4_revoke_states() walks the same state tables and for that reason
+already runs only under nfsd_mutex with nn->nfsd_serv confirmed
+present. The async COPY cancel was added ahead of that protected
+section, so it escaped the guard. The first two patches move the cancel
+inside the protected section on both the procfs unlock_filesystem path
+and the NFSD_CMD_UNLOCK_FILESYSTEM netlink path. Async copies exist
+only while the server runs, so gating the cancel on nn->nfsd_serv loses
+nothing.
 
-[01/21] nfsd: clear opcnt on compound arg release to prevent OOB read
-        commit: ef6fe22ee7de0a016bd6b4ec6cf314b9f93cd816
-[02/21] nfsd: add missing read barrier to rpc_status_get dumpit seqcount retry
-        commit: 71a715232eff2ff9b8fbb7ad2f9f882187056ac8
-[03/21] nfsd: fix netlink dumpit error handling for rpc_status_get
-        commit: ef265c50d90fc7e92461668fab69f9a33e935092
-[04/21] sunrpc: defer rq_argp and rq_resp free until after RCU grace period
-        commit: 5d51eea254f4be0b146bd859384e10723d59bcf8
-[05/21] nfsd: check nfsd4_acl_to_attr() return value in nfsd4_create()
-        commit: 50c819a3406963f7935a62d81321984b947b5b97
-[06/21] nfsd: add filehandle match check to nfsd4_delegreturn()
-        commit: 35450eb04ec5718ef680062da9711f054cacfdb9
-[07/21] nfsd: validate nseconds in TIME_DELEG decode paths
-        commit: 387858689eb526681b3fca7d24d3fb18b353356a
-[09/21] nfsd: fix version mismatch loops in nfsd_acl_init_request()
-        commit: a6a22b9c4135f80b8b1b5c9f7629cddb677c5dad
-[10/21] nfsd: fix FL_SLEEP being set unconditionally for all LOCK types
-        commit: fd848bc2582871814762604f3675f1bd139e356e
-[11/21] nfsd: add fh_want_write() for early-verified SETATTR in nfsd_proc_setattr()
-        commit: 19a6dd09bf8d22d7af15ef068f57ec279f9051aa
-[12/21] nfsd: fix clock domain mismatch in clients_still_reclaiming()
-        commit: 0fecd3b7c474eedb60ec03716a13a61c93eadec6
-[13/21] nfsd: use test_and_clear_bit for somebody_reclaimed to prevent lost update
-        commit: 7f101efd236e14915bf35d5c2b62d10350a63b1c
-[14/21] nfsd: reject reclaim LOCK after RECLAIM_COMPLETE
-        commit: 7a02caf96fac6faa22a93b8bd06d29d6f90318cd
-[16/21] lockd, nfsd: RCU-protect nlmsvc_ops dispatch
-        commit: b601157bf2118094708689033921e996e3418e29
-[17/21] nfsd: move nfsd_debugfs_init() after nfsd4_init_slabs() in init_nfsd()
-        commit: bb483d4ed57fd52c21c0f64c126986489d51c9d5
-[18/21] nfsd: initialize DRC hash table before registering shrinker
-        commit: bec760bf8e868cb6e232b4760dac86c0172d17f5
-[19/21] nfsd: restore rq_status_counter to even on all nfsd_dispatch() exit paths
-        commit: f8b2bcada458865af99537ece2b5470417b0143b
-[21/21] nfsd: drop the stateid, not the stateowner, on seqid_op replay retry
-        commit: 402b9e49a8e5da556adbafd21871ea4e8a617372
+The netlink command that patch 2 corrects, 327c5168eff2 ("NFSD: Add
+NFSD_CMD_UNLOCK_FILESYSTEM netlink command"), has not yet reached
+mainline; it sits in nfsd-next, destined for v7.2. Patch 2 therefore
+applies to nfsd-next, not to a released kernel, and needs no stable
+backport.
 
---
+The last patch adds lockdep_assert_held(&nfsd_mutex) to the state-table
+walkers and documents the nfsd_mutex / nn->nfsd_serv precondition in
+a Context: kdoc section, so a future caller added to this path cannot
+silently reintroduce the same use-after-free.
+
+---
+Chuck Lever (3):
+      NFSD: Prevent post-shutdown use-after-free in unlock_filesystem
+      NFSD: Prevent post-shutdown use-after-free in NFSD_CMD_UNLOCK_FILESYSTEM
+      NFSD: Annotate caller preconditions for the state-table walkers
+
+ fs/nfsd/nfs4proc.c  |  6 ++++++
+ fs/nfsd/nfs4state.c | 16 +++++++++++++++-
+ fs/nfsd/nfsctl.c    | 14 ++++++++------
+ 3 files changed, 29 insertions(+), 7 deletions(-)
+---
+base-commit: 56d6b74e37708005739ef00bb59db34bffac15a8
+change-id: 20260613-unlock-filesystem-uaf-99a7577caea2
+
+Best regards,
+--  
 Chuck Lever
 
 
