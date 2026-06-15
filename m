@@ -1,141 +1,257 @@
-Return-Path: <linux-nfs+bounces-22557-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22558-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id n07hEuJSL2rh+QQAu9opvQ
-	(envelope-from <linux-nfs+bounces-22557-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2026 03:18:26 +0200
+	id J+/aKW7lL2q1IgUAu9opvQ
+	(envelope-from <linux-nfs+bounces-22558-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2026 13:43:42 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8CD6682B85
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2026 03:18:25 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D73F685C8B
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2026 13:43:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=synology.com header.s=123 header.b=kniGLisq;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22557-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22557-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=synology.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dP+Istka;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22558-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22558-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8F6043006392
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2026 01:15:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2B9EA30182A4
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Jun 2026 11:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2E923AE9B;
-	Mon, 15 Jun 2026 01:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5179D3D9674;
+	Mon, 15 Jun 2026 11:43:40 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.synology.com (mail.synology.com [211.23.38.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA597223DFB
-	for <linux-nfs@vger.kernel.org>; Mon, 15 Jun 2026 01:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E0A2F8EB0;
+	Mon, 15 Jun 2026 11:43:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781486133; cv=none; b=evWPGwfQrtFpIT/yJKmay6pTKjdxaz2mKUxnnvg8bP03S54lZ7Te7NJ2BVRk4AilbCGvxpkDE6/CpJT4v+x+PBB87JWX2gtiRgvPTnTqbhD7LSJppkjO522zRHGOmerP/oStejt5Q9Z2yy+Yhof9pOlyOopJ+EVgSuQ0XhnnMR4=
+	t=1781523820; cv=none; b=oSXLWZTAzBXGBFZixkkL8FDKN8kd2TOHiMt0IroQKmIflXYdd6GJcsYJxrIfhEKF4CJXAJaS9xQs3TiDY50feBLhv+5O2Gn6dbJkykKXLiO+OTRMCtlcO0Y413lv9EVG9QlGv9kQ0nkGc+EPDkQH2DuU26jThNdRX6HNXXAiQhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781486133; c=relaxed/simple;
-	bh=eT0ZBNc7WvsgxEQExt22iJrLxGEgNsmeLF3mlJuH/sA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pR2NIKgemQY86mmLVPVYDsEYCsSXShI2+ZNkkaoh6msiBlP1jZxZXaNeB9euNdl3a0JvaQkUYUFcUr/zU4/3d+TV7goz/0dvUndWmkML7LTZJmiMKAPtFbD8sBEw7Q7WelI/MHgPbsQzkxJZF26ObSUHHMc4mO/1wYWFhuw074I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synology.com; spf=pass smtp.mailfrom=synology.com; dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b=kniGLisq; arc=none smtp.client-ip=211.23.38.101
-From: robbieko <robbieko@synology.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synology.com;
-	s=123; t=1781486125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nHOSGYcWMJhfQyeuVFYvSaOPdFc9amNSPIsG3Tj1hiA=;
-	b=kniGLisqaRtQ6+gpGzw34WVbVIr1qk//3DoyJaLWm04JGqwkiZCRd3nYvPekw53QBxUSUk
-	U+vXFEq9HbdGJZA/OCYgUGXSSWvs2xi3hOchJl6Rry9yYKebNnEP/P+7el+iSpvBaOdZ5N
-	8PKqY8ezNX8O9nomiO0qnjvLRSzXqVM=
-To: linux-nfs@vger.kernel.org
-Cc: Robbie Ko <robbieko@synology.com>
-Subject: [PATCH v2 2/2] nfsd: use NSEC_PER_SEC in nfsd4_decode_nfstime4()
-Date: Mon, 15 Jun 2026 09:14:37 +0800
-Message-ID: <20260615011520.1477943-2-robbieko@synology.com>
-In-Reply-To: <20260615011520.1477943-1-robbieko@synology.com>
-References: <20260615011520.1477943-1-robbieko@synology.com>
+	s=arc-20240116; t=1781523820; c=relaxed/simple;
+	bh=vyCk7pS91Uax59VX1WZSazMfWYCJy5hK4qy/aePdk+8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qQR4OeJPkFW7qK1TTOwzSipKSqwKhRIZf21wY6NnwI3E9iaWWiOrr7iH18aLaEn8k4zbqpE2MNQoed1b0KgJn7ir658fLv5ygc1Y5lW6Fg0M8+zAhlxbpe/gmkLwacwoymqHIQbfY796I0WUBMV1MkzEAJEEKBrxiCOoyupEFf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dP+Istka; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16D381F00A3A;
+	Mon, 15 Jun 2026 11:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781523818;
+	bh=TBMPQ5a6D7EiHdxr1pquu+Llv8zJ3cXLm5ExSBxUWBI=;
+	h=From:Date:Subject:To:Cc;
+	b=dP+Istka/JVbGpwchPh7d0Q4qyb8RMIRdxEobRL+xA5uezt/8oEbrkYBfA39oC79O
+	 I6f1vP2GtaKIE1LN4dKcaMb7rjJPIa4BomL0ByJ0yKHjc3EBuJa0uiUUIlkuYGLMvO
+	 5E+uKa36OdxJD9iXi2e2pWMc8J9cE7nQrXrFGi5CpasI/1UoGGsAxExpbr+KlEPI3M
+	 Gz9YMcWEGVWWuMb4dUAXFJ1tCzHDQXzncafsIcJmHqHnxW/GuqJ+AKajPhr3veULQO
+	 rG6X104KEoSSI/3eDau31k9ulbGSuwx8ZzUMGokhDESxz7U11yLR0UDDBqgBGmcMWD
+	 s4mVbXMZ2NaRg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 15 Jun 2026 07:43:34 -0400
+Subject: [PATCH v3] nfsd: validate sockaddr length per family in
+ listener_set
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Synology-Virus-Status: no
-X-Synology-MCP-Status: no
-X-Synology-Auth: pass
-X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
-X-Synology-Spam-Flag: no
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260615-nfsd-testing-v3-1-e9b515e17e54@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/13M0QrCIBTG8VcZ5zpDj81cV71HdGHzbJNCQ4cUY
+ ++eGwSty++D/2+CRNFRglM1QaTskgu+DLmroB2M74k5WzYgR8UV18x3ybKR0uh8z5TWRuNByrb
+ mUJJnpM69Vu5yLXtwaQzxvepZLO8XarZQFowz0tK0ZCwa0uc7RU+PfYg9LFLGn1qIvxpLXd8aT
+ nhUHdpmU8/z/AFAH7155wAAAA==
+X-Change-ID: 20260608-nfsd-testing-688a82433c50
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4580; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=vyCk7pS91Uax59VX1WZSazMfWYCJy5hK4qy/aePdk+8=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqL+VpaRdYMv/X8SQqCiIA5/UdUdQXAjOXMZUfK
+ AAxFYIW9umJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCai/laQAKCRAADmhBGVaC
+ FZWLEAC6vqmJbfqSVCb0CQvle9+2wMms+gazmKdvTyyArgevkohnH7VYzA0vpUYUgGL0gO1qzbe
+ DpnuQwJGHcXo2f6ce/QYQUEphE8H63c9ffijj64694vV1km1xomg0PwNaUhalDOPg4zCu/ghUJN
+ 7t10uPcOQ+zB+5O7E1Jf1mof7VC4dFq6//eKjOBYIv8nrzjTszIUKjj02cleAMfT32TGWn7Dj2P
+ iCirC9MRvFmkFa3PzQhm9dR72H3Ix4UGSJupGQ62c7GhpUjuR/KhD7lnJJtS+W/QYN6C3pSGrRz
+ qKHPxMYgQdcGL5ttgktznXVzxtOYNjAw+rPVw/cwxibYBoHShe5pClKU1zHZqgljnevulwhls+X
+ 1LbAC786MVeuCdN2Za2deXXKO2a9An6tzwiewptvhwSJSvEi1+/oRiax2k23I5Jk6ayk0OP1E4G
+ Gw/LuK/tjQlkyPBLcKua0E25MVvtZYIl/QuF7bSneKxNJioDQ0TQn6eRvObif/HwnjOWZYsCt8d
+ QByAl1unKxAJmR7H/E4JuL78YC132Nkb1zHw/FuxJ3Fke9NQQbK1EkRl2LVSqyEja5nhDw3nrUb
+ JKEIOGXWB+6je5SOf65Ti+d46fgC3gpl4afYJeUp06lzLWt3raDSi5pGOyrGcNyCIJfDSENL1Q1
+ +GjD4XvllFDKrMQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[synology.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[synology.com:s=123];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22557-lists,linux-nfs=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[robbieko@synology.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22558-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:robbieko@synology.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robbieko@synology.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[synology.com:+];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FROM_HAS_DN(0.00)[]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B8CD6682B85
+X-Rspamd-Queue-Id: 1D73F685C8B
 
-From: Robbie Ko <robbieko@synology.com>
+nfsd_sock_nl_policy declares NFSD_A_SOCK_ADDR as bare NLA_BINARY
+with no minimum length. A CAP_NET_ADMIN caller can send a 16-byte
+NFSD_A_SOCK_ADDR with sa_family=AF_INET6, causing a 12-byte OOB
+read across three consumers (rpc_cmp_addr_port, svc_find_listener,
+kernel_bind).
 
-nfsd4_decode_nfstime4() open-codes the nanoseconds upper bound as the
-literal (u32)1000000000. Use the named constant NSEC_PER_SEC instead,
-matching the out-of-range check added for the NFSv2/NFSv3 setattr path
-and improving readability.
+Tighten the policy to NLA_POLICY_MIN_LEN(16) so that nla_parse_nested()
+rejects anything shorter than a struct sockaddr, and add per-family
+length validation in both nlmsg_for_each_attr_type loops to cover the
+larger struct sockaddr_in6. The new policy floor subsumes the open-coded
+"nla_len < sizeof(struct sockaddr)" check, so drop it from both loops.
 
-The original code cast the literal to u32 to force an unsigned
-comparison, which matters on 32-bit where tv_nsec is a 32-bit signed
-long: an out-of-range u32 wire nseconds (>= 0x80000000) assigned to it
-becomes negative and a signed compare against NSEC_PER_SEC (a signed
-long) would wrongly pass. Keep that protection by casting tv_nsec to
-unsigned long, the same width as tv_nsec, matching timespec64_valid()
-and the NFSv2/NFSv3 setattr check. No functional change.
+In the listener-creation loop, report the error rather than silently
+succeeding. Previously an unsupported family reached
+svc_xprt_create_from_sa(), which returned -EAFNOSUPPORT to userspace;
+simply skipping the malformed attribute would instead return 0. Set
+-EAFNOSUPPORT for unsupported families and -EINVAL for a too-short
+address before continuing, so userspace still sees the failure.
 
-Signed-off-by: Robbie Ko <robbieko@synology.com>
+Fixes: 16a471177496 ("NFSD: add listener-{set,get} netlink command")
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This version fixes the error handling so that an invalid address passed
+from userland will properly cause a -EINVAL return.
+---
+ Documentation/netlink/specs/nfsd.yaml |  4 ++++
+ fs/nfsd/netlink.c                     |  2 +-
+ fs/nfsd/nfsctl.c                      | 41 ++++++++++++++++++++++++++++++-----
+ 3 files changed, 40 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 2a0946c630e1..db17bd3e45d6 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -244,7 +244,7 @@ nfsd4_decode_nfstime4(struct nfsd4_compoundargs *argp, struct timespec64 *tv)
- 		return nfserr_bad_xdr;
- 	p = xdr_decode_hyper(p, &tv->tv_sec);
- 	tv->tv_nsec = be32_to_cpup(p++);
--	if (tv->tv_nsec >= (u32)1000000000)
-+	if ((unsigned long)tv->tv_nsec >= NSEC_PER_SEC)
- 		return nfserr_inval;
- 	return nfs_ok;
- }
+diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
+index 8f36fadd68f7..9677ba19ffcd 100644
+--- a/Documentation/netlink/specs/nfsd.yaml
++++ b/Documentation/netlink/specs/nfsd.yaml
+@@ -156,6 +156,10 @@ attribute-sets:
+       -
+         name: addr
+         type: binary
++        # 16 == sizeof(struct sockaddr_in); AF_INET6 callers
++        # validate the full sockaddr_in6 length in nfsctl.c.
++        checks:
++          min-len: 16
+       -
+         name: transport-name
+         type: string
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index fbee3676d253..6570960034f1 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -37,7 +37,7 @@ const struct nla_policy nfsd_fslocations_nl_policy[NFSD_A_FSLOCATIONS_LOCATION +
+ };
+ 
+ const struct nla_policy nfsd_sock_nl_policy[NFSD_A_SOCK_TRANSPORT_NAME + 1] = {
+-	[NFSD_A_SOCK_ADDR] = { .type = NLA_BINARY, },
++	[NFSD_A_SOCK_ADDR] = NLA_POLICY_MIN_LEN(16),
+ 	[NFSD_A_SOCK_TRANSPORT_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index f1ecbb13f642..64e9cdd17628 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2022,12 +2022,24 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 		if (!tb[NFSD_A_SOCK_ADDR] || !tb[NFSD_A_SOCK_TRANSPORT_NAME])
+ 			continue;
+ 
+-		if (nla_len(tb[NFSD_A_SOCK_ADDR]) < sizeof(*sa))
+-			continue;
+-
+ 		xcl_name = nla_data(tb[NFSD_A_SOCK_TRANSPORT_NAME]);
+ 		sa = nla_data(tb[NFSD_A_SOCK_ADDR]);
+ 
++		switch (sa->sa_family) {
++		case AF_INET:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in))
++				continue;
++			break;
++		case AF_INET6:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in6))
++				continue;
++			break;
++		default:
++			continue;
++		}
++
+ 		/* Put back any matching sockets */
+ 		list_for_each_entry_safe(xprt, tmp, &permsocks, xpt_list) {
+ 			/* This shouldn't be possible */
+@@ -2083,12 +2095,29 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 		if (!tb[NFSD_A_SOCK_ADDR] || !tb[NFSD_A_SOCK_TRANSPORT_NAME])
+ 			continue;
+ 
+-		if (nla_len(tb[NFSD_A_SOCK_ADDR]) < sizeof(*sa))
+-			continue;
+-
+ 		xcl_name = nla_data(tb[NFSD_A_SOCK_TRANSPORT_NAME]);
+ 		sa = nla_data(tb[NFSD_A_SOCK_ADDR]);
+ 
++		switch (sa->sa_family) {
++		case AF_INET:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in)) {
++				err = -EINVAL;
++				continue;
++			}
++			break;
++		case AF_INET6:
++			if (nla_len(tb[NFSD_A_SOCK_ADDR]) <
++			    sizeof(struct sockaddr_in6)) {
++				err = -EINVAL;
++				continue;
++			}
++			break;
++		default:
++			err = -EAFNOSUPPORT;
++			continue;
++		}
++
+ 		xprt = svc_find_listener(serv, xcl_name, net, sa);
+ 		if (xprt) {
+ 			if (delete)
+
+---
+base-commit: 332e2f4f37b213f231be1ab5ddc17e2052383b60
+change-id: 20260608-nfsd-testing-688a82433c50
+
+Best regards,
 -- 
-2.43.0
+Jeff Layton <jlayton@kernel.org>
 
-
-Disclaimer: The contents of this e-mail message and any attachments are confidential and are intended solely for addressee. The information may also be legally privileged. This transmission is sent in trust, for the sole purpose of delivery to the intended recipient. If you have received this transmission in error, any use, reproduction or dissemination of this transmission is strictly prohibited. If you are not the intended recipient, please immediately notify the sender by reply e-mail or phone and delete this message and its attachments, if any.
 
