@@ -1,129 +1,212 @@
-Return-Path: <linux-nfs+bounces-22647-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZBFyM9nOMWqtqQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-22647-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 00:31:53 +0200
+	id 8o4xCM3hMWperQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 01:52:45 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCBC6695944
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 00:31:52 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88624695CAA
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 01:52:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hMBWJ7dC;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22647-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22647-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=P2AL17nv;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D388D3008C8D
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 22:31:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 73ECA301725B
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 23:52:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5ECD3ACEF1;
-	Tue, 16 Jun 2026 22:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC4C3D88EF;
+	Tue, 16 Jun 2026 23:52:40 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8B73AB47B
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 22:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9757121D596
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 23:52:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781649107; cv=none; b=RWPX7tz7gj8j2Mi14XCDw2mmEZV38Mr+SqtPshD8pgVGXMmlZswBWlnIUBV705Zpcg/PwyC5CumqWG3spsqisSl0heaYchJvn5ryjslShm38HoGP0jAe+9C1/cYpfh9hRYur5PHwx4WpJ2ef/fMzsxpw9HVs3GUXWWx2/5jEpxo=
+	t=1781653960; cv=none; b=PnrmUgCY6a4j2UQYrOxokav3J9kAEEwjDkGEmHWQkAi8WOttm+KkCJSm25WHXkXogpOsINJK6s3mmgZCMgHrRpqM4cOlPp/C4dDBz6R1l8IDQDtnF4HUKU43OOTa9Hls9GjUW7KvITavDTWsQmqGfzFW+kWSJgemQhJolKWSSmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781649107; c=relaxed/simple;
-	bh=6pLkKdpLzTQMXWoptcUd76uBEHUgojgBxUWXo57ri1A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r9PKB99epvOBDKbkSfT0HZ9TP+bamXO6d3O+VstoiRRLrJp1OPyABt8TQqN1TOf1mOD1AQEvnNcz4nTP8lvWHLKWG470Xv5tn7CVgmu0THTjZlRmQRym40kZ229QzHLIWUUbugALXp5cqBM3V70Iuup6N95m+JEprTN6liBGk3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMBWJ7dC; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174D11F000E9;
-	Tue, 16 Jun 2026 22:31:46 +0000 (UTC)
+	s=arc-20240116; t=1781653960; c=relaxed/simple;
+	bh=lStjC9LCIqnlSYTTHtozq5fQTNrzkwNhWPyy6lZ/k6Q=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=s94PB+kmywNwr0ntYO2+1YZMbLskX70Ok9lRAvh+11H9hwBIhPt9aB4EabzUGPDKmNucSg4D+jt1Em0xEH9Yz5xK1YcKwqROIj9Ds6J913g8aatd8m/RyZvYR/D/ERbqQhMMyD22ifnSKa1D/wyzZf6kKAJhdmmL9SQByKsIqYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2AL17nv; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7E61F000E9
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 23:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781649106;
-	bh=pVgZr6mBtU4Dw+g1EVqjGeVAJyldhDKGmNdfEOaLCZs=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=hMBWJ7dC4umWdQRIBf2xyiw18KILI6Bl389AGhY1A8xIsInFLxKXgChBgbYNjftIl
-	 Dd8Fa426Up5glbAojMf6NWIutOMgdaTZUsKCu/kI2K0Th6rhun6mm/rSjSbn407uyY
-	 oEeeX6iCTVFK+J3GGe0ZjJhUo7YLoo/5lfr5oiHhXcNvYpUxrrKnhK8aW9HSzt6P1y
-	 06/dWAV9aWs9yik1A0FDSBsR+xTAGMXpl1ZcMmOEKcjSPpD0FZdetx2h6JoQH9Dqle
-	 LpcBBmwEDmnQY3T0j8VbTsFe1VJ2J9JBic4lcs881Z8ZCsY2srIDD0icfshqo/050n
-	 4TGvkrzI0o/7w==
-From: Chuck Lever <cel@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	robbieko <robbieko@synology.com>
-Subject: Re: [PATCH v3 1/3] nfsd: reject out-of-range useconds in NFSv2 SETATTR/CREATE
-Date: Tue, 16 Jun 2026 18:31:43 -0400
-Message-ID: <178164909508.424942.9440635362510515285.b4-ty@b4>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260616054027.2360930-1-robbieko@synology.com>
-References: <20260616054027.2360930-1-robbieko@synology.com>
+	s=k20260515; t=1781653959;
+	bh=2PGFMcZQgbKQIiP0tOkTJWkJgankUzGNfIcpo79TfmM=;
+	h=Date:From:To:In-Reply-To:References:Subject;
+	b=P2AL17nvndOUdhICk6lA9kkNV4sTQqncFnf6bIpPhSwXhydQWuOxZpr+TNmCu23at
+	 dgHh7oXZFc/3hmaurtHTcVAXnZBu17XbSVrF6oKZafTwvxNG5nPM38QXDZLwRFBan1
+	 k+/oyxiNf+C5i3KwRiBkV57ejdgxSvLrkBIfGPjj1Ag7U7++ohQKgbGoEhLhPsPa5J
+	 ZEHfriNm8ofFRekXxOC7YxApQ5t9+UDFX+HEXcuAmXyfXPJnbc5qREjdKX27BusrpX
+	 Y9BopGBS/EWmFYKecRU9QnRsYLDjNxaDfO7da2xAOSk156sWW/eJkkqUKsHpvASm4a
+	 8AXVPve5KxMOA==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 41FFFF40073;
+	Tue, 16 Jun 2026 19:52:38 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 16 Jun 2026 19:52:38 -0400
+X-ME-Sender: <xms:xuExalMkkbhJGNOT-5IkG_bMBPfIPA-XbNvK8NSzJfBGTAHlDmRQBQ>
+    <xme:xuExaizdgU7vaVwGSUzUvaEB512-IVrbt72_SeeYM3vlRapq3zKj7unrSlutjEXk5
+    KmZTtdKyoZxfySKVbSDMnXTEmdfueu2vtensyVMPcGlSX__J8ANVeY>
+X-ME-Proxy-Cause: dmFkZTGVQrd5dSRSiAW5GJeQyQ2RSBb1wa0g34jCC3OBnQ5HCrANrPgfrJfYJA/3StbLzR
+    ALBLxiBNMuJXZxSyR1HEZl0sH8j0mO47H317C68JK1yQCIH07WzeYiIi9vElv8XHqV/AiJ
+    626e8svWp8hsX24TU3IdTwblf4GU318Zce5Je2opBAkjxMgm81hZpNMuymP5rODbN9Usj4
+    nqX0H9ygw8+t/dTK5Ugsg6GDfKaruhC2mSXr27D25cG2v41Y7ThfhW5WXKXBS8np7SfiE4
+    e6+Z0SnMahsD2pATuW8M1ednHZSMGs5CrEWhHFvfXhz0VNpnlfI3ttU3YdCbJcXjo607P2
+    xuis0ZvSmn8q5p7h5wOwj8+w9Me4kWFwfpe/R2l+Y5SvbjkNoQW4SkOMdDq+R6kCG7TEX3
+    efSKF3epDyeHILQw/ezocSX2F7XlJZ7xOx2MBLQOr1rwVkc0BB13/SFfVPxG3/8V5kUKDJ
+    f+HVLORWkenw3mVYRcqGLN3p6FiAd0b+nSWzRQaSE/jR2TPkwvYy07A9cNh9z0bNBj8VOR
+    VI1C4/qPow/eJUiacEcfMtdHPp2CGe60nrs5nVK4h3mSm4Afa+PXz74irSWWoLtouwnfn6
+    FNbPDoS24APDvK7figm+dBDZYOGbkadbBBbJ6FMmbSHHYSmqYgei5vSSpfew
+X-ME-Proxy: <xmx:xuExatLL--stJn163-wziMUgt_acAFURq3v8kFmUTAqu4kI37KXRzA>
+    <xmx:xuExag74tp0zGw6U-HPIBovbf6j7gp5f3nwpX02_MUfyeIlBDWhTdw>
+    <xmx:xuExaoytDcW7FQFt-y4M49V89G3uOSaWfP5T64-VOUQYLdkJYasm0Q>
+    <xmx:xuExasYtYKAHmT5ElqNp7N1-VrIFk-siUiL2zATBWvhj3qGncVeUig>
+    <xmx:xuExaiRrbgZ1C4w9SJSy4i35ge266VnxJnmR5X3RdFHqdMSUlFdKo4xJ>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 22419780075; Tue, 16 Jun 2026 19:52:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Date: Tue, 16 Jun 2026 19:52:17 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Jeff Layton" <jlayton@poochiereds.net>, robbieko <robbieko@synology.com>,
+ linux-nfs@vger.kernel.org
+Message-Id: <9695b086-512d-4be6-9730-20d490519b15@app.fastmail.com>
+In-Reply-To: <cb4eedd0becf980ed5d8113f54eb5d35ed56ae5c.camel@poochiereds.net>
+References: <20260616054027.2360930-1-robbieko@synology.com>
+ <cb4eedd0becf980ed5d8113f54eb5d35ed56ae5c.camel@poochiereds.net>
+Subject: Re: [PATCH v3 1/3] nfsd: reject out-of-range useconds in NFSv2 SETATTR/CREATE
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
+X-Spamd-Result: default: False [-5.15 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:robbieko@synology.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22648-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22647-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@poochiereds.net,m:robbieko@synology.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[synology.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,app.fastmail.com:mid];
+	RCPT_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BCBC6695944
+X-Rspamd-Queue-Id: 88624695CAA
 
-On Tue, 16 Jun 2026 13:39:58 +0800, robbieko wrote:
-> The NFSv2 sattr decoder converts the wire useconds to nanoseconds in
-> svcxdr_decode_sattr():
-> 
-> 	iap->ia_atime.tv_nsec = tmp2 * NSEC_PER_USEC;
-> 
-> tmp2 is a u32 and NSEC_PER_USEC is 1000, so the product is computed in
-> unsigned long. On ILP32 that is 32 bits, and an out-of-range useconds
-> value such as 4294968 wraps to tv_nsec == 704. The corruption therefore
-> happens during decode, before any proc function can inspect the value,
-> and a later range check on tv_nsec would see an in-range result and
-> accept it.
-> 
-> [...]
 
-Applied to nfsd-testing, thanks!
 
-[1/3] nfsd: reject out-of-range useconds in NFSv2 SETATTR/CREATE
-      commit: 5a6e45730d33afefe6ac1208173365840314dfd9
-[2/3] nfsd: reject out-of-range nseconds in NFSv3 SETATTR and create ops
-      commit: ccf2a0a8a51b8fa23bd4e4413e01b57a81451c7f
-[3/3] nfsd: use NSEC_PER_SEC in nfsd4_decode_nfstime4()
-      commit: 324975079e798c30a15d23396c51216937389baf
+On Tue, Jun 16, 2026, at 3:18 PM, Jeff Layton wrote:
+> On Tue, 2026-06-16 at 13:39 +0800, robbieko wrote:
+>> From: Robbie Ko <robbieko@synology.com>
+>> 
+>> The NFSv2 sattr decoder converts the wire useconds to nanoseconds in
+>> svcxdr_decode_sattr():
+>> 
+>> 	iap->ia_atime.tv_nsec = tmp2 * NSEC_PER_USEC;
+>> 
+>> tmp2 is a u32 and NSEC_PER_USEC is 1000, so the product is computed in
+>> unsigned long. On ILP32 that is 32 bits, and an out-of-range useconds
+>> value such as 4294968 wraps to tv_nsec == 704. The corruption therefore
+>> happens during decode, before any proc function can inspect the value,
+>> and a later range check on tv_nsec would see an in-range result and
+>> accept it.
+>> 
+>> Guard the raw useconds before the multiplication and reject values
+>> greater than 1000000. useconds == 1000000 is kept: it is the Sun
+>> convention for "set to the current server time", and the in-tree Linux
+>> NFSv2 client emits it in both the atime and the mtime field for a plain
+>> touch / utimes(file, NULL) (see encode_sattr() and
+>> xdr_encode_current_server_time() in fs/nfs/nfs2xdr.c). Rejecting 1000000
+>> would turn that common operation into a hard decode failure for both
+>> SETATTR and CREATE. 1000000 * NSEC_PER_USEC is 10^9, which does not wrap
+>> on ILP32, so the Sun convention value passes through safely; only
+>> genuinely out-of-range values (> 1000000) are rejected. The atime and
+>> mtime guards are therefore symmetric.
+>> 
+>> The decoder only applied the Sun convention in the mtime block, which
+>> clears ATTR_ATIME_SET|ATTR_MTIME_SET when mtime useconds == 1000000. If a
+>> client puts 1000000 in the atime field but not in the mtime field, the
+>> atime block stored an out-of-range tv_nsec (10^9) and left ATTR_ATIME_SET
+>> set, so the bogus value reached the filesystem. Apply the convention in
+>> the atime block as well, clearing ATTR_ATIME_SET so the server uses its
+>> current time and ignores the value. Only ATTR_ATIME_SET is cleared there;
+>> the mtime block keeps its existing behavior, where 1000000 means "set
+>> both atime and mtime to now".
+>> 
+>> Signed-off-by: Robbie Ko <robbieko@synology.com>
+>> ---
+>>  fs/nfsd/nfsxdr.c | 31 +++++++++++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>> 
+>> diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
+>> index ae71e0621317..48a4e89a5f41 100644
+>> --- a/fs/nfsd/nfsxdr.c
+>> +++ b/fs/nfsd/nfsxdr.c
+>> @@ -172,14 +172,45 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+>>  	tmp1 = be32_to_cpup(p++);
+>>  	tmp2 = be32_to_cpup(p++);
+>>  	if (tmp1 != (u32)-1 && tmp2 != (u32)-1) {
+>> +		/*
+>> +		 * Guard the raw useconds before the unit conversion below.
+>> +		 * tmp2 * NSEC_PER_USEC is computed in unsigned long, which is
+>> +		 * 32 bits on ILP32, so an out-of-range value would wrap and
+>> +		 * silently produce a bogus in-range tv_nsec. useconds ==
+>> +		 * 1000000 is the Sun "set to current server time" convention
+>> +		 * (see the mtime block below); allow it and reject anything
+>> +		 * larger. Note 1000000 * NSEC_PER_USEC is 10^9, which does not
+>> +		 * wrap on ILP32.
+>> +		 */
+>> +		if (tmp2 > 1000000)
+>> +			return false;
+>
+> The logic looks fine, but rather than having these verbose comments
+> above each use of 1000000, it'd be better to declare a constant and
+> document its use once above that.
+>
+> Something like this (and consolidate the comments above that):
+>
+> #define		SUN_V2_SET_TO_NOW	1000000
+>
+> Though I think the current fashion is to use enums for this so they
+> show up in the debugger.
 
---
+The applied version of this patch defines such a symbolic constant.
+Robbie, no need to resend.
+
+
+-- 
 Chuck Lever
-
 
