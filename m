@@ -1,60 +1,59 @@
-Return-Path: <linux-nfs+bounces-22645-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22646-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RkQPIy+iMWrGogUAu9opvQ
-	(envelope-from <linux-nfs+bounces-22645-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 21:21:19 +0200
+	id s48nBEGjMWrnogUAu9opvQ
+	(envelope-from <linux-nfs+bounces-22646-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 21:25:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E596F694F28
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 21:21:18 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DA6E694F5D
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 21:25:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="OGFos/ZC";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22645-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22645-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=VwQASzmY;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22646-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22646-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 013BE304CFD3
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 19:21:18 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C732D30078B2
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 19:25:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EA1E3D7D70;
-	Tue, 16 Jun 2026 19:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE66318EDA;
+	Tue, 16 Jun 2026 19:25:50 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BD6344D88
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 19:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE07313E07
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 19:25:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781637676; cv=none; b=W7cmwGeTOqIbx0hykFXy0acl71IkWcQTKIDqCbcT7zQmbAPZGjBK0Jb/75akbMoXmK9Qz4ImwHu2yATc6h+mdjFlzTvSiC0YeJA8xSVBt3Vpf/2N6gW0oS1N8wKIrBFGAAWMnyCjrTmW2wkShp/cjnPIHVCzwgzd+IYSTS8FCYQ=
+	t=1781637950; cv=none; b=lR5ZWIGsPYLIzN9dhnFzckRiJ1pxdXZfIvVIaRPRZ7ZtF8nM3LGOZWlBU1FOzwDmj2lm+otS0DUfOCW5NA2BA+U3d9EHh7KbZ8GNRF6fkOswJeMSCITyeMnYoiErgVcPjHxOVyysIgX0cMyfyoWKkIZ3Dzfam/V1hhc84TjLdHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781637676; c=relaxed/simple;
-	bh=8qXWt6AQk31gr3Vm27YveN9uFy5sYv8gNKViKYulMVU=;
+	s=arc-20240116; t=1781637950; c=relaxed/simple;
+	bh=SPNxV9h2NBDnLDWCGgz4A34KEzYjsLQCVAvQZ8tepig=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sV4iSdMGnvevKo1flCHJOVr6chSO3VehGxqtetwXoKWzzV0X6j9jmRIZg2uJ9sYiOt8lW+oaAnhLIX9Re7sGqe26zFKBqEp8hB4cYJsy1FT7eHvvmheV5wNwYXd5PhjFu4Y0A12WX3tEfoDbr3Bi+xJzd6MAcjL8599f92H7CkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGFos/ZC; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9194B1F000E9;
-	Tue, 16 Jun 2026 19:21:14 +0000 (UTC)
+	 Content-Type:MIME-Version; b=WUIKuy8EMywMxv/lTed0oQ1huiKyEXDUa5TZL9dk7PJD8DOCQLgstDMwWJs3y/r9E3qbMuq/YSQxR0U9zmPo8sFm1WvnURnxkmEbBLj9oy5YA7LG/oi+Dzsf0/znsEg/ZevzkVfPtAI37wVWVB3j7cb4sQ4EZCh4Arhv+JyUXTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwQASzmY; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E381F000E9;
+	Tue, 16 Jun 2026 19:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781637674;
-	bh=BSH3fL07hYwQ9RUcv5XZESVs7myEhciDrJa+vzTRExo=;
+	s=k20260515; t=1781637949;
+	bh=GLQ0EdKW+Y1Rw/PQenn/aA9u3Gpl97CHHqFytIQoNA8=;
 	h=Subject:From:To:Date:In-Reply-To:References;
-	b=OGFos/ZCGcdlX4msplhlXi3CdITSBNOKZyc2Et37ArTDnxi5zOIIeQSXLnS1wqC5X
-	 nzL8b5usLvP79o0jsccP1cKQTQW7pveO33gjzwfnFS/C60oy1l4fs0g+VA88PbCJh3
-	 L+MOZyL3aAmn8i/EXDYnR1qaOC6/k8cOOa9obWtp3laOLtq3I+tGVKMn2FRPICJTYM
-	 jPdxp5qKDoZYLZNKlGDoxVPvGRbjJ6V1eP3CV+itwdg39BKO+JQlkXW8x8Zj65nMeW
-	 piejYQntj9db1thXmMGt9UVW0CgD/5EoPTlBvbd9aO0qcherU2wDAi0SchgoR++SL/
-	 XpROXgccMSzTg==
-Message-ID: <7065e7822237951c1e24f2a10320fe7bde35fed9.camel@kernel.org>
-Subject: Re: [PATCH v3 2/3] nfsd: reject out-of-range nseconds in NFSv3
- SETATTR and create ops
+	b=VwQASzmYWQOULu3YPZt5vbPkJ/oaoLFv14/3saY9Lio5fYSSsoD+S/h+bWmdLbBv8
+	 m74JFnPYUc72mB0VuXGkGvGScIu01nPNQabghVD1I61FMptnH1gjXLvytwzxJ9sRHn
+	 YgtyBJLMifo66ZCWk0rzWizIW9f4ymqeHR2+FwarpDvoFEXPDVrKMkNpephCG2bjGH
+	 2ans8pFBG/P4ng8jzu0d/qLfRhGf8flupJkjdca+dVV223vDEB4r7rtjQMvoRoFNmv
+	 0UL6lMCSoiR/p8VLRfJbhVczKkdOO3y+4kTVfpNoo7UzZyeiQUcTvfjBZzDBC/5Enp
+	 C0gqdc1Yicz9Q==
+Message-ID: <a769d2f211035c82cdac1cd0d2530c6259b55ac9.camel@kernel.org>
+Subject: Re: [PATCH v3 3/3] nfsd: use NSEC_PER_SEC in nfsd4_decode_nfstime4()
 From: Jeff Layton <jlayton@kernel.org>
 To: robbieko <robbieko@synology.com>, linux-nfs@vger.kernel.org
-Date: Tue, 16 Jun 2026 15:21:13 -0400
-In-Reply-To: <20260616054027.2360930-2-robbieko@synology.com>
+Date: Tue, 16 Jun 2026 15:25:47 -0400
+In-Reply-To: <20260616054027.2360930-3-robbieko@synology.com>
 References: <20260616054027.2360930-1-robbieko@synology.com>
-	 <20260616054027.2360930-2-robbieko@synology.com>
+	 <20260616054027.2360930-3-robbieko@synology.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,7 +142,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -156,7 +155,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_TWO(0.00)[2];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22645-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22646-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -168,157 +167,46 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,synology.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E596F694F28
+X-Rspamd-Queue-Id: 9DA6E694F5D
 
-On Tue, 2026-06-16 at 13:39 +0800, robbieko wrote:
+On Tue, 2026-06-16 at 13:40 +0800, robbieko wrote:
 > From: Robbie Ko <robbieko@synology.com>
 >=20
-> A client can send an NFSv3 SETATTR, CREATE, MKDIR, SYMLINK or MKNOD
-> carrying an atime or mtime whose nseconds field is out of range. The
-> value is well-formed on the wire and decodes cleanly into a valid
-> uint32, but it is not a valid timespec64: tv_nsec must be less than
-> NSEC_PER_SEC.
+> nfsd4_decode_nfstime4() open-codes the nanoseconds upper bound as the
+> literal (u32)1000000000. Use the named constant NSEC_PER_SEC instead,
+> matching the NFSv3 setattr check and improving readability.
 >=20
-> Nothing in the setattr path clamps it. notify_change() runs the time
-> through timestamp_truncate(), which does not reduce tv_nsec below
-> NSEC_PER_SEC when the filesystem supports nanosecond granularity
-> (s_time_gran =3D=3D 1), and the inode atime/mtime setters store it verbat=
-im
-> (only ctime is normalized, via inode_set_ctime_to_ts()). The
-> un-normalized value then corrupts on-disk metadata: ext4's
-> ext4_encode_extra_time() shifts tv_nsec left by EXT4_EPOCH_BITS, which
-> overflows the 32-bit extra field and clobbers the seconds-epoch bits, so
-> the stored seconds (and thus the year) are wrong on read-back. XFS with
-> bigtime mis-stores the timestamp for the same reason.
->=20
-> Validate the client-supplied atime/mtime in the proc handlers and return
-> NFS3ERR_INVAL before anything is changed. RFC 1813 lists NFS3ERR_INVAL
-> for SETATTR and describes it as the error for a value the server 'can
-> not store ... in its own representation'; the client maps it to EINVAL.
->=20
-> Checking in the proc handlers, rather than in nfsd_setattr(), keeps the
-> rejection in front of object creation. The create operations create the
-> object before nfsd_create_setattr() runs, so a late failure would leave
-> the new object behind and turn a non-idempotent request into a namespace
-> change that reports failure. The check is therefore done up front, for
-> the create operations before the object is created.
->=20
-> tv_nsec is a long, so the comparison casts it to unsigned long (the same
-> width) rather than to u32, matching timespec64_valid(). A u32 cast would
-> truncate on 64-bit; the unsigned long cast also rejects a value that
-> became negative when an out-of-range u32 wire nseconds was assigned to a
-> 32-bit long.
->=20
-> Only client-supplied times are checked: SET_TO_SERVER_TIME requests
-> carry no client value. The sattrguard3 ctime is deliberately left alone:
-> an out-of-range guard simply never matches the object's ctime and yields
-> NFS3ERR_NOT_SYNC via the existing guardtime comparison, which is the
-> protocol-correct outcome rather than rejecting the request.
+> The original code cast the literal to u32 to force an unsigned
+> comparison, which matters on 32-bit where tv_nsec is a 32-bit signed
+> long: an out-of-range u32 wire nseconds (>=3D 0x80000000) assigned to it
+> becomes negative and a signed compare against NSEC_PER_SEC (a signed
+> long) would wrongly pass. Keep that protection by casting tv_nsec to
+> unsigned long, the same width as tv_nsec, matching timespec64_valid().
+> No functional change.
 >=20
 > Signed-off-by: Robbie Ko <robbieko@synology.com>
 > ---
->  fs/nfsd/nfs3proc.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
+>  fs/nfsd/nfs4xdr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index 42adc5461db0..32d6b51dbe53 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -29,6 +29,25 @@ static int	nfs3_ftypes[] =3D {
->  	S_IFIFO,		/* NF3FIFO */
->  };
-> =20
-> +/*
-> + * Reject a client-supplied atime or mtime whose nanoseconds field is ou=
-t
-> + * of range. Such a value is well-formed on the wire but is not a valid
-> + * timespec64, and storing it verbatim can corrupt on-disk timestamps.
-> + * tv_nsec is a long, so it is cast to unsigned long (the same width) to
-> + * catch both an over-large value and one that became negative when an
-> + * out-of-range u32 wire nseconds was assigned to a 32-bit long.
-> + */
-> +static bool nfsd3_time_in_range(const struct iattr *iap)
-> +{
-> +	if ((iap->ia_valid & ATTR_ATIME_SET) &&
-> +	    (unsigned long)iap->ia_atime.tv_nsec >=3D NSEC_PER_SEC)
-> +		return false;
-> +	if ((iap->ia_valid & ATTR_MTIME_SET) &&
-> +	    (unsigned long)iap->ia_mtime.tv_nsec >=3D NSEC_PER_SEC)
-> +		return false;
-> +	return true;
-> +}
-> +
->  static __be32 nfsd3_map_status(__be32 status)
->  {
->  	switch (status) {
-> @@ -101,9 +120,14 @@ nfsd3_proc_setattr(struct svc_rqst *rqstp)
->  				SVCFH_fmt(&argp->fh));
-> =20
->  	fh_copy(&resp->fh, &argp->fh);
-> +	if (!nfsd3_time_in_range(&argp->attrs)) {
-> +		resp->status =3D nfserr_inval;
-> +		goto out;
-> +	}
->  	if (argp->check_guard)
->  		guardtime =3D &argp->guardtime;
->  	resp->status =3D nfsd_setattr(rqstp, &resp->fh, &attrs, guardtime);
-> +out:
->  	resp->status =3D nfsd3_map_status(resp->status);
->  	return rpc_success;
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 2a0946c630e1..db17bd3e45d6 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -244,7 +244,7 @@ nfsd4_decode_nfstime4(struct nfsd4_compoundargs *argp=
+, struct timespec64 *tv)
+>  		return nfserr_bad_xdr;
+>  	p =3D xdr_decode_hyper(p, &tv->tv_sec);
+>  	tv->tv_nsec =3D be32_to_cpup(p++);
+> -	if (tv->tv_nsec >=3D (u32)1000000000)
+> +	if ((unsigned long)tv->tv_nsec >=3D NSEC_PER_SEC)
+>  		return nfserr_inval;
+>  	return nfs_ok;
 >  }
-> @@ -265,6 +289,8 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
-> =20
->  	trace_nfsd_vfs_create(rqstp, fhp, S_IFREG, argp->name, argp->len);
-> =20
-> +	if (!nfsd3_time_in_range(iap))
-> +		return nfserr_inval;
->  	if (isdotent(argp->name, argp->len))
->  		return nfserr_exist;
->  	if (!(iap->ia_valid & ATTR_MODE))
-> @@ -400,8 +426,13 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
->  	argp->attrs.ia_valid &=3D ~ATTR_SIZE;
->  	fh_copy(&resp->dirfh, &argp->fh);
->  	fh_init(&resp->fh, NFS3_FHSIZE);
-> +	if (!nfsd3_time_in_range(&argp->attrs)) {
-> +		resp->status =3D nfserr_inval;
-> +		goto out;
-> +	}
->  	resp->status =3D nfsd_create(rqstp, &resp->dirfh, argp->name, argp->len=
-,
->  				   &attrs, S_IFDIR, 0, &resp->fh);
-> +out:
->  	resp->status =3D nfsd3_map_status(resp->status);
->  	return rpc_success;
->  }
-> @@ -415,6 +446,10 @@ nfsd3_proc_symlink(struct svc_rqst *rqstp)
->  		.na_iattr	=3D &argp->attrs,
->  	};
-> =20
-> +	if (!nfsd3_time_in_range(&argp->attrs)) {
-> +		resp->status =3D nfserr_inval;
-> +		goto out;
-> +	}
->  	if (argp->tlen =3D=3D 0) {
->  		resp->status =3D nfserr_inval;
->  		goto out;
-> @@ -471,6 +506,11 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
->  		goto out;
->  	}
-> =20
-> +	if (!nfsd3_time_in_range(&argp->attrs)) {
-> +		resp->status =3D nfserr_inval;
-> +		goto out;
-> +	}
-> +
->  	type =3D nfs3_ftypes[argp->ftype];
->  	resp->status =3D nfsd_create(rqstp, &resp->dirfh, argp->name, argp->len=
-,
->  				   &attrs, type, rdev, &resp->fh);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
