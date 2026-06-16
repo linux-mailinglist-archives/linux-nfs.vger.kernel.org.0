@@ -1,410 +1,194 @@
-Return-Path: <linux-nfs+bounces-22600-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22601-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GJrfEAcmMWr8cgUAu9opvQ
-	(envelope-from <linux-nfs+bounces-22600-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 12:31:35 +0200
+	id DUF1Ag46MWrUeQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-22601-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 13:57:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAC4C68E50F
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 12:31:34 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 939E568F031
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 13:57:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=FjVZzTdk;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22600-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22600-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=V9bWwwBe;
+	dkim=pass header.d=redhat.com header.s=google header.b=MqSvICL8;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22601-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22601-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C8A7C32313AA
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 10:16:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 212E630B1129
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 11:52:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A7346AEF2;
-	Tue, 16 Jun 2026 10:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A078043D500;
+	Tue, 16 Jun 2026 11:52:38 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB8642EED1
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 10:12:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF5643D4ED
+	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 11:52:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781604768; cv=none; b=m4twDC8zlh0CXrRIX4FNJl/eA5Z70BRAgBL1eoVgpqhRO6r1kP2SrzERPXzseTZryWG2TBTRxKdkqjO46/K2CmX//AIfPnYmG69OOwyjkYX9AcbX5SVx8dxWrdC9IWQQMiCW+39EeLnhwVYxn9CWzMHQa7Ap3n6d6uKYtoeSMdU=
+	t=1781610758; cv=none; b=frBQBLvxuLbJEPAOt3H9UB6guk0/Kkv/ys7RmWbSI5P/USFy+RoyHzx7CE9O2ynQBQyIEcuW6vmb2MTEb4aLkKXuqJbhFzYCRixQ9A656y5RV26B8RszwH+Y+4Jc1yFYgLP9LbmrYelq0o1q7F9J2vkeBUby/WmAoWaCQ86CkRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781604768; c=relaxed/simple;
-	bh=ruY45ttVeiyQLQwko7KQrYYWXy4JG5B3riX9l+a5hd4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bg7fPQ2qARjeTD8XRBYriFWtIOoqCV7/FxrV9aaOvbNcri2XV48QC1/6addLpkAU4UwVOgaIPo6ox2c2OowWBXGwdNU1lVTubvcMkSd8P88AdXc+aBCEKTHMLxaLUW2GY4nIcx7DbVJkbqoMKGRspTNe53+cHIT+p6R1afFY850=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FjVZzTdk; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1781610758; c=relaxed/simple;
+	bh=X4lgEBwMZyQs8z8CfHu1Omuvvb7bsgvEneDvh5qb8K4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a96uOh2tVenpEpIonXboc5gK0eal5fiU8XWJcCj56zYDQwNGjfK1E1Pf2BYIe/rDVPn5660ERlRSmXoHWgZHW3TAZbnndg938fvh4AeKUvdg/A6ZFatQuuSJFBW4Qe8GSKXutB2QjUOPhSZAvsK4/xqjWuA36X50is4QwfD2Pk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V9bWwwBe; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=MqSvICL8; arc=none smtp.client-ip=170.10.129.124
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781604765;
+	s=mimecast20190719; t=1781610756;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G0n6jjl7CQg3ycUEFyobHO2Y/1gqjiW+QmR0BwEEEt4=;
-	b=FjVZzTdkT2Jd/H3igF0sFPugwMqfXC8f+0Aq83cS8C5aR4PLk1y284Z3Ttp0DLww3zGzBh
-	CKsEe+yUpopRRz6LnUqOEiWOr0SDV92Vp2Vu7S+2QvAcr+CxUQ9TdDsPPNOvVhm+cNL8uW
-	D01lA9IU2vZl+S4E4Pt2bVa75ZR6wzs=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-156-NzcYndrqM-WxUWpiP4tobg-1; Tue,
- 16 Jun 2026 06:12:39 -0400
-X-MC-Unique: NzcYndrqM-WxUWpiP4tobg-1
-X-Mimecast-MFC-AGG-ID: NzcYndrqM-WxUWpiP4tobg_1781604756
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CBD401956055;
-	Tue, 16 Jun 2026 10:12:36 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.44.50.44])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EDB891771;
-	Tue, 16 Jun 2026 10:12:30 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Matthew Wilcox <willy@infradead.org>,
-	Christoph Hellwig <hch@infradead.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Leon Romanovsky <leon@kernel.org>,
-	Steve French <sfrench@samba.org>,
-	ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 30/30] CHANGES
-Date: Tue, 16 Jun 2026 11:08:19 +0100
-Message-ID: <20260616100821.2062304-31-dhowells@redhat.com>
-In-Reply-To: <20260616100821.2062304-1-dhowells@redhat.com>
-References: <20260616100821.2062304-1-dhowells@redhat.com>
+	bh=oN8Btr+aUG0NrlG+ZSh2e5HFfjL5pxW4VeD5qFzifXU=;
+	b=V9bWwwBe8DaZYB4v51LXaDG/jlA0MGZ2eVPhqOHPJrf4ChYncOsG2M+PM/9jxx6Sst2uR1
+	A81//F3RBjGgDzvzszbVvYM7u/vMIGSz3JqntYm4XK0MDfsl//oOYA+yh0yw+PPkF1fxJA
+	KhrqOisWErnADYxpMEt8U/9awg9/Ni8=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-207-G-T6Rd-FNbW_tQt_YJjflw-1; Tue, 16 Jun 2026 07:52:35 -0400
+X-MC-Unique: G-T6Rd-FNbW_tQt_YJjflw-1
+X-Mimecast-MFC-AGG-ID: G-T6Rd-FNbW_tQt_YJjflw_1781610755
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-9156cb14b1cso446476785a.1
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 04:52:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1781610754; x=1782215554; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oN8Btr+aUG0NrlG+ZSh2e5HFfjL5pxW4VeD5qFzifXU=;
+        b=MqSvICL8p0/pct9jnCbnmr2G1E9fdZcEyNiHyCdqjctW6Ds3Ylzrv73efnjlI4nqoh
+         5ICRPu7AfgpO3+Wp2jfW0Z5eRTjIz/UfasCYzE/GeLnTx8tyl0IzZ1lOn8E9hHLDRyZq
+         Zg+yICH7wM2PN9tmpxINNJ1OJeXaHflAjksJzQanQrU2rUshbplnOjAx05cFO4tfVPCI
+         d950sD/VHo+r85nCJC3WskpW94GZYGcMgM/DeB9+Jw9Ofv6EelV58IuGL392V1GNQflz
+         Nl6YlgGaZkRGmu72XXhMwAhhBB5URDsIcpEDZ6BREn5iM9rrRb8uIUeRiyu5uGCEQR1f
+         hpMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781610754; x=1782215554;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oN8Btr+aUG0NrlG+ZSh2e5HFfjL5pxW4VeD5qFzifXU=;
+        b=n8iN/SE8gjPnoICecywpLxB/h6TDNgyDFpqSecrp5OZ3KFqZT06oxf452VR2v+s8dF
+         wFWYRXOQs4PjD37kM/U2aj1lkAQ8aaMXOdddnp6RL0BCuO/qk5e9ohOhXMcSBDI/VKkT
+         4YvmHuzmtWDHz7vT6x4+TP4Ywz0vtex8FPvJMGVeq8QWMJ7EqeVO3IgY11YQJu4J6mt3
+         HmqY7x/Qoj8ecI9JuE4qLXr//YEwUDscmHHpE9hkt1iS5vPVCvKi/g7z5tQBhB5O5Q/u
+         tpoPZqefldEMKWVdivyxe4PvdTxsMrwpIS+6z8pQJsUQ5f5fZqLdXUnQgGlcSFDh9E1W
+         nVMg==
+X-Gm-Message-State: AOJu0YzPx4O8hyTIQkt466b1/5wlzdF0N4JBJsbzRwh0kCM6MW3o8rXD
+	BPbZdxHhF8P4YRRd+RCgX+WJ4qeWKrTpot9F5MXN/GI0En7UfNTw8zQnP+jkTBFHDclRbTYyRp1
+	YbT61QKqhmb7NlYs51y77oNnnLUDsXbF6oeylSVF9/BZ22aM9Vr5OXAl1BjZqaDnGMwZJXg==
+X-Gm-Gg: Acq92OGMOpuFnZBha6T6d6RFeZHiYP7zM0K8PAIvKaeXNky0DeENbqMP3MMy+VSL4hx
+	JmcPhQ14ii8EUHKKIUYkIJWj8VtP8HbHQ5FEPU+rPpBb48d/9FrF4xyctbv4IRgoO09h9c2OJmc
+	LWpgxeHIywpeE5SP+iz9viCa1o646CTQa7S2YB6nfxawxQgYpNOu0kKH2CfHcVNtoGcijIMZJgw
+	ij4uc8Nqk03tSLHtDGP3vxbOcwx2uUKTnq04/wG+ZRO2ynzgHE20kL2orUdQyvL1QSJQ58nKNpK
+	9i5LPK4fJBjhOTKJgFTA70nLOKlgAxwbe2A6XuZ4GcMad6vCG1bto1kZc66SG8SsoKrOKvtlh84
+	8PqIMQg1DTHGnwk2ikLkL
+X-Received: by 2002:a05:620a:262a:b0:916:469:5455 with SMTP id af79cd13be357-917f08a05aemr2307891785a.32.1781610754656;
+        Tue, 16 Jun 2026 04:52:34 -0700 (PDT)
+X-Received: by 2002:a05:620a:262a:b0:916:469:5455 with SMTP id af79cd13be357-917f08a05aemr2307888985a.32.1781610754261;
+        Tue, 16 Jun 2026 04:52:34 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.242.27])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9161a06367dsm1436339885a.43.2026.06.16.04.52.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2026 04:52:33 -0700 (PDT)
+Message-ID: <4b815f0f-6bc1-4781-84dd-d998d6fedee8@redhat.com>
+Date: Tue, 16 Jun 2026 07:52:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+User-Agent: Mozilla Thunderbird
+Subject: Re: [nfs-utils PATCH] nfsd: don't assume service is running when
+ setting thread count to 0
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <20260608131351.95211-1-smayhew@redhat.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20260608131351.95211-1-smayhew@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-22600-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22601-lists,linux-nfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:christian@brauner.io,m:willy@infradead.org,m:hch@infradead.org,m:dhowells@redhat.com,m:pc@manguebit.org,m:axboe@kernel.dk,m:leon@kernel.org,m:sfrench@samba.org,m:chenxiaosong@chenxiaosong.com,m:marc.dionne@auristor.com,m:ericvh@kernel.org,m:asmadeus@codewreck.org,m:idryomov@gmail.com,m:netfs@lists.linux.dev,m:linux-afs@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:v9fs@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dhowells@redhat.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:smayhew@redhat.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWO(0.00)[2];
 	DKIM_TRACE(0.00)[redhat.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AAC4C68E50F
+X-Rspamd-Queue-Id: 939E568F031
 
----
- fs/netfs/iterator.c    | 22 ++++++++++++++--------
- fs/netfs/read_retry.c  | 12 +++++++++---
- fs/netfs/write_issue.c | 24 ++++++++++++++++++++++--
- fs/netfs/write_retry.c | 23 ++++++++++++++---------
- fs/nfs/fscache.c       |  3 ++-
- fs/smb/client/file.c   |  2 +-
- 6 files changed, 62 insertions(+), 24 deletions(-)
 
-diff --git a/fs/netfs/iterator.c b/fs/netfs/iterator.c
-index d464e1784b8a..5e8e816eeff3 100644
---- a/fs/netfs/iterator.c
-+++ b/fs/netfs/iterator.c
-@@ -33,8 +33,8 @@
-  * the original iterator will have been advanced by the amount extracted.
-  *
-  * If an error occurs and no pages are extracted, an error will be returned and
-- * any allocated bvecq will be freed.  The allocated bvecq will also be freed
-- * if no pages are extracted, but no error is recorded.
-+ * any allocated bvecq will be freed.  If there is no data to be extracted (or
-+ * @max_len or @max_pages are zero), a single empty bvecq will be returned.
-  *
-  * The bvecq segments are marked with indications on how to get clean up the
-  * extracted fragments.
-@@ -43,7 +43,7 @@ ssize_t netfs_extract_iter(struct iov_iter *orig, size_t max_len, size_t max_pag
- 			   unsigned long long fpos, struct bvecq **_bvecq_head,
- 			   iov_iter_extraction_t extraction_flags)
- {
--	struct bvecq *bq_tail = NULL;
-+	struct bvecq *bq_tail = NULL, *bq;
- 	ssize_t ret = 0;
- 	size_t extracted = 0;
- 
-@@ -53,15 +53,13 @@ ssize_t netfs_extract_iter(struct iov_iter *orig, size_t max_len, size_t max_pag
- 	if (max_len > orig->count)
- 		max_len = orig->count;
- 	if (WARN_ON_ONCE(!max_len || !max_pages))
--		return 0;
-+		goto alloc_empty;
- 
- 	max_pages = iov_iter_npages(orig, max_pages);
- 	if (!max_pages)
--		return 0;
-+		goto alloc_empty;
- 
- 	do {
--		struct bvecq *bq;
--
- 		bq = bvecq_alloc_one(max_pages, GFP_NOFS);
- 		if (!bq) {
- 			ret = -ENOMEM;
-@@ -142,10 +140,18 @@ ssize_t netfs_extract_iter(struct iov_iter *orig, size_t max_len, size_t max_pag
- 	} while (max_len > 0 && max_pages > 0);
- 
- out:
--	if (extracted)
-+	if (extracted || ret == 0)
- 		return extracted;
- 	bvecq_put(*_bvecq_head);
- 	*_bvecq_head = NULL;
- 	return ret;
-+
-+alloc_empty:
-+	bq = bvecq_alloc_one(1, GFP_NOFS);
-+	if (!bq)
-+		return -ENOMEM;
-+	*_bvecq_head = bq;
-+	return 0;
-+
- }
- EXPORT_SYMBOL_GPL(netfs_extract_iter);
-diff --git a/fs/netfs/read_retry.c b/fs/netfs/read_retry.c
-index a5cd6e20cae1..0f8ff53fe703 100644
---- a/fs/netfs/read_retry.c
-+++ b/fs/netfs/read_retry.c
-@@ -79,11 +79,12 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
- 	if (rreq->netfs_ops->retry_request)
- 		rreq->netfs_ops->retry_request(rreq, NULL);
- 
-+	/* Read pointer to subreq before reading subreq state. */
-+	next = smp_load_acquire(&stream->subrequests.next);
-+
- 	/* Renegotiate all the download requests and flip any failed cache
- 	 * reads over to being download requests and negotiate those also.
- 	 */
--	next = stream->subrequests.next;
--
- 	do {
- 		struct netfs_io_subrequest *from, *to, *tmp;
- 		unsigned long long start;
-@@ -110,7 +111,12 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
- 			goto abandon;
- 		}
- 
--		list_for_each_continue(next, &stream->subrequests) {
-+		for (;;) {
-+			/* Read pointer to subreq before reading subreq state. */
-+			next = smp_load_acquire(&next->next);
-+			if (next == &stream->subrequests)
-+				break;
-+
- 			subreq = list_entry(next, struct netfs_io_subrequest, rreq_link);
- 			if (subreq->start != start + len ||
- 			    subreq->transferred > 0 ||
-diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
-index e2e35d619119..37e5b5ee1cea 100644
---- a/fs/netfs/write_issue.c
-+++ b/fs/netfs/write_issue.c
-@@ -722,6 +722,20 @@ static int netfs_queue_wb_folio(struct netfs_io_request *wreq,
- 	goto out;
- }
- 
-+static void writeback_iter_cancel(struct address_space *mapping,
-+				  struct writeback_control *wbc,
-+				  struct folio *folio, int *error,
-+				  bool unlocked)
-+{
-+	do {
-+		if (!unlocked) {
-+			folio_redirty_for_writepage(wbc, folio);
-+			folio_unlock(folio);
-+			unlocked = false;
-+		}
-+	} while ((folio = writeback_iter(mapping, wbc, folio, error)));
-+}
-+
- /*
-  * Write some of the pending data back to the server
-  */
-@@ -776,11 +790,15 @@ int netfs_writepages(struct address_space *mapping,
- 
- 		params.notes &= NOTES__KEEP_MASK;
- 		error = netfs_queue_wb_folio(wreq, wbc, folio, &params);
--		if (error < 0)
-+		if (error < 0) {
-+			writeback_iter_cancel(mapping, wbc, folio, &error, false);
- 			break;
-+		}
- 		error = netfs_issue_streams(wreq, &params);
--		if (error < 0)
-+		if (error < 0) {
-+			writeback_iter_cancel(mapping, wbc, folio, &error, true);
- 			break;
-+		}
- 
- 		bvecq_pos_step(&params.dispatch_cursor);
- 	} while ((folio = writeback_iter(mapping, wbc, folio, &error)));
-@@ -924,6 +942,7 @@ int netfs_advance_writethrough(struct netfs_writethrough *wthru,
- 	folio_put(wthru->in_progress);
- 	wthru->in_progress = NULL;
- 	wreq->submitted = wreq->len;
-+	bvecq_pos_step(&wthru->params.dispatch_cursor);
- 	return ret;
- }
- 
-@@ -945,6 +964,7 @@ ssize_t netfs_end_writethrough(struct netfs_writethrough *wthru,
- 		ret = netfs_queue_wb_folio(wreq, wbc, folio, &wthru->params);
- 		if (ret == 0)
- 			ret = netfs_issue_streams(wreq, &wthru->params);
-+		bvecq_pos_step(&wthru->params.dispatch_cursor);
- 		folio_put(folio);
- 		wthru->in_progress = NULL;
- 		wreq->submitted = wreq->len;
-diff --git a/fs/netfs/write_retry.c b/fs/netfs/write_retry.c
-index e7955cc707e0..d9cc49f21346 100644
---- a/fs/netfs/write_retry.c
-+++ b/fs/netfs/write_retry.c
-@@ -23,7 +23,6 @@ int netfs_prepare_write_retry_buffer(struct netfs_io_subrequest *subreq,
- 				     unsigned int max_segs)
- {
- 	struct netfs_io_request *wreq = subreq->rreq;
--	struct netfs_io_stream *stream = &wreq->io_streams[subreq->stream_nr];
- 	size_t len;
- 
- 	bvecq_pos_set(&subreq->dispatch_pos, &wreq->retry_cursor);
-@@ -35,9 +34,9 @@ int netfs_prepare_write_retry_buffer(struct netfs_io_subrequest *subreq,
- 		trace_netfs_sreq(subreq, netfs_sreq_trace_limited);
- 	}
- 
--	stream->issue_from += len;
--	stream->buffered   -= len;
--	if (stream->buffered == 0)
-+	wreq->retry_start += len;
-+	wreq->retry_buffered   -= len;
-+	if (wreq->retry_buffered == 0)
- 		bvecq_pos_unset(&wreq->retry_cursor);
- 	return 0;
- }
-@@ -63,7 +62,8 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 	if (unlikely(stream->failed))
- 		return;
- 
--	next = stream->subrequests.next;
-+	/* Read pointer to subreq before reading subreq state. */
-+	next = smp_load_acquire(&stream->subrequests.next);
- 
- 	do {
- 		struct netfs_io_subrequest *subreq = NULL, *from, *to, *tmp;
-@@ -84,7 +84,12 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 		    !test_bit(NETFS_SREQ_NEED_RETRY, &from->flags))
- 			goto out;
- 
--		list_for_each_continue(next, &stream->subrequests) {
-+		for (;;) {
-+			/* Read pointer to subreq before reading subreq state. */
-+			next = smp_load_acquire(&next->next);
-+			if (next == &stream->subrequests)
-+				break;
-+
- 			subreq = list_entry(next, struct netfs_io_subrequest, rreq_link);
- 			if (subreq->start != start + len ||
- 			    subreq->transferred > 0 ||
-@@ -135,7 +140,7 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 		/* If we managed to use fewer subreqs, we can discard the
- 		 * excess; if we used the same number, then we're done.
- 		 */
--		if (!len) {
-+		if (!wreq->retry_buffered) {
- 			if (subreq == to)
- 				continue;
- 			list_for_each_entry_safe_from(subreq, tmp,
-@@ -158,7 +163,7 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 			subreq = netfs_alloc_subrequest(wreq);
- 			subreq->source		= to->source;
- 			subreq->start		= start;
--			subreq->len		= len;
-+			subreq->len		= wreq->retry_buffered;
- 			subreq->stream_nr	= to->stream_nr;
- 			subreq->retry_count	= 1;
- 
-@@ -188,7 +193,7 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 
- 			trace_netfs_sreq(subreq, netfs_sreq_trace_retry);
- 			stream->issue_write(subreq);
--		} while (len);
-+		} while (wreq->retry_buffered > 0);
- 
- 	} while (!list_is_head(next, &stream->subrequests));
- 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index cf750faaec6a..f39a351c566d 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -324,7 +324,7 @@ static void nfs_netfs_issue_read(struct netfs_io_subrequest *sreq)
- 
- 	netfs = nfs_netfs_alloc(sreq);
- 	if (!netfs) {
--		sreq->error = err;
-+		sreq->error = -ENOMEM;
- 		goto term;
- 	}
- 
-@@ -343,6 +343,7 @@ static void nfs_netfs_issue_read(struct netfs_io_subrequest *sreq)
- out:
- 	nfs_pageio_complete_read(&pgio);
- 	nfs_netfs_put(netfs);
-+	return;
- term:
- 	return netfs_read_subreq_terminated(sreq);
- }
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index d3a9041786ac..b770c349137a 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -222,7 +222,7 @@ static void cifs_issue_read(struct netfs_io_subrequest *subreq)
- 			rc = cifs_reopen_file(req->cfile, true);
- 		} while (rc == -EAGAIN);
- 		if (rc)
--			goto failed;
-+			goto fail_with_credits;
- 	}
- 
- 	if (subreq->rreq->origin != NETFS_UNBUFFERED_READ &&
+
+On 6/8/26 9:13 AM, Scott Mayhew wrote:
+> Newer kernels return -EIO if you try to write to /proc/fs/nfsd/threads
+> and there are no active listeners.
+> 
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Committed...
+
+steved.
+> ---
+>   utils/nfsd/nfsd.c | 16 ++++++++++------
+>   1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+> index 365e145d..c95d32f4 100644
+> --- a/utils/nfsd/nfsd.c
+> +++ b/utils/nfsd/nfsd.c
+> @@ -311,12 +311,16 @@ main(int argc, char **argv)
+>   				argv[0], count);
+>   			count = 1;
+>   		} else if (count == 0) {
+> -			/*
+> -			 * don't bother setting anything else if the threads
+> -			 * are coming down anyway.
+> -			 */
+> -			socket_up = 1;
+> -			goto set_threads;
+> +			if (nfssvc_inuse()) {
+> +				/*
+> +				 * don't bother setting anything else if the threads
+> +				 * are coming down anyway.
+> +				 */
+> +				socket_up = 1;
+> +				goto set_threads;
+> +			} else {
+> +				goto out;
+> +			}
+>   		}
+>   	}
+>   
 
 
