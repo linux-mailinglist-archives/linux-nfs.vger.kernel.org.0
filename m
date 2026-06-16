@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22649-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8o4xCM3hMWperQUAu9opvQ
-	(envelope-from <linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 01:52:45 +0200
+	id /GsCKnziMWp0rQUAu9opvQ
+	(envelope-from <linux-nfs+bounces-22649-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 01:55:40 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88624695CAA
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 01:52:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B78695CC8
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 01:55:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=P2AL17nv;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22648-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NzMoLksD;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22649-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22649-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 73ECA301725B
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 23:52:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F11FD31484C3
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jun 2026 23:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC4C3D88EF;
-	Tue, 16 Jun 2026 23:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9268D4014AD;
+	Tue, 16 Jun 2026 23:55:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9757121D596
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 23:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9393721D596;
+	Tue, 16 Jun 2026 23:55:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781653960; cv=none; b=PnrmUgCY6a4j2UQYrOxokav3J9kAEEwjDkGEmHWQkAi8WOttm+KkCJSm25WHXkXogpOsINJK6s3mmgZCMgHrRpqM4cOlPp/C4dDBz6R1l8IDQDtnF4HUKU43OOTa9Hls9GjUW7KvITavDTWsQmqGfzFW+kWSJgemQhJolKWSSmU=
+	t=1781654132; cv=none; b=tkCnqxeERatMrmUO101zeH0VkRJERUMV9+KI4IyNDzug54zJ/jp+wQKHrWJrVKmkry0AjGvTt39Uj3s22am1lFDeRhkMYGKmG2G+jFK184TkTT1Ou25hCXQh43gG4YqCWUFHfPZIenB9KsdKArNUqeSgwAQlefO49oW8953CsP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781653960; c=relaxed/simple;
-	bh=lStjC9LCIqnlSYTTHtozq5fQTNrzkwNhWPyy6lZ/k6Q=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=s94PB+kmywNwr0ntYO2+1YZMbLskX70Ok9lRAvh+11H9hwBIhPt9aB4EabzUGPDKmNucSg4D+jt1Em0xEH9Yz5xK1YcKwqROIj9Ds6J913g8aatd8m/RyZvYR/D/ERbqQhMMyD22ifnSKa1D/wyzZf6kKAJhdmmL9SQByKsIqYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2AL17nv; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7E61F000E9
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jun 2026 23:52:39 +0000 (UTC)
+	s=arc-20240116; t=1781654132; c=relaxed/simple;
+	bh=SDmIBId0ITXPr94PESh2YNLWgSq9W6bRB7Yfjw907W8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=gMwS8ZzSrVB5VXA/k8YK8vmQVyit4FrYiy6/EVzvntdA1ZBCqBwloTbaD/gT7qmOCp9Dp+pzQxTGwuGzTTzitpY9s8T+93P+VWtA6aKZP6a5xf/xVBtoEZolIjSLhV4oeCEWRZwG/A6SSzbXIkN/fLKzkxNJdlWMI3lYa7S9OLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzMoLksD; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 829AF1F00A3D;
+	Tue, 16 Jun 2026 23:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781653959;
-	bh=2PGFMcZQgbKQIiP0tOkTJWkJgankUzGNfIcpo79TfmM=;
-	h=Date:From:To:In-Reply-To:References:Subject;
-	b=P2AL17nvndOUdhICk6lA9kkNV4sTQqncFnf6bIpPhSwXhydQWuOxZpr+TNmCu23at
-	 dgHh7oXZFc/3hmaurtHTcVAXnZBu17XbSVrF6oKZafTwvxNG5nPM38QXDZLwRFBan1
-	 k+/oyxiNf+C5i3KwRiBkV57ejdgxSvLrkBIfGPjj1Ag7U7++ohQKgbGoEhLhPsPa5J
-	 ZEHfriNm8ofFRekXxOC7YxApQ5t9+UDFX+HEXcuAmXyfXPJnbc5qREjdKX27BusrpX
-	 Y9BopGBS/EWmFYKecRU9QnRsYLDjNxaDfO7da2xAOSk156sWW/eJkkqUKsHpvASm4a
-	 8AXVPve5KxMOA==
+	s=k20260515; t=1781654131;
+	bh=zLdTwqbeehqCKRrfdVRiWtHbT6AUgFS6H0xX4wk3A/s=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=NzMoLksDjPU/zEUY0Zn/wo9MAcUsn3b9WTU/Cboa6COYZCkc41QFHCs5AAuE6oZCB
+	 l1VVSO8LjKEz672Y15JIiT+fyGvdKCBTmzNkCsSmq71mwwWGcilUVZNlMP/5CT3qiR
+	 9UsKFOha1BEvWTd/0iHsrMWSLrtV65b5YUo9NdCUhnXGCWMPc3XbMcVHbqAPbk4Eo+
+	 LRD46vfz0LoqQYTe4ofOcMiyrPMEmm6+Qmv8jcOrMB6VzVXCt2ZF7SjrXSuUQNpKZ3
+	 +DKBAk+rDlCR/maj68rA3DgRh2WxUvh763FGlK+e93NLsqlpB/FoutQT7btKiv4RHn
+	 Me/V+dk0gYRtg==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 41FFFF40073;
-	Tue, 16 Jun 2026 19:52:38 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id AA092F40082;
+	Tue, 16 Jun 2026 19:55:29 -0400 (EDT)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Tue, 16 Jun 2026 19:52:38 -0400
-X-ME-Sender: <xms:xuExalMkkbhJGNOT-5IkG_bMBPfIPA-XbNvK8NSzJfBGTAHlDmRQBQ>
-    <xme:xuExaizdgU7vaVwGSUzUvaEB512-IVrbt72_SeeYM3vlRapq3zKj7unrSlutjEXk5
-    KmZTtdKyoZxfySKVbSDMnXTEmdfueu2vtensyVMPcGlSX__J8ANVeY>
-X-ME-Proxy-Cause: dmFkZTGVQrd5dSRSiAW5GJeQyQ2RSBb1wa0g34jCC3OBnQ5HCrANrPgfrJfYJA/3StbLzR
-    ALBLxiBNMuJXZxSyR1HEZl0sH8j0mO47H317C68JK1yQCIH07WzeYiIi9vElv8XHqV/AiJ
-    626e8svWp8hsX24TU3IdTwblf4GU318Zce5Je2opBAkjxMgm81hZpNMuymP5rODbN9Usj4
-    nqX0H9ygw8+t/dTK5Ugsg6GDfKaruhC2mSXr27D25cG2v41Y7ThfhW5WXKXBS8np7SfiE4
-    e6+Z0SnMahsD2pATuW8M1ednHZSMGs5CrEWhHFvfXhz0VNpnlfI3ttU3YdCbJcXjo607P2
-    xuis0ZvSmn8q5p7h5wOwj8+w9Me4kWFwfpe/R2l+Y5SvbjkNoQW4SkOMdDq+R6kCG7TEX3
-    efSKF3epDyeHILQw/ezocSX2F7XlJZ7xOx2MBLQOr1rwVkc0BB13/SFfVPxG3/8V5kUKDJ
-    f+HVLORWkenw3mVYRcqGLN3p6FiAd0b+nSWzRQaSE/jR2TPkwvYy07A9cNh9z0bNBj8VOR
-    VI1C4/qPow/eJUiacEcfMtdHPp2CGe60nrs5nVK4h3mSm4Afa+PXz74irSWWoLtouwnfn6
-    FNbPDoS24APDvK7figm+dBDZYOGbkadbBBbJ6FMmbSHHYSmqYgei5vSSpfew
-X-ME-Proxy: <xmx:xuExatLL--stJn163-wziMUgt_acAFURq3v8kFmUTAqu4kI37KXRzA>
-    <xmx:xuExag74tp0zGw6U-HPIBovbf6j7gp5f3nwpX02_MUfyeIlBDWhTdw>
-    <xmx:xuExaoytDcW7FQFt-y4M49V89G3uOSaWfP5T64-VOUQYLdkJYasm0Q>
-    <xmx:xuExasYtYKAHmT5ElqNp7N1-VrIFk-siUiL2zATBWvhj3qGncVeUig>
-    <xmx:xuExaiRrbgZ1C4w9SJSy4i35ge266VnxJnmR5X3RdFHqdMSUlFdKo4xJ>
+  by phl-compute-10.internal (MEProxy); Tue, 16 Jun 2026 19:55:29 -0400
+X-ME-Sender: <xms:ceIxav2pzg_6w4XGz02JjoBqeLHc7y7dIW5R9Fdfuvoq5o2eqpSAyg>
+    <xme:ceIxao6Cgl6dJGE_jEB0b2ribwAkhZgWpwHnKcm3EIv87msB0JkljAd3e83kqhSXY
+    FwRBTvNHx-2Wjzh3-re0EBv_deFTU7BLJEx19PGL70QhieV6-9NOQ>
+X-ME-Proxy-Cause: dmFkZTGKv/73K9Q/iMN9KBKYeOGfzfcyLZdCGUapQlr+Y5h7YvHT0jFxaXZed4fWbzf1N0
+    zCPy49rpMyyycy/kF6HkmuKbN3eVydqcEO5uXv+ISGsBkFQhlGANbHdrtXF+19wIxCJh87
+    ZLQ6tirMyJgHXFAkO/SdZt2njPyPEReNhTPtZ0qUGsKuVUgBBh5dryY/8gtycof1YrddSD
+    8Ltc59R1mvifod6oPfNE4pJz7wwSOoC6cT8+Z02hTyfdfR44Sl6VB7l7D0d3VLlDywv+DC
+    57hEiRYB0w9/MA/f1txn1QrHcNdMGchuaovR1j4Epm7pKO9dLeyNnUMCdrDOUyHk4ydoME
+    uxb6LxIFO3Ix4HGiyDUSVo3gUz/RReJePNIayhzCzfW4u5rQYCbgAi8/SaDjc7L/HlAENt
+    YOW/KDkj0XB15sSS9EK8szczYt1hdjLo89BjDFUv+NSeYypcNF7KZJxFM9rU3w67I+vHNR
+    /QKmJO2bDqiHEF9ZyEcE3ddHJ4sNd8KxpqgONUzkc5i75O/7Q5CmLA1u0DTC+gV9m9Xol0
+    yjgKDkrrIak3albCJPjihUt3PqnhJ1C+fVEyoGLL6QH+TA03Q4ezCAOHKxLQ4a8xVWcBWW
+    JOPDL6gHfNcxADCbEVMfSzh+QUnI4HrBJbk8ljZiN/wD5nsWr9Y48CHBAxbQ
+X-ME-Proxy: <xmx:ceIxaiCfMxuULjeB_-bhxYOBRmPXSjt2mni0BoFhbKfbwb3zW4m2kA>
+    <xmx:ceIxaij4c0BJFwNnCMVf8ysHNj90ccP4_6EnYHt-Vz39AXNGHeH_mA>
+    <xmx:ceIxagYC9apkdGNetH8zvA4bnG7IVgvGZCyk3d-jOEVJDXOVOWxkew>
+    <xmx:ceIxajlRHb52IjHDCamNwWqtggr5CY8xXVqNF9zxD5kHNAydH4YaXA>
+    <xmx:ceIxamiNeyH0_APP1FyWZUzz3u7PJepumy6CCDo3R78Ui0hIsDHZodp4>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 22419780075; Tue, 16 Jun 2026 19:52:38 -0400 (EDT)
+	id 87A4E780070; Tue, 16 Jun 2026 19:55:29 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,15 +79,19 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 16 Jun 2026 19:52:17 -0400
+Date: Tue, 16 Jun 2026 19:55:08 -0400
 From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@poochiereds.net>, robbieko <robbieko@synology.com>,
- linux-nfs@vger.kernel.org
-Message-Id: <9695b086-512d-4be6-9730-20d490519b15@app.fastmail.com>
-In-Reply-To: <cb4eedd0becf980ed5d8113f54eb5d35ed56ae5c.camel@poochiereds.net>
-References: <20260616054027.2360930-1-robbieko@synology.com>
- <cb4eedd0becf980ed5d8113f54eb5d35ed56ae5c.camel@poochiereds.net>
-Subject: Re: [PATCH v3 1/3] nfsd: reject out-of-range useconds in NFSv2 SETATTR/CREATE
+To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>
+Cc: "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Steve Dickson" <steved@redhat.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <d29b710e-2771-4e5d-8765-1de806a9aa72@app.fastmail.com>
+In-Reply-To: <20260616-exportd-netlink-v4-1-03505aee3883@kernel.org>
+References: <20260616-exportd-netlink-v4-0-03505aee3883@kernel.org>
+ <20260616-exportd-netlink-v4-1-03505aee3883@kernel.org>
+Subject: Re: [PATCH v4 1/4] sunrpc: add per-netns per-procedure call counts to svc_stat
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -96,116 +100,67 @@ X-Spamd-Result: default: False [-5.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22648-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@poochiereds.net,m:robbieko@synology.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22649-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[synology.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,app.fastmail.com:mid];
-	RCPT_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:steved@redhat.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 88624695CAA
+X-Rspamd-Queue-Id: 09B78695CC8
 
+Hey Jeff -
 
-
-On Tue, Jun 16, 2026, at 3:18 PM, Jeff Layton wrote:
-> On Tue, 2026-06-16 at 13:39 +0800, robbieko wrote:
->> From: Robbie Ko <robbieko@synology.com>
->> 
->> The NFSv2 sattr decoder converts the wire useconds to nanoseconds in
->> svcxdr_decode_sattr():
->> 
->> 	iap->ia_atime.tv_nsec = tmp2 * NSEC_PER_USEC;
->> 
->> tmp2 is a u32 and NSEC_PER_USEC is 1000, so the product is computed in
->> unsigned long. On ILP32 that is 32 bits, and an out-of-range useconds
->> value such as 4294968 wraps to tv_nsec == 704. The corruption therefore
->> happens during decode, before any proc function can inspect the value,
->> and a later range check on tv_nsec would see an in-range result and
->> accept it.
->> 
->> Guard the raw useconds before the multiplication and reject values
->> greater than 1000000. useconds == 1000000 is kept: it is the Sun
->> convention for "set to the current server time", and the in-tree Linux
->> NFSv2 client emits it in both the atime and the mtime field for a plain
->> touch / utimes(file, NULL) (see encode_sattr() and
->> xdr_encode_current_server_time() in fs/nfs/nfs2xdr.c). Rejecting 1000000
->> would turn that common operation into a hard decode failure for both
->> SETATTR and CREATE. 1000000 * NSEC_PER_USEC is 10^9, which does not wrap
->> on ILP32, so the Sun convention value passes through safely; only
->> genuinely out-of-range values (> 1000000) are rejected. The atime and
->> mtime guards are therefore symmetric.
->> 
->> The decoder only applied the Sun convention in the mtime block, which
->> clears ATTR_ATIME_SET|ATTR_MTIME_SET when mtime useconds == 1000000. If a
->> client puts 1000000 in the atime field but not in the mtime field, the
->> atime block stored an out-of-range tv_nsec (10^9) and left ATTR_ATIME_SET
->> set, so the bogus value reached the filesystem. Apply the convention in
->> the atime block as well, clearing ATTR_ATIME_SET so the server uses its
->> current time and ignores the value. Only ATTR_ATIME_SET is cleared there;
->> the mtime block keeps its existing behavior, where 1000000 means "set
->> both atime and mtime to now".
->> 
->> Signed-off-by: Robbie Ko <robbieko@synology.com>
->> ---
->>  fs/nfsd/nfsxdr.c | 31 +++++++++++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->> 
->> diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
->> index ae71e0621317..48a4e89a5f41 100644
->> --- a/fs/nfsd/nfsxdr.c
->> +++ b/fs/nfsd/nfsxdr.c
->> @@ -172,14 +172,45 @@ svcxdr_decode_sattr(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->>  	tmp1 = be32_to_cpup(p++);
->>  	tmp2 = be32_to_cpup(p++);
->>  	if (tmp1 != (u32)-1 && tmp2 != (u32)-1) {
->> +		/*
->> +		 * Guard the raw useconds before the unit conversion below.
->> +		 * tmp2 * NSEC_PER_USEC is computed in unsigned long, which is
->> +		 * 32 bits on ILP32, so an out-of-range value would wrap and
->> +		 * silently produce a bogus in-range tv_nsec. useconds ==
->> +		 * 1000000 is the Sun "set to current server time" convention
->> +		 * (see the mtime block below); allow it and reject anything
->> +		 * larger. Note 1000000 * NSEC_PER_USEC is 10^9, which does not
->> +		 * wrap on ILP32.
->> +		 */
->> +		if (tmp2 > 1000000)
->> +			return false;
+On Tue, Jun 16, 2026, at 8:45 AM, Jeff Layton wrote:
+> The existing per-procedure call counts live in global
+> svc_version->vs_count[] arrays which are not network-namespace-aware.
+> Add per-netns equivalents in struct svc_stat so the upcoming netlink
+> stats interface can return namespace-scoped statistics.
 >
-> The logic looks fine, but rather than having these verbose comments
-> above each use of 1000000, it'd be better to declare a constant and
-> document its use once above that.
->
-> Something like this (and consolidate the comments above that):
->
-> #define		SUN_V2_SET_TO_NOW	1000000
->
-> Though I think the current fashion is to use enums for this so they
-> show up in the debugger.
+> Add a vs_count pointer array to struct svc_stat, along with
+> svc_stat_alloc_counts() and svc_stat_free_counts() helpers to manage
+> per-version percpu call count arrays.
 
-The applied version of this patch defines such a symbolic constant.
-Robbie, no need to resend.
+This patch appears to break the build for an NFSv3-only server
+configured with CONFIG_PROC_FS=n.
 
+svc_stat_alloc_counts() and svc_stat_free_counts() are defined in
+net/sunrpc/stats.c, which the Makefile builds only under PROC_FS:
+
+       sunrpc-$(CONFIG_PROC_FS) += stats.o
+
+nfsd_net_init()/nfsd_net_exit() call both helpers unconditionally,
+and the declarations in <linux/sunrpc/stats.h> sit outside the
+#ifdef CONFIG_PROC_FS block with no !PROC_FS stubs. CONFIG_NFSD does
+not depend on PROC_FS -- only NFSD_V4 does -- so NFSD=y with
+NFSD_V2/V3 and PROC_FS=n is a valid Kconfig combination. The result
+is an undefined reference to svc_stat_alloc_counts at vmlinux link
+(NFSD=y), or a modpost failure for NFSD=m since both symbols are
+EXPORT_SYMBOL_GPL.
+
+net/sunrpc/svc.c is always built, and might be a more natural home
+for the new functions.
 
 -- 
 Chuck Lever
