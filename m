@@ -1,54 +1,53 @@
-Return-Path: <linux-nfs+bounces-22652-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22653-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vJ+NI8N/Mmq40wUAu9opvQ
-	(envelope-from <linux-nfs+bounces-22652-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 13:06:43 +0200
+	id slS5LUOBMmo91AUAu9opvQ
+	(envelope-from <linux-nfs+bounces-22653-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 13:13:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE71C698CE5
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 13:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E02FE698DE0
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 13:13:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="ZADKwP/r";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22652-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22652-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=IGs3Jjbz;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22653-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22653-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AB6D8301AB8D
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 11:04:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 22D4D301DE11
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Jun 2026 11:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF0CF2C027F;
-	Wed, 17 Jun 2026 11:04:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7241370AD6;
+	Wed, 17 Jun 2026 11:07:19 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF7F282F3C;
-	Wed, 17 Jun 2026 11:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9032F15E5BB;
+	Wed, 17 Jun 2026 11:07:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781694250; cv=none; b=NvH9N9ah5+K5WBYNXfBQw9/Ig/vPmxdVX4BuRLYombFbRHkmJ6s2eNjccX6I+SZlUn3SE/8KBfDB2Ql0nom0lbGGEcbgjlb59+ilc1FmYb1r1rRxnv1579J1SN64PHrjYYTM3n2Ua809PiEOgpFE/zVcBVf36g8CbYfi7r6Sfi4=
+	t=1781694439; cv=none; b=nMsZgLSe79kQB7a6ok505BnN5JnBDUVl01z/zu3oNyBudBNF/5Fe0admy5JC/4BFf9XoUeElNQKm3aXaw+XRSroF9sxnAEty5b6c6efrd80yqCBLeRa9OuXcNrYKYs3EUxpNKmFpjh0jPkdh9PeA1x4NpFN615dPk1M2TeU3eGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781694250; c=relaxed/simple;
-	bh=1qPl7fB+5kKHSZ6eNvMSIUhRN+y/tQ8wZ5lMIKbG8M8=;
+	s=arc-20240116; t=1781694439; c=relaxed/simple;
+	bh=ozQQlXuNxYf8gCWRVFLIctdAk3hACM3sDBxSY+PTTxI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EcsGFZQ2tNjSNfWb2Hf9iCvKpkVXp7+GC5zDvf+Rl/dZZmyI7D3vSoUJOrC+vCdaTt9LENjWKSOPHXB+AAuQB2twlRmL1HLb8wvVpWioyVHNcyhUvPJzmBEnFKf6QWoypsGBmTLzBQb2DZCbKQompL4rYAmHsowukC6XY4o+9x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZADKwP/r; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A42B81F000E9;
-	Wed, 17 Jun 2026 11:04:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=IhFQLk16SuzO8wXgJrfZGbmj4fX4hjrNqVn5RAWw9r7f+2gy0cMr0NIe4h+ssWELLsOVMkzZIQ8w7emh6uc7BojZXvA5k66yFSYHAjt7T6dRTBFle1/wLuwZBihEX4P5KS+UyZ1IErbjdkO5AKQIcwA7UH6fwq3r1enbIzj7dFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGs3Jjbz; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA581F00A3A;
+	Wed, 17 Jun 2026 11:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781694249;
-	bh=djzMxB41GeKyGtcnLvVt9lwkWvpXTUh2o7i5tuIwok0=;
+	s=k20260515; t=1781694438;
+	bh=zvWrYEq9Qvg9xcfi+xzW0gvn2miQLhzHoAQSFIxzJMw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ZADKwP/rlJsuy6RyQkxcEGMXXh335V6EBzLp4liExdTUFlH2avehwSbCrYU+2sPHB
-	 Zyu+6DL2Mtn5IEmGn3bzb0sINInH16qi6qMW4ItxFiKkIhCyVPg4T67GTRq9faH2pO
-	 0zLrB+WlCMCbQsVY+ditkBXvIef19LvJfXufDqvfp6AtH3cxiqWyPDF27kGRIjKxDQ
-	 RplfhXmbT51NiNMDcCZUyyd2j84qmksTXtCwLMyXfj3nQOEjDT9IfseCVVWz2NCPPH
-	 6U/vTYegJXCKTZgO1ld3lXUOC2tBFpjmhZjdngE9STCK1Zk63NewVt+DnJJAHwX/bD
-	 J1U1gZvAvZ6rg==
-Message-ID: <d322de3e8e54e8f64b0a630a3f517fb565342abc.camel@kernel.org>
-Subject: Re: [PATCH v4 1/4] sunrpc: add per-netns per-procedure call counts
- to svc_stat
+	b=IGs3JjbzYKcocfmmCXAJmWvSdnl9S+Zw3W75CTj4yzvRzlfEBhpxwdOWfdBp/eEVS
+	 kH/BUDciQdKVp8YPrypu3GTvP/PRdPpbHJrawMaRtQ8gKKNApb7Y/hSfn19PfXF796
+	 dCtAiYsiGkLHqicjnQ7SzlDxvYv8HbzFsFjJ7XjeacGyCrV/O/LxLeoovyaQGaqMGY
+	 801e/zS5ylzE7lPWVCfSRqhrWvBtJQAgwFA2eXcr9JZ2JySCPOFcLSEde/FPHVhDF7
+	 IFTAXqz4JgGKuakMdmX1nztow8zP2MTgYNN66yLi1PPuXsjXoUrRICbXULxstrJ9ip
+	 uANkzWcABchMg==
+Message-ID: <657f71a2c6dc1e817be57e40431a6578281ea823.camel@kernel.org>
+Subject: Re: [PATCH v4 3/4] nfsd: implement server-stats-get netlink handler
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
@@ -56,11 +55,11 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
 Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
  Steve Dickson <steved@redhat.com>, linux-nfs@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Date: Wed, 17 Jun 2026 07:04:06 -0400
-In-Reply-To: <d29b710e-2771-4e5d-8765-1de806a9aa72@app.fastmail.com>
+Date: Wed, 17 Jun 2026 07:07:16 -0400
+In-Reply-To: <e55738ec-80a5-4e74-85e3-29c17d4f67c9@app.fastmail.com>
 References: <20260616-exportd-netlink-v4-0-03505aee3883@kernel.org>
-	 <20260616-exportd-netlink-v4-1-03505aee3883@kernel.org>
-	 <d29b710e-2771-4e5d-8765-1de806a9aa72@app.fastmail.com>
+	 <20260616-exportd-netlink-v4-3-03505aee3883@kernel.org>
+	 <e55738ec-80a5-4e74-85e3-29c17d4f67c9@app.fastmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -155,7 +154,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22652-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22653-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:steved@redhat.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -178,42 +177,76 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DE71C698CE5
+X-Rspamd-Queue-Id: E02FE698DE0
 
-On Tue, 2026-06-16 at 19:55 -0400, Chuck Lever wrote:
+On Tue, 2026-06-16 at 20:57 -0400, Chuck Lever wrote:
 > Hey Jeff -
 >=20
 > On Tue, Jun 16, 2026, at 8:45 AM, Jeff Layton wrote:
-> > The existing per-procedure call counts live in global
-> > svc_version->vs_count[] arrays which are not network-namespace-aware.
-> > Add per-netns equivalents in struct svc_stat so the upcoming netlink
-> > stats interface can return namespace-scoped statistics.
+> > Implement nfsd_nl_server_stats_get_dumpit() which exposes the
+> > NFS server statistics currently available via /proc/net/rpc/nfsd
+> > through the nfsd generic netlink family.
 > >=20
-> > Add a vs_count pointer array to struct svc_stat, along with
-> > svc_stat_alloc_counts() and svc_stat_free_counts() helpers to manage
-> > per-version percpu call count arrays.
+> > The handler uses a dump operation to stream statistics across
+> > multiple netlink messages:
+> >=20
+> >   - First message: all scalar stats (reply cache, filehandle,
+> >     IO, network, RPC) plus per-version procedure counts
+> >     (proc2/3/4-ops) using per-netns vs_count arrays.
+> >=20
+> >   - Subsequent messages: NFSv4 per-operation counts
+> >     (proc4ops-ops), one entry per message, using cb->args[0]
+> >     to track the current operation index across dump calls.
+> >=20
+> > This allows nfsstat to retrieve server statistics via netlink
+> > with a procfs fallback for older kernels.
+> >=20
+> > Assisted-by: Claude:claude-opus-4-6
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  Documentation/netlink/specs/nfsd.yaml | 105 +++++++++++++++++
+> >  fs/nfsd/netlink.c                     |   5 +
+> >  fs/nfsd/netlink.h                     |   2 +
+> >  fs/nfsd/nfsctl.c                      | 206 ++++++++++++++++++++++++++=
+++++++++
+> >  include/uapi/linux/nfsd_netlink.h     |  35 ++++++
+> >  5 files changed, 353 insertions(+)
 >=20
-> This patch appears to break the build for an NFSv3-only server
-> configured with CONFIG_PROC_FS=3Dn.
+> The procfs output in nfsd_show() emits one more counter that this dump
+> handler drops: wdeleg_getattr (NFSD_STATS_WDELEG_GETATTR), printed at
+> the end of the CONFIG_NFSD_V4 block in fs/nfsd/stats.c, right after
+> proc4ops. The netlink dump stops after proc4ops-ops and sets
+> cb->args[0] =3D -1, so the write-delegation GETATTR-conflict counter neve=
+r
+> goes out on the wire.
 >=20
-> svc_stat_alloc_counts() and svc_stat_free_counts() are defined in
-> net/sunrpc/stats.c, which the Makefile builds only under PROC_FS:
+> There's no schema slot for it either: the server-stats attribute-set
+> ends at proc4ops-ops, so a consumer that prefers netlink and only falls
+> back to procfs on an old kernel loses this counter on every kernel new
+> enough to support server-stats-get.
 >=20
->        sunrpc-$(CONFIG_PROC_FS) +=3D stats.o
+> I Suggest:
 >=20
-> nfsd_net_init()/nfsd_net_exit() call both helpers unconditionally,
-> and the declarations in <linux/sunrpc/stats.h> sit outside the
-> #ifdef CONFIG_PROC_FS block with no !PROC_FS stubs. CONFIG_NFSD does
-> not depend on PROC_FS -- only NFSD_V4 does -- so NFSD=3Dy with
-> NFSD_V2/V3 and PROC_FS=3Dn is a valid Kconfig combination. The result
-> is an undefined reference to svc_stat_alloc_counts at vmlinux link
-> (NFSD=3Dy), or a modpost failure for NFSD=3Dm since both symbols are
-> EXPORT_SYMBOL_GPL.
+> - add a wdeleg-getattr (u64) attribute to the server-stats
+>   attribute-set in nfsd.yaml and list it under the dump reply
+>   attributes;
 >=20
-> net/sunrpc/svc.c is always built, and might be a more natural home
-> for the new functions.
+> - add NFSD_A_SERVER_STATS_WDELEG_GETATTR to the uapi enum, after
+>   PROC4OPS_OPS and before __NFSD_A_SERVER_STATS_MAX so existing
+>   values don't shift;
+>=20
+> - emit it as a single scalar in the start =3D=3D 0 message, wrapped in
+>   CONFIG_NFSD_V4 to match the procfs side.
+>=20
 
-Thanks. Looks pretty simple to fix. I'll plan to send a v5.
+This omission was intentional. The stated purpose of this patchset was
+to convert nfsstat to use netlink. nfsstat does not access or display
+this field today. Without something that consumes this stat, I don't
+see the point of adding it here. We can always add it later when/if it
+becomes useful to userland.
+
+Is there something that accesses this today that I'm not aware of? If
+not, is there some future intent to add this to nfsstat?
 --=20
 Jeff Layton <jlayton@kernel.org>
 
