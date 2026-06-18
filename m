@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22671-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22672-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id iAdvAK0jNGo8PgYAu9opvQ
-	(envelope-from <linux-nfs+bounces-22671-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2026 18:58:21 +0200
+	id IidMG68jNGo/PgYAu9opvQ
+	(envelope-from <linux-nfs+bounces-22672-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2026 18:58:23 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 935906A1B5D
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2026 18:58:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8CA46A1B64
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2026 18:58:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=SLRuora7;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22671-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22671-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LIKzHUWh;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22672-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22672-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DBA8E30117AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2026 16:58:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9FE4330488D6
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Jun 2026 16:58:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54E232B128;
-	Thu, 18 Jun 2026 16:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357153438A1;
+	Thu, 18 Jun 2026 16:58:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5905292B2E;
-	Thu, 18 Jun 2026 16:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E8A32FA2B;
+	Thu, 18 Jun 2026 16:58:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781801898; cv=none; b=EDfZy7yUIpl+CovYbBrVGDPtjmOuEryp34bj7dsq86jbXteMCzRc5j8IdV5OZjhvKfsx2dfFyAC0t6egmqEXoZex4NUVJdtU3UaE9WH23IbaL+BjngdNJC7DJ8LKm4u2H4CuAvom/4WRRJAdcZYxQKY0BVQ44E9SDSfTwAZ2f4o=
+	t=1781801900; cv=none; b=B1aZdqhVNKH6PKHeHxyoRDZmhcmPgCc5Wq6KS+TBSl/QMIE/KAYNYGIerJ+wFzy7AzU+huybWMReHEyzhO3P37BiIFpSmqe7bPcI/7vAfqPzleiGcTd2D6mvSVUozk2MbHhyB6EDcWuQlUFok1FVuufGkG8i5kkqzBrLv6+Eq6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781801898; c=relaxed/simple;
-	bh=+vRNg/vB88tsr9ajwBBbvFTItz8uF6l4IN0qGYGdBFY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KRH9OQiQZxgeQ2/8C+P5T8Qb1NlUtMbIuoZIdjDLJCZpV+R9yfHcxtwD+8ivoTZARFYZ6MqAJwGEEhS5amPhWdvg1vJsCO11sL4HXca13DUhViWhvoKBPULoRaDdQQps/q3h/Vg+DEpKnQKkES3zwDfw1pXOBCxMwYtbX/stviY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLRuora7; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 808E81F000E9;
-	Thu, 18 Jun 2026 16:58:16 +0000 (UTC)
+	s=arc-20240116; t=1781801900; c=relaxed/simple;
+	bh=uZ2FBmxOoVhJsLeuZtKLiGJZ3fUw16DLYpIJJdwXrAI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uDpsO/qkQMc7LlpaVxdyfA+hokc1oQpmjKEEi3Zqov8hGdNxPDBWXIcOO6Fl54JX8TT0eOdMp6NdljnPBy2Seq/2k4Cfl3P/UAfaCwlEZfuAnr3zLzBIBQJR4y0/Ho4rXxXPPZySUQAybRo/UOgzySXnx4Gyd7WPaNLs9CwGz8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIKzHUWh; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97211F00A3A;
+	Thu, 18 Jun 2026 16:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781801897;
-	bh=3lit7TWbOMU4PURJ2KRg50uobsepI1W7z4i2B/762E4=;
-	h=From:Subject:Date:To:Cc;
-	b=SLRuora7TAZ30bBG8cSExrGqfNcA980yYwsSY0g9+HLTrYA9n4jThiaMoNULiRLtC
-	 g9KDPlJQ7C2QN/E2PMSMXT1a4WT1Xu8ruGdJ8YGZYJD/UETGBVAxxXjapHZdh4UBoM
-	 noVzJiPj37RVbDDGxqr+thEj7eCaArhpSN5YYbe2GsXrm/iI74eET76TEzzEPwC2bx
-	 rcM+G+YREMPRuikam8YUHdjmY1k+2uKkRFPXl/unqNAI0d3fKfFXyLhgNJ2dieRSCt
-	 3FpYI16Hnbr2NJtdIt8e6O4a3KdOtxCfacJXb7BoQLOSX/h/y+WmPMYLw6qnTdRmv3
-	 MHiJ+8l3YXynw==
+	s=k20260515; t=1781801898;
+	bh=Ajw8xEIbnhyGqpeHFElvJETCGD/Q08OjHIPkMg7eBg8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=LIKzHUWh1rcnMF7JYZWuvOZlU5o8yiiEAHohIFiMJR2Z3iW9uyoZi8VZocR7Xi2Zw
+	 nSSEAxrm9M3E2KScgDRhZNmb3NvSNe0qLQQpO6SQmbEG6BFdqu9vqaRCXkeiN6hX5d
+	 mJxEQ/0dFuHNe9uRw7vwNRYjmjmzTqbgDnERn3dboIdbtvNeTyvupqTJN5XZoTfKd8
+	 q/QOAbAyUv+uBdM4QL//V8zoaObPkTeYUnNYGYNo/s5ZIX5jLx1cBMCtVyXiNMeN+o
+	 GVgHyeWo/+Cn9Jjbh4V1+kWjCz7AzdPPkemdD7N0A/5+reLG7rI+EVkGnwtgultSSl
+	 l3i+Lij+WZDqw==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v5 0/6] nfsd/sunrpc: convert nfsstat server-side interfaces
- to use netlink
-Date: Thu, 18 Jun 2026 12:57:54 -0400
-Message-Id: <20260618-exportd-netlink-v5-0-e9aef947af3d@kernel.org>
+Date: Thu, 18 Jun 2026 12:57:55 -0400
+Subject: [PATCH v5 1/6] sunrpc: add per-netns per-procedure call counts to
+ svc_stat
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,12 +58,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XPQQ6CMBAF0KuQrq2ZdpgGXHkP46LQQRtJIYUQD
- OHuVjdq0OX/ybyfWcTA0fMgDtkiIk9+8F1IgXaZqK82XFh6l7LQoA2gMpLnvoujk4HH1oebVHX
- ZVKQJDaNIV33kxs8v8XRO+eqHsYv318Cknu1/a1ISpFGaXG10VRIdbxwDt/suXsQTm/QbSJtbQ
- CcgBwBs2OUE9QbAN2Cg3AKYAGuJoLBUVcptgPwD+PVCngBAArLMWBT4Bazr+gAbnqmtcgEAAA=
- =
-X-Change-ID: 20260316-exportd-netlink-1c9fb52536e3
+Message-Id: <20260618-exportd-netlink-v5-1-e9aef947af3d@kernel.org>
+References: <20260618-exportd-netlink-v5-0-e9aef947af3d@kernel.org>
+In-Reply-To: <20260618-exportd-netlink-v5-0-e9aef947af3d@kernel.org>
 To: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
  Chuck Lever <cel@kernel.org>
@@ -71,20 +68,20 @@ Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
  Steve Dickson <steved@redhat.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3175; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=+vRNg/vB88tsr9ajwBBbvFTItz8uF6l4IN0qGYGdBFY=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqNCOfT94gUhQYFmnzKEXokuSJQCbfwcvArPY0B
- ucWxrOfSH+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCajQjnwAKCRAADmhBGVaC
- FXcbD/sHHwCsCAodk/L/HfLOC0SRvYomeo5Z5EKlg401g5vwujA4wygthKlr40rbVJe8nMyZX1X
- ImzbDtMMQGOZht9jBGHx32qI602Y92A4OftO5CBC3vEnYFpdcNF0IAG7kTCRk7wuPrgTUYiScLy
- vHqr/GUZbyRjp+VZc45M/kxSRmChzLFPP3HQwM4Vq0TJgKDuvSJvAheEEFUy/yLVXTyp+Sd9Bsp
- lgqOoD30aHp5s02X2UNvRGFIhCgw6KX6N1EVSql9zKaWLSpXudITUUUpX2XY6hmJ/r6yDq7xgkx
- 4psMarre3yixfesaxZfnt1erKAyMuNWXIEHRrTLvVOBsfseoSMpAj3pWwzjz/Wsj9DOSJ8V+GjO
- Oy4RNBH1D+oigNyumkvlqK1QOLu/DzGwdpiZAaY6CFo4IJdAhjEkaxFr2f69XMukN2nZ4BQaohu
- cgtfVSsX/y4vASv0X80jAzugrLNszQoTo4qJXmim7LASAWK8AIVfyQlTXPAvjy7OBcdnD19KJk7
- Cp08cGbbbNbfgs/Qz7fsc2ObpJXuapOw5AfmLpxPEyP7Klic4ONRLtd4jKUxPdrJ9kYPmOFHQ2X
- vaOz9LczAA/m1H7s1JrbjxHgXXzRRtmeWLpad1zjo0A49VYc2oeC+JdbnldUkdH2WE2Eo9EXh9S
- O4M8O6oobdp92aA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5117; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=uZ2FBmxOoVhJsLeuZtKLiGJZ3fUw16DLYpIJJdwXrAI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqNCOmi7E8jDxWuh03EkfgKwqPVxx7xQB7MAHgv
+ +kIFSF/c5+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCajQjpgAKCRAADmhBGVaC
+ FZVtD/9mpExe8NBgy9T+iIO0c7DaFCW1R6i4Er8T8sFkSZdQZgIP/71/rE1Lj2LgmUJg27tuR9X
+ fHhq8/GUoDZFshThFQU4jEtaBVl2BCdddWsWP1QFv2TRg0VZyOxWXZXhfn7sw5fi5o3t4WZgVY/
+ LKz174BwxL0jFpG+yyhNI1vmMcyOPDuEbg7PtGwHvuZFBGq8PGPbQ9/W88ljdAOzX3nvhJ4wgpD
+ MJPXMGQUJV/GFzq93YGEIh/D3VQXUh0KQZFtmZOtzPpQFy2Far3tahqW6fqaKDbb/R/QV81yS7h
+ 4LVtjqiWvumS0/FfyEcp7VwiA/TLrTz9fJlfAQExWxKjGmvCKsCDwigx2GzcDoBKGkK7nc3jTuY
+ oInR/FCDsFJKYR760RsnIT+AXGLH7Ny2RMpT8jViuJpFGEMS56vOZp0p0SIsJ5L7q72n61NSYLj
+ FlbTPLHoJDVMYqmkJQelLeyC/6zU7Jw6Y4ufGwfL2SbH6h+kPy0ku518Cfk5/PQ5o4vlYpcGGwd
+ 22N/F+DO2FWMT3PxL9dP/DxGfVs+uK9ERdI8Mj5fAe59syGdQnEmrfOE4PozqSNa+emGfIAkRCq
+ 5IhRuMib+rMBjRVP43gPsv/lhmO+KLLwBLP0z0C3ZbxvO9omKajdJGR6yEIJTB7Xt+iFSFjFbHQ
+ quolw4wnsEGWzGg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -92,13 +89,13 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22671-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22672-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:steved@redhat.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -117,83 +114,170 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 935906A1B5D
+X-Rspamd-Queue-Id: D8CA46A1B64
 
-The main difference in this version is the addition of server callback
-operation counts. I'll be sending another nfs-utils patch to add support
-for displaying those in nfsstat.
+The existing per-procedure call counts live in global
+svc_version->vs_count[] arrays which are not network-namespace-aware.
+Add per-netns equivalents in struct svc_stat so the upcoming netlink
+stats interface can return namespace-scoped statistics.
 
-The nfsstat tool currently scrapes /proc/net/rpc/nfsd for server
-statistics. This procfs interface has several limitations: the
-counters are global (not network-namespace-aware), the format is
-fragile to parse, and it cannot be extended without breaking
-existing parsers.
+Add a vs_count pointer array to struct svc_stat, along with
+svc_stat_alloc_counts() and svc_stat_free_counts() helpers to manage
+per-version percpu call count arrays.
 
-This series adds per-network-namespace procedure call counts to
-the sunrpc layer and exposes them through a new netlink handler
-in the nfsd generic netlink family, allowing nfsstat to retrieve
-server statistics via netlink with a procfs fallback for older
-kernels. The nfs-utils patch for that part is already merged.
+Increment the per-net counter alongside the global one in
+svc_generic_init_request(). Call the alloc/free helpers from
+nfsd_net_init() and nfsd_net_exit().
 
-Additionally, this version adds tracking of callback operation counts.
-
+Assisted-by: Claude:claude-opus-4-6
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v5:
-- Add NFSv4 callback call counts to nfsstat upcall
-- Link to v4: https://lore.kernel.org/r/20260616-exportd-netlink-v4-0-03505aee3883@kernel.org
+ fs/nfsd/nfsctl.c             |  8 +++++-
+ include/linux/sunrpc/stats.h |  6 +++++
+ net/sunrpc/svc.c             | 62 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+), 1 deletion(-)
 
-Changes in v4:
-- Ensure error is returned when nla_put_*() calls fail
-- Link to v3: https://lore.kernel.org/r/20260609-exportd-netlink-v3-0-aa5508a5bb1d@kernel.org
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index caf59421f8f4..601301e34fc7 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2514,9 +2514,12 @@ static __net_init int nfsd_net_init(struct net *net)
+ 
+ 	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
+ 	nn->nfsd_svcstats.program = &nfsd_programs[0];
++	retval = svc_stat_alloc_counts(&nn->nfsd_svcstats);
++	if (retval)
++		goto out_proc_error;
+ 	if (!nfsd_proc_stat_init(net)) {
+ 		retval = -ENOMEM;
+-		goto out_proc_error;
++		goto out_svcstats_error;
+ 	}
+ 
+ 	for (i = 0; i < sizeof(nn->nfsd_versions); i++)
+@@ -2534,6 +2537,8 @@ static __net_init int nfsd_net_init(struct net *net)
+ #endif
+ 	return 0;
+ 
++out_svcstats_error:
++	svc_stat_free_counts(&nn->nfsd_svcstats);
+ out_proc_error:
+ 	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
+ out_repcache_error:
+@@ -2574,6 +2579,7 @@ static __net_exit void nfsd_net_exit(struct net *net)
+ 	kfree_sensitive(nn->fh_key);
+ 	nfsd_net_cb_shutdown(nn);
+ 	nfsd_proc_stat_shutdown(net);
++	svc_stat_free_counts(&nn->nfsd_svcstats);
+ 	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
+ 	nfsd_idmap_shutdown(net);
+ 	nfsd_export_shutdown(net);
+diff --git a/include/linux/sunrpc/stats.h b/include/linux/sunrpc/stats.h
+index 3ce1550d1beb..087ade905e29 100644
+--- a/include/linux/sunrpc/stats.h
++++ b/include/linux/sunrpc/stats.h
+@@ -37,9 +37,15 @@ struct svc_stat {
+ 				rpcbadfmt,
+ 				rpcbadauth,
+ 				rpcbadclnt;
++
++	/* Per-version per-procedure call counts (per-cpu, per-netns) */
++	unsigned long __percpu	**vs_count;
+ };
+ 
+ struct net;
++int			svc_stat_alloc_counts(struct svc_stat *statp);
++void			svc_stat_free_counts(struct svc_stat *statp);
++
+ #ifdef CONFIG_PROC_FS
+ int			rpc_proc_init(struct net *);
+ void			rpc_proc_exit(struct net *);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index dd80a2eaaa74..0cee079df1cb 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1438,6 +1438,14 @@ svc_generic_init_request(struct svc_rqst *rqstp,
+ 	/* Bump per-procedure stats counter */
+ 	this_cpu_inc(versp->vs_count[rqstp->rq_proc]);
+ 
++	/* Bump per-net per-procedure stats counter */
++	if (rqstp->rq_server->sv_stats &&
++	    rqstp->rq_server->sv_stats->program == progp &&
++	    rqstp->rq_server->sv_stats->vs_count &&
++	    rqstp->rq_server->sv_stats->vs_count[rqstp->rq_vers])
++		this_cpu_inc(rqstp->rq_server->sv_stats->vs_count
++				[rqstp->rq_vers][rqstp->rq_proc]);
++
+ 	ret->dispatch = versp->vs_dispatch;
+ 	return rpc_success;
+ err_bad_vers:
+@@ -1449,6 +1457,60 @@ svc_generic_init_request(struct svc_rqst *rqstp,
+ }
+ EXPORT_SYMBOL_GPL(svc_generic_init_request);
+ 
++/**
++ * svc_stat_alloc_counts - allocate per-netns per-version call count arrays
++ * @statp: svc_stat whose vs_count arrays should be allocated
++ *
++ * statp->program must be set before calling this.
++ *
++ * Returns zero on success, or a negative errno otherwise.
++ */
++int svc_stat_alloc_counts(struct svc_stat *statp)
++{
++	struct svc_program *prog = statp->program;
++	unsigned int i;
++
++	statp->vs_count = kcalloc(prog->pg_nvers,
++				  sizeof(unsigned long __percpu *),
++				  GFP_KERNEL);
++	if (!statp->vs_count)
++		return -ENOMEM;
++
++	for (i = 0; i < prog->pg_nvers; i++) {
++		if (!prog->pg_vers[i])
++			continue;
++		statp->vs_count[i] = __alloc_percpu(prog->pg_vers[i]->vs_nproc *
++					    sizeof(unsigned long),
++					    sizeof(unsigned long));
++		if (!statp->vs_count[i])
++			goto err;
++	}
++	return 0;
++err:
++	svc_stat_free_counts(statp);
++	return -ENOMEM;
++}
++EXPORT_SYMBOL_GPL(svc_stat_alloc_counts);
++
++/**
++ * svc_stat_free_counts - free per-netns per-version call count arrays
++ * @statp: svc_stat whose vs_count arrays should be freed
++ */
++void svc_stat_free_counts(struct svc_stat *statp)
++{
++	struct svc_program *prog = statp->program;
++	unsigned int i;
++
++	if (!statp->vs_count)
++		return;
++
++	for (i = 0; i < prog->pg_nvers; i++)
++		free_percpu(statp->vs_count[i]);
++	kfree(statp->vs_count);
++	statp->vs_count = NULL;
++}
++EXPORT_SYMBOL_GPL(svc_stat_free_counts);
++
+ /*
+  * Common routine for processing the RPC request.
+  */
 
-Changes in v3:
-- Only increment per-net stats for the "primary" program
-- Link to v2: https://lore.kernel.org/r/20260525-exportd-netlink-v2-0-40003fed450c@kernel.org
-
----
-Jeff Layton (6):
-      sunrpc: add per-netns per-procedure call counts to svc_stat
-      sunrpc: use per-net counts in svc_seq_show()
-      nfsd: implement server-stats-get netlink handler
-      sunrpc: remove unused svc_version vs_count field
-      nfsd: count NFSv4 callback operations per netns
-      nfsd: export NFSv4 callback op stats via netlink
-
- Documentation/netlink/specs/nfsd.yaml | 111 +++++++++++++++
- fs/lockd/svc4proc.c                   |   4 -
- fs/lockd/svcproc.c                    |   7 -
- fs/nfs/callback_xdr.c                 |   6 -
- fs/nfsd/localio.c                     |   3 -
- fs/nfsd/netlink.c                     |   5 +
- fs/nfsd/netlink.h                     |   2 +
- fs/nfsd/netns.h                       |  12 +-
- fs/nfsd/nfs2acl.c                     |   3 -
- fs/nfsd/nfs3acl.c                     |   3 -
- fs/nfsd/nfs3proc.c                    |   3 -
- fs/nfsd/nfs4callback.c                |   7 +-
- fs/nfsd/nfs4proc.c                    |   3 -
- fs/nfsd/nfs4state.c                   |   2 -
- fs/nfsd/nfsctl.c                      | 250 +++++++++++++++++++++++++++++++++-
- fs/nfsd/nfsproc.c                     |   3 -
- fs/nfsd/stats.c                       |   2 +-
- fs/nfsd/stats.h                       |   5 +-
- include/linux/sunrpc/stats.h          |   6 +
- include/linux/sunrpc/svc.h            |   1 -
- include/uapi/linux/nfsd_netlink.h     |  36 +++++
- net/sunrpc/stats.c                    |   2 +-
- net/sunrpc/svc.c                      |  63 ++++++++-
- 23 files changed, 492 insertions(+), 47 deletions(-)
----
-base-commit: 6f90c7618528b5ca5887f8c6057f26dcc7a27a99
-change-id: 20260316-exportd-netlink-1c9fb52536e3
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.54.0
 
 
