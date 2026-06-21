@@ -1,107 +1,162 @@
-Return-Path: <linux-nfs+bounces-22731-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22732-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CBAKNy3YNmr9FQcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22731-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2026 20:13:01 +0200
+	id Wl1FGTY5N2pTLgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22732-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2026 03:07:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EFE36A972F
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2026 20:13:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A35D66A9F5A
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2026 03:07:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="UCdI0yY/";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22731-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22731-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MTAcIkFU;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22732-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22732-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C2E613004F07
-	for <lists+linux-nfs@lfdr.de>; Sat, 20 Jun 2026 18:13:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 49B69300EABC
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2026 01:07:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 860E0330330;
-	Sat, 20 Jun 2026 18:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 951041A683B;
+	Sun, 21 Jun 2026 01:06:59 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF75175A80;
-	Sat, 20 Jun 2026 18:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B9311CA9;
+	Sun, 21 Jun 2026 01:06:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781979179; cv=none; b=bbCDjWBB9lVKCqvuWUZzNPLoPlqmV5CeyZ1JesiioF+AsYRAWYA01qb0qRa2oxg5ScUzNUXEgZ8VoZeGDeLvdUzbIu42erd3KjjxO9X3nvxCAgPp5418xTRYLYQfX4Lb98bD6xbO+qFfR+HcRmcXZwGS0Dus9ffdX8PE+aVT6i8=
+	t=1782004019; cv=none; b=APE4IFYyzcaQ2qyVyJzSvVi4CwlxEymDEl2t2WEdGEyPYbxxVXa8vxH3QgzqlYUgPbp9Nv7ztAvyjnyOadPXwYv7aRBowS4xu7u8zXuX5c0RAzd7zUBEWtZWhzH9yaGQUI4H9IbYpkwpDxdvG3jRXAzaKBDbuyqzhs5gtIwauqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781979179; c=relaxed/simple;
-	bh=AkPCgh/fHn9RWC8DBqZy5D9Mpbi2qfE48CSlpiFJuKQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pNuBlFKkTd7F3GIvxV2HaOu0p+PyFa/QwTHhYmDXycoKr9Y3FRoPSE/lynfK23IogDv07DNMumBd9h+/KY6/gjZHMBixMNH+kALTe2fADQ6iL4aLAqKfBTy7zzlXx+U8wZPCVmmn4i0a4/BngPteI+MNAldRUKJZLJCv2Ee9h60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCdI0yY/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146451F000E9;
-	Sat, 20 Jun 2026 18:12:56 +0000 (UTC)
+	s=arc-20240116; t=1782004019; c=relaxed/simple;
+	bh=4RFTVGMBJ1c4pj7Q+YW0xpRqzBelNmDe0HHsvkLG7Yc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HwYgXZQHqvhtjf7N4msZ3TXBSq6s2NoAx/YTcdGXiYrZ5R/eQZbgNuov7Zibz9r7mlpYaayQRMaQ2HtjW2g3eNXvw1Ahol/81myyouFbE21wTMjW+2qo1H8Bq7peswa3rw0bxXwRVoummWF0/Gs47k8HiR62VkpJYp5oXG4ZUyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTAcIkFU; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7481F000E9;
+	Sun, 21 Jun 2026 01:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781979177;
-	bh=c8GmJuUOlPtcdTI/eN/NIq1baA/SbZ8+ASJpqEsqbRc=;
-	h=From:Date:Subject:To:Cc;
-	b=UCdI0yY/rHzxxnIVcZ/edkeQYDNaSGC5aNCHxPTZsCqhCZA3M8sLymWGF5ZIDWVWe
-	 gzQZc1C358HaWseRMTCfSqyJNDOt1hZzZfih29C0GP0bHvxAdkef1vC1XE9M/yaz+G
-	 gpNAZ9Sf8jdQHAeI+t6pXeuZonztBapBuAj9nWkxiioOTejrOL9/jpuDyP1zfW+BN0
-	 AOOTDPPuL250oNhPQNGkpGuE6wc60xbiMbPO2hcroTtXqni8TQm1Cx3Hx1Q6EVSszh
-	 7OaubUTg4/Y6DAOt4nRe4T0HVxLhrK/0cL2j0Ibqmnid9XIA81Ivcpb8Uisrox2IMh
-	 R0SFJLfMQE2ow==
+	s=k20260515; t=1782004018;
+	bh=3jucXQk9edbNM1o3qwDMcaJHxBT5Qlw0Z0AotdxsJq4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=MTAcIkFUO16Bz5DytbFojbEqRKHi8l/rNww1GP4Zzn+Qcp01SW1rZjM1O2ba1BQ3N
+	 yN395LscGp0cnkfmXp8OJ9IjtQ3HWjNZXTIhO1jx1A80D26PcHxXJfJcDm42K6O6Bd
+	 QHnSXn89fz7nnuSjkTW2ltrDLiz10ciC/SkQZDUiN8CeVnygXOrhUl51157e90JWMD
+	 mvQ4UaspFKkIC56JAzq4yvX4iotK45/HXd8ZEmkfsFJeEpmFdkdZeiIl4JIzReORah
+	 lWf0vI2QBSnW1r5tsaF06mKrnlkDJt7c3yeD/h3D0awIsZMgQ+ANCSBIn64G/GzPKf
+	 Vi01YufSXDh2Q==
+Message-ID: <d0daedc8491e046c036bfe4e6915dc677e79428e.camel@kernel.org>
+Subject: Re: [PATCH 0/4] nfs: remove the fileid field from struct nfs_inode
 From: Jeff Layton <jlayton@kernel.org>
-Date: Sat, 20 Jun 2026 14:12:44 -0400
-Subject: [PATCH v3] nfsd: recall deleg if a requested dir attr change can't
- be encoded
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Jonathan Corbet
+	 <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Date: Sat, 20 Jun 2026 21:06:56 -0400
+In-Reply-To: <20260512-nfsino-v1-0-284720522f4c@kernel.org>
+References: <20260512-nfsino-v1-0-284720522f4c@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260620-dir-deleg-fixes-v3-1-4ff9a315c793@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WNwQ6CMBBEf4X07Jp2gQKe/A/jAdoFGgk1W9NoC
- P9u4aQxHt9M5s0iArGjIE7ZIpiiC87PCfJDJszYzgOBs4kFStRSqwqsY7A00QC9e1IAMq2pC9m
- UXV2ItLoz7UUaXa6JRxcenl/7QVRb+t8VFUjIsavLLtfaYHO+Ec80HT0PYpNF/BQ0vwIEBa1F7
- AlNZSv7JVjX9Q2lnZOd8AAAAA==
-X-Change-ID: 20260617-dir-deleg-fixes-ecac84095b84
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8586; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=AkPCgh/fHn9RWC8DBqZy5D9Mpbi2qfE48CSlpiFJuKQ=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqNtgkCbDvx2WYKamsVHMRTxzjlzqRX8e9tAxqX
- 3AXhb0T/oyJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCajbYJAAKCRAADmhBGVaC
- FZp6D/9qwQzFZsRRltGpnRk1KXytALpoFmN2Uby7yjQBYXKXE62MgaKpk7uOaLPzV4OCi7LcF+N
- Xe2ecrF/mjtvLBti/zIdHXpZBtOlS0cU5UNbD3wmLZkq6DtZYJcBUmvW6UcdZkNe26Kuaf2EXC3
- 1fxEkDAGmWQ672/R7v8zUqD6zf6I8fDD7xP79hWSi3UXN/hb8H26vQI9mxnGCX4MqWt71KfYEm6
- NSfpyL94TdsVzErVsQDoiAIr+lgu+sv+xZyj0xobahbl4ZHkUp/Jso8CON7oPhk//u2vSouIcKR
- /3Pgjolf4saNlGKbmma1T0Os0C2NgXPoPyZ1DcZxwsh5pLcdKLAzqPoGbOJN4Ry8RBFovRsA5zc
- 5xnMtkoMyS3PCxg9njC8+NPnGhZfAuYfRp/JlBsefp74DDND2DooUpj8Q4yRCEBkvUqpVx8wLMH
- rWK0g3bLQv4xdocr6Q0DSjzjcGebVVU9L1nKf/z7sBp9qfuhovKqXaVI2bKg/wa6bewREwi7ppY
- cHAMv3QZNJ6cizqPjiHFdyLFRc5tiSGb3LKgWL/uv5TAckemBYZ6PV7g0L4vPfB7uMHSzl5uTky
- mrERXVC9uo/irJiK8g/wF4nnvpBJMUyGScBT1mSo6He2LmbcmNfhf+Xu+8/UdixZTx/7jDRPhEo
- imv/Z3WMFk33XEg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22731-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-22732-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -112,243 +167,62 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6EFE36A972F
+X-Rspamd-Queue-Id: A35D66A9F5A
 
-When the client requested NOTIFY4_CHANGE_DIR_ATTRS,
-nfsd4_cb_notify_prepare() tried to append the dir attribute change to
-the CB_NOTIFY, but silently dropped it if the attrmask space
-reservation failed or nfsd4_encode_dir_attr_change() failed to marshal
-the change into the buffer. It then returned true and transmitted a
-CB_NOTIFY lacking the requested notification, leaving the client's
-cached directory attributes stale with no indication.
-
-RFC 8881 s10.9.4 requires the server to recall the delegation when the
-directory changes in a way that is not covered by the notification.
-Treat a failure to encode the dir attribute change like the per-event
-encode failures already handled in the loop above: set error and fall
-through to out_recall.
-
-The granted notification mask and the requested dir attribute mask come
-from independent fields of the GET_DIR_DELEGATION request, so a client
-can be granted NOTIFY4_CHANGE_DIR_ATTRS while requesting no specific dir
-attributes. nfsd4_encode_dir_attr_change() now distinguishes a genuine
-encode failure (which forces the recall) from that benign case (which
-simply omits the event).
-
-For that distinction to hold, nfsd4_setup_notify_entry4() must not mask
-genuine failures as an empty attribute set. It previously routed three
-different conditions through its noattrs label and returned true with a
-zero-length attribute set:
-
-  - a NULL or negative dentry (no attributes to report),
-  - a vfs_getattr() failure, and
-  - an nfsd4_encode_attr_vals() failure (XDR buffer exhaustion).
-
-Only the first is benign; the latter two are genuine failures that were
-indistinguishable from the "no attributes requested" case, so a
-requested change could still be silently dropped (the per-event entries
-encoded by nfsd4_encode_notify_event() were affected the same way).
-Return false on a vfs_getattr() or nfsd4_encode_attr_vals() failure so
-the error propagates to the caller and the delegation is recalled, and
-reserve the noattrs path for the NULL or negative dentry case.
-
-While we're in there, also remove an unneeded check for
-NOTIFY4_CHANGE_DIR_ATTRS from nfsd4_encode_dir_attr_change().
-
-Fixes: 757a16cd93d5 ("nfsd: add support to CB_NOTIFY for dir attribute changes")
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Tue, 2026-05-12 at 12:12 -0400, Jeff Layton wrote:
+> v7.1-rc1 contains patches to make inode->i_ino to be a u64. With this
+> change, there is no need to keep a separate "fileid" field in struct
+> nfs_inode.
+>=20
+> This patchset eliminiates that field, and the inode number hashing
+> machinery that is no longer needed. This shaves 8 bytes off of each
+> nfs_inode.
+>=20
+> Trond/Anna: please consider this for v7.2.
+>=20
+> Assisted-by: Claude:claude-opus-4-6
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Jeff Layton (4):
+>       nfs: store the full NFS fileid in inode->i_ino
+>       nfs: remove nfs_compat_user_ino64() and deprecate enable_ino64
+>       nfs: replace NFS_FILEID() and nfsi->fileid with inode->i_ino
+>       nfs: remove fileid field from struct nfs_inode
+>=20
+>  Documentation/admin-guide/kernel-parameters.txt |  7 --
+>  fs/nfs/dir.c                                    |  4 +-
+>  fs/nfs/export.c                                 |  6 +-
+>  fs/nfs/filelayout/filelayout.c                  |  4 +-
+>  fs/nfs/flexfilelayout/flexfilelayout.c          |  6 +-
+>  fs/nfs/inode.c                                  | 87 +++++++++----------=
+------
+>  fs/nfs/nfs4proc.c                               |  4 +-
+>  fs/nfs/nfs4trace.h                              | 79 ++++++++++---------=
 ---
-This version should address Chuck's comments about the NULL pointer
-handling.
----
-Changes in v3:
-- Recall delegations on vfs_getattr() failure instead of sending empty attr set
-- Link to v2: https://lore.kernel.org/r/20260619-dir-deleg-fixes-v2-1-ad22fe2c7d7d@kernel.org
+>  fs/nfs/nfstrace.h                               | 84 ++++++++++++-------=
+-----
+>  fs/nfs/pagelist.c                               |  2 +-
+>  fs/nfs/pnfs.c                                   |  2 +-
+>  fs/nfs/unlink.c                                 |  2 +-
+>  fs/nfs/write.c                                  |  2 +-
+>  include/linux/nfs_fs.h                          | 25 -------
+>  14 files changed, 123 insertions(+), 191 deletions(-)
+> ---
+> base-commit: 5d6919055dec134de3c40167a490f33c74c12581
+> change-id: 20260512-nfsino-1f9a8ca2f3ed
+>=20
+> Best regards,
 
-Changes in v2:
-- Allow nfsd4_encode_dir_attr_change() to return ERR_PTR when there are errors
-- Drop unneeded NOTIFY4_CHANGE_DIR_ATTRS check
-- Link to v1: https://lore.kernel.org/r/20260617-dir-deleg-fixes-v1-0-32b85b366c29@kernel.org
----
- fs/nfsd/nfs4state.c | 43 ++++++++++++++++++++++++--------------
- fs/nfsd/nfs4xdr.c   | 60 ++++++++++++++++++++++++++++++-----------------------
- 2 files changed, 62 insertions(+), 41 deletions(-)
+Ping?
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b830aed7ae39..4ae5d65c056a 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3598,23 +3598,36 @@ nfsd4_cb_notify_prepare(struct nfsd4_callback *cb)
- put_event:
- 		nfsd_notify_event_put(nne);
- 	}
--	if (!error) {
--		if (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)) {
--			u32 *maskp = (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-+	if (!error && (dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS))) {
-+		u32 *maskp = (u32 *)xdr_reserve_space(&stream, sizeof(*maskp));
-+		u8 *p;
- 
--			if (maskp) {
--				u8 *p = nfsd4_encode_dir_attr_change(&stream, dp, nf);
--
--				if (p) {
--					*maskp = BIT(NOTIFY4_CHANGE_DIR_ATTRS);
--					ncn->ncn_nf[count].notify_mask.count = 1;
--					ncn->ncn_nf[count].notify_mask.element = maskp;
--					ncn->ncn_nf[count].notify_vals.data = p;
--					ncn->ncn_nf[count].notify_vals.len = (u8 *)stream.p - p;
--					++count;
--				}
--			}
-+		if (maskp)
-+			p = nfsd4_encode_dir_attr_change(&stream, dp, nf);
-+		else
-+			p = ERR_PTR(-ENOBUFS);
-+
-+		if (IS_ERR(p)) {
-+			/*
-+			 * The client asked to be told about dir attr changes
-+			 * but the change could not be encoded. RFC 8881
-+			 * s10.9.4 requires the server to recall the delegation
-+			 * rather than drop a requested notification, so fall
-+			 * through to recall. A NULL return instead means there
-+			 * were no attributes to report, so omit the event in
-+			 * that case.
-+			 */
-+			error = true;
-+		} else if (p) {
-+			*maskp = BIT(NOTIFY4_CHANGE_DIR_ATTRS);
-+			ncn->ncn_nf[count].notify_mask.count = 1;
-+			ncn->ncn_nf[count].notify_mask.element = maskp;
-+			ncn->ncn_nf[count].notify_vals.data = p;
-+			ncn->ncn_nf[count].notify_vals.len = (u8 *)stream.p - p;
-+			++count;
- 		}
-+	}
-+	if (!error) {
- 		ncn->ncn_nf_cnt = count;
- 		nfsd_file_put(nf);
- 		return true;
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 5282e00805af..b37290b723f5 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4291,9 +4291,21 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	parent = (dentry == path.dentry);
- 	path.dentry = dentry;
- 
--	/* FIXME: d_find_alias for inode ? */
--	if (!path.dentry || !d_inode(path.dentry))
--		goto noattrs;
-+	/*
-+	 * A NULL or negative dentry has no attributes to report. This is
-+	 * expected, e.g. for the old entry of a rename or for an entry that
-+	 * has already been removed, so encode an empty attribute set rather
-+	 * than failing.
-+	 */
-+	if (!path.dentry || !d_inode(path.dentry)) {
-+		attrmask[0] = 0;
-+		attrmask[1] = 0;
-+		attrmask[2] = 0;
-+		ne->ne_attrs.attr_vals.data = NULL;
-+		ne->ne_attrs.attr_vals.len = 0;
-+		ne->ne_attrs.attrmask.count = 1;
-+		return true;
-+	}
- 
- 	/*
- 	 * It is possible that the client was granted a delegation when a file
-@@ -4302,7 +4314,7 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 	 */
- 	ret = vfs_getattr(&path, &args.stat, CB_NOTIFY_STATX_REQUEST_MASK, AT_STATX_SYNC_AS_STAT);
- 	if (ret)
--		goto noattrs;
-+		return false;
- 
- 	args.change_attr = nfsd4_change_attribute(&args.stat);
- 
-@@ -4326,18 +4338,10 @@ nfsd4_setup_notify_entry4(struct notify_entry4 *ne, struct xdr_stream *xdr,
- 
- 	status = nfsd4_encode_attr_vals(xdr, attrmask, &args);
- 	if (status != nfs_ok)
--		goto noattrs;
-+		return false;
- 
- 	ne->ne_attrs.attr_vals.len = (u8 *)xdr->p - ne->ne_attrs.attr_vals.data;
- 	return true;
--noattrs:
--	attrmask[0] = 0;
--	attrmask[1] = 0;
--	attrmask[2] = 0;
--	ne->ne_attrs.attr_vals.data = NULL;
--	ne->ne_attrs.attr_vals.len = 0;
--	ne->ne_attrs.attrmask.count = 1;
--	return true;
- }
- 
- /**
-@@ -4439,28 +4443,32 @@ u8 *nfsd4_encode_notify_event(struct xdr_stream *xdr, struct nfsd_notify_event *
-  * @nf: nfsd_file opened on the directory
-  *
-  * Encode a dir attr change event.
-+ *
-+ * Return: a pointer to the start of the encoded event on success; NULL
-+ * if there were no requested attributes to report, in which case the
-+ * caller should omit the event; or an ERR_PTR if the event was requested
-+ * but could not be marshalled into @xdr, in which case the caller should
-+ * recall the delegation.
-  */
- u8 *nfsd4_encode_dir_attr_change(struct xdr_stream *xdr, struct nfs4_delegation *dp,
- 				 struct nfsd_file *nf)
- {
- 	struct dentry *dentry = nf->nf_file->f_path.dentry;
- 	struct notify_attr4 na = { };
--	bool ret;
--	u8 *p = NULL;
--
--	if (!(dp->dl_notify_mask & BIT(NOTIFY4_CHANGE_DIR_ATTRS)))
--		return NULL;
-+	u8 *p;
- 
- 	/* RFC 8881 s10.4.3: ne_file must be a zero-length string for dir attrs */
--	ret = nfsd4_setup_notify_entry4(&na.na_changed_entry, xdr,
--					dentry, dp, nf, "", 0);
-+	if (!nfsd4_setup_notify_entry4(&na.na_changed_entry, xdr,
-+				       dentry, dp, nf, "", 0))
-+		return ERR_PTR(-ENOBUFS);
- 
--	/* Don't bother with the event if we're not encoding attrs */
--	if (ret && na.na_changed_entry.ne_attrs.attr_vals.len) {
--		p = (u8 *)xdr->p;
--		if (!xdrgen_encode_notify_attr4(xdr, &na))
--			p = NULL;
--	}
-+	/* No requested attributes to report; omit the event */
-+	if (!na.na_changed_entry.ne_attrs.attr_vals.len)
-+		return NULL;
-+
-+	p = (u8 *)xdr->p;
-+	if (!xdrgen_encode_notify_attr4(xdr, &na))
-+		return ERR_PTR(-ENOBUFS);
- 	return p;
- }
- 
-
----
-base-commit: 6f90c7618528b5ca5887f8c6057f26dcc7a27a99
-change-id: 20260617-dir-deleg-fixes-ecac84095b84
-
-Best regards,
--- 
+i just noticed that this never made v7.2. Maybe consider for v7.3?
+--=20
 Jeff Layton <jlayton@kernel.org>
-
 
