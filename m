@@ -1,136 +1,154 @@
-Return-Path: <linux-nfs+bounces-22767-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22770-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id K5bNDltoOWrLrwcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22767-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 18:52:43 +0200
+	id V8rqBB+aOWoUvgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22770-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 22:25:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA62D6B14C3
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 18:52:42 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A09BD6B23FB
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 22:25:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=C4kpffoq;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22767-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22767-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=medichon.fr header.s=ovhmo3801317-selector1 header.b=BsIS7TxL;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22770-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22770-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BED1C301A729
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:52:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 17C1230368B6
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 20:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2D233A9CB;
-	Mon, 22 Jun 2026 16:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5250034D3B0;
+	Mon, 22 Jun 2026 20:25:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from 2.mo561.mail-out.ovh.net (2.mo561.mail-out.ovh.net [46.105.75.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8E733CEA2;
-	Mon, 22 Jun 2026 16:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED46B34D3B2
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jun 2026 20:24:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782147125; cv=none; b=m7duQFja7eQHu4lW779ji7JgVH5TgtlQcj8WbybBHd8/8cZ3rBWlKt+9G1rVixO4zEPipVhkbFeqcQSrZ8reMChMhBS0taleu8jmMNt8HtS+1y/dZvryrGPNE8X8UQA9k0FZlfkcypGvWkr+/yXpzb2G7pblqcpSbLirgwl82ks=
+	t=1782159900; cv=none; b=DYjOEZRNFoLtFNhXEHiwz0jM6/bYXx/l81g0TIRNMLAaNwjwea+bFPz3zTj3taVOVYyrN5xxfAouBaVFW+TQ72paGqw29q2rbs/0sGDwN/b76XfED7QpYa/RYeQ/XbNkBhN466SHqxgUVW6A8IrVWNnh/52WyhYmWtfwfvK+jk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782147125; c=relaxed/simple;
-	bh=6+P9pSwfaRh/FJ2Ae5JWmxAni7SXDOgYmFtpbfKSAtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gPkpG1A6L6WLr8KWB1r6iY2fmfDeVx30ixsSRN58DUXcA1a/XkmG+Mi5AL5XnnBjwsD+pOkrrlyqHvQO1MaXb3i2aoLRoZsYkql6QPDsF60/m99eFthU7idN6zAgqozv/+SA0Df+51SQLmeG4YYt7ACjO+iQAKD6j9BUX08ates=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4kpffoq; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF0041F000E9;
-	Mon, 22 Jun 2026 16:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782147124;
-	bh=KXhjFgbhEvwE+7GGBfh7My0VIVq6OjTLQwMtEz0hufY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=C4kpffoqKELHy6h2iIonBbM+lwHOlkqgrFXueJXDfdgl75fDx8nTrSA+oGiGyoeAm
-	 8CCy0uyoOREJUge4zC6mq+dv0w+QL43toIPSNlcNAZyZKDjugsy6al/c7V2Nxly4Pl
-	 B3u0wZw90AH5q2Vforbc/8novl4n4De9d7hKEY2j9fwmOHjRuuHlA8HYlkPOQSxTMr
-	 w8OjFxrmzo3xN9JG3zdPXZhL02HItS9kysxEXgHLRRSGAVfOqOYr/WF7zxLGK20H2R
-	 AQhZ61uSQFpPSM+xdZ5/Wi01z1P5qKOyIveeDb+LOtEbWIs/Vdg1dtFfhX3DZ+GRC2
-	 IABQXBNVHhFSA==
-Date: Mon, 22 Jun 2026 12:51:54 -0400
-From: Steven Rostedt <rostedt@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Thomas
- Gleixner <tglx@kernel.org>, Julia Lawall <julia.lawall@inria.fr>, Yury
- Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- dri-devel@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
- intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 0/2] tracing: Move trace_printk.h out of kernel.h
-Message-ID: <20260622125154.6f5b9b33@fedora>
-In-Reply-To: <08b3c961-18bb-43d9-8d7f-8a87bcad0afa@infradead.org>
-References: <20260621093430.264983361@kernel.org>
-	<20260622083440.GX49951@noisy.programming.kicks-ass.net>
-	<08b3c961-18bb-43d9-8d7f-8a87bcad0afa@infradead.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1782159900; c=relaxed/simple;
+	bh=QFVNcbUmf7knt2wDTPFQrIQVeLimzfcml0Z0p5TcKIQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZnHLKLo4TD/jeBaeAvG1opULW/fKex8qN+ePux0uKs/ppDyXTkI8bOo5KLMxbpxyKKCzXqr2+vEuuJVdKjMEpMxYN9m+7K/tvmt9ZL1bg/u2A4WzxFmXcWlVnqWuX+5HLzkv8nwjOUr9JsS4n7+ZQPi/zaK9rMN+QQObhQgXLzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=medichon.fr; spf=pass smtp.mailfrom=medichon.fr; dkim=pass (2048-bit key) header.d=medichon.fr header.i=@medichon.fr header.b=BsIS7TxL; arc=none smtp.client-ip=46.105.75.36
+Received: from director6.ghost.mail-out.ovh.net (unknown [10.110.37.251])
+	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4gkbVl58B3z5wR0
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jun 2026 17:56:47 +0000 (UTC)
+Received: from ghost-submission-7d8d68f679-ghq26 (unknown [10.110.188.223])
+	by director6.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 1A2C58017F;
+	Mon, 22 Jun 2026 17:56:47 +0000 (UTC)
+Received: from medichon.fr ([37.59.142.101])
+	by ghost-submission-7d8d68f679-ghq26 with ESMTPSA
+	id evTZOl53OWrOIhsAiGv3aQ
+	(envelope-from <abo@medichon.fr>); Mon, 22 Jun 2026 17:56:47 +0000
+X-OVh-ClientIp:88.190.90.129
+From: Arnaud Bonnet <abo@medichon.fr>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	code@agatha.dev,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	Arnaud Bonnet <abo@medichon.fr>
+Subject: [PATCH 0/2] nfs: refactor bit operations using clear_and_wake_up_bit
+Date: Mon, 22 Jun 2026 19:55:09 +0200
+Message-ID: <cover.1782148639.git.abo@medichon.fr>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+x-ovh-tracer-id: 8601593814169181790
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: dmFkZTEYiaRYT3r9jlIA0oEG4B6jh3fy9pIW0eb/Th3QyottCtY5waIWuKOMmq16quGabDO2oXzpz1USi008BQP4mzbxJ3kZ5hl29krUeN2bkEXUYNdhne96a4pl7N5NG74aO0TuD1Rl5nrYv9Wme0yAz9i0KzyaUk6cWKoYaLQKTDRzv/hrNhGUtVW1VsPgoaFm9ieK3H/yJo+V1Rw974yQdNkinl/OVG4Z1rYtE/hB/2abuNcJeGMio34EqprhYAf0nqkz70kz2xTyhrwcTqXaJVv7knDnj/mkbzuf2XSeoDP7PRFw8nc4PDO1L4UF/xdE+/7vsoGnT1BEuAgGVCDXLRgqRF818u8eK5as0D/NGJO1tOFiSabKZ96hZ+CF9Tal6dfp6lt42k3alLAvr4cQhij3VPbWFuNvL7sfXKpLANT4FGzZ0r/A/qg00WT5JridXPbM9HUS/2GENJRgeMifCAl+twO1+zHKIy3LBqJTeyHYOdx3Ymf66ldtY6uB8jGobZjhKKmTRCv3IBBE4G0gXginOGyjL0oI06lS3mG8JUK/qwPeYp/04BkRYxBDwkgho00qqstMh28WSYVsxKHk9SiXGJ01CPRbpSAWlRRtHf6kiBUPvBxTB/SzFQxXjFPIRbSTLjCQDYj+Nc+xT9eCOaLTABPjZF3nE3MGCzD6n0yb7Q
+DKIM-Signature: a=rsa-sha256; bh=I4XupfxaOi3hDJ4E5xk1CLtm675cjM3xvj6zaVMvTMc=;
+ c=relaxed/relaxed; d=medichon.fr; h=From; s=ovhmo3801317-selector1;
+ t=1782151007; v=1;
+ b=BsIS7TxLyn3KoZgs7poe3f9/tHUf1UtY65+qhlFWt9OP2FGFZxjNn4aiRBjBgX6ZiFdVDaOK
+ 29ghcmcYFb4V4Q8ufkTVqZvFTlj6ZYRJWpXgI+3XePBHQCVFzEoaCU/xsgRwmYigPkF6pt0Hj71
+ 0Zu01+5ek1L4SkiEljDFY+7Ys32ws9k/cApEpC9Ji67NjR7zHVTcmd4kAaDdYaIroDc8spe7opT
+ E9RgX67KURQrRZWSw4dAmTYt293nFkFkJ5/HWGcq+1p8vx88M7qjFH0sN0ONxuavuzdGhs3++82
+ CxtWasjEXtZ3w31UVA75OMyoZF5YM50Hb2nGY3+LLyKpA==
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[medichon.fr:s=ovhmo3801317-selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22767-lists,linux-nfs=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[rostedt@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:rdunlap@infradead.org,m:peterz@infradead.org,m:linux-kernel@vger.kernel.org,m:linux-trace-kernel@vger.kernel.org,m:mhiramat@kernel.org,m:mark.rutland@arm.com,m:mathieu.desnoyers@efficios.com,m:akpm@linux-foundation.org,m:torvalds@linux-foundation.org,m:bigeasy@linutronix.de,m:john.ogness@linutronix.de,m:tglx@kernel.org,m:julia.lawall@inria.fr,m:yury.norov@gmail.com,m:linux-doc@vger.kernel.org,m:linux-kbuild@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:dri-devel@lists.freedesktop.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-arm-kernel@lists.infradead.org,m:linux-rdma@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-ext4@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:kvm@vger.kernel.org,m:intel-gfx@lists.freedesktop.org,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rostedt@kernel.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[infradead.org,vger.kernel.org,kernel.org,arm.com,efficios.com,linux-foundation.org,linutronix.de,inria.fr,gmail.com,lists.ozlabs.org,lists.freedesktop.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-22770-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:code@agatha.dev,m:skhan@linuxfoundation.org,m:me@brighamcampbell.com,m:jkoolstra@xs4all.nl,m:abo@medichon.fr,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[abo@medichon.fr,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,agatha.dev,linuxfoundation.org,brighamcampbell.com,xs4all.nl,medichon.fr];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[medichon.fr];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[abo@medichon.fr,linux-nfs@vger.kernel.org];
+	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[medichon.fr:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,fedora:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,infradead.org:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,agatha.dev:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AA62D6B14C3
+X-Rspamd-Queue-Id: A09BD6B23FB
 
-On Mon, 22 Jun 2026 09:40:45 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+Several functions in nfs code use the exact following sequence of calls
+when dealing with flags:
+	
+	clear_bit_unlock();
+	smp_mb__after_atomic();
+	wake_up_bit();
 
-> > Did you forget your C 101 class? If you use a function, you gotta
-> > include the relevant header.  
-> 
-> Also item #1 in Documentation/process/submit-checklist.rst.
+Since commit 8236b0ae31c8 ("bdi: wake up concurrent wb_shutdown()
+callers.") came the helper clear_and_wake_up_bit() for this exact
+purpose, and has since been adopted by several subsystems, including
+vfs.
 
-What is that? Remove all trace_printk()s before you submit?
+This function is already used in files such as nfs4state.c and
+pnfs_nfs.c and this serie aims to continue this effort, which also
+allows to remove some no longer used code.
 
-Because that is what you should do. But now you also need to remember
-to remove the include <linux/trace_printk.h> too. Or, I guess if
-someone uses it a lot, they may just keep it in their files without the
-trace_printk()s.
+Tested on x86 hardware using a loopback pNFS SCSI layout:
+* doing image compression/decompression using xz and
+* recompiling tinyconfig kernels on the remounted partition
+No error reported under sanitizers.
 
--- Steve
+Suggested-by: Agatha Isabelle Moreira <code@agatha.dev>
+Link: https://kernelnewbies.org/Beginner%20Cleanup%20and%20Refactor%20Tasks%20by%20Agatha%20Isabelle%20Moreira#task_007
+Signed-off-by: Arnaud Bonnet <abo@medichon.fr>
+---
+
+Arnaud Bonnet (2):
+  nfs: replace atomic bitops sequence with clear_and_wake_up_bit helper
+  nfs: refactor pNFS functions using clear_and_wake_up_bit
+
+ fs/nfs/inode.c |  4 +---
+ fs/nfs/pnfs.c  | 35 ++++++++++-------------------------
+ 2 files changed, 11 insertions(+), 28 deletions(-)
+
+-- 
+2.53.0
+
 
