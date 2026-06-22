@@ -1,187 +1,157 @@
-Return-Path: <linux-nfs+bounces-22765-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22766-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id M8vvH7hLOWqQqAcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22765-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:50:32 +0200
+	id wJBeHLBlOWp8rgcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22766-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 18:41:20 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC1456B0783
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C95096B1341
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 18:41:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EmN+Dtqe;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22765-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22765-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=infradead.org header.s=bombadil.20210309 header.b=wSEig2tX;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22766-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22766-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=infradead.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EDDF73075DC1
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 14:45:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6023330305FB
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:40:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA2EA2DC762;
-	Mon, 22 Jun 2026 14:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E1433A9CB;
+	Mon, 22 Jun 2026 16:40:52 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9568F2D7DCE
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Jun 2026 14:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64312238D52;
+	Mon, 22 Jun 2026 16:40:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782139541; cv=none; b=G1W1aGEUCiCK2Xy071+DlFAssFpWL+GI7XffEIw3hZEcKN/o+1PBuTykP7Fh4qAlRPZm54kWJO9e3e1CeW/CWPGL9lA9BDvzW5DZqOnh3vLmHBryqywIwxMrJ3gu1ujJmYbjZtn7NKZBwFrGI4ii1zynlplITV7lhrsNO2zOsbQ=
+	t=1782146452; cv=none; b=TaSOTJJ2K8BH15QgQZ+a0WtpyrNnprsNFfuAjX8ay7JzxQwZ1eP3ZQ4swrr0ZzISQABsMzXtKzcXoBDTVJcdNlZsGN9FJFJ56rliV+A/L/7S6VZ6qcTTNsJFE2fjh1x3Kj2HYGIuxyOMfN+lu2K8qP/RnRDzjqlPEFdg6HYgdJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782139541; c=relaxed/simple;
-	bh=4nklSuMgY84tg6AVzlLxLrmO7rOR764dxgdwRosB0Uw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lcCMW3l2ILxG+jx5uSwOBbLbAOnbLEIyh1yuSJ4aTrJoBpNmUKrRMUjvSgro2TRd5JftHYVJQrwWeQo10jYaH2798nt0SceaNueO7I45phU+a1Z9NZICgEt0IhXsMWEc4ccii+Nv7GjGLDicSFWzWdkchAv6PUX72YPuH4XrcXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmN+Dtqe; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A4B1F00A3A;
-	Mon, 22 Jun 2026 14:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782139540;
-	bh=xU/nTiq2pQqlLwjLs9IZQZyXT6Yiu/KI7V0J3uNL6o8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=EmN+Dtqe73aa894/oa71IXzhT65K1imQ6/Y1DGRLe2BgXp+3PESIAl2jDZBE8EH3v
-	 xN5V60aYZxS7NR+XtHRoyh+zmsqUoZVsyr1cnA8AvRD1KqBp7k+5mHrgCc8aBCdXld
-	 FY+lda3MxeWDC8bm8RRyNAV4l49kRtAiqUgZXyaSzsq2F+cnY0pB6WXcMvBDc6ww1m
-	 abbJA3+94wl57CsXr9oMFCmFWnxTE/v9ZzL1RiCMInvCJEIzq7zotG2yeLXXj24iM5
-	 zsWh1rYmrX3/FyZ3oBfd4ZKWmSDcUBgH2ZDS76KwxM/hzmrfSg+6zzuw0lPQ0HoUPc
-	 qySbj3o8iWepA==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 7F255F40085;
-	Mon, 22 Jun 2026 10:45:39 -0400 (EDT)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-02.internal (MEProxy); Mon, 22 Jun 2026 10:45:39 -0400
-X-ME-Sender: <xms:k0o5av2mx8-bUG9lqLr6LrxV-6lSaAV_WpU09-NS5Kje9ecFPZVq2Q>
-    <xme:k0o5ao471AqH6ARU5BAVVRd73srTayvBRCBJ8zYptJdhOD77QjDgY2KRDCEfXj3sV
-    qh15Ox2zkCzDp9SYyV5rQ1rb6MHBgWhG9dq3FZCo1KmyI2cgwJ6s8w>
-X-ME-Proxy-Cause: dmFkZTGKdKfplLa92Z8rZWslfY9FIS4KUjQ4Csrkd6wOIzjq1ARdURIx1UXsrecVHohg/M
-    eFqMLlrTQa8XbBBgcCvrrCmQtj3MuVk0rzho+SjS4E+/lnnb6QJDqFOKRZxPg7JIK9XH0O
-    Sm4GdcSPg9jCALQ5tCtCCVKk6CDZHUpoZOqmfCk6WLj/I5ULaAtyEBoeYwIkiLKmjkZoko
-    JEWPQ97uHobKVN75gHfTZLC2kygAkTcmkMKH5uCBZGayyPFIHUmyp+zWi4/82OfH3p06p9
-    8wqEPjhTAawtmBYw48C6GPUorFdbW1WgOuOMc/wRrl4ooesDEjf1ttKTgepnUOC8f+n1V2
-    PGNLOYUptBUFYFps0wNoOk/Wiaa1G7Jkr2ZBl+yiSZISuyq+nrnMu+DfLT5G8lDm5EDvqm
-    HPSTa1XIXs1cJFei0T1cCntpUcXPuK50e3OxuR2F74RwFlgnI9Tom9LJvDRjLwcAr3aKoE
-    rd+SciblfxwRGcxvmIIUaIS2FusXCHbnlGX7jltf4R4ae2LotAuSsUn0oLXtawcKvEc5kN
-    QsWTz4bFbJ69q4qPjgKqdtSqHSL2lHNcdiNBPpA8vbTxcp7K+4s88sGVBKEJYX2OtdofSr
-    QiCXnzyuoeUX1aZnENUEakJqF1iFb5shS3NcQUEKT7nPrdMDiTT9wpyl7/5A
-X-ME-Proxy: <xmx:k0o5aqa2WHR_C7mVRmidlQrFya_z76Ro_3AOjFE_4DjmT8XZS1_QBw>
-    <xmx:k0o5asfjTyHFXcXiGI_PjextYzZSi3iGwDT02VvQJg_YpEYGAhrdFw>
-    <xmx:k0o5arKDqRbMJQhV72nHpluwu2SqX_6JWXiOgPTrjqvzeqGtvNIPhA>
-    <xmx:k0o5apIcgCskcg1r00L1KE8Zx1k5Lt7FB2Q827fhDOgL25xFpW1_kw>
-    <xmx:k0o5aqXkDboCgyFyeviZDV5_R1hh3-4jHxfz5xCSh8KH30wawoQJRTa1>
-Feedback-ID: i20964851:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5DA4CB6006E; Mon, 22 Jun 2026 10:45:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1782146452; c=relaxed/simple;
+	bh=VlfRDc9QQZP3OTb4meK3W37YOlAqyrnZGvqyxn7MT0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kCP5UK+Oe6zuu9WEdqREnyk4CLmh6yw6/5xOC6WfVGItJwLfFEKMZ03qD8D3bXSVdYKfbHwcFCmoxYHXBtx0RX/8aV/H7GSI23pTauMYmOmkhdawX59Z3m6LPg/J8pS+8eXJqIMd1G89J02WUIb51ipbKT29tG/i+VbYO5zkd1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wSEig2tX; arc=none smtp.client-ip=198.137.202.133
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=c5UMhYqzW3FXITWipN5SHhAQOB1P9YUKBIDy0r3xPQw=; b=wSEig2tXNqqYlMi+DO0fVntY5n
+	xOHolZZKA+fIDoV0P9vbcZYk+nTw3ZO3neQaPzi4xv2gcxwSzlDonXdcprWpDH2QVuSHb1XstdPJW
+	SDJunku4cTdk3jGABXOOirk4qvdvStLyf+TSspP6lyyvSkgzI8foJ7iUHjAWC1KMbyOnlr8Bk2/AC
+	kSmplFs4mh7vU8qt6mUcBWozaXfZYbjxcaOPfxhFG3Z95uao/bptRNf0v9TlnvAPmJRfMGZZ11YUj
+	Kd2cOw4Cnm3blaF1fkpC/rbtuwYhawbpOJtgBO9UdgKUgdoYUd8ev6TfDb5XWKvISvKwTYP33Ug+E
+	awdU0f0A==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wbhhW-00000005CFj-0vuV;
+	Mon, 22 Jun 2026 16:40:46 +0000
+Message-ID: <08b3c961-18bb-43d9-8d7f-8a87bcad0afa@infradead.org>
+Date: Mon, 22 Jun 2026 09:40:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A_7NIs0qKC9w
-Date: Mon, 22 Jun 2026 10:45:18 -0400
-From: "Anna Schumaker" <anna@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Shuah Khan" <skhan@linuxfoundation.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Message-Id: <d0e00b35-ce08-45f9-9bc9-7dc63694c171@app.fastmail.com>
-In-Reply-To: <d0daedc8491e046c036bfe4e6915dc677e79428e.camel@kernel.org>
-References: <20260512-nfsino-v1-0-284720522f4c@kernel.org>
- <d0daedc8491e046c036bfe4e6915dc677e79428e.camel@kernel.org>
-Subject: Re: [PATCH 0/4] nfs: remove the fileid field from struct nfs_inode
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] tracing: Move trace_printk.h out of kernel.h
+To: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ John Ogness <john.ogness@linutronix.de>, Thomas Gleixner <tglx@kernel.org>,
+ Julia Lawall <julia.lawall@inria.fr>, Yury Norov <yury.norov@gmail.com>,
+ linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org
+References: <20260621093430.264983361@kernel.org>
+ <20260622083440.GX49951@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260622083440.GX49951@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.15 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22766-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[rdunlap@infradead.org,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	FORGED_RECIPIENTS(0.00)[m:peterz@infradead.org,m:rostedt@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-trace-kernel@vger.kernel.org,m:mhiramat@kernel.org,m:mark.rutland@arm.com,m:mathieu.desnoyers@efficios.com,m:akpm@linux-foundation.org,m:torvalds@linux-foundation.org,m:bigeasy@linutronix.de,m:john.ogness@linutronix.de,m:tglx@kernel.org,m:julia.lawall@inria.fr,m:yury.norov@gmail.com,m:linux-doc@vger.kernel.org,m:linux-kbuild@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:dri-devel@lists.freedesktop.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-arm-kernel@lists.infradead.org,m:linux-rdma@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-ext4@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:kvm@vger.kernel.org,m:intel-gfx@lists.freedesktop.org,m:yurynorov@gmail.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22765-lists,linux-nfs=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,arm.com,efficios.com,linux-foundation.org,linutronix.de,inria.fr,gmail.com,lists.ozlabs.org,lists.freedesktop.org,st-md-mailman.stormreply.com,lists.infradead.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	FROM_NEQ_ENVFROM(0.00)[rdunlap@infradead.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,infradead.org:mid,infradead.org:from_mime,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CC1456B0783
+X-Rspamd-Queue-Id: C95096B1341
 
-Hi Jeff,
 
-On Sat, Jun 20, 2026, at 9:06 PM, Jeff Layton wrote:
-> On Tue, 2026-05-12 at 12:12 -0400, Jeff Layton wrote:
->> v7.1-rc1 contains patches to make inode->i_ino to be a u64. With this
->> change, there is no need to keep a separate "fileid" field in struct
->> nfs_inode.
->> 
->> This patchset eliminiates that field, and the inode number hashing
->> machinery that is no longer needed. This shaves 8 bytes off of each
->> nfs_inode.
->> 
->> Trond/Anna: please consider this for v7.2.
->> 
->> Assisted-by: Claude:claude-opus-4-6
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> ---
->> Jeff Layton (4):
->>       nfs: store the full NFS fileid in inode->i_ino
->>       nfs: remove nfs_compat_user_ino64() and deprecate enable_ino64
->>       nfs: replace NFS_FILEID() and nfsi->fileid with inode->i_ino
->>       nfs: remove fileid field from struct nfs_inode
->> 
->>  Documentation/admin-guide/kernel-parameters.txt |  7 --
->>  fs/nfs/dir.c                                    |  4 +-
->>  fs/nfs/export.c                                 |  6 +-
->>  fs/nfs/filelayout/filelayout.c                  |  4 +-
->>  fs/nfs/flexfilelayout/flexfilelayout.c          |  6 +-
->>  fs/nfs/inode.c                                  | 87 +++++++++----------------
->>  fs/nfs/nfs4proc.c                               |  4 +-
->>  fs/nfs/nfs4trace.h                              | 79 ++++++++++------------
->>  fs/nfs/nfstrace.h                               | 84 ++++++++++++------------
->>  fs/nfs/pagelist.c                               |  2 +-
->>  fs/nfs/pnfs.c                                   |  2 +-
->>  fs/nfs/unlink.c                                 |  2 +-
->>  fs/nfs/write.c                                  |  2 +-
->>  include/linux/nfs_fs.h                          | 25 -------
->>  14 files changed, 123 insertions(+), 191 deletions(-)
->> ---
->> base-commit: 5d6919055dec134de3c40167a490f33c74c12581
->> change-id: 20260512-nfsino-1f9a8ca2f3ed
->> 
->> Best regards,
->
-> Ping?
->
-> i just noticed that this never made v7.2. Maybe consider for v7.3?
 
-These are actually the first four patches in my linux-next branch for
-the pull request I'm planning on sending (hopefully) later today.
+On 6/22/26 1:34 AM, Peter Zijlstra wrote:
+> On Sun, Jun 21, 2026 at 05:34:30AM -0400, Steven Rostedt wrote:
+>> There's been complaints about trace_printk() being defined in kernel.h as it
+>> can increase the compilation time. As it is only used by some developers for
+>> debugging purposes, it should not be in kernel.h causing lots of wasted CPU
+>> cycles for those that do not ever care about it.
+>>
+>> Instead, add a CONFIG_TRACE_PRINTK_DEBUGGING option that developers that do
+>> use it can set and not have to always remember to add #include <linux/trace_printk.h>
+>> to the files they add trace_printk() while debugging. It also means that
+>> those that do not have that config set will not have to worry about wasted
+>> CPU cycles as it is only include in the CFLAGS when the option is set, and
+>> its completely ignored otherwise.
+> 
+> Did you forget your C 101 class? If you use a function, you gotta
+> include the relevant header.
 
-Anna
+Also item #1 in Documentation/process/submit-checklist.rst.
 
-> -- 
-> Jeff Layton <jlayton@kernel.org>
+> You don't see userspace saying: 'Hey, you know what, perhaps we should
+> add stdio.h to every other header, just in case someone wants to
+> printf()' either.
+> 
+> I really don't understand your argument. Yes, maybe someone will forget
+> and then either their editor (if they have a halfway modern setup with
+> LSP enabled) or their build will complain, but so what? This is all
+> trivial stuff, surely we have more pressing matters to concern outselves
+> with?
+
+
+
+-- 
+~Randy
+
 
