@@ -1,61 +1,138 @@
-Return-Path: <linux-nfs+bounces-22762-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22763-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DIaqAnNAOWpOpQcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22762-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:02:27 +0200
+	id BEHnD5xAOWpUpQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22763-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:03:08 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 553546B0204
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:02:25 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F0D36B0219
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 16:03:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AFxBufpd;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22762-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22762-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Q9E+wZZN;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22763-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22763-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1B0193073731
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 13:56:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9BD423000B3C
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 14:01:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33BA23B47C4;
-	Mon, 22 Jun 2026 13:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C4193B5E10;
+	Mon, 22 Jun 2026 14:01:35 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134F23B2FF6;
-	Mon, 22 Jun 2026 13:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E193B5E01
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jun 2026 14:01:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782136566; cv=none; b=DaW4tLGcmDUfK+6Kd0HbQOFEjVhe/NpqUVGs0I5VYziZrHwx6PbrT5O434Ml/5cuIPFq59rXOZW+TEkZn1JV0nsiS9+daQ9OaRbvI3XxnwUztelvq84qVL/TQElGfcJeyaqhNC6r1Xy+GeasSq5Aa9YsqtqZtGPWF7hXdtKR8H8=
+	t=1782136895; cv=none; b=bTywpQVnBUoN3iXylAV6ZsNFNdrOnXBroATqoNiU8HEYI4lKqXP7xr8DGuPOR+0hADHO+cWfqK+iNVQHqQoPT+eMkpawJH/8sjc+jd1KxlK9zRZ4opZtfEq+in2EVwPDhtYjLV/kB96ubl9nVBP6RpoMxlIGz8IarqypH1sQHaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782136566; c=relaxed/simple;
-	bh=LKr+YPJtrjomGYwWg3kf0WOf3aBNZci9gU1urRCALJs=;
+	s=arc-20240116; t=1782136895; c=relaxed/simple;
+	bh=qe3sLENGLFxfz3zd7WgcQ2TdgZV62RqnJP5EAExszyA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lh66Jc7IX1vxRJY0WRIflK7Ins/GGgoD6Zfw7PjaXToG/3BWNbdFzT7jo6yZ6psqo+YXil1mWTMrvNdrmRnp3VgpB4WTSG1b6XT+xv5VT7wGXGM6F+t7+j3x96BuLjfSbWrLLt8A1zdTL3K7AnrjNj9jQvl5F54C3k2bFqpfgdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFxBufpd; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C0D61F000E9;
-	Mon, 22 Jun 2026 13:56:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=OyjAW1e3G0wM0Dz6xoRhrzqziZzRwxL8DaYeqUjUTM65YyIM+/i+1gYFauSDbfTOBDKu5FMAzvjpGB5MpX2i7olBN+MUzpb4pV6co6/8rb4J6NPNnczvrn5PlvDBFVnsfjw7N2mDmntRCkCS4y1+L7GUsp70wjfcdx0p9aTZszg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9E+wZZN; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBB71F000E9;
+	Mon, 22 Jun 2026 14:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782136564;
-	bh=F6e/r1oTclgPS+kw+4oDjkxzumrdY03nm4aIFJVo8y0=;
+	s=k20260515; t=1782136894;
+	bh=qe3sLENGLFxfz3zd7WgcQ2TdgZV62RqnJP5EAExszyA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=AFxBufpdPStXiVDRkukjHH7bi5topOnA+1/jLR7mO+iqzK+BH12O7X5F1p5zBXdlG
-	 SVFmG2B43Q8qIUXghi4bUTH+0addKlkCXL4NB0WgUYZv2XgnFtLSyyUKkQuR3/KeEb
-	 URacgQETb+oDkvJW51U333UI+ScdSkKnT2AT6bSa2vYW9kliazjo9mrHbYuQ3116Ca
-	 Q7r1O057M/hH9XCze541Qg3xYBVzH9pLKt2kqDCUYdORXlQ+C+GBEM3UnAJeCoEIDV
-	 fQIGHFGbneeof77EoVg9LL61voaMERocMhpNyD1FcU7IwNnI4Gcd9TfBnN0h/YvQYp
-	 taNxIE8JTgUxw==
-Message-ID: <2d09ab9a74d1eb21c99454dba8be597612d20efa.camel@kernel.org>
-Subject: Re: [PATCH] NFS: invalidate i_blocks after COMMIT to fix stale
- block count on NFSv4
-From: Trond Myklebust <trondmy@kernel.org>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, anna@kernel.org, 
-	linux-nfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com
-Date: Mon, 22 Jun 2026 09:56:03 -0400
-In-Reply-To: <20260622060038.13731-1-jefflexu@linux.alibaba.com>
-References: <20260622060038.13731-1-jefflexu@linux.alibaba.com>
+	b=Q9E+wZZNpbIlgDARA2XcD47RCHcY/lBE/P+OLixVWuODw5u8gtO1e8a4BRaM/jGRG
+	 4tke2O82sremMsm/sdKE+BT8G+ur8AgyrLc5jnW13P/CY0xXEvwdDsQvTqg66oltZZ
+	 fupdYG/gOCb5K+1+vI1/Ngixe/zK1aubdfx6zo0vNJ5txhkggSKjditQCbzhc2h0fp
+	 XIdqhyJRCRv02uNtEtQYzaZheRIhcIPJxdLeV85/AVwP9/I3x6Udjy00ueYF4r/xCO
+	 kP/dQAVX8RGG0lnYfGr+1kKvWrBu/FaxLsHnLT3xf1UF4ZQ9+A+pBi8dvZvU/whQuS
+	 DTH6gesK4+IcQ==
+Message-ID: <2888cb8f7cde2ed76d59a807b2668cf95f1166ff.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Guard admin state-revocation walks with
+ NFSD_NET_UP
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, NeilBrown <neilb@ownmail.net>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, XIAO WU <xiaowu.417@qq.com>
+Date: Mon, 22 Jun 2026 10:01:31 -0400
+In-Reply-To: <2b3f6886-86ca-4da3-b1df-a2bec0f93e5f@app.fastmail.com>
+References: <20260621162551.2469460-1-cel@kernel.org>
+	 <8369948d3e01471c64d37182ddc6a2f1cdb0c473.camel@kernel.org>
+	 <2b3f6886-86ca-4da3-b1df-a2bec0f93e5f@app.fastmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
@@ -70,110 +147,68 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-22763-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neilb@ownmail.net,m:okorniev@redhat.com,m:dai.ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:xiaowu.417@qq.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,qq.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:jefflexu@linux.alibaba.com,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:joseph.qi@linux.alibaba.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22762-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 553546B0204
+X-Rspamd-Queue-Id: 9F0D36B0219
 
-On Mon, 2026-06-22 at 14:00 +0800, Jingbo Xu wrote:
-> NFSv4 COMMIT compound does not include GETATTR, and
-> nfs4_commit_done_cb
-> does not refresh inode attributes. Meanwhile, every WRITE marks
-> NFS_INO_INVALID_BLOCKS via nfs_post_op_update_inode_force_wcc_locked.
+On Mon, 2026-06-22 at 09:14 -0400, Chuck Lever wrote:
+> On Mon, 2026-06-22 at 07:57 -0400, Jeff Layton wrote:
+> > Can nn->nfsd_serv be non-NULL while the NFSv4 state tables are still
+> > NULL?
+> > ...
+> > Would checking nn->nfsd_net_up instead of nn->nfsd_serv be more
+> > accurate here, since nfsd_net_up is set at the tail of
+> > nfsd_startup_net() exactly when the state tables become valid?
 >=20
-> After COMMIT, i_blocks remains stale until the next stat() triggers a
-> full revalidation. In writeback-heavy workloads where COMMITs happen
-> without intervening stat() calls, the cached block count can stay
-> indefinitely wrong.
+> Yep, that's exactly the gap. The hunk you've quoted is 1/3 of the
+> earlier "post-shutdown use-after-free" series, which only guarded the
+> shutdown side of the window. nn->nfsd_serv is also set at service
+> creation, before nfsd_startup_net() allocates conf_id_hashtbl, so the
+> startup side was still exposed.
 >=20
-> Mark NFS_INO_INVALID_BLOCKS on successful COMMIT completion so that
-> the
-> next nfs_getattr requesting STATX_BLOCKS will issue a GETATTR with
-> SPACE_USED, fetching the correct value from the server.
+> The thread you're replying to is the follow-on that closes it: it
+> switches all three unlock paths (write_unlock_fs,
+> nfsd_nl_unlock_filesystem_doit, nfsd_nl_unlock_export_doit) from
+> nn->nfsd_serv to test_bit(NFSD_NET_UP, &nn->flags) and rewrites the
+> walkers' Context: notes to match. NFSD_NET_UP is set at the tail of
+> nfsd_startup_net() and cleared in nfsd_shutdown_net() after the tables
+> are freed, so it brackets precisely the window you describe.
 >=20
-> This matches NFSv3 behavior where nfs3_commit_done already calls
-> nfs_refresh_inode with the wcc_data post-op attributes.
->=20
-> Reproduce with xfstests generic/694 on NFSv4.0 loopback:
->=20
-> =C2=A0 Server:
-> =C2=A0=C2=A0=C2=A0 mount /dev/vdc /data/test
-> =C2=A0=C2=A0=C2=A0 mount /dev/vdd /data/scratch
-> =C2=A0=C2=A0=C2=A0 exportfs -o insecure,rw,sync,no_root_squash,fsid=3D1
-> 127.0.0.1:/data/test
-> =C2=A0=C2=A0=C2=A0 exportfs -o insecure,rw,sync,no_root_squash,fsid=3D2
-> 127.0.0.1:/data/scratch
->=20
-> =C2=A0 Client:
-> =C2=A0=C2=A0=C2=A0 mount -t nfs -o vers=3D4.0 localhost:/data/test /mnt/t=
-est
-> =C2=A0=C2=A0=C2=A0 mount -t nfs -o vers=3D4.0 localhost:/data/scratch /mn=
-t/scratch
->=20
-> =C2=A0 local.config:
-> =C2=A0=C2=A0=C2=A0 export TEST_FS_MOUNT_OPTS=3D"-o vers=3D4.0"
-> =C2=A0=C2=A0=C2=A0 export MOUNT_OPTIONS=3D"-o vers=3D4.0"
-> =C2=A0=C2=A0=C2=A0 export FSTYP=3Dnfs
-> =C2=A0=C2=A0=C2=A0 export TEST_DEV=3Dlocalhost:/data/test
-> =C2=A0=C2=A0=C2=A0 export SCRATCH_DEV=3Dlocalhost:/data/scratch
-> =C2=A0=C2=A0=C2=A0 export TEST_DIR=3D/mnt/test
-> =C2=A0=C2=A0=C2=A0 export SCRATCH_MNT=3D/mnt/scratch
->=20
-> This fixes xfstests generic/694.
->=20
-> Assisted-by: Qoder:Qwen3.7-Max
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> ---
-> =C2=A0fs/nfs/write.c | 2 ++
-> =C2=A01 file changed, 2 insertions(+)
->=20
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index d7c399763ad9..88c5c9f7434c 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -1851,6 +1851,8 @@ static void nfs_commit_release_pages(struct
-> nfs_commit_data *data)
-> =C2=A0		/* Latency breaker */
-> =C2=A0		cond_resched();
-> =C2=A0	}
-> +	if (status >=3D 0)
-> +		nfs_set_cache_invalid(data->inode,
-> NFS_INO_INVALID_BLOCKS);
-> =C2=A0
-> =C2=A0	nfs_init_cinfo(&cinfo, data->inode, data->dreq);
-> =C2=A0	nfs_commit_end(cinfo.mds);
+> I assume your comment was meant for 1/3 of that series rather than
+> this thread... but we've reached the same conclusion, so no action
+> needed beyond this patch, correct?
 
-That sounds like an XFS bug, not an NFS bug. COMMIT isn't changing the
-data contents of the file: it is just ensuring that the existing data
-is persisted onto disk.
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+Ahh right. I missed that that had been fixed in the other series. This
+is fine then.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
