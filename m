@@ -1,61 +1,57 @@
-Return-Path: <linux-nfs+bounces-22750-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22751-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id N+3LEi5ZOGpgbQcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22750-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2026 23:35:42 +0200
+	id YgbPC5jPOGrDiQcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22751-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 08:00:56 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D42746AB9B9
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2026 23:35:41 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28B936ACDB3
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 08:00:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=HKWL2djo;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22750-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22750-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=peEns2wI;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22751-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22751-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4F3C430022ED
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Jun 2026 21:35:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 531123001FB7
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jun 2026 06:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 017382836A0;
-	Sun, 21 Jun 2026 21:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 648BE3346A0;
+	Mon, 22 Jun 2026 06:00:50 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3833597B
-	for <linux-nfs@vger.kernel.org>; Sun, 21 Jun 2026 21:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A01280A51;
+	Mon, 22 Jun 2026 06:00:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782077738; cv=none; b=Tdjch1yHBe08VrQrFFz5LYPljNN4dQplhG22KATCGOW0wNdlT6IKifNhsY+Go2mZXoF0TPAPjsJ3TnIgV8xSIzjznasmcs2v9+DcD0vySmGxG1NtxCvQ3KXAzpi7GDzgt3izRebQXgTzAPdL4O1FQWjB3f1tjaOl7z7knrccD6A=
+	t=1782108050; cv=none; b=HUxQ8+3Q7WFqtSICsTFHhNuNvqFH8fSkdUPwEnft5VXyyhPjqCs+WvBE8inbKO7H2NoBoVH8PtYnD+K9Qn6OvEGS/IEIyZZKLT2hekbvQ6jWDzfgbeHHo2JPl/lRN9telgdVSXx+zYvQOX+aIMQpl7THvz/vYzEBweMnGdWOUGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782077738; c=relaxed/simple;
-	bh=RwlGMzMdnM7O94MzezUO/QwJUx/Q+TLSZA1jlmgTVnc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hDQvwHaTkjMWFZSvG0JRK5Dt3lwJ2LQHV/DYLe10H6dZR8UBqmTy2bMjrANT08EI5E5LuVfGUZpmUW2tt/fv1lHZNwQqFDLnlNSheqoZICG4DsFX/gSwDxzm+U5hN7CM7fGrYm0RdzmkHitE9VnqCPeECOHIei4/3C5VJtO/syI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HKWL2djo; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E571F000E9;
-	Sun, 21 Jun 2026 21:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782077737;
-	bh=qO39d/NGhJfs+nDphxcxALKfJwSbhRYXc2H073neJiE=;
-	h=From:To:Cc:Subject:Date;
-	b=HKWL2djoosdkeQhlHQ9SQL7dFKDNSflzb7oexb3aUEr/WKLQrBaZzPxMyXZ6saauJ
-	 AvkRSpn9US7nL+QXEks98+Em/22GVzGRtq6OJN4DOjFBE1EP5+dJe8sv1awyhjLVoI
-	 6w5pi7/UnHafKxw73eQsVKoyIfN7JGkhv19unITQwEiwkuAyyt20L2bXI4TlAFIfl4
-	 cWEtuT5QSWq2RxeMzhU8tZukIVMwDtxLbrTcqc2LVs58gaTJG1ssf/ZIfKMbVIEqgR
-	 RetTFr+9luCsyViq30OKzjR6ciLQrUIJeF0AljCOHVadgVXu1ka4+fkrmrvNthFgJ5
-	 w2fhhnWQdceiw==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFSD: Replace isdotent() macro
-Date: Sun, 21 Jun 2026 17:35:35 -0400
-Message-ID: <20260621213535.539450-1-cel@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1782108050; c=relaxed/simple;
+	bh=yFn14TsG+dBdbYo22tsXRVY/GQie74Fiot4Ih0qR8OM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J+ItkLd90k58JOSDSAc04b6LFJ4blO0ZBHzr30DiB2u2sqgp9q8gGruCU7WdFVbOUUiKBgeoIq/BCCHwa8bmhtA73PDiBXJ9l3nQuo15oT4NKQx98VZEZ/Rrl3ZmayiUq+wZ12TM7gRfH+mMCUtYd3uPUKjerN/DXwKnF+5XhvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=peEns2wI; arc=none smtp.client-ip=115.124.30.131
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782108039; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=8QChs0znYXOzmMnPHkO1EpMOdyETth1B13Rh22KHUOg=;
+	b=peEns2wIgqDcrFPkfSjRXgXHIo5aE2tzDPK/DL7XhSlfA0QC2fHO3lo5WTKbirzHl6yt4+mxQ7fGkri9ZQRxNmGli2GXZHEyY1LivAdN7lfnDc8fhtru4fj/VT9OASaBkJ05GyoZOd9aRnjxO6xwNbYpII/lF4KKGrJR+AgjG0Q=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X5IYQD8_1782108038;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0X5IYQD8_1782108038 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Jun 2026 14:00:38 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	joseph.qi@linux.alibaba.com
+Subject: [PATCH] NFS: invalidate i_blocks after COMMIT to fix stale block count on NFSv4
+Date: Mon, 22 Jun 2026 14:00:38 +0800
+Message-Id: <20260622060038.13731-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -64,211 +60,101 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-10.66 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	WHITELIST_SPF_DKIM(-3.00)[alibaba.com:d:+,kernel.org:s:+];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22750-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:jlayton@kernel.org,m:okorniev@redhat.com,m:dai.ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22751-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:joseph.qi@linux.alibaba.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[jefflexu@linux.alibaba.com,linux-nfs@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jefflexu@linux.alibaba.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime,alibaba.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D42746AB9B9
+X-Rspamd-Queue-Id: 28B936ACDB3
 
-The VFS provides name_is_dot_dotdot() as the canonical helper for
-recognizing the "." and ".." directory entries, and fs/ already uses
-it widely. nfsd has instead carried its own open-coded isdotent()
-macro that computes the same predicate for non-empty names, a needless
-duplicate of shared functionality. The macro reads the first name byte
-without first confirming the name is non-empty; name_is_dot_dotdot()
-tests the length first, so it never touches a zero-length buffer.
-Convert every isdotent() call site to the generic helper and remove the
-macro.
+NFSv4 COMMIT compound does not include GETATTR, and nfs4_commit_done_cb
+does not refresh inode attributes. Meanwhile, every WRITE marks
+NFS_INO_INVALID_BLOCKS via nfs_post_op_update_inode_force_wcc_locked.
 
-Signed-off-by: Chuck Lever <cel@kernel.org>
+After COMMIT, i_blocks remains stale until the next stat() triggers a
+full revalidation. In writeback-heavy workloads where COMMITs happen
+without intervening stat() calls, the cached block count can stay
+indefinitely wrong.
+
+Mark NFS_INO_INVALID_BLOCKS on successful COMMIT completion so that the
+next nfs_getattr requesting STATX_BLOCKS will issue a GETATTR with
+SPACE_USED, fetching the correct value from the server.
+
+This matches NFSv3 behavior where nfs3_commit_done already calls
+nfs_refresh_inode with the wcc_data post-op attributes.
+
+Reproduce with xfstests generic/694 on NFSv4.0 loopback:
+
+  Server:
+    mount /dev/vdc /data/test
+    mount /dev/vdd /data/scratch
+    exportfs -o insecure,rw,sync,no_root_squash,fsid=1 127.0.0.1:/data/test
+    exportfs -o insecure,rw,sync,no_root_squash,fsid=2 127.0.0.1:/data/scratch
+
+  Client:
+    mount -t nfs -o vers=4.0 localhost:/data/test /mnt/test
+    mount -t nfs -o vers=4.0 localhost:/data/scratch /mnt/scratch
+
+  local.config:
+    export TEST_FS_MOUNT_OPTS="-o vers=4.0"
+    export MOUNT_OPTIONS="-o vers=4.0"
+    export FSTYP=nfs
+    export TEST_DEV=localhost:/data/test
+    export SCRATCH_DEV=localhost:/data/scratch
+    export TEST_DIR=/mnt/test
+    export SCRATCH_MNT=/mnt/scratch
+
+This fixes xfstests generic/694.
+
+Assisted-by: Qoder:Qwen3.7-Max
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- fs/nfsd/nfs3proc.c |  2 +-
- fs/nfsd/nfs3xdr.c  |  2 +-
- fs/nfsd/nfs4proc.c |  2 +-
- fs/nfsd/nfs4xdr.c  |  4 ++--
- fs/nfsd/nfsd.h     |  3 ---
- fs/nfsd/nfsproc.c  |  2 +-
- fs/nfsd/vfs.c      | 13 +++++++------
- 7 files changed, 13 insertions(+), 15 deletions(-)
+ fs/nfs/write.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 42adc5461db0..a14827cfeeb8 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -265,7 +265,7 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- 	trace_nfsd_vfs_create(rqstp, fhp, S_IFREG, argp->name, argp->len);
- 
--	if (isdotent(argp->name, argp->len))
-+	if (name_is_dot_dotdot(argp->name, argp->len))
- 		return nfserr_exist;
- 	if (!(iap->ia_valid & ATTR_MODE))
- 		iap->ia_mode = 0;
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 2ff9a991a8fb..e481804bb120 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -987,7 +987,7 @@ compose_entry_fh(struct nfsd3_readdirres *cd, struct svc_fh *fhp,
- 	dparent = cd->fh.fh_dentry;
- 	exp  = cd->fh.fh_export;
- 
--	if (isdotent(name, namlen)) {
-+	if (name_is_dot_dotdot(name, namlen)) {
- 		if (namlen == 2) {
- 			dchild = dget_parent(dparent);
- 			/*
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 907b899a90da..654705d1dd37 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -259,7 +259,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	__be32 status;
- 	int host_err;
- 
--	if (isdotent(open->op_fname, open->op_fnamelen))
-+	if (name_is_dot_dotdot(open->op_fname, open->op_fnamelen))
- 		return nfserr_exist;
- 	if (!(iap->ia_valid & ATTR_MODE))
- 		iap->ia_mode = 0;
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 2a0946c630e1..8db16a30d971 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -98,7 +98,7 @@ check_filename(char *str, int len)
- 		return nfserr_inval;
- 	if (len > NFS4_MAXNAMLEN)
- 		return nfserr_nametoolong;
--	if (isdotent(str, len))
-+	if (name_is_dot_dotdot(str, len))
- 		return nfserr_badname;
- 	for (i = 0; i < len; i++)
- 		if (str[i] == '/')
-@@ -4241,7 +4241,7 @@ nfsd4_encode_entry4(void *ccdv, const char *name, int namlen,
- 	__be32 nfserr = nfserr_toosmall;
- 
- 	/* In nfsv4, "." and ".." never make it onto the wire.. */
--	if (name && isdotent(name, namlen)) {
-+	if (name && name_is_dot_dotdot(name, namlen)) {
- 		cd->common.err = nfs_ok;
- 		return 0;
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index d7c399763ad9..88c5c9f7434c 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1851,6 +1851,8 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
+ 		/* Latency breaker */
+ 		cond_resched();
  	}
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 7c009f07c90b..faf5c1dafa42 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -372,9 +372,6 @@ enum {
- #define	nfserr_symlink_not_dir	cpu_to_be32(NFSERR_SYMLINK_NOT_DIR)
- };
++	if (status >= 0)
++		nfs_set_cache_invalid(data->inode, NFS_INO_INVALID_BLOCKS);
  
--/* Check for dir entries '.' and '..' */
--#define isdotent(n, l)	(l < 3 && n[0] == '.' && (l == 1 || n[1] == '.'))
--
- #ifdef CONFIG_NFSD_V4
- 
- /* before processing a COMPOUND operation, we have to check that there
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 8873033d1e82..846506445ff9 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -298,7 +298,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
- 	/* Check for NFSD_MAY_WRITE in nfsd_create if necessary */
- 
- 	resp->status = nfserr_exist;
--	if (isdotent(argp->name, argp->len))
-+	if (name_is_dot_dotdot(argp->name, argp->len))
- 		goto done;
- 	hosterr = fh_want_write(dirfhp);
- 	if (hosterr) {
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index eafdf7b7890f..73506e924dc3 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -255,7 +255,7 @@ nfsd_lookup_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	exp = exp_get(fhp->fh_export);
- 
- 	/* Lookup the name, but don't follow links */
--	if (isdotent(name, len)) {
-+	if (name_is_dot_dotdot(name, len)) {
- 		if (len==1)
- 			dentry = dget(dparent);
- 		else if (dparent != exp->ex_path.dentry)
-@@ -1867,7 +1867,7 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- 	trace_nfsd_vfs_create(rqstp, fhp, type, fname, flen);
- 
--	if (isdotent(fname, flen))
-+	if (name_is_dot_dotdot(fname, flen))
- 		return nfserr_exist;
- 
- 	err = fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_NOP);
-@@ -1969,7 +1969,7 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (!flen || path[0] == '\0')
- 		goto out;
- 	err = nfserr_exist;
--	if (isdotent(fname, flen))
-+	if (name_is_dot_dotdot(fname, flen))
- 		goto out;
- 
- 	err = fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_CREATE);
-@@ -2046,7 +2046,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
- 	if (!len)
- 		goto out;
- 	err = nfserr_exist;
--	if (isdotent(name, len))
-+	if (name_is_dot_dotdot(name, len))
- 		goto out;
- 
- 	err = nfs_ok;
-@@ -2157,7 +2157,8 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
- 	tdentry = tfhp->fh_dentry;
- 
- 	err = nfserr_perm;
--	if (!flen || isdotent(fname, flen) || !tlen || isdotent(tname, tlen))
-+	if (!flen || name_is_dot_dotdot(fname, flen) ||
-+	    !tlen || name_is_dot_dotdot(tname, tlen))
- 		goto out;
- 
- 	err = nfserr_xdev;
-@@ -2279,7 +2280,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
- 	trace_nfsd_vfs_unlink(rqstp, fhp, fname, flen);
- 
- 	err = nfserr_acces;
--	if (!flen || isdotent(fname, flen))
-+	if (!flen || name_is_dot_dotdot(fname, flen))
- 		goto out;
- 	err = fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_REMOVE);
- 	if (err)
+ 	nfs_init_cinfo(&cinfo, data->inode, data->dreq);
+ 	nfs_commit_end(cinfo.mds);
 -- 
-2.54.0
+2.19.1.6.gb485710b
 
 
