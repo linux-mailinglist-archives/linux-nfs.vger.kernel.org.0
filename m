@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-22788-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22789-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DbbOKmeLOmoS/gcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22788-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 15:34:31 +0200
+	id VcRNAveMOmrp/gcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22789-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 15:41:11 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC83E6B77B6
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 15:34:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5864A6B785C
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 15:41:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="eU/ShVbe";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22788-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22788-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=M4BZizKn;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22789-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22789-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A733230236FE
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 13:33:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 08BCF3014DBF
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 13:40:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B013A37C909;
-	Tue, 23 Jun 2026 13:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE9837C90A;
+	Tue, 23 Jun 2026 13:40:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9576937C902
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 13:33:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4B922E3F0
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 13:40:06 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782221610; cv=none; b=CFyEjW9J6jgswZYqJZM77lctHUjlO0x0pM/81y/hHJ9gXQfd8heoemW+3JBMtZo2GY+km6x38QwgZtcfirRLolz6qR3NJH20NeKc/b0/wWB78ufktZvqOzeCqUuZ0njely/1YYRcbQ1AzqtS9zs6hYK1AvJRt6ihXAC6VJH2d1E=
+	t=1782222007; cv=none; b=Iwx50v7HA246vHRJBfz+alHHjNBjAh4w0fnovARZPqZNMWKC0roXGRoFJ0n+wAUaXixCXgSGZE8yGueI/ib+hj7Izsr5g/Rn0Xvilc3XeQo1a5aKd8q2PdGyEcSgARfGO3/48cRi0ZrSOLEft2OjurAktlFnsPapRWyIPhNuOdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782221610; c=relaxed/simple;
-	bh=6iXyg16Q30bV0ih3FzslAqnB7a40qL70Rjwe+kppTZo=;
+	s=arc-20240116; t=1782222007; c=relaxed/simple;
+	bh=UMCyz7g88DMaGowgecywRKB4zMvZOi9PZxzbKX4HQUs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZUXCPm+wbbwZvRwsE7eqoXPXxp8o43Mp6qZJlfl4IKW7Kuy2Wy/ELwfvY93AqDsr8g8Ze6bSo4z/1TWQG2hLmHSRxqLj7UjA0Gx+K8tgZPHN4VE1W/CVRHdKJG8dens5mMS/qBYnXJg1C7TGXpv/M+Q27L58QakOSTV8ro9uOGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eU/ShVbe; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770461F000E9;
-	Tue, 23 Jun 2026 13:33:28 +0000 (UTC)
+	 Content-Type:MIME-Version; b=HnTsB5vyvbWA+61vfws7YqFXrU6EEVBUkigSrVddOHjqgSXaw7tYC2SnxqCRzr56i01WXoQcNyqk/X8rImnYBzX6PohKOYfw1UFj2hoiriM+0JQhDREjhBP6PC+BYS84jhQQZHTw+r8Y/gnuIjpe64esK7gAPjqnKM6Fv+/W2rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4BZizKn; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0ED1F00A3A;
+	Tue, 23 Jun 2026 13:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782221609;
-	bh=b66C/nu9vqMjImE8IOL4PUbeXsgTqJ9A5lqAx4/CVpg=;
+	s=k20260515; t=1782222006;
+	bh=QT1RD+LwlHxC6br2L80f2sufQYkQ+1t8+JIK28suRpY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=eU/ShVbesfRvrAmoGITC79hVyHaLxvdC48/fzeTIiPiPAvXodihuv1KHv8FddhzdB
-	 S0QlYQOJ0BknEdnZoxmH36wmIiBscS5c0T4Mm4IiTtSNAnwQvumRysBmzdhlV0HZbF
-	 wUJeDFd6giqWL835Chgypgiyt3tQAVCInld/d+aB6XEvcS6S9V6iDu749M/1JnErS7
-	 kgJmfK8uZWCstZCVxX4Sn01fNUqLTApcwDOaNakeg5TYeQZmAL8QRFAKgW0bheH6hi
-	 74RZl9dLxGEUtupRZBvUVhexBcEUN1UIQJwdrQAICGp5HctxGch98QBiYqGr6dHl/J
-	 CFP3c2WGu1b5g==
-Message-ID: <6076ff478091a512354443e7764ca1b737a386aa.camel@kernel.org>
+	b=M4BZizKn+rqwJcrm4szSQCgY6SblSALLoy2awlHyM3kpDUUs/2Nm8P5SQwBsF1EUz
+	 t5s1l27B/Gamodco0XLF23p9mYuYbUXuAyOASJqCbQTZYEi2DazLQBZVgBRVwhr0V4
+	 fyWU0vFK1WIYA0fVBX7hHATx3Ic3q96RbSnyHo/sudVNPT0Pu55T/BRbsRuuzhx+WG
+	 DZr6m1XEwEyytNltE1766ivypjzFzKB7Rya1rSY1xgCoRdHzaQ9DxqGZLgY144lww3
+	 513J3b55C9CUa/YQ8iqizCAU7DAz9uHnRFWsN4TesRFN4LhpFbMwr5RgPDOq/ve9zX
+	 z87/WuTMuWMYQ==
+Message-ID: <509e5aecbccb57cd7cd033d45a0c28db8ba8b52c.camel@kernel.org>
 Subject: Re: NFS delegations behavior analysis
 From: Jeff Layton <jlayton@kernel.org>
 To: Benjamin Coddington <ben.coddington@hammerspace.com>
@@ -54,13 +54,14 @@ Cc: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>, Piyush Sachdeva
  <s.piyush1024@gmail.com>, linux-nfs <linux-nfs@vger.kernel.org>, Chuck
  Lever	 <cel@kernel.org>, trondmy <trondmy@kernel.org>, sfrench@samba.org, 
 	sprasad@microsoft.com, vaibsharma@microsoft.com
-Date: Tue, 23 Jun 2026 09:33:26 -0400
-In-Reply-To: <4323491E-64A0-4883-8343-5EB569A0D81A@hammerspace.com>
+Date: Tue, 23 Jun 2026 09:40:03 -0400
+In-Reply-To: <E86DDFB0-6E5E-40CC-8DFA-7233793D25E1@hammerspace.com>
 References: <m2qzlx7eye.fsf@gmail.com>
 	 <0b39c1e01a92f99fe456c76523ec7f3aa5dc1a81.camel@kernel.org>
 	 <455619640.1622514.1782212671358.JavaMail.zimbra@desy.de>
 	 <227140ce94ebe4186d02b081489a58f32b878ec4.camel@kernel.org>
 	 <4323491E-64A0-4883-8343-5EB569A0D81A@hammerspace.com>
+	 <E86DDFB0-6E5E-40CC-8DFA-7233793D25E1@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -151,11 +152,11 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22788-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22789-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_CC(0.00)[desy.de,gmail.com,vger.kernel.org,kernel.org,samba.org,microsoft.com];
@@ -176,75 +177,35 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AC83E6B77B6
+X-Rspamd-Queue-Id: 5864A6B785C
 
-On Tue, 2026-06-23 at 09:11 -0400, Benjamin Coddington wrote:
-> On 23 Jun 2026, at 7:10, Jeff Layton wrote:
+On Tue, 2026-06-23 at 09:32 -0400, Benjamin Coddington wrote:
+> On 23 Jun 2026, at 9:11, Benjamin Coddington wrote:
 >=20
-> > I think Ben did the latest pass of trying to tune the heuristics here.
-> > Any thoughts on how we could do this better (and whether there are
-> > particular ls-ish workloads that we don't want to regress)?
+> > .... er - so with directory delegations, can we simply re-hydrate the d=
+entry
+> > cache from the directory page mappings if the delegation is still valid=
+?
+> > Does the directory delegation pin the mapping?  Clearly I need to look =
+at
+> > the code..
 >=20
-> I haven't (shame) thought about READDIR in the context of directory
-> delegations.
->=20
-> But during my time at Red Hat we worked hard to optimize some readdir
-> problems and I learned that almost any change we made ended up making
-> someone's workload regress.  We also found that our performance benchmark=
-s
-> rarely matched the most common real-world workloads.  We made the mistake=
- of
-> trying to improve the benchmark which resulted in performance regressions
-> for real-world users.
->=20
-> Jeff, you've already touched on the core issue regarding fixing this with
-> bulk GETATTR calls - the kernel doesn't know what syscall pattern the
-> userspace process is going to use next.  The `ls -l` command and `find` a=
-nd
-> friends have complex history and branching logic, they do different looku=
-p
-> and getattr patterns based on their own goals, and NFS cannot optimize fo=
-r
-> any one case.
->=20
-> I think the last time we discussed additional improvements there were som=
-e
-> ideas about teaching the readdir code to respond to fadvise flags, but th=
-en
-> you'd also need to teach the utilities how to use them as well, and those
-> utilities try to be filesystem-agnostic.
->=20
-> Its a tough problem, and sometimes the simplest thing might be to just us=
-e
-> more directories on NFS.
->=20
-> **coffee!**
->=20
-> .... er - so with directory delegations, can we simply re-hydrate the den=
-try
-> cache from the directory page mappings if the delegation is still valid?
-> Does the directory delegation pin the mapping?  Clearly I need to look at
-> the code..
+> .. right - we don't keep the file attributes in the mappings today.  And,
+> more to the point - the directory delegation doesn't protect those file
+> attributes either.  We'd need NOTIFY4_CHANGE_CHILD_ATTRIBUTES implemented=
+.
 >=20
 
-I think the main problem is not the dcache, but the attributes on the
-inodes. The first pass uses a full-attrs READDIR (aka readdirplus) and
-everything goes reasonably quick.
+Which I think could be done, at least on the Linux server. fsnotify
+does support watching for child attribute changes (FS_EVENT_ON_CHILD |
+FS_ATTRIB).
 
-Then, on the second pass, the client skips checking directory
-attributes before trusting the dcache because of the delegation (which
-is good), but the inodes those dentries point to have an attrcache
-timeout, and we end up doing a GETATTR for each statx() call when a
-readdirplus would have been cheaper.
-
-I guess after you see a few statx() calls from the same pid on the same
-directory in a short timeframe you could switch to doing READDIR,=C2=A0but
-that sounds horrid to get right and keep working.
-
+That could be very chatty though. We would need to do the work to make
+nfsd send callbacks >1 page in order to keep up, I imagine.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
