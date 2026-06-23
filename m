@@ -1,314 +1,202 @@
-Return-Path: <linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22778-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id O1kDCs43OmrB4AcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 09:37:50 +0200
+	id mILAJZdZOmoy6wcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22778-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 12:01:59 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C71706B4E77
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 09:37:48 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70EE96B60A2
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 12:01:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b="u/j/R+Ys";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=huawei.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=ioMugKa4;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22778-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22778-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6D4CC301FD49
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 07:37:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9D641300729D
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 10:01:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC925464D;
-	Tue, 23 Jun 2026 07:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C943A34B183;
+	Tue, 23 Jun 2026 10:01:53 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF70B75801;
-	Tue, 23 Jun 2026 07:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759E533A9FE
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 10:01:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782200266; cv=none; b=T3QvPU8mIkCrtPk3odvbztzLT8+DfzU9jFp5HFkVxFYx2Tpu/M03EQUarfYlvn9d2nWCjOJ475ncZLkMT6mDB7UKCkfqMcQjQRASqUh99AH5Y0Cdmgj1XXm9Qsg6cqMslTw6GlIwhRaI8VuXvzEb/owEFMzKkCslvJT58vMgCso=
+	t=1782208913; cv=none; b=UKB1iScrqZYvL49XwnqRBoTyrReIUwN3cSSiT7xTu2YXGpYhc8CE2G433GxromEc81kbBubyp5n5rI2mFmcJEOqLh3vK4kmf0IDU1vt+X0YbrrBr9WDBGh1kXfdQSAzSIVQ2RFP4KCYMTUXCpOqqrKety77wfZFfzim25N2swMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782200266; c=relaxed/simple;
-	bh=7KY+riPquigpYiNWCdw15ESu0Rjk+vSn+wcWy0KUsTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=riG4QKrABdwZGDR4WqJiKqg9QJitLaunY+Ab2FS82KvAGZlpSNs8VH92FPs2pg9+Pu9i/uLH+yi+w6czLvi/yegPU0vP9M5KLSRqvhxXSB4Y0hVnib+LUJ3kLjLsuI4hYCrPWDNv93+6giITN9MCjKHOPy/Ihxx1Bc8hxQiYhiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=u/j/R+Ys; arc=none smtp.client-ip=113.46.200.226
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=kVKvh6ytZ6/0+qWMDg/SowqVA26fH8LxyNW7d4OdxmU=;
-	b=u/j/R+YspM8ptAzTAbtKsYsuawFR58nvUaxV1LSysxlXfzyiSGxbgDN0pFIL9ZKZMMq4K+vxu
-	iJllPtHwZUwC0FC7fz/wvCImQxa5BenT5YMul2skSgA5WMpidPl2WgDAUOdpuVQY7Rc3Kb8BBtx
-	I96GyicRbJiPNCtSW1bHg2E=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gkxXV6sVBzKm58;
-	Tue, 23 Jun 2026 15:29:30 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9383A4056E;
-	Tue, 23 Jun 2026 15:37:35 +0800 (CST)
-Received: from [10.174.176.240] (10.174.176.240) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Tue, 23 Jun 2026 15:37:34 +0800
-Message-ID: <9b27efad-f22a-45b9-b080-1552acf50016@huawei.com>
-Date: Tue, 23 Jun 2026 15:37:34 +0800
+	s=arc-20240116; t=1782208913; c=relaxed/simple;
+	bh=4FychGiQokW8myhu14rFsgDtjxa3yPjm1iGI3LvR/k4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XslpJwbDO84lEwe0vz8XdfiLCJSXHc42usT6UH19YvUWjOTGywNsutP4HHdYrxzWvoZTR1+yo27aK+8TX4PB2Att3KHAlk4TzCAAA3AF+nyAgzL8SM6MhObNTsiFkBbWbtvgkBD1vVHKxeeCdkb5VY+F5quZxyHGxZojNcr5Lcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ioMugKa4; arc=none smtp.client-ip=209.85.210.174
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-842358aaf36so2367034b3a.2
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 03:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782208912; x=1782813712; darn=vger.kernel.org;
+        h=mime-version:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tNSWRZXsCCBKPrvOedC4pwja5q458btxYd/tRhWFRqg=;
+        b=ioMugKa4k0dj43SKeq2XGJ8fdR3VdiaHTLLGdyuXY2KgZRxCXWigNfZWfGkXeNugNa
+         tvvhEFLpTjJudbiqAQye9rWMknESTVysnRNiHPXVJZZqgYPiZLmEQYY2MkV/N/x96zs5
+         DDbroRTK2x0XvpZOpJj3QrMFKvN1wdvEefHI5rHZGhkXPWKH4K43KGG2Doka+eH3PyR1
+         Chws+6h+GyJ3v9YqBQ4ymqeE8noL5s9WQobMoQCGlaH/uk4cn60n6GH/Iw81vDziRBrL
+         JvrVoUkQmUdsIOywCff6BjgYjiTzoLxZR+utxohCFZ8cNolujT/epH5UGYmNSbPi6xfF
+         Dttg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782208912; x=1782813712;
+        h=mime-version:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tNSWRZXsCCBKPrvOedC4pwja5q458btxYd/tRhWFRqg=;
+        b=s6dkxCI6OgWbzDpqLvAw2szODuoZ72npfP+2fyneo8wO81dCCKCpKj/rSCcl6KG+tg
+         aHG93DxQ2u+pz/kQ5Y6X+TKncS/b1KkZL9aRYCkGA93U7ZcWE+gloRjl8pSEjOaqBw1u
+         xXiwN8Ujp8VmnH1/pzPJ9E1jCGStQJfne/lYplXNcL9dtt28ZxNptLB5R4HikB3h9zIB
+         8uzWa+CTPUNQea85X7ElvZnhaLMx6s7uO0Ttpy7OCYWYj96s5/aJHzTvIHsswLmyY2aj
+         livzYTKLNAH4XxN2hSgXqNZRRESzZdOCyq6DGbM8BTqYiHgv020LptmqINsD9YMs/856
+         Xm1g==
+X-Gm-Message-State: AOJu0YxsmpxnZGTbmmX79V7ld13eM8jyrDpGkaOvOipv0P9xZCX3Z9ut
+	uGDFz3n+gzyCDK3qeHMEKYjSXsgN2l93JyEYFk8z4PegDQxwZk0ISVsxtLDxcA==
+X-Gm-Gg: AfdE7ckRjSxe52dTA6iDZzFLwF84tJSn5pyzzvyJIu0gBz14wyV9ZeQF4kCg+hB7hgL
+	6xE/zeAFd6J03IQma3EgMkvpnD/a996TQHDghjvRjw6e5N8oF84hZs88Z4NJQI5Wh3eGgcu0f7w
+	lltzmntbH9Jxzns6YJWGKVmachaZfhAy5UVSMnsYA8G3Fi9KmDUkyN1/RnkJwgUq4ZQJRcv/c/+
+	CiTmMrQGrU8qPm3QLq16Ia9XLbxKTOoX92H9TaP9STpJy097jCUcTmuWbClUPkxLLLY1TGo+Rbn
+	A+celxrSSSHZzXOwJmYuKplSeqGPXQUDe5bt2xiQLMkFq82nY6wYsBhYNXPVqU2h4bDTEG/hCm+
+	2aRSxneswkME7Ip8mxiNMJCgZT4Ev7Mn+gnMVvGwOnOyfL4sOZnJ7OH6JSTuZRKsq++fLuLjWRY
+	nzcG0YyUpD637S47y2Abm2wno8rq1XkiGr7NrHVdQ=
+X-Received: by 2002:a05:6a00:2a03:b0:835:405a:7e6d with SMTP id d2e1a72fcca58-845970eb55bmr2289433b3a.21.1782208911487;
+        Tue, 23 Jun 2026 03:01:51 -0700 (PDT)
+Received: from localhost ([49.207.146.236])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564e7696dsm13856411b3a.37.2026.06.23.03.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 03:01:50 -0700 (PDT)
+From: Piyush Sachdeva <s.piyush1024@gmail.com>
+To: linux-nfs@vger.kernel.org, cel@kernel.org, trondmy@kernel.org,
+ sfrench@samba.org, sprasad@microsoft.com
+Cc: vaibsharma@microsoft.com
+Subject: NFS delegations behavior analysis
+Date: Tue, 23 Jun 2026 15:31:45 +0530
+Message-ID: <m2qzlx7eye.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
- lock list
-To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<chuck.lever@oracle.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yangerkun@huaweicloud.com>, <lilingfeng3@huawei.com>,
-	<zhangjian496@h-partners.com>, <yi.zhang@huawei.com>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20260226012203.3962997-1-yangerkun@huawei.com>
- <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
- <163aebb3-4233-4aaa-872c-c36aa3fcb3af@huawei.com>
- <403e3267-70ef-4fb3-9700-0a14d28abc4c@huawei.com>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <403e3267-70ef-4fb3-9700-0a14d28abc4c@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemf100006.china.huawei.com (7.202.181.220)
+Content-Type: text/plain
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22777-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:yangerkun@huaweicloud.com,m:lilingfeng3@huawei.com,m:zhangjian496@h-partners.com,m:yi.zhang@huawei.com,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22778-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:cel@kernel.org,m:trondmy@kernel.org,m:sfrench@samba.org,m:sprasad@microsoft.com,m:vaibsharma@microsoft.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[spiyush1024@gmail.com,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[spiyush1024@gmail.com,linux-nfs@vger.kernel.org];
+	TO_DN_NONE(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:email,huawei.com:mid,huawei.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C71706B4E77
+X-Rspamd-Queue-Id: 70EE96B60A2
 
-Gently ping...
+Hi,
+Lately I have been running micro benchmarks around the `ls` command and
+reading through the code documentation of the NFS client to better
+understand the client side caching behavior with and without
+delegations.
 
-This patch has been reviewed, but leave alone here for a long time...
+Understanding so far:
+Delegations (both file and directory) are granted by the server to the
+client, indefinitely (until revoked or under the watermark) to cache
+attributes. The caching of data is a result of the attribute
+cache. Hence forth, a directory delegation will cache the directory
+attributes and the names of the files in the directory, and a file
+delegation will cache the attributes of the file and the file data.
 
-在 2026/5/8 16:33, yangerkun 写道:
-> Gently ping...
-> 
-> 在 2026/4/16 11:01, yangerkun 写道:
->> Hi Anna and Trond,
->>
->> Could you please help check if there are any issues with this patch, and
->> if there are none, could you help merge it in?
->>
->> Thanks,
->> Erkun.
->>
->> 在 2026/3/9 22:09, Jeff Layton 写道:
->>> On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
->>>> Lingfeng identified a bug and suggested two solutions, but both appear
->>>> to have issues.
->>>>
->>>> Generally, we cannot release flc_lock while iterating over the file 
->>>> lock
->>>> list to avoid use-after-free (UAF) problems with file locks. However,
->>>> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
->>>> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
->>>> may take a long time. To resolve this, NFS switches to using nfsi- 
->>>> >rwsem
->>>> for the same protection, and nfs_reclaim_locks follows this approach.
->>>> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
->>>> this is inadequate since a single inode can have multiple nfs4_state
->>>> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
->>>>
->>>> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte 
->>>> range
->>>> lock must be atomic with the stateid update"), the functions
->>>> nfs4_locku_done and nfs4_lock_done also break this rule because they
->>>> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
->>>> this protection could cause many deadlocks, so instead, the call to
->>>> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
->>>> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
->>>> lock must be atomic with the stateid update"), it has been resolved
->>>> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly 
->>>> triggering
->>>> state recovery") because all slots are drained before calling
->>>> nfs4_do_reclaim, which prevents concurrent stateid changes along 
->>>> this path.
->>>> Also, nfs_delegation_claim_locks does not cause this concurrency either
->>>> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no 
->>>> RPC is
->>>> sent, so nfs4_lock_done is not called. Therefore,
->>>> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the 
->>>> first
->>>> time the stateid is set.
->>>>
->>>> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
->>>> Closes: https://lore.kernel.org/all/20250419085709.1452492-1- 
->>>> lilingfeng3@huawei.com/
->>>> Closes: https://lore.kernel.org/all/20250715030559.2906634-1- 
->>>> lilingfeng3@huawei.com/
->>>> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be 
->>>> atomic with the stateid update")
->>>> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
->>>> ---
->>>>   fs/nfs/delegation.c     |  9 ++++++++-
->>>>   fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
->>>>   include/linux/nfs_xdr.h |  1 -
->>>>   3 files changed, 19 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
->>>> index 122fb3f14ffb..9546d2195c25 100644
->>>> --- a/fs/nfs/delegation.c
->>>> +++ b/fs/nfs/delegation.c
->>>> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, 
->>>> fmode_t type)
->>>>   static int nfs_delegation_claim_locks(struct nfs4_state *state, 
->>>> const nfs4_stateid *stateid)
->>>>   {
->>>>       struct inode *inode = state->inode;
->>>> +    struct nfs_inode *nfsi = NFS_I(inode);
->>>>       struct file_lock *fl;
->>>>       struct file_lock_context *flctx = locks_inode_context(inode);
->>>>       struct list_head *list;
->>>> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct 
->>>> nfs4_state *state, const nfs4_state
->>>>           goto out;
->>>>       list = &flctx->flc_posix;
->>>> +
->>>> +    /* Guard against reclaim and new lock/unlock calls */
->>>> +    down_write(&nfsi->rwsem);
->>>>       spin_lock(&flctx->flc_lock);
->>>>   restart:
->>>>       for_each_file_lock(fl, list) {
->>>> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct 
->>>> nfs4_state *state, const nfs4_state
->>>>               continue;
->>>>           spin_unlock(&flctx->flc_lock);
->>>>           status = nfs4_lock_delegation_recall(fl, state, stateid);
->>>> -        if (status < 0)
->>>> +        if (status < 0) {
->>>> +            up_write(&nfsi->rwsem);
->>>>               goto out;
->>>> +        }
->>>>           spin_lock(&flctx->flc_lock);
->>>>       }
->>>>       if (list == &flctx->flc_posix) {
->>>> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct 
->>>> nfs4_state *state, const nfs4_state
->>>>           goto restart;
->>>>       }
->>>>       spin_unlock(&flctx->flc_lock);
->>>> +    up_write(&nfsi->rwsem);
->>>>   out:
->>>>       return status;
->>>>   }
->>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->>>> index 91bcf67bd743..9d6fbca8798b 100644
->>>> --- a/fs/nfs/nfs4proc.c
->>>> +++ b/fs/nfs/nfs4proc.c
->>>> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task 
->>>> *task, void *data)
->>>>       switch (task->tk_status) {
->>>>           case 0:
->>>>               renew_lease(calldata->server, calldata->timestamp);
->>>> -            locks_lock_inode_wait(calldata->lsp->ls_state->inode, 
->>>> &calldata->fl);
->>>>               if (nfs4_update_lock_stateid(calldata->lsp,
->>>>                       &calldata->res.stateid))
->>>>                   break;
->>>> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task 
->>>> *task, void *calldata)
->>>>       case 0:
->>>>           renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
->>>>                   data->timestamp);
->>>> -        if (data->arg.new_lock && !data->cancelled) {
->>>> -            data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->>>> -            if (locks_lock_inode_wait(lsp->ls_state->inode, &data- 
->>>> >fl) < 0)
->>>> -                goto out_restart;
->>>> -        }
->>>>           if (data->arg.new_lock_owner != 0) {
->>>>               nfs_confirm_seqid(&lsp->ls_seqid, 0);
->>>>               nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
->>>> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state 
->>>> *state, int cmd, struct file_lock *f
->>>>       msg.rpc_argp = &data->arg;
->>>>       msg.rpc_resp = &data->res;
->>>>       task_setup_data.callback_data = data;
->>>> -    if (recovery_type > NFS_LOCK_NEW) {
->>>> -        if (recovery_type == NFS_LOCK_RECLAIM)
->>>> -            data->arg.reclaim = NFS_LOCK_RECLAIM;
->>>> -    } else
->>>> -        data->arg.new_lock = 1;
->>>> +
->>>> +    if (recovery_type == NFS_LOCK_RECLAIM)
->>>> +        data->arg.reclaim = NFS_LOCK_RECLAIM;
->>>> +
->>>>       task = rpc_run_task(&task_setup_data);
->>>>       if (IS_ERR(task))
->>>>           return PTR_ERR(task);
->>>> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state 
->>>> *state, int cmd, struct file_lock
->>>>       up_read(&nfsi->rwsem);
->>>>       mutex_unlock(&sp->so_delegreturn_mutex);
->>>>       status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
->>>> +    if (status)
->>>> +        goto out;
->>>> +
->>>> +    down_read(&nfsi->rwsem);
->>>> +    request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->>>> +    status = locks_lock_inode_wait(state->inode, request);
->>>> +    up_read(&nfsi->rwsem);
->>>>   out:
->>>>       request->c.flc_flags = flags;
->>>>       return status;
->>>> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
->>>> index ff1f12aa73d2..9599ad15c3ad 100644
->>>> --- a/include/linux/nfs_xdr.h
->>>> +++ b/include/linux/nfs_xdr.h
->>>> @@ -580,7 +580,6 @@ struct nfs_lock_args {
->>>>       struct nfs_lowner    lock_owner;
->>>>       unsigned char        block : 1;
->>>>       unsigned char        reclaim : 1;
->>>> -    unsigned char        new_lock : 1;
->>>>       unsigned char        new_lock_owner : 1;
->>>>   };
->>>
->>> Nice work!
->>>
->>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
->>>
->>>
->>
-> 
-> 
-> 
+Workload run:
+I focused on the 2 workloads below, doing 2 passes of a large flat
+directory (with close to 100K files) - 
+a cold pass, and warm pass using the cache from the cold pass:
+- lslr - ls -lR on both runs
+- lsmix - ls -R (cold) and then ls -lR (warm)
 
+I also played with the rdirplus behavior using both the default
+heuristic behavior and the `rdirplus=force` set at mount time.
+
+Numbers:
+actimeo=5s, rdirplus=force, ACLs off, flat_dir
+==================================================================
+
+                 |         LSLR          |         LSMIX
+                 |  (ls -lR cold / warm) |  (p1 ls -R / p2 ls -lR)
+Operation        |  flat cold  | flat warm |   flat p1   | flat p2
+-----------------+-------------+-----------+-------------+---------
+READDIR calls    |    27       |     0     |   27        |    0
+READDIR recv B   | 23,603,024  |     0     | 23,603,024  |    0
+   call type     | readdirplus |    --     | readdirplus |    --
+LOOKUP           |     1       |     0     |    1        |    0
+GETATTR          |     3       |  100,000  |    2        | 100,001
+ACCESS           |     2       |     0     |    2        |    0
+-----------------+-------------+-----------+-------------+---------
+Elapsed (age)    |  ~14 s      |  ~62 s    |   ~16 s     |  ~63 s
+
+
+Observations:
+When doing `ls` or `ls -l` on a directory, due to the open(2) on the
+directory, the client gets a directory delegation - caching the
+directory attributes and file names. However, as we don't have file
+delegations due to no open(2) calls to any of the files. Henceforth,
+the cache of file attributes is governed by `actimeo`.
+Now here is the interesting bit, if the next `ls -l` is issued after
+the `actimeo`, a massive GETATTR storm hits the server, doing stat()
+calls for every file in the directory. As a result, the performance of
+this warm `ls -l` run ends up being worse than the cold pass. I am
+guessing this is most likely due to the compounded "rdirplus" being more
+efficient than stat() calls.
+
+
+Proposal:
+For large directories, this ends up being a massive problem, taking 1-2
+minutes when enumerating a directory on the warm passes.
+- An easier way to tackle this could be to do a rdirplus=[auto | forced]
+  instead of issuing the stat(2) storm to the server: When the client
+  notices that there are cache misses, which would be the case of file
+  attributes, instead of fetching file names from the directory-delegation
+  cache and attributes from GETATTR, the client does a READDIRPLUS to
+  the server, nonetheless.
+- A more tedious would be the to cache file attributes as well, as a part
+  of the directory delegation. This would end up requiring a change in the
+  NFS protocol spec though.
+- Bulk GETATTR calls: I am uncertain of the feasibility of this, but
+  what if, the client could do 1 GETATTR call for getting attributes
+  for multiple files. 
+
+-- 
+Piyush
 
