@@ -1,50 +1,58 @@
-Return-Path: <linux-nfs+bounces-22776-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BItfFrkROmqo0wcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22776-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 06:55:21 +0200
+	id O1kDCs43OmrB4AcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 09:37:50 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id E280F6B40B2
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 06:55:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C71706B4E77
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 09:37:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=PY+QmjLC;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22776-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22776-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linux.alibaba.com;
+	dkim=pass header.d=huawei.com header.s=dkim header.b="u/j/R+Ys";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22777-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=huawei.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C60C7303DD07
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 04:55:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6D4CC301FD49
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 07:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B7333A9622;
-	Tue, 23 Jun 2026 04:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC925464D;
+	Tue, 23 Jun 2026 07:37:46 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71E83A3804;
-	Tue, 23 Jun 2026 04:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF70B75801;
+	Tue, 23 Jun 2026 07:37:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782190504; cv=none; b=VkDm6h6PQ5g1Z5NxojiLaoyPEPlVrI02+60vI2HiH2DbB/PtcqyWxz1UwryRO+AgZalgmBEjjfbUTOdU7GtldPdDsHsXFAV1fcl3fUR6oK9ruXh88VfTdjtPyf8bpskJ+9C7o4BtuQCR+igtFGr8kNjfBvdOodBFF7wKnB4A3tc=
+	t=1782200266; cv=none; b=T3QvPU8mIkCrtPk3odvbztzLT8+DfzU9jFp5HFkVxFYx2Tpu/M03EQUarfYlvn9d2nWCjOJ475ncZLkMT6mDB7UKCkfqMcQjQRASqUh99AH5Y0Cdmgj1XXm9Qsg6cqMslTw6GlIwhRaI8VuXvzEb/owEFMzKkCslvJT58vMgCso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782190504; c=relaxed/simple;
-	bh=WhEL/BqwCBXzwugRJUHxcnan8uq6aZKyEugRw0UxD0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQ9IsUP49AmSk9heBKISU3eAiabWBWhrlAxnzX64kLUTCVZ6o9StND1XL5Ovs10PprKjRsKccbBtLbjPw/ISzNR/A70aBKI5xIPsceGygikmA6JT9fYNQeY2rZz+V85BCIUS+3mr4Hx8Cn1ZvNlFCre7qYR0hIugaV+GrCOVZ4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PY+QmjLC; arc=none smtp.client-ip=115.124.30.99
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782190498; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=vtLCPOvXkBkBfi3DgLhj2I+9Rs0o/4TKYRj6X2OritY=;
-	b=PY+QmjLCYW9TynKfERnNXX9xEjsAfWDyDTosELDN39fMR8uslgQsqLb4yG2Fy44KAATuNFg5w556uu29FCYPybYhdVqacDcdesdl4LnmFtgeo/e21acH5elDHD5mpreCKt4uG2Q57fBdOg6WmBS6kkQHWY1CshapY86+VJ69M1A=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0X5Sjruz_1782190497;
-Received: from 30.120.78.16(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0X5Sjruz_1782190497 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Jun 2026 12:54:57 +0800
-Message-ID: <c0bbe0c0-2b6f-47d9-8f45-b16bb455a089@linux.alibaba.com>
-Date: Tue, 23 Jun 2026 12:54:54 +0800
+	s=arc-20240116; t=1782200266; c=relaxed/simple;
+	bh=7KY+riPquigpYiNWCdw15ESu0Rjk+vSn+wcWy0KUsTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=riG4QKrABdwZGDR4WqJiKqg9QJitLaunY+Ab2FS82KvAGZlpSNs8VH92FPs2pg9+Pu9i/uLH+yi+w6czLvi/yegPU0vP9M5KLSRqvhxXSB4Y0hVnib+LUJ3kLjLsuI4hYCrPWDNv93+6giITN9MCjKHOPy/Ihxx1Bc8hxQiYhiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=u/j/R+Ys; arc=none smtp.client-ip=113.46.200.226
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=kVKvh6ytZ6/0+qWMDg/SowqVA26fH8LxyNW7d4OdxmU=;
+	b=u/j/R+YspM8ptAzTAbtKsYsuawFR58nvUaxV1LSysxlXfzyiSGxbgDN0pFIL9ZKZMMq4K+vxu
+	iJllPtHwZUwC0FC7fz/wvCImQxa5BenT5YMul2skSgA5WMpidPl2WgDAUOdpuVQY7Rc3Kb8BBtx
+	I96GyicRbJiPNCtSW1bHg2E=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gkxXV6sVBzKm58;
+	Tue, 23 Jun 2026 15:29:30 +0800 (CST)
+Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9383A4056E;
+	Tue, 23 Jun 2026 15:37:35 +0800 (CST)
+Received: from [10.174.176.240] (10.174.176.240) by
+ kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Tue, 23 Jun 2026 15:37:34 +0800
+Message-ID: <9b27efad-f22a-45b9-b080-1552acf50016@huawei.com>
+Date: Tue, 23 Jun 2026 15:37:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,203 +60,255 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] NFS: invalidate i_blocks after COMMIT to fix stale block
- count on NFSv4
-To: Trond Myklebust <trondmy@kernel.org>, anna@kernel.org,
- linux-nfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
- linux-xfs@vger.kernel.org
-References: <20260622060038.13731-1-jefflexu@linux.alibaba.com>
- <2d09ab9a74d1eb21c99454dba8be597612d20efa.camel@kernel.org>
- <71d4ac02-d760-49ab-a01c-e7d1a6662a18@linux.alibaba.com>
- <2098148dfb9e156dd88242afecdea5d372b7a169.camel@kernel.org>
-Content-Language: en-US
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <2098148dfb9e156dd88242afecdea5d372b7a169.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
+ lock list
+To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
+	<chuck.lever@oracle.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yangerkun@huaweicloud.com>, <lilingfeng3@huawei.com>,
+	<zhangjian496@h-partners.com>, <yi.zhang@huawei.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <20260226012203.3962997-1-yangerkun@huawei.com>
+ <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
+ <163aebb3-4233-4aaa-872c-c36aa3fcb3af@huawei.com>
+ <403e3267-70ef-4fb3-9700-0a14d28abc4c@huawei.com>
+From: yangerkun <yangerkun@huawei.com>
+In-Reply-To: <403e3267-70ef-4fb3-9700-0a14d28abc4c@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemf100006.china.huawei.com (7.202.181.220)
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-12.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	WHITELIST_SPF_DKIM(-3.00)[alibaba.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-9.16 / 15.00];
+	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:joseph.qi@linux.alibaba.com,m:linux-xfs@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22777-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jefflexu@linux.alibaba.com,linux-nfs@vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:yangerkun@huaweicloud.com,m:lilingfeng3@huawei.com,m:zhangjian496@h-partners.com,m:yi.zhang@huawei.com,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22776-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jefflexu@linux.alibaba.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yangerkun@huawei.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:email,huawei.com:mid,huawei.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E280F6B40B2
+X-Rspamd-Queue-Id: C71706B4E77
 
+Gently ping...
 
+This patch has been reviewed, but leave alone here for a long time...
 
-On 6/23/26 12:51 PM, Trond Myklebust wrote:
-> On Tue, 2026-06-23 at 12:04 +0800, Jingbo Xu wrote:
+在 2026/5/8 16:33, yangerkun 写道:
+> Gently ping...
 > 
->> +cc [linux-xfs@vger.kernel.org](mailto:linux-xfs@vger.kernel.org)
+> 在 2026/4/16 11:01, yangerkun 写道:
+>> Hi Anna and Trond,
 >>
->> On 6/22/26 9:56 PM, Trond Myklebust wrote:
+>> Could you please help check if there are any issues with this patch, and
+>> if there are none, could you help merge it in?
 >>
->>> On Mon, 2026-06-22 at 14:00 +0800, Jingbo Xu wrote:
->>>
->>>> NFSv4 COMMIT compound does not include GETATTR, and
->>>> nfs4_commit_done_cb
->>>> does not refresh inode attributes. Meanwhile, every WRITE marks
->>>> NFS_INO_INVALID_BLOCKS via nfs_post_op_update_inode_force_wcc_locked.
+>> Thanks,
+>> Erkun.
+>>
+>> 在 2026/3/9 22:09, Jeff Layton 写道:
+>>> On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
+>>>> Lingfeng identified a bug and suggested two solutions, but both appear
+>>>> to have issues.
 >>>>
->>>> After COMMIT, i_blocks remains stale until the next stat() triggers a
->>>> full revalidation. In writeback-heavy workloads where COMMITs happen
->>>> without intervening stat() calls, the cached block count can stay
->>>> indefinitely wrong.
+>>>> Generally, we cannot release flc_lock while iterating over the file 
+>>>> lock
+>>>> list to avoid use-after-free (UAF) problems with file locks. However,
+>>>> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
+>>>> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
+>>>> may take a long time. To resolve this, NFS switches to using nfsi- 
+>>>> >rwsem
+>>>> for the same protection, and nfs_reclaim_locks follows this approach.
+>>>> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
+>>>> this is inadequate since a single inode can have multiple nfs4_state
+>>>> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
 >>>>
->>>> Mark NFS_INO_INVALID_BLOCKS on successful COMMIT completion so that
->>>> the
->>>> next nfs_getattr requesting STATX_BLOCKS will issue a GETATTR with
->>>> SPACE_USED, fetching the correct value from the server.
+>>>> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte 
+>>>> range
+>>>> lock must be atomic with the stateid update"), the functions
+>>>> nfs4_locku_done and nfs4_lock_done also break this rule because they
+>>>> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
+>>>> this protection could cause many deadlocks, so instead, the call to
+>>>> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
+>>>> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
+>>>> lock must be atomic with the stateid update"), it has been resolved
+>>>> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly 
+>>>> triggering
+>>>> state recovery") because all slots are drained before calling
+>>>> nfs4_do_reclaim, which prevents concurrent stateid changes along 
+>>>> this path.
+>>>> Also, nfs_delegation_claim_locks does not cause this concurrency either
+>>>> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no 
+>>>> RPC is
+>>>> sent, so nfs4_lock_done is not called. Therefore,
+>>>> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the 
+>>>> first
+>>>> time the stateid is set.
 >>>>
->>>> This matches NFSv3 behavior where nfs3_commit_done already calls
->>>> nfs_refresh_inode with the wcc_data post-op attributes.
->>>>
->>>> Reproduce with xfstests generic/694 on NFSv4.0 loopback:
->>>>
->>>>   Server:
->>>>     mount /dev/vdc /data/test
->>>>     mount /dev/vdd /data/scratch
->>>>     exportfs -o insecure,rw,sync,no_root_squash,fsid=1
->>>> 127.0.0.1:/data/test
->>>>     exportfs -o insecure,rw,sync,no_root_squash,fsid=2
->>>> 127.0.0.1:/data/scratch
->>>>
->>>>   Client:
->>>>     mount -t nfs -o vers=4.0 localhost:/data/test /mnt/test
->>>>     mount -t nfs -o vers=4.0 localhost:/data/scratch /mnt/scratch
->>>>
->>>>   local.config:
->>>>     export TEST_FS_MOUNT_OPTS="-o vers=4.0"
->>>>     export MOUNT_OPTIONS="-o vers=4.0"
->>>>     export FSTYP=nfs
->>>>     export TEST_DEV=localhost:/data/test
->>>>     export SCRATCH_DEV=localhost:/data/scratch
->>>>     export TEST_DIR=/mnt/test
->>>>     export SCRATCH_MNT=/mnt/scratch
->>>>
->>>> This fixes xfstests generic/694.
->>>>
->>>> Assisted-by: Qoder:Qwen3.7-Max
->>>> Signed-off-by: Jingbo Xu <[jefflexu@linux.alibaba.com](mailto:jefflexu@linux.alibaba.com)>
+>>>> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+>>>> Closes: https://lore.kernel.org/all/20250419085709.1452492-1- 
+>>>> lilingfeng3@huawei.com/
+>>>> Closes: https://lore.kernel.org/all/20250715030559.2906634-1- 
+>>>> lilingfeng3@huawei.com/
+>>>> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be 
+>>>> atomic with the stateid update")
+>>>> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
 >>>> ---
->>>>  fs/nfs/write.c | 2 ++
->>>>  1 file changed, 2 insertions(+)
+>>>>   fs/nfs/delegation.c     |  9 ++++++++-
+>>>>   fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
+>>>>   include/linux/nfs_xdr.h |  1 -
+>>>>   3 files changed, 19 insertions(+), 13 deletions(-)
 >>>>
->>>> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
->>>> index d7c399763ad9..88c5c9f7434c 100644
->>>> --- a/fs/nfs/write.c
->>>> +++ b/fs/nfs/write.c
->>>> @@ -1851,6 +1851,8 @@ static void nfs_commit_release_pages(struct
->>>> nfs_commit_data *data)
->>>>  		/* Latency breaker */
->>>>  		cond_resched();
->>>>  	}
->>>> +	if (status >= 0)
->>>> +		nfs_set_cache_invalid(data->inode,
->>>> NFS_INO_INVALID_BLOCKS);
->>>>  
->>>>  	nfs_init_cinfo(&cinfo, data->inode, data->dreq);
->>>>  	nfs_commit_end(cinfo.mds);
+>>>> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+>>>> index 122fb3f14ffb..9546d2195c25 100644
+>>>> --- a/fs/nfs/delegation.c
+>>>> +++ b/fs/nfs/delegation.c
+>>>> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode, 
+>>>> fmode_t type)
+>>>>   static int nfs_delegation_claim_locks(struct nfs4_state *state, 
+>>>> const nfs4_stateid *stateid)
+>>>>   {
+>>>>       struct inode *inode = state->inode;
+>>>> +    struct nfs_inode *nfsi = NFS_I(inode);
+>>>>       struct file_lock *fl;
+>>>>       struct file_lock_context *flctx = locks_inode_context(inode);
+>>>>       struct list_head *list;
+>>>> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct 
+>>>> nfs4_state *state, const nfs4_state
+>>>>           goto out;
+>>>>       list = &flctx->flc_posix;
+>>>> +
+>>>> +    /* Guard against reclaim and new lock/unlock calls */
+>>>> +    down_write(&nfsi->rwsem);
+>>>>       spin_lock(&flctx->flc_lock);
+>>>>   restart:
+>>>>       for_each_file_lock(fl, list) {
+>>>> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct 
+>>>> nfs4_state *state, const nfs4_state
+>>>>               continue;
+>>>>           spin_unlock(&flctx->flc_lock);
+>>>>           status = nfs4_lock_delegation_recall(fl, state, stateid);
+>>>> -        if (status < 0)
+>>>> +        if (status < 0) {
+>>>> +            up_write(&nfsi->rwsem);
+>>>>               goto out;
+>>>> +        }
+>>>>           spin_lock(&flctx->flc_lock);
+>>>>       }
+>>>>       if (list == &flctx->flc_posix) {
+>>>> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct 
+>>>> nfs4_state *state, const nfs4_state
+>>>>           goto restart;
+>>>>       }
+>>>>       spin_unlock(&flctx->flc_lock);
+>>>> +    up_write(&nfsi->rwsem);
+>>>>   out:
+>>>>       return status;
+>>>>   }
+>>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>>> index 91bcf67bd743..9d6fbca8798b 100644
+>>>> --- a/fs/nfs/nfs4proc.c
+>>>> +++ b/fs/nfs/nfs4proc.c
+>>>> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task 
+>>>> *task, void *data)
+>>>>       switch (task->tk_status) {
+>>>>           case 0:
+>>>>               renew_lease(calldata->server, calldata->timestamp);
+>>>> -            locks_lock_inode_wait(calldata->lsp->ls_state->inode, 
+>>>> &calldata->fl);
+>>>>               if (nfs4_update_lock_stateid(calldata->lsp,
+>>>>                       &calldata->res.stateid))
+>>>>                   break;
+>>>> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task 
+>>>> *task, void *calldata)
+>>>>       case 0:
+>>>>           renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
+>>>>                   data->timestamp);
+>>>> -        if (data->arg.new_lock && !data->cancelled) {
+>>>> -            data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+>>>> -            if (locks_lock_inode_wait(lsp->ls_state->inode, &data- 
+>>>> >fl) < 0)
+>>>> -                goto out_restart;
+>>>> -        }
+>>>>           if (data->arg.new_lock_owner != 0) {
+>>>>               nfs_confirm_seqid(&lsp->ls_seqid, 0);
+>>>>               nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
+>>>> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state 
+>>>> *state, int cmd, struct file_lock *f
+>>>>       msg.rpc_argp = &data->arg;
+>>>>       msg.rpc_resp = &data->res;
+>>>>       task_setup_data.callback_data = data;
+>>>> -    if (recovery_type > NFS_LOCK_NEW) {
+>>>> -        if (recovery_type == NFS_LOCK_RECLAIM)
+>>>> -            data->arg.reclaim = NFS_LOCK_RECLAIM;
+>>>> -    } else
+>>>> -        data->arg.new_lock = 1;
+>>>> +
+>>>> +    if (recovery_type == NFS_LOCK_RECLAIM)
+>>>> +        data->arg.reclaim = NFS_LOCK_RECLAIM;
+>>>> +
+>>>>       task = rpc_run_task(&task_setup_data);
+>>>>       if (IS_ERR(task))
+>>>>           return PTR_ERR(task);
+>>>> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state 
+>>>> *state, int cmd, struct file_lock
+>>>>       up_read(&nfsi->rwsem);
+>>>>       mutex_unlock(&sp->so_delegreturn_mutex);
+>>>>       status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
+>>>> +    if (status)
+>>>> +        goto out;
+>>>> +
+>>>> +    down_read(&nfsi->rwsem);
+>>>> +    request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+>>>> +    status = locks_lock_inode_wait(state->inode, request);
+>>>> +    up_read(&nfsi->rwsem);
+>>>>   out:
+>>>>       request->c.flc_flags = flags;
+>>>>       return status;
+>>>> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+>>>> index ff1f12aa73d2..9599ad15c3ad 100644
+>>>> --- a/include/linux/nfs_xdr.h
+>>>> +++ b/include/linux/nfs_xdr.h
+>>>> @@ -580,7 +580,6 @@ struct nfs_lock_args {
+>>>>       struct nfs_lowner    lock_owner;
+>>>>       unsigned char        block : 1;
+>>>>       unsigned char        reclaim : 1;
+>>>> -    unsigned char        new_lock : 1;
+>>>>       unsigned char        new_lock_owner : 1;
+>>>>   };
+>>>
+>>> Nice work!
+>>>
+>>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 >>>
 >>>
->>> That sounds like an XFS bug, not an NFS bug. COMMIT isn't changing the
->>> data contents of the file: it is just ensuring that the existing data
->>> is persisted onto disk.
->>>
->>
->>
->> Yes the underlying backend filesystem is indeed xfs.
->>
->> I retest it and can confirm that this failure is much likely
->> reproducible on NFS upon XFS, while NFS upon EXT4 succeeds for 50
->> consecutive test runs.
->>
->> Beside XFS itself also passes the test.
->>
->>
->> To be honest I'm not familiar with NFS, following is what AI concludes:
->>
->> ```
->> Root Cause Timing Sequence: NFSv4.0 Stale i_blocks After syncfs
->>
->>
->>    Client issues multiple UNSTABLE WRITEs — each WRITE compound includes
->> a piggy-backed GETATTR that returns the server's current SPACE_USED. The
->> client updates inode->i_blocks from the last completed WRITE's post-op
->> attributes.
->>
->>    Server-side delayed allocation — the export's local filesystem
->> (ext4/xfs) uses delayed allocation. Metadata blocks (indirect blocks /
->> extent tree nodes) are not yet allocated during most WRITE handling;
->> they materialize only when the local fs performs its own writeback.
->>
->>    Last WRITE completes before server metadata writeback (~80%
->> probability in user's environment) — the final GETATTR returns
->> SPACE_USED = 8388608 (data only, no metadata block). Client caches
->> i_blocks = 8388608.
->>
->>    syncfs triggers COMMIT — nfs_write_inode(WB_SYNC_ALL) calls
->> __nfs_commit_inode, which sends a COMMIT RPC to the server.
->>    Server executes vfs_fsync_range — this forces the local fs writeback,
->> which now allocates the metadata block. Server's true SPACE_USED becomes
->> 8388616 (+8 sectors = 4 KiB).
->>
->>    COMMIT response carries no file attributes — per RFC 7530 §16.3.3,
->> COMMIT4resok contains only a write verifier. The XDR decoder
->> (nfs4_xdr_dec_commit) never calls decode_getfattr.
->>
->>    nfs_commit_release_pages performs no attribute invalidation — it
->> neither sends a follow-up GETATTR nor marks NFS_INO_INVALID_BLOCKS. The
->> stale cached value persists.
->>
->>    Subsequent stat returns stale i_blocks — cache_validity is clean, so
->> nfs_getattr serves the cached value 8388608 without revalidation.
->>
->>    After cycle_mount, fresh GETATTR returns 8388616 — mismatch detected,
->> test fails.
->> ```
 >>
 > 
 > 
-> I agree with your AI that this may indeed be a consequence of XFS's delayed allocation feature. However that hardly changes the fact that it would be a violation of the POSIX rules for how write(), fsync() and stat() are supposed to work in this situation.
 > 
-> My point is that I fail to see why we should degrade the performance of the generic NFS client in order to address a bug in one of the back end filesystems (in this case XFS) being exported.
-> 
-
-Understand.  Just have no idea which is the proper way to fix this.
-
-
--- 
-Thanks,
-Jingbo
 
 
