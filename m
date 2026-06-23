@@ -1,66 +1,65 @@
-Return-Path: <linux-nfs+bounces-22780-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22781-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Uv/uOM5qOmpd8gcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22780-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 13:15:26 +0200
+	id B5LjNLZpOmrg8QcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22781-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 13:10:46 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D038B6B69C9
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 13:15:25 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED006B6931
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 13:10:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=K1oiXfI8;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22780-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22780-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=mTzFhnBd;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22781-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22781-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9C2F03093036
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 11:04:51 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BB7A830022D6
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 11:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C4E23D1CCA;
-	Tue, 23 Jun 2026 11:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC3C3D333D;
+	Tue, 23 Jun 2026 11:10:43 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C6B3D3008;
-	Tue, 23 Jun 2026 11:04:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568B53D3008
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 11:10:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782212691; cv=none; b=TC1JIFYm5qDD0TGslUB+nZ63sx4mXf6daoLKIS3hJQa/nV9lVlQQDJm28QCzn0485Hc2pm+WkO08OEhXU0H2NNWkVlIltusJeAP5BfBHefvbYU6C0C7ZpgoSx4UaYawNpdKjyyvMgPMPEqR+fevluh3eXYuYB9kfe5TTEbh3WpE=
+	t=1782213043; cv=none; b=t+RmGfR/pYyXdTjFe1N2DnLVjjobdctp0MXEyjnm4vvBbHPfHoBcUnZ8oWksvDo1IodHEVhVe4de/38RoKZ1uSMZ878FbGG7NOtQBTn0B5XponVjjhZzLGrZWYTafQ48R+I5AdQ94fgChnR//W9arj8fUwF/bFv4tFnTKEn5JEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782212691; c=relaxed/simple;
-	bh=RTanCUpvtUBMF4CUzqkZamxQOh9M+hWnwErkCQfsBMg=;
+	s=arc-20240116; t=1782213043; c=relaxed/simple;
+	bh=NtcvFgG1VZiseA5clpiOuDwJWBYfQ+BqL9c/foYazeM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Xm+DqgsfpYbjgl8upR4qcZ0JvoHDG8j3aKNsLG/CcyKzH07Ahq/EYoprc0UYdAnAmqkqKWTvKMolL7Rtm5UNeBv+Btp5GTZXVzGA+VVvdHC0uM8p/RkOxj3b8AHGeeqe8NZnA74wdkJ0myOypDQ+QdXPAhsMfn+IKK3eYJBl63I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1oiXfI8; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F4E1F000E9;
-	Tue, 23 Jun 2026 11:04:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=fsC3d6j6nIKhj+jFSfYln1Q16imEjomvNHL26z4wVv8aUET7KOjmE8StcjXEKCwrH3YdBFCWI+ZAtLWptg3BOxvPlRIUav3GzxYBL5r1vfOrGEG9KVkId05Nrp22si0sPv2GJ4oT9JjNaShPAtzfi+HGvFKcTPikfAE9L1oYUbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTzFhnBd; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105DF1F000E9;
+	Tue, 23 Jun 2026 11:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782212689;
-	bh=lClbhszTMPfKdNN1SBGGeBJpPSg3DMW+kbrXaZkEA6Q=;
+	s=k20260515; t=1782213041;
+	bh=CwVKF+PFcvP+h9afhR16X+OCCJf/E4KGBejynDATNiQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=K1oiXfI8teb2/PO3sQlsYRiCzZl3I9H4vXLTXuNrw945WytGRbVOKOR+kYewCq5Os
-	 GNb03NAThlsFDYdolvNFdUmY+3CkxpCN5F5FrIoKno+mg9WJ0WYZMJnLQlMYuyOZ62
-	 KO/FsXykpyX7YMJys+0uazCHSVMgu5/y2/dWg7dOfUyphRkzaEJOLQIWEzZt7W9vuK
-	 cSCoCZc+0xI6r8+le5Y+6hW/0EGw+sjtCKGXqqKTwIVdzX/NbBGgKdMOrjJ4HOa2v2
-	 C2mFeDWxD2sUcPQ9AYpGLrNit1alEQoRdAwFeU4nfAj2BBeePk29Y7pIEd8JcIQhgc
-	 gcQhZoKG2mRtQ==
-Message-ID: <e5ebc36c9a7e356c8d1b98ce3a9d1f3420177334.camel@kernel.org>
-Subject: Re: [PATCH 1/4] nfs: store the full NFS fileid in inode->i_ino
+	b=mTzFhnBd6jxX9b34c2rf4ImVrrMxmtVOmHuuSoQXOUU04zZUN1rFazzOSZ0Qf52uA
+	 TDd8CD4NzcEnhHJPI4PeUIf5PZu2naordRQLqCvFHAipmiqBHP7dLO8fUWnfv8toI4
+	 Rvmxa6iCejmyAUeBZo4tcJW210ZyShuzB2ila6Guy9ct53pwc+iE8j1hxdwjPh6t9r
+	 8iFJmLL06fbw0UVPlh2zAiF8wWqXF8+bKM9V6LRD2LUg2G27nX2tWBIrDKQe6CuyL0
+	 RaGkoLlsU94/e3S/gJYZFnQ1zg2L93ED5Xd9BLR+qvtCw+7xjILd01cXOF0Olonkv1
+	 GDHrBNh9EkruA==
+Message-ID: <227140ce94ebe4186d02b081489a58f32b878ec4.camel@kernel.org>
+Subject: Re: NFS delegations behavior analysis
 From: Jeff Layton <jlayton@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Jonathan Corbet
-	 <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Date: Tue, 23 Jun 2026 07:04:47 -0400
-In-Reply-To: <655d0d2a5f8203c52c78d37462328449e49b7feb.camel@kernel.org>
-References: <20260512-nfsino-v1-0-284720522f4c@kernel.org>
-		 <20260512-nfsino-v1-1-284720522f4c@kernel.org>
-		 <0750912a-f8dc-4714-ae11-4592d2e8eca7@sirena.org.uk>
-	 <655d0d2a5f8203c52c78d37462328449e49b7feb.camel@kernel.org>
+To: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>, Benjamin Coddington
+	 <ben.coddington@hammerspace.com>
+Cc: Piyush Sachdeva <s.piyush1024@gmail.com>, linux-nfs
+	 <linux-nfs@vger.kernel.org>, Chuck Lever <cel@kernel.org>, trondmy
+	 <trondmy@kernel.org>, sfrench@samba.org, sprasad@microsoft.com, 
+	vaibsharma@microsoft.com
+Date: Tue, 23 Jun 2026 07:10:39 -0400
+In-Reply-To: <455619640.1622514.1782212671358.JavaMail.zimbra@desy.de>
+References: <m2qzlx7eye.fsf@gmail.com>
+	 <0b39c1e01a92f99fe456c76523ec7f3aa5dc1a81.camel@kernel.org>
+	 <455619640.1622514.1782212671358.JavaMail.zimbra@desy.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -145,175 +144,172 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-22781-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22780-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,samba.org,microsoft.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:broonie@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:tigran.mkrtchyan@desy.de,m:ben.coddington@hammerspace.com,m:s.piyush1024@gmail.com,m:linux-nfs@vger.kernel.org,m:cel@kernel.org,m:trondmy@kernel.org,m:sfrench@samba.org,m:sprasad@microsoft.com,m:vaibsharma@microsoft.com,m:spiyush1024@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D038B6B69C9
+X-Rspamd-Queue-Id: 6ED006B6931
 
-On Mon, 2026-06-22 at 18:38 -0400, Jeff Layton wrote:
-> On Mon, 2026-06-22 at 22:05 +0100, Mark Brown wrote:
-> > On Tue, May 12, 2026 at 12:12:42PM -0400, Jeff Layton wrote:
-> > > Now that inode->i_ino is a 64-bit value, store the full NFS fileid in
-> > > it directly instead of an XOR-folded hash. This makes NFS_FILEID() an=
-d
-> > > set_nfs_fileid() operate on inode->i_ino rather than the separate
-> > > nfsi->fileid field.
+On Tue, 2026-06-23 at 13:04 +0200, Mkrtchyan, Tigran wrote:
+>=20
+> ----- Original Message -----
+> > From: "Jeff Layton" <jlayton@kernel.org>
+> > To: "Piyush Sachdeva" <s.piyush1024@gmail.com>, "linux-nfs" <linux-nfs@=
+vger.kernel.org>, "Chuck Lever" <cel@kernel.org>,
+> > "trondmy" <trondmy@kernel.org>, sfrench@samba.org, sprasad@microsoft.co=
+m
+> > Cc: vaibsharma@microsoft.com
+> > Sent: Tuesday, 23 June, 2026 12:50:16
+> > Subject: Re: NFS delegations behavior analysis
+>=20
+> > On Tue, 2026-06-23 at 15:31 +0530, Piyush Sachdeva wrote:
+> > > Hi,
+> > > Lately I have been running micro benchmarks around the `ls` command a=
+nd
+> > > reading through the code documentation of the NFS client to better
+> > > understand the client side caching behavior with and without
+> > > delegations.
+> > >=20
+> > > Understanding so far:
+> > > Delegations (both file and directory) are granted by the server to th=
+e
+> > > client, indefinitely (until revoked or under the watermark) to cache
+> > > attributes. The caching of data is a result of the attribute
+> > > cache. Hence forth, a directory delegation will cache the directory
+> > > attributes and the names of the files in the directory, and a file
+> > > delegation will cache the attributes of the file and the file data.
+> > >=20
+> > > Workload run:
+> > > I focused on the 2 workloads below, doing 2 passes of a large flat
+> > > directory (with close to 100K files) -
+> > > a cold pass, and warm pass using the cache from the cold pass:
+> > > - lslr - ls -lR on both runs
+> > > - lsmix - ls -R (cold) and then ls -lR (warm)
+> > >=20
+> > > I also played with the rdirplus behavior using both the default
+> > > heuristic behavior and the `rdirplus=3Dforce` set at mount time.
+> > >=20
+> > > Numbers:
+> > > actimeo=3D5s, rdirplus=3Dforce, ACLs off, flat_dir
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >=20
+> > >                  |         LSLR          |         LSMIX
+> > >                  |  (ls -lR cold / warm) |  (p1 ls -R / p2 ls -lR)
+> > > Operation        |  flat cold  | flat warm |   flat p1   | flat p2
+> > > -----------------+-------------+-----------+-------------+---------
+> > > READDIR calls    |    27       |     0     |   27        |    0
+> > > READDIR recv B   | 23,603,024  |     0     | 23,603,024  |    0
+> > >    call type     | readdirplus |    --     | readdirplus |    --
+> > > LOOKUP           |     1       |     0     |    1        |    0
+> > > GETATTR          |     3       |  100,000  |    2        | 100,001
+> > > ACCESS           |     2       |     0     |    2        |    0
+> > > -----------------+-------------+-----------+-------------+---------
+> > > Elapsed (age)    |  ~14 s      |  ~62 s    |   ~16 s     |  ~63 s
+> > >=20
+> > >=20
+> > > Observations:
+> > > When doing `ls` or `ls -l` on a directory, due to the open(2) on the
+> > > directory, the client gets a directory delegation - caching the
+> > > directory attributes and file names. However, as we don't have file
+> > > delegations due to no open(2) calls to any of the files. Henceforth,
+> > > the cache of file attributes is governed by `actimeo`.
+> > > Now here is the interesting bit, if the next `ls -l` is issued after
+> > > the `actimeo`, a massive GETATTR storm hits the server, doing stat()
+> > > calls for every file in the directory. As a result, the performance o=
+f
+> > > this warm `ls -l` run ends up being worse than the cold pass. I am
+> > > guessing this is most likely due to the compounded "rdirplus" being m=
+ore
+> > > efficient than stat() calls.
+> > >=20
+> > >=20
+> > > Proposal:
+> > > For large directories, this ends up being a massive problem, taking 1=
+-2
+> > > minutes when enumerating a directory on the warm passes.
+> > > - An easier way to tackle this could be to do a rdirplus=3D[auto | fo=
+rced]
+> > >   instead of issuing the stat(2) storm to the server: When the client
+> > >   notices that there are cache misses, which would be the case of fil=
+e
+> > >   attributes, instead of fetching file names from the directory-deleg=
+ation
+> > >   cache and attributes from GETATTR, the client does a READDIRPLUS to
+> > >   the server, nonetheless.
+> > > - A more tedious would be the to cache file attributes as well, as a =
+part
+> > >   of the directory delegation. This would end up requiring a change i=
+n the
+> > >   NFS protocol spec though.
+> > > - Bulk GETATTR calls: I am uncertain of the feasibility of this, but
+> > >   what if, the client could do 1 GETATTR call for getting attributes
+> > >   for multiple files.
 > >=20
-> > This patch is in -next now and is triggering a failure for in the LTP
-> > ioctl10.c test for me on arm:
 > >=20
-> > tst_buffers.c:57: TINFO: Test is using guarded buffers
-> > tst_test.c:2047: TINFO: LTP version: 20260130
-> > tst_test.c:2050: TINFO: Tested kernel: 7.1.0-next-20260622 #1 SMP @1782=
-128788 armv7l
+> > ls is such a hard workload to get right, because we don't really get an
+>=20
+> 100% agree. And there were a couple of attempts to address this issue
+> (second ls that is slow).
+>=20
+> > indication in the kernel of what userland's intentions are. It's
+> > basically a readdir() call followed by a bunch of stat()'s, but at the
+> > point where we're getting the readdir() call, we don't know if userland
+> > intends to stat() those files or not. We have to make a guess about
+> > that intention.
 > >=20
-> > ...
+> > In this case, it sounds like the directory cache was valid, so the
+> > client decided it didn't need to do a READDIR at all, but the
+> > individual files had caches that timed out.
 > >=20
-> > ioctl10.c:111: TFAIL: q->inode (11493907226) !=3D entry.vm_inode (42949=
-67295)
-> >=20
+> > So imagine you're the kernel client and have been given that second
+> > readdir() call: Why should you decide to do a READDIRPLUS at that point
+> > instead of a regular READDIR?
 >=20
-> Note that the vm_inode value is arm32's ULONG_MAX.
+> May we need some kind of client-side heuristics, like on the server side
+> for open-delegations, where after seeing some `stats` for files in the
+> In the same directory, the client will decide to switch to READDIR (v4)
+> to get all attributes in one go.
 >=20
-> > arm64 seems unaffected, I didn't really investigate but I'll note that
-> > unsigned long is 32 bit on arm.
-> >=20
-> > Full log:
-> >=20
-> >    https://lava.sirena.org.uk/scheduler/job/2904745#L3852
-> >=20
-> > bisect log with more test job links:
-> >=20
->=20
->=20
-> The testcase does this:
->=20
-> static void parse_maps_file(const char *filename, const char *keyword, st=
-ruct map_entry *entry)
-> {
->         FILE *fp =3D SAFE_FOPEN(filename, "r");
->=20
->         char line[1024];
->=20
->         while (fgets(line, sizeof(line), fp) !=3D NULL) {
->                 if (fnmatch(keyword, line, 0) =3D=3D 0) {
->                         if (sscanf(line, "%lx-%lx %s %lx %x:%x %lu %s",
->                                                 &entry->vm_start, &entry-=
->vm_end, entry->vm_flags_str,
->                                                 &entry->vm_pgoff, &entry-=
->vm_major, &entry->vm_minor,
->                                                 &entry->vm_inode, entry->=
-vm_name) < 7)
->                                 tst_brk(TFAIL, "parse maps file /proc/sel=
-f/maps failed");
->=20
->                         entry->vm_flags =3D parse_vm_flags(entry->vm_flag=
-s_str);
->=20
->                         SAFE_FCLOSE(fp);
->                         return;
->                 }
->         }
->=20
->         SAFE_FCLOSE(fp);
->         tst_brk(TFAIL, "parse maps file /proc/self/maps failed");
-> }
->=20
-> Note that it's trying to stuff the inode number field into an unsigned
-> long. Before this patch, the maps file would have printed the old
-> (hashed) inode number on 32-bit. Now, it prints the full 64-bit inode
-> number.
->=20
-> I asked The Big Pickle and it says:
->=20
-> "In glibc (userspace): The C standard says this is undefined behavior.
-> In practice, glibc's scanf internally uses strtoul/strtoull, which on
-> overflow store ULONG_MAX/ULLONG_MAX and set errno =3D ERANGE. However,
-> scanf itself does not propagate ERANGE to the caller =E2=80=94 it still r=
-eturns
-> 1 (success). So you'd silently get ULONG_MAX stored."
->=20
-> We could argue that this is a bug in the testcase. It assumes that the
-> maps file will never print a value larger than ULONG_MAX in that field,
-> and I don't see why it would make that assumption in this day and age.
->=20
-> Are there actual programs in the field that scrape the maps file that
-> might be affected by this change?
 
-This testcase patch should fix it. I'll plan to send this to the LTP
-list, but it would be nice if someone could confirm the fix on arm32:
+Yeah, we definitely do. I'm just not sure what those heuristics look
+like.
 
------------------------8<---------------------
-
-[PATCH LTP] ioctl10: fix the sscanf() call to handle 64-bit inode on 32-bit=
- arch
-
-This test started failing recently on arm32, when we switched the
-kernel to displaying the full 64-bit inode number in the maps file.
-Change the testcase to allow for a full 64-bit inode number on all
-arches. The value it's compared to is already 64-bits so widening this
-field is all that is necessary.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- testcases/kernel/syscalls/ioctl/ioctl10.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/testcases/kernel/syscalls/ioctl/ioctl10.c b/testcases/kernel/s=
-yscalls/ioctl/ioctl10.c
-index b668c9e93889..d7e40f3c8643 100644
---- a/testcases/kernel/syscalls/ioctl/ioctl10.c
-+++ b/testcases/kernel/syscalls/ioctl/ioctl10.c
-@@ -35,7 +35,7 @@ struct map_entry {
- 	unsigned long vm_pgoff;
- 	unsigned int vm_major;
- 	unsigned int vm_minor;
--	unsigned long vm_inode;
-+	uint64_t vm_inode;
- 	char vm_name[256];
- 	unsigned int vm_flags;
- };
-@@ -68,7 +68,7 @@ static void parse_maps_file(const char *filename, const c=
-har *keyword, struct ma
-=20
- 	while (fgets(line, sizeof(line), fp) !=3D NULL) {
- 		if (fnmatch(keyword, line, 0) =3D=3D 0) {
--			if (sscanf(line, "%lx-%lx %s %lx %x:%x %lu %s",
-+			if (sscanf(line, "%lx-%lx %s %lx %x:%x %llu %s",
- 						&entry->vm_start, &entry->vm_end, entry->vm_flags_str,
- 						&entry->vm_pgoff, &entry->vm_major, &entry->vm_minor,
- 						&entry->vm_inode, entry->vm_name) < 7)
+I think Ben did the latest pass of trying to tune the heuristics here.
+Any thoughts on how we could do this better (and whether there are
+particular ls-ish workloads that we don't want to regress)?
 --=20
-2.54.0
-
+Jeff Layton <jlayton@kernel.org>
 
