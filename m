@@ -1,260 +1,234 @@
-Return-Path: <linux-nfs+bounces-22773-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22774-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5kAZBTjmOWpqywcAu9opvQ
-	(envelope-from <linux-nfs+bounces-22773-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 03:49:44 +0200
+	id diTaNRcGOmrr0AcAu9opvQ
+	(envelope-from <linux-nfs+bounces-22774-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 06:05:43 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 294306B3651
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 03:49:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 376246B3F1C
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 06:05:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=gFClyCwJ;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22773-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22773-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=QtCL8OW7;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22774-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22774-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7A580300F7B2
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 01:47:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A59EB304DB98
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jun 2026 04:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C13917BEBF;
-	Tue, 23 Jun 2026 01:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 261BF395AE2;
+	Tue, 23 Jun 2026 04:04:45 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C3F355F22
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 01:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B3339022B;
+	Tue, 23 Jun 2026 04:04:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782179254; cv=none; b=rj/oVgOlnCp3F/iVlcclgk7ExrYSE+jlBDK3yB1wiuIaBHk0A1AvnjDjaQX47RqdCxn/h1d/nGmQWKuo5EpVWoHv3ihFKUrisIaDq+bxX78fkJNCheB2IL0N182TOoEzWKG3RWOOQPKSzM6Z4DVobny+dw62ikLhKO5eGYR11zY=
+	t=1782187485; cv=none; b=uFnxxRe6tfe38/NcVWNXKSUrZIi1ZyvY8zacmgW3JGGsJSQXxQ4eF+Md5Fj8x6g5rwakcbHH/SaZt0ADbEnaGiCZk6aQIg2KYFK4n+VpntN5Nghdots5+I2xVUTzAgMA3BVoOpYwG5K3KTMOaf4DJpA3hYukDI9UhZ9c3HV/IA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782179254; c=relaxed/simple;
-	bh=mxQr6mZNPGMjsyxgd4tX/IKRtDhS6/zpnrop+y7+vU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iCRROpz0bbvmFKoFuxdB9LdFQt2jNJywCf0bBSqXA4Qo6Xk+5NeitNZc41uvZiH3yLUKf2ua9TsR8i9DdWbqpqURlwgasPMpMolYNiz0K3WO50J+b8jpbNAHdIxJE3sQF9wQGxyG7nI4cKYVyqN1U52cIkmMO2iVWGXGV0UxMhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFClyCwJ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 339DE1F000E9;
-	Tue, 23 Jun 2026 01:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782179252;
-	bh=7vVC65Iy1yV6xpJAdVT0T+/tPu/s3vPRcQHSzz0ry9g=;
-	h=From:To:Cc:Subject:Date;
-	b=gFClyCwJYOoWycTczZIwHKjkGJJXUHYx6xZCCKYSwVAdVc7TW2d6YvOMp748ZTwKE
-	 Sc5vXQKcqiqcuKs6JXbvYnBFHT+izgGFJ1L8BpHUMkHDSq/wMmwrnRDell5jKrBGV8
-	 bOWoqE7Ig57Sro8e4nv6kEJ8xDZWp9FJhcvmuvg0Vi8BrEUwsv3El4tSxMtNIXEUTV
-	 zEEPb76FEX4lMDS9HecWEUCLRJnsDyWzW6+9JvqXjbMweC53GV/fh38xelhKHUU5fP
-	 +mj8XkB3/ChYREEkm+pcliD6rWJMS2nbqzjADyT96QlNpqT55cIHMbLlRR2mBv0R20
-	 Ac6FjkSQaXUlA==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chris Mason <clm@meta.com>
-Subject: [PATCH] svcrdma: Reject inline replies that overflow the pull-up buffer
-Date: Mon, 22 Jun 2026 21:47:28 -0400
-Message-ID: <20260623014728.826032-1-cel@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1782187485; c=relaxed/simple;
+	bh=36HmSz0nfuCjvaQ0XW7BUfHd8BrN+aGz2B0yqJ07nPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mE2dh1UnGj6F61rj8ubquN+/zHvAOui8JLKfNfHluy3lu3vyKJKh1oTTHWWgamuNys/ro8vmb8KKr2NY9sJdbJhZfOkw0X1PmOfwt6JvIgjSD+v+ecB83jNGPt8uWFQNR5sI1E1p830jCD5So81dlwqNkregQ4DSLGblgR/Qppo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QtCL8OW7; arc=none smtp.client-ip=115.124.30.133
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782187479; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=yqkrfYs2jEBOpbs4UxnwxjJjFItCcyIqQyhy6JXkNqo=;
+	b=QtCL8OW7CBNpYOtuz4nKXwJXrI03v/F8fG+EBIpPP9AM/BRzbxh3jKASW8u2mpeJLTNVd+R0o3AvgIssu+xlnlTu+FvM2kKVnaovMnZFc3cxOIw70c/zor3UmPc5JS4+H2pnH3unaSbVkHzRdI+Ys7zPpD9j7uTKFZE4DCnFW4I=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0X5SkNzW_1782187478;
+Received: from 30.120.78.16(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0X5SkNzW_1782187478 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Jun 2026 12:04:38 +0800
+Message-ID: <71d4ac02-d760-49ab-a01c-e7d1a6662a18@linux.alibaba.com>
+Date: Tue, 23 Jun 2026 12:04:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] NFS: invalidate i_blocks after COMMIT to fix stale block
+ count on NFSv4
+To: Trond Myklebust <trondmy@kernel.org>, anna@kernel.org,
+ linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
+ linux-xfs@vger.kernel.org
+References: <20260622060038.13731-1-jefflexu@linux.alibaba.com>
+ <2d09ab9a74d1eb21c99454dba8be597612d20efa.camel@kernel.org>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <2d09ab9a74d1eb21c99454dba8be597612d20efa.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-12.16 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	WHITELIST_SPF_DKIM(-3.00)[alibaba.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:jlayton@kernel.org,m:okorniev@redhat.com,m:dai.ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:clm@meta.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22773-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:joseph.qi@linux.alibaba.com,m:linux-xfs@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jefflexu@linux.alibaba.com,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-22774-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jefflexu@linux.alibaba.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,meta.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 294306B3651
+X-Rspamd-Queue-Id: 376246B3F1C
 
-An RPC-over-RDMA client can request a reply, such as an NFS READ
-payload, without providing a Write list or a Reply chunk to carry
-it. When such a reply needs more scatter/gather entries than the
-device's Send Queue supports, svc_rdma_pull_up_needed() selects
-pull-up and svc_rdma_pull_up_reply_msg() linearizes the whole
-reply into sctxt->sc_xprt_buf. That buffer is only sc_max_req_size
-bytes, while the reply on this path is bounded only by the client's
-request, so svc_rdma_xb_linearize() copies past the end of the
-buffer and corrupts adjacent slab memory. The oversized length is
-then stored in sc_sges[0].length and posted, so the device also
-reads beyond the mapped region.
++cc linux-xfs@vger.kernel.org
 
-The SGE-exhaustion branch is the only pull-up path that can exceed
-the buffer: the threshold branch pulls up only replies smaller
-than RPCRDMA_PULLUP_THRESH, and replies that fit the device's SGE
-budget are sent directly without linearization. Make
-svc_rdma_pull_up_needed() report -E2BIG when the reply it would
-pull up cannot fit sc_max_req_size, and fail the request with
-ERR_CHUNK as RFC 8166 Section 4.5.3 directs rather than dropping
-the connection.
+On 6/22/26 9:56 PM, Trond Myklebust wrote:
+> On Mon, 2026-06-22 at 14:00 +0800, Jingbo Xu wrote:
+>> NFSv4 COMMIT compound does not include GETATTR, and
+>> nfs4_commit_done_cb
+>> does not refresh inode attributes. Meanwhile, every WRITE marks
+>> NFS_INO_INVALID_BLOCKS via nfs_post_op_update_inode_force_wcc_locked.
+>>
+>> After COMMIT, i_blocks remains stale until the next stat() triggers a
+>> full revalidation. In writeback-heavy workloads where COMMITs happen
+>> without intervening stat() calls, the cached block count can stay
+>> indefinitely wrong.
+>>
+>> Mark NFS_INO_INVALID_BLOCKS on successful COMMIT completion so that
+>> the
+>> next nfs_getattr requesting STATX_BLOCKS will issue a GETATTR with
+>> SPACE_USED, fetching the correct value from the server.
+>>
+>> This matches NFSv3 behavior where nfs3_commit_done already calls
+>> nfs_refresh_inode with the wcc_data post-op attributes.
+>>
+>> Reproduce with xfstests generic/694 on NFSv4.0 loopback:
+>>
+>>   Server:
+>>     mount /dev/vdc /data/test
+>>     mount /dev/vdd /data/scratch
+>>     exportfs -o insecure,rw,sync,no_root_squash,fsid=1
+>> 127.0.0.1:/data/test
+>>     exportfs -o insecure,rw,sync,no_root_squash,fsid=2
+>> 127.0.0.1:/data/scratch
+>>
+>>   Client:
+>>     mount -t nfs -o vers=4.0 localhost:/data/test /mnt/test
+>>     mount -t nfs -o vers=4.0 localhost:/data/scratch /mnt/scratch
+>>
+>>   local.config:
+>>     export TEST_FS_MOUNT_OPTS="-o vers=4.0"
+>>     export MOUNT_OPTIONS="-o vers=4.0"
+>>     export FSTYP=nfs
+>>     export TEST_DEV=localhost:/data/test
+>>     export SCRATCH_DEV=localhost:/data/scratch
+>>     export TEST_DIR=/mnt/test
+>>     export SCRATCH_MNT=/mnt/scratch
+>>
+>> This fixes xfstests generic/694.
+>>
+>> Assisted-by: Qoder:Qwen3.7-Max
+>> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+>> ---
+>>  fs/nfs/write.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+>> index d7c399763ad9..88c5c9f7434c 100644
+>> --- a/fs/nfs/write.c
+>> +++ b/fs/nfs/write.c
+>> @@ -1851,6 +1851,8 @@ static void nfs_commit_release_pages(struct
+>> nfs_commit_data *data)
+>>  		/* Latency breaker */
+>>  		cond_resched();
+>>  	}
+>> +	if (status >= 0)
+>> +		nfs_set_cache_invalid(data->inode,
+>> NFS_INO_INVALID_BLOCKS);
+>>  
+>>  	nfs_init_cinfo(&cinfo, data->inode, data->dreq);
+>>  	nfs_commit_end(cinfo.mds);
+> 
+> That sounds like an XFS bug, not an NFS bug. COMMIT isn't changing the
+> data contents of the file: it is just ensuring that the existing data
+> is persisted onto disk.
+> 
 
-The helper no longer answers a simple yes/no question: it now
-reports pull-up, no pull-up, or -E2BIG for a reply too large to
-linearize. Rename svc_rdma_pull_up_needed() to
-svc_rdma_check_pull_up() so its name no longer implies a boolean
-predicate.
+Yes the underlying backend filesystem is indeed xfs.
 
-Fixes: e248aa7be86e ("svcrdma: Remove max_sge check at connect time")
-Reported-by: Chris Mason <clm@meta.com>
-Assisted-by: kres:claude-opus-4-7
-Signed-off-by: Chuck Lever <cel@kernel.org>
----
- net/sunrpc/xprtrdma/svc_rdma_sendto.c | 47 ++++++++++++++++++---------
- 1 file changed, 32 insertions(+), 15 deletions(-)
+I retest it and can confirm that this failure is much likely
+reproducible on NFS upon XFS, while NFS upon EXT4 succeeds for 50
+consecutive test runs.
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index 7f6d17bf8c1f..c09659b17351 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -825,20 +825,21 @@ static int svc_rdma_xb_count_sges(const struct xdr_buf *xdr,
- }
- 
- /**
-- * svc_rdma_pull_up_needed - Determine whether to use pull-up
-+ * svc_rdma_check_pull_up - Determine whether to use pull-up
-  * @rdma: controlling transport
-  * @sctxt: send_ctxt for the Send WR
-  * @write_pcl: Write chunk list provided by client
-  * @xdr: xdr_buf containing RPC message to transmit
-  *
-  * Returns:
-- *   %true if pull-up must be used
-- *   %false otherwise
-+ *   %1 if pull-up must be used
-+ *   %0 if pull-up is not needed
-+ *   %-E2BIG if the reply is too large to be pulled up
-  */
--static bool svc_rdma_pull_up_needed(const struct svcxprt_rdma *rdma,
--				    const struct svc_rdma_send_ctxt *sctxt,
--				    const struct svc_rdma_pcl *write_pcl,
--				    const struct xdr_buf *xdr)
-+static int svc_rdma_check_pull_up(const struct svcxprt_rdma *rdma,
-+				   const struct svc_rdma_send_ctxt *sctxt,
-+				   const struct svc_rdma_pcl *write_pcl,
-+				   const struct xdr_buf *xdr)
- {
- 	/* Resources needed for the transport header */
- 	struct svc_rdma_pullup_data args = {
-@@ -850,11 +851,22 @@ static bool svc_rdma_pull_up_needed(const struct svcxprt_rdma *rdma,
- 	ret = pcl_process_nonpayloads(write_pcl, xdr,
- 				      svc_rdma_xb_count_sges, &args);
- 	if (ret < 0)
--		return false;
-+		return 0;
- 
- 	if (args.pd_length < RPCRDMA_PULLUP_THRESH)
--		return true;
--	return args.pd_num_sges >= rdma->sc_max_send_sges;
-+		return 1;
-+	if (args.pd_num_sges < rdma->sc_max_send_sges)
-+		return 0;
-+
-+	/*
-+	 * The reply has too many SGEs to Send inline, so it has to be
-+	 * linearized into sc_xprt_buf. That buffer holds only
-+	 * sc_max_req_size bytes, so a larger reply cannot be pulled up.
-+	 * RFC 8166 Section 4.5.3 requires responding with ERR_CHUNK.
-+	 */
-+	if (args.pd_length > rdma->sc_max_req_size)
-+		return -E2BIG;
-+	return 1;
- }
- 
- /**
-@@ -910,7 +922,7 @@ static int svc_rdma_xb_linearize(const struct xdr_buf *xdr,
-  * Assemble the elements of @xdr into the transport header buffer.
-  *
-  * Assumptions:
-- *  pull_up_needed has determined that @xdr will fit in the buffer.
-+ *  check_pull_up has determined that @xdr will fit in the buffer.
-  *
-  * Returns:
-  *   %0 if pull-up was successful
-@@ -945,6 +957,7 @@ static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
-  *
-  * Returns:
-  *   %0 if DMA mapping was successful.
-+ *   %-E2BIG if the reply is too large to be pulled up
-  *   %-EMSGSIZE if a buffer manipulation problem occurred
-  *   %-EIO if DMA mapping failed
-  *
-@@ -960,6 +973,7 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 		.md_rdma	= rdma,
- 		.md_ctxt	= sctxt,
- 	};
-+	int ret;
- 
- 	/* Set up the (persistently-mapped) transport header SGE. */
- 	sctxt->sc_send_wr.num_sge = 1;
-@@ -974,7 +988,10 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 	/* For pull-up, svc_rdma_send() will sync the transport header.
- 	 * No additional DMA mapping is necessary.
- 	 */
--	if (svc_rdma_pull_up_needed(rdma, sctxt, write_pcl, xdr))
-+	ret = svc_rdma_check_pull_up(rdma, sctxt, write_pcl, xdr);
-+	if (ret < 0)
-+		return ret;
-+	if (ret)
- 		return svc_rdma_pull_up_reply_msg(rdma, sctxt, write_pcl, xdr);
- 
- 	return pcl_process_nonpayloads(write_pcl, xdr,
-@@ -1162,7 +1179,7 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
- 						   &rctxt->rc_reply_pcl, sctxt,
- 						   &rqstp->rq_res);
- 		if (ret < 0)
--			goto reply_chunk;
-+			goto send_err;
- 		rc_size = ret;
- 	}
- 
-@@ -1183,10 +1200,10 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
- 
- 	ret = svc_rdma_send_reply_msg(rdma, sctxt, rctxt, rqstp);
- 	if (ret < 0)
--		goto put_ctxt;
-+		goto send_err;
- 	return 0;
- 
--reply_chunk:
-+send_err:
- 	if (ret != -E2BIG && ret != -EINVAL)
- 		goto put_ctxt;
- 
+Beside XFS itself also passes the test.
+
+
+To be honest I'm not familiar with NFS, following is what AI concludes:
+
+```
+Root Cause Timing Sequence: NFSv4.0 Stale i_blocks After syncfs
+
+
+   Client issues multiple UNSTABLE WRITEs — each WRITE compound includes
+a piggy-backed GETATTR that returns the server's current SPACE_USED. The
+client updates inode->i_blocks from the last completed WRITE's post-op
+attributes.
+
+   Server-side delayed allocation — the export's local filesystem
+(ext4/xfs) uses delayed allocation. Metadata blocks (indirect blocks /
+extent tree nodes) are not yet allocated during most WRITE handling;
+they materialize only when the local fs performs its own writeback.
+
+   Last WRITE completes before server metadata writeback (~80%
+probability in user's environment) — the final GETATTR returns
+SPACE_USED = 8388608 (data only, no metadata block). Client caches
+i_blocks = 8388608.
+
+   syncfs triggers COMMIT — nfs_write_inode(WB_SYNC_ALL) calls
+__nfs_commit_inode, which sends a COMMIT RPC to the server.
+   Server executes vfs_fsync_range — this forces the local fs writeback,
+which now allocates the metadata block. Server's true SPACE_USED becomes
+8388616 (+8 sectors = 4 KiB).
+
+   COMMIT response carries no file attributes — per RFC 7530 §16.3.3,
+COMMIT4resok contains only a write verifier. The XDR decoder
+(nfs4_xdr_dec_commit) never calls decode_getfattr.
+
+   nfs_commit_release_pages performs no attribute invalidation — it
+neither sends a follow-up GETATTR nor marks NFS_INO_INVALID_BLOCKS. The
+stale cached value persists.
+
+   Subsequent stat returns stale i_blocks — cache_validity is clean, so
+nfs_getattr serves the cached value 8388608 without revalidation.
+
+   After cycle_mount, fresh GETATTR returns 8388616 — mismatch detected,
+test fails.
+```
+
+
 -- 
-2.54.0
+Thanks,
+Jingbo
 
 
