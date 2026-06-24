@@ -1,220 +1,233 @@
-Return-Path: <linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22806-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Z00TCgoPPGqIjQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:08:26 +0200
+	id +82/MKkWPGrZjggAu9opvQ
+	(envelope-from <linux-nfs+bounces-22806-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:40:57 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 718A86C03C1
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:08:25 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30D276C0698
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:40:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b=SoFxbBET;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ftZN5FMj;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22806-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22806-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5E013303BB27
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 17:05:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1B0F0301C946
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 17:40:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A68379C5A;
-	Wed, 24 Jun 2026 17:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8565A3DD847;
+	Wed, 24 Jun 2026 17:40:54 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DE03783A1
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 17:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCCC3DD52C;
+	Wed, 24 Jun 2026 17:40:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782320700; cv=none; b=Z2VvD5RsI0BwnIhwhJ9U6Qq3/ooQG7ehmPgbHh8kerW/WlmZeAINwvmO/IqTNC/rv+B3KTXx/lPLnH3AJc8iPRzJCIwZaausXs5IOdKbcKduss9hRX8sji3Z4XcLQOwDMxKX6K74C+yRoe+6pDie5UUi6uCHEyWRjrNMIcIY9MI=
+	t=1782322854; cv=none; b=GY7C1uhPNtOys+QdyIEBQAcSbqxGTwWgULUYbT3u2P5N1CNy81j5wgpgL04y2p4PljXfma1DBO6ZJvHLSUIMkSp5fvax18sYOjBUqYPLez31T/DkLgOxYL3VlA3DxO+vPG/70+rE+TT2Vza5vDGZgdNpIsw8kUlKME4dmGI5n9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782320700; c=relaxed/simple;
-	bh=f4XXfEg9EkSIV9TvyGgaKfyAqm57C+xwNdBcZpJU0Ww=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KNfJCXwArN9k/1zHH/cmCw5ldTWm4tuuTs9+cveHgUxrYEddZ+/Kyumf/Xk3uZiU6YTQvJsBD6y67SppFr/7z6Oht8NcyQhS1pqC7RM6tAKFNGdDGzvYgkw6w3yDNQSkFREHWNvmanvaf0dfxNOvoAbGVN4hyHW5aFAJJwL0Wr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=SoFxbBET; arc=none smtp.client-ip=209.85.210.41
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7e93d1dd156so653445a34.0
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 10:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1782320696; x=1782925496; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xrFjH1dLnJGqAQgCyIJd/ck0yaqgBAkS8DGvIqjcyzI=;
-        b=SoFxbBETsSoiJnd2I67EnzTAB9StH4dYoObUES9jlb5xf9zhSDbBzDapc08CVWQUNK
-         O6Hzvjad/1mlqYJFyPWHkZyPfTfF7Q0weZbz/fv2uagMkFjGN24ffaEuD2AGP4OBp6C6
-         5de56N4nbrmbYln8ITHIHqVfUPx/FgWa6oL7T0T0PX6jNUcMn4wUXWmWPzFFzIY20jTT
-         Rf1QUYvBlS3AYvHKTqN8OXgoPzOHaJ8dNUxqt8uCShyEzyy05tG4V/guFg12HqdvD2Kx
-         p2intOzaRnM2fMZNXu358wBW3SJmfZPOYKrdqSZaTAcVoGuBDdiCO51RgoqLayewhfDB
-         MrRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782320696; x=1782925496;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xrFjH1dLnJGqAQgCyIJd/ck0yaqgBAkS8DGvIqjcyzI=;
-        b=BqLkUxa1Zzc8foLvg5kJpMGZahx7kXOdGwxpYNi6j45G+2jvj7DF5kg3JEubMWp4mg
-         dcC7JsRFaHIMI/21ujWeHg+pwWb5iIHyVadCNKpLURpQEiS+fOsEyjm3VF8Eq9kBTlrx
-         BzzUFvgFYYntMFrQYhQtVnBVLK37wei+i2NkZmkL0ySYH8hRlUn0TL+Q0voW5IHyUc76
-         /vttnLNBXFnElsb9Hz691lr92YvtFlGI0M0BNx+TfYI9gK7XLONcmTrt77etayv9Elz+
-         JUc09jE2iVA+Nc/4gENzfN9p3vilejgCE5pvuhEJd/eopih7BCLJja0UnTejxSVdSzVE
-         jrnw==
-X-Forwarded-Encrypted: i=1; AFNElJ/Vv80xtNoQMxlkFdcUq57iQ93NY8zJ95VHFOVY7eWZbvED+NjiBoAAicPpp+5RIFnjktEwrNuVqs0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpT4NytOGWnjlIqMxCi0NABQWKWNeOlXM8N4VBWLOG4xbH+xDC
-	ICM+hUUsy5qoLpalWefLMiJj/6CgdPrezB2uroHdvY2VkNFzUKDga6Gt+JpBa9p/s8Y=
-X-Gm-Gg: AfdE7cllaDdT99g28WKp/F9yOSHkhZ0/Aph/nDjdSYzFMkNYkB1M2AE3x02tRO3EW2r
-	usq0GBNzKx/OjUaNCedDY2nddNACRkH+CRmQy+YjdPsFm2KjGhQ8mj49rAElv4ZQpC7wP8p3t1x
-	fcRRvYRECWVbS6fMwHvIiXdMPstBmBhtc/Vk92f6iqKxkeH8SKrM5S5yQUsXBWTMCXThEltSyC+
-	pZl8qnaM4QKvH2DDgl2+VbZCskHfae2Cnrw413aNgs62TbqRud1cAVrDhgeQkpy/2rqmaab+LL5
-	z4VI2+mzFTbcAn3iyE9rEW6M+qTVWz8ReQmndp4Tq169rqz5yvnLrwfc7kLElUk3FQVFC7hGhoV
-	7Rs1btmSsIeZdYACoUJZHW9ud2RhRHoAdbozVCli9hzaMrJJmVh3dKQWOYyQAQ+P+7toV4nGyTB
-	vArOFj3cS8UuxWMlk1V9nkV1u//URd/5qpz/OkH+Ciom4jZTHw
-X-Received: by 2002:a05:6830:4c01:b0:7e6:c819:22e9 with SMTP id 46e09a7af769-7e98688aac7mr3739758a34.17.1782320696225;
-        Wed, 24 Jun 2026 10:04:56 -0700 (PDT)
-Received: from bcodding.csb.hammerspace.com ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e94429a031sm11959103a34.23.2026.06.24.10.04.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2026 10:04:55 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Chuck Lever <cel@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neilb@ownmail.net>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: Daire Byrne <daire@dneg.com>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH RFC 3/3] SUNRPC: grant an idle flow a burst allowance on the high-priority queue
-Date: Wed, 24 Jun 2026 13:04:50 -0400
-Message-ID: <fdd0e8541cdf8a37cbb97e5c33730593a1649eb6.1782314746.git.bcodding@hammerspace.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1782314746.git.bcodding@hammerspace.com>
-References: <cover.1782314746.git.bcodding@hammerspace.com>
+	s=arc-20240116; t=1782322854; c=relaxed/simple;
+	bh=taTjQ2E+gAZ0MH0aKhoFsHBfoQOqaOz9pQSiNtNH7Rw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mdTGxrAlDRKqj0goV7tXUOEWP1PmlrJ1rWrX3TsuzJBwl7HBdWk504gSkz/6bmF9bLUMGufJdbhK1+KCj5TIWQ145++T72CNRdk8m+PFGALIspHc3Nz3HXtlzMuYmi1s2T69D72qi0g4VIqstCmyvl0u+xcWTIKe6LXj5VI/kEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftZN5FMj; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BFD31F00A3A;
+	Wed, 24 Jun 2026 17:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782322851;
+	bh=Pgn/VEgIrLmNwajq3UvGjWPMFY3iHxHxLsrU3go3Occ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=ftZN5FMjsK+u48mFhmCe39UZNEpCu43knI4iHV2ssn9LC9vUZLGKdTmvYn64dFKPh
+	 Dd/G0miL8Os0VGwvKgsRJZInFoaJ9Doe/QyzFrqZ7UR74VpR/xbph/3hALvGFkcRX6
+	 zVqGXnqZh2bV51omHuQX3HY3l+TMlpngdOK1m712bzGxMjNWV/nFCAUsJYzAZrSUd1
+	 lAw9gSAtixuMz+Kmuu235Tg8MfJ7rR966EptZsmBazaH8nj83mHXf5axziE3nFT0o7
+	 9125rDGL6zyq60OhC16Wzh4DijPc3qWGBnTalT7x4iGRSCaZHg51+Mn+rwEAKwIi8l
+	 yRjq6UchKHQVA==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9679AF40092;
+	Wed, 24 Jun 2026 13:40:50 -0400 (EDT)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Wed, 24 Jun 2026 13:40:50 -0400
+X-ME-Sender: <xms:ohY8aj0UwhcI91WWq2w1KtDNQrjfcsWkcSfiWelekZQmnxIpHCGY_A>
+    <xme:ohY8as4_nOVKZQWTM95GgvyJ4AGR7akoQAPyEHJUqA8FKK6ymJwvFEofEeTOy-e0A
+    8lxvz0NgHzAynlm1XFXOknhogf3mtX638MKY9ebTtmWItMQGH9Drkoo>
+X-ME-Proxy-Cause: dmFkZTFGjxciZgABQIbAOdNCY9jS63ZZMwWqilOlJGzI6kmQ/SVlQ//XBITfCxErZVxqbc
+    3TfJ83SAPRyheCFVFBUeKvfrRC1qOuDFrwNM5gHFuSb+cCSYotKmJ49w8JZNfz493lDILy
+    nFHOikG1tU00sXgA2Jd1pUtwqQelXW3oueKg3IM+pL27w6zVGnvageAVxhrleHFMCZOgvI
+    Gto5iyqVPh3QiNPNTajmmk3YDOUexjsB1h+6XYtNXHoJ4gh9UKv0Q8fEgcvwW3JMkxBckY
+    DbnXOJYfvrO1coRt9KCJd5JJ6UgJe35hoBzDmVCV1pwCskf8yLElsbNs97HNZRNhdw2sb5
+    P7+mEqrl6MiDQvY7LKS9pL4ewu//cy6a/gGmOoe9syd2zyFw8K3BHoxmYQf8oSJ5vErw82
+    b+OgEiVqzo1DWtaMb2jaGVKiBO043L0o6b6/WEqCpSNT5uxygL+lCBuSBmF8TSlnpJvug7
+    gnEAMX69fdyE/CFXsPnghX2xdBku4lTcYjZOkdri9akoPVZDfKEK+RP1AzIUUxjJONp+NJ
+    UhjmQRA0AZlKnsZ6Uwo/qjF64qjGx4U20f+2SLQPQfqFghMlM+PUb67C75Sv4ortwMv4/7
+    mS6WAtW83fEJG+Q8yFZYlsmJ1DCGZpQT2BYnS3g9RoZkNdHeAWZMDTzJxA3A
+X-ME-Proxy: <xmx:ohY8as9pwMDkrR5-awNrAO6nZVYBK0QqIgvjCgaCs-7kEUTVg3dSvg>
+    <xmx:ohY8agJVZ0xpKA5QHPoVd3ddcaM1w0VvmGphRaHcv_r9khbJp6MTdw>
+    <xmx:ohY8algRIgBGb-aRDmecorb6Ua-bDizeQh4VLUmWMgugU9JxHmiaVQ>
+    <xmx:ohY8ag5ZYxJJAtG4eHyC_tWL2IkvGZXHmDmrSWPVjYeKm5myTsD5vQ>
+    <xmx:ohY8atYRSvZkh9p2ONdga1hvW-li4r4npKb0ySkftf892mAZJjtHsDKG>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6C58DB6006F; Wed, 24 Jun 2026 13:40:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: A3DnrUNbOo8B
+Date: Wed, 24 Jun 2026 13:40:29 -0400
+From: "Anna Schumaker" <anna@kernel.org>
+To: Shuangpeng <shuangpeng.kernel@gmail.com>,
+ "Trond Myklebust" <trondmy@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <cfbe2028-c317-4d43-bc87-6004224be128@app.fastmail.com>
+In-Reply-To: <4EB31731-B511-44E6-9019-760EED0A2BD1@gmail.com>
+References: <4EB31731-B511-44E6-9019-760EED0A2BD1@gmail.com>
+Subject: Re: [BUG] KASAN: slab-use-after-free in xprt_put
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-5.15 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22805-lists,linux-nfs=lfdr.de];
+	XM_UA_NO_VERSION(0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:jlayton@kernel.org,m:neilb@ownmail.net,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:daire@dneg.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:shuangpeng.kernel@gmail.com,m:trondmy@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:shuangpengkernel@gmail.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-22806-lists,linux-nfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:dkim,hammerspace.com:email,hammerspace.com:mid,hammerspace.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 718A86C03C1
+X-Rspamd-Queue-Id: 30D276C0698
 
-Routing only the leading request of a flow to the high-priority queue
-protects single, isolated round trips but not interactive work: one
-client request -- a syscall, a page fault against an NFS-backed file --
-fans out into many correlated RPCs.  With a budget of one, the first
-jumps the queue and the rest fall to the bulk queue and finish at the
-aggressor's rate, so the command completes no sooner than before.
+Hi Shuangpeng,
 
-Grant a transport a budget of SVC_XPRT_HI_BURST high-priority dispatches
-when it becomes active after idling (xpt_nr_rqsts == 0 at enqueue),
-spending one credit per dispatch and falling back to the bulk queue once
-the budget is gone.  The whole burst a request fans out into is now
-serviced ahead of backlogged flows, not just its leading edge.
+On Sat, Jun 6, 2026, at 10:16 PM, Shuangpeng wrote:
+> Hi Kernel Maintainers,
+>
+> I hit the following KASAN report while testing current upstream kernel:
+>
+> KASAN: slab-use-after-free in xprt_put
+>
+> on commit: e8c2f9fdadee7cbc75134dc463c1e0d856d6e5c7 (May 25 2026)
+>
+> To help trigger the bug more reliably, we applied a minimal diagnostic=
+ patch
+> that only adds delays and print statements.
+>
+> The reproducer and .config files are here.
+> https://gist.github.com/shuangpengbai/98a27c1e3c0dc5489f117efa7c254593
+>
+> I=E2=80=99m happy to test debug patches or provide additional informat=
+ion.
+>
+> Reported-by: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
 
-The budget refills only on an idle-to-active transition, so a flow that
-stays continuously backlogged spends its budget once and then lives in
-the bulk queue: a client cannot hold the high-priority queue by keeping
-its connections busy or by opening more of them.  xpt_hi_credit is
-touched only under the XPT_BUSY serialisation in svc_xprt_enqueue, so it
-needs no atomic or lock.
+There have been a handful of fixes in this area that were just merged
+upstream. Any chance you can check if the problem is still there with
+Linus's current tree (or with -rc1 when it releases after the weekend)?
 
-SVC_XPRT_HI_BURST is a fixed 64 for now -- generous enough to cover a
-typical request's RPC fan-out, and cheap to over-provision since a
-backlogged flow rides the high-priority queue for at most that many
-dispatches per idle period.
+Thanks,
+Anna
 
-Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
----
- include/linux/sunrpc/svc_xprt.h |  1 +
- net/sunrpc/svc_xprt.c           | 14 +++++++++++---
- 2 files changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index da2a2531e110..18b2c4237f1f 100644
---- a/include/linux/sunrpc/svc_xprt.h
-+++ b/include/linux/sunrpc/svc_xprt.h
-@@ -61,6 +61,7 @@ struct svc_xprt {
- 	struct svc_serv		*xpt_server;	/* service for transport */
- 	atomic_t    	    	xpt_reserved;	/* space on outq that is rsvd */
- 	atomic_t		xpt_nr_rqsts;	/* Number of requests */
-+	int			xpt_hi_credit;	/* high-priority dispatch budget */
- 	struct mutex		xpt_mutex;	/* to serialize sending data */
- 	spinlock_t		xpt_lock;	/* protects sk_deferred
- 						 * and xpt_auth_cache */
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index ec4c05094e9a..6b0da45aede6 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -499,6 +499,10 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
- 	return false;
- }
- 
-+/* High-priority dispatch budget granted to a flow when it becomes active
-+ * after idling -- sized to cover an interactive request's burst of RPCs. */
-+#define SVC_XPRT_HI_BURST	64
-+
- /**
-  * svc_xprt_enqueue - Queue a transport on an idle nfsd thread
-  * @xprt: transport with data pending
-@@ -523,10 +527,14 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
- 
- 	percpu_counter_inc(&pool->sp_sockets_queued);
- 	xprt->xpt_qtime = ktime_get();
--	if (atomic_read(&xprt->xpt_nr_rqsts))
--		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
--	else
-+	if (atomic_read(&xprt->xpt_nr_rqsts) == 0)
-+		xprt->xpt_hi_credit = SVC_XPRT_HI_BURST;
-+	if (xprt->xpt_hi_credit > 0) {
-+		xprt->xpt_hi_credit--;
- 		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts_hi);
-+	} else {
-+		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
-+	}
- 
- 	svc_pool_wake_idle_thread(pool);
- }
--- 
-2.53.0
-
+>
+>
+> [  170.638952][   T24]=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [  170.641053][   T24] BUG: KASAN: slab-use-after-free in xprt_put=20
+> (./include/linux/instrumented.h:112=20
+> ./include/linux/atomic/atomic-instrumented.h:400=20
+> ./include/linux/refcount.h:389 ./include/linux/refcount.h:432=20
+> ./include/linux/refcount.h:450 ./include/linux/kref.h:64=20
+> net/sunrpc/xprt.c:2195)
+> [  170.643027][   T24] Write of size 4 at addr ffff8881092e1000 by tas=
+k=20
+> kworker/1:0/24
+> [  170.645020][   T24]
+> [  170.645344][   T24] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX =
++=20
+> PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [  170.645349][   T24] Workqueue: events rpc_free_client_work
+> [  170.645375][   T24] Call Trace:
+> [  170.645390][   T24]  <TASK>
+> [  170.645394][   T24]  dump_stack_lvl (lib/dump_stack.c:94=20
+> lib/dump_stack.c:120)
+> [  170.645451][   T24]  print_report (mm/kasan/report.c:378=20
+> mm/kasan/report.c:482)
+> [  170.645514][   T24]  kasan_report (mm/kasan/report.c:595)
+> [  170.645525][   T24]  kasan_check_range (mm/kasan/generic.c:?=20
+> mm/kasan/generic.c:200)
+> [  170.645530][   T24]  xprt_put (./include/linux/instrumented.h:112=20
+> ./include/linux/atomic/atomic-instrumented.h:400=20
+> ./include/linux/refcount.h:389 ./include/linux/refcount.h:432=20
+> ./include/linux/refcount.h:450 ./include/linux/kref.h:64=20
+> net/sunrpc/xprt.c:2195)
+> [  170.645535][   T24]  rpc_free_client_work (net/sunrpc/clnt.c:991)
+> [  170.645541][   T24]  process_scheduled_works=20
+> (kernel/workqueue.c:3314 kernel/workqueue.c:3397)
+> [  170.645557][   T24]  worker_thread (kernel/workqueue.c:3478)
+> [  170.645577][   T24]  kthread (kernel/kthread.c:436)
+> [  170.645590][   T24]  ret_from_fork (arch/x86/kernel/process.c:158)
+> [  170.645624][   T24]  ret_from_fork_asm=20
+> (arch/x86/entry/entry_64.S:245)
+> [  170.645631][   T24]  </TASK>
+> [  170.645633][   T24]
+> [  170.657540][   T24] Freed by task 0 on cpu 1 at 165.626544s:
+> [  170.657945][   T24]  kasan_save_track (mm/kasan/common.c:57=20
+> mm/kasan/common.c:78)
+> [  170.658274][   T24]  kasan_save_free_info (mm/kasan/generic.c:584)
+> [  170.658632][   T24]  __kasan_slab_free (mm/kasan/common.c:253=20
+> mm/kasan/common.c:285)
+> [  170.658965][   T24]  __rcu_free_sheaf_prepare=20
+> (./include/linux/kasan.h:235 mm/slub.c:2689 mm/slub.c:2940)
+> [  170.659363][   T24]  rcu_free_sheaf (mm/slub.c:5850)
+> [  170.659693][   T24]  rcu_core (kernel/rcu/tree.c:2617=20
+> kernel/rcu/tree.c:2869)
+> [  170.659997][   T24]  handle_softirqs (kernel/softirq.c:622)
+> [  170.660335][   T24]  __irq_exit_rcu (kernel/softirq.c:656=20
+> kernel/softirq.c:496 kernel/softirq.c:735)
+> [  170.660657][   T24]  sysvec_apic_timer_interrupt=20
+> (arch/x86/kernel/apic/apic.c:1061 arch/x86/kernel/apic/apic.c:1061)
+> [  170.661058][   T24]  asm_sysvec_apic_timer_interrupt=20
+> (./arch/x86/include/asm/idtentry.h:697)
+> [  170.661480][   T24]
+> [  170.661645][   T24] The buggy address belongs to the object at=20
+> ffff8881092e1000
+> [  170.661645][   T24]  which belongs to the cache kmalloc-2k of size=20
+> 2048
+> [  170.662610][   T24] The buggy address is located 0 bytes inside of
+> [  170.662610][   T24]  freed 2048-byte region [ffff8881092e1000,=20
+> ffff8881092e1800)
+>
+> Best,
+> Shuangpeng
 
