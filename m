@@ -1,338 +1,209 @@
-Return-Path: <linux-nfs+bounces-22797-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22798-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id IrgWJ9xCO2rCUwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22797-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 04:37:16 +0200
+	id 4Qj8Hw1WO2psWQgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22798-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 05:59:09 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 978EC6BAF21
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 04:37:15 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF56C6BB2D2
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 05:59:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22797-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22797-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=DAmoJvwB;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22798-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22798-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AF8813023F8A
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 02:37:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7DD3D303A8F8
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 03:59:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193462F7F0A;
-	Wed, 24 Jun 2026 02:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E954366045;
+	Wed, 24 Jun 2026 03:59:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72C01A3160;
-	Wed, 24 Jun 2026 02:37:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7079263C8C
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 03:59:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782268633; cv=none; b=VeM+dHmRMAS4Ioggci6PNDf8LcIpvnHU2pTjS/BYZfqvXMTJuj+IqkMSkJyIsB7sc98WohpHKpqgjGyWFGOIzXHJgS9XBH1h9pYYBy7fEroKYCCO0J6jyiBVnvFDTck8e3gfq0jpGtQnYkaLNvKc2jSE4tcGCgI9jPEVFXe5EP0=
+	t=1782273547; cv=none; b=ug+7cTSnuVEDh3VbfMrYzi8sZ9bDrF0RzD9vSefDXkG6lVWAb2FVdY4rXFkrW34zw+JLKEs9amjzKQGSh42Fav+V8PdBS6WmL1iQ2mH4SnSlrqpJorNptDTWuQ2gq9n3SFeOKCa8ZfxpmUjWr2DNdvLmmoFw59ho/BAEdR4BjvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782268633; c=relaxed/simple;
-	bh=toChljM5J+1Q9hPupt4sU9AKm3KQxXi1+sR3Ofx1Z10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gvV9TJWak/VO5G5UOrDXaT3p4Wi+07Ek6o1x1wrjcDtrpjmVOWLyMfeZ9PE1FBTOW5G1oIkY4yIxZM+Tm596BZZwTbwQNAuk0VX7Xk8QlzIr3Wb37+uZNDFI5av6pCxBUoWYDm/uk3A+U1iUNur6+6fLiEXL/s/JapdkNSfSNA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4glQzn3DSfzYQts9;
-	Wed, 24 Jun 2026 10:36:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 3A792408E6;
-	Wed, 24 Jun 2026 10:37:03 +0800 (CST)
-Received: from [10.174.176.240] (unknown [10.174.176.240])
-	by APP1 (Coremail) with SMTP id cCh0CgA3hzzJQjtqRbqUCw--.49590S3;
-	Wed, 24 Jun 2026 10:36:59 +0800 (CST)
-Message-ID: <a12a6847-b74c-4fe8-9ad8-b1e0c607bc9d@huaweicloud.com>
-Date: Wed, 24 Jun 2026 10:36:57 +0800
+	s=arc-20240116; t=1782273547; c=relaxed/simple;
+	bh=WPUce5p8c2EUssWotG0cGhNLvcSMZmlN2FpDZaWBlEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJT+yot1RXde4qsuBdGimMHrBvoztFQ3oiK8O9IvsEYARm197gllxiYFWteLY3q/07sMI56RZGna6cg2jp170y4bofKQC/PRy4ut8//eBUZ2JsPFYEP/KeZO0jk+dKTSbajZGIEndPI2jZuminNYs1Zz+Awwdlza1KaEG1Xy4PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DAmoJvwB; arc=none smtp.client-ip=209.85.214.180
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2bf20f6be6bso3289545ad.3
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Jun 2026 20:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782273545; x=1782878345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aijuYlDBKVQj7gxHHfn1uzpu7gtBUKO8JKuffLd7lBI=;
+        b=DAmoJvwBfioZNUohy0ImiwAhVhDsMmrg6pdlxPOmPL9XSCZ5ubnP7fHnF4e87hk/TF
+         sjcWNPrVGTv9Kd6IZr17nieR4xLK8tnNMFrBgRyKOmPBXFcLDBdOrrREUEHpl9F+A92l
+         9os3C5gk5aQDTsHLHwgDo+DIKqNHDM13jxWbE2kpHzqu+AjZBM/Re4kb1pHPL02bmBnP
+         tG6XtzWsNr5tk5O+Ge5ucDesjiUW9t2FfezalWtcvcjj8wQvOids/w+nOM2YzuGCXi8L
+         dX1gbZxuhtNO4nFNvh2oXH5jK4Rz096TJTFISRZcg+26PWnKIYI+Ph+HiQBreHijcd9s
+         +1Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782273545; x=1782878345;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aijuYlDBKVQj7gxHHfn1uzpu7gtBUKO8JKuffLd7lBI=;
+        b=VvF0aW6sZ5RInkVAK+MgdFzljMhwq83GES+iuVSxCwqfdP9WErnTjAQs/j6XphpNAm
+         LGyUQ9gWWphRcFL8mgYzAybvowSNCBu1XTom+52ZHWXPTD/EYdmhNFwjrWsVxbsiGh/z
+         VxwTdsVUmh+cLBkwH9nG74kq/nW9uPvYioF0hXnxoN3V728g1mNYgUCO2D4Z8+FgHKVL
+         FAWvxCXBZAsXo3Aq0UXVzdegHPErrj9dvVe32KboP/rFno97sePBsBS2J6j+uaBPuYJF
+         87dSanVmUyXF7FY2PilWyaMgqUgkY0gn5lHV9RbjRUJ5wm+u0FtYDKd8+d0OtFqCK3Cc
+         Su0g==
+X-Gm-Message-State: AOJu0YwC5YdW8/pnCII1J6/Q/UYQZBWmq6DLx+EIfS3mWydukmxg22Su
+	fDqr8ql0RnhUJ+sZDBumaD1O1BMso+NnCdzZR3Ui7GFAB+3P0E2roHKUfNX9PVJF/YA=
+X-Gm-Gg: AfdE7cnCodrwkC2l+2UGeJ11AzVRbyG/53hZZW2fYHcQRQ2ia8qSydWItlOIVDO8mAe
+	bHwUIWiD8d84hrBrkgj5b7NBqch50hfzJK0xVf2CsDBLrhmSGfoaoqyX7/KL2zrc+2NOs2ZZNNW
+	35IX+vn/9tR3uLPNudORYsWrbxM9B/brl0cLd1VKQ9dWwfu06LFa0VBokN+dSzeig+FjCdgPr7S
+	cEzAWV3e/4E0UoVXYFbI8LGinfCSBEi7Cb6v0da0EY2CNM22qCn7JTRR/Aey19yQx2M0PZ9h37r
+	gmi+IAn3y9fRxyJXvmE2Gn67MFq6CnTWU4A9X4iJ+zVnKIi1neQeSMLZSLNfUKTINVpRTx3RSmc
+	NmFEj6fX06ibjpXNn5Vsdm1OdBF+wDr1w3KHI99YNIMLmRnyfZZ7xVby9Uhjo1klc8pwe52OYT5
+	ec4XbUQun62nAecraLBneNHLRZQsQpqNV0
+X-Received: by 2002:a17:903:244b:b0:2b4:59bf:5728 with SMTP id d9443c01a7336-2c7e14ea7e2mr17342975ad.25.1782273544995;
+        Tue, 23 Jun 2026 20:59:04 -0700 (PDT)
+Received: from haichao.tail057a43.ts.net ([2001:da8:e000:1206:69f4:9671:af22:eb44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c742fdd411sm135555715ad.0.2026.06.23.20.59.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 20:59:04 -0700 (PDT)
+From: Ruoyu Wang <ruoyuw560@gmail.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ruoyu Wang <ruoyuw560@gmail.com>
+Subject: [PATCH] NFSv4: remove callback IDR entry on client allocation failure
+Date: Wed, 24 Jun 2026 11:58:58 +0800
+Message-ID: <20260624035858.172129-1-ruoyuw560@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfs: use nfsi->rwsem to protect traversal of the file
- lock list
-To: Anna Schumaker <anna@kernel.org>, yangerkun <yangerkun@huawei.com>,
- Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
- Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- lilingfeng3@huawei.com, zhangjian496@h-partners.com, yi.zhang@huawei.com,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20260226012203.3962997-1-yangerkun@huawei.com>
- <dcf0b02002857a6be502e372ebb3e175412d7184.camel@kernel.org>
- <163aebb3-4233-4aaa-872c-c36aa3fcb3af@huawei.com>
- <403e3267-70ef-4fb3-9700-0a14d28abc4c@huawei.com>
- <9b27efad-f22a-45b9-b080-1552acf50016@huawei.com>
- <261c255e-2cc5-4f27-8239-e708f1c9f95a@app.fastmail.com>
-From: yangerkun <yangerkun@huaweicloud.com>
-In-Reply-To: <261c255e-2cc5-4f27-8239-e708f1c9f95a@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgA3hzzJQjtqRbqUCw--.49590S3
-X-Coremail-Antispam: 1UD129KBjvJXoWfGr45urykCFy5ur18WF1xXwb_yoWDWr4fpF
-	ykJFW5GrW5Xr18Jr12gw1UZryjyr1UGw1UXr1UJFyxArsrtr1Fgr1UXryq9r1UJr48Jr4U
-	Xr15JrW3u34UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22797-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[huaweicloud.com];
-	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:yangerkun@huawei.com,m:jlayton@kernel.org,m:trondmy@kernel.org,m:chuck.lever@oracle.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lilingfeng3@huawei.com,m:zhangjian496@h-partners.com,m:yi.zhang@huawei.com,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[yangerkun@huaweicloud.com,linux-nfs@vger.kernel.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-22798-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ruoyuw560@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[ruoyuw560@gmail.com,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yangerkun@huaweicloud.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ruoyuw560@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	R_DKIM_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,huaweicloud.com:mid,huaweicloud.com:from_mime,linux-nfs.org:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 978EC6BAF21
+X-Rspamd-Queue-Id: CF56C6BB2D2
 
+nfs4_alloc_client() allocates an NFSv4.0 callback identifier before it
+finishes setting up the client. If any later initialization step fails,
+the error path frees the nfs_client directly with nfs_free_client(). That
+bypasses nfs_put_client(), which is where the callback IDR entry is
+removed during normal teardown.
 
+A failed allocation can therefore leave cb_ident_idr pointing at a freed
+nfs_client. A later NFSv4.0 callback lookup by cb_ident would find the
+stale pointer and take a reference to it.
 
-在 2026/6/24 3:52, Anna Schumaker 写道:
-> Hi Erkun,
-> 
-> On Tue, Jun 23, 2026, at 3:37 AM, yangerkun wrote:
->> Gently ping...
->>
->> This patch has been reviewed, but leave alone here for a long time...
-> 
-> The patch is in my linux-next branch right here: https://git.linux-nfs.org/?p=anna/linux-nfs.git;a=commit;h=4837fb36219e6c08b666bc31a86841bad8526358
+Make the callback IDR removal helper callable by the allocation failure
+path, and remove the callback identifier before freeing the client.
 
-Aha, thanks for this! MAINTAINERS only point 
-git://git.linux-nfs.org/projects/trondmy/linux-nfs.git and I did not 
-found this commit exists. Sorry for the noise....
+This was found by a local static-analysis checker for publish-before-free
+lifetime bugs and confirmed by manual inspection.
 
-> 
-> Anna
-> 
->>
->> 在 2026/5/8 16:33, yangerkun 写道:
->>> Gently ping...
->>>
->>> 在 2026/4/16 11:01, yangerkun 写道:
->>>> Hi Anna and Trond,
->>>>
->>>> Could you please help check if there are any issues with this patch, and
->>>> if there are none, could you help merge it in?
->>>>
->>>> Thanks,
->>>> Erkun.
->>>>
->>>> 在 2026/3/9 22:09, Jeff Layton 写道:
->>>>> On Thu, 2026-02-26 at 09:22 +0800, Yang Erkun wrote:
->>>>>> Lingfeng identified a bug and suggested two solutions, but both appear
->>>>>> to have issues.
->>>>>>
->>>>>> Generally, we cannot release flc_lock while iterating over the file
->>>>>> lock
->>>>>> list to avoid use-after-free (UAF) problems with file locks. However,
->>>>>> functions like nfs_delegation_claim_locks and nfs4_reclaim_locks cannot
->>>>>> adhere to this rule because recover_lock or nfs4_lock_delegation_recall
->>>>>> may take a long time. To resolve this, NFS switches to using nfsi-
->>>>>>> rwsem
->>>>>> for the same protection, and nfs_reclaim_locks follows this approach.
->>>>>> Although nfs_delegation_claim_locks uses so_delegreturn_mutex instead,
->>>>>> this is inadequate since a single inode can have multiple nfs4_state
->>>>>> instances. Therefore, the fix is to also use nfsi->rwsem in this case.
->>>>>>
->>>>>> Furthermore, after commit c69899a17ca4 ("NFSv4: Update of VFS byte
->>>>>> range
->>>>>> lock must be atomic with the stateid update"), the functions
->>>>>> nfs4_locku_done and nfs4_lock_done also break this rule because they
->>>>>> call locks_lock_inode_wait without holding nfsi->rwsem. Simply adding
->>>>>> this protection could cause many deadlocks, so instead, the call to
->>>>>> locks_lock_inode_wait is moved into _nfs4_proc_setlk. Regarding the bug
->>>>>> fixed by commit c69899a17ca4 ("NFSv4: Update of VFS byte range
->>>>>> lock must be atomic with the stateid update"), it has been resolved
->>>>>> after commit 0460253913e5 ("NFSv4: nfs4_do_open() is incorrectly
->>>>>> triggering
->>>>>> state recovery") because all slots are drained before calling
->>>>>> nfs4_do_reclaim, which prevents concurrent stateid changes along
->>>>>> this path.
->>>>>> Also, nfs_delegation_claim_locks does not cause this concurrency either
->>>>>> since when _nfs4_proc_setlk is called with NFS_DELEGATED_STATE, no
->>>>>> RPC is
->>>>>> sent, so nfs4_lock_done is not called. Therefore,
->>>>>> nfs4_lock_delegation_recall from nfs_delegation_claim_locks is the
->>>>>> first
->>>>>> time the stateid is set.
->>>>>>
->>>>>> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
->>>>>> Closes: https://lore.kernel.org/all/20250419085709.1452492-1-
->>>>>> lilingfeng3@huawei.com/
->>>>>> Closes: https://lore.kernel.org/all/20250715030559.2906634-1-
->>>>>> lilingfeng3@huawei.com/
->>>>>> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be
->>>>>> atomic with the stateid update")
->>>>>> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
->>>>>> ---
->>>>>>    fs/nfs/delegation.c     |  9 ++++++++-
->>>>>>    fs/nfs/nfs4proc.c       | 22 +++++++++++-----------
->>>>>>    include/linux/nfs_xdr.h |  1 -
->>>>>>    3 files changed, 19 insertions(+), 13 deletions(-)
->>>>>>
->>>>>> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
->>>>>> index 122fb3f14ffb..9546d2195c25 100644
->>>>>> --- a/fs/nfs/delegation.c
->>>>>> +++ b/fs/nfs/delegation.c
->>>>>> @@ -173,6 +173,7 @@ int nfs4_check_delegation(struct inode *inode,
->>>>>> fmode_t type)
->>>>>>    static int nfs_delegation_claim_locks(struct nfs4_state *state,
->>>>>> const nfs4_stateid *stateid)
->>>>>>    {
->>>>>>        struct inode *inode = state->inode;
->>>>>> +    struct nfs_inode *nfsi = NFS_I(inode);
->>>>>>        struct file_lock *fl;
->>>>>>        struct file_lock_context *flctx = locks_inode_context(inode);
->>>>>>        struct list_head *list;
->>>>>> @@ -182,6 +183,9 @@ static int nfs_delegation_claim_locks(struct
->>>>>> nfs4_state *state, const nfs4_state
->>>>>>            goto out;
->>>>>>        list = &flctx->flc_posix;
->>>>>> +
->>>>>> +    /* Guard against reclaim and new lock/unlock calls */
->>>>>> +    down_write(&nfsi->rwsem);
->>>>>>        spin_lock(&flctx->flc_lock);
->>>>>>    restart:
->>>>>>        for_each_file_lock(fl, list) {
->>>>>> @@ -189,8 +193,10 @@ static int nfs_delegation_claim_locks(struct
->>>>>> nfs4_state *state, const nfs4_state
->>>>>>                continue;
->>>>>>            spin_unlock(&flctx->flc_lock);
->>>>>>            status = nfs4_lock_delegation_recall(fl, state, stateid);
->>>>>> -        if (status < 0)
->>>>>> +        if (status < 0) {
->>>>>> +            up_write(&nfsi->rwsem);
->>>>>>                goto out;
->>>>>> +        }
->>>>>>            spin_lock(&flctx->flc_lock);
->>>>>>        }
->>>>>>        if (list == &flctx->flc_posix) {
->>>>>> @@ -198,6 +204,7 @@ static int nfs_delegation_claim_locks(struct
->>>>>> nfs4_state *state, const nfs4_state
->>>>>>            goto restart;
->>>>>>        }
->>>>>>        spin_unlock(&flctx->flc_lock);
->>>>>> +    up_write(&nfsi->rwsem);
->>>>>>    out:
->>>>>>        return status;
->>>>>>    }
->>>>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->>>>>> index 91bcf67bd743..9d6fbca8798b 100644
->>>>>> --- a/fs/nfs/nfs4proc.c
->>>>>> +++ b/fs/nfs/nfs4proc.c
->>>>>> @@ -7076,7 +7076,6 @@ static void nfs4_locku_done(struct rpc_task
->>>>>> *task, void *data)
->>>>>>        switch (task->tk_status) {
->>>>>>            case 0:
->>>>>>                renew_lease(calldata->server, calldata->timestamp);
->>>>>> -            locks_lock_inode_wait(calldata->lsp->ls_state->inode,
->>>>>> &calldata->fl);
->>>>>>                if (nfs4_update_lock_stateid(calldata->lsp,
->>>>>>                        &calldata->res.stateid))
->>>>>>                    break;
->>>>>> @@ -7344,11 +7343,6 @@ static void nfs4_lock_done(struct rpc_task
->>>>>> *task, void *calldata)
->>>>>>        case 0:
->>>>>>            renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
->>>>>>                    data->timestamp);
->>>>>> -        if (data->arg.new_lock && !data->cancelled) {
->>>>>> -            data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->>>>>> -            if (locks_lock_inode_wait(lsp->ls_state->inode, &data-
->>>>>>> fl) < 0)
->>>>>> -                goto out_restart;
->>>>>> -        }
->>>>>>            if (data->arg.new_lock_owner != 0) {
->>>>>>                nfs_confirm_seqid(&lsp->ls_seqid, 0);
->>>>>>                nfs4_stateid_copy(&lsp->ls_stateid, &data->res.stateid);
->>>>>> @@ -7459,11 +7453,10 @@ static int _nfs4_do_setlk(struct nfs4_state
->>>>>> *state, int cmd, struct file_lock *f
->>>>>>        msg.rpc_argp = &data->arg;
->>>>>>        msg.rpc_resp = &data->res;
->>>>>>        task_setup_data.callback_data = data;
->>>>>> -    if (recovery_type > NFS_LOCK_NEW) {
->>>>>> -        if (recovery_type == NFS_LOCK_RECLAIM)
->>>>>> -            data->arg.reclaim = NFS_LOCK_RECLAIM;
->>>>>> -    } else
->>>>>> -        data->arg.new_lock = 1;
->>>>>> +
->>>>>> +    if (recovery_type == NFS_LOCK_RECLAIM)
->>>>>> +        data->arg.reclaim = NFS_LOCK_RECLAIM;
->>>>>> +
->>>>>>        task = rpc_run_task(&task_setup_data);
->>>>>>        if (IS_ERR(task))
->>>>>>            return PTR_ERR(task);
->>>>>> @@ -7573,6 +7566,13 @@ static int _nfs4_proc_setlk(struct nfs4_state
->>>>>> *state, int cmd, struct file_lock
->>>>>>        up_read(&nfsi->rwsem);
->>>>>>        mutex_unlock(&sp->so_delegreturn_mutex);
->>>>>>        status = _nfs4_do_setlk(state, cmd, request, NFS_LOCK_NEW);
->>>>>> +    if (status)
->>>>>> +        goto out;
->>>>>> +
->>>>>> +    down_read(&nfsi->rwsem);
->>>>>> +    request->c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
->>>>>> +    status = locks_lock_inode_wait(state->inode, request);
->>>>>> +    up_read(&nfsi->rwsem);
->>>>>>    out:
->>>>>>        request->c.flc_flags = flags;
->>>>>>        return status;
->>>>>> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
->>>>>> index ff1f12aa73d2..9599ad15c3ad 100644
->>>>>> --- a/include/linux/nfs_xdr.h
->>>>>> +++ b/include/linux/nfs_xdr.h
->>>>>> @@ -580,7 +580,6 @@ struct nfs_lock_args {
->>>>>>        struct nfs_lowner    lock_owner;
->>>>>>        unsigned char        block : 1;
->>>>>>        unsigned char        reclaim : 1;
->>>>>> -    unsigned char        new_lock : 1;
->>>>>>        unsigned char        new_lock_owner : 1;
->>>>>>    };
->>>>>
->>>>> Nice work!
->>>>>
->>>>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
->>>>>
->>>>>
->>>>
->>>
->>>
->>>
+Fixes: f4eecd5da342 ("NFS implement v4.0 callback_ident")
+Signed-off-by: Ruoyu Wang <ruoyuw560@gmail.com>
+---
+ fs/nfs/client.c     | 14 +++++++++++++-
+ fs/nfs/internal.h   |  1 +
+ fs/nfs/nfs4client.c |  1 +
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 4dcb91ab..60386330 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -215,9 +215,21 @@ static void nfs_cb_idr_remove_locked(struct nfs_client *clp)
+ {
+ 	struct nfs_net *nn = net_generic(clp->cl_net, nfs_net_id);
+ 
+-	if (clp->cl_cb_ident)
++	if (clp->cl_cb_ident) {
+ 		idr_remove(&nn->cb_ident_idr, clp->cl_cb_ident);
++		clp->cl_cb_ident = 0;
++	}
++}
++
++void nfs_cb_idr_remove(struct nfs_client *clp)
++{
++	struct nfs_net *nn = net_generic(clp->cl_net, nfs_net_id);
++
++	spin_lock(&nn->nfs_client_lock);
++	nfs_cb_idr_remove_locked(clp);
++	spin_unlock(&nn->nfs_client_lock);
+ }
++EXPORT_SYMBOL_GPL(nfs_cb_idr_remove);
+ 
+ static void pnfs_init_server(struct nfs_server *server)
+ {
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index acaeff7d..a9b3023d 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -225,6 +225,7 @@ void nfs_server_copy_userdata(struct nfs_server *, struct nfs_server *);
+ 
+ extern void nfs_put_client(struct nfs_client *);
+ extern void nfs_free_client(struct nfs_client *);
++void nfs_cb_idr_remove(struct nfs_client *clp);
+ extern struct nfs_client *nfs4_find_client_ident(struct net *, int);
+ extern struct nfs_client *
+ nfs4_find_client_sessionid(struct net *, const struct sockaddr *,
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 71c271a1..aff019d2 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -261,6 +261,7 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	return clp;
+ 
+ error:
++	nfs_cb_idr_remove(clp);
+ 	nfs_free_client(clp);
+ 	return ERR_PTR(err);
+ }
+-- 
+2.51.0
 
 
