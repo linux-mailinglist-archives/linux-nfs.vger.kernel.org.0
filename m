@@ -1,81 +1,81 @@
-Return-Path: <linux-nfs+bounces-22804-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hegAJQYPPGqHjQgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22804-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:08:22 +0200
+	id Z00TCgoPPGqIjQgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:08:26 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E85E66C03BC
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:08:21 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 718A86C03C1
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 19:08:25 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b=cwRlXGjQ;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22804-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22804-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=hammerspace.com header.s=google header.b=SoFxbBET;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22805-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 59C893038513
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 17:05:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5E013303BB27
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jun 2026 17:05:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8620F3672B2;
-	Wed, 24 Jun 2026 17:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A68379C5A;
+	Wed, 24 Jun 2026 17:05:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD533793A5
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 17:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DE03783A1
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 17:04:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782320699; cv=none; b=dNROAD9zuvlujcBWSRj6Rh0oGznP04uD1bueq2lhbFQ6otLmuPK1B+/rJrzGCFyhIHTnnMMxL+RN8SvJ1tuYSTpz4rrWr6fUoD2MNEBLIAF8zg7dDoLxsROhjyIcnCA5BMHkHlkZHVrzFHPaxmhIOYMm7MOcPoG+MhAhftI0Qv8=
+	t=1782320700; cv=none; b=Z2VvD5RsI0BwnIhwhJ9U6Qq3/ooQG7ehmPgbHh8kerW/WlmZeAINwvmO/IqTNC/rv+B3KTXx/lPLnH3AJc8iPRzJCIwZaausXs5IOdKbcKduss9hRX8sji3Z4XcLQOwDMxKX6K74C+yRoe+6pDie5UUi6uCHEyWRjrNMIcIY9MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782320699; c=relaxed/simple;
-	bh=a1o+gdXWenzUIIIaOXXsdcqgEzTGUTXXk/XlcAtPxyg=;
+	s=arc-20240116; t=1782320700; c=relaxed/simple;
+	bh=f4XXfEg9EkSIV9TvyGgaKfyAqm57C+xwNdBcZpJU0Ww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XaQEBfdJnNXFtSE1GEWdfVJh6argtVN12vX28FIa/INaoiPnlIgP5HW72+IDAmDxWOq5d2SmY9Bh2wdEosSThrrWhdog8dwUpsCsWE1m1aOIyXnRbDpZWmyG5DTvnflAmKUo/ePEkvJMng/WL8M1UdSOlZI/A/ldUQTN9VnSnik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=cwRlXGjQ; arc=none smtp.client-ip=209.85.210.44
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7e93c3f1717so599461a34.2
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 10:04:56 -0700 (PDT)
+	 MIME-Version; b=KNfJCXwArN9k/1zHH/cmCw5ldTWm4tuuTs9+cveHgUxrYEddZ+/Kyumf/Xk3uZiU6YTQvJsBD6y67SppFr/7z6Oht8NcyQhS1pqC7RM6tAKFNGdDGzvYgkw6w3yDNQSkFREHWNvmanvaf0dfxNOvoAbGVN4hyHW5aFAJJwL0Wr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=SoFxbBET; arc=none smtp.client-ip=209.85.210.41
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7e93d1dd156so653445a34.0
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Jun 2026 10:04:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1782320695; x=1782925495; darn=vger.kernel.org;
+        d=hammerspace.com; s=google; t=1782320696; x=1782925496; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MWkVkmEk23+RpTR6vxK4sQw7dZSZ/i0HWPyI822C9ss=;
-        b=cwRlXGjQTsmnB6dS6s2TBHVVKK9HaKvMRyvoPbM846l4dB791nB1nuMwjmrgv7spKu
-         JT/ru8UfD7dERY45CFxkrIxE7MTRRT8fXno3LPQCl71WU8pZwjAalpL8L0a3/hIXd7Is
-         HY3wmb0m6bAaqJD4XM0KPh6Teo/SyImkHcfdpIrFrgxsX3RxWDgtpY27X+jSbTIGtA3d
-         I5ihdpdqlYlzC5+elILzAt8pEmsgWrpKaOAGoYecNY6kfKsfpDbBzMUdgEGlHfr5iZ57
-         UB9mnEgp5zFDhiP4Tkby9ljB6bxRWdk2badwJTnymMO15NIaDskfFfP2rhH9cQAu2A3X
-         Kshg==
+        bh=xrFjH1dLnJGqAQgCyIJd/ck0yaqgBAkS8DGvIqjcyzI=;
+        b=SoFxbBETsSoiJnd2I67EnzTAB9StH4dYoObUES9jlb5xf9zhSDbBzDapc08CVWQUNK
+         O6Hzvjad/1mlqYJFyPWHkZyPfTfF7Q0weZbz/fv2uagMkFjGN24ffaEuD2AGP4OBp6C6
+         5de56N4nbrmbYln8ITHIHqVfUPx/FgWa6oL7T0T0PX6jNUcMn4wUXWmWPzFFzIY20jTT
+         Rf1QUYvBlS3AYvHKTqN8OXgoPzOHaJ8dNUxqt8uCShyEzyy05tG4V/guFg12HqdvD2Kx
+         p2intOzaRnM2fMZNXu358wBW3SJmfZPOYKrdqSZaTAcVoGuBDdiCO51RgoqLayewhfDB
+         MrRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782320695; x=1782925495;
+        d=1e100.net; s=20251104; t=1782320696; x=1782925496;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=MWkVkmEk23+RpTR6vxK4sQw7dZSZ/i0HWPyI822C9ss=;
-        b=N297LKIPOuS0UR4GxsUEstrqLDTQc+mve0LQ+/QS55nk2eB0OiM71YXwJMYM1Qy4cw
-         ocIMmQoI4Dj3nrQcDsZ43JbJnsrdURMi3qHfFp6D8mqTBcJf9VYxjrtQeqIx+R+EKNXb
-         pMoty6ppYYU14uddZOuMIoPIzhDE0ZDeZFCHaKM2hJcZBN9JYOkQ6qtzLahHrajl/G7J
-         9XW7+aqaVrUXf5P3+1ltQ1bDBJd3gY5sVvo2rrwHyFDH1kdpK3IvcO8GJ1/IjEgVby3k
-         CuvrrXoweDXOu6YsAv4Td8dpEsgXYzzndkKAy6wITn6keYixMdEXte51L1tmCwZ1d5rL
-         HfEw==
-X-Forwarded-Encrypted: i=1; AFNElJ9vl/flqumGCJgkKzyEa7C9a9uqdXQ+UNqSx4SkStgy+WpwReX9FvfyLWkQpL+hXme4lmyNiQJzUdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7fJ6yjyVGprxPVPc3Z0zozWH/0lhq5T7PvHl7moYb/s/foI4q
-	X4x4l4igS+agXJd+IH2JAbhvD5SG1EpNB5TTj2LjHMmKgipL33OyVpc/CL9/wJ3lv80=
-X-Gm-Gg: AfdE7cngFDA+W9ppPUqIvXbKDneGBBQ8Xgz3vC5AKPQBfkKu61nBVEULS9wYy6+xX5O
-	Kw3OxhlHwiup6CKH/Pzdz20H4di/tNQtdWGCzD7uBs7sskPqYwnYgy1GaumwrirYdKp3o59T5+G
-	1dCjpRFkRm5drQTxSzbdfO4nr3WwpKZpV/gVe0zCiSsx7V+9mRX6qLZDctwYoEDMXFiBLZrTzU3
-	F0behqb+xFYXkqzcIBAHCqy38WnE/qnfJVmhojNGJst7hVmM60Hy4+576E2eo87qlEmaInp9Tpu
-	C1WPFV2BR1lusNiP6fbQGJT70ZSQSHeFLt6oh3sXc/MH2U+CSYx6TAHex/jZF//tYmq0CosY0g2
-	ymZ7rDeOJgM23WBUBeF8xWM09ReUxzE5V8BJxLHeOLs+q82eDln24uaN8czzmxrsrV3SD+lL7YJ
-	BTpVahFj/urXg0FVmDUOkQ13kUjRxECdkh5ZO1kdneJKSsLzLi
-X-Received: by 2002:a05:6830:d02:b0:7dc:dbe4:3f21 with SMTP id 46e09a7af769-7e9792eb9c9mr5749314a34.1.1782320694973;
-        Wed, 24 Jun 2026 10:04:54 -0700 (PDT)
+        bh=xrFjH1dLnJGqAQgCyIJd/ck0yaqgBAkS8DGvIqjcyzI=;
+        b=BqLkUxa1Zzc8foLvg5kJpMGZahx7kXOdGwxpYNi6j45G+2jvj7DF5kg3JEubMWp4mg
+         dcC7JsRFaHIMI/21ujWeHg+pwWb5iIHyVadCNKpLURpQEiS+fOsEyjm3VF8Eq9kBTlrx
+         BzzUFvgFYYntMFrQYhQtVnBVLK37wei+i2NkZmkL0ySYH8hRlUn0TL+Q0voW5IHyUc76
+         /vttnLNBXFnElsb9Hz691lr92YvtFlGI0M0BNx+TfYI9gK7XLONcmTrt77etayv9Elz+
+         JUc09jE2iVA+Nc/4gENzfN9p3vilejgCE5pvuhEJd/eopih7BCLJja0UnTejxSVdSzVE
+         jrnw==
+X-Forwarded-Encrypted: i=1; AFNElJ/Vv80xtNoQMxlkFdcUq57iQ93NY8zJ95VHFOVY7eWZbvED+NjiBoAAicPpp+5RIFnjktEwrNuVqs0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpT4NytOGWnjlIqMxCi0NABQWKWNeOlXM8N4VBWLOG4xbH+xDC
+	ICM+hUUsy5qoLpalWefLMiJj/6CgdPrezB2uroHdvY2VkNFzUKDga6Gt+JpBa9p/s8Y=
+X-Gm-Gg: AfdE7cllaDdT99g28WKp/F9yOSHkhZ0/Aph/nDjdSYzFMkNYkB1M2AE3x02tRO3EW2r
+	usq0GBNzKx/OjUaNCedDY2nddNACRkH+CRmQy+YjdPsFm2KjGhQ8mj49rAElv4ZQpC7wP8p3t1x
+	fcRRvYRECWVbS6fMwHvIiXdMPstBmBhtc/Vk92f6iqKxkeH8SKrM5S5yQUsXBWTMCXThEltSyC+
+	pZl8qnaM4QKvH2DDgl2+VbZCskHfae2Cnrw413aNgs62TbqRud1cAVrDhgeQkpy/2rqmaab+LL5
+	z4VI2+mzFTbcAn3iyE9rEW6M+qTVWz8ReQmndp4Tq169rqz5yvnLrwfc7kLElUk3FQVFC7hGhoV
+	7Rs1btmSsIeZdYACoUJZHW9ud2RhRHoAdbozVCli9hzaMrJJmVh3dKQWOYyQAQ+P+7toV4nGyTB
+	vArOFj3cS8UuxWMlk1V9nkV1u//URd/5qpz/OkH+Ciom4jZTHw
+X-Received: by 2002:a05:6830:4c01:b0:7e6:c819:22e9 with SMTP id 46e09a7af769-7e98688aac7mr3739758a34.17.1782320696225;
+        Wed, 24 Jun 2026 10:04:56 -0700 (PDT)
 Received: from bcodding.csb.hammerspace.com ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e94429a031sm11959103a34.23.2026.06.24.10.04.53
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e94429a031sm11959103a34.23.2026.06.24.10.04.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2026 10:04:54 -0700 (PDT)
+        Wed, 24 Jun 2026 10:04:55 -0700 (PDT)
 From: Benjamin Coddington <ben.coddington@hammerspace.com>
 X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
 To: Chuck Lever <cel@kernel.org>,
@@ -88,9 +88,9 @@ To: Chuck Lever <cel@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: Daire Byrne <daire@dneg.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH RFC 2/3] SUNRPC: dispatch idle transports ahead of backlogged ones
-Date: Wed, 24 Jun 2026 13:04:49 -0400
-Message-ID: <8b65b751a62984fa08797b18be7dfaf16bdb3721.1782314746.git.bcodding@hammerspace.com>
+Subject: [PATCH RFC 3/3] SUNRPC: grant an idle flow a burst allowance on the high-priority queue
+Date: Wed, 24 Jun 2026 13:04:50 -0400
+Message-ID: <fdd0e8541cdf8a37cbb97e5c33730593a1649eb6.1782314746.git.bcodding@hammerspace.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1782314746.git.bcodding@hammerspace.com>
 References: <cover.1782314746.git.bcodding@hammerspace.com>
@@ -106,13 +106,13 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22804-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22805-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:jlayton@kernel.org,m:neilb@ownmail.net,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:daire@dneg.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
@@ -132,123 +132,88 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[hammerspace.com:dkim,hammerspace.com:email,hammerspace.com:mid,hammerspace.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E85E66C03BC
+X-Rspamd-Queue-Id: 718A86C03C1
 
-A pool dispatches ready transports in FIFO order, so a connection that
-already has requests in flight sits in the same queue, on equal terms,
-as one that has been idle.  A client driving many concurrent requests
-therefore delays the next request of an interactive client whose
-previous reply has already completed: the interactive request waits
-behind the busy client's backlog even though servicing it costs a
-single round trip.
+Routing only the leading request of a flow to the high-priority queue
+protects single, isolated round trips but not interactive work: one
+client request -- a syscall, a page fault against an NFS-backed file --
+fans out into many correlated RPCs.  With a budget of one, the first
+jumps the queue and the rest fall to the bulk queue and finish at the
+aggressor's rate, so the command completes no sooner than before.
 
-Route a transport with no requests in flight onto the new high-priority
-queue, sp_xprts_hi, and drain that queue ahead of sp_xprts.  xpt_nr_rqsts
-is incremented when a thread reserves a request slot and decremented when
-the reply completes, so at enqueue time it counts the transport's prior
-in-flight work, not the request that just arrived: a flow whose last
-reply has completed reads zero and jumps the queue, while a flow with
-requests still in flight stays in the bulk queue.  The classification
-needs no client identity and no lock -- each queue is an independent lwq
-with its own ordering, so svc_thread_should_sleep() simply tests both.
+Grant a transport a budget of SVC_XPRT_HI_BURST high-priority dispatches
+when it becomes active after idling (xpt_nr_rqsts == 0 at enqueue),
+spending one credit per dispatch and falling back to the bulk queue once
+the budget is gone.  The whole burst a request fans out into is now
+serviced ahead of backlogged flows, not just its leading edge.
 
-This gives an idle flow's request a latency floor that a backlogged flow
-cannot push it below.  It is starvation avoidance, not proportional
-fairness: under sustained load across many idle flows the bulk queue can
-wait, and bounding that is left to later work.
+The budget refills only on an idle-to-active transition, so a flow that
+stays continuously backlogged spends its budget once and then lives in
+the bulk queue: a client cannot hold the high-priority queue by keeping
+its connections busy or by opening more of them.  xpt_hi_credit is
+touched only under the XPT_BUSY serialisation in svc_xprt_enqueue, so it
+needs no atomic or lock.
+
+SVC_XPRT_HI_BURST is a fixed 64 for now -- generous enough to cover a
+typical request's RPC fan-out, and cheap to over-provision since a
+backlogged flow rides the high-priority queue for at most that many
+dispatches per idle period.
 
 Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
 ---
- net/sunrpc/svc_xprt.c | 44 +++++++++++++++++++++++++++----------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ include/linux/sunrpc/svc_xprt.h |  1 +
+ net/sunrpc/svc_xprt.c           | 14 +++++++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
+index da2a2531e110..18b2c4237f1f 100644
+--- a/include/linux/sunrpc/svc_xprt.h
++++ b/include/linux/sunrpc/svc_xprt.h
+@@ -61,6 +61,7 @@ struct svc_xprt {
+ 	struct svc_serv		*xpt_server;	/* service for transport */
+ 	atomic_t    	    	xpt_reserved;	/* space on outq that is rsvd */
+ 	atomic_t		xpt_nr_rqsts;	/* Number of requests */
++	int			xpt_hi_credit;	/* high-priority dispatch budget */
+ 	struct mutex		xpt_mutex;	/* to serialize sending data */
+ 	spinlock_t		xpt_lock;	/* protects sk_deferred
+ 						 * and xpt_auth_cache */
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 63d1002e63e7..ec4c05094e9a 100644
+index ec4c05094e9a..6b0da45aede6 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -523,7 +523,10 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
+@@ -499,6 +499,10 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
+ 	return false;
+ }
+ 
++/* High-priority dispatch budget granted to a flow when it becomes active
++ * after idling -- sized to cover an interactive request's burst of RPCs. */
++#define SVC_XPRT_HI_BURST	64
++
+ /**
+  * svc_xprt_enqueue - Queue a transport on an idle nfsd thread
+  * @xprt: transport with data pending
+@@ -523,10 +527,14 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
  
  	percpu_counter_inc(&pool->sp_sockets_queued);
  	xprt->xpt_qtime = ktime_get();
--	lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
-+	if (atomic_read(&xprt->xpt_nr_rqsts))
+-	if (atomic_read(&xprt->xpt_nr_rqsts))
+-		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
+-	else
++	if (atomic_read(&xprt->xpt_nr_rqsts) == 0)
++		xprt->xpt_hi_credit = SVC_XPRT_HI_BURST;
++	if (xprt->xpt_hi_credit > 0) {
++		xprt->xpt_hi_credit--;
+ 		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts_hi);
++	} else {
 +		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
-+	else
-+		lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts_hi);
++	}
  
  	svc_pool_wake_idle_thread(pool);
  }
-@@ -536,7 +539,9 @@ static struct svc_xprt *svc_xprt_dequeue(struct svc_pool *pool)
- {
- 	struct svc_xprt	*xprt = NULL;
- 
--	xprt = lwq_dequeue(&pool->sp_xprts, struct svc_xprt, xpt_ready);
-+	xprt = lwq_dequeue(&pool->sp_xprts_hi, struct svc_xprt, xpt_ready);
-+	if (!xprt)
-+		xprt = lwq_dequeue(&pool->sp_xprts, struct svc_xprt, xpt_ready);
- 	if (xprt)
- 		svc_xprt_get(xprt);
- 	return xprt;
-@@ -759,7 +764,7 @@ svc_thread_should_sleep(struct svc_rqst *rqstp)
- 		return false;
- 
- 	/* was a socket queued? */
--	if (!lwq_empty(&pool->sp_xprts))
-+	if (!lwq_empty(&pool->sp_xprts_hi) || !lwq_empty(&pool->sp_xprts))
- 		return false;
- 
- 	/* are we shutting down? */
-@@ -1183,26 +1188,33 @@ static int svc_close_list(struct svc_serv *serv, struct list_head *xprt_list, st
- 	return ret;
- }
- 
--static void svc_clean_up_xprts(struct svc_serv *serv, struct net *net)
-+static void svc_clean_up_queue(struct lwq *queue, struct net *net)
- {
- 	struct svc_xprt *xprt;
-+	struct llist_node *q, **t1, *t2;
-+
-+	q = lwq_dequeue_all(queue);
-+	lwq_for_each_safe(xprt, t1, t2, &q, xpt_ready) {
-+		if (xprt->xpt_net == net) {
-+			set_bit(XPT_CLOSE, &xprt->xpt_flags);
-+			svc_delete_xprt(xprt);
-+			xprt = NULL;
-+		}
-+	}
-+
-+	if (q)
-+		lwq_enqueue_batch(q, queue);
-+}
-+
-+static void svc_clean_up_xprts(struct svc_serv *serv, struct net *net)
-+{
- 	int i;
- 
- 	for (i = 0; i < serv->sv_nrpools; i++) {
- 		struct svc_pool *pool = &serv->sv_pools[i];
--		struct llist_node *q, **t1, *t2;
--
--		q = lwq_dequeue_all(&pool->sp_xprts);
--		lwq_for_each_safe(xprt, t1, t2, &q, xpt_ready) {
--			if (xprt->xpt_net == net) {
--				set_bit(XPT_CLOSE, &xprt->xpt_flags);
--				svc_delete_xprt(xprt);
--				xprt = NULL;
--			}
--		}
- 
--		if (q)
--			lwq_enqueue_batch(q, &pool->sp_xprts);
-+		svc_clean_up_queue(&pool->sp_xprts_hi, net);
-+		svc_clean_up_queue(&pool->sp_xprts, net);
- 	}
- }
- 
 -- 
 2.53.0
 
