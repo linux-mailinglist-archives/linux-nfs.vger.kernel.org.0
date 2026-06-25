@@ -1,455 +1,202 @@
-Return-Path: <linux-nfs+bounces-22841-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id jLQ5MsFrPWrx2wgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22841-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 19:56:17 +0200
+	id UyMHJMRuPWps3AgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 20:09:08 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3376C80DA
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 19:56:17 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DF606C819D
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 20:09:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=IcirzBnW;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22841-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22841-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=XMreICqz;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9B6173082F1E
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 17:51:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D27B63016B5C
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 18:09:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A103DEFF5;
-	Thu, 25 Jun 2026 17:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 287C2DF59;
+	Thu, 25 Jun 2026 18:09:05 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EFF3E8338
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 17:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128872FFDEA
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 18:09:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782409869; cv=none; b=f4PSLGiUTH6Sq+8mKDhoCgEhxmdD5zp+4yFpp/YD30qyoWD7Gum0HyHibBWWqNKp9l+WA1PRbNjKFfZSChnfy0jaVZBmhTD3SdONRPoL8EJHz5tfRlj3WI9T7Phaj9x2sKQ9ehb8hnPpkDIbMcGKTU5kvCvc81rJWR8DOUVxPrU=
+	t=1782410945; cv=none; b=JoPocnx82GF8gvQohU1B3jDEUs4vGZ06hfgM5Zd5uzHkQw01tOnsykt/K1MxgWAJ0UGNs330IbH6EFY23mKGu9k/jyc3ioEkDSIrY0NO2Mz1RvoKn96qMsAg0F9/1QntmN8JYb0cIbuXsgNmLiC8cdUQFw6aRlZl0ZD19eQu/2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782409869; c=relaxed/simple;
-	bh=j3Hcjj6UO53qN0cFSCkrqzpZveaAjTchOGLDmt3Jnrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mz+cy50d19s7dz/ZmltS55j4pCmbjs9akWkW62X6kIwwcWa7bXg84ZlLlHIU2vUcZeCC2GHD0yvOePXucljvQmI/0rNaTOPHbuAEQkbJIMkoxGsEoQGAeeYVIUrMth5KpTxr0V0u1HE0fVr8Ekr7No721aH3mHeqiMFdr7NzvtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcirzBnW; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C68D11F000E9;
-	Thu, 25 Jun 2026 17:51:07 +0000 (UTC)
+	s=arc-20240116; t=1782410945; c=relaxed/simple;
+	bh=URhoe/12787U6wk+0zIE+oV4H7YxcHOVawrEu5vvfDQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XmCUQyZ0LLpqnix8Ih9NtnXjsJk1oqOL3Q/brMpO1emRY0/CjwvoHzEBDSrT8opfwQswdPpjJWDcQgMJrHsyFZ69/RM3Qcqmo9Eoa/tsubBAMEL7hvFqxi0xlonjIak1JoUbuEYtrISVsCJOKgxdDzia88Iuzccv8eGcQIT/ssM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMreICqz; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ADB61F00A3D;
+	Thu, 25 Jun 2026 18:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782409868;
-	bh=pvHQepK8EdjgOV7xMGDBf47VTsfeTbb5yDN/VhA5D6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IcirzBnWLs4TV/VDEFF5OC5oEAFHqWog03q/NcOyXH9QEvJQCRjue098iP7gWS/u2
-	 N2gOvRBpw7QqWOTsL48dxYEhHdRMpq8l20PmC2fKmAwYyYkYKu9GmzIZh3DPB2eCKP
-	 skrPhgV3YMJyFoXSM7muX1hvnozSXw2H4gZwWUeNc66nQ4Bf0DKG6tQbwHf+a+5gIg
-	 R78hrf5eYo7dfXqYRzukPyzVt/+CK5jsBIjw5/V6aWIoe3uv1EPcxuClKFdtDV5p5p
-	 4Ks1gWBjJMWnSI81pdWeDan/s1J6SLRp+6wyJyAVyQGhzWoKkTIICzAgQL2U/qvBdB
-	 TuYI+aPwFUj+A==
-Date: Thu, 25 Jun 2026 13:51:06 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Anna Schumaker <anna@kernel.org>
-Cc: Trond Myklebust <trondmy@kernel.org>,
-	Tom Haynes <loghyr@hammerspace.com>, Chuck Lever <cel@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] nfs4.2: add UNCACHEABLE_FILE_DATA attribute support
-Message-ID: <aj1qil-3Bc7ppLlY@kernel.org>
-References: <20260624191706.72544-1-snitzer@kernel.org>
- <20260624191706.72544-3-snitzer@kernel.org>
- <24b3d9cd-d06a-4c35-b316-f7ec88f48316@app.fastmail.com>
+	s=k20260515; t=1782410943;
+	bh=EaYrFb+aKPglSiaKMJdIRuG5zOXc65NEAeoSwbWzbr4=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=XMreICqzlQduJgM/wSUomOFPX4+co/i9g+nKt+nI13DsjqJC7AR6QI/Osvn0cZ9Wg
+	 QFsFC7VZvCboGgtiTHPs2RoGCQc3sRSrdEtdelYiyu+DuKmfBxysAH5XWMcPH84DpO
+	 OyB/Wdt1qAx9O7SeLNQLhcEcu12zoV9UDwr1dyMiecWtpzq03qJOXCHJN3EzL2iYjz
+	 dC/czN0lRQtEXtaEkNtyN0ZmlcEOIn1SiHcfAo5q8Qc30x5cmahoRIp9dbWNxB5CbK
+	 6x8Pr2Vfjvw/UE2Wd7mvWZXjNPwLcvG3gizWUhXSpOx5VgsezyDyvC8nkdycbMob2l
+	 rOAWNcIbfS2kQ==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9E836F40073;
+	Thu, 25 Jun 2026 14:09:02 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Thu, 25 Jun 2026 14:09:02 -0400
+X-ME-Sender: <xms:vm49aiGv_9PsxaDBJSmsXlNTd96FVjetoO9CaUQEvYHAVI5bahPUuQ>
+    <xme:vm49auIKMOfynPBMrT-XmM4liBaR9iLU9LxU1j5-HStdfSuSrZzM0sKbWe0pnIsdr
+    H3e_iytNVG1gTx6x-QULPx2cFoha-AQTsNSHisy_zDG79wnji-vTw>
+X-ME-Proxy-Cause: dmFkZTFs1C1q0xopVpmFf75RP4Jetd0cOSVsvl5PaT570P4R4/k+R2g1vAejGVwK13j0aT
+    tV99+elyAz43t9LhWphO6Rf5Wsev1Ci0/xPTsNEuUOf7DAu0Jdeyq1u+t7C5bwV21MTKCf
+    QPR/In477gdxdarbuG6ZHdKPsr6LwG1ccteO9z/iEJOuT/XUcoExFtbVfSX2YLx+SNAkc9
+    GoMmMYt5002RqtziN5A8I5q98437Cv5qhpsWggqNW/5LlP0vtBhcHLYe6gm4i8+Ca97T12
+    yavJkhP8ONhjG0EDR8zqRbFf8nm304FkSi03AbCkuZBqV0rw+zJsDnGzu63boQIbh2/4LB
+    nAS3BuzESR3ezaOPQjvF+q3QC2JQOGLV6EHOFkBCBtRaYceXvSKlCVMBZC+UJc+13kDS+r
+    dfgwu7UypJ7D+ecd3LrV0wTG86PGOUCiDjYz7PEREnzoYld2aS9wrhDXpZ4c97GqfA5Cqr
+    Nq+6ZRdZWKEz2rE8RaGwuATvvPdAxMisrYOkzzA8ELsEw664J9fi9fcpGXDQCo1zQ/IeMA
+    +8qCRyvt2MbAYuRAavehudUORhWdzV9RGTWArQH7GaDueonvVycHk3z7dIH3GsmSlH3WnV
+    zjk9rkduYFdnx0JTkkqJsVmt0leeS/Wm3t3CI3YiycVguY77w4LHQC/pyDzg
+X-ME-Proxy: <xmx:vm49apLDs_JZXyiHMjqOmvHTzenq-LrTjJcKh7syQeYh6zBJpG4s5g>
+    <xmx:vm49aiQu7fN5D6MvsdcKHSEZemkGptlygXnHymm-zdv4QJs_2ZBwzQ>
+    <xmx:vm49agtXnbiviTizOfG_cnFCEHAfERgph7lTmxV0Bpnv0ct-AkoBBQ>
+    <xmx:vm49arY5jxWGvTDMChq7_hmYnshZ6P65ghuPR3qYigRJc_4WrMAb8w>
+    <xmx:vm49auFXDtvIGyhHnmgewwTZ8dNl-XOIn2kh8AGJM1kqsd1UysFDmMq8>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7F7EF780ABA; Thu, 25 Jun 2026 14:09:02 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24b3d9cd-d06a-4c35-b316-f7ec88f48316@app.fastmail.com>
+X-ThreadId: AuAPBZ_DauHw
+Date: Thu, 25 Jun 2026 14:08:42 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Mike Snitzer" <snitzer@kernel.org>, "Anna Schumaker" <anna@kernel.org>
+Cc: "Trond Myklebust" <trondmy@kernel.org>,
+ "Thomas Haynes" <loghyr@hammerspace.com>, linux-nfs@vger.kernel.org
+Message-Id: <95f1c397-0630-44dc-a1d4-6e093c27fd6e@app.fastmail.com>
+In-Reply-To: <aj1l6i8ebnkHu67U@kernel.org>
+References: <20260624191706.72544-1-snitzer@kernel.org>
+ <20260624191706.72544-2-snitzer@kernel.org>
+ <16ff281b-f776-4e6c-9f2a-83c03f0d6eae@app.fastmail.com>
+ <aj1l6i8ebnkHu67U@kernel.org>
+Subject: Re: [PATCH 1/4] nfs4.2: add nfs4_2.x to generate the UNCACHEABLE_FILE_DATA
+ attribute
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-5.15 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:trondmy@kernel.org,m:loghyr@hammerspace.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22841-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:snitzer@kernel.org,m:anna@kernel.org,m:trondmy@kernel.org,m:loghyr@hammerspace.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22842-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ietf.org:url,hammerspace.com:email]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1D3376C80DA
+X-Rspamd-Queue-Id: 7DF606C819D
 
-On Thu, Jun 25, 2026 at 10:56:02AM -0400, Anna Schumaker wrote:
-> Hi Mike,
-> 
-> On Wed, Jun 24, 2026, at 3:17 PM, Mike Snitzer wrote:
-> > From: Tom Haynes <loghyr@hammerspace.com>
-> >
-> > Recognize the NFSv4.2 per-file UNCACHEABLE_FILE_DATA attribute (attr 87,
-> > draft-ietf-nfsv4-uncacheable-files): decode it via GETATTR, track per-
-> > exported-filesystem support, and record on the inode whether a regular
-> > file's data must not be cached.  Acting on the attribute (opening such
-> > files O_DIRECT) is done by a subsequent change.
-> >
-> > If the NFSv4 server reports a regular file's UNCACHEABLE_FILE_DATA as
-> > true, it indicates the file's data must not be cached; the client records
-> > this in NFS_I(inode)->uncacheable_file_data for use by the I/O paths.
-> >
-> > The UNCACHEABLE_FILE_DATA attribute applies only to regular files
-> > (NF4REG); per the draft a server MUST reject a query of it on any other
-> > object type with NFS4ERR_INVAL.  A subsequent commit gates the client
-> > accordingly.
-> >
-> > See: https://datatracker.ietf.org/doc/draft-ietf-nfsv4-uncacheable-files/
-> >
-> > Signed-off-by: Tom Haynes <loghyr@hammerspace.com>
-> > [snitzer: adapt Tom's original code focused on metadata for ABE]
-> > Co-developed-by: Mike Snitzer <snitzer@hammerspace.com>
-> > Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > Assisted-by: Claude:claude-opus-4-8
-> > ---
-> >  fs/nfs/inode.c          | 22 +++++++++++++++++++---
-> >  fs/nfs/nfs4proc.c       | 14 ++++++++++++--
-> >  fs/nfs/nfs4trace.h      |  4 +++-
-> >  fs/nfs/nfs4xdr.c        | 35 ++++++++++++++++++++++++++++++++++-
-> >  fs/nfs/nfstrace.h       |  3 ++-
-> >  include/linux/nfs4.h    |  1 +
-> >  include/linux/nfs_fs.h  |  3 +++
-> >  include/linux/nfs_xdr.h |  8 +++++++-
-> >  8 files changed, 81 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> > index 5bcd4027d203..c1227b7c5545 100644
-> > --- a/fs/nfs/inode.c
-> > +++ b/fs/nfs/inode.c
-> > @@ -507,6 +507,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh 
-> > *fh, struct nfs_fattr *fattr)
-> >  		inode->i_blocks = 0;
-> >  		nfsi->write_io = 0;
-> >  		nfsi->read_io = 0;
-> > +		nfsi->uncacheable_file_data = 0;
-> > 
-> >  		nfsi->read_cache_jiffies = fattr->time_start;
-> >  		nfsi->attr_gencount = fattr->gencount;
-> > @@ -561,6 +562,11 @@ nfs_fhget(struct super_block *sb, struct nfs_fh 
-> > *fh, struct nfs_fattr *fattr)
-> >  		} else if (fattr_supported & NFS_ATTR_FATTR_SPACE_USED &&
-> >  			   fattr->size != 0)
-> >  			nfs_set_cache_invalid(inode, NFS_INO_INVALID_BLOCKS);
-> > +		if (fattr->valid & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> > +			nfsi->uncacheable_file_data =
-> > +				!!(fattr->aux_flags & NFS_AUX_UNCACHEABLE_FILE_DATA);
-> > +		else if (fattr_supported & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> > +			nfs_set_cache_invalid(inode, NFS_INO_INVALID_UNCACHEABLE_FILE_DATA);
-> > 
-> >  		nfs_setsecurity(inode, fattr);
-> > 
-> > @@ -1975,7 +1981,8 @@ static int 
-> > nfs_inode_finish_partial_attr_update(const struct nfs_fattr *fattr,
-> >  		NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
-> >  		NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
-> >  		NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
-> > -		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
-> > +		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME |
-> > +		NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
-> >  	unsigned long cache_validity = NFS_I(inode)->cache_validity;
-> >  	enum nfs4_change_attr_type ctype = 
-> > NFS_SERVER(inode)->change_attr_type;
-> > 
-> > @@ -2297,7 +2304,8 @@ static int nfs_update_inode(struct inode *inode, 
-> > struct nfs_fattr *fattr)
-> >  	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
-> >  			| NFS_INO_INVALID_ATIME
-> >  			| NFS_INO_REVAL_FORCED
-> > -			| NFS_INO_INVALID_BLOCKS);
-> > +			| NFS_INO_INVALID_BLOCKS
-> > +			| NFS_INO_INVALID_UNCACHEABLE_FILE_DATA);
-> > 
-> >  	/* Do atomic weak cache consistency updates */
-> >  	nfs_wcc_update_inode(inode, fattr);
-> > @@ -2337,7 +2345,8 @@ static int nfs_update_inode(struct inode *inode, 
-> > struct nfs_fattr *fattr)
-> >  					| NFS_INO_INVALID_NLINK
-> >  					| NFS_INO_INVALID_MODE
-> >  					| NFS_INO_INVALID_OTHER
-> > -					| NFS_INO_INVALID_BTIME;
-> > +					| NFS_INO_INVALID_BTIME
-> > +					| NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
-> >  				if (S_ISDIR(inode->i_mode))
-> >  					nfs_force_lookup_revalidate(inode);
-> >  				attr_changed = true;
-> > @@ -2461,6 +2470,13 @@ static int nfs_update_inode(struct inode *inode, 
-> > struct nfs_fattr *fattr)
-> >  		nfsi->cache_validity |=
-> >  			save_cache_validity & NFS_INO_INVALID_BLOCKS;
-> > 
-> > +	if (fattr->valid & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> > +		nfsi->uncacheable_file_data =
-> > +				!!(fattr->aux_flags & NFS_AUX_UNCACHEABLE_FILE_DATA);
-> > +	else if (fattr_supported & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> > +		nfsi->cache_validity |=
-> > +			save_cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
-> > +
-> >  	/* Update attrtimeo value if we're out of the unstable period */
-> >  	if (attr_changed) {
-> >  		nfs_inc_stats(inode, NFSIOS_ATTRINVALIDATE);
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 1360409d8de9..d237abca4793 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -228,6 +228,7 @@ const u32 nfs4_fattr_bitmap[3] = {
-> >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
-> >  	FATTR4_WORD2_SECURITY_LABEL
-> >  #endif
-> > +	| FATTR4_WORD2_UNCACHEABLE_FILE_DATA
-> >  };
-> > 
-> >  static const u32 nfs4_pnfs_open_bitmap[3] = {
-> > @@ -250,6 +251,7 @@ static const u32 nfs4_pnfs_open_bitmap[3] = {
-> >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
-> >  	| FATTR4_WORD2_SECURITY_LABEL
-> >  #endif
-> > +	| FATTR4_WORD2_UNCACHEABLE_FILE_DATA
-> >  };
-> > 
-> >  static const u32 nfs4_open_noattr_bitmap[3] = {
-> > @@ -327,6 +329,9 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, 
-> > const __u32 *src,
-> >  	if (!(cache_validity & NFS_INO_INVALID_BTIME))
-> >  		dst[1] &= ~FATTR4_WORD1_TIME_CREATE;
-> > 
-> > +	if (!(cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA))
-> > +		dst[2] &= ~FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
-> > +
-> >  	if (nfs_have_delegated_mtime(inode)) {
-> >  		if (!(cache_validity & NFS_INO_INVALID_ATIME))
-> >  			dst[1] &= ~(FATTR4_WORD1_TIME_ACCESS|FATTR4_WORD1_TIME_ACCESS_SET);
-> > @@ -1238,7 +1243,7 @@ nfs4_update_changeattr_locked(struct inode *inode,
-> >  				NFS_INO_INVALID_SIZE | NFS_INO_INVALID_OTHER |
-> >  				NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_NLINK |
-> >  				NFS_INO_INVALID_MODE | NFS_INO_INVALID_BTIME |
-> > -				NFS_INO_INVALID_XATTR;
-> > +				NFS_INO_INVALID_XATTR | NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
-> >  		nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
-> >  	}
-> >  	nfsi->attrtimeo_timestamp = jiffies;
-> > @@ -3839,6 +3844,7 @@ nfs4_atomic_open(struct inode *dir, struct 
-> > nfs_open_context *ctx,
-> > 
-> >  	if (IS_ERR(state))
-> >  		return ERR_CAST(state);
-> > +
-> 
-> I think this unrelated whitespace change accidentally snuck in
 
-Yeap, will clean up if v2 needed.
- 
-> >  	return state->inode;
-> >  }
-> > 
-> > @@ -3857,7 +3863,7 @@ static void nfs4_close_context(struct 
-> > nfs_open_context *ctx, int is_sync)
-> > 
-> >  #define FATTR4_WORD1_NFS40_MASK (2*FATTR4_WORD1_MOUNTED_ON_FILEID - 1UL)
-> >  #define FATTR4_WORD2_NFS41_MASK (2*FATTR4_WORD2_SUPPATTR_EXCLCREAT - 1UL)
-> > -#define FATTR4_WORD2_NFS42_MASK (2*FATTR4_WORD2_OPEN_ARGUMENTS - 1UL)
-> > +#define FATTR4_WORD2_NFS42_MASK (2*FATTR4_WORD2_UNCACHEABLE_FILE_DATA - 1UL)
-> > 
-> >  #define FATTR4_WORD2_NFS42_TIME_DELEG_MASK \
-> >  	(FATTR4_WORD2_TIME_DELEG_MODIFY|FATTR4_WORD2_TIME_DELEG_ACCESS)
-> > @@ -3981,6 +3987,8 @@ static int _nfs4_server_capabilities(struct 
-> > nfs_server *server, struct nfs_fh *f
-> >  		memcpy(server->attr_bitmask_nl, res.attr_bitmask,
-> >  				sizeof(server->attr_bitmask));
-> >  		server->attr_bitmask_nl[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-> > +		if (!(res.attr_bitmask[2] & FATTR4_WORD2_UNCACHEABLE_FILE_DATA))
-> > +			server->fattr_valid &= ~NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA;
-> > 
-> >  		if (res.open_caps.oa_share_access_want[0] &
-> >  		    NFS4_SHARE_WANT_OPEN_XOR_DELEGATION)
-> > @@ -5809,6 +5817,8 @@ void nfs4_bitmask_set(__u32 bitmask[], const __u32 src[],
-> >  		bitmask[1] |= FATTR4_WORD1_SPACE_USED;
-> >  	if (cache_validity & NFS_INO_INVALID_BTIME)
-> >  		bitmask[1] |= FATTR4_WORD1_TIME_CREATE;
-> > +	if (cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA)
-> > +		bitmask[2] |= FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
-> > 
-> >  	if (cache_validity & NFS_INO_INVALID_SIZE)
-> >  		bitmask[0] |= FATTR4_WORD0_SIZE;
-> > diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-> > index 1ed677810d9d..27748a979e12 100644
-> > --- a/fs/nfs/nfs4trace.h
-> > +++ b/fs/nfs/nfs4trace.h
-> > @@ -33,7 +33,9 @@
-> >  		{ NFS_ATTR_FATTR_CHANGE, "CHANGE" }, \
-> >  		{ NFS_ATTR_FATTR_OWNER_NAME, "OWNER_NAME" }, \
-> >  		{ NFS_ATTR_FATTR_GROUP_NAME, "GROUP_NAME" }, \
-> > -		{ NFS_ATTR_FATTR_BTIME, "BTIME" })
-> > +		{ NFS_ATTR_FATTR_BTIME, "BTIME" }, \
-> > +		{ NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA, "UNCACHEABLE_FILE_DATA" })
-> > +
-> > 
-> >  DECLARE_EVENT_CLASS(nfs4_clientid_event,
-> >  		TP_PROTO(
-> > diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> > index c23c2eee1b5c..5020ac86b977 100644
-> > --- a/fs/nfs/nfs4xdr.c
-> > +++ b/fs/nfs/nfs4xdr.c
-> > @@ -120,7 +120,8 @@ static int decode_layoutget(struct xdr_stream *xdr, 
-> > struct rpc_rqst *req,
-> >  				3*nfstime4_maxsz + \
-> >  				nfs4_owner_maxsz + \
-> >  				nfs4_group_maxsz + nfs4_label_maxsz + \
-> > -				 decode_mdsthreshold_maxsz))
-> > +				 decode_mdsthreshold_maxsz) + \
-> > +				 NFS4_fattr4_uncacheable_file_data_sz)
-> 
-> Can this simply be a '1' like many of the other values here? I haven't
-> looked into why the double-parentheses are here yet, but it might be
-> styilisticly better to put the new value inside them right after
-> decode_mdsthreshold_maxsz.
 
-I used the xdrgen generated variable because over time the reason for
-each unnamed +1 gets lost.  So no, I purposely made a point to put a
-reason to the additional space usage.
+On Thu, Jun 25, 2026, at 1:31 PM, Mike Snitzer wrote:
+> On Thu, Jun 25, 2026 at 10:26:22AM -0400, Anna Schumaker wrote:
+>> Hi Mike,
+>> 
+>> On Wed, Jun 24, 2026, at 3:17 PM, Mike Snitzer wrote:
+>> > Introduce Documentation/sunrpc/xdr/nfs4_2.x for NFSv4.2 protocol
+>> > extensions and define the UNCACHEABLE_FILE_DATA attribute (attr 87)
+>> > there, verbatim from draft-ietf-nfsv4-uncacheable-files Section 7:
+>> >
+>> >   typedef bool            fattr4_uncacheable_file_data;
+>> >   const FATTR4_UNCACHEABLE_FILE_DATA      = 87;
+>> >
+>> > This mirrors how the sibling NFSv4.2 attributes (FATTR4_OFFLINE=83,
+>> > FATTR4_TIME_DELEG_*=84/85, FATTR4_OPEN_ARGUMENTS=86) are defined in
+>> > Documentation/sunrpc/xdr/nfs4_1.x and generated by
+>> > tools/net/sunrpc/xdrgen into <linux/sunrpc/xdrgen/nfs4_1.h>, which
+>> > nfs4.h already includes.
+>> >
+>> > Wire the fs/nfsd "make xdrgen" target to generate the definitions header
+>> > <linux/sunrpc/xdrgen/nfs4_2.h> and include it from <linux/nfs4.h>, so the
+>> > generated FATTR4_UNCACHEABLE_FILE_DATA constant and the
+>> > NFS4_fattr4_uncacheable_file_data_sz size macro are available to the
+>> > NFSv4.2 client support that follows.
+>> 
+>> Aren't these client side changes? The xdrgen stuff is used on the
+>> server-side. I wouldn't expect any of these values to be available
+>> if nfsd is kconfig-ed off.
+>
+> The NFS4.x client code needs and has access to NFS spec definitions
+> also, via <linux/nfs4.h>.
+>
+> Its only that the server side's xdrgen framework is needed to generate
+> updates to the headers.  So you'll note that I have also included in
+> this commit the gnerated output of <linux/sunrpc/xdrgen/nfs4_2.h>.
+> Even if NFSD weren't Kconfig'd on, the NFS client code still has the
+> benefit of these NFS spec definitions via <linux/nfs4.h> (and its
+> inclusion of previously generated <linux/sunrpc/xdrgen/nfs4_1.h> and
+> now <linux/sunrpc/xdrgen/nfs4_2.h>).
+>
+> Getting xdrgen to build and verify it to work took effort (Chuck uses
+> recent Fedora AFAIK, I happen to be using EL9.6 in this container, but
+> Claude code helped me cut through the missing deps pretty quickly).
+>
+> So to be clear: the Linux kernel build (and NFS client build) isn't
+> dependent on xdrgen running at build time.
 
-As for the parens, I think maybe just looking at the diff isn't
-adequate, if you look at the change applied to the code it will make
-sense (I think).
+Correct: The Makefile changes are for a target that is used only
+when the .x file changes, not for rebuilding the kernel.
 
-> >  #define nfs4_fattr_maxsz	(nfs4_fattr_bitmap_maxsz + \
-> >  				nfs4_fattr_value_maxsz)
-> >  #define decode_getattr_maxsz    (op_decode_hdr_maxsz + 
-> > nfs4_fattr_maxsz)
-> > @@ -4380,6 +4381,30 @@ static int decode_attr_open_arguments(struct 
-> > xdr_stream *xdr, uint32_t *bitmap,
-> >  	return 0;
-> >  }
-> > 
-> > +static int decode_attr_uncacheable_file_data(struct xdr_stream *xdr, 
-> > uint32_t *bitmap,
-> > +				   uint32_t *res, uint64_t *flags)
-> > +{
-> > +	int status = 0;
-> > +	__be32 *p;
-> > +
-> > +	if (unlikely(bitmap[2] & (FATTR4_WORD2_UNCACHEABLE_FILE_DATA - 1U)))
-> > +		return -EIO;
-> > +	if (likely(bitmap[2] & FATTR4_WORD2_UNCACHEABLE_FILE_DATA)) {
-> > +		p = xdr_inline_decode(xdr, 4);
-> > +		if (unlikely(!p))
-> > +			return -EIO;
-> > +		if (be32_to_cpup(p))
-> > +			*res |= NFS_AUX_UNCACHEABLE_FILE_DATA;
-> > +		else
-> > +			*res &= ~NFS_AUX_UNCACHEABLE_FILE_DATA;
-> > +		bitmap[2] &= ~FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
-> > +		*flags |= NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA;
-> > +	}
-> > +	dprintk("%s: uncacheable_file_data: =%s\n", __func__,
-> > +		(*res & NFS_AUX_UNCACHEABLE_FILE_DATA) == 0 ? "false" : "true");
-> > +	return status;
-> > +}
-> > +
-> >  static int verify_attr_len(struct xdr_stream *xdr, unsigned int savep, 
-> > uint32_t attrlen)
-> >  {
-> >  	unsigned int attrwords = XDR_QUADLEN(attrlen);
-> > @@ -4725,6 +4750,8 @@ static int decode_getfattr_attrs(struct 
-> > xdr_stream *xdr, uint32_t *bitmap,
-> >  	uint32_t type;
-> >  	int32_t err;
-> > 
-> > +	fattr->aux_flags = 0;
-> > +
-> >  	status = decode_attr_type(xdr, bitmap, &type);
-> >  	if (status < 0)
-> >  		goto xdr_error;
-> > @@ -4843,6 +4870,12 @@ static int decode_getfattr_attrs(struct 
-> > xdr_stream *xdr, uint32_t *bitmap,
-> >  		goto xdr_error;
-> >  	fattr->valid |= status;
-> > 
-> > +	status = decode_attr_uncacheable_file_data(xdr, bitmap, &fattr->aux_flags,
-> > +					 &fattr->valid);
-> > +	if (status < 0)
-> > +		goto xdr_error;
-> > +
-> > +	status = 0;
-> >  xdr_error:
-> >  	dprintk("%s: xdr returned %d\n", __func__, -status);
-> >  	return status;
-> > diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-> > index 4ada21f4eebd..b15c1732c869 100644
-> > --- a/fs/nfs/nfstrace.h
-> > +++ b/fs/nfs/nfstrace.h
-> > @@ -33,7 +33,8 @@
-> >  			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" }, \
-> >  			{ NFS_INO_INVALID_NLINK, "INVALID_NLINK" }, \
-> >  			{ NFS_INO_INVALID_MODE, "INVALID_MODE" }, \
-> > -			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" })
-> > +			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" }, \
-> > +			{ NFS_INO_INVALID_UNCACHEABLE_FILE_DATA, "INVALID_UNCACHEABLE_FILE_DATA" })
-> > 
-> >  #define nfs_show_nfsi_flags(v) \
-> >  	__print_flags(v, "|", \
-> > diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-> > index 34aa303354bc..af402373d0e7 100644
-> > --- a/include/linux/nfs4.h
-> > +++ b/include/linux/nfs4.h
-> > @@ -476,6 +476,7 @@ enum {
-> >  #define FATTR4_WORD2_ACL_TRUEFORM_SCOPE	BIT(FATTR4_ACL_TRUEFORM_SCOPE 
-> > - 64)
-> >  #define FATTR4_WORD2_POSIX_DEFAULT_ACL	BIT(FATTR4_POSIX_DEFAULT_ACL - 
-> > 64)
-> >  #define FATTR4_WORD2_POSIX_ACCESS_ACL	BIT(FATTR4_POSIX_ACCESS_ACL - 64)
-> > +#define 
-> > FATTR4_WORD2_UNCACHEABLE_FILE_DATA	BIT(FATTR4_UNCACHEABLE_FILE_DATA - 
-> > 64)
-> > 
-> >  /* MDS threshold bitmap bits */
-> >  #define THRESHOLD_RD                    (1UL << 0)
-> > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> > index ec17e602c979..b9228086a1df 100644
-> > --- a/include/linux/nfs_fs.h
-> > +++ b/include/linux/nfs_fs.h
-> > @@ -162,6 +162,8 @@ struct nfs_inode {
-> > 
-> >  	struct timespec64	btime;
-> > 
-> > +	unsigned char		uncacheable_file_data : 1;
-> > +
-> 
-> Since this is a boolean value, could we store it in a bool?
+However, as far as I am aware the client does not use the xdrgen
+headers for anything, currently. Changing the server-side should
+be done in a separate patch and only if the server-side code also
+needs the new protocol definitions. Otherwise I think we continue
+with the duplicated infrastructure -- or only hand-rolled, if
+there are no server-side needs yet.
 
-Sure, we can use a bitfield with bool as well. I don't have a
-preference, but seeing "bool" would express the boolean flag nature of
-this struct member (and any other flags that might follow).
 
-Mike
+> Tangential but related: maybe the xdrgen stuff should get lifted to
+> fs/nfs_common/ ?  Or we're fine with it living with NFS server?
+
+We're not that far along with xdrgen. I haven't heard any interest
+in the client-side maintainers adopting the tool-generated approach.
+
+
+-- 
+Chuck Lever
 
