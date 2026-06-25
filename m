@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22843-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UyMHJMRuPWps3AgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 20:09:08 +0200
+	id g8SjLZp6PWoy3ggAu9opvQ
+	(envelope-from <linux-nfs+bounces-22843-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 20:59:38 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DF606C819D
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 20:09:07 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F0056C84D8
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 20:59:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=XMreICqz;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22842-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NDD3ESPt;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22843-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22843-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D27B63016B5C
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 18:09:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C8DCB300D84E
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 18:59:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 287C2DF59;
-	Thu, 25 Jun 2026 18:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E0E73271EA;
+	Thu, 25 Jun 2026 18:59:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128872FFDEA
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 18:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDB925785C
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 18:59:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782410945; cv=none; b=JoPocnx82GF8gvQohU1B3jDEUs4vGZ06hfgM5Zd5uzHkQw01tOnsykt/K1MxgWAJ0UGNs330IbH6EFY23mKGu9k/jyc3ioEkDSIrY0NO2Mz1RvoKn96qMsAg0F9/1QntmN8JYb0cIbuXsgNmLiC8cdUQFw6aRlZl0ZD19eQu/2o=
+	t=1782413976; cv=none; b=GlgcK6XCfkwRkwpxO5SLfFZ9ixmEvrIBrI9iw9eLMVe4WHEa1oULT2jEP3XvmApA4VWeqOoXIFQB/yGbf6Xjf1cq3AYA0uQ2J/Q+ZziVGr5a5ouHXnXjCrgjbZGaJYoLcnXIA20M5zC+ISbN3xqZpO0CXEjovWZsGo3OJZ6V7AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782410945; c=relaxed/simple;
-	bh=URhoe/12787U6wk+0zIE+oV4H7YxcHOVawrEu5vvfDQ=;
+	s=arc-20240116; t=1782413976; c=relaxed/simple;
+	bh=C2NnYeLtn5hVbXjhlWLGRka8aq6wm5GlJhpnYylhTi0=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=XmCUQyZ0LLpqnix8Ih9NtnXjsJk1oqOL3Q/brMpO1emRY0/CjwvoHzEBDSrT8opfwQswdPpjJWDcQgMJrHsyFZ69/RM3Qcqmo9Eoa/tsubBAMEL7hvFqxi0xlonjIak1JoUbuEYtrISVsCJOKgxdDzia88Iuzccv8eGcQIT/ssM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMreICqz; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ADB61F00A3D;
-	Thu, 25 Jun 2026 18:09:03 +0000 (UTC)
+	 Subject:Content-Type; b=mWrbllwKJXvoqXYt4A3+jKa3yex+aCv3I/bISeyUjQGZFnpklNHApxNS+tJtlGq0AZnDhH8jjTayU/933jcFXa4pEqwT4rCNRdzyegbOuOOCD+2PFmym244ZPEc7tbCIUe59o4/yMGM3v1e43Q9P0MXGP48RpuAmc/qaKE/Lm/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDD3ESPt; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 656041F000E9;
+	Thu, 25 Jun 2026 18:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782410943;
-	bh=EaYrFb+aKPglSiaKMJdIRuG5zOXc65NEAeoSwbWzbr4=;
+	s=k20260515; t=1782413974;
+	bh=WBu3AQjpnToMa9C6xzFcjDP8qbwcEEjFOo1R5Hz2tkQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=XMreICqzlQduJgM/wSUomOFPX4+co/i9g+nKt+nI13DsjqJC7AR6QI/Osvn0cZ9Wg
-	 QFsFC7VZvCboGgtiTHPs2RoGCQc3sRSrdEtdelYiyu+DuKmfBxysAH5XWMcPH84DpO
-	 OyB/Wdt1qAx9O7SeLNQLhcEcu12zoV9UDwr1dyMiecWtpzq03qJOXCHJN3EzL2iYjz
-	 dC/czN0lRQtEXtaEkNtyN0ZmlcEOIn1SiHcfAo5q8Qc30x5cmahoRIp9dbWNxB5CbK
-	 6x8Pr2Vfjvw/UE2Wd7mvWZXjNPwLcvG3gizWUhXSpOx5VgsezyDyvC8nkdycbMob2l
-	 rOAWNcIbfS2kQ==
+	b=NDD3ESPtZSM0MDVjqpliT/ga17fUdhKlpT+g6Rro3Vg+tO1ZLbYogXoKNx3+0heg9
+	 AaXQClN5w94EsiF57UiM7FB7vWv9Efa4hWQAqMoW0xXZFmu9vdymKAEmo6BeVOKW+B
+	 zuz5HD+8sZBqC09gG43m0WHPejeHc5jjSATBttq3G+0s30dg2xtGf90XfTZ5PDbsTA
+	 AmictHana10wYHIcaiJD3ACxpsnRpIEY78ukKLZ3rarrs8P94txoq6A4uTyInavT2F
+	 JM48aXbKfwvv4HNADQ2i1bNf6OIBZ55KQ6DARfAD4tO64RIpm7z/0G6mNQbwH59rnU
+	 sMr0DtSgrdQ1w==
 Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9E836F40073;
-	Thu, 25 Jun 2026 14:09:02 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id A6751F40083;
+	Thu, 25 Jun 2026 14:59:33 -0400 (EDT)
 Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Thu, 25 Jun 2026 14:09:02 -0400
-X-ME-Sender: <xms:vm49aiGv_9PsxaDBJSmsXlNTd96FVjetoO9CaUQEvYHAVI5bahPUuQ>
-    <xme:vm49auIKMOfynPBMrT-XmM4liBaR9iLU9LxU1j5-HStdfSuSrZzM0sKbWe0pnIsdr
-    H3e_iytNVG1gTx6x-QULPx2cFoha-AQTsNSHisy_zDG79wnji-vTw>
-X-ME-Proxy-Cause: dmFkZTFs1C1q0xopVpmFf75RP4Jetd0cOSVsvl5PaT570P4R4/k+R2g1vAejGVwK13j0aT
-    tV99+elyAz43t9LhWphO6Rf5Wsev1Ci0/xPTsNEuUOf7DAu0Jdeyq1u+t7C5bwV21MTKCf
-    QPR/In477gdxdarbuG6ZHdKPsr6LwG1ccteO9z/iEJOuT/XUcoExFtbVfSX2YLx+SNAkc9
-    GoMmMYt5002RqtziN5A8I5q98437Cv5qhpsWggqNW/5LlP0vtBhcHLYe6gm4i8+Ca97T12
-    yavJkhP8ONhjG0EDR8zqRbFf8nm304FkSi03AbCkuZBqV0rw+zJsDnGzu63boQIbh2/4LB
-    nAS3BuzESR3ezaOPQjvF+q3QC2JQOGLV6EHOFkBCBtRaYceXvSKlCVMBZC+UJc+13kDS+r
-    dfgwu7UypJ7D+ecd3LrV0wTG86PGOUCiDjYz7PEREnzoYld2aS9wrhDXpZ4c97GqfA5Cqr
-    Nq+6ZRdZWKEz2rE8RaGwuATvvPdAxMisrYOkzzA8ELsEw664J9fi9fcpGXDQCo1zQ/IeMA
-    +8qCRyvt2MbAYuRAavehudUORhWdzV9RGTWArQH7GaDueonvVycHk3z7dIH3GsmSlH3WnV
-    zjk9rkduYFdnx0JTkkqJsVmt0leeS/Wm3t3CI3YiycVguY77w4LHQC/pyDzg
-X-ME-Proxy: <xmx:vm49apLDs_JZXyiHMjqOmvHTzenq-LrTjJcKh7syQeYh6zBJpG4s5g>
-    <xmx:vm49aiQu7fN5D6MvsdcKHSEZemkGptlygXnHymm-zdv4QJs_2ZBwzQ>
-    <xmx:vm49agtXnbiviTizOfG_cnFCEHAfERgph7lTmxV0Bpnv0ct-AkoBBQ>
-    <xmx:vm49arY5jxWGvTDMChq7_hmYnshZ6P65ghuPR3qYigRJc_4WrMAb8w>
-    <xmx:vm49auFXDtvIGyhHnmgewwTZ8dNl-XOIn2kh8AGJM1kqsd1UysFDmMq8>
+  by phl-compute-10.internal (MEProxy); Thu, 25 Jun 2026 14:59:33 -0400
+X-ME-Sender: <xms:lXo9auwKcU7N3glfI61Hhrd7EBDBp1YpwdN5RA8Y5oSjAhn9viulqw>
+    <xme:lXo9alGCEItPpWdwjGfM57QGo-630QT2kmz5vgJ48BLqZ0tO90o3bjhX8T2bIIOwf
+    xOr9Cn-VQpxKgbUo9DtJ_pUQT4tB53nb2kfoxQlbSY8vJvbJJvRLw>
+X-ME-Proxy-Cause: dmFkZTF9L/bMTjNT0pajOtF7vn/f95FppebJB7Y2LB4TC0UZgKePFRmF0rXpVGIrRTpa5n
+    gCXVqfRvk+uYbmeZEQ3xVpnuoKoUCPbu+ZsQJl0YHwmhOzrh20x7p1pZmD33kHbHw3s7EE
+    RVbaRTEucUgJh9zY919sU1xqW6MopBYWEt3QBvBTEfIZG8XOAw8NNVbwq+KDsM8KwOERlT
+    ocTEAf81yN05V58RX9m0y4ngk4xDVB2VXQ6n9ZE6xRE0aj7mRePJbc4ROd00+FfZ025FmJ
+    GfUcUOlVKW+OmIe77c4ljNIkfPQHjoL/U2S9m+TyCRxsTQVBAH8CbTQXZTVwMUTkn7PpI5
+    AlNOScGt7ZMRAALQZiiA0cE0/nLSB6B4tUkwFBUgM2NqDdRGYUrcySfSMtlDvTjkXSSmpU
+    S7UTEU+dLtMbZfJTqSkJWWVwLd/H2mTQHztjrKBnM7m1AwTyheh6aVIvijafQaUbfS91Mr
+    mzOKOqmcZNq4Armb/dIe0hMJZEQDNwCM9sPQ6YoWgHN4WC06syaFB0J2Yn9lhiY5ztbrMs
+    XEGnr9plM2mzyXV7294lV9iqsY17b6b1eDtWX/zncrWvO39BZH9hwdS79hoOYfd1QjGVJI
+    5jaKulaJ1+B6m2lCA+aggPb44a4jWSjMisRJVpuNMdX1Uuz6/5qp/IcfG66Q
+X-ME-Proxy: <xmx:lXo9aqT6eUEBW4ButCyfosfKRsYwclnb39YA14UfRU0O60dzd0tAhA>
+    <xmx:lXo9ai0RxO9YhaGk6tHm7g_MXWSf69FuY9oBMDlQ7J5uWHFliuNAUQ>
+    <xmx:lXo9aieWg3X5C6IMcEBIC-heD6SlvW_Z9euMFm2bSL5YTGFbY2uOCA>
+    <xmx:lXo9aiNw5FjnOqj1Z01yM4y1mM_7H_0HkSKw6c7UhBxEukvVexG85w>
+    <xmx:lXo9auWZB2T6Lz-hGxBBPdi9x5U7Q4111zbkcYtjlcoRj6r2MYv43qUs>
 Feedback-ID: ifa6e4810:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7F7EF780ABA; Thu, 25 Jun 2026 14:09:02 -0400 (EDT)
+	id 82B16780AB9; Thu, 25 Jun 2026 14:59:33 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,20 +79,20 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AuAPBZ_DauHw
-Date: Thu, 25 Jun 2026 14:08:42 -0400
+X-ThreadId: AEhg0xB2aOJ7
+Date: Thu, 25 Jun 2026 14:59:13 -0400
 From: "Chuck Lever" <cel@kernel.org>
-To: "Mike Snitzer" <snitzer@kernel.org>, "Anna Schumaker" <anna@kernel.org>
-Cc: "Trond Myklebust" <trondmy@kernel.org>,
- "Thomas Haynes" <loghyr@hammerspace.com>, linux-nfs@vger.kernel.org
-Message-Id: <95f1c397-0630-44dc-a1d4-6e093c27fd6e@app.fastmail.com>
-In-Reply-To: <aj1l6i8ebnkHu67U@kernel.org>
-References: <20260624191706.72544-1-snitzer@kernel.org>
- <20260624191706.72544-2-snitzer@kernel.org>
- <16ff281b-f776-4e6c-9f2a-83c03f0d6eae@app.fastmail.com>
- <aj1l6i8ebnkHu67U@kernel.org>
-Subject: Re: [PATCH 1/4] nfs4.2: add nfs4_2.x to generate the UNCACHEABLE_FILE_DATA
- attribute
+To: "Benjamin Coddington" <ben.coddington@hammerspace.com>,
+ "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neilb@ownmail.net>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>
+Cc: "Daire Byrne" <daire@dneg.com>, linux-nfs@vger.kernel.org
+Message-Id: <d8efb4f7-fd91-453e-a6fd-1427bdab1cc0@app.fastmail.com>
+In-Reply-To: <cover.1782314746.git.bcodding@hammerspace.com>
+References: <cover.1782314746.git.bcodding@hammerspace.com>
+Subject: Re: [PATCH RFC 0/3] SUNRPC: a latency floor for interactive clients via
+ sparse-flow dispatch
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -100,101 +100,100 @@ X-Spamd-Result: default: False [-5.15 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:snitzer@kernel.org,m:anna@kernel.org,m:trondmy@kernel.org,m:loghyr@hammerspace.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[hammerspace.com,kernel.org,ownmail.net,redhat.com,oracle.com,talpey.com];
+	FORGED_RECIPIENTS(0.00)[m:ben.coddington@hammerspace.com,m:jlayton@kernel.org,m:neilb@ownmail.net,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:daire@dneg.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22842-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
+	TAGGED_FROM(0.00)[bounces-22843-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,app.fastmail.com:mid];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7DF606C819D
+X-Rspamd-Queue-Id: 0F0056C84D8
 
 
+> an idle->active transport is granted a budget of 64 high-priority
+> dispatches [...] refilled only when the transport next idles.
+[...]
+> Open questions for the list: is the budget (64 here) the right
+> shape [...] And does the cooperative framing hold[?]
 
-On Thu, Jun 25, 2026, at 1:31 PM, Mike Snitzer wrote:
-> On Thu, Jun 25, 2026 at 10:26:22AM -0400, Anna Schumaker wrote:
->> Hi Mike,
->> 
->> On Wed, Jun 24, 2026, at 3:17 PM, Mike Snitzer wrote:
->> > Introduce Documentation/sunrpc/xdr/nfs4_2.x for NFSv4.2 protocol
->> > extensions and define the UNCACHEABLE_FILE_DATA attribute (attr 87)
->> > there, verbatim from draft-ietf-nfsv4-uncacheable-files Section 7:
->> >
->> >   typedef bool            fattr4_uncacheable_file_data;
->> >   const FATTR4_UNCACHEABLE_FILE_DATA      = 87;
->> >
->> > This mirrors how the sibling NFSv4.2 attributes (FATTR4_OFFLINE=83,
->> > FATTR4_TIME_DELEG_*=84/85, FATTR4_OPEN_ARGUMENTS=86) are defined in
->> > Documentation/sunrpc/xdr/nfs4_1.x and generated by
->> > tools/net/sunrpc/xdrgen into <linux/sunrpc/xdrgen/nfs4_1.h>, which
->> > nfs4.h already includes.
->> >
->> > Wire the fs/nfsd "make xdrgen" target to generate the definitions header
->> > <linux/sunrpc/xdrgen/nfs4_2.h> and include it from <linux/nfs4.h>, so the
->> > generated FATTR4_UNCACHEABLE_FILE_DATA constant and the
->> > NFS4_fattr4_uncacheable_file_data_sz size macro are available to the
->> > NFSv4.2 client support that follows.
->> 
->> Aren't these client side changes? The xdrgen stuff is used on the
->> server-side. I wouldn't expect any of these values to be available
->> if nfsd is kconfig-ed off.
->
-> The NFS4.x client code needs and has access to NFS spec definitions
-> also, via <linux/nfs4.h>.
->
-> Its only that the server side's xdrgen framework is needed to generate
-> updates to the headers.  So you'll note that I have also included in
-> this commit the gnerated output of <linux/sunrpc/xdrgen/nfs4_2.h>.
-> Even if NFSD weren't Kconfig'd on, the NFS client code still has the
-> benefit of these NFS spec definitions via <linux/nfs4.h> (and its
-> inclusion of previously generated <linux/sunrpc/xdrgen/nfs4_1.h> and
-> now <linux/sunrpc/xdrgen/nfs4_2.h>).
->
-> Getting xdrgen to build and verify it to work took effort (Chuck uses
-> recent Fedora AFAIK, I happen to be using EL9.6 in this container, but
-> Claude code helped me cut through the missing deps pretty quickly).
->
-> So to be clear: the Linux kernel build (and NFS client build) isn't
-> dependent on xdrgen running at build time.
+Before the budget shape, I wanted to pin down the re-arm trigger
+itself, since the whole floor rests on it.  Traced through, the grant
+is gated on a true zero-crossing: svc_xprt_enqueue() refills the
+credit only when atomic_read(&xprt->xpt_nr_rqsts) == 0 at the instant
+new data arrives -- i.e. every earlier request on that transport has
+already passed svc_xprt_release().  Not a low-watermark; exact zero.
 
-Correct: The Makefile changes are for a target that is used only
-when the .x file changes, not for rebuilding the kernel.
+My worry was that a sustained interactive flow (a tree walk holding a
+couple of RPCs in flight) never reaches zero, spends its 64 once, and
+then rides the normal queue.  The measurements push back on that.  I
+put a kprobe on the in-flight depth at each committed enqueue and ran
+a cold v4.2 loopback walk of a 7500-file tree (~15.5k server RPCs):
 
-However, as far as I am aware the client does not use the xdrgen
-headers for anything, currently. Changing the server-side should
-be done in a separate patch and only if the server-side code also
-needs the new protocol definitions. Otherwise I think we continue
-with the duplicated infrastructure -- or only hand-rolled, if
-there are no server-side needs yet.
+    depth 0 : 25.6%   <- re-arms the 64-credit budget
+    depth 1 : 62.3%
+    depth 2 : 12.2%
+    depth 3 : ~0
 
+So zero recurs about every fourth enqueue.  ~3 credits spent between
+refills against a budget of 64 -- the credit never approaches zero and
+the flow stays high-priority for the whole walk.  Uncontended, the
+"== 0" trigger is far from one-shot.
 
-> Tangential but related: maybe the xdrgen stuff should get lifted to
-> fs/nfs_common/ ?  Or we're fine with it living with NFS server?
+The catch: this can't reach the case the series exists for.  Loopback
+nfsd keeps up, so depth collapses on its own.  The demotion risk is
+under pool contention -- aggressor saturating the threads, the
+interactive flow's replies delayed, depth staying elevated, the
+zero-crossings that refill credits becoming rare.  I couldn't build
+that window without your per-op service-time hook.
 
-We're not that far along with xdrgen. I haven't heard any interest
-in the client-side maintainers adopting the tool-generated approach.
+Could you run the same probe under your aggressor + 10ms hook?  Keyed
+by transport it separates the interactive flow from the aggressor in
+one histogram:
+
+    T=/sys/kernel/tracing
+    echo 'p:svcenq svc_xprt_enqueue depth=+76($arg1):s32 \
+        flags=+56($arg1):x64 xprt=$arg1:x64' >> $T/dynamic_events
+    echo '!(flags & 1)' > $T/events/kprobes/svcenq/filter
+    echo 'hist:keys=xprt,depth:sort=xprt,depth' \
+        > $T/events/kprobes/svcenq/trigger
+    echo 1 > $T/events/kprobes/svcenq/enable
+
+(+76 = offsetof(svc_xprt, xpt_nr_rqsts), +56 = xpt_flags, x86_64;
+unchanged by the series since xpt_hi_credit lands after it.
+depth=$arg1->xpt_nr_rqsts.counter:s32 might be a cleaner approach.
+ filter !(flags & 1) keeps only committed enqueues -- XPT_BUSY
+clear at entry.)
+
+The question that settles it: for the interactive xprt under load,
+does the depth==0 fraction hold up, or do you see depth>=1 runs longer
+than 64?  If it holds, the trigger is fine and the uncovered tail is
+just the N>64 knee you already document.  If it collapses, that's the
+argument for a low-watermark refill rather than exact-zero -- and it
+belongs in the cover letter, which currently asserts "idle" without
+showing an interactive flow reaches it under contention.
 
 
 -- 
