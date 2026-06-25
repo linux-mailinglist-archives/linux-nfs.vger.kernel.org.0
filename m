@@ -1,522 +1,528 @@
-Return-Path: <linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22837-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id qO7TDKFBPWpr0QgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:56:33 +0200
+	id yYPpCF9RPWrl1AgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22837-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 18:03:43 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78A506C6DD5
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:56:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 780226C7455
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 18:03:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Lxjp0oQ0;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="U/H2L9L7";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22837-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22837-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 794AA3014657
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 14:56:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 424CD3013AB8
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 15:59:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2BD7334692;
-	Thu, 25 Jun 2026 14:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C67347DD;
+	Thu, 25 Jun 2026 15:59:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F192E11B9
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 14:56:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2D539DBD3;
+	Thu, 25 Jun 2026 15:59:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782399385; cv=none; b=Vi8l16x+V/j9smzxVRiM/By3kU6d4dMSm4kAJaeUCfm9KIkpVRoN1RIynlah0Egu9mXxkPsiORFhUwTtb0JOJz4b6ceOo6Te8fTA43iaVBearXM99GSyeoN9sCRqpd5fkGeDqGRTZE9hb3B7IAG/M63yJwT69of3uz4lNBT3rUg=
+	t=1782403176; cv=none; b=ON6BFn8wnudBS0xW23urJvn2JSXYcUngg+BCYP/52WtnTTJbN6FpZ+Pjta921rX6zMQMkmFIkBr0SFlfUVZ8qgqAGx38ZnaqmWsw//tNRLKB0dacwwg1JCS38DS3OUwTISdZKpC4K17kHwP4wX1J1675lv1zNYsRIbsfMVUuYBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782399385; c=relaxed/simple;
-	bh=e2decA3kMW3XtiBIGOkceEPf6lVmmUfRbqfWe022jhU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZmMHupmK+7g7DzxoMICHF3hgkBKhdS5X6dNWlsIirCciCOoNh97NTKzTnlGGqk+emt6eUWNh7K1wHSm/Q0gCUUYiwE9urM26yVjvWpqHYMKFs7fdGSmagEoI7fAfEJnuNKHbQsEF6GUG15Rrdtj4uw6/dKLUNVGHvwWcxO5dvzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lxjp0oQ0; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3368C1F000E9;
-	Thu, 25 Jun 2026 14:56:23 +0000 (UTC)
+	s=arc-20240116; t=1782403176; c=relaxed/simple;
+	bh=O8177/r+ZRF6LumEG0yEsC9akdg2bo3Vfcw/+iSzyCY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CXaTMinz1VmUEGaMUnUmdFpc5t0MI4+z8h+IzB7rBde3dDf0+MH+YtnI6r9fSX4QprFSk5rkgY/AKWnY2fZgNR4crzr97TpJxTso7BI64roYXAuV/QmgIrvHXzIBzVzdAyoJGR85sFjlhGHpnLXFDdk+xL7BrH40zu9grEF+VEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/H2L9L7; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E56D1F00A3A;
+	Thu, 25 Jun 2026 15:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782399383;
-	bh=3QcHlWDyWAWWG7jqoVtyoFg68rLoDmrZB4076N1PNmI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=Lxjp0oQ0qD+oabJZ9aqRSXu0rsr/lk7wJ1DerJCA7N55y4edo4TJtPzTCt8kyRfW/
-	 bn3tK7Iq2iYhImb5rkr68Q0VhKF0WvRo25PIZH30JInZ4J62Hzb2yn094tj+mzkTw9
-	 JUzP4CVBFs+UYwf5lIJR28VvsSefIcezwjioNReTL6Ndok4KnGBC1dk1Krly7ku1Wq
-	 sDGmvj+KZK5RWYgPGSDEUFl8q5BcxW/XL/iVhFe3QxhChS73RlPIjtPNqBZ1U8+ewn
-	 l++z/tSKxMcEFUrXykAt8f0sPbR+QQbaxITSq2pv9goco+W9clULElTkjuLRXB8+KX
-	 KuKeJ3BEUC6KA==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 67526F40068;
-	Thu, 25 Jun 2026 10:56:22 -0400 (EDT)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-02.internal (MEProxy); Thu, 25 Jun 2026 10:56:22 -0400
-X-ME-Sender: <xms:lkE9aub9KAScQD7lNLf8GqahrQ_AxZkdd2upYtqekinGOi2oV8oknw>
-    <xme:lkE9asOSJ_l0O422u-mrn3SnC-Rf33il-eCbtMdSPmtklKYPGT_M6ISfRMrDdTR21
-    74aa5UJv9wps5LEsk1y-ZQZ1qk94pTjVj8e5SAanoC94cfj1pLGMNY>
-X-ME-Proxy-Cause: dmFkZTF/+KzRFDgmF6PVyrdSwMwxkZ1xECwaZFtqCvVftXYmb5Xqmp6bnX5gXPxk80g5CI
-    XTLUzG+u+2QjxROFJT1o4A/RdDb67vNPaLDyeF4IJJ80mcLsKlDLkTwC6I6lWJSkaCWTMA
-    lEG51TWgw5PU92AFrtThaAqQZXAyrQhZ5XbakKOLPMh92ijBNMX597grgVPNI0LmGeD025
-    mLTL4KPD0aqmRar4PWz/2i0B3U9LnuuSY1XDghuFnJsk2UFYOV4F9VCR6Y1hsKaf6XyIrc
-    OClOLacIHOBuKE0ZeO6OiXckd8l9ciPvEom7hUD0degfDiwQd+0KjcPzG7Fl4a8SVE/lpB
-    KfX3/Ottj7QMC1yR0A2p03uKGJNDJ64fwQ5iGNmdPrQ3xsQWNVR2if3X8gw+kZnsBgyIIi
-    sxC3YvGzyqVZrnpKfD/RKa6n04TWe89VsroVMCpkvYbea+OyBNV+81jit2vEPZJxBdouZe
-    k7qoVSa2NDJikLcRC/ZpHp1c9hVLivjad7RBlgBccMyNa2Wo0YflYJoXb9ob4n8RQMkyOm
-    TYkrws7Z5uYqAijAkAd9i38aS0TRSEoAFoXGYVHAu799Q+D5S1UeSPnnfxr56Am4+er90z
-    7Ypvxu9kXIIZPOGX7uKI5zXwOHJBKau6dcgbZlkfDjt0oNHgCq3qHBYBluXQ
-X-ME-Proxy: <xmx:lkE9aqf---UzmtoRfONoXPmmP5k0k2u9jOmbQ6r09OASheIUm6kCRA>
-    <xmx:lkE9aluhqmwnsSaYI3TQDofJ5jYH-1gG-JM3-F72WUOuyPInkVvKsw>
-    <xmx:lkE9arkymHC90T2SqAzVaeb2dAge5iVnFSDIhpXaWWmE6UPwFbR6CQ>
-    <xmx:lkE9anwo6OLBKygWvqRA0kBCui7o28HyEZhfF4OVNRpy5BTfcyGesA>
-    <xmx:lkE9atPswWGi9R25eM1WgBQ5BXPqnkrXP0PZZMdzCguMmz5DotzhFTFP>
-Feedback-ID: i20964851:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 467E5B6006F; Thu, 25 Jun 2026 10:56:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20260515; t=1782403173;
+	bh=KTPeIBMXNOYdTnoR73zQWWWnwBUY1pCca85qwIRX0U0=;
+	h=From:Date:Subject:To:Cc;
+	b=U/H2L9L7zOdYsDdA7z+ULDLCOFUBlUpEWjP329XZj2rzNZ+pMmeW3WFdQhMeqZDeo
+	 Ym+p4GhWeJr4YAZXW3rZraJ6Lz96Sv2ETdnlVv3hNlcfsxQ6H0za2ceRyUrGejQEmH
+	 4SJtuOUq55iQlCa1pBv0pHjwCXXhkwKx4dyNdUDFTVNKjrL9zY6gco9UsKN4ZI/esd
+	 09I/ZtfLfa0EnUzzicxlTFXsmaoHquW1AhwJrDEesrGrk75ALaIasSwazjYpc5t8Sn
+	 gqRrOQe1BzIz8IdDnpVdYgvciCoCoheBoeN8/M8BXJh7PEtp2gbKJmnwZMBAlhqGEe
+	 gX6bqxcqsXTjw==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Thu, 25 Jun 2026 11:59:18 -0400
+Subject: [PATCH v2] sunrpc: hardcode pool_mode to pernode, remove other
+ modes
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AnujKKUB5lug
-Date: Thu, 25 Jun 2026 10:56:02 -0400
-From: "Anna Schumaker" <anna@kernel.org>
-To: "Mike Snitzer" <snitzer@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>
-Cc: "Tom Haynes" <loghyr@hammerspace.com>, "Chuck Lever" <cel@kernel.org>,
- linux-nfs@vger.kernel.org
-Message-Id: <24b3d9cd-d06a-4c35-b316-f7ec88f48316@app.fastmail.com>
-In-Reply-To: <20260624191706.72544-3-snitzer@kernel.org>
-References: <20260624191706.72544-1-snitzer@kernel.org>
- <20260624191706.72544-3-snitzer@kernel.org>
-Subject: Re: [PATCH 2/4] nfs4.2: add UNCACHEABLE_FILE_DATA attribute support
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260625-sunrpc-pool-mode-v2-1-4f512b6e1ee8@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32NQQ6CMBBFr0Jm7ZjSlhJdeQ/DQtoBGrFtpko0h
+ LtbOYDL95L//gqZ2FOGc7UC0+Kzj6GAPFRgp1sYCb0rDFJII7RUmF+Bk8UU44yP6AgVmb4xSgp
+ nNZRZYhr8e09eu8KTz8/In/1hqX/2T2ypsca+HaQg1bT61F/uxIHmY+QRum3bvh58mfCxAAAA
+X-Change-ID: 20260423-sunrpc-pool-mode-3e6b56320dc4
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+ Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11594; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=O8177/r+ZRF6LumEG0yEsC9akdg2bo3Vfcw/+iSzyCY=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqPVBdXmFYsY0lxHV55fxE7qh498FgUuobwN2Jo
+ 2tAiV9q4OmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaj1QXQAKCRAADmhBGVaC
+ FXNHEAChAKoZQcTdnyiJEUzr0uarPaa5tuwGEIIlfuWyA97EXOTZ+XxWseMNDvQ0DNh0pciH6bM
+ I9ip/Usm2aQ6DWw1uBiTusQatlC5kXiQPtd8r1w7Ha4QjRBPOp3J68FS5KTO8oimm4WAJ70t2Y7
+ jDeFI8amvviSyyp/NhTg5JcjlpfzjF0ez1/ZK5ss800VC9tQ+kpbG0qhSFOtoRQn6YA8yLu4mrv
+ YiD9CMHPWp92P8cmJsOxygUaWTOxig9PzaekZTbRtWZKrtTNEHltHPpg3d5P17NyVm1xaAggLTq
+ 44QC13sMprNh5/Wt3u8LgKz7LBDpMJyFMitG4Y6EF18aysiP1v+DkP0GKSVab7T0RODUBOves4M
+ r2OP/omC1Qd2zT8hBGYb+YbJpfCb2otYOVecBj9k8v04ilHy/INvQ59b2ERkW3OyyWAOrzE0o+g
+ QUfGYki7H3SUKHBCNhuW8XsGZEpO+dQ04SRes4IXUnJc9vO0DHkwDTYJZLwEPPD4plFFz3tupgb
+ 3/9EhN9+spIU2ka/z5yHotfwdOUb46hqD6GEpusiywLQ6s6h0zP6ODsOiJ7ixpV03A05YfXw4XR
+ jqSG0IpZz65zz+aoQfVMsugm7QmEOmlK+Gg4Ev7DR0m1iuHEdL7G6FQiCZARMi+HhhFRBR1t07H
+ 0iL4jqGSqcOhz9w==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.15 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22837-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:snitzer@kernel.org,m:trondmy@kernel.org,m:loghyr@hammerspace.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22836-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,ietf.org:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 78A506C6DD5
+X-Rspamd-Queue-Id: 780226C7455
 
-Hi Mike,
+The SVC_POOL_AUTO/GLOBAL/PERCPU/PERNODE pool mode selection machinery
+was added when NUMA was new and the right default was unclear.  Today,
+pernode is the right choice everywhere:
 
-On Wed, Jun 24, 2026, at 3:17 PM, Mike Snitzer wrote:
-> From: Tom Haynes <loghyr@hammerspace.com>
->
-> Recognize the NFSv4.2 per-file UNCACHEABLE_FILE_DATA attribute (attr 87,
-> draft-ietf-nfsv4-uncacheable-files): decode it via GETATTR, track per-
-> exported-filesystem support, and record on the inode whether a regular
-> file's data must not be cached.  Acting on the attribute (opening such
-> files O_DIRECT) is done by a subsequent change.
->
-> If the NFSv4 server reports a regular file's UNCACHEABLE_FILE_DATA as
-> true, it indicates the file's data must not be cached; the client records
-> this in NFS_I(inode)->uncacheable_file_data for use by the I/O paths.
->
-> The UNCACHEABLE_FILE_DATA attribute applies only to regular files
-> (NF4REG); per the draft a server MUST reject a query of it on any other
-> object type with NFS4ERR_INVAL.  A subsequent commit gates the client
-> accordingly.
->
-> See: https://datatracker.ietf.org/doc/draft-ietf-nfsv4-uncacheable-files/
->
-> Signed-off-by: Tom Haynes <loghyr@hammerspace.com>
-> [snitzer: adapt Tom's original code focused on metadata for ABE]
-> Co-developed-by: Mike Snitzer <snitzer@hammerspace.com>
-> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> Assisted-by: Claude:claude-opus-4-8
-> ---
->  fs/nfs/inode.c          | 22 +++++++++++++++++++---
->  fs/nfs/nfs4proc.c       | 14 ++++++++++++--
->  fs/nfs/nfs4trace.h      |  4 +++-
->  fs/nfs/nfs4xdr.c        | 35 ++++++++++++++++++++++++++++++++++-
->  fs/nfs/nfstrace.h       |  3 ++-
->  include/linux/nfs4.h    |  1 +
->  include/linux/nfs_fs.h  |  3 +++
->  include/linux/nfs_xdr.h |  8 +++++++-
->  8 files changed, 81 insertions(+), 9 deletions(-)
->
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 5bcd4027d203..c1227b7c5545 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -507,6 +507,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh 
-> *fh, struct nfs_fattr *fattr)
->  		inode->i_blocks = 0;
->  		nfsi->write_io = 0;
->  		nfsi->read_io = 0;
-> +		nfsi->uncacheable_file_data = 0;
-> 
->  		nfsi->read_cache_jiffies = fattr->time_start;
->  		nfsi->attr_gencount = fattr->gencount;
-> @@ -561,6 +562,11 @@ nfs_fhget(struct super_block *sb, struct nfs_fh 
-> *fh, struct nfs_fattr *fattr)
->  		} else if (fattr_supported & NFS_ATTR_FATTR_SPACE_USED &&
->  			   fattr->size != 0)
->  			nfs_set_cache_invalid(inode, NFS_INO_INVALID_BLOCKS);
-> +		if (fattr->valid & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> +			nfsi->uncacheable_file_data =
-> +				!!(fattr->aux_flags & NFS_AUX_UNCACHEABLE_FILE_DATA);
-> +		else if (fattr_supported & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> +			nfs_set_cache_invalid(inode, NFS_INO_INVALID_UNCACHEABLE_FILE_DATA);
-> 
->  		nfs_setsecurity(inode, fattr);
-> 
-> @@ -1975,7 +1981,8 @@ static int 
-> nfs_inode_finish_partial_attr_update(const struct nfs_fattr *fattr,
->  		NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
->  		NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
->  		NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
-> -		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
-> +		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME |
-> +		NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
->  	unsigned long cache_validity = NFS_I(inode)->cache_validity;
->  	enum nfs4_change_attr_type ctype = 
-> NFS_SERVER(inode)->change_attr_type;
-> 
-> @@ -2297,7 +2304,8 @@ static int nfs_update_inode(struct inode *inode, 
-> struct nfs_fattr *fattr)
->  	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
->  			| NFS_INO_INVALID_ATIME
->  			| NFS_INO_REVAL_FORCED
-> -			| NFS_INO_INVALID_BLOCKS);
-> +			| NFS_INO_INVALID_BLOCKS
-> +			| NFS_INO_INVALID_UNCACHEABLE_FILE_DATA);
-> 
->  	/* Do atomic weak cache consistency updates */
->  	nfs_wcc_update_inode(inode, fattr);
-> @@ -2337,7 +2345,8 @@ static int nfs_update_inode(struct inode *inode, 
-> struct nfs_fattr *fattr)
->  					| NFS_INO_INVALID_NLINK
->  					| NFS_INO_INVALID_MODE
->  					| NFS_INO_INVALID_OTHER
-> -					| NFS_INO_INVALID_BTIME;
-> +					| NFS_INO_INVALID_BTIME
-> +					| NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
->  				if (S_ISDIR(inode->i_mode))
->  					nfs_force_lookup_revalidate(inode);
->  				attr_changed = true;
-> @@ -2461,6 +2470,13 @@ static int nfs_update_inode(struct inode *inode, 
-> struct nfs_fattr *fattr)
->  		nfsi->cache_validity |=
->  			save_cache_validity & NFS_INO_INVALID_BLOCKS;
-> 
-> +	if (fattr->valid & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> +		nfsi->uncacheable_file_data =
-> +				!!(fattr->aux_flags & NFS_AUX_UNCACHEABLE_FILE_DATA);
-> +	else if (fattr_supported & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> +		nfsi->cache_validity |=
-> +			save_cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
-> +
->  	/* Update attrtimeo value if we're out of the unstable period */
->  	if (attr_changed) {
->  		nfs_inc_stats(inode, NFSIOS_ATTRINVALIDATE);
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 1360409d8de9..d237abca4793 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -228,6 +228,7 @@ const u32 nfs4_fattr_bitmap[3] = {
->  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
->  	FATTR4_WORD2_SECURITY_LABEL
->  #endif
-> +	| FATTR4_WORD2_UNCACHEABLE_FILE_DATA
->  };
-> 
->  static const u32 nfs4_pnfs_open_bitmap[3] = {
-> @@ -250,6 +251,7 @@ static const u32 nfs4_pnfs_open_bitmap[3] = {
->  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
->  	| FATTR4_WORD2_SECURITY_LABEL
->  #endif
-> +	| FATTR4_WORD2_UNCACHEABLE_FILE_DATA
->  };
-> 
->  static const u32 nfs4_open_noattr_bitmap[3] = {
-> @@ -327,6 +329,9 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, 
-> const __u32 *src,
->  	if (!(cache_validity & NFS_INO_INVALID_BTIME))
->  		dst[1] &= ~FATTR4_WORD1_TIME_CREATE;
-> 
-> +	if (!(cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA))
-> +		dst[2] &= ~FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
-> +
->  	if (nfs_have_delegated_mtime(inode)) {
->  		if (!(cache_validity & NFS_INO_INVALID_ATIME))
->  			dst[1] &= ~(FATTR4_WORD1_TIME_ACCESS|FATTR4_WORD1_TIME_ACCESS_SET);
-> @@ -1238,7 +1243,7 @@ nfs4_update_changeattr_locked(struct inode *inode,
->  				NFS_INO_INVALID_SIZE | NFS_INO_INVALID_OTHER |
->  				NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_NLINK |
->  				NFS_INO_INVALID_MODE | NFS_INO_INVALID_BTIME |
-> -				NFS_INO_INVALID_XATTR;
-> +				NFS_INO_INVALID_XATTR | NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
->  		nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
->  	}
->  	nfsi->attrtimeo_timestamp = jiffies;
-> @@ -3839,6 +3844,7 @@ nfs4_atomic_open(struct inode *dir, struct 
-> nfs_open_context *ctx,
-> 
->  	if (IS_ERR(state))
->  		return ERR_CAST(state);
-> +
+- On multi-NUMA hosts, it gives one pool per node with proper thread
+  affinity and NUMA-local memory allocation.
+- On single-node hosts, pernode degenerates to exactly one pool,
+  identical to the old "global" mode -- svc_pool_for_cpu() short-
+  circuits when sv_nrpools <= 1, no CPU affinity is set, and memory
+  is allocated from the single node.
 
-I think this unrelated whitespace change accidentally snuck in
+The percpu mode (one pool per CPU) created excessive pools relative to
+the number of threads most deployments run, and was only auto-selected
+in a narrow case (single node, >2 CPUs).
 
->  	return state->inode;
->  }
-> 
-> @@ -3857,7 +3863,7 @@ static void nfs4_close_context(struct 
-> nfs_open_context *ctx, int is_sync)
-> 
->  #define FATTR4_WORD1_NFS40_MASK (2*FATTR4_WORD1_MOUNTED_ON_FILEID - 1UL)
->  #define FATTR4_WORD2_NFS41_MASK (2*FATTR4_WORD2_SUPPATTR_EXCLCREAT - 1UL)
-> -#define FATTR4_WORD2_NFS42_MASK (2*FATTR4_WORD2_OPEN_ARGUMENTS - 1UL)
-> +#define FATTR4_WORD2_NFS42_MASK (2*FATTR4_WORD2_UNCACHEABLE_FILE_DATA - 1UL)
-> 
->  #define FATTR4_WORD2_NFS42_TIME_DELEG_MASK \
->  	(FATTR4_WORD2_TIME_DELEG_MODIFY|FATTR4_WORD2_TIME_DELEG_ACCESS)
-> @@ -3981,6 +3987,8 @@ static int _nfs4_server_capabilities(struct 
-> nfs_server *server, struct nfs_fh *f
->  		memcpy(server->attr_bitmask_nl, res.attr_bitmask,
->  				sizeof(server->attr_bitmask));
->  		server->attr_bitmask_nl[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-> +		if (!(res.attr_bitmask[2] & FATTR4_WORD2_UNCACHEABLE_FILE_DATA))
-> +			server->fattr_valid &= ~NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA;
-> 
->  		if (res.open_caps.oa_share_access_want[0] &
->  		    NFS4_SHARE_WANT_OPEN_XOR_DELEGATION)
-> @@ -5809,6 +5817,8 @@ void nfs4_bitmask_set(__u32 bitmask[], const __u32 src[],
->  		bitmask[1] |= FATTR4_WORD1_SPACE_USED;
->  	if (cache_validity & NFS_INO_INVALID_BTIME)
->  		bitmask[1] |= FATTR4_WORD1_TIME_CREATE;
-> +	if (cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA)
-> +		bitmask[2] |= FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
-> 
->  	if (cache_validity & NFS_INO_INVALID_SIZE)
->  		bitmask[0] |= FATTR4_WORD0_SIZE;
-> diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-> index 1ed677810d9d..27748a979e12 100644
-> --- a/fs/nfs/nfs4trace.h
-> +++ b/fs/nfs/nfs4trace.h
-> @@ -33,7 +33,9 @@
->  		{ NFS_ATTR_FATTR_CHANGE, "CHANGE" }, \
->  		{ NFS_ATTR_FATTR_OWNER_NAME, "OWNER_NAME" }, \
->  		{ NFS_ATTR_FATTR_GROUP_NAME, "GROUP_NAME" }, \
-> -		{ NFS_ATTR_FATTR_BTIME, "BTIME" })
-> +		{ NFS_ATTR_FATTR_BTIME, "BTIME" }, \
-> +		{ NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA, "UNCACHEABLE_FILE_DATA" })
-> +
-> 
->  DECLARE_EVENT_CLASS(nfs4_clientid_event,
->  		TP_PROTO(
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index c23c2eee1b5c..5020ac86b977 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -120,7 +120,8 @@ static int decode_layoutget(struct xdr_stream *xdr, 
-> struct rpc_rqst *req,
->  				3*nfstime4_maxsz + \
->  				nfs4_owner_maxsz + \
->  				nfs4_group_maxsz + nfs4_label_maxsz + \
-> -				 decode_mdsthreshold_maxsz))
-> +				 decode_mdsthreshold_maxsz) + \
-> +				 NFS4_fattr4_uncacheable_file_data_sz)
+Remove the SVC_POOL_* enum, mode selection heuristic,
+svc_pool_map_init_percpu(), and all mode-based switch statements.
+Simplify pool map functions to always use the pernode path.  If pool
+map allocation fails, svc_pool_map_get() now returns 0 and service
+creation fails, rather than silently falling back to a single global
+pool.
 
-Can this simply be a '1' like many of the other values here? I haven't
-looked into why the double-parentheses are here yet, but it might be
-styilisticly better to put the new value inside them right after
-decode_mdsthreshold_maxsz.
+The module parameter and netlink interfaces are preserved for backward
+compatibility:
+- Writing any previously-accepted value succeeds silently
+- Reading always returns "pernode"
+- Writing to the module parameter emits a deprecation notice
 
->  #define nfs4_fattr_maxsz	(nfs4_fattr_bitmap_maxsz + \
->  				nfs4_fattr_value_maxsz)
->  #define decode_getattr_maxsz    (op_decode_hdr_maxsz + 
-> nfs4_fattr_maxsz)
-> @@ -4380,6 +4381,30 @@ static int decode_attr_open_arguments(struct 
-> xdr_stream *xdr, uint32_t *bitmap,
->  	return 0;
->  }
-> 
-> +static int decode_attr_uncacheable_file_data(struct xdr_stream *xdr, 
-> uint32_t *bitmap,
-> +				   uint32_t *res, uint64_t *flags)
-> +{
-> +	int status = 0;
-> +	__be32 *p;
-> +
-> +	if (unlikely(bitmap[2] & (FATTR4_WORD2_UNCACHEABLE_FILE_DATA - 1U)))
-> +		return -EIO;
-> +	if (likely(bitmap[2] & FATTR4_WORD2_UNCACHEABLE_FILE_DATA)) {
-> +		p = xdr_inline_decode(xdr, 4);
-> +		if (unlikely(!p))
-> +			return -EIO;
-> +		if (be32_to_cpup(p))
-> +			*res |= NFS_AUX_UNCACHEABLE_FILE_DATA;
-> +		else
-> +			*res &= ~NFS_AUX_UNCACHEABLE_FILE_DATA;
-> +		bitmap[2] &= ~FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
-> +		*flags |= NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA;
-> +	}
-> +	dprintk("%s: uncacheable_file_data: =%s\n", __func__,
-> +		(*res & NFS_AUX_UNCACHEABLE_FILE_DATA) == 0 ? "false" : "true");
-> +	return status;
-> +}
-> +
->  static int verify_attr_len(struct xdr_stream *xdr, unsigned int savep, 
-> uint32_t attrlen)
->  {
->  	unsigned int attrwords = XDR_QUADLEN(attrlen);
-> @@ -4725,6 +4750,8 @@ static int decode_getfattr_attrs(struct 
-> xdr_stream *xdr, uint32_t *bitmap,
->  	uint32_t type;
->  	int32_t err;
-> 
-> +	fattr->aux_flags = 0;
-> +
->  	status = decode_attr_type(xdr, bitmap, &type);
->  	if (status < 0)
->  		goto xdr_error;
-> @@ -4843,6 +4870,12 @@ static int decode_getfattr_attrs(struct 
-> xdr_stream *xdr, uint32_t *bitmap,
->  		goto xdr_error;
->  	fattr->valid |= status;
-> 
-> +	status = decode_attr_uncacheable_file_data(xdr, bitmap, &fattr->aux_flags,
-> +					 &fattr->valid);
-> +	if (status < 0)
-> +		goto xdr_error;
-> +
-> +	status = 0;
->  xdr_error:
->  	dprintk("%s: xdr returned %d\n", __func__, -status);
->  	return status;
-> diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-> index 4ada21f4eebd..b15c1732c869 100644
-> --- a/fs/nfs/nfstrace.h
-> +++ b/fs/nfs/nfstrace.h
-> @@ -33,7 +33,8 @@
->  			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" }, \
->  			{ NFS_INO_INVALID_NLINK, "INVALID_NLINK" }, \
->  			{ NFS_INO_INVALID_MODE, "INVALID_MODE" }, \
-> -			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" })
-> +			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" }, \
-> +			{ NFS_INO_INVALID_UNCACHEABLE_FILE_DATA, "INVALID_UNCACHEABLE_FILE_DATA" })
-> 
->  #define nfs_show_nfsi_flags(v) \
->  	__print_flags(v, "|", \
-> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-> index 34aa303354bc..af402373d0e7 100644
-> --- a/include/linux/nfs4.h
-> +++ b/include/linux/nfs4.h
-> @@ -476,6 +476,7 @@ enum {
->  #define FATTR4_WORD2_ACL_TRUEFORM_SCOPE	BIT(FATTR4_ACL_TRUEFORM_SCOPE 
-> - 64)
->  #define FATTR4_WORD2_POSIX_DEFAULT_ACL	BIT(FATTR4_POSIX_DEFAULT_ACL - 
-> 64)
->  #define FATTR4_WORD2_POSIX_ACCESS_ACL	BIT(FATTR4_POSIX_ACCESS_ACL - 64)
-> +#define 
-> FATTR4_WORD2_UNCACHEABLE_FILE_DATA	BIT(FATTR4_UNCACHEABLE_FILE_DATA - 
-> 64)
-> 
->  /* MDS threshold bitmap bits */
->  #define THRESHOLD_RD                    (1UL << 0)
-> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> index ec17e602c979..b9228086a1df 100644
-> --- a/include/linux/nfs_fs.h
-> +++ b/include/linux/nfs_fs.h
-> @@ -162,6 +162,8 @@ struct nfs_inode {
-> 
->  	struct timespec64	btime;
-> 
-> +	unsigned char		uncacheable_file_data : 1;
-> +
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+This version is essentially the same as v1, but allows the kernel to
+accept any previously-accepted setting for pool-mode, which should
+alleviate concerns about breakage.
+---
+Changes in v2:
+- Accept any previously-accepted setting for pool_mode
+- Link to v1: https://lore.kernel.org/r/20260423-sunrpc-pool-mode-v1-1-b7f20e35749b@kernel.org
+---
+ net/sunrpc/svc.c | 238 +++++++++----------------------------------------------
+ 1 file changed, 37 insertions(+), 201 deletions(-)
 
-Since this is a boolean value, could we store it in a bool?
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index dd80a2eaaa74..6e3d509bf95a 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -38,19 +38,6 @@
+ 
+ static void svc_unregister(const struct svc_serv *serv, struct net *net);
+ 
+-#define SVC_POOL_DEFAULT	SVC_POOL_GLOBAL
+-
+-/*
+- * Mode for mapping cpus to pools.
+- */
+-enum {
+-	SVC_POOL_AUTO = -1,	/* choose one of the others */
+-	SVC_POOL_GLOBAL,	/* no mapping, just a single global pool
+-				 * (legacy & UP mode) */
+-	SVC_POOL_PERCPU,	/* one pool per cpu */
+-	SVC_POOL_PERNODE	/* one pool per numa node */
+-};
+-
+ /*
+  * Structure for mapping cpus to pools and vice versa.
+  * Setup once during sunrpc initialisation.
+@@ -58,62 +45,23 @@ enum {
+ 
+ struct svc_pool_map {
+ 	int count;			/* How many svc_servs use us */
+-	int mode;			/* Note: int not enum to avoid
+-					 * warnings about "enumeration value
+-					 * not handled in switch" */
+ 	unsigned int npools;
+-	unsigned int *pool_to;		/* maps pool id to cpu or node */
+-	unsigned int *to_pool;		/* maps cpu or node to pool id */
++	unsigned int *pool_to;		/* maps pool id to node */
++	unsigned int *to_pool;		/* maps node to pool id */
+ };
+ 
+-static struct svc_pool_map svc_pool_map = {
+-	.mode = SVC_POOL_DEFAULT
+-};
++static struct svc_pool_map svc_pool_map;
+ 
+ static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count only */
+ 
+-static int
+-__param_set_pool_mode(const char *val, struct svc_pool_map *m)
+-{
+-	int err, mode;
+-
+-	mutex_lock(&svc_pool_map_mutex);
+-
+-	err = 0;
+-	if (!strncmp(val, "auto", 4))
+-		mode = SVC_POOL_AUTO;
+-	else if (!strncmp(val, "global", 6))
+-		mode = SVC_POOL_GLOBAL;
+-	else if (!strncmp(val, "percpu", 6))
+-		mode = SVC_POOL_PERCPU;
+-	else if (!strncmp(val, "pernode", 7))
+-		mode = SVC_POOL_PERNODE;
+-	else
+-		err = -EINVAL;
+-
+-	if (err)
+-		goto out;
+-
+-	if (m->count == 0)
+-		m->mode = mode;
+-	else if (mode != m->mode)
+-		err = -EBUSY;
+-out:
+-	mutex_unlock(&svc_pool_map_mutex);
+-	return err;
+-}
+-
+-static int
+-param_set_pool_mode(const char *val, const struct kernel_param *kp)
+-{
+-	struct svc_pool_map *m = kp->arg;
+-
+-	return __param_set_pool_mode(val, m);
+-}
+-
+ int sunrpc_set_pool_mode(const char *val)
+ {
+-	return __param_set_pool_mode(val, &svc_pool_map);
++	if (!strncmp(val, "auto", 4) ||
++	    !strncmp(val, "global", 6) ||
++	    !strncmp(val, "percpu", 6) ||
++	    !strncmp(val, "pernode", 7))
++		return 0;
++	return -EINVAL;
+ }
+ EXPORT_SYMBOL(sunrpc_set_pool_mode);
+ 
+@@ -122,84 +70,32 @@ EXPORT_SYMBOL(sunrpc_set_pool_mode);
+  * @buf: where to write the current pool_mode
+  * @size: size of @buf
+  *
+- * Grab the current pool_mode from the svc_pool_map and write
+- * the resulting string to @buf. Returns the number of characters
++ * Write the pool_mode string to @buf. Returns the number of characters
+  * written to @buf (a'la snprintf()).
+  */
+ int
+ sunrpc_get_pool_mode(char *buf, size_t size)
+ {
+-	struct svc_pool_map *m = &svc_pool_map;
+-
+-	switch (m->mode)
+-	{
+-	case SVC_POOL_AUTO:
+-		return snprintf(buf, size, "auto");
+-	case SVC_POOL_GLOBAL:
+-		return snprintf(buf, size, "global");
+-	case SVC_POOL_PERCPU:
+-		return snprintf(buf, size, "percpu");
+-	case SVC_POOL_PERNODE:
+-		return snprintf(buf, size, "pernode");
+-	default:
+-		return snprintf(buf, size, "%d", m->mode);
+-	}
++	return snprintf(buf, size, "pernode");
+ }
+ EXPORT_SYMBOL(sunrpc_get_pool_mode);
+ 
+ static int
+-param_get_pool_mode(char *buf, const struct kernel_param *kp)
++param_set_pool_mode(const char *val, const struct kernel_param *kp)
+ {
+-	char str[16];
+-	int len;
+-
+-	len = sunrpc_get_pool_mode(str, ARRAY_SIZE(str));
+-
+-	/* Ensure we have room for newline and NUL */
+-	len = min_t(int, len, ARRAY_SIZE(str) - 2);
+-
+-	/* tack on the newline */
+-	str[len] = '\n';
+-	str[len + 1] = '\0';
+-
+-	return sysfs_emit(buf, "%s", str);
++	pr_notice("sunrpc: the pool_mode parameter is deprecated and will be removed in a future release.\n");
++	return sunrpc_set_pool_mode(val);
+ }
+ 
+-module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
+-		  &svc_pool_map, 0644);
+-
+-/*
+- * Detect best pool mapping mode heuristically,
+- * according to the machine's topology.
+- */
+ static int
+-svc_pool_map_choose_mode(void)
++param_get_pool_mode(char *buf, const struct kernel_param *kp)
+ {
+-	unsigned int node;
+-
+-	if (nr_online_nodes > 1) {
+-		/*
+-		 * Actually have multiple NUMA nodes,
+-		 * so split pools on NUMA node boundaries
+-		 */
+-		return SVC_POOL_PERNODE;
+-	}
+-
+-	node = first_online_node;
+-	if (nr_cpus_node(node) > 2) {
+-		/*
+-		 * Non-trivial SMP, or CONFIG_NUMA on
+-		 * non-NUMA hardware, e.g. with a generic
+-		 * x86_64 kernel on Xeons.  In this case we
+-		 * want to divide the pools on cpu boundaries.
+-		 */
+-		return SVC_POOL_PERCPU;
+-	}
+-
+-	/* default: one global pool */
+-	return SVC_POOL_GLOBAL;
++	return sysfs_emit(buf, "pernode\n");
+ }
+ 
++module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
++		  NULL, 0644);
++
+ /*
+  * Allocate the to_pool[] and pool_to[] arrays.
+  * Returns 0 on success or an errno.
+@@ -224,35 +120,7 @@ svc_pool_map_alloc_arrays(struct svc_pool_map *m, unsigned int maxpools)
+ }
+ 
+ /*
+- * Initialise the pool map for SVC_POOL_PERCPU mode.
+- * Returns number of pools or <0 on error.
+- */
+-static int
+-svc_pool_map_init_percpu(struct svc_pool_map *m)
+-{
+-	unsigned int maxpools = nr_cpu_ids;
+-	unsigned int pidx = 0;
+-	unsigned int cpu;
+-	int err;
+-
+-	err = svc_pool_map_alloc_arrays(m, maxpools);
+-	if (err)
+-		return err;
+-
+-	for_each_online_cpu(cpu) {
+-		BUG_ON(pidx >= maxpools);
+-		m->to_pool[cpu] = pidx;
+-		m->pool_to[pidx] = cpu;
+-		pidx++;
+-	}
+-	/* cpus brought online later all get mapped to pool0, sorry */
+-
+-	return pidx;
+-};
+-
+-
+-/*
+- * Initialise the pool map for SVC_POOL_PERNODE mode.
++ * Initialise the pool map for one pool per NUMA node.
+  * Returns number of pools or <0 on error.
+  */
+ static int
+@@ -284,14 +152,13 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
+  * Add a reference to the global map of cpus to pools (and
+  * vice versa) if pools are in use.
+  * Initialise the map if we're the first user.
+- * Returns the number of pools. If this is '1', no reference
+- * was taken.
++ * Returns the number of pools, or 0 on failure.
+  */
+ static unsigned int
+ svc_pool_map_get(void)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+-	int npools = -1;
++	int npools;
+ 
+ 	mutex_lock(&svc_pool_map_mutex);
+ 	if (m->count++) {
+@@ -299,22 +166,11 @@ svc_pool_map_get(void)
+ 		return m->npools;
+ 	}
+ 
+-	if (m->mode == SVC_POOL_AUTO)
+-		m->mode = svc_pool_map_choose_mode();
+-
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-		npools = svc_pool_map_init_percpu(m);
+-		break;
+-	case SVC_POOL_PERNODE:
+-		npools = svc_pool_map_init_pernode(m);
+-		break;
+-	}
+-
++	npools = svc_pool_map_init_pernode(m);
+ 	if (npools <= 0) {
+-		/* default, or memory allocation failure */
+-		npools = 1;
+-		m->mode = SVC_POOL_GLOBAL;
++		m->count--;
++		mutex_unlock(&svc_pool_map_mutex);
++		return 0;
+ 	}
+ 	m->npools = npools;
+ 	mutex_unlock(&svc_pool_map_mutex);
+@@ -346,14 +202,11 @@ static int svc_pool_map_get_node(unsigned int pidx)
+ {
+ 	const struct svc_pool_map *m = &svc_pool_map;
+ 
+-	if (m->count) {
+-		if (m->mode == SVC_POOL_PERCPU)
+-			return cpu_to_node(m->pool_to[pidx]);
+-		if (m->mode == SVC_POOL_PERNODE)
+-			return m->pool_to[pidx];
+-	}
++	if (m->count)
++		return m->pool_to[pidx];
+ 	return numa_mem_id();
+ }
++
+ /*
+  * Set the given thread's cpus_allowed mask so that it
+  * will only run on cpus in the given pool.
+@@ -372,27 +225,15 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ 	if (m->count == 0)
+ 		return;
+ 
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-	{
+-		set_cpus_allowed_ptr(task, cpumask_of(node));
+-		break;
+-	}
+-	case SVC_POOL_PERNODE:
+-	{
+-		set_cpus_allowed_ptr(task, cpumask_of_node(node));
+-		break;
+-	}
+-	}
++	set_cpus_allowed_ptr(task, cpumask_of_node(node));
+ }
+ 
+ /**
+  * svc_pool_for_cpu - Select pool to run a thread on this cpu
+  * @serv: An RPC service
+  *
+- * Use the active CPU and the svc_pool_map's mode setting to
+- * select the svc thread pool to use. Once initialized, the
+- * svc_pool_map does not change.
++ * Use the active CPU and the svc_pool_map to select the svc thread
++ * pool to use. Once initialized, the svc_pool_map does not change.
+  *
+  * Return value:
+  *   A pointer to an svc_pool
+@@ -400,20 +241,12 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+-	int cpu = raw_smp_processor_id();
+-	unsigned int pidx = 0;
++	unsigned int pidx;
+ 
+ 	if (serv->sv_nrpools <= 1)
+ 		return serv->sv_pools;
+ 
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-		pidx = m->to_pool[cpu];
+-		break;
+-	case SVC_POOL_PERNODE:
+-		pidx = m->to_pool[cpu_to_node(cpu)];
+-		break;
+-	}
++	pidx = m->to_pool[cpu_to_node(raw_smp_processor_id())];
+ 
+ 	return &serv->sv_pools[pidx % serv->sv_nrpools];
+ }
+@@ -617,6 +450,9 @@ struct svc_serv *svc_create_pooled(struct svc_program *prog,
+ 	struct svc_serv *serv;
+ 	unsigned int npools = svc_pool_map_get();
+ 
++	if (!npools)
++		return NULL;
++
+ 	serv = __svc_create(prog, nprogs, stats, bufsize, npools, threadfn);
+ 	if (!serv)
+ 		goto out_err;
 
-Thanks,
-Anna
+---
+base-commit: 2bb83225da8ee0383d17783b5c903589696faf90
+change-id: 20260423-sunrpc-pool-mode-3e6b56320dc4
 
->  	/*
->  	 * read_cache_jiffies is when we started read-caching this inode.
->  	 * attrtimeo is for how long the cached information is assumed
-> @@ -319,6 +321,7 @@ struct nfs4_copy_state {
->  #define NFS_INO_INVALID_NLINK	BIT(16)		/* cached nlinks is invalid */
->  #define NFS_INO_INVALID_MODE	BIT(17)		/* cached mode is invalid */
->  #define NFS_INO_INVALID_BTIME	BIT(18)		/* cached btime is invalid */
-> +#define NFS_INO_INVALID_UNCACHEABLE_FILE_DATA	BIT(19)		/* cached 
-> uncacheable_file_data is invalid */
-> 
->  #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
->  		| NFS_INO_INVALID_CTIME \
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 11c5b31cfc7d..2e1987ac403d 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -17,6 +17,9 @@
-> 
->  #define NFS_BITMASK_SZ		3
-> 
-> +/* aux_flags in nfs_fattr */
-> +#define NFS_AUX_UNCACHEABLE_FILE_DATA	BIT(0)
-> +
->  struct nfs4_string {
->  	unsigned int len;
->  	char *data;
-> @@ -68,6 +71,7 @@ struct nfs_fattr {
->  	struct timespec64	mtime;
->  	struct timespec64	ctime;
->  	struct timespec64	btime;
-> +	__u32			aux_flags;	/* NFSv4 auxiliary flags bitfield */
->  	__u64			change_attr;	/* NFSv4 change attribute */
->  	__u64			pre_change_attr;/* pre-op NFSv4 change attribute */
->  	__u64			pre_size;	/* pre_op_attr.size	  */
-> @@ -108,6 +112,7 @@ struct nfs_fattr {
->  #define NFS_ATTR_FATTR_GROUP_NAME	BIT_ULL(24)
->  #define NFS_ATTR_FATTR_V4_SECURITY_LABEL BIT_ULL(25)
->  #define NFS_ATTR_FATTR_BTIME		BIT_ULL(26)
-> +#define NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA	BIT_ULL(27)
-> 
->  #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
->  		| NFS_ATTR_FATTR_MODE \
-> @@ -129,7 +134,8 @@ struct nfs_fattr {
->  #define NFS_ATTR_FATTR_V4 (NFS_ATTR_FATTR \
->  		| NFS_ATTR_FATTR_SPACE_USED \
->  		| NFS_ATTR_FATTR_BTIME \
-> -		| NFS_ATTR_FATTR_V4_SECURITY_LABEL)
-> +		| NFS_ATTR_FATTR_V4_SECURITY_LABEL \
-> +		| NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
-> 
->  /*
->   * Maximal number of supported layout drivers.
-> -- 
-> 2.47.3
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
