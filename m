@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id S1vWALo8PWqDzwgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:35:38 +0200
+	id qO7TDKFBPWpr0QgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:56:33 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E0476C6B10
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:35:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78A506C6DD5
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:56:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nhjQDjNI;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Lxjp0oQ0;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22836-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EA0F03171B69
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 14:27:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 794AA3014657
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 14:56:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C4F0392837;
-	Thu, 25 Jun 2026 14:27:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2BD7334692;
+	Thu, 25 Jun 2026 14:56:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D538E5C4
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 14:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F192E11B9
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 14:56:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782397668; cv=none; b=EQYZyIjI+Gi8SUv/nHS82XzmHlpOwniIdD2KqxIRYd5i/yiYetMtpeaUG5ic0MEkUVuITacMHw7BJTf1NNd2IX3LrLUvb2gFuzRj/ZG8Bmg4eqBsBZ4rnHP/PkIVXQIrdRmiPSGJmQw1T8C+tOkUG96pxlWu/WvvlGd57eDbLB0=
+	t=1782399385; cv=none; b=Vi8l16x+V/j9smzxVRiM/By3kU6d4dMSm4kAJaeUCfm9KIkpVRoN1RIynlah0Egu9mXxkPsiORFhUwTtb0JOJz4b6ceOo6Te8fTA43iaVBearXM99GSyeoN9sCRqpd5fkGeDqGRTZE9hb3B7IAG/M63yJwT69of3uz4lNBT3rUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782397668; c=relaxed/simple;
-	bh=yrov0n4BJglgRlZ8s0Nd/vkfUcrq8uIUVk1tdl0VCSQ=;
+	s=arc-20240116; t=1782399385; c=relaxed/simple;
+	bh=e2decA3kMW3XtiBIGOkceEPf6lVmmUfRbqfWe022jhU=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=WWlBJ2laGBP0M5L4M9MnLM4y+D1+FBAaMvqdRokoIsOa+CnDtBiDRnjdw7f34mRV33oa6B+SgEhGsIGPo7Vo0ml+pIfs/+QayOol+f52Wa/u+2QxTQpwOpRmCgoCv/A2wjbNen3U8/bOXUgHGRjCr4SbR8yuB+T1Z6+dKXer8fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhjQDjNI; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B531D1F000E9;
-	Thu, 25 Jun 2026 14:27:44 +0000 (UTC)
+	 Subject:Content-Type; b=ZmMHupmK+7g7DzxoMICHF3hgkBKhdS5X6dNWlsIirCciCOoNh97NTKzTnlGGqk+emt6eUWNh7K1wHSm/Q0gCUUYiwE9urM26yVjvWpqHYMKFs7fdGSmagEoI7fAfEJnuNKHbQsEF6GUG15Rrdtj4uw6/dKLUNVGHvwWcxO5dvzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lxjp0oQ0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3368C1F000E9;
+	Thu, 25 Jun 2026 14:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782397665;
-	bh=9bN4MkuLPTowGDmDqgSY8eW47+jblydvdJag1+rwfaI=;
+	s=k20260515; t=1782399383;
+	bh=3QcHlWDyWAWWG7jqoVtyoFg68rLoDmrZB4076N1PNmI=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=nhjQDjNIHJhyXH+cprt7ChxuIcqFUvRHTQKVDAP+zsXx3iLbabOEFZkiC+iSjq0qs
-	 YIaGUsR+ijsEQ6dif+N4Z1VrIqMa187Jxk6mhP+NKJmkKgnN+Te7Zv758HVopcDBKv
-	 yK5Fa/V/MEhMk+bsdXafOYkWiyAYkt+8AzoPgITPE6GBypX7K0SCRA4U3GD95xkZUg
-	 Rj1C706EeHNBv9L/ppaU1u2/jo9ESQ6kcCPX1i7R24F/yjgOuUEoAGyUB5ArMEf7Fc
-	 +79Hzr+JmZDpc+2x2Tvu60dOuVa3/sAXlPnaSCOMvG0TCrwLKWqo1SB7OQTCK1gAzZ
-	 6oBkM54EEhCXg==
+	b=Lxjp0oQ0qD+oabJZ9aqRSXu0rsr/lk7wJ1DerJCA7N55y4edo4TJtPzTCt8kyRfW/
+	 bn3tK7Iq2iYhImb5rkr68Q0VhKF0WvRo25PIZH30JInZ4J62Hzb2yn094tj+mzkTw9
+	 JUzP4CVBFs+UYwf5lIJR28VvsSefIcezwjioNReTL6Ndok4KnGBC1dk1Krly7ku1Wq
+	 sDGmvj+KZK5RWYgPGSDEUFl8q5BcxW/XL/iVhFe3QxhChS73RlPIjtPNqBZ1U8+ewn
+	 l++z/tSKxMcEFUrXykAt8f0sPbR+QQbaxITSq2pv9goco+W9clULElTkjuLRXB8+KX
+	 KuKeJ3BEUC6KA==
 Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1F6A4F4006F;
-	Thu, 25 Jun 2026 10:27:44 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 67526F40068;
+	Thu, 25 Jun 2026 10:56:22 -0400 (EDT)
 Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-02.internal (MEProxy); Thu, 25 Jun 2026 10:27:44 -0400
-X-ME-Sender: <xms:4Do9asLcAVdVhhe38AfhYElGSI1mNnWzQlBp1wQpswZgPFhO75LavA>
-    <xme:4Do9am8eiFLf3euCMNV5w3-UZjxVxci9PoIJSbNqcncRFdC2Tbrfq3NUkldLCJfSP
-    6gr7nvTX0q9cndB7wVMio_z_KFXSZ04Ww8827pHZ2S5XOMntFqaHVA>
-X-ME-Proxy-Cause: dmFkZTGIoxEsdVdUCgBBnZSuGVVmsUaUsMbULvPKht7nhHeuVpdh/sOJUqxDKdGTFQe7as
-    54aZXE+gLiAFlMQ5Bpl/L89IAPjQ4hQmgDv9HfQggLwaDlZZjseqINRUi+ybm+z+ZpZHQ1
-    5qdSn5mXwyoPhAhq5QtPpPWX00BLez4q3jh66xws4qh+xvlqrErvunojBg5BZuNnjNRG5F
-    IXWk66gFzzUQQEV+3oFmgslSPWq346ob99vaM39n9nkaEaC9LGLnDj4LiIqxIq3puN9+pg
-    YJpRodbr+1eqp7vLUX6lHECjoyTlTkGrp9eSOSeUn3DP9t0vAxWAxD5/ZCb4KurORvz6ly
-    5vvGw5/uHCnAhvqZcr/oBaZSRJVuj114bHfFzHtZgkkEO79OzbqcMdEH2gt3rSd6thxz40
-    vRhcIjx2OcuBRbsnSOV+oNB2uaLLhliypux8JtHtg+2c79/WCuTQdVrwha3SDuHqMmKwQC
-    phy6NbNErexWP1t1eJhmBt/C4dQ2tm0xGRVaScDWCexKuV+M6Z2bmm+qPJVvj8EwvR3MLF
-    47S71alxmN6/H48BbZN/ZaFY6nQtsVmS7Gg1dEddr3c+eD3KdgVXScUXvN6REj4qyU4JIx
-    +wZswOzhecwMoYYDs+mmzTRzvhSh2uf+H65gWN1hZzq8Nu9TdW2SLXAtj8Tg
-X-ME-Proxy: <xmx:4Do9auPMtF85cwVDAjFOttzX6YlHgLqIbTQOiM6KYED3gmcNFR_S-A>
-    <xmx:4Do9audY9HDI8F2H_TXSGq9RtXqdB18KT_kUY7YztyCPDiHHTolUKA>
-    <xmx:4Do9alUh8xtl7hppOi5V7-GUQZGq00otgKXU_1puozNkZyhgen0GBg>
-    <xmx:4Do9aujoz8rMvk3TLkSQg6o5YB6Bo-cd7A_pzs-FIxgQt8b81QdJTQ>
-    <xmx:4Do9as_i32GhaIjNPWr-xXCYqeOjsVkm9uJuhYJXQ3xyZfpznh2ljVeB>
+  by phl-compute-02.internal (MEProxy); Thu, 25 Jun 2026 10:56:22 -0400
+X-ME-Sender: <xms:lkE9aub9KAScQD7lNLf8GqahrQ_AxZkdd2upYtqekinGOi2oV8oknw>
+    <xme:lkE9asOSJ_l0O422u-mrn3SnC-Rf33il-eCbtMdSPmtklKYPGT_M6ISfRMrDdTR21
+    74aa5UJv9wps5LEsk1y-ZQZ1qk94pTjVj8e5SAanoC94cfj1pLGMNY>
+X-ME-Proxy-Cause: dmFkZTF/+KzRFDgmF6PVyrdSwMwxkZ1xECwaZFtqCvVftXYmb5Xqmp6bnX5gXPxk80g5CI
+    XTLUzG+u+2QjxROFJT1o4A/RdDb67vNPaLDyeF4IJJ80mcLsKlDLkTwC6I6lWJSkaCWTMA
+    lEG51TWgw5PU92AFrtThaAqQZXAyrQhZ5XbakKOLPMh92ijBNMX597grgVPNI0LmGeD025
+    mLTL4KPD0aqmRar4PWz/2i0B3U9LnuuSY1XDghuFnJsk2UFYOV4F9VCR6Y1hsKaf6XyIrc
+    OClOLacIHOBuKE0ZeO6OiXckd8l9ciPvEom7hUD0degfDiwQd+0KjcPzG7Fl4a8SVE/lpB
+    KfX3/Ottj7QMC1yR0A2p03uKGJNDJ64fwQ5iGNmdPrQ3xsQWNVR2if3X8gw+kZnsBgyIIi
+    sxC3YvGzyqVZrnpKfD/RKa6n04TWe89VsroVMCpkvYbea+OyBNV+81jit2vEPZJxBdouZe
+    k7qoVSa2NDJikLcRC/ZpHp1c9hVLivjad7RBlgBccMyNa2Wo0YflYJoXb9ob4n8RQMkyOm
+    TYkrws7Z5uYqAijAkAd9i38aS0TRSEoAFoXGYVHAu799Q+D5S1UeSPnnfxr56Am4+er90z
+    7Ypvxu9kXIIZPOGX7uKI5zXwOHJBKau6dcgbZlkfDjt0oNHgCq3qHBYBluXQ
+X-ME-Proxy: <xmx:lkE9aqf---UzmtoRfONoXPmmP5k0k2u9jOmbQ6r09OASheIUm6kCRA>
+    <xmx:lkE9aluhqmwnsSaYI3TQDofJ5jYH-1gG-JM3-F72WUOuyPInkVvKsw>
+    <xmx:lkE9arkymHC90T2SqAzVaeb2dAge5iVnFSDIhpXaWWmE6UPwFbR6CQ>
+    <xmx:lkE9anwo6OLBKygWvqRA0kBCui7o28HyEZhfF4OVNRpy5BTfcyGesA>
+    <xmx:lkE9atPswWGi9R25eM1WgBQ5BXPqnkrXP0PZZMdzCguMmz5DotzhFTFP>
 Feedback-ID: i20964851:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F0B2BB6006E; Thu, 25 Jun 2026 10:27:43 -0400 (EDT)
+	id 467E5B6006F; Thu, 25 Jun 2026 10:56:22 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -79,19 +79,18 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AHquR-yw989F
-Date: Thu, 25 Jun 2026 10:26:22 -0400
+X-ThreadId: AnujKKUB5lug
+Date: Thu, 25 Jun 2026 10:56:02 -0400
 From: "Anna Schumaker" <anna@kernel.org>
 To: "Mike Snitzer" <snitzer@kernel.org>,
  "Trond Myklebust" <trondmy@kernel.org>
 Cc: "Tom Haynes" <loghyr@hammerspace.com>, "Chuck Lever" <cel@kernel.org>,
  linux-nfs@vger.kernel.org
-Message-Id: <16ff281b-f776-4e6c-9f2a-83c03f0d6eae@app.fastmail.com>
-In-Reply-To: <20260624191706.72544-2-snitzer@kernel.org>
+Message-Id: <24b3d9cd-d06a-4c35-b316-f7ec88f48316@app.fastmail.com>
+In-Reply-To: <20260624191706.72544-3-snitzer@kernel.org>
 References: <20260624191706.72544-1-snitzer@kernel.org>
- <20260624191706.72544-2-snitzer@kernel.org>
-Subject: Re: [PATCH 1/4] nfs4.2: add nfs4_2.x to generate the UNCACHEABLE_FILE_DATA
- attribute
+ <20260624191706.72544-3-snitzer@kernel.org>
+Subject: Re: [PATCH 2/4] nfs4.2: add UNCACHEABLE_FILE_DATA attribute support
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -99,7 +98,7 @@ X-Spamd-Result: default: False [-5.15 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -112,8 +111,8 @@ X-Spamd-Result: default: False [-5.15 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:snitzer@kernel.org,m:trondmy@kernel.org,m:loghyr@hammerspace.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22835-lists,linux-nfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,app.fastmail.com:mid];
+	TAGGED_FROM(0.00)[bounces-22836-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,ietf.org:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -128,172 +127,396 @@ X-Spamd-Result: default: False [-5.15 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4E0476C6B10
+X-Rspamd-Queue-Id: 78A506C6DD5
 
 Hi Mike,
 
 On Wed, Jun 24, 2026, at 3:17 PM, Mike Snitzer wrote:
-> Introduce Documentation/sunrpc/xdr/nfs4_2.x for NFSv4.2 protocol
-> extensions and define the UNCACHEABLE_FILE_DATA attribute (attr 87)
-> there, verbatim from draft-ietf-nfsv4-uncacheable-files Section 7:
+> From: Tom Haynes <loghyr@hammerspace.com>
 >
->   typedef bool            fattr4_uncacheable_file_data;
->   const FATTR4_UNCACHEABLE_FILE_DATA      = 87;
+> Recognize the NFSv4.2 per-file UNCACHEABLE_FILE_DATA attribute (attr 87,
+> draft-ietf-nfsv4-uncacheable-files): decode it via GETATTR, track per-
+> exported-filesystem support, and record on the inode whether a regular
+> file's data must not be cached.  Acting on the attribute (opening such
+> files O_DIRECT) is done by a subsequent change.
 >
-> This mirrors how the sibling NFSv4.2 attributes (FATTR4_OFFLINE=83,
-> FATTR4_TIME_DELEG_*=84/85, FATTR4_OPEN_ARGUMENTS=86) are defined in
-> Documentation/sunrpc/xdr/nfs4_1.x and generated by
-> tools/net/sunrpc/xdrgen into <linux/sunrpc/xdrgen/nfs4_1.h>, which
-> nfs4.h already includes.
+> If the NFSv4 server reports a regular file's UNCACHEABLE_FILE_DATA as
+> true, it indicates the file's data must not be cached; the client records
+> this in NFS_I(inode)->uncacheable_file_data for use by the I/O paths.
 >
-> Wire the fs/nfsd "make xdrgen" target to generate the definitions header
-> <linux/sunrpc/xdrgen/nfs4_2.h> and include it from <linux/nfs4.h>, so the
-> generated FATTR4_UNCACHEABLE_FILE_DATA constant and the
-> NFS4_fattr4_uncacheable_file_data_sz size macro are available to the
-> NFSv4.2 client support that follows.
+> The UNCACHEABLE_FILE_DATA attribute applies only to regular files
+> (NF4REG); per the draft a server MUST reject a query of it on any other
+> object type with NFS4ERR_INVAL.  A subsequent commit gates the client
+> accordingly.
+>
+> See: https://datatracker.ietf.org/doc/draft-ietf-nfsv4-uncacheable-files/
+>
+> Signed-off-by: Tom Haynes <loghyr@hammerspace.com>
+> [snitzer: adapt Tom's original code focused on metadata for ABE]
+> Co-developed-by: Mike Snitzer <snitzer@hammerspace.com>
+> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Assisted-by: Claude:claude-opus-4-8
+> ---
+>  fs/nfs/inode.c          | 22 +++++++++++++++++++---
+>  fs/nfs/nfs4proc.c       | 14 ++++++++++++--
+>  fs/nfs/nfs4trace.h      |  4 +++-
+>  fs/nfs/nfs4xdr.c        | 35 ++++++++++++++++++++++++++++++++++-
+>  fs/nfs/nfstrace.h       |  3 ++-
+>  include/linux/nfs4.h    |  1 +
+>  include/linux/nfs_fs.h  |  3 +++
+>  include/linux/nfs_xdr.h |  8 +++++++-
+>  8 files changed, 81 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 5bcd4027d203..c1227b7c5545 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -507,6 +507,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh 
+> *fh, struct nfs_fattr *fattr)
+>  		inode->i_blocks = 0;
+>  		nfsi->write_io = 0;
+>  		nfsi->read_io = 0;
+> +		nfsi->uncacheable_file_data = 0;
+> 
+>  		nfsi->read_cache_jiffies = fattr->time_start;
+>  		nfsi->attr_gencount = fattr->gencount;
+> @@ -561,6 +562,11 @@ nfs_fhget(struct super_block *sb, struct nfs_fh 
+> *fh, struct nfs_fattr *fattr)
+>  		} else if (fattr_supported & NFS_ATTR_FATTR_SPACE_USED &&
+>  			   fattr->size != 0)
+>  			nfs_set_cache_invalid(inode, NFS_INO_INVALID_BLOCKS);
+> +		if (fattr->valid & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
+> +			nfsi->uncacheable_file_data =
+> +				!!(fattr->aux_flags & NFS_AUX_UNCACHEABLE_FILE_DATA);
+> +		else if (fattr_supported & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
+> +			nfs_set_cache_invalid(inode, NFS_INO_INVALID_UNCACHEABLE_FILE_DATA);
+> 
+>  		nfs_setsecurity(inode, fattr);
+> 
+> @@ -1975,7 +1981,8 @@ static int 
+> nfs_inode_finish_partial_attr_update(const struct nfs_fattr *fattr,
+>  		NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
+>  		NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
+>  		NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
+> -		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
+> +		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME |
+> +		NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
+>  	unsigned long cache_validity = NFS_I(inode)->cache_validity;
+>  	enum nfs4_change_attr_type ctype = 
+> NFS_SERVER(inode)->change_attr_type;
+> 
+> @@ -2297,7 +2304,8 @@ static int nfs_update_inode(struct inode *inode, 
+> struct nfs_fattr *fattr)
+>  	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
+>  			| NFS_INO_INVALID_ATIME
+>  			| NFS_INO_REVAL_FORCED
+> -			| NFS_INO_INVALID_BLOCKS);
+> +			| NFS_INO_INVALID_BLOCKS
+> +			| NFS_INO_INVALID_UNCACHEABLE_FILE_DATA);
+> 
+>  	/* Do atomic weak cache consistency updates */
+>  	nfs_wcc_update_inode(inode, fattr);
+> @@ -2337,7 +2345,8 @@ static int nfs_update_inode(struct inode *inode, 
+> struct nfs_fattr *fattr)
+>  					| NFS_INO_INVALID_NLINK
+>  					| NFS_INO_INVALID_MODE
+>  					| NFS_INO_INVALID_OTHER
+> -					| NFS_INO_INVALID_BTIME;
+> +					| NFS_INO_INVALID_BTIME
+> +					| NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
+>  				if (S_ISDIR(inode->i_mode))
+>  					nfs_force_lookup_revalidate(inode);
+>  				attr_changed = true;
+> @@ -2461,6 +2470,13 @@ static int nfs_update_inode(struct inode *inode, 
+> struct nfs_fattr *fattr)
+>  		nfsi->cache_validity |=
+>  			save_cache_validity & NFS_INO_INVALID_BLOCKS;
+> 
+> +	if (fattr->valid & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
+> +		nfsi->uncacheable_file_data =
+> +				!!(fattr->aux_flags & NFS_AUX_UNCACHEABLE_FILE_DATA);
+> +	else if (fattr_supported & NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
+> +		nfsi->cache_validity |=
+> +			save_cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
+> +
+>  	/* Update attrtimeo value if we're out of the unstable period */
+>  	if (attr_changed) {
+>  		nfs_inc_stats(inode, NFSIOS_ATTRINVALIDATE);
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 1360409d8de9..d237abca4793 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -228,6 +228,7 @@ const u32 nfs4_fattr_bitmap[3] = {
+>  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+>  	FATTR4_WORD2_SECURITY_LABEL
+>  #endif
+> +	| FATTR4_WORD2_UNCACHEABLE_FILE_DATA
+>  };
+> 
+>  static const u32 nfs4_pnfs_open_bitmap[3] = {
+> @@ -250,6 +251,7 @@ static const u32 nfs4_pnfs_open_bitmap[3] = {
+>  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+>  	| FATTR4_WORD2_SECURITY_LABEL
+>  #endif
+> +	| FATTR4_WORD2_UNCACHEABLE_FILE_DATA
+>  };
+> 
+>  static const u32 nfs4_open_noattr_bitmap[3] = {
+> @@ -327,6 +329,9 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, 
+> const __u32 *src,
+>  	if (!(cache_validity & NFS_INO_INVALID_BTIME))
+>  		dst[1] &= ~FATTR4_WORD1_TIME_CREATE;
+> 
+> +	if (!(cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA))
+> +		dst[2] &= ~FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
+> +
+>  	if (nfs_have_delegated_mtime(inode)) {
+>  		if (!(cache_validity & NFS_INO_INVALID_ATIME))
+>  			dst[1] &= ~(FATTR4_WORD1_TIME_ACCESS|FATTR4_WORD1_TIME_ACCESS_SET);
+> @@ -1238,7 +1243,7 @@ nfs4_update_changeattr_locked(struct inode *inode,
+>  				NFS_INO_INVALID_SIZE | NFS_INO_INVALID_OTHER |
+>  				NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_NLINK |
+>  				NFS_INO_INVALID_MODE | NFS_INO_INVALID_BTIME |
+> -				NFS_INO_INVALID_XATTR;
+> +				NFS_INO_INVALID_XATTR | NFS_INO_INVALID_UNCACHEABLE_FILE_DATA;
+>  		nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
+>  	}
+>  	nfsi->attrtimeo_timestamp = jiffies;
+> @@ -3839,6 +3844,7 @@ nfs4_atomic_open(struct inode *dir, struct 
+> nfs_open_context *ctx,
+> 
+>  	if (IS_ERR(state))
+>  		return ERR_CAST(state);
+> +
 
-Aren't these client side changes? The xdrgen stuff is used on the
-server-side. I wouldn't expect any of these values to be available
-if nfsd is kconfig-ed off.
+I think this unrelated whitespace change accidentally snuck in
+
+>  	return state->inode;
+>  }
+> 
+> @@ -3857,7 +3863,7 @@ static void nfs4_close_context(struct 
+> nfs_open_context *ctx, int is_sync)
+> 
+>  #define FATTR4_WORD1_NFS40_MASK (2*FATTR4_WORD1_MOUNTED_ON_FILEID - 1UL)
+>  #define FATTR4_WORD2_NFS41_MASK (2*FATTR4_WORD2_SUPPATTR_EXCLCREAT - 1UL)
+> -#define FATTR4_WORD2_NFS42_MASK (2*FATTR4_WORD2_OPEN_ARGUMENTS - 1UL)
+> +#define FATTR4_WORD2_NFS42_MASK (2*FATTR4_WORD2_UNCACHEABLE_FILE_DATA - 1UL)
+> 
+>  #define FATTR4_WORD2_NFS42_TIME_DELEG_MASK \
+>  	(FATTR4_WORD2_TIME_DELEG_MODIFY|FATTR4_WORD2_TIME_DELEG_ACCESS)
+> @@ -3981,6 +3987,8 @@ static int _nfs4_server_capabilities(struct 
+> nfs_server *server, struct nfs_fh *f
+>  		memcpy(server->attr_bitmask_nl, res.attr_bitmask,
+>  				sizeof(server->attr_bitmask));
+>  		server->attr_bitmask_nl[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
+> +		if (!(res.attr_bitmask[2] & FATTR4_WORD2_UNCACHEABLE_FILE_DATA))
+> +			server->fattr_valid &= ~NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA;
+> 
+>  		if (res.open_caps.oa_share_access_want[0] &
+>  		    NFS4_SHARE_WANT_OPEN_XOR_DELEGATION)
+> @@ -5809,6 +5817,8 @@ void nfs4_bitmask_set(__u32 bitmask[], const __u32 src[],
+>  		bitmask[1] |= FATTR4_WORD1_SPACE_USED;
+>  	if (cache_validity & NFS_INO_INVALID_BTIME)
+>  		bitmask[1] |= FATTR4_WORD1_TIME_CREATE;
+> +	if (cache_validity & NFS_INO_INVALID_UNCACHEABLE_FILE_DATA)
+> +		bitmask[2] |= FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
+> 
+>  	if (cache_validity & NFS_INO_INVALID_SIZE)
+>  		bitmask[0] |= FATTR4_WORD0_SIZE;
+> diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+> index 1ed677810d9d..27748a979e12 100644
+> --- a/fs/nfs/nfs4trace.h
+> +++ b/fs/nfs/nfs4trace.h
+> @@ -33,7 +33,9 @@
+>  		{ NFS_ATTR_FATTR_CHANGE, "CHANGE" }, \
+>  		{ NFS_ATTR_FATTR_OWNER_NAME, "OWNER_NAME" }, \
+>  		{ NFS_ATTR_FATTR_GROUP_NAME, "GROUP_NAME" }, \
+> -		{ NFS_ATTR_FATTR_BTIME, "BTIME" })
+> +		{ NFS_ATTR_FATTR_BTIME, "BTIME" }, \
+> +		{ NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA, "UNCACHEABLE_FILE_DATA" })
+> +
+> 
+>  DECLARE_EVENT_CLASS(nfs4_clientid_event,
+>  		TP_PROTO(
+> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+> index c23c2eee1b5c..5020ac86b977 100644
+> --- a/fs/nfs/nfs4xdr.c
+> +++ b/fs/nfs/nfs4xdr.c
+> @@ -120,7 +120,8 @@ static int decode_layoutget(struct xdr_stream *xdr, 
+> struct rpc_rqst *req,
+>  				3*nfstime4_maxsz + \
+>  				nfs4_owner_maxsz + \
+>  				nfs4_group_maxsz + nfs4_label_maxsz + \
+> -				 decode_mdsthreshold_maxsz))
+> +				 decode_mdsthreshold_maxsz) + \
+> +				 NFS4_fattr4_uncacheable_file_data_sz)
+
+Can this simply be a '1' like many of the other values here? I haven't
+looked into why the double-parentheses are here yet, but it might be
+styilisticly better to put the new value inside them right after
+decode_mdsthreshold_maxsz.
+
+>  #define nfs4_fattr_maxsz	(nfs4_fattr_bitmap_maxsz + \
+>  				nfs4_fattr_value_maxsz)
+>  #define decode_getattr_maxsz    (op_decode_hdr_maxsz + 
+> nfs4_fattr_maxsz)
+> @@ -4380,6 +4381,30 @@ static int decode_attr_open_arguments(struct 
+> xdr_stream *xdr, uint32_t *bitmap,
+>  	return 0;
+>  }
+> 
+> +static int decode_attr_uncacheable_file_data(struct xdr_stream *xdr, 
+> uint32_t *bitmap,
+> +				   uint32_t *res, uint64_t *flags)
+> +{
+> +	int status = 0;
+> +	__be32 *p;
+> +
+> +	if (unlikely(bitmap[2] & (FATTR4_WORD2_UNCACHEABLE_FILE_DATA - 1U)))
+> +		return -EIO;
+> +	if (likely(bitmap[2] & FATTR4_WORD2_UNCACHEABLE_FILE_DATA)) {
+> +		p = xdr_inline_decode(xdr, 4);
+> +		if (unlikely(!p))
+> +			return -EIO;
+> +		if (be32_to_cpup(p))
+> +			*res |= NFS_AUX_UNCACHEABLE_FILE_DATA;
+> +		else
+> +			*res &= ~NFS_AUX_UNCACHEABLE_FILE_DATA;
+> +		bitmap[2] &= ~FATTR4_WORD2_UNCACHEABLE_FILE_DATA;
+> +		*flags |= NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA;
+> +	}
+> +	dprintk("%s: uncacheable_file_data: =%s\n", __func__,
+> +		(*res & NFS_AUX_UNCACHEABLE_FILE_DATA) == 0 ? "false" : "true");
+> +	return status;
+> +}
+> +
+>  static int verify_attr_len(struct xdr_stream *xdr, unsigned int savep, 
+> uint32_t attrlen)
+>  {
+>  	unsigned int attrwords = XDR_QUADLEN(attrlen);
+> @@ -4725,6 +4750,8 @@ static int decode_getfattr_attrs(struct 
+> xdr_stream *xdr, uint32_t *bitmap,
+>  	uint32_t type;
+>  	int32_t err;
+> 
+> +	fattr->aux_flags = 0;
+> +
+>  	status = decode_attr_type(xdr, bitmap, &type);
+>  	if (status < 0)
+>  		goto xdr_error;
+> @@ -4843,6 +4870,12 @@ static int decode_getfattr_attrs(struct 
+> xdr_stream *xdr, uint32_t *bitmap,
+>  		goto xdr_error;
+>  	fattr->valid |= status;
+> 
+> +	status = decode_attr_uncacheable_file_data(xdr, bitmap, &fattr->aux_flags,
+> +					 &fattr->valid);
+> +	if (status < 0)
+> +		goto xdr_error;
+> +
+> +	status = 0;
+>  xdr_error:
+>  	dprintk("%s: xdr returned %d\n", __func__, -status);
+>  	return status;
+> diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+> index 4ada21f4eebd..b15c1732c869 100644
+> --- a/fs/nfs/nfstrace.h
+> +++ b/fs/nfs/nfstrace.h
+> @@ -33,7 +33,8 @@
+>  			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" }, \
+>  			{ NFS_INO_INVALID_NLINK, "INVALID_NLINK" }, \
+>  			{ NFS_INO_INVALID_MODE, "INVALID_MODE" }, \
+> -			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" })
+> +			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" }, \
+> +			{ NFS_INO_INVALID_UNCACHEABLE_FILE_DATA, "INVALID_UNCACHEABLE_FILE_DATA" })
+> 
+>  #define nfs_show_nfsi_flags(v) \
+>  	__print_flags(v, "|", \
+> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+> index 34aa303354bc..af402373d0e7 100644
+> --- a/include/linux/nfs4.h
+> +++ b/include/linux/nfs4.h
+> @@ -476,6 +476,7 @@ enum {
+>  #define FATTR4_WORD2_ACL_TRUEFORM_SCOPE	BIT(FATTR4_ACL_TRUEFORM_SCOPE 
+> - 64)
+>  #define FATTR4_WORD2_POSIX_DEFAULT_ACL	BIT(FATTR4_POSIX_DEFAULT_ACL - 
+> 64)
+>  #define FATTR4_WORD2_POSIX_ACCESS_ACL	BIT(FATTR4_POSIX_ACCESS_ACL - 64)
+> +#define 
+> FATTR4_WORD2_UNCACHEABLE_FILE_DATA	BIT(FATTR4_UNCACHEABLE_FILE_DATA - 
+> 64)
+> 
+>  /* MDS threshold bitmap bits */
+>  #define THRESHOLD_RD                    (1UL << 0)
+> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> index ec17e602c979..b9228086a1df 100644
+> --- a/include/linux/nfs_fs.h
+> +++ b/include/linux/nfs_fs.h
+> @@ -162,6 +162,8 @@ struct nfs_inode {
+> 
+>  	struct timespec64	btime;
+> 
+> +	unsigned char		uncacheable_file_data : 1;
+> +
+
+Since this is a boolean value, could we store it in a bool?
 
 Thanks,
 Anna
 
->
-> No functional change.
->
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> Assisted-by: Claude:claude-opus-4-8
-> ---
->  Documentation/sunrpc/xdr/nfs4_2.x    | 52 ++++++++++++++++++++++++++++
->  fs/nfsd/Makefile                     |  5 ++-
->  include/linux/nfs4.h                 |  1 +
->  include/linux/sunrpc/xdrgen/nfs4_2.h | 19 ++++++++++
->  4 files changed, 76 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/sunrpc/xdr/nfs4_2.x
->  create mode 100644 include/linux/sunrpc/xdrgen/nfs4_2.h
->
-> diff --git a/Documentation/sunrpc/xdr/nfs4_2.x 
-> b/Documentation/sunrpc/xdr/nfs4_2.x
-> new file mode 100644
-> index 000000000000..d10a91d657b0
-> --- /dev/null
-> +++ b/Documentation/sunrpc/xdr/nfs4_2.x
-> @@ -0,0 +1,52 @@
-> +/*
-> + * Copyright (c) 2026 IETF Trust and the persons identified
-> + * as the document authors.  All rights reserved.
-> + *
-> + * The document authors are identified in RFC 7862 and
-> + * draft-ietf-nfsv4-uncacheable-files.
-> + *
-> + * Redistribution and use in source and binary forms, with
-> + * or without modification, are permitted provided that the
-> + * following conditions are met:
-> + *
-> + * - Redistributions of source code must retain the above
-> + *   copyright notice, this list of conditions and the
-> + *   following disclaimer.
-> + *
-> + * - Redistributions in binary form must reproduce the above
-> + *   copyright notice, this list of conditions and the
-> + *   following disclaimer in the documentation and/or other
-> + *   materials provided with the distribution.
-> + *
-> + * - Neither the name of Internet Society, IETF or IETF
-> + *   Trust, nor the names of specific contributors, may be
-> + *   used to endorse or promote products derived from this
-> + *   software without specific prior written permission.
-> + *
-> + *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
-> + *   AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-> + *   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-> + *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-> + *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
-> + *   EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-> + *   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-> + *   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + *   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-> + *   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-> + *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-> + *   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-> + *   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-> + *   IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-> + *   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +pragma header nfs4;
-> +
-> +/*
-> + * The following content was extracted from
-> + * draft-ietf-nfsv4-uncacheable-files
-> + */
-> +
-> +typedef bool            fattr4_uncacheable_file_data;
-> +
-> +const FATTR4_UNCACHEABLE_FILE_DATA      = 87;
-> diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
-> index f0da4d69dc74..0ff198e102a3 100644
-> --- a/fs/nfsd/Makefile
-> +++ b/fs/nfsd/Makefile
-> @@ -37,11 +37,14 @@ nfsd-$(CONFIG_DEBUG_FS) += debugfs.o
->  #
->  .PHONY: xdrgen
+>  	/*
+>  	 * read_cache_jiffies is when we started read-caching this inode.
+>  	 * attrtimeo is for how long the cached information is assumed
+> @@ -319,6 +321,7 @@ struct nfs4_copy_state {
+>  #define NFS_INO_INVALID_NLINK	BIT(16)		/* cached nlinks is invalid */
+>  #define NFS_INO_INVALID_MODE	BIT(17)		/* cached mode is invalid */
+>  #define NFS_INO_INVALID_BTIME	BIT(18)		/* cached btime is invalid */
+> +#define NFS_INO_INVALID_UNCACHEABLE_FILE_DATA	BIT(19)		/* cached 
+> uncacheable_file_data is invalid */
 > 
-> -xdrgen: ../../include/linux/sunrpc/xdrgen/nfs4_1.h nfs4xdr_gen.h 
-> nfs4xdr_gen.c
-> +xdrgen: ../../include/linux/sunrpc/xdrgen/nfs4_1.h 
-> ../../include/linux/sunrpc/xdrgen/nfs4_2.h nfs4xdr_gen.h nfs4xdr_gen.c
+>  #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
+>  		| NFS_INO_INVALID_CTIME \
+> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> index 11c5b31cfc7d..2e1987ac403d 100644
+> --- a/include/linux/nfs_xdr.h
+> +++ b/include/linux/nfs_xdr.h
+> @@ -17,6 +17,9 @@
 > 
->  ../../include/linux/sunrpc/xdrgen/nfs4_1.h: 
-> ../../Documentation/sunrpc/xdr/nfs4_1.x
->  	../../tools/net/sunrpc/xdrgen/xdrgen definitions $< > $@
+>  #define NFS_BITMASK_SZ		3
 > 
-> +../../include/linux/sunrpc/xdrgen/nfs4_2.h: 
-> ../../Documentation/sunrpc/xdr/nfs4_2.x
-> +	../../tools/net/sunrpc/xdrgen/xdrgen definitions $< > $@
+> +/* aux_flags in nfs_fattr */
+> +#define NFS_AUX_UNCACHEABLE_FILE_DATA	BIT(0)
 > +
->  nfs4xdr_gen.h: ../../Documentation/sunrpc/xdr/nfs4_1.x
->  	../../tools/net/sunrpc/xdrgen/xdrgen declarations $< > $@
+>  struct nfs4_string {
+>  	unsigned int len;
+>  	char *data;
+> @@ -68,6 +71,7 @@ struct nfs_fattr {
+>  	struct timespec64	mtime;
+>  	struct timespec64	ctime;
+>  	struct timespec64	btime;
+> +	__u32			aux_flags;	/* NFSv4 auxiliary flags bitfield */
+>  	__u64			change_attr;	/* NFSv4 change attribute */
+>  	__u64			pre_change_attr;/* pre-op NFSv4 change attribute */
+>  	__u64			pre_size;	/* pre_op_attr.size	  */
+> @@ -108,6 +112,7 @@ struct nfs_fattr {
+>  #define NFS_ATTR_FATTR_GROUP_NAME	BIT_ULL(24)
+>  #define NFS_ATTR_FATTR_V4_SECURITY_LABEL BIT_ULL(25)
+>  #define NFS_ATTR_FATTR_BTIME		BIT_ULL(26)
+> +#define NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA	BIT_ULL(27)
 > 
-> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-> index 44e5e9fa12e1..34aa303354bc 100644
-> --- a/include/linux/nfs4.h
-> +++ b/include/linux/nfs4.h
-> @@ -18,6 +18,7 @@
->  #include <uapi/linux/nfs4.h>
->  #include <linux/sunrpc/msg_prot.h>
->  #include <linux/sunrpc/xdrgen/nfs4_1.h>
-> +#include <linux/sunrpc/xdrgen/nfs4_2.h>
+>  #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
+>  		| NFS_ATTR_FATTR_MODE \
+> @@ -129,7 +134,8 @@ struct nfs_fattr {
+>  #define NFS_ATTR_FATTR_V4 (NFS_ATTR_FATTR \
+>  		| NFS_ATTR_FATTR_SPACE_USED \
+>  		| NFS_ATTR_FATTR_BTIME \
+> -		| NFS_ATTR_FATTR_V4_SECURITY_LABEL)
+> +		| NFS_ATTR_FATTR_V4_SECURITY_LABEL \
+> +		| NFS_ATTR_FATTR_UNCACHEABLE_FILE_DATA)
 > 
->  enum nfs4_acl_whotype {
->  	NFS4_ACL_WHO_NAMED = 0,
-> diff --git a/include/linux/sunrpc/xdrgen/nfs4_2.h 
-> b/include/linux/sunrpc/xdrgen/nfs4_2.h
-> new file mode 100644
-> index 000000000000..9441f6cefbff
-> --- /dev/null
-> +++ b/include/linux/sunrpc/xdrgen/nfs4_2.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Generated by xdrgen. Manual edits will be lost. */
-> +/* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_2.x */
-> +/* XDR specification modification time: Fri Jun 12 10:44:36 2026 */
-> +
-> +#ifndef _LINUX_XDRGEN_NFS4_2_DEF_H
-> +#define _LINUX_XDRGEN_NFS4_2_DEF_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/sunrpc/xdrgen/_defs.h>
-> +
-> +typedef bool fattr4_uncacheable_file_data;
-> +
-> +enum { FATTR4_UNCACHEABLE_FILE_DATA = 87 };
-> +
-> +#define NFS4_fattr4_uncacheable_file_data_sz \
-> +	(XDR_bool)
-> +
-> +#endif /* _LINUX_XDRGEN_NFS4_2_DEF_H */
+>  /*
+>   * Maximal number of supported layout drivers.
 > -- 
 > 2.47.3
 
