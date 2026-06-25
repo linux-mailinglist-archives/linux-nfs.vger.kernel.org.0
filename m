@@ -1,218 +1,299 @@
-Return-Path: <linux-nfs+bounces-22834-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3PoyIu0ZPWoVxAgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22834-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 14:07:09 +0200
+	id S1vWALo8PWqDzwgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:35:38 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E12246C5626
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 14:07:08 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E0476C6B10
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 16:35:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b=S1FzVnyQ;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22834-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22834-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nhjQDjNI;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22835-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 17D7830C51FC
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 12:06:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EA0F03171B69
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 14:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 612213BB11C;
-	Thu, 25 Jun 2026 12:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C4F0392837;
+	Thu, 25 Jun 2026 14:27:48 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050F93DDDC3
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 12:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D538E5C4
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 14:27:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389159; cv=none; b=OHQj01qYF1HzHjxOk+u4n/mpLZWyq2xzqZ/771bMd25WrIEfHc+0+pdL/yVz0Wpv63Z4bnv3wOAlx302BScLb+2exhVU7kf0U5IHU9qojcEKrsu5m2Ye1BdeEAneCNef5C/3lJRZ/K54guAMP89InZcDAsMgw/70Hp/j4fZRgwA=
+	t=1782397668; cv=none; b=EQYZyIjI+Gi8SUv/nHS82XzmHlpOwniIdD2KqxIRYd5i/yiYetMtpeaUG5ic0MEkUVuITacMHw7BJTf1NNd2IX3LrLUvb2gFuzRj/ZG8Bmg4eqBsBZ4rnHP/PkIVXQIrdRmiPSGJmQw1T8C+tOkUG96pxlWu/WvvlGd57eDbLB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389159; c=relaxed/simple;
-	bh=Wa+fpGjS5/ibCIDbRTqRwwY/khk4s7wVbVH0srL6hfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=riV3/DX3DAu++I1/IqAR03pfCPfCBdMG6tZ0OSf5R8Pld2wSnyTF4bf+uOhsJzvv6MQ/35sIr5ca8FOboamplAcCcgqc8AeEYpnQzeix5wdDrSwRweTpUdXAV0h07pewFj0fdgXC8TpfKiNpRuSmgbppTH4N/mBO2yrL2wYh2WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=S1FzVnyQ; arc=none smtp.client-ip=209.85.160.45
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-43fc82b52afso1343957fac.1
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Jun 2026 05:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1782389157; x=1782993957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oeLqvVdd/ordrUU0pk1YjK8tqQrgS9wJ6KIItZyhlY8=;
-        b=S1FzVnyQHYR1TE84GEuNqqVgJ5ACYTsyif4UsBf899Xz45jQhD2uOZC6qNZKo8e7x3
-         WQW1X0qGu7M+3ujQrO49SN252XxvWNzzy/NT9SwVtW5lcENyhx5O3bYinJTwRzEVKzol
-         iLuFIml7SpwnEGLhdRoyVBQdQ4CKNqht95MnVND+obYp4SHK+PJ4DfOmdq/uet7OtlJ+
-         1HxSOnHvSqotxA2NMBoCGp85Twf1/JfXOqhyjXcw9UbaJqQXB+KW7SsdSgd3m+AcwTtj
-         Ysdv1NAHPyA6CiLlJFTLMCY4+BZbeOy8jGdYnXj39EEYU/qL7JUC7Pmay2B41JwnU4Sj
-         aH0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782389157; x=1782993957;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oeLqvVdd/ordrUU0pk1YjK8tqQrgS9wJ6KIItZyhlY8=;
-        b=hA+wnL1m0CfoKATEmmt/xAhtNp1E8k3WMp7YOdVK9oRFXaCFmAN0Iz4xKq7NLa890k
-         TisZqDmGDuno5RurWVx4ilSAZ9mIRrOMF2zbix8/GUpNcscENn5nBnkrA9wKCkd1vvtu
-         rIM+xtq9gGMVE7batQCtuDujtUVaonInZ6MTQeWdPfIw2G3BIHDlzPPmVeM0iAJBJfbY
-         HAK1Sn57pK4KkkKVEho9qrFIa8WE/vQIiPYWl+XFTVYeZr1XWoSnan+UvIG61Oj5w7+P
-         faUCGMYsKWJA1mOVt1QDtgOAHFQlcV1CVXbbyAoOezbOMKZ2dc3vbRbI/PuPa1iWHh14
-         S4ow==
-X-Gm-Message-State: AOJu0Yzm1U58kKHQkAEkHnjbrJMd2ugyfX6eUFNO6VlgQnsNX9c/k72K
-	XoahSIGFj4UM4o2FcVF37uwm7fbm2z0/TF35jJA6Z+5sq7basoRXPJtt41SdwU8AKYg=
-X-Gm-Gg: AfdE7ckxxzbL29Xb0C4QheS8KFnuJkig8pXzniL49frbI3LIllvUnHKWD3F3R1lpp3O
-	YH7MHkOCjKhuUZssMTGZwkyxlgKTUc80CS5bj+7eUxvsvo0R7PaBXBCnKpZa9U/iAYVxhMS5xr7
-	6hmH45pDQee6RGkkFgCC2NdL2xKPSFfBMzJT2EbinS57Ll9mz+jA26TvJuNeQqApdlAAWI75cLL
-	PLTE9gju38tX57veAYzyqOUw5Po0ImJYaNErAv2gDVTY77PU5uFenpDOh//ARSntrGbksIwWAa3
-	qfWLt78vuU5DKEqGJGP7OW/sYuUl1XmEUBobEg+Ct8965KvmCri1vJa8Q86Eb2Znw2kJy8DO77r
-	3L0+KoMAyszHWH6wJdH2zNtWvR4IboU3HFfPc9UQqXHKvnxruzTN/tsc4G2EMT4VRcP2FINR7pK
-	7e8T20n8mq/USYO1OT9XogyzXriVzJcQ0C+D1dy0OpOe7qPbSO
-X-Received: by 2002:a05:6870:45a7:b0:447:7ad3:329b with SMTP id 586e51a60fabf-448117a48f0mr1755480fac.6.1782389156755;
-        Thu, 25 Jun 2026 05:05:56 -0700 (PDT)
-Received: from bcodding.csb.hammerspace.com ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4472e79af8fsm11123405fac.0.2026.06.25.05.05.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 05:05:56 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2 3/3] NFSv4/flexfiles: report cancelled I/O as a layout error
-Date: Thu, 25 Jun 2026 08:05:50 -0400
-Message-ID: <b5ed2050a2fa573ad9a2bcf7769f23397e480f2a.1782388900.git.bcodding@hammerspace.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1782388900.git.bcodding@hammerspace.com>
-References: <cover.1782388900.git.bcodding@hammerspace.com>
+	s=arc-20240116; t=1782397668; c=relaxed/simple;
+	bh=yrov0n4BJglgRlZ8s0Nd/vkfUcrq8uIUVk1tdl0VCSQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=WWlBJ2laGBP0M5L4M9MnLM4y+D1+FBAaMvqdRokoIsOa+CnDtBiDRnjdw7f34mRV33oa6B+SgEhGsIGPo7Vo0ml+pIfs/+QayOol+f52Wa/u+2QxTQpwOpRmCgoCv/A2wjbNen3U8/bOXUgHGRjCr4SbR8yuB+T1Z6+dKXer8fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhjQDjNI; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B531D1F000E9;
+	Thu, 25 Jun 2026 14:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782397665;
+	bh=9bN4MkuLPTowGDmDqgSY8eW47+jblydvdJag1+rwfaI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=nhjQDjNIHJhyXH+cprt7ChxuIcqFUvRHTQKVDAP+zsXx3iLbabOEFZkiC+iSjq0qs
+	 YIaGUsR+ijsEQ6dif+N4Z1VrIqMa187Jxk6mhP+NKJmkKgnN+Te7Zv758HVopcDBKv
+	 yK5Fa/V/MEhMk+bsdXafOYkWiyAYkt+8AzoPgITPE6GBypX7K0SCRA4U3GD95xkZUg
+	 Rj1C706EeHNBv9L/ppaU1u2/jo9ESQ6kcCPX1i7R24F/yjgOuUEoAGyUB5ArMEf7Fc
+	 +79Hzr+JmZDpc+2x2Tvu60dOuVa3/sAXlPnaSCOMvG0TCrwLKWqo1SB7OQTCK1gAzZ
+	 6oBkM54EEhCXg==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 1F6A4F4006F;
+	Thu, 25 Jun 2026 10:27:44 -0400 (EDT)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Thu, 25 Jun 2026 10:27:44 -0400
+X-ME-Sender: <xms:4Do9asLcAVdVhhe38AfhYElGSI1mNnWzQlBp1wQpswZgPFhO75LavA>
+    <xme:4Do9am8eiFLf3euCMNV5w3-UZjxVxci9PoIJSbNqcncRFdC2Tbrfq3NUkldLCJfSP
+    6gr7nvTX0q9cndB7wVMio_z_KFXSZ04Ww8827pHZ2S5XOMntFqaHVA>
+X-ME-Proxy-Cause: dmFkZTGIoxEsdVdUCgBBnZSuGVVmsUaUsMbULvPKht7nhHeuVpdh/sOJUqxDKdGTFQe7as
+    54aZXE+gLiAFlMQ5Bpl/L89IAPjQ4hQmgDv9HfQggLwaDlZZjseqINRUi+ybm+z+ZpZHQ1
+    5qdSn5mXwyoPhAhq5QtPpPWX00BLez4q3jh66xws4qh+xvlqrErvunojBg5BZuNnjNRG5F
+    IXWk66gFzzUQQEV+3oFmgslSPWq346ob99vaM39n9nkaEaC9LGLnDj4LiIqxIq3puN9+pg
+    YJpRodbr+1eqp7vLUX6lHECjoyTlTkGrp9eSOSeUn3DP9t0vAxWAxD5/ZCb4KurORvz6ly
+    5vvGw5/uHCnAhvqZcr/oBaZSRJVuj114bHfFzHtZgkkEO79OzbqcMdEH2gt3rSd6thxz40
+    vRhcIjx2OcuBRbsnSOV+oNB2uaLLhliypux8JtHtg+2c79/WCuTQdVrwha3SDuHqMmKwQC
+    phy6NbNErexWP1t1eJhmBt/C4dQ2tm0xGRVaScDWCexKuV+M6Z2bmm+qPJVvj8EwvR3MLF
+    47S71alxmN6/H48BbZN/ZaFY6nQtsVmS7Gg1dEddr3c+eD3KdgVXScUXvN6REj4qyU4JIx
+    +wZswOzhecwMoYYDs+mmzTRzvhSh2uf+H65gWN1hZzq8Nu9TdW2SLXAtj8Tg
+X-ME-Proxy: <xmx:4Do9auPMtF85cwVDAjFOttzX6YlHgLqIbTQOiM6KYED3gmcNFR_S-A>
+    <xmx:4Do9audY9HDI8F2H_TXSGq9RtXqdB18KT_kUY7YztyCPDiHHTolUKA>
+    <xmx:4Do9alUh8xtl7hppOi5V7-GUQZGq00otgKXU_1puozNkZyhgen0GBg>
+    <xmx:4Do9aujoz8rMvk3TLkSQg6o5YB6Bo-cd7A_pzs-FIxgQt8b81QdJTQ>
+    <xmx:4Do9as_i32GhaIjNPWr-xXCYqeOjsVkm9uJuhYJXQ3xyZfpznh2ljVeB>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F0B2BB6006E; Thu, 25 Jun 2026 10:27:43 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AHquR-yw989F
+Date: Thu, 25 Jun 2026 10:26:22 -0400
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Mike Snitzer" <snitzer@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>
+Cc: "Tom Haynes" <loghyr@hammerspace.com>, "Chuck Lever" <cel@kernel.org>,
+ linux-nfs@vger.kernel.org
+Message-Id: <16ff281b-f776-4e6c-9f2a-83c03f0d6eae@app.fastmail.com>
+In-Reply-To: <20260624191706.72544-2-snitzer@kernel.org>
+References: <20260624191706.72544-1-snitzer@kernel.org>
+ <20260624191706.72544-2-snitzer@kernel.org>
+Subject: Re: [PATCH 1/4] nfs4.2: add nfs4_2.x to generate the UNCACHEABLE_FILE_DATA
+ attribute
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-5.15 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22834-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS(0.00)[m:snitzer@kernel.org,m:trondmy@kernel.org,m:loghyr@hammerspace.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22835-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,app.fastmail.com:mid];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anna@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,hammerspace.com:dkim,hammerspace.com:email,hammerspace.com:mid,hammerspace.com:from_mime,vger.kernel.org:from_smtp]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E12246C5626
+X-Rspamd-Queue-Id: 4E0476C6B10
 
-When a layout is recalled or revoked the client cancels its in-flight I/O
-so the layout can be returned.  The metadata server needs to learn that
-this I/O to the storage device did not complete, so that it can reconcile
-the affected mirror instance (or, if none remains, take other action).
+Hi Mike,
 
-The cancellation completed with -EAGAIN, which ff_layout_io_track_ds_error()
-does not recognise: it fell through the switch and recorded nothing, so no
-error was reported to the server.
+On Wed, Jun 24, 2026, at 3:17 PM, Mike Snitzer wrote:
+> Introduce Documentation/sunrpc/xdr/nfs4_2.x for NFSv4.2 protocol
+> extensions and define the UNCACHEABLE_FILE_DATA attribute (attr 87)
+> there, verbatim from draft-ietf-nfsv4-uncacheable-files Section 7:
+>
+>   typedef bool            fattr4_uncacheable_file_data;
+>   const FATTR4_UNCACHEABLE_FILE_DATA      = 87;
+>
+> This mirrors how the sibling NFSv4.2 attributes (FATTR4_OFFLINE=83,
+> FATTR4_TIME_DELEG_*=84/85, FATTR4_OPEN_ARGUMENTS=86) are defined in
+> Documentation/sunrpc/xdr/nfs4_1.x and generated by
+> tools/net/sunrpc/xdrgen into <linux/sunrpc/xdrgen/nfs4_1.h>, which
+> nfs4.h already includes.
+>
+> Wire the fs/nfsd "make xdrgen" target to generate the definitions header
+> <linux/sunrpc/xdrgen/nfs4_2.h> and include it from <linux/nfs4.h>, so the
+> generated FATTR4_UNCACHEABLE_FILE_DATA constant and the
+> NFS4_fattr4_uncacheable_file_data_sz size macro are available to the
+> NFSv4.2 client support that follows.
 
--EAGAIN is overloaded in the RPC layer, so rather than key the reporting on
-it, cancel the I/O with -ECANCELED and map that to NFS4ERR_NXIO in
-ff_layout_io_track_ds_error() -- the status the client already reports for
-the transport errors that leave an in-flight write incomplete.  The
-cancelled I/O is then reported to the server via LAYOUTERROR / LAYOUTRETURN.
+Aren't these client side changes? The xdrgen stuff is used on the
+server-side. I wouldn't expect any of these values to be available
+if nfsd is kconfig-ed off.
 
-Unlike a genuine transport error, though, we aborted the I/O ourselves and
-have no evidence the device is at fault, so once the error is recorded we
-skip marking the device unreachable and forcing a further layout return.
+Thanks,
+Anna
 
-The retry disposition is unchanged from the original -EAGAIN cancellation:
-both NFS4ERR_NXIO and -ECANCELED are no-ops in ff_layout_async_handle_error(),
-which still resets the I/O to pNFS (or the MDS), so it is re-driven as before.
-
-Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index c4aa995026f6..c8072f333236 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -1543,6 +1543,17 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- 		case -EACCES:
- 			*op_status = status = NFS4ERR_ACCESS;
- 			break;
-+		case -ECANCELED:
-+			/*
-+			 * In-flight I/O we cancelled to return a recalled or
-+			 * revoked layout.  Report it as a failure to reach the
-+			 * device (NFS4ERR_NXIO), like the transport errors
-+			 * above, so the server can reconcile the affected mirror
-+			 * instance.  We aborted the I/O ourselves rather than
-+			 * observe the device fail, so don't condemn it below.
-+			 */
-+			*op_status = status = NFS4ERR_NXIO;
-+			break;
- 		default:
- 			return;
- 		}
-@@ -1553,6 +1564,15 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- 				       mirror, dss_id, offset, length, status, opnum,
- 				       nfs_io_gfp_mask());
- 
-+	/*
-+	 * I/O we cancelled ourselves to return a recalled or revoked layout
-+	 * is reported above so the server can reconcile the mirror, but we
-+	 * have no evidence the device is at fault: don't mark it unreachable
-+	 * or force a return.
-+	 */
-+	if (error == -ECANCELED)
-+		goto out;
-+
- 	switch (status) {
- 	case NFS4ERR_DELAY:
- 	case NFS4ERR_GRACE:
-@@ -1572,6 +1592,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- 						  lseg);
- 	}
- 
-+out:
- 	dprintk("%s: err %d op %d status %u\n", __func__, err, opnum, status);
- }
- 
-@@ -2462,7 +2483,7 @@ static void ff_layout_cancel_io(struct pnfs_layout_segment *lseg)
- 			clnt = ds_clp->cl_rpcclient;
- 			if (!clnt)
- 				continue;
--			if (!rpc_cancel_tasks(clnt, -EAGAIN,
-+			if (!rpc_cancel_tasks(clnt, -ECANCELED,
- 					      ff_layout_match_io, lseg))
- 				continue;
- 			rpc_clnt_disconnect(clnt);
--- 
-2.53.0
-
+>
+> No functional change.
+>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Assisted-by: Claude:claude-opus-4-8
+> ---
+>  Documentation/sunrpc/xdr/nfs4_2.x    | 52 ++++++++++++++++++++++++++++
+>  fs/nfsd/Makefile                     |  5 ++-
+>  include/linux/nfs4.h                 |  1 +
+>  include/linux/sunrpc/xdrgen/nfs4_2.h | 19 ++++++++++
+>  4 files changed, 76 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/sunrpc/xdr/nfs4_2.x
+>  create mode 100644 include/linux/sunrpc/xdrgen/nfs4_2.h
+>
+> diff --git a/Documentation/sunrpc/xdr/nfs4_2.x 
+> b/Documentation/sunrpc/xdr/nfs4_2.x
+> new file mode 100644
+> index 000000000000..d10a91d657b0
+> --- /dev/null
+> +++ b/Documentation/sunrpc/xdr/nfs4_2.x
+> @@ -0,0 +1,52 @@
+> +/*
+> + * Copyright (c) 2026 IETF Trust and the persons identified
+> + * as the document authors.  All rights reserved.
+> + *
+> + * The document authors are identified in RFC 7862 and
+> + * draft-ietf-nfsv4-uncacheable-files.
+> + *
+> + * Redistribution and use in source and binary forms, with
+> + * or without modification, are permitted provided that the
+> + * following conditions are met:
+> + *
+> + * - Redistributions of source code must retain the above
+> + *   copyright notice, this list of conditions and the
+> + *   following disclaimer.
+> + *
+> + * - Redistributions in binary form must reproduce the above
+> + *   copyright notice, this list of conditions and the
+> + *   following disclaimer in the documentation and/or other
+> + *   materials provided with the distribution.
+> + *
+> + * - Neither the name of Internet Society, IETF or IETF
+> + *   Trust, nor the names of specific contributors, may be
+> + *   used to endorse or promote products derived from this
+> + *   software without specific prior written permission.
+> + *
+> + *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
+> + *   AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+> + *   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> + *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+> + *   FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+> + *   EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+> + *   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+> + *   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + *   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> + *   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+> + *   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+> + *   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+> + *   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+> + *   IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+> + *   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +pragma header nfs4;
+> +
+> +/*
+> + * The following content was extracted from
+> + * draft-ietf-nfsv4-uncacheable-files
+> + */
+> +
+> +typedef bool            fattr4_uncacheable_file_data;
+> +
+> +const FATTR4_UNCACHEABLE_FILE_DATA      = 87;
+> diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+> index f0da4d69dc74..0ff198e102a3 100644
+> --- a/fs/nfsd/Makefile
+> +++ b/fs/nfsd/Makefile
+> @@ -37,11 +37,14 @@ nfsd-$(CONFIG_DEBUG_FS) += debugfs.o
+>  #
+>  .PHONY: xdrgen
+> 
+> -xdrgen: ../../include/linux/sunrpc/xdrgen/nfs4_1.h nfs4xdr_gen.h 
+> nfs4xdr_gen.c
+> +xdrgen: ../../include/linux/sunrpc/xdrgen/nfs4_1.h 
+> ../../include/linux/sunrpc/xdrgen/nfs4_2.h nfs4xdr_gen.h nfs4xdr_gen.c
+> 
+>  ../../include/linux/sunrpc/xdrgen/nfs4_1.h: 
+> ../../Documentation/sunrpc/xdr/nfs4_1.x
+>  	../../tools/net/sunrpc/xdrgen/xdrgen definitions $< > $@
+> 
+> +../../include/linux/sunrpc/xdrgen/nfs4_2.h: 
+> ../../Documentation/sunrpc/xdr/nfs4_2.x
+> +	../../tools/net/sunrpc/xdrgen/xdrgen definitions $< > $@
+> +
+>  nfs4xdr_gen.h: ../../Documentation/sunrpc/xdr/nfs4_1.x
+>  	../../tools/net/sunrpc/xdrgen/xdrgen declarations $< > $@
+> 
+> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+> index 44e5e9fa12e1..34aa303354bc 100644
+> --- a/include/linux/nfs4.h
+> +++ b/include/linux/nfs4.h
+> @@ -18,6 +18,7 @@
+>  #include <uapi/linux/nfs4.h>
+>  #include <linux/sunrpc/msg_prot.h>
+>  #include <linux/sunrpc/xdrgen/nfs4_1.h>
+> +#include <linux/sunrpc/xdrgen/nfs4_2.h>
+> 
+>  enum nfs4_acl_whotype {
+>  	NFS4_ACL_WHO_NAMED = 0,
+> diff --git a/include/linux/sunrpc/xdrgen/nfs4_2.h 
+> b/include/linux/sunrpc/xdrgen/nfs4_2.h
+> new file mode 100644
+> index 000000000000..9441f6cefbff
+> --- /dev/null
+> +++ b/include/linux/sunrpc/xdrgen/nfs4_2.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Generated by xdrgen. Manual edits will be lost. */
+> +/* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_2.x */
+> +/* XDR specification modification time: Fri Jun 12 10:44:36 2026 */
+> +
+> +#ifndef _LINUX_XDRGEN_NFS4_2_DEF_H
+> +#define _LINUX_XDRGEN_NFS4_2_DEF_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/sunrpc/xdrgen/_defs.h>
+> +
+> +typedef bool fattr4_uncacheable_file_data;
+> +
+> +enum { FATTR4_UNCACHEABLE_FILE_DATA = 87 };
+> +
+> +#define NFS4_fattr4_uncacheable_file_data_sz \
+> +	(XDR_bool)
+> +
+> +#endif /* _LINUX_XDRGEN_NFS4_2_DEF_H */
+> -- 
+> 2.47.3
 
