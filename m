@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-22848-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22849-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id k1G0AYDgPWry7QgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22848-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 04:14:24 +0200
+	id s+ZDN+znPWrs7wgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22849-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 04:46:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92DBA6C9B3E
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 04:14:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 878D16C9DB0
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 04:46:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm1 header.b=OSNWbzEP;
-	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="D HqT0po";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22848-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22848-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ownmail.net header.s=fm1 header.b=o5EAFetw;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="Y SMOEsx";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22849-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22849-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ownmail.net;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 08C293006146
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 02:14:23 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A1632300C7CA
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 02:46:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792EC2F12AC;
-	Fri, 26 Jun 2026 02:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BAB02777F3;
+	Fri, 26 Jun 2026 02:45:59 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77518184;
-	Fri, 26 Jun 2026 02:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A26B149C6F
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2026 02:45:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782440061; cv=none; b=baIegQk5/MIAB7QPsTDbeU9sKagtMbINs/gBxoKxomCqdfzrqMQotBvcwAACcbWk8Xwodt4W9HU2XdEBg0iGoZaE03ValygBPRnErBcHgZX+MoqCnxvjxK2cgAkxrUkddR8l/isxTmFGnNcBRDATSosQ1dbipQllNy/fHIaeBJY=
+	t=1782441959; cv=none; b=mtRW+QsqZtBlUmnMWFxEO9ugN07b98A9/wXlTjLc0hsq53gaH6hgwMcdlv4tAK/p1TFpPFuILqc23ALJvGi/550vMkuC+rMti0f7wXYxTpcL2w3cSsq+GB6VqNBVT9OrHv3clvLAJgxzt5g1Jot0EVgECDOXfmMXvoDVKKfDvDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782440061; c=relaxed/simple;
-	bh=3uTR/6Fn3+pzjADz5C5sAMnZ38vbVRBPNAvCxc1PZfI=;
+	s=arc-20240116; t=1782441959; c=relaxed/simple;
+	bh=I7A4xLnhYW8fQzuu6KL5x/VorVWBBi255sizVBuAgMs=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Fl3li3aHqYAIOSnW9EqBj0ezL2b9K487xpm/wT+zOgTwUrOXnnc1m52xYJqx7MKXRS+jwUOGLyErd5Z68wv6fxk4o4WyePqzr5VZ4nlwCr5ove3xG0xlak7yC/W2OiaEVqyM3C9GXIoB+Lgzwf9SQO7dvrgeMloApg3Hvx9iB8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=OSNWbzEP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DHqT0pog; arc=none smtp.client-ip=202.12.124.152
+	 References:Date:Message-id; b=gBZLzr71sE/kcGuYYXIL/54ZjA8uoR/QsgmnsiJbpREIW/7j335g7V0ypn+4NWXuuZE4T63/hImAiW3pyfLnwWhQt4rnekJ/ASXD0+rP18ETW22qr+eHplemHaU0fZfps3EJrVkRyGiS46X+zW0q23LL9nLSRfLfQxFQBWB+3zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=o5EAFetw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YSMOEsxo; arc=none smtp.client-ip=202.12.124.145
 Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 937BD7A0082;
-	Thu, 25 Jun 2026 22:14:18 -0400 (EDT)
+	by mailfout.stl.internal (Postfix) with ESMTP id 54F2E1D000FE;
+	Thu, 25 Jun 2026 22:45:56 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 25 Jun 2026 22:14:18 -0400
+  by phl-compute-03.internal (MEProxy); Thu, 25 Jun 2026 22:45:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1782440058; x=1782526458; bh=yt0Gdotyc4GLJFGd5hvNhQDoJ3vyt6Uq8X+
-	0vmRJmQc=; b=OSNWbzEPNH2w7FEN9Z0ZY9l5E7SbUPAA9Qk+oe6oJAwHilcvgSi
-	MARz4EpDgsDJbZBPrxNa6fbQE9/Sd61+wRwPqB1OBOTl1OJqgfII3IcRHzqMBdUa
-	J5Mpqh28uwYvsgKhNDotbW5f/LG4dZoKegC/cTAOYSwztoGGd7dKmwIr0y5sJVhX
-	Hjlwq5Sn5Cz9lUY5kUMl90yUxAt9EXNsHoeqY4qYU2TOB0ujb0ThGixPO71sv05I
-	rcEMM6V5DrdhzXmnOBQWz61NMFIC1jG7KRLkwr/euZXzpS4Obv/0dj9UqTaT01e4
-	0cm5jZoiqOTBv0epGJjZNtePJKtFd0mCq+g==
+	1782441956; x=1782528356; bh=Pkt01ccpq47R5dLh6sm5YxO5bvUnWXXdiiP
+	B8sutIz0=; b=o5EAFetwounPQiJU2MTQxutI9jmsVlLXOiLwrWlnfCEcCi4Eveh
+	dAf+2HrQI86IXEUDTetN6/GNoxbZPIAE4JMxeEafjRfKbhKsTCdgI2Hi2Is2q7/K
+	hDda5DhiTM8k+NH3nVtMmnNKPMQuWmWn50c9R1631ZNEomt2QVvP2wUTAGFGJdX0
+	BFoBULjwDVT8ZP66iaCccZQevHEgyMRek7kMZI187Itwm7HeJJ/iBgVlrBcslSxU
+	6JizY/HwbDaBHoRLzArdgSQJKNwWK+IwP2StmYzVT+K3dDSFO0Lcjy+a72z9TOne
+	ZoEu6BSxvWSLECXl+qWywqS8LV9iQRg92vQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782440058; x=
-	1782526458; bh=yt0Gdotyc4GLJFGd5hvNhQDoJ3vyt6Uq8X+0vmRJmQc=; b=D
-	HqT0pogbzzIx+nPdzFzdSV423zowWdmwLYJ4WEIqC3x3PNy0eF+ikgjo1JyE3+ku
-	0l7+MW2Vi/t2zlhsy/gSde5rqmtrsk9o8PXhj7SCwcoUnMUy7RkmIO4u1LVi6gXD
-	jCQ2Bslfoq8Lng/8Q/bz0BrSTTYFWP4D9nRpX+j4p8pkCAmG7fv7PSgno2o4v9Tf
-	Gq1dXLYirlaC+LEW/BV+rGxuTZ+pd2IPYbvhQ7tlEqAgH3Zotn6u8GHuSkK+JOlh
-	uZ2pOQxNQ+aniDTsyphTRqFA+B4uTi4qpfr8qJsSr2fusHefmdQvl3iOzac6jN9/
-	yNfJTt9NN2Q9cS8J90uIw==
-X-ME-Sender: <xms:euA9anq3k_HtIFkSE4zhnG2EDmJPTQnOwS2gv1OAXEEaf27nL01Cig>
-    <xme:euA9amlwwZDP__RQc2hDm32miDgUeoZLyVNKacpRUkmwDZcs-2a19554UvZSWxHc3
-    KF3KAzXhxxgnUrhTqQVlO_GDKliZfkW-4OIELxgc7qmKOk2zg>
-X-ME-Received: <xmr:euA9aodip50yK0C0FmJQLQNP2O1dQE0TLKw_0s9kq1UuEqqKlLQ3yAFpJ6XBVpZixH8Tuk8v8sXNAgaGAS_Q09juCPkyZGQ>
-X-ME-Proxy-Cause: dmFkZTEXHzzYU9OAuBaVEDiTd6JRr1QOl2Up+tgpJej8Wf8MoL5kxC51L03aHY31sitzth
-    F6hu/uqiDCtiCahwkC+bm/Yfo090c0YFStu2DfaOyUuD35dIUYGbXhOnUlj6dMlEF0pZXA
-    L+6bxnAQD9E9ZWVzb4yjIaBfdVP3oLPyU2yk+Fpzgdp6YKkLhMUYBA6xz7URvsZuHZDFcw
-    7RSE0XNu8DsnNCQalrdv2CMZERRO4a0Gmx0cWQ7698QlY+mmdWmA189wIje/BAlOMcOolf
-    FshWMnaq6QjKSMWfO33eHCxSc7JD0kp5mk8iCaxW9x/H1xAoDDIbBJ15xZSvyTsgO7osOD
-    5mq8c6UmofOn7+mfLscYdkinuqt2VRtvY3lB9iA5uV1Y933fxjHZs5PwF4lFHkmOfvmQYG
-    XqbyQfiQsYpt4hQc0Tf4MxYxPWTjtMXnCveIA7EhLXGJi8+PRbJsSoXhHbtmkIn9Jwbl3T
-    IuEX1jzxrZGH/eQnSrnLZUKPoPo6NzI61N2YHQGxSDAyiPsIK8hsCGz6Ld9XErGBM61dy1
-    tN0T4ojnXohw/Rh8xqlwWKH6IOtdqlD+2rn+4tlh59AVccXnfCQWZBcRWL8LHnsmV7wgSv
-    PHi4g3dtPqrzBHGqI42yPF4Ap5Ix/QfoakXu1qTn8u1GdASfL/sbpgpqd4SQ
-X-ME-Proxy: <xmx:euA9aqrz33orB0-zabtiw0uJayJWS8Sw2pC8-ZhTx_gu5WBOkDtRbg>
-    <xmx:euA9aqN3BFzXV-Hp2_u3zPmZtuhiaaKfnmeTrgwdPYQKzvpozaJ_CA>
-    <xmx:euA9alhJc027-OHoF35YzA0M1hhE13-4UUUTMNvOzhbPvLvDz__RzA>
-    <xmx:euA9aluDwe48MKK_yCS7SIdbbzQq_MmRibozWzVCVLviOW-53_bsZw>
-    <xmx:euA9arLZ9O6zAI6gMnPNuIg6sdI0WK_AMHGP4sqVxVXAzItVQPPQacG->
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782441956; x=
+	1782528356; bh=Pkt01ccpq47R5dLh6sm5YxO5bvUnWXXdiiPB8sutIz0=; b=Y
+	SMOEsxogZo8N03z468Pzs3R0pRZInnlMc5Zkacvx27hg7hmI1ZXcFGnf+a+aBTfl
+	GbaCryviEZ/R3Rqxol9tsP3aAXCgvH2DD7zJ5yHA9yZML0sRu7ilUtwyPvGTdmpt
+	e3HJBHHR28jTBqtHpWkwzI02xdmwnuUQ1sR0j5pm0BygNGB0E/pp3iRK1DIJMDsx
+	TRAgPoJHz4KaSt/31RJcTqHgptLEzSN4gVl0RxxDP0i50f8bLkmPOr/CYPXsb3bV
+	Ds2J4nHaz7OzHqJqWPn3qMNXflP9OTJNbkzPTMcDFTAWZ+kRMg+LbxJjCNnNht6o
+	DnLAefdmfYZF3CRG4hgRw==
+X-ME-Sender: <xms:4-c9agUxDrzHMMqZr3HtmsoupfSWyk35HXDPnMeRp_Z1hzFz23LzfA>
+    <xme:4-c9ahJEfdBXOyJGGjwy0T15hgax-Nw-nAmn-xnCGkAGDE4ZMvKsyVA-8SHptMC8n
+    0jriVCZ9DRZh0tsHaMjOV7_icHR7EzyX1GF4NPtJP7wJY3aMQw>
+X-ME-Received: <xmr:4-c9ao1gvCB7B-NCsDsP0Ey2-SVmeK1LlGRMq11y04DfR4nbiAUOLPMQg-YA4gIISD16MfMvlaABFuFit1UUA-lzvm6RvUU>
+X-ME-Proxy-Cause: dmFkZTGlQ8fcwGP2ef6HggM3qq+pgRkDbt/Mm2asvhIfAXfh6tY095h3FV4Xp1a6iyTWjG
+    9VmivgSz2sbF/kQXKLJ4sdP2maDjlzJfVgRe3jJpdD8zcZLBEWgFKIJaRm+f27OCqcNLyQ
+    bLV3K1dazcjY7z2V9XJlJI1tIDy0YQ3OSEClkfbHaIOPW6hQZAX1FM1EAAmH7ZZdHA8ejA
+    6zjW3/EoGgbom3Uo+1Uu6b4Bu8sZXdSBxPEcJKE/VRRztdTA8dVXiZw8cG8zxD6/Oz8HN9
+    5Ls187diyXSR7fKvNekRmA3rGq6cEr/Eklmdu8iJwTJ06dDf+sFvovyvoNz0Fy8wVQTjnW
+    NEXSpJhUOwuuNpNBrm6SP1w/MWQ4bs6iKPBbkzmsgs8qEttZGGuXV2MMBPUrBPM/Ymj524
+    NV8uilIjVm+/Qcq/Z+uMwggQWR/uT/sj2IowR8cnApPf5hjeh4nEXoE0pi3qWv8qdBUivk
+    aO7gmqJ1zf0iO1rsvMp+yWw28uyqMI+juZj1h/bq3Y3KpPndrOVnvM7gy1V9kdgoZ0pTdZ
+    3vGdeYcgGI8Zr3uwOXZOPPIboUkP0mCVdTl+GlJVSXkd0+avuznKb37d17o1pESSglRmNM
+    zbiV5fwKZxi/XsuWrul6ydVL3TvjPJ2O52W41k1inkuyGqNY1Ths8CufuXSg
+X-ME-Proxy: <xmx:4-c9amLLZKeEabusmDqYX2tD2HuzjKIwX4BRPSe2dnzJ_xp79iuo2w>
+    <xmx:4-c9arh8GqsZFyFIezZa4-3aJ8_JAv4-Nfb01UETHmET9GxdpP1UOg>
+    <xmx:4-c9auDh9gjG_TnHv753-qtcoUo-YBa2ca-Od9kxcFoRuGsq0xavIg>
+    <xmx:4-c9al7VTa5LaDzUOb5SBs5HACS0XCQDoo5nH3EtsyFun1_ytJE_0Q>
+    <xmx:5Oc9asDu59RgStkyxVZSnu_u6To6KrVTmJk4E24mw4RWMGL8CHDFC-nw>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Jun 2026 22:14:15 -0400 (EDT)
+ 25 Jun 2026 22:45:52 -0400 (EDT)
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -95,37 +95,37 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+To: "Benjamin Coddington" <ben.coddington@hammerspace.com>
+Cc: "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <cel@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject:
- Re: [PATCH v2] sunrpc: hardcode pool_mode to pernode, remove other modes
-In-reply-to: <20260625-sunrpc-pool-mode-v2-1-4f512b6e1ee8@kernel.org>
-References: <20260625-sunrpc-pool-mode-v2-1-4f512b6e1ee8@kernel.org>
-Date: Fri, 26 Jun 2026 12:14:11 +1000
-Message-id: <178244005168.27465.2587255049421564152@noble.neil.brown.name>
+ "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Daire Byrne" <daire@dneg.com>,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 0/3] SUNRPC: a latency floor for interactive clients
+ via sparse-flow dispatch
+In-reply-to: <cover.1782314746.git.bcodding@hammerspace.com>
+References: <cover.1782314746.git.bcodding@hammerspace.com>
+Date: Fri, 26 Jun 2026 12:45:48 +1000
+Message-id: <178244194881.27465.15942469476886027226@noble.neil.brown.name>
 Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22848-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22849-lists,linux-nfs=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FREEMAIL_FROM(0.00)[ownmail.net];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:ben.coddington@hammerspace.com,m:cel@kernel.org,m:jlayton@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:daire@dneg.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -142,444 +142,208 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,messagingengine.com:dkim,brown.name:replyto,ownmail.net:dkim,ownmail.net:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ownmail.net:dkim,ownmail.net:from_mime,messagingengine.com:dkim,brown.name:replyto,vger.kernel.org:from_smtp,noble.neil.brown.name:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 92DBA6C9B3E
+X-Rspamd-Queue-Id: 878D16C9DB0
 
-On Fri, 26 Jun 2026, Jeff Layton wrote:
-> The SVC_POOL_AUTO/GLOBAL/PERCPU/PERNODE pool mode selection machinery
-> was added when NUMA was new and the right default was unclear.  Today,
-> pernode is the right choice everywhere:
+On Thu, 25 Jun 2026, Benjamin Coddington wrote:
+> This RFC follows the per-client fair-scheduling discussion from May/June
+> [1], and Chuck's slot-growth clamp that grew out of it [2].  It takes the
+> direction that thread settled on: rather than enforce proportional
+> fairness between clients, give an interactive client a latency floor that
+> a busy neighbour cannot push it below.
 >=20
-> - On multi-NUMA hosts, it gives one pool per node with proper thread
->   affinity and NUMA-local memory allocation.
-> - On single-node hosts, pernode degenerates to exactly one pool,
->   identical to the old "global" mode -- svc_pool_for_cpu() short-
->   circuits when sv_nrpools <=3D 1, no CPU affinity is set, and memory
->   is allocated from the single node.
+> Problem
+> -------
 >=20
-> The percpu mode (one pool per CPU) created excessive pools relative to
-> the number of threads most deployments run, and was only auto-selected
-> in a narrow case (single node, >2 CPUs).
+> nfsd dispatches ready transports per-pool in FIFO order, with no notion of
+> how much work each transport already has outstanding.  A client that keeps
+> many requests in flight -- nconnect, a deep v4.1 slot table, or simply
+> several connections -- sits in that queue on equal terms with a client
+> that has been idle.  So the request a user is waiting on (a stat, an open,
+> a directory listing) waits behind a backup job's backlog, even though
+> servicing it costs a single round trip.  The user-visible symptom is an
+> interactive session that stutters whenever a bulk client is busy.
 >=20
-> Remove the SVC_POOL_* enum, mode selection heuristic,
-> svc_pool_map_init_percpu(), and all mode-based switch statements.
-> Simplify pool map functions to always use the pernode path.  If pool
-> map allocation fails, svc_pool_map_get() now returns 0 and service
-> creation fails, rather than silently falling back to a single global
-> pool.
+> Approach
+> --------
 >=20
-> The module parameter and netlink interfaces are preserved for backward
-> compatibility:
-> - Writing any previously-accepted value succeeds silently
-> - Reading always returns "pernode"
-> - Writing to the module parameter emits a deprecation notice
+> This is starvation avoidance, not proportional fairness (per Chuck's
+> reframe on [1]).  The protected unit is the interactive cycle: one user
+> command fans out into a burst of correlated RPCs, so it is the whole
+> burst, not a single RPC, that must be allowed to jump ahead.
 >=20
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> This version is essentially the same as v1, but allows the kernel to
-> accept any previously-accepted setting for pool-mode, which should
-> alleviate concerns about breakage.
-> ---
-> Changes in v2:
-> - Accept any previously-accepted setting for pool_mode
-> - Link to v1: https://lore.kernel.org/r/20260423-sunrpc-pool-mode-v1-1-b7f2=
-0e35749b@kernel.org
-> ---
->  net/sunrpc/svc.c | 238 +++++++++------------------------------------------=
-----
->  1 file changed, 37 insertions(+), 201 deletions(-)
+> The signal is already on every transport: xpt_nr_rqsts, the count of
+> requests in flight.  A transport with nothing in flight when new work
+> arrives is, by definition, not the one hogging threads -- so it goes on a
+> second, high-priority per-pool queue that is drained ahead of the normal
+> one.  To cover the whole burst rather than only its leading edge, an
+> idle->active transport is granted a budget of 64 high-priority dispatches,
+> spent down as the burst is serviced and refilled only when the transport
+> next idles.  A transport that never idles spends its budget once and then
+> shares the normal queue like everyone else.
 >=20
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index dd80a2eaaa74..6e3d509bf95a 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -38,19 +38,6 @@
-> =20
->  static void svc_unregister(const struct svc_serv *serv, struct net *net);
-> =20
-> -#define SVC_POOL_DEFAULT	SVC_POOL_GLOBAL
-> -
-> -/*
-> - * Mode for mapping cpus to pools.
-> - */
-> -enum {
-> -	SVC_POOL_AUTO =3D -1,	/* choose one of the others */
-> -	SVC_POOL_GLOBAL,	/* no mapping, just a single global pool
-> -				 * (legacy & UP mode) */
-> -	SVC_POOL_PERCPU,	/* one pool per cpu */
-> -	SVC_POOL_PERNODE	/* one pool per numa node */
-> -};
-> -
->  /*
->   * Structure for mapping cpus to pools and vice versa.
->   * Setup once during sunrpc initialisation.
-> @@ -58,62 +45,23 @@ enum {
-> =20
->  struct svc_pool_map {
->  	int count;			/* How many svc_servs use us */
-> -	int mode;			/* Note: int not enum to avoid
-> -					 * warnings about "enumeration value
-> -					 * not handled in switch" */
->  	unsigned int npools;
-> -	unsigned int *pool_to;		/* maps pool id to cpu or node */
-> -	unsigned int *to_pool;		/* maps cpu or node to pool id */
-> +	unsigned int *pool_to;		/* maps pool id to node */
-> +	unsigned int *to_pool;		/* maps node to pool id */
->  };
-> =20
-> -static struct svc_pool_map svc_pool_map =3D {
-> -	.mode =3D SVC_POOL_DEFAULT
-> -};
-> +static struct svc_pool_map svc_pool_map;
-> =20
->  static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count onl=
-y */
-> =20
-> -static int
-> -__param_set_pool_mode(const char *val, struct svc_pool_map *m)
-> -{
-> -	int err, mode;
-> -
-> -	mutex_lock(&svc_pool_map_mutex);
-> -
-> -	err =3D 0;
-> -	if (!strncmp(val, "auto", 4))
-> -		mode =3D SVC_POOL_AUTO;
-> -	else if (!strncmp(val, "global", 6))
-> -		mode =3D SVC_POOL_GLOBAL;
-> -	else if (!strncmp(val, "percpu", 6))
-> -		mode =3D SVC_POOL_PERCPU;
-> -	else if (!strncmp(val, "pernode", 7))
-> -		mode =3D SVC_POOL_PERNODE;
-> -	else
-> -		err =3D -EINVAL;
-> -
-> -	if (err)
-> -		goto out;
-> -
-> -	if (m->count =3D=3D 0)
-> -		m->mode =3D mode;
-> -	else if (mode !=3D m->mode)
-> -		err =3D -EBUSY;
-> -out:
-> -	mutex_unlock(&svc_pool_map_mutex);
-> -	return err;
-> -}
-> -
-> -static int
-> -param_set_pool_mode(const char *val, const struct kernel_param *kp)
-> -{
-> -	struct svc_pool_map *m =3D kp->arg;
-> -
-> -	return __param_set_pool_mode(val, m);
-> -}
-> -
->  int sunrpc_set_pool_mode(const char *val)
->  {
-> -	return __param_set_pool_mode(val, &svc_pool_map);
-> +	if (!strncmp(val, "auto", 4) ||
-> +	    !strncmp(val, "global", 6) ||
-> +	    !strncmp(val, "percpu", 6) ||
-> +	    !strncmp(val, "pernode", 7))
-> +		return 0;
-
-"!strncmp" is one most disliked constructs....
-What would you think of using match_string() or even
-sysfs_match_string() ??
-
-> +	return -EINVAL;
->  }
->  EXPORT_SYMBOL(sunrpc_set_pool_mode);
-> =20
-> @@ -122,84 +70,32 @@ EXPORT_SYMBOL(sunrpc_set_pool_mode);
->   * @buf: where to write the current pool_mode
->   * @size: size of @buf
->   *
-> - * Grab the current pool_mode from the svc_pool_map and write
-> - * the resulting string to @buf. Returns the number of characters
-> + * Write the pool_mode string to @buf. Returns the number of characters
->   * written to @buf (a'la snprintf()).
->   */
->  int
->  sunrpc_get_pool_mode(char *buf, size_t size)
->  {
-> -	struct svc_pool_map *m =3D &svc_pool_map;
-> -
-> -	switch (m->mode)
-> -	{
-> -	case SVC_POOL_AUTO:
-> -		return snprintf(buf, size, "auto");
-> -	case SVC_POOL_GLOBAL:
-> -		return snprintf(buf, size, "global");
-> -	case SVC_POOL_PERCPU:
-> -		return snprintf(buf, size, "percpu");
-> -	case SVC_POOL_PERNODE:
-> -		return snprintf(buf, size, "pernode");
-> -	default:
-> -		return snprintf(buf, size, "%d", m->mode);
-> -	}
-> +	return snprintf(buf, size, "pernode");
->  }
->  EXPORT_SYMBOL(sunrpc_get_pool_mode);
-> =20
->  static int
-> -param_get_pool_mode(char *buf, const struct kernel_param *kp)
-> +param_set_pool_mode(const char *val, const struct kernel_param *kp)
->  {
-> -	char str[16];
-> -	int len;
-> -
-> -	len =3D sunrpc_get_pool_mode(str, ARRAY_SIZE(str));
-> -
-> -	/* Ensure we have room for newline and NUL */
-> -	len =3D min_t(int, len, ARRAY_SIZE(str) - 2);
-> -
-> -	/* tack on the newline */
-> -	str[len] =3D '\n';
-> -	str[len + 1] =3D '\0';
-> -
-> -	return sysfs_emit(buf, "%s", str);
-> +	pr_notice("sunrpc: the pool_mode parameter is deprecated and will be remo=
-ved in a future release.\n");
-
-Which future release?  How will we remember?
-
-> +	return sunrpc_set_pool_mode(val);
->  }
-> =20
-> -module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
-> -		  &svc_pool_map, 0644);
-> -
-> -/*
-> - * Detect best pool mapping mode heuristically,
-> - * according to the machine's topology.
-> - */
->  static int
-> -svc_pool_map_choose_mode(void)
-> +param_get_pool_mode(char *buf, const struct kernel_param *kp)
->  {
-> -	unsigned int node;
-> -
-> -	if (nr_online_nodes > 1) {
-> -		/*
-> -		 * Actually have multiple NUMA nodes,
-> -		 * so split pools on NUMA node boundaries
-> -		 */
-> -		return SVC_POOL_PERNODE;
-> -	}
-> -
-> -	node =3D first_online_node;
-> -	if (nr_cpus_node(node) > 2) {
-> -		/*
-> -		 * Non-trivial SMP, or CONFIG_NUMA on
-> -		 * non-NUMA hardware, e.g. with a generic
-> -		 * x86_64 kernel on Xeons.  In this case we
-> -		 * want to divide the pools on cpu boundaries.
-> -		 */
-> -		return SVC_POOL_PERCPU;
-> -	}
-> -
-> -	/* default: one global pool */
-> -	return SVC_POOL_GLOBAL;
-> +	return sysfs_emit(buf, "pernode\n");
->  }
-> =20
-> +module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
-> +		  NULL, 0644);
-> +
->  /*
->   * Allocate the to_pool[] and pool_to[] arrays.
->   * Returns 0 on success or an errno.
-> @@ -224,35 +120,7 @@ svc_pool_map_alloc_arrays(struct svc_pool_map *m, unsi=
-gned int maxpools)
->  }
-> =20
->  /*
-> - * Initialise the pool map for SVC_POOL_PERCPU mode.
-> - * Returns number of pools or <0 on error.
-> - */
-> -static int
-> -svc_pool_map_init_percpu(struct svc_pool_map *m)
-> -{
-> -	unsigned int maxpools =3D nr_cpu_ids;
-> -	unsigned int pidx =3D 0;
-> -	unsigned int cpu;
-> -	int err;
-> -
-> -	err =3D svc_pool_map_alloc_arrays(m, maxpools);
-> -	if (err)
-> -		return err;
-> -
-> -	for_each_online_cpu(cpu) {
-> -		BUG_ON(pidx >=3D maxpools);
-> -		m->to_pool[cpu] =3D pidx;
-> -		m->pool_to[pidx] =3D cpu;
-> -		pidx++;
-> -	}
-> -	/* cpus brought online later all get mapped to pool0, sorry */
-> -
-> -	return pidx;
-> -};
-> -
-> -
-> -/*
-> - * Initialise the pool map for SVC_POOL_PERNODE mode.
-> + * Initialise the pool map for one pool per NUMA node.
->   * Returns number of pools or <0 on error.
->   */
->  static int
-> @@ -284,14 +152,13 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
->   * Add a reference to the global map of cpus to pools (and
->   * vice versa) if pools are in use.
->   * Initialise the map if we're the first user.
-> - * Returns the number of pools. If this is '1', no reference
-> - * was taken.
-> + * Returns the number of pools, or 0 on failure.
->   */
->  static unsigned int
->  svc_pool_map_get(void)
->  {
->  	struct svc_pool_map *m =3D &svc_pool_map;
-> -	int npools =3D -1;
-> +	int npools;
-> =20
->  	mutex_lock(&svc_pool_map_mutex);
->  	if (m->count++) {
-> @@ -299,22 +166,11 @@ svc_pool_map_get(void)
->  		return m->npools;
->  	}
-> =20
-> -	if (m->mode =3D=3D SVC_POOL_AUTO)
-> -		m->mode =3D svc_pool_map_choose_mode();
-> -
-> -	switch (m->mode) {
-> -	case SVC_POOL_PERCPU:
-> -		npools =3D svc_pool_map_init_percpu(m);
-> -		break;
-> -	case SVC_POOL_PERNODE:
-> -		npools =3D svc_pool_map_init_pernode(m);
-> -		break;
-> -	}
-> -
-> +	npools =3D svc_pool_map_init_pernode(m);
->  	if (npools <=3D 0) {
-> -		/* default, or memory allocation failure */
-> -		npools =3D 1;
-> -		m->mode =3D SVC_POOL_GLOBAL;
-> +		m->count--;
-
-Could we make this
-   m->count =3D 0
-
-to make it crystal clear that there are now no references?
-It would be nice to rename ->count to ->refcount or similar
-so it is obvious what is being counted, but that doesn't need to be part
-of this change.
-
-> +		mutex_unlock(&svc_pool_map_mutex);
-> +		return 0;
->  	}
->  	m->npools =3D npools;
->  	mutex_unlock(&svc_pool_map_mutex);
-> @@ -346,14 +202,11 @@ static int svc_pool_map_get_node(unsigned int pidx)
->  {
->  	const struct svc_pool_map *m =3D &svc_pool_map;
-> =20
-> -	if (m->count) {
-> -		if (m->mode =3D=3D SVC_POOL_PERCPU)
-> -			return cpu_to_node(m->pool_to[pidx]);
-> -		if (m->mode =3D=3D SVC_POOL_PERNODE)
-> -			return m->pool_to[pidx];
-> -	}
-> +	if (m->count)
-> +		return m->pool_to[pidx];
->  	return numa_mem_id();
-
-Can this code run if m->count is zero?
-
->  }
-> +
->  /*
->   * Set the given thread's cpus_allowed mask so that it
->   * will only run on cpus in the given pool.
-> @@ -372,27 +225,15 @@ svc_pool_map_set_cpumask(struct task_struct *task, un=
-signed int pidx)
->  	if (m->count =3D=3D 0)
->  		return;
-> =20
-> -	switch (m->mode) {
-> -	case SVC_POOL_PERCPU:
-> -	{
-> -		set_cpus_allowed_ptr(task, cpumask_of(node));
-> -		break;
-> -	}
-> -	case SVC_POOL_PERNODE:
-> -	{
-> -		set_cpus_allowed_ptr(task, cpumask_of_node(node));
-> -		break;
-> -	}
-> -	}
-> +	set_cpus_allowed_ptr(task, cpumask_of_node(node));
->  }
-> =20
->  /**
->   * svc_pool_for_cpu - Select pool to run a thread on this cpu
->   * @serv: An RPC service
->   *
-> - * Use the active CPU and the svc_pool_map's mode setting to
-> - * select the svc thread pool to use. Once initialized, the
-> - * svc_pool_map does not change.
-> + * Use the active CPU and the svc_pool_map to select the svc thread
-> + * pool to use. Once initialized, the svc_pool_map does not change.
->   *
->   * Return value:
->   *   A pointer to an svc_pool
-> @@ -400,20 +241,12 @@ svc_pool_map_set_cpumask(struct task_struct *task, un=
-signed int pidx)
->  struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
->  {
->  	struct svc_pool_map *m =3D &svc_pool_map;
-> -	int cpu =3D raw_smp_processor_id();
-> -	unsigned int pidx =3D 0;
-> +	unsigned int pidx;
-> =20
->  	if (serv->sv_nrpools <=3D 1)
->  		return serv->sv_pools;
-> =20
-> -	switch (m->mode) {
-> -	case SVC_POOL_PERCPU:
-> -		pidx =3D m->to_pool[cpu];
-> -		break;
-> -	case SVC_POOL_PERNODE:
-> -		pidx =3D m->to_pool[cpu_to_node(cpu)];
-> -		break;
-> -	}
-> +	pidx =3D m->to_pool[cpu_to_node(raw_smp_processor_id())];
-> =20
->  	return &serv->sv_pools[pidx % serv->sv_nrpools];
->  }
-> @@ -617,6 +450,9 @@ struct svc_serv *svc_create_pooled(struct svc_program *=
-prog,
->  	struct svc_serv *serv;
->  	unsigned int npools =3D svc_pool_map_get();
-> =20
-> +	if (!npools)
-> +		return NULL;
-> +
->  	serv =3D __svc_create(prog, nprogs, stats, bufsize, npools, threadfn);
->  	if (!serv)
->  		goto out_err;
+> There is no client identity anywhere in this -- it keys only on a
+> transport's own in-flight depth -- so it covers v3, v4.0 and v4.1
+> uniformly, needs no lookup or lifecycle, adds no lock (the existing lwq
+> barriers carry the sleep/wake), and is always on with nothing to tune.
+> (LOCALIO is out of scope: a local client's reads and writes bypass the
+> RPC dispatch path entirely, so they neither contend here nor are
+> reordered by this change.)
 >=20
+>   patch 1  add the second per-pool ready queue (no functional change)
+>   patch 2  dispatch idle transports ahead of backlogged ones
+>   patch 3  grant the 64-RPC burst budget
+>=20
+> Relationship to Chuck's slot-growth RFC
+> ---------------------------------------
+>=20
+> This series is based on Chuck's "Stop NFSv4.1 slot-growth heuristic from
+> rewarding busy clients" [2], and both A and B above include it -- so the
+> A/B delta isolates this series and the clamp does not account for the
+> improvement.
+>=20
+> The two are complementary, not overlapping.  [2] stops nfsd from growing a
+> busy session's slot table past the thread ceiling: nfsd slot accounting.
+> This series changes the order in which ready transports are dispatched:
+> sunrpc dispatch.  Basing on [2] changes neither the design nor the result
+> here -- a slot-capped session still fills the pool, so the dispatch-layer
+> floor is still wanted on top of it.
+>=20
+> Results
+> -------
+>=20
+> Because the goal is a latency floor and not a share, the measurement
+> differs from the earlier bucket RFC and the numbers are not comparable:
+> that series measured a greedy client's share of throughput; this one
+> measures how long an interactive client's command takes to complete while
+> a neighbour is busy.
+>=20
+> Workload: a backlogged aggressor (K connections, deep offered load,
+> saturating the pool) shares the server with one interactive client that
+> issues a burst of N requests, waits for all replies, idles 50ms, and
+> repeats.  A 10ms service time is injected per op (a test-only debug hook,
+> not part of this series) so the measurement isolates the dispatch path from
+> filesystem work.  A is stock nfsd-testing; B is the same plus this series.
+> Figures are NFSv3 burst-completion p50 in ms; NFSv4.1 tracks within a few
+> percent (the classifier uses no source identity, so v3 runs on plain
+> loopback and behaves the same).
+>=20
+> Interactive burst completion vs aggressor connection count K (N=3D32;
+> unobstructed floor 45ms):
+>=20
+>     K       4      8     16     32
+>     A    81.6  242.0  432.9  826.6
+>     B    60.9   64.5   65.4   64.4
+>          1.3x   3.8x   6.6x  12.8x
+>=20
+> Baseline climbs ~linearly with the aggressor's backlog; patched holds the
+> floor no matter how deep that backlog is -- the property that matters.
+>=20
+> vs burst size N (K=3D16), showing the 64-credit knee (floor for reference):
+>=20
+>     N        1      8     32     64     96    128
+>    floor  14.9   31.9   44.8   71.5   96.8  122.4
+>     A     28.6  122.0  434.2  862.4 1272.6 1696.3
+>     B     16.7   36.0   65.1  124.5  546.4  961.6
+>=20
+> For N <=3D 64 the whole burst is covered and tracks the floor (B within
+> 1.7x); beyond 64 the uncovered tail -- the N-64 RPCs that spill to the
+> normal queue -- degrades toward baseline (B/floor jumps 1.7x -> 5.6x
+> across the 64->96 boundary).  The knee at exactly 64 is the budget working
+> as designed, not a regression.
+>=20
+> Aggregate throughput (aggressor + interactive) is within 1% A vs B at
+> saturation (~1290 ops/s) -- the dispatcher reorders, it does not throttle.
+> With no aggressor the interactive floor is identical A vs B; the kernels
+> differ only under contention.
+>=20
+> Figures are p50; longer runs are available for firmer tails.
+>=20
+> What this deliberately does not do
+> ----------------------------------
+>=20
+> - It is not proportional fairness.  Two backlogged clients still split the
+>   pool by connection count; this protects only flows that idle.
+>=20
+> - The normal queue can wait under sustained high-priority load.  v1 drains
+>   high-priority strictly first; bounding that starvation -- an inter-tier
+>   deficit round-robin, the way fq_codel actually interleaves its sparse
+>   and bulk tiers -- is left for a follow-up, pending the question below.
+>=20
+> - The 64-dispatch budget defeats a pipelined aggressor (it lands wholly in
+>   the normal queue), but a client that shapes its traffic to look sparse
+>   -- send <=3D64, drain, repeat -- can still scale its high-priority share
+>   with connection count.  Whether to harden against that is the open
+>   question: if this is cooperative scheduling (Neil's framing) a bulk
+>   floor suffices; if it is an attack surface (Chuck's framing) the
+>   high-priority tier needs intra-tier fairness, which reintroduces
+>   identity.
+>=20
+> Open questions for the list: is the budget (64 here) the right shape, and
+> should it be fixed, derived from the thread count, or hinted by the v4.1
+> slot table?  And does the cooperative framing hold, or must we resist
+> deliberate sparse-shaping?
 
-I think this is a good a worthwhile change.
-Regarding Chucks comments, I think a minimum of one thread per node,
-rather than a minimum of one thread total, is the sensible approach.
-Of course if there exist memory-only nodes, they wouldn't need a thread.
+I wonder if we should make "batch" the special case, rather than
+"interactive".
+I don't think this makes a big difference to the code (there are still
+two queues and everyone starts out interactive) but it might change how
+we think about it.
+
+I would wait a lot longer than 64 requests before considering an
+xprt to be "batch", and I would probably want to measure it in
+seconds rather than requests.  Maybe 10-15 seconds.
+I might also only consider an xprt batch if xpt_nr_rqsts remains above
+some small number - maybe 5.
+
+Maybe we could keep track of the number of "batch" xprts and compare it
+to the thread limit.  Batch xprts might only be allowed some share of
+the thread limit...
+
+If there are a bunch of READ requests on the same file, the first could
+trigger a read-ahead, and the next several might wait for that
+read-ahead, so they would all be blocked on the same thing, which can be
+pointless.  nfsd doesn;'t have any direct visibility into this, but
+limiting requests-per-xprt differently for batch and interactive might
+be useful.  non-sync WRITE requests probably behave differently...
+
+While this approach does seem pleasingly simple, I wonder how easy it
+would be for a client to accidentally start appearing to be "batch".
+Multiple interactive sessions on the one client could incorrectly
+trigger the batch detection.
+
+Maybe it would be useful to collect some statistics of what a "batch"
+stream typically looks like (OP mix, concurrency,...) as there may be a
+better signal to look for than xpt_nr_rqsts.
 
 Thanks,
 NeilBrown
+
+
+>=20
+> [1] https://lore.kernel.org/linux-nfs/cover.1780498019.git.bcodding@hammers=
+pace.com/
+> [2] https://lore.kernel.org/linux-nfs/20260610-nfsd-slot-growth-clamp-v1-0-=
+7b966700df0b@kernel.org/
+>=20
+> Benjamin Coddington (3):
+>   SUNRPC: add a second per-pool ready queue for high-priority transports
+>   SUNRPC: dispatch idle transports ahead of backlogged ones
+>   SUNRPC: grant an idle flow a burst allowance on the high-priority
+>     queue
+>=20
+>  include/linux/sunrpc/svc.h      |  1 +
+>  include/linux/sunrpc/svc_xprt.h |  1 +
+>  net/sunrpc/svc.c                |  1 +
+>  net/sunrpc/svc_xprt.c           | 52 +++++++++++++++++++++++----------
+>  4 files changed, 39 insertions(+), 16 deletions(-)
+>=20
+> --=20
+> 2.53.0
+>=20
+>=20
+
 
