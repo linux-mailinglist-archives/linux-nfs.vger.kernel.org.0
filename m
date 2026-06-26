@@ -1,186 +1,208 @@
-Return-Path: <linux-nfs+bounces-22846-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22847-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kA/fKPK8PWpE6AgAu9opvQ
-	(envelope-from <linux-nfs+bounces-22846-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 01:42:42 +0200
+	id cKnEFcDaPWq87AgAu9opvQ
+	(envelope-from <linux-nfs+bounces-22847-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 03:49:52 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3006D6C928D
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 01:42:42 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 478BA6C9969
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 03:49:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ERWk9tSf;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22846-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22846-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ownmail.net header.s=fm1 header.b=PgWq6cXN;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="W fDJD9e";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22847-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22847-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ownmail.net;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 067EF304C7D2
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jun 2026 23:42:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9602F3005ABE
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 01:49:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACF634C9AD;
-	Thu, 25 Jun 2026 23:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A09048CFC;
+	Fri, 26 Jun 2026 01:49:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18BE13B7AE;
-	Thu, 25 Jun 2026 23:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D35C8634C
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jun 2026 01:49:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782430928; cv=none; b=LUz93YxxdARVhH4drYsSK1hwl3DPX3X2Jip6k0WL9ZwHfyUx6USkkvQ7ma+TZZzoZaIRLPG1QRiVBHn0y85mQsW8sugV9K52kKvlrscrMeN7f+kFpQQFVkbO1ZVBkHyWcbI/0xgdJS+b8jKQ2rQ8Y42YDhj4kfXzN3RHKoKtfT8=
+	t=1782438563; cv=none; b=pJ8ZIAbxuUFepEFSsGzlsrdWvGudU31oCyKvVXWGhIkENs3DMpFb1TldOj/tK2OGIjQG0Gx+lPG2BazT/RqyRDS+eq/umu6Ea/OD8AjI/t3OneZ3r4nSlVpSngj5I+IxEpnWly1ufz4LeQaLj1ZROKK866nCHD+VcGOym1D1hVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782430928; c=relaxed/simple;
-	bh=XLWncx6sAi2SL2n9opoom94BbjE0WreKNCFruJ4bcbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eSX1vhnyPXqWCfZMe2VumjoUiaDOsXft3XSYjbcuLce5UiTdxVqCpP0eDgmAtJa84XpgBaU7gQXFhUH7S+jpcQBvWiUM1IJaCLir4dAViIP9ZA6d/qjEiGfi2WRQxfWXUfd5v6Ue1wRQNWvEkEy6VyPOTEXpi++zHqR7NMKS9hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERWk9tSf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DEF11F000E9;
-	Thu, 25 Jun 2026 23:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782430926;
-	bh=7rTeWGRC3qlYe3M/STi4OqC/ckIFBCcw0pmuKzcM+Ms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ERWk9tSfkvUB3gpMoi+r8/npeOf+VTcK6LEcTQ+ydlZM4R04BnjE7NoxRlL2Y7oOp
-	 HwEILF3l/MEtXv4l1oapXtPAddR7mVIcAbFM+/NzAauaraVXtWjthqV/7Xr9jV0rmP
-	 iV/aTYKta1D6uPYRp+2hh9+GTlghECm8I505IDeByN96e5NV0eCKP7muVv5sc3JnQG
-	 O3K8AFvvCi6QK5nN6WRqQQQyuO2ODeP0WbSkJkHgCIFXVq1+HVSkMdVsvtq4txrVyP
-	 sezhtjuTBGj4tnd2fWtTX6Neebzlxe0449kNqUc5+ZQaEKrKtQDmJHaKYNRwLyfJcc
-	 gFiMuxnkCmkKg==
-Date: Thu, 25 Jun 2026 16:41:58 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Yury Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v4 2/2] tracing: Remove trace_printk.h from kernel.h
-Message-ID: <20260625234158.GA261868@ax162>
-References: <20260625104007.041432666@kernel.org>
- <20260625104402.210473477@kernel.org>
+	s=arc-20240116; t=1782438563; c=relaxed/simple;
+	bh=gcYEdd+vw3nmcMK7dziyAOcD0Xc4d7ZpZqStZ6KaO+M=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ulhFz+fJfYG6wm7bvCFWTkuNeqp4rrI4YP/LdFWE7CJpGXeDF8kWXLARY5e9LaRlgwaiqhmb85co7cpej1CTzxuAMC01P1Nn8lL2ezuw75c30dNxrxirkbij/Ms6mQMOu7fe6Nzn44041InamR9NEvFWKRO4AW1EO5Q3Q8nR1QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=PgWq6cXN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WfDJD9ei; arc=none smtp.client-ip=202.12.124.145
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 853471D00101;
+	Thu, 25 Jun 2026 21:49:20 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Thu, 25 Jun 2026 21:49:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1782438560; x=1782524960; bh=Z3cKT7RhWYeEhtBEjcoHBKZXLRWmWacSIP2
+	RU45Img0=; b=PgWq6cXNIqEv/syR4jSGjy6+0vh4Ju7DJ3ldUkS31iGhs/QlyDA
+	j1cjw+mraR4uLgBcGYIjukjF3WPtEYi1mTkRH9sftlZ2e2U+0BIE8gj/Af+yfbcP
+	i/yyELn1/cPKf8MlMl6qy0LmJo8K643p/v2Sh1tzLQeE+6yX//WJV3VT1DgWaL6E
+	ZWGluTSD1yaVlnKJUpQrgqVbISrFKYVg4AMeCNmslx68W28ns8yzuqjhxEkcIJeE
+	6n1spReR13qfX3NJnSwptL/XibOeDT0Nqz95u0C4JBKaVb3+T7B7dCzE/EaX3flK
+	8iyA+CU5lppXXXApm0tS1FXzb2PRcdmdspQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782438560; x=
+	1782524960; bh=Z3cKT7RhWYeEhtBEjcoHBKZXLRWmWacSIP2RU45Img0=; b=W
+	fDJD9eieRbSUbDnMN1hoZozf6PnuEvehhGgfAzfdltjosq0ri2ItNett6NjHrjeQ
+	98kNviHnL9n5/MNrVd9/dH+lFq9KM4s1Zf3tq9jaSbZCGAAFxfbkTVGcnff7RZCV
+	iFtffovhVrb55w5K6Te+u4Y4yZJshlp8ofNuqfiXw7pk1Y2mGbwPQ6H5IhQ/rIS7
+	Vd0akDWpY089mx1r+mXA+FcTM4Z2pWhysph7mGGbgWE0YZVUgoomVyxZBuFevTsP
+	Xn47cNPvkEl9dhUJXW+8vbdHV59xBrM0wknPxrfDTnbNneY4Fc8l/wVqsPyGko/K
+	4+o3QqiacaOwzZay8sABQ==
+X-ME-Sender: <xms:oNo9arl9_zWMH7hozYufp1vOa9VALbKZl2cyqIDs3iXhjrgNFH296A>
+    <xme:oNo9ahHCFtwJ_FZd_O7gI0-R0GVT795ORoETFkOP7IGylmYqT5SBK5CANTQepiBLN
+    KQu2S0wPwyBQ0IAlwgyrP0PH8AR9AXcNaxpgFrSkekytechjw>
+X-ME-Received: <xmr:oNo9aj7D-7juxKRaNhvCqZcov_MGwz4tGcNm2ylOh4C0PMU6iFK0ZFZDqKvIcTKpN_Rg6mr2rxuYRqm0idgufsSoCdOoctg>
+X-ME-Proxy-Cause: dmFkZTGlA4PbXdtm07gLsrpjNfpqdCpfAyfa6W2F+SMWp8HEySifPilF5GEPzUArL5lEJL
+    g8NCZpQqpsGcYChNGj2vYZP2ouqAdJv/6j3flRBasu93oSxDV43UaujdnozKtw5jBW28WD
+    cZgbOGQuLzq0LfyD2Fp0uje83n3R4HEb9Z4a+iIY8Wr48t6SYL/REHbeiK/5DrI+vG1TMH
+    aB2PwndqjcUujNG5n4SngcVE8A3K9fjAMeyTDWJ607e8nPh38vDQYhwMIfO8b5pdjL08ao
+    M+bjP0Ni3d/X1rNGGURSUv3ubh07JTj0STkTbY8uFi6i5K6n0h5b/Zp/nPUVoZYPCI4ypZ
+    kuMbxDKqg9bU71zMopqDNc8BIRHgMnIhAtae+sIBpzdnYqxi0DmR48rqs49yiLJn/Rltzg
+    nqc2Jeh//zM5TZ25LkTmzb2S9JhVCFitYb2KG8SmQDW4nWrwUVnXE1I8yUkU1Jar77i9cJ
+    muxjTR01KP6Ye078prdtRg99Us2BxT7o/1pULeQpPvMNFEbZqQljuX2/fc3n0KcyUHMn3L
+    OzcClnt0hPnAm+xaD/rCmFyc0NG4WlJZZlRDqVcAj7A9Kw+Tn/lTa2b99seAq4hlcUvslv
+    7elf7bUyVFDfTZFp5y9cxBlJftuKAEAfl32v76jc/0EbmuY77xkXhkuhT8Ew
+X-ME-Proxy: <xmx:oNo9aplDc0RNl_1a86RRtEClbE7Q1_HB0sj_l_JqpafUQlwzO619DA>
+    <xmx:oNo9aooSkPr6TpOlylED7Ijx40pis0WC4MigRo0EnvB9SEeQ5OY7Gg>
+    <xmx:oNo9aotAhTXxsSwg0MfnfypMThvsZH2mnzi-XIBkt29ViYJ-OcJ4Mg>
+    <xmx:oNo9atG4t_9L9Rz0GlJqy7ZhDfsCvjwpCdSbuhXfdeXAboGQ_fqn5A>
+    <xmx:oNo9akbj1zh6rVdvelaFwAkZ-VUfm8Yg41whAlASp_VTxxn6WLELatP2>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 Jun 2026 21:49:17 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260625104402.210473477@kernel.org>
+From: NeilBrown <neilb@ownmail.net>
+To: "Olga Kornievskaia" <okorniev@redhat.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org,
+ neilb@brown.name, Dai.Ngo@oracle.com, tom@talpey.com
+Subject: Re: [PATCH 1/1] lockd: fix GRANTED_MSG handling
+In-reply-to: <20260625211852.31972-1-okorniev@redhat.com>
+References: <20260625211852.31972-1-okorniev@redhat.com>
+Date: Fri, 26 Jun 2026 11:49:15 +1000
+Message-id: <178243855549.27465.5550787515518801190@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:rostedt@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-trace-kernel@vger.kernel.org,m:mhiramat@kernel.org,m:mark.rutland@arm.com,m:mathieu.desnoyers@efficios.com,m:akpm@linux-foundation.org,m:torvalds@linux-foundation.org,m:bigeasy@linutronix.de,m:john.ogness@linutronix.de,m:tglx@kernel.org,m:peterz@infradead.org,m:julia.lawall@inria.fr,m:yury.norov@gmail.com,m:linux-doc@vger.kernel.org,m:linux-kbuild@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:dri-devel@lists.freedesktop.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-arm-kernel@lists.infradead.org,m:linux-rdma@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-ext4@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:kvm@vger.kernel.org,m:intel-gfx@lists.freedesktop.org,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22846-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER(0.00)[nathan@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22847-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nathan@kernel.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,arm.com,efficios.com,linux-foundation.org,linutronix.de,infradead.org,inria.fr,gmail.com,lists.ozlabs.org,lists.freedesktop.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	FORGED_RECIPIENTS(0.00)[m:okorniev@redhat.com,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:neilb@brown.name,m:Dai.Ngo@oracle.com,m:tom@talpey.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	HAS_REPLYTO(0.00)[neil@brown.name];
+	RCVD_COUNT_FIVE(0.00)[6];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,goodmis.org:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,brown.name:replyto,brown.name:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3006D6C928D
+X-Rspamd-Queue-Id: 478BA6C9969
 
-Hi Steve,
+On Fri, 26 Jun 2026, Olga Kornievskaia wrote:
+> GRANTED_MSG is a server-to-client callback, so it runs on the client,
+> where nfsd never registers nlmsvc_ops. The nlm4svc_lookup_host()/
+> nlm3svc_lookup_host() helpers are for the server-side request handlers
+> (TEST/LOCK/CANCEL/UNLOCK), which reach nlmsvc_ops->fopen and must
+> reject requests when nfsd isn't running. GRANTED_MSG only calls
+> nlmclnt_grant(). Instead, of calling nlm4svc_lookup_host()/
+> nlm3svc_lookup_host() (which results in a client failing a GRANTED_MSG
+> call) call nlmsvc_lookup_host.
+>=20
+> Fixes: 62721885e861 ("lockd: Use xdrgen XDR functions for the NLMv4 GRANTED=
+_MSG procedure")
+> Fixes: 6c534ad999b6 ("lockd: Use xdrgen XDR functions for the NLMv3 GRANTED=
+_MSG procedure")
+> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> ---
+>  fs/lockd/svc4proc.c | 3 ++-
+>  fs/lockd/svcproc.c  | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+> index 080dffce9d8e..b73004a7987e 100644
+> --- a/fs/lockd/svc4proc.c
+> +++ b/fs/lockd/svc4proc.c
+> @@ -872,7 +872,8 @@ static __be32 nlm4svc_proc_granted_msg(struct svc_rqst =
+*rqstp)
+>  	struct nlm4_testargs_wrapper *argp =3D rqstp->rq_argp;
+>  	struct nlm_host *host;
+> =20
+> -	host =3D nlm4svc_lookup_host(rqstp, argp->xdrgen.alock.caller_name, false=
+);
+> +	host =3D nlmsvc_lookup_host(rqstp, argp->xdrgen.alock.caller_name.data,
+> +				  argp->xdrgen.alock.caller_name.len);
+>  	if (!host)
+>  		return rpc_system_err;
+> =20
+> diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+> index dce6f6e3fd40..d410b8c69893 100644
+> --- a/fs/lockd/svcproc.c
+> +++ b/fs/lockd/svcproc.c
+> @@ -901,7 +901,8 @@ static __be32 nlmsvc_proc_granted_msg(struct svc_rqst *=
+rqstp)
+>  	if (argp->xdrgen.cookie.len > NLM_MAXCOOKIELEN)
+>  		return rpc_garbage_args;
+> =20
+> -	host =3D nlm3svc_lookup_host(rqstp, argp->xdrgen.alock.caller_name, false=
+);
+> +	host =3D nlmsvc_lookup_host(rqstp, argp->xdrgen.alock.caller_name.data,
+> +				  argp->xdrgen.alock.caller_name.len);
+>  	if (!host)
+>  		return rpc_system_err;
+> =20
 
-On Thu, Jun 25, 2026 at 06:40:09AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> There have been complaints about trace_printk.h causing more build time
-> for being in kernel.h if it changes. There is also an effort to clean up
-> kernel.h to have it not include unneeded header files. Move trace_printk.h
-> out of kernel.h and place it in the headers and C files that use it.
-> 
-> Link: https://lore.kernel.org/all/CAHk-=wikCBeVFjVXiY4o-oepdbjAoir5+TcAgtL12c4u1TpZLQ@mail.gmail.com/
-> 
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Reviewed-by: NeilBrown <neil@brown.name>
 
-This patch breaks lib/test_context-analysis.c for me in several
-configurations:
+That is a subtle difference between nlm4svc_lookup_host() and
+nlmsvc_lookup_host().  I wonder if making the names more distinct would
+help...
 
-  In file included from lib/test_context-analysis.c:9:
-  In file included from include/linux/local_lock.h:5:
-  include/linux/local_lock_internal.h:46:2: error: use of undeclared identifier '_THIS_IP_'
-     46 |         lock_map_acquire(&l->dep_map);
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  include/linux/lockdep.h:541:69: note: expanded from macro 'lock_map_acquire'
-    541 | #define lock_map_acquire(l)                     lock_acquire_exclusive(l, 0, 0, NULL, _THIS_IP_)
-        |                                                                                       ^~~~~~~~~
-  In file included from lib/test_context-analysis.c:9:
-  In file included from include/linux/local_lock.h:5:
-  include/linux/local_lock_internal.h:53:2: error: use of undeclared identifier '_THIS_IP_'
-     53 |         lock_map_acquire_try(&l->dep_map);
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  include/linux/lockdep.h:542:73: note: expanded from macro 'lock_map_acquire_try'
-    542 | #define lock_map_acquire_try(l)                 lock_acquire_exclusive(l, 0, 1, NULL, _THIS_IP_)
-        |                                                                                       ^~~~~~~~~
-  In file included from lib/test_context-analysis.c:9:
-  In file included from include/linux/local_lock.h:5:
-  include/linux/local_lock_internal.h:62:2: error: use of undeclared identifier '_THIS_IP_'
-     62 |         lock_map_release(&l->dep_map);
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  include/linux/lockdep.h:545:47: note: expanded from macro 'lock_map_release'
-    545 | #define lock_map_release(l)                     lock_release(l, _THIS_IP_)
-        |                                                                 ^~~~~~~~~
-  3 errors generated.
-
-The following diff resolves it for me, should I send it as a separate
-patch or do you want to just fold it in with a note?
-
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 621566345406..2301a701ffbb 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -10,6 +10,7 @@
- #ifndef __LINUX_LOCKDEP_H
- #define __LINUX_LOCKDEP_H
- 
-+#include <linux/instruction_pointer.h>
- #include <linux/lockdep_types.h>
- #include <linux/smp.h>
- #include <asm/percpu.h>
--- 
-Cheers,
-Nathan
+Thanks,
+NeilBrown
 
