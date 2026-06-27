@@ -1,79 +1,97 @@
-Return-Path: <linux-nfs+bounces-22867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22868-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XoFABBfNPmrVLwkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22867-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 21:03:51 +0200
+	id 2mKdA5RbP2o8SAkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22868-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jun 2026 07:11:48 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EAE26CFD7C
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 21:03:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD9746D1277
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jun 2026 07:11:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Tw9iWJ3A;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22867-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22867-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=fastmail.org header.s=fm1 header.b=nm9ZQbNf;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="i eqWb76";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22868-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22868-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=fastmail.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BB5D4300A582
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jun 2026 19:03:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EAF9B302B09B
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jun 2026 05:11:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BE93B9DA9;
-	Fri, 26 Jun 2026 19:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 438912F4A14;
+	Sat, 27 Jun 2026 05:11:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A95478F2F;
-	Fri, 26 Jun 2026 19:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F16878F26;
+	Sat, 27 Jun 2026 05:11:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782500614; cv=none; b=JaZbmRDsZ6shVSgxzDlT4v5srXQUQJrCw9Kpuw1E+dYj+nRNr+jxfm93PkO8KmJ9myYHcEkGOjkmWySN8nR+td8LRDWUrGwjJRKgEsufL2adhqQDaSLBzb05FXA6KutV+rsCGcD68ovkDol0HaURJm86AKIWWv67hZbUduyuV3U=
+	t=1782537104; cv=none; b=Pr05YahcNS/AGrcrMfezcwRdPsbAFv3YqM5Eb52762kO/R/6uBujjz/M/OnVsIYocBQzBXBEhRtBMtrTsS7BJ5Fne5caPnOmQW6YjdMhG9RFcnRwHj15Weva7fTbe3T1wUIa7fPhH+4N0qSgWTtoI1aWkDWDwAfMiSl9Ye3V/Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782500614; c=relaxed/simple;
-	bh=xgD+moCIk2s9p64pqwR5V1lvrLbSEMq1BO1aJJ5fuAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qwdr3UcRB5CEugn3LNBtMlbi0qE/Ce9LjL1kL4LQCb7TT6SsuZYTg0uh88H+O1P0KPaXxsHzzlLqlJbjqlSKhN56L+xDa6y8DXxNFQ50ldNxfjrpWAKbLo4Oci3BafhT077nA26lhqrZSHy7Wqud2imqToQeN/2+Fv5XXHyR0mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tw9iWJ3A; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10911F000E9;
-	Fri, 26 Jun 2026 19:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782500612;
-	bh=TyFl9GWmXNLl+QLk0gYGvkiIPobdLVhGYz9j6ia1saU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Tw9iWJ3AW/qVhYN7KGc/ZTiaZzg/3oECz+DiP4VJfyn3QB4fPWwrgNuAJIGNxs+V2
-	 gQMOySYXH+qHCB0JOy7ShmXUDJ864WlfuAmNSW4eC0jw1v5I1DDn/MBUmLRwI+Zmn+
-	 Tvx68PQugVu+ljQ23TFRCcjPeBFQjWYKgQD+yv+Dj0NPAyY7KU1ce1064Yq2UJQHNh
-	 7PCVds29NYJupkBRTBhXtnaGXQquqVp6AN7Xp9L5f6IxL0XEVKpAcZfxaTF8hC29A2
-	 GZgsbwtmAy/ydDOu69TLhC+XE3g2v+Sxjbre9Fp/7W+UikRELgut2FYBWl4v+dv3IH
-	 ZX2QubJjR77jQ==
-Date: Fri, 26 Jun 2026 12:03:25 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Yury Norov <yury.norov@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-rdma@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-nfs@vger.kernel.org, kvm@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v4 2/2] tracing: Remove trace_printk.h from kernel.h
-Message-ID: <20260626190325.GA3913132@ax162>
-References: <20260625104007.041432666@kernel.org>
- <20260625104402.210473477@kernel.org>
- <20260625234158.GA261868@ax162>
- <20260626045119.659d1e6b@fedora>
+	s=arc-20240116; t=1782537104; c=relaxed/simple;
+	bh=/VsB74zwCXVnz/0VFCi/dUI3gIBJbC3fxzQsz0T8RbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iaKtbEyZQMXuuHASTb4leBJuTqAQFd1k9vuttRpIU4NJrUNzMzowCHCtjQUWNIS65e8jslr50Z6pDrf+XXi1D3YuWqAgea/t3WuR+R+6NgNyk/WQNLK+kWrcFtHBLrqvMqx7dGDCkeZO2qtTvg9jFgdz0QMY9eVnuO+dHKU7m/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=nm9ZQbNf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ieqWb76Z; arc=none smtp.client-ip=202.12.124.143
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailflow.stl.internal (Postfix) with ESMTP id 41786130024B;
+	Sat, 27 Jun 2026 01:11:41 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Sat, 27 Jun 2026 01:11:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1782537101; x=1782540701; bh=Yawowe8zx5C7uDvQPKakOCXbHdKhV7R9
+	9P2QeR1rAS8=; b=nm9ZQbNfHNYkv8cdFpySG0htUn3UCNbtS/+tFfURRLH2epJa
+	D8HjhJi2+zQzPPtGTp5nNEMYwskgo9t6QjWspNz9bFEzOJGKndw339qVspvaWXHi
+	l+mH96g+w0VFnrk/jiNulSOqY8tx4OEWBYfqMtQGhBVmMCM+WAgGHiBkRXrbqHfa
+	D1VbAIclGnixLA1v/6S8c4eHEghMxem4SB1dInEVzLcU4BG96MlSKe+fsWXCIFLW
+	bXxVnChg2II4VqLsb98Z5UTXoI5JozlrJGSJlNxNCX4r4iJB4Y109TnZifld51Y/
+	i8fPA+iz7SdXqGV3VYfjGfy91ugfo4Z1KQ2XNg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782537101; x=
+	1782540701; bh=Yawowe8zx5C7uDvQPKakOCXbHdKhV7R99P2QeR1rAS8=; b=i
+	eqWb76Z0YIJk5JqS+Sorj115qkFVnzZkwiEvqjjRMl1AX4+V9Agb9tJliqXVwZ0f
+	ZndsFhvkJ/aqpekwv1SCDyAJqY6QSrrEd1otJfAj0ZYFlCtlC7J4KWG3zLjkXLfU
+	OR3NLClJf/CMfGiBF3IFixmvGtFyKvduUKj9l0x2DTYgSa5loJ6FLePDj/FW4Wbz
+	HwQlx+4NNUY8Lmn3E7v0NPGwrD9Jk00EvLNyH1nAwivKPz0kaTChziS9Nx8Q2ecB
+	jReYP2YwRmFQi2g6+BKsCO4RkyD4YLtLctqej17FHQ4B3JxsnP4kOdS970/FbmDd
+	r91NJ5iPyEWm9JOzX/3Uw==
+X-ME-Sender: <xms:jFs_avHKXgTEIwS8b64GJMLPODF4IKHCf2Tfa3kUtVKbfr048gTTuA>
+    <xme:jFs_alRI2R4TeT1aAvFwTCBGvCud5CcgFqapaCTXObB3tnVpZCWB_wTqPzKTIWB1b
+    -cmdB2NuHbluaSgUBAfmskODSfFRAfjDe_Sj-hpfqigyZzX0nTfuQo>
+X-ME-Received: <xmr:jFs_asuLKDV0IZnHJonUf5NFOsX-Hg0U1Fm_lCcKo61O58dgDRmLO5buFm4>
+X-ME-Proxy-Cause: dmFkZTEEJGas0eal+haqiznubm05y0BHQqqdCWlV5MG4ed30bCnDNmZnYMoGVqATwByXQ6
+    62jw/wpBiAVlhnZdzI8HoTE5bi+hevsp/u9zJ0oU5IglqMHIf8+isdmzspda8CkFRN0L5E
+    RWIIOx+csNFY6hhAFCY1ilJo9VRvWdX7ksW7rcUSTy7enVhf+UqqVtDjkP2AE9NzXuuzPd
+    NYyVzry+AlVHzQyFi7Ion7i/0ez3GQXUe/mfKlbIbvqd6ovxb2QKrh2kSKjpOZ5Vob7ica
+    nVYyrny7nVBo34xbtlnSZUINwmAGdm2SAzfUClMB/O1IBG1k79l2D6swXv+NJBB0SXLNfl
+    1T9Qk/zyIz1rqLoqTyW6afxPNLRwtoXbNv3iFWpvECmWfvCDCtNHnaf8gf9CwHkqCwdTCN
+    ur73CruIY+oA53abIUd4yyljMMzKll6R5R0HvDze0/Ze0MqeIGD3PkJwIaO9dx9mKX9lye
+    c+9BNbWrg4cnT7ZOWcY+bNkhebh5pYjqXSJwL0rcAXK6zBYKttGZJ2Vxjr2zhFtFzKG9Xn
+    2nTm7KTnK4aNBG1WG8IBO/Soinow03DlWUdV+otnK0VxDX/YG82WNeQcsu6Qo6opqSEbmg
+    NpYb0YlP2WVzeffweojx+5ZSd4yHzK3k/Bh1jZNQ5iB9hXhsCGtn07uFQWmw
+X-ME-Proxy: <xmx:jFs_atIocfDxU9qUuiMeMg4i-t6hEubvXDSxixRZjvyBhPcbQTci8Q>
+    <xmx:jFs_ahloNhEcXa_qMI-rbvbCasKi2DUl134z1ZanqEnHqcDS-pNNQw>
+    <xmx:jFs_amI4qr5wtbNR4HoHzqxybSbrjgsIj0A0-do9-dTC-obtGNmatw>
+    <xmx:jFs_au7c73mBp-BAkkO-b7mTWramchj1_rSx8DXrHuxKdDKqV-cqaw>
+    <xmx:jFs_apgmrl4lWEpPjQyoN_N9Ci6b9OXilQnDCWvaJicBN9xuSqSGqtIi>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 27 Jun 2026 01:11:40 -0400 (EDT)
+Date: Sat, 27 Jun 2026 00:11:37 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] SUNRPC: Replace strlcat() with snprintf() in
+ rpc_sockaddr2uaddr()
+Message-ID: <aj9bie25tpHnz7_G@dev>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,113 +100,94 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260626045119.659d1e6b@fedora>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[fastmail.org,none];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_DKIM_ALLOW(-0.20)[fastmail.org:s=fm1,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22867-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:rostedt@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-trace-kernel@vger.kernel.org,m:mhiramat@kernel.org,m:mark.rutland@arm.com,m:mathieu.desnoyers@efficios.com,m:akpm@linux-foundation.org,m:torvalds@linux-foundation.org,m:bigeasy@linutronix.de,m:john.ogness@linutronix.de,m:tglx@kernel.org,m:peterz@infradead.org,m:julia.lawall@inria.fr,m:yury.norov@gmail.com,m:linux-doc@vger.kernel.org,m:linux-kbuild@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:dri-devel@lists.freedesktop.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-arm-kernel@lists.infradead.org,m:linux-rdma@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-ext4@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:kvm@vger.kernel.org,m:intel-gfx@lists.freedesktop.org,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,arm.com,efficios.com,linux-foundation.org,linutronix.de,infradead.org,inria.fr,gmail.com,lists.ozlabs.org,lists.freedesktop.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[nathan@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	SURBL_MULTI_FAIL(0.00)[vger.kernel.org:query timed out];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	DBL_FAIL(0.00)[sin.lore.kernel.org:query timed out];
-	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22868-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nathan@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER(0.00)[icb@fastmail.org,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-hardening@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[fastmail.org:+,messagingengine.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[icb@fastmail.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	BLOCKLISTDE_FAIL(0.00)[100.103.45.18:query timed out];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ax162:mid,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,fastmail.org:dkim,fastmail.org:email,fastmail.org:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8EAE26CFD7C
+X-Rspamd-Queue-Id: DD9746D1277
 
-On Fri, Jun 26, 2026 at 04:51:19AM -0400, Steven Rostedt wrote:
-> On Thu, 25 Jun 2026 16:41:58 -0700
-> Nathan Chancellor <nathan@kernel.org> wrote:
-> 
-> 
-> > The following diff resolves it for me, should I send it as a separate
-> > patch or do you want to just fold it in with a note?
-> > 
-> > diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-> > index 621566345406..2301a701ffbb 100644
-> > --- a/include/linux/lockdep.h
-> > +++ b/include/linux/lockdep.h
-> > @@ -10,6 +10,7 @@
-> >  #ifndef __LINUX_LOCKDEP_H
-> >  #define __LINUX_LOCKDEP_H
-> >  
-> > +#include <linux/instruction_pointer.h>
-> 
-> Ah, so the reason for this breakage is because lockdep was relying on
-> instruction_pointer.h, that just happened to be included in kernel.h
-> via trace_printk.h.
+In preparation for removing the deprecated strlcat() API[1], replace the
+snprintf()/strlcat() pair in rpc_sockaddr2uaddr() with a single snprintf()
+that appends the port suffix directly to the address buffer.
 
-Correct.
+rpc_ntop4() and rpc_ntop6_noscopeid() leave a NUL-terminated presentation
+address in addrbuf; the port is then formatted as ".p1.p2" and appended.
+Writing that suffix at addrbuf + strlen(addrbuf) with snprintf() yields the
+same universal address string as the separate portbuf/strlcat() step it
+replaces, so the intermediate portbuf is no longer needed.
 
-> This is a separate issue, so it should be a separate patch. I'll add it
-> as patch 1 of this series.
+snprintf() returns the length it would have written excluding the NUL, so
+comparing it against the remaining buffer space preserves the existing
+truncation check that returns NULL.
 
-Sounds good, thanks!
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
+---
+ net/sunrpc/addr.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-> Can you send me the config you used. This didn't trigger in my tests.
-
-It is a plain allmodconfig, for example on arm:
-
-  $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- allmodconfig lib/test_context-analysis.o
-  In file included from include/linux/local_lock_internal.h:8,
-                   from include/linux/local_lock.h:5,
-                   from lib/test_context-analysis.c:9:
-  include/linux/local_lock_internal.h: In function 'local_lock_acquire':
-  include/linux/lockdep.h:541:87: error: '_THIS_IP_' undeclared (first use in this function)
-    541 | #define lock_map_acquire(l)                     lock_acquire_exclusive(l, 0, 0, NULL, _THIS_IP_)
-        |                                                                                       ^~~~~~~~~
-  include/linux/lockdep.h:509:88: note: in definition of macro 'lock_acquire_exclusive'
-    509 | #define lock_acquire_exclusive(l, s, t, n, i)           lock_acquire(l, s, t, 0, 1, n, i)
-        |                                                                                        ^
-  include/linux/local_lock_internal.h:46:9: note: in expansion of macro 'lock_map_acquire'
-     46 |         lock_map_acquire(&l->dep_map);
-        |         ^~~~~~~~~~~~~~~~
-  include/linux/lockdep.h:541:87: note: each undeclared identifier is reported only once for each function it appears in
-  ...
-
-I also reproduced it on top of allnoconfig:
-
-  $ cat allno.config
-  CONFIG_CONTEXT_ANALYSIS_TEST=y
-  CONFIG_DEBUG_KERNEL=y
-  CONFIG_DEBUG_LOCK_ALLOC=y
-  CONFIG_EXPERT=y
-  CONFIG_MMU=y
-  CONFIG_RUNTIME_TESTING_MENU=y
-
-  $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KCONFIG_ALLCONFIG=1 clean allnoconfig lib/test_context-analysis.o
-  <same error as above>
-
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 97ff11973c49..c164ea214e6a 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -264,9 +264,9 @@ EXPORT_SYMBOL_GPL(rpc_pton);
+  */
+ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+ {
+-	char portbuf[RPCBIND_MAXUADDRPLEN];
+ 	char addrbuf[RPCBIND_MAXUADDRLEN];
+ 	unsigned short port;
++	size_t len, avail;
+ 
+ 	switch (sap->sa_family) {
+ 	case AF_INET:
+@@ -283,11 +283,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+ 		return NULL;
+ 	}
+ 
+-	if (snprintf(portbuf, sizeof(portbuf),
+-		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
+-		return NULL;
+-
+-	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
++	len = strlen(addrbuf);
++	avail = sizeof(addrbuf) - len;
++	if (snprintf(addrbuf + len, avail, ".%u.%u",
++		     port >> 8, port & 0xff) >= avail)
+ 		return NULL;
+ 
+ 	return kstrdup(addrbuf, gfp_flags);
 -- 
-Cheers,
-Nathan
+2.47.3
+
 
