@@ -1,278 +1,216 @@
-Return-Path: <linux-nfs+bounces-22870-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22871-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CC8jEguPQWqYsAkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22870-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2026 23:15:55 +0200
+	id d/qKOE0aQmoO0QkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22871-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 09:10:05 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85AE86D4F58
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2026 23:15:54 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A0986D6CBB
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 09:10:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=M7tgPV1w;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22870-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22870-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b=BHZdM1h7;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22871-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22871-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=obsidian.systems (policy=none);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 287BD300C008
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Jun 2026 21:15:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 85D6F301F4AD
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 07:00:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D381D9663;
-	Sun, 28 Jun 2026 21:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B068A3A872E;
+	Mon, 29 Jun 2026 06:59:55 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD5C2765D7
-	for <linux-nfs@vger.kernel.org>; Sun, 28 Jun 2026 21:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFA139BFE1;
+	Mon, 29 Jun 2026 06:59:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782681352; cv=none; b=YxKU+VctFEpYZ+GD1JtlBL7yXz13gfllwoBv6eOUBbmwrmS+jv4s/P5OBiOrAuFSotczXHqWoKNVfpg4rz+caCp9isFJQcrJYEE2rsGS6rwO8yoOIT5eLYCOk7f42J7U7M1lBABoBELj1g+DYigoXkuCYBTwtCVOoIZ3m4Zw7qU=
+	t=1782716395; cv=none; b=ccfjqgs3j/bonGQNVrqlO19pb2u4KUMl1gMliD9BhvCZ19TAhAB1fJ/pnWKObqM1rQ4Jii6/KHhYej8MnX9X8o+ic5ddHErpWNh27+MOC7TmLFgi1QrKFs4MAT8Yixx3sSOW7tJfqNq7bYpCfDLNBSQvERlQ5n5nXO0wrlBccw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782681352; c=relaxed/simple;
-	bh=bbbnl1Sz5UQM0naLMufHkE7oMuJxy/AQI0I0uOo9lS0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WY+hjOY0oTWVZGsFIT0tjdh824J428ZeOjoK1dSBgbe7yDpO3naUlK8NCvLnvWcNVn1toAaibwS0xW42jFjcVYbaY4DfMc8EwJk5VnWHtdEoVDL0sFui3k0h4G4AIHXU5yXHKh8/uw7ZW+XSM1rofH0MYVEqEiOVg/7oqSmA4eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7tgPV1w; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A4E1F000E9;
-	Sun, 28 Jun 2026 21:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782681351;
-	bh=0Pg4dQLWEEQfrjoWunyFdRMfGWUIsC0VT+M4MKBkTus=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=M7tgPV1wTfcEAorwoNX/z7g6HejacCtZCFU1Uah6yYQ6ujOKwgmeBuUeNDKovA9ll
-	 sbD32QA8wjRWve4yGfmAKTNX0CFqMdE4aXhwUhJLNxBDfdxpCzJsI6CsTrD4aKnRb+
-	 iPy08Bg/fJ4G5X7KetPkpjnKJhm5JKK3o7HwfqmsTSAe/O22YfCkPWyZgnO2WzVU6w
-	 IK+50Rt+b8G/KIBp927qCe8F7PkES+I8Mk9wqXAKKdHj/VPkrAR28q956Eguy8Vrku
-	 odNSRDwtkIdrBXifkzGf7guWHwDI5EK0b9N0teETW1SEeiSD337ebFNuEUkJl5wH/G
-	 KxyEw6e1XUk7A==
-Message-ID: <fb81ad5a850160daab7092a8289bc626862f6072.camel@kernel.org>
-Subject: Re: [PATCH] [RFC] nfs4: inject process namespace into COMPOUND tag
-From: Trond Myklebust <trondmy@kernel.org>
-To: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>, chuck.lever@oracle.com, 
-	jlayton@kernel.org, anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Date: Sun, 28 Jun 2026 17:15:42 -0400
-In-Reply-To: <20260626151029.1516839-1-tigran.mkrtchyan@desy.de>
-References: <20260626151029.1516839-1-tigran.mkrtchyan@desy.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
+	s=arc-20240116; t=1782716395; c=relaxed/simple;
+	bh=tYsHBzQ2vOQXcrOetqIt8QTpdhuvILhgntCm0fGFWQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=knU9Qx08w9+Q9E6I9yhXvK+PWXsjfIdffeHoLG8HsrJEaNaSEGZC8b4p8q8vgAyuNF4ALLziAA8bE0C/vRByEx6f1UV05p6x7vUEo6pTC45ktzq2h8jby3osMBbDmgAw7aGVuSXLgBgQ86t9OVuVO/8uL61/nGNblQqR2fxyQyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=Obsidian.Systems; spf=fail smtp.mailfrom=Obsidian.Systems; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BHZdM1h7; arc=none smtp.client-ip=103.168.172.142
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.phl.internal (Postfix) with ESMTP id 6597A1380199;
+	Mon, 29 Jun 2026 02:59:53 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Mon, 29 Jun 2026 02:59:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1782716393; x=1782723593; bh=yKchnWIun08ZH/dza01bJYYLCZ3CGuAhcKX
+	8fKBHQq8=; b=BHZdM1h7EBPAVqQBkpLLAi88Pyo+X2kqC/LnqsFSTk3glr2jqWg
+	GqIkvvSznKPZoOrGWEmpsPD+Qbgg5lsnCbHKVk3q2FhKFRtzjZdGOo2JU8dyGG7y
+	66JRkl6NBPsLCWuIvGesQYahTV/B+0qhYsm1v/seClIaXdV1+o8A0yp9yThUC1CB
+	LBy31wo6FfVKma1jxxFqYgs+mUwp71WtsshK8nRB+VbqSkVpYbOhRReK9L+IfoZX
+	TNkdJuxdIksn2I8zoYarC1OzwqSJ1FIt6DF7kG9baR7tBV2bB/TcZPqyUHbf33vq
+	iEu/PGySY+4QnMgzKzsrWUEuQhmDuIs9h6A==
+X-ME-Sender: <xms:5xdCagzsFueOF7noMHyCTf4kiChlI-8KLFnZC9PCmfZxogdqmoa4CA>
+    <xme:5xdCam6I2pNTfoa1gUQDRC714pNU_7quuJ37nYBcVDyZDE2KYrazFpoRn363dX9ZO
+    I7W5g7nyAzNub6VC9LtPSlAeYmemmNJu5O99F0f-NjXX3dlceQOcnw>
+X-ME-Received: <xmr:5xdCah2ZIM5rY3dhehEJP-78RbE591i5ZZA2tfQwjYBiWGQrk5xCX8L7vZLz8isWFXvgwz5lfdKqYM8WlfSNOhA7hF6sHSZAd7ofmw>
+X-ME-Proxy-Cause: dmFkZTG1MzZNIK/9LeMFIaDGsEfvFNo5AvCYGQDHW+g20Nu9ip4TV3nJ7p59RrHd/M78Hu
+    Tp0tmf0jRIUShBiZMlJYf1knZYI21dsvCzMUUkvMby4qr5+GyT4SrKsaT7Au0nty91uRZo
+    +0N0Od7YjXaw1Ge3foZofxXn5LVncJbLeoxaqP6M9RQsfpyke9fd6wdzqtzyygbsVzCNgU
+    FkqSO5gWpGFZ7zkIBEZzol7+2F8f+lnnSm9E96SpcfsZYHrEYIyBWXWrKffH727ICfhi2e
+    exm19riPEN6Sq4uUFYYA1BHaHccnvLVIZOT3aoVUoQcDZ6zCfm+1C1D29P9b6OkzVl1mKx
+    YtGDyDyBMsqn9DlqQS8o3FOKpSed+ky+G+N4VqSlWkdCKSn7ol/cAUydRn1SbmgZFXVv5/
+    xlRyu0nIKJ32bblV4W80J0qrB8mcIx06ZsaFginCPIop4dl+rhV7faHKHCDm3WzMk5YzBo
+    RH1tZXKRWd4E0jMvz49bY80paH9WkV0dmV8eN8JoDFPg0RYii2W0p16wd4iMIXWgiQprfG
+    fVBVqHQqQTMwJ0mDpewZC07EFG/WTVjZ+ePCpSdDlMGTSW29EFmL7zg1bTOmeJGF4Rlr6Z
+    TbCY7jI7h9ay+yJPKsC3e0NctMPkxhPnstNr4surhjdc58oitBvM6OV6JoBA
+X-ME-Proxy: <xmx:5xdCav0yswmb9mhUmQWj5jG9tuFFQYt73H1Lz3jW2Saujb7zHcvqyw>
+    <xmx:5xdCagcqymsI4lnM6qRbvXTbr7ToZMTVfj96h_q5ut7osQczYFcB4w>
+    <xmx:5xdCapIw3VAmdhYyGINTcxjJeqsP-6WE3TMeB6qaca7RwJckj2eYsg>
+    <xmx:5xdCan-FKRbHRVqantc7u6i9lippIRP9-wb4cZgkoE1NWL8cXf0LSg>
+    <xmx:6RdCal7ITYN3Qzl8b69T3cgnmcXrTimMkfzW3JrfsPjg8ll8zdVpofwL>
+Feedback-ID: i91b946ab:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Jun 2026 02:59:51 -0400 (EDT)
+From: John Ericson <John.Ericson@Obsidian.Systems>
+To: "Andy Lutomirski" <luto@kernel.org>,	"Al Viro" <viro@zeniv.linux.org.uk>,
+	"Christian Brauner" <brauner@kernel.org>,	"Jan Kara" <jack@suse.cz>,
+	"David Howells" <dhowells@redhat.com>,	"Chuck Lever" <cel@kernel.org>,
+	"Jeff Layton" <jlayton@kernel.org>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	"David Laight" <david.laight.linux@gmail.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,	"Li Chen" <me@linux.beauty>,
+	"Cong Wang" <cwang@multikernel.io>,	"Arnd Bergmann" <arnd@arndb.de>,
+	"Thomas Gleixner" <tglx@kernel.org>,	"Ingo Molnar" <mingo@redhat.com>,
+	"Borislav Petkov" <bp@alien8.de>,
+	"Dave Hansen" <dave.hansen@linux.intel.com>,
+	"Jonathan Corbet" <corbet@lwn.net>,	"Kees Cook" <kees@kernel.org>,
+	"Sergei Zimmerman" <sergei@zimmerman.foo>,
+	"Farid Zakaria" <farid.m.zakaria@gmail.com>,
+	linux-arch <linux-arch@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	linux-api <linux-api@vger.kernel.org>,	netfs <netfs@lists.linux.dev>,
+	linux-nfs <linux-nfs@vger.kernel.org>
+Cc: John Ericson <mail@JohnEricson.me>
+Subject: [RFC PATCH 0/3] fs: support tasks with a null root or cwd
+Date: Mon, 29 Jun 2026 02:58:19 -0400
+Message-ID: <20260629065934.1425479-1-John.Ericson@Obsidian.Systems>
+X-Mailer: git-send-email 2.51.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [1.44 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[messagingengine.com:s=fm1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[obsidian.systems : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tigran.mkrtchyan@desy.de,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22870-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22871-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,redhat.com,linuxfoundation.org,gmail.com,zytor.com,linux.beauty,multikernel.io,arndb.de,alien8.de,linux.intel.com,lwn.net,zimmerman.foo,vger.kernel.org,lists.linux.dev];
+	FORGED_RECIPIENTS(0.00)[m:luto@kernel.org,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:dhowells@redhat.com,m:cel@kernel.org,m:jlayton@kernel.org,m:skhan@linuxfoundation.org,m:david.laight.linux@gmail.com,m:hpa@zytor.com,m:me@linux.beauty,m:cwang@multikernel.io,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:corbet@lwn.net,m:kees@kernel.org,m:sergei@zimmerman.foo,m:farid.m.zakaria@gmail.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-api@vger.kernel.org,m:netfs@lists.linux.dev,m:linux-nfs@vger.kernel.org,m:mail@JohnEricson.me,m:davidlaightlinux@gmail.com,m:faridmzakaria@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[John.Ericson@Obsidian.Systems,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[John.Ericson@Obsidian.Systems,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:email]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,Obsidian.Systems:mid,Obsidian.Systems:from_mime,johnericson.me:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 85AE86D4F58
+X-Rspamd-Queue-Id: 6A0986D6CBB
 
-On Fri, 2026-06-26 at 17:10 +0200, Tigran Mkrtchyan wrote:
-> On large shared machines often multiple jobs of a same user run in
-> parallel. For debugging, it's usually impossible to identify requests
-> coming from different processes.
->=20
-> The batch systems like HTCondor or SLURM start every job in it's own
-> namespace, thus passing namespace info to the server will help by
-> debugging.
->=20
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 260 V4 Call GETATTR FH:
-> 0xd5ffb2cb
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 324 V4 Reply (Call In 89)
-> GETATTR
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 260 V4 Call GETATTR FH:
-> 0xd0b0a44e
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 324 V4 Reply (Call In 95)
-> GETATTR
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 268 V4 Call ACCESS FH:
-> 0xd0b0a44e, [Check: RD LU MD XT DL XAR XAW XAL]
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 240 V4 Reply (Call In 101)
-> ACCESS, [Allowed: RD LU MD XT DL XAR XAW XAL]
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 284 V4 Call READDIR FH:
-> 0xd0b0a44e
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 664 V4 Reply (Call In 105)
-> READDIR
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 284 V4 Call ns:4026532507
-> GETATTR FH: 0xd67b66a5
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 340 V4 Reply (Call In 111)
-> ns:4026532507 GETATTR
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 292 V4 Call ns:4026532507 AC=
-CESS
-> FH: 0xd67b66a5, [Check: RD LU MD XT DL XAR XAW XAL]
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 256 V4 Reply (Call In 117)
-> ns:4026532507 ACCESS, [Access Denied: MD XT DL XAW], [Allowed: RD LU
-> XAR XAL]
-> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 308 V4 Call ns:4026532507
-> READDIR FH: 0xd67b66a5
-> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 200 V4 Reply (Call In 121)
-> ns:4026532507 READDIR
->=20
-> Suggested-by: Chuck Lever <chuck.lever@oracle.com>
-> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-> ---
-> =C2=A0fs/nfs/nfs4xdr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 24 +++++++++++++++++++-----
-> =C2=A0include/linux/sunrpc/sched.h |=C2=A0 2 ++
-> =C2=A0net/sunrpc/sched.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 6 ++++++
-> =C2=A03 files changed, 27 insertions(+), 5 deletions(-)
->=20
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index c23c2eee1b5c..9c035c74a3b5 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -46,6 +46,7 @@
-> =C2=A0#include <linux/kdev_t.h>
-> =C2=A0#include <linux/module.h>
-> =C2=A0#include <linux/utsname.h>
-> +#include <linux/pid_namespace.h>
-> =C2=A0#include <linux/sunrpc/clnt.h>
-> =C2=A0#include <linux/sunrpc/msg_prot.h>
-> =C2=A0#include <linux/sunrpc/gss_api.h>
-> @@ -71,12 +72,8 @@ static void encode_layoutget(struct xdr_stream
-> *xdr,
-> =C2=A0static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst
-> *req,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0 struct nfs4_layoutget_res *res);
-> =C2=A0
-> -/* NFSv4 COMPOUND tags are only wanted for debugging purposes */
-> -#ifdef DEBUG
-> +/* Enable compound tags to include namespace information */
-> =C2=A0#define NFS4_MAXTAGLEN		20
-> -#else
-> -#define NFS4_MAXTAGLEN		0
-> -#endif
-> =C2=A0
-> =C2=A0/* lock,open owner id:
-> =C2=A0 * we currently use size 2 (u64) out of (NFS4_OPAQUE_LIMIT=C2=A0 >>=
- 2)
-> @@ -1034,6 +1031,23 @@ static void encode_compound_hdr(struct
-> xdr_stream *xdr,
-> =C2=A0{
-> =C2=A0	__be32 *p;
-> =C2=A0
-> +	/* Inject namespace info into compound tag if not already
-> set */
-> +	if (hdr->taglen =3D=3D 0 && req->rq_task !=3D NULL) {
-> +		/* Use namespace info captured at task creation time
-> */
-> +		struct rpc_task *task =3D req->rq_task;
-> +
-> +		if (taks->tk_ns_inum !=3D 0) {
+From: John Ericson <mail@JohnEricson.me>
 
-Hmm.... This has not been compile tested.
+This patch series allows processes to avoid having a root directory
+and/or a working directory. The actual implementation is in the second
+patch. The first patch just prepares some documentation. (Are struct
+fields documented like this? Would this be good regardless?) And the
+third patch adds unit tests.
 
-> +			char ns_tag[NFS4_MAXTAGLEN + 1];
-> +
-> +			hdr->taglen =3D snprintf(ns_tag,
-> sizeof(ns_tag), "ns:%u", taks->tk_ns_inum);
-> +			if (hdr->taglen > NFS4_MAXTAGLEN) {
-> +				hdr->taglen =3D NFS4_MAXTAGLEN;
-> +				ns_tag[NFS4_MAXTAGLEN] =3D '\0';
-> +			}
-> +			hdr->tag =3D ns_tag;
+I have tested these patches by `kunit.py run`-ing my new test suite.
 
-ns_tag is only scoped to this block. I suggest that instead of
-assigning to hdr->taglen and hdr->tag, you just do the assignment to
-hdr->replen + call to encode_string() here, so you don't have to assign
-a scope limited buffer to an externally visible struct.
+The motivation is discussed at length in the thread starting with [1].
+This patch would be the first in a series trying to allow for
+less-privileged and more cheaply less-privileged processes than we have
+today, by nulling out their namespace fields (or similar) so they do not
+belong to any namespaces. This specific change is a prelude (in spirit,
+it might actually be orthogonal in practice) to nulling out the mount
+namespace, so that the process does not "belong" to any mount namespace.
 
-Note also that there is no need to NUL terminate ns_tag[] when hdr-
->taglen > NFS4_MAXTAGLEN, since encode_string() does not require a nul
-terminated string. In addition, snprintf() always guarantees that the
-string is nul terminated, even when truncated by the buffer size :-).
+Nothing creates such a task yet; the new UAPIs that would take advantage
+of this feature are left as future work. It may not be appropriate to
+submit such a "dead-code" patch, but I wanted to demonstrate just how
+easy this change is (along with at least a unit test to exercise it),
+before getting into UAPI designs.
 
-> +		}
-> +	}
-> +
-> =C2=A0	/* initialize running count of expected bytes in reply.
-> =C2=A0	 * NOTE: the replied tag SHOULD be the same is the one sent,
-> =C2=A0	 * but this is not required as a MUST for the server to do
-> so. */
-> diff --git a/include/linux/sunrpc/sched.h
-> b/include/linux/sunrpc/sched.h
-> index 0dbdf3722537..d376b52a72a1 100644
-> --- a/include/linux/sunrpc/sched.h
-> +++ b/include/linux/sunrpc/sched.h
-> @@ -92,6 +92,8 @@ struct rpc_task {
-> =C2=A0
-> =C2=A0	pid_t			tk_owner;	/* Process id for
-> batching tasks */
-> =C2=A0
-> +	unsigned int		tk_ns_inum;	/* PID namespace
-> inum for namespace tracking */
-> +
-> =C2=A0	int			tk_rpc_status;	/* Result of last
-> RPC operation */
-> =C2=A0	unsigned short		tk_flags;	/* misc flags */
-> =C2=A0	unsigned short		tk_timeouts;	/* maj timeouts */
-> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> index 016f16ca5779..4e8e7fa849d5 100644
-> --- a/net/sunrpc/sched.c
-> +++ b/net/sunrpc/sched.c
-> @@ -21,6 +21,7 @@
-> =C2=A0#include <linux/mutex.h>
-> =C2=A0#include <linux/freezer.h>
-> =C2=A0#include <linux/sched/mm.h>
-> +#include <linux/pid_namespace.h>
-> =C2=A0
-> =C2=A0#include <linux/sunrpc/clnt.h>
-> =C2=A0#include <linux/sunrpc/metrics.h>
-> @@ -1110,6 +1111,11 @@ static void rpc_init_task(struct rpc_task
-> *task, const struct rpc_task_setup *ta
-> =C2=A0	task->tk_priority =3D task_setup_data->priority -
-> RPC_PRIORITY_LOW;
-> =C2=A0	task->tk_owner =3D current->tgid;
-> =C2=A0
-> +	struct pid_namespace *pid_ns =3D task_active_pid_ns(current);
-> +	/* Keep track on namespace id */
-> +	if (pid_ns !=3D &init_pid_ns)
-> +		task->tk_ns_inum =3D pid_ns->ns.inum;
+The marquee new UAPI around this would, I hope, be the new non-fork-exec
+process spawning API Li Chen started in [2]. The idea would be that,
+instead of doing process initialization in the child post-fork, it is
+done from the parent, against (my terminology) an "embryonic" (not yet
+runnable; withheld from the schedule) process. These null fields
+(`struct path` to directories in this patch, pointers to namespaces in
+the latter patches to be written) allow for lightweight and minimally
+privileged initial embryonic processes, allowing for good performance
+(don't preemptively allocate things the caller may not want) and abiding
+by the "principle of least privilege" (initialization should always
+grant, not take away, privileges and resources from the embryonic
+process).
 
-For buffered writes, this will tell you the pid namespace of the
-process that is flushing the data, not that of the process that wrote
-the data into the page cache. Is that what you expected?
+So far in the linked discussion, the alternative that best addresses my
+motivation is using the new "nullfs" for the root directory and cwd.
+Practically, that is almost as good -- reading and statting the
+directory will work, but it will reliably be and remain empty regardless
+of how privileged the caller is. The downside is simply that we would
+like those operations also to fail, to more readily signal to developers
+and users (human or agent, for that matter) that the working directory
+and root directory should be avoided, and paths should instead always be
+paired with a file descriptor and used with `*at` or other modern UAPIs.
 
-> +
-> =C2=A0	/* Initialize workqueue for async tasks */
-> =C2=A0	task->tk_workqueue =3D task_setup_data->workqueue;
-> =C2=A0
+[1]: https://lore.kernel.org/all/a49ce818-f38d-41b0-bbf7-80b8aad998b1@app.fastmail.com/
 
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trondmy@kernel.org, trond.myklebust@hammerspace.com
+[2]: https://lore.kernel.org/all/20260528095235.2491226-1-me@linux.beauty/
+
+John Ericson (3):
+  fs: Add documentation to some `struct fs_struct` fields
+  fs: support tasks with a null root or cwd
+  fs: add KUnit tests for tasks with a null root or cwd
+
+ fs/Kconfig                     |  11 +++
+ fs/cachefiles/daemon.c         |   6 +-
+ fs/d_path.c                    |   6 +-
+ fs/fhandle.c                   |   3 +
+ fs/fs_struct.c                 |   4 +
+ fs/namei.c                     |  22 ++++-
+ fs/proc/base.c                 |   8 +-
+ fs/tests/null_root_cwd_kunit.c | 147 +++++++++++++++++++++++++++++++++
+ include/linux/fs_struct.h      |  29 ++++++-
+ 9 files changed, 228 insertions(+), 8 deletions(-)
+ create mode 100644 fs/tests/null_root_cwd_kunit.c
+
+-- 
+2.51.2
+
 
