@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-22879-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22880-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rgY8C0CwQmr4/gkAu9opvQ
-	(envelope-from <linux-nfs+bounces-22879-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 19:49:52 +0200
+	id K4jdJmqwQmoJ/wkAu9opvQ
+	(envelope-from <linux-nfs+bounces-22880-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 19:50:34 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87CD46DDE17
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 19:49:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 146186DDE20
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 19:50:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LZq3yRBh;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22879-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22879-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=gbiTKj6M;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22880-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22880-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A94B0302F3BA
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 17:48:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 157313062631
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jun 2026 17:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D105B3806B5;
-	Mon, 29 Jun 2026 17:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C1D937FF7B;
+	Mon, 29 Jun 2026 17:48:28 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF17E792;
-	Mon, 29 Jun 2026 17:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4771380FC0;
+	Mon, 29 Jun 2026 17:48:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782755306; cv=none; b=el7elCdrfL7CzdJLrNohqkr1VP00rBxEfessfnAP33qKTQqWUSngjToheAMBOhfDFWjGutm5yFqeab8EDmHYn5r0RD2BAkSV4GVNIdFzYjIruTM1ZlH1lwhLQ5MY6GUthK7EeonAOzCnrOq3UTwFSRXlKREdqciPVox7er5egS8=
+	t=1782755308; cv=none; b=QGSZqLiwtiuudSYEFL65s0/fKNmDdrA2AeRpumCxJw0XmJyzeNR/DONEjHXMd0i/NPLETA2JAH0TRdqt1d75p9B/BFQ0bcQiZCurjPjb/1yeXX+hC0BmIMj9G68eXc+c6TeLSNl86EN8U7GVdQHHnc3YH8zFd2o42J2Pee6BFD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782755306; c=relaxed/simple;
-	bh=mDDQQFYiSv11Qo1XF/EgiJgTEdlvx/mVT1MBEhwz92I=;
+	s=arc-20240116; t=1782755308; c=relaxed/simple;
+	bh=luuB7eUiT8XZ9hl6KugP8lgqueJwn4O7ZezxEAo5C5Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ug2KfcXaKbQbhFhXy7nGupO+eKqz4eW4iImsfunXUkK2aGFJ7+SOTNRWooQ/2CW0cgsxFU4Y3BZhhaXqKo1oxdblDfSwjgV6Quw+YnWs6Ms1XhNRC7mf6gVzlu1S9LRqflVOX419anYcZxB43B0hgVXhuSsnGGEk5kxRChbmqeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZq3yRBh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B618B1F00A3F;
-	Mon, 29 Jun 2026 17:48:24 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=PH79ZENbK3KSim63vDmrmZiXL00Pzc6sfDOL3F2rcmQTdGPbqxi59whoWsVuUMQ9A+opzP1ifckvpWdeoJUWwuyX6ePrvIs6nfmTEeWc0tnzL90JazYRNuNMFcWJK4VHhmmlT3RNxOGGLLV+ZZGe68lwHxyzHW4ZAIUaEJ4b1N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbiTKj6M; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE4671F00A3D;
+	Mon, 29 Jun 2026 17:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782755305;
-	bh=ulF3Qt5D45+POJ71NlJ2SkChEKGLmNvr8KisLQGGIoY=;
+	s=k20260515; t=1782755306;
+	bh=pHAubyCqWIr000IfzYdL9HQ95n95yh5msZ6rNQFxPqc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=LZq3yRBhXqTMD8bHBGf+n6DMfmaYk/DE/l/Zjbvk9R1e9MwIVeFRB91BjRRPTGe2e
-	 9cLQLfNvquFGCDR2mOJqXNPvabeZdXh4OwqVEcK0HW63ufEexSa/6ecAXt01sh37Mg
-	 4X4oLj8J0MxABXhEH3tPwE89ODe9C3Y0DDonCxGIAlyCZAywoOb+RWFVpkBNzlq4cK
-	 vimF8hJcV4VooX/fHBm/FxG94ZG0QUrWpTjd5F0AsLJxxyA0LTGh946za6oq8Ksnmp
-	 bF4ZELOHDoOS5lC3IDwXj/LdsCRXhfEUMfpvPh5SedLF0B+qrnJwizuhaxbbfkatXZ
-	 GoXNgmxPWnWGw==
+	b=gbiTKj6MzqfZ9s46q1+YPZzWwXFr6ZBhsDe4uUId/zcQMTUz3raqzIRYwkJL0XXMy
+	 tS5BkTUo4LFUECCbRJlvw3W6AGvKHdffzlpK7R8TicwkOaqtGeAI96Bvlyb50M7BIG
+	 mI+8ZcsZjz9vKWjqwukYI6kjkrlTpwK6QEsgcANWcRA47SdIHk8e731aCry569ex7i
+	 xVl8aLrVhDmZ6rKuQIRWqgPpI1s0pLElKuN77buHvUp5KVnLDFCJrTtkA+q6GgnOhf
+	 ETnh2SjZy98J8R3lJoprJ9OsmQCTu3wWDfsvbHEbLtBFvmFMH2xnrNZBfwCt85dHan
+	 2L9544EUixjvw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 29 Jun 2026 13:48:05 -0400
-Subject: [PATCH v3 1/4] sunrpc: route to a populated pool in
- svc_pool_for_cpu()
+Date: Mon, 29 Jun 2026 13:48:06 -0400
+Subject: [PATCH v3 2/4] sunrpc: hardcode pool_mode to pernode, remove other
+ modes
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260629-sunrpc-pool-mode-v3-1-d92676606dfd@kernel.org>
+Message-Id: <20260629-sunrpc-pool-mode-v3-2-d92676606dfd@kernel.org>
 References: <20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org>
 In-Reply-To: <20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -68,20 +68,20 @@ To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2803; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=mDDQQFYiSv11Qo1XF/EgiJgTEdlvx/mVT1MBEhwz92I=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqQq/mZwBDl87wDYDKSmO+U/8dIVx3yw7neIzsd
- 4vdSZbsg1SJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCakKv5gAKCRAADmhBGVaC
- FXPFEACR2fGfHCyoFdTH77O5RAZGfXq5ZOMYgYs1QLgXs5HVpFELvQyKJ2GskgEOIJHtGfaPrE+
- 6xgN5SZoacdF/PIod5u69ek4oG5feqYQVJy1n1BlwPAF9ZtyVxlgBBG0d0IUw/qMyKO/qqo0Oco
- GnHsCspznS25fCJGp0W+LqVW5QvN68gOh+VbS3ZaHUMMAmKBMTpPX6aX9swpPcYTn+lXTuCv4VH
- ROtDHfhy3vWYD++Uih/RdRj3csTB6Dww4/iFzT95H+qyxnyaoYvD/d/Er5g1eQ46qsX3IBzIGpK
- xuMyj9am6SOYMloPM5I9Uwp+GzFo1un/j3twmH2iIUb7Wt2IxAQqX+QmkYSrJVaamSJTrLDaWtb
- htrDpQ65KLYYq/zL2I+DPOdVDs4o58QJ588vx9MJzRkvgb6TVjvf2LdYuDPM4EbVcnWLs9B3P7/
- SHxhQpXpotFA/0Lyvb7xMGYwJxx4FazVk40XhUsbpSmQZRd9f+7pNGTxbY+c9I+8kuPb+UHdZnT
- hAoc3KUwGCrSrinY5A4TjobB4L8jGkf0ABb16zGXqKmUqzERcscoYkyUo3+Wd85j49UXKC8fR1/
- DDtM0/fKfZcdFFz9gJEKAxdEepjEwUWMrNMgsQv5ZVHDdpwwAyBq1F/xe8qE6GzjKjbJ2LvRVD1
- jj+rwjoi4G1Wg/g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13644; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=luuB7eUiT8XZ9hl6KugP8lgqueJwn4O7ZezxEAo5C5Y=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqQq/mPsG5/MTy1XtO1HLvE4DK61zEyiaBHCNue
+ YZjGrxE4T2JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCakKv5gAKCRAADmhBGVaC
+ FdWvD/9rOTfxuKztnYwXx1cRnJcPCkdXLRyXlMSrznKOWh9OisnX/F/nKmiKEbpJGyZX1oUUPY0
+ aHu5Rz4gBRZI5VwXjqlD7l5m6HHXUWEUIks8KuJvuSorCbGuL7ugwBQpKtFvESHk7rkWDMey2Ly
+ nMU4NM7sWy210rJPoLCoytsLj2BvnSt9/DSKummWUv/UcKSTYCwNi2q2n1H04AZ8usYH2+RU9Ua
+ /ZqdUtgsS7h9HeU+8l6MH0Yhn5glBDKyXc3Q1elw8TVw8E24tEFNCQVMrbpn+2fsEAZWSqHR1S5
+ ThfLheFV9TEzJheiexIWn00L+jVsLyXyURqODpT22OvfnhQfJsGK289J/R51o3W+DWfCy87H2GS
+ 8NFXfqStSNBAO/ssuRnNdSeFB4qlxJpD/1BkXgh9gIB7YE6Zjcp0V/1lUDj6UPi5XAD/v+LCnrO
+ zqtUJ853MslM+U0bQ+fveIdf7WZpRvJFdi/EyZz3tunqe9Cas3XPQ5iJWVh67+mWd4DNhM3X53e
+ KE4lQtwHVcL2tSEKaZVhMwRllJIHkARcnk8tDD6invSGn1y0WQt7wdkj6UZL4uNo4BS+kRIKGdO
+ E6A3N8C9o0QzmBPyGimoG7gxbuv/R10INR7YJXdlj5k5J6UlPs++52rceZrLLJBudbsH+Kh5Qyh
+ C/VTrBPswwWsNUQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -95,12 +95,12 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22879-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22880-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -118,77 +118,448 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 87CD46DDE17
+X-Rspamd-Queue-Id: 146186DDE20
 
-svc_set_num_threads() spreads the requested threads evenly across the
-service's pools (base = nrservs / sv_nrpools).  When a service runs
-fewer threads than it has pools -- e.g. an nfsd configured with fewer
-threads than the host has NUMA nodes while running in "pernode" or
-"percpu" mode -- the trailing pools are left with no threads at all.
+The SVC_POOL_AUTO/GLOBAL/PERCPU/PERNODE pool mode selection machinery
+was added when NUMA was new and the right default was unclear.  The
+default has always been "global" (a single pool for the whole service);
+the other modes were only used when an admin explicitly set the
+pool_mode parameter or asked for "auto", which then picked a mode from
+the host topology.  Today, pernode is the right choice everywhere:
 
-svc_xprt_enqueue() selects a pool from the CPU servicing the transport,
-queues the transport on that pool's sp_xprts, and only wakes a thread
-from the same pool.  Each thread services exclusively its own pool, so a
-transport that lands on a threadless pool is enqueued on sp_xprts and
-never picked up: the connection hangs indefinitely.
+- On multi-NUMA hosts, it gives one pool per node with proper thread
+  affinity and NUMA-local memory allocation.
+- On single-node hosts, pernode degenerates to exactly one pool,
+  identical to the old "global" mode -- svc_pool_for_cpu() short-
+  circuits when sv_nrpools <= 1, no CPU affinity is set, and memory
+  is allocated from the single node.
 
-Have svc_pool_for_cpu() skip pools that currently have no threads,
-falling back to the next populated pool.  This trades NUMA locality for
-a guarantee that the work is actually serviced.  sp_nrthreads is only
-updated under the service mutex; the lockless read here is a best-effort
-routing hint, so annotate it with data_race().
+The percpu mode (one pool per CPU) created excessive pools relative to
+the number of threads most deployments run, and was only auto-selected
+in a narrow case (single node, >2 CPUs).
 
-Fixes: 0f0257eaa5d2 ("svc: Move the xprt independent code to the svc_xprt.c file")
+Note that this changes the default behaviour on multi-NUMA hosts: a
+service that previously ran with a single global pool now gets one pool
+per NUMA node by default.  This in turn means a host running fewer
+threads than it has NUMA nodes can end up with pools that have no
+threads.  svc_pool_for_cpu() already falls back to a populated pool in
+that case, so transports are still serviced.
+
+Remove the SVC_POOL_* enum, mode selection heuristic,
+svc_pool_map_init_percpu(), and all mode-based switch statements.
+Simplify pool map functions to always use the pernode path.  If pool
+map allocation fails, svc_pool_map_get() now returns 0 and service
+creation fails, rather than silently falling back to a single global
+pool.
+
+The module parameter and netlink interfaces are preserved for backward
+compatibility:
+- Writing any previously-accepted value succeeds silently
+- Reading always returns "pernode"
+- Writing to the module parameter emits a deprecation notice
+
+Update Documentation/admin-guide/kernel-parameters.txt to mark the
+pool_mode parameter deprecated and describe the new behaviour.
+
+Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/svc.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |  20 +-
+ net/sunrpc/svc.c                                | 244 ++++--------------------
+ 2 files changed, 49 insertions(+), 215 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index b5493a7f8f22..441b78867478 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -7441,19 +7441,13 @@ Kernel parameters
+ 
+ 	sunrpc.pool_mode=
+ 			[NFS]
+-			Control how the NFS server code allocates CPUs to
+-			service thread pools.  Depending on how many NICs
+-			you have and where their interrupts are bound, this
+-			option will affect which CPUs will do NFS serving.
+-			Note: this parameter cannot be changed while the
+-			NFS server is running.
+-
+-			auto	    the server chooses an appropriate mode
+-				    automatically using heuristics
+-			global	    a single global pool contains all CPUs
+-			percpu	    one pool for each CPU
+-			pernode	    one pool for each NUMA node (equivalent
+-				    to global on non-NUMA machines)
++			Deprecated.  The NFS server now always uses one
++			service thread pool per NUMA node (equivalent to a
++			single global pool on non-NUMA machines).  All of
++			the previously accepted values (auto, global,
++			percpu, pernode) are still accepted for backward
++			compatibility but are ignored: the mode is always
++			pernode, and reads always return "pernode".
+ 
+ 	sunrpc.tcp_slot_table_entries=
+ 	sunrpc.udp_slot_table_entries=
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index dd80a2eaaa74..82fb7faf563f 100644
+index 82fb7faf563f..2f6938fe28b2 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -402,6 +402,7 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
+@@ -38,19 +38,6 @@
+ 
+ static void svc_unregister(const struct svc_serv *serv, struct net *net);
+ 
+-#define SVC_POOL_DEFAULT	SVC_POOL_GLOBAL
+-
+-/*
+- * Mode for mapping cpus to pools.
+- */
+-enum {
+-	SVC_POOL_AUTO = -1,	/* choose one of the others */
+-	SVC_POOL_GLOBAL,	/* no mapping, just a single global pool
+-				 * (legacy & UP mode) */
+-	SVC_POOL_PERCPU,	/* one pool per cpu */
+-	SVC_POOL_PERNODE	/* one pool per numa node */
+-};
+-
+ /*
+  * Structure for mapping cpus to pools and vice versa.
+  * Setup once during sunrpc initialisation.
+@@ -58,62 +45,29 @@ enum {
+ 
+ struct svc_pool_map {
+ 	int count;			/* How many svc_servs use us */
+-	int mode;			/* Note: int not enum to avoid
+-					 * warnings about "enumeration value
+-					 * not handled in switch" */
+ 	unsigned int npools;
+-	unsigned int *pool_to;		/* maps pool id to cpu or node */
+-	unsigned int *to_pool;		/* maps cpu or node to pool id */
++	unsigned int *pool_to;		/* maps pool id to node */
++	unsigned int *to_pool;		/* maps node to pool id */
+ };
+ 
+-static struct svc_pool_map svc_pool_map = {
+-	.mode = SVC_POOL_DEFAULT
+-};
++static struct svc_pool_map svc_pool_map;
+ 
+ static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count only */
+ 
+-static int
+-__param_set_pool_mode(const char *val, struct svc_pool_map *m)
+-{
+-	int err, mode;
+-
+-	mutex_lock(&svc_pool_map_mutex);
+-
+-	err = 0;
+-	if (!strncmp(val, "auto", 4))
+-		mode = SVC_POOL_AUTO;
+-	else if (!strncmp(val, "global", 6))
+-		mode = SVC_POOL_GLOBAL;
+-	else if (!strncmp(val, "percpu", 6))
+-		mode = SVC_POOL_PERCPU;
+-	else if (!strncmp(val, "pernode", 7))
+-		mode = SVC_POOL_PERNODE;
+-	else
+-		err = -EINVAL;
+-
+-	if (err)
+-		goto out;
+-
+-	if (m->count == 0)
+-		m->mode = mode;
+-	else if (mode != m->mode)
+-		err = -EBUSY;
+-out:
+-	mutex_unlock(&svc_pool_map_mutex);
+-	return err;
+-}
+-
+-static int
+-param_set_pool_mode(const char *val, const struct kernel_param *kp)
+-{
+-	struct svc_pool_map *m = kp->arg;
+-
+-	return __param_set_pool_mode(val, m);
+-}
++/*
++ * Pool modes that were historically accepted. They no longer select
++ * anything: the pool mode is always pernode. The names are retained
++ * only so that writing a previously-valid value still succeeds.
++ */
++static const char * const pool_mode_names[] = {
++	"auto", "global", "percpu", "pernode",
++};
+ 
+ int sunrpc_set_pool_mode(const char *val)
+ {
+-	return __param_set_pool_mode(val, &svc_pool_map);
++	int idx = sysfs_match_string(pool_mode_names, val);
++
++	return idx < 0 ? idx : 0;
+ }
+ EXPORT_SYMBOL(sunrpc_set_pool_mode);
+ 
+@@ -122,84 +76,32 @@ EXPORT_SYMBOL(sunrpc_set_pool_mode);
+  * @buf: where to write the current pool_mode
+  * @size: size of @buf
+  *
+- * Grab the current pool_mode from the svc_pool_map and write
+- * the resulting string to @buf. Returns the number of characters
++ * Write the pool_mode string to @buf. Returns the number of characters
+  * written to @buf (a'la snprintf()).
+  */
+ int
+ sunrpc_get_pool_mode(char *buf, size_t size)
+ {
+-	struct svc_pool_map *m = &svc_pool_map;
+-
+-	switch (m->mode)
+-	{
+-	case SVC_POOL_AUTO:
+-		return snprintf(buf, size, "auto");
+-	case SVC_POOL_GLOBAL:
+-		return snprintf(buf, size, "global");
+-	case SVC_POOL_PERCPU:
+-		return snprintf(buf, size, "percpu");
+-	case SVC_POOL_PERNODE:
+-		return snprintf(buf, size, "pernode");
+-	default:
+-		return snprintf(buf, size, "%d", m->mode);
+-	}
++	return snprintf(buf, size, "pernode");
+ }
+ EXPORT_SYMBOL(sunrpc_get_pool_mode);
+ 
+ static int
+-param_get_pool_mode(char *buf, const struct kernel_param *kp)
++param_set_pool_mode(const char *val, const struct kernel_param *kp)
+ {
+-	char str[16];
+-	int len;
+-
+-	len = sunrpc_get_pool_mode(str, ARRAY_SIZE(str));
+-
+-	/* Ensure we have room for newline and NUL */
+-	len = min_t(int, len, ARRAY_SIZE(str) - 2);
+-
+-	/* tack on the newline */
+-	str[len] = '\n';
+-	str[len + 1] = '\0';
+-
+-	return sysfs_emit(buf, "%s", str);
++	pr_notice_once("sunrpc: the pool_mode module parameter is deprecated and no longer has any effect; the pool mode is always 'pernode'\n");
++	return sunrpc_set_pool_mode(val);
+ }
+ 
+-module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
+-		  &svc_pool_map, 0644);
+-
+-/*
+- * Detect best pool mapping mode heuristically,
+- * according to the machine's topology.
+- */
+ static int
+-svc_pool_map_choose_mode(void)
++param_get_pool_mode(char *buf, const struct kernel_param *kp)
+ {
+-	unsigned int node;
+-
+-	if (nr_online_nodes > 1) {
+-		/*
+-		 * Actually have multiple NUMA nodes,
+-		 * so split pools on NUMA node boundaries
+-		 */
+-		return SVC_POOL_PERNODE;
+-	}
+-
+-	node = first_online_node;
+-	if (nr_cpus_node(node) > 2) {
+-		/*
+-		 * Non-trivial SMP, or CONFIG_NUMA on
+-		 * non-NUMA hardware, e.g. with a generic
+-		 * x86_64 kernel on Xeons.  In this case we
+-		 * want to divide the pools on cpu boundaries.
+-		 */
+-		return SVC_POOL_PERCPU;
+-	}
+-
+-	/* default: one global pool */
+-	return SVC_POOL_GLOBAL;
++	return sysfs_emit(buf, "pernode\n");
+ }
+ 
++module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
++		  NULL, 0644);
++
+ /*
+  * Allocate the to_pool[] and pool_to[] arrays.
+  * Returns 0 on success or an errno.
+@@ -224,35 +126,7 @@ svc_pool_map_alloc_arrays(struct svc_pool_map *m, unsigned int maxpools)
+ }
+ 
+ /*
+- * Initialise the pool map for SVC_POOL_PERCPU mode.
+- * Returns number of pools or <0 on error.
+- */
+-static int
+-svc_pool_map_init_percpu(struct svc_pool_map *m)
+-{
+-	unsigned int maxpools = nr_cpu_ids;
+-	unsigned int pidx = 0;
+-	unsigned int cpu;
+-	int err;
+-
+-	err = svc_pool_map_alloc_arrays(m, maxpools);
+-	if (err)
+-		return err;
+-
+-	for_each_online_cpu(cpu) {
+-		BUG_ON(pidx >= maxpools);
+-		m->to_pool[cpu] = pidx;
+-		m->pool_to[pidx] = cpu;
+-		pidx++;
+-	}
+-	/* cpus brought online later all get mapped to pool0, sorry */
+-
+-	return pidx;
+-};
+-
+-
+-/*
+- * Initialise the pool map for SVC_POOL_PERNODE mode.
++ * Initialise the pool map for one pool per NUMA node.
+  * Returns number of pools or <0 on error.
+  */
+ static int
+@@ -284,14 +158,13 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
+  * Add a reference to the global map of cpus to pools (and
+  * vice versa) if pools are in use.
+  * Initialise the map if we're the first user.
+- * Returns the number of pools. If this is '1', no reference
+- * was taken.
++ * Returns the number of pools, or 0 on failure.
+  */
+ static unsigned int
+ svc_pool_map_get(void)
+ {
  	struct svc_pool_map *m = &svc_pool_map;
- 	int cpu = raw_smp_processor_id();
- 	unsigned int pidx = 0;
-+	unsigned int i;
+-	int npools = -1;
++	int npools;
+ 
+ 	mutex_lock(&svc_pool_map_mutex);
+ 	if (m->count++) {
+@@ -299,22 +172,11 @@ svc_pool_map_get(void)
+ 		return m->npools;
+ 	}
+ 
+-	if (m->mode == SVC_POOL_AUTO)
+-		m->mode = svc_pool_map_choose_mode();
+-
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-		npools = svc_pool_map_init_percpu(m);
+-		break;
+-	case SVC_POOL_PERNODE:
+-		npools = svc_pool_map_init_pernode(m);
+-		break;
+-	}
+-
++	npools = svc_pool_map_init_pernode(m);
+ 	if (npools <= 0) {
+-		/* default, or memory allocation failure */
+-		npools = 1;
+-		m->mode = SVC_POOL_GLOBAL;
++		m->count = 0;
++		mutex_unlock(&svc_pool_map_mutex);
++		return 0;
+ 	}
+ 	m->npools = npools;
+ 	mutex_unlock(&svc_pool_map_mutex);
+@@ -346,14 +208,11 @@ static int svc_pool_map_get_node(unsigned int pidx)
+ {
+ 	const struct svc_pool_map *m = &svc_pool_map;
+ 
+-	if (m->count) {
+-		if (m->mode == SVC_POOL_PERCPU)
+-			return cpu_to_node(m->pool_to[pidx]);
+-		if (m->mode == SVC_POOL_PERNODE)
+-			return m->pool_to[pidx];
+-	}
++	if (m->count)
++		return m->pool_to[pidx];
+ 	return numa_mem_id();
+ }
++
+ /*
+  * Set the given thread's cpus_allowed mask so that it
+  * will only run on cpus in the given pool.
+@@ -372,27 +231,15 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ 	if (m->count == 0)
+ 		return;
+ 
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-	{
+-		set_cpus_allowed_ptr(task, cpumask_of(node));
+-		break;
+-	}
+-	case SVC_POOL_PERNODE:
+-	{
+-		set_cpus_allowed_ptr(task, cpumask_of_node(node));
+-		break;
+-	}
+-	}
++	set_cpus_allowed_ptr(task, cpumask_of_node(node));
+ }
+ 
+ /**
+  * svc_pool_for_cpu - Select pool to run a thread on this cpu
+  * @serv: An RPC service
+  *
+- * Use the active CPU and the svc_pool_map's mode setting to
+- * select the svc thread pool to use. Once initialized, the
+- * svc_pool_map does not change.
++ * Use the active CPU and the svc_pool_map to select the svc thread
++ * pool to use. Once initialized, the svc_pool_map does not change.
+  *
+  * Return value:
+  *   A pointer to an svc_pool
+@@ -400,22 +247,12 @@ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+-	int cpu = raw_smp_processor_id();
+-	unsigned int pidx = 0;
+-	unsigned int i;
++	unsigned int pidx, i;
  
  	if (serv->sv_nrpools <= 1)
  		return serv->sv_pools;
-@@ -414,8 +415,31 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv *serv)
- 		pidx = m->to_pool[cpu_to_node(cpu)];
- 		break;
- 	}
-+	pidx %= serv->sv_nrpools;
-+
-+	/*
-+	 * Threads are spread evenly across the pools, but when there are
-+	 * fewer threads than pools some pools can end up with none. A
-+	 * transport enqueued on a threadless pool would never be picked
-+	 * up, since each thread only services its own pool. Fall back to
-+	 * the next populated pool, trading NUMA locality for a guarantee
-+	 * that the transport is serviced.
-+	 */
-+	for (i = 0; i < serv->sv_nrpools; i++) {
-+		struct svc_pool *pool = &serv->sv_pools[pidx];
-+
-+		/* This is set under the sp_mutex and rarely ever changes. A
-+		 * data race here is harmless.
-+		 */
-+		if (data_race(pool->sp_nrthreads))
-+			return pool;
-+
-+		if (++pidx >= serv->sv_nrpools)
-+			pidx = 0;
-+	}
  
--	return &serv->sv_pools[pidx % serv->sv_nrpools];
-+	/* No pool has any threads; nothing can service the transport. */
-+	return &serv->sv_pools[pidx];
- }
+-	switch (m->mode) {
+-	case SVC_POOL_PERCPU:
+-		pidx = m->to_pool[cpu];
+-		break;
+-	case SVC_POOL_PERNODE:
+-		pidx = m->to_pool[cpu_to_node(cpu)];
+-		break;
+-	}
+-	pidx %= serv->sv_nrpools;
++	pidx = m->to_pool[cpu_to_node(raw_smp_processor_id())] % serv->sv_nrpools;
  
- static int svc_rpcb_setup(struct svc_serv *serv, struct net *net)
+ 	/*
+ 	 * Threads are spread evenly across the pools, but when there are
+@@ -641,6 +478,9 @@ struct svc_serv *svc_create_pooled(struct svc_program *prog,
+ 	struct svc_serv *serv;
+ 	unsigned int npools = svc_pool_map_get();
+ 
++	if (!npools)
++		return NULL;
++
+ 	serv = __svc_create(prog, nprogs, stats, bufsize, npools, threadfn);
+ 	if (!serv)
+ 		goto out_err;
 
 -- 
 2.54.0
