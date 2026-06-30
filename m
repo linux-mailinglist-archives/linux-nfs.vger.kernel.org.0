@@ -1,381 +1,250 @@
-Return-Path: <linux-nfs+bounces-22889-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22890-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id L0pHNsbJQ2rZhwoAu9opvQ
-	(envelope-from <linux-nfs+bounces-22889-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 15:51:02 +0200
+	id P5onE+/mQ2oylQoAu9opvQ
+	(envelope-from <linux-nfs+bounces-22890-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 17:55:27 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 336266E50D7
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 15:51:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EA126E6263
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 17:55:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=desy.de header.s=default header.b=vQZfOQCr;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22889-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22889-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=desy.de;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="l9lh5/3a";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22890-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22890-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 60B673112FC4
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 13:48:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 108AE3125B48
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 15:48:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FECD2F549F;
-	Tue, 30 Jun 2026 13:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA6BF45BD60;
+	Tue, 30 Jun 2026 15:48:11 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [131.169.56.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D6734D4D6
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jun 2026 13:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E135450917
+	for <linux-nfs@vger.kernel.org>; Tue, 30 Jun 2026 15:48:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782827328; cv=none; b=K8kVRAwfnwfPG+b2QWkMvpd96nPmOYUMrfV41iCcoYN5TDxfVRb9UbOp3bftyNKll2dUFsh7sr1fbP/hHm4O3qdBOCyLJXzK3ISbk3OaxX71279R94a5VLyGKfPBQ2zNNdq+7FYgqVuBlxQUL2fEST6DIoI3GhsNFLsiFA2mXZs=
+	t=1782834491; cv=none; b=iBzazsVVOBaITNrd1LCI+d2l2oa/4H69DRWHD9uUeimSWzjrySeuOkQW5hKqQdM8+b8/wdWcWwpJ+ED9RjZQ0VyWM9wbg67YnDoadmROOZcBrl5l6KfwAekpIM+mUxCizgirUiavGwAxqUBaV9I6oj3OPPsDogLD++prm4IkjoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782827328; c=relaxed/simple;
-	bh=FFXh0uZ8Q8YZy19967z67u9qiP1eeZDfyJje0k++zQQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=FeqBoibp348ynyIb2lPCZNbnUJlypRLjabZsGEMFRizoAGVwFw4kI9jMWAC96iPzBAYJiA4WSvzJ8F3fog0UWs71c9lpqEqOJT2MCtPibIfQ/xf+g0Pq57yzHYNh6BHm+cELJ3B0eKSclVfAyQnkLi0n9ewgWewuSKk6IBws1qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=vQZfOQCr; arc=none smtp.client-ip=131.169.56.154
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [131.169.56.165])
-	by smtp-o-1.desy.de (Postfix) with ESMTP id 80FD811F746
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jun 2026 15:48:28 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 80FD811F746
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1782827308; bh=1rgo0DvmOcmUFOWgQGNpR8CFpMUXwFSy1EfVNaPj0Lk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=vQZfOQCrfX7wwNlV7Ye0SLjh7Iv6WjL3AnTmfv8TM4mz2Jhl31LcpwBKVDhrAFjps
-	 iOohrbmlI0w+REC+tA7z5OirNtQiQDJNVQLtHtNKherlGgDVhF1FcTETBBezo6Wckd
-	 c1W+8wEruvgNWbLJ3MP6erVVfrwFUG6z54sJZtH8=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
-	by smtp-buf-2.desy.de (Postfix) with ESMTP id 736E1120043;
-	Tue, 30 Jun 2026 15:48:28 +0200 (CEST)
-Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [IPv6:2001:638:d:c303:acdc:1979:2:e7])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 6426140045;
-	Tue, 30 Jun 2026 15:48:28 +0200 (CEST)
-Received: from smtp-intra-3.desy.de (smtp-intra-3.desy.de [131.169.56.69])
-	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id DC46E100064;
-	Tue, 30 Jun 2026 15:48:26 +0200 (CEST)
-Received: from z-mbx-3.desy.de (z-mbx-3.desy.de [131.169.55.141])
-	by smtp-intra-3.desy.de (Postfix) with ESMTP id B03661A0041;
-	Tue, 30 Jun 2026 15:48:26 +0200 (CEST)
-Date: Tue, 30 Jun 2026 15:48:26 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: chuck lever <chuck.lever@oracle.com>, jlayton <jlayton@kernel.org>, 
-	anna <anna@kernel.org>, linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <255476971.4622529.1782827306515.JavaMail.zimbra@desy.de>
-In-Reply-To: <fb81ad5a850160daab7092a8289bc626862f6072.camel@kernel.org>
-References: <20260626151029.1516839-1-tigran.mkrtchyan@desy.de> <fb81ad5a850160daab7092a8289bc626862f6072.camel@kernel.org>
-Subject: Re: [PATCH] [RFC] nfs4: inject process namespace into COMPOUND tag
+	s=arc-20240116; t=1782834491; c=relaxed/simple;
+	bh=V/wtEIoaxRGdkuhrnAEyaCIEPW8Wtbo13Dm2b+StlJE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=QaJwBFtLU16uCg7o1IQ+1LrfQgOAB7RzG2fyx23xGUH8AMzW5M+7zTSyYNfqOyz2zXJAanQfri28SxHco9+sAcGIdQHdMWIHRC9f9lRXWzB28JYcN7oCg1h+4ZlQWs6oShG+nOS+qUknT15fUS0AyBLfKcdgr4XcPzlv9ZZlqqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9lh5/3a; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2CDE1F00A3A;
+	Tue, 30 Jun 2026 15:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782834490;
+	bh=I37OL6EnCY/61NHR9mkFvB+neu5ifz72N8QJZ99NtK8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=l9lh5/3acSSZ281btpTKVqCVz0zR5B9Zru290oFklF9mPci0KgH+gQnktoVvkpfRJ
+	 o8JTjE7sKv4Zsjanjaljedc1ROUkkGGz/D+lFRdbTyR0wQ2pjpml/KQeiQywn4MuFK
+	 Aj+Ff5ppboKGqT2+4IvPokP6k7Ibi6xnoT2C8PpN41+gC6+iLbhJezQvrWFIuybGgf
+	 qJYKtuSbCgPsuz/7+cJbqfm5yNe76jscmsImS0xE2sGhJtCxCFhvs4mN9Hb6ffWJRL
+	 eDS4jtMY+KGbegcD6Qcjsxrop5eyp3K0ND1euTt0GEl3qrL3yezXf8t8SLDQ3Wdv5L
+	 2k7ESXyug30Tg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 3150AF40069;
+	Tue, 30 Jun 2026 11:48:09 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Tue, 30 Jun 2026 11:48:09 -0400
+X-ME-Sender: <xms:OeVDarBKPMZABKh8npCoXdTl4r5voK25ZXsZvhreEfmbK8RsFbYzXw>
+    <xme:OeVDasXAlOilY8uqM84YAKcNGTlATcTwgeUylTvOf_jbK8FJr-qI_LNb5b8-1GUP9
+    VJY5w6UHFNIKlnuVcmnsmTSe4lx752Vy1rr5i8Vv6WHUi-m0Ec7P_wb>
+X-ME-Proxy-Cause: dmFkZTFLBB5ANlRbjmh2RlDmTP5+XF8r1gD7ABeuuxknVhw5zFl5f5oMgbh0q++D3Rcw1I
+    +1EE+GuOXtpatuZyouSuysNKd2hKM2maM3SxHvmyayCzSl7thqlvgEfGTGkXCJc2JNjpxp
+    uyh6cdssDiuXK5+SXpadgTvqTvmffVnQ9C/Qc+HXr3bAUTeG1lflHPasgQ7gD2lqp5UJis
+    H2zvlmc8i2h/HZECirP88WX+5usgPSTUuqebC5izzlch7esBEBwkRduJlT+bId9x3XX4uy
+    VMj3oJjCeruQxRkc/xqbSEoRfq+HkPEg+EsCQYwRJhP4iWF0ATxI9FaSEW3jSMktG4auLf
+    AKchXZzFF6KzGm/O//xwo+zR1GDwARHE5UX5EceKVvNRAyxXi5cuF9TFC/rAiwE7hVuUrt
+    WsxUve8tctEg4yTrpWXVn2sIXNNl/TR2CGj6JKP3gJ3HupWfskcqn7EN+9n18lbBYfxngN
+    k4KtcMIPDy7DkBex8ESaYkYRNEbqjh9A8rOjF7SnFJBG6gx6b4CYrllJwqtepyYAsAHKEN
+    lspxaaOWmeRvj7i4cZ/exygqpQK2+DsFrZqmlD9zIXki/oE7b7QB2YtJ8UwNH5TRP7QyjJ
+    +aXbyjlp7Y1YzRfRAv96eapWyOL74Ld4cUZjw4JAGbCvUj7eUbsmNH2pz8Vw
+X-ME-Proxy: <xmx:OeVDaoeO-eJYobFjDtxhLfWr1KSys4ykrIiLXDRmV5dj5h74xjYKnA>
+    <xmx:OeVDah99jTlRjst-RyakRI_3KTiDSR6p5Iu1n5ycZyYtiLcmC87YWQ>
+    <xmx:OeVDasmbnUTWoN3txI-o6txg71y4neXlR_lIjZ2MFhFcNpPllOyrqA>
+    <xmx:OeVDar9r78aecZSW8e7u26QP2l5TxiIk6g1kuZPQ23G5QmbY4jQa-w>
+    <xmx:OeVDaimEpTLYDXLPi8mNjF5NQ0jCdw2Q3G-foTBADLlyTH0dpaXp1YR8>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0EC4E780ABA; Tue, 30 Jun 2026 11:48:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
-	boundary="----=_Part_4622530_9064409.1782827306628"
-X-Mailer: Zimbra 10.1.18_GA_4890 (ZimbraWebClient - FF152 (Linux)/10.1.17_GA_4873)
-Thread-Topic: nfs4: inject process namespace into COMPOUND tag
-Thread-Index: 7a8XJWMPfDbNU14LxRS4CzIFprmnQA==
+X-ThreadId: AXywqv_4gqb-
+Date: Tue, 30 Jun 2026 11:47:48 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Oscar Ou" <oscarou@synology.com>, "Jeff Layton" <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Message-Id: <d8c309bb-37f8-4465-8abf-ba34db499ae1@app.fastmail.com>
+In-Reply-To: <20260630093820.2162344-1-oscarou@synology.com>
+References: <20260630093820.2162344-1-oscarou@synology.com>
+Subject: Re: [PATCH] lockd: refcount NLM_SHARE access/deny modes
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.26 / 15.00];
-	SIGNED_SMIME(-2.00)[];
+X-Spamd-Result: default: False [-5.15 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[desy.de,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[desy.de:s=default];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22890-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22889-lists,linux-nfs=lfdr.de];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:email,hammerspace.com:email];
-	FORGED_SENDER(0.00)[tigran.mkrtchyan@desy.de,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:oscarou@synology.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[desy.de:+];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,app.fastmail.com:mid];
+	RCPT_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tigran.mkrtchyan@desy.de,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	HAS_ATTACHMENT(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 336266E50D7
-
-------=_Part_4622530_9064409.1782827306628
-Date: Tue, 30 Jun 2026 15:48:26 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: chuck lever <chuck.lever@oracle.com>, jlayton <jlayton@kernel.org>, 
-	anna <anna@kernel.org>, linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <255476971.4622529.1782827306515.JavaMail.zimbra@desy.de>
-In-Reply-To: <fb81ad5a850160daab7092a8289bc626862f6072.camel@kernel.org>
-References: <20260626151029.1516839-1-tigran.mkrtchyan@desy.de> <fb81ad5a850160daab7092a8289bc626862f6072.camel@kernel.org>
-Subject: Re: [PATCH] [RFC] nfs4: inject process namespace into COMPOUND tag
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 10.1.18_GA_4890 (ZimbraWebClient - FF152 (Linux)/10.1.17_GA_4873)
-Thread-Topic: nfs4: inject process namespace into COMPOUND tag
-Thread-Index: 7a8XJWMPfDbNU14LxRS4CzIFprmnQA==
+X-Rspamd-Queue-Id: 9EA126E6263
 
 
+On Tue, Jun 30, 2026, at 5:38 AM, Oscar Ou wrote:
+> When an NFSv3/NLM client issues multiple NLM_SHARE calls from a single
+> host for the same (file, owner) tuple, the current implementation
+> overwrites the recorded access and deny modes with the latest pair.
+> A subsequent NLM_UNSHARE then drops the entire entry, even if other
+> grants were implicitly subsumed by the most recent SHARE.  This is
+> particularly visible to Windows-style clients that map each open of
+> a file to a distinct NLM_SHARE, all carrying the same NLM owner
+> handle.
 
------ Original Message -----
-> From: "Trond Myklebust" <trondmy@kernel.org>
-> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>, "chuck lever" <chuck.l=
-ever@oracle.com>, "jlayton"
-> <jlayton@kernel.org>, "anna" <anna@kernel.org>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Sunday, 28 June, 2026 23:15:42
-> Subject: Re: [PATCH] [RFC] nfs4: inject process namespace into COMPOUND t=
-ag
+> diff --git a/fs/lockd/svcshare.c b/fs/lockd/svcshare.c
+> index 5ac0ec25d62d..4a1a09c209ea 100644
+> --- a/fs/lockd/svcshare.c
+> +++ b/fs/lockd/svcshare.c
+> @@ -25,6 +25,24 @@ nlm_cmp_owner(struct lockd_share *share, struct 
+> xdr_netobj *oh)
+>  	    && !memcmp(share->s_owner.data, oh->data, oh->len);
+>  }
+> 
+> +/*
+> + * Recompute s_access / s_mode as the union of all positive refcount
+> + * buckets.  Caller must hold the per-file f_mutex.
+> + */
 
-> On Fri, 2026-06-26 at 17:10 +0200, Tigran Mkrtchyan wrote:
->> On large shared machines often multiple jobs of a same user run in
->> parallel. For debugging, it's usually impossible to identify requests
->> coming from different processes.
->>=20
->> The batch systems like HTCondor or SLURM start every job in it's own
->> namespace, thus passing namespace info to the server will help by
->> debugging.
->>=20
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 260 V4 Call GETATTR FH:
->> 0xd5ffb2cb
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 324 V4 Reply (Call In 89)
->> GETATTR
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 260 V4 Call GETATTR FH:
->> 0xd0b0a44e
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 324 V4 Reply (Call In 95)
->> GETATTR
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 268 V4 Call ACCESS FH:
->> 0xd0b0a44e, [Check: RD LU MD XT DL XAR XAW XAL]
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 240 V4 Reply (Call In 101)
->> ACCESS, [Allowed: RD LU MD XT DL XAR XAW XAL]
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 284 V4 Call READDIR FH:
->> 0xd0b0a44e
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 664 V4 Reply (Call In 105)
->> READDIR
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 284 V4 Call ns:4026532507
->> GETATTR FH: 0xd67b66a5
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 340 V4 Reply (Call In 111)
->> ns:4026532507 GETATTR
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 292 V4 Call ns:4026532507 A=
-CCESS
->> FH: 0xd67b66a5, [Check: RD LU MD XT DL XAR XAW XAL]
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 256 V4 Reply (Call In 117)
->> ns:4026532507 ACCESS, [Access Denied: MD XT DL XAW], [Allowed: RD LU
->> XAR XAL]
->> 192.168.122.150 =E2=86=92 192.168.178.69 NFS 308 V4 Call ns:4026532507
->> READDIR FH: 0xd67b66a5
->> 192.168.178.69 =E2=86=92 192.168.122.150 NFS 200 V4 Reply (Call In 121)
->> ns:4026532507 READDIR
->>=20
->> Suggested-by: Chuck Lever <chuck.lever@oracle.com>
->> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
->> ---
->> =C2=A0fs/nfs/nfs4xdr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 24 +++++++++++++++++++-----
->> =C2=A0include/linux/sunrpc/sched.h |=C2=A0 2 ++
->> =C2=A0net/sunrpc/sched.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 6 ++++++
->> =C2=A03 files changed, 27 insertions(+), 5 deletions(-)
->>=20
->> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
->> index c23c2eee1b5c..9c035c74a3b5 100644
->> --- a/fs/nfs/nfs4xdr.c
->> +++ b/fs/nfs/nfs4xdr.c
->> @@ -46,6 +46,7 @@
->> =C2=A0#include <linux/kdev_t.h>
->> =C2=A0#include <linux/module.h>
->> =C2=A0#include <linux/utsname.h>
->> +#include <linux/pid_namespace.h>
->> =C2=A0#include <linux/sunrpc/clnt.h>
->> =C2=A0#include <linux/sunrpc/msg_prot.h>
->> =C2=A0#include <linux/sunrpc/gss_api.h>
->> @@ -71,12 +72,8 @@ static void encode_layoutget(struct xdr_stream
->> *xdr,
->> =C2=A0static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqs=
-t
->> *req,
->> =C2=A0=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 struct nfs4_layoutget_res *res);
->> =C2=A0
->> -/* NFSv4 COMPOUND tags are only wanted for debugging purposes */
->> -#ifdef DEBUG
->> +/* Enable compound tags to include namespace information */
->> =C2=A0#define NFS4_MAXTAGLEN=09=0920
->> -#else
->> -#define NFS4_MAXTAGLEN=09=090
->> -#endif
->> =C2=A0
->> =C2=A0/* lock,open owner id:
->> =C2=A0 * we currently use size 2 (u64) out of (NFS4_OPAQUE_LIMIT=C2=A0 >=
-> 2)
->> @@ -1034,6 +1031,23 @@ static void encode_compound_hdr(struct
->> xdr_stream *xdr,
->> =C2=A0{
->> =C2=A0=09__be32 *p;
->> =C2=A0
->> +=09/* Inject namespace info into compound tag if not already
->> set */
->> +=09if (hdr->taglen =3D=3D 0 && req->rq_task !=3D NULL) {
->> +=09=09/* Use namespace info captured at task creation time
->> */
->> +=09=09struct rpc_task *task =3D req->rq_task;
->> +
->> +=09=09if (taks->tk_ns_inum !=3D 0) {
->=20
-> Hmm.... This has not been compile tested.
+Is the f_mutex statement here accurate, and the matching sentence in the
+commit message:
 
-I am pretty sure this is the code that I run on VM right now :)
+  The per-file f_mutex held by callers in fs/lockd/svcsubs.c continues
+  to serialise share manipulation, so the new arrays do not require
+  their own locking.
 
->=20
->> +=09=09=09char ns_tag[NFS4_MAXTAGLEN + 1];
->> +
->> +=09=09=09hdr->taglen =3D snprintf(ns_tag,
->> sizeof(ns_tag), "ns:%u", taks->tk_ns_inum);
->> +=09=09=09if (hdr->taglen > NFS4_MAXTAGLEN) {
->> +=09=09=09=09hdr->taglen =3D NFS4_MAXTAGLEN;
->> +=09=09=09=09ns_tag[NFS4_MAXTAGLEN] =3D '\0';
->> +=09=09=09}
->> +=09=09=09hdr->tag =3D ns_tag;
->=20
-> ns_tag is only scoped to this block. I suggest that instead of
-> assigning to hdr->taglen and hdr->tag, you just do the assignment to
-> hdr->replen + call to encode_string() here, so you don't have to assign
-> a scope limited buffer to an externally visible struct.
->=20
-> Note also that there is no need to NUL terminate ns_tag[] when hdr-
->>taglen > NFS4_MAXTAGLEN, since encode_string() does not require a nul
-> terminated string. In addition, snprintf() always guarantees that the
-> string is nul terminated, even when truncated by the buffer size :-).
->=20
->> +=09=09}
->> +=09}
->> +
->> =C2=A0=09/* initialize running count of expected bytes in reply.
->> =C2=A0=09 * NOTE: the replied tag SHOULD be the same is the one sent,
->> =C2=A0=09 * but this is not required as a MUST for the server to do
->> so. */
->> diff --git a/include/linux/sunrpc/sched.h
->> b/include/linux/sunrpc/sched.h
->> index 0dbdf3722537..d376b52a72a1 100644
->> --- a/include/linux/sunrpc/sched.h
->> +++ b/include/linux/sunrpc/sched.h
->> @@ -92,6 +92,8 @@ struct rpc_task {
->> =C2=A0
->> =C2=A0=09pid_t=09=09=09tk_owner;=09/* Process id for
->> batching tasks */
->> =C2=A0
->> +=09unsigned int=09=09tk_ns_inum;=09/* PID namespace
->> inum for namespace tracking */
->> +
->> =C2=A0=09int=09=09=09tk_rpc_status;=09/* Result of last
->> RPC operation */
->> =C2=A0=09unsigned short=09=09tk_flags;=09/* misc flags */
->> =C2=A0=09unsigned short=09=09tk_timeouts;=09/* maj timeouts */
->> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
->> index 016f16ca5779..4e8e7fa849d5 100644
->> --- a/net/sunrpc/sched.c
->> +++ b/net/sunrpc/sched.c
->> @@ -21,6 +21,7 @@
->> =C2=A0#include <linux/mutex.h>
->> =C2=A0#include <linux/freezer.h>
->> =C2=A0#include <linux/sched/mm.h>
->> +#include <linux/pid_namespace.h>
->> =C2=A0
->> =C2=A0#include <linux/sunrpc/clnt.h>
->> =C2=A0#include <linux/sunrpc/metrics.h>
->> @@ -1110,6 +1111,11 @@ static void rpc_init_task(struct rpc_task
->> *task, const struct rpc_task_setup *ta
->> =C2=A0=09task->tk_priority =3D task_setup_data->priority -
->> RPC_PRIORITY_LOW;
->> =C2=A0=09task->tk_owner =3D current->tgid;
->> =C2=A0
->> +=09struct pid_namespace *pid_ns =3D task_active_pid_ns(current);
->> +=09/* Keep track on namespace id */
->> +=09if (pid_ns !=3D &init_pid_ns)
->> +=09=09task->tk_ns_inum =3D pid_ns->ns.inum;
->=20
-> For buffered writes, this will tell you the pid namespace of the
-> process that is flushing the data, not that of the process that wrote
-> the data into the page cache. Is that what you expected?
+nlm_lookup_file() in fs/lockd/svcsubs.c takes file->f_mutex only around
+nlm_do_fopen() and drops it before returning:
+
+  fs/lockd/svcsubs.c:nlm_lookup_file() {
+        ...
+                mutex_lock(&file->f_mutex);
+                nfserr = nlm_do_fopen(rqstp, file, mode);
+                mutex_unlock(&file->f_mutex);
+        ...
+  }
+
+By the time nlmsvc_proc_share() / nlmsvc_proc_unshare() call into
+nlmsvc_share_file() / nlmsvc_unshare_file(), f_mutex is no longer held.
+What actually serialises these requests is that lockd runs a single
+service thread (svc_set_num_threads(serv, 0, 1) in fs/lockd/svc.c), so
+the conclusion that the arrays need no extra locking holds.  Would it be
+worth pointing the comment and commit message at the single-threaded
+service rather than f_mutex?
+
+The loop starts at v = 1, so s_access_counts[0] and s_mode_counts[0] are
+incremented and decremented but never read.  That is fine for computing
+the union, since index 0 (fsa_NONE / fsm_DN) contributes no bits.  It
+does mean the free decision keys on the recomputed s_access / s_mode
+rather than on every bucket, so the commit message wording
+
+  the entry is freed only when every bucket has reached zero.
+
+is slightly stronger than the code: an entry can be freed while
+s_access_counts[0] or s_mode_counts[0] is still non-zero.  Harmless
+given NONE/DN enforce nothing, but the stated invariant and the bucket-0
+storage do not quite line up.
 
 
-In general, with read-ahead, delegations, and other caching mechanisms,
-is it possible to match NFS I/O to an application?
+> +static void nlm_recompute_share(struct lockd_share *share)
+> +{
+> +	u32 new_access = 0, new_mode = 0, v;
+> +
+> +	for (v = 1; v < LOCKD_FSH_NR; v++) {
+> +		if (share->s_access_counts[v])
+> +			new_access |= v;
+> +		if (share->s_mode_counts[v])
+> +			new_mode |= v;
+> +	}
+> +	share->s_access = new_access;
+> +	share->s_mode = new_mode;
+> +}
+> +
+>  /**
+>   * nlmsvc_share_file - create a share
+>   * @host: Network client peer
+> @@ -64,12 +82,15 @@ nlmsvc_share_file(struct nlm_host *host, struct 
+> nlm_file *file,
+>  	share->s_host       = host;
+>  	share->s_owner.data = ohdata;
+>  	share->s_owner.len  = oh->len;
+> +	memset(share->s_access_counts, 0, sizeof(share->s_access_counts));
+> +	memset(share->s_mode_counts, 0, sizeof(share->s_mode_counts));
+>  	share->s_next       = file->f_shares;
+>  	file->f_shares      = share;
+> 
+>  update:
+> -	share->s_access = access;
+> -	share->s_mode = mode;
+> +	share->s_access_counts[access]++;
+> +	share->s_mode_counts[mode]++;
+> +	nlm_recompute_share(share);
+>  	return nlm_granted;
+>  }
+> 
 
-Best regards,
-   Tigran.
+A remote NLMv4 client can drive access or mode out of {0..3} here
+and write past s_access_counts[] / s_mode_counts[]. There are one
+or two other spots with the same issue.
+
+Thus your patch can't be applied as written.
+
+However, today is your lucky day: I have a patch that regenerates
+the XDR decoders to prevent exactly this issue, which I will post
+forthwith.
+
+I'm wondering about a Fixes tag. This issue has been around since
+1da177e4c3f4 ("Linux-2.6.12-rc2"), but the fix depends mechanically
+on the xdrgen conversion, so it certainly will not apply cleanly to
+kernels earlier than v7.1, and a proper fix will need both the
+regeneration patch and this one to be applied.
 
 
->=20
->> +
->> =C2=A0=09/* Initialize workqueue for async tasks */
->> =C2=A0=09task->tk_workqueue =3D task_setup_data->workqueue;
->> =C2=A0
->=20
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trondmy@kernel.org, trond.myklebust@hammerspace.com
-
-------=_Part_4622530_9064409.1782827306628
-Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
-2zCCBEOgAwIBAgIQBBL/+bEcDC3Q01JGn3M5ITANBgkqhkiG9w0BAQsFADBUMQswCQYDVQQGEwJO
-TDEZMBcGA1UECgwQR0VBTlQgVmVyZW5pZ2luZzEqMCgGA1UEAwwhR0VBTlQgVENTIEF1dGhlbnRp
-Y2F0aW9uIFJTQSBDQSA1MB4XDTI1MTIxMjE0MDk0MloXDTI3MDExMTE0MDk0MVowgakxEzARBgoJ
-kiaJk/IsZAEZFgNvcmcxFjAUBgoJkiaJk/IsZAEZFgZ0ZXJlbmExEzARBgoJkiaJk/IsZAEZFgN0
-Y3MxCzAJBgNVBAYTAkRFMS4wLAYDVQQKDCVEZXV0c2NoZXMgRWxla3Ryb25lbi1TeW5jaHJvdHJv
-biBERVNZMSgwJgYDVQQDDB9UaWdyYW4gTWtydGNoeWFuIHRpZ3JhbkBkZXN5LmRlMIIBojANBgkq
-hkiG9w0BAQEFAAOCAY8AMIIBigKCAYEArfnI6mD8MyGhRXT544OuIOATR0q0ViKjZWMjNO0PYJ7b
-WrA2ahLCMyOw18kaAhArvmyhASlCZGHAeHjMPQAcRWoBQyLXkbusXBqxPQbApGXcXERNGXja00Xk
-MrZCGe198EcRgn52hDbmcOhQPlyY/fKp3ukpPDLyQEeZFDDz4KeKFrZ6Qc3ps/yZqjQ2bXY8l93W
-G+0DVbP6e2AM0DW4fWDYoafLvnMyl2J5yhYjYXtFkcV7iiDUuQH/lZvYvRQTzlir0jczribIPpss
-zxcctqleZRX646qBT+lI0nP+EgdGPCXNteJGbwGHw7DQqXDk+0AIYShiiTMayRODX65uCwRG9iO5
-mtibWMeFTzGOy8HG09PFlc8VG8+2pZtIYLPIof65dykviDm0vI0A36iaw7gI5RRy1K6dGpJscKU2
-V5d+LlhVu5qjBayUfJQhy4jykZplaeXvQThZ9rg9ngz+FwlEz7tlM5U1hepzD7s1snyVaOGtRiQt
-yWSUKcMB0DPJAgMBAAGjggFRMIIBTTAfBgNVHSMEGDAWgBSDrT4rvBOJjYgJHL8g3F+4MVXq8TBX
-BggrBgEFBQcBAQRLMEkwRwYIKwYBBQUHMAKGO2h0dHA6Ly9jcnQuZ2VhbnQtcHJ2LmhhcmljYS5n
-ci9HRUFOVC1UQ1MtQ2xpZW50LUF1dGgtUjUuY2VyMDUGA1UdIAQuMCwwDAYKKoZIhvdMBQICBTAN
-BgsqhkiG90wFAgMDAzANBgsqhkiG90wFAgMBAjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUH
-AwQwTAYDVR0fBEUwQzBBoD+gPYY7aHR0cDovL2NybC5nZWFudC1wcnYuaGFyaWNhLmdyL0dFQU5U
-LVRDUy1DbGllbnQtQXV0aC1SNS5jcmwwHQYDVR0OBBYEFDxIMH6YFtPoOHuwqAzVWAjUq9klMA4G
-A1UdDwEB/wQEAwIFoDANBgkqhkiG9w0BAQsFAAOCAYEAM3+V2E77QHQaDQSi0RRpdct0OrebGrBQ
-1UZHmxhwyy1LaTERW/8J70lDP9FxYJlk77whB853mwW/LukNXzRNW/mgpuIlVQH+uooys5NbIgl2
-zVuIhQ/7CWO3xYbKyxk8pUwvk43qR/hVprL0djOGm9Wr31AmryK9KMXpod95pv3hydpAPZi+4Kux
-GtsmX69ggbcB518och4jij+KCtGCaFHjLbek40VYwAjIRSfwpVTKgFefkTEo+/G9KiJiT3p8Z/RL
-6VDc+pB+GFNAW/+Z6nAkRWJKZFrVAEFqX2by2v+CTu9oLPUKiRTCEuSXCqwsMO40qzYT8Tjp9+sq
-KfeGDPzRxd/J4G6JSsLpRrCesQnKRTwqEF6yUfvNyrqKe9fImt/UriOFjXcdPqAkhFWIr0d/fZQp
-1upqYQ1PnuyfdOU4Ct6NN9PGopyB4i+iKWaECe4W4iPZsF+qWUmynQpbAwDu/UvBN3U4wdrDdeO6
-XZ3HQ0q/aG67FOeLCkhOgnvqAAAxggLkMIIC4AIBATBoMFQxCzAJBgNVBAYTAk5MMRkwFwYDVQQK
-DBBHRUFOVCBWZXJlbmlnaW5nMSowKAYDVQQDDCFHRUFOVCBUQ1MgQXV0aGVudGljYXRpb24gUlNB
-IENBIDUCEAQS//mxHAwt0NNSRp9zOSEwDQYJYIZIAWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsG
-CSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYwNjMwMTM0ODI2WjAtBgkqhkiG9w0BCTQxIDAe
-MA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUAMC8GCSqGSIb3DQEJBDEiBCDYTgbCmz1/jDYJ
-RlK/aNEUBMfcGqYsAYTF4NoJW9dBmDA0BgkqhkiG9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqG
-SIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0BAQsFAASCAYCC2AG+HP7XEoYpdF2eoiqs4nfM
-+agVpQoMl+8oMzz5hsTd42gKGzkPC08nzQc+Y/3jBmKwKvVyeXDLqcMERPb4+lEN8z0ksxBNXc5u
-GGWtygEYWUwGYJj6FBAEyTl9rv1t2/AONU+0JLpzFb0swvCUXdkf5QI5BiSFTGshUdoLLtvBM7dj
-SFGCnhb31lYsGxsaWqfrZ4aP8zt6H+ymoUxU5FtE0oRSTprX+GhLkeanR40FPizkvlZy7f9wxP+R
-k1wNjtSFqg2ebCt9fjCoGrh+NLFCD1jXd5iNvKtw33/qXZyE9LyiXOz05H6EPob/fmFGyCQP5sg6
-stuXBumnhutKSsea8hGyzvoPXfLAwXyl+2XOfH9JggmSGhs8ZS2gIE3nlkUtfXMNLMNcIpdLxHQn
-Avq/LdsGsh32I7XO9f34XwAa3ob0TPSYJ/dNyAdLojeX03minV18xNWH+PSXArA+Ru63wdsTtBA5
-9OAKTTf0UBAs+jL61G48uOco+cySBEUAAAAAAAA=
-------=_Part_4622530_9064409.1782827306628--
+-- 
+Chuck Lever
 
