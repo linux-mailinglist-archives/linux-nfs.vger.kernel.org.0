@@ -1,141 +1,323 @@
-Return-Path: <linux-nfs+bounces-22887-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22888-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XBMsOimdQ2qldQoAu9opvQ
-	(envelope-from <linux-nfs+bounces-22887-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 12:40:41 +0200
+	id 5+4JM1u9Q2rZgAoAu9opvQ
+	(envelope-from <linux-nfs+bounces-22888-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 14:58:03 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5B896E3059
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 12:40:41 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id C40196E484B
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 14:58:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=sfOSDGLd;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22887-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22887-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Q5zy0bB/";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22888-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22888-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4119A3030105
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 10:38:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 52E5730717C5
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 12:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2907C389E02;
-	Tue, 30 Jun 2026 10:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E2E5411674;
+	Tue, 30 Jun 2026 12:48:52 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F6C3F23B3
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jun 2026 10:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8B6411672;
+	Tue, 30 Jun 2026 12:48:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782815924; cv=none; b=pQzKOZ4PMDJ/loaiNiS5fNaqjWKo99zWMV6g52hOnkpXlaOJ7mkon9gW+da8eBaDwOszHBzsInQPTloaJUe5HgxbGSUCZgnyfHp7MCwvMnctHR9jyjNV00JvnKz4h6r89vPdDLpxkd2limCrAm8TPIfelKfrNEne0tYDDWCyovU=
+	t=1782823732; cv=none; b=KRqXV80bHc32b/0Jlt9PDHkEfBJa6uev5fjrzE0O96NZIF2is1V+oIlHahCz9fq1WpZAzIn1CKs4CTh4Fbx4+EhSW/1YNHASrEYdrR9DN6p1BRinppugXzV+/+Wp/H/pX/oBFc/z9oNUqVlWk4G06Lkd4Fb5pMonjyEpk92Ix+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782815924; c=relaxed/simple;
-	bh=ejga8Dxh/6lWQgQQuhEmr2bBEbn3EFgeSvX/8+FanOM=;
+	s=arc-20240116; t=1782823732; c=relaxed/simple;
+	bh=DLembs2KsulvsiI4ZHQLxvjicweq8u7kYy3s6HFFEmY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uFN3d/+DAyL00v1QARni0ODcRVgE4Zg2p39f8w12rIoyfb8e59rzNqUnis2PVHJ1EiFIUpg/1ekbWAU1GYXQJY3Pp8JBfj8IFu/mppySmZab25rdBPk+Ekzwfl/FdTCmvvdO4JzLshA3hFwPoUgdbIoE+/ZjmlBlphWuxT6+ggA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sfOSDGLd; arc=none smtp.client-ip=74.125.82.169
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-30ec3dfbcd1so3317973eec.0
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Jun 2026 03:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782815922; x=1783420722; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ejga8Dxh/6lWQgQQuhEmr2bBEbn3EFgeSvX/8+FanOM=;
-        b=sfOSDGLdgxLs7tgkWmNdqmP3sO+1jADuHIXBWEpSPOyjfyqN7SXxFmuTF4bzH9Uc3j
-         NEB4i7J/J+ndmk6ueN2rDaZZy3KPQvxPDh+pjFWA9twHdYjLpDTlnq/4uQko8SsjCbgx
-         ofbP2TfieMzm7Lqa5qXYf2Q0fccpV86kkF5XgS+8BKpcL91N1sdWxNuwWE5ZESJE6CBs
-         UCwRpqEKSPFoTdUPkXHvweYF8V7iv/WwlERx01aNqzK6mf5P+xR5dTjrWMMbuW9E7cg/
-         4Dy0Qpcx6d9cHl2Aqursb2zkNvMWmxLu9OfO8TnC8z4fmNJf46XQ2dOsz7lXwp2A+bKV
-         rang==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782815922; x=1783420722;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ejga8Dxh/6lWQgQQuhEmr2bBEbn3EFgeSvX/8+FanOM=;
-        b=ACH7C0ftDVXkbHESfB65Q0HFhXmG3jTLm8lB71kmDCoI+oVmYgIa90KEhYMewzY8gV
-         Cqjuehg/3BwRZzCjuKs8xaFWKcxOnH1EEYd2LdnS2tz1+0qOD/2Jt/Txq/iriuwZ+fDJ
-         Q5P6UGN+sSiVjWPDuFu/Qh80RwedgzptlqwDuHNsgR4JLJdrMRzJ65WmGl4T7A6Wieix
-         ISOpkKJTQGFbTTSQnDWKO4kFFwfu9h/lbIXy1XAKcGHgSkN1RskVVMHYrxUFmAV53H86
-         BiJcVFeVoZnLOQ/pq1GandkH8CHTihsZ1513i+oy9FRR5zaH7LbDly/5AKw6bE0rYqKi
-         boRA==
-X-Gm-Message-State: AOJu0YyrIL3OcYRjRGft3DZERIgfR2AmjJX8becWCaTrybThBMhFNCHz
-	sweGGNLYVdnN5BJn3/VAuLDdbHJgfkw11uNcEl0agYJubNuqHbsadWDgPMoIKLVGrgs5nM0m
-X-Gm-Gg: AfdE7ckZee19w1foKevy0K2BhbmiHkL+yiR13gSvP/8Eff2TktgsKcDvqwFyyT1HCAV
-	EdFQh1IpNVyGC3JEx4Kzg1+Hq4mTubmdt5QftCodX3UoBUM5jhtO+sraFHQbjH1DcqYfDDEW7QR
-	cUDCQxxjuImujv97PJXBVrCbwDoYIS8rzYqGlHf3r4+GKdU2it+lz5Nt1jbQ0Sv7Bo1Enx2aMC5
-	4Opsf5su+Qiwlq6UPIQ26djzfb+6JKDcfyfGP3Jjm0eSo/hDUB8z6GBohUjtnA3sKoAMI7yO8JW
-	6p+SdOFHs1lQmUd59IQc5/5ffLTdeEQrDeCbgDeQ0Edvie//88GN5RTyTT3wd0Y4Q83j1ZwCt2O
-	/y9kCD0kzhVYNmPCwOnp1YB8YY8XAtkwpqDD1VrwtIcXXo7PB3EA5j0K2krdP2AWNEuKO4R79HW
-	fh4D4=
-X-Received: by 2002:a05:7301:3f19:b0:30c:99c8:2b1b with SMTP id 5a478bee46e88-30ee1344fbamr2327129eec.10.1782815921831;
-        Tue, 30 Jun 2026 03:38:41 -0700 (PDT)
-Received: from houminxi ([38.34.12.160])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee3265ab6sm7126901eec.30.2026.06.30.03.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 03:38:41 -0700 (PDT)
-From: Minxi Hou <houminxi@gmail.com>
-To: linux-nfs@vger.kernel.org
-Cc: Minxi Hou <houminxi@gmail.com>
-Subject: Re: [PATCH] NFS: pnfs: fix stale references in pnfs.rst
-Date: Tue, 30 Jun 2026 18:38:38 +0800
-Message-ID: <20260630103838.105808-1-houminxi@gmail.com>
+	 MIME-Version; b=cYcWR6OYYbT+LspSWuiCxx6wGGUws0BjpdUnFF5+VLYdtByR9EVr6ndSu/n7EU35VoGvAuzPaGHL5hruA6IBPrqpw794HU0ITl5Np2TeSOgI81RHd7TgQQw6aCbu0jXALTzK1iQoPpsBVeUZSc1YYi82i+4p6CIfL44GzIvGLZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5zy0bB/; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFCE61F000E9;
+	Tue, 30 Jun 2026 12:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782823730;
+	bh=PfKy2Q298N1Frsyoz/1Bob8hdbhUypxEFV9nYQcw6uE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Q5zy0bB/JJiCtgLWhsuSLGVLwOVsWBHXfrDrjhPD9iCcBL89aTpNaGNQ6Xske3jnZ
+	 7KSF9UBooD4pkCwFra4M4vOHWE6s7FBE35oZ23uDuPVnZSq31okhcOK57QQQj+SDKu
+	 AfWJ36pWU7STKcs3af46q2e4RjbbmEjNxcWuv0+j5bArCdWg3dlPEWQuyz7PIa0fzA
+	 hLQg3yDKRtSRNEoBVJsgAxrdLEnbzSir33rxxqs01t88isKBR1cDICt00/3cP8P6HM
+	 FMJ52+KQj0YtBTZHjWVyV4G7ouW2u6dXmmu1iuCaJ2r1VDDAKaiVwf4H87ZxxiCS1s
+	 /YvxCXhmAJTmQ==
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 5/4] sunrpc: protect the svc_pool_map pool_to[] array with RCU
+Date: Tue, 30 Jun 2026 08:48:47 -0400
+Message-ID: <20260630124847.289974-1-jlayton@kernel.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260619142040.3970345-1-houminxi@gmail.com>
-References: <20260619142040.3970345-1-houminxi@gmail.com>
+In-Reply-To: <20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org>
+References: <20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22887-lists,linux-nfs=lfdr.de];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER(0.00)[houminxi@gmail.com,linux-nfs@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,m:houminxi@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22888-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[houminxi@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C5B896E3059
+X-Rspamd-Queue-Id: C40196E484B
 
-Hi,
+svc_pool_map_get_node() reads the global svc_pool_map without holding
+svc_pool_map_mutex and dereferences m->pool_to[]. The array was both
+published and torn down without any synchronisation against that
+lockless reader:
 
-Friendly ping on this documentation fix. It corrects two stale
-references in pnfs.rst (a removed struct field and a renamed
-function). Happy to respin if any changes are needed.
+ - svc_pool_map_get() incremented m->count to one before
+   svc_pool_map_init_pernode() allocated and filled the arrays, so a
+   reader observing the map as "in use" could see a NULL (or partially
+   built) pool_to[] and oops.
 
-Thanks,
-Minxi
+ - svc_pool_map_put() freed the arrays as soon as the last reference
+   went away, so a reader that had already started dereferencing
+   pool_to[] could use it after free.
+
+svc_new_thread() takes this lockless path for every service, including
+unpooled ones that hold no map reference, so the reader genuinely can
+run concurrently with another service's startup or shutdown.
+
+Publish pool_to[] with rcu_assign_pointer() only after it is fully
+built in a private allocation, and have svc_pool_map_get_node()
+dereference it under rcu_read_lock(). On teardown, clear the pointer
+and defer the free past a grace period with kfree_rcu_mightsleep().
+
+svc_pool_map_set_cpumask() also reads pool_to[], but its caller holds a
+map reference (it checks sv_nrpools > 1) so the array is stable; it uses
+rcu_dereference_protected() rather than taking the read lock.
+
+to_pool[] needs no such treatment: it is only read by services that
+hold a map reference, so it cannot be freed under a reader.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Assisted-by: Claude:claude-opus-4-8
+---
+ net/sunrpc/svc.c | 91 +++++++++++++++++++++++++-----------------------
+ 1 file changed, 48 insertions(+), 43 deletions(-)
+
+Sashiko pointed out this (preexisting) problem during review of the
+other 4 in the series. I figure we might as well fix it too while we're
+in here.
+
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 4fff0725ef8f..ebd953248e34 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -46,13 +46,13 @@ static void svc_unregister(const struct svc_serv *serv, struct net *net);
+ struct svc_pool_map {
+ 	int count;			/* How many svc_servs use us */
+ 	unsigned int npools;
+-	unsigned int *pool_to;		/* maps pool id to node */
++	unsigned int __rcu *pool_to;	/* maps pool id to node */
+ 	unsigned int *to_pool;		/* maps node to pool id */
+ };
+ 
+ static struct svc_pool_map svc_pool_map;
+ 
+-static DEFINE_MUTEX(svc_pool_map_mutex);/* protects svc_pool_map.count only */
++static DEFINE_MUTEX(svc_pool_map_mutex);/* serialises svc_pool_map updates */
+ 
+ /*
+  * Pool modes that were historically accepted. They no longer select
+@@ -102,32 +102,12 @@ param_get_pool_mode(char *buf, const struct kernel_param *kp)
+ module_param_call(pool_mode, param_set_pool_mode, param_get_pool_mode,
+ 		  NULL, 0644);
+ 
+-/*
+- * Allocate the to_pool[] and pool_to[] arrays.
+- * Returns 0 on success or an errno.
+- */
+-static int
+-svc_pool_map_alloc_arrays(struct svc_pool_map *m, unsigned int maxpools)
+-{
+-	m->to_pool = kcalloc(maxpools, sizeof(unsigned int), GFP_KERNEL);
+-	if (!m->to_pool)
+-		goto fail;
+-	m->pool_to = kcalloc(maxpools, sizeof(unsigned int), GFP_KERNEL);
+-	if (!m->pool_to)
+-		goto fail_free;
+-
+-	return 0;
+-
+-fail_free:
+-	kfree(m->to_pool);
+-	m->to_pool = NULL;
+-fail:
+-	return -ENOMEM;
+-}
+-
+ /*
+  * Initialise the pool map for one pool per NUMA node.
+  * Returns number of pools or <0 on error.
++ *
++ * pool_to[] is published with rcu_assign_pointer() only once fully built,
++ * so a lockless reader sees either NULL or a complete map.
+  */
+ static int
+ svc_pool_map_init_pernode(struct svc_pool_map *m)
+@@ -135,21 +115,30 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
+ 	unsigned int maxpools = nr_node_ids;
+ 	unsigned int pidx = 0;
+ 	unsigned int node;
+-	int err;
++	unsigned int *to_pool, *pool_to;
+ 
+-	err = svc_pool_map_alloc_arrays(m, maxpools);
+-	if (err)
+-		return err;
++	to_pool = kcalloc(maxpools, sizeof(*to_pool), GFP_KERNEL);
++	if (!to_pool)
++		return -ENOMEM;
++	pool_to = kcalloc(maxpools, sizeof(*pool_to), GFP_KERNEL);
++	if (!pool_to) {
++		kfree(to_pool);
++		return -ENOMEM;
++	}
+ 
+ 	for_each_node_with_cpus(node) {
+ 		/* some architectures (e.g. SN2) have cpuless nodes */
+ 		BUG_ON(pidx > maxpools);
+-		m->to_pool[node] = pidx;
+-		m->pool_to[pidx] = node;
++		to_pool[node] = pidx;
++		pool_to[pidx] = node;
+ 		pidx++;
+ 	}
+ 	/* nodes brought online later all get mapped to pool0, sorry */
+ 
++	m->npools = pidx;
++	m->to_pool = to_pool;
++	rcu_assign_pointer(m->pool_to, pool_to);
++
+ 	return pidx;
+ }
+ 
+@@ -178,7 +167,6 @@ svc_pool_map_get(void)
+ 		mutex_unlock(&svc_pool_map_mutex);
+ 		return 0;
+ 	}
+-	m->npools = npools;
+ 	mutex_unlock(&svc_pool_map_mutex);
+ 	return npools;
+ }
+@@ -195,11 +183,21 @@ svc_pool_map_put(void)
+ 
+ 	mutex_lock(&svc_pool_map_mutex);
+ 	if (!--m->count) {
++		unsigned int *pool_to;
++
++		/* Protected by svc_pool_map_mutex */
++		pool_to = rcu_dereference_protected(m->pool_to, 1);
++
++		/*
++		 * Defer the pool_to[] free past a grace period; a lockless
++		 * reader may still hold it. to_pool[] has no such readers, so
++		 * free it directly.
++		 */
++		rcu_assign_pointer(m->pool_to, NULL);
+ 		kfree(m->to_pool);
+ 		m->to_pool = NULL;
+-		kfree(m->pool_to);
+-		m->pool_to = NULL;
+ 		m->npools = 0;
++		kfree_rcu_mightsleep(pool_to);
+ 	}
+ 	mutex_unlock(&svc_pool_map_mutex);
+ }
+@@ -207,10 +205,15 @@ svc_pool_map_put(void)
+ static int svc_pool_map_get_node(unsigned int pidx)
+ {
+ 	const struct svc_pool_map *m = &svc_pool_map;
++	const unsigned int *pool_to;
++	int node = numa_mem_id();
+ 
+-	if (m->count)
+-		return m->pool_to[pidx];
+-	return numa_mem_id();
++	rcu_read_lock();
++	pool_to = rcu_dereference(m->pool_to);
++	if (pool_to)
++		node = pool_to[pidx];
++	rcu_read_unlock();
++	return node;
+ }
+ 
+ /*
+@@ -221,17 +224,19 @@ static inline void
+ svc_pool_map_set_cpumask(struct task_struct *task, unsigned int pidx)
+ {
+ 	struct svc_pool_map *m = &svc_pool_map;
+-	unsigned int node = m->pool_to[pidx];
++	const unsigned int *pool_to;
+ 
+ 	/*
+-	 * The caller checks for sv_nrpools > 1, which
+-	 * implies that we've been initialized.
++	 * The caller checks for sv_nrpools > 1, so its service holds a
++	 * reference to the map: pool_to[] is allocated and cannot be freed
++	 * under us. No RCU read lock is needed; the held reference keeps the
++	 * array stable.
+ 	 */
+-	WARN_ON_ONCE(m->count == 0);
+-	if (m->count == 0)
++	pool_to = rcu_dereference_protected(m->pool_to, 1);
++	if (WARN_ON_ONCE(!pool_to))
+ 		return;
+ 
+-	set_cpus_allowed_ptr(task, cpumask_of_node(node));
++	set_cpus_allowed_ptr(task, cpumask_of_node(pool_to[pidx]));
+ }
+ 
+ /**
+-- 
+2.54.0
+
 
