@@ -1,214 +1,307 @@
-Return-Path: <linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22903-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UoDFBVpyRGrJuwoAu9opvQ
-	(envelope-from <linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 03:50:18 +0200
+	id 0nTLHSulRGqWyQoAu9opvQ
+	(envelope-from <linux-nfs+bounces-22903-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 07:27:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06D856E91A6
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 03:50:17 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE7A96E9D7E
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 07:27:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm1 header.b=flM3lVcp;
-	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="f Jd+cGy";
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ownmail.net;
+	dkim=pass header.d=synology.com header.s=123 header.b=K+zA1I5H;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22903-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22903-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=synology.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CB09B3022A80
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jul 2026 01:50:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80B843028B1A
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jul 2026 05:27:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 559993612E0;
-	Wed,  1 Jul 2026 01:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C2FF363081;
+	Wed,  1 Jul 2026 05:27:04 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from mail.synology.com (mail.synology.com [211.23.38.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23000360EF6;
-	Wed,  1 Jul 2026 01:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B7F28504D
+	for <linux-nfs@vger.kernel.org>; Wed,  1 Jul 2026 05:27:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782870614; cv=none; b=FE90CeiObyNUg6nRQeKrkylbG2H8LVyQuMhUGSb0PUMCtfK0n1JWsdzjC+MgdwK8ZyMk7crnnbjWLhaPNMlPZ0fNhL1cz/CkxtLDm9c5uxwkyt6fN50Y9LFMkBg6D0K/SYCw8auoemVJGSUA2q1Q+TLyxxj4r8JQuImFHF7VNNQ=
+	t=1782883624; cv=none; b=H5P75F28BRPd+fRenTAqdayQLLs6lL+/AhC6q8ihxqyrQTS8T6GZ4sL3hyUsz7XupfTY1qGT8xdQg7RZsP91oCW1nnCBxgfXoMtgD0XbeLSL0jNrxHop3aZ6Na8xpv1xYwRwWcl7SsWGUhpGQAkieSI37Le3tZZT/RhdengO2tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782870614; c=relaxed/simple;
-	bh=e47uxe1VS+QU2FqDn25QPxOPingmUkGhEqRcNz+fN3U=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=iAv7GgVcTlzJ1/cfIZ0PUEAiBTnUTUoUcmkbwLjKl/eRkVHmGi60QOTDDgVFBqqNphtbKUSNVQ/Awc08OBK5aeHYwcdQ+I0DOwtkMlt3xuBajS2R9Q1xUnMi4k3AyOveMNbSJ2mGRdzbOs7BMNkNIFZ/arvBE7tvJ6zm8nJrwuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=flM3lVcp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fJd+cGyQ; arc=none smtp.client-ip=103.168.172.145
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 47B84EC016D;
-	Tue, 30 Jun 2026 21:50:11 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Tue, 30 Jun 2026 21:50:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1782870611; x=1782957011; bh=wNJAVsfjqK1239R++sn9/FcHKTjkjKyLGT0
-	e94Ytsfs=; b=flM3lVcpZdTuw3KU97tYxCZ8FvyUgOI1YL2xwX3MpfisFF0w6yc
-	HZgSsg5DVVBbGkc9aO7pm2dxvz1Tl9uDK72ToSJZBVi8pLX4VKUVFW7CpjFH3+iO
-	UgAxS2/LHgQ4wynzCpIz3w0dmWSb7pkO378achJd0ABiuAeYJoNBsfzSmg9cevMu
-	sTakXvnSuhitzlOV88DF9e/vKVzeISvnPPQEx/Na+snvB2HsNVCwBpPogznAN+zq
-	J4zk2TjgXadACK0nih4njTdlCTKaPBn06186O9QqFMMCKpBaT0AYc5yPVyaz8KKZ
-	xoZKT1iUlwZWzD2HNKkTDD3Vllq1J2lHmkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782870611; x=
-	1782957011; bh=wNJAVsfjqK1239R++sn9/FcHKTjkjKyLGT0e94Ytsfs=; b=f
-	Jd+cGyQAcZnSpY1/YUNzNCgjOIZO7ajstaDvCsdxGEy/PT5qKwpFTeqaTzQhghKO
-	wkslJk5Lo+PuWk2mgYSSwe6VpBXwg9sLk1tHYZDsHJ2NI/Tcpwnzf1A563JhjDgX
-	3AucHjMN3uLupoZ52lRixUkUXWV/uOBf1DcXxhEwLjbdH18EfOW3oRooCtdLrRiW
-	d09oQTXizSk9ft4vGrTH4+ZE7MTpgztMoF0GQq5TKJZF8G4n5V2OHPb5bQRWAMRK
-	0CR73WMSsVQNln2d95tfBqa4JZxWCVlV6hLHPRVzbyWYCo0DneYj/lepCcviq8LF
-	fJepvHoAPPL8qdhXHOnWw==
-X-ME-Sender: <xms:UnJEaoWx0iFoM4xDYyT2IQ25xg0-ihaZ_Tc97HejtEAZ8aRLpA8dWA>
-    <xme:UnJEahjJW7z5ZfbKXksep7vfE1eih5iSuyNbP1Y3StgHsTV0TN-lLiTsk_MBg-WSm
-    31Lnn44JtjJI6Pzery3ZdDjordJINNsVVzB3cg9daLkQAg>
-X-ME-Received: <xmr:UnJEagpfYF18KjTJI-ANLnqn91taNsWtuhx7HaQTkAi3s7xlTsL3dCdcbOhNv8SXJg>
-X-ME-Proxy-Cause: dmFkZTGNb6u9hkoRKrj4F0VMWONjQGQ0sMqfG8jqo0midHUNrLKBvLazrGc4JjSPiJb0og
-    EkiUOt4+kuX6ZXtdexf5/bDeErt0YmrasvHAneid0CeBLFm07lY3AdmDw9hlaydLds8wqn
-    RdWN5L2A0olRXrMfsmON0e0w29GCIKjeg03l+7eu9mWLxzmSneix964hbKetmfRoKetb5V
-    9RdrY77VnmefgAOQdNz8xgFn5KHJhA4CbHRR+ZzudsH2T+HDWcMBi98FkIxZZkNmQzm03O
-    7swE9SWvRGhsw46MHO+lXRCNaGerdVSWsM3O/k88OrS0qUMSdMAU9LsxKYmQ2L8w/n+SD8
-    MYKxmgJk3NRCXy5192iGBWhb95jF/uaNYH+wgkQjQVW5knHDi6iKTCi0/MbJGyiMlSnQrr
-    CenC1Wx+I/0K4rV/ZrqSf0VvdcATHacrTRMD7zHAe4uN7aXU04tIURdhPgDCdG5d4v/GYF
-    JSqV5//CYcM/mwUrFRz/NMciSkBKNt1GMPsh8FBjCz6asPSAaEYDZ7hBSfe023XlIxeu4c
-    XqnhrPWtX6OhWuvdwvDwJM3y+KmNotBbIpAdPXwH+i1rgYrLli5/jgRNTny2amEfZt+wpx
-    U+z2e3PaEU0GYxz8ST9MpLe3WvsOtLYZVRila+H+UkLMBEwPjsxBYnPsEqIA
-X-ME-Proxy: <xmx:UnJEanEpRbLohyaWz0NQWhKeHrMxoeRYS7K2IndozZTn0-_OkmOezg>
-    <xmx:UnJEal4n4QULiH2f_CbP8Ysc3oCBEvy9zVehOIAkqz_hUT0Af8HPkg>
-    <xmx:UnJEavcdsBDx8I8SbeB4BpXZ69bsPkWvL0STwav2b4dQPPsq06lpCg>
-    <xmx:UnJEag7lQpuFHrXU06E1UqKjmcvOzF7Pn_sCUWH6vJ7Zdm2GHGNRhw>
-    <xmx:U3JEajlupWSUJ9pq7Fjqqe84bUJoH3GH58Z0sUzMxVnwsHyhJYii0rRN>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Jun 2026 21:50:08 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1782883624; c=relaxed/simple;
+	bh=CH+91z2l363PpCAf6OQY1pPqirG6umsDEx2xyK5i8Ls=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rweq7wIwTDIG6M44KHqQYoK6mXcJ0187OubB5TYdL8kExj5Q3jQx65nLRaja29wbaqgPtNhKVvEjkb9sEsHkbacGKprdvxfZpRQLVmdzfGOrAHBdRj0Rby9tWxHXk1knZQHgCnz9bQNFtj/iL2MeTscr1JK/rv+OKlBrmNLWodE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synology.com; spf=pass smtp.mailfrom=synology.com; dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b=K+zA1I5H; arc=none smtp.client-ip=211.23.38.101
+Received: from vbm-oscarou.. (unknown [10.17.211.167])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.synology.com (Postfix) with ESMTPSA id 4gqpRS1Vw5zKP7XWM;
+	Wed, 01 Jul 2026 13:27:00 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synology.com;
+	s=123; t=1782883620;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZya2k8bPd/8VNgDFuYCUFC7ZX0vhDTT1XrLCj2Oclg=;
+	b=K+zA1I5H2IlpOuZSGuOjErLPsgaTLmRj8l/BaR9dk2nf8qcxGAC9tOa5O2W4qLQylSRHiA
+	sP+pl/Gg0izUac0sobVl9g2riimv2c8lrpRXcCgYt6xpCNSrU1IXUwZ+G95dyV3ah3fr/E
+	q/mS8YitWAxAD72C8mwtfaH/brdB+QU=
+From: Oscar Ou <oscarou@synology.com>
+To: Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	Oscar Ou <oscarou@synology.com>
+Subject: [PATCH v2] lockd: refcount NLM_SHARE access/deny modes
+Date: Wed,  1 Jul 2026 13:26:45 +0800
+Message-Id: <20260701052645.2213483-1-oscarou@synology.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260630093820.2162344-1-oscarou@synology.com>
+References: <20260630093820.2162344-1-oscarou@synology.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <cel@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject:
- Re: [PATCH 5/4] sunrpc: protect the svc_pool_map pool_to[] array with RCU
-In-reply-to: <20260630124847.289974-1-jlayton@kernel.org>
-References: <20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org>
-  <20260630124847.289974-1-jlayton@kernel.org>
-Date: Wed, 01 Jul 2026 11:50:01 +1000
-Message-id: <178287060141.27465.14090245730909314119@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Transfer-Encoding: 8bit
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Spam-Flag: no
+X-Synology-Virus-Status: no
+X-Synology-MCP-Status: no
+X-Synology-Auth: pass
+Content-Type: text/plain
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[synology.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[synology.com:s=123];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22902-lists,linux-nfs=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22903-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:oscarou@synology.com,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	RCVD_COUNT_FIVE(0.00)[6];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	FORGED_SENDER(0.00)[oscarou@synology.com,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[oscarou@synology.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[synology.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,messagingengine.com:dkim,ownmail.net:dkim,ownmail.net:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[synology.com:dkim,synology.com:email,synology.com:mid,synology.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 06D856E91A6
+X-Rspamd-Queue-Id: BE7A96E9D7E
 
-On Tue, 30 Jun 2026, Jeff Layton wrote:
-> svc_pool_map_get_node() reads the global svc_pool_map without holding
-> svc_pool_map_mutex and dereferences m->pool_to[]. The array was both
-> published and torn down without any synchronisation against that
-> lockless reader:
->=20
->  - svc_pool_map_get() incremented m->count to one before
->    svc_pool_map_init_pernode() allocated and filled the arrays, so a
->    reader observing the map as "in use" could see a NULL (or partially
->    built) pool_to[] and oops.
->=20
->  - svc_pool_map_put() freed the arrays as soon as the last reference
->    went away, so a reader that had already started dereferencing
->    pool_to[] could use it after free.
->=20
-> svc_new_thread() takes this lockless path for every service, including
-> unpooled ones that hold no map reference, so the reader genuinely can
-> run concurrently with another service's startup or shutdown.
->=20
-> Publish pool_to[] with rcu_assign_pointer() only after it is fully
-> built in a private allocation, and have svc_pool_map_get_node()
-> dereference it under rcu_read_lock(). On teardown, clear the pointer
-> and defer the free past a grace period with kfree_rcu_mightsleep().
->=20
-> svc_pool_map_set_cpumask() also reads pool_to[], but its caller holds a
-> map reference (it checks sv_nrpools > 1) so the array is stable; it uses
-> rcu_dereference_protected() rather than taking the read lock.
->=20
-> to_pool[] needs no such treatment: it is only read by services that
-> hold a map reference, so it cannot be freed under a reader.
+When an NFSv3/NLM client issues multiple NLM_SHARE calls from a single
+host for the same (file, owner) tuple, the current implementation
+overwrites the recorded access and deny modes with the latest pair.
+A subsequent NLM_UNSHARE then drops the entire entry, even if other
+grants were implicitly subsumed by the most recent SHARE.  This is
+particularly visible to Windows-style clients that map each open of
+a file to a distinct NLM_SHARE, all carrying the same NLM owner
+handle.  For example:
 
-I don't think this is the best approach.
-The problem only occurs when svc_create() is used as when
-svc_create_pooled() is used, svc_pool_map_get() is called early so a
-reference is held to svc_pool_map.
+    1. SHARE(access=RW, deny=W)   -> entry [RW, deny W]
+    2. SHARE(access=R,  deny=N)   -> entry [R, deny N]   (RW/W overwritten)
+    3. UNSHARE(access=R, deny=N)  -> entry freed
+    4. UNSHARE(access=RW, deny=W) -> nothing to release
 
-svc_new_thread() is the only caller of svc_pool_map_get_node(), and it
-can easily check pool->sv_is_pooled and only call
-svc_pool_map_get_node() is sv_is_pooled is true.  When false it should
-probably use NUMA_NO_NODE.
-e.g.
+Track each of the four valid fsh_access and fsh_mode values with a
+small per-value refcount.  On SHARE the appropriate buckets are
+incremented; on UNSHARE they are decremented.  s_access / s_mode
+are recomputed in both paths as the union of all positive buckets
+with a non-NONE / non-DN value (indices 1..3), and the entry is
+freed once s_access and s_mode are both zero.
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index ae9ec4bf34f7..063826702f46 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -800,7 +800,10 @@ int svc_new_thread(struct svc_serv *serv, struct svc_poo=
-l *pool)
- 	int node;
- 	int err =3D 0;
-=20
--	node =3D svc_pool_map_get_node(pool->sp_id);
-+	if (serv->sv_is_pooled)
-+		node =3D svc_pool_map_get_node(pool->sp_id);
-+	else
-+		node =3D NUMA_NO_NODE;
-=20
- 	rqstp =3D svc_prepare_thread(serv, pool, node);
- 	if (!rqstp)
+NLM_UNSHARE gains the access and deny modes as arguments so the
+correct buckets can be decremented.  The two callers in svcproc.c
+and svc4proc.c are updated to forward the decoded values.
+
+Signed-off-by: Oscar Ou <oscarou@synology.com>
+---
+Applies on top of "lockd: Regenerate NLMv4 XDR code" by Chuck Lever.
+
+No Fixes: tag.  The fix depends mechanically on the xdrgen
+regeneration, so a Fixes: tag would mislead -stable backporters.
+Happy to add one plus an informal Depends-on: line if preferred.
+
+Changes since v1:
+- Reworded the "buckets" sentence in the commit message: the entry is
+  freed once s_access and s_mode are both zero, not when every bucket
+  has reached zero.  Index 0 (fsa_NONE / fsm_DN) contributes no bits
+  to the union and does not gate freeing.
+- Dropped the incorrect claim that per-file f_mutex serialises the
+  new arrays, from both the commit message and the comment on
+  nlm_recompute_share().  f_mutex is released by nlm_lookup_file()
+  before the share helpers run.
+
+ fs/lockd/share.h    |  6 +++++-
+ fs/lockd/svc4proc.c |  4 +++-
+ fs/lockd/svcproc.c  |  4 +++-
+ fs/lockd/svcshare.c | 40 +++++++++++++++++++++++++++++++++++-----
+ 4 files changed, 46 insertions(+), 8 deletions(-)
+
+diff --git a/fs/lockd/share.h b/fs/lockd/share.h
+index 1ec3ccdb2aef..3b414774c5b3 100644
+--- a/fs/lockd/share.h
++++ b/fs/lockd/share.h
+@@ -11,6 +11,8 @@
+ /* Synthetic svid for lockowner lookup during share operations */
+ #define LOCKD_SHARE_SVID	(~(u32)0)
+ 
++#define LOCKD_FSH_NR		4	/* fsh_access / fsh_mode are in {0..3} */
++
+ /*
+  * DOS share for a specific file
+  */
+@@ -21,12 +23,14 @@ struct lockd_share {
+ 	struct xdr_netobj	s_owner;	/* owner handle */
+ 	u32			s_access;	/* access mode */
+ 	u32			s_mode;		/* deny mode */
++	u32			s_access_counts[LOCKD_FSH_NR];
++	u32			s_mode_counts[LOCKD_FSH_NR];
+ };
+ 
+ __be32	nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
+ 			  struct xdr_netobj *oh, u32 access, u32 mode);
+ __be32	nlmsvc_unshare_file(struct nlm_host *host, struct nlm_file *file,
+-			    struct xdr_netobj *oh);
++			    struct xdr_netobj *oh, u32 access, u32 mode);
+ void	nlmsvc_traverse_shares(struct nlm_host *, struct nlm_file *,
+ 					       nlm_host_match_fn_t);
+ 
+diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+index 78e675470c4b..49ae487e3390 100644
+--- a/fs/lockd/svc4proc.c
++++ b/fs/lockd/svc4proc.c
+@@ -1078,7 +1078,9 @@ static __be32 nlm4svc_proc_unshare(struct svc_rqst *rqstp)
+ 	if (resp->xdrgen.stat)
+ 		goto out;
+ 
+-	resp->xdrgen.stat = nlmsvc_unshare_file(host, file, &lock->oh);
++	resp->xdrgen.stat = nlmsvc_unshare_file(host, file, &lock->oh,
++						argp->xdrgen.share.access,
++						argp->xdrgen.share.mode);
+ 
+ 	nlmsvc_release_lockowner(lock);
+ 
+diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+index 4836887f11ef..54845e52d31e 100644
+--- a/fs/lockd/svcproc.c
++++ b/fs/lockd/svcproc.c
+@@ -1097,7 +1097,9 @@ static __be32 nlmsvc_proc_unshare(struct svc_rqst *rqstp)
+ 	if (resp->xdrgen.stat)
+ 		goto out;
+ 
+-	resp->xdrgen.stat = nlmsvc_unshare_file(host, file, &lock->oh);
++	resp->xdrgen.stat = nlmsvc_unshare_file(host, file, &lock->oh,
++						argp->xdrgen.share.access,
++						argp->xdrgen.share.mode);
+ 
+ 	nlmsvc_release_lockowner(lock);
+ 
+diff --git a/fs/lockd/svcshare.c b/fs/lockd/svcshare.c
+index 5ac0ec25d62d..b7372094d397 100644
+--- a/fs/lockd/svcshare.c
++++ b/fs/lockd/svcshare.c
+@@ -25,6 +25,24 @@ nlm_cmp_owner(struct lockd_share *share, struct xdr_netobj *oh)
+ 	    && !memcmp(share->s_owner.data, oh->data, oh->len);
+ }
+ 
++/*
++ * Recompute s_access / s_mode as the union of all positive refcount
++ * buckets.
++ */
++static void nlm_recompute_share(struct lockd_share *share)
++{
++	u32 new_access = 0, new_mode = 0, v;
++
++	for (v = 1; v < LOCKD_FSH_NR; v++) {
++		if (share->s_access_counts[v])
++			new_access |= v;
++		if (share->s_mode_counts[v])
++			new_mode |= v;
++	}
++	share->s_access = new_access;
++	share->s_mode = new_mode;
++}
++
+ /**
+  * nlmsvc_share_file - create a share
+  * @host: Network client peer
+@@ -64,12 +82,15 @@ nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
+ 	share->s_host       = host;
+ 	share->s_owner.data = ohdata;
+ 	share->s_owner.len  = oh->len;
++	memset(share->s_access_counts, 0, sizeof(share->s_access_counts));
++	memset(share->s_mode_counts, 0, sizeof(share->s_mode_counts));
+ 	share->s_next       = file->f_shares;
+ 	file->f_shares      = share;
+ 
+ update:
+-	share->s_access = access;
+-	share->s_mode = mode;
++	share->s_access_counts[access]++;
++	share->s_mode_counts[mode]++;
++	nlm_recompute_share(share);
+ 	return nlm_granted;
+ }
+ 
+@@ -78,12 +99,14 @@ nlmsvc_share_file(struct nlm_host *host, struct nlm_file *file,
+  * @host: Network client peer
+  * @file: File to be unshared
+  * @oh: Share owner handle
++ * @access: Access mode of the SHARE being released
++ * @mode: Deny mode of the SHARE being released
+  *
+  * Returns an NLM status code.
+  */
+ __be32
+ nlmsvc_unshare_file(struct nlm_host *host, struct nlm_file *file,
+-		    struct xdr_netobj *oh)
++		    struct xdr_netobj *oh, u32 access, u32 mode)
+ {
+ 	struct lockd_share	*share, **shpp;
+ 
+@@ -93,8 +116,15 @@ nlmsvc_unshare_file(struct nlm_host *host, struct nlm_file *file,
+ 	for (shpp = &file->f_shares; (share = *shpp) != NULL;
+ 					shpp = &share->s_next) {
+ 		if (share->s_host == host && nlm_cmp_owner(share, oh)) {
+-			*shpp = share->s_next;
+-			kfree(share);
++			if (share->s_access_counts[access])
++				share->s_access_counts[access]--;
++			if (share->s_mode_counts[mode])
++				share->s_mode_counts[mode]--;
++			nlm_recompute_share(share);
++			if (!share->s_access && !share->s_mode) {
++				*shpp = share->s_next;
++				kfree(share);
++			}
+ 			return nlm_granted;
+ 		}
+ 	}
+-- 
+2.34.1
 
 
-NeilBrown
+Disclaimer: The contents of this e-mail message and any attachments are confidential and are intended solely for addressee. The information may also be legally privileged. This transmission is sent in trust, for the sole purpose of delivery to the intended recipient. If you have received this transmission in error, any use, reproduction or dissemination of this transmission is strictly prohibited. If you are not the intended recipient, please immediately notify the sender by reply e-mail or phone and delete this message and its attachments, if any.
 
