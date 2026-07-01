@@ -1,184 +1,184 @@
-Return-Path: <linux-nfs+bounces-22908-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22909-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XEwBCQQ0RWqL8goAu9opvQ
-	(envelope-from <linux-nfs+bounces-22908-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 17:36:36 +0200
+	id Kc7gD/ZzRWokAgsAu9opvQ
+	(envelope-from <linux-nfs+bounces-22909-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 22:09:26 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FADE6EF4F7
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 17:36:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 935356F14D7
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 22:09:25 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=VUtllnV0;
-	dkim=pass header.d=redhat.com header.s=google header.b=jja2OHzp;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22908-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22908-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Bew+8c68;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22909-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22909-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9E261300829F
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jul 2026 15:36:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9CEEC30FE7DF
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jul 2026 19:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32092DC767;
-	Wed,  1 Jul 2026 15:36:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC2E435E1A6;
+	Wed,  1 Jul 2026 19:57:12 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FA31FC110
-	for <linux-nfs@vger.kernel.org>; Wed,  1 Jul 2026 15:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB49E431E7B;
+	Wed,  1 Jul 2026 19:57:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782920193; cv=none; b=QrxbEOMdXep8xIXpbk0YYsnoHft54ak5Sh5fR99Y3zNPCW/1h1Xu4WAIPwj74cQZmeJxPefVXXIjn7JQ6IVMDvkMRxatXpVdHmDYl4rnXJNHblZ+BMMkgN03tIc8CBZr4gIIAOF2J+httl8COKBiB+JQDTQ58y4CL/hZrLlkYm0=
+	t=1782935832; cv=none; b=V3Z5ndT/CQPsIBx81w6priggUHTqdN+zOpferQ9jnHDexBsK2cz433ULSnC5B6tNx+NxNRPh8IgXOyr0faDVhVHrwfjtbUFlWoK1xmsYv9P0HDF5UGJ5jhw+7DTPFNOYc4x2FKTFgV7MZaumPfWldLWVfPSCvRqKg9yBNAnDr8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782920193; c=relaxed/simple;
-	bh=l9WWJg9Ujtby7zGR3KODrRu+J4w5DoFtaB4s6p7ZRlY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pw69nlYnjQT9geccUA1gXcx3Rz+oX/rBcwgGGg7GxPZLHQXxzhOEMS/g8tTXNY3j8Uf1M5y2RKejXtO8ZY64OQoAmCoc2/sE0uOPMIrjS4cpT0mdMNK7qdiSivwswm6RiKHpQXh/JUiz0RqH2A1UDKuUWRIbaDnz4JOC7wmqYac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VUtllnV0; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=jja2OHzp; arc=none smtp.client-ip=170.10.129.124
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782920191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCPTqC9P3Eiq7AUl3G+xVx8nZoLCTAFDVHofZYbub4U=;
-	b=VUtllnV0yocIhYhblitGpi03xO4zJkb+c721E+vxnvDyU3TUCRdTj0Eg6SqoVkwOP65gQD
-	sYeJ08vyvfJVnmC8L7d50USH34BGYPlFxzOdzt06WXadrNiPT4g4dtfJbXNldD1+wl35Ii
-	Lq9dZSUZpfaWoFJcU4pqeYqDWHaEd4s=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-uz9GmmWJOP6hwHLrGJZK_Q-1; Wed, 01 Jul 2026 11:36:30 -0400
-X-MC-Unique: uz9GmmWJOP6hwHLrGJZK_Q-1
-X-Mimecast-MFC-AGG-ID: uz9GmmWJOP6hwHLrGJZK_Q_1782920190
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-92e632390d2so161447585a.3
-        for <linux-nfs@vger.kernel.org>; Wed, 01 Jul 2026 08:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1782920190; x=1783524990; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aCPTqC9P3Eiq7AUl3G+xVx8nZoLCTAFDVHofZYbub4U=;
-        b=jja2OHzpQOxMqnukmJvbgq9akTFqvdUVyHZK0gz4vhg9SAYHmP1oDuYAEwhq96wxxI
-         lI2MZO3vm7SOyjKp5OHaFJHdsAnKbDdFe7bk8UJa70EN388PrsrqHZh9iEMfIXMWgri7
-         F+0IUeV8x1BKT2oQnXfZtYUIXMdNoHUQhRlkBxev01kX7Hyav7zXKJS1lBnNEZnjlfbN
-         ajPmgZ0tfhZVF+3fBXwwoQ+HCbPTjdlwBK9X+dq74+NN1CKNuxFD/wjU0gWv7r2G1oSz
-         PQ/q1V6Lnjh+SG/VO9bPbTf5CfE53aP9xMKeH47CcTEeYNQzkjV1Bpc3WEl8ac3F+KSo
-         +zpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782920190; x=1783524990;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=aCPTqC9P3Eiq7AUl3G+xVx8nZoLCTAFDVHofZYbub4U=;
-        b=SB001JpDoZey6RqN1DxV+5TMz1GQNvBVtHfNs2m3fMfpse3yijAnqn/GhYjgbbR+JX
-         gBRt4ptV8tDMUwmCczHAEenuv+2yAguymB65dhTWBiQl3OH9Viz2/SrtRvStGtSWZksH
-         Ewlp3Hcn0FZ3uXWTykqjHfEAH9nMZrZjqPottNXLK03c1DGpRVeDwVM/75vTTg0Hwlol
-         cdTK1j05khK3m5qu9z1DeLP0miHuArD4hHOXJCTj3FSufO0uesnvdOma/8TGt+q/ImAw
-         B88/qIklA+E+A0byheSFb8MupVEk+PfMRHnE9x1IaJUscG3kLGbSiQcqzOH8jHNiDvqs
-         L7bg==
-X-Gm-Message-State: AOJu0Yy6H/NjHYxnKC+iNyfc+YKVUzzO6GZB4kEBqxUgG2sQqK2hUxIH
-	LaZBotSG8OMs9ASQ44U8IiS+qLENZNZydHbLAxP6h3MEf4rQBibD9/tCpqB2NXlqjwDts0uJlqU
-	EuHwwYgabNK3ioA6D/jZC1zy+zUN/bsyPLreOEzQZiZgDwS64BepfuwGu9VjGXxDciNomBw==
-X-Gm-Gg: AfdE7cm7CboY4JEYCQka68DTPYWqxzCclrE5LT3NWFD4A4D7v2zqdevlYkKX9NzDGd1
-	C4cR7UOEzLJOV/ssjhvsdxoiKbV1t4H+PgXVx9gKkugo/4oIDbTBaEyvBjNoOtUOZpvRW11YhcP
-	oDa7bUbATkyAcrjrIPCm+/5a5nRZNTRAPq3u0flzrES6rLSiishJFxAj1+TeUFDgVCxFz6FNg4T
-	XlfyS1RN6Nyo50BabEpEhWYqD8p9HqtyiQFisfRIe1Mld2V/QOv+hzgEbcLuKXmZukkubMLGOUT
-	VUZNhwUPJ8J3JQPvZfnMnndk/LrzZyFt9t+7fekF4VfkeZU+hW6swYb16OlNCbc/PKsGVVtj5uu
-	heapVJEaxCWs=
-X-Received: by 2002:a05:620a:628b:b0:92e:4727:924c with SMTP id af79cd13be357-92e7b01ed76mr213717285a.33.1782920189545;
-        Wed, 01 Jul 2026 08:36:29 -0700 (PDT)
-X-Received: by 2002:a05:620a:628b:b0:92e:4727:924c with SMTP id af79cd13be357-92e7b01ed76mr213712085a.33.1782920189089;
-        Wed, 01 Jul 2026 08:36:29 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.244.234])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f3611ddea1sm23802766d6.25.2026.07.01.08.36.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2026 08:36:27 -0700 (PDT)
-Message-ID: <be3368ef-0708-4789-842a-1286a8143dd1@redhat.com>
-Date: Wed, 1 Jul 2026 11:36:27 -0400
+	s=arc-20240116; t=1782935832; c=relaxed/simple;
+	bh=wlGvZyIYKFZSRSrzenlC/yPHHmXLQ4zEetEmpyOgjuA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VodXNbcuOeNxQZGhG95319D0vKucrrcHUPkCKL+QtED46ZeZ09ws4KfU1InrrzzgN6ae72jSnS6y9zjZmiPE6i+kjDeB3OYxElc7MzqAuQh+bG0v/CxsGIGuG6c3NYQPFhKPVppt0BgiOz2bv+Ix2I2lDnJs1hjkKiNjsXaGWoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bew+8c68; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E711F000E9;
+	Wed,  1 Jul 2026 19:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782935831;
+	bh=/WR7rHFgE8bLY5tYkDvk/w9+dBkbf5i4SwJO4cztbhE=;
+	h=From:Subject:Date:To:Cc;
+	b=Bew+8c68l0z7gvUDL0AD2iw/PQM2K4hgFuAJMK9SN2v/doGGMJze18O+/+VKvfUtn
+	 Dz2jALCDNXU+sJa94B16Do1lJ0o/wZaBj+84PmudvGECc/wu0IghrCs9CBe4CUQRfT
+	 qoCfEUrF4pvQyz7ZU4AyqJ2zofSN7E2Z8Ml4CtG+M1BiMTmYmaiCHkBrcNVbZOjkXc
+	 LuJxVGTkn8iTKKa9IKfMtDKVadC4cXSS/0ljZJJPHULdIefjUFhYGgu0DTlSSOntSw
+	 oWR/m0Ko/lJiFjlY3lzIOkp2/z6qa+OtnuKrV8yDvmBKn0l7pfykLTmLip+ABTNcao
+	 gj/rUGdDj7OrA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v4 0/4] sunrpc: hardcode pool_mode to pernode, remove other
+ modes
+Date: Wed, 01 Jul 2026 15:56:55 -0400
+Message-Id: <20260701-sunrpc-pool-mode-v4-0-b3d867e4c8f9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rpcbind: fix leak of nconf in main()
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-References: <20260630161358.133351-1-smayhew@redhat.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20260630161358.133351-1-smayhew@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/33NwQ6CMAyA4VchO1uzdWOIJ9/DeBBWYBEZ2ZRoC
+ O/u4KJG4vFv2q8jC+QtBbZPRuZpsMG6LobaJKxszl1NYE1shhw1Vygh3Dvfl9A718LVGQJJuki
+ 1RG5KxeJZ76myj4U8nmI3Ntycfy4fBjFP/2CDAAFFViEnmWYqLw4X8h21W+drNmsDvgWN6YqAU
+ VBVKrDQJIh2P4L8FPIVQQIHk6POdNwwlfkSpml6AQuORnI1AQAA
+X-Change-ID: 20260423-sunrpc-pool-mode-3e6b56320dc4
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+ Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2442; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=wlGvZyIYKFZSRSrzenlC/yPHHmXLQ4zEetEmpyOgjuA=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqRXEQ8aB2pXJLna5jiWpiTPLZg6OD/2R9ztzK1
+ yApbjFLydCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCakVxEAAKCRAADmhBGVaC
+ FQ32D/91ta+mS8KmG7j+TZpAgWro7iyjwKjwYRpD9/D+lJYxw+UsFxFSKlBEy06l6YRGyuawL8V
+ aqfUY9YToL3/ZxqIeR9KBgXz70rmwgpafcHFoZauBgZWwc3RKHOu+d+hlLSf0qaEyH3l7rSHqWm
+ WB7uU0Ol3RSBVAEC2pw/FSfvaxZMiKSfYd7S3m9Y+X7SMxGBZEp3Cx51Nw+zlrF4q7bCBpOh3i2
+ +B22syIt/1+bzwCiOHGshF3NI3BWqLgt5vVAN7RM4nVgWL2zn91+StgyBP+2L10PeGX9HwD3Mbi
+ zZ5zn5+uW4Qh8Cq6MY8uMWL3MccQu/XiggwIdehWdR3HzR31QHMAHxUAuyGw52NTWa+0kKuN6UX
+ MZNrJnMuuFajTaBG+0CjaR4ddkvHEpT0PvO3xCzwPvq+Z39W76M1e1FGizfyjMTd8jMTkG5cjN4
+ roRbYGwSIeD+KyZmhTbw2J7nSa5hkw5gLltWi4VHL9GEAB+D+6K40ENz4VLJ7AGKEY6BeH73PlE
+ NXoCbTQIp9ycqHchFnk6c9xR8h3njx3V1Deqjp9GorDwM1M12ITAiCrGMDxyeHNZMZeEw4XT2oz
+ fZFtgDSzC6jP2+nr3xCkwan5c1VL1gTi8KbM6zo9OYNuV4MkS3qlP6rt7XL8+L2UxcpoD0wfj19
+ YtW2RrPZsAeo1kQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22908-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:smayhew@redhat.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	RCPT_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22909-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steved@redhat.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9FADE6EF4F7
+X-Rspamd-Queue-Id: 935356F14D7
 
+This version drops the 5/4 follow-on patch that I had sent after the
+original series, and changes the second patch to not allow unpooled
+services to consult the map.
 
+Patches #1 and #3 address what is a shortcoming of the existing code --
+namely that the server can be configured to schedule RPCs to pools with
+no threads in them.
 
-On 6/30/26 12:13 PM, Scott Mayhew wrote:
-> Before reusing nconf in the getnetconfig() loop, we need to free the
-> memory that was previously allocated via getnetconfigent().  Fixes the
-> following leak reported by valgrind:
-> 
-> ==9031== 1,136 (136 direct, 1,000 indirect) bytes in 1 blocks are definitely lost in loss record 63 of 67
-> ==9031==    at 0x485183E: malloc (vg_replace_malloc.c:447)
-> ==9031==    by 0x4879D1F: getnetconfigent (in /usr/lib64/libtirpc.so.3.0.0)
-> ==9031==    by 0x4004336: main (rpcbind.c:271)
-> 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Committed...
+The first patch addresses this problem: if the chosen pool has no
+threads, then choose another that does.
 
-steved.> ---
->   src/rpcbind.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/src/rpcbind.c b/src/rpcbind.c
-> index 4212377..c39df97 100644
-> --- a/src/rpcbind.c
-> +++ b/src/rpcbind.c
-> @@ -282,6 +282,7 @@ main(int argc, char *argv[])
->   	rpc_control(RPC_SVC_CONNMAXREC_SET, &maxrec);
->   
->   	init_transport(nconf);
-> +	freenetconfigent(nconf);
->   
->   	while ((nconf = getnetconfig(nc_handle))) {
->   		if (nconf->nc_flag & NC_VISIBLE)
+The third patch tries to prevent this situation in the
+auto-thread-placement case by ensuring that each populated node has at
+least one thread.
+
+The last patch is a performance micro-optimization. The old code used a
+modulus (actually two) to determine the pool (and prevent potentially
+overrunning the array). This trades that for a less cpu-intensive method
+of finding the pool to use.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v4:
+- Drop 5/4 RCU patch
+- Only let pooled services consult the map
+- Comment and commit log fixes
+- Link to v3: https://lore.kernel.org/r/20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org
+
+Changes in v3:
+- Add patch to ensure that we don't route requests to empty pools
+- When auto-distributing threads, always create at least one thread per populated pool
+- Use sysfs_match_string for the module parameter
+- Reword deprecation printk to be more vague about removal
+- Explicitly set m_count == 0 in svc_pool_map_get()
+- Optimize svc_pool_for_cpu() by eliminating modulus ops
+- Link to v2: https://lore.kernel.org/r/20260625-sunrpc-pool-mode-v2-1-4f512b6e1ee8@kernel.org
+
+Changes in v2:
+- Accept any previously-accepted setting for pool_mode
+- Link to v1: https://lore.kernel.org/r/20260423-sunrpc-pool-mode-v1-1-b7f20e35749b@kernel.org
+
+---
+Jeff Layton (4):
+      sunrpc: route to a populated pool in svc_pool_for_cpu()
+      sunrpc: hardcode pool_mode to pernode, remove other modes
+      sunrpc: guarantee a thread per CPU-bearing node when auto-distributing
+      sunrpc: eliminate a modulus operation from the enqueueing codepath
+
+ Documentation/admin-guide/kernel-parameters.txt |  20 +-
+ net/sunrpc/svc.c                                | 302 ++++++++----------------
+ 2 files changed, 104 insertions(+), 218 deletions(-)
+---
+base-commit: f8eb95335cc219493427f976460cf4b7e9641e92
+change-id: 20260423-sunrpc-pool-mode-3e6b56320dc4
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
