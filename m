@@ -1,198 +1,214 @@
-Return-Path: <linux-nfs+bounces-22901-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Uka4OaFURGoJtAoAu9opvQ
-	(envelope-from <linux-nfs+bounces-22901-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 01:43:29 +0200
+	id UoDFBVpyRGrJuwoAu9opvQ
+	(envelope-from <linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 03:50:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ED916E8B20
-	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 01:43:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 06D856E91A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 01 Jul 2026 03:50:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ljQpz9ji;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22901-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22901-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ownmail.net header.s=fm1 header.b=flM3lVcp;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="f Jd+cGy";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22902-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ownmail.net;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EA5423077ACC
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jun 2026 23:43:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CB09B3022A80
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jul 2026 01:50:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F21E31715B;
-	Tue, 30 Jun 2026 23:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 559993612E0;
+	Wed,  1 Jul 2026 01:50:14 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB2B33A9F8
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jun 2026 23:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23000360EF6;
+	Wed,  1 Jul 2026 01:50:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782862987; cv=none; b=r0v5SUfBd2jNHQOjvwSJ06piLUkOWOVMS3wOnBW3JC8VtTgejwIlJsbJE2bUGkHITQr7x8uvB/4UINc9nyG7jGlr4rZKfNtsti4XXsMrrz/KJA/bDBkMnB/jbxpi6yD+JHTUJaBIH6+Dr7B/BHORNelRmMyPtT+XMTM9c773ngA=
+	t=1782870614; cv=none; b=FE90CeiObyNUg6nRQeKrkylbG2H8LVyQuMhUGSb0PUMCtfK0n1JWsdzjC+MgdwK8ZyMk7crnnbjWLhaPNMlPZ0fNhL1cz/CkxtLDm9c5uxwkyt6fN50Y9LFMkBg6D0K/SYCw8auoemVJGSUA2q1Q+TLyxxj4r8JQuImFHF7VNNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782862987; c=relaxed/simple;
-	bh=uccZM0DqUcxeAOuynLRN+rnVfmOHrmSRN3cQ06r2iCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X70YBxrQg5e4fF74YkpEjT0LsQOjq7HXUD7xQk1uIBWh22Bi+p/DBOHXsWPnoVlCFAxbHjD+eAxo2VcgwwVr4Et2lrBNtS0Z2lrrW0UarVlrRtEPh78zC2jc8oM6+KMC7OrpaaMBmWiuXymyV6Koqxdm95roJrJktnJ7IwYPW80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljQpz9ji; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A831F000E9;
-	Tue, 30 Jun 2026 23:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782862986;
-	bh=7neU2TGnFxRbVkHA27B0jB+58uCpyjby58Cg0fFGijk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ljQpz9ji0G4zSb64f+Che75DYbPVxsu/ZLJYFnHQGRmdB/J5xyB45rQhUoZ/4MqBM
-	 r/GLVqVATwFGnT5nyoKNb64486eZpMhhMd1k9Omg21TtPVRp51AHeqYywALxKjGjbs
-	 TSyXzWJud3yxn4BWJ8W1tuwq20m5k0PNbx76KZqPB4Z+0xCxhi55oE8Qt1NwvikpVL
-	 Nrf+b1JwEeLI9hIoieZ0yU6kZ++M516gxm2ioW7i63lE36dwqxNg7OVgytd0yJYT2u
-	 wBhJOnzdniqdnuzo1KEcQhxMuPT+LZvCSULJWYmWHBmnX9LqSozdPYBY5S+g0Ii6PK
-	 wfCsS6CI5T0NA==
-From: Mike Snitzer <snitzer@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: Tom Haynes <loghyr@hammerspace.com>,
-	Chuck Lever <cel@kernel.org>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH v2 6/6] nfs4.2: honor UNCACHEABLE_DIRENT_METADATA by refetching readdir
-Date: Tue, 30 Jun 2026 19:42:57 -0400
-Message-ID: <20260630234257.5615-7-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20260630234257.5615-1-snitzer@kernel.org>
-References: <20260630234257.5615-1-snitzer@kernel.org>
+	s=arc-20240116; t=1782870614; c=relaxed/simple;
+	bh=e47uxe1VS+QU2FqDn25QPxOPingmUkGhEqRcNz+fN3U=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=iAv7GgVcTlzJ1/cfIZ0PUEAiBTnUTUoUcmkbwLjKl/eRkVHmGi60QOTDDgVFBqqNphtbKUSNVQ/Awc08OBK5aeHYwcdQ+I0DOwtkMlt3xuBajS2R9Q1xUnMi4k3AyOveMNbSJ2mGRdzbOs7BMNkNIFZ/arvBE7tvJ6zm8nJrwuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=flM3lVcp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fJd+cGyQ; arc=none smtp.client-ip=103.168.172.145
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id 47B84EC016D;
+	Tue, 30 Jun 2026 21:50:11 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Tue, 30 Jun 2026 21:50:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1782870611; x=1782957011; bh=wNJAVsfjqK1239R++sn9/FcHKTjkjKyLGT0
+	e94Ytsfs=; b=flM3lVcpZdTuw3KU97tYxCZ8FvyUgOI1YL2xwX3MpfisFF0w6yc
+	HZgSsg5DVVBbGkc9aO7pm2dxvz1Tl9uDK72ToSJZBVi8pLX4VKUVFW7CpjFH3+iO
+	UgAxS2/LHgQ4wynzCpIz3w0dmWSb7pkO378achJd0ABiuAeYJoNBsfzSmg9cevMu
+	sTakXvnSuhitzlOV88DF9e/vKVzeISvnPPQEx/Na+snvB2HsNVCwBpPogznAN+zq
+	J4zk2TjgXadACK0nih4njTdlCTKaPBn06186O9QqFMMCKpBaT0AYc5yPVyaz8KKZ
+	xoZKT1iUlwZWzD2HNKkTDD3Vllq1J2lHmkQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782870611; x=
+	1782957011; bh=wNJAVsfjqK1239R++sn9/FcHKTjkjKyLGT0e94Ytsfs=; b=f
+	Jd+cGyQAcZnSpY1/YUNzNCgjOIZO7ajstaDvCsdxGEy/PT5qKwpFTeqaTzQhghKO
+	wkslJk5Lo+PuWk2mgYSSwe6VpBXwg9sLk1tHYZDsHJ2NI/Tcpwnzf1A563JhjDgX
+	3AucHjMN3uLupoZ52lRixUkUXWV/uOBf1DcXxhEwLjbdH18EfOW3oRooCtdLrRiW
+	d09oQTXizSk9ft4vGrTH4+ZE7MTpgztMoF0GQq5TKJZF8G4n5V2OHPb5bQRWAMRK
+	0CR73WMSsVQNln2d95tfBqa4JZxWCVlV6hLHPRVzbyWYCo0DneYj/lepCcviq8LF
+	fJepvHoAPPL8qdhXHOnWw==
+X-ME-Sender: <xms:UnJEaoWx0iFoM4xDYyT2IQ25xg0-ihaZ_Tc97HejtEAZ8aRLpA8dWA>
+    <xme:UnJEahjJW7z5ZfbKXksep7vfE1eih5iSuyNbP1Y3StgHsTV0TN-lLiTsk_MBg-WSm
+    31Lnn44JtjJI6Pzery3ZdDjordJINNsVVzB3cg9daLkQAg>
+X-ME-Received: <xmr:UnJEagpfYF18KjTJI-ANLnqn91taNsWtuhx7HaQTkAi3s7xlTsL3dCdcbOhNv8SXJg>
+X-ME-Proxy-Cause: dmFkZTGNb6u9hkoRKrj4F0VMWONjQGQ0sMqfG8jqo0midHUNrLKBvLazrGc4JjSPiJb0og
+    EkiUOt4+kuX6ZXtdexf5/bDeErt0YmrasvHAneid0CeBLFm07lY3AdmDw9hlaydLds8wqn
+    RdWN5L2A0olRXrMfsmON0e0w29GCIKjeg03l+7eu9mWLxzmSneix964hbKetmfRoKetb5V
+    9RdrY77VnmefgAOQdNz8xgFn5KHJhA4CbHRR+ZzudsH2T+HDWcMBi98FkIxZZkNmQzm03O
+    7swE9SWvRGhsw46MHO+lXRCNaGerdVSWsM3O/k88OrS0qUMSdMAU9LsxKYmQ2L8w/n+SD8
+    MYKxmgJk3NRCXy5192iGBWhb95jF/uaNYH+wgkQjQVW5knHDi6iKTCi0/MbJGyiMlSnQrr
+    CenC1Wx+I/0K4rV/ZrqSf0VvdcATHacrTRMD7zHAe4uN7aXU04tIURdhPgDCdG5d4v/GYF
+    JSqV5//CYcM/mwUrFRz/NMciSkBKNt1GMPsh8FBjCz6asPSAaEYDZ7hBSfe023XlIxeu4c
+    XqnhrPWtX6OhWuvdwvDwJM3y+KmNotBbIpAdPXwH+i1rgYrLli5/jgRNTny2amEfZt+wpx
+    U+z2e3PaEU0GYxz8ST9MpLe3WvsOtLYZVRila+H+UkLMBEwPjsxBYnPsEqIA
+X-ME-Proxy: <xmx:UnJEanEpRbLohyaWz0NQWhKeHrMxoeRYS7K2IndozZTn0-_OkmOezg>
+    <xmx:UnJEal4n4QULiH2f_CbP8Ysc3oCBEvy9zVehOIAkqz_hUT0Af8HPkg>
+    <xmx:UnJEavcdsBDx8I8SbeB4BpXZ69bsPkWvL0STwav2b4dQPPsq06lpCg>
+    <xmx:UnJEag7lQpuFHrXU06E1UqKjmcvOzF7Pn_sCUWH6vJ7Zdm2GHGNRhw>
+    <xmx:U3JEajlupWSUJ9pq7Fjqqe84bUJoH3GH58Z0sUzMxVnwsHyhJYii0rRN>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 30 Jun 2026 21:50:08 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <cel@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>
+Subject:
+ Re: [PATCH 5/4] sunrpc: protect the svc_pool_map pool_to[] array with RCU
+In-reply-to: <20260630124847.289974-1-jlayton@kernel.org>
+References: <20260629-sunrpc-pool-mode-v3-0-d92676606dfd@kernel.org>
+  <20260630124847.289974-1-jlayton@kernel.org>
+Date: Wed, 01 Jul 2026 11:50:01 +1000
+Message-id: <178287060141.27465.14090245730909314119@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22901-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:loghyr@hammerspace.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	URIBL_MULTI_FAIL(0.00)[sea.lore.kernel.org:server fail,ietf.org:server fail];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[snitzer@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22902-lists,linux-nfs=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[ownmail.net];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	HAS_REPLYTO(0.00)[neil@brown.name];
+	RCVD_COUNT_FIVE(0.00)[6];
 	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,ietf.org:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,messagingengine.com:dkim,ownmail.net:dkim,ownmail.net:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3ED916E8B20
+X-Rspamd-Queue-Id: 06D856E91A6
 
-Honor the per-directory UNCACHEABLE_DIRENT_METADATA attribute: when a
-directory is marked uncacheable, nfs_readdir() bypasses the readdir page
-cache and refetches directory-entry metadata from the server on every
-readdir, satisfying the always-refetch semantics the attribute requires
-(draft-ietf-nfsv4-uncacheable-directories Section 5.1).
+On Tue, 30 Jun 2026, Jeff Layton wrote:
+> svc_pool_map_get_node() reads the global svc_pool_map without holding
+> svc_pool_map_mutex and dereferences m->pool_to[]. The array was both
+> published and torn down without any synchronisation against that
+> lockless reader:
+>=20
+>  - svc_pool_map_get() incremented m->count to one before
+>    svc_pool_map_init_pernode() allocated and filled the arrays, so a
+>    reader observing the map as "in use" could see a NULL (or partially
+>    built) pool_to[] and oops.
+>=20
+>  - svc_pool_map_put() freed the arrays as soon as the last reference
+>    went away, so a reader that had already started dereferencing
+>    pool_to[] could use it after free.
+>=20
+> svc_new_thread() takes this lockless path for every service, including
+> unpooled ones that hold no map reference, so the reader genuinely can
+> run concurrently with another service's startup or shutdown.
+>=20
+> Publish pool_to[] with rcu_assign_pointer() only after it is fully
+> built in a private allocation, and have svc_pool_map_get_node()
+> dereference it under rcu_read_lock(). On teardown, clear the pointer
+> and defer the free past a grace period with kfree_rcu_mightsleep().
+>=20
+> svc_pool_map_set_cpumask() also reads pool_to[], but its caller holds a
+> map reference (it checks sv_nrpools > 1) so the array is stable; it uses
+> rcu_dereference_protected() rather than taking the read lock.
+>=20
+> to_pool[] needs no such treatment: it is only read by services that
+> hold a map reference, so it cannot be freed under a reader.
 
-Rather than searching the cached readdir folios, nfs_readdir() forces the
--EBADCOOKIE path so the request is served by uncached_readdir(); the
-dir_cookie == 0 (start-of-directory) case is included so the very first
-readdir of an uncacheable directory also goes to the server.  A
-tracepoint records when an uncacheable directory bypasses the cache.
+I don't think this is the best approach.
+The problem only occurs when svc_create() is used as when
+svc_create_pooled() is used, svc_pool_map_get() is called early so a
+reference is held to svc_pool_map.
 
-The metadata the attribute governs is the per-entry size and timestamps,
-which are carried only by READDIRPLUS (a plain READDIR refreshes names
-but leaves the entries' attributes to the inode attribute caches).  So
-also force READDIRPLUS for an uncacheable directory (when the server is
-capable): nfs_use_readdirplus() otherwise enables it only at the start of
-the directory or once cache usage crosses a threshold, and the cache-
-bypassing path above never accrues that usage -- which would leave
-continuation READDIRs of a large directory refreshing names but serving
-stale per-entry attributes.  Forcing READDIRPLUS makes each READDIR
-refresh the entries' attribute caches (via nfs_prime_dcache() ->
-nfs_refresh_inode()), so a subsequent stat() observes current values.
+svc_new_thread() is the only caller of svc_pool_map_get_node(), and it
+can easily check pool->sv_is_pooled and only call
+svc_pool_map_get_node() is sv_is_pooled is true.  When false it should
+probably use NUMA_NO_NODE.
+e.g.
 
-The attribute does not change NFSv4.2 change-attribute semantics: the
-client continues to use the directory change attribute for validation;
-this only suppresses serving READDIR responses from the local cache.
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index ae9ec4bf34f7..063826702f46 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -800,7 +800,10 @@ int svc_new_thread(struct svc_serv *serv, struct svc_poo=
+l *pool)
+ 	int node;
+ 	int err =3D 0;
+=20
+-	node =3D svc_pool_map_get_node(pool->sp_id);
++	if (serv->sv_is_pooled)
++		node =3D svc_pool_map_get_node(pool->sp_id);
++	else
++		node =3D NUMA_NO_NODE;
+=20
+ 	rqstp =3D svc_prepare_thread(serv, pool, node);
+ 	if (!rqstp)
 
-See: https://datatracker.ietf.org/doc/draft-ietf-nfsv4-uncacheable-directories/
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-Assisted-by: Claude:claude-opus-4-8
----
- fs/nfs/dir.c      | 18 ++++++++++++++++--
- fs/nfs/nfstrace.h |  1 +
- 2 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 6b07abf272b1..2162e93992c2 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -667,6 +667,14 @@ static bool nfs_use_readdirplus(struct inode *dir, struct dir_context *ctx,
- 		return false;
- 	if (NFS_SERVER(dir)->flags & NFS_MOUNT_FORCE_RDIRPLUS)
- 		return true;
-+	/*
-+	 * An uncacheable directory must refetch directory-entry metadata
-+	 * (including per-entry size and timestamps) from the server on each
-+	 * READDIR; force READDIRPLUS so those attributes are refreshed on
-+	 * every call rather than left stale in the inode attribute caches.
-+	 */
-+	if (NFS_I(dir)->uncacheable_dirent_metadata)
-+		return true;
- 	if (ctx->pos == 0 ||
- 	    cache_hits + cache_misses > NFS_READDIR_CACHE_USAGE_THRESHOLD)
- 		return true;
-@@ -1274,12 +1282,18 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	desc->clear_cache = force_clear;
- 
- 	do {
--		res = readdir_search_pagecache(desc);
-+		if (nfsi->uncacheable_dirent_metadata) {
-+			res = -EBADCOOKIE;
-+			trace_nfs_readdir_uncacheable_directory(inode);
-+		} else {
-+			res = readdir_search_pagecache(desc);
-+		}
- 
- 		if (res == -EBADCOOKIE) {
- 			res = 0;
- 			/* This means either end of directory */
--			if (desc->dir_cookie && !desc->eof) {
-+			if ((desc->dir_cookie || nfsi->uncacheable_dirent_metadata) &&
-+			    !desc->eof) {
- 				/* Or that the server has 'lost' a cookie */
- 				res = uncached_readdir(desc);
- 				if (res == 0)
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index b15c1732c869..a9930d59c610 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -181,6 +181,7 @@ DEFINE_NFS_INODE_EVENT_DONE(nfs_fsync_exit);
- DEFINE_NFS_INODE_EVENT(nfs_access_enter);
- DEFINE_NFS_INODE_EVENT_DONE(nfs_set_cache_invalid);
- DEFINE_NFS_INODE_EVENT(nfs_readdir_force_readdirplus);
-+DEFINE_NFS_INODE_EVENT(nfs_readdir_uncacheable_directory);
- DEFINE_NFS_INODE_EVENT_DONE(nfs_readdir_cache_fill_done);
- DEFINE_NFS_INODE_EVENT_DONE(nfs_readdir_uncached_done);
- 
--- 
-2.47.3
-
+NeilBrown
 
