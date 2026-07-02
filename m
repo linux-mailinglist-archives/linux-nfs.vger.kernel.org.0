@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-22930-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22931-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id cezYC8vCRWo4EwsAu9opvQ
-	(envelope-from <linux-nfs+bounces-22930-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 03:45:47 +0200
+	id 9k4ZGZfBRWr7EgsAu9opvQ
+	(envelope-from <linux-nfs+bounces-22931-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 03:40:39 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3C656F2D8D
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 03:45:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D05366F2D03
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 03:40:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm1 header.b="gZwF/QBr";
-	dkim=pass header.d=messagingengine.com header.s=fm1 header.b=fnPATpoT;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22930-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22930-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ownmail.net header.s=fm1 header.b=m1PmA62x;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b=bARPj8ac;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22931-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22931-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ownmail.net;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9A55D30BB72B
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 01:40:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DBEA9302D1AD
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 01:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 402B82BDC26;
-	Thu,  2 Jul 2026 01:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C31FF2C08BB;
+	Thu,  2 Jul 2026 01:40:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47C5282F1C
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Jul 2026 01:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DF629B200
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Jul 2026 01:40:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782956432; cv=none; b=e8LUlCJZN1I3mCJB9ZKxC5b4zJhtNlUGGhVUW+JZwkOCtBPtn2zcN5oL8c4Z16MDUzzvT0kzfERzoMF2rEcFsAglyJXjrscNJg7LLhCID9v6Ps8mNzAsZ4Mgrzz8MJ48kx5Tnb7NPUmSN8R2nOI6tFyX/x5SBbnx5dH+JmeIK1Q=
+	t=1782956436; cv=none; b=dQqHZqPvCQmgjf+G4ojl5MhKpMkORL1h9oun2Qn+yytGHO0kOyyFcX5sTyOVRu1SjQwUr7tSHGvNbBsyogbLj01J4jGU3wQf825/dgMEbrRWsMMo27lFcHT6WpgcE/OYSH57vKtexYRY5xoh/lnCJ2F7A2tgfbH2TmrEu6Fa+8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782956432; c=relaxed/simple;
-	bh=9vLhJkMjwbA32SsavWheRfJcb5MuiJcu+bWzt50hV2M=;
+	s=arc-20240116; t=1782956436; c=relaxed/simple;
+	bh=D0QOkmYGB4UzI6nkBOds8dJabdx9AmwarUBorTQg5qk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YfFPoBKDCFBhpx2RYYV6ioAz4U+czw0LHds4MTGNlxA3+PHvzagNFpCyNR5MfqplVPYuU7x19+uoxmZpg6T+xotPkWQeasqkoENU8SXTpeKZQgYefjPAyW9fP6YBRX8CbzmAz54yYWi9pcDvCBZ2cgm1HYD7CI/SR7DVpwUAUac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=gZwF/QBr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fnPATpoT; arc=none smtp.client-ip=103.168.172.147
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 1C842EC0081;
-	Wed,  1 Jul 2026 21:40:30 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Wed, 01 Jul 2026 21:40:30 -0400
+	 MIME-Version; b=qzDHrXo5PnxVPVIk4AoMQewCR23WwcFUzO4wT5ZcE8dP2WxXzMUV4GFaXxWv0Ch24hKyPTVS9j4jTzwcTgKTYc3GPBMV4cUfA8W6205AqsPOr2n03LZKj5l631KW2F3gU6dXgSxW32r+/QfZelC5KNwqV66LgDzSn2jYrKBNmls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=m1PmA62x; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bARPj8ac; arc=none smtp.client-ip=103.168.172.155
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 9C773140011B;
+	Wed,  1 Jul 2026 21:40:34 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 01 Jul 2026 21:40:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1782956430;
-	 x=1783042830; bh=BSF54gVqEavR8iR2zjpD1mjooWER7exLJ5IYISZLawI=; b=
-	gZwF/QBrbWbOLSROjzJd7HKtItAVBY5B8xvLRL7aSOlOXPkOPcFT7wuAHw7Ku4lT
-	q18JbrApfqrsWwBrszZLmoMOOuwPguOEaMMcKffbAlkD/KKJUPO4/LP3Zf+pw7z7
-	WymMeiFP8sGWIOM/qAZHMuLFTBhjOxkpKEsVYBuTg7k75EdBAd/DyXoxtN61r7eR
-	I8yGVWw51HvEEa6PbILWHN0ewq5qrPyz9CIhtMbW4qz16fQFP4QJSDRtwiJsFLXU
-	dOVaPyle0qX2K3iJDT1BQHYmYZ7o9Q7rCuO+d/zrgr0pG/gLlkvLENFH6gUX+hxN
-	rDfHcycDhBWCON8NHSGExQ==
+	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1782956434;
+	 x=1783042834; bh=8gvq+byj3+5wZS8tUsB8LG5Yy81W1ore8VeYOGwk6EI=; b=
+	m1PmA62xLamt9NYnZhtm7Kte6UMIExm/4IGKoQxg+i+k8dSF+hPb7HRt7Qpj/xlh
+	CMkCwxYf4HTOTarezF4l1I4s+otMpAmJTxJM2bUM2Lv3iZHxEr8nvwiYhBKgupdo
+	0q7rOqJy+6DqQRVO+H2c2nC3w0o6Ts+kqg/1uZPrDJ+g6uT+/U/02T3VO6fi707D
+	09vgYNTTK5S9db+R+CKgN/okG5OMaAMXXH7I7p6GWUZXEe2OyIA89O7Teg0oYhl7
+	XW1qVoDW7HhnIzUYKXmd2w90IwSIjnO7pN0y1BFR8BsuCC8tVhbB6H4UtxGqWXbt
+	dbsKILwqBBPp3DSc4rXDRw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1782956430; x=1783042830; bh=B
-	SF54gVqEavR8iR2zjpD1mjooWER7exLJ5IYISZLawI=; b=fnPATpoTEUEFyzpv7
-	uNdP5a5D4X/8WUeRJgEOetjZXwN35pMdFZfwChIe3WVp33gYxEXZ48UjloFXNgFE
-	H2V+2/vAAw6jcoTqHiyZRNdpwsKtgendMvvPoaYs35J/0rm7664KNkPrktDjvMpX
-	GeU1fpElpwimnnCnm2ZGByd5GpM8UFkuA1vgzIm3WpaKb96qhzn9ZTgoVfsY4LZx
-	f6aFociWCDHdvJKQwSZ6egf58fUwZeWShfsFEcxiySwKhKNadAchZdiDlI0jbIPQ
-	tMsk3YjW6Yrmq6Tu6cHXVYeg0s970mFx/AyiPTGtbgd4WTKXqA8hS9/0RVHeaDl4
-	hiYaw==
-X-ME-Sender: <xms:jcFFahPyfPWdc4OuQ1DYWhUHrmhHC7i1DO3gIFBqg7qsd1-wOwGIQg>
-    <xme:jcFFanplpWK3Bd55q-50txOMgexZETVh9BrOOaoBQIYuyjxz0Yu9KLf4c1ZJG2sq1
-    rPXw7zhWqlt-hhCE8Eq4DU6_Xbogg0VLOdI6AEo992bypDg2g>
-X-ME-Received: <xmr:jcFFaqEr0zr26d4EEUIoRgn07_iyIFtUU_lmxm-54d9aVYuYXp710-xEEJu9iIB0tn30MQsKmI59AaqcTnTikqDfAH-3N2U>
+	:x-me-sender:x-sasl-enc; s=fm1; t=1782956434; x=1783042834; bh=8
+	gvq+byj3+5wZS8tUsB8LG5Yy81W1ore8VeYOGwk6EI=; b=bARPj8acVqEtyk/MT
+	jeGroRI3P7+LbzH9ajVM84wlaRm06C0vrFeO11HxlF9R7xqkzadCWEHFHI/TFzOE
+	5AhBxVjNaS8ywSvu/5eJwy6yAU0E0LryXRDQft/VlXltj6v9fUPesNI7nY3l/hCP
+	74uleCMx7mH2zT7TXGq1rmizToVCzD30pFqfwezYBF+VgKUtKMCtWzywQOiHChyS
+	ZKGrKQdweMbi8FYfm6hy78L/DDZrJ0J99DCPL02rgw+1X98ZNOI2TBoSS2TnrZkh
+	krKHXhwBHHh1PALcYGW1OZFRA3vTPYZZbJyR0Hfwb1y8ZJLR9G34xxjeUO4QJ06S
+	pWVLg==
+X-ME-Sender: <xms:ksFFauHGUwTTAJnkVBQbD02HiiI6w0SpIErPLyMh33edNqaS6kelaw>
+    <xme:ksFFajAVN4mvcTdClHMBUoTW8wnciw05Az5NwZyhFCy2r72-WZpZgmdN-cJt3VOca
+    z0Czwm34Ar_TlB-qs77JmQHpHEA5RNytd5LOChTP6WfNfWNKw>
+X-ME-Received: <xmr:ksFFah-AgFpd3mqvVfSw-eCbEPcQwcvb9SlJdbkTnF1IVmKDLhZRu4SWTo9YllMWnz4h-nMtR3APBjKNLIg-XHG4MuDAzq8>
 X-ME-Proxy-Cause: dmFkZTGxxG3WYOxUHoAfQ/lPCCBtpuI/S7RhXZdDZo5R/zg8oB5VVkJeqNXv4+5JHOpq5a
     +KGMHLUceWZQbXPkcZMChswAkz7oDBNzn2AAW712K9zA+2pVUC0R25sTJVNA5GxxGZFPf1
     pbUOYpi4dQLmAi8WqifnbcWGv9caFABP7KC0vD8MdlGlpjn5roAZxmnOAYWdGQbArFc5Hb
     UEMPfmUhw7JKuGB/UeLW6QzhMn9rUFgblOXzq7GYDHlxGkjfNMCQ4PJDU4+12b6NAKgXbl
-    Rg1mGujmSEJHxyDH3iqFB1G6ofNBMwYgggnhxc3EKZatNVAxTrXJlSKPeBcpJnvqZuoCLg
-    OW0VzWXNd0zlStJIH773N/bK/FG7xUOcqNDFky79xBnj5dP4EWpeOTFdIudPeqnt6pUmlV
-    S3zLo82MQTDNLURR4Ho2NCgXBTQX21GqwShZwC/ltPBZzFSApzbkWVDPDpoLyewkFFrAXw
-    nbL9NjCzmH9HiTC0DNG1iDYgVne8m6y6auZ5KdheiT4+g5xlX4FZn4bIUqARH00cEdPdXK
-    Hi7BqSppMp28dFs0B/5NpOiMa0PBxvHRPmWhG0a4FzWrSXJpUL4ywpfpIR09d0ka4MILNB
-    xtDUVZU99GJOy/jAPa76OVuWO+YApApsrc3yLf518u6uomCx1Ciz7+KKrNiQ
-X-ME-Proxy: <xmx:jcFFakqpdX8DFQvXgP4D-MeNbn7JN4T5N1amZFa31YhUFGMeMSIGxw>
-    <xmx:jcFFarZf350j8Np2NiGPigwGTAQcriGsBXzqewNzf5tmEqq39hWZKA>
-    <xmx:jcFFalVjEYf69V9S5WN4oaHCZovoQDsMjuOGjeanf_f4kfStWQ9ubg>
-    <xmx:jcFFas8fCnjVkKqLXj4Lk55qYLNTfOOFIw59Blt5aMMoE-lBsDtQ0g>
-    <xmx:jsFFauv4zdNlsFl_6A_NX4cpYjcwJAWBLwbwJVKEUqArq7o427TMHg35>
+    Rg1mGujmSEJHxyDH3iqFB1G6ofNBMwYgggnhxc3EKZatNVAxTrXJlSKPeBcpJnvqZuoCOU
+    XfaAkGEQ9wdE4VHXxqKik6FxSNGwRQspdO0u95ACU2LohNmf/Z0x+dyrAF3guarTzpw/An
+    YCcR+++B4ytX1qp85szQi2CzgNt/fiFZzzK53axtjNphonjIcmz8ix9f0wTCTTUTdXla9Z
+    /eHses9G8sIhaezfp5M8+qqiLipZFoM7NT0iahMKQ01b3fZJhKfkkoNCpAesv/wqkEtDf3
+    v/oBjp/tU3k9P50BYmrabvwBWnO/yAR8YwKgP05RbfkCP9Hgktoyxg0GThbIxiCzz0mg3B
+    R9dGsAG9ldwqkm2Kepaf49CTd3VAdoIPCS20KiXXeu8H31unRLqEambRxZ3Q
+X-ME-Proxy: <xmx:ksFFavDWU974itS52E5736UzgRHAxrPEO_OWVN-8HFRDN09osu-BEw>
+    <xmx:ksFFamTzg6hmCTJMbtdVCwSEor_ChTHz_zJXKwa_dhmm3LzLe3_MBw>
+    <xmx:ksFFamuYOvQwLW1lfMUwml6G67NIC8bHUmAm68t8IWdY6GrYxFD1-Q>
+    <xmx:ksFFai1-j_zl1vNq7zoDleqeTqroLuQa-yFuPNbzsBXLocRE30h-GA>
+    <xmx:ksFFaoPkRB85yw_KqL-ZSxXjP-IMhoKD5jDnVGsV1XtPjFiazUQ4R_6k>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 1 Jul 2026 21:40:27 -0400 (EDT)
+ 1 Jul 2026 21:40:32 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -93,9 +93,9 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH 04/10] nfsd: remove subtlety from nfsd4_create_file()
-Date: Thu,  2 Jul 2026 11:34:23 +1000
-Message-ID: <20260702014000.3397240-5-neilb@ownmail.net>
+Subject: [PATCH 05/10] nfsd: in nfsd4_create_file() let VFS report if file was created.
+Date: Thu,  2 Jul 2026 11:34:24 +1000
+Message-ID: <20260702014000.3397240-6-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260702014000.3397240-1-neilb@ownmail.net>
 References: <20260702014000.3397240-1-neilb@ownmail.net>
@@ -113,13 +113,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm1,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22930-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22931-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -137,96 +137,160 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:replyto,brown.name:email,messagingengine.com:dkim,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ownmail.net:dkim,ownmail.net:mid,ownmail.net:from_mime];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,ownmail.net:dkim,ownmail.net:mid,ownmail.net:from_mime,brown.name:replyto,brown.name:email];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B3C656F2D8D
+X-Rspamd-Queue-Id: D05366F2D03
 
 From: NeilBrown <neil@brown.name>
 
-nfsd4_create_file() has a switch with cases for
-NFS4_CREATE_EXCLUSIVE and NFS4_CREATE_EXCLUSIVE4_1 which are identical
-except for one line which is marked "subtle" in both cases.
+nfsd4_create_file() currently assumes that if a lookup failed but then a
+create succeeds, then the "create" operation actually created the file.
+With atomic_open this may not be the case - some other actor might have
+created the file between the lookup and the create.
 
-The difference boils down to a "goto".  For the EXCLUSIVE case the
-target is "out:" which is after a setattr call.  For EXCLUSIVE4_1
-the target is "set_attr:" which is the start of that setattr call.
+So we move the call to nfsd4_vfs_create() earlier and set ->op_created
+based on that.  Then use "!  ->op_created" to trigger nfserr_exist
+handling.
 
-We already have a function is_create_with_attrs() which determines if
-the setattr is needed, and differentiates between these two cases.  So
-if we guard the setattr with "is_create_with_attrs()", then we can "goto
-setattr" for both cases and so unify the two cases in the switch.  This,
-I think, makes the code clearer and less subtle.
+The switch statement is split up into two if() statements.
+First we check for the possibility of a successful exclusive
+create and set ->op_create to true if appropriate.
+Then we check for NFS4_CREATE_UNCHECKED to decide if a
+pre-existing file means an error or success.
+
+This allows us to combine the two fh_compose() calls to one place.
+
+Also move the clearing of ATTR_SIZE for a newly created file down to a
+point where we know we have actually created the file.
+
+With this rearrangement we now repeat the setattr when an exclusive
+create is repeated.  This should be both rare and harmless, and it
+simplifies the code.
+
+The above requires changing dentry_create() to reliably set
+FMODE_CREATED when the file was actually created.  Previously it only
+sets this flag when atomic_open is used.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4proc.c | 33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
+ fs/namei.c         |  2 ++
+ fs/nfsd/nfs4proc.c | 63 ++++++++++++++++++----------------------------
+ 2 files changed, 27 insertions(+), 38 deletions(-)
 
+diff --git a/fs/namei.c b/fs/namei.c
+index 5cc9f0f466b8..e0a62198fc60 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -5073,6 +5073,8 @@ struct file *dentry_create(struct path *path, int flags, umode_t mode,
+ 		error = vfs_create(mnt_idmap(path->mnt), path->dentry, mode, NULL);
+ 		if (!error)
+ 			error = vfs_open(path, file);
++		if (!error)
++			file->f_mode |= FMODE_CREATED;
+ 	}
+ 	if (unlikely(error))
+ 		return ERR_PTR(error);
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index c63c8fe64079..5b7f0314776f 100644
+index 5b7f0314776f..cbb549ca6567 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -363,22 +363,15 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+@@ -333,22 +333,30 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		status = fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_CREATE);
+ 		if (status != nfs_ok)
+ 			goto out;
+-	}
+-
+-	if (d_really_is_positive(child)) {
+-		/* NFSv4 protocol requires change attributes even though
+-		 * no change happened.
+-		 */
+-		fh_fill_post_noop(fhp);
+ 
+-		status = fh_compose(resfhp, fhp->fh_export, child, fhp);
++		status = nfsd4_vfs_create(fhp, &child, open);
+ 		if (status != nfs_ok)
+ 			goto out;
++		open->op_created = open->op_filp->f_mode & FMODE_CREATED;
++	}
+ 
+-		switch (open->op_createmode) {
+-		case NFS4_CREATE_UNCHECKED:
+-			if (!d_is_reg(child))
+-				break;
++	status = fh_compose(resfhp, fhp->fh_export, child, fhp);
++	if (status != nfs_ok)
++		goto out;
++
++	if (!open->op_created &&
++	    nfsd4_create_is_exclusive(open->op_createmode) &&
++	    inode_get_mtime_sec(d_inode(child)) == v_mtime &&
++	    inode_get_atime_sec(d_inode(child)) == v_atime &&
++	    d_inode(child)->i_size == 0)
++		open->op_created = true;
++
++	if (!open->op_created) {
++		if (open->op_createmode == NFS4_CREATE_UNCHECKED) {
++			/* NFSv4 protocol requires change attributes
++			 * even though no change happened.
++			 */
++			fh_fill_post_noop(fhp);
+ 
+ 			/*
+ 			 * In NFSv4, we don't want to truncate the file
+@@ -356,41 +364,20 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 			 * some other reason. Furthermore, if the size is
+ 			 * nonzero, we should ignore it according to spec!
+ 			 */
+-			open->op_truncate = (iap->ia_valid & ATTR_SIZE) &&
+-						!iap->ia_size;
+-			break;
+-		case NFS4_CREATE_GUARDED:
++			open->op_truncate = (d_is_reg(child) &&
++					     (iap->ia_valid & ATTR_SIZE) &&
++					     !iap->ia_size);
++		} else
  			status = nfserr_exist;
- 			break;
- 		case NFS4_CREATE_EXCLUSIVE:
+-			break;
+-		case NFS4_CREATE_EXCLUSIVE:
+-		case NFS4_CREATE_EXCLUSIVE4_1:
 -			if (inode_get_mtime_sec(d_inode(child)) == v_mtime &&
 -			    inode_get_atime_sec(d_inode(child)) == v_atime &&
 -			    d_inode(child)->i_size == 0) {
 -				open->op_created = true;
--				break;		/* subtle */
+-				goto set_attr;
 -			}
 -			status = nfserr_exist;
 -			break;
- 		case NFS4_CREATE_EXCLUSIVE4_1:
- 			if (inode_get_mtime_sec(d_inode(child)) == v_mtime &&
- 			    inode_get_atime_sec(d_inode(child)) == v_atime &&
- 			    d_inode(child)->i_size == 0) {
- 				open->op_created = true;
--				goto set_attr;	/* subtle */
-+				goto set_attr;
- 			}
- 			status = nfserr_exist;
-+			break;
- 		}
+-		}
  		goto out;
  	}
-@@ -398,16 +391,18 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+-
+-	status = nfsd4_vfs_create(fhp, &child, open);
+-	if (status != nfs_ok)
+-		goto out;
+-	open->op_created = true;
++	/* file was created */
+ 	fh_fill_post_attrs(fhp);
+ 
+-	status = fh_compose(resfhp, fhp->fh_export, child, fhp);
+-	if (status != nfs_ok)
+-		goto out;
+-
+ 	/* A newly created file already has a file size of zero. */
+ 	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size == 0))
  		iap->ia_valid &= ~ATTR_SIZE;
  
- set_attr:
--	status = nfsd_create_setattr(rqstp, fhp, resfhp, &attrs);
--
--	if (attrs.na_labelerr)
--		open->op_bmval[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
--	if (attrs.na_paclerr || attrs.na_dpaclerr)
--		open->op_bmval[0] &= ~FATTR4_WORD0_ACL;
--	if (attrs.na_dpaclerr)
--		open->op_bmval[2] &= ~FATTR4_WORD2_POSIX_DEFAULT_ACL;
--	if (attrs.na_paclerr)
--		open->op_bmval[2] &= ~FATTR4_WORD2_POSIX_ACCESS_ACL;
-+	if (is_create_with_attrs(open)) {
-+		status = nfsd_create_setattr(rqstp, fhp, resfhp, &attrs);
-+
-+		if (attrs.na_labelerr)
-+			open->op_bmval[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-+		if (attrs.na_paclerr || attrs.na_dpaclerr)
-+			open->op_bmval[0] &= ~FATTR4_WORD0_ACL;
-+		if (attrs.na_dpaclerr)
-+			open->op_bmval[2] &= ~FATTR4_WORD2_POSIX_DEFAULT_ACL;
-+		if (attrs.na_paclerr)
-+			open->op_bmval[2] &= ~FATTR4_WORD2_POSIX_ACCESS_ACL;
-+	}
- out:
- 	end_creating(child);
- 	fh_drop_write(fhp);
+-set_attr:
+ 	if (is_create_with_attrs(open)) {
+ 		status = nfsd_create_setattr(rqstp, fhp, resfhp, &attrs);
+ 
 -- 
 2.50.0.107.gf914562f5916.dirty
 
