@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-22941-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22942-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GK7hHrdbRmppRgsAu9opvQ
-	(envelope-from <linux-nfs+bounces-22941-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 14:38:15 +0200
+	id y6GaN7daRmoORgsAu9opvQ
+	(envelope-from <linux-nfs+bounces-22942-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 14:33:59 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCA946F7B5C
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 14:38:14 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 579246F7A92
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 14:33:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=T9lXcpdi;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22941-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22941-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=RiUzXGOH;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22942-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22942-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8D7A3194592
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 12:17:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C2A94304A9A5
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 12:32:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B01847D954;
-	Thu,  2 Jul 2026 12:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 647B4481AA2;
+	Thu,  2 Jul 2026 12:31:56 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0412E8DEA;
-	Thu,  2 Jul 2026 12:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30FE4963DB;
+	Thu,  2 Jul 2026 12:31:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782994645; cv=none; b=cHCSrT0ibiFjold5QBTvUSDpU7KpG0SSje6eMHFbXXdifxk/ECvs9J1XOCES9t8ERh/pZmsvlIaEhpiIBM0Mo4vdZELRtGxUzajgqgYROrCaEOri3MusTBAL5s1w3myinjJVQWlZtVF8Sh9iZdGv14IQhhr+Ysm83TF2CkpORMA=
+	t=1782995516; cv=none; b=Pe7SujTFM7qNxzfj1JrAb5CCPiutC1/EIBSq+w6VKK0z8xQorPKS4TzvKc5/HVwAla5J89VVT5bFUK9GDzjzLOYM8eqLDlfiLy9SQvRcVQ0vzy5Ze77Tm8lKhHP5B3bGKSUNZaaw/6GdFpuK2+3hbN4NoLN357JqbXoD1b2vzg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782994645; c=relaxed/simple;
-	bh=koY24Y3/FwYDTsTJxxt33spfGQnd6sCH39qugoJHN8Y=;
+	s=arc-20240116; t=1782995516; c=relaxed/simple;
+	bh=uNE5w/8sj/wCmG2f8RVJwn/QiWd0P5Z5UYyTWg0Gw9o=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fZuQFv/EBQ8A5BLZBeQFDQAgJKt2q3TRKNE8Jhdq3Sxcco0iUSfcdUxYhpeUzJo5gfl7e2/lEv8c0IZO1zW5ZcEsrduN7b6thuj6apkFQeDh1DqqoSdLkblOs1XUxNbZVhmf7jER8wi0Xe0HHQs/doa2FyyW7mOOKqGkqpTdHAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9lXcpdi; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4531F000E9;
-	Thu,  2 Jul 2026 12:17:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=q+7TJuB45svGWMB53gJatT4HYfHwYCvNAGQPc+LSqgkubFb+Yawkb2Qjd4YIHa8wdRdPPV6tORB5Hy1UrQ3HamS9a9rJAvQf76+IJgkDdcdC6rCHQt1wxDvDiIruKE1SgKuXTP+WT7q96mWkbiG8clRKLWLzQgUxqyu2SIfdGkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RiUzXGOH; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAA81F000E9;
+	Thu,  2 Jul 2026 12:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782994643;
-	bh=Uu+FSw9b4SMJe20t+rn2/WBPGlKa/waIUnc8Lfp/Rag=;
+	s=k20260515; t=1782995512;
+	bh=kFBRuehs2yjUr6yWbpva7+iRQelhG1uJOXlmIdv8wQs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=T9lXcpdiKPXwszQ4yCYOmZhE6oKWUtN4qQuANE58d1R6KtC4D/jmrIJ7CHKedCygW
-	 xjp8VvhJJrouMBpN7iDGaT2+VhyovE4FEJBo7DyDwD1Yg90d2ahIz4EoJuoRagt+iK
-	 +XTAx2pmJjmoc0JCYjUuiY9I8G9OhgI0y2PU9q863ouzw1aWXISE6CoQ54FPiX+Nlr
-	 AGduiqCdKwEFntVW1yRx2nOC97mXQSXt+IBC/G5mRrDbPZT9LaOiH7/bmkqKIs07He
-	 NNvVBg4WcvSz258b6mOem/zvonpKSLQ7Yp9M3kFDgE5hrbp1FSNjpp+8Y/lR70JTSt
-	 JMLMRMmE7f89Q==
-Message-ID: <ccfad59a086674ef8612d32f72a23c5401a3eacb.camel@kernel.org>
+	b=RiUzXGOHbjIH/Xf3SqynjQQ2NxWKA21C9Lop89KEIVHNJ5ixyVjV7mnk1F9TnfRX8
+	 A9WmWAih9KaFvSDc/wSwoqfFWOh8MAoMXS3SoWlDCpAH4/tv/UfGUYsVBb66/vDL0b
+	 OI5Qjmm5HEycniAR0fCATIg9cy9WxUD/rHfMtJ6Q0qNfCkBOZ091rDDFsUjQlc13sz
+	 ZBzVE+3berd4TDwFUzVMLYE0Tu7HSpT2pTIhztvcv/koquU8BUzLwlZvsslj9URZW9
+	 36t2gv3z5c2Ll3cU5vFzqROjtKMRFYEcpMQKyOXbNLX/Oalb3IXCVM7Coc+/Gd2K/v
+	 ASjKbwtul8Qgg==
+Message-ID: <5f5ef0bb961dc0bdd34383d368261aac50509d82.camel@kernel.org>
 Subject: Re: [PATCH v4 1/4] sunrpc: route to a populated pool in
  svc_pool_for_cpu()
 From: Jeff Layton <jlayton@kernel.org>
@@ -55,11 +55,12 @@ Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>, Chuck Lever	 <cel@kernel.org>,
  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 02 Jul 2026 08:17:20 -0400
-In-Reply-To: <178294402742.27465.8893159356805540635@noble.neil.brown.name>
+Date: Thu, 02 Jul 2026 08:31:49 -0400
+In-Reply-To: <ccfad59a086674ef8612d32f72a23c5401a3eacb.camel@kernel.org>
 References: <20260701-sunrpc-pool-mode-v4-0-b3d867e4c8f9@kernel.org>
-	  <20260701-sunrpc-pool-mode-v4-1-b3d867e4c8f9@kernel.org>
-	 <178294402742.27465.8893159356805540635@noble.neil.brown.name>
+		  <20260701-sunrpc-pool-mode-v4-1-b3d867e4c8f9@kernel.org>
+		 <178294402742.27465.8893159356805540635@noble.neil.brown.name>
+	 <ccfad59a086674ef8612d32f72a23c5401a3eacb.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -149,12 +150,12 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22941-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22942-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -162,7 +163,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
@@ -176,114 +177,137 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BCA946F7B5C
+X-Rspamd-Queue-Id: 579246F7A92
 
-On Thu, 2026-07-02 at 08:13 +1000, NeilBrown wrote:
-> On Thu, 02 Jul 2026, Jeff Layton wrote:
-> > svc_set_num_threads() spreads the requested threads evenly across the
-> > service's pools (base =3D nrservs / sv_nrpools).  When a service runs
-> > fewer threads than it has pools -- e.g. an nfsd configured with fewer
-> > threads than the host has NUMA nodes while running in "pernode" or
-> > "percpu" mode -- the trailing pools are left with no threads at all.
+On Thu, 2026-07-02 at 08:17 -0400, Jeff Layton wrote:
+> On Thu, 2026-07-02 at 08:13 +1000, NeilBrown wrote:
+> > On Thu, 02 Jul 2026, Jeff Layton wrote:
+> > > svc_set_num_threads() spreads the requested threads evenly across the
+> > > service's pools (base =3D nrservs / sv_nrpools).  When a service runs
+> > > fewer threads than it has pools -- e.g. an nfsd configured with fewer
+> > > threads than the host has NUMA nodes while running in "pernode" or
+> > > "percpu" mode -- the trailing pools are left with no threads at all.
+> > >=20
+> > > svc_xprt_enqueue() selects a pool from the CPU servicing the transpor=
+t,
+> > > queues the transport on that pool's sp_xprts, and only wakes a thread
+> > > from the same pool.  Each thread services exclusively its own pool, s=
+o a
+> > > transport that lands on a threadless pool is enqueued on sp_xprts and
+> > > never picked up: the connection hangs indefinitely.
+> > >=20
+> > > Have svc_pool_for_cpu() skip pools that currently have no threads,
+> > > falling back to the next populated pool.  This trades NUMA locality f=
+or
+> > > a guarantee that the work is actually serviced.  sp_nrthreads is only
+> > > updated under the service mutex; the lockless read here is a best-eff=
+ort
+> > > routing hint, so annotate it with data_race().
+> > >=20
+> > > Fixes: 0f0257eaa5d2 ("svc: Move the xprt independent code to the svc_=
+xprt.c file")
 > >=20
-> > svc_xprt_enqueue() selects a pool from the CPU servicing the transport,
-> > queues the transport on that pool's sp_xprts, and only wakes a thread
-> > from the same pool.  Each thread services exclusively its own pool, so =
-a
-> > transport that lands on a threadless pool is enqueued on sp_xprts and
-> > never picked up: the connection hangs indefinitely.
+> > Why that commit?  Did this ever work correctly?
+> > It seems more likely that=20
+> > Fixes: 3262c816a3d7 ("[PATCH] knfsd: split svc_serv into pools")
+> > is appropriate.
 > >=20
-> > Have svc_pool_for_cpu() skip pools that currently have no threads,
-> > falling back to the next populated pool.  This trades NUMA locality for
-> > a guarantee that the work is actually serviced.  sp_nrthreads is only
-> > updated under the service mutex; the lockless read here is a best-effor=
-t
-> > routing hint, so annotate it with data_race().
-> >=20
-> > Fixes: 0f0257eaa5d2 ("svc: Move the xprt independent code to the svc_xp=
-rt.c file")
 >=20
-> Why that commit?  Did this ever work correctly?
-> It seems more likely that=20
-> Fixes: 3262c816a3d7 ("[PATCH] knfsd: split svc_serv into pools")
-> is appropriate.
->=20
-
-Indeed. Good catch.
-
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  net/sunrpc/svc.c | 26 +++++++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > index dd80a2eaaa74..82fb7faf563f 100644
-> > --- a/net/sunrpc/svc.c
-> > +++ b/net/sunrpc/svc.c
-> > @@ -402,6 +402,7 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv *=
-serv)
-> >  	struct svc_pool_map *m =3D &svc_pool_map;
-> >  	int cpu =3D raw_smp_processor_id();
-> >  	unsigned int pidx =3D 0;
-> > +	unsigned int i;
-> > =20
-> >  	if (serv->sv_nrpools <=3D 1)
-> >  		return serv->sv_pools;
-> > @@ -414,8 +415,31 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv =
-*serv)
-> >  		pidx =3D m->to_pool[cpu_to_node(cpu)];
-> >  		break;
-> >  	}
-> > +	pidx %=3D serv->sv_nrpools;
-> > +
-> > +	/*
-> > +	 * Threads are spread evenly across the pools, but when there are
-> > +	 * fewer threads than pools some pools can end up with none. A
-> > +	 * transport enqueued on a threadless pool would never be picked
-> > +	 * up, since each thread only services its own pool. Fall back to
-> > +	 * the next populated pool, trading NUMA locality for a guarantee
-> > +	 * that the transport is serviced.
-> > +	 */
-> > +	for (i =3D 0; i < serv->sv_nrpools; i++) {
-> > +		struct svc_pool *pool =3D &serv->sv_pools[pidx];
-> > +
-> > +		/* This is set under the sp_mutex and rarely ever changes. A
-> > +		 * data race here is harmless.
-> > +		 */
-> > +		if (data_race(pool->sp_nrthreads))
-> > +			return pool;
-> > +
-> > +		if (++pidx >=3D serv->sv_nrpools)
-> > +			pidx =3D 0;
-> > +	}
-> > =20
-> > -	return &serv->sv_pools[pidx % serv->sv_nrpools];
-> > +	/* No pool has any threads; nothing can service the transport. */
->=20
-> Would a WARN_ON_ONCE() be appropriate here?
+> Indeed. Good catch.
 >=20
 
-Maybe a pr_notice_once()? A stack trace isn't particularly helpful
-here, but it would be good to let someone know that this isn't
-optimally configured. I'll add one for v5.
+I had the LLM run this down. We're both wrong.
+
+It briefly worked properly after 3262c816a3d7 ("split svc_serv into
+pools"), but then was broken in the same series in commit bfd241600a3b
+("knfsd: make rpc threads pools numa aware"). So I think we want:
+
+Fixes: bfd241600a3b ("knfsd: make rpc threads pools numa aware")
 
 
-> I think this is a sensible defensive-programming approach.
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  net/sunrpc/svc.c | 26 +++++++++++++++++++++++++-
+> > >  1 file changed, 25 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > > index dd80a2eaaa74..82fb7faf563f 100644
+> > > --- a/net/sunrpc/svc.c
+> > > +++ b/net/sunrpc/svc.c
+> > > @@ -402,6 +402,7 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv=
+ *serv)
+> > >  	struct svc_pool_map *m =3D &svc_pool_map;
+> > >  	int cpu =3D raw_smp_processor_id();
+> > >  	unsigned int pidx =3D 0;
+> > > +	unsigned int i;
+> > > =20
+> > >  	if (serv->sv_nrpools <=3D 1)
+> > >  		return serv->sv_pools;
+> > > @@ -414,8 +415,31 @@ struct svc_pool *svc_pool_for_cpu(struct svc_ser=
+v *serv)
+> > >  		pidx =3D m->to_pool[cpu_to_node(cpu)];
+> > >  		break;
+> > >  	}
+> > > +	pidx %=3D serv->sv_nrpools;
+> > > +
+> > > +	/*
+> > > +	 * Threads are spread evenly across the pools, but when there are
+> > > +	 * fewer threads than pools some pools can end up with none. A
+> > > +	 * transport enqueued on a threadless pool would never be picked
+> > > +	 * up, since each thread only services its own pool. Fall back to
+> > > +	 * the next populated pool, trading NUMA locality for a guarantee
+> > > +	 * that the transport is serviced.
+> > > +	 */
+> > > +	for (i =3D 0; i < serv->sv_nrpools; i++) {
+> > > +		struct svc_pool *pool =3D &serv->sv_pools[pidx];
+> > > +
+> > > +		/* This is set under the sp_mutex and rarely ever changes. A
+> > > +		 * data race here is harmless.
+> > > +		 */
+> > > +		if (data_race(pool->sp_nrthreads))
+> > > +			return pool;
+> > > +
+> > > +		if (++pidx >=3D serv->sv_nrpools)
+> > > +			pidx =3D 0;
+> > > +	}
+> > > =20
+> > > -	return &serv->sv_pools[pidx % serv->sv_nrpools];
+> > > +	/* No pool has any threads; nothing can service the transport. */
+> >=20
+> > Would a WARN_ON_ONCE() be appropriate here?
+> >=20
 >=20
-> Reviewed-by: NeilBrown <neil@brown.name>
+> Maybe a pr_notice_once()? A stack trace isn't particularly helpful
+> here, but it would be good to let someone know that this isn't
+> optimally configured. I'll add one for v5.
+>=20
 >=20
 
-Thanks!
+This is probably not feasible, as there are cases where we legitimately
+queue the call to a pool with no threads.
 
-> > +	return &serv->sv_pools[pidx];
-> >  }
-> > =20
-> >  static int svc_rpcb_setup(struct svc_serv *serv, struct net *net)
+At startup, we create listeners and then threads only get spun up
+later. If we get a RPC on the listener port during that window, the
+message would fire. There's a similar window on shutdown.
+
+It might not hurt to add a tracepoint there though.
+
+> > I think this is a sensible defensive-programming approach.
 > >=20
-> > --=20
-> > 2.54.0
+> > Reviewed-by: NeilBrown <neil@brown.name>
 > >=20
-> >=20
+>=20
+> Thanks!
+>=20
+> > > +	return &serv->sv_pools[pidx];
+> > >  }
+> > > =20
+> > >  static int svc_rpcb_setup(struct svc_serv *serv, struct net *net)
+> > >=20
+> > > --=20
+> > > 2.54.0
+> > >=20
+> > >=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
