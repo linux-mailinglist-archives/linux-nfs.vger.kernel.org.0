@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-22950-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22951-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Wf/YK/bIRmrldQsAu9opvQ
-	(envelope-from <linux-nfs+bounces-22950-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 22:24:22 +0200
+	id /TJ0If3IRmrmdQsAu9opvQ
+	(envelope-from <linux-nfs+bounces-22951-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 22:24:29 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A48446FCB61
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 22:24:21 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81D966FCB67
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 22:24:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=biJ0PlW2;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22950-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22950-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=CLoq75nt;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22951-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22951-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9427E3012D87
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 20:24:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8A98730172D7
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 20:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A618E385D60;
-	Thu,  2 Jul 2026 20:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F7D23A71BE;
+	Thu,  2 Jul 2026 20:24:14 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937F535DD1C;
-	Thu,  2 Jul 2026 20:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4922B35E929;
+	Thu,  2 Jul 2026 20:24:13 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783023853; cv=none; b=HgmncO7Nb09p8u7s+KCwjVAPzHpcW06jZCLuqzNnqeFBmDD+p+nu0ixZDKcyFSbWeO30IMqutmgkcL45RmSHhjr5nuxtlj/nGG0MoY1UC++0QN5Bq77flVs9+vehlLwgxnh7e6756ro3lp/E6A9SgjhBrtmumcoUeeFkoBUqdBw=
+	t=1783023854; cv=none; b=Ayt9dg+TUn0VslHvo2mT7Fu5p1bgYGeK0knyDF4Bd56Kgn/b5RVUi3mar6YrJzf5GwXv7zUh0vdOVYJK+bySC5QX0554Tc/wKvU5oU0271O8JOn663cJTjaDKOBazfdH1QNYbItb1LdFMwhdknWiie1IALGLbZQ38NXT0yONcUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783023853; c=relaxed/simple;
-	bh=Pygw4ryOg79zPL8Zohf12UHXWkYFz8zzfhg5Nk32in4=;
+	s=arc-20240116; t=1783023854; c=relaxed/simple;
+	bh=JAmux79vK/x3zIBRw7nbAGO5uthnwlOzMl012oRQgs4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uCIdXT3pktNoCS76sPTc0EAwIvGUcE6Dw9N1FF10iA1bWom2s9haKMI5vUoiuD+vDjs6h5J6wTxfGn9QwzrmXP9x0f3D6T0aBZLPkZ3ZcGAflwuhDz5Qh5CksmTjxAxToMssQqXBeWauzuBth2+iZhPM0D04TbBA7e3X5SrXpzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=biJ0PlW2; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28BA71F00A3A;
+	 MIME-Version; b=gsBzV/TASgB6pMoqIX4MRJahSUuk98LV1t2tcLWwv6FYEkuhrbcnbLP9wrEZ/d7BwdpplDMEQG2XxVt4+suaDcq+Ix2UrJku67q4BlCpfEXbD5018AWxJKg67F85QAnLw8VVMjem9f5GbYX6ngen0qOylFoimT+RKEGnh203e+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLoq75nt; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52571F00A3D;
 	Thu,  2 Jul 2026 20:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783023852;
-	bh=09nabSfTIjxx+ORUphDRsoJ6nNrhADfGgMUIXyxRsNE=;
+	s=k20260515; t=1783023853;
+	bh=KoXkQDKRgHRYLYlqKF1aOxYpobnYihowBP+MERmUeDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=biJ0PlW23nAU0+HaoUgg/7cftSZVjlkcfH5k2ciuXkAkJod5IcuevAdaQcd39TtlB
-	 hQaFFKWH1svZrVFeroIV1LrdsDbm/RXuF3qPgkqFsOwBSy4j1Y6GGj3geUJzW4UQ8c
-	 xND90ai0SBWgMp9A9N2JqUXlXn/KRJc+y1QH7HbfQrw4KXdlKBnldur1gJH5qy8g8h
-	 UPhicbxrqvTDqs+HvdZ0WUUOr76m0i9wSsRB3LjdOZiXoeesN5bLJUJmSBjfne3oPd
-	 toK80lwXL/jjV3XpjAfJo4K8a70/SQ0wfowQUDM3l+z8iIiqiNZEqY1ubgYgDtPcAa
-	 a0p/gJ/pE5ebw==
+	b=CLoq75ntJIFauox5ln06Sv54to0Uyez0I/yMi15c+mrQgJUXLsbk1Mk51PvsOSLul
+	 wCkpEbHXtnG64XuxqmYF67HIkTVKivgVeo7DXuayNXUYgD24t1zaSOKb5urODO3qTt
+	 Y28UztrFK73Fg1GzqZOosYirGUDV8YRKzqOO4YTmZ0mKtAjYW9nJpllLb9bHKVWe4T
+	 pvSgPwAauWQIyjPwDER15y5uPcmYoO2T9Opya6C60GFhyeoYdfR1Rrxe/8MPUAvbMX
+	 VQQ4wZgeiug/2bgd760FAcHhsUkq36W1Fj7OaKxpebXS76KBf7GIzDUKOykWYCcU6n
+	 Frw/aph1E68BQ==
 From: Chuck Lever <cel@kernel.org>
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>
-Subject: [PATCH 6.18.y 2/3] nfsd: update mtime/ctime on COPY in presence of delegated attributes
-Date: Thu,  2 Jul 2026 16:24:08 -0400
-Message-ID: <20260702202409.1583677-2-cel@kernel.org>
+	Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 6.18.y 3/3] nfsd: release layout stid on setlease failure
+Date: Thu,  2 Jul 2026 16:24:09 -0400
+Message-ID: <20260702202409.1583677-3-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260702202409.1583677-1-cel@kernel.org>
 References: <20260702202409.1583677-1-cel@kernel.org>
@@ -66,22 +66,22 @@ Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:okorniev@redhat.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22950-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22951-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_THREE(0.00)[3];
@@ -93,82 +93,76 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RWL_MAILSPIKE_POSSIBLE(0.00)[104.64.211.4:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,oracle.com:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,meta.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A48446FCB61
+X-Rspamd-Queue-Id: 81D966FCB67
 
-From: Olga Kornievskaia <okorniev@redhat.com>
+commit 30d55c8aabb261bc3f427d6b9aae7ef6206063f9 upstream.
 
-commit 4183cf383b6faec17a0882b84cd2d901dba62b16 upstream.
+nfs4_alloc_stid() publishes the new stid into cl->cl_stateids via
+idr_alloc_cyclic() under cl_lock before returning to
+nfsd4_alloc_layout_stateid(). When nfsd4_layout_setlease() then
+fails, the error path frees the layout stateid directly with
+kmem_cache_free() without ever calling idr_remove(), leaving the
+IDR slot pointing at freed slab memory. Any subsequent IDR walker
+(states_show, client teardown) dereferences the dangling pointer.
 
-When delegated attributes are given on open, the file is opened with
-NOCMTIME and modifying operations do not update mtime/ctime as to not get
-out-of-sync with the client's delegated view. However, for COPY operation,
-the server should update its view of mtime/ctime and reflect that in any
-GETATTR queries.
+The correct teardown for an IDR-published stid is nfs4_put_stid(),
+which removes the IDR slot under cl_lock, dispatches sc_free
+(nfsd4_free_layout_stateid) to release ls->ls_file via
+nfsd4_close_layout(), and drops the nfs4_file reference in its
+tail.
 
-Fixes: e5e9b24ab8fa ("nfsd: freeze c/mtime updates with outstanding WRITE_ATTRS delegation")
+A second issue blocks that switch: nfsd4_free_layout_stateid()
+unconditionally inspects ls->ls_fence_work via
+delayed_work_pending() under ls_lock, but
+INIT_DELAYED_WORK(&ls->ls_fence_work, ...) currently runs only
+after the setlease call. On the setlease-failure path the
+destructor would touch an uninitialized delayed_work.
+
+    nfsd4_alloc_layout_stateid()
+      nfs4_alloc_stid()           /* idr_alloc_cyclic under cl_lock */
+      nfsd4_layout_setlease()     /* fails */
+        nfs4_put_stid()
+          nfsd4_free_layout_stateid()
+            delayed_work_pending(&ls->ls_fence_work)  /* needs INIT */
+            nfsd4_close_layout()  /* nfsd_file_put(ls->ls_file) */
+          put_nfs4_file()
+
+Fix by hoisting the ls_fenced / ls_fence_delay / INIT_DELAYED_WORK
+initialization above the nfsd4_layout_setlease() call, and replace
+the manual nfsd_file_put + put_nfs4_file + kmem_cache_free cleanup
+with a single nfs4_put_stid(stp).
+
+Fixes: c5c707f96fc9 ("nfsd: implement pNFS layout recalls")
 Cc: stable@vger.kernel.org
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+Assisted-by: kres (claude-opus-4-7)
+Signed-off-by: Chris Mason <clm@meta.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+[ cel: drop fence_work init hoist absent from 6.18.y ]
 Signed-off-by: Chuck Lever <cel@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 11 ++++++++++-
- fs/nfsd/xdr4.h     |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4layouts.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index dd22bfd168b5..1c5dd65ecfa6 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1956,8 +1956,10 @@ static int nfsd4_do_async_copy(void *data)
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 683bd1130afe..62762e43f810 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -256,9 +256,7 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+ 	BUG_ON(!ls->ls_file);
  
- 	set_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_flags);
- 	trace_nfsd_copy_async_done(copy);
--	nfsd4_send_cb_offload(copy);
- 	atomic_dec(&copy->cp_nn->pending_async_copies);
-+	if (copy->cp_res.wr_bytes_written > 0 && copy->attr_update)
-+		nfsd_update_cmtime_attr(copy->nf_dst->nf_file, 0);
-+	nfsd4_send_cb_offload(copy);
- 	return 0;
- }
- 
-@@ -2017,6 +2019,9 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		memcpy(&result->cb_stateid, &copy->cp_stateid.cs_stid,
- 			sizeof(result->cb_stateid));
- 		dup_copy_fields(copy, async_copy);
-+		if ((READ_ONCE(copy->nf_dst->nf_file->f_mode) &
-+			       FMODE_NOCMTIME) != 0)
-+			async_copy->attr_update = true;
- 		memcpy(async_copy->cp_cb_offload.co_referring_sessionid.data,
- 		       cstate->session->se_sessionid.data,
- 		       NFS4_MAX_SESSIONID_LEN);
-@@ -2035,6 +2040,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	} else {
- 		status = nfsd4_do_copy(copy, copy->nf_src->nf_file,
- 				       copy->nf_dst->nf_file, true);
-+		if ((READ_ONCE(copy->nf_dst->nf_file->f_mode) &
-+			       FMODE_NOCMTIME) != 0 &&
-+				copy->cp_res.wr_bytes_written > 0)
-+			nfsd_update_cmtime_attr(copy->nf_dst->nf_file, 0);
+ 	if (nfsd4_layout_setlease(ls)) {
+-		nfsd_file_put(ls->ls_file);
+-		put_nfs4_file(fp);
+-		kmem_cache_free(nfs4_layout_stateid_cache, ls);
++		nfs4_put_stid(stp);
+ 		return NULL;
  	}
- out:
- 	trace_nfsd_copy_done(copy, status);
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 1ce8e12ae335..d0ef5e7f1077 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -745,6 +745,7 @@ struct nfsd4_copy {
- 
- 	struct nfsd_file        *nf_src;
- 	struct nfsd_file        *nf_dst;
-+	bool			attr_update;
- 
- 	copy_stateid_t		cp_stateid;
  
 -- 
 2.54.0
