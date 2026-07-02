@@ -1,169 +1,143 @@
-Return-Path: <linux-nfs+bounces-22937-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22938-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bYzzJObDRWpzEwsAu9opvQ
-	(envelope-from <linux-nfs+bounces-22937-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 03:50:30 +0200
+	id OdUSEkIARmrOHgsAu9opvQ
+	(envelope-from <linux-nfs+bounces-22938-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 08:08:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 386C56F2E04
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 03:50:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A4316F3AEF
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 08:08:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22937-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22937-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=YWiewdux;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22938-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22938-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B06F5301A44B
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 01:50:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0C6693014657
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 06:03:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A33F62C21E6;
-	Thu,  2 Jul 2026 01:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD1EA36B054;
+	Thu,  2 Jul 2026 06:03:46 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4E529B79B;
-	Thu,  2 Jul 2026 01:50:23 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18DDC22332E;
+	Thu,  2 Jul 2026 06:03:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782957026; cv=none; b=USWmWg28IRHiM7O04fWLi6drrkKr2CBRdMC2CoiRS5HkzxX5Ga/SoOdRcBC79C+InMtuBNwUdhUrfJOdZo+GAoe3OzLi2HIeF5fvZIMmwqs9LNn/BeF4h8442ZKJeH2FxAsNf+zKh4dm50gbI3izkB0AIj/UFdO0mUZa9LWOsxE=
+	t=1782972226; cv=none; b=ZutVD2I3ae+UafbhdW1EfQ/AVzjsQBIVxg76hLsepp8SR+iYKPczlgVqe7g1Uo8pTssjisYD5PzAmdHY3HA86lD5eEkkY4Ie5XTrFinqgSA2jQhNdBJDbojTFSK891SYxSBCiYjUfNsGi6UMa/RKvf6oB4ajiQJfFwxpd2lRAtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782957026; c=relaxed/simple;
-	bh=EYK5gGhf2WCP8XECD+MQ+3RLd6xkWWgez07E0AmpYHk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I5U2NFisgQecYhAdumbzQtxnXHvQG2qgMNLZqpWi94oY3Q/B6WICsB9IWridjImK8hIuUsGE7lOxvOpKid6NBHbIYT/nxPb2Ou7rUIDVsTSZ7hLqgS4eVJqjb1+zYe04TFDSm5hgRYXDPFy2NAn4ftNqG0IVit8u9pmxZZHIoSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-X-UUID: 610a885475b811f1aa26b74ffac11d73-20260702
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:0130af7c-4e88-4dcc-9800-a4894c0a2bf4,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:04db85e218a4687316c40f98d044e792,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|136|850|865|898,TC:nil,Content:0|15|
-	50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,
-	OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 610a885475b811f1aa26b74ffac11d73-20260702
-X-User: yijiangshan@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <yijiangshan@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1213473515; Thu, 02 Jul 2026 09:50:18 +0800
-From: Jiangshan Yi <yijiangshan@kylinos.cn>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: gregkh@linuxfoundation.org,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	13667453960@163.com,
-	Jiangshan Yi <yijiangshan@kylinos.cn>
-Subject: [PATCH] NFS: fix folio dereference before NULL check in nfs_inode_remove_request()
-Date: Thu,  2 Jul 2026 09:50:14 +0800
-Message-Id: <20260702015014.192357-1-yijiangshan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1782972226; c=relaxed/simple;
+	bh=P+Dfz57Duebop7W0Y9UL+IO/oLzMA4pZeLlFNiZ1qcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XGhLQf7d4jYDd9Ok/N33wwQCcwPg+M+hbWObElistJumR+6eIhy6GDSN8m64tTNCiubeIr+hGjjiizhTD/YgIcp3xV50SWjiL/lc0jIC0Lhz8liZGpnRor6aUwnLSAa4l0NvBPu4YNAUqCZkVdVp0nNSlgMNVTd5bqYcHQYXeOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YWiewdux; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 3C67320B7169; Wed,  1 Jul 2026 23:03:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3C67320B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1782972223;
+	bh=PYV85AvFz4rVWO3U/hhUvMvhuqB8LpaELOR2jS/qchU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YWiewduxaLuWS7rWYB1zlKBpG5aA+R24KUAH3I597I72uX/KPA1VykdQbrEWWP7Np
+	 ZMXqOfd63PnLfEHvY9exzPQkrEBt5b65twR2m+gfSW+EACtewSCu18K92iq1eEb6eo
+	 23jCh8m24d9IZdFNVnC3LvCe85f6mAfC0hsWpNZs=
+Date: Wed, 1 Jul 2026 23:03:43 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	mkalderon@marvell.com, zyjzyj2000@gmail.com, sagi@grimberg.me,
+	mgurtovoy@nvidia.com, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+	bvanassche@acm.org, kbusch@kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, kch@nvidia.com, smfrench@gmail.com,
+	linkinjeon@kernel.org, metze@samba.org, tom@talpey.com,
+	trondmy@kernel.org, anna@kernel.org, chuck.lever@oracle.com,
+	jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, achender@kernel.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	horms@kernel.org, kees@kernel.org, markzhang@nvidia.com,
+	andriy.shevchenko@linux.intel.com, ebadger@purestorage.com,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	target-devel@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+	rds-devel@oss.oracle.com
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH rdma-next v8] RDMA: Change capability fields in
+ ib_device_attr from int to u32
+Message-ID: <akX/P/0TiSQ38YdS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260619203107.606359-1-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260619203107.606359-1-ernis@linux.microsoft.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.04 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22937-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[kylinos.cn];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,vger.kernel.org,163.com,kylinos.cn];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[yijiangshan@kylinos.cn,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:gregkh@linuxfoundation.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:13667453960@163.com,m:yijiangshan@kylinos.cn,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,marvell.com,gmail.com,grimberg.me,nvidia.com,ionos.com,acm.org,kernel.dk,lst.de,samba.org,talpey.com,oracle.com,brown.name,redhat.com,davemloft.net,google.com,linux.intel.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
+	FORGED_RECIPIENTS(0.00)[m:jgg@ziepe.ca,m:leon@kernel.org,m:mkalderon@marvell.com,m:zyjzyj2000@gmail.com,m:sagi@grimberg.me,m:mgurtovoy@nvidia.com,m:haris.iqbal@ionos.com,m:jinpu.wang@ionos.com,m:bvanassche@acm.org,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:kch@nvidia.com,m:smfrench@gmail.com,m:linkinjeon@kernel.org,m:metze@samba.org,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:achender@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:kees@kernel.org,m:markzhang@nvidia.com,m:andriy.shevchenko@linux.intel.com,m:ebadger@purestorage.com,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:target-devel@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:samba-technical@lists.samba.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:rds-devel@oss.oracle.
+ com,m:jgg@nvidia.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yijiangshan@kylinos.cn,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	R_DKIM_NA(0.00)[];
+	FORGED_SENDER(0.00)[ernis@linux.microsoft.com,linux-nfs@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22938-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,nvidia.com:email,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,linux.microsoft.com:dkim,linux.microsoft.com:from_mime,sashiko.dev:url,samba.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 386C56F2E04
+X-Rspamd-Queue-Id: 2A4316F3AEF
 
-nfs_inode_remove_request() obtains the folio for the head request via
-nfs_page_to_folio(), which returns NULL when the PG_FOLIO flag is not
-set on req->wb_head.
+On Fri, Jun 19, 2026 at 01:30:39PM -0700, Erni Sri Satya Vennela wrote:
+> The capability counter fields in struct ib_device_attr are declared
+> as signed int, but these values are inherently non-negative. Drivers
+> maintain their cached caps as u32 and assign them directly into these
+> int fields; if a cap exceeds INT_MAX the implicit narrowing yields a
+> negative value visible to the IB core.
+> 
+> Change the signed int capability fields to u32 to match the
+> underlying nature of the data. Also update consumers across the IB
+> core, ULPs, NVMe-oF target, RDS, and NFS/RDMA so the new u32 values
+> are not forced back through signed int or u8 via min()/min_t() or
+> narrowing local variables.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> Acked-by: Stefan Metzmacher <metze@samba.org> # smbdirect
 
-The presence of the "if (likely(folio))" check shows the code already
-assumes folio can be NULL. However, folio was dereferenced before that
-check:
 
-        folio = nfs_page_to_folio(req->wb_head);
-        mapping = folio->mapping;                       /* deref */
+Hi,
 
-        spin_lock(&mapping->i_private_lock);
-        if (likely(folio)) {                            /* too late */
+Just a friendly follow-up on this patch. The Sashiko review mentioned a
+low-priority item, and I'd appreciate any guidance on whether the change
+is needed.
 
-folio->mapping is read (and mapping->i_private_lock is taken, and
-folio_end_dropbehind(folio) is called outside the check) before folio
-is validated, so a NULL folio would crash before the guard is ever
-reached, rendering the check useless.
+https://sashiko.dev/#/patchset/20260619203107.606359-1-ernis%40linux.microsoft.com
 
-Move the folio->mapping read, the i_private_lock section and the
-folio_end_dropbehind() call inside the "if (likely(folio))" block so
-the folio is only dereferenced after it has been confirmed non-NULL.
-The behaviour is unchanged when folio is non-NULL.
-
-Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
----
- fs/nfs/write.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index fcffb8c9e9df..33d51eb9a3a4 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -739,17 +739,18 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 	nfs_page_group_lock(req);
- 	if (nfs_page_group_sync_on_bit_locked(req, PG_REMOVE)) {
- 		struct folio *folio = nfs_page_to_folio(req->wb_head);
--		struct address_space *mapping = folio->mapping;
- 
--		spin_lock(&mapping->i_private_lock);
- 		if (likely(folio)) {
-+			struct address_space *mapping = folio->mapping;
-+
-+			spin_lock(&mapping->i_private_lock);
- 			folio->private = NULL;
- 			folio_clear_private(folio);
- 			clear_bit(PG_MAPPED, &req->wb_head->wb_flags);
--		}
--		spin_unlock(&mapping->i_private_lock);
-+			spin_unlock(&mapping->i_private_lock);
- 
--		folio_end_dropbehind(folio);
-+			folio_end_dropbehind(folio);
-+		}
- 	}
- 	nfs_page_group_unlock(req);
- 
--- 
-2.25.1
-
+Thanks,
+Vennela
 
