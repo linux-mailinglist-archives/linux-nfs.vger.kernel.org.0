@@ -1,148 +1,169 @@
-Return-Path: <linux-nfs+bounces-22939-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22940-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8dTjGvMaRmpRKAsAu9opvQ
-	(envelope-from <linux-nfs+bounces-22939-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 10:01:55 +0200
+	id POyLIVkuRmryLAsAu9opvQ
+	(envelope-from <linux-nfs+bounces-22940-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 11:24:41 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 058416F487B
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 10:01:50 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7943C6F5350
+	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 11:24:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZdKpHwc2;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22939-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22939-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=intel.com header.s=Intel header.b=PisJ7vjl;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22940-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22940-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 98760302572D
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 07:44:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6C6DE3005301
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 08:59:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85723A4F5E;
-	Thu,  2 Jul 2026 07:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9340D429837;
+	Thu,  2 Jul 2026 08:59:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14003B4EA9;
-	Thu,  2 Jul 2026 07:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE83E367F2F;
+	Thu,  2 Jul 2026 08:59:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782978266; cv=none; b=D5wroQqQ9FsbzheIIymscXgtzHLR4vBZBMJu1IiSkVJYaaUYJ7H0q2dLC/bZC1w9WOA1gU2irGb1VD+6Rk4fghqCImpgU9QgpyoOEV4rbi7dO/lP75Px0j8AnGyZapTPv/DuVet2Fr48YfxEtDsybl90pzyuV2b/cgc+4Ejze7s=
+	t=1782982784; cv=none; b=OYKgmPGTF547KWv3W5YWpO3p8Tf2G0eh/e/SEQJKYcQn+lDWq5Fq4SGSQwfsYNLtnFn95DcpoLGaWlkwRuL/b+6zLJbobAesc1bRfLJQ5T2FK5AcuzVSP1ufwcrF+U7iTuHrxeNzNndscc8r7u2B+W649eIqxHVmLjl4WE1Ph2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782978266; c=relaxed/simple;
-	bh=86OvD4fbRP1MhaFrjiWmHql7uPFq7+n64G79hRC1syE=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=ZmF4hiPQFHslRGBF4qJfSGLATfVcgzXm7/qFG0/vNZLvFAoRTAOIkmwi7jB2k1rUmIWpvnfoc2RHJaGGHhcEWGHhADt3ligbVFz4FbG/CuWr8vKfk8b3bU2Jx2Ho4/WhToqTv91Gv3Pf7YW7EvGzUYk/TutRfIeA/kH//NTV+gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZdKpHwc2; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F841F000E9;
-	Thu,  2 Jul 2026 07:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782978262;
-	bh=pw7UB+las03Zd+n0XXxB46auuLv6eyuJTUsh0sXoIck=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=ZdKpHwc2j42OHNqT6vySAGjYzBtQ7zSona1+PlfNEsIOXJYT2WxO89xvARtVfCenO
-	 90FAp5/2D0wzbkCDmUPenZRdJhzKu3UqFdPQR1xTkxbIeIoVrp4NoGSPvV/LAWAY/+
-	 13LDx8rtoqw/x7NdwEXxIS7KOLLOHt9SBUYjc7OSF/kMxtazINW6JhtXf0Bd7Zfz3l
-	 r3N5CBpGUTT5oZgqEfAqxjKD/BAz5Qd2ETtUm2GAZUmipaaZKnc0/rpnKUifjRqAJB
-	 w0DeFz5B4+ov2oczSldWfH4T/IC6OVdOuIOR4mQksiq/t8mzN/EJLaHVKnLZvcuoXg
-	 5AawwGEY4Kkog==
+	s=arc-20240116; t=1782982784; c=relaxed/simple;
+	bh=gYLTkBsJEUClTNfXhPkNzHUVAl7MUmlSeasGQSngDn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMtUccKUjg3wG6mjtj3n7KEo2ZYvC9VLCf1mXLOcJDw9kbjzDuimkHuxFhihn70SCr77COjdZKOwA62hwgfiutFE61w4aOv+zjgyCMxIq61OJ6QBtc61oIxlNd0HzFODYkh3bbXHY8PldtBWWhY6B4vHdODEWIgo1Kac/x5foRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PisJ7vjl; arc=none smtp.client-ip=192.198.163.15
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782982783; x=1814518783;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gYLTkBsJEUClTNfXhPkNzHUVAl7MUmlSeasGQSngDn4=;
+  b=PisJ7vjlwiWLBlSkdnkDw6wV3LlsKjYcdxuDEpLY8EoFIzK4QVMb4k73
+   zr5Ir3cjijjjjqk47iNDCsSDg0Dc5LJBETMUOH0mxLmikcR9e8kGUrDqI
+   7T3LSSZl6Wrgg5mOGckHamKxZOxybMktX0ASzthPp8+Rg+rCeQkzspxp/
+   ON43gWsZhAVYCk4ZHXLyxTmD4O9x/F+J3vHgbeOzcI4lKxdjJhTPNvoY+
+   Uss7++GvmPdS6T4Vm/XSyLRvEg1K1tBIlogqQX8OYf6u7J6t9Q46/Te1O
+   6JmnPlRXhu3zceWEWN2i1ZPiNyaNDXbDxvSjD8jZK4S2lfR6w6zphY6Gc
+   A==;
+X-CSE-ConnectionGUID: YQKrb66CQyC3o2SSeLGkcA==
+X-CSE-MsgGUID: 6+t08cZhSYutIJKE6GHvNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="83861764"
+X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
+   d="scan'208";a="83861764"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 01:59:42 -0700
+X-CSE-ConnectionGUID: YjT0r9y3SOWMz/XZRomMBw==
+X-CSE-MsgGUID: ZStAWpo+QtOOnZ714iy4cA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
+   d="scan'208";a="257146674"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.213])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 01:59:33 -0700
+Date: Thu, 2 Jul 2026 11:59:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	mkalderon@marvell.com, zyjzyj2000@gmail.com, sagi@grimberg.me,
+	mgurtovoy@nvidia.com, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+	bvanassche@acm.org, kbusch@kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, kch@nvidia.com, smfrench@gmail.com,
+	linkinjeon@kernel.org, metze@samba.org, tom@talpey.com,
+	trondmy@kernel.org, anna@kernel.org, chuck.lever@oracle.com,
+	jlayton@kernel.org, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, achender@kernel.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	horms@kernel.org, kees@kernel.org, markzhang@nvidia.com,
+	ebadger@purestorage.com, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH rdma-next v8] RDMA: Change capability fields in
+ ib_device_attr from int to u32
+Message-ID: <akYocsiHWdH8Tncq@ashevche-desk.local>
+References: <20260619203107.606359-1-ernis@linux.microsoft.com>
+ <akX/P/0TiSQ38YdS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH/RFC 00/18] VFS/nfsd: replace dentry_create()
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Christian Brauner <brauner@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <cel@kernel.org>, 
- Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>, 
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- Jori Koolstra <jkoolstra@xs4all.nl>, 
- Benjamin Coddington <ben.coddington@hammerspace.com>, 
- Mateusz Guzik <mjguzik@gmail.com>
-In-Reply-To: <20260601070042.249432-1-neilb@ownmail.net>
-References: <20260601070042.249432-1-neilb@ownmail.net>
-Date: Thu, 02 Jul 2026 09:44:17 +0200
-Message-Id: <20260702-kurswechsel-grundlos-erdteil-27c448aef1ec@brauner>
-X-Mailer: b4 0.16-dev-4217c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1395; i=brauner@kernel.org;
- h=from:subject:message-id; bh=86OvD4fbRP1MhaFrjiWmHql7uPFq7+n64G79hRC1syE=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWS5iV1+tWCqwHXtvdvOGOrfK3RIcHy7IuFwJ3tQ/MFUz
- wUcamyTOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYS6s/IsPPxiVP+Zv9n/b3x
- bHXZ+1MNRwOz2rjlS0Qfz/DqDON9vIvhf/i3kFt68w8EJHrsnMLx/uyZG1mrqjS6dCynL44xCe/
- QZAMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akX/P/0TiSQ38YdS@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-22940-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[ziepe.ca,kernel.org,marvell.com,gmail.com,grimberg.me,nvidia.com,ionos.com,acm.org,kernel.dk,lst.de,samba.org,talpey.com,oracle.com,brown.name,redhat.com,davemloft.net,google.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RSPAMD_URIBL_FAIL(0.00)[brauner:query timed out];
-	FORGED_SENDER(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:brauner@kernel.org,m:viro@zeniv.linux.org.uk,m:cel@kernel.org,m:jlayton@kernel.org,m:jack@suse.cz,m:linux-fsdevel@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jkoolstra@xs4all.nl,m:ben.coddington@hammerspace.com,m:mjguzik@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22939-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,vger.kernel.org,xs4all.nl,hammerspace.com,gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	FORGED_RECIPIENTS(0.00)[m:ernis@linux.microsoft.com,m:jgg@ziepe.ca,m:leon@kernel.org,m:mkalderon@marvell.com,m:zyjzyj2000@gmail.com,m:sagi@grimberg.me,m:mgurtovoy@nvidia.com,m:haris.iqbal@ionos.com,m:jinpu.wang@ionos.com,m:bvanassche@acm.org,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:kch@nvidia.com,m:smfrench@gmail.com,m:linkinjeon@kernel.org,m:metze@samba.org,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:achender@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:kees@kernel.org,m:markzhang@nvidia.com,m:ebadger@purestorage.com,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:target-devel@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:samba-technical@lists.samba.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:rds-devel@oss.oracle.com,m:jg
+ g@nvidia.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brauner:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	RWL_MAILSPIKE_POSSIBLE(0.00)[104.64.211.4:from];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:dkim,vger.kernel.org:from_smtp,ashevche-desk.local:mid,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 058416F487B
+X-Rspamd-Queue-Id: 7943C6F5350
 
-On 2026-06-01 16:37 +1000, NeilBrown wrote:
-> My recent proposal for inverting the order between inode_lock() on a
-> parent dir and d_alloc_parallel()[1] missed that fact that atomic_open()
-> has two callers, and would have resulted in easy deadlocks from nfsd
-> when re-exporting and NFS filesystem.
+On Wed, Jul 01, 2026 at 11:03:43PM -0700, Erni Sri Satya Vennela wrote:
+> On Fri, Jun 19, 2026 at 01:30:39PM -0700, Erni Sri Satya Vennela wrote:
+> > The capability counter fields in struct ib_device_attr are declared
+> > as signed int, but these values are inherently non-negative. Drivers
+> > maintain their cached caps as u32 and assign them directly into these
+> > int fields; if a cap exceeds INT_MAX the implicit narrowing yields a
+> > negative value visible to the IB core.
+> > 
+> > Change the signed int capability fields to u32 to match the
+> > underlying nature of the data. Also update consumers across the IB
+> > core, ULPs, NVMe-oF target, RDS, and NFS/RDMA so the new u32 values
+> > are not forced back through signed int or u8 via min()/min_t() or
+> > narrowing local variables.
 > 
-> I think the best way to fix this is to provide a richer interface for
-> nfsd to use, which includes all the locking as well as inode_operations
-> calls.  This allows the nfsd behaviour to share more code with the
-> system-call behaviour.
-> 
-> This series refactors code between lookup_open() and
-> open_last_lookups(), and uses the new lookup_open() to provide
-> vfs_lookup_open().  It then rearranges the code in nfsd so that it can
-> easily use vfs_lookup_open() instead of dentry_create().  Finally
-> dentry_create() is removed.
-> 
-> This series is based on a merge of nfsd-testing, vfs-next/work.dcache,
-> and vfs/vfs.fixes (though I can't see my "Fix possible failure to
-> unlock.."[2] patch in there yet).  So I probably will need to resubmit
-> after a bunch of that has hit mainline - though a few of the patches
+> Just a friendly follow-up on this patch. The Sashiko review mentioned a
+> low-priority item, and I'd appreciate any guidance on whether the change
+> is needed.
 
-Yes, please resubmit. 
+As I read this it needs to be fixed, the problem is that there is
+a potential of a weird case (not sure they are IRL) when somebody can use
+INT_MIN (in representation of signed number) to actually mean 0x80000000
+size.
 
-> This will conflict with the O_CREAT|O_DIRECTORY work so obviously we'll need to
-> work out how to order them once we both have enough positive review.
+> https://sashiko.dev/#/patchset/20260619203107.606359-1-ernis%40linux.microsoft.com
 
-I have that on my todo but somehow said todo keeps growing...
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
