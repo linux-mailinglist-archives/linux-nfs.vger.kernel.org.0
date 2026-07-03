@@ -1,167 +1,306 @@
-Return-Path: <linux-nfs+bounces-22963-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QR0jH04vR2pKUAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22963-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:41:02 +0200
+	id ltrRGDUwR2pkUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:44:53 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 160946FE3F2
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:41:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEE3A6FE418
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:44:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=QjDzgq9p;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22963-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22963-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ownmail.net header.s=fm2 header.b=crxxZDA+;
+	dkim=pass header.d=messagingengine.com header.s=fm2 header.b="B HOOKCt";
+	dmarc=pass (policy=none) header.from=ownmail.net;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8835D301B037
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:41:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1CF44301AF5E
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:43:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABC4309DB5;
-	Fri,  3 Jul 2026 03:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6155318146;
+	Fri,  3 Jul 2026 03:43:03 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355DF31353C;
-	Fri,  3 Jul 2026 03:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133A5266EE9;
+	Fri,  3 Jul 2026 03:42:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783050059; cv=none; b=NFKXMEgfNXL9oq1DfT78FMuqTpj+YPEg1GRoBPd3hB0FeLd5QmRVM4/ezpYqDf2ye+9l02VAnA1Qnc/sHYA+DfUOevQ20V/9WggljLh0J822ZBeIi0FZnuhCxQF74kEvPVnuHk/KKaV/m/oNiCDVZwsbrxUGlulm3sukUs5YksU=
+	t=1783050183; cv=none; b=K3aXW/6dBI9LhQicEzQKEnSr16B5YWb/Z1CK0JC0cIEx90JMLRIiT3q9fbqPOkC5V8/lV3IyDtVRSVvg1HwF8ZX0k679JMfZnzC4qgN67ftlWWo9jluDYVjz9RVAvNCVyedw6JiKOKgOynmRZVMRXDBvDHyR7p2vLLoje9O1ZWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783050059; c=relaxed/simple;
-	bh=viIwZTOLTf2n5u3MDsPJS0+2ezGHyBMIrfCGNOQ94Zo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2sWAOFkouJWIEP5BYMVLvShfyjXmib90mLmBHkLvBzxnjINXf2YgXKSf3myI1N83p5bbHtOvJJ32eRN4dGjR1k9rA96EJhcKTdYHqvc+/IPjR0AFL+mwdmrsi9MjuFrgMN7DYzmOd9wvpbuvKE9tjlPrcKovFJeAaP7OcKETh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjDzgq9p; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A45101F000E9;
-	Fri,  3 Jul 2026 03:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783050051;
-	bh=ndscrT7u2I1rV7aTnG11s/KjS0zFjllj+dEk3X9y6p0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QjDzgq9pwgA18AuG3rWj8KjxKS5d7qW9xvBgw9nL3QLHTCDe4ekAqva0LmtksiMFp
-	 52gekaW/50g5218dD25khR9tGTFFz61L19LaBmJSZpLmIO27ethkgSCjxa9WcSjYU5
-	 Qj0sF5OyFuhTliqVm2CjM+t9ep1J5tZE7SU3clu7XL7uZ1jE11+kskpR0t2kBS8dao
-	 JuEPBxbXIboTMc9iT+ywyFMTQsInnaBRV5cHal+9/02hmdbykd8n9EN1bC/Tx4hHCl
-	 QaIxqDnxSSGeF2GR9cwopGwQAblwedYMooCYQUw/HbSf2jJPxHo+/x76y+6nDkFqzd
-	 xRqSyKl+O7UWg==
-From: Chuck Lever <cel@kernel.org>
-To: <stable@vger.kernel.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chris Mason <clm@meta.com>
-Subject: [PATCH 5.10.y] nfsd: reset write verifier on deferred writeback errors
-Date: Thu,  2 Jul 2026 23:40:48 -0400
-Message-ID: <20260703034048.1602590-1-cel@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <2026070204-festivity-sternness-523f@gregkh>
-References: <2026070204-festivity-sternness-523f@gregkh>
+	s=arc-20240116; t=1783050183; c=relaxed/simple;
+	bh=hLP/JvvMNwlYcx1UhqreRxpmnLcXS11wgb4lsJw+aOI=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=QFDQC3XGSaInlNEYm9PB5VrVAHGeeg8sdjeddwyU4D4xuPVGjirmDeexjRK97+wonP0PIIGsw9+lFy/7tfZFxv4iwDWl6kTzamCtoFQw8iEPdz3b5xm8dy5UKV+LEm5Ir/5QZzEJ7o/U61tsyu0nzR+Cz8Ia9GvyHb7shk6744w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=crxxZDA+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BHOOKCtl; arc=none smtp.client-ip=103.168.172.155
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8CC281400071;
+	Thu,  2 Jul 2026 23:42:53 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 02 Jul 2026 23:42:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
+	1783050173; x=1783136573; bh=dVMklWEvZlc9VgTiGP9e4b0XY9DEyVXj+lt
+	4lAONHV0=; b=crxxZDA+qxrNsXhatpBqAe7J0KErueLKA3jHqUcq+Jp4VzZ4rsN
+	IQYyea7dLaYDnmoi2O3LqmawbIjdAstVr53VsbyeOlQRszoG1YFlgLxOfnCj/Huu
+	8/HJrcj0OGGesVyQuZ0UucXy04Pg8aSM4iEXy4e8Zxhv2PZAtjzq3Iw+fizbzqRd
+	mgdBdaSg1PFYjjLf+gHgzVBB+EueQWncpdbyafB/915duHU5TogLz27Yzz7DCf9w
+	dTE0UUV8u8hZdwe6b410uK2pjF4JO6z0rtv774o5zLrt/GUfYaErnPxv1cot6kuX
+	zzenITsgIHgppREd8RNLPJ+7Q72a4tLbJDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783050173; x=
+	1783136573; bh=dVMklWEvZlc9VgTiGP9e4b0XY9DEyVXj+lt4lAONHV0=; b=B
+	HOOKCtlRolpPJM6yVMEDy+CmLiG7M+dP4abxbH/a6DHzRvFhcc7eVEmS5ClslP4y
+	SmDKtO+JvrRHD+UNxSiAL0vGd73bz9QNq6vxiqQfw89CdojeKF4pW8Nxdqiouf+B
+	/po8D3F0ejJe/92/5FIJua11LaTE/+lYnW8CqZV+pYWSFiOOFRm5MocvMyCwUfDv
+	3ATLqoa52R0B3Rw0eLCaKSJVpgnxiHRY2FhU54l5uywI/yWj+rpzV/Y3CzbHBviS
+	WW+K45y/GaZYJ/b3QYwY8C8pr4FJAgsoT/yGfmEMg0oqxXwGGE86XCc2z+HMnho3
+	gEganWj2aOhS9H+0HRYTw==
+X-ME-Sender: <xms:vS9HamblCWLO2ell7_tFsBZW-ux22ai4owIJxFQnwe7RDjRYWqDuoA>
+    <xme:vS9HauUF5Z2mlEryXcRbnOi6zcQTgXCUjEn4cZVB5rvEYCjWpjz7PpFa4CxF9s5oS
+    iW5DrCkDvbjoNrZKh6_hEuR91iT9wRS7c3fx6ZZCLpJc7E>
+X-ME-Received: <xmr:vS9HalNwa4Sq_5q9dDFW6dL-t1rf0TdEX1lVpqTMVgT6gr6s6z2SS8dne8ygo9jTRN7Z7naR014y-6FutJtUaa8HVMrT18A>
+X-ME-Proxy-Cause: dmFkZTGo/kk7lJxMABpcjZ2O02+BLekeUxmecIPsUWV44Y4VTXEzWykJyeOV7dujOrCTP3
+    j2P9uG7T4LU6EyEup4qIy31+iZwXc3I8oLtgfn2rlgIRt1sRHKz242OSwKb9NgYGY5qlP6
+    9AALPa71yVYZOVj4ACVIEC2tiPj4dkk+wgHrj9fFC2xcfMMoD0FIgleESfQoKkIBmGer+Z
+    C7C86CltWWq6kwsj5OT7qXuUeQ9iXgZ3bXy4Acj2ji8rFvoroUZIWx8zQi86helqxrMZga
+    rldR330xWQbq7b0ZAhio2twvUjYgFQOIxh/ocrhx1KUM+GEooVI4dCJGY8bSSR+D72Zwgy
+    UBSIq/dtwBiqOTbbpsinHMYAGG2biCrA2LuCRfG9ba5lKZuxHFj+NrbeJFXIPzqTgWzGvn
+    oUCZFyDTzsYdU7/+lkEeIN5fjU5KrakDuMO1fBbxAzrMnDzKQgz+6UtFCPK5Ph8PJvR6op
+    IMw+MNNeOjdYaB4xbRvgHk9mhPuT80ePsYfW4WPUJ0kAXDRVoY4uxybGel4The8VTQ7iI+
+    4HbYLL3B1f+BOlqwNzuM5sjc/ccCjjrhjIdKHqT6JMM4bL2IX0HwSp+sw3RiTymfElVDEg
+    EVuncr5Iw1DLR6NdEYLdgkU+yfNmJrQYPj80pzpByhmMXZmy0H5CNFRIoyPg
+X-ME-Proxy: <xmx:vS9HaoYbz4Bls-O1HGtF-y7vSP2VWLQ7uF3gl5kt7KhyEejD3tjLGw>
+    <xmx:vS9Hak8YeEceLF6oJP-JTfNEiiZ-DthM0S2MqzMnmvXQBzE15lZCYg>
+    <xmx:vS9HapQ6mbYzPfJIc_gB4L9qsVfRGHzhrJIkEppQJ0yH0NP_DBfepw>
+    <xmx:vS9Hauch9TW2edgWuCcAb6zsSJFrS3S1ydKORN6nggLL2yBnPN1XDg>
+    <xmx:vS9Hao7sFb9Na7SHft-ksFNNE90XCsXsr4DtSDrsk8gFVYksfIqcaC9F>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 2 Jul 2026 23:42:50 -0400 (EDT)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@ownmail.net>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <cel@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v4 1/4] sunrpc: route to a populated pool in svc_pool_for_cpu()
+In-reply-to: <5f5ef0bb961dc0bdd34383d368261aac50509d82.camel@kernel.org>
+References: <20260701-sunrpc-pool-mode-v4-0-b3d867e4c8f9@kernel.org>
+  <20260701-sunrpc-pool-mode-v4-1-b3d867e4c8f9@kernel.org>
+  <178294402742.27465.8893159356805540635@noble.neil.brown.name>
+  <ccfad59a086674ef8612d32f72a23c5401a3eacb.camel@kernel.org>
+  <5f5ef0bb961dc0bdd34383d368261aac50509d82.camel@kernel.org>
+Date: Fri, 03 Jul 2026 13:42:46 +1000
+Message-id: <178305016681.27465.3325737287555850173@noble.neil.brown.name>
+Reply-To: NeilBrown <neil@brown.name>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22963-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22964-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jlayton@kernel.org,m:clm@meta.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_FROM(0.00)[ownmail.net];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
+	HAS_REPLYTO(0.00)[neil@brown.name]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 160946FE3F2
+X-Rspamd-Queue-Id: AEE3A6FE418
 
-From: Jeff Layton <jlayton@kernel.org>
+On Thu, 02 Jul 2026, Jeff Layton wrote:
+> On Thu, 2026-07-02 at 08:17 -0400, Jeff Layton wrote:
+> > On Thu, 2026-07-02 at 08:13 +1000, NeilBrown wrote:
+> > > On Thu, 02 Jul 2026, Jeff Layton wrote:
+> > > > svc_set_num_threads() spreads the requested threads evenly across the
+> > > > service's pools (base =3D nrservs / sv_nrpools).  When a service runs
+> > > > fewer threads than it has pools -- e.g. an nfsd configured with fewer
+> > > > threads than the host has NUMA nodes while running in "pernode" or
+> > > > "percpu" mode -- the trailing pools are left with no threads at all.
+> > > >=20
+> > > > svc_xprt_enqueue() selects a pool from the CPU servicing the transpor=
+t,
+> > > > queues the transport on that pool's sp_xprts, and only wakes a thread
+> > > > from the same pool.  Each thread services exclusively its own pool, s=
+o a
+> > > > transport that lands on a threadless pool is enqueued on sp_xprts and
+> > > > never picked up: the connection hangs indefinitely.
+> > > >=20
+> > > > Have svc_pool_for_cpu() skip pools that currently have no threads,
+> > > > falling back to the next populated pool.  This trades NUMA locality f=
+or
+> > > > a guarantee that the work is actually serviced.  sp_nrthreads is only
+> > > > updated under the service mutex; the lockless read here is a best-eff=
+ort
+> > > > routing hint, so annotate it with data_race().
+> > > >=20
+> > > > Fixes: 0f0257eaa5d2 ("svc: Move the xprt independent code to the svc_=
+xprt.c file")
+> > >=20
+> > > Why that commit?  Did this ever work correctly?
+> > > It seems more likely that=20
+> > > Fixes: 3262c816a3d7 ("[PATCH] knfsd: split svc_serv into pools")
+> > > is appropriate.
+> > >=20
+> >=20
+> > Indeed. Good catch.
+> >=20
+>=20
+> I had the LLM run this down. We're both wrong.
+>=20
+> It briefly worked properly after 3262c816a3d7 ("split svc_serv into
+> pools"), but then was broken in the same series in commit bfd241600a3b
+> ("knfsd: make rpc threads pools numa aware"). So I think we want:
+>=20
+> Fixes: bfd241600a3b ("knfsd: make rpc threads pools numa aware")
 
-commit 2090b05803faab8a9fa62fbff871007862cac1b7 upstream.
+That is certainly credible - thanks.
 
-nfsd_vfs_write() and nfsd_commit() both call filemap_check_wb_err() to
-detect deferred writeback errors, but neither rotates the server's write
-verifier (nn->writeverf) when this check fails. Every other
-durable-storage-failure path in these functions calls
-commit_reset_write_verifier() before returning an error.
+>=20
+>=20
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > ---
+> > > >  net/sunrpc/svc.c | 26 +++++++++++++++++++++++++-
+> > > >  1 file changed, 25 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > > > index dd80a2eaaa74..82fb7faf563f 100644
+> > > > --- a/net/sunrpc/svc.c
+> > > > +++ b/net/sunrpc/svc.c
+> > > > @@ -402,6 +402,7 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv=
+ *serv)
+> > > >  	struct svc_pool_map *m =3D &svc_pool_map;
+> > > >  	int cpu =3D raw_smp_processor_id();
+> > > >  	unsigned int pidx =3D 0;
+> > > > +	unsigned int i;
+> > > > =20
+> > > >  	if (serv->sv_nrpools <=3D 1)
+> > > >  		return serv->sv_pools;
+> > > > @@ -414,8 +415,31 @@ struct svc_pool *svc_pool_for_cpu(struct svc_ser=
+v *serv)
+> > > >  		pidx =3D m->to_pool[cpu_to_node(cpu)];
+> > > >  		break;
+> > > >  	}
+> > > > +	pidx %=3D serv->sv_nrpools;
+> > > > +
+> > > > +	/*
+> > > > +	 * Threads are spread evenly across the pools, but when there are
+> > > > +	 * fewer threads than pools some pools can end up with none. A
+> > > > +	 * transport enqueued on a threadless pool would never be picked
+> > > > +	 * up, since each thread only services its own pool. Fall back to
+> > > > +	 * the next populated pool, trading NUMA locality for a guarantee
+> > > > +	 * that the transport is serviced.
+> > > > +	 */
+> > > > +	for (i =3D 0; i < serv->sv_nrpools; i++) {
+> > > > +		struct svc_pool *pool =3D &serv->sv_pools[pidx];
+> > > > +
+> > > > +		/* This is set under the sp_mutex and rarely ever changes. A
+> > > > +		 * data race here is harmless.
+> > > > +		 */
+> > > > +		if (data_race(pool->sp_nrthreads))
+> > > > +			return pool;
+> > > > +
+> > > > +		if (++pidx >=3D serv->sv_nrpools)
+> > > > +			pidx =3D 0;
+> > > > +	}
+> > > > =20
+> > > > -	return &serv->sv_pools[pidx % serv->sv_nrpools];
+> > > > +	/* No pool has any threads; nothing can service the transport. */
+> > >=20
+> > > Would a WARN_ON_ONCE() be appropriate here?
+> > >=20
+> >=20
+> > Maybe a pr_notice_once()? A stack trace isn't particularly helpful
+> > here, but it would be good to let someone know that this isn't
+> > optimally configured. I'll add one for v5.
+> >=20
+> >=20
+>=20
+> This is probably not feasible, as there are cases where we legitimately
+> queue the call to a pool with no threads.
+>=20
+> At startup, we create listeners and then threads only get spun up
+> later. If we get a RPC on the listener port during that window, the
+> message would fire. There's a similar window on shutdown.
+>=20
+> It might not hurt to add a tracepoint there though.
 
-The missing rotation means clients holding UNSTABLE write data under the
-current verifier will COMMIT, receive the unchanged verifier back, and
-conclude their data is durable — silently dropping data that failed
-writeback. This violates the UNSTABLE+COMMIT durability contract
-(RFC 1813 §3.3.7, RFC 8881 §18.32).
+and a comment explaining when this might happen?
 
-Add commit_reset_write_verifier() calls at both filemap_check_wb_err()
-error sites, matching the pattern used by adjacent error paths in the
-same functions. The helper already filters -EAGAIN and -ESTALE
-internally, so the calls are unconditionally safe.
+The start-up window makes sense - as long as we start a thread on each
+pool it should be safe.  But if we don't (if the admin request zero on
+some pools) we can still get stuck.  Is there something simple we can do
+about that, or does the admin get to keep both halves?
 
-Reported-by: Chris Mason <clm@meta.com>
-Fixes: 555dbf1a9aac ("nfsd: Replace use of rwsem with errseq_t")
-Cc: stable@vger.kernel.org
-Assisted-by: kres:claude-opus-4-6
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-[ cel: open-code the reset; commit_reset_write_verifier() is v6.7 ]
-Signed-off-by: Chuck Lever <cel@kernel.org>
----
- fs/nfsd/vfs.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+And on shutdown the threads stop before the sockets are cleaned up - but
+they do get cleaned up, so all good.
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 194681424866..c8eebd03784a 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1149,8 +1149,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 	nfsd_stats_io_write_add(nn, exp, *cnt);
- 	fsnotify_modify(file);
- 	host_err = filemap_check_wb_err(file->f_mapping, since);
--	if (host_err < 0)
-+	if (host_err < 0) {
-+		nfsd_reset_write_verifier(nn);
-+		trace_nfsd_writeverf_reset(nn, rqstp, host_err);
- 		goto out_nfserr;
-+	}
- 
- 	if (stable && use_wgather) {
- 		host_err = wait_for_concurrent_writes(file);
-@@ -1286,6 +1289,10 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 			nfsd_copy_write_verifier(verf, nn);
- 			err2 = filemap_check_wb_err(nf->nf_file->f_mapping,
- 						    since);
-+			if (err2 < 0) {
-+				nfsd_reset_write_verifier(nn);
-+				trace_nfsd_writeverf_reset(nn, rqstp, err2);
-+			}
- 			err = nfserrno(err2);
- 			break;
- 		case -EINVAL:
--- 
-2.54.0
+Thanks,
+NeilBrown
+
+
+>=20
+> > > I think this is a sensible defensive-programming approach.
+> > >=20
+> > > Reviewed-by: NeilBrown <neil@brown.name>
+> > >=20
+> >=20
+> > Thanks!
+> >=20
+> > > > +	return &serv->sv_pools[pidx];
+> > > >  }
+> > > > =20
+> > > >  static int svc_rpcb_setup(struct svc_serv *serv, struct net *net)
+> > > >=20
+> > > > --=20
+> > > > 2.54.0
+> > > >=20
+> > > >=20
+>=20
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
 
 
