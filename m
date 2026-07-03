@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-22959-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22960-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EhbKDEouR2oiUAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22959-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:36:42 +0200
+	id 9SONCSQvR2pGUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22960-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:40:20 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 848DF6FE3AD
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:36:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F1E36FE3E9
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:40:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WvEGIbeu;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=UGj2kn68;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22959-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22959-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22960-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22960-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D995A30E48AF
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:33:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5D7F6300CBFD
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99489313E3F;
-	Fri,  3 Jul 2026 03:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E688F31A06C;
+	Fri,  3 Jul 2026 03:37:23 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974253148DA;
-	Fri,  3 Jul 2026 03:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80F0318146;
+	Fri,  3 Jul 2026 03:37:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783049580; cv=none; b=qCrGK+SWx9SV0xB8Rwge7HSUumn6HgFKwroh1BuIS1Sk7tFIpxPTNfU0kRUNlXLEnwADI5uF+zj62NwJNBjjKO3IHVTGzzt/EZaJd9xnetqN6j7JoXfsL75Lt1htHEqyv9+tyDhPfyvXrWovSp4bEyfnOSTGsIEWNDJI6vriPbg=
+	t=1783049842; cv=none; b=fBRBVoYWTXZjs2T1HNc94bK4Q2oQBcl1tg+uQMKKJdfr1ZmeRqSuktzJdKwwveKYmqMGyV0DGa7LItnCFA5KCYZVqxgUhdEN6ZArecO1IQQKYQKQaQD/QD8E2VuHST+W8I2n0B0j5zzMTlIY+YOGId1V2cQf5R3kakplbWcrcRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783049580; c=relaxed/simple;
-	bh=UyVKHl44V9oblhGbFz3Nt2ly+SeUjgUCGBMkhPzd/yo=;
+	s=arc-20240116; t=1783049842; c=relaxed/simple;
+	bh=uw8dNJSIRwmPU6hOtEiQahKvItGTuZZB1YQm6EBduCg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EdtozdG9S3SAhuGVgDa0sTUDDr7mLaYAo0ovHeiMTp4oefi24b4aZIaYsiF0WtHh3sp0t950WU4TFMfNoLz3Ow0YgWDthYwcWZKtg4LST0oDyD51kEQ1ELxnU0UB77tJgCJye9IdpN8aiqBazrDpu0zUWN5tj//y36+p8OFpk5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvEGIbeu; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45281F00A3A;
-	Fri,  3 Jul 2026 03:32:46 +0000 (UTC)
+	 MIME-Version:Content-Type; b=jL3hbWfoNiVNelmiUapShYcxWvV2l/xX43HgVpnnguIbAzjHdwKykxg7Ttw2IehS1aaThhK8ioDHmNVv0Mx2uLfORfjXwYqjk2PUm2P3ROGh9gjHEYDOTVRItBN2jq6c5zRoUgzznaLAW1Bw4XphYecdL082xZUseFZrBYrFv2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGj2kn68; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4106B1F000E9;
+	Fri,  3 Jul 2026 03:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783049567;
-	bh=l5TPp3rc00ZF15B3XLumzanSxaqs36Mi+WEr8CXXg6I=;
+	s=k20260515; t=1783049832;
+	bh=h2gdU2TGu5W6JUdXVgFuxxtiDlZggXXUhPgQZuH1mDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WvEGIbeu6I519kOOSH7q9qsLcEVT04XYa8ISPefpWFT8BzqyIqgUnNFaa3O1cYr9W
-	 Ab1/5+8JJX6rqTR1cwflU/FFgpN/o1CUgfWdqi5Dq/On0YSRKOQJYoHRKcbC9KpxhU
-	 EH29euyWxsFQ8vxD0P++goB13CuV1XWQicbz4BUZhB1WRKBJ0DpPnRVKZkQ5xCCTXE
-	 IgcgQgUNe7dCPiIYhrSZE0/44Jv0T1YTfLNyPYAjM8ZhqUY1krC30VqWkZgOiRo+AW
-	 6l23I68DdeNOkcisNfAwj26s6QyrLTeWsyCYKR8Bxq9xKVCalauthD+gdQethchvcN
-	 /6kMPKQcMXh3A==
+	b=UGj2kn68+GqrZBevV7VHFoexAaSRizAN3uqVyKbC7ZTXEGxksBGkUvL4SasARkCh9
+	 8asMxIHqQVGP0sCJyMCtevNDQ69+1DefTz+r1QNisDBH9GWyJQB7OyVWbhy6rA3Xwt
+	 3QvI4eJIwrNY8nsaf2jWqJtIF3ToLYNQEGru72ayQq5Milon59IpLzd/Fp44yyJwJH
+	 0p+kHVL3012Jc2s/MvA0TMTlDkgFUSf1KPOjStlBazQW2vi+OZqL8Ju0Ss1YMMpyRK
+	 FZXIF0iKDZIgS5YZlUqEpLvuNYy78fK9nYNNAjBWvVn1HdpMAMAGKPXal9nqJMGgNc
+	 WIz15MQj8oN9w==
 From: Chuck Lever <cel@kernel.org>
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Jeff Layton <jlayton@kernel.org>,
 	Chris Mason <clm@meta.com>
-Subject: [PATCH 6.1.y 2/2] nfsd: reset write verifier on deferred writeback errors
-Date: Thu,  2 Jul 2026 23:32:43 -0400
-Message-ID: <20260703033243.1539871-2-cel@kernel.org>
+Subject: [PATCH 5.15.y] nfsd: reset write verifier on deferred writeback errors
+Date: Thu,  2 Jul 2026 23:37:05 -0400
+Message-ID: <20260703033705.1572486-1-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260703033243.1539871-1-cel@kernel.org>
-References: <20260703033243.1539871-1-cel@kernel.org>
+In-Reply-To: <2026070204-septum-trimness-cb0f@gregkh>
+References: <2026070204-septum-trimness-cb0f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -71,13 +71,13 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22959-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22960-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
@@ -94,11 +94,11 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 848DF6FE3AD
+X-Rspamd-Queue-Id: 6F1E36FE3E9
 
 From: Jeff Layton <jlayton@kernel.org>
 
@@ -134,10 +134,10 @@ Signed-off-by: Chuck Lever <cel@kernel.org>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 87a596fc6654..c40b2a706691 100644
+index e1737984e0ca..7b0bc4507ad0 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1134,8 +1134,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+@@ -1133,8 +1133,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
  	nfsd_stats_io_write_add(nn, exp, *cnt);
  	fsnotify_modify(file);
  	host_err = filemap_check_wb_err(file->f_mapping, since);
@@ -150,7 +150,7 @@ index 87a596fc6654..c40b2a706691 100644
  
  	if (stable && use_wgather) {
  		host_err = wait_for_concurrent_writes(file);
-@@ -1271,6 +1274,10 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+@@ -1270,6 +1273,10 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
  			nfsd_copy_write_verifier(verf, nn);
  			err2 = filemap_check_wb_err(nf->nf_file->f_mapping,
  						    since);
