@@ -1,57 +1,91 @@
-Return-Path: <linux-nfs+bounces-22970-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22971-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id u9NKFwBdR2oTXAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22970-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 08:56:00 +0200
+	id arQMLsyRR2pgbQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22971-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 12:41:16 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D0046FF467
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 08:55:59 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB64B701509
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 12:41:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.dev header.s=key1 header.b=i4x1sP4a;
-	dmarc=pass (policy=none) header.from=linux.dev;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22970-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22970-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=XTgCoTfg;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22971-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22971-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 61718301CA77
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 06:55:52 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 832113001FB0
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 10:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF56835203A;
-	Fri,  3 Jul 2026 06:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78BD93B6361;
+	Fri,  3 Jul 2026 10:28:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9241A30C141
-	for <linux-nfs@vger.kernel.org>; Fri,  3 Jul 2026 06:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA53B5305
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Jul 2026 10:28:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783061751; cv=none; b=JjF+kQ0QooBPJesURB0HOpFaTIEh7RnyNYLU8loLyKQH9DLdhDqL9VjjlnZ+ah31Vsy2Lt910TzIRuB+TxPZHbPYqN+j+Ua1zNnbjhxJLpbmnr7AV5sNvDwX3vOl0RtYaZMVv60ImoiR9z+F84Q8NYTYul1eFXEhbik3anWvWMo=
+	t=1783074519; cv=none; b=Xb7bI3glpa5cwLHIF04fiTBH22hvzAVUF3fOVB1cmPiGzX705ENf+DGuzNBF/apb5Hq8GhAp5l1sx3HC+JOLIXVHKIwNmC8C8NE5W+ROCuAe+hPXQ+jwSLE3GbpdfKxCkb5Er/WT50sQGiMkUhLqloJmE/XHlayJP/slWVZeZFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783061751; c=relaxed/simple;
-	bh=uzjRBJnAEhuw8XoqI0dy6E42dxTwpn4qnUhAJwve0oI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CmUri+JSof1ZSbwyrVY/UNM66Hbq/26xR1g/IbT2K5LQaD5csZedVAmcSpnOqEKY9Wa1cdg2y0CqP4774GYMSO6p4BZYRWDz7VAP7hkeS2o4Psm3YYIvzIHyh6dWcby1s+4Lqj0a7TERalMZkcvCBMv1MgkEJbHBFfbtmSMCRlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i4x1sP4a; arc=none smtp.client-ip=91.218.175.184
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783061747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=B6lnRtW660sE99Z4H+dJnuRkFvuFoekLxVYU1hHJ6vw=;
-	b=i4x1sP4alVeDiO/eKw0xx5bZvi5WrVRsDlRhSJuLy3ULde/+Q6liHQYSDVrC2BuYnOzrPS
-	hA0VScNtMCReWdz8GYJu+l62J1Y6PU5xKiVG9m7yxIQ/1h9EqUo2hk78q6yReookjokLI0
-	GQIFOq26FpkP82phaWraq3cozofeMmE=
-From: zhang.guodong@linux.dev
+	s=arc-20240116; t=1783074519; c=relaxed/simple;
+	bh=s+a1TvCidY6rKa7+tJ7kXyNU1jsLYXLQD8C8n9E8gPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MPC7fV+6iVaj9oKNwoxZscW/33gOmONK2ezJQk1GcwOO1pb/gsGSDyvQjbR8W6+qffteFOkxrxMymzpR3g06mHTogkck4L3Wek8tDb3dq9pE4hPZ9S6RPr6jWCT0OToPdlLwoYT4NdkWOh9+ycrSTQewOxxeLkSAfeKBqZMKq/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTgCoTfg; arc=none smtp.client-ip=209.85.160.177
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51bfe810293so1988291cf.1
+        for <linux-nfs@vger.kernel.org>; Fri, 03 Jul 2026 03:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783074517; x=1783679317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xQ87Vgx+7GmUr/a8Eh2OpOLrPDatw5mWiln10DDeZ58=;
+        b=XTgCoTfghieYqDtqvF81BtYpawL0lUMlfcmhMC3do6kekXgQMkkg2v4gtcAiwcxxeE
+         lfB2IJSjxYeHABtzS0Ya1eYeKfOgmBil8F6i1o6o6HAzKEVwNBZofFP2Yft3rA75EXEO
+         mbIQq/6+qGBF49iPtv/sxoun/PNaEXpQVDXhmKXrYq0+28804JoaktHXCd6VSw+tvwQJ
+         sUdADqL11wElqW60W730Qd4YeANrwNoutcI/9vFOfM1l23qN4sxiXhpURHHFxbYbjyvP
+         80WDm1fxBqeQKa/c//iJUXSjv4NeaaK6dobje1hD86wnoPByWP0htsT0n/WONDG4RtTG
+         IDjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783074517; x=1783679317;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xQ87Vgx+7GmUr/a8Eh2OpOLrPDatw5mWiln10DDeZ58=;
+        b=KmJj5SH3yIicRaWF6Zfm6idtcBpEfjvpAQVl8v4SWDeH6kX9VTIVxcrJ/kdpLdmaRB
+         OG4tES6DhM+L9jXRO8N+TlESVKkddnB+hCG9M9ugxtBmIvgMwx3pv4keJiCNn99DjvxY
+         u0FYTumbcOpxm6cKUmhy888VGclKy/Nj6Fm35U7crg8zgXKh6CPpKVsszplr6BUwD7GF
+         SVK8G47s6hbjy3o5aV6qFy/BBCtLaTjrkwC8+Y4JJiDGgiKbj+YEiWI2E7UdY9T0Obfy
+         2A3GoyPdd6bQHOqyN7MHtxivhtDS8qVyURHB5BiN/Q6UYJcjOUcApO3s4KKC+bKIdKmn
+         XHnw==
+X-Forwarded-Encrypted: i=1; AFNElJ/RM2JQVAsEFckiyVgUaF082mpFxQm76t5CyCAxcsieO1WXKVKIFAQe1+5k75IQKLE0t9nC6Ryep7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxlyoc2SeFlGkjZ9h5hflXyw8cBmDey7nNM2q5zJkmhN4ywbB5u
+	n8tZAN9fwT/dPptAuidOohnkRLVxh1YqUoAtSK0dazABJjGUFShfBAVb
+X-Gm-Gg: AfdE7ckBh+/yhu0yt+cXGSlJcRmK0mwGX2me5lf9+jQXMQBs92Zqhz2B7YnLxLvtnua
+	+5dyIObtPEAfAtgHM17OI5epCVQQLRTJSOYk5mexX5+1rWNynM70mPhingQA0M0qk9cFMknLp0x
+	ye6VXwiDedhQzQJcFae6fP3+oFT73kVUM30uoOuivQlgdeZhw+sMSc9FddBmeTj7tKOI7OpltiC
+	d67DFXHbdbVSFbH84GF2MQfULW/r21o+Zp8RP9YzAO2l7x+9MzvZn/XL5SmsgjzB4U0wxH0IZif
+	iDMWxVcGMDathlPF+72vT8nswrTZLvaRlMAF2fmD01OQ0qWXho/L2q2RTsk68svOIOg5qWGyOOn
+	gqTy3SV76tO7cG7WjzncKBuAjfMX9UR4UTjRDt8zdNVPIOveyuYCm/cqq4HLYYV+OS8kNjGZvXB
+	ntC65awiTZbtbTvpXhWOZwL7l4Do6LiDKE79vBzVyFbYT4kztZhjMiIlSX4nFHJpeGT7msR+xSR
+	4q8
+X-Received: by 2002:a05:622a:1:b0:51c:1daf:1978 with SMTP id d75a77b69052e-51c2af1da22mr118286981cf.54.1783074517007;
+        Fri, 03 Jul 2026 03:28:37 -0700 (PDT)
+Received: from mainer (pool-71-184-152-175.bstnma.fios.verizon.net. [71.184.152.175])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51c41d2d688sm14072881cf.17.2026.07.03.03.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2026 03:28:36 -0700 (PDT)
+From: Achilles Gaikwad <achillesgaikwad@gmail.com>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	ZhangGuoDong <zhangguodong@kylinos.cn>,
-	Jackie Liu <liuyun01@kylinos.cn>
-Subject: [PATCH] NFS: Verify symlink inode before caching target
-Date: Fri,  3 Jul 2026 14:54:48 +0800
-Message-ID: <20260703065448.210255-1-zhang.guodong@linux.dev>
+Cc: Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Paul Moore <paul@paul-moore.com>,
+	linux-nfs@vger.kernel.org,
+	Achilles Gaikwad <achillesgaikwad@gmail.com>
+Subject: [PATCH] NFSv4.2: fix nfs4_listxattr NULL pointer dereference
+Date: Fri,  3 Jul 2026 06:27:59 -0400
+Message-ID: <20260703102759.9626-1-achillesgaikwad@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,106 +93,101 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-22971-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER(0.00)[achillesgaikwad@gmail.com,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,paul-moore.com,vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22970-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:stephen.smalley.work@gmail.com,m:paul@paul-moore.com,m:linux-nfs@vger.kernel.org,m:achillesgaikwad@gmail.com,m:stephensmalleywork@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:zhangguodong@kylinos.cn,m:liuyun01@kylinos.cn,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[zhang.guodong@linux.dev,linux-nfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhang.guodong@linux.dev,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.dev:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[achillesgaikwad@gmail.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.dev:from_mime,linux.dev:dkim,linux.dev:mid,kylinos.cn:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5D0046FF467
+X-Rspamd-Queue-Id: BB64B701509
 
-From: ZhangGuoDong <zhangguodong@kylinos.cn>
+A call to listxattr() with a buffer size = 0 returns the actual
+size of the buffer needed for a subsequent call. On an NFSv4.2
+mount this triggers the following oops:
 
-nfs_symlink() copies the symlink target into a folio before issuing the
-SYMLINK RPC.  After a successful reply, it caches that folio in the
-instantiated inode mapping and assumes that the dentry now names a
-symlink.
+  [  399.768687] BUG: kernel NULL pointer dereference, address: 0000000000000000
+  [  399.768705] RIP: 0010:_copy_from_pages+0x44/0xe0
+  [  399.768722] Call Trace:
+  [  399.768723]  nfs4_xattr_alloc_entry+0x1bf/0x1e0
+  [  399.768730]  nfs4_xattr_cache_set_list+0x43/0x1f0
+  [  399.768731]  nfs4_listxattr+0x21f/0x250
+  [  399.768733]  vfs_listxattr+0x55/0xa0
+  [  399.768736]  listxattr+0x23/0x160
+  [  399.768737]  path_listxattrat+0xba/0x1e0
+  [  399.768739]  do_syscall_64+0xe2/0x680
 
-If the dentry is instantiated with a non-symlink inode, the raw symlink
-target folio can be inserted into the wrong mapping.  When that inode is
-a directory, reclaim or unmount later calls nfs_readdir_clear_array()
-through nfs_dir_aops and interprets the symlink target as a readdir
-cache array, which can lead to invalid kfree() calls.
+security_inode_listsecurity() now decrements the remaining size
+even when the buffer is NULL, so in the size-query case 'left'
+underflows to a huge size_t value and nfs4_listxattr_nfs4_user()
+treats the NULL buffer as real, ending in a NULL dereference in
+_copy_from_pages().
 
-A vmcore from a 4.19-based kernel showed the crash when reclaiming a
-directory mapping on unmount:
+Declare 'left' as ssize_t and pass a zero length to
+nfs4_listxattr_nfs4_user() when the buffer is NULL.
 
-  Stack trace:
-   nfs_readdir_clear_array+0x4d/0x70 [nfs]
-   page_cache_free_page.isra.35+0x1a/0x90
-   delete_from_page_cache_batch+0x1cf/0x2c0
-   truncate_inode_pages_range+0x24d/0x910
-   [...]
-   nfs_evict_inode+0x15/0x30 [nfs]
-   evict+0x115/0x2b0
-   dispose_list+0x48/0x60
-   evict_inodes+0x16c/0x1b0
-   generic_shutdown_super+0x3f/0x120
-   nfs_kill_super+0x1b/0x40 [nfs]
-   deactivate_locked_super+0x3f/0x70
-   cleanup_mnt+0x3b/0x80
-
-The current code still has the same unchecked cache insertion pattern,
-so it may be susceptible to the same failure mode.
-
-Verify that the instantiated inode is a symlink before caching the
-target folio.  If the type is wrong, drop the suspect dentry and skip
-the cache insertion while preserving the successful SYMLINK result.
-
-Co-developed-by: Jackie Liu <liuyun01@kylinos.cn>
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
-Signed-off-by: ZhangGuoDong <zhangguodong@kylinos.cn>
+Fixes: f71ece9712b7 ("security,fs,nfs,net: update security_inode_listsecurity() interface")
+Signed-off-by: Achilles Gaikwad <achillesgaikwad@gmail.com>
 ---
- fs/nfs/dir.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/nfs/nfs4proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 2f5f26f93238..d10f060b0b94 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -2669,6 +2669,12 @@ int nfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
- 		return error;
- 	}
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1360409d8de9..4859c2c96c78 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10585,7 +10585,7 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+ {
+ 	ssize_t error, error2, error3;
+-	size_t left = size;
++	ssize_t left = size;
  
-+	if (unlikely(!d_is_symlink(dentry))) {
-+		d_drop(dentry);
-+		folio_put(folio);
-+		return 0;
-+	}
-+
- 	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
+ 	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+@@ -10600,7 +10600,8 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+ 		return error2;
+ 	error2 = size - error - left;
  
- 	/*
+-	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
++	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list,
++					  list ? left : 0);
+ 	if (error3 < 0)
+ 		return error3;
+ 
+
+base-commit: 6eb8711ece2ce27e52e327a5b7a628ed39b97f45
 -- 
-2.43.0
+2.55.0
 
 
