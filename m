@@ -1,88 +1,84 @@
-Return-Path: <linux-nfs+bounces-22957-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22958-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id i67LBinbRmq0egsAu9opvQ
-	(envelope-from <linux-nfs+bounces-22957-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 23:42:01 +0200
+	id dOunD3ctR2oAUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22958-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:33:11 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB5BC6FD022
-	for <lists+linux-nfs@lfdr.de>; Thu, 02 Jul 2026 23:42:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9D0C6FE37D
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:33:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=C1nmlsUK;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22957-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22957-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=g+m8Uw8N;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22958-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22958-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B3B56303779E
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jul 2026 21:41:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6865F306D8B2
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:33:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E8F3A9DB2;
-	Thu,  2 Jul 2026 21:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA60306757;
+	Fri,  3 Jul 2026 03:33:05 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B3D312834;
-	Thu,  2 Jul 2026 21:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DDB30C164;
+	Fri,  3 Jul 2026 03:32:50 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783028499; cv=none; b=WHMehhJ9x9+QJBVxhjpk0iGtATQpjZQdsxD5pNg/gBjENnVTWFN1zYR0IKX6xBtvkFadMiExhCvLJrZkiA4KgSdiGaTmS0eI1VMeIYsG5JYMYd+RMuTMiUGbTxiFi7pZCX+L8X9NtbV2xIB8ukbXtDYI1tNy4acvU5fgj6+1L0k=
+	t=1783049580; cv=none; b=Ym4ROgYoRQw+0mDQJHxtJSxFK1sI1xqd9bm0Fj4DxW8jzj1ZO1y0j/F1HvnUkTHLe3LgdscVl+QdqjArVvi2Wy4nSRqJF6OBp5jjq4WTQA8VlUqPaoSVtqbCih3rqaEEkhWxxqWRxDRRWZrmCGOqZLFc2FnWuRD0Gy8W/fSoIzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783028499; c=relaxed/simple;
-	bh=tT/3omg3PNgIoOIavzQkCy5itycSAAr2+yb/AXr4bSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RcIe+TGSCzOeSpZEZpggEneN9kRJcr6Gm0M3nYCnNzmrdxgupSHr/iZ03bkUjwWER+PchtKetoHq8x1aWcvTYg+Z8nF7aPrjUs1v4IbtlRng8+srv/Avvs3eRm98eT1SG2TkWP22dybNkrS9M1Xp3h86I9RhAXmcOBvxuVmPue0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1nmlsUK; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27A951F00A3D;
-	Thu,  2 Jul 2026 21:41:38 +0000 (UTC)
+	s=arc-20240116; t=1783049580; c=relaxed/simple;
+	bh=voviGqTGQPSemFptJDez/r58pUKhSxCLlp81nQEyLWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JCxCouTj+0/8nBE6dnB9fUwdAiNgWeclWjJS5zAfHb3RxTZmO/+inX1yq6j5l9omXQgHuVm0M1bfg04jNsMPisdP7XQSKwlQXcO1mox5FXLvq0jtvQghJybz18PnGoYMqHNIAdp0+1eAwJHdo3UDATUv8MOW76pI6R4GNz0zs7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+m8Uw8N; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117251F000E9;
+	Fri,  3 Jul 2026 03:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783028498;
-	bh=D0+XDJ0DE8l6O8P0lzGa5SSgmMFTY4bNO+D7PkidL6Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=C1nmlsUKN46VHIwEmYuqu3Jl0dnrNR8rgh0agHtBrr6mGwEOq0NyVrPWP1PXsxfMj
-	 XEB+dZ0vBwRMOzPICy+02qlePQ6qa9uzlAVe5rCVZTxsZhkpmGQUqOS3tZSjCMACvc
-	 lvQwq9gpGxJ17eyILgagegP1alDY3DxqQM+u3dxhfF9lj+oJ042+wOruRM1k+Morjw
-	 oOzhiRsguWHlljZhT5ZTfDfIBoGypu4GlWldb3k0+o1RlfXYR1fBml2lw3icjHo+/N
-	 tlmkTIJQbRzQ2+zq7mOlDlYCGN4AhYkh4+6HnPgl5tDEFx1hWQL9BTYDpVZbpY1PlO
-	 dCvmSAUqoif0A==
+	s=k20260515; t=1783049566;
+	bh=eHRs2IQ1+jjS6boktaY1cIFCKznQL4Ms2em86RPj6n4=;
+	h=From:To:Cc:Subject:Date;
+	b=g+m8Uw8NPSeiQftrspEoO8Y9jEyB1dEWuJVg4//AFqnUFkZyKmWwaVXm87g8MCJzN
+	 +J2s0PfhuK9Qz6aFqgD0Eis5liZvotqia/N/OFMq/iSYPEqUnOBqCxT3kydSNWGw+Y
+	 Zeoyp5/+Pcvkl02DSh1YPpUJLm570YgemvbrltRQqCUm+Qond/NBcLJRVc6a2T6JI0
+	 Elv2igGFhds1FF6la7Wy5igfEGyy1Kopzrf+cePBCLknUWuRifTI6tymB/p8PoX3ud
+	 BV09THdzVz2nEK/JepVqcHNwSA93/+gXQMl1ck+P8G/GX/teVUdib3VBSIORueF8p5
+	 +VMYr1ar2ivKQ==
 From: Chuck Lever <cel@kernel.org>
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chris Mason <clm@meta.com>
-Subject: [PATCH 6.6.y 2/2] nfsd: reset write verifier on deferred writeback errors
-Date: Thu,  2 Jul 2026 17:41:35 -0400
-Message-ID: <20260702214135.533354-2-cel@kernel.org>
+	Chris Mason <clm@meta.com>,
+	Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 6.1.y 1/2] nfsd: release layout stid on setlease failure
+Date: Thu,  2 Jul 2026 23:32:42 -0400
+Message-ID: <20260703033243.1539871-1-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260702214135.533354-1-cel@kernel.org>
-References: <20260702214135.533354-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-22958-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22957-lists,linux-nfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:jlayton@kernel.org,m:clm@meta.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:clm@meta.com,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -95,75 +91,78 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,meta.com:email]
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BB5BC6FD022
+X-Rspamd-Queue-Id: E9D0C6FE37D
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Chris Mason <clm@meta.com>
 
-commit 2090b05803faab8a9fa62fbff871007862cac1b7 upstream.
+commit 30d55c8aabb261bc3f427d6b9aae7ef6206063f9 upstream.
 
-nfsd_vfs_write() and nfsd_commit() both call filemap_check_wb_err() to
-detect deferred writeback errors, but neither rotates the server's write
-verifier (nn->writeverf) when this check fails. Every other
-durable-storage-failure path in these functions calls
-commit_reset_write_verifier() before returning an error.
+nfs4_alloc_stid() publishes the new stid into cl->cl_stateids via
+idr_alloc_cyclic() under cl_lock before returning to
+nfsd4_alloc_layout_stateid(). When nfsd4_layout_setlease() then
+fails, the error path frees the layout stateid directly with
+kmem_cache_free() without ever calling idr_remove(), leaving the
+IDR slot pointing at freed slab memory. Any subsequent IDR walker
+(states_show, client teardown) dereferences the dangling pointer.
 
-The missing rotation means clients holding UNSTABLE write data under the
-current verifier will COMMIT, receive the unchanged verifier back, and
-conclude their data is durable — silently dropping data that failed
-writeback. This violates the UNSTABLE+COMMIT durability contract
-(RFC 1813 §3.3.7, RFC 8881 §18.32).
+The correct teardown for an IDR-published stid is nfs4_put_stid(),
+which removes the IDR slot under cl_lock, dispatches sc_free
+(nfsd4_free_layout_stateid) to release ls->ls_file via
+nfsd4_close_layout(), and drops the nfs4_file reference in its
+tail.
 
-Add commit_reset_write_verifier() calls at both filemap_check_wb_err()
-error sites, matching the pattern used by adjacent error paths in the
-same functions. The helper already filters -EAGAIN and -ESTALE
-internally, so the calls are unconditionally safe.
+A second issue blocks that switch: nfsd4_free_layout_stateid()
+unconditionally inspects ls->ls_fence_work via
+delayed_work_pending() under ls_lock, but
+INIT_DELAYED_WORK(&ls->ls_fence_work, ...) currently runs only
+after the setlease call. On the setlease-failure path the
+destructor would touch an uninitialized delayed_work.
 
-Reported-by: Chris Mason <clm@meta.com>
-Fixes: 555dbf1a9aac ("nfsd: Replace use of rwsem with errseq_t")
+    nfsd4_alloc_layout_stateid()
+      nfs4_alloc_stid()           /* idr_alloc_cyclic under cl_lock */
+      nfsd4_layout_setlease()     /* fails */
+        nfs4_put_stid()
+          nfsd4_free_layout_stateid()
+            delayed_work_pending(&ls->ls_fence_work)  /* needs INIT */
+            nfsd4_close_layout()  /* nfsd_file_put(ls->ls_file) */
+          put_nfs4_file()
+
+Fix by hoisting the ls_fenced / ls_fence_delay / INIT_DELAYED_WORK
+initialization above the nfsd4_layout_setlease() call, and replace
+the manual nfsd_file_put + put_nfs4_file + kmem_cache_free cleanup
+with a single nfs4_put_stid(stp).
+
+Fixes: c5c707f96fc9 ("nfsd: implement pNFS layout recalls")
 Cc: stable@vger.kernel.org
-Assisted-by: kres:claude-opus-4-6
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Assisted-by: kres (claude-opus-4-7)
+Signed-off-by: Chris Mason <clm@meta.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-[ cel: 6.6.y predates the commit_reset_write_verifier() helper (v6.7);
-  open-coded nfsd_reset_write_verifier() and the reset tracepoint at
-  both sites, matching the other reset paths in these functions ]
+[ cel: no ls_fence_work in 6.1.y; dropped INIT_DELAYED_WORK hunk ]
 Signed-off-by: Chuck Lever <cel@kernel.org>
 ---
- fs/nfsd/vfs.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4layouts.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index ae1f43eb515a..6658c92340f2 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1185,8 +1185,11 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 	nfsd_stats_io_write_add(nn, exp, *cnt);
- 	fsnotify_modify(file);
- 	host_err = filemap_check_wb_err(file->f_mapping, since);
--	if (host_err < 0)
-+	if (host_err < 0) {
-+		nfsd_reset_write_verifier(nn);
-+		trace_nfsd_writeverf_reset(nn, rqstp, host_err);
- 		goto out_nfserr;
-+	}
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 308214378fd3..84bb200e24ad 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -242,9 +242,7 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
+ 	BUG_ON(!ls->ls_file);
  
- 	if (stable && use_wgather) {
- 		host_err = wait_for_concurrent_writes(file);
-@@ -1330,6 +1333,10 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 			nfsd_copy_write_verifier(verf, nn);
- 			err2 = filemap_check_wb_err(nf->nf_file->f_mapping,
- 						    since);
-+			if (err2 < 0) {
-+				nfsd_reset_write_verifier(nn);
-+				trace_nfsd_writeverf_reset(nn, rqstp, err2);
-+			}
- 			err = nfserrno(err2);
- 			break;
- 		case -EINVAL:
+ 	if (nfsd4_layout_setlease(ls)) {
+-		nfsd_file_put(ls->ls_file);
+-		put_nfs4_file(fp);
+-		kmem_cache_free(nfs4_layout_stateid_cache, ls);
++		nfs4_put_stid(stp);
+ 		return NULL;
+ 	}
+ 
 -- 
 2.54.0
 
