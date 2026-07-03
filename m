@@ -1,306 +1,204 @@
-Return-Path: <linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22965-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ltrRGDUwR2pkUAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:44:53 +0200
+	id /OBNJlwyR2qoUAAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22965-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:54:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEE3A6FE418
-	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:44:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E95F46FE468
+	for <lists+linux-nfs@lfdr.de>; Fri, 03 Jul 2026 05:54:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm2 header.b=crxxZDA+;
-	dkim=pass header.d=messagingengine.com header.s=fm2 header.b="B HOOKCt";
-	dmarc=pass (policy=none) header.from=ownmail.net;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22964-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=synology.com header.s=123 header.b=kVW4nHAt;
+	dmarc=pass (policy=quarantine) header.from=synology.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22965-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22965-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1CF44301AF5E
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:43:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BE0573044F1C
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jul 2026 03:54:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6155318146;
-	Fri,  3 Jul 2026 03:43:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B17A9313E15;
+	Fri,  3 Jul 2026 03:54:01 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from mail.synology.com (mail.synology.com [211.23.38.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133A5266EE9;
-	Fri,  3 Jul 2026 03:42:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71E230C17A
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Jul 2026 03:53:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783050183; cv=none; b=K3aXW/6dBI9LhQicEzQKEnSr16B5YWb/Z1CK0JC0cIEx90JMLRIiT3q9fbqPOkC5V8/lV3IyDtVRSVvg1HwF8ZX0k679JMfZnzC4qgN67ftlWWo9jluDYVjz9RVAvNCVyedw6JiKOKgOynmRZVMRXDBvDHyR7p2vLLoje9O1ZWs=
+	t=1783050841; cv=none; b=QN59xE1iAQWfKiss6Va9XHlxqtbZ71N35tMRTcAv+uTM1G/ql4JOfZdTVBN1R4b/2UMIvnnVJeWw4fY4ekC7UBO/CLpGaQ+bQGvwdC9552oDiy4a4DcfwiaVsjF0ePuXodbT1xZek2Q3IKo73KKdsO0Labz39LJ8OEAejxwYNz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783050183; c=relaxed/simple;
-	bh=hLP/JvvMNwlYcx1UhqreRxpmnLcXS11wgb4lsJw+aOI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=QFDQC3XGSaInlNEYm9PB5VrVAHGeeg8sdjeddwyU4D4xuPVGjirmDeexjRK97+wonP0PIIGsw9+lFy/7tfZFxv4iwDWl6kTzamCtoFQw8iEPdz3b5xm8dy5UKV+LEm5Ir/5QZzEJ7o/U61tsyu0nzR+Cz8Ia9GvyHb7shk6744w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=crxxZDA+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BHOOKCtl; arc=none smtp.client-ip=103.168.172.155
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8CC281400071;
-	Thu,  2 Jul 2026 23:42:53 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Thu, 02 Jul 2026 23:42:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1783050173; x=1783136573; bh=dVMklWEvZlc9VgTiGP9e4b0XY9DEyVXj+lt
-	4lAONHV0=; b=crxxZDA+qxrNsXhatpBqAe7J0KErueLKA3jHqUcq+Jp4VzZ4rsN
-	IQYyea7dLaYDnmoi2O3LqmawbIjdAstVr53VsbyeOlQRszoG1YFlgLxOfnCj/Huu
-	8/HJrcj0OGGesVyQuZ0UucXy04Pg8aSM4iEXy4e8Zxhv2PZAtjzq3Iw+fizbzqRd
-	mgdBdaSg1PFYjjLf+gHgzVBB+EueQWncpdbyafB/915duHU5TogLz27Yzz7DCf9w
-	dTE0UUV8u8hZdwe6b410uK2pjF4JO6z0rtv774o5zLrt/GUfYaErnPxv1cot6kuX
-	zzenITsgIHgppREd8RNLPJ+7Q72a4tLbJDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783050173; x=
-	1783136573; bh=dVMklWEvZlc9VgTiGP9e4b0XY9DEyVXj+lt4lAONHV0=; b=B
-	HOOKCtlRolpPJM6yVMEDy+CmLiG7M+dP4abxbH/a6DHzRvFhcc7eVEmS5ClslP4y
-	SmDKtO+JvrRHD+UNxSiAL0vGd73bz9QNq6vxiqQfw89CdojeKF4pW8Nxdqiouf+B
-	/po8D3F0ejJe/92/5FIJua11LaTE/+lYnW8CqZV+pYWSFiOOFRm5MocvMyCwUfDv
-	3ATLqoa52R0B3Rw0eLCaKSJVpgnxiHRY2FhU54l5uywI/yWj+rpzV/Y3CzbHBviS
-	WW+K45y/GaZYJ/b3QYwY8C8pr4FJAgsoT/yGfmEMg0oqxXwGGE86XCc2z+HMnho3
-	gEganWj2aOhS9H+0HRYTw==
-X-ME-Sender: <xms:vS9HamblCWLO2ell7_tFsBZW-ux22ai4owIJxFQnwe7RDjRYWqDuoA>
-    <xme:vS9HauUF5Z2mlEryXcRbnOi6zcQTgXCUjEn4cZVB5rvEYCjWpjz7PpFa4CxF9s5oS
-    iW5DrCkDvbjoNrZKh6_hEuR91iT9wRS7c3fx6ZZCLpJc7E>
-X-ME-Received: <xmr:vS9HalNwa4Sq_5q9dDFW6dL-t1rf0TdEX1lVpqTMVgT6gr6s6z2SS8dne8ygo9jTRN7Z7naR014y-6FutJtUaa8HVMrT18A>
-X-ME-Proxy-Cause: dmFkZTGo/kk7lJxMABpcjZ2O02+BLekeUxmecIPsUWV44Y4VTXEzWykJyeOV7dujOrCTP3
-    j2P9uG7T4LU6EyEup4qIy31+iZwXc3I8oLtgfn2rlgIRt1sRHKz242OSwKb9NgYGY5qlP6
-    9AALPa71yVYZOVj4ACVIEC2tiPj4dkk+wgHrj9fFC2xcfMMoD0FIgleESfQoKkIBmGer+Z
-    C7C86CltWWq6kwsj5OT7qXuUeQ9iXgZ3bXy4Acj2ji8rFvoroUZIWx8zQi86helqxrMZga
-    rldR330xWQbq7b0ZAhio2twvUjYgFQOIxh/ocrhx1KUM+GEooVI4dCJGY8bSSR+D72Zwgy
-    UBSIq/dtwBiqOTbbpsinHMYAGG2biCrA2LuCRfG9ba5lKZuxHFj+NrbeJFXIPzqTgWzGvn
-    oUCZFyDTzsYdU7/+lkEeIN5fjU5KrakDuMO1fBbxAzrMnDzKQgz+6UtFCPK5Ph8PJvR6op
-    IMw+MNNeOjdYaB4xbRvgHk9mhPuT80ePsYfW4WPUJ0kAXDRVoY4uxybGel4The8VTQ7iI+
-    4HbYLL3B1f+BOlqwNzuM5sjc/ccCjjrhjIdKHqT6JMM4bL2IX0HwSp+sw3RiTymfElVDEg
-    EVuncr5Iw1DLR6NdEYLdgkU+yfNmJrQYPj80pzpByhmMXZmy0H5CNFRIoyPg
-X-ME-Proxy: <xmx:vS9HaoYbz4Bls-O1HGtF-y7vSP2VWLQ7uF3gl5kt7KhyEejD3tjLGw>
-    <xmx:vS9Hak8YeEceLF6oJP-JTfNEiiZ-DthM0S2MqzMnmvXQBzE15lZCYg>
-    <xmx:vS9HapQ6mbYzPfJIc_gB4L9qsVfRGHzhrJIkEppQJ0yH0NP_DBfepw>
-    <xmx:vS9Hauch9TW2edgWuCcAb6zsSJFrS3S1ydKORN6nggLL2yBnPN1XDg>
-    <xmx:vS9Hao7sFb9Na7SHft-ksFNNE90XCsXsr4DtSDrsk8gFVYksfIqcaC9F>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 2 Jul 2026 23:42:50 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1783050841; c=relaxed/simple;
+	bh=n8T9SRtKWBTd3qClblHvOUAaIkV5ziDlPY9OPfR8QM0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qVTTDhl+l0bhMGVvuftHlAcZQGWv1g/m5FsFdUwh+4S5oLzjxoagUtIM/v8eRgGkSHuDbUT5JRPviVoFYg/mRV1Q28jvcGLu0XrfWyw0oFHh1ODyEW1HCdjd94j5/KYq+vVPtX8/afU4RwjDghK3Gy73GW7eKTgtExDQDVqfsWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synology.com; spf=pass smtp.mailfrom=synology.com; dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b=kVW4nHAt; arc=none smtp.client-ip=211.23.38.101
+Received: from vbm-oscarou.. (unknown [10.17.211.167])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.synology.com (Postfix) with ESMTPSA id 4gs0Gv10XGzKRM2mm;
+	Fri, 03 Jul 2026 11:53:43 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synology.com;
+	s=123; t=1783050823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1AdcXrOnfoLkElHrBK10r3wTJyroaU0FGE2v2ADLo0=;
+	b=kVW4nHAtvLlYc7tKO+QBtU840DkpMHKGfrFcq9Na/imWwn+o8mx8kZoCO6EdlCzrV0ZuQQ
+	jbSwHXus6k40prv5NlnATSKO5wL1DyivsvdRpzyvYurKq1IT+A2u7dY5kccQGSec8AAIhZ
+	E14b+flgxfPc2CF7Oo1LkKB7FzfQy8Q=
+From: Oscar Ou <oscarou@synology.com>
+To: cel@kernel.org
+Cc: jlayton@kernel.org,
+	linux-nfs@vger.kernel.org,
+	oscarou@synology.com
+Subject: Re: [PATCH v2] lockd: refcount NLM_SHARE access/deny modes
+Date: Fri,  3 Jul 2026 11:53:31 +0800
+Message-Id: <20260703035331.2414135-1-oscarou@synology.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <bdce0570-b584-444b-b78e-a5a2cc5b85ad@app.fastmail.com>
+References: <bdce0570-b584-444b-b78e-a5a2cc5b85ad@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Chuck Lever" <cel@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v4 1/4] sunrpc: route to a populated pool in svc_pool_for_cpu()
-In-reply-to: <5f5ef0bb961dc0bdd34383d368261aac50509d82.camel@kernel.org>
-References: <20260701-sunrpc-pool-mode-v4-0-b3d867e4c8f9@kernel.org>
-  <20260701-sunrpc-pool-mode-v4-1-b3d867e4c8f9@kernel.org>
-  <178294402742.27465.8893159356805540635@noble.neil.brown.name>
-  <ccfad59a086674ef8612d32f72a23c5401a3eacb.camel@kernel.org>
-  <5f5ef0bb961dc0bdd34383d368261aac50509d82.camel@kernel.org>
-Date: Fri, 03 Jul 2026 13:42:46 +1000
-Message-id: <178305016681.27465.3325737287555850173@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
+X-Synology-Spam-Flag: no
+X-Synology-Virus-Status: no
+X-Synology-MCP-Status: no
+X-Synology-Auth: pass
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[synology.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[synology.com:s=123];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22964-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22965-lists,linux-nfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[oscarou@synology.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,m:oscarou@synology.com,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[synology.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[oscarou@synology.com,linux-nfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_NONE(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	MIME_TRACE(0.00)[0:+]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AEE3A6FE418
+X-Rspamd-Queue-Id: E95F46FE468
 
-On Thu, 02 Jul 2026, Jeff Layton wrote:
-> On Thu, 2026-07-02 at 08:17 -0400, Jeff Layton wrote:
-> > On Thu, 2026-07-02 at 08:13 +1000, NeilBrown wrote:
-> > > On Thu, 02 Jul 2026, Jeff Layton wrote:
-> > > > svc_set_num_threads() spreads the requested threads evenly across the
-> > > > service's pools (base =3D nrservs / sv_nrpools).  When a service runs
-> > > > fewer threads than it has pools -- e.g. an nfsd configured with fewer
-> > > > threads than the host has NUMA nodes while running in "pernode" or
-> > > > "percpu" mode -- the trailing pools are left with no threads at all.
-> > > >=20
-> > > > svc_xprt_enqueue() selects a pool from the CPU servicing the transpor=
-t,
-> > > > queues the transport on that pool's sp_xprts, and only wakes a thread
-> > > > from the same pool.  Each thread services exclusively its own pool, s=
-o a
-> > > > transport that lands on a threadless pool is enqueued on sp_xprts and
-> > > > never picked up: the connection hangs indefinitely.
-> > > >=20
-> > > > Have svc_pool_for_cpu() skip pools that currently have no threads,
-> > > > falling back to the next populated pool.  This trades NUMA locality f=
-or
-> > > > a guarantee that the work is actually serviced.  sp_nrthreads is only
-> > > > updated under the service mutex; the lockless read here is a best-eff=
-ort
-> > > > routing hint, so annotate it with data_race().
-> > > >=20
-> > > > Fixes: 0f0257eaa5d2 ("svc: Move the xprt independent code to the svc_=
-xprt.c file")
-> > >=20
-> > > Why that commit?  Did this ever work correctly?
-> > > It seems more likely that=20
-> > > Fixes: 3262c816a3d7 ("[PATCH] knfsd: split svc_serv into pools")
-> > > is appropriate.
-> > >=20
-> >=20
-> > Indeed. Good catch.
-> >=20
->=20
-> I had the LLM run this down. We're both wrong.
->=20
-> It briefly worked properly after 3262c816a3d7 ("split svc_serv into
-> pools"), but then was broken in the same series in commit bfd241600a3b
-> ("knfsd: make rpc threads pools numa aware"). So I think we want:
->=20
-> Fixes: bfd241600a3b ("knfsd: make rpc threads pools numa aware")
+On Wed, Jul 01, 2026 at 09:40:46AM -0400, Chuck Lever wrote:
+> 1. New thread per revision — no In-Reply-To: back to the
+>    old version.
+> [...]
+> 2. Version the subject tag, not RESEND. [PATCH v2],
+>    [PATCH v2 01/27] (lines 716–719, 726–731). RESEND is
+>    only for re-sending an /unchanged/ series that got no
+>    response (lines 379–380) — a modified series is never
+>    RESEND.
 
-That is certainly credible - thanks.
+Understood, thanks -- v3 will go out as its own top-level
+thread with a [PATCH v3] subject.
 
->=20
->=20
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > >  net/sunrpc/svc.c | 26 +++++++++++++++++++++++++-
-> > > >  1 file changed, 25 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > > > index dd80a2eaaa74..82fb7faf563f 100644
-> > > > --- a/net/sunrpc/svc.c
-> > > > +++ b/net/sunrpc/svc.c
-> > > > @@ -402,6 +402,7 @@ struct svc_pool *svc_pool_for_cpu(struct svc_serv=
- *serv)
-> > > >  	struct svc_pool_map *m =3D &svc_pool_map;
-> > > >  	int cpu =3D raw_smp_processor_id();
-> > > >  	unsigned int pidx =3D 0;
-> > > > +	unsigned int i;
-> > > > =20
-> > > >  	if (serv->sv_nrpools <=3D 1)
-> > > >  		return serv->sv_pools;
-> > > > @@ -414,8 +415,31 @@ struct svc_pool *svc_pool_for_cpu(struct svc_ser=
-v *serv)
-> > > >  		pidx =3D m->to_pool[cpu_to_node(cpu)];
-> > > >  		break;
-> > > >  	}
-> > > > +	pidx %=3D serv->sv_nrpools;
-> > > > +
-> > > > +	/*
-> > > > +	 * Threads are spread evenly across the pools, but when there are
-> > > > +	 * fewer threads than pools some pools can end up with none. A
-> > > > +	 * transport enqueued on a threadless pool would never be picked
-> > > > +	 * up, since each thread only services its own pool. Fall back to
-> > > > +	 * the next populated pool, trading NUMA locality for a guarantee
-> > > > +	 * that the transport is serviced.
-> > > > +	 */
-> > > > +	for (i =3D 0; i < serv->sv_nrpools; i++) {
-> > > > +		struct svc_pool *pool =3D &serv->sv_pools[pidx];
-> > > > +
-> > > > +		/* This is set under the sp_mutex and rarely ever changes. A
-> > > > +		 * data race here is harmless.
-> > > > +		 */
-> > > > +		if (data_race(pool->sp_nrthreads))
-> > > > +			return pool;
-> > > > +
-> > > > +		if (++pidx >=3D serv->sv_nrpools)
-> > > > +			pidx =3D 0;
-> > > > +	}
-> > > > =20
-> > > > -	return &serv->sv_pools[pidx % serv->sv_nrpools];
-> > > > +	/* No pool has any threads; nothing can service the transport. */
-> > >=20
-> > > Would a WARN_ON_ONCE() be appropriate here?
-> > >=20
-> >=20
-> > Maybe a pr_notice_once()? A stack trace isn't particularly helpful
-> > here, but it would be good to let someone know that this isn't
-> > optimally configured. I'll add one for v5.
-> >=20
-> >=20
->=20
-> This is probably not feasible, as there are cases where we legitimately
-> queue the call to a pool with no threads.
->=20
-> At startup, we create listeners and then threads only get spun up
-> later. If we get a RPC on the listener port during that window, the
-> message would fire. There's a similar window on shutdown.
->=20
-> It might not hurt to add a tracepoint there though.
+> With the per-value refcount a replayed SHARE instead increments the
+> bucket a second time.  Over UDP a lost reply followed by a client
+> retransmit reaches nlmsvc_share_file() twice for one open, and if the
+> client then sends one matching UNSHARE:
+>
+>     SHARE(access=RW, deny=W)              -> s_access_counts[3] = 1
+>     SHARE(access=RW, deny=W) (retransmit) -> s_access_counts[3] = 2
+>     UNSHARE(access=RW, deny=W)            -> s_access_counts[3] = 1
+>
+> nlm_recompute_share() still sees s_access_counts[3] > 0, so s_access
+> stays non-zero and the entry is never freed.  Can this leave a stale
+> share reservation that denies later conflicting opens until the host is
+> torn down?
 
-and a comment explaining when this might happen?
+Yes.  The inflated bucket only drains via the client's own
+UNSHAREs or a FREE_ALL / SM_NOTIFY teardown, so until then
+conflicting SHAREs from other owners see a spurious
+NLM_LCK_DENIED.
 
-The start-up window makes sense - as long as we start a thread on each
-pool it should be safe.  But if we don't (if the admin request zero on
-some pools) we can still get stuck.  Is there something simple we can do
-about that, or does the admin get to keep both halves?
+> Here the client still holds open #2, but its reservation is gone, so a
+> conflicting open from another owner would now be granted.  Can a
+> retransmitted UNSHARE release a grant the client still holds?
 
-And on shutdown the threads stop before the sockets are cleaned up - but
-they do get cleaned up, so all good.
+Agreed -- the UNSHARE retransmit should have been a no-op, but
+v2 decrements a second time and releases a share the client
+still holds.
+
+> Taken together, is there a way to keep SHARE and UNSHARE idempotent
+> under retransmission, some per-open identity to match on rather than a
+> bare count, so a duplicated request lands on the same state the way the
+> other NLM procedures do?
+>
+> One direction would be to track the set of held (access, deny)
+> combinations rather than a count of each.
+> [...]
+> Setting or clearing a bit is idempotent, so a replayed SHARE or UNSHARE
+> lands on the same mask, while distinct (access, deny) opens from one
+> owner are still tracked separately.
+
+Agreed -- that lines up with the invariant the other NLM handlers
+rely on, and it's the shape I'll use for v3.  Concretely:
+
+    #define LOCKD_FSH_BIT(a, d)  BIT(((a) << 2) | (d))
+
+    SHARE:   share->s_held_mask |=  LOCKD_FSH_BIT(access, mode);
+    UNSHARE: share->s_held_mask &= ~LOCKD_FSH_BIT(access, mode);
+
+s_access / s_mode are recomputed as the union of (i >> 2) / (i & 3)
+over the set bits, and the entry is freed once s_held_mask is zero.
+Both ops become an idempotent bit set/clear, so retransmits land
+on the same state.
+
+> The tradeoff is that two opens with the identical (access, deny) pair
+> collapse to one bit, so a count of duplicate identical opens is lost.
+> RFC 1813 defines SHARE and UNSHARE but does not require that repeated
+> identical SHAREs from one owner survive an equal number of UNSHAREs
+> [...]
+> Does that match your reading?
+
+Yes.  RFC 1813 is silent on repeat semantics for SHARE / UNSHARE,
+and section 4.5 explicitly treats non-idempotent requests as
+something a reply cache has to protect, which lockd doesn't run
+for NLM.  So collapsing identical (access, deny) opens from one
+owner into a single bit stays inside the protocol, and it buys
+back the idempotency the other NLM handlers already assume.
+
+> The bottom line is that after more consideration, IMO the reference
+> count approach is not going to work, in particular because NLM still
+> operates on unreliable network transports like UDP. Consider the
+> above direction not as a mandate but as a possible approach that
+> might address the issue you've reported while avoiding introducing
+> non-idempotency.
+
+Adopting the held-mask direction.  v3 shortly, as a new top-level
+thread.
 
 Thanks,
-NeilBrown
+Oscar
 
-
->=20
-> > > I think this is a sensible defensive-programming approach.
-> > >=20
-> > > Reviewed-by: NeilBrown <neil@brown.name>
-> > >=20
-> >=20
-> > Thanks!
-> >=20
-> > > > +	return &serv->sv_pools[pidx];
-> > > >  }
-> > > > =20
-> > > >  static int svc_rpcb_setup(struct svc_serv *serv, struct net *net)
-> > > >=20
-> > > > --=20
-> > > > 2.54.0
-> > > >=20
-> > > >=20
->=20
-> --=20
-> Jeff Layton <jlayton@kernel.org>
->=20
-
+Disclaimer: The contents of this e-mail message and any attachments are confidential and are intended solely for addressee. The information may also be legally privileged. This transmission is sent in trust, for the sole purpose of delivery to the intended recipient. If you have received this transmission in error, any use, reproduction or dissemination of this transmission is strictly prohibited. If you are not the intended recipient, please immediately notify the sender by reply e-mail or phone and delete this message and its attachments, if any.
 
