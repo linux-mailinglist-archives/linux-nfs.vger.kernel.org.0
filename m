@@ -1,64 +1,89 @@
-Return-Path: <linux-nfs+bounces-22989-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22990-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5ZA5M8hqSGpKqAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22989-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 04:07:04 +0200
+	id LdxBHz45SWqlzQAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22990-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 18:47:58 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72B26706719
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 04:07:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA117707FE9
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 18:47:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Q8JFdaXy;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22989-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22989-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=TBPsWm5W;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22990-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22990-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 68F8930422C0
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Jul 2026 02:05:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5141030125E0
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Jul 2026 16:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E68B321638D;
-	Sat,  4 Jul 2026 02:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7335327B32C;
+	Sat,  4 Jul 2026 16:42:29 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DC43431EF;
-	Sat,  4 Jul 2026 02:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0AE246BD5
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Jul 2026 16:42:28 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783130741; cv=none; b=Wqj8d9WriHBezR6YK7AXZju5PRo72o01Hv36+inqqLnWUnnH1eb0eKMvKevofeO1vCsL0BU6BxOR185UtKBcCRyxKRkNsGnDYjqfCBsuRcwkS4L1l6+d7bwZM7Q4R2k+dOmsRqRJthxEdsYzCzW8eSYq6wezrE86vnukCLutXsk=
+	t=1783183349; cv=none; b=hF78XssKkUHNQgBEMkv9wpOxTmL4GlOaeZjniwjdHnr9iFqxtWWPXp6ieXR6oWIPcIsRvUf83rIMTh+k2SwA99aky6yZo9blHKFT1tHqwp0w2/Zs/Qfg1UgauffrImZdMXa+f/f3NSXrnfno6aMxCspLwAPWbtLqPZDVImzCn4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783130741; c=relaxed/simple;
-	bh=+MZspb6jd4NigXbMKEVUSzPCyi1i15734/YNShGq9MQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pw8o9M9nfKcSFIx0h0LwHZMkhPPXcnFSM3utLHcigCU7b/h+/VxKApkdzlE+624tqEBkY1e2Gv3Gjd42y1hD5UXBtCblp1cbgwheGiPOnyJ3TR8QN0NLw5cmdWEK+FwHhtqLLepgrIJynPZztHP/VmLjeYuLSpRBhcefmzjMPUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8JFdaXy; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79BE1F000E9;
-	Sat,  4 Jul 2026 02:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783130740;
-	bh=9WM2YU7j6aR0eN08qNnm30jRmphyDgOmQCl47Pwzp44=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Q8JFdaXya6+gkUnjqcPfJ/NdSb0n+ZEWE4VMNWxjxQ20GJOYGkUiN2LsZkzYjKFkH
-	 VGpQW0TDDO3vx2+Pe8e25LXyH/JjlG7j7of1CufT/vrWW4YCnUrvZzsZFXnRHJo6EQ
-	 Y7x2e7tzmopPtfLomoAsCMLfS1C+oZ3OGH0QT2F6oo+1OXs7/XI4yNStADtQ7x6gXx
-	 8roVetGIldApXJddDH2aSknhb7HR8SCHOoT8RdmEzVJk1aA+2ouQ3ac2LlMkZmofAk
-	 T80AudWVCwB8qiQVRUQWESKe7XXG372yeMCy7cjHNweQTjF6HN9HKVHvyuMJlUodEF
-	 KGGepx2T7gK7w==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
+	s=arc-20240116; t=1783183349; c=relaxed/simple;
+	bh=3DH3J6Rf9zeKLeuVKNgSsOratKRnhRIkPjLU6KuYHUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TbxQWPcWbRf9Zc2sIV1/nR9XIeyZqLL7Y1fGzeSwWDmc2Q0XdqYULSpG7ucGvqylIoD7ggVLA+QsQcf5jID8l/bSKpM1rb/4p1wsNrPFC7RPikY+kGSgkpG/s72aAOP9jsQ//xrgTCLGLZGzebdqezFWkzdcWlZQUQ0StU0mAKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBPsWm5W; arc=none smtp.client-ip=209.85.216.51
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-381216921aaso1467659a91.1
+        for <linux-nfs@vger.kernel.org>; Sat, 04 Jul 2026 09:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783183347; x=1783788147; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wXfPC98kSxxFae2WuA2+su+R30KB2XgLe0qUBfwtF10=;
+        b=TBPsWm5W4rCxzmauLB83CsllrqSUjOGaU9Imk3NHSBgMavF3kiNK2edgxGo7pLgp/7
+         SY1zQdY4lYpzmZuu1w783XM2YxbV/Q8TJOJ8UBs299c3+SigLNTJ/MgAgsadbSg4PLj/
+         ODhUP7zEnJqclLEpICRgksIVuhGUgI3IbRFejwsZnajijKHxUMIod1GFSSdJZUxDYtcv
+         xP5GtGqW09PDpxa9NXzJ9siG1mKjp4ZCpgf56nCFZbf0l5d1YR3UwxrVdhge2tSm3h3c
+         mvK5tRSzw3AxGHXioummkXVbsqrm8aLzY4ErLdWnRYrM98t4Hd3mYFtZirP7JnNhnYsT
+         /4iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783183347; x=1783788147;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wXfPC98kSxxFae2WuA2+su+R30KB2XgLe0qUBfwtF10=;
+        b=NU6dxZL3uu8iaxr/vi5qd0OtK8OE9PhqHJyh8PT9j/NqWghjg4JeIZqixc67YBI3nd
+         wSdXfS2jd8LNh9IgDruOPqkzcOg672+X+/0keQCzg7K7loNCZO2M6vGasVehM9N9PM0w
+         IYdWXHzL2HOjl9VMgu2rJgemI5eZPN9VRGIqcRBxHLEI0V4/gcLrJd8pHlvtgYCMMP3a
+         hqjvjeOWOWBhCzYNJPxSxUVI1uFf6QKlBnlGGg9A7/oNsXGOoLIUsMDYNYRsApsQklRB
+         r3D8isviS1dxp93WQa3Lp/NfyW12TfWN1T18LUgm+ooRWPMqn2PQU/TNq1g9gJBg7pdW
+         Pw9A==
+X-Forwarded-Encrypted: i=1; AHgh+Rp/UfGMaroCLlQf0W7GxmK7drcyxY1nVaJkTAwYHThzxzRPKfGYUBqcztxlaDiJLEhHI59c4xRA0ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1yc75tKiifqTd98boNIkZdsjVQJvjZ8zXT3vXdlCZnDnnVkWG
+	ityWOdlLtnSvqF74+whvGsgC4sJ4Ve3/K7bhN+SZTEmq2PhJYBsxiTur
+X-Gm-Gg: AfdE7cljrZqLgkPMbPfcMLnpBXpm2YhKD6nklv9obN4Zsjqgtrtft/iDc3FtgKs7ZY8
+	25wXjQhnJ7YJaz3YZFuIC2XOcSUzyUyhaQ5qhftbrJjerNc+0HssGz8GZS1YhAC53R8aGTn+7BU
+	1dXNot50v4SqURlWVDonXEuZFuZ142z7NmcSVJGPGHhKoT7trQ2BeDEns0Mxv5pc1adMIzSicGA
+	mAyDNah52bnA5kBu8yeceMKXbyi3C79gd6mmmSzelIrRwb0OAEFdxW9eRJJd3IYKzDf5AvDgZuj
+	CvpyzOqwQgQaVwZ7nG9+ITxdUn7VOxG4y+/SL9hFEBoXGoMQFxhkl32DK/c3bLDQpbbGrLj3tco
+	XTtBWtv+PmHR3JntHx1TZskcBJJsEDTC+udnW2EpmZ95RxJNY0LKpyrBYo44XLCMP2OV7vHpcsE
+	YZv/Q=
+X-Received: by 2002:a17:90b:4b05:b0:36a:fcf5:64bd with SMTP id 98e67ed59e1d1-382807a9d55mr3783720a91.2.1783183347450;
+        Sat, 04 Jul 2026 09:42:27 -0700 (PDT)
+Received: from lgs.. ([152.32.214.178])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38127ccd661sm2606832a91.15.2026.07.04.09.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2026 09:42:27 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
 	linux-nfs@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,
-	Chris Mason <clm@meta.com>,
-	Chuck Lever <cel@kernel.org>
-Subject: Re: [PATCH 5.10.y] nfsd: reset write verifier on deferred writeback errors
-Date: Fri,  3 Jul 2026 22:05:07 -0400
-Message-ID: <2026070315-stable-reply-0013@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260703034048.1602590-1-cel@kernel.org>
-References: <20260703034048.1602590-1-cel@kernel.org>
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>
+Subject: [PATCH] NFS: Fix delayed delegation return list handling
+Date: Sun,  5 Jul 2026 00:42:17 +0800
+Message-ID: <20260704164217.228078-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,50 +92,79 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:sashal@kernel.org,m:linux-nfs@vger.kernel.org,m:jlayton@kernel.org,m:clm@meta.com,m:cel@kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[sashal@kernel.org,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-22989-lists,linux-nfs=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-22990-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lgs201920130244@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[lgs201920130244@gmail.com,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[lgs201920130244@gmail.com,linux-nfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 72B26706719
+X-Rspamd-Queue-Id: BA117707FE9
 
-On Thu, Jul 02, 2026 at 11:40:48PM -0400, Chuck Lever wrote:
-> From: Jeff Layton <jlayton@kernel.org>
->
-> commit 2090b05803faab8a9fa62fbff871007862cac1b7 upstream.
+The delayed delegation return handling added a separate
+delegations_delayed list to keep delegations whose return needs to be
+retried later. The delayed list is then spliced back to
+delegations_return by nfs_server_clear_delayed_delegations(), which also
+causes the state manager to retry the delegation return.
 
-Queued for 5.10.y, thanks!
+However, nfs_end_delegation_return() still moves delayed delegations to
+delegations_return instead of delegations_delayed. As a result, the new
+delayed list is never populated, nfs_server_clear_delayed_delegations()
+always returns false, and NFS4CLNT_DELEGRETURN is not set again to drive
+a retry.
 
+Move delayed delegations to delegations_delayed so that the delayed
+return path can splice them back to delegations_return and schedule the
+retry as intended.
+
+Fixes: 4039fbedcbcb ("NFS: fix delayed delegation return handling")
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+ fs/nfs/delegation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 9546d2195c25..f65e0930ac9d 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -594,7 +594,7 @@ static int nfs_end_delegation_return(struct inode *inode,
+ 	spin_lock(&server->delegations_lock);
+ 	if (list_empty(&delegation->entry))
+ 		refcount_inc(&delegation->refcount);
+-	list_move_tail(&delegation->entry, &server->delegations_return);
++	list_move_tail(&delegation->entry, &server->delegations_delayed);
+ 	spin_unlock(&server->delegations_lock);
+ 	set_bit(NFS4CLNT_DELEGRETURN_DELAYED, &server->nfs_client->cl_state);
+ abort:
 -- 
-Thanks,
-Sasha
+2.43.0
+
 
