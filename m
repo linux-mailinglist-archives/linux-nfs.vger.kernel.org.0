@@ -1,186 +1,122 @@
-Return-Path: <linux-nfs+bounces-22991-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22992-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id D5rHF/VBSWrszgAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22991-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 19:25:09 +0200
+	id KiQYDvJFSWqSzwAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22992-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 19:42:10 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CCF0708140
-	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 19:25:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B2407081CC
+	for <lists+linux-nfs@lfdr.de>; Sat, 04 Jul 2026 19:42:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=XNYTcx6U;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22991-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22991-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MKQLsSEf;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22992-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22992-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D9144301CDAA
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Jul 2026 17:24:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F33B5300EF47
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Jul 2026 17:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674D435F60E;
-	Sat,  4 Jul 2026 17:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC903749E2;
+	Sat,  4 Jul 2026 17:42:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D640376A01
-	for <linux-nfs@vger.kernel.org>; Sat,  4 Jul 2026 17:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840DB298CAB
+	for <linux-nfs@vger.kernel.org>; Sat,  4 Jul 2026 17:42:06 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783185865; cv=none; b=hyhNWwaml640YT9eYxvznxV7xjIFqDaIDMUgK1xQeLIleAfST7XG0wykEgcJpIemhEKNYuQgrzpuKHPyPodzmq7g0oLLf1tTohs/xkKH1Bb2nGGNTbkzfIjOHyWLJU6/cqN60SOKkQibUl+/gVzBiz9tRqZAf9xX6y+kCqNlIj8=
+	t=1783186927; cv=none; b=j4aXEdM2kyGTJ41/ia3HHeIaI81bnlYueH4cCZpIizpAWXMlHwaTAVOMuoNhdB7YHmUtTEtYksKbSWUU8f7+dxg5Sk+cTFeFULmZNzcUAgl9ljx7V7qHIxhCRiD1Ln3F9jWFR17D1jpJloWDZpbRRANKZdqXDQY1wGBe6N+XtJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783185865; c=relaxed/simple;
-	bh=mLbu5NxpQGUaotQi8An6gHfrLO6XJVpNbJHvvs4xUDk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QUg+VfcFO5b1yQygkYBNRnP0lkYVFEXfVQY/QUa4S0hMcJKNyZv/oztMY33m/H+alEbchtXR2MIOp9fTB50BTeeKenLSN2nTwXEkpxyPiMxdt5h5Hp/RYQaissI1sff5LBEmBgJqBmZZ19hN+J+NDz30ZjhCSRh6TVOc6hcH8Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XNYTcx6U; arc=none smtp.client-ip=209.85.214.180
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cacd69a9c0so12245105ad.1
-        for <linux-nfs@vger.kernel.org>; Sat, 04 Jul 2026 10:24:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783185863; x=1783790663; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=2DSnqMqiMbLJNwIDj4iLOM57cvPMuBmzdO+biTwlkGE=;
-        b=XNYTcx6Ux0HfwCvXxwRDGFkETlz+0OFL/09WTdHla7bjncuPYablNrlV/JRbATypXi
-         eYZxth7/gcv8XN5s03Dw41MBi9Zj2qUGnsdwloLA/a/j9hSAhaQ0sFPM/k9ox1P5wZb6
-         X6gR1xpHX37fgjNTDoLFTwOguHmuQRa2jeXT2HA/k23JMNjR7j+SrY9tyPJbiO595OaD
-         E3i5UmgHjBhp9mSdsoVepQ+jS1oH9ecfXWAfIwqEVbXQ3HtpC/KMeMIr1tB61DyqGz3M
-         0rE+NlmA03pyVqNVEvHX35TEjri7jHh5P8cg3S4MI0iGclFvtsiFPa/TQTGL+BIr8yyT
-         pIfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783185863; x=1783790663;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=2DSnqMqiMbLJNwIDj4iLOM57cvPMuBmzdO+biTwlkGE=;
-        b=kHNZFkq1CK1eqY0gOtd/Wp/Qspo0cNEhgswH5F0gTCddEigpX2OJWjNUyNmKygN1hx
-         l3gnXLFT1FBjoG35LhUt/KYqnU7ZFUIP8vj3kGKBDphF/h5rzPSgipo8sp3I1Ox5jdZu
-         U6Q0HkwaIUHR1P1jqiqk1iza5BHmqCNZotNHaBYrVZWdorxSVcdWVl+tNhRqOBv/Ba+C
-         tOqW/ehkBGJXYZ36oppyJC4odoCAQ0iXYCu/bMaMtmn16p1mTY5peF4Hjr+IgD0mQRK4
-         9/fptKF5atc2Ggq73bQYvw/M014FvQisl00J7ELEeVsf2w0AsEAd+RLSVTNHSHq2Ve5y
-         dC2g==
-X-Forwarded-Encrypted: i=1; AHgh+RrNfQBYVbt5oYGR5JU0H/IkU5aBForBHjnLfOaExC+HJyQRACxjQs5/utK7qFbEblX+JjUG6jhZo+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy11T/dSj3jLmlo3I8gt2xrePPqlWCdmQkOJQWhZPPMfiwcasOj
-	wK/lMo37c3Eanu9ak9b+GbdOIMeP1HJbdOXPGsPaeXz3dZBDOJSn8Gjv
-X-Gm-Gg: AfdE7cmOzRQIEsGF9YskvyEUcVB1S8xBE0j4O9/pJOVWwSyXr+8J6xzM1NPkW5j7tuu
-	AMbd80svDzt+DTqH68nWYcDwVA45xoF/0B02f68iBXzYa3r4k6TAXDqY3GAmCut1Hzkya8bllPv
-	30gS3bPfI3lmg9sFeOV2srA2PxlrJdQ0pdIOeO0ydO1ubW/SWlO8NuNPkZ4t1lSMgmLSM910mMW
-	6HlXzpb7gZQUsbic+VDkI4D13eV9VoUAHfgGQJBAn+R8Q/+trj0eCempQC3bZbjVcECr1bPd2JT
-	H7CVUpVRoc63eTGpfHWTEBV5ZymbLjjA7ZRwxm33KmE4X473a+a+g9xYVMQqJGxs9sCZfl4lvgY
-	3RF0+VEPRkGbvP3lEC5+udRVLYHEL532vGNVdI5bDzMtHGd50wF7uZhR7nnNa9e8W/OzWilapvA
-	2ub073MAEDhQ==
-X-Received: by 2002:a17:903:28e:b0:2c9:97a7:f548 with SMTP id d9443c01a7336-2cbb9f38c77mr37813255ad.46.1783185863346;
-        Sat, 04 Jul 2026 10:24:23 -0700 (PDT)
-Received: from lgs.. ([101.76.249.46])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad77658b5sm25123875ad.50.2026.07.04.10.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2026 10:24:22 -0700 (PDT)
-From: Guangshuo Li <lgs201920130244@gmail.com>
-To: Chuck Lever <cel@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Guangshuo Li <lgs201920130244@gmail.com>
-Subject: [PATCH] nfsd: Fix dentry refcount leak in nfsd_set_fh_dentry()
-Date: Sun,  5 Jul 2026 01:23:00 +0800
-Message-ID: <20260704172300.254447-1-lgs201920130244@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1783186927; c=relaxed/simple;
+	bh=nh6kFZpzJN7n+RZRkhx1IJJ/gVtRkueABnba7qgkGQY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iUrHBU3d0YqiR3XtBUtxBVQFqB3+1pl5pjb4tj9oOqt0BLsD3UstohzA/DQHTpuRtdDmpc3ZWNNOHn2uCWrB0VLgUzZlXa80MDY/nCakhIviZP2H3b36TfY2VJbcdWQUAykFfPo0XEHbMDtLPOZXHRNe4+vlRkez0WjV631qHw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKQLsSEf; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72711F000E9;
+	Sat,  4 Jul 2026 17:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783186926;
+	bh=d54CLJIu9+biFhkOSXVv1yEdICOaDbVRDk85s7zWt10=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=MKQLsSEf9gUm+jKYJ1qFYRkmSfZqRAmkGkKo/ITkx686oXvu76z82+5xnuMqLbdjv
+	 2fL/RmWXasyZOEQO46Fv6Cpst0M44tYYJQbvr1rth9SA1yYyzib4IV5O3I4iRuv0Eo
+	 ubrlain21ebGPmwMKiqhRroBMgdajiNA0BgKHpXuzppliTYKVsCpbI3Mjg0dj3ZhIC
+	 Mu8Mn1moIrVOwh1OeaY3JF+kDapbkIooXHnslLcsKLFKgkUevRJr/TIuoARKFDEyvh
+	 QvA5mKL1qkytiEr5ch+cKii2bZ5fBnphioJbOd/oAJ3qngMpbLUTorxMLP4+D1izIk
+	 l6lQfD5zG9lmg==
+From: Chuck Lever <cel@kernel.org>
+To: jlayton@kernel.org,
+	Oscar Ou <oscarou@synology.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3] lockd: preserve multiple NLM_SHARE grants from the same owner
+Date: Sat,  4 Jul 2026 13:42:03 -0400
+Message-ID: <178318668544.3488896.1908137356659270173.b4-ty@b4>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260703063856.2423734-1-oscarou@synology.com>
+References: <20260703063856.2423734-1-oscarou@synology.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-4.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-22991-lists,linux-nfs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lgs201920130244@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lgs201920130244@gmail.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lgs201920130244@gmail.com,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22992-lists,linux-nfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:oscarou@synology.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3CCF0708140
+X-Rspamd-Queue-Id: 6B2407081CC
 
-nfsd_set_fh_dentry() gets a dentry reference before checking whether an
-NFSv2 or NFSv3 filehandle resolves to a V4ROOT export. Such filehandles
-are rejected, but the rejection path jumps to out before the dentry is
-stored in fhp->fh_dentry.
+On Fri, 03 Jul 2026 14:38:56 +0800, Oscar Ou wrote:
+> When an NFSv3/NLM client issues multiple NLM_SHARE calls from a single
+> host for the same (file, owner) tuple, the current implementation
+> overwrites the recorded access and deny modes with the latest pair.
+> A subsequent NLM_UNSHARE then drops the entire entry, even if other
+> grants were implicitly subsumed by the most recent SHARE.  This is
+> particularly visible to Windows-style clients that map each open of
+> a file to a distinct NLM_SHARE, all carrying the same NLM owner
+> handle.  For example:
+> 
+> [...]
 
-As a result, fh_put() will not see the dentry, and the out path only
-drops the export reference. The dentry reference obtained by dget() or
-exportfs_decode_fh_raw() is therefore leaked.
+Applied to nfsd-testing, thanks!
 
-Add a separate error path for the V4ROOT rejection case that drops the
-dentry reference before dropping the export reference.
+[1/1] lockd: preserve multiple NLM_SHARE grants from the same owner
+      commit: c8c45fb61a5ff3eb786e4aa434b534b605ab657e
 
-Fixes: 8a7348a9ed70 ("nfsd: fix refcount leak in nfsd_set_fh_dentry()")
-Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
----
- fs/nfsd/nfsfh.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 429ca5c6ec08..2ca5bb5b5e88 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -345,20 +345,22 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
- 			fhp->fh_no_wcc = true;
- 		fhp->fh_64bit_cookies = true;
- 		if (exp->ex_flags & NFSEXP_V4ROOT)
--			goto out;
-+			goto out_dput;
- 		break;
- 	case NFS_FHSIZE:
- 		fhp->fh_no_wcc = true;
- 		if (EX_WGATHER(exp))
- 			fhp->fh_use_wgather = true;
- 		if (exp->ex_flags & NFSEXP_V4ROOT)
--			goto out;
-+			goto out_dput;
- 	}
- 
- 	fhp->fh_dentry = dentry;
- 	fhp->fh_export = exp;
- 
- 	return 0;
-+out_dput:
-+	dput(dentry);
- out:
- 	exp_put(exp);
- 	return error;
--- 
-2.43.0
+--
+Chuck Lever
 
 
