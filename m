@@ -1,213 +1,157 @@
-Return-Path: <linux-nfs+bounces-22993-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-22994-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id V34jDeKJSWp82wAAu9opvQ
-	(envelope-from <linux-nfs+bounces-22993-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 05 Jul 2026 00:32:02 +0200
+	id AC2BOJ+wSWrE6AAAu9opvQ
+	(envelope-from <linux-nfs+bounces-22994-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 05 Jul 2026 03:17:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89E1A7088E8
-	for <lists+linux-nfs@lfdr.de>; Sun, 05 Jul 2026 00:32:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 352EB708C2B
+	for <lists+linux-nfs@lfdr.de>; Sun, 05 Jul 2026 03:17:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm2 header.b=QeP7hgMC;
-	dkim=pass header.d=messagingengine.com header.s=fm2 header.b="D F5ddzd";
-	dmarc=pass (policy=none) header.from=ownmail.net;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22993-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22993-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=UepoQlbJ;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-22994-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-22994-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 35EA23020A42
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Jul 2026 22:31:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E1DA5300EFB3
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 Jul 2026 01:16:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73519283FCE;
-	Sat,  4 Jul 2026 22:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A068188CC9;
+	Sun,  5 Jul 2026 01:16:43 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4263F258EFF;
-	Sat,  4 Jul 2026 22:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E694207A;
+	Sun,  5 Jul 2026 01:16:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783204302; cv=none; b=uH4QB3OMmQwfSjlp3/aYDwXBz04m/+JbCcpMf16uzpDd8iAE6Zr0Ty3MfsrQ6m1d0MlCB38IGEQGonVsqCK2ruJZRxFc3+OK4nvgY1NljhDkfHtqgA4BwSGvw4Gy+TcvgXDvgl4SYfpAV5QAOf9vlSbXMIwmBvkKXcUV4NwFZ1Y=
+	t=1783214203; cv=none; b=EaZXSDRFeC1xW++xjhVouVLUE/3g4LhjdRgeeIETu3JiphcR1BtpY6nuhsePHO5Pu+qlzoCIeHP0GJEXiYHyF2hCWGStIPjJVFWb9f/5pUTM4ZuUVCFd1kmTO1M5A5qtq7DODzA9RGx0LoYB9kYsRSqS5lMaZ+2dbrKfUVD/CXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783204302; c=relaxed/simple;
-	bh=bvNjmCrd9qIYyyjqAKa6MU251i/K6Oqb2WzqLAU0nCY=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=U0yz6heAdtEe7swowmlqRQJYnRwOD6Ipcbo+kogKZX63y2H/8L/gUdfMI+y6ka299+d0NiveYq8qy2rlOVqNdwlg/cGMQbuauLd48b6Z+DZKDOro9lEvZhiKHgBdz9420cYDioCnLuRfSz2yHQ6T+2bItbpv8AL60Hf4MgWo9Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=QeP7hgMC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DF5ddzd2; arc=none smtp.client-ip=103.168.172.158
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4041A140007C;
-	Sat,  4 Jul 2026 18:31:39 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Sat, 04 Jul 2026 18:31:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1783204299; x=1783290699; bh=NxRMsN79PkJSYQMYTfX7q0Lm4z/OcL5bx63
-	dmcNwN9E=; b=QeP7hgMChLD1s5jC34S3COp16gZio1cA9f7EEtvADNVf5idF0SY
-	SkTm4lCwnrO7ewKZSCQWvDwxsFIttNINPIDgm8yIkaF7aqVtGGIPCkwhy8iTFnxx
-	vr6JzgO5Bp/tRzOMtmPW9O00XnUh7bXnB2CxxEvABDkTrj5fwcdcNLxhnpTKcpK9
-	Nb0a0gwwj7NZMF+Yjdmzy9pcR8alQX4mtoJzFZM7AzH4VceJLlX7v0LuoM2OCiT2
-	mYubz+2z1CK5LNHLZN5JBz3j7erbpbLNCSQCPqGzsFAxIkFn3e7fCg4aNJOoIeDK
-	svnoL0bV6jab3zrujDfYhWL3tJfNiBkw/qg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783204299; x=
-	1783290699; bh=NxRMsN79PkJSYQMYTfX7q0Lm4z/OcL5bx63dmcNwN9E=; b=D
-	F5ddzd2DXYFT28/IEn45n9YCv+HbZw8uDIhU9uhmFRtTnrLqY2MkmL2gPZYIZ64v
-	+Cu9YmZW2uh40Oz15F6go1G8U4pDFUwmLKoONe+jUdc/VuwZMNYoAf/OLBYQtezQ
-	EpE4Bh/CSp99uY+u0Uf5ppRfUC3KqbKNqlpyZaTksAdGzs0y9OqbQAQD7dGVvqXG
-	WQMTDQGUuS+anTNakruELRqZShSNKEDdLQlZkEHPTTHq/doeJ/KR4xQOs8cpuwhs
-	3vPDPIVE3ZnJdnVBdtm3LtxFBux9JNNKdKf7D5/Av0PqjV5KNTyD9aeEL2DmHYJN
-	AqW96IQV896O/aYLNe4tA==
-X-ME-Sender: <xms:y4lJahAkrOGFpajGSyF4_cjmx-CRWVSUIdZGg8AkmRaaqQXUHYyMpA>
-    <xme:y4lJapjYWlI-UBb_9RiH5JomkCLAi-H8hQPko72dU7y3bCevI9TWtej_r3Xw_m2dd
-    BiJWEKBa3A_40WY8UsiTjDzPeUks3b7WWZbDkNSwSOMNkIEk4c>
-X-ME-Received: <xmr:y4lJajNXpVOmReEAI6EhftmtldF6VPETCFX08ZocliLqhEPt2hKUKgtyP_WsHo6r1CzfowvTudkwxSJwNDBV6_RE90II1vQ>
-X-ME-Proxy-Cause: dmFkZTE/wTPYMgKq/xP52IeW2BX1uJwr0KWis8X3EwyFNhhkxs8fdi0ZesvCy08XY+/7jM
-    E1f7+DlzjRbaFX4aoJWCRwiBBGch/6OkCK4m+f2KukEfyV7wZG57to5WGcSjX1uYTt2OkL
-    2kjrgJPAb0HkG3ze9nu2BEVvQpe13eCoqjuz/8Y0vJOEHXXiMK20UqHlNChCoXi4cLXv5b
-    QldwfJv61LQZfYGoPUevT+aeoQkmiQcPFfR2lKfCgTgGxggbY0aRoxe0v9ULWnjET9h3Fb
-    DN9znigDq/r/c1PTzYZY6afMC4Iie2e5JHA2/74dprUUuPyKdcoVKCM8LlQMFG1G2ucaVb
-    xZfgp1XJkrhtp7tJFk7hw5JONAK2kKnDQL8Wbr+PjzC2yVRfNx2ExeyWO6AYzOu8jOKKhS
-    57kIDPuAmzsK7UjBdC52EJ9T5rqeU9x7c3lNY7TUmnAyeR3OR0g6tIw6OxqNzLiCq9r3D0
-    3RtYD1y7v1+TyZty4Emc4IRBcDuCGKnUPGxSO+ZdTmbAsctaaXpbfI3xFlbouTZQbfK5oD
-    0t6P7yOCrYl4S6P3oH1WvACRpoo1ZwWkIpc3pqESIw3A2SHk/za5qHfqJbJh8UwFqo8Cjf
-    J9hSI6oc1dKn59jnq6A91PRrOOUzW4i16oI8HVhZ+teb8fi92RNQOqIYiRdw
-X-ME-Proxy: <xmx:y4lJap_weaf681_JRl03us881EHp_GEopzkx9cbkc_pqDbNzs4qnIw>
-    <xmx:y4lJakeecRRPa3QRXxR0URxceSmG3oa6dmFMlIJXdqnK_qVQ4MJuDw>
-    <xmx:y4lJaowOvHZ5euxjLKO7E5fIhaD1XFHfcKDeE4UgxKDx61ASrHay_w>
-    <xmx:y4lJapLOUdtOZ9YGPHnVf2LH_2GcSvcQnxOH5mHOQsY7ZG6MIDWk_w>
-    <xmx:y4lJas1xw3AwPSMuV_G6oMzMg0gx9wua-bkZB-Y-9MBDPJOYoFsccRvQ>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 4 Jul 2026 18:31:36 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1783214203; c=relaxed/simple;
+	bh=otmSyEE4r4W6IWXiP/y5hUShoMAMAB0YFm14wMkqnt0=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pGQpWYYyz/jz9PpUzgSLLwLhJiz8KIsUdHhbB+NRDT5015g8DYjjaofFX16x5keFSHL41ZDqCrujlFnCUccHDiogZNC5bEPQmVXPrCFWTx7lcKB8iDNdgOJqn1cGpQvjE/ufCI4WHMOa3QXHpTgYVAIySu5w3ZODR02YOEue/qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UepoQlbJ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B851F000E9;
+	Sun,  5 Jul 2026 01:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783214201;
+	bh=igvSi8BiREbcSC0oNNsjOWRl0EPberDPu7faJjPRXrQ=;
+	h=Date:From:To:In-Reply-To:References:Subject;
+	b=UepoQlbJ8QtRVlnl91Rie+XrPdIkwbHaNMsESC0rSJBxPZvpEwEqfAu1lt9t6VH8y
+	 USfyVobBXzqAXQA2HLtrXwvGOoc+n3gzTjydRLzhDFvbOiDQx0vPYuEKg476bTXV8K
+	 8x9niA1R9XgWtD1ZhnyJxnOeM1MnV5X99IVkogu/uNgE5gltDt1qtWQgePsm/B42ca
+	 0T30ovtRsuCur6WPqzCf8xHmSVzbq6QHl+CDu4S/hQRD5/5Sq+EJEq6L0pYWvtnOj1
+	 hLHu9oEVWEZnp/5sgw+Jl2K//7OAGTdS4FpdcCwFfbROK3giEl1yLbnaNdPn6EQh3g
+	 X0VoNnncKntdg==
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6ED2CF40068;
+	Sat,  4 Jul 2026 21:16:40 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-10.internal (MEProxy); Sat, 04 Jul 2026 21:16:40 -0400
+X-ME-Sender: <xms:eLBJarmy0ZsUQVvfE7jhNWBJ6k_h_uWGOz2-fUoYzGYymD9Gi8A9Ig>
+    <xme:eLBJapoi9sp_kPpE5yeJfz3XqjBE9hfrn5Hn9GCYN-sH9YhIiJBZj_RqniOnAFIJg
+    H2HlUXLvS6fucLyAB6MQgMNPyBpR8asLM1jxyFLFLpqG6iQqNUszTU>
+X-ME-Proxy-Cause: dmFkZTGGPrGEcY3Xavg7LixQR434I8qQcsHVc+5LV0XIzwtFC2//o1Lx0ZU2guU0T7W/Rf
+    t3Kby0aaQCmN1hWVuNJKYVCqPvYuT0exDmeVkafQNBJ3KiHDVCQFnIf+SUnMAkKYYh7U4v
+    yNhrW2CswauWkQyj9pP3nHOkOuIBISAPWFrl/5jGFEgXRkiAK7Fxbn+0apyDULg3iRmi67
+    76dfT2TszxRLiIr6bTNVez4eHk/EIyGw0BuhbiAmQAM2nfcbYmcmxdj+W9sF1reUGoZcsN
+    arzI7l/nek3XTrLqV1AVfpROWSV8WWcg1DOwUu37dIss1IwMT/VzqZeC3I8q0Jmw4/JII/
+    7Us7RehNGf0TIjYPXTd8V27708ftFjA5vBCxI0Fzvg7JeYnNLHKObiyo5G2BtOucBxtqkS
+    48UsRafqQV+jikCld2pH4gNVeDMxVPmdBT136V2HH1oD+lnw3Y2FgoUz/Vbi3aF2WBDZnY
+    +poQ0DMocRzjbs+hDDvFNsjDUgPvqT3zZYs2v1OTqBm4xDlpi1cSRSa9JhE1xNgqtqZJrz
+    MbOA5eMcuNRSSutupmraSbBv4+ytgG4OhPt0OiE5vd4U90nToBFmFUUO+oFv4rX1Bo32zk
+    bA0VkxO7zsn+D3MQR4VEDxe+qg9ZM0RESnszWHUfufl2UOJSuIoMNGF4w+Jg
+X-ME-Proxy: <xmx:eLBJaoG_sTYISWnVP9vF9ZNsztmpPCMblmWQfZweB0zQTpdReJKYtQ>
+    <xmx:eLBJatVtYEUVFiGWbCJY-WeprbiFpQt5Lfs2sI2hWhTqOw6b4QmjEQ>
+    <xmx:eLBJakVy26UhoHoFEjlIBKlvjxQ2-_-75RNM08xKtA6TeuPOAyONeQ>
+    <xmx:eLBJarKFaScc0uYQVnwXg4E4LObxJXIvI3ZWYAOUffIk0Rf3exG4Zw>
+    <xmx:eLBJasCtQbkiWWfR5aj3Iv15Rb5vxp1T-cBJl2P_So3vnkfqI-y6It1W>
+Feedback-ID: ifa6e4810:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4B5BD780AB8; Sat,  4 Jul 2026 21:16:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Guangshuo Li" <lgs201920130244@gmail.com>
-Cc: "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
+Date: Sat, 04 Jul 2026 21:16:20 -0400
+From: "Chuck Lever" <cel@kernel.org>
+To: "Guangshuo Li" <lgs201920130244@gmail.com>,
+ "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
  "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Guangshuo Li" <lgs201920130244@gmail.com>
-Subject: Re: [PATCH] nfsd: Fix dentry refcount leak in nfsd_set_fh_dentry()
-In-reply-to: <20260704172300.254447-1-lgs201920130244@gmail.com>
+ linux-kernel@vger.kernel.org
+Message-Id: <4fe80ee0-d032-4355-abff-eb499dbe2288@app.fastmail.com>
+In-Reply-To: <20260704172300.254447-1-lgs201920130244@gmail.com>
 References: <20260704172300.254447-1-lgs201920130244@gmail.com>
-Date: Sun, 05 Jul 2026 08:31:33 +1000
-Message-id: <178320429328.27465.2341140887279902100@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Subject: Re: [PATCH] nfsd: Fix dentry refcount leak in nfsd_set_fh_dentry()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.15 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22993-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:lgs201920130244@gmail.com,m:cel@kernel.org,m:jlayton@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	FREEMAIL_CC(0.00)[kernel.org,redhat.com,oracle.com,talpey.com,vger.kernel.org,gmail.com];
+	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	RCVD_COUNT_FIVE(0.00)[6];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-nfs@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org,brown.name,redhat.com,oracle.com,talpey.com,vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:lgs201920130244@gmail.com,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22994-lists,linux-nfs=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,app.fastmail.com:mid];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ownmail.net:from_mime,ownmail.net:dkim,messagingengine.com:dkim]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 89E1A7088E8
+X-Rspamd-Queue-Id: 352EB708C2B
 
-On Sun, 05 Jul 2026, Guangshuo Li wrote:
+
+On Sat, Jul 4, 2026, at 1:23 PM, Guangshuo Li wrote:
 > nfsd_set_fh_dentry() gets a dentry reference before checking whether an
 > NFSv2 or NFSv3 filehandle resolves to a V4ROOT export. Such filehandles
 > are rejected, but the rejection path jumps to out before the dentry is
 > stored in fhp->fh_dentry.
->=20
+>
 > As a result, fh_put() will not see the dentry, and the out path only
 > drops the export reference. The dentry reference obtained by dget() or
 > exportfs_decode_fh_raw() is therefore leaked.
->=20
+>
 > Add a separate error path for the V4ROOT rejection case that drops the
 > dentry reference before dropping the export reference.
->=20
+>
 > Fixes: 8a7348a9ed70 ("nfsd: fix refcount leak in nfsd_set_fh_dentry()")
 > Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
 
-Thanks for finding and reporting that.
+Thanks for the report. It appears that there is already a fix for this
+issue queued in nfsd-next:
 
-Reviewed-by: NeilBrown <neil@brown.name>
-
-NeilBrown
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-next&id=ce7d3cc59012382bad5946b4cfc2cdcaabb81163
 
 
-> ---
->  fs/nfsd/nfsfh.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index 429ca5c6ec08..2ca5bb5b5e88 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -345,20 +345,22 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqs=
-tp, struct net *net,
->  			fhp->fh_no_wcc =3D true;
->  		fhp->fh_64bit_cookies =3D true;
->  		if (exp->ex_flags & NFSEXP_V4ROOT)
-> -			goto out;
-> +			goto out_dput;
->  		break;
->  	case NFS_FHSIZE:
->  		fhp->fh_no_wcc =3D true;
->  		if (EX_WGATHER(exp))
->  			fhp->fh_use_wgather =3D true;
->  		if (exp->ex_flags & NFSEXP_V4ROOT)
-> -			goto out;
-> +			goto out_dput;
->  	}
-> =20
->  	fhp->fh_dentry =3D dentry;
->  	fhp->fh_export =3D exp;
-> =20
->  	return 0;
-> +out_dput:
-> +	dput(dentry);
->  out:
->  	exp_put(exp);
->  	return error;
-> --=20
-> 2.43.0
->=20
->=20
-
+-- 
+Chuck Lever
 
