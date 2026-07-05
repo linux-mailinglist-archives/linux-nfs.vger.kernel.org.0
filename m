@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-23004-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23005-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Nr/SMfvYSmpfIgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23004-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 00:21:47 +0200
+	id LA6cFgTZSmpiIgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23005-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 00:21:56 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3125870B9C6
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 00:21:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A98C270B9D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 00:21:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ownmail.net header.s=fm2 header.b=TfXpGbvF;
-	dkim=pass header.d=messagingengine.com header.s=fm2 header.b=fGdyvMXK;
+	dkim=pass header.d=ownmail.net header.s=fm2 header.b=cQosEkGF;
+	dkim=pass header.d=messagingengine.com header.s=fm2 header.b=Uq7uN57o;
 	dmarc=pass (policy=none) header.from=ownmail.net;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23004-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23004-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23005-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23005-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 36D0E3007347
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 Jul 2026 22:21:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E10733011591
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 Jul 2026 22:21:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6864A35F193;
-	Sun,  5 Jul 2026 22:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E072253958;
+	Sun,  5 Jul 2026 22:21:29 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A508253958
-	for <linux-nfs@vger.kernel.org>; Sun,  5 Jul 2026 22:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3547F34DCC8
+	for <linux-nfs@vger.kernel.org>; Sun,  5 Jul 2026 22:21:28 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783290085; cv=none; b=tA7UUHVyE9r/iQl6YYJ+Qa5TG+vxOAudbNO26gSulfZjU0aT18ymx5yKSNQXvfpM8qmNryk3aYYkdi6RXhXV/LR2x8f0SvtpuWKAqG2lTcEfO5PvelEESYuganJjqJs/Rw0ZHofOp7A3Wusq0Ydr836zABgLdhHFyP7Rm6S2xTY=
+	t=1783290089; cv=none; b=QL6+21m/vQtG1/AemcqZx4tgD62gHxvro4laVUFYF6+2ZLXiOmG42/wlm7hs8wG207leW5/+q9oAqXbvmf/luvbrFHvR3jU1jgRT0BpNPIGnIUNT0mfBPJb7SDa4jrb4xTB3EWGFN0IIZI2c0IPWrslIsH9Xsu/uXMPGSYv89bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783290085; c=relaxed/simple;
-	bh=ZVfMP/fvJPxbLDMIVepneGgb4xnwth8Ilqp+9Wz1/mc=;
+	s=arc-20240116; t=1783290089; c=relaxed/simple;
+	bh=BBQvco99D7DN7MRaj8pDDiPhIro6Ymkz+OlQZWg2laM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HoBXlZMvGRE0YJ67yOoffNtXZp1hO6Q3BQ0UrA3x5+zwAx8ar6inK2OPtUB9OrzpnyLAwEm+z/ffjmBXCjdb7etQCP3qZXtc81Eky5cjzMz1ZQwpk9DEgrMHoynIQ63Ow9Ydg6Y3vOMJQHBaYbc9JkmPu6Nc2gn/iSnZZm1RN+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=TfXpGbvF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fGdyvMXK; arc=none smtp.client-ip=103.168.172.156
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 515651400022;
-	Sun,  5 Jul 2026 18:21:23 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Sun, 05 Jul 2026 18:21:23 -0400
+	 MIME-Version; b=t3t3rUy7ME14MGBCL9laJkV+uTjUifRjjsaYAydd+Eedo0tq+5Ia9gRa/8qo7jPc8Ep1FggjqZO7KopEnvtj4xPj3b+AGMUbwsZaz7OXxEQ8vOVtO6ihGM4FYy34eMdGuEhffQ2XCwNWaPi83Udso3CC3c4+WKVGvMb49Do64BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=cQosEkGF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Uq7uN57o; arc=none smtp.client-ip=103.168.172.156
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 9C66A1400045;
+	Sun,  5 Jul 2026 18:21:27 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Sun, 05 Jul 2026 18:21:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1783290083;
-	 x=1783376483; bh=CCbEoTJQNfIiFKaaeom8FmWpQjaxZyJkf/6Ucz6CMig=; b=
-	TfXpGbvFOtqaulRu5XyEr+bOOiezMvHHns7cdYG+ZKlOLqgRq0kh7FmjaWLxdhy6
-	bgAfvb7dEqONr+tVAH+NIf11A3JZaTC0zyZATPaZ74Kaaw8WuucKZIdyGc8Aa2kc
-	iEYaKAy7VaI4PNN4MbE9c1fXh/jzW6CNgCGRyDYmS6yFXOYPYF+rGfoU3MKTBNgq
-	9sVzAo4Pk7X5F6bAWritYyxyfGqROmOiQEPMu6WqixHizI5LETzuvMMbuBwlox64
-	TBgSDliHlArajhdPFZYsgOkTH8VOc7p3J0oykGZir2pm7G+nPGeVg1bMrUXbBE/6
-	ev9t6rn65HV93m81fbZF2g==
+	:reply-to:reply-to:subject:subject:to:to; s=fm2; t=1783290087;
+	 x=1783376487; bh=rFKTDtAoM6V9i7JLJOq+6+Ah164GFWu3Bn19e5agFxk=; b=
+	cQosEkGFLuz0dGxNWNeUVdDC2AUVHfBwHcQE3zxC2GpKUtWzRUXK2Ru9Q9/eoFkW
+	OPiGuzk8E6vpqaZgwN3UziVlZrkVqPZWO3i+I6o7zZ6vmhGpDoeN2djUeIgRAJ0U
+	IWo6U7aRX7ioVyPptsCS2jw1XeimICxMcf1eGnTnRdYGeFmOfflHLag29P2V/6rr
+	0KJ4RdHsEhstutIPziwc7MOsGprWTVhcnBYKz4jsrW639gjANGR00QVq7A/BmGdw
+	CQ/0W8J8K1AhhdKSsiMfL+YMjzS+06tTeUE/wJ/E46J0I9iRpdZFiyGIuzHYCYht
+	UJlJdLxolXzt1bSKVeK4cQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1783290083; x=1783376483; bh=C
-	CbEoTJQNfIiFKaaeom8FmWpQjaxZyJkf/6Ucz6CMig=; b=fGdyvMXK00u56jaTm
-	pCkh3LDaHI5r7CNFtukEDLoTm+ErcBmuuNp/X2SzOhO+dmhorFewqf/o2XfdS8oZ
-	D9OPuBc50Y6105OhSEjpJJVByfh8absgeD0tVUgoJtaZCSCfXPRKIBFIpC2Ko9s1
-	8CXJe7k0ANZ6toaRwvMg9t8rJIJKqnK+nSbsmFpJP9q4iFeub33bo1VW3U3SrFTW
-	ZcvWa+6s1uaCowAv4w+65izRDM8REpXzOW5GEBgApOe6b6xdsaeIIgIvmpcWkHBz
-	VgzslwG8sRSzTm1IgUjOlmiqzu83d7rVJv6Z2Z1gpvx3/Bx3hZqFYzyAIvLzS7NR
-	S5ejg==
-X-ME-Sender: <xms:49hKakQI6lStuJ5sBbySNt7IT3nUI_N0tdDDrm9F9c4NnBuRF4-6zg>
-    <xme:49hKalfeM_kcoTLSVjsG-YhmcVOsowM49G8oqrkignU9hU0CqobqB6KEFBR0oHDIS
-    86keRO_g3VsBptJBLkmcZ1UTJLmbCtjMz7ywttroN1eIkyJLA>
-X-ME-Received: <xmr:49hKarovz2cprO2ogTmO7X65pbjIaJ04pa3fi_AfU-86VB71_3wdr1bAht98COU_pMMJ-GPl3po10VP-2nE8ir_4CQzuG3A>
-X-ME-Proxy-Cause: dmFkZTF0YcQ5/RatK2cyJlbfE7M9CwaOcSZuP/T/fJ8+XInZaqxHj7aGc2JZlfqxkZ1Qnb
-    5pIxU9QzoakZc0IdtOoXKKnpZniKDX0JG+ndb/siPWPBdeP7+Bn5gaTvUxk3c9pDZEOccS
-    ZUVnOEXCnNTf4W4kowKgP8JF/eZsbX7BzvByipTtOkrknQQGU91k5ndYz5iApF6SjSjw6P
-    Qhi8feNcqKNEbdG0PK5/c4f6xkxJb3xixST9Ou1zT9lF7x0QDR4JasUarp/Jc+/HH1cd2X
-    yinvfhvJbnjnUmHJDnMFbUX2AFkaKnzRa+mYJX7LzsktGmf3G5fUjTJc2x4Ao2IjCyM7qw
-    vURzkWw+zAsK2ywqnJ+GfKJJe8O6M/x0qJtth+i0F2R6aRvX7QShnf1D6+2H64/GTFQ8Uk
-    IsKYfUKtlYv91KFp9SRXrgozO2ph1jbILqsu/UOKcMTktYMJT8NlWlfOPFsIXswfIj637q
-    mUBj6Q3gwSV4vnSMWLhm9NTRQIFyU8T6Ak5x/TV96cMlXUHoeZOCSgoNRgn35VUq49aLeX
-    +iQ2RVkvA4QPvG+17WdOSsE9sTxQjlltvNv+Z9Eudp8BPD0aBt5FUuF1CpQHFrSlaC7YR3
-    vdelDQP/1EbreIahRswAATTM1sduTx5FueWQg2gm+TqaxjfsBW5MDPbhgd0w
-X-ME-Proxy: <xmx:49hKau_dfYdL5V9To2tgmB3imAXapOJPchpTl3txOaJGtjaB8bd-Kg>
-    <xmx:49hKavcHxgaUctjlrIvIA9dBRUKpp4qkFIyXr-oPXbgWA8kLcygAlA>
-    <xmx:49hKagJtXeZwP_xt0pYuI_M0-Nd4LEOqHgJILHKo4ASijkNTXSOtrg>
-    <xmx:49hKanisl03qiqD6VZmTDfGx9pAV3dHnZITAQBFsXSUpn1K_MBOVSQ>
-    <xmx:49hKalxWUR9mrk96bdlFY9NwUhcnV-Ey7tAIAHjLnn68MMHECrd0vTR6>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1783290087; x=1783376487; bh=r
+	FKTDtAoM6V9i7JLJOq+6+Ah164GFWu3Bn19e5agFxk=; b=Uq7uN57o2IEQQDB2/
+	WVuI9k5mc9mnmRifgbFkdbp8Lm1a0lV9lmKjLr3HhGDwAzQkfWnX6XfjlPPF4Plp
+	PVe/EEerSK+89nUu2WxKaGp/I9Ey8duNMWunvlL5+5P50bwd5+1CwUKL8F5WIyGB
+	ae46ipAQoR5WzzP6y5gllNJSm3vywn+lJAhn+uwgCWngmnm8N9viAysf6UdViJ16
+	OLgOwUeMx7lUDs0hf8rLtyJ2mbYc1HuAFObQPl6OuZXEw1/PLLPgf+j5VOO2v6FN
+	6dt7Ybb6McJuLvbCp3pWS+e2s6exuLCJga+iwB45V2BNOetnb17RRGt4ZlQ5g/py
+	tFUpQ==
+X-ME-Sender: <xms:59hKaluwajtoMEnrco3tlGwh-diK8MFGeq4KAIn7jzKfy8tuyvGiFQ>
+    <xme:59hKaiIaNJzjn-Uq59nlyG-dNsT_mcYMAXEXfpzeS9wrbdcg6SPxmq06eNe2Jv2Bx
+    CcGz6s44hwt_RnGxf55ss-6rqirperJFle92p01m5vb9R2xzHI>
+X-ME-Received: <xmr:59hKaikHxS1Gcl1qEZdiWD3lWx53i5obZi3rtvqe-ABvOIJtInCN9c24pitIgUxIrV13sFVksGdMdhraHfvuQpWxF1XOJC4>
+X-ME-Proxy-Cause: dmFkZTErMAdh0PO5/SmQA5niNOZljaHMTkfhLKVcydPCRuIYEgeCpwNzmZMjkoUgxqFWu/
+    YMfLhryAuXf29i+O1RP6N9SNW1cAwyvbrnLX3Q8tEs2vpIyBAQzdN6QpRE9F5PYiNP/Ai6
+    FdTJG7jvkY7lFiaf9jq2XJnBFzx3ycbYPXka/Jw5locHtkKiv6Wmjja0airzqO6OOdos3M
+    v8djOo5IAnHKx49LFvgO7ipfCT6lPV3+hcDbBk14OrlslPtYDRtHJ3nPSQUaI2ZNaJNiIQ
+    fMIwxYC+x1amSEvRHr1JmsaI1HhndEWvkl9fQmmFoR7262jRSTDd8zeYh06rmyzCsM9gpZ
+    MepzCHVqkDuiWTekAIsAVFfcTHSvPAUVRwDRuSnr+9X286MFgTXAl7rfedmshEaWmZwAje
+    tkndmrw7BnBpUszClJgGIdXsyKihNeKBacHBudrUIiO4dVRHyjsCVaZzvd/DdlXMuY6AnB
+    5wq1LufWZmU6J8uN2v3P4nv3oKM0GsAWY1v+0fDIOW2usWvBlPGfACMusRQbyoAjumSVx9
+    QmzuMwSLtVB0WLI9LRckXf0zPl3Pa+/nWdv3FNkSxIDRIUmO+BProbdvopvouI6x8G4+Ug
+    xm5znELAZC77u9/alSTLs0PTT6mVA75v3Qun43js+LpW6gq8b7YhVNEzAKrw
+X-ME-Proxy: <xmx:59hKajJSDI1lOzLrI3v0KER-jnIEJKAVNPl7xLEcJ43VviaEJUYTBg>
+    <xmx:59hKan66pajIfoZpvxLGIZaWS0jfhPT5c5acEY3cJBT9PYzIc0l9Vw>
+    <xmx:59hKan26dXPr4YqEpM_qiZWyeDP7Tw3cWJvq77F_s72h3ya-2uSbHQ>
+    <xmx:59hKatcr8U12_OQAUQMcS6ht0gCTlwPEKzerKxXD0ipNaaZ7OifndA>
+    <xmx:59hKajNhtWkwWjABXePeOILM3Jto75ocYfDNkesGZqIVxGM9T7mioRDN>
 Feedback-ID: i9d664b8f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 5 Jul 2026 18:21:21 -0400 (EDT)
+ 5 Jul 2026 18:21:25 -0400 (EDT)
 From: NeilBrown <neilb@ownmail.net>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -93,9 +93,9 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v2 09/14] nfsd: reduce range of directory lock in nfsd4_create_file()
-Date: Mon,  6 Jul 2026 08:19:41 +1000
-Message-ID: <20260705222032.1240057-10-neilb@ownmail.net>
+Subject: [PATCH v2 10/14] nfsd: open-code nfsd4_vfs_create() into nfsd4_create_file()
+Date: Mon,  6 Jul 2026 08:19:42 +1000
+Message-ID: <20260705222032.1240057-11-neilb@ownmail.net>
 X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
 In-Reply-To: <20260705222032.1240057-1-neilb@ownmail.net>
 References: <20260705222032.1240057-1-neilb@ownmail.net>
@@ -113,13 +113,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23004-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23005-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:chuck.lever@oracle.com,m:jlayton@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -141,56 +141,119 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[neil@brown.name];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3125870B9C6
+X-Rspamd-Queue-Id: A98C270B9D1
 
 From: NeilBrown <neil@brown.name>
 
-We only need to hold the lock taken by start_creating() until the create
-has been attempted.  Holding for longer can serve no purpose.
-
-The lock is currently held across the setattr call.  This might be the
-intent but it serves no purpose.  Holding the lock prevents the name
-from being removed or renamed, but it doesn't prevent a GETATTR or a
-racing SETATTR or an OPEN.
-
-Calling end_creating() puts the reference to 'child', but we can still
-use the reference that was stored in open->op_filp.
+Having this sub function separate doesn't really add clarity, and merging
+allows for some refactoring and ultimately using a different VFS
+interface.
 
 Signed-off-by: NeilBrown <neil@brown.name>
 ---
- fs/nfsd/nfs4proc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 76 +++++++++++++++++++++-------------------------
+ 1 file changed, 34 insertions(+), 42 deletions(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 244d5f3975b7..973beda7f161 100644
+index 973beda7f161..a34731e1714f 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -367,9 +367,12 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		if (status == nfs_ok)
- 			open->op_created = open->op_filp->f_mode & FMODE_CREATED;
- 	}
-+	end_creating(child);
- 	if (status != nfs_ok)
- 		goto out;
+@@ -201,46 +201,6 @@ static inline bool nfsd4_create_is_exclusive(int createmode)
+ 		createmode == NFS4_CREATE_EXCLUSIVE4_1;
+ }
  
-+	child = open->op_filp->f_path.dentry;
+-static __be32
+-nfsd4_vfs_create(struct svc_fh *fhp, struct dentry **child,
+-		 struct nfsd4_open *open)
+-{
+-	struct file *filp;
+-	struct path path;
+-	int oflags;
+-
+-	oflags = O_CREAT | O_LARGEFILE;
+-	/*
+-	 * For the EXCLUSIVE modes we do our own uniqueness tests
+-	 * so don't want O_EXCL.
+-	 */
+-	if (open->op_createmode == NFS4_CREATE_GUARDED)
+-		oflags |= O_EXCL;
+-
+-	switch (open->op_share_access & NFS4_SHARE_ACCESS_BOTH) {
+-	case NFS4_SHARE_ACCESS_WRITE:
+-		oflags |= O_WRONLY;
+-		break;
+-	case NFS4_SHARE_ACCESS_BOTH:
+-		oflags |= O_RDWR;
+-		break;
+-	default:
+-		oflags |= O_RDONLY;
+-	}
+-
+-	path.mnt = fhp->fh_export->ex_path.mnt;
+-	path.dentry = *child;
+-	filp = dentry_create(&path, oflags, open->op_iattr.ia_mode,
+-			     current_cred());
+-	*child = path.dentry;
+-
+-	if (IS_ERR(filp))
+-		return nfserrno(PTR_ERR(filp));
+-
+-	open->op_filp = filp;
+-	return nfs_ok;
+-}
+-
+ /*
+  * Implement NFSv4's unchecked, guarded, and exclusive create
+  * semantics for regular files. Open state for this new file is
+@@ -363,9 +323,41 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	} else if (create_status) {
+ 		status = create_status;
+ 	} else {
+-		status = nfsd4_vfs_create(fhp, &child, open);
+-		if (status == nfs_ok)
++		struct file *filp;
++		struct path path;
++		int oflags;
 +
- 	status = fh_compose(resfhp, fhp->fh_export, child, fhp);
++		oflags = O_CREAT | O_LARGEFILE;
++		/*
++		 * For the EXCLUSIVE modes we do our own uniqueness tests
++		 * so don't want O_EXCL.
++		 */
++		if (open->op_createmode == NFS4_CREATE_GUARDED)
++			oflags |= O_EXCL;
++
++		switch (open->op_share_access & NFS4_SHARE_ACCESS_BOTH) {
++		case NFS4_SHARE_ACCESS_WRITE:
++			oflags |= O_WRONLY;
++			break;
++		case NFS4_SHARE_ACCESS_BOTH:
++			oflags |= O_RDWR;
++			break;
++		default:
++			oflags |= O_RDONLY;
++		}
++
++		path.mnt = fhp->fh_export->ex_path.mnt;
++		path.dentry = child;
++		filp = dentry_create(&path, oflags, open->op_iattr.ia_mode,
++				     current_cred());
++		child = path.dentry;
++
++		if (IS_ERR(filp)) {
++			status = nfserrno(PTR_ERR(filp));
++		} else {
++			open->op_filp = filp;
+ 			open->op_created = open->op_filp->f_mode & FMODE_CREATED;
++		}
+ 	}
+ 	end_creating(child);
  	if (status != nfs_ok)
- 		goto out;
-@@ -419,7 +422,6 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (attrs.na_paclerr)
- 		open->op_bmval[2] &= ~FATTR4_WORD2_POSIX_ACCESS_ACL;
- out:
--	end_creating(child);
- 	fh_drop_write(fhp);
- out_free:
- 	nfsd_attrs_free(&attrs);
 -- 
 2.50.0.107.gf914562f5916.dirty
 
