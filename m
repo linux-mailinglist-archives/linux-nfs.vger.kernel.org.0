@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-23055-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23053-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gqpBHsxTS2q2PQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23055-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 09:05:48 +0200
+	id YJfsB49TS2qePQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23053-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 09:04:47 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 186E870D48A
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 09:05:48 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FDC170D44A
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 09:04:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=sk.com (policy=none);
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23055-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23055-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23053-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23053-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 16218316AF36
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 06:45:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6E62433E7005
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 06:44:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421D042B31E;
-	Mon,  6 Jul 2026 06:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E554242A7B1;
+	Mon,  6 Jul 2026 06:22:09 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8E0400E15;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16E93EA96A;
 	Mon,  6 Jul 2026 06:21:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783318931; cv=none; b=ueYPVbdVXGq3onQTU4qw/C2teGm471FCkJ80bfOZHlieP5XZvPozRGhfOeRDc84qZEix59/QXFtGk5nxEjDnpuNKd6AyNfG75GOxBvqEM+TR40lsTHX2mgLGGfntOOoglA9bzPX+29catAUAfVyvlbP07wSfNXrCgqWwnfdudk4=
+	t=1783318927; cv=none; b=tqH4WVrTABZToVJm+Rw6EaSaqPpemqMoeNO9mcM1G6Rp6b2b8XqkoI5xsSyO++pv2qp+X6HudjS/3fi8sjw9adYBuIPiG8y93qPmUGat9a2goQAk457178Hr1vEpYn6B72D+iTgXWTq0KpDbyraZ1oaBq8+CgqKdv+U4IDjV/rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783318931; c=relaxed/simple;
-	bh=qdrhPquz9LK1TSCcGBmbSQVFrGLawwrbGLlsjRyWAwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=nZGWObkToGdXmp9oXFD+0ke+uVj1ZglVZ4Q73UJNe5GqiPA5reECm2x9sFlPJld6t1WvzKoo9iFAdiVywXFiEUcyXofzW9P/LC9TY1ocFpr+FzjIteAAY79SexqvnqUbz9GqOG2ZV9Tn0szjXxFmlW4aLgSmDMcXOogwc4QwcHE=
+	s=arc-20240116; t=1783318927; c=relaxed/simple;
+	bh=mmPlRW8aN19lFRugmcatfsbnT9mjk0ziOlsqZXzc284=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=tpP80eRgnVLjkYuHNC/trN0NJK+DQtOvQUHESspLYMNwBIiK5ewfa2qOWi4PoIBG8PGUkzeORJaEcC2PTaiM63NrPf9qBvule7cs0dnBrSFGmkVSDKjgImbyyd3YkeLeRUf1xNz0GBQu6Z0sSpNHaurUX4smEb7ExcQPKegeQqk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-X-AuditID: a67dfc5b-c45ff70000001609-c7-6a4b4983bcb4
+X-AuditID: a67dfc5b-c2dff70000001609-e4-6a4b498389cb
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: max.byungchul.park@gmail.com,
@@ -198,45 +198,45 @@ Cc: max.byungchul.park@gmail.com,
 	aliceryhl@google.com,
 	tmgross@umich.edu,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v19 34/40] rcu/update: fix same dept key collision between various types of RCU
-Date: Mon,  6 Jul 2026 15:19:22 +0900
-Message-Id: <20260706061928.66713-35-byungchul@sk.com>
+Subject: [PATCH v19 35/40] dept: introduce APIs to set page usage and use subclasses_evt for the usage
+Date: Mon,  6 Jul 2026 15:19:23 +0900
+Message-Id: <20260706061928.66713-36-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20260706061928.66713-1-byungchul@sk.com>
 References: <20260706061928.66713-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbUxTdxTG/d97/7eXhiY3FfWKMZga8CURdUE9S8Sgidt1ZolmWTT6QW/k
-	KkVA1yITMw1OQCXS1BrWzMq7LdpCi1UMilWsWhE2KL6MokjHEipMCuGlgIAvt25+OfnlOec8
-	5/lwGFLZhaMZdUamqMkQ0lS0nJIHIytWnNqyNXVVsS0aLjmqafDabQj8oTMIJqZNJLw3eGTw
-	0eVB8Fu7gQSf9x4Jo7UfaAj6GzAYi7wIRvr/RnDD042gV19HQtmvLgyBly4C2t/OEGBzfg9+
-	S4ACYz8NJuMpQip9BBTVNBDwzmKVgSUnFuzBNgxvAwYa/I/zMTg7HyEoz79Mwe8lXTTccT2h
-	4FxtHYYc0wQGb2MLBscbHwFPLl6loO12DQZzRzsB1//8g4Rx3QLwni/E4NP3IqgZrKDhyrBR
-	SvQinwBP2Vy4WlolZb48ToF5bJCE030NNDgCD0iYqpKuNk81E/CPLiiDkeIPGIpmzkipT+oQ
-	nBz1I8jtWgO61m9hzGalYVA/hsH0qFuWlMRP5OkoPu/pe5qvLqlG/PSUAfF5eokeDAyRvLll
-	gOabKzj+1sXXMr7MeYTPfRjEfOWdfoIvHwlh3mk9S/Pl030kP9jaKtsWs0u+PllMU2eJmpUb
-	9spTyttcxOHnG47eLbCSOahtVQGKYDg2gbNWhugv7O924zDT7BLO53tHhjmKXcRdLwxIupwh
-	2Wcx3DlLIVWAGGY2u4eratofnqHYWG7Y5/jso2DXcq8m22X/ecZwttrGzz4Rkm6fKSbCrGTX
-	cK+GHlNhT461RXATnfX/L8zn7l/xUXqkKEOzrEipzshKF9RpCfEp2Rnqo/H7DqU7kfRzluMz
-	u+vRiPcHN2IZpIpUQNJ3qUosZGmz092IY0hVlCJu6dZUpSJZyD4mag7t0RxJE7VutIChVPMU
-	X43/nKxkDwiZ4kFRPCxqvnQJJiI6B8Wf0N7YWbFkdLJ/8TF9k2xH/ZbX8+d4WxuH7ycYzvak
-	DAzHDgVDTTsTbx3XHvjLeCFqnsnhXhy5fe2u1UJJrrjbuUzl2htKLO39cezeptNxpYmquT3W
-	yp/q7MoOYVGLvOeafeOJfztn4bivXzaui3s+mZhp3udZ+PSbFZu33TR3TK/7RUVpU4TVy0mN
-	VvgEtFflsW8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUxTZxTGfd9779tLY81NIXqDiZoG8SuKZkhOVIgmRu40GhMTRRMDjV6l
-	fKmtQzFblGJjZTjbmpZIQQGlakFBQBS1SiDrHIpQi9IMsGI6HAFFkSqfdu3M/jn5nec858n5
-	47CU/C4TyaqyjorqLGWGgkhp6ba1ecu1P25JW2k6Hwt63Uno8foYeJXbRIN/VE9DcXUVgWnr
-	XQnoay8y8KRLS0PHrUoEXr8ewddJKwW6xgAN0yanBEbHuyVgzkUQcDgRWFwmCjwdjymoqs/F
-	8LnmG4HBlhEE5j4fgcKBXBqGbQUIivqtEhj4PRHeex8wEOh9h6HryxACm+8bBl/TGQTTlnS4
-	XF4XXLd8JDDZ1k5BobkDQVlfLwUjA28Q1DtfI3Bc1xL423CHArdvFnT6hwn8af6VwHtXMYYP
-	NQRKtQ4GXM8GEZRYTQj6/3JgyLtSTcBSUktD45v7EnANTmHosZgwVNZuBa+tn4anhnIcPDfo
-	uj0HrIV5OFj+wWC++QDDuM0uWV+BhK+632jBXteABd2LaSJUXapCwuSECQmjFXmUoDME25ah
-	YUo4XXdMqHg6RIQJ/0siOL6U0kJrOS9cPTuBBWPbcqGxqFeyfcMe6br9YoYqW1THJKRIU8va
-	HfhwZ8LxR/l26hRqX5mPwliei+W9r5uZEBNuEe/xjFMhjuAW8HXn+oO6lKU493y+wHaOzkcs
-	G84l89eeHAh5aG4h/8lTTUIs4+L47jGX5HvmfL6ypum/nLCgfmuqBIdYzq3mu4f/oA1IWopm
-	2FGEKis7U6nKWL1Ck56ak6U6vmLfocxaFHwn2y9Txnto1J3YjDgWKWbKYP3mNDmjzNbkZDYj
-	nqUUEbLoxVvS5LL9ypwTovpQsvqnDFHTjOaytGKObPMuMUXOHVQeFdNF8bCo/n+K2bDIUyj+
-	PO6r2bs1ENs52/HQuNH+6fYPC3t+1p1s60hagjbJR4pnLotfUxTQ7Yjyawui8knU7lfUEaNp
-	G7NkjafhUon7Rmt4Qtlzg3GMOC9E1scdIclvW/DOMynassRonX6PIjzJ1XUjGxrmHUttdS7Q
-	lEu1MSSmKd697+bY6WimM05Ba1KVq5ZSao3yX1zt3TVKAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSX0xTdxzF+d37u7eXjiY31WR3+sDSqDOi6BbHvkvI5uIDV50Ji0YTfdBq
+	r1JWwBQBgbgVKB1BMLVJIaNFK0hFrUjaCKLU8MeBDZLCcIACxQKrEKksjpZR0K7V+HLyyTnf
+	c56+DCkdp9YxysyzgjpTrpLRYiz2x9VtK9mzL32Hp2UHDBd1YAgslmEw37HR8NbUKoLHI8UY
+	JgNlCJZWTCSUtoUxLC6PicBYhCDs7EHwb/M7Gl51v0Fg9M7QUD1XhKHGZxKBf/IBBSPBeQQz
+	Hb8huFLniNxV/UPDSr+bhGrjAIKr3gkSnI3FNPytv0uCy3iBBv+gmYDXzTRYip0U1JoMCHzP
+	nQSU1N+hYfDVKgHjVQYCbtn3w6TVh6FPX0eAqbokKrMEGG8/IOBJ/TgGq2YjmPqHKGjyuymY
+	7NVR0Kp5IQL7sz8QLD71EmCr8JFgnx6mwPk8Aa7qrmH4/fI4De1OF4aee1MEVDTfpcBjC1Mw
+	0NFHQV/PYwyumhsY3PdvU9AwMkiAo/8JuUvBL5VexPxNRwvBl/75luZtl22IL9VHpHt+geS1
+	jjy+oW+e5kOBv2jeGbRg/lL/Nr6tZkLEW+w5vPaRn+IdjVv4+vY5IjXhiDhZIaiUuYJ6+3fH
+	xWnW7kfUmaKkc74hN6FBhq3lKJbh2J2cJ+RFH3n2ZZCKMs1+wY2OLpNRXst+zjkqfRFfzJDs
+	UDxXYa3E0WANe4rrDAfflzG7kZtaNUQKDCNhk7jww18+bMZzt5o73u/ERuym1VoiylL2a25s
+	oRdHNzn2eiwX8DSSHwqfcZ2No1iPJBYUcxNJlZm5GXKlamdiWn6m8lziyawMO4r8nPX86tF7
+	6M3AgS7EMkgWJ4Fde9OllDw3Oz+jC3EMKVsr2bR5X7pUopDnFwjqrGPqHJWQ3YXWM1j2qeSr
+	YJ5Cyp6WnxV+FoQzgvpjSjCx6zRI9+PT+JwDLS8MS6kL5dcTvvX0ZngCKYnf1JbHHK58bQ9Z
+	8rOGC8JXoOaHwmd27XQ1n7771IBVpC0Z0b1s/+nCJ6xd5Lx40Jvs6mxJadg9cz9pzmwariqU
+	uMbGYk5Mpxh635W1mqd+VbVp3brQf5rTZEjftH3J7KpUiFPjvt9wSIaz0+RfbiHV2fL/ASb5
+	DkRvAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe2xLcRTH97v39vaulJta4hrJaDAW84px4hXPuQgh/lj4A81c1q2tahmT
+	eXRV5t01aRfrxozVshXTMmYptTGPEauxzWM2VLdlY8we2dapW+Kfk8/5fs/55vxxKFxyWxBO
+	yVW7OY1KppCSIkK0dp4+Wr9ydeJ0u1MI6YZD8KHRK4BanZuA7q50ArKv20kYtN7mTcc5ATyp
+	SyOg+loRgsbudAS9A1YcDKUBAgZNlULo6nsvBLMOQcBVicDiMeFQX30fB/tNHQa/in+T0FbR
+	icD8yUtCZquOgA7bKQRZPqsQWh+tgG+NZQIINDRjUNfTjsDm/Y2B130MwaAlCS7kOfl1yw8S
+	Bl68xCHTXI3g4qcGHDpbmxDcrPyIwFWQRsJX4y0carzD4HV3BwlPzSdJ+ObJxuB7MQm5aS4B
+	eJ63IcixmhD43rkw0F+6ToIlx0FAadNdIXja/Bh8sJgwKHKsgUabj4AqYx7Gn8tP3RgJ1kw9
+	xpcWDMxXyzDosxUKF+UjttdwhmALnSUYa3g1SLL283bEDvSbENuVr8dZg5FvK9o7cPaIcy+b
+	X9VOsv3db0jW1ZNLsM/yGPby8X6MzXgRzZZmNQjXLd4kmr+NU8iTOc20hVtFCbaKhwK1bvY+
+	X81L7DAyTTmBQimGnsW0NPcIgkzSkUx9fR8e5DB6LOM87eN1EYXTNRHMKdtpImiMoLczDwI9
+	KMgEPYH57DfxCxQlpmczgXsH/2VGMEXF7r85obx8zZ+DBVlCxzDvOx4TRiTKRSGFKEyuSlbK
+	5IqYqdqkhBSVfN/U+J1KB+LfyXbAn3EHddWsKEc0haRDxbBoVaJEIEvWpijLEUPh0jDxxEmr
+	EyXibbKU/Zxm5xbNHgWnLUejKUI6UrwqjtsqoXfIdnNJHKfmNP9djAoNP4yiDq0bcqSz/Uf/
+	8udRk2eqzwxftutLrL/cmzon5EpqrBLG6Uvc0TMjXBsg5vux8Dr3rh1P85pLLD/jqjImxrWk
+	KsrUTzxLjbWbC/YXR8aHH10wtqqAvux3HXfNLVBKhxjeblxfO6rsbJPekVzXPGfM0PjI7N7x
+	P0NuxapV0V/kS3pPSAltgmxGFK7Ryv4AjOPYH0oDAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -249,7 +249,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[sk.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
@@ -261,11 +261,11 @@ X-Spamd-Result: default: False [1.64 / 15.00];
  el.org,m:jack@suse.cz,m:jlayton@kernel.org,m:dan.j.williams@intel.com,m:hch@infradead.org,m:djwong@kernel.org,m:dri-devel@lists.freedesktop.org,m:rodrigosiqueiramelo@gmail.com,m:melissa.srw@gmail.com,m:hamohammed.sa@gmail.com,m:harry.yoo@oracle.com,m:chris.p.wilson@intel.com,m:gwan-gyeong.mun@intel.com,m:boqun.feng@gmail.com,m:longman@redhat.com,m:yunseong.kim@ericsson.com,m:ysk@kzalloc.com,m:yeoreum.yun@arm.com,m:netdev@vger.kernel.org,m:matthew.brost@intel.com,m:her0gyugyu@gmail.com,m:corbet@lwn.net,m:catalin.marinas@arm.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:luto@kernel.org,m:sumit.semwal@linaro.org,m:gustavo@padovan.org,m:christian.koenig@amd.com,m:andi.shyti@kernel.org,m:arnd@arndb.de,m:lorenzo.stoakes@oracle.com,m:Liam.Howlett@oracle.com,m:rppt@kernel.org,m:surenb@google.com,m:mcgrof@kernel.org,m:petr.pavlu@suse.com,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:paulmck@kernel.org,m:frederic@kernel.org,m:neeraj.upadhyay@kernel.org,m:joelagnelf@nvidia.com,m:jo
  sh@joshtriplett.org,m:urezki@gmail.com,m:mathieu.desnoyers@efficios.com,m:jiangshanlai@gmail.com,m:qiang.zhang@linux.dev,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[byungchul@sk.com,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-23055-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23053-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -277,234 +277,235 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[165];
 	TAGGED_RCPT(0.00)[linux-nfs,renesas];
 	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sk.com:from_mime,sk.com:email,sk.com:mid,kzalloc.com:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sk.com:from_mime,sk.com:email,sk.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 186E870D48A
+X-Rspamd-Queue-Id: 5FDC170D44A
 
-From: Yunseong Kim <ysk@kzalloc.com>
+False positive reports have been observed since dept assumes that all
+the pages have the same dept class, but the class should be split since
+the call paths are different depending on what the page is used for.
 
-The current implementation shares the same dept key for multiple
-synchronization points, which can lead to false positive reports in
-dependency tracking and potential confusion in debugging.  For example,
-both normal RCU and tasks trace RCU synchronization points use the same
-dept key.  Specifically:
+At least, ones for block device and ones for regular file have
+exclusively different usages.
 
-   1. synchronize_rcu() uses a dept key embedded in __wait_rcu_gp():
+Define usage candidates like:
 
-      synchronize_rcu()
-         synchronize_rcu_normal()
-            _wait_rcu_gp()
-               __wait_rcu_gp() <- the key as static variable
+   DEPT_PAGE_REGFILE_CACHE /* page in regular file's address_space */
+   DEPT_PAGE_BDEV_CACHE    /* page in block device's address_space */
+   DEPT_PAGE_DEFAULT       /* the others */
 
-   2. synchronize_rcu_tasks_trace() uses the dept key, too:
+Introduce APIs to set each page usage properly and make sure not to
+interact between DEPT_PAGE_REGFILE_CACHE and DEPT_PAGE_BDEV_CACHE.
+Besides that, it allows the other cases:
 
-      synchronize_rcu_tasks_trace()
-         synchronize_rcu_tasks_generic()
-            _wait_rcu_gp()
-               __wait_rcu_gp() <- the key as static variable
+   interaction between DEPT_PAGE_DEFAULT and DEPT_PAGE_REGFILE_CACHE,
+   interaction between DEPT_PAGE_DEFAULT and DEPT_PAGE_BDEV_CACHE,
+   interaction between DEPT_PAGE_DEFAULT and DEPT_PAGE_DEFAULT.
 
-Since the both rely on the same dept key, dept may report false positive
-circular dependency.  To resolve this, separate dept keys and maps
-should be assigned to each struct rcu_synchronize.
-
-   ===================================================
-   DEPT: Circular dependency has been detected.
-   6.15.0-rc6-00042-ged94bafc6405 #2 Not tainted
-   ---------------------------------------------------
-   summary
-   ---------------------------------------------------
-   *** DEADLOCK ***
-
-   context A
-      [S] lock(cpu_hotplug_lock:0)
-      [W] __wait_rcu_gp(<sched>:0)
-      [E] unlock(cpu_hotplug_lock:0)
-
-   context B
-      [S] (unknown)(<sched>:0)
-      [W] lock(cpu_hotplug_lock:0)
-      [E] try_to_wake_up(<sched>:0)
-
-   [S]: start of the event context
-   [W]: the wait blocked
-   [E]: the event not reachable
-   ---------------------------------------------------
-   context A's detail
-   ---------------------------------------------------
-   context A
-      [S] lock(cpu_hotplug_lock:0)
-      [W] __wait_rcu_gp(<sched>:0)
-      [E] unlock(cpu_hotplug_lock:0)
-
-   [S] lock(cpu_hotplug_lock:0):
-   [<ffff8000802ce964>] cpus_read_lock+0x14/0x20
-   stacktrace:
-         percpu_down_read.constprop.0+0x88/0x2ec
-         cpus_read_lock+0x14/0x20
-         cgroup_procs_write_start+0x164/0x634
-         __cgroup_procs_write+0xdc/0x4d0
-         cgroup_procs_write+0x34/0x74
-         cgroup_file_write+0x25c/0x670
-         kernfs_fop_write_iter+0x2ec/0x498
-         vfs_write+0x574/0xc30
-         ksys_write+0x124/0x244
-         __arm64_sys_write+0x70/0xa4
-         invoke_syscall+0x88/0x2e0
-         el0_svc_common.constprop.0+0xe8/0x2e0
-         do_el0_svc+0x44/0x60
-         el0_svc+0x50/0x188
-         el0t_64_sync_handler+0x10c/0x140
-         el0t_64_sync+0x198/0x19c
-
-   [W] __wait_rcu_gp(<sched>:0):
-   [<ffff8000804ce88c>] __wait_rcu_gp+0x324/0x498
-   stacktrace:
-         schedule+0xcc/0x348
-         schedule_timeout+0x1a4/0x268
-         __wait_for_common+0x1c4/0x3f0
-         __wait_for_completion_state+0x20/0x38
-         __wait_rcu_gp+0x35c/0x498
-         synchronize_rcu_normal+0x200/0x218
-         synchronize_rcu+0x234/0x2a0
-         rcu_sync_enter+0x11c/0x300
-         percpu_down_write+0xb4/0x3e0
-         cgroup_procs_write_start+0x174/0x634
-         __cgroup_procs_write+0xdc/0x4d0
-         cgroup_procs_write+0x34/0x74
-         cgroup_file_write+0x25c/0x670
-         kernfs_fop_write_iter+0x2ec/0x498
-         vfs_write+0x574/0xc30
-         ksys_write+0x124/0x244
-
-   [E] unlock(cpu_hotplug_lock:0):
-   (N/A)
-   ---------------------------------------------------
-   context B's detail
-   ---------------------------------------------------
-   context B
-      [S] (unknown)(<sched>:0)
-      [W] lock(cpu_hotplug_lock:0)
-      [E] try_to_wake_up(<sched>:0)
-
-   [S] (unknown)(<sched>:0):
-   (N/A)
-
-   [W] lock(cpu_hotplug_lock:0):
-   [<ffff8000802ce964>] cpus_read_lock+0x14/0x20
-   stacktrace:
-         percpu_down_read.constprop.0+0x6c/0x2ec
-         cpus_read_lock+0x14/0x20
-         check_all_holdout_tasks_trace+0x90/0xa30
-         rcu_tasks_wait_gp+0x47c/0x938
-         rcu_tasks_one_gp+0x75c/0xef8
-         rcu_tasks_kthread+0x180/0x1dc
-         kthread+0x3ac/0x74c
-         ret_from_fork+0x10/0x20
-
-   [E] try_to_wake_up(<sched>:0):
-   [<ffff8000804233b8>] complete+0xb8/0x1e8
-   stacktrace:
-         try_to_wake_up+0x374/0x1164
-         complete+0xb8/0x1e8
-         wakeme_after_rcu+0x14/0x20
-         rcu_tasks_invoke_cbs+0x218/0xaa8
-         rcu_tasks_one_gp+0x834/0xef8
-         rcu_tasks_kthread+0x180/0x1dc
-         kthread+0x3ac/0x74c
-         ret_from_fork+0x10/0x20
-   (wait to wake up)
-   stacktrace:
-         __schedule+0xf64/0x3614
-         schedule+0xcc/0x348
-         schedule_timeout+0x1a4/0x268
-         __wait_for_common+0x1c4/0x3f0
-         __wait_for_completion_state+0x20/0x38
-         __wait_rcu_gp+0x35c/0x498
-         synchronize_rcu_tasks_generic+0x14c/0x220
-         synchronize_rcu_tasks_trace+0x24/0x8c
-         rcu_init_tasks_generic+0x168/0x194
-         do_one_initcall+0x174/0xa00
-         kernel_init_freeable+0x744/0x7dc
-         kernel_init+0x78/0x220
-         ret_from_fork+0x10/0x20
-
-Separating the dept key and map for each of struct rcu_synchronize,
-ensuring proper tracking for each execution context.
-
-Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
-[ Rewrote the changelog. ]
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/rcupdate_wait.h | 13 ++++++++-----
- kernel/rcu/rcu.h              |  1 +
- kernel/rcu/update.c           |  5 +++--
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ include/linux/dept.h       | 34 ++++++++++++++-
+ include/linux/mm_types.h   |  1 +
+ include/linux/page-flags.h | 89 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 120 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rcupdate_wait.h b/include/linux/rcupdate_wait.h
-index 4c92d4291cce..ee598e70b4bc 100644
---- a/include/linux/rcupdate_wait.h
-+++ b/include/linux/rcupdate_wait.h
-@@ -19,17 +19,20 @@ struct rcu_synchronize {
+diff --git a/include/linux/dept.h b/include/linux/dept.h
+index 236e57befb13..3b8faf5f04cf 100644
+--- a/include/linux/dept.h
++++ b/include/linux/dept.h
+@@ -19,8 +19,8 @@ struct task_struct;
+ #define DEPT_MAX_WAIT_HIST		64
+ #define DEPT_MAX_ECXT_HELD		48
  
- 	/* This is for debugging. */
- 	struct rcu_gp_oldstate oldstate;
-+	struct dept_map dmap;
-+	struct dept_key dkey;
+-#define DEPT_MAX_SUBCLASSES		16
+-#define DEPT_MAX_SUBCLASSES_EVT		2
++#define DEPT_MAX_SUBCLASSES		24
++#define DEPT_MAX_SUBCLASSES_EVT		3
+ #define DEPT_MAX_SUBCLASSES_USR		(DEPT_MAX_SUBCLASSES / DEPT_MAX_SUBCLASSES_EVT)
+ #define DEPT_MAX_SUBCLASSES_CACHE	2
+ 
+@@ -142,6 +142,35 @@ struct dept_ext_wgen {
+ 	unsigned int wgen;
  };
- void wakeme_after_rcu(struct rcu_head *head);
  
- void __wait_rcu_gp(bool checktiny, unsigned int state, int n, call_rcu_func_t *crcu_array,
--		   struct rcu_synchronize *rs_array);
-+		   struct rcu_synchronize *rs_array, struct dept_key *dkey);
++enum {
++	DEPT_PAGE_DEFAULT = 0,
++	DEPT_PAGE_REGFILE_CACHE,	/* regular file page cache */
++	DEPT_PAGE_BDEV_CACHE,		/* block device cache */
++	DEPT_PAGE_USAGE_NR,		/* nr of usages options */
++};
++
++#define DEPT_PAGE_USAGE_SHIFT 16
++#define DEPT_PAGE_USAGE_MASK ((1U << DEPT_PAGE_USAGE_SHIFT) - 1)
++#define DEPT_PAGE_USAGE_PENDING_MASK (DEPT_PAGE_USAGE_MASK << DEPT_PAGE_USAGE_SHIFT)
++
++/*
++ * Identify each page's usage type
++ */
++struct dept_page_usage {
++	/*
++	 * low 16 bits  : the current usage type
++	 * high 16 bits : usage type requested to be set
++	 *
++	 * Do not apply usage type on request immediately but postpone
++	 * it until the next use of PG flags.  For example, if the page
++	 * is already within a PG_locked critical section, regard it as
++	 * DEPT_PAGE_DEFAULT temporarily at least until the section ends
++	 * e.g. folio_unlock() since it's still unclear which usage type
++	 * the page acts within the section.
++	 */
++	atomic_t type; /* Update and read atomically */
++};
++
+ void dept_stop_emerg(void);
+ void dept_on(void);
+ void dept_off(void);
+@@ -192,6 +221,7 @@ void dept_hardirqs_off(void);
+ struct dept_key { };
+ struct dept_map { };
+ struct dept_ext_wgen { };
++struct dept_page_usage { };
  
- #define _wait_rcu_gp(checktiny, state, ...) \
--do {												\
--	call_rcu_func_t __crcu_array[] = { __VA_ARGS__ };					\
--	struct rcu_synchronize __rs_array[ARRAY_SIZE(__crcu_array)];				\
--	__wait_rcu_gp(checktiny, state, ARRAY_SIZE(__crcu_array), __crcu_array, __rs_array);	\
-+do {													\
-+	call_rcu_func_t __crcu_array[] = { __VA_ARGS__ };						\
-+	static struct dept_key __key;									\
-+	struct rcu_synchronize __rs_array[ARRAY_SIZE(__crcu_array)];					\
-+	__wait_rcu_gp(checktiny, state, ARRAY_SIZE(__crcu_array), __crcu_array, __rs_array, &__key);	\
- } while (0)
+ #define DEPT_MAP_INITIALIZER(n, k) { }
  
- #define wait_rcu_gp(...) _wait_rcu_gp(false, TASK_UNINTERRUPTIBLE, __VA_ARGS__)
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index 9b10b57b79ad..d30dfc345532 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -12,6 +12,7 @@
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 5b3f54ee0d38..e25d09f3dfa9 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -220,6 +220,7 @@ struct page {
+ 	struct page *kmsan_shadow;
+ 	struct page *kmsan_origin;
+ #endif
++	struct dept_page_usage usage;
+ 	struct dept_ext_wgen pg_locked_wgen;
+ } _struct_page_alignment;
  
- #include <linux/slab.h>
- #include <trace/events/rcu.h>
-+#include <linux/dept_sdt.h>
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 8ab39823ea31..0b0655354b08 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -204,6 +204,80 @@ enum pageflags {
  
+ extern struct dept_map pg_locked_map;
+ 
++static inline void dept_set_page_usage(struct page *p,
++		unsigned int new_type)
++{
++	/*
++	 * Consider the page as DEPT_PAGE_DEFAULT until the next use of
++	 * PG flags e.g. folio_lock().
++	 */
++	unsigned int type = DEPT_PAGE_DEFAULT;
++
++	if (WARN_ON_ONCE(new_type >= DEPT_PAGE_USAGE_NR))
++		return;
++
++	new_type <<= DEPT_PAGE_USAGE_SHIFT;
++	new_type |= type & DEPT_PAGE_USAGE_MASK;
++	atomic_set(&p->usage.type, new_type);
++}
++
++static inline void dept_set_folio_usage(struct folio *f,
++		unsigned int new_type)
++{
++	dept_set_page_usage(&f->page, new_type);
++}
++
++static inline void dept_reset_page_usage(struct page *p)
++{
++	dept_set_page_usage(p, DEPT_PAGE_DEFAULT);
++}
++
++static inline void dept_reset_folio_usage(struct folio *f)
++{
++	dept_reset_page_usage(&f->page);
++}
++
++static inline void dept_update_page_usage(struct page *p)
++{
++	unsigned int type = atomic_read(&p->usage.type);
++	unsigned int new_type;
++
++retry:
++	new_type = type & DEPT_PAGE_USAGE_PENDING_MASK;
++	new_type >>= DEPT_PAGE_USAGE_SHIFT;
++	new_type |= type & DEPT_PAGE_USAGE_PENDING_MASK;
++
++	/*
++	 * Already updated by others.
++	 */
++	if (type == new_type)
++		return;
++
++	if (!atomic_try_cmpxchg(&p->usage.type, &type, new_type))
++		goto retry;
++}
++
++static inline unsigned long dept_event_flags(struct page *p, bool wait)
++{
++	unsigned int type;
++
++	type = atomic_read(&p->usage.type) & DEPT_PAGE_USAGE_MASK;
++
++	if (WARN_ON_ONCE(type >= DEPT_PAGE_USAGE_NR))
++		return 0;
++
++	/*
++	 * wait
++	 */
++	if (wait)
++		return (1UL << DEPT_PAGE_DEFAULT) | (1UL << type);
++
++	/*
++	 * event
++	 */
++	return 1UL << type;
++}
++
  /*
-  * Grace-period counter management.
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index d98a5c38e19c..c2858650ccf5 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -409,7 +409,7 @@ void wakeme_after_rcu(struct rcu_head *head)
- EXPORT_SYMBOL_GPL(wakeme_after_rcu);
+  * Place the following annotations in its suitable point in code:
+  *
+@@ -214,20 +288,29 @@ extern struct dept_map pg_locked_map;
  
- void __wait_rcu_gp(bool checktiny, unsigned int state, int n, call_rcu_func_t *crcu_array,
--		   struct rcu_synchronize *rs_array)
-+		   struct rcu_synchronize *rs_array, struct dept_key *dkey)
+ static inline void dept_page_set_bit(struct page *p, int bit_nr)
  {
- 	int i;
- 	int j;
-@@ -426,7 +426,8 @@ void __wait_rcu_gp(bool checktiny, unsigned int state, int n, call_rcu_func_t *c
- 				break;
- 		if (j == i) {
- 			init_rcu_head_on_stack(&rs_array[i].head);
--			init_completion(&rs_array[i].completion);
-+			sdt_map_init_key(&rs_array[i].dmap, dkey);
-+			init_completion_dmap(&rs_array[i].completion, &rs_array[i].dmap);
- 			(crcu_array[i])(&rs_array[i].head, wakeme_after_rcu);
- 		}
- 	}
++	dept_update_page_usage(p);
++
+ 	if (bit_nr == PG_locked)
+ 		dept_request_event(&pg_locked_map, &p->pg_locked_wgen);
+ }
+ 
+ static inline void dept_page_clear_bit(struct page *p, int bit_nr)
+ {
++	unsigned long evt_f = dept_event_flags(p, false);
++
+ 	if (bit_nr == PG_locked)
+-		dept_event(&pg_locked_map, 1UL, _RET_IP_, __func__, &p->pg_locked_wgen);
++		dept_event(&pg_locked_map, evt_f, _RET_IP_, __func__, &p->pg_locked_wgen);
+ }
+ 
+ static inline void dept_page_wait_on_bit(struct page *p, int bit_nr)
+ {
++	unsigned long evt_f;
++
++	dept_update_page_usage(p);
++	evt_f = dept_event_flags(p, true);
++
+ 	if (bit_nr == PG_locked)
+-		dept_wait(&pg_locked_map, 1UL, _RET_IP_, __func__, 0, -1L);
++		dept_wait(&pg_locked_map, evt_f, _RET_IP_, __func__, 0, -1L);
+ }
+ 
+ static inline void dept_folio_set_bit(struct folio *f, int bit_nr)
+@@ -245,6 +328,8 @@ static inline void dept_folio_wait_on_bit(struct folio *f, int bit_nr)
+ 	dept_page_wait_on_bit(&f->page, bit_nr);
+ }
+ #else
++#define dept_set_page_usage(p, t)		do { } while (0)
++#define dept_reset_page_usage(p)		do { } while (0)
+ #define dept_page_set_bit(p, bit_nr)		do { } while (0)
+ #define dept_page_clear_bit(p, bit_nr)		do { } while (0)
+ #define dept_page_wait_on_bit(p, bit_nr)	do { } while (0)
 -- 
 2.17.1
 
