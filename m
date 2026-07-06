@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-23026-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23025-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QJcrFytKS2rxOgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23026-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:24:43 +0200
+	id +hOkOvpJS2rhOgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23025-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:23:54 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE01C70CEC0
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:24:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC1B70CE86
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:23:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=sk.com (policy=none);
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23026-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23026-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23025-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23025-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5AC58300C0E9
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 06:23:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EEB6830277BD
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 06:23:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F0843D6CC6;
-	Mon,  6 Jul 2026 06:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B536C3D4129;
+	Mon,  6 Jul 2026 06:20:01 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D73423CE084;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B483CDBC0;
 	Mon,  6 Jul 2026 06:19:55 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783318805; cv=none; b=m02gOwuZqNlpC2cfng0ptsDmjwmxiKc+K+zcTgjZ07/58U6B7UqGwjnrl7kKHP4L5mEgzKLscmG5bbc7oCq8aq+9U7//T/PvoC8ArpgcaEqSRDYR4csQqLzlqTAiGDVQk+yCCL8wFJQtquO2sRV/q45V77JpMdv1sgnbikF+G64=
+	t=1783318801; cv=none; b=sxV/Cv8arXii8AceHcAI6jahqDM5LwGwVtOEqCehM0+E8PYkDc2hGHmZjo0XBT/wi2ZSM0KeKzDaa2vZxWwJRosQ/Lq/jzZJhQK95m16SUHQjDmHUEgj6VssdgXbG7yi5eGOisixdgzF9whRekUthnqkebRHRd4OYzVcZsYXB3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783318805; c=relaxed/simple;
-	bh=Bw+5Ne6spVWh6PrS9oguNhBplYyIHw1zmMdPFF5IdTU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=EmOEZYL572n5f8FTqRys3pqFqKip+7YiLmVN2/0IrxIJNhYWx/xKuyL6REbmBRYnj6mhXquL4edYrGht2hcLtCXSP6RzSp7PupJtkM2kmhdfTjl0D1QTuR1LkDA2MpxwS5K4prKC9Fz2VXMvXBtjis2vydwH2hHXsPbzUkAW+WU=
+	s=arc-20240116; t=1783318801; c=relaxed/simple;
+	bh=+s2j6yLA5HaibzGG0ZuVEzuWRMuvaCcwfUG0le5o9Bw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=bzSpIJW72Np3xLC5rV+Tw0VWxKwgTw3CRAUuJ6fKqquBCSH+CEr5UQ7yizy09dagpbZvys4Y4BQo7xyfs1Enlq4cNwHKL62kbCFYilRhsohWHOm/PqybKVhKBsRIMlPwVGGHy2RSUMpTgaMk3sQTsTmIyd1hNPgNfptwDJw1cis=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-X-AuditID: a67dfc5b-c45ff70000001609-f0-6a4b48fce368
+X-AuditID: a67dfc5b-c2dff70000001609-0f-6a4b48fc473d
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: max.byungchul.park@gmail.com,
@@ -198,45 +198,45 @@ Cc: max.byungchul.park@gmail.com,
 	aliceryhl@google.com,
 	tmgross@umich.edu,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v19 06/40] dept: distinguish each kernel context from another
-Date: Mon,  6 Jul 2026 15:18:54 +0900
-Message-Id: <20260706061928.66713-7-byungchul@sk.com>
+Subject: [PATCH v19 07/40] dept: distinguish each work from another
+Date: Mon,  6 Jul 2026 15:18:55 +0900
+Message-Id: <20260706061928.66713-8-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20260706061928.66713-1-byungchul@sk.com>
 References: <20260706061928.66713-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbUxTZxTHfe597ks7ai7VzItGMY2CcRGmcctJROKX6ROMi86Y+Bpsxo0t
-	b7oWOlmm1jENICqTFCIVx4vUCkWxTBBCN4bC1kALzAUqsMEcVstLWRrBKAijEL+c/HL+v3M+
-	/Xla2cus5LWpaZIuVZ2sYuVYPh5SummW7E78+FZPCGRdOAcDg8MM9JxvxvDOXM/B4GQWgtfT
-	ZhouNMxhePWmn4M5RxsCT9cvNBT6zmMo8po58LXugt6pMQSW4VkK3hUkwbSrc14wdSEI+IYQ
-	PM97QMOT4aXgNF1iYbz7BgUl3zkY6O4YRVBsvobA2+egILP8HgsFxXYMDUONHHSPzlBQZd8D
-	gxYvhva8MgoK7q8Ac2EmNT9eUtBRPoDBYlwPz6xFHLRVveDg7ngnA/XGIQ7sT1sR2HK9NDj6
-	PoLrNwdYaHI4MbQ9fEZBbs0DBv62zTFgNL9moKu5nYH2tt8xOIvuYOh3XeWgs7GagYrebgpq
-	XR00TF1ZBZ685wiq/WUs5Pu9CJ4WjnE7EkhlbR1FbDdtiLyqyKTJo7EJmlS0j7HkVvZbivzg
-	2kQaiv7iSIk9ndRaN5LyJh9FSgOTDLFXZrPEHrjGkYGeJpb43W5ub+RheUyClKw1SLro2ONy
-	zRXfh6eyD51uzTdhI2rcmYN4XhS2iiNmTQ6SLeDjygk2yKwQKXo8b+ggLxfWirWXvUwOkvO0
-	8CRczLVcxsFgmbBHHPnvZxRkLKwXy0ZtCwcK4ROx/yc/u/g0XKyqaV7Yy4RPxbszxVSQlUFn
-	4je86JTLxDt/xC1ymPir1YPzkKIELalESm2qIUWtTd4apclI1Z6O+vJkih3N181yZubIQxTo
-	2t+CBB6pQhSwIy5RyagN+oyUFiTytGq5ImLD7kSlIkGd8Y2kOxmvS0+W9C1oFY9VKxRbpr5O
-	UAon1GlSkiSdknTvU4qXrTQilXgmRajzG85e/JOrsfZapqPlafGh/+6LMk2W5h9csnSv5oN9
-	rvokw4nQyENxEdf7Rh7pZ5elfxvjdGwJcxz9LDZ9e4vTus6d/8XnvD5WGZ9zQBZ69p/Vm931
-	pq9+DDsWHr02fI39qqPO9bJ17vusiMdHkxTHx2OPNBe7A8xtunpbjArrNerNG2mdXv0/Sh//
-	dGoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSWUwTcRDG/e9ut0u1ZlOJrPAANirEKN5mosaoibJKNL6IURO16kYKpZBW
-	ETyigI0FrYFqi1JBBKlaKkcBtZgqoOJJuFQIp0dFK0cJUgxQwFbjy+Q3833fZB6GwkUPef6U
-	VH6MU8glMjEpIAQ71qYsdrPhUUvbSgNBrToLHd12HnxMqiLANawm4EaxmYQJw0M+qC3XefCq
-	JZmAhqJCBN0uNYLf4wYcVNYpAia0tXwYHm3ngy4JwZStFoG+UYtDa8NTHMzlSRj8KpkkoffZ
-	EALdZzsJmY4kApzGSwiyegx8cLwIg/7uxzyY6vyOQctIHwKjfRIDe9UFBBP6aLiZV+aJ6wdJ
-	GK+rxyFT14Dg1udOHIYcnxCU13YhsN1NJuFbegUOzfaZ8N7lJOG17iIJ/Y03MBgoISE32caD
-	xne9CLINWgQ9bTYMUvKLSdBnWwiwfqrkQ2OvG4MOvRaDQst26Db2EPA2PQ/znOtxlfqBITMF
-	85QfGOjuP8Zg1GjibyhA7G/VZYI1lT3AWFXTBMmac8yIHR/TIna4IAVnVeme9lmfE2fPl51g
-	C972keyY6wPJ2kZyCfZNHsPeTh3D2Iy6xaw1q5O/c+NewbojnEwazymWrD8oiLzsmB2Xuifh
-	xRUdcQ5VbklDPhRDr2Sem5ykl0k6mGltHcW97EsHMWWaHl4aElA43RzIXDJqCK8wi97O/Bx8
-	grxM0POZvF7z34CQXsW0lw+Q/5YGMoUlVX/nPvRqpsidjXlZ5PU4XxLpSJCLppmQr1QeHyOR
-	ylaFKqMjE+XShNDDsTEW5Hkn4xl3xiM03BxWg2gKiWcIYcO2KBFPEq9MjKlBDIWLfYULQsKj
-	RMIjksSTnCL2gOK4jFPWoACKEPsJt+3mDoroo5JjXDTHxXGK/ypG+fifQzn1+ju77oRe4xzF
-	83L2uzZV2AdWSFy5IZp3QebY98Hh8XWnwmaOdA0tl3csiFCvy7f+yGoaXXN10T486Oike06X
-	baxadyH2XvTmUFO/dsaVr1dLv/hV/9RkzJ0+bckeu9Mie2KtOF3hH+Gqjqg/pPCvZPrC7QHn
-	qa0fA11a7RZaIyaUkZJlC3GFUvIHD3HWhkoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbUxTZxTHee7Lc28rzW4uhF3rCLMpuml0uKA5UbeR7cNubJaYsGTJ+IA3
+	cjOKULAoA6MJvoDKoJqx0imiFbpSebFaQpwKWlujgs6gg9qhLmBM1bRQrbTIm1vB+OXkl5z/
+	/5fz4bAkP0yrWb1hh2w0SIUarKSUY4nNq96KuoKM8VoF+Pa6KTjh7MAw13iBgcmZRhImph4y
+	4B+4SkLQG0FgHn2KIWyvRfAgFkJwqrkLQ7DhJYZexz4Mg9EwBuu+XhoCw70E7G9xYrg4comB
+	e8FZAtpd30Gj5TkB5s7LBEzZ2xiwV6bDE8dxBv6zFsPjI2YK+v710RAM/Bo3Dq+E09U2Co6d
+	fIShp7ePggH3bRr+eHCPgNERPw0x0xLoHG+OXxCzk/CPJRQXRsMMOF5Z4hcMVRNww5oCZ061
+	Iui+WoUgYotRcLPOTcDB55cxVNvOE3DdeYEAZ8BLgqvDh8EbDRFQf9+KoX+6n4BI01sazLOH
+	MDTuNSH4paqBgpk3JzCY7n4LTRNroHPOh7KyxI6THUisOhof3lCYFKejQ1i8ePwxI1pdO8Uu
+	xwqxpecFIZ6ORGlxOPiF6Go7jMWasUFCvPX7DCV6vIeQ+HTQEk9UmsnN6h+VG/PkQn2ZbPzs
+	yy3K/IG/rhAl40y5vaEdVaIeXIMUrMBlCnfdbuo937pjI+cZc8sFv39qgZO5j4WuugBdg5Qs
+	yf2dJtTa6xYKSdw3woSlHs0zxaULr/pNTA1iWRW3Vpi4Lr1zpgnt59wLHgW3Tjg720TMMx+P
+	PAzfpOadAudUCE5vN/OusFi45vBTR5HKihLaEK83lBVJ+sLM1fkVBn356q3FRS4U/zj7ntmc
+	P1FkINuDOBZpElWQtamAp6Wy0ooiDxJYUpOsWvaJroBX5UkVu2Rjca5xZ6Fc6kFLWErzoerz
+	2M95PPeTtEPeJsslsvH9lmAV6kq0SFt/INvBrtu1J6c6HUlJWa0j2q5UNa/UDoZ0gSOfrv++
+	xCBd2t0SS1Qv3c56Et6YJm2bV2aM0qGP2lLngknGoZwPZvZneFN9409SrvxWlXDjNZ+my+3T
+	LkXJuc82LP7qdYLOOpk5vSX/B+22lPLsM0mPuGWid+zsNP91a7ddpaFK86U1K0hjqfQ/ZF7q
+	W20DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUxTZxTGfd97e++lWnPXYbxBE02NbnMRNYo5U+NH9odvdCpLluwrRm/g
+	brTlQ1tEIVEppRFRDHZpiRaUMWkcLVCBqQwriIoINoKooIjVrFYJSBULBmjFotk/J7+T5zlP
+	nj8ORykvymI4dWq6pEsVk1WMnJZvW2NcEiJbNMuG8mMhz3QIHnt9MnhgaKJhJJhHQ3G1k4Gw
+	7SILeTUnZdDanUNDR5UDgXckD8G7CRsFpvpJGsLmFhaCY70sWAwIJt0tCKydZgp6OhopcNYZ
+	MLx1vWdg4NowAsszHwNF/QYaAvZjCE75bSz039gEr7wNMpjse4Ghe3QQgd33HoOv6TCCsFUL
+	Z8pqI+fW1wxMeO5QUGTpQPDnsz4KhvufIqhreYLAfS6HgeeF/1DQ5ZsJ90YCDNyyHGXgVWcx
+	hiEXA6U5bhl03h5AUGIzI/A/cmMw/lXNgLWkhob6p/+y0DkQwvDYasbgqNkKXrufhvbCMhyp
+	G3Gdnw22IiOOjJcYLJUNGMbsFeyGckTemY7TpKL2Aiamu2GGOE87EZkYNyMSLDdSxFQYWa8N
+	BiiSW7uPlLcPMmR85D5D3KOlNGkrE8jZI+OYnPAsIfWn+tj4jb/I1yZKyeoMSbd03S55Uofn
+	Ct49xO63Wx0oG11m8lEUJ/ArhdbbZ6kpZvgvhJ6esY8czc8Xagv8snwk5yi+a55wzF5ATwmf
+	898KwaI/0BTT/ELhTdtxNh9xnIKPE4LXxU+Z8wSHq+ljThS/SqgKleApVkYsvYGbdCGSl6Jp
+	FShanZqRIqqT42L12qTMVPX+2IS0lBoUeSf7gdCJSyjYtakZ8RxSzVDAhs0apUzM0GemNCOB
+	o1TRikVfbtEoFYliZpakS9up25ss6ZvRHI5WzVZs/lHapeR/F9MlrSTtlnT/q5iLislGXy/P
+	GcYrNLb4aTOSpv902Xl41rnWhIWDXd+8ERu1e7Pky67kan0FcRqq0pIQl0gMM3XsD59djakU
+	XLq5P3sOVtfVuxcvSsu+ef370HfFroZ4e/XYDa9nh7p7j+O3r7q3Z+WuzrjayK33BdJH/W29
+	Z249/G/BTu2v8j1V4QNrje3Rf6tofZK4fDGl04sfAI6fsMZKAwAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -261,7 +261,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
  el.org,m:jack@suse.cz,m:jlayton@kernel.org,m:dan.j.williams@intel.com,m:hch@infradead.org,m:djwong@kernel.org,m:dri-devel@lists.freedesktop.org,m:rodrigosiqueiramelo@gmail.com,m:melissa.srw@gmail.com,m:hamohammed.sa@gmail.com,m:harry.yoo@oracle.com,m:chris.p.wilson@intel.com,m:gwan-gyeong.mun@intel.com,m:boqun.feng@gmail.com,m:longman@redhat.com,m:yunseong.kim@ericsson.com,m:ysk@kzalloc.com,m:yeoreum.yun@arm.com,m:netdev@vger.kernel.org,m:matthew.brost@intel.com,m:her0gyugyu@gmail.com,m:corbet@lwn.net,m:catalin.marinas@arm.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:luto@kernel.org,m:sumit.semwal@linaro.org,m:gustavo@padovan.org,m:christian.koenig@amd.com,m:andi.shyti@kernel.org,m:arnd@arndb.de,m:lorenzo.stoakes@oracle.com,m:Liam.Howlett@oracle.com,m:rppt@kernel.org,m:surenb@google.com,m:mcgrof@kernel.org,m:petr.pavlu@suse.com,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:paulmck@kernel.org,m:frederic@kernel.org,m:neeraj.upadhyay@kernel.org,m:joelagnelf@nvidia.com,m:jo
  sh@joshtriplett.org,m:urezki@gmail.com,m:mathieu.desnoyers@efficios.com,m:jiangshanlai@gmail.com,m:qiang.zhang@linux.dev,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[byungchul@sk.com,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-23026-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23025-lists,linux-nfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -277,383 +277,42 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[165];
 	TAGGED_RCPT(0.00)[linux-nfs,renesas];
 	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sk.com:from_mime,sk.com:email,sk.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sk.com:from_mime,sk.com:email,sk.com:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EE01C70CEC0
+X-Rspamd-Queue-Id: CFC1B70CE86
 
-Each unique kernel context, in dept's point of view, should be
-identified on every entrance to kernel mode e.g. system call or user
-oriented fault.  Otherwise, dept may track meaningless dependencies
-across different kernel context.
+Workqueue already provides concurrency control.  By that, any wait in a
+work doesn't prevents events in other works with the control enabled.
+Thus, each work would better be considered a different context.
+
+So let dept assign a different context id to each work.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/dept.h              | 17 +++++---
- include/linux/irq-entry-common.h  |  4 ++
- include/linux/sched.h             | 10 ++---
- kernel/dependency/dept.c          | 67 ++++++++++++++++---------------
- kernel/dependency/dept_internal.h | 12 +++---
- 5 files changed, 61 insertions(+), 49 deletions(-)
+ kernel/workqueue.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/dept.h b/include/linux/dept.h
-index b1c55305be17..0b012d3799f2 100644
---- a/include/linux/dept.h
-+++ b/include/linux/dept.h
-@@ -24,11 +24,16 @@ struct task_struct;
- #define DEPT_MAX_SUBCLASSES_USR		(DEPT_MAX_SUBCLASSES / DEPT_MAX_SUBCLASSES_EVT)
- #define DEPT_MAX_SUBCLASSES_CACHE	2
- 
--#define DEPT_SIRQ			0
--#define DEPT_HIRQ			1
--#define DEPT_IRQS_NR			2
--#define DEPT_SIRQF			(1UL << DEPT_SIRQ)
--#define DEPT_HIRQF			(1UL << DEPT_HIRQ)
-+enum {
-+	DEPT_CXT_SIRQ = 0,
-+	DEPT_CXT_HIRQ,
-+	DEPT_CXT_IRQS_NR,
-+	DEPT_CXT_PROCESS = DEPT_CXT_IRQS_NR,
-+	DEPT_CXTS_NR
-+};
-+
-+#define DEPT_SIRQF			(1UL << DEPT_CXT_SIRQ)
-+#define DEPT_HIRQF			(1UL << DEPT_CXT_HIRQ)
- 
- struct dept_key {
- 	union {
-@@ -146,6 +151,7 @@ void dept_event(struct dept_map *m, unsigned long e_f, unsigned long ip, const c
- void dept_ecxt_exit(struct dept_map *m, unsigned long e_f, unsigned long ip);
- void dept_sched_enter(void);
- void dept_sched_exit(void);
-+void dept_update_cxt(void);
- 
- static inline void dept_ecxt_enter_nokeep(struct dept_map *m)
- {
-@@ -193,6 +199,7 @@ struct dept_map { };
- #define dept_ecxt_exit(m, e_f, ip)			do { } while (0)
- #define dept_sched_enter()				do { } while (0)
- #define dept_sched_exit()				do { } while (0)
-+#define dept_update_cxt()				do { } while (0)
- #define dept_ecxt_enter_nokeep(m)			do { } while (0)
- #define dept_key_init(k)				do { (void)(k); } while (0)
- #define dept_key_destroy(k)				do { (void)(k); } while (0)
-diff --git a/include/linux/irq-entry-common.h b/include/linux/irq-entry-common.h
-index d26d1b1bcbfb..37ef4f20bdc4 100644
---- a/include/linux/irq-entry-common.h
-+++ b/include/linux/irq-entry-common.h
-@@ -9,6 +9,7 @@
- #include <linux/syscalls.h>
- #include <linux/tick.h>
- #include <linux/unwind_deferred.h>
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index c6ea96d5b716..4a4075d0697c 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -55,6 +55,7 @@
+ #include <linux/kvm_para.h>
+ #include <linux/delay.h>
+ #include <linux/irq_work.h>
 +#include <linux/dept.h>
  
- #include <asm/entry-common.h>
+ #include "workqueue_internal.h"
  
-@@ -88,6 +89,9 @@ static __always_inline bool arch_in_rcu_eqs(void) { return false; }
-  */
- static __always_inline void enter_from_user_mode(struct pt_regs *regs)
- {
-+	/* Make dept work with a new context. */
+@@ -3204,6 +3205,8 @@ __acquires(&pool->lock)
+ 
+ 	lockdep_copy_map(&lockdep_map, &work->lockdep_map);
+ #endif
 +	dept_update_cxt();
 +
- 	arch_enter_from_user_mode(regs);
- 	lockdep_hardirqs_off(CALLER_ADDR0);
- 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 11c2efbf59b3..63360eb2301a 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -833,19 +833,19 @@ struct dept_task {
- 	int				wait_hist_pos;
- 
- 	/*
--	 * sequential id to identify each IRQ context
-+	 * sequential id to identify each context
- 	 */
--	unsigned int			irq_id[DEPT_IRQS_NR];
-+	unsigned int			cxt_id[DEPT_CXTS_NR];
- 
- 	/*
- 	 * for tracking IRQ-enabled points with cross-event
- 	 */
--	unsigned int			wgen_enirq[DEPT_IRQS_NR];
-+	unsigned int			wgen_enirq[DEPT_CXT_IRQS_NR];
- 
- 	/*
- 	 * for keeping up-to-date IRQ-enabled points
- 	 */
--	unsigned long			enirq_ip[DEPT_IRQS_NR];
-+	unsigned long			enirq_ip[DEPT_CXT_IRQS_NR];
- 
- 	/*
- 	 * for reserving a current stack instance at each operation
-@@ -899,7 +899,7 @@ struct dept_task {
- 	.wait_hist = { { .wait = NULL, } },			\
- 	.ecxt_held_pos = 0,					\
- 	.wait_hist_pos = 0,					\
--	.irq_id = { 0U },					\
-+	.cxt_id = { 0U },					\
- 	.wgen_enirq = { 0U },					\
- 	.enirq_ip = { 0UL },					\
- 	.stack = NULL,						\
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index fd091ae28ae2..1c4de1b55730 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -230,9 +230,9 @@ static struct dept_class *dep_tc(struct dept_dep *d)
- 
- static const char *irq_str(int irq)
- {
--	if (irq == DEPT_SIRQ)
-+	if (irq == DEPT_CXT_SIRQ)
- 		return "softirq";
--	if (irq == DEPT_HIRQ)
-+	if (irq == DEPT_CXT_HIRQ)
- 		return "hardirq";
- 	return "(unknown)";
- }
-@@ -410,7 +410,7 @@ static void initialize_class(struct dept_class *c)
- {
- 	int i;
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++) {
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++) {
- 		struct dept_iecxt *ie = &c->iecxt[i];
- 		struct dept_iwait *iw = &c->iwait[i];
- 
-@@ -436,7 +436,7 @@ static void initialize_ecxt(struct dept_ecxt *e)
- {
- 	int i;
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++) {
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++) {
- 		e->enirq_stack[i] = NULL;
- 		e->enirq_ip[i] = 0UL;
- 	}
-@@ -452,7 +452,7 @@ static void initialize_wait(struct dept_wait *w)
- {
- 	int i;
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++) {
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++) {
- 		w->irq_stack[i] = NULL;
- 		w->irq_ip[i] = 0UL;
- 	}
-@@ -491,7 +491,7 @@ static void destroy_ecxt(struct dept_ecxt *e)
- {
- 	int i;
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++)
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++)
- 		if (e->enirq_stack[i])
- 			put_stack(e->enirq_stack[i]);
- 	if (e->class)
-@@ -507,7 +507,7 @@ static void destroy_wait(struct dept_wait *w)
- {
- 	int i;
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++)
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++)
- 		if (w->irq_stack[i])
- 			put_stack(w->irq_stack[i]);
- 	if (w->class)
-@@ -665,7 +665,7 @@ static void print_diagram(struct dept_dep *d)
- 	const char *tc_n = tc->sched_map ? "<sched>" : (tc->name ?: "(unknown)");
- 
- 	irqf = e->enirqf & w->irqf;
--	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR) {
-+	for_each_set_bit(irq, &irqf, DEPT_CXT_IRQS_NR) {
- 		if (!firstline)
- 			pr_warn("\nor\n\n");
- 		firstline = false;
-@@ -698,7 +698,7 @@ static void print_dep(struct dept_dep *d)
- 	const char *tc_n = tc->sched_map ? "<sched>" : (tc->name ?: "(unknown)");
- 
- 	irqf = e->enirqf & w->irqf;
--	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR) {
-+	for_each_set_bit(irq, &irqf, DEPT_CXT_IRQS_NR) {
- 		pr_warn("%s has been enabled:\n", irq_str(irq));
- 		print_ip_stack(e->enirq_ip[irq], e->enirq_stack[irq]);
- 		pr_warn("\n");
-@@ -866,7 +866,7 @@ static void bfs(void *root, struct bfs_ops *ops, void *in, void **out)
-  */
- 
- static unsigned long cur_enirqf(void);
--static int cur_irq(void);
-+static int cur_cxt(void);
- static unsigned int cur_ctxt_id(void);
- 
- static struct dept_iecxt *iecxt(struct dept_class *c, int irq)
-@@ -1443,7 +1443,7 @@ static void add_dep(struct dept_ecxt *e, struct dept_wait *w)
- 	if (d) {
- 		check_dl_bfs(d);
- 
--		for (i = 0; i < DEPT_IRQS_NR; i++) {
-+		for (i = 0; i < DEPT_CXT_IRQS_NR; i++) {
- 			struct dept_iwait *fiw = iwait(fc, i);
- 			struct dept_iecxt *found_ie;
- 			struct dept_iwait *found_iw;
-@@ -1487,7 +1487,7 @@ static void add_wait(struct dept_class *c, unsigned long ip,
- 	struct dept_task *dt = dept_task();
- 	struct dept_wait *w;
- 	unsigned int wg;
--	int irq;
-+	int cxt;
- 	int i;
- 
- 	if (DEPT_WARN_ON(!valid_class(c)))
-@@ -1503,9 +1503,9 @@ static void add_wait(struct dept_class *c, unsigned long ip,
- 	w->wait_stack = get_current_stack();
- 	w->sched_sleep = sched_sleep;
- 
--	irq = cur_irq();
--	if (irq < DEPT_IRQS_NR)
--		add_iwait(c, irq, w);
-+	cxt = cur_cxt();
-+	if (cxt == DEPT_CXT_HIRQ || cxt == DEPT_CXT_SIRQ)
-+		add_iwait(c, cxt, w);
- 
- 	/*
- 	 * Avoid adding dependency between user aware nested ecxt and
-@@ -1579,7 +1579,7 @@ static struct dept_ecxt_held *add_ecxt(struct dept_map *m,
- 	eh->sub_l = sub_l;
- 
- 	irqf = cur_enirqf();
--	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR)
-+	for_each_set_bit(irq, &irqf, DEPT_CXT_IRQS_NR)
- 		add_iecxt(c, irq, e, false);
- 
- 	del_ecxt(e);
-@@ -1728,7 +1728,7 @@ static void do_event(struct dept_map *m, struct dept_map *real_m,
- 			add_dep(eh->ecxt, wh->wait);
- 	}
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++) {
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++) {
- 		struct dept_ecxt *e;
- 
- 		if (before(dt->wgen_enirq[i], wg))
-@@ -1775,7 +1775,7 @@ static void disconnect_class(struct dept_class *c)
- 		call_rcu(&d->rh, del_dep_rcu);
- 	}
- 
--	for (i = 0; i < DEPT_IRQS_NR; i++) {
-+	for (i = 0; i < DEPT_CXT_IRQS_NR; i++) {
- 		stale_iecxt(iecxt(c, i));
- 		stale_iwait(iwait(c, i));
- 	}
-@@ -1800,27 +1800,21 @@ static unsigned long cur_enirqf(void)
- 	return 0UL;
- }
- 
--static int cur_irq(void)
-+static int cur_cxt(void)
- {
- 	if (lockdep_softirq_context(current))
--		return DEPT_SIRQ;
-+		return DEPT_CXT_SIRQ;
- 	if (lockdep_hardirq_context())
--		return DEPT_HIRQ;
--	return DEPT_IRQS_NR;
-+		return DEPT_CXT_HIRQ;
-+	return DEPT_CXT_PROCESS;
- }
- 
- static unsigned int cur_ctxt_id(void)
- {
- 	struct dept_task *dt = dept_task();
--	int irq = cur_irq();
-+	int cxt = cur_cxt();
- 
--	/*
--	 * Normal process context
--	 */
--	if (irq == DEPT_IRQS_NR)
--		return 0U;
--
--	return dt->irq_id[irq] | (1UL << irq);
-+	return dt->cxt_id[cxt] | (1UL << cxt);
- }
- 
- static void enirq_transition(int irq)
-@@ -1877,7 +1871,7 @@ static void dept_enirq(unsigned long ip)
- 
- 	flags = dept_enter();
- 
--	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR) {
-+	for_each_set_bit(irq, &irqf, DEPT_CXT_IRQS_NR) {
- 		dt->enirq_ip[irq] = ip;
- 		enirq_transition(irq);
- 	}
-@@ -1923,6 +1917,13 @@ void noinstr dept_hardirqs_off(void)
- 	dept_task()->hardirqs_enabled = false;
- }
- 
-+void noinstr dept_update_cxt(void)
-+{
-+	struct dept_task *dt = dept_task();
-+
-+	dt->cxt_id[DEPT_CXT_PROCESS] += 1UL << DEPT_CXTS_NR;
-+}
-+
- /*
-  * Ensure it's the outmost softirq context.
-  */
-@@ -1930,7 +1931,7 @@ void dept_softirq_enter(void)
- {
- 	struct dept_task *dt = dept_task();
- 
--	dt->irq_id[DEPT_SIRQ] += 1UL << DEPT_IRQS_NR;
-+	dt->cxt_id[DEPT_CXT_SIRQ] += 1UL << DEPT_CXTS_NR;
- }
- 
- /*
-@@ -1940,7 +1941,7 @@ void noinstr dept_hardirq_enter(void)
- {
- 	struct dept_task *dt = dept_task();
- 
--	dt->irq_id[DEPT_HIRQ] += 1UL << DEPT_IRQS_NR;
-+	dt->cxt_id[DEPT_CXT_HIRQ] += 1UL << DEPT_CXTS_NR;
- }
- 
- void dept_sched_enter(void)
-diff --git a/kernel/dependency/dept_internal.h b/kernel/dependency/dept_internal.h
-index 732f297710aa..f5023365b3fd 100644
---- a/kernel/dependency/dept_internal.h
-+++ b/kernel/dependency/dept_internal.h
-@@ -106,8 +106,8 @@ struct dept_class {
- 			/*
- 			 * for tracking IRQ dependencies
- 			 */
--			struct dept_iecxt iecxt[DEPT_IRQS_NR];
--			struct dept_iwait iwait[DEPT_IRQS_NR];
-+			struct dept_iecxt iecxt[DEPT_CXT_IRQS_NR];
-+			struct dept_iwait iwait[DEPT_CXT_IRQS_NR];
- 
- 			/*
- 			 * classified by a map embedded in task_struct,
-@@ -169,8 +169,8 @@ struct dept_ecxt {
- 			/*
- 			 * where the IRQ-enabled happened
- 			 */
--			unsigned long	enirq_ip[DEPT_IRQS_NR];
--			struct dept_stack *enirq_stack[DEPT_IRQS_NR];
-+			unsigned long	enirq_ip[DEPT_CXT_IRQS_NR];
-+			struct dept_stack *enirq_stack[DEPT_CXT_IRQS_NR];
- 
- 			/*
- 			 * where the event context started
-@@ -214,8 +214,8 @@ struct dept_wait {
- 			/*
- 			 * where the IRQ wait happened
- 			 */
--			unsigned long	irq_ip[DEPT_IRQS_NR];
--			struct dept_stack *irq_stack[DEPT_IRQS_NR];
-+			unsigned long	irq_ip[DEPT_CXT_IRQS_NR];
-+			struct dept_stack *irq_stack[DEPT_CXT_IRQS_NR];
- 
- 			/*
- 			 * where the wait happened
+ 	/* ensure we're on the correct CPU */
+ 	WARN_ON_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
+ 		     raw_smp_processor_id() != pool->cpu);
 -- 
 2.17.1
 
