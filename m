@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-23100-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23101-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id y/+pCzzXS2rwbAEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23100-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 18:26:36 +0200
+	id wlezM/LbS2pBbgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23101-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 18:46:42 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7651D7133D2
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 18:26:35 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB7A7137A5
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 18:46:41 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MOQoGuQq;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=T7UMGwPo;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23100-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23100-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23101-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23101-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B1D435DE448
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 15:52:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E50743158C96
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 16:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFAA53A8753;
-	Mon,  6 Jul 2026 15:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 835A93E6391;
+	Mon,  6 Jul 2026 16:00:53 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BAE3EB0EE
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 15:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4784C3CFF61
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 16:00:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783353146; cv=none; b=SwwEZSm5nUMJ6R2svDmkm7M8BmOMH9fOoSnDcnpt2NYkW1RBP6xVMnYiX/VvmRt3Srn9pvcPcsqYFj9bLTL/xDLZGO1HiZQmk/y0WC0wheBIqFACSvL3PCJbtQ+wrhbNviL6OyNZkgAkdQY55yiFzFgLR7no0WNtBUg6Cb37hro=
+	t=1783353653; cv=none; b=oxFBaHkwDKcprukl90kCbuLPGqxjaFqySZglIVHNXOet63uJICbzh6xRrjEruTZSVXe5Amexv1BGN+s46xAAMiQ+l1E/ww5qZbFNmFUpEpLYKPQioYK6/FouMmBcSxHMHO+HReAHH8/WQGHv77M1ymSZy3st01O1BkRqmUBiTKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783353146; c=relaxed/simple;
-	bh=gXZASFQyiiaSmZ/vOl4/oHyzSXWuIYJoDZAmRKRK6rQ=;
+	s=arc-20240116; t=1783353653; c=relaxed/simple;
+	bh=m8rJDUzyUn05W0QRPU8lSyncO+wlBewjmX+ATagl7Yc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NTxCqMpLGFFZKQ4F0/ezA/d+Op/e0HEjji64Mn+fFZ/LBOfO83bbTAyyJVh0MYKAUx+gYOVBxVHoDBzS5JulIfRNGzgGYcEcanDWtqPdHDbQJNvSvCVlBLps0215SCPi1hOsk93y21F65c/T0ArlfTKxVVoYWQy6Nu3s//R6yQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOQoGuQq; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C671F00A3A;
-	Mon,  6 Jul 2026 15:52:16 +0000 (UTC)
+	 Content-Type:MIME-Version; b=CT3/ibLFzbzER72JaSc+82aB/yCZx0K+Rr0RCme6ziBXfUGLLQ5pH7JCrGgZRT2XCgq/4jgvpG1F+Cc9jiTxKlHadPM9VeWmnBbimKVsM8NbvvgrROCrwtykMZalMxSxpod6X8WAz80+aV6d/ayySBxG5viHZcJCGO6n5jxJ+e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7UMGwPo; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B5781F000E9;
+	Mon,  6 Jul 2026 16:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783353137;
-	bh=CUDOxJb4WEWHl/BDrlHvuC5Ttz26RzVYRmI5/HDTzs0=;
+	s=k20260515; t=1783353651;
+	bh=y3FfNzNfM1FiPnAdcUa0yzR1KDzQD55Xa2OBGCIebjc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=MOQoGuQqg2LVwoLr4jilvsByINB9hfmq6zLSU5TNMNoqlCSVqXQznq93pxBvESO/9
-	 WkaEK/lnVghjr++sC/D4av9Yd7wizK6B2namGk+I42Q8ifW9LDAdsnnT9EiwZX+eCq
-	 UFF75i9Hpj6oUuzpD2ddt4VHAtsWy+cMI6F7Gdz0Iw4lvbNsdfmAycGOH6Gqm93Xa5
-	 YYlCkHm27DTiTQ6W95oTFXmCmiFx+NjIOK2029Bs952DbEYrtQ+e/qs1xTnhpsg92t
-	 Fx568lEbh+Fg+EBIaUxLm/StMh0Qij/kr1yEXT/m9EAFGoKSjviotyEfSEIAuBeQ2O
-	 EkZUAw7okAHFQ==
-Message-ID: <8ef43a6cfb235b0ef449388d56a4faeab492160c.camel@kernel.org>
-Subject: Re: [PATCH v2 06/14] nfsd: in nfsd4_create_file() let VFS report if
- file was created.
+	b=T7UMGwPobyq1LUmw39XmOxMeJf6hKKkcltWtrFTp6OqmVG0nskxTt9YJOUXdE2Yzs
+	 BRSyrdb2EZ/ukAe0b12AVlfcHmi8MXOq1jMWTuZ/HHFoCFK3LhxCMetRAoNKt83l5W
+	 MvQwHqGaRAaQKNlIixXTOslH6eH2spXsx3EFpMSMJv9/TWeW9LTAaQdX5u7HbuswGh
+	 F5Su7ZfWdhd+U6WLzHyt1NwUDvcrrl7AbXifLuntsuxqxv/r5blNB1SyOkILfCXaBn
+	 ECBU4K+AU/q0flp12fSzX4uy5U4rwna/tQlxnp/9vETUdwLyNY+q3TVLXkatzpaVPh
+	 7kZ7rY0CsII+w==
+Message-ID: <6f9f29157871d413bcef1531653b2d6811d8aa02.camel@kernel.org>
+Subject: Re: [PATCH v2 13/14] nfsd: separate out VFS-specific from from
+ nfsd4_create_file()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Mon, 06 Jul 2026 11:52:15 -0400
-In-Reply-To: <20260705222032.1240057-7-neilb@ownmail.net>
+Date: Mon, 06 Jul 2026 12:00:49 -0400
+In-Reply-To: <20260705222032.1240057-14-neilb@ownmail.net>
 References: <20260705222032.1240057-1-neilb@ownmail.net>
-	 <20260705222032.1240057-7-neilb@ownmail.net>
+	 <20260705222032.1240057-14-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -145,7 +145,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -156,7 +156,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23100-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23101-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
@@ -170,185 +170,153 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,brown.name:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,brown.name:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7651D7133D2
+X-Rspamd-Queue-Id: CAB7A7137A5
 
 On Mon, 2026-07-06 at 08:19 +1000, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> nfsd4_create_file() currently assumes that if a lookup failed but then a
-> create succeeds, then the "create" operation actually created the file.
-> With atomic_open this may not be the case - some other actor might have
-> created the file between the lookup and the create.
+> All the code in nfsd4_create_file() that is VFS manipulation, with now
+> NFS-specific knowledge, has been localised.  Now we split that out into
+> a separate function: do_lookup_open().
 >=20
-> So we move the call to nfsd4_vfs_create() earlier and set ->op_created
-> based on the FMODE_CREATED flag that it set.  Then use "!  ->op_created"
-> to trigger nfserr_exist handling.
->=20
-> The switch statement is split up into two if() statements.
-> First we check for the possibility of a successful exclusive
-> create and set ->op_create to true if appropriate.
-> Then we check for NFS4_CREATE_UNCHECKED to decide if a
-> pre-existing file means an error or success.
->=20
-> This allows us to combine the two fh_compose() calls to one place.
->=20
-> A subtle difference here is that we now must only pass O_EXCL to
-> dentry_create() for NFS4_CREATE_GUARDED.  For the EXCLUSIVE create modes
-> we want a successful open even if the file already exists.  We then
-> check the verifier after the open succeeded to see if it was exclusive.
->=20
-
-Do we really want a successful open in the EXCLUSIVE cases?
-
-Opens have side effects (notably, that they can cause delegation
-recalls). If you have two racing clients creating a file, the first
-gets an open and write delegation and then the second ends up
-immediately causing a delegrecall for the first, even though it may
-never touch the file again after the OPEN fails.
-
-I think we may want to reconsider that logic, if possible: Maybe we
-should keep using O_EXCL in those cases and just re-drive the open
-without it if it fails and the verifier looks right? That's a bit
-uglier, but that may cause fewer delegation recalls.
-
-> The above requires changing dentry_create() to reliably set
-> FMODE_CREATED when the file was actually created.  Previously it only
-> sets this flag when atomic_open is used.
+> It is planned to provide a vfs_lookup_open() in vfs code which provides
+> this functionality.  This will share more code with the syscall open
+> path, and make it easier to modify locking at the VFS level.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/namei.c         |  2 ++
->  fs/nfsd/nfs4proc.c | 69 ++++++++++++++++++++--------------------------
->  2 files changed, 32 insertions(+), 39 deletions(-)
+>  fs/nfsd/nfs4proc.c | 108 ++++++++++++++++++++++++---------------------
+>  1 file changed, 58 insertions(+), 50 deletions(-)
 >=20
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 5cc9f0f466b8..e0a62198fc60 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -5073,6 +5073,8 @@ struct file *dentry_create(struct path *path, int f=
-lags, umode_t mode,
->  		error =3D vfs_create(mnt_idmap(path->mnt), path->dentry, mode, NULL);
->  		if (!error)
->  			error =3D vfs_open(path, file);
-> +		if (!error)
-> +			file->f_mode |=3D FMODE_CREATED;
->  	}
->  	if (unlikely(error))
->  		return ERR_PTR(error);
 > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 69cdbdcde7e9..f59ee074c0c9 100644
+> index 10323c620b71..643cf4302db5 100644
 > --- a/fs/nfsd/nfs4proc.c
 > +++ b/fs/nfsd/nfs4proc.c
-> @@ -210,7 +210,11 @@ nfsd4_vfs_create(struct svc_fh *fhp, struct dentry *=
-*child,
->  	int oflags;
+> @@ -201,6 +201,47 @@ static inline bool nfsd4_create_is_exclusive(int cre=
+atemode)
+>  		createmode =3D=3D NFS4_CREATE_EXCLUSIVE4_1;
+>  }
 > =20
->  	oflags =3D O_CREAT | O_LARGEFILE;
-> -	if (nfsd4_create_is_exclusive(open->op_createmode))
-> +	/*
-> +	 * For the EXCLUSIVE modes we do our own uniqueness tests
-> +	 * so don't want O_EXCL.
-> +	 */
-> +	if (open->op_createmode =3D=3D NFS4_CREATE_GUARDED)
->  		oflags |=3D O_EXCL;
-> =20
->  	switch (open->op_share_access & NFS4_SHARE_ACCESS_BOTH) {
-> @@ -333,22 +337,30 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
-c_fh *fhp,
->  		status =3D fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_CREATE);
->  		if (status !=3D nfs_ok)
->  			goto out;
-> -	}
-> =20
-> -	if (d_really_is_positive(child)) {
-> -		/* NFSv4 protocol requires change attributes even though
-> -		 * no change happened.
-> -		 */
-> -		fh_fill_post_noop(fhp);
-> -
-> -		status =3D fh_compose(resfhp, fhp->fh_export, child, fhp);
-> +		status =3D nfsd4_vfs_create(fhp, &child, open);
->  		if (status !=3D nfs_ok)
->  			goto out;
-> +		open->op_created =3D open->op_filp->f_mode & FMODE_CREATED;
-> +	}
-> =20
-> -		switch (open->op_createmode) {
-> -		case NFS4_CREATE_UNCHECKED:
-> -			if (!d_is_reg(child))
-> -				break;
-> +	status =3D fh_compose(resfhp, fhp->fh_export, child, fhp);
-> +	if (status !=3D nfs_ok)
+> +static struct file *do_lookup_open(struct path *parent,
+> +				   struct qstr *name,
+> +				   unsigned int oflags,
+> +				   umode_t mode)
+> +{
+> +	struct file *filp =3D NULL;
+> +	struct path path;
+> +	struct dentry *child;
+> +	int error =3D 0;
+> +
+> +	error =3D mnt_want_write(parent->mnt);
+> +
+> +	if (error)
+> +		return ERR_PTR(error);
+> +
+> +	child =3D start_creating(&nop_mnt_idmap, parent->dentry, name);
+> +	if (IS_ERR(child)) {
+> +		filp =3D ERR_CAST(child);
 > +		goto out;
+> +	}
+> +	path.mnt =3D parent->mnt;
+> +	path.dentry =3D child;
 > +
-> +	if (!open->op_created &&
-> +	    nfsd4_create_is_exclusive(open->op_createmode) &&
-> +	    inode_get_mtime_sec(d_inode(child)) =3D=3D v_mtime &&
-> +	    inode_get_atime_sec(d_inode(child)) =3D=3D v_atime &&
-> +	    d_inode(child)->i_size =3D=3D 0)
-> +		open->op_created =3D true;
+> +	if (d_really_is_positive(child)) {
+> +		/*
+> +		 * open the file so that, unless it is O_RDONLY, we
+> +		 * have write-access to the fs for setattr below.
+> +		 */
+> +		filp =3D dentry_open(&path, oflags, current_cred());
+> +	} else if (!(oflags & O_CREAT)) {
+> +		filp =3D ERR_PTR(-ENOENT);
+> +	} else {
+> +		filp =3D dentry_create(&path, oflags, mode, current_cred());
+> +		child =3D path.dentry;
+> +	}
+> +	end_creating(child);
+> +out:
+> +	mnt_drop_write(parent->mnt);
+> +	return filp;
+> +}
 > +
-> +	if (!open->op_created) {
-> +		if (open->op_createmode =3D=3D NFS4_CREATE_UNCHECKED) {
-> +			/* NFSv4 protocol requires change attributes
-> +			 * even though no change happened.
-> +			 */
-> +			fh_fill_post_noop(fhp);
-> =20
->  			/*
->  			 * In NFSv4, we don't want to truncate the file
-> @@ -356,41 +368,20 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
+>  /*
+>   * Implement NFSv4's unchecked, guarded, and exclusive create
+>   * semantics for regular files. Open state for this new file is
+> @@ -218,14 +259,13 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
 c_fh *fhp,
->  			 * some other reason. Furthermore, if the size is
->  			 * nonzero, we should ignore it according to spec!
->  			 */
-> -			open->op_truncate =3D (iap->ia_valid & ATTR_SIZE) &&
-> -						!iap->ia_size;
-> -			break;
-> -		case NFS4_CREATE_GUARDED:
-> -			status =3D nfserr_exist;
-> -			break;
-> -		case NFS4_CREATE_EXCLUSIVE:
-> -		case NFS4_CREATE_EXCLUSIVE4_1:
-> -			if (inode_get_mtime_sec(d_inode(child)) =3D=3D v_mtime &&
-> -			    inode_get_atime_sec(d_inode(child)) =3D=3D v_atime &&
-> -			    d_inode(child)->i_size =3D=3D 0) {
-> -				open->op_created =3D true;
-> -				goto set_attr;
-> -			}
-> +			open->op_truncate =3D (d_is_reg(child) &&
-> +					     (iap->ia_valid & ATTR_SIZE) &&
-> +					     !iap->ia_size);
-> +		} else
->  			status =3D nfserr_exist;
-> -			break;
-> -		}
+>  		.na_seclabel	=3D &open->op_label,
+>  	};
+>  	int oflags =3D O_CREAT | O_LARGEFILE;
+> -	struct dentry *parent, *child =3D ERR_PTR(-EINVAL);
+> -	struct path path =3D {
+> +	struct dentry *child =3D ERR_PTR(-EINVAL);
+> +	struct path parent =3D {
+>  		.mnt =3D fhp->fh_export->ex_path.mnt,
+> +		.dentry =3D fhp->fh_dentry,
+>  	};
+>  	__u32 v_mtime, v_atime;
+> -	struct inode *inode;
+>  	__be32 status, create_status;
+> -	int host_err;
+> =20
+>  	if (name_is_dot_dotdot(open->op_fname, open->op_fnamelen))
+>  		return nfserr_exist;
+> @@ -235,10 +275,8 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>  	status =3D fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_EXEC);
+>  	if (status !=3D nfs_ok)
+>  		return status;
+> -	parent =3D fhp->fh_dentry;
+> -	inode =3D d_inode(parent);
+> =20
+> -	if (!IS_POSIXACL(inode))
+> +	if (!IS_POSIXACL(d_inode(parent.dentry)))
+>  		iap->ia_mode &=3D ~current_umask();
+> =20
+>  	/*
+> @@ -303,53 +341,23 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+>  	}
+> =20
+>  	create_status =3D fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_CREATE);
+> -
+> -	host_err =3D fh_want_write(fhp);
+> -	if (host_err) {
+> -		status =3D nfserrno(host_err);
+> -		goto out;
+> -	}
+> -
+> -	child =3D start_creating(&nop_mnt_idmap, parent,
+> -			       &QSTR_LEN(open->op_fname, open->op_fnamelen));
+> -	if (IS_ERR(child)) {
+> -		status =3D nfserrno(PTR_ERR(child));
+> -		fh_drop_write(fhp);
+> +	if (create_status)
+> +		oflags &=3D ~O_CREAT;
+> +	open->op_filp =3D do_lookup_open(&parent,
+> +				       &QSTR_LEN(open->op_fname,
+> +						 open->op_fnamelen),
+> +				       oflags,
+> +				       open->op_iattr.ia_mode);
+> +	if (IS_ERR(open->op_filp)) {
+> +		status =3D nfserrno(PTR_ERR(open->op_filp));
+> +		open->op_filp =3D NULL;
+> +		if (status =3D=3D NFSERR_NOENT && create_status)
+> +			status =3D create_status;
 >  		goto out;
 >  	}
-> -
-> -	status =3D nfsd4_vfs_create(fhp, &child, open);
-> -	if (status !=3D nfs_ok)
-> -		goto out;
-> -	open->op_created =3D true;
-> +	/* file was created */
->  	fh_fill_post_attrs(fhp);
-> =20
-> -	status =3D fh_compose(resfhp, fhp->fh_export, child, fhp);
-> -	if (status !=3D nfs_ok)
-> -		goto out;
-> -
->  	/* A newly created file already has a file size of zero. */
->  	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size =3D=3D 0))
->  		iap->ia_valid &=3D ~ATTR_SIZE;
-> =20
-> -set_attr:
->  	status =3D nfsd_create_setattr(rqstp, fhp, resfhp, &attrs);
-> =20
->  	if (attrs.na_labelerr)
+>=20
+
+My Claude spotted this:
+
+Should this compare against nfserr_noent rather than NFSERR_NOENT?
+
+status is __be32, and it is assigned from nfserrno(-ENOENT), which returns
+nfserr_noent.
+
 
 --=20
 Jeff Layton <jlayton@kernel.org>
