@@ -1,37 +1,38 @@
-Return-Path: <linux-nfs+bounces-23020-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23021-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id dxiIMnBJS2qrOgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23020-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:21:36 +0200
+	id bASIBxJKS2rrOgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23021-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:24:18 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BA0470CDD1
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:21:36 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 343B370CEAB
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 08:24:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=sk.com (policy=none);
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23020-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23020-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23021-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23021-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47BFB301C5BD
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 06:19:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C4E43037DCB
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 06:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB643C13EE;
-	Mon,  6 Jul 2026 06:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F6A3C37B6;
+	Mon,  6 Jul 2026 06:19:50 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D963C23ED6F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F23937416B;
 	Mon,  6 Jul 2026 06:19:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783318786; cv=none; b=thJi8wCqmVIiAI+9flUhSK4/NIziiI/NmTCBdYBAim2hUQk1FjrmosqVe68xQcB9BiPWN1gUAAh02R2JlazdTREN5Zah/X89AzpgruZUq0TFIH5Zif2Mu0xueLPrHP6Jwo1uOodgVmhGqFp29BAMIa3SbZrin79P9KGTsjtB+yQ=
+	t=1783318790; cv=none; b=PFjrqR01no7d36mGpLCPWcM3N4CDbDX9Jxl71dijdAK4qxSM5BIg1cbHDLPsoKGHSyMJs89jvZjw6P3CpGUGW1GGyt2QnB2q667zH70sGwaFsWBzym5kn7FncXAlJTng5cf7rzaTZZOq86oTk9QIdEPvswOxB+SQ8JvENOO78B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783318786; c=relaxed/simple;
-	bh=7LQtZfSFV+ucO+3UZcewjHC/WOxu+83GU38+H9B+zyk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WgJZTtIxby99s6Ffn588zLXpfys7xYrxO1P3+pqCIJFUVEUEPjN7czbx8n9+0RbsJj2gXQOfAMe9i4/K1Wil5vZhbjIsDEW7bPjE7JHTQj2MbWArn798dFLR3sefXvA/pjZnXHOUV3Q6I3/nC6l77H0ikk+Asdg4CTESuqtzvyY=
+	s=arc-20240116; t=1783318790; c=relaxed/simple;
+	bh=EG6VqYxid2VxeGfijPsI4Si23rl1SR+KSWaPDY+JfwE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ulWk8q0bN1ajyR3q4ZsJXsQQ75qjrpGB/3Orm0t3JQ6w7cP4BHWEK2siedtMKScl5bSMqWhSiOKulH9/SVo8kEpSyIVEpExsCycjPURK3f4sTxoe9O7yDpwagNODW4BcwBvA6n0QztvjWD1Wq2SH3iW6kTGMp+T79b7Xh9P1H7E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-X-AuditID: a67dfc5b-c45ff70000001609-38-6a4b48fb82d0
+X-AuditID: a67dfc5b-c45ff70000001609-56-6a4b48fba083
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: max.byungchul.park@gmail.com,
@@ -198,10 +199,12 @@ Cc: max.byungchul.park@gmail.com,
 	aliceryhl@google.com,
 	tmgross@umich.edu,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v19 00/40] DEPT(DEPendency Tracker)
-Date: Mon,  6 Jul 2026 15:18:48 +0900
-Message-Id: <20260706061928.66713-1-byungchul@sk.com>
+Subject: [PATCH v19 01/40] dept: implement DEPT(DEPendency Tracker)
+Date: Mon,  6 Jul 2026 15:18:49 +0900
+Message-Id: <20260706061928.66713-2-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260706061928.66713-1-byungchul@sk.com>
+References: <20260706061928.66713-1-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -210,47 +213,47 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0yTZxTH97zv815o6PKumvnqsrDUubElw21IPFkWY/ywPRt+IHHJMv3g
-	mvFGiqWYIghqHQ5xlcHs3LSj5dICVmhx1Fa8jWYdkQriBp1EO6VCCRcRAcMKDLmtnbv47Zzf
-	Of9//ic5PK0oZdfwau1eSadVaZSsDMvG421vzJPUzDdti+vAUPw59PYNMnDrsA/DdMSAoaKp
-	kYVFy0UODO5yBvqmDQgWT/g5iMzd5WDZ60fQeP4wBX+4llgwD1s4GG17H5ZDIxTYB5coqK7x
-	sDB26hELppPdCGzhEA1To/0IzvvvIRgyNtPQMz3JwniggoIJFwvWL7wMBG6MIRi+46WgqLaJ
-	hVOVbgyX+69wEBhboKDPPozBNBrl51aBxXSfgpNnf6Rgzu7gYKDezIHfOcLBD+Nd0bzXjjJw
-	sbCfA/fvbQgiPWEKDFemMdiO1mEor+plocXbgcGwGEHgvzRAQamrmYFCyywD3b5OBppGghR0
-	+tsxdJgbMNz95TgH4f4gA0HjEIKzEzXR62bs9OZ0Mlv8NSYOzwWKNFY1IjL/+AQikdNFNCk2
-	Rtsjnn3EO2PF5HqNSOqOPabIZXOII1Z3LjlydZwhtS2jFHE7jrGk91YLm5a4XfZuuqRR50m6
-	9Zs+lWW0+t7b03AT5fsCQaoQ2WyoBMXxorBBHPl+gv6vvh+iYjUrvCoGg3N/85XCS6KnbJgp
-	QTKeFm4miKX2MhwbrBCSxeXwEluCeB4L68QboeQYlgsp4mSgnnvimSA6XT76CX9O7CgfxLF1
-	OurfVKWIYTq6UtRsoWP2onA9TjzzU8U/eVaLP9cHsRE9a35Kbv5fbn5KbkW0AynU2rwslVqz
-	ISmjQKvOT/osO8uNoj9q1y/suISmure1IoFHyng5bP4wU8Go8nIKslqRyNPKlfJXElMzFfJ0
-	VcF+SZe9U5erkXJa0Qs8Vq6Svz2zL10h7FLtlXZL0h5J9++U4uPWFKKPBkrodzo2xT/TlTb7
-	iTP3G0fPWpl+qmtLmr46Wbe7ZuMHnodJVfbKbKVfP/DiVwkPTLfb64YeHby3lXQql1qckw+t
-	7bu2fpv48fN6nbO2elZLX0updK1uSwofEB/8mv3dwrk/j78W3vFbUQPZEv/l7ZdT5tdOGcsO
-	ZeaD1lSamq/ZpsQ5Gaq3Xqd1Oaq/AG8Md8afAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sb0xTZxTG89739t5rt27XyuJVP7g0my4moJvDnTiz6D6MdxgXv7nopjZw
-	A4WCrlWEZcsoXTNEGKVZS2gtQieNQies/BloujWQkTEwo6soGdRC0hUJsBpsJbQU1sYs88vJ
-	c57zO0/Oh8NheViynVOVXhA1pUq1gpHS0o/e1WfGydGifXZfNlQbvoLpYEgC93VeGmLRahqu
-	droYSNp+YqHa3SSB3x5U0TB+qwNBMFaNYCVhw2AY2KAhaRpmIbo6xYJZh2DDM4zA4jNhmBz/
-	BYOrR0fBk651BhaGlhGYZ0MMNM7raIg4axFYwzYW5n/NgaXgHQlsBOYoePB0EYEztE5ByPsN
-	gqSlGK45ulPrlscMJO7+gaHRPI6gdTaAYXl+BkHP8EMEnhtVDPxt7MXgD70E92IRBkbMVxhY
-	8l2l4J8uBlqqPBLwjS0gsNtMCMJ/eSjQf9/JgMXupmFg5jYLvoU1CqYtJgo63Mcg6AzTMGp0
-	UKlzU9SPW8HWqKdS5REF5h/uULDqbGcPtyGyYviWJu3dfRQx/JlkiKvZhUgibkIk2qbHxGBM
-	tUOLEUy+7r5E2kYXGRKPTTDE87SFJr87BHL9cpwiDXczyYA1wB4/clJ6KF9Uq8pEzd73zkoL
-	B70fnL/pR+Ve3yRViVpbUQ3axAn828LcowCV1gy/W5icXMVpncG/KnTXhSU1SMph3r9TqHXW
-	0enBFn6/sDG7ztQgjqP514WxwP60LeOzhYjvBvssc6fQ0eXFz/zNwkhTiE7jOJXf2SxP2ziF
-	6Htt2IhesD5HWf+nrM9RLQi3owxVaVmJUqXOztIWF1aUqsqz8s6VuFHq+5xfrjX0o6g/ZxDx
-	HFK8KIPDuUVyibJMW1EyiAQOKzJku944WiSX5SsrPhc1585oLqpF7SDawdGKrbLcE+JZOV+g
-	vCAWi+J5UfPflOI2ba9EssoJ/anIpZnpkXLXONvS910XK3+y73icdrw8XBAbE4z21049zul1
-	39tR2b85b+2dombr6R6d+sP7xw4U5H2cOfHJiSl7/kWpbGl02/srZCjpqP2sof6KuLL8Sm4i
-	CFWJn+uduwKfMuambDwlO3jEX38gunyQPEzMfXG5762Gui0KWluofHMP1miV/wIIt/YleQMA
-	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se2xTdRTH/d3fvbd3ZZVrXfSKiZAa0QzGKwgnRB6JKL9ANBAS/1CjNvbG
+	de4BHXvUQCgbwwKdYOOKbV3toDTYdtB0gkw2HcNVyljsGNm6sVEGs7PplhrYI9s6aruFyH+f
+	nPN95CSHw3I7u4hTF+4TNYXKfAUrpaWjmXU5CbIjb1W0bgHoqw5C96EWGsbH9DTofWYGrvdU
+	0BAe1yOYnLFiqGpM0jBr9Esg2exHYOo0YggFf8fg+fkQBY+8j1moGRxiIe40IIi2bYPR8BUG
+	kgPDFPRMjCBwDj2m4MfTDSzETP+yMNPxF4ZTNUEEdYMDGB5G7yHoGnoWbo/HWQjUHGeh82YM
+	Qa3ViKAzlqCg32SkwO17D8LOCA3tJ09TcCqa6qy/QsGU0yUBa0cXA4nB1ZC0F4HfPSyBwN1u
+	BmIRIwu/6O5JwNfbhmDs9iAFHkMEg+9BatvctwzMtn4WmpoDqbtnxxD4L9+noOvXH1gweC8y
+	cNeTZEBnnWQg2NLOwIXhEAUBy0803Ok4IdmiIpNV39Ck6tYsSzw2DyIz00ZEro3EMTncUEbO
+	to+wpHnCThPH0WmKfNuRQxotAxJi95WQw3+MMqThXDY50xSlSF9s486cD6VvqcR8damoWbnp
+	M2nuGZsB7/l+iimPH+9ndagySB9DGZzArxXaXH3oCTu6zXPM8q8LodAUTnMWv0RoqI4wx5CU
+	w3zXYsHgrE6ZOe55/m2h6dbetIbmXxNqHBVMmmX8m8IR0wAzn7lYcHtb5nIy+HXC+UQtlWZ5
+	SnMn/ic9r39OCJiH5iJxqveCTZ4e45S18qIVp2sF/n6GcOTSd+x85kvC1XMh+iTiLU/ZLf/b
+	LU/Z7Qi7kFxdWFqgVOevXZGrLVSXr/i8qMCHUn/rPJD46DJ6GNzdingOKTJlsGV7npxRlhZr
+	C1qRwGFFlmzpGzvy5DKVUvuVqCn6VFOSLxa3opc5WvGibM1EmUrOf6HcJ34pintEzZMtxWUs
+	0iFrxTbbgkbSqdrM73ctM7yv2GWa3R7OclV/fW1vee6BD575uFdYeDAnop1uvMouf3WyzZF5
+	1LFSI1VcemFDX63f69W9syaQFy5bst593tEtKbHpez+pNzp/27r1lX92Vta7aLfcjG034vyJ
+	7A09uzZnlscfZS99d//f8XVnl9eOagMKujhXuToba4qV/wFxLzM6swMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbWxTZRTH89znvq1QcilbuMHEkZKJMbZAEHMixLCo4REy4gcNygdZlSvt
+	Xgq2OBkJGW1XnLDJqLZzLZtz6xrTTTa3opbRsJcwRCTsBdhwG2OhVpdt1sBa2Es3byEEvpz8
+	z3N+//95PhweqxaZVbzBeFAyGXV5alZBK3ZutmnmyI6c9d7aJVBiL4Lh0TADNy3tNMSmS2g4
+	3dTIQsLzCwclLZUM/DZgpaHnTAOC0VgJggdzHgz24CINCUc3B9MzQxw4LQgWQ90IXL0ODIM9
+	FzA0BiwU3G9eYGGi6x4C51iYhYpxCw1RXykCd8TDwfjFbTA12sbA4sjfFAzEJxH4wgsUhNu/
+	QJBw5cJ3ta2y3fUfC3NXr2GocPYg+H5sBMO98TsIAt23EYR+sLLwV/lZDP3hZXA9FmXhsvME
+	C1O9pyn4t5mFGmuIgd4/JhBUeRwIIn+GKLDVNbHgqmqhIXjnHAe9E/MUDLscFDS0ZMGoL0LD
+	lfJaSv6uTP20EjwVNkou/1Dg/LGNghmfn9taj8gD+1c08bf+TBF7X4IljdWNiMzNOhCZrrdh
+	Yi+X267JKCbFrZ+T+iuTLJmN3WBJKF5Dk99rReL9cpYip65qSNA9wr2TuVuxZa+UZyiQTOte
+	z1bo66pL8YFvZ5hD0RPD7FFk66GPoxReFF4RvTcrUVKzwlpxcHAGJ3WqsFpsLYswx5GCx0J/
+	uljqK5MNPL9CeEM83/dpkqGFDNHptTJJrRQ2icdcI8zjzHSxobn9UU6K8Kp4Zr6KSmqVzAxF
+	L9GP+eXi5crwo0gs722qViWfsWy1nfXgcqR0P0O5n1LuZ6gahP0o1WAsyNcZ8jZpzbn6QqPh
+	kPbj/fktSD5L35H5U7+i6f5tnUjgkXqpErZuz1ExugJzYX4nEnmsTlW+8OKOHJVyr67wsGTa
+	v8f0WZ5k7kTP8bR6pXL7LilbJezTHZRyJemAZHoypfiUVUfRmpcPp2YX5xiH7i/teF+f9mZW
+	IDPYptWs6TC6iPbDAf/FLaZJPSlSnow3CJfixXcTmAvcoi1aP4e+Ppae/U3XtaKIrynjtdUn
+	q97TTDEf9WV88DYLax/GMjenjQUupD1v3bVz7N3bCyTkM6uCZQ+vH9Gs2BDP6vik2LvsrY11
+	e9S0Wa/b8BI2mXX/A3JZXPqSAwAA
 X-CFilter-Loop: Reflected
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[sk.com : SPF not aligned (relaxed), No valid DKIM,none];
@@ -261,12 +264,12 @@ X-Spamd-Result: default: False [1.14 / 15.00];
 	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:max.byungchul.park@gmail.com,m:kernel_team@skhynix.com,m:torvalds@linux-foundation.org,m:damien.lemoal@opensource.wdc.com,m:linux-ide@vger.kernel.org,m:adilger.kernel@dilger.ca,m:linux-ext4@vger.kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:will@kernel.org,m:tglx@linutronix.de,m:rostedt@goodmis.org,m:joel@joelfernandes.org,m:sashal@kernel.org,m:daniel.vetter@ffwll.ch,m:duyuyang@gmail.com,m:johannes.berg@intel.com,m:tj@kernel.org,m:tytso@mit.edu,m:willy@infradead.org,m:david@fromorbit.com,m:amir73il@gmail.com,m:gregkh@linuxfoundation.org,m:kernel-team@lge.com,m:linux-mm@kvack.org,m:akpm@linux-foundation.org,m:mhocko@kernel.org,m:minchan@kernel.org,m:hannes@cmpxchg.org,m:vdavydov.dev@gmail.com,m:sj@kernel.org,m:jglisse@redhat.com,m:dennis@kernel.org,m:cl@linux.com,m:penberg@kernel.org,m:rientjes@google.com,m:vbabka@suse.cz,m:ngupta@vflare.org,m:linux-block@vger.kernel.org,m:josef@toxicpanda.com,m:linux-fsdevel@vger.kern
  el.org,m:jack@suse.cz,m:jlayton@kernel.org,m:dan.j.williams@intel.com,m:hch@infradead.org,m:djwong@kernel.org,m:dri-devel@lists.freedesktop.org,m:rodrigosiqueiramelo@gmail.com,m:melissa.srw@gmail.com,m:hamohammed.sa@gmail.com,m:harry.yoo@oracle.com,m:chris.p.wilson@intel.com,m:gwan-gyeong.mun@intel.com,m:boqun.feng@gmail.com,m:longman@redhat.com,m:yunseong.kim@ericsson.com,m:ysk@kzalloc.com,m:yeoreum.yun@arm.com,m:netdev@vger.kernel.org,m:matthew.brost@intel.com,m:her0gyugyu@gmail.com,m:corbet@lwn.net,m:catalin.marinas@arm.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:luto@kernel.org,m:sumit.semwal@linaro.org,m:gustavo@padovan.org,m:christian.koenig@amd.com,m:andi.shyti@kernel.org,m:arnd@arndb.de,m:lorenzo.stoakes@oracle.com,m:Liam.Howlett@oracle.com,m:rppt@kernel.org,m:surenb@google.com,m:mcgrof@kernel.org,m:petr.pavlu@suse.com,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:paulmck@kernel.org,m:frederic@kernel.org,m:neeraj.upadhyay@kernel.org,m:joelagnelf@nvidia.com,m:jo
  sh@joshtriplett.org,m:urezki@gmail.com,m:mathieu.desnoyers@efficios.com,m:jiangshanlai@gmail.com,m:qiang.zhang@linux.dev,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-23020-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23021-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
 	FREEMAIL_CC(0.00)[gmail.com,skhynix.com,linux-foundation.org,opensource.wdc.com,vger.kernel.org,dilger.ca,redhat.com,infradead.org,kernel.org,linutronix.de,goodmis.org,joelfernandes.org,ffwll.ch,intel.com,mit.edu,fromorbit.com,linuxfoundation.org,lge.com,kvack.org,cmpxchg.org,linux.com,google.com,suse.cz,vflare.org,toxicpanda.com,lists.freedesktop.org,oracle.com,ericsson.com,kzalloc.com,arm.com,lwn.net,alien8.de,zytor.com,linaro.org,padovan.org,amd.com,arndb.de,suse.com,nvidia.com,joshtriplett.org,efficios.com,linux.dev,suse.de,brown.name,talpey.com,huawei.com,amazon.co.uk,linux.alibaba.com,glider.be,linux.intel.com,treblig.org,star-ark.net,valla.it,vivo.com,baidu.com,lists.infradead.org,lists.linaro.org,lists.linux.dev,qq.com,ownmail.net,sang-engineering.com,linux-m68k.org,garyguo.net,protonmail.com,umich.edu];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	TO_DN_NONE(0.00)[];
@@ -278,158 +281,41 @@ X-Spamd-Result: default: False [1.14 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[linux-nfs,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sk.com:mid,sk.com:from_mime,vger.kernel.org:from_smtp,kzalloc.com:email,intel.com:email,oracle.com:email,arm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oracle.com:email,kzalloc.com:email,arm.com:email,intel.com:email,vger.kernel.org:from_smtp,sk.com:from_mime,sk.com:email,sk.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5BA0470CDD1
+X-Rspamd-Queue-Id: 343B370CEAB
 
-Hi Linus and folks,
+Lockdep tracks lock acquisition order to identify potential deadlock
+conditions. Additionally, it monitors IRQ state changes (enable/disable)
+to detect cases where locks are inadvertently acquired during interrupt
+handling.
 
-DEPT(DEPendency Tracker) is a runtime deadlock detection framework that
-sees what lockdep cannot.
+PROBLEM
+-------
+Waits and their corresponding events that never become reachable can
+eventually lead to deadlocks. However, since Lockdep focuses solely on
+lock acquisition order, it has inherent limitations when handling waits
+and events.
 
-I'm thrilled to share that DEPT has moved beyond theory and is now
-catching real deadlocks in the wild:
+Moreover, by tracking only lock acquisition order, Lockdep cannot
+properly handle read locks or cross-event scenarios such as
+wait_for_completion() and complete(), making it increasingly inadequate
+as a general-purpose deadlock detection tool.
 
-   https://lore.kernel.org/lkml/6383cde5-cf4b-facf-6e07-1378a485657d@I-love.SAKURA.ne.jp/
-   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
-   https://lore.kernel.org/all/b6e00e77-4a8c-4e05-ab79-266bf05fcc2d@igalia.com/
+SOLUTION
+--------
+DEPT(DEPendency Tracker) addresses these limitations by focusing
+directly on waits and events. DEPT monitors wait operations and their
+corresponding events, reporting when any events become unreachable.
 
-I've added comprehensive documentation explaining DEPT's design and usage.
-Getting started is as simple as enabling CONFIG_DEPT and watching dmesg.
-
-THE PROBLEM LOCKDEP CANNOT SOLVE
---------------------------------
-
-Lockdep has been our trusted deadlock detector for two decades, but it
-has a fundamental blind spot: it tracks lock acquisition order, not the
-actual waits and events that cause deadlocks. This means lockdep misses:
-
-  * Deadlocks involving folio locks (not released within the context)
-  * Cross-context synchronization like wait_for_completion()/complete()
-  * DMA fence waits, RCU waits, and general waitqueue patterns
-  * Any synchronization primitive outside the classic lock/unlock model
-
-Consider this real deadlock pattern that lockdep cannot detect:
-
-   context X              context Y              context Z
-
-                          mutex_lock A
-   folio_lock B
-                          folio_lock B <- DEADLOCK
-                                                 mutex_lock A <- DEADLOCK
-                                                 folio_unlock B
-                          folio_unlock B
-                          mutex_unlock A
-                                                 mutex_unlock A
-
-Lockdep sees lock acquisitions. DEPT sees the actual dependency:
-
-   "mutex_unlock A in context Y cannot happen until folio_lock B is
-   awakened by the owner's folio_unlock B, and vice versa in context Z."
-
-It's a circular dependency that means deadlock.
-
-THE DEPT APPROACH
------------------
-
-DEPT asks a simpler question: "What is this context waiting for, and
-what event will wake it up?"
-
-Every deadlock is fundamentally about unreachable events. DEPT tracks:
-
-  [S] Where an event context begins (the code path that will trigger
-      an event)
-  [W] Where a wait for another event apears between [S] and [E]
-  [E] Where the event for [S] occurs
-
-By building a dependency graph of "[E] cannot occur until the event that
-[W] waits for occurs", DEPT detects circular dependencies regardless of
-the underlying synchronization primitives involved.
-
-WHAT DEPT BRINGS TO THE TABLE
------------------------------
-
-  * Universal coverage: Works with any wait/event-based synchronization,
-    not just locks
-  * Correct read-lock handling: No more blind spots for read-side
-    dependencies
-  * Continuous operation: Unlike lockdep, DEPT keeps running after
-    reports, catching multiple deadlocks in a single session
-  * Clean annotation API: Simple, intuitive interfaces for subsystem
-    maintainers to refine detection
-  * Battle-tested: Already catching real deadlocks as the links above
-    demonstrate
-
-FALSE POSITIVES: THE HONEST CONVERSATION
-----------------------------------------
-
-Like any powerful detection tool, DEPT faces the false positive
-challenge. This is not unique to DEPT — lockdep spent years building its
-annotation infrastructure (lock classes, subclasses, lockdep_map) to
-separate real bugs from intentional patterns.
-
-DEPT is on the same journey. We have:
-
-  * Event site recovery: Declare when an event has fallback paths
-  * Subclass-based classification: Distinguish per-CPU, per-device,
-    and modality-specific waits
-  * Page usage tracking: Separate block device mappings from regular
-    file mappings to avoid spurious reports (currently being worked on)
-
-But comprehensive annotation requires subsystem maintainer expertise.
-This is where I need your help.
-
-THE PATH TO MAINLINE
---------------------
-
-DEPT is marked EXPERIMENTAL in Kconfig for a reason. Like lockdep, it
-will mature through collaboration:
-
-  1. Core framework: Stabilized and ready for review
-  2. Subsystem pilots: Working with maintainers to add annotations
-     where they matter most (mm, block, drm, networking, ...)
-  3. Gradual enablement: DEPT and lockdep coexist; DEPT takes over
-     dependency checking when ready
-
-I am not proposing to replace lockdep. Lockdep's lock usage validation
-remains invaluable. The vision is:
-
-   LOCKDEP: Validates correct lock usage
-      |
-      v
-   DEPT: Performs dependency checking with full wait/event coverage
-
-WHY MERGE NOW?
---------------
-
-Some might suggest: "Fix all false positives out-of-tree first." But
-the affected subsystems span the entire kernel. Like lockdep's
-two-decade annotation journey, DEPT needs mainline visibility for:
-
-  * Proper annotation placement (maintainers know their code best)
-  * Real-world testing across configurations and workloads
-  * Incremental improvement through community feedback
-
-CONFIG_DEPT is opt-in. It won't affect your default kernel build. But
-for those debugging complex synchronization issues, DEPT is ready to
-help today.
-
-ACKNOWLEDGMENTS
----------------
-
-This work would not be possible without:
-
-   Harry Yoo <harry.yoo@oracle.com>
-   Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-   Yunseong Kim <ysk@kzalloc.com>
-   Yeoreum Yun <yeoreum.yun@arm.com>
-
-And the countless kernel developers whose lockdep annotations over two
-decades showed us the path forward.
+DEPT provides:
+  * Correct handling of read locks
+  * Support for general waits and events
+  * Continuous operation, even after multiple reports
+  * Simple, intuitive annotation APIs
 
 FAQ
 ---
-
 Q. Isn't this the cross-release feature that got reverted?
 
 A. Cross-release (commit b09be676e0ff2) attempted to extend lockdep
@@ -462,440 +348,3921 @@ A. That's the point — report them. Work with us to add annotations that
    distinguish your intentional patterns from real deadlocks. This is
    how lockdep became indispensable, and it's how DEPT will too.
 
-GETTING STARTED
----------------
-
-  1. Enable CONFIG_DEPT (EXPERIMENTAL)
-  2. Boot your kernel
-  3. Check dmesg for DEPT reports
-  4. Read Documentation/dev-tools/dept.rst for interpretation
-
-DEPT is a tool for understanding your code's synchronization behavior.
-Even if you never see a deadlock report, the visibility it provides
-is invaluable.
-
-I look forward to your feedback, patches, and collaboration. Let's make
-DEPT as indispensable to kernel developers as lockdep has been.
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Tested-by: Harry Yoo <harry.yoo@oracle.com>
+Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Tested-by: Yunseong Kim <ysk@kzalloc.com>
+Tested-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
-Changes from v18:
-
-	1. Rebase on v7.0.
-	2. Add 'Reviewed-by: Jeff Layton <jlayton@kernel.org>' on 37th
-	   patch, 'SUNRPC: relocate struct rcu_head to the first field
-	   of struct rpc_xprt'. (thanks to Jeff Layton)
-	3. Refine and supplement dept documents and comments, and fix
-	   typos. (feedbacked by Bagas Sanjaya and Yunseong Kim)
-	4. Add __rust_helper to rust_helper_wait_for_completion().
-	   (feedbacked by Dirk Behme)
-	5. Remove the part supporting recover events tracking - I will
-	   keep maintaining it out of tree tho - as it unnecessarily
-	   complicates the initial DEPT patchset and significantly
-	   increases the review burden.
-	6. Get rid of 'extern' keyword with function declarations.
-	   (feedbacked by Petr Pavlu)
-
-Changes from v17:
-
-	1. Rebase on the mainline as of 2025 Dec 5.
-	2. Convert the documents' format from txt to rst. (feedbacked
-	   by Jonathan Corbet and Bagas Sanjaya)
-	3. Move the documents from 'Documentation/dependency' to
-	   'Documentation/dev-tools'. (feedbakced by Jonathan Corbet)
-	4. Improve the documentation. (feedbacked by NeilBrown)
-	5. Use a common function, enter_from_user_mode(), instead of
-	   arch specific code, to notice context switch from user mode.
-	   (feedbacked by Dave Hansen, Mark Rutland, and Mark Brown)
-	6. Resolve the header dependency issue by using dept's internal
-	   header, instead of relocating 'struct llist_{head,node}' to
-	   another header. (feedbacked by Greg KH)
-	7. Improve page(or folio) usage type APIs.
-	8. Add rust helper for wait_for_completion(). (feedbacked by
-	   Guangbo Cui, Boqun Feng, and Danilo Krummrich)
-	9. Refine some commit messages.
-
-Changes from v16:
-
-	1. Rebase on v6.17.
-	2. Fix a false positive from rcu (by Yunseong Kim)
-	3. Introduce APIs to set page's usage, dept_set_page_usage() and
-	   dept_reset_page_usage() to avoid false positives.
-	4. Consider lock_page() as a potential wait unconditionally.
-	5. Consider folio_lock_killable() as a potential wait
-	   unconditionally.
-	6. Add support for tracking PG_writeback waits and events.
-	7. Fix two build errors due to the additional debug information
-	   added by dept. (by Yunseong Kim)
-
-Changes from v15:
-
-	1. Fix typo and improve comments and commit messages (feedbacked
-	   by ALOK TIWARI, Waiman Long, and kernel test robot).
-	2. Do not stop dept on detection of cicular dependency of
-	   recover event, allowing to keep reporting.
-	3. Add SK hynix to copyright.
-	4. Consider folio_lock() as a potential wait unconditionally.
-	5. Fix Kconfig dependency bug (feedbacked by kernel test rebot).
-	6. Do not suppress reports that involve classes even that have
-	   already involved in other reports, allowing to keep
-	   reporting.
-
-Changes from v14:
-
-	1. Rebase on the current latest, v6.15-rc6.
-	2. Refactor dept code.
-	3. With multi event sites for a single wait, even if an event
-	   forms a circular dependency, the event can be recovered by
-	   other event(or wake up) paths.  Even though informing the
-	   circular dependency is worthy but it should be suppressed
-	   once informing it, if it doesn't lead an actual deadlock.  So
-	   introduce APIs to annotate the relationship between event
-	   site and recover site, that are, event_site() and
-	   dept_recover_event().
-	4. wait_for_completion() worked with dept map embedded in struct
-	   completion.  However, it generates a few false positves since
-	   all the waits using the instance of struct completion, share
-	   the map and key.  To avoid the false positves, make it not to
-	   share the map and key but each wait_for_completion() caller
-	   have its own key by default.  Of course, external maps also
-	   can be used if needed.
-	5. Fix a bug about hardirq on/off tracing.
-	6. Implement basic unit test for dept.
-	7. Add more supports for dma fence synchronization.
-	8. Add emergency stop of dept e.g. on panic().
-	9. Fix false positives by mmu_notifier_invalidate_*().
-	10. Fix recursive call bug by DEPT_WARN_*() and DEPT_STOP().
-	11. Fix trivial bugs in DEPT_WARN_*() and DEPT_STOP().
-	12. Fix a bug that a spin lock, dept_pool_spin, is used in
-	    both contexts of irq disabled and enabled without irq
-	    disabled.
-	13. Suppress reports with classes, any of that already have
-	    been reported, even though they have different chains but
-	    being barely meaningful.
-	14. Print stacktrace of the wait that an event is now waking up,
-	    not only stacktrace of the event.
-	15. Make dept aware of lockdep_cmp_fn() that is used to avoid
-	    false positives in lockdep so that dept can also avoid them.
-	16. Do do_event() only if there are no ecxts have been
-	    delimited.
-	17. Fix a bug that was not synchronized for stage_m in struct
-	    dept_task, using a spin lock, dept_task()->stage_lock.
-	18. Fix a bug that dept didn't handle the case that multiple
-	    ttwus for a single waiter can be called at the same time
-	    e.i. a race issue.
-	19. Distinguish each kernel context from others, not only by
-	    system call but also by user oriented fault so that dept can
-	    work with more accuracy information about kernel context.
-	    That helps to avoid a few false positives.
-	20. Limit dept's working to x86_64 and arm64.
-
-Changes from v13:
-
-	1. Rebase on the current latest version, v6.9-rc7.
-	2. Add 'dept' documentation describing dept APIs.
-
-Changes from v12:
-
-	1. Refine the whole document for dept.
-	2. Add 'Interpret dept report' section in the document, using a
-	   deadlock report obtained in practice. Hope this version of
-	   document helps guys understand dept better.
-
-	   https://lore.kernel.org/lkml/6383cde5-cf4b-facf-6e07-1378a485657d@I-love.SAKURA.ne.jp/#t
-	   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
-
-Changes from v11:
-
-	1. Add 'dept' documentation describing the concept of dept.
-	2. Rewrite the commit messages of the following commits for
-	   using weaker lockdep annotation, for better description.
-
-	   fs/jbd2: Use a weaker annotation in journal handling
-	   cpu/hotplug: Use a weaker annotation in AP thread
-
-	   (feedbacked by Thomas Gleixner)
-
-Changes from v10:
-
-	1. Fix noinstr warning when building kernel source.
-	2. dept has been reporting some false positives due to the folio
-	   lock's unfairness. Reflect it and make dept work based on
-	   dept annotaions instead of just wait and wake up primitives.
-	3. Remove the support for PG_writeback while working on 2. I
-	   will add the support later if needed.
-	4. dept didn't print stacktrace for [S] if the participant of a
-	   deadlock is not lock mechanism but general wait and event.
-	   However, it made hard to interpret the report in that case.
-	   So add support to print stacktrace of the requestor who asked
-	   the event context to run - usually a waiter of the event does
-	   it just before going to wait state.
-	5. Give up tracking raw_local_irq_{disable,enable}() since it
-	   totally messed up dept's irq tracking. So make it work in the
-	   same way as lockdep does. I will consider it once any false
-	   positives by those are observed again.
-	6. Change the manual rwsem_acquire_read(->j_trans_commit_map)
-	   annotation in fs/jbd2/transaction.c to the try version so
-	   that it works as much as it exactly needs.
-	7. Remove unnecessary 'inline' keyword in dept.c and add
-	   '__maybe_unused' to a needed place.
-
-Changes from v9:
-
-	1. Fix a bug. SDT tracking didn't work well because of my big
-	   mistake that I should've used waiter's map to indentify its
-	   class but it had been working with waker's one. FYI,
-	   PG_locked and PG_writeback weren't affected. They still
-	   worked well. (reported by YoungJun)
-	
-Changes from v8:
-
-	1. Fix build error by adding EXPORT_SYMBOL(PG_locked_map) and
-	   EXPORT_SYMBOL(PG_writeback_map) for kernel module build -
-	   appologize for that. (reported by kernel test robot)
-	2. Fix build error by removing header file's circular dependency
-	   that was caused by "atomic.h", "kernel.h" and "irqflags.h",
-	   which I introduced - appolgize for that. (reported by kernel
-	   test robot)
-
-Changes from v7:
-
-	1. Fix a bug that cannot track rwlock dependency properly,
-	   introduced in v7. (reported by Boqun and lockdep selftest)
-	2. Track wait/event of PG_{locked,writeback} more aggressively
-	   assuming that when a bit of PG_{locked,writeback} is cleared
-	   there might be waits on the bit. (reported by Linus, Hillf
-	   and syzbot)
-	3. Fix and clean bad style code e.i. unnecessarily introduced
-	   a randome pattern and so on. (pointed out by Linux)
-	4. Clean code for applying dept to wait_for_completion().
-
-Changes from v6:
-
-	1. Tie to task scheduler code to track sleep and try_to_wake_up()
-	   assuming sleeps cause waits, try_to_wake_up()s would be the
-	   events that those are waiting for, of course with proper dept
-	   annotations, sdt_might_sleep_weak(), sdt_might_sleep_strong()
-	   and so on. For these cases, class is classified at sleep
-	   entrance rather than the synchronization initialization code.
-	   Which would extremely reduce false alarms.
-	2. Remove the dept associated instance in each page struct for
-	   tracking dependencies by PG_locked and PG_writeback thanks to
-	   the 1. work above.
-	3. Introduce CONFIG_dept_AGGRESIVE_TIMEOUT_WAIT to suppress
-	   reports that waits with timeout set are involved, for those
-	   who don't like verbose reporting.
-	4. Add a mechanism to refill the internal memory pools on
-	   running out so that dept could keep working as long as free
-	   memory is available in the system.
-	5. Re-enable tracking hashed-waitqueue wait. That's going to no
-	   longer generate false positives because class is classified
-	   at sleep entrance rather than the waitqueue initailization.
-	6. Refactor to make it easier to port onto each new version of
-	   the kernel.
-	7. Apply dept to dma fence.
-	8. Do trivial optimizaitions.
-
-Changes from v5:
-
-	1. Use just pr_warn_once() rather than WARN_ONCE() on the lack
-	   of internal resources because WARN_*() printing stacktrace is
-	   too much for informing the lack. (feedback from Ted, Hyeonggon)
-	2. Fix trivial bugs like missing initializing a struct before
-	   using it.
-	3. Assign a different class per task when handling onstack
-	   variables for waitqueue or the like. Which makes dept
-	   distinguish between onstack variables of different tasks so
-	   as to prevent false positives. (reported by Hyeonggon)
-	4. Make dept aware of even raw_local_irq_*() to prevent false
-	   positives. (reported by Hyeonggon)
-	5. Don't consider dependencies between the events that might be
-	   triggered within __schedule() and the waits that requires
-	    __schedule(), real ones. (reported by Hyeonggon)
-	6. Unstage the staged wait that has prepare_to_wait_event()'ed
-	   *and* yet to get to __schedule(), if we encounter __schedule()
-	   in-between for another sleep, which is possible if e.g. a
-	   mutex_lock() exists in 'condition' of ___wait_event().
-	7. Turn on CONFIG_PROVE_LOCKING when CONFIG_DEPT is on, to rely
-	   on the hardirq and softirq entrance tracing to make dept more
-	   portable for now.
-
-Changes from v4:
-
-	1. Fix some bugs that produce false alarms.
-	2. Distinguish each syscall context from another *for arm64*.
-	3. Make it not warn it but just print it in case dept ring
-	   buffer gets exhausted. (feedback from Hyeonggon)
-	4. Explicitely describe "EXPERIMENTAL" and "dept might produce
-	   false positive reports" in Kconfig. (feedback from Ted)
-
-Changes from v3:
-
-	1. dept shouldn't create dependencies between different depths
-	   of a class that were indicated by *_lock_nested(). dept
-	   normally doesn't but it does once another lock class comes
-	   in. So fixed it. (feedback from Hyeonggon)
-	2. dept considered a wait as a real wait once getting to
-	   __schedule() even if it has been set to TASK_RUNNING by wake
-	   up sources in advance. Fixed it so that dept doesn't consider
-	   the case as a real wait. (feedback from Jan Kara)
-	3. Stop tracking dependencies with a map once the event
-	   associated with the map has been handled. dept will start to
-	   work with the map again, on the next sleep.
-
-Changes from v2:
-
-	1. Disable dept on bit_wait_table[] in sched/wait_bit.c
-	   reporting a lot of false positives, which is my fault.
-	   Wait/event for bit_wait_table[] should've been tagged in a
-	   higher layer for better work, which is a future work.
-	   (feedback from Jan Kara)
-	2. Disable dept on crypto_larval's completion to prevent a false
-	   positive.
-
-Changes from v1:
-
-	1. Fix coding style and typo. (feedback from Steven)
-	2. Distinguish each work context from another in workqueue.
-	3. Skip checking lock acquisition with nest_lock, which is about
-	   correct lock usage that should be checked by lockdep.
-
-Changes from RFC(v0):
-
-	1. Prevent adding a wait tag at prepare_to_wait() but __schedule().
-	   (feedback from Linus and Matthew)
-	2. Use try version at lockdep_acquire_cpus_lock() annotation.
-	3. Distinguish each syscall context from another.
-
-Byungchul Park (39):
-  dept: implement DEPT(DEPendency Tracker)
-  dept: add single event dependency tracker APIs
-  dept: add lock dependency tracker APIs
-  dept: tie to lockdep and IRQ tracing
-  dept: add proc knobs to show stats and dependency graph
-  dept: distinguish each kernel context from another
-  dept: distinguish each work from another
-  dept: add a mechanism to refill the internal memory pools on running
-    out
-  dept: record the latest one out of consecutive waits of the same class
-  dept: apply sdt_might_sleep_{start,end}() to
-    wait_for_completion()/complete()
-  dept: apply sdt_might_sleep_{start,end}() to swait
-  dept: apply sdt_might_sleep_{start,end}() to waitqueue wait
-  dept: apply sdt_might_sleep_{start,end}() to hashed-waitqueue wait
-  dept: apply sdt_might_sleep_{start,end}() to dma fence
-  dept: track timeout waits separately with a new Kconfig
-  dept: apply timeout consideration to wait_for_completion()/complete()
-  dept: apply timeout consideration to swait
-  dept: apply timeout consideration to waitqueue wait
-  dept: apply timeout consideration to hashed-waitqueue wait
-  dept: apply timeout consideration to dma fence wait
-  dept: make dept able to work with an external wgen
-  dept: track PG_locked with dept
-  dept: print staged wait's stacktrace on report
-  locking/lockdep: prevent various lockdep assertions when
-    lockdep_off()'ed
-  dept: add documents for dept
-  cpu/hotplug: use a weaker annotation in AP thread
-  dept: assign dept map to mmu notifier invalidation synchronization
-  dept: assign unique dept_key to each distinct dma fence caller
-  dept: make dept aware of lockdep_set_lock_cmp_fn() annotation
-  dept: make dept stop from working on debug_locks_off()
-  dept: assign unique dept_key to each distinct wait_for_completion()
-    caller
-  completion, dept: introduce init_completion_dmap() API
-  dept: call dept_hardirqs_off() in local_irq_*() regardless of irq
-    state
-  dept: introduce APIs to set page usage and use subclasses_evt for the
-    usage
-  dept: track PG_writeback with dept
-  SUNRPC: relocate struct rcu_head to the first field of struct rpc_xprt
-  mm: percpu: increase PERCPU_DYNAMIC_SIZE_SHIFT on DEPT and large
-    PAGE_SIZE
-  rust: completion: Add __rust_helper to
-    rust_helper_wait_for_completion()
-  dept: implement a basic unit test for dept
-
-Yunseong Kim (1):
-  rcu/update: fix same dept key collision between various types of RCU
-
- Documentation/dev-tools/dept.rst     |  905 ++++++++
- Documentation/dev-tools/dept_api.rst |  124 +
- Documentation/dev-tools/index.rst    |    2 +
- drivers/dma-buf/dma-fence.c          |   23 +-
- include/linux/completion.h           |  124 +-
- include/linux/dept.h                 |  267 +++
- include/linux/dept_ldt.h             |   78 +
- include/linux/dept_sdt.h             |   68 +
- include/linux/dept_unit_test.h       |   61 +
- include/linux/dma-fence.h            |   74 +-
- include/linux/hardirq.h              |    3 +
- include/linux/irq-entry-common.h     |    4 +
- include/linux/irqflags.h             |   21 +-
- include/linux/local_lock_internal.h  |    1 +
- include/linux/lockdep.h              |  105 +-
- include/linux/lockdep_types.h        |    3 +
- include/linux/mm_types.h             |    4 +
- include/linux/mmu_notifier.h         |   26 +
- include/linux/mutex.h                |    1 +
- include/linux/page-flags.h           |  217 +-
- include/linux/pagemap.h              |   37 +-
- include/linux/percpu-rwsem.h         |    2 +-
- include/linux/percpu.h               |    4 +
- include/linux/rcupdate_wait.h        |   13 +-
- include/linux/rtmutex.h              |    1 +
- include/linux/rwlock_types.h         |    1 +
- include/linux/rwsem.h                |    1 +
- include/linux/sched.h                |  111 +
- include/linux/seqlock.h              |    2 +-
- include/linux/spinlock_types_raw.h   |    3 +
- include/linux/srcu.h                 |    2 +-
- include/linux/sunrpc/xprt.h          |    9 +-
- include/linux/swait.h                |    3 +
- include/linux/wait.h                 |    3 +
- include/linux/wait_bit.h             |    3 +
- init/init_task.c                     |    2 +
- init/main.c                          |    2 +
- kernel/Makefile                      |    1 +
- kernel/cpu.c                         |    2 +-
- kernel/dependency/Makefile           |    5 +
- kernel/dependency/dept.c             | 3222 ++++++++++++++++++++++++++
- kernel/dependency/dept_hash.h        |   10 +
- kernel/dependency/dept_internal.h    |  314 +++
- kernel/dependency/dept_object.h      |   13 +
- kernel/dependency/dept_proc.c        |   94 +
- kernel/dependency/dept_unit_test.c   |  149 ++
- kernel/exit.c                        |    1 +
- kernel/fork.c                        |    2 +
- kernel/locking/lockdep.c             |   33 +
- kernel/module/main.c                 |    2 +
- kernel/rcu/rcu.h                     |    1 +
- kernel/rcu/update.c                  |    5 +-
- kernel/sched/completion.c            |   62 +-
- kernel/sched/core.c                  |    9 +
- kernel/workqueue.c                   |    3 +
- lib/Kconfig.debug                    |   48 +
- lib/debug_locks.c                    |    2 +
- lib/locking-selftest.c               |    2 +
- mm/filemap.c                         |   38 +
- mm/mm_init.c                         |    3 +
- mm/mmu_notifier.c                    |   31 +-
- rust/helpers/completion.c            |    5 +
- 62 files changed, 6247 insertions(+), 120 deletions(-)
- create mode 100644 Documentation/dev-tools/dept.rst
- create mode 100644 Documentation/dev-tools/dept_api.rst
+ include/linux/dept.h              |  208 ++
+ include/linux/hardirq.h           |    3 +
+ include/linux/sched.h             |  107 ++
+ init/init_task.c                  |    2 +
+ init/main.c                       |    2 +
+ kernel/Makefile                   |    1 +
+ kernel/dependency/Makefile        |    3 +
+ kernel/dependency/dept.c          | 2977 +++++++++++++++++++++++++++++
+ kernel/dependency/dept_hash.h     |   10 +
+ kernel/dependency/dept_internal.h |  283 +++
+ kernel/dependency/dept_object.h   |   13 +
+ kernel/exit.c                     |    1 +
+ kernel/fork.c                     |    2 +
+ kernel/module/main.c              |    2 +
+ kernel/sched/core.c               |    9 +
+ lib/Kconfig.debug                 |   26 +
+ lib/locking-selftest.c            |    2 +
+ 17 files changed, 3651 insertions(+)
  create mode 100644 include/linux/dept.h
- create mode 100644 include/linux/dept_ldt.h
- create mode 100644 include/linux/dept_sdt.h
- create mode 100644 include/linux/dept_unit_test.h
  create mode 100644 kernel/dependency/Makefile
  create mode 100644 kernel/dependency/dept.c
  create mode 100644 kernel/dependency/dept_hash.h
  create mode 100644 kernel/dependency/dept_internal.h
  create mode 100644 kernel/dependency/dept_object.h
- create mode 100644 kernel/dependency/dept_proc.c
- create mode 100644 kernel/dependency/dept_unit_test.c
 
-
-base-commit: 028ef9c96e96197026887c0f092424679298aae8
+diff --git a/include/linux/dept.h b/include/linux/dept.h
+new file mode 100644
+index 000000000000..b1c55305be17
+--- /dev/null
++++ b/include/linux/dept.h
+@@ -0,0 +1,208 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * DEPT(DEPendency Tracker) - runtime dependency tracker
++ *
++ * Started by Byungchul Park <max.byungchul.park@gmail.com>:
++ *
++ *  Copyright (c) 2020 LG Electronics, Inc., Byungchul Park
++ *  Copyright (c) 2024 SK hynix, Inc., Byungchul Park
++ */
++
++#ifndef __LINUX_DEPT_H
++#define __LINUX_DEPT_H
++
++#ifdef CONFIG_DEPT
++
++struct task_struct;
++
++#define DEPT_MAX_STACK_ENTRY		16
++#define DEPT_MAX_WAIT_HIST		64
++#define DEPT_MAX_ECXT_HELD		48
++
++#define DEPT_MAX_SUBCLASSES		16
++#define DEPT_MAX_SUBCLASSES_EVT		2
++#define DEPT_MAX_SUBCLASSES_USR		(DEPT_MAX_SUBCLASSES / DEPT_MAX_SUBCLASSES_EVT)
++#define DEPT_MAX_SUBCLASSES_CACHE	2
++
++#define DEPT_SIRQ			0
++#define DEPT_HIRQ			1
++#define DEPT_IRQS_NR			2
++#define DEPT_SIRQF			(1UL << DEPT_SIRQ)
++#define DEPT_HIRQF			(1UL << DEPT_HIRQ)
++
++struct dept_key {
++	union {
++		/*
++		 * Each byte-wise address will be used as its key.
++		 */
++		char			base[DEPT_MAX_SUBCLASSES];
++
++		/*
++		 * for caching the main class pointer
++		 */
++		struct dept_class	*classes[DEPT_MAX_SUBCLASSES_CACHE];
++	};
++};
++
++struct dept_map {
++	const char			*name;
++	struct dept_key			*keys;
++
++	/*
++	 * subclass that can be set from user
++	 */
++	int				sub_u;
++
++	/*
++	 * It's local copy for fast access to the associated classes.
++	 * Also used for dept_key for static maps.
++	 */
++	struct dept_key			map_key;
++
++	/*
++	 * wait timestamp associated to this map
++	 */
++	unsigned int			wgen;
++
++	/*
++	 * whether this map should be going to be checked or not
++	 */
++	bool				nocheck;
++};
++
++#define DEPT_MAP_INITIALIZER(n, k)					\
++{									\
++	.name = #n,							\
++	.keys = (struct dept_key *)(k),					\
++	.sub_u = 0,							\
++	.map_key = { .classes = { NULL, } },				\
++	.wgen = 0U,							\
++	.nocheck = false,						\
++}
++
++struct dept_ecxt_held {
++	/*
++	 * associated event context
++	 */
++	struct dept_ecxt		*ecxt;
++
++	/*
++	 * unique key for this dept_ecxt_held
++	 */
++	struct dept_map			*map;
++
++	/*
++	 * class of the ecxt of this dept_ecxt_held
++	 */
++	struct dept_class		*class;
++
++	/*
++	 * the wgen when the event context started
++	 */
++	unsigned int			wgen;
++
++	/*
++	 * subclass that only works in the local context
++	 */
++	int				sub_l;
++};
++
++struct dept_wait_hist {
++	/*
++	 * associated wait
++	 */
++	struct dept_wait		*wait;
++
++	/*
++	 * unique id of all waits system-wise until wrapped
++	 */
++	unsigned int			wgen;
++
++	/*
++	 * local context id to identify IRQ context
++	 */
++	unsigned int			ctxt_id;
++};
++
++void dept_on(void);
++void dept_off(void);
++void dept_init(void);
++void dept_task_init(struct task_struct *t);
++void dept_task_exit(struct task_struct *t);
++void dept_free_range(void *start, unsigned int sz);
++
++void dept_map_init(struct dept_map *m, struct dept_key *k, int sub_u, const char *n);
++void dept_map_reinit(struct dept_map *m, struct dept_key *k, int sub_u, const char *n);
++void dept_map_copy(struct dept_map *to, struct dept_map *from);
++void dept_wait(struct dept_map *m, unsigned long w_f, unsigned long ip, const char *w_fn, int sub_l);
++void dept_stage_wait(struct dept_map *m, struct dept_key *k, unsigned long ip, const char *w_fn);
++void dept_request_event_wait_commit(void);
++void dept_clean_stage(void);
++void dept_ttwu_stage_wait(struct task_struct *t, unsigned long ip);
++void dept_ecxt_enter(struct dept_map *m, unsigned long e_f, unsigned long ip, const char *c_fn, const char *e_fn, int sub_l);
++bool dept_ecxt_holding(struct dept_map *m, unsigned long e_f);
++void dept_request_event(struct dept_map *m);
++void dept_event(struct dept_map *m, unsigned long e_f, unsigned long ip, const char *e_fn);
++void dept_ecxt_exit(struct dept_map *m, unsigned long e_f, unsigned long ip);
++void dept_sched_enter(void);
++void dept_sched_exit(void);
++
++static inline void dept_ecxt_enter_nokeep(struct dept_map *m)
++{
++	dept_ecxt_enter(m, 0UL, 0UL, NULL, NULL, 0);
++}
++
++/*
++ * for users who want to manage external keys
++ */
++void dept_key_init(struct dept_key *k);
++void dept_key_destroy(struct dept_key *k);
++void dept_map_ecxt_modify(struct dept_map *m, unsigned long e_f, struct dept_key *new_k, unsigned long new_e_f, unsigned long new_ip, const char *new_c_fn, const char *new_e_fn, int new_sub_l);
++
++void dept_softirq_enter(void);
++void dept_hardirq_enter(void);
++void dept_softirqs_on_ip(unsigned long ip);
++void dept_hardirqs_on(void);
++void dept_softirqs_off(void);
++void dept_hardirqs_off(void);
++#else /* !CONFIG_DEPT */
++struct dept_key { };
++struct dept_map { };
++
++#define DEPT_MAP_INITIALIZER(n, k) { }
++
++#define dept_on()					do { } while (0)
++#define dept_off()					do { } while (0)
++#define dept_init()					do { } while (0)
++#define dept_task_init(t)				do { } while (0)
++#define dept_task_exit(t)				do { } while (0)
++#define dept_free_range(s, sz)				do { } while (0)
++
++#define dept_map_init(m, k, su, n)			do { (void)(n); (void)(k); } while (0)
++#define dept_map_reinit(m, k, su, n)			do { (void)(n); (void)(k); } while (0)
++#define dept_map_copy(t, f)				do { } while (0)
++#define dept_wait(m, w_f, ip, w_fn, sl)			do { (void)(w_fn); } while (0)
++#define dept_stage_wait(m, k, ip, w_fn)			do { (void)(k); (void)(w_fn); } while (0)
++#define dept_request_event_wait_commit()		do { } while (0)
++#define dept_clean_stage()				do { } while (0)
++#define dept_ttwu_stage_wait(t, ip)			do { } while (0)
++#define dept_ecxt_enter(m, e_f, ip, c_fn, e_fn, sl)	do { (void)(c_fn); (void)(e_fn); } while (0)
++#define dept_ecxt_holding(m, e_f)			false
++#define dept_request_event(m)				do { } while (0)
++#define dept_event(m, e_f, ip, e_fn)			do { (void)(e_fn); } while (0)
++#define dept_ecxt_exit(m, e_f, ip)			do { } while (0)
++#define dept_sched_enter()				do { } while (0)
++#define dept_sched_exit()				do { } while (0)
++#define dept_ecxt_enter_nokeep(m)			do { } while (0)
++#define dept_key_init(k)				do { (void)(k); } while (0)
++#define dept_key_destroy(k)				do { (void)(k); } while (0)
++#define dept_map_ecxt_modify(m, e_f, n_k, n_e_f, n_ip, n_c_fn, n_e_fn, n_sl) do { (void)(n_k); (void)(n_c_fn); (void)(n_e_fn); } while (0)
++
++#define dept_softirq_enter()				do { } while (0)
++#define dept_hardirq_enter()				do { } while (0)
++#define dept_softirqs_on_ip(ip)				do { } while (0)
++#define dept_hardirqs_on()				do { } while (0)
++#define dept_softirqs_off()				do { } while (0)
++#define dept_hardirqs_off()				do { } while (0)
++#endif
++#endif /* __LINUX_DEPT_H */
+diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
+index d57cab4d4c06..bb279dbbe748 100644
+--- a/include/linux/hardirq.h
++++ b/include/linux/hardirq.h
+@@ -5,6 +5,7 @@
+ #include <linux/context_tracking_state.h>
+ #include <linux/preempt.h>
+ #include <linux/lockdep.h>
++#include <linux/dept.h>
+ #include <linux/ftrace_irq.h>
+ #include <linux/sched.h>
+ #include <linux/vtime.h>
+@@ -106,6 +107,7 @@ void irq_exit_rcu(void);
+  */
+ #define __nmi_enter()						\
+ 	do {							\
++		dept_off();					\
+ 		lockdep_off();					\
+ 		arch_nmi_enter();				\
+ 		BUG_ON(in_nmi() == NMI_MASK);			\
+@@ -128,6 +130,7 @@ void irq_exit_rcu(void);
+ 		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
+ 		arch_nmi_exit();				\
+ 		lockdep_on();					\
++		dept_on();					\
+ 	} while (0)
+ 
+ #define nmi_exit()						\
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 5a5d3dbc9cdf..11c2efbf59b3 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -50,6 +50,7 @@
+ #include <linux/unwind_deferred_types.h>
+ #include <asm/kmap_size.h>
+ #include <linux/time64.h>
++#include <linux/dept.h>
+ #ifndef COMPILE_OFFSETS
+ #include <generated/rq-offsets.h>
+ #endif
+@@ -817,6 +818,110 @@ struct kmap_ctrl {
+ #endif
+ };
+ 
++#ifdef CONFIG_DEPT
++struct dept_task {
++	/*
++	 * all event contexts that have entered and before exiting
++	 */
++	struct dept_ecxt_held		ecxt_held[DEPT_MAX_ECXT_HELD];
++	int				ecxt_held_pos;
++
++	/*
++	 * ring buffer holding all waits that have happened
++	 */
++	struct dept_wait_hist		wait_hist[DEPT_MAX_WAIT_HIST];
++	int				wait_hist_pos;
++
++	/*
++	 * sequential id to identify each IRQ context
++	 */
++	unsigned int			irq_id[DEPT_IRQS_NR];
++
++	/*
++	 * for tracking IRQ-enabled points with cross-event
++	 */
++	unsigned int			wgen_enirq[DEPT_IRQS_NR];
++
++	/*
++	 * for keeping up-to-date IRQ-enabled points
++	 */
++	unsigned long			enirq_ip[DEPT_IRQS_NR];
++
++	/*
++	 * for reserving a current stack instance at each operation
++	 */
++	struct dept_stack		*stack;
++
++	/*
++	 * for preventing recursive call into DEPT engine
++	 */
++	int				recursive;
++
++	/*
++	 * for preventing reentrance to WARN*() while warning
++	 */
++	int				in_warning;
++
++	/*
++	 * for staging data to commit a wait
++	 */
++	struct dept_map			stage_m;
++	struct dept_map			*stage_real_m;
++	bool				stage_sched_map;
++	const char			*stage_w_fn;
++	unsigned long			stage_ip;
++	arch_spinlock_t			stage_lock;
++
++	/*
++	 * the number of missing ecxts
++	 */
++	int				missing_ecxt;
++
++	/*
++	 * for tracking IRQ-enable state
++	 */
++	bool				hardirqs_enabled;
++	bool				softirqs_enabled;
++
++	/*
++	 * whether the current is on do_exit()
++	 */
++	bool				task_exit;
++
++	/*
++	 * whether the current is running __schedule()
++	 */
++	bool				in_sched;
++};
++
++#define DEPT_TASK_INITIALIZER(t)				\
++{								\
++	.wait_hist = { { .wait = NULL, } },			\
++	.ecxt_held_pos = 0,					\
++	.wait_hist_pos = 0,					\
++	.irq_id = { 0U },					\
++	.wgen_enirq = { 0U },					\
++	.enirq_ip = { 0UL },					\
++	.stack = NULL,						\
++	.recursive = 0,						\
++	.in_warning = 0,					\
++	.stage_m = DEPT_MAP_INITIALIZER((t)->stage_m, NULL),	\
++	.stage_real_m = NULL,					\
++	.stage_sched_map = false,				\
++	.stage_w_fn = NULL,					\
++	.stage_ip = 0UL,					\
++	.stage_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED,\
++	.missing_ecxt = 0,					\
++	.hardirqs_enabled = false,				\
++	.softirqs_enabled = false,				\
++	.task_exit = false,					\
++	.in_sched = false,					\
++}
++#else
++struct dept_task { };
++#define DEPT_TASK_INITIALIZER(t) { }
++#endif
++
+ struct task_struct {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/*
+@@ -1271,6 +1376,8 @@ struct task_struct {
+ 	struct held_lock		held_locks[MAX_LOCK_DEPTH];
+ #endif
+ 
++	struct dept_task		dept_task;
++
+ #if defined(CONFIG_UBSAN) && !defined(CONFIG_UBSAN_TRAP)
+ 	unsigned int			in_ubsan;
+ #endif
+diff --git a/init/init_task.c b/init/init_task.c
+index 5c838757fc10..79aae8437b10 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -14,6 +14,7 @@
+ #include <linux/numa.h>
+ #include <linux/scs.h>
+ #include <linux/plist.h>
++#include <linux/dept.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -230,6 +231,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
+ 	.curr_chain_key = INITIAL_CHAIN_KEY,
+ 	.lockdep_recursion = 0,
+ #endif
++	.dept_task = DEPT_TASK_INITIALIZER(init_task),
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	.ret_stack		= NULL,
+ 	.tracing_graph_pause	= ATOMIC_INIT(0),
+diff --git a/init/main.c b/init/main.c
+index 1cb395dd94e4..9c0603cca965 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -66,6 +66,7 @@
+ #include <linux/debug_locks.h>
+ #include <linux/debugobjects.h>
+ #include <linux/lockdep.h>
++#include <linux/dept.h>
+ #include <linux/kmemleak.h>
+ #include <linux/padata.h>
+ #include <linux/pid_namespace.h>
+@@ -1150,6 +1151,7 @@ void start_kernel(void)
+ 		      panic_param);
+ 
+ 	lockdep_init();
++	dept_init();
+ 
+ 	/*
+ 	 * Need to run this when irqs are enabled, because it wants
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 6785982013dc..a1856fb9887c 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -59,6 +59,7 @@ obj-y += dma/
+ obj-y += entry/
+ obj-y += unwind/
+ obj-$(CONFIG_MODULES) += module/
++obj-y += dependency/
+ 
+ obj-$(CONFIG_KCMP) += kcmp.o
+ obj-$(CONFIG_FREEZER) += freezer.o
+diff --git a/kernel/dependency/Makefile b/kernel/dependency/Makefile
+new file mode 100644
+index 000000000000..b5cfb8a03c0c
+--- /dev/null
++++ b/kernel/dependency/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_DEPT) += dept.o
+diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
+new file mode 100644
+index 000000000000..52b9669fe017
+--- /dev/null
++++ b/kernel/dependency/dept.c
+@@ -0,0 +1,2977 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * DEPT(DEPendency Tracker) - Runtime dependency tracker
++ *
++ * Started by Byungchul Park <max.byungchul.park@gmail.com>:
++ *
++ *  Copyright (c) 2020 LG Electronics, Inc., Byungchul Park
++ *  Copyright (c) 2024 SK hynix, Inc., Byungchul Park
++ *
++ * DEPT provides a general way to detect potential deadlocks at runtime
++ * and the interest is not limited to typical lock but to every
++ * synchronization primitives.
++ *
++ * The following ideas were borrowed from LOCKDEP:
++ *
++ *    1) Use a graph to track relationship between classes.
++ *    2) Prevent performance regression using hash.
++ *
++ * The following items were enhanced from LOCKDEP:
++ *
++ *    1) Cover more deadlock cases.
++ *    2) Allow multiple reports.
++ *
++ * TODO: Both LOCKDEP and DEPT should co-exist until DEPT is considered
++ * stable. Then the dependency check routine should be replaced with
++ * DEPT after. It should finally look like:
++ *
++ *
++ *
++ * As is:
++ *
++ *    LOCKDEP
++ *    +-----------------------------------------+
++ *    | Lock usage correctness check            | <-> locks
++ *    |                                         |
++ *    |                                         |
++ *    | +-------------------------------------+ |
++ *    | | Dependency check                    | |
++ *    | | (by tracking lock acquisition order)| |
++ *    | +-------------------------------------+ |
++ *    |                                         |
++ *    +-----------------------------------------+
++ *
++ *    DEPT
++ *    +-----------------------------------------+
++ *    | Dependency check                        | <-> waits/events
++ *    | (by tracking wait and event context)    |
++ *    +-----------------------------------------+
++ *
++ *
++ *
++ * To be:
++ *
++ *    LOCKDEP
++ *    +-----------------------------------------+
++ *    | Lock usage correctness check            | <-> locks
++ *    |                                         |
++ *    |                                         |
++ *    |       (Request dependency check)        |
++ *    |                    T                    |
++ *    +--------------------|--------------------+
++ *                         |
++ *    DEPT                 V
++ *    +-----------------------------------------+
++ *    | Dependency check                        | <-> waits/events
++ *    | (by tracking wait and event context)    |
++ *    +-----------------------------------------+
++ */
++
++#include <linux/sched.h>
++#include <linux/stacktrace.h>
++#include <linux/spinlock.h>
++#include <linux/kallsyms.h>
++#include <linux/hash.h>
++#include <linux/dept.h>
++#include <linux/utsname.h>
++#include <linux/kernel.h>
++#include "dept_internal.h"
++
++static int dept_stop;
++static int dept_per_cpu_ready;
++
++static inline struct dept_task *dept_task(void)
++{
++	return &current->dept_task;
++}
++
++#define DEPT_READY_WARN (!oops_in_progress && !dept_task()->in_warning)
++
++/*
++ * Make all operations using DEPT_WARN_ON() fail on oops_in_progress and
++ * prevent warning message.
++ */
++#define DEPT_WARN_ON_ONCE(c)						\
++	({								\
++		int __ret = !!(c);					\
++									\
++		if (likely(DEPT_READY_WARN)) {				\
++			++dept_task()->in_warning;			\
++			WARN_ONCE(c, "DEPT_WARN_ON_ONCE: " #c);		\
++			--dept_task()->in_warning;			\
++		}							\
++		__ret;							\
++	})
++
++#define DEPT_WARN_ONCE(s...)						\
++	({								\
++		if (likely(DEPT_READY_WARN)) {				\
++			++dept_task()->in_warning;			\
++			WARN_ONCE(1, "DEPT_WARN_ONCE: " s);		\
++			--dept_task()->in_warning;			\
++		}							\
++	})
++
++#define DEPT_WARN_ON(c)							\
++	({								\
++		int __ret = !!(c);					\
++									\
++		if (likely(DEPT_READY_WARN)) {				\
++			++dept_task()->in_warning;			\
++			WARN(c, "DEPT_WARN_ON: " #c);			\
++			--dept_task()->in_warning;			\
++		}							\
++		__ret;							\
++	})
++
++#define DEPT_WARN(s...)							\
++	({								\
++		if (likely(DEPT_READY_WARN)) {				\
++			++dept_task()->in_warning;			\
++			WARN(1, "DEPT_WARN: " s);			\
++			--dept_task()->in_warning;			\
++		}							\
++	})
++
++#define DEPT_STOP(s...)							\
++	({								\
++		WRITE_ONCE(dept_stop, 1);				\
++		if (likely(DEPT_READY_WARN)) {				\
++			++dept_task()->in_warning;			\
++			WARN(1, "DEPT_STOP: " s);			\
++			--dept_task()->in_warning;			\
++		}							\
++	})
++
++#define DEPT_INFO_ONCE(s...) pr_warn_once("DEPT_INFO_ONCE: " s)
++
++static arch_spinlock_t dept_spin = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
++
++/*
++ * The DEPT internal engine should be cautious when using external functions
++ * (e.g., printk) during reporting, as such usage might cause untrackable
++ * deadlocks.
++ */
++static atomic_t dept_outworld = ATOMIC_INIT(0);
++
++static void dept_outworld_enter(void)
++{
++	atomic_inc(&dept_outworld);
++}
++
++static void dept_outworld_exit(void)
++{
++	atomic_dec(&dept_outworld);
++}
++
++static bool dept_outworld_entered(void)
++{
++	return atomic_read(&dept_outworld);
++}
++
++static bool dept_lock(void)
++{
++	while (!arch_spin_trylock(&dept_spin))
++		if (unlikely(dept_outworld_entered()))
++			return false;
++	return true;
++}
++
++static void dept_unlock(void)
++{
++	arch_spin_unlock(&dept_spin);
++}
++
++enum bfs_ret {
++	BFS_CONTINUE,
++	BFS_DONE,
++	BFS_SKIP,
++};
++
++static bool before(unsigned int a, unsigned int b)
++{
++	return (int)(a - b) < 0;
++}
++
++static bool valid_stack(struct dept_stack *s)
++{
++	return s && s->nr > 0;
++}
++
++static bool valid_class(struct dept_class *c)
++{
++	return c->key;
++}
++
++static void invalidate_class(struct dept_class *c)
++{
++	c->key = 0UL;
++}
++
++static struct dept_ecxt *dep_e(struct dept_dep *d)
++{
++	return d->ecxt;
++}
++
++static struct dept_wait *dep_w(struct dept_dep *d)
++{
++	return d->wait;
++}
++
++static struct dept_class *dep_fc(struct dept_dep *d)
++{
++	return dep_e(d)->class;
++}
++
++static struct dept_class *dep_tc(struct dept_dep *d)
++{
++	return dep_w(d)->class;
++}
++
++static const char *irq_str(int irq)
++{
++	if (irq == DEPT_SIRQ)
++		return "softirq";
++	if (irq == DEPT_HIRQ)
++		return "hardirq";
++	return "(unknown)";
++}
++
++/*
++ * DEPT doesn't work when it's stopped by DEPT_STOP() or when running in a
++ * NMI context.
++ */
++static bool dept_working(void)
++{
++	return !READ_ONCE(dept_stop) && !in_nmi();
++}
++
++/*
++ * Even k == NULL is considered a valid key because it would use
++ * &->map_key as the key in that case.
++ */
++struct dept_key __dept_no_validate__;
++static bool valid_key(struct dept_key *k)
++{
++	return &__dept_no_validate__ != k;
++}
++
++/*
++ * Pool
++ * =====================================================================
++ * DEPT maintains pools to provide objects in a safe way.
++ *
++ *    1) Static pool is used at the beginning of boot time.
++ *    2) Local pool is tried first before the static pool. Objects that
++ *       have been freed will be placed there.
++ */
++
++enum object_t {
++#define OBJECT(id, nr) OBJECT_##id,
++	#include "dept_object.h"
++#undef OBJECT
++	OBJECT_NR,
++};
++
++#define OBJECT(id, nr)							\
++static struct dept_##id spool_##id[nr];					\
++static DEFINE_PER_CPU(struct llist_head, lpool_##id);
++	#include "dept_object.h"
++#undef OBJECT
++
++static struct dept_pool dept_pool[OBJECT_NR] = {
++#define OBJECT(id, nr) {						\
++	.name = #id,							\
++	.obj_sz = sizeof(struct dept_##id),				\
++	.obj_nr = ATOMIC_INIT(nr),					\
++	.node_off = offsetof(struct dept_##id, pool_node),		\
++	.spool = spool_##id,						\
++	.lpool = &lpool_##id, },
++	#include "dept_object.h"
++#undef OBJECT
++};
++
++/*
++ * We can use llist regardless of whether CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG
++ * is enabled, because NMI and other contexts on the same CPU never run
++ * inside DEPT concurrently—reentrance is prevented.
++ */
++static void *from_pool(enum object_t t)
++{
++	struct dept_pool *p;
++	struct llist_head *h;
++	struct llist_node *n;
++
++	/*
++	 * llist_del_first() doesn't allow concurrent access, e.g.,
++	 * between process and IRQ context.
++	 */
++	if (DEPT_WARN_ON(!irqs_disabled()))
++		return NULL;
++
++	p = &dept_pool[t];
++
++	/*
++	 * Try local pool first.
++	 */
++	if (likely(dept_per_cpu_ready))
++		h = this_cpu_ptr(p->lpool);
++	else
++		h = &p->boot_pool;
++
++	n = llist_del_first(h);
++	if (n)
++		return (void *)n - p->node_off;
++
++	/*
++	 * Try static pool.
++	 */
++	if (atomic_read(&p->obj_nr) > 0) {
++		int idx = atomic_dec_return(&p->obj_nr);
++
++		if (idx >= 0)
++			return p->spool + (idx * p->obj_sz);
++	}
++
++	DEPT_INFO_ONCE("---------------------------------------------\n"
++		"  Some of Dept internal resources are run out.\n"
++		"  Dept might still work if the resources get freed.\n"
++		"  However, the chances are Dept will suffer from\n"
++		"  the lack from now. Needs to extend the internal\n"
++		"  resource pools. Ask max.byungchul.park@gmail.com\n");
++	return NULL;
++}
++
++static void to_pool(void *o, enum object_t t)
++{
++	struct dept_pool *p = &dept_pool[t];
++	struct llist_head *h;
++
++	preempt_disable();
++	if (likely(dept_per_cpu_ready))
++		h = this_cpu_ptr(p->lpool);
++	else
++		h = &p->boot_pool;
++
++	llist_add(o + p->node_off, h);
++	preempt_enable();
++}
++
++#define OBJECT(id, nr)							\
++static void (*ctor_##id)(struct dept_##id *a);				\
++static void (*dtor_##id)(struct dept_##id *a);				\
++static struct dept_##id *new_##id(void)					\
++{									\
++	struct dept_##id *a;						\
++									\
++	a = (struct dept_##id *)from_pool(OBJECT_##id);			\
++	if (unlikely(!a))						\
++		return NULL;						\
++									\
++	atomic_set(&a->ref, 1);						\
++									\
++	if (ctor_##id)							\
++		ctor_##id(a);						\
++									\
++	return a;							\
++}									\
++									\
++static struct dept_##id *get_##id(struct dept_##id *a)			\
++{									\
++	atomic_inc(&a->ref);						\
++	return a;							\
++}									\
++									\
++static void put_##id(struct dept_##id *a)				\
++{									\
++	if (!atomic_dec_return(&a->ref)) {				\
++		if (dtor_##id)						\
++			dtor_##id(a);					\
++		to_pool(a, OBJECT_##id);				\
++	}								\
++}									\
++									\
++static void del_##id(struct dept_##id *a)				\
++{									\
++	put_##id(a);							\
++}									\
++									\
++static bool __maybe_unused id##_consumed(struct dept_##id *a)		\
++{									\
++	return a && atomic_read(&a->ref) > 1;				\
++}
++#include "dept_object.h"
++#undef OBJECT
++
++#define SET_CONSTRUCTOR(id, f) \
++static void (*ctor_##id)(struct dept_##id *a) = f
++
++static void initialize_dep(struct dept_dep *d)
++{
++	INIT_LIST_HEAD(&d->dep_node);
++	INIT_LIST_HEAD(&d->dep_rev_node);
++}
++SET_CONSTRUCTOR(dep, initialize_dep);
++
++static void initialize_class(struct dept_class *c)
++{
++	int i;
++
++	for (i = 0; i < DEPT_IRQS_NR; i++) {
++		struct dept_iecxt *ie = &c->iecxt[i];
++		struct dept_iwait *iw = &c->iwait[i];
++
++		ie->ecxt = NULL;
++		ie->enirq = i;
++		ie->staled = false;
++
++		iw->wait = NULL;
++		iw->irq = i;
++		iw->staled = false;
++		iw->touched = false;
++	}
++	c->bfs_gen = 0U;
++
++	INIT_LIST_HEAD(&c->all_node);
++	INIT_LIST_HEAD(&c->dep_head);
++	INIT_LIST_HEAD(&c->dep_rev_head);
++	INIT_LIST_HEAD(&c->bfs_node);
++}
++SET_CONSTRUCTOR(class, initialize_class);
++
++static void initialize_ecxt(struct dept_ecxt *e)
++{
++	int i;
++
++	for (i = 0; i < DEPT_IRQS_NR; i++) {
++		e->enirq_stack[i] = NULL;
++		e->enirq_ip[i] = 0UL;
++	}
++	e->ecxt_ip = 0UL;
++	e->ecxt_stack = NULL;
++	e->enirqf = 0UL;
++	e->event_ip = 0UL;
++	e->event_stack = NULL;
++}
++SET_CONSTRUCTOR(ecxt, initialize_ecxt);
++
++static void initialize_wait(struct dept_wait *w)
++{
++	int i;
++
++	for (i = 0; i < DEPT_IRQS_NR; i++) {
++		w->irq_stack[i] = NULL;
++		w->irq_ip[i] = 0UL;
++	}
++	w->wait_ip = 0UL;
++	w->wait_stack = NULL;
++	w->irqf = 0UL;
++}
++SET_CONSTRUCTOR(wait, initialize_wait);
++
++static void initialize_stack(struct dept_stack *s)
++{
++	s->nr = 0;
++}
++SET_CONSTRUCTOR(stack, initialize_stack);
++
++#define OBJECT(id, nr) \
++static void (*ctor_##id)(struct dept_##id *a);
++	#include "dept_object.h"
++#undef OBJECT
++
++#undef SET_CONSTRUCTOR
++
++#define SET_DESTRUCTOR(id, f) \
++static void (*dtor_##id)(struct dept_##id *a) = f
++
++static void destroy_dep(struct dept_dep *d)
++{
++	if (dep_e(d))
++		put_ecxt(dep_e(d));
++	if (dep_w(d))
++		put_wait(dep_w(d));
++}
++SET_DESTRUCTOR(dep, destroy_dep);
++
++static void destroy_ecxt(struct dept_ecxt *e)
++{
++	int i;
++
++	for (i = 0; i < DEPT_IRQS_NR; i++)
++		if (e->enirq_stack[i])
++			put_stack(e->enirq_stack[i]);
++	if (e->class)
++		put_class(e->class);
++	if (e->ecxt_stack)
++		put_stack(e->ecxt_stack);
++	if (e->event_stack)
++		put_stack(e->event_stack);
++}
++SET_DESTRUCTOR(ecxt, destroy_ecxt);
++
++static void destroy_wait(struct dept_wait *w)
++{
++	int i;
++
++	for (i = 0; i < DEPT_IRQS_NR; i++)
++		if (w->irq_stack[i])
++			put_stack(w->irq_stack[i]);
++	if (w->class)
++		put_class(w->class);
++	if (w->wait_stack)
++		put_stack(w->wait_stack);
++}
++SET_DESTRUCTOR(wait, destroy_wait);
++
++#define OBJECT(id, nr) \
++static void (*dtor_##id)(struct dept_##id *a);
++	#include "dept_object.h"
++#undef OBJECT
++
++#undef SET_DESTRUCTOR
++
++/*
++ * Caching and hashing
++ * =====================================================================
++ * DEPT makes use of caching and hashing to improve performance. Each
++ * object can be obtained in O(1) with its key.
++ *
++ * NOTE: Currently we assume all the objects in the hashs will never be
++ * removed. Implement it when needed.
++ */
++
++/*
++ * Some information might be lost but it's only for hashing key.
++ */
++static unsigned long mix(unsigned long a, unsigned long b)
++{
++	int halfbits = sizeof(unsigned long) * 8 / 2;
++	unsigned long halfmask = (1UL << halfbits) - 1UL;
++
++	return (a << halfbits) | (b & halfmask);
++}
++
++static bool cmp_dep(struct dept_dep *d1, struct dept_dep *d2)
++{
++	return dep_fc(d1)->key == dep_fc(d2)->key &&
++	       dep_tc(d1)->key == dep_tc(d2)->key;
++}
++
++static unsigned long key_dep(struct dept_dep *d)
++{
++	return mix(dep_fc(d)->key, dep_tc(d)->key);
++}
++
++static bool cmp_class(struct dept_class *c1, struct dept_class *c2)
++{
++	return c1->key == c2->key;
++}
++
++static unsigned long key_class(struct dept_class *c)
++{
++	return c->key;
++}
++
++#define HASH(id, bits)							\
++static struct hlist_head table_##id[1 << (bits)];			\
++									\
++static struct hlist_head *head_##id(struct dept_##id *a)		\
++{									\
++	return table_##id + hash_long(key_##id(a), bits);		\
++}									\
++									\
++static struct dept_##id *hash_lookup_##id(struct dept_##id *a)		\
++{									\
++	struct dept_##id *b;						\
++									\
++	hlist_for_each_entry_rcu(b, head_##id(a), hash_node)		\
++		if (cmp_##id(a, b))					\
++			return b;					\
++	return NULL;							\
++}									\
++									\
++static void hash_add_##id(struct dept_##id *a)				\
++{									\
++	get_##id(a);							\
++	hlist_add_head_rcu(&a->hash_node, head_##id(a));		\
++}									\
++									\
++static void hash_del_##id(struct dept_##id *a)				\
++{									\
++	hlist_del_rcu(&a->hash_node);					\
++	put_##id(a);							\
++}
++#include "dept_hash.h"
++#undef HASH
++
++static struct dept_dep *lookup_dep(struct dept_class *fc,
++				   struct dept_class *tc)
++{
++	struct dept_ecxt onetime_e = { .class = fc };
++	struct dept_wait onetime_w = { .class = tc };
++	struct dept_dep  onetime_d = { .ecxt = &onetime_e,
++				       .wait = &onetime_w };
++	return hash_lookup_dep(&onetime_d);
++}
++
++static struct dept_class *lookup_class(unsigned long key)
++{
++	struct dept_class onetime_c = { .key = key };
++
++	return hash_lookup_class(&onetime_c);
++}
++
++/*
++ * Report
++ * =====================================================================
++ * DEPT prints useful information to help debugging on detection of
++ * problematic dependency.
++ */
++
++static void print_ip_stack(unsigned long ip, struct dept_stack *s)
++{
++	if (ip)
++		print_ip_sym(KERN_WARNING, ip);
++
++#ifdef CONFIG_DEPT_DEBUG
++	if (!s)
++		pr_warn("stack is NULL.\n");
++	else if (!s->nr)
++		pr_warn("stack->nr is 0.\n");
++	if (s)
++		pr_warn("stack ref is %d.\n", atomic_read(&s->ref));
++#endif
++
++	if (valid_stack(s)) {
++		pr_warn("stacktrace:\n");
++		stack_trace_print(s->raw, s->nr, 5);
++	}
++
++	if (!ip && !valid_stack(s))
++		pr_warn("(N/A)\n");
++}
++
++#define print_spc(spc, fmt, ...) \
++	pr_warn("%*c" fmt, (spc) * 3, ' ', ##__VA_ARGS__)
++
++static void print_diagram(struct dept_dep *d)
++{
++	struct dept_ecxt *e = dep_e(d);
++	struct dept_wait *w = dep_w(d);
++	struct dept_class *fc = dep_fc(d);
++	struct dept_class *tc = dep_tc(d);
++	unsigned long irqf;
++	int irq;
++	bool firstline = true;
++	int spc = 1;
++	const char *w_fn = w->wait_fn ?: "(unknown)";
++	const char *e_fn = e->event_fn ?: "(unknown)";
++	const char *c_fn = e->ecxt_fn ?: "(unknown)";
++	const char *fc_n = fc->sched_map ? "<sched>" : (fc->name ?: "(unknown)");
++	const char *tc_n = tc->sched_map ? "<sched>" : (tc->name ?: "(unknown)");
++
++	irqf = e->enirqf & w->irqf;
++	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR) {
++		if (!firstline)
++			pr_warn("\nor\n\n");
++		firstline = false;
++
++		print_spc(spc, "[S] %s(%s:%d)\n", c_fn, fc_n, fc->sub_id);
++		print_spc(spc, "    <%s interrupt>\n", irq_str(irq));
++		print_spc(spc + 1, "[W] %s(%s:%d)\n", w_fn, tc_n, tc->sub_id);
++		print_spc(spc, "[E] %s(%s:%d)\n", e_fn, fc_n, fc->sub_id);
++	}
++
++	if (!irqf) {
++		print_spc(spc, "[S] %s(%s:%d)\n", c_fn, fc_n, fc->sub_id);
++		print_spc(spc, "[W] %s(%s:%d)\n", w_fn, tc_n, tc->sub_id);
++		print_spc(spc, "[E] %s(%s:%d)\n", e_fn, fc_n, fc->sub_id);
++	}
++}
++
++static void print_dep(struct dept_dep *d)
++{
++	struct dept_ecxt *e = dep_e(d);
++	struct dept_wait *w = dep_w(d);
++	struct dept_class *fc = dep_fc(d);
++	struct dept_class *tc = dep_tc(d);
++	unsigned long irqf;
++	int irq;
++	const char *w_fn = w->wait_fn ?: "(unknown)";
++	const char *e_fn = e->event_fn ?: "(unknown)";
++	const char *c_fn = e->ecxt_fn ?: "(unknown)";
++	const char *fc_n = fc->sched_map ? "<sched>" : (fc->name ?: "(unknown)");
++	const char *tc_n = tc->sched_map ? "<sched>" : (tc->name ?: "(unknown)");
++
++	irqf = e->enirqf & w->irqf;
++	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR) {
++		pr_warn("%s has been enabled:\n", irq_str(irq));
++		print_ip_stack(e->enirq_ip[irq], e->enirq_stack[irq]);
++		pr_warn("\n");
++
++		pr_warn("[S] %s(%s:%d):\n", c_fn, fc_n, fc->sub_id);
++		print_ip_stack(e->ecxt_ip, e->ecxt_stack);
++		pr_warn("\n");
++
++		pr_warn("[W] %s(%s:%d) in %s context:\n",
++		       w_fn, tc_n, tc->sub_id, irq_str(irq));
++		print_ip_stack(w->irq_ip[irq], w->irq_stack[irq]);
++		pr_warn("\n");
++
++		pr_warn("[E] %s(%s:%d):\n", e_fn, fc_n, fc->sub_id);
++		print_ip_stack(e->event_ip, e->event_stack);
++	}
++
++	if (!irqf) {
++		pr_warn("[S] %s(%s:%d):\n", c_fn, fc_n, fc->sub_id);
++		print_ip_stack(e->ecxt_ip, e->ecxt_stack);
++		pr_warn("\n");
++
++		pr_warn("[W] %s(%s:%d):\n", w_fn, tc_n, tc->sub_id);
++		print_ip_stack(w->wait_ip, w->wait_stack);
++		pr_warn("\n");
++
++		pr_warn("[E] %s(%s:%d):\n", e_fn, fc_n, fc->sub_id);
++		print_ip_stack(e->event_ip, e->event_stack);
++	}
++}
++
++static void save_current_stack(int skip);
++
++/*
++ * Print all classes in a circle.
++ */
++static void print_circle(struct dept_class *c)
++{
++	struct dept_class *fc = c->bfs_parent;
++	struct dept_class *tc = c;
++	int i;
++
++	dept_outworld_enter();
++	save_current_stack(6);
++
++	pr_warn("===================================================\n");
++	pr_warn("DEPT: Circular dependency has been detected.\n");
++	pr_warn("%s %.*s %s\n", init_utsname()->release,
++		(int)strcspn(init_utsname()->version, " "),
++		init_utsname()->version,
++		print_tainted());
++	pr_warn("---------------------------------------------------\n");
++	pr_warn("summary\n");
++	pr_warn("---------------------------------------------------\n");
++
++	if (fc == tc)
++		pr_warn("*** AA DEADLOCK ***\n\n");
++	else
++		pr_warn("*** DEADLOCK ***\n\n");
++
++	i = 0;
++	do {
++		struct dept_dep *d = lookup_dep(fc, tc);
++
++		pr_warn("context %c\n", 'A' + (i++));
++		print_diagram(d);
++		if (fc != c)
++			pr_warn("\n");
++
++		tc = fc;
++		fc = fc->bfs_parent;
++	} while (tc != c);
++
++	pr_warn("\n");
++	pr_warn("[S]: start of the event context\n");
++	pr_warn("[W]: the wait blocked\n");
++	pr_warn("[E]: the event not reachable\n");
++
++	i = 0;
++	do {
++		struct dept_dep *d = lookup_dep(fc, tc);
++
++		pr_warn("---------------------------------------------------\n");
++		pr_warn("context %c's detail\n", 'A' + i);
++		pr_warn("---------------------------------------------------\n");
++		pr_warn("context %c\n", 'A' + (i++));
++		print_diagram(d);
++		pr_warn("\n");
++		print_dep(d);
++
++		tc = fc;
++		fc = fc->bfs_parent;
++	} while (tc != c);
++
++	pr_warn("---------------------------------------------------\n");
++	pr_warn("information that might be helpful\n");
++	pr_warn("---------------------------------------------------\n");
++	dump_stack();
++
++	dept_outworld_exit();
++}
++
++/*
++ * BFS(Breadth First Search)
++ * =====================================================================
++ * Whenever a new dependency is added into the graph, search the graph
++ * for a new circular dependency.
++ */
++
++struct bfs_ops {
++	void (*bfs_init)(void *, void *, void **);
++	void (*extend)(struct list_head *, void *);
++	void *(*dequeue)(struct list_head *);
++	enum bfs_ret (*callback)(void *, void *, void **);
++};
++
++static unsigned int bfs_gen;
++
++/*
++ * NOTE: Must be called with dept_lock held.
++ */
++static void bfs(void *root, struct bfs_ops *ops, void *in, void **out)
++{
++	LIST_HEAD(q);
++	enum bfs_ret ret;
++
++	if (DEPT_WARN_ON(!ops || !ops->bfs_init || !ops->extend ||
++				!ops->dequeue || !ops->callback))
++		return;
++
++	/*
++	 * Avoid zero bfs_gen.
++	 */
++	bfs_gen = bfs_gen + 1 ?: 1;
++	ops->bfs_init(root, in, out);
++
++	ret = ops->callback(root, in, out);
++	if (ret != BFS_CONTINUE)
++		return;
++
++	ops->extend(&q, root);
++	while (!list_empty(&q)) {
++		void *node = ops->dequeue(&q);
++
++		if (ret == BFS_DONE)
++			continue;
++
++		ret = ops->callback(node, in, out);
++		if (ret == BFS_CONTINUE)
++			ops->extend(&q, node);
++	}
++}
++
++/*
++ * Main operations
++ * =====================================================================
++ * Add dependencies - Each new dependency is added into the graph and
++ * checked if it forms a circular dependency.
++ *
++ * Track waits - Waits are queued into the ring buffer for later use to
++ * generate appropriate dependencies with cross-event.
++ *
++ * Track event contexts(ecxt) - Event contexts are pushed into local
++ * stack for later use to generate appropriate dependencies with waits.
++ */
++
++static unsigned long cur_enirqf(void);
++static int cur_irq(void);
++static unsigned int cur_ctxt_id(void);
++
++static struct dept_iecxt *iecxt(struct dept_class *c, int irq)
++{
++	return &c->iecxt[irq];
++}
++
++static struct dept_iwait *iwait(struct dept_class *c, int irq)
++{
++	return &c->iwait[irq];
++}
++
++static void stale_iecxt(struct dept_iecxt *ie)
++{
++	if (ie->ecxt)
++		put_ecxt(ie->ecxt);
++
++	WRITE_ONCE(ie->ecxt, NULL);
++	WRITE_ONCE(ie->staled, true);
++}
++
++static void set_iecxt(struct dept_iecxt *ie, struct dept_ecxt *e)
++{
++	/*
++	 * ->ecxt will never be updated once getting set until the class
++	 * gets removed.
++	 */
++	if (ie->ecxt)
++		DEPT_WARN_ON(1);
++	else
++		WRITE_ONCE(ie->ecxt, get_ecxt(e));
++}
++
++static void stale_iwait(struct dept_iwait *iw)
++{
++	if (iw->wait)
++		put_wait(iw->wait);
++
++	WRITE_ONCE(iw->wait, NULL);
++	WRITE_ONCE(iw->staled, true);
++}
++
++static void set_iwait(struct dept_iwait *iw, struct dept_wait *w)
++{
++	/*
++	 * ->wait will never be updated once getting set until the class
++	 * gets removed.
++	 */
++	if (iw->wait)
++		DEPT_WARN_ON(1);
++	else
++		WRITE_ONCE(iw->wait, get_wait(w));
++
++	iw->touched = true;
++}
++
++static void touch_iwait(struct dept_iwait *iw)
++{
++	iw->touched = true;
++}
++
++static void untouch_iwait(struct dept_iwait *iw)
++{
++	iw->touched = false;
++}
++
++static struct dept_stack *get_current_stack(void)
++{
++	struct dept_stack *s = dept_task()->stack;
++
++	return s ? get_stack(s) : NULL;
++}
++
++static void prepare_current_stack(void)
++{
++	DEPT_WARN_ON(dept_task()->stack);
++
++	dept_task()->stack = new_stack();
++}
++
++static void save_current_stack(int skip)
++{
++	struct dept_stack *s = dept_task()->stack;
++
++	if (!s)
++		return;
++
++	if (valid_stack(s))
++		return;
++
++	s->nr = stack_trace_save(s->raw, DEPT_MAX_STACK_ENTRY, skip);
++}
++
++static void finish_current_stack(void)
++{
++	struct dept_stack *s = dept_task()->stack;
++
++	/*
++	 * Fill the struct dept_stack with a valid stracktrace if it has
++	 * been referred at least once.
++	 */
++	if (stack_consumed(s))
++		save_current_stack(2);
++
++	dept_task()->stack = NULL;
++
++	/*
++	 * Actual deletion will happen at put_stack() if the stack has
++	 * been referred.
++	 */
++	if (s)
++		del_stack(s);
++}
++
++/*
++ * FIXME: For now, disable LOCKDEP while DEPT is working.
++ *
++ * Both LOCKDEP and DEPT report it on a deadlock detection using
++ * printk taking the risk of another deadlock that might be caused by
++ * locks of console or printk between inside and outside of them.
++ *
++ * For DEPT, it's no problem since multiple reports are allowed. But it
++ * would be a bad idea for LOCKDEP since it will stop even on a singe
++ * report. So we need to prevent LOCKDEP from its reporting the risk
++ * DEPT would take when reporting something.
++ */
++#include <linux/lockdep.h>
++
++void noinstr dept_off(void)
++{
++	dept_task()->recursive++;
++	lockdep_off();
++}
++
++void noinstr dept_on(void)
++{
++	lockdep_on();
++	dept_task()->recursive--;
++}
++
++static unsigned long dept_enter(void)
++{
++	unsigned long flags;
++
++	flags = arch_local_irq_save();
++	dept_off();
++	prepare_current_stack();
++	return flags;
++}
++
++static void dept_exit(unsigned long flags)
++{
++	finish_current_stack();
++	dept_on();
++	arch_local_irq_restore(flags);
++}
++
++static unsigned long dept_enter_recursive(void)
++{
++	unsigned long flags;
++
++	flags = arch_local_irq_save();
++	return flags;
++}
++
++static void dept_exit_recursive(unsigned long flags)
++{
++	arch_local_irq_restore(flags);
++}
++
++/*
++ * NOTE: Must be called with dept_lock held.
++ */
++static struct dept_dep *__add_dep(struct dept_ecxt *e,
++				  struct dept_wait *w)
++{
++	struct dept_dep *d;
++
++	if (DEPT_WARN_ON(!valid_class(e->class)))
++		return NULL;
++
++	if (DEPT_WARN_ON(!valid_class(w->class)))
++		return NULL;
++
++	if (lookup_dep(e->class, w->class))
++		return NULL;
++
++	d = new_dep();
++	if (unlikely(!d))
++		return NULL;
++
++	d->ecxt = get_ecxt(e);
++	d->wait = get_wait(w);
++
++	/*
++	 * Add the dependency into hash and graph.
++	 */
++	hash_add_dep(d);
++	list_add(&d->dep_node, &dep_fc(d)->dep_head);
++	list_add(&d->dep_rev_node, &dep_tc(d)->dep_rev_head);
++	return d;
++}
++
++static void bfs_init_check_dl(void *node, void *in, void **out)
++{
++	struct dept_class *root = (struct dept_class *)node;
++	struct dept_dep *new = (struct dept_dep *)in;
++
++	root->bfs_gen = bfs_gen;
++	dep_tc(new)->bfs_parent = dep_fc(new);
++}
++
++static void bfs_extend_dep(struct list_head *h, void *node)
++{
++	struct dept_class *cur = (struct dept_class *)node;
++	struct dept_dep *d;
++
++	list_for_each_entry(d, &cur->dep_head, dep_node) {
++		struct dept_class *next = dep_tc(d);
++
++		if (bfs_gen == next->bfs_gen)
++			continue;
++		next->bfs_parent = cur;
++		next->bfs_gen = bfs_gen;
++		list_add_tail(&next->bfs_node, h);
++	}
++}
++
++static void *bfs_dequeue_dep(struct list_head *h)
++{
++	struct dept_class *c;
++
++	DEPT_WARN_ON(list_empty(h));
++
++	c = list_first_entry(h, struct dept_class, bfs_node);
++	list_del(&c->bfs_node);
++	return c;
++}
++
++static enum bfs_ret cb_check_dl(void *node, void *in, void **out)
++{
++	struct dept_class *cur = (struct dept_class *)node;
++	struct dept_dep *new = (struct dept_dep *)in;
++
++	if (cur == dep_fc(new)) {
++		print_circle(dep_tc(new));
++		return BFS_DONE;
++	}
++
++	return BFS_CONTINUE;
++}
++
++/*
++ * This function is actually in charge of reporting.
++ */
++static void check_dl_bfs(struct dept_dep *d)
++{
++	struct bfs_ops ops = {
++		.bfs_init = bfs_init_check_dl,
++		.extend = bfs_extend_dep,
++		.dequeue = bfs_dequeue_dep,
++		.callback = cb_check_dl,
++	};
++
++	bfs((void *)dep_tc(d), &ops, (void *)d, NULL);
++}
++
++static void bfs_init_dep(void *node, void *in, void **out)
++{
++	struct dept_class *root = (struct dept_class *)node;
++
++	root->bfs_gen = bfs_gen;
++}
++
++static void bfs_extend_dep_rev(struct list_head *h, void *node)
++{
++	struct dept_class *cur = (struct dept_class *)node;
++	struct dept_dep *d;
++
++	list_for_each_entry(d, &cur->dep_rev_head, dep_rev_node) {
++		struct dept_class *next = dep_fc(d);
++
++		if (bfs_gen == next->bfs_gen)
++			continue;
++		next->bfs_parent = cur;
++		next->bfs_gen = bfs_gen;
++		list_add_tail(&next->bfs_node, h);
++	}
++}
++
++static enum bfs_ret cb_find_iw(void *node, void *in, void **out)
++{
++	struct dept_class *cur = (struct dept_class *)node;
++	int irq = *(int *)in;
++	struct dept_iwait *iw;
++
++	if (DEPT_WARN_ON(!out))
++		return BFS_DONE;
++
++	iw = iwait(cur, irq);
++
++	/*
++	 * If any parent's ->wait was set, then the children would've
++	 * been touched.
++	 */
++	if (!iw->touched)
++		return BFS_SKIP;
++
++	if (!iw->wait)
++		return BFS_CONTINUE;
++
++	*out = iw;
++	return BFS_DONE;
++}
++
++static struct dept_iwait *find_iw_bfs(struct dept_class *c, int irq)
++{
++	struct dept_iwait *iw = iwait(c, irq);
++	struct dept_iwait *found = NULL;
++	struct bfs_ops ops = {
++		.bfs_init = bfs_init_dep,
++		.extend = bfs_extend_dep_rev,
++		.dequeue = bfs_dequeue_dep,
++		.callback = cb_find_iw,
++	};
++
++	bfs((void *)c, &ops, (void *)&irq, (void **)&found);
++
++	if (found)
++		return found;
++
++	untouch_iwait(iw);
++	return NULL;
++}
++
++static enum bfs_ret cb_touch_iw_find_ie(void *node, void *in, void **out)
++{
++	struct dept_class *cur = (struct dept_class *)node;
++	int irq = *(int *)in;
++	struct dept_iecxt *ie = iecxt(cur, irq);
++	struct dept_iwait *iw = iwait(cur, irq);
++
++	if (DEPT_WARN_ON(!out))
++		return BFS_DONE;
++
++	touch_iwait(iw);
++
++	if (!ie->ecxt)
++		return BFS_CONTINUE;
++	if (!*out)
++		*out = ie;
++
++	/*
++	 * Do touch_iwait() all the way.
++	 */
++	return BFS_CONTINUE;
++}
++
++static struct dept_iecxt *touch_iw_find_ie_bfs(struct dept_class *c,
++					       int irq)
++{
++	struct dept_iecxt *found = NULL;
++	struct bfs_ops ops = {
++		.bfs_init = bfs_init_dep,
++		.extend = bfs_extend_dep,
++		.dequeue = bfs_dequeue_dep,
++		.callback = cb_touch_iw_find_ie,
++	};
++
++	bfs((void *)c, &ops, (void *)&irq, (void **)&found);
++	return found;
++}
++
++/*
++ * Should be called with dept_lock held.
++ */
++static void __add_idep(struct dept_iecxt *ie, struct dept_iwait *iw)
++{
++	struct dept_dep *new;
++
++	/*
++	 * There's nothing to do.
++	 */
++	if (!ie || !iw || !ie->ecxt || !iw->wait)
++		return;
++
++	new = __add_dep(ie->ecxt, iw->wait);
++
++	/*
++	 * Deadlock detected. Let check_dl_bfs() report it.
++	 */
++	if (new) {
++		check_dl_bfs(new);
++		stale_iecxt(ie);
++		stale_iwait(iw);
++	}
++
++	/*
++	 * If !new, it would be the case of lack of object resource.
++	 * Just let it go and get checked by other chances. Retrying is
++	 * meaningless in that case.
++	 */
++}
++
++static void set_check_iecxt(struct dept_class *c, int irq,
++			    struct dept_ecxt *e)
++{
++	struct dept_iecxt *ie = iecxt(c, irq);
++
++	set_iecxt(ie, e);
++	__add_idep(ie, find_iw_bfs(c, irq));
++}
++
++static void set_check_iwait(struct dept_class *c, int irq,
++			    struct dept_wait *w)
++{
++	struct dept_iwait *iw = iwait(c, irq);
++
++	set_iwait(iw, w);
++	__add_idep(touch_iw_find_ie_bfs(c, irq), iw);
++}
++
++static void add_iecxt(struct dept_class *c, int irq, struct dept_ecxt *e,
++		      bool stack)
++{
++	/*
++	 * This access is safe since we ensure e->class has set locally.
++	 */
++	struct dept_task *dt = dept_task();
++	struct dept_iecxt *ie = iecxt(c, irq);
++
++	if (DEPT_WARN_ON(!valid_class(c)))
++		return;
++
++	if (unlikely(READ_ONCE(ie->staled)))
++		return;
++
++	/*
++	 * Skip add_iecxt() if ie->ecxt has ever been set at least once.
++	 * Which means it has a valid ->ecxt or been staled.
++	 */
++	if (READ_ONCE(ie->ecxt))
++		return;
++
++	if (unlikely(!dept_lock()))
++		return;
++
++	if (unlikely(ie->staled))
++		goto unlock;
++	if (ie->ecxt)
++		goto unlock;
++
++	e->enirqf |= (1UL << irq);
++
++	/*
++	 * Should be NULL since it's the first time that these
++	 * enirq_{ip,stack}[irq] have ever set.
++	 */
++	DEPT_WARN_ON(e->enirq_ip[irq]);
++	DEPT_WARN_ON(e->enirq_stack[irq]);
++
++	e->enirq_ip[irq] = dt->enirq_ip[irq];
++	e->enirq_stack[irq] = stack ? get_current_stack() : NULL;
++
++	set_check_iecxt(c, irq, e);
++unlock:
++	dept_unlock();
++}
++
++static void add_iwait(struct dept_class *c, int irq, struct dept_wait *w)
++{
++	struct dept_iwait *iw = iwait(c, irq);
++
++	if (DEPT_WARN_ON(!valid_class(c)))
++		return;
++
++	if (unlikely(READ_ONCE(iw->staled)))
++		return;
++
++	/*
++	 * Skip add_iwait() if iw->wait has ever been set at least once.
++	 * Which means it has a valid ->wait or been staled.
++	 */
++	if (READ_ONCE(iw->wait))
++		return;
++
++	if (unlikely(!dept_lock()))
++		return;
++
++	if (unlikely(iw->staled))
++		goto unlock;
++	if (iw->wait)
++		goto unlock;
++
++	w->irqf |= (1UL << irq);
++
++	/*
++	 * Should be NULL since it's the first time that these
++	 * irq_{ip,stack}[irq] have ever set.
++	 */
++	DEPT_WARN_ON(w->irq_ip[irq]);
++	DEPT_WARN_ON(w->irq_stack[irq]);
++
++	w->irq_ip[irq] = w->wait_ip;
++	w->irq_stack[irq] = get_current_stack();
++
++	set_check_iwait(c, irq, w);
++unlock:
++	dept_unlock();
++}
++
++static struct dept_wait_hist *hist(int pos)
++{
++	struct dept_task *dt = dept_task();
++
++	return dt->wait_hist + (pos % DEPT_MAX_WAIT_HIST);
++}
++
++static int hist_pos_next(void)
++{
++	struct dept_task *dt = dept_task();
++
++	return dt->wait_hist_pos % DEPT_MAX_WAIT_HIST;
++}
++
++static void hist_advance(void)
++{
++	struct dept_task *dt = dept_task();
++
++	dt->wait_hist_pos++;
++	dt->wait_hist_pos %= DEPT_MAX_WAIT_HIST;
++}
++
++static struct dept_wait_hist *new_hist(void)
++{
++	struct dept_wait_hist *wh = hist(hist_pos_next());
++
++	hist_advance();
++	return wh;
++}
++
++static void add_hist(struct dept_wait *w, unsigned int wg, unsigned int ctxt_id)
++{
++	struct dept_wait_hist *wh = new_hist();
++
++	if (likely(wh->wait))
++		put_wait(wh->wait);
++
++	wh->wait = get_wait(w);
++	wh->wgen = wg;
++	wh->ctxt_id = ctxt_id;
++}
++
++/*
++ * Should be called after setting up e's iecxt and w's iwait.
++ */
++static void add_dep(struct dept_ecxt *e, struct dept_wait *w)
++{
++	struct dept_class *fc = e->class;
++	struct dept_class *tc = w->class;
++	struct dept_dep *d;
++	int i;
++
++	if (lookup_dep(fc, tc))
++		return;
++
++	if (unlikely(!dept_lock()))
++		return;
++
++	/*
++	 * __add_dep() will lookup_dep() again with lock held.
++	 */
++	d = __add_dep(e, w);
++	if (d) {
++		check_dl_bfs(d);
++
++		for (i = 0; i < DEPT_IRQS_NR; i++) {
++			struct dept_iwait *fiw = iwait(fc, i);
++			struct dept_iecxt *found_ie;
++			struct dept_iwait *found_iw;
++
++			/*
++			 * '->touched == false' guarantees there's no
++			 * parent that has been set ->wait.
++			 */
++			if (!fiw->touched)
++				continue;
++
++			/*
++			 * find_iw_bfs() will untouch the iwait if
++			 * not found.
++			 */
++			found_iw = find_iw_bfs(fc, i);
++
++			if (!found_iw)
++				continue;
++
++			found_ie = touch_iw_find_ie_bfs(tc, i);
++			__add_idep(found_ie, found_iw);
++		}
++	}
++	dept_unlock();
++}
++
++static atomic_t wgen = ATOMIC_INIT(1);
++
++static int next_wgen(void)
++{
++	/*
++	 * Avoid zero wgen.
++	 */
++	return atomic_inc_return(&wgen) ?: atomic_inc_return(&wgen);
++}
++
++static void add_wait(struct dept_class *c, unsigned long ip,
++		     const char *w_fn, int sub_l, bool sched_sleep)
++{
++	struct dept_task *dt = dept_task();
++	struct dept_wait *w;
++	unsigned int wg;
++	int irq;
++	int i;
++
++	if (DEPT_WARN_ON(!valid_class(c)))
++		return;
++
++	w = new_wait();
++	if (unlikely(!w))
++		return;
++
++	WRITE_ONCE(w->class, get_class(c));
++	w->wait_ip = ip;
++	w->wait_fn = w_fn;
++	w->wait_stack = get_current_stack();
++	w->sched_sleep = sched_sleep;
++
++	irq = cur_irq();
++	if (irq < DEPT_IRQS_NR)
++		add_iwait(c, irq, w);
++
++	/*
++	 * Avoid adding dependency between user aware nested ecxt and
++	 * wait.
++	 */
++	for (i = dt->ecxt_held_pos - 1; i >= 0; i--) {
++		struct dept_ecxt_held *eh;
++
++		eh = dt->ecxt_held + i;
++
++		/*
++		 * the case of invalid key'ed one
++		 */
++		if (!eh->ecxt)
++			continue;
++
++		if (eh->ecxt->class != c || eh->sub_l == sub_l)
++			add_dep(eh->ecxt, w);
++	}
++
++	wg = next_wgen();
++	add_hist(w, wg, cur_ctxt_id());
++
++	del_wait(w);
++}
++
++static struct dept_ecxt_held *add_ecxt(struct dept_map *m,
++		struct dept_class *c, unsigned long ip, const char *c_fn,
++		const char *e_fn, int sub_l)
++{
++	struct dept_task *dt = dept_task();
++	struct dept_ecxt_held *eh;
++	struct dept_ecxt *e;
++	unsigned long irqf;
++	unsigned int wg;
++	int irq;
++
++	if (DEPT_WARN_ON(!valid_class(c)))
++		return NULL;
++
++	if (DEPT_WARN_ON_ONCE(dt->ecxt_held_pos >= DEPT_MAX_ECXT_HELD))
++		return NULL;
++
++	wg = next_wgen();
++	if (m->nocheck) {
++		eh = dt->ecxt_held + (dt->ecxt_held_pos++);
++		eh->ecxt = NULL;
++		eh->map = m;
++		eh->class = get_class(c);
++		eh->wgen = wg;
++		eh->sub_l = sub_l;
++
++		return eh;
++	}
++
++	e = new_ecxt();
++	if (unlikely(!e))
++		return NULL;
++
++	e->class = get_class(c);
++	e->ecxt_ip = ip;
++	e->ecxt_stack = ip ? get_current_stack() : NULL;
++	e->event_fn = e_fn;
++	e->ecxt_fn = c_fn;
++
++	eh = dt->ecxt_held + (dt->ecxt_held_pos++);
++	eh->ecxt = get_ecxt(e);
++	eh->map = m;
++	eh->class = get_class(c);
++	eh->wgen = wg;
++	eh->sub_l = sub_l;
++
++	irqf = cur_enirqf();
++	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR)
++		add_iecxt(c, irq, e, false);
++
++	del_ecxt(e);
++	return eh;
++}
++
++static int find_ecxt_pos(struct dept_map *m, struct dept_class *c,
++			 bool newfirst)
++{
++	struct dept_task *dt = dept_task();
++	int i;
++
++	if (newfirst) {
++		for (i = dt->ecxt_held_pos - 1; i >= 0; i--) {
++			struct dept_ecxt_held *eh;
++
++			eh = dt->ecxt_held + i;
++			if (eh->map == m && eh->class == c)
++				return i;
++		}
++	} else {
++		for (i = 0; i < dt->ecxt_held_pos; i++) {
++			struct dept_ecxt_held *eh;
++
++			eh = dt->ecxt_held + i;
++			if (eh->map == m && eh->class == c)
++				return i;
++		}
++	}
++	return -1;
++}
++
++static bool pop_ecxt(struct dept_map *m, struct dept_class *c)
++{
++	struct dept_task *dt = dept_task();
++	int pos;
++	int i;
++
++	pos = find_ecxt_pos(m, c, true);
++	if (pos == -1)
++		return false;
++
++	if (dt->ecxt_held[pos].class)
++		put_class(dt->ecxt_held[pos].class);
++
++	if (dt->ecxt_held[pos].ecxt)
++		put_ecxt(dt->ecxt_held[pos].ecxt);
++
++	dt->ecxt_held_pos--;
++
++	for (i = pos; i < dt->ecxt_held_pos; i++)
++		dt->ecxt_held[i] = dt->ecxt_held[i + 1];
++	return true;
++}
++
++static bool good_hist(struct dept_wait_hist *wh, unsigned int wg)
++{
++	return wh->wait != NULL && before(wg, wh->wgen);
++}
++
++/*
++ * Binary-search the ring buffer for the earliest valid wait.
++ */
++static int find_hist_pos(unsigned int wg)
++{
++	int oldest;
++	int l;
++	int r;
++	int pos;
++
++	oldest = hist_pos_next();
++	if (unlikely(good_hist(hist(oldest), wg))) {
++		DEPT_INFO_ONCE("Need to expand the ring buffer.\n");
++		return oldest;
++	}
++
++	l = oldest + 1;
++	r = oldest + DEPT_MAX_WAIT_HIST - 1;
++	for (pos = (l + r) / 2; l <= r; pos = (l + r) / 2) {
++		struct dept_wait_hist *p = hist(pos - 1);
++		struct dept_wait_hist *wh = hist(pos);
++
++		if (!good_hist(p, wg) && good_hist(wh, wg))
++			return pos % DEPT_MAX_WAIT_HIST;
++		if (good_hist(wh, wg))
++			r = pos - 1;
++		else
++			l = pos + 1;
++	}
++	return -1;
++}
++
++static void do_event(struct dept_map *m, struct dept_map *real_m,
++		struct dept_class *c, unsigned int wg, unsigned long ip,
++		const char *e_fn)
++{
++	struct dept_task *dt = dept_task();
++	struct dept_wait_hist *wh;
++	struct dept_ecxt_held *eh;
++	unsigned int ctxt_id;
++	int end;
++	int pos;
++	int i;
++
++	if (DEPT_WARN_ON(!valid_class(c)))
++		return;
++
++	if (m->nocheck)
++		return;
++
++	/*
++	 * The event was triggered before wait.
++	 */
++	if (!wg)
++		return;
++
++	/*
++	 * If an ecxt for this map exists, let the ecxt work for this
++	 * event and do not proceed it in do_event().
++	 */
++	if (find_ecxt_pos(real_m, c, false) != -1)
++		return;
++	eh = add_ecxt(m, c, 0UL, NULL, e_fn, 0);
++
++	if (!eh)
++		return;
++
++	if (DEPT_WARN_ON(!eh->ecxt))
++		goto out;
++
++	eh->ecxt->event_ip = ip;
++	eh->ecxt->event_stack = get_current_stack();
++
++	pos = find_hist_pos(wg);
++	if (pos == -1)
++		goto out;
++
++	ctxt_id = cur_ctxt_id();
++	end = hist_pos_next();
++	end = end > pos ? end : end + DEPT_MAX_WAIT_HIST;
++	for (wh = hist(pos); pos < end; wh = hist(++pos)) {
++		if (dt->in_sched && wh->wait->sched_sleep)
++			continue;
++
++		if (wh->ctxt_id == ctxt_id)
++			add_dep(eh->ecxt, wh->wait);
++	}
++
++	for (i = 0; i < DEPT_IRQS_NR; i++) {
++		struct dept_ecxt *e;
++
++		if (before(dt->wgen_enirq[i], wg))
++			continue;
++
++		e = eh->ecxt;
++		add_iecxt(e->class, i, e, false);
++	}
++out:
++	/*
++	 * Pop ecxt that temporarily has been added to handle this event.
++	 */
++	pop_ecxt(m, c);
++}
++
++static void del_dep_rcu(struct rcu_head *rh)
++{
++	struct dept_dep *d = container_of(rh, struct dept_dep, rh);
++
++	preempt_disable();
++	del_dep(d);
++	preempt_enable();
++}
++
++/*
++ * NOTE: Must be called with dept_lock held.
++ */
++static void disconnect_class(struct dept_class *c)
++{
++	struct dept_dep *d, *n;
++	int i;
++
++	list_for_each_entry_safe(d, n, &c->dep_head, dep_node) {
++		list_del_rcu(&d->dep_node);
++		list_del_rcu(&d->dep_rev_node);
++		hash_del_dep(d);
++		call_rcu(&d->rh, del_dep_rcu);
++	}
++
++	list_for_each_entry_safe(d, n, &c->dep_rev_head, dep_rev_node) {
++		list_del_rcu(&d->dep_node);
++		list_del_rcu(&d->dep_rev_node);
++		hash_del_dep(d);
++		call_rcu(&d->rh, del_dep_rcu);
++	}
++
++	for (i = 0; i < DEPT_IRQS_NR; i++) {
++		stale_iecxt(iecxt(c, i));
++		stale_iwait(iwait(c, i));
++	}
++}
++
++/*
++ * Context control
++ * =====================================================================
++ * Whether a wait is in {hard,soft}-IRQ context or whether
++ * {hard,soft}-IRQ has been enabled on the way to an event is very
++ * important to check dependency. All those things should be tracked.
++ */
++
++static unsigned long cur_enirqf(void)
++{
++	struct dept_task *dt = dept_task();
++	int he = dt->hardirqs_enabled;
++	int se = dt->softirqs_enabled;
++
++	if (he)
++		return DEPT_HIRQF | (se ? DEPT_SIRQF : 0UL);
++	return 0UL;
++}
++
++static int cur_irq(void)
++{
++	if (lockdep_softirq_context(current))
++		return DEPT_SIRQ;
++	if (lockdep_hardirq_context())
++		return DEPT_HIRQ;
++	return DEPT_IRQS_NR;
++}
++
++static unsigned int cur_ctxt_id(void)
++{
++	struct dept_task *dt = dept_task();
++	int irq = cur_irq();
++
++	/*
++	 * Normal process context
++	 */
++	if (irq == DEPT_IRQS_NR)
++		return 0U;
++
++	return dt->irq_id[irq] | (1UL << irq);
++}
++
++static void enirq_transition(int irq)
++{
++	struct dept_task *dt = dept_task();
++	int i;
++
++	/*
++	 * IRQ can cut in on the way to the event. Used for cross-event
++	 * detection.
++	 *
++	 *    wait context	event context(ecxt)
++	 *    ------------	-------------------
++	 *    wait event
++	 *       UPDATE wgen
++	 *			observe IRQ enabled
++	 *			   UPDATE wgen
++	 *			   keep the wgen locally
++	 *
++	 *			on the event
++	 *			   check the wgen kept
++	 */
++
++	dt->wgen_enirq[irq] = next_wgen();
++
++	for (i = dt->ecxt_held_pos - 1; i >= 0; i--) {
++		struct dept_ecxt_held *eh;
++		struct dept_ecxt *e;
++
++		eh = dt->ecxt_held + i;
++		e = eh->ecxt;
++		if (e)
++			add_iecxt(e->class, irq, e, true);
++	}
++}
++
++static void dept_enirq(unsigned long ip)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long irqf = cur_enirqf();
++	int irq;
++	unsigned long flags;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	/*
++	 * IRQ ON/OFF transition might happen while Dept is working.
++	 * We cannot handle recursive entrance. Just ignore it.
++	 * Only transitions outside of Dept will be considered.
++	 */
++	if (dt->recursive)
++		return;
++
++	flags = dept_enter();
++
++	for_each_set_bit(irq, &irqf, DEPT_IRQS_NR) {
++		dt->enirq_ip[irq] = ip;
++		enirq_transition(irq);
++	}
++
++	dept_exit(flags);
++}
++
++void dept_softirqs_on_ip(unsigned long ip)
++{
++	/*
++	 * Assumes that it's called with IRQ disabled so that accessing
++	 * current's fields is not racy.
++	 */
++	dept_task()->softirqs_enabled = true;
++	dept_enirq(ip);
++}
++
++void dept_hardirqs_on(void)
++{
++	/*
++	 * Assumes that it's called with IRQ disabled so that accessing
++	 * current's fields is not racy.
++	 */
++	dept_task()->hardirqs_enabled = true;
++	dept_enirq(_RET_IP_);
++}
++
++void dept_softirqs_off(void)
++{
++	/*
++	 * Assumes that it's called with IRQ disabled so that accessing
++	 * current's fields is not racy.
++	 */
++	dept_task()->softirqs_enabled = false;
++}
++
++void dept_hardirqs_off(void)
++{
++	/*
++	 * Assumes that it's called with IRQ disabled so that accessing
++	 * current's fields is not racy.
++	 */
++	dept_task()->hardirqs_enabled = false;
++}
++
++/*
++ * Ensure it's the outmost softirq context.
++ */
++void dept_softirq_enter(void)
++{
++	struct dept_task *dt = dept_task();
++
++	dt->irq_id[DEPT_SIRQ] += 1UL << DEPT_IRQS_NR;
++}
++
++/*
++ * Ensure it's the outmost hardirq context.
++ */
++void dept_hardirq_enter(void)
++{
++	struct dept_task *dt = dept_task();
++
++	dt->irq_id[DEPT_HIRQ] += 1UL << DEPT_IRQS_NR;
++}
++
++void dept_sched_enter(void)
++{
++	dept_task()->in_sched = true;
++}
++
++void dept_sched_exit(void)
++{
++	dept_task()->in_sched = false;
++}
++
++/*
++ * Exposed APIs
++ * =====================================================================
++ */
++
++static void clean_classes_cache(struct dept_key *k)
++{
++	int i;
++
++	for (i = 0; i < DEPT_MAX_SUBCLASSES_CACHE; i++) {
++		if (!READ_ONCE(k->classes[i]))
++			continue;
++
++		WRITE_ONCE(k->classes[i], NULL);
++	}
++}
++
++/*
++ * Assume we don't have to consider race with the map when
++ * dept_map_init() is called.
++ */
++void dept_map_init(struct dept_map *m, struct dept_key *k, int sub_u,
++		   const char *n)
++{
++	unsigned long flags;
++
++	if (unlikely(!dept_working())) {
++		m->nocheck = true;
++		return;
++	}
++
++	if (DEPT_WARN_ON(sub_u < 0)) {
++		m->nocheck = true;
++		return;
++	}
++
++	if (DEPT_WARN_ON(sub_u >= DEPT_MAX_SUBCLASSES_USR)) {
++		m->nocheck = true;
++		return;
++	}
++
++	/*
++	 * Allow recursive entrance.
++	 */
++	flags = dept_enter_recursive();
++
++	clean_classes_cache(&m->map_key);
++
++	m->keys = k;
++	m->sub_u = sub_u;
++	m->name = n;
++	m->wgen = 0U;
++	m->nocheck = !valid_key(k);
++
++	dept_exit_recursive(flags);
++}
++EXPORT_SYMBOL_GPL(dept_map_init);
++
++/*
++ * Assume we don't have to consider race with the map when
++ * dept_map_reinit() is called.
++ */
++void dept_map_reinit(struct dept_map *m, struct dept_key *k, int sub_u,
++		     const char *n)
++{
++	unsigned long flags;
++
++	if (unlikely(!dept_working())) {
++		m->nocheck = true;
++		return;
++	}
++
++	/*
++	 * Allow recursive entrance.
++	 */
++	flags = dept_enter_recursive();
++
++	if (k) {
++		clean_classes_cache(&m->map_key);
++		m->keys = k;
++		m->nocheck = !valid_key(k);
++	}
++
++	if (sub_u >= 0 && sub_u < DEPT_MAX_SUBCLASSES_USR)
++		m->sub_u = sub_u;
++
++	if (n)
++		m->name = n;
++
++	m->wgen = 0U;
++
++	dept_exit_recursive(flags);
++}
++EXPORT_SYMBOL_GPL(dept_map_reinit);
++
++void dept_map_copy(struct dept_map *to, struct dept_map *from)
++{
++	if (unlikely(!dept_working())) {
++		to->nocheck = true;
++		return;
++	}
++
++	*to = *from;
++
++	/*
++	 * XXX: 'to' might be in a stack or something. Using the address
++	 * in a stack segment as a key is meaningless. Just ignore the
++	 * case for now.
++	 */
++	if (!to->keys) {
++		to->nocheck = true;
++		return;
++	}
++
++	/*
++	 * Since the class cache can be modified concurrently we could
++	 * observe half pointers (64bit arch using 32bit copy
++	 * instructions).  Therefore clear the caches and take the
++	 * performance hit.
++	 */
++	clean_classes_cache(&to->map_key);
++}
++
++static LIST_HEAD(dept_classes);
++
++static bool within(const void *addr, void *start, unsigned long size)
++{
++	return addr >= start && addr < start + size;
++}
++
++void dept_free_range(void *start, unsigned int sz)
++{
++	struct dept_task *dt = dept_task();
++	struct dept_class *c, *n;
++	unsigned long flags;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive) {
++		DEPT_STOP("Failed to successfully free Dept objects.\n");
++		return;
++	}
++
++	flags = dept_enter();
++
++	/*
++	 * dept_free_range() should not fail.
++	 *
++	 * FIXME: Should be fixed if dept_free_range() causes deadlock
++	 * with dept_lock().
++	 */
++	while (unlikely(!dept_lock()))
++		cpu_relax();
++
++	list_for_each_entry_safe(c, n, &dept_classes, all_node) {
++		if (!within((void *)c->key, start, sz) &&
++		    !within(c->name, start, sz))
++			continue;
++
++		hash_del_class(c);
++		disconnect_class(c);
++		list_del(&c->all_node);
++		invalidate_class(c);
++
++		/*
++		 * Actual deletion will happen on the rcu callback
++		 * that has been added in disconnect_class().
++		 */
++		del_class(c);
++	}
++	dept_unlock();
++	dept_exit(flags);
++
++	/*
++	 * Wait until even lockless hash_lookup_class() for the class
++	 * returns NULL.
++	 */
++	might_sleep();
++	synchronize_rcu();
++}
++
++static int sub_id(struct dept_map *m, int e)
++{
++	return (m ? m->sub_u : 0) + e * DEPT_MAX_SUBCLASSES_USR;
++}
++
++static struct dept_class *check_new_class(struct dept_key *local,
++					  struct dept_key *k, int sub_id,
++					  const char *n, bool sched_map)
++{
++	struct dept_class *c = NULL;
++
++	if (DEPT_WARN_ON(sub_id >= DEPT_MAX_SUBCLASSES))
++		return NULL;
++
++	if (DEPT_WARN_ON(!k))
++		return NULL;
++
++	/*
++	 * XXX: Assume that users prevent the map from using if any of
++	 * the cached keys has been invalidated. If not, the cache,
++	 * local->classes should not be used because it would be racy
++	 * with class deletion.
++	 */
++	if (local && sub_id < DEPT_MAX_SUBCLASSES_CACHE)
++		c = READ_ONCE(local->classes[sub_id]);
++
++	if (c)
++		return c;
++
++	c = lookup_class((unsigned long)k->base + sub_id);
++	if (c)
++		goto caching;
++
++	if (unlikely(!dept_lock()))
++		return NULL;
++
++	c = lookup_class((unsigned long)k->base + sub_id);
++	if (unlikely(c))
++		goto unlock;
++
++	c = new_class();
++	if (unlikely(!c))
++		goto unlock;
++
++	c->name = n;
++	c->sched_map = sched_map;
++	c->sub_id = sub_id;
++	c->key = (unsigned long)(k->base + sub_id);
++	hash_add_class(c);
++	list_add(&c->all_node, &dept_classes);
++unlock:
++	dept_unlock();
++caching:
++	if (local && sub_id < DEPT_MAX_SUBCLASSES_CACHE)
++		WRITE_ONCE(local->classes[sub_id], c);
++
++	return c;
++}
++
++/*
++ * Called between dept_enter() and dept_exit().
++ */
++static void __dept_wait(struct dept_map *m, unsigned long w_f,
++			unsigned long ip, const char *w_fn, int sub_l,
++			bool sched_sleep, bool sched_map)
++{
++	int e;
++
++	/*
++	 * Be as conservative as possible. In case of multiple waits for
++	 * a single dept_map, we are going to keep only the last wait's
++	 * wgen for simplicity - keeping all wgens seems overengineering.
++	 *
++	 * Of course, it might cause missing some dependencies that
++	 * would rarely, probably never, happen but it helps avoid
++	 * false positive reports.
++	 */
++	for_each_set_bit(e, &w_f, DEPT_MAX_SUBCLASSES_EVT) {
++		struct dept_class *c;
++		struct dept_key *k;
++
++		k = m->keys ?: &m->map_key;
++		c = check_new_class(&m->map_key, k,
++				    sub_id(m, e), m->name, sched_map);
++		if (!c)
++			continue;
++
++		add_wait(c, ip, w_fn, sub_l, sched_sleep);
++	}
++}
++
++/*
++ * Called between dept_enter() and dept_exit().
++ */
++static void __dept_event(struct dept_map *m, struct dept_map *real_m,
++		unsigned long e_f, unsigned long ip, const char *e_fn,
++		bool sched_map)
++{
++	struct dept_class *c;
++	struct dept_key *k;
++	int e;
++
++	e = find_first_bit(&e_f, DEPT_MAX_SUBCLASSES_EVT);
++
++	if (DEPT_WARN_ON(e >= DEPT_MAX_SUBCLASSES_EVT))
++		return;
++
++	/*
++	 * An event is an event. If the caller passed more than single
++	 * event, then warn it and handle the event corresponding to
++	 * the first bit anyway.
++	 */
++	DEPT_WARN_ON(1UL << e != e_f);
++
++	k = m->keys ?: &m->map_key;
++	c = check_new_class(&m->map_key, k, sub_id(m, e), m->name, sched_map);
++
++	if (c)
++		do_event(m, real_m, c, READ_ONCE(m->wgen), ip, e_fn);
++}
++
++void dept_wait(struct dept_map *m, unsigned long w_f,
++	       unsigned long ip, const char *w_fn, int sub_l)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive)
++		return;
++
++	if (m->nocheck)
++		return;
++
++	flags = dept_enter();
++
++	__dept_wait(m, w_f, ip, w_fn, sub_l, false, false);
++
++	dept_exit(flags);
++}
++EXPORT_SYMBOL_GPL(dept_wait);
++
++void dept_stage_wait(struct dept_map *m, struct dept_key *k,
++		     unsigned long ip, const char *w_fn)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (m && m->nocheck)
++		return;
++
++	/*
++	 * Either m or k should be passed. Which means Dept relies on
++	 * either its own map or the caller's position in the code when
++	 * determining its class.
++	 */
++	if (DEPT_WARN_ON(!m && !k))
++		return;
++
++	/*
++	 * Allow recursive entrance.
++	 */
++	flags = dept_enter_recursive();
++
++	/*
++	 * Ensure the outmost dept_stage_wait() works.
++	 */
++	if (dt->stage_m.keys)
++		goto exit;
++
++	arch_spin_lock(&dt->stage_lock);
++	if (m) {
++		dt->stage_m = *m;
++		dt->stage_real_m = m;
++
++		/*
++		 * Ensure dt->stage_m.keys != NULL and it works with the
++		 * map's map_key, not stage_m's one when ->keys == NULL.
++		 */
++		if (!m->keys)
++			dt->stage_m.keys = &m->map_key;
++	} else {
++		dt->stage_m.name = w_fn;
++		dt->stage_sched_map = true;
++		dt->stage_real_m = &dt->stage_m;
++	}
++
++	/*
++	 * dept_map_reinit() includes WRITE_ONCE(->wgen, 0U) that
++	 * effectively disables the map just in case real sleep won't
++	 * happen. dept_request_event_wait_commit() will enable it.
++	 */
++	dept_map_reinit(&dt->stage_m, k, -1, NULL);
++
++	dt->stage_w_fn = w_fn;
++	dt->stage_ip = ip;
++	arch_spin_unlock(&dt->stage_lock);
++exit:
++	dept_exit_recursive(flags);
++}
++EXPORT_SYMBOL_GPL(dept_stage_wait);
++
++static void __dept_clean_stage(struct dept_task *dt)
++{
++	memset(&dt->stage_m, 0x0, sizeof(struct dept_map));
++	dt->stage_real_m = NULL;
++	dt->stage_sched_map = false;
++	dt->stage_w_fn = NULL;
++	dt->stage_ip = 0UL;
++}
++
++void dept_clean_stage(void)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	/*
++	 * Allow recursive entrance.
++	 */
++	flags = dept_enter_recursive();
++	arch_spin_lock(&dt->stage_lock);
++	__dept_clean_stage(dt);
++	arch_spin_unlock(&dt->stage_lock);
++	dept_exit_recursive(flags);
++}
++EXPORT_SYMBOL_GPL(dept_clean_stage);
++
++/*
++ * Always called from __schedule().
++ */
++void dept_request_event_wait_commit(void)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++	unsigned int wg;
++	unsigned long ip;
++	const char *w_fn;
++	bool sched_map;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	/*
++	 * It's impossible that __schedule() is called while Dept is
++	 * working that already disabled IRQ at the entrance.
++	 */
++	if (DEPT_WARN_ON(dt->recursive))
++		return;
++
++	flags = dept_enter();
++
++	arch_spin_lock(&dt->stage_lock);
++
++	/*
++	 * Checks if current has staged a wait.
++	 */
++	if (!dt->stage_m.keys) {
++		arch_spin_unlock(&dt->stage_lock);
++		goto exit;
++	}
++
++	w_fn = dt->stage_w_fn;
++	ip = dt->stage_ip;
++	sched_map = dt->stage_sched_map;
++
++	wg = next_wgen();
++	WRITE_ONCE(dt->stage_m.wgen, wg);
++	arch_spin_unlock(&dt->stage_lock);
++
++	__dept_wait(&dt->stage_m, 1UL, ip, w_fn, 0, true, sched_map);
++exit:
++	dept_exit(flags);
++}
++
++/*
++ * Always called from try_to_wake_up().
++ */
++void dept_ttwu_stage_wait(struct task_struct *requestor, unsigned long ip)
++{
++	struct dept_task *dt = dept_task();
++	struct dept_task *dt_req = &requestor->dept_task;
++	unsigned long flags;
++	struct dept_map m;
++	struct dept_map *real_m;
++	bool sched_map;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive)
++		return;
++
++	flags = dept_enter();
++
++	arch_spin_lock(&dt_req->stage_lock);
++
++	/*
++	 * Serializing is unnecessary as long as it always comes from
++	 * try_to_wake_up().
++	 */
++	m = dt_req->stage_m;
++	sched_map = dt_req->stage_sched_map;
++	real_m = dt_req->stage_real_m;
++	__dept_clean_stage(dt_req);
++	arch_spin_unlock(&dt_req->stage_lock);
++
++	/*
++	 * ->stage_m.keys should not be NULL if it's in use. Should
++	 * make sure that it's not NULL when staging a valid map.
++	 */
++	if (!m.keys)
++		goto exit;
++
++	__dept_event(&m, real_m, 1UL, ip, "try_to_wake_up", sched_map);
++exit:
++	dept_exit(flags);
++}
++
++/*
++ * Modifies the latest ecxt corresponding to m and e_f.
++ */
++void dept_map_ecxt_modify(struct dept_map *m, unsigned long e_f,
++			  struct dept_key *new_k, unsigned long new_e_f,
++			  unsigned long new_ip, const char *new_c_fn,
++			  const char *new_e_fn, int new_sub_l)
++{
++	struct dept_task *dt = dept_task();
++	struct dept_ecxt_held *eh;
++	struct dept_class *c;
++	struct dept_key *k;
++	unsigned long flags;
++	int pos = -1;
++	int new_e;
++	int e;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	/*
++	 * XXX: Couldn't handle re-enterance cases. Ignore it for now.
++	 */
++	if (dt->recursive)
++		return;
++
++	/*
++	 * Should go ahead no matter whether ->nocheck == true or not
++	 * because ->nocheck value can be changed within the ecxt area
++	 * delimitated by dept_ecxt_enter() and dept_ecxt_exit().
++	 */
++
++	flags = dept_enter();
++
++	for_each_set_bit(e, &e_f, DEPT_MAX_SUBCLASSES_EVT) {
++		k = m->keys ?: &m->map_key;
++		c = check_new_class(&m->map_key, k,
++				    sub_id(m, e), m->name, false);
++		if (!c)
++			continue;
++
++		/*
++		 * When it found an ecxt for any event in e_f, done.
++		 */
++		pos = find_ecxt_pos(m, c, true);
++		if (pos != -1)
++			break;
++	}
++
++	if (unlikely(pos == -1))
++		goto exit;
++
++	eh = dt->ecxt_held + pos;
++	new_sub_l = new_sub_l >= 0 ? new_sub_l : eh->sub_l;
++
++	new_e = find_first_bit(&new_e_f, DEPT_MAX_SUBCLASSES_EVT);
++
++	if (new_e < DEPT_MAX_SUBCLASSES_EVT)
++		/*
++		 * Let it work with the first bit anyway.
++		 */
++		DEPT_WARN_ON(1UL << new_e != new_e_f);
++	else
++		new_e = e;
++
++	pop_ecxt(m, c);
++
++	/*
++	 * Apply the key to the map.
++	 */
++	if (new_k)
++		dept_map_reinit(m, new_k, -1, NULL);
++
++	k = m->keys ?: &m->map_key;
++	c = check_new_class(&m->map_key, k, sub_id(m, new_e), m->name, false);
++
++	if (c && add_ecxt(m, c, new_ip, new_c_fn, new_e_fn, new_sub_l))
++		goto exit;
++
++	/*
++	 * Successfully pop_ecxt()ed but failed to add_ecxt().
++	 */
++	dt->missing_ecxt++;
++exit:
++	dept_exit(flags);
++}
++EXPORT_SYMBOL_GPL(dept_map_ecxt_modify);
++
++void dept_ecxt_enter(struct dept_map *m, unsigned long e_f, unsigned long ip,
++		     const char *c_fn, const char *e_fn, int sub_l)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++	struct dept_class *c;
++	struct dept_key *k;
++	int e;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive) {
++		dt->missing_ecxt++;
++		return;
++	}
++
++	/*
++	 * Should go ahead no matter whether ->nocheck == true or not
++	 * because ->nocheck value can be changed within the ecxt area
++	 * delimitated by dept_ecxt_enter() and dept_ecxt_exit().
++	 */
++
++	flags = dept_enter();
++
++	e = find_first_bit(&e_f, DEPT_MAX_SUBCLASSES_EVT);
++
++	if (e >= DEPT_MAX_SUBCLASSES_EVT)
++		goto missing_ecxt;
++
++	/*
++	 * An event is an event. If the caller passed more than single
++	 * event, then warn it and handle the event corresponding to
++	 * the first bit anyway.
++	 */
++	DEPT_WARN_ON(1UL << e != e_f);
++
++	k = m->keys ?: &m->map_key;
++	c = check_new_class(&m->map_key, k, sub_id(m, e), m->name, false);
++
++	if (c && add_ecxt(m, c, ip, c_fn, e_fn, sub_l))
++		goto exit;
++missing_ecxt:
++	dt->missing_ecxt++;
++exit:
++	dept_exit(flags);
++}
++EXPORT_SYMBOL_GPL(dept_ecxt_enter);
++
++bool dept_ecxt_holding(struct dept_map *m, unsigned long e_f)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++	bool ret = false;
++	int e;
++
++	if (unlikely(!dept_working()))
++		return false;
++
++	if (dt->recursive)
++		return false;
++
++	flags = dept_enter();
++
++	for_each_set_bit(e, &e_f, DEPT_MAX_SUBCLASSES_EVT) {
++		struct dept_class *c;
++		struct dept_key *k;
++
++		k = m->keys ?: &m->map_key;
++		c = check_new_class(&m->map_key, k,
++				    sub_id(m, e), m->name, false);
++		if (!c)
++			continue;
++
++		if (find_ecxt_pos(m, c, true) != -1) {
++			ret = true;
++			break;
++		}
++	}
++
++	dept_exit(flags);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(dept_ecxt_holding);
++
++void dept_request_event(struct dept_map *m)
++{
++	unsigned long flags;
++	unsigned int wg;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (m->nocheck)
++		return;
++
++	/*
++	 * Allow recursive entrance.
++	 */
++	flags = dept_enter_recursive();
++
++	wg = next_wgen();
++	WRITE_ONCE(m->wgen, wg);
++
++	dept_exit_recursive(flags);
++}
++EXPORT_SYMBOL_GPL(dept_request_event);
++
++void dept_event(struct dept_map *m, unsigned long e_f,
++		unsigned long ip, const char *e_fn)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (m->nocheck)
++		return;
++
++	if (dt->recursive) {
++		/*
++		 * Dept won't work with this even though an event
++		 * context has been asked. Don't make it confused at
++		 * handling the event. Disable it until the next.
++		 */
++		WRITE_ONCE(m->wgen, 0U);
++		return;
++	}
++
++	flags = dept_enter();
++
++	__dept_event(m, m, e_f, ip, e_fn, false);
++
++	/*
++	 * Keep the map diabled until the next sleep.
++	 */
++	WRITE_ONCE(m->wgen, 0U);
++
++	dept_exit(flags);
++}
++EXPORT_SYMBOL_GPL(dept_event);
++
++void dept_ecxt_exit(struct dept_map *m, unsigned long e_f,
++		    unsigned long ip)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++	int e;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive) {
++		dt->missing_ecxt--;
++		return;
++	}
++
++	/*
++	 * Should go ahead no matter whether ->nocheck == true or not
++	 * because ->nocheck value can be changed within the ecxt area
++	 * delimitated by dept_ecxt_enter() and dept_ecxt_exit().
++	 */
++
++	flags = dept_enter();
++
++	for_each_set_bit(e, &e_f, DEPT_MAX_SUBCLASSES_EVT) {
++		struct dept_class *c;
++		struct dept_key *k;
++
++		k = m->keys ?: &m->map_key;
++		c = check_new_class(&m->map_key, k,
++				    sub_id(m, e), m->name, false);
++		if (!c)
++			continue;
++
++		/*
++		 * When it found an ecxt for any event in e_f, done.
++		 */
++		if (pop_ecxt(m, c))
++			goto exit;
++	}
++
++	dt->missing_ecxt--;
++exit:
++	dept_exit(flags);
++}
++EXPORT_SYMBOL_GPL(dept_ecxt_exit);
++
++void dept_task_exit(struct task_struct *t)
++{
++	struct dept_task *dt = &t->dept_task;
++	int i;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	raw_local_irq_disable();
++
++	if (dt->stack) {
++		put_stack(dt->stack);
++		dt->stack = NULL;
++	}
++
++	for (i = 0; i < dt->ecxt_held_pos; i++) {
++		if (dt->ecxt_held[i].class) {
++			put_class(dt->ecxt_held[i].class);
++			dt->ecxt_held[i].class = NULL;
++		}
++		if (dt->ecxt_held[i].ecxt) {
++			put_ecxt(dt->ecxt_held[i].ecxt);
++			dt->ecxt_held[i].ecxt = NULL;
++		}
++	}
++
++	for (i = 0; i < DEPT_MAX_WAIT_HIST; i++) {
++		if (dt->wait_hist[i].wait) {
++			put_wait(dt->wait_hist[i].wait);
++			dt->wait_hist[i].wait = NULL;
++		}
++	}
++
++	dt->task_exit = true;
++	dept_off();
++
++	raw_local_irq_enable();
++}
++
++void dept_task_init(struct task_struct *t)
++{
++	memset(&t->dept_task, 0x0, sizeof(struct dept_task));
++	t->dept_task.stage_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
++}
++
++void dept_key_init(struct dept_key *k)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++	int sub_id;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive) {
++		DEPT_STOP("Key initialization fails.\n");
++		return;
++	}
++
++	flags = dept_enter();
++
++	clean_classes_cache(k);
++
++	/*
++	 * dept_key_init() should not fail.
++	 *
++	 * FIXME: Should be fixed if dept_key_init() causes deadlock
++	 * with dept_lock().
++	 */
++	while (unlikely(!dept_lock()))
++		cpu_relax();
++
++	for (sub_id = 0; sub_id < DEPT_MAX_SUBCLASSES; sub_id++) {
++		struct dept_class *c;
++
++		c = lookup_class((unsigned long)k->base + sub_id);
++		if (!c)
++			continue;
++
++		DEPT_STOP("The class(%s/%d) has not been removed.\n",
++			  c->name, sub_id);
++		break;
++	}
++
++	dept_unlock();
++	dept_exit(flags);
++}
++EXPORT_SYMBOL_GPL(dept_key_init);
++
++void dept_key_destroy(struct dept_key *k)
++{
++	struct dept_task *dt = dept_task();
++	unsigned long flags;
++	int sub_id;
++
++	if (unlikely(!dept_working()))
++		return;
++
++	if (dt->recursive == 1 && dt->task_exit) {
++		/*
++		 * Need to allow to go ahead in this case where
++		 * ->recursive has been set to 1 by dept_off() in
++		 * dept_task_exit() and ->task_exit has been set to
++		 * true in dept_task_exit().
++		 */
++	} else if (dt->recursive) {
++		DEPT_STOP("Key destroying fails.\n");
++		return;
++	}
++
++	flags = dept_enter();
++
++	/*
++	 * dept_key_destroy() should not fail.
++	 *
++	 * FIXME: Should be fixed if dept_key_destroy() causes deadlock
++	 * with dept_lock().
++	 */
++	while (unlikely(!dept_lock()))
++		cpu_relax();
++
++	for (sub_id = 0; sub_id < DEPT_MAX_SUBCLASSES; sub_id++) {
++		struct dept_class *c;
++
++		c = lookup_class((unsigned long)k->base + sub_id);
++		if (!c)
++			continue;
++
++		hash_del_class(c);
++		disconnect_class(c);
++		list_del(&c->all_node);
++		invalidate_class(c);
++
++		/*
++		 * Actual deletion will happen on the rcu callback
++		 * that has been added in disconnect_class().
++		 */
++		del_class(c);
++	}
++
++	dept_unlock();
++	dept_exit(flags);
++
++	/*
++	 * Wait until even lockless hash_lookup_class() for the class
++	 * returns NULL.
++	 */
++	might_sleep();
++	synchronize_rcu();
++}
++EXPORT_SYMBOL_GPL(dept_key_destroy);
++
++static void move_llist(struct llist_head *to, struct llist_head *from)
++{
++	struct llist_node *first = llist_del_all(from);
++	struct llist_node *last = first;
++
++	if (!first)
++		return;
++
++	while (llist_next(last))
++		last = llist_next(last);
++	llist_add_batch(first, last, to);
++}
++
++static void migrate_per_cpu_pool(void)
++{
++	const int boot_cpu = 0;
++	int i;
++
++	/*
++	 * The boot CPU has been using the temporal local pool so far.
++	 * From now on that per_cpu areas have been ready, use the
++	 * per_cpu local pool instead.
++	 */
++	DEPT_WARN_ON(smp_processor_id() != boot_cpu);
++	for (i = 0; i < OBJECT_NR; i++) {
++		struct llist_head *from;
++		struct llist_head *to;
++
++		from = &dept_pool[i].boot_pool;
++		to = per_cpu_ptr(dept_pool[i].lpool, boot_cpu);
++		move_llist(to, from);
++	}
++}
++
++#define B2KB(B) ((B) / 1024)
++
++/*
++ * Should be called after setup_per_cpu_areas() and before no non-boot
++ * CPUs have been on.
++ */
++void __init dept_init(void)
++{
++	size_t mem_total = 0;
++
++	local_irq_disable();
++	dept_per_cpu_ready = 1;
++	migrate_per_cpu_pool();
++	local_irq_enable();
++
++#define HASH(id, bits) BUILD_BUG_ON(1 << (bits) <= 0);
++	#include "dept_hash.h"
++#undef HASH
++#define OBJECT(id, nr) mem_total += sizeof(struct dept_##id) * nr;
++	#include "dept_object.h"
++#undef OBJECT
++#define HASH(id, bits) mem_total += sizeof(struct hlist_head) * (1 << (bits));
++	#include "dept_hash.h"
++#undef HASH
++
++	pr_info("DEPendency Tracker: Copyright (c) 2020 LG Electronics, Inc., Byungchul Park\n");
++	pr_info("... DEPT_MAX_STACK_ENTRY: %d\n", DEPT_MAX_STACK_ENTRY);
++	pr_info("... DEPT_MAX_WAIT_HIST  : %d\n", DEPT_MAX_WAIT_HIST);
++	pr_info("... DEPT_MAX_ECXT_HELD  : %d\n", DEPT_MAX_ECXT_HELD);
++	pr_info("... DEPT_MAX_SUBCLASSES : %d\n", DEPT_MAX_SUBCLASSES);
++#define OBJECT(id, nr)							\
++	pr_info("... memory used by %s: %zu KB\n",			\
++	       #id, B2KB(sizeof(struct dept_##id) * nr));
++	#include "dept_object.h"
++#undef OBJECT
++#define HASH(id, bits)							\
++	pr_info("... hash list head used by %s: %zu KB\n",		\
++	       #id, B2KB(sizeof(struct hlist_head) * (1 << (bits))));
++	#include "dept_hash.h"
++#undef HASH
++	pr_info("... total memory used by objects and hashs: %zu KB\n", B2KB(mem_total));
++	pr_info("... per task memory footprint: %zu bytes\n", sizeof(struct dept_task));
++}
+diff --git a/kernel/dependency/dept_hash.h b/kernel/dependency/dept_hash.h
+new file mode 100644
+index 000000000000..fd85aab1fdfb
+--- /dev/null
++++ b/kernel/dependency/dept_hash.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * HASH(id, bits)
++ *
++ * id  : Id for the object of struct dept_##id.
++ * bits: 1UL << bits is the hash table size.
++ */
++
++HASH(dep, 12)
++HASH(class, 12)
+diff --git a/kernel/dependency/dept_internal.h b/kernel/dependency/dept_internal.h
+new file mode 100644
+index 000000000000..04c040dbcbc8
+--- /dev/null
++++ b/kernel/dependency/dept_internal.h
+@@ -0,0 +1,283 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * DEPT(DEPendency Tracker) - runtime dependency tracker internal header
++ *
++ * Started by Byungchul Park <max.byungchul.park@gmail.com>:
++ *
++ *  Copyright (c) 2020 LG Electronics, Inc., Byungchul Park
++ *  Copyright (c) 2024 SK hynix, Inc., Byungchul Park
++ */
++
++#ifndef __DEPT_INTERNAL_H
++#define __DEPT_INTERNAL_H
++
++#ifdef CONFIG_DEPT
++#include <linux/dept.h>
++#include <linux/percpu.h>
++#include <linux/llist.h>
++#include <linux/types.h>
++
++struct dept_pool {
++	const char			*name;
++
++	/*
++	 * object size
++	 */
++	size_t				obj_sz;
++
++	/*
++	 * the number of the static array
++	 */
++	atomic_t			obj_nr;
++
++	/*
++	 * offset of ->pool_node
++	 */
++	size_t				node_off;
++
++	/*
++	 * pointer to the pool
++	 */
++	void				*spool;
++	struct llist_head		boot_pool;
++	struct llist_head __percpu	*lpool;
++};
++
++struct dept_ecxt;
++struct dept_iecxt {
++	struct dept_ecxt		*ecxt;
++	int				enirq;
++	/*
++	 * flag to prevent adding a new ecxt
++	 */
++	bool				staled;
++};
++
++struct dept_wait;
++struct dept_iwait {
++	struct dept_wait		*wait;
++	int				irq;
++	/*
++	 * flag to prevent adding a new wait
++	 */
++	bool				staled;
++	bool				touched;
++};
++
++struct dept_class {
++	union {
++		struct llist_node	pool_node;
++		struct {
++			/*
++			 * reference counter for object management
++			 */
++			atomic_t	ref;
++
++			/*
++			 * unique information about the class
++			 */
++			const char	*name;
++			unsigned long	key;
++			int		sub_id;
++
++			/*
++			 * for BFS
++			 */
++			unsigned int	bfs_gen;
++			struct dept_class *bfs_parent;
++			struct list_head bfs_node;
++
++			/*
++			 * for hashing this object
++			 */
++			struct hlist_node hash_node;
++
++			/*
++			 * for linking all classes
++			 */
++			struct list_head all_node;
++
++			/*
++			 * for associating its dependencies
++			 */
++			struct list_head dep_head;
++			struct list_head dep_rev_head;
++
++			/*
++			 * for tracking IRQ dependencies
++			 */
++			struct dept_iecxt iecxt[DEPT_IRQS_NR];
++			struct dept_iwait iwait[DEPT_IRQS_NR];
++
++			/*
++			 * classified by a map embedded in task_struct,
++			 * not an explicit map
++			 */
++			bool		sched_map;
++		};
++	};
++};
++
++struct dept_stack {
++	union {
++		struct llist_node	pool_node;
++		struct {
++			/*
++			 * reference counter for object management
++			 */
++			atomic_t	ref;
++
++			/*
++			 * backtrace entries
++			 */
++			unsigned long	raw[DEPT_MAX_STACK_ENTRY];
++			int nr;
++		};
++	};
++};
++
++struct dept_ecxt {
++	union {
++		struct llist_node	pool_node;
++		struct {
++			/*
++			 * reference counter for object management
++			 */
++			atomic_t	ref;
++
++			/*
++			 * function that entered to this ecxt
++			 */
++			const char	*ecxt_fn;
++
++			/*
++			 * event function
++			 */
++			const char	*event_fn;
++
++			/*
++			 * associated class
++			 */
++			struct dept_class *class;
++
++			/*
++			 * flag indicating which IRQ has been
++			 * enabled within the event context
++			 */
++			unsigned long	enirqf;
++
++			/*
++			 * where the IRQ-enabled happened
++			 */
++			unsigned long	enirq_ip[DEPT_IRQS_NR];
++			struct dept_stack *enirq_stack[DEPT_IRQS_NR];
++
++			/*
++			 * where the event context started
++			 */
++			unsigned long	ecxt_ip;
++			struct dept_stack *ecxt_stack;
++
++			/*
++			 * where the event triggered
++			 */
++			unsigned long	event_ip;
++			struct dept_stack *event_stack;
++		};
++	};
++};
++
++struct dept_wait {
++	union {
++		struct llist_node	pool_node;
++		struct {
++			/*
++			 * reference counter for object management
++			 */
++			atomic_t	ref;
++
++			/*
++			 * function causing this wait
++			 */
++			const char	*wait_fn;
++
++			/*
++			 * the associated class
++			 */
++			struct dept_class *class;
++
++			/*
++			 * which IRQ the wait was placed in
++			 */
++			unsigned long	irqf;
++
++			/*
++			 * where the IRQ wait happened
++			 */
++			unsigned long	irq_ip[DEPT_IRQS_NR];
++			struct dept_stack *irq_stack[DEPT_IRQS_NR];
++
++			/*
++			 * where the wait happened
++			 */
++			unsigned long	wait_ip;
++			struct dept_stack *wait_stack;
++
++			/*
++			 * whether this wait is for commit in scheduler
++			 */
++			bool		sched_sleep;
++		};
++	};
++};
++
++struct dept_dep {
++	union {
++		struct llist_node	pool_node;
++		struct {
++			/*
++			 * reference counter for object management
++			 */
++			atomic_t	ref;
++
++			/*
++			 * key data of dependency
++			 */
++			struct dept_ecxt *ecxt;
++			struct dept_wait *wait;
++
++			/*
++			 * This object can be referred without dept_lock
++			 * held but with IRQ disabled, e.g. for hash
++			 * lookup. So deferred deletion is needed.
++			 */
++			struct rcu_head rh;
++
++			/*
++			 * for hashing this object
++			 */
++			struct hlist_node hash_node;
++
++			/*
++			 * for linking to a class object
++			 */
++			struct list_head dep_node;
++			struct list_head dep_rev_node;
++		};
++	};
++};
++
++struct dept_hash {
++	/*
++	 * hash table
++	 */
++	struct hlist_head		*table;
++
++	/*
++	 * size of the table e.i. 2^bits
++	 */
++	int				bits;
++};
++
++#endif
++#endif /* __DEPT_INTERNAL_H */
+diff --git a/kernel/dependency/dept_object.h b/kernel/dependency/dept_object.h
+new file mode 100644
+index 000000000000..0b7eb16fe9fb
+--- /dev/null
++++ b/kernel/dependency/dept_object.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * OBJECT(id, nr)
++ *
++ * id: Id for the object of struct dept_##id.
++ * nr: # of the object that should be kept in the pool.
++ */
++
++OBJECT(dep, 1024 * 8)
++OBJECT(class, 1024 * 8)
++OBJECT(stack, 1024 * 32)
++OBJECT(ecxt, 1024 * 16)
++OBJECT(wait, 1024 * 32)
+diff --git a/kernel/exit.c b/kernel/exit.c
+index ede3117fa7d4..25297ef0421e 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -1016,6 +1016,7 @@ void __noreturn do_exit(long code)
+ 	exit_tasks_rcu_finish();
+ 
+ 	lockdep_free_task(tsk);
++	dept_task_exit(tsk);
+ 	do_task_dead();
+ }
+ EXPORT_SYMBOL(do_exit);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index bc2bf58b93b6..1f94bfd1a46b 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -108,6 +108,7 @@
+ #include <linux/tick.h>
+ #include <linux/unwind_deferred.h>
+ #include <linux/pgalloc.h>
++#include <linux/dept.h>
+ #include <linux/uaccess.h>
+ 
+ #include <asm/mmu_context.h>
+@@ -2175,6 +2176,7 @@ __latent_entropy struct task_struct *copy_process(
+ 	p->pagefault_disabled = 0;
+ 
+ 	lockdep_init_task(p);
++	dept_task_init(p);
+ 
+ 	p->blocked_on = NULL; /* not blocked yet */
+ 
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index c3ce106c70af..5bf3b3d1e3ec 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -1375,12 +1375,14 @@ static void free_mod_mem(struct module *mod)
+ 
+ 		/* Free lock-classes; relies on the preceding sync_rcu(). */
+ 		lockdep_free_key_range(mod_mem->base, mod_mem->size);
++		dept_free_range(mod_mem->base, mod_mem->size);
+ 		if (mod_mem->size)
+ 			module_memory_free(mod, type);
+ 	}
+ 
+ 	/* MOD_DATA hosts mod, so free it at last */
+ 	lockdep_free_key_range(mod->mem[MOD_DATA].base, mod->mem[MOD_DATA].size);
++	dept_free_range(mod->mem[MOD_DATA].base, mod->mem[MOD_DATA].size);
+ 	module_memory_free(mod, MOD_DATA);
+ }
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 496dff740dca..c01597d645ae 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -69,6 +69,7 @@
+ #include <linux/wait_api.h>
+ #include <linux/workqueue_api.h>
+ #include <linux/livepatch_sched.h>
++#include <linux/dept.h>
+ 
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ # ifdef CONFIG_GENERIC_IRQ_ENTRY
+@@ -4160,6 +4161,8 @@ int try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		if (READ_ONCE(p->on_rq) && ttwu_runnable(p, wake_flags))
+ 			break;
+ 
++		dept_ttwu_stage_wait(p, _RET_IP_);
++
+ 		/*
+ 		 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
+ 		 * possible to, falsely, observe p->on_cpu == 0.
+@@ -6783,6 +6786,11 @@ static void __sched notrace __schedule(int sched_mode)
+ 	rq = cpu_rq(cpu);
+ 	prev = rq->curr;
+ 
++	prev_state = READ_ONCE(prev->__state);
++	if (sched_mode != SM_PREEMPT && prev_state & TASK_NORMAL)
++		dept_request_event_wait_commit();
++
++	dept_sched_enter();
+ 	schedule_debug(prev, preempt);
+ 
+ 	if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
+@@ -6919,6 +6927,7 @@ static void __sched notrace __schedule(int sched_mode)
+ 		raw_spin_rq_unlock_irq(rq);
+ 	}
+ 	trace_sched_exit_tp(is_switch);
++	dept_sched_exit();
+ }
+ 
+ void __noreturn do_task_dead(void)
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 93f356d2b3d9..8eefca5cbb6f 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1441,6 +1441,32 @@ config DEBUG_ATOMIC_LARGEST_ALIGN
+ 
+ menu "Lock Debugging (spinlocks, mutexes, etc...)"
+ 
++config DEPT
++	bool "Dependency tracking (EXPERIMENTAL)"
++	depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
++	select DEBUG_SPINLOCK
++	select DEBUG_MUTEXES if !PREEMPT_RT
++	select DEBUG_RT_MUTEXES if RT_MUTEXES
++	select DEBUG_RWSEMS if !PREEMPT_RT
++	select DEBUG_WW_MUTEX_SLOWPATH
++	select DEBUG_LOCK_ALLOC
++	select TRACE_IRQFLAGS
++	select STACKTRACE
++	select KALLSYMS
++	select KALLSYMS_ALL
++	select PROVE_LOCKING
++	default n
++	help
++	  Check dependencies between wait and event and report it if
++	  deadlock possibility has been detected. Multiple reports are
++	  allowed if there are more than a single problem.
++
++	  This feature is considered EXPERIMENTAL that might produce
++	  false positive reports because new dependencies start to be
++	  tracked, that have never been tracked before. It's worth
++	  noting, to mitigate the impact by the false positives, multi
++	  reporting has been supported.
++
+ config LOCK_DEBUGGING_SUPPORT
+ 	bool
+ 	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index d939403331b5..a7f8e59d0092 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -1398,6 +1398,8 @@ static void reset_locks(void)
+ 	local_irq_disable();
+ 	lockdep_free_key_range(&ww_lockdep.acquire_key, 1);
+ 	lockdep_free_key_range(&ww_lockdep.mutex_key, 1);
++	dept_free_range(&ww_lockdep.acquire_key, 1);
++	dept_free_range(&ww_lockdep.mutex_key, 1);
+ 
+ 	I1(A); I1(B); I1(C); I1(D);
+ 	I1(X1); I1(X2); I1(Y1); I1(Y2); I1(Z1); I1(Z2);
 -- 
 2.17.1
 
