@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-23107-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23108-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wgKfEl3xS2q0dQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23107-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 20:18:05 +0200
+	id 5cRDLFfbS2oUbgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23108-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 18:44:07 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4125714659
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 20:18:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2166571371D
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 18:44:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=mLFab6sO;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NhNVqMli;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23107-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23107-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23108-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23108-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 348F8307FC95
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 16:15:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AFEC93047F08
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 16:15:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53623128DF;
-	Mon,  6 Jul 2026 16:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59DD3430CE5;
+	Mon,  6 Jul 2026 16:15:41 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FEA3BD246
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 16:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164A8421F00
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 16:15:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783354510; cv=none; b=ANjC0s4V2DGORqKBFAq07O/wh6C6T9Lct0YARZPp4OcOss9fdFtP9/DqC0SuV5ptZX2FA/dx30x3T3cCDpu0Uci6eapi4fmcm2j6unRFWjAfsL9xFF2j/4hSrz0j8GD4crjs2wG+4iGvHYC9U6/+z14aCbV/2kIvhB+a/V8Z0YA=
+	t=1783354541; cv=none; b=BHO04PM97bVzMLTma4yReNyn+NXIz3VX3cqO+DafeC0iTCVx8o8Ym8yM/o6UUpndTUmXgOEd+svBRanZXRQM5vfPzcIT2jkFbLK0IwdndVD3vbqHrfSQPkJOXQyPJ5oIy+6owuL7b7bHYbSsJEEh0/juKcPEg2ecxSwVxo5ZlfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783354510; c=relaxed/simple;
-	bh=0PIR85zFTGf9p/hE6AYYD6XNWHe48PmRnYym0xK8+6M=;
+	s=arc-20240116; t=1783354541; c=relaxed/simple;
+	bh=fTRpFaZRQYVl0bc5aNpnqWGG07mKmK2Y/gFCNQkSgXw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OerWRtCaB6jvxCzMW3Oi021+IxLwNfPC1VhE73fiRgwHWk32sTqjtB4qCKX83EHXXyajA+aoYYpUv5pXwon/JgLY3BbQsjvlZKIADbEPjI6NWQgjifTYXC06xmGNojrPDnI2h2NA9y5DVCNefWsWU+ZRr7OznA7zpx7qtjof51A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLFab6sO; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFFDB1F000E9;
-	Mon,  6 Jul 2026 16:15:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=aPyGzkJIpPyn6+pH1NGWRQv/xVUu/tKCkL5OZzmsUZXKeTaM/vFXKKY5bZRWs/hNF1QjD++47iFjFpt5YZ2/KNJlSETk1HNshi1v/vf2ymiSYS/j7DnQ2qv/KtIzCVl3hctp7MwFKxCweCrRU+p7CL1EtVVh4qFidUbGR6Gjf6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhNVqMli; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25F181F00A3D;
+	Mon,  6 Jul 2026 16:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783354509;
-	bh=DCBbCUmXiWhveWa86RVTnSYUbYA1jS3+hXkXPzI8zOA=;
+	s=k20260515; t=1783354539;
+	bh=ffGmCPbE/tJRfwKo4MK1zAk9M58tiAwoOaSCNOeP/wo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=mLFab6sOJXSbdbNdJtpUkYsxfBoSfEjLP+pJtqn80gymV0LQXgxPrsgpczOQy5op7
-	 P7gVHTwpjXal6sKapY9IeWgHlVqFoUdWLu5R/RoYhroHyQHu/98UhrNaF0hrjFYp1W
-	 HfBXxmPdUtTTAuVnYZBv4DxUNKGJq0L67D7Ei87QEdcLEV6DOsY2yklma80i7loAYC
-	 CwDnkVlYUyjK68DXS8l43XrhzwtjaoxQa0UMiIdg5fyLSbZKuP1jlx7Xamm63m3/AO
-	 x4HyGdNKheQjNTdKWfAnVim1CybIcKEx3LCmYgTb0eZxEebF9esVdFqQXfPacrwe/g
-	 tr7760pRM0Yow==
-Message-ID: <e6b08d28b3e7b6ee3dbbb482a33d58c2bc420245.camel@kernel.org>
-Subject: Re: [PATCH v2 02/14] nfsd: replace fh_fill_both_attrs() with
- fh_fill_post_noop()
+	b=NhNVqMliiYkKtbM8Z1xNeq+9TEO13Fp4ZdXUR8W5i6qclrPJ54x/qbPsfZE8emvZ2
+	 4tsE0MqIIQL9sUefDkoCFFkgBhT+XsWiaHY94dUA/QxMW1YlIRx31jTWoepMvmGHdv
+	 o9oB2aZ7f9iOwN6VxHxLtxDfhKJliOff+3X6k5bLVee1dqJbnl7WDbCB/iR6YlzTro
+	 qHM42yCohhURNH+tGVL6LkByinqRoR40qk8S9OmZKdgnWm2TrPxGzRdGbvxuRQ8VCg
+	 fyTKb8NUgtsr1GNtW4N0+/Dqrv9GJwYv2lhUCXCkYBecvbCF2h/qlTP89iDsVhRage
+	 I0UeC2Kk6HUYg==
+Message-ID: <11136cdee28e26e2426f84222810f2b5db681525.camel@kernel.org>
+Subject: Re: [PATCH v2 03/14] nfsd: move fh_want_write() after preamble in
+ nfsd4_create_file()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Mon, 06 Jul 2026 12:15:07 -0400
-In-Reply-To: <20260705222032.1240057-3-neilb@ownmail.net>
+Date: Mon, 06 Jul 2026 12:15:37 -0400
+In-Reply-To: <20260705222032.1240057-4-neilb@ownmail.net>
 References: <20260705222032.1240057-1-neilb@ownmail.net>
-	 <20260705222032.1240057-3-neilb@ownmail.net>
+	 <20260705222032.1240057-4-neilb@ownmail.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -145,18 +145,18 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23107-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23108-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
@@ -170,51 +170,93 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,brown.name:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C4125714659
+X-Rspamd-Queue-Id: 2166571371D
 
 On Mon, 2026-07-06 at 08:19 +1000, NeilBrown wrote:
 > From: NeilBrown <neil@brown.name>
 >=20
-> fh_fill_both_attrs() is only needed for open/create and is used in the
-> case when the target already existed so no creating happens.
+> As part of separating the nfsd-specific code from the VFS interaction
+> code in nfsd4_create_file(), move fh_want_write() to just before we need
+> it.
 >=20
-> As part of refactoring this code it is changed to call
-> fh_fill_pre_attrs() once early on (so errors only need to be caught in
-> one place) and then to use a new fh_fill_post_noop() when it is
-> determined that no creation happened.
+> Consequently errors in the "if" statement that this code is moved over
+> can now be returned immediately rather than needing to "goto out".
 >=20
-> fh_fill_pre_attrs() now stores the attrs (which it had to get all of
-> anyway)_ in ->fh_post_attr.  fh_fill_post_noop() simply marks them as
-> valid.  fh_fill_post_attrs() replaces them.
->=20
-> This change involves moving fh_fill_pre_attrs() out of the inode_lock on
-> the directory.  This means that we cannot provide "atomic" wcc data so a
-> new fh_fill_pre_attrs_unlocked() is provided which marks the attrs as
-> non-atomic.
->=20
-> This is unfortunate but inevitable if we are ever to allow concurrent
-> updates in a directory (which can significantly improve performance in
-> some cases).  To get atomic pre/post attributes we will need to be able
-> to ask the fs to provide them, or to request a lease on the directory
-> for the duration of an operation.
->=20
-> Note that we haven't provided pre/post attrs on WRITE requests for a
-> long time for exactly this reason - we cannot lock the file to get them.
+> Also restructure that "if" statement to only test is_create_with_attrs()
+> once.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfs4proc.c | 20 ++++++--------
->  fs/nfsd/nfsfh.c    | 69 +++++++++++++++++++++++-----------------------
->  fs/nfsd/nfsfh.h    | 14 +++++++++-
->  3 files changed, 56 insertions(+), 47 deletions(-)
+>  fs/nfsd/nfs4proc.c | 31 +++++++++++++++++--------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
 >=20
-
-The loss of atomic post-op attrs is lamentable, but it is in service of
-a higher cause!
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index a93132323b66..17be4f7420fc 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -270,22 +270,18 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+>  	parent =3D fhp->fh_dentry;
+>  	inode =3D d_inode(parent);
+> =20
+> -	host_err =3D fh_want_write(fhp);
+> -	if (host_err)
+> -		return nfserrno(host_err);
+> -
+> -	if (open->op_acl) {
+> +	if (!is_create_with_attrs(open)) {
+> +		/* No attrs to check */
+> +	} else if (open->op_acl) {
+>  		if (open->op_dpacl || open->op_pacl) {
+> -			status =3D nfserr_inval;
+> -			goto out;
+> +			/* Cannot specify both NFSv4 and Posix ACLs */
+> +			return nfserr_inval;
+>  		}
+> -		if (is_create_with_attrs(open)) {
+> -			status =3D nfsd4_acl_to_attr(NF4REG, open->op_acl,
+> +		status =3D nfsd4_acl_to_attr(NF4REG, open->op_acl,
+>  						   &attrs);
+> -			if (status)
+> -				goto out;
+> -		}
+> -	} else if (is_create_with_attrs(open)) {
+> +		if (status)
+> +			return status;
+> +	} else {
+>  		/* The dpacl and pacl will get released by nfsd_attrs_free(). */
+>  		attrs.na_dpacl =3D open->op_dpacl;
+>  		attrs.na_pacl =3D open->op_pacl;
+> @@ -293,6 +289,12 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>  		open->op_pacl =3D NULL;
+>  	}
+> =20
+> +	host_err =3D fh_want_write(fhp);
+> +	if (host_err) {
+> +		status =3D nfserrno(host_err);
+> +		goto out_free;
+> +	}
+> +
+>  	child =3D start_creating(&nop_mnt_idmap, parent,
+>  			       &QSTR_LEN(open->op_fname, open->op_fnamelen));
+>  	if (IS_ERR(child)) {
+> @@ -409,8 +411,9 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_=
+fh *fhp,
+>  		open->op_bmval[2] &=3D ~FATTR4_WORD2_POSIX_ACCESS_ACL;
+>  out:
+>  	end_creating(child);
+> -	nfsd_attrs_free(&attrs);
+>  	fh_drop_write(fhp);
+> +out_free:
+> +	nfsd_attrs_free(&attrs);
+>  	return status;
+>  }
+> =20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
