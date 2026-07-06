@@ -1,294 +1,218 @@
-Return-Path: <linux-nfs+bounces-23117-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23118-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id F1q9FDToS2pPcgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23117-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 19:39:00 +0200
+	id sXKbM83uS2ridAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23118-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 20:07:09 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FDC4713F91
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 19:38:59 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA1E71448A
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 20:07:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=JV8CCUke;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23117-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23117-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=infradead.org header.s=casper.20170209 header.b=CNyUy7kr;
+	dmarc=pass (policy=none) header.from=infradead.org;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23118-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23118-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 931D630BC9C5
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 17:30:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 723F3301CC53
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 18:06:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC653AEF46;
-	Mon,  6 Jul 2026 17:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50941435A9C;
+	Mon,  6 Jul 2026 18:06:22 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2173AEF3A
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 17:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F549422549;
+	Mon,  6 Jul 2026 18:06:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783358970; cv=none; b=fhr3t9S77NIOlf7V+N2AUSrAqycKdJPiubKzQmoxsOK/sp9ovcj9FwpC/8aec1PlW/OJnrB1MzLgmvMQE5l9PnL5RXqn9lwj2rz2sr/iULnzULOcXAMGtonLSquZvTmBDXPHz1BFkvmr+5q0YM1f37zql7M7WXwzTnzJrerTTbc=
+	t=1783361181; cv=none; b=lWre/ScDu8bT9gcIMlHG8tm5k0HuwM6UmfwWIzQE0Ng7b4wkTP2b0JrZVmvAF7kKCHD7p+uWXQsIAXw0GhKFPT3gngU4XZ3W8pZ6lxkzYU5yam4xSGy+CID8JH6+7zCOQVL12kLtmTFpQgjXxA9CySY7LaiQppt2vMWHKn5BEio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783358970; c=relaxed/simple;
-	bh=qCADXsj5dh52OKQc80USjThFxhnxdTkNjLcy4huDTww=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eg5Eh4T0z8rMK5Qx9onNoGjzPQn6xdQkgIm5Mc6tSPx4hz+O6VayqCysO+QwOFwzXrg5RMsjwh2S1NSU66ssGcJOQRECcjFbZqQBQwOH+Q5UT9A3ZFMGe/4Wp0sKXCEqJ60xq0IhT66qPESg6xlRDZAEVYR5Q3zOnW6x1+XlUTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JV8CCUke; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F2B1F000E9;
-	Mon,  6 Jul 2026 17:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783358968;
-	bh=WHkF8dgJkhd0zubW5Y27UY2ihiS3jvWaRk4Lg4XC6K8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=JV8CCUkeP5FwcVXv6w0+HxrX2ISGtiAadgfsNVjnutvSfVWyWbiBvesKHDTTQZLI6
-	 x22fQpRjc9lHHfLX2f7cagIiQw/gF9bIN4UcfRsaF1jOdvYHnO0WZIPmddGFjq7Vi6
-	 VJs5hL6Ic2hX9d+kv0lrhbHR2Qc+/4jSu8m3RjWcMGfGClRWg4QFTIlmjR1o4hW85r
-	 oSOjr/HtOZYBwa1AvI2LALV8l1kM3bybNbmNx5ftAMkuYzgb9wHNXOPXIJTiz4oOhD
-	 IbXQZ5/ExOyNVmsczS+H0Xn/7U8UJpfexs1/MQlXqo9QEwBczijRqS2oEUJbvsNd0Q
-	 3riGUt8iCinQQ==
-Message-ID: <39785ebf72eb7eeb09e006f40b7c2b38cbc0b083.camel@kernel.org>
-Subject: Re: [PATCH v2 2/6] NFSD: Prevent client use-after-free during
- delegation revoke
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Mon, 06 Jul 2026 13:29:26 -0400
-In-Reply-To: <20260705-cel-v2-2-d88c3b68e8bc@kernel.org>
-References: <20260705-cel-v2-0-d88c3b68e8bc@kernel.org>
-	 <20260705-cel-v2-2-d88c3b68e8bc@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
+	s=arc-20240116; t=1783361181; c=relaxed/simple;
+	bh=WSrxhZ3K3aHd+oacRAsc/khrD9rBmmLfoF539Nq0u78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=govuGuGGEytB6D5rxJrZaN1xwVOXsq2EzjnD9vP922e/ybGk/aqV/nudPbCgA9/54xz4qS9n/ZbY9ruVJ8l4X8SG46so3IMjJKISMjE00YcIfaeBwGj+FV3Mo8n4JqZ4rRzHHHAibMO6jSPv+R4zfthXjbFrZwu8D59Lqcwho38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CNyUy7kr; arc=none smtp.client-ip=90.155.50.34
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7OW/CenuU9P13pzjhjZutuMsDUz3ebL4YDkxxEUpTq8=; b=CNyUy7krT2KWgEwmWVKxtIQ+mF
+	Vb+1q+gyB5yQGtWUUUTFfkVXSRepuw7fyFqIY66jb6ov+a2TSQuU6Oeko21f10IdvUo87ND796N2s
+	r4dJq4T0v6JLzeGf9VmqXcqhhRS0zxb+AYnr/OkLGsRdGJ59LoP8x6HtyxyIaDGX/UNF4eV4mx/6j
+	9DFL/3RA2rxLGItPLNRlN3OyyNrc4LrBZnn6Z3pAqvn4XXv6D9Sm5JmxAl/Nx6Vi/43ITWBd3Tatn
+	UF0bFlXL9IwSqecAJqVY3MLm3w3NDEriZxsXwEytou0y28YZK6qZ/ZV3pvVIppH/oIVxHPm218vXX
+	ibjZRXUw==;
+Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wgnhQ-0000000GLqy-1n2W;
+	Mon, 06 Jul 2026 18:05:44 +0000
+Date: Mon, 6 Jul 2026 19:05:44 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Byungchul Park <byungchul@sk.com>
+Cc: linux-kernel@vger.kernel.org, max.byungchul.park@gmail.com,
+	kernel_team@skhynix.com, torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org, will@kernel.org,
+	tglx@linutronix.de, rostedt@goodmis.org, joel@joelfernandes.org,
+	sashal@kernel.org, daniel.vetter@ffwll.ch, duyuyang@gmail.com,
+	johannes.berg@intel.com, tj@kernel.org, tytso@mit.edu,
+	david@fromorbit.com, amir73il@gmail.com, gregkh@linuxfoundation.org,
+	kernel-team@lge.com, linux-mm@kvack.org, akpm@linux-foundation.org,
+	mhocko@kernel.org, minchan@kernel.org, hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com, sj@kernel.org, jglisse@redhat.com,
+	dennis@kernel.org, cl@linux.com, penberg@kernel.org,
+	rientjes@google.com, vbabka@suse.cz, ngupta@vflare.org,
+	linux-block@vger.kernel.org, josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org, jack@suse.cz, jlayton@kernel.org,
+	dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
+	dri-devel@lists.freedesktop.org, rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com, hamohammed.sa@gmail.com,
+	harry.yoo@oracle.com, chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com, boqun.feng@gmail.com, longman@redhat.com,
+	yunseong.kim@ericsson.com, ysk@kzalloc.com, yeoreum.yun@arm.com,
+	netdev@vger.kernel.org, matthew.brost@intel.com,
+	her0gyugyu@gmail.com, corbet@lwn.net, catalin.marinas@arm.com,
+	bp@alien8.de, x86@kernel.org, hpa@zytor.com, luto@kernel.org,
+	sumit.semwal@linaro.org, gustavo@padovan.org,
+	christian.koenig@amd.com, andi.shyti@kernel.org, arnd@arndb.de,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	rppt@kernel.org, surenb@google.com, mcgrof@kernel.org,
+	petr.pavlu@suse.com, da.gomez@kernel.org, samitolvanen@google.com,
+	paulmck@kernel.org, frederic@kernel.org, neeraj.upadhyay@kernel.org,
+	joelagnelf@nvidia.com, josh@joshtriplett.org, urezki@gmail.com,
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
+	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
+	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
+	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
+	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
+	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
+	yuzhao@google.com, baolin.wang@linux.alibaba.com,
+	usamaarif642@gmail.com, joel.granados@kernel.org,
+	richard.weiyang@gmail.com, geert+renesas@glider.be,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
+	chenhuacai@kernel.org, francesco@valla.it,
+	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
+	masahiroy@kernel.org, brauner@kernel.org,
+	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
+	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, 2407018371@qq.com, dakr@kernel.org,
+	miguel.ojeda.sandonis@gmail.com, neilb@ownmail.net,
+	bagasdotme@gmail.com, wsa+renesas@sang-engineering.com,
+	dave.hansen@intel.com, geert@linux-m68k.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v19 22/40] dept: track PG_locked with dept
+Message-ID: <akvueAxPl8aoLvMR@casper.infradead.org>
+References: <20260706061928.66713-1-byungchul@sk.com>
+ <20260706061928.66713-23-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260706061928.66713-23-byungchul@sk.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23117-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23118-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:byungchul@sk.com,m:linux-kernel@vger.kernel.org,m:max.byungchul.park@gmail.com,m:kernel_team@skhynix.com,m:torvalds@linux-foundation.org,m:damien.lemoal@opensource.wdc.com,m:linux-ide@vger.kernel.org,m:adilger.kernel@dilger.ca,m:linux-ext4@vger.kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:will@kernel.org,m:tglx@linutronix.de,m:rostedt@goodmis.org,m:joel@joelfernandes.org,m:sashal@kernel.org,m:daniel.vetter@ffwll.ch,m:duyuyang@gmail.com,m:johannes.berg@intel.com,m:tj@kernel.org,m:tytso@mit.edu,m:david@fromorbit.com,m:amir73il@gmail.com,m:gregkh@linuxfoundation.org,m:kernel-team@lge.com,m:linux-mm@kvack.org,m:akpm@linux-foundation.org,m:mhocko@kernel.org,m:minchan@kernel.org,m:hannes@cmpxchg.org,m:vdavydov.dev@gmail.com,m:sj@kernel.org,m:jglisse@redhat.com,m:dennis@kernel.org,m:cl@linux.com,m:penberg@kernel.org,m:rientjes@google.com,m:vbabka@suse.cz,m:ngupta@vflare.org,m:linux-block@vger.kernel.org,m:josef@toxicpanda.com,m:linux-fsdevel@vger.kernel.
+ org,m:jack@suse.cz,m:jlayton@kernel.org,m:dan.j.williams@intel.com,m:hch@infradead.org,m:djwong@kernel.org,m:dri-devel@lists.freedesktop.org,m:rodrigosiqueiramelo@gmail.com,m:melissa.srw@gmail.com,m:hamohammed.sa@gmail.com,m:harry.yoo@oracle.com,m:chris.p.wilson@intel.com,m:gwan-gyeong.mun@intel.com,m:boqun.feng@gmail.com,m:longman@redhat.com,m:yunseong.kim@ericsson.com,m:ysk@kzalloc.com,m:yeoreum.yun@arm.com,m:netdev@vger.kernel.org,m:matthew.brost@intel.com,m:her0gyugyu@gmail.com,m:corbet@lwn.net,m:catalin.marinas@arm.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:luto@kernel.org,m:sumit.semwal@linaro.org,m:gustavo@padovan.org,m:christian.koenig@amd.com,m:andi.shyti@kernel.org,m:arnd@arndb.de,m:lorenzo.stoakes@oracle.com,m:Liam.Howlett@oracle.com,m:rppt@kernel.org,m:surenb@google.com,m:mcgrof@kernel.org,m:petr.pavlu@suse.com,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:paulmck@kernel.org,m:frederic@kernel.org,m:neeraj.upadhyay@kernel.org,m:joelagnelf@nvidia.com,m:josh@
+ joshtriplett.org,m:urezki@gmail.com,m:mathieu.desnoyers@efficios.com,m:jiangshanlai@gmail.com,m:qiang.zhang@linux.dev,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:chuck.lever@oracle.com,m:neil@brown.name,m:okorniev@redhat.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,skhynix.com,linux-foundation.org,opensource.wdc.com,dilger.ca,redhat.com,infradead.org,kernel.org,linutronix.de,goodmis.org,joelfernandes.org,ffwll.ch,intel.com,mit.edu,fromorbit.com,linuxfoundation.org,lge.com,kvack.org,cmpxchg.org,linux.com,google.com,suse.cz,vflare.org,toxicpanda.com,lists.freedesktop.org,oracle.com,ericsson.com,kzalloc.com,arm.com,lwn.net,alien8.de,zytor.com,linaro.org,padovan.org,amd.com,arndb.de,suse.com,nvidia.com,joshtriplett.org,efficios.com,linux.dev,suse.de,brown.name,talpey.com,huawei.com,amazon.co.uk,linux.alibaba.com,glider.be,linux.intel.com,treblig.org,star-ark.net,valla.it,vivo.com,baidu.com,lists.infradead.org,lists.linaro.org,lists.linux.dev,qq.com,ownmail.net,sang-engineering.com,linux-m68k.org,garyguo.net,protonmail.com,umich.edu];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[165];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[willy@infradead.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs,renesas];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[casper.infradead.org:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,infradead.org:from_mime,infradead.org:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8FDC4713F91
+X-Rspamd-Queue-Id: 4FA1E71448A
 
-On Sun, 2026-07-05 at 21:25 -0400, Chuck Lever wrote:
-> A delegation stateid stores only a bare pointer to its owning
-> nfs4_client; a reference on the stateid does not keep the client
-> alive.  The client outlives its stateids solely because
-> __destroy_client() drains every delegation from cl_delegations and
-> cl_revoked before free_client() runs.
->=20
-> nfs4_laundromat() breaks that invariant.  It unhashes an expired
-> delegation from cl_delegations under deleg_lock, drops the lock, and
-> calls revoke_delegation(), which reacquires clp->cl_lock and links the
-> delegation onto clp->cl_revoked.  Between the unhash and the revoke the
-> delegation is on neither client-reachable list, so client_has_state()
-> can report no remaining state.
->=20
-> Every path that can free a client holding delegations first requires
-> cl_rpc_users to be zero: DESTROY_CLIENTID and a superseding EXCHANGE_ID
-> gate on mark_client_expired_locked(), and the admin "expire" write
-> waits in force_expire_client().  The laundromat holds no such
-> reference.  A client whose recalled delegation has just timed out -- a
-> rebooted client whose new incarnation supersedes the old one, say --
-> can therefore run __destroy_client() to completion and free the client
-> while revoke_delegation() is still about to dereference clp->cl_lock
-> and clp->cl_revoked, a use-after-free.
->=20
-> Pin the client with cl_rpc_users across the revoke so the teardown
-> paths block until it completes and then reap it from cl_revoked
-> themselves.  A client already expiring reaps its own delegations, so
-> skip it and leave the delegation on del_recall_lru for
-> __destroy_client() to handle.
->=20
-> Fixes: 3bd64a5ba171 ("nfsd4: implement SEQ4_STATUS_RECALLABLE_STATE_REVOK=
-ED")
-> Signed-off-by: Chuck Lever <cel@kernel.org>
-> ---
->  fs/nfsd/netns.h     |  6 ++++--
->  fs/nfsd/nfs4state.c | 23 +++++++++++++++++++++++
->  2 files changed, 27 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 03724bef10a7..a7bd7b67fa4f 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -115,7 +115,8 @@ struct nfsd_net {
->  	struct list_head client_lru;
->  	struct list_head close_lru;
-> =20
-> -	/* protects del_recall_lru and delegation hash/unhash */
-> +	/* protects del_recall_lru and delegation hash/unhash;
-> +	 * nests outside client_lock */
->  	spinlock_t deleg_lock ____cacheline_aligned;
->  	struct list_head del_recall_lru;
-> =20
-> @@ -124,7 +125,8 @@ struct nfsd_net {
-> =20
->  	struct delayed_work laundromat_work;
-> =20
-> -	/* client_lock protects the client lru list and session hash table */
-> +	/* client_lock protects the client lru list and session hash
-> +	 * table; nests inside deleg_lock */
->  	spinlock_t client_lock;
-> =20
->  	/* protects blocked_locks_lru */
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index e000ed3e96e9..efeb2a2e9c8f 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -7457,6 +7457,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		.new_timeo =3D nn->nfsd4_lease
->  	};
->  	struct nfs4_cpntf_state *cps;
-> +	struct nfs4_client *clp;
->  	copy_stateid_t *cps_t;
->  	int i;
-> =20
-> @@ -7485,6 +7486,18 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
->  		if (!state_expired(&lt, dp->dl_time))
->  			break;
-> +		clp =3D dp->dl_stid.sc_client;
-> +		spin_lock(&nn->client_lock);
-> +		if (is_client_expired(clp)) {
-> +			spin_unlock(&nn->client_lock);
-> +			continue;
-> +		}
-> +		/*
-> +		 * Pin without reviving: get_client_locked() would
-> +		 * flip a courtesy client back to NFSD4_ACTIVE.
-> +		 */
-> +		atomic_inc(&clp->cl_rpc_users);
-> +		spin_unlock(&nn->client_lock);
->  		refcount_inc(&dp->dl_stid.sc_count);
->  		unhash_delegation_locked(dp, SC_STATUS_REVOKED);
->  		list_add(&dp->dl_recall_lru, &reaplist);
-> @@ -7493,8 +7506,18 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	while (!list_empty(&reaplist)) {
->  		dp =3D list_first_entry(&reaplist, struct nfs4_delegation,
->  					dl_recall_lru);
-> +		clp =3D dp->dl_stid.sc_client;
->  		list_del_init(&dp->dl_recall_lru);
->  		revoke_delegation(dp);
-> +		/*
-> +		 * Unpin without renewing: put_client_renew() would
-> +		 * renew the reaped client's lease.
-> +		 */
-> +		if (atomic_dec_and_lock(&clp->cl_rpc_users, &nn->client_lock)) {
-> +			if (is_client_expired(clp))
-> +				wake_up_all(&expiry_wq);
-> +			spin_unlock(&nn->client_lock);
-> +		}
->  	}
-> =20
->  	spin_lock(&nn->client_lock);
+On Mon, Jul 06, 2026 at 03:19:10PM +0900, Byungchul Park wrote:
+> Makes dept able to track PG_locked waits and events, which will be
+> useful in practice.  See the following link that shows dept worked with
+> PG_locked and detected real issues in practice:
+> 
+>    https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> @@ -219,6 +220,7 @@ struct page {
+>  	struct page *kmsan_shadow;
+>  	struct page *kmsan_origin;
+>  #endif
+> +	struct dept_ext_wgen pg_locked_wgen;
+>  } _struct_page_alignment;
+
+I may not understand this quite correctly, but I think that tracking
+PG_locked dependencies in the struct page has both false positive and
+false negative problems.
+
+Imagine we have a file mapping M1 containing folio F1 at index 0 and F2
+at index 1.  It is correct locking order to lock F1 before locking F2
+(for example when doing writeback).  Later, M1 has its folios reclaimed
+and returned to the free pool.  Then each is added to mapping M2, this
+time with folio F2 at index 8 and F1 at index 9.  Now the correct order
+to lock these folios in the order F2 followed by F1.
+
+I don't see a part of this patch where we clear pg_locked_wgen when the
+page is returned to the page allocator.  Maybe I missed that.
+
+I think we should be tracking PG_locked dependencies in the owner
+of the folio.  For files, that would be in the struct address_space.
+For anon memory, I think that's in the anon_vma, but if somebody told
+me it was in some other structure, I wouldn't argue with them.
+
+This requires slightly more complexity than lockdep currently has.
+We don't want to use a lockdep class for each folio, obviously.  So we
+need something to say "I already have folio F1 locked, is it OK to lock
+folio F2?".  Essentially figuring out how we can track all folios in a
+given mapping the same way, and making sure that we don't deadlock on
+folios in the same mapping.
+
+If F1 and F2 are in different mappings, it's not a deadlock if F1 is in a
+filesystem mapping and F2 is in its backing dev.  It's also not a deadlock
+if F1 and F2 are both filesystem folios and the inodes are both locked.
+See vfs_lock_two_folios() in fs/remap_range.c.
+
+I have much less knowledge about anonymous memory locking order.
+Maybe it doesn't happen.  Or about locking one anon and one file folio.
+For slab memory, we don't sleep on PG_locked (it's used as a spinlock bit).
+For other kinds of memory ... I don't know.  Page migration is fun.
 
