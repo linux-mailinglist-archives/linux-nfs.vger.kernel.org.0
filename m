@@ -1,65 +1,63 @@
-Return-Path: <linux-nfs+bounces-23076-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23077-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rLW3ALjoS2qHcgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23076-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 19:41:12 +0200
+	id r/VEAbrPS2rjagEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23077-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 17:54:34 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3F6713FF6
-	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 19:41:11 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACB77712DE0
+	for <lists+linux-nfs@lfdr.de>; Mon, 06 Jul 2026 17:54:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=RgGZw+CY;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=AvbJ2MP5;
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23076-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23076-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23077-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23077-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 85CEF37CF739
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 15:30:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E7216302D314
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jul 2026 15:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFB223EBF24;
-	Mon,  6 Jul 2026 15:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4B738886F;
+	Mon,  6 Jul 2026 15:34:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC903DFC67
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 15:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8A439D3DA
+	for <linux-nfs@vger.kernel.org>; Mon,  6 Jul 2026 15:34:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783351742; cv=none; b=ngbtM2zyGUZpNKbSGGhcGP+Y1JFRfF9Qy6ZQ8BdsMwfPSzuC1PnGWTnwsGKCq08iYmAvBpoxtiZ+NCjGng8Brtefkb5+fDW74p77ukIJLyHbE2WmnIZYzavAyItCKLVpr0Alto4nUFATwATOGDt93Y5lJZQcS6J+IxONm303hlI=
+	t=1783352070; cv=none; b=uArv1BEFxaYd1TlW4lrHe2n6JZHEKWX5VoZWBVpPui68gWaX3gN2asjzvaajRBf2V58isSLWMeMtjAwOstLx/WRx4bk3tN7mjHZ15bpVXSyHLlzCDbcnX30MUGq20+R04sTnYTvaylfYp+LEU3mFBF0v2TjqXk6Ao6YpUwRrktc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783351742; c=relaxed/simple;
-	bh=cpPCtORRiAX6AaW2x1iFAhbF0y/b8+n9WP2Jgrwoskc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VOpHbC5QKT3bC0YcmMnmrAEriIbQ/b6GRLeVN61QaGqzDW3bmAqF1fiulIp800p+q0xygf60MlqRovG+mjtejMd7JCxhfRlJ//fkQ14hNMfaMxesgk+cMDXQFUsWekX/FUUSqyp4qSvtEVKrp+z+jGG5nAfVnCFwkIHbKFsxquw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RgGZw+CY; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1783352070; c=relaxed/simple;
+	bh=YMYMvTJqPQ4Fbs+w7z6WLF+d+XmNDtWZbfC0Bw3opCU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OxA80KfwH1P3ikmt/41NVBEkTyqEKwZLbwVWpl18IFedQn+SrPVjFBEnmVVlTDuHGYw50c5JQfP0XcFxLEZBfv5LsDnukxBOxmA1iXhPrJj3WS5OfQHiKIxW/Jrv1Cz0JeLQrxVQIkUJgqo2PkOsWB58mApcJZO+2KMF4mbuJDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AvbJ2MP5; arc=none smtp.client-ip=170.10.133.124
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783351738;
+	s=mimecast20190719; t=1783352067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cmkh/8lLK1jZ4C+z8yxT+guDlzv8wKx1996Nlx+mLJo=;
-	b=RgGZw+CYUvQyDN7Zx4kFWr12zlnf3yakWGsV/jAudPV3Ci3ltP+vG1oseLbcxw6LCEnRgd
-	lQ2p1VeakWr6w3UAnyXjAuZGGGyQhKsmtU0NXEpmPriC6YDUIXFvRe5NIaG5Md1rJluxZA
-	5iRBH5SLxFiw/kEjHNu7I/bSfis/SLE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fJgudNbA+jqSC6IQkevTiVxycA2ilRQtfmBrSyeMALc=;
+	b=AvbJ2MP5vHH7pl/lenmGtncJcVwsdXxJ28pvVueoVihX4tTtrteJ6jLgXruGsSuJ/Rs3vZ
+	o8O5QbbhH+6OlwA8KYpvdceExPNzJ8ZHI0VWNsOomGqdtQqZn9ZcxHigujHK6HUrkia7pA
+	vdPD7CXfYzfWWY1qGAbGMBV+QOvSCGU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-639-gJhDEOWGNGKMJMLS2mW_zA-1; Mon,
- 06 Jul 2026 11:28:54 -0400
-X-MC-Unique: gJhDEOWGNGKMJMLS2mW_zA-1
-X-Mimecast-MFC-AGG-ID: gJhDEOWGNGKMJMLS2mW_zA_1783351730
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-52-Sbr2cRBtMlKHGPv5jeXyww-1; Mon,
+ 06 Jul 2026 11:34:23 -0400
+X-MC-Unique: Sbr2cRBtMlKHGPv5jeXyww-1
+X-Mimecast-MFC-AGG-ID: Sbr2cRBtMlKHGPv5jeXyww_1783352058
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60F3B1805A28;
-	Mon,  6 Jul 2026 15:28:50 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 391A51955D8F;
+	Mon,  6 Jul 2026 15:34:18 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.33.159])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7E3F319560A0;
-	Mon,  6 Jul 2026 15:28:43 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7D72D1956096;
+	Mon,  6 Jul 2026 15:34:11 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -84,11 +82,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 06/21] netfs: Add some tools for managing bvecq chains
-Date: Mon,  6 Jul 2026 16:27:21 +0100
-Message-ID: <20260706152737.1231312-7-dhowells@redhat.com>
-In-Reply-To: <20260706152737.1231312-1-dhowells@redhat.com>
-References: <20260706152737.1231312-1-dhowells@redhat.com>
+Subject: [PATCH v5 00/21] netfs: Keep track of folios in a segmented bio_vec[] chain
+Date: Mon,  6 Jul 2026 16:33:46 +0100
+Message-ID: <20260706153408.1231650-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -104,13 +100,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[23];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-23076-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23077-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
@@ -128,1187 +124,422 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.dev:email,vger.kernel.org:from_smtp,infradead.org:email,manguebit.org:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4B3F6713FF6
+X-Rspamd-Queue-Id: ACB77712DE0
 
-Provide a selection of tools for managing bvec queue chains.  This
-includes:
+Hi Christian,
 
- (1) Allocation, prepopulation, expansion, shortening and refcounting of
-     bvecqs and bvecq chains.
+Could you add these patches to the VFS tree for next?
 
-     This can be used to do things like creating an encryption buffer in
-     cifs or a directory content buffer in afs.  The memory segments will
-     be appropriate disposed off according to the flags on the bvecq.
+The patches get rid of folio_queue, rolling_buffer and ITER_FOLIOQ,
+replacing the folio queue construct used to manage buffers in netfslib with
+one based around a segmented chain of bio_vec arrays instead.  There are
+three main aims here:
 
- (2) Management of a bvecq chain as a rolling buffer and the management of
-     positions within it.
+ (1) The kernel file I/O subsystem seems to be moving towards consolidating
+     on the use of bio_vec arrays, so embrace this by moving netfslib to
+     keep track of its buffers for buffered I/O in bio_vec[] form.
 
- (3) Loading folios, slicing chains and clearing content.
+ (2) Netfslib already uses a bio_vec[] to handle unbuffered/DIO, so the
+     number of different buffering schemes used can be reduced to just a
+     single one.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Paulo Alcantara <pc@manguebit.org>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Christoph Hellwig <hch@infradead.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/Makefile            |   1 +
- fs/netfs/bvecq.c             | 763 +++++++++++++++++++++++++++++++++++
- fs/netfs/internal.h          |   1 +
- fs/netfs/stats.c             |   4 +-
- include/linux/bvecq.h        | 270 +++++++++++++
- include/linux/netfs.h        |   1 +
- include/trace/events/netfs.h |  24 ++
- 7 files changed, 1063 insertions(+), 1 deletion(-)
+ (3) Always send an entire filesystem RPC request message to a TCP socket
+     with single kernel_sendmsg() call as this is faster, more efficient
+     and doesn't require the use of corking as it puts the entire
+     transmission loop inside of a single tcp_sendmsg().
+
+For the replacement of folio_queue, a segmented chain of bio_vec arrays
+rather than a single monolithic array is provided:
+
+	struct bvecq {
+		struct bvecq		*next;
+		struct bvecq		*prev;
+		unsigned long long	fpos;
+		refcount_t		ref;
+		u32			priv;
+		u16			nr_slots;
+		u16			max_slots;
+		enum bvecq_mem		mem_type:2;
+		bool			inline_bv:1;
+		bool			discontig:1;
+		struct bio_vec		*bv;
+		struct bio_vec		__bv[];
+	};
+
+The fields are:
+
+ (1) next, prev - Link segments together in a list.  I want this to be
+     NULL-terminated linear rather than circular to make it possible to
+     arbitrarily glue bits on the front.
+
+ (2) fpos, discontig - Note the current file position of the first byte of
+     the segment and whether this bvecq is discontiguous with the previous.
+     When accessing the pagecache to clear flags/locks, the fpos can be
+     used to look up folios by file position rather than by finding those
+     folios from the info stored in the bio_vecs.
+
+     When the file position is relevant, the model I'm working with is that
+     all the segments pointed to by a single bvecq must represent
+     contiguous data, but adjacent bvecqs within a chain need not be
+     contiguous.  This allows a bvecq chain to be used to provide bufferage
+     for a sparse read or write RPC such as can be done with Ceph.
+
+     If a bvecq segment is not contiguous with the previous one,
+     ->discontig should be set (this is technically redundant if one keeps
+     track of the fpos as a bvecq chain is processed).
+
+     Note that the beginning and end file positions in a segment need not
+     be aligned to any filesystem block size.
+
+ (3) ref - Refcount.  Each bvecq keeps a ref on the next.  I'm not sure
+     this is entirely necessary, but it makes sharing slices easier.
+
+ (4) priv - Private data for the owner.  Dispensible; currently only used
+     for storing a debug ID for tracing in a patch not included here.
+
+ (5) max_slots, nr_slots.  The size of bv[] and the number of slots used.
+     I've assumed a maximum of 65535 bio_vecs in the array (which would
+     represent a ~1MiB allocation).
+
+ (6) bv, __bv, inline_bv.  bv points to the bio_vec[] array handled by
+     this segment.  This may begin at __bv and if it does inline_bv should
+     be set (otherwise it's impossible to distinguish a separately
+     allocated bio_vec[] that follows immediately by coincidence).
+
+ (7) mem_type.  Indicates how the memory attached to the bio_vecs should be
+     disposed of when the bvecq is destroyed.  It can be one of:
+
+	BVECQ_MEM_EXTERNAL	- Externally tracked ref; don't put
+	BVECQ_MEM_PAGECACHE	- Pagecache; must be put
+	BVECQ_MEM_GUP		- Pinned by from GUP; needs unpin
+	BVECQ_MEM_ALLOCED	- Plain alloc'd pages; can be mempooled
+
+     [!] I'm not sure that this is a good name for this member or for the
+     	 enum values.
+
+I've also defined an iov_iter iterator type ITER_BVECQ to walk this sort of
+construct so that it can be passed directly to sendmsg() or block-based DIO
+(as cachefiles does).
+
+
+This series makes the following changes to netfslib:
+
+ (1) The folio_queue chain used to hold folios for buffered I/O is replaced
+     with a bvecq chain.  Each bio_vec then holds (a portion of) one folio.
+     Each bvecq holds a contiguous sequence of folios, but adjacent bvecqs
+     in a chain may be discontiguous.
+
+ (2) For unbuffered/DIO, the source iov_iter is extracted into a bvecq
+     chain.
+
+ (3) An abstract position representation ('bvecq_pos') is created that can
+     used to hold a position in a bvecq chain.  For the moment, this takes
+     a ref on the bvecq it points to, but that may be excessive.
+
+ (4) Buffer tracking is managed with three cursors:  The load_cursor, at
+     which new folios are added as we go; the dispatch_cursor, at which new
+     subrequests' buffers start when they're created; and the
+     collect_cursor, the point at which folios are being unlocked.
+
+     Not all cursors are necessarily needed in all situations and during
+     buffered writeback, we need a dispatch cursor per stream (one for the
+     network filesystem and one for the cache).
+
+ (5) ->prepare_read(), buffer setting up and ->issue_read() are merged, as
+     are the write variants, with the filesystem calling back up to
+     netfslib to prepare its buffer.  This simplifies the process of
+     setting up a subrequest.  It may even make sense to have the
+     filesystem allocate the subrequest.
+
+ (6) Retry dispatch tracking is added to netfs_io_request so that the
+     buffer preparation functions can find it.  Retry requires an
+     additional buffer cursor.
+
+ (7) Netfslib dispatches I/O by accumulating enough bufferage to dispatch
+     at least one subrequest, then looping to generate as many as the
+     filesystem wants to (they may be limited by other constraints,
+     e.g. max RDMA segment count or negotiated max size).  This loop could
+     be moved down into the filesystem.  A new method is provided by which
+     netfslib can ask the filesystem to provide an estimate of the data
+     that should be accumulated before dispatch begins.
+
+ (8) Reading from the cache is now managed by querying the cache to provide
+     a list of the next two data extents within the cache.
+
+ (9) AFS directories are switched to using a bvecq rather than a
+     folio_queue to hold their contents.
+
+(10) CIFS is switch to using a bvecq rather than a folio_queue for holding
+     a temporary encryption buffer.
+
+(11) CIFS RDMA is given the ability to extract ITER_BVECQ and support for
+     extracting ITER_FOLIOQ is removed.
+
+(12) All the folio_queue and rolling_buffer code is removed.
+
+Cachefiles is also modified:
+
+ (1) The object type in the cachefiles file xattr is now correctly set to
+     CACHEFILES_CONTENT_{SINGLE,ALL,BACKFS_MAP} rather than just being 0,
+     to indicate whether we have a single monolithic blob, all the data up
+     to cache i_size with no holes or a sparse file with the data mapped by
+     the backing file system (as currently upstream).
+
+ (2) For "ALL" type files, the cache's i_size is used to track how much
+     data is saved in the cache and no longer bears any relation to the
+     netfs i_size.  The actual object size is stored in the xattr.
+
+ (3) For most typical files which are contiguous and written progressively,
+     the object type is now set to "ALL".  For anything else, cachefiles
+     uses SEEK_DATA/HOLE to find extent outlines at before (this is the
+     current behaviour and needs to be fixed, but in a separate set of
+     patches as it's not trivial).
+
+Two further things that I'm working on (but not in this branch) are:
+
+ (1) Make it so that a filesystem can be given a copy of a subchain which
+     it can then tack header and trailer protocol elements upon to form a
+     single message (I have this working for cifs) and even join copies
+     together with intervening protocol elements to form compounds.
+
+ (2) Make it so that a filesystem can 'splice' out the contents of the TCP
+     receive queue into a bvecq chain.  This allows the socket lock to be
+     dropped much more quickly and the copying of data read to the
+     destination buffers to happen without the lock.  I have this working
+     for cifs too.  Kernel recvmsg() doesn't then block kernel sendmsg()
+     for anywhere near as long.
+
+There are also some things I want to consider for the future:
+
+ (1) Create one or more batched iteration functions to 'unlock' all the
+     folios in a bio_vec[], where 'unlock' is the appropriate action for
+     ending a read or a write.  Batching should hopefully also improve the
+     efficiency of wrangling the marks on the xarray.  Very often these
+     marks are going to be represented by contiguous bits, so there may be
+     a way to change them in bulk.
+
+ (2) Rather than walking the bvecq chain to get each individual folio out
+     via bv_page, use the file position stored on the bvecq and the sum of
+     bv_len to iterate over the appropriate range in i_pages.
+
+ (3) Change iov_iter to store the initial starting point and for
+     iov_iter_revert() to reset to that and advance.  This would (a) help
+     prevent over-reversion and (b) dispense with the need for a prev
+     pointer.
+
+ (4) Use bvecq to replace scatterlist.  One problem with replacing
+     scatterlist is that crypto drivers like to glue bits on the front of
+     the scatterlists they're given (something trivial with that API) - and
+     this is one way to achieve it.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-next
+
+Thanks,
+David
+
+Changes
+=======
+ver #5)
+- Rebase on v7.2-rc2 as that has a bunch of outstanding netfs and afs
+  bugfixes included.
+
+ver #4)
+- Fixed a number of bugs reported by Sashiko[3].
+  - Added a patch to fix an underflow in iov_iter_extract_xarray_pages().
+  - Added a patch to fix alloc failure in iov_iter_extract_bvec_pages().
+  - Added a patch to remove an unused var in kunit code.
+  - Added a patch to fix the folio offset in extract_xarray_to_sg().
+  - Added a patch to fix the exclusion over writeback to make it cover
+    collection too.
+  - Fixed double fput() in cachefiles.
+  - Fixed the collection of cache writes to handle cancellation better.
+  - Fixed iterate_bvecq() to skip bvecq structs with nr_slots==0.
+  - Add a comment into iterate_bvecq() that a slot with bv_len>0 must have a
+    valid bv_page.
+  - Fixed iov_iter_bvecq_advance(), iov_iter_bvecq_revert(),
+    iter_count_bvecq_pages(), iov_iter_extract_bvecq_pages() and
+    extract_bvecq_to_sg() to correctly handle empty bvecqs.
+  - Fixed extract_bvecq_to_sg() to be limited by iter->count.
+  - Fixed bvecq_expand_buffer() to take an unsigned size param.
+  - Fixed bvecq_expand_buffer() to not mix memory types in alloc'd bvecqs.
+  - Fixed bvecq_shorten_buffer() occasional retention of zero-length slots.
+  - Fixed slot validity check polarity in bvecq_pos_advance(); also don't use
+    inner loop otherwise break then exits the wrong loop.
+  - Fixed bvecq_zero(), bvecq_slice() and bvecq_extract to use a barrier when
+    checking bq->nr_slots.
+  - Restructured bvecq_zero() to be similar to bvecq_pos_advance().
+  - Fixed an off-by-one error in bvecq_pos_step() and added a missing slot
+    reset.
+  - Fixed a break in netfs_extract_iter() that should have been a goto.
+  - Fixed netfs_extract_iter() to limit number of pages extracted to remnant
+    of max_pages.
+  - Fixed an uninit var in afs_do_read_symlink().
+  - Fixed netfs_read_gaps() to fill a multipart bvecq chain correctly.
+  - Fixed netfs_dispatch_unbuffered_reads() to initialise collect_cursor as
+    netfs_rreq_assess_dio() uses it to flush the data read.
+  - Fixed netfs_extract_iter() to init the slot counter outside the extract
+    loop to avoid overwriting already loaded slots.
+  - Fixed callers of bvecq_delete_spent() to update bvecq_pos::slot before
+    calling.
+  - Fixed netfs_reissue_write() to make sure subreq->content is unset before
+    setting.
+  - Altered netfs_extract_iter() to free any allocated bvecq chain if no pages
+    were extracted and an error occurred  (and to initialise the return
+    pointer to NULL).  Also, made it return an empty bvecq if nothing was
+    extracted, but no error occurred.
+  - Fixed ceph_netfs_issue_read() to just return if
+    ceph_netfs_issue_op_inline() returns anything other than 1 to avoid a
+    double termination.
+  - Fixed ceph_netfs_issue_read() to do the size calculation in the right
+    order to avoid the op expanding to larger than the buffer.
+  - Fixed netfs_issue_read(), in the NETFS_FILL_WITH_ZEROES case, to deduct
+    subreq->len from stream->buffered rather than just setting it to 0.
+  - Fixed netfs_perform_write() to put the folio if netfs_advance_writethrough()
+    fails.
+  - Restored the old ->prepare_write op specifically for
+    fscache_write_to_cache() which is still used by Ceph.
+  - Fixed undefined return in netfs_pgpriv2_issue_stream().
+  - Fixed netfs_collect_write_results() to try to make sure a request isn't
+    left paused if there are no further server-bound subreqs.
+  - Fixed netfs_queue_wb_folio() to redirty the folio before unlocking it if
+    it can't allocate a bvecq.
+  - Fixed netfs_writepages() to cancel the pagecache iteration after ENOMEM.
+  - Fixed netfs_advance/end_writethrough() to advance the dispatch cursor.
+  - Fixed netfs_retry_read_subrequests() to use barriers when walking
+    stream->subrequests as the app may add another subreq before pausing.
+  - Fixed netfs_prepare_write_retry_buffer() to use ->retry_start and
+    ->retry_buffered rather than ->issue_from and ->buffered.
+  - Fixed netfs_retry_write_stream() to use barriers when walking
+    stream->subrequests as the app may add another subreq before pausing.
+  - Fixed netfs_retry_write_stream() to check the correct length when adding
+    additional subreqs.
+  - Fixed nfs_netfs_issue_read() to set -ENOMEM, not 0, on alloc failure.
+  - Fixed nfs_netfs_issue_read() to only terminate the subreq once.
+  - Fixed cifs_issue_read() to release the credits if cifs_reopen_file()
+    fails.
+- Rebased on v7.1.
+
+ver #3)
+- Rebased to -rc7 as the patches wouldn't apply for Christian.
+- Prepended a fix for a warning from generic/464 (the problem also exists
+  upstream, just not the warning).
+- Renamed kmap_local_bvec() to bvec_kmap_partial() as requested by
+  Christoph.
+- Adjusted smbdirect patch descriptions as requested by Stefan Metzmacher.
+
+ver #2)
+- Fixed a number of bugs reported by Sashiko[1].
+- Split a bunch of fixes out and posted them separately[2].
+
+[1] https://sashiko.dev/#/patchset/20260326104544.509518-1-dhowells%40redhat.com
+[2] https://lore.kernel.org/linux-fsdevel/20260512-infozentrum-becher-7f86c47c96c8@brauner/T/#t
+[3] https://sashiko.dev/#/patchset/20260608145432.681865-1-dhowells%40redhat.com
+
+David Howells (21):
+  mm: Make readahead store folio count in readahead_control
+  netfs: Bulk load the readahead-provided folios up front
+  Add a function to kmap one page of a multipage bio_vec
+  iov_iter: Make iov_iter_get_pages*() wrap iov_iter_extract_pages()
+  iov_iter: Add a segmented queue of bio_vec[]
+  netfs: Add some tools for managing bvecq chains
+  netfs: Add a function to extract from an iter into a bvecq
+  afs: Use a bvecq to hold dir content rather than folioq
+  cifs: Use a bvecq for buffering instead of a folioq
+  smbdirect: Support ITER_BVECQ in smbdirect_map_sges_from_iter()
+  cachefiles: Don't rely on backing fs storage map for most use cases
+  netfs: Add the cache object ID to netfs_read/write tracepoints
+  netfs: Switch to using bvecq rather than folio_queue and
+    rolling_buffer
+  smbdirect: Remove support for ITER_FOLIOQ from
+    smbdirect_map_sges_from_iter()
+  netfs: Remove netfs_alloc/free_folioq_buffer()
+  netfs: Remove netfs_extract_user_iter()
+  iov_iter: Remove ITER_FOLIOQ
+  netfs: Remove folio_queue and rolling_buffer
+  netfs: Check for too much data being read
+  netfs: Limit the minimum trigger for progress reporting
+  netfs: Combine prepare and issue ops and grab the buffers on request
+
+ Documentation/core-api/folio_queue.rst      |  209 ----
+ Documentation/core-api/index.rst            |    1 -
+ Documentation/filesystems/netfs_library.rst |    2 +-
+ fs/9p/vfs_addr.c                            |   59 +-
+ fs/afs/dir.c                                |   40 +-
+ fs/afs/dir_edit.c                           |   43 +-
+ fs/afs/dir_search.c                         |   33 +-
+ fs/afs/file.c                               |   28 +-
+ fs/afs/fsclient.c                           |    8 +-
+ fs/afs/inode.c                              |    2 +-
+ fs/afs/internal.h                           |   12 +-
+ fs/afs/symlink.c                            |   35 +-
+ fs/afs/write.c                              |   32 +-
+ fs/afs/yfsclient.c                          |    6 +-
+ fs/cachefiles/interface.c                   |   82 +-
+ fs/cachefiles/internal.h                    |   13 +-
+ fs/cachefiles/io.c                          |  523 +++++++---
+ fs/cachefiles/namei.c                       |   19 +-
+ fs/cachefiles/xattr.c                       |   24 +-
+ fs/ceph/Kconfig                             |    1 +
+ fs/ceph/addr.c                              |  125 ++-
+ fs/netfs/Kconfig                            |    3 +
+ fs/netfs/Makefile                           |    4 +-
+ fs/netfs/buffered_read.c                    |  514 +++++----
+ fs/netfs/buffered_write.c                   |   31 +-
+ fs/netfs/bvecq.c                            |  763 ++++++++++++++
+ fs/netfs/direct_read.c                      |  108 +-
+ fs/netfs/direct_write.c                     |  157 +--
+ fs/netfs/fscache_io.c                       |    4 +-
+ fs/netfs/internal.h                         |  112 +-
+ fs/netfs/iterator.c                         |  391 +++----
+ fs/netfs/misc.c                             |  168 +--
+ fs/netfs/objects.c                          |   22 +-
+ fs/netfs/read_collect.c                     |  160 +--
+ fs/netfs/read_pgpriv2.c                     |  187 ++--
+ fs/netfs/read_retry.c                       |  246 +++--
+ fs/netfs/read_single.c                      |  169 +--
+ fs/netfs/rolling_buffer.c                   |  222 ----
+ fs/netfs/stats.c                            |    6 +-
+ fs/netfs/write_collect.c                    |  240 +++--
+ fs/netfs/write_issue.c                      | 1042 +++++++++++--------
+ fs/netfs/write_retry.c                      |  150 +--
+ fs/nfs/Kconfig                              |    1 +
+ fs/nfs/fscache.c                            |   17 +-
+ fs/smb/client/cifsglob.h                    |    2 +-
+ fs/smb/client/cifssmb.c                     |   13 +-
+ fs/smb/client/file.c                        |  139 +--
+ fs/smb/client/smb2ops.c                     |   82 +-
+ fs/smb/client/smb2pdu.c                     |   28 +-
+ fs/smb/client/transport.c                   |   15 +-
+ fs/smb/smbdirect/connection.c               |  134 ++-
+ include/linux/bvec.h                        |   18 +
+ include/linux/bvecq.h                       |  326 ++++++
+ include/linux/folio_queue.h                 |  282 -----
+ include/linux/fscache.h                     |   17 +
+ include/linux/iov_iter.h                    |   87 +-
+ include/linux/netfs.h                       |  165 +--
+ include/linux/pagemap.h                     |   10 +
+ include/linux/rolling_buffer.h              |   61 --
+ include/linux/uio.h                         |   17 +-
+ include/trace/events/cachefiles.h           |   17 +-
+ include/trace/events/netfs.h                |  155 ++-
+ kernel/bpf/btf.c                            |    2 -
+ lib/iov_iter.c                              |  547 +++++-----
+ lib/scatterlist.c                           |   82 +-
+ lib/tests/kunit_iov_iter.c                  |  135 ++-
+ mm/readahead.c                              |    5 +
+ net/9p/client.c                             |    8 +-
+ 68 files changed, 4764 insertions(+), 3597 deletions(-)
+ delete mode 100644 Documentation/core-api/folio_queue.rst
  create mode 100644 fs/netfs/bvecq.c
-
-diff --git a/fs/netfs/Makefile b/fs/netfs/Makefile
-index b43188d64bd8..e1f12ecb5abf 100644
---- a/fs/netfs/Makefile
-+++ b/fs/netfs/Makefile
-@@ -3,6 +3,7 @@
- netfs-y := \
- 	buffered_read.o \
- 	buffered_write.o \
-+	bvecq.o \
- 	direct_read.o \
- 	direct_write.o \
- 	iterator.o \
-diff --git a/fs/netfs/bvecq.c b/fs/netfs/bvecq.c
-new file mode 100644
-index 000000000000..f9b2087616fa
---- /dev/null
-+++ b/fs/netfs/bvecq.c
-@@ -0,0 +1,763 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Buffering helpers for bvec queues
-+ *
-+ * Copyright (C) 2026 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <linux/bvecq.h>
-+#include "internal.h"
-+
-+void bvecq_dump(const struct bvecq *bq)
-+{
-+	int b = 0;
-+
-+	for (; bq; bq = bq->next, b++) {
-+		int skipz = 0;
-+
-+		pr_notice("BQ[%u] %u/%u fp=%llx%s\n",
-+			  b, bq->nr_slots, bq->max_slots, bq->fpos,
-+			  bq->discontig ? " discontig" : "");
-+		for (int s = 0; s < bq->nr_slots; s++) {
-+			const struct bio_vec *bv = &bq->bv[s];
-+
-+			if (!bv->bv_page && !bv->bv_len && skipz < 2) {
-+				skipz = 1;
-+				continue;
-+			}
-+			if (skipz == 1)
-+				pr_notice("BQ[%u:00-%02u] ...\n", b, s - 1);
-+			skipz = 2;
-+			pr_notice("BQ[%u:%02u] %10lx %04x %04x %u\n",
-+				  b, s,
-+				  bv->bv_page ? page_to_pfn(bv->bv_page) : 0,
-+				  bv->bv_offset, bv->bv_len,
-+				  bv->bv_page ? page_count(bv->bv_page) : 0);
-+		}
-+	}
-+}
-+EXPORT_SYMBOL(bvecq_dump);
-+
-+/**
-+ * bvecq_alloc_one - Allocate a single bvecq node with unpopulated slots
-+ * @nr_slots: Number of slots to allocate
-+ * @gfp: The allocation constraints.
-+ *
-+ * Allocate a single bvecq node and initialise the header.  A number of inline
-+ * slots are also allocated, rounded up to fit after the header in a power-of-2
-+ * slab object of up to 512 bytes (up to 29 slots on a 64-bit cpu).  The slot
-+ * array is not initialised.
-+ *
-+ * Return: The node pointer or NULL on allocation failure.
-+ */
-+struct bvecq *bvecq_alloc_one(size_t nr_slots, gfp_t gfp)
-+{
-+	struct bvecq *bq;
-+	const size_t max_size = 512;
-+	const size_t max_slots = (max_size - sizeof(*bq)) / sizeof(bq->__bv[0]);
-+	size_t part = umin(nr_slots, max_slots);
-+	size_t size = roundup_pow_of_two(struct_size(bq, __bv, part));
-+
-+	bq = kmalloc(size, gfp & ~GFP_ZONEMASK);
-+	if (bq) {
-+		*bq = (struct bvecq) {
-+			.ref		= REFCOUNT_INIT(1),
-+			.bv		= bq->__bv,
-+			.inline_bv	= true,
-+			.max_slots	= (size - sizeof(*bq)) / sizeof(bq->__bv[0]),
-+		};
-+		netfs_stat(&netfs_n_bvecq);
-+	}
-+	return bq;
-+}
-+EXPORT_SYMBOL(bvecq_alloc_one);
-+
-+/**
-+ * bvecq_alloc_chain - Allocate an unpopulated bvecq chain
-+ * @nr_slots: Number of slots to allocate
-+ * @gfp: The allocation constraints.
-+ *
-+ * Allocate a chain of bvecq nodes providing at least the requested cumulative
-+ * number of slots.
-+ *
-+ * Return: The first node pointer or NULL on allocation failure.
-+ */
-+struct bvecq *bvecq_alloc_chain(size_t nr_slots, gfp_t gfp)
-+{
-+	struct bvecq *head = NULL, *tail = NULL;
-+
-+	_enter("%zu", nr_slots);
-+
-+	for (;;) {
-+		struct bvecq *bq;
-+
-+		bq = bvecq_alloc_one(nr_slots, gfp);
-+		if (!bq)
-+			goto oom;
-+
-+		if (tail) {
-+			tail->next = bq;
-+			bq->prev = tail;
-+		} else {
-+			head = bq;
-+		}
-+		tail = bq;
-+		if (tail->max_slots >= nr_slots)
-+			break;
-+		nr_slots -= tail->max_slots;
-+	}
-+
-+	return head;
-+oom:
-+	bvecq_put(head);
-+	return NULL;
-+}
-+EXPORT_SYMBOL(bvecq_alloc_chain);
-+
-+/**
-+ * bvecq_alloc_buffer2 - Allocate a bvecq chain and populate with buffers
-+ * @size: Target size of the buffer (can be 0 for an empty buffer)
-+ * @pre_slots: Number of preamble slots to set aside
-+ * @gfp: The allocation constraints.
-+ *
-+ * Allocate a chain of bvecq nodes and populate the slots with sufficient pages
-+ * to provide at least the requested amount of space, leaving the first
-+ * @pre_slots slots unset.  The pre-slots must all fit into the the first
-+ * bvecq.
-+ *
-+ * The pages allocated may be compound pages larger than PAGE_SIZE and thus
-+ * occupy fewer slots.  The pages have their refcounts set to 1 and can be
-+ * passed to MSG_SPLICE_PAGES.
-+ *
-+ * Return: The first node pointer or NULL on allocation failure.
-+ */
-+struct bvecq *bvecq_alloc_buffer2(size_t size, unsigned int pre_slots, gfp_t gfp)
-+{
-+	struct bvecq *head = NULL, *tail = NULL, *p = NULL;
-+	size_t nr_per_bq = BVECQ_STD_SLOTS;
-+	size_t count = DIV_ROUND_UP(size, PAGE_SIZE);
-+
-+	_enter("%zx,%zx,%u", size, count, pre_slots);
-+
-+	if (WARN_ON_ONCE(pre_slots > nr_per_bq))
-+		return NULL;
-+
-+	do {
-+		struct page **pages;
-+		int want, got;
-+
-+		p = bvecq_alloc_one(min(pre_slots + count, nr_per_bq), gfp);
-+		if (!p)
-+			goto oom;
-+
-+		p->mem_type = BVECQ_MEM_ALLOCED;
-+
-+		if (tail) {
-+			tail->next = p;
-+			p->prev = tail;
-+		} else {
-+			head = p;
-+		}
-+		tail = p;
-+		if (!count)
-+			break;
-+
-+		/* Need to clear pre slots and pages[], so just clear all. */
-+		memset(p->bv, 0, p->max_slots * sizeof(p->bv[0]));
-+
-+		pages = (struct page **)&p->bv[p->max_slots];
-+		pages -= p->max_slots - pre_slots;
-+
-+		want = min(count, p->max_slots - pre_slots);
-+		got = alloc_pages_bulk(gfp, want, pages);
-+		if (got < want) {
-+			for (int i = 0; i < got; i++) {
-+				__free_page(pages[i]);
-+				pages[i] = NULL;
-+			}
-+			goto oom;
-+		}
-+
-+		tail->nr_slots = pre_slots + got;
-+		for (int i = 0; i < got; i++) {
-+			int j = pre_slots + i;
-+
-+			set_page_count(pages[i], 1);
-+			bvec_set_page(&tail->bv[j], pages[i], PAGE_SIZE, 0);
-+		}
-+
-+		count -= got;
-+		pre_slots = 0;
-+	} while (count > 0);
-+
-+	return head;
-+oom:
-+	bvecq_put(head);
-+	return NULL;
-+}
-+EXPORT_SYMBOL(bvecq_alloc_buffer2);
-+
-+/*
-+ * Free the page pointed to by a slot as necessary.
-+ */
-+static void bvecq_free_slot(struct bvecq *bq, unsigned int slot)
-+{
-+	struct page *page = bq->bv[slot].bv_page;
-+
-+	if (!page)
-+		return;
-+
-+	switch (bq->mem_type) {
-+	case BVECQ_MEM_EXTERNAL:
-+		break;
-+	case BVECQ_MEM_PAGECACHE:
-+		put_page(page);
-+		break;
-+	case BVECQ_MEM_GUP:
-+		unpin_user_page(page);
-+		break;
-+	case BVECQ_MEM_ALLOCED:
-+		__free_pages(page, compound_order(page));
-+		break;
-+	default:
-+		WARN_ON_ONCE(1);
-+		break;
-+	}
-+}
-+
-+/**
-+ * bvecq_put - Put a ref on a bvec queue
-+ * @bq: The start of the folio queue to free
-+ *
-+ * Put the ref(s) on the nodes in a bvec queue, freeing up the node and the
-+ * page fragments it points to as the refcounts become zero.
-+ */
-+void bvecq_put(struct bvecq *bq)
-+{
-+	struct bvecq *next;
-+
-+	for (; bq; bq = next) {
-+		if (!refcount_dec_and_test(&bq->ref))
-+			break;
-+		for (int slot = 0; slot < bq->nr_slots; slot++)
-+			bvecq_free_slot(bq, slot);
-+		next = bq->next;
-+		netfs_stat_d(&netfs_n_bvecq);
-+		kfree(bq);
-+	}
-+}
-+EXPORT_SYMBOL(bvecq_put);
-+
-+/**
-+ * bvecq_expand_buffer - Allocate buffer space into a bvec queue
-+ * @_buffer: Pointer to the bvecq chain to expand (may point to a NULL; updated).
-+ * @_cur_size: Current size of the buffer (updated).
-+ * @size: Target size of the buffer.
-+ * @gfp: The allocation constraints.
-+ *
-+ * Append extra pages to a buffer to increase its capacity to the @size
-+ * specified.  If the current tail has space, but is not of the
-+ * BVECQ_MEM_ALLOCED memory type, a separate bvecq will be allocated to hold
-+ * the new memory.
-+ */
-+int bvecq_expand_buffer(struct bvecq **_buffer, size_t *_cur_size, size_t size, gfp_t gfp)
-+{
-+	struct bvecq *tail = *_buffer;
-+
-+	size = round_up(size, PAGE_SIZE);
-+	if (tail)
-+		while (tail->next)
-+			tail = tail->next;
-+
-+	while (*_cur_size < size) {
-+		struct page *page;
-+		size_t need = size - *_cur_size;
-+		int order = 0;
-+
-+		if (!tail || bvecq_is_full(tail) || tail->mem_type != BVECQ_MEM_ALLOCED) {
-+			struct bvecq *p;
-+
-+			p = bvecq_alloc_one(BVECQ_STD_SLOTS, gfp);
-+			if (!p)
-+				return -ENOMEM;
-+			if (tail) {
-+				tail->next = p;
-+				p->prev = tail;
-+			} else {
-+				*_buffer = p;
-+			}
-+			tail = p;
-+			p->mem_type = BVECQ_MEM_ALLOCED;
-+		}
-+
-+		if (need > PAGE_SIZE)
-+			order = umin(ilog2(need) - PAGE_SHIFT, MAX_PAGECACHE_ORDER);
-+
-+		page = alloc_pages(gfp | __GFP_COMP, order);
-+		if (!page && order > 0) {
-+			page = alloc_pages(gfp | __GFP_COMP, 0);
-+			order = 0;
-+		}
-+		if (!page)
-+			return -ENOMEM;
-+
-+		bvec_set_page(&tail->bv[tail->nr_slots++], page, PAGE_SIZE << order, 0);
-+		*_cur_size += PAGE_SIZE << order;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(bvecq_expand_buffer);
-+
-+/**
-+ * bvecq_shorten_buffer - Shorten a bvec queue buffer
-+ * @bq: The start of the buffer to shorten
-+ * @slot: The slot to start from
-+ * @size: The size to retain
-+ *
-+ * Shorten the content of a bvec queue down to the minimum number of slots,
-+ * starting at the specified slot, to retain the specified size.
-+ *
-+ * Return: 0 if successful; -EMSGSIZE if there is insufficient content.
-+ */
-+int bvecq_shorten_buffer(struct bvecq *bq, unsigned int slot, size_t size)
-+{
-+	/* Skip through the segments we want to keep. */
-+	for (; bq; bq = bq->next) {
-+		for (; slot < bq->nr_slots; slot++) {
-+			if (size < bq->bv[slot].bv_len)
-+				goto found;
-+			size -= bq->bv[slot].bv_len;
-+		}
-+		slot = 0;
-+	}
-+	if (WARN_ON_ONCE(size > 0))
-+		return -EMSGSIZE;
-+	return 0;
-+
-+found:
-+	/* Shorten any partial entry and clean the rest of this bvecq. */
-+	if (size > 0) {
-+		bq->bv[slot].bv_len = size;
-+		slot++;
-+	}
-+	for (int i = slot; i < bq->nr_slots; i++)
-+		bvecq_free_slot(bq, i);
-+	bq->nr_slots = slot;
-+
-+	/* Free the queue tail. */
-+	bvecq_put(bq->next);
-+	bq->next = NULL;
-+	return 0;
-+}
-+EXPORT_SYMBOL(bvecq_shorten_buffer);
-+
-+/**
-+ * bvecq_buffer_init - Initialise a buffer and set position
-+ * @pos: The position to point at the new buffer.
-+ * @gfp: The allocation constraints.
-+ *
-+ * Initialise a rolling buffer.  We allocate an unpopulated bvecq node to so
-+ * that the pointers can be independently driven by the producer and the
-+ * consumer.
-+ *
-+ * Return 0 if successful; -ENOMEM on allocation failure.
-+ */
-+int bvecq_buffer_init(struct bvecq_pos *pos, gfp_t gfp)
-+{
-+	struct bvecq *bq;
-+
-+	bq = bvecq_alloc_one(BVECQ_STD_SLOTS, gfp);
-+	if (!bq)
-+		return -ENOMEM;
-+
-+	pos->bvecq  = bq; /* Comes with a ref. */
-+	pos->slot   = 0;
-+	pos->offset = 0;
-+	return 0;
-+}
-+
-+/**
-+ * bvecq_buffer_append - Append a new bvecq node to a buffer
-+ * @pos: The position of the last node.
-+ * @bq: The buffer to add.
-+ *
-+ * Add a new node on to the buffer chain at the specified position, either
-+ * because the previous one is full or because we have a discontiguity to
-+ * contend with, and update @pos to point to it.
-+ */
-+void bvecq_buffer_append(struct bvecq_pos *pos, struct bvecq *bq)
-+{
-+	struct bvecq *head = pos->bvecq;
-+
-+	bq->prev = head;
-+
-+	pos->bvecq = bvecq_get(bq);
-+	pos->slot = 0;
-+	pos->offset = 0;
-+
-+	/* Make sure the initialisation is stored before the next pointer.
-+	 *
-+	 * [!] NOTE: After we set head->next, the consumer is at liberty to
-+	 * immediately delete the old head.
-+	 */
-+	smp_store_release(&head->next, bq);
-+	bvecq_put(head);
-+}
-+
-+/**
-+ * bvecq_pos_advance - Advance a bvecq position
-+ * @pos: The position to advance.
-+ * @amount: The amount of bytes to advance by.
-+ *
-+ * Advance the specified bvecq position by @amount bytes.  @pos is updated and
-+ * bvecq ref counts may have been manipulated.  If the position hits the end of
-+ * the queue, then it is left pointing beyond the last slot of the last bvecq
-+ * so that it doesn't break the chain.
-+ */
-+void bvecq_pos_advance(struct bvecq_pos *pos, size_t amount)
-+{
-+	struct bvecq *bq = pos->bvecq;
-+	unsigned int slot = pos->slot;
-+	size_t offset = pos->offset;
-+
-+	while (amount) {
-+		size_t part;
-+
-+		if (!bvecq_acquire_slot(bq, slot)) {
-+			if (!bq->next) {
-+				WARN_ON_ONCE(amount > 0);
-+				break;
-+			}
-+			bq = bq->next;
-+			slot = 0;
-+			offset = 0;
-+			continue;
-+		}
-+
-+		part = bq->bv[slot].bv_len - offset;
-+
-+		if (part > amount) {
-+			offset += amount;
-+			break;
-+		}
-+		amount -= part;
-+		offset = 0;
-+		slot++;
-+	}
-+
-+	pos->slot   = slot;
-+	pos->offset = offset;
-+	bvecq_pos_move(pos, bq);
-+}
-+
-+/*
-+ * Clear part of the memory pointed to by a bio_vec.
-+ */
-+static void bvec_zero(const struct bio_vec *bv, size_t offset, size_t len)
-+{
-+	struct page *page = bv->bv_page;
-+
-+	offset += bv->bv_offset;
-+
-+	page  += offset / PAGE_SIZE;
-+	offset = offset % PAGE_SIZE;
-+
-+	while (len) {
-+		size_t part = umin(len, PAGE_SIZE - offset);
-+		char *p = kmap_local_page(page);
-+
-+		memset(p + offset, 0, part);
-+		kunmap_local(p);
-+
-+		len -= part;
-+		offset = 0;
-+		page++;
-+	}
-+}
-+
-+/**
-+ * bvecq_zero - Clear memory starting at the bvecq position.
-+ * @pos: The position in the bvecq chain to start clearing.
-+ * @amount: The number of bytes to clear.
-+ *
-+ * Clear memory fragments pointed to by a bvec queue.  @pos is updated and
-+ * bvecq ref counts may have been manipulated.  If the position hits the end of
-+ * the queue, then it is left pointing beyond the last slot of the last bvecq
-+ * so that it doesn't break the chain.
-+ *
-+ * Return: The number of bytes cleared.
-+ */
-+ssize_t bvecq_zero(struct bvecq_pos *pos, size_t amount)
-+{
-+	struct bvecq *bq = pos->bvecq;
-+	unsigned int slot = pos->slot;
-+	ssize_t cleared = 0;
-+	size_t offset = pos->offset;
-+
-+	while (amount) {
-+		const struct bio_vec *bv;
-+		size_t part;
-+
-+		if (!bvecq_acquire_slot(bq, slot)) {
-+			if (!bq->next) {
-+				WARN_ON_ONCE(amount > 0);
-+				break;
-+			}
-+			bq = bq->next;
-+			slot = 0;
-+			offset = 0;
-+			continue;
-+		}
-+
-+		bv = &bq->bv[slot];
-+		if (offset >= bv->bv_len) {
-+			slot++;
-+			offset = 0;
-+			continue;
-+		}
-+
-+		part = min(bv->bv_len - offset, amount);
-+		bvec_zero(bv, offset, part);
-+		cleared += part;
-+		offset += part;
-+		amount -= part;
-+	}
-+
-+	pos->slot   = slot;
-+	pos->offset = offset;
-+	bvecq_pos_move(pos, bq);
-+	return cleared;
-+}
-+
-+/**
-+ * bvecq_slice - Find a slice of a bvecq queue
-+ * @pos: The position to start at.
-+ * @max_size: The maximum size of the slice (or ULONG_MAX).
-+ * @max_slots: The maximum number of slots in the slice (or INT_MAX).
-+ * @_nr_slots: Where to put the number of slots (updated).
-+ *
-+ * Determine the size and number of slots that can be obtained the next slice
-+ * of bvec queue up to the maximum size and slot count specified.  The slice is
-+ * also limited if a discontiguity is found.
-+ *
-+ * @pos is updated to the end of the slice.  If the position hits the end of
-+ * the queue, then it is left pointing beyond the last slot of the last bvecq
-+ * so that it doesn't break the chain.
-+ *
-+ * Return: The number of bytes in the slice.
-+ */
-+size_t bvecq_slice(struct bvecq_pos *pos, size_t max_size,
-+		   unsigned int max_slots, unsigned int *_nr_slots)
-+{
-+	struct bvecq *bq;
-+	unsigned int slot = pos->slot, nslots = 0;
-+	size_t size = 0, offset = pos->offset;
-+
-+	bq = pos->bvecq;
-+	for (;;) {
-+		for (; slot < bvecq_nr_slots_acquire(bq); slot++) {
-+			const struct bio_vec *bvec = &bq->bv[slot];
-+
-+			if (offset < bvec->bv_len && bvec->bv_page) {
-+				size_t part = umin(bvec->bv_len - offset, max_size);
-+
-+				size += part;
-+				offset += part;
-+				max_size -= part;
-+				nslots++;
-+				if (!max_size || nslots >= max_slots)
-+					goto out;
-+			}
-+			offset = 0;
-+		}
-+
-+		/* pos->bvecq isn't allowed to go NULL as the queue may get
-+		 * extended and we would lose our place.
-+		 */
-+		if (!bq->next)
-+			break;
-+		slot = 0;
-+		bq = bq->next;
-+		if (bq->discontig && size > 0)
-+			break;
-+	}
-+
-+out:
-+	*_nr_slots = nslots;
-+	if (slot == bvecq_nr_slots_acquire(bq) && bq->next) {
-+		bq = bq->next;
-+		slot = 0;
-+		offset = 0;
-+	}
-+	bvecq_pos_move(pos, bq);
-+	pos->slot = slot;
-+	pos->offset = offset;
-+	return size;
-+}
-+
-+/**
-+ * bvecq_extract - Extract a slice of a bvecq queue into a new bvecq queue
-+ * @pos: The position to start at.
-+ * @max_size: The maximum size of the slice (or ULONG_MAX).
-+ * @max_slots: The maximum number of slots in the slice (or INT_MAX).
-+ * @to: Where to put the extraction bvecq chain head (updated).
-+ *
-+ * Allocate a new bvecq and extract into it memory fragments from a slice of
-+ * bvec queue, starting at @pos.  The slice is also limited if a discontiguity
-+ * is found.  No refs are taken on the page.
-+ *
-+ * @pos is updated to the end of the slice.  If the position hits the end of
-+ * the queue, then it is left pointing beyond the last slot of the last bvecq
-+ * so that it doesn't break the chain.
-+ *
-+ * If successful, *@to is set to point to the head of the newly allocated chain
-+ * and the caller inherits a ref to it.
-+ *
-+ * Return: The number of bytes extracted; -ENOMEM on allocation failure or -EIO
-+ * if no slots were available to extract.
-+ */
-+ssize_t bvecq_extract(struct bvecq_pos *pos, size_t max_size,
-+		      unsigned int max_slots, struct bvecq **to)
-+{
-+	struct bvecq_pos tmp_pos;
-+	struct bvecq *src, *dst = NULL;
-+	unsigned int slot = pos->slot, dslot = 0, nslots;
-+	ssize_t extracted = 0;
-+	size_t offset = pos->offset, amount;
-+
-+	*to = NULL;
-+	if (WARN_ON_ONCE(!max_slots))
-+		max_slots = INT_MAX;
-+
-+	bvecq_pos_set(&tmp_pos, pos);
-+	amount = bvecq_slice(&tmp_pos, max_size, max_slots, &nslots);
-+	bvecq_pos_unset(&tmp_pos);
-+	if (nslots == 0)
-+		return -EIO;
-+
-+	dst = bvecq_alloc_chain(nslots, GFP_KERNEL);
-+	if (!dst)
-+		return -ENOMEM;
-+	*to = dst;
-+	max_slots = nslots;
-+	nslots = 0;
-+
-+	/* Transcribe the slots */
-+	src = pos->bvecq;
-+	for (;;) {
-+		for (; slot < bvecq_nr_slots_acquire(src); slot++) {
-+			const struct bio_vec *sv = &src->bv[slot];
-+			struct bio_vec *dv = &dst->bv[dslot];
-+
-+			_debug("EXTR BQ=%x[%x] off=%zx am=%zx p=%lx",
-+			       src->priv, slot, offset, amount, page_to_pfn(sv->bv_page));
-+
-+			if (offset < sv->bv_len && sv->bv_page) {
-+				size_t part = umin(sv->bv_len - offset, amount);
-+
-+				bvec_set_page(dv, sv->bv_page, part,
-+					      sv->bv_offset + offset);
-+				extracted += part;
-+				amount -= part;
-+				offset += part;
-+				trace_netfs_bv_slot(dst, dslot);
-+				dslot++;
-+				nslots++;
-+				if (dslot >= dst->max_slots) {
-+					bvecq_filled_to(dst, dslot);
-+					dst = dst->next;
-+					dslot = 0;
-+				}
-+				if (nslots >= max_slots)
-+					goto out;
-+				if (amount == 0)
-+					goto out;
-+			}
-+			offset = 0;
-+		}
-+
-+		/* pos->bvecq isn't allowed to go NULL as the queue may get
-+		 * extended and we would lose our place.
-+		 */
-+		if (!src->next)
-+			break;
-+		slot = 0;
-+		src = src->next;
-+		if (src->discontig && extracted > 0)
-+			break;
-+	}
-+
-+out:
-+	if (dst)
-+		bvecq_filled_to(dst, dslot);
-+	if (slot == bvecq_nr_slots_acquire(src) && src->next) {
-+		src = src->next;
-+		slot = 0;
-+		offset = 0;
-+	}
-+	bvecq_pos_move(pos, src);
-+	pos->slot = slot;
-+	pos->offset = offset;
-+	return extracted;
-+}
-+
-+/**
-+ * bvecq_load_from_ra - Allocate a bvecq chain and load from readahead
-+ * @pos: Blank position object to attach the new chain to.
-+ * @ractl: The readahead control context.
-+ *
-+ * Decant the set of folios to be read from the readahead context into a bvecq
-+ * chain.  Each folio occupies one bio_vec element.
-+ *
-+ * Return: Amount of data loaded or -ENOMEM on allocation failure.
-+ */
-+ssize_t bvecq_load_from_ra(struct bvecq_pos *pos, struct readahead_control *ractl)
-+{
-+	XA_STATE(xas, &ractl->mapping->i_pages, ractl->_index);
-+	struct folio *folio;
-+	struct bvecq *bq;
-+	unsigned int slot = 0;
-+	size_t loaded = 0;
-+
-+	bq = bvecq_alloc_chain(ractl->_nr_folios, GFP_NOFS);
-+	if (!bq)
-+		return -ENOMEM;
-+
-+	pos->bvecq  = bq;
-+	pos->slot   = 0;
-+	pos->offset = 0;
-+
-+	rcu_read_lock();
-+
-+	xas_for_each(&xas, folio, ractl->_index + ractl->_nr_pages - 1) {
-+		size_t len;
-+
-+		if (xas_retry(&xas, folio))
-+			continue;
-+		VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-+
-+		len = folio_size(folio);
-+		bvec_set_folio(&bq->bv[slot], folio, len, 0);
-+		loaded += len;
-+		slot++;
-+		trace_netfs_folio(folio, netfs_folio_trace_read);
-+
-+		if (slot >= bq->max_slots) {
-+			bvecq_filled_to(bq, slot);
-+			bq = bq->next;
-+			if (!bq)
-+				break;
-+			slot = 0;
-+		}
-+	}
-+
-+	rcu_read_unlock();
-+
-+	if (bq)
-+		bvecq_filled_to(bq, slot);
-+
-+	ractl->_index += ractl->_nr_pages;
-+	ractl->_nr_pages = 0;
-+	return loaded;
-+}
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index 5e86417c88d4..8cb74cb8242a 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -170,6 +170,7 @@ extern atomic_t netfs_n_wh_retry_write_subreq;
- extern atomic_t netfs_n_wb_lock_skip;
- extern atomic_t netfs_n_wb_lock_wait;
- extern atomic_t netfs_n_folioq;
-+extern atomic_t netfs_n_bvecq;
- 
- int netfs_stats_show(struct seq_file *m, void *v);
- 
-diff --git a/fs/netfs/stats.c b/fs/netfs/stats.c
-index ab6b916addc4..84c2a4bcc762 100644
---- a/fs/netfs/stats.c
-+++ b/fs/netfs/stats.c
-@@ -48,6 +48,7 @@ atomic_t netfs_n_wh_retry_write_subreq;
- atomic_t netfs_n_wb_lock_skip;
- atomic_t netfs_n_wb_lock_wait;
- atomic_t netfs_n_folioq;
-+atomic_t netfs_n_bvecq;
- 
- int netfs_stats_show(struct seq_file *m, void *v)
- {
-@@ -90,9 +91,10 @@ int netfs_stats_show(struct seq_file *m, void *v)
- 		   atomic_read(&netfs_n_rh_retry_read_subreq),
- 		   atomic_read(&netfs_n_wh_retry_write_req),
- 		   atomic_read(&netfs_n_wh_retry_write_subreq));
--	seq_printf(m, "Objs   : rr=%u sr=%u foq=%u wsc=%u\n",
-+	seq_printf(m, "Objs   : rr=%u sr=%u bq=%u foq=%u wsc=%u\n",
- 		   atomic_read(&netfs_n_rh_rreq),
- 		   atomic_read(&netfs_n_rh_sreq),
-+		   atomic_read(&netfs_n_bvecq),
- 		   atomic_read(&netfs_n_folioq),
- 		   atomic_read(&netfs_n_wh_wstream_conflict));
- 	seq_printf(m, "WbLock : skip=%u wait=%u\n",
-diff --git a/include/linux/bvecq.h b/include/linux/bvecq.h
-index 15f16f905877..01335ccb3871 100644
---- a/include/linux/bvecq.h
-+++ b/include/linux/bvecq.h
-@@ -53,4 +53,274 @@ struct bvecq {
- 	struct bio_vec	__bv[];		/* Default array (if ->inline_bv) */
- };
- 
-+#if BITS_PER_LONG == 64
-+/* Number of slots in __bv[] for a bvecq in a 512-byte kmalloc block. */
-+#define BVECQ_STD_SLOTS		29	/* 2 words/slot; 32 slots; bvecq is 6 words (3 slots) */
-+#elif  BITS_PER_LONG == 32
-+/* Number of slots in __bv[] for a bvecq in a 256-byte kmalloc block. */
-+#define BVECQ_STD_SLOTS		18	/* 3 words/slot; 21 slots; bvecq is 9 words (3 slots) */
-+#else
-+#error BVECQ_STD_SLOTS undetermined
-+#endif
-+
-+/*
-+ * Position in a bio_vec queue.  The bvecq holds a ref on the queue segment it
-+ * points to.
-+ */
-+struct bvecq_pos {
-+	struct bvecq		*bvecq;		/* The first bvecq */
-+	unsigned int		offset;		/* The offset within the starting slot */
-+	u16			slot;		/* The starting slot */
-+};
-+
-+void bvecq_dump(const struct bvecq *bq);
-+struct bvecq *bvecq_alloc_one(size_t nr_slots, gfp_t gfp);
-+struct bvecq *bvecq_alloc_chain(size_t nr_slots, gfp_t gfp);
-+struct bvecq *bvecq_alloc_buffer2(size_t size, unsigned int pre_slots, gfp_t gfp);
-+void bvecq_put(struct bvecq *bq);
-+int bvecq_expand_buffer(struct bvecq **_buffer, size_t *_cur_size, size_t size, gfp_t gfp);
-+int bvecq_shorten_buffer(struct bvecq *bq, unsigned int slot, size_t size);
-+int bvecq_buffer_init(struct bvecq_pos *pos, gfp_t gfp);
-+void bvecq_buffer_append(struct bvecq_pos *pos, struct bvecq *bq);
-+void bvecq_pos_advance(struct bvecq_pos *pos, size_t amount);
-+ssize_t bvecq_zero(struct bvecq_pos *pos, size_t amount);
-+size_t bvecq_slice(struct bvecq_pos *pos, size_t max_size,
-+		   unsigned int max_slots, unsigned int *_nr_slots);
-+ssize_t bvecq_extract(struct bvecq_pos *pos, size_t max_size,
-+		      unsigned int max_slots, struct bvecq **to);
-+ssize_t bvecq_load_from_ra(struct bvecq_pos *pos, struct readahead_control *ractl);
-+
-+/**
-+ * bvecq_alloc_buffer - Allocate a bvecq chain and populate with buffers
-+ * @size: Target size of the buffer (can be 0 for an empty buffer)
-+ * @gfp: The allocation constraints.
-+ *
-+ * Wrapper around %bvecq_alloc_buffer2().
-+ */
-+static inline struct bvecq *bvecq_alloc_buffer(size_t size, gfp_t gfp)
-+{
-+	return bvecq_alloc_buffer2(size, 0, gfp);
-+}
-+
-+/**
-+ * bvecq_get - Get a ref on a bvecq
-+ * @bq: The bvecq to get a ref on
-+ */
-+static inline struct bvecq *bvecq_get(struct bvecq *bq)
-+{
-+	refcount_inc(&bq->ref);
-+	return bq;
-+}
-+
-+/**
-+ * bvecq_is_full - Determine if a bvecq is full
-+ * @bvecq: The object to query
-+ *
-+ * Return: true if full; false if not.
-+ */
-+static inline bool bvecq_is_full(const struct bvecq *bvecq)
-+{
-+	return bvecq->nr_slots >= bvecq->max_slots;
-+}
-+
-+/**
-+ * bvecq_filled_to - Release filled slots with release barrier
-+ * @bvecq: The object modified
-+ * @to: The latest slot filled + 1
-+ */
-+static inline void bvecq_filled_to(struct bvecq *bvecq, unsigned int to)
-+{
-+	/* Set the slot counter after filling the slot */
-+	smp_store_release(&bvecq->nr_slots, to);
-+}
-+
-+/**
-+ * bvecq_nr_slots_acquire - Get the number of filled slots with acquire barrier
-+ * @bvecq: The object to query
-+ *
-+ * Return: The number of filled slots
-+ */
-+static inline unsigned int bvecq_nr_slots_acquire(const struct bvecq *bvecq)
-+{
-+	/* Read the slot counter before looking at the slot */
-+	return smp_load_acquire(&bvecq->nr_slots);
-+}
-+
-+/**
-+ * bvecq_acquire_slot - Determine if a slot is valid with acquire barrier
-+ * @bvecq: The object to query
-+ * @slot: The next slot
-+ *
-+ * Return: true if valid; false if might not be valid
-+ */
-+static inline bool bvecq_acquire_slot(const struct bvecq *bvecq, unsigned int slot)
-+{
-+	/* Read the slot counter before looking at the slot */
-+	return slot < bvecq_nr_slots_acquire(bvecq);
-+}
-+
-+/**
-+ * bvecq_pos_set - Set one position to be the same as another
-+ * @pos: The position object to set
-+ * @at: The source position.
-+ *
-+ * Set @pos to have the same position as @at.  This may take a ref on the
-+ * bvecq pointed to.
-+ */
-+static inline void bvecq_pos_set(struct bvecq_pos *pos, const struct bvecq_pos *at)
-+{
-+	*pos = *at;
-+	bvecq_get(pos->bvecq);
-+}
-+
-+/**
-+ * bvecq_pos_unset - Unset a position
-+ * @pos: The position object to unset
-+ *
-+ * Unset @pos.  This does any needed ref cleanup.
-+ */
-+static inline void bvecq_pos_unset(struct bvecq_pos *pos)
-+{
-+	bvecq_put(pos->bvecq);
-+	pos->bvecq = NULL;
-+	pos->slot = 0;
-+	pos->offset = 0;
-+}
-+
-+/**
-+ * bvecq_pos_transfer - Transfer one position to another, clearing the first
-+ * @pos: The position object to set
-+ * @from: The source position to clear.
-+ *
-+ * Set @pos to have the same position as @from and then clear @from.  This may
-+ * transfer a ref on the bvecq pointed to.
-+ */
-+static inline void bvecq_pos_transfer(struct bvecq_pos *pos, struct bvecq_pos *from)
-+{
-+	*pos = *from;
-+	from->bvecq = NULL;
-+	from->slot = 0;
-+	from->offset = 0;
-+}
-+
-+/**
-+ * bvecq_pos_move - Update a position to a new bvecq
-+ * @pos: The position object to update.
-+ * @to: The new bvecq to point at.
-+ *
-+ * Update @pos to point to @to if it doesn't already do so.  This may
-+ * manipulate refs on the bvecqs pointed to.
-+ */
-+static inline void bvecq_pos_move(struct bvecq_pos *pos, struct bvecq *to)
-+{
-+	struct bvecq *old = pos->bvecq;
-+
-+	if (old != to) {
-+		pos->bvecq = bvecq_get(to);
-+		bvecq_put(old);
-+	}
-+}
-+
-+/**
-+ * bvecq_pos_nudge - Nudge a position onto the next segment if current used up
-+ * @pos: The position object to nudge.
-+ *
-+ * Update @pos to point to the next segment in the chain if we've used up the
-+ * current segment.  This may manipulate refs on the bvecqs pointed to.
-+ *
-+ * Return: true if found a new segment, false if hit the end.
-+ */
-+static inline bool bvecq_pos_nudge(struct bvecq_pos *pos)
-+{
-+	struct bvecq *bq = pos->bvecq;
-+
-+	for (;;) {
-+		if (!bvecq_acquire_slot(bq, pos->slot)) {
-+			bq = bq->next;
-+			if (!bq)
-+				return false;
-+			bvecq_pos_move(pos, bq);
-+			pos->slot = 0;
-+			pos->offset = 0;
-+			continue;
-+		}
-+		if (pos->offset >= bq->bv[pos->slot].bv_len) {
-+			pos->slot++;
-+			pos->offset = 0;
-+			continue;
-+		}
-+		return true;
-+	}
-+}
-+
-+/**
-+ * bvecq_pos_step - Step a position to the next slot if possible
-+ * @pos: The position object to step.
-+ *
-+ * Update @pos to point to the next slot in the queue if not at the end.  This
-+ * may manipulate refs on the bvecqs pointed to.
-+ *
-+ * Return: true if successful, false if was at the end.
-+ */
-+static inline bool bvecq_pos_step(struct bvecq_pos *pos)
-+{
-+	struct bvecq *bq = pos->bvecq;
-+
-+	pos->slot++;
-+	pos->offset = 0;
-+	if (pos->slot < bq->nr_slots)
-+		return true;
-+	if (!bq->next)
-+		return false;
-+	bvecq_pos_move(pos, bq->next);
-+	pos->slot = 0;
-+	return true;
-+}
-+
-+/**
-+ * bvecq_delete_spent - Delete the bvecq at the front if possible
-+ * @pos: The position object to update.
-+ *
-+ * Delete the used up bvecq at the front of the queue that @pos points to if it
-+ * is not the last node in the queue; if it is the last node in the queue, it
-+ * is kept so that the queue doesn't become detached from the other end.  This
-+ * may manipulate refs on the bvecqs pointed to.  It is also possible that the
-+ * producer will fill more slots in the current bvecq.
-+ *
-+ * Also, we have to be very careful: the consumer can catch the producer, which
-+ * could lead to us having nothing left in the queue, causing the front and
-+ * back pointers to end up on different tracks.  To avoid this, we must always
-+ * keep at least one segment in the queue.
-+ *
-+ * The caller must reload from @pos after calling this.
-+ *
-+ * Return: true if there's more available; false if not.
-+ */
-+static inline bool bvecq_delete_spent(struct bvecq_pos *pos)
-+{
-+	struct bvecq *spent = pos->bvecq;
-+	struct bvecq *next;
-+	unsigned int slot = pos->slot;
-+
-+again:
-+	/* Read the contents of the queue node after the pointer to it. */
-+	next = smp_load_acquire(&spent->next);
-+	if (!next)
-+		return false; /* Nothing more to consume at the moment. */
-+	if (slot < bvecq_nr_slots_acquire(spent))
-+		return true; /* The producer added more. */
-+	next->prev = NULL;
-+	spent->next = NULL;
-+	bvecq_put(spent);
-+	pos->bvecq = next; /* We take spent's ref. */
-+	pos->slot = 0;
-+	pos->offset = 0;
-+	if (!bvecq_acquire_slot(next, 0)) {
-+		spent = next;
-+		slot = 0;
-+		goto again;
-+	}
-+	return true;
-+}
-+
- #endif /* _LINUX_BVECQ_H */
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 4f7571ea49bd..2999c4b7e6a9 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -17,6 +17,7 @@
- #include <linux/workqueue.h>
- #include <linux/fs.h>
- #include <linux/pagemap.h>
-+#include <linux/bvecq.h>
- #include <linux/uio.h>
- #include <linux/rolling_buffer.h>
- 
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index 9bda9302be90..5354a0439324 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -789,6 +789,30 @@ TRACE_EVENT(netfs_folioq,
- 		      __print_symbolic(__entry->trace, netfs_folioq_traces))
- 	    );
- 
-+TRACE_EVENT(netfs_bv_slot,
-+	    TP_PROTO(const struct bvecq *bq, int slot),
-+
-+	    TP_ARGS(bq, slot),
-+
-+	    TP_STRUCT__entry(
-+		    __field(unsigned long,		pfn)
-+		    __field(unsigned int,		offset)
-+		    __field(unsigned int,		len)
-+		    __field(unsigned int,		slot)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->slot = slot;
-+		    __entry->pfn = page_to_pfn(bq->bv[slot].bv_page);
-+		    __entry->offset = bq->bv[slot].bv_offset;
-+		    __entry->len = bq->bv[slot].bv_len;
-+			   ),
-+
-+	    TP_printk("bq[%x] p=%lx %x-%x",
-+		      __entry->slot,
-+		      __entry->pfn, __entry->offset, __entry->offset + __entry->len)
-+	    );
-+
- #undef EM
- #undef E_
- #endif /* _TRACE_NETFS_H */
+ delete mode 100644 fs/netfs/rolling_buffer.c
+ create mode 100644 include/linux/bvecq.h
+ delete mode 100644 include/linux/folio_queue.h
+ delete mode 100644 include/linux/rolling_buffer.h
 
 
