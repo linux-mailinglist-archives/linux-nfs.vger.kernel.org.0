@@ -1,267 +1,167 @@
-Return-Path: <linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23132-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QcLcE3LfTGp+rQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 13:13:54 +0200
+	id TVaaHJPjTGphrgEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23132-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 13:31:31 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D896F71AD71
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 13:13:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0749D71AF48
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 13:31:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Mi33wM6o;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=RuKJBK7c;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23132-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23132-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DF7B33011E9A
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 11:13:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2FFDC3019920
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 11:22:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58679380FFB;
-	Tue,  7 Jul 2026 11:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1FC52BEC34;
+	Tue,  7 Jul 2026 11:22:37 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F503F0755
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 11:13:45 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783422827; cv=none; b=rv54NvVoS929ikQgRmbDEa2HtFH97qwt3hrdcy/XXKZTznSK16mtSFfSvcsts6EV20cmK8WoNuhpI0AnvfkRJB1IEb7SzlZF9Fa00ZU9rN0iMA9VhxtGUB0oxItUYbGXtJetMgi60fFur0ZIGdRS4hlAUu9y6a16e6K4zcpo46E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783422827; c=relaxed/simple;
-	bh=Dzu7rnVWesWO7NYpJiNTRGrZ89JkEeuDSeGMgkecpuQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=svcjoE/vb+NlWeul05oAPAnP8GPgRSEoupyBe2rih6ex64l1WvDIcA4JDH1SkqsVW7pILVImw+GHnlfOIZHuPUyCxF+WnM6h+d8UsNTb3912aiImYgn1MAKA6xcCyO/n6O+q+tTIyT2baFVYEkl9U2UNcevcugpm9Ea5z80h7hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mi33wM6o; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EC91F000E9;
-	Tue,  7 Jul 2026 11:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783422825;
-	bh=Bw0/XH4zfsGmjY/LLIM7qPl1ckZCZWlnh+SL9ztqd/0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Mi33wM6oD+25fhW/baeE62loyH43lIFSdRk9iVK33pl0QrvUB83IGw4P9xmf8L08O
-	 0QSupdki08Kfv72YXgc9HHIzjW0M0c3tv5bxJj+7dgmkTTMMcV2+dNZxZuPIlwCJnb
-	 HQHCaPoKq0ugbN1L2+Bne52iypLYzNyyQVAODHPTgYuLoVXRiDC005GwbiDxAksqH5
-	 VLrLF7WMBWPPktG7t3aMMt8RcgjcFH7nwyRWksMSOINEjk4kgY7t6K4W2U/lmzpbtr
-	 SzDTOE2IwjtAKKly4ggQZxvBfgJklW+uMmIihbxMPBxdn1IVkSBQtDnRztCdtEiiaC
-	 pgyTf7Q+HbB9g==
-Message-ID: <817fa5902f35305b2c4f38b11379dbf6eade49c6.camel@kernel.org>
-Subject: Re: [PATCH v2 06/14] nfsd: in nfsd4_create_file() let VFS report if
- file was created.
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, 	linux-nfs@vger.kernel.org
-Date: Tue, 07 Jul 2026 07:13:44 -0400
-In-Reply-To: <178338050586.27465.16700298229223579148@noble.neil.brown.name>
-References: <20260705222032.1240057-1-neilb@ownmail.net>
-	  <20260705222032.1240057-7-neilb@ownmail.net>
-	  <8ef43a6cfb235b0ef449388d56a4faeab492160c.camel@kernel.org>
-	 <178338050586.27465.16700298229223579148@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34041303A35
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 11:22:36 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783423357; cv=pass; b=QiIGvkZScaW22wIr5jOPLj5fZRLAH+MLvJ3I5JsJqOgGQOdx/ycoqWuvhOAon/3HZSecDHCc4pVZBB46RM4+eWOq99z/vfMr+AAf2aKw/dyCCcrXH54kP3HEIW2G8NPLoBA/fkDDW+fJcb00n1jmdZrXQtlL1O9+IruJTZWpU6w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783423357; c=relaxed/simple;
+	bh=Ai6aH3bAzQ5F/P6PmYrtyqk7WXMC/vVWkXC5pNUHoI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=DMyR46fgqdTNRDolvKmoP32h6RSBDglOmE6kori7OD0EPwaRCpH+XO8rOQ5atPghrA/DVWj9L73XMtDFUOaNgK2VQP4HawPEBVLN4VXfMzF/0nWDDmR7gdCTMrRkILfst/x6l/Kjtg2IV6OMvmTO7ypahw8SelS/WS12woY9lcE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RuKJBK7c; arc=pass smtp.client-ip=209.85.218.49
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-c1254b73d63so449180466b.1
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jul 2026 04:22:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783423354; cv=none;
+        d=google.com; s=arc-20260327;
+        b=dfFlqOqD6cAi8yl4eAVs1SnTuPNuZSrxhgSTdl+sekeJvQCZ5Esnch9UKBRQ7aIGiH
+         kSIWykcxjmmbjrlVFxOJHrGp6svlhlXk1BffXlnwRqfhTnfZKopH0CLBfvywNGPWQgs8
+         zclLZ+wObtxMqAC/Bm7t68R+lBfEzEXL6gOxi28nFV8GWp4UtAe7F3xMzWpauDpYbHf4
+         9/srH3ymz8QmSRG2VmITM4OTSIsiBgnDZlxttyCgFsKtsJhRfleD1wHwyBmhTN3slbUk
+         NRBOIAZRhic4CNIF/hgRRM0ksjPO5zHRN+8vbKQ88Rfru3HSRkDtwI/tv4KDd9ZO2s+m
+         IEyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Ai6aH3bAzQ5F/P6PmYrtyqk7WXMC/vVWkXC5pNUHoI0=;
+        fh=A3pMOUK00huGibGCZBFsLekFLVbB5hHGKjUNNKwO+5E=;
+        b=arFylQqvnpvLBCn1clh2f+hM9DTUXYkbC1rvL/DtOL+CERKv44hELPBSCio1RCbTvh
+         xMrqsPk3BTG4wc7tpU72om9jSVcFACl4sC3and+9M2hu7GIKxG66Vlw80PWooBgI2aPo
+         JfW5LtDKfr38Aon8g8r0R1j2QACxWA6tbaitk5stI0I2yUS9UPZfkpk5eyCT8ivakI67
+         wXp6/bI1DqV831feHaUg91cBRyz+oqSkSN8A37ZKCaay2vfNurAW5ahXiKQZTAglZ0y1
+         rvGvMhgY1JgWdicCwSkWYc3p4eQ5qC5uqTiqw3bLR4ytN+Ew27FsG/6T59D8WYM0RpRJ
+         ve8w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783423354; x=1784028154; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ai6aH3bAzQ5F/P6PmYrtyqk7WXMC/vVWkXC5pNUHoI0=;
+        b=RuKJBK7cScO/Q/CxUrbFNUwK0bN2kWsUkHOjdhs4PyMalnsw5h1nk3/bznlfxWGnyc
+         pyasrixmZciKjz9HY0EVnPDTzYmgchx+vBZLnU95p4ScsRh+65Dl1j9sG858EI4bWjDj
+         TWqKksVWZ5mnChtXtPOzxf9WAQh4JUlE6z8sCz62+te/PfUs6gJaso5DVJ76qhJrMRDq
+         mWwVXJJqjeHPLUH0qWUBg2CxuRXtY7KC/Y8+NcTkWvkbJHgwni0tcpxvbGtXmGc28KC+
+         Brd4NDnw5S/6Yq44mpSfsjZ/5s/3hN1jsEDCXpSr2kPHRLfSNQ8fD8GZyNjbi3GpQh3/
+         4gBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783423354; x=1784028154;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Ai6aH3bAzQ5F/P6PmYrtyqk7WXMC/vVWkXC5pNUHoI0=;
+        b=HP4uKg0bZvXGFIxV0qOEVRI0reKHqOs+TCG1LwrdtKdQxrW1cmH23kerLUdtLA/Eve
+         mcI2vt9wOXfo+mYXGq3wXSvjLxKy/zK4jfk+z83agV9Ww3D5Wv7q5bsjEeq47yrJ7pal
+         Jj2GV9RE60HHud+fR/kxY4BkBvI+75LuHGSSmWqFQSt90uDfILtpzXGwnuqCZNuipOcS
+         /nVhEZEJEM5o6sLKDH6AyOX7ln9pNnzYSK4QA9rPHC4cTCq/RoI8O+mhxd7+hJ1V2hfN
+         zQe38NLgVlGnIjv7YfMBlwFsEx0q8RKN+iiUQbrArvzIX0fOotL8jJgw5iT/qFYWlZkM
+         QRwA==
+X-Gm-Message-State: AOJu0YzV0q42UJe4cT8rJene41BqAeQzgkHdeQnYGzfXnwmkHGbPNcWQ
+	LP9YHvtxJ93siFgD9Tst8poFsL2LMm7/+y7cLTnelEYxiYvCiDZTSbKa3k1+dm7vBa5wXKIHUUD
+	ahmkGAGXFZZeyeArXRxQGLlwS5F46zetBqg==
+X-Gm-Gg: AfdE7ckhJdVY3vTihmZGnCDyqbsXPKz3P6pFOgKabpw+IyJVhnvEi4FzSJRdFCtYM6x
+	vBmsi+s5YgH4B5GBy/iKNue9nAvmmKv7DMIPtJQe94uy3q4SxkN4smP5YQkWQ+NnTsGsiGDY2sb
+	lnHnqee05ylWONaDaFlTPC56+R0P0KmFUjd8+HoaU/HFN8lajHEle2yA5Vgw6KOmAePz8gjSKQl
+	s/RVA8XIBxaaC4czNl0VwElgqnVHD2W/ckA9ynbFPqywnw+7lZQuN5m8vNJVph/gVkzEq/Og2/3
+	QnJbJVYjCQ==
+X-Received: by 2002:a17:907:9492:b0:c12:919f:f6e3 with SMTP id
+ a640c23a62f3a-c15a6858f40mr248125166b.57.1783423354283; Tue, 07 Jul 2026
+ 04:22:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CALWcw=HsVbqgnBE+fW=qO9ULPww8_0amGjgw-f11FuoV2=ftOA@mail.gmail.com>
+In-Reply-To: <CALWcw=HsVbqgnBE+fW=qO9ULPww8_0amGjgw-f11FuoV2=ftOA@mail.gmail.com>
+From: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
+Date: Tue, 7 Jul 2026 13:22:00 +0200
+X-Gm-Features: AVVi8CdSyXtwYhaRNrK318L82UXzQW7A8Pb4Rk9WTMoyPhq3d-sTH_HuVyDmZTI
+Message-ID: <CALWcw=HMhCU_-UX7mHPwX9jqu-r7y7XBBrhg66UNjxYZaiO9Ew@mail.gmail.com>
+Subject: Re: NFS swap with RDMA?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23131-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_ALL(0.00)[];
+	RCPT_COUNT_ONE(0.00)[1];
+	TAGGED_FROM(0.00)[bounces-23132-lists,linux-nfs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[takeshinishimuralinux@gmail.com,linux-nfs@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[takeshinishimuralinux@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,brown.name:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mail.gmail.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D896F71AD71
+X-Rspamd-Queue-Id: 0749D71AF48
 
-On Tue, 2026-07-07 at 09:28 +1000, NeilBrown wrote:
-> On Tue, 07 Jul 2026, Jeff Layton wrote:
-> > On Mon, 2026-07-06 at 08:19 +1000, NeilBrown wrote:
-> > > From: NeilBrown <neil@brown.name>
-> > >=20
-> > > nfsd4_create_file() currently assumes that if a lookup failed but the=
-n a
-> > > create succeeds, then the "create" operation actually created the fil=
-e.
-> > > With atomic_open this may not be the case - some other actor might ha=
-ve
-> > > created the file between the lookup and the create.
-> > >=20
-> > > So we move the call to nfsd4_vfs_create() earlier and set ->op_create=
-d
-> > > based on the FMODE_CREATED flag that it set.  Then use "!  ->op_creat=
-ed"
-> > > to trigger nfserr_exist handling.
-> > >=20
-> > > The switch statement is split up into two if() statements.
-> > > First we check for the possibility of a successful exclusive
-> > > create and set ->op_create to true if appropriate.
-> > > Then we check for NFS4_CREATE_UNCHECKED to decide if a
-> > > pre-existing file means an error or success.
-> > >=20
-> > > This allows us to combine the two fh_compose() calls to one place.
-> > >=20
-> > > A subtle difference here is that we now must only pass O_EXCL to
-> > > dentry_create() for NFS4_CREATE_GUARDED.  For the EXCLUSIVE create mo=
-des
-> > > we want a successful open even if the file already exists.  We then
-> > > check the verifier after the open succeeded to see if it was exclusiv=
-e.
-> > >=20
-> >=20
-> > Do we really want a successful open in the EXCLUSIVE cases?
-> >=20
-> > Opens have side effects (notably, that they can cause delegation
-> > recalls). If you have two racing clients creating a file, the first
-> > gets an open and write delegation and then the second ends up
-> > immediately causing a delegrecall for the first, even though it may
-> > never touch the file again after the OPEN fails.
-> >=20
-> > I think we may want to reconsider that logic, if possible: Maybe we
-> > should keep using O_EXCL in those cases and just re-drive the open
-> > without it if it fails and the verifier looks right? That's a bit
-> > uglier, but that may cause fewer delegation recalls.
->=20
-> Thanks for raising this.  My thinking was that next EXCLUSIVE creates
-> was weird.
-> If the server is re-exporting NFS, then think about what happens to the
-> verifier stored on the backend server.
-> First the verifier from the intermediate server is stored,=20
-> then the nfs client on the intermediate server sends a SETATTR to remove =
-it,=20
-> then the intermediate server sets the verifier from the originating
-> client.
-> then the originating client removes it.
->=20
-> So 4 setattrs altogether.
->=20
-> Also if the intermediate server ever gets a retransmit of the OPEN
-> request, it will send an EXCLUSIVE open to the backend server which will
-> fail even if the verifier is still correct.
->=20
-> I agree that recalling a delegation needlessly is not good, but will it
-> happen often?  If the app checks for then name before trying the O_EXCL
-> open, then the delegation would not get recalled because the OPEN
-> wouldn't be tried.  I wonder how often that happens....
->=20
-> I think setting O_EXCL in the NFS4_CREATE_GUARDED case is important.
-> I'm open to discussion around the issues with O_EXCL and the
-> NFS4_CREATE_EXCLUSIVE case.
->=20
-> Maybe doing a lookup first when the exported fs is NFS would be an OK
-> compromise.
->=20
+?
+
+On Thu, Jun 11, 2026 at 6:01=E2=80=AFPM Takeshi Nishimura
+<takeshi.nishimura.linux@gmail.com> wrote:
+>
+> Dear list,
+>
+> does Linux swap over NFS file work with RDMA transports?
+> --
+> Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
+=A6
+> Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
 
 
-I guess it shouldn't happen often, since we do check
-d_really_is_negative() prior to calling nfsd4_vfs_create(). Given that,
-let's go with the scheme you've got here. We can always revisit it if
-this turns out to be more of an issue.
+
 --=20
-Jeff Layton <jlayton@kernel.org>
+Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
+=A6
+Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
 
