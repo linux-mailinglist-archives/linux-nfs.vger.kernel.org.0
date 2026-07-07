@@ -1,88 +1,94 @@
-Return-Path: <linux-nfs+bounces-23138-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23139-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RYVbHZQXTWrauwEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23138-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 17:13:24 +0200
+	id OcPSDhoaTWqDvAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23139-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 17:24:10 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CEBF71D1C4
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 17:13:23 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00B2A71D399
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 17:24:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hammerspace.com header.s=google header.b=d+eD1bW3;
-	dmarc=pass (policy=quarantine) header.from=hammerspace.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23138-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23138-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=GFd+A+DA;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23139-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23139-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2A9A830D0E4B
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 15:08:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E7DEC3013BA0
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 15:24:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 120123769E5;
-	Tue,  7 Jul 2026 15:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9098B33F588;
+	Tue,  7 Jul 2026 15:24:01 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD9E379EE7
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 15:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D813EBF36
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 15:23:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783436842; cv=none; b=qalTV2oi6BUpMLK99xXZxmTk6WW+GVP2UY8dx83DtafqyOjLiRIoP/AK7mSvK5+xFmzkuohx9C9GXrVfRxzGe0iwGvNlfe6yE3OZl085hMmFMrFGpuRadfvP7t5x+TLnXDjC8N+ZjyH3vOgr6WOV0LsqVXIc6URQaRE086DUTqk=
+	t=1783437841; cv=none; b=ihLS7xg37GGxCi+v2KeN09UNgMgizawfMZuRJ75pID7Fm+usrVdb9GWj9Zg6EnoVWV1lXk1OE9qYAN+3jbABp5dAZK2lFe5cutlVmkq0vf0Q+LvOIdDz+oa2Fd7JwLXP+3ufKzZRPXU+98ormlaqcdeeWo0FCkf6x76EoNqm0R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783436842; c=relaxed/simple;
-	bh=o/gNpYdhlekp4QQxaZfqu1tGOARHkU79BudSbfccIlE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nRq1KlnA5KlsGrDXmY04Jehtqw9hUAe6KWnpM0Nkazw487ZwGF4k3f8EN9sxbSoDgNyeBvsPmIAefS3bDeGf3nFFBGDZm5O0ASAQiaGHaBDI6SCVe1y8L3o6muCjDeAL/a8VacLdNpG1i9TeiHRnxm5IpGtJ/ECG5VUPErOJ6U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (2048-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=d+eD1bW3; arc=none smtp.client-ip=209.85.160.41
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-44ce674ed17so2574379fac.0
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Jul 2026 08:07:20 -0700 (PDT)
+	s=arc-20240116; t=1783437841; c=relaxed/simple;
+	bh=DcskmWiYpWxeg5Fi4znambpcFfjcuYecnOLuH/KYEaE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G2zC3L+hEKf0JJiI43+T6Yd/2kpfvwvIMHMH9K6iTxqsy95dohQrV5zBdYan0BZKNvILotQ1ZiGa8AJKfhVOIHDUvYYwGkV/4hYC7TzgEM5IUaeehWBDvcbS9Fp8oTWBvfIlcZJ9lai5gFEodQMX56NCYc2rI4K6oqEmA1BxnXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFd+A+DA; arc=none smtp.client-ip=209.85.222.174
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-920f33347f5so212605185a.3
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jul 2026 08:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hammerspace.com; s=google; t=1783436839; x=1784041639; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+dZPKZaCOxwYzuh4Lwb0MsDL6tOjQMEMgThRNAVB0nI=;
-        b=d+eD1bW3jBYdEQcD4NgsHxOOKF2RwRGqRbaEEeAZeaFb02j7oOKmKJSebmTKx2srSh
-         iQsYGsoGRid9/U7UzYyMbtSTucBvIgxVhF/cPmyTGnQ49j1zNVnmMMFzY0gU1DaOZAfT
-         GoPlHqOnQ20piicYknCWUYQkZj1yr82euwC2h6F3NU0TFvcwiHdsPchBP55SaTvP7xnf
-         5MYCeptGxNqFfGryGYHkFhJlctTNcCj0VNTAtr2uZF0UGF3lu/YWe38XqSbW+K4UG9zR
-         i3RZm5Zv/oOwFHXzFv4kyQBlHOMQqaYLWyG9owt5QsjCfEf1RhEw66oxlCusaHhWIKoJ
-         XHSg==
+        d=gmail.com; s=20251104; t=1783437839; x=1784042639; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MWs8o677+cowbofw6u2468FYLFBQAbffMlciJq0SXrY=;
+        b=GFd+A+DAgfiyOzWOj2YOq06lJOHuYBwRuTI522giU+HH+CxmML04eM2V206CBkWCao
+         3kDJ128Y2SVRSCCKY+hdonxcoCJUzdezv8FK11b9rapmkSwlTlgcQiRxjhvirLup50pA
+         TsvhU/PjnAG55D5wjKf7ZKVILHN8V6SzGATozSOFTgDpsTjbFqWEUD6Ug8PXH+2IGOXf
+         zE8McxPeVtb/ecCo6R57Yx3wJ0MbgNfN85mfZ/kEwpMcoD+8ZLqj7R63J9Aal6teGKxG
+         Trx0DbfuKOgzlLM1b2Z+ZJMpZp8cG/fpCz2I/B18mHmNj/6KbIl2fYGwwVLB55m4IBHp
+         c2Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783436839; x=1784041639;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+dZPKZaCOxwYzuh4Lwb0MsDL6tOjQMEMgThRNAVB0nI=;
-        b=Ovu8FviG7k9ZpXk+NKEZmpw/Kxj/l24Tx099FXNHNG3Lx6shRq+tIcljEa9G7YkNpb
-         ybVCIy0EmdopIoNknaE+ANOk+2P33fr11mhVLakQSl/Yw7nECidjqF2udm6Z0b/fOvMR
-         x68e7QmVDMOcE6o/zDAFoS4nZADbeFUog1gH9CxSLmMzdn2gnguJx2q2CaK6ww29t5NU
-         xKB1QMS2Q6YQ75tYVdAF/uwEKc8PxWrYlu7wGELHJP9zpt06+/qGgpNw62jtQEmnH54r
-         PMhw7mN3GeS51JHhTRrcv9qHvl/h6BNbsDEJTigEro3IjGLBgOKnTIwzS0EMn6wzc5hy
-         pWGQ==
-X-Gm-Message-State: AOJu0YzEEV0ExgtD9gPQDKBewciGT3aDbrtejmkXnBtOGNncSMf0Sbke
-	34ssvWhqoyyFosZERDgAulOVdJYR+23Uh2XYlGht9/WDMtcT4FnydgESjJN9K1CnWsiBdm219AG
-	Psi5k
-X-Gm-Gg: AfdE7cmFgdxfLSRBzlXjCaGYVnhnLP6TR2OOQOkaQkb/phSz0sGNBWYHCHIhVhATHh8
-	qA5829Rj+F1itvitu9vMVXFVCoqu9HdsdT2ogn9mfCv/IknHJ8ASz7WBtxH23eKakLOodHF/csa
-	U+cH8tuWVSWA9LzLO19eD9+urH4N750Rr5w6Pl/mR8ABxbVRtDCAMYJfhGqzyc9+kGil28l+0g9
-	AFiOIez2Wr0iSYWr6gueAnU1VPbxmNLMqeSKKNGBArCzN3PwRVQvp8ONBJVW2K7tCh/i4scvIgc
-	1JDcxBfKCGJ7EOT6JtxmQFBtqB79FIV+ZKt5E02oPjgUCQKj1dnHTZpIO5nEie7le9IQODTAgE0
-	kekIRj8jzb/Y+g86PO3eE+6pnRl1k2+IBBQZ/kevGPPpld/Cr/RSCBnOKEyupUjDRJMt+HmRyfY
-	c4cxR30qW2zjJSrp1R8IB3nUN18J6cMGybb32vgaZDhtFFAmP3y06ZuL7IRLw=
-X-Received: by 2002:a05:6870:7191:b0:447:1ceb:7cc6 with SMTP id 586e51a60fabf-451059c2cafmr3548693fac.15.1783436838973;
-        Tue, 07 Jul 2026 08:07:18 -0700 (PDT)
-Received: from bcodding.csb.hammerspace.com ([66.97.168.37])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-44cfb559559sm14219839fac.9.2026.07.07.08.07.17
+        d=1e100.net; s=20251104; t=1783437839; x=1784042639;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=MWs8o677+cowbofw6u2468FYLFBQAbffMlciJq0SXrY=;
+        b=V+gVZpi2uKN/GDnFTXKNOS14hTeKCn2rBvFo7TV1GT6TwFkHcxgAGcuyP910qry5UW
+         J/yluCwgJFVBcRsr3uQxoadN9siwRtUGKmsq/QwGRovzHLAOEV8OF9M7sT7ItmgNerck
+         TE7m5Bk9Nv9ISexUB5QYgWcqfUFH0YS5Ik47CN5LB1jASPvoHGOPkVC7GJ+WrEcqm3b1
+         7p5rqhdAtk/kLw6yRE5NHtjD37MYy52QhSkKBDM946xsHuAJneFRnHfRn6t6bEzLf7E9
+         j19e21PUtLPBk+V9PsZxeAvB6F32Yt5Rkxfp66A0eXLd9Rn/ktcbuUsSQ6wbh4ro1fkx
+         YRAg==
+X-Forwarded-Encrypted: i=1; AHgh+Rq2JverCe/HRWX6Oec2NWFfRgLa94u8bzJ8IJIpWFpBErnjfOzLrVtkWXeRpyyVtyUDZK8fHIky2Pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIA71vKBF+aoVKvTDMNpTVoyFXfdpZvJQNiJb1aHWA00Bxp/Ot
+	0g6wnylBVToUURE/maagANN+xDv//t7wdB9iESKnr6nl7r2l2W1eB+G6
+X-Gm-Gg: AfdE7cnOu0eRD/fPSp9Eu6stNtQPtBjW9WsKWRLS7pzoGNGNTkKM7QSgz3sMLmtmaXu
+	/XVQq4CHInZGXIzlzONKMCLi2g+K5glMA63d+TQQQXkZWiMM+NFlLrBYDwP3OW59961FrHYWlcw
+	DVMHpsl7P0HklSltdTt65voGRbuYFl3j+1IP5NbctqEloLzNySyXoSEQmtyK72S2FNs5Dkbzzsl
+	Nkc/09RpIV9kVubyMKhpPSGo/KHQ6acKeNqwSmyPP5wlTpIdcsd8GZw9F3AS3mxDMrEsYT/Po79
+	rv0ZE1mkJkSfc9Z3+Se9SeNot4w08Oitvs4uOIXaY9T/9Cp8VuxanKZiBF0s8OZ4X3+mTMEYLJB
+	imzNi9YTMbAzYgzxDr5qI0v7Jj5VDqR+/ayJC0CUak9QdsLamy63kDh4Lz83BTousEIlFDERqlA
+	Y7XOFldP7Ht13TRRJAfLw1LDkR/oxuJ9dkF9TawHI282KCg+owxTRBxv9NtqcYKRo/KyEz7Xg=
+X-Received: by 2002:a05:620a:290a:b0:92e:7ed1:3595 with SMTP id af79cd13be357-92ebb7164demr663575685a.69.1783437836871;
+        Tue, 07 Jul 2026 08:23:56 -0700 (PDT)
+Received: from mainer (pool-71-174-70-84.bstnma.fios.verizon.net. [71.174.70.84])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e90b9db95sm1163467685a.14.2026.07.07.08.23.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 08:07:18 -0700 (PDT)
-From: Benjamin Coddington <ben.coddington@hammerspace.com>
-X-Google-Original-From: Benjamin Coddington <bcodding@hammerspace.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: Charge unstable writes by request size, not folio size
-Date: Tue,  7 Jul 2026 11:07:16 -0400
-Message-ID: <96cb0f45621309481c96cb1e81ef3175257161ec.1783436588.git.bcodding@hammerspace.com>
-X-Mailer: git-send-email 2.53.0
+        Tue, 07 Jul 2026 08:23:56 -0700 (PDT)
+From: Achilles Gaikwad <achillesgaikwad@gmail.com>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: paul@paul-moore.com,
+	stephen.smalley.work@gmail.com,
+	linux-nfs@vger.kernel.org,
+	achillesgaikwad@gmail.com
+Subject: [PATCH v2] NFSv4.2: fix nfs4_listxattr size accounting
+Date: Tue,  7 Jul 2026 11:23:05 -0400
+Message-ID: <20260707152305.15324-1-achillesgaikwad@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260703102759.9626-1-achillesgaikwad@gmail.com>
+References: <20260703102759.9626-1-achillesgaikwad@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -91,166 +97,125 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hammerspace.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[hammerspace.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-23138-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[paul-moore.com,gmail.com,vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[hammerspace.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	FROM_NEQ_ENVFROM(0.00)[ben.coddington@hammerspace.com,linux-nfs@vger.kernel.org];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-23139-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:paul@paul-moore.com,m:stephen.smalley.work@gmail.com,m:linux-nfs@vger.kernel.org,m:achillesgaikwad@gmail.com,m:stephensmalleywork@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[achillesgaikwad@gmail.com,linux-nfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[achillesgaikwad@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,anthropic.com:email,hammerspace.com:from_mime,hammerspace.com:email,hammerspace.com:mid,hammerspace.com:dkim]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6CEBF71D1C4
+X-Rspamd-Queue-Id: 00B2A71D399
 
-nfs_folio_mark_unstable() and nfs_folio_clear_commit() charge and
-uncharge NR_WRITEBACK/WB_WRITEBACK by folio_nr_pages(folio) once per
-*request* added to or removed from a commit list. This is correct only
-when a folio has a single associated request. When pg_test splits a
-folio into N sub-folio requests (e.g. pNFS flexfiles striping with a
-stripe unit smaller than the folio size, or plain wsize-limited
-splitting), each of the N requests independently charges the whole
-folio's page count, inflating the accounting by a factor of N per
-folio. With large folios and small stripe units this reaches multiple
-orders of magnitude: a 2 MiB folio split into 512 4 KiB requests can
-charge up to 512x its real size, pushing global dirty+writeback
-accounting past the system's dirty threshold and forcing every
-buffered writer on the host into the hard-throttle path, including
-unrelated in-kernel NFS server threads sharing the box.
+A call to listxattr() with a buffer size of 0 returns the actual
+size of the buffer needed for a subsequent call. On an NFSv4.2
+mount this triggers the following oops:
 
-Charge each request only for the pages it actually covers.
+  [  399.768687] BUG: kernel NULL pointer dereference, address: 0000000000000000
+  [  399.768705] RIP: 0010:_copy_from_pages+0x44/0xe0
+  [  399.768722] Call Trace:
+  [  399.768723]  nfs4_xattr_alloc_entry+0x1bf/0x1e0
+  [  399.768730]  nfs4_xattr_cache_set_list+0x43/0x1f0
+  [  399.768731]  nfs4_listxattr+0x21f/0x250
+  [  399.768733]  vfs_listxattr+0x55/0xa0
+  [  399.768736]  listxattr+0x23/0x160
+  [  399.768737]  path_listxattrat+0xba/0x1e0
+  [  399.768739]  do_syscall_64+0xe2/0x680
 
-Fixes: 0c493b5cf16e ("NFS: Convert buffered writes to use folios")
-Cc: stable@vger.kernel.org
-Signed-off-by: Benjamin Coddington <bcodding@hammerspace.com>
-Assisted-By: Claude Sonnet 5 <noreply@anthropic.com>
+security_inode_listsecurity() (via the xattr_list_one() helper) now
+decrements the remaining size even when the buffer pointer is NULL, so
+in the size-query case, 'left' underflows to a huge size_t value. As a
+result, nfs4_listxattr_nfs4_user() treats the NULL buffer as a real one,
+leading to a NULL pointer dereference in _copy_from_pages().
+
+security_inode_listsecurity() does not return the number of bytes
+it added to the list, so the code derived it as
+'size - error - left'. That is also wrong in the size-query case:
+the generic_listxattr() contribution is only subtracted from 'left'
+when a buffer is present. Thus, the query result comes up short by
+exactly that contribution (e.g., "system.nfs4_acl" on a mount with
+ACL support), and a caller that allocates the returned size gets
+-ERANGE on the subsequent call.
+
+Declare 'left' as ssize_t, use a scratch copy to measure security
+hook consumption, and only decrement 'left' if a buffer is present.
+
+Fixes: f71ece9712b7 ("security,fs,nfs,net: update security_inode_listsecurity() interface")
+Suggested-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Achilles Gaikwad <achillesgaikwad@gmail.com>
 ---
- fs/nfs/internal.h | 12 +++++++-----
- fs/nfs/pnfs_nfs.c |  2 +-
- fs/nfs/write.c    | 14 ++++++++------
- 3 files changed, 16 insertions(+), 12 deletions(-)
+Changes in v2:
+ - Use a scratch variable to track security label size directly,
+   replacing the old formula that undercounted the size-query case.
+ - Drop the now-unneeded NULL-buffer special case for
+   nfs4_listxattr_nfs4_user().
+ - Retitled from "fix nfs4_listxattr NULL pointer dereference"
+   (the same accounting bug caused both the oops and the undercount).
+v1: https://lore.kernel.org/linux-nfs/20260703102759.9626-1-achillesgaikwad@gmail.com/
+ fs/nfs/nfs4proc.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 18d46b0e71dd..1d5d62f88dde 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -847,17 +847,19 @@ void nfs_super_set_maxbytes(struct super_block *sb, __u64 maxfilesize)
- }
- 
- /*
-- * Record the page as unstable (an extra writeback period) and mark its
-- * inode as dirty.
-+ * Record the request's range as unstable (an extra writeback period) and
-+ * mark its inode as dirty.
-  */
--static inline void nfs_folio_mark_unstable(struct folio *folio,
-+static inline void nfs_folio_mark_unstable(struct nfs_page *req,
- 					   struct nfs_commit_info *cinfo)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1360409d8de9..a3415082d610 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10585,7 +10585,8 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
  {
-+	struct folio *folio = nfs_page_to_folio(req);
-+
- 	if (folio && !cinfo->dreq) {
- 		struct inode *inode = folio->mapping->host;
--		long nr = folio_nr_pages(folio);
-+		long nr = DIV_ROUND_UP(req->wb_bytes, PAGE_SIZE);
+ 	ssize_t error, error2, error3;
+-	size_t left = size;
++	ssize_t left = size;
++	ssize_t left2;
  
--		/* This page is really still in write-back - just that the
-+		/* This range is really still in write-back - just that the
- 		 * writeback is happening on the server now.
- 		 */
- 		node_stat_mod_folio(folio, NR_WRITEBACK, nr);
-diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index 12632a706da8..3a12d06a9928 100644
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -1199,7 +1199,7 @@ pnfs_layout_mark_request_commit(struct nfs_page *req,
- 
- 	nfs_request_add_commit_list_locked(req, list, cinfo);
- 	mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
--	nfs_folio_mark_unstable(nfs_page_to_folio(req), cinfo);
-+	nfs_folio_mark_unstable(req, cinfo);
- 	return;
- out_resched:
- 	mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index d7c399763ad9..f7a5fb8140c4 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -807,7 +807,7 @@ nfs_request_add_commit_list(struct nfs_page *req, struct nfs_commit_info *cinfo)
- 	mutex_lock(&NFS_I(cinfo->inode)->commit_mutex);
- 	nfs_request_add_commit_list_locked(req, &cinfo->mds->list, cinfo);
- 	mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
--	nfs_folio_mark_unstable(nfs_page_to_folio(req), cinfo);
-+	nfs_folio_mark_unstable(req, cinfo);
- }
- EXPORT_SYMBOL_GPL(nfs_request_add_commit_list);
- 
-@@ -866,10 +866,12 @@ nfs_mark_request_commit(struct nfs_page *req, struct pnfs_layout_segment *lseg,
- 	nfs_request_add_commit_list(req, cinfo);
- }
- 
--static void nfs_folio_clear_commit(struct folio *folio)
-+static void nfs_folio_clear_commit(struct nfs_page *req)
- {
-+	struct folio *folio = nfs_page_to_folio(req);
-+
- 	if (folio) {
--		long nr = folio_nr_pages(folio);
-+		long nr = DIV_ROUND_UP(req->wb_bytes, PAGE_SIZE);
- 
- 		node_stat_mod_folio(folio, NR_WRITEBACK, -nr);
- 		bdi_wb_stat_mod(folio->mapping->host, WB_WRITEBACK, -nr);
-@@ -889,7 +891,7 @@ static void nfs_clear_request_commit(struct nfs_commit_info *cinfo,
- 			nfs_request_remove_commit_list(req, cinfo);
- 		}
- 		mutex_unlock(&NFS_I(inode)->commit_mutex);
--		nfs_folio_clear_commit(nfs_page_to_folio(req));
-+		nfs_folio_clear_commit(req);
+ 	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+@@ -10595,10 +10596,13 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+ 		left -= error;
  	}
- }
  
-@@ -1741,7 +1743,7 @@ void nfs_retry_commit(struct list_head *page_list,
- 		req = nfs_list_entry(page_list->next);
- 		nfs_list_remove_request(req);
- 		nfs_mark_request_commit(req, lseg, cinfo, ds_commit_idx);
--		nfs_folio_clear_commit(nfs_page_to_folio(req));
-+		nfs_folio_clear_commit(req);
- 		nfs_unlock_and_release_request(req);
- 	}
- }
-@@ -1813,7 +1815,7 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
- 		req = nfs_list_entry(data->pages.next);
- 		nfs_list_remove_request(req);
- 		folio = nfs_page_to_folio(req);
--		nfs_folio_clear_commit(folio);
-+		nfs_folio_clear_commit(req);
+-	error2 = security_inode_listsecurity(d_inode(dentry), &list, &left);
++	left2 = left;
++	error2 = security_inode_listsecurity(d_inode(dentry), &list, &left2);
+ 	if (error2 < 0)
+ 		return error2;
+-	error2 = size - error - left;
++	error2 = left - left2;
++	if (list)
++		left -= error2;
  
- 		dprintk("NFS:       commit (%s/%llu %d@%lld)",
- 			nfs_req_openctx(req)->dentry->d_sb->s_id,
+ 	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+
+base-commit: 6eb8711ece2ce27e52e327a5b7a628ed39b97f45
 -- 
-2.53.0
+2.55.0
 
 
