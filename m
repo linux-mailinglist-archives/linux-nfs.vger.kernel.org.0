@@ -1,222 +1,267 @@
-Return-Path: <linux-nfs+bounces-23130-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2Y9JDrjVTGpKqgEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23130-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 12:32:24 +0200
+	id QcLcE3LfTGp+rQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 13:13:54 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C366771A6BA
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 12:32:23 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D896F71AD71
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 13:13:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=H8uhI0od;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Mi33wM6o;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23130-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23130-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23131-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 276F630A6B87
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 10:27:30 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DF7B33011E9A
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 11:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 209323E9C0C;
-	Tue,  7 Jul 2026 10:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58679380FFB;
+	Tue,  7 Jul 2026 11:13:47 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1909B3DEAC0;
-	Tue,  7 Jul 2026 10:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F503F0755
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 11:13:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783419958; cv=none; b=lmx2u1tXs9AWt36WgWdwDf34GRUhuMR9AbZaDH6j7YsM3mkuIp5mZknrRVJFfZp/HT/OHJMTvQlqSNVyB9Le25GeWGQtMej3Cv2OzrfgKsB/LZI0dYAmUBvbZir3zhEMDdIdUcZ9CFTiYlo/GJJZR8c0EzX1N6wklxOM4ouqR20=
+	t=1783422827; cv=none; b=rv54NvVoS929ikQgRmbDEa2HtFH97qwt3hrdcy/XXKZTznSK16mtSFfSvcsts6EV20cmK8WoNuhpI0AnvfkRJB1IEb7SzlZF9Fa00ZU9rN0iMA9VhxtGUB0oxItUYbGXtJetMgi60fFur0ZIGdRS4hlAUu9y6a16e6K4zcpo46E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783419958; c=relaxed/simple;
-	bh=lavQzsFzLuud4owucqXOAe7/TStmFbzpIYigj/qMI58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SrCnpOr92D1RRDDAgg0ss2Qa1XPhHp4hDpQS+/o/tEBDnMTqqrxqjuUjshA7JqAAd0OgAPQtthNjpAK0K6WddrsMdSYsTB1O/v+XAPPrAih0TQ6J5tZRFse/mM5vTF1MP9e4ZRDKgxLL97E3ClNBsIgZJiAbjGQKtWs3Tusz+Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8uhI0od; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D7F1F00A3A;
-	Tue,  7 Jul 2026 10:25:51 +0000 (UTC)
+	s=arc-20240116; t=1783422827; c=relaxed/simple;
+	bh=Dzu7rnVWesWO7NYpJiNTRGrZ89JkEeuDSeGMgkecpuQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=svcjoE/vb+NlWeul05oAPAnP8GPgRSEoupyBe2rih6ex64l1WvDIcA4JDH1SkqsVW7pILVImw+GHnlfOIZHuPUyCxF+WnM6h+d8UsNTb3912aiImYgn1MAKA6xcCyO/n6O+q+tTIyT2baFVYEkl9U2UNcevcugpm9Ea5z80h7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mi33wM6o; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EC91F000E9;
+	Tue,  7 Jul 2026 11:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783419953;
-	bh=mnX0Xor/Tw8U/V1nZ7vUJbpJLhv1WXsPVIqYsN1S9JI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=H8uhI0odf1+Nyc1vY1CAo56e01lIQRebr/i+R9T6Kt2TRVpmlVOcGQ6Im6ER4Sy/t
-	 RRY9GlYhnqkRfIVTXtJSw3hSLRXgIF6Uq5Kz0sVb07aSArilOz021PEGns2rlw2r8v
-	 6Pdnt/z6u0ati+bODvS9XJzgNCsrvJxU7lKZxjig+ODoqnGicqXLwJ6sJU3oxAryqq
-	 32rIazm76gCZ+a4BPcXhpECSGZ2Amk22Yx57OiChxpZ73lHbx5VnjTF3K/Ulnxuhu+
-	 YaAbd3UpBZ4cjSCcbIUGXQiGel3HL8yFdfM+AH2G7pDPedlo3ahuUlYqhjjSiZ+SX7
-	 DO1SsLFw/wo0g==
-Date: Tue, 7 Jul 2026 13:25:46 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, mkalderon@marvell.com,
-	zyjzyj2000@gmail.com, sagi@grimberg.me, mgurtovoy@nvidia.com,
-	haris.iqbal@ionos.com, jinpu.wang@ionos.com, bvanassche@acm.org,
-	kbusch@kernel.org, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, kch@nvidia.com, smfrench@gmail.com,
-	linkinjeon@kernel.org, metze@samba.org, tom@talpey.com,
-	cel@kernel.org, jlayton@kernel.org, neil@brown.name,
-	okorniev@redhat.com, Dai.Ngo@oracle.com, trondmy@kernel.org,
-	anna@kernel.org, achender@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	horms@kernel.org, kees@kernel.org,
-	andriy.shevchenko@linux.intel.com, clm@meta.com,
-	ebadger@purestorage.com, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH rdma-next v9] RDMA: Change capability fields in
- ib_device_attr from int to u32
-Message-ID: <20260707102546.GM15188@unreal>
-References: <20260703060329.896125-1-ernis@linux.microsoft.com>
- <20260706084950.GK15188@unreal>
- <akzS9EdxScQsx9n8@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=k20260515; t=1783422825;
+	bh=Bw0/XH4zfsGmjY/LLIM7qPl1ckZCZWlnh+SL9ztqd/0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Mi33wM6oD+25fhW/baeE62loyH43lIFSdRk9iVK33pl0QrvUB83IGw4P9xmf8L08O
+	 0QSupdki08Kfv72YXgc9HHIzjW0M0c3tv5bxJj+7dgmkTTMMcV2+dNZxZuPIlwCJnb
+	 HQHCaPoKq0ugbN1L2+Bne52iypLYzNyyQVAODHPTgYuLoVXRiDC005GwbiDxAksqH5
+	 VLrLF7WMBWPPktG7t3aMMt8RcgjcFH7nwyRWksMSOINEjk4kgY7t6K4W2U/lmzpbtr
+	 SzDTOE2IwjtAKKly4ggQZxvBfgJklW+uMmIihbxMPBxdn1IVkSBQtDnRztCdtEiiaC
+	 pgyTf7Q+HbB9g==
+Message-ID: <817fa5902f35305b2c4f38b11379dbf6eade49c6.camel@kernel.org>
+Subject: Re: [PATCH v2 06/14] nfsd: in nfsd4_create_file() let VFS report if
+ file was created.
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, 	linux-nfs@vger.kernel.org
+Date: Tue, 07 Jul 2026 07:13:44 -0400
+In-Reply-To: <178338050586.27465.16700298229223579148@noble.neil.brown.name>
+References: <20260705222032.1240057-1-neilb@ownmail.net>
+	  <20260705222032.1240057-7-neilb@ownmail.net>
+	  <8ef43a6cfb235b0ef449388d56a4faeab492160c.camel@kernel.org>
+	 <178338050586.27465.16700298229223579148@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akzS9EdxScQsx9n8@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:ernis@linux.microsoft.com,m:jgg@ziepe.ca,m:mkalderon@marvell.com,m:zyjzyj2000@gmail.com,m:sagi@grimberg.me,m:mgurtovoy@nvidia.com,m:haris.iqbal@ionos.com,m:jinpu.wang@ionos.com,m:bvanassche@acm.org,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:kch@nvidia.com,m:smfrench@gmail.com,m:linkinjeon@kernel.org,m:metze@samba.org,m:tom@talpey.com,m:cel@kernel.org,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:trondmy@kernel.org,m:anna@kernel.org,m:achender@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:kees@kernel.org,m:andriy.shevchenko@linux.intel.com,m:clm@meta.com,m:ebadger@purestorage.com,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:target-devel@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:samba-technical@lists.samba.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:rds-devel@oss.oracle.com,m:
- jgg@nvidia.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	FORGED_SENDER(0.00)[leon@kernel.org,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-23131-lists,linux-nfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-23130-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[ziepe.ca,marvell.com,gmail.com,grimberg.me,nvidia.com,ionos.com,acm.org,kernel.org,kernel.dk,lst.de,samba.org,talpey.com,brown.name,redhat.com,oracle.com,davemloft.net,google.com,linux.intel.com,meta.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,unreal:mid]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,brown.name:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C366771A6BA
+X-Rspamd-Queue-Id: D896F71AD71
 
-On Tue, Jul 07, 2026 at 03:20:36AM -0700, Erni Sri Satya Vennela wrote:
-> On Mon, Jul 06, 2026 at 11:49:50AM +0300, Leon Romanovsky wrote:
-> > > ---
-> > >  drivers/infiniband/core/cq.c               |  3 +-
-> > >  drivers/infiniband/hw/qedr/verbs.c         |  2 +-
-> > >  drivers/infiniband/sw/rxe/rxe_qp.c         | 22 +++++-----
-> > >  drivers/infiniband/sw/rxe/rxe_srq.c        | 16 +++----
-> > >  drivers/infiniband/ulp/ipoib/ipoib_cm.c    | 10 ++---
-> > >  drivers/infiniband/ulp/ipoib/ipoib_verbs.c |  3 +-
-> > >  drivers/infiniband/ulp/iser/iser_verbs.c   |  5 +--
-> > >  drivers/infiniband/ulp/isert/ib_isert.c    |  7 ++-
-> > >  drivers/infiniband/ulp/rtrs/rtrs-clt.c     | 11 ++---
-> > >  drivers/infiniband/ulp/rtrs/rtrs-srv.c     | 11 ++---
-> > >  drivers/infiniband/ulp/srp/ib_srp.c        |  2 +-
-> > >  drivers/infiniband/ulp/srpt/ib_srpt.c      | 21 +++++----
-> > >  drivers/nvme/host/rdma.c                   |  8 ++--
-> > >  drivers/nvme/target/rdma.c                 | 22 ++++++----
-> > >  fs/smb/smbdirect/accept.c                  |  5 ++-
-> > >  fs/smb/smbdirect/connect.c                 |  5 ++-
-> > >  fs/smb/smbdirect/connection.c              |  8 ++--
-> > >  include/linux/sunrpc/svc_rdma.h            |  4 +-
-> > >  include/rdma/ib_verbs.h                    | 50 +++++++++++-----------
-> > >  net/rds/ib.c                               | 10 ++---
-> > >  net/rds/ib_cm.c                            | 10 ++---
-> > >  net/sunrpc/xprtrdma/frwr_ops.c             |  7 +--
-> > >  net/sunrpc/xprtrdma/svc_rdma_transport.c   |  5 +--
-> > >  net/sunrpc/xprtrdma/verbs.c                |  2 +-
-> > >  24 files changed, 122 insertions(+), 127 deletions(-)
-> > 
-> > The following code is still missing. 
-> 
-> I'll make this change in the next version.
-> 
-> >Also, what about mxa_srq?
-> > Why wasn't it converted as well?
-> 
-> I originally left max_srq as int because its only consumer pairs it with
-> num_comp_vectors (a signed int) in nvmet_rdma, so keeping it int let
-> that site stay a plain min() instead of a min_t().
-> 
-> num_comp_vectors is the completion-vector count, legitimately int and
-> never anywhere near INT_MAX, so I'd prefer to leave it signed rather
-> than convert it everywhere. Does that work for you, or would you rather
-> num_comp_vectors be converted too?
+On Tue, 2026-07-07 at 09:28 +1000, NeilBrown wrote:
+> On Tue, 07 Jul 2026, Jeff Layton wrote:
+> > On Mon, 2026-07-06 at 08:19 +1000, NeilBrown wrote:
+> > > From: NeilBrown <neil@brown.name>
+> > >=20
+> > > nfsd4_create_file() currently assumes that if a lookup failed but the=
+n a
+> > > create succeeds, then the "create" operation actually created the fil=
+e.
+> > > With atomic_open this may not be the case - some other actor might ha=
+ve
+> > > created the file between the lookup and the create.
+> > >=20
+> > > So we move the call to nfsd4_vfs_create() earlier and set ->op_create=
+d
+> > > based on the FMODE_CREATED flag that it set.  Then use "!  ->op_creat=
+ed"
+> > > to trigger nfserr_exist handling.
+> > >=20
+> > > The switch statement is split up into two if() statements.
+> > > First we check for the possibility of a successful exclusive
+> > > create and set ->op_create to true if appropriate.
+> > > Then we check for NFS4_CREATE_UNCHECKED to decide if a
+> > > pre-existing file means an error or success.
+> > >=20
+> > > This allows us to combine the two fh_compose() calls to one place.
+> > >=20
+> > > A subtle difference here is that we now must only pass O_EXCL to
+> > > dentry_create() for NFS4_CREATE_GUARDED.  For the EXCLUSIVE create mo=
+des
+> > > we want a successful open even if the file already exists.  We then
+> > > check the verifier after the open succeeded to see if it was exclusiv=
+e.
+> > >=20
+> >=20
+> > Do we really want a successful open in the EXCLUSIVE cases?
+> >=20
+> > Opens have side effects (notably, that they can cause delegation
+> > recalls). If you have two racing clients creating a file, the first
+> > gets an open and write delegation and then the second ends up
+> > immediately causing a delegrecall for the first, even though it may
+> > never touch the file again after the OPEN fails.
+> >=20
+> > I think we may want to reconsider that logic, if possible: Maybe we
+> > should keep using O_EXCL in those cases and just re-drive the open
+> > without it if it fails and the verifier looks right? That's a bit
+> > uglier, but that may cause fewer delegation recalls.
+>=20
+> Thanks for raising this.  My thinking was that next EXCLUSIVE creates
+> was weird.
+> If the server is re-exporting NFS, then think about what happens to the
+> verifier stored on the backend server.
+> First the verifier from the intermediate server is stored,=20
+> then the nfs client on the intermediate server sends a SETATTR to remove =
+it,=20
+> then the intermediate server sets the verifier from the originating
+> client.
+> then the originating client removes it.
+>=20
+> So 4 setattrs altogether.
+>=20
+> Also if the intermediate server ever gets a retransmit of the OPEN
+> request, it will send an EXCLUSIVE open to the backend server which will
+> fail even if the verifier is still correct.
+>=20
+> I agree that recalling a delegation needlessly is not good, but will it
+> happen often?  If the app checks for then name before trying the O_EXCL
+> open, then the delegation would not get recalled because the OPEN
+> wouldn't be tried.  I wonder how often that happens....
+>=20
+> I think setting O_EXCL in the NFS4_CREATE_GUARDED case is important.
+> I'm open to discussion around the issues with O_EXCL and the
+> NFS4_CREATE_EXCLUSIVE case.
+>=20
+> Maybe doing a lookup first when the exported fs is NFS would be an OK
+> compromise.
+>=20
 
-In this patch no, but it is worth to write this in commit message.
 
-Thanks
-
-> 
-> If it needs converting, I'll do it as a separate patch, since it lives
-> in a different struct (ib_device) and touches many call sites.
-> Otherwise, using min_t() for just this one call is fine too.
-> 
-> Thanks,
-> Vennela
-> 
-> > 
-> > diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
-> > index f599c24b34e8..aae4f3f6bcba 100644
-> > --- a/drivers/infiniband/core/nldev.c
-> > +++ b/drivers/infiniband/core/nldev.c
-> > @@ -454,7 +454,8 @@ static int fill_res_info(struct sk_buff *msg, struct ib_device *device,
-> >         };
-> > 
-> >         struct nlattr *table_attr;
-> > -       int ret, i, curr, max;
-> > +       u64 curr, max;
-> > +       int ret, i;
-> > 
-> >         if (fill_nldev_handle(msg, device))
-> >                 return -EMSGSIZE;
-> > diff --git a/drivers/infiniband/core/restrack.c b/drivers/infiniband/core/restrack.c
-> > index cfee2071586c..1b2f9df49e28 100644
-> > --- a/drivers/infiniband/core/restrack.c
-> > +++ b/drivers/infiniband/core/restrack.c
-> > @@ -61,7 +61,7 @@ void rdma_restrack_clean(struct ib_device *dev)
-> >   * @type: actual type of object to operate
-> >   * @show_details: count driver specific objects
-> >   */
-> > -int rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> > +u32 rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> >                         bool show_details)
-> >  {
-> >         struct rdma_restrack_root *rt = &dev->res[type];
-> > diff --git a/include/rdma/restrack.h b/include/rdma/restrack.h
-> > index 451f99e3717d..c081384740ce 100644
-> > --- a/include/rdma/restrack.h
-> > +++ b/include/rdma/restrack.h
-> > @@ -123,7 +123,7 @@ struct rdma_restrack_entry {
-> >         u32 id;
-> >  };
-> > 
-> > -int rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> > +u32 rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> >                         bool show_details);
-> >  /**
-> >   * rdma_is_kernel_res() - check the owner of resource
+I guess it shouldn't happen often, since we do check
+d_really_is_negative() prior to calling nfsd4_vfs_create(). Given that,
+let's go with the scheme you've got here. We can always revisit it if
+this turns out to be more of an issue.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
