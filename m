@@ -1,234 +1,131 @@
-Return-Path: <linux-nfs+bounces-23153-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23154-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8UizJEFbTWpmywEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23153-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:02:09 +0200
+	id HdibMVpoTWrmzQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23154-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:58:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 055E571F768
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:02:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9E8A71FA90
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:58:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=paul-moore.com header.s=google header.b=Rzy56A06;
-	dmarc=pass (policy=none) header.from=paul-moore.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23153-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23153-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=NrpNBPbV;
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23154-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23154-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 06A023011862
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 20:01:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9AF253024117
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 20:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DD163D3D07;
-	Tue,  7 Jul 2026 20:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FF8A30D3EA;
+	Tue,  7 Jul 2026 20:58:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD833D090E
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 20:01:55 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783454517; cv=pass; b=OCzLrwmR5NFMlDMdVi99OTyyusU47qgiCn5kqkZ32OofZpGIkKmkfiBD96hkq7usHsum0x7vvFP5tIxjVZdi2gKgKyBIjLoKis8zJW0goo0Fg1RDTfgyWKMIT/6FBZ8nczuiKKZTqbeu+HPUhyFYkzOSgD9WvYjzSp+e+p1X9sg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783454517; c=relaxed/simple;
-	bh=CQw7pbBPSsQXtU1Uj2PUzAdATT3DC/fTZSmkVK5/zlQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FOxuH+vRO6tijZsfQrVi+AX1n4uTRDItA390jJ1W21/FCz4CC5F8YzJCNmXMZsIA7cHXUUh6Wj4IxVXtFtt9Nbx393GSAfiT9e92EQ92VI7Tco56+MTyG2Mp83y0qKDH+Os2gw2hey5Qn3mOqvIVVhQG1xz3GB1BIfOth8S9VpY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Rzy56A06; arc=pass smtp.client-ip=209.85.216.51
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-38759bcd877so1479694a91.2
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Jul 2026 13:01:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783454515; cv=none;
-        d=google.com; s=arc-20260327;
-        b=FMiwd9oZnY58qOnvdjoGvkcb6RBwE6Llub2jq5leaeGbQB9thEEsA7XZhG3l7wtgKP
-         Q0VV4bXsrHFeXFU89g68psTDgYSkR+bgN+7G38TmGoNdl8oGdu8pNY0+hCM6UbBOllkf
-         pWmfzBYQAcSvOgGhmfGEPdjL/B//qccSqj2kwLTQHO/WaaXBl40W3MLQ/aZDDJ3mEQBZ
-         sP/Y/znyyc+XU1Il5LnBhqCQE4j1VlwaLq50TobUgAGVR+bB4J8srRP2QAH/KFCVnK+g
-         1srmntTJGgfjHTq82pdwvQ1jOTw+Iirm1/1xV0iUFYvu4ghFyOnopNggpsQ2IRoC1PPG
-         fpTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=SKHaKGkq7zit82xHzq3cQSvjgYMyfS0+fVrI7chNkuQ=;
-        fh=1ZtQAyJIdhHhgTq/IzSLPuZCq3lF0MbJ/jFfQvhSZiI=;
-        b=T7yLnnw1AFN5s1OUsxzvswFNTag8r/kz+AxDmTT9uDJK3yLjYTUy7t0URu5DgJ7Xzp
-         4LuylWfb37o/myUTWGNszielbPhmtAovBQIlQH24RZGz1UPZqctVwYssXDQr79KS932k
-         UVCkmU2tvk6YwNf9CSYwA/D86NUlQ+PRavhJl1cB2/+xCt5T6Qz1BDxd5PIz88VqcWMX
-         fJPw4D2Gp9TBlO2+pXCYOF84t8PVCDMyE6hQUkMCETYu7A/ebCOmy9S9RYY1rbpJwiXg
-         XQCzGI5wehrBs8T0MHd2SH2eEObEpHNQQVIi7RRB5mZxnJDS6notcGvgKjwEW3AOglMI
-         45uA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1783454515; x=1784059315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKHaKGkq7zit82xHzq3cQSvjgYMyfS0+fVrI7chNkuQ=;
-        b=Rzy56A06EuG/557lKXbZj5FzisJs/VspFSC0lA9XwefOL1CiMcLL092fxKJxi8vel5
-         q6uFqfoyiy9cS5EmZlVctMrdZt/IlrZKXzLTm6hGDQgfuG01NEI5CPqRE/mjiCEyKHOY
-         lyCEYFc1GVDoVD7BNn9nGYhmmIVkW65A5E8e0uXTcCm911FASOXz1nupXw4CHxUkECDS
-         xAsQ2XLCzsVeWjzEGnVWn/iiTfMSJr5HygLH8e7S4P3Ty3BxyZJH3qwih3y/ZBLuViRY
-         BQmqmu0IlIp6+o0ngXd1D1sL30x9CRmVA88OZSK9UnudGv5km6dBExhAS1GurTUlZMNt
-         RqDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783454515; x=1784059315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SKHaKGkq7zit82xHzq3cQSvjgYMyfS0+fVrI7chNkuQ=;
-        b=i+sxvOpbNgeOVunLgeSRAq7D9iDhEtY0/lzcFBnqDHvDx/QhOpchsOH73ml1hDKok2
-         mCJazS3haRs3JVjgSt+Yah2tveI2wUKMV1dB/ClhaBAoTukcY4Y9XDTXI+WpSjIg37KG
-         DyrnPXIXDT87kyddr4fTruKI2IEhjP7ubc3IM09wczaTGIAygqxHZqdFtYRDUZDBHYzy
-         GxDY9HLdH0U6oP3H3r7gMRlg1HcmAFJf4m6sHTFpD2rNjvm7BEFBsg3ihv47b+aeFFw3
-         h6XA4zqLyUTSbxrL5C1Js+hXD6xCkzTWaPl1LFdSGtX0VF+lRFubQYgzYxmUyIOh/XWb
-         wyUQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrdHMfip7GujBK/8IgG5yzFSI31Cq/DZw8GrHqUbhYxg9u+hDJcJAxZIxP2beMU/45qL33EQKHhMZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx72dNgrzs2//TLYtGBneysm3UlXDSRinlqT3IVnGSwxAtqjHF
-	rxdl1dovzmVeUx9FN42IHjrVjOLENLxoiaOmn8Rnc04D4c48NVoHWYcBIMoQfWh3GFYBr9uO5+F
-	hiTzNIcEjcE5ucaWgLadHdoHIab1DUTc23vPl9PYy
-X-Gm-Gg: AfdE7clh46b/CXpPv6U5tcLPooQt8ZudgV+zBEjdgyWSwrcDU8/NtW40WAlejpR+m6r
-	gzIBQZXMpT7V/L2UVZq9Dm66nL5rq1tGslsv6ejL60aWbknnv9QetBrDlxAw59qxFkUwHWZfTgj
-	sjuFPDf7H13bRzr0Cx41igJobPGbV5oLYl/K75pSLVBd7i+XUj3ZFN4/IFoz2XB5hCT28x1UB45
-	FMVXZ2ocD8WGaE/QGNR4ynUDcF0IxC4MYOL4IUcEVSaiMTu1k1oFEakPgwMLDkgzjMNpzfP
-X-Received: by 2002:a17:90a:b108:b0:381:5ede:1296 with SMTP id
- 98e67ed59e1d1-3875547805amr4916450a91.11.1783454514983; Tue, 07 Jul 2026
- 13:01:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DE830B529
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 20:57:58 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783457880; cv=none; b=XnhnrcXOxDwhnZimFsl5Ruv7hqURM6kXkdEr/JPxB5CpjSfD/T2F+ZXIq6aa1HrTOUmA/Acbd8zHLoiX8pZI1TGdA9dyAZh73OMDhbWkGu2WRqa3oIMDS/QUzKCxGTIcFKT8UijHq2MsgRXOvbSnED99psbM4+fkpAcEGmXMnZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783457880; c=relaxed/simple;
+	bh=weVIrS/3y6NVo4sMV5WWcLapx58lwTamW2cF/2D5omo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fYFcAj7sXVIPhT0wXgrUyVGrNlKZLKyGMhYv/VYkVIPX+22n6SwAXEUHK72qDZ42H3OML5ai56XZlAsF03w/gzz1c9gH0y55IQEry1U8gYkBQP7xI0Yal0AivJqcnc18qOs+uHnGWIr4ZJ0fG087WtGBQb7vsV5IEQyAC8o/nEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NrpNBPbV; arc=none smtp.client-ip=170.10.133.124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783457877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/cXec0UB8SxJ0NoWCaBSkg0GuT85+NTisCBVanuLuY4=;
+	b=NrpNBPbVNB+7zOQQpAKaB8Dx/bsStlWN59qv7TaIkHS3tGExa/YntsiJCn8hqrhi2LKNDO
+	gvB0wutuR+GbjDVdGYPasvQFqCmTXw9l8rqjYXXJPCzBRkyyX2gfsyJc7b3SlLCS2DGXHk
+	gA2cyJl2LnhBoIVLzVvVjR/YHvsQteY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-250-VxW-0TzJMhmt9Q47TyVRHQ-1; Tue,
+ 07 Jul 2026 16:57:54 -0400
+X-MC-Unique: VxW-0TzJMhmt9Q47TyVRHQ-1
+X-Mimecast-MFC-AGG-ID: VxW-0TzJMhmt9Q47TyVRHQ_1783457873
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8BFF1955DAF;
+	Tue,  7 Jul 2026 20:57:53 +0000 (UTC)
+Received: from smayhew-thinkpadp1gen4i.remote.csb (unknown [10.22.80.127])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8430A1955D88;
+	Tue,  7 Jul 2026 20:57:53 +0000 (UTC)
+Received: from smayhew-thinkpadp1gen4i.remote.csb (localhost [IPv6:::1])
+	by smayhew-thinkpadp1gen4i.remote.csb (Postfix) with ESMTP id D85F44D4C113;
+	Tue, 07 Jul 2026 16:57:52 -0400 (EDT)
+From: Scott Mayhew <smayhew@redhat.com>
+To: steved@redhat.com
+Cc: jlayton@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [nfs-utils PATCH 0/3] mountd netlink fixes
+Date: Tue,  7 Jul 2026 16:57:49 -0400
+Message-ID: <20260707205752.313031-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260703102759.9626-1-achillesgaikwad@gmail.com>
- <20260707152305.15324-1-achillesgaikwad@gmail.com> <CAHC9VhSWWhMjs282cOTT45gn0pa8bDSxD0H24_is7k4tXmGJxQ@mail.gmail.com>
- <ac4f209c-f465-4938-adae-ecd00ecab175@app.fastmail.com>
-In-Reply-To: <ac4f209c-f465-4938-adae-ecd00ecab175@app.fastmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 7 Jul 2026 16:01:42 -0400
-X-Gm-Features: AVVi8Cc7whlyPeGuIcUVaMUhLCElVCGHeTQu6aN6Xlm0ZbpD5vFbi_OphdfvdLo
-Message-ID: <CAHC9VhQYjj3--K6KkDJBf6LfXqtj4TPh5LsMBpPYc0-Zz6wTMA@mail.gmail.com>
-Subject: Re: [PATCH v2] NFSv4.2: fix nfs4_listxattr size accounting
-To: Anna Schumaker <anna@kernel.org>
-Cc: Achilles Gaikwad <achillesgaikwad@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
-	stephen.smalley.work@gmail.com, linux-nfs@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
-	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-23153-lists,linux-nfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:anna@kernel.org,m:achillesgaikwad@gmail.com,m:trondmy@kernel.org,m:stephen.smalley.work@gmail.com,m:linux-nfs@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:stephensmalleywork@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[paul-moore.com:+];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:steved@redhat.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-23154-lists,linux-nfs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_NONE(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,configure.ac:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	TO_DN_SOME(0.00)[]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 055E571F768
+X-Rspamd-Queue-Id: E9E8A71FA90
 
-On Tue, Jul 7, 2026 at 3:12=E2=80=AFPM Anna Schumaker <anna@kernel.org> wro=
-te:
-> On Tue, Jul 7, 2026, at 2:48 PM, Paul Moore wrote:
-> > On Tue, Jul 7, 2026 at 11:24=E2=80=AFAM Achilles Gaikwad
-> > <achillesgaikwad@gmail.com> wrote:
-> >>
-> >> A call to listxattr() with a buffer size of 0 returns the actual
-> >> size of the buffer needed for a subsequent call. On an NFSv4.2
-> >> mount this triggers the following oops:
-> >>
-> >>   [  399.768687] BUG: kernel NULL pointer dereference, address: 000000=
-0000000000
-> >>   [  399.768705] RIP: 0010:_copy_from_pages+0x44/0xe0
-> >>   [  399.768722] Call Trace:
-> >>   [  399.768723]  nfs4_xattr_alloc_entry+0x1bf/0x1e0
-> >>   [  399.768730]  nfs4_xattr_cache_set_list+0x43/0x1f0
-> >>   [  399.768731]  nfs4_listxattr+0x21f/0x250
-> >>   [  399.768733]  vfs_listxattr+0x55/0xa0
-> >>   [  399.768736]  listxattr+0x23/0x160
-> >>   [  399.768737]  path_listxattrat+0xba/0x1e0
-> >>   [  399.768739]  do_syscall_64+0xe2/0x680
-> >>
-> >> security_inode_listsecurity() (via the xattr_list_one() helper) now
-> >> decrements the remaining size even when the buffer pointer is NULL, so
-> >> in the size-query case, 'left' underflows to a huge size_t value. As a
-> >> result, nfs4_listxattr_nfs4_user() treats the NULL buffer as a real on=
-e,
-> >> leading to a NULL pointer dereference in _copy_from_pages().
-> >>
-> >> security_inode_listsecurity() does not return the number of bytes
-> >> it added to the list, so the code derived it as
-> >> 'size - error - left'. That is also wrong in the size-query case:
-> >> the generic_listxattr() contribution is only subtracted from 'left'
-> >> when a buffer is present. Thus, the query result comes up short by
-> >> exactly that contribution (e.g., "system.nfs4_acl" on a mount with
-> >> ACL support), and a caller that allocates the returned size gets
-> >> -ERANGE on the subsequent call.
-> >>
-> >> Declare 'left' as ssize_t, use a scratch copy to measure security
-> >> hook consumption, and only decrement 'left' if a buffer is present.
-> >>
-> >> Fixes: f71ece9712b7 ("security,fs,nfs,net: update security_inode_lists=
-ecurity() interface")
-> >> Suggested-by: Paul Moore <paul@paul-moore.com>
-> >> Signed-off-by: Achilles Gaikwad <achillesgaikwad@gmail.com>
-> >> ---
-> >> Changes in v2:
-> >>  - Use a scratch variable to track security label size directly,
-> >>    replacing the old formula that undercounted the size-query case.
-> >>  - Drop the now-unneeded NULL-buffer special case for
-> >>    nfs4_listxattr_nfs4_user().
-> >>  - Retitled from "fix nfs4_listxattr NULL pointer dereference"
-> >>    (the same accounting bug caused both the oops and the undercount).
-> >> v1: https://lore.kernel.org/linux-nfs/20260703102759.9626-1-achillesga=
-ikwad@gmail.com/
-> >>  fs/nfs/nfs4proc.c | 10 +++++++---
-> >>  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > [CC'd the LSM and SELinux lists for visibility]
-> >
-> > Unfortunately my testing was unsuccessful due to an NFS problem that
-> > started with the v7.2 merge window that I haven't had the time to
-> > bisect yet.  Assuming the NFS folks are okay with this change, I
-> > figure they will want to send it up to Linus via their tree, if not
-> > let me know and I can send this up via the LSM tree.
->
-> Yeah, we'll send it through the NFS tree.
+A handful of fixes for some issues I ran into on Fedora Rawhide.
 
-Thanks Anna.
+Scott Mayhew (3):
+  configure: update check of system netlink headers
+  nfs.conf: add no-netlink option to exportd and mountd stanzas
+  mountd/exportd: disable netlink when falling back to /proc
 
-> I'll be curious to hear
-> what problem you're hitting, and what patch is the culprit once you
-> do that bisect!
+ configure.ac                 | 4 ++--
+ nfs.conf                     | 3 +++
+ support/export/cache.c       | 7 +++++++
+ support/export/cache_flush.c | 1 +
+ 4 files changed, 13 insertions(+), 2 deletions(-)
 
-Yes, me too :)
+-- 
+2.55.0
 
-I'm still working through a review backlog so it might be a bit before
-I have a chance, but in case anyone wants to test it out, it's easily
-reproduced using the selinux-testsuite and the NFS tests:
-
-https://github.com/SELinuxProject/selinux-testsuite#nfs
-
---=20
-paul-moore.com
 
