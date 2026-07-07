@@ -1,75 +1,75 @@
-Return-Path: <linux-nfs+bounces-23156-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23155-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7A9jB1toTWrnzQEAu9opvQ
-	(envelope-from <linux-nfs+bounces-23156-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:58:03 +0200
+	id ERnNGGFoTWrozQEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23155-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:58:09 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8309671FA91
-	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:58:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5F6571FA98
+	for <lists+linux-nfs@lfdr.de>; Tue, 07 Jul 2026 22:58:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=h87cm7vE;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b="VPLr3q/I";
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23156-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23156-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23155-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23155-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 81030302255C
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4CF36302207B
 	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jul 2026 20:58:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ADEF30E0E9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8747730B529;
 	Tue,  7 Jul 2026 20:58:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D64242D7B
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 20:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB7530C167
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jul 2026 20:57:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783457880; cv=none; b=TjgdZRl5lrkA/8h+D3hpI0Qf6c3bbXP39jvNifBq6oTF1KN2ZXYNhirX9n3Wbwe5O+kfxX9aratSIHKYaZJeLqrnURoDhaskzR+3as4cdcxDdbIX2COzniQpZ2HpSKst3sKn3KMsxHEhW1ueXWa9BVCPsyIujBWvPZqWzssewdU=
+	t=1783457880; cv=none; b=joCugarC37jcUh5XyKD0aL75fg1eWksCCnTvBm1hkNFu6eNc4gRathGTqdMvcUgKOJq0CcIv9SDO2yWY2A/ZoQ7+YnyqpGIaFEljK8Dnre87PskmGO2wThXKfmdJT9rvdXGzY1MgA2sUt1ugi++bP9Q+S5nWc2cCDY4BfmDzFwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783457880; c=relaxed/simple;
-	bh=C5/sQ3w/SK+PP6ggLKgDFI3ZgeNFoUnpC3t8Yt8qVI0=;
+	bh=xV6iiy/Wpt8EZJBE7TNQfGbT5ik0pV2Ngcs1myeR154=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bDM8jVy7zdp+yDexhR3CF939H9XvNYj90go/WcOAm8St6LSkNTb6fumisSBLeWX5oRaxCbB5jdnYs6EV+d/QbfFMVc4eqZM9inmRHDAaAYjMr6vJxAhmIkK3/Ff2pnj2epyo/0B7+JL2GMuWJVNfZmzJJZSXDD8jKu5M+ogdcZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h87cm7vE; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=H9Tu8M8Jppbc+HkjlOEZE0x/3gx9VDCbbr54Di16j6FvgVBApfc/Om6e28dQrKdLCpjAlJakXDo16LyRLJvihWpx2IQ9UwTiHrTEQksjIC/H2rVuLR6bSssqBa2axQT5XaGdM/QU1xpW0mbVPTzZaUPiYneSYiTTh9dAMLAiw/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VPLr3q/I; arc=none smtp.client-ip=170.10.129.124
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783457877;
+	s=mimecast20190719; t=1783457878;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Iyv0TMImYpAbpvWGi+/qFDUOvpd/PE3IcN/aYybEJxQ=;
-	b=h87cm7vET/KSDjjzkiQhfEo277nXIU1lg6H6TQABDmuywg0tBHNufK7Vtyu0TO9o245ogh
-	I6kiGoc4bbKixppSr1DFIf4dwfzkhJNzvUuSyvJZP3mVRYYwWPqD892k9Y7mnbE/Xbz2oT
-	qAnot4tMV24dvFH8qNzvK3v7NPpwg98=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=ZjCg1gYNBaeHDfpCJ2W4Q2H+lknLDt+n4KBWopvpsSg=;
+	b=VPLr3q/IW5lcF1UakGmOM9TBZ83L7gxHTCQ6LboTI85m0zxalj49RIiydm9xf2+PC9ys3U
+	Dle74aeVugVNM8Qte3LXYJjvoY0BYzb7y+FKBs44Tk2L9wxyDcfYsMHXM6faZIThnoEMDO
+	7+oU3/oBRSfbep2tYTMw5ZhRJvJuQP4=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-266-rlNXMX4UP3CUIH_InNdB0w-1; Tue,
- 07 Jul 2026 16:57:54 -0400
-X-MC-Unique: rlNXMX4UP3CUIH_InNdB0w-1
-X-Mimecast-MFC-AGG-ID: rlNXMX4UP3CUIH_InNdB0w_1783457873
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-QDty1wuBO7aD3fgFaYqfSg-1; Tue,
+ 07 Jul 2026 16:57:55 -0400
+X-MC-Unique: QDty1wuBO7aD3fgFaYqfSg-1
+X-Mimecast-MFC-AGG-ID: QDty1wuBO7aD3fgFaYqfSg_1783457874
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8BD51806CA0;
-	Tue,  7 Jul 2026 20:57:53 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 184A019541B4;
+	Tue,  7 Jul 2026 20:57:54 +0000 (UTC)
 Received: from smayhew-thinkpadp1gen4i.remote.csb (unknown [10.22.80.127])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 72FEE180075B;
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8418E1955F1C;
 	Tue,  7 Jul 2026 20:57:53 +0000 (UTC)
 Received: from smayhew-thinkpadp1gen4i.remote.csb (localhost [IPv6:::1])
-	by smayhew-thinkpadp1gen4i.remote.csb (Postfix) with ESMTP id E57E74D4C114;
+	by smayhew-thinkpadp1gen4i.remote.csb (Postfix) with ESMTP id F26374D4C115;
 	Tue, 07 Jul 2026 16:57:52 -0400 (EDT)
 From: Scott Mayhew <smayhew@redhat.com>
 To: steved@redhat.com
 Cc: jlayton@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH 1/3] configure: update check of system netlink headers
-Date: Tue,  7 Jul 2026 16:57:50 -0400
-Message-ID: <20260707205752.313031-2-smayhew@redhat.com>
+Subject: [nfs-utils PATCH 2/3] nfs.conf: add no-netlink option to exportd and mountd stanzas
+Date: Tue,  7 Jul 2026 16:57:51 -0400
+Message-ID: <20260707205752.313031-3-smayhew@redhat.com>
 In-Reply-To: <20260707205752.313031-1-smayhew@redhat.com>
 References: <20260707205752.313031-1-smayhew@redhat.com>
 Precedence: bulk
@@ -79,14 +79,14 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -98,9 +98,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS(0.00)[m:steved@redhat.com,m:jlayton@kernel.org,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23156-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23155-lists,linux-nfs=lfdr.de];
 	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -109,40 +109,43 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_NONE(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[configure.ac:url,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8309671FA91
+X-Rspamd-Queue-Id: A5F6571FA98
 
-Commit e1401387 ("nfsstat: add netlink support for fetching server
-statistics") added new symbols to support/include/nfsd_netlink.h
-that have not yet been added to the kernel headers.  Update the check
-that defines USE_SYSTEM_NFSD_NETLINK_H - otherwise nfsstat will fail
-to compile.
+This option was added by commit 60c38383 ("mountd/exportd/exportfs:
+add --no-netlink option to disable netlink"), but nfs.conf was not
+updated.
 
 Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- configure.ac | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ nfs.conf | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/configure.ac b/configure.ac
-index 8ca06fd6..4ca7666d 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -259,9 +259,9 @@ AC_CHECK_HEADERS(linux/nfsd_netlink.h)
- AC_DEFINE([HAVE_NFSD_NETLINK], 1,
- 	  [Define to 1 if nfsd generic netlink support is available])
- 
--# ensure we have the expkey attributes
-+# ensure the system netlink headers have the latest features
- AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/nfsd_netlink.h>]],
--			                   [[int foo = NFSD_A_EXPKEY_SEQNO;]])],
-+			                   [[int foo = NFSD_CMD_SERVER_STATS_GET;]])],
- 			   [AC_DEFINE([USE_SYSTEM_NFSD_NETLINK_H], 1,
- 				      ["Use system's linux/nfsd_netlink.h"])])
- AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <linux/lockd_netlink.h>]],
+diff --git a/nfs.conf b/nfs.conf
+index 84cc653f..fa12c592 100644
+--- a/nfs.conf
++++ b/nfs.conf
+@@ -43,6 +43,8 @@
+ # threads=1
+ # cache-use-ipaddr=n
+ # ttl=1800
++# no-netlink=0
++#
+ [mountd]
+ # debug="all|auth|call|general|parse"
+ # apply-root-cred=n
+@@ -55,6 +57,7 @@
+ # ha-callout=
+ # cache-use-ipaddr=n
+ # ttl=1800
++# no-netlink=0
+ #
+ [nfsdcld]
+ # debug=0
 -- 
 2.55.0
 
