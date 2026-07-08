@@ -1,188 +1,167 @@
-Return-Path: <linux-nfs+bounces-23160-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23161-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Ft4ZMHH+TWpqBQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23160-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 09:38:25 +0200
+	id Wu1iIwYCTmpJBgIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23161-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 09:53:42 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 298E8722B59
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 09:38:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DDF28722D7B
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 09:53:41 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b="GAsgFV8/";
-	dmarc=pass (policy=none) header.from=linux.microsoft.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23160-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23160-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=FIPr7LUV;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23161-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23161-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7616830406BC
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 07:35:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D333430B7851
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 07:44:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C04E3F8242;
-	Wed,  8 Jul 2026 07:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EF4B3F8706;
+	Wed,  8 Jul 2026 07:44:58 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0C73C4163;
-	Wed,  8 Jul 2026 07:35:30 +0000 (UTC)
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F973F0AA9
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2026 07:44:53 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783496142; cv=none; b=KuS3OASDc4gANJ8fTw9ZtEw+ZleRwwwfYNqRdqXJ7zafFzBdPszyZVqYkd6LEaUoXOu13YLp1cN7QMRVsRhyjvdJu4QGcjPBqVEk20u62sZhbN+kIjpN+Dq/niXnvTV+AsoiDOpTZzZXiw/CszF3FPfos/qjqzDB8t2B9a8lO2k=
+	t=1783496698; cv=none; b=LX+heqLKR5OX2PoHd5paSWQsxNdW7Z0WuIxTgrjcgiZvjXnYUVK2z8ZdlKw/nKnc6H1ocYbzooyuP1v1Cf6TP4eOHIbBy2aU3sUojC1LYKN3yVir4lJu8DIYStYfzh/7NUp7b1XJ369tlKu4+m3wFRW2fqEJqyy3uNXs2D7H6GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783496142; c=relaxed/simple;
-	bh=MqE9Y8BMDYiV70tzBzAEXt6PK0XA3tgk1BxOSWXF4mE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fl956ksxzztkwwhDHMhY+5FPzZ9rXTtz5IFG5r9HUHAAGcb4Abyp3sLui+R17wde/r60LKCAP6e8UPKfnXSVwGlVTf9Tci7mME4QQZ07Vz0dUX1T7qGowXo/FRT1mMZsUrDA0mfxZE0Q5Ye97uc00fKLLmk+JasZjZyhnMir1Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GAsgFV8/; arc=none smtp.client-ip=13.77.154.182
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 26DD120B7166; Wed,  8 Jul 2026 00:35:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 26DD120B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1783496124;
-	bh=tHbyxUhrsarzNRWmvxSCy2nePku4Gzl46NyrQxhVDTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GAsgFV8/gFHDIknrIuM61IsHT48x6Hsbl9j5ukuVc1teGLGUh1Zt8FHbdnALVrRRY
-	 RRYuc2/2EKDusilkbW6yOfVYGoTlH6EYPSgM+MQE/8aDz01mTJZKLrqSxb29uA46oC
-	 h+ZVMHiTsNZT7wYzxSh5PrBsQOvtxvc8pe/JHbPQ=
-Date: Wed, 8 Jul 2026 00:35:24 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, mkalderon@marvell.com,
-	zyjzyj2000@gmail.com, sagi@grimberg.me, mgurtovoy@nvidia.com,
-	haris.iqbal@ionos.com, jinpu.wang@ionos.com, bvanassche@acm.org,
-	kbusch@kernel.org, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, kch@nvidia.com, smfrench@gmail.com,
-	linkinjeon@kernel.org, metze@samba.org, tom@talpey.com,
-	cel@kernel.org, jlayton@kernel.org, neil@brown.name,
-	okorniev@redhat.com, Dai.Ngo@oracle.com, trondmy@kernel.org,
-	anna@kernel.org, achender@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	horms@kernel.org, kees@kernel.org,
-	andriy.shevchenko@linux.intel.com, clm@meta.com,
-	ebadger@purestorage.com, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH rdma-next v9] RDMA: Change capability fields in
- ib_device_attr from int to u32
-Message-ID: <ak39vJTvGCNJSHwi@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260703060329.896125-1-ernis@linux.microsoft.com>
- <20260706084950.GK15188@unreal>
- <akzS9EdxScQsx9n8@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20260707102546.GM15188@unreal>
+	s=arc-20240116; t=1783496698; c=relaxed/simple;
+	bh=5wgIhcz5dUbyLc6gsqkJDqa86lbI69k4eZmdDL38RUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iBckfFl84M5hGbcQi6fFtzVMI6g4Mjntn8Oo5ZGluk792p3D9+Gv439rMRX5WDBJ8MDL33Wi6w9xct6O+WPreHBQIpv6wTqVlbu5Yg1aLD3rpj4Ct9zFoqPx5m24mxHfuix1EIXphyo6PghJyochlITtIQxtXiiwC+Njuj29+oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FIPr7LUV; arc=none smtp.client-ip=209.85.214.180
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ccdb73f0e1so3870235ad.3
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2026 00:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783496691; x=1784101491; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2+AAszIXf7+JKb0b1PUUMxwKBwibCloV+wRATKmETRY=;
+        b=FIPr7LUVeqE7CN3jGi0tes4o3OEcoeLKZKASLSgLciDPEG2PzWKu7YqJoWC0CoFew/
+         B9HTcB6KpSdD3hTPQStT5smu5ZI2PxwLGEg0XIDPVoNlQ1eLerZwPEBtwBJ/tL2qQ4x6
+         BFfgI8Hn/E5v/tXajy53vTla29A3Wg9wpPxTuOBJ65qbk6lYNMkIz90Xh0ZUz6Ce4/ly
+         YHX/42yT8SbFjPJ/82DEQkFvRv395w8uNx0BOrYsbW9Z5V9aaGBvb4CtedSxIA9tROs6
+         +Qpn6XdDtoaSCTzNKVlGf3p6cHj+V+Us7zbsvKiGlpLRAlQ6WjYQ5nzvpZOvk/WyMSr4
+         Y/5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783496691; x=1784101491;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=2+AAszIXf7+JKb0b1PUUMxwKBwibCloV+wRATKmETRY=;
+        b=fywOsXPyiiiAtkgmjZUFxKDpqbUHH4/6QiluFopUm9aZGNiH7K0gO5DZ188Zuji4Zq
+         Etu+ZTh8Y5t1qtkSSUoyEZc8zXuChEAotpwf+dTsThggG20RDW9ozTIWoUKTTZCeLQxi
+         /94llhBo1hrce9yTQTK/4jLLYrqz1N8G2D6OMlrSSheazueGUh/nU3BlECG71rCa21Dz
+         eZAe9hK+lU/qhAoFvUEmcHH2j6Nooea6I7fPhbw1CLBNzQb97CMQP4p1a0J6lqxHLpch
+         IqIL3JwpMn7WlRwryOSkTA13bx67w42Mc2oXpuSuUi6IuvVTbbcfqDPwTiEPqrbujRrL
+         352g==
+X-Gm-Message-State: AOJu0Yx4U8ewoQF/Y0OO3xxTj7Un78eODoDbizTafVnOmPNPmmzUMSlh
+	h33AMeJsofIMu2eRdGz/OKy04EdP4R4oZKjFPYAxeEq3jWvr8nnGtQKB
+X-Gm-Gg: AfdE7clDtGLpRyroLfS6WW+WN6hw9GE9/yVQAZl4jrPki6EK7Lt4IrhIbtT42uxS8WV
+	nM+Q/otVVWL8Sts9YTf+KxK/c03nIwPBLeblHw66plKg1u96Rd8+njvby84sNdaVRehnaGPOiLs
+	NrF3mQouad1wfRB2uKpM1DObCdwy8Vupnt3OOlHGD5Dhv+j65xMQ1r9sNHz9GrT3hnFkTIgR+bm
+	+EoDpF4xiaNe/v5pWiirF4uud78s7JWm0R9BJzUBOi27pfWxcRAaNeBoY7WIhF8RXgAxhFGRGYO
+	cuF5pnzgyWThPydjr8cwz5T5n+QPa6sNbj/NBVR16LfZ41HWSrHeADrNCH+dcGgTmkWT/dyl9OW
+	wPtFVbIvfUDo+mwLGIxTJwZn3XKFjy/0HD4Ly7KWE54bnqu7cD7E8tS6Mn9LYHJTJVmKnVG0GdJ
+	nsYhQovhsxjx62pFK8cPVu
+X-Received: by 2002:a17:902:f550:b0:2ca:ed57:8586 with SMTP id d9443c01a7336-2ccea45aa02mr16102925ad.23.1783496691089;
+        Wed, 08 Jul 2026 00:44:51 -0700 (PDT)
+Received: from jeuk-MS-7D42.. ([211.226.54.223])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9bfe040sm23932035ad.31.2026.07.08.00.44.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 00:44:50 -0700 (PDT)
+From: Jeuk Kim <jeuk20.kim@gmail.com>
+X-Google-Original-From: Jeuk Kim <jeuk20.kim@samsung.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>,
+	hui81.qi@samsung.com,
+	j-young.choi@samsung.com,
+	peng.yun@samsung.com,
+	qian01.li@samsung.com,
+	xing1.he@samsung.com,
+	jeuk20.kim@samsung.com
+Subject: [PATCH 0/2] NFSv4/flexfiles: support loosely coupled data servers
+Date: Wed,  8 Jul 2026 16:44:31 +0900
+Message-ID: <20260708074433.390161-1-jeuk20.kim@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260707102546.GM15188@unreal>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:leon@kernel.org,m:jgg@ziepe.ca,m:mkalderon@marvell.com,m:zyjzyj2000@gmail.com,m:sagi@grimberg.me,m:mgurtovoy@nvidia.com,m:haris.iqbal@ionos.com,m:jinpu.wang@ionos.com,m:bvanassche@acm.org,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:kch@nvidia.com,m:smfrench@gmail.com,m:linkinjeon@kernel.org,m:metze@samba.org,m:tom@talpey.com,m:cel@kernel.org,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:trondmy@kernel.org,m:anna@kernel.org,m:achender@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:kees@kernel.org,m:andriy.shevchenko@linux.intel.com,m:clm@meta.com,m:ebadger@purestorage.com,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:target-devel@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:samba-technical@lists.samba.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:rds-devel@oss.oracle.com,m:jgg@nvidia
- .com,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[ernis@linux.microsoft.com,linux-nfs@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-23160-lists,linux-nfs=lfdr.de];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-nfs@vger.kernel.org];
-	FREEMAIL_CC(0.00)[ziepe.ca,marvell.com,gmail.com,grimberg.me,nvidia.com,ionos.com,acm.org,kernel.org,kernel.dk,lst.de,samba.org,talpey.com,brown.name,redhat.com,oracle.com,davemloft.net,google.com,linux.intel.com,meta.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-23161-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:tigran.mkrtchyan@desy.de,m:hui81.qi@samsung.com,m:j-young.choi@samsung.com,m:peng.yun@samsung.com,m:qian01.li@samsung.com,m:xing1.he@samsung.com,m:jeuk20.kim@samsung.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[jeuk20kim@gmail.com,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FROM_NEQ_ENVFROM(0.00)[jeuk20kim@gmail.com,linux-nfs@vger.kernel.org];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
+	RCPT_COUNT_SEVEN(0.00)[11];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,samsung.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 298E8722B59
+X-Rspamd-Queue-Id: DDF28722D7B
 
-> > I originally left max_srq as int because its only consumer pairs it with
-> > num_comp_vectors (a signed int) in nvmet_rdma, so keeping it int let
-> > that site stay a plain min() instead of a min_t().
-> > 
-> > num_comp_vectors is the completion-vector count, legitimately int and
-> > never anywhere near INT_MAX, so I'd prefer to leave it signed rather
-> > than convert it everywhere. Does that work for you, or would you rather
-> > num_comp_vectors be converted too?
-> 
-> In this patch no, but it is worth to write this in commit message.
-> 
-> Thanks
+RFC 8435 allows a flexfiles data server to be loosely coupled, i.e. an
+NFS server that does not advertise EXCHGID4_FLAG_USE_PNFS_DS via
+EXCHANGE_ID. The client currently ignores the ffdv_tightly_coupled flag
+and treats every DS as tightly coupled, so NFSv4.1+ I/O to a loosely
+coupled DS fails during DS setup.
 
-Thanks for the confirmation, Leon.
+Patch 2 threads the decoded tightly_coupled flag down to the DS connect
+path and, when it is false, skips the NFS_CS_PNFS flag and the
+is_ds_client() check.
 
-I'll use min_t for max_srq and document it in the commit message.
+Patch 1 fixes pre-existing NFSv4.0 DS crashes on the same path (the DS
+client has no session).
 
+Jeuk Kim (2):
+  NFSv4/flexfiles: fix NULL dereference for NFSv4.0 data servers
+  NFSv4/flexfiles: support loosely coupled data servers
 
-- Vennela
-> 
-> > 
-> > If it needs converting, I'll do it as a separate patch, since it lives
-> > in a different struct (ib_device) and touches many call sites.
-> > Otherwise, using min_t() for just this one call is fine too.
-> > 
-> > Thanks,
-> > Vennela
-> > 
-> > > 
-> > > diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
-> > > index f599c24b34e8..aae4f3f6bcba 100644
-> > > --- a/drivers/infiniband/core/nldev.c
-> > > +++ b/drivers/infiniband/core/nldev.c
-> > > @@ -454,7 +454,8 @@ static int fill_res_info(struct sk_buff *msg, struct ib_device *device,
-> > >         };
-> > > 
-> > >         struct nlattr *table_attr;
-> > > -       int ret, i, curr, max;
-> > > +       u64 curr, max;
-> > > +       int ret, i;
-> > > 
-> > >         if (fill_nldev_handle(msg, device))
-> > >                 return -EMSGSIZE;
-> > > diff --git a/drivers/infiniband/core/restrack.c b/drivers/infiniband/core/restrack.c
-> > > index cfee2071586c..1b2f9df49e28 100644
-> > > --- a/drivers/infiniband/core/restrack.c
-> > > +++ b/drivers/infiniband/core/restrack.c
-> > > @@ -61,7 +61,7 @@ void rdma_restrack_clean(struct ib_device *dev)
-> > >   * @type: actual type of object to operate
-> > >   * @show_details: count driver specific objects
-> > >   */
-> > > -int rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> > > +u32 rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> > >                         bool show_details)
-> > >  {
-> > >         struct rdma_restrack_root *rt = &dev->res[type];
-> > > diff --git a/include/rdma/restrack.h b/include/rdma/restrack.h
-> > > index 451f99e3717d..c081384740ce 100644
-> > > --- a/include/rdma/restrack.h
-> > > +++ b/include/rdma/restrack.h
-> > > @@ -123,7 +123,7 @@ struct rdma_restrack_entry {
-> > >         u32 id;
-> > >  };
-> > > 
-> > > -int rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> > > +u32 rdma_restrack_count(struct ib_device *dev, enum rdma_restrack_type type,
-> > >                         bool show_details);
-> > >  /**
-> > >   * rdma_is_kernel_res() - check the owner of resource
+ fs/nfs/filelayout/filelayoutdev.c         |  2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c    |  3 ++-
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |  3 ++-
+ fs/nfs/internal.h                         |  3 ++-
+ fs/nfs/nfs4client.c                       |  5 +++--
+ fs/nfs/nfs4session.c                      | 21 ++++++++++++++-------
+ fs/nfs/nfs4session.h                      |  3 ++-
+ fs/nfs/pnfs.h                             |  3 ++-
+ fs/nfs/pnfs_nfs.c                         | 14 +++++++++-----
+ 9 files changed, 37 insertions(+), 20 deletions(-)
+
+-- 
+2.43.0
+
 
