@@ -1,289 +1,391 @@
-Return-Path: <linux-nfs+bounces-23165-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23166-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id N1CWIZsmTmqvEAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23165-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 12:29:47 +0200
+	id 15Y7LXYqTmqCEQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23166-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 12:46:14 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F641724561
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 12:29:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AACC724743
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 12:46:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=medichon.fr header.s=ovhmo3801317-selector1 header.b=iytSqUQe;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23165-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23165-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Xp0gjdEn;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23166-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23166-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 55E2E30418CE
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 10:25:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 51EB6302572B
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 10:40:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCCCF393DE2;
-	Wed,  8 Jul 2026 10:25:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98B49409610;
+	Wed,  8 Jul 2026 10:40:34 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from 10.mo583.mail-out.ovh.net (10.mo583.mail-out.ovh.net [46.105.52.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9152538B123
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2026 10:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A5A422537;
+	Wed,  8 Jul 2026 10:40:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783506309; cv=none; b=B/aK+HtGmUTpJl9q5ffU9kWKNxUuwZCxSxg8b8PZ5iK18eJAZMXeDkp4GPmR0muD1VrEyHBYC4kJML8hqSBLx4WuM1EU9qknLTyUTAy/5MTE5KWx9a4h4PZS2H9qFzmavWdyoIWFmajpJZ7LZNxj1mRKUIR/LxLurjNg5JStRRE=
+	t=1783507227; cv=none; b=e/mz0LHEt169Goy40Oj1MUhIZ3s3Ah0mw0P6ktlOdZQ8JnxaC3a6DVa7lR0xJyp00jTKiRebNEY4xYe7cfX+ai7YQGzRPX3RfeU/zKTuZUxL1Hh/9P9KphDEgXZPAsk07cvxN+lcL3okWcv4IjIwifG+ucX/HFrwEd+FErgCCkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783506309; c=relaxed/simple;
-	bh=dW7OSHCzG1qwuJbRrmNmcKJKRL5nRxtrA4aPaDMNXqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G4kd8+XuoAWok4fw3x94fcmu/5vgH9cD7Viyt2+q+GrxPAoe52gF9zT5Fau4PsjCdULPU312t6gQboieaYqHT/b5n/szW4SYVbug1QO+DITPf25x1pbGunlEh+bQFUkEWI6oePg8fffUvJrjnCo0X9Do11csTXACmrTyQXp4MO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=medichon.fr; spf=pass smtp.mailfrom=medichon.fr; dkim=pass (2048-bit key) header.d=medichon.fr header.i=@medichon.fr header.b=iytSqUQe; arc=none smtp.client-ip=46.105.52.148
-Received: from director6.ghost.mail-out.ovh.net (unknown [10.109.249.167])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4gwCrt621Sz60Fs
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2026 09:45:50 +0000 (UTC)
-Received: from ghost-submission-7d8d68f679-hgqg5 (unknown [10.110.118.183])
-	by director6.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 372A4811BE;
-	Wed,  8 Jul 2026 09:45:50 +0000 (UTC)
-Received: from medichon.fr ([37.59.142.100])
-	by ghost-submission-7d8d68f679-hgqg5 with ESMTPSA
-	id L3KLOE0cTmp/ZhwAv+Jrmg
-	(envelope-from <abo@medichon.fr>); Wed, 08 Jul 2026 09:45:50 +0000
-X-OVh-ClientIp:88.190.90.129
-Message-ID: <db0c2094-fcaa-40b3-b570-135eaf5f2748@medichon.fr>
-Date: Wed, 8 Jul 2026 11:45:49 +0200
+	s=arc-20240116; t=1783507227; c=relaxed/simple;
+	bh=qvr14Bwyoil+3qBrj7J0xXjl+uVT68lqiXfsM2yq4OQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QfX9mY7HebjzPDsvovT4u/XrChkkted648QcVKhu+5eVyUdASeWTdYXNxJJS3N55lyGQY9B2FftDmhvlwolmK8yNxs2f/Cf7x0D5rlXyPNPVW95rDlE2KoLsrcVnGHJ1+xiuyLem5i8GLj1ZJe9VjyK2Mpto29rL4WB54stT1Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xp0gjdEn; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1676D1F000E9;
+	Wed,  8 Jul 2026 10:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783507219;
+	bh=MfMkhHAXhYVuWxF1IHapau5kJPx6422vA9PPXzEGWW4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Xp0gjdEnZJoCqCbU1WSX0KaEyALEUVyONQc7raJh4TEUuFMlWrGdwE3bZNrWpE6mH
+	 80R8MJTyq5rwNs9t2ZOdfFaKQAB4xtXMshpkL3/tGoQxdtSHZHJHkI/V0oD8E6/MCM
+	 aT4PgEPkCwmM/SfDKuKj2eQc5FPjL+9L/gK4t/FRYdVu4GTNnGvnIk8kPZcuRV5la2
+	 H8e4y2ky2YDoPAmbfI8R418ecfojrBONuqjmVhM8GNHNLfv2T32msw8T+9Eml3HgHf
+	 58SGCdaNYmhBtBbjWYnV68PqJzNkenLZXE1r1UVYlWE6+XwPQMfSj1dSGXV9loEBNV
+	 oD4VlHa3+xbfg==
+Message-ID: <6f703524141a195ad1e4f16b1b1d16ffa2073189.camel@kernel.org>
+Subject: Re: [PATCH v5 5/5] sunrpc: derive the pool count instead of caching
+ it in sv_nrpools
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Chuck Lever	 <cel@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 08 Jul 2026 06:40:17 -0400
+In-Reply-To: <178348882124.3371781.3092732814258907420@noble.neil.brown.name>
+References: <20260706-sunrpc-pool-mode-v5-0-6c4ee7cd89aa@kernel.org>
+	  <20260706-sunrpc-pool-mode-v5-5-6c4ee7cd89aa@kernel.org>
+	  <178337823128.27465.5531515481696438438@noble.neil.brown.name>
+	  <3496ed08e534a3e81dfe4168d4b2bc3c325d829a.camel@kernel.org>
+	 <178348882124.3371781.3092732814258907420@noble.neil.brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] nfs: refactor pNFS functions using
- clear_and_wake_up_bit
-To: Agatha Isabelle Moreira <code@agatha.dev>
-Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
- me@brighamcampbell.com, jkoolstra@xs4all.nl
-References: <cover.1782148639.git.abo@medichon.fr>
- <929ff54c0c212b22620d10e6d8bef2a01bc6fa30.1782148639.git.abo@medichon.fr>
- <guidai72It.44047.2026203akgZf5M7751Q5ElH_20715_LINUXKERNEL_AGATHA_@links.agatha.dev>
-Content-Language: en-US, fr
-From: Arnaud Bonnet <abo@medichon.fr>
-In-Reply-To: <guidai72It.44047.2026203akgZf5M7751Q5ElH_20715_LINUXKERNEL_AGATHA_@links.agatha.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-x-ovh-tracer-id: 2039567681600904913
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: dmFkZTFeNOJbuVWMjZ4VKj3eoaRkPV2biCM8/+1PuX7bGee87H2IF9fF80Bqzcd1r9I2vMOKvzgKInoEAvonCzKH/wiPv2azrcRPURo5GGHNCw9GU61kksKqEfjBvKdGPgWC8H1/4QB6PzG3ntDeKOTjnQhfmGlLFwkWqOJJvxu5Xo1cK2IS97vvYiL6t/r+BttaYr6KxxfGP4G/CO9ajbvndlur4BTSEBotZ2ZclnAT9UifHmsIQ84yAZWd5iv2jp8B3/2XL2T5VHpq+a0UaNXfwMAM9sUyFnoVUyO/+tlATnUxzYjX0RbxiRaXlspMPGFRfV+lUQxw6kiu1OmYsyjtFb35ZbmfTxEoox3LZgu8vEr+VbZCfzR1VfLpm8yrYXOD/wtbCBWIMEG5GO5e+eDexMZnAl5tkh02YUlTVAY+60oHSCwxxuDqGc1g3nFUPiNFrD2fay4Fe2fgM0GgqWAb39bro1nF4u9+BAQgWnitSAgDwJ7VGTpIZ7lKFTcCJjvuOd6lHubuS4lrbU5kTGoVxlQXiQWdZL5Gvf9u6XXvAW5O4fqSf1y1+gpWFyTnGraLGff/lroHEAGPflorpNiMdpMpobnf//uHmX+Vjfu7uvIbSlSLeSJRPr49unlwlBXPuxErg6hNY28BaFWBAd95Tf4TSMfx+ByURBxcoBjUv2ISAQ
-DKIM-Signature: a=rsa-sha256; bh=lbjM3y3QLFH2nVeZp7HINIV1Y9EsJuVo1RxlW6fLdW0=;
- c=relaxed/relaxed; d=medichon.fr; h=From; s=ovhmo3801317-selector1;
- t=1783503950; v=1;
- b=iytSqUQeg9po3/Jy0nwNpAu/6MLBYS4eQY8IUs2kSTlHvFXli6nVx2UlzevSxDNVTHrMeU8c
- kF4VFOQm/gzpaqQ4yx/lLdW3mGZEaUyZ+EYjJhd6/6B9bOcf3LvixWWMljKhmMb2vAforxM3vs/
- kzVrjddIlKBXW62XYmG50IV6TVxEeOQZIWVJJEDRKlznoaX0zUILfIt3HQAaWITGIFGPjRyL/1+
- E5QCvO7aDPYIL/2xjc5xE9dSezxE7Hrzi1W+M5hOVWu+xMQpK8r0wIBNUOIlrzMxb9KiKD3g5cl
- n1l0/f+Zc3jkWBNM5YwfLiMEHhAMv6IpXGAvncywSvm9g==
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[medichon.fr:s=ovhmo3801317-selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,linuxfoundation.org,brighamcampbell.com,xs4all.nl];
-	TAGGED_FROM(0.00)[bounces-23165-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:code@agatha.dev,m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:skhan@linuxfoundation.org,m:me@brighamcampbell.com,m:jkoolstra@xs4all.nl,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23166-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:trondmy@kernel.org,m:anna@kernel.org,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:cel@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[medichon.fr];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[medichon.fr:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[abo@medichon.fr,linux-nfs@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[abo@medichon.fr,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,medichon.fr:from_mime,medichon.fr:email,medichon.fr:mid,medichon.fr:dkim,agatha.dev:email]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,ownmail.net:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5F641724561
+X-Rspamd-Queue-Id: 2AACC724743
 
-On 7/3/26 10:55 PM, Agatha Isabelle Moreira wrote:
-> On Mon, Jun 22, 2026 at 07:55:11PM +0200, Arnaud Bonnet wrote:
->> Commit 8236b0ae31c83 ("bdi: wake up concurrent wb_shutdown() callers.")
->> introduces the clear_and_wake_up_bit() helper as a wrapper for the
->> common clear -> barrier -> wake up bitops sequence.
->>
->> The file pnfs.c has several helpers with identical contents. Thus they
->> are replaced with the more recent clean_and_wake_up_bit() global helper
->> which describes accurately its effects at the call and still specifies
->> the cleared bit. This also homogenizes the code with other subsystems.
->>
->> Since the helpers are no longer used after this, they can be safely
->> removed.
-> 
-> 
-> Hi Arnaud!
-> 
->>
->> Suggested-by: Agatha Isabelle Moreira <code@agatha.dev>
->> Link: https://kernelnewbies.org/Beginner%20Cleanup%20and%20Refactor%20Tasks%20by%20Agatha%20Isabelle%20Moreira#task_007
->> Signed-off-by: Arnaud Bonnet <abo@medichon.fr>
->> ---
->>  fs/nfs/pnfs.c | 35 ++++++++++-------------------------
->>  1 file changed, 10 insertions(+), 25 deletions(-)
->>
->> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
->> index 743467e9ba20..96ee18af1ebf 100644
->> --- a/fs/nfs/pnfs.c
->> +++ b/fs/nfs/pnfs.c
->> @@ -2100,15 +2100,6 @@ static bool pnfs_is_first_layoutget(struct pnfs_layout_hdr *lo)
->>  	return test_bit(NFS_LAYOUT_FIRST_LAYOUTGET, &lo->plh_flags);
->>  }
->>  
->> -static void pnfs_clear_first_layoutget(struct pnfs_layout_hdr *lo)
->> -{
->> -	unsigned long *bitlock = &lo->plh_flags;
->> -
->> -	clear_bit_unlock(NFS_LAYOUT_FIRST_LAYOUTGET, bitlock);
->> -	smp_mb__after_atomic();
->> -	wake_up_bit(bitlock, NFS_LAYOUT_FIRST_LAYOUTGET);
->> -}
-> 
-> I noticed that you found a subsystem function doing something quite
-> similar to what the `clear_and_wake_up_bit()` function.
-> 
-> From the cleanup point of view it seems good to me, but I think some
-> input from someone in the nfs subsystem would be highly appreciated to
-> confirm the correctness of this refactor.
-> 
-> IDK if you considered or if this makes total sense, but my only concern
-> here is that the maintainer *could* find the replaced function
-> `pnfs_clear_first_layoutget()` preferable to be kept, since it carries
-> some subsystem semantics (the `struct pnfs_layout_hdr *lo` argument and
-> the NFS_LAYOUT_FIRST_LAYOUTGET bit). But I could also be completely
-> wrong.
-> 
-> In the event that `NFS_LAYOUT_FIRST_LAYOUTGET` gets replaced by another
-> constant in the future (IDK if this is a plausible possibility), by
-> keeping the original function there would be only a single place to
-> touch.
-> 
-> Let's hope this message attracts more comments from someone with the
-> subsystem's expertise, which would be highly appreciated.
+On Wed, 2026-07-08 at 15:33 +1000, NeilBrown wrote:
+> On Tue, 07 Jul 2026, Jeff Layton wrote:
+> > On Tue, 2026-07-07 at 08:50 +1000, NeilBrown wrote:
+> > > On Mon, 06 Jul 2026, Jeff Layton wrote:
+> > > > Now that the pool mode is always pernode, svc_serv.sv_nrpools is
+> > > > redundant with sv_is_pooled: an unpooled service always has a singl=
+e
+> > > > pool, and a pooled service has svc_pool_map.npools pools (which is =
+one on
+> > > > a single-node host). sv_nrpools cannot distinguish an unpooled serv=
+ice
+> > > > from a pooled service that happens to have one pool, so it is sv_nr=
+pools,
+> > > > not sv_is_pooled, that carries no unique information.
+> > > >=20
+> > > > Replace the cached field with a svc_serv_nrpools() helper that deri=
+ves
+> > > > the count from sv_is_pooled and the pool map, and convert all reade=
+rs to
+> > > > it. svc_pool_map is file-local to svc.c, so export the helper for t=
+he
+> > > > svc_xprt.c and nfsd callers.
+> > > >=20
+> > > > Reading svc_pool_map.npools without svc_pool_map_mutex is safe: the
+> > > > mutex protects only svc_pool_map.count, and npools is already read
+> > > > locklessly in svc_pool_for_cpu().
+> > > >=20
+> > > > A pooled service holds a map reference for its whole lifetime, so n=
+pools
+> > > > is stable while any reader could observe it.  The hot path
+> > > > (svc_pool_for_cpu()) already dereferences svc_pool_map for to_pool,=
+ and
+> > > > npools shares that cacheline, so there is no new locking or coheren=
+ce
+> > > > cost.
+> > > >=20
+> > > > __svc_create() keeps using its local npools argument for the sv_poo=
+ls[]
+> > > > allocation, since sv_is_pooled is not set until svc_create_pooled()=
+ has
+> > > > returned from it.
+> > > >=20
+> > > > Doing this also removes a modulus operation from svc_pool_for_cpu()=
+,
+> > > > which should make for more efficient RPC queueing.
+> > > >=20
+> > > > Assisted-by: Claude:claude-opus-4-8
+> > > > Suggested-by: NeilBrown <neilb@ownmail.net>
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > ---
+> > > >  fs/nfsd/nfsctl.c           |  2 +-
+> > > >  fs/nfsd/nfssvc.c           | 10 ++++-----
+> > > >  include/linux/sunrpc/svc.h |  2 +-
+> > > >  net/sunrpc/svc.c           | 52 ++++++++++++++++++++++++++++++++--=
+------------
+> > > >  net/sunrpc/svc_xprt.c      |  6 +++---
+> > > >  5 files changed, 46 insertions(+), 26 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > > index bc16fc7ca24f..0543e5bb842f 100644
+> > > > --- a/fs/nfsd/nfsctl.c
+> > > > +++ b/fs/nfsd/nfsctl.c
+> > > > @@ -1526,7 +1526,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_b=
+uff *skb,
+> > > > =20
+> > > >  	rcu_read_lock();
+> > > > =20
+> > > > -	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> > > > +	for (i =3D 0; i < svc_serv_nrpools(nn->nfsd_serv); i++) {
+> > > >  		struct svc_rqst *rqstp;
+> > > >  		long thread_skip =3D 0;
+> > > > =20
+> > > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > > index a8ea4dbfa56b..2edf716ea022 100644
+> > > > --- a/fs/nfsd/nfssvc.c
+> > > > +++ b/fs/nfsd/nfssvc.c
+> > > > @@ -655,7 +655,7 @@ int nfsd_nrpools(struct net *net)
+> > > >  	if (nn->nfsd_serv =3D=3D NULL)
+> > > >  		return 0;
+> > > >  	else
+> > > > -		return nn->nfsd_serv->sv_nrpools;
+> > > > +		return svc_serv_nrpools(nn->nfsd_serv);
+> > > >  }
+> > > > =20
+> > > >  int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
+> > > > @@ -665,7 +665,7 @@ int nfsd_get_nrthreads(int n, int *nthreads, st=
+ruct net *net)
+> > > >  	int i;
+> > > > =20
+> > > >  	if (serv)
+> > > > -		for (i =3D 0; i < serv->sv_nrpools && i < n; i++)
+> > > > +		for (i =3D 0; i < svc_serv_nrpools(serv) && i < n; i++)
+> > > >  			nthreads[i] =3D serv->sv_pools[i].sp_nrthrmax;
+> > > >  	return 0;
+> > > >  }
+> > > > @@ -699,8 +699,8 @@ int nfsd_set_nrthreads(int n, int *nthreads, st=
+ruct net *net)
+> > > >  	if (n =3D=3D 1)
+> > > >  		return svc_set_num_threads(nn->nfsd_serv, nn->min_threads, nthre=
+ads[0]);
+> > > > =20
+> > > > -	if (n > nn->nfsd_serv->sv_nrpools)
+> > > > -		n =3D nn->nfsd_serv->sv_nrpools;
+> > > > +	if (n > svc_serv_nrpools(nn->nfsd_serv))
+> > > > +		n =3D svc_serv_nrpools(nn->nfsd_serv);
+> > > > =20
+> > > >  	/* enforce a global maximum number of threads */
+> > > >  	tot =3D 0;
+> > > > @@ -731,7 +731,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, st=
+ruct net *net)
+> > > >  	}
+> > > > =20
+> > > >  	/* Anything undefined in array is considered to be 0 */
+> > > > -	for (i =3D n; i < nn->nfsd_serv->sv_nrpools; ++i) {
+> > > > +	for (i =3D n; i < svc_serv_nrpools(nn->nfsd_serv); ++i) {
+> > > >  		err =3D svc_set_pool_threads(nn->nfsd_serv,
+> > > >  					   &nn->nfsd_serv->sv_pools[i],
+> > > >  					   0, 0);
+> > > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.=
+h
+> > > > index 3a0152d926fb..3c885ab6ad41 100644
+> > > > --- a/include/linux/sunrpc/svc.h
+> > > > +++ b/include/linux/sunrpc/svc.h
+> > > > @@ -85,7 +85,6 @@ struct svc_serv {
+> > > > =20
+> > > >  	char *			sv_name;	/* service name */
+> > > > =20
+> > > > -	unsigned int		sv_nrpools;	/* number of thread pools */
+> > > >  	bool			sv_is_pooled;	/* is this a pooled service? */
+> > > >  	struct svc_pool *	sv_pools;	/* array of thread pools */
+> > > >  	int			(*sv_threadfn)(void *data);
+> > > > @@ -480,6 +479,7 @@ void		   svc_wake_up(struct svc_serv *);
+> > > >  void		   svc_reserve(struct svc_rqst *rqstp, int space);
+> > > >  void		   svc_pool_wake_idle_thread(struct svc_pool *pool);
+> > > >  struct svc_pool   *svc_pool_for_cpu(struct svc_serv *serv);
+> > > > +unsigned int	   svc_serv_nrpools(const struct svc_serv *serv);
+> > > >  char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
+> > > >  const char *	   svc_proc_name(const struct svc_rqst *rqstp);
+> > > >  int		   svc_encode_result_payload(struct svc_rqst *rqstp,
+> > > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > > > index ece69cb0138a..800514a14f17 100644
+> > > > --- a/net/sunrpc/svc.c
+> > > > +++ b/net/sunrpc/svc.c
+> > > > @@ -224,7 +224,7 @@ svc_pool_map_set_cpumask(struct task_struct *ta=
+sk, unsigned int pidx)
+> > > >  	unsigned int node =3D m->pool_to[pidx];
+> > > > =20
+> > > >  	/*
+> > > > -	 * The caller checks for sv_nrpools > 1, which
+> > > > +	 * The caller checks for more than one pool, which
+> > > >  	 * implies that we've been initialized.
+> > > >  	 */
+> > > >  	WARN_ON_ONCE(m->count =3D=3D 0);
+> > > > @@ -234,6 +234,24 @@ svc_pool_map_set_cpumask(struct task_struct *t=
+ask, unsigned int pidx)
+> > > >  	set_cpus_allowed_ptr(task, cpumask_of_node(node));
+> > > >  }
+> > > > =20
+> > > > +/**
+> > > > + * svc_serv_nrpools - number of thread pools backing a service
+> > > > + * @serv: An RPC service
+> > > > + *
+> > > > + * Pooled services all share the global svc_pool_map, so their poo=
+l count
+> > > > + * is svc_pool_map.npools. Unpooled services have a single pool. R=
+eading
+> > > > + * npools without svc_pool_map_mutex is safe: a pooled service hol=
+ds a map
+> > > > + * reference for its whole lifetime, so npools is stable once set.
+> > > > + *
+> > > > + * Return value:
+> > > > + *   The number of pools in @serv
+> > > > + */
+> > > > +unsigned int svc_serv_nrpools(const struct svc_serv *serv)
+> > > > +{
+> > > > +	return serv->sv_is_pooled ? svc_pool_map.npools : 1;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(svc_serv_nrpools);
+> > >=20
+> > > I would make this a static-inline.
+> > >=20
+> >=20
+> > That would mean that we would have to export svc_pool_map, which is
+> > currently private to svc.c.
+>=20
+> Why is exporting svc_pool_map more problematic than exporting svc_serv_nr=
+pools?
+> I think it would be good for at least the code in svc_pool_for_cpu() to
+> inline the function.  Maybe it already does?  Or maybe marking it
+> "inline" but still exporting it would work.
+>=20
+> Thanks,
+> NeilBrown
+>=20
 
-Hi Agatha, I agree this required consideration when doing the change,
-however there is prior art with the use of clear_and_wake_up_bit and it
-is pretty universally done as an open coded call. If this is not
-desirable, I could resubmit (probably as a single patch) by only 
-replacing the sequence in the helpers.
+Doing what you suggest would increase the interface "surface" between
+sunrpc.ko and nfsd.ko.
 
-Some similar changes by Trond are f46f84931a0aa ("NFSv4/pNFS: Don't
-call _nfs4_pnfs_v3_ds_connect multiple times") and 43d20e80e2880 ("NFS:
-Fix a few more clear_bit() instances that need release semantics") and
-these keep the helpers, although in those cases the functions do more
-than just call clear_and_wake_up_bit.
+Currently struct svc_pool_map is only defined in net/sunrpc/svc.c, so
+we'd not only need to export the symbol, but also we'd have to make
+that definition public.
 
-Thanks for checking the patch!
-
->> -
->>  static void _add_to_server_list(struct pnfs_layout_hdr *lo,
->>  				struct nfs_server *server)
->>  {
->> @@ -2284,7 +2275,8 @@ pnfs_update_layout(struct inode *ino,
->>  					iomode, lo, lseg,
->>  					PNFS_UPDATE_LAYOUT_INVALID_OPEN);
->>  			nfs4_schedule_stateid_recovery(server, ctx->state);
->> -			pnfs_clear_first_layoutget(lo);
->> +			clear_and_wake_up_bit(NFS_LAYOUT_FIRST_LAYOUTGET,
->> +				&lo->plh_flags);
->>  			pnfs_put_layout_hdr(lo);
->>  			goto lookup_again;
->>  		}
->> @@ -2353,7 +2345,8 @@ pnfs_update_layout(struct inode *ino,
->>  			if (!exception.retry)
->>  				goto out_put_layout_hdr;
->>  			if (first)
->> -				pnfs_clear_first_layoutget(lo);
->> +				clear_and_wake_up_bit(NFS_LAYOUT_FIRST_LAYOUTGET,
->> +					&lo->plh_flags);
->>  			trace_pnfs_update_layout(ino, pos, count,
->>  				iomode, lo, lseg, PNFS_UPDATE_LAYOUT_RETRY);
->>  			pnfs_put_layout_hdr(lo);
->> @@ -2365,7 +2358,7 @@ pnfs_update_layout(struct inode *ino,
->>  
->>  out_put_layout_hdr:
->>  	if (first)
->> -		pnfs_clear_first_layoutget(lo);
->> +		clear_and_wake_up_bit(NFS_LAYOUT_FIRST_LAYOUTGET, &lo->plh_flags);
->>  	trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
->>  				 PNFS_UPDATE_LAYOUT_EXIT);
->>  	pnfs_put_layout_hdr(lo);
->> @@ -2457,7 +2450,7 @@ static void _lgopen_prepare_attached(struct nfs4_opendata *data,
->>  	lgp = pnfs_alloc_init_layoutget_args(ino, ctx, &current_stateid, &rng,
->>  					     nfs_io_gfp_mask());
->>  	if (!lgp) {
->> -		pnfs_clear_first_layoutget(lo);
->> +		clear_and_wake_up_bit(NFS_LAYOUT_FIRST_LAYOUTGET, &lo->plh_flags);
->>  		nfs_layoutget_end(lo);
->>  		pnfs_put_layout_hdr(lo);
->>  		return;
->> @@ -2561,7 +2554,8 @@ void nfs4_lgopen_release(struct nfs4_layoutget *lgp)
->>  {
->>  	if (lgp != NULL) {
->>  		if (lgp->lo) {
->> -			pnfs_clear_first_layoutget(lgp->lo);
->> +			clear_and_wake_up_bit(NFS_LAYOUT_FIRST_LAYOUTGET,
->> +				&lgp->lo->plh_flags);
->>  			nfs_layoutget_end(lgp->lo);
->>  		}
->>  		pnfs_layoutget_free(lgp);
->> @@ -3273,15 +3267,6 @@ pnfs_generic_pg_readpages(struct nfs_pageio_descriptor *desc)
->>  }
->>  EXPORT_SYMBOL_GPL(pnfs_generic_pg_readpages);
->>  
->> -static void pnfs_clear_layoutcommitting(struct inode *inode)
->> -{
->> -	unsigned long *bitlock = &NFS_I(inode)->flags;
->> -
->> -	clear_bit_unlock(NFS_INO_LAYOUTCOMMITTING, bitlock);
->> -	smp_mb__after_atomic();
->> -	wake_up_bit(bitlock, NFS_INO_LAYOUTCOMMITTING);
->> -}
->> -
->>  /*
->>   * There can be multiple RW segments.
->>   */
->> @@ -3306,7 +3291,7 @@ static void pnfs_list_write_lseg_done(struct inode *inode, struct list_head *lis
->>  		pnfs_put_lseg(lseg);
->>  	}
->>  
->> -	pnfs_clear_layoutcommitting(inode);
->> +	clear_and_wake_up_bit(NFS_INO_LAYOUTCOMMITTING, &NFS_I(inode)->flags);
->>  }
->>  
->>  void pnfs_set_lo_fail(struct pnfs_layout_segment *lseg)
->> @@ -3446,7 +3431,7 @@ pnfs_layoutcommit_inode(struct inode *inode, bool sync)
->>  	spin_unlock(&inode->i_lock);
->>  	kfree(data);
->>  clear_layoutcommitting:
->> -	pnfs_clear_layoutcommitting(inode);
->> +	clear_and_wake_up_bit(NFS_INO_LAYOUTCOMMITTING, &NFS_I(inode)->flags);
->>  	goto out;
->>  }
->>  EXPORT_SYMBOL_GPL(pnfs_layoutcommit_inode);
->> -- 
->> 2.53.0
->>
-> 
-> Other than that, both patches appear to successfuly apply and compile
-> just fine.
+Why expose so many internal details to other modules when all we need
+is this one accessor? I think keeping this interface small is
+preferable.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
