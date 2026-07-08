@@ -1,151 +1,176 @@
-Return-Path: <linux-nfs+bounces-23169-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23170-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id L0ikGBtKTmoPKQIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23169-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 15:01:15 +0200
+	id AFyGHPhMTmq3KQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23170-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 15:13:28 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 493CA7268E1
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 15:01:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C16F6726ACB
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 15:13:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="hJ3SD2b/";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23169-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23169-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=CSOvkRcM;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23170-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23170-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D31DA306A7E9
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 12:58:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 383C8300C5B4
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 13:06:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754C246AEE8;
-	Wed,  8 Jul 2026 12:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5B724887E;
+	Wed,  8 Jul 2026 13:06:58 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF5947A0B7;
-	Wed,  8 Jul 2026 12:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62003242D7B
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2026 13:06:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783515506; cv=none; b=EmSF0e3XyEiItf+RMRZ7AjTHQLnT2acSOd5aFaKqXzIX5rpAaIuMlofg5cnEuESNognN+vGmX4HT6NyqLy9Yf//95tAkQGzjYKn6bVM/SoLsKj4Xj5iBhAAL94f7tTA6xSb6jz15KdghsN2/Yp69hvj61pxCWrsHlpZ1m0Qz6kE=
+	t=1783516018; cv=none; b=nouZsdxthD1dDUWKQ5RBy+sdi/UgzTaYwt+dH6i7n8qfNNP215VakE8vs0NVOohMhg+9SdzJDf/ZJQaY8moZBWh0vylMHjW2cEYnUXfV4rVPI0kUQhCGccjx1sj5akZcD09ky2s5ODtuauzwnbUiTboDm0XGtUZfIcYsAAQdP9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783515506; c=relaxed/simple;
-	bh=YNlbfMe7IjLEtrnfl3yeMzxTsmPJmaEGZXA4hkPj/rI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gg/VmX/Vfa7n/JZao5y5DSgAGTmpnmQq4otKCd6fkoTuHx/I9s6rQf2O4WprKIuPMNvSxm6Yur8PquCL7VpcBlpLyCBc03P3p/0M/Vq1b9Hr52MLk1LtSY5yVVUF0ReS4Ts8PGP3+4xk2gx1F6MA1qLlBNlqs6+Y4IvQhkHaIMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJ3SD2b/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9451F00A3A;
-	Wed,  8 Jul 2026 12:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783515505;
-	bh=xm3xg4KWA1ldRv7EorYZDzsMgM35ZrzU+YdCvPgOFGY=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=hJ3SD2b/zeZr/ealheQUI4XBstv9gf2KSjh64zYam7oKqcN64bn9MM1wxw0Qbqs6s
-	 amDTANx5UKbbRcYKyUN5MVwUu+0iCz6Q/ezP2m4IV+IA+0+cMiVFuUZ/qfHVizY/py
-	 Cj3uaiOFmpMA/nArfflCxH9m2KLLLJFTFGrPP+OW62n0/oO+NyGFEM8rRjKJgyrX+F
-	 k8RUNPuBjMAtqezLtT7lEH61oOIwvoKBPdhZ2vOOO857Q6i3v6/K3WhV36ik0yzeJ+
-	 OOByY9xmthR/MgisEV2VDbiAstIo5iNZ3EItGHYsRKOXTCSH3H2QYPnUL50/Ba2hbE
-	 9LgXFqJFIPBXQ==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id B2D93F40069;
-	Wed,  8 Jul 2026 08:58:23 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 08 Jul 2026 08:58:23 -0400
-X-ME-Sender: <xms:b0lOaqHi9Lxe18lZ3VY_zh0u-EQypuOBTGdE3WqAorteygB9EZtF0g>
-    <xme:b0lOamL4291PhJx4ihnf43pLgvftK-QIYeLHwXkZy2ODXwJBcPsp1sMUYmorv943X
-    lAS7XCCmDVVV3iGqdoRqxN4z3H_IhghNurt_HnCaLUo19yQAJr1if_e>
-X-ME-Proxy-Cause: dmFkZTEy4qbe4+qGdVa99u5/9ySaOJls65jRaaw5i3YdzHfiedbgOXMgxuAtiIHWZ+uqE2
-    iUTXP/GHpOpKNAC6XbzoQKLcNxhFPOmDOMxDw6SyuEiIoFlDGHhfxiRJ63xiax/ODyZAfm
-    XyuJUD6QugluSPJfky2aAfZqh5ti5PYmSiZ4WKwgJxrRLxw8OqLAXe6YZTZujQL/++o1f/
-    p5WfNhaw33ZuNOYTQNWCNh8nCwv0S6/HqaITVynPZjwaiILlcmG5Xsao1LAFcEVePPq4wC
-    MkyMmlEMKEF6LOxg+M+ArWQyDCX8513CVA2f+knpPfKIozzsLcAwpS1JvzYfKiKw7PR0jL
-    w1uDA67H5WSQIoMPOaC3onOwTC993g4sBT70JTMJueARCknIS6uIDHHGuA1U9tik2wJgU4
-    ISbNhVn2299qoOdVSb3IzrgSUoPmQfeYvMKpYkOtSaG0BUN5ewlqBO1CO+giqnbMW5qLNw
-    rNjY+uddxk9SRTiiAH1glQW+lMlTdh7Q5JuM893ei9HQtD47LvUyZ/pcQk6JNmLjwwEm+S
-    zHu7itczD4UPF2TkbjEjvDpN4haOJgO25QYcOmLJIIIFPJTEeaSe+t86Z9JAm4Yiq4qo/n
-    DQDS1jZWak4FXVODLKQ+6k/JIGl0qL6PZ/JiuqKzu+OdAQESlXu61ksv27xg
-X-ME-Proxy: <xmx:b0lOaqVKCdesnQ7-xXOz36Ht7Hr8-ylwY7VxDpy5-jHU6-8EKdprAQ>
-    <xmx:b0lOanC8wt8povs8NMbbQL1KOI8cswZZ4PBoj4c587-MpYKbrLnBeA>
-    <xmx:b0lOavHXfdtZ-8kcDLB8XJa9patJmln0BviMS0F-ZGsKr8g-lIe8eA>
-    <xmx:b0lOao5ejwwoLtl8-zXsbPAJVeZuDKgvwPoT1wWtX5pjOXZcCAKKmA>
-    <xmx:b0lOalkPjeryNxQwBxLhI2Kj7NAetKJE-inDRoS2eRUpEF0T8cI8SjzF>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8F88A780AB9; Wed,  8 Jul 2026 08:58:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1783516018; c=relaxed/simple;
+	bh=fwy5fO/V7JapY3djJy0QpJK55av6p74lqWx9juegZb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GaiGU0fdFj0NuIDJ/BfahYsM9DCyrjCuhTkyBjpubaH6ISfpu6xKL5TeVkZZL49NGb04RJZ88w7USN+1BAbRaerI0rGcnR+WtXpUdOcCxdl31jbG22AyLEC7/t5BHj3etZwMPAjeR36SgxZRw06FpEbXgURFtlIt8miGBOXMblM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CSOvkRcM; arc=none smtp.client-ip=209.85.214.180
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cad4170e8eso8854635ad.3
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2026 06:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783516017; x=1784120817; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4H65Jt0qaP5+omtTAiQmAVRn7+xFeblOteKrGy1TQnM=;
+        b=CSOvkRcMXhUHnEhDGDHuduJOOu4EVjJ3hstSvMx2oqSw1BdEhYqOtZ6FQWIF7H+jwx
+         XAhE5e6pKGAQxrAr1/ejju3zcO5HtMyM9XMf5nlZBrCFDUVkYvWCHFojKuwH9bQn84ZU
+         JXuQNjRUrqJtULVKwZVxXTFD1FBcJy7LQcW24Ho3mkMqyc7r12VaXOx3Ekz7PK7bzWzn
+         rxdRydBVwak4bgojx8oHbaWCxFzJ3iqqkhLltfLJe3v1Cu1VevNOaOhrkJZiUiGHxPGJ
+         V06gYgCINOavao86itgPaP3KPJ9I+YszPS2TYyZ6zcJjfkMh70WAPuc+k7hhfMzAuDUa
+         OPEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783516017; x=1784120817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4H65Jt0qaP5+omtTAiQmAVRn7+xFeblOteKrGy1TQnM=;
+        b=iufQESwRtMEnvXqj+ks/wdc5/ecitMZ+M9+MK8Ivrv2/CEhO0C8YBp06stGPEMjpxC
+         7OBxwjVodZ1bu6xAz4vaW4OSc2LIQ29gCqFoOqUG6MEidSYK6KOq89LSP73TH+Pf16EU
+         bReQxwtzj3Msz3wubKj0kKap7QM4glWpYrac2MyE9qCL6bw/ZJR2e3XdlgtBPKHnxVaT
+         WJIsPzF2gxmUb6N2moz8abUZwzG/tR+0PhzG2FCoxM9CpcdzE/z4Vvq1tZJ7IDgyI2nq
+         LlHgme6pBulOXApqQsMd8DtxW3HDIuXyXu61sdejgDni1xopa6/Zpfif8nLctdBU22TN
+         6PkQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoQPWXQ/r39ct6jrpsShJlYwLAi5YV50IEUnH6Wxkh9/c5lBfMAxik0tAAsAT2dDAL5VYS2ZD9yDLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxlp7sZHftwRKXDyEhxfWl1zwUeWVpLlF1AkmYtp5VAgen1TWIz
+	l85qEY/pl2BNIDqF9tiAWvzRBtq5lUuFu/NQh5HozuAVSl8O/hzidt+l
+X-Gm-Gg: AfdE7ckZn29xKLFanRVERhzNbVU7LyjZwjwo2MghFD8RtG0RIG9CAQ1D1MVwpOYZsP9
+	/vxhDP2YHfyUOaZ2jmIGC069MZdUI/G/wPTDEH+xFe8J8xlW5e8Jq+W2h/QvB3zLL1LPMz3DuHJ
+	YQevw8C9JcNH6jHimQXhMQXs6Ldf5q1U9vKiKUbtybPsjS1MbPFyhgVOOgJ7o90rQs69GwCSDgC
+	rXN7C7vG/acdBkZnv1WaXQfTNKDr33UuOFIrkPuLzjpzTJUO2lmAGejPRSxpiTCW9Xz9dAt9aFL
+	iwKyUF/mRXQafm9KzSLCGHHfkeisSntQnQ/qQXH9O2GpWZ8YqIvl+6m8aQJpw43lylP/Hlj1nvN
+	+CQdP/9ap7hz8nQWcI2NXHAHbySj6l2osCrlsvT8iNNr8zu7/tNLPkqr7H4AAAIpctuhTjvjI6E
+	hXcgUnqJUWfA==
+X-Received: by 2002:a17:903:3903:b0:2cb:14b3:4cfe with SMTP id d9443c01a7336-2ccea582ae2mr27025425ad.45.1783516016527;
+        Wed, 08 Jul 2026 06:06:56 -0700 (PDT)
+Received: from lgs.. ([101.76.249.46])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccf5a4fa46sm2927725ad.30.2026.07.08.06.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 06:06:55 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jann Horn <jannh@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>
+Subject: [PATCH] fhandle: handle detached mounts in capable_wrt_mount()
+Date: Wed,  8 Jul 2026 21:06:48 +0800
+Message-ID: <20260708130648.767811-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A-vGNRBYFzmF
-Date: Wed, 08 Jul 2026 08:58:03 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <6e5e956d-4a6a-4548-8d9b-3ca3628a018c@app.fastmail.com>
-In-Reply-To: <20260708-pool-mode-v1-1-98e9e106ebf3@kernel.org>
-References: <20260708-pool-mode-v1-1-98e9e106ebf3@kernel.org>
-Subject: Re: [PATCH] sunrpc: drop unneeded nrpools check in svc_pool_for_cpu()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.15 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-23169-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:trondmy@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RSPAMD_EMAILBL_FAIL(0.00)[neil.brown.name:query timed out];
+	FREEMAIL_CC(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-23170-lists,linux-nfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:cel@kernel.org,m:jlayton@kernel.org,m:amir73il@gmail.com,m:jannh@google.com,m:linux-fsdevel@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lgs201920130244@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[lgs201920130244@gmail.com,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,gmail.com,google.com,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lgs201920130244@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[linux-nfs];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 493CA7268E1
+X-Rspamd-Queue-Id: C16F6726ACB
 
+The change referenced by the Fixes tag protects the lockless read of
+mount->mnt_ns in may_decode_fh() with an RCU read-side critical section.
 
+That prevents the namespace object from being freed while it is being
+used, but it does not guarantee that mount->mnt_ns is non-NULL. A mount
+can be detached concurrently after is_mounted() has checked the field and
+before capable_wrt_mount() reads it again.
 
-On Wed, Jul 8, 2026, at 8:00 AM, Jeff Layton wrote:
-> As Neil pointed out in review:
->
-> "The values stored in svc_pool_map.to_pool are all less than
->  svc_pool_map.npools.  So that if() condition cannot be true."
->
-> Drop the useless check from this hotpath.
->
-> Suggested-by: NeilBrown <neil@brown.name>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> Chuck, feel free to fold this into 5/5 of the pool_mode series.
+If capable_wrt_mount() observes the detached state, it currently
+dereferences the NULL namespace pointer while passing mnt_ns->user_ns to
+ns_capable().
 
-Folded in to 5/5 and pushed out to nfsd-testing.
+Treat a detached mount as not capable for this permission relaxation and
+return false when the RCU-protected mnt_ns read yields NULL.
 
+Fixes: 40ab6644b996 ("fhandle: fix UAF due to unlocked ->mnt_ns read in may_decode_fh()")
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+ fs/fhandle.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 1ca7eb3a6cb5..d9de7210a411 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -295,6 +295,9 @@ static bool capable_wrt_mount(struct mount *mount)
+ 	 */
+ 	guard(rcu)();
+ 	mnt_ns = READ_ONCE(mount->mnt_ns);
++	if (!mnt_ns)
++		return false;
++
+ 	return ns_capable(mnt_ns->user_ns, CAP_SYS_ADMIN);
+ }
+ 
 -- 
-Chuck Lever
+2.43.0
+
 
