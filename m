@@ -1,51 +1,161 @@
-Return-Path: <linux-nfs+bounces-23171-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23172-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7or7F0hiTmrCLgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23171-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 16:44:24 +0200
+	id hfsELHx3TmpbNQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23172-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 18:14:52 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C544E727875
-	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 16:44:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D4507288B2
+	for <lists+linux-nfs@lfdr.de>; Wed, 08 Jul 2026 18:14:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=janestreet.com header.s=waixah header.b=u81GnZ71;
-	dmarc=pass (policy=quarantine) header.from=janestreet.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23171-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23171-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=suse.com header.s=google header.b="V9o0/GIU";
+	dmarc=pass (policy=quarantine) header.from=suse.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23172-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23172-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EF3103045AB3
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 14:38:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2538731A8893
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jul 2026 15:46:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F181285CB4;
-	Wed,  8 Jul 2026 14:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31185372692;
+	Wed,  8 Jul 2026 15:46:08 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BDE299937
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2026 14:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462C11F8755
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Jul 2026 15:46:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783521479; cv=none; b=gpVDSkZG0SI+z/aT/sEYh+gx8M70Ob720WuHvkIGSmxRYK3a3Sa6MBJ5BAhtwpfsElWZ8QVg3a3wGTJFSfOYSMheu4hNpQhlOOn16eW4X3JzNUEMf2V6PqRTp7SCr0WvXZKcRZRf4rFmA1Zbs7ocnYzvxP+sgZB7Hc4B+Mea5Vw=
+	t=1783525567; cv=none; b=CFKbC3D3q4f/FvEKFlsCR5UJLCvp9cNs4ItG/w05FzJSWbaJv8WrvN2I1X1Mk39dIZAsfalFc5nBF8QNEovo7AXFe9FNJAS6hNUgZsAF5cQL+OXyRdCKIaj+0GhWZJPbk4rQJiDhi1OJDaI/z/cvAKWrJIz79qa80kyAlHmBrX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783521479; c=relaxed/simple;
-	bh=v12DQ8za5E1b5G5ZhdoWW/HMR9aNrh+7H0BFAiLzSLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bM+ww3Ej/OAXl5kFVeeQj7CDhs8qU9YOC8838opHQkp509uBigCumKUKZMeBG23n7t6kbjvkyeKVC5S8g9PGvI1OiYN3LfARGpF3r0ldjv9+v2NHN7Nc7nqFyFbNjZzW+17iPBnyLzh5pFalgkAx6VldRCy7QzbgWiiQisIu9m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=u81GnZ71; arc=none smtp.client-ip=64.215.233.18
-From: tilan@janestreet.com
-To: cel@kernel.org
-Cc: anna@kernel.org,
- 	linux-nfs@vger.kernel.org,
- 	tilan@janestreet.com,
- 	trondmy@kernel.org
-Subject: RE nfs: opening a file with O_WRONLY|O_CREAT flags can result in permission denied error
-Date: Wed,  8 Jul 2026 10:37:51 -0400
-Message-ID: <20260708143751.4172658-1-tilan@janestreet.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <dfe72971-5478-45dd-82c1-0aa2e1156aee@app.fastmail.com>
-References: <dfe72971-5478-45dd-82c1-0aa2e1156aee@app.fastmail.com>
+	s=arc-20240116; t=1783525567; c=relaxed/simple;
+	bh=9vHkvbT9qGw6XnwnbsV8mVwKGJQJ6h+q3CIzqn5nO9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/7MOW/1HYmjDdAduTCXjTkQ2muehTJtSkWiaizbP2RGH5gvboM7LDTPXhSF4j6dZsUxXNEj3HUBsePVhW3/UyAwiF+SxbbGtL5Lg94eLv9v3Q4iAdKnJFiSC0d4E+mfjry5neFQU0U0GEFBxlhrSWIGnLrzIv/SbdMTvpycEZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V9o0/GIU; arc=none smtp.client-ip=209.85.221.47
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-47de0093c42so881720f8f.3
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Jul 2026 08:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1783525562; x=1784130362; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=f/mdlbu7kxNAYQt2PwbA0grJPU5KW1EejarCbBPlRO8=;
+        b=V9o0/GIUUfwXKE6Si0vT9XcZGfRtCEAITKFydTRSMtxOkifhRtmp/MtdeuBSvQjlah
+         GKs0jcAl1dbNwep3X2epdX94A1E2PRCE/RJiQzscSyYA+100AJlBrKKtfaJDQR7m4qkR
+         MweaN2SaoTQVXZzo+CbE6iStSMIrM4q/CBP5yJG7R81GdmoVDUVD+GVaUICIey6oYKd8
+         c0/nveapDqgLkjDAcqEvEelk984mV+G/mTYHz2PA9ukpzmVGFCRmoyUTJUuTmnoF/KXq
+         /H2ps2dV9sdcW0mO39x4tQ2SC1Bv8NBxCJ8uQ5aycxoeyR9m8B7y7ZQSTbchyM/Rw7cS
+         uAKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783525562; x=1784130362;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=f/mdlbu7kxNAYQt2PwbA0grJPU5KW1EejarCbBPlRO8=;
+        b=qDmPM0mgYcaXAsoVlFfeyVnfmlpWRpNhxqFLyv15JvCouqhb3gJfXr1xs03MCLHZZj
+         ZWovDsSWRo9jGfYu4cDhwyP3jtVgb+rBFeEO1iMUwBFTbygvzZNVm7YqtO4Jo9qbO/QN
+         6RfVJ4RP93814L0jFImJLfyjzIvW+puEv/ANRBE7StN+SZq/xZA8kiQB5fEO8PWHeZPA
+         StxVJg5hl6omnLSBkhAIyoOBm2OdOfhZeV3HRfnNlHLvQXSQzh1uckQsYkzze12gl3X5
+         db3IIh+o01R1cmWV+Z9/yILxFtUxmN7tWc9tremNgFcOyYwUR47jVAimndtQxQVq8AnO
+         ULyQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqADT6ziCAZTbpGIYqMppL+aBuzicgI0ImyNN6EEeVFctIYUUg6jvbAPqHO63nV5WuTSyStf+GsXLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoUBYany9u+r/MF2yqq+yayZUgdqRtdSEcORH+WBhAciccAL0X
+	nh3icVWRnirvA03oLEWUfFcDcVZUIc2q6muaUYLYycVdzXxX4BSwOPPd6HJQWA6US9A=
+X-Gm-Gg: AfdE7ckRj+Q46O7wqlTuewmudNXmI7oe3cQe2yhZUv8k4pBVeJuoSvRRcvUq7yiWec2
+	0NXA4EFt6yUGnVlzc1p2YWAu6EAAzySQqKOK6Hcw2Wwqs5tpfxliNXf/u0aojQgdzNjWHz64W5m
+	OEg76T4zpLJujrWAuwyVeijRTUYLVk9vD15GtMkZHnIITN1ParRhQFr+tAiD4XNOT2+z1w6NzSQ
+	UWFMCkvEfYO6fTkyzOVj+uFw5lJ0uxC67c02b+SdiGfQYUKC+r+vEK3qKPmMzteYFua2ANZTAPz
+	1C+4EBxTMPMlQzSS6nOI4hysXKxxAJWjvRrvpDCIFcqCv/oKoRkt2z2OellHXD0Sylks7KPJFWE
+	ppAWt+gZ36iNlsTl4yj/X9Xb4GDThOsTaFNYz4xfmHkAULaB5B4sVd2rfnaq5jSFP/yNMD5E64t
+	Ade21rZVfeH0btaHtioP58MT55GKdnLgfAsIwHm4eE
+X-Received: by 2002:a05:6000:4304:b0:46d:55a5:8ec5 with SMTP id ffacd0b85a97d-47df078bbffmr3378920f8f.33.1783525561596;
+        Wed, 08 Jul 2026 08:46:01 -0700 (PDT)
+Received: from zovi.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9e4d780csm44806847f8f.11.2026.07.08.08.45.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 08:46:01 -0700 (PDT)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Michal Januszewski <spock@gentoo.org>,
+	Helge Deller <deller@gmx.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Pavel Machek <pavel@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Kentaro Takeda <takedakn@nttdata.co.jp>,
+	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	drbd-dev@lists.linux.dev,
+	linux-block@vger.kernel.org,
+	greybus-dev@lists.linaro.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ocfs2-devel@lists.linux.dev,
+	cgroups@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	bridge@lists.linux.dev,
+	netdev@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH 0/2] Bring includes in linux/kmod.h up to date
+Date: Wed,  8 Jul 2026 17:44:28 +0200
+Message-ID: <20260708154510.6794-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,133 +163,93 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
-  s=waixah; t=1783521471;
-  bh=4AsbDyBFANvust+buQxkV6KGvXiAg5S/6LAA4t3zKZU=;
-  h=From:To:Cc:Subject:Date:In-Reply-To:References;
-  b=u81GnZ71t8oNeMGkOGRNyJ+yBFg+QeVarMnnpxEBXD5AQ99T5fcpgPHiymZu9ww4R
-  gcmveSzDFrldezkw4I84CW9FZ0ouahMjWQdW7gpmypavzPqp8s6rKzBFPCA6kIGSN7
-  /BaM6nk49qkj8FPKnexrMPTPi1wKog0fr6om6J4KTN7KWcSQsB7ZtrwYAMJZC+5afx
-  Qavz61B0N1Y4Y4OjbfFlnQhOFrWkqCx7O3O6+6PTaSL5P/lkVgdgZLACOD26QnrtqG
-  2P3g375fPCx3c5TCsxSOlICQFHWSNbEuVFZyrJZ7+Fyry6fWW9AoF6JPQcD9lcH4vn
-  opvQjgcsK49/A==
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[janestreet.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[janestreet.com:s=waixah];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-23171-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:tony.luck@intel.com,m:bp@alien8.de,m:tglx@kernel.org,m:mingo@redhat.com,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:philipp.reisner@linbit.com,m:lars.ellenberg@linbit.com,m:christoph.boehmwalder@linbit.com,m:axboe@kernel.dk,m:johan@kernel.org,m:elder@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:spock@gentoo.org,m:deller@gmx.de,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:trondmy@kernel.org,m:anna@kernel.org,m:cel@kernel.org,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:tj@kernel.org,m:hannes@cmpxchg.org,m:mkoutny@suse.com,m:mcgrof@kernel.org,m:petr.pavlu@suse.com,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:atomlin@atomlin.com,m:pavel@kernel.org,m:lenb@kernel.org,m:akpm@linux-foundation.org,m:dakr@kernel.org,m:razor@blackwall.org,m:idosch@nvidia.com,m:davem@davemloft.net,m:e
+ dumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:dhowells@redhat.com,m:jarkko@kernel.org,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:takedakn@nttdata.co.jp,m:penguin-kernel@I-love.SAKURA.ne.jp,m:linux-edac@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:drbd-dev@lists.linux.dev,m:linux-block@vger.kernel.org,m:greybus-dev@lists.linaro.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-acpi@vger.kernel.org,m:linux-fbdev@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:ocfs2-devel@lists.linux.dev,m:cgroups@vger.kernel.org,m:linux-modules@vger.kernel.org,m:linux-pm@vger.kernel.org,m:driver-core@lists.linux.dev,m:bridge@lists.linux.dev,m:netdev@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:tilan@janestreet.com,m:trondmy@kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[tilan@janestreet.com,linux-nfs@vger.kernel.org];
-	FROM_NO_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-23172-lists,linux-nfs=lfdr.de];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TO_DN_NONE(0.00)[];
+	FORGED_SENDER(0.00)[petr.pavlu@suse.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[intel.com,alien8.de,kernel.org,redhat.com,linux.intel.com,zytor.com,linbit.com,kernel.dk,linuxfoundation.org,gentoo.org,gmx.de,zeniv.linux.org.uk,suse.cz,brown.name,oracle.com,talpey.com,fasheh.com,evilplan.org,linux.alibaba.com,cmpxchg.org,suse.com,google.com,atomlin.com,linux-foundation.org,blackwall.org,nvidia.com,davemloft.net,paul-moore.com,namei.org,hallyn.com,nttdata.co.jp,I-love.SAKURA.ne.jp];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[petr.pavlu@suse.com,linux-nfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tilan@janestreet.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[janestreet.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	RCPT_COUNT_GT_50(0.00)[77];
+	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[suse.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,janestreet.com:from_mime,janestreet.com:dkim,janestreet.com:mid]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,suse.com:from_mime,suse.com:dkim,suse.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C544E727875
+X-Rspamd-Queue-Id: 4D4507288B2
 
->>>> Hello,
->>>> 
->>>> We recently noticed there is a behavior change w.r.t opening a file 
->>>> with the O_WRONLY|O_CREAT flags over the NFSv3 protocol after
->>>> upgrading
->>>> the kernel from 6.1 LTS to 6.12 LTS. From the packets capturing, it
->>>> seems
->>>> like the kernel would now issue an additional CREATE rpc call to the
->>>> remote NFS server regardless if the target file pre-exists or not.
->>>> The CREATE rpc request could return an EACCES error if the client
->>>> only has 
->>>> the write permission to the pre-existing file but no write permission
->>>> on 
->>>> the directory containing the pre-existing file. This causes the
->>>> openat 
->>>> syscall to fail with permission denied error which is not expected.
->>>> 
->>>> After doing some code tracing, it seems like the new behavior was
->>>> introduced as part of 7c6c5249f061 ("NFS: add atomic_open for NFSv3
->>>> to
->>>> handle O_TRUNC correctly."). We would like to confirm if the current 
->>>> behavior that we are observing with the 6.12 kernel is expected given
->>>> that the new behavior breaks existing user's application code. We 
->>>> currently have a workaround by explicitly remove the O_CREAT flag
->>>> when 
->>>> opening a pre-existing file for write, but would still prefer not
->>>> have
->>>> to apply this workaround when upgrading to the newer kernel.
->>>
->>> What server are you using?
->>>
->> The permission error was reproduced against a vendor appliance, running
->> the same test against NFSD seems to yield a different result
->> (no permission errors) due to differences in behavior from the CREATE 
->> RPC implementation.
->>
->> NFSD behavior
->>
->>   - CREATE RPC (UNCHECKED mode) returns the filehandle of the 
->>     existing file along with the file's attributes
->>	  
->> Vendor appliance
->>
->>   - CREATE RPC (UNCHECKED mode) always attempts to create a new
->>     file and returns the new filehandle. This explains why we
->>     are seeing permission denied error from openat syscall.
->>	  
->> RFC 1813 states that 
->>
->>   "UNCHECKED means that the file should be created without checking
->>   for the existence of a duplicate file in the same directory. In this
->>   case, how.obj_attributes is a sattr3 describing the initial
->>   attributes for the file."
->>	 
->> It seems like the vendor's implementation matches more closely to what
->> the "standard" describes, but the behavior might not be what a normal
->> user would expect. I guess there is no win-win situation here.
+The usermode helper declarations were previously provided by linux/kmod.h
+but commit c1f3fa2a4fde ("kmod: split off umh headers into its own file")
+moved them to linux/umh.h in 2017. Add explicit includes of linux/umh.h to
+files that use usermode helpers and remove linux/kmod.h where it is no
+longer needed.
 
-> Compare RFC 7530's UNCHECKED4. It says explicitly that if the object
-> already exists, a non-exclusive create does not recreate it. The
-> existing object is used and the supplied attributes are applied. RFC
-> 7530 and subsequent RFCs document what UNCHECKED was always meant to
-> do, and NFSD's NFSv3 behavior is consistent with that.
+Then clean up linux/kmod.h so that it includes only the headers that it
+actually requires, importantly removing the compat linux/umh.h include.
 
-> IMHO the correct interpretation, the one consistent with the rest of
-> NFSv3, with NFSv4's clarifying text, and with POSIX, is NFSD's, not
-> the vendor's. UNCHECKED governs error-vs-no-error on a duplicate,
-> not recreate-vs-reuse.
+Apologies for the wide distribution.
 
-> But to confirm this, look for an RFC 1813 erratum, or WG/implementor-list
-> guidance, stating that UNCHECKED must replace or re-create a pre-existing
-> file and return a fresh filehandle. It would also be sensible to check
-> how Solaris NFSv3 behaves, as it is a reference implementation for
-> RFC 1813.
+This cleanup is motivated by trying to reduce the preprocessed size of
+linux/module.h, which includes linux/kmod.h. The linux/module.h header is
+included by every *.mod.c file to provide `struct module` and other related
+definitions, so it should avoid pulling in unnecessary dependencies. Note
+that this series doesn't immediately improve the situation, since most of
+the files included by linux/kmod.h are, for now, also included by
+linux/module.h through other paths.
 
-I ran the same test against the Solaris 11.4, and the NFSv3's behavior
-is consistent with the Linux nfsd. I guess this would be sufficient to
-conclude that the vendor's implementation is deviated from the actual 
-intent and the addition of NFSv3 atomic_open exposes this difference in
-an very unfortunate way.
+Petr Pavlu (2):
+  umh, treewide: Explicitly include linux/umh.h where needed
+  module: Bring includes in linux/kmod.h up to date
+
+ arch/x86/kernel/cpu/mce/dev-mcelog.c |  2 +-
+ drivers/block/drbd/drbd_nl.c         |  1 +
+ drivers/greybus/svc_watchdog.c       |  1 +
+ drivers/macintosh/windfarm_core.c    |  1 +
+ drivers/pnp/pnpbios/core.c           |  2 +-
+ drivers/video/fbdev/uvesafb.c        |  1 +
+ fs/coredump.c                        |  2 +-
+ fs/nfs/cache_lib.c                   |  2 +-
+ fs/nfsd/nfs4layouts.c                |  2 +-
+ fs/nfsd/nfs4recover.c                |  1 +
+ fs/ocfs2/stackglue.c                 |  1 +
+ include/linux/kmod.h                 | 12 ++----------
+ kernel/cgroup/cgroup-v1.c            |  1 +
+ kernel/module/kmod.c                 |  1 +
+ kernel/power/process.c               |  2 +-
+ kernel/reboot.c                      |  2 +-
+ kernel/umh.c                         |  2 +-
+ lib/kobject_uevent.c                 |  2 +-
+ net/bridge/br_stp_if.c               |  2 +-
+ security/keys/request_key.c          |  2 +-
+ security/tomoyo/common.h             |  2 +-
+ 21 files changed, 22 insertions(+), 22 deletions(-)
 
 
-Thanks,
-Tian
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+-- 
+2.54.0
+
 
