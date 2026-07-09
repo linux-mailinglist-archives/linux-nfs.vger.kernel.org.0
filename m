@@ -1,74 +1,92 @@
-Return-Path: <linux-nfs+bounces-23185-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23186-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GwdkLEA+T2r5cgIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23185-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 08:22:56 +0200
+	id 0i5oDgddT2rufAIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23186-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 10:34:15 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16CA572D148
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 08:22:56 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1039672E56C
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 10:34:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=infradead.org header.s=bombadil.20210309 header.b="TxLl8m/b";
-	dmarc=pass (policy=none) header.from=infradead.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23185-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23185-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=intel.com header.s=Intel header.b=aqOnfrwo;
+	dmarc=pass (policy=none) header.from=intel.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23186-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23186-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0E78A3033196
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2026 06:22:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 5AD1F3079BAF
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2026 08:32:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55CB73BE162;
-	Thu,  9 Jul 2026 06:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9513D3F39F5;
+	Thu,  9 Jul 2026 08:32:09 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808453BB9E3;
-	Thu,  9 Jul 2026 06:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2726E3F0AA2;
+	Thu,  9 Jul 2026 08:32:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783578167; cv=none; b=DNHXk63F/WcWpSOrU2zBJUwr/8w823PMzww31UjQEgav+TzWjkctvKq4+juhD9FvQDWoAuvUUcEylQPW7VUo3KOAFBmT5dNSjOeBKVdC9lWGWZdPqCTInLrCLmScncqebTSMijpdrouz1SVCUT6urptvp81okKWNaHWvf02J+uM=
+	t=1783585929; cv=none; b=HQU+JByDWN0ZUxM2hpFxjTTy6xy3UFRi3ocgG7VLL85N9qhmgKVz5IFKPCFAHx+o45DPAok/DSr8lbOPOMV1foCxZUykeSNYptFu+G90Vyie94bWmg9gVFEC2NtTJ8P0yvlAT7GccBKJs2FM1mFfRwnZfPT8pDEX2l8ULNaDRx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783578167; c=relaxed/simple;
-	bh=zfpT3sX54bTbBEQeU+F4ru8vBoBJn7jSFRhdYmYhqNE=;
+	s=arc-20240116; t=1783585929; c=relaxed/simple;
+	bh=tesK+oxJqsB49auQK1mjbbrkVhdKYiJrkTlVS/W/lOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jF5HCyf/evogQPa0DbG8j25EagD+5Sgmq58yE7asykwDqbRcr+mokD4dI7BaW2/ZMIRV9ZMQWbmA/x78uTDpgmxfDrDq+Y+WjuaFnh4qHsN4X9aRkMlFXnkMN5L+OckFo8q6e1CishCkFRIr2PQVqy8TxPcfkGNv0dKLemG6upY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TxLl8m/b; arc=none smtp.client-ip=198.137.202.133
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EAywz+hiKhqdw365nIbaeBzJ8UbXeVL7JDmIYJCVkAk=; b=TxLl8m/b9FuKBBioATGr0g8hzp
-	WrjGhfz3c/eOmAJLe5S2Q4U11NzwhPtVLyi27gacDu1LoS1TzQc61S4qhG3JFfnlkCJApCkPhRxHP
-	Q8lhx/csYNltvaul4EjL8c/sva/D9sy7c14WrBJ/7dBLYmpojI63mS8LoOiZmtobLEh4vVzGMyU9R
-	zL1wT+v1JJ6InCDtFt9/hl3Iz7he/vxNfmEzHi+4vMiwBR+RORO4pDbnh7yxrvA/6k2/CdpK+8e92
-	m+V+AAgPyspgJQHUH5vgo55JELAj+ecYzqwcQ1SroaZ4U2v9uz8pAK8VLDBRpyXlfKnMIioel51ac
-	zr4pvyig==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whi9k-000000018tH-2Kd7;
-	Thu, 09 Jul 2026 06:22:44 +0000
-Date: Wed, 8 Jul 2026 23:22:44 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Pranjal Shrivastava <praan@google.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Trond Myklebust <trondmy@kernel.org>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Anna Schumaker <anna@kernel.org>,
-	Shivaji Kant <shivajikant@google.com>, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] nfs: Optimize direct I/O to use folios for
- requests
-Message-ID: <ak8-NMsNPOB3zpF-@infradead.org>
-References: <7ee3bcfdd6126c93cbb1c219bf601182b95c10d9.camel@kernel.org>
- <ajGGpDvzZdkGtSbN@google.com>
- <ajP8ZTTLYkICFTO_@infradead.org>
- <ajQ21kH1ZVajS2Y7@casper.infradead.org>
- <aj4iiD5C_yyLeb3U@infradead.org>
- <akevQfFVteCOD6LM@google.com>
- <akfAgy52s_Gch2KG@infradead.org>
- <akzsO_vmYX_7Umjd@google.com>
- <ak4A6IEmWNi27I2d@infradead.org>
- <ak44z-X-SKKhkBkg@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUlGTkLU892zJ5Qa+yiQZDRttOPY2a1+3aqzbioimmj1xxIEFb/OWBK1+IDhbHj1iv1BELPevDC1MWUFpWXJ+8gpj2Ek1sItm1tr+KupLysW8IRdG3H83tf6KL2c5+IcUu9j4H5LVww1VDUjVwmTGic/XnmdAlScmrIe1nTEmB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aqOnfrwo; arc=none smtp.client-ip=192.198.163.18
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783585928; x=1815121928;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tesK+oxJqsB49auQK1mjbbrkVhdKYiJrkTlVS/W/lOU=;
+  b=aqOnfrwohYy6CTM21w0/xYpfju7bldEWmMf6w21+t4qqXOqOE4CQYOxT
+   mtCUZvh/AFq8A94AwTISTwKfI9iHSYgsMIDrG/9m77Zue8ztpIJg6dcKn
+   pNSeRVAnb7VHQwXVtBLt397GRbJIoky8Q5r66zJzUmii0MJGPlskUeat+
+   GzJIgEZ2XiYZekzgvV14D3wbuSxw7efEmLOlPkMerDYf7xsXVcd8fMrZ6
+   +Q9Uos46xhv/KA3yxY0agP5RssREnPhcVpviJQkFrG+huLVKtzhzQ+9e2
+   7PVrzzCfuXm2EeRyKHcevH0SUkD8fJtyxEUo4NrJwhIiSp6cVAGNS7K+P
+   g==;
+X-CSE-ConnectionGUID: S70fGcBKRVCq58yHvozo/g==
+X-CSE-MsgGUID: M+a8V2EeSFmcx3HSXaTIfw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="83373170"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="83373170"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 01:32:07 -0700
+X-CSE-ConnectionGUID: EEXzGbqiQH+fSuwG0kIRwg==
+X-CSE-MsgGUID: Ubkrz2plSRGEjKFky/y1TA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="250537941"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 01:31:57 -0700
+Date: Thu, 9 Jul 2026 11:31:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	mkalderon@marvell.com, zyjzyj2000@gmail.com, sagi@grimberg.me,
+	mgurtovoy@nvidia.com, haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+	bvanassche@acm.org, kbusch@kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, kch@nvidia.com, smfrench@gmail.com,
+	linkinjeon@kernel.org, metze@samba.org, tom@talpey.com,
+	cel@kernel.org, jlayton@kernel.org, neil@brown.name,
+	okorniev@redhat.com, Dai.Ngo@oracle.com, trondmy@kernel.org,
+	anna@kernel.org, achender@kernel.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	horms@kernel.org, kees@kernel.org, michaelgur@nvidia.com,
+	edwards@nvidia.com, phaddad@nvidia.com, eadavis@qq.com,
+	yishaih@nvidia.com, kalesh-anakkur.purayil@broadcom.com,
+	clm@meta.com, ebadger@purestorage.com, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v10 rdma-next] RDMA: Change capability fields in
+ ib_device_attr from int to u32
+Message-ID: <ak9ce4PaJ5n89zW9@ashevche-desk.local>
+References: <20260709055211.2498307-1-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -77,52 +95,112 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ak44z-X-SKKhkBkg@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20260709055211.2498307-1-ernis@linux.microsoft.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-23185-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:praan@google.com,m:hch@infradead.org,m:willy@infradead.org,m:trondmy@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:anna@kernel.org,m:shivajikant@google.com,m:linux-mm@kvack.org,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-23186-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,infradead.org:from_mime,infradead.org:dkim,infradead.org:mid]
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:ernis@linux.microsoft.com,m:jgg@ziepe.ca,m:leon@kernel.org,m:mkalderon@marvell.com,m:zyjzyj2000@gmail.com,m:sagi@grimberg.me,m:mgurtovoy@nvidia.com,m:haris.iqbal@ionos.com,m:jinpu.wang@ionos.com,m:bvanassche@acm.org,m:kbusch@kernel.org,m:axboe@kernel.dk,m:hch@lst.de,m:kch@nvidia.com,m:smfrench@gmail.com,m:linkinjeon@kernel.org,m:metze@samba.org,m:tom@talpey.com,m:cel@kernel.org,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:trondmy@kernel.org,m:anna@kernel.org,m:achender@kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:kees@kernel.org,m:michaelgur@nvidia.com,m:edwards@nvidia.com,m:phaddad@nvidia.com,m:eadavis@qq.com,m:yishaih@nvidia.com,m:kalesh-anakkur.purayil@broadcom.com,m:clm@meta.com,m:ebadger@purestorage.com,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:target-devel@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:linux-cifs@vger.ker
+ nel.org,m:samba-technical@lists.samba.org,m:linux-nfs@vger.kernel.org,m:netdev@vger.kernel.org,m:rds-devel@oss.oracle.com,m:jgg@nvidia.com,s:lists@lfdr.de];
+	FREEMAIL_CC(0.00)[ziepe.ca,kernel.org,marvell.com,gmail.com,grimberg.me,nvidia.com,ionos.com,acm.org,kernel.dk,lst.de,samba.org,talpey.com,brown.name,redhat.com,oracle.com,davemloft.net,google.com,qq.com,broadcom.com,meta.com,purestorage.com,vger.kernel.org,lists.infradead.org,lists.samba.org,oss.oracle.com];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCPT_COUNT_GT_50(0.00)[50];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,ashevche-desk.local:mid,intel.com:email,intel.com:dkim,linux.intel.com:from_mime,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 16CA572D148
+X-Rspamd-Queue-Id: 1039672E56C
 
-On Wed, Jul 08, 2026 at 11:47:27AM +0000, Pranjal Shrivastava wrote:
-> > Sorry if I'm thick, but I'm not sure what "folio" move means.  In doubt
-> > if you think you can get a series merged quicker without a later part
-> > I'd split it.
+On Wed, Jul 08, 2026 at 10:51:29PM -0700, Erni Sri Satya Vennela wrote:
+> The capability counter fields in struct ib_device_attr are declared
+> as signed int, but these values are inherently non-negative. Drivers
+> maintain their cached caps as u32 and assign them directly into these
+> int fields; if a cap exceeds INT_MAX the implicit narrowing yields a
+> negative value visible to the IB core.
 > 
-> Apologies for being unclear. I meant I could post a standalone series
-> that moves NFS Direct I/O to folio, i.e. break out Patches 6 & 7 to
-> another series, if that makes sense?
+> Change the signed int capability fields to u32 to match the
+> underlying nature of the data. Also update consumers across the IB
+> core, ULPs, NVMe-oF target, RDS, and NFS/RDMA so the new u32 values
+> are not forced back through signed int or u8 via min()/min_t() or
+> narrowing local variables.
+> 
+> The nvmet-rdma consumer of max_srq clamps it against
+> ib_device.num_comp_vectors, which stays a signed int, so that site
+> uses min_t() instead of min() to handle the signed/unsigned mismatch.
 
-Sounds good.
+Assuming the functionality is left untouched, from code perspective LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+...
+
+>  int ipoib_cm_dev_init(struct net_device *dev)
+>  {
+>  	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+> -	int max_srq_sge, i;
+> +	u32 max_srq_sge;
+> +	int i;
+>  	u8 addr;
+
+This can keep the reversed xmas tree ordering.
+
+...
+
+>  static int srq_size_set(const char *val, const struct kernel_param *kp)
+>  {
+> -	int n = 0, ret;
+> +	unsigned int n;
+> +	int ret;
+>  
+> -	ret = kstrtoint(val, 10, &n);
+> +	ret = kstrtouint(val, 10, &n);
+>  	if (ret != 0 || n < 256)
+>  		return -EINVAL;
+
+Side note (perhaps another patch?)
+
+	ret = kstrtouint(val, 10, &n);
+	if (ret)
+		return ret;
+	if (n < 256)
+		return -ERANGE,
+
+> -	return param_set_int(val, kp);
+> +	return param_set_uint(val, kp);
+>  }
+
+...
+
+Have you considered also replacing min_not_zero() or do some refactoring
+around there?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
