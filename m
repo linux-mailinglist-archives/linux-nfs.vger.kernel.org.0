@@ -1,63 +1,63 @@
-Return-Path: <linux-nfs+bounces-23200-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23201-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xpnOOmfqT2rVqAIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23200-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 20:37:27 +0200
+	id ANPeNhjsT2pnqQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23201-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 20:44:40 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84BFF734553
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 20:37:27 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7036F7346E5
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 20:44:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AlH1uucA;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=JtJrNelT;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23200-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23200-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23201-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23201-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E77DE3024965
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2026 18:37:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D0A9130CD871
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2026 18:41:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93E274DB548;
-	Thu,  9 Jul 2026 18:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D205B43B487;
+	Thu,  9 Jul 2026 18:40:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F38440E8DC
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jul 2026 18:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D79437452
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Jul 2026 18:40:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783622246; cv=none; b=GaWUzV3iEVeJQTqF8GmOyDQoykOmyRF3z2gjSvfWOTdABstscynzoZ4wF1uy2Bgn+Q4XnAzhxfEDHPobDncv++XlvOLLrch278jAZeT+2A1b04kZ1jZ84+L9R+PcXh8AjWxkjhxcNBbpYN3UDjb+ptI4OM8zWH8cpnJ5MwZstko=
+	t=1783622439; cv=none; b=N4eNgpbVYaq75f7Env4QUWUgkQdRGdSGhIItv5Vi/BI+lvrbAIYW7UmcRsIANoXOujsvjUFg+5NZmI+qE9cNBzha6GoCV63HpqusO0HZi+y/HdN1Bj8ccvuRYJbvxUJtFbp3gIB7BqUtcXgtiU2sfgQdlS4jrhQsTsbKYPMEut4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783622246; c=relaxed/simple;
-	bh=JSnDgLhDDcjlYNAbai4x2LTFexgDyuaepZ+2zi6HlmA=;
+	s=arc-20240116; t=1783622439; c=relaxed/simple;
+	bh=bP2LwmJXuNdd+WfSfvqGzi2n7sRpjuhumdWTYMyGPlU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XHHSvu7rUSLTkpVfqOA7sjJF9Vbc1zVx4Dx7Xk51YknngYXPpWXlSn6GkPlSboXAdwG1+BR0cixUfPgHfwfJ4RK80hhzr5MYabW3pQd17UdzeRjXTLVeRkdcwi8zSfCMN9qLp8eV89xXBRuW5Tg2NRwk09Ft2OWOl9QVKajb9Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlH1uucA; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE611F000E9;
-	Thu,  9 Jul 2026 18:37:24 +0000 (UTC)
+	 Content-Type:MIME-Version; b=AHNXhFmMInxz6eYd+4Rhqaid9w21HnpxJml8pc8AknO6PBj6q/yKoZKSwoR++WKiWC49tiV0RM7PzaUuRkUd/uW0ZbLGnft43WeGx/e2j+KZwfJ7es5hj3HLE9yc5Yn/8VUyPX4TLT957cVPRbgOi9Gd7qTKEojZ03eDSuuYbok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JtJrNelT; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05371F00A3D;
+	Thu,  9 Jul 2026 18:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783622245;
-	bh=rSx3kfXf/C7SWeMKejuO0YqWV33sYBERJ0Ev11Tl/tI=;
+	s=k20260515; t=1783622438;
+	bh=npdPDB+UdM6WBw/JSp0wV79GzHOXaRb03yB9XUmb2Wo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=AlH1uucA+UHEZDFtKmC6hGVuXtOP1e16WxrwRULX2CybZh9qQ52i+oIMPVsEQie7X
-	 BsqDJxBWWbDWjfSWM/+WWgbDnynaj6/HE+ty+7DmAFN00WaBSLi14RV3T4lOFM1A+Z
-	 i/CXfSluzacmI3cNG3srSygq3BxVBzq0nBnyMx5Nk9CXLW/KlpNcee0k6/ohrs88Tt
-	 zks1pR8ROXkxqiGpLdkii2GxibVPs2FTpv3ZMThiPaLb8OYCVso2cXqvHeU77aeOTt
-	 jF+zNa7NHt7r/9tFSlbc6uGHqIGK25Vqc6mCKLZqtaj95BwigRihDWTzlx/cIn8vtV
-	 5fc4udat9qIRg==
-Message-ID: <ada73c77322ddc803836c42699478d27ed49dcf6.camel@kernel.org>
-Subject: Re: [PATCH v4 8/9] NFSD: Prevent client use-after-free during
- close_lru reaping
+	b=JtJrNelTcrmgtlQ2KavdiEEeJ2Gd/dkxiuCIbRQTy9DiDUZu1HSPGvdbfVr+k7iEo
+	 2QRs2VXT/EXh8Clq/MEQcBRLryPkm0/E/CeTK4INOMpPkCkKgXvOz6FZD5TpoVU1Oe
+	 O6bLU2tR9zoabHRwXcBVBIO9uYgAtVlP8dmTPMgDPVTPFv+urunpxaddkPVw6M1Wua
+	 MNLSBtwzcNZzDAEyZ9kGrs6Y5zPRploLPw7+yqui8Y0fTT46hl2VBn+wMjVwzNy5+F
+	 oqVvO2Zg72X5UKqYH4VnrmfOKy10oN7EgwX89kIPlCtCcG9LdTtco1xq6wJF9aiA4Q
+	 fvpk/npopVs1Q==
+Message-ID: <62b35e8e3073f16c7ffc514fc30f23c788d25486.camel@kernel.org>
+Subject: Re: [PATCH v4 9/9] NFSD: Release the export reference when reaping
+ open stateids
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Thu, 09 Jul 2026 14:37:23 -0400
-In-Reply-To: <20260709-cel-v4-8-1d519d9be0cb@kernel.org>
+Cc: linux-nfs@vger.kernel.org, sashiko-bot <sashiko-bot@kernel.org>
+Date: Thu, 09 Jul 2026 14:40:36 -0400
+In-Reply-To: <20260709-cel-v4-9-1d519d9be0cb@kernel.org>
 References: <20260709-cel-v4-0-1d519d9be0cb@kernel.org>
-	 <20260709-cel-v4-8-1d519d9be0cb@kernel.org>
+	 <20260709-cel-v4-9-1d519d9be0cb@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -146,79 +146,123 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23200-lists,linux-nfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23201-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,m:sashiko-bot@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 84BFF734553
+X-Rspamd-Queue-Id: 7036F7346E5
 
 On Thu, 2026-07-09 at 13:40 -0400, Chuck Lever wrote:
-> An nfs4_openowner left on nn->close_lru after its final CLOSE keeps
-> its last closed stateid in oo_last_closed_stid, holding only a raw
-> pointer to its nfs4_client. The laundromat reaps timed-out entries,
-> drops nn->client_lock, and calls nfs4_put_stid(), which dereferences
-> the client through cl_lock. Nothing pins the client across that
-> window, so a concurrent force_expire_client() can free it and
-> nfs4_put_stid() reads freed memory. __destroy_client() hits the same
-> race, walking clp->cl_openowners without cl_lock.
+> nfs4_put_stid() releases the svc_export tracked in
+> nfs4_stid.sc_export, but free_ol_stateid_reaplist() frees open and
+> lock stateids by calling ->sc_free() directly, bypassing that path.
+> An open stateid takes an sc_export reference in nfs4_open() and a
+> lock stateid takes its own in init_lock_stateid(); both reach
+> free_ol_stateid_reaplist() through their normal teardown, the open
+> stateid via release_open_stateid() and the lock stateid via
+> nfsd4_release_lockowner(), each through put_ol_stateid_locked().
+> The reference is therefore never dropped, pinning the export and
+> blocking unmount for the lifetime of the stateid.
 >=20
-> Pin the client with cl_rpc_users before dropping client_lock, and
-> skip clients already expiring. __destroy_client() then cleans up its
-> own close_lru entries through release_last_closed_stateid(), so
-> teardown no longer races the laundromat.
+> Release sc_export in free_ol_stateid_reaplist() the way
+> nfs4_put_stid() does. ->sc_free() runs once per stateid, and a
+> stateid reaches free_ol_stateid_reaplist() or nfs4_put_stid() but
+> never both, so the reference is dropped exactly once. Revoked
+> stateids reach this path with sc_export already cleared by
+> drop_stid_export(), so they are skipped rather than double-freed.
 >=20
-> Fixes: 217526e7ecc9 ("nfsd: protect the close_lru list and oo_last_closed=
-_stid with client_lock")
+> nfs4_put_stid() itself read sc_export before acquiring cl_lock.
+> drop_stid_export() clears that field and releases the reference
+> under cl_lock, so a concurrent revocation could drop the export in
+> the window between the read and the final put, releasing the same
+> reference twice. Read sc_export while cl_lock is held so the two
+> paths serialize and the reference is released exactly once.
+>=20
+> Fixes: ba0cde5dc81d ("NFSD: Track svc_export in nfs4_stid")
+> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+> Closes: https://sashiko.dev/#/patchset/20260707-cel-v3-0-7c0cc16fd54f@ker=
+nel.org?part=3D9
 > Signed-off-by: Chuck Lever <cel@kernel.org>
 > ---
->  fs/nfsd/nfs4state.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  fs/nfsd/nfs4state.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 4acd02f1642c..20556b8f186a 100644
+> index 20556b8f186a..e988dfebf75e 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -7581,11 +7581,16 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		if (!state_expired(&lt, oo->oo_time))
->  			break;
->  		list_del_init(&oo->oo_close_lru);
-> +		clp =3D oo->oo_owner.so_client;
-> +		if (is_client_expired(clp))
-> +			continue;
->  		stp =3D oo->oo_last_closed_stid;
->  		oo->oo_last_closed_stid =3D NULL;
-> +		atomic_inc(&clp->cl_rpc_users);
->  		spin_unlock(&nn->client_lock);
->  		nfs4_put_stid(&stp->st_stid);
->  		spin_lock(&nn->client_lock);
-> +		put_client_no_renew_locked(clp);
+> @@ -1272,9 +1272,9 @@ alloc_init_dir_deleg(struct nfs4_client *clp, struc=
+t nfs4_file *fp)
+>  void
+>  nfs4_put_stid(struct nfs4_stid *s)
+>  {
+> -	struct svc_export *exp =3D s->sc_export;
+>  	struct nfs4_file *fp =3D s->sc_file;
+>  	struct nfs4_client *clp =3D s->sc_client;
+> +	struct svc_export *exp;
+> =20
+>  	might_lock(&clp->cl_lock);
+> =20
+> @@ -1285,6 +1285,8 @@ nfs4_put_stid(struct nfs4_stid *s)
+>  	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
+>  	if (s->sc_status & SC_STATUS_ADMIN_REVOKED)
+>  		atomic_dec(&s->sc_client->cl_admin_revoked);
+> +	/* Read under cl_lock to serialize with drop_stid_export(). */
+> +	exp =3D s->sc_export;
+>  	nfs4_free_cpntf_statelist(clp->net, s);
+>  	spin_unlock(&clp->cl_lock);
+>  	s->sc_free(s);
+> @@ -1744,6 +1746,7 @@ static void
+>  free_ol_stateid_reaplist(struct list_head *reaplist)
+>  {
+>  	struct nfs4_ol_stateid *stp;
+> +	struct svc_export *exp;
+>  	struct nfs4_file *fp;
+> =20
+>  	might_sleep();
+> @@ -1753,9 +1756,12 @@ free_ol_stateid_reaplist(struct list_head *reaplis=
+t)
+>  				       st_locks);
+>  		list_del(&stp->st_locks);
+>  		fp =3D stp->st_stid.sc_file;
+> +		exp =3D stp->st_stid.sc_export;
+>  		stp->st_stid.sc_free(&stp->st_stid);
+>  		if (fp)
+>  			put_nfs4_file(fp);
+> +		if (exp)
+> +			exp_put(exp);
+
+nit: nfs4_put_stid() does this in the reverse order. It doesn't
+actually matter, but it looks a bit weird if you want to fix it up
+before merging.
+
 >  	}
->  	spin_unlock(&nn->client_lock);
+>  }
 > =20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
