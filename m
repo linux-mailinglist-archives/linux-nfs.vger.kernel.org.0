@@ -1,207 +1,273 @@
-Return-Path: <linux-nfs+bounces-23187-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23188-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mdFnI8tuT2p9ggIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23187-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 11:50:03 +0200
+	id FuGvKYWWT2ohkQIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23188-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 14:39:33 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00E5572F202
-	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 11:50:02 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F829731132
+	for <lists+linux-nfs@lfdr.de>; Thu, 09 Jul 2026 14:39:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b=PovcRIVX;
-	dmarc=pass (policy=quarantine) header.from=suse.com;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23187-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23187-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=HN20nwGU;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23188-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23188-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B55AD302BBE7
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2026 09:50:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E434F3091E81
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jul 2026 12:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E66DD3F4848;
-	Thu,  9 Jul 2026 09:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96D0C3BED63;
+	Thu,  9 Jul 2026 12:33:12 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC24401A33
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jul 2026 09:49:51 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783590598; cv=none; b=cKluk/HVrKJRv97KB1BlqVeVTt6GO/2AroUd5quF3cgRLtuXqDiGq30KCBF8TjTwQEKNPBpLeO4uLUZtx5C0Yl2sWy3NTYIeGE8E9Mn0FNMBSxUio3DjNnUU5PEdg0wOquHcq0UYnsZ1WbxI9D/neT3jFkg+usC7qQGGs6LZRkU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783590598; c=relaxed/simple;
-	bh=jTFvyUggpn9b7ir5dJXF/0vV6aESSqllkJsE1EJX8x0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qB6WuXC78EHO3BJ6mcnIG+YPRY7IDFdjgOlf6rCGoq5EuCnXJ45jlPADSQWpgdUKHeXlsUb9NUEMLur2R51LPD73w+PzZBnoB4Uh+Iq+9ZJtpNj8LmBVEvScarwXwa7DyqsOZZbHuR4UYYKdI5BTC54vV1yVnh4ukk5F0OsDjik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PovcRIVX; arc=none smtp.client-ip=209.85.128.45
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-493e497643fso9113685e9.0
-        for <linux-nfs@vger.kernel.org>; Thu, 09 Jul 2026 02:49:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910D142378A
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Jul 2026 12:33:09 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783600392; cv=pass; b=njdx2LhOnWhMCpUSo192XWkQwXDzBsEN4Y+yzV37g7nNWWp4lMOoO/0/0ckKyBunyjEt+AZo/uy3DB9YLdTT9dRniHfmhwBAHxoj8ZX4mszpdvFCWOMitTO3MlNkGvkQVzqSW+oE6nvRROJi1b1NWYhJJ5VxwQ1vx3wHPJnZJ8k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783600392; c=relaxed/simple;
+	bh=TZ4/MUsld9BeNU5QPGcKumrNi2uJrTMz7CYtcX2ZYPU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MvlIMRvWFVCpx3uY0ASwpV4QzilaISJb3zqW+SmgoZ9QtRFdptwTKvScKW0KpVbkA4yPAue2XZHxXgX1p1NwNMlSqsxNUJF5jMWuJT8IMe/EZuXrnz8VmCice6F03R9YHehluL2C65gfPiuGEaMMrKai56+S6P0LOTlfoVK98VM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HN20nwGU; arc=pass smtp.client-ip=209.85.214.178
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2cc7e86e7aeso17568035ad.2
+        for <linux-nfs@vger.kernel.org>; Thu, 09 Jul 2026 05:33:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783600389; cv=none;
+        d=google.com; s=arc-20260327;
+        b=SfKKlZwt0srBz+KryIPh/3BQr9vLtsZcG1zcfaWumcAk77F2gzFdqNcoLwFjF6WKNt
+         4LH0nCUalfNb35WpyDoIQF94DMfcwiHNS1+kNZajRFn+i7BXDqA8Pi5Lnt+PLpUoZUnF
+         x25XExOxrWMLar5FAjPSI9ugt+ixwd160InBPsEfBh3vXc2r4YwHypoj2Sux+nB30v0A
+         UuRIuQrhE5Onh5RGhoIA6SNA1F20qAys8y1TwMGIzjT3dyQZw3DCdDMW2l4IM0bPfnqK
+         tX3ULVluLFb7gNETvHG8ZD7I53n5ptQDz3NVisJxEXiQnSBK/ANGGcj/5U6J0yo0gJYA
+         kg0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=wEznrTgLikCU91TRmqiWgIn6d7+4evlXZ/ukCLbpHQY=;
+        fh=KNISephoOrYmBIxEiK6Og3bnUSwegZIfekPKvcS7FpU=;
+        b=ORD6dZNo8vqEEQ1tu7H1ZpHMXiuy2ypDleQiQwHdaVGbn7T2ZKSI3XJ4mX0BUYC1qW
+         A/NJ0k4LFj8145CWyXYuJdHgyrj7dIzGiVLh9Pe5QgLvlcf3tXDVPVC3Va53ulHl9gVp
+         TYhWKCSJ+sPMJEw9QUeus67Qrw5PN9+jgSoChgNkgehkXnOvJ7l273Y0spl+31a5Ao9j
+         lOiZhhdQZoo4mOpDCodxjXirP7AfJJc1NwexIaEU2xwXsaEViCb13+axFeiUBn45tQDG
+         sV3kp0dgOZBeDDk0skpHWYpkmi7u7rx0JIdR4u17o1JtayDgxc0YiqrmNiVbPaM0McSh
+         Z8IQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1783590589; x=1784195389; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=MXemn+RWgfgniHXL+Z+iccp115cwF5wMpUS4nNjdkFs=;
-        b=PovcRIVXEPSF/FJeQlxhlzoXjqZOrbs3CiE5bUYuum/kokSouOcrfuWzkJz+QZ+EEU
-         bXZutBCPHghMPuDpORpgqEkhwf9ItYai/C2Wls7hXpV8JBACI0ISAzSZohMkmVLXApNn
-         fZlxwp5LQbRlt1W9WkBqq04596J259cyQGkTEsx5D5ai1Vpe/8NCZrLqgzS5soekf8Zd
-         N1CUWCeoaHYptaJl5ecJ1ZzDp9e7jZkz7Z27dZDIG4LQ8N1cI1J5HRitdDR0mFAuAiJK
-         tCK2hnhPLuoPo29pU3Y3TxhIiW33KldSOjrnaQ78LbO8JgLXI4Yv8EB+9OvmBldN7dCE
-         StRA==
+        d=gmail.com; s=20251104; t=1783600389; x=1784205189; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=wEznrTgLikCU91TRmqiWgIn6d7+4evlXZ/ukCLbpHQY=;
+        b=HN20nwGUQhAlIoFLQB2Y24qqbP6XBylsYfXwv5i/Gq6nh362O9PoY07rXep5aiX4Ja
+         A/e5/TLrPEry5ib+HqsNe+m3DTGh2P5PTardH7W8Fg1dWyKoewyzajmz/mvRmOy4uK7v
+         IHFLHt2w64+PgFbQj/D4O79bDHxCcv26+AlzLg5XPaGg6A5g6dOM5ipc0dyOGhouczqB
+         hAi0ljDFpeMzjj6fg+4Eyw2mCY62fDYeJB9K0V6HRDyfkDbKyGzu7A9UX4evukNTzwuh
+         YhqNEgD2bT5xirBqw+jC2+8lEBZx3jCxiLoCFCE0fRgAmz9I2MxGWFC6el6oCjGItdvP
+         CJDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783590589; x=1784195389;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=MXemn+RWgfgniHXL+Z+iccp115cwF5wMpUS4nNjdkFs=;
-        b=dD0YkV4854rqEw9FOTYASlX9ff2RVpL99AfR7NRNcTnwcfH4XgVWDBMdH/JcB7pVKU
-         t53ZFWU59+n/JyykGVeA00/PRh8TQVQYi6P8HXl0jDybOJp3gmw1Iscy7h+yZLLFkqWA
-         kjlDXNGZOyqvBYXzqF8SrOM425rev/hC+ZP5Fk5HvNEmhGFzY5ZOTHfimMFwYyuW9Sxi
-         PsnTT9k7i45PiRaRtlhVClXoQbV/AoB9w4eUCxx/YfZpr1vtqY9TmQA3slfOAZNMcfdd
-         8oqEgqcwhAitL7GKSxTSd+LKl+jWU9XAKjTh1cIzG7TPA5abab4hQ39c7HpKO74k8BTk
-         76bg==
-X-Forwarded-Encrypted: i=1; AHgh+RpHOgs6wk2OKeSdl/0KDcTz8UsbH0Hj2whNxS0xWXP/tBqt3PhCDkE9Z4Rn4sJZijb3MhGOi4YhtQY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRNRBMPg+qhm7pREowfRorCfTFIvL9mDF7+AqiRxDoCzmInwcu
-	r7GeBtSVgiOb89CpiLkwX1uOyKNCtXUMVTpIQoSOFGqSjjCIxmnkBvM7x66mOmVCZWU=
-X-Gm-Gg: AfdE7clHZN1JAfupE7fckihKtbUGctOOCFX4iuY1R9EjZ7x8Cduvm/UBA8VbSo6QtNn
-	CpT1LIbzhIq1Ha0EJcfycdIHTqhrwU+a6whbASq50B4USYQp69eiwn7zX0CGriWwPr9pU2bFC/y
-	h65hzM2BmTKfoo9znYLKWaUjT5AhMIsVTTx7X5KyRHR+/1ycmnC4O1wIfTS05KgLaVyUDhRTlzy
-	Rw9j4mjkaW1JUMdapEvoc26yIB+xwD6P8O914eNML6+g+RXB6dhe3WhM5Izy8hwu3axjqsbFbhF
-	D0m6thU+KSil0nNRanmfXx1I0os6rlF2M1JIQZpMNE7+pKaT6cI5tSh8HHh3/HQClaqV2zbTYpU
-	mgyZRR7FNJu7Kw/RGFHcv2xnZXVrHqfCg7CM8feVvUUwTv/TOiAIupoc28NMivXbOaWb7ClCoAx
-	XQEfpMAH7YD6xxEgXrWXytWnfirlgZxTz3Lg==
-X-Received: by 2002:a05:600c:c1d7:20b0:490:9782:3eb8 with SMTP id 5b1f17b1804b1-493e68c3535mr47652155e9.25.1783590588957;
-        Thu, 09 Jul 2026 02:49:48 -0700 (PDT)
-Received: from [192.168.42.79] (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493eb6d53absm47837275e9.6.2026.07.09.02.49.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2026 02:49:48 -0700 (PDT)
-Message-ID: <3e2ae6e8-41ad-45f0-a885-131a5711c276@suse.com>
-Date: Thu, 9 Jul 2026 11:49:45 +0200
+        d=1e100.net; s=20251104; t=1783600389; x=1784205189;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=wEznrTgLikCU91TRmqiWgIn6d7+4evlXZ/ukCLbpHQY=;
+        b=cRBGp7KcMpT2CrTLo/kiUDshBmpvTHdcAD1KQyQ5GchumRgcVkr+jNRRp3wDK8TVTt
+         31TYAsBhKWsreZVAQoLkMlAFY/eBnGU2NVEIBYQJ6hHuk4t+Q/lDuhqaNY0hP7miE6kG
+         fOXr1a2G17riZU0eyAf6RMiD9GSJ/Yf+rM8l4PPl74QKZmHELH+Z/L9aKAYeOFPL2UXB
+         BYfrWTlkNR/vX9/SE3c8+rT/ssk8y0ReZDhmFqIs52rDDwmUiFMWzUo1jiIp9iXHDSS4
+         mjA7WYaov0uNOKVQlvbMDG3l9R+dt8jSwgSOqKfIQqA7Yt6raTDoRJ2cGjJU1NP5Ud6W
+         QI9w==
+X-Forwarded-Encrypted: i=1; AHgh+RoqmoCd6o00bm+wJ46VE+IkZXGqvrhUY2GawQbGptqfaB6U3bi0pfno5evBZz5pTqzRiQpvs3FQSUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeHn4fsty0yBhqTvnBmzJuJwmuC9IZGvgWRQ74+ek510bd97oG
+	yJAwbNSVd6pvnv/0Ia659hZn+OxoAIr9wWlOHbGmTg2OF62egIEE8yykJuocZvrgqVL6G8J4AP3
+	c9y/Wr9erObNDHH0sLZsWQzEJXXrHoTo=
+X-Gm-Gg: AfdE7cmXh8F+k/+vr3oTBg3ZCf6QetE4wDku2ETA1JGZrRqfliq2JHx9enHEmOmUkLR
+	NEF5Qy49yvsWCznRplyhVFutmExrWXCFVnpr44kGlEZOdmWV2/wa//+X1dCw2UcLusPEXob4oer
+	a2pl6chDeOXEQ2mDD6dTqyCJdx7kWBCUjS+6FwhPL0ESbUroRyGvKAxmZfzYH1KflOSkw8dwgWS
+	qEcc/R3UAHq2N114IoyLaKDB+vVWWCRKfCJWWlCxt1g8bEv6cxhPekRUYUDgr7Y8nHXMBqY
+X-Received: by 2002:a17:902:fb0d:b0:2ca:f21a:a6c5 with SMTP id
+ d9443c01a7336-2ccea34857fmr53376045ad.1.1783600388853; Thu, 09 Jul 2026
+ 05:33:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] umh, treewide: Explicitly include linux/umh.h where
- needed
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Philipp Reisner <philipp.reisner@linbit.com>,
- Lars Ellenberg <lars.ellenberg@linbit.com>,
- =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
- Jens Axboe <axboe@kernel.dk>, Johan Hovold <johan@kernel.org>,
- Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Michal Januszewski <spock@gentoo.org>, Helge Deller <deller@gmx.de>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
- Joseph Qi <joseph.qi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Luis Chamberlain <mcgrof@kernel.org>,
- Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- Aaron Tomlin <atomlin@atomlin.com>, Pavel Machek <pavel@kernel.org>,
- Len Brown <lenb@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Nikolay Aleksandrov
- <razor@blackwall.org>, Ido Schimmel <idosch@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Kentaro Takeda <takedakn@nttdata.co.jp>,
- Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
- linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
- drbd-dev@lists.linux.dev, linux-block@vger.kernel.org,
- greybus-dev@lists.linaro.org, linuxppc-dev@lists.ozlabs.org,
- linux-acpi@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
- cgroups@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-pm@vger.kernel.org, driver-core@lists.linux.dev,
- bridge@lists.linux.dev, netdev@vger.kernel.org, keyrings@vger.kernel.org,
- linux-security-module@vger.kernel.org
-References: <20260708154510.6794-1-petr.pavlu@suse.com>
- <20260708154510.6794-2-petr.pavlu@suse.com>
- <ak6STbqZd-Q-c56v@localhost.localdomain>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <ak6STbqZd-Q-c56v@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260703102759.9626-1-achillesgaikwad@gmail.com>
+ <20260707152305.15324-1-achillesgaikwad@gmail.com> <CAHC9VhSWWhMjs282cOTT45gn0pa8bDSxD0H24_is7k4tXmGJxQ@mail.gmail.com>
+ <ac4f209c-f465-4938-adae-ecd00ecab175@app.fastmail.com> <CAHC9VhQYjj3--K6KkDJBf6LfXqtj4TPh5LsMBpPYc0-Zz6wTMA@mail.gmail.com>
+ <CAEjxPJ7dttPDxQDa_xXFd1H-QT_vkUwjtnH+=3cmG5dhSiaAXw@mail.gmail.com> <CAHC9VhSyCuiPBRWz_vUbx7+L5yLiXkjKX+7UyCLr82-_gAj2NQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhSyCuiPBRWz_vUbx7+L5yLiXkjKX+7UyCLr82-_gAj2NQ@mail.gmail.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 9 Jul 2026 08:32:57 -0400
+X-Gm-Features: AVVi8Cd4uZMDN1rLABDX_bWMI0FuplRTPn2H59VH4Frrquyfh8DPbM0M13o1E7I
+Message-ID: <CAEjxPJ4+wgUDY3YxajZ=2D3WLzgat_Mqvr05VtJ4KrXW7_kuXA@mail.gmail.com>
+Subject: Re: [PATCH v2] NFSv4.2: fix nfs4_listxattr size accounting
+To: Paul Moore <paul@paul-moore.com>
+Cc: Anna Schumaker <anna@kernel.org>, Achilles Gaikwad <achillesgaikwad@gmail.com>, 
+	Trond Myklebust <trondmy@kernel.org>, linux-nfs@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[petr.pavlu@suse.com,linux-nfs@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[intel.com,alien8.de,kernel.org,redhat.com,linux.intel.com,zytor.com,linbit.com,kernel.dk,linuxfoundation.org,gentoo.org,gmx.de,zeniv.linux.org.uk,suse.cz,brown.name,oracle.com,talpey.com,fasheh.com,evilplan.org,linux.alibaba.com,cmpxchg.org,google.com,atomlin.com,linux-foundation.org,blackwall.org,nvidia.com,davemloft.net,paul-moore.com,namei.org,hallyn.com,nttdata.co.jp,i-love.sakura.ne.jp,vger.kernel.org,lists.linux.dev,lists.linaro.org,lists.ozlabs.org,lists.freedesktop.org];
-	TAGGED_FROM(0.00)[bounces-23187-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:paul@paul-moore.com,m:anna@kernel.org,m:achillesgaikwad@gmail.com,m:trondmy@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:mkoutny@suse.com,m:tony.luck@intel.com,m:bp@alien8.de,m:tglx@kernel.org,m:mingo@redhat.com,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:philipp.reisner@linbit.com,m:lars.ellenberg@linbit.com,m:christoph.boehmwalder@linbit.com,m:axboe@kernel.dk,m:johan@kernel.org,m:elder@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:spock@gentoo.org,m:deller@gmx.de,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:trondmy@kernel.org,m:anna@kernel.org,m:cel@kernel.org,m:jlayton@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:tj@kernel.org,m:hannes@cmpxchg.org,m:mcgrof@kernel.org,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:atomlin@atomlin.com,m:pavel@kernel.org,m:lenb@kernel.org,m:akpm@linux-foundation.org,m:dakr@kernel.org,m:razor@blackwall.org,m:idosch@nvidia.com,m:davem@davemloft.net,m:edumazet@google.com,m:k
- uba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:dhowells@redhat.com,m:jarkko@kernel.org,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:takedakn@nttdata.co.jp,m:penguin-kernel@i-love.sakura.ne.jp,m:linux-edac@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:drbd-dev@lists.linux.dev,m:linux-block@vger.kernel.org,m:greybus-dev@lists.linaro.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-acpi@vger.kernel.org,m:linux-fbdev@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:ocfs2-devel@lists.linux.dev,m:cgroups@vger.kernel.org,m:linux-modules@vger.kernel.org,m:linux-pm@vger.kernel.org,m:driver-core@lists.linux.dev,m:bridge@lists.linux.dev,m:netdev@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-23188-lists,linux-nfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[stephensmalleywork@gmail.com,linux-nfs@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[petr.pavlu@suse.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_GT_50(0.00)[76];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:from_mime,suse.com:email,suse.com:mid,suse.com:dkim,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[stephensmalleywork@gmail.com,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,vger.kernel.org:from_smtp,paul-moore.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 00E5572F202
+X-Rspamd-Queue-Id: 0F829731132
 
-On 7/8/26 8:13 PM, Michal Koutný wrote:
-> Hi Petr.
-> 
-> On Wed, Jul 08, 2026 at 05:44:29PM +0200, Petr Pavlu <petr.pavlu@suse.com> wrote:
->> diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
->> index a4337c9b5287..60eb994c32ae 100644
->> --- a/kernel/cgroup/cgroup-v1.c
->> +++ b/kernel/cgroup/cgroup-v1.c
->> @@ -16,6 +16,7 @@
->>  #include <linux/pid_namespace.h>
->>  #include <linux/cgroupstats.h>
->>  #include <linux/fs_parser.h>
->> +#include <linux/umh.h>
->>  
->>  #include <trace/events/cgroup.h>
-> 
-> There is kmod.h in here too but it's unnecessary, no module lazy loading
-> in this code.
+On Wed, Jul 8, 2026 at 4:11=E2=80=AFPM Paul Moore <paul@paul-moore.com> wro=
+te:
+>
+> On Wed, Jul 8, 2026 at 2:54=E2=80=AFPM Stephen Smalley
+> <stephen.smalley.work@gmail.com> wrote:
+> > On Tue, Jul 7, 2026 at 4:01=E2=80=AFPM Paul Moore <paul@paul-moore.com>=
+ wrote:
+> > >
+> > > On Tue, Jul 7, 2026 at 3:12=E2=80=AFPM Anna Schumaker <anna@kernel.or=
+g> wrote:
+> > > > On Tue, Jul 7, 2026, at 2:48 PM, Paul Moore wrote:
+> > > > > On Tue, Jul 7, 2026 at 11:24=E2=80=AFAM Achilles Gaikwad
+> > > > > <achillesgaikwad@gmail.com> wrote:
+> > > > >>
+> > > > >> A call to listxattr() with a buffer size of 0 returns the actual
+> > > > >> size of the buffer needed for a subsequent call. On an NFSv4.2
+> > > > >> mount this triggers the following oops:
+> > > > >>
+> > > > >>   [  399.768687] BUG: kernel NULL pointer dereference, address: =
+0000000000000000
+> > > > >>   [  399.768705] RIP: 0010:_copy_from_pages+0x44/0xe0
+> > > > >>   [  399.768722] Call Trace:
+> > > > >>   [  399.768723]  nfs4_xattr_alloc_entry+0x1bf/0x1e0
+> > > > >>   [  399.768730]  nfs4_xattr_cache_set_list+0x43/0x1f0
+> > > > >>   [  399.768731]  nfs4_listxattr+0x21f/0x250
+> > > > >>   [  399.768733]  vfs_listxattr+0x55/0xa0
+> > > > >>   [  399.768736]  listxattr+0x23/0x160
+> > > > >>   [  399.768737]  path_listxattrat+0xba/0x1e0
+> > > > >>   [  399.768739]  do_syscall_64+0xe2/0x680
+> > > > >>
+> > > > >> security_inode_listsecurity() (via the xattr_list_one() helper) =
+now
+> > > > >> decrements the remaining size even when the buffer pointer is NU=
+LL, so
+> > > > >> in the size-query case, 'left' underflows to a huge size_t value=
+. As a
+> > > > >> result, nfs4_listxattr_nfs4_user() treats the NULL buffer as a r=
+eal one,
+> > > > >> leading to a NULL pointer dereference in _copy_from_pages().
+> > > > >>
+> > > > >> security_inode_listsecurity() does not return the number of byte=
+s
+> > > > >> it added to the list, so the code derived it as
+> > > > >> 'size - error - left'. That is also wrong in the size-query case=
+:
+> > > > >> the generic_listxattr() contribution is only subtracted from 'le=
+ft'
+> > > > >> when a buffer is present. Thus, the query result comes up short =
+by
+> > > > >> exactly that contribution (e.g., "system.nfs4_acl" on a mount wi=
+th
+> > > > >> ACL support), and a caller that allocates the returned size gets
+> > > > >> -ERANGE on the subsequent call.
+> > > > >>
+> > > > >> Declare 'left' as ssize_t, use a scratch copy to measure securit=
+y
+> > > > >> hook consumption, and only decrement 'left' if a buffer is prese=
+nt.
+> > > > >>
+> > > > >> Fixes: f71ece9712b7 ("security,fs,nfs,net: update security_inode=
+_listsecurity() interface")
+> > > > >> Suggested-by: Paul Moore <paul@paul-moore.com>
+> > > > >> Signed-off-by: Achilles Gaikwad <achillesgaikwad@gmail.com>
+> > > > >> ---
+> > > > >> Changes in v2:
+> > > > >>  - Use a scratch variable to track security label size directly,
+> > > > >>    replacing the old formula that undercounted the size-query ca=
+se.
+> > > > >>  - Drop the now-unneeded NULL-buffer special case for
+> > > > >>    nfs4_listxattr_nfs4_user().
+> > > > >>  - Retitled from "fix nfs4_listxattr NULL pointer dereference"
+> > > > >>    (the same accounting bug caused both the oops and the underco=
+unt).
+> > > > >> v1: https://lore.kernel.org/linux-nfs/20260703102759.9626-1-achi=
+llesgaikwad@gmail.com/
+> > > > >>  fs/nfs/nfs4proc.c | 10 +++++++---
+> > > > >>  1 file changed, 7 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > [CC'd the LSM and SELinux lists for visibility]
+> > > > >
+> > > > > Unfortunately my testing was unsuccessful due to an NFS problem t=
+hat
+> > > > > started with the v7.2 merge window that I haven't had the time to
+> > > > > bisect yet.  Assuming the NFS folks are okay with this change, I
+> > > > > figure they will want to send it up to Linus via their tree, if n=
+ot
+> > > > > let me know and I can send this up via the LSM tree.
+> > > >
+> > > > Yeah, we'll send it through the NFS tree.
+> > >
+> > > Thanks Anna.
+> > >
+> > > > I'll be curious to hear
+> > > > what problem you're hitting, and what patch is the culprit once you
+> > > > do that bisect!
+> > >
+> > > Yes, me too :)
+> > >
+> > > I'm still working through a review backlog so it might be a bit befor=
+e
+> > > I have a chance, but in case anyone wants to test it out, it's easily
+> > > reproduced using the selinux-testsuite and the NFS tests:
+> > >
+> > > https://github.com/SELinuxProject/selinux-testsuite#nfs
+> >
+> > They seem to pass for me with and without the patch (they don't
+> > exercise listxattr AFAIK).
+> > This was on the current selinux/dev branch, v7.2-rc1 based.
+>
+> They work for me on vanilla v7.1 and fail somewhere before vanilla
+> v7.2-rc1 (still bisecting).
+>
+> I wonder if there is an interaction problem with a recent userspace
+> update.  What distro/userspace are you running for your tests?  I'm
+> doing my testing on a relatively recent Rawhide.
 
-You're right. I'll remove the kmod.h include from
-kernel/cgroup/cgroup-v1.c. I went through all the files again and it
-seems this was the only place I missed.
-
--- 
-Thanks,
-Petr
+I was on F44, so yes, it could be a difference in e.g. coreutils or
+other userspace on rawhide that is tickling this particular bug.
 
