@@ -1,54 +1,55 @@
-Return-Path: <linux-nfs+bounces-23231-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23232-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 6V+nLQL9UGp39gIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23231-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:09:06 +0200
+	id 3K27DlP+UGrS9gIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23232-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:14:43 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1680873B9EE
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:09:06 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3304373BABB
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:14:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="U4GkVJ/Q";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="SMXVyg5/";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23231-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23231-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23232-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23232-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E4B530477E5
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 14:00:24 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 04E95301139A
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 14:00:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6282BDC28;
-	Fri, 10 Jul 2026 14:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CD892FA0C4;
+	Fri, 10 Jul 2026 14:00:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCE22DB78C;
-	Fri, 10 Jul 2026 14:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3BD2E737D;
+	Fri, 10 Jul 2026 14:00:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783692023; cv=none; b=rPza+7gwCPMF/1G//KUvV2lSox0K44j+9RaUxFqiOPMNcd3rbYoox1DTCBzc+xKplAhZv/cMZPGsU/jctvUeAnaOcd8OjOuhuW/UeSYHhkyUgWEjx9bJSUSa9i1EaMYtSq5iwCsHW76tvon7t9mek5HiLxy3o+34PyiR+LjcDUA=
+	t=1783692025; cv=none; b=TZmlRdVsV0my4w8+SmbLjIUJCAH8yUH7qpJMXIoisoiFriGn16i2EBIX6zO7c9jpVCTFvIj90N1y+eDMj+UhCNIWfdVxe1nZL9vWqfyjLRKyxG7dFqZ+0/gfoJ9EdSld9gajiYTQxrjOC4YBBw8NQftLJunrSgXaEYRUuW8HLGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783692023; c=relaxed/simple;
-	bh=QPt+IimTqDFgymJN5oJf2AlkCQtrWCNLlMFUzk0KI4Y=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ar83wjgBrTPjQNUAFg48a5gcamkHM59thokBJtgW6+SvZ026GcN1yanrw8A1eNAdJ8cPFe5TyDy7/9zwrxaeytjpjYJ+Eitu9eTvN32pEP1kYQwTd9bmhjAmZWnOCxxNAhSSoioXVA7izCauNBsANkP52uliadci/0goVij1yDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4GkVJ/Q; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8544F1F000E9;
-	Fri, 10 Jul 2026 14:00:21 +0000 (UTC)
+	s=arc-20240116; t=1783692025; c=relaxed/simple;
+	bh=0uwhy/RiiEPzdI8zBwJ661GrYPmXfXDw4kHWDXe+aFc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=no18ZslTqLw6hRjl0sfKY5sNAXx+LJ83NMkQo51a2USbvE2DRuI6Ka8qGjDJPz7TXcikEzWq9H1iEL8UdsUFUMg0oAPGNelaDb5P4rRgNZOEjheJuRLTZkPu4AFspT1koYcdsG508Sy1xfb1YNx0LEfpcn9F6DSn9RcpHnyVQu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMXVyg5/; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DEEB1F00A3D;
+	Fri, 10 Jul 2026 14:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783692022;
-	bh=Wpq0sXsoJXmV+Vhp7sFBedgd51dK5O+/ymbBfVbBXhc=;
-	h=From:Subject:Date:To:Cc;
-	b=U4GkVJ/QHy0CEtan8xLkLcX/M873nc/BDpxPitHJd7xvRH2fbdbw8dIhLLysAPi7g
-	 rLsQjk0GrjWP0efQljMYu+hFzPVUnOubSb/Frk1btjOPX92DaIG8a/jB3H1ydT4PVI
-	 E59aDHjIoQJ3toV72/ro5iHzJzxRlk2pHw84d+TKNEEhnuN5cVGHntQZf++FAZ0Zhn
-	 frandT4xiFH6xwpuqS2msPFt/XrnS+8o8vhJFO6XCnSRkQipzNmRHUDDujEzxYQCn8
-	 eyfnkVew25a2D7TgUyyppgHTkWkN8ZwEPv4yS6epI5kL0JYs65pV9L9xrplmGgqOGd
-	 y8qpajYN/BaHA==
+	s=k20260515; t=1783692023;
+	bh=Jag53DCfZhjz9zup7kqf3WqxAeZYGKw0TPMdGztZ/+Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=SMXVyg5/tQhbhHCEebiUM3fdbH5sf6Hs170VGrpFR+/zX3Org2TSYu0I4zR4BFCiv
+	 pu6s8Bzqh9CPM/dokhKxS8vUfoQkDN30qFiZ+HKsGAPtQ57LxMI7fuWZHEaUoRZCja
+	 GNVZpa1v0xuHfnqJfF/19g/v/bw+w2DYNNArgPAdrhmgwuqhXCf87YcLlNPRssN3Oo
+	 8qTCjiXIztCCCJxw1eiATg5OKVHD/cATlz/sqDkwfDVpizOWX3gMQCV/51PZDv0CwR
+	 /qMmov3Mmj7rnm5uHV4x2flTP6gzRUkK7lUNldUn6Pl6GLyRn5gZ5J+ndQtB1zP2Md
+	 suT1Qc4ERbYRQ==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v3 00/10] nfsd: copy offload fixes
-Date: Fri, 10 Jul 2026 10:00:04 -0400
-Message-Id: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
+Date: Fri, 10 Jul 2026 10:00:05 -0400
+Subject: [PATCH v3 01/10] nfsd: fix cpntf publish race in
+ nfs4_init_cp_state
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -57,31 +58,29 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XMywrCMBCF4VcpszaSTHqJrnwPcdHYSTsoqSQlK
- KXvbtqNKLg8B75/hkiBKcKxmCFQ4sijz0PvCrgOre9JcJc3oMRa1lgK72InJooT+16YUh+cVLX
- WCiGTRyDHzy13vuQ9cJzG8NrqSa3vn1BSQgprTKXJIlJZnW4UPN33Y+hhLSX86EYefjRmLVtlW
- 9TaOtN86WVZ3hJJ+WDnAAAA
-X-Change-ID: 20260624-nfsd-testing-8439f0163312
+Message-Id: <20260710-nfsd-testing-v3-1-a0ff7db6aa3e@kernel.org>
+References: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
+In-Reply-To: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2635; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=QPt+IimTqDFgymJN5oJf2AlkCQtrWCNLlMFUzk0KI4Y=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqUPrt2XrIcGdDVbDqCwaswCoA2+n9fFvRZCf2w
- XRg9od5rAKJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCalD67QAKCRAADmhBGVaC
- FRIkD/9basz9x9JNvxvHe52fZu3KJoOV7GHlq15YNc+fBW7I3Yf1x5avtUiqxofW9tnqp0C3blc
- ITU+mIeLhTQ92HJ7iFV0iwVimPsgLzBn3uyxAxsH+pdgd+gUY+MLrRfIktbzAmDtlLlJ/HNV/Dd
- wCm8ZB9DLvzA13rmffVpfloXYDA6B3HgGf7H3ED6UML0DkZ6VLRUGtX7aU69Hz1x9UoDHbBnbg2
- FcUKQ93Jrs0qp2VWmQ7acmIVWEdHDpVL0/4oaU4U5cECviEuj6DsBbVrPbdiWxETWt1zwpQH1cz
- VYQb16mlIgMRfYu9SitFTrB1LdZzHDUtwEddupZgd+2OvRC0U8I9v2kFmasR4cMPjgOEbFj21JE
- eg+Pcu96H8t2oW82SPdRWZjRKuicquLpz06ajjGccWc1wlUiKFhrCmNxxYud+whKHxX/0gSCy5i
- DgaaS+C819s/9wokKaWOngiXgAT03ffwlaQ6nPoc8xwrbdynkwBINZz41VjjJ035I9WTHKorV2l
- nilbhPExSLu0X+0FpfxGFxZPDeEjweIZGNGxbzDcNZbPaNPqnkXoSxgka0yWNShfEU7Ah/ESizs
- tUEHndEnXXsIM7sajboOMhLNNLrjA0zaKdvJxrZBdwg9rsszf8m3NmW9+BiWU4QdZK8YNM+yNMh
- s/7QTTxXHWkTpMg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4124; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=I/ZB1x92w1R31EbXV6PYwa3Zzf0dTEOEA09nUqFj1gQ=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqUPry3Npdja8BKKYfIYAnBNWAkGqAlcBaTitOf
+ 17xX4B8q2uJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCalD68gAKCRAADmhBGVaC
+ FZDBEACZV/n7gGCp7PI+2a0RL/dqOWS3JJA/oZ+mGYoW8tkFxPC5DI5dWsTlHySOrWKeieu5ACq
+ 8N5VR5KSmcOOAhTwA+auIafMeLgOTc/t/9KkWkBM91820X4D404Dp9IvQ94ahjW5F78WcSDsEp3
+ iv9XdvX9I+w1X/EglC8kXAeQP1kf4YkghmlwgAsBKb8MBwNhpKOJE9zILVLaGfqheGwuhqDQXj2
+ G57VtAUJvudF/6+OB97yTVE8axTISYfi6MLqhZQPZiCSV75W9gNJakIpqGkyKkG2HX5f1z182Gs
+ IGubkgzDSMzWxZMPX6ZCw6e+vxvEMHMRqRSDtdLr7+rGKdxIjmMnlqqPdONuQPaLq6B8ck5GeAI
+ qfH9PgMRv+MredLI+LM83RKlhAsUnzo+fLwGrjTqFbluFa3x8imGSQH3sr/2pvFxZ/6A3sopLMv
+ 1cb+Sn66yaP1niXjY9uH48dlWvaluw1oYuXRn9LslDlaRQOmQf8VwhHTDBgCWu1ir9pFC123Q2f
+ yebODbiy0CQFXyg9pJyJU9b7n+p65T7AXeAQ80B7UVaeX7sF6cuFdw9nBv1SK3AoA1J1XRLa04I
+ tKDLnYvtWU9gmRww2uiuK9n5YoyATkKwpplPSqIKNe0VPzt0BWMTyDizAWK/pJTmYWCu1RhMgyI
+ giDG9zOu/h4s/qQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -89,18 +88,18 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23231-lists,linux-nfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-23232-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -114,70 +113,118 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1680873B9EE
+X-Rspamd-Queue-Id: 3304373BABB
 
-This version fixes a couple of problems noticed by Sashiko.
+From: Chris Mason <clm@meta.com>
 
-These patches fix bugs in inter-server copy offload code noticed by LLM
-inspection. The first 3 were found via kres, and the next 4 fix problems
-that were flagged in agentic review of those patches (and some via
-testing).
+nfs4_alloc_init_cpntf_state() published the new cpntf entry into the
+s2s_cp_stateids IDR (with cs_type set) in one s2s_cp_lock section, then
+took the lock again to list_add() it onto p_stid->sc_cp_list. In the gap
+the entry is reachable by so_id but cp_list is still {NULL,NULL} from
+kzalloc. A racing OFFLOAD_CANCEL (so_id is echoed to the client as
+cnr_stateid, so any NFSv4.2 client can drive it) reaches
+manage_cpntf_state() -> _free_cpntf_state_locked() and does list_del() on
+the zeroed list_head, oopsing the server.
 
-The last 3 patches attempt to rework the code to be less problematic in
-the future. It breaks up the nfsd4_copy object into two separate objects
-with well-defined lifetimes, and then integrates the COPY stateids into
-the normal nfs4_stid model. The idea is to bring clarity to the copy
-object lifetimes that was the underlying cause of most of these bugs.
+Fold the cs_type assignment and the list_add() into the same critical
+section as idr_alloc_cyclic(), so a concurrent lookup either misses the
+entry or sees a fully linked cp_list. INIT_LIST_HEAD() the entry after
+allocation and switch _free_cpntf_state_locked() to list_del_init() so a
+stale unlink is a no-op. nfs4_init_copy_state() passes NULL p_stid and
+skips the list_add, preserving NFS4_COPY_STID semantics.
 
-As part of this work, I've had Claude cook up a set of pynfs tests for
-COPY that I'll post separately.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Fixes: 624322f1adc5 ("NFSD add COPY_NOTIFY operation")
+Assisted-by: kres:claude-opus-4-7
+Signed-off-by: Chris Mason <clm@meta.com>
 ---
-Changes in v3:
-- Write new stateid to cp_res to prevent potential bad CB_OFFLOAD call
-- Fix interim regression that could cause IDR leak
-- Make comments much more terse
-- Link to v2: https://lore.kernel.org/r/20260709-nfsd-testing-v2-0-0a1ba233bf87@kernel.org
+ fs/nfsd/nfs4state.c | 35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
-Changes in v2:
-- Add new patches to fix neighboring bugs found via testing and LLM review
-- Fix error return when given NL_NAME or NL_URL netlocs
-- Split nfsd4_copy into transient and durable async copy objects
-- Rework COPY stateids to use normal stateid infrastructure
-- Link to v1: https://lore.kernel.org/r/20260624-nfsd-testing-v1-0-b8853eb22e45@kernel.org
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a4398dc861a5..3f83c5107e28 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -944,7 +944,7 @@ struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *sla
+  * Create a unique stateid_t to represent each COPY.
+  */
+ static int nfs4_init_cp_state(struct nfsd_net *nn, copy_stateid_t *stid,
+-			      unsigned char cs_type)
++			      unsigned char cs_type, struct nfs4_stid *p_stid)
+ {
+ 	int new_id;
+ 
+@@ -954,19 +954,34 @@ static int nfs4_init_cp_state(struct nfsd_net *nn, copy_stateid_t *stid,
+ 	idr_preload(GFP_KERNEL);
+ 	spin_lock(&nn->s2s_cp_lock);
+ 	new_id = idr_alloc_cyclic(&nn->s2s_cp_stateids, stid, 0, 0, GFP_NOWAIT);
+-	stid->cs_stid.si_opaque.so_id = new_id;
+-	stid->cs_stid.si_generation = 1;
++	if (new_id >= 0) {
++		stid->cs_stid.si_opaque.so_id = new_id;
++		stid->cs_stid.si_generation = 1;
++		/*
++		 * Set cs_type and link onto sc_cp_list under the same lock
++		 * that installed the IDR entry, so a concurrent
++		 * manage_cpntf_state() sees either no entry or a fully
++		 * linked cp_list.
++		 */
++		stid->cs_type = cs_type;
++		if (p_stid) {
++			struct nfs4_cpntf_state *cps =
++				container_of(stid, struct nfs4_cpntf_state,
++					     cp_stateid);
++
++			list_add(&cps->cp_list, &p_stid->sc_cp_list);
++		}
++	}
+ 	spin_unlock(&nn->s2s_cp_lock);
+ 	idr_preload_end();
+ 	if (new_id < 0)
+ 		return 0;
+-	stid->cs_type = cs_type;
+ 	return 1;
+ }
+ 
+ int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
+ {
+-	return nfs4_init_cp_state(nn, &copy->cp_stateid, NFS4_COPY_STID);
++	return nfs4_init_cp_state(nn, &copy->cp_stateid, NFS4_COPY_STID, NULL);
+ }
+ 
+ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
+@@ -977,13 +992,13 @@ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
+ 	cps = kzalloc_obj(struct nfs4_cpntf_state);
+ 	if (!cps)
+ 		return NULL;
++	/* So a stale list_del_init() before linking is a no-op. */
++	INIT_LIST_HEAD(&cps->cp_list);
+ 	cps->cpntf_time = ktime_get_boottime_seconds();
+ 	refcount_set(&cps->cp_stateid.cs_count, 1);
+-	if (!nfs4_init_cp_state(nn, &cps->cp_stateid, NFS4_COPYNOTIFY_STID))
++	if (!nfs4_init_cp_state(nn, &cps->cp_stateid, NFS4_COPYNOTIFY_STID,
++				p_stid))
+ 		goto out_free;
+-	spin_lock(&nn->s2s_cp_lock);
+-	list_add(&cps->cp_list, &p_stid->sc_cp_list);
+-	spin_unlock(&nn->s2s_cp_lock);
+ 	return cps;
+ out_free:
+ 	kfree(cps);
+@@ -7854,7 +7869,7 @@ _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cpntf_state *cps)
+ 	WARN_ON_ONCE(cps->cp_stateid.cs_type != NFS4_COPYNOTIFY_STID);
+ 	if (!refcount_dec_and_test(&cps->cp_stateid.cs_count))
+ 		return;
+-	list_del(&cps->cp_list);
++	list_del_init(&cps->cp_list);
+ 	idr_remove(&nn->s2s_cp_stateids,
+ 		   cps->cp_stateid.cs_stid.si_opaque.so_id);
+ 	kfree(cps);
 
----
-Chris Mason (1):
-      nfsd: fix cpntf publish race in nfs4_init_cp_state
-
-Jeff Layton (9):
-      nfsd: fix UAF in async copy cancel and shutdown
-      nfsd: fix stale s2s_cp_stateids IDR entry for async COPY
-      nfsd: initialize copy-notify stateid before publishing it
-      nfsd: check client ownership when cancelling a copy-notify stateid
-      nfsd: revoke copy-notify stateids before dropping their reference
-      nfsd: return NFS4ERR_NOTSUPP for unsupported netloc4 types
-      nfsd: split nfsd4_copy into transient and durable async copy objects
-      nfsd: make the copy offload stateid a first-class nfs4_stid
-      nfsd: drop dead COPY-vs-COPYNOTIFY type handling from s2s stateid IDR
-
- fs/nfsd/nfs4proc.c  | 261 +++++++++++++++++++++++++++++++---------------------
- fs/nfsd/nfs4state.c | 187 ++++++++++++++++++++++++++++---------
- fs/nfsd/nfs4xdr.c   |  13 +++
- fs/nfsd/state.h     |   6 +-
- fs/nfsd/xdr4.h      |  30 ++++--
- 5 files changed, 337 insertions(+), 160 deletions(-)
----
-base-commit: bc7d6a41a6282da7c175c1638bdfef69c10f78d5
-change-id: 20260624-nfsd-testing-8439f0163312
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.55.0
 
 
