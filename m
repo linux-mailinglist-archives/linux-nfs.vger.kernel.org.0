@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-23238-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23239-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id N8osMZv7UGoJ9gIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23238-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:03:07 +0200
+	id wte/A9n7UGoc9gIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23239-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:04:09 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C14073B901
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9149C73B925
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:04:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=VHyxpJ+s;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MbvkLxb0;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23238-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23238-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23239-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23239-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9AC7C3070848
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 14:01:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F0A1030836AD
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 14:01:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E170233D511;
-	Fri, 10 Jul 2026 14:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE5F73446AD;
+	Fri, 10 Jul 2026 14:00:31 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EFE331EB4;
-	Fri, 10 Jul 2026 14:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808C62FA0C4;
+	Fri, 10 Jul 2026 14:00:29 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783692029; cv=none; b=bW3Cq9yHC72QP1Frh/Kc9jg8UulOzOzCXgkkIMzqfJEbtoajaEHnfHXIfc48OC1tweGLw5mpWz1t0SikxwmLRdZuyuG7YvYWu9TJINVJ6PpjEpWDDzAgQwnfbWCJ/t0B4hnW/oMM551S4TWjZcphxUNISAXy7qFWt6haDmkUG90=
+	t=1783692031; cv=none; b=b5m8Sw6N0YQPeT3orowuXOXteOwTq1eJfDC+EQ2kyFXARl2q3KYWF5zEaSzkykXsKYKyyjTRuo/IQzGJvj6lx33sz44rf4q4sKV44A3uIN70iq/Og7xRvZ7f3TmA8F5SY1E8l6LBb+p2/KAKJDECA+vKkQljJJoqQN/CBt8MTy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783692029; c=relaxed/simple;
-	bh=O3zVjYJlD31VOeO1zO2OJGMu5IB5oxpMhkms1vAy4hM=;
+	s=arc-20240116; t=1783692031; c=relaxed/simple;
+	bh=KTHodAZGJ3KvYcgDRaV++CVO2yz9ofJR2ZXtyJwknRw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GQwyt3KRzkMmuCntUbmgWMLjxPyTE2Nw3xL7wksZTGUajWYWuOyKB4SM4VBilQgrag0p+tNyEEb/dmfDRYZvrOkl6ioHmYIUfMV4p7ztpoRSlaAowty1G7b37DAA5gO1rqc7/s1fZqvfCTpQjBSiLBa6h+jfon5mGsesFtGe3F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHyxpJ+s; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D199F1F00A3D;
-	Fri, 10 Jul 2026 14:00:27 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=sqB8smWWYSrZqfI/IRwC6Rc0p2KBnJtdWhq+z5mDsSc1qbYKU7oIK1NFA5j3paXcbr3rgP9zLZWN20weVxLZeVlg7DqzscINQs9/LiYQTVU/SW3VomEF5z+3WfG2byvJiL2+1qnLC26lKpTMPxb6urcIUGeV6cHb/cW9OC1+XTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbvkLxb0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B91D31F00A3E;
+	Fri, 10 Jul 2026 14:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783692028;
-	bh=P2UK8iZxhZqTJ9EVtaztQjWJ1DGz1mVZItAmwDsX5Eg=;
+	s=k20260515; t=1783692029;
+	bh=VEg4W59kRfEpKtcb0nG6i5wUKaiiqGilFeRyE/K3lbk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=VHyxpJ+sGcLFnIBwNWISHqpfITwIJYWrLA3gw3fys6JlkqYYPKtuZqNxibXu6+naj
-	 Bf8EbIPkPdEUv+RQ2ofJmb6uxmhO9z4ypJLYyKLGoxkcla6FS1V8tzPQUXOebq2BC1
-	 Zqy9iQHtGyT+/YMXo7Cd7Y7jdaxfkib3bcntG6eaahCpQOGTxmWMAnvqz+V1NjS7B9
-	 geuEBaEl2di8tG3PTO5Ovw3bdsKmMFeDRFHRR/UTfb3Ges6M+M/1UocrVVjkgqW+2E
-	 Xu+EJ4dpS4EUwxMqUwDTSMoOgLAMY5wp2yXwn+zrziIPCM5h7UQhQ52LbABDVY1Us1
-	 4zqlN4QQclQYw==
+	b=MbvkLxb0WDisTW2Ehiy6CIgXgZgFOT+joeZsu9yXaKfRQqt3w6LPm/V8mUqpucrWT
+	 GV708/WLoi33ZjKIa8Qq0UnvL0dm4L19N8qS6MAIaOUyps2k/ZCW+5ZowEGnGC8B4N
+	 pkEvdKyGzbX+u8AVB/eZfk7280t/ARdtRixqCbaLctPsUpBpaoc0D6QLztCnczy2iX
+	 aYk2RzoySWHwcAFknN7suOekAvgWpzdgp4BzazLcjwjl4wodyjBMO6Sd4ZuozvgSrh
+	 Pr6pMaLRFNguQOwBqC3VMqDLy9aOQEZRt4t7ghtmAnBk5PbX+HItpvcbAquAtTNqtI
+	 th5yQqz7xjcWQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 10 Jul 2026 10:00:11 -0400
-Subject: [PATCH v3 07/10] nfsd: return NFS4ERR_NOTSUPP for unsupported
- netloc4 types
+Date: Fri, 10 Jul 2026 10:00:12 -0400
+Subject: [PATCH v3 08/10] nfsd: split nfsd4_copy into transient and durable
+ async copy objects
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260710-nfsd-testing-v3-7-a0ff7db6aa3e@kernel.org>
+Message-Id: <20260710-nfsd-testing-v3-8-a0ff7db6aa3e@kernel.org>
 References: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
 In-Reply-To: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -67,20 +67,20 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1681; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=O3zVjYJlD31VOeO1zO2OJGMu5IB5oxpMhkms1vAy4hM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqUPr0x4mVvwjU4N0vMSkma9Aor7NtgQZ6XIdoL
- +gJt8NP3lGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCalD69AAKCRAADmhBGVaC
- FSY7D/0WM+tx8BdxyF5VDDz6ze9OsezLOEazZjH5lMNWwr2bn1HDS7j/3qNBQTbjmI2fuvftLAB
- aKmgHKPgKCWVD6AquGzZzbYh2PJ7Bk3GXOy3x4HmRWmN2dnt0NpGRQp85jVDhURCQCcyvZhx7Uo
- GKU5wkyebqTDlnUmaJq66y1UhUquaaR3+uv2P+1+cYqVJUGsEjnK12JGYIgh3PCvKqsz/hoBikY
- OOgNLFnV11Hb2kDoFj7Aly2EmrdbGikjIQs0ra/mqx1QuLNKwlYWpDUZRX4SbXvbjPz6E1G3IOB
- b42AZCayVrwnjTsrWIgw+EeFwIs1gjRZoRyGNXmCQ8Gu2+Iy+AIzWf61eB/5IvA75EWdrK0VBm2
- F+QuRDq/zkBxyXqFn87unBKj2OIO5uwX4SpnPTRLUO6OecUfQY5PGRELqFgy6VvSHQUGOaif1zP
- kGuvmnYxeaP/PI39/O1hE4R3PJhU45O3Tv5RUpInbRdcaAA7f4kN5dk3H17s/kDW6fdeZDl03F/
- /qV3Ki8jyKjyyU9ollC+CrPTv0hftRXSNJ8XN+VHzQvBRXztxm138H/V7ENhXzSdhRrqXYBvkA0
- VVkY/yE91YmFYtcOLLFLRGIcrPYxKyjC+0W8rRWH7RSIuxU8TczYzKOwwT8jQdbEAxr8Mbyc/34
- 0JshRa1mMJcz2RA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=20468; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=KTHodAZGJ3KvYcgDRaV++CVO2yz9ofJR2ZXtyJwknRw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqUPr0h3ghKD4MB2NmPGPyq9wPvtPUpyla66Ck1
+ ninWe8NRiKJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCalD69AAKCRAADmhBGVaC
+ Fa74D/wLP29v0w1kIj3ggax20HwIjC1cP6n2Ob3L8hvM3KpBUNC+GBehIhJpYpSby6uh9l8Ze5v
+ xWi2WshnLztHjCkeMJXn92P0OORQ50/NQRYpGfv90k6hmJBHRgwr8+6UNNv/ZJT5acB5UK79kVJ
+ ievRvxGBO8iSznTbxhFjJunQ2WbqjKNh1XUsQjPDGJKKq2knwBONNYuB3Czq0tk7ehQzLjiN4H8
+ aniAA0JzogoP0nI0auu0xj//xDn4Q3kHSZi+3AmDOnhWIIB7VWsj8o7x5ncwZMS1lqCPo7baKk/
+ E7xvx2UWR52eAElNsf4tk2XGG310kHgeNA5+hII2oB9uHbXPGEUIK2vDKWyVTLxyGUjr9/j3n0K
+ FXkTgyle+I7jYd8SX84ZnbRmsZqy//IkxZ0EYKNes+aO2ZdhufPdH7ZXWDmPFwWuX4LSWKwSK9i
+ vrv7b6In6BT/oZ926/wm7zde29cEf46YkFfdi0Xr30ZfJKGAuTyCocWckpVv4Xh05GBv3wJOMbj
+ FWXUn2JpQtUN+hsPWJCrjA1z2ItqNHDQHKd5elWozP0pPfuURLbo53eP7WTe9sIifACEELG6uPb
+ vtzA2FAxTS59uzNDYjRbdtLnguVoBcApbvkfioxBGAjg4Jm+rcL7lcbT/tlCztEdJPvzwEGjqXX
+ L287ofV3aCphPVg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23238-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23239-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -117,53 +117,539 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6C14073B901
+X-Rspamd-Queue-Id: 9149C73B925
 
-nfsd4_decode_nl4_server() handled only NL4_NETADDR and returned
-nfserr_bad_xdr for NL4_NAME and NL4_URL. Those forms are well-formed XDR,
-so BADXDR is misleading -- the request is unsupported, not malformed.
+struct nfsd4_copy served two roles: as &u->copy it is a transient
+per-COMPOUND argument in the request buffer; as the heap async_copy it is
+a durable object (worker kthread, reaper linkage, CB_OFFLOAD callback, IDR
+stateid) that outlives the COMPOUND, with dup_copy_fields() shuttling
+state between them. That dual identity was the root of the recent lifetime
+bugs.
 
-Decode and discard the utf8str_cis for NL4_NAME and NL4_URL to keep the
-stream consistent, and return nfserr_notsupp. nfsd4_proc_compound() honors
-a decode-time op->status, so the op fails without executing.
+Introduce struct nfsd4_async_copy for the durable object. It embeds a
+struct nfsd4_copy (cp_copy) for the operation parameters/result and adds
+the durable-only fields: async_copies linkage, task_struct, refcount,
+reaper TTL, copy stateid, and CB_OFFLOAD callback. The durable object
+therefore never points into the request buffer. cp_clp stays in
+nfsd4_copy -- it is a request property read by the sync-copy tracepoints
+on the transient object.
 
-Fixes: 84e1b21d5ec4 ("NFSD add ca_source_server<> to COPY")
+Mechanical split, no intended behavioral change; a step toward folding the
+copy stateids into the common nfs4_stid infrastructure.
+
+Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/nfsd/nfs4proc.c  | 137 +++++++++++++++++++++++++++-------------------------
+ fs/nfsd/nfs4state.c |   6 +--
+ fs/nfsd/state.h     |   5 +-
+ fs/nfsd/xdr4.h      |  30 ++++++++----
+ 4 files changed, 98 insertions(+), 80 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index aef48fb0fac2..3873d037a763 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2123,6 +2123,7 @@ static __be32 nfsd4_decode_nl4_server(struct nfsd4_compoundargs *argp,
- {
- 	struct nfs42_netaddr *naddr;
- 	__be32 *p;
-+	u32 str_len;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 506cd4910fb7..9f897c4ffc16 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -57,7 +57,7 @@ module_param(inter_copy_offload_enable, bool, 0644);
+ MODULE_PARM_DESC(inter_copy_offload_enable,
+ 		 "Enable inter server to server copy offload. Default: false");
  
- 	if (xdr_stream_decode_u32(argp->xdr, &ns->nl4_type) < 0)
- 		return nfserr_bad_xdr;
-@@ -2152,6 +2153,18 @@ static __be32 nfsd4_decode_nl4_server(struct nfsd4_compoundargs *argp,
- 			return nfserr_bad_xdr;
- 		memcpy(naddr->addr, p, naddr->addr_len);
- 		break;
-+	case NL4_NAME:
-+	case NL4_URL:
-+		/*
-+		 * Well-formed XDR, but only NL4_NETADDR is supported. Consume
-+		 * the utf8str_cis to keep the stream aligned, then return
-+		 * NFS4ERR_NOTSUPP rather than the misleading NFS4ERR_BADXDR.
-+		 */
-+		if (xdr_stream_decode_u32(argp->xdr, &str_len) < 0)
-+			return nfserr_bad_xdr;
-+		if (!xdr_inline_decode(argp->xdr, str_len))
-+			return nfserr_bad_xdr;
-+		return nfserr_notsupp;
- 	default:
- 		return nfserr_bad_xdr;
+-static void cleanup_async_copy(struct nfsd4_copy *copy);
++static void cleanup_async_copy(struct nfsd4_async_copy *copy);
+ 
+ #ifdef CONFIG_NFSD_V4_2_INTER_SSC
+ static int nfsd4_ssc_umount_timeout = 900000;		/* default to 15 mins */
+@@ -1465,13 +1465,13 @@ nfsd4_clone(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+  */
+ bool nfsd4_has_active_async_copies(struct nfs4_client *clp)
+ {
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 	bool result = false;
+ 
+ 	spin_lock(&clp->async_lock);
+ 	list_for_each_entry(copy, &clp->async_copies, copies) {
+-		if (!test_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_flags) &&
+-		    !test_bit(NFSD4_COPY_F_STOPPED, &copy->cp_flags)) {
++		if (!test_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_copy.cp_flags) &&
++		    !test_bit(NFSD4_COPY_F_STOPPED, &copy->cp_copy.cp_flags)) {
+ 			result = true;
+ 			break;
+ 		}
+@@ -1487,7 +1487,7 @@ bool nfsd4_has_active_async_copies(struct nfs4_client *clp)
+ void nfsd4_async_copy_reaper(struct nfsd_net *nn)
+ {
+ 	struct nfs4_client *clp;
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 	LIST_HEAD(reaplist);
+ 
+ 	spin_lock(&nn->client_lock);
+@@ -1496,8 +1496,9 @@ void nfsd4_async_copy_reaper(struct nfsd_net *nn)
+ 
+ 		spin_lock(&clp->async_lock);
+ 		list_for_each_safe(pos, next, &clp->async_copies) {
+-			copy = list_entry(pos, struct nfsd4_copy, copies);
+-			if (test_bit(NFSD4_COPY_F_OFFLOAD_DONE, &copy->cp_flags)) {
++			copy = list_entry(pos, struct nfsd4_async_copy, copies);
++			if (test_bit(NFSD4_COPY_F_OFFLOAD_DONE,
++				     &copy->cp_copy.cp_flags)) {
+ 				if (!--copy->cp_ttl) {
+ 					list_del_init(&copy->copies);
+ 					list_add(&copy->copies, &reaplist);
+@@ -1509,52 +1510,53 @@ void nfsd4_async_copy_reaper(struct nfsd_net *nn)
+ 	spin_unlock(&nn->client_lock);
+ 
+ 	while (!list_empty(&reaplist)) {
+-		copy = list_first_entry(&reaplist, struct nfsd4_copy, copies);
++		copy = list_first_entry(&reaplist, struct nfsd4_async_copy,
++					copies);
+ 		list_del_init(&copy->copies);
+ 		cleanup_async_copy(copy);
  	}
+ }
+ 
+-static void nfs4_put_copy(struct nfsd4_copy *copy)
++static void nfs4_put_copy(struct nfsd4_async_copy *copy)
+ {
+ 	if (!refcount_dec_and_test(&copy->refcount))
+ 		return;
+-	/* Drop the task_struct pinned in nfsd4_copy(); NULL on sync copies. */
++	/* Drop the task_struct pinned in nfsd4_copy(). */
+ 	if (copy->copy_task)
+ 		put_task_struct(copy->copy_task);
+-	kfree(copy->cp_src);
++	kfree(copy->cp_copy.cp_src);
+ 	kfree(copy);
+ }
+ 
+ static void release_copy_files(struct nfsd4_copy *copy);
+ 
+-static void nfsd4_stop_copy(struct nfsd4_copy *copy)
++static void nfsd4_stop_copy(struct nfsd4_async_copy *copy)
+ {
+-	trace_nfsd_copy_async_cancel(copy);
++	trace_nfsd_copy_async_cancel(&copy->cp_copy);
+ 	/*
+ 	 * Join the kthread before releasing its resources. The task_struct is
+ 	 * pinned in nfsd4_copy(), so kthread_stop() is safe even after the
+ 	 * one-shot kthread has exited. The caller already unlinked the copy,
+ 	 * so this runs once per copy.
+ 	 */
+-	set_bit(NFSD4_COPY_F_STOPPED, &copy->cp_flags);
++	set_bit(NFSD4_COPY_F_STOPPED, &copy->cp_copy.cp_flags);
+ 	kthread_stop(copy->copy_task);
+-	if (!test_bit(NFSD4_COPY_F_CB_ERROR, &copy->cp_flags))
+-		copy->nfserr = nfs_ok;
+-	set_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_flags);
++	if (!test_bit(NFSD4_COPY_F_CB_ERROR, &copy->cp_copy.cp_flags))
++		copy->cp_copy.nfserr = nfs_ok;
++	set_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_copy.cp_flags);
+ 
+-	release_copy_files(copy);
++	release_copy_files(&copy->cp_copy);
+ 	nfs4_put_copy(copy);
+ }
+ 
+-static struct nfsd4_copy *nfsd4_unhash_copy(struct nfs4_client *clp)
++static struct nfsd4_async_copy *nfsd4_unhash_copy(struct nfs4_client *clp)
+ {
+-	struct nfsd4_copy *copy = NULL;
++	struct nfsd4_async_copy *copy = NULL;
+ 
+ 	spin_lock(&clp->async_lock);
+ 	if (!list_empty(&clp->async_copies)) {
+-		copy = list_first_entry(&clp->async_copies, struct nfsd4_copy,
+-					copies);
++		copy = list_first_entry(&clp->async_copies,
++					struct nfsd4_async_copy, copies);
+ 		refcount_inc(&copy->refcount);
+ 		/*
+ 		 * Unlinking hides the copy from the reaper, so drop its
+@@ -1562,7 +1564,7 @@ static struct nfsd4_copy *nfsd4_unhash_copy(struct nfs4_client *clp)
+ 		 */
+ 		nfs4_free_copy_state(copy);
+ 		/* Pairs with smp_load_acquire() in nfsd4_send_cb_offload(). */
+-		smp_store_release(&copy->cp_clp, NULL);
++		smp_store_release(&copy->cp_copy.cp_clp, NULL);
+ 		if (!list_empty(&copy->copies))
+ 			list_del_init(&copy->copies);
+ 	}
+@@ -1572,7 +1574,7 @@ static struct nfsd4_copy *nfsd4_unhash_copy(struct nfs4_client *clp)
+ 
+ void nfsd4_shutdown_copy(struct nfs4_client *clp)
+ {
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 
+ 	while ((copy = nfsd4_unhash_copy(clp)) != NULL) {
+ 		nfsd4_stop_copy(copy);
+@@ -1605,7 +1607,7 @@ static bool nfsd4_copy_on_sb(const struct nfsd4_copy *copy,
+ void nfsd4_cancel_copy_by_sb(struct net *net, struct super_block *sb)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+-	struct nfsd4_copy *copy, *tmp;
++	struct nfsd4_async_copy *copy, *tmp;
+ 	struct nfs4_client *clp;
+ 	unsigned int idhashval;
+ 	LIST_HEAD(to_cancel);
+@@ -1619,7 +1621,7 @@ void nfsd4_cancel_copy_by_sb(struct net *net, struct super_block *sb)
+ 			spin_lock(&clp->async_lock);
+ 			list_for_each_entry_safe(copy, tmp,
+ 						 &clp->async_copies, copies) {
+-				if (nfsd4_copy_on_sb(copy, sb)) {
++				if (nfsd4_copy_on_sb(&copy->cp_copy, sb)) {
+ 					refcount_inc(&copy->refcount);
+ 					/*
+ 					 * Hold a reference on the client while
+@@ -1631,9 +1633,9 @@ void nfsd4_cancel_copy_by_sb(struct net *net, struct super_block *sb)
+ 					 * survive callback flight.
+ 					 */
+ 					kref_get(&clp->cl_nfsdfs.cl_ref);
+-					copy->nfserr = nfserr_admin_revoked;
++					copy->cp_copy.nfserr = nfserr_admin_revoked;
+ 					set_bit(NFSD4_COPY_F_CB_ERROR,
+-						&copy->cp_flags);
++						&copy->cp_copy.cp_flags);
+ 					list_move(&copy->copies, &to_cancel);
+ 				}
+ 			}
+@@ -1643,7 +1645,7 @@ void nfsd4_cancel_copy_by_sb(struct net *net, struct super_block *sb)
+ 	spin_unlock(&nn->client_lock);
+ 
+ 	list_for_each_entry_safe(copy, tmp, &to_cancel, copies) {
+-		struct nfs4_client *clp = copy->cp_clp;
++		struct nfs4_client *clp = copy->cp_copy.cp_clp;
+ 
+ 		list_del_init(&copy->copies);
+ 		/* Reaper can't reach it; drop the s2s entry while cp_clp is valid. */
+@@ -1940,10 +1942,10 @@ static void nfsd4_cb_offload_release(struct nfsd4_callback *cb)
+ {
+ 	struct nfsd4_cb_offload *cbo =
+ 		container_of(cb, struct nfsd4_cb_offload, co_cb);
+-	struct nfsd4_copy *copy =
+-		container_of(cbo, struct nfsd4_copy, cp_cb_offload);
++	struct nfsd4_async_copy *copy =
++		container_of(cbo, struct nfsd4_async_copy, cp_cb_offload);
+ 
+-	set_bit(NFSD4_COPY_F_OFFLOAD_DONE, &copy->cp_flags);
++	set_bit(NFSD4_COPY_F_OFFLOAD_DONE, &copy->cp_copy.cp_flags);
+ 	nfsd4_put_client(cb->cb_clp);
+ 	/* Drop the copy reference taken in nfsd4_send_cb_offload(). */
+ 	nfs4_put_copy(copy);
+@@ -2059,7 +2061,6 @@ static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+ 	if (!nfsd4_ssc_is_inter(src))
+ 		dst->nf_src = nfsd_file_get(src->nf_src);
+ 
+-	memcpy(&dst->cp_stateid, &src->cp_stateid, sizeof(src->cp_stateid));
+ 	memcpy(dst->cp_src, src->cp_src, sizeof(struct nl4_server));
+ 	memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
+ 	memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
+@@ -2082,14 +2083,14 @@ static void release_copy_files(struct nfsd4_copy *copy)
+  * Called from the reaper and from nfsd4_copy()'s error path; in both
+  * cases the copy is already unreachable from clp->async_copies.
+  */
+-static void cleanup_async_copy(struct nfsd4_copy *copy)
++static void cleanup_async_copy(struct nfsd4_async_copy *copy)
+ {
+ 	nfs4_free_copy_state(copy);
+-	release_copy_files(copy);
++	release_copy_files(&copy->cp_copy);
+ 	nfs4_put_copy(copy);
+ }
+ 
+-static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
++static void nfsd4_send_cb_offload(struct nfsd4_async_copy *copy)
+ {
+ 	struct nfsd4_cb_offload *cbo = &copy->cp_cb_offload;
+ 	struct nfs4_client *clp;
+@@ -2100,15 +2101,15 @@ static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
+ 	 * cp_clp is NULL once the copy was canceled; skip the callback, the
+ 	 * canceling path owns the notification.
+ 	 */
+-	clp = smp_load_acquire(&copy->cp_clp);
++	clp = smp_load_acquire(&copy->cp_copy.cp_clp);
+ 	if (!clp) {
+-		set_bit(NFSD4_COPY_F_OFFLOAD_DONE, &copy->cp_flags);
++		set_bit(NFSD4_COPY_F_OFFLOAD_DONE, &copy->cp_copy.cp_flags);
+ 		return;
+ 	}
+ 
+-	memcpy(&cbo->co_res, &copy->cp_res, sizeof(copy->cp_res));
+-	memcpy(&cbo->co_fh, &copy->fh, sizeof(copy->fh));
+-	cbo->co_nfserr = copy->nfserr;
++	memcpy(&cbo->co_res, &copy->cp_copy.cp_res, sizeof(copy->cp_copy.cp_res));
++	memcpy(&cbo->co_fh, &copy->cp_copy.fh, sizeof(copy->cp_copy.fh));
++	cbo->co_nfserr = copy->cp_copy.nfserr;
+ 	cbo->co_retries = 5;
+ 
+ 	/*
+@@ -2125,7 +2126,8 @@ static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
+ 				 cbo->co_referring_slotid,
+ 				 cbo->co_referring_seqno);
+ 	trace_nfsd_cb_offload(clp, &cbo->co_res.cb_stateid,
+-			      &cbo->co_fh, copy->cp_count, copy->nfserr);
++			      &cbo->co_fh, copy->cp_copy.cp_count,
++			      copy->cp_copy.nfserr);
+ 	nfsd4_try_run_cb(&cbo->co_cb);
+ }
+ 
+@@ -2138,7 +2140,8 @@ static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
+  */
+ static int nfsd4_do_async_copy(void *data)
+ {
+-	struct nfsd4_copy *copy = (struct nfsd4_copy *)data;
++	struct nfsd4_async_copy *async = data;
++	struct nfsd4_copy *copy = &async->cp_copy;
+ 	__be32 nfserr = nfs_ok;
+ 
+ 	trace_nfsd_copy_async(copy);
+@@ -2180,9 +2183,9 @@ static int nfsd4_do_async_copy(void *data)
+ 	atomic_dec(&copy->cp_nn->pending_async_copies);
+ 	if (copy->cp_res.wr_bytes_written > 0 && copy->attr_update)
+ 		nfsd_update_cmtime_attr(copy->nf_dst->nf_file, 0);
+-	nfsd4_send_cb_offload(copy);
++	nfsd4_send_cb_offload(async);
+ 	/* Drop the kthread's reference (taken in nfsd4_copy()); copy may be freed after this. */
+-	nfs4_put_copy(copy);
++	nfs4_put_copy(async);
+ 	return 0;
+ }
+ 
+@@ -2191,7 +2194,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		union nfsd4_op_u *u)
+ {
+ 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+-	struct nfsd4_copy *async_copy = NULL;
++	struct nfsd4_async_copy *async_copy = NULL;
+ 	struct nfsd4_copy *copy = &u->copy;
+ 	struct nfsd42_write_res *result;
+ 	__be32 status;
+@@ -2223,10 +2226,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (nfsd4_copy_is_async(copy)) {
+ 		struct task_struct *task;
+ 
+-		async_copy = kzalloc_obj(struct nfsd4_copy);
++		async_copy = kzalloc_obj(struct nfsd4_async_copy);
+ 		if (!async_copy)
+ 			goto out_err;
+-		async_copy->cp_nn = nn;
++		async_copy->cp_copy.cp_nn = nn;
+ 		INIT_LIST_HEAD(&async_copy->copies);
+ 		refcount_set(&async_copy->refcount, 1);
+ 		async_copy->cp_ttl = NFSD_COPY_INITIAL_TTL;
+@@ -2234,18 +2237,22 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		if (atomic_inc_return(&nn->pending_async_copies) >
+ 				(int)rqstp->rq_pool->sp_nrthreads)
+ 			goto out_dec_async_copy_err;
+-		async_copy->cp_src = kmalloc_obj(*async_copy->cp_src);
+-		if (!async_copy->cp_src)
++		async_copy->cp_copy.cp_src = kmalloc_obj(*async_copy->cp_copy.cp_src);
++		if (!async_copy->cp_copy.cp_src)
+ 			goto out_dec_async_copy_err;
+-		dup_copy_fields(copy, async_copy);
+ 
+ 		if (!nfs4_init_copy_state(nn, async_copy))
+ 			goto out_dec_async_copy_err;
+ 		memcpy(&result->cb_stateid, &async_copy->cp_stateid.cs_stid,
+ 			sizeof(result->cb_stateid));
++		/*
++		 * dup after writing cb_stateid; duplicating first would leave
++		 * the callback stateid zeroed.
++		 */
++		dup_copy_fields(copy, &async_copy->cp_copy);
+ 		if ((READ_ONCE(copy->nf_dst->nf_file->f_mode) &
+ 			       FMODE_NOCMTIME) != 0)
+-			async_copy->attr_update = true;
++			async_copy->cp_copy.attr_update = true;
+ 		memcpy(async_copy->cp_cb_offload.co_referring_sessionid.data,
+ 		       cstate->session->se_sessionid.data,
+ 		       NFS4_MAX_SESSIONID_LEN);
+@@ -2268,10 +2275,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		 */
+ 		refcount_inc(&async_copy->refcount);
+ 		wake_up_process(async_copy->copy_task);
+-		spin_lock(&async_copy->cp_clp->async_lock);
++		spin_lock(&async_copy->cp_copy.cp_clp->async_lock);
+ 		list_add(&async_copy->copies,
+-				&async_copy->cp_clp->async_copies);
+-		spin_unlock(&async_copy->cp_clp->async_lock);
++				&async_copy->cp_copy.cp_clp->async_copies);
++		spin_unlock(&async_copy->cp_copy.cp_clp->async_lock);
+ 		status = nfs_ok;
+ 	} else {
+ 		status = nfsd4_do_copy(copy, copy->nf_src->nf_file,
+@@ -2303,10 +2310,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	goto out;
+ }
+ 
+-static struct nfsd4_copy *
++static struct nfsd4_async_copy *
+ find_async_copy_locked(struct nfs4_client *clp, stateid_t *stateid)
+ {
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 
+ 	lockdep_assert_held(&clp->async_lock);
+ 
+@@ -2318,10 +2325,10 @@ find_async_copy_locked(struct nfs4_client *clp, stateid_t *stateid)
+ 	return NULL;
+ }
+ 
+-static struct nfsd4_copy *
++static struct nfsd4_async_copy *
+ find_async_copy(struct nfs4_client *clp, stateid_t *stateid)
+ {
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 
+ 	spin_lock(&clp->async_lock);
+ 	copy = find_async_copy_locked(clp, stateid);
+@@ -2333,7 +2340,7 @@ find_async_copy(struct nfs4_client *clp, stateid_t *stateid)
+ 		 * async_lock so the reaper can't reach it. Caller drops the
+ 		 * membership ref after nfsd4_stop_copy().
+ 		 */
+-		smp_store_release(&copy->cp_clp, NULL);
++		smp_store_release(&copy->cp_copy.cp_clp, NULL);
+ 		if (!list_empty(&copy->copies))
+ 			list_del_init(&copy->copies);
+ 	}
+@@ -2347,7 +2354,7 @@ nfsd4_offload_cancel(struct svc_rqst *rqstp,
+ 		     union nfsd4_op_u *u)
+ {
+ 	struct nfsd4_offload_status *os = &u->offload_status;
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 	struct nfs4_client *clp = cstate->clp;
+ 
+ 	copy = find_async_copy(clp, &os->stateid);
+@@ -2440,17 +2447,17 @@ nfsd4_offload_status(struct svc_rqst *rqstp,
+ {
+ 	struct nfsd4_offload_status *os = &u->offload_status;
+ 	__be32 status = nfs_ok;
+-	struct nfsd4_copy *copy;
++	struct nfsd4_async_copy *copy;
+ 	struct nfs4_client *clp = cstate->clp;
+ 
+ 	os->completed = false;
+ 	spin_lock(&clp->async_lock);
+ 	copy = find_async_copy_locked(clp, &os->stateid);
+ 	if (copy) {
+-		os->count = copy->cp_res.wr_bytes_written;
+-		if (test_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_flags)) {
++		os->count = copy->cp_copy.cp_res.wr_bytes_written;
++		if (test_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_copy.cp_flags)) {
+ 			os->completed = true;
+-			os->status = copy->nfserr;
++			os->status = copy->cp_copy.nfserr;
+ 		}
+ 	} else
+ 		status = nfserr_bad_stateid;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 99f450f292a0..1feda9eaf3a0 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -979,7 +979,7 @@ static int nfs4_init_cp_state(struct nfsd_net *nn, copy_stateid_t *stid,
+ 	return 1;
+ }
+ 
+-int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy)
++int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_async_copy *copy)
+ {
+ 	return nfs4_init_cp_state(nn, &copy->cp_stateid, NFS4_COPY_STID, NULL);
+ }
+@@ -1013,13 +1013,13 @@ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
+ 	return NULL;
+ }
+ 
+-void nfs4_free_copy_state(struct nfsd4_copy *copy)
++void nfs4_free_copy_state(struct nfsd4_async_copy *copy)
+ {
+ 	struct nfsd_net *nn;
+ 
+ 	if (copy->cp_stateid.cs_type != NFS4_COPY_STID)
+ 		return;
+-	nn = net_generic(copy->cp_clp->net, nfsd_net_id);
++	nn = net_generic(copy->cp_copy.cp_clp->net, nfsd_net_id);
+ 	spin_lock(&nn->s2s_cp_lock);
+ 	idr_remove(&nn->s2s_cp_stateids,
+ 		   copy->cp_stateid.cs_stid.si_opaque.so_id);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index bc0181ef1cb6..4526b67c90d4 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -872,6 +872,7 @@ struct nfsd4_blocked_lock {
+ struct nfsd4_compound_state;
+ struct nfsd_net;
+ struct nfsd4_copy;
++struct nfsd4_async_copy;
+ 
+ extern __be32 nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate, struct svc_fh *fhp,
+@@ -883,8 +884,8 @@ __be32 nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
+ 			    struct nfs4_stid **s, struct nfsd_net *nn);
+ struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *slab,
+ 				  void (*sc_free)(struct nfs4_stid *));
+-int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy);
+-void nfs4_free_copy_state(struct nfsd4_copy *copy);
++int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_async_copy *copy);
++void nfs4_free_copy_state(struct nfsd4_async_copy *copy);
+ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
+ 			struct nfs4_stid *p_stid);
+ void nfs4_put_stid(struct nfs4_stid *s);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 805c7122eb93..62311fb9351f 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -759,28 +759,38 @@ struct nfsd4_copy {
+ 	struct nfsd42_write_res	cp_res;
+ 	struct knfsd_fh		fh;
+ 
+-	/* offload callback */
+-	struct nfsd4_cb_offload	cp_cb_offload;
+-
+ 	struct nfs4_client      *cp_clp;
+ 
+ 	struct nfsd_file        *nf_src;
+ 	struct nfsd_file        *nf_dst;
+ 	bool			attr_update;
+ 
+-	copy_stateid_t		cp_stateid;
+-
+-	struct list_head	copies;
+-	struct task_struct	*copy_task;
+-	refcount_t		refcount;
+-	unsigned int		cp_ttl;
+-
+ 	struct nfsd4_ssc_umount_item *ss_nsui;
+ 	struct nfs_fh		c_fh;
+ 	nfs4_stateid		stateid;
+ 	struct nfsd_net		*cp_nn;
+ };
+ 
++/*
++ * Durable state for an async (background) server-side COPY.
++ *
++ * struct nfsd4_copy is transient: it lives in the COMPOUND argument buffer
++ * and is reused once the op returns. An async COPY outlives the COMPOUND
++ * (worker kthread, reaper linkage, CB_OFFLOAD), so its params and result are
++ * snapshotted into the embedded cp_copy and it never points into the request
++ * buffer.
++ */
++struct nfsd4_async_copy {
++	struct nfsd4_copy	cp_copy;	/* operation params + result */
++
++	struct list_head	copies;		/* nfs4_client.async_copies */
++	struct task_struct	*copy_task;
++	refcount_t		refcount;
++	unsigned int		cp_ttl;
++	copy_stateid_t		cp_stateid;	/* s2s_cp_stateids IDR entry */
++	struct nfsd4_cb_offload	cp_cb_offload;
++};
++
+ static inline void nfsd4_copy_set_sync(struct nfsd4_copy *copy, bool sync)
+ {
+ 	if (sync)
 
 -- 
 2.55.0
