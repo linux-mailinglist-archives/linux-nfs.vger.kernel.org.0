@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-23235-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23236-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hdU4OTz7UGrn9QIAu9opvQ
-	(envelope-from <linux-nfs+bounces-23235-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:01:32 +0200
+	id /r78Il37UGr49QIAu9opvQ
+	(envelope-from <linux-nfs+bounces-23236-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:02:05 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56C8673B8BC
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:01:32 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9BFA73B8D4
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 16:02:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dWjnQhWk;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=KzjLBZ0S;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23235-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23235-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23236-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23236-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E85253053444
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 14:00:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EDF13305DE6B
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jul 2026 14:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6D331E826;
-	Fri, 10 Jul 2026 14:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129FF32B138;
+	Fri, 10 Jul 2026 14:00:28 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EB32E1C4E;
-	Fri, 10 Jul 2026 14:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85AA319871;
+	Fri, 10 Jul 2026 14:00:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783692027; cv=none; b=BVVhKOdIECztIJvhUFsSR2IN1l+FXrUCAAxloLlxLgBye4aBpn7bGZqPUDd0ryWuHR8l+rtpO0Hgil36RJzQuYIf/+O7N+5kDBPgu8rUpBJRHJ8qXh6Wx9BFXdSI7CwXW0G0GS/ReOKY+o9MmHjva/pChbuMvvpeCFz0aYPTED8=
+	t=1783692028; cv=none; b=u/vwp4KSXADurDQVOU4gyKM71pg7GeI49j4IIeAUXlo0BwIF5PFALVF2xklXDYnEW+y1XcDSkXFp3Kh8ttjGaXk9udogUnYJy+6aNm8P9lBQeL3FrPZkIRO8SyZsyRJInX+oaS6cjryTYpqbxfCHZjgzVdvQ0srd4YPDGs4Hymk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783692027; c=relaxed/simple;
-	bh=FUD4yD/riJOMTlsN+JqjCYZX5iaCr4b55fbjtTn9SsU=;
+	s=arc-20240116; t=1783692028; c=relaxed/simple;
+	bh=GxJvjXtiR7eEOp06uNYPWPOn0UpTEVuLFO0Lu+rWrK8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oelK4nnbPYy8s6GqETqWAV7l6v7+vKOVnNvxdDmc8ONpGwIns107gU5iURQbIfHt8WhorqKZYXBSD6D5odE8VccqoXa8zKxg8wjenMl7cKv8KMof7SMMXHdKrpojkrFSU0oWANLfTrifI0mC+F4ZtfcE/MzDhrW1CNQMY0vZPu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWjnQhWk; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2544D1F000E9;
+	 In-Reply-To:To:Cc; b=hfPcRRxJgQy5X4SoM6jRyzWYX7P4+xJ7BuaOtFZkxaXJMW0yD2uvwZGJa8oxBnteNumZtl7QPTw+WtHPYfaD3DeoD/gEIBsLZkvtjVZoSET5ACx0hUCNoaXtqO5/2LNzPFWKKakEV+3vLf5kC1uG1LtaoP6W+I0C3u55e1WQz/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzjLBZ0S; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CF8F1F00A3F;
 	Fri, 10 Jul 2026 14:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783692025;
-	bh=WeG1IBJzOmxlZcls8uuoMy/8/EacdTPLb6j2W8/i8IQ=;
+	s=k20260515; t=1783692026;
+	bh=GGh4d/NZmelqfygPTYIZ7C/JabRyp9RVSEKvPbeIe8k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=dWjnQhWkf4XjdB0eyK9iRdBqn+RdcPyzsOxk7fdSwwprgKFxL6wk2FzBbid0VM62w
-	 acL6HFn+2RE00vgnxTUqF6UNoCU1V6gsgFNdKrqLy5ph7z8EwwoogeWa0NstV/NR7v
-	 5R5LwhDFnoRxF7Og9IhHgjfdVPEcfetJLV60lcAGk9PfD8W5uLM1O02A0ptAS2QDEP
-	 2f04sTlpAl2ElktvZBVVNJ1c76uG6iHXah5OC1jTtcI8pEi0yc8Uz/9mJx20JluN3b
-	 kdHXR3LQ0PzHvsarnLR/6etvHReZmezPPdLP5Iia6JcfODS6oEeJHtb3uZI9SWAdJv
-	 3mIjKcNQDTz4A==
+	b=KzjLBZ0SQXMkDbeBm2tjBoOp7JV5rx4KSo73verZwe+F4d63KlE/VQVANRHb2d0ZY
+	 0xgk7ecdJqeeM1g3fkpsb36cWIpAO95M2P4Hdy0VzCIeZAVFltof6NkGWnqC9lfGAO
+	 zSu1aRYlvHXeqAdfGIoSamkZ+9IwwmC94JAoeQgajwG4iMqgd7/+Ju00fsW2UBTqVP
+	 aHhAXYGho3ecGxKDuQyH8NqLaoDfMeDVDky1S59TAnynvnsl5omL8okdSNYyhqU7MN
+	 MPXDbWlDxFL5AbKvBjStiBGnvlSjNRe7poV7wJc4fYNzxrLq4Bsx6RiypQz+5dfCqU
+	 2JxGloaHuBY5Q==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 10 Jul 2026 10:00:08 -0400
-Subject: [PATCH v3 04/10] nfsd: initialize copy-notify stateid before
- publishing it
+Date: Fri, 10 Jul 2026 10:00:09 -0400
+Subject: [PATCH v3 05/10] nfsd: check client ownership when cancelling a
+ copy-notify stateid
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260710-nfsd-testing-v3-4-a0ff7db6aa3e@kernel.org>
+Message-Id: <20260710-nfsd-testing-v3-5-a0ff7db6aa3e@kernel.org>
 References: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
 In-Reply-To: <20260710-nfsd-testing-v3-0-a0ff7db6aa3e@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, 
@@ -67,20 +67,20 @@ To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>,
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4050; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=FUD4yD/riJOMTlsN+JqjCYZX5iaCr4b55fbjtTn9SsU=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqUPrzvH7hSzRWM1xA52Z0IMrxwZh+JIJNEOyK9
- 4Sa4iRo5laJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCalD68wAKCRAADmhBGVaC
- FU4rD/4tHv1oxL4xHp5uh8p5g/si0p6BCyTqF9gmk+O8+LWe9pAUhl7TK3/AjMmkMkaX8bkjEJt
- 5THQhh7cbZBNDaeTsW5gSgtOiDZykXwUN4zYbuY8x223WycwqJH6buP3gEXiI7Xu9q9qP7pIxK1
- bAtkG2VNH7CHKcPOkUkQMCEuKhc4ME6cnoFGDxvW/oIV/x4mEIeMHvaTa3Mu+6V/tMxwlqaPKq/
- 15ldJB/dj1Mr1Ki1SUJ+OeILf+fZFZNKDf3jQBnY2oGEeXMv3WAJ2XLN+7Eg04VVJqwiPIrcLPZ
- Vgj3bsja88FUHkVUi8AWByWxsr1b6QU5MB1HqlxIciC2+UuvZSCfvfa/4AmLmhzxvBddPVen2YX
- mQpjnwbbPxpWjd5wHLXfaU238pdiAVj0lSgD3m1rXHUEhHRQ6Qpnx9t4htgFqjV9gdj7pRqbuvx
- N5Km0uswhZCquH5EbN+t141mb36OGhXf2mAjGeLYJzf6rU11UZsWZ43LHSb5JpZumNJ3UetbeTq
- 00KjFD7bByPMfV+a2cFQmH/0iOsr8hJy8h4iEQWxPmMrJ9cKf+IEY3M0/adcRquxUKUOQjQtcCC
- +pOOkOaFcV24jWIbwXiyHsvKmgdQZVsAr+/1aNfZkImqeNgEWxygf7b2vewDE+RMRtffAl7uQ2S
- XDcKgGuAsfNNSoQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1593; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=GxJvjXtiR7eEOp06uNYPWPOn0UpTEVuLFO0Lu+rWrK8=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBqUPrz/C27z01jVpmJHNwEOGOx8ru9fQipSnYRa
+ +ma/d4TIRaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCalD68wAKCRAADmhBGVaC
+ FcmTEACAeTIR6vhnaT+LYA1gFYTIB5MBBWTNoEUpTMBWzJCsO6lAeMZJASspEus6l+zvDRsiOAz
+ ahLMPe9BFWMiyVuNvrcbjziLWLgWqINoC36ycVPON92McIsdG9kkrtvWydHpzlt2OKwKyWauFhX
+ 5fUp1OFUINplWWX2B9dcPtgv+nW0EMsK+hLLBsyjUrXPD+sFhZgr6uRcWyDh6swO1oMiyXj7UUG
+ 464LVJHHTDhemVzWHVii1rSSS+wj6G8LdDZxcZmgzbLEAk1dFWtumnNBzc5IrrGZQYr9xNAEhj2
+ seCGO8mEhhlBayhjk2zaez25xh0qmU1Vd+CWuDK/UAGSoeEB5+92A52PCZYWghvFLIgt5kBbFYF
+ 3AUMukge6CQzYoGTBCiJU07V050MS4oQfEOJBT7miIfhyfGjg2orKDnL2YT2f6u1TOOYOELvyPo
+ Zd8Vsi1wFVM/aDpoeSmTbsBc36b9KsXzKeE9k3KqGpmiImc5V/XwhlEKaZXVXtnWgnBCzLm7Xj8
+ VZ4uImCEKlxCT+FcryM787Gm4s9J+/6fyPI1FAg6u7gnT80T43RHeXd7Uh0au8CHGZJQFhrTqq2
+ 78Mj2H8LzQOMwi9TnHR4Z3Fecf/BcxoHMnchSWbu3JrSJ9+Xoo1LRh9TpBmwNsHXOr9CZ7YQxwF
+ 3W7HUPYsyuhCtCA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Rspamd-Action: no action
@@ -88,13 +88,13 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23235-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23236-lists,linux-nfs=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:cel@kernel.org,m:neil@brown.name,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:clm@meta.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jlayton@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-nfs@vger.kernel.org];
@@ -113,102 +113,57 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 56C8673B8BC
+X-Rspamd-Queue-Id: E9BFA73B8D4
 
-nfsd4_copy_notify() finished initializing the cpntf state after
-nfs4_alloc_init_cpntf_state() had already linked it into the
-s2s_cp_stateids IDR and the parent's sc_cp_list, with cs_count == 1 (the
-membership reference) and none held for the caller. A racing
-OFFLOAD_CANCEL (crafted cl_id == nn->s2s_cp_cl_id plus the guessable
-so_id) could reach manage_cpntf_state() and free the entry, turning the
-caller's subsequent cpn_cnr_stateid read and cp_p_stateid/cp_p_clid
-writes into use-after-free. The owning clientid was also only recorded
-after publication, so it could not gate an ownership check in that window.
+On the OFFLOAD_CANCEL path (clp != NULL), manage_cpntf_state() freed the
+target cpntf state without checking ownership. The lookup key
+st->si_opaque.so_id is allocated cyclically (guessable) and the embedded
+clientid is the fixed per-net nn->s2s_cp_cl_id, so any authenticated
+NFSv4.2 client could cancel and free another client's copy-notify
+stateid.
 
-Record cp_p_stateid and cp_p_clid inside nfs4_alloc_init_cpntf_state()
-before nfs4_init_cp_state() publishes the entry, and return it with an
-extra reference. The caller reads the stateid under that reference and
-drops it with nfs4_put_cpntf_state(); on a late error the laundromat
-reaps the entry.
+Compare the creating clientid recorded in state->cp_p_clid against the
+requesting client's cl_clientid and return nfserr_bad_stateid on a
+mismatch instead of freeing the entry.
 
-Fixes: 624322f1adc5 ("NFSD add COPY_NOTIFY operation")
+Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4proc.c  | 16 +++++++++-------
- fs/nfsd/nfs4state.c | 10 +++++++++-
- 2 files changed, 18 insertions(+), 8 deletions(-)
+ fs/nfsd/nfs4state.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index b9049a3d7c07..506cd4910fb7 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2373,7 +2373,6 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
- 	struct nfs4_stid *stid = NULL;
- 	struct nfs4_cpntf_state *cps;
--	struct nfs4_client *clp = cstate->clp;
- 
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					&cn->cpn_src_stateid, RD_STATE, NULL,
-@@ -2387,12 +2386,14 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	cn->cpn_lease_time.tv_nsec = 0;
- 
- 	status = nfserrno(-ENOMEM);
-+	/*
-+	 * The returned cps is published and fully initialized, and carries an
-+	 * extra reference for us; drop it once we are done with it.
-+	 */
- 	cps = nfs4_alloc_init_cpntf_state(nn, stid);
- 	if (!cps)
- 		goto out;
- 	memcpy(&cn->cpn_cnr_stateid, &cps->cp_stateid.cs_stid, sizeof(stateid_t));
--	memcpy(&cps->cp_p_stateid, &stid->sc_stateid, sizeof(stateid_t));
--	memcpy(&cps->cp_p_clid, &clp->cl_clientid, sizeof(clientid_t));
- 
- 	/* For now, only return one server address in cpn_src, the
- 	 * address used by the client to connect to this server.
-@@ -2401,10 +2402,11 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfsd4_set_netaddr((struct sockaddr *)&rqstp->rq_daddr,
- 				 &cn->cpn_src->u.nl4_addr);
- 	WARN_ON_ONCE(status);
--	if (status) {
--		nfs4_put_cpntf_state(nn, cps);
--		goto out;
--	}
-+	/*
-+	 * Drop our extra reference. The membership reference keeps the entry
-+	 * alive for a later inter-server READ, or until the laundromat reaps it.
-+	 */
-+	nfs4_put_cpntf_state(nn, cps);
- out:
- 	nfs4_put_stid(stid);
- 	return status;
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 3f83c5107e28..9ae0f18121ef 100644
+index 9ae0f18121ef..b3fe163a148d 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -995,7 +995,15 @@ struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
- 	/* So a stale list_del_init() before linking is a no-op. */
- 	INIT_LIST_HEAD(&cps->cp_list);
- 	cps->cpntf_time = ktime_get_boottime_seconds();
--	refcount_set(&cps->cp_stateid.cs_count, 1);
-+	/*
-+	 * Fully initialize the entry before nfs4_init_cp_state() publishes it,
-+	 * since a concurrent OFFLOAD_CANCEL could then free it. Take an extra
-+	 * reference for the caller (dropped with nfs4_put_cpntf_state()).
-+	 */
-+	memcpy(&cps->cp_p_stateid, &p_stid->sc_stateid, sizeof(stateid_t));
-+	memcpy(&cps->cp_p_clid, &p_stid->sc_client->cl_clientid,
-+	       sizeof(clientid_t));
-+	refcount_set(&cps->cp_stateid.cs_count, 2);
- 	if (!nfs4_init_cp_state(nn, &cps->cp_stateid, NFS4_COPYNOTIFY_STID,
- 				p_stid))
- 		goto out_free;
+@@ -7905,10 +7905,20 @@ __be32 manage_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+ 			state = NULL;
+ 			goto unlock;
+ 		}
+-		if (!clp)
++		if (!clp) {
+ 			refcount_inc(&state->cp_stateid.cs_count);
+-		else
++		} else if (memcmp(&clp->cl_clientid, &state->cp_p_clid,
++				  sizeof(clientid_t))) {
++			/*
++			 * OFFLOAD_CANCEL: only the creating client may cancel.
++			 * so_id is guessable, so without this check any client
++			 * could free another's cpntf state.
++			 */
++			state = NULL;
++			goto unlock;
++		} else {
+ 			_free_cpntf_state_locked(nn, state);
++		}
+ 	}
+ unlock:
+ 	spin_unlock(&nn->s2s_cp_lock);
 
 -- 
 2.55.0
