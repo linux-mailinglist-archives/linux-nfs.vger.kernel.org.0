@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-23259-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23260-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id NbY+HR6uU2ridQMAu9opvQ
-	(envelope-from <linux-nfs+bounces-23259-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 17:09:18 +0200
+	id DOhwGTvsU2r0gAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-23260-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 21:34:19 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE2087451CF
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 17:09:17 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8AA1745C5F
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 21:34:18 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="eFFe8/pa";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=a4lKNVsr;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23259-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23259-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23260-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23260-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D4A47300538E
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 15:09:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 310E7300C02C
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 19:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9902C33F8B2;
-	Sun, 12 Jul 2026 15:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72F12FFF89;
+	Sun, 12 Jul 2026 19:31:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF6F33F58E
-	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 15:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47D623ABB9
+	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 19:31:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783868954; cv=none; b=WVcNoBm1lYCllcBdBli6xgbiNW67+fcmfN9gieTDO2OCTs58f3sgeruWXAt4rnUImYiAsjXrFv7EuIoX/hkGBQnJhkIApaTItoTSSpaw4Paq3Y92DMTEk5rNujAp9/BvgxqM2u2BPaDNztiIWLLUgXvhdzDhaUCXZwAfXVYxu4M=
+	t=1783884685; cv=none; b=PkTM5Mx19TP+4yGjFEbNDsFhAuDNHcFdwiHK8xhKZBYMPifvVv8YxMdsGxiTo6eUPbuSe8ER8jCqO0WcttdphY906jEuOYQUSxRtSCpOsVPJ9WuP5qpF6fYhGoXVts2rogfqAG53Pi0hMuDsGRMpU/MSmYoqsSXN16dUQkXIJnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783868954; c=relaxed/simple;
-	bh=Mee4xtfyNaSH/SxXUGZwdtEhVaLM7DEjdb2FJu+3/8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NZraHBm9LL3+ymgIVpG9L0FxHjHKbyaWgaHVj9kzhEGr3e8dq9LCvqUGAaWLHBfp8bwei9jqe2SeCK4RzWqbneG1DLT0KpjlWsi1YlbyBsliYgCSOENXJBKBnQQg2w+gecgxWNQ/JMC2rTy+7xHnOI9t5YwMMP7bhXCaXDktF/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFFe8/pa; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964621F000E9;
-	Sun, 12 Jul 2026 15:09:12 +0000 (UTC)
+	s=arc-20240116; t=1783884685; c=relaxed/simple;
+	bh=b5D/zaYe4qSe+A+FLcjhzvcpUVgvT9DwxZeRNzuxCxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uJ+limnPUgVcMs9WNnNNo8ATdEQ2/ocKA14oFrh+EFaGDpa0XuRTd4pun2iuFCsYjpvlu6JV3JdnUh7jc/P4hm0NUBcZGtCH+3CqLAmqkZTSxuVtiHx/n4OxfyTy8giVx5Exfgy6IK+PvimVp+lgnoDbpuEi22VQW1QYarIWSp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4lKNVsr; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E111F000E9;
+	Sun, 12 Jul 2026 19:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783868953;
-	bh=qTLvHS+pZksw+YAZ0EMUrYFKZ6SwGc82es8e0Fox1t8=;
+	s=k20260515; t=1783884684;
+	bh=99QzLRXRdiOcmXZlgFFZPtcDco3EFK6oXdwJ2NOC9LY=;
 	h=From:To:Cc:Subject:Date;
-	b=eFFe8/pav+HMmZmCJrpO6CDvgjHWzecpwSJt1WC6X5LMPHKplhgffjqBpMArJ5vzr
-	 TOAFI0XJ2vjck8QgL6VcwFbGnlDVnqixS+SPKj4sx8oPcKK5sbQEoDNC4ipCT3wpaM
-	 QJ08VRpDyjChVk2YupFuPPwtMrhJv3qZylOs9iA/+ykmKBdi3PJNbmdP5kG1eRnRsT
-	 mlAA8ixXAuASGJxAHRa6nlErB06sXd7lHjqt9LbDx8OoWczf4J/UCWtDo7z5tJNqxB
-	 4wb/XGdTjBhJGQHz8DZF2PvcQ1ZlP5LZsc1LvTR0IY5m6UXSVQvJVFrc1pKKuSoz40
-	 yOQhbM/JIkzGQ==
+	b=a4lKNVsrc2yzYp2+s3WDwrgMmMV6jLgIL/HA8yujPjR7/cKNO/bqRiEkPjiYcQ3N/
+	 svzTkn/kFxkN/e7ffEIui1NWaqHHwVisg4ch+8MYwl+oX5v0VJEqvpQt0CRS/oSTUc
+	 UIU+PssHi9I0MwacwvA7EoymadTnKLOSs7qLeefG/GNUKbuiaxAwHQJ0MaROKLODYw
+	 wt3V4l5l0R6JubIspqg1oOMJQRPNPnmv+K3DsHbE68FjGbfpIdtQCRlpwkbnGZyLPn
+	 26/d/lR5HIhlJPnoYNNfKaiRWt6gwwIzqjVfhkU4W3C57z/gYL858krX2PY0aK/txB
+	 dQOEYjj0wYY0w==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFSD: Encode only the status in NFS-ACL v2 GETACL error replies
-Date: Sun, 12 Jul 2026 11:09:11 -0400
-Message-ID: <20260712150911.48461-1-cel@kernel.org>
+Subject: [PATCH 0/5] Minor fixes for xdrgen
+Date: Sun, 12 Jul 2026 15:31:17 -0400
+Message-ID: <20260712193122.116845-1-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -70,13 +70,13 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23259-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23260-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -94,78 +94,47 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CE2087451CF
+X-Rspamd-Queue-Id: A8AA1745C5F
 
-The NFSv2 ACL GETACL reply is a union that carries file attributes
-and ACL data only when the status is NFS_OK. All error cases are
-void results. However, currently the NFSv2 ACL GETACL result encoder
-decides whether to append the "OK" body by testing only whether the
-file handle resolved to a positive dentry, not the actual reply
-status.
+While working on server-side xdrgen conversion for NFSv2 and NFSv3,
+I found several unrelated minor issues with the xdrgen tool. They
+are collected here in this series.
 
-A GETACL request that resolves its file handle but then fails for
-another reason (an unsupported mask value, a getattr failure, or an
-ACL retrieval error) therefore appends file attributes and ACL data
-after the error status on the wire. Worse, when the mask is
-rejected, fh_getattr() hasn't been called at all, so those
-attributes are serialized from a zero-filled kstat and are junk.
+Chuck Lever (5):
+  xdrgen: Emit a blank line ahead of enum declarations
+  xdrgen: Share void RPC procedure handlers across programs
+  xdrgen: Do not declare union XDR functions in the definitions header
+  xdrgen: Add XDR width macros for short integer types
+  xdrgen: Fix opaque and string encoders for unbounded members
 
-The logic before the xdr_stream conversion used the reply status.
-Revert to that approach (but keep the xdr_stream conversion in
-place).
+ fs/lockd/nlm3xdr_gen.c                        | 30 +-------------
+ fs/lockd/nlm3xdr_gen.h                        |  4 +-
+ fs/lockd/nlm4xdr_gen.c                        | 30 +-------------
+ fs/lockd/nlm4xdr_gen.h                        |  4 +-
+ fs/lockd/svc4proc.c                           | 40 +++++++++----------
+ fs/lockd/svcproc.c                            | 40 +++++++++----------
+ fs/nfsd/nfs4xdr_gen.c                         |  2 +-
+ fs/nfsd/nfs4xdr_gen.h                         |  5 ++-
+ include/linux/sunrpc/xdrgen/_builtins.h       | 32 +++++++++++++++
+ include/linux/sunrpc/xdrgen/_defs.h           |  2 +
+ include/linux/sunrpc/xdrgen/nfs4_1.h          |  2 +-
+ include/linux/sunrpc/xdrgen/nlm3.h            |  2 +-
+ include/linux/sunrpc/xdrgen/nlm4.h            |  2 +-
+ tools/net/sunrpc/xdrgen/generators/program.py |  8 ++++
+ .../templates/C/enum/declaration/enum.j2      |  1 +
+ .../templates/C/pointer/encoder/string.j2     |  2 +
+ .../pointer/encoder/variable_length_opaque.j2 |  2 +
+ .../templates/C/program/decoder/argument.j2   |  4 --
+ .../templates/C/program/encoder/result.j2     |  4 --
+ .../templates/C/struct/encoder/string.j2      |  2 +
+ .../struct/encoder/variable_length_opaque.j2  |  2 +
+ .../templates/C/union/definition/close.j2     |  6 ---
+ 22 files changed, 103 insertions(+), 123 deletions(-)
 
-Fixes: f8cba47344f7 ("NFSD: Update the NFSv2 GETACL result encoder to use struct xdr_stream")
-Signed-off-by: Chuck Lever <cel@kernel.org>
----
- fs/nfsd/nfs2acl.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
-
-diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
-index 827f90194c43..2998640f259d 100644
---- a/fs/nfsd/nfs2acl.c
-+++ b/fs/nfsd/nfs2acl.c
-@@ -253,22 +253,21 @@ nfsaclsvc_encode_getaclres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 
- 	if (!svcxdr_encode_stat(xdr, resp->status))
- 		return false;
--
--	if (dentry == NULL || d_really_is_negative(dentry))
--		return true;
--	inode = d_inode(dentry);
--
--	if (!svcxdr_encode_fattr(rqstp, xdr, &resp->fh, &resp->stat))
--		return false;
--	if (xdr_stream_encode_u32(xdr, resp->mask) < 0)
--		return false;
--
--	if (!nfs_stream_encode_acl(xdr, inode, resp->acl_access,
--				   resp->mask & NFS_ACL, 0))
--		return false;
--	if (!nfs_stream_encode_acl(xdr, inode, resp->acl_default,
--				   resp->mask & NFS_DFACL, NFS_ACL_DEFAULT))
--		return false;
-+	switch (resp->status) {
-+	case nfs_ok:
-+		inode = d_inode(dentry);
-+		if (!svcxdr_encode_fattr(rqstp, xdr, &resp->fh, &resp->stat))
-+			return false;
-+		if (xdr_stream_encode_u32(xdr, resp->mask) < 0)
-+			return false;
-+		if (!nfs_stream_encode_acl(xdr, inode, resp->acl_access,
-+					   resp->mask & NFS_ACL, 0))
-+			return false;
-+		if (!nfs_stream_encode_acl(xdr, inode, resp->acl_default,
-+					   resp->mask & NFS_DFACL, NFS_ACL_DEFAULT))
-+			return false;
-+		break;
-+	}
- 
- 	return true;
- }
 -- 
 2.54.0
 
