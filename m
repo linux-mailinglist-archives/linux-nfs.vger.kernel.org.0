@@ -1,50 +1,51 @@
-Return-Path: <linux-nfs+bounces-23272-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23273-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id c2UOGwn9U2qBggMAu9opvQ
-	(envelope-from <linux-nfs+bounces-23272-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:01 +0200
+	id YUADFg39U2qHggMAu9opvQ
+	(envelope-from <linux-nfs+bounces-23273-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:05 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A512A745DE9
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 929B2745DFF
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=SSKNst76;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Z9bUvteD;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23272-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23272-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23273-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23273-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1DE92300A380
+	by sea.lore.kernel.org (Postfix) with ESMTP id D209C300D85E
 	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 20:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DFF352C28;
-	Sun, 12 Jul 2026 20:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9357E0E4;
+	Sun, 12 Jul 2026 20:45:58 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FA7E0E4
-	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 20:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A23734F255
+	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 20:45:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783889157; cv=none; b=mWqXjY9mLpj/+OW+ZBbQ2nxx0kD6jt3FwvN9V3ZFJ0Fc/dDqtmFViyTnPFF8ynFOGomquJdoF3+C8UClOhJ9x9OHCH2Gc6V8/zKd4PnViPmzyCLfo5uoOfWNVZsiWicEmK316g6EG7/f88/nij4yX89AESp/jjzxSmneYQj4luE=
+	t=1783889158; cv=none; b=V1xHAXboI5nDnV+i4iFlCouPpaIoZ4Ktun68N94P3niPLxtlsiviCB+0Mv7Zvr87s32PP2KF6xft32DH5cR1SbyxQk9uQdw6+RlNUPbQp2TeNkJulVO/4YbtqGTT/j9YQN1rLQgpjWWQxHwBkzD5flYbrL04crXBDh6VkbnLhcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783889157; c=relaxed/simple;
-	bh=cdgv6J5jif0F/zEmXQfM3hf1zFVhvlyMYry+d/C07jY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FUT+p/G9rD/zuAGtkkiizzcyJ912GqZu6Zp0ASDBll2O58U4aelMXv/y48UM3rZX5oq8RtmbX/6JCCVdW2cVIyFet1A3BQ8x8FWHWucOOsa53kHncmdaRpOCe95eZm0zxRbi4sFte9OVcD4QRDXCfIycEEjdOh0BrdvHdbcy3lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSKNst76; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7A1C1F000E9;
-	Sun, 12 Jul 2026 20:45:55 +0000 (UTC)
+	s=arc-20240116; t=1783889158; c=relaxed/simple;
+	bh=jxbcocbFZooNtU3CBQsr6I03ulVKR6sl43RKsCM3Ghk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iDteE6sX4Nt/YvxyZFJfivCp+mnkTOwYbufN9b+Cpgocrk60nkFkDSOWYiOne4y/H9UyYL5ho2sS7Ucp/AU7XhRD1/Db4CWGRxHhgvrs/vZ260iLy3SwOWs984ttJ0h2aclPPXdA3OxWyRrt3faMlORWTGMflreCEsm5ss/PHJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9bUvteD; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67FE91F00A3D;
+	Sun, 12 Jul 2026 20:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783889156;
-	bh=J1f9zMYiBy1EfKv+pRDPR/b6CLXaHOMxaWDOTqJUtq4=;
-	h=From:To:Cc:Subject:Date;
-	b=SSKNst76yNno1tr6Pd8MM8RQRqMdTDrMGdpR6SWzlFeov9wFpegSlAC0dFfS3/bMW
-	 uLXenBSoLmoK381/c8vEBnPABqko3ouktlJE7DdZBwFUmHmHT55t4uIgFjcpwlIH2c
-	 QT2qzSuXLDRnh4+ixHcnNqJq+FLLbE7QVbivCSQdDbYsyhlK5+nNNJc/FNKgB9WNev
-	 vsrUOjGPKdQRvv6Mvlp2xTvyTn0crrhR7riupSsamQjDLvroDOyMZhW8vM5MHHXeWl
-	 hP6wuZXvFiaCTZK6eX6AWUDHBsQHFmfq4oUmYjaYmWzPd/POoR24LFa8nNQGE4BF0e
-	 mnoSo+6OocYng==
+	bh=YAB5XSmRDgBBpI6FwxjVr6o5v5Qemk24OELQ8O//mRI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Z9bUvteD37syhxC2R4syIcn3S0rjgcFsLm68mdPDVO0ME7d4uGucqwRNydf+pLU1m
+	 mpmIdxYO/8QKrIghvhKY5FqSiny/7w5v2bFprpFbcHC1cbKdli5JPqRxe4TuR22e4A
+	 j7656qkgSnpSPUw7JXI74472NdCMD/egyg8pinSEmh6pS89UyrTlYAyvhF1pN/+a2Q
+	 n+1b1g1fDeTa5b76MO7kHvAQ8pZ7GFNxu4+qIODjora/M5MMUs4W1FoKICyL1+Bt4G
+	 K/SF/4aCGKvm5GQsiBkvTN4Nwdq2HL7M9BSJjyBpOrEOr728VhR91V1IzVGQeBt0RT
+	 RmAzyrqO9KOFA==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,10 +53,12 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH 0/9] Start reorganizing fs/nfsd/nfsd.h
-Date: Sun, 12 Jul 2026 16:45:45 -0400
-Message-ID: <20260712204554.125308-1-cel@kernel.org>
+Subject: [PATCH 1/9] NFSD: Make "stats.h" self-contained
+Date: Sun, 12 Jul 2026 16:45:46 -0400
+Message-ID: <20260712204554.125308-2-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260712204554.125308-1-cel@kernel.org>
+References: <20260712204554.125308-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,13 +73,13 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23272-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23273-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -94,61 +97,42 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A512A745DE9
+X-Rspamd-Queue-Id: 929B2745DFF
 
-fs/nfsd/nfsd.h has become a kitchen sink of unrelated declarations
-and definitions, including a broad swathe of headers and other
-detritus in NFSD source files. This organization introduces
-brittleness that makes it difficult to execute changes that cut
-across layers and internal modules that might otherwise be cleanly
-siloed. It also pulls in unused items into each TU, making
-compilation of nfsd.ko needlessly slower and more computationally-
-expensive.
+The inline helpers in fs/nfsd/stats.h dereference struct nfsd_net and
+struct svc_export, yet the header includes neither "netns.h" nor
+"export.h", where those types are defined. Each helper therefore
+compiles only when its translation unit has already pulled in both
+headers ahead of "stats.h" -- a hidden ordering requirement that has
+to be honored at every include site.
 
-This series begins sorting through this pile to relocate items that
-are obviously better placed in NFS version- or task-specific
-headers.
+Include "netns.h" and "export.h" from "stats.h" directly so the
+header stands on its own, and no consumer has to order its includes
+to satisfy it.
 
-Chuck Lever (9):
-  NFSD: Make "stats.h" self-contained
-  NFSD: Explicitly include "stats.h"
-  NFSD: include "netns.h"
-  NFSD: Remove '#include "nfsd.h"' from fs/nfsd/cache.h
-  NFSD: Move the export.h include from nfsd.h to auth.c
-  NFSD: Move struct readdir_cd
-  NFSD: Relocate nfsd_user_namespace()
-  NFSD: Relocate nfsd4_set_netaddr()
-  NFSD: Relocate NFSv4 "supported attributes" to new header
+Signed-off-by: Chuck Lever <cel@kernel.org>
+---
+ fs/nfsd/stats.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
- fs/nfsd/attr4.h     | 162 +++++++++++++++++++++++++++++++++++
- fs/nfsd/auth.c      |  19 +++++
- fs/nfsd/auth.h      |   6 ++
- fs/nfsd/cache.h     |   3 +-
- fs/nfsd/nfs4idmap.c |   1 +
- fs/nfsd/nfs4proc.c  |  32 +++++++
- fs/nfsd/nfs4state.c |   1 +
- fs/nfsd/nfs4xdr.c   |   2 +
- fs/nfsd/nfscache.c  |   2 +
- fs/nfsd/nfsctl.c    |   2 +
- fs/nfsd/nfsd.h      | 202 +-------------------------------------------
- fs/nfsd/nfsfh.c     |   2 +
- fs/nfsd/nfsxdr.c    |   2 +
- fs/nfsd/state.h     |   3 +
- fs/nfsd/stats.c     |   2 +
- fs/nfsd/stats.h     |   3 +
- fs/nfsd/trace.h     |   1 +
- fs/nfsd/vfs.c       |   2 +
- fs/nfsd/vfs.h       |   5 +-
- fs/nfsd/xdr.h       |   1 +
- fs/nfsd/xdr3.h      |   1 +
- fs/nfsd/xdr4.h      |   2 +-
- 22 files changed, 253 insertions(+), 203 deletions(-)
- create mode 100644 fs/nfsd/attr4.h
-
+diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
+index e4efb0e4e56d..87736b7fbf28 100644
+--- a/fs/nfsd/stats.h
++++ b/fs/nfsd/stats.h
+@@ -10,6 +10,9 @@
+ #include <uapi/linux/nfsd/stats.h>
+ #include <linux/percpu_counter.h>
+ 
++#include "export.h"
++#include "netns.h"
++
+ struct proc_dir_entry *nfsd_proc_stat_init(struct net *net);
+ void nfsd_proc_stat_shutdown(struct net *net);
+ 
 -- 
 2.54.0
 
