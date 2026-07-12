@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-23275-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23277-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uf+lLwn9U2qCggMAu9opvQ
-	(envelope-from <linux-nfs+bounces-23275-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:01 +0200
+	id BkxAHwr9U2qFggMAu9opvQ
+	(envelope-from <linux-nfs+bounces-23277-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:02 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62A82745DEB
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F884745DF6
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jyod3Qez;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=eis1QJ2g;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23275-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23275-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23277-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23277-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D759E3003635
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 20:46:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C0B00300361E
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 20:46:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59FB236921E;
-	Sun, 12 Jul 2026 20:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3357E0E4;
+	Sun, 12 Jul 2026 20:46:01 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416BD3B42F8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADFB352C28
 	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 20:45:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783889160; cv=none; b=I5q446mVDkZUB9cRNshTBEq3PGECyeHN5rSviYhV5wm8pazn6yEY1nQHLLY3i/ghFX8oUYHa8+EnRwe3vFYhZ8fJZvEQZyojSVWo3sIsJ1UWGjBDDl0z62nvbyUaTQkqtP6c4H8G2PZFtdR8/nceBBS8TAF5ukxV/Er1P+XsE6A=
+	t=1783889161; cv=none; b=PT80ix23/bWrNd17YBLpEIu2+u7i8nCWfLc6gHlJ+5W+cYgXvlfH0/aBaacmdWg58zRhwydC1Jn5/j/oW92aTqHCkUWVGaNV3M92wZrrpdzFWipskU3LEJddewHNPZ6P+2I3J5K1/NGz89SxyxlY6JqdtKWI7G63U7nWbstweR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783889160; c=relaxed/simple;
-	bh=t2IFeyc3it4UWSltH9c5H4wB05MkGVD86AxEfbUo4Ko=;
+	s=arc-20240116; t=1783889161; c=relaxed/simple;
+	bh=FiYF5JkJFBiibf1IE69q7qzqCicjTk0g3fmxAtYhhks=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FmoUwRW5DVmGN5OYBxhgGJqtrsxVHqZ+KnKn0O05/87fn7SD46U3IA0AgEN2GxTGWOu1clW6ennIVpgAij1294myQaObjcjyrZnJLofLVgdiy6BVyecca+gvh1xdnzZbwXYN+x4jJc4NzvjLPPikZND4OCl4ZxnLGHbi9VUO720=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyod3Qez; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE1A1F00A3D;
-	Sun, 12 Jul 2026 20:45:58 +0000 (UTC)
+	 MIME-Version; b=Ptwfb5d+zkCrT+tRvwMPGbWNuAkR7OBRw6JWtzm4sBsFyYM3X4XPXCzoCEB8kUifGttlfLmZB5c/C19EmSez+PKYUwvKs4nNVj2ZBhmUcHddCM9gqZ6Vcq2vZJrDMLs7qCD/udkceYsBmkvL7Iy2Sd+vfOxSil17ZAmqLC4ujmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eis1QJ2g; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 624811F00A3E;
+	Sun, 12 Jul 2026 20:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783889159;
-	bh=31ZQc39LBPeJ9niGOAVJ0mHO0NN0s8qc3GkM2PHCjtE=;
+	bh=aXOIlKR4yZy4vfHsMiZmXuzfnPzYyf1k9FaNsb9kDr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jyod3QezKHeLeHYAIkCSYiHG13zNSwnXRzrz887HPRT6btdeFcnt29US1Swq/Wp58
-	 FAdCjGBaMNzq43GtOa4rskbu1rjOHbLk2w/BflabA1n+fvp3w2/guJCe6wyIXwuV30
-	 YLHavUg1iH7u7EL32pXEuXqBklAQrcNA7I/qeUW7+B5R3bSaErL+taEF1v/kjm2tLf
-	 cLb7lL8/Q7/aIX77OW43Ci1DNuyNDFLqa92/EZ35gCkouSaKf1xYGAni42wmNiglz/
-	 XKT/jG3Mk1bMKLUjBxXllmCes6Y9pv8QiQ53vpQ9Znu4PjjyvJb83SKQnQdrqkX5Th
-	 /kS6WQQVeimIw==
+	b=eis1QJ2gKf6P3qY77VZc37a8Z2DmHhWK+UE1Kqc1WUzYAwg+mkHWlFCW0NL/nIDjq
+	 7um1z13yvK+udUDgLI2qHwvtrGW+q8azOx9QvEZhIdD1k4Y5zG9IfawddcxOYyl6Hj
+	 0CwpFsJ6JeHWTc1R175H+vRurDldCHPTdF0Mi8em49f0YZkCZxmZL3NmWXTjkp8Zfk
+	 q2CshDAuew2yF4Sd0EkmyUsSC9p9/jt/cDyif6U6A4iuut10cFpTDPg5sPnaXvJmBt
+	 mzeuJqIrPNAJJe36oeh4QqkwFKHEeiun8z1YSMNq/8hwK8AKjIZTiR/7jQO94Aemy9
+	 KsyOhGGjJHaWQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -53,9 +53,9 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH 4/9] NFSD: Remove '#include "nfsd.h"' from fs/nfsd/cache.h
-Date: Sun, 12 Jul 2026 16:45:49 -0400
-Message-ID: <20260712204554.125308-5-cel@kernel.org>
+Subject: [PATCH 5/9] NFSD: Move the export.h include from nfsd.h to auth.c
+Date: Sun, 12 Jul 2026 16:45:50 -0400
+Message-ID: <20260712204554.125308-6-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260712204554.125308-1-cel@kernel.org>
 References: <20260712204554.125308-1-cel@kernel.org>
@@ -79,7 +79,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23275-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23277-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -101,30 +101,50 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 62A82745DEB
+X-Rspamd-Queue-Id: 4F884745DF6
 
-Clean up: cache.h does not need the full definition of struct
-nfsd_net. A forward declaration suffices.
+Nothing declared in fs/nfsd/nfsd.h references a type, macro, or
+function that export.h defines. The include is present only so
+that source files including nfsd.h pick up export.h's definitions
+transitively. Of the twenty source files that include nfsd.h, only
+auth.c relies on that side effect: it names struct svc_export and the
+NFSEXP_* flags yet includes no header that supplies them.
+
+Add the export.h include directly to auth.c, then drop it from nfsd.h
+so the header carries only the dependencies its own declarations
+require.
 
 Signed-off-by: Chuck Lever <cel@kernel.org>
 ---
- fs/nfsd/cache.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfsd/auth.c | 1 +
+ fs/nfsd/nfsd.h | 2 --
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
-index bb7addef4a31..3bc4856e34b8 100644
---- a/fs/nfsd/cache.h
-+++ b/fs/nfsd/cache.h
-@@ -10,7 +10,8 @@
- #define NFSCACHE_H
+diff --git a/fs/nfsd/auth.c b/fs/nfsd/auth.c
+index 4dc327e02456..e3b4a35caac6 100644
+--- a/fs/nfsd/auth.c
++++ b/fs/nfsd/auth.c
+@@ -3,6 +3,7 @@
  
- #include <linux/sunrpc/svc.h>
--#include "nfsd.h"
-+
-+struct nfsd_net;
+ #include <linux/sched.h>
+ #include "nfsd.h"
++#include "export.h"
+ #include "auth.h"
  
- /*
-  * Representation of a reply cache entry.
+ int nfsexp_flags(struct svc_cred *cred, struct svc_export *exp)
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 4583d7d51a88..b35e9a9a112d 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -23,8 +23,6 @@
+ 
+ #include <uapi/linux/nfsd/debug.h>
+ 
+-#include "export.h"
+-
+ #undef ifdebug
+ #ifdef CONFIG_SUNRPC_DEBUG
+ # define ifdebug(flag)		if (nfsd_debug & NFSDDBG_##flag)
 -- 
 2.54.0
 
