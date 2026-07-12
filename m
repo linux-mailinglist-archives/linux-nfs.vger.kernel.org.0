@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-23278-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23279-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Uyq7NiD9U2qNggMAu9opvQ
-	(envelope-from <linux-nfs+bounces-23278-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:24 +0200
+	id nWs5GAz9U2qGggMAu9opvQ
+	(envelope-from <linux-nfs+bounces-23279-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:04 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F9A5745E0A
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:24 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 418A7745DFA
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="J7/ZzOG8";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="JZ/AliPX";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23278-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23278-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23279-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23279-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2E085300D33E
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 20:46:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 27B9D3003379
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 20:46:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0666352C28;
-	Sun, 12 Jul 2026 20:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64BA3546F5;
+	Sun, 12 Jul 2026 20:46:02 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28523B42F8
-	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 20:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BBD34F255
+	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 20:46:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783889161; cv=none; b=jW/YyHWJQPpJtU2/jogNezJTWC/qGuwmpavMzjYGwYZ/Lk5hTcaCFetEcWJgT1m1uZB+uJzNYny67Lq1ELjwKIv91q3BZftbXpRtkcL9D+lT6B5yDc6vEoqVbtTXdpXoS8R/NYKDvZZfys8k5IDPIoPGPLi/TxyxeiB9nENs1Sk=
+	t=1783889162; cv=none; b=suDflhwSvDCBf0HzDcRbCw10rhHd4NphXYhGtFPuGm969DwqJ2aOXunsG2s4M2cHAgJ0mRErGDoI+V2naEfQ17vmr73A6f91cfQ3APFwMH+hw+0mEupvJ7khl/gWCvSxhpkxr2zmIqecuBbC1q0PCawcdK9Q3czKwkeRLgZo6qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783889161; c=relaxed/simple;
-	bh=mE3588FAf7Wt7yJRk38a8mcUiwf8oNXvSRW7mBPSUXE=;
+	s=arc-20240116; t=1783889162; c=relaxed/simple;
+	bh=DD/PI8n4Bgrc2qvjXb0F/mGsk2W+jSHd+CqgUMamLj4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NMqNoBNkA2LGzEpItHSnQLgjPcraxgZl4cpmmprTvnUMjnwBaddnUkzNxu8Wp8Uky+6BKE1UeoBnUGayH/k1Aa1o6a4GEPrCUVfAANOtsSXGdnAxrDCctB8UZGi+Nz20NkmRT+AW40mz1JKjMOFX6oxXXX4XZdUF7XO9Ew5qMho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7/ZzOG8; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAF71F00A3A;
+	 MIME-Version; b=OQ7iMUDSdeyo4LqhW3NsdoglTGhK9IdtID1Xr/mufPAtw1z4kPt1ms9lri5HW1nDB/y09+8rQB1qCK01Y+xPUffNkhK8u0nskjXEth7aQ2HEExiG3GKTbdkIxlHYwc4026Anxcxgy+mxRm6H73pwwmElCfJ42sewFSUzZHrZ6kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZ/AliPX; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E54E81F000E9;
 	Sun, 12 Jul 2026 20:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783889160;
-	bh=8onOtOYMMLr/gwuFAp5Nh+7qO/59+tPzfQTG7Fb1e/8=;
+	s=k20260515; t=1783889161;
+	bh=5SmQEDJZ9TjqEGQqSCNZFs8lwiBWPcN/Bxk9RVnE5zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=J7/ZzOG8K8htFKO9/VZqjPkWhAhCJqBc5sokZfCRgCbZ2SotUnmoWGh3l257LS2oy
-	 12pKLwbzY8t6RRtumuLOkpxtx0Zmyb5NMKpIv1IVpkX5ZCHLreFC2tG1c51WbAulnb
-	 4iD2YVSWr/9eBGUxlEi9SWy2g080giVQteHUA9zUlTc1aRzcnXZFBBVdN4tuczwKm7
-	 OnQ3qPEG2cmeZ4vA+2CO4CPP2ZUit+ZJkATcPR/t9+iUgA0mqjjWzfDviLIIVb/z7t
-	 iMZcL9JFvP42lxsHCx5dd5xosPm7m1DIW9kfyhlaVvvxhOzPFx+gLsgtFS3HKZdo1e
-	 Qj8LyuJ+rYabw==
+	b=JZ/AliPXd85wl3v50sYknlmE64SORoONLrCUf4jymbZ6GhQDHhx4ZyhpHB6/cdjMH
+	 +OUvZAN6ehbj9xJ7+wqfODS+ctSeswNrdxhwqHczqPOC/4EdkKbZiO3HvoNdIdMeIx
+	 wt1aDGkr/nZJSklMrshEL+L5hioZv4AANeoBOoJupCnVOxrqJjGv084JMtvnII0eFD
+	 B1VodLwTWMXiPAJ0irfe8UM/NIKcxE5RCzDjcuiWaI5+ENPQAxqCEbBKcQCPxL1ZZ2
+	 Fa01Mexqm0xPwwfSWJ5b54bAfYHJoP1ZTOSZHovC6QjGAx3MjgLei2RMpGwY44GbJJ
+	 mQbqlOMVWL1hQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -53,9 +53,9 @@ To: NeilBrown <neil@brown.name>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH 6/9] NFSD: Move struct readdir_cd
-Date: Sun, 12 Jul 2026 16:45:51 -0400
-Message-ID: <20260712204554.125308-7-cel@kernel.org>
+Subject: [PATCH 7/9] NFSD: Relocate nfsd_user_namespace()
+Date: Sun, 12 Jul 2026 16:45:52 -0400
+Message-ID: <20260712204554.125308-8-cel@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260712204554.125308-1-cel@kernel.org>
 References: <20260712204554.125308-1-cel@kernel.org>
@@ -73,13 +73,13 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23278-lists,linux-nfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23279-lists,linux-nfs=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -97,108 +97,118 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2F9A5745E0A
+X-Rspamd-Queue-Id: 418A7745DFA
 
-struct readdir_cd is part of the VFS readdir API, but it lives in
-nfsd.h, the subsystem's catch-all header, rather than alongside that
-API. That forces vfs.h to include nfsd.h solely to declare readdir_cd
-for its nfsd_readdir() prototype, a layering inversion since vfs.h is
-the lower-level shim.
+Refactor: nfsd_user_namespace() currently lives in nfsd.h, so every
+caller must pull in nfsd.h -- directly or transitively via state.h --
+and with it the NFS protocol definitions from uapi/linux/nfs.h and
+friends, even when the caller uses nothing else from nfsd.h.
 
-Relocate readdir_cd to vfs.h, just below the nfsd_filldir_t callback
-typedef. vfs.h then defines the struct itself and no longer includes
-nfsd.h. The xdr headers that embed readdir_cd by value include vfs.h
-to obtain the definition. This prepares the ground for dropping nfsd.h
-from more files.
+Since nfsd_user_namespace() is an auth-related function, move it
+to fs/nfsd/auth.c in preparation for removing '#include "nfsd.h"'
+from a few places.
 
 Signed-off-by: Chuck Lever <cel@kernel.org>
 ---
- fs/nfsd/nfsd.h | 4 ----
- fs/nfsd/vfs.h  | 5 ++++-
- fs/nfsd/xdr.h  | 1 +
- fs/nfsd/xdr3.h | 1 +
- fs/nfsd/xdr4.h | 2 +-
- 5 files changed, 7 insertions(+), 6 deletions(-)
+ fs/nfsd/auth.c      | 18 ++++++++++++++++++
+ fs/nfsd/auth.h      |  6 ++++++
+ fs/nfsd/nfs4idmap.c |  1 +
+ fs/nfsd/nfs4xdr.c   |  1 +
+ fs/nfsd/nfsd.h      |  6 ------
+ 5 files changed, 26 insertions(+), 6 deletions(-)
 
+diff --git a/fs/nfsd/auth.c b/fs/nfsd/auth.c
+index e3b4a35caac6..5ef9a0466eda 100644
+--- a/fs/nfsd/auth.c
++++ b/fs/nfsd/auth.c
+@@ -88,3 +88,21 @@ int nfsd_setuser(struct svc_cred *cred, struct svc_export *exp)
+ 	return -ENOMEM;
+ }
+ 
++/**
++ * nfsd_user_namespace - Get user_namespace in effect for an RPC request
++ * @rqstp: RPC execution context
++ *
++ * xpt_cred is set once at transport creation and never modified. The
++ * transport itself is reference-counted during request processing, so
++ * no explicit reference on the namespace is necessary.
++ *
++ * Return: the user_namespace from the transport credential, or
++ * init_user_ns if no credential was set. The returned namespace pointer
++ * is valid for the duration of the RPC request.
++ */
++struct user_namespace *nfsd_user_namespace(const struct svc_rqst *rqstp)
++{
++	const struct cred *cred = rqstp->rq_xprt->xpt_cred;
++
++	return cred ? cred->user_ns : &init_user_ns;
++}
+diff --git a/fs/nfsd/auth.h b/fs/nfsd/auth.h
+index 8c5031bbbcee..832bc957980d 100644
+--- a/fs/nfsd/auth.h
++++ b/fs/nfsd/auth.h
+@@ -8,10 +8,16 @@
+ #ifndef LINUX_NFSD_AUTH_H
+ #define LINUX_NFSD_AUTH_H
+ 
++struct user_namespace;
++struct svc_export;
++struct svc_rqst;
++
+ /*
+  * Set the current process's fsuid/fsgid etc to those of the NFS
+  * client user
+  */
+ int nfsd_setuser(struct svc_cred *cred, struct svc_export *exp);
+ 
++struct user_namespace *nfsd_user_namespace(const struct svc_rqst *rqstp);
++
+ #endif /* LINUX_NFSD_AUTH_H */
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index 71ba61b5d0a3..e9faf8b78f74 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -38,6 +38,7 @@
+ #include <linux/slab.h>
+ #include <linux/sunrpc/svc_xprt.h>
+ #include <net/net_namespace.h>
++#include "auth.h"
+ #include "idmap.h"
+ #include "nfsd.h"
+ #include "netns.h"
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index aef48fb0fac2..cba2e72d616c 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -47,6 +47,7 @@
+ 
+ #include <uapi/linux/xattr.h>
+ 
++#include "auth.h"
+ #include "idmap.h"
+ #include "acl.h"
+ #include "xdr4.h"
 diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index b35e9a9a112d..0503ee0e1bbe 100644
+index 0503ee0e1bbe..81312b11b5c2 100644
 --- a/fs/nfsd/nfsd.h
 +++ b/fs/nfsd/nfsd.h
-@@ -47,10 +47,6 @@ enum {
- 	NFSSVC_MAXBLKSIZE       = RPCSVC_MAXPAYLOAD,
- };
+@@ -153,12 +153,6 @@ static inline int nfsd_v4client(struct svc_rqst *rq)
+ {
+ 	return rq && rq->rq_prog == NFS_PROGRAM && rq->rq_vers == 4;
+ }
+-static inline struct user_namespace *
+-nfsd_user_namespace(const struct svc_rqst *rqstp)
+-{
+-	const struct cred *cred = rqstp->rq_xprt->xpt_cred;
+-	return cred ? cred->user_ns : &init_user_ns;
+-}
  
--struct readdir_cd {
--	__be32			err;	/* 0, nfserr, or nfserr_eof */
--};
--
- /* Maximum number of operations per session compound */
- #define NFSD_MAX_OPS_PER_COMPOUND	200
- 
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index e09ea04a51b9..4af2ff9e9dfe 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -9,7 +9,6 @@
- #include <linux/fs.h>
- #include <linux/posix_acl.h>
- #include "nfsfh.h"
--#include "nfsd.h"
- 
- /*
-  * Flags for nfsd_permission
-@@ -45,6 +44,10 @@ struct nfsd_file;
-  */
- typedef int (*nfsd_filldir_t)(void *, const char *, int, loff_t, u64, unsigned);
- 
-+struct readdir_cd {
-+	__be32			err;	/* nfs_ok, nfserr, or nfserr_eof */
-+};
-+
- /* nfsd/vfs.c */
- struct nfsd_attrs {
- 	struct iattr		*na_iattr;	/* input */
-diff --git a/fs/nfsd/xdr.h b/fs/nfsd/xdr.h
-index 852f71580bd0..df540c940cef 100644
---- a/fs/nfsd/xdr.h
-+++ b/fs/nfsd/xdr.h
-@@ -7,6 +7,7 @@
- #include <linux/vfs.h>
- #include "nfsd.h"
- #include "nfsfh.h"
-+#include "vfs.h"
- 
- struct nfsd_fhandle {
- 	struct svc_fh		fh;
-diff --git a/fs/nfsd/xdr3.h b/fs/nfsd/xdr3.h
-index a7c9714b0b0e..344203874b4c 100644
---- a/fs/nfsd/xdr3.h
-+++ b/fs/nfsd/xdr3.h
-@@ -9,6 +9,7 @@
- #define _LINUX_NFSD_XDR3_H
- 
- #include "xdr.h"
-+#include "vfs.h"
- 
- struct nfsd3_sattrargs {
- 	struct svc_fh		fh;
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 805c7122eb93..0ec0f43b1a87 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -38,7 +38,7 @@
- #define _LINUX_NFSD_XDR4_H
- 
- #include "state.h"
--#include "nfsd.h"
-+#include "vfs.h"
- 
- #define NFSD4_MAX_TAGLEN	128
- #define XDR_LEN(n)                     (((n) + 3) & ~3)
+ /* 
+  * NFSv4 State
 -- 
 2.54.0
 
