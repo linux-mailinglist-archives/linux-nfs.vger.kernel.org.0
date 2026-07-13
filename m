@@ -1,480 +1,210 @@
-Return-Path: <linux-nfs+bounces-23281-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23282-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id lOQgNSf9U2qVggMAu9opvQ
-	(envelope-from <linux-nfs+bounces-23281-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:31 +0200
+	id pUvgNlBdVGqZlAMAu9opvQ
+	(envelope-from <linux-nfs+bounces-23282-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2026 05:36:48 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 441AA745E10
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 22:46:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 802FE746F58
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2026 05:36:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=l06Hxd49;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23281-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23281-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dkim=none;
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=sk.com (policy=none);
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23282-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23282-lists+linux-nfs=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F1472300DDDD
-	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jul 2026 20:46:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CF37C300CBC5
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jul 2026 03:36:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C677E0E4;
-	Sun, 12 Jul 2026 20:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDDFA314B9A;
+	Mon, 13 Jul 2026 03:36:41 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8963B2D14
-	for <linux-nfs@vger.kernel.org>; Sun, 12 Jul 2026 20:46:03 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D211C5F27;
+	Mon, 13 Jul 2026 03:36:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783889164; cv=none; b=az1rNWWeAW+bHVkilOi4mkMXlvYNKJTsRMgkoQzz+JCOsHMyEBVdoJLCaaY8WDY+MlU5GjMJEg6kbaG7MWaS0C6q7uEvAeI1Pm2stZDw26v+k+hQ8D6yISonP2U22iHXY5JjdGhPXHAk2CLF1F29/MuYEt8nAyrpv1Q0LSkk9F4=
+	t=1783913801; cv=none; b=Hps71Y7xLQfxf0sQb3B24jDdVu3hMLqVQ+AKbH8FvX38fdPugXLRo1OlfEB3L7Bdxb44XvecA8g4wu7W3uEsuxy/DvuzZ/c8mR6nlFC1y21kKWGG8mPrqj73b+QCqc6Pc3SA6zdR2G8duILZAaRJCyLrMiG1m4XvdJLOzxrLnbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783889164; c=relaxed/simple;
-	bh=uqG5sOM0q2zgId50xGJf0Y51ny2cYG61Fzou3drKEbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WTNMIgr/raAjUxCe38/nhEmEtwqWl9datITyZk3d6f+PLUfeG+i5Syly57GtoluVyG2Gaiey0xaFnLbguh7zMiPkGI6FPbAvV2hGrNlXynRTlX/Bi8PI0vubcZIyO4Q8v3/APZ+GWqmmUarFl9yHPdtPXHNH8B2Gre/HthT0Gac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l06Hxd49; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D8C1F00A3E;
-	Sun, 12 Jul 2026 20:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783889163;
-	bh=aUOVJ6DRTvA8HLm8Ieque6cvXagne0S/VQVdgI1FUGg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=l06Hxd49KSUiiLmYgUscNPeho/zashVgI0YjOpCwHxnYwj9Qs9HOwx98ZcLFzcIvA
-	 5v31iHzjS/DX7VD2NGp95OnbgzXITHpThxP7p48IL1bghJaKI+hR9/eRKSsjQUdP84
-	 NikgRhhnpeTY8NnGa6gDw7tS1ZBx/xEn/uRCVD71cBne7vvzlvMZ6cV689WjagDSFI
-	 YkU0NcceAofxmLJ6cR1cUjehDLWW4xyohTc6odU5q+YYNF0YgaOWyeU2nXKWeYwxQS
-	 JH6I39nbI31iRJTDP4sfeJ9OoKj7zG2qPaCi+GxV3lTvmzIeD+0YchSY/9iLKtSncH
-	 a5oTHvpM7KLaA==
-From: Chuck Lever <cel@kernel.org>
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>
-Subject: [PATCH 9/9] NFSD: Relocate NFSv4 "supported attributes" to new header
-Date: Sun, 12 Jul 2026 16:45:54 -0400
-Message-ID: <20260712204554.125308-10-cel@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260712204554.125308-1-cel@kernel.org>
-References: <20260712204554.125308-1-cel@kernel.org>
+	s=arc-20240116; t=1783913801; c=relaxed/simple;
+	bh=/M9QIh4BDhVbOh90sNI83T2LK3a7Bga3WuACDOoWjts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QJdOWW07FlHvhRpYiEK2ytkir90nqsAz1jDXkz/tOiEy8dQCwMZeyCdsZSYOo1xE6QGrWfK46tAOJpTLgNcnFqGPuHYlikcFMkhsTFWMuD8SAGfy5CZev44/9MzoGBKT3eNj+7lJIn+9oMWFeuayvmS4eUBVmjsbRvDGEDf48vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+X-AuditID: a67dfc5b-c2dff70000001609-f8-6a545d3cfdb0
+Date: Mon, 13 Jul 2026 12:36:23 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Gary Guo <gary@garyguo.net>, linux-kernel@vger.kernel.org,
+	max.byungchul.park@gmail.com, kernel_team@skhynix.com,
+	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
+	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
+	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
+	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
+	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+	sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
+	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
+	ngupta@vflare.org, linux-block@vger.kernel.org,
+	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
+	djwong@kernel.org, dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com, harry.yoo@oracle.com,
+	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
+	boqun.feng@gmail.com, longman@redhat.com, yunseong.kim@ericsson.com,
+	ysk@kzalloc.com, yeoreum.yun@arm.com, netdev@vger.kernel.org,
+	matthew.brost@intel.com, her0gyugyu@gmail.com, corbet@lwn.net,
+	catalin.marinas@arm.com, bp@alien8.de, x86@kernel.org,
+	hpa@zytor.com, luto@kernel.org, sumit.semwal@linaro.org,
+	gustavo@padovan.org, christian.koenig@amd.com,
+	andi.shyti@kernel.org, arnd@arndb.de, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
+	mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
+	samitolvanen@google.com, paulmck@kernel.org, frederic@kernel.org,
+	neeraj.upadhyay@kernel.org, joelagnelf@nvidia.com,
+	josh@joshtriplett.org, urezki@gmail.com,
+	mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+	qiang.zhang@linux.dev, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+	chuck.lever@oracle.com, neil@brown.name, okorniev@redhat.com,
+	Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
+	anna@kernel.org, kees@kernel.org, bigeasy@linutronix.de,
+	clrkwllms@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com,
+	kristina.martsenko@arm.com, wangkefeng.wang@huawei.com,
+	broonie@kernel.org, kevin.brodsky@arm.com, dwmw@amazon.co.uk,
+	shakeel.butt@linux.dev, ast@kernel.org, ziy@nvidia.com,
+	yuzhao@google.com, baolin.wang@linux.alibaba.com,
+	usamaarif642@gmail.com, joel.granados@kernel.org,
+	richard.weiyang@gmail.com, geert+renesas@glider.be,
+	tim.c.chen@linux.intel.com, linux@treblig.org,
+	alexander.shishkin@linux.intel.com, lillian@star-ark.net,
+	chenhuacai@kernel.org, francesco@valla.it,
+	guoweikang.kernel@gmail.com, link@vivo.com, jpoimboe@kernel.org,
+	masahiroy@kernel.org, brauner@kernel.org,
+	thomas.weissschuh@linutronix.de, oleg@redhat.com, mjguzik@gmail.com,
+	andrii@kernel.org, wangfushuai@baidu.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, linux-i2c@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+	rcu@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, 2407018371@qq.com, dakr@kernel.org,
+	neilb@ownmail.net, bagasdotme@gmail.com,
+	wsa+renesas@sang-engineering.com, dave.hansen@intel.com,
+	geert@linux-m68k.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v19 39/40] rust: completion: Add __rust_helper to
+ rust_helper_wait_for_completion()
+Message-ID: <20260713033623.GA79338@system.software.com>
+References: <20260706061928.66713-1-byungchul@sk.com>
+ <20260706061928.66713-40-byungchul@sk.com>
+ <CANiq72kEo=bGcHNaSA9JZhv4iuE+YDvu0kN+Z7aopVp3=2C+Wg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72kEo=bGcHNaSA9JZhv4iuE+YDvu0kN+Z7aopVp3=2C+Wg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sb0xTVxyGd+499/ZSrbl0MI82maG4mGhwwzHzM9mIMVlyk2WJ032Zi9Fm
+	3IxiKaxFEKaxTKv1D4huZeMWWaGOoVZtWpwTZDJ0aAOMWh3rnLWgiCOIxD8tAaldW7KMb0+e
+	c877vh8ORysvsIs5rb5ENOg1OjUrx/Lx+U1Z723+uOAt11kVWMy74U5omIHwcwuG+nNOFizu
+	Ogau//kVhlDYgmDyhY0G88UYhuixbhlYKxEEfJdpcLZWUvDM9ZIF69AwC9KITQbjoXYGYsGH
+	FERrt8H3TR4WGoeCNDwdHURwc3gB3ApPsOC1HmLhsYuFG71jCEZud1Cwx3GOhdrjbgw3xmYo
+	OO3+EELNIxhs3/5DgfVMOwVTzadkYOu7ycC9FkkGM0PZELMXQfCIFcPZ8X4GvHcHGAhd28fA
+	BdOgDNx//YbAfT/uGvedwFDXcIeFSx1eDJbo8/iWtnoWDrvOM3DXGWPAZJtkwNfZw4D/tA+D
+	VzqJob/tDANDgwEGPH29NESqVeA7WsVAoOYBWpsnTJqrsWD2R1nB2eBEwovpY0gw18TpyqMJ
+	WtjrKRN+6HnECtPhP1ihI2LHwokD05RwUQrKhL2/3JYJdvd2wdOyXHBcGqXWZ22Sv5sn6rSl
+	ouHN3K3y/MpYNV1swzvu1bmRCTnog4jjCJ9D7FVbDqKUJFp7qlGCMf8Gsfiv4wSz/DISCEzR
+	CU7jV5GBnva4l3M0b32dNE3UJx+8ymvJw5qO5CUFD+TBVCzplfxJRKSxtbM+lXjrhpOhdDx0
+	psGf3EDzKvLjS25WLyF7ztuSMSn8R8TR2ccmOJ3PJJ0/XaMSvYR/nEKavu5mZkcvIr+2BHAN
+	SpXmVEhzKqT/K6Q5FXaETyGlVl9aqNHqclbml+u1O1Z+VlToRvHv3Lxr5tOf0VPfxi7Ec0g9
+	X+EybixQMppSY3lhFyIcrU5TZKviSpGnKa8QDUVbDNt1orELqTisXqhYFSnLU/Kfa0rEbaJY
+	LBr+O6W4lMUmtAneL3M9UQVzoummdb3H/0512D758vB3R7T++zsvL6vYmXsr3dK4prW/YmlV
+	iU8vbthsOLqgMNiqymhsWypkr2jI3Nq36Kp2Te7qgRUbVBnrJ6s4xZPy13Sv7P+9hWROByOR
+	rHmezrRvMlaH5aPdxWFf7RfkHX5Xwf51Sz6Q3hYzkRob8zXZy2mDUfMvWsBm3MoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTVxjHPffenl6a1VwRw4lkc3bqlhl1bmKeRLJp/MDN3qJjZsuWRTq5
+	WWsBsVUmJoqldtbNNKWm7WgrMBhVsUNWsA6hGYGIVUbkZUNUEFgqjoGACJjyVi81y/hy8j+/
+	839+eT4clo6145WsOvOQoM1UpiuwjJF9vM2wIemrT/e/FR5ZByZjLnT3hiTQqa9nYHLCxID7
+	shfDnOuqFEy+AgkE7+Qx0FpxCUHvpAnBsxkXDcaaCANz1iYpTITvS8GmRxAJNCGwt1lp6Gr9
+	nQZvtZ6Cp5XzGIYaxxHY+kMYHIN6BkY9ZxA4B1xSGLyeDI97ayUQ6XlEwZ2pYQSe0DwFofpT
+	CObsGigqqRLH7WMYZlpu0+CwtSL4qb+HhvHBPgTVTQ8QBC7kYXhouUJDR2gp/Dk5iuGm7QcM
+	j9vcFIxUYijOC0ig7Y8hBOdcVgQD9wIUGEovY7Cf8zFQ03dNCm1DsxR0260UXPJ9BL2eAQaa
+	LSWUuK7Y+jUeXA4DJR7/UGD7pZaCsKdcur0M8c+MZoYvr/JTvLF9DvPeQi/iZ6atiJ8oM9C8
+	0SJeG4dHaf5k1bd8WfMw5qcn/8J8YKqY4W+VEP7n09MUn9+yga9x9kh37fhClpQmpKuzBe2m
+	d1NlKn3ETGe5mCN/F/jQCVRKf49iWMJtIbZmM1rIDLeWmNqDzELG3Oukqysc7cRxb5PO5lqR
+	y1ias71CSkbd0YHlnJo8sgSiJTkH5GE4EuWx3EVEnEPbX/Bl5GZBKCqlRelsYbvYZ8WcQM7P
+	sy/wKmK44opqYrjdpLS+BS/kFdxrpN5/g7Kgpc5FJucik/N/k3ORqRgx5ShOnZmdoVSnJ27U
+	aVQ5meojG/cdyPAh8bd6js3m/4YmOpIbEMcixUvySl3K/liJMluXk9GACEsr4uSbE0QkT1Pm
+	HBW0B/ZqD6cLugaUwDKKePn7nwmpsdw3ykOCRhCyBO1/rxQbs/IECn4i+NHaiuu55j1nD75x
+	xvDBj/1POnFa4a01n+s0I1/Ghf9d0mcz5j5ReOMTHRcHXnWM95UuyavcYZ66sDfl6tfF608X
+	jfEpLTfcSauPyxP9yp1jsxXBdzSdyVtXn7x/+7vhuvOkruNe1ofBs1t1iZ6RIr9K1Z2ldj/N
+	r3j5vWXCg7sKRqdSbn6T1uqUzwG4/G81qQMAAA==
+X-CFilter-Loop: Reflected
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[sk.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23281-lists,linux-nfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:miguel.ojeda.sandonis@gmail.com,m:gary@garyguo.net,m:linux-kernel@vger.kernel.org,m:max.byungchul.park@gmail.com,m:kernel_team@skhynix.com,m:torvalds@linux-foundation.org,m:damien.lemoal@opensource.wdc.com,m:linux-ide@vger.kernel.org,m:adilger.kernel@dilger.ca,m:linux-ext4@vger.kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:will@kernel.org,m:tglx@linutronix.de,m:rostedt@goodmis.org,m:joel@joelfernandes.org,m:sashal@kernel.org,m:daniel.vetter@ffwll.ch,m:duyuyang@gmail.com,m:johannes.berg@intel.com,m:tj@kernel.org,m:tytso@mit.edu,m:willy@infradead.org,m:david@fromorbit.com,m:amir73il@gmail.com,m:gregkh@linuxfoundation.org,m:kernel-team@lge.com,m:linux-mm@kvack.org,m:akpm@linux-foundation.org,m:mhocko@kernel.org,m:minchan@kernel.org,m:hannes@cmpxchg.org,m:vdavydov.dev@gmail.com,m:sj@kernel.org,m:jglisse@redhat.com,m:dennis@kernel.org,m:cl@linux.com,m:penberg@kernel.org,m:rientjes@google.com,m:vbabka@suse.cz,m:ngupta@vflare.org,m:linux-block@vger.kernel
+ .org,m:josef@toxicpanda.com,m:linux-fsdevel@vger.kernel.org,m:jack@suse.cz,m:jlayton@kernel.org,m:dan.j.williams@intel.com,m:hch@infradead.org,m:djwong@kernel.org,m:dri-devel@lists.freedesktop.org,m:rodrigosiqueiramelo@gmail.com,m:melissa.srw@gmail.com,m:hamohammed.sa@gmail.com,m:harry.yoo@oracle.com,m:chris.p.wilson@intel.com,m:gwan-gyeong.mun@intel.com,m:boqun.feng@gmail.com,m:longman@redhat.com,m:yunseong.kim@ericsson.com,m:ysk@kzalloc.com,m:yeoreum.yun@arm.com,m:netdev@vger.kernel.org,m:matthew.brost@intel.com,m:her0gyugyu@gmail.com,m:corbet@lwn.net,m:catalin.marinas@arm.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:luto@kernel.org,m:sumit.semwal@linaro.org,m:gustavo@padovan.org,m:christian.koenig@amd.com,m:andi.shyti@kernel.org,m:arnd@arndb.de,m:lorenzo.stoakes@oracle.com,m:Liam.Howlett@oracle.com,m:rppt@kernel.org,m:surenb@google.com,m:mcgrof@kernel.org,m:petr.pavlu@suse.com,m:da.gomez@kernel.org,m:samitolvanen@google.com,m:paulmck@kernel.org,m:frederic@kernel.org,m:ne
+ eraj.upadhyay@kernel.org,m:joelagnelf@nvidia.com,m:josh@joshtriplett.org,m:urezki@gmail.com,m:mathieu.desnoyers@efficios.com,m:jiangshanlai@gmail.com,m:qiang.zhang@linux.dev,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:chuck.lever@oracle.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:neil@brown.name,m:jlayton@kernel.org,m:okorniev@redhat.com,m:dai.ngo@oracle.com,m:tom@talpey.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-23282-lists,linux-nfs=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-nfs@vger.kernel.org];
+	FORGED_SENDER(0.00)[byungchul@sk.com,linux-nfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[165];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[byungchul@sk.com,linux-nfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[garyguo.net,vger.kernel.org,gmail.com,skhynix.com,linux-foundation.org,opensource.wdc.com,dilger.ca,redhat.com,infradead.org,kernel.org,linutronix.de,goodmis.org,joelfernandes.org,ffwll.ch,intel.com,mit.edu,fromorbit.com,linuxfoundation.org,lge.com,kvack.org,cmpxchg.org,linux.com,google.com,suse.cz,vflare.org,toxicpanda.com,lists.freedesktop.org,oracle.com,ericsson.com,kzalloc.com,arm.com,lwn.net,alien8.de,zytor.com,linaro.org,padovan.org,amd.com,arndb.de,suse.com,nvidia.com,joshtriplett.org,efficios.com,linux.dev,suse.de,brown.name,talpey.com,huawei.com,amazon.co.uk,linux.alibaba.com,glider.be,linux.intel.com,treblig.org,star-ark.net,valla.it,vivo.com,baidu.com,lists.infradead.org,lists.linaro.org,lists.linux.dev,qq.com,ownmail.net,sang-engineering.com,linux-m68k.org,protonmail.com,umich.edu];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-nfs,renesas];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[system.software.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 441AA745E10
+X-Rspamd-Queue-Id: 802FE746F58
 
-These NFSv4 attribute bitmask definitions live in nfsd.h, which
-nearly every nfsd source file includes, yet only nfs4proc.c and
-nfs4xdr.c reference them. Move them to a dedicated header so only
-those two consumers pull them in.
+On Sat, Jul 11, 2026 at 02:13:05PM +0200, Miguel Ojeda wrote:
+> On Mon, Jul 6, 2026 at 8:22 AM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > This is needed to inline these helpers into Rust code, which is required
+> > for DEPT to play with wait_for_completion().
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> 
+> Apart from what Gary said -- why did you need to do this in a separate
+> patch in the same series?
 
-While moving the block, correct the stale QUOTA_* annotation: the
-promised support never materialized, so these attributes are
-unlikely to be supported any time soon rather than forthcoming.
+Not necessary.  I will make them into one patch.  Thanks.
 
-Signed-off-by: Chuck Lever <cel@kernel.org>
----
- fs/nfsd/attr4.h    | 162 +++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/nfs4proc.c |   1 +
- fs/nfsd/nfs4xdr.c  |   1 +
- fs/nfsd/nfsd.h     | 150 -----------------------------------------
- 4 files changed, 164 insertions(+), 150 deletions(-)
- create mode 100644 fs/nfsd/attr4.h
-
-diff --git a/fs/nfsd/attr4.h b/fs/nfsd/attr4.h
-new file mode 100644
-index 000000000000..f0b51f8050b7
---- /dev/null
-+++ b/fs/nfsd/attr4.h
-@@ -0,0 +1,162 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * NFSv4 file attributes supported by this implementation
-+ */
-+
-+#ifndef _LINUX_NFSD_ATTR4_H
-+#define _LINUX_NFSD_ATTR4_H
-+
-+#include <linux/types.h>
-+#include <linux/nfs4.h>
-+
-+/*
-+ * The following attributes are not implemented by NFSD:
-+ *    ARCHIVE       (deprecated anyway)
-+ *    HIDDEN        (unlikely to be supported any time soon)
-+ *    MIMETYPE      (unlikely to be supported any time soon)
-+ *    QUOTA_*       (unlikely to be supported any time soon)
-+ *    SYSTEM        (unlikely to be supported any time soon)
-+ *    TIME_BACKUP   (unlikely to be supported any time soon)
-+ */
-+#define NFSD4_SUPPORTED_ATTRS_WORD0                                                         \
-+(FATTR4_WORD0_SUPPORTED_ATTRS   | FATTR4_WORD0_TYPE         | FATTR4_WORD0_FH_EXPIRE_TYPE   \
-+ | FATTR4_WORD0_CHANGE          | FATTR4_WORD0_SIZE         | FATTR4_WORD0_LINK_SUPPORT     \
-+ | FATTR4_WORD0_SYMLINK_SUPPORT | FATTR4_WORD0_NAMED_ATTR   | FATTR4_WORD0_FSID             \
-+ | FATTR4_WORD0_UNIQUE_HANDLES  | FATTR4_WORD0_LEASE_TIME   | FATTR4_WORD0_RDATTR_ERROR     \
-+ | FATTR4_WORD0_ACLSUPPORT      | FATTR4_WORD0_CANSETTIME   | FATTR4_WORD0_CASE_INSENSITIVE \
-+ | FATTR4_WORD0_CASE_PRESERVING | FATTR4_WORD0_CHOWN_RESTRICTED                             \
-+ | FATTR4_WORD0_FILEHANDLE      | FATTR4_WORD0_FILEID       | FATTR4_WORD0_FILES_AVAIL      \
-+ | FATTR4_WORD0_FILES_FREE      | FATTR4_WORD0_FILES_TOTAL  | FATTR4_WORD0_FS_LOCATIONS | FATTR4_WORD0_HOMOGENEOUS      \
-+ | FATTR4_WORD0_MAXFILESIZE     | FATTR4_WORD0_MAXLINK      | FATTR4_WORD0_MAXNAME          \
-+ | FATTR4_WORD0_MAXREAD         | FATTR4_WORD0_MAXWRITE     | FATTR4_WORD0_ACL)
-+
-+#define NFSD4_SUPPORTED_ATTRS_WORD1                                                         \
-+(FATTR4_WORD1_MODE              | FATTR4_WORD1_NO_TRUNC     | FATTR4_WORD1_NUMLINKS         \
-+ | FATTR4_WORD1_OWNER	        | FATTR4_WORD1_OWNER_GROUP  | FATTR4_WORD1_RAWDEV           \
-+ | FATTR4_WORD1_SPACE_AVAIL     | FATTR4_WORD1_SPACE_FREE   | FATTR4_WORD1_SPACE_TOTAL      \
-+ | FATTR4_WORD1_SPACE_USED      | FATTR4_WORD1_TIME_ACCESS  | FATTR4_WORD1_TIME_ACCESS_SET  \
-+ | FATTR4_WORD1_TIME_DELTA      | FATTR4_WORD1_TIME_METADATA   | FATTR4_WORD1_TIME_CREATE      \
-+ | FATTR4_WORD1_TIME_MODIFY     | FATTR4_WORD1_TIME_MODIFY_SET | FATTR4_WORD1_MOUNTED_ON_FILEID)
-+
-+#define NFSD4_SUPPORTED_ATTRS_WORD2 0
-+
-+/* 4.1 */
-+#ifdef CONFIG_NFSD_PNFS
-+#define PNFSD_SUPPORTED_ATTRS_WORD1	FATTR4_WORD1_FS_LAYOUT_TYPES
-+#define PNFSD_SUPPORTED_ATTRS_WORD2 \
-+(FATTR4_WORD2_LAYOUT_BLKSIZE	| FATTR4_WORD2_LAYOUT_TYPES)
-+#else
-+#define PNFSD_SUPPORTED_ATTRS_WORD1	0
-+#define PNFSD_SUPPORTED_ATTRS_WORD2	0
-+#endif /* CONFIG_NFSD_PNFS */
-+
-+#define NFSD4_1_SUPPORTED_ATTRS_WORD0 \
-+	NFSD4_SUPPORTED_ATTRS_WORD0
-+
-+#define NFSD4_1_SUPPORTED_ATTRS_WORD1 \
-+	(NFSD4_SUPPORTED_ATTRS_WORD1	| PNFSD_SUPPORTED_ATTRS_WORD1)
-+
-+#define NFSD4_1_SUPPORTED_ATTRS_WORD2 \
-+	(NFSD4_SUPPORTED_ATTRS_WORD2	| PNFSD_SUPPORTED_ATTRS_WORD2 | \
-+	 FATTR4_WORD2_SUPPATTR_EXCLCREAT)
-+
-+/* 4.2 */
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-+#define NFSD4_2_SECURITY_ATTRS		FATTR4_WORD2_SECURITY_LABEL
-+#else
-+#define NFSD4_2_SECURITY_ATTRS		0
-+#endif
-+
-+#ifdef CONFIG_NFSD_V4_POSIX_ACLS
-+#define NFSD4_2_POSIX_ACL_ATTRS \
-+	(FATTR4_WORD2_ACL_TRUEFORM | \
-+	FATTR4_WORD2_ACL_TRUEFORM_SCOPE | \
-+	FATTR4_WORD2_POSIX_DEFAULT_ACL | \
-+	FATTR4_WORD2_POSIX_ACCESS_ACL)
-+#else
-+#define NFSD4_2_POSIX_ACL_ATTRS		0
-+#endif
-+
-+#define NFSD4_2_SUPPORTED_ATTRS_WORD2 \
-+	(NFSD4_1_SUPPORTED_ATTRS_WORD2 | \
-+	FATTR4_WORD2_MODE_UMASK | \
-+	FATTR4_WORD2_CLONE_BLKSIZE | \
-+	NFSD4_2_SECURITY_ATTRS | \
-+	FATTR4_WORD2_XATTR_SUPPORT | \
-+	FATTR4_WORD2_TIME_DELEG_ACCESS | \
-+	FATTR4_WORD2_TIME_DELEG_MODIFY | \
-+	FATTR4_WORD2_OPEN_ARGUMENTS | \
-+	NFSD4_2_POSIX_ACL_ATTRS)
-+
-+/* These will return ERR_INVAL if specified in GETATTR or READDIR. */
-+#define NFSD_WRITEONLY_ATTRS_WORD1 \
-+	(FATTR4_WORD1_TIME_ACCESS_SET   | FATTR4_WORD1_TIME_MODIFY_SET)
-+
-+/*
-+ * These are the only attrs allowed in CREATE/OPEN/SETATTR. Don't add
-+ * a writeable attribute here without also adding code to parse it to
-+ * nfsd4_decode_fattr4().
-+ */
-+#define NFSD_WRITEABLE_ATTRS_WORD0 \
-+	(FATTR4_WORD0_SIZE | FATTR4_WORD0_ACL)
-+#define NFSD_WRITEABLE_ATTRS_WORD1 \
-+	(FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP \
-+	| FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_CREATE \
-+	| FATTR4_WORD1_TIME_MODIFY_SET)
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-+#define MAYBE_FATTR4_WORD2_SECURITY_LABEL \
-+	FATTR4_WORD2_SECURITY_LABEL
-+#else
-+#define MAYBE_FATTR4_WORD2_SECURITY_LABEL 0
-+#endif
-+#ifdef CONFIG_NFSD_V4_POSIX_ACLS
-+#define MAYBE_FATTR4_WORD2_POSIX_ACL_ATTRS \
-+	FATTR4_WORD2_POSIX_DEFAULT_ACL | FATTR4_WORD2_POSIX_ACCESS_ACL
-+#else
-+#define MAYBE_FATTR4_WORD2_POSIX_ACL_ATTRS 0
-+#endif
-+#define NFSD_WRITEABLE_ATTRS_WORD2 \
-+	(FATTR4_WORD2_MODE_UMASK \
-+	| MAYBE_FATTR4_WORD2_SECURITY_LABEL \
-+	| FATTR4_WORD2_TIME_DELEG_ACCESS \
-+	| FATTR4_WORD2_TIME_DELEG_MODIFY \
-+	| MAYBE_FATTR4_WORD2_POSIX_ACL_ATTRS \
-+	)
-+
-+#define NFSD_SUPPATTR_EXCLCREAT_WORD0 \
-+	NFSD_WRITEABLE_ATTRS_WORD0
-+/*
-+ * we currently store the exclusive create verifier in the v_{a,m}time
-+ * attributes so the client can't set these at create time using EXCLUSIVE4_1
-+ */
-+#define NFSD_SUPPATTR_EXCLCREAT_WORD1 \
-+	(NFSD_WRITEABLE_ATTRS_WORD1 & \
-+	 ~(FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_MODIFY_SET))
-+/*
-+ * The FATTR4_WORD2_TIME_DELEG attributes are not to be allowed for
-+ * OPEN(create) with EXCLUSIVE4_1. It doesn't make sense to set a
-+ * delegated timestamp on a new file.
-+ *
-+ * This mask includes NFSv4.2-only attributes (e.g., POSIX ACLs).
-+ * Version filtering occurs via nfsd_suppattrs[] before this mask
-+ * is applied, so pre-4.2 clients never see unsupported attributes.
-+ */
-+#define NFSD_SUPPATTR_EXCLCREAT_WORD2 \
-+	(NFSD_WRITEABLE_ATTRS_WORD2 & \
-+	~(FATTR4_WORD2_TIME_DELEG_ACCESS | FATTR4_WORD2_TIME_DELEG_MODIFY))
-+
-+extern const u32 nfsd_suppattrs[3][3];
-+
-+static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
-+{
-+	return !((bm1[0] & ~bm2[0]) ||
-+	         (bm1[1] & ~bm2[1]) ||
-+		 (bm1[2] & ~bm2[2]));
-+}
-+
-+static inline bool nfsd_attrs_supported(u32 minorversion, const u32 *bmval)
-+{
-+	return bmval_is_subset(bmval, nfsd_suppattrs[minorversion]);
-+}
-+
-+#endif /* _LINUX_NFSD_ATTR4_H */
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 59889cdca109..9031a5bdb0fc 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -42,6 +42,7 @@
- #include <linux/sunrpc/addr.h>
- #include <linux/nfs_ssc.h>
- 
-+#include "attr4.h"
- #include "idmap.h"
- #include "cache.h"
- #include "xdr4.h"
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index cba2e72d616c..29105580c203 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -47,6 +47,7 @@
- 
- #include <uapi/linux/xattr.h>
- 
-+#include "attr4.h"
- #include "auth.h"
- #include "idmap.h"
- #include "acl.h"
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 33015657b16f..76a69d9a4e73 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -367,156 +367,6 @@ enum {
- #define NFSD_DELEGRETURN_TIMEOUT	(HZ / 34)	/* 30ms */
- #define	NFSD_CB_GETATTR_TIMEOUT		NFSD_DELEGRETURN_TIMEOUT
- 
--/*
-- * The following attributes are not implemented by NFSD:
-- *    ARCHIVE       (deprecated anyway)
-- *    HIDDEN        (unlikely to be supported any time soon)
-- *    MIMETYPE      (unlikely to be supported any time soon)
-- *    QUOTA_*       (will be supported in a forthcoming patch)
-- *    SYSTEM        (unlikely to be supported any time soon)
-- *    TIME_BACKUP   (unlikely to be supported any time soon)
-- */
--#define NFSD4_SUPPORTED_ATTRS_WORD0                                                         \
--(FATTR4_WORD0_SUPPORTED_ATTRS   | FATTR4_WORD0_TYPE         | FATTR4_WORD0_FH_EXPIRE_TYPE   \
-- | FATTR4_WORD0_CHANGE          | FATTR4_WORD0_SIZE         | FATTR4_WORD0_LINK_SUPPORT     \
-- | FATTR4_WORD0_SYMLINK_SUPPORT | FATTR4_WORD0_NAMED_ATTR   | FATTR4_WORD0_FSID             \
-- | FATTR4_WORD0_UNIQUE_HANDLES  | FATTR4_WORD0_LEASE_TIME   | FATTR4_WORD0_RDATTR_ERROR     \
-- | FATTR4_WORD0_ACLSUPPORT      | FATTR4_WORD0_CANSETTIME   | FATTR4_WORD0_CASE_INSENSITIVE \
-- | FATTR4_WORD0_CASE_PRESERVING | FATTR4_WORD0_CHOWN_RESTRICTED                             \
-- | FATTR4_WORD0_FILEHANDLE      | FATTR4_WORD0_FILEID       | FATTR4_WORD0_FILES_AVAIL      \
-- | FATTR4_WORD0_FILES_FREE      | FATTR4_WORD0_FILES_TOTAL  | FATTR4_WORD0_FS_LOCATIONS | FATTR4_WORD0_HOMOGENEOUS      \
-- | FATTR4_WORD0_MAXFILESIZE     | FATTR4_WORD0_MAXLINK      | FATTR4_WORD0_MAXNAME          \
-- | FATTR4_WORD0_MAXREAD         | FATTR4_WORD0_MAXWRITE     | FATTR4_WORD0_ACL)
--
--#define NFSD4_SUPPORTED_ATTRS_WORD1                                                         \
--(FATTR4_WORD1_MODE              | FATTR4_WORD1_NO_TRUNC     | FATTR4_WORD1_NUMLINKS         \
-- | FATTR4_WORD1_OWNER	        | FATTR4_WORD1_OWNER_GROUP  | FATTR4_WORD1_RAWDEV           \
-- | FATTR4_WORD1_SPACE_AVAIL     | FATTR4_WORD1_SPACE_FREE   | FATTR4_WORD1_SPACE_TOTAL      \
-- | FATTR4_WORD1_SPACE_USED      | FATTR4_WORD1_TIME_ACCESS  | FATTR4_WORD1_TIME_ACCESS_SET  \
-- | FATTR4_WORD1_TIME_DELTA      | FATTR4_WORD1_TIME_METADATA   | FATTR4_WORD1_TIME_CREATE      \
-- | FATTR4_WORD1_TIME_MODIFY     | FATTR4_WORD1_TIME_MODIFY_SET | FATTR4_WORD1_MOUNTED_ON_FILEID)
--
--#define NFSD4_SUPPORTED_ATTRS_WORD2 0
--
--/* 4.1 */
--#ifdef CONFIG_NFSD_PNFS
--#define PNFSD_SUPPORTED_ATTRS_WORD1	FATTR4_WORD1_FS_LAYOUT_TYPES
--#define PNFSD_SUPPORTED_ATTRS_WORD2 \
--(FATTR4_WORD2_LAYOUT_BLKSIZE	| FATTR4_WORD2_LAYOUT_TYPES)
--#else
--#define PNFSD_SUPPORTED_ATTRS_WORD1	0
--#define PNFSD_SUPPORTED_ATTRS_WORD2	0
--#endif /* CONFIG_NFSD_PNFS */
--
--#define NFSD4_1_SUPPORTED_ATTRS_WORD0 \
--	NFSD4_SUPPORTED_ATTRS_WORD0
--
--#define NFSD4_1_SUPPORTED_ATTRS_WORD1 \
--	(NFSD4_SUPPORTED_ATTRS_WORD1	| PNFSD_SUPPORTED_ATTRS_WORD1)
--
--#define NFSD4_1_SUPPORTED_ATTRS_WORD2 \
--	(NFSD4_SUPPORTED_ATTRS_WORD2	| PNFSD_SUPPORTED_ATTRS_WORD2 | \
--	 FATTR4_WORD2_SUPPATTR_EXCLCREAT)
--
--/* 4.2 */
--#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--#define NFSD4_2_SECURITY_ATTRS		FATTR4_WORD2_SECURITY_LABEL
--#else
--#define NFSD4_2_SECURITY_ATTRS		0
--#endif
--
--#ifdef CONFIG_NFSD_V4_POSIX_ACLS
--#define NFSD4_2_POSIX_ACL_ATTRS \
--	(FATTR4_WORD2_ACL_TRUEFORM | \
--	FATTR4_WORD2_ACL_TRUEFORM_SCOPE | \
--	FATTR4_WORD2_POSIX_DEFAULT_ACL | \
--	FATTR4_WORD2_POSIX_ACCESS_ACL)
--#else
--#define NFSD4_2_POSIX_ACL_ATTRS		0
--#endif
--
--#define NFSD4_2_SUPPORTED_ATTRS_WORD2 \
--	(NFSD4_1_SUPPORTED_ATTRS_WORD2 | \
--	FATTR4_WORD2_MODE_UMASK | \
--	FATTR4_WORD2_CLONE_BLKSIZE | \
--	NFSD4_2_SECURITY_ATTRS | \
--	FATTR4_WORD2_XATTR_SUPPORT | \
--	FATTR4_WORD2_TIME_DELEG_ACCESS | \
--	FATTR4_WORD2_TIME_DELEG_MODIFY | \
--	FATTR4_WORD2_OPEN_ARGUMENTS | \
--	NFSD4_2_POSIX_ACL_ATTRS)
--
--extern const u32 nfsd_suppattrs[3][3];
--
--static inline bool bmval_is_subset(const u32 *bm1, const u32 *bm2)
--{
--	return !((bm1[0] & ~bm2[0]) ||
--	         (bm1[1] & ~bm2[1]) ||
--		 (bm1[2] & ~bm2[2]));
--}
--
--static inline bool nfsd_attrs_supported(u32 minorversion, const u32 *bmval)
--{
--	return bmval_is_subset(bmval, nfsd_suppattrs[minorversion]);
--}
--
--/* These will return ERR_INVAL if specified in GETATTR or READDIR. */
--#define NFSD_WRITEONLY_ATTRS_WORD1 \
--	(FATTR4_WORD1_TIME_ACCESS_SET   | FATTR4_WORD1_TIME_MODIFY_SET)
--
--/*
-- * These are the only attrs allowed in CREATE/OPEN/SETATTR. Don't add
-- * a writeable attribute here without also adding code to parse it to
-- * nfsd4_decode_fattr().
-- */
--#define NFSD_WRITEABLE_ATTRS_WORD0 \
--	(FATTR4_WORD0_SIZE | FATTR4_WORD0_ACL)
--#define NFSD_WRITEABLE_ATTRS_WORD1 \
--	(FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP \
--	| FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_CREATE \
--	| FATTR4_WORD1_TIME_MODIFY_SET)
--#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--#define MAYBE_FATTR4_WORD2_SECURITY_LABEL \
--	FATTR4_WORD2_SECURITY_LABEL
--#else
--#define MAYBE_FATTR4_WORD2_SECURITY_LABEL 0
--#endif
--#ifdef CONFIG_NFSD_V4_POSIX_ACLS
--#define MAYBE_FATTR4_WORD2_POSIX_ACL_ATTRS \
--	FATTR4_WORD2_POSIX_DEFAULT_ACL | FATTR4_WORD2_POSIX_ACCESS_ACL
--#else
--#define MAYBE_FATTR4_WORD2_POSIX_ACL_ATTRS 0
--#endif
--#define NFSD_WRITEABLE_ATTRS_WORD2 \
--	(FATTR4_WORD2_MODE_UMASK \
--	| MAYBE_FATTR4_WORD2_SECURITY_LABEL \
--	| FATTR4_WORD2_TIME_DELEG_ACCESS \
--	| FATTR4_WORD2_TIME_DELEG_MODIFY \
--	| MAYBE_FATTR4_WORD2_POSIX_ACL_ATTRS \
--	)
--
--#define NFSD_SUPPATTR_EXCLCREAT_WORD0 \
--	NFSD_WRITEABLE_ATTRS_WORD0
--/*
-- * we currently store the exclusive create verifier in the v_{a,m}time
-- * attributes so the client can't set these at create time using EXCLUSIVE4_1
-- */
--#define NFSD_SUPPATTR_EXCLCREAT_WORD1 \
--	(NFSD_WRITEABLE_ATTRS_WORD1 & \
--	 ~(FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_MODIFY_SET))
--/*
-- * The FATTR4_WORD2_TIME_DELEG attributes are not to be allowed for
-- * OPEN(create) with EXCLUSIVE4_1. It doesn't make sense to set a
-- * delegated timestamp on a new file.
-- *
-- * This mask includes NFSv4.2-only attributes (e.g., POSIX ACLs).
-- * Version filtering occurs via nfsd_suppattrs[] before this mask
-- * is applied, so pre-4.2 clients never see unsupported attributes.
-- */
--#define NFSD_SUPPATTR_EXCLCREAT_WORD2 \
--	(NFSD_WRITEABLE_ATTRS_WORD2 & \
--	~(FATTR4_WORD2_TIME_DELEG_ACCESS | FATTR4_WORD2_TIME_DELEG_MODIFY))
--
- extern int nfsd4_is_junction(struct dentry *dentry);
- extern int register_cld_notifier(void);
- extern void unregister_cld_notifier(void);
--- 
-2.54.0
-
+	Byungchul
+> 
+> Cheers,
+> Miguel
 
