@@ -1,130 +1,173 @@
-Return-Path: <linux-nfs+bounces-23311-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23312-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9/UkKvj2VWoyxAAAu9opvQ
-	(envelope-from <linux-nfs+bounces-23311-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 10:44:40 +0200
+	id KRujEZFKVmrF2wAAu9opvQ
+	(envelope-from <linux-nfs+bounces-23312-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 16:41:21 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E2997528A4
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 10:44:39 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3C1E755F82
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 16:41:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=h-partners.com header.s=dkim header.b=Utf51hUD;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23311-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23311-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=huawei.com (policy=quarantine);
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dtG9ZaLD;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23312-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23312-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 650063006231
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 08:43:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 73A0E308473E
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 14:37:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E85A141DEDD;
-	Tue, 14 Jul 2026 08:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB053D9DD7;
+	Tue, 14 Jul 2026 14:37:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C083FBED8
-	for <linux-nfs@vger.kernel.org>; Tue, 14 Jul 2026 08:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8827D47F2F6;
+	Tue, 14 Jul 2026 14:37:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784018595; cv=none; b=U+UDHittmUjvtrzF9a6BzZr/ZU//NC3pLmrWHXmofW2PozZA0sP1QXE62g2bxDknXGoi19uGsferFz8jHEdqaQ68ZDAQCAlvQ4W9JKgGn6BGdy0TMBGYV3xAqRQFmPfcbX9qo5N4UTgMUpZce9sEC1EKocbXX334oTR53N5SQD0=
+	t=1784039838; cv=none; b=Hxhg/VG5StMeRPGf3glVx4uoAqoHjrFLY6Be/z/mf2MPgsTby1aKkMCzZ8gmj4C3L5ug95FIF+Z0TKwxzitA+jvMYxZhsVw5YyCuFMa0FWYNhAiqjJ1H+CtJnzFt1CRzwg+k+52Q351mcV+yGl4YWhsGDiYrxVht3w20kYgNzL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784018595; c=relaxed/simple;
-	bh=ly7bQ4BAnAOC8P9fjgAl9GIS2fX6P0BTqvr7CwPzgS0=;
-	h=Message-ID:Date:MIME-Version:From:To:CC:Subject:Content-Type; b=nBVYzed2MMbb+Y7m1yc4lCuXakfi+VP/sGTRigLafl+NYdBuERubgQtvxCWD+k4qjvJAkproH6thFlXQv3SxYQxgABufQWgdj6WI5Kk0Y6+t9mJSHeJYF20yBeqL6MIQm+/wHbIItqvk/3GRL89h0WmXEMLoQkNk3FsP9pU3BFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=Utf51hUD; arc=none smtp.client-ip=113.46.200.216
-dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=sUKQH4VdGipxeXjGUWsLEH0zhGUCBwnfMjsCPjNx1EE=;
-	b=Utf51hUDz+WQ9d29LQZ4k3Ycp9Uym5CLgesz8TbAVCjDVOabOGx9y3aupiq4wT83JcFu0Ca5x
-	pvI10KwSujLDe0uQIixcIGIfSPL19FeW5Cn06XR/59G0+e6l3YnbE6K9qKLt0omc8QmECQCGkUd
-	dT4NbhQC4TyMf/K9LDrMbJY=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gzsz94Djpz1T4HL;
-	Tue, 14 Jul 2026 16:33:57 +0800 (CST)
-Received: from dggpemr100013.china.huawei.com (unknown [7.185.36.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id BEE1740579;
-	Tue, 14 Jul 2026 16:43:06 +0800 (CST)
-Received: from [10.174.186.66] (10.174.186.66) by
- dggpemr100013.china.huawei.com (7.185.36.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Tue, 14 Jul 2026 16:43:06 +0800
-Message-ID: <356736aa-25d8-4b79-a50f-33b4e7035856@huawei.com>
-Date: Tue, 14 Jul 2026 16:43:05 +0800
+	s=arc-20240116; t=1784039838; c=relaxed/simple;
+	bh=PdVB8NgStSUmCyhI+hVIdN1jQb/NJGvzW2PY8KcsZW0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uffvQpCUvasMNqgAmauFyip0aAdmHzlm9h73qb8B6o9hLFrlwKspGDi6O+RMFePW0qxauvZkZ4z450a49KNXZ2VcLFWrFysiFoyWDJ+4JsUCMHCz6OC80Apllr55+GHj8xsdQ+nTI6xLOmiz7L2FtkbY1cJ4ZVYUYK+V+t3ECjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtG9ZaLD; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD781F000E9;
+	Tue, 14 Jul 2026 14:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784039829;
+	bh=LQZIyv0ZtAKxxL/9+Fp0LyJNcqg5cviSmk1e6E/ATPc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=dtG9ZaLDqslGV3c+pK8dSYZh2iBxeQdKyPXVNIbG/IE5Q5igzMGzkOk7RK7lPDe8w
+	 fL5pSsNxroGyzTNfE6OSdKoKi8auRk9l7XX8Fdt/mb823bb3yAjgNHnYV9EW3ZCDL4
+	 NSGTBzmQH3TRAA7TCvhdv5ytnVom9y+hdHrvMnJKPx/G1kTyFmD1B28lpU1Dcb6Wum
+	 XS9L7rtgOL9JjiXVw3Aovn6J5/2IhePElH7TI5OT414i1ai5Cngllba1pBoESJYt51
+	 rsH5lQsuc14dOP/V2OqcLhQSoDM1QV6yqrSMji9zf6BhKCYJgCcQlNv4UpDNRWVyHj
+	 aqlG6v8/tUDDw==
+Message-ID: <f5705b41fd63260c5b84343531f139fa72dfa57c.camel@kernel.org>
+Subject: Re: [PATCH] pnfs/blocklayout: reject zero chunk_size and
+ volumes_count in GETDEVICEINFO
+From: Trond Myklebust <trondmy@kernel.org>
+To: Michael Bommarito <michael.bommarito@gmail.com>, Anna Schumaker
+	 <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Date: Tue, 14 Jul 2026 10:37:07 -0400
+In-Reply-To: <20260711150547.2912006-1-michael.bommarito@gmail.com>
+References: <20260711150547.2912006-1-michael.bommarito@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "zhangjian (CG)" <zhangjian496@huawei.com>
-To: <steved@redhat.com>, <chuck.lever@oracle.com>
-CC: <linux-nfs@vger.kernel.org>
-Subject: nfsd: fix memory overflow for haddr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- dggpemr100013.china.huawei.com (7.185.36.198)
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[huawei.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),quarantine];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[h-partners.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[h-partners.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-23311-lists,linux-nfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[zhangjian496@huawei.com,linux-nfs@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:steved@redhat.com,m:chuck.lever@oracle.com,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:michael.bommarito@gmail.com,m:anna@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:michaelbommarito@gmail.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-23312-lists,linux-nfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhangjian496@huawei.com,linux-nfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[trondmy@kernel.org,linux-nfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-nfs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9E2997528A4
+X-Rspamd-Queue-Id: D3C1E755F82
 
-when hcounter is not 0, haddr memory is not enough.
-asan report heap-buffer-overflow error in following scene:
-CFLAGS="-fsanitize=address -g" ./configure && make
-./utils/nfsd/nfsd -H 192.168.1.1 -H 192.168.1.2
+On Sat, 2026-07-11 at 11:05 -0400, Michael Bommarito wrote:
+> nfs4_block_decode_volume() in fs/nfs/blocklayout/dev.c decodes stripe
+> parameters from GETDEVICEINFO XDR without checking for zero values.
+> A malicious pNFS server returning chunk_size=3D0 causes a division-by-
+> zero panic in bl_map_stripe() via div_u64(offset, dev->chunk_size).
+> Separately, volumes_count=3D0 passes the existing upper-bound check
+> and causes a second division-by-zero via div_u64_rem(chunk,
+> dev->nr_children=3D0).
+>=20
+> Impact: a malicious or compromised pNFS blocklayout server can panic
+> an
+> affected Linux NFS client after the client mounts/uses the server and
+> maps
+> I/O through the poisoned blocklayout. An in-kernel parser/mapper
+> KUnit
+> reproducer is available privately.
+>=20
+> Reject both zero values at decode time with -EIO.
+>=20
+> Fixes: 5c83746a0cf2 ("pnfs/blocklayout: in-kernel GETDEVICEINFO XDR
+> parsing")
+> Cc: stable@vger.kernel.org
+> Assisted-by: Claude:claude-opus-4-7
+> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+> ---
+> =C2=A0fs/nfs/blocklayout/dev.c | 5 ++++-
+> =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
+> index cc6327d97a91a..fc60669db3ec4 100644
+> --- a/fs/nfs/blocklayout/dev.c
+> +++ b/fs/nfs/blocklayout/dev.c
+> @@ -183,8 +183,11 @@ nfs4_block_decode_volume(struct xdr_stream *xdr,
+> struct pnfs_block_volume *b)
+> =C2=A0			return -EIO;
+> =C2=A0
+> =C2=A0		p =3D xdr_decode_hyper(p, &b->stripe.chunk_size);
+> +		if (!b->stripe.chunk_size)
+> +			return -EIO;
+> =C2=A0		b->stripe.volumes_count =3D be32_to_cpup(p++);
+> -		if (b->stripe.volumes_count >
+> PNFS_BLOCK_MAX_DEVICES) {
+> +		if (!b->stripe.volumes_count ||
+> +		=C2=A0=C2=A0=C2=A0 b->stripe.volumes_count >
+> PNFS_BLOCK_MAX_DEVICES) {
+> =C2=A0			dprintk("Too many volumes: %d\n", b-
+> >stripe.volumes_count);
+> =C2=A0			return -EIO;
+> =C2=A0		}
 
-Signed-off-by: zhangjian <zhangjian496@huawei.com>
----
- utils/nfsd/nfsd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+NACK to this, and all further patches with the words "malicious server"
+as their justification. It's time to stop this incessant flood of
+worthless AI slop...
 
-diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
-index c95d32f4..e3fcdde4 100644
---- a/utils/nfsd/nfsd.c
-+++ b/utils/nfsd/nfsd.c
-@@ -185,7 +185,7 @@ main(int argc, char **argv)
- 				hcounter = 0;
- 			}
- 			if (hcounter) {
--				haddr = realloc(haddr, sizeof(char*) * hcounter+1);
-+				haddr = realloc(haddr, sizeof(char*) * (hcounter+1));
- 				if(!haddr) {
- 					fprintf(stderr, "%s: unable to allocate "
- 							"memory.\n", progname);
--- 
-2.33.0
+This is storage, not grandma's email server. If you have a "malicious
+server" then it's game over. Your attempts to detect 0 length fields is
+going to be pointless security theatre because a real malicious actor
+will just corrupt the data.
+If a server is sending this kind of thing due to a bug, then you
+shouldn't trust it with your data. Just find a server that follows the
+spec.
 
+So no, we're not going to waste more time on this kind of junk
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
 
