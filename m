@@ -1,260 +1,223 @@
-Return-Path: <linux-nfs+bounces-23319-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-23320-lists+linux-nfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FP/sHPCGVmr38AAAu9opvQ
-	(envelope-from <linux-nfs+bounces-23319-lists+linux-nfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 20:58:56 +0200
+	id B3pZBZCxVmrrAAEAu9opvQ
+	(envelope-from <linux-nfs+bounces-23320-lists+linux-nfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2026 00:00:48 +0200
 X-Original-To: lists+linux-nfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA7FF758017
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 20:58:55 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52AE5759188
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jul 2026 00:00:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=prodromou.com header.s=selector1 header.b=jgi+SszH;
-	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23319-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23319-lists+linux-nfs=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=prodromou.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=KHBq0p+X;
+	spf=pass (mail.lfdr.de: domain of "linux-nfs+bounces-23320-lists+linux-nfs=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-nfs+bounces-23320-lists+linux-nfs=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CFB8A300F16D
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 18:58:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F1FEA3020A55
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jul 2026 22:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07275377A8E;
-	Tue, 14 Jul 2026 18:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431A033F361;
+	Tue, 14 Jul 2026 22:00:45 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022076.outbound.protection.outlook.com [52.101.43.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA0B377AB4
-	for <linux-nfs@vger.kernel.org>; Tue, 14 Jul 2026 18:58:49 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784055532; cv=fail; b=IFamMxW104xEWGaXNUK52lBCZtJxEiSkBIzG+d3MTXalsxIYVt9+J5PCmu1UFoa+rm9VUsJN9AaFMhbocDxIf9i+g2UXUbLqIF/YdDFB0wIVqZljbgqvKzksWARS+uDEiBdurz6fBxrQvC5/pN3uC/aW5E6NrZR8TULRnxFjFlw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784055532; c=relaxed/simple;
-	bh=f26yXErMDLCrCJUb4cyK+dKHiLupJs1V6oHsGXrscIM=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nohdENHfPH+dFB6MrtOSCixLlnDscfjnW1b00WTz17kpdJ5w+ElDnAVxW3RDpBXRJ8IEdLdh4EPfMQzVoNoXkHzVTTfFcQq7Ql0HgtoZA55oPDiZ+1tosN4SPUQUID0W7MRnKG+Ycv0j31NrfVJMYoWNvRXr6FDvFKKcJ95OJVA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prodromou.com; spf=pass smtp.mailfrom=prodromou.com; dkim=pass (2048-bit key) header.d=prodromou.com header.i=@prodromou.com header.b=jgi+SszH; arc=fail smtp.client-ip=52.101.43.76
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DsNuUMBQMk0FQB4XUgOjliWeLjxOl73fMnVd8i/KFl88gVTJ8S8UsqCgK2ZuMTrPx0FHRxY8jVqlyvCC7on0aMS+DvNvg5SkMygOonOYjMbxpkS6mGNk/Oh1bFlq4DC3IG4VN7gsSLsPaEgEw3Rdd4GqajNP75/Jq3EFqr96iyIP7S1ubkg8eZ3c6AgfSoyZCRqYgraKQ6ARPD1K6zQkIWUQrmo3ks39/a5Gu+SXr4yC8BhxkYd6nipenjsMXhCzp84gQ6T8zO8J2UL9mLDjsDpjXMamZ7T4IrTEXDU6Ae8QhLf+Vpb7/WxKYIRqiQ2Sd2fslS9FoOVPe0zNd8i6gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sR94Ca51ZGCUdYJQIR8zDOBtt+x3tSqx68F1ECItsAU=;
- b=iyZ5IyDUFFRyya/pgiC+Qkw18QdPdA+6h1ACFaGrCYgiccMjRuU5d542x2/Oj890/WS7XPZm6OD6fUGgJ7v6doc2C5iRoOso6kOLG8T9iic4tFxfa/P/tMNuaVBqG1F8B+b3yo4KdFn1OrdHZGi4n8CbPctPKKPaGo0AVK08bzvyDg6mT6tTRbpUq2f23TrlMo2OQ8Gxy/AY+6uWzKv0Emq6G9PJbV+8/Hgw1Obi3X3T8wKn9O7/thzo6a/eS3O2K5g1RG7ZxFBDuTSAstUwuEd6YZaRdb2XUpctkSSq3bITHP2j0u/41Kynk7DlVulWxur5px5QKaVCAB1tGulxjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prodromou.com; dmarc=pass action=none
- header.from=prodromou.com; dkim=pass header.d=prodromou.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prodromou.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sR94Ca51ZGCUdYJQIR8zDOBtt+x3tSqx68F1ECItsAU=;
- b=jgi+SszHoSeFeYY5zpmRJmu20taY0y67gX7/Z+MTdA9TTIKgfoB9lMKRZ1/PbaLNTFuVDcBD4nh0C319tfJaw8Atc58hZH5vufnfHE+qDING1fR1XIGBF42QpdRmdCcBwAJ/Tb1AdcEM+D6SeozYWU8LcypsS8thfjzB/Qv4WUxpwwEZ3VArI2w+FTw4u39FTQbB+/eyJIEGEJHqA2C9oukYmNwMooCp9bJ4KIOJOlCWua4AjrR6NQ5wqd9/mbCeUAftMTeimjNzVe+Lpzq09EAOscbjP4Ujrr653BVwxK9J52cFravgkLPz5M/DJ6C5M0iVk3Q2zDmMJpq2L/VIUA==
-Received: from SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM (2603:10b6:806:3c6::20)
- by LV8P220MB1709.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:1fa::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Tue, 14 Jul
- 2026 18:58:47 +0000
-Received: from SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM
- ([fe80::c968:514:7fbf:1ebc]) by SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM
- ([fe80::c968:514:7fbf:1ebc%7]) with mapi id 15.21.0223.008; Tue, 14 Jul 2026
- 18:58:46 +0000
-From: Nate Prodromou <nate@prodromou.com>
-To: "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-	"anna@kernel.org" <anna@kernel.org>
-CC: "hch@lst.de" <hch@lst.de>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFS: fix delegation_hash_table leak when
- nfs4_server_common_setup() fails
-Thread-Topic: [PATCH] NFS: fix delegation_hash_table leak when
- nfs4_server_common_setup() fails
-Thread-Index: AQHdE8LMVWdv46JJY0SWhrZfnQHoew==
-Date: Tue, 14 Jul 2026 18:58:46 +0000
-Message-ID:
- <SA1P220MB14925066FEE37CAC1C083DEBC8F92@SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1P220MB1492:EE_|LV8P220MB1709:EE_
-x-ms-office365-filtering-correlation-id: c583439d-4c5b-4299-25c7-08dee1d9ef1c
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|38070700021|56012099006|55112099003|18002099003|11063799006;
-x-microsoft-antispam-message-info:
- /LldksPYai0orDZBjl4K8XUITlvX/dG9XQVk6bPuugh5gW/VdMQ/nhcTCuQhdDAYTVb9FPdayAnO3hg96XjGpseXx63Tmo4WvWZJnwgD0/hth+5a7P7gOvsYbIi5LXGpibro8rXWf1wH2dCw8b8f9vnmSBXIGIJXDUnf7GrlYGDzW7wLjifFuTbQ4HcfS08oEtrPOT9xtG1GMLlQtYOwmO33aFcoQJLENZGtn1uiGAaaCh/c6qan/D0S7bYzuXTVjjXdocYhgZt7+rC88vnv39CsqJdp23oTL10Kxr7AGlVUa8qgpm+HPU7XG6JjM/soWGzR942yq1qYjqaVk3emoXm698DIUJfJc44fu345xqeJmPbDTx7bP6WskuJe1iFiHDx/VIMbf1EYBsLxbqVZDfFXT4h5UvXpaIMeGYFF0Lb9zKYFBD1bbRkqjHlqVg5XmJscQLAC5HwmR8Ai+X5aBWfemwl3+rhYM1T+Q9p/9g9UW+JmVrPvX3CUt3QVv7tZpjLu7XUpH2EKqTllzdAd9xr4VpkKtPD2au370txwJu+tYPjqkJjqGdu7cJwLg4HnOreUFltGZsdnFlVKYpZzbezUr8bAmz7UI+txBSnu76oOAzZTSyeJEsv47iSUOHGKA0cOjf6r4sKohL+e2Sp1g3XdDJpjaMsrNQBJS12MfJkDXD9o0BpPrjVVDylgiY/gHEvojcgoR2oTcyLZeqET9Q==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(38070700021)(56012099006)(55112099003)(18002099003)(11063799006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7W0FevSY8kRPmIJMDiOkg2g+MZYYrgYgJOyNSliLvM9cZGm8u3WtOiU+FWLU?=
- =?us-ascii?Q?MlZqV2RrYvU4U/ljvJtE7Zkz3rQ+SDFrokUj7YKBoOFm5Jj/bu5XE5ywRiWo?=
- =?us-ascii?Q?s4wJ19DZpqbeEMfUHn91Vu73USICBRsjCNzNSCVSkxH0S+XjUkUSGD4CHLGA?=
- =?us-ascii?Q?2hd7kjvRlFp1v06W9KkUdkSHl8JgZ//xAoKe+pi0Q0v0dsnrXIPzC5myyHgd?=
- =?us-ascii?Q?QQZqW1+9eUFv3rJ1zybDFpd+h+Hlj9Banu2P9GE3Cyn4RLdU1lt1Av2pz0eH?=
- =?us-ascii?Q?VwC0fuZtPfe9Yl4hCxh13KiT7tuGGsvV2ovNgvDDVld2khV/AeFv69xDTQB4?=
- =?us-ascii?Q?Esn5VCWoaYmUNA05h/NfmeIfi8bJQ7nv05LOpoV5KY1+1+w0oWBUbcwtxlSA?=
- =?us-ascii?Q?zq3mtuCcRim68YWIqChULcIfA1CNd1HzfszltSsrBJ/NrJNhzpOzTZvX2D1k?=
- =?us-ascii?Q?BfOIOKLiNV3YKR8tccU0FzTnahWUbxQKP7jR+nkpPK99Gku8+1t0A6dm33XF?=
- =?us-ascii?Q?lfB6/exjSTTa6H2JXwHcP1rD9+53ys6eSZf08tYbw3AemEwGOxvyoJ07XmW6?=
- =?us-ascii?Q?HSK1HwNcyLmQNdoHy8lXfIuj3WIUwCoqNnafvmX5mCog0QrypsW6wY2OspLm?=
- =?us-ascii?Q?hUzvNEN8QED/UhSktt+DKx+zWi7CvhssOqMOrTjif2Rj9UrPWhzSvxy8nWpp?=
- =?us-ascii?Q?epX5eguWigeWsq0ru+Vn8za1KxjWaGIwc4AceJEk6oJjDm8pvRPYbC7tCJCp?=
- =?us-ascii?Q?zgrMqIiCdN4/uv2TvjpBPLLEGSQ70S+Zm/wBOXmuzgJkIQkPs0gykVu7hfa5?=
- =?us-ascii?Q?YTk3NpraSc43GKhKDkIg4L+EUxWMhZLOpf6+MjGhjHgKSArzsC2DLe1UTW2F?=
- =?us-ascii?Q?cWzhCWhuoLmo3Jc3tVfgewVS/abmDIOECN5Ketr5NVmtvIUiBfgddxN4F3QK?=
- =?us-ascii?Q?YatSIRLCbIfQDDL3Tk1gQPEYlOcZL7BT3XxIA39Kc8Rasl/VrnkxztJFU8GV?=
- =?us-ascii?Q?leIG7MOTEB1oicjpPTJo6EW+vGig1GZnX7Xnrr3Zzbvv87R0+gY+lGfiRH3F?=
- =?us-ascii?Q?kVkCKV64jlSSW9ox6GE7C2m08SkXOX+pYZcQ97fOAuhMipUHsN1v1mumxyV0?=
- =?us-ascii?Q?HVMx3lDdLpinupjUfxAW7blNarkCcpyn2nKMsgiwCys8wFNKOGqSAN3QGfFd?=
- =?us-ascii?Q?rrFXUrJfuK+EyU9eku+doL8687qlQWKZJuDrIu1ZUhg2tdqpqLxn10J2SZ8I?=
- =?us-ascii?Q?6gr66eZmS5LoHNqoqs70TbvvQgc/vvGCJgtdvUd6ghPDgwWUjbR4l9q/AUx+?=
- =?us-ascii?Q?+MCvuxh6quS2K3GIy+KvOU7pgf3dv1df36axBvBGeZY3HdBc+OF1nhslZcu/?=
- =?us-ascii?Q?8y5XJ3FzfDYwG22NFo5hVHuM80cE3Qt7A5ver8flhu83YP+J/kswKzDkAYMa?=
- =?us-ascii?Q?u48Tp8UpA9OpBC3evDi3FmoTCB9YZLUr0FzdCRVOzVJtXZ2tFlIUOjX8kdhO?=
- =?us-ascii?Q?BellYxRG7DtayPWjZ8Hepix+YfmWtmKRP8tESS/Hz2ZLNUnvziUdBqFbENVt?=
- =?us-ascii?Q?Dd59HR/6XjxGRDX8HWaW5vtmGv+qhbt0lLuGpnnyt7k1Lt3ATtargzKt5Jhb?=
- =?us-ascii?Q?XK49A6cOX1Hpq0X0jUibSIbaO/c74tSQYDTlBuMY/8whSMBvagn35QdyevTy?=
- =?us-ascii?Q?mcAw1steEk3jSTEbG/iI+9uYPO483dnmmieGQOPRyE1Z8i9H?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C9342BC3F
+	for <linux-nfs@vger.kernel.org>; Tue, 14 Jul 2026 22:00:43 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784066445; cv=none; b=mmRu3tBk/hj/h1V7KUo31xIzWID6DAOvn8UYr+++7JCfq7SjLZgtJsmBGJH6RM8rTKLNcy8IjCsd8dQGje1GzcThimg1dqJ0HG6zc5wS+3U2XJmQCBTmUz0kmmRi3caBJs5GHn+QKYmL1UpjzLLaKx6zWSCJQDhX4CLJTFGIg9M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784066445; c=relaxed/simple;
+	bh=CfVJs28W5hxFw8ISq4Xyaqt87hZXNKUuonnOsEGAs38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLVGUXSd1Yk4qKRcYAnSJV38FSibAueZu41Q1ba9zf1s6jAkI5kmdJBWPKFC+t2YxnDn0GhqnMxRpp7eREDNzwOQxvD0/CVeOrqJkcSbeZqLLDY3gc3wVyttiZz/HYv4x2qIbUmATYqmXaTWbJs5pTrTgKCU3Kysc9Q0oyBucXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KHBq0p+X; arc=none smtp.client-ip=170.10.133.124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784066442;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tLV0uO8G+CcD7BsepUgECb6bFenLBgGo57rW9dKc/SY=;
+	b=KHBq0p+X5MsyQf3QnHHqAubWNXs5Um0r5uVSth/JK4Zd+kgeuiQ5J40z9twQdL0C7aTxhC
+	CQ4jbMVwMnZOuX6wvTLpNM564s/rr0faagVyHpdAtq2xlbwYtJ/Dgr4HP/j9bKjie39pv2
+	OH0xH1lf4RZs8jkyEwKzYhFsoMA+UZ0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-a-wLa56ZP72HISr4gaZkUw-1; Tue,
+ 14 Jul 2026 18:00:40 -0400
+X-MC-Unique: a-wLa56ZP72HISr4gaZkUw-1
+X-Mimecast-MFC-AGG-ID: a-wLa56ZP72HISr4gaZkUw_1784066438
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B63C61956052;
+	Tue, 14 Jul 2026 22:00:38 +0000 (UTC)
+Received: from smayhew-thinkpadp1gen4i.remote.csb (unknown [10.22.80.112])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2F5CB30003B8;
+	Tue, 14 Jul 2026 22:00:38 +0000 (UTC)
+Received: by smayhew-thinkpadp1gen4i.remote.csb (Postfix, from userid 13752)
+	id 7075D4E1E582; Tue, 14 Jul 2026 18:00:37 -0400 (EDT)
+Date: Tue, 14 Jul 2026 18:00:37 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-nfs@vger.kernel.org, Anna Schumaker <anna@kernel.org>,
+	jlayton@kernel.org, chuck.lever@oracle.com,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Achilles Gaikwad <achillesgaikwad@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH v2] NFSv4.2: fix nfs4_listxattr size accounting
+Message-ID: <alaxhbWbFMZyC8VQ@smayhew-thinkpadp1gen4i.remote.csb>
+References: <CAHC9VhSWWhMjs282cOTT45gn0pa8bDSxD0H24_is7k4tXmGJxQ@mail.gmail.com>
+ <ac4f209c-f465-4938-adae-ecd00ecab175@app.fastmail.com>
+ <CAHC9VhQYjj3--K6KkDJBf6LfXqtj4TPh5LsMBpPYc0-Zz6wTMA@mail.gmail.com>
+ <CAEjxPJ7dttPDxQDa_xXFd1H-QT_vkUwjtnH+=3cmG5dhSiaAXw@mail.gmail.com>
+ <CAHC9VhSyCuiPBRWz_vUbx7+L5yLiXkjKX+7UyCLr82-_gAj2NQ@mail.gmail.com>
+ <CAEjxPJ4+wgUDY3YxajZ=2D3WLzgat_Mqvr05VtJ4KrXW7_kuXA@mail.gmail.com>
+ <CAHC9VhSxpAx+G35fbcMjJ1PfqJxDZYpTEu=qpO+0PQe=nkX5-g@mail.gmail.com>
+ <CAHC9VhRq+Vth-4D4OHFAY_6hXqmj=MgTc_2G=3Ehr6bAQzp26Q@mail.gmail.com>
+ <CAHC9VhQy4LOgQg0mk+s5sjHOzMe1sxPUgJ2W7vRT8ms4znZp+Q@mail.gmail.com>
+ <CAHC9VhR+pWFnt=1pBJTky78br7NsfVcZE=V4UkfkfTbMvBo+mQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: prodromou.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: c583439d-4c5b-4299-25c7-08dee1d9ef1c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2026 18:58:46.8751
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b1638132-4a5e-4b5d-9640-f0738f99b12e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r+KHYqahO9r6AtooUPhmBSMdpmgOA9rWhp8ZjEW+PejjgdYnwgfz5smTN8WEqoPkB4gxLIUSVU6FLkl7O09+eA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8P220MB1709
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHC9VhR+pWFnt=1pBJTky78br7NsfVcZE=V4UkfkfTbMvBo+mQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[prodromou.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[prodromou.com:s=selector1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:trond.myklebust@hammerspace.com,m:anna@kernel.org,m:hch@lst.de,m:linux-nfs@vger.kernel.org,s:lists@lfdr.de];
-	TO_DN_EQ_ADDR_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,oracle.com,gmail.com];
+	TAGGED_FROM(0.00)[bounces-23320-lists,linux-nfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,oracle.com:email,smayhew-thinkpadp1gen4i.remote.csb:mid];
+	FORGED_SENDER(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:paul@paul-moore.com,m:linux-nfs@vger.kernel.org,m:anna@kernel.org,m:jlayton@kernel.org,m:chuck.lever@oracle.com,m:stephen.smalley.work@gmail.com,m:achillesgaikwad@gmail.com,m:trondmy@kernel.org,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:stephensmalleywork@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[nate@prodromou.com,linux-nfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-23319-lists,linux-nfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nate@prodromou.com,linux-nfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[prodromou.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-nfs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[prodromou.com:from_mime,prodromou.com:email,prodromou.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,SA1P220MB1492.NAMP220.PROD.OUTLOOK.COM:mid]
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[smayhew@redhat.com,linux-nfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-nfs];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CA7FF758017
+X-Rspamd-Queue-Id: 52AE5759188
 
-nfs4_server_common_setup() allocates server->delegation_hash_table=0A=
-first, but server->destroy - the only path that frees the table via=0A=
-nfs4_destroy_server() - is not assigned until the very end of the=0A=
-function. If any intermediate step fails (the is_ds_only_client()=0A=
-check, nfs4_init_session(), nfs4_get_rootfh(), or nfs_probe_server()),=0A=
-the function returns with server->destroy still NULL, so the caller's=0A=
-nfs_free_server() skips the destroy callback and the hash table is=0A=
-leaked (4 KiB per attempt with the default delegation watermark).=0A=
-=0A=
-This is trivially reachable from userspace: every failed NFSv4 mount=0A=
-leaks one allocation. A client that persistently retries a mount that=0A=
-cannot succeed leaks kernel memory without bound. Observed in=0A=
-production where a Longhorn backup poller retried mount.nfs4 against=0A=
-an NFSv3-only server roughly 10 times per second, leaking ~3.4 GiB of=0A=
-unreclaimable slab (kmalloc-rnd-13-4k) per day; the node accumulated=0A=
-12 GiB of leaked slab before the source was identified via the=0A=
-kmem:kmalloc tracepoint (call_site=3Dnfs4_delegation_hash_alloc).=0A=
-=0A=
-Reproducer:=0A=
-=0A=
-  # server exports NFSv3 only (or export path absent for v4)=0A=
-  while :; do mount -t nfs4 <server>:/missing /mnt; done=0A=
-  # watch SUnreclaim in /proc/meminfo grow 4 KiB per iteration=0A=
-=0A=
-Free the table on the error paths between the allocation and the=0A=
-assignment of server->destroy.=0A=
-=0A=
-Fixes: f5b3108e6a14 ("NFS: use a hash table for delegation lookup")=0A=
-Cc: stable@vger.kernel.org=0A=
-Signed-off-by: Nate Prodromou <nate@prodromou.com>=0A=
----=0A=
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c=0A=
---- a/fs/nfs/nfs4client.c=0A=
-+++ b/fs/nfs/nfs4client.c=0A=
-@@ -915,20 +915,22 @@ static int nfs4_server_common_setup(struct nfs_server=
- =0A=
- 		return error;=0A=
- =0A=
- 	/* data servers support only a subset of NFSv4.1 */=0A=
--	if (is_ds_only_client(server->nfs_client))=0A=
--		return -EPROTONOSUPPORT;=0A=
-+	if (is_ds_only_client(server->nfs_client)) {=0A=
-+		error =3D -EPROTONOSUPPORT;=0A=
-+		goto out_free_delegation_hash;=0A=
-+	}=0A=
- =0A=
- 	/* We must ensure the session is initialised first */=0A=
- 	error =3D nfs4_init_session(server->nfs_client);=0A=
- 	if (error < 0)=0A=
--		return error;=0A=
-+		goto out_free_delegation_hash;=0A=
- =0A=
- 	nfs_server_set_init_caps(server);=0A=
- =0A=
- 	/* Probe the root fh to retrieve its FSID and filehandle */=0A=
- 	error =3D nfs4_get_rootfh(server, mntfh, auth_probe);=0A=
- 	if (error < 0)=0A=
--		return error;=0A=
-+		goto out_free_delegation_hash;=0A=
- =0A=
- 	dprintk("Server FSID: %llx:%llx\n",=0A=
- 			(unsigned long long) server->fsid.major,=0A=
-@@ -937,7 +939,7 @@ static int nfs4_server_common_setup(struct nfs_server =
-=0A=
- =0A=
- 	error =3D nfs_probe_server(server, mntfh);=0A=
- 	if (error < 0)=0A=
--		return error;=0A=
-+		goto out_free_delegation_hash;=0A=
- =0A=
- 	nfs4_session_limit_rwsize(server);=0A=
- 	nfs4_session_limit_xasize(server);=0A=
-@@ -949,6 +951,11 @@ static int nfs4_server_common_setup(struct nfs_server =
-=0A=
- 	server->mount_time =3D jiffies;=0A=
- 	server->destroy =3D nfs4_destroy_server;=0A=
- 	return 0;=0A=
-+=0A=
-+out_free_delegation_hash:=0A=
-+	kfree(server->delegation_hash_table);=0A=
-+	server->delegation_hash_table =3D NULL;=0A=
-+	return error;=0A=
- }=0A=
- =0A=
- /*=0A=
--- =0A=
-2.47.0=0A=
+On Tue, 14 Jul 2026, Paul Moore wrote:
+
+> On Fri, Jul 10, 2026 at 6:20=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> >
+> > ... and scratch that, the offending commit was that one.
+> >
+> >    commit 01c2305795a3b6b164df48e72b12022a68fd60c1
+> >    Author: Jeff Layton <jlayton@kernel.org>
+> >    Date:   Wed Mar 25 10:40:32 2026 -0400
+> >
+> >    nfsd: add netlink upcall for the nfsd.fh cache
+> >
+> >    Add netlink-based cache upcall support for the expkey (nfsd.fh) cach=
+e,
+> >    following the same pattern as the existing svc_export netlink suppor=
+t.
+> >
+> >    Add expkey to the cache-type enum, a new expkey attribute-set with
+> >    client, fsidtype, fsid, negative, expiry, and path fields, and the
+> >    expkey-get-reqs / expkey-set-reqs operations to the nfsd YAML spec
+> >    and generated headers.
+> >
+> >    Implement nfsd_nl_expkey_get_reqs_dumpit() which snapshots pending
+> >    expkey cache requests and sends each entry's seqno, client name,
+> >    fsidtype, and fsid over netlink.
+> >
+> >    Implement nfsd_nl_expkey_set_reqs_doit() which parses expkey cache
+> >    responses from userspace (client, fsidtype, fsid, expiry, and path
+> >    or negative flag) and updates the cache via svc_expkey_lookup() /
+> >    svc_expkey_update().
+> >
+> >    Wire up the expkey_notify() callback in svc_expkey_cache_template
+> >    so cache misses trigger NFSD_CMD_CACHE_NOTIFY multicast events with
+> >    NFSD_CACHE_TYPE_EXPKEY.
+> >
+> >    Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> >    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Playing around with it some this morning on a current Fedora Rawhide
+> system, I can reproduce the problem with a simple command line:
+>=20
+>  %  mount -t nfs localhost:/mnt/test /mnt/nfs_test
+>  mount.nfs: Connection refused for localhost:/mnt/test on /mnt/nfs_test
+>=20
+> ... adding an explicit "vers=3D{4,4.1,4.2}" has no effect; versions 2
+> and 3 are no supported on my kernel builds.  There is nothing obvious
+> in dmesg.  I've run with SELinux both in permissive mode and disabled
+> and encountered the same problem.  This doesn't appear to be related
+> to SELinux, it may simply be that we are the first ones to hit this.
+>=20
+> As there was some earlier discussion about this being a wonky
+> interaction with userspace, here are some of the relevant packages on
+> my system:
+>=20
+> nfs-common-utils-2.9.1-4.rc4.fc45.x86_64
+> nfs-client-utils-2.9.1-4.rc4.fc45.x86_64
+> nfsv4-client-utils-2.9.1-4.rc4.fc45.x86_64
+> nfs-utils-2.9.1-4.rc4.fc45.x86_64
+>=20
+> My next step is to try disabling portions of the NFS file handle cache
+> upcall to see if that is the issue, but it would be nice if the NFS
+> devs could take a look at this too.  I'm happy to test things out or
+> answer any questions about my test system.
+
+Pardon the dumb question, but are you positive your NFS server is
+running?  No errors from 'systemctl status nfs-server.service' or
+'systemctl status nfs-mountd.service'?  A connection refused error
+typically indicates the server isn't running.
+
+What if you add 'no-netlink=3D1' to the mountd stanza in /etc/nfs.conf and
+restart nfs-server.service?
+
+FWIW the netlink upcall requires CAP_NET_ADMIN, which is blocked by the
+current selinux-policy on rawhide (and I think it's a dontaudit rule)...
+but you said you've disabled SELinux and reproduced your problem, so I'm
+scratching my head.  Plus the symptom I ran into was the mount command
+hanging, not a 'connection refused' error.  At any rate I filed
+https://github.com/fedora-selinux/selinux-policy/pull/3278 to update the
+selinux-policy (no movement on that yet) and the most recent mountd
+patch improves the fallback to the old proc interface, but I don't think
+it's been added to Fedora yet either.
+
+-Scott
+
+>=20
+> --=20
+> paul-moore.com
+>=20
+
 
